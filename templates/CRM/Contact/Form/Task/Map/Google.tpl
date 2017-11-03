@@ -30,96 +30,132 @@
   {assign var=height value="600px"}
   {assign var=width  value="100%"}
 {/if}
-{assign var=protocol value="https://"}
-{assign var=defaultZoom value=12}  
+<div id="civicrm-google-map" class="event-map media_embed" style="width: {$width}; height: {$height}"></div>
+<script src="{$config->resourceBase}packages/markerclusterer/markerclusterer.js"></script>
 {literal}
-<script src="{/literal}{$protocol}{literal}maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
 <script type="text/javascript">
-    function initMap() {
-        var latlng = new google.maps.LatLng({/literal}{$center.lat},{$center.lng}{literal});
-        var map = new google.maps.Map(document.getElementById("google_map"));
-        map.setCenter(latlng);
-        map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-        setMapOptions(map);
+(function($){
+
+// this is free embed map api key
+var googleMapEmbed = 'https://www.google.com/maps/embed/v1/<MODE>?';
+var googleMapKey = '{/literal}{if $mapKey}{$mapKey}{/if}{literal}';
+var googleMapJS = 'https://maps.googleapis.com/maps/api/js?';
+var mapWidth = '{/literal}{$width}{literal}';
+var mapHeight = '{/literal}{$height}{literal}';
+var mapId = '#civicrm-google-map';
+var locations = [];
+{/literal}{if $locationsJson}
+locations = {$locationsJson};
+{/if}{literal}
+
+if (!locations.length) {
+  return;
+}
+// embed api
+else if (locations.length == 1) {
+  // prepare parameters
+  var location = locations[0];
+  var parameters = [];
+  var mode = 'place'; // currently only support place mode
+  var src = '';
+  if (typeof location.address) {
+    q = location.address;
+  }
+  else if (typeof location.lat === 'string' && typeof location.lng === 'string') {
+    q = location.lat + ',' + location.lng;
+  }
+  if (q) {
+    q = encodeURIComponent(q);
+    parameters.push('q='+q);
+    if (typeof location.locationName !== 'undefined') {
+      var source = encodeURIComponent(location.locationName);
+      parameters.push('attribution_source='+source);
+      parameters.push('attribution_web_url='+ encodeURIComponent(window.location.href));
+      parameters.push('attribution_ios_deep_link_id=comgooglemaps://?daddr='+q); // for iphone
     }
-    
-    function setMapOptions(map) {
-        bounds = new google.maps.LatLngBounds( );
-	{/literal}
-	{foreach from=$locations item=location}
-	    {if $location.url and ! $profileGID}
-		{literal}
-		var data = "{/literal}<div class=\"map-content\"><h3><a href='{$location.url}'>{$location.displayName}</a></h3><p>{if !$skipLocationType}[{$location.location_type}] {/if}{$location.address}</p><div>{ts}Get Directions From{/ts}:</div><div style=\"width:400px;\">{ts}From{/ts}:<input type=text id=from size=\"30\" /><br />{ts}To{/ts}:{$location.displayAddress}<input type=hidden id=to value='{$location.displayAddress}'> <a class=\"button silver\" href=\"javascript:gpopUp();\">{ts}&raquo; Go{/ts}</a></div></div>";
-	    {else}
-		{capture assign="profileURL"}{crmURL p='civicrm/profile/view' q="reset=1&id=`$location.contactID`&gid=$profileGID"}{/capture}
-		{literal}
-		var data = "{/literal}<div class=\"map-content\"><p><a href='{$profileURL}'>{$location.displayName}</a></h3><p>{if !$skipLocationType}[{$location.location_type}] {/if}{$location.address}</p><div>{ts}Get Directions From{/ts}:</div><div style=\"width:400px;\">{ts}From{/ts}:<input type=text id=from size=\"30\" /><br />{ts}To{/ts}:{$location.displayAddress}<input type=hidden id=to value='{$location.displayAddress}'> <a class=\"button silver\" href=\"javascript:gpopUp();\">{ts}&raquo; Go{/ts}</a></div></div>";
-	    {/if}
-	    {literal}
-	    var address = "{/literal}{$location.address}{literal}";
-	    {/literal}
-	    {if $location.lat}
-		var point  = new google.maps.LatLng({$location.lat},{$location.lng});
-		{if $location.image && ( $location.marker_class neq 'Event' ) }
- 		  var image = '{$location.image}';
-		{else}
-                 {if $location.marker_class eq 'Individual'}
- 		      var image = "{$config->resourceBase}i/contact_ind.gif";
- 		  {/if}
- 		  {if $location.marker_class eq 'Household'}
- 		      var image = "{$config->resourceBase}i/contact_house.png";
- 		  {/if}
- 		  {if $location.marker_class eq 'Organization' || $location.marker_class eq 'Event'}
-  		      var image = "{$config->resourceBase}i/contact_org.gif";
- 		  {/if}
-                {/if}
- 	        {literal}
-                createMarker(map, point, data, image);
-                bounds.extend(point);
-                {/literal}
-	    {/if}
-	{/foreach}
-        map.setCenter(bounds.getCenter());
-        {if count($locations) gt 1}  
-            map.fitBounds(bounds);
-            map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
-        {elseif $location.marker_class eq 'Event' || $location.marker_class eq 'Individual'|| $location.marker_class eq 'Household' || $location.marker_class eq 'Organization' }
-            map.setZoom({$defaultZoom});
-        {else} 
-            map.setZoom({$defaultZoom}); 
-        {/if}
-	{literal}	
+    parameters.push('key='+googleMapKey);
+    src = googleMapEmbed.replace('<MODE>', mode);
+    src += parameters.join('&');
+
+    $(mapId).html('<iframe src="'+src+'" style="border:0; width:'+mapWidth+'; height:'+mapHeight+';" frameborder="0" allowfullscreen></iframe>');
+  }
+}
+// paid api, needs specify key at /civicrm/admin/setting/mapping
+else {
+  if (googleMapKey.length <= 0) {
+    $(mapId).html('{/literal}<a href="{crmURL p='civicrm/admin/setting/mapping' q='reset=1'}">{ts}Enter your Google API Key OR your Yahoo Application ID.{/ts}</a>{literal}');
+    return;
+  }
+  else {
+    var lat, lng;
+    var center = {};
+    {/literal}{if $center}
+    lat = Number({$center.lat});
+    lng = Number({$center.lng});
+    {/if}{literal}
+    if (lat && lng) {
+      center = {"lat": lat, "lng": lng};
+    }
+    var info = function(loc) {
+      var output = '';
+      if (loc.photo) {
+        output += '<div><a href="'+loc.url+'" target="_blank"><img src="'+loc.photo+'" style="max-width:150px;"></a></div>';
+      }
+      if (loc.displayName) {
+        output += '<div><strong><a href="'+loc.url+'" target="_blank">'+loc.displayName+'</a></strong></div>';
+      }
+      if (loc.displayAddress) {
+        output += '<div>'+loc.displayAddress+'</div>';
+      }
+      if (loc.country) {
+        output += '<div>'+loc.country+'</div>';
+      }
+      return output;
     }
 
-    function createMarker(map, point, data, image) {
-        var marker = new google.maps.Marker({ position: point,
-                                              map: map,
-                                              icon: image
-                                            });
-        var infowindow = new google.maps.InfoWindow({
-            content: data,
-            maxWidth: 500
-        });
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.open(map,marker);
-        });
- 
+    // load clusterer js
+    window.crmGoogleMapCallback = function() {
+      var infowindow = null;
+      var markerAnimtion = null;
+      var map = new google.maps.Map(document.getElementById('civicrm-google-map'), {
+        zoom: 8,
+        center: center
+      });
+      var markers = locations.map(function(location, i){
+        var infoHtml = info(location);
+        if (location.lat && location.lng) {
+          var icon = '{/literal}{$config->resourceBase}{literal}packages/markerclusterer/'+location.marker_class.toLowerCase()+'.svg';
+          var marker = new google.maps.Marker({
+            position: {"lat": Number(location.lat), "lng": Number(location.lng)},
+            title: location.displayName,
+            icon: icon
+          });
+          marker.addListener('click', function() {
+            if (infowindow) {
+              infowindow.close();
+            }
+            infowindow = new google.maps.InfoWindow({
+              content: infoHtml 
+            });
+            infowindow.open(map, marker);
+          });
+          return marker;
+        }
+      });
+      var markerCluster = new MarkerClusterer(map, markers, {
+        maxZoom: 16, // we need set prevent never zoom enough
+        imagePath: '{/literal}{$config->resourceBase}{literal}packages/markerclusterer/m'
+      });
     }
 
-    function gpopUp() {
-	var from   = document.getElementById('from').value;
-	var to     = document.getElementById('to').value;	
-	var URL    = "http://maps.google.com.tw/maps?saddr=" + from + "&daddr=" + to;
-	day = new Date();
-	id  = day.getTime();
-	eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=780,height=640,left = 202,top = 100');");
-    }
+		// add google map script
+    var script = document.createElement('script');
+    script.src = googleMapJS + 'key=' + googleMapKey + '&callback=crmGoogleMapCallback';
+    $('body').append(script);
+  }
+}
 
-    if (window.addEventListener) {
-        window.addEventListener("load", initMap, false);
-    } else if (window.attachEvent) {
-        document.attachEvent("onreadystatechange", initMap);
-    }
+
+})(cj);
 </script>
 {/literal}
-<div id="google_map" class="event-map media_embed" style="width: {$width}; height: {$height}"></div>

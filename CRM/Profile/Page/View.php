@@ -122,15 +122,6 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
       if (!empty($profileIds)) {
         $gidString = implode(',', $profileIds);
       }
-
-      $map = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'is_map');
-      if ($map) {
-        $this->assign('mapURL',
-          CRM_Utils_System::url("civicrm/profile/map",
-            "reset=1&pv=1&cid={$this->_id}&gid={$gidString}"
-          )
-        );
-      }
       if (CRM_Core_Permission::ufGroupValid($this->_gid,
           CRM_Core_Permission::SEARCH
         )) {

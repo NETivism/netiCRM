@@ -61,9 +61,11 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
       }
 
       CRM_Core_BAO_ConfigSetting::retrieve($this->_defaults);
-
-      require_once "CRM/Core/Config/Defaults.php";
       CRM_Core_Config_Defaults::setValues($this->_defaults, $formMode);
+      $config = CRM_Core_Config::singleton();
+      foreach($config as $name => $value) {
+        $this->_defaults[$name] = $value;
+      }
 
       require_once "CRM/Core/OptionGroup.php";
       $list = array_flip(CRM_Core_OptionGroup::values('contact_autocomplete_options',

@@ -52,7 +52,7 @@ class CRM_Utils_Geocode_Google {
    * @var string
    * @static
    */
-  static protected $_uri = '/maps/api/geocode/xml?sensor=false&address=';
+  static protected $_uri = '/maps/api/geocode/xml?address=';
 
   /**
    * function that takes an address object and gets the latitude / longitude for this
@@ -115,11 +115,11 @@ class CRM_Utils_Geocode_Google {
       $add .= '+' . urlencode(str_replace('', '+', $values['country']));
     }
 
-    if(CRM_Utils_System::isSSL()){
-      $query = 'https://' . self::$_server . self::$_uri . $add;
+    if ($config->mapAPIKey) {
+      $query = 'https://' . self::$_server . self::$_uri . $add . '&key='.$config->mapAPIKey;
     }
     else {
-      $query = 'http://' . self::$_server . self::$_uri . $add;
+      $query = 'https://' . self::$_server . self::$_uri . $add;
     }
 
     require_once 'HTTP/Request.php';

@@ -37,21 +37,8 @@
          <tr class="crm-map-form-block-mapAPIKey">
              <td>{$form.mapAPIKey.label}</td>
              <td>{$form.mapAPIKey.html|crmReplace:class:huge}<br />
-             <span class="description">{ts}Enter your Google API Key OR your Yahoo Application ID.{/ts} {help id='map-key2'}</span></td>
+             <span class="description">{ts}Enter your Google API Key OR your Yahoo Application ID.{/ts} {help id='map-key'}</span></td>
          </tr>
     </table>
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
-{literal}
-<script type="text/javascript">
-showHideMapAPIkey( cj('#mapProvider').val( ) );
-
-function showHideMapAPIkey( mapProvider ) {
-  if ( mapProvider && mapProvider == 'Google' ) {
-    cj('#Mapping tr.crm-map-form-block-mapAPIKey').hide( );
-  } else {
-    cj('#Mapping tr.crm-map-form-block-mapAPIKey').show( );
-  }
-}
-</script>
-{/literal}

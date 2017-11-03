@@ -31,26 +31,19 @@
   </div><!-- /.crm-accordion-header -->
   <div class="crm-accordion-body" id="tagGroup">
 {/if}
-    <table class="form-layout-compressed" style="width:98%">
+    <table class="form-layout-compressed">
 	<tr>
 	    {foreach key=key item=item from=$tagGroup}
 		{* $type assigned from dynamic.tpl *}
 		{if !$type || $type eq $key }
-		<td width={cycle name=tdWidth values="70%","30%"}><span class="label">{if $title}{$form.$key.label}{/if}</span>
+		<td width={cycle name=tdWidth values="50%","50%"}><span class="label">{if $title}{$form.$key.label}{/if}</span>
 		    <div id="crm-tagListWrap">
-		    <table id="crm-tagGroupTable">
+		    <table id="crm-tagGroupTable" style="border: 0;margin-bottom:0;">
 			{foreach key=k item=it from=$form.$key}
 			    {if $k|is_numeric}
-				<tr class={cycle values="'odd-row','even-row'" name=$key} id="crm-tagRow{$k}">
+				<tr id="crm-tagRow{$k}">
 				    <td>
-					    <label>
-              {$it.html}
-              {if $item.$k.description}
-					    <span class="description">
-						   ( {$item.$k.description} )
-					    </span>
-              {/if}
-              </label>
+					    {$it.html}{if $item.$k.description && !$anonUser}{help id="$type-desc-$k" text=$item.$k.description}{/if}
 				    </td>
 				</tr>
 			    {/if}
@@ -61,7 +54,9 @@
 		{/if}
 	    {/foreach}
 	</tr>
+  {if $tagset}
 	<tr><td>{include file="CRM/common/Tag.tpl"}</td></tr>
+  {/if}
     </table>   
 {if $title}
  </div><!-- /.crm-accordion-body -->

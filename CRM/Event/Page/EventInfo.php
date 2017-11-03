@@ -164,58 +164,11 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
     $this->assign('action', CRM_Core_Action::VIEW);
     //To show the event location on maps directly on event info page
-    $locations = &CRM_Event_BAO_Event::getMapInfo($this->_id);
-    if (!empty($locations) && CRM_Utils_Array::value('is_map', $values['event'])) {
-      $this->assign('locations', $locations);
+    if (CRM_Utils_Array::value('is_map', $values['event'])) {
+      $locations = CRM_Event_BAO_Event::getMapInfo($this->_id);
+      $this->assign('locationsJson', json_encode($locations));
+      $this->assign_by_ref('locations', $locations);
       $this->assign('mapProvider', $config->mapProvider);
-      $this->assign('mapKey', $config->mapAPIKey);
-      $sumLat = $sumLng = 0;
-      $maxLat = $maxLng = -400;
-      $minLat = $minLng = + 400;
-      foreach ($locations as $location) {
-        $sumLat += $location['lat'];
-        $sumLng += $location['lng'];
-
-        if ($location['lat'] > $maxLat) {
-          $maxLat = $location['lat'];
-        }
-        if ($location['lat'] < $minLat) {
-          $minLat = $location['lat'];
-        }
-
-        if ($location['lng'] > $maxLng) {
-          $maxLng = $location['lng'];
-        }
-        if ($location['lng'] < $minLng) {
-          $minLng = $location['lng'];
-        }
-      }
-
-      $center = array('lat' => (float ) $sumLat / count($locations),
-        'lng' => (float ) $sumLng / count($locations),
-      );
-      $span = array('lat' => (float )($maxLat - $minLat),
-        'lng' => (float )($maxLng - $minLng),
-      );
-      $this->assign_by_ref('center', $center);
-      $this->assign_by_ref('span', $span);
-      if ($action == CRM_Core_Action::PREVIEW) {
-        $mapURL = CRM_Utils_System::url('civicrm/contact/map/event',
-          "eid={$this->_id}&reset=1&action=preview",
-          TRUE, NULL, TRUE,
-          TRUE
-        );
-      }
-      else {
-        $mapURL = CRM_Utils_System::url('civicrm/contact/map/event',
-          "eid={$this->_id}&reset=1",
-          TRUE, NULL, TRUE,
-          TRUE
-        );
-      }
-
-      $this->assign('skipLocationType', TRUE);
-      $this->assign('mapURL', $mapURL);
     }
     require_once 'CRM/Event/BAO/Participant.php';
     $eventFullMessage = CRM_Event_BAO_Participant::eventFull($this->_id);
