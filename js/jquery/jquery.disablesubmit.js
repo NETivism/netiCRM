@@ -1,8 +1,33 @@
 (function($){
   $(document).ready(function(){
+
+    // solve last submitted qfkey
+    var last_qfkey = getUrlParams('qfKey');
+    if(!last_qfkey && $('[name=qfKey]').length >= 1){
+      last_qfkey = $('[name=qfKey]').val();
+      if(!last_qfkey && $('#last_check_id').length >= 1){
+        last_qfkey = $('#last_check_id').val();
+      }
+    }
+
+    if(last_qfkey){
+      last_submitted = getCookie(last_qfkey);
+      if(last_submitted == 1){
+        if($('.crm-error').length == 0){
+          last_submitted = 2; // don't change btn stat anymore.
+        }else{
+          last_submitted = 0;
+        }
+        setCookie(last_qfkey, last_submitted, 3600);
+      }
+    }
+
     var qfkey = getUrlParams('qfKey');
     if(!qfkey){
-      qfkey = $('[name=submit_once_check]').val();
+      qfkey = $('[name=qfKey]').val();
+      if(!qfkey){
+        qfkey = $('[name=submit_once_check]').val();
+      }
     }
     var submitted = getCookie(qfkey);
     var $obj = $('input[data=submit-once]');
@@ -22,7 +47,12 @@
         // set cookie
         $obj.bind('click', function(e){
           // If attribute is readonly, don't enable.
-          if(submitted < 1 && $obj.parents("form").has('.error:visible').length == 0 && !$obj.attr("readonly")){
+
+          // Not trigger when jvalidate is not enabled.
+          if( $obj.parents("form").has('.error:visible').length > 0 && typeof(jQuery.validator) == 'function'){
+            var is_block_by_error = true;
+          }
+          if(submitted < 1 && !is_block_by_error && !$obj.attr("readonly")){
             setCookie(qfkey, 1, 3600);
             submitted = 1;
             $(this).val($(this).val() + ' ...');
@@ -33,7 +63,10 @@
       // prevent double submit
       $obj.parents("form").on('submit', function(e){
         var $form = $(this);
-        if ($form.data('submitted') === true || $form.has('.error:visible').length > 0 || $obj.attr("readonly")) {
+        if( $form.has('.error:visible').length > 0 && typeof(jQuery.validator) == 'function'){
+          var is_block_by_error = true;
+        }
+        if ($form.data('submitted') === true || is_block_by_error || $obj.attr("readonly")) {
           // Previously submitted - don't submit again
           e.preventDefault();
         }
