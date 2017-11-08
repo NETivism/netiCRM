@@ -117,6 +117,16 @@ class CRM_Event_Task {
         ),
       );
 
+
+      $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
+      if ($providersCount) {
+        self::$_tasks[] = array(
+          'title' => ts('SMS - schedule/send'),
+          'class' => 'CRM_Event_Form_Task_SMS',
+          'result' => TRUE,
+        );
+      }
+
       //CRM-4418, check for delete
       if (!CRM_Core_Permission::check('delete in CiviEvent')) {
         unset(self::$_tasks[1]);

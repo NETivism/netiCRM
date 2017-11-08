@@ -105,6 +105,7 @@ class SmsData {
   public $vldtime;
   public $response;
   public $smsFlag;
+  public $clientID;
 
   /**
    * SmsData constructor.
@@ -136,6 +137,12 @@ class SmsData {
       $this->response = $response;
     }
 
+    if(!empty($this->dlvtime)){
+      $dlvdate = date('Ymd',$this->dlvtime);
+    }else{
+      $dlvdate = date('Ymd');
+    }
+    $this->clientID = md5($this->dest.$dlvdate.$this->body);
   }
 
 //  public function setDestination($phoneNum) {
@@ -201,6 +208,7 @@ class SmsData {
           'encoding'=>'UTF8',
           'dstaddr' => $this->dest,
           'smbody' => $this->body,
+          'clientID' => $this->clientID,
         );
         $str .= http_build_query($param);
         break;
@@ -210,6 +218,7 @@ class SmsData {
           'dstaddr' => $this->dest,
           'smbody' => $this->body,
           'CharsetURL' => 'utf-8',
+          'clientID' => $this->clientID,
         );
         if ($this->destname) {
           $param['destname'] = $this->destname;
@@ -221,6 +230,7 @@ class SmsData {
         break;
 
       case 'ML'://多筆長簡訊
+        $str .= ($this->clientID) ? $this->clientID : '';
         $str .= '$$' . $this->dest .
           (($this->dlvtime) ? '$$' . $this->dlvtime : '$$') .
           (($this->vldtime) ? '$$' . $this->vldtime : '$$') .
