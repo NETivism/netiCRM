@@ -70,19 +70,14 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     // just for display error message when issue tax receipt
     $this->addElement('hidden', 'error_placeholder', '');
     $createButton = $printButton = FALSE;
-    if (!empty($this->_taxReceipt)) {
       $valid = CRM_Utils_Hook::validateTaxReceipt($this->_id, $this->_taxReceipt);
 
-      // if tax receipt not validated, display create button let user create again.
-      if (isset($valid['success']) && !$valid['success']) {
-        $createButton = TRUE;
-      }
-      else {
-        $printButton = TRUE;
-      }
-    }
-    else {
+    // if tax receipt not validated, display create button let user create again.
+    if (isset($valid['success']) && !$valid['success']) {
       $createButton = TRUE;
+    }
+    elseif (isset($valid['success']) && $valid['success'] && !empty($this->_taxReceipt)){
+      $printButton = TRUE;
     }
 
     $config = CRM_Core_Config::singleton();
