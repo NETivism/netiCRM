@@ -329,7 +329,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
     $qfKey = $this->_key;
     $componentId = $componentContext = NULL;
-    if ($this->_context != 'contribute') {
+    if ($this->_context != 'contribute' && $this->_context != 'search') {
       $qfKey = CRM_Utils_Request::retrieve('key', 'String', CRM_Core_DAO::$_nullObject);
       $componentId = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject);
       $componentAction = CRM_Utils_Request::retrieve('action', 'String', CRM_Core_DAO::$_nullObject);
