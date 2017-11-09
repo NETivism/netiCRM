@@ -41,6 +41,8 @@
 
   <civicrm_persistent />
 
+  <civicrm_sequence />
+
   <civicrm_acl />
 
   <civicrm_acl_entity_role />

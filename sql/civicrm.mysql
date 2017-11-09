@@ -169,6 +169,7 @@ DROP TABLE IF EXISTS civicrm_acl_contact_cache;
 DROP TABLE IF EXISTS civicrm_contact;
 DROP TABLE IF EXISTS civicrm_acl_entity_role;
 DROP TABLE IF EXISTS civicrm_acl;
+DROP TABLE IF EXISTS civicrm_sequence;
 DROP TABLE IF EXISTS civicrm_persistent;
 DROP TABLE IF EXISTS civicrm_discount;
 DROP TABLE IF EXISTS civicrm_component;
@@ -724,6 +725,26 @@ CREATE TABLE civicrm_persistent (
  
  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_sequence
+-- *
+-- * .
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_sequence (
+
+
+     name varchar(64) NOT NULL   ,
+     value varchar(255)    ,
+     timestamp double     
+,
+    PRIMARY KEY ( name )
+ 
+ 
+ 
+)  ENGINE=MEMORY  ;
 
 -- /*******************************************************
 -- *

@@ -486,6 +486,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
   function getTable($tableXML, &$database, &$tables) {
     $name = trim((string ) $tableXML->name);
+    $engine = !empty($tableXML->engine) ? $tableXML->engine : NULL;
     $klass = trim((string ) $tableXML->class);
     $base = $this->value('base', $tableXML) . '/DAO/';
     $pre = str_replace('/', '_', $base);
@@ -512,6 +513,9 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       'localizable' => $localizable,
       'log' => $this->value('log', $tableXML, 'false'),
     );
+    if (!empty($engine)) {
+      $table['engine'] = $engine;
+    }
 
     $fields = array();
     foreach ($tableXML->field as $fieldXML) {

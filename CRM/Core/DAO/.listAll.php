@@ -20,6 +20,7 @@ $dao['Worldregion'] = 'CRM_Core_DAO_Worldregion';
 $dao['Component'] = 'CRM_Core_DAO_Component';
 $dao['Discount'] = 'CRM_Core_DAO_Discount';
 $dao['Persistent'] = 'CRM_Core_DAO_Persistent';
+$dao['Sequence'] = 'CRM_Core_DAO_Sequence';
 $dao['ACL'] = 'CRM_ACL_DAO_ACL';
 $dao['EntityRole'] = 'CRM_ACL_DAO_EntityRole';
 $dao['Contact'] = 'CRM_Contact_DAO_Contact';

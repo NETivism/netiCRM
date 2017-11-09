@@ -144,6 +144,7 @@ DROP TABLE IF EXISTS civicrm_acl_contact_cache;
 DROP TABLE IF EXISTS civicrm_contact;
 DROP TABLE IF EXISTS civicrm_acl_entity_role;
 DROP TABLE IF EXISTS civicrm_acl;
+DROP TABLE IF EXISTS civicrm_sequence;
 DROP TABLE IF EXISTS civicrm_persistent;
 DROP TABLE IF EXISTS civicrm_discount;
 DROP TABLE IF EXISTS civicrm_component;
