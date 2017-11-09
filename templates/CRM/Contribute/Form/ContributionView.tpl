@@ -60,7 +60,7 @@
 <table class="crm-info-panel">
     <tr>
         <td class="label">{ts}From{/ts}</td>
-        <td class="bold">{$displayName}</td>
+        <td class="bold"><a href="{crmURL p="civicrm/contact/view" q="cid=$contact_id&reset=1"}">{$displayName}</a></td>
     </tr>
     <tr>
       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update"}
