@@ -105,6 +105,7 @@ class CRM_Contact_Form_Task_SMSCommon {
     }
 
     $to = $form->add('text', 'to', ts('To'), array('class' => 'huge'));
+    $to->freeze();
     $form->add('text', 'activity_subject', ts('Name The SMS'), array('class' => 'huge'), TRUE);
 
     $toSetDefault = TRUE;
