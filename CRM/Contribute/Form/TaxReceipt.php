@@ -9,6 +9,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   public $_tplParams = array();
   public $_taxReceipt = NULL;
   public $_userContext = NULL;
+  public $_contribution = NULL;
 
   public function preProcess() {
     $taxReceiptImplements = CRM_Utils_Hook::availableHooks('civicrm_validateTaxReceipt');
@@ -33,9 +34,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $this->_id;
     if($contribution->find(TRUE)) {
-      if ($contribution->contribution_status_id != 1) {
-        CRM_Core_Error::fatal(ts('This record not complete, you can only create tax receipt for completed payment.'));
-      }
+      $this->_contribution = $contribution;
       if ($contribution->total_amount <= 0) {
         CRM_Core_Error::fatal(ts('Contribution amount must be greater than %1', array(1 => 0)));
       }
@@ -70,7 +69,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     // just for display error message when issue tax receipt
     $this->addElement('hidden', 'error_placeholder', '');
     $createButton = $printButton = FALSE;
-      $valid = CRM_Utils_Hook::validateTaxReceipt($this->_id, $this->_taxReceipt);
+    $valid = CRM_Utils_Hook::validateTaxReceipt($this->_id, $this->_taxReceipt, $this->_contribution);
 
     // if tax receipt not validated, display create button let user create again.
     if (isset($valid['success']) && !$valid['success']) {
