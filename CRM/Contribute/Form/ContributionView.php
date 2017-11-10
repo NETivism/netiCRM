@@ -172,6 +172,12 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     // assign values to the template
     $this->assign($values);
 
+    // get detail about membership payment, contribution page, or event
+    $details = CRM_Contribute_BAO_Contribution::getComponentDetails(array($id));
+    if (!empty($details[$id])) {
+      $this->assign('details', $details[$id]);
+    }
+
     // add viewed contribution to recent items list
     require_once 'CRM/Utils/Recent.php';
     require_once 'CRM/Utils/Money.php';

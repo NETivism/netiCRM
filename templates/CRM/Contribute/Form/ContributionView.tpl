@@ -137,14 +137,19 @@
 	{/if}
 	<tr>
 	    <td class="label">{ts}Source{/ts}</td>
-    	<td>{$source}</td>
+    	<td>
+        <div>{$source}</div>
+        {if $details.event}
+        <div>(<a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$details.event`"}" target="_blank">{ts}Event{/ts}</a> - <a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&action=view&id=`$details.participant`&cid=`$details.contact_id`"}">{ts}View Participation{/ts}</a>)</div>
+        {/if}
+        {if $details.page_id}
+        <div>(<a href="{crmURL p='civicrm/admin/contribute' q="action=update&reset=1&id=`$details.page_id`"}" target="_blank">{ts}View contribution page{/ts} - {$contribution_page_title}</a>)</div>
+        {/if}
+        {if $details.membership}
+        <div>(<a href="{crmURL p='civicrm/contact/view/membership' q="reset=1&action=view&id=`$details.membership`&cid=`$details.contact_id`"}" target="_blank">{ts}View Membership{/ts}</a>)</div>
+        {/if}
+      </td>
 	</tr>
-	{if $contribution_page_title}
-  <tr>
-      <td class="label">{ts}Contribution Page{/ts}</td>
-      <td>{$contribution_page_title}</td>
-  </tr>
-  {/if}
   {if $contribution_recur_id}
       <tr>
           <td class="label">{ts}Recurring Contribution ID{/ts}</td>
