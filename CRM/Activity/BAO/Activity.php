@@ -1313,9 +1313,88 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   }
 
   /**
+   * Prepare SMS
+   *
+   * @param array $contactIds
+   *        Also cound be 1 integer of contact_id
+   * @param integer $providerId
+   * @param string $message
+   *
+   * Copy from SMSCommon::postProcess
+   */
+  public static function prepareSMS(
+    $contactIds,
+    $providerId,
+    $message
+  ) {
+    $activityParams = array(
+      'sms_provider_id' => $providerId,
+      'sms_text_message' => $message,
+      'activity_subject' => substr($message, 0, 10),
+    );
+    $smsParams = array(
+      'provider_id' => $providerId,
+    );
+    // format contact details array to handle multiple sms from same contact
+    $contactDetails = array();
+
+    if(!is_array($contactIds)){
+      $contactIds = array($contactIds);
+    }
+    foreach ($contactIds as $cid) {
+      $contact = array();
+      // print($cid."\n");
+
+      $dao_phone = new CRM_Core_DAO_Phone();
+      $dao_phone->contact_id = $cid;
+      $dao_phone->phone_type_id = 2;
+      $dao_phone->is_primary = true;
+      if($dao_phone->find(TRUE)){
+        // print_r($dao_phone);
+        $contact['phone'] = $dao_phone->phone;
+        $contact['phone_type_id'] = 2;
+
+        $dao_contact = new CRM_Contact_DAO_Contact();
+        $dao_contact->id = $cid;
+        if($dao_contact->find(TRUE)){
+          // print_r($dao_contact);
+          $contact['id'] = $dao_contact->id;
+          $contact['do_not_sms'] = $dao_contact->do_not_sms;
+          $contact['is_deceased'] = $dao_contact->is_deceased;
+          $contact['is_deleted'] = $dao_contact->is_deleted;
+          $contact['sort_name'] = $dao_contact->sort_name;
+          $contact['display_name'] = $dao_contact->display_name;
+        }
+      }
+      if(!empty($contact)){
+        $contactDetails[$cid] = $contact;
+      }
+    }
+    // print_r($contactDetails);
+    // exit;
+
+
+    // $smsParams carries all the arguments provided on form (or via hooks), to the provider->send() method
+    // this gives flexibity to the users / implementors to add their own args via hooks specific to their sms providers
+    $smsParams = $activityParams;
+    unset($smsParams['sms_text_message']);
+    $smsParams['provider_id'] = $providerId;
+
+    list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::sendSMS(
+      $contactDetails,
+      $activityParams,
+      $smsParams,
+      $contactIds
+    );
+  }
+
+  /**
    * Send SMS.
    *
    * @param array $contactDetails
+   *        An Array of all contacts need to send,
+   *        each contact is an array must contain 'phone', 'phone_type_id', 'contact_id'
+   *        These field also could be included : 'do_not_sms', 'is_deceased', 'is_deleted'
    * @param array $activityParams
    * @param array $smsParams
    * @param $contactIds
@@ -1519,6 +1598,11 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       'contact_id' => $toID,
       'record_type_id' => $targetID,
     );
+    $activity = new CRM_Activity_DAO_Activity();
+    $activity->id = $activityID;
+    if($activity->find(TRUE)){
+      CRM_Activity_BAO_Activity::addActivity($activity, 'SMS', $toID);
+    }
     // CRM_Activity_BAO_ActivityContact::create($activityTargetParams);
 
     return TRUE;
