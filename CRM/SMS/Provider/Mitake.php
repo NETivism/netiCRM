@@ -11,78 +11,83 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    */
   static private $_singleton = NULL;
 
+  private $multi_mode = false;
+
+  private $long_mode = false;
+
   private $_providerInfo = array();
 
   private $sms = null;
 
-	public static function &singleton($providerParams = array(), $force = FALSE) {
+  public static function &singleton($providerParams = array(), $force = FALSE) {
     $providerID = CRM_Utils_Array::value('provider_id', $providerParams);
-		$providerInfo = CRM_SMS_BAO_Provider::getProviderInfo($providerID);
-		if (!isset(self::$_singleton)) {
+    $providerInfo = CRM_SMS_BAO_Provider::getProviderInfo($providerID);
+    if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_SMS_Provider_Mitake($providerInfo);
     }
     return self::$_singleton;
-	}
+  }
 
-	function __construct($providerInfo) {
+  function __construct($providerInfo) {
     $this->_providerInfo = $providerInfo;
-	}
+  }
 
-	// use via CRM_Activity_BAO_Activity::sendSMSMessage
-	public function send($recipients, $header, $message, $dncID = NULL){
-		$param = array(
+  // use via CRM_Activity_BAO_Activity::sendSMSMessage
+  public function send($recipients, $header, $message, $dncID = NULL){
+    $param = array(
       'username' => $this->_providerInfo['username'],
       'password' => $this->_providerInfo['password'],
     );
     $data_str = http_build_query($param);
     $this->sms = new SmsData($recipients, $message);
-    $options['data'] = $this->prepareSmsData();
-    print_r($this->do_request($this->_providerInfo['api_url'] . '?' . $data_str .'&' . $options['data'] .'&outtype=1&Encoding_PostIn=UTF8', 'POST', $options));
-	}
+    $data = $this->prepareSmsData();
+    $options['data'] = $data['post'];
+    return $this->do_request($this->_providerInfo['api_url'] . '?' . $data_str .'&' . $data['get'] , 'POST', $options);
+  }
 
-	protected function do_request($req_uri, $method = 'GET', $options = array()) {
-
+  protected function do_request($req_uri, $method = 'GET', $options = array()) {
     if($method == 'POST'){
-    	$ch = curl_init($req_uri);
-		  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-		  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		  curl_setopt($ch, CURLOPT_POST, 1);
-		  // curl_setopt($ch, CURLOPT_POSTFIELDS, $options['data']);
-		  if(!empty($options['header'])){
-		  	curl_setopt($ch, CURLOPT_HEADER, $options['header']);  // DO NOT RETURN HTTP HEADERS
-		  }else{
-		  	curl_setopt($ch, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
-		  }
-		  
-		  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
-		  $receive = curl_exec($ch);
-		  curl_close($ch);
+      $ch = curl_init($req_uri);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $options['data']);
+      if(!empty($options['header'])){
+        curl_setopt($ch, CURLOPT_HEADER, $options['header']);  // DO NOT RETURN HTTP HEADERS
+      }else{
+        curl_setopt($ch, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
+      }
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
+      $receive = curl_exec($ch);
+      curl_close($ch);
     }
 
     return $receive;
   }
 
   protected function prepareSmsData() {
-    $str = '';
+    $data = array();
     if ($this->multi_mode) {
       foreach ($this->sms as $sms) {
         if ($this->long_mode) {
-          $str .= REQUEST_TIME . $sms->dest .  $sms->formatedSMS('ML') . "\r\n";
+          $smsTypeData = $sms->formatedSMS('ML');
+          $data['get'] = REQUEST_TIME . $sms->dest . $smsTypeData['get']  . "\r\n";
         }
         else {
-          $str .= '[' . REQUEST_TIME . $sms->dest . "]\r\n" . $sms->formatedSMS('MS') . "\r\n";
+          $smsTypeData = $sms->formatedSMS('MS');
+          $data = '[' . REQUEST_TIME . $sms->dest . "]\r\n" . $smsTypeData['get'] . "\r\n";
         }
       }
     }
     else {
       if ($this->long_mode) {
-        $str .= $this->sms->formatedSMS('SL');
+        $data = $this->sms->formatedSMS('SL');
       }
       else {
-        $str .= $this->sms->formatedSMS('SS');
+        $data = $this->sms->formatedSMS('SS');
       }
     }
-    return $str;
+    return $data;
   }
 }
 
@@ -201,7 +206,8 @@ class SmsData {
    * Format SmsData for POST
    */
   public function formatedSMS($format_type) {
-    $str = '';
+    // $str = '';
+    $data = array();
     switch ($format_type) {
       case 'SS'://單筆短簡訊
         $param = array(
@@ -210,7 +216,7 @@ class SmsData {
           'smbody' => $this->body,
           'clientID' => $this->clientID,
         );
-        $str .= http_build_query($param);
+        $data['get'] = http_build_query($param);
         break;
 
       case 'SL'://單筆長簡訊
@@ -223,15 +229,20 @@ class SmsData {
         if ($this->destname) {
           $param['destname'] = $this->destname;
         }
-        $str .= http_build_query($param);
+        $data['get'] = http_build_query($param);
 
       case 'MS'://多筆短簡訊
-        $str .= 'dstaddr=' . $this->dest . "\r\n" . 'smbody=' . $this->body . "\r\n";
+        $data['get'] = 'encoding=UTF8';
+        if(!empty($this->clientID)){
+          $data['post'] = '['.$this->clientID.']';
+        }
+        $data['post'] = 'dstaddr=' . $this->dest . "\r\n" . 'smbody=' . $this->body . "\r\n";
         break;
 
       case 'ML'://多筆長簡訊
-        $str .= ($this->clientID) ? $this->clientID : '';
-        $str .= '$$' . $this->dest .
+        $data['get'] = 'outtype=1&Encoding_PostIn=UTF8';
+        $data['post'] = ($this->clientID) ? $this->clientID : '';
+        $data['post'] = '$$' . $this->dest .
           (($this->dlvtime) ? '$$' . $this->dlvtime : '$$') .
           (($this->vldtime) ? '$$' . $this->vldtime : '$$') .
           (($this->destname) ? '$$' . $this->destname : '$$') .
@@ -240,7 +251,7 @@ class SmsData {
 
         break;
     }
-    return $str;
+    return $data;
 
   }
 
