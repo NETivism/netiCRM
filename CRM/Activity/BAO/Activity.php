@@ -1589,21 +1589,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       return $sendResult;
     }
 
-    $activityContacts = CRM_Core_OptionGroup::values('activity_contacts', FALSE, FALSE, FALSE, NULL, 'name');
-    $targetID = CRM_Utils_Array::key('Activity Targets', $activityContacts);
-
     // add activity target record for every sms that is send
     $activityTargetParams = array(
       'activity_id' => $activityID,
-      'contact_id' => $toID,
-      'record_type_id' => $targetID,
+      'target_contact_id' => $toID,
     );
-    $activity = new CRM_Activity_DAO_Activity();
-    $activity->id = $activityID;
-    if($activity->find(TRUE)){
-      CRM_Activity_BAO_Activity::addActivity($activity, 'SMS', $toID);
-    }
-    // CRM_Activity_BAO_ActivityContact::create($activityTargetParams);
+    self::createActivityTarget($activityTargetParams);
 
     return TRUE;
   }
