@@ -139,7 +139,11 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->is_active = 1;
-    $messageTemplates->is_sms = $isSMS;
+    if($isSMS){
+      $messageTemplates->is_sms = $isSMS;
+    }else{
+      unset($messageTemplates->is_sms);
+    }
 
     if (!$all) {
       $messageTemplates->workflow_id = 'NULL';

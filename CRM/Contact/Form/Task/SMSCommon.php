@@ -369,13 +369,13 @@ class CRM_Contact_Form_Task_SMSCommon {
 
       if (!empty($thisValues['SMSsaveTemplate'])) {
         $messageTemplate['msg_title'] = $thisValues['SMSsaveTemplateName'];
-        CRM_Core_BAO_MessageTemplate::add($messageTemplate);
+        CRM_Core_BAO_MessageTemplates::add($messageTemplate);
       }
 
       if (!empty($thisValues['SMStemplate']) && !empty($thisValues['SMSupdateTemplate'])) {
         $messageTemplate['id'] = $thisValues['SMStemplate'];
         unset($messageTemplate['msg_title']);
-        CRM_Core_BAO_MessageTemplate::add($messageTemplate);
+        CRM_Core_BAO_MessageTemplates::add($messageTemplate);
       }
     }
 

@@ -86,6 +86,9 @@
 {/if}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
+
+
+{*
 <script type="text/javascript">
 
 {if $toContact}
@@ -114,3 +117,4 @@ cj(function($){
 });
 </script>
 {/literal}
+*}
