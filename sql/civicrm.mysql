@@ -826,7 +826,7 @@ CREATE TABLE civicrm_contact (
      do_not_trade tinyint   DEFAULT 0 ,
      is_opt_out tinyint NOT NULL  DEFAULT 0 COMMENT 'Has the contact opted out from receiving all bulk email from the organization or site domain?',
      legal_identifier varchar(32)    COMMENT 'May be used for SSN, EIN/TIN, Household ID (census) or other applicable unique legal/government ID.',
-     external_identifier varchar(32)    COMMENT 'Unique trusted external ID (generally from a legacy app/datasource). Particularly useful for deduping operations.',
+     external_identifier varchar(128)    COMMENT 'Unique trusted external ID (generally from a legacy app/datasource). Particularly useful for deduping operations.',
      sort_name varchar(128)    COMMENT 'Name used for sorting different contact types',
      display_name varchar(128)    COMMENT 'Formatted name representing preferred format for display/print/other output.',
      nick_name varchar(128)    COMMENT 'Nick Name.',
