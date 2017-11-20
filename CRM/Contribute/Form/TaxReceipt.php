@@ -72,10 +72,10 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     $valid = CRM_Utils_Hook::validateTaxReceipt($this->_id, $this->_taxReceipt);
 
     // if tax receipt not validated, display create button let user create again.
-    if (isset($valid['success']) && !$valid['success']) {
+    if (!empty($valid['create'])) {
       $createButton = TRUE;
     }
-    elseif (isset($valid['success']) && $valid['success'] && !empty($this->_taxReceipt)){
+    if (!empty($valid['print'])) {
       $printButton = TRUE;
     }
 

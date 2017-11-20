@@ -65,7 +65,7 @@
     <tr>
       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update"}
       <td class="label">{ts}Contribution Type{/ts}</td>
-    	<td>{$contribution_type}{if $is_taxreceipt} (<a href="{crmURL p="civicrm/contribute/taxreceipt" q=$urlParams"}" target="_blank">{ts}Tax Receipt{/ts}</a>){/if}</td>
+    	<td>{$contribution_type}{if $is_taxreceipt} (<a href="{crmURL p="civicrm/contribute/taxreceipt" q=$urlParams"}">{ts}Tax Receipt{/ts}</a>){/if}</td>
     </tr>
     {if $lineItem}
     <tr>

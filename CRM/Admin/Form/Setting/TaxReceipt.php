@@ -16,7 +16,7 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
 
 
     $fields = CRM_Core_BAO_CustomField::getFields('Contribution');
-    $option = array(0 => ts('-- Select --'));
+    $option = array(0 => ts('-- '.ts('Cancel').'--'));
     foreach ($fields as $custom_id => $f) {
       $option[$custom_id] = $f['label'];
     }
