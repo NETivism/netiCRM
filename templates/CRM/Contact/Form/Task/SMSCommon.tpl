@@ -82,14 +82,21 @@ return true;
 
 function maxCharInfoDisplay(){
    var maxLength = {/literal}{$max_sms_length}{literal};
-   var enteredCharLength = cj('#sms_text_message').val().length;
+   var textMsg = cj('#sms_text_message').val();
+   var is_chinese = textMsg.match(/[^\x00-\xff]/g);
+   if(is_chinese){
+     maxLength = 70;
+   }
+   var enteredCharLength = textMsg.length;
    var count = enteredCharLength;
 
    if( count < 0 ) {
       cj('#sms_text_message').val(cj('#sms_text_message').val().substring(0, maxLength));
       count = 0;
    }
-   cj('#char-count-message').text( "You can insert up to " + maxLength + " characters. You have entered " + count + " characters." );
+   var finalMsg =  "{/literal}{ts}You can insert up to %1 characters. You have entered %2 characters.{/ts}{literal}";
+   finalMsg = finalMsg.replace("%1", maxLength).replace("%2",count);
+   cj('#char-count-message').text(finalMsg);
 }
 {/literal}{/if}{literal}
 
