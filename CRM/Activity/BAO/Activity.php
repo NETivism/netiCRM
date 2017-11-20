@@ -1504,6 +1504,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $activityID,
         $userID
       );
+      $activity->details .= nl2br("\n\n".$sendResult);
+      $activity->save();
 
       if (PEAR::isError($sendResult)) {
         // Collect all of the PEAR_Error objects
@@ -1596,7 +1598,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     );
     self::createActivityTarget($activityTargetParams);
 
-    return TRUE;
+    return $sendResult;
   }
 
 
