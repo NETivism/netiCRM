@@ -122,6 +122,7 @@ class CRM_SMS_Form_Upload extends CRM_Core_Form {
     $tempVar = FALSE;
 
     $this->assign('max_sms_length', CRM_SMS_Provider::MAX_SMS_CHAR);
+    $this->assign('max_zh_sms_length', CRM_SMS_Provider::MAX_ZH_SMS_CHAR);
 
     // this seems so hacky, not sure what we are doing here and why. Need to investigate and fix
     $session->getVars($options,

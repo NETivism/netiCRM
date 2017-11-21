@@ -39,7 +39,8 @@ abstract class CRM_SMS_Provider {
    * @var object
    */
   static private $_singleton = array();
-  const MAX_SMS_CHAR = 460;
+  const MAX_SMS_CHAR = 170;
+  const MAX_ZH_SMS_CHAR = 70;
 
   /**
    * Singleton function used to manage this object.
