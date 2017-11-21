@@ -85,7 +85,7 @@ function maxCharInfoDisplay(){
    var textMsg = cj('#sms_text_message').val();
    var is_chinese = textMsg.match(/[^\x00-\xff]/g);
    if(is_chinese){
-     maxLength = 70;
+     maxLength = {/literal}{$max_zh_sms_length}{literal};
    }
    var enteredCharLength = textMsg.length;
    var count = enteredCharLength;
