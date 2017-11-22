@@ -94,7 +94,7 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
    */
   public function buildQuickForm($check = FALSE) {
     $this->addButtons(array(
-        array('type' => 'next',
+        array('type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
         ),

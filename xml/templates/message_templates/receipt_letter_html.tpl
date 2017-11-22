@@ -40,7 +40,11 @@
       <tr>
         <td class="col-1">身分證字號/統一編號</td>
         <td class="col-2">{$serial_id}</td>
-        <td class="col-3" rowspan="4">&nbsp;</td>
+        <td class="col-3" rowspan="4" style="position: relative;">
+          <div style="position: absolute;top: 0;">
+            <img style="height:77pt;width: auto;position: absolute;top: 0;" src="{$imageBigStampUrl}"/>
+          </div>
+        </td>
       </tr>
       <tr>
         <td class="col-1">收入用途/類別</td>
@@ -57,7 +61,9 @@
       <tr>
         <td class="col-1">金額（小寫）</td>
         <td class="col-2">{$amount|crmMoney:$currency} 元整</td>
-        <td class="col-3">經辦人：</td>
+        <td class="col-3" style="position: relative;">經辦人：
+          <img style="height: 19pt;width:auto;position: absolute;top: 0;left: 54pt;" src="{$imageSmallStampUrl}"/>
+        </td>
       </tr>
     </table>
   </div>

@@ -34,6 +34,19 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     );
     $this->addElement('select', 'receiptAddrType', ts('Address Fields'), $addressFields);
 
+    // https://github.com/NETivism/netiCRM/blob/develop/CRM/Contribute/Form/ManagePremiums.php#L291-L321
+    $this->add('file', 'uploadBigStamp', ts('The stamp of organization.'));
+    $this->add('file', 'uploadSmallStamp', ts('The stamp of the person in charge.'));
+    $config = CRM_Core_Config::singleton();
+    $this->controller->addActions($config->imageUploadDir, array('uploadBigStamp', 'uploadSmallStamp'));
+
+    if($config->imageBigStampName){
+      $this->assign('imageBigStampUrl', $config->imageUploadURL . $config->imageBigStampName);
+    }
+    if($config->imageSmallStampName){
+      $this->assign('imageSmallStampUrl', $config->imageUploadURL . $config->imageSmallStampName);
+    }
+
     // redirect to Administer Section After hitting either Save or Cancel button.
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
@@ -41,5 +54,95 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $check = TRUE;
     parent::buildQuickForm($check);
   }
+
+
+  // FROM : /CRM/Contribute/Form/ManagePremiums.php#L291-L321
+  public function postProcess() {
+    $params = $this->controller->exportValues($this->_name);
+    $uploadBigStamp = CRM_Utils_Array::value('uploadBigStamp', $params);
+    $uploadBigStamp = $uploadBigStamp['name'];
+
+    $uploadSmallStamp = CRM_Utils_Array::value('uploadSmallStamp', $params);
+    $uploadSmallStamp = $uploadSmallStamp['name'];
+
+    // to check wether GD is installed or not
+    $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
+    if($gdSupport) {
+      if ($uploadBigStamp) {
+        $error = false;
+        $params['imageBigStampName'] = $this->_resizeImage($uploadBigStamp, "_full", 800, 350);
+      }
+      if ($uploadSmallStamp) {
+        $error = false;
+        $params['imageSmallStampName'] = $this->_resizeImage($uploadSmallStamp, "_full", 800, 200);
+      }
+    }else{
+      $error = true;
+    }
+
+    parent::commonProcess($params);
+  }
+
+  /**
+   * Resize a premium image to a different size
+   *
+   * @access private
+   *
+   * @param string $filename
+   * @param string $resizedName
+   * @param $width
+   * @param $height
+   *
+   * @return Path to image
+   */
+  private function _resizeImage($filename, $resizedName, $width, $height ) {
+    // figure out the new filename
+    $pathParts = pathinfo($filename);
+    $newFilename = $pathParts['dirname']."/".$pathParts['filename'].$resizedName.".".$pathParts['extension'];
+
+    // get image about original image
+    $imageInfo = getimagesize($filename);
+    $widthOrig = $imageInfo[0];
+    $heightOrig = $imageInfo[1];
+
+    if($widthOrig > $width){
+      $widthNew = $width;
+      $heightNew = $heightOrig * $widthNew / $widthOrig;
+    }else{
+      $widthNew = $widthOrig;
+      $heightNew = $heightOrig;
+    }
+    $image = imagecreatetruecolor($widthNew, $heightNew);
+    
+    if($imageInfo['mime'] == 'image/gif') {
+      $source = imagecreatefromgif($filename);
+    }
+    elseif($imageInfo['mime'] == 'image/png') {
+      $source = imagecreatefrompng($filename);
+    }
+    else {
+      $source = imagecreatefromjpeg($filename);
+    }
+
+    
+    // resize
+    imagecopyresized($image, $source, 0, 0, 0, 0, $widthNew, $heightNew, $widthOrig, $heightOrig);
+
+    // save the resized image
+    $fp = fopen($newFilename, 'w+');
+    ob_start();
+    ImageJPEG($image);
+    $image_buffer = ob_get_contents();
+    ob_end_clean();
+    ImageDestroy($image);
+    fwrite($fp, $image_buffer);
+    rewind($fp);
+    fclose($fp);
+
+    // return the URL to link to
+    $config = CRM_Core_Config::singleton();
+    return basename($newFilename);
+  }
+
 }
 
