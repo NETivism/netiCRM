@@ -106,7 +106,12 @@
         <p>
           <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time.{/ts}
             {if $is_email_receipt}
-                {ts}You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions.{/ts}
+                {ts}You will receive an email receipt for each recurring contribution.{/ts} 
+                {if $receipt_from_email}
+                {ts 1=$receipt_from_email}To modify or cancel future contributions please contact us at %1.{/ts}
+                {else}
+                {ts}To modify or cancel future contributions please contact us.{/ts}
+                {/if}
             {/if}
         </p>
       </div>
