@@ -47,8 +47,8 @@
         {foreach from=$rows item=row}
         <tr id="sms_provider-{$row.id}" class="crm-entity {cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
             <td class="crm-provider-name"><strong>{$row.name}</strong> ({$row.title})<br/>
-                {ts}API Type:{/ts} {$row.api_type}<br/>
-                {ts}API Url:{/ts} {$row.api_url}<br/>
+                {ts}API Type{/ts}: {$row.api_type}<br/>
+                {ts}API Url{/ts}: {$row.api_url}<br/>
             </td>
             <td class="crm-provider-username">{$row.username}
         </td>
