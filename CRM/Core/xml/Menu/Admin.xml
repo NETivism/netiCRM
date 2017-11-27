@@ -601,17 +601,4 @@
    <icon>admin/small/36.png</icon>
    <weight>500</weight>
 </item>
-  <item>
-   <path>civicrm/sms/send</path>
-   <title>New Mass SMS</title>
-   <page_callback>CRM_SMS_Controller_Send</page_callback>
-   <access_arguments>administer CiviCRM</access_arguments>
-   <page_type>1</page_type>
-   <weight>610</weight>
-</item>
-   <item>
-   <path>civicrm/sms/callback</path>
-   <page_callback>CRM_SMS_Page_Callback</page_callback>
-   <access_callback>1</access_callback>
-</item>
 </menu>
