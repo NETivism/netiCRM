@@ -33,7 +33,7 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
+class CRM_SMS_DAO_Provider extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -41,7 +41,7 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_msg_template';
+  static $_tableName = 'civicrm_sms_provider';
   /**
    * static instance to hold the field values
    *
@@ -81,73 +81,90 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    */
   static $_log = false;
   /**
-   * Message Template ID
+   * SMS Provider ID
    *
    * @var int unsigned
    */
   public $id;
   /**
-   * Descriptive title of message
+   * Provider internal name points to option_value of option_group sms_provider_name
    *
    * @var string
    */
-  public $msg_title;
+  public $name;
   /**
-   * Subject for email message.
+   * Provider name visible to user
+   *
+   * @var string
+   */
+  public $title;
+  /**
+   *
+   * @var string
+   */
+  public $username;
+  /**
+   *
+   * @var string
+   */
+  public $password;
+  /**
+   * points to value in civicrm_option_value for group sms_api_type
+   *
+   * @var int unsigned
+   */
+  public $api_type;
+  /**
+   *
+   * @var string
+   */
+  public $api_url;
+  /**
+   * the api params in xml, http or smtp format
    *
    * @var text
    */
-  public $msg_subject;
+  public $api_params;
   /**
-   * Text formatted message
    *
-   * @var text
+   * @var boolean
    */
-  public $msg_text;
-  /**
-   * HTML formatted message
-   *
-   * @var text
-   */
-  public $msg_html;
+  public $is_default;
   /**
    *
    * @var boolean
    */
   public $is_active;
   /**
-   * a pseudo-FK to civicrm_option_value
+   * Which Domain is this sms provider for
    *
    * @var int unsigned
    */
-  public $workflow_id;
-  /**
-   * is this the default message template for the workflow referenced by workflow_id?
-   *
-   * @var boolean
-   */
-  public $is_default;
-  /**
-   * is this the reserved message template which we ship for the workflow referenced by workflow_id?
-   *
-   * @var boolean
-   */
-  public $is_reserved;
-  /**
-   * Is this message template used for sms?
-   *
-   * @var boolean
-   */
-  public $is_sms;
+  public $domain_id;
   /**
    * class constructor
    *
    * @access public
-   * @return civicrm_msg_template
+   * @return civicrm_sms_provider
    */
   function __construct()
   {
     parent::__construct();
+  }
+  /**
+   * return foreign links
+   *
+   * @access public
+   * @return array
+   */
+  function &links()
+  {
+    if (!(self::$_links)) {
+      self::$_links = array(
+        'domain_id' => 'civicrm_domain:id',
+      );
+    }
+    return self::$_links;
   }
   /**
    * returns all the column names of this table
@@ -162,57 +179,70 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('SMS Provider ID') ,
           'required' => true,
         ) ,
-        'msg_title' => array(
-          'name' => 'msg_title',
+        'name' => array(
+          'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Msg Title') ,
+          'title' => ts('SMS Provider Name') ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ) ,
+        'title' => array(
+          'name' => 'title',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('SMS Provider Title') ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ) ,
+        'username' => array(
+          'name' => 'username',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('SMS Provider Username') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
-        'msg_subject' => array(
-          'name' => 'msg_subject',
-          'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Msg Subject') ,
+        'password' => array(
+          'name' => 'password',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('SMS Provider Password') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
         ) ,
-        'msg_text' => array(
-          'name' => 'msg_text',
-          'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Msg Text') ,
-          'rows' => 10,
-          'cols' => 75,
-        ) ,
-        'msg_html' => array(
-          'name' => 'msg_html',
-          'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Msg Html') ,
-          'rows' => 10,
-          'cols' => 75,
-        ) ,
-        'is_active' => array(
-          'name' => 'is_active',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Is Active') ,
-          'default' => '',
-        ) ,
-        'workflow_id' => array(
-          'name' => 'workflow_id',
+        'api_type' => array(
+          'name' => 'api_type',
           'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('SMS Provider API') ,
+          'required' => true,
+        ) ,
+        'api_url' => array(
+          'name' => 'api_url',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('SMS Provider API URL') ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'api_params' => array(
+          'name' => 'api_params',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('SMS Provider API Params') ,
         ) ,
         'is_default' => array(
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
+          'title' => ts('SMS Provider is Default?') ,
         ) ,
-        'is_reserved' => array(
-          'name' => 'is_reserved',
+        'is_active' => array(
+          'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('SMS Provider is Active?') ,
         ) ,
-        'is_sms' => array(
-          'name' => 'is_sms',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Message Template is used for SMS?') ,
+        'domain_id' => array(
+          'name' => 'domain_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('SMS Domain') ,
+          'FKClassName' => 'CRM_Core_DAO_Domain',
         ) ,
       );
     }
@@ -252,7 +282,7 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['msg_template'] = & $fields[$name];
+            self::$_import['sms_provider'] = & $fields[$name];
           } else {
             self::$_import[$name] = & $fields[$name];
           }
@@ -275,7 +305,7 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['msg_template'] = & $fields[$name];
+            self::$_export['sms_provider'] = & $fields[$name];
           } else {
             self::$_export[$name] = & $fields[$name];
           }

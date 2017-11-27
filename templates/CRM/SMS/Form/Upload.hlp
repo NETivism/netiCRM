@@ -23,21 +23,29 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset>
-<legend>{ts}Send an SMS{/ts}</legend>
-<dl>
-<dt>{ts}From{/ts}</dt><dd>{$from|escape}</dd>
-{if $single eq false}
-<dt>{ts}Recipient(s){/ts}</dt><dd>{$to|escape}</dd>
+{htxt id ="id-sms_provider-title"}
+  {ts}SMS Provider{/ts}
+{/htxt}
+{htxt id ="id-sms_provider"}
+<p>{ts}Select the SMS provider for this mass message from the dropdown list.{/ts}</p>
+{if $params.isAdmin}
+    {capture assign="fromConfig"}{crmURL p="civicrm/admin/sms/provider" q="reset=1"}{/capture}
+    <p>{ts 1=$fromConfig}Go to <a href='%1'>Administer CiviCRM &raquo; System Settings &raquo; SMS Providers</a> to add or edit SMS Provider.{/ts}</p>
 {else}
-<dt>{$form.to.label}</dt><dd>{$form.to.html}</dd>
+    {ts}Contact your site administrator if you need to use a SMS Provider which is not in the dropdown list.{/ts}
 {/if}
-<dt>{$form.message.label}</dt><dd>{$form.message.html}</dd>
-{if $single eq false}
-    <dt></dt><dd>{include file="CRM/Contact/Form/Task.tpl"}</dd>
-{/if}
-<dt></dt><dd>{$form.buttons.html}</dd>
-</dl>
-</fieldset>
-</div>
+{/htxt}
+
+{htxt id="content-intro-title"}
+  {ts}Message Formats{/ts}
+{/htxt}
+{htxt id="content-intro"}
+<p>{ts}You can send a <strong>TEXT</strong> Message using the available text pane.{/ts}</p>
+{/htxt}
+
+{htxt id="upload-compose-title"}
+  {ts}Upload or Compose On-screen{/ts}
+{/htxt}
+{htxt id="upload-compose"}
+<p>{ts}You can also <strong>Upload</strong> the content stored in the files. OR you can <strong>Compose</strong> content directly on the screen.{/ts}</p>
+{/htxt}

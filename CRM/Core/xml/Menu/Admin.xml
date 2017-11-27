@@ -591,4 +591,14 @@
      <page_callback>CRM_Admin_Page_Persistent</page_callback>
      <access_arguments>administer CiviCRM,access CiviCRM</access_arguments>
   </item>
+  <item>
+   <path>civicrm/admin/sms/provider</path>
+   <title>Sms Providers</title>
+   <desc>To configure a sms provider</desc>
+   <page_callback>CRM_SMS_Page_Provider</page_callback>
+   <access_arguments>administer CiviCRM</access_arguments>
+   <adminGroup>Configure</adminGroup>
+   <icon>admin/small/36.png</icon>
+   <weight>500</weight>
+</item>
 </menu>

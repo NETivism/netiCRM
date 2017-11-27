@@ -1313,6 +1313,296 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   }
 
   /**
+   * Prepare SMS
+   *
+   * @param array $contactIds
+   *        Also cound be 1 integer of contact_id
+   * @param integer $providerId
+   * @param string $message
+   *
+   * Copy from SMSCommon::postProcess
+   */
+  public static function prepareSMS(
+    $contactIds,
+    $providerId,
+    $message
+  ) {
+    $activityParams = array(
+      'sms_provider_id' => $providerId,
+      'sms_text_message' => $message,
+      'activity_subject' => substr($message, 0, 10),
+    );
+    $smsParams = array(
+      'provider_id' => $providerId,
+    );
+    // format contact details array to handle multiple sms from same contact
+    $contactDetails = array();
+
+    if(!is_array($contactIds)){
+      $contactIds = array($contactIds);
+    }
+    foreach ($contactIds as $cid) {
+      $contact = array();
+      // print($cid."\n");
+
+      $dao_phone = new CRM_Core_DAO_Phone();
+      $dao_phone->contact_id = $cid;
+      $dao_phone->phone_type_id = 2;
+      $dao_phone->is_primary = true;
+      if($dao_phone->find(TRUE)){
+        // print_r($dao_phone);
+        $contact['phone'] = $dao_phone->phone;
+        $contact['phone_type_id'] = 2;
+
+        $dao_contact = new CRM_Contact_DAO_Contact();
+        $dao_contact->id = $cid;
+        if($dao_contact->find(TRUE)){
+          // print_r($dao_contact);
+          $contact['id'] = $dao_contact->id;
+          $contact['do_not_sms'] = $dao_contact->do_not_sms;
+          $contact['is_deceased'] = $dao_contact->is_deceased;
+          $contact['is_deleted'] = $dao_contact->is_deleted;
+          $contact['sort_name'] = $dao_contact->sort_name;
+          $contact['display_name'] = $dao_contact->display_name;
+        }
+      }
+      if(!empty($contact)){
+        $contactDetails[$cid] = $contact;
+      }
+    }
+    // print_r($contactDetails);
+    // exit;
+
+
+    // $smsParams carries all the arguments provided on form (or via hooks), to the provider->send() method
+    // this gives flexibity to the users / implementors to add their own args via hooks specific to their sms providers
+    $smsParams = $activityParams;
+    unset($smsParams['sms_text_message']);
+    $smsParams['provider_id'] = $providerId;
+
+    list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::sendSMS(
+      $contactDetails,
+      $activityParams,
+      $smsParams,
+      $contactIds
+    );
+  }
+
+  /**
+   * Send SMS.
+   *
+   * @param array $contactDetails
+   *        An Array of all contacts need to send,
+   *        each contact is an array must contain 'phone', 'phone_type_id', 'contact_id'
+   *        These field also could be included : 'do_not_sms', 'is_deceased', 'is_deleted'
+   * @param array $activityParams
+   * @param array $smsParams
+   * @param $contactIds
+   * @param int $userID
+   *
+   * @return array
+   * @throws CRM_Core_Exception
+   */
+  public static function sendSMS(
+    &$contactDetails,
+    &$activityParams,
+    &$smsParams = array(),
+    &$contactIds,
+    $userID = NULL
+  ) {
+    if ($userID == NULL) {
+      $session = CRM_Core_Session::singleton();
+      if (!is_numeric($session->get('userID'))) {
+        $userID = NULL;
+      }
+      $userID = $session->get('userID');
+    }
+
+    $text = &$activityParams['sms_text_message'];
+
+    // CRM-4575
+    // token replacement of addressee/email/postal greetings
+    // get the tokens added in subject and message
+    $messageToken = CRM_Utils_Token::getTokens($text);
+
+    // Create the meta level record first ( sms activity )
+    $activityTypeID = CRM_Utils_Array::key('SMS',CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE));
+    // $activityTypeID = CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity',
+    //   'activity_type_id',
+    //   'SMS'
+    // );
+
+    $details = $text;
+
+    $activitySubject = $activityParams['activity_subject'];
+    $activityParams = array(
+      'source_contact_id' => $userID,
+      'activity_type_id' => $activityTypeID,
+      'activity_date_time' => date('YmdHis'),
+      'subject' => $activitySubject,
+      'details' => $details,
+      'status_id' => CRM_Utils_Array::key('Completed',CRM_Core_PseudoConstant::activityStatus()),
+      // 'status_id' => CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity', 'status_id', 'Completed'),
+    );
+
+    $activity = self::create($activityParams);
+    $activityID = $activity->id;
+
+    $returnProperties = array();
+
+    if (isset($messageToken['contact'])) {
+      foreach ($messageToken['contact'] as $key => $value) {
+        $returnProperties[$value] = 1;
+      }
+    }
+
+    // call token hook
+    $tokens = array();
+    CRM_Utils_Hook::tokens($tokens);
+    $categories = array_keys($tokens);
+
+    // get token details for contacts, call only if tokens are used
+    $details = array();
+    if (!empty($returnProperties) || !empty($tokens)) {
+      list($details) = CRM_Utils_Token::getTokenDetails($contactIds,
+        $returnProperties,
+        NULL, NULL, FALSE,
+        $messageToken,
+        'CRM_Activity_BAO_Activity'
+      );
+    }
+
+    $success = 0;
+    $escapeSmarty = FALSE;
+    $errMsgs = array();
+    foreach ($contactDetails as $values) {
+      $contactId = $values['contact_id'];
+
+      if (!empty($details) && is_array($details["{$contactId}"])) {
+        // unset phone from details since it always returns primary number
+        unset($details["{$contactId}"]['phone']);
+        unset($details["{$contactId}"]['phone_type_id']);
+        $values = array_merge($values, $details["{$contactId}"]);
+      }
+
+      $tokenText = CRM_Utils_Token::replaceContactTokens($text, $values, FALSE, $messageToken, FALSE, $escapeSmarty);
+      $tokenText = CRM_Utils_Token::replaceHookTokens($tokenText, $values, $categories, FALSE, $escapeSmarty);
+
+      // Only send if the phone is of type mobile
+      $phoneTypes = CRM_Core_PseudoConstant::phoneType();
+      if ($values['phone_type_id'] == CRM_Utils_Array::key(ts('Mobile'), $phoneTypes)) {
+        $smsParams['To'] = $values['phone'];
+      }
+      else {
+        $smsParams['To'] = '';
+      }
+
+      $sendResult = self::sendSMSMessage(
+        $contactId,
+        $tokenText,
+        $smsParams,
+        $activityID,
+        $userID
+      );
+      $activity->details .= nl2br("\n\n".$sendResult);
+      $activity->save();
+
+      if (PEAR::isError($sendResult)) {
+        // Collect all of the PEAR_Error objects
+        $errMsgs[] = $sendResult;
+      }
+      else {
+        $success++;
+      }
+    }
+
+    // If at least one message was sent and no errors
+    // were generated then return a boolean value of TRUE.
+    // Otherwise, return FALSE (no messages sent) or
+    // and array of 1 or more PEAR_Error objects.
+    $sent = FALSE;
+    if ($success > 0 && count($errMsgs) == 0) {
+      $sent = TRUE;
+    }
+    elseif (count($errMsgs) > 0) {
+      $sent = $errMsgs;
+    }
+
+    return array($sent, $activity->id, $success);
+  }
+
+  /**
+   * Send the sms message to a specific contact.
+   *
+   * @param int $toID
+   *   The contact id of the recipient.
+   * @param $tokenText
+   * @param array $smsParams
+   *   The params used for sending sms.
+   * @param int $activityID
+   *   The activity ID that tracks the message.
+   * @param int $userID
+   *
+   * @return bool|PEAR_Error
+   *   true on success or PEAR_Error object
+   */
+  public static function sendSMSMessage(
+    $toID,
+    &$tokenText,
+    $smsParams = array(),
+    $activityID,
+    $userID = NULL
+  ) {
+    $toDoNotSms = "";
+    $toPhoneNumber = "";
+
+    if ($smsParams['To']) {
+      $toPhoneNumber = trim($smsParams['To']);
+    }
+    elseif ($toID) {
+      $filters = array('is_deceased' => 0, 'is_deleted' => 0, 'do_not_sms' => 0);
+      $toPhoneNumbers = CRM_Core_BAO_Phone::allPhones($toID, FALSE, 'Mobile', $filters);
+      // To get primary mobile phonenumber,if not get the first mobile phonenumber
+      if (!empty($toPhoneNumbers)) {
+        $toPhoneNumerDetails = reset($toPhoneNumbers);
+        $toPhoneNumber = CRM_Utils_Array::value('phone', $toPhoneNumerDetails);
+        // Contact allows to send sms
+        $toDoNotSms = 0;
+      }
+    }
+
+    // make sure both phone are valid
+    // and that the recipient wants to receive sms
+    if (empty($toPhoneNumber) or $toDoNotSms) {
+      return PEAR::raiseError(
+        'Recipient phone number is invalid or recipient does not want to receive SMS',
+        NULL,
+        PEAR_ERROR_RETURN
+      );
+    }
+
+    $recipient = $smsParams['To'];
+    $smsParams['contact_id'] = $toID;
+    $smsParams['parent_activity_id'] = $activityID;
+
+    $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
+    $sendResult = $providerObj->send($recipient, $smsParams, $tokenText, NULL, $userID);
+    if (PEAR::isError($sendResult)) {
+      return $sendResult;
+    }
+
+    // add activity target record for every sms that is send
+    $activityTargetParams = array(
+      'activity_id' => $activityID,
+      'target_contact_id' => $toID,
+    );
+    self::createActivityTarget($activityTargetParams);
+
+    return $sendResult;
+  }
+
+
+  /**
    * send the message to a specific contact
    *
    * @param string $from         the name and email of the sender
