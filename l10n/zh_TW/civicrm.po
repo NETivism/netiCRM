@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-08-24 08:24+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-11-28 06:36+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2893,7 +2893,7 @@ msgstr "選擇群組"
 #: CRM/Group/Form/Edit.php CRM/Mailing/Selector/Browse.php
 #: CRM/Upgrade/Form.php
 msgid "Continue"
-msgstr "繼續"
+msgstr "下一步"
 
 #: CRM/Contact/Form/DedupeRules.php CRM/Dedupe/DAO/RuleGroup.php
 msgid "Fuzzy"
@@ -10622,7 +10622,7 @@ msgstr "包含我的名字及訊息"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "List my contribution anonymously"
-msgstr "以匿名方式列出我的捐款"
+msgstr "以匿名方式顯示我的捐款"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Confirm Contribution"
@@ -27972,7 +27972,7 @@ msgstr "捐款人名冊"
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "List my contribution"
-msgstr "列出我的捐款"
+msgstr "顯示我的捐款"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
@@ -27982,7 +27982,7 @@ msgstr "匿名的"
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "under the name"
-msgstr "名下"
+msgstr "名稱"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
@@ -44661,7 +44661,7 @@ msgstr "收據編號預設以年月數字為流水序號，您可以在此設定
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Description will appear at the end of receipt."
-msgstr "這裡的描述將會縣市在收據底部。"
+msgstr "這裡的描述將會顯示在收據底部。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Organization info will appear at the end of receipt."
@@ -45625,7 +45625,7 @@ msgstr "最近 %1 個月已有捐款的支持者"
 msgid ""
 "You can send some result or impact of your project to them. And don't forget"
 " to exclude them in donation letter."
-msgstr "該寄送成果報告或專案進度給這些捐款人囉～然後要寄送募款信時，也別忘了排除這些階款人。"
+msgstr "該寄送成果報告或專案進度給這些捐款人囉～然後要寄送募款信時，也別忘了排除這些捐款人。"
 
 #: CRM/Contribute/Page/Booster.php
 msgid "Last year but not this year donors"
@@ -45886,3 +45886,9 @@ msgstr "回到網站"
 #: templates/CRM/common/betterContributionForm.tpl
 msgid "To upload data is only for person contribution."
 msgstr "上傳資料至國稅局僅限個人捐款"
+
+msgid "Normal tax or zero tax"
+msgstr "應稅或零稅率"
+
+msgid "Tax free"
+msgstr "免稅"
