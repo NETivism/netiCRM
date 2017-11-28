@@ -45778,3 +45778,9 @@ msgstr ""
 #: templates/CRM/common/betterContributionForm.tpl
 msgid "To upload data is only for person contribution."
 msgstr ""
+
+msgid "Normal tax or zero tax"
+msgstr ""
+
+msgid "Tax free"
+msgstr ""

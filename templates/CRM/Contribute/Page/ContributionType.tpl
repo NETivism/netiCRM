@@ -55,7 +55,13 @@
 	        <td>{$row.name}</td>	
 	        <td>{$row.description}</td>
             	<td>{$row.accounting_code}</td>
-	        <td>{if $row.is_taxreceipt eq 1} {ts}Yes{/ts} ({ts}Tax Rate{/ts}: {$row.tax_rate}%) {else} {ts}No{/ts} {/if}</td>
+	        <td>{if $row.is_taxreceipt eq 1}
+            {ts}Normal tax or zero tax{/ts} ({ts}Tax Rate{/ts}: {$row.tax_rate}%)
+            {elseif $row.is_taxreceipt eq -1}
+            {ts}Tax free{/ts} ({ts}Tax Rate{/ts}: {$row.tax_rate}%)
+            {else}
+            {ts}No{/ts}
+            {/if}</td>
 	        <td>{if $row.is_deductible eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td>{if $row.is_reserved eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
