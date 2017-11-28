@@ -133,7 +133,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$contributionType) {
       CRM_Core_PseudoConstant::populate(self::$contributionType, 'CRM_Contribute_DAO_ContributionType');
       CRM_Core_PseudoConstant::populate(self::$deductibleType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible', 'is_active', 'is_deductible=1');
-      CRM_Core_PseudoConstant::populate(self::$taxType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_taxreceipt', 'is_active', 'is_taxreceipt=1');
+      CRM_Core_PseudoConstant::populate(self::$taxType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_taxreceipt', 'is_active', 'is_taxreceipt <> 0');
     }
     $types = array();
     if ($receiptType == 'is_deductible') {
