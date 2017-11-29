@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-11-28 06:36+0000\n"
+"PO-Revision-Date: 2017-11-29 06:48+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -28982,7 +28982,7 @@ msgstr "若需要更改或取消預定捐款，可以透過 %1 與我們聯繫�
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "You will receive an email receipt for each recurring contribution."
-msgstr "每次定期定額捐款，我們都會發送收據至您的 Email 中。"
+msgstr "每一期捐款，您都會收到一份 Email 通知，表示捐款成功"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
