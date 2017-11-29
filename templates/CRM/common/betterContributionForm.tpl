@@ -214,7 +214,8 @@ cj(function($){
   /**
    * Occur when press same_as button. Valid legal id and last_name, first_name fields, display error message.
    */
-  function doCheckSameAs(isShowError = true){
+  function doCheckSameAs(isShowError){
+    isShowError = (typeof(isShowError) !== 'undefined') ? isShowError : true;
     doClearNameIdErrorMessage();
     var $sameas = $('#same_as');
     var error = [];

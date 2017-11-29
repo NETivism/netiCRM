@@ -77,21 +77,31 @@
 cj(document).ready(function($){
   var showHideTaxReceipt = function(){
     if($('#is_deductible').attr('checked')) {
-      $('#is_taxreceipt').removeAttr('checked');
       $('tr.crm-contribution-form-block-is_taxreceipt').hide();
+      $('input[name=is_taxreceipt][value=0]').attr("checked", true);
     }
     else {
       $('tr.crm-contribution-form-block-is_taxreceipt').show();
     }
   }
-  var showHideTaxRate = function() {
-    if ($('#is_taxreceipt').attr('checked')) {
-    
+  var showHideTaxRate = function(obj) {
+    var checked = Number($(obj).val());
+    if (checked < 0 ) {
+      $('.crm-contribution-form-block-tax_rate').hide();
+      $('#tax_rate').val('0');
+    }
+    else if (checked > 0) {
+      $('.crm-contribution-form-block-tax_rate').show();
+    }
+    else if (checked == 0){
+      $('.crm-contribution-form-block-tax_rate').hide();
     }
   }
   $('#is_deductible').click(showHideTaxReceipt);
-  $('#is_taxreceipt').click(showHideTaxRate);
+  $('input[name=is_taxreceipt]').click(function(){
+    showHideTaxRate(this);
+  });
   showHideTaxReceipt();
-  showHideTaxRate();
+  showHideTaxRate($("input[name=is_taxreceipt][checked=checked]"));
 });
 {/literal}</script>

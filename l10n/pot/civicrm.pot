@@ -46043,7 +46043,6 @@ msgid_plural "Messages Sent"
 msgstr[0] ""
 msgstr[1] ""
 
-
 msgid "because no phone number on file or communication preferences specify DO NOT SMS or Contact is deceased"
 msgstr ""
 
@@ -46059,4 +46058,10 @@ msgid "There are no SMS providers configured, or no SMS providers are set active
 msgstr ""
 
 msgid "The Reply SMS Could only be sent for activities with '%1' subject."
+msgstr ""
+
+msgid "Normal tax or zero tax"
+msgstr ""
+
+msgid "Tax free"
 msgstr ""

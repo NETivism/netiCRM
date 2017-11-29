@@ -7,7 +7,27 @@
 <div class="crm-submit-buttons">
   {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
-<h3>{ts}Tax Receipt Fields{/ts}</h3>
+{if $taxReceiptPrint}
+<div>{$taxReceiptPrint}</div>
+{/if}
+{if $taxReceiptInfo}
+<div class="crm-accordion-wrapper crm-accordion-open">
+  <div class="crm-accordion-header"> <span class="zmdi crm-accordion-pointer"></span> {ts}Tax Receipt Information{/ts}</div>
+  <div class="crm-accordion-body">
+    <table class="crm-info-panel taxreceipt-info">
+    {foreach from=$taxReceiptInfo key=fieldName item=fieldInfo}
+      <tr>
+        <td class="label">{$fieldName}</td>
+        <td>{$fieldInfo}</td>
+      </tr>
+    {/foreach}
+    </table>
+  </div>
+</div>
+{/if}
+<div class="crm-accordion-wrapper crm-accordion-open">
+  <div class="crm-accordion-header"> <span class="zmdi crm-accordion-pointer"></span> {ts}Tax Receipt Fields{/ts}</div>
+  <div class="crm-accordion-body">
   <table class="crm-info-panel taxreceipt-fields">
     <tr>
       <td class="label">{ts}Transaction ID{/ts}</td>
@@ -20,19 +40,8 @@
     </tr>
   {/foreach}
   </table>
-{if $taxReceiptPrint}
-<h3>{ts}Print Tax Receipt{/ts}</h3>
-{/if}
-<h3>{ts}Tax Receipt Information{/ts}</h3>
-  <table class="crm-info-panel taxreceipt-info">
-  {foreach from=$taxReceiptInfo key=fieldName item=fieldInfo}
-    <tr>
-      <td class="label">{$fieldName}</td>
-      <td>{$fieldInfo}</td>
-    </tr>
-  {/foreach}
-  </table>
-
+  </div>
+</div>
 {if $form.tax_receipt_paper.html}
 <div class="crm-section {$form.tax_receipt_paper.name}-section">
   <div class="label">{$form.tax_receipt_paper.label}</div>
@@ -49,6 +58,7 @@
 </div><!-- crm-block -->
 <script>{literal}
 cj(document).ready(function($){
+  $().crmaccordions();
   $('input[name=_qf_TaxReceipt_next]').click(function(e){
     var confirmed = confirm("{/literal}{ts}Once create tax receipt, you can't withdraw your receipt.{/ts}{literal}");
     if (!confirmed) {

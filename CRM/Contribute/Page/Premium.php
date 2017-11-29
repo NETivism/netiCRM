@@ -163,13 +163,13 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
       $productDAO->is_active = 1;
 
       if ($productDAO->find(TRUE)) {
-        $premiums[$productDAO->id] = array();
-        $premiums[$productDAO->id]['weight'] = $dao->weight;
-        CRM_Core_DAO::storeValues($productDAO, $premiums[$productDAO->id]);
+        $premiums[$dao->id] = array();
+        $premiums[$dao->id]['weight'] = $dao->weight;
+        CRM_Core_DAO::storeValues($productDAO, $premiums[$dao->id]);
 
         $action = array_sum(array_keys($this->links()));
 
-        $premiums[$dao->product_id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
           array('id' => $pageID, 'pid' => $dao->id)
         );
       }

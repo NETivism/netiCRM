@@ -63,9 +63,13 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     $this->add('text', 'tax_rate', ts('Tax Rate'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'tax_rate'));
 
     $this->add('checkbox', 'is_deductible', ts('Tax-deductible?'));
-    $this->add('checkbox', 'is_taxreceipt', ts('Tax Receipt'));
+    $taxReceiptType = array(
+      '0' => ts('None'),
+      '-1' => ts('Tax free'),
+      '1' => ts('Normal tax or zero tax'),
+    );
+    $this->addRadio('is_taxreceipt', ts('Tax Receipt Type'), $taxReceiptType);
     $this->add('checkbox', 'is_active', ts('Enabled?'));
-
     if ($this->_action == CRM_Core_Action::UPDATE && CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved')) {
       $this->freeze(array('name', 'description', 'is_active'));
     }

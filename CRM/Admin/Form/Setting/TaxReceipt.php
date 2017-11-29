@@ -16,7 +16,7 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
 
 
     $fields = CRM_Core_BAO_CustomField::getFields('Contribution');
-    $option = array(0 => ts('-- Select --'));
+    $option = array(0 => ts('-- '.ts('Cancel').'--'));
     foreach ($fields as $custom_id => $f) {
       $option[$custom_id] = $f['label'];
     }
@@ -27,6 +27,7 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'taxReceiptItem', ts('Invoice item name field'), $option);
     $this->addElement('select', 'taxReceiptNumber', ts('Invoice number field'), $option);
     $this->addElement('select', 'taxReceiptPaper', ts('Printing paper invoice field'), $option);
+    $this->addElement('select', 'taxReceiptAgree', ts('Agree tax receipt handling'), $option);
 
     $this->addElement('select', 'taxReceiptDonate', ts('Tax receipt give org field'), $option);
     $this->addElement('textarea', 'taxReceiptDonateSelect', ts('Give tax receipt to listed organization'));

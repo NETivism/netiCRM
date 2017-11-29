@@ -54,6 +54,10 @@
             <td class="label">{$form.taxReceiptPaper.label}</td><td>{$form.taxReceiptPaper.html}<br />
             </td>
         </tr>
+        <tr class="crm-mail-form-block-taxReceiptAgree">
+            <td class="label">{$form.taxReceiptAgree.label}</td><td>{$form.taxReceiptAgree.html}<br />
+            </td>
+        </tr>
       </table>
    <h2>{ts}Tax Invoice Giving{/ts}</h2>
       <table class="form-layout-compressed">
