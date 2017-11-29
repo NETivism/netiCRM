@@ -26,9 +26,8 @@
 {if $action eq 1 or $action eq 2 or $action eq 8}
    {include file="CRM/SMS/Form/Provider.tpl"}
 {else}
-  {capture assign=wikiLink}{docURL page="Setting up a SMS Provider for CiviSMS" text="(How to add a SMS Provider)" resource="wiki"}{/capture}
   <div class="help">
-    {ts}You can configure one or more SMS Providers for your CiviCRM installation. To learn more about the procedure to install SMS extension and Provider, refer{/ts} {$wikiLink}
+    {ts}You can configure one or more SMS Providers for your CiviCRM installation.{/ts}
   </div>
 
   {if $rows}
@@ -48,7 +47,7 @@
         <tr id="sms_provider-{$row.id}" class="crm-entity {cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
             <td class="crm-provider-name"><strong>{$row.name}</strong> ({$row.title})<br/>
                 {ts}API Type{/ts}: {$row.api_type}<br/>
-                {ts}API Url{/ts}: {$row.api_url}<br/>
+                {ts}API URL{/ts}: {$row.api_url}<br/>
             </td>
             <td class="crm-provider-username">{$row.username}
         </td>

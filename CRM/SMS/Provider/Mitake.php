@@ -91,17 +91,6 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
   }
 }
 
-
-/**
- * Created by PhpStorm.
- * User: Ken
- * Date: 2016/7/21
- * Time: 上午 01:50
- */
-
-// namespace Drupal\sms_mitake;
-
-
 class SmsData {
   public $dest;
   public $destname;
@@ -150,41 +139,6 @@ class SmsData {
     $this->clientID = md5($this->dest.$dlvdate.$this->body);
   }
 
-//  public function setDestination($phoneNum) {
-//    $this->dest = $this->check_and_format_phone($phoneNum);
-//    return $this;
-//  }
-//
-//  public function setBody($text) {
-//    $this->body = $text;
-//    return $this;
-//  }
-//
-//  public function setDeliveryTime($dlvtime) {
-//    $this->dlvtime = $dlvtime;
-//    return $this;
-//  }
-//
-//  public function getBody() {
-//    return $this->body;
-//  }
-//
-//  public function getDestination() {
-//    return $this->dest;
-//  }
-
-
-//  protected function encoder($encode_type, $body) {
-//    switch ($encode_type) {
-//      case 'urlencode':
-//        return urlencode($body);
-//        break;
-//      case 'big5':
-//        break;
-//    }
-//    return $body;
-//  }
-
   protected function check_and_format_phone($phone) {
     $p = preg_replace('/[^0-9]/', '', str_replace('+886', '0', $phone));
     if ((strlen($p) != 10) || !preg_match('/09[0-9]{8}/', $p, $match)) {
@@ -209,17 +163,17 @@ class SmsData {
     // $str = '';
     $data = array();
     switch ($format_type) {
-      case 'SS'://單筆短簡訊
+      case 'SS': // Single Short
         $param = array(
           'encoding'=>'UTF8',
           'dstaddr' => $this->dest,
           'smbody' => $this->body,
           'clientID' => $this->clientID,
         );
-        $data['get'] = http_build_query($param);
+        $data['get'] = http_build_query($param, "", "&", PHP_QUERY_RFC3986);
         break;
 
-      case 'SL'://單筆長簡訊
+      case 'SL': // Single Long
         $param = array(
           'dstaddr' => $this->dest,
           'smbody' => $this->body,
@@ -230,8 +184,9 @@ class SmsData {
           $param['destname'] = $this->destname;
         }
         $data['get'] = http_build_query($param);
+        break;
 
-      case 'MS'://多筆短簡訊
+      case 'MS': // Multiple Short
         $data['get'] = 'encoding=UTF8';
         if(!empty($this->clientID)){
           $data['post'] = '['.$this->clientID.']';
@@ -239,7 +194,7 @@ class SmsData {
         $data['post'] = 'dstaddr=' . $this->dest . "\r\n" . 'smbody=' . $this->body . "\r\n";
         break;
 
-      case 'ML'://多筆長簡訊
+      case 'ML': // Multiple Long
         $data['get'] = 'outtype=1&Encoding_PostIn=UTF8';
         $data['post'] = ($this->clientID) ? $this->clientID : '';
         $data['post'] = '$$' . $this->dest .
