@@ -183,7 +183,7 @@ class SmsData {
         if ($this->destname) {
           $param['destname'] = $this->destname;
         }
-        $data['get'] = http_build_query($param);
+        $data['get'] = http_build_query($param, "", "&", PHP_QUERY_RFC3986);
         break;
 
       case 'MS': // Multiple Short

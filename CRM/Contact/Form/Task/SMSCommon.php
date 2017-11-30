@@ -120,7 +120,7 @@ class CRM_Contact_Form_Task_SMSCommon {
 
       $form->_contactIds = array();
       foreach ($allToPhone as $value) {
-        list($contactId, $phone) = explode('::', $value);
+        list($contactId, $phone) = explode('::', trim($value));
         if ($contactId) {
           $form->_contactIds[] = $contactId;
           $form->_toContactPhone[] = $phone;
@@ -358,6 +358,7 @@ class CRM_Contact_Form_Task_SMSCommon {
     $thisValues = $form->controller->exportValues($form->getName());
 
     $fromSmsProviderId = $thisValues['sms_provider_id'];
+    $thisValues['sms_text_message'] = htmlspecialchars_decode($thisValues['sms_text_message']);
 
     // process message template
     if (!empty($thisValues['SMSsaveTemplate']) || !empty($thisValues['SMSupdateTemplate'])) {
