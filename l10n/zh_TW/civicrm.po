@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-11-23 08:55+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-11-28 06:36+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46191,3 +46191,9 @@ msgstr ""
 
 msgid "The Reply SMS Could only be sent for activities with '%1' subject."
 msgstr ""
+
+msgid "Normal tax or zero tax"
+msgstr "應稅或零稅率"
+
+msgid "Tax free"
+msgstr "免稅"
