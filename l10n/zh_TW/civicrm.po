@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-11-29 06:48+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-11-30 04:02+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18232,7 +18232,7 @@ msgstr "取消此認捐會取消任何已排定（且尚未完成）的認捐付
 #: templates/CRM/Pledge/Form/Pledge.tpl
 #: templates/CRM/Price/Form/DeleteField.tpl
 #: templates/CRM/Price/Form/DeleteSet.tpl templates/CRM/Price/Form/Option.tpl
-#: templates/CRM/UF/Form/Field.tpl
+#: templates/CRM/UF/Form/Field.tpl templates/CRM/SMS/Form/Provider.tpl
 msgid "Do you want to continue?"
 msgstr "是否繼續？"
 
@@ -28982,7 +28982,7 @@ msgstr "若需要更改或取消預定捐款，可以透過 %1 與我們聯繫�
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "You will receive an email receipt for each recurring contribution."
-msgstr "每一期捐款，您都會收到一份 Email 通知，表示捐款成功"
+msgstr "每一期捐款，您都會收到一份 Email 通知，表示捐款成功。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
@@ -45886,6 +45886,311 @@ msgstr "回到網站"
 #: templates/CRM/common/betterContributionForm.tpl
 msgid "To upload data is only for person contribution."
 msgstr "上傳資料至國稅局僅限個人捐款"
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid "Current Image Thumbnail"
+msgstr "目前圖片縮圖"
+
+#: CRM/SMS/BAO/Provider.php
+msgid "Invalid value passed to delete function."
+msgstr "函式代入錯誤參數（請洽工程人員）"
+
+#: CRM/SMS/DAO/Provider.php
+msgid "SMS Provider ID"
+msgstr "簡訊供應商編號"
+
+msgid "SMS Provider Name"
+msgstr "簡訊供應商名稱"
+
+msgid "SMS Provider Title"
+msgstr "簡訊供應商標題"
+
+msgid "SMS Provider Username"
+msgstr "簡訊供應商使用者帳號"
+
+msgid "SMS Provider Password"
+msgstr "簡訊供應商密碼"
+
+msgid "SMS Provider API"
+msgstr "簡訊供應商 API"
+
+msgid "SMS Provider API URL"
+msgstr "簡訊供應商 API 網址"
+
+msgid "SMS Provider API Params"
+msgstr "簡訊供應商 API 參數"
+
+msgid "SMS Provider is Default?"
+msgstr "是否為預設簡訊供應商?"
+
+msgid "SMS Provider is Active?"
+msgstr "是否啟用簡訊供應商?"
+
+msgid "SMS Domain"
+msgstr "簡訊域名"
+
+#: CRM/SMS/Form/Group.php
+msgid ""
+"The <a href=\"%1\">SMS Provider</a> has not been configured or is not "
+"active."
+msgstr "<a href=\\\"%1\\\">簡訊供應商</a>未設置正確或是未啟用。"
+
+msgid "Name Your SMS"
+msgstr "為簡訊命名"
+
+msgid "INCLUDE Recipients of These Message(s)"
+msgstr ""
+
+msgid "EXCLUDE Recipients of These Message(s)"
+msgstr ""
+
+msgid "Your Mass SMS has been saved."
+msgstr ""
+
+msgid "Saved"
+msgstr "已儲存"
+
+msgid "Cannot have same sms in Include mailing(s) and Exclude mailing(s)."
+msgstr ""
+
+#: CRM/SMS/Form/Provider.php
+msgid "SMS Provider"
+msgstr "簡訊供應商"
+
+msgid "API Type"
+msgstr "API 型態"
+
+msgid "API Url"
+msgstr "API 網址"
+
+msgid "API Parameters"
+msgstr "API 參數"
+
+msgid "Is this provider active?"
+msgstr "是否啟用"
+
+msgid "Is this a default provider?"
+msgstr "是否為預設供應商"
+
+msgid "Selected Provider has been deleted."
+msgstr "所選的簡訊供應商已刪除"
+
+msgid "Deleted"
+msgstr "已刪除"
+
+#: CRM/SMS/Form/Schedule.php
+msgid "Schedule SMS"
+msgstr ""
+
+msgid "Submit Mass SMS"
+msgstr ""
+
+msgid ""
+"Your Mass SMS has been saved. Click the 'Continue' action to resume working "
+"on it."
+msgstr ""
+
+msgid "Could not find a mailing id"
+msgstr ""
+
+#: CRM/SMS/Form/Upload.php
+msgid ""
+"There is no SMS Provider Configured. You can add here <a href='%1'>Add SMS "
+"Provider</a>"
+msgstr "未設定簡訊供應商，你可以<a href='%1'>按此新增一個</a>"
+
+msgid "Please provide a Text"
+msgstr ""
+
+msgid "You can configure the SMS message body up to %1 characters"
+msgstr "簡訊內文最多可輸入 %1 個字符"
+
+msgid "The body of the SMS cannot exceed %1 characters."
+msgstr "簡訊內文不可輸入超過 %1 個字符"
+
+msgid "SMS Content"
+msgstr "簡訊內容"
+
+#: CRM/SMS/Page/Provider.php
+msgid "Edit Provider"
+msgstr "編輯供應商"
+
+msgid "Delete Provider"
+msgstr "移除供應商"
+
+msgid "Enable Provider"
+msgstr "啟用供應商"
+
+msgid "Disable Provider"
+msgstr "停用供應商"
+
+msgid "Settings - SMS Provider"
+msgstr "設定 - 簡訊供應商"
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Are you sure you would like to execute this job?"
+msgstr "確定要執行此工作?"
+
+#: templates/CRM/SMS/Form/Schedule.tpl
+msgid ""
+"You can schedule this Mass SMS to be sent starting at a specific date and "
+"time, OR you can request that it be sent as soon as possible by checking "
+"&quot;Send Immediately&quot;."
+msgstr ""
+
+msgid ""
+"Set a date and time when you want CiviSMS to start sending this Mass SMS."
+msgstr ""
+
+msgid "Preview SMS"
+msgstr "先前簡訊"
+
+msgid "SMS HTML:"
+msgstr ""
+
+msgid "SMS Text:"
+msgstr ""
+
+#: templates/CRM/SMS/Form/Upload.tpl
+msgid ""
+"You can either <strong>upload</strong> the sms content from your computer OR"
+" <strong>compose</strong> the content on this screen."
+msgstr ""
+
+msgid ""
+"Browse to the <strong>TEXT</strong> message file you have prepared for this "
+"SMS."
+msgstr ""
+
+#: templates/CRM/SMS/Page/Provider.tpl
+msgid ""
+"You can configure one or more SMS Providers for your CiviCRM installation. "
+"To learn more about the procedure to install SMS extension and Provider, "
+"refer"
+msgstr ""
+
+msgid "Provider Details"
+msgstr "供應商詳情"
+
+msgid "no parameters"
+msgstr ""
+
+#: xml/templates/civicrm_data.tpl
+msgid "Sms Provider Internal Name"
+msgstr "系統內部簡訊供應商"
+
+msgid "URL Preferences"
+msgstr ""
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "SMS Message"
+msgstr "簡訊內文"
+
+msgid "Document Body"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/SMS.tpl
+msgid ""
+"SMS will NOT be sent to %count contact - (no phone number on file, or "
+"communication preferences specify DO NOT SMS, or contact is deceased)."
+msgid_plural ""
+"SMS will NOT be sent to %count contacts - (no phone number on file, or "
+"communication preferences specify DO NOT SMS, or contact is deceased)."
+msgstr[0] "簡訊將不會發給其中 %count 位聯絡人（沒有電話號碼，或是已設定為「不要傳送簡訊」、或聯絡人已過世）。"
+
+msgid ""
+"SMS will NOT be sent to contacts of %count Activity - (there are more than "
+"one Target contact)."
+msgid_plural ""
+"SMS will NOT be sent to contacts of %count Activities - (there are more than"
+" one Target contact)."
+msgstr[0] "簡訊將不會發給其中 %count 個活動的聯絡人（超過一個目標聯絡人）。"
+
+msgid ""
+"SMS will NOT be sent to contacts of %count selected activity as they are "
+"invalid for this task action."
+msgid_plural ""
+"SMS will NOT be sent to contacts of %count selected activities as they are "
+"invalid for this task action."
+msgstr[0] "由於其中 %count 個活動的聯絡人的任務是無效的，簡訊將不會發給這些人。"
+
+msgid "SMS will NOT be sent to %count contact."
+msgid_plural "SMS will NOT be sent to %count contacts."
+msgstr[0] "簡訊將不會發給其中 %count 位聯絡人"
+
+msgid "SMS body exceeding limit of 160 characters"
+msgstr "簡訊內文限制為 160 個字符"
+
+msgid "SMS will NOT be sent to contacts of %count selected activity."
+msgid_plural "SMS will NOT be sent to contacts of %count selected activities."
+msgstr[0] "簡訊將不會發給其中 %count 個活動的聯絡人"
+
+#: CRM/Contact/Task.php
+msgid "SMS - schedule/send"
+msgstr "簡訊-排程/發送"
+
+#: CRM/Core/DAO/MessageTemplates.php
+msgid "Message Template is used for SMS?"
+msgstr "是否用於簡訊?"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "Mailing SMS Provider"
+msgstr "簡訊供應商"
+
+#: templates/CRM/Contact/Form/Task/SMSCommon.tpl
+msgid "You can insert up to %1 characters. You have entered %2 characters."
+msgstr "您可以輸入最多 %1 個字符，目前已輸入 %2 個字符。"
+
+#: CRM/Contact/Form/Task/SMSCommon.php
+msgid "Name The SMS"
+msgstr "簡訊名稱"
+
+msgid "One selected activity consists of more than one target contact."
+msgid_plural ""
+"%count selected activities consist of more than one target contact."
+msgstr[0] ""
+
+msgid "The selected activity is invalid."
+msgid_plural "%count selected activities are invalid."
+msgstr[0] ""
+
+msgid "%1: SMS Reply will not be sent."
+msgstr "%1: 回覆簡訊不會發送"
+
+msgid ""
+"Selected contact(s) do not have a valid Phone, or communication preferences "
+"specify DO NOT SMS, or they are deceased"
+msgstr "所選的聯絡人沒有有效的電話號碼，或是設定成「不要傳送簡訊」，或是已過世。"
+
+msgid "Please provide Text message."
+msgstr "請輸入文字訊息。"
+
+msgid "One message was sent successfully."
+msgid_plural "%count messages were sent successfully."
+msgstr[0] "已成功送出 %count 則訊息。"
+
+msgid "Message Sent"
+msgid_plural "Messages Sent"
+msgstr[0] "訊息已送出"
+
+msgid ""
+"because no phone number on file or communication preferences specify DO NOT "
+"SMS or Contact is deceased"
+msgstr "因為聯絡人沒有電話號碼，或是已設定為「不要傳送簡訊」、或聯絡人已過世"
+
+msgid "or the contact is not part of the activity '%1'"
+msgstr ""
+
+msgid "One Message Not Sent"
+msgid_plural "%count Messages Not Sent"
+msgstr[0] "%count 則訊息未送出"
+
+msgid ""
+"There are no SMS providers configured, or no SMS providers are set active"
+msgstr ""
+
+msgid "The Reply SMS Could only be sent for activities with '%1' subject."
+msgstr ""
 
 msgid "Normal tax or zero tax"
 msgstr "應稅或零稅率"
