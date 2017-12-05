@@ -71,12 +71,14 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
     $this->addRule('max_amount', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
 
     $default = array();
+    $grouping = array('recurring' => ts('Recurring Contribution'), 'non-recurring' => ts('Non-recurring Contribution'));
     for ($i = 1; $i <= self::NUM_OPTION; $i++) {
       // label
       $this->add('text', "label[$i]", ts('Label'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'label'));
 
       // value
       $this->add('text', "value[$i]", ts('Value'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'value'));
+      $this->add('select', "grouping[$i]", ts('show'), array('' => ts('no limit')) + $grouping);
       $this->addRule("value[$i]", ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
 
       // default
@@ -464,6 +466,7 @@ SELECT id
 
           $labels = CRM_Utils_Array::value('label', $params);
           $values = CRM_Utils_Array::value('value', $params);
+          $grouping = CRM_Utils_Array::value('grouping', $params);
           $default = CRM_Utils_Array::value('default', $params);
 
           $options = array();
@@ -474,6 +477,7 @@ SELECT id
               $options[] = array('label' => trim($labels[$i]),
                 'value' => CRM_Utils_Rule::cleanMoney(trim($values[$i])),
                 'weight' => $i,
+                'grouping' => trim($grouping[$i]),
                 'is_active' => 1,
                 'is_default' => $default == $i,
               );

@@ -332,6 +332,12 @@ WHERE  v.option_group_id = g.id
         $value->option_group_id = $group->id;
         $value->label = $v['label'];
         $value->value = $v['value'];
+        if (isset($v['grouping'])) {
+          $value->grouping = $v['grouping'];
+        }
+        if (isset($v['filter']) && is_numeric($v['filter'])) {
+          $value->filter = $v['filter'];
+        }
         $value->name = CRM_Utils_Array::value('name', $v);
         $value->description = CRM_Utils_Array::value('description', $v);
         $value->weight = CRM_Utils_Array::value('weight', $v);
@@ -353,7 +359,7 @@ WHERE  v.option_group_id = g.id
 
   static function getAssoc($groupName, &$values, $flip = FALSE, $field = 'name') {
     $query = "
-SELECT v.id as amount_id, v.value, v.label, v.name, v.description, v.weight
+SELECT v.id as amount_id, v.value, v.label, v.name, v.description, v.weight, v.grouping, v.filter
   FROM civicrm_option_group g,
        civicrm_option_value v
  WHERE g.id = v.option_group_id
@@ -363,7 +369,7 @@ ORDER BY v.weight
     $params = array(1 => array($groupName, 'String'));
     $dao = CRM_Core_DAO::executeQuery($query, $params);
 
-    $fields = array('value', 'label', 'name', 'description', 'amount_id', 'weight');
+    $fields = array('value', 'label', 'name', 'description', 'amount_id', 'weight', 'grouping', 'filter');
     if ($flip) {
       $values = array();
     }

@@ -680,7 +680,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         $elements[] = &$this->createElement('radio', NULL, '',
           CRM_Utils_Money::format($amount['value']) . ' ' . $amount['label'],
           $amount['amount_id'],
-          array('onclick' => 'clearAmountOther();')
+          array(
+            'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
+            'onclick' => 'clearAmountOther();',
+          )
         );
       }
     }
