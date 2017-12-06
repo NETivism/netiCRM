@@ -464,7 +464,7 @@ function enableHonorType( ) {
       $("input[name=amount]").each(function() {
         var $label = $(this).closest('label.crm-form-elem');
         if (isRecur == '1') {
-          if ($(this).data('grouping') == 'recurring') {
+          if ($(this).data('grouping') == 'non-recurring') {
             $label.hide();
           }
           else {
@@ -472,7 +472,7 @@ function enableHonorType( ) {
           }
         }
         else {
-          if ($(this).data('grouping') == 'non-recurring') {
+          if ($(this).data('grouping') == 'recurring') {
             $label.hide();
           }
           else {
