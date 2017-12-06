@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-11-28 06:36+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-11-30 04:02+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28982,7 +28982,7 @@ msgstr "若需要更改或取消預定捐款，可以透過 %1 與我們聯繫�
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "You will receive an email receipt for each recurring contribution."
-msgstr "每次定期定額捐款，我們都會發送收據至您的 Email 中。"
+msgstr "每一期捐款，您都會收到一份 Email 通知，表示捐款成功。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
@@ -45933,7 +45933,7 @@ msgstr "簡訊域名"
 msgid ""
 "The <a href=\"%1\">SMS Provider</a> has not been configured or is not "
 "active."
-msgstr "<a href=\"%1\">簡訊供應商</a>未設置正確或是未啟用。"
+msgstr "<a href=\\\"%1\\\">簡訊供應商</a>未設置正確或是未啟用。"
 
 msgid "Name Your SMS"
 msgstr "為簡訊命名"
@@ -45973,7 +45973,7 @@ msgid "Is this a default provider?"
 msgstr "是否為預設供應商"
 
 msgid "Selected Provider has been deleted."
-msgstr ""
+msgstr "所選的簡訊供應商已刪除"
 
 msgid "Deleted"
 msgstr "已刪除"
@@ -46183,7 +46183,7 @@ msgstr ""
 
 msgid "One Message Not Sent"
 msgid_plural "%count Messages Not Sent"
-msgstr[0] ""
+msgstr[0] "%count 則訊息未送出"
 
 msgid ""
 "There are no SMS providers configured, or no SMS providers are set active"

@@ -456,7 +456,31 @@ function enableHonorType( ) {
     }
   });
 
-  cj(document).ready(function(){
+  cj(document).ready(function($){
+    var amountGrouping = function(){
+      $('.crm-section.amount-section label').css("display", "block");
+      $('.crm-section.amount-section br').remove();
+      var isRecur = $("input[name=is_recur]:checked").val();
+      $("input[name=amount]").each(function() {
+        var $label = $(this).closest('label.crm-form-elem');
+        if (isRecur == '1') {
+          if ($(this).data('grouping') == 'non-recurring') {
+            $label.hide();
+          }
+          else {
+            $label.show();
+          }
+        }
+        else {
+          if ($(this).data('grouping') == 'recurring') {
+            $label.hide();
+          }
+          else {
+            $label.show();
+          }
+        }
+      });
+    }
     var enablePeriod = function($isRecur){
       var $installments = cj('#installments');
       var $frequencyUnits = cj('#frequency_unit');
@@ -473,6 +497,7 @@ function enableHonorType( ) {
     }
     if (cj('input[name=is_recur]').length > 1) {
       cj('input[name=is_recur]').click(function(){
+        amountGrouping();
         enablePeriod(cj(this));
       });
       enablePeriod(cj('input[name=is_recur]:checked'));
@@ -523,6 +548,7 @@ function enableHonorType( ) {
       cj(".first_name-section .content .description").html('{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}');
     {/if}
     {literal}
+    amountGrouping();
   });
 {/literal}
 </script>
