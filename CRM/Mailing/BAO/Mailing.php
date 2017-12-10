@@ -2483,7 +2483,6 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     $modePrefixes = array('Mail' => NULL, 'SMS' => 'SMS');
 
     $className = CRM_Utils_System::getClassName($form);
-    dpm($className);
 
     if ($className != 'CRM_SMS_Form_Upload' && $className != 'CRM_Contact_Form_Task_SMS' && $className != 'CRM_Event_Form_Task_SMS' && $className != 'CRM_Contribute_Form_Task_SMS') {
       $form->addwysiwyg( 'html_message',
