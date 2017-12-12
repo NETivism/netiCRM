@@ -123,6 +123,9 @@ class CRM_Core_Payment_BaseIPN {
     $objects['contributionType'] = $contributionType;
     $paymentProcessorID = $paymentProcessorID ? $paymentProcessorID : $contribution->payment_processor_id;
     if ($input['component'] == 'contribute') {
+      if (!empty($contribution->contribution_recur_id) && empty($ids['contributionRecur'])) {
+        $ids['contributionRecur'] = $contribution->contribution_recur_id;
+      }
 
       // retrieve the other optional objects first so
       // stuff down the line can use this info and do things
@@ -821,7 +824,7 @@ class CRM_Core_Payment_BaseIPN {
     $template->assign('is_monetary', 1);
     $template->assign('is_recur', $recur);
     $template->assign('currency', $contribution->currency);
-    if ($recur) {
+    if ($recur && !empty($objects['contributionRecur'])) {
       require_once 'CRM/Core/Payment.php';
       $paymentObject = &CRM_Core_Payment::singleton($contribution->is_test ? 'test' : 'live',
         $objects['paymentProcessor']
