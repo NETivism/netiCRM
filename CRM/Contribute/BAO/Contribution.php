@@ -1972,11 +1972,11 @@ SELECT source_contact_id
     $template->assign('instrument', $instruments[$contribution->payment_instrument_id]);
 
     // refs #18399
-    $source_name_array = explode(': ', $contribution->source);
+    $source_name_array = explode(':', $contribution->source);
     if(count($source_name_array) >= 2){
-      $prefix = $source_name_array[0].': ';
+      $prefix = $source_name_array[0].':';
       $source_name = str_replace($prefix, '', $contribution->source);
-      $template->assign('source_name' , $source_name);
+      $template->assign('source_name' , trim($source_name));
     }
 
     $addrParams = array('contact_id' => $contact->id);
