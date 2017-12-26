@@ -1207,7 +1207,7 @@ class CRM_Export_BAO_Export {
               case 'StateProvince':
               case 'Link':
               case 'String':
-                $newColumn = "$fieldName varchar(2000)";
+                $newColumn = "$fieldName text";
                 break;
 
               case 'Memo':
