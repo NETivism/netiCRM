@@ -153,15 +153,15 @@ class CRM_Core_Smarty extends Smarty {
 
     // Add class to crm container
     $crm_container_class_arr = array("crm-container");
-    $current_path = strtok($_SERVER["REQUEST_URI"],'?');
+    $current_path = CRM_Utils_System::currentPath();
 
     $md_allow_path = array(
-      "/civicrm/event/register",
-      "/civicrm/event/info",
-      "/civicrm/contribute/transact",
-      "/civicrm/profile/create",
-      "/civicrm/event/confirm",
-      "/civicrm/event/cancel"
+      "civicrm/event/register",
+      "civicrm/event/info",
+      "civicrm/contribute/transact",
+      "civicrm/profile/create",
+      "civicrm/event/confirm",
+      "civicrm/event/cancel"
     );
 
     if (in_array($current_path, $md_allow_path)) {
