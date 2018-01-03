@@ -20,9 +20,16 @@ class CRM_ParticipantProcessor
         $pendingStatuses = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Pending'"  );
         $expiredStatuses = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Negative'" );
         $waitingStatuses = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Waiting'"  );
+
+        // remove Pending from waitlist and Pending from approval, during #22026 the register_date has problem
+        $pending = $pendingStatuses;
+        $pendingWait = array_search('Pending from waitlist', $pending);
+        $pendingApproval = array_search('Pending from approval', $pending);
+        unset($pending[$pendingWait]);
+        unset($pending[$pendingApproval]);
         
         //build the required status ids.
-        $statusIds =  '(' . implode( ',', array_merge( array_keys( $pendingStatuses ), array_keys( $waitingStatuses ) ) ) . ')';
+        $statusIds =  '(' . implode(',',  array_keys($pending)) . ')';
         
         $participantDetails = $fullEvents = array( );
         $expiredParticipantCount = $waitingConfirmCount = $waitingApprovalCount = 0;
