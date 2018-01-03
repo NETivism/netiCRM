@@ -822,9 +822,17 @@ class CRM_Core_Payment_BaseIPN {
       )
     );
     $template->assign('is_monetary', 1);
-    $template->assign('is_recur', $recur);
     $template->assign('currency', $contribution->currency);
+
+    // trying to load recurring object
+    if ($recur && empty($objects['contributionRecur'])) {
+      $recurObj = new CRM_Contribute_DAO_ContributionRecur();
+      $recurObj->id = $contribution->contribution_recur_id;
+      $recurObj->find(TRUE);
+      $objects['contributionRecur'] = &$recurObj;
+    }
     if ($recur && !empty($objects['contributionRecur'])) {
+      $template->assign('is_recur', 1);
       require_once 'CRM/Core/Payment.php';
       $paymentObject = &CRM_Core_Payment::singleton($contribution->is_test ? 'test' : 'live',
         $objects['paymentProcessor']
@@ -859,6 +867,9 @@ class CRM_Core_Payment_BaseIPN {
         }
         $template->assign('recur', $recurring);
       }
+    }
+    else {
+      $template->assign('is_recur', 0);
     }
 
     require_once 'CRM/Utils/Address.php';

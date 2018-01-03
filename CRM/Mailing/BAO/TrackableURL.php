@@ -115,10 +115,10 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
     $punc = '.:?\-';
     $any = "{$letters}{$gunk}{$punc}";
     if ($onlyHrefs) {
-      $pattern = "{\\b(href=([\"'])?($protos:[$any]+?(?=[$punc]*[^$any]|$))([\"'])?)}im";
+      $pattern = "{\\b(href=([\"'])?($protos:[$any]+(?=[$punc]*[^$any]|$))([\"'])?)}im";
     }
     else {
-      $pattern = "{\\b($protos:[$any]+?(?=[$punc]*[^$any]|$))}eim";
+      $pattern = "{\\b($protos:[$any]+(?=[$punc]*[^$any]|$))}eim";
     }
 
     $trackURL = CRM_Mailing_BAO_TrackableURL::getTrackerURL('\\1', $mailing_id, $queue_id);

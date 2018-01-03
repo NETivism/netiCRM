@@ -585,10 +585,10 @@ ORDER BY   i.contact_id, i.email_id
     $punc = '.:?\-';
     $any = "{$letters}{$gunk}{$punc}";
     if ($onlyHrefs) {
-      $pattern = "\\bhref[ ]*=[ ]*([\"'])?(($protos:[$any]+?(?=[$punc]*[^$any]|$)))([\"'])?";
+      $pattern = "\\bhref[ ]*=[ ]*([\"'])?(($protos:[$any]+(?=[$punc]*[^$any]|$)))([\"'])?";
     }
     else {
-      $pattern = "\\b($protos:[$any]+?(?=[$punc]*[^$any]|$))";
+      $pattern = "\\b($protos:[$any]+(?=[$punc]*[^$any]|$))";
     }
 
     $patterns[] = $pattern;

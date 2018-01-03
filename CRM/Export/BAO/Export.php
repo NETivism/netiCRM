@@ -1209,7 +1209,7 @@ class CRM_Export_BAO_Export {
               case 'StateProvince':
               case 'Link':
               case 'String':
-                $newColumn = "$fieldName varchar(255)";
+                $newColumn = "$fieldName text";
                 break;
 
               case 'Memo':
@@ -1217,12 +1217,12 @@ class CRM_Export_BAO_Export {
                 break;
 
               default:
-                $newColumn = "$fieldName varchar(64)";
+                $newColumn = "$fieldName varchar(255)";
                 break;
             }
           }
           else {
-            $newColumn = "$fieldName varchar(64)";
+            $newColumn = "$fieldName varchar(255)";
           }
         }
       }

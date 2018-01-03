@@ -252,7 +252,13 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     //fix for CRM-3552, CRM-4575
     if (in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee', 'from_email_address', 'website_type'))) {
       $this->assign('showDefault', TRUE);
-      $this->add('checkbox', 'is_default', ts('Default Option?'));
+      $ele = $this->add('checkbox', 'is_default', ts('Default Option?'));
+      if ($this->_id) {
+        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , array(1 => array($this->_id, 'Integer')));
+        if ($is_default >= 1) {
+          $ele->freeze();
+        }
+      }
     }
 
     //get contact type for which user want to create a new greeting/addressee type, CRM-4575
