@@ -656,7 +656,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           $frequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units');
           if (array_key_exists($this->_params[$v], $frequencyUnits)) {
             // This is a bug for recurring unit translations. refs #4670
-            $this->assign($v, $frequencyUnits[$this->_params[$v]]);
+            $this->assign($v, ts($this->_params[$v]));
           }
         }
         else {
