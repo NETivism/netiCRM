@@ -85,7 +85,7 @@
                 {else}
                     <p><strong>{ts 1=$frequency_interval 2=$frequency_unit}I want to contribute this amount every %1 %2(s).{/ts}</strong></p>
                 {/if}
-                <p>{ts}Your initial contribution will be processed once you complete the confirmation step. You will be able to modify or cancel future contributions at any time by logging in to your account.{/ts}</p>
+                <p>{ts}Your initial contribution will be processed once you complete the confirmation step. You will be able to modify or cancel future contributions at any time by contact us.{/ts}</p>
             {/if}
             {if $is_pledge }
                 {if $pledge_frequency_interval GT 1}

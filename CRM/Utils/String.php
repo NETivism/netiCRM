@@ -99,6 +99,7 @@ class CRM_Utils_String {
         $conf['transliteration_enable'] = TRUE;
         $purged_name = strtolower(transliteration_clean_filename($name));
         $purged_name = trim($purged_name, '_');
+        $purged_name = preg_replace('/[-.]+/', $char, $purged_name); // prevent transliteration convert dash
       }
     }
     else {
