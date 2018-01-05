@@ -2147,14 +2147,14 @@ SELECT source_contact_id
         'receiptOrgInfo' => htmlspecialchars_decode($config->receiptOrgInfo),
         'receiptDescription' => htmlspecialchars_decode($config->receiptDescription),
         'record' => $annualRecords,
-        'recordHeader' => array(
+      );
+      $tplParams['recordHeader'] = !empty($option['recordHeader']) ? $option['recordHeader'] :  array(
           ts('Receipt ID'),
           ts('Contribution Types'),
           ts('Payment Instrument'),
           ts('Receipt Date'),
           ts('Total Amount'),
-        ),
-      );
+        );
 
       // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
       $sendTemplateParams = array(
@@ -2174,12 +2174,14 @@ SELECT source_contact_id
     $config = CRM_Core_Config::singleton();
     $where = array();
 
+    $date_field_name = !empty($option['dateField']) ? $option['dateField'] : 'receipt_date';
+
     // filter by year by receipt date
     if(!empty($option['year'])){
       $year = $option['year'];
       $start = $year.'-01-01 00:00:00';
       $end = $year.'-12-31 23:59:59';
-      $where[] = "c.receipt_date >= '$start' AND c.receipt_date <= '$end'";
+      $where[] = "c.$date_field_name >= '$start' AND c.$date_field_name <= '$end'";
     }
 
     // filter by contribution type, default only dedutible contribution type
@@ -2215,7 +2217,7 @@ SELECT source_contact_id
     $args = array(
       1 => array($contact_id, 'Integer'),
     );
-    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.receipt_date) as receipt_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_id, c.receipt_date ASC";
+    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.$date_field_name) as receipt_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_id, c.$date_field_name ASC";
     $result = CRM_Core_DAO::executeQuery($query, $args);
    
     $contribution_type = array();

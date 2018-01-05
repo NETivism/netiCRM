@@ -109,14 +109,14 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       $session->resetScope('AnnualReceipt');
       $this->_year = $params['year'];
 
-      $option = array();
+      $this->option = array();
       foreach($params as $k => $p){
         if($k != 'qfKey' && !empty($p)){
-          $option[$k] = $p;
+          $this->option[$k] = $p;
         }
       }
       CRM_Utils_Hook::postProcess(get_class($this), $this);
-      self::makeReceipt($this->_contactIds, $option);
+      self::makeReceipt($this->_contactIds, $this->option);
       self::makePDF();
     }
     CRM_Utils_System::civiExit();
