@@ -1988,5 +1988,6 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
     }
     $templateObject->assign('share_google_calendar', 'http://www.google.com/calendar/event?'.http_build_query($gcal));
   }
+
 }
 

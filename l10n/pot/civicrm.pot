@@ -46065,3 +46065,12 @@ msgstr ""
 
 msgid "Tax free"
 msgstr ""
+
+msgid "When the time exceed, participants who are not finishing their confirming/registration will be expired automatically."
+msgstr ""
+
+msgid "If participant choose non-credit card payment method, the automatic expiration will extend one more day for minimal payment deadline of non-credit card payment method."
+msgstr ""
+
+msgid "Please notice that if your event needs approval or have waitlist, the calculation of expiration day <strong>based on the day they receive confirmation email</strong>. Participants needs to finish their confirmation in days you set above."
+msgstr ""

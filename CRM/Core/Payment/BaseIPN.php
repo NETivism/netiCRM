@@ -991,7 +991,11 @@ class CRM_Core_Payment_BaseIPN {
       $values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($template, $groupTree);
 
       require_once 'CRM/Core/OptionGroup.php';
-      $values['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.".(string)$values['id'],(int)($template->get_template_vars('amount')));
+      if(!empty($contribution->amount_level)){
+        $values['amount_level'] = $contribution->amount_level;
+      }else{
+        $values['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.".(string)$values['id'],(int)($template->get_template_vars('amount')));
+      }
       $template->assign('amount_level', $values['amount_level']);
       // 2015.1.30 End
 

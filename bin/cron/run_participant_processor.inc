@@ -21,15 +21,10 @@ class CRM_ParticipantProcessor
         $expiredStatuses = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Negative'" );
         $waitingStatuses = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Waiting'"  );
 
-        // remove Pending from waitlist and Pending from approval, during #22026 the register_date has problem
-        $pending = $pendingStatuses;
-        $pendingWait = array_search('Pending from waitlist', $pending);
-        $pendingApproval = array_search('Pending from approval', $pending);
-        unset($pending[$pendingWait]);
-        unset($pending[$pendingApproval]);
+        $pendingPayLater = array_search('Pending from pay later', $pendingStatuses);
         
         //build the required status ids.
-        $statusIds =  '(' . implode(',',  array_keys($pending)) . ')';
+        $statusIds =  '(' . implode( ',', array_merge( array_keys( $pendingStatuses ), array_keys( $waitingStatuses ) ) ) . ')';
         
         $participantDetails = $fullEvents = array( );
         $expiredParticipantCount = $waitingConfirmCount = $waitingApprovalCount = 0;
@@ -54,7 +49,7 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
      AND   event.is_active = 1 
  ORDER BY  participant.register_date, participant.id 
 ";
-        $dao =& CRM_Core_DAO::executeQuery( $query );
+        $dao = CRM_Core_DAO::executeQuery( $query );
         while ( $dao->fetch( ) ) {
             
             $participantDetails[$dao->id] = array( 'id'               => $dao->id,
@@ -82,12 +77,20 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                 if ( $expirationTime && array_key_exists( $values['status_id'], $pendingStatuses ) ) { 
                     
                     //get the expiration and registration pending time.
-                    $expirationSeconds = $expirationTime * 3600;
-                    $registrationPendingSeconds = CRM_Utils_Date::unixTime( $values['register_date'] );
-                    $expirationDay = date('Y-m-d', $expirationSeconds + $registrationPendingSeconds).' 23:59:59';
+                    $baseTime = strtotime($values['register_date']);
+                    $plusDay = ceil($expirationTime/24);
+                    $expirationSeconds = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
+
+                    $paymentOffsetSeconds = 0;
+                    $sql = "SELECT c.instrument_id FROM civicrm_participant_payment p INNER JOIN civicrm_contribution c ON c.id = p.contribution_id";
+                    $instrument_id = CRM_Core_DAO::singleValueQuery($sql);
+                    if (!empty($instrument_id) && $instrument_id > 1 && $values['status_id'] == $pendingPayLater) {
+                      $paymentOffsetSeconds = 86400; // for #22026, wait one more day for payment limitation
+                    }
+                    $expirationDay = date('Y-m-d', $expirationSeconds + $paymentOffsetSeconds).' 23:59:59';
                     
                     // expired registration since registration cross allow confirmation time.
-                    if ( strtotime($expirationDay) < time( ) ) {
+                    if ( strtotime($expirationDay) < time()) {
                         
                         //lets get the transaction mechanism.
                         require_once 'CRM/Core/Transaction.php';

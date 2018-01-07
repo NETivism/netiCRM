@@ -109,6 +109,12 @@ class CRM_Contribute_BAO_Contribution_Utils {
       $form->_params['item_name'] = $form->_params['description'];
       $form->_params['receive_date'] = $now;
 
+      // calculate billing expiration date
+      $baseTime = CRM_REQUEST_TIME;
+      $plusDay = CRM_Core_Payment::PAY_LATER_DEFAULT_EXPIRED_DAY;
+      $expiredTime= CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
+      $form->_params['payment_expired_timestamp'] = $expiredTime;
+
       if ($form->_values['is_recur'] &&
         $contribution->contribution_recur_id
       ) {
@@ -579,10 +585,6 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
           if (CRM_Utils_Array::value($localKey, $mapper['transaction'])) {
             $transaction[$mapper['transaction'][$localKey]] = $localVal;
           }
-        }
-
-        if (empty($params) && empty($transaction)) {
-          continue;
         }
 
         if (!empty($transaction) && $category) {
