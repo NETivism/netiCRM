@@ -596,7 +596,20 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         $pending = FALSE;
         $result = NULL;
 
-        require_once 'CRM/Event/PseudoConstant.php';
+        // calculate billing expiration date
+        if (!empty($value['is_primary'])) {
+          $baseTime = CRM_REQUEST_TIME;
+          $plusDay = CRM_Core_Payment::PAY_LATER_DEFAULT_EXPIRED_DAY;
+          if ($this->_allowConfirmation) {
+            if (!empty($this->_values['event']['expiration_time'])) {
+              $baseTime = strtotime($this->_values['participant']['register_date']);
+              $plusDay = ceil($this->_values['event']['expiration_time']/24);
+            }
+          }
+          $expiredTime= CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
+          $value['payment_expired_timestamp'] = $expiredTime;
+        }
+
         if ($this->_isOnWaitlist || $this->_requireApproval) {
           //get the participant statuses.
           $waitingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Waiting'");

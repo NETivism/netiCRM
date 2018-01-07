@@ -42,6 +42,7 @@ abstract class CRM_Core_Payment {
    * BUTTON - the processor collects it and sends it back to us via some protocol
    */
   CONST BILLING_MODE_FORM = 1, BILLING_MODE_BUTTON = 2, BILLING_MODE_NOTIFY = 4;
+  CONST PAY_LATER_DEFAULT_EXPIRED_DAY = 7; // day, refs #22026
 
   /**
    * which payment type(s) are we using?
@@ -246,6 +247,26 @@ abstract class CRM_Core_Payment {
       // TODO 
     }
     return $vars;  
+  }
+
+  /**
+   * Calculate expireation base on event setting and specific date
+   *
+   * @param int $baseTime timestamp for calculate basetime
+   * @param string $plusDay days after base time to be expiration
+   *
+   * @return int timestamp
+   * @access public
+   * @static
+   */
+  static function calcExpirationDate($baseTime, $plusDay = self::PAY_LATER_DEFAULT_EXPIRED_DAY) {
+    // refs #22026
+    if (empty($baseTime)) {
+      $baseTime = CRM_REQUEST_TIME;
+    }
+    // stick on 23:59:59
+    $expiredDate = date('Y-m-d', $baseTime + 86400 * $plusDay);
+    return strtotime($expiredDate.' 23:59:59'); // timestamp
   }
 }
 

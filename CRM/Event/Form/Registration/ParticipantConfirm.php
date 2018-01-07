@@ -45,6 +45,8 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
   // CRM-6060
   protected $_cc = NULL;
 
+  protected $_participant = NULL;
+
   /**
    * Function to set variables up before form is built
    *
@@ -63,8 +65,9 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
       require_once 'CRM/Event/BAO/Participant.php';
       $params = array('id' => $this->_participantId);
       CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Participant', $params, $values,
-        array('contact_id', 'event_id', 'status_id')
+        array('contact_id', 'event_id', 'status_id', 'register_date')
       );
+      $this->_participant = $values;
     }
 
     $this->_participantStatusId = $values['status_id'];
@@ -101,22 +104,26 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
    * @access public
    */
   public function buildQuickForm() {
-    $params = array('id' => $this->_eventId);
     $values = array();
-    CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Event', $params, $values,
-      array('title')
-    );
+    $params = array('id' => $this->_eventId);
+    CRM_Event_BAO_Event::retrieve($params, $values['event']);
 
     $buttons = array();
-    require_once 'CRM/Event/PseudoConstant.php';
+    $expired = FALSE;
+
+    // calculate expiration day base on registration day, #22026
+    if (!empty($values['event']['expiration_time'])) {
+      $baseTime = strtotime($this->_participant['register_date']);
+      $plusDay = ceil($values['event']['expiration_time']/24);
+      $expiredTime = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
+      if (time() > $expiredTime) {
+        $expired = TRUE;
+      }
+    }
+    
     // only pending status class family able to confirm.
-
     $statusMsg = NULL;
-    if (array_key_exists($this->_participantStatusId,
-        CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")
-      )) {
-
-
+    if (array_key_exists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")) && !$expired) {
       //need to confirm that though participant confirming
       //registration - but is there enough space to confirm.
       require_once 'CRM/Event/PseudoConstant.php';
@@ -125,15 +132,15 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
       $additonalIds = CRM_Event_BAO_participant::getAdditionalParticipantIds($this->_participantId);
       $requireSpace = 1 + count($additonalIds);
       if ($emptySeats !== NULL && ($requireSpace > $emptySeats)) {
-        $statusMsg = ts("Oops, it looks like there are currently no available spaces for the %1 event.", array(1 => $values['title']));
+        $statusMsg = ts("Oops, it looks like there are currently no available spaces for the %1 event.", array(1 => $values['event']['title']));
       }
       else {
         if ($this->_cc == 'fail') {
-          $statusMsg = '<div class="bold">' . ts('Your Credit Card transaction was not successful. No money has yet been charged to your card.') . '</div><div><br />' . ts('Click the "Confirm Registration" button to complete your registration in %1, or click "Cancel Registration" if you are no longer interested in attending this event.', array(1 => $values['title'])) . '</div>';
+          $statusMsg = '<div class="bold">' . ts('Your Credit Card transaction was not successful. No money has yet been charged to your card.') . '</div><div><br />' . ts('Click the "Confirm Registration" button to complete your registration in %1, or click "Cancel Registration" if you are no longer interested in attending this event.', array(1 => $values['event']['title'])) . '</div>';
         }
         else {
           $url = CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",FALSE, NULL, FALSE, TRUE );
-          $statusMsg = '<div class="bold">' . ts('Confirm your registration for %1.', array(1 => "<a href='$url' target='_blank'>".$values['title']."</a>")) . '</div><div><br />' . ts('Click the "Confirm Registration" button to begin, or click "Cancel Registration" if you are no longer interested in attending this event.') . '</div>';
+          $statusMsg = '<div class="bold">' . ts('Confirm your registration for %1.', array(1 => "<a href='$url' target='_blank'>".$values['event']['title']."</a>")) . '</div><div><br />' . ts('Click the "Confirm Registration" button to begin, or click "Cancel Registration" if you are no longer interested in attending this event.') . '</div>';
         }
         $buttons = array_merge($buttons, array(array('type' => 'next',
               'name' => ts('Confirm Registration'),
@@ -144,9 +151,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     }
 
     // status class other than Negative should be able to cancel registration.
-    if (array_key_exists($this->_participantStatusId,
-        CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")
-      )) {
+    if (array_key_exists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")) && !$expired) {
       $cancelConfirm = ts('Are you sure you want to cancel your registration for this event?');
       $buttons = array_merge($buttons, array(array('type' => 'submit',
             'name' => ts('Cancel Registration'),
@@ -154,18 +159,15 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
             'js' => array('onclick' => 'return confirm(\'' . $cancelConfirm . '\');'),
           )));
       if (!$statusMsg) {
-        $statusMsg = ts('You can cancel your registration for %1 by clicking "Cancel Registration".', array(1 => $values['title']));
+        $statusMsg = ts('You can cancel your registration for %1 by clicking "Cancel Registration".', array(1 => $values['event']['title']));
       }
     }
     if (!$statusMsg) {
       $statusMsg = ts("Oops, it looks like your registration for %1 has already been cancelled.",
-        array(1 => $values['title'])
+        array(1 => $values['event']['title'])
       );
     }
     $this->assign('statusMsg', $statusMsg);
-
-    $params = array('id' => $this->_eventId);
-    CRM_Event_BAO_Event::retrieve($params, $values['event']);
 
     $this->assign('event', $values['event']);
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));
