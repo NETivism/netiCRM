@@ -1841,5 +1841,11 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
     }
     return $summary;
   }
+
+  static function confirmLink($id, $cs) {
+    if (!empty($id) && !empty($cs)) {
+      return CRM_Utils_System::url('civicrm/event/confirm', 'reset=1&participantId='.$id.'&cs='.$cs);
+    }
+  }
 }
 

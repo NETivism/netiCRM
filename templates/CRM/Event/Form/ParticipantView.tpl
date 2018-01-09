@@ -87,7 +87,7 @@
 	    <td>{$register_date|crmDate}&nbsp;</td>
 	</tr>
     <tr class="crm-event-participantview-form-block-status">
-	    <td class="label">{ts}Status{/ts}</td><td>{$status}&nbsp;</td>
+	    <td class="label">{ts}Status{/ts}</td><td>{$status}{if $confirmLink} (<a href="{$confirmLink}" target="_blank">{ts}Confirm Registration{/ts} {ts}Link{/ts}</a>){/if}</td>
 	</tr>
     {if $source}
         <tr class="crm-event-participantview-form-block-event_source">
