@@ -66,8 +66,8 @@
       {foreach from=$rows item=row}
       <tr id="crm-mailing_{$row.id}" class="{cycle values="odd-row,even-row"} crm-mailing crm-mailing_status-{$row.status}">
         <td class="crm-mailing-name">{$row.name}</td>
-        <td class="crm-mailing-visibility">{ts}{$row.visibility}{/ts}</td>
-        <td class="crm-mailing-status crm-mailing_status-{$row.status}">{$row.status}</td>
+        <td class="crm-mailing-visibility">{ts}{$row.visibility}{/ts}(<a href="{crmURL p='civicrm/mailing/view' q="reset=1&id=`$row.id`"}" target="_blank">{ts}view{/ts}</a>)</td>
+        <td class="crm-mailing-status crm-mailing_status-{$row.status|lower}">{$row.status_label}</td>
         <td class="crm-mailing-created_by"><a href ={crmURL p='civicrm/contact/view' q="reset=1&cid="}{$row.created_id}>{$row.created_by}</a></td>
         {if $unscheduled}
             <td class="crm-mailing-created_date">{$row.created_date}</td>
@@ -137,7 +137,20 @@
     <div class="messages status">
             &nbsp;
             {capture assign=crmURL}{crmURL p='civicrm/mailing/send' q='reset=1'}{/capture}
-            {capture assign=archiveURL}{crmURL p='civicrm/mailing/browse/archived' q='reset=1'}{/capture}
+            this {capture assign=archiveURL}{crmURL p='civicrm/mailing/browse/archived' q='reset=1'}{/capture}
             {ts 1=$crmURL 2=$archiveURL}There are no Scheduled or Sent Mailings. You can <a href='%1'>create and send one</a> OR you can search the <a href='%2'>Archived Mailings</a>.{/ts}
    </div>
 {/if}
+<script>{literal}
+cj(document).ready(function($){
+  $(".crm-mailing_status-scheduled").closest('tr').find('a.action-item[href*=continue]').click(function(e){
+    if (confirm("{/literal}{ts}Edit scheduled mailing will cancel this schedule. You will need to re-schedule this mailing in last step of the editing. Continue?{/ts}{literal}")) {  
+      this.href += '&reschedule=1'; 
+    } 
+    else { 
+      e.preventDefault();
+      return false;
+    }
+  });  
+});
+{/literal}</script>

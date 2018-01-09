@@ -81,11 +81,11 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                     $plusDay = ceil($expirationTime/24);
                     $expirationSeconds = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
 
-                    $paymentOffsetSeconds = 0;
-                    $sql = "SELECT c.instrument_id FROM civicrm_participant_payment p INNER JOIN civicrm_contribution c ON c.id = p.contribution_id";
-                    $instrument_id = CRM_Core_DAO::singleValueQuery($sql);
+                    // for #22026, do not expire which already receive billing invoice
+                    $sql = "SELECT c.payment_instrument_id FROM civicrm_participant_payment p INNER JOIN civicrm_contribution c ON c.id = p.contribution_id WHERE p.participant_id = %1 AND c.payment_processor_id IS NOT NULL";
+                    $instrument_id = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($participantId, 'Positive')));
                     if (!empty($instrument_id) && $instrument_id > 1 && $values['status_id'] == $pendingPayLater) {
-                      $paymentOffsetSeconds = 86400; // for #22026, wait one more day for payment limitation
+                      continue;
                     }
                     $expirationDay = date('Y-m-d', $expirationSeconds + $paymentOffsetSeconds).' 23:59:59';
                     

@@ -46074,3 +46074,15 @@ msgstr ""
 
 msgid "Please notice that if your event needs approval or have waitlist, the calculation of expiration day <strong>based on the day they receive confirmation email</strong>. Participants needs to finish their confirmation in days you set above."
 msgstr ""
+
+msgid "Edit scheduled mailing will cancel this schedule. You will need to re-schedule this mailing in last step of the editing. Continue?"
+msgstr ""
+
+msgid "un-publish"
+msgstr ""
+
+msgid "Are you sure you want to make this mailing public?"
+msgstr ""
+
+msgid "Are you sure you want to un-publish this mailing from public?"
+msgstr "" 

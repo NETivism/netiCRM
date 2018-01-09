@@ -84,6 +84,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
   function setDefaultValues() {
     $mailingID = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
     $continue = CRM_Utils_Request::retrieve('continue', 'String', $this, FALSE, NULL);
+    $reschedule = CRM_Utils_Request::retrieve('reschedule', 'Integer', $this, FALSE, NULL);
 
     // check that the user has permission to access mailing id
     require_once 'CRM/Mailing/BAO/Mailing.php';
@@ -97,6 +98,16 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $mailing->id = $mailingID;
       $mailing->addSelectByOption('name', 'campaign_id');
       $mailing->find(TRUE);
+
+      if ($reschedule) {
+        $existsJob = array();
+        $returnProperties = array('id', 'status', 'start_date');
+        $params = array('mailing_id' => $mailing->id);
+        CRM_Core_DAO::commonRetrieve('CRM_Mailing_DAO_Job', $params, $existsJob, $returnProperties);
+        if (!empty($existsJob) && empty($existsJob['start_date']) && $existsJob['status'] === 'Scheduled') {
+          CRM_Mailing_BAO_Mailing::delJob($existsJob['id']);
+        }
+      }
 
       $defaults['name'] = $mailing->name;
       if (!$continue) {

@@ -226,6 +226,18 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
         $controller->run();
       }
     }
+    elseif ($this->_action & CRM_Core_Action::REOPEN) {
+      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean', $this)) {
+        CRM_Mailing_BAO_Mailing::changeVisibility($this->_mailingId);
+      }
+      CRM_Utils_System::redirect($context);
+    }
+    elseif ($this->_action & CRM_Core_Action::CLOSE) {
+      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean', $this)) {
+        CRM_Mailing_BAO_Mailing::changeVisibility($this->_mailingId);
+      }
+      CRM_Utils_System::redirect($context);
+    }
 
     $selector = new CRM_Mailing_Selector_Browse();
     $selector->setParent($this);

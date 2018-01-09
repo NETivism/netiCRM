@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-01-08 08:38+0000\n"
-"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-01-09 06:30+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46215,3 +46215,17 @@ msgid ""
 "confirmation email</strong>. Participants needs to finish their confirmation"
 " in days you set above."
 msgstr "請注意，如果你的活動設定為「需事先審核」，或是「允許候補」，過期日的<strong>計算起始日為給參加者審核通過或成為正取寄信通知日期</strong>，也因此參加者必須在你設定的時間內完成報名與繳費。"
+
+msgid ""
+"Edit scheduled mailing will cancel this schedule. You will need to re-"
+"schedule this mailing in last step of the editing. Continue?"
+msgstr "編輯已排程的電子報，將會取消這個排程。若要重新排程，你必須在接下來的編輯作業最後一步重新排程。確定要繼續嗎？"
+
+msgid "un-publish"
+msgstr "取消公開"
+
+msgid "Are you sure you want to make this mailing public?"
+msgstr "你確定將電子報設定為公開顯示嗎？"
+
+msgid "Are you sure you want to un-publish this mailing from public?"
+msgstr "你確定將電子報設定為不公開顯示嗎？"

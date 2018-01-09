@@ -245,6 +245,8 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
       $cancelExtra = ts('Are you sure you want to cancel this mailing?');
       $deleteExtra = ts('Are you sure you want to delete this mailing?');
       $archiveExtra = ts('Are you sure you want to archive this mailing?');
+      $publicExtra = ts('Are you sure you want to make this mailing public?');
+      $unpublishExtra = ts('Are you sure you want to un-publish this mailing from public?');
 
       $actionLinks = array(
         /*
@@ -275,10 +277,24 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
           'title' => ts('Cancel Mailing'),
         ),
         CRM_Core_Action::PREVIEW => array(
-          'name' => ts('Continue'),
+          'name' => ts('Edit'),
           'url' => 'civicrm/mailing/send',
           'qs' => 'mid=%%mid%%&continue=true&reset=1',
           'title' => ts('Continue Mailing'),
+        ),
+        CRM_Core_Action::REOPEN => array(
+          'name' => ts('Public'),
+          'url' => 'civicrm/mailing/browse',
+          'qs' => 'action=reopen&mid=%%mid%%&reset=1',
+          'extra' => 'onclick="if (confirm(\'' . $publicExtra. '\')) {  this.href+=\'&amp;confirmed=1\'; } else { return false;}"',
+          'title' => ts('Public Pages'),
+        ),
+        CRM_Core_Action::CLOSE=> array(
+          'name' => ts('un-publish'),
+          'url' => 'civicrm/mailing/browse',
+          'qs' => 'action=close&mid=%%mid%%&reset=1',
+          'extra' => 'onclick="if (confirm(\'' . $unpublishExtra. '\')) {  this.href+=\'&amp;confirmed=1\'; } else { return false;}"',
+          'title' => ts('User and User Admin Only'),
         ),
         CRM_Core_Action::DELETE => array(
           'name' => ts('Delete'),
@@ -308,16 +324,15 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
         $allAccess = TRUE;
       }
 
+      /*
       if (CRM_Core_Permission::check('approve mailings')) {
         $showApprovalLinks = TRUE;
       }
+      */
 
-      /*
       if (CRM_Core_Permission::check('create mailings')) {
         $showCreateLinks = TRUE;
       }
-*/
-
 
       if (CRM_Core_Permission::check('schedule mailings')) {
         $showScheduleLinks = TRUE;
@@ -369,6 +384,17 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
             if ($allAccess || $showCreateLinks) {
               $actionMask |= CRM_Core_Action::UPDATE;
             }
+            if (empty($row['start']) && $row['status'] == 'Scheduled') {
+              if ($allAccess || ($showCreateLinks || $showScheduleLinks)) {
+                $actionMask |= CRM_Core_Action::PREVIEW;
+              }
+            }
+          }
+          if (($allAccess || $showCreateLinks) && $row['visibility'] == 'User and User Admin Only') {
+            $actionMask |= CRM_Core_Action::REOPEN;
+          }
+          elseif (($allAccess || $showCreateLinks) && $row['visibility'] == 'Public Pages') {
+            $actionMask |= CRM_Core_Action::CLOSE;
           }
         }
         else {
@@ -380,18 +406,11 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
             }
           }
         }
-        if (in_array($row['status'], array(
-              'Scheduled', 'Running', 'Paused',
-            ))) {
-          if ($allAccess ||
-            ($showApprovalLinks && $showCreateLinks && $showScheduleLinks)
-          ) {
-
+        if (in_array($row['status'], array('Scheduled', 'Running', 'Paused'))) {
+          if ($allAccess || ($showApprovalLinks && $showCreateLinks && $showScheduleLinks)) {
             $actionMask |= CRM_Core_Action::DISABLE;
           }
-          if ($row['status'] == 'Scheduled' &&
-            empty($row['approval_status_id'])
-          ) {
+          if ($row['status'] == 'Scheduled' && empty($row['approval_status_id'])) {
             if ($workFlow && ($allAccess || $showApprovalLinks)) {
               $actionMask |= CRM_Core_Action::ENABLE;
             }
@@ -413,7 +432,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
           $actionMask = CRM_Core_Action::ADD;
         }
         //get status strings as per locale settings CRM-4411.
-        $rows[$key]['status'] = CRM_Mailing_BAO_Job::status($row['status']);
+        $rows[$key]['status_label'] = CRM_Mailing_BAO_Job::status($row['status']);
 
         $rows[$key]['action'] = CRM_Core_Action::formLink($actionLinks,
           $actionMask,
@@ -431,6 +450,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
           $rows[$key]['scheduled'] = '';
         }
         unset($rows[$key]['scheduled_iso']);
+        $rows[$key]['view_url'] = CRM_Utils_System::url('civicrm/mailing/view', 'reset=1&id='.$row['id']);
       }
     }
 
@@ -478,6 +498,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
     }
 
     $to = $this->_parent->get('mailing_to');
+
     if (!CRM_Utils_System::isNull($to)) {
       $dateClause1[] = 'civicrm_mailing_job.start_date <= %3';
       $dateClause2[] = 'civicrm_mailing_job.scheduled_date <= %3';
