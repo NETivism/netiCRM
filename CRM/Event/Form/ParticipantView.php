@@ -53,6 +53,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $values = $ids = array();
     $participantID = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
+    $statusTypes = CRM_Event_PseudoConstant::participantStatus();
     $params = array('id' => $participantID);
 
     CRM_Event_BAO_Participant::getValues($params,
@@ -70,7 +71,21 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     if (CRM_Utils_Array::value('fee_level', $values[$participantID])) {
       CRM_Event_BAO_Participant::fixEventLevel($values[$participantID]['fee_level']);
     }
-
+    $eventDetails = array();
+    $eventId = $values[$participantID]['event_id'];
+    $eventParams = array('id' => $eventId);
+    CRM_Event_BAO_Event::retrieve($eventParams, $eventDetails);
+    $statusLabel = $statusTypes[$values[$participantID]['status_id']];
+    if ($statusLabel == 'Pending from waitlist' || $statusLabel == 'Pending from approval') {
+      $checksumLife = 'inf';
+      $endDate = CRM_Utils_Array::value('end_date', $eventDetails);
+      if ($endDate) {
+        $checksumLife = (CRM_Utils_Date::unixTime($endDate) - time()) / (60 * 60);
+      }
+      $checksumValue = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactID, NULL, $checksumLife);
+      $values[$participantID]['checksum'] = $checksumValue;
+      $values[$participantID]['confirmLink'] = CRM_Event_BAO_Participant::confirmLink($participantID, $checksumValue);
+    }
     if ($values[$participantID]['is_test']) {
       $values[$participantID]['status'] .= ' (test) ';
     }
