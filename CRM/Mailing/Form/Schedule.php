@@ -282,7 +282,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       $job = new CRM_Mailing_BAO_Job();
       $job->mailing_id = $mailing->id;
       $job->is_test = 0;
-      if ($job->find(TRUE)) {
+      if ($job->find(TRUE) && !empty($job->start_date)) {
         CRM_Core_Error::fatal(ts('A job for this mailing already exists'));
       }
 

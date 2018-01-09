@@ -100,6 +100,8 @@ class CRM_Core_Action {
     'renew' => self::RENEW,
     'detach' => self::DETACH,
     'revert' => self::REVERT,
+    'close' => self::CLOSE,
+    'reopen' => self::REOPEN,
   );
 
   /**

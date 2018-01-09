@@ -2811,5 +2811,22 @@ ORDER BY civicrm_mailing.name";
     }
     return '';
   }
+
+  public static function changeVisibility($mid) {
+    if (is_numeric($mid) && !empty($mid)) {
+      $mailing = new CRM_Mailing_BAO_Mailing();
+      $mailing->id = $mid;
+      if ($mailing->find(TRUE)) {
+        if ($mailing->visibility == 'User and User Admin Only') {
+          $mailing->visibility = 'Public Pages';
+        }
+        else {
+          $mailing->visibility = 'User and User Admin Only'; 
+        }
+        return $mailing->save();
+      }
+    }
+    return FALSE;
+  }
 }
 
