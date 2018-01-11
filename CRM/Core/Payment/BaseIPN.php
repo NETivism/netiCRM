@@ -994,7 +994,7 @@ class CRM_Core_Payment_BaseIPN {
       if(!empty($contribution->amount_level)){
         $values['amount_level'] = $contribution->amount_level;
       }else{
-        $values['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.".(string)$values['id'],(int)($template->get_template_vars('amount')));
+        $values['amount_level'] = FALSE;
       }
       $template->assign('amount_level', $values['amount_level']);
       // 2015.1.30 End
