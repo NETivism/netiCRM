@@ -77,6 +77,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     'amount_level',
     'total_amount',
     'contribution_type',
+    'contribution_type_id',
     'contribution_source',
     'payment_instrument',
     'created_date',

@@ -2280,6 +2280,8 @@ SELECT source_contact_id
     if ($reset) {
       $contribution->receipt_id = NULL;
     }
+    $accountingCode = array();
+    CRM_Core_PseudoConstant::populate($accountingCode, 'CRM_Contribute_DAO_ContributionType', TRUE, 'accounting_code');
 
     // have receipt date? completed? already have receipt id?
     if (!empty($contribution->receipt_date) && $contribution->contribution_status_id == 1 && empty($contribution->receipt_id)) {
@@ -2290,15 +2292,23 @@ SELECT source_contact_id
         if ($contribution->id) {
           $fids = CRM_Core_BAO_FinancialTrxn::getFinancialTrxnIds($contribution->id, 'civicrm_contribution');
         }
+        $online = 'M';
+        $prefix = '';
         if (!empty($fids['entityFinancialTrxnId']) || $is_online) {
-          // online
-          $prefix = 'A';
+          $online = 'A';
+        }
+        if (strstr($config->receiptPrefix, '!online')) {
+          $prefix = str_replace('!online', $online, $config->receiptPrefix);
         }
         else {
-          $prefix = 'M';
+          $prefix = $online.$config->receiptPrefix;
         }
         if(!empty($config->receiptPrefix)){
-          $prefix .= CRM_Utils_Date::customFormat($contribution->receipt_date, $config->receiptPrefix);
+          if (strstr($config->receiptPrefix, '!acc')) {
+            $accCode = !empty($accountingCode[$contribution->contribution_type_id]) ? $accountingCode[$contribution->contribution_type_id] : '';
+            $prefix = str_replace('!acc', $accCode, $prefix);
+          }
+          $prefix = CRM_Utils_Date::customFormat($contribution->receipt_date, $prefix);
         }
 
         if ($contribution->is_test) {
