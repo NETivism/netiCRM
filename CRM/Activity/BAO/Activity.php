@@ -1413,9 +1413,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     if ($userID == NULL) {
       $session = CRM_Core_Session::singleton();
       if (!is_numeric($session->get('userID'))) {
-        $userID = NULL;
+        $userID = CRM_Core_BAO_UFMatch::getContactId(1);
+      }else{
+        $userID = $session->get('userID');
       }
-      $userID = $session->get('userID');
     }
 
     $text = &$activityParams['sms_text_message'];
