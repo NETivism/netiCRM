@@ -1789,7 +1789,10 @@ AND civicrm_contact.is_opt_out =0";
 
     $mailing->query("
             SELECT          {$t['mailing_group']}.group_type as group_type,
+                            {$t['mailing_group']}.entity_table as entity_table,
+                            {$t['mailing_group']}.entity_id as entity_id,
                             {$t['group']}.id as group_id,
+                            {$t['group']}.title as group_title,
                             {$t['group']}.title as group_title,
                             {$t['group']}.is_hidden as group_hidden,
                             {$t['mailing']}.id as mailing_id,
@@ -1797,14 +1800,10 @@ AND civicrm_contact.is_opt_out =0";
             FROM            {$t['mailing_group']}
             LEFT JOIN       {$t['group']}
                     ON      {$t['mailing_group']}.entity_id = {$t['group']}.id
-                    AND     {$t['mailing_group']}.entity_table =
-                                                                '{$t['group']}'
+                    AND     {$t['mailing_group']}.entity_table = '{$t['group']}'
             LEFT JOIN       {$t['mailing']}
-                    ON      {$t['mailing_group']}.entity_id =
-                                                            {$t['mailing']}.id
-                    AND     {$t['mailing_group']}.entity_table =
-                                                            '{$t['mailing']}'
-
+                    ON      {$t['mailing_group']}.entity_id = {$t['mailing']}.id
+                    AND     {$t['mailing_group']}.entity_table = '{$t['mailing']}'
             WHERE           {$t['mailing_group']}.mailing_id = $mailing_id
             ");
 
@@ -1819,17 +1818,31 @@ AND civicrm_contact.is_opt_out =0";
         );
       }
       else {
+        if ($mailing->entity_table == 'civicrm_mailing_event_opened' || $mailing->entity_table == 'civicrm_mailing_event_trackable_url_open') {
+          $mailing->mailing_id = $mailing->entity_id;
+          $mailing_name = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $mailing->mailing_id, 'name');
+          if ($mailing->entity_table == 'civicrm_mailing_event_opened') {
+            $label = 'Recipients who opened these mailing';
+            $link = CRM_Utils_System::url('civicrm/mailing/report/event', "reset=1&event=opened&distinct=1&mid={$mailing->mailing_id}");
+          }
+          else {
+            $label = 'Recipients who clicked these mailing';
+            $link = CRM_Utils_System::url('civicrm/mailing/report/event', "reset=1&event=click&distinct=1&mid={$mailing->mailing_id}");
+          }
+          $label = strtoupper($mailing->group_type) . " " . $label;
+          $label = ts($label) . ': '.$mailing_name;
+          $mailing->mailing_name = $label;
+        }
+        else {
+          $link = CRM_Utils_System::url('civicrm/mailing/report/event', "reset=1&event=queue&mid={$mailing->mailing_id}");
+        }
         $row['id'] = $mailing->mailing_id;
         $row['name'] = $mailing->mailing_name;
         $row['mailing'] = TRUE;
-        $row['link'] = CRM_Utils_System::url('civicrm/mailing/report',
-          "mid={$row['id']}"
-        );
+        $row['link'] = $link;
       }
 
       /* Rename hidden groups */
-
-
       if ($mailing->group_hidden == 1) {
         $row['name'] = "Search Results";
       }
