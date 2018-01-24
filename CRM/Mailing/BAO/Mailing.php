@@ -108,8 +108,9 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     $eq = CRM_Mailing_Event_DAO_Queue::getTableName();
     $ed = CRM_Mailing_Event_DAO_Delivered::getTableName();
     $eb = CRM_Mailing_Event_DAO_Bounce::getTableName();
-    $eo = CRM_Mailing_Event_BAO_Opened::getTableName();
-    $ec = CRM_Mailing_Event_BAO_TrackableURLOpen::getTableName();
+    $eo = CRM_Mailing_Event_DAO_Opened::getTableName();
+    $ec = CRM_Mailing_Event_DAO_TrackableURLOpen::getTableName();
+    $eu = CRM_Mailing_Event_DAO_Unsubscribe::getTableName();
 
     $email = CRM_Core_DAO_Email::getTableName();
     $contact = CRM_Contact_DAO_Contact::getTableName();
@@ -188,7 +189,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
                         AND             $mg.group_type = 'Exclude'";
     $mailingGroup->query($excludeClickedMailing);
 
-    /* exclude all clicked mailing in specific mailnig */
+    /* exclude all opened mailing in specific mailnig */
     $excludeOpenedMailing = "INSERT IGNORE INTO X_$job_id (contact_id)
                     SELECT  DISTINCT    $eq.contact_id
                     FROM                $eq
@@ -202,6 +203,35 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
                                         $mg.mailing_id = {$mailing_id}
                         AND             $mg.group_type = 'Exclude'";
     $mailingGroup->query($excludeOpenedMailing);
+
+    // refs #22150, exclude unsubscribed mail when included in opened / click
+    $excludeOpenedUnsubscribed = "INSERT IGNORE INTO X_$job_id (contact_id)
+                    SELECT  DISTINCT    $eq.contact_id
+                    FROM                $eq
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$eo'
+                    INNER JOIN          $eu
+                            ON          $eu.event_queue_id = $eq.id
+                    WHERE
+                                        $mg.mailing_id = {$mailing_id}
+                        AND             $mg.group_type = 'Include'";
+    $mailingGroup->query($excludeOpenedUnsubscribed);
+
+    $excludeClickedUnsubscribed = "INSERT IGNORE INTO X_$job_id (contact_id)
+                    SELECT  DISTINCT    $eq.contact_id
+                    FROM                $eq
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$ec'
+                    INNER JOIN          $eu
+                            ON          $eu.event_queue_id = $eq.id
+                    WHERE
+                                        $mg.mailing_id = {$mailing_id}
+                        AND             $mg.group_type = 'Include'";
+    $mailingGroup->query($excludeClickedUnsubscribed);
 
     // get all the saved searches AND hierarchical groups
     // and load them in the cache
