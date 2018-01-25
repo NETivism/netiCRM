@@ -108,8 +108,9 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     $eq = CRM_Mailing_Event_DAO_Queue::getTableName();
     $ed = CRM_Mailing_Event_DAO_Delivered::getTableName();
     $eb = CRM_Mailing_Event_DAO_Bounce::getTableName();
-    $eo = CRM_Mailing_Event_BAO_Opened::getTableName();
-    $ec = CRM_Mailing_Event_BAO_TrackableURLOpen::getTableName();
+    $eo = CRM_Mailing_Event_DAO_Opened::getTableName();
+    $ec = CRM_Mailing_Event_DAO_TrackableURLOpen::getTableName();
+    $eu = CRM_Mailing_Event_DAO_Unsubscribe::getTableName();
 
     $email = CRM_Core_DAO_Email::getTableName();
     $contact = CRM_Contact_DAO_Contact::getTableName();
@@ -188,7 +189,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
                         AND             $mg.group_type = 'Exclude'";
     $mailingGroup->query($excludeClickedMailing);
 
-    /* exclude all clicked mailing in specific mailnig */
+    /* exclude all opened mailing in specific mailnig */
     $excludeOpenedMailing = "INSERT IGNORE INTO X_$job_id (contact_id)
                     SELECT  DISTINCT    $eq.contact_id
                     FROM                $eq
@@ -202,6 +203,35 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
                                         $mg.mailing_id = {$mailing_id}
                         AND             $mg.group_type = 'Exclude'";
     $mailingGroup->query($excludeOpenedMailing);
+
+    // refs #22150, exclude unsubscribed mail when included in opened / click
+    $excludeOpenedUnsubscribed = "INSERT IGNORE INTO X_$job_id (contact_id)
+                    SELECT  DISTINCT    $eq.contact_id
+                    FROM                $eq
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$eo'
+                    INNER JOIN          $eu
+                            ON          $eu.event_queue_id = $eq.id
+                    WHERE
+                                        $mg.mailing_id = {$mailing_id}
+                        AND             $mg.group_type = 'Include'";
+    $mailingGroup->query($excludeOpenedUnsubscribed);
+
+    $excludeClickedUnsubscribed = "INSERT IGNORE INTO X_$job_id (contact_id)
+                    SELECT  DISTINCT    $eq.contact_id
+                    FROM                $eq
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$ec'
+                    INNER JOIN          $eu
+                            ON          $eu.event_queue_id = $eq.id
+                    WHERE
+                                        $mg.mailing_id = {$mailing_id}
+                        AND             $mg.group_type = 'Include'";
+    $mailingGroup->query($excludeClickedUnsubscribed);
 
     // get all the saved searches AND hierarchical groups
     // and load them in the cache
@@ -1789,7 +1819,10 @@ AND civicrm_contact.is_opt_out =0";
 
     $mailing->query("
             SELECT          {$t['mailing_group']}.group_type as group_type,
+                            {$t['mailing_group']}.entity_table as entity_table,
+                            {$t['mailing_group']}.entity_id as entity_id,
                             {$t['group']}.id as group_id,
+                            {$t['group']}.title as group_title,
                             {$t['group']}.title as group_title,
                             {$t['group']}.is_hidden as group_hidden,
                             {$t['mailing']}.id as mailing_id,
@@ -1797,14 +1830,10 @@ AND civicrm_contact.is_opt_out =0";
             FROM            {$t['mailing_group']}
             LEFT JOIN       {$t['group']}
                     ON      {$t['mailing_group']}.entity_id = {$t['group']}.id
-                    AND     {$t['mailing_group']}.entity_table =
-                                                                '{$t['group']}'
+                    AND     {$t['mailing_group']}.entity_table = '{$t['group']}'
             LEFT JOIN       {$t['mailing']}
-                    ON      {$t['mailing_group']}.entity_id =
-                                                            {$t['mailing']}.id
-                    AND     {$t['mailing_group']}.entity_table =
-                                                            '{$t['mailing']}'
-
+                    ON      {$t['mailing_group']}.entity_id = {$t['mailing']}.id
+                    AND     {$t['mailing_group']}.entity_table = '{$t['mailing']}'
             WHERE           {$t['mailing_group']}.mailing_id = $mailing_id
             ");
 
@@ -1819,17 +1848,31 @@ AND civicrm_contact.is_opt_out =0";
         );
       }
       else {
+        if ($mailing->entity_table == 'civicrm_mailing_event_opened' || $mailing->entity_table == 'civicrm_mailing_event_trackable_url_open') {
+          $mailing->mailing_id = $mailing->entity_id;
+          $mailing_name = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $mailing->mailing_id, 'name');
+          if ($mailing->entity_table == 'civicrm_mailing_event_opened') {
+            $label = 'Recipients who opened these mailing';
+            $link = CRM_Utils_System::url('civicrm/mailing/report/event', "reset=1&event=opened&distinct=1&mid={$mailing->mailing_id}");
+          }
+          else {
+            $label = 'Recipients who clicked these mailing';
+            $link = CRM_Utils_System::url('civicrm/mailing/report/event', "reset=1&event=click&distinct=1&mid={$mailing->mailing_id}");
+          }
+          $label = strtoupper($mailing->group_type) . " " . $label;
+          $label = ts($label) . ': '.$mailing_name;
+          $mailing->mailing_name = $label;
+        }
+        else {
+          $link = CRM_Utils_System::url('civicrm/mailing/report/event', "reset=1&event=queue&mid={$mailing->mailing_id}");
+        }
         $row['id'] = $mailing->mailing_id;
         $row['name'] = $mailing->mailing_name;
         $row['mailing'] = TRUE;
-        $row['link'] = CRM_Utils_System::url('civicrm/mailing/report',
-          "mid={$row['id']}"
-        );
+        $row['link'] = $link;
       }
 
       /* Rename hidden groups */
-
-
       if ($mailing->group_hidden == 1) {
         $row['name'] = "Search Results";
       }

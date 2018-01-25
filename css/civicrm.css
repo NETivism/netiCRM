@@ -1893,6 +1893,7 @@ table.campaign td,
 }
 .crm-container .thermometer-cell.pcp-donate {
     border-left: 3px solid #FFF;
+    vertical-align: top;
 }
 .crm-container .thermometer-cell.pcp-donate a.button {
     white-space: nowrap;
