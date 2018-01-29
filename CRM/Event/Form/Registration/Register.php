@@ -869,6 +869,15 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if (is_array($checked)) {
       $errors += $checked;
     }
+
+    // check full
+    if($self->_isEventFull){
+      if (!$self->_allowWaitlist && !$self->_allowConfirmation) {
+        $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
+        return $errors;
+      }
+    }
+
     //check for availability of registrations.
     if (!$self->_allowConfirmation &&
       !CRM_Utils_Array::value('bypass_payment', $fields) &&
