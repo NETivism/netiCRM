@@ -600,13 +600,15 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         if (!empty($value['is_primary'])) {
           $baseTime = CRM_REQUEST_TIME;
           $plusDay = CRM_Core_Payment::PAY_LATER_DEFAULT_EXPIRED_DAY;
+          if (!empty($this->_values['event']['expiration_time'])) {
+            $plusDay = ceil($this->_values['event']['expiration_time']/24);
+          }
           if ($this->_allowConfirmation) {
             if (!empty($this->_values['event']['expiration_time'])) {
               $baseTime = strtotime($this->_values['participant']['register_date']);
-              $plusDay = ceil($this->_values['event']['expiration_time']/24);
             }
           }
-          $expiredTime= CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
+          $expiredTime = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
           $value['payment_expired_timestamp'] = $expiredTime;
         }
 
