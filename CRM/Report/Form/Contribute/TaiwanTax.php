@@ -43,6 +43,12 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
 
   function __construct() {
     $config = CRM_Core_Config::singleton();
+    $contactTypes = CRM_Contact_BAO_ContactType::basicTypePairs();
+    foreach($contactTypes as $key => $name) {
+      if ($key !== 'Individual') {
+        unset($contactTypes[$key]);
+      }
+    }
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -88,7 +94,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
           'contact_type' =>
           array('title' => ts('Contact Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-            'options' => CRM_Contact_BAO_ContactType::basicTypePairs(),
+            'options' => $contactTypes,
             'default' => array('Individual'),
           ),
         ),
@@ -172,6 +178,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   function select() {
     $select = array();
     $columnHeaders = array();
+    $this->_specialCase = '';
 
     foreach ($this->_columns as $tableName => $table) {
       if (array_key_exists('fields', $table)) {
@@ -192,14 +199,15 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
 ";
             }
             elseif ($fieldName == $this->_receiptSerial) {
-              $select[] = "
+              $this->_specialCase = "
 (CASE
   WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH({$field['dbAlias']}) > 0
   THEN {$field['dbAlias']}
   ELSE 
     (CASE WHEN {$this->_aliases['civicrm_contact']}.contact_type = 'Organization' THEN {$this->_aliases['civicrm_contact']}.sic_code ELSE {$this->_aliases['civicrm_contact']}.legal_identifier END)
-  END) as receipt_serial
+  END)
 ";
+              $select[] = $this->_specialCase .' as receipt_serial ';
             }
             else{
               $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
@@ -232,6 +240,11 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
 FROM civicrm_contribution {$this->_aliases['civicrm_contribution']}
 INNER JOIN civicrm_contact {$this->_aliases['civicrm_contact']}
 ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
+  }
+
+  function where() {
+    parent::where();
+    $this->_where .= "AND ({$this->_specialCase} NOT REGEXP '^[0-9]{8}$')";
   }
 
   function groupBy(){
