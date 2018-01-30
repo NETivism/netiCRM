@@ -23,6 +23,7 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
   function buildColumn(){
     $this->_queryColumns = array( 
       'contact.id' => 'id',
+      'failed.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
       'failed.created_date' => 'created_date_failed',
       'success.created_date' => 'created_date_success',
@@ -30,7 +31,7 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
       'success.total_amount' => 'total_amount_success',
     );
     $this->_columns = array(
-      ts('ID') => 'id',
+      ts('ID') => 'contact_id',
       ts('Name') => 'sort_name',
       ts('Created Date') => 'created_date_failed',
       ts('Amount') . ' - (' . ts("Failed") . ')' => 'total_amount_failed',

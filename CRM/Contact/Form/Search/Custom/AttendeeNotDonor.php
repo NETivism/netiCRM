@@ -25,6 +25,7 @@ class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_S
   function buildColumn(){
     $this->_queryColumns = array( 
       'contact.id' => 'id',
+      'p.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
       'COUNT(p.id)' => 'register_count',
     );

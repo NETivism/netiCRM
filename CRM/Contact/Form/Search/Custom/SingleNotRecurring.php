@@ -20,6 +20,7 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
   function buildColumn(){
     $this->_queryColumns = array( 
       'contact.id' => 'id',
+      'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
       'ROUND(SUM(c.total_amount))' => 'receive_amount',
       'COUNT(c.id)' => 'completed_count',
