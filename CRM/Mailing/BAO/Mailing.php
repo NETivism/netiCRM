@@ -205,6 +205,20 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     $mailingGroup->query($excludeOpenedMailing);
 
     // refs #22150, exclude unsubscribed mail when included in opened / click
+    $excludeMailingUnsubsribed = "INSERT IGNORE INTO X_$job_id (contact_id)
+                    SELECT  DISTINCT    $eq.contact_id
+                    FROM                $eq
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$mailing'
+                    INNER JOIN          $eu
+                            ON          $eu.event_queue_id = $eq.id
+                    WHERE
+                                        $mg.mailing_id = {$mailing_id}
+                        AND             $mg.group_type = 'Include'";
+    $mailingGroup->query($excludeMailingUnsubsribed);
+
     $excludeOpenedUnsubscribed = "INSERT IGNORE INTO X_$job_id (contact_id)
                     SELECT  DISTINCT    $eq.contact_id
                     FROM                $eq
