@@ -117,8 +117,14 @@ class CRM_Utils_System_Drupal7 {
     if (function_exists('user_load')) {
       $user = user_load($ufID);
       if ($user->mail != $ufName) {
-        user_save($user, array('mail' => $ufName));
-        $user = user_load($ufID);
+        // check if duplicated email on drupal
+        if ((bool) db_select('users')->fields('users', array('uid'))->condition('mail', db_like($ufName), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+          // drupal user mail already be taken
+        }
+        else {
+          user_save($user, array('mail' => $ufName));
+          $user = user_load($ufID);
+        }
       }
     }
   }
