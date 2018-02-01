@@ -126,12 +126,17 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
 
     
     // resize
-    imagecopyresized($image, $source, 0, 0, 0, 0, $widthNew, $heightNew, $widthOrig, $heightOrig);
+    ImageAlphaBlending($image,true);
+    ImageSaveAlpha($image,true);
+    $color = imagecolorallocatealpha($image, 0, 0, 0, 127);
+    imagefill($image, 0, 0, $color);
+
+    imagecopyresampled($image, $source, 0, 0, 0, 0, $widthNew, $heightNew, $widthOrig, $heightOrig);
 
     // save the resized image
     $fp = fopen($newFilename, 'w+');
     ob_start();
-    ImageJPEG($image);
+    imagepng($image);
     $image_buffer = ob_get_contents();
     ob_end_clean();
     ImageDestroy($image);
