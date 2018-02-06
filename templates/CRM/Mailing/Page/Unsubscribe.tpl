@@ -41,7 +41,6 @@
             {foreach from=$groups item=group}
             <tr class="{cycle values="odd-row,even-row"}">
              <td><strong>{$group.title}</strong></td>
-             <td>&nbsp;&nbsp;{$group.description}&nbsp;</td>
             </tr>
             {/foreach}  
         </table>
