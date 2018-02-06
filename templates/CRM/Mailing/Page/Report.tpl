@@ -65,7 +65,7 @@
 {if $group.mailing}
 {ts 1=$group.link 2=$group.name}Recipients of <a href="%1">%2</a>{/ts}
 {else}
-{ts 1=$group.link 2=$group.name}Members of <a href="%1">%2</a>{/ts}
+{ts}Group{/ts}: <a href="{$group.link}">{$group.name}</a>
 {/if}
 </td>
 </tr>
