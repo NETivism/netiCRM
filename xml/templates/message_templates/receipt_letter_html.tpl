@@ -40,10 +40,8 @@
       <tr>
         <td class="col-1">身分證字號/統一編號</td>
         <td class="col-2">{$serial_id}</td>
-        <td class="col-3" rowspan="4" style="position: relative;">
-          <div style="position: absolute;top: 0;">
-            <img style="height:77pt;width: auto;position: absolute;top: 0;" src="{$imageBigStampUrl}"/>
-          </div>
+        <td class="col-3 big-stamp-wrapper stamp-wrapper" rowspan="4">
+            <img class="big-stamp stamp-img" src="{$imageBigStampUrl}"/>
         </td>
       </tr>
       <tr>
@@ -61,8 +59,8 @@
       <tr>
         <td class="col-1">金額（小寫）</td>
         <td class="col-2">{$amount|crmMoney:$currency} 元整</td>
-        <td class="col-3" style="position: relative;">經辦人：
-          <img style="height: 19pt;width:auto;position: absolute;top: 0;left: 54pt;" src="{$imageSmallStampUrl}"/>
+        <td class="col-3 small-stamp-wrapper stamp-wrapper">經辦人：
+          <img class="small-stamp stamp-img" src="{$imageSmallStampUrl}"/>
         </td>
       </tr>
     </table>
