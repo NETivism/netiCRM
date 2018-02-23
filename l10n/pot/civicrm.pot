@@ -33833,7 +33833,7 @@ msgid "Recipients of <a href=\"%1\">%2</a>"
 msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl
-msgid "Members of <a href=\"%1\">%2</a>"
+msgid "Members of group <a href=\"%1\">%2</a>"
 msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl

@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-01-09 06:30+0000\n"
+"PO-Revision-Date: 2018-02-23 09:38+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -5093,7 +5093,7 @@ msgstr "已排程"
 
 #: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
 msgid "Running"
-msgstr "載入中"
+msgstr "進行中"
 
 #: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
 msgid "Complete"
@@ -33810,8 +33810,8 @@ msgid "Recipients of <a href=\"%1\">%2</a>"
 msgstr "收件者：<a href=\"%1\">%2</a>"
 
 #: templates/CRM/Mailing/Page/Report.tpl
-msgid "Members of <a href=\"%1\">%2</a>"
-msgstr "會員：<a href=\"%1\">%2</a>"
+msgid "Members of group <a href=\"%1\">%2</a>"
+msgstr "群組成員: <a href=\"%1\">%2</a>"
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Excluded"
