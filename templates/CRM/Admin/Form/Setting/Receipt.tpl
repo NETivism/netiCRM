@@ -68,7 +68,7 @@
                 <img style="max-height: 103px;" src="{$imageBigStampUrl}"><br/>
                 {/if}
                 {$form.uploadBigStamp.html}<br />
-            <span class="description">{ts}This image will show on receipt.{/ts}</span></td>
+            <span class="description">{ts}This image will show on receipt.The position please click <a class="receipt-image-button">here</a> to get more information{/ts}</span></td>
         </tr>
         <tr class="crm-form-block-uploadSmallStamp">
             <td class="label">{$form.uploadSmallStamp.label}</td><td>
@@ -76,9 +76,51 @@
                 <img style="max-height: 43px;" src="{$imageSmallStampUrl}"><br/>
                 {/if}
                 {$form.uploadSmallStamp.html}<br />
-            <span class="description">{ts}This image will show on receipt.{/ts}</span></td>
+            <span class="description">{ts}This image will show on receipt.The position please click <a class="receipt-image-button">here</a> to get more information{/ts}</span></td>
         </tr>
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>
+<div class="receipt-image">
+    <div class="receipt-image-inner">
+        <img src="{$config->resourceBase}i/admin/receipt/example1.png">
+        <br/>
+        <img src="{$config->resourceBase}i/admin/receipt/example2.png">
+        <br/>
+        <img src="{$config->resourceBase}i/admin/receipt/example_full.png">
+    </div>
+</div>
+{literal}
+<style>
+    .receipt-image{
+        display: none;
+    }
+    .receipt-image.display{
+        display: block;
+        position: fixed;
+        background: rgba(0,0,0,0.5);
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 5%;
+    }
+    .receipt-image-inner {
+        overflow-y: scroll;
+        background: white;
+        height: 100%;
+        padding: 20px;
+    }
+</style>
+<script>
+    (function($){
+        $(function(){
+            $('.receipt-image-button,.receipt-image').click(function(){
+                $('.receipt-image').toggleClass('display');
+            });
+        })
+    })(cj);
+</script>
+{/literal}
 </div>
