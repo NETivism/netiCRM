@@ -46087,13 +46087,13 @@ msgstr ""
 msgid "Are you sure you want to un-publish this mailing from public?"
 msgstr "" 
 
-# templates/CRM/Admin/Form/Setting/Receipt.tpl
-msgid "This image will show on receipt."
-msgstr ""
-
 # CRM/Admin/Form/Setting/Receipt.php
 msgid "The stamp of organization."
 msgstr ""
 
 msgid "The stamp of the person in charge."
+msgstr ""
+
+# templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "This image will show on receipt. The position please click <a class='%1'>here</a> to get more information."
 msgstr ""
