@@ -62,7 +62,7 @@ table td { padding: 2px 4px; }
 .stamp-wrapper{position: relative;}
 .stamp-img{position: absolute;}
 .big-stamp{bottom: 0;max-height: 103px;left: 1px;}
-.small-stamp{top: 0;max-height: 43px;left: 70px;z-index: 1;}
+.small-stamp{top: 0;max-height: 43px;left: 70px;z-index: -1;}
 
 {/literal}
 </style>
