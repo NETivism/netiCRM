@@ -68,7 +68,7 @@
                 <img style="max-height: 103px;" src="{$imageBigStampUrl}"><br/>
                 {/if}
                 {$form.uploadBigStamp.html}<br />
-            <span class="description">{ts 1="receipt-image-button"}This image will show on receipt.The position please click <a class='%1'>here</a> to get more information.{/ts}</span></td>
+            <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
         </tr>
         <tr class="crm-form-block-uploadSmallStamp">
             <td class="label">{$form.uploadSmallStamp.label}</td><td>
@@ -76,77 +76,10 @@
                 <img style="max-height: 43px;" src="{$imageSmallStampUrl}"><br/>
                 {/if}
                 {$form.uploadSmallStamp.html}<br />
-            <span class="description">{ts 1="receipt-image-button"}This image will show on receipt.The position please click <a class='%1'>here</a> to get more information.{/ts}</span></td>
+            <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
         </tr>
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>
-<div class="receipt-image">
-    <div class="receipt-image-inner">
-        <img src="{$config->resourceBase}i/admin/receipt/example1.png">
-        <br/>
-        <img src="{$config->resourceBase}i/admin/receipt/example2.png">
-        <br/>
-        <img src="{$config->resourceBase}i/admin/receipt/example_full.png">
-        <div class="receipt-image-close-button receipt-image-button">X</div>
-    </div>
-
-</div>
-{literal}
-<style>
-    .receipt-image-button{
-        cursor: pointer;
-    }
-    .receipt-image{
-        display: none;
-    }
-    .receipt-image.display{
-        display: block;
-        position: fixed;
-        background: rgba(0,0,0,0.5);
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        padding: 5%;
-    }
-    .receipt-image-inner {
-        overflow-y: scroll;
-        background: white;
-        height: 100%;
-        padding: 20px;
-    }
-    .receipt-image-close-button{
-        border: white 2px solid;
-        width: 40px;
-        position: absolute;
-        top: 10%;
-        right: calc(5% - 40px);
-        color: white;
-        font-size: 40px;
-        line-height: 30px;
-        text-align: center;
-        padding: 10px 0;
-        font-family: sans-serif;
-    }
-    .receipt-image-close-button:hover {
-        background: white;
-        color: black;
-    }
-</style>
-<script>
-    (function($){
-        $(function(){
-            $('.receipt-image-button,.receipt-image').click(function(e){
-                if(e.srcElement.className == 'receipt-image-inner'){
-                    return ;
-                }
-                $('.receipt-image').toggleClass('display');
-                e.stopPropagation();
-            });
-        })
-    })(cj);
-</script>
 {/literal}
 </div>

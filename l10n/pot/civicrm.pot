@@ -46095,5 +46095,5 @@ msgid "The stamp of the person in charge."
 msgstr ""
 
 # templates/CRM/Admin/Form/Setting/Receipt.tpl
-msgid "This image will show on receipt. The position please click <a class='%1'>here</a> to get more information."
+msgid "This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information."
 msgstr ""

@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-02-28 11:28+0000\n"
+"PO-Revision-Date: 2018-03-02 03:44+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46239,6 +46239,6 @@ msgstr "經辦人章圖檔"
 
 # templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid ""
-"This image will show on receipt. The position please click <a "
-"class='%1'>here</a> to get more information."
-msgstr "這張圖片會出現在收據上，位置請參考<a class='%1'>這裡</a>來取得更詳細的資訊。"
+"This image will show on receipt.The position please click <a href='%1' "
+"target='_blank'>here</a> to get more information."
+msgstr "這張圖片會出現在收據上，位置請參考<a href='%1' target='_blank'>此連結</a>來取得更詳細的資訊。"
