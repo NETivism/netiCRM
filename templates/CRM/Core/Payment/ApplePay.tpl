@@ -21,7 +21,7 @@
       merchantname : 'NewebPay',
       ordernumber : 'T2016120001',
       productname : '測試商品',
-      price : '100.00'
+      price : '{/literal}{$amount}{literal}'
   }
   
   //-- 總計

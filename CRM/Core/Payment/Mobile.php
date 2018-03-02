@@ -124,39 +124,29 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    *
    */
   function doTransferCheckout(&$params, $component) {
-    print('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta charset="UTF-8">
-</head>
-<body>');
 
+    $paymentProcessor = $this->_paymentProcessor;
+    $form_params = $this->_paymentForm->_params;
 
-//     print_r($params);
-//     print($component);
-//     exit;
-
-    $paymentProcessor = $this->get('paymentProcessor');
     $provider_name = $paymentProcessor['signature'];
     $module_name = 'civicrm_'.strtolower($provider_name);
     if (module_load_include('inc', $module_name, $module_name.'.checkout') === FALSE) {
       CRM_Core_Error::fatal('Module '.$module_name.' doesn\'t exists.');
     }
-    $function_name = "_{$module_name}_mobile_variable";
+    $function_name = "{$module_name}_get_mobile_params";
     $payment_params = call_user_func($function_name);
 
-    print_r($this);
-    exit;
-    $options = array(
-      1 => array( $params['civicrm_instrument_id'], 'Integer')
-    );
+    $options = array(1 => array( $params['civicrm_instrument_id'], 'Integer'));
     $instrument_name = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
+
     if($instrument_name == 'ApplePay'){
       $smarty = CRM_Core_Smarty::singleton();
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
-      print_r($page);
+      $smarty->assign('amount', $form_params['amount'] );
+      print($page);
       exit;
     }
+    
   }
 }
 
