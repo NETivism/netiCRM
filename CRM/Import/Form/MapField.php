@@ -245,6 +245,9 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
       //Modify mapper fields title if fields are present in dedupe rule
       if (is_array($this->_dedupeFields[$contactType])) {
         foreach ($this->_dedupeFields[$contactType] as $val) {
+          if ($val == 'state_province_id') {
+            $val = 'state_province';
+          }
           if ($valTitle = CRM_Utils_Array::value($val, $this->_mapperFields)) {
             $this->_mapperFields[$val] = $valTitle . ts('(match to contact)');
           }
