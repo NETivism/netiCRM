@@ -303,11 +303,6 @@ class DB_mysql extends DB_common
         $ismanip = $this->_checkManip($query);
         $this->last_query = $query;
         $query = $this->modifyQuery($query);
-        if ($this->_db) {
-            if (!@mysql_select_db($this->_db, $this->connection)) {
-                return $this->mysqlRaiseError(DB_ERROR_NODBSELECTED);
-            }
-        }
         if (!$this->autocommit && $ismanip) {
             if ($this->transaction_opcount == 0) {
                 $result = @mysql_query('SET AUTOCOMMIT=0', $this->connection);
