@@ -506,7 +506,7 @@ SELECT cg.table_name  as table_name ,
        cg.is_multiple as is_multiple,
        cf.column_name as column_name,
        cf.id          as cf_id      ,
-       cf.data_type   as data_type 
+       cf.data_type   as data_type
 FROM   civicrm_custom_group cg,
        civicrm_custom_field cf
 WHERE  cf.custom_group_id = cg.id
@@ -518,22 +518,11 @@ AND    cf.id IN ( $fieldIDList )
 
     while ($dao->fetch()) {
       // ensure that value is of the right data type
-      $dataType = $dao->data_type;
       foreach ($fieldValues[$dao->cf_id] as $fieldValue) {
-        if (CRM_Utils_Type::escape($fieldValue['value'],
-            $dataType, FALSE
-          ) === NULL) {
-          return CRM_Core_Error::createAPIError(ts('value: %1 is not of the right field data type: %2',
-              array(1 => $fieldValue['value'],
-                2 => $dao->data_type,
-              )
-            ));
-        }
-
         $cvParam = array(
           'entity_id' => $params['entityID'],
           'value' => $fieldValue['value'],
-          'type' => $dataType,
+          'type' => $dao->data_type,
           'custom_field_id' => $dao->cf_id,
           'custom_group_id' => $dao->cg_id,
           'table_name' => $dao->table_name,
