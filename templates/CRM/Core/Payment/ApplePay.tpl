@@ -9,6 +9,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript">
 
+  function dd(text){
+    $('dd.console').append("<div>"+text+"</div>");
+  }
+
+    $(function(){
+        dd('Loading finished.');
+    });
+
   //-- 檢查環境是否可執行 ApplePay
   if (window.ApplePaySession) {
       if (ApplePaySession.canMakePayments) {
@@ -51,8 +59,6 @@
   //-- 計算含運金額
   total.amount = Number(order.price) + Number(shippingMethod.amount);
   
-  
-  
   var apaybegin = function() {
     
     try {
@@ -78,7 +84,49 @@
         /*
           3-1.取得 event.validationURL 傳送至商家server進行商家驗證.
           3-2.驗證完成後取得 merchant session,並執行 session.completeMerchantValidation(merchantSession)//-- 參數型別為JSON物件
-        */    
+        */
+
+        var data = {
+          provider: "{/literal}{$provider}{literal}",
+          validationURL: event.validationURL
+        };
+
+        dd('s2:準備進行商店驗證，傳入資訊');
+        dd(JSON.stringify(data));
+
+
+
+        // 將validationURL拋到Server端，由Server端與Apple Server做商店驗證
+        
+        $.ajax({
+          type: "POST",
+          url: 'https://try.trelolo.com/civicrm/ajax/applepay/validate',
+          data: data,
+          dataType: "json",
+          success: function (merchantSession){
+
+            //alert(merchantSession);
+
+            dd("Validate Success");
+
+            // if(apple_pay_params.debug_mode == 'yes')
+            // {
+            //   console.log('s3:商店驗證回傳結果');
+            //   console.log(merchantSession);
+            //   console.log(JSON.parse(merchantSession));
+            // }
+
+            // if(apple_pay_params.debug_mode == 'yes')
+            // {
+            //   console.log('s4:提示付款，按壓指紋');
+            // }
+          }
+        });
+        
+
+
+
+
       };
       
       //-- 4).Payment授權完成
@@ -87,6 +135,9 @@
           4-1.將 event.payment.token 傳回商家 server 進行授權
           4-2.將授權結果傳入 session.completePayment(ApplePaySession.STATUS_SUCCESS)
         */
+
+
+
       };
 
       //-- 收件人資料變更
@@ -191,13 +242,15 @@
       </dd>
       <dd style="margin-top:10px;">
         <span>總金額:</span>
-        <span>100</span>
+        <span>{/literal}{$amount}{literal}</span>
       </dd>
     </dl>
   </div>
   
   <div style="margin-left:20px;"><p>選擇支付工具:</p></div>
   <div align="center" style="margin-top: 10px"><button class="apple-pay-button apple-pay-button-white-with-line" onclick="apaybegin();"></button></div>
+
+  <dd class="console">Console message: </dd>
 </div>
 
 </body>

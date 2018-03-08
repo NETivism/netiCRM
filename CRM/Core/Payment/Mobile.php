@@ -141,12 +141,48 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     if($instrument_name == 'ApplePay'){
       $smarty = CRM_Core_Smarty::singleton();
-      $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
+      $smarty->assign('provider', $provider_name );
       $smarty->assign('amount', $form_params['amount'] );
+      $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       print($page);
       exit;
     }
     
+  }
+
+  static function validate(){
+    if($_POST['provider'] == 'neweb'){
+      $data = array(
+        "merchantnumber" => "123456",
+        "domain_name" => "xxxx.org",
+        "display_name" => "測試",
+        // "validation_url" => "https://apple-pay-gateway-cert.apple.com/paymentservices/startSession",
+        "validation_url" => $_POST['validationURL'],
+      );
+
+      // dd(date('Y-m-d H:i:s'));
+      // dd($_POST, 'POST');
+      // dd($data,'data');
+
+      $url = 'https://testmaple2.neweb.com.tw/NewebPayment2/applepay/sessions';
+      $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
+      '. json_encode($data).'
+      END';
+      // dd($cmd, 'cmd');
+      $result = exec($cmd);
+
+      // dd($result,'result');
+
+      echo $result;
+      exit;
+      
+    }
+
+
+  }
+
+  static function checkout(){
+    $data = $_POST;
   }
 }
 
