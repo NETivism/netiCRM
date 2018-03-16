@@ -19,4 +19,4 @@ pipeline:
   notify:
     image: drillster/drone-email
     port: 2525
-    secrets: [PLUGIN_FROM, EMAIL_HOST, EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_RECIPIENTS]
+    secrets: [plugin_from, email_host, email_username, email_password, email_recipients]
