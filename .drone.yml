@@ -1,27 +1,21 @@
 pipeline:
-  build:
-    image: netivism/neticrm-ci:drone
-    environment:
-      - TZ=Asia/Taipei
-      - RUNPORT=8080
-      - DRUPAL_ROOT=/var/www/html
-      - CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci
-      - DRUPAL=7.54
-      - NETICRM=develop
-    commands:
-      - /usr/bin/supervisord &
-      - /init.sh
-      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
-      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php
-      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
-      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
-      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
+#  build:
+#    image: netivism/neticrm-ci:drone
+#    environment:
+#      - TZ=Asia/Taipei
+#      - RUNPORT=8080
+#      - DRUPAL_ROOT=/var/www/html
+#      - CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci
+#      - DRUPAL=7.54
+#      - NETICRM=develop
+#    commands:
+#      - /usr/bin/supervisord &
+#      - /init.sh
+#      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
+#      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php
+#      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
+#      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
+#      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
   notify:
     image: drillster/drone-email
-    skip_verify: true
-    from: ${PLUGIN_FROM}
-    host: ${EMAIL_HOST}
-    port: ${EMAIL_PORT}
-    username: ${EMAIL_USERNAME}
-    password: ${EMAIL_PASSWORD}
-    recipients: ${EMAIL_RECIPIENTS}
+    secrets: [PLUGIN_FROM, EMAIL_HOST, EMAIL_PORT, EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_RECIPIENTS]
