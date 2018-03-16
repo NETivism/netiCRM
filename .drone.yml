@@ -18,4 +18,5 @@ pipeline:
 #      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
   notify:
     image: drillster/drone-email
-    secrets: [PLUGIN_FROM, EMAIL_HOST, EMAIL_PORT, EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_RECIPIENTS]
+    port: 2525
+    secrets: [PLUGIN_FROM, EMAIL_HOST, EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_RECIPIENTS]
