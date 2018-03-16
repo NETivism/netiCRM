@@ -19,10 +19,9 @@ pipeline:
   notify:
     image: drillster/drone-email
     skip_verify: true
-    secrets:
-      - PLUGIN_FROM
-      - EMAIL_HOST
-      - EMAIL_PORT
-      - EMAIL_USERNAME
-      - EMAIL_PASSWORD
-      - EMAIL_RECIPIENTS
+    from: ${PLUGIN_FROM}
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    recipients: ${EMAIL_RECIPIENTS}
