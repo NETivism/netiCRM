@@ -16,3 +16,13 @@ pipeline:
       - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
+  notify:
+    image: drillster/drone-email
+    from: noreply@mail.neticrm.tw
+    skip_verify: true
+    recipients_only: true
+    host: ${email_host}
+    port: ${email_port}
+    username: ${email_username}
+    password: ${email_password}
+    recipients: ${email_recipients}
