@@ -131,6 +131,18 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
       );
     }
 
+    $columnHeaders = array(
+      ts('Membership Type'),
+      ts('Join Date'),
+      ts('Start Date'),
+      ts('End Date'),
+      ts('Reminder Date'),
+      ts('Status'),
+      ts('Source'),
+      '', // last for action
+    );
+    $selecor = new stdClass();
+    CRM_Utils_Hook::searchColumns('membership', $columnHeaders, $membership, $selector);
     $activeMembers = CRM_Member_BAO_Membership::activeMembers($membership);
     $inActiveMembers = CRM_Member_BAO_Membership::activeMembers($membership, 'inactive');
     $this->assign('activeMembers', $activeMembers);
