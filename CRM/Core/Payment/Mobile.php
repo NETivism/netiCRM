@@ -125,53 +125,82 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    */
   function doTransferCheckout(&$params, $component) {
 
+    dd('Hello');
+    dd($_POST);
+
     $paymentProcessor = $this->_paymentProcessor;
+    dd($paymentProcessor);
     $form_params = $this->_paymentForm->_params;
+
+    dd($form_params);
 
     $provider_name = $paymentProcessor['signature'];
     $module_name = 'civicrm_'.strtolower($provider_name);
     if (module_load_include('inc', $module_name, $module_name.'.checkout') === FALSE) {
       CRM_Core_Error::fatal('Module '.$module_name.' doesn\'t exists.');
     }
-    $function_name = "{$module_name}_get_mobile_params";
-    $payment_params = call_user_func($function_name);
 
     $options = array(1 => array( $params['civicrm_instrument_id'], 'Integer'));
     $instrument_name = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
 
     if($instrument_name == 'ApplePay'){
       $smarty = CRM_Core_Smarty::singleton();
-      $smarty->assign('provider', $provider_name );
-      $smarty->assign('amount', $form_params['amount'] );
+      $smarty->assign('after_redirect', 0);
+      $params = array(
+        'cid' => $form_params['contributionID'],
+        'provider' => $provider_name,
+        'description' => $form_params['description'],
+        'amount' => $form_params['amount']
+      );
+      $smarty->assign('params', $params );
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       print($page);
       exit;
     }
-    
+  }
+
+  static function checkout(){
+    dd('HelloTwo');
+    dd($_POST);
+
+    if($_POST['instrument'] == 'ApplePay'){
+      $smarty = CRM_Core_Smarty::singleton();
+      $smarty->assign('after_redirect', 1);
+      foreach ($_POST as $key => $value) {
+        $smarty->assign($key, $value );
+      }
+      $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
+      print($page);
+      exit;
+    }
   }
 
   static function validate(){
-    if($_POST['provider'] == 'neweb'){
+    dd(date('Y-m-d H:i:s'));
+    dd($_POST, 'POST_validate');
+    if(strtolower($_POST['provider']) == 'neweb'){
       $data = array(
-        "merchantnumber" => "123456",
-        "domain_name" => "xxxx.org",
+        "merchantnumber" => "761981",
+        "domain_name" => "www.nncf.org",
         "display_name" => "測試",
         // "validation_url" => "https://apple-pay-gateway-cert.apple.com/paymentservices/startSession",
         "validation_url" => $_POST['validationURL'],
       );
 
-      // dd(date('Y-m-d H:i:s'));
-      // dd($_POST, 'POST');
-      // dd($data,'data');
+      dd($data,'data');
 
-      $url = 'https://testmaple2.neweb.com.tw/NewebPayment2/applepay/sessions';
+      module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
+      if(function_exists('civicrm_neweb_get_mobile_params')){
+        $payment_params = civicrm_neweb_get_mobile_params();
+      }
+      $url = $payment_params['session_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
-      // dd($cmd, 'cmd');
+      dd($cmd, 'cmd');
       $result = exec($cmd);
 
-      // dd($result,'result');
+      dd($result,'result');
 
       echo $result;
       exit;
@@ -181,8 +210,36 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
   }
 
-  static function checkout(){
+  static function transact(){
+    dd(date('Y-m-d H:i:s'));
+    dd($_POST, 'POST_transact');
     $data = $_POST;
+    if(strtolower($_POST['provider']) == 'neweb'){
+      $data = array(
+
+      );
+
+      // dd(date('Y-m-d H:i:s'));
+      // dd($_POST, 'POST');
+      // dd($data,'data');
+
+      module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
+      if(function_exists('civicrm_neweb_get_mobile_params')){
+        $payment_params = civicrm_neweb_get_mobile_params();
+      }
+      $url = $payment_params['transact_url'];
+      $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
+      '. json_encode($data).'
+      END';
+      dd($cmd, 'cmd');
+      $result = exec($cmd);
+
+      dd($result,'result');
+
+      echo $result;
+      exit;
+      
+    }
   }
 }
 
