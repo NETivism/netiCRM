@@ -163,3 +163,14 @@
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
  </fieldset>
 </div>
+<script>{literal}
+cj(document).ready(function($){
+  if ($('#is_default').length) {
+    $('#is_default').click(function() {
+      if ($(this).attr('checked')) {
+        $('#is_active').attr('checked', true);
+      }
+    });
+  }
+});
+{/literal}</script>

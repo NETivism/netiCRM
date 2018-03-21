@@ -245,10 +245,6 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
     $enabled = $this->add('checkbox', 'is_active', ts('Enabled?'));
 
-    if ($isReserved) {
-      $enabled->freeze();
-    }
-
     //fix for CRM-3552, CRM-4575
     if (in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee', 'from_email_address', 'website_type'))) {
       $this->assign('showDefault', TRUE);
@@ -334,6 +330,9 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       if (!CRM_Utils_Mail::checkMailProviders($formEmail)) {
         $errors['label'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
       }
+    }
+    if ($fields['is_default'] && empty($fields['is_active'])) {
+      $errors['is_active'] = ts('%1 is a required field.', array(1 => ts('Is Active')));
     }
 
     return $errors;
