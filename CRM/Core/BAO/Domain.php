@@ -165,22 +165,20 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
     }
     require_once 'CRM/Core/OptionGroup.php';
     $fromEmailAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
+    if (empty($fromEmailAddress)) {
+      $fromEmailAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL);
+    }
     if (!empty($fromEmailAddress)) {
-      require_once 'CRM/Utils/Mail.php';
-      foreach ($fromEmailAddress as $key => $value) {
-        $email = CRM_Utils_Mail::pluckEmailFromHeader($value);
-        $fromName = CRM_Utils_Array::value(1, explode('"', $value));
-        break;
-      }
+      $addr = reset($fromEmailAddress);
+      $email = CRM_Utils_Mail::pluckEmailFromHeader($addr);
+      $fromName = CRM_Utils_Array::value(1, explode('"', $addr));
       return array($fromName, $email);
     }
-
-    $url = CRM_Utils_System::url('civicrm/contact/domain',
-      'action=update&reset=1'
-    );
-    $status = ts("There is no valid default from email address configured for the domain. You can configure here <a href='%1'>Configure From Email Address.</a>", array(1 => $url));
-
-    CRM_Core_Error::fatal($status);
+    else {
+      $url = CRM_Utils_System::url('civicrm/admin/options/from_email', 'reset=1&group=from_email_address');
+      $status = ts("There is no valid default from email address configured for the domain. You can configure here <a href='%1'>Configure From Email Address.</a>", array(1 => $url));
+      CRM_Core_Session::setStatus($status);
+    }
   }
 
   static function addContactToDomainGroup($contactID) {
