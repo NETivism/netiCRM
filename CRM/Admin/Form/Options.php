@@ -103,6 +103,15 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
         CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
       }
     }
+
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      if ($this->_id) {
+        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , array(1 => array($this->_id, 'Integer')));
+        if ($is_default) {
+          CRM_Core_Error::fatal(ts('You cannot delete default value.'));
+        }
+      }
+    }
   }
 
   /**
