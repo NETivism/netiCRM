@@ -180,8 +180,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     dd($_POST, 'POST_validate');
     if(strtolower($_POST['provider']) == 'neweb'){
       $data = array(
-        "merchantnumber" => "761981",
-        "domain_name" => "www.nncf.org",
+        "merchantnumber" => "758200",
+        "domain_name" => "dev.neticrm.tw",
         "display_name" => "測試",
         // "validation_url" => "https://apple-pay-gateway-cert.apple.com/paymentservices/startSession",
         "validation_url" => $_POST['validationURL'],
