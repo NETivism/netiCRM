@@ -80,7 +80,12 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @access public
    */
   function preProcess() {
-    parent::preProcess();
+    $blockCount = CRM_Utils_Request::retrieve('count', 'Positive', CRM_Core_DAO::$_nullObject);
+    if(empty($blockCount)){
+      // for ajax , don't do extra things. refs #20631
+      parent::preProcess();
+    }
+
 
     $this->_values = $this->get('values');
     if ($this->_id && empty($this->_values)) {
