@@ -323,13 +323,14 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       }
 
       // is the event active (enabled)?
-      if (!$this->_values['event']['is_active']) {
+      $is_test = $this->_action & CRM_Core_Action::PREVIEW;
+      if (!$this->_values['event']['is_active'] && !$is_test) {
         // form is inactive, die a fatal death
         CRM_Core_Error::statusBounce(ts('The event you requested is currently unavailable (contact the site administrator for assistance).'));
       }
 
       // is online registration is enabled?
-      if (!$this->_values['event']['is_online_registration']) {
+      if (!$this->_values['event']['is_online_registration'] && !$is_test) {
         CRM_Core_Error::statusBounce(ts('Online registration is not currently available for this event (contact the site administrator for assistance).'), $infoUrl);
       }
 
@@ -339,22 +340,14 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       }
 
       $now = date('YmdHis');
-      $startDate = CRM_Utils_Date::processDate(CRM_Utils_Array::value('registration_start_date',
-          $this->_values['event']
-        ));
+      $startDate = CRM_Utils_Date::processDate(CRM_Utils_Array::value('registration_start_date', $this->_values['event']));
 
-      if ($startDate &&
-        $startDate >= $now
-      ) {
+      if ($startDate &&  $startDate >= $now && !$is_test) {
         CRM_Core_Error::statusBounce(ts('Registration for this event begins on %1', array(1 => CRM_Utils_Date::customFormat(CRM_Utils_Array::value('registration_start_date', $this->_values['event'])))), $infoUrl);
       }
 
-      $endDate = CRM_Utils_Date::processDate(CRM_Utils_Array::value('registration_end_date',
-          $this->_values['event']
-        ));
-      if ($endDate &&
-        $endDate < $now
-      ) {
+      $endDate = CRM_Utils_Date::processDate(CRM_Utils_Array::value('registration_end_date', $this->_values['event']));
+      if ($endDate && $endDate < $now && !$is_test) {
         CRM_Core_Error::statusBounce(ts('Registration for this event ended on %1', array(1 => CRM_Utils_Date::customFormat(CRM_Utils_Array::value('registration_end_date', $this->_values['event'])))), $infoUrl);
       }
 
