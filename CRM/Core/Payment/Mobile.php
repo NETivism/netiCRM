@@ -190,8 +190,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       dd($data,'data');
 
       module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
-      if(function_exists('civicrm_neweb_get_mobile_params')){
-        $payment_params = civicrm_neweb_get_mobile_params();
+      if(function_exists('_civicrm_neweb_get_mobile_params')){
+        $payment_params = __civicrm_neweb_get_mobile_params();
       }
       $url = $payment_params['session_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
@@ -224,8 +224,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       // dd($data,'data');
 
       module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
-      if(function_exists('civicrm_neweb_get_mobile_params')){
-        $payment_params = civicrm_neweb_get_mobile_params();
+      if(function_exists('_civicrm_neweb_get_mobile_params')){
+        $payment_params = _civicrm_neweb_get_mobile_params();
       }
       $url = $payment_params['transact_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 

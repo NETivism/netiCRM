@@ -174,6 +174,7 @@
               */
               dd("Start transact");
               data = {
+                provider : window.applePayProcess.provider
 
               };
 
