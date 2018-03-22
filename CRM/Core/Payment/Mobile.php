@@ -125,12 +125,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    */
   function doTransferCheckout(&$params, $component) {
 
-    dd(date('Y-m-d H:i:s'));
-    dd('Hello');
-
-    $qfKey = $_POST['qfKey'];
+    // dd(date('Y-m-d H:i:s'));
+    // dd('Hello');
+    $qfKey = $params['qfKey'];
     $paymentProcessor = $this->_paymentProcessor;
     $form_params = $this->_paymentForm->_params;
+
+    $session = CRM_Core_Session::singleton();
+    $session->set($qfKey."_params", $params);
 
     $provider_name = $paymentProcessor['password'];
     $module_name = 'civicrm_'.strtolower($provider_name);
@@ -141,7 +143,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $options = array(1 => array( $params['civicrm_instrument_id'], 'Integer'));
     $instrument_name = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
 
-    if($instrument_name == 'ApplePay'){
+    if(strtolower($instrument_name) == 'applepay'){
       $smarty = CRM_Core_Smarty::singleton();
       $smarty->assign('after_redirect', 0);
       $params = array(
@@ -154,12 +156,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $smarty->assign('params', $params );
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       print($page);
-      exit;
+      CRM_Utils_System::civiExit();
     }
   }
 
   static function checkout(){
-
     if($_POST['instrument'] == 'ApplePay'){
       $smarty = CRM_Core_Smarty::singleton();
       $smarty->assign('after_redirect', 1);
@@ -168,21 +169,27 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       }
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       print($page);
-      exit;
+      CRM_Utils_System::civiExit();
     }
   }
 
   static function validate(){
-    $qfKey = $_POST['qfKey'];
-    $controller = $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$_POST['qfKey']];
-    $paymentProcessor = $controller['paymentProcessor'];
+    // dd('hello validate');
+    // dd($_POST, 'VALIDATE POST');
 
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $_POST['cid'];
+    $contribution->find(TRUE);
 
-    if(strtolower($paymentProcessor['password']) == 'neweb'){
+    $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
+    $paymentProcessor->id = $contribution->payment_processor_id;
+    $paymentProcessor->find(TRUE);
+
+    if(strtolower($paymentProcessor->password) == 'neweb'){
       $data = array(
-        "merchantnumber" => $paymentProcessor['user_name'],
+        "merchantnumber" => $paymentProcessor->user_name,
         "domain_name" => $_POST['domain_name'],
-        "display_name" => $controller['params']['item_name'],
+        "display_name" => $contribution->source,
         "validation_url" => $_POST['validationURL'],
       );
 
@@ -197,7 +204,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $result = exec($cmd);
 
       echo $result;
-      exit;
+      CRM_Utils_System::civiExit();
       
     }
 
@@ -205,33 +212,78 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function transact(){
-    $qfKey = $_POST['qfKey'];
-    $controller = $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$_POST['qfKey']];
-    $paymentProcessor = $controller['paymentProcessor'];
+    // dd('hello transact');
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $_POST['cid'];
+    $contribution->find(TRUE);
 
-    if(strtolower($paymentProcessor['password']) == 'neweb'){
+    $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
+    $paymentProcessor->id = $contribution->payment_processor_id;
+    $paymentProcessor->find(TRUE);
+
+    if(strtolower($paymentProcessor->password) == 'neweb'){
       $data = array(
-        'userid' => $paymentProcessor['signature'],
-        'passwd' => $paymentProcessor['subject'],
-        'merchantnumber' => $paymentProcessor['user_name'],
-        'ordernumber' => $controller['params']['contributionID'],
+        'userid' => $paymentProcessor->signature,
+        'passwd' => $paymentProcessor->subject,
+        'merchantnumber' => $paymentProcessor->user_name,
+        'ordernumber' => $contribution->id,
         'applepay_token' => $_POST['applepay_token'],
         'depositflag' => 0,
-        'consumerip' => $controller['params']['ip_address'],
+        'consumerip' => CRM_Utils_System::ipAddress(),
       );
 
       module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
       if(function_exists('_civicrm_neweb_get_mobile_params')){
         $payment_params = _civicrm_neweb_get_mobile_params();
+      }else{
+        CRM_Core_Error::debug_log_message("Doesn't enable module: civicrm_neweb");
       }
       $url = $payment_params['transact_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
       $result = exec($cmd);
+      $result = json_decode($result);
+      
+      $ipn = new CRM_Core_Payment_BaseIPN();
+      $input = $ids = $objects = array();
+      // if(!empty($controller['value']['event_id'])){
+        // ?? 
+        // $input['component'] = 'event';
 
-      echo $result;
-      exit;
+      // }else{
+        $input['component'] = 'contribute';
+      // }
+      $ids['contribution'] = $contribution->id;
+      $ids['contact'] = $contribution->contact_id;
+      // $pid = $controller['params']['payment_processor'];
+      // $validate_result = $ipn->validateData($input, $ids, $objects, FALSE, $pid);
+      $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
+      if($validate_result){
+        $transaction = new CRM_Core_Transaction();
+        if($result->prc == 0 && $result->src == 0){
+          // $input['trxn_id'] = $c->trxn_id;
+          $input['payment_instrument_id'] = $contribution->payment_instrument_id;
+          // $input['check_number'] = $result['writeoffnumber'];
+          $input['amount'] = $contribution->amount;
+          // if($result['timepaid']){
+          //   $objects['contribution']->receive_date = $result['timepaid'];
+          // }
+          // else{
+            $objects['contribution']->receive_date = date('YmdHis');
+          // }
+          $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
+
+          $result = array('is_success' => 1);
+        }else{
+          $transaction_result = $ipn->failed($objects, $transaction);
+          $result = array('is_success' => 0);
+        }
+      }
+
+      echo json_encode($result);
+      // dd($result,'RESULT');
+      CRM_Utils_System::civiExit();
       
     }
   }

@@ -111,8 +111,8 @@
               */
 
               var data = {
+                cid : window.applePayProcess.cid,
                 validationURL: event.validationURL,
-                qfKey: window.applePayProcess.qfKey,
                 domain_name:　location.host
               };
 
@@ -160,7 +160,7 @@
               */
               dd("Start transact");
               data = {
-                qfKey: window.applePayProcess.qfKey,
+                cid : window.applePayProcess.cid,
                 applepay_token : event.payment.token,
 
               };
@@ -172,18 +172,17 @@
                 dataType: "json",
                 success: function (result){
                   dd(result);
-                  if(result.prc == 0 && result.src == 0){
+                  if(result.is_success){
                     dd("Transact Success");
                     dd(ApplePaySession.STATUS_SUCCESS);
                     session.completePayment(JSON.parse(ApplePaySession.STATUS_SUCCESS));
 
-                    $('.payment_info>dl').append("<h2 style='color: red;'>付款成功</h2>");
-                    // $('.payment_info>dl').append("<h2>付款成功，五秒後自動跳轉。</h2>");
-                    /*
+                    $('.payment_info>dl').append("<h2 style='color: red;>付款成功，五秒後自動跳轉。</h2>");
+                    
                     setTimeout(function(){
                       location.href = "/civicrm/contribute/transact?_qf_ThankYou_display=true&qfKey="+window.applePayProcess.qfKey;
                     },5000);
-                    */
+                    
 
 
                   }else{
@@ -282,6 +281,14 @@
 
   <div class="payment_info" style="border: 2px solid; border-radius: 10px; margin-left:20px; margin-right:20px;">
     <dl>
+      <dd>
+        <span>qfKey:</span>
+        <span>{/literal}{$qfKey}{literal}</span>
+      </dd>
+      <dd>
+        <span>provider:</span>
+        <span>{/literal}{$provider}{literal}</span>
+      </dd>
       <dd>
         <span>訂單編號:</span>
         <span>{/literal}{$cid}{literal}</span>
