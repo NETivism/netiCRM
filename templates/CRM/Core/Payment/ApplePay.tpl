@@ -70,11 +70,7 @@
         */
         doReady: function(){
           // this.total.amount = Number(this.order.price) + Number(this.shippingMethod.amount),
-          this.request.total = this.total
-
-          $(function(){
-              dd('Loading finished.');
-          });
+          dd('Loading finished.');
 
         //-- 檢查環境是否可執行 ApplePay
         if (window.ApplePaySession) {
@@ -137,11 +133,13 @@
                   //alert(merchantSession);
 
                   try{
-                  dd("Validate Success");
-                  merchantSession = window.applePayProcess.merchantSession = JSON.parse(result.merchantSession);
-                  
-                  session.completeMerchantValidation(JSON.parse(merchantSession));
+                    dd("Validate Success");
+                    merchantSession = window.applePayProcess.merchantSession = JSON.parse(result.merchantSession);
+                    dd(merchantSession);
+                    
+                    session.completeMerchantValidation(merchantSession);
                   }catch(err){
+                    dd("ERR");
                     dd(err);
                   }
                 }
@@ -163,7 +161,7 @@
               dd("Start transact");
               data = {
                 qfKey: window.applePayProcess.qfKey,
-                applepay_token : window.applePayProcess.merchantSession.signature,
+                applepay_token : event.payment.token,
 
               };
 
@@ -174,31 +172,25 @@
                 dataType: "json",
                 success: function (result){
                   dd(result);
-                  if(result.prc == 0 && result.src == 0){else{
+                  if(result.prc == 0 && result.src == 0){
+                    dd("Transact Success");
                     dd(ApplePaySession.STATUS_SUCCESS);
                     session.completePayment(JSON.parse(ApplePaySession.STATUS_SUCCESS));
-                  }
+
+                    $('.payment_info>dl').append("<h2 style='color: red;'>付款成功</h2>");
+                    // $('.payment_info>dl').append("<h2>付款成功，五秒後自動跳轉。</h2>");
+                    /*
+                    setTimeout(function(){
+                      location.href = "/civicrm/contribute/transact?_qf_ThankYou_display=true&qfKey="+window.applePayProcess.qfKey;
+                    },5000);
+                    */
+
+
+                  }else{
                     dd(ApplePaySession.STATUS_FAILURE);
                     session.completePayment(JSON.parse(ApplePaySession.STATUS_FAILURE));
 
                   }
-
-                  //alert(merchantSession);
-
-                  dd("Transact Success");
-
-                  // if(apple_pay_params.debug_mode == 'yes')
-                  // {
-                  //   console.log('s3:商店驗證回傳結果');
-                  //   console.log(merchantSession);
-                  //   console.log(JSON.parse(merchantSession));
-                  // }
-
-                  // if(apple_pay_params.debug_mode == 'yes')
-                  // {
-                  //   console.log('s4:提示付款，按壓指紋');
-                  // }
-                  
                 }
               });
 
@@ -211,7 +203,7 @@
               
             };
             
-            //開始進行 Apple Pay 支付
+            //開始 Apple Pay 支付
             session.begin();
             
           } catch (err) {
@@ -221,6 +213,9 @@
 
         } // doPay = function(){ ... }
       } // window.applePayProcess = { ... }
+
+      window.applePayProcess.doReady();
+
     }); // $(function(){ ... })
   })(jQuery);
 
@@ -285,15 +280,15 @@
 <div id="step-after-redirect" style="width:320px;margin:0 auto;">
   <div align="center"><p>歡迎使用藍新金流</p></div>
 
-  <div style="border: 2px solid; border-radius: 10px; margin-left:20px; margin-right:20px;">
+  <div class="payment_info" style="border: 2px solid; border-radius: 10px; margin-left:20px; margin-right:20px;">
     <dl>
       <dd>
         <span>訂單編號:</span>
-        <span>T2016120001</span>
+        <span>{/literal}{$cid}{literal}</span>
       </dd>
       <dd>
-        <span>商品:</span>
-        <span>測試商品</span>
+        <span>品名:</span>
+        <span>{/literal}{$description}{literal}</span>
       </dd>
       <dd style="margin-top:10px;">
         <span>總金額:</span>

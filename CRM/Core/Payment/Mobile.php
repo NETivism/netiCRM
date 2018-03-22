@@ -159,8 +159,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function checkout(){
-    dd('HelloTwo');
-    dd($_POST, 'POST_checkout');
 
     if($_POST['instrument'] == 'ApplePay'){
       $smarty = CRM_Core_Smarty::singleton();
@@ -175,9 +173,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function validate(){
-    dd(date('Y-m-d H:i:s'));
-    dd($_POST, 'POST_validate');
-
     $qfKey = $_POST['qfKey'];
     $controller = $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$_POST['qfKey']];
     $paymentProcessor = $controller['paymentProcessor'];
@@ -191,20 +186,15 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         "validation_url" => $_POST['validationURL'],
       );
 
-      dd($data,'data');
-
       module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
       if(function_exists('_civicrm_neweb_get_mobile_params')){
-        $payment_params = __civicrm_neweb_get_mobile_params();
+        $payment_params = _civicrm_neweb_get_mobile_params();
       }
       $url = $payment_params['session_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
-      dd($cmd, 'cmd');
       $result = exec($cmd);
-
-      dd($result,'result');
 
       echo $result;
       exit;
@@ -215,9 +205,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function transact(){
-    dd(date('Y-m-d H:i:s'));
-    dd($_POST, 'POST_transact');
-
     $qfKey = $_POST['qfKey'];
     $controller = $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$_POST['qfKey']];
     $paymentProcessor = $controller['paymentProcessor'];
@@ -227,15 +214,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         'userid' => $paymentProcessor['signature'],
         'passwd' => $paymentProcessor['subject'],
         'merchantnumber' => $paymentProcessor['user_name'],
-        'ordernumber' => $controller['params']['contribution_id'],
-        'applepay_token' => $controller['params']['ip_address'],
+        'ordernumber' => $controller['params']['contributionID'],
+        'applepay_token' => $_POST['applepay_token'],
         'depositflag' => 0,
-        'consumerip' => $_SERVER['HTTP_CLIENT_IP'],
+        'consumerip' => $controller['params']['ip_address'],
       );
-
-      // dd(date('Y-m-d H:i:s'));
-      // dd($_POST, 'POST');
-      // dd($data,'data');
 
       module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
       if(function_exists('_civicrm_neweb_get_mobile_params')){
@@ -245,10 +228,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
-      dd($cmd, 'cmd');
       $result = exec($cmd);
-
-      dd($result,'result');
 
       echo $result;
       exit;
