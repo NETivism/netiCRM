@@ -57,6 +57,7 @@
         cid:'{/literal}{$cid}{literal}',
         provider: "{/literal}{$provider}{literal}",
         description : '{/literal}{$description}{literal}',
+        qfKey : '{/literal}{$qfKey}{literal}',
         amount : {/literal}{$amount}{literal},
 
         /*
@@ -114,8 +115,9 @@
               */
 
               var data = {
-                provider: window.applePayProcess.provider,
-                validationURL: event.validationURL
+                validationURL: event.validationURL,
+                qfKey: window.applePayProcess.qfKey,
+                domain_name:　location.host
               };
 
               dd('s2:準備進行商店驗證，傳入資訊');
@@ -136,23 +138,8 @@
 
                   try{
                   dd("Validate Success");
-                  merchantSession = result.merchantSession;
-                  dd(merchantSession);
-                  dd(JSON.parse(merchantSession));
-                  dd(session);
-                  dd(session.completeMerchantValidation);
-
-                  // if(apple_pay_params.debug_mode == 'yes')
-                  // {
-                  //   console.log('s3:商店驗證回傳結果');
-                  //   console.log(merchantSession);
-                  //   console.log(JSON.parse(merchantSession));
-                  // }
-
-                  // if(apple_pay_params.debug_mode == 'yes')
-                  // {
-                  //   console.log('s4:提示付款，按壓指紋');
-                  // }
+                  merchantSession = window.applePayProcess.merchantSession = JSON.parse(result.merchantSession);
+                  
                   session.completeMerchantValidation(JSON.parse(merchantSession));
                   }catch(err){
                     dd(err);
@@ -168,13 +155,15 @@
             
             //-- 4).Payment授權完成
             session.onpaymentauthorized = function(event){
+              dd(event);
               /*
                 4-1.將 event.payment.token 傳回商家 server 進行授權
                 4-2.將授權結果傳入 session.completePayment(ApplePaySession.STATUS_SUCCESS)
               */
               dd("Start transact");
               data = {
-                provider : window.applePayProcess.provider
+                qfKey: window.applePayProcess.qfKey,
+                applepay_token : window.applePayProcess.merchantSession.signature,
 
               };
 
@@ -183,7 +172,16 @@
                 url: '/civicrm/ajax/applepay/transact',
                 data: data,
                 dataType: "json",
-                success: function (merchantSession){
+                success: function (result){
+                  dd(result);
+                  if(result.prc == 0 && result.src == 0){else{
+                    dd(ApplePaySession.STATUS_SUCCESS);
+                    session.completePayment(JSON.parse(ApplePaySession.STATUS_SUCCESS));
+                  }
+                    dd(ApplePaySession.STATUS_FAILURE);
+                    session.completePayment(JSON.parse(ApplePaySession.STATUS_FAILURE));
+
+                  }
 
                   //alert(merchantSession);
 
@@ -200,8 +198,7 @@
                   // {
                   //   console.log('s4:提示付款，按壓指紋');
                   // }
-                  dd(ApplePaySession.STATUS_SUCCESS);
-                  session.completePayment(JSON.parse(ApplePaySession.STATUS_SUCCESS));
+                  
                 }
               });
 

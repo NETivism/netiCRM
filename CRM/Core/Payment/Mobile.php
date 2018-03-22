@@ -125,16 +125,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    */
   function doTransferCheckout(&$params, $component) {
 
+    dd(date('Y-m-d H:i:s'));
     dd('Hello');
-    dd($_POST);
 
+    $qfKey = $_POST['qfKey'];
     $paymentProcessor = $this->_paymentProcessor;
-    dd($paymentProcessor);
     $form_params = $this->_paymentForm->_params;
 
-    dd($form_params);
-
-    $provider_name = $paymentProcessor['signature'];
+    $provider_name = $paymentProcessor['password'];
     $module_name = 'civicrm_'.strtolower($provider_name);
     if (module_load_include('inc', $module_name, $module_name.'.checkout') === FALSE) {
       CRM_Core_Error::fatal('Module '.$module_name.' doesn\'t exists.');
@@ -150,7 +148,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         'cid' => $form_params['contributionID'],
         'provider' => $provider_name,
         'description' => $form_params['description'],
-        'amount' => $form_params['amount']
+        'amount' => $form_params['amount'],
+        'qfKey' => $qfKey,
       );
       $smarty->assign('params', $params );
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
@@ -161,7 +160,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
   static function checkout(){
     dd('HelloTwo');
-    dd($_POST);
+    dd($_POST, 'POST_checkout');
 
     if($_POST['instrument'] == 'ApplePay'){
       $smarty = CRM_Core_Smarty::singleton();
@@ -178,12 +177,17 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   static function validate(){
     dd(date('Y-m-d H:i:s'));
     dd($_POST, 'POST_validate');
-    if(strtolower($_POST['provider']) == 'neweb'){
+
+    $qfKey = $_POST['qfKey'];
+    $controller = $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$_POST['qfKey']];
+    $paymentProcessor = $controller['paymentProcessor'];
+
+
+    if(strtolower($paymentProcessor['password']) == 'neweb'){
       $data = array(
-        "merchantnumber" => "758200",
-        "domain_name" => "dev.neticrm.tw",
-        "display_name" => "測試",
-        // "validation_url" => "https://apple-pay-gateway-cert.apple.com/paymentservices/startSession",
+        "merchantnumber" => $paymentProcessor['user_name'],
+        "domain_name" => $_POST['domain_name'],
+        "display_name" => $controller['params']['item_name'],
         "validation_url" => $_POST['validationURL'],
       );
 
@@ -213,10 +217,20 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   static function transact(){
     dd(date('Y-m-d H:i:s'));
     dd($_POST, 'POST_transact');
-    $data = $_POST;
-    if(strtolower($_POST['provider']) == 'neweb'){
-      $data = array(
 
+    $qfKey = $_POST['qfKey'];
+    $controller = $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$_POST['qfKey']];
+    $paymentProcessor = $controller['paymentProcessor'];
+
+    if(strtolower($paymentProcessor['password']) == 'neweb'){
+      $data = array(
+        'userid' => $paymentProcessor['signature'],
+        'passwd' => $paymentProcessor['subject'],
+        'merchantnumber' => $paymentProcessor['user_name'],
+        'ordernumber' => $controller['params']['contribution_id'],
+        'applepay_token' => $controller['params']['ip_address'],
+        'depositflag' => 0,
+        'consumerip' => $_SERVER['HTTP_CLIENT_IP'],
       );
 
       // dd(date('Y-m-d H:i:s'));
