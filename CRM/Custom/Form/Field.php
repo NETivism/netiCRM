@@ -369,12 +369,13 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $_showHide->addToTemplate();
 
     // text length for alpha numeric data types
-    $this->add('text',
+    $ele = $this->add('text',
       'text_length',
       ts('Database field length'),
       $attributes['text_length'],
       FALSE
     );
+    $ele->freeze();
     $this->addRule('text_length', ts('Value should be a positive number'), 'integer');
 
     $this->add('text',
