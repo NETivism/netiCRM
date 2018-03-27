@@ -301,6 +301,14 @@ invert              = 0
     invert              = 0
   }
 {/if}
+{include file="CRM/common/showHideByFieldValue.tpl"
+trigger_field_id    ="is_multiple_registrations"
+trigger_value       =""
+target_element_id   ="allow_same_emails|additional_profile_pre|additional_profile_post"
+target_element_type ="table-row"
+field_type          ="radio"
+invert              = 0
+}
 
 {*include profile link function*}
 {include file="CRM/common/buildProfileLink.tpl"}
