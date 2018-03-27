@@ -203,7 +203,10 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
     }
     else {
       $this->addWysiwyg('msg_html', ts('HTML Message'),
-        array('cols' => '80', 'rows' => '8',
+        array(
+          'cols' => '80',
+          'rows' => '8',
+          'fullpage' => '1',
           'onkeyup' => "return verify(this)",
         )
       );
