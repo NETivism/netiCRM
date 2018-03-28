@@ -4694,6 +4694,7 @@ VALUES
   (@option_group_id_asOpt, '聯絡人類型'            ,  16, 'contactType', NULL, 0, NULL, 18, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_asOpt, '群組'                  ,  17, 'groups', NULL, 0, NULL, 19, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_asOpt, '標籤/Tag'                    ,  18, 'tags', NULL, 0, NULL, 20, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_asOpt, '電子報'                ,  19, 'CiviMail', NULL, 0, NULL, 21, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_udOpt, '群組'                     , 1, 'Groups', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_udOpt, '捐款'              , 2, 'CiviContribute', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
