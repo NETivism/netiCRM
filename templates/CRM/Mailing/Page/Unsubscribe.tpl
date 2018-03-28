@@ -25,7 +25,6 @@
 *}
 {if $confirm}
     <div class="messages status">
-          &nbsp;
           <label>{$display_name} ({$email})</label> {ts}has been successfully unsubscribed.{/ts}
     </div>
 {else}
@@ -34,16 +33,8 @@
       {if $groupExist}
         <div class="messages status">
           {ts 1=$display_name 2=$email} %1 (%2){/ts}<br/>
-          {ts}Are you sure you want to be unsubscribed from mailing lists:{/ts}<br/>
+          {ts}Are you sure you want to be unsubscribed this mailing list?{/ts}<br/>
         </div>
-        <table class="selector" style="width: auto; margin-top: 20px;">
-            {counter start=0 skip=1 print=false}
-            {foreach from=$groups item=group}
-            <tr class="{cycle values="odd-row,even-row"}">
-             <td><strong>{$group.title}</strong></td>
-            </tr>
-            {/foreach}  
-        </table>
         <div class="crm-submit-buttons">
             <span class="crm-button crm-button-type-save"><input type="submit" name="_qf_unsubscribe_next" value="{ts}Unsubscribe{/ts}" class="form-submit" /></span> &nbsp;&nbsp;&nbsp;
             <span class="crm-button crm-button-type-cancel"><input type="submit" name="_qf_unsubscribe_cancel" value="{ts}Cancel{/ts}" class="form-submit" /></span>
