@@ -6,12 +6,10 @@
   </td>
 <td>
   <div>
-  {$form.mailing_job_status.label}<br />
-  {$form.mailing_job_status.html}
+  {$form.mailing_job_status.label}: {$form.mailing_job_status.html}
   </div>
   <div>
-  {$form.mailing_bounce_types.label}<br />
-  {$form.mailing_bounce_types.html}
+  {$form.mailing_bounce_types.label}: {$form.mailing_bounce_types.html}
   </div>
 </td>
 </tr>
@@ -62,3 +60,4 @@
        campaignTrClass='crmCampaign' campaignTdClass='crmCampaignContainer'}
   </td>
 </tr>
+{include file="CRM/common/chosen.tpl" selector="select#mailing_id,select#mailing_bounce_types"}

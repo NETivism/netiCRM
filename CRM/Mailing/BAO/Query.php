@@ -398,9 +398,7 @@ class CRM_Mailing_BAO_Query {
     $mailings = CRM_Mailing_BAO_Mailing::getMailingsList();
 
     if (!empty($mailings)) {
-      $form->add('select', 'mailing_id', ts('Mailing Name'), $mailings, FALSE,
-        array('id' => 'mailing_id', 'multiple' => 'multiple', 'class' => 'crm-select2')
-      );
+      $form->addSelect('mailing_id', ts('Mailing Name'), $mailings, array('multiple' => 'multiple'));
     }
 
     $form->addDate('mailing_date_low', ts('From'), FALSE, array('formatType' => 'searchDate'));
@@ -415,12 +413,10 @@ class CRM_Mailing_BAO_Query {
       'Running' => ts('Running'),
       'Canceled' => ts('Canceled'),
     );
-    $form->addElement('select', 'mailing_job_status', ts('Mailing Status'), $mailingJobStatuses, FALSE);
+    $form->addSelect('mailing_job_status', ts('Mailing Status'), $mailingJobStatuses);
   
     $mailingBounceTypes = CRM_Mailing_PseudoConstant::bounceType();
-    $form->add('select', 'mailing_bounce_types', ts('Bounce Type'), $mailingBounceTypes, FALSE,
-      array('id' => 'mailing_bounce_types', 'multiple' => 'multiple', 'class' => 'crm-select2')
-    );
+    $form->addSelect('mailing_bounce_types', ts('Bounce Type'), $mailingBounceTypes, array('multiple' => 'multiple'));
 
     // event filters
     $form->addRadio('mailing_delivery_status', ts('Delivery Status'), CRM_Mailing_PseudoConstant::yesNoOptions('delivered'), array('allowClear' => TRUE));
