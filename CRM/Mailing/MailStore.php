@@ -109,9 +109,12 @@ class CRM_Mailing_MailStore {
    */
   function fetchNext($count = 1) {
     if (isset($this->_transport->options->uidReferencing) and $this->_transport->options->uidReferencing) {
-      $offset = array_shift($this->_transport->listUniqueIdentifiers());
+      $identifiers = $this->_transport->listUniqueIdentifiers();
+      if (is_array($identifiers)) {
+        $offset = array_shift($identifiers);
+      }
     }
-    else {
+    if (empty($offset)) {
       $offset = 1;
     }
     try {
