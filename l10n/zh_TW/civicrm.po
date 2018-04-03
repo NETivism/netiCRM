@@ -33809,17 +33809,8 @@ msgstr "包括"
 msgid "Recipients of <a href=\"%1\">%2</a>"
 msgstr "收件者：<a href=\"%1\">%2</a>"
 
-#: templates/CRM/Mailing/Page/Report.tpl
-<<<<<<< HEAD
-msgid "Members of <a href=\"%1\">%2</a>"
-msgstr ""
-||||||| merged common ancestors
-msgid "Members of <a href=\"%1\">%2</a>"
-msgstr "會員：<a href=\"%1\">%2</a>"
-=======
 msgid "Members of group <a href=\"%1\">%2</a>"
 msgstr ""
->>>>>>> hotfix
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Excluded"
