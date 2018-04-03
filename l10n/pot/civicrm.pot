@@ -33833,7 +33833,7 @@ msgid "Recipients of <a href=\"%1\">%2</a>"
 msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl
-msgid "Members of <a href=\"%1\">%2</a>"
+msgid "Members of group <a href=\"%1\">%2</a>"
 msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl
@@ -33897,7 +33897,7 @@ msgid " %1 (%2)"
 msgstr ""
 
 #: templates/CRM/Mailing/Page/Unsubscribe.tpl
-msgid "Are you sure you want to be unsubscribed from mailing lists:"
+msgid "Are you sure you want to be unsubscribed this mailing list?"
 msgstr ""
 
 #: templates/CRM/Mailing/Page/Unsubscribe.tpl

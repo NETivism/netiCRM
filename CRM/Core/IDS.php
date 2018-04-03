@@ -74,7 +74,7 @@ class CRM_Core_IDS {
     require_once 'IDS/Init.php';
 
     // init the PHPIDS and pass the REQUEST array
-    $config = &CRM_Core_Config::singleton();
+    $config = CRM_Core_Config::singleton();
 
     $configFile = $config->configAndLogDir . 'Config.IDS.ini';
     if (!file_exists($configFile)) {
@@ -186,8 +186,8 @@ class CRM_Core_IDS {
    *
    * @return boolean
    */
-  private function log($result, $reaction = 0) {
-
+  private function log($result, $reaction = 0, $impact = NULL) {
+    $config = CRM_Core_Config::singleton();
     $ip = ($_SERVER['SERVER_ADDR'] != '127.0.0.1') ? $_SERVER['SERVER_ADDR'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ?
       $_SERVER['HTTP_X_FORWARDED_FOR'] :
       '127.0.0.1'
@@ -196,16 +196,19 @@ class CRM_Core_IDS {
     $data = array();
     $session = CRM_Core_Session::singleton();
     foreach ($result as $event) {
-      $data[] = array(
+      $log = array(
         'name' => $event->getName(),
-        'value' => stripslashes($event->getValue()),
         'page' => $_SERVER['REQUEST_URI'],
         'userid' => $session->get('userID'),
         'session' => session_id() ? session_id() : '0',
         'ip' => $ip,
         'reaction' => $reaction,
-        'impact' => $result->getImpact(),
+        'impact' => $impact,
       );
+      if ($config->debug) {
+        $log['value'] = stripslashes($event->getValue());
+      }
+      $data[] = $log;
     }
 
     CRM_Core_Error::debug_var('IDS Detector Details', $data);

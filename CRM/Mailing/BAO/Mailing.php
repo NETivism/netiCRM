@@ -1854,14 +1854,14 @@ AND civicrm_contact.is_opt_out =0";
     $report['group'] = array('include' => array(), 'exclude' => array(), 'base' => array());
     while ($mailing->fetch()) {
       $row = array();
-      if (isset($mailing->group_id)) {
-        $row['id'] = $mailing->group_id;
-        $row['name'] = $mailing->group_title;
-        $row['link'] = CRM_Utils_System::url('civicrm/group/search',
-          "reset=1&force=1&context=smog&gid={$row['id']}"
-        );
+      if ($mailing->entity_table == 'civicrm_group') {
+        $row['name'] = $mailing->group_title ? $mailing->group_title : ts("Deleted");
+        if (isset($mailing->group_id)) {
+          $row['id'] = $mailing->group_id ? $mailing->group_id : '';
+          $row['link'] = CRM_Utils_System::url('civicrm/group/search', "reset=1&force=1&context=smog&gid={$row['id']}");
+        }
       }
-      else {
+      elseif($mailing->entity_table) {
         if ($mailing->entity_table == 'civicrm_mailing_event_opened' || $mailing->entity_table == 'civicrm_mailing_event_trackable_url_open') {
           $mailing->mailing_id = $mailing->entity_id;
           $mailing_name = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $mailing->mailing_id, 'name');
@@ -2187,35 +2187,34 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   static function &mailingACLIDs($count = FALSE, $condition = NULL) {
-    $mailingIDs = array();
-
     // get all the groups that this user can access
     // if they dont have universal access
     $groups = CRM_Core_PseudoConstant::group();
-    if (!empty($groups)) {
-      $groupIDs = implode(',',
-        array_keys($groups)
-      );
-      $selectClause = ($count) ? 'COUNT( DISTINCT m.id) as count' : 'DISTINCT( m.id ) as id';
-      // get all the mailings that are in this subset of groups
-      $query = "
+    if (CRM_Core_Permission::check('Administer CiviCRM') || CRM_Core_Permission::check('view all contacts')) {
+      $where = ' ( 1 )';
+    }
+    elseif (!empty($groups)) {
+      $groupIDs = implode(',', array_keys($groups));
+      $where = "( ( g.entity_table = 'civicrm_group' AND g.entity_id IN ( $groupIDs ) ) OR   ( g.entity_table IS NULL AND g.entity_id IS NULL ) )";
+    }
+
+    $selectClause = ($count) ? 'COUNT( DISTINCT m.id) as count' : 'DISTINCT( m.id ) as id';
+    // get all the mailings that are in this subset of groups
+    $query = "
 SELECT    $selectClause 
   FROM    civicrm_mailing m
 LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
- WHERE ( ( g.entity_table = 'civicrm_group' AND g.entity_id IN ( $groupIDs ) )
-    OR   ( g.entity_table IS NULL AND g.entity_id IS NULL ) )
+ WHERE $where 
    $condition";
-      $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
-      if ($count) {
-        $dao->fetch();
-        return $dao->count;
-      }
-      $mailingIDs = array();
-      while ($dao->fetch()) {
-        $mailingIDs[] = $dao->id;
-      }
+   $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
+    if ($count) {
+      $dao->fetch();
+      return $dao->count;
     }
-
+    $mailingIDs = array();
+    while ($dao->fetch()) {
+      $mailingIDs[] = $dao->id;
+    }
     return $mailingIDs;
   }
 

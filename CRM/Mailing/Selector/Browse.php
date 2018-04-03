@@ -134,6 +134,11 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
 
       self::$_columnHeaders = array(
         array(
+          'name' => ts('ID'),
+          'sort' => 'id',
+          'direction' => CRM_Utils_Sort::DONTCARE,
+        ),
+        array(
           'name' => ts('Mailing Name'),
           'sort' => 'name',
           'direction' => CRM_Utils_Sort::DONTCARE,
@@ -455,7 +460,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
     }
 
     // also initialize the AtoZ pager
-    $this->pagerAtoZ();
+    // $this->pagerAtoZ(); // remove a-z to improve performance
     return $rows;
   }
 

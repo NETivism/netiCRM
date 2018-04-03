@@ -65,6 +65,7 @@
       {counter start=0 skip=1 print=false}
       {foreach from=$rows item=row}
       <tr id="crm-mailing_{$row.id}" class="{cycle values="odd-row,even-row"} crm-mailing crm-mailing_status-{$row.status}">
+        <td class="crm-mailing-name">{$row.id}</td>
         <td class="crm-mailing-name">{$row.name}</td>
         <td class="crm-mailing-visibility">{ts}{$row.visibility}{/ts}(<a href="{crmURL p='civicrm/mailing/view' q="reset=1&id=`$row.id`"}" target="_blank">{ts}view{/ts}</a>)</td>
         <td class="crm-mailing-status crm-mailing_status-{$row.status|lower}">{$row.status_label}</td>

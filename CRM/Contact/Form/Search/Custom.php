@@ -96,8 +96,8 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $formValues = $this->_formValues;
     unset($formValues['component_mode']);
     unset($formValues['qfKey']);
-    if (empty($formValues) && method_exists($this->_customClass, 'setDefaultValues')) {
-      $defaults = $this->_customClass->setDefaultValues();
+    if (empty($formValues) && method_exists($this->selector->_search, 'setDefaultValues')) {
+      $defaults = $this->selector->_search->setDefaultValues();
       return $defaults;
     }
     else {

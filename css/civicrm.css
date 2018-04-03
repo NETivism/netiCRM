@@ -4185,24 +4185,33 @@ ul.ui-sortable {
 /* premium list */
 .crm-container .premiums-listings td {
   padding: 10px 4px;
+  display: inline-block;
+}
+.crm-container .premiums-listings tr > td:first-child {
+  padding: 0;
 }
 .crm-container .premiums-listings img {
   max-width: 100%;
   height: auto;
 }
-.crm-container .premium-img {
-  width: 37%;
+.crm-container .premiums-listings .premium-img {
+  width: auto;
+  max-width: 37%;
 }
-.crm-container .premium-img > label {
+.crm-container .premiums-listings .premium-img > label {
   cursor: pointer;
 }
-.crm-container .premium-img > label > img {
+.crm-container .premiums-listings .premium-img > label > img {
   pointer-events: none;
 }
-.crm-container .premium-img + .premium-info {
-  padding-left: 20px;
+.crm-container .premiums-listings .premium-info {
+  max-width: 80%;
 }
-.crm-container .premium-name {
+.crm-container .premiums-listings .premium-img + .premium-info {
+  padding-left: 20px;
+  max-width: 55%;
+}
+.crm-container .premiums-listings .premium-name {
   margin-bottom: 10px;
   line-height: 1.4;
   cursor: pointer;
@@ -5933,10 +5942,13 @@ input.crm-form-textfield,
   .crm-container-md .crm-custom-data-view .crm-info-panel tr > td:last-of-type {
     padding-right: 0;
   }
-  .crm-container .premium-img {
-    width: 28%;
+  .crm-container .premiums-listings .premium-img {
+    max-width: 28%;
   }
-  .crm-container .premium-img + .premium-info {
+  .crm-container .premiums-listings .premium-info {
+    max-width: 85%;
+  }
+  .crm-container .premiums-listings .premium-img + .premium-info {
     padding-left: 8px;
   }
 }

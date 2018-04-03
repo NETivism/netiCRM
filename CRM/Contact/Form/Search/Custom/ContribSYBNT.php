@@ -135,9 +135,7 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT implements CRM_Contact_Form_Se
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
-    $includeContactIDs = FALSE
-  ) {
+  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
 
     $where = $this->where();
     if (!empty($where)) {
@@ -152,11 +150,10 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT implements CRM_Contact_Form_Se
     $from = $this->from();
 
     $select = $this->select();
+    $fields = "DISTINCT contact.id as id, contrib_1.contact_id as contact_id, contact.display_name as display_name, " . $select;
 
     $sql = "
-SELECT     DISTINCT contact.id as contact_id,
-           contact.display_name as display_name,
-           $select
+SELECT     $fields
 FROM       civicrm_contact AS contact
 LEFT JOIN  civicrm_contribution contrib_1 ON contrib_1.contact_id = contact.id
            $from
@@ -167,6 +164,9 @@ GROUP BY   contact.id
            $having
 ORDER BY   receive_amount desc
 ";
+    if ($onlyIDs) {
+      $sql = "SELECT contact_a.contact_id FROM ($sql) contact_a WHERE (1) ";
+    }
 
     return $sql;
   }

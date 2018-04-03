@@ -16,3 +16,7 @@ pipeline:
       - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
+#  notify:
+#    image: drillster/drone-email
+#    port: 2525
+#    secrets: [plugin_from, email_host, email_username, email_password, email_recipients]

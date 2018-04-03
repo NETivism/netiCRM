@@ -135,6 +135,9 @@ class CRM_Core_OptionValue {
           $action += CRM_Core_Action::DISABLE;
           if ($dao->is_active) {
             $action -= CRM_Core_Action::ENABLE;
+            if ($dao->is_default) {
+              $action -= CRM_Core_Action::DISABLE;
+            }
           }
           else {
             $action -= CRM_Core_Action::DISABLE;
@@ -144,6 +147,9 @@ class CRM_Core_OptionValue {
       else {
         if ($dao->is_active) {
           $action -= CRM_Core_Action::ENABLE;
+          if ($dao->is_default) {
+            $action -= CRM_Core_Action::DISABLE;
+          }
         }
         else {
           $action -= CRM_Core_Action::DISABLE;
@@ -151,6 +157,9 @@ class CRM_Core_OptionValue {
         if ((($groupName == 'case_type') && in_array($dao->value, $caseTypeIds)) ||
           (($groupName == 'case_status') && in_array($dao->value, $caseStatusIds))
         ) {
+          $action -= CRM_Core_Action::DELETE;
+        }
+        if ($dao->is_default) {
           $action -= CRM_Core_Action::DELETE;
         }
       }

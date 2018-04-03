@@ -69,13 +69,16 @@
         <table id="active_membership" class="display">
             <thead>
             <tr>
+              {foreach from=$columnHeaders item=header}
+                <th>{$header}</th>
+              {/foreach}
                 <th>{ts}Membership Type{/ts}</th>
                 <th>{ts}Join Date{/ts}</th>
                 <th>{ts}Start Date{/ts}</th>
                 <th>{ts}End Date{/ts}</th>
                 <th>{ts}Reminder Date{/ts}</th>
-                <th>{ts}Status{/ts}</th>
                 <th>{ts}Source{/ts}</th>
+                <th>{ts}Status{/ts}</th>
                 <th></th>
             </tr>
             </thead>
@@ -89,8 +92,8 @@
                 <td class="crm-membership-start_date">{$activeMember.start_date|crmDate}</td>
                 <td class="crm-membership-end_date">{$activeMember.end_date|crmDate}</td>
                 <td class="crm-membership-reminder_date">{$activeMember.reminder_date|crmDate}</td>
-                <td class="crm-membership-status">{$activeMember.status}</td>
                 <td class="crm-membership-source">{$activeMember.source}</td>
+                <td class="crm-membership-status">{$activeMember.status}</td>
                 <td>
                     {$activeMember.action|replace:'xx':$activeMember.id}
                     {if $activeMember.owner_membership_id}
@@ -112,13 +115,16 @@
         <table id="pending_membership" class="display">
             <thead>
             <tr>
+              {foreach from=$columnHeaders item=header}
+                <th>$header</th>
+              {/foreach}
                 <th>{ts}Membership Type{/ts}</th>
                 <th>{ts}Join Date{/ts}</th>
                 <th>{ts}Start Date{/ts}</th>
                 <th>{ts}End Date{/ts}</th>
                 <th>{ts}Reminder Date{/ts}</th>
-                <th>{ts}Status{/ts}</th>
                 <th>{ts}Source{/ts}</th>
+                <th>{ts}Status{/ts}</th>
                 <th></th>
             </tr>
             </thead>
@@ -129,8 +135,8 @@
                 <td class="crm-membership-start_date">{$inActiveMember.start_date|crmDate}</td>
                 <td class="crm-membership-end_date">{$inActiveMember.end_date|crmDate}</td>
                 <td class="crm-membership-reminder_date">{$inActiveMember.reminder_date|crmDate}</td>
-                <td class="crm-membership-status">{$inActiveMember.status}</td>
                 <td class="crm-membership-source">{$inActiveMember.source}</td>
+                <td class="crm-membership-status">{$inActiveMember.status}</td>
                 <td>{$inActiveMember.action|replace:'xx':$inActiveMember.id}</td>
             </tr>
             {/foreach}

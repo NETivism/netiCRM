@@ -58,3 +58,9 @@
     </div> {* end crm-container-snippet div *}
     {/if}
 {/if}
+{if $additional_snippet_css}<style type="text/css">
+{$additional_snippet_css}
+</style>{/if}
+{if $additional_snippet_js}<script type="text/javascript">
+{$additional_snippet_js}
+</script>{/if}

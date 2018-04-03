@@ -39,6 +39,8 @@
  */
 class CRM_Export_BAO_Export {
   CONST EXPORT_ROW_COUNT = 300;
+  CONST VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
+  CONST DISPLAY_SEPARATOR = '|';
 
   /**
    * Function to get the list the export fields
@@ -703,14 +705,12 @@ class CRM_Export_BAO_Export {
               $fieldValue = CRM_Utils_Array::value($fieldValue, $imProviders);
             }
             elseif ($field == 'participant_role_id') {
-              require_once 'CRM/Event/PseudoConstant.php';
               $participantRoles = CRM_Event_PseudoConstant::participantRole();
-              $sep = CRM_Core_DAO::VALUE_SEPARATOR;
               $viewRoles = array();
-              foreach (explode($sep, $dao->$field) as $k => $v) {
+              foreach (explode(self::VALUE_SEPARATOR, $dao->$field) as $k => $v) {
                 $viewRoles[] = $participantRoles[$v];
               }
-              $fieldValue = implode(',', $viewRoles);
+              $fieldValue = implode(self::DISPLAY_SEPARATOR, $viewRoles);
             }
           }
           elseif ($field == 'master_address_belongs_to') {
@@ -1551,7 +1551,13 @@ GROUP BY civicrm_primary_id ";
       foreach ($sqlColumns as $column => $sqlColumn) {
         $arr = explode(' ', $sqlColumn);
         $column = $arr[0];
-        $row[$column] = CRM_Utils_String::toNumber($dao->$column);
+        $fieldValue = $dao->$column;
+        if (strstr($fieldValue, self::VALUE_SEPARATOR)){
+          $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
+          $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
+          $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
+        }
+        $row[$column] = CRM_Utils_String::toNumber($fieldValue);
       }
       $writer->addRow($row);
     }

@@ -80,6 +80,10 @@ function buildAdditionalBlocks( blockName, className ) {
         async   : false,
         success : function(html){
             cj(fname).after(html);
+            if( className == 'CRM_Event_Form_ManageEvent_Location' ){
+                // event only support 2 sets of phone and email. refs #20631
+                cj('#add' + blockName).hide();
+            }
         }
     });
 
@@ -153,6 +157,9 @@ function removeBlock( blockName, blockId ) {
 
     //unset block from html
     cj( "#"+ blockName + "_Block_" + blockId ).empty().remove();
+
+    // show for event manage location page. refs #20631
+    cj("#add" + blockName).show();
 
     //show the link 'add address' to last element of Address Block
     if ( blockName == 'Address' ) {

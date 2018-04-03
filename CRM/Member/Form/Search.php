@@ -424,8 +424,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
     );
 
     if ($membershipType) {
-      $this->_formValues['member_membership_type_id'] = array($membershipType => 1);
-      $this->_defaults['member_membership_type_id'] = array($membershipType => 1);
+      $membershipType = explode(',', $membershipType);
+      $this->_formValues['member_membership_type_id'] = $membershipType;
+      $this->_defaults['member_membership_type_id'] = $membershipType;
     }
 
 

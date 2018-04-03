@@ -1574,6 +1574,8 @@ ORDER BY civicrm_email.is_primary DESC";
     }
 
     require_once 'CRM/Contact/BAO/Contact.php';
+    $config = CRM_Core_Config::singleton();
+    $config->doNotResetCache = TRUE;
     if ($data['contact_type'] != 'Student') {
       if(!empty($params['log_data'])) {
         $data['log_data'] = $params['log_data'];
@@ -1664,6 +1666,7 @@ ORDER BY civicrm_email.is_primary DESC";
     else {
       CRM_Utils_Hook::post('create', 'Profile', $contactID, $params);
     }
+    $config->doNotResetCache = FALSE;
     return $contactID;
   }
 
