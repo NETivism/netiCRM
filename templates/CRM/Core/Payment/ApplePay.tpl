@@ -1,3 +1,4 @@
+{if !$after_redirect}
 {literal}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -5,10 +6,6 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=BIG5">
 <title>Apple Pay Test Page</title>
-{/literal}
-
-{if !$after_redirect}
-{literal}
 <style type="text/css">
   
 </style>
@@ -41,6 +38,8 @@
     btn.style.display = "block";
   }, 1000);
 </script>
+</body>
+</html>
 {/literal}
 {else}
 
@@ -274,8 +273,6 @@
     } 
 }
 </style>
-</head>
-<body>
 <div id="step-after-redirect" style="width:320px;margin:0 auto;">
   <div align="center"><p>歡迎使用藍新金流</p></div>
 
@@ -311,6 +308,3 @@
 </div>
 {/literal}
 {/if}
-
-</body>
-</html>

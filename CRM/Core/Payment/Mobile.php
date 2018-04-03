@@ -168,8 +168,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         $smarty->assign($key, $value );
       }
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
-      print($page);
-      CRM_Utils_System::civiExit();
+      // CRM_Utils_Hook::alterContent($page, 'page', $pageTemplateFile, $this);
+      CRM_Utils_System::theme('page', $page);
     }
   }
 
@@ -201,7 +201,19 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
+      $record = array(
+        'cid' => $contribution->id,
+        'post_data' => $cmd,
+      );
+      drupal_write_record('civicrm_contribution_neweb', $record);
+
       $result = exec($cmd);
+
+      $record = array(
+        'cid' => $contribution->id,
+        'data' => $result,
+      );
+      drupal_write_record('civicrm_contribution_neweb', $record, 'cid');
 
       echo $result;
       CRM_Utils_System::civiExit();
@@ -242,8 +254,27 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
+
+      $record = array(
+        'cid' => $contribution->id,
+        'post_data_transact' => $cmd,
+      );
+      drupal_write_record('civicrm_contribution_neweb', $record, 'cid');
+
       $result = exec($cmd);
+
+      $record = array(
+        'cid' => $contribution->id,
+        'return_data' => $result,
+      );
       $result = json_decode($result);
+
+      $record['created'] = time();
+      $record['prc'] = $result->prc;
+      $record['src'] = $result->src;
+      $record['bankrc'] = $result->bankresponsecode;
+      $record['approvalcode'] = $result->approvalcode;
+      drupal_write_record('civicrm_contribution_neweb', $record, 'cid');
       
       $ipn = new CRM_Core_Payment_BaseIPN();
       $input = $ids = $objects = array();
@@ -252,7 +283,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         // $input['component'] = 'event';
 
       // }else{
-        $input['component'] = 'contribute';
+      $input['component'] = 'contribute';
       // }
       $ids['contribution'] = $contribution->id;
       $ids['contact'] = $contribution->contact_id;
