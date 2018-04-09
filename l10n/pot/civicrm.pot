@@ -46097,3 +46097,16 @@ msgstr ""
 # templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information."
 msgstr ""
+
+# templates/CRM/Core/Payment/ApplePay.tpl
+msgid "If your page doesn't redirect, please click 'Continue' button to act."
+msgstr ""
+
+msgid "Paid success!! Fresh page after 5 seconds."
+msgstr ""
+
+msgid "Payment Organization"
+msgstr ""
+
+msgid "Subject Name"
+msgstr ""
