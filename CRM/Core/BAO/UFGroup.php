@@ -894,9 +894,13 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
                 $dataType = $field['data_type'];
 
                 if ($htmlType == 'File') {
-                  $fileURL = CRM_Core_BAO_CustomField::getFileURL($cid,
-                    $cfID
-                  );
+                  $customVal = (int)($details->{$name});
+                  if (!empty($customVal)) {
+                    $fileURL = CRM_Core_BAO_CustomField::getFileURL($cid, NULL, $customVal);
+                  }
+                  else{
+                    $fileURL = CRM_Core_BAO_CustomField::getFileURL($cid, $cfID);
+                  }
                   $params[$index] = $values[$index] = $fileURL['file_url'];
                 }
                 else {

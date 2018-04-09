@@ -2,10 +2,26 @@
 /**
  * File containing the ezcMailImapTransport class.
  *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
  * @package Mail
- * @version 1.7beta1
- * @copyright Copyright (C) 2005-2009 eZ Systems AS. All rights reserved.
- * @license http://ez.no/licenses/new_bsd New BSD License
+ * @version //autogen//
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
 /**
@@ -119,7 +135,7 @@
  *           Holds the options you can set to the IMAP transport.
  *
  * @package Mail
- * @version 1.7beta1
+ * @version //autogen//
  * @mainclass
  */
 class ezcMailImapTransport
@@ -395,7 +411,14 @@ class ezcMailImapTransport
      */
     public function __destruct()
     {
-        $this->disconnect();
+        try
+        {
+            $this->disconnect();
+        }
+        catch ( ezcMailTransportException $e )
+        {
+            // Ignore occuring transport exceptions.
+        }
     }
 
     /**
@@ -440,7 +463,7 @@ class ezcMailImapTransport
         {
             case 'options':
                 return $this->options;
-            
+
             default:
                 throw new ezcBasePropertyNotFoundException( $name );
         }
@@ -716,7 +739,7 @@ class ezcMailImapTransport
 
         // if the mailbox selection will be successful, $state will be STATE_SELECTED
         // or STATE_SELECTED_READONLY, depending on the $readOnly parameter
-        if ( $readOnly !== true ) 
+        if ( $readOnly !== true )
         {
             $this->connection->sendData( "{$tag} SELECT \"{$mailbox}\"" );
             $state = self::STATE_SELECTED;
@@ -855,7 +878,7 @@ class ezcMailImapTransport
         return true;
     }
 
-    /** 
+    /**
      * Copies message(s) from the currently selected mailbox to mailbox
      * $destination.
      *
@@ -905,10 +928,10 @@ class ezcMailImapTransport
         {
             throw new ezcMailTransportException( "Can't call copyMessages() on the IMAP transport when a mailbox is not selected." );
         }
-    
+
         $tag = $this->getNextTag();
         $this->connection->sendData( "{$tag} {$uid}COPY {$messages} \"{$destination}\"" );
-        
+
         $response = trim( $this->getResponse( $tag ) );
         if ( $this->responseType( $response ) != self::RESPONSE_OK )
         {
@@ -958,7 +981,7 @@ class ezcMailImapTransport
 
         $messageList = array();
         $messages = array();
- 
+
         // get the numbers of the existing messages
         $tag = $this->getNextTag();
         $command = "{$tag} SEARCH UNDELETED";
@@ -973,9 +996,7 @@ class ezcMailImapTransport
             $ids = trim( substr( $response, 9 ) );
             if ( $ids !== "" )
             {
-                $messageList = explode( ' ', $ids , 201);
-                // #18265, don't know why we need pop first mail, fix that
-                // array_pop($messageList);
+                $messageList = explode( ' ', $ids );
             }
         }
         // skip the OK response ("{$tag} OK Search completed.")
@@ -1068,7 +1089,7 @@ class ezcMailImapTransport
         }
 
         $sizes = array();
-        $ids = implode( $messages, ',' );
+        $ids = implode( ',', $messages );
 
         $tag = $this->getNextTag();
         $this->connection->sendData( "{$tag} {$uid}FETCH {$ids} (RFC822.SIZE)" );
@@ -2014,7 +2035,7 @@ class ezcMailImapTransport
         }
 
         $flags = array();
-        $ids = implode( $messages, ',' );
+        $ids = implode( ',', $messages );
 
         $tag = $this->getNextTag();
         $this->connection->sendData( "{$tag} {$uid}FETCH {$ids} (FLAGS)" );
@@ -2026,9 +2047,19 @@ class ezcMailImapTransport
             {
                 if ( $this->options->uidReferencing )
                 {
-                    preg_match( '/\*\s.*\sFETCH\s\(FLAGS \((.*)\)\sUID\s(.*)\)/U', $response, $matches );
-                    $parts = explode( ' ', $matches[1] );
-                    $flags[intval( $matches[2] )] = $parts;
+                    if ( preg_match( '/\*\s.*\sFETCH\s\(FLAGS \((.*)\)\sUID\s(.*)\)/U', $response, $matches ) )
+                    {
+                        $parts = explode( ' ', $matches[1] );
+                        $flags[intval( $matches[2] )] = $parts;
+                    }
+
+                    // The second regex here is to handle edge cases where a mail server like gmail returns the FETCH response in a different order than normal
+                    else
+                    {
+                        preg_match( '/\*\s.*\sFETCH\s\(UID\s(.*)\sFLAGS \((.*)\)\)/U', $response, $matches );
+                        $parts = explode( ' ', $matches[2] );
+                        $flags[intval( $matches[1] )] = $parts;
+                    }
                 }
                 else
                 {
@@ -2427,11 +2458,11 @@ class ezcMailImapTransport
                 $flags[$i] = '\\' . $this->normalizeFlag( $flags[$i] );
             }
             $flagList = implode( ' ', $flags );
-            $command = "{$tag} APPEND {$mailbox} ({$flagList}) {{$mailSize}}";
+            $command = "{$tag} APPEND \"{$mailbox}\" ({$flagList}) {{$mailSize}}";
         }
         else
         {
-            $command = "{$tag} APPEND {$mailbox} {{$mailSize}}";
+            $command = "{$tag} APPEND \"{$mailbox}\" {{$mailSize}}";
         }
 
         $this->connection->sendData( $command );
@@ -2462,7 +2493,7 @@ class ezcMailImapTransport
      *
      * @param string $flag
      * @return string
-     */ 
+     */
     protected function normalizeFlag( $flag )
     {
         $flag = strtoupper( $flag );

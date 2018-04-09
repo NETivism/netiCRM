@@ -95,8 +95,12 @@ class CiviMailProcessor {
 
         require_once 'api/v2/Mailer.php';
 
-        // process fifty at a time, CRM-4002
-        while ($mails = $store->fetchNext(5)) {
+        // process 200 mail per times
+        while ($mails = $store->fetchNext(10)) {
+            $times++;
+            if ($times > 20) {
+              break;
+            }
             foreach ($mails as $key => $mail) {
 
                 // for every addressee: match address elements if it's to CiviMail
