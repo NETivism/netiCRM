@@ -1,6 +1,6 @@
 # 
 # Translators:
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2017
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2018
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-01-09 06:30+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-04-09 11:37+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5093,7 +5093,7 @@ msgstr "已排程"
 
 #: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
 msgid "Running"
-msgstr "載入中"
+msgstr "進行中"
 
 #: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
 msgid "Complete"
@@ -15254,7 +15254,7 @@ msgstr "報名連結內容"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Register multiple participants?"
-msgstr "報名多位參加者？"
+msgstr "一次報名多位參加者？"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Allow multiple registrations from the same email address?"
@@ -33810,8 +33810,8 @@ msgid "Recipients of <a href=\"%1\">%2</a>"
 msgstr "收件者：<a href=\"%1\">%2</a>"
 
 #: templates/CRM/Mailing/Page/Report.tpl
-msgid "Members of <a href=\"%1\">%2</a>"
-msgstr "會員：<a href=\"%1\">%2</a>"
+msgid "Members of group <a href=\"%1\">%2</a>"
+msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Excluded"
@@ -33874,8 +33874,8 @@ msgid " %1 (%2)"
 msgstr " %1 (%2)"
 
 #: templates/CRM/Mailing/Page/Unsubscribe.tpl
-msgid "Are you sure you want to be unsubscribed from mailing lists:"
-msgstr "您確定要退訂此份電子報："
+msgid "Are you sure you want to be unsubscribed this mailing list?"
+msgstr "您確定要取消訂閱本封電子報？"
 
 #: templates/CRM/Mailing/Page/Unsubscribe.tpl
 msgid ""
@@ -46067,7 +46067,7 @@ msgid ""
 "You can configure one or more SMS Providers for your CiviCRM installation. "
 "To learn more about the procedure to install SMS extension and Provider, "
 "refer"
-msgstr "你可以為你的 CiviCRM 設定一個以上的簡訊供應商，需要更多資訊請參考"
+msgstr ""
 
 msgid "Provider Details"
 msgstr "供應商詳情"
@@ -46229,3 +46229,29 @@ msgstr "你確定將電子報設定為公開顯示嗎？"
 
 msgid "Are you sure you want to un-publish this mailing from public?"
 msgstr "你確定將電子報設定為不公開顯示嗎？"
+
+# CRM/Admin/Form/Setting/Receipt.php
+msgid "The stamp of organization."
+msgstr ""
+
+msgid "The stamp of the person in charge."
+msgstr ""
+
+# templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"This image will show on receipt.The position please click <a href='%1' "
+"target='_blank'>here</a> to get more information."
+msgstr ""
+
+# templates/CRM/Core/Payment/ApplePay.tpl
+msgid "If your page doesn't redirect, please click 'Continue' button to act."
+msgstr "若未自動轉向繳款頁面，請您按「下一步」來繼續進行動作"
+
+msgid "Paid success!! Fresh page after 5 seconds."
+msgstr "付款成功，五秒後將自動跳轉。"
+
+msgid "Payment Organization"
+msgstr "收款單位"
+
+msgid "Subject Name"
+msgstr "品名"
