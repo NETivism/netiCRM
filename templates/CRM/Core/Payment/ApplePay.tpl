@@ -16,7 +16,7 @@
   
   <form action="/civicrm/payment/mobile/checkout" name="print" method="post" id="redirect-form">
     <div align="center" id="submit-button">
-      <p>若未自動轉向繳款頁面，請您按「下一步」來繼續進行動作</p>
+      <p>{ts}If your page doesn't redirect, please click 'Continue' button to act.{/ts}</p>
       <div>
         <input type="hidden" name="redirect" value="1">
         <input type="hidden" name="instrument" value="ApplePay">
@@ -25,7 +25,7 @@
             <input type="hidden" name="{$key}" value="{$item}">
           {/foreach}
         {literal}
-        <input type="submit" id="submit-button" value="下一步" />
+        <input type="submit" id="submit-button" value="{ts}Continue{/ts}" />
       </div>
     </div>
   </form>
@@ -56,6 +56,7 @@
         cid:'{/literal}{$cid}{literal}',
         provider: "{/literal}{$provider}{literal}",
         description : '{/literal}{$description}{literal}',
+        organization : '{/literal}{$organization}{literal}',
         qfKey : '{/literal}{$qfKey}{literal}',
         amount : {/literal}{$amount}{literal},
 
@@ -91,10 +92,10 @@
               supportedNetworks : [ 'visa','masterCard' ], //支援卡別
               merchantCapabilities : [ 'supports3DS' ],
               total : {
-                label : this.description,
+                label : this.organization,
                 amount : this.amount
-              } //總金額
-              // lineItems : [{label:'運費', amount:window.applePayProcess.shippingMethod.amount}], // 細項
+              }, //總金額
+              lineItems : [{label:this.description, amount:this.amount}], // 細項
               // requiredBillingContactFields : ["postalAddress","name"],           // 要求付款人資訊 (備註：Apple說明,為提供最佳使用者體驗,應避免要求使用者填寫不必要資訊)
               // requiredShippingContactFields : ["postalAddress","name","phone", "email"], // 要求收件人資訊 (備註：Apple說明,為提供最佳使用者體驗,應避免要求使用者填寫不必要資訊)
             };
@@ -128,9 +129,6 @@
                 data: data,
                 dataType: "json",
                 success: function (result){
-
-                  //alert(merchantSession);
-
                   try{
                     dd("Validate Success");
                     merchantSession = window.applePayProcess.merchantSession = JSON.parse(result.merchantSession);
@@ -143,11 +141,6 @@
                   }
                 }
               });
-              
-
-
-
-
             };
             
             //-- 4).Payment授權完成
@@ -176,7 +169,7 @@
                     dd(ApplePaySession.STATUS_SUCCESS);
                     session.completePayment(JSON.parse(ApplePaySession.STATUS_SUCCESS));
 
-                    $('.payment_info>dl').append("<h2 style='color: red;>付款成功，五秒後自動跳轉。</h2>");
+                    $('.crm-custom-data-view').append("<h2 style='color: red;>{ts}Paid success!! Fresh page after 5 seconds.{/ts}</h2>");
                     
                     setTimeout(function(){
                       location.href = "/civicrm/contribute/transact?_qf_ThankYou_display=true&qfKey="+window.applePayProcess.qfKey;
@@ -220,11 +213,11 @@
   function dd(text){
     // $('dd.console').append("<div> Type:" ++"</div>");
     if(typeof text == 'object'){
-      $('dd.console').append("<div> Type:"+(typeof text)+"</div>");
-      $('dd.console').append("<div>"+JSON.stringify(text)+"</div>");
+      $('.console').append("<div> Type:"+(typeof text)+"</div>");
+      $('.console').append("<div>"+JSON.stringify(text)+"</div>");
       return;
     }
-    $('dd.console').append("<div>"+text+"</div>");
+    $('.console').append("<div>"+text+"</div>");
   }
 
 </script>
@@ -283,15 +276,15 @@
       <table class="crm-info-panel">
         <tbody>
           <tr>
-            <td class="label">收款單位</td>
+            <td class="label">{ts}Organization{/ts}</td>
             <td class="html-adjust">{/literal}{$organization}{literal}</td>
           </tr>
           <tr>
-            <td class="label">品名</td>
+            <td class="label">{ts}Object Name{/ts}</td>
             <td class="html-adjust">{/literal}{$description}{literal}</td>
           </tr>
           <tr>
-            <td class="label">金額</td>
+            <td class="label">{ts}Amount{/ts}</td>
             <td class="html-adjust">{/literal}{$amount|crmMoney}{literal}</td>
           </tr>
         </tbody>
@@ -301,7 +294,7 @@
 
   <div align="center" style="margin-top: 10px"><button class="apple-pay-button apple-pay-button-black-with-line" onclick="window.applePayProcess.doPay();"></button></div>
 
-  <dd class="console">Console message: </dd>
+  <div class="console">Console message: </div>
 </div>
 {/literal}
 {/if}

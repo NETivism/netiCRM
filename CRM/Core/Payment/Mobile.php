@@ -167,7 +167,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         $smarty->assign($key, $value );
       }
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
-      CRM_Utils_System::setTitle("立即捐款/繳款");
+      CRM_Utils_System::setTitle(ts('Contribute Now'));
       // CRM_Utils_Hook::alterContent($page, 'page', $pageTemplateFile, $this);
       CRM_Utils_System::theme('page', $page);
     }
