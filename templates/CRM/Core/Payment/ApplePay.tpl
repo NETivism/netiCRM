@@ -16,7 +16,7 @@
   
   <form action="/civicrm/payment/mobile/checkout" name="print" method="post" id="redirect-form">
     <div align="center" id="submit-button">
-      <p>{ts}If your page doesn't redirect, please click 'Continue' button to act.{/ts}</p>
+      <p>{/literal}{ts}If your page doesn't redirect, please click 'Continue' button to act.{/ts}{literal}</p>
       <div>
         <input type="hidden" name="redirect" value="1">
         <input type="hidden" name="instrument" value="ApplePay">
@@ -25,7 +25,7 @@
             <input type="hidden" name="{$key}" value="{$item}">
           {/foreach}
         {literal}
-        <input type="submit" id="submit-button" value="{ts}Continue{/ts}" />
+        <input type="submit" id="submit-button" value="{/literal}{ts}Continue{/ts}{literal}" />
       </div>
     </div>
   </form>
@@ -169,7 +169,7 @@
                     dd(ApplePaySession.STATUS_SUCCESS);
                     session.completePayment(JSON.parse(ApplePaySession.STATUS_SUCCESS));
 
-                    $('.crm-custom-data-view').append("<h2 style='color: red;>{ts}Paid success!! Fresh page after 5 seconds.{/ts}</h2>");
+                    $('.crm-custom-data-view').append("<h2 style='color: red;>{/literal}{ts}Paid success!! Fresh page after 5 seconds.{/ts}{literal}</h2>");
                     
                     setTimeout(function(){
                       location.href = "/civicrm/contribute/transact?_qf_ThankYou_display=true&qfKey="+window.applePayProcess.qfKey;
@@ -276,15 +276,15 @@
       <table class="crm-info-panel">
         <tbody>
           <tr>
-            <td class="label">{ts}Organization{/ts}</td>
+            <td class="label">{/literal}{ts}Payment Organization{/ts}{literal}</td>
             <td class="html-adjust">{/literal}{$organization}{literal}</td>
           </tr>
           <tr>
-            <td class="label">{ts}Object Name{/ts}</td>
+            <td class="label">{/literal}{ts}Subject Name{/ts}{literal}</td>
             <td class="html-adjust">{/literal}{$description}{literal}</td>
           </tr>
           <tr>
-            <td class="label">{ts}Amount{/ts}</td>
+            <td class="label">{/literal}{ts}Amount{/ts}{literal}</td>
             <td class="html-adjust">{/literal}{$amount|crmMoney}{literal}</td>
           </tr>
         </tbody>
