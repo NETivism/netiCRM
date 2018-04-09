@@ -246,6 +246,9 @@
     }
 }
 @supports not (-webkit-appearance: -apple-pay-button) {
+    .console {
+        display: none;
+    }
     .apple-pay-button {
         display: inline-block;
         background-size: 100% 60%;
@@ -273,36 +276,30 @@
     } 
 }
 </style>
-<div id="step-after-redirect" style="width:320px;margin:0 auto;">
-  <div align="center"><p>歡迎使用藍新金流</p></div>
 
-  <div class="payment_info" style="border: 2px solid; border-radius: 10px; margin-left:20px; margin-right:20px;">
-    <dl>
-      <dd>
-        <span>qfKey:</span>
-        <span>{/literal}{$qfKey}{literal}</span>
-      </dd>
-      <dd>
-        <span>provider:</span>
-        <span>{/literal}{$provider}{literal}</span>
-      </dd>
-      <dd>
-        <span>訂單編號:</span>
-        <span>{/literal}{$cid}{literal}</span>
-      </dd>
-      <dd>
-        <span>品名:</span>
-        <span>{/literal}{$description}{literal}</span>
-      </dd>
-      <dd style="margin-top:10px;">
-        <span>總金額:</span>
-        <span>{/literal}{$amount}{literal}</span>
-      </dd>
-    </dl>
+<div class="crm-container-md">
+  <div class="crm-custom-data-view">
+    <div class="crm-accordion-body">
+      <table class="crm-info-panel">
+        <tbody>
+          <tr>
+            <td class="label">收款單位</td>
+            <td class="html-adjust">{/literal}{$organization}{literal}</td>
+          </tr>
+          <tr>
+            <td class="label">品名</td>
+            <td class="html-adjust">{/literal}{$description}{literal}</td>
+          </tr>
+          <tr>
+            <td class="label">金額</td>
+            <td class="html-adjust">{/literal}{$amount|crmMoney}{literal}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  
-  <div style="margin-left:20px;"><p>選擇支付工具:</p></div>
-  <div align="center" style="margin-top: 10px"><button class="apple-pay-button apple-pay-button-white-with-line" onclick="window.applePayProcess.doPay();"></button></div>
+
+  <div align="center" style="margin-top: 10px"><button class="apple-pay-button apple-pay-button-black-with-line" onclick="window.applePayProcess.doPay();"></button></div>
 
   <dd class="console">Console message: </dd>
 </div>
