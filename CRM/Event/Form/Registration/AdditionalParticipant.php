@@ -188,7 +188,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     $first_name = $last_name = NULL;
     foreach (array('pre', 'post') as $keys) {
       if (isset($this->_values['additional_custom_' . $keys . '_id'])) {
-        $this->buildCustom($this->_values['additional_custom_' . $keys . '_id'], 'additionalCustom' . ucfirst($keys), TRUE);
+        $this->buildCustom($this->_values['additional_custom_' . $keys . '_id'], 'additionalCustom' . ucfirst($keys));
         $$keys = CRM_Core_BAO_UFGroup::getFields($this->_values['additional_custom_' . $keys . '_id']);
       }
       foreach (array('first_name', 'last_name') as $name) {
@@ -348,7 +348,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
 
       //CRM-4320
       if ($allowToProceed) {
-        $buttons = array_merge($buttons, array(array('type' => 'next',
+        $buttons = array_merge($buttons, array(array(
+              'type' => 'upload',
               'name' => ts('Continue >>'),
               'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
               'isDefault' => TRUE,
