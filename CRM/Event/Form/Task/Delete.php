@@ -114,21 +114,18 @@ class CRM_Event_Form_Task_Delete extends CRM_Event_Form_Task {
       if (CRM_Utils_Array::value('delete_participant', $params) == 1) {
         if (CRM_Event_BAO_Participant::isPrimaryParticipant($participantId)) {
           $additionalIds = (CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId));
-          $additionalCount = count($additionalIds);
           foreach ($additionalIds as $value) {
             CRM_Event_BAO_Participant::deleteParticipant($value);
+            $deletedParticipants++;
           }
           CRM_Event_BAO_Participant::deleteParticipant($participantId);
+          $deletedParticipants++;
         }
-        $deletedParticipants++;
       }
       else {
         CRM_Event_BAO_Participant::deleteParticipant($participantId);
         $deletedParticipants++;
       }
-    }
-    if ($additionalCount) {
-      $deletedParticipants += $additionalCount;
     }
 
     $status = array(

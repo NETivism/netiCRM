@@ -203,9 +203,10 @@
         {/foreach}
     	<div class="crm-group {$groupTitlePre}-group">
             <div class="header-dark">
-    	        {$groupTitlePre}
+              {ts 1=1}Participant Information - Participant %1{/ts}
             </div>
             <fieldset class="label-left">
+                <legend>{$groupTitlePre}</legend>
                 {include file="CRM/UF/Form/Block.tpl" fields=$customPreGroup}
             </fieldset>
         </div>
@@ -218,10 +219,8 @@
             {/if}
         {/foreach}
     	<div class="crm-group {$groupTitlePost}-group">
-            <div class="header-dark">
-                {$groupTitlePost}
-            </div>
             <fieldset class="label-left">  
+                <legend>{$groupTitlePost}</legend>
                 {include file="CRM/UF/Form/Block.tpl" fields=$customPostGroup}
             </fieldset>
         </div>
@@ -241,13 +240,12 @@
                         {else}
                             <fieldset class="label-left"><legend>{$value.additionalCustomPost_grouptitle}</legend>
                         {/if}
-                        <table class="form-layout-compressed">	
                         {foreach from=$val item=v key=f}
-                            <tr>
-                                <td class="label twenty">{$f}</td><td class="view-value">{$v}</td>
-                            </tr>
+                        <div class="crm-section {$field}-section">
+                          <div class="label">{$f}</div>
+                          <div class="content">{$v}</div>
+                        </div>
                         {/foreach}
-                        </table>
                         </fieldset>
                     {/if}
                 <div>
