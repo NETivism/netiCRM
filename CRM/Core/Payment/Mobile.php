@@ -124,12 +124,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    *
    */
   function doTransferCheckout(&$params, $component) {
-
-    // dd(date('Y-m-d H:i:s'));
-    // dd('Hello');
     $qfKey = $params['qfKey'];
     $paymentProcessor = $this->_paymentProcessor;
-    $form_params = $this->_paymentForm->_params;
 
     $provider_name = $paymentProcessor['password'];
     $module_name = 'civicrm_'.strtolower($provider_name);
@@ -140,17 +136,29 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $options = array(1 => array( $params['civicrm_instrument_id'], 'Integer'));
     $instrument_name = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
 
+    if(!empty($params['amount_level'])){
+      $description = $params['description'] . ' - ' . $params['amount_level'];
+    }else{
+      $description = $params['description'];
+    }
+
     if(strtolower($instrument_name) == 'applepay'){
       $smarty = CRM_Core_Smarty::singleton();
       $smarty->assign('after_redirect', 0);
-      $params = array(
-        'cid' => $form_params['contributionID'],
+      $payment_params = array(
+        'cid' => $params['contributionID'],
         'provider' => $provider_name,
-        'description' => $form_params['description'],
-        'amount' => $form_params['amount'],
+        'description' => $description,
+        'amount' => $params['amount'],
         'qfKey' => $qfKey,
       );
-      $smarty->assign('params', $params );
+      if(!empty($params['participantID'])){
+        $payment_params['pid'] = $params['participantID'];
+      }
+      if(!empty($params['eventID'])){
+        $payment_params['eid'] = $params['eventID'];
+      }
+      $smarty->assign('params', $payment_params );
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       print($page);
       CRM_Utils_System::civiExit();
@@ -174,8 +182,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function validate(){
-    // dd('hello validate');
-    // dd($_POST, 'VALIDATE POST');
 
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $_POST['cid'];
@@ -224,7 +230,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function transact(){
-    // dd('hello transact');
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $_POST['cid'];
     $contribution->find(TRUE);
@@ -278,17 +283,15 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       
       $ipn = new CRM_Core_Payment_BaseIPN();
       $input = $ids = $objects = array();
-      // if(!empty($controller['value']['event_id'])){
-        // ?? 
-        // $input['component'] = 'event';
-
-      // }else{
-      $input['component'] = 'contribute';
-      // }
+      if(!empty($_POST['pid']) && !empty($_POST['eid'])){
+        $input['component'] = 'event';
+        $ids['participant'] = $_POST['pid'];
+        $ids['event'] = $_POST['eid'];
+      }else{
+        $input['component'] = 'contribute';
+      }
       $ids['contribution'] = $contribution->id;
       $ids['contact'] = $contribution->contact_id;
-      // $pid = $controller['params']['payment_processor'];
-      // $validate_result = $ipn->validateData($input, $ids, $objects, FALSE, $pid);
       $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
       if($validate_result){
         $transaction = new CRM_Core_Transaction();
@@ -297,12 +300,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
           $input['payment_instrument_id'] = $contribution->payment_instrument_id;
           // $input['check_number'] = $result['writeoffnumber'];
           $input['amount'] = $contribution->amount;
-          // if($result['timepaid']){
-          //   $objects['contribution']->receive_date = $result['timepaid'];
-          // }
-          // else{
-            $objects['contribution']->receive_date = date('YmdHis');
-          // }
+          $objects['contribution']->receive_date = date('YmdHis');
           $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
 
           $result = array('is_success' => 1);
@@ -313,7 +311,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       }
 
       echo json_encode($result);
-      // dd($result,'RESULT');
       CRM_Utils_System::civiExit();
       
     }

@@ -54,11 +54,15 @@
       window.applePayProcess = {
 
         cid:'{/literal}{$cid}{literal}',
-        provider: "{/literal}{$provider}{literal}",
+        provider: '{/literal}{$provider}{literal}',
         description : '{/literal}{$description}{literal}',
         organization : '{/literal}{$organization}{literal}',
         qfKey : '{/literal}{$qfKey}{literal}',
         amount : {/literal}{$amount}{literal},
+        {/literal}
+          {if $pid}pid : '{$pid}', {/if}
+          {if $eid}eid : '{$eid}', {/if}
+        {literal}
 
         /*
         order:{
@@ -84,45 +88,27 @@
         doPay : function() {
       
           try {
-            //--依據新版 PCI DSS3.1規範，TLSv1.0通訊協定不得再繼續使用，支援協定 TLSv1.1 and TLSv1.2
-            //-- 1).建立 Apple Pay request 
             request = {
-              countryCode : 'TW', // 國別
-              currencyCode : 'TWD', // 幣別
-              supportedNetworks : [ 'visa','masterCard' ], //支援卡別
+              countryCode : 'TW',
+              currencyCode : 'TWD',
+              supportedNetworks : [ 'visa','masterCard' ],
               merchantCapabilities : [ 'supports3DS' ],
               total : {
                 label : this.organization,
                 amount : this.amount
-              }, //總金額
-              lineItems : [{label:this.description, amount:this.amount}], // 細項
-              // requiredBillingContactFields : ["postalAddress","name"],           // 要求付款人資訊 (備註：Apple說明,為提供最佳使用者體驗,應避免要求使用者填寫不必要資訊)
-              // requiredShippingContactFields : ["postalAddress","name","phone", "email"], // 要求收件人資訊 (備註：Apple說明,為提供最佳使用者體驗,應避免要求使用者填寫不必要資訊)
+              },
+              lineItems : [{label:this.description, amount:this.amount}],
             };
             
-            //-- 2).建立 Apple Pay Session
             const session = new ApplePaySession(2, request);
           
-            //-- 3).驗證商家
             session.onvalidatemerchant = function(event) {
-              /*
-                3-1.取得 event.validationURL 傳送至商家server進行商家驗證.
-                3-2.驗證完成後取得 merchant session,並執行 session.completeMerchantValidation(merchantSession)//-- 參數型別為JSON物件
-              */
-
               var data = {
                 cid : window.applePayProcess.cid,
                 validationURL: event.validationURL,
                 domain_name:　location.host
               };
 
-              dd('s2:準備進行商店驗證，傳入資訊');
-              dd(JSON.stringify(data));
-
-
-
-              // 將validationURL拋到Server端，由Server端與Apple Server做商店驗證
-              
               $.ajax({
                 type: "POST",
                 url: '/civicrm/ajax/applepay/validate',
@@ -142,20 +128,15 @@
                 }
               });
             };
-            
-            //-- 4).Payment授權完成
             session.onpaymentauthorized = function(event){
               dd(event);
-              /*
-                4-1.將 event.payment.token 傳回商家 server 進行授權
-                4-2.將授權結果傳入 session.completePayment(ApplePaySession.STATUS_SUCCESS)
-              */
               dd("Start transact");
               data = {
                 cid : window.applePayProcess.cid,
                 applepay_token : event.payment.token,
-
               };
+              data.pid = window.applePayProcess.pid ? window.applePayProcess.pid : undefined;
+              data.eid = window.applePayProcess.eid ? window.applePayProcess.eid : undefined;
 
               $.ajax({
                 type: "POST",
@@ -169,10 +150,14 @@
                     dd(ApplePaySession.STATUS_SUCCESS);
                     session.completePayment(JSON.parse(ApplePaySession.STATUS_SUCCESS));
 
-                    $('.crm-custom-data-view').append("<h2 style='color: red;>{/literal}{ts}Paid success!! Fresh page after 5 seconds.{/ts}{literal}</h2>");
+                    $('.crm-accordion-body').append("<p style='color: red;'>{/literal}{ts}Paid success!! Fresh page after 5 seconds.{/ts}{literal}</p>");
                     
                     setTimeout(function(){
-                      location.href = "/civicrm/contribute/transact?_qf_ThankYou_display=true&qfKey="+window.applePayProcess.qfKey;
+                      if(window.applePayProcess.pid){
+                        location.href = "/civicrm/event/register?_qf_ThankYou_display=true&qfKey="+window.applePayProcess.qfKey;
+                      }else{
+                        location.href = "/civicrm/contribute/transact?_qf_ThankYou_display=true&qfKey="+window.applePayProcess.qfKey;
+                      }
                     },5000);
                     
 
@@ -188,13 +173,11 @@
 
             };
 
-            //-- 系統自動取消
             session.oncancel = function(){
               dd("Cancel");
               
             };
-            
-            //開始 Apple Pay 支付
+
             session.begin();
             
           } catch (err) {
@@ -239,9 +222,6 @@
     }
 }
 @supports not (-webkit-appearance: -apple-pay-button) {
-    .console {
-        display: none;
-    }
     .apple-pay-button {
         display: inline-block;
         background-size: 100% 60%;
@@ -267,6 +247,9 @@
         background-color: white;
         border: .5px solid black;
     } 
+}
+.console {
+    display: none;
 }
 </style>
 
