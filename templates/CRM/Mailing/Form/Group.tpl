@@ -125,15 +125,14 @@
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
 </div>
 
+{include file="CRM/common/chosen.tpl" selector="select.chosen"}
 {literal}
 <script type="text/javascript">
 cj(function() {
   cj().crmaccordions(); 
-  cj('.advmultiselect select[name$="t\\\[\\\]"]').each(function(){
-    if (!cj(this).attr('disabled')) {
-      cj(this).parents('.crm-accordion-closed').each(function(){
-        cj(this).find('.crm-accordion-header').trigger('click');
-      });
+  cj('select.chosen').each(function(){
+    if (cj(this).find('option[selected=selected]')) {
+      cj(this).closest('.crm-accordion-header').trigger('click');
     }
   });
 });
