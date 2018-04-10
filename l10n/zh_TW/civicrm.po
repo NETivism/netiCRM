@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-03-28 04:21+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-04-09 11:37+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33809,6 +33809,7 @@ msgstr "包括"
 msgid "Recipients of <a href=\"%1\">%2</a>"
 msgstr "收件者：<a href=\"%1\">%2</a>"
 
+#: templates/CRM/Mailing/Page/Report.tpl
 msgid "Members of group <a href=\"%1\">%2</a>"
 msgstr ""
 
@@ -46231,13 +46232,26 @@ msgstr "你確定將電子報設定為不公開顯示嗎？"
 
 # CRM/Admin/Form/Setting/Receipt.php
 msgid "The stamp of organization."
-msgstr "組織章圖檔"
+msgstr ""
 
 msgid "The stamp of the person in charge."
-msgstr "經辦人章圖檔"
+msgstr ""
 
 # templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid ""
 "This image will show on receipt.The position please click <a href='%1' "
 "target='_blank'>here</a> to get more information."
-msgstr "這張圖片會出現在收據上，位置請參考<a href='%1' target='_blank'>此連結</a>來取得更詳細的資訊。"
+msgstr ""
+
+# templates/CRM/Core/Payment/ApplePay.tpl
+msgid "If your page doesn't redirect, please click 'Continue' button to act."
+msgstr "若未自動轉向繳款頁面，請您按「下一步」來繼續進行動作"
+
+msgid "Paid success!! Fresh page after 5 seconds."
+msgstr "付款成功，五秒後將自動跳轉。"
+
+msgid "Payment Organization"
+msgstr "收款單位"
+
+msgid "Subject Name"
+msgstr "品名"
