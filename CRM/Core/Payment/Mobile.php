@@ -124,6 +124,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    *
    */
   function doTransferCheckout(&$params, $component) {
+
     $qfKey = $params['qfKey'];
     $paymentProcessor = $this->_paymentProcessor;
 
@@ -136,11 +137,19 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $options = array(1 => array( $params['civicrm_instrument_id'], 'Integer'));
     $instrument_name = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
 
-    if(!empty($params['amount_level'])){
-      $description = $params['description'] . ' - ' . $params['amount_level'];
+    if(!empty($params['eventID'])){
+      $event = new CRM_Event_DAO_Event();
+      $event->id = $params['eventID'];
+      $event->find(1);
+      $page_title = $event->title;
     }else{
-      $description = $params['description'];
+      $contribution_pgae = new CRM_Contribute_DAO_ContributionPage();
+      $contribution_pgae->id = $params['contributionPageID'];
+      $contribution_pgae->find(1);
+      $page_title = $contribution_pgae->title;
     }
+
+    $description = !empty($params['amount_level']) ? $page_title . ' - ' . $params['amount_level'] : $page_title;
 
     if(strtolower($instrument_name) == 'applepay'){
       $smarty = CRM_Core_Smarty::singleton();
@@ -202,16 +211,31 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
       if(function_exists('_civicrm_neweb_get_mobile_params')){
         $payment_params = _civicrm_neweb_get_mobile_params();
+      }else{
+        $error = "Can't get params from module when validate: civicrm_neweb";
+        CRM_Core_Error::debug_log_message($error);
+        $note .= $error;
+        CRM_Core_Payment_Mobile::addNote($note, $contribution);
       }
+
       $url = $payment_params['session_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
+
+      // $sql = "SELECT cid FROM civicrm_contribution_neweb WHERE cid = {$contribution->id}";
+      // $cid = CRM_Core_DAO::singleValueQuery($sql);
+      // if(!empty($cid)){
+      //   $primary_keys = 'cid';
+      // }else{
+      //   $primary_keys = array();
+      // }
+
       $record = array(
         'cid' => $contribution->id,
         'post_data' => $cmd,
       );
-      drupal_write_record('civicrm_contribution_neweb', $record);
+      drupal_write_record('civicrm_contribution_neweb', $record, $primary_keys);
 
       $result = exec($cmd);
 
@@ -221,12 +245,16 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       );
       drupal_write_record('civicrm_contribution_neweb', $record, 'cid');
 
+      $result_object = json_decode($result);
+      if($result_object->prc !== 0 || $result_object->src !== 0){
+        $note = "Prc: {$result_object->prc}, Src: {$result_object->src}";
+        CRM_Core_Error::debug_log_message($error);
+        CRM_Core_Payment_Mobile::addNote($note, $contribution);
+      }
+
       echo $result;
       CRM_Utils_System::civiExit();
-      
     }
-
-
   }
 
   static function transact(){
@@ -253,7 +281,10 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       if(function_exists('_civicrm_neweb_get_mobile_params')){
         $payment_params = _civicrm_neweb_get_mobile_params();
       }else{
-        CRM_Core_Error::debug_log_message("Doesn't enable module: civicrm_neweb");
+        $error = "Can't get params from module when transact: civicrm_neweb";
+        CRM_Core_Error::debug_log_message($error);
+        $note .= $error;
+        CRM_Core_Payment_Mobile::addNote($note, $contribution);
       }
       $url = $payment_params['transact_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
@@ -305,7 +336,9 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
           $result = array('is_success' => 1);
         }else{
-          $transaction_result = $ipn->failed($objects, $transaction);
+          $ipn->failed($objects, $transaction, $error);
+          $note .= $error . "Prc: {$result_object->prc}, Src: {$result_object->src}";
+          CRM_Core_Payment_Mobile::addNote($note, $contribution);
           $result = array('is_success' => 0);
         }
       }
@@ -315,5 +348,28 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       
     }
   }
+
+  static function addNote($note, &$contribution){
+      require_once 'CRM/Core/BAO/Note.php';
+      $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n\nError: ".$note."\n===============================\n";
+      $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
+      if(count($note_exists)){
+        $note_id = array( 'id' => reset(array_keys($note_exists)) );
+        $note = $note . reset($note_exists);
+      }
+      else{
+        $note_id = NULL;
+      }
+      $noteParams = array(
+        'entity_table'  => 'civicrm_contribution',
+        'note'          => $note,
+        'entity_id'     => $contribution->id,
+        'contact_id'    => $contribution->contact_id,
+        'modified_date' => date('Ymd')
+      );
+      CRM_Core_BAO_Note::add( $noteParams, $note_id );
+    }
+
+
 }
 

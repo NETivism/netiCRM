@@ -150,7 +150,7 @@
                     dd(ApplePaySession.STATUS_SUCCESS);
                     session.completePayment(JSON.parse(ApplePaySession.STATUS_SUCCESS));
 
-                    $('.crm-accordion-body').append("<p style='color: red;'>{/literal}{ts}Paid success!! Fresh page after 5 seconds.{/ts}{literal}</p>");
+                    $('.display-data').append("<p style='color: red;'>{/literal}{ts}Paid success!! Fresh page after 5 seconds.{/ts}{literal}</p>");
                     
                     setTimeout(function(){
                       if(window.applePayProcess.pid){
@@ -253,31 +253,27 @@
 }
 </style>
 
-<div class="crm-container-md">
-  <div class="crm-custom-data-view">
-    <div class="crm-accordion-body">
-      <table class="crm-info-panel">
-        <tbody>
-          <tr>
-            <td class="label">{/literal}{ts}Payment Organization{/ts}{literal}</td>
-            <td class="html-adjust">{/literal}{$organization}{literal}</td>
-          </tr>
-          <tr>
-            <td class="label">{/literal}{ts}Subject Name{/ts}{literal}</td>
-            <td class="html-adjust">{/literal}{$description}{literal}</td>
-          </tr>
-          <tr>
-            <td class="label">{/literal}{ts}Amount{/ts}{literal}</td>
-            <td class="html-adjust">{/literal}{$amount|crmMoney}{literal}</td>
-          </tr>
-        </tbody>
-      </table>
+<div class="crm-container">
+  <div class="crm-group display-data">
+    <div class="crm-section">
+      <div class="label">{/literal}{ts}Payment Organization{/ts}{literal}</div>
+      <div class="content">{/literal}{$organization}{literal}</div>
+    </div>
+    <div class="crm-section">
+      <div class="label">{/literal}{ts}Subject Name{/ts}{literal}</div>
+      <div class="content">{/literal}{$description}{literal}</div>
+    </div>
+    <div class="crm-section">
+      <div class="label">{/literal}{ts}Amount{/ts}{literal}</div>
+      <div class="content">{/literal}{$amount|crmMoney}{literal}</div>
     </div>
   </div>
 
-  <div align="center" style="margin-top: 10px"><button class="apple-pay-button apple-pay-button-black-with-line" onclick="window.applePayProcess.doPay();"></button></div>
+  <div class="crm-group">
+    <div align="center" style="margin-top: 10px"><button class="apple-pay-button apple-pay-button-black-with-line" onclick="window.applePayProcess.doPay();"></button></div>
+  </div>
 
-  <div class="console">Console message: </div>
+  <div class="crm-group console">Console message: </div>
 </div>
 {/literal}
 {/if}
