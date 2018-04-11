@@ -46110,3 +46110,12 @@ msgstr ""
 
 msgid "Subject Name"
 msgstr ""
+
+msgid "Mobile Payment"
+msgstr ""
+
+msgid "Payment Processor Provider"
+msgstr ""
+
+msgid "Account"
+msgstr ""

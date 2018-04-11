@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-04-09 11:37+0000\n"
+"PO-Revision-Date: 2018-04-11 07:07+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46067,7 +46067,7 @@ msgid ""
 "You can configure one or more SMS Providers for your CiviCRM installation. "
 "To learn more about the procedure to install SMS extension and Provider, "
 "refer"
-msgstr ""
+msgstr "你可以為你的 CiviCRM 設定一個以上的簡訊供應商，需要更多資訊請參考"
 
 msgid "Provider Details"
 msgstr "供應商詳情"
@@ -46255,3 +46255,12 @@ msgstr "收款單位"
 
 msgid "Subject Name"
 msgstr "品名"
+
+msgid "Mobile Payment"
+msgstr "行動支付"
+
+msgid "Payment Processor Provider"
+msgstr "金流商"
+
+msgid "Account"
+msgstr "帳號"
