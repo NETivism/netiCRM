@@ -1262,10 +1262,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
         require_once 'CRM/Event/Form/Registration/Confirm.php';
         CRM_Event_Form_Registration_Confirm::fixLocationFields($value, $fields);
-        //for free event or additional participant, dont create billing email address.
-        if (!CRM_Utils_Array::value('is_primary', $value) || !$this->_values['event']['is_monetary']) {
-          unset($value["email-{$this->_bltID}"]);
-        }
 
         $contactID = &CRM_Event_Form_Registration_Confirm::updateContactFields($contactID, $value, $fields);
 
