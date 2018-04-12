@@ -98,26 +98,14 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * @return string
    * @access public
    */
-  public function defaultFromHeader($header, &$patterns) {
-    foreach ($patterns as $key => $re) {
-      /* Skip the first (empty) key/pattern */
-
-      if (empty($re)) {
-
-        continue;
-
-      }
-
-      /* if we've already used this field, move on */
-
-      //             if ($this->_fieldUsed[$key])
-      //                 continue;
-      /* Scan through the headerPatterns defined in the schema for a
-             * match */
-
-      if (preg_match($re, $header)) {
-        $this->_fieldUsed[$key] = TRUE;
-        return $key;
+  public function defaultFromHeader($columnName, &$patterns) {
+    if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
+      $columnMatch = trim(preg_replace('/\(.*\)/', '', $columnName));
+      $matches = preg_grep('/^'.$columnMatch.'/iu', $this->_mapperFields);
+      if (count($matches)) {
+        $columnKey = key($matches);
+        $this->_fieldUsed[$columnKey] = TRUE;
+        return $columnKey;
       }
     }
     return '';

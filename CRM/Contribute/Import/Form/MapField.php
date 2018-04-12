@@ -105,23 +105,12 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    */
   public function defaultFromHeader($columnName, &$patterns) {
     if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
-      $matches = preg_grep('/^'.$columnName.'/iu', $this->_mapperFields);
+      $columnMatch = trim(preg_replace('/\(.*\)/', '', $columnName));
+      $matches = preg_grep('/^'.$columnMatch.'/iu', $this->_mapperFields);
       if (count($matches)) {
         $columnKey = key($matches);
         $this->_fieldUsed[$columnKey] = TRUE;
         return $columnKey;
-      }
-    }
-    foreach ($patterns as $key => $re) {
-      /* Skip the first (empty) key/pattern */
-      if (empty($re) || $re == '//') {
-        continue;
-      }
-
-      /* Scan through the headerPatterns defined in the schema for a match */
-      if (preg_match($re, $columnName)) {
-        $this->_fieldUsed[$key] = TRUE;
-        return $key;
       }
     }
     return '';
