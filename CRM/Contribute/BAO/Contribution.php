@@ -506,7 +506,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
 
       $note = CRM_Core_DAO_Note::import();
       $tmpFields = CRM_Contribute_DAO_Contribution::import();
-      $tmpFields['contribution_contact_id']['title'] = ts('Contact') . '::' .$tmpFields['contribution_contact_id']['title'];
+      $tmpFields['contribution_contact_id']['title'] = ts('Contacts') . '::' .$tmpFields['contribution_contact_id']['title'];
       unset($tmpFields['option_value']);
       $optionFields = CRM_Core_OptionValue::getFields($mode = 'contribute');
 
@@ -530,7 +530,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
         }
         $index = $fieldName;
         $contactFields[$index] = $fieldData;
-        $contactFields[$index]['title'] = ts('Contact') . '::' .$contactFields[$index]['title'];
+        $contactFields[$index]['title'] = ts('Contacts') . '::' .$contactFields[$index]['title'];
       }
 
       $fields = array_merge($fields, CRM_Contribute_DAO_ContributionType::export());
