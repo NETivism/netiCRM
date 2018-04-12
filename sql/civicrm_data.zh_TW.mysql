@@ -4475,7 +4475,7 @@ VALUES
    ('directory_preferences'         , 'Directory Preferences'              , 0, 1),
    ('url_preferences'               , 'URL Preferences'                    , 0, 1),
    ('sms_api_type'                  , 'Api Type'                           , 0, 1),
-   ('sms_provider_name'             , 'Sms Provider Internal Name'         , 0, 1);
+   ('sms_provider_name'             , '系統內部簡訊供應商'         , 0, 1);
 
    
 SELECT @option_group_id_pcm            := max(id) from civicrm_option_group where name = 'preferred_communication_method';
@@ -5253,7 +5253,7 @@ VALUES
  ('PayPal_Standard',    'PayPal - 網站付款標準版', NULL,1,0,'商業帳戶 Email',NULL,NULL,NULL,'Payment_PayPalImpl','https://www.paypal.com/',NULL,'https://www.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,4,1),
  ('PayPal',             'PayPal - 網站付款進階版',      NULL,1,0,'使用者名稱','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/','https://www.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/','https://www.sandbox.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',3, 1 ),
  ('PayPal_Express',     'PayPal - 快速結帳',       NULL,1,0,'使用者名稱','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',2,NULL),
- ('Google_Checkout',    'Google Checkout',        NULL,1,0,'商業帳戶帳號','Key',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
+ ('Google_Checkout',    'Google Checkout',        NULL,1,0,'商家編號','Key',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
  ('Moneris',            'Moneris',                NULL,1,0,'使用者名稱','密碼','Store ID',NULL,'Payment_Moneris','https://www3.moneris.com/',NULL,NULL,NULL,'https://esqa.moneris.com/',NULL,NULL,NULL,1,1),
  ('AuthNet_AIM',        'Authorize.Net - AIM',    NULL,1,0,'API Login','Payment Key','MD5 Hash',NULL,'Payment_AuthorizeNet','https://secure.authorize.net/gateway/transact.dll',NULL,'https://api.authorize.net/xml/v1/request.api',NULL,'https://test.authorize.net/gateway/transact.dll',NULL,'https://apitest.authorize.net/xml/v1/request.api',NULL,1,NULL),
  ('PayJunction',        'PayJunction',            NULL,1,0,'User Name','Password',NULL,NULL,'Payment_PayJunction','https://payjunction.com/quick_link',NULL,NULL,NULL,'https://www.payjunctionlabs.com/quick_link',NULL,NULL,NULL,1,1),
@@ -5264,7 +5264,8 @@ VALUES
  ('Elavon',             'Elavon 金流機制','Elavon / Nova Virtual Merchant',1,0,'SSL Merchant ID ','SSL User ID','SSL PIN',NULL,'Payment_Elavon','https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,'https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,1,0),
  ('Realex',             'Realex Payment',         NULL,1,0,'Merchant ID', 'Password', NULL, 'Account', 'Payment_Realex', 'https://epage.payandshop.com/epage.cgi', NULL, NULL, NULL, 'https://epage.payandshop.com/epage-remote.cgi', NULL, NULL, NULL, 1, 0 ),
  ('PayflowPro',         'PayflowPro',             NULL,1,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
- ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL);
+ ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
+ ('Mobile', '行動支付', NULL, 1, 0, '商家編號', '金流商', '帳號', '密碼',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL);
 
 
 -- the fuzzy default dedupe rules
@@ -12736,6 +12737,7 @@ registration process.{/ts}</p>
 {capture assign=confirmUrl}{crmURL p=\'civicrm/event/confirm\' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
 Click this link to go to a web page where you can confirm your registration online:
 {$confirmUrl}
+{if $participant.last_registration}{ts}Registration End Date{/ts}: {$participant.last_registration|crmDate}{/if}
 {/if}
 
 ===========================================================
@@ -12744,8 +12746,6 @@ Click this link to go to a web page where you can confirm your registration onli
 ===========================================================
 {$event.event_title}
 {$event.event_start_date|crmDate}{if $event.event_end_date}-{if $event.event_end_date|date_format:"%Y%m%d" == $event.event_start_date|date_format:"%Y%m%d"}{$event.event_end_date|crmDate:0:1}{else}{$event.event_end_date|crmDate}{/if}{/if}
-
-{ts}Participant Role{/ts}: {$participant.role}
 
 {if $isShowLocation}
 {if $event.location.address.1.name}
@@ -12775,21 +12775,6 @@ Click this link to go to a web page where you can confirm your registration onli
 {if $eventEmail.email}
 
 {ts}Email{/ts}: {$eventEmail.email}{/if}{/foreach}
-{/if}
-
-{capture assign=icalFeed}{crmURL p=\'civicrm/event/ical\' q="reset=1&id=`$event.id`" h=0 a=1 fe=1}{/capture}
-{ts}Download iCalendar File{/ts}: {$icalFeed}
-{if $contact.email}
-
-===========================================================
-{ts}Registered Email{/ts}
-
-===========================================================
-{$contact.email}
-{/if}
-
-{if $register_date}
-{ts}Registration Date{/ts}: {$participant.register_date|crmDate}
 {/if}
 
 {ts 1=$domain.phone 2=$domain.email}Please contact us at %1 or send email to %2 if you have questions.{/ts}
@@ -12830,6 +12815,7 @@ Click this link to go to a web page where you can confirm your registration onli
     <td colspan="2" {$valueStyle}>
      {capture assign=confirmUrl}{crmURL p=\'civicrm/event/confirm\' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
      <a href="{$confirmUrl}">{ts}Go to a web page where you can confirm your registration online{/ts}</a>
+     {if $participant.last_registration} ({ts}Registration End Date{/ts}: {$participant.last_registration|crmDate}){/if}
     </td>
    </tr>
   {/if}
@@ -12845,14 +12831,6 @@ Click this link to go to a web page where you can confirm your registration onli
       <td colspan="2" {$valueStyle}>
        {$event.event_title}<br />
        {$event.event_start_date|crmDate}{if $event.event_end_date}-{if $event.event_end_date|date_format:"%Y%m%d" == $event.event_start_date|date_format:"%Y%m%d"}{$event.event_end_date|crmDate:0:1}{else}{$event.event_end_date|crmDate}{/if}{/if}
-      </td>
-     </tr>
-     <tr>
-      <td {$labelStyle}>
-       {ts}Participant Role{/ts}:
-      </td>
-      <td {$valueStyle}>
-       {$participant.role}
       </td>
      </tr>
 
@@ -12912,38 +12890,6 @@ Click this link to go to a web page where you can confirm your registration onli
        {/if}
       {/foreach}
      {/if}
-
-     {capture assign=icalFeed}{crmURL p=\'civicrm/event/ical\' q="reset=1&id=`$event.id`" h=0 a=1 fe=1}{/capture}
-     <tr>
-      <td colspan="2" {$valueStyle}>
-       <a href="{$icalFeed}">{ts}Download iCalendar File{/ts}</a>
-      </td>
-     </tr>
-
-     {if $contact.email}
-      <tr>
-       <th {$headerStyle}>
-        {ts}Registered Email{/ts}
-       </th>
-      </tr>
-      <tr>
-       <td colspan="2" {$valueStyle}>
-        {$contact.email}
-       </td>
-      </tr>
-     {/if}
-
-     {if $register_date}
-      <tr>
-       <td {$labelStyle}>
-        {ts}Registration Date{/ts}
-       </td>
-       <td {$valueStyle}>
-        {$participant.register_date|crmDate}
-       </td>
-      </tr>
-     {/if}
-
     </table>
    </td>
   </tr>
@@ -12970,6 +12916,7 @@ Click this link to go to a web page where you can confirm your registration onli
 {capture assign=confirmUrl}{crmURL p=\'civicrm/event/confirm\' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
 Click this link to go to a web page where you can confirm your registration online:
 {$confirmUrl}
+{if $participant.last_registration}{ts}Registration End Date{/ts}: {$participant.last_registration|crmDate}{/if}
 {/if}
 
 ===========================================================
@@ -12978,8 +12925,6 @@ Click this link to go to a web page where you can confirm your registration onli
 ===========================================================
 {$event.event_title}
 {$event.event_start_date|crmDate}{if $event.event_end_date}-{if $event.event_end_date|date_format:"%Y%m%d" == $event.event_start_date|date_format:"%Y%m%d"}{$event.event_end_date|crmDate:0:1}{else}{$event.event_end_date|crmDate}{/if}{/if}
-
-{ts}Participant Role{/ts}: {$participant.role}
 
 {if $isShowLocation}
 {if $event.location.address.1.name}
@@ -13009,21 +12954,6 @@ Click this link to go to a web page where you can confirm your registration onli
 {if $eventEmail.email}
 
 {ts}Email{/ts}: {$eventEmail.email}{/if}{/foreach}
-{/if}
-
-{capture assign=icalFeed}{crmURL p=\'civicrm/event/ical\' q="reset=1&id=`$event.id`" h=0 a=1 fe=1}{/capture}
-{ts}Download iCalendar File{/ts}: {$icalFeed}
-{if $contact.email}
-
-===========================================================
-{ts}Registered Email{/ts}
-
-===========================================================
-{$contact.email}
-{/if}
-
-{if $register_date}
-{ts}Registration Date{/ts}: {$participant.register_date|crmDate}
 {/if}
 
 {ts 1=$domain.phone 2=$domain.email}Please contact us at %1 or send email to %2 if you have questions.{/ts}
@@ -13064,6 +12994,7 @@ Click this link to go to a web page where you can confirm your registration onli
     <td colspan="2" {$valueStyle}>
      {capture assign=confirmUrl}{crmURL p=\'civicrm/event/confirm\' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
      <a href="{$confirmUrl}">{ts}Go to a web page where you can confirm your registration online{/ts}</a>
+     {if $participant.last_registration} ({ts}Registration End Date{/ts}: {$participant.last_registration|crmDate}){/if}
     </td>
    </tr>
   {/if}
@@ -13079,14 +13010,6 @@ Click this link to go to a web page where you can confirm your registration onli
       <td colspan="2" {$valueStyle}>
        {$event.event_title}<br />
        {$event.event_start_date|crmDate}{if $event.event_end_date}-{if $event.event_end_date|date_format:"%Y%m%d" == $event.event_start_date|date_format:"%Y%m%d"}{$event.event_end_date|crmDate:0:1}{else}{$event.event_end_date|crmDate}{/if}{/if}
-      </td>
-     </tr>
-     <tr>
-      <td {$labelStyle}>
-       {ts}Participant Role{/ts}:
-      </td>
-      <td {$valueStyle}>
-       {$participant.role}
       </td>
      </tr>
 
@@ -13146,38 +13069,6 @@ Click this link to go to a web page where you can confirm your registration onli
        {/if}
       {/foreach}
      {/if}
-
-     {capture assign=icalFeed}{crmURL p=\'civicrm/event/ical\' q="reset=1&id=`$event.id`" h=0 a=1 fe=1}{/capture}
-     <tr>
-      <td colspan="2" {$valueStyle}>
-       <a href="{$icalFeed}">{ts}Download iCalendar File{/ts}</a>
-      </td>
-     </tr>
-
-     {if $contact.email}
-      <tr>
-       <th {$headerStyle}>
-        {ts}Registered Email{/ts}
-       </th>
-      </tr>
-      <tr>
-       <td colspan="2" {$valueStyle}>
-        {$contact.email}
-       </td>
-      </tr>
-     {/if}
-
-     {if $register_date}
-      <tr>
-       <td {$labelStyle}>
-        {ts}Registration Date{/ts}
-       </td>
-       <td {$valueStyle}>
-        {$participant.register_date|crmDate}
-       </td>
-      </tr>
-     {/if}
-
     </table>
    </td>
   </tr>
