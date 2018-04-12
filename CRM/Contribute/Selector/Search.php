@@ -184,6 +184,12 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
     $this->_single = $single;
     $this->_limit = $limit;
+    if ($context == 'search' && strstr(CRM_Utils_System::currentPath(), 'participant')) {
+      $context = 'participant';
+    }
+    if ($context == 'search' && strstr(CRM_Utils_System::currentPath(), 'membership')) {
+      $context = 'membership';
+    }
     $this->_context = $context;
     $this->_compContext = $compContext;
 
