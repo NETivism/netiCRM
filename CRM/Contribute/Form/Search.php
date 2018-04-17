@@ -173,7 +173,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->_pageId = CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject);
     $this->_test = CRM_Utils_Request::retrieve('test', 'Boolean', $this);
     $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive', $this);
-    $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
+    $this->_context = empty($this->get('context')) ? CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search') : $this->get('context');
 
     $this->assign("context", $this->_context);
 
