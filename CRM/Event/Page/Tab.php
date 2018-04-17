@@ -294,7 +294,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
       $controller->set('test', $is_test);
       $controller->set('cid', $this->_contactId);
       $controller->set('participantId', $this->_id);
-      $controller->set('context', 'contribution');
+      $controller->set('context', 'participant');
       $controller->process();
       $controller->run();
     }
