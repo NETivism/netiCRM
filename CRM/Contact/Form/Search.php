@@ -356,7 +356,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
     if (isset($this->_ssID)) {
       if ($permission == CRM_Core_Permission::EDIT) {
-        $tasks = $tasks + CRM_Contact_Task::optionalTaskTitle();
+        CRM_Contact_Task::optionalTaskTitle($tasks);
       }
 
       $savedSearchValues = array('id' => $this->_ssID,

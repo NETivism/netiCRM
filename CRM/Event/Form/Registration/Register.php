@@ -644,7 +644,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    */
   static public function buildAmount(&$form, $required = TRUE, $discountId = NULL) {
     //if payment done, no need to build the fee block.
-    if (isset($form->_paymentId) && $form->_paymentId) {
+    if (isset($form->_paymentId) && $form->_paymentId && $form->_online) {
       //fix to diaplay line item in update mode.
       $form->assign('priceSet', isset($form->_priceSet) ? $form->_priceSet : NULL);
       return;
@@ -1262,10 +1262,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
         require_once 'CRM/Event/Form/Registration/Confirm.php';
         CRM_Event_Form_Registration_Confirm::fixLocationFields($value, $fields);
-        //for free event or additional participant, dont create billing email address.
-        if (!CRM_Utils_Array::value('is_primary', $value) || !$this->_values['event']['is_monetary']) {
-          unset($value["email-{$this->_bltID}"]);
-        }
 
         $contactID = &CRM_Event_Form_Registration_Confirm::updateContactFields($contactID, $value, $fields);
 

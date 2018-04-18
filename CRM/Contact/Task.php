@@ -339,11 +339,14 @@ class CRM_Contact_Task {
    * @static
    * @access public
    */
-  static function &optionalTaskTitle() {
-    $tasks = array(
-      14 => self::$_tasks[14]['title'],
-    );
-    return $tasks;
+  static function &optionalTaskTitle(&$tasks) {
+    $task = self::$_tasks[14];
+    if ($task['optgroup']) {
+      $tasks[ts($task['optgroup'])][14] = $task['title'];
+    }
+    else {
+      $tasks[14] = $task['title'];
+    }
   }
 
   static function getTask($value) {

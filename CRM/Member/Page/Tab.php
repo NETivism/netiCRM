@@ -514,7 +514,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
       $controller->set('test', $is_test);
       $controller->set('cid', $contactId);
       $controller->set('memberId', $membershipId);
-      $controller->set('context', 'contribution');
+      $controller->set('context', 'membership');
       $controller->process();
       $controller->run();
     }
