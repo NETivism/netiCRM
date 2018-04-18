@@ -56,12 +56,12 @@
         {elseif $form.discount_id.label}
             <tr class="crm-event-eventfees-form-block-discount_id"><td class="label">&nbsp;&nbsp;{$form.discount_id.label}</td><td>{$form.discount_id.html}</td></tr>
         {/if}
-        {if $action EQ 2 and $hasPayment and $onlinePayment}
+        {if $action EQ 2 and $hasPayment and $onlinePayment and !$onlinePendingContributionId}
             <tr class="crm-event-eventfees-form-block-fee_level"><td class="label">&nbsp;&nbsp;{ts}Event Level{/ts}</td><td class="view-value"><span class="bold">{$fee_level}&nbsp;{if $fee_amount}- {$fee_amount|crmMoney:$fee_currency}{/if}</span></td></tr>
         {else}
             <tr class="crm-event-eventfees-form-block-fee_amount"><td class="label">{ts}Event Level{/ts}</td><td>{$form.amount.html}
-            {if $hasPayment}
-              <div class="description has-payment-notice font-red" style="display:none">{ts}This participant have exists contribution record. You need to update related contribution belone this participant manually.{/ts}</div>
+            {if $hasPayment && !$onlinePendingContributionId}
+              <div class="description has-payment-notice font-red" style="display:none">{ts}This participant have completed or cancelled contribution record. You need to update related contribution belone this participant manually.{/ts}</div>
               <script>{literal}
                 cj(document).ready(function($){
                   $("input[name=amount]").click(function(){
@@ -95,7 +95,7 @@
                     <td class="label">{$form.contribution_type_id.label}<span class="marker"> *</span></td>
                     <td>{$form.contribution_type_id.html}<br /><span class="description">{ts}Select the appropriate contribution type for this payment.{/ts}</span></td>
                 </tr>
-                <tr class="crm-event-eventfees-form-block-total_amount"><td class="label">{$form.total_amount.label}</td><td>{$form.total_amount.html|crmMoney:$currency}<br/><span class="description">{ts}Actual payment amount for this registration.{/ts}</span></td></tr>
+                <tr class="crm-event-eventfees-form-block-total_amount"><td class="label">{$form.total_amount.label}</td><td>{$form.total_amount.html|crmMoney:$currency}({ts}Original{/ts}: {$original_total_amount})<br/><span class="description">{ts}Actual payment amount for this registration.{/ts}</span></td></tr>
                 <tr>
                     <td class="label" >{$form.receive_date.label}</td>
                     <td>{include file="CRM/common/jcalendar.tpl" elementName=receive_date}</td>
