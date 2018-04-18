@@ -350,7 +350,7 @@ SELECT label, value
             $sql = "$fieldName";
             // if we are coming in from listings,
             // for checkboxes the value is already in the right format and is NOT an array
-            if (is_array($value)) {
+            if (empty($field['is_search_range']) && is_array($value)) {
               require_once 'CRM/Core/BAO/CustomOption.php';
 
               //ignoring $op value for checkbox and multi select
@@ -607,7 +607,7 @@ SELECT label, value
     if (isset($value['from'])) {
       $val = CRM_Utils_Type::escape($value['from'], $type);
 
-      if ($type == 'String') {
+      if ($type == 'String' && !CRM_Utils_Type::validate($val, 'Float', FALSE)) {
         $this->_where[$grouping][] = "$fieldName >= '$val'";
       }
       else {
@@ -618,7 +618,7 @@ SELECT label, value
 
     if (isset($value['to'])) {
       $val = CRM_Utils_Type::escape($value['to'], $type);
-      if ($type == 'String') {
+      if ($type == 'String' && !CRM_Utils_Type::validate($val, 'Float', FALSE)) {
         $this->_where[$grouping][] = "$fieldName <= '$val'";
       }
       else {
