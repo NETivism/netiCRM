@@ -372,6 +372,17 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
       );
 
+      $row['contribution_total_amount'] = NULL;
+      $row['contribution_currency'] = NULL;
+      if ($row['participant_fee_amount']) {
+        $sql = "SELECT c.id, c.currency, c.total_amount FROM civicrm_contribution c INNER JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE p.participant_id = %1 ORDER BY c.created_date DESC";
+        $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($result->participant_id, 'Integer')));
+        if ($dao->fetch()) {
+          $row['contribution_total_amount'] = $dao->total_amount;
+          $row['contribution_currency'] = $dao->currency;
+        }
+      }
+
       $row['paid'] = CRM_Event_BAO_Event::isMonetary($row['event_id']);
 
       if (CRM_Utils_Array::value('participant_fee_level', $row)) {
@@ -427,13 +438,12 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
         array(
-          'name' => ts('Fee Level'),
+          'name' => ts('Event Level'),
           'sort' => 'fee_level',
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
         array(
-          'name' => ts('Amount'),
-          'sort' => 'fee_amount',
+          'name' => ts('Actual Amount'),
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
         array(
