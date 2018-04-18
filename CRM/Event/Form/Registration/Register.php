@@ -644,7 +644,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    */
   static public function buildAmount(&$form, $required = TRUE, $discountId = NULL) {
     //if payment done, no need to build the fee block.
-    if (isset($form->_paymentId) && $form->_paymentId) {
+    if (isset($form->_paymentId) && $form->_paymentId && $form->_online) {
       //fix to diaplay line item in update mode.
       $form->assign('priceSet', isset($form->_priceSet) ? $form->_priceSet : NULL);
       return;

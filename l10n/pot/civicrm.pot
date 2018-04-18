@@ -46086,3 +46086,6 @@ msgstr ""
 
 msgid "Are you sure you want to un-publish this mailing from public?"
 msgstr "" 
+
+msgid "This participant have completed or cancelled contribution record. You need to update related contribution belone this participant manually."
+msgstr ""

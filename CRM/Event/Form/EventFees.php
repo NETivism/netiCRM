@@ -339,9 +339,13 @@ class CRM_Event_Form_EventFees {
       $contribution = new CRM_Contribute_DAO_Contribution();
       $contribution->id = $contriId;
       $contribution->find(TRUE);
-      foreach (array('contribution_type_id', 'payment_instrument_id', 'contribution_status_id', 'receive_date', 'total_amount') as $f) {
+      foreach (array('contribution_type_id', 'payment_instrument_id', 'contribution_status_id', 'receive_date', 'total_amount', 'trxn_id') as $f) {
         if ($f == 'receive_date') {
           list($defaults[$form->_pId]['receive_date']) = CRM_Utils_Date::setDateDefaults($contribution->$f);
+        }
+        elseif ($f == 'total_amount') {
+          $form->assign("original_total_amount", $contribution->$f);
+          $defaults[$form->_pId][$f] = $contribution->$f;
         }
         else {
           $defaults[$form->_pId][$f] = $contribution->$f;
@@ -460,10 +464,13 @@ SELECT  id, html_type
     }
 
     if ($form->_pId) {
-      if (CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantPayment',
-          $form->_pId, 'contribution_id', 'participant_id'
-        )) {
-        $form->_online = TRUE;
+      $contribution_id = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantPayment', $form->_pId, 'contribution_id', 'participant_id');
+      if ($contribution_id) {
+        $fids = CRM_Core_BAO_FinancialTrxn::getFinancialTrxnIds($contribution_id, 'civicrm_contribution');
+        $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution_id, 'trxn_id', 'id');
+        if (!empty($fids['entityFinancialTrxnId']) || !empty($trxn_id)) {
+          $form->_online = TRUE;
+        }
       }
     }
 
@@ -594,6 +601,7 @@ SELECT  id, html_type
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $form->assign('outBound_option', $mailingInfo['outBound_option']);
     $form->assign('hasPayment', $form->_paymentId);
+    $form->assign('onlinePayment', $form->_online);
   }
 }
 

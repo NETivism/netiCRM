@@ -1035,12 +1035,21 @@ cj(function() {
         $participantBAO->id = $this->_id;
         $participantBAO->find(TRUE);
         $contributionParams['total_amount'] = $participantBAO->fee_amount;
-
         $params['discount_id'] = NULL;
         //re-enter the values for UPDATE mode
         $params['fee_level'] = $params['amount_level'] = $participantBAO->fee_level;
         $params['fee_amount'] = $participantBAO->fee_amount;
-        if (isset($params['priceSetId'])) {
+
+        if (!isset($params['priceSetId']) && CRM_Utils_Array::value('amount', $params)) {
+          $fee_level = $this->_values['fee'][$params['amount']]['label'];
+          $fee_amount = $this->_values['fee'][$params['amount']]['value'];
+          if ($fee_amount != $participantBAO->fee_amount) {
+            $params['fee_level'] = $fee_level;
+            $params['fee_amount'] = $fee_amount;
+            $contributionParams['total_amount'] = $fee_amount;
+          }
+        }
+        if(isset($params['priceSetId'])) {
           require_once 'CRM/Price/BAO/LineItem.php';
           $lineItem[0] = CRM_Price_BAO_LineItem::getLineItems($this->_id);
         }

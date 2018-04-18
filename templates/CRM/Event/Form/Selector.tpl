@@ -90,9 +90,9 @@
         {/foreach}
         </td>
     {else}
-        <td class="crm-participant-participant_fee_level">{if !$row.paid && !$row.participant_fee_level} {ts}(no fee){/ts}{else} {$row.participant_fee_level}{/if}</td>
+        <td class="crm-participant-participant_fee_level">{if !$row.paid && !$row.participant_fee_level} {ts}(no fee){/ts}{else} {$row.participant_fee_level} ({$row.participant_fee_amount|crmMoney:$row.participant_fee_currency}){/if}</td>
     {/if}
-    <td class="right nowrap crm-paticipant-participant_fee_amount">{$row.participant_fee_amount|crmMoney:$row.participant_fee_currency}</td>
+    <td class="right nowrap crm-paticipant-contribution_total_amount">{$row.contribution_total_amount|crmMoney:$row.contribution_currency}</td>
     <td class="crm-participant-participant_register_date">{$row.participant_register_date|crmDate}</td>	
     <td class="crm-participant-participant_status crm-participant_status_{$row.participant_status_id}">{$row.participant_status}</td>
     <td class="crm-participant-participant_role">{$row.participant_role_id}</td>

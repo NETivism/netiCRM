@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-03-28 04:21+0000\n"
+"PO-Revision-Date: 2018-04-18 07:59+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -4756,7 +4756,7 @@ msgstr "設定"
 
 #: CRM/Event/BAO/Query.php CRM/Event/DAO/Participant.php
 msgid "Fee level"
-msgstr "活動費用選項"
+msgstr "費用選項"
 
 #: CRM/Event/BAO/Query.php CRM/Event/DAO/Participant.php
 msgid "Participant Source"
@@ -4778,7 +4778,7 @@ msgstr "活動類型"
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 #: templates/CRM/Event/Form/Task/Print.tpl
 msgid "Fee Level"
-msgstr "活動費用選項"
+msgstr "費用選項"
 
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/EventInfo.php
 #: CRM/Report/Form/Event/IncomeCountSummary.php
@@ -15691,7 +15691,7 @@ msgstr "參加此活動需要經過審查。一旦您通過審核，我們會傳
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Fee Level is a required field."
-msgstr "活動費用選項是必填欄位。"
+msgstr "費用選項是必填欄位。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "There is only enough space left on this event for %1 participant(s)."
@@ -18027,7 +18027,7 @@ msgstr "認捐週期"
 
 #: CRM/Pledge/DAO/Payment.php
 msgid "Actual Amount"
-msgstr "總金額"
+msgstr "實收金額"
 
 #: CRM/Pledge/DAO/Payment.php templates/CRM/Pledge/Page/Payment.tpl
 msgid "Last Reminder"
@@ -24319,7 +24319,7 @@ msgstr "（例如：%1）"
 
 #: templates/CRM/Admin/Page/PaymentProcessor.hlp
 msgid "Merchant ID"
-msgstr "商業帳戶帳號"
+msgstr "商家編號"
 
 #: templates/CRM/Admin/Page/PaymentProcessor.hlp
 msgid ""
@@ -30861,7 +30861,7 @@ msgstr "活動級別"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Event Fee Level (if applicable)."
-msgstr "活動費用選項（如適用）。"
+msgstr "費用選項（如適用）。"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
@@ -31154,7 +31154,7 @@ msgstr "選擇一個預先設定的價目表，以提供活動報名表單多項
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "Regular Fees"
-msgstr "價格選項"
+msgstr "未折扣費用"
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid ""
@@ -33811,7 +33811,7 @@ msgstr "收件者：<a href=\"%1\">%2</a>"
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Members of group <a href=\"%1\">%2</a>"
-msgstr ""
+msgstr "群組的成員 <a href=\"%1\">%2</a>"
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Excluded"
@@ -46067,7 +46067,7 @@ msgid ""
 "You can configure one or more SMS Providers for your CiviCRM installation. "
 "To learn more about the procedure to install SMS extension and Provider, "
 "refer"
-msgstr ""
+msgstr "你可以為你的 CiviCRM 設定一個以上的簡訊供應商，需要更多資訊請參考"
 
 msgid "Provider Details"
 msgstr "供應商詳情"
@@ -46229,3 +46229,8 @@ msgstr "你確定將電子報設定為公開顯示嗎？"
 
 msgid "Are you sure you want to un-publish this mailing from public?"
 msgstr "你確定將電子報設定為不公開顯示嗎？"
+
+msgid ""
+"This participant have completed or cancelled contribution record. You need "
+"to update related contribution belone this participant manually."
+msgstr "此參加者有已完成或已取消的費用紀錄，選擇不同活動級別後，你必須手動更新相關繳款紀錄的金額。"
