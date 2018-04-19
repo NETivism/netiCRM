@@ -120,7 +120,7 @@
   <field>
        <name>external_identifier</name>
        <type>varchar</type>
-       <length>32</length>
+       <length>128</length>
        <import>true</import>
        <headerPattern>/external\s?id/i</headerPattern>
        <dataPattern>/^\d{11,}$/</dataPattern>

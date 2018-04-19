@@ -252,7 +252,8 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $template->assign('domain_address', $location['address'][1]['display_text']);
       $template->assign('receiptOrgInfo', htmlspecialchars_decode($config->receiptOrgInfo));
       $template->assign('receiptDescription', htmlspecialchars_decode($config->receiptDescription));
-
+      $template->assign('imageBigStampUrl', $config->imageUploadDir . $config->imageBigStampName);
+      $template->assign('imageSmallStampUrl', $config->imageUploadDir . $config->imageSmallStampName);
 
       // set some fake input values so we can reuse IPN code
       $input['amount'] = $contribution->total_amount;

@@ -2280,6 +2280,8 @@ SELECT source_contact_id
     if ($reset) {
       $contribution->receipt_id = NULL;
     }
+    $accountingCode = array();
+    CRM_Core_PseudoConstant::populate($accountingCode, 'CRM_Contribute_DAO_ContributionType', TRUE, 'accounting_code');
 
     // have receipt date? completed? already have receipt id?
     if (!empty($contribution->receipt_date) && $contribution->contribution_status_id == 1 && empty($contribution->receipt_id)) {
@@ -2290,46 +2292,35 @@ SELECT source_contact_id
         if ($contribution->id) {
           $fids = CRM_Core_BAO_FinancialTrxn::getFinancialTrxnIds($contribution->id, 'civicrm_contribution');
         }
+        $online = 'M';
+        $prefix = '';
         if (!empty($fids['entityFinancialTrxnId']) || $is_online) {
-          // online
-          $prefix = 'A';
+          $online = 'A';
+        }
+        if (strstr($config->receiptPrefix, '!online')) {
+          $prefix = str_replace('!online', $online, $config->receiptPrefix);
         }
         else {
-          $prefix = 'M';
+          $prefix = $online.$config->receiptPrefix;
         }
         if(!empty($config->receiptPrefix)){
-          $prefix .= CRM_Utils_Date::customFormat($contribution->receipt_date, $config->receiptPrefix);
+          if (strstr($config->receiptPrefix, '!acc')) {
+            $accCode = !empty($accountingCode[$contribution->contribution_type_id]) ? $accountingCode[$contribution->contribution_type_id] : '';
+            $prefix = str_replace('!acc', $accCode, $prefix);
+          }
+          $prefix = CRM_Utils_Date::customFormat($contribution->receipt_date, $prefix);
         }
 
         if ($contribution->is_test) {
           $prefix = 'test-' . $prefix;
         }
         CRM_Utils_Hook::alterReceiptId($prefix, $contribution);
-
-        // now, give a proper id for contribution
-        $last = self::lastReceiptID($prefix);
-
-        if (empty($last)) {
-          // first of this prefix, do generate
-          $num = sprintf('%06d', 1);
-          $receipt_id = $prefix . '-' . $num;
-        }
-        else {
-          // truncate and generate
-          $num = str_replace($prefix . '-', '', $last);
-          $num = (int)$num;
-          $num++;
-          $num = sprintf('%06d', $num);
-          $receipt_id = $prefix . '-' . $num;
-        }
-        // watchdog('civicrm', $last.":".$receipt_id);
+        $receipt_id = self::lastReceiptID($prefix);
 
         $contribution->receipt_id = $receipt_id;
-        if (!empty($contribution->created_date)) {
-          $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
-        }
         if ($save && $contribution->id) {
           $contribution->save();
+          CRM_Core_DAO::executeQuery("DELETE FROM civicrm_sequence WHERE name = %1", array(1 => array($prefix, 'String')));
         }
         return $receipt_id;
       }
@@ -2340,12 +2331,49 @@ SELECT source_contact_id
   }
 
   function lastReceiptID($prefix) {
-    $query = "SELECT receipt_id FROM civicrm_contribution WHERE UPPER(receipt_id) LIKE UPPER('{$prefix}-%') AND receipt_id IS NOT NULL AND receipt_id != '' ORDER BY receipt_id DESC";
-    $last = CRM_Core_DAO::singleValueQuery($query);
-
-    if ($last) {
-      return $last;
+    $receipt_id = 'null';
+    $last = 0;
+    $counter = 0;
+    while($last === 0) {
+      $time = microtime(TRUE)-0.35; // 0.35 second ago 
+      $counter++;
+      $exists = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_sequence WHERE name = %1 AND timestamp >= %2", array(
+        1 => array($prefix, 'String'),
+        2 => array($time, 'Float'),
+      ));
+      $exists = (int) $exists;
+      if (!$exists) {
+        $sql = "SELECT REPLACE(receipt_id, %1, '') FROM civicrm_contribution WHERE UPPER(receipt_id) LIKE UPPER(%2) AND receipt_id IS NOT NULL AND receipt_id != '' ORDER BY receipt_id DESC";
+        $last = CRM_Core_DAO::singleValueQuery($sql, array(
+          1 => array("{$prefix}-", 'String'),
+          2 => array("{$prefix}-%", 'String'),
+        ));
+        $last = (int) $last;
+        if (($last > $exists) || (empty($last) && empty($exists))) {
+          CRM_Core_DAO::executeQuery("INSERT INTO civicrm_sequence (name, value, timestamp) VALUES (%1, %2, %3) ON DUPLICATE KEY UPDATE value = %2, timestamp = %3", array(
+            1 => array($prefix, 'String'),
+            2 => array($last, 'String'),
+            3 => array(microtime(TRUE), 'Float'),
+          ));
+          $num = $last;
+          break;
+        }
+      }
+      usleep(340000); // sleep 0.34 sec
     }
+
+    if (empty($num)) {
+      // first of this prefix, do generate
+      $num = sprintf('%06d', 1);
+      $receipt_id = $prefix . '-' . $num;
+    }
+    else {
+      // truncate and generate
+      $num++;
+      $num = sprintf('%06d', $num);
+      $receipt_id = $prefix . '-' . $num;
+    }
+    return $receipt_id;
   }
 
   /**

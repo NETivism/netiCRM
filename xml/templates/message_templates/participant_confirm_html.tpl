@@ -34,6 +34,7 @@
     <td colspan="2" {$valueStyle}>
      {capture assign=confirmUrl}{crmURL p='civicrm/event/confirm' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
      <a href="{$confirmUrl}">{ts}Go to a web page where you can confirm your registration online{/ts}</a>
+     {if $participant.last_registration} ({ts}Registration End Date{/ts}: {$participant.last_registration|crmDate}){/if}
     </td>
    </tr>
   {/if}
@@ -49,14 +50,6 @@
       <td colspan="2" {$valueStyle}>
        {$event.event_title}<br />
        {$event.event_start_date|crmDate}{if $event.event_end_date}-{if $event.event_end_date|date_format:"%Y%m%d" == $event.event_start_date|date_format:"%Y%m%d"}{$event.event_end_date|crmDate:0:1}{else}{$event.event_end_date|crmDate}{/if}{/if}
-      </td>
-     </tr>
-     <tr>
-      <td {$labelStyle}>
-       {ts}Participant Role{/ts}:
-      </td>
-      <td {$valueStyle}>
-       {$participant.role}
       </td>
      </tr>
 
@@ -116,38 +109,6 @@
        {/if}
       {/foreach}
      {/if}
-
-     {capture assign=icalFeed}{crmURL p='civicrm/event/ical' q="reset=1&id=`$event.id`" h=0 a=1 fe=1}{/capture}
-     <tr>
-      <td colspan="2" {$valueStyle}>
-       <a href="{$icalFeed}">{ts}Download iCalendar File{/ts}</a>
-      </td>
-     </tr>
-
-     {if $contact.email}
-      <tr>
-       <th {$headerStyle}>
-        {ts}Registered Email{/ts}
-       </th>
-      </tr>
-      <tr>
-       <td colspan="2" {$valueStyle}>
-        {$contact.email}
-       </td>
-      </tr>
-     {/if}
-
-     {if $register_date}
-      <tr>
-       <td {$labelStyle}>
-        {ts}Registration Date{/ts}
-       </td>
-       <td {$valueStyle}>
-        {$participant.register_date|crmDate}
-       </td>
-      </tr>
-     {/if}
-
     </table>
    </td>
   </tr>

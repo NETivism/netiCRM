@@ -8,6 +8,7 @@
 {capture assign=confirmUrl}{crmURL p='civicrm/event/confirm' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
 Click this link to go to a web page where you can confirm your registration online:
 {$confirmUrl}
+{if $participant.last_registration}{ts}Registration End Date{/ts}: {$participant.last_registration|crmDate}{/if}
 {/if}
 
 ===========================================================
@@ -16,8 +17,6 @@ Click this link to go to a web page where you can confirm your registration onli
 ===========================================================
 {$event.event_title}
 {$event.event_start_date|crmDate}{if $event.event_end_date}-{if $event.event_end_date|date_format:"%Y%m%d" == $event.event_start_date|date_format:"%Y%m%d"}{$event.event_end_date|crmDate:0:1}{else}{$event.event_end_date|crmDate}{/if}{/if}
-
-{ts}Participant Role{/ts}: {$participant.role}
 
 {if $isShowLocation}
 {if $event.location.address.1.name}
@@ -47,21 +46,6 @@ Click this link to go to a web page where you can confirm your registration onli
 {if $eventEmail.email}
 
 {ts}Email{/ts}: {$eventEmail.email}{/if}{/foreach}
-{/if}
-
-{capture assign=icalFeed}{crmURL p='civicrm/event/ical' q="reset=1&id=`$event.id`" h=0 a=1 fe=1}{/capture}
-{ts}Download iCalendar File{/ts}: {$icalFeed}
-{if $contact.email}
-
-===========================================================
-{ts}Registered Email{/ts}
-
-===========================================================
-{$contact.email}
-{/if}
-
-{if $register_date}
-{ts}Registration Date{/ts}: {$participant.register_date|crmDate}
 {/if}
 
 {ts 1=$domain.phone 2=$domain.email}Please contact us at %1 or send email to %2 if you have questions.{/ts}

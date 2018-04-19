@@ -149,6 +149,7 @@ DROP TABLE IF EXISTS civicrm_membership_type;
 DROP TABLE IF EXISTS civicrm_task_status;
 DROP TABLE IF EXISTS civicrm_task;
 DROP TABLE IF EXISTS civicrm_project;
+DROP TABLE IF EXISTS civicrm_sms_provider;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;
@@ -169,6 +170,7 @@ DROP TABLE IF EXISTS civicrm_acl_contact_cache;
 DROP TABLE IF EXISTS civicrm_contact;
 DROP TABLE IF EXISTS civicrm_acl_entity_role;
 DROP TABLE IF EXISTS civicrm_acl;
+DROP TABLE IF EXISTS civicrm_sequence;
 DROP TABLE IF EXISTS civicrm_persistent;
 DROP TABLE IF EXISTS civicrm_discount;
 DROP TABLE IF EXISTS civicrm_component;
@@ -435,7 +437,8 @@ CREATE TABLE civicrm_msg_template (
      is_active tinyint   DEFAULT 1 ,
      workflow_id int unsigned    COMMENT 'a pseudo-FK to civicrm_option_value',
      is_default tinyint   DEFAULT 1 COMMENT 'is this the default message template for the workflow referenced by workflow_id?',
-     is_reserved tinyint    COMMENT 'is this the reserved message template which we ship for the workflow referenced by workflow_id?' 
+     is_reserved tinyint    COMMENT 'is this the reserved message template which we ship for the workflow referenced by workflow_id?',
+     is_sms tinyint   DEFAULT 0 COMMENT 'Is this message template used for sms?' 
 ,
     PRIMARY KEY ( id )
  
@@ -727,6 +730,26 @@ CREATE TABLE civicrm_persistent (
 
 -- /*******************************************************
 -- *
+-- * civicrm_sequence
+-- *
+-- * .
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_sequence (
+
+
+     name varchar(64) NOT NULL   ,
+     value varchar(255)    ,
+     timestamp double     
+,
+    PRIMARY KEY ( name )
+ 
+ 
+ 
+)  ENGINE=MEMORY  ;
+
+-- /*******************************************************
+-- *
 -- * civicrm_acl
 -- *
 -- * Access Control List
@@ -805,7 +828,7 @@ CREATE TABLE civicrm_contact (
      do_not_trade tinyint   DEFAULT 0 ,
      is_opt_out tinyint NOT NULL  DEFAULT 0 COMMENT 'Has the contact opted out from receiving all bulk email from the organization or site domain?',
      legal_identifier varchar(32)    COMMENT 'May be used for SSN, EIN/TIN, Household ID (census) or other applicable unique legal/government ID.',
-     external_identifier varchar(32)    COMMENT 'Unique trusted external ID (generally from a legacy app/datasource). Particularly useful for deduping operations.',
+     external_identifier varchar(128)    COMMENT 'Unique trusted external ID (generally from a legacy app/datasource). Particularly useful for deduping operations.',
      sort_name varchar(128)    COMMENT 'Name used for sorting different contact types',
      display_name varchar(128)    COMMENT 'Formatted name representing preferred format for display/print/other output.',
      nick_name varchar(128)    COMMENT 'Nick Name.',
@@ -1077,7 +1100,8 @@ CREATE TABLE civicrm_mailing (
      scheduled_date datetime    COMMENT 'Date and time this mailing was scheduled.',
      is_archived tinyint   DEFAULT 0 COMMENT 'Is this mailing archived?',
      visibility enum('User and User Admin Only', 'Public Pages')   DEFAULT 'User and User Admin Only' COMMENT 'In what context(s) is the mailing contents visible (online viewing)',
-     dedupe_email tinyint   DEFAULT 0 COMMENT 'Remove duplicate emails?' 
+     dedupe_email tinyint   DEFAULT 0 COMMENT 'Remove duplicate emails?',
+     sms_provider_id int unsigned     
 ,
     PRIMARY KEY ( id )
  
@@ -1394,6 +1418,35 @@ CREATE TABLE civicrm_premiums_product (
 ,      
      CONSTRAINT FK_civicrm_premiums_product_premiums_id FOREIGN KEY (premiums_id) REFERENCES civicrm_premiums(id) ,      
      CONSTRAINT FK_civicrm_premiums_product_product_id FOREIGN KEY (product_id) REFERENCES civicrm_product(id)   
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_sms_provider
+-- *
+-- * Table to add different sms providers 
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_sms_provider (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'SMS Provider ID',
+     name varchar(64)    COMMENT 'Provider internal name points to option_value of option_group sms_provider_name',
+     title varchar(64)    COMMENT 'Provider name visible to user',
+     username varchar(255)    ,
+     password varchar(255)    ,
+     api_type int unsigned NOT NULL   COMMENT 'points to value in civicrm_option_value for group sms_api_type',
+     api_url varchar(128)    ,
+     api_params text    COMMENT 'the api params in xml, http or smtp format',
+     is_default tinyint   DEFAULT 0 ,
+     is_active tinyint   DEFAULT 0 ,
+     domain_id int unsigned    COMMENT 'Which Domain is this sms provider for' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+,      
+     CONSTRAINT FK_civicrm_sms_provider_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

@@ -46087,5 +46087,38 @@ msgstr ""
 msgid "Are you sure you want to un-publish this mailing from public?"
 msgstr "" 
 
+# CRM/Admin/Form/Setting/Receipt.php
+msgid "The stamp of organization."
+msgstr ""
+
+msgid "The stamp of the person in charge."
+msgstr ""
+
+# templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information."
+msgstr ""
+
+# templates/CRM/Core/Payment/ApplePay.tpl
+msgid "If your page doesn't redirect, please click 'Continue' button to act."
+msgstr ""
+
+msgid "Paid success!! Fresh page after 5 seconds."
+msgstr ""
+
+msgid "Payment Organization"
+msgstr ""
+
+msgid "Subject Name"
+msgstr ""
+
+msgid "Mobile Payment"
+msgstr ""
+
+msgid "Payment Processor Provider"
+msgstr ""
+
+msgid "Account"
+msgstr ""
+
 msgid "This participant have completed or cancelled contribution record. You need to update related contribution belone this participant manually."
 msgstr ""

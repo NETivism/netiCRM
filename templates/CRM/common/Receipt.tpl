@@ -59,6 +59,10 @@ table td { padding: 2px 4px; }
 .page-contain-2-sections.receipt-with-address .receipt.original { min-height: 340px; max-height: 340px;}
 .page-contain-2-sections.receipt-with-address .receipt-body td{line-height: 21px;}
 
+.stamp-wrapper{position: relative;}
+.stamp-img{position: absolute;}
+.big-stamp{bottom: 0;max-height: 103px;left: 1px;}
+.small-stamp{top: 0;max-height: 43px;left: 70px;z-index: -1;}
 
 {/literal}
 </style>

@@ -229,107 +229,20 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
 
     // group
-    $inG = &$this->addElement('advmultiselect', 'includeGroups',
-      ts('Include Group(s)') . ' ',
-      $groups,
-      array(
-        'size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
-      )
-    );
-
-    //as we are having hidden smart group so no need.
-    if (empty($this->_searchBasedMailing)) {
-      $this->addRule('includeGroups', ts('Please select a group to be mailed.'), 'required');
-    }
-
-    $outG = &$this->addElement('advmultiselect', 'excludeGroups',
-      ts('Exclude Group(s)') . ' ',
-      $groups,
-      array(
-        'size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
-      )
-    );
-
-    $inG->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $outG->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $inG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
-    $outG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $this->addSelect('includeGroups', ts('Include Group(s)'), $groups, array('class' => 'chosen', 'multiple' => 'multiple'));
+    $this->addSelect('excludeGroups', ts('Exclude Group(s)'), $groups, array('class' => 'chosen', 'multiple' => 'multiple'));
 
     // mailing
-    $inM = &$this->addElement('advmultiselect', 'includeMailings',
-      ts('INCLUDE Recipients of These Mailing(s)') . ' ',
-      $mailings,
-      array(
-        'size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
-      )
-    );
-    $outM = &$this->addElement('advmultiselect', 'excludeMailings',
-      ts('EXCLUDE Recipients of These Mailing(s)') . ' ',
-      $mailings,
-      array(
-        'size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
-      )
-    );
-    $inM->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $outM->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $inM->setButtonAttributes('remove', array('value' => ts('<< Remove')));
-    $outM->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $this->addSelect('includeMailings', ts('INCLUDE Recipients of These Mailing(s)'), $mailings, array('class' => 'chosen', 'multiple' => 'multiple'));
+    $this->addSelect('excludeMailings', ts('EXCLUDE Recipients of These Mailing(s)'), $mailings, array('class' => 'chosen', 'multiple' => 'multiple'));
     
     // open
-    $inO = &$this->addElement('advmultiselect', 'includeOpened',
-      ts('INCLUDE Recipients who opened these mailing') . ' ',
-      $mailings,
-      array(
-        'size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
-      )
-    );
-    $outO = &$this->addElement('advmultiselect', 'excludeOpened',
-      ts('EXCLUDE Recipients who opened these mailing') . ' ',
-      $mailings,
-      array(
-        'size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
-      )
-    );
-    $inO->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $outO->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $inO->setButtonAttributes('remove', array('value' => ts('<< Remove')));
-    $outO->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $this->addSelect('includeOpened', ts('INCLUDE Recipients who opened these mailing'), $mailings, array('class' => 'chosen', 'multiple' => 'multiple'));
+    $this->addSelect('excludeOpened', ts('EXCLUDE Recipients who opened these mailing'), $mailings, array('class' => 'chosen', 'multiple' => 'multiple'));
 
     // clicked1
-    $inC = &$this->addElement('advmultiselect', 'includeClicked',
-      ts('INCLUDE Recipients who clicked these mailing') . ' ',
-      $mailings,
-      array(
-        'size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
-      )
-    );
-    $outC = &$this->addElement('advmultiselect', 'excludeClicked',
-      ts('EXCLUDE Recipients who clicked these mailing') . ' ',
-      $mailings,
-      array(
-        'size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
-      )
-    );
-    $inC->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $outC->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $inC->setButtonAttributes('remove', array('value' => ts('<< Remove')));
-    $outC->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $this->addSelect('includeClicked', ts('INCLUDE Recipients who clicked these mailing'), $mailings, array('class' => 'chosen', 'multiple' => 'multiple'));
+    $this->addSelect('excludeClicked', ts('EXCLUDE Recipients who clicked these mailing'), $mailings, array('class' => 'chosen', 'multiple' => 'multiple'));
 
     $this->addFormRule(array('CRM_Mailing_Form_Group', 'formRule'));
 

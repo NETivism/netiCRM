@@ -80,7 +80,6 @@ CREATE TABLE {$table.name} (
 {/foreach} {* table.foreignKey *}
 {/if} {* table.foreignKey *}
 
-{* ) {if $mysql eq 'modern' }{$table.attributes}{/if}; *}
-) {if $mysql eq 'modern' } {$table.attributes_modern} {else} {$table.attributes_simple} {/if} ;
+) {if $table.engine} ENGINE={$table.engine} {elseif $mysql eq 'modern' } {$table.attributes_modern} {else} {$table.attributes_simple} {/if} ;
 
 {/foreach} {* tables *}

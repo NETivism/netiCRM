@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<table>
+  <engine>MEMORY</engine>
+  <base>CRM/Core</base>
+  <class>Sequence</class>
+  <name>civicrm_sequence</name>
+  <comment>.</comment>
+  <add>4.0</add>
+  <field>
+      <name>name</name>
+      <type>varchar</type>
+      <length>64</length>
+      <required>true</required>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>name</name>
+  </primaryKey>
+  <field>
+      <name>value</name>
+      <type>varchar</type>
+      <length>255</length>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>timestamp</name>
+      <type>double</type>
+      <add>4.0</add>
+  </field>
+</table>

@@ -1356,6 +1356,21 @@ UPDATE  civicrm_participant
 
       //now send email appropriate mail to primary.
       if ($emailType) {
+        // calculate last registration date
+        if ($emailType == 'Confirm') {
+          if ($eventDetails[$participantValues['event_id']]['registration_end_date']) {
+            $lastRegisteration = $eventDetails[$participantValues['event_id']]['registration_end_date'];
+          }
+          if (!empty($eventDetails[$participantValues['event_id']]['expiration_time'])) {
+            $baseTime = strtotime($participantValues['register_date']);
+            $plusDay = ceil($eventDetails[$participantValues['event_id']]['expiration_time']/24);
+            $lastRegisteration = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
+            $lastRegisteration = date('Y-m-d H:i:s', $lastRegisteration);
+          }
+          if (!empty($lastRegisteration)) {
+            $participantValues['last_registration'] = $lastRegisteration;
+          }
+        }
         $mail = self::sendTransitionParticipantMail($participantId,
           $participantValues,
           $eventDetails[$participantValues['event_id']],

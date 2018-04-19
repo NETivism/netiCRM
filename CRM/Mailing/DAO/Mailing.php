@@ -253,6 +253,11 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
    */
   public $dedupe_email;
   /**
+   *
+   * @var int unsigned
+   */
+  public $sms_provider_id;
+  /**
    * class constructor
    *
    * @access public
@@ -448,6 +453,11 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
           'name' => 'dedupe_email',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Dedupe Email') ,
+        ) ,
+        'sms_provider_id' => array(
+          'name' => 'sms_provider_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Mailing SMS Provider') ,
         ) ,
       );
     }

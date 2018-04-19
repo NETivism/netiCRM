@@ -28,15 +28,22 @@
 <script type="text/javascript" >
 var text_message = null;
 var html_message = null;
+var prefix = '';
 var isPDF        = false;
 var isMailing    = false;
 
 {/literal}
+
 {if $form.formName eq 'MessageTemplates'}
     {literal}
     text_message = "msg_text";
     html_message = "msg_html";
     {/literal}
+{elseif $form.formName eq 'SMS'}
+    prefix = "SMS";
+    text_message = "sms_text_message";
+    html_message = "html_message";
+    isMailing = true;
 {else}
     {literal}
     text_message = "text_message";
@@ -61,41 +68,50 @@ var isMailing    = false;
 {literal}
 
 var editor = {/literal}"{$editor}"{literal};
-function showSaveUpdateChkBox()
-{
-    if ( document.getElementById('template') == null ) {
-        if (document.getElementsByName("saveTemplate")[0].checked){
-            document.getElementById("saveDetails").style.display = "block";
-            document.getElementById("editMessageDetails").style.display = "block";
-        } else {
-            document.getElementById("saveDetails").style.display = "none";
-            document.getElementById("editMessageDetails").style.display = "none";
-        }
-        return;
+function showSaveUpdateChkBox(prefix) {
+  prefix = prefix || '';
+  if (document.getElementById(prefix + "template") == null) {
+    if (document.getElementsByName(prefix + "saveTemplate")[0].checked){
+      document.getElementById(prefix + "saveDetails").style.display = "block";
+      document.getElementById(prefix + "editMessageDetails").style.display = "block";
     }
-
-    if ( document.getElementsByName("saveTemplate")[0].checked && document.getElementsByName("updateTemplate")[0].checked == false  ) {
-        document.getElementById("updateDetails").style.display = "none";
-    } else if ( document.getElementsByName("saveTemplate")[0].checked && document.getElementsByName("updateTemplate")[0].checked ){
-        document.getElementById("editMessageDetails").style.display = "block";	
-        document.getElementById("saveDetails").style.display = "block";	
-    } else if ( document.getElementsByName("saveTemplate")[0].checked == false && document.getElementsByName("updateTemplate")[0].checked ){
-        document.getElementById("saveDetails").style.display = "none";
-        document.getElementById("editMessageDetails").style.display = "block";
-    } else {
-        document.getElementById("saveDetails").style.display = "none";
-        document.getElementById("editMessageDetails").style.display = "none";
+    else {
+      document.getElementById(prefix + "saveDetails").style.display = "none";
+      document.getElementById(prefix + "updateDetails").style.display = "none";
     }
+    return;
+  }
 
+  if (document.getElementsByName(prefix + "saveTemplate")[0].checked &&
+    document.getElementsByName(prefix + "updateTemplate")[0].checked == false) {
+    document.getElementById(prefix + "updateDetails").style.display = "none";
+  }
+  else if ( document.getElementsByName(prefix + "saveTemplate")[0].checked &&
+    document.getElementsByName(prefix + "updateTemplate")[0].checked ){
+    document.getElementById(prefix + "editMessageDetails").style.display = "block";
+    document.getElementById(pefix + "saveDetails").style.display = "block";
+  }
+  else if ( document.getElementsByName(prefix + "saveTemplate")[0].checked == false &&
+      document.getElementsByName(prefix + "updateTemplate")[0].checked ) {
+    document.getElementById(prefix + "saveDetails").style.display = "none";
+    document.getElementById(prefix + "editMessageDetails").style.display = "block";
+  }
+  else {
+    document.getElementById(prefix + "saveDetails").style.display = "none";
+    document.getElementById(prefix + "updateDetails").style.display = "none";
+  }
 }
 
-function selectValue( val ) {
-    document.getElementsByName("saveTemplate")[0].checked = false;
-    document.getElementsByName("updateTemplate")[0].checked = false;
-    showSaveUpdateChkBox();
+function selectValue( val, prefix) {
+    document.getElementsByName(prefix + "saveTemplate")[0].checked = false;
+    document.getElementsByName(prefix + "updateTemplate")[0].checked = false;
+    showSaveUpdateChkBox(prefix);
     if ( !val ) {
         if ( !isPDF ) {
             document.getElementById(text_message).value ="";
+            if (prefix == 'SMS') {
+                return;
+            }
             document.getElementById("subject").value ="";
         }
         if ( editor == "ckeditor" ) {
@@ -123,6 +139,10 @@ function selectValue( val ) {
         if ( !isPDF ) {
             cj("#subject").val( data.subject );
 
+            if(prefix == 'SMS'){
+                cj("#"+text_message).val(data.msg_text);
+                return;
+            }
             // do not load text message from template
             cj("#"+text_message).val("");
         }
@@ -154,42 +174,50 @@ function selectValue( val ) {
     }, 'json');    
 }
 
- if ( isMailing ) { 
-     document.getElementById("editMessageDetails").style.display = "block";
+if ( isMailing ) {
+    document.getElementById(prefix + "editMessageDetails").style.display = "block";
 
-    function verify( select )
-    {
-        if ( document.getElementsByName("saveTemplate")[0].checked  == false ) {
-            document.getElementById("saveDetails").style.display = "none";
+    function verify(select, prefix) {
+        prefix = prefix || '';
+        if (document.getElementsByName(prefix + "saveTemplate")[0].checked  == false) {
+            document.getElementById(prefix + "saveDetails").style.display = "none";
         }
-        document.getElementById("editMessageDetails").style.display = "block";
+        document.getElementById(prefix + "editMessageDetails").style.display = "block";
 
         var templateExists = true;
-        if ( document.getElementById('template') == null ) {
+        if (document.getElementById(prefix + "template") == null) {
             templateExists = false;
         }
 
-        if ( templateExists && document.getElementById('template').value ) {
-            document.getElementById("updateDetails").style.display = '';
-        } else {
-            document.getElementById("updateDetails").style.display = 'none';
+        if (templateExists && document.getElementById(prefix + "template").value) {
+            document.getElementById(prefix + "updateDetails").style.display = '';
+        }
+        else {
+            document.getElementById(prefix + "updateDetails").style.display = 'none';
         }
 
-        document.getElementById("saveTemplateName").disabled = false;
+        document.getElementById(prefix + "saveTemplateName").disabled = false;
     }
 
-    function showSaveDetails(chkbox) 
-    {
+    function showSaveDetails(chkbox, prefix) {
+        prefix = prefix || '';
         if (chkbox.checked) {
-            document.getElementById("saveDetails").style.display = "block";
-            document.getElementById("saveTemplateName").disabled = false;
-        } else {
-            document.getElementById("saveDetails").style.display = "none";
-            document.getElementById("saveTemplateName").disabled = true;
+            document.getElementById(prefix + "saveDetails").style  .display = "block";
+            document.getElementById(prefix + "saveTemplateName").  disabled = false;
+        }
+        else {
+            document.getElementById(prefix + "saveDetails").style  .display = "none";
+            document.getElementById(prefix + "saveTemplateName").disabled = true;
         }
     }
 
-    showSaveUpdateChkBox();
+    if (cj("#sms_text_message").length) {
+        showSaveUpdateChkBox('SMS');
+    }
+    if (cj("#text_message").length) {
+        showSaveUpdateChkBox();
+    }
+
 
     {/literal}
     {if $editor eq "ckeditor"}

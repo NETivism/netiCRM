@@ -46230,6 +46230,41 @@ msgstr "你確定將電子報設定為公開顯示嗎？"
 msgid "Are you sure you want to un-publish this mailing from public?"
 msgstr "你確定將電子報設定為不公開顯示嗎？"
 
+# CRM/Admin/Form/Setting/Receipt.php
+msgid "The stamp of organization."
+msgstr ""
+
+msgid "The stamp of the person in charge."
+msgstr ""
+
+# templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"This image will show on receipt.The position please click <a href='%1' "
+"target='_blank'>here</a> to get more information."
+msgstr ""
+
+# templates/CRM/Core/Payment/ApplePay.tpl
+msgid "If your page doesn't redirect, please click 'Continue' button to act."
+msgstr "若未自動轉向繳款頁面，請您按「下一步」來繼續進行動作"
+
+msgid "Paid success!! Fresh page after 5 seconds."
+msgstr "付款成功，五秒後將自動跳轉。"
+
+msgid "Payment Organization"
+msgstr "收款單位"
+
+msgid "Subject Name"
+msgstr "品名"
+
+msgid "Mobile Payment"
+msgstr "行動支付"
+
+msgid "Payment Processor Provider"
+msgstr "金流商"
+
+msgid "Account"
+msgstr "帳號"
+
 msgid ""
 "This participant have completed or cancelled contribution record. You need "
 "to update related contribution belone this participant manually."

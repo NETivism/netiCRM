@@ -50,5 +50,6 @@
 <xi:include href="Component.xml"            parse="xml" />
 <xi:include href="Discount.xml"             parse="xml" />
 <xi:include href="Website.xml"              parse="xml" />
-<xi:include href="Persistent.xml"              parse="xml" />
+<xi:include href="Persistent.xml"           parse="xml" />
+<xi:include href="Sequence.xml"             parse="xml" />
 </tables>

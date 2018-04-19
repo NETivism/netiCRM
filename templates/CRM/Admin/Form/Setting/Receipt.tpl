@@ -62,7 +62,24 @@
             <td class="label">{$form.receiptAddrType.label}</td><td>{$form.receiptAddrType.html}<br />
             <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
         </tr>
+        <tr class="crm-form-block-uploadBigStamp">
+            <td class="label">{$form.uploadBigStamp.label}</td><td>
+                {if $imageBigStampUrl}
+                <img style="max-height: 103px;" src="{$imageBigStampUrl}"><br/>
+                {/if}
+                {$form.uploadBigStamp.html}<br />
+            <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
+        </tr>
+        <tr class="crm-form-block-uploadSmallStamp">
+            <td class="label">{$form.uploadSmallStamp.label}</td><td>
+                {if $imageSmallStampUrl}
+                <img style="max-height: 43px;" src="{$imageSmallStampUrl}"><br/>
+                {/if}
+                {$form.uploadSmallStamp.html}<br />
+            <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
+        </tr>
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>
+{/literal}
 </div>
