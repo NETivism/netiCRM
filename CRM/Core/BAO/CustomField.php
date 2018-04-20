@@ -1532,17 +1532,28 @@ SELECT id
       if (empty($value)) {
         return;
       }
+      if (is_string($value)) {
+				if ($value[0] != '/') {
+					$filePath = CRM_Utils_File::baseFilePath().$value;
+				}
+				else{
+					$filePath = $value;
+				}
+        if (file_exists($filePath)) {
+          $mimeType = mime_content_type($filePath);
+        }
+      }
+      else {
+        $filePath = $value['name'];
+        $mimeType = $value['type'];
+      }
 
-      require_once 'CRM/Core/DAO/File.php';
-      $config = &CRM_Core_Config::singleton();
 
-      $fName = $value['name'];
-      $mimeType = $value['type'];
-
-      $filename = pathinfo($fName, PATHINFO_BASENAME);
+      $basename = pathinfo($filePath, PATHINFO_BASENAME);
 
       // rename this file to go into the secure directory
-      if (!rename($fName, $config->customFileUploadDir . $filename)) {
+      $config = CRM_Core_Config::singleton();
+      if (!rename($filePath, $config->customFileUploadDir . $basename)) {
         CRM_Core_Error::statusBounce(ts('Could not move custom file to custom upload directory'));
         return;
       }
@@ -1562,12 +1573,12 @@ SELECT $columnName
         $fileDAO->id = $fileId;
       }
 
-      $fileDAO->uri = $filename;
+      $fileDAO->uri = $basename;
       $fileDAO->mime_type = $mimeType;
       $fileDAO->upload_date = date('Ymdhis');
       $fileDAO->save();
       $fileId = $fileDAO->id;
-      $value = $filename;
+      $value = $basename;
     }
 
     if (!is_array($customFormatted)) {

@@ -739,7 +739,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     elseif (civicrm_duplicate($newContact)) {
       // if duplicate, no need of further processing
       if ($onDuplicate == CRM_Import_Parser::DUPLICATE_SKIP) {
-        $errorMessage = "Skipping duplicate record";
+        $errorMessage = ts("On duplicate entries").":".ts("Skip");
         array_unshift($values, $errorMessage);
         $importRecordParams = array($statusFieldName => 'DUPLICATE', "${statusFieldName}Msg" => $errorMessage);
         $this->updateImportRecord($values[count($values) - 1], $importRecordParams);
@@ -1737,6 +1737,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       $config = &CRM_Core_Config::singleton();
       $config->doNotResetCache = 1;
       $formatted['log_data'] = !empty($this->_contactLog) ? $this->_contactLog : ts('Import Contact');
+      dpm($formatted);
       $cid = CRM_Contact_BAO_Contact::createProfileContact($formatted, $contactFields,
         $contactId, NULL, NULL,
         $formatted['contact_type']
