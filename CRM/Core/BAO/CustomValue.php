@@ -112,6 +112,18 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
 
       case 'Link':
         return CRM_Utils_Rule::url($value);
+
+      case 'File':
+        if (CRM_Utils_Rule::string($value)) {
+          if ($value[0] != '/') {
+            $file_path = CRM_Utils_File::baseFilePath().$value;
+          }
+          else{
+            $file_path = $value;
+          }
+          return file_exists($file_path);
+        }
+        return;
     }
     return FALSE;
   }

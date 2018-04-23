@@ -418,7 +418,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     //checking error in core data
     $this->isErrorInCoreData($params, $errorMessage);
     if ($errorMessage) {
-      $tempMsg = "Invalid value for field(s) : $errorMessage";
+      $tempMsg = ts("Invalid value for field(s)").":".$errorMessage;
       // put the error message in the import record in the DB
       $importRecordParams = array($statusFieldName => 'ERROR', "${statusFieldName}Msg" => $tempMsg);
       $this->updateImportRecord($values[count($values) - 1], $importRecordParams);
@@ -739,7 +739,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     elseif (civicrm_duplicate($newContact)) {
       // if duplicate, no need of further processing
       if ($onDuplicate == CRM_Import_Parser::DUPLICATE_SKIP) {
-        $errorMessage = "Skipping duplicate record";
+        $errorMessage = ts("On duplicate entries").":".ts("Skip");
         array_unshift($values, $errorMessage);
         $importRecordParams = array($statusFieldName => 'DUPLICATE', "${statusFieldName}Msg" => $errorMessage);
         $this->updateImportRecord($values[count($values) - 1], $importRecordParams);
@@ -1205,7 +1205,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             }
           }
           // need not check for label filed import
-          $htmlType = array('CheckBox', 'Multi-Select', 'AdvMulti-Select', 'Select', 'Radio', 'Multi-Select State/Province', 'Multi-Select Country');
+          $htmlType = array('CheckBox', 'Multi-Select', 'AdvMulti-Select', 'Select', 'Radio', 'Multi-Select State/Province', 'Multi-Select Country', 'File');
           if (!in_array($customFields[$customFieldID]['html_type'], $htmlType) ||
             $customFields[$customFieldID]['data_type'] == 'Boolean' ||
             $customFields[$customFieldID]['data_type'] == 'ContactReference'
@@ -1213,6 +1213,14 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             $valid = CRM_Core_BAO_CustomValue::typecheck($customFields[$customFieldID]['data_type'], $value);
             if (!$valid) {
               self::addToErrorMsg($customFields[$customFieldID]['label'], $errorMessage);
+            }
+          }
+
+          // check values for File type
+          if ($customFields[$customFieldID]['html_type'] == 'File') {
+            $valid = CRM_Core_BAO_CustomValue::typecheck($customFields[$customFieldID]['data_type'], $value);
+            if (!$valid) {
+              self::addToErrorMsg(ts("File %1 does not exist or is not readable", array(1 => $value)), $errorMessage);
             }
           }
 
@@ -1729,6 +1737,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       $config = &CRM_Core_Config::singleton();
       $config->doNotResetCache = 1;
       $formatted['log_data'] = !empty($this->_contactLog) ? $this->_contactLog : ts('Import Contact');
+      dpm($formatted);
       $cid = CRM_Contact_BAO_Contact::createProfileContact($formatted, $contactFields,
         $contactId, NULL, NULL,
         $formatted['contact_type']
