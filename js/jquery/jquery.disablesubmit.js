@@ -49,7 +49,7 @@
           // If attribute is readonly, don't enable.
 
           // Not trigger when jvalidate is not enabled.
-          if( $obj.parents("form").has('.error:visible').length > 0 && typeof(jQuery.validator) == 'function'){
+          if( $obj.parents("form").has('.error:visible').length > 0){
             var is_block_by_error = true;
           }
           if(submitted < 1 && !is_block_by_error && !$obj.attr("readonly")){
@@ -63,19 +63,21 @@
       // prevent double submit
       $obj.parents("form").on('submit', function(e){
         var $form = $(this);
-        if( $form.has('.error:visible').length > 0 && typeof(jQuery.validator) == 'function'){
-          var is_block_by_error = true;
-        }
-        if ($form.data('submitted') === true || is_block_by_error || $obj.attr("readonly")) {
-          // Previously submitted - don't submit again
-          e.preventDefault();
-        }
-        else {
-          // Mark it so that the next submit can be ignored
-          $form.data('submitted', true);
-          // Don't use disabled cause profile edit will have problem. refs #20289 - 9F
-          $obj.attr("readonly", true);
-        }
+        window.setTimeout(function(){
+          if( $form.has('.error:visible').length > 0){
+            var is_block_by_error = true;
+          }
+          if ($form.data('submitted') === true || is_block_by_error || $obj.attr("readonly")) {
+            // Previously submitted - don't submit again
+            e.preventDefault();
+          }
+          else {
+            // Mark it so that the next submit can be ignored
+            $form.data('submitted', true);
+            // Don't use disabled cause profile edit will have problem. refs #20289 - 9F
+            $obj.attr("readonly", true);
+          }
+        }, 250);
       });
     }
 
