@@ -47,14 +47,23 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       $this->assign('imageSmallStampUrl', $config->imageUploadURL . $config->imageSmallStampName);
     }
 
+    $this->add('hidden', 'deleteBigStamp');
+    $this->add('hidden', 'deleteSmallStamp');
+
     // redirect to Administer Section After hitting either Save or Cancel button.
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
+    $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/receipt', 'reset=1'));
 
     $check = TRUE;
     parent::buildQuickForm($check);
   }
 
+  function setDefaultValues() {
+    $defaults = parent::setDefaultValues();
+    $defaults['deleteBigStamp'] = '';
+    $defaults['deleteSmallStamp'] = '';
+    return $defaults;
+  }
 
   // FROM : /CRM/Contribute/Form/ManagePremiums.php#L291-L321
   public function postProcess() {
@@ -64,6 +73,18 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
 
     $uploadSmallStamp = CRM_Utils_Array::value('uploadSmallStamp', $params);
     $uploadSmallStamp = $uploadSmallStamp['name'];
+
+    $deleteBigStamp = CRM_Utils_Array::value('deleteBigStamp', $params);
+    $deleteSmallStamp = CRM_Utils_Array::value('deleteSmallStamp', $params);
+    unset($params['deleteBigStamp']);
+    unset($params['deleteSmallStamp']);
+
+    if($deleteBigStamp){
+      $params['imageBigStampName'] = '';
+    }
+    if($deleteSmallStamp){
+      $params['imageSmallStampName'] = '';
+    }
 
     // to check wether GD is installed or not
     $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
