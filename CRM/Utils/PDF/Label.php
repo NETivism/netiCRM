@@ -34,6 +34,7 @@
  *
  */
 
+define('PDF_FONT_NAME_MAIN', 'droidsansfallback');
 require_once 'tcpdf/tcpdf.php';
 class CRM_Utils_PDF_Label extends TCPDF {
 
@@ -136,7 +137,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
 
     parent::__construct('P', $tFormat['metric'], $tFormat['paper-size']);
     // uncomment this to use non-default font
-    $this->SetFont('arialunicid0', '', 10);
+    $this->SetFont('droidsansfallback', '', 10);
     $this->SetFormat($tFormat);
     $this->generatorMethod = NULL;
     $this->SetMargins(0, 0);

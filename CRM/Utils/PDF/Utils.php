@@ -75,6 +75,7 @@ class CRM_Utils_PDF_Utils {
     }
     else {
       // or fallback to tcpdf version
+      define('PDF_FONT_NAME_MAIN', 'droidsansfallback');
       require_once 'tcpdf/tcpdf.php';
       $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $paperSize, TRUE, 'UTF-8', FALSE);
 
