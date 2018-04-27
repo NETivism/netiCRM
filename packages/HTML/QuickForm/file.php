@@ -117,7 +117,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      */
     function freeze()
     {
-        return false;
+        $this->_flagFrozen = true;
     } //end func freeze
 
     // }}}
