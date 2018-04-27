@@ -379,6 +379,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @access private
    */
   private function _initVariables() {
+    global $civicrm_root;
     // retrieve serialised settings
     $variables = array();
     CRM_Core_BAO_ConfigSetting::retrieve($variables);
@@ -463,6 +464,12 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     if ($this->mapProvider) {
       $this->geocodeMethod = 'CRM_Utils_Geocode_' . $this->mapProvider;
+    }
+
+    if ($this->debug) {
+      if (file_exists($civicrm_root.'civicrm-version.txt')) {
+        $this->version = file_get_contents($civicrm_root.'civicrm-version.txt');
+      }
     }
   }
 
