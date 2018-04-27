@@ -216,7 +216,7 @@ class CRM_Contact_Form_Task_SMSCommon {
             && $value['phone_type_id'] != CRM_Utils_Array::value('Mobile', $phoneTypes) && empty($value['is_deceased'])
           ) {
             $filter = array('do_not_sms' => 0);
-            $contactPhones = CRM_Core_BAO_Phone::allPhones($contactId, FALSE, 'Mobile', $filter);
+            $contactPhones = CRM_Core_BAO_Phone::allPhones($contactId, FALSE, ts('Mobile'));
             if (count($contactPhones) > 0) {
               $mobilePhone = CRM_Utils_Array::retrieveValueRecursive($contactPhones, 'phone');
               $form->_contactDetails[$contactId]['phone_id'] = CRM_Utils_Array::retrieveValueRecursive($contactPhones, 'id');

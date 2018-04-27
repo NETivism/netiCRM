@@ -133,11 +133,16 @@ class CRM_Contact_Page_AJAX {
             )";
     }
 
+    if(!empty($select)){
+      $field_data_name = ', data';
+      $field_data = ", CONCAT_WS( ' :: ', {$select} ) as data";
+    }
+
     //CRM-5954
     $query = "
-            SELECT id, data, sort_name, nick_name
+            SELECT id {$field_data_name}, sort_name, nick_name
             FROM (
-                SELECT cc.id as id, CONCAT_WS( ' :: ', {$select} ) as data, sort_name, nick_name
+                SELECT cc.id as id {$field_data}, sort_name, nick_name
                 FROM civicrm_contact cc {$from}
         {$aclFrom}
         {$additionalFrom}

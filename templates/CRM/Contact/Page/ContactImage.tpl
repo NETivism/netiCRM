@@ -25,19 +25,10 @@
 *}
 {* This form is for displaying contact Image *}
     <div class="crm-contact_image crm-contact_image-block">
-        <a href="#" onClick="contactImagePopUp('{$imageURL}',{$imageWidth},{$imageHeight});">
-            <img src="{$imageURL}" height = {$imageThumbHeight} width={$imageThumbWidth}>
-        </a>
+      {include file='CRM/common/modal.tpl' modalImage=$contactImage}
     </div>
     {if $action eq 0 or $action eq 2}
     <div class="crm-contact_image-block  class="crm-contact_image crm-contact_image-delete"">
         {$deleteURL}
     </div>
     {/if}
-    {literal}
-    <script>
-	function contactImagePopUp(url, width, height) {
-     	    newwindow = window.open(url,'name', 'width='+width+', height='+height );
-        }	
-    </script>
-    {/literal}

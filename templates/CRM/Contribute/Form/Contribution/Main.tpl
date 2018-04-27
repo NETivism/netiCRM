@@ -449,7 +449,7 @@ function enableHonorType( ) {
   }
   cj("input[name=payment_processor]").click(function(){
     if(cj("input[name=is_recur][value=1]").attr("checked")){
-      check_recur_support($(this).val());
+      check_recur_support(cj(this).val());
     }
     if(cj(this).val() == 0){
       cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$pay_later_receipt|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');

@@ -806,7 +806,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
             $field['data_type'] == 'File' || ($viewOnly && $field['name'] == 'image_URL')
           ) {
             // ignore file upload fields
-            continue;
+            // continue;
           }
 
           list($prefixName, $index) = CRM_Utils_System::explode('-', $key, 2);

@@ -940,11 +940,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
                 }
               }
               elseif ($name == 'image_URL') {
-                list($width, $height) = getimagesize($details->$name);
-                list($thumbWidth, $thumbHeight) = CRM_Contact_BAO_Contact::getThumbSize($width, $height);
-
-                $image_URL = '<img src="' . $details->$name . '" height= ' . $thumbHeight . ' width= ' . $thumbWidth . '  />';
-                $values[$index] = "<a href='#' onclick='contactImagePopUp(\"{$details->$name}\", {$width}, {$height});'>{$image_URL}</a>";
+                $contactImage = CRM_Utils_Image::getImageVars($details->$name); 
+                $values[$index] = CRM_Utils_Image::getImageModal($contactImage);
               }
               elseif (in_array($name, array('birth_date', 'deceased_date', 'membership_start_date', 'membership_end_date', 'join_date'))) {
                 require_once 'CRM/Utils/Date.php';

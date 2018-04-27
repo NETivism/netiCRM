@@ -76,7 +76,7 @@ function verify( ) {
 
  {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
  {include file="CRM/common/WizardHeader.tpl"}
-<div id="help">
+<div class="messages status">
     <p>
     {ts}The information below previews the results of importing your data in CiviCRM. Review the totals to ensure that they represent your expected results.{/ts}
     </p>

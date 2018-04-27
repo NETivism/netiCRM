@@ -614,21 +614,8 @@ SELECT $select
                         $fileDAO->mime_type == "image/x-png" ||
                         $fileDAO->mime_type == "image/png"
                       ) {
-                        $customValue['displayURL'] = $customValue['fileURL'];
-                        $entityId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_EntityFile',
-                          $fileDAO->id,
-                          'entity_id',
-                          'id'
-                        );
-                        require_once 'CRM/Core/BAO/File.php';
-                        list($path) = CRM_Core_BAO_File::path($fileDAO->id, $entityId,
-                          NULL, NULL
-                        );
-                        list($imageWidth, $imageHeight) = getimagesize($path);
-                        require_once 'CRM/Contact/BAO/Contact.php';
-                        list($imageThumbWidth, $imageThumbHeight) = CRM_Contact_BAO_Contact::getThumbSize($imageWidth, $imageHeight);
-                        $customValue['imageThumbWidth'] = $imageThumbWidth;
-                        $customValue['imageThumbHeight'] = $imageThumbHeight;
+                        $customImage = CRM_Utils_Image::getImageVars($customValue['fileURL']); 
+                        $customValue['image'] = $customImage;
                       }
                     }
                   }

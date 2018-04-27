@@ -1347,9 +1347,9 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           require_once 'CRM/Core/BAO/File.php';
           list($path) = CRM_Core_BAO_File::path($fileID, $entityId, NULL, NULL);
           list($imageWidth, $imageHeight) = getimagesize($path);
-          list($imageThumbWidth, $imageThumbHeight) = CRM_Contact_BAO_Contact::getThumbSize($imageWidth, $imageHeight);
-          $url = CRM_Utils_System::url('civicrm/file', "reset=1&id=$fileID&eid=$contactID");
-          $result['file_url'] = "<a href='javascript:imagePopUp(\"$url\");'><img src=\"$url\" width=$imageThumbWidth height=$imageThumbHeight/></a>";
+          $image = CRM_Utils_Image::getImageVars($path);
+          $image['url'] = CRM_Utils_System::url('civicrm/file', "reset=1&id=$fileID&eid=$contactID");
+          $result['file_url'] = Contact_Utils_Image::getImageModal($image);
           // for non image files
         }
         else {
@@ -1532,17 +1532,28 @@ SELECT id
       if (empty($value)) {
         return;
       }
+      if (is_string($value)) {
+				if ($value[0] != '/') {
+					$filePath = CRM_Utils_File::baseFilePath().$value;
+				}
+				else{
+					$filePath = $value;
+				}
+        if (file_exists($filePath)) {
+          $mimeType = mime_content_type($filePath);
+        }
+      }
+      else {
+        $filePath = $value['name'];
+        $mimeType = $value['type'];
+      }
 
-      require_once 'CRM/Core/DAO/File.php';
-      $config = &CRM_Core_Config::singleton();
 
-      $fName = $value['name'];
-      $mimeType = $value['type'];
-
-      $filename = pathinfo($fName, PATHINFO_BASENAME);
+      $basename = pathinfo($filePath, PATHINFO_BASENAME);
 
       // rename this file to go into the secure directory
-      if (!rename($fName, $config->customFileUploadDir . $filename)) {
+      $config = CRM_Core_Config::singleton();
+      if (!rename($filePath, $config->customFileUploadDir . $basename)) {
         CRM_Core_Error::statusBounce(ts('Could not move custom file to custom upload directory'));
         return;
       }
@@ -1562,12 +1573,12 @@ SELECT $columnName
         $fileDAO->id = $fileId;
       }
 
-      $fileDAO->uri = $filename;
+      $fileDAO->uri = $basename;
       $fileDAO->mime_type = $mimeType;
       $fileDAO->upload_date = date('Ymdhis');
       $fileDAO->save();
       $fileId = $fileDAO->id;
-      $value = $filename;
+      $value = $basename;
     }
 
     if (!is_array($customFormatted)) {
