@@ -63,17 +63,23 @@
             <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
         </tr>
         <tr class="crm-form-block-uploadBigStamp">
-            <td class="label">{$form.uploadBigStamp.label}</td><td>
+            <td class="label">{$form.uploadBigStamp.label}<div class="label-test">{ts}test{/ts}</div></td>
+            <td class="value">
                 {if $imageBigStampUrl}
-                <img style="max-height: 103px;" src="{$imageBigStampUrl}"><br/>
+                <img style="max-height: 103px;" src="{$imageBigStampUrl}">
+                <a class="delete-image" href="javascript:void(0);" data-field="deleteBigStamp">{ts}Delete{/ts}</a>
+                <br/>
                 {/if}
                 {$form.uploadBigStamp.html}<br />
             <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
         </tr>
         <tr class="crm-form-block-uploadSmallStamp">
-            <td class="label">{$form.uploadSmallStamp.label}</td><td>
+            <td class="label">{$form.uploadSmallStamp.label}<div class="label-test">{ts}test{/ts}</div></td>
+            <td class="value">
                 {if $imageSmallStampUrl}
-                <img style="max-height: 43px;" src="{$imageSmallStampUrl}"><br/>
+                <img style="max-height: 43px;" src="{$imageSmallStampUrl}">
+                <a class="delete-image" href="javascript:void(0);" data-field="deleteSmallStamp">{ts}Delete{/ts}</a>
+                <br/>
                 {/if}
                 {$form.uploadSmallStamp.html}<br />
             <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
@@ -81,5 +87,24 @@
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>
+{literal}
+<script type="text/javascript">
+    cj(function($){
+        $('.delete-image').click(function(){
+            deleteFieldName = $(this).attr('data-field');
+            $('[name='+deleteFieldName+']').val(1);
+            $(this).parent().find('img').css('filter','brightness(50%)');
+        });
+    })
+</script>
+<style type="text/css">
+    .label-test{
+        vertical-align: top;
+        padding-left: 5px;
+        font-size: 11px;
+        color: #f44336;
+        display: inline;
+    }
+</style>
 {/literal}
 </div>

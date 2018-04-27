@@ -67,9 +67,9 @@ class CRM_Event_Badge_Simple extends CRM_Event_Badge {
 
     $this->pdf->SetXY($x, $y + $this->pdf->height - 5);
 
-    $this->pdf->SetFontSize(15);
+    $this->pdf->SetFontSize(26);
     $this->pdf->MultiCell($this->pdf->width, 10, $participant['sort_name'], $this->border, "C", 0, 1, $x, $y + $this->tMarginName);
-    $this->pdf->SetFontSize(10);
+    $this->pdf->SetFontSize(14);
     $this->pdf->MultiCell($this->pdf->width, 0, $participant['current_employer'], $this->border, "C", 0, 1, $x, $this->pdf->getY());
   }
 }
