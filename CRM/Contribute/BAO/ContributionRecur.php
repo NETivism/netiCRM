@@ -324,6 +324,12 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       if ($i == 1) {
         // load custom field values
         $parent = CRM_Core_BAO_CustomValueTable::getEntityValues($query->id, 'Contribution');
+
+        // load contribution_soft for #22323
+        $parent_soft = new CRM_Contribute_DAO_ContributionSoft();
+        $parent_soft->contribution_id = $query->id;
+        $parent_soft->find(TRUE);
+
         if ($contributionId) {
           $children = array(0 => $contributionId);
           break;
@@ -332,6 +338,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       elseif ($i > 1 && !$contributionId) {
         $children[] = $query->id;
       }
+      $i++;
     }
 
     if (!empty($parent) && !empty($children)) {
@@ -356,6 +363,21 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
           }
         }
         CRM_Core_BAO_CustomValueTable::setValues($params);
+      }
+    }
+
+    // Duplicate contribution soft .For #22323
+    if(!empty($parent_soft->id) && !empty($children)){
+      foreach ($children as $cid) {
+        $cs = new CRM_Contribute_DAO_ContributionSoft();
+        $cs->contribution_id = $cid;
+        if(empty($cs->find(TRUE))){
+          $cs = clone $parent_soft;
+          unset($cs->id);
+          $cs->contribution_id = $cid;
+          $cs->save();
+          unset($cs);
+        }
       }
     }
   }
