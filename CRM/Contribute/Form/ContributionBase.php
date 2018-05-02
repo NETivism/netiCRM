@@ -189,6 +189,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   public $_priceSet;
 
   public $_action;
+  protected $_uploadedFiles;
 
   /**
    * Function to set variables up before form is built
@@ -805,8 +806,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
             isset($field['data_type']) &&
             $field['data_type'] == 'File' || ($viewOnly && $field['name'] == 'image_URL')
           ) {
-            // ignore file upload fields
-            // continue;
+            // change file upload description
+            $this->_uploadedFiles[$key] = $field['name'];
           }
 
           list($prefixName, $index) = CRM_Utils_System::explode('-', $key, 2);

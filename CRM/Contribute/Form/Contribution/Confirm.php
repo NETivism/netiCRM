@@ -339,6 +339,18 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
           if (isset($contact["{$name}_id"])) {
             $defaults["{$name}_id"] = $contact["{$name}_id"];
           }
+          if (!empty($this->_uploadedFiles[$name])) {
+            if (!empty($contact[$name]['name'])) {
+              $defaults[$name] = ts('File uploaded');
+            }
+          }
+        }
+        elseif ($name == 'image_URL') {
+          if (!empty($this->_uploadedFiles[$name])) {
+            if (!empty($contact[$name]['name'])) {
+              $defaults[$name] = ts('File uploaded');
+            }
+          }
         }
         elseif (in_array($name, array('addressee', 'email_greeting', 'postal_greeting'))
           && CRM_Utils_Array::value($name . '_custom', $contact)

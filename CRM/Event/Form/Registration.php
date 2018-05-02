@@ -184,6 +184,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
   public $_lineItem;
   public $_lineItemParticipantsCount;
   public $_availableRegistrations;
+  protected $_uploadedFiles;
 
   /**
    * Function to set variables up before form is built
@@ -717,8 +718,8 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
             isset($field['data_type']) &&
             $field['data_type'] == 'File' || ($viewOnly && $field['name'] == 'image_URL')
           ) {
-            // ignore file upload fields
-            continue;
+            // change file upload description
+            $this->_uploadedFiles[$key] = $field['name'];
           }
           //make the field optional if primary participant
           //have been skip the additional participant.
