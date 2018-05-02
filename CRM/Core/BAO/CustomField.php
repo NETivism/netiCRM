@@ -1349,7 +1349,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           list($imageWidth, $imageHeight) = getimagesize($path);
           $image = CRM_Utils_Image::getImageVars($path);
           $image['url'] = CRM_Utils_System::url('civicrm/file', "reset=1&id=$fileID&eid=$contactID");
-          $result['file_url'] = Contact_Utils_Image::getImageModal($image);
+          $result['file_url'] = CRM_Utils_Image::getImageModal($image);
           // for non image files
         }
         else {
