@@ -180,6 +180,18 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
           if (isset($contact[$timeField])) {
             $defaults[$timeField] = $contact[$timeField];
           }
+          if (!empty($this->_uploadedFiles[$name])) {
+            if (!empty($contact[$name]['name'])) {
+              $defaults[$name] = ts('File uploaded');
+            }
+          }
+        }
+        elseif ($name == 'image_URL') {
+          if (!empty($this->_uploadedFiles[$name])) {
+            if (!empty($contact[$name]['name'])) {
+              $defaults[$name] = ts('File uploaded');
+            }
+          }
         }
         elseif (in_array($name, array('addressee', 'email_greeting', 'postal_greeting'))
           && CRM_Utils_Array::value($name . '_custom', $contact)

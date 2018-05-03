@@ -1913,6 +1913,9 @@ ORDER BY civicrm_email.is_primary DESC";
     if (!isset($data['contact_type'])) {
       $data['contact_type'] = 'Individual';
     }
+    if (is_array($data['image_URL']) && !empty($data['image_URL']['name'])) {
+      self::processImageParams($data);
+    }
 
     if (CRM_Core_Permission::access('Quest')) {
       $studentFieldPresent = 0;

@@ -72,7 +72,7 @@
 					    {if $element.field_value.image}
 						<td class="html-adjust">{include file='CRM/common/modal.tpl' modalImage=$element.field_value.image}</td>
 					    {else}
-						<td class="html-adjust"><a href="{$element.field_value.fileURL}">{$element.field_value.fileName}</a> 456</td>
+						<td class="html-adjust"><a href="{$element.field_value.fileURL}">{$element.field_value.fileName}</a></td>
 					    {/if}
 					{else}
 					    <td class="html-adjust">{$element.field_value}</td>

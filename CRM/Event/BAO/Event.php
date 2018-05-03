@@ -1426,6 +1426,11 @@ WHERE civicrm_event.is_active = 1
           $status = CRM_Event_PseudoConstant::participantStatus();
           $values[$index] = $status[$params[$name]];
         }
+        elseif ('image_URL' == $name) {
+          if (!empty($params[$name]['name']) || !empty($params[$name])) {
+            $values[$index] = ts('File uploaded');
+          }
+        }
         elseif (strpos($name, '-') !== FALSE) {
           list($fieldName, $id) = CRM_Utils_System::explode('-', $name, 2);
           $detailName = str_replace(' ', '_', $name);
@@ -1474,7 +1479,9 @@ WHERE  id = $cfID
               if ($htmlType == 'File') {
                 //$fileURL = CRM_Core_BAO_CustomField::getFileURL( $contactID, $cfID );
                 //$params[$index] = $values[$index] = $fileURL['file_url'];
-                $values[$index] = $params[$index];
+                if (!empty($params[$name]['name'])) {
+                  $values[$index] = ts('File uploaded');
+                }
               }
               else {
                 if ($dao->data_type == 'Int' ||

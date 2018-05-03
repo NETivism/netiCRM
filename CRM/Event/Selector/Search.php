@@ -329,6 +329,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     require_once 'CRM/Event/BAO/Event.php';
     require_once 'CRM/Event/PseudoConstant.php';
     $statusTypes = CRM_Event_PseudoConstant::participantStatus();
+    $statusContribution = CRM_Contribute_PseudoConstant::contributionStatus();
     $statusClasses = CRM_Event_PseudoConstant::participantStatusClass();
     $participantRoles = CRM_Event_PseudoConstant::participantRole();
     $sep = CRM_Core_DAO::VALUE_SEPARATOR;
@@ -375,11 +376,12 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
       $row['contribution_total_amount'] = NULL;
       $row['contribution_currency'] = NULL;
       if ($row['participant_fee_amount']) {
-        $sql = "SELECT c.id, c.currency, c.total_amount FROM civicrm_contribution c INNER JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE p.participant_id = %1 ORDER BY c.created_date DESC";
+        $sql = "SELECT c.id, c.currency, c.total_amount, c.contribution_status_id FROM civicrm_contribution c INNER JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE p.participant_id = %1 ORDER BY c.created_date DESC";
         $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($result->participant_id, 'Integer')));
         if ($dao->fetch()) {
           $row['contribution_total_amount'] = $dao->total_amount;
           $row['contribution_currency'] = $dao->currency;
+          $row['contribution_status'] = $statusContribution[$dao->contribution_status_id];
         }
       }
 

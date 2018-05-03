@@ -133,6 +133,18 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
           if (isset($this->_params[0][$timeField])) {
             $defaults[$timeField] = $this->_params[0][$timeField];
           }
+          if (!empty($this->_uploadedFiles[$name])) {
+            if (!empty($this->_params[0][$name]['name'])) {
+              $defaults[$name] = ts('File uploaded');
+            }
+          }
+        }
+        elseif ($name == 'image_URL') {
+          if (!empty($this->_uploadedFiles[$name])) {
+            if (!empty($this->_params[0][$name]['name']) || !empty($this->_params[0][$name])) {
+              $defaults[$name] = ts('File uploaded');
+            }
+          }
         }
         elseif (in_array($name, array('addressee', 'email_greeting', 'postal_greeting'))
           && CRM_Utils_Array::value($name . '_custom', $this->_params[0])

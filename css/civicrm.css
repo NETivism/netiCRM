@@ -5572,16 +5572,18 @@ input.crm-form-textfield,
   display: inline-block;
 }
 .crm-container-md .crm-form-select-single::after {
-  content: "\025BE";
-  position: absolute;
+  content: "";
   display: block;
-  top: 2px;
+  position: absolute;
+  top: 0;
   right: 0;
-  font-weight: bold;
-  font-size: 1.75rem;
-  color: #666;
-  z-index: 11;
-  line-height: 1;
+  margin: 18px 5px 0 0;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #555;
+  pointer-events: none;
 }
 .crm-container-md .crm-form-select-single select,
 .crm-container-md .crm-form-select-single select.form-select {
@@ -5614,6 +5616,9 @@ input.crm-form-textfield,
 }
 .crm-container-md table.advmultiselect td select[style*="visibility: hidden;"] {
   display: none; /* have to check */
+}
+.crm-container-md .crm-form-select-chosen:after {
+  display: none;
 }
 
 /* md: crm radio and checkbox */
