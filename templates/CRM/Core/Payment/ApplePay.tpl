@@ -59,6 +59,7 @@
         organization : '{/literal}{$organization}{literal}',
         qfKey : '{/literal}{$qfKey}{literal}',
         amount : {/literal}{$amount}{literal},
+        is_test : {/literal}{$is_test}{literal},
         {/literal}
           {if $pid}pid : '{$pid}', {/if}
           {if $eid}eid : '{$eid}', {/if}
@@ -106,7 +107,8 @@
               var data = {
                 cid : window.applePayProcess.cid,
                 validationURL: event.validationURL,
-                domain_name:　location.host
+                domain_name:　location.host,
+                is_test : window.applePayProcess.is_test,
               };
 
               $.ajax({
@@ -134,6 +136,7 @@
               data = {
                 cid : window.applePayProcess.cid,
                 applepay_token : event.payment.token,
+                is_test : window.applePayProcess.is_test,
               };
               data.pid = window.applePayProcess.pid ? window.applePayProcess.pid : undefined;
               data.eid = window.applePayProcess.eid ? window.applePayProcess.eid : undefined;

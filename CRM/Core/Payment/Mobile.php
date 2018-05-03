@@ -151,6 +151,12 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     $description = !empty($params['amount_level']) ? $page_title . ' - ' . $params['amount_level'] : $page_title;
 
+    if($this->_paymentForm->_mode == 'test'){
+      $is_test = 1;
+    }else{
+      $is_test = 0;
+    }
+
     if(strtolower($instrument_name) == 'applepay'){
       $smarty = CRM_Core_Smarty::singleton();
       $smarty->assign('after_redirect', 0);
@@ -160,6 +166,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         'description' => $description,
         'amount' => $params['amount'],
         'qfKey' => $qfKey,
+        'is_test' => $is_test,
       );
       if(!empty($params['participantID'])){
         $payment_params['pid'] = $params['participantID'];
@@ -208,17 +215,23 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         "validation_url" => $_POST['validationURL'],
       );
 
-      module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
-      if(function_exists('_civicrm_neweb_get_mobile_params')){
-        $payment_params = _civicrm_neweb_get_mobile_params();
+      if(empty($paymentProcessor->url_site)){
+        module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
+        if(function_exists('_civicrm_neweb_get_mobile_params')){
+          $payment_params = _civicrm_neweb_get_mobile_params();
+        }else{
+          $error = "Can't get params from module when validate: civicrm_neweb";
+          CRM_Core_Error::debug_log_message($error);
+          $note .= $error;
+          CRM_Core_Payment_Mobile::addNote($note, $contribution);
+        }
+
+        $_test = $_POST['is_test']? '_test' : '';
+        $url = $payment_params['session_url'.$_test];
       }else{
-        $error = "Can't get params from module when validate: civicrm_neweb";
-        CRM_Core_Error::debug_log_message($error);
-        $note .= $error;
-        CRM_Core_Payment_Mobile::addNote($note, $contribution);
+        $url = preg_replace('/\/$/', '', trim($paymentProcessor->url_site)).'/sessions';
       }
 
-      $url = $payment_params['session_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
@@ -277,16 +290,22 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         'consumerip' => CRM_Utils_System::ipAddress(),
       );
 
-      module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
-      if(function_exists('_civicrm_neweb_get_mobile_params')){
-        $payment_params = _civicrm_neweb_get_mobile_params();
+      if(empty($paymentProcessor->url_site)){
+        module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
+        if(function_exists('_civicrm_neweb_get_mobile_params')){
+          $payment_params = _civicrm_neweb_get_mobile_params();
+        }else{
+          $error = "Can't get params from module when transact: civicrm_neweb";
+          CRM_Core_Error::debug_log_message($error);
+          $note .= $error;
+          CRM_Core_Payment_Mobile::addNote($note, $contribution);
+        }
+
+        $_test = $_POST['is_test']? '_test' : '';
+        $url = $payment_params['transact_url'.$_test];
       }else{
-        $error = "Can't get params from module when transact: civicrm_neweb";
-        CRM_Core_Error::debug_log_message($error);
-        $note .= $error;
-        CRM_Core_Payment_Mobile::addNote($note, $contribution);
+        $url = preg_replace('/\/$/', '', trim($paymentProcessor->url_site)).'/ccaccept';
       }
-      $url = $payment_params['transact_url'];
       $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
       '. json_encode($data).'
       END';
