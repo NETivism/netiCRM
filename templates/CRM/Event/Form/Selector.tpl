@@ -94,7 +94,7 @@
     {/if}
     <td class="right nowrap crm-paticipant-contribution_total_amount">
       {$row.contribution_total_amount|crmMoney:$row.contribution_currency}<br>
-      ({$row.contribution_status})
+      {if $row.contribution_status}({$row.contribution_status}){/if}
     </td>
     <td class="crm-participant-participant_register_date">{$row.participant_register_date|crmDate}</td>	
     <td class="crm-participant-participant_status crm-participant_status_{$row.participant_status_id}">{$row.participant_status}</td>
