@@ -121,14 +121,14 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
   function setFields() {
     $this->_fields = array(
       'subject' => array('type' => 'text',
-        'label' => ts('Subject'),
+        'label' => ts('Activity Subject'),
         'attributes' => CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity',
           'subject'
         ),
       ),
-      'duration' => array('type' => 'text',
-        'label' => ts('Duration'),
-        'attributes' => array('size' => 4, 'maxlength' => 8),
+      'duration' => array('type' => 'number',
+        'label' => ts('Activity Duration'),
+        'attributes' => array('step' => 10),
         'required' => FALSE,
       ),
       'location' => array('type' => 'text',
@@ -146,7 +146,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
         'required' => FALSE,
       ),
       'status_id' => array('type' => 'select',
-        'label' => ts('Status'),
+        'label' => ts('Task Status'),
         'attributes' =>
         CRM_Core_PseudoConstant::activityStatus(),
         'required' => TRUE,
@@ -167,31 +167,23 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
         CRM_Core_PseudoConstant::ActivityType(FALSE),
       ),
       'interval' => array('type' => 'text',
-        'label' => 'in',
+        'label' => ts('in'),
         'attributes' =>
         array('size' => 4, 'maxlength' => 8),
       ),
       'interval_unit' => array('type' => 'select',
         'label' => NULL,
         'attributes' =>
-        CRM_Core_OptionGroup::values('recur_frequency_units',
-          FALSE, FALSE, FALSE,
-          NULL, 'name'
-        ),
+        CRM_Core_OptionGroup::values('recur_frequency_units', FALSE, FALSE, TRUE, NULL, 'name', FALSE),
       ),
       // Add optional 'Subject' field for the Follow-up Activiity, CRM-4491
       'followup_activity_subject' => array('type' => 'text',
-        'label' => ts('Subject'),
+        'label' => ts('Activity Subject'),
         'attributes' => CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity',
           'subject'
         ),
       ),
     );
-
-    // append (s) for interval_unit attribute list
-    foreach ($this->_fields['interval_unit']['attributes'] as $name => $label) {
-      $this->_fields['interval_unit']['attributes'][$name] = $label . '(s)';
-    }
 
     if (($this->_context == 'standalone') &&
       ($printPDF = CRM_Utils_Array::key('Print PDF Letter', $this->_fields['followup_activity_type_id']['attributes']))
@@ -642,6 +634,9 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
         if ($values['type'] == 'wysiwyg') {
           $this->addWysiwyg($field, $values['label'], $attribute, $required);
         }
+        elseif ($values['type'] == 'number') {
+          $this->addNumber($field, $values['label'], $attribute, $required);
+        }
         else {
           $this->add($values['type'], $field, $values['label'], $attribute, $required);
         }
@@ -656,7 +651,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       'positiveInteger'
     );
 
-    $this->addDateTime('activity_date_time', ts('Date'), TRUE, array('formatType' => 'activityDateTime'));
+    $this->addDateTime('activity_date_time', ts('Activity Actual Date %1 %2', array(1=>'', 2=>'')), TRUE, array('formatType' => 'activityDateTime'));
 
     //autocomplete url
     $dataUrl = CRM_Utils_System::url("civicrm/ajax/rest",
@@ -1028,7 +1023,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     $followupStatus = '';
     if (CRM_Utils_Array::value('followup_activity_type_id', $params)) {
       $followupActivity = CRM_Activity_BAO_Activity::createFollowupActivity($activity->id, $params);
-      $followupStatus = "A followup activity has been scheduled.";
+      $followupStatus = ts("A followup activity has been scheduled.");
     }
 
     // send copy to assignee contacts.CRM-4509
