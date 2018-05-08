@@ -156,6 +156,10 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
                     return '<div class="crm-form-elem crm-form-textfield">' . $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' /></div>';
                     break;
 
+                case 'number':
+                    return '<div class="crm-form-elem crm-form-number">' . $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' /></div>';
+                    break;
+
                 case 'file':
                     return '<div class="crm-form-elem crm-form-file">' . $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' /></div>';
                     break;
