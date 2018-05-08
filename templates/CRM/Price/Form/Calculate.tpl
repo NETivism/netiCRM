@@ -93,6 +93,7 @@ cj("#priceset select, #priceset input").each(function () {
         break;
         
       case 'text':
+      case 'number':
         //default calcution of element. 
         var textval = parseFloat( cj(this).val() );
         if ( textval ) {
@@ -111,9 +112,10 @@ cj("#priceset select, #priceset input").each(function () {
         }
         
         //event driven calculation of element.
-        cj(this).bind( 'keyup', function() { calculateText( this );
-        }).bind( 'blur' , function() { calculateText( this );   
-        });
+        cj(this)
+          .bind( 'keyup', function() { calculateText( this ); })
+          .bind( 'blur' , function() { calculateText( this ); })
+          .bind( 'change' , function() { calculateText( this ); });
         display( totalfee );
         break;
 
