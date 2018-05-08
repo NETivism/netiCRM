@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-04-19 07:30+0000\n"
+"PO-Revision-Date: 2018-05-07 02:14+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46049,7 +46049,7 @@ msgid "SMS HTML:"
 msgstr ""
 
 msgid "SMS Text:"
-msgstr ""
+msgstr "簡訊文字："
 
 #: templates/CRM/SMS/Form/Upload.tpl
 msgid ""
@@ -46073,7 +46073,7 @@ msgid "Provider Details"
 msgstr "供應商詳情"
 
 msgid "no parameters"
-msgstr ""
+msgstr "沒有參數"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Sms Provider Internal Name"
@@ -46127,7 +46127,7 @@ msgstr[0] "簡訊將不會發給其中 %count 個活動的聯絡人"
 
 #: CRM/Contact/Task.php
 msgid "SMS - schedule/send"
-msgstr "簡訊-排程/發送"
+msgstr "簡訊-發送"
 
 #: CRM/Core/DAO/MessageTemplates.php
 msgid "Message Template is used for SMS?"

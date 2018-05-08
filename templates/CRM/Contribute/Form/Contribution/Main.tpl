@@ -110,7 +110,7 @@
                 {if $receipt_from_email}
                 {ts 1=$receipt_from_email}To modify or cancel future contributions please contact us at %1.{/ts}
                 {else}
-                {ts}To modify or cancel future contributions please contact us.{/ts}
+                {ts}To modify or cancel future contributions please contact us{/ts}
                 {/if}
             {/if}
         </p>

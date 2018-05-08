@@ -280,6 +280,8 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     $participantParams = $this->_params;
     $formattedValues = array();
     $count = 1;
+
+    // process additional participant
     foreach ($participantParams as $participantNum => $participantValue) {
       if ($participantNum && $participantValue != 'skip') {
         //get the customPre profile info
@@ -378,6 +380,18 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
           }
           if (isset($this->_params[0]["{$name}_id"])) {
             $defaults["{$name}_id"] = $this->_params[0]["{$name}_id"];
+          }
+          if (!empty($this->_uploadedFiles[$name])) {
+            if (!empty($this->_params[0][$name]['name'])) {
+              $defaults[$name] = ts('File uploaded');
+            }
+          }
+        }
+        elseif ($name == 'image_URL') {
+          if (!empty($this->_uploadedFiles[$name])) {
+            if (!empty($this->_params[0][$name]['name']) || !empty($this->_params[0][$name])) {
+              $defaults[$name] = ts('File uploaded');
+            }
           }
         }
         elseif (in_array($name, array('addressee', 'email_greeting', 'postal_greeting'))

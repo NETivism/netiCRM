@@ -35,8 +35,8 @@
   {else}
       <td class="label">{$element.field_title}</td>
       {if $element.field_type == 'File'}
-          {if $element.field_value.displayURL}
-              <td class="crm-custom_data crm-displayURL"><a href="javascript:imagePopUp('{$element.field_value.displayURL}')" ><img src="{$element.field_value.displayURL}" height = "{$element.field_value.imageThumbHeight}" width="{$element.field_value.imageThumbWidth}"></a></td>
+          {if $element.field_value.image}
+              <td class="crm-custom_data crm-displayURL">{include file='CRM/common/modal.tpl' modalImage=$element.field_value.image}</td>
           {else}
               <td class="html-adjust crm-custom_data crm-fileURL"><a href="{$element.field_value.fileURL}">{$element.field_value.fileName}</a></td>
           {/if}

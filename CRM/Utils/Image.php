@@ -239,6 +239,52 @@ class CRM_Utils_Image {
     return FALSE;
   }
 
+  /**
+   * function to return proportional height and width and image url for passing modal
+   *
+   * @return Array thumb dimension of image
+   */
+  public static function getImageVars($file) {
+    list($imageWidth, $imageHeight) = getimagesize($file);
+    $thumbWidth = 125;
+    if ($imageWidth && $imageHeight) {
+      $imageRatio = $imageWidth / $imageHeight;
+    }
+    else {
+      $imageRatio = 1;
+    }
+    if ($imageRatio > 1) {
+      $imageThumbWidth = $thumbWidth;
+      $imageThumbHeight = round($thumbWidth / $imageRatio);
+    }
+    else {
+      $imageThumbHeight = $thumbWidth;
+      $imageThumbWidth = $thumbWidth * $imageRatio;
+    }
+    return array(
+      'url' => $file,
+      'width' => $imageWidth,
+      'height' => $imageHeight,
+      'thumb' => array(
+        'width' => $imageThumbWidth,
+        'height' => $imageThumbHeight,
+      ),
+    );
+    return FALSE;
+  }
+
+  /**
+   * function to return proportional height and width of the image
+   *
+   * @return Array thumb dimension of image
+   */
+  public static function getImageModal($vars) {
+    $template = CRM_Core_Smarty::singleton();
+    $template->assign('modalImage', $vars);
+
+    return $template->fetch('CRM/common/modal.tpl');
+  }
+
   function __destruct() {
     imagedestroy($this->resource);
     imagedestroy($this->tmp);

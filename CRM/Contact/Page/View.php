@@ -126,13 +126,8 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
         )));
 
     if ($image_URL = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_contactId, 'image_URL')) {
-      list($imageWidth, $imageHeight) = getimagesize($image_URL);
-      list($imageThumbWidth, $imageThumbHeight) = CRM_Contact_BAO_Contact::getThumbSize($imageWidth, $imageHeight);
-      $this->assign("imageWidth", $imageWidth);
-      $this->assign("imageHeight", $imageHeight);
-      $this->assign("imageThumbWidth", $imageThumbWidth);
-      $this->assign("imageThumbHeight", $imageThumbHeight);
-      $this->assign("imageURL", $image_URL);
+      $contactImage = CRM_Utils_Image::getImageVars($image_URL); 
+      $this->assign('contactImage', $contactImage);
     }
 
     // also store in session for future use

@@ -117,7 +117,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      */
     function freeze()
     {
-        return false;
+        $this->_flagFrozen = true;
     } //end func freeze
 
     // }}}
@@ -176,7 +176,11 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
                 if ($caller->getAttribute('method') == 'get') {
                     return PEAR::raiseError('Cannot add a file upload field to a GET method form');
                 }
-                $this->_value = $this->_findValue();
+                $value = $this->_findValue();
+                if (null === $value) {
+                  $value = $this->_findValue($caller->_defaultValues);
+                }
+                $this->_value = $value;
                 $caller->updateAttributes(array('enctype' => 'multipart/form-data'));
                 $caller->setMaxFileSize();
                 break;
@@ -385,13 +389,25 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
     * @access    private
     * @return    mixed
     */
-    function _findValue()
+    function _findValue(&$values)
     {
-        if (empty($_FILES)) {
-            return null;
-        }
         $elementName = $this->getName();
         $elementName = preg_replace('/\[\]$/', '', $elementName);
+        if (!empty($values)) {
+          if (isset($values[$elementName])) {
+            if (is_array($values[$elementName])) {
+              if (!empty($values[$elementName]['name'])) {
+                return $values[$elementName]['name'];
+              }
+            }
+            if (!empty($values[$elementName])) {
+              return $values[$elementName];
+            }
+          }
+        }
+        if (empty($_FILES)) {
+          return null;
+        }
         if (isset($_FILES[$elementName])) {
             return $_FILES[$elementName];
         } elseif (false !== ($pos = strpos($elementName, '['))) {

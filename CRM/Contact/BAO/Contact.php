@@ -816,35 +816,6 @@ WHERE id={$id}; ";
   }
 
   /**
-   * function to return proportional height and width of the image
-   *
-   * @param  Integer $imageWidth  width of image
-   *
-   * @param  Integer $imageHeight height of image
-   *
-   * @return Array thumb dimension of image
-   */
-  public static function getThumbSize($imageWidth, $imageHeight) {
-    $thumbWidth = 100;
-    if ($imageWidth && $imageHeight) {
-      $imageRatio = $imageWidth / $imageHeight;
-    }
-    else {
-      $imageRatio = 1;
-    }
-    if ($imageRatio > 1) {
-      $imageThumbWidth = $thumbWidth;
-      $imageThumbHeight = round($thumbWidth / $imageRatio);
-    }
-    else {
-      $imageThumbHeight = $thumbWidth;
-      $imageThumbWidth = $thumbWidth * $imageRatio;
-    }
-
-    return array($imageThumbWidth, $imageThumbHeight);
-  }
-
-  /**
    * function to validate type of contact image
    *
    * @param  Array  $param      array of contact/profile field to be edited/added
@@ -1941,6 +1912,9 @@ ORDER BY civicrm_email.is_primary DESC";
 
     if (!isset($data['contact_type'])) {
       $data['contact_type'] = 'Individual';
+    }
+    if (is_array($data['image_URL']) && !empty($data['image_URL']['name'])) {
+      self::processImageParams($data);
     }
 
     if (CRM_Core_Permission::access('Quest')) {
