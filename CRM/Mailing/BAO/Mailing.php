@@ -2533,6 +2533,79 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     //sorted in ascending order tokens by ignoring word case
     $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
+    //CRM-5058
+    $form->add('select', 'token3', ts('Insert Token'),
+      $tokens, FALSE,
+      array(
+        'size' => "5",
+        'multiple' => TRUE,
+        'onclick' => "return tokenReplText(this);",
+      )
+    );
+
+    $form->add('select', 'token1', ts('Insert Tokens'),
+      $tokens, FALSE,
+      array(
+        'size' => "5",
+        'multiple' => TRUE,
+        'onclick' => "return tokenReplText(this);",
+      )
+    );
+
+    $form->add('select', 'token2', ts('Insert Tokens'),
+      $tokens, FALSE,
+      array(
+        'size' => "5",
+        'multiple' => TRUE,
+        'onclick' => "return tokenReplHtml(this);",
+      )
+    );
+
+
+    require_once 'CRM/Core/BAO/MessageTemplates.php';
+    $form->_templates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
+    if (!empty($form->_templates)) {
+      $form->assign('templates', TRUE);
+      $form->add('select', 'template', ts('Use Template'),
+        array(
+          '' => ts('- select -'),
+        ) + $form->_templates, FALSE,
+        array('onChange' => "selectValue( this.value );")
+      );
+      $form->add('checkbox', 'updateTemplate', ts('Update Template'), NULL);
+    }
+
+    $form->add('checkbox', 'saveTemplate', ts('Save As New Template'), NULL, FALSE,
+      array('onclick' => "showSaveDetails(this);")
+    );
+    $form->add('text', 'saveTemplateName', ts('Template Title'));
+
+
+    //insert message Text by selecting "Select Template option"
+    $form->add('textarea',
+      'text_message',
+      ts('Plain-text format'),
+      array(
+        'cols' => '80', 'rows' => '8',
+        'onkeyup' => "return verify(this)",
+      )
+    );
+    $form->addWysiwyg('html_message',
+      ts('HTML format'),
+      array(
+        'cols' => '80',
+        'rows' => '8',
+        'fullpage' => '1',
+        'onkeyup' => "return verify(this)",
+      )
+    );
+
+    //get the tokens.
+    $tokens = array();
+    if (method_exists($form, 'listTokens')) {
+      $tokens = $form->listTokens();
+    }
+
     $templates = array();
 
     $textFields = array('text_message' => ts('HTML Format'), 'sms_text_message' => ts('SMS Message'));
