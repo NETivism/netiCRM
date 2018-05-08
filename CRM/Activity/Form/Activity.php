@@ -128,7 +128,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       ),
       'duration' => array('type' => 'number',
         'label' => ts('Activity Duration'),
-        'attributes' => array('step' => 10),
+        'attributes' => array('step' => 10, 'min' => 0),
         'required' => FALSE,
       ),
       'location' => array('type' => 'text',
