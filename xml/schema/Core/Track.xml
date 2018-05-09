@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Core</base>
+  <class>Track</class>
+  <name>civicrm_track</name>
+  <comment>Tracking civicrm click on specific page.</comment>
+  <add>4.0</add>
+  <log>false</log>
+  <field>
+      <name>session_key</name>
+      <type>varchar</type>
+      <length>255</length>
+      <required>true</required>
+      <comment>Session of this visit</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>session_key</name>
+  </primaryKey>
+  <field>
+      <name>page_type</name>
+      <type>varchar</type>
+      <length>64</length>
+      <required>true</required>
+      <comment>Page type like civicrm_event or civicrm_contribution_page</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>page_id</name>
+      <required>true</required>
+      <type>int unsigned</type>
+      <comment>Page id.</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_page_type_id</name>
+    <fieldName>page_type</fieldName>
+    <fieldName>page_id</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>entity_table</name>
+      <type>varchar</type>
+      <length>64</length>
+      <comment>Entity table like civicrm_contribution or civicrm_participant or civicrm_membership</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>entity_id</name>
+      <type>int unsigned</type>
+      <comment>Entity id like contribution id or participant id</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_entity_table_id</name>
+    <fieldName>entity_table</fieldName>
+    <fieldName>entity_id</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>state</name>
+      <type>tinyint unsigned</type>
+      <comment>Depth of this visit</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_state</name>
+    <fieldName>state</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>referrer_type</name>
+      <type>varchar</type>
+      <length>64</length>
+      <comment>Referrer type of inbound visit</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_referrer_type</name>
+    <fieldName>referrer_type</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>referrer_network</name>
+      <type>varchar</type>
+      <length>64</length>
+      <comment>Referrer network of inbound visit</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_referrer_network</name>
+    <fieldName>referrer_network</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>referrer_url</name>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Referrer url of inbound traffic. Null when no referrer</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>landing</name>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Landing page of this record without protocol and host name</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>utm_source</name>
+      <type>varchar</type>
+      <length>255</length>
+      <comment></comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_utm_source</name>
+    <fieldName>utm_source</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>utm_medium</name>
+      <type>varchar</type>
+      <length>255</length>
+      <comment></comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_utm_medium</name>
+    <fieldName>utm_medium</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>utm_campaign</name>
+      <type>varchar</type>
+      <length>255</length>
+      <comment></comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>utm_term</name>
+      <type>varchar</type>
+      <length>255</length>
+      <comment></comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>utm_content</name>
+      <type>varchar</type>
+      <length>255</length>
+      <comment></comment>
+      <add>4.0</add>
+  </field>
+</table>
