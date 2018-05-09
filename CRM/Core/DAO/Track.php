@@ -81,6 +81,12 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
    */
   static $_log = false;
   /**
+   * table primary key
+   *
+   * @var string
+   */
+  public $_primaryKey = 'session_key';
+  /**
    * Session of this visit
    *
    * @var string
@@ -119,7 +125,7 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
   /**
    * Depth of this visit
    *
-   * @var tinyint unsigned
+   * @var int unsigned
    */
   public $state;
   /**
@@ -231,7 +237,7 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
         ) ,
         'state' => array(
           'name' => 'state',
-          'type' => CRM_Utils_Type::T_TINYINTUNSIGNED,
+          'type' => CRM_Utils_Type::T_INT,
           'title' => ts('State') ,
         ) ,
         'referrer_type' => array(

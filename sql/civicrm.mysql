@@ -654,7 +654,7 @@ CREATE TABLE civicrm_track (
      page_id int unsigned NOT NULL   COMMENT 'Page id.',
      entity_table varchar(64)    COMMENT 'Entity table like civicrm_contribution or civicrm_participant or civicrm_membership',
      entity_id int unsigned    COMMENT 'Entity id like contribution id or participant id',
-     state tinyint unsigned    COMMENT 'Depth of this visit',
+     state int unsigned    COMMENT 'Depth of this visit',
      referrer_type varchar(64)    COMMENT 'Referrer type of inbound visit',
      referrer_network varchar(64)    COMMENT 'Referrer network of inbound visit',
      referrer_url varchar(255)    COMMENT 'Referrer url of inbound traffic. Null when no referrer',

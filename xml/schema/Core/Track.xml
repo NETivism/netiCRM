@@ -72,7 +72,7 @@
   </index>
   <field>
       <name>state</name>
-      <type>tinyint unsigned</type>
+      <type>int unsigned</type>
       <comment>Depth of this visit</comment>
       <add>4.0</add>
   </field>
