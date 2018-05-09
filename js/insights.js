@@ -55,6 +55,7 @@ function referrerInfo() {
 	}
 }
 
+<<<<<<< HEAD
 function trackVisit(visitInfo) {
   if (typeof cj === 'undefined') {
     return;
