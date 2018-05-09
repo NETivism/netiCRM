@@ -87,6 +87,12 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
    */
   public $session_key;
   /**
+   * Date time of this visit
+   *
+   * @var datetime
+   */
+  public $visit_date;
+  /**
    * Page type like civicrm_event or civicrm_contribution_page
    *
    * @var string
@@ -192,6 +198,12 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
           'required' => true,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'visit_date' => array(
+          'name' => 'visit_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Visit Date') ,
+          'required' => true,
         ) ,
         'page_type' => array(
           'name' => 'page_type',

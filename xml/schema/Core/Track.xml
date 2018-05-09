@@ -19,6 +19,18 @@
        <name>session_key</name>
   </primaryKey>
   <field>
+      <name>visit_date</name>
+      <type>datetime</type>
+      <required>true</required>
+      <comment>Date time of this visit</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_visit_date</name>
+    <fieldName>visit_date</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
       <name>page_type</name>
       <type>varchar</type>
       <length>64</length>
