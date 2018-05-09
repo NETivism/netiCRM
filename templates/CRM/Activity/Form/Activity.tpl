@@ -119,6 +119,14 @@
                 </tr>
              {/if}
 	     {/if}
+             <tr class="crm-activity-form-block-activity_date_time">
+                <td class="label">{$form.activity_date_time.label}</td>
+                {if $action neq 4}
+                    <td class="view-value">{include file="CRM/common/jcalendar.tpl" elementName=activity_date_time}</td>
+                {else}
+                    <td class="view-value">{$form.activity_date_time.html|crmDate}</td>
+                {/if}
+             </tr>
 	     
 	     {if $surveyActivity} 
                <tr class="crm-activity-form-block-survey">
@@ -150,6 +158,37 @@
              {/if}
              </tr>
              
+            {if $activityTypeFile}
+                {include file="CRM/$crmDir/Form/Activity/$activityTypeFile.tpl"}
+            {/if}
+
+             <tr class="crm-activity-form-block-subject">
+                <td class="label">{$form.subject.label}</td><td class="view-value">{$form.subject.html|crmReplace:class:huge}</td>
+             </tr>
+             <tr class="crm-activity-form-block-location">
+                <td class="label">{$form.location.label}</td><td class="view-value">{$form.location.html|crmReplace:class:huge}</td>
+             </tr> 
+             <tr class="crm-activity-form-block-duration">
+                <td class="label">{$form.duration.label}</td>
+                <td class="view-value">
+                    {$form.duration.html} {ts}minutes{/ts}
+                    {if $action neq 4}<span class="description">{ts}Total time spent on this activity (in minutes).{/ts}{/if}
+                </td>
+             </tr> 
+             <tr class="crm-activity-form-block-details">
+               <td class="label">{$form.details.label}</td>
+        	        {if $activityTypeName eq "Print PDF Letter"}
+            		  <td class="view-value">
+                          {* If using plain textarea, assign class=huge to make input large enough. *}
+                          {if $defaultWysiwygEditor eq 0}{$form.details.html|crmReplace:class:huge|nl2br}{else}{$form.details.html}{/if}
+            		  </td>
+            		{else}
+            	      <td class="view-value">
+                          {* If using plain textarea, assign class=huge to make input large enough. *}
+                          {if $defaultWysiwygEditor eq 0}{$form.details.html|crmStripAlternatives|crmReplace:class:huge|nl2br}{else}{$form.details.html|crmStripAlternatives}{/if}
+            		  </td>
+            		{/if}
+             </tr> 
              <tr class="crm-activity-form-block-assignee_contact_id">
              {if $action eq 4}
                 <td class="label">{ts}Assigned To{/ts}</td><td class="view-value">
@@ -169,52 +208,13 @@
                 </td>
              {/if}
              </tr>
-
-            {if $activityTypeFile}
-                {include file="CRM/$crmDir/Form/Activity/$activityTypeFile.tpl"}
-            {/if}
-
-             <tr class="crm-activity-form-block-subject">
-                <td class="label">{$form.subject.label}</td><td class="view-value">{$form.subject.html|crmReplace:class:huge}</td>
-             </tr>
-             <tr class="crm-activity-form-block-location">
-                <td class="label">{$form.location.label}</td><td class="view-value">{$form.location.html|crmReplace:class:huge}</td>
-             </tr> 
-             <tr class="crm-activity-form-block-activity_date_time">
-                <td class="label">{$form.activity_date_time.label}</td>
-                {if $action neq 4}
-                    <td class="view-value">{include file="CRM/common/jcalendar.tpl" elementName=activity_date_time}</td>
-                {else}
-                    <td class="view-value">{$form.activity_date_time.html|crmDate}</td>
-                {/if}
-             </tr>
-             <tr class="crm-activity-form-block-duration">
-                <td class="label">{$form.duration.label}</td>
-                <td class="view-value">
-                    {$form.duration.html}
-                    {if $action neq 4}<span class="description">{ts}Total time spent on this activity (in minutes).{/ts}{/if}
-                </td>
-             </tr> 
-             <tr class="crm-activity-form-block-status_id">
-                <td class="label">{$form.status_id.label}</td><td class="view-value">{$form.status_id.html}</td>
-             </tr> 
-             <tr class="crm-activity-form-block-details">
-               <td class="label">{$form.details.label}</td>
-        	        {if $activityTypeName eq "Print PDF Letter"}
-            		  <td class="view-value">
-                          {* If using plain textarea, assign class=huge to make input large enough. *}
-                          {if $defaultWysiwygEditor eq 0}{$form.details.html|crmReplace:class:huge|nl2br}{else}{$form.details.html}{/if}
-            		  </td>
-            		{else}
-            	      <td class="view-value">
-                          {* If using plain textarea, assign class=huge to make input large enough. *}
-                          {if $defaultWysiwygEditor eq 0}{$form.details.html|crmStripAlternatives|crmReplace:class:huge|nl2br}{else}{$form.details.html|crmStripAlternatives}{/if}
-            		  </td>
-            		{/if}
-             </tr> 
              <tr class="crm-activity-form-block-priority_id">
                 <td class="label">{$form.priority_id.label}</td><td class="view-value">{$form.priority_id.html}</td>
              </tr>
+             <tr class="crm-activity-form-block-status_id">
+                <td class="label">{$form.status_id.label}</td><td class="view-value">{$form.status_id.html}</td>
+             </tr> 
+
 	     {if $surveyActivity } 
                <tr class="crm-activity-form-block-result">
                  <td class="label">{$form.result.label}</td><td class="view-value">{$form.result.html}</td>

@@ -879,6 +879,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
+  function addNumber($name, $label, $attributes, $required) {
+    $this->add('number', $name, $label, $attributes, $required);
+  }
+
   function buildAddressBlock($locationId, $title, $phone,
     $alternatePhone = NULL, $addressRequired = NULL,
     $phoneRequired = NULL, $altPhoneRequired = NULL,

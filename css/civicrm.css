@@ -4224,6 +4224,7 @@ ul.ui-sortable {
 .crm-container select,
 .crm-container input.form-autocomplete, 
 .crm-container input.form-text, 
+.crm-container input.form-number, 
 .crm-container textarea.form-textarea, 
 .crm-container select.form-select {
   padding: 5px;
@@ -5336,6 +5337,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem input[type="text"],
 .crm-container-md .crm-form-elem input[type="number"],
 .crm-container-md .crm-form-elem input.form-text,
+.crm-container-md .crm-form-elem input.form-number,
 .crm-container-md .crm-form-elem select,
 .crm-container-md .crm-form-elem select.form-select,
 .crm-container-md .crm-form-elem textarea,
@@ -5360,6 +5362,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem input[type="text"],
 .crm-container-md .crm-form-elem input[type="number"],
 .crm-container-md .crm-form-elem input.form-text,
+.crm-container-md .crm-form-elem input.form-number,
 .crm-container-md .crm-form-elem select,
 .crm-container-md .crm-form-elem select.form-select {
   width: 16rem;
@@ -5371,6 +5374,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem input[type="text"].error,
 .crm-container-md .crm-form-elem input[type="number"].error,
 .crm-container-md .crm-form-elem input.form-text.error,
+.crm-container-md .crm-form-elem input.form-number.error,
 .crm-container-md .crm-form-elem select.error,
 .crm-container-md .crm-form-elem select.form-select.error,
 .crm-container-md .crm-form-elem textarea.error,
@@ -5380,6 +5384,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem input[type="text"]:hover,
 .crm-container-md .crm-form-elem input[type="number"]:hover,
 .crm-container-md .crm-form-elem input.form-text:hover,
+.crm-container-md .crm-form-elem input.form-number:hover,
 .crm-container-md .crm-form-elem select:hover,
 .crm-container-md .crm-form-elem select.form-select:hover,
 .crm-container-md .crm-form-elem textarea:hover,
@@ -5407,6 +5412,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem input[type="text"]:hover,
 .crm-container-md .crm-form-elem input[type="number"]:hover,
 .crm-container-md .crm-form-elem input.form-text:hover,
+.crm-container-md .crm-form-elem input.form-number:hover,
 .crm-container-md .crm-form-elem select:hover,
 .crm-container-md .crm-form-elem select.form-select:hover,
 .crm-container-md .crm-form-elem textarea:hover,
@@ -5416,6 +5422,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem input[type="text"]:focus,
 .crm-container-md .crm-form-elem input[type="number"]:focus,
 .crm-container-md .crm-form-elem input.form-text:focus,
+.crm-container-md .crm-form-elem input.form-number:focus,
 .crm-container-md .crm-form-elem select:focus,
 .crm-container-md .crm-form-elem select.form-select:focus,
 .crm-container-md .crm-form-elem textarea:focus,
@@ -5425,6 +5432,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem input[type="text"].error:focus,
 .crm-container-md .crm-form-elem input[type="number"].error:focus,
 .crm-container-md .crm-form-elem input.form-text.error:focus,
+.crm-container-md .crm-form-elem input.form-number.error:focus,
 .crm-container-md .crm-form-elem select.error:focus,
 .crm-container-md .crm-form-elem select.form-select.error:focus,
 .crm-container-md .crm-form-elem textarea.error:focus,

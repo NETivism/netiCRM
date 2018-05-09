@@ -588,7 +588,7 @@ SELECT $select
                       $customValue['id'] = $dao->$idName;
                       $customValue['data'] = $fileDAO->uri;
                       $customValue['fid'] = $fileDAO->id;
-                      $customValue['fileURL'] = CRM_Utils_System::url('civicrm/file', "reset=1&id={$fileDAO->id}&eid={$dao->$entityIDName}");
+                      $customValue['fileURL'] = CRM_Utils_System::url('civicrm/file', "reset=1&id={$fileDAO->id}&eid={$dao->$entityIDName}", FALSE, NULL, FALSE);
                       $customValue['displayURL'] = NULL;
                       $deleteExtra = ts('Are you sure you want to delete attached file.');
                       $deleteURL = array(CRM_Core_Action::DELETE =>
