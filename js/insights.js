@@ -1,24 +1,26 @@
 "use strict";
+
 function loadScript(url, callback){
-	var script = document.createElement("script")
-	script.type = "text/javascript";
+  var script = document.createElement("script")
+  script.type = "text/javascript";
 
-	if (script.readyState){  //IE
-			script.onreadystatechange = function(){
-					if (script.readyState == "loaded" ||
-									script.readyState == "complete"){
-							script.onreadystatechange = null;
-							callback();
-					}
-			};
-	} else {  //Others
-			script.onload = function(){
-					callback();
-			};
-	}
+  if (script.readyState){  //IE
+    script.onreadystatechange = function(){
+      if (script.readyState == "loaded" ||
+        script.readyState == "complete"){
+        script.onreadystatechange = null;
+        callback();
+      }
+    };
+  }
+  else {  //Others
+    script.onload = function(){
+      callback();
+    };
+  }
 
-	script.src = url;
-	document.getElementsByTagName("body")[0].appendChild(script);
+  script.src = url;
+  document.getElementsByTagName("body")[0].appendChild(script);
 }
 
 function getHostNameFromUrl(url) {
@@ -30,16 +32,22 @@ function getHostNameFromUrl(url) {
 }
 
 function referrerInfo() {
-	if (typeof navigator.doNotTrack === 'object') {
-		var doNotTrack = navigator.doNotTrack;
-	}
-	else {
-		var doNotTrack = null;
-	}
-	if (!doNotTrack) {
+  if (typeof navigator.doNotTrack === 'object') {
+    var doNotTrack = navigator.doNotTrack;
+  }
+  else {
+    var doNotTrack = null;
+  }
+  if (!doNotTrack) {
+    var dateTime = Date.now();
+    var timestamp = Math.floor(dateTime / 1000);
     var referrerInfo = sessionStorage.getItem('referrerInfo');
     if (referrerInfo) {
       referrerInfo = JSON.parse(referrerInfo);
+    }
+
+    // if someone visit this site over 30mins, we need to get referrer again
+    if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && referrerInfo.timestamp - timestamp < 1800) {
       trackVisit(referrerInfo);
     }
     else {
@@ -48,26 +56,49 @@ function referrerInfo() {
       inbound.referrer.parse(url, referrer, function (err, visitInfo) {
         // set to sessionStorage because we need to make sure same browser different session have diffrent result
         visitInfo.landing = location.href.replace(location.origin, '');
-        sessionStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
+        visitInfo.timestamp = timestamp;
+        if (referrerInfo && typeof referrerInfo.referrer !== 'undefined') {
+          if (visitInfo.referrer.type !== 'direct' && visitInfo.referrer.type !== 'internal') {
+            sessionStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
+          }
+          else {
+            visitInfo = referrerInfo;
+          }
+        }
+        else {
+          sessionStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
+        }
         trackVisit(visitInfo);
       });
     }
-	}
+  }
 }
 
-<<<<<<< HEAD
 function trackVisit(visitInfo) {
   if (typeof cj === 'undefined') {
     return;
   }
-
-  if (cj("input[type=hidden][name=qfKey]").val()) {
-    // required session key
+  cj(document).ready(function($){
     var object = {};
-    object['session_key'] = cj("input[type=hidden][name=qfKey]").val();
-    object['landing'] = visitInfo.landing ? visitInfo.landing : '';
+    if (location.href.match(/civicrm\/event\/(register|info)/)) {
+      object['page_type'] = 'civicrm_event';
+    }
+    else if (location.href.match(/civicrm\/contribute\/transact/)) {
+      object['page_type'] = 'civicrm_contribution_page';
+    }
+    else if (location.href.match(/civicrm\/profile\/create/)) {
+      object['page_type'] = 'civicrm_profile';
+    }
+    var page_id = location.search.match(/id=(\d+)/);
+    if (page_id) {
+      object['page_id'] = page_id[1];
+    }
+    if (!object['page_type'] || !object['page_id']) {
+      return;
+    }
 
     // prepare 
+    object['landing'] = visitInfo.landing ? visitInfo.landing : '';
     object['referrer_type'] = visitInfo.referrer.type;
     object['referrer_network'] = '';
     object['referrer_url'] = '';
@@ -111,13 +142,18 @@ function trackVisit(visitInfo) {
     }
 
     // prepare url
-    console.log(object);
-  }
+    $.ajax({
+      type: "POST",
+      url: '/civicrm/ajax/track',
+      data: JSON.stringify(object),
+      dataType: 'text'
+    });
+  });
 }
 
 var currentScriptSrc = document.currentScript.src;
-currentScriptSrc = currentScriptSrc.replace(/insights\.js.*$/, 'inbound.js');
-loadScript(currentScriptSrc, function(){
+var inboundSrc = currentScriptSrc.replace(/insights\.js.*$/, 'inbound.js');
+loadScript(inboundSrc, function(){
   referrerInfo();
 });
 

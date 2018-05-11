@@ -1364,37 +1364,29 @@ WHERE  v.option_group_id = g.id
   }
 
   public function track($pageName = '', $entityTable = NULL, $entityId = NULL) {
-    if (!empty($this->controller->_key)) {
-      $qfkey = $this->controller->_key;
-      $page_id = $this->_values['event']['id'];
-      if (empty($pageName)) {
-        $actionName = $this->controller->getActionName();
-        list($pageName, $action) = $actionName;
-      }
-      $pageName = strtolower($pageName);
-      $state = array(
-        'register' => 1,
-        'confirm' => 2,
-        'payment' => 3,
-        'thankyou' => 4
-      );
-      $params = array(
-        'session_key' => $qfkey,
-        'state' => $state[$pageName],
-      );
-      if ($params['state'] == 1) {
-        $params['visit_date'] = date('Y-m-d H:i:s');
-        $params['page_type'] = 'civicrm_event';
-        if ($this->_values['event']['id']) {
-          $params['page_id'] = $page_id;
-        }
-      }
-      if ($entityTable && $entityId) {
-        $params['entity_table'] = $entityTable;
-        $params['entity_id'] = $entityId;
-      }
-      CRM_Core_BAO_Track::add($params);
+    $page_id = $this->_values['event']['id'];
+    if (empty($pageName)) {
+      $actionName = $this->controller->getActionName();
+      list($pageName, $action) = $actionName;
     }
+    $pageName = strtolower($pageName);
+    $state = array(
+      'register' => 1,
+      'confirm' => 2,
+      'payment' => 3,
+      'thankyou' => 4
+    );
+    $params = array(
+      'state' => $state[$pageName],
+      'page_type' => 'civicrm_event',
+      'page_id' => $page_id,
+      'visit_date' => date('Y-m-d H:i:s'),
+    );
+    if ($entityTable && $entityId) {
+      $params['entity_table'] = $entityTable;
+      $params['entity_id'] = $entityId;
+    }
+    CRM_Core_BAO_Track::add($params);
   }
 }
 
