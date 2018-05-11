@@ -108,6 +108,31 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     // block contribution
     $this->preProcess();
 
+    // refs #22871 add chart data
+    $summary_contrib = array();
+    if($_GET['start_date']){
+      $cc_filter['start_date'] = $_GET['start_date'];
+    }
+    if($_GET['end_date']){
+      $cc_filter['end_date'] = $_GET['end_date'];
+    }
+    $filter_time = !empty($cc_filter) ? $cc_filter : array('start_date' => date('Y').'-01-01', 'end_date' => date('Y-m-d'));
+
+    $filter_recur = array('contribution_recur_id' => TRUE);
+    $filter_not_recur = array('contribution_recur_id' => FALSE);
+    $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_time+$filter_recur));
+    $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_time+$filter_not_recur));
+
+    $filter_time = array('start_date' => date('Y-m-d', strtotime('-30day')), 'end_date' => date('Y-m-d'));
+    $summary_contrib['Last30DaysContrib']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'DAY'), array('contribution' => $filter_time+$filter_recur));
+    $summary_contrib['Last30DaysContrib']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'DAY'), array('contribution' => $filter_time+$filter_not_recur));
+
+    $summary_contrib['Last30DaysProvince']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, array('contribution' => 1, 'seperate_other' => 1), array('contribution' => $filter_time+$filter_recur));
+    $summary_contrib['Last30DaysProvince']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,array('contribution' => 1, 'seperate_other' => 1), array('contribution' => $filter_time+$filter_not_recur));
+    if($_GET['debug']){
+      dpm($summary_contrib);
+    }
+
     // block recur
     $template =& CRM_Core_Smarty::singleton();
     $components = CRM_Core_Component::getEnabledComponents();
