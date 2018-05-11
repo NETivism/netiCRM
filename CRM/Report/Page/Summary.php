@@ -48,6 +48,17 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    */
   function run() {
 
+    $cc_filter = array();
+    if($_GET['start_date']){
+      $cc_filter['start_date'] = $_GET['start_date'];
+    }
+    if($_GET['end_date']){
+      $cc_filter['end_date'] = $_GET['end_date'];
+    }
+    if(!empty($cc_filter)){
+      $filter = array('contribution' => $cc_filter);
+    }
+
     $components = CRM_Core_Component::getEnabledComponents();
     $path = get_class($this);
     $allData = CRM_Core_BAO_Cache::getItem('Report Page Summary', $path.'_reportPageSummary', $components['CiviReport']->componentID);
@@ -59,9 +70,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $allData['mailing'] = CRM_Report_BAO_Summary::getMailingData();
       $params = array('contribution' => 1);
       $allData['statistic_by_condition'] = array(
-        'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER,$params),
-        'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE,$params),
-        'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,$params),
+        'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER,$params, $filter),
+        'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE,$params, $filter),
+        'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,$params, $filter),
         );
       $allData['participant_after_mailing'] = CRM_Report_BAO_Summary::getPartAfterMailData();
       $allData['contribute_after_mailing'] = CRM_Report_BAO_Summary::getConAfterMailData();
