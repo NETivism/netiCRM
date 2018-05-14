@@ -56,7 +56,7 @@
         {elseif $form.discount_id.label}
             <tr class="crm-event-eventfees-form-block-discount_id"><td class="label">&nbsp;&nbsp;{$form.discount_id.label}</td><td>{$form.discount_id.html}</td></tr>
         {/if}
-        {if $action EQ 2 and $hasPayment and $onlinePayment and !$onlinePendingContributionId}
+        {if $action EQ 2 and $hasPayment and $onlinePayment}
             <tr class="crm-event-eventfees-form-block-fee_level"><td class="label">&nbsp;&nbsp;{ts}Event Level{/ts}</td><td class="view-value"><span class="bold">{$fee_level}&nbsp;{if $fee_amount}- {$fee_amount|crmMoney:$fee_currency}{/if}</span></td></tr>
         {else}
             <tr class="crm-event-eventfees-form-block-fee_amount"><td class="label">{ts}Event Level{/ts}</td><td>{$form.amount.html}

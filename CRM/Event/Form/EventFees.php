@@ -347,6 +347,11 @@ class CRM_Event_Form_EventFees {
           $form->assign("original_total_amount", $contribution->$f);
           $defaults[$form->_pId][$f] = $contribution->$f;
         }
+        elseif ($f == 'trxn_id' && !empty($contribution->$f)) {
+          $defaults[$form->_pId][$f] = $contribution->$f;
+          $form->getElement('trxn_id')->freeze();
+          $form->getElement('total_amount')->freeze();
+        }
         else {
           $defaults[$form->_pId][$f] = $contribution->$f;
         }
@@ -533,9 +538,6 @@ SELECT  id, html_type
         $form->assign('showTransactionId', FALSE);
         if ($path != 'civicrm/contact/search/basic') {
           $form->add('text', 'trxn_id', ts('Transaction ID'));
-          $form->addRule('trxn_id', ts('Transaction ID already exists in Database.'),
-            'objectExists', array('CRM_Contribute_DAO_Contribution', $form->_eventId, 'trxn_id')
-          );
           $form->assign('showTransactionId', TRUE);
         }
 
