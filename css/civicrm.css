@@ -2686,6 +2686,26 @@ span.icon {
 .Note-icon:before { content: "\f25b"; }
 .Relationship-icon:before { content: "\f30d"; }
 
+/* media embed */
+.crm-container .media_embed {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  width: auto !important;
+  height: 0 !important;
+  overflow: hidden;
+}
+.crm-container .media_embed iframe,
+.crm-container .media_embed object,
+.crm-container .media_embed video,
+.crm-container .media_embed embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 /* accordion styles */
 
 .crm-accordion-header {
@@ -5856,26 +5876,6 @@ input.crm-form-textfield,
 }
 
 @media screen and (max-width: 768px) {
-  /* media embed */ 
-  .media_embed {
-    position: relative;
-    padding-bottom: 56.25%;
-    padding-top: 30px;
-    width: auto !important;
-    height: 0 !important;
-    overflow: hidden;
-  }
-  .media_embed iframe,
-  .media_embed object,
-  .media_embed video,
-  .media_embed embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-
   .crm-container {
     margin-top: 0;
   }
