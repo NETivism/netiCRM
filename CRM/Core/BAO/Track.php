@@ -27,7 +27,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       $params['visit_date'] = date('Y-m-d H:i:s');
     }
     $params['session_key'] = session_id();
-    $params['session_key'] = "{$params['session_key']}_{$params['page_type']}_{$params['page_id']}}";
+    $params['session_key'] = "{$params['session_key']}_{$params['page_type']}_{$params['page_id']}";
     if ($params['session_key']) {
       $track = new CRM_Core_DAO_Track();
       $track->session_key = $params['session_key'];
