@@ -289,6 +289,22 @@ class CRM_Utils_Hook {
   }
 
   /**
+   * Change menu item xml
+   *
+   * @param $items
+   *   Contribution id
+   */
+  static function menuItems(&$items) {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+
+    return call_user_func_array(array($config->userHookClass, 'invoke'), array(
+      1, &$items, &$null, &$null, &$null, &$null, 'civicrm_menuItems'
+    ));
+  }
+
+  /**
    * This hook is called when rendering the dashboard (q=civicrm/dashboard)
    *
    * @param int $contactID - the contactID for whom the dashboard is being rendered

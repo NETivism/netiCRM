@@ -71,7 +71,7 @@ class CRM_Core_Menu {
       $coreMenuFilesNamespace = 'CRM_Core_xml_Menu';
       $coreMenuFilesPath = str_replace('_', DIRECTORY_SEPARATOR, $coreMenuFilesNamespace);
       global $civicrm_root;
-      $files = CRM_Utils_File::getFilesByExtension($civicrm_root . DIRECTORY_SEPARATOR . $coreMenuFilesPath, 'xml');
+      $files = CRM_Utils_File::getFilesByExtension($civicrm_root . $coreMenuFilesPath, 'xml');
 
       // Grab component menu files
       $files = array_merge($files,
@@ -157,7 +157,9 @@ class CRM_Core_Menu {
    * @access public
    */
   static function &items() {
-    return self::xmlItems();
+    $items = self::xmlItems();
+    CRM_Utils_Hook::menuItems($items);
+    return $items;
   }
 
   static function isArrayTrue(&$values) {
