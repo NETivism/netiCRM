@@ -132,6 +132,24 @@
 <div class="chartist-test">
 {php}
   $chart = array(
+    'id' => 'chart-stack-bar',
+    'classes' => array('ct-chart-bar'),
+    'selector' => '#chart-stack-bar',
+    'type' => 'Bar',
+    'labels' => json_encode(array('Q1', 'Q2', 'Q3', 'Q4')),
+    'series' => json_encode(array(array(8, 12, 14, 13), array(2, 4, 5, 3), array(1, 2, 4, 6))),
+    'seriesUnit' => 'k',
+    'withToolTip' => true,
+    'stackBars' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
+
+<div class="chartist-test">
+{php}
+  $chart = array(
     'id' => 'chart-funnel',
     'selector' => '#chart-funnel',
     'labels' => json_encode(array('成功寄送', '開信次數', '點擊次數')),
