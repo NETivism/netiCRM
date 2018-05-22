@@ -775,13 +775,18 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         break;
 
       case 'Select':
-        $selectOption = &CRM_Core_BAO_CustomOption::valuesByID($field->id,
-          $field->option_group_id
-        );
-        $qf->add('select', $elementName, $label,
-          array('' => ts('- select -')) + $selectOption,
-          (($useRequired || ($useRequired && $field->is_required)) && !$search)
-        );
+        $selectOption = CRM_Core_BAO_CustomOption::valuesByID($field->id, $field->option_group_id); // array value => label
+        $selectGrouping = CRM_Core_OptionGroup::valuesByID($field->option_group_id, FALSE, TRUE); // array label => grouping
+        $attributes = !empty($field->attributes) ? $field->attributes : '';
+        $qf->addSelect($elementName, $label,  array('' => ts('- select -')), $field->attributes, (($useRequired || ($useRequired && $field->is_required)) && !$search));
+        $el = $qf->getElement($elementName);
+        foreach($selectOption as $value => $label) {
+          $attributes = array();
+          if (!empty($selectGrouping[$label])) {
+            $attributes['data-parent-filter'] = $selectGrouping[$label];
+          }
+          $el->addOption($label, $value, $attributes);
+        }
         break;
 
       //added for select multiple

@@ -81,6 +81,7 @@ packages/jquery/plugins/jquery.blockUI.js
 js/rest.js
 
 js/jquery/jquery.crmaccordions.js
+js/jquery/jquery.crmdependentselect.js
 js/jquery/jquery.crmasmselect.js
 js/jquery/jquery.crmtooltip.js
 js/jquery/jquery.disablesubmit.js

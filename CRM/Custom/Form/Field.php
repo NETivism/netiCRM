@@ -211,6 +211,11 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
         );
         $this->_defaultDataType = $defaults['data_type'];
       }
+      if ($defaults['attributes']) {
+        if (preg_match('/data-parent=(\d+)/i', $defaults['attributes'], $matches)) {
+          $defaults['parent'] = $matches[1];
+        }
+      }
 
       $defaults['option_type'] = 2;
     }
@@ -287,6 +292,21 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $sel->setOptions(array($dt, $it));
     if ($this->_action == CRM_Core_Action::UPDATE) {
       $this->freeze('data_type');
+
+      // only update can choose selection type
+      if ($this->_values['html_type'] == 'Select') {
+        $parentOptions = array('' => ts('- select Parent -'));
+        $params = array('id' => $this->_values['custom_group_id']);
+        $customGroup = array();
+        CRM_Core_BAO_CustomGroup::retrieve($params, $customGroup);
+        $customFields = CRM_Core_BAO_CustomField::getFields($customGroup['extends']);
+        foreach($customFields as $fieldId => $field) {
+          if ($field['html_type'] == 'Select' && $fieldId != $this->_values['id']) {
+            $parentOptions[$fieldId] = $field['label'];
+          }
+        }
+        $this->addSelect('parent', ts('Parent'), $parentOptions);
+      }
     }
     $includeFieldIds = NULL;
     if ($this->_action == CRM_Core_Action::UPDATE) {
@@ -895,11 +915,16 @@ SELECT id
       }
     }
 
+
     // need the FKEY - custom group id
     $params['custom_group_id'] = $this->_gid;
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $params['id'] = $this->_id;
+      if ($params['parent']) {
+        $params['attributes'] = 'data-parent='.$params['parent'];
+        unset($params['parent']);
+      }
     }
 
     $customField = CRM_Core_BAO_CustomField::create($params);

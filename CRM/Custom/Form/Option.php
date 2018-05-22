@@ -79,6 +79,26 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    */
   public function preProcess() {
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this);
+    if ($this->_fid) {
+      $params = array(
+        'id' => $this->_fid
+      );
+      $field = array();
+      CRM_Core_BAO_CustomField::retrieve($params, $field);
+      if (!empty($field['attributes']) && strstr($field['attributes'], 'data-parent=')) {
+        $matches = array();
+        if (preg_match('/data-parent=(\d+)/i', $field['attributes'], $matches)) {
+          $parentFieldId = (int)$matches[1];
+          $params = array('id' => $parentFieldId);
+          CRM_Core_BAO_CustomField::retrieve($params, $field);
+          if ($field['id'] == $parentFieldId && $field['option_group_id']) {
+            $optionValues = CRM_Core_OptionGroup::valuesByID($field['option_group_id']);
+            $this->_parent['id'] = $parentFieldId;
+            $this->_parent['options'] = $optionValues;
+          }
+        }
+      }
+    }
 
     $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
     if (!isset($this->_gid) && $this->_fid) {
@@ -183,6 +203,11 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
 
       // weight
       $this->add('text', 'weight', ts('Order'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'weight'), TRUE);
+
+      if (!empty($this->_parent['id']) && is_array($this->_parent['options'])) {
+        $options = array('' => ts('- select Parent -')) + $this->_parent['options'];
+        $this->addSelect('grouping', ts('Parent'), $options);
+      }
       $this->addRule('weight', ts('is a numeric field'), 'numeric');
 
       // is active ?
@@ -395,6 +420,9 @@ SELECT count(*)
     $customOption->name = CRM_Utils_String::titleToVar($params['label']);
     $customOption->weight = $params['weight'];
     $customOption->value = $params['value'];
+    if ($params['grouping']) {
+      $customOption->grouping = $params['grouping'];
+    }
     $customOption->is_active = CRM_Utils_Array::value('is_active', $params, FALSE);
 
     if ($this->_action == CRM_Core_Action::DELETE) {
