@@ -42,6 +42,13 @@
         <tr class="crm-custom_option-form-block-value">
             <td class="label">{$form.value.label}</td>
             <td>{$form.value.html}</td>
+        </tr>
+        {if $form.grouping}
+        <tr class="crm-custom_option-form-block-grouping">
+            <td class="label">{$form.grouping.label}</td>
+            <td>{$form.grouping.html}</td>
+        </tr>
+        {/if}
         <tr class="crm-custom_option-form-block-weight">
             <td class="label">{$form.weight.label}</td>
             <td>{$form.weight.html}</td>
