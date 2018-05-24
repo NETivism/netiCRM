@@ -1315,7 +1315,7 @@ CREATE TABLE {$exportTempTable} (
     }
 
     $sql .= "
-) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci
+) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 ";
 
     CRM_Core_DAO::executeQuery($sql);

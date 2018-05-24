@@ -49,7 +49,7 @@ class CRM_Upgrade_Incremental_php_ThreeThree {
     // insert name column for custom field table.
     // make sure name for custom field, group and
     // profile should be unique and properly munged.
-    $colQuery = 'ALTER TABLE `civicrm_custom_field` ADD `name` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL AFTER `custom_group_id` ';
+    $colQuery = 'ALTER TABLE `civicrm_custom_field` ADD `name` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `custom_group_id` ';
     CRM_Core_DAO::executeQuery($colQuery, CRM_Core_DAO::$_nullArray, TRUE, NULL, FALSE, FALSE);
 
     require_once 'CRM/Utils/String.php';
