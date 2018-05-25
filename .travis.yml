@@ -34,7 +34,7 @@ before_install:
     innodb_large_prefix=ON
     innodb_file_format=Barracuda
     innodb_file_format_max=Barracuda" | sudo tee /etc/mysql/my.cnf
-  - sudo service mysql restart
+  - sudo /etc/init.d/mysql restart
   - mysql -e 'CREATE DATABASE neticrmci;'
 
 install:
