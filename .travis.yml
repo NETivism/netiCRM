@@ -2,17 +2,14 @@ sudo: false
 language: php
 
 php:
-  - 5.4
   - 5.5
   - 5.6
 
 env:
   - RUNPORT=8080
 
-mysql:
-  database: neticrmci
-  username: root
-  encoding: utf8
+services:
+  - mysql
 
 git:
   submodules: false
@@ -36,8 +33,9 @@ before_install:
     collation_server=utf8mb4_unicode_ci
     innodb_large_prefix=ON
     innodb_file_format=Barracuda
-    innodb_file_format_max=Barracuda" | sudo tee /etc/mysql/conf.d/travis.cnf
-  - sudo /etc/init.d/mysql restart
+    innodb_file_format_max=Barracuda" | sudo tee /etc/mysql/my.cnf
+  - sudo service mysql restart
+  - mysql -e 'CREATE DATABASE neticrmci;'
 
 install:
   # casperjs
