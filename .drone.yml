@@ -20,3 +20,5 @@ pipeline:
     image: drillster/drone-email
     from: noreply@mail.neticrm.tw
     secrets: [email_port, email_host, email_username, email_password, email_recipients]
+    when:
+      status: [ changed, failure, success ]
