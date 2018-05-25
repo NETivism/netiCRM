@@ -18,6 +18,7 @@ pipeline:
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
   notify:
     image: drillster/drone-email
+    skip_verify: true
     from: noreply@mail.neticrm.tw
     secrets: [email_port, email_host, email_username, email_password, email_recipients]
     when:
