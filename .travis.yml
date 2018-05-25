@@ -56,7 +56,7 @@ install:
   - ln -s $(readlink -e $(cd -)) civicrm
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e 'create database neticrmci CHARACTER SET'
+  - mysql -e 'create database neticrmci CHARACTER SET utf8 COLLATE utf8_general_ci'
   - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/neticrmci --account-pass=123456 --site-name=netiCRM --enable=transliteration neticrmci 
 
   # reference and enable civicrm in build site
