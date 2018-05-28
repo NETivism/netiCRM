@@ -98,6 +98,30 @@
 
 <div class="chartist-test">
 {php}
+  /*
+  疊合區域圖範例 - 相關參數
+
+  stackLines：是否讓 Line 圖表有疊合效果，資料格式為布林值，預設為「false」
+  */
+
+  $chart = array(
+    'id' => 'chart-stack-line',
+    'selector' => '#chart-stack-line',
+    'type' => 'Line',
+    'labels' => json_encode(array('Q1', 'Q2', 'Q3', 'Q4')),
+    'series' => json_encode(array(array(8, 12, 14, 13), array(2, 4, 5, 3), array(1, 2, 4, 6))),
+    'seriesUnit' => '$ ',
+    'seriesUnitPosition'=> 'prefix',
+    'withToolTip' => true,
+    'stackLines' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
+
+<div class="chartist-test">
+{php}
   $chart = array(
     'id' => 'chart-bar',
     'classes' => array('ct-chart-bar'),
