@@ -143,7 +143,10 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     $recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['recur']);
     $not_recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['not_recur']);
-
+    for ($i=1; $i < 12; $i++) {
+      $recur_year_sum[$i] += $recur_year_sum[$i-1];
+      $not_recur_year_sum[$i] += $not_recur_year_sum[$i-1];
+    }
 
     $chart = array(
       'id' => 'chart-one-year',
