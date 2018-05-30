@@ -179,7 +179,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     );
     $template->assign('chart_last_30_sum', $chart);
 
-    $last_30_province_label = $summary_contrib['Last30DaysProvince']['recur']['label']+$summary_contrib['Last30DaysProvince']['not_recur']['label'];
+    $last_30_province_label =  array_unique(array_merge($summary_contrib['Last30DaysProvince']['recur']['label'], $summary_contrib['Last30DaysProvince']['not_recur']['label']));
     $last_30_province_recur_sum = self::getDateForChart($last_30_province_label, $summary_contrib['Last30DaysProvince']['recur']);
     $last_30_province_not_recur_sum = self::getDateForChart($last_30_province_label, $summary_contrib['Last30DaysProvince']['not_recur']);
 
