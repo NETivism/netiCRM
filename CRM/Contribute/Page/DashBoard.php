@@ -141,8 +141,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $year_month_label[] = $year_month;
     }
 
-    $recur_year_sum = self::getDateForChart($year_month_label, $summary_contrib['ContribThisYear']['recur']);
-    $not_recur_year_sum = self::getDateForChart($year_month_label, $summary_contrib['ContribThisYear']['not_recur']);
+    $recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['recur']);
+    $not_recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['not_recur']);
 
 
     $chart = array(
@@ -164,8 +164,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $last_30_label[] = $date;
       $recur_index = array_search($date, $summary_contrib['Last30DaysContrib']['recur']['label']);
     }
-    $recur_30_sum = self::getDateForChart($last_30_label, $summary_contrib['Last30DaysContrib']['recur']);
-    $not_recur_30_sum = self::getDateForChart($last_30_label, $summary_contrib['Last30DaysContrib']['not_recur']);
+    $recur_30_sum = self::getDataForChart($last_30_label, $summary_contrib['Last30DaysContrib']['recur']);
+    $not_recur_30_sum = self::getDataForChart($last_30_label, $summary_contrib['Last30DaysContrib']['not_recur']);
 
     $chart = array(
       'id' => 'chart-30-sum',
@@ -179,9 +179,11 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     );
     $template->assign('chart_last_30_sum', $chart);
 
-    $last_30_province_label =  array_unique(array_merge($summary_contrib['Last30DaysProvince']['recur']['label'], $summary_contrib['Last30DaysProvince']['not_recur']['label']));
-    $last_30_province_recur_sum = self::getDateForChart($last_30_province_label, $summary_contrib['Last30DaysProvince']['recur']);
-    $last_30_province_not_recur_sum = self::getDateForChart($last_30_province_label, $summary_contrib['Last30DaysProvince']['not_recur']);
+    $last_30_province_recur_label = empty($summary_contrib['Last30DaysProvince']['recur'])?array():$summary_contrib['Last30DaysProvince']['recur']['label'];
+    $last_30_province_not_recur_label = empty($summary_contrib['Last30DaysProvince']['not_recur'])?array():$summary_contrib['Last30DaysProvince']['not_recur']['label'];
+    $last_30_province_label =  array_unique(array_merge($last_30_province_recur_label, $last_30_province_not_recur_label));
+    $last_30_province_recur_sum = self::getDataForChart($last_30_province_label, $summary_contrib['Last30DaysProvince']['recur']);
+    $last_30_province_not_recur_sum = self::getDataForChart($last_30_province_label, $summary_contrib['Last30DaysProvince']['not_recur']);
 
     $chart = array(
       'id' => 'chart-30-province-sum',
@@ -295,7 +297,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 
-  private static function getDateForChart($label_array, $summary_array, $type='sum'){
+  private static function getDataForChart($label_array, $summary_array, $type='sum'){
     $return_array = array();
     foreach ($label_array as $label) {
       $recur_index = array_search($label, $summary_array['label']);
