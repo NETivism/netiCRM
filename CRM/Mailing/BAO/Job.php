@@ -486,7 +486,9 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     $isDelivered = FALSE;
 
     // make sure that there's no more than $config->mailerBatchLimit mails processed in a run
+    $ranQueue = 0;
     while ($eq->fetch()) {
+      $ranQueue++;
       // if ( ( $mailsProcessed % 100 ) == 0 ) {
       // CRM_Utils_System::xMemory( "$mailsProcessed: " );
       // }
@@ -522,6 +524,9 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
     if (!empty($fields)) {
       $isDelivered = $this->deliverGroup($fields, $mailing, $mailer, $job_date, $attachments);
+    }
+    else if (!$ranQueue) { // running job in empty queue
+      $isDelivered = TRUE;
     }
     return $isDelivered;
   }
