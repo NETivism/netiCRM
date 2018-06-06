@@ -155,6 +155,12 @@ function custom_option_html_type( ) {
             </table>
             </td>
         </tr>
+        {if $form.parent}
+        <tr>
+            <td class="label">{$form.parent.label}</td>
+            <td class="html-adjust">{$form.parent.html}</td>
+        </tr>
+        {/if}
         <tr  class="crm-custom-field-form-block-options_per_line" id="optionsPerLine" {if $action neq 2 && ($form.data_type.value.0.0 >= 4 && $form.data_type.value.1.0 neq 'CheckBox' || $form.data_type.value.1.0 neq 'Radio' )}class="hide-block"{/if}>
             <td class="label">{$form.options_per_line.label}</td>	
             <td class="html-adjust">{$form.options_per_line.html|crmReplace:class:two}</td>

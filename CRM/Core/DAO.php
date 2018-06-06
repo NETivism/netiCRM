@@ -195,7 +195,10 @@ class CRM_Core_DAO extends DB_DataObject {
    */
   function keys() {
     static $keys;
-    if (!isset($keys)) {
+    if (!empty($this->_primaryKey)) {
+      return array($this->_primaryKey);
+    }
+    elseif (!isset($keys)) {
       $keys = array('id');
     }
     return $keys;
@@ -211,7 +214,10 @@ class CRM_Core_DAO extends DB_DataObject {
    */
   function sequenceKey() {
     static $sequenceKeys;
-    if (!isset($sequenceKeys)) {
+    if (!empty($this->_primaryKey)) {
+      return array(FALSE, FALSE, $this->_primaryKey);
+    }
+    elseif (!isset($sequenceKeys)) {
       $sequenceKeys = array('id', TRUE);
     }
     return $sequenceKeys;
@@ -260,7 +266,13 @@ class CRM_Core_DAO extends DB_DataObject {
   }
 
   function save() {
-    if ($this->id) {
+    if (!empty($this->_primaryKey)) {
+      $key = $this->_primaryKey;
+    }
+    else {
+      $key = 'id';
+    }
+    if ($this->$key) {
       $this->update();
     }
     else {

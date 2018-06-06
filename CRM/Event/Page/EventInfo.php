@@ -54,6 +54,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
   function run() {
     //get the event id.
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
+    $this->track();
     $config = CRM_Core_Config::singleton();
     require_once 'CRM/Event/BAO/Event.php';
     // ensure that the user has permission to see this page
@@ -336,6 +337,16 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       }
     }
     return parent::getTemplateFileName();
+  }
+
+  function track() {
+    $params = array(
+      'state' => '0',
+      'page_type' => 'civicrm_event',
+      'page_id' => $this->_id,
+      'visit_date' => date('Y-m-d H:i:s'),
+    );
+    CRM_Core_BAO_Track::add($params);
   }
 }
 

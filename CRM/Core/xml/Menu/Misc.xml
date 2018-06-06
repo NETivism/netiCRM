@@ -79,7 +79,6 @@
   <item>
      <path>civicrm/apibrowser</path>
      <page_callback>CRM_Admin_Page_APIExplorer</page_callback>
-     <access_arguments>access CiviCRM</access_arguments>
      <access_callback>1</access_callback>
      <is_public>true</is_public>
   </item>
@@ -118,6 +117,11 @@
   <item>
      <path>civicrm/ajax/applepay/transact</path>
      <page_callback>CRM_Core_Payment_Mobile::transact</page_callback> 
+     <access_callback>1</access_callback>
+  </item>
+  <item>
+     <path>civicrm/ajax/track</path>
+     <page_callback>CRM_Core_BAO_Track::ajax</page_callback> 
      <access_callback>1</access_callback>
   </item>
 </menu>

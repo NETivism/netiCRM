@@ -98,6 +98,15 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
        */
       static $_log = {$table.log};
 
+     {if $table.primaryKey.name != "id"}
+     /**
+      * table primary key
+      *
+      * @var string
+      */
+      public $_primaryKey = '{$table.primaryKey.name}';
+     {/if}
+
 {foreach from=$table.fields item=field}
     /**
 {if $field.comment}

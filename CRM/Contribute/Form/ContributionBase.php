@@ -591,6 +591,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     if (CRM_Utils_Request::retrieve('cancel', 'Boolean', CRM_Core_DAO::$_nullObject)) {
       self::cancelRecurring();
     }
+
+    // tracking click
+    $this->_ppType = CRM_Utils_Array::value('type', $_GET);
+    if (!$this->_ppType) {
+      $this->track();
+    }
   }
 
   /**
@@ -927,6 +933,32 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         CRM_Contribute_BAO_Contribution::deleteContribution($contribId);
       }
     }
+  }
+
+  public function track($pageName = '', $entityTable = NULL, $entityId = NULL) {
+    $page_id = $this->_values['id'];
+    if (empty($pageName)) {
+      $actionName = $this->controller->getActionName();
+      list($pageName, $action) = $actionName;
+    }
+    $pageName = strtolower($pageName);
+    $state = array(
+      'main' => 1,
+      'confirm' => 2,
+      'payment' => 3,
+      'thankyou' => 4
+    );
+    $params = array(
+      'state' => $state[$pageName],
+      'page_type' => 'civicrm_contribution_page',
+      'page_id' => $page_id,
+      'visit_date' => date('Y-m-d H:i:s'),
+    );
+    if ($entityTable && $entityId) {
+      $params['entity_table'] = $entityTable;
+      $params['entity_id'] = $entityId;
+    }
+    CRM_Core_BAO_Track::add($params);
   }
 }
 

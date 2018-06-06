@@ -51,6 +51,8 @@
   var isDonut = {/literal}{$chartist.isDonut|default:0}{literal};
   var isFillDonut = {/literal}{$chartist.isFillDonut|default:0}{literal};
   var animation = {/literal}{$chartist.animation|default:0}{literal};
+  var stackBars = {/literal}{$chartist.stackBars|default:0}{literal};
+  var stackLines = {/literal}{$chartist.stackLines|default:0}{literal};
   var chartSelector = "{/literal}{$chartist.selector|default:'.chartist-chart'}{literal}";
   var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
@@ -205,6 +207,22 @@
     return data;
   }
 
+  var renderStackLinesSeries = function(series) {
+    for (var i = 0; i < series.length; i++) {
+      if (i > 0) {
+        for (var j = 0; j < series[i].length; j++) {
+          series[i][j] = series[i-1][j] + series[i][j];
+        }
+      }
+    }
+
+    return series;
+  }
+
+  if (chartType == 'Line' && stackLines) {
+    chartSeries = renderStackLinesSeries(chartSeries);
+  }
+
   var data = {
     // Our series array that contains series objects or in this case series data arrays
     "series": chartSeries
@@ -301,6 +319,19 @@
   options.labelOffset = 65;
   cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-legend');
   renderChartLegend(chartSelector, data, seriesUnit);
+{/literal}{/if}
+
+{if $chartist.type eq 'Line' && $chartist.stackLines}{literal}
+  options.showArea = true;
+  options.showPoint = false;
+  options.showLine = false;
+  options.low = 0;
+  options.classNames = {};
+  options.classNames.chart = 'ct-chart-line ct-chart-line-stacked';
+{/literal}{/if}
+
+{if $chartist.type eq 'Bar' && $chartist.stackBars}{literal}
+  options.stackBars = {/literal}{$chartist.stackBars}{literal};
 {/literal}{/if}
 
 {if $chartist.labelOffset}{literal}

@@ -24,67 +24,88 @@
  +--------------------------------------------------------------------+
 *}
 {* CiviContribute DashBoard (launch page) *}
-{if $buildTabularView}
-<table class="report">
-<tr class="columnheader-dark">
-    <th scope="col">{ts}Period{/ts}</th>
-    <th scope="col">{ts}Total Amount{/ts}</th>
-    <th scope="col" title="Contribution Count"><strong>#</strong></th><th></th></tr>
-<tr>
-    <td><strong>{ts}Current Month-To-Date{/ts}</strong></td>
-    <td class="label">{if NOT $monthToDate.Valid.amount}{ts}(n/a){/ts}{else}{$monthToDate.Valid.amount}{/if}</td>
-    <td class="label">{$monthToDate.Valid.count}</td>
-    <td><a href="{$monthToDate.Valid.url}">{ts}view details{/ts}...</a></td>
-</tr>
-<tr>
-    <td><strong>{ts}Current Fiscal Year-To-Date{/ts}</strong></td>
-    <td class="label">{if NOT $yearToDate.Valid.amount}{ts}(n/a){/ts}{else}{$yearToDate.Valid.amount}{/if}</td>
-    <td class="label">{$yearToDate.Valid.count}</td>
-    <td><a href="{$yearToDate.Valid.url}">{ts}view details{/ts}...</a></td>
-</tr>
-<tr>
-    <td><strong>{ts}Cumulative{/ts}</strong><br />{ts}(since inception){/ts}</td>
-    <td class="label">{if NOT $startToDate.Valid.amount}{ts}(n/a){/ts}{else}{$startToDate.Valid.amount}{/if}</td>
-    <td class="label">{$startToDate.Valid.count}</td>
-    <td><a href="{$startToDate.Valid.url}">{ts}view details{/ts}...</a></td>
-</tr>
-</table>
-{elseif $buildChart}
-  {include file = "CRM/Contribute/Form/ContributionCharts.tpl"}
-{else} 
-<div class="crm-section dashboard-section">
-  <h3>{ts}Contribution Summary{/ts} {help id="id-contribute-intro"}</h3>
-      <div id="mainTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-           <li id="chart_view"   class="crm-tab-button ui-state-active ui-corner-top ui-corner-bottom ui-tabs-selected" > 
-             <a href="#chart_layout"><span>&nbsp;</span>&nbsp;{ts}Chart Layout{/ts}&nbsp;</a> </li>
-           <li id ="table_view"  class="crm-tab-button ui-corner-top ui-corner-bottom ui-state-default" >
-             <a href="#table_layout"><span>&nbsp;</span>&nbsp;{ts}Table Layout{/ts}&nbsp;</a>
-           </li>
-{if $isAdmin}
- {capture assign=newPageURL}{crmURL p="civicrm/admin/contribute/add" q="action=add&reset=1"}{/capture}
- {capture assign=configPagesURL}{crmURL p="civicrm/admin/contribute" q="reset=1"}{/capture}
 
-<div class="float-right">
-     <span><a href="{$configPagesURL}" class="button"><span>{ts}Manage Contribution Pages{/ts}</span></a></span>
-    <span><a href="{$newPageURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Contribution Page{/ts}</span></a></span>
-</tr>
-</table>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="chartist">
+    {include file="CRM/common/chartist.tpl" chartist=$chart_this_year}
+    </div>
+  </div>
 </div>
-{/if}
-</ul>
-  <div id="chartData"></div>
-  <div id="tableData"></div></div>
-</div><!-- end dashboard -->
-<div class="crm-section dashboard-section">
-  {include file="CRM/common/chartist.tpl" chartist=$chartRecur}
-  {capture assign=frequency_unit}{ts}{$frequencyUnit}{/ts}{/capture}
-  {foreach from=$summaryRecur key=currency item=summary}
-    <ul>
-      <li>{ts 1=$summaryTime}Generated at %1{/ts} (<a href="{crmURL p=civicrm/contribute q=reset=1&update=1}">{ts}Update{/ts}</a>) - <strong>{ts 1=$summary.contributions 2=$frequency_unit 3=$summary.contacts 4=$summary.amount|crmMoney}There are %1 contributions in this %2 by %3 contacts. Total amount: %4{/ts}</strong></li>
-    </ul>
-  {/foreach}
+
+
+
+{literal}
+<style type="text/css">
+  .bigger{
+    font-size: 1.5em;
+  }
+  .red{
+    color: red;
+  }
+</style>
+{/literal}
+
+<div class="row">
+  <div class="col-md-4 col-xs-6">
+    <div class="box-content">
+      <h4 class="kpi-box-title">過去30天首次捐款人數</h4>
+      <div class="box-detail">
+        <span class="bigger"><span class="red">{$last_30_count}</span> 人</span>
+        {if $last_30_count_is_changed}
+          <span>較前30天{if $last_30_count_is_growth}成長{else}下降{/if}<span>{$last_30_count_growth}</span>%</span>
+        {/if}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-xs-6">
+    <div class="box-content">
+      <h4 class="kpi-box-title">過去30天最大額捐款</h4>
+      <div class="box-detail">
+        <span class="bigger"> <span class="red">{$last_30_max_amount}</span>元 </span><br>
+        來自<a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$last_30_max_id`&cid=`$last_30_max_contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$last_30_max_display_name}於{$last_30_max_receive_date}</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-xs-6">
+    <div class="box-content">
+      <h4 class="kpi-box-title">過去30天捐款總金額</h4>
+        <div class="box-detail">
+          <span class="bigger"><span class="red">{$last_30_sum}</span> 元</span>
+          {if $last_30_sum_is_changed}
+            <span>較前30天{if $last_30_sum_is_growth}成長{else}下降{/if}<span>{$last_30_sum_growth}</span>%</span>
+          {/if}
+        </div>
+    </div>
+  </div>
 </div>
+
+<div class="row">
+  <h3>過去30天募款頁狀況</h3>
+  <div class="col-md-4 col-xs-6">
+  </div>
+</div>
+
+<div class="row">
+  <h3>最近30天捐款金額</h3>
+  <div>
+    <div class="chartist">
+    {include file="CRM/common/chartist.tpl" chartist=$chart_last_30_sum}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <h3>最近30天縣市捐款金額</h3>
+  <div>
+    <div class="chartist">
+    {include file="CRM/common/chartist.tpl" chartist=$chart_last_30_province_sum}
+    </div>
+  </div>
+</div>
+
+
 {if $pager->_totalItems}
 <div class="crm-section dashboard-section">
     <h3>{ts}Recent Contributions{/ts}</h3>
@@ -150,5 +171,3 @@ function buildTabularView( ) {
 
 </script>
 {/literal}
-
-{/if}
