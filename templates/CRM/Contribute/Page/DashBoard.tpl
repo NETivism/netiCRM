@@ -41,8 +41,33 @@
   .bigger{
     font-size: 1.5em;
   }
-  .red{
+  .red {
     color: red;
+  }
+  .grey {
+    color: grey;
+  }
+  .source-outter {
+    display: flex;
+  }
+  .source-inner {
+    flex: 0 0 20%;
+  }
+  .process-wrapper {
+    width: 100%;
+    height: 2em;
+  }
+  .process-full {
+    display: block;
+    background: #ccc;
+    height: 100%;
+  }
+  .process-inner {
+    display: block;
+    height: 100%;
+    background: black;
+    color: white;
+    text-align: center;
   }
 </style>
 {/literal}
@@ -53,7 +78,7 @@
       <h4 class="kpi-box-title">過去30天首次捐款人數</h4>
       <div class="box-detail">
         <span class="bigger"><span class="red">{$last_30_count}</span> 人</span>
-        {if $last_30_count_is_changed}
+        {if $last_30_count_growth}
           <span>較前30天{if $last_30_count_is_growth}成長{else}下降{/if}<span>{$last_30_count_growth}</span>%</span>
         {/if}
       </div>
@@ -73,7 +98,7 @@
       <h4 class="kpi-box-title">過去30天捐款總金額</h4>
         <div class="box-detail">
           <span class="bigger"><span class="red">{$last_30_sum}</span> 元</span>
-          {if $last_30_sum_is_changed}
+          {if $last_30_sum_growth}
             <span>較前30天{if $last_30_sum_is_growth}成長{else}下降{/if}<span>{$last_30_sum_growth}</span>%</span>
           {/if}
         </div>
@@ -83,7 +108,30 @@
 
 <div class="row">
   <h3>過去30天募款頁狀況</h3>
-  <div class="col-md-4 col-xs-6">
+  <div class="col-md-{$page_col_n}">
+    {foreach from=$contribution_page_status item=page}
+      <h5>{$page.title}</h5>
+      <div>過去30天有<span class="bigger"><span class="red">{$page.last_30_count}</span>筆</span>新增捐款</div>
+      {if $page.last_30_count_growth}
+        <div>較前30天{if $page.last_30_count_is_growth}成長{else}下降{/if}<span class="bigger">{$page.last_30_count_growth}%</span></div>
+      {/if}
+      {if $page.goal}
+        <div class="process-wrapper"><span class="process-full"><span class="process-inner" style="width:{$page.process}%;">{$page.process}%</span></span></div>
+      {/if}
+      <div class="grey">總達成金額 {$page.total_amount|crmMoney}{if $page.goal} / {$page.goal|crmMoney}{/if}</div>
+      <div class="grey">總捐款人次 {$page.total_count}</div>
+      <div><h5>捐款來源</h5>
+        <div class="source-outter">
+          {foreach from=$page.source item=source}
+          <div class="source-inner">
+            <div>{$source.type}</div>
+            <div>{$source.count}%</div>
+          </div>
+          {/foreach}
+        </div>
+      </div>
+
+    {/foreach}
   </div>
 </div>
 

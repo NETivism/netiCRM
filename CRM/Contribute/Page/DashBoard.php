@@ -227,13 +227,15 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $template->assign('last_30_count', $last_30_count);
     if($last_60_count > 0){
       $last_30_count_growth = ( $last_30_count / $last_60_count ) -1;
-      $template->assign('last_30_count_growth', abs($last_30_count_growth) * 100);
-      $template->assign('last_30_count_is_changed', $last_30_count_growth != 0);
+      $template->assign('last_30_count_growth', number_format(abs($last_30_count_growth) * 100, 2));
       $template->assign('last_30_count_is_growth', $last_30_count_growth > 0);
     }
 
-    $sql = "SELECT * FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON cc.contact_id = c.id WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= '$last30day' ORDER BY cc.total_amount DESC LIMIT 1;";
-    $dao = CRM_Core_DAO::executeQuery($sql);
+    $sql = "SELECT * FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON cc.contact_id = c.id WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 ORDER BY cc.total_amount DESC LIMIT 1;";
+    $params = array(
+      1 => array($last30day, 'String'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
     if($dao->fetch()){
       $template->assign('last_30_max_amount', $dao->total_amount);
       $template->assign('last_30_max_id', $dao->id);
@@ -243,17 +245,23 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       // $template->assign('last_30_max_receive_date', $dao->receive_date);
     }
 
-    $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= '$last30day' ;";
-    $last_30_sum = CRM_Core_DAO::singleValueQuery($sql);
+    $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 ;";
+    $params = array(
+      1 => array($last30day, 'String'),
+    );
+    $last_30_sum = CRM_Core_DAO::singleValueQuery($sql, $params);
 
-    $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date < '$last30day' AND receive_date >= '$last60day'  ;";
-    $last_60_sum = CRM_Core_DAO::singleValueQuery($sql);
+    $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date < %1 AND receive_date >= %2  ;";
+    $params = array(
+      1 => array($last30day, 'String'),
+      2 => array($last60day, 'String'),
+    );
+    $last_60_sum = CRM_Core_DAO::singleValueQuery($sql, $params);
 
     $template->assign('last_30_sum', $last_30_sum);
     if($last_60_sum > 0){
       $last_30_sum_growth = ( $last_30_sum / $last_60_sum ) -1;
-      $template->assign('last_30_sum_growth', abs($last_30_sum_growth) * 100);
-      $template->assign('last_30_sum_is_changed', $last_30_sum_growth != 0);
+      $template->assign('last_30_sum_growth', number_format(abs($last_30_sum_growth) * 100, 2));
       $template->assign('last_30_sum_is_growth', $last_30_sum_growth > 0);
     }
 
@@ -282,17 +290,80 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $template->assign('chartRecur', $chart);
     }
 
+    // contribution_page status
+    $sql = "SELECT cp.id id, title, goal_amount, SUM(c.total_amount) sum, COUNT(c.id) count FROM civicrm_contribution_page cp INNER JOIN civicrm_contribution c ON cp.id = c.contribution_page_id WHERE c.receive_date >= %1 AND c.contribution_status_id = 1 GROUP BY cp.id ORDER BY count DESC LIMIT 3";
+    $params = array(
+      1 => array($last30day, 'String'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    $i = 0;
+    while($dao->fetch()){
+      $sql = "SELECT COUNT(id) FROM civicrm_contribution WHERE contribution_page_id = %1 AND receive_date < %2 AND receive_date >= %3 AND contribution_status_id = 1";
+      $params = array(
+        1 => array((int)$dao->id, 'Integer'),
+        2 => array($last30day , 'String'),
+        3 => array($last60day , 'String'),
+      );
+      $last_60_count = CRM_Core_DAO::singleValueQuery($sql, $params);
+      $sql = "SELECT COUNT(id) count, SUM(total_amount) total_amount FROM civicrm_contribution WHERE contribution_page_id = %1 AND contribution_status_id = 1";
+      $dao_page = CRM_Core_DAO::executeQuery($sql, $params);
+      if($dao_page->fetch()){
+        $total_count = $dao_page->count;
+        $total_amount = $dao_page->total_amount;
+      }
+      $source = self::getCourceByPageID($dao->id);
+
+      $last_30_count = $dao->count;
+      $goal = $dao->goal_amount;
+
+      /** for Test */
+
+      if ($_GET['test']) {
+        $goal = 100000;
+        $last_30_count = rand(0,300);
+        $last_60_count = rand(0,300);
+        $total_amount = rand(0,50000);
+        $total_count = rand(0,100);
+      }
+
+      /** for Test */
+
+      $cp_status[$i] = array(
+        'title' => $dao->title,
+        'last_30_count' => $last_30_count,
+        'goal' => $goal,
+        'total_count' => $total_count,
+        'total_amount' => $total_amount,
+        'source' => $source,
+      );
+
+      if(!empty($goal)){
+        $cp_status[$i]['process'] = number_format(($total_amount / $goal) * 100, 2);
+      }
+
+      if($last_60_count > 0){
+        $last_30_count_growth = ( $last_30_count / $last_60_count ) -1;
+        $cp_status[$i]['last_30_count_growth'] = number_format(abs($last_30_count_growth) * 100,2 );
+        $cp_status[$i]['last_30_count_is_growth'] = $last_30_count_growth > 0;
+      }
+
+      $i++;
+    }
+    $this->assign('contribution_page_status', $cp_status);
+
+    $this->assign('page_col_n', (12 / $dao->N));
+
     // block last contribution
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search',
       ts('Contributions'), NULL
     );
     $controller->setEmbedded(TRUE);
-
     $controller->set('limit', 10);
     $controller->set('force', 1);
     $controller->set('context', 'dashboard');
     $controller->process();
     $controller->run();
+
     $chartForm = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionCharts',
       ts('Contributions Charts'), NULL
     );
@@ -304,7 +375,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 
-  private static function getDataForChart($label_array, $summary_array, $type='sum'){
+  private static function getDataForChart($label_array, $summary_array, $type='sum') {
     $return_array = array();
     foreach ($label_array as $label) {
       $recur_index = array_search($label, $summary_array['label']);
@@ -314,6 +385,62 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         $return_array[] = 0;
       }
     }
+
+    return $return_array;
+  }
+
+  private static function getCourceByPageID($page_id) {
+    $sql = "SELECT COUNT(session_key) sum FROM civicrm_track WHERE page_type = 'civicrm_contribution_page' AND page_id = %1";
+    $params = array(
+      1 => array($page_id, 'Integer'),
+    );
+    $sum = CRM_Core_DAO::singleValueQuery($sql, $params);
+    $sql = "SELECT COUNT(session_key) count, referrer_network FROM civicrm_track WHERE page_type = 'civicrm_contribution_page' AND page_id = %1 GROUP BY referrer_network";
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    $return_array = array();
+    $i = 0;
+    $other = 0;
+    while($dao->fetch()){
+      if(count($return_array) < 4 && !empty($dao->referrer_network)){
+        $return_array[$i] = array(
+          'type' => $dao->referrer_network,
+          'count' => number_format($dao->count / $sum , 2),
+        );
+      }else{
+        $other += $dao->count;
+      }
+    }
+    $return_array[4] = array(
+      'type' => 'other',
+      'count' => number_format($other / $sum, 2),
+    );
+
+    /* for test */
+    if ($_GET['test']) {
+      $return_array = array(
+        array(
+          'type' => '電子報',
+          'count' => rand(0,10000) / 100,
+        ),
+        array(
+          'type' => 'FB',
+          'count' => rand(0,10000) / 100,
+        ),
+        array(
+          'type' => 'Twitter',
+          'count' => rand(0,10000) / 100,
+        ),
+        array(
+          'type' => '搜尋',
+          'count' => rand(0,10000) / 100,
+        ),
+        array(
+          'type' => '其他',
+          'count' => rand(0,10000) / 100,
+        ),
+      );
+    }
+    /* for test */
 
     return $return_array;
   }
