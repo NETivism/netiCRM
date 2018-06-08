@@ -457,29 +457,48 @@ function enableHonorType( ) {
   });
 
   cj(document).ready(function($){
-    var amountGrouping = function(){
+    var amountGrouping = function(init){
+      var amountFilter = function() {
+        $("input[name=amount]").each(function() {
+          var $label = $(this).closest('label.crm-form-elem');
+          if (isRecur == '1') {
+            if ($(this).data('grouping') == 'non-recurring') {
+              $label.hide();
+            }
+            else {
+              $label.show();
+            }
+          }
+          else {
+            if ($(this).data('grouping') == 'recurring') {
+              $label.hide();
+            }
+            else {
+              $label.show();
+            }
+          }
+        });
+      }
       $('.crm-section.amount-section label').css("display", "block");
       $('.crm-section.amount-section br').remove();
       var isRecur = $("input[name=is_recur]:checked").val();
-      $("input[name=amount]").each(function() {
-        var $label = $(this).closest('label.crm-form-elem');
-        if (isRecur == '1') {
-          if ($(this).data('grouping') == 'non-recurring') {
-            $label.hide();
-          }
-          else {
-            $label.show();
-          }
+      if (init) {
+        amountFilter();
+        // whatever, show current selected option
+        $("input[name=amount]:checked").closest("label.crm-form-elem").show();
+      }
+      else {
+        if (isRecur == 1) {
+          var dataFilter = 'recurring';
         }
         else {
-          if ($(this).data('grouping') == 'recurring') {
-            $label.hide();
-          }
-          else {
-            $label.show();
-          }
+          var dataFilter = 'non-recurring';
         }
-      });
+        $("input[name=amount]").removeProp("checked");
+        var $default = $("input[name=amount][data-grouping="+dataFilter+"][data-default=1]");
+        $default.prop("checked", true);
+        amountFilter();
+      }
     }
     var enablePeriod = function($isRecur){
       var $installments = cj('#installments');
@@ -548,7 +567,7 @@ function enableHonorType( ) {
       cj(".first_name-section .content .description").html('{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}');
     {/if}
     {literal}
-    amountGrouping();
+    amountGrouping(true);
   });
 {/literal}
 </script>

@@ -4585,6 +4585,7 @@ ul.ui-sortable {
 
 /* crm form element */
 .crm-form-textfield,
+.crm-form-number,
 .crm-form-select {
   display: inline-block;
   vertical-align: middle;

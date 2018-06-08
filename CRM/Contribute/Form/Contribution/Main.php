@@ -682,6 +682,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           $amount['amount_id'],
           array(
             'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
+            'data-default' => !empty($amount['filter']) ? 1 : 0,
             'onclick' => 'clearAmountOther();',
           )
         );
@@ -850,7 +851,19 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->_defaults['is_recur'] = 1;
     }
     else {
-      $this->_defaults['is_recur'] = 0;
+      if ($this->_values['is_recur'] == 1 && !empty($this->_values['default_amount_id'])) {
+        // check amount settings
+        $defaultAmountRecur = $this->_values['amount'][$this->_values['default_amount_id']]['grouping'];
+        if ($defaultAmountRecur == 'recurring') {
+          $this->_defaults['is_recur'] = 1;
+        }
+        else {
+          $this->_defaults['is_recur'] = 0;
+        }
+      }
+      else {
+        $this->_defaults['is_recur'] = 0;
+      }
     }
 
     if ($this->_values['is_recur_interval']) {
@@ -896,8 +909,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
     $this->addGroup($elements, 'is_recur', NULL, '<br />');
 
-    $attributes['installments']['placeholder'] = ts('no limit');
-    $this->add('text', 'installments', ts('Installments'), $attributes['installments']);
+    $attributes['installments'] = array(
+      'placeholder' => ts('no limit'),
+      'min' => 2,
+      'style' => 'max-width:100px',
+    );
+    $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
     $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
   }
 
