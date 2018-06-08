@@ -1115,7 +1115,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * send the message to all the contacts and also insert a
    * contact activity in each contacts record
    *
-   * @param array  $contactDetails the array of contact details to send the email
+   * @param array  $contactDetails array('contact_id' => 123, 'email' => 'aaa@bbb.ccc')
    * @param string $subject      the subject of the message
    * @param string $message      the message contents
    * @param string $emailAddress use this 'to' email address instead of the default Primary address
@@ -1146,6 +1146,11 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     &$object = NULL
   ) {
     $class = is_object($object) ? get_class($object) : 'CRM_Activity_BAO_Activity';
+    if (empty($contactIds)) {
+      foreach($contactDetails as $cDetails) {
+        $contactIds[] = $cDetails['contact_id'];
+      }
+    }
 
     // get the contact details of logged in contact, which we set as from email
     if ($userID == NULL) {
@@ -1310,6 +1315,60 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     }
 
     return array($sent, $activity->id);
+  }
+
+  /**
+   * @param int  $fromId     from contact id
+   * @param int  $toId       to contact id
+   * @param int  $templateId message template id
+   * @param int  $check      check if mail should be send on hold, desease or do not email
+   */
+  public static function sendEmailTemplate($fromId, $toId, $template_id, $check = FALSE) {
+    $returnProperties = array(
+      'sort_name' => 1,
+      'email' => 1,
+      'do_not_email' => 1,
+      'is_deceased' => 1,
+      'on_hold' => 1,
+      'display_name' => 1,
+      'preferred_mail_format' => 1,
+    );
+    list($details) = CRM_Mailing_BAO_Mailing::getDetails(array($fromId, $toId), $returnProperties, FALSE, FALSE);
+    if (!empty($details)) {
+      $fromDetails = $details[$fromId];
+      $toDetails = array($details[$toId]);
+      $contactIds = array($toId);
+
+      if ($check) {
+        if ($toDetails['do_not_email'] || empty($toDetails['email']) || !empty($toDetails['is_deceased']) || $toDetails['on_hold']) {
+          return FALSE;
+        }
+      }
+
+      $params = array('id' => $template_id);
+      $template = array();
+      CRM_Core_BAO_MessageTemplates::retrieve($params, $template);
+      $subject = $template['msg_subject'];
+      $text = !empty($template['msg_text']) ? $template['msg_text'] : '';
+      $html = !empty($template['msg_html']) ? $template['msg_html'] : '';
+			list($sent, $activityId) = self::sendEmail(
+				$toDetails,
+				$subject,
+				$text,
+				$html,
+				NULL, // emailAddress
+				$fromId, // sender contact id
+				NULL, // formatted from address
+				NULL, // attachments
+				NULL, // cc
+				NULL, // bcc
+				$contactIds // contact_id
+			);
+      if ($sent) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**

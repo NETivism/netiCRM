@@ -52,6 +52,7 @@
 {if $action neq 4 && $action neq 1028}
     <span class="crm-clear-link">(<a href="javascript:clearDateTime( '{$elementId}' );">{ts}clear{/ts}</a>)</span>
 {/if}
+{if not $form.$elementName.frozen}
 <script type="text/javascript">
     {literal}
     cj( function() {
@@ -133,4 +134,5 @@
     }
     {/literal}
 </script>
+{/if}
 {/strip}
