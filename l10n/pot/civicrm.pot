@@ -46122,3 +46122,6 @@ msgstr ""
 
 msgid "This participant have completed or cancelled contribution record. You need to update related contribution belone this participant manually."
 msgstr ""
+
+msgid "Used for"
+msgstr ""
