@@ -1336,7 +1336,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     list($details) = CRM_Mailing_BAO_Mailing::getDetails(array($fromId, $toId), $returnProperties, FALSE, FALSE);
     if (!empty($details)) {
       $fromDetails = $details[$fromId];
-      $toDetails = array($details[$toId]);
+      $toDetails = $details[$toId];
       $contactIds = array($toId);
 
       if ($check) {
@@ -1345,25 +1345,26 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         }
       }
 
+      $toDetails = array($details[$toId]);
       $params = array('id' => $template_id);
       $template = array();
       CRM_Core_BAO_MessageTemplates::retrieve($params, $template);
       $subject = $template['msg_subject'];
       $text = !empty($template['msg_text']) ? $template['msg_text'] : '';
       $html = !empty($template['msg_html']) ? $template['msg_html'] : '';
-			list($sent, $activityId) = self::sendEmail(
-				$toDetails,
-				$subject,
-				$text,
-				$html,
-				NULL, // emailAddress
-				$fromId, // sender contact id
-				NULL, // formatted from address
-				NULL, // attachments
-				NULL, // cc
-				NULL, // bcc
-				$contactIds // contact_id
-			);
+      list($sent, $activityId) = self::sendEmail(
+        $toDetails,
+        $subject,
+        $text,
+        $html,
+        NULL, // emailAddress
+        $fromId, // sender contact id
+        NULL, // formatted from address
+        NULL, // attachments
+        NULL, // cc
+        NULL, // bcc
+        $contactIds // contact_id
+      );
       if ($sent) {
         return TRUE;
       }
