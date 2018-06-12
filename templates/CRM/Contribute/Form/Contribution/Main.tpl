@@ -495,9 +495,9 @@ function enableHonorType( ) {
           var dataFilter = 'non-recurring';
         }
         $("input[name=amount]").removeProp("checked");
-        var $default = $("input[name=amount][data-grouping="+dataFilter+"][data-default=1]");
-        $default.prop("checked", true);
         amountFilter();
+        var $default = $("input[name=amount][data-default=1]:visible");
+        $default.prop("checked", true);
       }
     }
     var enablePeriod = function($isRecur){

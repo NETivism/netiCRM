@@ -177,16 +177,18 @@
                     <div id="map-field">
                     <table id="map-field-table">
                         <tr class="columnheader" >
-                          <td scope="column">{ts}Default{/ts} - {ts}Show{/ts}</td>
+                          <td scope="column">{ts}Used for{/ts}</td>
                           <td scope="column">{ts}Contribution Label{/ts}</td>
-                          <td scope="column">{ts}Default{/ts} - {ts}Price Option{/ts}</td>
+                          <td scope="column">{ts}Amount{/ts}</td>
+                          <td scope="column">{ts}Default{/ts}</td>
                         </tr>
                         {section name=loop start=1 loop=11}
                             {assign var=idx value=$smarty.section.loop.index}
                             <tr>
                               <td class="even-row">{$form.default.$idx.html} {$form.grouping.$idx.html}</td>
                               <td>{$form.label.$idx.html}</td>
-                              <td class="even-row">{$form.filter.$idx.html} - {$form.value.$idx.html|crmMoney}</td>
+                              <td class="even-row">{$form.value.$idx.html|crmMoney}</td>
+                              <td class="even-row">{$form.filter.$idx.html}</td>
                             </tr>
                         {/section}
                     </table>
