@@ -1259,7 +1259,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           }
           $mappingObject['mappingName'][1][$fieldCount] = $fieldName;
           $mappingObject['mappingContactType'][1][$fieldCount] = $field['field_type'];
-          if (!empty($field['location_type_id'])) {
+          if (!empty($field['location_type_id']) && !strstr($field['name'], 'email')) {
             $mappingObject['mappingLocation'][1][$fieldCount] = $field['location_type_id'];
           }
           if (!empty($field['phone_type_id'])) {
