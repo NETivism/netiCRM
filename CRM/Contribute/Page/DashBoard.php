@@ -338,7 +338,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       );
 
       if(!empty($goal)){
-        $cp_status[$i]['process'] = number_format(($total_amount / $goal) * 100, 2);
+        $cp_status[$i]['process'] = ($total_amount / $goal) * 100;
       }
 
       if($last_60_count > 0){
@@ -352,6 +352,53 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $this->assign('contribution_page_status', $cp_status);
 
     $this->assign('page_col_n', (12 / $dao->N));
+
+
+    // last 30 days count
+    $instrument_option_group_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+    $params = array(
+      1 => array($instrument_option_group_id, 'Integer'),
+      2 => array($last30day , 'String'),
+    );
+
+    $sql = "SELECT cc.id id, c.id contact_id, cc.receive_date receive_date, cc.total_amount amount, c.display_name name, ov.label instrument FROM civicrm_contribution cc 
+      INNER JOIN civicrm_contact c ON cc.contact_id = c.id
+      INNER JOIN civicrm_option_value ov ON cc.payment_instrument_id = ov.value
+      WHERE ov.option_group_id = %1 AND cc.payment_processor_id IS NOT NULL AND cc.contribution_status_id = 1 AND cc.is_test = 0 AND cc.receive_date >= %2 AND cc.contribution_recur_id IS NULL ORDER BY receive_date DESC LIMIT 5 ";
+    // $sql_single = str_replace('{$is_recur}', $is_recur , $sql);
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    $single_contributions = array();
+    while($dao->fetch()){
+      $single_contributions[] = array(
+        'id' => $dao->id,
+        'contact_id' => $dao->contact_id,
+        'name' => $dao->name, 
+        'date' => date('Y-m-d', strtotime($dao->receive_date)),
+        'amount' => $dao->amount,
+        'instrument' => $dao->instrument,
+      );
+    }
+
+    $sql = "SELECT cc.id id, c.id contact_id, cc.receive_date receive_date, cc.total_amount amount, c.display_name name, cr.installments installments FROM civicrm_contribution cc 
+      INNER JOIN civicrm_contact c ON cc.contact_id = c.id
+      INNER JOIN civicrm_contribution_recur cr ON cr.id = cc.contribution_recur_id
+      WHERE cc.payment_processor_id IS NOT NULL AND cc.contribution_status_id = 1 AND cc.is_test = 0 AND cc.receive_date >= %2 AND cc.contribution_recur_id IS NULL ORDER BY receive_date DESC LIMIT 5 ";
+    // $sql_recur = str_replace('{$is_recur}', $is_recur , $sql);
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    $recur_contributions = array();
+    while($dao->fetch()){
+      $recur_contributions[] = array(
+        'id' => $dao->id,
+        'contact_id' => $dao->contact_id,
+        'name' => $dao->name, 
+        'date' => date('Y-m-d', strtotime($dao->receive_date)),
+        'amount' => $dao->amount,
+        'installments' => $dao->installments,
+      );
+    }
+    $this->assign('single_contributions', $single_contributions);
+    $this->assign('recur_contributions', $recur_contributions);
+
 
     // block last contribution
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search',
@@ -395,7 +442,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       1 => array($page_id, 'Integer'),
     );
     $sum = CRM_Core_DAO::singleValueQuery($sql, $params);
-    $sql = "SELECT COUNT(session_key) count, referrer_network FROM civicrm_track WHERE page_type = 'civicrm_contribution_page' AND page_id = %1 GROUP BY referrer_network";
+    $sql = "SELECT COUNT(session_key) count, referrer_network FROM civicrm_track WHERE page_type = 'civicrm_contribution_page' AND page_id = %1 GROUP BY referrer_network ORDER BY count";
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     $return_array = array();
     $i = 0;
@@ -404,7 +451,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       if(count($return_array) < 4 && !empty($dao->referrer_network)){
         $return_array[$i] = array(
           'type' => $dao->referrer_network,
-          'count' => number_format($dao->count / $sum , 2),
+          'count' => number_format(($dao->count / $sum) * 100 , 2),
         );
       }else{
         $other += $dao->count;
@@ -412,7 +459,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     }
     $return_array[4] = array(
       'type' => 'other',
-      'count' => number_format($other / $sum, 2),
+      'count' => number_format(($other / $sum) * 100, 2),
     );
 
     /* for test */
