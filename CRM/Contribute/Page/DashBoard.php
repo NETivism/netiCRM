@@ -108,6 +108,17 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     // block contribution
     $this->preProcess();
 
+    $last_30_stamp = strtotime('-30day');
+    $last_30_day = date('Y-m-d', $last_30_stamp);
+    $last_60_day = date('Y-m-d', strtotime('-60day'));
+
+    $last_stamp = $last_30_stamp;
+    for ($i=0; $i < 30 ; $i++) {
+      $date = date('Y-m-d', $last_stamp);
+      $last_30_array[] = $date;
+      $last_stamp += 86400;
+    }
+
     // refs #22871 add chart data
     $summary_contrib = array();
     if($_GET['start_date']){
@@ -123,7 +134,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_time+$filter_recur));
     $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_time+$filter_not_recur));
 
-    $filter_time = array('start_date' => date('Y-m-d', strtotime('-30day')), 'end_date' => date('Y-m-d'));
+    $filter_time = array('start_date' => $last_30_day, 'end_date' => date('Y-m-d'));
     $summary_contrib['Last30DaysContrib']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'DAY'), array('contribution' => $filter_time+$filter_recur));
     $summary_contrib['Last30DaysContrib']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'DAY'), array('contribution' => $filter_time+$filter_not_recur));
 
@@ -165,26 +176,72 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     );
     $template->assign('chart_this_year', $chart);
 
-    $last_30_label = array();
-    for ($i=30; $i > 0 ; $i--) {
-      $date = date('Y-m-d', strtotime('-'.$i.'day'));
-      $last_30_label[] = $date;
+    foreach ($last_30_array as $date) {
       $recur_index = array_search($date, $summary_contrib['Last30DaysContrib']['recur']['label']);
     }
-    $recur_30_sum = self::getDataForChart($last_30_label, $summary_contrib['Last30DaysContrib']['recur']);
-    $not_recur_30_sum = self::getDataForChart($last_30_label, $summary_contrib['Last30DaysContrib']['not_recur']);
+    $recur_30_sum = self::getDataForChart($last_30_array, $summary_contrib['Last30DaysContrib']['recur']);
+    $not_recur_30_sum = self::getDataForChart($last_30_array, $summary_contrib['Last30DaysContrib']['not_recur']);
 
     $chart = array(
       'id' => 'chart-30-sum',
       'selector' => '#chart-30-sum',
       'type' => 'Line',
-      'labels' => json_encode($last_30_label),
+      'labels' => json_encode($last_30_array),
       'series' => json_encode(array($recur_30_sum, $not_recur_30_sum)),
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',
       'withToolTip' => true,
     );
     $template->assign('chart_last_30_sum', $chart);
+
+    // $sql = "SELECT t.referrer_type, t.referrer_network FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.entity_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1";
+    $sql = "SELECT t.referrer_network referrer_network FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 GROUP BY referrer_network";
+    $params = array(
+      1 => array($last_30_day, 'String'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    $track_label = array();
+    while($dao->fetch()){
+      if(!$dao->referrer_network){
+        $track_label[] = ts('Others');
+      }else{
+        if(!in_array($dao->referrer_network, $track_label)){
+          $track_label[] = $dao->referrer_network;
+        }
+      }
+    }
+    $count_track = count($track_label) ? count($track_label) : 1;
+    $last_30_track = array_fill(0,30, array_fill(0, $count_track, 0));
+
+    $sql = "SELECT t.referrer_network, count(t.referrer_network) count, DATE_FORMAT(t.visit_date,'%Y-%m-%d') visit_day FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 GROUP BY visit_day, referrer_network";
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    while($dao->fetch()){
+      $inx_date = array_search($dao->visit_day, $last_30_array);
+      if(!$dao->referrer_network){
+        $track_network = ts('Others');
+      }else{
+        $track_network = $dao->referrer_network;
+      }
+      $inx_network = array_search($track_network, $track_label);
+      $last_30_track[$inx_date][$inx_network] = $dao->count;
+    }
+
+    if($_GET['debug']){
+      dpm($last_30_track);
+    }
+
+    $chart = array(
+      'id' => 'chart-30-track',
+      'selector' => '#chart-30-track',
+      'type' => 'Bar',
+      'labels' => json_encode($last_30_array),
+      'series' => json_encode($last_30_track),
+      'seriesUnit' => '$ ',
+      'seriesUnitPosition'=> 'prefix',
+      'withToolTip' => true,
+      'stackBars' => true
+    );
+    $template->assign('chart_last_30_track', $chart);
 
     $last_30_province_recur_label = empty($summary_contrib['Last30DaysProvince']['recur'])?array():$summary_contrib['Last30DaysProvince']['recur']['label'];
     $last_30_province_not_recur_label = empty($summary_contrib['Last30DaysProvince']['not_recur'])?array():$summary_contrib['Last30DaysProvince']['not_recur']['label'];
@@ -206,10 +263,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $template->assign('chart_last_30_province_sum', $chart);
 
     // First contribtion contact in last 30 days
-    $last30day = date('Y-m-d', strtotime('-30day'));
-    $last60day = date('Y-m-d', strtotime('-60day'));
     $sql = "  SELECT COUNT(c.id) ct, cc30.id, SUM(cc30.total_amount) sum FROM civicrm_contact c
-      INNER JOIN ( SELECT id, contact_id, total_amount FROM civicrm_contribution WHERE receive_date >= '$last30day' AND is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc30 ON c.id = cc30.contact_id
+      INNER JOIN ( SELECT id, contact_id, total_amount FROM civicrm_contribution WHERE receive_date >= '$last_30_day' AND is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc30 ON c.id = cc30.contact_id
       INNER JOIN ( SELECT id, contact_id FROM civicrm_contribution WHERE is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc_all ON c.id = cc_all.contact_id WHERE cc30.id = cc_all.id;";
     $dao = CRM_Core_DAO::executeQuery($sql);
     if($dao->fetch()){
@@ -217,7 +272,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $last_30_sum = $dao->sum;
     }
     $sql = "  SELECT COUNT(c.id) ct, cc60.id, SUM(cc60.total_amount) FROM civicrm_contact c
-      INNER JOIN ( SELECT id, contact_id, total_amount FROM civicrm_contribution WHERE receive_date < '$last30day' AND receive_date >= '$last60day' AND is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc60 ON c.id = cc60.contact_id
+      INNER JOIN ( SELECT id, contact_id, total_amount FROM civicrm_contribution WHERE receive_date < '$last_30_day' AND receive_date >= '$last_60_day' AND is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc60 ON c.id = cc60.contact_id
       INNER JOIN ( SELECT id, contact_id FROM civicrm_contribution WHERE is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc_all ON c.id = cc_all.contact_id WHERE cc60.id = cc_all.id;";
     $dao = CRM_Core_DAO::executeQuery($sql);
     if($dao->fetch()){
@@ -233,7 +288,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     $sql = "SELECT * FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON cc.contact_id = c.id WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 ORDER BY cc.total_amount DESC LIMIT 1;";
     $params = array(
-      1 => array($last30day, 'String'),
+      1 => array($last_30_day, 'String'),
     );
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     if($dao->fetch()){
@@ -247,14 +302,14 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 ;";
     $params = array(
-      1 => array($last30day, 'String'),
+      1 => array($last_30_day, 'String'),
     );
     $last_30_sum = CRM_Core_DAO::singleValueQuery($sql, $params);
 
     $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date < %1 AND receive_date >= %2  ;";
     $params = array(
-      1 => array($last30day, 'String'),
-      2 => array($last60day, 'String'),
+      1 => array($last_30_day, 'String'),
+      2 => array($last_60_day, 'String'),
     );
     $last_60_sum = CRM_Core_DAO::singleValueQuery($sql, $params);
 
@@ -293,7 +348,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     // contribution_page status
     $sql = "SELECT cp.id id, title, goal_amount, SUM(c.total_amount) sum, COUNT(c.id) count FROM civicrm_contribution_page cp INNER JOIN civicrm_contribution c ON cp.id = c.contribution_page_id WHERE c.receive_date >= %1 AND c.contribution_status_id = 1 GROUP BY cp.id ORDER BY count DESC LIMIT 3";
     $params = array(
-      1 => array($last30day, 'String'),
+      1 => array($last_30_day, 'String'),
     );
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     $i = 0;
@@ -301,8 +356,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $sql = "SELECT COUNT(id) FROM civicrm_contribution WHERE contribution_page_id = %1 AND receive_date < %2 AND receive_date >= %3 AND contribution_status_id = 1";
       $params = array(
         1 => array((int)$dao->id, 'Integer'),
-        2 => array($last30day , 'String'),
-        3 => array($last60day , 'String'),
+        2 => array($last_30_day , 'String'),
+        3 => array($last_60_day , 'String'),
       );
       $last_60_count = CRM_Core_DAO::singleValueQuery($sql, $params);
       $sql = "SELECT COUNT(id) count, SUM(total_amount) total_amount FROM civicrm_contribution WHERE contribution_page_id = %1 AND contribution_status_id = 1";
@@ -358,7 +413,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $instrument_option_group_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
     $params = array(
       1 => array($instrument_option_group_id, 'Integer'),
-      2 => array($last30day , 'String'),
+      2 => array($last_30_day , 'String'),
     );
 
     $sql = "SELECT cc.id id, c.id contact_id, cc.receive_date receive_date, cc.total_amount amount, c.display_name name, ov.label instrument FROM civicrm_contribution cc 

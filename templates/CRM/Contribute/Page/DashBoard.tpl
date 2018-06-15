@@ -264,6 +264,20 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box mdl-shadow--2dp">
+      <div class="box-content">
+      <h3>最近30天成交捐款人來源（募款頁的上一個頁面網址）</h3>
+      <div>
+        <div class="chartist">
+        {include file="CRM/common/chartist.tpl" chartist=$chart_last_30_track}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
