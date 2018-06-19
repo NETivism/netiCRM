@@ -87,7 +87,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     if ($entityFileDAO->find(TRUE)) {
       // display url only when file section is public
       $publicFileSection = explode(',', CRM_Core_BAO_File::PUBLIC_ENTITY_TABLE);
-      if (in_array($entityFileDAO->entity_table, $publicFileSection)) {
+      if (in_array($entityFileDAO->entity_table, $publicFileSection) || substr($entityFileDAO->entity_table, 0,13) == 'civicrm_value') {
         $fileDAO = new CRM_Core_DAO_File();
         $fileDAO->id = $fileID;
         if ($fileDAO->find(TRUE)) {

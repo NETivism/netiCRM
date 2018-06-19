@@ -815,9 +815,30 @@ class CRM_Export_BAO_Export {
               elseif (isset($fieldValue) && $fieldValue != '') {
                 //check for custom data
                 if ($cfID = CRM_Core_BAO_CustomField::getKeyID($relationField)) {
-                  $row[$field . $relationField] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID,
-                    $relationQuery[$field]->_options
-                  );
+                  if($query->_fields[$relationField]['data_type'] == 'File'){
+                    $fileID = $fieldValue;
+                    $sql = "SELECT g.table_name table_name, f.column_name column_name FROM civicrm_custom_group g INNER JOIN civicrm_custom_field f ON g.id = f.custom_group_id WHERE f.id = %1";
+                    $params = array(
+                      1 => array($cfID, "Integer"),
+                    );
+                    $dao_cv = CRM_Core_DAO::executeQuery($sql, $params);
+                    if($dao_cv->fetch()){
+                      $custom_value_table = $dao_cv->table_name;
+                      $custom_value_field = $dao_cv->column_name;
+                      $sql = "SELECT entity_id FROM $custom_value_table WHERE $custom_value_field = %1";
+                      $params = array(
+                        1 => array($fileID, "Integer"),
+                      );
+                      $entityID = CRM_Core_DAO::singleValueQuery($sql, $params);
+                      list($url, $ignore1, $ignore2) = CRM_Core_BAO_File::url($fileID, $entityID);
+                      $row[$field . $relationField] = $url;
+                    }
+                    $dao_cv->free();
+                  }else{
+                    $row[$field . $relationField] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID,
+                      $relationQuery[$field]->_options
+                    );
+                  }
                 }
                 elseif (in_array($relationField, array('email_greeting', 'postal_greeting', 'addressee'))) {
                   //special case for greeting replacement
@@ -851,9 +872,33 @@ class CRM_Export_BAO_Export {
             }
           }
           elseif (isset($fieldValue) && $fieldValue != '') {
+
             //check for custom data
             if ($cfID = CRM_Core_BAO_CustomField::getKeyID($field)) {
-              $row[$field] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $query->_options);
+              if($query->_fields[$field]['data_type'] == 'File'){
+                $fileID = $dao->$field;
+                if(!empty($fileID)){
+                  $sql = "SELECT g.table_name table_name, f.column_name column_name FROM civicrm_custom_group g INNER JOIN civicrm_custom_field f ON g.id = f.custom_group_id WHERE f.id = %1";
+                  $params = array(
+                    1 => array($cfID, "Integer"),
+                  );
+                  $dao_cv = CRM_Core_DAO::executeQuery($sql, $params);
+                  if($dao_cv->fetch()){
+                    $custom_value_table = $dao_cv->table_name;
+                    $custom_value_field = $dao_cv->column_name;
+                    $sql = "SELECT entity_id FROM $custom_value_table WHERE $custom_value_field = %1";
+                    $params = array(
+                      1 => array($fileID, "Integer"),
+                    );
+                    $entityID = CRM_Core_DAO::singleValueQuery($sql, $params);
+                    list($url, $ignore1, $ignore2) = CRM_Core_BAO_File::url($fileID, $entityID);
+                    $row[$field] = $url;
+                  }
+                  $dao_cv->free();
+                }
+              }else{
+                $row[$field] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $query->_options);
+              }
             }
             elseif (array_key_exists($field, $multipleSelectFields)) {
               //option group fixes
@@ -905,7 +950,6 @@ class CRM_Export_BAO_Export {
             $row[$field] = '';
           }
         }
-
         $newRow = array();
         $rowIndex = 0;
         foreach ($row as $value) {
