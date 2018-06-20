@@ -89,9 +89,9 @@
         <div>
           <h5 class="kpi-box-title">首次捐款人數</h5>
           <div class="box-detail">
-            <span class="bigger"><span class="red">{$last_30_count}</span> 人</span>
-            {if $last_30_count_growth}
-              {if $last_30_count_is_growth}
+            <span class="bigger"><span class="red">{$duration_count}</span> 人</span>
+            {if $duration_count_growth}
+              {if $duration_count_is_growth}
                   {assign var="zmdi" value="zmdi-long-arrow-up"}
                   {assign var="verb" value="成長"}
                   {assign var="color" value="blue"}
@@ -100,7 +100,7 @@
                   {assign var="verb" value="下降"}
                   {assign var="color" value="red"}
               {/if}
-              <div><span class="{$color}"><i class="zmdi {$zmdi}"></i>較前30天{$verb}<span>{$last_30_count_growth}</span>%</span></div>
+              <div><span class="{$color}"><i class="zmdi {$zmdi}"></i>較前30天{$verb}<span>{$duration_count_growth}</span>%</span></div>
             {/if}
           </div>
 
@@ -115,8 +115,8 @@
         <div>
           <h5 class="kpi-box-title">最大額捐款</h5>
           <div class="box-detail">
-            <span class="bigger"> <span class="red">{$last_30_max_amount}</span>元 </span><br>
-            來自<a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$last_30_max_id`&cid=`$last_30_max_contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$last_30_max_display_name}於{$last_30_max_receive_date}</a>
+            <span class="bigger"> <span class="red">{$duration_max_amount}</span>元 </span><br>
+            來自<a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$duration_max_id`&cid=`$duration_max_contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$duration_max_display_name}於{$duration_max_receive_date}</a>
           </div>
         </div>
       </div>
@@ -129,9 +129,9 @@
         <div> 
           <h5 class="kpi-box-title">捐款總金額</h5>
             <div class="box-detail">
-              <span class="bigger"><span class="red">{$last_30_sum}</span> 元</span>
-              {if $last_30_sum_growth}
-                {if $last_30_sum_is_growth}
+              <span class="bigger"><span class="red">{$duration_sum}</span> 元</span>
+              {if $duration_sum_growth}
+                {if $duration_sum_is_growth}
                     {assign var="zmdi" value="zmdi-long-arrow-up"}
                     {assign var="verb" value="成長"}
                     {assign var="color" value="blue"}
@@ -140,7 +140,7 @@
                     {assign var="verb" value="下降"}
                     {assign var="color" value="red"}
                 {/if}
-                <div><span class="{$color}"><i class="zmdi {$zmdi}"></i>較前30天{$verb}<span>{$last_30_sum_growth}</span>%</span></div>
+                <div><span class="{$color}"><i class="zmdi {$zmdi}"></i>較前30天{$verb}<span>{$duration_sum_growth}</span>%</span></div>
               {/if}
             </div>
         </div>
@@ -152,7 +152,7 @@
 <div class="row">
   <h3>過去30天募款頁狀況</h3>
   {foreach from=$contribution_page_status item=page}
-  {if $page.last_30_count_is_growth}
+  {if $page.duration_count_is_growth}
       {assign var="zmdi" value="zmdi-long-arrow-up"}
       {assign var="verb" value="成長"}
       {assign var="color" value="blue"}
@@ -165,9 +165,9 @@
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h5>{$page.title}</h5>
-        <div>過去30天有<span class="bigger"><span class="red">{$page.last_30_count}</span>筆</span>新增捐款</div>
-        {if $page.last_30_count_growth}
-          <div><i class="bigger zmdi {$zmdi}"></i>較前30天<span class="{$color}">{$verb}<span class="bigger">{$page.last_30_count_growth}%</span></span></div>
+        <div>過去30天有<span class="bigger"><span class="red">{$page.duration_count}</span>筆</span>新增捐款</div>
+        {if $page.duration_count_growth}
+          <div><i class="bigger zmdi {$zmdi}"></i>較前30天<span class="{$color}">{$verb}<span class="bigger">{$page.duration_count_growth}%</span></span></div>
         {/if}
         <span class="grey">總達成金額 {$page.total_amount|crmMoney}{if $page.goal} / {$page.goal|crmMoney}{/if}</span>
         <span class="grey">總人次 {$page.total_count}</span>
@@ -257,7 +257,7 @@
       <h3>最近30天捐款金額</h3>
       <div>
         <div class="chartist">
-        {include file="CRM/common/chartist.tpl" chartist=$chart_last_30_sum}
+        {include file="CRM/common/chartist.tpl" chartist=$chart_duration_sum}
         </div>
       </div>
     </div>
@@ -271,7 +271,7 @@
       <h3>最近30天成交捐款人來源（募款頁的上一個頁面網址）</h3>
       <div>
         <div class="chartist">
-        {include file="CRM/common/chartist.tpl" chartist=$chart_last_30_track}
+        {include file="CRM/common/chartist.tpl" chartist=$chart_duration_track}
         </div>
       </div>
     </div>
@@ -285,7 +285,7 @@
       <h3>最近30天縣市捐款金額</h3>
       <div>
         <div class="chartist">
-        {include file="CRM/common/chartist.tpl" chartist=$chart_last_30_province_sum}
+        {include file="CRM/common/chartist.tpl" chartist=$chart_duration_province_sum}
         </div>
       </div>
     </div>
