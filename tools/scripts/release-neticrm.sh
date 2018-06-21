@@ -39,7 +39,7 @@ do_merge(){
   git pull
   git checkout ${VERSION_PREFIX}master
   git fetch --all
-  git reset --hard origin/master
+  git reset --hard origin/${VERSION_PREFIX}master
   git merge ${VERSION_PREFIX}hotfix -m "Release merge."
   git commit
   if [ "$2" = "7.x" ] || [ -z "$2" ]; then
