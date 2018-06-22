@@ -200,9 +200,9 @@
         <table>
           {foreach from=$single_contributions item=contribution}
           <tr>
-            <td><a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$conribution.id`&cid=`$contribution.contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$contribution.name}</a></td>
+            <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contribution.contact_id`" h=0 a=1 fe=1}">{$contribution.name}</a></td>
             <td>{$contribution.date}</td>
-            <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contribution.contact_id`" h=0 a=1 fe=1}">{$contribution.amount|crmMoney}</a></td>
+            <td><a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$contribution.id`&cid=`$contribution.contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$contribution.amount|crmMoney}</a></td>
             <td>{$contribution.instrument}</td>
           </tr>
           {/foreach}
@@ -219,9 +219,9 @@
         <table>
           {foreach from=$recur_contributions item=contribution}
           <tr>
-            <td>{$contribution.name}</td>
+            <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contribution.contact_id`" h=0 a=1 fe=1}">{$contribution.name}</a></td>
             <td>{$contribution.date}</td>
-            <td>{$contribution.amount|crmMoney}</td>
+            <td><a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$contribution.id`&cid=`$contribution.contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$contribution.amount|crmMoney}</a></td>
             <td>{$contribution.instrument}</td>
           </tr>
           {/foreach}
@@ -236,12 +236,11 @@
       <div class="box-content">
         <h3>即將到期的定期定額</h3>
         <table>
-          {foreach from=$recur_contributions item=contribution}
+          {foreach from=$expire_recur item=contribution}
           <tr>
-            <td>{$contribution.name}</td>
-            <td>{$contribution.date}</td>
-            <td>{$contribution.amount|crmMoney}</td>
-            <td>{$contribution.instrument}</td>
+            <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contribution.contact_id`" h=0 a=1 fe=1}">{$contribution.name}</a></td>
+            <td><a href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$contribution.recur_id`&cid=`$contribution.contact_id`" h=0 a=1 fe=1}">{$contribution.amount|crmMoney}</a></td>
+            <td>{$contribution.end_date}</td>
           </tr>
           {/foreach}
         </table>

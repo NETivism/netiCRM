@@ -473,6 +473,27 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     }
     $this->assign('recur_contributions', $recur_contributions);
 
+    $params_next_month = array(
+      1 => array(date('Y-m-d', strtotime("+1 month")), 'String'),
+    );
+    $sql = "SELECT c.id contact_id, c.display_name name, cr.amount amount, cr.end_date end_date, cr.id recur_id, c.id contribution_id
+      FROM civicrm_contribution_recur cr 
+      INNER JOIN civicrm_contact c ON cr.contact_id = c.id 
+      WHERE cr.end_date <= %1 AND cr.contribution_status_id = 5 
+      GROUP BY cr.id ORDER BY c.id ASC LIMIT 5";
+    $dao = CRM_Core_DAO::executeQuery($sql, $params_next_month);
+    $expire_recur = array();
+    while($dao->fetch()){
+      $recur = array();
+      $recur['contact_id'] = $dao->contact_id;
+      $recur['name'] = $dao->name;
+      $recur['amount'] = $dao->amount;
+      $recur['recur_id'] = $dao->recur_id;
+      $recur['end_date'] = $dao->end_date;
+      $expire_recur[] = $recur;
+    }
+    $this->assign('expire_recur', $expire_recur);
+
   }
 
   private static function getDataForChart($label_array, $summary_array, $type='sum') {
