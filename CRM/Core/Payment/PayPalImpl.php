@@ -486,8 +486,6 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
 
     // Allow further manipulation of the arguments via custom hooks ..
     CRM_Utils_Hook::alterPaymentProcessorParams($this, $params, $paypalParams);
-print_r($paypalParams);
-exit();
 
     $uri = '';
     foreach ($paypalParams as $key => $value) {
