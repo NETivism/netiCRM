@@ -154,7 +154,7 @@
         <div>
           <h5 class="kpi-box-title">最大額捐款</h5>
           <div class="box-detail">
-            <span class="bigger"> <span class="red">{$duration_max_amount}</span>元 </span><br>
+            <span class="bigger"> <span class="red">{$duration_max_amount|crmMoney}</span>元 </span><br>
             來自<a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$duration_max_id`&cid=`$duration_max_contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$duration_max_display_name}於{$duration_max_receive_date}</a>
           </div>
         </div>
@@ -168,7 +168,7 @@
         <div> 
           <h5 class="kpi-box-title">捐款總金額</h5>
             <div class="box-detail">
-              <span class="bigger"><span class="red">{$duration_sum}</span> 元</span>
+              <span class="bigger"><span class="red">{$duration_sum|crmMoney}</span> 元</span>
               {if $duration_sum_growth}
                 <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_sum_growth}</div>
               {/if}
@@ -185,29 +185,7 @@
   <div class="col-xs-12 col-md-{$page_col_n}">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h5>{$page.title}</h5>
-        <div>有<span class="bigger"><span class="red">{$page.duration_count}</span>筆</span>新增捐款</div>
-        {if $page.duration_count_growth}
-          <div>{include file="CRM/common/growth_sentence.tpl" growth=$page.duration_count_growth bigger=1}</div>
-        {/if}
-        <div class="grey">總達成金額 {$page.total_amount|crmMoney}{if $page.goal} / {$page.goal|crmMoney}{/if}</div>
-        <div class="grey">總人次 {$page.total_count}</div>
-        
-        <div class="process-wrapper">
-          {if $page.goal}
-          <span class="process-full"><span class="process-inner" style="width:{if $page.process > 100}100{else}{$page.process}{/if}%;">{$page.process|number_format:2:".":","}%</span></span>
-          {/if}
-        </div>
-        <div><h5>捐款來源</h5>
-          <div class="source-outter">
-            {foreach from=$page.source item=source}
-            <div class="source-inner">
-              <div>{$source.type}</div>
-              <div>{$source.count}%</div>
-            </div>
-            {/foreach}
-          </div>
-        </div>
+        {include file="CRM/common/ContributionPageStatusCard.tpl" page=$page}
       </div>
     </div>
   </div>
@@ -217,7 +195,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>這 {$days} 天新進捐款（單筆）</h3>
+        <h3>這 {$days} 天新進單筆捐款</h3>
         <table>
           {foreach from=$single_contributions item=contribution}
           <tr>
@@ -236,7 +214,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>這 {$days} 天新進捐款（定期定額）</h3>
+        <h3>這 {$days} 天新進定期定額捐款</h3>
         <table>
           {foreach from=$recur_contributions item=contribution}
           <tr>
