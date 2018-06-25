@@ -399,10 +399,28 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       CRM_Core_Error::fatal(ts('Component is invalid'));
     }
 
-    $ids = CRM_Contribute_BAO_Contribution::buildIds($params['contributionID']);
-    // user userFrameworkResourceURL because we dont need languae prefix of url
-    $notifyURL = $config->userFrameworkResourceURL."extern/ipn.php?".CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
     $testingParam = $this->_mode == 'test' ? '&action=preview' : '';
+
+    $notifyURL = $config->userFrameworkResourceURL . "extern/ipn.php?reset=1&contactID={$params['contactID']}" . "&contributionID={$params['contributionID']}" . "&module={$component}";
+
+    if ($component == 'event') {
+      $notifyURL .= "&eventID={$params['eventID']}&participantID={$params['participantID']}";
+    }
+    else {
+      $membershipID = CRM_Utils_Array::value('membershipID', $params);
+      if ($membershipID) {
+        $notifyURL .= "&membershipID=$membershipID";
+      }
+      $relatedContactID = CRM_Utils_Array::value('related_contact', $params);
+      if ($relatedContactID) {
+        $notifyURL .= "&relatedContactID=$relatedContactID";
+
+        $onBehalfDupeAlert = CRM_Utils_Array::value('onbehalf_dupe_alert', $params);
+        if ($onBehalfDupeAlert) {
+          $notifyURL .= "&onBehalfDupeAlert=$onBehalfDupeAlert";
+        }
+      }
+    }
 
     $url = ($component == 'event') ? 'civicrm/event/register' : 'civicrm/contribute/transact';
     $returnURL = CRM_Utils_System::url($url, "_qf_ThankYou_display=1&qfKey={$params['qfKey']}", TRUE, NULL, FALSE);
@@ -465,6 +483,13 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
 
     // if recurring donations, add a few more items
     if (!empty($params['is_recur'])) {
+      if ($params['contributionRecurID']) {
+        $notifyURL .= "&contributionRecurID={$params['contributionRecurID']}&contributionPageID={$params['contributionPageID']}";
+        $paypalParams['notify_url'] = $notifyURL;
+      }
+      else {
+        CRM_Core_Error::fatal(ts('Recurring contribution, but no database id'));
+      }
       $paypalParams += array(
         'cmd' => '_xclick-subscriptions',
         'a3' => $params['amount'],
