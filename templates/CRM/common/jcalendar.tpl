@@ -25,23 +25,31 @@
 *}
 {strip}
 {if $batchUpdate}
-    {assign var='elementId'   value=$form.field.$elementIndex.$elementName.id}
+    {if !$elementId}
+        {assign var='elementId'   value=$form.field.$elementIndex.$elementName.id}
+    {/if}
     {assign var="tElement" value=$elementName|cat:"_time"}
     {assign var="timeElement" value=field_`$elementIndex`_`$elementName`_time}
     {$form.field.$elementIndex.$elementName.html|crmReplace:class:dateplugin}
     &nbsp;&nbsp;{$form.field.$elementIndex.$tElement.label}&nbsp;&nbsp;{$form.field.$elementIndex.$tElement.html|crmReplace:class:six}
 {elseif $elementIndex}
-    {assign var='elementId'   value=$form.$elementName.$elementIndex.id}
+    {if !$elementId}
+        {assign var='elementId'   value=$form.$elementName.$elementIndex.id}
+    {/if}
     {assign var="timeElement" value=$elementName|cat:"_time.$elementIndex"}
     {$form.$elementName.$elementIndex.html|crmReplace:class:dateplugin}
 {elseif $blockId and $blockSection}
-    {assign var='elementId'   value=$form.$blockSection.$blockId.$elementName.id}
+    {if !$elementId}
+        {assign var='elementId'   value=$form.$blockSection.$blockId.$elementName.id}
+    {/if}
     {assign var="tElement" value=`$elementName`_time}
     {$form.$blockSection.$blockId.$elementName.html|crmReplace:class:dateplugin}
     {assign var="timeElement" value=`$blockSection`_`$blockId`_`$elementName`_time}
     &nbsp;&nbsp;{$form.$blockSection.$blockId.$tElement.label}&nbsp;&nbsp;{$form.$blockSection.$blockId.$tElement.html|crmReplace:class:six}
 {else}
-    {assign var='elementId'   value=$form.$elementName.id}
+    {if !$elementId}
+        {assign var='elementId'   value=$form.$elementName.id}
+    {/if}
     {assign var="timeElement" value=$elementName|cat:'_time'}
     {$form.$elementName.html|crmReplace:class:dateplugin}
 {/if}

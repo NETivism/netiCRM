@@ -77,11 +77,60 @@
     color: white;
     text-align: center;
   }
+  .date-selector-wrapper {
+    position: relative;
+  }
+  .date-selector {
+    position: absolute;
+    width: auto;
+    top: -10px;
+    right: 0;
+  }
 </style>
 {/literal}
 
-<div class="row">
-  <h3>過去 30 天捐款概況</h3>
+<div class="row date-selector-wrapper">
+  <h3>這 {$days} 天捐款概況</h3>
+
+  <div class="date-selector">
+    <span class="labels">
+      {ts}Start Date{/ts}
+    </span>
+    <span class="fields">
+      <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0"  format="yy-mm-dd" name="start_date" type="text" id="start_date" class="form-text dateplugin" value="{$start_date}"/>
+      <input timeformat="1" name="start_date_time" type="hidden" id="start_date_time" class="form-text" />
+      {include file="CRM/common/jcalendar.tpl" elementName=start_date elementId=start_date action=4}
+    </span>
+    <span class="labels">
+      {ts}End Date{/ts}
+    </span>
+    <span class="fields">
+      <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="end_date" type="text" id="end_date" class="form-text dateplugin" value="{$end_date}"/>
+      <input timeformat="1" name="end_date_time" type="hidden" id="end_date_time" class="form-text" />
+      {include file="CRM/common/jcalendar.tpl" elementName=end_date elementId=end_date action=4}
+    </span>
+    <span>
+      <button type="button" id="date-selector-button">{ts}Submit{/ts}</button>
+      {literal}
+        <script>
+          cj('#date-selector-button').click(function(){
+            var url = '/civicrm/contribute?reset=1';
+            var start_date = cj('#start_date').val();
+            var end_date = cj('#end_date').val();
+            if(start_date){
+              url += '&start_date='+start_date;
+            }
+            if(end_date){
+              url += '&end_date='+end_date;
+            }
+            location.href = url;
+          });
+        </script>
+      {/literal}
+    </span>
+  </div>
+
+
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
@@ -91,19 +140,9 @@
           <div class="box-detail">
             <span class="bigger"><span class="red">{$duration_count}</span> 人</span>
             {if $duration_count_growth}
-              {if $duration_count_is_growth}
-                  {assign var="zmdi" value="zmdi-long-arrow-up"}
-                  {assign var="verb" value="成長"}
-                  {assign var="color" value="blue"}
-              {else}
-                  {assign var="zmdi" value="zmdi-long-arrow-down"}
-                  {assign var="verb" value="下降"}
-                  {assign var="color" value="red"}
-              {/if}
-              <div><span class="{$color}"><i class="zmdi {$zmdi}"></i>較前30天{$verb}<span>{$duration_count_growth}</span>%</span></div>
+              <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_count_growth}</div>
             {/if}
           </div>
-
         </div>
       </div>
     </div>
@@ -131,16 +170,7 @@
             <div class="box-detail">
               <span class="bigger"><span class="red">{$duration_sum}</span> 元</span>
               {if $duration_sum_growth}
-                {if $duration_sum_is_growth}
-                    {assign var="zmdi" value="zmdi-long-arrow-up"}
-                    {assign var="verb" value="成長"}
-                    {assign var="color" value="blue"}
-                {else}
-                    {assign var="zmdi" value="zmdi-long-arrow-down"}
-                    {assign var="verb" value="下降"}
-                    {assign var="color" value="red"}
-                {/if}
-                <div><span class="{$color}"><i class="zmdi {$zmdi}"></i>較前30天{$verb}<span>{$duration_sum_growth}</span>%</span></div>
+                <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_sum_growth}</div>
               {/if}
             </div>
         </div>
@@ -150,27 +180,18 @@
 </div>
 
 <div class="row">
-  <h3>過去30天募款頁狀況</h3>
+  <h3>這 {$days} 天募款頁狀況</h3>
   {foreach from=$contribution_page_status item=page}
-  {if $page.duration_count_is_growth}
-      {assign var="zmdi" value="zmdi-long-arrow-up"}
-      {assign var="verb" value="成長"}
-      {assign var="color" value="blue"}
-  {else}
-      {assign var="zmdi" value="zmdi-long-arrow-down"}
-      {assign var="verb" value="下降"}
-      {assign var="color" value="red"}
-  {/if}
   <div class="col-xs-12 col-md-{$page_col_n}">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h5>{$page.title}</h5>
-        <div>過去30天有<span class="bigger"><span class="red">{$page.duration_count}</span>筆</span>新增捐款</div>
+        <div>有<span class="bigger"><span class="red">{$page.duration_count}</span>筆</span>新增捐款</div>
         {if $page.duration_count_growth}
-          <div><i class="bigger zmdi {$zmdi}"></i>較前30天<span class="{$color}">{$verb}<span class="bigger">{$page.duration_count_growth}%</span></span></div>
+          <div>{include file="CRM/common/growth_sentence.tpl" growth=$page.duration_count_growth bigger=1}</div>
         {/if}
-        <span class="grey">總達成金額 {$page.total_amount|crmMoney}{if $page.goal} / {$page.goal|crmMoney}{/if}</span>
-        <span class="grey">總人次 {$page.total_count}</span>
+        <div class="grey">總達成金額 {$page.total_amount|crmMoney}{if $page.goal} / {$page.goal|crmMoney}{/if}</div>
+        <div class="grey">總人次 {$page.total_count}</div>
         
         <div class="process-wrapper">
           {if $page.goal}
@@ -196,7 +217,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>過去30天新進捐款（單筆）</h3>
+        <h3>這 {$days} 天新進捐款（單筆）</h3>
         <table>
           {foreach from=$single_contributions item=contribution}
           <tr>
@@ -215,7 +236,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>過去30天新進捐款（定期定額）</h3>
+        <h3>這 {$days} 天新進捐款（定期定額）</h3>
         <table>
           {foreach from=$recur_contributions item=contribution}
           <tr>
@@ -236,7 +257,7 @@
       <div class="box-content">
         <h3>即將到期的定期定額</h3>
         <table>
-          {foreach from=$expire_recur item=contribution}
+          {foreach from=$due_recur item=contribution}
           <tr>
             <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contribution.contact_id`" h=0 a=1 fe=1}">{$contribution.name}</a></td>
             <td><a href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$contribution.recur_id`&cid=`$contribution.contact_id`" h=0 a=1 fe=1}">{$contribution.amount|crmMoney}</a></td>
@@ -253,7 +274,7 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>最近30天捐款金額</h3>
+      <h3>這 {$days} 天捐款金額</h3>
       <div>
         <div class="chartist">
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_sum}
@@ -267,7 +288,7 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>最近30天成交捐款人來源（募款頁的上一個頁面網址）</h3>
+      <h3>這 {$days} 天成交捐款人來源（募款頁的上一個頁面網址）</h3>
       <div>
         <div class="chartist">
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_track}
@@ -281,7 +302,7 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>最近30天縣市捐款金額</h3>
+      <h3>這 {$days} 天縣市捐款金額</h3>
       <div>
         <div class="chartist">
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_province_sum}

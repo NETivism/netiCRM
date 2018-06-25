@@ -136,6 +136,18 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $end_date = $this->end_date = $end_date ? $end_date : ($_GET['end_date'] ? $_GET['end_date'] : date('Y-m-d'));
     $start_date = $this->start_date = $start_date ? $start_date : ($_GET['start_date'] ? $_GET['start_date'] : date('Y-m-d', strtotime('-30day')));
 
+    $end_timestamp = strtotime($end_date);
+    $start_timestamp = strtotime($start_date);
+    if(empty($end_timestamp)){
+      CRM_Core_Error::fatal(ts('End date is not valid date format.'));
+    }
+    if(empty($start_timestamp)){
+      CRM_Core_Error::fatal(ts('Start date is not valid date format.'));
+    }
+    if($start_timestamp > $end_timestamp){
+      CRM_Core_Error::fatal(ts('Start date should not be after End date.'));
+    }
+
     $last_end_date = $this->last_end_date = $this->start_date;
     $duration_stamp = strtotime($this->end_date) - strtotime($this->start_date);
     $last_start_date = $this->last_start_date =  date('Y-m-d', strtotime($this->start_date) - $duration_stamp);
@@ -148,6 +160,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     }
     $this->duration_array = $duration_array;
 
+    $this->days = ceil(($end_timestamp - $start_timestamp) / 86400);
+
     $this->params_duration = array(
       1 => array($start_date, 'String'),
       2 => array($end_date, 'String'),
@@ -156,20 +170,16 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       1 => array($last_start_date, 'String'),
       2 => array($last_end_date, 'String'),
     );
+
+    $this->assign('days', $this->days);
+    $this->assign('start_date', $this->start_date);
+    $this->assign('end_date', $this->end_date);
+
   }
 
   function processDashBoard(){
 
-    
-
     // refs #22871 add chart data
-    $summary_contrib = array();
-    if($_GET['start_date']){
-      $cc_filter['start_date'] = $_GET['start_date'];
-    }
-    if($_GET['end_date']){
-      $cc_filter['end_date'] = $_GET['end_date'];
-    }
     $filter_time = array('start_date' => $this->start_date, 'end_date' => $this->end_date);
     $filter_all_year = array('start_date' => date('Y').'-01-01', 'end_date' => date('Y-m-d'));
 
@@ -187,7 +197,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       dpm($summary_contrib);
     }
 
-    $template =& CRM_Core_Smarty::singleton();
     $one_year_label = $year_month_label = array();
     for ($month=1; $month <= 12 ; $month++) {
       $one_year_label[] = $month.'月';
@@ -218,7 +227,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'withToolTip' => true,
       'stackLines' => true
     );
-    $template->assign('chart_this_year', $chart);
+    $this->assign('chart_this_year', $chart);
 
     foreach ($this->duration_array as $date) {
       $recur_index = array_search($date, $summary_contrib['LastDurationContrib']['recur']['label']);
@@ -236,32 +245,32 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'seriesUnitPosition'=> 'prefix',
       'withToolTip' => true,
     );
-    $template->assign('chart_last_duration_sum', $chart);
+    $this->assign('chart_duration_sum', $chart);
 
-    // $sql = "SELECT t.referrer_type, t.referrer_network FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.entity_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1";
-    $sql = "SELECT t.referrer_network referrer_network FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date < %2 GROUP BY referrer_network";
+    // $sql = "SELECT t.referrer_type, t.referrer_type FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.entity_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1";
+    $sql = "SELECT t.referrer_type referrer_type FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date < %2 GROUP BY referrer_type";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     $track_label = array();
     while($dao->fetch()){
-      if(!$dao->referrer_network){
+      if(!$dao->referrer_type){
         $track_label[] = ts('Others');
       }else{
-        if(!in_array($dao->referrer_network, $track_label)){
-          $track_label[] = $dao->referrer_network;
+        if(!in_array($dao->referrer_type, $track_label)){
+          $track_label[] = $dao->referrer_type;
         }
       }
     }
     $count_track = count($track_label) ? count($track_label) : 1;
     $duration_track = array_fill(0, count($this->duration_array), array_fill(0, $count_track, 0));
 
-    $sql = "SELECT t.referrer_network, count(t.referrer_network) count, DATE_FORMAT(t.visit_date,'%Y-%m-%d') visit_day FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date < %2 GROUP BY visit_day, referrer_network";
+    $sql = "SELECT t.referrer_type, count(t.referrer_type) count, DATE_FORMAT(t.visit_date,'%Y-%m-%d') visit_day FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date < %2 GROUP BY visit_day, referrer_type";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     while($dao->fetch()){
       $inx_date = array_search($dao->visit_day, $this->duration_array);
-      if(!$dao->referrer_network){
+      if(!$dao->referrer_type){
         $track_network = ts('Others');
       }else{
-        $track_network = $dao->referrer_network;
+        $track_network = $dao->referrer_type;
       }
       $inx_network = array_search($track_network, $track_label);
       $duration_track[$inx_date][$inx_network] = $dao->count;
@@ -282,7 +291,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'withToolTip' => true,
       'stackBars' => true
     );
-    $template->assign('chart_duration_track', $chart);
+    $this->assign('chart_duration_track', $chart);
 
     $duration_province_recur_label = empty($summary_contrib['LastDurationProvince']['recur']) ? array() : $summary_contrib['LastDurationProvince']['recur']['label'];
     $duration_province_not_recur_label = empty($summary_contrib['LastDurationProvince']['not_recur']) ? array() : $summary_contrib['LastDurationProvince']['not_recur']['label'];
@@ -301,7 +310,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'withToolTip' => true,
       'stackBars' => true
     );
-    $template->assign('chart_duration_province_sum', $chart);
+    $this->assign('chart_duration_province_sum', $chart);
 
     // First contribtion contact in last 30 days
     $sql = "  SELECT COUNT(c.id) ct, ccd.id, SUM(ccd.total_amount) sum FROM civicrm_contact c
@@ -317,22 +326,21 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $last_duration_count = $dao->ct;
     }
 
-    $template->assign('duration_count', $duration_count);
+    $this->assign('duration_count', $duration_count);
     if($last_duration_count > 0){
       $duration_count_growth = ( $duratioin_count / $last_duration_count ) -1;
-      $template->assign('duration_count_growth', number_format(abs($duration_count_growth) * 100, 2));
-      $template->assign('duration_count_is_growth', $duration_count_growth > 0);
+      $this->assign('duration_count_growth', number_format($duration_count_growth * 100, 2));
     }
 
     $sql = "SELECT * FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON cc.contact_id = c.id WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 AND receive_date < %2 ORDER BY cc.total_amount DESC LIMIT 1;";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     if($dao->fetch()){
-      $template->assign('duration_max_amount', $dao->total_amount);
-      $template->assign('duration_max_id', $dao->id);
-      $template->assign('duration_max_contact_id', $dao->contact_id);
-      $template->assign('duration_max_display_name', $dao->display_name);
-      $template->assign('duration_max_receive_date', $dao->receive_date);
-      // $template->assign('duration_max_receive_date', $dao->receive_date);
+      $this->assign('duration_max_amount', $dao->total_amount);
+      $this->assign('duration_max_id', $dao->id);
+      $this->assign('duration_max_contact_id', $dao->contact_id);
+      $this->assign('duration_max_display_name', $dao->display_name);
+      $this->assign('duration_max_receive_date', $dao->receive_date);
+      // $this->assign('duration_max_receive_date', $dao->receive_date);
     }
 
     $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 AND receive_date < %2 ;";
@@ -340,11 +348,10 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     $last_duration_sum = CRM_Core_DAO::singleValueQuery($sql, $this->params_last_duration);
 
-    $template->assign('duration_sum', $duration_sum);
+    $this->assign('duration_sum', $duration_sum);
     if($last_duration_sum > 0){
       $duration_sum_growth = ( $duration_sum / $last_duration_sum ) -1;
-      $template->assign('duration_sum_growth', number_format(abs($duration_sum_growth) * 100, 2));
-      $template->assign('duration_sum_is_growth', $duration_sum_growth > 0);
+      $this->assign('duration_sum_growth', number_format($duration_sum_growth * 100, 2));
     }
 
     // block recur
@@ -362,14 +369,14 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       }
     }
     if(!empty($summary)){
-      $template->assign('summaryRecur', $summary);
-      $template->assign('summaryTime', date('n/j H:i', $summaryTime));
-      $template->assign('frequencyUnit', 'month');
+      $this->assign('summaryRecur', $summary);
+      $this->assign('summaryTime', date('n/j H:i', $summaryTime));
+      $this->assign('frequencyUnit', 'month');
       $chart = CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
       $chart['withToolTip'] = true;
       $chart['seriesUnitPosition'] = 'prefix';
       $chart['seriesUnit'] = '$';
-      $template->assign('chartRecur', $chart);
+      $this->assign('chartRecur', $chart);
     }
 
     // contribution_page status
@@ -422,8 +429,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
       if($last_duration_count > 0){
         $duration_count_growth = ( $duration_count / $last_duration_count ) -1;
-        $cp_status[$i]['duration_count_growth'] = number_format(abs($duration_count_growth) * 100,2 );
-        $cp_status[$i]['duration_count_is_growth'] = $duration_count_growth > 0;
+        $cp_status[$i]['duration_count_growth'] = number_format($duration_count_growth * 100,2 );
       }
 
       $i++;
@@ -482,17 +488,17 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       WHERE cr.end_date <= %1 AND cr.contribution_status_id = 5 
       GROUP BY cr.id ORDER BY c.id ASC LIMIT 5";
     $dao = CRM_Core_DAO::executeQuery($sql, $params_next_month);
-    $expire_recur = array();
+    $due_recur = array();
     while($dao->fetch()){
       $recur = array();
       $recur['contact_id'] = $dao->contact_id;
       $recur['name'] = $dao->name;
       $recur['amount'] = $dao->amount;
       $recur['recur_id'] = $dao->recur_id;
-      $recur['end_date'] = $dao->end_date;
+      $recur['end_date'] = date('Y-m-d', strtotime($dao->end_date));
       $expire_recur[] = $recur;
     }
-    $this->assign('expire_recur', $expire_recur);
+    $this->assign('due_recur', $due_recur);
 
   }
 
@@ -516,15 +522,15 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       1 => array($page_id, 'Integer'),
     );
     $sum = CRM_Core_DAO::singleValueQuery($sql, $params);
-    $sql = "SELECT COUNT(session_key) count, referrer_network FROM civicrm_track WHERE page_type = 'civicrm_contribution_page' AND page_id = %1 GROUP BY referrer_network ORDER BY count";
+    $sql = "SELECT COUNT(session_key) count, referrer_type FROM civicrm_track WHERE page_type = 'civicrm_contribution_page' AND page_id = %1 GROUP BY referrer_type ORDER BY count";
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     $return_array = array();
     $i = 0;
     $other = 0;
     while($dao->fetch()){
-      if(count($return_array) < 4 && !empty($dao->referrer_network)){
+      if(count($return_array) < 4 && !empty($dao->referrer_type)){
         $return_array[$i] = array(
-          'type' => $dao->referrer_network,
+          'type' => $dao->referrer_type,
           'count' => number_format(($dao->count / $sum) * 100 , 2),
         );
       }else{
