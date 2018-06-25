@@ -400,7 +400,8 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     }
 
     $ids = CRM_Contribute_BAO_Contribution::buildIds($params['contributionID']);
-    $notifyURL = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, $config->userFrameworkResourceURL."extern/ipn.php");
+    // user userFrameworkResourceURL because we dont need languae prefix of url
+    $notifyURL = $config->userFrameworkResourceURL."extern/ipn.php?".CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
     $testingParam = $this->_mode == 'test' ? '&action=preview' : '';
 
     $url = ($component == 'event') ? 'civicrm/event/register' : 'civicrm/contribute/transact';
@@ -485,6 +486,8 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
 
     // Allow further manipulation of the arguments via custom hooks ..
     CRM_Utils_Hook::alterPaymentProcessorParams($this, $params, $paypalParams);
+print_r($paypalParams);
+exit();
 
     $uri = '';
     foreach ($paypalParams as $key => $value) {
