@@ -31,7 +31,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     if ($params['session_key']) {
       $track = new CRM_Core_DAO_Track();
       $track->session_key = $params['session_key'];
-      if ($track->find()) {
+      if ($track->find(TRUE)) {
         $track->copyValues($params);
         $track->update();
       }

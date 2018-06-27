@@ -28,7 +28,7 @@
 <div class="crm-custom-search-description">
   <p>{ts}Someone had donated last year but not this year. You can take care of them to see if they still remember you.{/ts}</p>
 </div>
-  <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if $rowsEmpty}open{else}closed{/if}">
+  <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if !$rows}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>
       {ts}Edit Search Criteria{/ts}

@@ -191,6 +191,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   public $_action;
   protected $_uploadedFiles;
 
+  public $_contributionID;
+
   /**
    * Function to set variables up before form is built
    *
@@ -281,6 +283,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $this->_paymentProcessor = $this->get('paymentProcessor');
     $this->_priceSetId = $this->get('priceSetId');
     $this->_priceSet = $this->get('priceSet');
+    $this->_contributionID = $this->get('contributionID');
 
     if (!$this->_values) {
       // get all the values from the dao object
@@ -935,7 +938,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
   }
 
-  public function track($pageName = '', $entityTable = NULL, $entityId = NULL) {
+  public function track($pageName = '') {
     $page_id = $this->_values['id'];
     if (empty($pageName)) {
       $actionName = $this->controller->getActionName();
@@ -954,11 +957,16 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       'page_id' => $page_id,
       'visit_date' => date('Y-m-d H:i:s'),
     );
-    if ($entityTable && $entityId) {
-      $params['entity_table'] = $entityTable;
-      $params['entity_id'] = $entityId;
+    $track = CRM_Core_BAO_Track::add($params);
+    if (!empty($this->_contributionID) && !empty($track->id)) {
+      $paramsEntity = array(
+        'track_id' => $track->id,
+        'entity_table' => 'civicrm_contribution',
+        'entity_id' => $this->_contributionID,
+        'state' => $state[$pageName],
+      );
+      CRM_Core_BAO_TrackEntity::add($paramsEntity);
     }
-    CRM_Core_BAO_Track::add($params);
   }
 }
 
