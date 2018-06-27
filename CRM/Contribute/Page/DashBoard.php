@@ -396,21 +396,28 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     // last 30 days count
     $instrument_option_group_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
 
-    $sql = "SELECT cc.id id, c.id contact_id, cc.receive_date receive_date, cc.total_amount amount, c.display_name name, ov.label instrument FROM civicrm_contribution cc 
+    $sql = "SELECT cc.id id, c.id contact_id, cc.receive_date receive_date, cc.total_amount amount, c.display_name name, cc.payment_instrument_id instrument_id FROM civicrm_contribution cc 
       INNER JOIN civicrm_contact c ON cc.contact_id = c.id
-      INNER JOIN civicrm_option_value ov ON cc.payment_instrument_id = ov.value
-      WHERE ov.option_group_id = $instrument_option_group_id AND cc.payment_processor_id IS NOT NULL AND cc.contribution_status_id = 1 AND cc.is_test = 0 AND cc.receive_date >= %1 AND cc.receive_date < %2 AND cc.contribution_recur_id IS NULL ORDER BY receive_date DESC LIMIT 5 ";
+      WHERE cc.contribution_status_id = 1 AND cc.is_test = 0 AND cc.receive_date >= %1 AND cc.receive_date < %2 AND cc.contribution_recur_id IS NULL ORDER BY receive_date DESC LIMIT 5 ";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     $single_contributions = array();
     while($dao->fetch()){
-      $single_contributions[] = array(
+      $contribution = array(
         'id' => $dao->id,
         'contact_id' => $dao->contact_id,
         'name' => $dao->name, 
         'date' => date('Y-m-d', strtotime($dao->receive_date)),
         'amount' => $dao->amount,
-        'instrument' => $dao->instrument,
       );
+      if(!empty($dao->instrument_id)){
+        $sql = "SELECT ov.label FROM civicrm_option_value ov WHERE ov.value = %1 AND ov.option_group_id = %2";
+        $params_ov = array(
+          1 => array($dao->instrument_id, 'Integer'),
+          2 => array($instrument_option_group_id, 'Integer'),
+        );
+        $contribution['instrument'] = CRM_Core_DAO::singleValueQuery($sql, $params_ov);
+      }
+      $single_contributions[] = $contribution;
     }
     $this->assign('single_contributions', $single_contributions);
 

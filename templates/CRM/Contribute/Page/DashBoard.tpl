@@ -206,6 +206,7 @@
           </tr>
           {/foreach}
         </table>
+        <span><a href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1&recur=0"}">{ts}more{/ts}</a></span>
       </div>
     </div>
   </div>
@@ -225,6 +226,7 @@
           </tr>
           {/foreach}
         </table>
+        <span><a href="{crmURL p='civicrm/contact/search/custom' q="force=1&reset=1&csid=17&start=`$start_date`&end=`$end_date`"}">{ts}more{/ts}</a></span>
       </div>
     </div>
   </div>
@@ -243,6 +245,7 @@
           </tr>
           {/foreach}
         </table>
+        <span><a href="{crmURL p='civicrm/contact/search/custom' q="mode=booster&force=1&reset=1&csid=17"}">{ts}more{/ts}</a></span>
       </div>
     </div>
   </div>
@@ -258,6 +261,7 @@
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_sum}
         </div>
       </div>
+      <span><a href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1"}"">{ts}more{/ts}</a></span>
     </div>
   </div>
 </div>
@@ -289,7 +293,6 @@
     </div>
   </div>
 </div>
-
 
 {if $pager->_totalItems}
 <div class="crm-section dashboard-section">
