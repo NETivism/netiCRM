@@ -123,7 +123,6 @@ class CRM_Contribute_BAO_Contribution_Utils {
 
       $form->set('params', $form->_params);
       $form->postProcessPremium($premiumParams, $contribution);
-      $form->track('payment', 'civicrm_contribution', $contribution->id);
 
       if ($form->_amount > 0.0) {
         // add qfKey so we can send to paypal

@@ -834,12 +834,12 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     // add participant record
     $participant = $this->addParticipant($this->_params, $contactID);
     $this->_participantIDS[] = $participant->id;
-    $this->track('payment', 'civicrm_participant', $participant->id);
 
     //setting register_by_id field and primaryContactId
     if (CRM_Utils_Array::value('is_primary', $this->_params)) {
       $this->set('registerByID', $participant->id);
       $this->set('primaryContactId', $contactID);
+      $this->track('payment');
     }
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     CRM_Core_BAO_CustomValueTable::postProcess($this->_params,
@@ -1363,7 +1363,7 @@ WHERE  v.option_group_id = g.id
     }
   }
 
-  public function track($pageName = '', $entityTable = NULL, $entityId = NULL) {
+  public function track($pageName = '') {
     $page_id = $this->_values['event']['id'];
     if (empty($pageName)) {
       $actionName = $this->controller->getActionName();
@@ -1382,11 +1382,17 @@ WHERE  v.option_group_id = g.id
       'page_id' => $page_id,
       'visit_date' => date('Y-m-d H:i:s'),
     );
-    if ($entityTable && $entityId) {
-      $params['entity_table'] = $entityTable;
-      $params['entity_id'] = $entityId;
+    $track = CRM_Core_BAO_Track::add($params);
+    $primaryParticipant = $this->get('registerByID');
+    if (!empty($track->id) && !empty($primaryParticipant)) {
+      $paramsEntity = array(
+        'track_id' => $track->id,
+        'entity_table' => 'civicrm_participant',
+        'entity_id' => $primaryParticipant,
+        'state' => $state[$pageName],
+      );
+      CRM_Core_BAO_TrackEntity::add($paramsEntity);
     }
-    CRM_Core_BAO_Track::add($params);
   }
 }
 

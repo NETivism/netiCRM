@@ -1033,11 +1033,16 @@ class CRM_Profile_Form extends CRM_Core_Form {
       'page_id' => $this->_gid,
       'visit_date' => date('Y-m-d H:i:s'),
     );
-    if ($this->_id) {
-      $params['entity_table'] = 'civicrm_contact';
-      $params['entity_id'] = $this->_id;
+    $track = CRM_Core_BAO_Track::add($params);
+    if ($this->_id && !empty($track->id)) {
+      $paramsEntity = array(
+        'track_id' => $track->id,
+        'entity_table' => 'civicrm_contact',
+        'entity_id' => $this->_id,
+        'state' => $state[$pageName],
+      );
+      CRM_Core_BAO_TrackEntity::add($paramsEntity);
     }
-    CRM_Core_BAO_Track::add($params);
   }
 }
 

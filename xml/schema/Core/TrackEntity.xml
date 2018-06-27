@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Core</base>
+  <class>TrackEntity</class>
+  <name>civicrm_track_entity</name>
+  <comment>Record entity of one track</comment>
+  <add>4.0</add>
+  <log>false</log>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>ID for internal usage</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>track_id</name>
+      <type>int unsigned</type>
+      <comment>FK to Track ID</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey>
+       <name>track_id</name>
+       <table>civicrm_track</table>
+       <key>id</key>
+       <add>4</add>
+       <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <field>
+      <name>entity_table</name>
+      <type>varchar</type>
+      <length>64</length>
+      <comment>Entity table like civicrm_contribution or civicrm_participant or civicrm_membership</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>entity_id</name>
+      <type>int unsigned</type>
+      <comment>Entity id like contribution id or participant id</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_entity_table_id</name>
+    <fieldName>entity_table</fieldName>
+    <fieldName>entity_id</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>state</name>
+      <type>int unsigned</type>
+      <comment>Depth of this entity visit</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_state</name>
+    <fieldName>state</fieldName>
+    <add>4.0</add>
+  </index>
+</table>
