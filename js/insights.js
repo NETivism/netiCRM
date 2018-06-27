@@ -107,7 +107,17 @@ function trackVisit(visitInfo) {
         object['referrer_network'] = visitInfo.referrer.network;
         break;
       case 'direct':
-        object['referrer_network'] = '';
+        // detect if from civimail mailing list
+        var queue_id = location.search.match(/civimail_x_q=(\d+)/);
+        var url_id = location.search.match(/civimail_x_u=(\d+)/);
+        if (queue_id && url_id) {
+          object['referrer_type'] = 'email';
+          object['referrer_network'] = 'civimail';
+          object['referrer_url'] = 'external/url.php?qid='+queue_id[1]+'&u='+url_id[1];
+        }
+        else {
+          object['referrer_network'] = '';
+        }
         break;
       case 'email':
         object['referrer_network'] = visitInfo.referrer.client;
