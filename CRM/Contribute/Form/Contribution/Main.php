@@ -660,6 +660,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if(!empty($this->_submitValues['receipt_type'])){
       $this->assign('receipt_type',$this->_submitValues['receipt_type']);
     }
+    
+    $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($this->_id);
+    $this->assign('achievement', $achievement);
   }
 
   /**

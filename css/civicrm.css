@@ -6063,3 +6063,54 @@ input.crm-form-textfield,
 .crm-container a.pcp-contribute-button:link {
     margin: 2em 0;
 }
+
+/* Progress bar */
+.crm-container .progress-wrapper {
+    display: table;
+    width: 100%;
+}
+.crm-container .progress-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+.crm-container .progress-cell.progress-bar-wrapper {
+    width: 80%;
+}
+.crm-container .progress-bar-wrapper {
+    position:relative;
+    border: 1px solid #AAA;
+}
+.crm-container .progress-bar {
+    height: 28px;
+    background: #66cccc;
+    border: 2px solid rgba(255, 255, 255, 0.75);
+}
+.crm-container .progress-pointer {
+    position:absolute;
+    color: #555;
+    top: 0;
+    padding: 0 10px;
+}
+.crm-container .progress-pointer-over {
+    position:absolute;
+    top: 10px;
+    color: #999;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.crm-container .progress-amount {
+  display: flex;
+  justify-content: space-between;
+}
+.crm-container .progress-amount-raised {
+}
+.crm-container .progress-amount-goal {
+}
+.crm-container .progress-cell .button {
+    white-space: nowrap;
+    border-left: 5px solid #FFF;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0;
+    width: 100%;
+}

@@ -700,5 +700,54 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
 
     return $info;
   }
+
+  
+  /**
+   * Function to get goal of contribution page
+   *
+   * @param int $contributionPageId Contribution Page Id
+   *
+   * @return array $achieved
+   *   $type     amount or recurring
+   *   $goal     goal of this contribution page
+   *   $current  current amount or people
+   *   $percent  current/goal percentage, 100 means achieved
+   *   $achieved TRUE / FALSE to indicate if page is achieved goal
+   *
+   * @access public
+   * @static
+   */
+  static function goalAchieved($contributionPageId) {
+    $page = array();
+    CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+
+    if (!empty($page['goal_amount']) && $page['goal_amount'] > 0) {
+      $sql = "SELECT SUM(total_amount) sum FROM civicrm_contribution WHERE contribution_page_id = %1 AND contribution_status_id = 1 AND is_test = 0 GROUP BY contribution_page_id";
+      $percent = round($total_amount/$page['goal_amount'], 1);
+      $type = 'amount';
+      $goal = $page['goal_amount'];
+    }
+    elseif (!empty($page['goal_recurring']) && $page['goal_recurring'] > 0) {
+      $sql = "SELECT COUNT(*) FROM (SELECT c.contribution_status_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_page_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 AND r.contribution_status_id != 3 GROUP BY r.id)";
+      $type = 'recurring';
+      $goal = $page['goal_recurring'];
+    }
+
+    if ($type) {
+      $current = CRM_Core_DAO::singleValueQuery($sql, array( 1 => array($contributionPageId, 'Integer')));
+      $percent = round(ceil(($current/$goal)*100));
+      if ($current > 0 && $percent < 1) {
+        $percent = 1; // when there is value, we have at least 1 percent
+      }
+      return array(
+        'type' => $type,
+        'goal' => $goal,
+        'current' => $current,
+        'percent' => $percent,
+        'achieved' => $percent >= 100 ? TRUE : FALSE,
+      );
+    }
+    return array();
+  }
 }
 
