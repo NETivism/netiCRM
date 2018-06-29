@@ -33,8 +33,7 @@
     </field>
     <field>
         <name>bounce_reason</name>
-        <type>varchar</type>
-        <length>255</length>
+        <type>text</type>
         <comment>The reason the email bounced.</comment>
     </field>
     <field>

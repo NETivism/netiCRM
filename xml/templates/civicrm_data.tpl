@@ -890,6 +890,7 @@ INSERT INTO civicrm_mailing_bounce_pattern
     (@bounceTypeID, 'not a gateway'),
     (@bounceTypeID, 'server is down or unreachable'),
     (@bounceTypeID, 'too many connections'),
+    (@bounceTypeID, 'host or domain name not found'),
     (@bounceTypeID, 'unable to connect');
 
 INSERT INTO civicrm_mailing_bounce_type 

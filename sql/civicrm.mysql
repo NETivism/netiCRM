@@ -3321,7 +3321,7 @@ CREATE TABLE civicrm_mailing_event_bounce (
      id int unsigned NOT NULL AUTO_INCREMENT  ,
      event_queue_id int unsigned NOT NULL   COMMENT 'FK to EventQueue',
      bounce_type_id int unsigned    COMMENT 'What type of bounce was it?',
-     bounce_reason varchar(255)    COMMENT 'The reason the email bounced.',
+     bounce_reason text    COMMENT 'The reason the email bounced.',
      time_stamp datetime NOT NULL   COMMENT 'When this bounce event occurred.' 
 ,
     PRIMARY KEY ( id )

@@ -100,7 +100,7 @@ class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
   /**
    * The reason the email bounced.
    *
-   * @var string
+   * @var text
    */
   public $bounce_reason;
   /**
@@ -161,10 +161,8 @@ class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
         ) ,
         'bounce_reason' => array(
           'name' => 'bounce_reason',
-          'type' => CRM_Utils_Type::T_STRING,
+          'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Bounce Reason') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
         ) ,
         'time_stamp' => array(
           'name' => 'time_stamp',
