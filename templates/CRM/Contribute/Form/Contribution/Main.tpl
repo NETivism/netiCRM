@@ -87,9 +87,11 @@
         <div class="progress-bar" style="width:{$percent_css}%;"></div>
         <div class="progress-pointer" style="{if $percent_css > 50}right:{math equation="x - y" x=100 y=`$percent_css` format="%.1f"}{else}left:{$percent_css}{/if}%">{ts 1=`$achievement.percent`}%1% achieved{/ts}</div>
       </div>
+      {if $intro_text}
       <div class="progress-cell progress-button">
         <div class="button"><span>{ts}Donate Now{/ts}</span></div>
       </div>
+      {/if}
     </div>
   </div><!--progress-block-->
   {/if}
@@ -587,6 +589,11 @@ function enableHonorType( ) {
     {/if}
     {literal}
     amountGrouping(true);
+
+    // click then scroll to bottom
+    $(".progress-button .button").click(function(){
+      jQuery(".payment_options-group")[0].scrollIntoView({"behavior":"smooth","block":"center"});
+    });
   });
 {/literal}
 </script>

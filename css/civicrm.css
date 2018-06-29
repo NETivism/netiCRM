@@ -6065,6 +6065,9 @@ input.crm-form-textfield,
 }
 
 /* Progress bar */
+.crm-container .progress-block {
+  margin: 0 0 30px 0;
+}
 .crm-container .progress-wrapper {
     display: table;
     width: 100%;
