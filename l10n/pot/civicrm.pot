@@ -28627,14 +28627,6 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
 msgid ""
-"Enter an optional goal amount for this contribution page (e.g. for this "
-"'campaign'). If you enable a contribution widget for this page, the widget "
-"will track progress against this goal. Otherwise, the goal will display as "
-"'no limit'."
-msgstr ""
-
-#: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
-msgid ""
 "You can optionally set an \"active date range\" for this contribution page. "
 "These dates are currently only used by the \"Contribution Widget\" - which "
 "will give a \"Campaign is over\" message if it is accessed outside of the "
@@ -46124,4 +46116,22 @@ msgid "This participant have completed or cancelled contribution record. You nee
 msgstr ""
 
 msgid "Used for"
+msgstr ""
+
+msgid "%1 achieved"
+msgstr ""
+
+msgid "Goal Subscribtion"
+msgstr ""
+
+msgid "Display progress bar on the top of contribution page."
+msgstr ""
+
+msgid "Enter one of these goal to display progress bar on the top of contribution page and contribution widget."
+msgstr ""
+
+msgid "Percentage of progress base on total amount / goal amount of this contribution page."
+msgstr ""
+
+msgid "Percentage of progress base on active recurring subscriptions / goal subscriptions of this contribution page."
 msgstr ""
