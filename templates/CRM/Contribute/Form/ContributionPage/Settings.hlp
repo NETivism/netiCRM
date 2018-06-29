@@ -40,8 +40,12 @@ if you are also collecting additional contributions (as configured on the Member
 {ts}If you want content displayed at the bottom of the contribution page, enter it here.{/ts}
 {/htxt}
 
-{htxt id="id-goal_amount"}
-{ts}Enter an optional goal amount for this contribution page (e.g. for this 'campaign'). If you enable a contribution widget for this page, the widget will track progress against this goal. Otherwise, the goal will display as 'no limit'.{/ts}
+{htxt id="id-progress_bar"}
+{ts}Enter one of these goal to display progress bar on the top of contribution page and contribution widget.{/ts}<br>
+<strong>{ts}Goal Amount{/ts}</strong><br>
+{ts}Percentage of progress base on total amount / goal amount of this contribution page.{/ts}<br>
+<strong>{ts}Goal Subscription{/ts}</strong><br>
+{ts}Percentage of progress base on active recurring subscriptions / goal subscriptions of this contribution page.{/ts}
 {/htxt}
 
 {htxt id="id-start_date"}

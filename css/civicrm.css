@@ -6085,7 +6085,7 @@ input.crm-form-textfield,
 }
 .crm-container .progress-bar {
     height: 28px;
-    background: #66cccc;
+    background: #a8d2f9;
     border: 2px solid rgba(255, 255, 255, 0.75);
 }
 .crm-container .progress-pointer {
@@ -6116,4 +6116,5 @@ input.crm-form-textfield,
     text-align: center;
     margin: 0;
     width: 100%;
+    background: #3f51b5;
 }

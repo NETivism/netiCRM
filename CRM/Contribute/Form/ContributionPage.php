@@ -102,6 +102,7 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
 
     // setting title and 3rd level breadcrumb for html page if contrib page exists
     if ($this->_id) {
+      $this->assign('id', $this->_id);
       $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
 
       $url = CRM_Utils_System::url('civicrm/admin/contribute',
@@ -220,7 +221,12 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
       // fix the display of the monetary value, CRM-4038
       require_once 'CRM/Utils/Money.php';
       if (isset($defaults['goal_amount'])) {
-        $defaults['goal_amount'] = CRM_Utils_Money::format($defaults['goal_amount'], NULL, '%a');
+        $defaults['goal_amount'] = ceil($defaults['goal_amount']);
+        $defaults['display_progress_bar'] = 1;
+      }
+      if (isset($defaults['goal_recurring'])) {
+        $defaults['goal_recurring'] = ceil($defaults['goal_recurring']);
+        $defaults['display_progress_bar'] = 1;
       }
 
       // get price set id.

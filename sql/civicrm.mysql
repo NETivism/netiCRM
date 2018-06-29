@@ -3535,6 +3535,7 @@ CREATE TABLE civicrm_contribution_page (
      min_amount decimal(20,2)    COMMENT 'if other amounts allowed, user can configure minimum allowed.',
      max_amount decimal(20,2)    COMMENT 'if other amounts allowed, user can configure maximum allowed.',
      goal_amount decimal(20,2)    COMMENT 'The target goal for this page, allows people to build a goal meter',
+     goal_recurring int unsigned    COMMENT 'The target recurring goal for this page, allows people to build a goal meter base on subscriptions',
      thankyou_title varchar(255)    COMMENT 'Title for Thank-you page (header title tag, and display at the top of the page).',
      thankyou_text text    COMMENT 'text and html allowed. displayed above result on success page',
      thankyou_footer text    COMMENT 'Text and html allowed. displayed at the bottom of the success page. Common usage is to include link(s) to other pages such as tell-a-friend, etc.',
