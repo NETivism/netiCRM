@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-06-29 07:36+0000\n"
+"PO-Revision-Date: 2018-06-29 11:50+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -39307,7 +39307,7 @@ msgstr "被內容過濾器擷取的訊息"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Error in SMTP transaction"
-msgstr "SMTP 錯誤"
+msgstr "退信無法分析或寄件系統錯誤"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Name and Address"
