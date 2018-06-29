@@ -248,6 +248,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     $dao->query($query);
 
     $results = array();
+    $bounceType = CRM_Mailing_PseudoConstant::bounceType('name', 'description');
 
     while ($dao->fetch()) {
       $url = CRM_Utils_System::url('civicrm/contact/view',
@@ -258,7 +259,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
         'email' => $dao->email,
         // FIXME: translate this
         'type' => (empty($dao->bounce_type)
-           ? ts('Unknown') : $dao->bounce_type
+           ? ts('Unknown') : $bounceType[$dao->bounce_type]."($dao->bounce_type)"
         ),
         'reason' => $dao->reason,
         'date' => CRM_Utils_Date::customFormat($dao->date),
