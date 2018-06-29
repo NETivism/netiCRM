@@ -46121,7 +46121,7 @@ msgstr ""
 msgid "%1 achieved"
 msgstr ""
 
-msgid "Goal Subscribtion"
+msgid "Goal Subscription"
 msgstr ""
 
 msgid "Display progress bar on the top of contribution page."
