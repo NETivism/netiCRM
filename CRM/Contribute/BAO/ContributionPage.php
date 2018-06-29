@@ -728,7 +728,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       $goal = $page['goal_amount'];
     }
     elseif (!empty($page['goal_recurring']) && $page['goal_recurring'] > 0) {
-      $sql = "SELECT COUNT(*) FROM (SELECT c.contribution_status_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_page_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 AND r.contribution_status_id != 3 GROUP BY r.id)";
+      $sql = "SELECT COUNT(*) FROM (SELECT c.contribution_status_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_page_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 AND r.contribution_status_id != 3 GROUP BY r.id) as subscription";
       $type = 'recurring';
       $goal = $page['goal_recurring'];
     }

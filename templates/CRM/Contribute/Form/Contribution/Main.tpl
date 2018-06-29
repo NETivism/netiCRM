@@ -85,7 +85,7 @@
     <div class="progress-wrapper">
       <div class="progress-cell progress-bar-wrapper">
         <div class="progress-bar" style="width:{$percent_css}%;"></div>
-        <div class="progress-pointer" style="{if $percent_css > 50}right:{math equation="x - y" x=100 y=`$percent_css` format="%.1f"}{else}left:{$percent_css}{/if}%">{ts 1=`$achievement.percent`}%1% achieved{/ts}</div>
+        <div class="progress-pointer" style="{if $percent_css > 50}right:{math equation="x - y" x=100 y=`$percent_css` format="%.1f"}{else}left:{$percent_css}{/if}%">{ts 1="`$achievement.percent`%"}%1 achieved{/ts}</div>
       </div>
       {if $intro_text}
       <div class="progress-cell progress-button">
