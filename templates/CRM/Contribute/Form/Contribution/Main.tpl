@@ -80,7 +80,7 @@
   <div class="progress-block">
     <div class="progress-amount">
       <div class="progress-amount-raised">{if $achievement.type == "amount"}{$achievement.current|crmMoney}{else}{$achievement.current} {ts}People{/ts}{/if}</div>
-      <div class="progress-amount-goal">{if $achievement.type == "amount"}{ts}Goal Amount{/ts} {$achievement.goal|crmMoney}{else}{ts}Goal Subscribtion{/ts} {$achievement.goal}{ts}People{/ts}{/if}</div>
+      <div class="progress-amount-goal">{if $achievement.type == "amount"}{ts}Goal Amount{/ts} {$achievement.goal|crmMoney}{else}{ts}Goal Subscription{/ts} {$achievement.goal}{ts}People{/ts}{/if}</div>
     </div>
     <div class="progress-wrapper">
       <div class="progress-cell progress-bar-wrapper">
