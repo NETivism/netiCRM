@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-06-29 07:18+0000\n"
+"PO-Revision-Date: 2018-06-29 07:36+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46268,7 +46268,7 @@ msgstr "使用於"
 msgid "%1 achieved"
 msgstr "已達成 %1"
 
-msgid "Goal Subscribtion"
+msgid "Goal Subscription"
 msgstr "目標訂閱"
 
 msgid "Display progress bar on the top of contribution page."
