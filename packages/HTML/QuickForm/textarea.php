@@ -64,8 +64,12 @@ class HTML_QuickForm_textarea extends HTML_QuickForm_element
      */
     function HTML_QuickForm_textarea($elementName=null, $elementLabel=null, $attributes=null)
     {
-        if (!isset($attributes['placeholder'])) {
-          $attributes['placeholder'] = ts('Enter text here') . ' ...';
+        if (is_string($attributes)) {
+            if (!strstr($attributes, 'placeholder=')) {
+                $attributes .= ' placeholder="'.ts('Enter text here').' ..."';
+            }
+        } elseif (!isset($attributes['placeholder'])) {
+            $attributes['placeholder'] = ts('Enter text here') . ' ...';
         }
         HTML_QuickForm_element::HTML_QuickForm_element($elementName, $elementLabel, $attributes);
         $this->_persistantFreeze = true;
