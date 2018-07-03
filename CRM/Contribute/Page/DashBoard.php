@@ -174,10 +174,15 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $this->assign('days', $this->days);
     $this->assign('start_date', $this->start_date);
     $this->assign('end_date', $this->end_date);
+    $this->assign('last_start_date', $this->last_start_date);
+    $this->assign('last_end_date', $this->last_end_date);
 
   }
 
   function processDashBoard(){
+    if($_GET['debug']){
+      $this->assign('debug', 1);
+    }
 
     // refs #22871 add chart data
     $filter_time = array('start_date' => $this->start_date, 'end_date' => $this->end_date);
@@ -521,7 +526,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         $total_amount = $dao_page->total_amount;
       }
 
-      $source = self::getSourceByPageID($pid);
+      $source = self::getSourceByPageID($pid, $start_date, $end_date);
 
       $duration_count = $dao->count ? $dao->count : 0;
       $goal = $dao->goal_amount;
@@ -566,21 +571,37 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     return $return_array;
   }
 
-  private static function getSourceByPageID($page_id) {
-    $sql = "SELECT COUNT(session_key) sum FROM civicrm_track WHERE page_type = 'civicrm_contribution_page' AND page_id = %1";
+  private static function getSourceByPageID($page_id, $start_date = NULL, $end_date = NULL) {
     $params = array(
       1 => array($page_id, 'Integer'),
     );
+    $and_clause = array("c.contribution_page_id = %1 AND c.contribution_status_id = 1");
+    if($start_date){
+      $and_clause[] = ' c.receive_date >= %2 ';
+      $params[2] = array($start_date . ' 00:00:00', 'String');
+    }
+    if($end_date){
+      $and_clause[] = ' c.receive_date <= %3 ';
+      $params[3] = array($end_date . ' 23:59:59', 'String');
+    }
+    $and = implode(' AND ', $and_clause);
+
+    $sql = "SELECT COUNT(c.id) sum FROM civicrm_contribution c
+    LEFT JOIN (SELECT * FROM civicrm_track_entity WHERE entity_table = 'civicrm_contribution' )  te ON te.entity_id = c.id
+    LEFT JOIN  civicrm_track t ON t.id = te.track_id 
+    WHERE $and ";
     $sum = CRM_Core_DAO::singleValueQuery($sql, $params);
-    $sql = "SELECT COUNT(session_key) count, referrer_type FROM civicrm_track WHERE page_type = 'civicrm_contribution_page' AND page_id = %1 GROUP BY referrer_type ORDER BY count";
+    $sql = "SELECT COUNT(c.id) count, t.referrer_type FROM civicrm_contribution c 
+    LEFT JOIN (SELECT * FROM civicrm_track_entity WHERE entity_table = 'civicrm_contribution' )  te ON te.entity_id = c.id
+    LEFT JOIN  civicrm_track t ON t.id = te.track_id 
+    WHERE $and GROUP BY t.referrer_type ORDER BY count DESC";
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     $return_array = array();
-    $i = 0;
     $other = 0;
     while($dao->fetch()){
-      if(count($return_array) < 4 && !empty($dao->referrer_type)){
-        $return_array[$i] = array(
-          'type' => ts($dao->referrer_type),
+      if(count($return_array) < 4 ){
+        $return_array[] = array(
+          'type' => empty($dao->referrer_type) ? ts("Unknown") : ts($dao->referrer_type),
           'count' => number_format(($dao->count / $sum) * 100 ),
         );
       }else{
@@ -591,33 +612,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'type' => ts('Other'),
       'count' => number_format(($other / $sum) * 100),
     );
-
-    /* for test */
-    if ($_GET['test']) {
-      $return_array = array(
-        array(
-          'type' => '電子報',
-          'count' => rand(0,10000) / 100,
-        ),
-        array(
-          'type' => 'FB',
-          'count' => rand(0,10000) / 100,
-        ),
-        array(
-          'type' => 'Twitter',
-          'count' => rand(0,10000) / 100,
-        ),
-        array(
-          'type' => '搜尋',
-          'count' => rand(0,10000) / 100,
-        ),
-        array(
-          'type' => '其他',
-          'count' => rand(0,10000) / 100,
-        ),
-      );
-    }
-    /* for test */
 
     return $return_array;
   }
