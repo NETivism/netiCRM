@@ -317,22 +317,15 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $this->assign('chart_duration_province_sum', $chart);
 
     // First contribtion contact in last 30 days
-    $sql = "  SELECT COUNT(c.id) ct, ccd.id, SUM(ccd.total_amount) sum FROM civicrm_contact c
+    $sql = "  SELECT COUNT(c.id) ct FROM civicrm_contact c
       INNER JOIN ( SELECT id, contact_id, total_amount FROM civicrm_contribution WHERE receive_date >= %1 AND receive_date <= %2 AND is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) ccd ON c.id = ccd.contact_id
       INNER JOIN ( SELECT id, contact_id FROM civicrm_contribution WHERE is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc_all ON c.id = cc_all.contact_id WHERE ccd.id = cc_all.id;";
-    $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
-    if($dao->fetch()){
-      $duration_count = $dao->ct;
-      $duration_sum = $dao->sum;
-    }
-    $dao = CRM_Core_DAO::executeQuery($sql, $this->params_last_duration);
-    if($dao->fetch()){
-      $last_duration_count = $dao->ct;
-    }
-
+    $duration_count = CRM_Core_DAO::singleValueQuery($sql, $this->params_duration);
+    $last_duration_count = CRM_Core_DAO::singleValueQuery($sql, $this->params_last_duration);
     $this->assign('duration_count', $duration_count);
     if($last_duration_count > 0){
-      $duration_count_growth = ( $duratioin_count / $last_duration_count ) -1;
+      $duration_count_growth = ( $duration_count / $last_duration_count ) -1;
+      dpm($duration_count_growth);
       $this->assign('duration_count_growth', number_format($duration_count_growth * 100, 2));
     }
 
