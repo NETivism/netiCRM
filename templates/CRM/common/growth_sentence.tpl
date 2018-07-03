@@ -6,12 +6,12 @@
 {else}
   {if $growth > 0}
       {assign var="zmdi" value="zmdi-long-arrow-up"}
-      {assign var="verb" value="成長"}
+      {capture assign="verb"}{ts}grow by{/ts}{/capture}
       {assign var="color" value="blue"}
   {else}
       {assign var="zmdi" value="zmdi-long-arrow-down"}
-      {assign var="verb" value="下降"}
+      {capture assign="verb"}{ts}decrease by{/ts}{/capture}
       {assign var="color" value="red"}
   {/if}
-  <i class="{$bigger} zmdi {$zmdi}"></i>{if $days}較前 {$days} 天{/if}<span class="{$color}">{$verb}<span class="{$bigger}">{$growth|abs}%</span></span>
+  <i class="{$bigger} zmdi {$zmdi}"></i>{if $days}{ts 1=$days}Compared with previous %1 days{/ts}{/if} <span class="{$color}">{$verb} <span class="{$bigger}">{$growth|abs}%</span></span>
 {/if}

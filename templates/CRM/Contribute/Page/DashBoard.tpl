@@ -60,17 +60,17 @@
   .source-inner {
     flex: 0 0 20%;
   }
-  .process-wrapper {
+  .progress-wrapper {
     width: 100%;
     height: 2em;
     margin-bottom: 10px;
   }
-  .process-full {
+  .progress-full {
     display: block;
     background: #ccc;
     height: 100%;
   }
-  .process-inner {
+  .progress-inner {
     display: block;
     height: 100%;
     background: black;
@@ -90,7 +90,7 @@
 {/literal}
 
 <div class="row date-selector-wrapper">
-  <h3>這 {$days} 天捐款概況</h3>
+  <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Summary{/ts}</h3>
 
   <div class="date-selector">
     <span class="labels">
@@ -136,9 +136,9 @@
       <div class="box-content">
         <i class="zmdi zmdi-hc-5x zmdi-male" style="float:left;"></i>
         <div>
-          <h5 class="kpi-box-title">首次捐款人數</h5>
+          <h5 class="kpi-box-title">{ts}Number of First Time Donation Donors{/ts}</h5>
           <div class="box-detail">
-            <span class="bigger"><span class="red">{$duration_count}</span> 人</span>
+            <span class="bigger">{$duration_count}</span>
             {if $duration_count_growth}
               <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_count_growth}</div>
             {/if}
@@ -152,10 +152,10 @@
       <div class="box-content">
         <i class="zmdi zmdi-hc-5x zmdi-money" style="float: left;"></i>
         <div>
-          <h5 class="kpi-box-title">最大額捐款</h5>
+          <h5 class="kpi-box-title">{ts}Contribution with Maximum Amount{/ts}</h5>
           <div class="box-detail">
-            <span class="bigger"> <span class="red">{$duration_max_amount|crmMoney}</span>元 </span><br>
-            來自<a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$duration_max_id`&cid=`$duration_max_contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$duration_max_display_name}於{$duration_max_receive_date}</a>
+            <span class="bigger">{$duration_max_amount|crmMoney}</span><br>
+            {ts}From{/ts}<a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$duration_max_id`&cid=`$duration_max_contact_id`&action=view&context=contribution&selectedChild=contribute" h=0 a=1 fe=1}">{$duration_max_display_name}{ts}in{/ts}{$duration_max_receive_date}</a>
           </div>
         </div>
       </div>
@@ -166,9 +166,9 @@
       <div class="box-content">
         <i class="zmdi zmdi-hc-5x zmdi-money" style="float: left;"></i>
         <div> 
-          <h5 class="kpi-box-title">捐款總金額</h5>
+          <h5 class="kpi-box-title">{ts}Total Amount{/ts}</h5>
             <div class="box-detail">
-              <span class="bigger"><span class="red">{$duration_sum|crmMoney}</span> 元</span>
+              <span class="bigger">{$duration_sum|crmMoney}</span>
               {if $duration_sum_growth}
                 <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_sum_growth}</div>
               {/if}
@@ -179,8 +179,9 @@
   </div>
 </div>
 
+{if $contribution_page_status}
 <div class="row">
-  <h3>這 {$days} 天募款頁狀況</h3>
+  <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Page Status{/ts}</h3>
   {foreach from=$contribution_page_status item=page}
   <div class="col-xs-12 col-md-{$page_col_n}">
     <div class="box mdl-shadow--2dp">
@@ -191,11 +192,14 @@
   </div>
   {/foreach}
 </div>
+{/if}
+
+
 <div class="row">
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>這 {$days} 天新進單筆捐款</h3>
+        <h3>{ts 1=$days}In %1 days{/ts} {ts}Non-recurring Contribution{/ts}</h3>
         <table>
           {foreach from=$single_contributions item=contribution}
           <tr>
@@ -215,7 +219,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>這 {$days} 天新進定期定額捐款</h3>
+        <h3>{ts 1=$days}In %1 days{/ts} {ts}New Recurring Contribution{/ts}</h3>
         <table>
           {foreach from=$recur_contributions item=contribution}
           <tr>
@@ -235,7 +239,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>即將到期的定期定額</h3>
+        <h3>{ts}End of recurring contribution{/ts}</h3>
         <table>
           {foreach from=$due_recur item=contribution}
           <tr>
@@ -255,7 +259,7 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>這 {$days} 天捐款金額</h3>
+      <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount{/ts}</h3>
       <div>
         <div class="chartist">
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_sum}
@@ -270,7 +274,7 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>這 {$days} 天成交捐款人來源（募款頁的上一個頁面網址）</h3>
+      <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount by Flow Source{/ts}</h3>
       <div>
         <div class="chartist">
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_track}
@@ -284,7 +288,7 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>這 {$days} 天縣市捐款金額</h3>
+      <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount by Province{/ts}</h3>
       <div>
         <div class="chartist">
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_province_sum}
