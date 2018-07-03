@@ -86,6 +86,9 @@
     top: -10px;
     right: 0;
   }
+  .more{
+    text-align: right;
+  }
 </style>
 {/literal}
 
@@ -138,9 +141,16 @@
         <div>
           <h5 class="kpi-box-title">{ts}Number of First Time Donation Donors{/ts}</h5>
           <div class="box-detail">
-            <span class="bigger">{$duration_count}</span>
+            <span class="bigger">
+              {$duration_count}
+            </span>
             {if $duration_count_growth}
               <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_count_growth}</div>
+            {/if}
+            {if $debug}
+            <div class="more">
+              <a href="{crmURL p='civicrm/search/FirstTimeDonor' q='force=1'}">{ts}more{/ts}</a>
+            </div>
             {/if}
           </div>
         </div>
@@ -168,9 +178,18 @@
         <div> 
           <h5 class="kpi-box-title">{ts}Total Amount{/ts}</h5>
             <div class="box-detail">
-              <span class="bigger">{$duration_sum|crmMoney}</span>
+              <span class="bigger">
+                {$duration_sum|crmMoney}
+              </span>
               {if $duration_sum_growth}
                 <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_sum_growth}</div>
+              {/if}
+              {if $debug}
+              <div class="more">
+                <a class="more" href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1"}">
+                  {ts}more{/ts}
+                </a>
+              </div>
               {/if}
             </div>
         </div>
@@ -210,7 +229,9 @@
           </tr>
           {/foreach}
         </table>
-        <span><a href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1&recur=0"}">{ts}more{/ts}</a></span>
+        <div class="more" >
+          <a href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1&recur=0"}">{ts}more{/ts}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -230,7 +251,9 @@
           </tr>
           {/foreach}
         </table>
-        <span><a href="{crmURL p='civicrm/contact/search/custom' q="force=1&reset=1&csid=17&start=`$start_date`&end=`$end_date`"}">{ts}more{/ts}</a></span>
+        <div class="more">
+          <a href="{crmURL p='civicrm/contact/search/custom' q="force=1&reset=1&csid=17&start=`$start_date`&end=`$end_date`"}">{ts}more{/ts}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -249,7 +272,9 @@
           </tr>
           {/foreach}
         </table>
-        <span><a href="{crmURL p='civicrm/contact/search/custom' q="mode=booster&force=1&reset=1&csid=17"}">{ts}more{/ts}</a></span>
+        <div class="more">
+          <a href="{crmURL p='civicrm/contact/search/custom' q="mode=booster&force=1&reset=1&csid=17"}">{ts}more{/ts}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -265,7 +290,9 @@
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_sum}
         </div>
       </div>
-      <span><a href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1"}"">{ts}more{/ts}</a></span>
+      <div class="more">
+        <a href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1"}">{ts}more{/ts}</a>
+      </div>
     </div>
   </div>
 </div>

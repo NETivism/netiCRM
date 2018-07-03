@@ -59,8 +59,10 @@
   </div>
 </div>
 <br/>
+{if $debug}
 <div class="grey-background">
   <a href="{crmURL p='civicrm/contribute/search' q="reset=1&pid=`$page.id`&force=1&test=0" h=0 a=1 fe=1}">
+{/if}
     <div>{ts}Amount reached{/ts} {$page.total_amount|crmMoney}{if $page.goal} / {$page.goal|crmMoney}{/if}</div>
     <div>{ts}Total Donate Times{/ts} {$page.total_count}</div>
     <div class="progress-wrapper">
@@ -68,5 +70,7 @@
       <span class="progress-full"><span class="progress-inner" style="width:{if $page.progress > 100}100{else}{$page.progress}{/if}%;">{$page.progress|number_format:2:".":","}%</span></span>
       {/if}
     </div>
+{if $debug}
   </a>
 </div>
+{/if}

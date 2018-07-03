@@ -325,7 +325,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $this->assign('duration_count', $duration_count);
     if($last_duration_count > 0){
       $duration_count_growth = ( $duration_count / $last_duration_count ) -1;
-      dpm($duration_count_growth);
       $this->assign('duration_count_growth', number_format($duration_count_growth * 100, 2));
     }
 
