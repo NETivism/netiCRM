@@ -1,17 +1,19 @@
-<div class="chartist-wrapper">
+{php}
+global $crmChartistAdded;
+if (!$crmChartistAdded) {
+{/php}
+  <script type="text/javascript" src="{$config->resourceBase}packages/moment/moment.min.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/dist/chartist.min.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-axistitle.js"></script>
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/dist/chartist.min.css">
-  
-  {if $chartist.withToolTip}
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
-  {/if}
-
-  {if $chartist.type eq 'Pie' and $chartist.isFillDonut}
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js"></script>
-  {/if}
-
+{php}
+  $crmChartistAdded = TRUE;
+}
+{/php}
+<div class="chartist-wrapper">
 {if $chartist.series}
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
   
@@ -58,6 +60,9 @@
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
   var seriesUnit = "{/literal}{$chartist.seriesUnit|default:''}{literal}";
   var seriesUnitPosition = "{/literal}{$chartist.seriesUnitPosition|default:'suffix'}{literal}";
+
+  {/literal}{* moment support parse format, check https://momentjs.com/docs/#/parsing/string-format/ *}{literal}
+  var autoDateLabel = {/literal}{$chartist.autoDateLabel|default:0}{literal};
 
   var floorDecimal = function (val, precision) {
     return Math.floor(Math.floor(val * Math.pow(10, (precision || 0) + 1)) / 10) / Math.pow(10, (precision || 0));
@@ -184,9 +189,14 @@
       for (var i = 0; i < data.series.length; i++) {
         for (var j = 0; j < data.series[i].length; j++) {
           label = typeof data.labels !== 'undefined' ? data.labels[j] : '';
-          series = data.series[i][j];
+          series = typeof data.series[i][j]["y"] !== "undefined" ? data.series[i][j]["y"] : data.series[i][j];
           desc = getDesc(label, series, type, unit);
-          data.series[i][j] = {"meta": desc, "value": series};
+          if (typeof data.series[i][j]["y"] !== "undefined") {
+            data.series[i][j]["meta"] = desc;
+          }
+          else {
+            data.series[i][j] = {"meta": desc, "value": series};
+          }
         }  
       }
     }
@@ -229,8 +239,43 @@
   };
 
   if (typeof chartLabels !== 'undefined' && chartLabels.length > 0) {    
-    // A labels array that can contain any sort of values
     data['labels'] = chartLabels;
+
+    // for time serial horizontal label
+    // check http://gionkunz.github.io/chartist-js/examples.html#example-timeseries-moment
+    if (autoDateLabel) {
+      data.series = [];
+      // rebuild data object
+      var stamp = [];
+      for(var idx in chartLabels) {
+        if (typeof autoDateLabel === "string" && autoDateLabel.length > 1) {
+          stamp[idx] = moment(chartLabels[idx], autoDateLabel).format("x");
+        }
+        else {
+          stamp[idx] = moment(chartLabels[idx]).format("x");
+        }
+      }
+      for(var i = 0; i < chartSeries.length; i++) {
+        if (typeof chartSeries[i] === "object") {
+          data.series[i] = [];
+          for(var j = 0; j < chartSeries[i].length; j++) {
+            data.series[i].push({ "x":stamp[j], "y":chartSeries[i][j]});
+          }
+        }
+        else {
+          data.series[i] = [];
+          data.series[i].push({ "x":stamp[i], "y":chartSeries[i]});
+        }
+      }
+
+      var axisX = {
+        type: Chartist.FixedScaleAxis,
+        divisor: chartLabels.length > 12 ? 12 : chartLabels.length,
+        labelInterpolationFnc: function(value) {
+          return moment(value).format('YYYY-MM-DD');
+        }
+      };
+    }
   }
 
   // Create a new line chart object where as first parameter we pass in a selector
@@ -302,6 +347,7 @@
       axisClass: 'ct-axis-title ct-axis-x',
       textAnchor: 'end',
       position: 'end',
+      showGrid: autoDateLabel ? false : true,
       offset: { x: 40, y: 15 }
     },
     axisY: {
@@ -380,6 +426,9 @@
     }
   }
 
+  if (typeof axisX !== "undefined") {
+    options["axisX"] = axisX;
+  }
   var chart = new Chartist.{/literal}{$chartist.type|capitalize|default:'Line'}{literal}(chartSelector, data, options);
 
   if (animation) {

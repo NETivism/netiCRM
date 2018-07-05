@@ -249,6 +249,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',
       'withToolTip' => true,
+      'autoDateLabel' => true,
     );
     $this->assign('chart_duration_sum', $chart);
 

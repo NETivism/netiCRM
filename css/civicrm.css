@@ -3258,6 +3258,19 @@ div#civicrm-dashboard form {
 .chartist-chart > svg > .ct-series:nth-last-child(14) .ct-slice-pie { fill: #b2c326; }
 .chartist-chart > svg > .ct-series:nth-last-child(15) .ct-slice-pie { fill: #6188e2; }
 .chartist-chart > svg > .ct-series:nth-last-child(16) .ct-slice-pie { fill: #a748ca; }
+.chartist-chart .ct-point {
+  stroke-width: 5px;
+  stroke-linecap: round;
+  opacity: .5;
+}
+.chartist-chart .ct-point:hover {
+  stroke-width: 8px;
+  stroke-linecap: round;
+  opacity: 1;
+}
+.chartist-chart .ct-line {
+  stroke-width: 2px;
+}
 .chartist-wrapper .ct-label[data-chart-percent^="0"] {
   display: none;
 }
