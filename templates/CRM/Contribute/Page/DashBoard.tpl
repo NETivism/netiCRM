@@ -198,14 +198,14 @@
   </div>
 </div>
 
-{if $contribution_page_status}
+{if $contribution_page_stat}
 <div class="row">
   <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Page Status{/ts}</h3>
-  {foreach from=$contribution_page_status item=page}
+  {foreach from=$contribution_page_stat item=stat}
   <div class="col-xs-12 col-md-{$page_col_n}">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        {include file="CRM/common/ContributionPageStatusCard.tpl" page=$page}
+        {include file="CRM/common/ContributionPageStatusCard.tpl" statistics=$stat}
       </div>
     </div>
   </div>

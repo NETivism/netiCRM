@@ -717,7 +717,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
    * @access public
    * @static
    */
-  static function goalAchieved($contributionPageId, $start = NULL, $end = NULL) {
+  static function goalAchieved($contributionPageId) {
     $page = $params = $whereClause = array();
     CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
     $whereClause = array(
@@ -728,20 +728,10 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     $params = array(
       1 => array($contributionPageId, 'Integer'),
     );
-    if (!empty($start)) {
-      $whereClause[] = 'c.receive_date >= %2';
-      $params[2] = array($start_date . ' 00:00:00', 'String');
-    }
-    if (!empty($end)) {
-      $whereClause[] = 'c.receive_date <= %3';
-      $params[3] = array($end_date . ' 23:59:59', 'String');
-    }
-
     if (!empty($page['goal_amount']) && $page['goal_amount'] > 0) {
       $type = 'amount';
       $where = implode(" AND ", $whereClause);
       $sql = "SELECT SUM(c.total_amount) as `sum`, COUNT(id) as `count` FROM civicrm_contribution c WHERE $where GROUP BY c.contribution_page_id";
-      $percent = round($total_amount/$page['goal_amount'], 1);
       $type = 'amount';
       $goal = $page['goal_amount'];
     }

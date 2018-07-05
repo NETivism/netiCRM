@@ -390,12 +390,11 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     while($dao->fetch()){
       $stat = self::getContributionPageStatistics($dao->id, $this->start_date, $this->end_date);
       if(!empty($stat)){
-        $cp_status[$i] = $stat;
+        $cp_stat[$dao->id] = $stat;
       }
-
       $i++;
     }
-    $this->assign('contribution_page_status', $cp_status);
+    $this->assign('contribution_page_stat', $cp_stat);
 
     $this->assign('page_col_n', (12 / $dao->N));
 
@@ -518,24 +517,31 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     }
 
     // achievement
-    $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($pid, $start_date, $end_date);
+    $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($pid);
 
     // new contribution with last time interval
 		if(!empty($start_date)){
 			if(empty($end_date)){
 				$end_date = date('Y-m-d');
 			}
-			list($last_start_date, $last_end_date) = self::getLastDurationTime($start_date, $end_date);
+			$sql = "SELECT COUNT(id) FROM civicrm_contribution c WHERE contribution_page_id = %1 AND receive_date >= %2 AND receive_date <= %3 AND contribution_status_id = 1 AND c.is_test = 0 ";
+			$params = array(
+				1 => array($pid, 'Integer'),
+				2 => array($start_date . ' 00:00:00' , 'String'),
+				3 => array($end_date . ' 23:59:59' , 'String'),
+			);
+			$duration_count = CRM_Core_DAO::singleValueQuery($sql, $params);
 
+			list($last_start_date, $last_end_date) = self::getLastDurationTime($start_date, $end_date);
 			$sql = "SELECT COUNT(id) FROM civicrm_contribution c WHERE contribution_page_id = %1 AND receive_date >= %2 AND receive_date <= %3 AND contribution_status_id = 1 AND c.is_test = 0 ";
 			$params = array(
 				1 => array($pid, 'Integer'),
 				2 => array($last_start_date . ' 00:00:00' , 'String'),
-				3 => array($last_end_date . '23:59:59' , 'String'),
+				3 => array($last_end_date . ' 23:59:59' , 'String'),
 			);
 			$last_duration_count = CRM_Core_DAO::singleValueQuery($sql, $params);
-      $duration_count = $achievement['count'] ? $achievement['count'] : 0;
-      $duration_count_growth = ( $duration_count / $last_duration_count ) -1;
+
+      $duration_count_growth = ( $duration_count / $last_duration_count ) - 1;
       $duration['count'] = $duration_count;
       $duration['growth'] = number_format($duration_count_growth * 100,2 );
 		}
