@@ -725,6 +725,9 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       'c.contribution_status_id = 1',
       'c.is_test = 0',
     );
+    $params = array(
+      1 => array($contributionPageId, 'Integer'),
+    );
     if (!empty($start)) {
       $whereClause[] = 'c.receive_date >= %2';
       $params[2] = array($start_date . ' 00:00:00', 'String');
@@ -752,7 +755,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     }
 
     if ($type) {
-      $dao = CRM_Core_DAO::executeQuery($sql, array( 1 => array($contributionPageId, 'Integer')));
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
       $dao->fetch();
       $current = $type == 'amount' ? $dao->sum : $dao->count;
       $percent = round(ceil(($current/$goal)*100));
