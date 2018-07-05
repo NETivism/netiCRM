@@ -93,4 +93,42 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     CRM_Utils_System::civiExit();
   }
 
+  public static function referrerTypeByPage($pageType, $pageId, $start = NULL, $end = NULL) {
+    $params = array(
+      1 => array($pageType, 'String'),
+      2 => array($pageId, 'Integer'),
+    );
+    $whereClause = array(
+      't.page_type = %1',
+      't.page_id = %2',
+    );
+
+    if($start_date){
+      $whereClause[] = ' t.visit_date >= %3 ';
+      $params[3] = array($start_date . ' 00:00:00', 'String');
+    }
+    if($end_date){
+      $whereClause[] = ' t.visit_date <= %4 ';
+      $params[4] = array($end_date . ' 23:59:59', 'String');
+    }
+
+    $where = implode(' AND ', $whereClause);
+    $sql = "SELECT COUNT(t.id) FROM civicrm_track t WHERE $where";
+    $total = CRM_Core_DAO::singleValueQuery($sql, $params);
+    $sql = "SELECT COUNT(t.id) as `count`, t.referrer_type FROM civicrm_track t WHERE $where GROUP BY t.referrer_type ORDER BY count DESC";
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+
+    $return = array();
+    while($dao->fetch()){
+      $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
+      $return[$type] = array(
+        'name' => $type,
+        'label' => empty($dao->referrer_type) ? ts("Unknown") : ts($dao->referrer_type),
+        'count' => $dao->count,
+        'percent' => number_format(($dao->count / $total) * 100 ),
+      );
+    }
+
+    return $return;
+  }
 }

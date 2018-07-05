@@ -717,24 +717,44 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
    * @access public
    * @static
    */
-  static function goalAchieved($contributionPageId) {
-    $page = array();
+  static function goalAchieved($contributionPageId, $start = NULL, $end = NULL) {
+    $page = $params = $whereClause = array();
     CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+    $whereClause = array(
+      'c.contribution_page_id = %1',
+      'c.contribution_status_id = 1',
+      'c.is_test = 0',
+    );
+    if (!empty($start)) {
+      $whereClause[] = 'c.receive_date >= %2';
+      $params[2] = array($start_date . ' 00:00:00', 'String');
+    }
+    if (!empty($end)) {
+      $whereClause[] = 'c.receive_date <= %3';
+      $params[3] = array($end_date . ' 23:59:59', 'String');
+    }
 
     if (!empty($page['goal_amount']) && $page['goal_amount'] > 0) {
-      $sql = "SELECT SUM(total_amount) sum FROM civicrm_contribution WHERE contribution_page_id = %1 AND contribution_status_id = 1 AND is_test = 0 GROUP BY contribution_page_id";
+      $type = 'amount';
+      $where = implode(" AND ", $whereClause);
+      $sql = "SELECT SUM(c.total_amount) as `sum`, COUNT(id) as `count` FROM civicrm_contribution c WHERE $where GROUP BY c.contribution_page_id";
       $percent = round($total_amount/$page['goal_amount'], 1);
       $type = 'amount';
       $goal = $page['goal_amount'];
     }
     elseif (!empty($page['goal_recurring']) && $page['goal_recurring'] > 0) {
-      $sql = "SELECT COUNT(*) FROM (SELECT c.contribution_status_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_page_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 AND r.contribution_status_id != 3 GROUP BY r.id) as subscription";
+      $type = 'recurring';
+      $whereClause[] = "r.contribution_status_id != 3";
+      $where = implode(" AND ", $whereClause);
+      $sql = "SELECT SUM(subscription.total_amount) as `sum`, COUNT(subscription.id) as `count` FROM (SELECT c.total_amount, c.id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE $where GROUP BY r.id) as subscription";
       $type = 'recurring';
       $goal = $page['goal_recurring'];
     }
 
     if ($type) {
-      $current = CRM_Core_DAO::singleValueQuery($sql, array( 1 => array($contributionPageId, 'Integer')));
+      $dao = CRM_Core_DAO::executeQuery($sql, array( 1 => array($contributionPageId, 'Integer')));
+      $dao->fetch();
+      $current = $type == 'amount' ? $dao->sum : $dao->count;
       $percent = round(ceil(($current/$goal)*100));
       if ($current > 0 && $percent < 1) {
         $percent = 1; // when there is value, we have at least 1 percent
@@ -745,6 +765,8 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
         'current' => $current,
         'percent' => $percent,
         'achieved' => $percent >= 100 ? TRUE : FALSE,
+        'count' => $dao->count,
+        'sum' => $dao->sum,
       );
     }
     return array();

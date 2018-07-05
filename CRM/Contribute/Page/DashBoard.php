@@ -317,14 +317,22 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $this->assign('chart_duration_province_sum', $chart);
 
     // First contribtion contact in last 30 days
-    $sql = "  SELECT COUNT(c.id) ct FROM civicrm_contact c
+    $sql = "  SELECT COUNT(c.id) ct, ccd.id, SUM(ccd.total_amount) sum FROM civicrm_contact c
       INNER JOIN ( SELECT id, contact_id, total_amount FROM civicrm_contribution WHERE receive_date >= %1 AND receive_date <= %2 AND is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) ccd ON c.id = ccd.contact_id
       INNER JOIN ( SELECT id, contact_id FROM civicrm_contribution WHERE is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc_all ON c.id = cc_all.contact_id WHERE ccd.id = cc_all.id;";
-    $duration_count = CRM_Core_DAO::singleValueQuery($sql, $this->params_duration);
-    $last_duration_count = CRM_Core_DAO::singleValueQuery($sql, $this->params_last_duration);
+    $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
+    if($dao->fetch()){
+      $duration_count = $dao->ct;
+      $duration_sum = $dao->sum;
+    }
+    $dao = CRM_Core_DAO::executeQuery($sql, $this->params_last_duration);
+    if($dao->fetch()){
+      $last_duration_count = $dao->ct;
+    }
+
     $this->assign('duration_count', $duration_count);
     if($last_duration_count > 0){
-      $duration_count_growth = ( $duration_count / $last_duration_count ) -1;
+      $duration_count_growth = ( $duratioin_count / $last_duration_count ) -1;
       $this->assign('duration_count_growth', number_format($duration_count_growth * 100, 2));
     }
 
@@ -380,9 +388,9 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     $i = 0;
     while($dao->fetch()){
-      $status = self::getContributionPageStatus($dao->id, $this->start_date, $this->end_date);
-      if(!empty($status)){
-        $cp_status[$i] = $status;
+      $stat = self::getContributionPageStatistics($dao->id, $this->start_date, $this->end_date);
+      if(!empty($stat)){
+        $cp_status[$i] = $stat;
       }
 
       $i++;
@@ -475,78 +483,70 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     return array($last_start_date, $last_end_date);
   }
 
-  static function getContributionPageStatus($pid, $start_date = NULL, $end_date = NULL) {
-    // contribution_page status
-    $contribution_page_status = array();
-    $params = array(
-      1 => array((int)$pid, 'Integer'),
-    );
+  public static function getContributionPageStatistics($pid, $start_date = NULL, $end_date = NULL) {
+    $pid = (int)$pid;
+    $page = $track = $achievement = $duration = array();
 
-    $and_clause = array(' c.contribution_status_id = 1 AND c.is_test = 0 AND cp.id = %1 ');
-    if($start_date){
-      $and_clause[] = ' c.receive_date >= %2 ';
-      $params[2] = array($start_date . ' 00:00:00', 'String');
-    }
-    if($end_date){
-      $and_clause[] = ' c.receive_date <= %3 ';
-      $params[3] = array($end_date . ' 23:59:59', 'String');
-    }
-    $and = implode(' AND ', $and_clause);
-    $sql = "SELECT cp.id id, title, goal_amount, SUM(c.total_amount) sum, COUNT(c.id) count FROM civicrm_contribution_page cp INNER JOIN civicrm_contribution c ON cp.id = c.contribution_page_id WHERE $and GROUP BY cp.id";
-    
-    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    // contribution page profile
+    CRM_Contribute_BAO_ContributionPage::setValues($pid, $page);
+    $sql = "SELECT COUNT(c.id) as `count`, SUM(c.total_amount) as `total_amount` FROM civicrm_contribution c WHERE c.contribution_page_id = %1 AND c.contribution_status_id = 1 AND c.is_test = 0";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($pid, 'Integer')));
     if($dao->fetch()){
-      if(!empty($start_date)){
-        if(empty($end_date)){
-          $end_date = date('Y-m-d');
-        }
-        list($last_start_date, $last_end_date) = self::getLastDurationTime($start_date, $end_date);
-
-        $sql = "SELECT COUNT(id) FROM civicrm_contribution c WHERE contribution_page_id = %1 AND receive_date >= %2 AND receive_date <= %3 AND contribution_status_id = 1 AND c.is_test = 0 ";
-        $params = array(
-          1 => array((int)$pid, 'Integer'),
-          2 => array($last_start_date . ' 00:00:00' , 'String'),
-          3 => array($last_end_date . '23:59:59' , 'String'),
-        );
-        $last_duration_count = CRM_Core_DAO::singleValueQuery($sql, $params);
-      }
-
-      $sql = "SELECT COUNT(id) count, SUM(total_amount) total_amount FROM civicrm_contribution c WHERE contribution_page_id = %1 AND contribution_status_id = 1 AND c.is_test = 0 ";
-      $dao_page = CRM_Core_DAO::executeQuery($sql, $params);
-      if($dao_page->fetch()){
-        $total_count = $dao_page->count;
-        $total_amount = $dao_page->total_amount;
-      }
-
-      $source = self::getSourceByPageID($pid, $start_date, $end_date);
-
-      $duration_count = $dao->count ? $dao->count : 0;
-      $goal = $dao->goal_amount;
-
-      $contribution_page_status = array(
-        'id' => $pid,
-        'title' => $dao->title,
-        'duration_count' => $duration_count,
-        'goal' => $goal,
-        'total_count' => $total_count,
-        'total_amount' => $total_amount,
-        'source' => $source,
-      );
-
-      if(!empty($goal)){
-        $contribution_page_status['progress'] = ($total_amount / $goal) * 100;
-      }
-
-      if($last_duration_count > 0){
-        $duration_count_growth = ( $duration_count / $last_duration_count ) -1;
-        $contribution_page_status['duration_count_growth'] = number_format($duration_count_growth * 100,2 );
-      }
-
-      return $contribution_page_status;
-      
+      $page['total_count'] = $dao->count;
+      $page['total_amount'] = $dao->total_amount;
     }
 
+    // track
+    $track = CRM_Core_BAO_Track::referrerTypeByPage('civicrm_contribution_page', $pid, $start_date, $end_date);
+    if (count($track) > 4) {
+      $track['other'] = array(
+        'name' => 'other',
+        'label' => ts('Other'),
+        'count' => 0,
+        'percent' => 0,
+      );
+    }
+    $i = 0;
+    $trackTotal = 0;
+    foreach($track as $referType => $t) {
+      $i++;
+      if ($i > 3 && $referType != 'other') {
+        $track['other']['count'] += $t['count'];
+        $track['other']['percent'] += $t['percent'];
+        unset($track[$referType]);
+      }
+    }
 
+    // achievement
+    $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($pid, $start_date, $end_date);
+
+    // new contribution with last time interval
+		if(!empty($start_date)){
+			if(empty($end_date)){
+				$end_date = date('Y-m-d');
+			}
+			list($last_start_date, $last_end_date) = self::getLastDurationTime($start_date, $end_date);
+
+			$sql = "SELECT COUNT(id) FROM civicrm_contribution c WHERE contribution_page_id = %1 AND receive_date >= %2 AND receive_date <= %3 AND contribution_status_id = 1 AND c.is_test = 0 ";
+			$params = array(
+				1 => array($pid, 'Integer'),
+				2 => array($last_start_date . ' 00:00:00' , 'String'),
+				3 => array($last_end_date . '23:59:59' , 'String'),
+			);
+			$last_duration_count = CRM_Core_DAO::singleValueQuery($sql, $params);
+      $duration_count = $achievement['count'] ? $achievement['count'] : 0;
+      $duration_count_growth = ( $duration_count / $last_duration_count ) -1;
+      $duration['count'] = $duration_count;
+      $duration['growth'] = number_format($duration_count_growth * 100,2 );
+		}
+
+    $return = array(
+      'page' => $page,
+      'track' => $track,
+      'achievement' => $achievement,
+      'duration' => $duration,
+    );
+    return $return;
   }
 
   private static function getDataForChart($label_array, $summary_array, $type='sum') {
@@ -559,51 +559,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         $return_array[] = 0;
       }
     }
-
-    return $return_array;
-  }
-
-  private static function getSourceByPageID($page_id, $start_date = NULL, $end_date = NULL) {
-    $params = array(
-      1 => array($page_id, 'Integer'),
-    );
-    $and_clause = array("c.contribution_page_id = %1 AND c.contribution_status_id = 1");
-    if($start_date){
-      $and_clause[] = ' c.receive_date >= %2 ';
-      $params[2] = array($start_date . ' 00:00:00', 'String');
-    }
-    if($end_date){
-      $and_clause[] = ' c.receive_date <= %3 ';
-      $params[3] = array($end_date . ' 23:59:59', 'String');
-    }
-    $and = implode(' AND ', $and_clause);
-
-    $sql = "SELECT COUNT(c.id) sum FROM civicrm_contribution c
-    LEFT JOIN (SELECT * FROM civicrm_track_entity WHERE entity_table = 'civicrm_contribution' )  te ON te.entity_id = c.id
-    LEFT JOIN  civicrm_track t ON t.id = te.track_id 
-    WHERE $and ";
-    $sum = CRM_Core_DAO::singleValueQuery($sql, $params);
-    $sql = "SELECT COUNT(c.id) count, t.referrer_type FROM civicrm_contribution c 
-    LEFT JOIN (SELECT * FROM civicrm_track_entity WHERE entity_table = 'civicrm_contribution' )  te ON te.entity_id = c.id
-    LEFT JOIN  civicrm_track t ON t.id = te.track_id 
-    WHERE $and GROUP BY t.referrer_type ORDER BY count DESC";
-    $dao = CRM_Core_DAO::executeQuery($sql, $params);
-    $return_array = array();
-    $other = 0;
-    while($dao->fetch()){
-      if(count($return_array) < 4 ){
-        $return_array[] = array(
-          'type' => empty($dao->referrer_type) ? ts("Unknown") : ts($dao->referrer_type),
-          'count' => number_format(($dao->count / $sum) * 100 ),
-        );
-      }else{
-        $other += $dao->count;
-      }
-    }
-    $return_array[4] = array(
-      'type' => ts('Other'),
-      'count' => number_format(($other / $sum) * 100),
-    );
 
     return $return_array;
   }

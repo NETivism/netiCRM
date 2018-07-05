@@ -342,18 +342,23 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
     }
     elseif ($action & CRM_Core_Action::UPDATE) {
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
+      $page = array();
+      CRM_Contribute_BAO_ContributionPage::setValues($pid, $page);
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
           "action=update&reset=1&id={$id}"
         ));
       $config = CRM_Core_Config::singleton();
 
-      CRM_Utils_System::setTitle(ts('Configure Contribution Page'));
+      CRM_Utils_System::setTitle(ts('Configure Contribution Page')." - ".$page['title']);
+      $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($id);
+      $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id);
+      unset($pageStatistics['page']['title']);
+      $this->assign('contribution_page_statistics', $pageStatistics);
 
       // assign vars to templates
       $this->assign('id', $id);
-      $this->assign('title', CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $id, 'title'));
-      $this->assign('is_active', CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $id, 'is_active'));
+      $this->assign('is_active', $page['is_active']);
       if (in_array('CiviMember', $config->enableComponents)) {
         $this->assign('CiviMember', TRUE);
       }

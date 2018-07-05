@@ -12,10 +12,10 @@
   .blue {
     color: #03a9f4;
   }
-  .source-outter {
+  .track-outter {
     display: flex;
   }
-  .source-inner {
+  .track-inner {
     flex: 0 0 20%;
   }
   .grey-background{
@@ -41,36 +41,46 @@
   }
 </style>
 {/literal}
-<h4><a href="{crmURL p='civicrm/admin/contribute' q="action=update&reset=1&id=`$page.id`" h=0 a=1 fe=1}">{$page.title}</a></h4>
-{capture assign="contribution_count"}<span class="bigger">{$page.duration_count}</span>{/capture}
+{if $statistics.page}
+<h4><a href="{crmURL p='civicrm/admin/contribute' q="action=update&reset=1&id=`$statistics.page.id`" h=0 a=1 fe=1}">{$statistics.page.title}</a></h4>
+{/if}
+
+{if $statistics.duration}
+{capture assign="contribution_count"}<span class="bigger">{$statistics.duration.duration_count}</span>{/capture}
 <div>{ts 1=$contribution_count}There are %1 new contributions.{/ts}</div>
-{if $page.duration_count_growth}
-  <div>{include file="CRM/common/growth_sentence.tpl" growth=$page.duration_count_growth bigger=1}</div>
+  {if $statistics.duration.duration_count_growth}
+  <div>{include file="CRM/common/growth_sentence.tpl" growth=$statistics.duration.duration_count_growth bigger=1}</div>
+  {/if}
 {/if}
 <br/>
 <div><h5>{ts}Flow Source{/ts}</h5>
-  <div class="source-outter">
-    {foreach from=$page.source item=source}
-    <div class="source-inner">
-      <div>{$source.type}</div>
-      <div>{$source.count}%</div>
+  <div class="track-outter">
+    {foreach from=$statistics.track item=source}
+    <div class="track-inner type-{$source.name}">
+      <div>{$source.label}</div>
+      <div>{$source.percent}%</div>
     </div>
     {/foreach}
   </div>
 </div>
 <br/>
-{if $debug}
 <div class="grey-background">
-  <a href="{crmURL p='civicrm/contribute/search' q="reset=1&pid=`$page.id`&force=1&test=0" h=0 a=1 fe=1}">
-{/if}
-    <div>{ts}Amount reached{/ts} {$page.total_amount|crmMoney}{if $page.goal} / {$page.goal|crmMoney}{/if}</div>
-    <div>{ts}Total Donate Times{/ts} {$page.total_count}</div>
-    <div class="progress-wrapper">
-      {if $page.goal}
-      <span class="progress-full"><span class="progress-inner" style="width:{if $page.progress > 100}100{else}{$page.progress}{/if}%;">{$page.progress|number_format:2:".":","}%</span></span>
+  <a href="{crmURL p='civicrm/contribute/search' q="reset=1&pid=`$statistics.page.id`&force=1&test=0" h=0 a=1 fe=1}">
+    <div>
+      {if $statistics.achievement.type == "amount"}
+        {capture assign=achieved}{$statistics.achievement.current|crmMoney}{/capture}
+        {ts 1="`$achieved`"}%1 achieved{/ts}
+        {if $statistics.achievement.goal} / {$statistics.achievement.goal|crmMoney}{/if}
+      {else}
+        {ts 1="`$statistics.achievement.current`"}%1 achieved{/ts}
+        {if $statistics.achievement.goal} / {$statistics.achievement.goal} {ts}People{/ts}{/if}
       {/if}
     </div>
-{if $debug}
+    <div>{ts}Donation Count{/ts} {$statistics.page.total_count}</div>
+    <div class="progress-wrapper">
+      {if $statistics.achievement}
+      <span class="progress-full"><span class="progress-inner" style="width:{if $statistics.achievement.achieved}100{else}{$statistics.achievement.percent}{/if}%;">{$statistics.achievement.percent}%</span></span>
+      {/if}
+    </div>
   </a>
 </div>
-{/if}
