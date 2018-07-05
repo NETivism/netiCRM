@@ -33,7 +33,7 @@
   }
   .crm-contribute-widget .crm-amount-fill {
     background-color: #76CC1E;
-    height:1em;
+    height:1.5em;
     display:block;
     border-radius: 4px 0px 0px 4px;
     text-align: right;
@@ -54,10 +54,6 @@
     margin-bottom:.8em;
     color: #aaa;
     text-align: center;
-  }
-  .crm-contribute-widget .crm-donors {
-    font-size:1.6em;
-    margin-bottom:.8em;
   }
   .crm-contribute-widget .crm-logo {
     text-align:center;
@@ -121,7 +117,6 @@
         <div id="crm_cpid_{$cpageId}_amt_raised" class="crm-amount-raised"></div>
         <div id="crm_cpid_{$cpageId}_amt_hi" class="crm-amount-high"></div>
     </div>
-    <div id="crm_cpid_{$cpageId}_donors" class="crm-donors"></div>
     <div class="crm-amount-bar">
         <div class="crm-amount-fill" id="crm_cpid_{$cpageId}_amt_fill"><span id="crm_cpid_{$cpageId}_percentage" class="crm-percentage"></span></div>
     </div>
@@ -168,11 +163,10 @@
         }
         document.getElementById('crm_cpid_'+cpid+'_amt_raised').innerHTML   = jsondata.money_raised;
         document.getElementById('crm_cpid_'+cpid+'_comments').innerHTML     = jsondata.about;
-        document.getElementById('crm_cpid_'+cpid+'_donors').innerHTML       = jsondata.num_donors;
         document.getElementById('crm_cpid_'+cpid+'_btn_txt').innerHTML      = jsondata.button_title;
         document.getElementById('crm_cpid_'+cpid+'_campaign').innerHTML     = jsondata.campaign_start;
         if ( jsondata.money_raised_percentage ) {
-            document.getElementById('crm_cpid_'+cpid+'_amt_fill').style.width   = jsondata.money_raised_percentage;
+            document.getElementById('crm_cpid_'+cpid+'_amt_fill').style.width   = parseInt(jsondata.money_raised_percentage) > 100 ? "100%" : jsondata.money_raised_percentage;
             document.getElementById('crm_cpid_'+cpid+'_percentage').innerHTML   = jsondata.money_raised_percentage;
         }
         if ( !jsondata.is_active ) {
@@ -183,5 +177,5 @@
     
 </script>
 {/literal}
-<script type="text/javascript" src="{$config->userFrameworkResourceURL}/extern/widget.php?cpageId={$cpageId}&widgetId={$widget_id}"></script>
+<script type="text/javascript" src="{$config->userFrameworkResourceURL}/extern/widget.php?cpageId={$cpageId}&widgetId={$widget_id}&language={$tsLocale}"></script>
 
