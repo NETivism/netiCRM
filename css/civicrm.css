@@ -3268,6 +3268,9 @@ div#civicrm-dashboard form {
   stroke-linecap: round;
   opacity: 1;
 }
+.chartist-chart .ct-chart-line-stacked .ct-point {
+  stroke-width: 3px;
+}
 .chartist-chart .ct-line {
   stroke-width: 2px;
 }

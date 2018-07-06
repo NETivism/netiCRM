@@ -308,7 +308,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'id' => 'chart-duration-province-sum',
       'selector' => '#chart-duration-province-sum',
       'type' => 'Bar',
-      'labels' => json_encode($duration_province_label),
+      'labels' => json_encode(array_values($duration_province_label)), // array_values to let key to integer not string
       'series' => json_encode(array($duration_province_recur_sum, $duration_province_not_recur_sum)),
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',

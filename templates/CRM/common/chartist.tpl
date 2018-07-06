@@ -47,6 +47,7 @@ if (!$crmChartistAdded) {
 
 <script>{literal}
 (function(){
+  var chartId = "{/literal}{$chartist.id|default:""}{literal}";
   var chartLabels = {/literal}{$chartist.labels|default:"[]"}{literal};
   var chartSeries = {/literal}{$chartist.series|default:"[]"}{literal};
   var withToolTip = {/literal}{$chartist.withToolTip|default:0}{literal};
@@ -339,6 +340,9 @@ if (!$crmChartistAdded) {
       }
     }; 
   }
+  if (typeof axisX === "object") {
+    options["axisX"] = axisX;
+  }
   options.plugins = [];
 {/literal}{if $chartist.axisx || $chartist.axisy}{literal}
   var axis = Chartist.plugins.ctAxisTitle({
@@ -369,7 +373,7 @@ if (!$crmChartistAdded) {
 
 {if $chartist.type eq 'Line' && $chartist.stackLines}{literal}
   options.showArea = true;
-  options.showPoint = false;
+  options.showPoint = true;
   options.showLine = false;
   options.low = 0;
   options.classNames = {};
@@ -426,9 +430,6 @@ if (!$crmChartistAdded) {
     }
   }
 
-  if (typeof axisX !== "undefined") {
-    options["axisX"] = axisX;
-  }
   var chart = new Chartist.{/literal}{$chartist.type|capitalize|default:'Line'}{literal}(chartSelector, data, options);
 
   if (animation) {
