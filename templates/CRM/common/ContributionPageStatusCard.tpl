@@ -48,7 +48,7 @@
 {if $statistics.duration}
 {capture assign="contribution_count"}<span class="bigger">{$statistics.duration.count}</span>{/capture}
 <div>{ts 1=$contribution_count}There are %1 new contributions.{/ts}</div>
-  {if $statistics.duration.duration_count_growth}
+  {if $statistics.duration.growth}
   <div>{include file="CRM/common/growth_sentence.tpl" growth=$statistics.duration.growth bigger=1}</div>
   {/if}
 {/if}
