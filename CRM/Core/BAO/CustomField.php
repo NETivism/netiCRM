@@ -1622,7 +1622,7 @@ SELECT $columnName
     // add the id and extends_id
     $table = array('name' => $params['name'],
       'is_multiple' => $params['is_multiple'],
-      'attributes' => "ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+      'attributes' => "ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC",
       'fields' => array(
         array('name' => 'id',
           'type' => 'int unsigned',
