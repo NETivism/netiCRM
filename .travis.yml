@@ -97,3 +97,11 @@ notifications:
       - jimmy@netivism.com.tw
     on_success: always
     on_failure: always
+
+after_failure:
+  - echo 'LOG: supervisor init stderr '
+  - cat `ls log/supervisor/init-stderr-*`
+  - echo 'LOG: php_errors '
+  - cat log/php_errors.log
+  - echo 'LOG: drupal '
+  - cat log/drupal.log
