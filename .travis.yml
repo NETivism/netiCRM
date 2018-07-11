@@ -1,4 +1,4 @@
-sudo: false
+sudo: required
 language: php
 
 php:
@@ -27,11 +27,8 @@ addons:
 before_install:
   - git submodule init
   - git submodule update
-  - |
-    echo -e "[mysqld]
-    innodb_large_prefix = true
-    innodb_file_format_max = barracuda" | sudo tee /etc/mysql/conf.d/travis.cnf
-  - sudo /etc/init.d/mysql restart
+  - echo -e "[mysqld]\ninnodb_large_prefix = true\ninnodb_file_format = Barracuda\ninnodb_file_format_max = barracuda\ninnodb_file_per_table  = 1" | sudo tee -a /etc/mysql/my.cnf
+  - sudo service mysql restart
 
 install:
   # casperjs
@@ -97,11 +94,3 @@ notifications:
       - jimmy@netivism.com.tw
     on_success: always
     on_failure: always
-
-after_failure:
-  - echo 'LOG: supervisor init stderr '
-  - cat `ls log/supervisor/init-stderr-*`
-  - echo 'LOG: php_errors '
-  - cat log/php_errors.log
-  - echo 'LOG: drupal '
-  - cat log/drupal.log
