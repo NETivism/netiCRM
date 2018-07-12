@@ -26,6 +26,7 @@
 {* CiviContribute DashBoard (launch page) *}
 
 
+{if $chart_this_year}
 <div class="row">
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
@@ -37,7 +38,7 @@
     </div>
   </div>
 </div>
-
+{/if}
 
 
 {literal}
@@ -77,14 +78,15 @@
     color: white;
     text-align: center;
   }
-  .date-selector-wrapper {
-    position: relative;
-  }
   .date-selector {
-    position: absolute;
-    width: auto;
-    top: -10px;
-    right: 0;
+    position: sticky;
+    width: 100%;
+    top: 0px;
+    z-index: 99;
+    background-color: #FFFFFFCC;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
   }
   .more{
     text-align: right;
@@ -92,10 +94,9 @@
 </style>
 {/literal}
 
-<div class="row date-selector-wrapper">
+<div class="date-selector">
   <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Summary{/ts}</h3>
-
-  <div class="date-selector">
+  <div>
     <span class="labels">
       {ts}Start Date{/ts}
     </span>
@@ -132,12 +133,12 @@
       {/literal}
     </span>
   </div>
-
-
+</div><!--date selector-->
+<div class="row">
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <i class="zmdi zmdi-hc-5x zmdi-male" style="float:left;"></i>
+        <i class="zmdi zmdi-hc-5x zmdi-male"></i>
         <div>
           <h5 class="kpi-box-title">{ts}Number of First Time Donation Donors{/ts}</h5>
           <div class="box-detail">
@@ -160,7 +161,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <i class="zmdi zmdi-hc-5x zmdi-money" style="float: left;"></i>
+        <i class="zmdi zmdi-hc-5x zmdi-money"></i>
         <div>
           <h5 class="kpi-box-title">{ts}Contribution with Maximum Amount{/ts}</h5>
           <div class="box-detail">
@@ -174,7 +175,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <i class="zmdi zmdi-hc-5x zmdi-money" style="float: left;"></i>
+        <i class="zmdi zmdi-hc-5x zmdi-money"></i>
         <div> 
           <h5 class="kpi-box-title">{ts}Total Amount{/ts}</h5>
             <div class="box-detail">
@@ -353,6 +354,10 @@ cj(document).ready( function( ) {
             cj('#chartData').children().html('');
         }
     });
+    if (cj("#admin-header").length) {
+      var stickytop = cj("#admin-header").outerHeight();
+      cj(".crm-container .date-selector").css("top", stickytop+"px");
+    }
 });        
            
 function getChart( ) {

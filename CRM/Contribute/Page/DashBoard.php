@@ -190,8 +190,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     $filter_recur = array('contribution_recur_id' => TRUE);
     $filter_not_recur = array('contribution_recur_id' => FALSE);
-    $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_recur));
-    $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_not_recur));
+
 
     $summary_contrib['LastDurationContrib']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'DAY'), array('contribution' => $filter_time+$filter_recur));
     $summary_contrib['LastDurationContrib']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'DAY'), array('contribution' => $filter_time+$filter_not_recur));
@@ -202,37 +201,41 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       dpm($summary_contrib);
     }
 
-    $one_year_label = $year_month_label = array();
-    for ($month=1; $month <= 12 ; $month++) {
-      $one_year_label[] = $month.'月';
-      $year_month = date('Y').'-'.sprintf('%02d',$month);
-      $year_month_label[] = $year_month;
-    }
-
-    $recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['recur']);
-    $not_recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['not_recur']);
-    for ($i=1; $i < 12; $i++) {
-      if($i <= date('m')){
-        $recur_year_sum[$i] += $recur_year_sum[$i-1];
-        $not_recur_year_sum[$i] += $not_recur_year_sum[$i-1];
-      }else{
-        unset($recur_year_sum[$i]);
-        unset($not_recur_year_sum[$i]);
+    if (empty($_GET['start_date']) && empty($_GET['end_date'])) {
+      $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_recur));
+      $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_not_recur));
+      $one_year_label = $year_month_label = array();
+      for ($month=1; $month <= 12 ; $month++) {
+        $one_year_label[] = $month.'月';
+        $year_month = date('Y').'-'.sprintf('%02d',$month);
+        $year_month_label[] = $year_month;
       }
-    }
 
-    $chart = array(
-      'id' => 'chart-one-year',
-      'selector' => '#chart-one-year',
-      'type' => 'Line',
-      'labels' => json_encode($one_year_label),
-      'series' => json_encode(array($recur_year_sum, $not_recur_year_sum)),
-      'seriesUnit' => '$ ',
-      'seriesUnitPosition'=> 'prefix',
-      'withToolTip' => true,
-      'stackLines' => true
-    );
-    $this->assign('chart_this_year', $chart);
+      $recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['recur']);
+      $not_recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['not_recur']);
+      for ($i=1; $i < 12; $i++) {
+        if($i <= date('m')){
+          $recur_year_sum[$i] += $recur_year_sum[$i-1];
+          $not_recur_year_sum[$i] += $not_recur_year_sum[$i-1];
+        }else{
+          unset($recur_year_sum[$i]);
+          unset($not_recur_year_sum[$i]);
+        }
+      }
+
+      $chart = array(
+        'id' => 'chart-one-year',
+        'selector' => '#chart-one-year',
+        'type' => 'Line',
+        'labels' => json_encode($one_year_label),
+        'series' => json_encode(array($recur_year_sum, $not_recur_year_sum)),
+        'seriesUnit' => '$ ',
+        'seriesUnitPosition'=> 'prefix',
+        'withToolTip' => true,
+        'stackLines' => true
+      );
+      $this->assign('chart_this_year', $chart);
+    }
 
     foreach ($this->duration_array as $date) {
       $recur_index = array_search($date, $summary_contrib['LastDurationContrib']['recur']['label']);
@@ -293,6 +296,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',
       'withToolTip' => true,
+      'autoDateLabel' => true,
       'stackBars' => true
     );
     $this->assign('chart_duration_track', $chart);

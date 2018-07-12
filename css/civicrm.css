@@ -3258,22 +3258,26 @@ div#civicrm-dashboard form {
 .chartist-chart > svg > .ct-series:nth-last-child(14) .ct-slice-pie { fill: #b2c326; }
 .chartist-chart > svg > .ct-series:nth-last-child(15) .ct-slice-pie { fill: #6188e2; }
 .chartist-chart > svg > .ct-series:nth-last-child(16) .ct-slice-pie { fill: #a748ca; }
-.chartist-chart .ct-point {
-  stroke-width: 5px;
-  stroke-linecap: round;
-  opacity: .5;
-}
+.chartist-chart .series-large .ct-bar { stroke-width: 4px; }
+.chartist-chart .series-medium .ct-bar { stroke-width: 6px; }
+.chartist-chart .series-normal .ct-bar { stroke-width: 10px; }
+
+.chartist-chart .ct-point { opacity: .5; }
+.chartist-chart .series-large .ct-point { stroke-width: 4px; }
+.chartist-chart .series-medium .ct-point { stroke-width: 6px; }
+.chartist-chart .series-normal .ct-point { stroke-width: 8px; }
 .chartist-chart .ct-point:hover {
   stroke-width: 8px;
-  stroke-linecap: round;
   opacity: 1;
 }
 .chartist-chart .ct-chart-line-stacked .ct-point {
   stroke-width: 3px;
 }
-.chartist-chart .ct-line {
-  stroke-width: 2px;
-}
+
+.chartist-chart .ct-line { stroke-width: 2px; }
+.chartist-chart .series-large .ct-line { stroke-width: 2px; }
+.chartist-chart .series-medium .ct-line { stroke-width: 3px; }
+.chartist-chart .series-normal .ct-line { stroke-width: 4px; }
 .chartist-wrapper .ct-label[data-chart-percent^="0"] {
   display: none;
 }

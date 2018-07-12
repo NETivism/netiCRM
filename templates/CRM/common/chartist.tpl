@@ -218,6 +218,7 @@ if (!$crmChartistAdded) {
     return data;
   }
 
+
   var renderStackLinesSeries = function(series) {
     for (var i = 0; i < series.length; i++) {
       if (i > 0) {
@@ -244,7 +245,7 @@ if (!$crmChartistAdded) {
 
     // for time serial horizontal label
     // check http://gionkunz.github.io/chartist-js/examples.html#example-timeseries-moment
-    if (autoDateLabel) {
+    if (autoDateLabel && (typeof chartSeries === "object")) {
       data.series = [];
       // rebuild data object
       var stamp = [];
@@ -256,10 +257,10 @@ if (!$crmChartistAdded) {
           stamp[idx] = moment(chartLabels[idx]).format("x");
         }
       }
-      for(var i = 0; i < chartSeries.length; i++) {
+      for(var i in chartSeries) {
         if (typeof chartSeries[i] === "object") {
           data.series[i] = [];
-          for(var j = 0; j < chartSeries[i].length; j++) {
+          for(var j in chartSeries[i]) {
             data.series[i].push({ "x":stamp[j], "y":chartSeries[i][j]});
           }
         }
@@ -286,6 +287,7 @@ if (!$crmChartistAdded) {
   var options = {};
   if(chartType == 'Line' || chartType == 'Bar') {
     options = {
+      classNames: {"chart": ""},
       showPoint: true,
       showArea: true,
       lineSmooth: Chartist.Interpolation.simple({
@@ -307,8 +309,10 @@ if (!$crmChartistAdded) {
       }
     };
   }
+  // pie, donut
   else {
     options = {
+      classNames: {"chart": ""},
       ignoreEmptyValues: true,
       labelInterpolationFnc: function(value, index) {
         switch (labelType) {
@@ -343,6 +347,26 @@ if (!$crmChartistAdded) {
   if (typeof axisX === "object") {
     options["axisX"] = axisX;
   }
+
+  // check if multi dimention
+  var seriesLength = 0;
+  if (typeof data.series[0] === "object") {
+    seriesLength = data.series[0].length; 
+  }
+  else
+  if(typeof data.series === "object"){
+    seriesLength = data.series.length; 
+  }
+  if (seriesLength > 60) {
+    options.classNames["chart"] += ' series-large ';
+  }
+  else
+  if (seriesLength > 14) {
+    options.classNames["chart"] += ' series-medium ';
+  }
+  else {
+    options.classNames["chart"] += ' series-normal ';
+  }
   options.plugins = [];
 {/literal}{if $chartist.axisx || $chartist.axisy}{literal}
   var axis = Chartist.plugins.ctAxisTitle({
@@ -351,7 +375,6 @@ if (!$crmChartistAdded) {
       axisClass: 'ct-axis-title ct-axis-x',
       textAnchor: 'end',
       position: 'end',
-      showGrid: autoDateLabel ? false : true,
       offset: { x: 40, y: 15 }
     },
     axisY: {
@@ -376,8 +399,7 @@ if (!$crmChartistAdded) {
   options.showPoint = true;
   options.showLine = false;
   options.low = 0;
-  options.classNames = {};
-  options.classNames.chart = 'ct-chart-line ct-chart-line-stacked';
+  options.classNames["chart"] += ' ct-chart-line ct-chart-line-stacked ';
 {/literal}{/if}
 
 {if $chartist.type eq 'Bar' && $chartist.stackBars}{literal}
