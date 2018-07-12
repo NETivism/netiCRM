@@ -1,3 +1,4 @@
+dist: trusty
 sudo: required
 language: php
 
@@ -31,6 +32,7 @@ before_install:
   - sudo service mysql restart
 
 install:
+  - php --version
   # casperjs
   - wget https://github.com/n1k0/casperjs/archive/master.tar.gz -O /tmp/casper.tar.gz
   - tar -xf /tmp/casper.tar.gz
@@ -53,8 +55,10 @@ install:
   - ln -s $(readlink -e $(cd -)) civicrm
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e 'create database neticrmci CHARACTER SET utf8 COLLATE utf8_general_ci'
-  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/neticrmci --account-pass=123456 --site-name=netiCRM --enable=transliteration neticrmci 
+  - mysql -e "CREATE DATABASE neticrmci CHARACTER SET utf8 COLLATE utf8_general_ci;"
+  - mysql -e "CREATE USER 'neticrm'@'localhost' IDENTIFIED BY 'neticrm';"
+  - mysql -e "GRANT ALL ON neticrmci.* TO 'neticrm'@'127.0.0.1';"
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://neticrm:neticrm@127.0.0.1/neticrmci --account-pass=123456 --site-name=netiCRM --enable=transliteration neticrmci 
 
   # reference and enable civicrm in build site
   - ln -s $(readlink -e $(cd -)) neticrmci/$(ls neticrmci -1 | tail -1)/sites/all/modules/civicrm
