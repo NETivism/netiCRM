@@ -7,7 +7,7 @@
   <p>{ts}When you reach them, don't forget to present how much thanks you have received their donation. If you can send some project report to them, they may want to join you again after reading your needs.{/ts}</p>
 </div>
 {/if}
-<div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if $rowsEmpty}open{else}closed{/if}">
+<div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if !$rows}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>
       {ts}Edit Search Criteria{/ts}

@@ -75,7 +75,8 @@ packages/jquery/plugins/jquery.FormNavigate.js
 packages/jquery/plugins/jquery.chosen.js
 packages/jquery/css/jquery.chosen.css
 
-packages/jquery/plugins/jquery.simplemodal.min.js
+packages/jquery/plugins/jquery.modal.min.js
+packages/jquery/css/jquery.modal.min.css
 packages/jquery/plugins/jquery.blockUI.js
 
 js/rest.js

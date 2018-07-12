@@ -55,6 +55,24 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       $this->_config = CRM_Core_Config::singleton();
       $this->buildColumn();
     }
+
+    $lowDate = CRM_Utils_Request::retrieve('start', 'Timestamp',
+      CRM_Core_DAO::$_nullObject
+    );
+    if ($lowDate) {
+      $lowDate = CRM_Utils_Type::escape($lowDate, 'Timestamp');
+      $date = CRM_Utils_Date::setDateDefaults($lowDate);
+      $this->_formValues['start_date_from'] = $date[0];
+    }
+
+    $highDate = CRM_Utils_Request::retrieve('end', 'Timestamp',
+      CRM_Core_DAO::$_nullObject
+    );
+    if ($highDate) {
+      $highDate = CRM_Utils_Type::escape($highDate, 'Timestamp');
+      $date = CRM_Utils_Date::setDateDefaults($highDate);
+      $this->_formValues['start_date_to'] = $date[0];
+    }
   }
 
   function buildColumn(){

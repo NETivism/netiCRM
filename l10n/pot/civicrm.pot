@@ -28627,14 +28627,6 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
 msgid ""
-"Enter an optional goal amount for this contribution page (e.g. for this "
-"'campaign'). If you enable a contribution widget for this page, the widget "
-"will track progress against this goal. Otherwise, the goal will display as "
-"'no limit'."
-msgstr ""
-
-#: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
-msgid ""
 "You can optionally set an \"active date range\" for this contribution page. "
 "These dates are currently only used by the \"Contribution Widget\" - which "
 "will give a \"Campaign is over\" message if it is accessed outside of the "
@@ -46121,4 +46113,92 @@ msgid "Account"
 msgstr ""
 
 msgid "This participant have completed or cancelled contribution record. You need to update related contribution belone this participant manually."
+msgstr ""
+
+msgid "Used for"
+msgstr ""
+
+msgid "%1 achieved"
+msgstr ""
+
+msgid "Goal Subscription"
+msgstr ""
+
+msgid "Display progress bar on the top of contribution page."
+msgstr ""
+
+msgid "Enter one of these goal to display progress bar on the top of contribution page and contribution widget."
+msgstr ""
+
+msgid "Percentage of progress base on total amount / goal amount of this contribution page."
+msgstr ""
+
+msgid "Percentage of progress base on active recurring subscriptions / goal subscriptions of this contribution page."
+msgstr ""
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "In %1 days"
+msgstr ""
+
+msgid "Number of First Time Donation Donors"
+msgstr ""
+
+msgid "Contribution with Maximum Amount"
+msgstr ""
+
+msgid "Contribution Page Status"
+msgstr ""
+
+msgid "New Recurring Contribution"
+msgstr ""
+
+msgid "Contribution Amount by Flow Source"
+msgstr ""
+
+msgid "Contribution Amount by Province"
+msgstr ""
+
+#: CRM/common/growth_sentence.tpl
+msgid "Compared with previous %1 days"
+msgstr ""
+
+msgid "grow by"
+msgstr ""
+
+msgid "decrease by"
+msgstr ""
+
+#: CRM/common/ContributionPageStatusCard.tpl
+msgid "There are %1 new contributions."
+msgstr ""
+
+#: CRM/common/ContributionPageStatusCard.tpl
+msgid "Flow Source"
+msgstr ""
+
+msgid "Amount reached"
+msgstr ""
+
+msgid "Total Donate Times"
+msgstr ""
+
+msgid "direct"
+msgstr ""
+
+msgid "internal"
+msgstr ""
+
+msgid "link"
+msgstr ""
+
+msgid "social"
+msgstr ""
+
+msgid "search"
+msgstr ""
+
+msgid "Email clients"
+msgstr ""
+
+msgid "ads"
 msgstr ""

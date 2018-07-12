@@ -23,12 +23,8 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<h2>{$title}</h2>                                
-<div id="help">
-    {capture assign=docLink}{docURL page="CiviContribute Admin" text="CiviContribute Administration Documentation"}{/capture}
-    {ts 1=$docLink}Use the links below to update features and content for this Online Contribution Page, as well as to run through the contribution process in <strong>test mode</strong>. Refer to the %1 for more information.{/ts}
-</div>
-<table class="report"> 
+{include file="CRM/common/ContributionPageStatusCard.tpl" statistics=$contribution_page_statistics}
+<table>
 <tr>
     {if $is_active}
         <td nowrap><a href="{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$id`" fe='true'}" target="_blank" class="button"><i class="zmdi zmdi-share"></i> {ts}Go to this LIVE Online Contribution page{/ts}</a></td>
@@ -53,6 +49,11 @@
     <td>{ts}Test-drive the entire contribution process - including custom fields, confirmation, thank-you page, and receipting. Transactions will be directed to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and a test contribution record will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. Test contributions are not visible on the Contributions tab, but can be viewed by searching for 'Test Contributions' in the CiviContribute search form.</strong>{/ts}
     </td>
 </tr>
+</table>
+
+
+<h2>{ts}Settings{/ts}</h2>
+<table class="report"> 
 <tr>
     <td class="nowrap"><a href="{crmURL p='civicrm/admin/contribute/settings' q="reset=1&action=update&id=`$id`"}" id="idTitleAndSettings">&raquo; {ts}Title and Settings{/ts}</a></td>
     <td>{ts}Set page title and describe your cause or campaign. Select contribution type (donation, campaign contribution, etc.), and set optional fund-raising goal and campaign start and end dates. Enable honoree features and allow individuals to contribute on behalf of an organization. Enable or disable this page.{/ts}</td>

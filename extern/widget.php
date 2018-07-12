@@ -36,6 +36,12 @@
 require_once '../civicrm.config.php';
 
 $config   = CRM_Core_Config::singleton( );
+
+$language = CRM_Utils_Request::retrieve( 'language', 'String', CRM_Core_DAO::$_nullObject );
+if (!empty($language)) {
+  global $tsLocale;
+  $tsLocale = $language;
+}
 $template = CRM_Core_Smarty::singleton( );
 
 $cpageId  = CRM_Utils_Request::retrieve( 'cpageId', 'Positive', CRM_Core_DAO::$_nullObject );

@@ -8,6 +8,17 @@
   <add>4.0</add>
   <log>false</log>
   <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>ID for internal usage</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
       <name>session_key</name>
       <type>varchar</type>
       <length>255</length>
@@ -15,9 +26,12 @@
       <comment>Session of this visit</comment>
       <add>4.0</add>
   </field>
-  <primaryKey>
-       <name>session_key</name>
-  </primaryKey>
+  <index>
+    <name>track_session_key</name>
+    <fieldName>session_key</fieldName>
+    <unique>true</unique>
+    <add>4.0</add>
+  </index>
   <field>
       <name>visit_date</name>
       <type>datetime</type>
@@ -49,25 +63,6 @@
     <name>index_page_type_id</name>
     <fieldName>page_type</fieldName>
     <fieldName>page_id</fieldName>
-    <add>4.0</add>
-  </index>
-  <field>
-      <name>entity_table</name>
-      <type>varchar</type>
-      <length>64</length>
-      <comment>Entity table like civicrm_contribution or civicrm_participant or civicrm_membership</comment>
-      <add>4.0</add>
-  </field>
-  <field>
-      <name>entity_id</name>
-      <type>int unsigned</type>
-      <comment>Entity id like contribution id or participant id</comment>
-      <add>4.0</add>
-  </field>
-  <index>
-    <name>index_entity_table_id</name>
-    <fieldName>entity_table</fieldName>
-    <fieldName>entity_id</fieldName>
     <add>4.0</add>
   </index>
   <field>

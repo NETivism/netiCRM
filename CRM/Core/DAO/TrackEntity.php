@@ -33,7 +33,7 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
+class CRM_Core_DAO_TrackEntity extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -41,7 +41,7 @@ class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_mailing_event_bounce';
+  static $_tableName = 'civicrm_track_entity';
   /**
    * static instance to hold the field values
    *
@@ -81,39 +81,40 @@ class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
    */
   static $_log = false;
   /**
+   * ID for internal usage
    *
    * @var int unsigned
    */
   public $id;
   /**
-   * FK to EventQueue
+   * FK to Track ID
    *
    * @var int unsigned
    */
-  public $event_queue_id;
+  public $track_id;
   /**
-   * What type of bounce was it?
+   * Entity table like civicrm_contribution or civicrm_participant or civicrm_membership
+   *
+   * @var string
+   */
+  public $entity_table;
+  /**
+   * Entity id like contribution id or participant id
    *
    * @var int unsigned
    */
-  public $bounce_type_id;
+  public $entity_id;
   /**
-   * The reason the email bounced.
+   * Depth of this entity visit
    *
-   * @var text
+   * @var int unsigned
    */
-  public $bounce_reason;
-  /**
-   * When this bounce event occurred.
-   *
-   * @var datetime
-   */
-  public $time_stamp;
+  public $state;
   /**
    * class constructor
    *
    * @access public
-   * @return civicrm_mailing_event_bounce
+   * @return civicrm_track_entity
    */
   function __construct()
   {
@@ -129,7 +130,7 @@ class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
   {
     if (!(self::$_links)) {
       self::$_links = array(
-        'event_queue_id' => 'civicrm_mailing_event_queue:id',
+        'track_id' => 'civicrm_track:id',
       );
     }
     return self::$_links;
@@ -149,26 +150,26 @@ class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ) ,
-        'event_queue_id' => array(
-          'name' => 'event_queue_id',
+        'track_id' => array(
+          'name' => 'track_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-          'FKClassName' => 'CRM_Mailing_Event_DAO_Queue',
+          'FKClassName' => 'CRM_Core_DAO_Track',
         ) ,
-        'bounce_type_id' => array(
-          'name' => 'bounce_type_id',
+        'entity_table' => array(
+          'name' => 'entity_table',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Entity Table') ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ) ,
+        'entity_id' => array(
+          'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
         ) ,
-        'bounce_reason' => array(
-          'name' => 'bounce_reason',
-          'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Bounce Reason') ,
-        ) ,
-        'time_stamp' => array(
-          'name' => 'time_stamp',
-          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Time Stamp') ,
-          'required' => true,
+        'state' => array(
+          'name' => 'state',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('State') ,
         ) ,
       );
     }
@@ -208,7 +209,7 @@ class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['mailing_event_bounce'] = & $fields[$name];
+            self::$_import['track_entity'] = & $fields[$name];
           } else {
             self::$_import[$name] = & $fields[$name];
           }
@@ -231,7 +232,7 @@ class CRM_Mailing_Event_DAO_Bounce extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['mailing_event_bounce'] = & $fields[$name];
+            self::$_export['track_entity'] = & $fields[$name];
           } else {
             self::$_export[$name] = & $fields[$name];
           }

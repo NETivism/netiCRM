@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-05-08 06:22+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-07-03 06:37+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28618,14 +28618,6 @@ msgstr "如果您希望訊息出現在募款頁面的底部，請於這裡輸入
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
 msgid ""
-"Enter an optional goal amount for this contribution page (e.g. for this "
-"'campaign'). If you enable a contribution widget for this page, the widget "
-"will track progress against this goal. Otherwise, the goal will display as "
-"'no limit'."
-msgstr "請為此募款頁輸入一個目標金額。如果您為此頁啓用一個捐款小工具，這個小工具就會追蹤這個目標金額的達成狀況。若無，則目標會顯示為「沒有限制」。"
-
-#: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
-msgid ""
 "You can optionally set an \"active date range\" for this contribution page. "
 "These dates are currently only used by the \"Contribution Widget\" - which "
 "will give a \"Campaign is over\" message if it is accessed outside of the "
@@ -30460,7 +30452,7 @@ msgstr "條文："
 
 #: templates/CRM/Contribute/Page/UserDashboard.tpl
 msgid "Change Recurring Contribution"
-msgstr "更變定期定額"
+msgstr "變更定期定額"
 
 #: templates/CRM/Core/BillingBlock.tpl
 msgid ""
@@ -39315,7 +39307,7 @@ msgstr "被內容過濾器擷取的訊息"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Error in SMTP transaction"
-msgstr "SMTP 錯誤"
+msgstr "退信無法分析或寄件系統錯誤"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Name and Address"
@@ -46269,3 +46261,97 @@ msgid ""
 "This participant have completed or cancelled contribution record. You need "
 "to update related contribution belone this participant manually."
 msgstr "此參加者有已完成或已取消的費用紀錄，選擇不同活動級別後，你必須手動更新相關繳款紀錄的金額。"
+
+msgid "Used for"
+msgstr "使用於"
+
+msgid "%1 achieved"
+msgstr "已達成 %1"
+
+msgid "Goal Subscription"
+msgstr "目標訂閱"
+
+msgid "Display progress bar on the top of contribution page."
+msgstr "在募款頁上方顯示募款進度條"
+
+msgid ""
+"Enter one of these goal to display progress bar on the top of contribution "
+"page and contribution widget."
+msgstr "輸入其中一種目標，以在捐款頁、募款小工具的上方顯示進度條。"
+
+msgid ""
+"Percentage of progress base on total amount / goal amount of this "
+"contribution page."
+msgstr "進度百分比計算方式：目前收到總金額 ÷ 目標金額。"
+
+msgid ""
+"Percentage of progress base on active recurring subscriptions / goal "
+"subscriptions of this contribution page."
+msgstr "進度百分比計算方式：目前定期定額的人數 ÷ 目前訂閱人數。"
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "In %1 days"
+msgstr "此 %1 天"
+
+msgid "Number of First Time Donation Donors"
+msgstr "首次捐款人數"
+
+msgid "Contribution with Maximum Amount"
+msgstr "最高額捐款"
+
+msgid "Contribution Page Status"
+msgstr "募款頁狀況"
+
+msgid "New Recurring Contribution"
+msgstr "新進定期定額捐款"
+
+msgid "Contribution Amount by Flow Source"
+msgstr "成交捐款流量來源"
+
+msgid "Contribution Amount by Province"
+msgstr "縣市捐款金額"
+
+#: CRM/common/growth_sentence.tpl
+msgid "Compared with previous %1 days"
+msgstr "相較前 %1 天"
+
+msgid "grow by"
+msgstr "增加"
+
+msgid "decrease by"
+msgstr "減少"
+
+#: CRM/common/ContributionPageStatusCard.tpl
+msgid "There are %1 new contributions."
+msgstr "有 %1 筆新增捐款"
+
+#: CRM/common/ContributionPageStatusCard.tpl
+msgid "Flow Source"
+msgstr "流量來源"
+
+msgid "Amount reached"
+msgstr "達成金額"
+
+msgid "Total Donate Times"
+msgstr "總人次"
+
+msgid "direct"
+msgstr "直接"
+
+msgid "internal"
+msgstr "內部"
+
+msgid "link"
+msgstr "連結"
+
+msgid "social"
+msgstr "社交"
+
+msgid "search"
+msgstr "搜尋"
+
+msgid "Email clients"
+msgstr "Email"
+
+msgid "ads"
+msgstr "廣告"

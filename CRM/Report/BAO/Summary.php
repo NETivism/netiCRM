@@ -96,8 +96,11 @@ class CRM_Report_BAO_Summary {
     $allData['instruments'] = array();
     $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
 
-    $sql = "SELECT value,label FROM civicrm_option_value WHERE option_group_id = $gid";
-    $dao = CRM_Core_DAO::executeQuery($sql);
+    $sql = "SELECT value,label FROM civicrm_option_value WHERE option_group_id = %1";
+    $params = array(
+      1 => array($gid, 'Integer'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params );
     while($dao->fetch()){
       $name = $dao->label;
       $value = $dao->value;

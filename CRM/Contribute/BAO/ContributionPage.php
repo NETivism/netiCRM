@@ -700,5 +700,69 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
 
     return $info;
   }
+
+  
+  /**
+   * Function to get goal of contribution page
+   *
+   * @param int $contributionPageId Contribution Page Id
+   *
+   * @return array $achieved
+   *   $type     amount or recurring
+   *   $goal     goal of this contribution page
+   *   $current  current amount or people
+   *   $percent  current/goal percentage, 100 means achieved
+   *   $achieved TRUE / FALSE to indicate if page is achieved goal
+   *
+   * @access public
+   * @static
+   */
+  static function goalAchieved($contributionPageId) {
+    $page = $params = $whereClause = array();
+    CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+    $whereClause = array(
+      'c.contribution_page_id = %1',
+      'c.contribution_status_id = 1',
+      'c.is_test = 0',
+    );
+    $params = array(
+      1 => array($contributionPageId, 'Integer'),
+    );
+    if (!empty($page['goal_amount']) && $page['goal_amount'] > 0) {
+      $type = 'amount';
+      $where = implode(" AND ", $whereClause);
+      $sql = "SELECT SUM(c.total_amount) as `sum`, COUNT(id) as `count` FROM civicrm_contribution c WHERE $where GROUP BY c.contribution_page_id";
+      $type = 'amount';
+      $goal = $page['goal_amount'];
+    }
+    elseif (!empty($page['goal_recurring']) && $page['goal_recurring'] > 0) {
+      $type = 'recurring';
+      $whereClause[] = "r.contribution_status_id != 3";
+      $where = implode(" AND ", $whereClause);
+      $sql = "SELECT SUM(subscription.total_amount) as `sum`, COUNT(subscription.id) as `count` FROM (SELECT c.total_amount, c.id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE $where GROUP BY r.id) as subscription";
+      $type = 'recurring';
+      $goal = $page['goal_recurring'];
+    }
+
+    if ($type) {
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
+      $dao->fetch();
+      $current = $type == 'amount' ? $dao->sum : $dao->count;
+      $percent = round(ceil(($current/$goal)*100));
+      if ($current > 0 && $percent < 1) {
+        $percent = 1; // when there is value, we have at least 1 percent
+      }
+      return array(
+        'type' => $type,
+        'goal' => $goal,
+        'current' => $current,
+        'percent' => $percent,
+        'achieved' => $percent >= 100 ? TRUE : FALSE,
+        'count' => $dao->count,
+        'sum' => $dao->sum,
+      );
+    }
+    return array();
+  }
 }
 

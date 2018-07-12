@@ -175,6 +175,7 @@ DROP TABLE IF EXISTS civicrm_persistent;
 DROP TABLE IF EXISTS civicrm_discount;
 DROP TABLE IF EXISTS civicrm_component;
 DROP TABLE IF EXISTS civicrm_worldregion;
+DROP TABLE IF EXISTS civicrm_track_entity;
 DROP TABLE IF EXISTS civicrm_track;
 DROP TABLE IF EXISTS civicrm_tag;
 DROP TABLE IF EXISTS civicrm_preferences_date;
@@ -648,12 +649,11 @@ CREATE TABLE civicrm_tag (
 CREATE TABLE civicrm_track (
 
 
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'ID for internal usage',
      session_key varchar(255) NOT NULL   COMMENT 'Session of this visit',
      visit_date datetime NOT NULL   COMMENT 'Date time of this visit',
      page_type varchar(64) NOT NULL   COMMENT 'Page type like civicrm_event or civicrm_contribution_page',
      page_id int unsigned NOT NULL   COMMENT 'Page id.',
-     entity_table varchar(64)    COMMENT 'Entity table like civicrm_contribution or civicrm_participant or civicrm_membership',
-     entity_id int unsigned    COMMENT 'Entity id like contribution id or participant id',
      state int unsigned    COMMENT 'Depth of this visit',
      referrer_type varchar(64)    COMMENT 'Referrer type of inbound visit',
      referrer_network varchar(64)    COMMENT 'Referrer network of inbound visit',
@@ -665,18 +665,17 @@ CREATE TABLE civicrm_track (
      utm_term varchar(255)    ,
      utm_content varchar(255)     
 ,
-    PRIMARY KEY ( session_key )
+    PRIMARY KEY ( id )
  
-    ,     INDEX index_visit_date(
+    ,     UNIQUE INDEX track_session_key(
+        session_key
+  )
+  ,     INDEX index_visit_date(
         visit_date
   )
   ,     INDEX index_page_type_id(
         page_type
       , page_id
-  )
-  ,     INDEX index_entity_table_id(
-        entity_table
-      , entity_id
   )
   ,     INDEX index_state(
         state
@@ -696,6 +695,36 @@ CREATE TABLE civicrm_track (
   
  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_track_entity
+-- *
+-- * Record entity of one track
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_track_entity (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'ID for internal usage',
+     track_id int unsigned    COMMENT 'FK to Track ID',
+     entity_table varchar(64)    COMMENT 'Entity table like civicrm_contribution or civicrm_participant or civicrm_membership',
+     entity_id int unsigned    COMMENT 'Entity id like contribution id or participant id',
+     state int unsigned    COMMENT 'Depth of this entity visit' 
+,
+    PRIMARY KEY ( id )
+ 
+    ,     INDEX index_entity_table_id(
+        entity_table
+      , entity_id
+  )
+  ,     INDEX index_state(
+        state
+  )
+  
+,      
+     CONSTRAINT FK_civicrm_track_entity_track_id FOREIGN KEY (track_id) REFERENCES civicrm_track(id) ON DELETE CASCADE  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3292,7 +3321,7 @@ CREATE TABLE civicrm_mailing_event_bounce (
      id int unsigned NOT NULL AUTO_INCREMENT  ,
      event_queue_id int unsigned NOT NULL   COMMENT 'FK to EventQueue',
      bounce_type_id int unsigned    COMMENT 'What type of bounce was it?',
-     bounce_reason varchar(255)    COMMENT 'The reason the email bounced.',
+     bounce_reason text    COMMENT 'The reason the email bounced.',
      time_stamp datetime NOT NULL   COMMENT 'When this bounce event occurred.' 
 ,
     PRIMARY KEY ( id )
@@ -3506,6 +3535,7 @@ CREATE TABLE civicrm_contribution_page (
      min_amount decimal(20,2)    COMMENT 'if other amounts allowed, user can configure minimum allowed.',
      max_amount decimal(20,2)    COMMENT 'if other amounts allowed, user can configure maximum allowed.',
      goal_amount decimal(20,2)    COMMENT 'The target goal for this page, allows people to build a goal meter',
+     goal_recurring int unsigned    COMMENT 'The target recurring goal for this page, allows people to build a goal meter base on subscriptions',
      thankyou_title varchar(255)    COMMENT 'Title for Thank-you page (header title tag, and display at the top of the page).',
      thankyou_text text    COMMENT 'text and html allowed. displayed above result on success page',
      thankyou_footer text    COMMENT 'Text and html allowed. displayed at the bottom of the success page. Common usage is to include link(s) to other pages such as tell-a-friend, etc.',

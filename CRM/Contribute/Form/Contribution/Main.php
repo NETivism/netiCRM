@@ -660,6 +660,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if(!empty($this->_submitValues['receipt_type'])){
       $this->assign('receipt_type',$this->_submitValues['receipt_type']);
     }
+    
+    $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($this->_id);
+    $this->assign('achievement', $achievement);
   }
 
   /**
@@ -672,18 +675,44 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $elements = array();
     if (!empty($this->_values['amount'])) {
       // first build the radio boxes
-      require_once 'CRM/Utils/Hook.php';
       CRM_Utils_Hook::buildAmount('contribution', $this, $this->_values['amount']);
 
-      require_once 'CRM/Utils/Money.php';
+      // set default display
+      if (!empty($this->_values['default_amount_id'])) {
+        $this->_defaultAmountRecur = $this->_values['amount'][$this->_values['default_amount_id']]['grouping'];
+      }
+      
       foreach ($this->_values['amount'] as $amount) {
+        // set default price option
+        $attributes = array(
+          'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
+          'data-default' => !empty($amount['filter']) ? 1 : 0,
+          'onclick' => 'clearAmountOther();',
+        );
+        if (!empty($amount['filter'])) {
+          switch($amount['grouping']) {
+            case 'recurring':
+              if ($amount['grouping'] == $this->_defaultAmountRecur) {
+                $this->_defaults['amount'] = $amount['amount_id'];
+              }
+              break;
+            case 'non-recurring':
+              if ($amount['grouping'] == $this->_defaultAmountRecur) {
+                $this->_defaults['amount'] = $amount['amount_id'];
+              }
+              elseif(empty($this->_defaultAmountRecur)) {
+                $this->_defaults['amount'] = $amount['amount_id'];
+              }
+              break;
+            default:
+              $this->_defaults['amount'] = $amount['amount_id'];
+              break;
+          }
+        }
         $elements[] = &$this->createElement('radio', NULL, '',
           CRM_Utils_Money::format($amount['value']) . ' ' . $amount['label'],
           $amount['amount_id'],
-          array(
-            'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
-            'onclick' => 'clearAmountOther();',
-          )
+          $attributes
         );
       }
     }
@@ -693,9 +722,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->assign('is_separate_payment', TRUE);
     }
 
-    if (isset($this->_values['default_amount_id'])) {
-      $this->_defaults['amount'] = $this->_values['default_amount_id'];
-    }
     $title = ts('Contribution Amount');
     if ($this->_values['is_allow_other_amount']) {
       if (!empty($this->_values['amount'])) {
@@ -850,7 +876,17 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->_defaults['is_recur'] = 1;
     }
     else {
-      $this->_defaults['is_recur'] = 0;
+      if ($this->_values['is_recur'] == 1 && !empty($this->_defaultAmountRecur)) {
+        if ($this->_defaultAmountRecur == 'recurring') {
+          $this->_defaults['is_recur'] = 1;
+        }
+        else {
+          $this->_defaults['is_recur'] = 0;
+        }
+      }
+      else {
+        $this->_defaults['is_recur'] = 0;
+      }
     }
 
     if ($this->_values['is_recur_interval']) {
@@ -896,8 +932,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
     $this->addGroup($elements, 'is_recur', NULL, '<br />');
 
-    $attributes['installments']['placeholder'] = ts('no limit');
-    $this->add('text', 'installments', ts('Installments'), $attributes['installments']);
+    $attributes['installments'] = array(
+      'placeholder' => ts('no limit'),
+      'min' => 2,
+      'style' => 'max-width:100px',
+    );
+    $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
     $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
   }
 

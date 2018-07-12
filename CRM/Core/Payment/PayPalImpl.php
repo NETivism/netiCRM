@@ -399,6 +399,8 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       CRM_Core_Error::fatal(ts('Component is invalid'));
     }
 
+    $testingParam = $this->_mode == 'test' ? '&action=preview' : '';
+
     $notifyURL = $config->userFrameworkResourceURL . "extern/ipn.php?reset=1&contactID={$params['contactID']}" . "&contributionID={$params['contributionID']}" . "&module={$component}";
 
     if ($component == 'event') {
@@ -421,22 +423,8 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     }
 
     $url = ($component == 'event') ? 'civicrm/event/register' : 'civicrm/contribute/transact';
-    $cancel = ($component == 'event') ? '_qf_Register_display' : '_qf_Main_display';
-    $returnURL = CRM_Utils_System::url($url,
-      "_qf_ThankYou_display=1&qfKey={$params['qfKey']}",
-      TRUE, NULL, FALSE
-    );
-    $cancelURL = CRM_Utils_System::url($url,
-      "$cancel=1&cancel=1&qfKey={$params['qfKey']}",
-      TRUE, NULL, FALSE
-    );
-
-    // ensure that the returnURL is absolute.
-    if (substr($returnURL, 0, 4) != 'http') {
-      require_once 'CRM/Utils/System.php';
-      $fixUrl = CRM_Utils_System::url("civicrm/admin/setting/url", '&reset=1');
-      CRM_Core_Error::fatal(ts('Sending a relative URL to PayPalIPN is erroneous. Please make your resource URL (in <a href="%1">Administer CiviCRM &raquo; Global Settings &raquo; Resource URLs</a> ) complete.', array(1 => $fixUrl)));
-    }
+    $returnURL = CRM_Utils_System::url($url, "_qf_ThankYou_display=1&qfKey={$params['qfKey']}", TRUE, NULL, FALSE);
+    $cancelURL = CRM_Utils_System::url($url, "reset=1&id=".$params['contributionPageID'].$testingParam, TRUE, NULL, FALSE);
 
     $paypalParams = array('business' => $this->_paymentProcessor['user_name'],
       'notify_url' => $notifyURL,
@@ -502,8 +490,8 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       else {
         CRM_Core_Error::fatal(ts('Recurring contribution, but no database id'));
       }
-
-      $paypalParams += array('cmd' => '_xclick-subscriptions',
+      $paypalParams += array(
+        'cmd' => '_xclick-subscriptions',
         'a3' => $params['amount'],
         'p3' => $params['frequency_interval'],
         't3' => ucfirst(substr($params['frequency_unit'], 0, 1)),
@@ -515,7 +503,8 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       );
     }
     else {
-      $paypalParams += array('cmd' => '_xclick',
+      $paypalParams += array(
+        'cmd' => '_xclick',
         'amount' => $params['amount'],
       );
     }

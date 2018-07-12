@@ -890,6 +890,7 @@ INSERT INTO civicrm_mailing_bounce_pattern
     (@bounceTypeID, 'not a gateway'),
     (@bounceTypeID, 'server is down or unreachable'),
     (@bounceTypeID, 'too many connections'),
+    (@bounceTypeID, 'host or domain name not found'),
     (@bounceTypeID, 'unable to connect');
 
 INSERT INTO civicrm_mailing_bounce_type 
@@ -1048,7 +1049,7 @@ INSERT INTO civicrm_mailing_bounce_pattern
 
 INSERT INTO civicrm_mailing_bounce_type 
         (name, description, hold_threshold) 
-        VALUES ('Syntax', '{ts escape="sql"}Error in SMTP transaction{/ts}', 3);
+        VALUES ('Syntax', '{ts escape="sql"}Error in SMTP transaction{/ts}', 100);
 
 SELECT @bounceTypeID := max(id) FROM civicrm_mailing_bounce_type WHERE name = 'Syntax';
 INSERT INTO civicrm_mailing_bounce_pattern 

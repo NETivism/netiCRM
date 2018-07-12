@@ -81,11 +81,11 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
    */
   static $_log = false;
   /**
-   * table primary key
+   * ID for internal usage
    *
-   * @var string
+   * @var int unsigned
    */
-  public $_primaryKey = 'session_key';
+  public $id;
   /**
    * Session of this visit
    *
@@ -110,18 +110,6 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
    * @var int unsigned
    */
   public $page_id;
-  /**
-   * Entity table like civicrm_contribution or civicrm_participant or civicrm_membership
-   *
-   * @var string
-   */
-  public $entity_table;
-  /**
-   * Entity id like contribution id or participant id
-   *
-   * @var int unsigned
-   */
-  public $entity_id;
   /**
    * Depth of this visit
    *
@@ -197,6 +185,11 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
   {
     if (!(self::$_fields)) {
       self::$_fields = array(
+        'id' => array(
+          'name' => 'id',
+          'type' => CRM_Utils_Type::T_INT,
+          'required' => true,
+        ) ,
         'session_key' => array(
           'name' => 'session_key',
           'type' => CRM_Utils_Type::T_STRING,
@@ -223,17 +216,6 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
           'name' => 'page_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
-          'name' => 'entity_table',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Entity Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
-          'name' => 'entity_id',
-          'type' => CRM_Utils_Type::T_INT,
         ) ,
         'state' => array(
           'name' => 'state',

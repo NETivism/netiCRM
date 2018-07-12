@@ -416,6 +416,10 @@ class CRM_Mailing_BAO_Query {
     $form->addSelect('mailing_job_status', ts('Mailing Status'), $mailingJobStatuses);
   
     $mailingBounceTypes = CRM_Mailing_PseudoConstant::bounceType();
+    $mailingBounceTypesDesc = CRM_Mailing_PseudoConstant::bounceType('id', 'description');
+    foreach($mailingBounceTypes as $bid => $type) {
+      $mailingBounceTypes[$bid] = $type." ({$mailingBounceTypesDesc[$bid]})";
+    }
     $form->addSelect('mailing_bounce_types', ts('Bounce Type'), $mailingBounceTypes, array('multiple' => 'multiple'));
 
     // event filters

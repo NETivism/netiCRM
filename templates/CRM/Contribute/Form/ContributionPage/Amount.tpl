@@ -171,25 +171,24 @@
                 <span class="description">{ts 1=5|crmMoney}If you have chosen to <strong>Allow Other Amounts</strong>, you can use the fields above to control minimum and/or maximum acceptable values (e.g. don't allow contribution amounts less than %1).{/ts}</span></td></tr>
                </table>
             </td></tr>
-            
             <tr><td colspan="2">
                 <fieldset><legend>{ts}Fixed Contribution Options{/ts}</legend>
                     {ts}Use the table below to enter up to ten fixed contribution amounts. These will be presented as a list of radio button options. Both the label and dollar amount will be displayed.{/ts}<br />
                     <div id="map-field">
                     <table id="map-field-table">
                         <tr class="columnheader" >
-                          <td scope="column">{ts}Show{/ts}</td>
+                          <td scope="column">{ts}Used for{/ts}</td>
                           <td scope="column">{ts}Contribution Label{/ts}</td>
                           <td scope="column">{ts}Amount{/ts}</td>
-                          <td scope="column">{ts}Default?{/ts}<br /><span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('default', 'Amount'); return false;" >{ts}clear{/ts}</a>)</span></td>
+                          <td scope="column">{ts}Default{/ts}</td>
                         </tr>
                         {section name=loop start=1 loop=11}
                             {assign var=idx value=$smarty.section.loop.index}
                             <tr>
-                              <td>{$form.grouping.$idx.html}</td>
-                              <td class="even-row">{$form.label.$idx.html}</td>
-                              <td>{$form.value.$idx.html|crmMoney}</td>
-                              <td class="even-row">{$form.default.$idx.html}</td>
+                              <td class="even-row">{$form.default.$idx.html} {$form.grouping.$idx.html}</td>
+                              <td>{$form.label.$idx.html}</td>
+                              <td class="even-row">{$form.value.$idx.html|crmMoney}</td>
+                              <td class="even-row">{$form.filter.$idx.html}</td>
                             </tr>
                         {/section}
                     </table>
@@ -203,6 +202,46 @@
 
 {literal}
 <script type="text/javascript">
+  cj(document).ready(function($){
+    var varifyCheckbox = function($checkbox) {
+      var $tr = $checkbox.closest("tr");
+      var $table = $checkbox.closest("table");
+      var groupCurrent = $tr.find("select[name^=grouping]").val() ? $tr.find("select[name^=grouping]").val() : 'all';
+
+      var $trAll = $table.find("select[name^=grouping]").filter(function(){ return !$(this).val(); }).closest("tr");
+      var $trRecur = $table.find("select[name^=grouping]").filter(function(){ return $(this).val() == 'recurring'; }).closest("tr");
+      var $trNon = $table.find("select[name^=grouping]").filter(function(){ return $(this).val() == 'non-recurring'; }).closest("tr");
+
+      if($checkbox.is(":checked")) {
+        // clear all same level checkbox, use that for default
+        switch(groupCurrent) {
+          case "all":
+            $("input[type=checkbox][name^=filter]:checked").removeProp('checked');
+            $checkbox.prop("checked", true);
+            break;
+          case "recurring":
+            $trAll.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
+            $trRecur.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
+            $checkbox.prop("checked", true);
+            break;
+          case "non-recurring":
+            $trAll.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
+            $trNon.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
+            $checkbox.prop("checked", true);
+            break;
+        }
+      }
+    }
+    $("input[type=checkbox][name^=filter]").change(function(e){
+      varifyCheckbox($(this));
+      return false;
+    });
+    $("select[name^=grouping]").change(function(e){
+      var $tr = $(this).closest("tr");
+      var $checkbox = $tr.find("input[type=checkbox][name^=filter]:checked");
+      varifyCheckbox($checkbox);
+    });
+  });
    var paymentProcessorMapper = new Array( );
      {/literal}
        {if $recurringPaymentProcessor}

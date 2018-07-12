@@ -3258,6 +3258,26 @@ div#civicrm-dashboard form {
 .chartist-chart > svg > .ct-series:nth-last-child(14) .ct-slice-pie { fill: #b2c326; }
 .chartist-chart > svg > .ct-series:nth-last-child(15) .ct-slice-pie { fill: #6188e2; }
 .chartist-chart > svg > .ct-series:nth-last-child(16) .ct-slice-pie { fill: #a748ca; }
+.chartist-chart .series-large .ct-bar { stroke-width: 4px; }
+.chartist-chart .series-medium .ct-bar { stroke-width: 6px; }
+.chartist-chart .series-normal .ct-bar { stroke-width: 10px; }
+
+.chartist-chart .ct-point { opacity: .5; }
+.chartist-chart .series-large .ct-point { stroke-width: 4px; }
+.chartist-chart .series-medium .ct-point { stroke-width: 6px; }
+.chartist-chart .series-normal .ct-point { stroke-width: 8px; }
+.chartist-chart .ct-point:hover {
+  stroke-width: 8px;
+  opacity: 1;
+}
+.chartist-chart .ct-chart-line-stacked .ct-point {
+  stroke-width: 3px;
+}
+
+.chartist-chart .ct-line { stroke-width: 2px; }
+.chartist-chart .series-large .ct-line { stroke-width: 2px; }
+.chartist-chart .series-medium .ct-line { stroke-width: 3px; }
+.chartist-chart .series-normal .ct-line { stroke-width: 4px; }
 .chartist-wrapper .ct-label[data-chart-percent^="0"] {
   display: none;
 }
@@ -3662,17 +3682,6 @@ div#crm-toolTip
 
 
 /* Overlay */
-#basic-modal-content {display:none;}
-#simplemodal-overlay {background-color:#000; cursor:wait;}
-
-/* Container */
-#simplemodal-container {color:#555; background-color:#333; border:4px solid #444; padding:12px;}
-#simplemodal-container .simplemodal-data {padding:0px;}
-#simplemodal-container code {background:#141414; border-left:3px solid #65B43D; color:#bbb; display:block; margin-bottom:12px; padding:4px 6px 6px;}
-#simplemodal-container a {color:#ddd;}
-#simplemodal-container a.modalCloseImg {background:url(../i/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
-#simplemodal-container h3 {color:#84b8d9;}
-
 .ui-datepicker * {
   font-size: 11px;
 }
@@ -4596,6 +4605,7 @@ ul.ui-sortable {
 
 /* crm form element */
 .crm-form-textfield,
+.crm-form-number,
 .crm-form-select {
   display: inline-block;
   vertical-align: middle;
@@ -6074,3 +6084,57 @@ input.crm-form-textfield,
     margin: 2em 0;
 }
 
+/* Progress bar */
+.crm-container .progress-block {
+  margin: 0 0 30px 0;
+}
+.crm-container .progress-wrapper {
+    display: table;
+    width: 100%;
+}
+.crm-container .progress-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+.crm-container .progress-cell.progress-bar-wrapper {
+    width: 80%;
+}
+.crm-container .progress-bar-wrapper {
+    position:relative;
+    border: 1px solid #AAA;
+}
+.crm-container .progress-bar {
+    height: 28px;
+    background: #a8d2f9;
+    border: 2px solid rgba(255, 255, 255, 0.75);
+}
+.crm-container .progress-pointer {
+    position:absolute;
+    color: #555;
+    top: 0;
+    padding: 0 10px;
+}
+.crm-container .progress-pointer-over {
+    position:absolute;
+    top: 10px;
+    color: #999;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.crm-container .progress-amount {
+  display: flex;
+  justify-content: space-between;
+}
+.crm-container .progress-amount-raised {
+}
+.crm-container .progress-amount-goal {
+}
+.crm-container .progress-cell .button {
+    white-space: nowrap;
+    border-left: 5px solid #FFF;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0;
+    width: 100%;
+    background: #3f51b5;
+}

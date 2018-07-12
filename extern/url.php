@@ -18,11 +18,17 @@ if ( ! $queue_id || ! $url_id ) {
 }
 
 $url = CRM_Mailing_Event_BAO_TrackableURLOpen::track($queue_id, $url_id);
-
+$url_parsed = parse_url($url);
 // CRM-7103
 // looking for additional query variables and append them when redirecting
 $query_param = $_GET;
 unset($query_param['q'], $query_param['qid'], $query_param['u']);
+
+if ($url_parsed['host'] === $_SERVER['HTTP_HOST']) {
+  $query_param['civimail_x_q'] = $queue_id;
+  $query_param['civimail_x_u'] = $url_id;
+}
+
 if (!empty($query_param)) {
   $query_string = http_build_query($query_param);
 
