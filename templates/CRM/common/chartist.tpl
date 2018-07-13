@@ -7,7 +7,9 @@ if (!$crmChartistAdded) {
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-axistitle.js"></script>
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/dist/chartist.min.css">
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
+  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css">
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
+  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js"></script>
 {php}
   $crmChartistAdded = TRUE;
@@ -50,7 +52,9 @@ if (!$crmChartistAdded) {
   var chartId = "{/literal}{$chartist.id|default:""}{literal}";
   var chartLabels = {/literal}{$chartist.labels|default:"[]"}{literal};
   var chartSeries = {/literal}{$chartist.series|default:"[]"}{literal};
+  var chartLegends = {/literal}{$chartist.legends|default:"[]"}{literal};
   var withToolTip = {/literal}{$chartist.withToolTip|default:0}{literal};
+  var withVerticalHint = {/literal}{$chartist.withVerticalHint|default:0}{literal};
   var isDonut = {/literal}{$chartist.isDonut|default:0}{literal};
   var isFillDonut = {/literal}{$chartist.isFillDonut|default:0}{literal};
   var animation = {/literal}{$chartist.animation|default:0}{literal};
@@ -61,9 +65,16 @@ if (!$crmChartistAdded) {
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
   var seriesUnit = "{/literal}{$chartist.seriesUnit|default:''}{literal}";
   var seriesUnitPosition = "{/literal}{$chartist.seriesUnitPosition|default:'suffix'}{literal}";
-
-  {/literal}{* moment support parse format, check https://momentjs.com/docs/#/parsing/string-format/ *}{literal}
   var autoDateLabel = {/literal}{$chartist.autoDateLabel|default:0}{literal};
+  var seriesLength = 0;
+  if (typeof chartSeries[0] === "object") {
+    seriesLength = chartSeries[0].length; 
+  }
+  else
+  if(typeof chartSeries=== "object"){
+    seriesLength = chartSeries.length; 
+  }
+  autoDateLabel = seriesLength > 35 && autoDateLabel ? true : false; 
 
   var floorDecimal = function (val, precision) {
     return Math.floor(Math.floor(val * Math.pow(10, (precision || 0) + 1)) / 10) / Math.pow(10, (precision || 0));
@@ -348,15 +359,6 @@ if (!$crmChartistAdded) {
     options["axisX"] = axisX;
   }
 
-  // check if multi dimention
-  var seriesLength = 0;
-  if (typeof data.series[0] === "object") {
-    seriesLength = data.series[0].length; 
-  }
-  else
-  if(typeof data.series === "object"){
-    seriesLength = data.series.length; 
-  }
   if (seriesLength > 60) {
     options.classNames["chart"] += ' series-large ';
   }
@@ -416,9 +418,16 @@ if (!$crmChartistAdded) {
   }
     
   if (withToolTip) {
-      data = renderToolTipData(data, chartType, seriesUnit);
-      var tooltip = Chartist.plugins.tooltip();
-      options.plugins.push(tooltip);   
+    data = renderToolTipData(data, chartType, seriesUnit);
+    var tooltip = Chartist.plugins.tooltip();
+    options.plugins.push(tooltip);   
+  }
+  if (withVerticalHint && !autoDateLabel && chartLegends.length > 0) {
+    options.plugins.push(
+      Chartist.plugins.verticalhint({
+				seriesLabel:chartLegends
+      })
+    ); 
   }
 
   if (chartType == 'Pie') {

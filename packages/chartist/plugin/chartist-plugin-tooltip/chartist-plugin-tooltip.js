@@ -84,6 +84,12 @@
           var meta = $point.getAttribute('ct:meta') || seriesName || '';
           var hasMeta = !!meta;
           var value = $point.getAttribute('ct:value');
+          if (typeof value === "string" && value.indexOf(",")) {
+            var multi = value.split(",");
+            if (typeof multi[1] !== "undefined") {
+              value = multi[1];
+            }
+          }
 
           if (options.transformTooltipTextFnc && typeof options.transformTooltipTextFnc === 'function') {
             value = options.transformTooltipTextFnc(value);

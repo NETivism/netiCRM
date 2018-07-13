@@ -3266,12 +3266,12 @@ div#civicrm-dashboard form {
 .chartist-chart .series-large .ct-point { stroke-width: 4px; }
 .chartist-chart .series-medium .ct-point { stroke-width: 6px; }
 .chartist-chart .series-normal .ct-point { stroke-width: 8px; }
+.chartist-chart .ct-chart-line-stacked .ct-point {
+  stroke-width: 4px;
+}
 .chartist-chart .ct-point:hover {
   stroke-width: 8px;
   opacity: 1;
-}
-.chartist-chart .ct-chart-line-stacked .ct-point {
-  stroke-width: 3px;
 }
 
 .chartist-chart .ct-line { stroke-width: 2px; }

@@ -1,0 +1,56 @@
+.chartist-verticalhint {
+  position: absolute;
+  display: inline-block;
+  opacity: 0;
+  min-width: 5em;
+  padding: .5em;
+  box-shadow: 1px 0px 4px black;
+  background: #FFFFFF;
+  color: #453D3F;
+  font-weight: 700;
+  font-size: 0.85em;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+  -webkit-transition: opacity .2s linear;
+  -moz-transition: opacity .2s linear;
+  -o-transition: opacity .2s linear;
+  transition: opacity .2s linear; }
+  .chartist-verticalhint:before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    margin-top: -15px;
+    border: 15px solid transparent;
+    border-right-color: #FFFFFF; }
+  .chartist-verticalhint.verticalhint-show {
+    opacity: .8; }
+
+.chartist-verticalhint-highlight {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  min-width: 1em;
+  min-height: 1em;
+  background: #EFEFEF;
+  border: 1px solid #999;
+  text-align: center;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-transition: opacity .2s linear;
+  -moz-transition: opacity .2s linear;
+  -o-transition: opacity .2s linear;
+  transition: opacity .2s linear; }
+  .chartist-verticalhint-highlight.verticalhint-show {
+    opacity: .5; 
+  }
+.ct-labels .ct-horizontal {
+  cursor: pointer;
+}
+.ct-area, .ct-line {
+  pointer-events: none; 
+}
+

@@ -220,6 +220,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         'seriesUnit' => '$ ',
         'seriesUnitPosition'=> 'prefix',
         'withToolTip' => true,
+        'withVerticalHint' => true,
+        'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
         'stackLines' => true
       );
       $this->assign('chart_this_year', $chart);
@@ -239,6 +241,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'series' => json_encode(array($recur_duration_sum, $not_recur_duration_sum)),
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',
+      'withVerticalHint' => true,
+      'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
       'withToolTip' => true,
       'autoDateLabel' => true,
     );
@@ -284,6 +288,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',
       'withToolTip' => true,
+      'withVerticalHint' => true,
+      'legends' => json_encode($track_label),
       'autoDateLabel' => true,
       'stackBars' => true
     );
