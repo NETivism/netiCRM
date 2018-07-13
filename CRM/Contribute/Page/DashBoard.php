@@ -523,6 +523,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         3 => array($end_date . ' 23:59:59' , 'String'),
       );
       $duration_count = CRM_Core_DAO::singleValueQuery($sql, $params);
+      $duration['count'] = $duration_count;
 
       list($last_start_date, $last_end_date) = self::getLastDurationTime($start_date, $end_date);
       $sql = "SELECT COUNT(id) FROM civicrm_contribution c WHERE contribution_page_id = %1 AND receive_date >= %2 AND receive_date <= %3 AND contribution_status_id = 1 AND c.is_test = 0 ";
@@ -533,9 +534,10 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       );
       $last_duration_count = CRM_Core_DAO::singleValueQuery($sql, $params);
 
-      $duration_count_growth = ( $duration_count / $last_duration_count ) - 1;
-      $duration['count'] = $duration_count;
-      $duration['growth'] = number_format($duration_count_growth * 100,2 );
+      if($last_duration_count > 1){
+        $duration_count_growth = ( $duration_count / $last_duration_count ) - 1;
+        $duration['growth'] = number_format($duration_count_growth * 100,2 );
+      }
     }
 
     $return = array(
