@@ -331,13 +331,6 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
           $cc_and[] = "receive_date <= '{$cc_filter['end_date']}'";
           unset($cc_filter['end_date']);
         }
-        // if(!empty($cc_filter['is_recur'])){
-        //   $cc_and[] = "contribution_recur_id IS NOT NULL";
-        //   unset($cc_filter['is_recur']);
-        // }else if($cc_filter['is_recur'] == '0'){
-        //   $cc_and[] = "contribution_recur_id IS NULL";
-        //   unset($cc_filter['is_recur']);
-        // }
         foreach ($cc_filter as $key => $value) {
           if(in_array(substr($value, 0, 1), array('>', '<', '=', '!'))){
             $cc_and[] = $key .' '. $value;

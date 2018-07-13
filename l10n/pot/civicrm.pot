@@ -46202,3 +46202,22 @@ msgstr ""
 
 msgid "ads"
 msgstr ""
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "Contributions Since This Year"
+msgstr ""
+
+msgid "Non-recurring Total Amount"
+msgstr ""
+
+msgid "Number of Donation Donors: %1"
+msgstr ""
+
+msgid "Total Contributions: %1"
+msgstr ""
+
+msgid "Total Payments: %1"
+msgstr ""
+
+msgid "Recurring Total Amount"
+msgstr ""

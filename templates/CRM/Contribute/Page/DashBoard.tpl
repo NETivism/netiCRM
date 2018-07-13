@@ -31,6 +31,19 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
+        <h3 class="kpi-box-title">{ts}Contributions Since This Year{/ts}</h3>
+        <div class="this-year-info-wrapper">
+          <div class="this-year-info this-year-info-non-recur">
+            {ts}Non-recurring Total Amount{/ts} {$this_year_sum_non_recur|crmMoney}
+            {ts 1=$this_year_people_non_recur}Number of Donation Donors: %1{/ts} 
+            {ts 1=$this_year_count_non_recur}Total Contributions: %1{/ts}
+          </div>
+          <div class="this-year-info this-year-info-recur">
+            {ts}Recurring Total Amount{/ts} {$this_year_sum_recur|crmMoney}
+            {ts 1=$this_year_people_recur}Number of Donation Donors: %1{/ts} 
+            {ts 1=$this_year_count_recur}Total Payments: %1{/ts}
+          </div>
+        </div>
         <div class="chartist">
         {include file="CRM/common/chartist.tpl" chartist=$chart_this_year}
         </div>
@@ -90,6 +103,32 @@
   }
   .more{
     text-align: right;
+  }
+  .this-year-info-wrapper {
+    background-color: #eee;
+    padding: 10px;
+  }
+  .this-year-info {
+    position: relative;
+    padding-left: 25px;
+  }
+  .this-year-info::before,
+  .this-year-info::after {
+    display: block;
+    width: 20px;
+    height: 20px;
+    content: " ";
+    float: left;
+    background-color: white;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .this-year-info-recur::after {
+    background-color: rgba(215, 2, 6, .1);
+  }
+  .this-year-info-non-recur::after {
+    background-color: rgba(240, 91, 79, .1);
   }
 </style>
 {/literal}
@@ -221,7 +260,7 @@
       <div class="box-content">
         <h3>{ts 1=$days}In %1 days{/ts} {ts}Non-recurring Contribution{/ts}</h3>
         <table>
-          {foreach from=$single_contributions item=contribution}
+          {foreach from=$non_recur_contributions item=contribution}
           <tr>
             <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contribution.contact_id`" h=0 a=1 fe=1}">{$contribution.name}</a></td>
             <td>{$contribution.date}</td>
@@ -326,72 +365,15 @@
   </div>
 </div>
 
-{if $pager->_totalItems}
-<div class="crm-section dashboard-section">
-    <h3>{ts}Recent Contributions{/ts}</h3>
-    <div>
-        {include file="CRM/Contribute/Form/Selector.tpl" context="dashboard"}
-    </div>
-</div>
-{/if}{literal}
+{literal}
 <script type="text/javascript">
        
 cj(document).ready( function( ) {
-    getChart( );
-    cj('#chart_view').click(function( ) {
-        if ( cj('#chart_view').hasClass('ui-state-default') ) { 
-            cj('#chart_view').removeClass('ui-state-default').addClass('ui-state-active ui-tabs-selected');
-            cj('#table_view').removeClass('ui-state-active ui-tabs-selected').addClass('ui-state-default');
-            getChart( );
-            cj('#tableData').children().html('');
-        }
-    });
-    cj('#table_view').click(function( ) {
-        if ( cj('#table_view').hasClass('ui-state-default') ) {
-            cj('#table_view').removeClass('ui-state-default').addClass('ui-state-active ui-tabs-selected');
-            cj('#chart_view').removeClass('ui-state-active ui-tabs-selected').addClass('ui-state-default');
-            buildTabularView();
-            cj('#chartData').children().html('');
-        }
-    });
     if (cj("#admin-header").length) {
       var stickytop = cj("#admin-header").outerHeight();
       cj(".crm-container .date-selector").css("top", stickytop+"px");
     }
-});        
-           
-function getChart( ) {
-   var year        = cj('#select_year').val( );
-   var charttype   = cj('#chart_type').val( );
-   var date        = new Date()
-   var currentYear = date.getFullYear( );
-   if ( !charttype ) charttype = 'bvg';     
-   if ( !year ) year           = currentYear;
-
-   var chartUrl = {/literal}"{crmURL p='civicrm/ajax/chart' q='snippet=4' h=0}"{literal};
-   chartUrl    += "&year=" + year + "&type=" + charttype;
-
-   cj.ajax({
-       url     : chartUrl,
-       async    : false,
-       success  : function(html){
-           cj( "#chartData" ).html( html );
-       }	 
-   });
-
-}
-
-function buildTabularView( ) {
-    var tableUrl = {/literal}"{crmURL p='civicrm/contribute/ajax/tableview' q='snippet=4' h=0}"{literal};
-    tableUrl    += "&showtable=1";
-    cj.ajax({
-        url      : tableUrl,
-        async    : false,
-        success  : function(html){
-            cj( "#tableData" ).html( html );
-        }	 
-    });
-}
+});
 
 </script>
 {/literal}

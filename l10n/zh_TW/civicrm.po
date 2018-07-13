@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-07-03 06:37+0000\n"
+"PO-Revision-Date: 2018-07-13 07:44+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45284,7 +45284,7 @@ msgid "Non-online Registration"
 msgstr "非線上報名"
 
 msgid "People"
-msgstr "人數"
+msgstr "人"
 
 msgid "Report Summary"
 msgstr "報表摘要"
@@ -46355,3 +46355,22 @@ msgstr "Email"
 
 msgid "ads"
 msgstr "廣告"
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "Contributions Since This Year"
+msgstr "今年迄今捐款"
+
+msgid "Non-recurring Total Amount"
+msgstr "單筆累積金額"
+
+msgid "Number of Donation Donors: %1"
+msgstr "捐款人數：%1人"
+
+msgid "Total Contributions: %1"
+msgstr "筆數：%1筆"
+
+msgid "Total Payments: %1"
+msgstr "扣款筆數：%1筆"
+
+msgid "Recurring Total Amount"
+msgstr "定期定額累積金額"

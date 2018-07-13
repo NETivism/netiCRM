@@ -110,25 +110,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $this->getDate();
     $this->processDashBoard();
 
-    // block last contribution
-    $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search',
-      ts('Contributions'), NULL
-    );
-    $controller->setEmbedded(TRUE);
-    $controller->set('limit', 10);
-    $controller->set('force', 1);
-    $controller->set('context', 'dashboard');
-    $controller->process();
-    $controller->run();
-
-    $chartForm = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionCharts',
-      ts('Contributions Charts'), NULL
-    );
-
-    $chartForm->setEmbedded(TRUE);
-    $chartForm->process();
-    $chartForm->run();
-
     return parent::run();
   }
 
@@ -211,8 +192,15 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         $year_month_label[] = $year_month;
       }
 
-      $recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['recur']);
-      $not_recur_year_sum = self::getDataForChart($year_month_label, $summary_contrib['ContribThisYear']['not_recur']);
+      $contrib_this_year = $summary_contrib['ContribThisYear'];
+      $this->assign('this_year_sum_non_recur', array_sum($contrib_this_year['not_recur']['sum']));
+      $this->assign('this_year_sum_recur', array_sum($contrib_this_year['recur']['sum']));
+      $this->assign('this_year_count_non_recur', array_sum($contrib_this_year['not_recur']['count']));
+      $this->assign('this_year_count_recur', array_sum($contrib_this_year['recur']['count']));
+      $this->assign('this_year_people_non_recur', array_sum($contrib_this_year['not_recur']['people']));
+      $this->assign('this_year_people_recur', array_sum($contrib_this_year['recur']['people']));
+      $recur_year_sum = self::getDataForChart($year_month_label, $contrib_this_year['recur']);
+      $not_recur_year_sum = self::getDataForChart($year_month_label, $contrib_this_year['not_recur']);
       for ($i=1; $i < 12; $i++) {
         if($i <= date('m')){
           $recur_year_sum[$i] += $recur_year_sum[$i-1];
@@ -410,7 +398,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       INNER JOIN civicrm_contact c ON cc.contact_id = c.id
       WHERE cc.contribution_status_id = 1 AND cc.is_test = 0 AND cc.receive_date >= %1 AND cc.receive_date <= %2 AND cc.contribution_recur_id IS NULL ORDER BY receive_date DESC LIMIT 5 ";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
-    $single_contributions = array();
+    $non_recur_contributions = array();
     while($dao->fetch()){
       $contribution = array(
         'id' => $dao->id,
@@ -427,9 +415,9 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         );
         $contribution['instrument'] = CRM_Core_DAO::singleValueQuery($sql, $params_ov);
       }
-      $single_contributions[] = $contribution;
+      $non_recur_contributions[] = $contribution;
     }
-    $this->assign('single_contributions', $single_contributions);
+    $this->assign('non_recur_contributions', $non_recur_contributions);
 
     $sql = "SELECT cc.id id, c.id contact_id, cc.receive_date receive_date, cc.total_amount amount, c.display_name name, cr.installments installments FROM civicrm_contribution cc 
       INNER JOIN civicrm_contact c ON cc.contact_id = c.id
