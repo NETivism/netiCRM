@@ -36,9 +36,10 @@
         {*section name=cols loop=$columnCount*}
         {section name=cols loop=$columnCount.1}
             {assign var="i" value=$smarty.section.cols.index}
-            <tr>
+            <tr class="draggable">
                 <td class="form-item even-row">
                    {$form.mapper.1[$i].html}
+                   {$form.weight.1[$i].html}
                 </td>
             </tr>
         {/section}
@@ -119,6 +120,21 @@
             }).hide();
             $("select[name="+name+"]").trigger("liszt:updated");
           });
+        });
+        var tbody = document.getElementById('map-field').querySelector('tbody');
+        Sortable.create(tbody, {
+          draggable:'tr.draggable',
+          onUpdate: function(event){
+            var elem = event.srcElement.querySelectorAll('tr.draggable');
+            elem.forEach(function(item, i){
+              var input = item.querySelector('[name^="mapper"]');
+              if(input){
+                var k = /^mapper\[\d+\]\[(\d+)\]/.exec(input.name)[1];
+                var weight_item = document.querySelector('[name^="weight[1]['+k+']"]');
+                weight_item.value = i;
+              }
+            });
+          }
         });
        {/literal}	     
 	</script>

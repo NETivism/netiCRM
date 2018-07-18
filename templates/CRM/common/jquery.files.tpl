@@ -94,3 +94,5 @@ packages/mdl/mdl.custom.css
 packages/mdl/material.min.js
 
 packages/material-design-iconic-font/css/material-design-iconic-font.min.css
+
+packages/Sortable/Sortable.min.js

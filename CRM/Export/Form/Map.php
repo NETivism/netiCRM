@@ -193,7 +193,11 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       return;
     }
 
-    $mapperKeys = $params['mapper'][1];
+    $mapperKeysOrigin = $params['mapper'][1];
+    $mapperWeight = $params['weight'][1];
+    for ($i=0; $i < count($mapperWeight); $i++) {
+      $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
+    }
 
     $checkEmpty = 0;
     foreach ($mapperKeys as $value) {

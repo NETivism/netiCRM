@@ -1926,6 +1926,27 @@ table.campaign td,
   width:16px;
 }
 
+.crm-container #map-field .draggable .form-item{
+  padding-left: 50px;
+  position: relative;
+  border-bottom: 1px solid #fff;
+}
+.crm-container #map-field .draggable.sortable-chosen .form-item{
+  background: #fff;
+}
+.crm-container #map-field .draggable .form-item::before{
+  content: " ";
+  display: block;
+  background: url("../i/draggable.png") no-repeat left 1px;
+  overflow: hidden;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  cursor: all-scroll;
+}
+
 .crm-container .pcp-create-your-own {
     clear:left;
     margin:1em 0;
