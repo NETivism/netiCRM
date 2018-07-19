@@ -574,11 +574,6 @@ function enableHonorType( ) {
     {/if}
     {literal}
     amountGrouping(true);
-
-    // click then scroll to bottom
-    $(".progress-button .button").click(function(){
-      jQuery(".payment_options-group")[0].scrollIntoView({"behavior":"smooth","block":"center"});
-    });
   });
 {/literal}
 </script>
