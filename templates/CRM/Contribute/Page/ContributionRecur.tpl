@@ -31,6 +31,7 @@
         <h3>{ts}Recurring contributions{/ts}</h3>
         <div class="crm-block crm-content-block crm-recurcontrib-view-block">
           <table class="crm-info-panel">
+            <tr><td class="label">{ts}From{/ts}</td><td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contactId`" h=0 a=1 fe=1}">{$displayName}</a></td></tr>
             <tr><td class="label">{ts}Recurring Contribution ID{/ts}</td><td>{$recur.id}</td></tr>
             <tr><td class="label">{ts}Amount{/ts}</td><td>{$recur.amount} {$recur.currency}</td></tr>
             <tr><td class="label">{ts}Frequency{/ts}</td><td>{ts}every{/ts} {$recur.frequency_interval} {ts}{$recur.frequency_unit}{/ts}</td></tr>

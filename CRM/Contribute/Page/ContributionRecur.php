@@ -122,6 +122,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
     // set page title
     CRM_Contact_Page_View::setTitle($this->_contactId);
+    list($displayName, $ignore) = CRM_Contact_Page_View::getContactDetails($this->_contactId);
+    $this->assign('displayName', $displayName);
 
     $this->assign('action', $this->_action);
 

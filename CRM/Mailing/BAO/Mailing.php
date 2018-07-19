@@ -277,6 +277,31 @@ WHERE  c.group_id = {$groupDAO->id}
       $mailingGroup->query($smartGroupExclude);
     }
 
+    /* From #22536. If $dedupeEmail, Collect all same email contact to exclude group */
+    if($dedupeEmail){
+
+      $mailingGroup->query(
+        "CREATE TEMPORARY TABLE X_{$job_id}_2
+              (contact_id int primary key)
+              ENGINE=HEAP"
+      );
+
+      $mailingGroup->query(
+        "INSERT IGNORE INTO X_{$job_id}_2 (contact_id)
+          SELECT contact_id FROM X_$job_id"
+      );
+
+      $sql = "
+        INSERT IGNORE INTO X_$job_id (contact_id)
+        SELECT DISTINCT e2.contact_id
+        FROM X_{$job_id}_2 x
+        INNER JOIN civicrm_email e ON x.contact_id = e.contact_id
+        LEFT JOIN civicrm_email e2 ON e.email = e2.email AND e.contact_id != e2.contact_id
+        WHERE e2.contact_id IS NOT NULL
+        ";
+      $mailingGroup->query($sql);
+    }
+
     /* Get all the group contacts we want to include */
 
 
