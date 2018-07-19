@@ -39,7 +39,7 @@
             <tr class="draggable">
                 <td class="form-item even-row">
                    {$form.mapper.1[$i].html}
-                   {$form.weight.1[$i].html}
+                  <div class="drag-handler"></div>
                 </td>
             </tr>
         {/section}
@@ -123,6 +123,7 @@
         });
         var tbody = document.getElementById('map-field').querySelector('tbody');
         Sortable.create(tbody, {
+          handle:'.drag-handler',
           draggable:'tr.draggable',
           onUpdate: function(event){
             var elem = event.srcElement.querySelectorAll('tr.draggable');

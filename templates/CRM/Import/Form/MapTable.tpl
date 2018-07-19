@@ -54,7 +54,7 @@
         {*Loop on columns parsed from the import data rows*}
         {section name=cols loop=$columnCount}
             {assign var="i" value=$smarty.section.cols.index}
-            <tr style="border: 1px solid #DDDDDD;">
+            <tr {if $wizard.currentStepName == 'MapField'}class="draggable"{/if} style="border: 1px solid #DDDDDD;">
 
                 {if $showColNames}        
                     <td class="even-row labels">{$columnNames[$i]}</td>
@@ -115,6 +115,7 @@
                         {/if}
                     {else}
                         {$form.mapper[$i].html}
+                        <div class="drag-handler"></div>
                     {/if}
                 </td>
 
@@ -164,7 +165,8 @@
              }
             cj('select[id^="mapper"][id$="[0]"]').addClass('huge');
             {/literal}
-	    {include file="CRM/common/highLightImport.tpl" relationship=true}	    
+	    {include file="CRM/common/highLightImport.tpl" relationship=true}
+        {include file="CRM/common/importSortable.tpl"}
 	</script>
     </div>
     {/if}

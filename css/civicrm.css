@@ -1927,24 +1927,32 @@ table.campaign td,
 }
 
 .crm-container #map-field .draggable .form-item{
-  padding-left: 50px;
+  padding-right: 50px;
   position: relative;
   border-bottom: 1px solid #fff;
 }
 .crm-container #map-field .draggable.sortable-chosen .form-item{
   background: #fff;
 }
-.crm-container #map-field .draggable .form-item::before{
+
+.crm-container #map-field .draggable .drag-handler{
+  width: 50px;
+  height: 100%;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  cursor: all-scroll;
+}
+.crm-container #map-field .draggable .drag-handler:before{
   content: " ";
   display: block;
-  background: url("../i/draggable.png") no-repeat left 1px;
+  background: url("../i/draggable.png") no-repeat right 1px;
   overflow: hidden;
   width: 15px;
   height: 15px;
   position: absolute;
-  left: 15px;
+  right: 15px;
   top: 15px;
-  cursor: all-scroll;
 }
 
 .crm-container .pcp-create-your-own {

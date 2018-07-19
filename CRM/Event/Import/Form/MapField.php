@@ -287,6 +287,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     //used to warn for mismatch column count or mismatch mapping
     $warning = 0;
     for ($i = 0; $i < $this->_columnCount; $i++) {
+      $this->add('hidden', "weight[$i]");
+      $defaults["weight[$i]"] = $i;
       $sel = &$this->addElement('hierselect', "mapper[$i]", ts('Mapper for Field %1', array(1 => $i)), NULL);
       $jsSet = FALSE;
       if ($this->get('savedMapping')) {
@@ -518,8 +520,14 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
 
     $mapperKeys = array();
     $mapper = array();
-    $mapperKeys = $this->controller->exportValue($this->_name, 'mapper');
+    $mapperKeysOrigin = $this->controller->exportValue($this->_name, 'mapper');
     $mapperKeysMain = array();
+
+    $mapperWeight = $params['weight'];
+    for ($i=0; $i < count($mapperWeight); $i++) {
+      $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
+    }
+    $this->set('mapperKeys', $mapperKeys);
 
     for ($i = 0; $i < $this->_columnCount; $i++) {
       $mapper[$i] = $this->_mapperFields[$mapperKeys[$i][0]];
