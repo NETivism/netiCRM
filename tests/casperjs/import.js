@@ -66,7 +66,7 @@ var item = {
 casper.test.begin('Page output correct test', 1, function suite(test) {
   casper.start(item.url_prefix + '/user', function() {
     casper.capture("picture/import_task_login_0.png");
-    test.assertExists('#user-login--2', "Found login form");
+    test.assertExists('[id^="user-login-"]', "Found login form");
     this.fill('[id^="user-login-"]', {
       'name':'admin',
       'pass':'123456'
