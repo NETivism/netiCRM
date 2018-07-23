@@ -58,7 +58,7 @@
     {foreach from=$statistics.track item=source}
     <div class="track-inner type-{$source.name}">
       <div>{$source.label}</div>
-      <div>{$source.percent}%</div>
+      <div>{if $source.display}{$source.display}{else}{$source.percent}%{/if}</div>
     </div>
     {/foreach}
   </div>
