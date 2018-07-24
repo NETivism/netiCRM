@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-06-29 11:50+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-07-13 07:44+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30452,7 +30452,7 @@ msgstr "條文："
 
 #: templates/CRM/Contribute/Page/UserDashboard.tpl
 msgid "Change Recurring Contribution"
-msgstr "更變定期定額"
+msgstr "變更定期定額"
 
 #: templates/CRM/Core/BillingBlock.tpl
 msgid ""
@@ -45284,7 +45284,7 @@ msgid "Non-online Registration"
 msgstr "非線上報名"
 
 msgid "People"
-msgstr "人數"
+msgstr "人"
 
 msgid "Report Summary"
 msgstr "報表摘要"
@@ -46288,3 +46288,89 @@ msgid ""
 "Percentage of progress base on active recurring subscriptions / goal "
 "subscriptions of this contribution page."
 msgstr "進度百分比計算方式：目前定期定額的人數 ÷ 目前訂閱人數。"
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "In %1 days"
+msgstr "此 %1 天"
+
+msgid "Number of First Time Donation Donors"
+msgstr "首次捐款人數"
+
+msgid "Contribution with Maximum Amount"
+msgstr "最高額捐款"
+
+msgid "Contribution Page Status"
+msgstr "募款頁狀況"
+
+msgid "New Recurring Contribution"
+msgstr "新進定期定額捐款"
+
+msgid "Contribution Amount by Flow Source"
+msgstr "成交捐款流量來源"
+
+msgid "Contribution Amount by Province"
+msgstr "縣市捐款金額"
+
+#: CRM/common/growth_sentence.tpl
+msgid "Compared with previous %1 days"
+msgstr "相較前 %1 天"
+
+msgid "grow by"
+msgstr "增加"
+
+msgid "decrease by"
+msgstr "減少"
+
+#: CRM/common/ContributionPageStatusCard.tpl
+msgid "There are %1 new contributions."
+msgstr "有 %1 筆新增捐款"
+
+#: CRM/common/ContributionPageStatusCard.tpl
+msgid "Flow Source"
+msgstr "流量來源"
+
+msgid "Amount reached"
+msgstr "達成金額"
+
+msgid "Total Donate Times"
+msgstr "總人次"
+
+msgid "direct"
+msgstr "直接"
+
+msgid "internal"
+msgstr "內部"
+
+msgid "link"
+msgstr "連結"
+
+msgid "social"
+msgstr "社交"
+
+msgid "search"
+msgstr "搜尋"
+
+msgid "Email clients"
+msgstr "Email"
+
+msgid "ads"
+msgstr "廣告"
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "Contributions Since This Year"
+msgstr "今年迄今捐款"
+
+msgid "Non-recurring Total Amount"
+msgstr "單筆累積金額"
+
+msgid "Number of Donation Donors: %1"
+msgstr "捐款人數：%1人"
+
+msgid "Total Contributions: %1"
+msgstr "筆數：%1筆"
+
+msgid "Total Payments: %1"
+msgstr "扣款筆數：%1筆"
+
+msgid "Recurring Total Amount"
+msgstr "定期定額累積金額"
