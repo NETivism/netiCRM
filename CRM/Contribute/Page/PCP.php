@@ -159,107 +159,97 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    * @static
    */
   function browse($action = NULL) {
-    require_once 'CRM/Contact/BAO/GroupNesting.php';
-    $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
-      'String',
-      $this
-    );
-    if ($this->_sortByCharacter == 1 ||
-      !empty($_POST)
-    ) {
-      $this->_sortByCharacter = '';
-    }
-
-    require_once 'CRM/Contribute/PseudoConstant.php';
-    $status = CRM_Contribute_PseudoConstant::pcpstatus();
-    $contribution_page = CRM_Contribute_PseudoConstant::contributionPage();
     $pcpSummary = $params = array();
-    $whereClause = NULL;
 
-    if (!empty($_POST) || (!empty($_GET['status_id']) || !empty($_GET['contribution_page_id']))) {
-      if ($_REQUEST['status_id'] != 0) {
-        $whereClause = ' AND cp.status_id = %1';
-        $params['1'] = array($_REQUEST['status_id'], 'Integer');
+    $pcpSummary = $this->get("pcpSummary");
+    if (empty($pcpSummary)) {
+      $status = CRM_Contribute_PseudoConstant::pcpstatus();
+      $contribution_page = CRM_Contribute_PseudoConstant::contributionPage();
+      $whereClause = array();
+
+      if ($status_id = CRM_Utils_Request::retrieve('status_id', 'Positive', $this)) {
+        $whereClause[] = 'cp.status_id = %1';
+        $params['1'] = array($status_id, 'Integer');
       }
 
-      if ($_REQUEST['contibution_page_id'] != 0) {
-        $whereClause .= ' AND cp.contribution_page_id = %2';
-        $params['2'] = array($_REQUEST['contibution_page_id'], 'Integer');
+      if ($contribution_page_id = CRM_Utils_Request::retrieve('contribution_page_id', 'Positive', $this)) {
+        $whereClause[] = 'cp.contribution_page_id = %2';
+        $params['2'] = array($contribution_page_id, 'Integer');
       }
 
-      if ($_REQUEST['status_id'] != 0 || $_REQUEST['contibution_page_id'] != 0) {
-        $this->set('whereClause', $whereClause);
-        $this->set('params', $params);
+      if ($contact_id = CRM_Utils_Request::retrieve('contact_id', 'Positive', $this)) {
+        $whereClause[] = 'cp.contact_id = %3';
+        $params['3'] = array($contact_id, 'Integer');
+      }
+
+      if ($title = $this->get("title")) {
+        $whereClause[] = 'cp.title LIKE %4';
+        $params['4'] = array("%".$title."%", 'String');
+      }
+
+      if (!empty($whereClause)) {
+        $whereClause = implode(" AND ", $whereClause);
       }
       else {
-        $this->set('whereClause', NULL);
-        $this->set('params', NULL);
-      }
-    }
-
-    $approvedId = CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name');
-
-    //check for delete CRM-4418
-    require_once 'CRM/Core/Permission.php';
-    $allowToDelete = CRM_Core_Permission::check('delete in CiviContribute');
-
-    $params = $this->get('params') ? $this->get('params') : array();
-    $title = ' AND cp.title LIKE %3';
-    $params['3'] = array($this->_sortByCharacter . '%', 'String');
-
-    $query = "
-        SELECT cp.id as id, contact_id , status_id, cp.title as title, contribution_page_id, start_date, end_date, cp.is_active as active
-        FROM civicrm_pcp cp, civicrm_contribution_page cpp
-        WHERE cp.contribution_page_id = cpp.id $title" . $this->get('whereClause') . " ORDER BY status_id";
-
-    $dao = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Contribute_DAO_PCP');
-
-    while ($dao->fetch()) {
-
-      $pcpSummary[$dao->id] = array();
-      $action = array_sum(array_keys($this->links()));
-
-      CRM_Core_DAO::storeValues($dao, $pcpSummary[$dao->id]);
-
-      require_once 'CRM/Contact/BAO/Contact.php';
-      $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->contact_id);
-
-      $class = '';
-
-      if ($dao->status_id != $approvedId || $dao->active != 1) {
-        $class = 'disabled';
+        $whereClause = " 1 ";
       }
 
-      switch ($dao->status_id) {
-        case 2:
-          $action -= CRM_Core_Action::RENEW;
-          break;
+      $query = "
+          SELECT cp.id as id, contact_id , status_id, cp.title as title, contribution_page_id, start_date, end_date, cp.is_active as active
+          FROM civicrm_pcp cp INNER JOIN civicrm_contribution_page cpp ON cpp.id = cp.contribution_page_id
+          WHERE " . $whereClause . " ORDER BY status_id ASC";
 
-        case 3:
-          $action -= CRM_Core_Action::REVERT;
-          break;
+      $dao = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Contribute_DAO_PCP');
+
+      $allowToDelete = CRM_Core_Permission::check('delete in CiviContribute');
+      $approvedId = CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name');
+      while ($dao->fetch()) {
+
+        $pcpSummary[$dao->id] = array();
+        $action = array_sum(array_keys($this->links()));
+
+        CRM_Core_DAO::storeValues($dao, $pcpSummary[$dao->id]);
+
+        require_once 'CRM/Contact/BAO/Contact.php';
+        $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->contact_id);
+
+        $class = '';
+
+        if ($dao->active != 1 || $dao->status_id == 3) {
+          $class = 'disabled';
+        }
+
+        switch ($dao->status_id) {
+          case 2:
+            $action -= CRM_Core_Action::RENEW;
+            break;
+
+          case 3:
+            $action -= CRM_Core_Action::REVERT;
+            break;
+        }
+
+        if (!$allowToDelete) {
+          $action -= CRM_Core_Action::DELETE;
+        }
+
+        $pcpSummary[$dao->id]['id'] = $dao->id;
+        $pcpSummary[$dao->id]['start_date'] = $dao->start_date;
+        $pcpSummary[$dao->id]['end_date'] = $dao->end_date;
+        $pcpSummary[$dao->id]['supporter'] = $contact['0'];
+        $pcpSummary[$dao->id]['supporter_id'] = $dao->contact_id;
+        $pcpSummary[$dao->id]['status_id'] = $status[$dao->status_id];
+        $pcpSummary[$dao->id]['contribution_page_id'] = $dao->contribution_page_id;
+        $pcpSummary[$dao->id]['contribution_page_title'] = $contribution_page[$dao->contribution_page_id];
+        $pcpSummary[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+          array('id' => $dao->id)
+        );
+        $pcpSummary[$dao->id]['class'] = $class;
       }
-
-      if (!$allowToDelete) {
-        $action -= CRM_Core_Action::DELETE;
-      }
-
-      $pcpSummary[$dao->id]['id'] = $dao->id;
-      $pcpSummary[$dao->id]['start_date'] = $dao->start_date;
-      $pcpSummary[$dao->id]['end_date'] = $dao->end_date;
-      $pcpSummary[$dao->id]['supporter'] = $contact['0'];
-      $pcpSummary[$dao->id]['supporter_id'] = $dao->contact_id;
-      $pcpSummary[$dao->id]['status_id'] = $status[$dao->status_id];
-      $pcpSummary[$dao->id]['contribution_page_id'] = $dao->contribution_page_id;
-      $pcpSummary[$dao->id]['contribution_page_title'] = $contribution_page[$dao->contribution_page_id];
-      $pcpSummary[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
-        array('id' => $dao->id)
-      );
-      $pcpSummary[$dao->id]['class'] = $class;
+      $this->set("pcpSummary", $pcpSummary);
     }
 
     $this->search();
-    $this->pagerAToZ($this->get('whereClause'), $params);
     if ($pcpSummary) {
       $this->assign('rows', $pcpSummary);
     }
@@ -273,7 +263,6 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
   }
 
   function search() {
-
     if ($this->_action & CRM_Core_Action::DELETE) {
       return;
     }
@@ -312,19 +301,5 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
     return 'civicrm/admin/pcp';
   }
 
-  function pagerAtoZ($whereClause, $whereParams) {
-    require_once 'CRM/Utils/PagerAToZ.php';
-
-    $query = "
- SELECT UPPER(LEFT(cp.title, 1)) as sort_name
-     FROM civicrm_pcp cp, civicrm_contribution_page cpp
-   WHERE cp.contribution_page_id = cpp.id $whereClause
- ORDER BY LEFT(cp.title, 1);
-        ";
-    $dao = CRM_Core_DAO::executeQuery($query, $whereParams);
-
-    $aToZBar = CRM_Utils_PagerAToZ::getAToZBar($dao, $this->_sortByCharacter, TRUE);
-    $this->assign('aToZ', $aToZBar);
-  }
 }
 

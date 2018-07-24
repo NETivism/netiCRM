@@ -34,9 +34,6 @@
 
 {if $rows}
 <div id="ltype">
-<p></p>
-{include file="CRM/common/pager.tpl" location="top"}
-{include file="CRM/common/pagerAToZ.tpl}
 {include file="CRM/common/jsortable.tpl}
 {strip}
 <table id="options" class="display">
@@ -44,10 +41,10 @@
     <tr>
 		<th>{ts}Page Title{/ts}</th>
 		<th>{ts}Created by{/ts}</th>
-		<th id="sortable">{ts}Contribution Page{/ts}</th>
+		<th>{ts}Contribution Page{/ts}</th>
 		<th id="start_date">{ts}Starts{/ts}</th>
 		<th id="end_date">{ts}Ends{/ts}</th>
-		<th>{ts}Status{/ts}</th>
+		<th id="sortable">{ts}Status{/ts}</th>
 		<th></th>
 		<th class="hiddenElement"></th>
 		<th class="hiddenElement"></th>

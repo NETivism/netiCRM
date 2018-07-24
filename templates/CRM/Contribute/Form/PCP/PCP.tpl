@@ -27,13 +27,16 @@
   {include file="CRM/Contribute/Form/PCP/Delete.tpl"}
 {else}
     <div id="pcp" class="crm-block crm-form-block crm-pcp-search-form-block">
-        <h3>{ts}Find Campaign Pages{/ts}</h3>
-        <table class="form-layout-compressed">
-	    <tr>
-		    <td>{$form.status_id.label}<br />{$form.status_id.html}</td>
-		    <td>{$form.contribution_page_id.label}<br />{$form.contribution_page_id.html}</td>
-	    </tr>
-        </table>
-        <div class="crm-submit-buttons">{$form.buttons.html}</div>
+      <h3>{ts}Find Campaign Pages{/ts}</h3>
+      <table class="form-layout-compressed">
+        <tr>
+          <td>{$form.title.label}<br />{$form.title.html}</td>
+          <td>{$form.contact_id.label}<br />{$form.contact_id.html}</td>
+          <td>{$form.contribution_page_id.label}<br />{$form.contribution_page_id.html}</td>
+          <td>{$form.status_id.label}<br />{$form.status_id.html}</td>
+        </tr>
+      </table>
+      {include file="CRM/common/chosen.tpl" selector="select#contact_id,select#contribution_page_id"}
+      <div class="crm-submit-buttons">{$form.buttons.html}</div>
     </div>
 {/if}

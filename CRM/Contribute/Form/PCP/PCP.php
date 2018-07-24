@@ -164,9 +164,16 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
         array(ts('- select -')),
         CRM_Contribute_PseudoConstant::contributionPage()
       );
+      $dao = CRM_Core_DAO::executeQuery("SELECT p.contact_id, c.sort_name FROM civicrm_pcp p INNER JOIN civicrm_contact c ON p.contact_id = c.id GROUP BY p.contact_id");
+      $contacts = array(ts('- select -'));
+      while($dao->fetch()) {
+        $contacts[$dao->contact_id] = $dao->sort_name;
+      }
 
-      $this->addElement('select', 'status_id', ts('Status'), $status);
-      $this->addElement('select', 'contribution_page_id', ts('Contribution Page'), $contribution_page);
+      $this->addSelect('status_id', ts('Status'), $status);
+      $this->addSelect('contribution_page_id', ts('Contribution Page'), $contribution_page);
+      $this->addSelect('contact_id', ts('Created by'), $contacts);
+      $this->add('text', 'title', ts('Page Title'));
       $this->addButtons(array(
           array('type' => 'refresh',
             'name' => ts('Search'),
@@ -208,12 +215,12 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       $params = $this->controller->exportValues($this->_name);
       $parent = $this->controller->getParent();
 
-      if (!empty($params)) {
-        $fields = array('status_id', 'contribution_page_id');
+      if (!empty($params) && is_object($parent)) {
+        // clear result
+        $parent->set("pcpSummary", array());
+        $fields = array('status_id', 'contribution_page_id', 'contact_id', 'title');
         foreach ($fields as $field) {
-          if (isset($params[$field]) &&
-            !CRM_Utils_System::isNull($params[$field])
-          ) {
+          if (isset($params[$field]) && !CRM_Utils_System::isNull($params[$field])) {
             $parent->set($field, $params[$field]);
           }
           else {
