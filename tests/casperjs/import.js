@@ -4,7 +4,7 @@
 var system = require('system');
 var port = system.env.RUNPORT;
 
-var url = (port == '80') ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
+var url = (port == '80') ? 'https://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 var item = {
   url_prefix: url,
   task: [
@@ -48,16 +48,27 @@ var item = {
         'mapper[8][0]': 'activity_date_time',
       }
     },
-    /*
     {
       type: 'participant',
       url: '/civicrm/event/import?reset=1',
+      fields: {
+        'mapper[0][0]': 'last_name',
+        'mapper[1][0]': 'first_name',
+        'mapper[2][0]': 'email',
+        'mapper[7][0]': 'event_id',
+      }
     },
     {
       type: 'member',
-      url: '/civicrm/member/import?reset=1'
+      url: '/civicrm/member/import?reset=1',
+      fields: {
+        'mapper[0][0]': 'last_name',
+        'mapper[1][0]': 'first_name',
+        'mapper[2][0]': 'email',
+        'mapper[7][0]': 'membership_type_id',
+        'mapper[8][0]': 'membership_start_date',
+      }
     },
-    */
   ],
   // site_name: 'netiCRM'
 }
@@ -91,7 +102,7 @@ item.task.forEach(function(task, i){
       casper.echo('=====================================');
       casper.echo('** Step 1: Enter Upload File Page. **');
       casper.echo('=====================================');
-      test.assertExists('#savedMapping', 'Save Mapping Field is Exist.');
+      test.assertExists('#skipColumnHeader', 'Skip Column Header Field is Exist.');
       casper.capture("picture/import_task_"+i+"_1.png");
     });
 
