@@ -47,6 +47,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $this->assign('displayRecent', FALSE);
 
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
+    $this->_key = CRM_Utils_Request::retrieve('key', 'String', $this);
     $this->assign('context', $this->_context);
 
     $this->_pageId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
@@ -77,6 +78,9 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
         require_once 'CRM/Utils/Money.php';
         $defaults['goal_amount'] = CRM_Utils_Money::format($defaults['goal_amount'], NULL, '%a');
       }
+
+      $sortName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $defaults['contact_id'], 'sort_name');
+      CRM_Utils_System::setTitle(ts('Edit Your Personal Campaign Page') . ' - ' . $sortName);
     }
 
     if ($this->get('action') & CRM_Core_Action::ADD) {
@@ -99,6 +103,9 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    if ($this->_key) {
+      $this->add('hidden', 'key', $this->_key);
+    }
     $this->add('text', 'title', ts('Title'), NULL, TRUE);
     $this->add('textarea', 'intro_text', ts('Event Summary'), NULL, TRUE);
     $this->add('text', 'goal_amount', ts('Your Goal'), NULL, TRUE);
@@ -122,11 +129,13 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $this->addElement('checkbox', 'is_active', ts('Active'));
 
     $this->addButtons(array(
-        array('type' => 'upload',
+        array(
+          'type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
         ),
-        array('type' => 'cancel',
+        array(
+          'type' => 'cancel',
           'name' => ts('Cancel'),
         ),
       )
@@ -321,8 +330,17 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     if (!$this->_pageId) {
       $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
     }
+    elseif ($this->_context == 'standalone') {
+      $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
+    }
     elseif ($this->_context == 'dashboard') {
-      $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/pcp', "reset=1"));
+      // $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
+      if (!empty($params['key'])) {
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/pcp', "_qf_PCP_display=true&qfKey=".$params['key']));
+      }
+      else {
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/pcp', "reset=1"));
+      }
     }
   }
 }
