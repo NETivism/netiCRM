@@ -46221,3 +46221,6 @@ msgstr ""
 
 msgid "Recurring Total Amount"
 msgstr ""
+
+msgid "Reset"
+msgstr ""

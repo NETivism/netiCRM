@@ -52,7 +52,6 @@ cj('table.' + useClass).each(function(){
 //remove last comma
 tableId = tableId.substring(0, tableId.length - 1 );
 eval('tableId =[' + tableId + ']');
- 
   cj.each(tableId, function(i,n){
     tabId = '#option' + tcount + n; 
     //get the object of first tr data row.
@@ -90,7 +89,7 @@ eval('tableId =[' + tableId + ']');
                 columns += '{ "sType": "currency" },';
             break;
             case 'link':
-                columns += '{"sType": "html"},';	    
+                columns += '{"sType": "html"},';      
             break;   
             default:
                 if ( cj(this).text() ) {
@@ -101,12 +100,12 @@ eval('tableId =[' + tableId + ']');
             break;
         }
         count++; 
-	});
-	columns    = columns.substring(0, columns.length - 1 );
-	sortColumn = sortColumn.substring(0, sortColumn.length - 1 );
-	eval('sortColumn =[' + sortColumn + ']');
-	eval('columns =[' + columns + ']');
-    	
+  });
+  columns    = columns.substring(0, columns.length - 1 );
+  sortColumn = sortColumn.substring(0, sortColumn.length - 1 );
+  eval('sortColumn =[' + sortColumn + ']');
+  eval('columns =[' + columns + ']');
+      
         var currTable = cj(tabId);
         if (currTable) {
             // contains the dataTables master records
@@ -117,52 +116,63 @@ eval('tableId =[' + tableId + ']');
                     // if already exists, remove from the array
                     if (s[i].sInstance = tabId) {
                         s.splice(i,1);
-	            }
-    	        }
-  	    }
-	}
-	
+              }
+              }
+        }
+  }
+  
     var oTable = null;
+    var language = {
+      "oPaginate": {
+        "sFirst":"«",
+        "sLast":"»",
+        "sNext":"›",
+        "sPrevious":"‹",
+      }
+    };
     if ( useAjax ) {
       oTable = cj(tabId).dataTable({
-    	        "bFilter"    : false,
-		"bAutoWidth" : false,
-                "aaSorting"  : sortColumn,
-		"aoColumns"  : columns,
-	    	"bProcessing": true,
-		"sPaginationType": "full_numbers",
-		"sDom"       : '<"crm-datatable-pager-top"lfp>rt<"crm-datatable-pager-bottom"ip>',
-	   	"bServerSide": true,
-	   	"sAjaxSource": sourceUrl,
-
-		{/literal}{if $callBack}{literal}
-		"fnDrawCallback": function() { checkSelected(); },
-		{/literal}{/if}{literal}
-
-		"fnServerData": function ( sSource, aoData, fnCallback ) {
-			cj.ajax( {
-				"dataType": 'json', 
-				"type": "POST", 
-				"url": sSource, 
-				"data": aoData, 
-				"success": fnCallback
-			} ); }
-     		}); 
+        "oLanguage"  : language,
+        "bFilter"    : false,
+        "bAutoWidth" : false,
+        "aaSorting"  : sortColumn,
+        "aoColumns"  : columns,
+        "bProcessing": true,
+        "bLengthChange": false,
+        "sPaginationType": "full_numbers",
+        "sDom"       : '<"crm-datatable-pager-top"lfp>rt<"crm-datatable-pager-bottom"ip>',
+        "bServerSide": true,
+        "sAjaxSource": sourceUrl,
+        {/literal}{if $callBack}{literal}
+        "fnDrawCallback": function() { checkSelected(); },
+        {/literal}{/if}{literal}
+        "fnServerData": function ( sSource, aoData, fnCallback ) {
+          cj.ajax( {
+            "dataType": 'json',
+            "type": "POST", 
+            "url": sSource, 
+            "data": aoData, 
+            "success": fnCallback
+          } ); }
+      }); 
     } else {
       oTable = cj(tabId).dataTable({
-			"aaSorting"    : sortColumn,
-             	        "bPaginate"    : false,
-                	"bLengthChange": true,
-                	"bFilter"      : false,
-                	"bInfo"        : false,
-                	"bAutoWidth"   : false,
-               		"aoColumns"   : columns
-    			 }); 
+        "oLanguage"    : language,
+        "aaSorting"    : sortColumn,
+        "bPaginate"    : true,
+        "iDisplayLength": 20,
+        "bLengthChange": false,
+        "sPaginationType": "full_numbers",
+        "bFilter"      : false,
+        "bInfo"        : false,
+        "bAutoWidth"   : false,
+        "aoColumns"   : columns
+      }); 
     }
     var object;
 
     if ( !useAjax ) { 
-    cj('a.action-item').click( function(){
+      cj('a.action-item').click( function(){
         object = cj(this);
         cj('table.display').one( 'mouseover', function() {
             var nNodes     = oTable.fnGetNodes( );
@@ -181,43 +191,43 @@ eval('tableId =[' + tableId + ']');
                 }
             });
         });
-    });
+      });
     }
     
-    });       
+  });       
 });
 
 function getElementClass( element ) {
-if( cj(element).attr('class') )	 return cj(element).attr('class');
-return '';
+  if( cj(element).attr('class') )   return cj(element).attr('class');
+  return '';
 }
 
 //function to fetch the occurence of element
 function getRowId(row,str){
  cj.each( row, function(i, n) {
-    if( str === cj(n).attr('class') ) {
-        optionId = i;
-    }
+  if( str === cj(n).attr('class') ) {
+    optionId = i;
+  }
  });
-return optionId;
+  return optionId;
 }
 
 //plugin to sort on currency
 var symbol = "{/literal}{$config->defaultCurrencySymbol($config->defaultSymbol)}{literal}";
 cj.fn.dataTableExt.oSort['currency-asc']  = function(a,b) {
-	var x = (a == "-") ? 0 : a.replace( symbol, "" );
-	var y = (b == "-") ? 0 : b.replace( symbol, "" );
-	x = parseFloat( x );
-	y = parseFloat( y );
-	return ((x < y) ? -1 : ((x > y) ?  1 : 0));
+  var x = (a == "-") ? 0 : a.replace( symbol, "" );
+  var y = (b == "-") ? 0 : b.replace( symbol, "" );
+  x = parseFloat( x );
+  y = parseFloat( y );
+  return ((x < y) ? -1 : ((x > y) ?  1 : 0));
 };
 
 cj.fn.dataTableExt.oSort['currency-desc'] = function(a,b) {
-	var x = (a == "-") ? 0 : a.replace( symbol, "" );
-	var y = (b == "-") ? 0 : b.replace( symbol, "" );
-	x = parseFloat( x );
-	y = parseFloat( y );
-	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
+  var x = (a == "-") ? 0 : a.replace( symbol, "" );
+  var y = (b == "-") ? 0 : b.replace( symbol, "" );
+  x = parseFloat( x );
+  y = parseFloat( y );
+  return ((x < y) ?  1 : ((x > y) ? -1 : 0));
 };
 </script>
 {/literal}
