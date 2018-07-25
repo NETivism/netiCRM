@@ -72,8 +72,9 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         CRM_Core_Action::UPDATE => array(
           'name' => ts('Edit'),
           'url' => 'civicrm/contribute/pcp/info',
-          'qs' => 'action=update&reset=1&id=%%id%%&context=dashboard',
+          'qs' => 'action=update&reset=1&id=%%id%%&context=standalone&key=%%qfKey%%',
           'title' => ts('Edit Personal Campaign Page'),
+          'fe' => TRUE,
         ),
         CRM_Core_Action::RENEW => array(
           'name' => ts('Approve'),
@@ -203,6 +204,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
 
       $allowToDelete = CRM_Core_Permission::check('delete in CiviContribute');
       $approvedId = CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name');
+      $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
       while ($dao->fetch()) {
 
         $pcpSummary[$dao->id] = array();
@@ -242,7 +244,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         $pcpSummary[$dao->id]['contribution_page_id'] = $dao->contribution_page_id;
         $pcpSummary[$dao->id]['contribution_page_title'] = $contribution_page[$dao->contribution_page_id];
         $pcpSummary[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
-          array('id' => $dao->id)
+          array('id' => $dao->id, 'qfKey' => $qfKey)
         );
         $pcpSummary[$dao->id]['class'] = $class;
       }

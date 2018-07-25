@@ -46135,3 +46135,6 @@ msgstr ""
 
 msgid "Percentage of progress base on active recurring subscriptions / goal subscriptions of this contribution page."
 msgstr ""
+
+msgid "Reset"
+msgstr ""

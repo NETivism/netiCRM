@@ -34,9 +34,9 @@
           <td>{$form.contact_id.label}<br />{$form.contact_id.html}</td>
           <td>{$form.contribution_page_id.label}<br />{$form.contribution_page_id.html}</td>
           <td>{$form.status_id.label}<br />{$form.status_id.html}</td>
+          <td><div class="crm-submit-buttons">{$form.buttons.html}</div></td>
         </tr>
       </table>
       {include file="CRM/common/chosen.tpl" selector="select#contact_id,select#contribution_page_id"}
-      <div class="crm-submit-buttons">{$form.buttons.html}</div>
     </div>
 {/if}

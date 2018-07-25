@@ -175,10 +175,17 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       $this->addSelect('contact_id', ts('Created by'), $contacts);
       $this->add('text', 'title', ts('Page Title'));
       $this->addButtons(array(
-          array('type' => 'refresh',
+          array(
+            'type' => 'refresh',
             'name' => ts('Search'),
-            'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+            'spacing' => ' ',
             'isDefault' => TRUE,
+          ),
+          array(
+            'type' => 'refresh',
+            'name' => ts('Reset'),
+            'spacing' => ' ',
+            'isDefault' => FALSE,
           ),
         )
       );
@@ -212,21 +219,27 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been deleted.", array(1 => $this->_title)));
     }
     else {
-      $params = $this->controller->exportValues($this->_name);
-      $parent = $this->controller->getParent();
+      $buttonName = $this->_submitValues['_qf_PCP_refresh'];
+      if ($buttonName == ts("Search")) {
+        $params = $this->controller->exportValues($this->_name);
+        $parent = $this->controller->getParent();
 
-      if (!empty($params) && is_object($parent)) {
-        // clear result
-        $parent->set("pcpSummary", array());
-        $fields = array('status_id', 'contribution_page_id', 'contact_id', 'title');
-        foreach ($fields as $field) {
-          if (isset($params[$field]) && !CRM_Utils_System::isNull($params[$field])) {
-            $parent->set($field, $params[$field]);
-          }
-          else {
-            $parent->set($field, NULL);
+        if (!empty($params) && is_object($parent)) {
+          // clear result
+          $parent->set("pcpSummary", array());
+          $fields = array('status_id', 'contribution_page_id', 'contact_id', 'title');
+          foreach ($fields as $field) {
+            if (isset($params[$field]) && !CRM_Utils_System::isNull($params[$field])) {
+              $parent->set($field, $params[$field]);
+            }
+            else {
+              $parent->set($field, NULL);
+            }
           }
         }
+      }
+      else {
+        CRM_Utils_System::redirect(CRM_Utils_System::url("civicrm/admin/pcp", "reset=1"));
       }
     }
   }
