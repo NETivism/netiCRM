@@ -3,7 +3,7 @@ ini_set('include_path', '.' . PATH_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'pac
 ini_set('memory_limit', '512M');
 
 define('CIVICRM_UF', 'Drupal');
-define('VERSION', '7.54'); // specified Drupal Version
+define('VERSION', '7.59'); // specified Drupal Version
 
 require_once '../civicrm.config.php';
 $config   = CRM_Core_Config::singleton();
@@ -107,6 +107,7 @@ class CRM_GenCode_Main {
    * @param $file, the path to the XML schema file
    */
   function main($argVersion, $argCms, $file) {
+    // legcy civicrm verions
     $versionFile        = "version.xml";
     $versionXML         = &$this->parseInput($versionFile);
     $db_version         = $versionXML->version_no;
@@ -378,10 +379,11 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     }
 
     echo "Generating civicrm-version file\n";
-    $svnversion = `git rev-parse --short HEAD`;
-    $this->smarty->assign('db_version', $db_version);
-    $this->smarty->assign('cms', ucwords($cms));
-    $this->smarty->assign('svnrevision', $svnversion);
+    $git_tag = `git describe --tags`;
+    list($git_tag) = explode('-', $git_tag);
+    $git_revision = `git rev-parse --short HEAD`;
+    $this->smarty->assign('git_revision', $git_revision);
+    $this->smarty->assign('git_tag', $git_tag);
     file_put_contents($this->phpCodePath . "civicrm-version.txt", $this->smarty->fetch('civicrm_version.tpl'));
   }
 

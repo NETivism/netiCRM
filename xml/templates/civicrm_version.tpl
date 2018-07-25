@@ -1,1 +1,1 @@
-{$db_version} {$cms} PHP5 {$svnrevision}
+{$git_tag} ({$git_revision})
