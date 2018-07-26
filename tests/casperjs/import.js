@@ -10,7 +10,7 @@ var item = {
   task: [
     {
       type: 'contact',
-      url: '/civicrm/import/contact?reset=1', 
+      url: 'civicrm/import/contact?reset=1',
       fields: {
         'mapper[0][0]': 'last_name',
         'mapper[1][0]': 'first_name',
@@ -26,7 +26,7 @@ var item = {
     },
     {
       type: 'contribute',
-      url: '/civicrm/contribute/import?reset=1',
+      url: 'civicrm/contribute/import?reset=1',
       fields: {
         'mapper[0][0]': 'last_name',
         'mapper[1][0]': 'first_name',
@@ -38,7 +38,7 @@ var item = {
     },
     {
       type: 'activity',
-      url: '/civicrm/import/activity?reset=1',
+      url: 'civicrm/import/activity?reset=1',
       fields: {
         'mapper[0][0]': 'last_name',
         'mapper[1][0]': 'first_name',
@@ -50,7 +50,7 @@ var item = {
     },
     {
       type: 'participant',
-      url: '/civicrm/event/import?reset=1',
+      url: 'civicrm/event/import?reset=1',
       fields: {
         'mapper[0][0]': 'last_name',
         'mapper[1][0]': 'first_name',
@@ -60,7 +60,7 @@ var item = {
     },
     {
       type: 'member',
-      url: '/civicrm/member/import?reset=1',
+      url: 'civicrm/member/import?reset=1',
       fields: {
         'mapper[0][0]': 'last_name',
         'mapper[1][0]': 'first_name',
@@ -75,10 +75,10 @@ var item = {
 
 // 0. Login
 casper.test.begin('Page output correct test', 1, function suite(test) {
-  casper.start(item.url_prefix + '/user', function() {
+  casper.start(item.url_prefix, function() {
     casper.capture("picture/import_task_login_0.png");
-    test.assertExists('[id^="user-login-"]', "Found login form");
-    this.fill('[id^="user-login-"]', {
+    test.assertExists('#user-login-form', "Found login form");
+    this.fill('#user-login-form', {
       'name':'admin',
       'pass':'123456'
     }, true);
