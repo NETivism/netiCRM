@@ -103,6 +103,10 @@
 	{/if}
 
 	<tr>
+	    <td class="label">{ts}Created Date{/ts}</td>
+    	<td>{$created_date|crmDate}</td>
+	</tr>
+	<tr>
 	    <td class="label">{ts}Received{/ts}</td>
     	<td>{if $receive_date}{$receive_date|crmDate}{else}({ts}pending{/ts}){/if}</td>
 	</tr>
