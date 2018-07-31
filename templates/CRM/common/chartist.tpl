@@ -8,9 +8,11 @@ if (!$crmChartistAdded) {
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/dist/chartist.min.css">
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css">
+  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend-custom.css">
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js"></script>
+  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend.js"></script>
 {php}
   $crmChartistAdded = TRUE;
 }
@@ -53,6 +55,8 @@ if (!$crmChartistAdded) {
   var chartLabels = {/literal}{$chartist.labels|default:"[]"}{literal};
   var chartSeries = {/literal}{$chartist.series|default:"[]"}{literal};
   var chartLegends = {/literal}{$chartist.legends|default:"[]"}{literal};
+  var withOldLegend = {/literal}{$chartist.withOldLegend|default:0}{literal};
+  var withLegend = {/literal}{$chartist.withLegend|default:0}{literal};
   var withToolTip = {/literal}{$chartist.withToolTip|default:0}{literal};
   var withVerticalHint = {/literal}{$chartist.withVerticalHint|default:0}{literal};
   var isDonut = {/literal}{$chartist.isDonut|default:0}{literal};
@@ -229,7 +233,6 @@ if (!$crmChartistAdded) {
     return data;
   }
 
-
   var renderStackLinesSeries = function(series) {
     for (var i = 0; i < series.length; i++) {
       if (i > 0) {
@@ -242,8 +245,46 @@ if (!$crmChartistAdded) {
     return series;
   }
 
+  var renderSeriesWithLabels = function() {
+    if (chartSeries.length > 0 && chartLegends.length > 0) {
+      for (var i = 0; i < chartSeries.length; i++) {
+        if (typeof chartLegends[i] !== 'undefined') {
+          chartSeries[i] = {"name": chartLegends[i], "data": chartSeries[i]};
+        }
+      }
+    }
+  }
+
+  var removeEmptySeriesAndLabels = function() {
+    if (chartType == 'Pie') {
+      for (var i = 0; i < chartSeries.length; i++) {
+        if (chartSeries[i] == 0) {
+          chartSeries.splice(i, 1);
+          chartLabels.splice(i, 1);
+        }
+      }
+    }
+  }
+
+
   if (chartType == 'Line' && stackLines) {
     chartSeries = renderStackLinesSeries(chartSeries);
+  }
+
+  if (withOldLegend) {
+    if (chartType == 'Pie') {
+      removeEmptySeriesAndLabels();
+    }
+  }
+
+  if (withLegend) {
+    if (chartType == 'Line' || chartType == 'Bar') {
+      renderSeriesWithLabels();
+    }
+
+    if (chartType == 'Pie') {
+      removeEmptySeriesAndLabels();
+    }
   }
 
   var data = {
@@ -390,10 +431,20 @@ if (!$crmChartistAdded) {
   options.plugins.push(axis);
 {/literal}{/if}
 
-{if $chartist.withLegend}{literal}
+{if $chartist.withOldLegend}{literal}
   options.labelOffset = 65;
-  cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-legend');
+  cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-old-legend');
   renderChartLegend(chartSelector, data, seriesUnit);
+{/literal}{/if}
+
+{if $chartist.withLegend}{literal}
+  cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-legend');
+  var legend = Chartist.plugins.legend();
+  options.plugins.push(legend);
+
+  if (chartType == 'Pie') {
+    options.labelOffset = 65;
+  }
 {/literal}{/if}
 
 {if $chartist.type eq 'Line' && $chartist.stackLines}{literal}

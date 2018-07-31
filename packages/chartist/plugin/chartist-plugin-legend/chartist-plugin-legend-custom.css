@@ -1,0 +1,163 @@
+/*
+==========================================
+origin code:
+https://github.com/CodeYellowBV/chartist-plugin-legend
+==========================================
+.ct-legend {
+    position: relative;
+    z-index: 10;
+
+    li {
+        position: relative;
+        padding-left: 23px;
+        margin-bottom: 3px;
+    }
+
+    li:before {
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        left: 0;
+        content: '';
+        border: 3px solid transparent;
+        border-radius: 2px;
+    }
+
+    li.inactive:before {
+        background: transparent;
+    }
+
+    &.ct-legend-inside {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    @for $i from 0 to length($ct-series-colors) {
+        .ct-series-#{$i}:before {
+            background-color: nth($ct-series-colors, $i + 1);
+            border-color: nth($ct-series-colors, $i + 1);
+        }
+    }
+}
+*/
+
+/* base */
+.ct-legend {
+  position: relative;
+  z-index: 10;
+}
+.ct-legend li {
+  position: relative;
+  padding-left: 23px;
+  margin-bottom: 3px;
+}
+.ct-legend li:before {
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  left: 0;
+  content: '';
+  border: 3px solid transparent;
+  border-radius: 2px;
+}
+.ct-legend li.inactive:before {
+   background: transparent;
+}
+.ct-legend.ct-legend-inside {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+/* custom */
+.ct-legend:not(.ct-legend-inside) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.ct-legend li {
+  margin-bottom: .5em;
+  list-style: none;
+  line-height: 1.4;
+  font-size: 1rem;
+}
+.ct-legend:not(.ct-legend-inside) li {
+  margin: 0 1.75em 0 0;
+}
+.ct-legend li:last-child {
+  margin-right: 0;
+}
+.ct-legend li:hover {
+  cursor: pointer;
+}
+.ct-legend li:before {
+  top: 0;
+  margin: 2px 0 0 0;
+}
+.ct-legend .ct-series-0:before {
+  background-color: #d70206;
+  border-color: #d70206;
+}
+.ct-legend .ct-series-1:before {
+  background-color: #f05b4f;
+  border-color: #f05b4f;
+}
+.ct-legend .ct-series-2:before {
+  background-color: #f4c63d;
+  border-color: #f4c63d;
+}
+.ct-legend .ct-series-3:before {
+  background-color: #d17905;
+  border-color: #d17905;
+ }
+.ct-legend .ct-series-4:before {
+  background-color: #453d3f;
+  border-color: #453d3f;
+}
+.ct-legend .ct-series-5:before {
+  background-color: #59922b;
+  border-color: #59922b;
+}
+.ct-legend .ct-series-6:before {
+  background-color: #0544d3;
+  border-color: #0544d3;
+}
+.ct-legend .ct-series-7:before {
+  background-color: #6b0392;
+  border-color: #6b0392;
+}
+.ct-legend .ct-series-8:before {
+  background-color: #f05b4f;
+  border-color: #f05b4f;
+}
+.ct-legend .ct-series-9:before {
+  background-color: #dda458;
+  border-color: #dda458;
+}
+.ct-legend .ct-series-10:before {
+  background-color: #eacf7d;
+  border-color: #eacf7d;
+}
+.ct-legend .ct-series-11:before {
+  background-color: #86797d;
+  border-color: #86797d;
+}
+.ct-legend .ct-series-12:before {
+  background-color: #b2c326;
+  border-color: #b2c326;
+}
+.ct-legend .ct-series-13:before {
+  background-color: #6188e2;
+  border-color: #6188e2;
+}
+.ct-legend .ct-series-14:before {
+  background-color: #a748ca;
+  border-color: #a748ca;
+}
+.chart-with-legend .chartist-chart.ct-chart-pie .ct-label {
+  font-size: 15px;
+  text-shadow: 1px 1px 1px #333;
+  fill: rgba(255,255,255,.8);
+  color: rgba(255,255,255,.8);
+}
