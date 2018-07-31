@@ -66,6 +66,9 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    */
   public $_preventMultipleSubmission;
 
+
+  public $_contributionID;
+
   /**
    * Function to set variables up before form is built
    *
@@ -702,10 +705,10 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
           );
 
           $value['contributionID'] = $contribution->id;
+          $this->_contributionID = $contribution->id;
           $value['contributionTypeID'] = $contribution->contribution_type_id;
           $value['receive_date'] = $contribution->receive_date;
           $value['trxn_id'] = $contribution->trxn_id;
-          $value['contributionID'] = $contribution->id;
           $value['contributionTypeID'] = $contribution->contribution_type_id;
         }
         $value['contactID'] = $contactID;
