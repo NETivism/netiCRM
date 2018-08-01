@@ -155,6 +155,15 @@ https://github.com/CodeYellowBV/chartist-plugin-legend
   background-color: #a748ca;
   border-color: #a748ca;
 }
+.chart-with-legend .ct-chart-pie > svg {
+  max-width: 50%;
+}
+.chart-with-legend .ct-legend.ct-legend-inside {
+  position: relative;
+  float: right;
+  width: 50%;
+  margin: 0;
+}
 .chart-with-legend .chartist-chart.ct-chart-pie .ct-label {
   font-size: 15px;
   text-shadow: 1px 1px 1px #333;
