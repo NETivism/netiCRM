@@ -25,7 +25,9 @@ neticrm_merge(){
   echo -e "\n###### netiCRM ######\n"
   cd $CIVICRMPATH
   do_merge $TAG
-  git tag -a $TAG -m "Release $TAG"
+  cat "Release note of $TAG:\n" > /tmp/release-note.txt
+  git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%h %s" >> /tmp/release-note.txt
+  git tag -a $TAG -F /tmp/release-note.txt
 }
 
 do_merge(){
