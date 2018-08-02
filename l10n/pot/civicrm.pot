@@ -46224,3 +46224,6 @@ msgstr ""
 
 msgid "Reset"
 msgstr ""
+
+msgid "rows"
+msgstr ""

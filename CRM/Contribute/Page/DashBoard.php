@@ -222,7 +222,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         'withToolTip' => true,
         'withVerticalHint' => true,
         'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
-        'stackLines' => true
+        'stackLines' => true,
       );
       $this->assign('chart_this_year', $chart);
     }
@@ -245,6 +245,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
       'withToolTip' => true,
       'autoDateLabel' => true,
+      'withLegend' => true,
     );
     $this->assign('chart_duration_sum', $chart);
 
@@ -285,13 +286,13 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'type' => 'Bar',
       'labels' => json_encode($this->duration_array),
       'series' => json_encode($duration_track),
-      'seriesUnit' => '$ ',
-      'seriesUnitPosition'=> 'prefix',
+      'seriesUnit' => ts("rows"),
       'withToolTip' => true,
       'withVerticalHint' => true,
       'legends' => json_encode($track_label),
       'autoDateLabel' => true,
-      'stackBars' => true
+      'stackBars' => true,
+      'withLegend' => true,
     );
     $this->assign('chart_duration_track', $chart);
 
@@ -305,12 +306,14 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'id' => 'chart-duration-province-sum',
       'selector' => '#chart-duration-province-sum',
       'type' => 'Bar',
+      'legends' => json_encode(array_values($duration_province_label)), // array_values to let key to integer not string
       'labels' => json_encode(array_values($duration_province_label)), // array_values to let key to integer not string
       'series' => json_encode(array($duration_province_recur_sum, $duration_province_not_recur_sum)),
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',
       'withToolTip' => true,
-      'stackBars' => true
+      'stackBars' => true,
+      'withLegend' => true,
     );
     $this->assign('chart_duration_province_sum', $chart);
 
