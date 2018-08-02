@@ -1235,6 +1235,19 @@ class CRM_Contact_BAO_Query {
         }
       }
       else {
+        if($id == 'group' && $formValues['operator'] == 'AND'){
+          foreach ($values as $group_id => $ignore) {
+            if(!empty($ignore)){
+              $group_ids = array($group_id => 1);
+              $values = CRM_Contact_BAO_Query::fixWhereValues($id, $group_ids, $wildcard, $useEquals);
+              if (!$values) {
+                continue;
+              }
+              $params[] = $values;
+            }
+          }
+          continue;
+        }
         $values = CRM_Contact_BAO_Query::fixWhereValues($id, $values, $wildcard, $useEquals);
 
         if (!$values) {
@@ -2545,6 +2558,21 @@ class CRM_Contact_BAO_Query {
         else {
           $groupClause = $ssClause;
         }
+      }
+
+      if(strstr($op, 'NULL')) {
+        $qill = ts('Group').ts($op);
+      }
+      else{
+        $qill = ts('Contacts %1', array(1 => $op));
+        $qill .= ' ' . implode(' ' . ts('or') . ' ', $names);
+      }
+      if (!empty($statii) && $op != 'IS NULL') {
+        foreach($statii as $v){
+          $v = trim($v, "'");
+          $statii_qill[] = ts($v);
+        }
+        $qill .= " " . ts('AND') . " " . ts('Group Status') . ' - ' . implode(' ' . ts('or') . ' ', $statii_qill);
       }
     }
 

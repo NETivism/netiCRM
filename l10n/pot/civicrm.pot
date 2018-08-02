@@ -46136,5 +46136,91 @@ msgstr ""
 msgid "Percentage of progress base on active recurring subscriptions / goal subscriptions of this contribution page."
 msgstr ""
 
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "In %1 days"
+msgstr ""
+
+msgid "Number of First Time Donation Donors"
+msgstr ""
+
+msgid "Contribution with Maximum Amount"
+msgstr ""
+
+msgid "Contribution Page Status"
+msgstr ""
+
+msgid "New Recurring Contribution"
+msgstr ""
+
+msgid "Contribution Amount by Flow Source"
+msgstr ""
+
+msgid "Contribution Amount by Province"
+msgstr ""
+
+#: CRM/common/growth_sentence.tpl
+msgid "Compared with previous %1 days"
+msgstr ""
+
+msgid "grow by"
+msgstr ""
+
+msgid "decrease by"
+msgstr ""
+
+#: CRM/common/ContributionPageStatusCard.tpl
+msgid "There are %1 new contributions."
+msgstr ""
+
+#: CRM/common/ContributionPageStatusCard.tpl
+msgid "Flow Source"
+msgstr ""
+
+msgid "Amount reached"
+msgstr ""
+
+msgid "Total Donate Times"
+msgstr ""
+
+msgid "direct"
+msgstr ""
+
+msgid "internal"
+msgstr ""
+
+msgid "link"
+msgstr ""
+
+msgid "social"
+msgstr ""
+
+msgid "search"
+msgstr ""
+
+msgid "Email clients"
+msgstr ""
+
+msgid "ads"
+msgstr ""
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "Contributions Since This Year"
+msgstr ""
+
+msgid "Non-recurring Total Amount"
+msgstr ""
+
+msgid "Number of Donation Donors: %1"
+msgstr ""
+
+msgid "Total Contributions: %1"
+msgstr ""
+
+msgid "Total Payments: %1"
+msgstr ""
+
+msgid "Recurring Total Amount"
+msgstr ""
+
 msgid "Reset"
 msgstr ""
