@@ -46224,3 +46224,9 @@ msgstr ""
 
 msgid "Reset"
 msgstr ""
+
+msgid "rows"
+msgstr ""
+
+msgid "Offline registration (by %1)"
+msgstr ""
