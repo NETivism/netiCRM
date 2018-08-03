@@ -31,6 +31,7 @@
     display: block;
     background: #ccc;
     height: 100%;
+    width: 100%;
   }
   .progress-inner {
     display: block;
@@ -77,10 +78,10 @@
       {/if}
     </div>
     <div>{ts}Donation Count{/ts} {$statistics.page.total_count}</div>
+    {if $statistics.achievement}
     <div class="progress-wrapper">
-      {if $statistics.achievement}
       <span class="progress-full"><span class="progress-inner" style="width:{if $statistics.achievement.achieved}100{else}{$statistics.achievement.percent}{/if}%;">{$statistics.achievement.percent}%</span></span>
-      {/if}
     </div>
+    {/if}
   </a>
 </div>
