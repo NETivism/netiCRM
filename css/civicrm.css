@@ -6118,52 +6118,109 @@ input.crm-form-textfield,
   margin: 0 0 30px 0;
 }
 .crm-container .progress-wrapper {
-    display: table;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 .crm-container .progress-cell {
-    display: table-cell;
-    vertical-align: middle;
+  vertical-align: middle;
 }
 .crm-container .progress-cell.progress-bar-wrapper {
-    width: 80%;
+  width: 80%;
+}
+.crm-container .progress-cell.progress-button {
+  width: 19%;
 }
 .crm-container .progress-bar-wrapper {
-    position:relative;
-    border: 1px solid #AAA;
+  position:relative;
+  background: #eceff2;
+  border-radius: 2px;
+  overflow: hidden;
 }
 .crm-container .progress-bar {
-    height: 28px;
-    background: #a8d2f9;
-    border: 2px solid rgba(255, 255, 255, 0.75);
+  height: 30px;
+  background: #4cb6ac;
+  border-radius: 2px 0 0 2px;
+  box-shadow: 0px 0px 5px 0px #aaa;
 }
 .crm-container .progress-pointer {
-    position:absolute;
-    color: #555;
-    top: 0;
-    padding: 0 10px;
+  position:absolute;
+  color: #555;
+  top: 2px;
+  padding: 0 10px;
+}
+.crm-container .progress-pointer.white {
+  color: #FFF;
 }
 .crm-container .progress-pointer-over {
-    position:absolute;
-    top: 10px;
-    color: #999;
-    font-size: 1.2em;
-    font-weight: bold;
+  position:absolute;
+  top: 10px;
+  color: #999;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 .crm-container .progress-amount {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 .crm-container .progress-amount-raised {
 }
+.crm-container .progress-amount-raised span{
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #4cb6ac;
+}
 .crm-container .progress-amount-goal {
+}
+.crm-container .progress-amount-goal span {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #3c4db7;
 }
 .crm-container .progress-cell .button {
     white-space: nowrap;
-    border-left: 5px solid #FFF;
     vertical-align: middle;
     text-align: center;
     margin: 0;
     width: 100%;
     background: #3f51b5;
+    border-radius: 2px;
+    box-shadow: 1px 1px 10px 1px #aaa;
+}
+/* CSS talk bubble */
+.crm-container .bubble{
+  display: inline-block;
+  position: relative;
+	width: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 5px 10px
+}
+
+
+/*Right triangle, placed bottom left side slightly in*/
+.crm-container .bubble:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 30px;
+  right: auto;
+  top: auto;
+	bottom: -10px;
+	border: 5px solid #ccc;
+	border-color: #ccc transparent transparent #ccc;
+}
+.crm-container .bubble:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 31px;
+  right: auto;
+  top: auto;
+	bottom: -8px;
+	border: 5px solid;
+	border-color: white transparent transparent white;
 }
