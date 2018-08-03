@@ -36,7 +36,7 @@
             <tr><td class="label">{ts}Amount{/ts}</td><td>{$recur.amount} {$recur.currency}</td></tr>
             <tr><td class="label">{ts}Frequency{/ts}</td><td>{ts}every{/ts} {$recur.frequency_interval} {ts}{$recur.frequency_unit}{/ts}</td></tr>
             <tr><td class="label">{ts}Cycle Day{/ts}</td><td>{$recur.cycle_day} {if $recur.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}</td></tr>
-            <tr><td class="label">{ts}Installments{/ts}</td><td>{$recur.installments}</td></tr>
+            <tr><td class="label">{ts}Installments{/ts}</td><td>{if $recur.installments}{$recur.installments}{else}{ts}no limit{/ts}{/if}</td></tr>
             <tr><td></td><td></td></tr>
             <tr><td class="label">{ts}Create date{/ts}</td><td>{$recur.create_date|crmDate}</td></tr>
             <tr><td class="label">{ts}Start date{/ts}</td><td>{$recur.start_date|crmDate}</td></tr>
