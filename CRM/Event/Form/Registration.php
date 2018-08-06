@@ -1382,17 +1382,12 @@ WHERE  v.option_group_id = g.id
       'page_id' => $page_id,
       'visit_date' => date('Y-m-d H:i:s'),
     );
-    $track = CRM_Core_BAO_Track::add($params);
     $primaryParticipant = $this->get('registerByID');
-    if (!empty($track->id) && !empty($primaryParticipant)) {
-      $paramsEntity = array(
-        'track_id' => $track->id,
-        'entity_table' => 'civicrm_participant',
-        'entity_id' => $primaryParticipant,
-        'state' => $state[$pageName],
-      );
-      CRM_Core_BAO_TrackEntity::add($paramsEntity);
+    if (!empty($primaryParticipant)) {
+      $params['entity_table'] = 'civicrm_participant';
+      $params['entity_id'] = $primaryParticipant;
     }
+    $track = CRM_Core_BAO_Track::add($params);
   }
 }
 

@@ -27,9 +27,21 @@
       <add>4.0</add>
   </field>
   <index>
-    <name>track_session_key</name>
+    <name>index_session_key</name>
     <fieldName>session_key</fieldName>
-    <unique>true</unique>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>counter</name>
+      <required>true</required>
+      <type>int unsigned</type>
+      <default>1</default>
+      <comment>Counter of visit times in same person.</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_counter</name>
+    <fieldName>counter</fieldName>
     <add>4.0</add>
   </index>
   <field>
@@ -159,4 +171,23 @@
       <comment></comment>
       <add>4.0</add>
   </field>
+  <field>
+      <name>entity_table</name>
+      <type>varchar</type>
+      <length>64</length>
+      <comment>Entity table like civicrm_contribution or civicrm_participant or civicrm_membership</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>entity_id</name>
+      <type>int unsigned</type>
+      <comment>Entity id like contribution id or participant id</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>index_entity_table_id</name>
+    <fieldName>entity_table</fieldName>
+    <fieldName>entity_id</fieldName>
+    <add>4.0</add>
+  </index>
 </table>

@@ -17,7 +17,6 @@ $dao['PaymentProcessorType'] = 'CRM_Core_DAO_PaymentProcessorType';
 $dao['PreferencesDate'] = 'CRM_Core_DAO_PreferencesDate';
 $dao['Tag'] = 'CRM_Core_DAO_Tag';
 $dao['Track'] = 'CRM_Core_DAO_Track';
-$dao['TrackEntity'] = 'CRM_Core_DAO_TrackEntity';
 $dao['Worldregion'] = 'CRM_Core_DAO_Worldregion';
 $dao['Component'] = 'CRM_Core_DAO_Component';
 $dao['Discount'] = 'CRM_Core_DAO_Discount';

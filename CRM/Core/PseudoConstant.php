@@ -320,6 +320,13 @@ class CRM_Core_PseudoConstant {
   private static $extensions = array();
 
   /**
+   * TrackState
+   * @var array
+   * @static
+   */
+  private static $trackState = array();
+
+  /**
    * populate the object from the database. generic populate
    * method
    *
@@ -1529,6 +1536,19 @@ ORDER BY name";
     }
 
     return self::$extensions;
+  }
+
+  public static function &trackState() {
+    if (!self::$trackState) {
+      self::$trackState = array(
+        0 => 'Information Screen',
+        1 => 'Form Screen',
+        2 => 'Confirmation Screen',
+        3 => 'Payment Screen',
+        4 => 'Thank You Screen',
+      );
+    }
+    return self::$trackState;
   }
 }
 

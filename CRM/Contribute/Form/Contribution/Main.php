@@ -663,6 +663,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     
     $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($this->_id);
     $this->assign('achievement', $achievement);
+
+    // hidden track id
+    $this->addElement('hidden', 'track', $this->get('trackId'));
   }
 
   /**

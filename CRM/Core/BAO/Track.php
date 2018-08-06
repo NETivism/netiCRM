@@ -1,5 +1,9 @@
 <?php
 class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
+  const SESSION_LIMIT = 1800; // second
+  const LAST_STATE = 4;
+  const FIRST_STATE = 1;
+
   /**
    * class constructor
    */
@@ -27,44 +31,43 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       $params['visit_date'] = date('Y-m-d H:i:s');
     }
     $params['session_key'] = session_id();
-    $params['session_key'] = "{$params['session_key']}_{$params['page_type']}_{$params['page_id']}";
-    if ($params['session_key']) {
-      $track = new CRM_Core_DAO_Track();
-      $track->session_key = $params['session_key'];
-      if ($track->find(TRUE)) {
+    $track = new CRM_Core_DAO_Track();
+    if (!empty($params['id']) && is_numeric($params['id'])) {
+      $track->id = $params['id'];
+      $track->find(TRUE);
+      $track->copyValues($params);
+      $track->counter++;
+      $track->update();
+    }
+    else {
+      // in thirty mins same session visit same page and not completed
+      // we treat as same visit
+      $sameSession = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_track WHERE session_key = %1 AND visit_date > %2 AND page_type = %3 AND page_id = %4 AND state < %5 ORDER BY visit_date DESC LIMIT 1", array(
+        1 => array($params['session_key'], 'String'),
+        2 => array(date('Y-m-d H:i:s', time() - self::SESSION_LIMIT), 'String'),
+        3 => array($params['page_type'], 'String'),
+        4 => array($params['page_id'], 'Integer'),
+        5 => array(self::LAST_STATE, 'Integer')
+      ));
+      
+      if ($sameSession->fetch()) {
+        $track->id = $sameSession->id;
+        $track->find(TRUE);
+        if ($params['state'] < $track->state) {
+          unset($params['state']);
+        }
         $track->copyValues($params);
+        if ($track->state <= self::FIRST_STATE) {
+          $track->counter++;
+        }
         $track->update();
       }
       else {
-        // check if qfkey exists
         $track->copyValues($params);
         $track->insert();
       }
-      return $track;
     }
-    else {
-      return FALSE;
-    }
-  }
-
-  /**
-   * Function to delete the track
-   *
-   * @param int $session_key   track session_key
-   *
-   * @return boolean
-   * @access public
-   * @static
-   *
-   */
-  static function del($session_key) {
-    // delete all track records with the selected tracked session_key
-    $track = new CRM_Core_DAO_Track();
-    $track->session_key = $session_key;
-    if ($track->delete()) {
-      return TRUE;
-    }
-    return FALSE;
+    return $track;
   }
 
   /**
@@ -82,14 +85,15 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     }
     $json = json_decode($post);
     if (empty($json) || empty($json->page_type) || empty($json->page_id)) {
-      exit();
+      CRM_Utils_System::civiExit();
     }
+
     $track = new CRM_Core_BAO_Track();
     $fields = $track->fields();
     $params = (array) $json;
     $params = array_intersect_key($params, $fields);
     $params = array_filter($params);
-    CRM_Core_BAO_Track::add($params);
+    $track = CRM_Core_BAO_Track::add($params);
     CRM_Utils_System::civiExit();
   }
 
@@ -113,9 +117,9 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     }
 
     $where = implode(' AND ', $whereClause);
-    $sql = "SELECT COUNT(t.id) FROM civicrm_track t WHERE $where";
+    $sql = "SELECT COUNT(t.id) FROM civicrm_track t LEFT JOIN civicrm_track_entity e ON t.id = e.track_id WHERE $where";
     $total = CRM_Core_DAO::singleValueQuery($sql, $params);
-    $sql = "SELECT COUNT(t.id) as `count`, t.referrer_type FROM civicrm_track t WHERE $where GROUP BY t.referrer_type ORDER BY count DESC";
+    $sql = "SELECT COUNT(t.id) as `count`, t.referrer_type FROM civicrm_track t LEFT JOIN civicrm_track_entity e ON t.id = e.track_id WHERE $where GROUP BY t.referrer_type ORDER BY count DESC";
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
 
     $return = array();

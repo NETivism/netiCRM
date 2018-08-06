@@ -93,6 +93,12 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
    */
   public $session_key;
   /**
+   * Counter of visit times in same person.
+   *
+   * @var int unsigned
+   */
+  public $counter;
+  /**
    * Date time of this visit
    *
    * @var datetime
@@ -166,6 +172,18 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
    */
   public $utm_content;
   /**
+   * Entity table like civicrm_contribution or civicrm_participant or civicrm_membership
+   *
+   * @var string
+   */
+  public $entity_table;
+  /**
+   * Entity id like contribution id or participant id
+   *
+   * @var int unsigned
+   */
+  public $entity_id;
+  /**
    * class constructor
    *
    * @access public
@@ -197,6 +215,13 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
           'required' => true,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'counter' => array(
+          'name' => 'counter',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Counter') ,
+          'required' => true,
+          'default' => '',
         ) ,
         'visit_date' => array(
           'name' => 'visit_date',
@@ -284,6 +309,17 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO
           'title' => ts('Utm Content') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'entity_table' => array(
+          'name' => 'entity_table',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Entity Table') ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ) ,
+        'entity_id' => array(
+          'name' => 'entity_id',
+          'type' => CRM_Utils_Type::T_INT,
         ) ,
       );
     }

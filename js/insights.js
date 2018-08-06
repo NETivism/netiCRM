@@ -151,12 +151,11 @@ function trackVisit(visitInfo) {
       }
     }
 
-    // prepare url
     $.ajax({
       type: "POST",
       url: '/civicrm/ajax/track',
       data: JSON.stringify(object),
-      dataType: 'text'
+      dataType: 'json'
     });
   });
 }

@@ -957,16 +957,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       'page_id' => $page_id,
       'visit_date' => date('Y-m-d H:i:s'),
     );
-    $track = CRM_Core_BAO_Track::add($params);
-    if (!empty($this->_contributionID) && !empty($track->id)) {
-      $paramsEntity = array(
-        'track_id' => $track->id,
-        'entity_table' => 'civicrm_contribution',
-        'entity_id' => $this->_contributionID,
-        'state' => $state[$pageName],
-      );
-      CRM_Core_BAO_TrackEntity::add($paramsEntity);
+    if (!empty($this->_contributionID)) {
+      $params['entity_table'] = 'civicrm_contribution';
+      $params['entity_id'] = $this->_contributionID;
     }
+    $track = CRM_Core_BAO_Track::add($params);
   }
 }
 
