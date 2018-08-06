@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-03 09:50+0000\n"
+"PO-Revision-Date: 2018-08-06 07:39+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46270,7 +46270,7 @@ msgid "%1 achieved"
 msgstr "已達成 %1"
 
 msgid "Goal Subscription"
-msgstr "目標人次"
+msgstr "定期定額目標人次"
 
 msgid "Display progress bar on the top of contribution page."
 msgstr "在募款頁上方顯示募款進度條"
@@ -46384,3 +46384,7 @@ msgstr "筆"
 
 msgid "Offline registration (by %1)"
 msgstr "(由 %1 手動報名)"
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "We have released new dashboard page. Click here!!"
+msgstr "我們有新的報表頁面了。點我前往！！"
