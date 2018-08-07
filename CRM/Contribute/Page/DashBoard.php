@@ -215,6 +215,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'withVerticalHint' => true,
       'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
       'withToolTip' => true,
+      'autoDateLabel' => true,
       'withLegend' => true,
     );
     $this->assign('chart_duration_sum', $chart);
@@ -264,6 +265,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'withToolTip' => true,
       'withVerticalHint' => true,
       'legends' => json_encode(array_values($referrerTypesIdx)),
+      'autoDateLabel' => true,
       'stackBars' => true,
       'withLegend' => true,
     );
