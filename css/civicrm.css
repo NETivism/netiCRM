@@ -6233,9 +6233,14 @@ input.crm-form-textfield,
   margin: 0 10px;
   border-radius: 15px;
 }
-.crm-container .filter-box .zmdi{
-  color: #AAA;
+.crm-container .filter-box .zmdi {
+  color: #EEE;
 }
-.crm-container .filter-box .zmdi:hover{
+.crm-container .filter-box a.zmdi {
   color: #FFF;
+  text-decoration: none;
+  margin-left: 5px;
+}
+.crm-container .filter-box a.zmdi:hover{
+  color: #CCC;
 }

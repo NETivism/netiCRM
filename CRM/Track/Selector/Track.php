@@ -240,6 +240,21 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     $pageTables = array();
     while ($dao->fetch()) {
       $id = $dao->id.'-'.$dao->tid;
+      $referrerUrl = $landing = '';
+      if ($dao->referrer_url) {
+        if (strstr($dao->referrer_url, 'http')) {
+          $url = parse_url($dao->referrer_url);
+          $referrerUrl = $url['host'].'... <a href="'.$dao->referrer_url.'" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i></a>';
+        }
+        else {
+          $referrerUrl = strstr($dao->referrer_url, 0, 15).'...';
+        }
+      }
+      if ($dao->landing) {
+        $url = parse_url($dao->landing);
+        $landing = $url['path'].' <a href="'.$dao->landing.'" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i></a>';
+      }
+
       $results[$id] = array();
       $results[$id]['page_type'] = $this->_pageTypes[$dao->page_type];
       $results[$id]['page_id'] = $dao->page_id;
@@ -248,8 +263,8 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         'state' => empty($this->_state) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&state=$dao->state").'">'.$this->_trackState[$dao->state].'</a>' : $this->_trackState[$dao->state],
         'referrer_type' => empty($this->_referrerType) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&rtype=$dao->referrer_type").'">'.$this->_referrerTypes[$dao->referrer_type].'</a>' : $this->_referrerTypes[$dao->referrer_type],
         'referrer_network' => empty($this->_referrerNetwork) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&rnetwork=$dao->referrer_network").'">'.$dao->referrer_network.'</a>' : $dao->referrer_network,
-        'referrer_url' => $dao->referrer_url,
-        'landing' => $dao->landing,
+        'referrer_url' => $referrerUrl,
+        'landing' => $landing,
         'entity_id' => $dao->entity_id,
       );
       $pageTables[$dao->page_type][$dao->page_id][$id] = $id;

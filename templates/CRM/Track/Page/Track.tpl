@@ -1,7 +1,7 @@
 {if $filters}
 <div class="crm-block crm-form-block">
   {foreach from=$filters item=filter key=name}
-    <span class="filter-box">{$filter.title}: {$filter.value_display}<a href="{crmURL q=$filter.url}"><i class="zmdi zmdi-close-circle"></i></a></span>
+    <span class="filter-box"><i class="zmdi zmdi-filter-list"></i> {$filter.title}: {$filter.value_display}<a href="{crmURL q=$filter.url}" class="zmdi zmdi-close-circle"></a></span>
   {/foreach}
 </div>
 {/if}
