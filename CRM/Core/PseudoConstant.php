@@ -1548,11 +1548,11 @@ ORDER BY name";
   public static function &trackState() {
     if (!self::$trackState) {
       self::$trackState = array(
-        0 => 'Information Screen',
-        1 => 'Form Screen',
-        2 => 'Confirmation Screen',
-        3 => 'Payment Screen',
-        4 => 'Thank You Screen',
+        0 => ts('Information Screen'),
+        1 => ts('Form Screen'),
+        2 => ts('Confirmation Screen'),
+        3 => ts('Payment Screen'),
+        4 => ts('Thank You Screen'),
       );
     }
     return self::$trackState;

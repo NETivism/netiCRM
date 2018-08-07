@@ -52,6 +52,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    */
   public $_columnHeaders;
 
+
   /**
    * Class constructor
    *
@@ -111,13 +112,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     );
     $this->_trackState = CRM_Core_PseudoConstant::trackState();
     $this->_referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
-    if ($this->_pageType && $this->_pageId) {
-      // breadcrumb starter
-      $breadcrumbs = array(
-        array('url' => CRM_Utils_System::url(str_replace('%%id%%', $this->_pageId, $this->_pageUrl[$this->_pageType])), 'title' => $this->_pageTypes[$this->_pageType]),
-      );
-      CRM_Utils_System::appendBreadCrumb($breadcrumbs);
-    }
   }
   //end of constructor
 
@@ -429,6 +423,17 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     }
     if ($filters = $page->get('filters')) {
       $page->assign('filters', $filters);
+    }
+  }
+
+  function breadcrumbs($page) {
+    if ($this->_pageType && $this->_pageId && !$page->_breadcrumbs) {
+      // breadcrumb starter
+      $breadcrumbs = array(
+        array('url' => CRM_Utils_System::url(str_replace('%%id%%', $this->_pageId, $this->_pageUrl[$this->_pageType])), 'title' => $this->_pageTypes[$this->_pageType]),
+      );
+      CRM_Utils_System::appendBreadCrumb($breadcrumbs);
+      $page->_breadcrumbs = $breadcrumbs;
     }
   }
 }

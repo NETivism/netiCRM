@@ -42,6 +42,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     }
     $selector = new CRM_Track_Selector_Track($params, $this->_scope);
     $selector->filters($this);
+    $selector->breadcrumbs($this);
 
     $controller = new CRM_Core_Selector_Controller(
       $selector,
