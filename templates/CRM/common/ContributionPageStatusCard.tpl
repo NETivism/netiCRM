@@ -55,7 +55,7 @@
 {/if}
 <br/>
 <div>
-  <h5><a href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_contribution_page&pid=`$statistics.page.id`"}">{ts}Flow Source{/ts}</a></h5>
+  <h5><a href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_contribution_page&pid=`$statistics.page.id`"}">{ts}Traffic Source{/ts}</a></h5>
   {if $statistics.track}
   <div class="track-outter">
     {foreach from=$statistics.track item=source}

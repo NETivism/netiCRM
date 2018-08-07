@@ -355,7 +355,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($id);
       $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id);
       foreach($pageStatistics['track'] as &$track) {
-        $track['display'] = "{$track['percent']}% ({$track['count']})";
+        $track['display'] = "{$track['percent']}% ({$track['count']} ".ts('People').")";
       }
       unset($pageStatistics['page']['title']);
       $this->assign('contribution_page_statistics', $pageStatistics);
