@@ -54,7 +54,9 @@
   {/if}
 {/if}
 <br/>
-<div><h5>{ts}Flow Source{/ts}</h5>
+<div>
+  <h5><a href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_contribution_page&pid=`$statistics.page.id`"}">{ts}Flow Source{/ts}</a></h5>
+  {if $statistics.track}
   <div class="track-outter">
     {foreach from=$statistics.track item=source}
     <div class="track-inner type-{$source.name}">
@@ -63,10 +65,12 @@
     </div>
     {/foreach}
   </div>
+  {/if}
 </div>
 <br/>
 <div class="grey-background">
-  <a href="{crmURL p='civicrm/contribute/search' q="reset=1&pid=`$statistics.page.id`&force=1&test=0" h=0 a=1 fe=1}">
+  <a href="{crmURL p='civicrm/contribute/search' q="reset=1&pid=`$statistics.page.id`&force=1&status=1&test=0" h=0 a=1 fe=1}">
+    {if $statistics.achievement}
     <div>
       {if $statistics.achievement.type == "amount"}
         {capture assign=achieved}{$statistics.achievement.current|crmMoney}{/capture}
@@ -77,6 +81,12 @@
         {if $statistics.achievement.goal} / {$statistics.achievement.goal} {ts}People{/ts}{/if}
       {/if}
     </div>
+    {else}
+    <div>
+      {capture assign=achieved}{$statistics.page.total_amount|crmMoney}{/capture}
+      {ts 1="`$achieved`"}%1 achieved{/ts}
+    </div>
+    {/if}
     <div>{ts}Donation Count{/ts} {$statistics.page.total_count}</div>
     {if $statistics.achievement}
     <div class="progress-wrapper">

@@ -6224,3 +6224,18 @@ input.crm-form-textfield,
 	border: 5px solid;
 	border-color: white transparent transparent white;
 }
+
+/* filter box */
+.crm-container .filter-box {
+  background: #555;
+  color: #EEE;
+  padding: 2px 10px;
+  margin: 0 10px;
+  border-radius: 15px;
+}
+.crm-container .filter-box .zmdi{
+  color: #AAA;
+}
+.crm-container .filter-box .zmdi:hover{
+  color: #FFF;
+}
