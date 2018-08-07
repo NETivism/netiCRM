@@ -58,6 +58,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
 
     CRM_Utils_System::setTitle($selector->getTitle());
     $this->assign('title', $selector->getTitle());
+    self::chart($this, 'chart_track', $params);
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
@@ -67,6 +68,77 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     }
 
     return parent::run();
+  }
+
+  public static function chart($page, $chartName, $selectorParams) {
+    $referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
+    $label = $dates = array();
+    $dummy = $data = $legend = array();
+    $selector = new CRM_Track_Selector_Track($selectorParams);
+    $dao = $selector->getQuery(
+      "referrer_type, count(id) as `count`, DATE_FORMAT(visit_date,'%Y-%m-%d') visit_day",
+      'GROUP BY visit_day, referrer_type',
+      NULL,
+      NULL,
+      'visit_date ASC'
+    );
+    while($dao->fetch()){
+      if(empty($dao->referrer_type)){
+        $dao->referrer_type = 'unknown';
+      }
+      $dates[$dao->visit_day] = 1;
+      $dummy[$dao->referrer_type][$dao->visit_day] = (int)$dao->count;
+    }
+
+    // prepare period label for chartist
+    $start = !empty($selectorParams['visitDateStart']) ? $selectorParams['visitDateStart'] : key($dates);
+    end($dates);
+    $end = !empty($selectorParams['visitDateEnd']) ? $selectorParams['visitDateEnd'] : key($dates);
+    if($start !== $end) {
+      $period = new DatePeriod(
+        new DateTime($start),
+        new DateInterval('P1D'),
+        new DateTime($end)
+      );
+      foreach ($period as $key => $val) {
+        $label[] = $val->format('Y-m-d');
+      }
+    }
+    else {
+      $label = array($start);
+    }
+     
+    // prepare series and label for chartist
+    $seriesNum = 0; 
+    foreach($dummy as $rtype => $d) {
+      $legend[$seriesNum] = $referrerTypes[$rtype];
+      $data[$seriesNum] = array();
+      foreach($label as $idx => $date) {
+        if (!empty($d[$date])) {
+          $data[$seriesNum][$idx] = $d[$date];
+        }
+        else {
+          $data[$seriesNum][$idx] = 0;
+        }
+      }
+      $seriesNum++;
+    }
+
+    $chart = array(
+      'id' => str_replace('_', '-', $chartName),
+      'selector' => '#'.str_replace('_', '-', $chartName),
+      'type' => 'Bar',
+      'labels' => json_encode($label),
+      'series' => json_encode($data),
+      'seriesUnit' => ts("rows"),
+      'withToolTip' => true,
+      'withVerticalHint' => true,
+      'legends' => json_encode($legend),
+      'stackBars' => true,
+      'withLegend' => true,
+      'autoDateLabel' => true,
+    );
+    $page->assign($chartName, $chart);
   }
 }
 

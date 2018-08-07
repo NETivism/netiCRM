@@ -1,17 +1,21 @@
-{include file="CRM/common/pager.tpl" location="top"}
-{if $graphic}
-{/if}
 {if $filters}
-<div class="crm-block">
+<div class="crm-block crm-form-block">
   {foreach from=$filters item=filter key=name}
-    <span class="filter-box">{$filter.title}:{$filter.value_display}<a href="{crmURL q=$filter.url}"><i class="zmdi zmdi-close-circle"></i></a></span>
+    <span class="filter-box">{$filter.title}: {$filter.value_display}<a href="{crmURL q=$filter.url}"><i class="zmdi zmdi-close-circle"></i></a></span>
   {/foreach}
 </div>
 {/if}
-{if $summary}
-  {$summary}
+{if $chart_track}
+<div class="col-xs-12">
+  <div class="box mdl-shadow--2dp">
+    <div class="chartist">
+      {include file="CRM/common/chartist.tpl" chartist=$chart_track}
+    </div>
+  </div>
+</div>
 {/if}
 
+{include file="CRM/common/pager.tpl" location="top"}
 {if $rows }
 {include file="CRM/common/jsortable.tpl"}
 {strip}

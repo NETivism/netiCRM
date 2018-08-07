@@ -282,7 +282,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       while($recordDAO->fetch()) {
         foreach($records[$recordDAO->id] as $resultId) {
           $url = str_replace(array('%%cid%%', '%%id%%'), array($recordDAO->cid, $recordDAO->id), $this->_referencedRecordUrl[$table]);
-          $results[$resultId]['entity_id'] = $this->_referencedRecordType[$table].': '.$recordDAO->sort_name.'<a href="'.CRM_Utils_System::url($url).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
+          $results[$resultId]['entity_id'] = $this->_referencedRecordType[$table].': '.'<a href="'.CRM_Utils_System::url($this->_drillDown.'&entity_id='.$recordDAO->id).'">'.$recordDAO->sort_name.'</a><a href="'.CRM_Utils_System::url($url).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
         }
       }
     }
@@ -313,7 +313,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       $args[4] = array($this->_referrerNetwork, 'String');
     }
     if ($this->_entityId) {
-      $where[] = "entityId = %5";
+      $where[] = "entity_id = %5";
       $args[5] = array($this->_entityId, 'Integer');
     }
     if ($this->_visitDateStart) {
@@ -323,6 +323,10 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     if ($this->_visitDateEnd) {
       $where[] = "visit_date <= %7";
       $args[7] = array($this->_visitDateEnd, 'String');
+    }
+    if ($this->_state) {
+      $where[] = "state = %8";
+      $args[8] = array($this->_state, 'Integer');
     }
 
     $where = implode(" AND ", $where);
