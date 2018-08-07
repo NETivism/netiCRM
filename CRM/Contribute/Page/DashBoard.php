@@ -219,33 +219,36 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     );
     $this->assign('chart_duration_sum', $chart);
 
-    $sql = "SELECT t.referrer_type referrer_type FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date <= %2 GROUP BY referrer_type";
-    $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
-    $duration_track = array();
-    $track_label = array();
-    while($dao->fetch()){
-      $duration_track[] = array_fill(0, count($this->duration_array), 0);
-      if(!$dao->referrer_type){
-        $track_label[] = ts('Others');
-      }else{
-        if(!in_array($dao->referrer_type, $track_label)){
-          $track_label[] = $dao->referrer_type;
-        }
-      }
-    }
 
-    $sql = "SELECT t.referrer_type, count(t.referrer_type) count, DATE_FORMAT(t.visit_date,'%Y-%m-%d') visit_day FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date <= %2 GROUP BY visit_day, referrer_type";
-    $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
+    $referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
+    $referrerTypesIdx = array_values($referrerTypes);
+    $referrerTypesAvailable = array();
+    $durationTrack = array();
+    foreach($this->duration_array as $idx => $d) {
+      foreach($referrerTypesIdx as $k => $type) {
+        $durationTrack[$k][$idx] = 0;
+       }
+     }
+    $params = array(
+      'pageType' => 'civicrm_contribution_page',
+      'visitDateStart' => $this->params_duration[1][0],
+      'visitDateEnd' => $this->params_duration[2][0],
+    );
+    $selector = new CRM_Track_Selector_Track($params);
+    $dao = $selector->getQuery("referrer_type, count(id) as `count`, DATE_FORMAT(visit_date,'%Y-%m-%d') visit_day", 'GROUP BY visit_day, referrer_type');
     while($dao->fetch()){
-      $inx_date = array_search($dao->visit_day, $this->duration_array);
-      if(!$dao->referrer_type){
-        $track_network = ts('Others');
-      }else{
-        $track_network = $dao->referrer_type;
+      $dateIdx = array_search($dao->visit_day, $this->duration_array);
+      if(empty($dao->referrer_type)){
+        $dao->referrer_type = 'unknown';
       }
-      $inx_network = array_search($track_network, $track_label);
-      $duration_track[$inx_network][$inx_date] = $dao->count;
+      $referrerTypeIdx = array_search($referrerTypes[$dao->referrer_type], $referrerTypesIdx);
+      $referrerTypesAvailable[$referrerTypeIdx] = 1;
+      $durationTrack[$referrerTypeIdx][$dateIdx] = (int)$dao->count;
     }
+    $durationTrack = array_intersect_key($durationTrack, $referrerTypesAvailable);
+    $referrerTypesIdx = array_intersect_key($referrerTypesIdx, $referrerTypesAvailable);
+    $durationTrack = array_values($durationTrack);
+    $referrerTypesIdx = array_values($referrerTypesIdx);
 
     if($_GET['debug']){
       dpm($duration_track);
@@ -256,11 +259,11 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'selector' => '#chart-duration-track',
       'type' => 'Bar',
       'labels' => json_encode($this->duration_array),
-      'series' => json_encode($duration_track),
+      'series' => json_encode($durationTrack),
       'seriesUnit' => ts("rows"),
       'withToolTip' => true,
       'withVerticalHint' => true,
-      'legends' => json_encode($track_label),
+      'legends' => json_encode(array_values($referrerTypesIdx)),
       'stackBars' => true,
       'withLegend' => true,
     );
