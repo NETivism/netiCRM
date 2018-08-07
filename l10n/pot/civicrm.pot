@@ -46224,3 +46224,13 @@ msgstr ""
 
 msgid "Reset"
 msgstr ""
+
+msgid "rows"
+msgstr ""
+
+msgid "Offline registration (by %1)"
+msgstr ""
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "We have released new dashboard page. Click here!!"
+msgstr ""
