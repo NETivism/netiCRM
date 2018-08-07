@@ -1381,7 +1381,7 @@ cj(function() {
 
         //build contribution params
         if (!$this->_onlinePendingContributionId) {
-          $contributionParams['source'] = "{$eventTitle}: Offline registration (by {$userName})";
+          $contributionParams['source'] = "{$eventTitle}: ".ts("Offline registration (by %1)", array(1 => $userName));
         }
 
         $contributionParams['currency'] = $config->defaultCurrency;

@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-02 09:06+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-08-07 11:18+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46270,7 +46270,7 @@ msgid "%1 achieved"
 msgstr "已達成 %1"
 
 msgid "Goal Subscription"
-msgstr "目標人次"
+msgstr "定期定額目標人次"
 
 msgid "Display progress bar on the top of contribution page."
 msgstr "在募款頁上方顯示募款進度條"
@@ -46306,8 +46306,8 @@ msgstr "募款頁狀況"
 msgid "New Recurring Contribution"
 msgstr "新進定期定額捐款"
 
-msgid "Contribution Amount by Flow Source"
-msgstr "成交捐款流量來源"
+msgid "Contribution Amount by Traffic Source"
+msgstr ""
 
 msgid "Contribution Amount by Province"
 msgstr "縣市捐款金額"
@@ -46327,7 +46327,7 @@ msgid "There are %1 new contributions."
 msgstr "有 %1 筆新增捐款"
 
 #: CRM/common/ContributionPageStatusCard.tpl
-msgid "Flow Source"
+msgid "Traffic Source"
 msgstr "流量來源"
 
 msgid "Amount reached"
@@ -46381,3 +46381,49 @@ msgstr "重設"
 
 msgid "rows"
 msgstr "筆"
+
+msgid "Offline registration (by %1)"
+msgstr "(由 %1 手動報名)"
+
+#: CRM/Contribute/Page/DashBoard.tpl
+msgid "We have released new dashboard page. Click here!!"
+msgstr "我們有新的報表頁面了。點我前往！！"
+
+msgid "Page Name"
+msgstr "頁面名稱"
+
+msgid "Visit Date"
+msgstr "造訪日期"
+
+msgid "Visit State"
+msgstr "造訪層次"
+
+msgid "Referrer Type"
+msgstr "流量來源類型"
+
+msgid "Referrer Network"
+msgstr "流量來源網絡"
+
+msgid "Referrer URL"
+msgstr "流量來源網址"
+
+msgid "Landing Page"
+msgstr "到達頁面"
+
+msgid "Referenced Record"
+msgstr "關聯紀錄"
+
+msgid "Information Screen"
+msgstr "資訊頁面"
+
+msgid "Form Screen"
+msgstr "表單填寫頁面"
+
+msgid "Payment Screen"
+msgstr "金流頁面"
+
+msgid "Thank You Screen"
+msgstr "感謝頁面"
+
+msgid "unknown"
+msgstr "未知"
