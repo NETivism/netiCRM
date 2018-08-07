@@ -1,3 +1,4 @@
+
 {php}
 global $crmChartistAdded;
 if (!$crmChartistAdded) {
@@ -451,6 +452,7 @@ if (!$crmChartistAdded) {
   options.showArea = true;
   options.showPoint = true;
   options.showLine = false;
+  options.lineSmooth = Chartist.Interpolation.none();
   options.low = 0;
   options.classNames["chart"] += ' ct-chart-line ct-chart-line-stacked ';
 {/literal}{/if}
