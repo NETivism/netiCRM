@@ -109,7 +109,7 @@
   .progress-full {
     display: block;
     background: #ccc;
-    height: 100%;
+    width: 100%;
   }
   .progress-inner {
     display: block;
