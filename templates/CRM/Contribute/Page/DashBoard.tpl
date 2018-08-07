@@ -25,6 +25,12 @@
 *}
 {* CiviContribute DashBoard (launch page) *}
 
+{if $isAdmin}
+ {capture assign=configPagesURL}{crmURL p="civicrm/admin/contribute" q="reset=1"}{/capture}
+<div class="float-right">
+     <span><a href="{$configPagesURL}" class="button"><span>{ts}Manage Contribution Pages{/ts}</span></a></span>
+</div>
+{/if}
 
 {if $chart_this_year}
 <div class="row">
@@ -53,6 +59,27 @@
 </div>
 {/if}
 
+{if $chartRecur}
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box mdl-shadow--2dp">
+      <div class="box-content">
+        <div class="crm-section dashboard-section">
+          <div class="chartist">
+            {include file="CRM/common/chartist.tpl" chartist=$chartRecur}
+          </div>
+          {capture assign=frequency_unit}{ts}{$frequencyUnit}{/ts}{/capture}
+          {foreach from=$summaryRecur key=currency item=summary}
+            <ul>
+              <li>{ts 1=$summaryTime}Generated at %1{/ts} (<a href="{crmURL p=civicrm/contribute q=reset=1&update=1}">{ts}Update{/ts}</a>) - <strong>{ts 1=$summary.contributions 2=$frequency_unit 3=$summary.contacts 4=$summary.amount|crmMoney}There are %1 contributions in this %2 by %3 contacts. Total amount: %4{/ts}</strong></li>
+            </ul>
+          {/foreach}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{/if}
 
 {literal}
 <style type="text/css">
@@ -103,10 +130,6 @@
   }
   .more{
     text-align: right;
-  }
-  .this-year-info-wrapper {
-    background-color: #eee;
-    padding: 10px;
   }
   .this-year-info {
     position: relative;

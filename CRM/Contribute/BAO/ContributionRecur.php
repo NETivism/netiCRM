@@ -454,6 +454,8 @@ GROUP BY c.currency";
     ksort($labels);
     
     $chart = array(
+      'id' => 'chart-recur',
+      'selector' => '#chart-recur',
       'title' => ts('Recurring contributions estimated in next %1 %2', array(1 => $limit, 2 => ts($frequency_unit))),
       'labels' => json_encode(array_values($labels)),
       'series' => json_encode(array(array_values($values))),
