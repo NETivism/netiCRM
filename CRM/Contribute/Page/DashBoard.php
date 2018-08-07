@@ -221,6 +221,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     $sql = "SELECT t.referrer_type referrer_type FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date <= %2 GROUP BY referrer_type";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
+    $duration_track = array();
     $track_label = array();
     while($dao->fetch()){
       $duration_track[] = array_fill(0, count($this->duration_array), 0);
@@ -233,7 +234,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       }
     }
 
-    $duration_track = array();
     $sql = "SELECT t.referrer_type, count(t.referrer_type) count, DATE_FORMAT(t.visit_date,'%Y-%m-%d') visit_day FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date <= %2 GROUP BY visit_day, referrer_type";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     while($dao->fetch()){
