@@ -49,52 +49,21 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
    *
    */
   function preProcess() {
-    CRM_Utils_System::setTitle(ts('CiviContribute'));
+    $title = ts('CiviContribute Dashboard');
+    $title .= "<span class='red'>Beta</span>";
+    CRM_Utils_System::setTitle($title);
 
-    $status = array('Valid', 'Cancelled');
-    $prefixes = array('start', 'month', 'year');
-    $startDate = NULL;
-    $startToDate = $monthToDate = $yearToDate = array();
+    $this->getDate();
 
-    //get contribution dates.
-    require_once 'CRM/Contribute/BAO/Contribution.php';
-    $dates = CRM_Contribute_BAO_Contribution::getContributionDates();
-    foreach (array('now', 'yearDate', 'monthDate') as $date) {
-      $$date = $dates[$date];
-    }
-    $yearNow = $yearDate + 10000;
-    foreach ($prefixes as $prefix) {
-      $aName = $prefix . 'ToDate';
-      $dName = $prefix . 'Date';
-
-      if ($prefix == 'year') {
-        $now = $yearNow;
+    if(empty($this->is_custom_date)){
+      // Check for admin permission to see if we should include the Manage Contribution Pages action link
+      $isAdmin = 0;
+      require_once 'CRM/Core/Permission.php';
+      if (CRM_Core_Permission::check('administer CiviCRM')) {
+        $isAdmin = 1;
       }
-
-      foreach ($status as $s) {
-        ${$aName}[$s] = CRM_Contribute_BAO_Contribution::getTotalAmountAndCount($s, $$dName, $now);
-        ${$aName}[$s]['url'] = CRM_Utils_System::url('civicrm/contribute/search',
-          "reset=1&force=1&status=1&start={$$dName}&end=$now&test=0"
-        );
-      }
-
-      $this->assign($aName, $$aName);
+      $this->assign('isAdmin', $isAdmin);
     }
-
-    //for contribution tabular View
-    $buildTabularView = CRM_Utils_Array::value('showtable', $_GET, FALSE);
-    $this->assign('buildTabularView', $buildTabularView);
-    if ($buildTabularView) {
-      return;
-    }
-
-    // Check for admin permission to see if we should include the Manage Contribution Pages action link
-    $isAdmin = 0;
-    require_once 'CRM/Core/Permission.php';
-    if (CRM_Core_Permission::check('administer CiviCRM')) {
-      $isAdmin = 1;
-    }
-    $this->assign('isAdmin', $isAdmin);
   }
 
   /**
@@ -107,13 +76,15 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
   function run() {
     // block contribution
     $this->preProcess();
-    $this->getDate();
     $this->processDashBoard();
 
     return parent::run();
   }
 
   function getDate($start_date = NULL, $end_date = NULL){
+    if(!empty($_GET['end_date']) || !empty($_GET['start_date'])){
+      $this->is_custom_date = TRUE;
+    }
     $end_date = $this->end_date = $end_date ? $end_date : ($_GET['end_date'] ? $_GET['end_date'] : date('Y-m-d'));
     $start_date = $this->start_date = $start_date ? $start_date : ($_GET['start_date'] ? $_GET['start_date'] : date('Y-m-d', strtotime('-30day')));
 
@@ -182,7 +153,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       dpm($summary_contrib);
     }
 
-    if (empty($_GET['start_date']) && empty($_GET['end_date'])) {
+    if (empty($this->is_custom_date)) {
       $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_recur));
       $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_not_recur));
       $one_year_label = $year_month_label = array();
@@ -244,13 +215,13 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'withVerticalHint' => true,
       'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
       'withToolTip' => true,
-      'autoDateLabel' => true,
       'withLegend' => true,
     );
     $this->assign('chart_duration_sum', $chart);
 
     $sql = "SELECT t.referrer_type referrer_type FROM civicrm_track t INNER JOIN civicrm_contribution_page cp ON t.page_id = cp.id WHERE t.page_type = 'civicrm_contribution_page' AND cp.is_active = 1 AND t.visit_date >= %1 AND t.visit_date <= %2 GROUP BY referrer_type";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
+    $duration_track = array();
     $track_label = array();
     while($dao->fetch()){
       $duration_track[] = array_fill(0, count($this->duration_array), 0);
@@ -290,7 +261,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'withToolTip' => true,
       'withVerticalHint' => true,
       'legends' => json_encode($track_label),
-      'autoDateLabel' => true,
       'stackBars' => true,
       'withLegend' => true,
     );
@@ -359,29 +329,31 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $this->assign('duration_sum_growth', number_format($duration_sum_growth * 100, 2));
     }
 
-    // block recur
-    $components = CRM_Core_Component::getEnabledComponents();
-    $path = get_class($this);
-    $summary = CRM_Core_BAO_Cache::getItem('Contribution Chart', $path.'_currentRunningSummary', $components['CiviContribute']->componentID);
-    $summaryTime = CRM_Core_BAO_Cache::getItem('Contribution Chart', $path.'_currentRunningSummary_time', $components['CiviContribute']->componentID);
-    if(empty($summary) || time() - $summaryTime > 86400 || $_GET['update']) {
-      $summary = CRM_Contribute_BAO_ContributionRecur::currentRunningSummary();
-      CRM_Core_BAO_Cache::setItem($summary, 'Contribution Chart', $path.'_currentRunningSummary', $components['CiviContribute']->componentID);
-      $summaryTime = CRM_REQUEST_TIME;
-      CRM_Core_BAO_Cache::setItem($summaryTime, 'Contribution Chart', $path.'_currentRunningSummary_time', $components['CiviContribute']->componentID);
-      if ($_GET['update']) {
-        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute', 'reset=1'));
+    if(empty($this->is_custom_date)){
+      // block recur
+      $components = CRM_Core_Component::getEnabledComponents();
+      $path = get_class($this);
+      $summary = CRM_Core_BAO_Cache::getItem('Contribution Chart', $path.'_currentRunningSummary', $components['CiviContribute']->componentID);
+      $summaryTime = CRM_Core_BAO_Cache::getItem('Contribution Chart', $path.'_currentRunningSummary_time', $components['CiviContribute']->componentID);
+      if(empty($summary) || time() - $summaryTime > 86400 || $_GET['update']) {
+        $summary = CRM_Contribute_BAO_ContributionRecur::currentRunningSummary();
+        CRM_Core_BAO_Cache::setItem($summary, 'Contribution Chart', $path.'_currentRunningSummary', $components['CiviContribute']->componentID);
+        $summaryTime = CRM_REQUEST_TIME;
+        CRM_Core_BAO_Cache::setItem($summaryTime, 'Contribution Chart', $path.'_currentRunningSummary_time', $components['CiviContribute']->componentID);
+        if ($_GET['update']) {
+          CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute', 'reset=1'));
+        }
       }
-    }
-    if(!empty($summary)){
-      $this->assign('summaryRecur', $summary);
-      $this->assign('summaryTime', date('n/j H:i', $summaryTime));
-      $this->assign('frequencyUnit', 'month');
-      $chart = CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
-      $chart['withToolTip'] = true;
-      $chart['seriesUnitPosition'] = 'prefix';
-      $chart['seriesUnit'] = '$';
-      $this->assign('chartRecur', $chart);
+      if(!empty($summary)){
+        $this->assign('summaryRecur', $summary);
+        $this->assign('summaryTime', date('n/j H:i', $summaryTime));
+        $this->assign('frequencyUnit', 'month');
+        $chart = CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
+        $chart['withToolTip'] = true;
+        $chart['seriesUnitPosition'] = 'prefix';
+        $chart['seriesUnit'] = '$';
+        $this->assign('chartRecur', $chart);
+      }
     }
 
     // contribution_page status
