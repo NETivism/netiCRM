@@ -46152,7 +46152,7 @@ msgstr ""
 msgid "New Recurring Contribution"
 msgstr ""
 
-msgid "Contribution Amount by Flow Source"
+msgid "Contribution Amount by Traffic Source"
 msgstr ""
 
 msgid "Contribution Amount by Province"
@@ -46173,7 +46173,7 @@ msgid "There are %1 new contributions."
 msgstr ""
 
 #: CRM/common/ContributionPageStatusCard.tpl
-msgid "Flow Source"
+msgid "Traffic Source"
 msgstr ""
 
 msgid "Amount reached"
@@ -46233,4 +46233,43 @@ msgstr ""
 
 #: CRM/Contribute/Page/DashBoard.tpl
 msgid "We have released new dashboard page. Click here!!"
+msgstr ""
+
+msgid "Page Name"
+msgstr ""
+
+msgid "Visit Date"
+msgstr ""
+
+msgid "Visit State"
+msgstr ""
+
+msgid "Referrer Type"
+msgstr ""
+
+msgid "Referrer Network"
+msgstr ""
+
+msgid "Referrer URL"
+msgstr ""
+
+msgid "Landing Page"
+msgstr ""
+
+msgid "Referenced Record"
+msgstr ""
+
+msgid "Information Screen"
+msgstr ""
+
+msgid "Form Screen"
+msgstr ""
+
+msgid "Payment Screen"
+msgstr ""
+
+msgid "Thank You Screen"
+msgstr ""
+
+msgid "unknown"
 msgstr ""
