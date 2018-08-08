@@ -34,7 +34,7 @@ var vars = {
     {title:'Relationship Types', url:'civicrm/admin/reltype?reset=1'},
     {title:'CiviCRM Profile', url:'civicrm/admin/uf/group?reset=1'},
     {title:'Custom Data', url:'civicrm/admin/custom/group?reset=1'},
-    {title:'CiviContribute', url:'civicrm/contribute?reset=1'},
+    {title:'CiviContribute Dashboard', url:'civicrm/contribute?reset=1'},
     {title:'Payment Instrument Options', url:'civicrm/admin/options/payment_instrument?group=payment_instrument&reset=1'},
     {title:'New Contribution', url:'civicrm/contribute/add?reset=1&action=add&context=standalone'},
     {title:'Find Contributions', url:'civicrm/contribute/search?reset=1'},
