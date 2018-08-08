@@ -242,6 +242,30 @@
     'seriesUnit' => '$ ',
     'seriesUnitPosition'=> 'prefix',
     'legends' => json_encode(array('Money A', 'Money B', 'Money C')),
+    'autoDateLabel' => true,
+    'withLegend' => true,
+    'withToolTip' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
+
+<div class="chartist-test">
+{php}
+  $chart = array(
+    'title' => 'Bar Chart（圖例）',
+    'id' => 'chart-bar-with-legend',
+    'classes' => array('ct-chart-bar'),
+    'selector' => '#chart-bar-with-legend',
+    'type' => 'Bar',
+    'labels' => json_encode(array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')),
+    'series' => json_encode(array(array(12, 9, 7, 8, 5), array(2, 1, 3.5, 7, 3), array(1, 3, 4, 5, 6))),
+    'seriesUnit' => '$ ',
+    'seriesUnitPosition'=> 'prefix',
+    'legends' => json_encode(array('Money A', 'Money B', 'Money C')),
+    'autoDateLabel' => true,
+    'seriesUnit' => '$',
     'withLegend' => true,
     'withToolTip' => true
   );

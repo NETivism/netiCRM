@@ -279,10 +279,6 @@ if (!$crmChartistAdded) {
   }
 
   if (withLegend) {
-    if (chartType == 'Line' || chartType == 'Bar') {
-      renderSeriesWithLabels();
-    }
-
     if (chartType == 'Pie') {
       removeEmptySeriesAndLabels();
     }
@@ -440,7 +436,7 @@ if (!$crmChartistAdded) {
 
 {if $chartist.withLegend}{literal}
   cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-legend');
-  var legend = Chartist.plugins.legend();
+  var legend = chartType == 'Pie' ? Chartist.plugins.legend() : Chartist.plugins.legend({legendNames: chartLegends});
   options.plugins.push(legend);
 
   if (chartType == 'Pie') {
