@@ -83,6 +83,13 @@
 
 {literal}
 <style type="text/css">
+  .page-civicrm-contribute .page-title:after {
+    content: "beta";
+    vertical-align: top;
+    padding-left: 5px;
+    font-size: 13px;
+    color: #f44336;
+  }
   .bigger{
     font-size: 2em;
   }

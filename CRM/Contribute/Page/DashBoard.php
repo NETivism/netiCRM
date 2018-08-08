@@ -50,7 +50,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
    */
   function preProcess() {
     $title = ts('CiviContribute Dashboard');
-    $title .= "<span class='red'>Beta</span>";
     CRM_Utils_System::setTitle($title);
 
     $this->getDate();
