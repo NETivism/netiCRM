@@ -32,45 +32,37 @@ function getHostNameFromUrl(url) {
 }
 
 function referrerInfo() {
-  if (typeof navigator.doNotTrack === 'object') {
-    var doNotTrack = navigator.doNotTrack;
+  var dateTime = Date.now();
+  var timestamp = Math.floor(dateTime / 1000);
+  var referrerInfo = sessionStorage.getItem('referrerInfo');
+  if (referrerInfo) {
+    referrerInfo = JSON.parse(referrerInfo);
+  }
+
+  // if someone visit this site over 30mins, we need to get referrer again
+  if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && referrerInfo.timestamp - timestamp < 1800) {
+    trackVisit(referrerInfo);
   }
   else {
-    var doNotTrack = null;
-  }
-  if (!doNotTrack) {
-    var dateTime = Date.now();
-    var timestamp = Math.floor(dateTime / 1000);
-    var referrerInfo = sessionStorage.getItem('referrerInfo');
-    if (referrerInfo) {
-      referrerInfo = JSON.parse(referrerInfo);
-    }
-
-    // if someone visit this site over 30mins, we need to get referrer again
-    if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && referrerInfo.timestamp - timestamp < 1800) {
-      trackVisit(referrerInfo);
-    }
-    else {
-      var url = window.location.href;
-      var referrer = document.referrer;
-      inbound.referrer.parse(url, referrer, function (err, visitInfo) {
-        // set to sessionStorage because we need to make sure same browser different session have diffrent result
-        visitInfo.landing = location.href.replace(location.origin, '');
-        visitInfo.timestamp = timestamp;
-        if (referrerInfo && typeof referrerInfo.referrer !== 'undefined') {
-          if (visitInfo.referrer.type !== 'direct' && visitInfo.referrer.type !== 'internal') {
-            sessionStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
-          }
-          else {
-            visitInfo = referrerInfo;
-          }
-        }
-        else {
+    var url = window.location.href;
+    var referrer = document.referrer;
+    inbound.referrer.parse(url, referrer, function (err, visitInfo) {
+      // set to sessionStorage because we need to make sure same browser different session have diffrent result
+      visitInfo.landing = location.href.replace(location.origin, '');
+      visitInfo.timestamp = timestamp;
+      if (referrerInfo && typeof referrerInfo.referrer !== 'undefined') {
+        if (visitInfo.referrer.type !== 'direct' && visitInfo.referrer.type !== 'internal') {
           sessionStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
         }
-        trackVisit(visitInfo);
-      });
-    }
+        else {
+          visitInfo = referrerInfo;
+        }
+      }
+      else {
+        sessionStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
+      }
+      trackVisit(visitInfo);
+    });
   }
 }
 
@@ -149,6 +141,11 @@ function trackVisit(visitInfo) {
       for(var utmKey in visitInfo.campaign) {
         object[utmKey] = visitInfo.campaign[utmKey];
       }
+    }
+    if (typeof navigator.doNotTrack === 'object' && !navigator.doNotTrack) {
+      object['type'] = 'unknown';
+      object['referrer_network'] = '';
+      object['referrer_url'] = '';
     }
 
     $.ajax({
