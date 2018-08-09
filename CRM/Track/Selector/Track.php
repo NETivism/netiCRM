@@ -330,6 +330,9 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       $args[6] = array($this->_visitDateStart, 'String');
     }
     if ($this->_visitDateEnd) {
+      if (strlen($this->_visitDateEnd) <= 10) {
+        $this->_visitDateEnd .= ' 23:59:59';
+      }
       $where[] = "visit_date <= %7";
       $args[7] = array($this->_visitDateEnd, 'String');
     }

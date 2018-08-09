@@ -24,6 +24,12 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'referrerNetwork' => CRM_Utils_Request::retrieve('rnetwork', 'String', $null),
       'entityId' => CRM_Utils_Request::retrieve('entity_id', 'Positive', $null),
     );
+    if ($start = CRM_Utils_Request::retrieve('start', 'Date', $null)) {
+      $params['visitDateStart'] = $start;
+    }
+    if ($end = CRM_Utils_Request::retrieve('end', 'Date', $null)) {
+      $params['visitDateEnd'] = $end;
+    }
     if ($params['pageType'] == 'civicrm_contribution_page' && $params['pageId']) {
       // breadcrumb starter
       $breadcrumbs = array(
@@ -95,18 +101,15 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $start = !empty($selectorParams['visitDateStart']) ? $selectorParams['visitDateStart'] : key($dates);
     end($dates);
     $end = !empty($selectorParams['visitDateEnd']) ? $selectorParams['visitDateEnd'] : key($dates);
-    if($start !== $end) {
-      $period = new DatePeriod(
-        new DateTime($start),
-        new DateInterval('P1D'),
-        new DateTime($end)
-      );
-      foreach ($period as $key => $val) {
-        $label[] = $val->format('Y-m-d');
-      }
-    }
-    else {
-      $label = array($start);
+    $endD = new DateTime($end);
+    $endD->modify('+1 day');
+    $period = new DatePeriod(
+      new DateTime($start),
+      new DateInterval('P1D'),
+      $endD
+    );
+    foreach ($period as $key => $val) {
+      $label[] = $val->format('Y-m-d');
     }
      
     // prepare series and label for chartist
