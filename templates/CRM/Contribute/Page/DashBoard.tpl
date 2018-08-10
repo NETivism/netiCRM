@@ -371,7 +371,7 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount by Traffic Source{/ts}</h3>
+      <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Page Visits by Traffic Source{/ts}</h3>
       <div>
         <div class="chartist">
         {include file="CRM/common/chartist.tpl" chartist=$chart_duration_track}
