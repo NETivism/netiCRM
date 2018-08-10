@@ -290,6 +290,20 @@ class CRM_Dedupe_Finder {
         }
       }
     }
+
+    // #21211, we should prepare sort_name, display_name before saving to db
+    // to support sort_name / display_name as dedupe rule
+    if (!empty($params['civicrm_contact']) && $ctype == 'Individual') {
+      $contact = new stdClass(); // null class for pass into
+      $formatParams = array('contact_type' => 'Individual');
+      foreach($params['civicrm_contact'] as $field => $value) {
+        $contact->$field = $value;
+        $formatParams[$field] = $value;
+      }
+      CRM_Contact_BAO_Individual::format($formatParams, $contact);
+      $params['civicrm_contact']['display_name'] = $contact->display_name;
+      $params['civicrm_contact']['sort_name'] = $contact->sort_name;
+    }
     return $params;
   }
 }
