@@ -6,15 +6,18 @@
 </div>
 {/if}
 {if $chart_track}
-<div class="col-xs-12">
-  <div class="box mdl-shadow--2dp">
-    <div class="chartist">
-      {include file="CRM/common/chartist.tpl" chartist=$chart_track}
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box mdl-shadow--2dp">
+      <div class="box-content">
+        {include file="CRM/common/chartist.tpl" chartist=$chart_track}
+      </div>
     </div>
   </div>
 </div>
 {/if}
 
+<div class="row">
 {include file="CRM/common/pager.tpl" location="top"}
 {if $rows }
 {include file="CRM/common/jsortable.tpl"}
@@ -53,6 +56,7 @@
 
 
 {include file="CRM/common/pager.tpl" location="bottom"}
+</div>
 
 {if $pager and ( $pager->_totalPages > 1 )}
 {literal}

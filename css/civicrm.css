@@ -1361,7 +1361,7 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 .crm-search-tasks,
 .crm-tasks {
     margin-bottom:4px;
-    padding:4px;
+    padding: 5px 10px;
 }
 .crm-search-results {
     margin-bottom:4px;
@@ -1387,19 +1387,23 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 
 .crm-container .crm-pager {
     border:none;
-    background-color:#F5F6F1;
+    background-color:#ececec;
     position: relative;
-    height: 35px;
-    padding-top: 5px;
-    margin-bottom: 4px
+    padding: 3px 5px;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.crm-container .crm-pager-per-num {
+    text-align: right;
 }
 .crm-pager input {
     text-align: center;
+    margin: 0 3px;
 }
 .crm-pager-nav {
     display:block;
-    margin-top:7px;
-    padding-left:5px;
 }
 
 .crm-container .section-hidden {
@@ -3398,7 +3402,7 @@ div#civicrm-dashboard form {
 .chartist-chart .chartist-tooltip:after {
   content: "";
   position: absolute;
-  top: 100%;
+  top: 99%;
   left: 50%;
   width: 0;
   height: 0;
@@ -3528,7 +3532,7 @@ table.crm-info-panel td.label {
 
 .crm-search-tasks,
 .crm-tasks {
-    background-color:#F0F0E8;
+    background-color:#ececec;
     color:#52534D;
 }
 
@@ -3581,11 +3585,9 @@ div.m ul#civicrm-menu,
 .crm-container .crm-content-block,
 #full-screen-header,
 .crm-tooltip,
-.crm-container .crm-pager,
 .crm-container form .section-hidden-border,
 .crm-container #search-status,
 .crm-container .crm-form-block,
-.crm-container .crm-search-tasks,
 .crm-container .crm-tasks,
 .crm-container div.form-item,
 .crm-container div.messages,
