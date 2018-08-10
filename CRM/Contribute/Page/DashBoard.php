@@ -260,7 +260,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'type' => 'Bar',
       'labels' => json_encode($this->duration_array),
       'series' => json_encode($durationTrack),
-      'seriesUnit' => ts("rows"),
+      'seriesUnit' => ts("People"),
       'withToolTip' => true,
       'withVerticalHint' => true,
       'legends' => json_encode(array_values($referrerTypesIdx)),

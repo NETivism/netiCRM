@@ -134,7 +134,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'type' => 'Bar',
       'labels' => json_encode($label),
       'series' => json_encode($data),
-      'seriesUnit' => ts("rows"),
+      'seriesUnit' => ts("People"),
       'withToolTip' => true,
       'withVerticalHint' => true,
       'legends' => json_encode($legend),
