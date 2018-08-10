@@ -5191,7 +5191,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container #SearchContribution .crm-submit-buttons .form-submit {
   margin: 0;
 }
-.crm-container form[action="/civicrm/contribute/transact"] .crm-submit-buttons {
+.crm-container form[action*="/civicrm/contribute/transact"] .crm-submit-buttons {
   text-align: right;
 }
 .crm-container .same-as-wrapper,
@@ -5260,7 +5260,7 @@ tbody.scrollContent tr.alternateRow {
   padding: 12px 26px;
   font-size: 1.375rem;
 }
-.crm-container form[action="/civicrm/event/register"] .crm-submit-buttons {
+.crm-container form[action*="/civicrm/event/register"] .crm-submit-buttons {
   text-align: right;
 }
 .crm-container .messages.msg-event-full::before {
@@ -5287,7 +5287,7 @@ tbody.scrollContent tr.alternateRow {
 }
 
 /* Profiles Page */
-.crm-container form[action="/civicrm/profile/create"] .crm-submit-buttons {
+.crm-container form[action*="/civicrm/profile/create"] .crm-submit-buttons {
   text-align: center;
 }
 .crm-container .crm-profile-cancel {
