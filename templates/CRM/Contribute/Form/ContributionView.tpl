@@ -132,6 +132,13 @@
 	    <td class="label">{ts}Paid By{/ts}</td>
     	<td>{$payment_instrument}</td>
 	</tr>
+
+  {if $has_expire_date}
+  <tr>
+      <td class="label">{ts}Expire Date{/ts}</td>
+      <td>{$expire_date|crmDate}</td>
+  </tr>
+  {/if}
 	
 	{if $payment_instrument eq 'Check'}
         <tr>

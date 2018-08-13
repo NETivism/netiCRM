@@ -4325,7 +4325,8 @@ CREATE TABLE civicrm_contribution (
      honor_type_id int unsigned    COMMENT 'Implicit FK to civicrm_option_value.',
      address_id int unsigned    COMMENT 'Conditional foreign key to civicrm_address.id. We insert an address record for each contribution when we have associated billing name and address data.',
      check_number varchar(255)    ,
-     receipt_id varchar(255)     
+     receipt_id varchar(255)    ,
+     expire_date datetime    COMMENT 'when is payment expiration' 
 ,
     PRIMARY KEY ( id )
  
