@@ -46231,10 +46231,6 @@ msgstr ""
 msgid "Offline registration (by %1)"
 msgstr ""
 
-#: CRM/Contribute/Page/DashBoard.tpl
-msgid "We have released new dashboard page. Click here!!"
-msgstr ""
-
 msgid "Page Name"
 msgstr ""
 
@@ -46272,4 +46268,7 @@ msgid "Thank You Screen"
 msgstr ""
 
 msgid "unknown"
+msgstr ""
+
+msgid "Expire Date"
 msgstr ""

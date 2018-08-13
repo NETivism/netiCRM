@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-07 11:18+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-08-13 13:23+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46385,10 +46385,6 @@ msgstr "筆"
 msgid "Offline registration (by %1)"
 msgstr "(由 %1 手動報名)"
 
-#: CRM/Contribute/Page/DashBoard.tpl
-msgid "We have released new dashboard page. Click here!!"
-msgstr "我們有新的報表頁面了。點我前往！！"
-
 msgid "Page Name"
 msgstr "頁面名稱"
 
@@ -46427,3 +46423,6 @@ msgstr "感謝頁面"
 
 msgid "unknown"
 msgstr "未知"
+
+msgid "Expire Date"
+msgstr "到期日期"
