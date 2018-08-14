@@ -26,30 +26,19 @@
 (function($){
 
 $.fn.crmaccordions = function() {
-  $(".crm-accordion-wrapper").each(function() {
+  $(".crm-container").on('click', ".crm-accordion-header", function(e){
     var $this = $(this);
-    
     if (!$this.hasClass("crm-accordion-processed")) {
-      $this.on("click mouseenter mouseleave", ".crm-accordion-header", function(e) {
-        var $header = $(this);
-        var $wrapper = $header.parent();
+      var $header = $(this);
+      var $wrapper = $header.parent();
 
-        switch (e.type) {
-          case "click":
-              $wrapper.toggleClass("crm-accordion-open");
-              $wrapper.toggleClass("crm-accordion-closed");
-              return false; 
-            break;
-
-          case "mouseenter":
-            $header.addClass("crm-accordion-header-hover");
-            break;
-
-          case "mouseleave":
-            $header.removeClass("crm-accordion-header-hover");
-            break;
-        }
-      });
+      switch (e.type) {
+        case "click":
+            $wrapper.toggleClass("crm-accordion-open");
+            $wrapper.toggleClass("crm-accordion-closed");
+            return false; 
+          break;
+      }
     
       $this.addClass("crm-accordion-processed");
     }

@@ -3496,7 +3496,7 @@ table.crm-info-panel td.label {
 .crm-form-block {
     color:#3E3E3E;
 }
-.crm-accordion-header-hover {
+.crm-accordion-header:hover {
     background: #575757;
     color:#FFF;
 }

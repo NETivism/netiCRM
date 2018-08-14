@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-13 13:23+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-08-14 05:32+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27531,7 +27531,7 @@ msgstr "(不允許顯示名稱)"
 
 #: templates/CRM/Contact/Page/View/GroupContact.tpl
 msgid "This contact does not currently belong to any groups."
-msgstr "此聯絡人現不屬於任何群組"
+msgstr "此聯絡人現不屬於任何群組，或是僅在智慧群組"
 
 #: templates/CRM/Contact/Page/View/GroupContact.tpl
 msgid "Current Groups"
