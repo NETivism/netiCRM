@@ -57,6 +57,14 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     require_once 'CRM/Contribute/BAO/Contribution.php';
     CRM_Contribute_BAO_Contribution::getValues($params, $values, $ids);
 
+    $instrument_options = CRM_Core_OptionGroup::values('payment_instrument', FALSE);
+    $no_expire_date = array(ts('Convenient Store'), ts('Convenient Store code'), ts('ATM'));
+    $instrument = $instrument_options[$values['payment_instrument_id']];
+    if($values['payment_instrument_id'] != 1 && $instrument != 'Web ATM'){
+      $this->assign('has_expire_date', TRUE);
+      $this->assign('expire_date', $values['expire_date']);
+    }
+
     $softParams = array('contribution_id' => $values['contribution_id']);
     if ($softContribution = CRM_Contribute_BAO_Contribution::getSoftContribution($softParams, TRUE)) {
       $values = array_merge($values, $softContribution);

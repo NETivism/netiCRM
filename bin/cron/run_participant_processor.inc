@@ -75,19 +75,16 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                 
                 $expirationTime = CRM_Utils_Array::value( 'expiration_time', $values );
                 if ( $expirationTime && array_key_exists( $values['status_id'], $pendingStatuses ) ) { 
-                    
-                    //get the expiration and registration pending time.
-                    $baseTime = strtotime($values['register_date']);
-                    $plusDay = ceil($expirationTime/24);
-                    $expirationSeconds = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
-
-                    // for #22026, do not expire which already receive billing invoice
-                    $sql = "SELECT c.payment_instrument_id FROM civicrm_participant_payment p INNER JOIN civicrm_contribution c ON c.id = p.contribution_id WHERE p.participant_id = %1 AND c.payment_processor_id IS NOT NULL";
-                    $instrument_id = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($participantId, 'Positive')));
-                    if (!empty($instrument_id) && $instrument_id > 1 && $values['status_id'] == $pendingPayLater) {
-                      continue;
+                    // By #22714, Only check expire_date, ignore checking instrument.
+                    $sql = "SELECT c.expire_date FROM civicrm_participant_payment p INNER JOIN civicrm_contribution c ON c.id = p.contribution_id WHERE p.participant_id = %1 AND c.payment_processor_id IS NOT NULL";
+                    $expirationDay = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($participantId, 'Positive')));
+                    if(empty($expirationDay)){
+                        //get the expiration and registration pending time.
+                        $baseTime = strtotime($values['register_date']);
+                        $plusDay = ceil($expirationTime/24);
+                        $expirationSeconds = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
+                        $expirationDay = date('Y-m-d', $expirationSeconds + $paymentOffsetSeconds).' 23:59:59';
                     }
-                    $expirationDay = date('Y-m-d', $expirationSeconds + $paymentOffsetSeconds).' 23:59:59';
                     
                     // expired registration since registration cross allow confirmation time.
                     if ( strtotime($expirationDay) < time()) {

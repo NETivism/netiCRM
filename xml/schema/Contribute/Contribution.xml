@@ -395,4 +395,13 @@
     <fieldName>receipt_id</fieldName>
     <add>3.3</add>
   </index>
+  <field> 
+      <name>expire_date</name> 
+      <type>datetime</type> 
+      <import>true</import>
+      <headerPattern>/expire(.?date)?/i</headerPattern>
+      <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
+      <comment>when is payment expiration</comment> 
+      <add>3.3</add> 
+  </field> 
 </table>
