@@ -371,7 +371,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       foreach ($children as $cid) {
         $cs = new CRM_Contribute_DAO_ContributionSoft();
         $cs->contribution_id = $cid;
-        if($cs->find(TRUE)){
+        if(!$cs->find(TRUE)){
           $cs = clone $parent_soft;
           unset($cs->id);
           $cs->contribution_id = $cid;
