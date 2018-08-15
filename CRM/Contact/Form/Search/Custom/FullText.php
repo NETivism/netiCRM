@@ -191,7 +191,7 @@ CREATE TEMPORARY TABLE {$this->_tableName} (
 
     $sql .= "
   PRIMARY KEY ( id )
-) ENGINE=HEAP DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci
+) ENGINE=HEAP DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 ";
     CRM_Core_DAO::executeQuery($sql);
 
@@ -203,7 +203,7 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
   
   UNIQUE INDEX unique_entity_id ( entity_id ),
   PRIMARY KEY ( id )
-) ENGINE=HEAP DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci
+) ENGINE=HEAP DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 ";
     CRM_Core_DAO::executeQuery($sql);
   }

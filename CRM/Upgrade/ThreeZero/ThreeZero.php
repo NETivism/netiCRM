@@ -166,7 +166,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
     //lets insert column in civicrm_aprticipant table
     $query = "
         ALTER TABLE `civicrm_participant` 
-            ADD `fee_currency` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL COMMENT '3 character string, value derived from config setting.' AFTER `discount_id`";
+            ADD `fee_currency` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '3 character string, value derived from config setting.' AFTER `discount_id`";
     CRM_Core_DAO::executeQuery($query);
 
     //get currency from contribution table if exists/default

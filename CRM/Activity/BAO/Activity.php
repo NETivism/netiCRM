@@ -686,7 +686,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
 
     $sql .= "
           PRIMARY KEY ( activity_id )
-        ) ENGINE=HEAP DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci
+        ) ENGINE=HEAP DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
         ";
 
     CRM_Core_DAO::executeQuery($sql);
@@ -729,7 +729,7 @@ as tbl ";
     $activityTargetContactTempTable = "civicrm_temp_target_contact_{$randomNum}";
     $query = "CREATE TEMPORARY TABLE {$activityTargetContactTempTable} ( 
                 activity_id int unsigned, target_contact_id int unsigned, target_contact_name varchar(255) )
-                ENGINE=MYISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+                ENGINE=MYISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
 
     CRM_Core_DAO::executeQuery($query);
 
@@ -750,7 +750,7 @@ as tbl ";
     $activityAssigneetContactTempTable = "civicrm_temp_assignee_contact_{$randomNum}";
     $query = "CREATE TEMPORARY TABLE {$activityAssigneetContactTempTable} ( 
                 activity_id int unsigned, assignee_contact_id int unsigned, assignee_contact_name varchar(255) )
-                ENGINE=MYISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+                ENGINE=MYISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
 
     CRM_Core_DAO::executeQuery($query);
 

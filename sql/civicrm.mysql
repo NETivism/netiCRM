@@ -215,7 +215,7 @@ CREATE TABLE civicrm_address_format (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -235,7 +235,7 @@ CREATE TABLE civicrm_currency (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -263,7 +263,7 @@ CREATE TABLE civicrm_domain (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -287,7 +287,7 @@ CREATE TABLE civicrm_file (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -305,7 +305,7 @@ CREATE TABLE civicrm_financial_account (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -337,7 +337,7 @@ CREATE TABLE civicrm_financial_trxn (
 ,      
      CONSTRAINT FK_civicrm_financial_trxn_from_account_id FOREIGN KEY (from_account_id) REFERENCES civicrm_financial_account(id) ,      
      CONSTRAINT FK_civicrm_financial_trxn_to_account_id FOREIGN KEY (to_account_id) REFERENCES civicrm_financial_account(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -363,7 +363,7 @@ CREATE TABLE civicrm_location_type (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -394,7 +394,7 @@ CREATE TABLE civicrm_mail_settings (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -418,7 +418,7 @@ CREATE TABLE civicrm_mapping (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -445,7 +445,7 @@ CREATE TABLE civicrm_msg_template (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -475,7 +475,7 @@ CREATE TABLE civicrm_navigation (
 ,      
      CONSTRAINT FK_civicrm_navigation_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ,      
      CONSTRAINT FK_civicrm_navigation_parent_id FOREIGN KEY (parent_id) REFERENCES civicrm_navigation(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -499,7 +499,7 @@ CREATE TABLE civicrm_option_group (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -540,7 +540,7 @@ CREATE TABLE civicrm_payment_processor (
   
 ,      
      CONSTRAINT FK_civicrm_payment_processor_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -580,7 +580,7 @@ CREATE TABLE civicrm_payment_processor_type (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -607,7 +607,7 @@ CREATE TABLE civicrm_preferences_date (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -636,7 +636,7 @@ CREATE TABLE civicrm_tag (
   
 ,      
      CONSTRAINT FK_civicrm_tag_parent_id FOREIGN KEY (parent_id) REFERENCES civicrm_tag(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -720,7 +720,7 @@ CREATE TABLE civicrm_worldregion (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -739,7 +739,7 @@ namespace.'
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -772,7 +772,7 @@ CREATE TABLE civicrm_discount (
   
 ,      
      CONSTRAINT FK_civicrm_discount_option_group_id FOREIGN KEY (option_group_id) REFERENCES civicrm_option_group(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -794,7 +794,7 @@ CREATE TABLE civicrm_persistent (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -845,7 +845,7 @@ CREATE TABLE civicrm_acl (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -874,7 +874,7 @@ CREATE TABLE civicrm_acl_entity_role (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -986,7 +986,7 @@ CREATE TABLE civicrm_contact (
 ,      
      CONSTRAINT FK_civicrm_contact_primary_contact_id FOREIGN KEY (primary_contact_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contact_employer_id FOREIGN KEY (employer_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1014,7 +1014,7 @@ CREATE TABLE civicrm_acl_contact_cache (
 ,      
      CONSTRAINT FK_civicrm_acl_contact_cache_user_id FOREIGN KEY (user_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_acl_contact_cache_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1049,7 +1049,7 @@ CREATE TABLE civicrm_relationship_type (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1074,7 +1074,7 @@ CREATE TABLE civicrm_saved_search (
  
 ,      
      CONSTRAINT FK_civicrm_saved_search_mapping_id FOREIGN KEY (mapping_id) REFERENCES civicrm_mapping(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1103,7 +1103,7 @@ CREATE TABLE civicrm_contact_type (
   
 ,      
      CONSTRAINT FK_civicrm_contact_type_parent_id FOREIGN KEY (parent_id) REFERENCES civicrm_contact_type(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1128,7 +1128,7 @@ CREATE TABLE civicrm_mailing_component (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1184,7 +1184,7 @@ CREATE TABLE civicrm_mailing (
      CONSTRAINT FK_civicrm_mailing_msg_template_id FOREIGN KEY (msg_template_id) REFERENCES civicrm_msg_template(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_mailing_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_mailing_scheduled_id FOREIGN KEY (scheduled_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1209,7 +1209,7 @@ CREATE TABLE civicrm_mailing_group (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_group_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1230,7 +1230,7 @@ CREATE TABLE civicrm_mailing_trackable_url (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_trackable_url_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1260,7 +1260,7 @@ CREATE TABLE civicrm_mailing_job (
 ,      
      CONSTRAINT FK_civicrm_mailing_job_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_job_parent_id FOREIGN KEY (parent_id) REFERENCES civicrm_mailing_job(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1281,7 +1281,7 @@ CREATE TABLE civicrm_mailing_bounce_type (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1302,7 +1302,7 @@ CREATE TABLE civicrm_mailing_bounce_pattern (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_bounce_pattern_bounce_type_id FOREIGN KEY (bounce_type_id) REFERENCES civicrm_mailing_bounce_type(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1327,7 +1327,7 @@ CREATE TABLE civicrm_mailing_spool (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_spool_job_id FOREIGN KEY (job_id) REFERENCES civicrm_mailing_job(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1374,7 +1374,7 @@ CREATE TABLE civicrm_contribution_recur (
   
 ,      
      CONSTRAINT FK_civicrm_contribution_recur_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1401,7 +1401,7 @@ CREATE TABLE civicrm_contribution_type (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1427,7 +1427,7 @@ CREATE TABLE civicrm_premiums (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1463,7 +1463,7 @@ CREATE TABLE civicrm_product (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1486,7 +1486,7 @@ CREATE TABLE civicrm_premiums_product (
 ,      
      CONSTRAINT FK_civicrm_premiums_product_premiums_id FOREIGN KEY (premiums_id) REFERENCES civicrm_premiums(id) ,      
      CONSTRAINT FK_civicrm_premiums_product_product_id FOREIGN KEY (product_id) REFERENCES civicrm_product(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1515,7 +1515,7 @@ CREATE TABLE civicrm_sms_provider (
  
 ,      
      CONSTRAINT FK_civicrm_sms_provider_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1547,7 +1547,7 @@ CREATE TABLE civicrm_project (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1586,7 +1586,7 @@ CREATE TABLE civicrm_task (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1624,7 +1624,7 @@ CREATE TABLE civicrm_task_status (
   
 ,      
      CONSTRAINT FK_civicrm_task_status_task_id FOREIGN KEY (task_id) REFERENCES civicrm_task(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1669,7 +1669,7 @@ CREATE TABLE civicrm_membership_type (
      CONSTRAINT FK_civicrm_membership_type_member_of_contact_id FOREIGN KEY (member_of_contact_id) REFERENCES civicrm_contact(id) ON DELETE RESTRICT,      
      CONSTRAINT FK_civicrm_membership_type_contribution_type_id FOREIGN KEY (contribution_type_id) REFERENCES civicrm_contribution_type(id) ,      
      CONSTRAINT FK_civicrm_membership_type_renewal_msg_id FOREIGN KEY (renewal_msg_id) REFERENCES civicrm_msg_template(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1701,7 +1701,7 @@ CREATE TABLE civicrm_membership_status (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1745,7 +1745,7 @@ CREATE TABLE civicrm_campaign (
      CONSTRAINT FK_civicrm_campaign_parent_id FOREIGN KEY (parent_id) REFERENCES civicrm_campaign(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_campaign_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_campaign_last_modified_id FOREIGN KEY (last_modified_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1768,7 +1768,7 @@ CREATE TABLE civicrm_campaign_group (
  
 ,      
      CONSTRAINT FK_civicrm_campaign_group_campaign_id FOREIGN KEY (campaign_id) REFERENCES civicrm_campaign(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1807,7 +1807,7 @@ CREATE TABLE civicrm_survey (
      CONSTRAINT FK_civicrm_survey_campaign_id FOREIGN KEY (campaign_id) REFERENCES civicrm_campaign(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_survey_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_survey_last_modified_id FOREIGN KEY (last_modified_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1833,7 +1833,7 @@ CREATE TABLE civicrm_participant_status_type (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1856,7 +1856,7 @@ CREATE TABLE civicrm_dedupe_rule_group (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1880,7 +1880,7 @@ CREATE TABLE civicrm_dedupe_rule (
  
 ,      
      CONSTRAINT FK_civicrm_dedupe_rule_dedupe_rule_group_id FOREIGN KEY (dedupe_rule_group_id) REFERENCES civicrm_dedupe_rule_group(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1906,7 +1906,7 @@ CREATE TABLE civicrm_dedupe_exception (
 ,      
      CONSTRAINT FK_civicrm_dedupe_exception_contact_id1 FOREIGN KEY (contact_id1) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_dedupe_exception_contact_id2 FOREIGN KEY (contact_id2) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1937,7 +1937,7 @@ CREATE TABLE civicrm_case (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -1963,7 +1963,7 @@ CREATE TABLE civicrm_case_contact (
 ,      
      CONSTRAINT FK_civicrm_case_contact_case_id FOREIGN KEY (case_id) REFERENCES civicrm_case(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_case_contact_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2001,7 +2001,7 @@ CREATE TABLE civicrm_grant (
   
 ,      
      CONSTRAINT FK_civicrm_grant_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2026,7 +2026,7 @@ CREATE TABLE civicrm_tell_friend (
  
  
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2052,7 +2052,7 @@ CREATE TABLE civicrm_openid_nonces (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2080,7 +2080,7 @@ CREATE TABLE civicrm_openid_associations (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2107,7 +2107,7 @@ CREATE TABLE civicrm_pledge_block (
   )
   
  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2142,7 +2142,7 @@ CREATE TABLE civicrm_report_instance (
 ,      
      CONSTRAINT FK_civicrm_report_instance_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ,      
      CONSTRAINT FK_civicrm_report_instance_navigation_id FOREIGN KEY (navigation_id) REFERENCES civicrm_navigation(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2173,7 +2173,7 @@ CREATE TABLE civicrm_price_set (
   
 ,      
      CONSTRAINT FK_civicrm_price_set_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2197,7 +2197,7 @@ CREATE TABLE civicrm_price_set_entity (
   
 ,      
      CONSTRAINT FK_civicrm_price_set_entity_price_set_id FOREIGN KEY (price_set_id) REFERENCES civicrm_price_set(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2224,7 +2224,7 @@ CREATE TABLE civicrm_batch (
 ,      
      CONSTRAINT FK_civicrm_batch_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_batch_modified_id FOREIGN KEY (modified_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2253,7 +2253,7 @@ CREATE TABLE civicrm_cache (
   
 ,      
      CONSTRAINT FK_civicrm_cache_component_id FOREIGN KEY (component_id) REFERENCES civicrm_component(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2283,7 +2283,7 @@ CREATE TABLE civicrm_country (
 ,      
      CONSTRAINT FK_civicrm_country_address_format_id FOREIGN KEY (address_format_id) REFERENCES civicrm_address_format(id) ,      
      CONSTRAINT FK_civicrm_country_region_id FOREIGN KEY (region_id) REFERENCES civicrm_worldregion(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2328,7 +2328,7 @@ CREATE TABLE civicrm_custom_group (
   
 ,      
      CONSTRAINT FK_civicrm_custom_group_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2378,7 +2378,7 @@ CREATE TABLE civicrm_custom_field (
   
 ,      
      CONSTRAINT FK_civicrm_custom_field_custom_group_id FOREIGN KEY (custom_group_id) REFERENCES civicrm_custom_group(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2410,7 +2410,7 @@ CREATE TABLE civicrm_dashboard (
  
 ,      
      CONSTRAINT FK_civicrm_dashboard_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2452,7 +2452,7 @@ CREATE TABLE civicrm_email (
   
 ,      
      CONSTRAINT FK_civicrm_email_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2483,7 +2483,7 @@ CREATE TABLE civicrm_entity_batch (
   
 ,      
      CONSTRAINT FK_civicrm_entity_batch_batch_id FOREIGN KEY (batch_id) REFERENCES civicrm_batch(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2514,7 +2514,7 @@ CREATE TABLE civicrm_entity_file (
   
 ,      
      CONSTRAINT FK_civicrm_entity_file_file_id FOREIGN KEY (file_id) REFERENCES civicrm_file(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2536,7 +2536,7 @@ CREATE TABLE civicrm_entity_financial_trxn (
  
 ,      
      CONSTRAINT FK_civicrm_entity_financial_trxn_financial_trxn_id FOREIGN KEY (financial_trxn_id) REFERENCES civicrm_financial_trxn(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2562,7 +2562,7 @@ CREATE TABLE civicrm_entity_tag (
   
 ,      
      CONSTRAINT FK_civicrm_entity_tag_tag_id FOREIGN KEY (tag_id) REFERENCES civicrm_tag(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2599,7 +2599,7 @@ CREATE TABLE civicrm_im (
   
 ,      
      CONSTRAINT FK_civicrm_im_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2627,7 +2627,7 @@ CREATE TABLE civicrm_log (
   
 ,      
      CONSTRAINT FK_civicrm_log_modified_id FOREIGN KEY (modified_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2661,7 +2661,7 @@ CREATE TABLE civicrm_mapping_field (
      CONSTRAINT FK_civicrm_mapping_field_mapping_id FOREIGN KEY (mapping_id) REFERENCES civicrm_mapping(id) ,      
      CONSTRAINT FK_civicrm_mapping_field_location_type_id FOREIGN KEY (location_type_id) REFERENCES civicrm_location_type(id) ,      
      CONSTRAINT FK_civicrm_mapping_field_relationship_type_id FOREIGN KEY (relationship_type_id) REFERENCES civicrm_relationship_type(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2705,7 +2705,7 @@ CREATE TABLE civicrm_menu (
 ,      
      CONSTRAINT FK_civicrm_menu_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ,      
      CONSTRAINT FK_civicrm_menu_component_id FOREIGN KEY (component_id) REFERENCES civicrm_component(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2735,7 +2735,7 @@ CREATE TABLE civicrm_note (
   
 ,      
      CONSTRAINT FK_civicrm_note_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2777,7 +2777,7 @@ CREATE TABLE civicrm_option_value (
      CONSTRAINT FK_civicrm_option_value_option_group_id FOREIGN KEY (option_group_id) REFERENCES civicrm_option_group(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_option_value_component_id FOREIGN KEY (component_id) REFERENCES civicrm_component(id) ,      
      CONSTRAINT FK_civicrm_option_value_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2815,7 +2815,7 @@ CREATE TABLE civicrm_phone (
   
 ,      
      CONSTRAINT FK_civicrm_phone_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2869,7 +2869,7 @@ CREATE TABLE civicrm_preferences (
 ,      
      CONSTRAINT FK_civicrm_preferences_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_preferences_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2893,7 +2893,7 @@ CREATE TABLE civicrm_state_province (
   
 ,      
      CONSTRAINT FK_civicrm_state_province_country_id FOREIGN KEY (country_id) REFERENCES civicrm_country(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2929,7 +2929,7 @@ CREATE TABLE civicrm_uf_match (
 ,      
      CONSTRAINT FK_civicrm_uf_match_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ,      
      CONSTRAINT FK_civicrm_uf_match_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2951,7 +2951,7 @@ CREATE TABLE civicrm_timezone (
  
 ,      
      CONSTRAINT FK_civicrm_timezone_country_id FOREIGN KEY (country_id) REFERENCES civicrm_country(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -2981,7 +2981,7 @@ CREATE TABLE civicrm_openid (
   
 ,      
      CONSTRAINT FK_civicrm_openid_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3006,7 +3006,7 @@ CREATE TABLE civicrm_website (
   
 ,      
      CONSTRAINT FK_civicrm_website_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3032,7 +3032,7 @@ CREATE TABLE civicrm_acl_cache (
 ,      
      CONSTRAINT FK_civicrm_acl_cache_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_acl_cache_acl_id FOREIGN KEY (acl_id) REFERENCES civicrm_acl(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3059,7 +3059,7 @@ CREATE TABLE civicrm_dashboard_contact (
 ,      
      CONSTRAINT FK_civicrm_dashboard_contact_dashboard_id FOREIGN KEY (dashboard_id) REFERENCES civicrm_dashboard(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_dashboard_contact_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3102,7 +3102,7 @@ CREATE TABLE civicrm_group (
   
 ,      
      CONSTRAINT FK_civicrm_group_saved_search_id FOREIGN KEY (saved_search_id) REFERENCES civicrm_saved_search(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3128,7 +3128,7 @@ CREATE TABLE civicrm_subscription_history (
 ,      
      CONSTRAINT FK_civicrm_subscription_history_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_subscription_history_group_id FOREIGN KEY (group_id) REFERENCES civicrm_group(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3154,7 +3154,7 @@ CREATE TABLE civicrm_group_contact_cache (
 ,      
      CONSTRAINT FK_civicrm_group_contact_cache_group_id FOREIGN KEY (group_id) REFERENCES civicrm_group(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_group_contact_cache_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3176,7 +3176,7 @@ CREATE TABLE civicrm_group_nesting (
 ,      
      CONSTRAINT FK_civicrm_group_nesting_child_group_id FOREIGN KEY (child_group_id) REFERENCES civicrm_group(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_group_nesting_parent_group_id FOREIGN KEY (parent_group_id) REFERENCES civicrm_group(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3202,7 +3202,7 @@ CREATE TABLE civicrm_group_organization (
 ,      
      CONSTRAINT FK_civicrm_group_organization_group_id FOREIGN KEY (group_id) REFERENCES civicrm_group(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_group_organization_organization_id FOREIGN KEY (organization_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3236,7 +3236,7 @@ CREATE TABLE civicrm_relationship (
      CONSTRAINT FK_civicrm_relationship_contact_id_b FOREIGN KEY (contact_id_b) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_relationship_relationship_type_id FOREIGN KEY (relationship_type_id) REFERENCES civicrm_relationship_type(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_relationship_case_id FOREIGN KEY (case_id) REFERENCES civicrm_case(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3260,7 +3260,7 @@ CREATE TABLE civicrm_mailing_recipients (
      CONSTRAINT FK_civicrm_mailing_recipients_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_recipients_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_recipients_email_id FOREIGN KEY (email_id) REFERENCES civicrm_email(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3285,7 +3285,7 @@ CREATE TABLE civicrm_mailing_event_queue (
      CONSTRAINT FK_civicrm_mailing_event_queue_job_id FOREIGN KEY (job_id) REFERENCES civicrm_mailing_job(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_event_queue_email_id FOREIGN KEY (email_id) REFERENCES civicrm_email(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_event_queue_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3308,7 +3308,7 @@ CREATE TABLE civicrm_mailing_event_bounce (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_event_bounce_event_queue_id FOREIGN KEY (event_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3329,7 +3329,7 @@ CREATE TABLE civicrm_mailing_event_delivered (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_event_delivered_event_queue_id FOREIGN KEY (event_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3352,7 +3352,7 @@ CREATE TABLE civicrm_mailing_event_forward (
 ,      
      CONSTRAINT FK_civicrm_mailing_event_forward_event_queue_id FOREIGN KEY (event_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_event_forward_dest_queue_id FOREIGN KEY (dest_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3373,7 +3373,7 @@ CREATE TABLE civicrm_mailing_event_opened (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_event_opened_event_queue_id FOREIGN KEY (event_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3394,7 +3394,7 @@ CREATE TABLE civicrm_mailing_event_reply (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_event_reply_event_queue_id FOREIGN KEY (event_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3418,7 +3418,7 @@ CREATE TABLE civicrm_mailing_event_subscribe (
 ,      
      CONSTRAINT FK_civicrm_mailing_event_subscribe_group_id FOREIGN KEY (group_id) REFERENCES civicrm_group(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_event_subscribe_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3439,7 +3439,7 @@ CREATE TABLE civicrm_mailing_event_confirm (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_event_confirm_event_subscribe_id FOREIGN KEY (event_subscribe_id) REFERENCES civicrm_mailing_event_subscribe(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3462,7 +3462,7 @@ CREATE TABLE civicrm_mailing_event_trackable_url_open (
 ,      
      CONSTRAINT FK_civicrm_mailing_event_trackable_url_open_event_queue_id FOREIGN KEY (event_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_event_trackable_url_open_trackable_url_id FOREIGN KEY (trackable_url_id) REFERENCES civicrm_mailing_trackable_url(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3484,7 +3484,7 @@ CREATE TABLE civicrm_mailing_event_unsubscribe (
  
 ,      
      CONSTRAINT FK_civicrm_mailing_event_unsubscribe_event_queue_id FOREIGN KEY (event_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3545,7 +3545,7 @@ CREATE TABLE civicrm_contribution_page (
 ,      
      CONSTRAINT FK_civicrm_contribution_page_contribution_type_id FOREIGN KEY (contribution_type_id) REFERENCES civicrm_contribution_type(id) ,      
      CONSTRAINT FK_civicrm_contribution_page_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3580,7 +3580,7 @@ CREATE TABLE civicrm_contribution_widget (
  
 ,      
      CONSTRAINT FK_civicrm_contribution_widget_contribution_page_id FOREIGN KEY (contribution_page_id) REFERENCES civicrm_contribution_page(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3611,7 +3611,7 @@ CREATE TABLE civicrm_pcp (
 ,      
      CONSTRAINT FK_civicrm_pcp_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_pcp_contribution_page_id FOREIGN KEY (contribution_page_id) REFERENCES civicrm_contribution_page(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3648,7 +3648,7 @@ CREATE TABLE civicrm_membership (
      CONSTRAINT FK_civicrm_membership_membership_type_id FOREIGN KEY (membership_type_id) REFERENCES civicrm_membership_type(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_membership_status_id FOREIGN KEY (status_id) REFERENCES civicrm_membership_status(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_membership_owner_membership_id FOREIGN KEY (owner_membership_id) REFERENCES civicrm_membership(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3680,7 +3680,7 @@ CREATE TABLE civicrm_membership_block (
 ,      
      CONSTRAINT FK_civicrm_membership_block_entity_id FOREIGN KEY (entity_id) REFERENCES civicrm_contribution_page(id) ,      
      CONSTRAINT FK_civicrm_membership_block_membership_type_default FOREIGN KEY (membership_type_default) REFERENCES civicrm_membership_type(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3708,7 +3708,7 @@ CREATE TABLE civicrm_membership_log (
      CONSTRAINT FK_civicrm_membership_log_membership_id FOREIGN KEY (membership_id) REFERENCES civicrm_membership(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_membership_log_status_id FOREIGN KEY (status_id) REFERENCES civicrm_membership_status(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_membership_log_modified_id FOREIGN KEY (modified_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3767,7 +3767,7 @@ CREATE TABLE civicrm_activity (
      CONSTRAINT FK_civicrm_activity_parent_id FOREIGN KEY (parent_id) REFERENCES civicrm_activity(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_activity_relationship_id FOREIGN KEY (relationship_id) REFERENCES civicrm_relationship(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_activity_original_id FOREIGN KEY (original_id) REFERENCES civicrm_activity(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3793,7 +3793,7 @@ CREATE TABLE civicrm_activity_assignment (
 ,      
      CONSTRAINT FK_civicrm_activity_assignment_activity_id FOREIGN KEY (activity_id) REFERENCES civicrm_activity(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_activity_assignment_assignee_contact_id FOREIGN KEY (assignee_contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3819,7 +3819,7 @@ CREATE TABLE civicrm_activity_target (
 ,      
      CONSTRAINT FK_civicrm_activity_target_activity_id FOREIGN KEY (activity_id) REFERENCES civicrm_activity(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_activity_target_target_contact_id FOREIGN KEY (target_contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3845,7 +3845,7 @@ CREATE TABLE civicrm_case_activity (
 ,      
      CONSTRAINT FK_civicrm_case_activity_case_id FOREIGN KEY (case_id) REFERENCES civicrm_case(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_case_activity_activity_id FOREIGN KEY (activity_id) REFERENCES civicrm_activity(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3891,7 +3891,7 @@ CREATE TABLE civicrm_pledge (
      CONSTRAINT FK_civicrm_pledge_contribution_type_id FOREIGN KEY (contribution_type_id) REFERENCES civicrm_contribution_type(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_pledge_contribution_page_id FOREIGN KEY (contribution_page_id) REFERENCES civicrm_contribution_page(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_pledge_honor_contact_id FOREIGN KEY (honor_contact_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3927,7 +3927,7 @@ CREATE TABLE civicrm_price_field (
   
 ,      
      CONSTRAINT FK_civicrm_price_field_price_set_id FOREIGN KEY (price_set_id) REFERENCES civicrm_price_set(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3955,7 +3955,7 @@ CREATE TABLE civicrm_price_field_value (
  
 ,      
      CONSTRAINT FK_civicrm_price_field_value_price_field_id FOREIGN KEY (price_field_id) REFERENCES civicrm_price_field(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -3992,7 +3992,7 @@ CREATE TABLE civicrm_line_item (
 ,      
      CONSTRAINT FK_civicrm_line_item_price_field_id FOREIGN KEY (price_field_id) REFERENCES civicrm_price_field(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_line_item_price_field_value_id FOREIGN KEY (price_field_value_id) REFERENCES civicrm_price_field_value(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4016,7 +4016,7 @@ CREATE TABLE civicrm_county (
   
 ,      
      CONSTRAINT FK_civicrm_county_state_province_id FOREIGN KEY (state_province_id) REFERENCES civicrm_state_province(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4058,7 +4058,7 @@ CREATE TABLE civicrm_uf_group (
      CONSTRAINT FK_civicrm_uf_group_limit_listings_group_id FOREIGN KEY (limit_listings_group_id) REFERENCES civicrm_group(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_uf_group_add_to_group_id FOREIGN KEY (add_to_group_id) REFERENCES civicrm_group(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_uf_group_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4098,7 +4098,7 @@ CREATE TABLE civicrm_uf_field (
 ,      
      CONSTRAINT FK_civicrm_uf_field_uf_group_id FOREIGN KEY (uf_group_id) REFERENCES civicrm_uf_group(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_uf_field_location_type_id FOREIGN KEY (location_type_id) REFERENCES civicrm_location_type(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4127,7 +4127,7 @@ CREATE TABLE civicrm_uf_join (
   
 ,      
      CONSTRAINT FK_civicrm_uf_join_uf_group_id FOREIGN KEY (uf_group_id) REFERENCES civicrm_uf_group(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4156,7 +4156,7 @@ CREATE TABLE civicrm_pcp_block (
 ,      
      CONSTRAINT FK_civicrm_pcp_block_entity_id FOREIGN KEY (entity_id) REFERENCES civicrm_contribution_page(id) ,      
      CONSTRAINT FK_civicrm_pcp_block_supporter_profile_id FOREIGN KEY (supporter_profile_id) REFERENCES civicrm_uf_group(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4221,7 +4221,7 @@ CREATE TABLE civicrm_address (
      CONSTRAINT FK_civicrm_address_state_province_id FOREIGN KEY (state_province_id) REFERENCES civicrm_state_province(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_address_country_id FOREIGN KEY (country_id) REFERENCES civicrm_country(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_address_master_id FOREIGN KEY (master_id) REFERENCES civicrm_address(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4255,7 +4255,7 @@ CREATE TABLE civicrm_loc_block (
      CONSTRAINT FK_civicrm_loc_block_email_2_id FOREIGN KEY (email_2_id) REFERENCES civicrm_email(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_loc_block_phone_2_id FOREIGN KEY (phone_2_id) REFERENCES civicrm_phone(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_loc_block_im_2_id FOREIGN KEY (im_2_id) REFERENCES civicrm_im(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4286,7 +4286,7 @@ CREATE TABLE civicrm_group_contact (
      CONSTRAINT FK_civicrm_group_contact_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_group_contact_location_id FOREIGN KEY (location_id) REFERENCES civicrm_loc_block(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_group_contact_email_id FOREIGN KEY (email_id) REFERENCES civicrm_email(id)   
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4366,7 +4366,7 @@ CREATE TABLE civicrm_contribution (
      CONSTRAINT FK_civicrm_contribution_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contribution_honor_contact_id FOREIGN KEY (honor_contact_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contribution_address_id FOREIGN KEY (address_id) REFERENCES civicrm_address(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4391,7 +4391,7 @@ CREATE TABLE civicrm_contribution_product (
  
 ,      
      CONSTRAINT FK_civicrm_contribution_product_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4421,7 +4421,7 @@ CREATE TABLE civicrm_contribution_soft (
      CONSTRAINT FK_civicrm_contribution_soft_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_contribution_soft_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_contribution_soft_pcp_id FOREIGN KEY (pcp_id) REFERENCES civicrm_pcp(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4447,7 +4447,7 @@ CREATE TABLE civicrm_membership_payment (
 ,      
      CONSTRAINT FK_civicrm_membership_payment_membership_id FOREIGN KEY (membership_id) REFERENCES civicrm_membership(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_membership_payment_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4526,7 +4526,7 @@ CREATE TABLE civicrm_event (
 ,      
      CONSTRAINT FK_civicrm_event_loc_block_id FOREIGN KEY (loc_block_id) REFERENCES civicrm_loc_block(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_event_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4566,7 +4566,7 @@ CREATE TABLE civicrm_participant (
      CONSTRAINT FK_civicrm_participant_status_id FOREIGN KEY (status_id) REFERENCES civicrm_participant_status_type(id) ,      
      CONSTRAINT FK_civicrm_participant_registered_by_id FOREIGN KEY (registered_by_id) REFERENCES civicrm_participant(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_participant_discount_id FOREIGN KEY (discount_id) REFERENCES civicrm_discount(id) ON DELETE SET NULL  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4590,7 +4590,7 @@ CREATE TABLE civicrm_participant_payment (
 ,      
      CONSTRAINT FK_civicrm_participant_payment_participant_id FOREIGN KEY (participant_id) REFERENCES civicrm_participant(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_participant_payment_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *
@@ -4626,6 +4626,6 @@ CREATE TABLE civicrm_pledge_payment (
 ,      
      CONSTRAINT FK_civicrm_pledge_payment_pledge_id FOREIGN KEY (pledge_id) REFERENCES civicrm_pledge(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_pledge_payment_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
  

@@ -441,7 +441,7 @@ class CRM_Core_BAO_CMSUser {
           array(1 => $db_uf->getMessage())
         ));
     }
-    $db_uf->query('/*!40101 SET NAMES utf8 */');
+    $db_uf->query('/*!40101 SET NAMES utf8mb4 */');
     return $db_uf;
   }
 }

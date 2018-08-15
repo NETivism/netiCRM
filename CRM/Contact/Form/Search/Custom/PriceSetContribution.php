@@ -82,7 +82,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
     $sql .= "
 PRIMARY KEY ( id ),
 UNIQUE INDEX unique_entity ( entity_table, entity_id )
-) ENGINE=HEAP DEFAULT CHARSET=utf8
+) ENGINE=HEAP DEFAULT CHARSET=utf8mb4
 ";
 
     CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);

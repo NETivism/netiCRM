@@ -21,7 +21,7 @@
 -- | GNU Affero General Public License or the licensing of CiviCRM,     |
 -- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 -- +--------------------------------------------------------------------+
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (1000, 1228, "AL", "Alabama"),
