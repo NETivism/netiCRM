@@ -34,7 +34,7 @@
 
 {if $rows}
 <div id="ltype">
-{include file="CRM/common/jsortable.tpl}
+{include file="CRM/common/jsortable.tpl hasPager=1}
 {strip}
 <table id="options" class="display">
 	<thead>
