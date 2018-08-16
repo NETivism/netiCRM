@@ -164,10 +164,14 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
         array(ts('- select -')),
         CRM_Contribute_PseudoConstant::contributionPage()
       );
-      $dao = CRM_Core_DAO::executeQuery("SELECT p.contact_id, c.sort_name FROM civicrm_pcp p INNER JOIN civicrm_contact c ON p.contact_id = c.id GROUP BY p.contact_id");
+      $dao = CRM_Core_DAO::executeQuery("SELECT p.contact_id, c.sort_name, c.external_identifier FROM civicrm_pcp p INNER JOIN civicrm_contact c ON p.contact_id = c.id GROUP BY p.contact_id");
       $contacts = array(ts('- select -'));
       while($dao->fetch()) {
-        $contacts[$dao->contact_id] = $dao->sort_name;
+        $exid = '';
+        if ($dao->external_identifier) {
+          $exid = ' - '.$dao->external_identifier;
+        }
+        $contacts[$dao->contact_id] = $dao->sort_name." ($dao->contact_id{$exid})";
       }
 
       $this->addSelect('status_id', ts('Status'), $status);
