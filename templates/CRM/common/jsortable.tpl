@@ -27,6 +27,7 @@
 <script type="text/javascript">
 cj( function( ) {
 var useAjax = {/literal}{if $useAjax}1{else}0{/if}{literal};
+var hasPager = {/literal}{if $hasPager}true{else}false{/if}{literal};
 
 var sourceUrl = '';
 var useClass  = 'display';
@@ -159,8 +160,8 @@ eval('tableId =[' + tableId + ']');
       oTable = cj(tabId).dataTable({
         "oLanguage"    : language,
         "aaSorting"    : sortColumn,
-        "bPaginate"    : true,
-        "iDisplayLength": 20,
+        "bPaginate"    : hasPager,
+        "iDisplayLength": hasPager ? 20 : 0,
         "bLengthChange": false,
         "sPaginationType": "full_numbers",
         "bFilter"      : false,

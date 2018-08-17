@@ -196,9 +196,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       }
 
       $query = "
-          SELECT cp.id as id, contact_id , status_id, cp.title as title, contribution_page_id, start_date, end_date, cp.is_active as active
-          FROM civicrm_pcp cp INNER JOIN civicrm_contribution_page cpp ON cpp.id = cp.contribution_page_id
-          WHERE " . $whereClause . " ORDER BY status_id ASC";
+          SELECT cp.id as id, cp.contact_id , cp.status_id, cp.title as title, cp.contribution_page_id, cpp.start_date, cpp.end_date, cp.is_active as active, cc.external_identifier FROM civicrm_pcp cp INNER JOIN civicrm_contribution_page cpp ON cpp.id = cp.contribution_page_id INNER JOIN civicrm_contact cc ON cc.id = cp.contact_id WHERE " . $whereClause . " ORDER BY status_id ASC";
 
       $dao = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Contribute_DAO_PCP');
 
@@ -238,8 +236,9 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         $pcpSummary[$dao->id]['id'] = $dao->id;
         $pcpSummary[$dao->id]['start_date'] = $dao->start_date;
         $pcpSummary[$dao->id]['end_date'] = $dao->end_date;
-        $pcpSummary[$dao->id]['supporter'] = $contact['0'];
-        $pcpSummary[$dao->id]['supporter_id'] = $dao->contact_id;
+        $pcpSummary[$dao->id]['pcp_contact'] = $contact['0'];
+        $pcpSummary[$dao->id]['pcp_contact_id'] = $dao->contact_id;
+        $pcpSummary[$dao->id]['pcp_contact_external_id'] = $dao->external_identifier;
         $pcpSummary[$dao->id]['status_id'] = $status[$dao->status_id];
         $pcpSummary[$dao->id]['contribution_page_id'] = $dao->contribution_page_id;
         $pcpSummary[$dao->id]['contribution_page_title'] = $contribution_page[$dao->contribution_page_id];
