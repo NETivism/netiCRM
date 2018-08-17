@@ -46272,3 +46272,7 @@ msgstr ""
 
 msgid "Expire Date"
 msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.tpl
+msgid "To change your personal info, go <a href=\"%1\">My Account page</a> for further setting."
+msgstr ""

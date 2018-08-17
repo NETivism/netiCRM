@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-14 05:32+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-08-17 09:19+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46426,3 +46426,9 @@ msgstr "未知"
 
 msgid "Expire Date"
 msgstr "到期日期"
+
+#: CRM/Contribute/Form/Contribution/Main.tpl
+msgid ""
+"To change your personal info, go <a href=\"%1\">My Account page</a> for "
+"further setting."
+msgstr "若要更改你的個資，請到「<a href=\"%1\">我的帳號</a>」頁面做進一步的修改。"
