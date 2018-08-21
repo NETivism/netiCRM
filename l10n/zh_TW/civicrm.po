@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-17 09:19+0000\n"
+"PO-Revision-Date: 2018-08-21 05:53+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46432,3 +46432,42 @@ msgid ""
 "To change your personal info, go <a href=\"%1\">My Account page</a> for "
 "further setting."
 msgstr "若要更改你的個資，請到「<a href=\"%1\">我的帳號</a>」頁面做進一步的修改。"
+
+msgid "Congo, Republic of the"
+msgstr "剛果共和國"
+
+msgid "Côte d’Ivoire"
+msgstr "象牙海岸"
+
+msgid "Iran, Islamic Republic Of"
+msgstr "伊朗"
+
+msgid "Libya"
+msgstr "利比亞"
+
+msgid "Macedonia, Republic Of"
+msgstr "馬其頓共和國"
+
+msgid "Palestine, State of"
+msgstr "巴勒斯坦"
+
+msgid "South Sudan"
+msgstr "南蘇丹"
+
+msgid "Curaçao"
+msgstr "古拉索"
+
+msgid "Sint Maarten (Dutch Part)"
+msgstr "荷屬聖馬丁"
+
+msgid "Bonaire, Saint Eustatius and Saba"
+msgstr "荷蘭加勒比區"
+
+msgid "Kosovo"
+msgstr "科索沃"
+
+msgid "Saint Barthélemy"
+msgstr "聖巴泰勒米"
+
+msgid "Saint Martin (French part)"
+msgstr "法屬聖馬丁"
