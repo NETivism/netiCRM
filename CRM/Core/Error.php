@@ -199,7 +199,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       echo CRM_Utils_System::theme('page', $content, TRUE);
     }
     else {
-      echo "Sorry. A non-recoverable error has occurred. The error trace below might help to resolve the issue<p>";
+      echo "Sorry. A non-recoverable error has occurred. The error trace below might help to resolve the issue<br>";
       CRM_Core_Error::debug(NULL, $error);
     }
 
@@ -401,15 +401,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         ($fileSize > 256 * 1024 * 1024) ||
         ($fileSize < 0)
       ) {
-        rename($fileName,
-          $fileName . '.' . date('Ymdhs', mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")))
-        );
+        rename($fileName, $fileName . '.' . date('Ymdhi', mktime(0, 0, 0, date("m") - 1, date("d"), date("Y"))));
       }
     }
 
     $file_log = Log::singleton('file', $fileName);
     $file_log->log("$message\n");
-    $str = "<p/><code>$message</code>";
+    $str = "$message\n";
     if ($out) {
       echo $str;
     }
@@ -613,6 +611,22 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       $null = &CRM_Core_DAO::$_nullObject;
       CRM_Utils_Hook::alterContent($content, 'page', $tplCommon, $null);
       CRM_Utils_System::theme('page', $content);
+    }
+  }
+
+  /**
+   * Purge logs
+   */
+  public static function purge() {
+    $config = CRM_Core_Config::singleton();
+    $filename = "{$config->configAndLogDir}CiviCRM." . md5($config->dsn . $config->userFrameworkResourceURL) . '.log';
+    $files = glob($filename.'*');
+    if (!empty($files)) {
+      foreach($files as $f) {
+        if ($f != $filename && filemtime($f) < strtotime('now - 3month')) {
+          unlink($f);
+        }
+      }
     }
   }
 }
