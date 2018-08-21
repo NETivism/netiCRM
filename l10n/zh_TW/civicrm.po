@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-21 05:53+0000\n"
+"PO-Revision-Date: 2018-08-21 08:11+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46471,3 +46471,13 @@ msgstr "聖巴泰勒米"
 
 msgid "Saint Martin (French part)"
 msgstr "法屬聖馬丁"
+
+msgid ""
+"You can configure one or more SMS Providers for your CiviCRM installation."
+msgstr "你可以為你的 CiviCRM 設定一個以上的簡訊供應商。"
+
+msgid "None found."
+msgstr "無任何結果。"
+
+msgid "Add SMS Provider"
+msgstr "新增簡訊供應商"

@@ -46315,3 +46315,12 @@ msgstr ""
 
 msgid "Saint Martin (French part)"
 msgstr ""
+
+msgid "You can configure one or more SMS Providers for your CiviCRM installation."
+msgstr ""
+
+msgid "None found."
+msgstr ""
+
+msgid "Add SMS Provider"
+msgstr ""
