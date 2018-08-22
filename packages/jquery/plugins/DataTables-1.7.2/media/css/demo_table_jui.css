@@ -140,6 +140,8 @@ table.display thead th div.DataTables_sort_wrapper span {
 .dataTables_paginate {
 	float: right;
 	text-align: right;
+	z-index: 1000;
+	position: relative;
 }
 
 /* Pagination nested */

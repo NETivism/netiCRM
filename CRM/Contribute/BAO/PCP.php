@@ -229,13 +229,41 @@ WHERE  civicrm_pcp.contact_id = civicrm_contact.id
    *
    * @return total amount
    */
-  static function thermoMeter($pcpId) {
-    $query = "
+  static function thermoMeter($pcpId, $type = 'amount') {
+    switch($type) {
+      case 'amount':
+        $query = "
 SELECT SUM(cc.total_amount) as total
 FROM civicrm_pcp pcp 
 LEFT JOIN civicrm_contribution_soft cs ON ( pcp.id = cs.pcp_id ) 
 LEFT JOIN civicrm_contribution cc ON ( cs.contribution_id = cc.id)
 WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
+        break;
+      case 'amount_per_contact':
+        $query = "
+SELECT SUM(cc.total_amount) as total
+FROM civicrm_pcp pcp 
+LEFT JOIN (SELECT * FROM civicrm_contribution_soft WHERE 1 GROUP BY contact_id ORDER BY contribution_id ASC) cs ON pcp.id = cs.pcp_id  
+LEFT JOIN civicrm_contribution cc ON cs.contribution_id = cc.id
+WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
+        break;
+      case 'num_contact':
+        $query = "
+SELECT COUNT(cs.contact_id) as total
+FROM civicrm_pcp pcp 
+LEFT JOIN (SELECT * FROM civicrm_contribution_soft WHERE 1 GROUP BY contact_id ORDER BY contribution_id ASC) cs ON pcp.id = cs.pcp_id  
+LEFT JOIN civicrm_contribution cc ON cs.contribution_id = cc.id
+WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0 GROUP BY cc.contact_id";
+        break;
+      case 'num_contribution':
+        $query = "
+SELECT COUNT(cc.total_amount) as total
+FROM civicrm_pcp pcp 
+LEFT JOIN civicrm_contribution_soft cs ON ( pcp.id = cs.pcp_id ) 
+LEFT JOIN civicrm_contribution cc ON ( cs.contribution_id = cc.id)
+WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
+        break;
+    }
 
     $params = array(1 => array($pcpId, 'Integer'));
     return CRM_Core_DAO::singleValueQuery($query, $params);

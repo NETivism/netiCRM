@@ -126,6 +126,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
         CRM_Core_OptionGroup::getAssoc($name, $defaultDiscounts[]);
         $i++;
       }
+      $defaults["discounted_label"] = array();
       //avoid moving up value of lable when some labels don't
       //have a value ,fixed for CRM-3088
       foreach ($defaultDiscounts as $key => $val) {
@@ -141,18 +142,21 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
           //discount set
           $discountValue[$key][] = $v;
         }
+        foreach ($val['label'] as $v) {
+          //take array of label
+          $discountLabel[$key][] = $v;
+        }
         //combining the weight with amount array for set default
         $discountDefualt[] = array_combine($discountWeight[$key], $discountValue[$key]);
+        //Add label array to default label
+        $discounted_label = array_combine($discountWeight[$key], $discountLabel[$key]);
+        $defaults["discounted_label"] = $discounted_label+$defaults["discounted_label"];
 
         foreach ($discountDefualt[$key] as $k => $v) {
           $defaults["discounted_value"][$k][$key + 1] = $v;
         }
         $maxSize[$key] = sizeof($val['label']);
       }
-
-      $maxKey = CRM_Utils_Array::key(max($maxSize), $maxSize);
-
-      $defaults["discounted_label"] = $totalLables[$maxKey]['label'];
 
       $this->set('discountSection', 1);
       $this->buildQuickForm();

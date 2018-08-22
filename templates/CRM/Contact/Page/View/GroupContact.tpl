@@ -55,19 +55,18 @@
 	{/strip}
 	{/if}
 
-    <div class="accordion ui-accordion ui-widget ui-helper-reset">
-      <div class="crm-accordion-wrapper crm-ajax-accordion crm-smartgroup-accordion collapsed">
-        <div class="crm-accordion-header" id="crm-contact_smartgroup" contact_id="{$contactId}">
-          {ts}Smart Group{/ts}
-        </div>
-        <!-- /.crm-accordion-header -->
-        <div class="crm-accordion-body">
-          <div class="crm-contact_smartgroup"></div>
-        </div>
-        <!-- /.crm-accordion-body -->
+    <div class="crm-accordion-wrapper crm-ajax-accordion crm-smartgroup-accordion crm-accordion-closed">
+      <div class="crm-accordion-header" id="crm-contact_smartgroup" contact_id="{$contactId}">
+        <div class="zmdi crm-accordion-pointer"></div>
+        {ts}Smart Group{/ts}
       </div>
-      <!-- /.crm-accordion-wrapper -->
+      <!-- /.crm-accordion-header -->
+      <div class="crm-accordion-body">
+        <div class="crm-contact_smartgroup"></div>
+      </div>
+      <!-- /.crm-accordion-body -->
     </div>
+    <!-- /.crm-accordion-wrapper -->
     
 	{* Include 'add to new group' form if session has edit contact permissions *}
     {if $permission EQ 'edit'}
@@ -134,10 +133,8 @@
   // bind first click of accordion header to load crm-accordion-body with snippet
   // everything else taken care of by cj().crm-accordions()
   cj(function () {
-    cj('.crm-ajax-accordion .crm-accordion-header').one('click', function () {
-      loadPanes(cj(this));
-    });
-    cj('.crm-ajax-accordion:not(.collapsed) .crm-accordion-header').each(function (index) {
+    cj().crmaccordions(); 
+    cj('.crm-ajax-accordion').on('click', '.crm-accordion-header', function () {
       loadPanes(cj(this));
     });
   });

@@ -1477,7 +1477,10 @@ SELECT id
       if (!CRM_Utils_System::isNull($value)) {
         $format = $customFields[$customFieldId]['date_format'];
 
-        if (in_array($format, array('dd-mm', 'mm/dd'))) {
+        if (is_numeric($value) && strlen($value) >= 8 && strlen($value) <= 14) {
+          $format = NULL;
+        }
+        elseif (in_array($format, array('dd-mm', 'mm/dd'))) {
           $dateTimeArray = explode(' ', $value);
 
           $separator = '/';
@@ -1494,13 +1497,14 @@ SELECT id
           $value = "01-01-{$value}";
         }
         elseif (in_array($format, array('mm/yy', 'yy-mm'))){
-          if($format == 'mm/yy'){
+          if($format == 'mm/yy' && strstr($value, '/')){
             list($month, $year) = explode('/', $value);
+            $value = '01-'.$month.'-'.$year;
           }
-          else{
+          elseif(strstr($value, '-')){
             list($year, $month) = explode('-', $value);
+            $value = '01-'.$month.'-'.$year;
           }
-          $value = '01-'.$month.'-'.$year;
           $format = NULL;
         }
 

@@ -46231,10 +46231,6 @@ msgstr ""
 msgid "Offline registration (by %1)"
 msgstr ""
 
-#: CRM/Contribute/Page/DashBoard.tpl
-msgid "We have released new dashboard page. Click here!!"
-msgstr ""
-
 msgid "Page Name"
 msgstr ""
 
@@ -46272,4 +46268,59 @@ msgid "Thank You Screen"
 msgstr ""
 
 msgid "unknown"
+msgstr ""
+
+msgid "Expire Date"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.tpl
+msgid "To change your personal info, go <a href=\"%1\">My Account page</a> for further setting."
+msgstr ""
+
+msgid "Congo, Republic of the"
+msgstr ""
+
+msgid "Côte d’Ivoire"
+msgstr ""
+
+msgid "Iran, Islamic Republic Of"
+msgstr ""
+
+msgid "Libya"
+msgstr ""
+
+msgid "Macedonia, Republic Of"
+msgstr ""
+
+msgid "Palestine, State of"
+msgstr ""
+
+msgid "South Sudan"
+msgstr ""
+
+msgid "Curaçao"
+msgstr ""
+
+msgid "Sint Maarten (Dutch Part)"
+msgstr ""
+
+msgid "Bonaire, Saint Eustatius and Saba"
+msgstr ""
+
+msgid "Kosovo"
+msgstr ""
+
+msgid "Saint Barthélemy"
+msgstr ""
+
+msgid "Saint Martin (French part)"
+msgstr ""
+
+msgid "You can configure one or more SMS Providers for your CiviCRM installation."
+msgstr ""
+
+msgid "None found."
+msgstr ""
+
+msgid "Add SMS Provider"
 msgstr ""
