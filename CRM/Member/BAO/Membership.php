@@ -821,39 +821,43 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
         $fields = array('' => array('title' => '- ' . ts('Membership Fields') . ' -'));
       }
 
+      $note = CRM_Core_DAO_Note::import();
       $tmpFields = CRM_Member_DAO_Membership::import();
-      require_once 'CRM/Contact/BAO/Contact.php';
-      $contactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
+      $tmpFields['membership_contact_id']['title'] = ts('Contacts') . '::' .$tmpFields['membership_contact_id']['title'];
+      unset($tmpFields['option_value']);
+      $optionFields = CRM_Core_OptionValue::getFields($mode = 'member');
+
+      // $contactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
+      $contactFields = array();
+      $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+      $contactFieldsIgnore = array('id', 'note', 'do_not_import', 'contact_sub_type', 'group_name', 'tag_name');
+
 
       // Using new Dedupe rule.
       $ruleParams = array(
         'contact_type' => $contactType,
         'level' => 'Strict',
       );
-      require_once 'CRM/Dedupe/BAO/Rule.php';
-      $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
-
-      $tmpContactField = array();
-      if (is_array($fieldsArray)) {
-        foreach ($fieldsArray as $value) {
-          $tmpContactField[trim($value)] = CRM_Utils_Array::value(trim($value), $contactFields);
-          if (!$status) {
-            $title = $tmpContactField[trim($value)]['title'] . " " . ts("(match to contact)");
-          }
-          else {
-            $title = $tmpContactField[trim($value)]['title'];
-          }
-          $tmpContactField[trim($value)]['title'] = $title;
-        }
+      $dupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      if (!is_array($dupeFields)) {
+        $dupeFields = array();
       }
-      $tmpContactField['external_identifier'] = $contactFields['external_identifier'];
-      $tmpContactField['external_identifier']['title'] = $contactFields['external_identifier']['title'] . " " . ts("(match to contact)");
 
-      $tmpFields['membership_contact_id']['title'] = $tmpFields['membership_contact_id']['title'] . " " . ts("(match to contact)");;
+      foreach ($tmpContactFields as $fieldName => $fieldData) {
+        $fieldName = trim($fieldName);
+        if (in_array($fieldName, $contactFieldsIgnore)) {
+          continue;
+        }
+        $index = $fieldName;
+        $contactFields[$index] = $fieldData;
+        $contactFields[$index]['title'] = ts('Contacts') . '::' .$contactFields[$index]['title'];
+      }
 
-      $fields = array_merge($fields, $tmpContactField);
       $fields = array_merge($fields, $tmpFields);
       $fields = array_merge($fields, CRM_Core_BAO_CustomField::getFieldsForImport('Membership'));
+      $fields = array_merge($fields, $optionFields);
+      $fields = array_merge($fields, $note);
+      $fields = array_merge($fields, $contactFields);
       self::$_importableFields = $fields;
     }
     return self::$_importableFields;
