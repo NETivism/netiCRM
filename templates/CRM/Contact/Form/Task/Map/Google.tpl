@@ -58,11 +58,11 @@ else if (locations.length == 1) {
   var parameters = [];
   var mode = 'place'; // currently only support place mode
   var src = '';
-  if (typeof location.address) {
-    q = location.address;
-  }
-  else if (typeof location.lat === 'string' && typeof location.lng === 'string') {
+  if (typeof location.lat === 'string' && typeof location.lng === 'string' && typeof location.street_address !== 'string') {
     q = location.lat + ',' + location.lng;
+  }
+  else if (typeof location.address === 'string') {
+    q = location.address;
   }
   if (q) {
     q = encodeURIComponent(q);
