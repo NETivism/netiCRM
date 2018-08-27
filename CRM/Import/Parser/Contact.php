@@ -243,7 +243,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     $this->_updateWithId = FALSE;
     if (in_array('id', $this->_mapperKeys) ||
       ($this->_externalIdentifierIndex >= 0 &&
-        in_array($this->_onDuplicate, array(CRM_Import_Parser::DUPLICATE_UPDATE, CRM_Import_Parser::DUPLICATE_FILL))
+        in_array($this->_onDuplicate, array(CRM_Import_Parser::DUPLICATE_UPDATE, CRM_Import_Parser::DUPLICATE_FILL, CRM_Import_Parser::DUPLICATE_SKIP))
       )
     ) {
       $this->_updateWithId = TRUE;
@@ -337,7 +337,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     $statusFieldName = $this->_statusFieldName;
 
     if ($this->_emailIndex >= 0) {
-      /* If we don't have the required fields, bail */
+      /* If we don't have the required fields, fail */
 
       if ($this->_contactType == 'Individual' && !$this->_updateWithId) {
         if ($errorRequired && !CRM_Utils_Array::value($this->_emailIndex, $values)) {
