@@ -558,19 +558,10 @@ function enableHonorType( ) {
     }
     {/literal}
     {if $contact_id}
-      {if isset($form.last_name.value) and $form.last_name.value and isset($form.first_name.value) and $form.first_name.value}
-        lockfield(cj("input#last_name"));
-        lockfield(cj("input#first_name"));
-      {/if}
-      {assign var="email_f" value="email-5"}
-      {if isset($form.$email_f.value) and $form.$email_f.value}
-        lockfield(cj("input#email-5"));
-      {/if}
-    {/if}
-    {if $is_contact_admin}
       lockfield(cj("input#last_name"));
       lockfield(cj("input#first_name"));
-      cj(".first_name-section .content").append('<div class="description">{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}</div>');
+      lockfield(cj("input#email-5"));
+      cj(".first_name-section .content").append('<div class="description">{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}{ts 1="/user"}To change your personal info, go <a href="%1">My Account page</a> for further setting.{/ts}</div>');
     {/if}
     {literal}
     amountGrouping(true);
