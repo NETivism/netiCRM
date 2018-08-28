@@ -46330,3 +46330,6 @@ msgstr ""
 
 msgid "Municipality of Macau"
 msgstr ""
+
+msgid "run every %1 minutes"
+msgstr ""

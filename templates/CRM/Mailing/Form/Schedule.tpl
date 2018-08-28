@@ -33,7 +33,9 @@
 <table class="form-layout">
   <tbody>
     <tr class="crm-mailing-schedule-form-block-now">
-        <td class="label">{$form.now.label}</td>
+        <td class="label">{$form.now.label}<br>
+        <sub>({ts 1=20}run every %1 minutes{/ts})</sub>
+        </td>
         <td>{$form.now.html}</td>
     </tr>
     <tr>

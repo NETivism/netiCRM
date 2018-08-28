@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-28 05:15+0000\n"
+"PO-Revision-Date: 2018-08-28 10:25+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46483,7 +46483,10 @@ msgid "Add SMS Provider"
 msgstr "新增簡訊供應商"
 
 msgid "Municipality of das Ilhas"
-msgstr "海島市"
+msgstr ""
 
 msgid "Municipality of Macau"
-msgstr "澳門市"
+msgstr ""
+
+msgid "run every %1 minutes"
+msgstr "每 %1 分鐘執行"
