@@ -3792,4 +3792,9 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (NULL, 1050, "17", "Haut-Lomami"),
 (NULL, 1050, "18", "Lualaba"),
 (NULL, 1050, "19", "Haut-Katanga"),
-(NULL, 1050, "20", "Tanganyika");
+(NULL, 1050, "20", "Tanganyika"),
+
+-- Added subdivisions of Macau
+
+(NULL, 1127, "01", "Municipality of das Ilhas"),
+(NULL, 1127, "02", "Municipality of Macau");
