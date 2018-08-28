@@ -155,7 +155,8 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       array('dao' => 'CRM_Contribute_DAO_Contribution',
         //'bao'           => 'CRM_Contribute_BAO_Contribution',
         'fields' =>
-        array('contribution_source' => NULL,
+        array(
+          'contribution_source' => NULL,
           'payment_instrument_id' => array(
             'title' => ts('Payment Instrument'),
           ),
@@ -177,6 +178,12 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         'filters' =>
         array('receive_date' =>
           array('operatorType' => CRM_Report_Form::OP_DATE),
+          'contribution_source' =>
+          array(
+            'title' => ts('Contribution Source'),
+            'type' => CRM_Utils_Type::T_STRING,
+            'operator' => 'like',
+          ),
           'contribution_status_id' =>
           array('title' => ts('Donation Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
