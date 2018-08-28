@@ -46324,3 +46324,9 @@ msgstr ""
 
 msgid "Add SMS Provider"
 msgstr ""
+
+msgid "Municipality of das Ilhas"
+msgstr ""
+
+msgid "Municipality of Macau"
+msgstr ""

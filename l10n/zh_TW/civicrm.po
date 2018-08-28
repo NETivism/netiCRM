@@ -46481,3 +46481,9 @@ msgstr "無任何結果。"
 
 msgid "Add SMS Provider"
 msgstr "新增簡訊供應商"
+
+msgid "Municipality of das Ilhas"
+msgstr "海島市"
+
+msgid "Municipality of Macau"
+msgstr "澳門市"
