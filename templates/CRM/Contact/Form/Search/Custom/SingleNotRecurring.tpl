@@ -10,12 +10,16 @@
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
       <div>
-      {ts 1=$form.contribution_count.html}Single donation over %1 times{/ts} <span class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</span>
+      {$form.payment_instrument_id.label}: {$form.payment_instrument_id.html} 
+      </div>
+      <div>
+      <label>{ts 1=$form.contribution_count.html}Single donation over %1 times{/ts}</label>
       </div>
       <div>
       {$form.receive_date_from.label}
       {include file="CRM/common/jcalendar.tpl" elementName=receive_date_from} <span>{$form.receive_date_to.label}</span>
       {include file="CRM/common/jcalendar.tpl" elementName=receive_date_to}
+      <span class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</span>
       </div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->

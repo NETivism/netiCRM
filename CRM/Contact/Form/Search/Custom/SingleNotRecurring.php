@@ -9,6 +9,7 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
   
   function __construct(&$formValues){
     parent::__construct($formValues);
+    $this->_instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     $this->_filled = FALSE;
     if(empty($this->_tableName)){
       $this->_tableName = 'civicrm_custom_search_singlenotrecurring';
@@ -22,12 +23,14 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
+      'c.payment_instrument_id' => 'payment_instrument_id',
       'ROUND(SUM(c.total_amount))' => 'receive_amount',
       'COUNT(c.id)' => 'completed_count',
     );
     $this->_columns = array(
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
+      ts('Payment Instrument') => 'payment_instrument_id',
       ts('Total Receive Amount') => 'receive_amount',
       ts('Completed Donation') => 'completed_count',
     );
@@ -132,6 +135,11 @@ $having
       $clauses[] = "c.receive_date <= '$to'";
     }
 
+    $instrumentId = !empty($this->_formValues['payment_instrument_id']) ? $this->_formValues['payment_instrument_id'] : NULL;
+    if ($instrumentId && is_numeric($instrumentId)) {
+      $clauses[] = "c.payment_instrument_id = $instrumentId";
+    }
+
     return implode(' AND ', $clauses);
   }
 
@@ -148,6 +156,7 @@ $having
       $option[$i] = $i;
     }
     $form->addSelect('contribution_count', ts('month'), $option);
+    $form->addSelect('payment_instrument_id', ts('Payment Instrument'), array('' => ts('- select -')) + $this->_instruments);
     $form->addDateRange('receive_date', ts('Received Date').' - '.ts('From'), NULL, FALSE);
   }
 
@@ -170,6 +179,9 @@ $having
       $from = empty($from) ? ' ... ' : $from;
       $qill[1]['receiveDateRange'] = ts("Receive Date").': '. $from . '~' . $to;
     }
+
+    $instrument = $this->_formValues['payment_instrument_id'];
+    $qill[1]['paymentInstrument'] = ts("Payment Instrument").' = '. $this->_instruments[$instrument];
     return $qill;  
   }
 
@@ -259,6 +271,9 @@ $having
   }
 
   function alterRow(&$row) {
+    if (!empty($row['payment_instrument_id'])) {
+      $row['payment_instrument_id'] = $this->_instruments[$row['payment_instrument_id']];
+    }
   }
 
   /**
