@@ -73,6 +73,7 @@
   <div class="clear"></div>
 {/if}
 <div id="register-now">
+  {include file="CRM/common/CMSUser.tpl"}
   {if $form.additional_participants.html}
     <div class="crm-section additional_participants-section" id="noOfparticipants">
       <div class="label">{$form.additional_participants.label}</div>
@@ -93,7 +94,6 @@
 
 
   {* User account registration option. Displays if enabled for one of the profiles on this page. *}
-  {include file="CRM/common/CMSUser.tpl"}
   {include file="CRM/UF/Form/Block.tpl" fields=$customPre} 
   {include file="CRM/UF/Form/Block.tpl" fields=$customPost}   
   {include file="CRM/common/moveEmail.tpl"}

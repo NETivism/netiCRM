@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-21 08:11+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-08-28 05:15+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46306,8 +46306,8 @@ msgstr "募款頁狀況"
 msgid "New Recurring Contribution"
 msgstr "新進定期定額捐款"
 
-msgid "Contribution Amount by Traffic Source"
-msgstr ""
+msgid "Contribution Page Visits by Traffic Source"
+msgstr "募款頁的訪客來源"
 
 msgid "Contribution Amount by Province"
 msgstr "縣市捐款金額"
@@ -46481,3 +46481,9 @@ msgstr "無任何結果。"
 
 msgid "Add SMS Provider"
 msgstr "新增簡訊供應商"
+
+msgid "Municipality of das Ilhas"
+msgstr "海島市"
+
+msgid "Municipality of Macau"
+msgstr "澳門市"

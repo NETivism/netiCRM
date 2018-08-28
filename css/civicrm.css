@@ -2236,6 +2236,8 @@ table.campaign td,
     width       : auto;
     margin-left : 10px;
     padding     : 3px;
+    top         : 0;
+    right       : 0;
 }
 
 /* class for text area resizer jquery plugin*/

@@ -90,6 +90,8 @@
     </div>
   {/if}
 
+  {* User account registration option. Displays if enabled for one of the profiles on this page. *}
+  {include file="CRM/common/CMSUser.tpl"}
   {include file="CRM/Contribute/Form/Contribution/MembershipBlock.tpl" context="makeContribution"}
 
 {if $is_monetary}
@@ -185,8 +187,6 @@
   </fieldset>
 {/if}{*is_monetary*}
 
-  {* User account registration option. Displays if enabled for one of the profiles on this page. *}
-  {include file="CRM/common/CMSUser.tpl"}
   {include file="CRM/Contribute/Form/Contribution/PremiumBlock.tpl" context="makeContribution"}
 
   {if $form.is_for_organization}

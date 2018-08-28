@@ -46152,7 +46152,7 @@ msgstr ""
 msgid "New Recurring Contribution"
 msgstr ""
 
-msgid "Contribution Amount by Traffic Source"
+msgid "Contribution Page Visits by Traffic Source"
 msgstr ""
 
 msgid "Contribution Amount by Province"
@@ -46323,4 +46323,10 @@ msgid "None found."
 msgstr ""
 
 msgid "Add SMS Provider"
+msgstr ""
+
+msgid "Municipality of das Ilhas"
+msgstr ""
+
+msgid "Municipality of Macau"
 msgstr ""

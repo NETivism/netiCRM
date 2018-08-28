@@ -146,8 +146,10 @@ class CRM_Utils_Geocode_Google {
         return TRUE;
       }
     }
-    // reset the geo code values if we did not get any good values
-    $values['geo_code_1'] = $values['geo_code_2'] = 'null';
+    // reset the geo code values if we did not get any good values, use embed api to show map result
+    if (!empty($values['street_address']) && empty($values['geo_code_1']) && empty($values['geo_code_2'])) {
+      $values['geo_code_1'] = $values['geo_code_2'] = 'null';
+    }
     return FALSE;
   }
 }
