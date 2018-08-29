@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-28 10:25+0000\n"
+"PO-Revision-Date: 2018-08-29 06:17+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -17677,7 +17677,7 @@ msgstr "使用信用卡進行會籍更新需要會費，然而因為此會員類
 
 #: CRM/Member/Form/MembershipRenewal.php
 msgid "Date Renewal Entered"
-msgstr "已輸入更新日期"
+msgstr "更新會籍的起算日"
 
 #: CRM/Member/Form/MembershipRenewal.php
 msgid "Record Renewal Payment?"
@@ -34020,7 +34020,7 @@ msgid ""
 "memberships, renewing will create a membership period commencing from the "
 "'Date Renewal Entered'. This date can be adjusted including being set to the"
 " day after the previous End Date - if continuous membership is required."
-msgstr "若是對還在期限中，與寬限期中的會員進行會籍更新，他們的會籍將會從預計到期日之後新增上去。若是已過期的會員，更新會籍則會讓會籍從輸入的會籍更新日起算。若有需要，會籍更新日可以調整，例如把日期調整到到期日之後。"
+msgstr "若是對還在期限中，對寬限期中的會員進行會籍更新，他們的會籍將從預計到期日之後新增上去。若是對已過期的會員進行會籍更新，他們的會籍將從更新會籍的起算日往後延長。因此若有需要，更新會籍的起算日可以調整，例如把日期調整到到期日之後。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Status of this membership."
