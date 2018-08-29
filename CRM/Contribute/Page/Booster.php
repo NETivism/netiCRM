@@ -19,13 +19,6 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
           'link' => CRM_Utils_System::url('civicrm/search/HalfYearDonor', 'force=1'),
         ),
         array(
-          'id' => 'contrib-sybnt',
-          'class' => 'mdl-card-theme',
-          'title' => ts('Last year but not this year donors'),
-          'description' => ts('These supporter have donation last year, but not in this year. Remember to connect them when you have some donation campaign.'),
-          'link' => CRM_Utils_System::url('civicrm/search/ContribSYBNT', 'force=1'),
-        ),
-        array(
           'id' => 'failed-no-further-donate',
           'class' => 'mdl-card-theme',
           'title' => ts('After payment failed but not retry in %1 days', array(1 => '7')),
@@ -34,6 +27,13 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
         ),
       ),
       ts('Potential Donors') => array(
+        array(
+          'id' => 'contrib-sybnt',
+          'class' => 'mdl-card-theme',
+          'title' => ts('Last year but not this year donors'),
+          'description' => ts('These supporter have donation last year, but not in this year. Remember to connect them when you have some donation campaign.'),
+          'link' => CRM_Utils_System::url('civicrm/search/ContribSYBNT', 'force=1'),
+        ),
         array(
           'id' => 'single-not-recurring',
           'class' => 'mdl-card-theme',
