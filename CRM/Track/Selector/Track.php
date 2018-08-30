@@ -31,6 +31,15 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
   private $_referrerNetwork;
 
   /**
+   * utm*
+   */
+  private $_utmSource;
+  private $_utmMedium;
+  private $_utmCampaign;
+  private $_utmTerm;
+  private $_utmContent;
+
+  /**
    * for the submitted transaction which eneityId we had?
    */
   private $_visitDateStart;
@@ -81,6 +90,11 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         'rnetwork' => ts('Referrer Network'),
         'state' => ts('Visit State'),
         'entity_id' => ts('Referenced Record'),
+        'utm_source' => 'utm_source',
+        'utm_medium' => 'utm_medium',
+        'utm_campaign' => 'utm_campaign',
+        'utm_term' => 'utm_term',
+        'utm_content' => 'utm_content',
       );
       $this->_drillDown = $this->_base;
       foreach($get as $filter => $value) {
@@ -112,6 +126,13 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     );
     $this->_trackState = CRM_Core_PseudoConstant::trackState();
     $this->_referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
+    $this->_utm = array(
+      'utm_source' => 'utm_source',
+      'utm_medium' => 'utm_medium',
+      'utm_campaign' => 'utm_campaign',
+      'utm_term' => 'utm_term',
+      'utm_content' => 'utm_content',
+    );
   }
   //end of constructor
 
@@ -188,6 +209,9 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
         array(
+          'name' => ts('Custom Campaign'),
+        ),
+        array(
           'name' => ts('Referrer URL'),
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
@@ -254,6 +278,18 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         $url = parse_url($dao->landing);
         $landing = $url['path'].' <a href="'.$dao->landing.'" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i></a>';
       }
+      $utmInfo = array();
+      foreach($this->_utm as $k => $v) {
+        if (!empty($dao->$k)) {
+          $utmInfo[$k] = $v.":".'<a href="'.CRM_Utils_System::url($this->_drillDown."&{$k}={$dao->$k}").'">'.$dao->$k.'</a>';
+        }
+      }
+      if (!empty($utmInfo)) {
+        $utmInfo = '<ul><li>'.implode("</li><li>", $utmInfo).'</li></ul>';
+      }
+      else {
+        $utmInfo = '';
+      }
 
       $results[$id] = array();
       $results[$id]['page_type'] = $this->_pageTypes[$dao->page_type];
@@ -263,6 +299,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         'state' => empty($this->_state) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&state=$dao->state").'">'.$this->_trackState[$dao->state].'</a>' : $this->_trackState[$dao->state],
         'referrer_type' => empty($this->_referrerType) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&rtype=$dao->referrer_type").'">'.$this->_referrerTypes[$dao->referrer_type].'</a>' : $this->_referrerTypes[$dao->referrer_type],
         'referrer_network' => empty($this->_referrerNetwork) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&rnetwork=$dao->referrer_network").'">'.$dao->referrer_network.'</a>' : $dao->referrer_network,
+        'utm' => $utmInfo,
         'referrer_url' => $referrerUrl,
         'landing' => $landing,
         'entity_id' => $dao->entity_id,
@@ -339,6 +376,27 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     if ($this->_state) {
       $where[] = "state = %8";
       $args[8] = array($this->_state, 'Integer');
+    }
+
+    if ($this->_utmSource) {
+      $where[] = "utm_source = %9";
+      $args[9] = array($this->_utmSource, 'String');
+    }
+    if ($this->_utmMedium) {
+      $where[] = "utm_medium = %10";
+      $args[10] = array($this->_utmMedium, 'String');
+    }
+    if ($this->_utmCampaign) {
+      $where[] = "utm_campaign = %11";
+      $args[11] = array($this->_utmCampaign, 'String');
+    }
+    if ($this->_utmTerm) {
+      $where[] = "utm_term = %12";
+      $args[12] = array($this->_utmTerm, 'String');
+    }
+    if ($this->_utmContent) {
+      $where[] = "utm_content= %13";
+      $args[13] = array($this->_utmContent, 'String');
     }
 
     $where = implode(" AND ", $where);
@@ -429,6 +487,12 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
               $filters[$name]['value_display'] = $this->_trackState[$value];
               break;
             case 'entity_id':
+              $filters[$name]['value_display'] = $value;
+            case 'utm_source':
+            case 'utm_medium':
+            case 'utm_campaign':
+            case 'utm_term':
+            case 'utm_content':
               $filters[$name]['value_display'] = $value;
               break;
           }

@@ -23,6 +23,11 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'referrerType' => CRM_Utils_Request::retrieve('rtype', 'String', $null),
       'referrerNetwork' => CRM_Utils_Request::retrieve('rnetwork', 'String', $null),
       'entityId' => CRM_Utils_Request::retrieve('entity_id', 'Positive', $null),
+      'utmSource' => CRM_Utils_Request::retrieve('utm_source', 'String', $null),
+      'utmMedium' => CRM_Utils_Request::retrieve('utm_medium', 'String', $null),
+      'utmCampaign' => CRM_Utils_Request::retrieve('utm_campaign', 'String', $null),
+      'utmTerm' => CRM_Utils_Request::retrieve('utm_term', 'String', $null),
+      'utmContent' => CRM_Utils_Request::retrieve('utm_content', 'String', $null),
     );
     if ($start = CRM_Utils_Request::retrieve('start', 'Date', $null)) {
       $params['visitDateStart'] = $start;
