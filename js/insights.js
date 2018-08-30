@@ -133,7 +133,7 @@ function trackVisit(visitInfo) {
         object['referrer_network'] = visitInfo.referrer.network;
         break;
       default:
-        object['type'] = 'unknown';
+        object['referrer_type'] = 'unknown';
         object['referrer_network'] = '';
         break;
     }
@@ -142,8 +142,8 @@ function trackVisit(visitInfo) {
         object[utmKey] = visitInfo.campaign[utmKey];
       }
     }
-    if (typeof navigator.doNotTrack === 'object' && !navigator.doNotTrack) {
-      object['type'] = 'unknown';
+    if (typeof navigator.doNotTrack === 'object' && navigator.doNotTrack) {
+      object['referrer_type'] = 'unknown';
       object['referrer_network'] = '';
       object['referrer_url'] = '';
     }
