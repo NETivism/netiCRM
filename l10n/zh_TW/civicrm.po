@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-29 06:17+0000\n"
+"PO-Revision-Date: 2018-08-31 08:05+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46490,3 +46490,9 @@ msgstr ""
 
 msgid "run every %1 minutes"
 msgstr "每 %1 分鐘執行"
+
+msgid "Taipa"
+msgstr "氹仔"
+
+msgid "Coloane"
+msgstr "路環"

@@ -46333,3 +46333,9 @@ msgstr ""
 
 msgid "run every %1 minutes"
 msgstr ""
+
+msgid "Taipa"
+msgstr "" 
+
+msgid "Coloane"
+msgstr ""
