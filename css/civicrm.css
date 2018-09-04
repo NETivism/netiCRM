@@ -3688,6 +3688,12 @@ div#crm-toolTip
 #contactDetails .contact_information-section tr {
   border-bottom: 1px dotted #E3E3E3;
 }
+#contactDetails tr[id^="Phone_Block_"] .crm-form-textfield {
+  max-width: 20rem;
+}
+#contactDetails tr[id^="Phone_Block_"] .crm-form-elem {
+  vertical-align: top;
+}
 
 .crm-container .crm-search_criteria_basic-accordion .form-layout td {
   border-right: 1px dotted #CCC;
@@ -4298,9 +4304,6 @@ ul.ui-sortable {
 .one-sidebar .crm-accordion-wrapper .huge40,
 .one-sidebar .crm-accordion-wrapper .bigSelect {
   max-width: 8rem;
-}
-.crm-accordion-wrapper #Phone_Block_1 .crm-form-textfield {
-  max-width: 20rem;
 }
 .crm-accordion-wrapper > .crm-submit-buttons {
   padding: 6px 18px;
