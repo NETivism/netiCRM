@@ -38,7 +38,7 @@ do_merge(){
   git pull
   if [ "$2" = "7.x" ] || [ -z "$2" ]; then
     if [ -z "$2" ]; then
-      cat "Release note of $TAG:\n" > /tmp/release-note.txt
+      echo "Release note of $TAG:\n" > /tmp/release-note.txt
       git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%h %s" >> /tmp/release-note.txt
       git tag -a $TAG -F /tmp/release-note.txt
     else
