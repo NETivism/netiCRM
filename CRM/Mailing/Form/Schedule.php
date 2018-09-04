@@ -294,6 +294,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
         else {
           $job->scheduled_date = CRM_Utils_Date::processDate($params['start_date'] . ' ' . $params['start_date_time']);
         }
+        $job->end_date = null;
         $job->save();
       }
 
