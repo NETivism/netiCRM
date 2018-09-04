@@ -67,16 +67,9 @@ if [ -n "$NEED_COMMIT" ]; then
   exit 1;
 else
   # do merge jobs
-  echo "We will begin merge process."
-  read -p "Are you sure?  [Y/n]" -n 1 REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\nUser abort."
-    exit 1
-  else
-    echo -e "\nProcessing merge ...\n"
-    neticrm_merge
-    echo -e "\nDone!"
-    cd $CIVICRMPATH && git status --porcelain && git tag
-    echo -e "You can use command below for release this:\n  git push --tags\n"
-  fi
+  echo -e "\nProcessing merge ...\n"
+  neticrm_merge
+  echo -e "\nDone!"
+  cd $CIVICRMPATH && git status --porcelain && git tag
+  echo -e "You can use command below for release this:\n  git push --tags\n"
 fi
