@@ -123,7 +123,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       );
     }
     foreach($return as $type => $data) {
-      $return[$type]['percent'] = number_format(($dao->count / $total) * 100 );
+      $return[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
     }
 
     return $return;
