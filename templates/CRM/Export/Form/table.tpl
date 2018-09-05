@@ -31,7 +31,10 @@
             <tr class="columnheader-dark"><th colspan="4">{ts 1=$savedName}Using Field Mapping: %1{/ts}</td></tr>
         {/if}
         <tr class="columnheader">
-            <th>{ts}Fields to Include in Export File{/ts}</th>
+            <th>
+                {ts}Fields to Include in Export File{/ts}
+                <div class="draggable-tip">{ts}Draggable{/ts}</div>
+            </th>
         </tr>
         {*section name=cols loop=$columnCount*}
         {section name=cols loop=$columnCount.1}
