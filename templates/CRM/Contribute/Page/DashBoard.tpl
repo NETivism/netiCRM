@@ -288,7 +288,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>{ts 1=$days}In %1 days{/ts} {ts}Non-recurring Contribution{/ts}</h3>
+        <h3>{ts 1=$days}In %1 days{/ts} {ts}New Non-Recurring Contribution{/ts}</h3>
         <table>
           {foreach from=$non_recur_contributions item=contribution}
           <tr>
@@ -332,7 +332,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>{ts}End of recurring contribution{/ts}</h3>
+        <h3>{ts 1=$days}In %1 days{/ts} {ts}End of recurring contribution{/ts}</h3>
         <table>
           {foreach from=$due_recur item=contribution}
           <tr>
