@@ -1929,7 +1929,13 @@ table.campaign td,
   text-indent:-10000px;
   width:16px;
 }
-
+.crm-container .draggable-tip{
+  float: right;
+  font-size: .8em;
+}
+.crm-container .columnheader td .draggable-tip{
+  color: #777;
+}
 .crm-container #map-field .draggable .form-item{
   padding-right: 50px;
   position: relative;
@@ -1945,7 +1951,10 @@ table.campaign td,
   position: absolute;
   right: 0px;
   top: 0px;
-  cursor: all-scroll;
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
 }
 .crm-container #map-field .draggable .drag-handler:before{
   content: " ";

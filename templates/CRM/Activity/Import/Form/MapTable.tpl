@@ -45,7 +45,10 @@
                 {/if}
             {/section}
             
-            <th>{ts}Matching CiviCRM Field{/ts}</th>
+            <th>
+                {ts}Matching CiviCRM Field{/ts}
+                {if $wizard.currentStepName == 'MapField'}<div class="draggable-tip">{ts}Draggable{/ts}</div>{/if}
+            </th>
         </tr>
         
         {*Loop on columns parsed from the import data rows*}
