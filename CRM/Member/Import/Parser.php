@@ -550,13 +550,6 @@ abstract class CRM_Member_Import_Parser {
     $params = array();
     for ($i = 0; $i < $this->_activeFieldCount; $i++) {
       if (isset($this->_activeFields[$i]->_value)) {
-        if (isset($this->_activeFields[$i]->_softCreditField)) {
-          if (!isset($params[$this->_activeFields[$i]->_name])) {
-            $params[$this->_activeFields[$i]->_name] = array();
-          }
-          $params[$this->_activeFields[$i]->_name][$this->_activeFields[$i]->_softCreditField] = $this->_activeFields[$i]->_value;
-        }
-
         if (isset($this->_activeFields[$i]->_hasLocationType)) {
           if (!isset($params[$this->_activeFields[$i]->_name])) {
             $params[$this->_activeFields[$i]->_name] = array();
@@ -589,9 +582,7 @@ abstract class CRM_Member_Import_Parser {
         }
 
         if (!isset($params[$this->_activeFields[$i]->_name])) {
-          if (!isset($this->_activeFields[$i]->_softCreditField)) {
-            $params[$this->_activeFields[$i]->_name] = $this->_activeFields[$i]->_value;
-          }
+          $params[$this->_activeFields[$i]->_name] = $this->_activeFields[$i]->_value;
         }
       }
     }
