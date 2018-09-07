@@ -5298,6 +5298,10 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
   margin: 15px 0;
 }
+/* subscribe */
+.crm-container form[action*="/civicrm/mailing/subscribe"] .crm-submit-buttons {
+  text-align: center;
+}
 
 /* Profiles Page */
 .crm-container form[action*="/civicrm/profile/create"] .crm-submit-buttons {
@@ -6256,4 +6260,8 @@ input.crm-form-textfield,
 }
 .crm-container .filter-box a.zmdi:hover{
   color: #CCC;
+}
+.crm-container .recaptcha-section {
+  display: flex;
+  justify-content: center;
 }

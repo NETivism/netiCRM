@@ -25,7 +25,6 @@
 *}
 {if $recaptchaHTML}
 <div class="crm-section recaptcha-section">
-    <div class="label"></div>
-    <div class="content">{$recaptchaHTML}</div>
+    {$recaptchaHTML}
 </div>
 {/if}
