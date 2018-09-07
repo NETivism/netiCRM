@@ -25,9 +25,6 @@ neticrm_merge(){
   echo -e "\n###### netiCRM ######\n"
   cd $CIVICRMPATH
   do_merge $TAG
-  cat "Release note of $TAG:\n" > /tmp/release-note.txt
-  git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%h %s" >> /tmp/release-note.txt
-  git tag -a $TAG -F /tmp/release-note.txt
 }
 
 do_merge(){
@@ -39,40 +36,25 @@ do_merge(){
   fi
   git checkout ${VERSION_PREFIX}hotfix
   git pull
+  if [ "$2" = "7.x" ] || [ -z "$2" ]; then
+    if [ -z "$2" ]; then
+      echo "Release note of $TAG:" > /tmp/release-note.txt
+      git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%h %s" >> /tmp/release-note.txt
+      git tag -a $TAG -F /tmp/release-note.txt
+    else
+      git tag -a $TAG -m "Release $TAG"
+    fi
+  fi
   git checkout ${VERSION_PREFIX}master
   git fetch --all
   git reset --hard origin/${VERSION_PREFIX}master
   git merge ${VERSION_PREFIX}hotfix -m "Release merge."
   git commit
-  if [ "$2" = "7.x" ] || [ -z "$2" ]; then
-    git tag -a $TAG -m "Release $TAG"
-  fi
 }
-
-# auto fetch transifex translations
-if [ -d $CALLEDPATH/../../l10n/$LANGUAGE ]; then
-  if [ ! -d $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES ]; then
-    mkdir $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES
-  fi
-  echo "Fetch lastest translation from transifex:"
-  read -p "  Enter transifex username (empty to skip): " TRANSIFEXUSER
-  read -p "  Enter transifex password (empty to skip): " TRANSIFEXPASS
-  cd $CALLEDPATH/../../l10n/$LANGUAGE/
-  if [ -n "$TRANSIFEXUSER" ] && [ -n "$TRANSIFEXPASS" ]; then
-    curl -L --user $TRANSIFEXUSER:$TRANSIFEXPASS -X GET "https://www.transifex.com/api/2/project/neticrm/resource/neticrmpot/translation/$LANGUAGE/?mode=default&file" -o civicrm.po
-  fi
-  msgfmt $CALLEDPATH/../../l10n/$LANGUAGE/civicrm.po -o $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES/civicrm.mo
+echo "Fetch latest translation ..."
+if which tx > /dev/null; then
+  cd $CIVICRMPATH/tool/scripts && ./pull-translation.sh
 fi
-
-# gen code for new translations 
-read -p "  Generate civicrm DAO code(y/empty to skip): " GENCODE
-if [ -d $CALLEDPATH/../../xml ] && [ -n "$GENCODE" ]; then
-  cd $CALLEDPATH/../../xml
-  php GenCode.php
-fi
-
-# verify if we have anything to commit
-echo -e "Done.\n\n"
 
 echo "Git status checking ..."
 cd $CIVICRMPATH
@@ -85,16 +67,9 @@ if [ -n "$NEED_COMMIT" ]; then
   exit 1;
 else
   # do merge jobs
-  echo "We will begin merge process."
-  read -p "Are you sure?  [Y/n]" -n 1 REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\nUser abort."
-    exit 1
-  else
-    echo -e "\nProcessing merge ...\n"
-    neticrm_merge
-    echo -e "\nDone!"
-    cd $CIVICRMPATH && git status --porcelain && git tag
-    echo -e "You can use command below for release this:\n  git push --tags\n"
-  fi
+  echo -e "\nProcessing merge ...\n"
+  neticrm_merge
+  echo -e "\nDone!"
+  cd $CIVICRMPATH && git status --porcelain && git tag
+  echo -e "You can use command below for release this:\n  git push --tags\n"
 fi

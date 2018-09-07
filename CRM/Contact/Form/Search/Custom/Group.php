@@ -279,6 +279,10 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         }
       }
 
+      // add deleted contact into exclude table
+      $excludeDeletedContact = "REPLACE INTO  Xg_{$this->_tableName} ( contact_id ) SELECT id FROM civicrm_contact WHERE is_deleted = 1";
+      CRM_Core_DAO::executeQuery($excludeDeletedContact);
+
       $sql = "CREATE TEMPORARY TABLE Ig_{$this->_tableName} ( id int PRIMARY KEY AUTO_INCREMENT,
                                                                    contact_id int,
                                                                    group_names varchar(64)) ENGINE=HEAP";
@@ -302,10 +306,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
 
 
       //used only when exclude group is selected
-      if ($xGroups != 0) {
-        $includeGroup .= " LEFT JOIN        Xg_{$this->_tableName}
-                                          ON       civicrm_contact.id = Xg_{$this->_tableName}.contact_id";
-      }
+      $includeGroup .= " LEFT JOIN Xg_{$this->_tableName} ON civicrm_contact.id = Xg_{$this->_tableName}.contact_id";
 
       if ($iGroups) {
         $includeGroup .= " WHERE           
@@ -317,9 +318,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       }
 
       //used only when exclude group is selected
-      if ($xGroups != 0) {
-        $includeGroup .= " AND  Xg_{$this->_tableName}.contact_id IS null";
-      }
+      $includeGroup .= " AND  Xg_{$this->_tableName}.contact_id IS null";
 
       CRM_Core_DAO::executeQuery($includeGroup);
 
@@ -398,6 +397,10 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         CRM_Core_DAO::executeQuery($excludeTag);
       }
 
+      // add deleted contact into exclude table
+      $excludeDeletedContactTag = "REPLACE INTO Xt_{$this->_tableName} ( contact_id ) SELECT id FROM civicrm_contact WHERE is_deleted = 1";
+      CRM_Core_DAO::executeQuery($excludeDeletedContactTag);
+
       $sql = "CREATE TEMPORARY TABLE It_{$this->_tableName} ( id int PRIMARY KEY AUTO_INCREMENT,
                                                                contact_id int,
                                                                tag_names varchar(64)) ENGINE=HEAP";
@@ -421,10 +424,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       }
 
       //used only when exclude tag is selected
-      if ($xTags != 0) {
-        $includeTag .= " LEFT JOIN        Xt_{$this->_tableName}
-                                       ON       civicrm_contact.id = Xt_{$this->_tableName}.contact_id";
-      }
+      $includeTag .= " LEFT JOIN Xt_{$this->_tableName} ON civicrm_contact.id = Xt_{$this->_tableName}.contact_id";
       if ($iTags) {
         $includeTag .= " WHERE   civicrm_entity_tag.tag_id IN($iTags)";
       }
@@ -433,9 +433,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       }
 
       //used only when exclude tag is selected
-      if ($xTags != 0) {
-        $includeTag .= " AND  Xt_{$this->_tableName}.contact_id IS null";
-      }
+      $includeTag .= " AND  Xt_{$this->_tableName}.contact_id IS null";
 
       CRM_Core_DAO::executeQuery($includeTag);
     }
@@ -443,8 +441,8 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     $from = " FROM civicrm_contact contact_a";
 
     /*
-         * check the situation and set booleans
-         */
+     * check the situation and set booleans
+     */
 
     if ($iGroups != 0) {
       $iG = TRUE;
@@ -458,18 +456,15 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     else {
       $iT = FALSE;
     }
-    if ($xGroups != 0) {
+
+    // force exclude group and tag true. because we have deleted contacts
+    if ($this->_groups) {
       $xG = TRUE;
     }
-    else {
-      $xG = FALSE;
-    }
-    if ($xTags != 0) {
+    if ($this->_tags) {
       $xT = TRUE;
     }
-    else {
-      $xT = FALSE;
-    }
+
     if (!$this->_groups || !$this->_tags) {
       $this->_andOr = 1;
     }

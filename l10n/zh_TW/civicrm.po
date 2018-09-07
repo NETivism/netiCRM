@@ -13,8 +13,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-08-28 05:15+0000\n"
+"PO-Revision-Date: 2018-09-07 08:10+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-09-05 04:25+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17677,7 +17679,7 @@ msgstr "使用信用卡進行會籍更新需要會費，然而因為此會員類
 
 #: CRM/Member/Form/MembershipRenewal.php
 msgid "Date Renewal Entered"
-msgstr "已輸入更新日期"
+msgstr "更新會籍的起算日"
 
 #: CRM/Member/Form/MembershipRenewal.php
 msgid "Record Renewal Payment?"
@@ -34020,7 +34022,7 @@ msgid ""
 "memberships, renewing will create a membership period commencing from the "
 "'Date Renewal Entered'. This date can be adjusted including being set to the"
 " day after the previous End Date - if continuous membership is required."
-msgstr "若是對還在期限中，與寬限期中的會員進行會籍更新，他們的會籍將會從預計到期日之後新增上去。若是已過期的會員，更新會籍則會讓會籍從輸入的會籍更新日起算。若有需要，會籍更新日可以調整，例如把日期調整到到期日之後。"
+msgstr "若是對還在期限中，對寬限期中的會員進行會籍更新，他們的會籍將從預計到期日之後新增上去。若是對已過期的會員進行會籍更新，他們的會籍將從更新會籍的起算日往後延長。因此若有需要，更新會籍的起算日可以調整，例如把日期調整到到期日之後。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Status of this membership."
@@ -38362,13 +38364,13 @@ msgstr "取消訂閱"
 msgid ""
 "You have been un-subscribed from the following groups: %1. You can re-"
 "subscribe by mailing %2 or clicking <a href=\"%3\">here</a>."
-msgstr "您已取消訂閱：%1。您欲重新訂閱，可以寄信給%2或按 <a href=\"%3\">這裡</a>。"
+msgstr "您已取消訂閱 %1。您欲重新訂閱，可以寄信給%2或按 <a href=\"%3\">這裡</a>。"
 
 #: xml/templates/civicrm_data.tpl
 msgid ""
 "You have been un-subscribed from the following groups: %1. You can re-"
 "subscribe by mailing %2 or clicking %3"
-msgstr "您已取消訂閱：%1。如您要重新訂閱，可寄信到%2或按%3"
+msgstr "您已取消訂閱 %1。如您要重新訂閱，可寄信到%2或按%3"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Re-subscribe Confirmation"
@@ -38378,13 +38380,13 @@ msgstr "再次訂閱確認"
 msgid ""
 "You have been re-subscribed to the following groups: %1. You can un-"
 "subscribe by mailing %2 or clicking <a href=\"%3\">here</a>."
-msgstr "您已重新訂閱以下電子報：%1。如您要取消訂閱，可寄信給%2或按<a href=\"%3\">這裡</a>。"
+msgstr "您已重新訂閱 %1。如您要取消訂閱，可寄信給%2或按<a href=\"%3\">這裡</a>。"
 
 #: xml/templates/civicrm_data.tpl
 msgid ""
 "You have been re-subscribed to the following groups: %1. You can un-"
 "subscribe by mailing %2 or clicking %3"
-msgstr "您已重新訂閱以下電子報：%1。如您要取消訂閱，可寄信給%2或按%3"
+msgstr "您已重新訂閱 %1。如您要取消訂閱，可寄信給%2或按%3"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Opt-out Confirmation"
@@ -46482,8 +46484,17 @@ msgstr "無任何結果。"
 msgid "Add SMS Provider"
 msgstr "新增簡訊供應商"
 
-msgid "Municipality of das Ilhas"
-msgstr "海島市"
+msgid "run every %1 minutes"
+msgstr "每 %1 分鐘執行"
 
-msgid "Municipality of Macau"
-msgstr "澳門市"
+msgid "Taipa"
+msgstr "氹仔"
+
+msgid "Coloane"
+msgstr "路環"
+
+msgid "New Non-Recurring Contribution"
+msgstr "新進定期定額捐款"
+
+msgid "Draggable"
+msgstr "拖曳"

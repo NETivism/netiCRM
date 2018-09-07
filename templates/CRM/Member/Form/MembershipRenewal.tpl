@@ -67,7 +67,10 @@
         </tr> 
         <tr class="crm-member-membershiprenew-form-block-renewal_date">  
             <td class="label">{$form.renewal_date.label}</td>
-            <td>{include file="CRM/common/jcalendar.tpl" elementName=renewal_date}</td>
+            <td>
+              {include file="CRM/common/jcalendar.tpl" elementName=renewal_date}
+              <div class="description">{ts}Renewing will add the normal membership period to the End Date of the previous period for members whose status is Current or Grace. For Expired memberships, renewing will create a membership period commencing from the 'Date Renewal Entered'. This date can be adjusted including being set to the day after the previous End Date - if continuous membership is required.{/ts}</div>
+            </td>
         </tr>
    
         {if $accessContribution and ! $membershipMode}

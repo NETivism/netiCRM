@@ -46325,8 +46325,17 @@ msgstr ""
 msgid "Add SMS Provider"
 msgstr ""
 
-msgid "Municipality of das Ilhas"
+msgid "run every %1 minutes"
 msgstr ""
 
-msgid "Municipality of Macau"
+msgid "Taipa"
+msgstr "" 
+
+msgid "Coloane"
+msgstr ""
+
+msgid "New Non-Recurring Contribution"
+msgstr ""
+
+msgid "Draggable"
 msgstr ""
