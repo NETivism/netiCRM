@@ -46336,3 +46336,6 @@ msgstr ""
 
 msgid "New Non-Recurring Contribution"
 msgstr ""
+
+msgid "Draggable"
+msgstr ""
