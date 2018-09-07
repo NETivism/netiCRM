@@ -4411,8 +4411,8 @@ VALUES
     ('電子報頁尾','Footer','頁尾標題','<a href=\"{action.optOutUrl}\">取消訂閱</a> <br/> {domain.address}','取消訂閱連結: {action.optOutUrl}\n{domain.address}',1,1),
     ('訂閱訊息','Subscribe','訂閱待確認','謝謝您訂閱 {subscribe.group}。請您按下<a href=\"{subscribe.url}\">這裡</a>完成確認訂閱的動作。','感謝您訂閱{subscribe.group}。為確認您有收到確認信函，請您點按後方的連結完成訂閱動作：{subscribe.url}',1,1),
     ('歡迎訊息','Welcome','您的訂閱已確認！感謝您的訂閱～','您好，您已完成 {welcome.group} 電子報的訂閱。','您好，您已完成 {welcome.group} 電子報的訂閱。',1,1),
-    ('取消訂閱的訊息文字','Unsubscribe','取消訂閱','您已取消訂閱：{unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱：{unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
-    ('再次訂閱訊息','Resubscribe','再次訂閱確認','您已重新訂閱以下電子報：{resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按<a href=\"{action.unsubscribeUrl}\">這裡</a>。','您已重新訂閱以下電子報：{resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按{action.unsubscribeUrl}',1,1),
+    ('取消訂閱的訊息文字','Unsubscribe','取消訂閱','您已取消訂閱 {unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱 {unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
+    ('再次訂閱訊息','Resubscribe','再次訂閱確認','您已重新訂閱 {resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按<a href=\"{action.unsubscribeUrl}\">這裡</a>。','您已重新訂閱 {resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按{action.unsubscribeUrl}',1,1),
     ('全站退訂的訊息文字','OptOut','退出確認','您這個 Email 將不會再收到從 {domain.name} 寄出的電子報。','您這個 Email 將不會再收到從 {domain.name} 寄出的電子報。',1,1),
     ('自動回覆','Reply','請將您的問題寄送到我們的 Email','這是自動回覆訊息，請勿回覆至此信箱。如有任何問題，請寄信至我們的 Email。','這是自動回覆訊息，請勿回覆至此信箱。如有任何問題，請寄信至我們的 Email。',1,1);
 
