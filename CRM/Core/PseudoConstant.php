@@ -166,6 +166,13 @@ class CRM_Core_PseudoConstant {
   private static $group;
 
   /**
+   * public group
+   * @var array
+   * @static
+   */
+  private static $publicGroup;
+
+  /**
    * groupIterator
    * @var mixed
    * @static
@@ -956,6 +963,17 @@ WHERE  id = %1";
       );
     }
     return self::$group[$groupKey];
+  }
+
+  public static function &publicGroup($groupType = NULL) {
+    if (!empty(self::$publicGroup)) {
+      return self::$publicGroup;
+    }
+    $condition = CRM_Contact_BAO_Group::groupTypeCondition($groupType);
+
+    self::$publicGroup = array();
+    self::populate(self::$publicGroup, 'CRM_Contact_DAO_Group', FALSE, 'title', 'is_active', "$condition AND visibility Like 'Public Pages'");
+    return self::$publicGroup;
   }
 
   /**

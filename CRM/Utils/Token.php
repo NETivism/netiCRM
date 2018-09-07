@@ -718,16 +718,9 @@ class CRM_Utils_Token {
         $config = CRM_Core_Config::singleton();
         $base = CRM_Utils_System::baseURL();
 
-        // FIXME: an ugly hack for CRM-2035, to be dropped once CRM-1799 is implemented
-        require_once 'CRM/Contact/DAO/Group.php';
-        $dao = new CRM_Contact_DAO_Group();
-        $dao->find();
-        while ($dao->fetch()) {
-          if (substr($dao->visibility, 0, 6) == 'Public') {
-            $visibleGroups[] = $dao->id;
-          }
-        }
-        $value = implode(', ', $groups);
+        $publicGroup = CRM_Core_PseudoConstant::publicGroup();
+        $availableGroup = array_intersect_key($groups, $publicGroup);
+        $value = implode(', ', $availableGroup);
         self::token_replace('unsubscribe', 'group', $value, $str);
       }
     }
@@ -753,7 +746,9 @@ class CRM_Utils_Token {
   ) {
     if (self::token_match('resubscribe', 'group', $str)) {
       if (!empty($groups)) {
-        $value = implode(', ', $groups);
+        $publicGroup = CRM_Core_PseudoConstant::publicGroup();
+        $availableGroup = array_intersect_key($groups, $publicGroup);
+        $value = implode(', ', $availableGroup);
         self::token_replace('resubscribe', 'group', $value, $str);
       }
     }
@@ -773,6 +768,11 @@ class CRM_Utils_Token {
    */
   public static function &replaceSubscribeTokens($str, $group, $url, $html) {
     if (self::token_match('subscribe', 'group', $str)) {
+      $publicGroup = CRM_Core_PseudoConstant::publicGroup();
+      $isPublic = array_search($group, $publicGroup);
+      if (!$isPublic) {
+        $group = '';
+      }
       self::token_replace('subscribe', 'group', $group, $str);
     }
     if (self::token_match('subscribe', 'url', $str)) {
@@ -838,6 +838,11 @@ class CRM_Utils_Token {
    */
   public static function &replaceWelcomeTokens($str, $group, $html) {
     if (self::token_match('welcome', 'group', $str)) {
+      $publicGroup = CRM_Core_PseudoConstant::publicGroup();
+      $isPublic = array_search($group, $publicGroup);
+      if (!$isPublic) {
+        $group = '';
+      }
       self::token_replace('welcome', 'group', $group, $str);
     }
     return $str;
