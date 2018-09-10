@@ -43,11 +43,12 @@
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
  {$initHideBoxes}
 </div>
-{literal}
 <script type="text/javascript" >
+{literal}
 if ( document.getElementsByName("saveMapping")[0].checked ) {
     document.getElementsByName("updateMapping")[0].checked = true;
     document.getElementsByName("saveMapping")[0].checked = false;
 } 
-</script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector='select[name$="0\\]"]' nowrapper=1}
+</script>

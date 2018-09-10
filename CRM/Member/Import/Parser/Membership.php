@@ -80,7 +80,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $this->_importableContactFields = $fields;
 
     foreach ($fields as $name => $field) {
-      $this->addField($name, $field['title'], $field['type'], $field['headerPattern'], $field['dataPattern']);
+      $this->addField($name, $field['title'], $field['type'], $field['headerPattern'], $field['dataPattern'], $field['hasLocationType']);
     }
 
     $this->_newMemberships = array();
