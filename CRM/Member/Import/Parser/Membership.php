@@ -191,6 +191,10 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $erroneousField = NULL;
     $response = $this->setActiveFieldValues($values, $erroneousField);
 
+    $params = &$this->getActiveFieldParams();
+    require_once 'CRM/Import/Parser/Contact.php';
+    $errorMessage = NULL;
+
     $errorRequired = FALSE;
 
     if ($this->_membershipTypeIndex < 0) {
@@ -221,7 +225,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $session = CRM_Core_Session::singleton();
     $dateType = $session->get("dateTypes");
     foreach ($params as $key => $val) {
-
+      $is_deleted = NULL;
       if ($val) {
         switch ($key) {
           case 'join_date':
@@ -273,11 +277,18 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
             }
             break;
-
-          case 'email':
-            if (!CRM_Utils_Rule::email($val)) {
-              CRM_Import_Parser_Contact::addToErrorMsg('Email Address', $errorMessage);
+          case 'contribution_contact_id':
+            $is_deleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'id');
+            if ($is_deleted) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
             }
+            break;
+          case 'external_identifier':
+            $is_deleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'external_identifier');
+            if ($is_deleted) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('External Identifier').'-'.$val)), $errorMessage);
+            }
+            break;
         }
       }
     }

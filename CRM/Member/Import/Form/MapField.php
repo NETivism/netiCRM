@@ -207,6 +207,10 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     }
     elseif ($this->_onDuplicate == CRM_Member_Import_Parser::DUPLICATE_SKIP) {
       unset($this->_mapperFields['membership_id']);
+      $highlightedFieldsArray = array('membership_contact_id', 'external_identifier', 'membership_start_date', 'membership_type_id');
+      foreach ($highlightedFieldsArray as $name) {
+        $highlightedFields[] = $name;
+      }
       $dedupeRuleGroup = $this->get('dedupeRuleGroup');
       if(!empty($dedupeRuleGroup)) {
         $ruleParams = array('id' => $dedupeRuleGroup);
@@ -224,7 +228,6 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         $this->_mapperFields[$fieldName] .= ' '. ts('(match to contact)');
         $highlightedFields[] = $fieldName;
       }
-      $highlightedFields = array_merge($highlightedFields, array('total_amount'));
     }
 
     // modify field title
