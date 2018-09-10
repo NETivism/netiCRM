@@ -724,10 +724,35 @@ abstract class CRM_Contribute_Import_Parser {
   }
 
   function getDataPatterns() {
-    $values = array();
+    /**
+      priority of fields is 'email', 'total amount', 'Each date fields like join_date, start_date', 'phone', 'contribute fields', 'contact fields'
+    */
+    $values = $contribute_fields = $contact_fields = array();
+    $priority_fields = array(
+      'email' => '',
+      'total_amount' => '',
+    );
+    $secondary_fields = array(
+      'phone' => '',
+    );
     foreach ($this->_fields as $name => $field) {
-      $values[$name] = $field->_dataPattern;
+      if(isset($priority_fields[$name])){
+        $priority_fields[$name] = $field->_dataPattern;
+      }
+      elseif(preg_match('/_date$/', $name)){
+        $priority_fields[$name] = $field->_dataPattern;
+      }
+      elseif(isset($secondary_fields[$name])){
+        $secondary_fields[$name] = $field->_dataPattern;
+      }
+      elseif(preg_match('/^'.ts('Contact').'::/', $field->_title)){
+        $contact_fields[$name] = $field->_dataPattern;
+      }
+      else{
+        $contribute_fields[$name] = $field->_dataPattern;
+      }
     }
+    $values = array_merge($priority_fields, $secondary_fields, $contribute_fields, $contact_fields);
     return $values;
   }
 

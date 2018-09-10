@@ -618,10 +618,34 @@ abstract class CRM_Member_Import_Parser {
   }
 
   function getDataPatterns() {
-    $values = array();
+    /**
+      priority of fields is 'email', 'Each date fields like join_date, start_date', 'phone', 'membership fields', 'contact fields'
+    */
+    $values = $member_fields = $contact_fields = array();
+    $priority_fields = array(
+      'email' => '',
+    );
+    $secondary_fields = array(
+      'phone' => '',
+    );
     foreach ($this->_fields as $name => $field) {
-      $values[$name] = $field->_dataPattern;
+      if(isset($priority_fields[$name])){
+        $priority_fields[$name] = $field->_dataPattern;
+      }
+      elseif(preg_match('/_date$/', $name)){
+        $priority_fields[$name] = $field->_dataPattern;
+      }
+      elseif(isset($secondary_fields[$name])){
+        $secondary_fields[$name] = $field->_dataPattern;
+      }
+      elseif(preg_match('/^'.ts('Contact').'::/', $field->_title)){
+        $contact_fields[$name] = $field->_dataPattern;
+      }
+      else{
+        $member_fields[$name] = $field->_dataPattern;
+      }
     }
+    $values = array_merge($priority_fields, $secondary_fields, $member_fields, $contact_fields);
     return $values;
   }
 
