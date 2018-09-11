@@ -1942,7 +1942,8 @@ table.campaign td,
   border-bottom: 1px solid #fff;
 }
 .crm-container #map-field .draggable.sortable-chosen .form-item{
-  background: #fff;
+  box-shadow: 0 2px 2px 1px grey;
+  z-index: 1;
 }
 
 .crm-container #map-field .draggable .drag-handler{
