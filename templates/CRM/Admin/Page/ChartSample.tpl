@@ -14,6 +14,7 @@
   */
 
   $chart = array(
+    'title' => 'Pie Chart (甜甜圈)',
     'id' => 'chart-donut-fill',
     'classes' => array('ct-chart-pie', 'ct-chart-fill-donut'),
     'selector' => '#chart-donut-fill',
@@ -67,6 +68,7 @@
 <div class="chartist-test">
 {php}
   $chart = array(
+    'title' => 'Pie Chart',
     'id' => 'chart-pie-simple-demo',
     'classes' => array('ct-chart-pie'),
     'selector' => '#chart-pie-simple-demo',
@@ -84,6 +86,7 @@
 <div class="chartist-test">
 {php}
   $chart = array(
+    'title' => 'Line Chart',
     'id' => 'chart-line',
     'classes' => array('ct-chart-line'),
     'selector' => '#chart-line',
@@ -102,12 +105,37 @@
 <div class="chartist-test">
 {php}
   /*
+  onlyIntegerY: Y軸是否只顯示整數，資料格式為布林值，預設為「false」
+  */
+
+  $chart = array(
+    'title' => 'Line Chart（Y軸只顯示整數）',
+    'id' => 'chart-line-only-integer-Y',
+    'classes' => array('ct-chart-line'),
+    'selector' => '#chart-line-only-integer-Y',
+    'type' => 'Line',
+    'labels' => json_encode(array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')),
+    'series' => json_encode(array(array(12, 9, 7, 8, 5), array(2, 1, 3.5, 7, 3), array(1, 3, 4, 5, 6))), 
+    'seriesUnit' => '$ ',
+    'seriesUnitPosition'=> 'prefix',
+    'withToolTip' => true,
+    'onlyIntegerY' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
+
+<div class="chartist-test">
+{php}
+  /*
   疊合區域圖範例 - 相關參數
 
   stackLines：是否讓 Line 圖表有疊合效果，資料格式為布林值，預設為「false」
   */
 
   $chart = array(
+    'title' => '疊合區域圖',
     'id' => 'chart-stack-line',
     'selector' => '#chart-stack-line',
     'type' => 'Line',
@@ -126,6 +154,7 @@
 <div class="chartist-test">
 {php}
   $chart = array(
+    'title' => 'Bar Chart',
     'id' => 'chart-bar',
     'classes' => array('ct-chart-bar'),
     'selector' => '#chart-bar',
@@ -143,6 +172,7 @@
 <div class="chartist-test">
 {php}
   $chart = array(
+    'title' => 'Bar Chart (overlapping)',
     'id' => 'chart-overlapping-bars',
     'classes' => array('ct-chart-bar'),
     'selector' => '#chart-overlapping-bars',
@@ -159,6 +189,7 @@
 <div class="chartist-test">
 {php}
   $chart = array(
+    'title' => 'Bar Chart (stack)',
     'id' => 'chart-stack-bar',
     'classes' => array('ct-chart-bar'),
     'selector' => '#chart-stack-bar',

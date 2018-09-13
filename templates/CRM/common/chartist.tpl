@@ -65,6 +65,7 @@ if (!$crmChartistAdded) {
   var animation = {/literal}{$chartist.animation|default:0}{literal};
   var stackBars = {/literal}{$chartist.stackBars|default:0}{literal};
   var stackLines = {/literal}{$chartist.stackLines|default:0}{literal};
+  var onlyIntegerY = {/literal}{$chartist.onlyIntegerY|default:0}{literal};
   var chartSelector = "{/literal}{$chartist.selector|default:'.chartist-chart'}{literal}";
   var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
@@ -354,7 +355,8 @@ if (!$crmChartistAdded) {
         labelInterpolationFnc: function(value) {
           var label = seriesUnit ? renderUnitLabel(value, seriesUnit, seriesUnitPosition, 'axis') : value;
           return label;
-        }
+        },
+        onlyInteger: onlyIntegerY
       }
     };
   }
