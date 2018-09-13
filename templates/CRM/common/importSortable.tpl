@@ -1,24 +1,28 @@
 {literal}
-  function recordImportData($i){
-    if(!window.importData){
-      window.importData = [];
+  window.fixedColumnsCount = document.querySelectorAll('.columnheader>*').length - 1;
+
+  function recordFixedColumnsData($i){
+    if(!window.fixedColumnsData){
+      window.fixedColumnsData = [];
     }
     var tds = Array.apply(null, document.querySelectorAll('#map-field>table tr>td:nth-child('+$i+')'));
-    window.importData[$i] = tds.map(function(elem){ return elem.textContent})
+    window.fixedColumnsData[$i] = tds.map(function(elem){ return elem.textContent})
   }
-  recordImportData(1);
-  recordImportData(2);
-
-  function rearrangeImportData($i){
+  for (var i = 1; i <= window.fixedColumnsCount; i++) {
+    recordFixedColumnsData(i);
+  }
+  
+  function rearrangeFixedColumnsData($i){
     var tds = Array.apply(null, document.querySelectorAll('#map-field>table tr>td:nth-child('+$i+')'));
-    tds.forEach(function(elem, i){ elem.textContent = window.importData[$i][i]});
+    tds.forEach(function(elem, i){ elem.textContent = window.fixedColumnsData[$i][i]});
   }
 
   var tbody = document.getElementById('map-field').querySelector('tbody');
   var config = { attributes: true, childList: true, subtree: true };
   var observer = new MutationObserver(function(){
-    rearrangeImportData(1);
-    rearrangeImportData(2);
+    for (var i = 1; i <= window.fixedColumnsCount; i++) {
+      rearrangeFixedColumnsData(i);
+    }
   });
 
   // Start observing the target node for configured mutations
