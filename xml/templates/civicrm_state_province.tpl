@@ -3796,5 +3796,6 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 
 -- Added subdivisions of Macau
 
-(NULL, 1127, "01", "Municipality of das Ilhas"),
-(NULL, 1127, "02", "Municipality of Macau");
+(NULL, 1127, "01", "Macao"),
+(NULL, 1127, "02", "Taipa"),
+(NULL, 1127, "03", "Coloane");
