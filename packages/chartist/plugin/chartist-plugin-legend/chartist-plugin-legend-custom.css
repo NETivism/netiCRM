@@ -119,12 +119,12 @@ https://github.com/CodeYellowBV/chartist-plugin-legend
   border-color: #d70206;
 }
 .ct-legend .ct-series-1:before {
-  background-color: #f05b4f;
-  border-color: #f05b4f;
-}
-.ct-legend .ct-series-2:before {
   background-color: #f4c63d;
   border-color: #f4c63d;
+}
+.ct-legend .ct-series-2:before {
+  background-color: #ff8279;
+  border-color: #ff8279;
 }
 .ct-legend .ct-series-3:before {
   background-color: #d17905;
