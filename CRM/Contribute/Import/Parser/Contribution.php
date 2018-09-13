@@ -536,7 +536,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     }
 
     $doCreateContact = FALSE;
-    $checkContactId = $this->checkContactById($paramValues);
+    $checkContactId = CRM_Import_Parser_Contact::checkContactById($paramValues, 'contribution_contact_id');
     $errDisp = "";
 
     if ($this->_createContactOption == self::CONTACT_DONTCREATE) {
@@ -720,42 +720,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     return self::processPledgePayments($formatted);
   }
 
-  function checkContactById($params) {
-    $pass = $contactID = 0;
-    $checkCid = new CRM_Contact_DAO_Contact();
-    if (!empty($params['external_identifier'])) {
-      $checkCid->external_identifier = $params['external_identifier'];
-      $checkCid->is_deleted = 0;
-      if($checkCid->find(TRUE)){
-        $contactID = $checkCid->id;
-      }
-    }
-
-    if (!empty($params['contribution_contact_id'])) {
-      if (!empty($contactID)) {
-        if ($contactID != $params['contribution_contact_id'] ){
-          $pass = FALSE;
-        }
-        else {
-          $pass = $contactID;
-        }
-      }
-      else {
-        $checkCid->id = $params['contribution_contact_id'];
-        $checkCid->is_deleted = 0;
-        if($checkCid->find(TRUE)){
-          $contactID = $checkCid->id;
-          $pass = $contactID;
-        }
-      }
-    }
-    elseif(!empty($contactID)) {
-      $pass = $contactID;
-    }
-    $checkCid->free();
-
-    return $pass;
-  }
 
   /**
    * the initializer code, called before the processing

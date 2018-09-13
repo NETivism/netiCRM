@@ -43,6 +43,11 @@ abstract class CRM_Member_Import_Parser {
   CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
 
   /**
+   * import contact when import member
+   */
+  CONST CONTACT_NOIDCREATE = 100, CONTACT_AUTOCREATE = 101, CONTACT_DONTCREATE = 102;
+
+  /**
    * various parser modes
    */
   CONST MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
@@ -55,7 +60,7 @@ abstract class CRM_Member_Import_Parser {
   /**
    * various Contact types
    */
-  CONST CONTACT_INDIVIDUAL = 1, CONTACT_HOUSEHOLD = 2, CONTACT_ORGANIZATION = 4;
+  CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
 
   protected $_fileName;
 
@@ -93,6 +98,26 @@ abstract class CRM_Member_Import_Parser {
    * running total number of invalid rows
    */
   protected $_invalidRowCount;
+
+  /**
+   * running total number of valid soft credit rows
+   */
+  protected $_validSoftCreditRowCount;
+
+  /**
+   * running total number of invalid soft credit rows
+   */
+  protected $_invalidSoftCreditRowCount;
+
+  /**
+   * running total number of valid pledge payment rows
+   */
+  protected $_validPledgePaymentRowCount;
+
+  /**
+   * running total number of invalid pledge payment rows
+   */
+  protected $_invalidPledgePaymentRowCount;
 
   /**
    * maximum number of invalid rows to store
@@ -204,6 +229,20 @@ abstract class CRM_Member_Import_Parser {
   protected $_haveColumnHeader;
 
   /**
+   * Dedupe group id for contact matching
+   *
+   * @var integer 
+   */
+  protected $_dedupeRuleGroupId;
+
+  /**
+   * Create contact mode
+   *
+   * @var integer
+   */
+  protected $_createContactOption;
+
+  /**
    * contact type
    *
    * @var int
@@ -221,25 +260,17 @@ abstract class CRM_Member_Import_Parser {
     $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,
     $contactType = self::CONTACT_INDIVIDUAL,
-    $onDuplicate = self::DUPLICATE_SKIP
+    $onDuplicate = self::DUPLICATE_SKIP,
+    $createContactOption = self::CONTACT_NOIDCREATE,
+    $dedupeRuleGroupId = 0
   ) {
     if (!is_array($fileName)) {
       CRM_Core_Error::fatal();
     }
     $fileName = $fileName['name'];
-
-    switch ($contactType) {
-      case self::CONTACT_INDIVIDUAL:
-        $this->_contactType = 'Individual';
-        break;
-
-      case self::CONTACT_HOUSEHOLD:
-        $this->_contactType = 'Household';
-        break;
-
-      case self::CONTACT_ORGANIZATION:
-        $this->_contactType = 'Organization';
-    }
+    $this->_contactType = $contactType;
+    $this->_createContactOption = $createContactOption;
+    $this->_dedupeRuleGroupId = $dedupeRuleGroupId;
 
     $this->init();
 
@@ -272,7 +303,7 @@ abstract class CRM_Member_Import_Parser {
     while (!feof($fd)) {
       $this->_lineCount++;
 
-      $values = fgetcsv($fd, 8192, $seperator);
+      $values = fgetcsv($fd, 20000, $seperator);
       if (!$values) {
         continue;
       }
@@ -333,6 +364,9 @@ abstract class CRM_Member_Import_Parser {
         $this->_invalidRowCount++;
         if ($this->_invalidRowCount < $this->_maxErrorCount) {
           $recordNumber = $this->_lineCount;
+          if ($this->_haveColumnHeader) {
+            $recordNumber--;
+          }
           array_unshift($values, $recordNumber);
           $this->_errors[] = $values;
         }
@@ -341,6 +375,9 @@ abstract class CRM_Member_Import_Parser {
       if ($returnCode & self::CONFLICT) {
         $this->_conflictCount++;
         $recordNumber = $this->_lineCount;
+        if ($this->_haveColumnHeader) {
+          $recordNumber--;
+        }
         array_unshift($values, $recordNumber);
         $this->_conflicts[] = $values;
       }
@@ -352,6 +389,9 @@ abstract class CRM_Member_Import_Parser {
         }
         $this->_duplicateCount++;
         $recordNumber = $this->_lineCount;
+        if ($this->_haveColumnHeader) {
+          $recordNumber--;
+        }
         array_unshift($values, $recordNumber);
         $this->_duplicates[] = $values;
         if ($onDuplicate != self::DUPLICATE_SKIP) {
@@ -390,7 +430,6 @@ abstract class CRM_Member_Import_Parser {
           $customHeaders
         );
         $this->_errorFileName = self::errorFileName(self::ERROR);
-
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
@@ -445,17 +484,6 @@ abstract class CRM_Member_Import_Parser {
     }
   }
 
-  /*function setActiveFieldLocationTypes( $elements ) {
-        for ($i = 0; $i < count( $elements ); $i++) {
-            $this->_activeFields[$i]->_hasLocationType = $elements[$i];
-        }
-    }
-    
-    function setActiveFieldPhoneTypes( $elements ) {
-        for ($i = 0; $i < count( $elements ); $i++) {
-            $this->_activeFields[$i]->_phoneType = $elements[$i];
-        }
-    }*/
   function setActiveFieldValues($elements, &$erroneousField) {
     $maxCount = count($elements) < $this->_activeFieldCount ? count($elements) : $this->_activeFieldCount;
     for ($i = 0; $i < $maxCount; $i++) {
@@ -480,6 +508,38 @@ abstract class CRM_Member_Import_Parser {
     return $valid;
   }
 
+  function setActiveFieldLocationTypes( $elements ) {
+      for ($i = 0; $i < count( $elements ); $i++) {
+          $this->_activeFields[$i]->_hasLocationType = $elements[$i];
+      }
+  }
+  
+  function setActiveFieldPhoneTypes( $elements ) {
+      for ($i = 0; $i < count( $elements ); $i++) {
+          $this->_activeFields[$i]->_phoneType = $elements[$i];
+      }
+  }
+
+  function setActiveFieldWebsiteTypes($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_websiteType = $elements[$i];
+    }
+  }
+
+  /**
+   * Function to set IM Service Provider type fields
+   *
+   * @param array $elements IM service provider type ids
+   *
+   * @return void
+   * @access public
+   */
+  function setActiveFieldImProviders($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_imProvider = $elements[$i];
+    }
+  }
+
   /**
    * function to format the field values for input to the api
    *
@@ -489,12 +549,41 @@ abstract class CRM_Member_Import_Parser {
   function &getActiveFieldParams() {
     $params = array();
     for ($i = 0; $i < $this->_activeFieldCount; $i++) {
-      if (isset($this->_activeFields[$i]->_value)
-        && !isset($params[$this->_activeFields[$i]->_name])
-        && !isset($this->_activeFields[$i]->_related)
-      ) {
+      if (isset($this->_activeFields[$i]->_value)) {
+        if (isset($this->_activeFields[$i]->_hasLocationType)) {
+          if (!isset($params[$this->_activeFields[$i]->_name])) {
+            $params[$this->_activeFields[$i]->_name] = array();
+          }
 
-        $params[$this->_activeFields[$i]->_name] = $this->_activeFields[$i]->_value;
+          $value = array(
+            $this->_activeFields[$i]->_name =>
+            $this->_activeFields[$i]->_value,
+            'location_type_id' =>
+            $this->_activeFields[$i]->_hasLocationType,
+          );
+
+          if (isset($this->_activeFields[$i]->_phoneType)) {
+            $value['phone_type_id'] = $this->_activeFields[$i]->_phoneType;
+          }
+
+          // get IM service Provider type id
+          if (isset($this->_activeFields[$i]->_imProvider)) {
+            $value['provider_id'] = $this->_activeFields[$i]->_imProvider;
+          }
+
+          $params[$this->_activeFields[$i]->_name][] = $value;
+        }
+        elseif (isset($this->_activeFields[$i]->_websiteType)) {
+          $value = array($this->_activeFields[$i]->_name => $this->_activeFields[$i]->_value,
+            'website_type_id' => $this->_activeFields[$i]->_websiteType,
+          );
+
+          $params[$this->_activeFields[$i]->_name][] = $value;
+        }
+
+        if (!isset($params[$this->_activeFields[$i]->_name])) {
+          $params[$this->_activeFields[$i]->_name] = $this->_activeFields[$i]->_value;
+        }
       }
     }
     return $params;
@@ -529,29 +618,49 @@ abstract class CRM_Member_Import_Parser {
   }
 
   function getDataPatterns() {
-    $values = array();
+    /**
+      priority of fields is 'email', 'Each date fields like join_date, start_date', 'phone', 'membership fields', 'contact fields'
+    */
+    $values = $member_fields = $contact_fields = array();
+    $priority_fields = array(
+      'email' => '',
+    );
+    $secondary_fields = array(
+      'phone' => '',
+    );
     foreach ($this->_fields as $name => $field) {
-      $values[$name] = $field->_dataPattern;
+      if(isset($priority_fields[$name])){
+        $priority_fields[$name] = $field->_dataPattern;
+      }
+      elseif(preg_match('/_date$/', $name)){
+        $priority_fields[$name] = $field->_dataPattern;
+      }
+      elseif(isset($secondary_fields[$name])){
+        $secondary_fields[$name] = $field->_dataPattern;
+      }
+      elseif(preg_match('/^'.ts('Contact').'::/', $field->_title)){
+        $contact_fields[$name] = $field->_dataPattern;
+      }
+      else{
+        $member_fields[$name] = $field->_dataPattern;
+      }
     }
+    $values = array_merge($priority_fields, $secondary_fields, $member_fields, $contact_fields);
     return $values;
   }
 
-  function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
+  function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//', $hasLocationType = FALSE) {
     if (empty($name)) {
-      $this->_fields['doNotImport'] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+      $this->_fields['doNotImport'] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
     }
     else {
-
-      //$tempField = CRM_Contact_BAO_Contact::importableFields('Individual', null );
       $tempField = CRM_Contact_BAO_Contact::importableFields('All', NULL);
       if (!array_key_exists($name, $tempField)) {
-        $this->_fields[$name] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+        $this->_fields[$name] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
       else {
         require_once 'CRM/Import/Field.php';
-        $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern,
-          CRM_Utils_Array::value('hasLocationType', $tempField[$name])
-        );
+        $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
     }
   }

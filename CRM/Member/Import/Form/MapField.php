@@ -143,9 +143,6 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         continue;
       }
 
-      //             if ($this->_fieldUsed[$key])
-      //                 continue;
-
       /* Take a vote over the preview data set */
 
       $hits = 0;
@@ -175,7 +172,6 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
    */
   public function preProcess() {
     $this->_mapperFields = $this->get('fields');
-    asort($this->_mapperFields);
 
     $this->_columnCount = $this->get('columnCount');
     $this->assign('columnCount', $this->_columnCount);
@@ -211,9 +207,26 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     }
     elseif ($this->_onDuplicate == CRM_Member_Import_Parser::DUPLICATE_SKIP) {
       unset($this->_mapperFields['membership_id']);
-      $highlightedFieldsArray = array('membership_contact_id', 'email', 'external_identifier', 'membership_start_date', 'membership_type_id');
+      $highlightedFieldsArray = array('membership_contact_id', 'external_identifier', 'membership_start_date', 'membership_type_id');
       foreach ($highlightedFieldsArray as $name) {
         $highlightedFields[] = $name;
+      }
+      $dedupeRuleGroup = $this->get('dedupeRuleGroup');
+      if(!empty($dedupeRuleGroup)) {
+        $ruleParams = array('id' => $dedupeRuleGroup);
+      }
+      else{
+        // default rule group
+        $ruleParams = array(
+          'contact_type' => $contactType,
+          'level' => 'Strict',
+        );
+      }
+      $dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $dedupeFields = array_merge($dedupeFields, array('membership_contact_id', 'external_identifier'));
+      foreach ($dedupeFields as $fieldName) {
+        $this->_mapperFields[$fieldName] .= ' '. ts('(match to contact)');
+        $highlightedFields[] = $fieldName;
       }
     }
 
@@ -240,17 +253,25 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       $this->applyFilter('saveMappingName', 'trim');
       $this->add('text', 'saveMappingName', ts('Name'));
       $this->add('text', 'saveMappingDesc', ts('Description'));
+      $this->_locationFields = array_merge(
+        CRM_Core_DAO_Address::import(),
+        CRM_Core_DAO_Phone::import(),
+        CRM_Core_DAO_Email::import(),
+        CRM_Core_DAO_IM::import(TRUE),
+        CRM_Core_DAO_OpenID::import()
+      );
     }
     else {
       $savedMapping = $this->get('savedMapping');
-
-      list($mappingName, $mappingContactType, $mappingLocation, $mappingPhoneType, $mappingRelation) = CRM_Core_BAO_Mapping::getMappingFields($savedMapping);
+      list($mappingName, $mappingContactType, $mappingLocation, $mappingPhoneType, $mappingImProvider, $mappingRelation, $mappingOperator, $mappingValue, $mappingWebsiteType) = CRM_Core_BAO_Mapping::getMappingFields($savedMapping);
 
       $mappingName = $mappingName[1];
       $mappingContactType = $mappingContactType[1];
-      $mappingLocation = CRM_Utils_Array::value('1', $mappingLocation);
-      $mappingPhoneType = CRM_Utils_Array::value('1', $mappingPhoneType);
-      $mappingRelation = CRM_Utils_Array::value('1', $mappingRelation);
+      $mappingLocation = CRM_Utils_Array::value(1, $mappingLocation);
+      $mappingPhoneType = CRM_Utils_Array::value(1, $mappingPhoneType);
+      $mappingImProvider = CRM_Utils_Array::value(1, $mappingImProvider);
+      $mappingRelation = CRM_Utils_Array::value(1, $mappingRelation);
+      $mappingWebsiteType = CRM_Utils_Array::value(1, $mappingWebsiteType);
 
       //mapping is to be loaded from database
 
@@ -295,11 +316,42 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
 
     /* Initialize all field usages to false */
 
+    $this->_location_types = &CRM_Core_PseudoConstant::locationType();
+    $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
+
+    /* FIXME: dirty hack to make the default option show up first.  This
+         * avoids a mozilla browser bug with defaults on dynamically constructed
+         * selector widgets. */
+    if ($defaultLocationType) {
+      $defaultLocation = $this->_location_types[$defaultLocationType->id];
+      unset($this->_location_types[$defaultLocationType->id]);
+      $this->_location_types = array($defaultLocationType->id => $defaultLocation) + $this->_location_types;
+    }
+
+    $sel1 = $this->_mapperFields;
+    $sel2[''] = NULL;
+
+    $phoneTypes = CRM_Core_PseudoConstant::phoneType();
+    $imProviders = CRM_Core_PseudoConstant::IMProvider();
+    $websiteTypes = CRM_Core_PseudoConstant::websiteType();
+
+    foreach ($this->_location_types as $key => $value) {
+      $sel3['phone'][$key] = &$phoneTypes;
+      //build array for IM service provider type for contact
+      $sel3['im'][$key] = &$imProviders;
+    }
+
     foreach ($mapperKeys as $key) {
       $this->_fieldUsed[$key] = FALSE;
+      $options = NULL;
+      if ($hasLocationTypes[$key]) {
+        $options = $this->_location_types;
+      }
+      elseif ($key == 'url') {
+        $options = $websiteTypes;
+      }
+      $sel2[$key] = $options;
     }
-    $this->_location_types = &CRM_Core_PseudoConstant::locationType();
-    $sel1 = $this->_mapperFields;
     if (!$this->get('onDuplicate')) {
       unset($sel1['id']);
       unset($sel1['membership_id']);
@@ -321,18 +373,45 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       if ($this->get('savedMapping')) {
         if (isset($mappingName[$i])) {
           if ($mappingName[$i] != ts('- do not import -')) {
+            $mapName = $mappingName[$i];
+            $patterns = array();
+            $mappingHeader = $this->defaultFromHeader($mapName, $patterns);
 
-            $mappingHeader = array_keys($this->_mapperFields, $mappingName[$i]);
+            $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : NULL;
+            $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
+            $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
+            $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : NULL;
+            $softField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
 
-            //When locationType is not set
-            $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+            if ($softField) {
+              $defaults["mapper[$i]"] = array($mappingHeader, $softField);
+            }
+            elseif ($websiteTypeId) {
+              if (!$websiteTypeId) {
+                $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+              }
+              $defaults["mapper[$i]"] = array($mappingHeader, $websiteTypeId);
+            }
+            else {
+              if (!$locationId) {
+                $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+              }
+              //default for IM/phone without related contact
+              $typeId = NULL;
+              if (isset($phoneType)) {
+                $typeId = $phoneType;
+              }
+              elseif (isset($imProvider)) {
+                $typeId = $imProvider;
+              }
+              $defaults["mapper[$i]"] = array($mappingHeader, $locationId, $typeId);
+            }
 
-            //When phoneType is not set
-            $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
-
+            if ((!$phoneType) && (!$imProvider)) {
+              $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+            }
             $js .= "{$formName}['mapper[$i][3]'].style.display = 'none';\n";
 
-            $defaults["mapper[$i]"] = array($mappingHeader[0]);
             $jsSet = TRUE;
           }
           else {
@@ -344,39 +423,52 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             }
           }
         }
-        else {
-          // this load section to help mapping if we ran out of saved columns when doing Load Mapping
-          $js .= "swapOptions($formName, 'mapper[$i]', 0, 3, 'hs_mapper_" . $i . "_');\n";
-
-          if ($hasHeaders) {
-            $defaults["mapper[$i]"] = array($this->defaultFromHeader($this->_columnHeaders[$i], $headerPatterns));
-          }
-          else {
-            $defaults["mapper[$i]"] = array($this->defaultFromData($dataPatterns, $i));
-          }
-        }
         //end of load mapping
       }
       else {
-        $js .= "swapOptions($formName, 'mapper[$i]', 0, 3, 'hs_mapper_" . $i . "_');\n";
+        // $js .= "swapOptions($formName, 'mapper[$i]', 0, 3, 'hs_mapper_" . $i . "_');\n";
+        $mappedHeaderKey = '';
+        $mappedTypeId = $mappedLocationId = 0;
         if ($hasHeaders) {
           // Infer the default from the skipped headers if we have them
-          $defaults["mapper[$i]"] = array(
-            $this->defaultFromHeader($this->_columnHeaders[$i],
-              $headerPatterns
-            ),
-            //                     $defaultLocationType->id
-            0,
-          );
+          $mappedHeaderKey = $this->defaultFromHeader(CRM_Utils_Array::value($i, $this->_columnHeaders), $headerPatterns);
+          $mappedLocationId = !empty($mappedHeaderKey) && !empty($this->_locationFields[$mappedHeaderKey]) ? $defaultLocationType->id : 0;
         }
         else {
           // Otherwise guess the default from the form of the data
-          $defaults["mapper[$i]"] = array(
-            $this->defaultFromData($dataPatterns, $i),
-            //                     $defaultLocationType->id
-            0,
-          );
+          $mappedHeaderKey = $this->defaultFromData($dataPatterns, $i);
+          $mappedLocationId = !empty($mappedHeaderKey) && !empty($this->_locationFields[$mappedHeaderKey]) ? $defaultLocationType->id : 0;
         }
+        if ($mappedLocationId) {
+          switch($mappedHeaderKey){
+            case 'im':
+              $mappedTypeId = key($imProviders);
+              break;
+            case 'phone':
+              $mappedTypeId = key($phoneTypes);
+              break;
+            default:
+              $mappedTypeId = 0;
+              break;
+          }
+        }
+        if ($mappedHeaderKey == 'website') {
+          $mappedLocationId = key($websiteTypes); 
+        }
+        if (!empty($mappedHeaderKey)) {
+          $defaults["mapper[$i]"] = array($mappedHeaderKey, $mappedLocationId, $mappedTypeId);
+          if ((!$mappedLocationId)) {
+            $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+          }
+          if ((!$mappedTypeId)) {
+            $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+          }
+        }
+        else {
+          $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+          $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+        }
+        $js .= "{$formName}['mapper[$i][3]'].style.display = 'none';\n";
       }
       $sel->setOptions(array($sel1, $sel2, (isset($sel3)) ? $sel3 : "", (isset($sel4)) ? $sel4 : ""));
     }
@@ -427,6 +519,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
    */
   static function formRule($fields, $files, $self) {
     $errors = array();
+    $fieldMessage = NULL;
 
     if (!array_key_exists('savedMapping', $fields)) {
       $importKeys = array();
@@ -446,12 +539,19 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         CRM_Member_Import_Parser::CONTACT_HOUSEHOLD => 'Household',
         CRM_Member_Import_Parser::CONTACT_ORGANIZATION => 'Organization',
       );
-      $params = array(
-        'level' => 'Strict',
-        'contact_type' => $contactTypes[$contactTypeId],
-      );
+      $dedupeRuleGroup = $self->get('dedupeRuleGroup');
+      if(!empty($dedupeRuleGroup)) {
+        $ruleParams = array('id' => $dedupeRuleGroup);
+      }
+      else{
+        // default rule group
+        $ruleParams = array(
+          'contact_type' => $contactType,
+          'level' => 'Strict',
+        );
+      }
       require_once 'CRM/Dedupe/BAO/RuleGroup.php';
-      list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($params);
+      list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($ruleParams);
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
         if (array_key_exists($val, $ruleFields)) {
@@ -546,29 +646,70 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     }
     $this->set('mapperKeys', $mapperKeys);
 
+    $phoneTypes = CRM_Core_PseudoConstant::phoneType();
+    $imProviders = CRM_Core_PseudoConstant::IMProvider();
+    $websiteTypes = CRM_Core_PseudoConstant::websiteType();
+    $locationTypes = CRM_Core_PseudoConstant::locationType();
+
+    //these mapper params need to set key as array and val as null.
+    $mapperParams = array(
+      'locations' => 'locationsVal',
+      'mapperLocType' => 'mapperLocTypeVal',
+      'mapperPhoneType' => 'mapperPhoneTypeVal',
+      'mapperImProvider' => 'mapperImProviderVal',
+      'mapperWebsiteType' => 'mapperWebsiteTypeVal',
+    );
+    foreach (array_keys($mapperParams) as $mapperParam) {
+      $$mapperParam = array();
+    }
+
     for ($i = 0; $i < $this->_columnCount; $i++) {
+      foreach (array_values($mapperParams) as $mapperParam)$$mapperParam = NULL;
+
+      $fldName = CRM_Utils_Array::value(0, $mapperKeys[$i]);
+      $selOne = CRM_Utils_Array::value(1, $mapperKeys[$i]);
+      $selTwo = CRM_Utils_Array::value(2, $mapperKeys[$i]);
+      $selThree = CRM_Utils_Array::value(3, $mapperKeys[$i]);
+
       $mapper[$i] = $this->_mapperFields[$mapperKeys[$i][0]];
       $mapperKeysMain[$i] = $mapperKeys[$i][0];
 
-      if (is_numeric($mapperKeys[$i][1])) {
-        $mapperLocType[$i] = $mapperKeys[$i][1];
+      if ($selOne && is_numeric($selOne)) {
+        if ($fldName == 'url') {
+          $mapperWebsiteTypeVal = $selOne;
+        }
+        else {
+          $locationsVal = $locationTypes[$selOne];
+          $mapperLocTypeVal = $selOne;
+          if ($selTwo && is_numeric($selTwo)) {
+            if ($fldName == 'phone') {
+              $mapperPhoneTypeVal = $selTwo;
+            }
+            elseif ($fldName == 'im') {
+              $mapperImProviderVal = $selTwo;
+            }
+          }
+        }
       }
-      else {
-        $mapperLocType[$i] = NULL;
-      }
-
-      if (!is_numeric($mapperKeys[$i][2])) {
-        $mapperPhoneType[$i] = $mapperKeys[$i][2];
-      }
-      else {
-        $mapperPhoneType[$i] = NULL;
+      foreach ($mapperParams as $mapperParamKey => $mapperParamVal) {
+        ${$mapperParamKey}[$i] = $$mapperParamVal;
       }
     }
 
     $this->set('mapper', $mapper);
+    $properties = array(
+      'ims' => 'mapperImProvider',
+      'phones' => 'mapperPhoneType',
+      'websites' => 'mapperWebsiteType',
+      'locationTypes' => 'mapperLocType',
+      'locations' => 'locations',
+    );
+    foreach ($properties as $propertyName => $propertyVal) {
+      $this->set($propertyName, $$propertyVal);
+    }
 
     // store mapping Id to display it in the preview page
-    $this->set('loadMappingId', $params['mappingId']);
+    $this->set('loadMappingId', CRM_Utils_Array::value('mappingId', $params));
 
     //Updating Mapping Records
     if (CRM_Utils_Array::value('updateMapping', $params)) {
@@ -588,9 +729,27 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         $updateMappingFields->id = $mappingFieldsId[$i];
         $updateMappingFields->mapping_id = $params['mappingId'];
         $updateMappingFields->column_number = $i;
-
-        list($id, $first, $second) = explode('_', $mapperKeys[$i][0]);
         $updateMappingFields->name = $mapper[$i];
+        $updateMappingFields->location_type_id = 'NULL';
+        $updateMappingFields->phone_type_id = 'NULL';
+        $updateMappingFields->im_provider_id = 'NULL';
+        $updateMappingFields->website_type_id = 'NULL';
+
+        if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'url') {
+          $updateMappingFields->website_type_id = isset($mapperKeys[$i][1]) ? $mapperKeys[$i][1] : 'NULL';
+        }
+        else {
+          if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'phone') {
+            $updateMappingFields->phone_type_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
+          }
+          elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
+            $updateMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
+          }
+          $location = array_keys($locationTypes, $locations[$i]);
+          $updateMappingFields->location_type_id = !empty($location) ? $location[0] : 'NULL';
+        }
+
+        $updateMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : 'NULL';
         $updateMappingFields->save();
       }
     }
@@ -611,15 +770,29 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         $saveMappingFields = new CRM_Core_DAO_MappingField();
         $saveMappingFields->mapping_id = $saveMapping->id;
         $saveMappingFields->column_number = $i;
-
-        list($id, $first, $second) = explode('_', $mapperKeys[$i][0]);
         $saveMappingFields->name = $mapper[$i];
+
+        
+        if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'url') {
+          $saveMappingFields->website_type_id = isset($mapperKeys[$i][1]) ? $mapperKeys[$i][1] : NULL;
+        }
+        else {
+          if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'phone') {
+            $saveMappingFields->phone_type_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
+          }
+          elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
+            $saveMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
+          }
+          $saveMappingFields->location_type_id = isset($location_id[0]) ? $location_id[0] : NULL;
+        }
+
+        $saveMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : NULL;
         $saveMappingFields->save();
       }
       $this->set('savedMapping', $saveMappingFields->mapping_id);
     }
 
-    $parser = new CRM_Member_Import_Parser_Membership($mapperKeysMain, $mapperLocType, $mapperPhoneType);
+    $parser = new CRM_Member_Import_Parser_Membership($mapperKeysMain, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvider);
     $parser->run($fileName, $seperator, $mapper, $skipColumnHeader,
       CRM_Member_Import_Parser::MODE_PREVIEW, $this->get('contactType')
     );
