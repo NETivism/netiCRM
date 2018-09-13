@@ -3288,9 +3288,29 @@ div#civicrm-dashboard form {
 .ct-chart-pie-medium {
   min-height: 400px;
 }
+.chartist-chart .ct-series-b .ct-bar,
+.chartist-chart .ct-series-b .ct-line,
+.chartist-chart .ct-series-b .ct-point,
+.chartist-chart .ct-series-b .ct-slice-donut {
+    stroke: #f4c63d;
+}
+.chartist-chart .ct-series-b .ct-area,
+.chartist-chart .ct-series-b .ct-slice-pie {
+    fill: #f4c63d;
+}
+.chartist-chart .ct-series-c .ct-bar,
+.chartist-chart .ct-series-c .ct-line,
+.chartist-chart .ct-series-c .ct-point,
+.chartist-chart .ct-series-c .ct-slice-donut {
+    stroke: #ff8279;
+}
+.chartist-chart .ct-series-c .ct-area,
+.chartist-chart .ct-series-c .ct-slice-pie {
+    fill: #ff8279;
+}
 .chartist-chart > svg > .ct-series-a .ct-slice-pie { fill: #d70206; }
-.chartist-chart > svg > .ct-series-b .ct-slice-pie { fill: #f05b4f; }
-.chartist-chart > svg > .ct-series-c .ct-slice-pie { fill: #f4c63d; }
+.chartist-chart > svg > .ct-series-b .ct-slice-pie { fill: #f4c63d; }
+.chartist-chart > svg > .ct-series-c .ct-slice-pie { fill: #ff8279; }
 .chartist-chart > svg > .ct-series-d .ct-slice-pie { fill: #d17905; }
 .chartist-chart > svg > .ct-series-e .ct-slice-pie { fill: #453d3f; }
 .chartist-chart > svg > .ct-series-f .ct-slice-pie { fill: #59922b; }
@@ -3376,8 +3396,8 @@ div#civicrm-dashboard form {
   margin: 5px 0 0 0;
 }
 .chart-with-old-legend .chart-legend > li:nth-child(1):before { background: #d70206; }
-.chart-with-old-legend .chart-legend > li:nth-child(2):before { background: #f05b4f; }
-.chart-with-old-legend .chart-legend > li:nth-child(3):before { background: #f4c63d; }
+.chart-with-old-legend .chart-legend > li:nth-child(2):before { background: #f4c63d; }
+.chart-with-old-legend .chart-legend > li:nth-child(3):before { background: #ff8279; }
 .chart-with-old-legend .chart-legend > li:nth-child(4):before { background: #d17905; }
 .chart-with-old-legend .chart-legend > li:nth-child(5):before { background: #453d3f; }
 .chart-with-old-legend .chart-legend > li:nth-child(6):before { background: #59922b; }
