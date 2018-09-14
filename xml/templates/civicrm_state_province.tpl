@@ -21,7 +21,7 @@
 -- | GNU Affero General Public License or the licensing of CiviCRM,     |
 -- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 -- +--------------------------------------------------------------------+
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (1000, 1228, "AL", "Alabama"),
@@ -3792,4 +3792,10 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (NULL, 1050, "17", "Haut-Lomami"),
 (NULL, 1050, "18", "Lualaba"),
 (NULL, 1050, "19", "Haut-Katanga"),
-(NULL, 1050, "20", "Tanganyika");
+(NULL, 1050, "20", "Tanganyika"),
+
+-- Added subdivisions of Macau
+
+(NULL, 1127, "01", "Macao"),
+(NULL, 1127, "02", "Taipa"),
+(NULL, 1127, "03", "Coloane");

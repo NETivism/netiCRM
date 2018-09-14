@@ -336,7 +336,7 @@ class CRM_Utils_System {
    * @static  */
   static function redirect($url = NULL) {
     if (!$url) {
-      $url = self::url('civicrm/dashboard', 'reset=1');
+      $url = self::url('');
     }
 
     // replace the &amp; characters with &

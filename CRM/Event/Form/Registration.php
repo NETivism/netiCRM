@@ -525,6 +525,8 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $this->_values['event'],
       $config->defaultCurrency
     );
+
+    $this->track();
   }
 
   /**
@@ -837,6 +839,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     if (CRM_Utils_Array::value('is_primary', $this->_params)) {
       $this->set('registerByID', $participant->id);
       $this->set('primaryContactId', $contactID);
+      $this->track('payment');
     }
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     CRM_Core_BAO_CustomValueTable::postProcess($this->_params,
@@ -1358,6 +1361,33 @@ WHERE  v.option_group_id = g.id
         }
       }
     }
+  }
+
+  public function track($pageName = '') {
+    $page_id = $this->_values['event']['id'];
+    if (empty($pageName)) {
+      $actionName = $this->controller->getActionName();
+      list($pageName, $action) = $actionName;
+    }
+    $pageName = strtolower($pageName);
+    $state = array(
+      'register' => 1,
+      'confirm' => 2,
+      'payment' => 3,
+      'thankyou' => 4
+    );
+    $params = array(
+      'state' => $state[$pageName],
+      'page_type' => 'civicrm_event',
+      'page_id' => $page_id,
+      'visit_date' => date('Y-m-d H:i:s'),
+    );
+    $primaryParticipant = $this->get('registerByID');
+    if (!empty($primaryParticipant)) {
+      $params['entity_table'] = 'civicrm_participant';
+      $params['entity_id'] = $primaryParticipant;
+    }
+    $track = CRM_Core_BAO_Track::add($params);
   }
 }
 

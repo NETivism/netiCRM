@@ -40,12 +40,59 @@
 </div>
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div> 
 	<table class="form-layout-compressed">
+	<tr class="crm-contribution-contributionpage-settings-form-block-is_active">
+    <td></td>
+    <td>{$form.is_active.html} {$form.is_active.label}<br />
+    {if $id}
+    		<span class="description">
+        	{if $config->userFramework EQ 'Drupal'}
+            	{ts}When your page is active, you can link people to the page by copying and pasting the following URL:{/ts}<br />
+            	<strong>{crmURL a=true p='civicrm/contribute/transact' q="reset=1&id=`$id`"}</strong>
+        	{elseif $config->userFramework EQ 'Joomla'}
+            	{ts 1=$title}When your page is active, create front-end links to the contribution page using the Menu Manager. Select <strong>CiviCRM &raquo; Contribution Pages</strong> and select <strong>%1</strong> for the contribution page.{/ts}
+        	{/if}
+		</span>
+    {/if}
+	  </td>
+	</tr>
 	<tr class="crm-contribution-contributionpage-settings-form-block-title"><td class="label">{$form.title.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contribution_page' field='title' id=$id}{/if}</td><td>{$form.title.html}<br/>
             <span class="description">{ts}This title will be displayed at the top of the page.<br />Please use only alphanumeric, spaces, hyphens and dashes for Title.{/ts}</td>
 	</tr>
-	<tr class="crm-contribution-contributionpage-settings-form-block-contribution_type_id"><td class="label">{$form.contribution_type_id.label}</td><td>{$form.contribution_type_id.html}<br />	
-            <span class="description">{ts}Select the corresponding contribution type for contributions made using this page.{/ts}</span> {help id="id-contribution_type"}</td>
+	<tr class="crm-contribution-contributionpage-settings-form-block-contribution_type_id"><td class="label">{$form.contribution_type_id.label}</td><td>{$form.contribution_type_id.html} {help id="id-contribution_type"}<br />	
+            <span class="description">{ts}Select the corresponding contribution type for contributions made using this page.{/ts}</span></td>
 	</tr>
+	<tr class="crm-contribution-contributionpage-settings-form-block-display_progress_bar">
+    <td class="label">{$form.display_progress_bar.label} {help id="id-progress_bar"}</td><td>{$form.display_progress_bar.html} {ts}Display progress bar on the top of contribution page.{/ts}</td>
+  </tr>
+	<tr id="for_goal_option" class="crm-contribution-form-block-display_progress_bar">
+        <td></td>
+        <td>
+            <table class="form-layout-compressed">
+              <tr class="crm-contribution-contributionpage-settings-form-block-goal_amount" id="goal_amount_row">
+                  <td>{$form.goal_amount.label}: $ {$form.goal_amount.html} {ts}or{/ts} 
+                  {$form.goal_recurring.label}:{$form.goal_recurring.html} {ts}People{/ts}</td>
+              </tr>
+            </table>
+        </td>
+  </tr>
+	<tr class="crm-contribution-contributionpage-settings-form-block-intro_text">
+	    <td class ="label">{$form.intro_text.label}<br />{help id="id-intro_msg"}</td><td>{$form.intro_text.html}</td>
+	</tr>
+	<tr class="crm-contribution-contributionpage-settings-form-block-footer_text">
+	    <td class ="label">{$form.footer_text.label}<br />{help id="id-footer_msg"}</td><td>{$form.footer_text.html}</td>
+	</tr>
+	<tr class="crm-contribution-contributionpage-settings-form-block-start_date">
+	    <td class ="label">{$form.start_date.label} {help id="id-start_date"}</td>
+	    <td>
+	        {include file="CRM/common/jcalendar.tpl" elementName=start_date}
+	    </td>    
+    </tr>
+	<tr class="crm-contribution-contributionpage-settings-form-block-end_date">
+	    <td class ="label">{$form.end_date.label}</td>
+	    <td>
+	        {include file="CRM/common/jcalendar.tpl" elementName=end_date}
+	    </td>    
+    </tr>
 	<tr class="crm-contribution-contributionpage-settings-form-block-is_organization"><td>&nbsp;</td><td>{$form.is_organization.html} {$form.is_organization.label}</td></tr>
 	<tr id="for_org_option" class="crm-contribution-form-block-is_organization">
         <td>&nbsp;</td>
@@ -64,28 +111,7 @@
             </tr>
             </table>
         </td>
-    </tr>
-	<tr class="crm-contribution-contributionpage-settings-form-block-intro_text">
-	    <td class ="label">{$form.intro_text.label}<br />{help id="id-intro_msg"}</td><td>{$form.intro_text.html}</td>
-	</tr>
-	<tr class="crm-contribution-contributionpage-settings-form-block-footer_text">
-	    <td class ="label">{$form.footer_text.label}<br />{help id="id-footer_msg"}</td><td>{$form.footer_text.html}</td>
-	</tr>
-	<tr class="crm-contribution-contributionpage-settings-form-block-goal_amount">
-	    <td class ="label">{$form.goal_amount.label}</td><td>{$form.goal_amount.html} {help id="id-goal_amount"}</td>
-	</tr>
-	<tr class="crm-contribution-contributionpage-settings-form-block-start_date">
-	    <td class ="label">{$form.start_date.label} {help id="id-start_date"}</td>
-	    <td>
-	        {include file="CRM/common/jcalendar.tpl" elementName=start_date}
-	    </td>    
-    </tr>
-	<tr class="crm-contribution-contributionpage-settings-form-block-end_date">
-	    <td class ="label">{$form.end_date.label}</td>
-	    <td>
-	        {include file="CRM/common/jcalendar.tpl" elementName=end_date}
-	    </td>    
-    </tr>
+  </tr>
 	<tr class="crm-contribution-contributionpage-settings-form-block-honor_block_is_active">
 	    <td>&nbsp;</td><td>{$form.honor_block_is_active.html}{$form.honor_block_is_active.label} {help id="id-honoree_section"}</td>
 	</tr>
@@ -99,27 +125,12 @@
     	<span class="description">{ts}Optional explanatory text for the Honoree section (displayed above the Honoree fields).{/ts}</span></td>
 	</tr>
 </table>
-<table class="form-layout-compressed">
-		<tr class="crm-contribution-contributionpage-settings-form-block-is_active"><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{$form.is_active.html} {$form.is_active.label}<br />
-	{if $id}
-    		<span class="description">
-        	{if $config->userFramework EQ 'Drupal'}
-            	{ts}When your page is active, you can link people to the page by copying and pasting the following URL:{/ts}<br />
-            	<strong>{crmURL a=true p='civicrm/contribute/transact' q="reset=1&id=`$id`"}</strong>
-        	{elseif $config->userFramework EQ 'Joomla'}
-            	{ts 1=$title}When your page is active, create front-end links to the contribution page using the Menu Manager. Select <strong>CiviCRM &raquo; Contribution Pages</strong> and select <strong>%1</strong> for the contribution page.{/ts}
-        	{/if}
-		</span>
-    	{/if}
-	</td>
-	</tr>    	
-     	</table>
 	<div id="customData"></div>
 	{*include custom data js file*}
 	{include file="CRM/common/customData.tpl"}	
 	{literal}
 		<script type="text/javascript">
-			cj(document).ready(function() {
+			cj(document).ready(function($) {
 				{/literal}
 				{if $customDataSubType} 
 					buildCustomData( '{$customDataType}', {$customDataSubType} );
@@ -127,6 +138,22 @@
 					buildCustomData( '{$customDataType}' );
 				{/if}
 				{literal}
+
+        // progress bar setting
+        $("input[name=goal_amount],input[name=goal_recurring]").change(function(){
+          var name = $(this).prop("name");
+          if ($(this).val()) {
+            if (name == "goal_amount") {
+              $("input[name=goal_recurring]").val("").prop("readonly", true);
+            }
+            else {
+              $("input[name=goal_amount]").val("").prop("readonly", true);
+            }
+          }
+          else {
+            $("input[name=goal_recurring],input[name=goal_amount]").prop("readonly", false);
+          }
+        });
 			});
 		</script>
 	{/literal}
@@ -146,6 +173,15 @@
     trigger_field_id    ="is_organization"
     trigger_value       = 1
     target_element_id   ="for_org_option" 
+    target_element_type ="table-row"
+    field_type          ="radio"
+    invert              = 0
+}
+
+{include file="CRM/common/showHideByFieldValue.tpl" 
+    trigger_field_id    ="display_progress_bar"
+    trigger_value       = 1
+    target_element_id   ="goal_amount_row" 
     target_element_type ="table-row"
     field_type          ="radio"
     invert              = 0

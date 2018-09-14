@@ -158,7 +158,7 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
     $config = CRM_Core_Config::singleton();
     $seperator = $config->fieldSeparator;
 
-    $mapper = $this->controller->exportValue('MapField', 'mapper');
+    $mapper = $this->get('mapperKeys');
     $mapperKeys = array();
     $mapperLocType = array();
     $mapperPhoneType = array();

@@ -2054,6 +2054,9 @@ SELECT source_contact_id
     $domain = CRM_Core_BAO_Domain::getDomain();
     $location = $domain->getLocationValues();
     $records = self::getAnnualReceiptRecord($contact_id, $option);
+    if(!empty($option['year'])){
+      $annualYear = $option['year'];
+    }
 
     $params = array('id' => $contact_id);
     $contact = array();
@@ -2147,6 +2150,7 @@ SELECT source_contact_id
         'receiptOrgInfo' => htmlspecialchars_decode($config->receiptOrgInfo),
         'receiptDescription' => htmlspecialchars_decode($config->receiptDescription),
         'record' => $annualRecords,
+        'year' => $annualYear,
       );
       $tplParams['recordHeader'] = !empty($option['recordHeader']) ? $option['recordHeader'] :  array(
           ts('Receipt ID'),

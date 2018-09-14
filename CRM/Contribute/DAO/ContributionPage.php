@@ -189,6 +189,12 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    */
   public $goal_amount;
   /**
+   * The target recurring goal for this page, allows people to build a goal meter base on subscriptions
+   *
+   * @var int unsigned
+   */
+  public $goal_recurring;
+  /**
    * Title for Thank-you page (header title tag, and display at the top of the page).
    *
    * @var string
@@ -454,6 +460,11 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
           'name' => 'goal_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Goal Amount') ,
+        ) ,
+        'goal_recurring' => array(
+          'name' => 'goal_recurring',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Goal Recurring') ,
         ) ,
         'thankyou_title' => array(
           'name' => 'thankyou_title',

@@ -820,10 +820,11 @@ ORDER BY a.object_id
 ";
       $params = array(1 => array($tableName, 'String'));
       $dao = &CRM_Core_DAO::executeQuery($query, $params);
+      $is_visited = array();
       while ($dao->fetch()) {
         if ($dao->object_id) {
           if (self::matchType($type, $dao->operation)) {
-            $ids[] = $dao->object_id;
+            $ids = self::searchChildrenGroup($dao->object_id, $ids);
           }
         }
         else {
@@ -843,6 +844,22 @@ ORDER BY a.object_id
     CRM_Utils_Hook::aclGroup($type, $contactID, $tableName, $allGroups, $ids);
 
     return $ids;
+  }
+
+  private static function searchChildrenGroup($start_id, $is_visited){
+    if(!in_array($start_id, $is_visited)){
+      $is_visited[] = $start_id;
+      $query_children = "SELECT children FROM civicrm_group WHERE id = %1";
+      $params_children = array(1 => array($start_id, 'Integer'));
+      $children = CRM_Core_DAO::singleValueQuery($query_children, $params_children);
+      if(!empty($children)){
+        $children = explode(',', $children);
+        foreach ($children as $child_id) {
+          $is_visited = self::searchChildrenGroup($child_id, $is_visited);
+        }
+      }
+    }
+    return $is_visited;
   }
 
   static function matchType($type, $operation) {

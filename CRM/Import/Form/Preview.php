@@ -261,7 +261,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       'newTagDesc' => $this->controller->exportValue($this->_name, 'newTagDesc'),
       'tag' => $this->controller->exportValue($this->_name, 'tag'),
       'allTags' => $this->get('tag'),
-      'mapper' => $this->controller->exportValue('MapField', 'mapper'),
+      'mapper' => $this->get('mapperKeys'),
       'mapFields' => $this->get('fields'),
       'contactType' => $this->get('contactType'),
       'contactSubType' => $this->get('contactSubType'),

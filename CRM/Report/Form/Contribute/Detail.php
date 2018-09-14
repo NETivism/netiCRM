@@ -138,6 +138,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           'fee_amount' => NULL,
           'receipt_id' => NULL,
           'net_amount' => NULL,
+          'contribution_source' => NULL,
           'total_amount' => array('title' => ts('Amount'),
             'required' => TRUE,
             'statistics' =>
@@ -172,6 +173,12 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           array('title' => ts('Payment Instrument'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_OptionGroup::values('payment_instrument'),
+          ),
+          'contribution_source' =>
+          array(
+            'title' => ts('Contribution Source'),
+            'type' => CRM_Utils_Type::T_STRING,
+            'operator' => 'like',
           ),
         ),
         'grouping' => 'contri-fields',

@@ -31,14 +31,18 @@
             <tr class="columnheader-dark"><th colspan="4">{ts 1=$savedName}Using Field Mapping: %1{/ts}</td></tr>
         {/if}
         <tr class="columnheader">
-            <th>{ts}Fields to Include in Export File{/ts}</th>
+            <th>
+                {ts}Fields to Include in Export File{/ts}
+                <div class="draggable-tip">{ts}Draggable{/ts}</div>
+            </th>
         </tr>
         {*section name=cols loop=$columnCount*}
         {section name=cols loop=$columnCount.1}
             {assign var="i" value=$smarty.section.cols.index}
-            <tr>
+            <tr class="draggable">
                 <td class="form-item even-row">
                    {$form.mapper.1[$i].html}
+                  <div class="drag-handler"></div>
                 </td>
             </tr>
         {/section}
@@ -119,6 +123,22 @@
             }).hide();
             $("select[name="+name+"]").trigger("liszt:updated");
           });
+        });
+        var tbody = document.getElementById('map-field').querySelector('tbody');
+        Sortable.create(tbody, {
+          handle:'.drag-handler',
+          draggable:'tr.draggable',
+          onUpdate: function(event){
+            var elem = event.srcElement.querySelectorAll('tr.draggable');
+            elem.forEach(function(item, i){
+              var input = item.querySelector('[name^="mapper"]');
+              if(input){
+                var k = /^mapper\[\d+\]\[(\d+)\]/.exec(input.name)[1];
+                var weight_item = document.querySelector('[name^="weight[1]['+k+']"]');
+                weight_item.value = i;
+              }
+            });
+          }
         });
        {/literal}	     
 	</script>

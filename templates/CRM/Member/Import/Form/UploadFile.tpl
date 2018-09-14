@@ -44,8 +44,8 @@
            </td>
        </tr>
        <tr class="crm-member-import-uploadfile-from-block-skipColumnHeader">
-           <td class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$form.skipColumnHeader.html} </td>
-	   <td>{$form.skipColumnHeader.label}<br />
+           <td class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	   <td>{$form.skipColumnHeader.html} {$form.skipColumnHeader.label}<br />
                <span class="description">
                 {ts}Check this box if the first row of your file consists of field names (Example: 'Contact ID', 'Amount').{/ts}</span>
            </td>
@@ -62,6 +62,17 @@
            <td class="label" >{$form.onDuplicate.label}</td>
            <td>{$form.onDuplicate.html} {help id="id-onDuplicate"}</td>
        </tr>
+       <tr class="create-new-contact"><td class="label">{$form.createContactOption.label}{help id="id-createContactOption"}</td><td>{$form.createContactOption.html}</td></tr>
+       <tr class="dedupe-rule-group">
+         <td class="label">{$form.dedupeRuleGroup.label}</td>
+         <td>
+           {$form.dedupeRuleGroup.html}
+           <div class="description">
+             {capture assign='newrule'}{crmURL p='civicrm/contact/deduperules' q='reset=1'}{/capture}
+             {ts 1=$newrule}Use rule you choose above for matching contact in each row. You can also <a href="%1">add new rule</a> anytime.{/ts}
+           </div>
+         </td>
+       </tr>
        <tr class="crm-member-import-uploadfile-from-block-date">{include file="CRM/Core/Date.tpl"}</tr>  
 {if $savedMapping}
        <tr  class="crm-member-import-uploadfile-from-block-savedMapping">
@@ -77,3 +88,47 @@
 
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
+ <script>{literal}
+cj(document).ready(function($){
+  var showHideCreateContact = function(init){
+    $("input[name=onDuplicate]:checked").each(function(){
+      if ($(this).val() == 4) {
+        $("input[name=createContactOption]").not("[value=102]").closest("label").addClass("disabled");
+        $("input[name=createContactOption]").not("[value=102]").attr('disabled', 'disabled');
+        $("input[name=createContactOption][value=102]").click();
+      }
+      else {
+        $("input[name=createContactOption]").not("[value=102]").removeAttr('disabled');
+        if (!init) {
+          $("input[name=createContactOption][value=100]").click();
+        }
+        $("tr.create-new-contact label").removeClass("disabled");
+      }
+    });
+  }
+  var showHideDedupeRule = function(){
+    $("input[name=contactType]:checked").each(function(){
+      var contactType = $(this).next('.elem-label').text();
+      $("#dedupeRuleGroup option").each(function(){
+        if ($(this).attr("value")) {
+          var re = new RegExp("^"+contactType,"g");
+          if(!$(this).text().match(re)){
+            $(this).hide();
+          }
+          else{
+            $(this).show();
+          }
+        }
+      });
+      $("#dedupeRuleGroup").val($("#dedupeRuleGroup option:visible:first").attr("value"));
+    });
+  }
+
+  $("input[name=onDuplicate]").click(showHideCreateContact);
+  $("input[name=contactType]").click(showHideDedupeRule);
+  $("tr.create-new-contact label.crm-form-elem").css('display', 'block');
+  $("tr.create-new-contact").find("br").remove();
+  showHideCreateContact(true);
+  showHideDedupeRule();
+});
+{/literal}</script>

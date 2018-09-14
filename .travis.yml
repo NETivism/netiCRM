@@ -1,18 +1,16 @@
-sudo: false
+dist: trusty
+sudo: required
 language: php
 
 php:
-  - 5.4
   - 5.5
   - 5.6
 
 env:
   - RUNPORT=8080
 
-mysql:
-  database: neticrmci
-  username: root
-  encoding: utf8
+services:
+  - mysql
 
 git:
   submodules: false
@@ -30,6 +28,8 @@ addons:
 before_install:
   - git submodule init
   - git submodule update
+  - echo -e "[mysqld]\ninnodb_large_prefix = true\ninnodb_file_format = Barracuda\ninnodb_file_format_max = barracuda\ninnodb_file_per_table  = 1" | sudo tee -a /etc/mysql/my.cnf
+  - sudo service mysql restart
 
 install:
   # casperjs
@@ -39,7 +39,7 @@ install:
 
   # add composer's global bin directory to the path
   # see: https://github.com/drush-ops/drush#install---composer
-  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
   # install drush globally
   - composer global require drush/drush:7.0.0
@@ -54,8 +54,10 @@ install:
   - ln -s $(readlink -e $(cd -)) civicrm
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e 'create database neticrmci CHARACTER SET utf8 COLLATE utf8_general_ci'
-  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/neticrmci --account-pass=123456 --site-name=netiCRM --enable=transliteration neticrmci 
+  - mysql -e "CREATE DATABASE neticrmci CHARACTER SET utf8 COLLATE utf8_general_ci;"
+  - mysql -e "CREATE USER 'neticrm'@'localhost' IDENTIFIED BY 'neticrm';"
+  - mysql -e "GRANT ALL ON neticrmci.* TO 'neticrm'@'127.0.0.1';"
+  - php -d sendmail_path=`which true` ~/.config/composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://neticrm:neticrm@127.0.0.1/neticrmci --account-pass=123456 --site-name=netiCRM --enable=transliteration neticrmci 
 
   # reference and enable civicrm in build site
   - ln -s $(readlink -e $(cd -)) neticrmci/$(ls neticrmci -1 | tail -1)/sites/all/modules/civicrm

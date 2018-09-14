@@ -265,9 +265,9 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     CRM_Contribute_BAO_Query::buildSearchForm($this);
 
     /* 
-         * add form checkboxes for each row. This is needed out here to conform to QF protocol 
-         * of all elements being declared in builQuickForm 
-         */
+     * add form checkboxes for each row. This is needed out here to conform to QF protocol 
+     * of all elements being declared in builQuickForm 
+     */
 
 
     $rows = $this->get('rows');
@@ -530,6 +530,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     if ($recur) {
       $this->_formValues['contribution_recur_id'] = $recur;
       $this->_formValues['contribution_recurring'] = 1;
+    }else if($recur === '0'){
+      $this->_formValues['contribution_recurring'] = 2;
     }
 
     //check for contribution page id.

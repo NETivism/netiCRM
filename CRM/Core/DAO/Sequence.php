@@ -81,6 +81,12 @@ class CRM_Core_DAO_Sequence extends CRM_Core_DAO
    */
   static $_log = false;
   /**
+   * table primary key
+   *
+   * @var string
+   */
+  public $_primaryKey = 'name';
+  /**
    *
    * @var string
    */

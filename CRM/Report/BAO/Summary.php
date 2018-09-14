@@ -38,7 +38,8 @@ class CRM_Report_BAO_Summary {
   const
     GENDER = 0,
     AGE = 1,
-    PROVINCE = 2;
+    PROVINCE = 2,
+    CONTRIBUTION_RECEIVE_DATE = 3;
 
 
   /** 
@@ -95,8 +96,11 @@ class CRM_Report_BAO_Summary {
     $allData['instruments'] = array();
     $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
 
-    $sql = "SELECT value,label FROM civicrm_option_value WHERE option_group_id = $gid";
-    $dao = CRM_Core_DAO::executeQuery($sql);
+    $sql = "SELECT value,label FROM civicrm_option_value WHERE option_group_id = %1";
+    $params = array(
+      1 => array($gid, 'Integer'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params );
     while($dao->fetch()){
       $name = $dao->label;
       $value = $dao->value;
@@ -268,12 +272,12 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
 
   /**
    * Get statistics by condition such as gender, age and province.
-   * @param  Constant $condition such as self::GENDER, self::AGE, self::PROVINCE
+   * @param  Constant $group_by such as self::GENDER, self::AGE, self::PROVINCE
    * @param  Array    $params
    * @return Array
    */
-  static function getStaWithCondition($condition, $params){
-    switch ($condition) {
+  static function getStaWithCondition($group_by, $params, $filter = array()){
+    switch ($group_by) {
       case self::GENDER:
         // $group_by_condition = $group_by_field = 'gender.label';
         $group_by_field = 'gender.label';
@@ -293,14 +297,69 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
         $table = 'civicrm_contact c LEFT JOIN (SELECT a.contact_id contact_id, p.name name FROM civicrm_address a INNER JOIN civicrm_state_province p ON a.state_province_id = p.id WHERE a.is_primary = 1 AND a.country_id = 1208) p ON c.id = p.contact_id';
         $order_by = 'ORDER BY sum DESC';
         break;
+      case self::CONTRIBUTION_RECEIVE_DATE:
+        $is_contribution = 1;
+        $group_by_field = 'cc.date';
+        $interval = empty($params['interval'])? 'DAY' : $params['interval'];
+        switch (strtoupper($interval)) {
+          case 'DAY':
+            $field_date = 'CONCAT(YEAR(receive_date), "-", LPAD(MONTH(receive_date), 2, 0), "-", LPAD(DAY(receive_date), 2, 0))';
+            break;
+          case 'MONTH':
+            $field_date = 'CONCAT(YEAR(receive_date), "-", LPAD(MONTH(receive_date), 2, 0))';
+            break;
+          case 'WEEK':
+            $field_date = 'CONCAT(YEAR(receive_date), "-", LPAD(WEEK(receive_date), 2, 0))';
+            break;
+        }
+        $contribution_query = "SELECT COUNT(DISTINCT c.contact_id) people, COUNT(c.contact_id) count, SUM(c.total_amount) sum, c.contact_id contact_id, $field_date date FROM civicrm_contribution c {\$cc_where} GROUP BY contact_id, date ";
+        $contribution_query = " INNER JOIN (".$contribution_query.") cc ON c.id = cc.contact_id";
+        $table = 'civicrm_contact c';
+        $order_by = 'ORDER BY date ASC';
+        break;
     }
-    $is_contribution = $params['contribution'];
+    $and = array();
+    $is_contribution = $is_contribution ? $is_contribution : $params['contribution'];
     if($is_contribution){
+      $cc_filter = $filter['contribution'];
+      if(!empty($cc_filter) && is_array($cc_filter)){
+        if(!empty($cc_filter['start_date'])){
+          $cc_and[] = "receive_date >= '{$cc_filter['start_date']}'";
+          unset($cc_filter['start_date']);
+        }
+        if(!empty($cc_filter['end_date'])){
+          $cc_and[] = "receive_date <= '{$cc_filter['end_date']}'";
+          unset($cc_filter['end_date']);
+        }
+        foreach ($cc_filter as $key => $value) {
+          if(in_array(substr($value, 0, 1), array('>', '<', '=', '!'))){
+            $cc_and[] = $key .' '. $value;
+          }else if($value === TRUE){
+            $cc_and[] = $key . ' IS NOT NULL';
+          }else if($value === FALSE){
+            $cc_and[] = $key . ' IS NULL';
+          }else{
+            $cc_and[] = $key . " = '$value'";
+          }
+        }
+        $cc_and = 'AND '.implode(' AND ', $cc_and);
+
+      }
+      $cc_where = "WHERE c.contribution_status_id = 1 AND c.is_test = 0 $cc_and";
+
       $contribution_field = ' SUM(cc.count) count, SUM(cc.sum) sum,';
-      $contribution_query = ' INNER JOIN (SELECT COUNT(DISTINCT c.contact_id) people, COUNT(c.contact_id) count, SUM(c.total_amount) sum, c.contact_id FROM civicrm_contribution c WHERE c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY c.contact_id) cc ON c.id = cc.contact_id';
+      $contribution_query = $contribution_query ? $contribution_query : " INNER JOIN (SELECT COUNT(DISTINCT c.contact_id) people, COUNT(c.contact_id) count, SUM(c.total_amount) sum, c.contact_id FROM civicrm_contribution c {\$cc_where} GROUP BY contact_id ) cc ON c.id = cc.contact_id";
+
+      // Finally apply contribution where clause.
+      $contribution_query = str_replace('{$cc_where}', $cc_where, $contribution_query);
+
+      // dpm($contribution_query);
+
     }else{
       $contribution_field = $contribution_query = '';
     }
+
+
     $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field label FROM $table $contribution_query GROUP BY label $order_by";
     // dpm($sql);
     // return ;
@@ -309,8 +368,8 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     $returnArray = array();
     $count = 0;
     while($dao->fetch()){
-      if($condition == self::PROVINCE){
-        if(!empty($dao->label)){
+      if($group_by == self::PROVINCE){
+        if(!empty($dao->label) && empty($params['seperate_other'])){
           $count++;
           if($count > 5){
             $returnArray[ts('Other')]['count'] += $dao->count;

@@ -1033,8 +1033,13 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       'email-' . $form->_bltID
     );
 
+    $form->set('contributionID', $contribution->id);
+    $form->_contributionID = $contribution->id;
+    $form->track('payment');
+
     // return if pending
     if ($pending) {
+      $transaction->commit();
       return $contribution;
     }
 

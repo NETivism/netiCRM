@@ -1,7 +1,7 @@
 -- +--------------------------------------------------------------------+
--- | CiviCRM version 3.3                                                |
+-- | CiviCRM version 5                                                  |
 -- +--------------------------------------------------------------------+
--- | Copyright CiviCRM LLC (c) 2004-2010                                |
+-- | Copyright CiviCRM LLC (c) 2004-2018                                |
 -- +--------------------------------------------------------------------+
 -- | This file is a part of CiviCRM.                                    |
 -- |                                                                    |
@@ -21,7 +21,8 @@
 -- | GNU Affero General Public License or the licensing of CiviCRM,     |
 -- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 -- +--------------------------------------------------------------------+
-/*!40101 SET NAMES utf8 */;
+--
+/*!40101 SET NAMES utf8mb4 */;
 
 /*******************************************************
 *
@@ -48,7 +49,7 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1008", "Antarctica", "AQ", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1009", "Antigua and Barbuda", "AG", "2", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1010", "Argentina", "AR", "2", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1011", "Armenia", "AM", "4", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1011", "Armenia", "AM", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1012", "Aruba", "AW", "2", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1013", "Australia", "AU", "4", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1014", "Austria", "AT", "1", "0");
@@ -88,10 +89,10 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1048", "Colombia", "CO", "2", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1049", "Comoros", "KM", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1050", "Congo, The Democratic Republic of the", "CD", "5", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1051", "Congo", "CG", "5", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1051", "Congo, Republic of the", "CG", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1052", "Cook Islands", "CK", "4", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1053", "Costa Rica", "CR", "2", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1054", "Côte d\'Ivoire", "CI", "5", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1054", "Côte d’Ivoire", "CI", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1055", "Croatia", "HR", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1056", "Cuba", "CU", "2", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1057", "Cyprus", "CY", "1", "0");
@@ -118,7 +119,7 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1078", "French Polynesia", "PF", "4", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1079", "French Southern Territories", "TF", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1080", "Gabon", "GA", "5", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1081", "Georgia", "GE", "4", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1081", "Georgia", "GE", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1082", "Germany", "DE", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1083", "Ghana", "GH", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1084", "Gibraltar", "GI", "1", "0");
@@ -140,7 +141,7 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1100", "Iceland", "IS", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1101", "India", "IN", "4", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1102", "Indonesia", "ID", "4", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1103", "Iran, Islamic Republic of", "IR", "3", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1103", "Iran, Islamic Republic Of", "IR", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1104", "Iraq", "IQ", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1105", "Ireland", "IE", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1106", "Israel", "IL", "3", "0");
@@ -160,12 +161,12 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1120", "Lebanon", "LB", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1121", "Lesotho", "LS", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1122", "Liberia", "LR", "5", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1123", "Libyan Arab Jamahiriya", "LY", "3", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1123", "Libya", "LY", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1124", "Liechtenstein", "LI", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1125", "Lithuania", "LT", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1126", "Luxembourg", "LU", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1127", "Macao", "MO", "4", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1128", "Macedonia, Republic of", "MK", "1", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1128", "Macedonia, Republic Of", "MK", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1129", "Madagascar", "MG", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1130", "Malawi", "MW", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1131", "Malaysia", "MY", "4", "0");
@@ -202,8 +203,8 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1162", "Oman", "OM", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1163", "Pakistan", "PK", "4", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1164", "Palau", "PW", "4", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1165", "Palestinian Territory, Occupied", "PS", "3", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1166", "Panama", "PA", "5", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1165", "Palestine, State of", "PS", "3", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1166", "Panama", "PA", "2", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1167", "Papua New Guinea", "PG", "4", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1168", "Paraguay", "PY", "2", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1169", "Peru", "PE", "2", "0");
@@ -237,7 +238,7 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1197", "South Georgia and the South Sandwich Islands", "GS", "2", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1198", "Spain", "ES", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1199", "Sri Lanka", "LK", "4", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1200", "Sudan", "SD", "5", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1200", "Sudan", "SD", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1201", "Suriname", "SR", "2", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1202", "Svalbard and Jan Mayen", "SJ", "1", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1203", "Swaziland", "SZ", "5", "0");
@@ -246,7 +247,7 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1206", "Syrian Arab Republic", "SY", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1207", "Sao Tome and Principe", "ST", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1208", "Taiwan", "TW", "4", "0");
-INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1209", "Tajikistan", "TJ", "4", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1209", "Tajikistan", "TJ", "3", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1210", "Tanzania, United Republic of", "TZ", "5", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1211", "Thailand", "TH", "4", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1212", "Bahamas", "BS", "2", "0");
@@ -284,6 +285,13 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1244", "Jersey", "JE", "99", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1245", "Guernsey", "GG", "99", "0");
 INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1246", "Isle of Man", "IM", "99", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1247", "South Sudan", "SS", "5", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1248", "Curaçao", "CW", "2", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1249", "Sint Maarten (Dutch Part)", "SX", "2", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1250", "Bonaire, Saint Eustatius and Saba", "BQ", "2", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1251", "Kosovo", "XK", "1", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1252", "Saint Barthélemy", "BL", "2", "0");
+INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated) VALUES("1253", "Saint Martin (French part)", "MF", "2", "0");
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 3.3                                                |
 -- +--------------------------------------------------------------------+
@@ -307,7 +315,7 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 -- | GNU Affero General Public License or the licensing of CiviCRM,     |
 -- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 -- +--------------------------------------------------------------------+
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (1000, 1228, "AL", "Alabama"),
@@ -4078,7 +4086,13 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (NULL, 1050, "17", "Haut-Lomami"),
 (NULL, 1050, "18", "Lualaba"),
 (NULL, 1050, "19", "Haut-Katanga"),
-(NULL, 1050, "20", "Tanganyika");
+(NULL, 1050, "20", "Tanganyika"),
+
+-- Added subdivisions of Macau
+
+(NULL, 1127, "01", "Macao"),
+(NULL, 1127, "02", "Taipa"),
+(NULL, 1127, "03", "Coloane");
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 3.3                                                |
 -- +--------------------------------------------------------------------+
@@ -4398,8 +4412,8 @@ VALUES
     ('電子報頁尾','Footer','頁尾標題','<a href=\"{action.optOutUrl}\">取消訂閱</a> <br/> {domain.address}','取消訂閱連結: {action.optOutUrl}\n{domain.address}',1,1),
     ('訂閱訊息','Subscribe','訂閱待確認','謝謝您訂閱 {subscribe.group}。請您按下<a href=\"{subscribe.url}\">這裡</a>完成確認訂閱的動作。','感謝您訂閱{subscribe.group}。為確認您有收到確認信函，請您點按後方的連結完成訂閱動作：{subscribe.url}',1,1),
     ('歡迎訊息','Welcome','您的訂閱已確認！感謝您的訂閱～','您好，您已完成 {welcome.group} 電子報的訂閱。','您好，您已完成 {welcome.group} 電子報的訂閱。',1,1),
-    ('取消訂閱的訊息文字','Unsubscribe','取消訂閱','您已取消訂閱：{unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱：{unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
-    ('再次訂閱訊息','Resubscribe','再次訂閱確認','您已重新訂閱以下電子報：{resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按<a href=\"{action.unsubscribeUrl}\">這裡</a>。','您已重新訂閱以下電子報：{resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按{action.unsubscribeUrl}',1,1),
+    ('取消訂閱的訊息文字','Unsubscribe','取消訂閱','您已取消訂閱 {unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱 {unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
+    ('再次訂閱訊息','Resubscribe','再次訂閱確認','您已重新訂閱 {resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按<a href=\"{action.unsubscribeUrl}\">這裡</a>。','您已重新訂閱 {resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按{action.unsubscribeUrl}',1,1),
     ('全站退訂的訊息文字','OptOut','退出確認','您這個 Email 將不會再收到從 {domain.name} 寄出的電子報。','您這個 Email 將不會再收到從 {domain.name} 寄出的電子報。',1,1),
     ('自動回覆','Reply','請將您的問題寄送到我們的 Email','這是自動回覆訊息，請勿回覆至此信箱。如有任何問題，請寄信至我們的 Email。','這是自動回覆訊息，請勿回覆至此信箱。如有任何問題，請寄信至我們的 Email。',1,1);
 
@@ -5371,6 +5385,7 @@ INSERT INTO civicrm_mailing_bounce_pattern
     (@bounceTypeID, 'not a gateway'),
     (@bounceTypeID, 'server is down or unreachable'),
     (@bounceTypeID, 'too many connections'),
+    (@bounceTypeID, 'host or domain name not found'),
     (@bounceTypeID, 'unable to connect');
 
 INSERT INTO civicrm_mailing_bounce_type 
@@ -5529,7 +5544,7 @@ INSERT INTO civicrm_mailing_bounce_pattern
 
 INSERT INTO civicrm_mailing_bounce_type 
         (name, description, hold_threshold) 
-        VALUES ('Syntax', 'SMTP 錯誤', 3);
+        VALUES ('Syntax', '退信無法分析或寄件系統錯誤', 100);
 
 SELECT @bounceTypeID := max(id) FROM civicrm_mailing_bounce_type WHERE name = 'Syntax';
 INSERT INTO civicrm_mailing_bounce_pattern 

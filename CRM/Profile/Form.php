@@ -317,6 +317,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
     }
 
     $this->setDefaultsValues();
+    $this->track(1);
   }
 
   /**
@@ -1001,6 +1002,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       }
     }
 
+    $this->track(4);
     $transaction->commit();
   }
 
@@ -1024,5 +1026,19 @@ class CRM_Profile_Form extends CRM_Core_Form {
     return parent::getTemplateFileName();
   }
 
+  function track($state) {
+    $params = array(
+      'state' => $state,
+      'page_type' => 'civicrm_uf_group',
+      'page_id' => $this->_gid,
+      'visit_date' => date('Y-m-d H:i:s'),
+    );
+    $track = CRM_Core_BAO_Track::add($params);
+    if ($this->_id) {
+      $params['entity_table'] = 'civicrm_contact';
+      $params['entity_id'] = $this->_id;
+    }
+    $track = CRM_Core_BAO_Track::add($params);
+  }
 }
 

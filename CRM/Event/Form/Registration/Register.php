@@ -584,6 +584,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         CRM_Core_BAO_CMSUser::buildForm($this, $profileID, TRUE);
       }
     }
+
     //we have to load confirm contribution button in template
     //when multiple payment processor as the user
     //can toggle with payment processor selection

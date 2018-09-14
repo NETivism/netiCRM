@@ -70,7 +70,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
     $this->add('text', 'max_amount', ts('Maximum Amount'), array('size' => 8, 'maxlength' => 8));
     $this->addRule('max_amount', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
 
-    $default = array();
+    $filter = array();
     $grouping = array('recurring' => ts('Recurring Contribution'), 'non-recurring' => ts('Non-recurring Contribution'));
     for ($i = 1; $i <= self::NUM_OPTION; $i++) {
       // label
@@ -82,9 +82,11 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
       $this->addRule("value[$i]", ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
 
       // default
+      $filter[] = $this->createElement('checkbox', $i);
       $default[] = $this->createElement('radio', NULL, NULL, NULL, $i);
     }
 
+    $this->addGroup($filter, 'filter');
     $this->addGroup($default, 'default');
 
     $this->addElement('checkbox', 'amount_block_is_active', ts('Contribution Amounts section enabled'), NULL, array('onclick' => "showHideAmountBlock( this, 'amount_block_is_active' );"));
@@ -222,14 +224,13 @@ SELECT id
       }
 
       if (CRM_Utils_Array::value('value', $defaults) && is_array($defaults['value'])) {
-        if (CRM_Utils_Array::value('default_amount_id', $defaults) &&
-          CRM_Utils_Array::value('amount_id', $defaults) &&
-          is_array($defaults['amount_id'])
-        ) {
+        if (CRM_Utils_Array::value('amount_id', $defaults) && is_array($defaults['amount_id'])) {
           foreach ($defaults['value'] as $i => $v) {
-            if ($defaults['amount_id'][$i] == $defaults['default_amount_id']) {
+            if (!empty($defaults['default_amount_id']) && $defaults['amount_id'][$i] == $defaults['default_amount_id']) {
               $defaults['default'] = $i;
-              break;
+            }
+            if ($defaults['filter'][$i]) {
+              $defaults['filter'][$i] = 1;
             }
           }
         }
@@ -468,6 +469,7 @@ SELECT id
           $values = CRM_Utils_Array::value('value', $params);
           $grouping = CRM_Utils_Array::value('grouping', $params);
           $default = CRM_Utils_Array::value('default', $params);
+          $filter = CRM_Utils_Array::value('filter', $params);
 
           $options = array();
           for ($i = 1; $i < self::NUM_OPTION; $i++) {
@@ -480,13 +482,11 @@ SELECT id
                 'grouping' => trim($grouping[$i]),
                 'is_active' => 1,
                 'is_default' => $default == $i,
+                'filter' => $filter[$i] == 1,
               );
             }
           }
-          CRM_Core_OptionGroup::createAssoc("civicrm_contribution_page.amount.{$contributionPageID}",
-            $options,
-            $params['default_amount_id']
-          );
+          CRM_Core_OptionGroup::createAssoc("civicrm_contribution_page.amount.{$contributionPageID}", $options, $params['default_amount_id']);
           if ($params['default_amount_id']) {
             CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionPage',
               $contributionPageID, 'default_amount_id',

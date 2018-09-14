@@ -342,18 +342,40 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
     }
     elseif ($action & CRM_Core_Action::UPDATE) {
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
+      $page = array();
+      CRM_Contribute_BAO_ContributionPage::setValues($id, $page);
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
           "action=update&reset=1&id={$id}"
         ));
       $config = CRM_Core_Config::singleton();
 
-      CRM_Utils_System::setTitle(ts('Configure Contribution Page'));
+      // statistics
+      CRM_Utils_System::setTitle(ts('Configure Contribution Page')." - ".$page['title']);
+      $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($id);
+      $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id);
+      foreach($pageStatistics['track'] as &$track) {
+        $track['display'] = "{$track['percent']}% ({$track['count']} ".ts('People').")";
+      }
+      unset($pageStatistics['page']['title']);
+      $this->assign('contribution_page_statistics', $pageStatistics);
+
+      //build the configure links
+      /*
+      $sectionInfo = CRM_Contribute_BAO_ContributionPage::getSectionInfo(array($id));
+      $sectionInfo = reset($sectionInfo);
+      $perm = self::checkPerm($sectionsInfo);
+      $links = array();
+      $links['configure'] = CRM_Core_Action::formLink(self::formatConfigureLinks($sectionInfo), $perm, array('id' => $pid), ts('Configure'), TRUE);      //build the contributions links.
+      $links['contribution'] = CRM_Core_Action::formLink(self::contributionLinks(), $perm, array('id' => $pid), ts('Contributions'), TRUE);
+      //export links.
+      $links['export'] = CRM_Core_Action::formLink(self::exportLinks(), $perm, array('id' => $pid), ts('Export'), TRUE);
+      $this->assign("contribution_page_links", $links);
+      */
 
       // assign vars to templates
       $this->assign('id', $id);
-      $this->assign('title', CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $id, 'title'));
-      $this->assign('is_active', CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $id, 'is_active'));
+      $this->assign('is_active', $page['is_active']);
       if (in_array('CiviMember', $config->enableComponents)) {
         $this->assign('CiviMember', TRUE);
       }
@@ -492,32 +514,7 @@ ORDER BY is_active DESC, id ASC
       CRM_Core_DAO::storeValues($dao, $contributionPage[$dao->id]);
       $contributionPage[$dao->id]['contribution_type'] = $contributionTypes[$dao->contribution_type_id];
 
-      // form all action links
-      $action = array_sum(array_keys($this->actionLinks()));
-
-      //add configure actions links.
-      $action += array_sum(array_keys($configureActionLinks));
-
-      //add online contribution links.
-      $action += array_sum(array_keys(self::onlineContributionLinks()));
-
-      //add contribution search links.
-      $action += array_sum(array_keys(self::contributionLinks()));
-
-      //add export links
-      $action += array_sum(array_keys(self::exportLinks()));
-
-      if ($dao->is_active) {
-        $action -= CRM_Core_Action::ENABLE;
-      }
-      else {
-        $action -= CRM_Core_Action::DISABLE;
-      }
-
-      //CRM-4418
-      if (!$allowToDelete) {
-        $action -= CRM_Core_Action::DELETE;
-      }
+      $action = self::checkPerm($contributionPage[$dao->id]);
 
       //build the configure links.
       $sectionsInfo = CRM_Utils_Array::value($dao->id, $contriPageSectionInfo, array());
@@ -701,6 +698,38 @@ SELECT count(id)
     }
 
     return $formattedConfLinks;
+  }
+
+  function checkPerm($page) {
+    $configureActionLinks = self::configureActionLinks();
+
+    // form all action links
+    $perm = array_sum(array_keys($this->actionLinks()));
+
+    //add configure actions links.
+    $perm += array_sum(array_keys($configureActionLinks));
+
+    //add online contribution links.
+    $perm += array_sum(array_keys(self::onlineContributionLinks()));
+
+    //add contribution search links.
+    $perm += array_sum(array_keys(self::contributionLinks()));
+
+    //add export links
+    $perm += array_sum(array_keys(self::exportLinks()));
+
+    if ($page['is_active']) {
+      $perm -= CRM_Core_Action::ENABLE;
+    }
+    else {
+      $perm -= CRM_Core_Action::DISABLE;
+    }
+
+    $allowToDelete = CRM_Core_Permission::check('delete in CiviContribute');
+    if (!$allowToDelete) {
+      $perm -= CRM_Core_Action::DELETE;
+    }
+    return $perm;
   }
 }
 

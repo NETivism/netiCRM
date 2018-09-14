@@ -254,6 +254,12 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
    */
   public $receipt_id;
   /**
+   * when is payment expiration
+   *
+   * @var datetime
+   */
+  public $expire_date;
+  /**
    * class constructor
    *
    * @access public
@@ -579,6 +585,16 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'where' => 'civicrm_contribution.receipt_id',
           'headerPattern' => '/receipt(.?number)?/i',
           'dataPattern' => '',
+          'export' => true,
+        ) ,
+        'expire_date' => array(
+          'name' => 'expire_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Expire Date') ,
+          'import' => true,
+          'where' => 'civicrm_contribution.expire_date',
+          'headerPattern' => '/expire(.?date)?/i',
+          'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
           'export' => true,
         ) ,
       );

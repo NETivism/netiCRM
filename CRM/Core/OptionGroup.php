@@ -343,6 +343,7 @@ WHERE  v.option_group_id = g.id
         $value->weight = CRM_Utils_Array::value('weight', $v);
         $value->is_default = CRM_Utils_Array::value('is_default', $v);
         $value->is_active = CRM_Utils_Array::value('is_active', $v);
+        $value->filter = CRM_Utils_Array::value('filter', $v);
         $value->save();
 
         if ($value->is_default) {
@@ -359,7 +360,7 @@ WHERE  v.option_group_id = g.id
 
   static function getAssoc($groupName, &$values, $flip = FALSE, $field = 'name') {
     $query = "
-SELECT v.id as amount_id, v.value, v.label, v.name, v.description, v.weight, v.grouping, v.filter
+SELECT v.id as amount_id, v.value, v.label, v.name, v.description, v.weight, v.grouping, v.filter, v.is_default
   FROM civicrm_option_group g,
        civicrm_option_value v
  WHERE g.id = v.option_group_id
@@ -369,7 +370,7 @@ ORDER BY v.weight
     $params = array(1 => array($groupName, 'String'));
     $dao = CRM_Core_DAO::executeQuery($query, $params);
 
-    $fields = array('value', 'label', 'name', 'description', 'amount_id', 'weight', 'grouping', 'filter');
+    $fields = array('value', 'label', 'name', 'description', 'amount_id', 'weight', 'grouping', 'filter', 'is_default');
     if ($flip) {
       $values = array();
     }

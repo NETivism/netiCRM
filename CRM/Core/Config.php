@@ -282,6 +282,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     else {
       $host = $_SERVER['HTTP_HOST'];
       $path = '/';
+      define('CIVICRM_UF_BASEURL', $scheme."://".$_SERVER['HTTP_HOST'].$path);
     }
     $this->userFrameworkBaseURL = $scheme.'://'.$host.$port.$path;
 
@@ -297,7 +298,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
 
     if (!$this->userFrameworkResourceURL) {
-      $this->userFrameworkResourceURL = rtrim($this->userFrameworkBaseURL, '/') . str_replace($this->userSystem->cmsRootPath(), '', $civicrm_root);
+      $this->userFrameworkResourceURL = rtrim(CIVICRM_UF_BASEURL, '/') . str_replace($this->userSystem->cmsRootPath(), '', $civicrm_root);
     }
   }
 
@@ -379,6 +380,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @access private
    */
   private function _initVariables() {
+    global $civicrm_root;
     // retrieve serialised settings
     $variables = array();
     CRM_Core_BAO_ConfigSetting::retrieve($variables);
@@ -459,10 +461,16 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     if (!$this->customFileUploadDir) {
       $this->customFileUploadDir = $this->uploadDir;
     }
-    $this->customFileUploadURL = $this->userFrameworkBaseURL . CRM_Utils_System::cmsDir('public') . '/civicrm/custom/';
+    $this->customFileUploadURL = rtrim(CIVICRM_UF_BASEURL, '/').'/'. CRM_Utils_System::cmsDir('public') . '/civicrm/custom/';
 
     if ($this->mapProvider) {
       $this->geocodeMethod = 'CRM_Utils_Geocode_' . $this->mapProvider;
+    }
+
+    if ($this->debug) {
+      if (file_exists($civicrm_root.'civicrm-version.txt')) {
+        $this->version = file_get_contents($civicrm_root.'civicrm-version.txt');
+      }
     }
   }
 

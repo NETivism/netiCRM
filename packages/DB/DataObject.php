@@ -1025,6 +1025,24 @@ class DB_DataObject extends DB_DataObject_Overload
                 continue;
             }
 
+						if (($v & DB_DATAOBJECT_DATE) || ($v & DB_DATAOBJECT_TIME)) {
+							if (strpos($this->$k, '-') != FALSE) {
+								/**
+								 * per CRM-14986 we have been having ongoing problems with the format returned from $dao->find(TRUE) NOT
+								 * being acceptable for an immediate save. This has resulted in the codebase being smattered with
+								 * instances of CRM_Utils_Date::isoToMysql for date fields retrieved in this way
+								 * which seems both risky (have to remember to do it for every field) & cludgey.
+								 * doing it here should be safe as only fields with a '-' in them will be affected - if they are
+								 *  already formatted or empty then this line will not be hit
+								 **/
+                $rightq .= $this->_quote((string) CRM_Utils_Date::isoToMysql($this->$k)) . ' ';
+                continue;
+							}
+              else {
+                $rightq .= " {$this->$k} ";
+                continue;
+              }
+						}
 
             if (is_numeric($this->$k)) {
                 $rightq .=" {$this->$k} ";
@@ -2316,7 +2334,7 @@ class DB_DataObject extends DB_DataObject_Overload
         
         // change the connection and results charsets to UTF-8 if we're using MySQL 4.1+
         $civicrmConfig =& CRM_Core_Config::singleton();
-        $this->query("/*!40101 SET NAMES utf8 */");
+        $this->query("/*!40101 SET NAMES utf8mb4 */");
         
         if (!empty($_DB_DATAOBJECT['CONFIG']['debug'])) {
             $this->debug(serialize($_DB_DATAOBJECT['CONNECTIONS']), "CONNECT",5);

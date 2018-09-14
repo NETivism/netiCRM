@@ -815,6 +815,8 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           else {
             $sel->setOptions(array($sel1, $sel2, $sel3, $sel4, $sel5, $sel6, $sel7));
           }
+          $form->add('hidden', "weight[$x][$i]", '');
+          $defaults["weight[$x][$i]"] = $i;
         }
         else {
           $sel->setOptions(array($sel1, $sel2, $sel3, $sel4));
@@ -1165,9 +1167,8 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           }
 
           $saveMappingFields->grouping = $key;
-          $saveMappingFields->column_number = $colCnt;
+          $saveMappingFields->column_number = $params['weight'][$key][$k];
           $saveMappingFields->save();
-          $colCnt++;
           $locationTypeid = $phoneTypeid = NULL;
         }
       }

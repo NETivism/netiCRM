@@ -1,17 +1,24 @@
-<div class="chartist-wrapper">
+
+{php}
+global $crmChartistAdded;
+if (!$crmChartistAdded) {
+{/php}
+  <script type="text/javascript" src="{$config->resourceBase}packages/moment/moment.min.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/dist/chartist.min.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-axistitle.js"></script>
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/dist/chartist.min.css">
-  
-  {if $chartist.withToolTip}
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
+  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css">
+  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend-custom.css">
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
-  {/if}
-
-  {if $chartist.type eq 'Pie' and $chartist.isFillDonut}
+  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js"></script>
-  {/if}
-
+  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend.js"></script>
+{php}
+  $crmChartistAdded = TRUE;
+}
+{/php}
+<div class="chartist-wrapper">
 {if $chartist.series}
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
   
@@ -45,17 +52,35 @@
 
 <script>{literal}
 (function(){
+  var chartId = "{/literal}{$chartist.id|default:""}{literal}";
   var chartLabels = {/literal}{$chartist.labels|default:"[]"}{literal};
   var chartSeries = {/literal}{$chartist.series|default:"[]"}{literal};
+  var chartLegends = {/literal}{$chartist.legends|default:"[]"}{literal};
+  var withOldLegend = {/literal}{$chartist.withOldLegend|default:0}{literal};
+  var withLegend = {/literal}{$chartist.withLegend|default:0}{literal};
   var withToolTip = {/literal}{$chartist.withToolTip|default:0}{literal};
+  var withVerticalHint = {/literal}{$chartist.withVerticalHint|default:0}{literal};
   var isDonut = {/literal}{$chartist.isDonut|default:0}{literal};
   var isFillDonut = {/literal}{$chartist.isFillDonut|default:0}{literal};
   var animation = {/literal}{$chartist.animation|default:0}{literal};
+  var stackBars = {/literal}{$chartist.stackBars|default:0}{literal};
+  var stackLines = {/literal}{$chartist.stackLines|default:0}{literal};
+  var onlyIntegerY = {/literal}{$chartist.onlyIntegerY|default:0}{literal};
   var chartSelector = "{/literal}{$chartist.selector|default:'.chartist-chart'}{literal}";
   var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
   var seriesUnit = "{/literal}{$chartist.seriesUnit|default:''}{literal}";
   var seriesUnitPosition = "{/literal}{$chartist.seriesUnitPosition|default:'suffix'}{literal}";
+  var autoDateLabel = {/literal}{$chartist.autoDateLabel|default:0}{literal};
+  var seriesLength = 0;
+  if (typeof chartSeries[0] === "object") {
+    seriesLength = chartSeries[0].length; 
+  }
+  else
+  if(typeof chartSeries=== "object"){
+    seriesLength = chartSeries.length; 
+  }
+  autoDateLabel = seriesLength > 35 && autoDateLabel ? true : false; 
 
   var floorDecimal = function (val, precision) {
     return Math.floor(Math.floor(val * Math.pow(10, (precision || 0) + 1)) / 10) / Math.pow(10, (precision || 0));
@@ -182,9 +207,14 @@
       for (var i = 0; i < data.series.length; i++) {
         for (var j = 0; j < data.series[i].length; j++) {
           label = typeof data.labels !== 'undefined' ? data.labels[j] : '';
-          series = data.series[i][j];
+          series = typeof data.series[i][j]["y"] !== "undefined" ? data.series[i][j]["y"] : data.series[i][j];
           desc = getDesc(label, series, type, unit);
-          data.series[i][j] = {"meta": desc, "value": series};
+          if (typeof data.series[i][j]["y"] !== "undefined") {
+            data.series[i][j]["meta"] = desc;
+          }
+          else {
+            data.series[i][j] = {"meta": desc, "value": series};
+          }
         }  
       }
     }
@@ -205,14 +235,99 @@
     return data;
   }
 
+  var renderStackLinesSeries = function(series) {
+    for (var i = 0; i < series.length; i++) {
+      if (i > 0) {
+        for (var j = 0; j < series[i].length; j++) {
+          series[i][j] = series[i-1][j] + series[i][j];
+        }
+      }
+    }
+
+    return series;
+  }
+
+  var renderSeriesWithLabels = function() {
+    if (chartSeries.length > 0 && chartLegends.length > 0) {
+      for (var i = 0; i < chartSeries.length; i++) {
+        if (typeof chartLegends[i] !== 'undefined') {
+          chartSeries[i] = {"name": chartLegends[i], "data": chartSeries[i]};
+        }
+      }
+    }
+  }
+
+  var removeEmptySeriesAndLabels = function() {
+    if (chartType == 'Pie') {
+      for (var i = 0; i < chartSeries.length; i++) {
+        if (chartSeries[i] == 0) {
+          chartSeries.splice(i, 1);
+          chartLabels.splice(i, 1);
+        }
+      }
+    }
+  }
+
+
+  if (chartType == 'Line' && stackLines) {
+    chartSeries = renderStackLinesSeries(chartSeries);
+  }
+
+  if (withOldLegend) {
+    if (chartType == 'Pie') {
+      removeEmptySeriesAndLabels();
+    }
+  }
+
+  if (withLegend) {
+    if (chartType == 'Pie') {
+      removeEmptySeriesAndLabels();
+    }
+  }
+
   var data = {
     // Our series array that contains series objects or in this case series data arrays
     "series": chartSeries
   };
 
   if (typeof chartLabels !== 'undefined' && chartLabels.length > 0) {    
-    // A labels array that can contain any sort of values
     data['labels'] = chartLabels;
+
+    // for time serial horizontal label
+    // check http://gionkunz.github.io/chartist-js/examples.html#example-timeseries-moment
+    if (autoDateLabel && (typeof chartSeries === "object")) {
+      data.series = [];
+      // rebuild data object
+      var stamp = [];
+      for(var idx in chartLabels) {
+        if (typeof autoDateLabel === "string" && autoDateLabel.length > 1) {
+          stamp[idx] = moment(chartLabels[idx], autoDateLabel).format("x");
+        }
+        else {
+          stamp[idx] = moment(chartLabels[idx]).format("x");
+        }
+      }
+      for(var i in chartSeries) {
+        if (typeof chartSeries[i] === "object") {
+          data.series[i] = [];
+          for(var j in chartSeries[i]) {
+            data.series[i].push({ "x":stamp[j], "y":chartSeries[i][j]});
+          }
+        }
+        else {
+          data.series[i] = [];
+          data.series[i].push({ "x":stamp[i], "y":chartSeries[i]});
+        }
+      }
+
+      var axisX = {
+        type: Chartist.FixedScaleAxis,
+        divisor: chartLabels.length > 12 ? 12 : chartLabels.length,
+        labelInterpolationFnc: function(value) {
+          return moment(value).format('YYYY-MM-DD');
+        }
+      };
+    }
   }
 
   // Create a new line chart object where as first parameter we pass in a selector
@@ -222,6 +337,7 @@
   var options = {};
   if(chartType == 'Line' || chartType == 'Bar') {
     options = {
+      classNames: {"chart": ""},
       showPoint: true,
       showArea: true,
       lineSmooth: Chartist.Interpolation.simple({
@@ -239,12 +355,15 @@
         labelInterpolationFnc: function(value) {
           var label = seriesUnit ? renderUnitLabel(value, seriesUnit, seriesUnitPosition, 'axis') : value;
           return label;
-        }
+        },
+        onlyInteger: onlyIntegerY
       }
     };
   }
+  // pie, donut
   else {
     options = {
+      classNames: {"chart": ""},
       ignoreEmptyValues: true,
       labelInterpolationFnc: function(value, index) {
         switch (labelType) {
@@ -276,6 +395,20 @@
       }
     }; 
   }
+  if (typeof axisX === "object") {
+    options["axisX"] = axisX;
+  }
+
+  if (seriesLength > 60) {
+    options.classNames["chart"] += ' series-large ';
+  }
+  else
+  if (seriesLength > 14) {
+    options.classNames["chart"] += ' series-medium ';
+  }
+  else {
+    options.classNames["chart"] += ' series-normal ';
+  }
   options.plugins = [];
 {/literal}{if $chartist.axisx || $chartist.axisy}{literal}
   var axis = Chartist.plugins.ctAxisTitle({
@@ -297,10 +430,33 @@
   options.plugins.push(axis);
 {/literal}{/if}
 
-{if $chartist.withLegend}{literal}
+{if $chartist.withOldLegend}{literal}
   options.labelOffset = 65;
-  cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-legend');
+  cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-old-legend');
   renderChartLegend(chartSelector, data, seriesUnit);
+{/literal}{/if}
+
+{if $chartist.withLegend}{literal}
+  cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-legend');
+  var legend = chartType == 'Pie' ? Chartist.plugins.legend() : Chartist.plugins.legend({legendNames: chartLegends});
+  options.plugins.push(legend);
+
+  if (chartType == 'Pie') {
+    options.labelOffset = 65;
+  }
+{/literal}{/if}
+
+{if $chartist.type eq 'Line' && $chartist.stackLines}{literal}
+  options.showArea = true;
+  options.showPoint = true;
+  options.showLine = false;
+  options.lineSmooth = Chartist.Interpolation.none();
+  options.low = 0;
+  options.classNames["chart"] += ' ct-chart-line ct-chart-line-stacked ';
+{/literal}{/if}
+
+{if $chartist.type eq 'Bar' && $chartist.stackBars}{literal}
+  options.stackBars = {/literal}{$chartist.stackBars}{literal};
 {/literal}{/if}
 
 {if $chartist.labelOffset}{literal}
@@ -313,9 +469,16 @@
   }
     
   if (withToolTip) {
-      data = renderToolTipData(data, chartType, seriesUnit);
-      var tooltip = Chartist.plugins.tooltip();
-      options.plugins.push(tooltip);   
+    data = renderToolTipData(data, chartType, seriesUnit);
+    var tooltip = Chartist.plugins.tooltip();
+    options.plugins.push(tooltip);   
+  }
+  if (withVerticalHint && !autoDateLabel && chartLegends.length > 0) {
+    options.plugins.push(
+      Chartist.plugins.verticalhint({
+				seriesLabel:chartLegends
+      })
+    ); 
   }
 
   if (chartType == 'Pie') {

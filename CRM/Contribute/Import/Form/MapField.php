@@ -391,6 +391,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $warning = 0;
 
     for ($i = 0; $i < $this->_columnCount; $i++) {
+      $this->add('hidden', "weight[$i]");
+      $defaults["weight[$i]"] = $i;
       $sel = &$this->addElement('hierselect', "mapper[$i]", ts('Mapper for Field %1', array(1 => $i)), NULL);
       $jsSet = FALSE;
       if ($this->get('savedMapping')) {
@@ -677,7 +679,13 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $seperator = $config->fieldSeparator;
 
     $mapper = $mapperKeys = $mapperKeysMain = $mapperSoftCredit = $softCreditFields = $mapperPhoneType = array();
-    $mapperKeys = $this->controller->exportValue($this->_name, 'mapper');
+    $mapperKeysOrigin = $this->controller->exportValue($this->_name, 'mapper');
+
+    $mapperWeight = $params['weight'];
+    for ($i=0; $i < count($mapperWeight); $i++) {
+      $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
+    }
+    $this->set('mapperKeys', $mapperKeys);
 
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
     $imProviders = CRM_Core_PseudoConstant::IMProvider();
@@ -775,23 +783,27 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         $updateMappingFields->mapping_id = $params['mappingId'];
         $updateMappingFields->column_number = $i;
         $updateMappingFields->name = $mapper[$i];
+        $updateMappingFields->location_type_id = 'NULL';
+        $updateMappingFields->phone_type_id = 'NULL';
+        $updateMappingFields->im_provider_id = 'NULL';
+        $updateMappingFields->website_type_id = 'NULL';
 
         if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'url') {
-          $updateMappingFields->website_type_id = isset($mapperKeys[$i][1]) ? $mapperKeys[$i][1] : NULL;
+          $updateMappingFields->website_type_id = isset($mapperKeys[$i][1]) ? $mapperKeys[$i][1] : 'NULL';
         }
         else {
           if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'phone') {
-            $updateMappingFields->phone_type_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
+            $updateMappingFields->phone_type_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
           }
           elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
-            $updateMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
+            $updateMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
           }
           $location = array_keys($locationTypes, $locations[$i]);
-          $updateMappingFields->location_type_id = isset($location) ? $location[0] : NULL;
+          $updateMappingFields->location_type_id = !empty($location) ? $location[0] : 'NULL';
         }
 
         //reuse contact_type field in db to store fields associated with soft credit
-        $updateMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : NULL;
+        $updateMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : 'NULL';
         $updateMappingFields->save();
       }
     }
@@ -812,22 +824,27 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         $saveMappingFields->mapping_id = $saveMapping->id;
         $saveMappingFields->column_number = $i;
         $saveMappingFields->name = $mapper[$i];
+        $saveMappingFields->location_type_id = 'NULL';
+        $saveMappingFields->phone_type_id = 'NULL';
+        $saveMappingFields->im_provider_id = 'NULL';
+        $saveMappingFields->website_type_id = 'NULL';
 
         if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'url') {
-          $saveMappingFields->website_type_id = isset($mapperKeys[$i][1]) ? $mapperKeys[$i][1] : NULL;
+          $saveMappingFields->website_type_id = isset($mapperKeys[$i][1]) ? $mapperKeys[$i][1] : 'NULL';
         }
         else {
           if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'phone') {
-            $saveMappingFields->phone_type_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
+            $saveMappingFields->phone_type_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
           }
           elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
-            $saveMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
+            $saveMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
           }
-          $saveMappingFields->location_type_id = isset($location_id[0]) ? $location_id[0] : NULL;
+          $location = array_keys($locationTypes, $locations[$i]);
+          $saveMappingFields->location_type_id = !empty($location) ? $location[0] : 'NULL';
         }
 
         //reuse contact_type field in db to store fields associated with soft credit
-        $saveMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : NULL;
+        $saveMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : 'NULL';
         $saveMappingFields->save();
       }
       $this->set('savedMapping', $saveMappingFields->mapping_id);

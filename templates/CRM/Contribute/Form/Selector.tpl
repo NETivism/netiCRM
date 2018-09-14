@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{if $context EQ 'Search'}
+{if $context EQ 'Search' || $context == 'contribution'}
     {include file="CRM/common/pager.tpl" location="top"}
 {/if}
 
@@ -108,6 +108,6 @@
  </script>
 {/if}
 
-{if $context EQ 'Search'}
+{if $context EQ 'Search' || $context == 'contribution'}
     {include file="CRM/common/pager.tpl" location="bottom"}
 {/if}

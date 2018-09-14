@@ -327,6 +327,20 @@ class CRM_Core_PseudoConstant {
   private static $extensions = array();
 
   /**
+   * TrackState
+   * @var array
+   * @static
+   */
+  private static $trackState = array();
+
+  /**
+   * Referrer Types
+   * @var array
+   * @static
+   */
+  private static $referrerTypes = array();
+
+  /**
    * populate the object from the database. generic populate
    * method
    *
@@ -1547,6 +1561,36 @@ ORDER BY name";
     }
 
     return self::$extensions;
+  }
+
+  public static function &trackState() {
+    if (!self::$trackState) {
+      self::$trackState = array(
+        0 => ts('Information Screen'),
+        1 => ts('Form Screen'),
+        2 => ts('Confirmation Screen'),
+        3 => ts('Payment Screen'),
+        4 => ts('Thank You Screen'),
+      );
+    }
+    return self::$trackState;
+  }
+
+  public static function &referrerTypes() {
+    if (!self::$referrerTypes) {
+      self::$referrerTypes =  array(
+        'ad' => ts('ads'),
+        'direct' => ts('direct'),
+        'email' => ts('Email clients'),
+        'internal' => ts('internal'),
+        'link' => ts('link'),
+        'search' => ts('search'),
+        'social' => ts('social'),
+        'unknown' => ts('Unknown'),
+        'internal' => ts('internal'),
+      );
+    }
+    return self::$referrerTypes;
   }
 }
 

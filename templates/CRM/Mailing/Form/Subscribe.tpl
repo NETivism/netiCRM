@@ -35,21 +35,22 @@
     </div>
 {/if}
 
-<table class="form-layout-compressed">
-    <tr class="crm-mailing-subscribe-form-block-email"><td style="width: 10%;">{$form.email.label}</td><td>{$form.email.html}</td></tr>
-    <tr><td colspan="2">
-        <div class="spacer"></div>
-
+<table class="form-layout-compressed" style="max-width:600px; margin: 0 auto;">
+    <tr class="crm-mailing-subscribe-form-block-email"><td style="min-width:90px;">{$form.email.label}</td><td>{$form.email.html}</td></tr>
+    <tr>
+       <td></td>
+       <td>
         {if ! $single} {* Show all public mailing list groups. Page was loaded w/o a specific group param (gid=N not in query string). *}
             <table summary="{ts}Group Listings.{/ts}" class="selector" style="width: auto;">
             {counter start=0 skip=1 print=false}
             {foreach from=$rows item=row}
-            <tr id='rowid{$row.id}' class="{cycle values="odd-row,even-row"}">
+            <div id='rowid{$row.id}'>
                 {assign var=cbName value=$row.checkbox}
-                <td class="crm-mailing-subscribe-form-block-{$cbName}">{$form.$cbName.html}</td>
-                <td class="crm-mailing-subscribe-form-block-title"><strong>{$row.title}</strong></td>
-                <td class="crm-mailing-subscribe-form-block-description">&nbsp;&nbsp;{$row.description}&nbsp;</td>
-            </tr>
+                <label class="crm-form-elem crm-form-checkbox">
+                {$form.$cbName.html}
+                <span class="elem-label">{$row.title}</span>
+                </label>
+            </div>
             {/foreach}  
             </table>
         {/if}

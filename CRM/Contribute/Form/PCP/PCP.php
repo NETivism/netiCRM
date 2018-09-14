@@ -75,6 +75,9 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
 
     //do not allow destructive actions without permissions
     $permission = FALSE;
+    if (!$userID) {
+      CRM_Utils_System::permissionDenied();
+    }
     if (CRM_Core_Permission::check('administer CiviCRM') ||
       ($userID && (CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP',
             $this->_id,

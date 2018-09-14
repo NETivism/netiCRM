@@ -45,13 +45,16 @@
                 {/if}
             {/section}
             
-            <th>{ts}Matching CiviCRM Field{/ts}</th>
+            <th>
+                {ts}Matching CiviCRM Field{/ts}
+                {if $wizard.currentStepName == 'MapField'}<div class="draggable-tip">{ts}Draggable{/ts}</div>{/if}
+            </th>
         </tr>
         
         {*Loop on columns parsed from the import data rows*}
         {section name=cols loop=$columnCount}
             {assign var="i" value=$smarty.section.cols.index}
-            <tr style="border-bottom: 1px solid #92B6EC;">
+            <tr {if $wizard.currentStepName == 'MapField'}class="draggable"{/if} style="border-bottom: 1px solid #92B6EC;">
                          
                 {section name=rows loop=$rowDisplayCount}
                     {assign var="j" value=$smarty.section.rows.index}
@@ -65,6 +68,7 @@
                         {$mapper[$i]}
                     {else}
                         {$form.mapper[$i].html}
+                        <div class="drag-handler"></div>
                     {/if}
                 </td>
 
@@ -113,7 +117,8 @@
         		 }
              }
              {/literal}
-	     {include file="CRM/common/highLightImport.tpl"}	     
+	     {include file="CRM/common/highLightImport.tpl"}
+       {include file="CRM/common/importSortable.tpl"}
 	    </script>
     </div>
     {/if}

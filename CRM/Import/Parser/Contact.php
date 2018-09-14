@@ -2217,5 +2217,42 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
   function getLastImportContactId() {
     return $this->_lastImportContactId;
   }
+
+  static public function checkContactById($params, $cidField) {
+    $pass = $contactID = 0;
+    $checkCid = new CRM_Contact_DAO_Contact();
+    if (!empty($params['external_identifier'])) {
+      $checkCid->external_identifier = $params['external_identifier'];
+      $checkCid->is_deleted = 0;
+      if($checkCid->find(TRUE)){
+        $contactID = $checkCid->id;
+      }
+    }
+
+    if (!empty($params[$cidField])) {
+      if (!empty($contactID)) {
+        if ($contactID != $params[$cidField] ){
+          $pass = FALSE;
+        }
+        else {
+          $pass = $contactID;
+        }
+      }
+      else {
+        $checkCid->id = $params[$cidField];
+        $checkCid->is_deleted = 0;
+        if($checkCid->find(TRUE)){
+          $contactID = $checkCid->id;
+          $pass = $contactID;
+        }
+      }
+    }
+    elseif(!empty($contactID)) {
+      $pass = $contactID;
+    }
+    $checkCid->free();
+
+    return $pass;
+  }
 }
 

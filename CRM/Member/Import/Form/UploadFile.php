@@ -50,6 +50,25 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/member/import', 'reset=1'));
+
+    $this->_contactTypes = array(
+      CRM_Member_Import_Parser::CONTACT_INDIVIDUAL,
+      CRM_Member_Import_Parser::CONTACT_HOUSEHOLD,
+      CRM_Member_Import_Parser::CONTACT_ORGANIZATION,
+    );
+    foreach ($this->_contactTypes as $type) {
+      $supportFields = &CRM_Dedupe_BAO_RuleGroup::supportedFields($type);
+      foreach($supportFields as $array) {
+        foreach($array as $name => $label){
+          if (!isset($this->_dedupeRuleFields[$name])) {
+            $this->_dedupeRuleFields[$name] = $label;
+          }
+        }
+      }
+    }
+
+    $dedupeGroupParams = array('level' => 'Strict');
+    $this->_dedupeRuleGroups = CRM_Dedupe_BAO_RuleGroup::getDetailsByParams($dedupeGroupParams);
   }
 
   /**
@@ -80,20 +99,42 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
-    $duplicateOptions = array();
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
-      NULL, NULL, ts('Insert new Membership'), CRM_Member_Import_Parser::DUPLICATE_SKIP
+    $duplicateOptions = array(
+      CRM_Member_Import_Parser::DUPLICATE_SKIP => ts('Insert new Membership'),
+      CRM_Member_Import_Parser::DUPLICATE_UPDATE => ts('Update existing Membership'),
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
-      NULL, NULL, ts('Update existing Membership'), CRM_Member_Import_Parser::DUPLICATE_UPDATE
-    );
+    $this->addRadio('onDuplicate', ts('Import mode'), $duplicateOptions);
 
-    $this->addGroup($duplicateOptions, 'onDuplicate',
-      ts('Import mode')
+    $duplicateContactOptions = array(
+      CRM_Member_Import_Parser::CONTACT_NOIDCREATE => ts('Create contact only on identifier not import'),
+      CRM_Member_Import_Parser::CONTACT_AUTOCREATE => ts('Create contact when not found'),
+      CRM_Member_Import_Parser::CONTACT_DONTCREATE => ts('Do not create or update contact'),
     );
-    $this->setDefaults(array('onDuplicate' =>
-        CRM_Member_Import_Parser::DUPLICATE_SKIP,
-      ));
+    $this->addRadio('createContactOption', ts('Create New Contact'), $duplicateContactOptions, NULL, '<br>');
+
+    //contact types option
+    $contactOptions = array();
+    foreach($this->_contactTypes as $type) {
+      if (CRM_Contact_BAO_ContactType::isActive($type)) {
+        $contactOptions[$type] = ts($type);
+      }
+    }
+    $this->addRadio('contactType', ts('Contact Type'), $contactOptions);
+
+    foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
+      $fields = array();
+      foreach($groupValues['fields'] as $name){
+        if (isset($this->_dedupeRuleFields[$name])) {
+          $fields[] = $this->_dedupeRuleFields[$name];
+        }
+      }
+      $label = ts($groupValues['contact_type']);
+      if ($groupValues['is_default']) {
+        $label .= ts('Default');
+      }
+      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . implode(', ', $fields) .')';
+    }
+    $this->add('select', 'dedupeRuleGroup', ts('Dedupe Rule of Contact'), $dedupeRule);
 
     //get the saved mapping details
     require_once "CRM/Core/BAO/Mapping.php";
@@ -104,38 +145,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       ));
     $this->assign('savedMapping', $mappingArray);
     $this->add('select', 'savedMapping', ts('Mapping Option'), array('' => ts('- select -')) + $mappingArray);
-
-    if ($loadeMapping = $this->get('loadedMapping')) {
-      $this->assign('loadedMapping', $loadeMapping);
-      $this->setDefaults(array('savedMapping' => $loadeMapping));
-    }
-
-    //contact types option
-    require_once 'CRM/Contact/BAO/ContactType.php';
-    $contactOptions = array();
-    if (CRM_Contact_BAO_ContactType::isActive('Individual')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Individual'), CRM_Member_Import_Parser::CONTACT_INDIVIDUAL
-      );
-    }
-    if (CRM_Contact_BAO_ContactType::isActive('Household')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Household'), CRM_Member_Import_Parser::CONTACT_HOUSEHOLD
-      );
-    }
-    if (CRM_Contact_BAO_ContactType::isActive('Organization')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Organization'), CRM_Member_Import_Parser::CONTACT_ORGANIZATION
-      );
-    }
-
-    $this->addGroup($contactOptions, 'contactType',
-      ts('Contact Type')
-    );
-
-    $this->setDefaults(array('contactType' =>
-        CRM_Member_Import_Parser::CONTACT_INDIVIDUAL,
-      ));
+    $this->addElement('submit', 'loadMapping', ts('Load Mapping'), NULL, array('onclick' => 'checkSelect()'));
 
     //build date formats
     require_once 'CRM/Core/Form/Date.php';
@@ -154,6 +164,26 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     );
   }
 
+  public function setDefaultValues(){
+    $defaults = $this->_submitValues;
+    if (!$defaults['onDuplicate']) {
+      $defaults['onDuplicate'] = CRM_Member_Import_Parser::DUPLICATE_SKIP;
+    }
+    if (!$defaults['createContactOption']) {
+      $defaults['createContactOption'] = CRM_Member_Import_Parser::CONTACT_NOIDCREATE;
+    }
+    if (!$defaults['contactType']) {
+      $defaults['contactType'] = CRM_Member_Import_Parser::CONTACT_INDIVIDUAL;
+    }
+
+    if ($loadeMapping = $this->get('loadedMapping')) {
+      $this->assign('loadedMapping', $loadeMapping);
+      $defaults['savedMapping'] = $loadeMapping;
+    }
+
+    return $defaults;
+  }
+
   /**
    * Process the uploaded file
    *
@@ -169,11 +199,20 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     $contactType = $this->controller->exportValue($this->_name, 'contactType');
     $dateFormats = $this->controller->exportValue($this->_name, 'dateFormats');
     $savedMapping = $this->controller->exportValue($this->_name, 'savedMapping');
+    $createContactOption = $this->controller->exportValue($this->_name, 'createContactOption');
+    $dedupeRuleGroup = $this->controller->exportValue($this->_name, 'dedupeRuleGroup');
 
     $this->set('onDuplicate', $onDuplicate);
     $this->set('contactType', $contactType);
     $this->set('dateFormats', $dateFormats);
     $this->set('savedMapping', $savedMapping);
+    if ($onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
+      $createContactOption = CRM_Contribute_Import_Parser::CONTACT_DONTCREATE; 
+      $this->set('createContactOption', $createContactOption);
+    }
+    else{
+      $this->set('createContactOption', $createContactOption);
+    }
 
     $session = CRM_Core_Session::singleton();
     $session->set("dateTypes", $dateFormats);

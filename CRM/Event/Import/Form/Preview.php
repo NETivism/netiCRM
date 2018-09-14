@@ -155,7 +155,7 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     $config = CRM_Core_Config::singleton();
     $seperator = $config->fieldSeparator;
 
-    $mapper = $this->controller->exportValue('MapField', 'mapper');
+    $mapper = $this->get('mapperKeys');
     $mapperKeys = array();
 
     foreach ($mapper as $key => $value) {

@@ -150,6 +150,7 @@ DROP TABLE IF EXISTS civicrm_persistent;
 DROP TABLE IF EXISTS civicrm_discount;
 DROP TABLE IF EXISTS civicrm_component;
 DROP TABLE IF EXISTS civicrm_worldregion;
+DROP TABLE IF EXISTS civicrm_track;
 DROP TABLE IF EXISTS civicrm_tag;
 DROP TABLE IF EXISTS civicrm_preferences_date;
 DROP TABLE IF EXISTS civicrm_payment_processor_type;

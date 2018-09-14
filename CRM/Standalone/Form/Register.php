@@ -40,7 +40,13 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
   protected $_fields = array();
 
-  protected $_openID; function preProcess() {
+  protected $_openID;
+  
+  function preProcess() {
+    $config = CRM_Core_Config::singleton();
+    if ($config->userFramework !== "Standalone") {
+      CRM_Utils_System::redirect();
+    }
     // pick the first profile ID that has user register checked
     require_once 'CRM/Core/BAO/UFGroup.php';
     $ufGroups = &CRM_Core_BAO_UFGroup::getModuleUFGroup('User Registration');
