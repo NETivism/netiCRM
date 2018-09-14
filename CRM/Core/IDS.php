@@ -83,6 +83,7 @@ class CRM_Core_IDS {
       clearstatcache();
 
       global $civicrm_root;
+      $civicrm_path = rtrim($civicrm_root, '/');
       $contents = "
 [General]
     filter_type         = xml

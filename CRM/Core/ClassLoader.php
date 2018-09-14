@@ -40,7 +40,8 @@ class CRM_Core_ClassLoader {
       $composer_classmap = CIVICRM_COMPOSER_DIR . '/vendor/composer/autoload_classmap.php';
     }
     else{
-      $composer_classmap = $civicrm_root . '/vendor/composer/autoload_classmap.php';
+      $civicrm_path = rtrim($civicrm_root, '/') .  DIRECTORY_SEPARATOR;
+      $composer_classmap = $civicrm_path. '/vendor/composer/autoload_classmap.php';
     }
     if(file_exists($composer_classmap)){
       $this->_composer_classmap = include_once($composer_classmap);
