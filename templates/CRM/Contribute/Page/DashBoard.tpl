@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="chartist">
-        {include file="CRM/common/chartist.tpl" chartist=$chart_this_year}
+          {include file="CRM/common/chartist.tpl" chartist=$chart_this_year}
         </div>
       </div>
     </div>
@@ -247,21 +247,21 @@
         <i class="zmdi zmdi-hc-5x zmdi-money"></i>
         <div> 
           <h5 class="kpi-box-title">{ts}Total Amount{/ts}</h5>
-            <div class="box-detail">
-              <span class="bigger">
-                {$duration_sum|crmMoney}
-              </span>
-              {if $duration_sum_growth}
-                <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_sum_growth}</div>
-              {/if}
-              {if $debug}
-              <div class="more">
-                <a class="more" href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1"}">
-                  {ts}more{/ts}
-                </a>
-              </div>
-              {/if}
+          <div class="box-detail">
+            <span class="bigger">
+              {$duration_sum|crmMoney}
+            </span>
+            {if $duration_sum_growth}
+              <div>{include file="CRM/common/growth_sentence.tpl" growth=$duration_sum_growth}</div>
+            {/if}
+            {if $debug}
+            <div class="more">
+              <a class="more" href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1"}">
+                {ts}more{/ts}
+              </a>
             </div>
+            {/if}
+          </div>
         </div>
       </div>
     </div>
@@ -328,7 +328,6 @@
     </div>
   </div>
 
-  
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
@@ -354,14 +353,15 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount{/ts}</h3>
-      <div>
-        <div class="chartist">
-        {include file="CRM/common/chartist.tpl" chartist=$chart_duration_sum}
+        <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount{/ts}</h3>
+        <div>
+          <div class="chartist">
+          {include file="CRM/common/chartist.tpl" chartist=$chart_duration_sum}
+          </div>
         </div>
-      </div>
-      <div class="more">
-        <a href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1"}">{ts}more{/ts}</a>
+        <div class="more">
+          <a href="{crmURL p='civicrm/contribute/search' q="reset=1&force=1&start=`$start_date`&end=`$end_date`&status=1"}">{ts}more{/ts}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -371,24 +371,26 @@
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Page Visits by Traffic Source{/ts}</h3>
-      <div>
-        <div class="chartist">
-        {include file="CRM/common/chartist.tpl" chartist=$chart_duration_track}
+        <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Page Visits by Traffic Source{/ts}</h3>
+        <div>
+          <div class="chartist">
+          {include file="CRM/common/chartist.tpl" chartist=$chart_duration_track}
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-
+<div class="row">
   <div class="col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-      <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount by Province{/ts}</h3>
-      <div>
-        <div class="chartist">
-        {include file="CRM/common/chartist.tpl" chartist=$chart_duration_province_sum}
+        <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount by Province{/ts}</h3>
+        <div>
+          <div class="chartist">
+          {include file="CRM/common/chartist.tpl" chartist=$chart_duration_province_sum}
+          </div>
         </div>
       </div>
     </div>
