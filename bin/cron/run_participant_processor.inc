@@ -44,9 +44,12 @@ class CRM_ParticipantProcessor
            event.requires_approval
      FROM  civicrm_participant participant
 LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
+INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
     WHERE  participant.status_id IN {$statusIds}
      AND   (event.end_date > now() OR event.end_date IS NULL)
+     AND   (event.start_date > now() OR event.start_date IS NULL)
      AND   event.is_active = 1 
+     AND   contact.is_deleted != 1
  ORDER BY  participant.register_date, participant.id 
 ";
         $dao = CRM_Core_DAO::executeQuery( $query );
@@ -65,7 +68,6 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
         }
         
         if ( !empty( $participantDetails ) ) {
-            /*
             //cron 1. move participant from pending to expire if needed
             foreach ( $participantDetails as $participantId => $values ) {
                 //process the additional participant at the time of
@@ -85,6 +87,9 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                         $plusDay = ceil($expirationTime/24);
                         $expirationSeconds = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
                         $expirationDay = date('Y-m-d', $expirationSeconds + $paymentOffsetSeconds).' 23:59:59';
+                    }
+                    if( strtotime($expirationDay) < strtotime('-3 days')) {
+                        continue;
                     }
                     
                     // expired registration since registration cross allow confirmation time.
@@ -118,7 +123,6 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                     }
                 }
             }//cron 1 end. 
-            */
             
             //cron 2. lets move participants from waiting list to pending status
             foreach ( $participantDetails as $participantId => $values ) {
