@@ -622,7 +622,7 @@ WHERE  id = %1";
           $amount_level[] = $values['label'] . ' - ' . $values['qty'];
           continue;
         }
-        $amount_level[] = $values['label'];
+        $amount_level[] = $values['field_title'].'-'.$values['label'].': '.$values['qty'];
       }
     }
 
