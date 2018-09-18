@@ -584,236 +584,207 @@ WHERE  id = %1";
           $params['amount_priceset_level_select'] = array();
           $params['amount_priceset_level_select'][CRM_Utils_Array::key(1, $params["price_{$id}"])] = $optionLabel;
           if (isset($selectLevel)) {
-          $selectLevel = array_merge($selectLevel, array_keys($params['amount_priceset_level_select']));
-        }
-        else {
-        $selectLevel = array_keys($params['amount_priceset_level_select']);
+            $selectLevel = array_merge($selectLevel, array_keys($params['amount_priceset_level_select']));
+          }
+          else {
+            $selectLevel = array_keys($params['amount_priceset_level_select']);
+          }
+          CRM_Price_BAO_LineItem::format($id, $params, $field, $lineItem);
+          $totalPrice += $lineItem[$optionValueId]['line_total'];
+          break;
+        case 'CheckBox':
+          $params['amount_priceset_level_checkbox'] = $optionIds = array();
+          foreach ($params["price_{$id}"] as $optionId => $option) {
+            $optionIds[] = $optionId;
+            $optionLabel = $field['options'][$optionId]['label'];
+            $params['amount_priceset_level_checkbox']["{$field['options'][$optionId]['id']}"] = $optionLabel;
+            if (isset($checkboxLevel)) {
+              $checkboxLevel = array_unique(array_merge($checkboxLevel, array_keys($params['amount_priceset_level_checkbox'])));
+            }
+            else {
+              $checkboxLevel = array_keys($params['amount_priceset_level_checkbox']);
+            }
+          }
+          CRM_Price_BAO_LineItem::format($id, $params, $field, $lineItem);
+          foreach ($optionIds as $optionId) {
+            $totalPrice += $lineItem[$optionId]['line_total'];
+          }
+          break;
       }
-      CRM_Price_BAO_LineItem::format($id, $params, $field, $lineItem);
-      $totalPrice += $lineItem[$optionValueId]['line_total'];
-      break;
-    case 'CheckBox':
-      $params['amount_priceset_level_checkbox'] = $optionIds = array();
-      foreach ($params["price_{$id}"] as $optionId => $option) {
-      $optionIds[] = $optionId;
-      $optionLabel = $field['options'][$optionId]['label'];
-      $params['amount_priceset_level_checkbox']["{$field['options'][$optionId]['id']}"] = $optionLabel;
-      if (isset($checkboxLevel)) {
-      $checkboxLevel = array_unique(array_merge(
-          $checkboxLevel,
-          array_keys($params['amount_priceset_level_checkbox'])
-        )
-      );
+    }
+
+    $amount_level = array();
+    $totalParticipant = 0;
+    if (is_array($lineItem)) {
+      foreach ($lineItem as $values) {
+        $totalParticipant += $values['participant_count'];
+        if ($values['html_type'] == 'Text') {
+          $amount_level[] = $values['label'] . ' - ' . $values['qty'];
+          continue;
+        }
+        $amount_level[] = $values['label'];
+      }
+    }
+
+    $displayParticipantCount = '';
+    if ($totalParticipant > 0) {
+      $displayParticipantCount = ' ' . ts('Participant Count') . ' -' . $totalParticipant;
+    }
+
+    require_once 'CRM/Core/BAO/CustomOption.php';
+    $params['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amount_level) . $displayParticipantCount . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+    $params['amount'] = $totalPrice;
+  }
+
+  /**
+   * Function to build the price set form.
+   *
+   * @return None
+   * @access public
+   */
+  static function buildPriceSet(&$form) {
+    $priceSetId = $form->get('priceSetId');
+    if (!$priceSetId) {
+      return;
+    }
+    $priceSet = self::getSetDetail($priceSetId, TRUE);
+    $form->_priceSet = CRM_Utils_Array::value($priceSetId, $priceSet);
+    $form->assign('priceSet', $form->_priceSet);
+    require_once 'CRM/Core/PseudoConstant.php';
+    $className = CRM_Utils_System::getClassName($form);
+
+    if ($className == 'CRM_Contribute_Form_Contribution_Main') {
+      $feeBlock = &$form->_values['fee'];
     }
     else {
-    $checkboxLevel = array_keys($params['amount_priceset_level_checkbox']);
+      $feeBlock = &$form->_priceSet['fields'];
+    }
+
+    // call the hook.
+    require_once 'CRM/Utils/Hook.php';
+    CRM_Utils_Hook::buildAmount('contribution', $form, $feeBlock);
+
+    foreach ($feeBlock as $field) {
+      if (CRM_Utils_Array::value('visibility', $field) == 'public' || $className == 'CRM_Contribute_Form_Contribution') {
+        $options = CRM_Utils_Array::value('options', $field);
+        if (!is_array($options)) {
+          continue;
+        }
+
+        CRM_Price_BAO_Field::addQuickFormElement($form, 'price_' . $field['id'], $field['id'], FALSE, CRM_Utils_Array::value('is_required', $field, FALSE), NULL, $options);
+      }
+    }
   }
-}
-CRM_Price_BAO_LineItem::format($id, $params, $field, $lineItem);
-foreach ($optionIds as $optionId) {
-$totalPrice += $lineItem[$optionId]['line_total'];
-}
-break;
-}
-}
 
-$amount_level = array();
-$totalParticipant = 0;
-if (is_array($lineItem)) {
-foreach ($lineItem as $values) {
-$totalParticipant += $values['participant_count'];
-if ($values['html_type'] == 'Text') {
-$amount_level[] = $values['label'] . ' - ' . $values['qty'];
-continue;
-}
-$amount_level[] = $values['label'];
-}
-}
+  /**
+   * Get field ids of a price set
+   *
+   * @param int id Price Set id
+   *
+   * @return array of the field ids
+   *
+   * @access public
+   * @static
+   */
+  public static function getFieldIds($id) {
+    $priceField = new CRM_Price_DAO_Field();
+    $priceField->price_set_id = $id;
+    $priceField->find();
+    while ($priceField->fetch()) {
+      $var[] = $priceField->id;
+    }
+    return $var;
+  }
 
-$displayParticipantCount = '';
-if ($totalParticipant > 0) {
-$displayParticipantCount = ' ' . ts('Participant Count') . ' -' . $totalParticipant;
-}
+  /**
+   * This function is to make a copy of a price set, including
+   * all the fields
+   *
+   * @param int $id the price set id to copy
+   *
+   * @return the copy object
+   * @access public
+   * @static
+   */
+  static function copy($id) {
+    $maxId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_price_set");
 
-require_once 'CRM/Core/BAO/CustomOption.php';
-$params['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amount_level) . $displayParticipantCount . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
-$params['amount'] = $totalPrice;
-}
+    $title = ts('[Copy id %1]', array(1 => $maxId + 1));
+    $fieldsFix = array(
+      'suffix' => array(
+        'title' => ' ' . $title,
+        'name' => '__Copy_id_' . ($maxId + 1) . '_',
+      )
+    );
 
-/**
- * Function to build the price set form.
- *
- * @return None
- * @access public
- */
-static
-function buildPriceSet(&$form) {
-$priceSetId = $form->get('priceSetId');
+    $copy = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Set', array('id' => $id), NULL, $fieldsFix);
 
-if (!$priceSetId) {
+    //copying all the blocks pertaining to the price set
+    $copyPriceField = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Field', array('price_set_id' => $id), array('price_set_id' => $copy->id));
+    if (!empty($copyPriceField)) {
+      $price = array_combine(self::getFieldIds($id), self::getFieldIds($copy->id));
 
-  return;
+      //copy option group and values
+      foreach ($price as $originalId => $copyId) {
+        CRM_Core_DAO::copyGeneric('CRM_Price_DAO_FieldValue', array('price_field_id' => $originalId), array('price_field_id' => $copyId));
+      }
+    }
+    $copy->save();
 
-}
+    require_once 'CRM/Utils/Hook.php';
+    CRM_Utils_Hook::copy('Set', $copy);
+    return $copy;
+  }
 
-$priceSet = self::getSetDetail($priceSetId, TRUE);
-$form->_priceSet = CRM_Utils_Array::value($priceSetId, $priceSet);
-$form->assign('priceSet', $form->_priceSet);
-require_once 'CRM/Core/PseudoConstant.php';
-$className = CRM_Utils_System::getClassName($form);
+  /**
+   * This function is to check price set permission
+   *
+   * @param int $sid the price set id
+   */
+  function checkPermission($sid) {
+    if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
+      $domain_id = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $sid, 'domain_id', 'id');
+      if (CRM_Core_Config::domainID() != $domain_id) {
+        CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
+      }
+    }
+    return TRUE;
+  }
 
-if ($className == 'CRM_Contribute_Form_Contribution_Main') {
-$feeBlock = &$form->_values['fee'];
-}
-else {
-$feeBlock = &$form->_priceSet['fields'];
-}
+  /**
+   * Get the sum of participant count
+   * for all fields of given price set.
+   *
+   * @param int $sid the price set id
+   *
+   * @access public
+   * @static
+   */
+  public static function getPricesetCount($sid, $onlyActive = TRUE) {
+    static $pricesetFieldCount;
+    $count = 0;
+    if (!$sid) {
+      return $count;
+    }
 
-// call the hook.
-require_once 'CRM/Utils/Hook.php';
-CRM_Utils_Hook::buildAmount('contribution', $form, $feeBlock);
+    $where = NULL;
+    if ($onlyActive) {
+      $where = 'AND  value.is_active = 1 AND field.is_active = 1';
+    }
 
-foreach ($feeBlock as $field) {
-if (CRM_Utils_Array::value('visibility', $field) == 'public' ||
-$className == 'CRM_Contribute_Form_Contribution'
-) {
-
-$options = CRM_Utils_Array::value('options', $field);
-if (!is_array($options)) {
-  continue;
-}
-
-CRM_Price_BAO_Field::addQuickFormElement($form,
-'price_' . $field['id'],
-$field['id'],
-FALSE,
-CRM_Utils_Array::value('is_required', $field, FALSE),
-NULL,
-$options
-);
-}
-}
-}
-
-/**
- * Get field ids of a price set
- *
- * @param int id Price Set id
- *
- * @return array of the field ids
- *
- * @access public
- * @static
- */
-public static function getFieldIds($id) {
-$priceField = new CRM_Price_DAO_Field();
-$priceField->price_set_id = $id;
-$priceField->find();
-while ($priceField->fetch()) {
-$var[] = $priceField->id;
-}
-return $var;
-}
-
-/**
- * This function is to make a copy of a price set, including
- * all the fields
- *
- * @param int $id the price set id to copy
- *
- * @return the copy object
- * @access public
- * @static
- */
-static
-function copy($id) {
-$maxId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_price_set");
-
-$title = ts('[Copy id %1]', array(1 => $maxId + 1));
-$fieldsFix = array('suffix' => array('title' => ' ' . $title,
-'name' => '__Copy_id_' . ($maxId + 1) . '_',
-),
-);
-
-$copy = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Set',
-array('id' => $id),
-NULL,
-$fieldsFix
-);
-
-//copying all the blocks pertaining to the price set
-$copyPriceField = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Field',
-array('price_set_id' => $id),
-array('price_set_id' => $copy->id)
-);
-if (!empty($copyPriceField)) {
-$price = array_combine(self::getFieldIds($id), self::getFieldIds($copy->id));
-
-//copy option group and values
-foreach ($price as $originalId => $copyId) {
-CRM_Core_DAO::copyGeneric('CRM_Price_DAO_FieldValue',
-array('price_field_id' => $originalId),
-array('price_field_id' => $copyId)
-);
-}
-}
-$copy->save();
-
-require_once 'CRM/Utils/Hook.php';
-CRM_Utils_Hook::copy('Set', $copy);
-return $copy;
-}
-
-/**
- * This function is to check price set permission
- *
- * @param int $sid the price set id
- */
-function checkPermission($sid) {
-if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
-$domain_id = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $sid, 'domain_id', 'id');
-if (CRM_Core_Config::domainID() != $domain_id) {
-CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
-}
-}
-return TRUE;
-}
-
-/**
- * Get the sum of participant count
- * for all fields of given price set.
- *
- * @param int $sid the price set id
- *
- * @access public
- * @static
- */
-public static function getPricesetCount($sid, $onlyActive = TRUE) {
-$count = 0;
-if (!$sid) {
-  return $count;
-}
-
-$where = NULL;
-if ($onlyActive) {
-  $where = 'AND  value.is_active = 1 AND field.is_active = 1';
-}
-
-static $pricesetFieldCount;
-if (!isset($pricesetFieldCount[$sid])) {
-$sql = "
-    SELECT  sum(value.count) as totalCount
-      FROM  civicrm_price_field_value  value
+    if (!isset($pricesetFieldCount[$sid])) {
+      $sql = "
+SELECT  sum(value.count) as totalCount
+FROM  civicrm_price_field_value  value
 INNER JOIN  civicrm_price_field field ON ( field.id = value.price_field_id )
 INNER JOIN  civicrm_price_set pset    ON ( pset.id = field.price_set_id ) 
-     WHERE  pset.id = %1
-            $where";
+WHERE  pset.id = %1 $where";
 
-$count = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($sid, 'Positive')));
-$pricesetFieldCount[$sid] = ($count) ? $count : 0;
-}
+      $count = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($sid, 'Positive')));
+      $pricesetFieldCount[$sid] = ($count) ? $count : 0;
+    }
 
-return $pricesetFieldCount[$sid];
-}
+    return $pricesetFieldCount[$sid];
+  }
 }
 
