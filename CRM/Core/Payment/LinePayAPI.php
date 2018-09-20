@@ -58,7 +58,8 @@ class CRM_Core_Payment_LinePayAPI {
       CRM_Core_Error::fatal('API type not supported currently or given wrong type');
     }
     else {
-      $this->_apiURL = $this->_apiTypes[$this->_apiType];
+      $this->_apiURL = $isTest ? self::LINEPAY_TEST : self::LINEPAY_PROD; 
+      $this->_apiURL .= $this->_apiTypes[$this->_apiType];
     }
   }
 
@@ -92,7 +93,7 @@ class CRM_Core_Payment_LinePayAPI {
     // change api url base on parameter
     if (preg_match('/{([a-z0-9]*)}/i', $this->_apiURL, $matches)) {
       $search = $matches[0];
-      $replace = $post[$matches[1]];
+      $replace = $params[$matches[1]];
       $newApiURL = str_replace($search, $replace, $this->_apiURL);
       if ($newApiURL == $this->_apiURL) {
         CRM_Core_Error::fatal("Required params '$search' of this API type $this->_apiURL");
@@ -117,15 +118,15 @@ class CRM_Core_Payment_LinePayAPI {
     $ch = curl_init($this->_apiURL);
     $opt = array();
 
-    $opt[opt_HTTPHEADER] = array(
-      'Content-Type' => 'application/json',
-      'X-LINE-ChannelId' => $this->_channelId, // 10 bytes
-      'X-LINE-ChannelSecret' => $this->_channelSecret, // 32 bytes
+    $opt[CURLOPT_HTTPHEADER] = array(
+      'Content-Type: application/json',
+      'X-LINE-ChannelId: ' . $this->_channelId, // 10 bytes
+      'X-LINE-ChannelSecret: ' . $this->_channelSecret, // 32 bytes
       #'X-LINE-MerchantDeviceType' => '',
     );
-    $opt[opt_POST] = TRUE;
-    $opt[opt_RETURNTRANSFER] = TRUE;
-    $opt[opt_POSTFIELDS] = json_encode($data);
+    $opt[CURLOPT_POST] = TRUE;
+    $opt[CURLOPT_RETURNTRANSFER] = TRUE;
+    $opt[CURLOPT_POSTFIELDS] = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     curl_setopt_array($ch, $opt);
 
     $result = curl_exec($ch);
@@ -147,11 +148,12 @@ class CRM_Core_Payment_LinePayAPI {
     else {
       $this->_response = NULL;
     }
-    return array(
+    $return = array(
       'success' => $this->_success,
       'status' => $status,
       'curlError' => $curlError,
     );
+    return $return;
   }
 
   /**
