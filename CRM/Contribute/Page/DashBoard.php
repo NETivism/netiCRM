@@ -267,6 +267,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'autoDateLabel' => true,
       'stackBars' => true,
       'withLegend' => true,
+      'onlyIntegerY' => true,
     );
     $this->assign('chart_duration_track', $chart);
 

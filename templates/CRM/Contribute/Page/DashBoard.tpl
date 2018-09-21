@@ -39,12 +39,12 @@
       <div class="box-content">
         <h3 class="kpi-box-title">{ts}Contributions Since This Year{/ts}</h3>
         <div class="this-year-info-wrapper">
-          <div class="this-year-info this-year-info-non-recur">
+          <div class="this-year-info this-year-info-non-recur ct-series-b">
             {ts}Non-recurring Total Amount{/ts} {$this_year_sum_non_recur|crmMoney}
             {ts 1=$this_year_people_non_recur}Number of Donation Donors: %1{/ts} 
             {ts 1=$this_year_count_non_recur}Total Contributions: %1{/ts}
           </div>
-          <div class="this-year-info this-year-info-recur">
+          <div class="this-year-info this-year-info-recur ct-series-a">
             {ts}Recurring Total Amount{/ts} {$this_year_sum_recur|crmMoney}
             {ts 1=$this_year_people_recur}Number of Donation Donors: %1{/ts} 
             {ts 1=$this_year_count_recur}Total Payments: %1{/ts}
@@ -154,11 +154,11 @@
     left: 0;
     top: 0;
   }
-  .this-year-info-recur::after {
-    background-color: rgba(215, 2, 6, .1);
+  .this-year-info.ct-series-a::after {
+    background-color: #f05b4f;
   }
-  .this-year-info-non-recur::after {
-    background-color: rgba(240, 91, 79, .1);
+  .this-year-info.ct-series-b::after {
+    background-color: #f4c63d;
   }
 </style>
 {/literal}
