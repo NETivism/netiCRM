@@ -126,11 +126,9 @@
             				{include file="CRM/Contact/Form/Edit/TagsAndGroups.tpl" type=$n}
                        {elseif ( $form.$n.name eq 'image_URL' )}
             	            {$form.$n.html}
-                		    {if $imageURL}
+                		    {if $contactImage}
                  	 	        <div class="crm-section contact_image-section">
-                 	 	            <div class="content">
-                 	 	                {include file="CRM/Contact/Page/ContactImage.tpl"}
-                 	 	            </div>
+                 	 	          {include file="CRM/Contact/Page/ContactImage.tpl"}
                  	 	        </div>
                  	        {/if}
             	       {else}
