@@ -239,7 +239,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     while($dao->fetch()){
       $dateIdx = array_search($dao->visit_day, $this->duration_array);
       if(empty($dao->referrer_type)){
-        $dao->referrer_type = 'unknown';
+        continue;
       }
       $referrerTypeIdx = array_search($referrerTypes[$dao->referrer_type], $referrerTypesIdx);
       $referrerTypesAvailable[$referrerTypeIdx] = 1;

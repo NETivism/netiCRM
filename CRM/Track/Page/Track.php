@@ -96,7 +96,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     );
     while($dao->fetch()){
       if(empty($dao->referrer_type)){
-        $dao->referrer_type = 'unknown';
+        continue;
       }
       $dates[$dao->visit_day] = 1;
       $dummy[$dao->referrer_type][$dao->visit_day] = (int)$dao->count;

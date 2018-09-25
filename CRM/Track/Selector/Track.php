@@ -338,6 +338,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
 
   function getQuery($select = '*', $groupBy = NULL, $offset = NULL, $rowCount = NULL, $sort = NULL) {
     $where = $args = array();
+    $where[] = "referrer_type IS NOT NULL";
     if ($this->_pageType) {
       $where[] = "page_type = %1";
       $args[1] = array($this->_pageType, 'String');
