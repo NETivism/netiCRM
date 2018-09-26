@@ -405,10 +405,10 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     }
     $this->assign('non_recur_contributions', $non_recur_contributions);
 
-    $sql = "SELECT cc.id id, c.id contact_id, cc.receive_date receive_date, cc.total_amount amount, c.display_name name, cr.installments installments FROM civicrm_contribution cc 
+    $sql = "SELECT cc.id id, c.id contact_id, cr.start_date start_date, cc.total_amount amount, c.display_name name, cr.installments installments FROM civicrm_contribution cc 
       INNER JOIN civicrm_contact c ON cc.contact_id = c.id
       INNER JOIN civicrm_contribution_recur cr ON cr.id = cc.contribution_recur_id
-      WHERE cc.payment_processor_id IS NOT NULL AND cc.contribution_status_id = 1 AND cc.is_test = 0 AND cc.receive_date >= %1 AND cc.receive_date <= %2 AND cc.contribution_recur_id IS NOT NULL GROUP BY cr.id ORDER BY receive_date DESC LIMIT 5 ";
+      WHERE cc.payment_processor_id IS NOT NULL AND cc.contribution_status_id = 1 AND cc.is_test = 0 AND start_date >= %1 AND start_date <= %2 AND cc.contribution_recur_id IS NOT NULL GROUP BY cr.id ORDER BY start_date DESC LIMIT 5 ";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     $recur_contributions = array();
     while($dao->fetch()){
@@ -416,7 +416,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         'id' => $dao->id,
         'contact_id' => $dao->contact_id,
         'name' => $dao->name, 
-        'date' => date('Y-m-d', strtotime($dao->receive_date)),
+        'date' => date('Y-m-d', strtotime($dao->start_date)),
         'amount' => $dao->amount,
       );
       if($dao->installments){
@@ -446,7 +446,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $recur['name'] = $dao->name;
       $recur['amount'] = $dao->amount;
       $recur['recur_id'] = $dao->recur_id;
-      $recur['end_date'] = date('Y-m-d', strtotime($dao->end_date));
+      $recur['end_date'] = empty($dao->end_date) ? '' : date('Y-m-d', strtotime($dao->end_date));
       $due_recur[] = $recur;
     }
     $this->assign('due_recur', $due_recur);

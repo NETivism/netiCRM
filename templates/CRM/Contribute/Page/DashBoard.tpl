@@ -322,7 +322,7 @@
           {/foreach}
         </table>
         <div class="more">
-          <a href="{crmURL p='civicrm/contact/search/custom' q="force=1&reset=1&csid=17&start=`$start_date`&end=`$end_date`"}">{ts}more{/ts}</a>
+          <a href="{crmURL p='civicrm/search/RecurSearch' q="force=1&start=`$start_date`&end=`$end_date`"}">{ts}more{/ts}</a>
         </div>
       </div>
     </div>
@@ -331,7 +331,7 @@
   <div class="col-xs-12 col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
-        <h3>{ts 1=$days}In %1 days{/ts} {ts}End of recurring contribution{/ts}</h3>
+        <h3>{ts}End of recurring contribution{/ts}</h3>
         <table>
           {foreach from=$due_recur item=contribution}
           <tr>
@@ -342,7 +342,7 @@
           {/foreach}
         </table>
         <div class="more">
-          <a href="{crmURL p='civicrm/contact/search/custom' q="mode=booster&force=1&reset=1&csid=17"}">{ts}more{/ts}</a>
+          <a href="{crmURL p='civicrm/search/RecurSearch' q="mode=booster&force=1"}">{ts}more{/ts}</a>
         </div>
       </div>
     </div>
