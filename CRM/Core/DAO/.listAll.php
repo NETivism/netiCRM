@@ -39,6 +39,7 @@ $dao['BouncePattern'] = 'CRM_Mailing_DAO_BouncePattern';
 $dao['Spool'] = 'CRM_Mailing_DAO_Spool';
 $dao['ContributionRecur'] = 'CRM_Contribute_DAO_ContributionRecur';
 $dao['ContributionType'] = 'CRM_Contribute_DAO_ContributionType';
+$dao['LinePay'] = 'CRM_Contribute_DAO_LinePay';
 $dao['Premium'] = 'CRM_Contribute_DAO_Premium';
 $dao['Product'] = 'CRM_Contribute_DAO_Product';
 $dao['PremiumsProduct'] = 'CRM_Contribute_DAO_PremiumsProduct';

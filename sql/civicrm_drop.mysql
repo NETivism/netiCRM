@@ -128,6 +128,7 @@ DROP TABLE IF EXISTS civicrm_sms_provider;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;
+DROP TABLE IF EXISTS civicrm_contribution_linepay;
 DROP TABLE IF EXISTS civicrm_contribution_type;
 DROP TABLE IF EXISTS civicrm_contribution_recur;
 DROP TABLE IF EXISTS civicrm_mailing_spool;

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>LinePay</class>
+  <name>civicrm_contribution_linepay</name>
+  <add>4.0</add>
+  <field>
+      <name>id</name>
+      <uniqueName>linepay_id</uniqueName>
+      <type>int unsigned</type>
+      <required>true</required>
+      <title>LinePay ID</title>
+      <comment>LinePay ID</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>trxn_id</name>
+      <uniqueName>contribution_trxn_id</uniqueName>
+      <title>Contribution Trxn ID</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>trxn_id from contribution</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>UI_contrib_trxn_id</name>
+      <fieldName>trxn_id</fieldName>      
+      <add>4.0</add>
+  </index>   
+  <field>
+      <name>transaction_id</name>
+      <uniqueName>transaction_id</uniqueName>
+      <title>Transaction ID</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>transaction id from linepay</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>UI_transaction_id</name>
+      <fieldName>transaction_id</fieldName>      
+      <add>4.0</add>
+  </index>   
+  <field>
+      <name>query</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>request</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/request</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>confirm</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/{transactionId}/confirm</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>refund</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/{transactionId}/refund</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>authorization</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/authorization</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>capture</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/authorizations/{transactionId}/capture</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>void</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/authorizations/{transactionId}/void</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>recurring_payment</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/preapprovedPay/{regKey}/payment</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>recurring_check</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/preapprovedPay/{regKey}/check</comment>
+      <default>NULL</default>
+  </field>
+  <field>
+      <name>recurring_expire</name>
+      <type>text</type>
+      <add>4.0</add>
+      <comment>response of /payments/preapprovedPay/{regKey}/expire</comment>
+      <default>NULL</default>
+  </field>
+</table>

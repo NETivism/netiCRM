@@ -153,6 +153,7 @@ DROP TABLE IF EXISTS civicrm_sms_provider;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;
+DROP TABLE IF EXISTS civicrm_contribution_linepay;
 DROP TABLE IF EXISTS civicrm_contribution_type;
 DROP TABLE IF EXISTS civicrm_contribution_recur;
 DROP TABLE IF EXISTS civicrm_mailing_spool;
@@ -1398,6 +1399,40 @@ CREATE TABLE civicrm_contribution_type (
  
     ,     UNIQUE INDEX UI_name(
         name
+  )
+  
+ 
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_linepay
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_linepay (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'LinePay ID',
+     trxn_id varchar(255)    COMMENT 'trxn_id from contribution',
+     transaction_id varchar(255)    COMMENT 'transaction id from linepay',
+     query text   DEFAULT NULL COMMENT 'response of /payments',
+     request text   DEFAULT NULL COMMENT 'response of /payments/request',
+     confirm text   DEFAULT NULL COMMENT 'response of /payments/{transactionId}/confirm',
+     refund text   DEFAULT NULL COMMENT 'response of /payments/{transactionId}/refund',
+     authorization text   DEFAULT NULL COMMENT 'response of /payments/authorization',
+     capture text   DEFAULT NULL COMMENT 'response of /payments/authorizations/{transactionId}/capture',
+     void text   DEFAULT NULL COMMENT 'response of /payments/authorizations/{transactionId}/void',
+     recurring_payment text   DEFAULT NULL COMMENT 'response of /payments/preapprovedPay/{regKey}/payment',
+     recurring_check text   DEFAULT NULL COMMENT 'response of /payments/preapprovedPay/{regKey}/check',
+     recurring_expire text   DEFAULT NULL COMMENT 'response of /payments/preapprovedPay/{regKey}/expire' 
+,
+    PRIMARY KEY ( id )
+ 
+    ,     INDEX UI_contrib_trxn_id(
+        trxn_id
+  )
+  ,     INDEX UI_transaction_id(
+        transaction_id
   )
   
  
