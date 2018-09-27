@@ -322,7 +322,7 @@
           {/foreach}
         </table>
         <div class="more">
-          <a href="{crmURL p='civicrm/search/RecurSearch' q="force=1&start=`$start_date`&end=`$end_date`"}">{ts}more{/ts}</a>
+          <a href="{crmURL p='civicrm/search/RecurSearch' q="force=1&start=`$start_date`&end=`$end_date`&status=5"}">{ts}more{/ts}</a>
         </div>
       </div>
     </div>
