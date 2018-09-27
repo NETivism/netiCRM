@@ -21,6 +21,7 @@ class CRM_Core_Payment_LinePayAPI {
     'th_TH' => 'th',
   );
 
+  public $_request;
   public $_response;
   public $_success;
 
@@ -64,6 +65,7 @@ class CRM_Core_Payment_LinePayAPI {
   }
 
   public function request($params) {
+    $orderId = $transactionId = NULL;
     $allowedFields = self::fields($this->_apiType);
     $post = array();
     foreach ($params as $name => $value) {
@@ -88,6 +90,19 @@ class CRM_Core_Payment_LinePayAPI {
       if (!in_array($post['currency'], self::$_currencies)) {
         CRM_Core_Error::fatal("Wrong currency specified: {$post['currency']}");
       }
+
+      if (empty($post['orderId'])) {
+        CRM_Core_Error::fatal("No contribution trxn_id (linepay orderId) specify");
+      }
+      else {
+        $this->writeRecord($post['orderId']);
+      }
+    }
+    if (!empty($post['orderId'])) {
+      $orderId = $post['orderId'];
+    }
+    if (!empty($params['transactionId'])) {
+      $transactionId = $params['transactionId'];
     }
 
     // change api url base on parameter
@@ -102,18 +117,87 @@ class CRM_Core_Payment_LinePayAPI {
         $this->_apiURL = $newApiURL;
       }
     }
-    $this->_curl($post);
+
+    $this->_request = $post;
+    $this->_curl();
+    if (!empty($this->_response)) {
+      $record = array(
+        'url' => $this->_apiURL,
+        'timestamp' => CRM_REQUEST_TIME,
+        'request' => $this->_request,
+        'response' => $this->_response,
+      );
+      // api response single record
+      if (!empty($this->_response->info) && is_object($this->_response->info)) {
+        if (!empty($this->_response->info->transactionId)) {
+          $transactionId = $this->_response->info->transactionId;
+        }
+        $this->writeRecord($orderId, $transactionId, $record);
+      }
+      // api response multiple records
+      elseif (!empty($this->_response->info) && is_array($this->_response->info)) {
+        $res = new stdClass();
+        $res = $this->_response;
+        unset($res->info);
+        unset($record['response']);
+        foreach($this->_response->info as $idx => $info) {
+          $r = clone $res;
+          $r->info = $info;
+          if (!empty($info->transactionId)) {
+            $record['response'] = $r;
+            $this->writeRecord(NULL, $info->transactionId, $record);
+          }
+          unset($record['response']);
+        }
+        $this->writeRecord(NULL, NULL, $this->_response);
+      }
+      // api response doesn't have info
+      // use orderId / transactionId from request params
+      elseif (empty($this->_response->info)) {
+        $this->writeRecord($orderId, $transactionId, $record);
+      }
+    }
     if ($this->_success) {
-      // write success record
       return $this->_response;
     }
     else {
-      // write error response
       return FALSE;
     }
   }
 
-  private function _curl($data) {
+  public function writeRecord($orderId = NULL, $transactionId = NULL, $data = NULL) {
+    if (empty($orderId) && empty($transactionId)) {
+      return FALSE;
+    }
+    $orderId = !empty($orderId) ? $orderId : '';
+    $transactionId = !empty($transactionId) ? $transactionId : '';
+    if (!empty($data)) {
+      $responseField = str_replace('/', '_', $this->_apiType);
+      $data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    }
+    $record = new CRM_Contribute_DAO_LinePay();
+    $id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_linepay WHERE trxn_id LIKE %1 OR transaction_id LIKE %2", array(
+      1 => array($orderId, 'String'),
+      2 => array($transactionId, 'String'),
+    ));
+    if ($id) {
+      $record->id = $id;
+      $record->find(TRUE);
+    }
+    if (!empty($transactionId)) {
+      $record->transaction_id = $transactionId;
+    }
+    if (!empty($orderId)) {
+      $record->trxn_id = $orderId;
+    }
+    if (!empty($responseField) && !empty($data)){
+      $record->$responseField = $data; 
+    }
+    $record->save();
+    return $record;
+  }
+
+  private function _curl() {
     $this->_success = FALSE;
     $ch = curl_init($this->_apiURL);
     $opt = array();
@@ -126,7 +210,7 @@ class CRM_Core_Payment_LinePayAPI {
     );
     $opt[CURLOPT_POST] = TRUE;
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
-    $opt[CURLOPT_POSTFIELDS] = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     curl_setopt_array($ch, $opt);
 
     $result = curl_exec($ch);
@@ -172,21 +256,6 @@ class CRM_Core_Payment_LinePayAPI {
         $fields = explode(',', 'amount,currency');
         break;
     }
-    /*
-    if ($isResponse) {
-      switch($apiType){
-        case 'query':
-          $fields = explode(',', 'returnCode,returnMessage');
-          break;
-        case 'request':
-          $fields = explode(',', '');
-          break;
-        case 'confirm':
-          $fields = explode(',', '');
-          break;
-      }
-    }
-    */
     return $fields;
   }
 }
