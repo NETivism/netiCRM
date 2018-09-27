@@ -18,7 +18,7 @@
   }
 
   var tbody = document.getElementById('map-field').querySelector('tbody');
-  var config = { attributes: true, childList: true, subtree: true };
+  var config = { attributes: true, childList: true };
   var observer = new MutationObserver(function(){
     for (var i = 1; i <= window.fixedColumnsCount; i++) {
       rearrangeFixedColumnsData(i);
