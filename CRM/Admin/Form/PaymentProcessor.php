@@ -103,49 +103,54 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
     $this->assign('is_recur', $this->_ppDAO->is_recur);
 
-    $this->_fields = array(
-      array('name' => 'user_name',
-        'label' => $this->_ppDAO->user_name_label,
-      ),
-      array('name' => 'password',
-        'label' => $this->_ppDAO->password_label,
-      ),
-      array('name' => 'signature',
-        'label' => $this->_ppDAO->signature_label,
-      ),
-      array('name' => 'subject',
-        'label' => $this->_ppDAO->subject_label,
-      ),
-      array('name' => 'url_site',
-        'label' => ts('Site URL'),
-        'rule' => 'url',
-        'msg' => ts('Enter a valid URL'),
-      ),
-    );
-
-    if ($this->_ppDAO->is_recur) {
-      $this->_fields[] = array('name' => 'url_recur',
-        'label' => ts('Recurring Payments URL'),
-        'rule' => 'url',
-        'msg' => ts('Enter a valid URL'),
+    if($this->_ppType == 'Mobile'){
+      $this->_fields = CRM_Core_Payment_Mobile::getAdminFields($this->_ppDAO);
+    }else{
+      $this->_fields = array(
+        array('name' => 'user_name',
+          'label' => $this->_ppDAO->user_name_label,
+        ),
+        array('name' => 'password',
+          'label' => $this->_ppDAO->password_label,
+        ),
+        array('name' => 'signature',
+          'label' => $this->_ppDAO->signature_label,
+        ),
+        array('name' => 'subject',
+          'label' => $this->_ppDAO->subject_label,
+        ),
+        array('name' => 'url_site',
+          'label' => ts('Site URL'),
+          'rule' => 'url',
+          'msg' => ts('Enter a valid URL'),
+        ),
       );
+
+      if ($this->_ppDAO->is_recur) {
+        $this->_fields[] = array('name' => 'url_recur',
+          'label' => ts('Recurring Payments URL'),
+          'rule' => 'url',
+          'msg' => ts('Enter a valid URL'),
+        );
+      }
+
+      if (!empty($this->_ppDAO->url_button_default)) {
+        $this->_fields[] = array('name' => 'url_button',
+          'label' => ts('Button URL'),
+          'rule' => 'url',
+          'msg' => ts('Enter a valid URL'),
+        );
+      }
+
+      if (!empty($this->_ppDAO->url_api_default)) {
+        $this->_fields[] = array('name' => 'url_api',
+          'label' => ts('API URL'),
+          'rule' => 'url',
+          'msg' => ts('Enter a valid URL'),
+        );
+      }
     }
 
-    if (!empty($this->_ppDAO->url_button_default)) {
-      $this->_fields[] = array('name' => 'url_button',
-        'label' => ts('Button URL'),
-        'rule' => 'url',
-        'msg' => ts('Enter a valid URL'),
-      );
-    }
-
-    if (!empty($this->_ppDAO->url_api_default)) {
-      $this->_fields[] = array('name' => 'url_api',
-        'label' => ts('API URL'),
-        'rule' => 'url',
-        'msg' => ts('Enter a valid URL'),
-      );
-    }
   }
 
   /**

@@ -53,6 +53,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     $this->_lineItem = $this->get('lineItem');
     $this->_paymentInstrument = $this->get('paymentInstrument');
     $is_deductible = $this->get('is_deductible');
+    $this->assign('payment_result_type', CRM_Utils_Request::retrieve('result', 'Int', $this));
     $this->assign('is_deductible', $is_deductible);
     $this->assign('thankyou_title', $this->_values['thankyou_title']);
     $this->assign('thankyou_text', CRM_Utils_Array::value('thankyou_text', $this->_values));
