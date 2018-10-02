@@ -59,8 +59,8 @@
            </td>
        </tr>
        <tr class="crm-member-import-uploadfile-from-block-onDuplicate">
-           <td class="label" >{$form.onDuplicate.label}</td>
-           <td>{$form.onDuplicate.html} {help id="id-onDuplicate"}</td>
+           <td class="label" >{$form.createContactMode.label}</td>
+           <td>{$form.createContactMode.html}</td>
        </tr>
        <tr class="create-new-contact"><td class="label">{$form.createContactOption.label}{help id="id-createContactOption"}</td><td>{$form.createContactOption.html}</td></tr>
        <tr class="dedupe-rule-group">
