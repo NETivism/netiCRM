@@ -150,7 +150,7 @@ class CRM_Core_Payment_LinePay {
         $thankyou_url = self::prepareThankYouUrl($params['qfKey']);
       }else{
         $ipn->failed($objects, $transaction, $error);
-        $note .= $error . "Prc: {$result_object->prc}, Src: {$result_object->src}";
+        $note .= $error . "returnCode: {$this->_linePayAPI->_response->returnCode}";
         CRM_Core_Payment_Mobile::addNote($note, $contribution);
         $thankyou_url = self::prepareThankYouUrl($params['qfKey'], True);
       }
