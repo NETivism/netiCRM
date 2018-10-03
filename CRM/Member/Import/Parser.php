@@ -45,7 +45,12 @@ abstract class CRM_Member_Import_Parser {
   /**
    * import contact when import member
    */
-  CONST CONTACT_NOIDCREATE = 100, CONTACT_AUTOCREATE = 101, CONTACT_DONTCREATE = 102;
+  CONST CONTACT_NOIDCREATE = 1, CONTACT_AUTOCREATE = 2, CONTACT_DONTCREATE = 4;
+
+  /**
+   * membership data update by selected corresponse field.
+   */
+  CONST DATA_UPDATE = 1;
 
   /**
    * various parser modes
