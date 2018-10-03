@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-09-15 05:10+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-10-03 10:32+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46496,3 +46496,168 @@ msgstr "新進單筆捐款"
 
 msgid "Draggable"
 msgstr "拖曳"
+
+msgid "This user is not a LINE Pay user."
+msgstr "買家不是 LINE Pay 會員"
+
+msgid "The purchasing user suspended for transaction."
+msgstr "買方被停止交易"
+
+msgid "Merchant not found."
+msgstr "找不到商家"
+
+msgid "This Merchant cannot use LINE Pay."
+msgstr "此商家無法使用 LINE Pay"
+
+msgid "Header information error"
+msgstr "標頭資訊錯誤"
+
+msgid "Not available credit card."
+msgstr "無法使用的信用卡"
+
+msgid "Error in Amount (scale)."
+msgstr "金額錯誤 (scale)"
+
+msgid "Invalid oneTimeKey"
+msgstr "非有效之 oneTimeKey"
+
+msgid "Account status error."
+msgstr "付款帳戶狀態錯誤"
+
+msgid "Insufficient balance remains."
+msgstr "餘額不足"
+
+msgid "Payment in progress."
+msgstr "正在進行付款"
+
+msgid "Transaction record not found."
+msgstr "找不到交易記錄"
+
+msgid "Transaction has already been made."
+msgstr "已有既存付款"
+
+msgid "Request amount is different from real amount."
+msgstr "付款 reserve 時的金額與申請的金額不一致"
+
+msgid "Preapproved payment account not available."
+msgstr "買家設定為自動付款的信用卡變無法使用狀態"
+
+msgid "The transaction Id not eligible for Refund."
+msgstr "交易編號不符合退款資格"
+
+msgid "Omitted request payment information."
+msgstr "無付款申請資訊"
+
+msgid "Exceeded the expiration for Refund."
+msgstr "可退款日期已過無法退款"
+
+msgid "Refund limit exceeded."
+msgstr "超過退款額度"
+
+msgid "The transaction has already been refunded."
+msgstr "交易已進行退款"
+
+msgid "Payment method and password must be certificated by LINE Pay."
+msgstr "付款 confirm 所需要資訊錯誤(在 LINE Pay)"
+
+msgid "User’s account remains have been changed."
+msgstr "使用者帳戶的餘額有變動"
+
+msgid "Existing same orderId."
+msgstr "已有同一訂單編號的交易履歷"
+
+msgid "Exceeded max. number of transactions (100) allowed to be retrieved."
+msgstr "超過允許擷取的交易數目 (100)"
+
+msgid "Unsupported currency."
+msgstr "不支援的貨幣"
+
+msgid "Status can not be processed."
+msgstr "無法處理狀態"
+
+msgid "Expired the payment date"
+msgstr "付款時限已過"
+
+msgid "Payment amount must be greater than 0."
+msgstr "付款金額必須大於 0"
+
+msgid "Payment amount exceeds amount requested."
+msgstr "付款金額比付款申請時候的金額還大"
+
+msgid "The regKey does not exist."
+msgstr "regKey 不存在"
+
+msgid "The regKey expired."
+msgstr "regKey 已過期"
+
+msgid "This Merchant cannot use Preapproved Payment."
+msgstr "此商家無法使用自動付款"
+
+msgid "Already processing payment with regKey"
+msgstr "已在處理使用 regKey 進行的付款"
+
+msgid "Duplicated the request calling API."
+msgstr "正在處理請求..."
+
+msgid "Internal request error."
+msgstr "內部請求錯誤"
+
+msgid "Temporary error while making a payment with Credit Card"
+msgstr "信用卡付款時候發生了臨時錯誤"
+
+msgid "Credit Card Payment Error"
+msgstr "信用卡付款錯誤"
+
+msgid "Credit Card Authorization Error"
+msgstr "信用卡授權錯誤"
+
+msgid "The payment has been declined due to suspected fraud."
+msgstr "因異常交易疑慮暫停交易,請洽 LINE Pay 客服確認"
+
+msgid "Omitted credit card information"
+msgstr "信用卡資訊不完整"
+
+msgid "Incorrect credit card payment information"
+msgstr "信用卡付款資訊不正確"
+
+msgid "Credit card expiration date has passed."
+msgstr "信用卡已過期"
+
+msgid "Credit card has insufficient funds."
+msgstr "信用卡的額度不足"
+
+msgid "Maximum credit card limit exceeded."
+msgstr "超過信用卡付款金額上限"
+
+msgid "One-time payment limit exceeded."
+msgstr "超過一次性付款的額度"
+
+msgid "This card has been reported stolen."
+msgstr "此信用卡已被掛失"
+
+msgid "This card has been suspended."
+msgstr "此信用卡已被停卡"
+
+msgid "Invalid Card Verification Number (CVN)"
+msgstr "信用卡驗證碼 (CVN) 無效"
+
+msgid "This card is blacklisted."
+msgstr "此信用卡已被列入黑名單"
+
+msgid "Invalid credit card number"
+msgstr "信用卡號無效"
+
+msgid "Invalid amount"
+msgstr "無效的金額"
+
+msgid "The credit card payment declined."
+msgstr "信用卡付款遭拒"
+
+msgid "Parameter error"
+msgstr "參數錯誤"
+
+msgid "JSON data format error"
+msgstr "JSON 資料格式錯誤"
+
+msgid "Internal error"
+msgstr "內部錯誤"
