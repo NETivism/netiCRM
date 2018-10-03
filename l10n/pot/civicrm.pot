@@ -46339,3 +46339,168 @@ msgstr ""
 
 msgid "Draggable"
 msgstr ""
+
+msgid "This user is not a LINE Pay user."
+msgstr ""
+
+msgid "The purchasing user suspended for transaction."
+msgstr ""
+
+msgid "Merchant not found."
+msgstr ""
+
+msgid "This Merchant cannot use LINE Pay."
+msgstr ""
+
+msgid "Header information error"
+msgstr ""
+
+msgid "Not available credit card."
+msgstr ""
+
+msgid "Error in Amount (scale)."
+msgstr ""
+
+msgid "Invalid oneTimeKey"
+msgstr ""
+
+msgid "Account status error."
+msgstr ""
+
+msgid "Insufficient balance remains."
+msgstr ""
+
+msgid "Payment in progress."
+msgstr ""
+
+msgid "Transaction record not found."
+msgstr ""
+
+msgid "Transaction has already been made."
+msgstr ""
+
+msgid "Request amount is different from real amount."
+msgstr ""
+
+msgid "Preapproved payment account not available."
+msgstr ""
+
+msgid "The transaction Id not eligible for Refund."
+msgstr ""
+
+msgid "Omitted request payment information."
+msgstr ""
+
+msgid "Exceeded the expiration for Refund."
+msgstr ""
+
+msgid "Refund limit exceeded."
+msgstr ""
+
+msgid "The transaction has already been refunded."
+msgstr ""
+
+msgid "Payment method and password must be certificated by LINE Pay."
+msgstr ""
+
+msgid "User’s account remains have been changed."
+msgstr ""
+
+msgid "Existing same orderId."
+msgstr ""
+
+msgid "Exceeded max. number of transactions (100) allowed to be retrieved."
+msgstr ""
+
+msgid "Unsupported currency."
+msgstr ""
+
+msgid "Status can not be processed."
+msgstr ""
+
+msgid "Expired the payment date"
+msgstr ""
+
+msgid "Payment amount must be greater than 0."
+msgstr ""
+
+msgid "Payment amount exceeds amount requested."
+msgstr ""
+
+msgid "The regKey does not exist."
+msgstr ""
+
+msgid "The regKey expired."
+msgstr ""
+
+msgid "This Merchant cannot use Preapproved Payment."
+msgstr ""
+
+msgid "Already processing payment with regKey"
+msgstr ""
+
+msgid "Duplicated the request calling API."
+msgstr ""
+
+msgid "Internal request error."
+msgstr ""
+
+msgid "Temporary error while making a payment with Credit Card"
+msgstr ""
+
+msgid "Credit Card Payment Error"
+msgstr ""
+
+msgid "Credit Card Authorization Error"
+msgstr ""
+
+msgid "The payment has been declined due to suspected fraud."
+msgstr ""
+
+msgid "Omitted credit card information"
+msgstr ""
+
+msgid "Incorrect credit card payment information"
+msgstr ""
+
+msgid "Credit card expiration date has passed."
+msgstr ""
+
+msgid "Credit card has insufficient funds."
+msgstr ""
+
+msgid "Maximum credit card limit exceeded."
+msgstr ""
+
+msgid "One-time payment limit exceeded."
+msgstr ""
+
+msgid "This card has been reported stolen."
+msgstr ""
+
+msgid "This card has been suspended."
+msgstr ""
+
+msgid "Invalid Card Verification Number (CVN)"
+msgstr ""
+
+msgid "This card is blacklisted."
+msgstr ""
+
+msgid "Invalid credit card number"
+msgstr ""
+
+msgid "Invalid amount"
+msgstr ""
+
+msgid "The credit card payment declined."
+msgstr ""
+
+msgid "Parameter error"
+msgstr ""
+
+msgid "JSON data format error"
+msgstr ""
+
+msgid "Internal error"
+msgstr ""
