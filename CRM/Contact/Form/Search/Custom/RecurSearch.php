@@ -73,6 +73,10 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       $date = CRM_Utils_Date::setDateDefaults($highDate);
       $this->_formValues['start_date_to'] = $date[0];
     }
+    $cstatus_id = CRM_Utils_Request::retrieve('status', 'Int', CRM_Core_DAO::$_nullObject);
+    if (!empty($cstatus_id)){
+      $this->_formValues['status'] = $cstatus_id;
+    }
   }
 
   function buildColumn(){
