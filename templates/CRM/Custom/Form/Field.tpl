@@ -117,6 +117,14 @@ function custom_option_html_type( ) {
         cj("#optionsPerLine").hide();
     }
 
+    {/literal}{if $form.is_membership_extends_id}{literal}
+    if( html_type_name == 'Text'){
+        cj('.crm-custom-field-form-block-is_membership_extends_id').show();
+    }else{
+        cj('.crm-custom-field-form-block-is_membership_extends_id').hide();
+    }
+    {/literal}{/if}{literal}
+
     {/literal}{if $action eq 1}{literal}
     clearSearchBoxes( );
     {/literal}{/if}{literal}
@@ -146,6 +154,17 @@ function custom_option_html_type( ) {
             <td class="label">{$form.text_length.label}</td>
             <td class="html-adjust">{$form.text_length.html}</td> 
         </tr>
+
+        {if $form.is_membership_extends_id}
+        <tr class="crm-custom-field-form-block-is_membership_extends_id">
+            <td class="label">{$form.is_membership_extends_id.label}</td>
+            <td class="html-adjust">{$form.is_membership_extends_id.html}
+            {if $action neq 4}
+                <span class="description">{ts}Checked if this field is used for coresponse reference id when import. {/ts}</span>
+            {/if}
+            </td>
+        </tr>
+        {/if}
         
         <tr id='showoption' {if $action eq 1 or $action eq 2 }class="hide-block"{/if}>
             <td colspan="2">

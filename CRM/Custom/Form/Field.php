@@ -245,6 +245,11 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
       $dontShowLink = substr($defaults['html_type'], -14) == 'State/Province' || substr($defaults['html_type'], -7) == 'Country' ? 1 : 0;
     }
 
+    $config = CRM_Core_Config::singleton();
+    if(!empty($config->membership_extends_id_field_id) && $config->membership_extends_id_field_id == $this->_id){
+      $defaults['is_membership_extends_id'] = 1;
+    }
+
     if (isset($dontShowLink)) {
       $this->assign('dontShowLink', $dontShowLink);
     }
@@ -517,6 +522,21 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
         'done',
         ts('Done'),
         array('onclick' => "location.href='$url'")
+      );
+    }
+
+    $type = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $this->_gid, 'extends');
+    if($type == 'Membership'){
+      $config = CRM_Core_Config::singleton();
+      $current_membership_extends_id_field_id = $config->membership_extends_id_field_id;
+      if($current_membership_extends_id_field_id){
+        $current_membership_extends_id_field_title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $current_membership_extends_id_field_id, 'label');
+        $this->assign('current_membership_extends_id_field_title', $current_membership_extends_id_field_title);
+      }
+
+      $this->addElement('checkbox',
+        'is_membership_extends_id',
+        ts('Is this Field as Membership Extends ID')
       );
     }
   }
@@ -860,6 +880,32 @@ AND    option_group_id = %2";
       $dataTypeKey = $params['data_type'][0];
       $params['html_type'] = self::$_dataToHTML[$params['data_type'][0]][$params['data_type'][1]];
       $params['data_type'] = self::$_dataTypeKeys[$params['data_type'][0]];
+    }
+
+    $type = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $this->_gid, 'extends');
+
+    if($type == 'Membership'){
+      $config = CRM_Core_Config::singleton();
+      $current_membership_extends_id_field_id = $config->membership_extends_id_field_id;
+
+      if(empty($this->_id)){
+        $this_field_id = CRM_Core_DAO::singleValueQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'civicrm_custom_field'");
+      }else{
+        $this_field_id = $this->_id;
+      }
+
+      if($current_membership_extends_id_field_id != $this_field_id ){
+        $add['membership_extends_id_field_id'] = $this_field_id;
+      }else{
+        if(!$this->controller->exportValues('is_membership_extends_id')){
+          $add['membership_extends_id_field_id'] = False;
+        }
+      }
+      CRM_Core_BAO_ConfigSetting::add($add);
+
+      // also delete the CRM_Core_Config key from the database
+      $cache = &CRM_Utils_Cache::singleton();
+      $cache->delete('CRM_Core_Config');
     }
 
     //fix for 'is_search_range' field.
