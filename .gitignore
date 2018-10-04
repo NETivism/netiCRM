@@ -5,3 +5,4 @@
 .svn*
 vendor
 *.DS_Store
+.vscode
