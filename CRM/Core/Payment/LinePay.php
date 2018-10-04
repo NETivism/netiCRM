@@ -96,7 +96,8 @@ class CRM_Core_Payment_LinePay {
       CRM_Utils_System::redirect($this->_linePayAPI->_response->info->paymentUrl->web);
     }else{
       $contribution = self::prepareContribution($contributionId);
-      $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode;
+      $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
+      $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
       CRM_Core_Payment_Mobile::addNote($note, $contribution);
       CRM_Core_Error::fatal('PaymentProcessor id must be given in url query.');
     }
@@ -150,7 +151,8 @@ class CRM_Core_Payment_LinePay {
         $thankyou_url = self::prepareThankYouUrl($params['qfKey']);
       }else{
         $ipn->failed($objects, $transaction, $error);
-        $note .= $error . "returnCode: {$this->_linePayAPI->_response->returnCode}";
+        $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
+        $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
         CRM_Core_Payment_Mobile::addNote($note, $contribution);
         $thankyou_url = self::prepareThankYouUrl($params['qfKey'], True);
       }
