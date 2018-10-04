@@ -9,6 +9,9 @@
   {if $config->customCSSURL}
   <link rel="stylesheet" href="{$config->customCSSURL}" type="text/css" media="all"/>
   {/if}
+  {literal}<style>
+    body { margin:0; padding: 0; }
+  </style>{/literal}
 </head>
 <body>
 <div class="crm-container">
