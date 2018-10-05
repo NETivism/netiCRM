@@ -58,7 +58,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       }
       // set iframe code
       $template = CRM_Core_Smarty::singleton();
-      $template->assign("iframeSrc", CRM_Utils_System::url('civicrm/contribute/widget', 'embed=1&id='.$this->_id, TRUE));
+      $template->assign("iframeSrc", CRM_Utils_System::url('civicrm/contribute/widget', 'embed=1&id='.$this->_id, TRUE, NULL, FALSE));
       $template->assign("iframeWidth", '300px');
       $iframeCode = $template->fetch('CRM/common/iframe.tpl');
       $this->assign('iframeCode', $iframeCode);
