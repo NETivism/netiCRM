@@ -332,13 +332,24 @@ class CRM_Core_Invoke {
         return $controller->run();
       }
       else {
-        $wrapper = new CRM_Utils_Wrapper();
-        return $wrapper->run('CRM_Profile_Form_Edit',
-          ts('Create Profile'),
-          array('mode' => CRM_Core_Action::ADD,
-            'ignoreKey' => TRUE,
-          )
-        );
+        $embed = CRM_Utils_Request::retrieve('embed', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE);
+        if ($embed) {
+          $profile = CRM_UF_Page_Group::profile();
+          $template = CRM_Core_Smarty::singleton();
+          $template->assign('embedBody', $profile);
+          $content = $template->fetch('CRM/common/Embed.tpl');
+          echo $content; 
+          return;
+        }
+        else {
+          $wrapper = new CRM_Utils_Wrapper();
+          return $wrapper->run('CRM_Profile_Form_Edit',
+            ts('Create Profile'),
+            array('mode' => CRM_Core_Action::ADD,
+              'ignoreKey' => TRUE,
+            )
+          );
+        }
       }
     }
 

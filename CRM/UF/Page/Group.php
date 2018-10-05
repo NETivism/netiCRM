@@ -173,7 +173,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
         CRM_Utils_System::updateCategories();
       }
       elseif ($action & CRM_Core_Action::PROFILE) {
-        $this->profile();
+        $this->profileCode();
         CRM_Utils_System::setTitle(ts('%1 - HTML Form Snippet', array(1 => $this->_title)));
       }
       elseif ($action & CRM_Core_Action::PREVIEW) {
@@ -213,47 +213,17 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function profile() {
-    $config = CRM_Core_Config::singleton();
-
-    // reassign resource base to be the full url, CRM-4660
-    $config->resourceBase = $config->userFrameworkResourceURL;
-    $config->useFrameworkRelativeBase = $config->userFrameworkBaseURL;
-
-    $gid = CRM_Utils_Request::retrieve('gid', 'Positive',
-      $this, FALSE, 0, 'GET'
-    );
-    $controller = new CRM_Core_Controller_Simple('CRM_Profile_Form_Edit', ts('Create'), CRM_Core_Action::ADD,
-      FALSE, FALSE, TRUE
-    );
-    $controller->reset();
-    $controller->process();
-    $controller->set('gid', $gid);
-    $controller->setEmbedded(TRUE);
-    $controller->run();
+  function profileCode() {
     $template = CRM_Core_Smarty::singleton();
-    $template->assign('gid', $gid);
-    $template->assign('tplFile', 'CRM/Profile/Form/Edit.tpl');
-    $profile = trim($template->fetch('CRM/Form/default.tpl'));
-    // not sure how to circumvent our own navigation system to generate the right form url
-    $form_url = CRM_Utils_System::url('civicrm/profile/create', 'gid=' . $gid . '&reset=1', FALSE);
-    $form_url = str_replace($config->useFrameworkRelativeBase, '', $form_url);
-    $profile = str_replace('civicrm/admin/uf/group', $form_url, $profile);
-
-    // FIXME: (CRM-3587) hack to make standalone profile in joomla work
-    // without administrator login
-    if ($config->userFramework == 'Joomla') {
-      $profile = str_replace('/administrator/index2.php', '/index.php', $profile);
-    }
-
-    // add jquery files
-    $profile = CRM_Utils_String::addJqueryFiles($profile);
-
-    $this->assign('profile', htmlentities($profile, ENT_NOQUOTES, 'UTF-8'));
-    //get the title of uf group
+    $gid = CRM_Utils_Request::retrieve('gid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
     if ($gid) {
-      $title = CRM_Core_BAO_UFGroup::getTitle($gid);
-      $this->_title = $title;
+    
+      $iframeSrc = CRM_Utils_System::url('civicrm/profile/create', 'reset=1&embed=1&gid='.$gid, TRUE);
+      $this->assign('iframeSrc', $iframeSrc);
+      $this->assign('iframeWidth', '100%');
+      $iframeCode = trim($template->fetch('CRM/common/iframe.tpl'));
+      $this->assign('profile', htmlentities($iframeCode, ENT_NOQUOTES, 'UTF-8'));
+      //get the title of uf group
     }
     else {
       $title = 'Profile Form';
@@ -484,6 +454,36 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       }
     }
     return $returnGroupTypes;
+  }
+
+  public static function profile($gid = NULL) {
+    $config = CRM_Core_Config::singleton();
+
+    // reassign resource base to be the full url, CRM-4660
+    $config->resourceBase = $config->userFrameworkResourceURL;
+    $config->useFrameworkRelativeBase = $config->userFrameworkBaseURL;
+
+    if (empty($gid)) {
+      $gid = CRM_Utils_Request::retrieve('gid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
+    }
+    $controller = new CRM_Core_Controller_Simple('CRM_Profile_Form_Edit', ts('Create'), CRM_Core_Action::ADD, FALSE, FALSE, TRUE);
+    $controller->reset();
+    $controller->process();
+    $controller->set('gid', $gid);
+    $controller->setEmbedded(TRUE);
+    $controller->run();
+    $template = CRM_Core_Smarty::singleton();
+    $template->assign('gid', $gid);
+    $template->assign('tplFile', 'CRM/Profile/Form/Edit.tpl');
+    $profile = trim($template->fetch('CRM/Form/default.tpl'));
+    // not sure how to circumvent our own navigation system to generate the right form url
+    $form_url = CRM_Utils_System::url('civicrm/profile/create', 'gid=' . $gid . '&reset=1', FALSE);
+    $form_url = str_replace($config->useFrameworkRelativeBase, '', $form_url);
+    $profile = str_replace('civicrm/admin/uf/group', $form_url, $profile);
+
+    // add jquery files
+    $profile = CRM_Utils_String::addJqueryFiles($profile);
+    return $profile;
   }
 }
 

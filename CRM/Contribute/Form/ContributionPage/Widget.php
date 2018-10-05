@@ -37,7 +37,9 @@ require_once 'CRM/Contribute/Form/ContributionPage.php';
 class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_ContributionPage {
   protected $_colors;
 
-  protected $_widget; function preProcess() {
+  protected $_widget;
+  
+  function preProcess() {
     parent::preProcess();
 
     require_once 'CRM/Contribute/DAO/Widget.php';
@@ -54,6 +56,13 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       if ($this->_widget->url_homepage) {
         $this->assign('showStatus', TRUE);
       }
+      // set iframe code
+      $template = CRM_Core_Smarty::singleton();
+      $template->assign("iframeSrc", CRM_Utils_System::url('civicrm/contribute/widget', 'embed=1&id='.$this->_id, TRUE));
+      $template->assign("iframeWidth", '300px');
+      $iframeCode = $template->fetch('CRM/common/iframe.tpl');
+      $this->assign('iframeCode', $iframeCode);
+      $this->assign('iframePlain', htmlentities($iframeCode, ENT_NOQUOTES, 'UTF-8'));
     }
 
     $this->assign('cpageId', $this->_id);
