@@ -14,6 +14,7 @@
   </style>{/literal}
 </head>
 <body>
+<script type="text/javascript" src="{$config->userFrameworkResourceURL}js/iframeresizer.contentwindow.js"></script>
 <div class="crm-container">
 {$embedBody}
 </div>

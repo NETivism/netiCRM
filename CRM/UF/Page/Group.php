@@ -218,7 +218,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
     if ($gid) {
     
-      $iframeSrc = CRM_Utils_System::url('civicrm/profile/create', 'reset=1&embed=1&gid='.$gid, TRUE);
+      $iframeSrc = CRM_Utils_System::url('civicrm/profile/create', 'reset=1&embed=1&gid='.$gid, TRUE, NULL, FALSE);
       $this->assign('iframeSrc', $iframeSrc);
       $this->assign('iframeWidth', '100%');
       $iframeCode = trim($template->fetch('CRM/common/iframe.tpl'));
