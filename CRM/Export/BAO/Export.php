@@ -1567,9 +1567,10 @@ GROUP BY civicrm_primary_id ";
           $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
           $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
         }
-        if(CRM_Utils_Type::validate($fieldValue, 'Int', False) && strlen($fieldValue) < 15){
+        if(strlen($fieldValue) < 15){
           $row[$column] = CRM_Utils_String::toNumber($fieldValue);
-        }else{
+        }
+        else{
           $row[$column] = $fieldValue;
         }
       }
