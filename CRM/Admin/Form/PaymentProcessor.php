@@ -238,7 +238,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       if ($section) {
         $name = "{$section}_$name";
       }
-      if (!empty($fields[$name])) {
+      if (!empty($fields[$name]) || $fields[$name] == '0') {
         $present = TRUE;
       }
       else {
