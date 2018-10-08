@@ -138,7 +138,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       $param = array(1 => array($config->external_membership_id_field_id, Integer));
       $dao = CRM_Core_DAO::executeQuery($sql, $param);
       if($dao->fetch()){
-        $referenceFieldOptions['custom_field'] = ts('Custom Field')." - ".$dao->group_title.": ".$dao->field_label;
+        $referenceFieldOptions['custom_'.$config->external_membership_id_field_id] = ts('Custom Field')." - ".$dao->group_title.": ".$dao->field_label;
       }
     }
 
@@ -216,7 +216,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       $onDuplicate = CRM_Contribute_Import_Parser::DUPLICATE_UPDATE;
     }else{
       $createContactOption = CRM_Member_Import_Parser::CONTACT_DONTCREATE;
-      $onDuplicate += CRM_Contribute_Import_Parser::DUPLICATE_NOCHECK;
+      $onDuplicate += CRM_Contribute_Import_Parser::DUPLICATE_SKIP;
     }
     if(!empty($createContactMode['updateMembership'])){
       $updateDataOption += CRM_Member_Import_Parser::DATA_UPDATE;

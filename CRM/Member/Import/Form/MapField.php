@@ -200,7 +200,8 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       foreach ($remove as $value) {
         unset($this->_mapperFields[$value]);
       }
-      $highlightedFieldsArray = array('membership_id', 'membership_start_date', 'membership_type_id');
+      $highlightedFieldsArray = array('membership_start_date', 'membership_type_id');
+      $highlightedFieldsArray[] = $this->controller->exportValue('UploadFile', 'dataReferenceField');
       foreach ($highlightedFieldsArray as $name) {
         $highlightedFields[] = $name;
       }
