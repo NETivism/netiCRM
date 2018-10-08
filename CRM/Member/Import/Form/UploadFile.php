@@ -99,8 +99,8 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
-    $createContactMode[] = $this->addElement('advcheckbox', 'createContact', NULL, ts('Create or search contact when new membership doesn\'t match id.'));
-    $createContactMode[] = $this->addElement('advcheckbox', 'updateMembership', NULL, ts('Update current membership data.'));
+    $createContactMode[] = $this->addElement('advcheckbox', 'createContact', NULL, ts('Create or search contact when new membership doesn\'t match id'));
+    $createContactMode[] = $this->addElement('advcheckbox', 'updateMembership', NULL, ts('Update current membership data'));
     $label = ts('Import mode');
     $this->addGroup($createContactMode, 'createContactMode', $label);
     $this->addRule('createContactMode', ts('%1 is a required field.', array(1 => $label)), 'required');
@@ -130,12 +130,18 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     }
     $this->add('select', 'dedupeRuleGroup', ts('Dedupe Rule of Contact'), $dedupeRule);
 
-
-    // $config = CRM_Core_Config::singleton();
     $referenceFieldOptions = array(
       'membership_id' => ts('Membership ID'),
-      'custom_field' => ts('Custom Field'),
     );
+    if(!empty($config->external_membership_id_field_id)){
+      $sql = "SELECT f.label AS field_label, g.title AS group_title FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
+      $param = array(1 => array($config->external_membership_id_field_id, Integer));
+      $dao = CRM_Core_DAO::executeQuery($sql, $param);
+      if($dao->fetch()){
+        $referenceFieldOptions['custom_field'] = ts('Custom Field')." - ".$dao->group_title.": ".$dao->field_label;
+      }
+    }
+
     $this->add('select', 'dataReferenceField', ts('The field use to search membership'), $referenceFieldOptions);
 
     //get the saved mapping details

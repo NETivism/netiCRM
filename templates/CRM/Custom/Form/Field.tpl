@@ -117,11 +117,11 @@ function custom_option_html_type( ) {
         cj("#optionsPerLine").hide();
     }
 
-    {/literal}{if $form.is_membership_extends_id}{literal}
+    {/literal}{if $form.is_external_membership_id}{literal}
     if( html_type_name == 'Text'){
-        cj('.crm-custom-field-form-block-is_membership_extends_id').show();
+        cj('.crm-custom-field-form-block-is_external_membership_id').show();
     }else{
-        cj('.crm-custom-field-form-block-is_membership_extends_id').hide();
+        cj('.crm-custom-field-form-block-is_external_membership_id').hide();
     }
     {/literal}{/if}{literal}
 
@@ -155,12 +155,19 @@ function custom_option_html_type( ) {
             <td class="html-adjust">{$form.text_length.html}</td> 
         </tr>
 
-        {if $form.is_membership_extends_id}
-        <tr class="crm-custom-field-form-block-is_membership_extends_id">
-            <td class="label">{$form.is_membership_extends_id.label}</td>
-            <td class="html-adjust">{$form.is_membership_extends_id.html}
+        {if $form.is_external_membership_id}
+        <tr class="crm-custom-field-form-block-is_external_membership_id">
+            <td class="label">{$form.is_external_membership_id.label}</td>
+            <td class="html-adjust">{$form.is_external_membership_id.html}
             {if $action neq 4}
-                <span class="description">{ts}Checked if this field is used for coresponse reference id when import. {/ts}</span>
+                <span class="description">
+                    {ts}Enabled if this field is used for coresponding membership data when importing.{/ts}
+                    {if $current_external_membership_id_field_title}
+                        {capture assign=group_url}{crmURL p='civicrm/admin/custom/group/field' q="reset=1&action=browse&gid=`$current_external_membership_id_group_id`" h=0 a=1 fe=1}{/capture}
+                        {capture assign=group_link}<a href="{$group_url}" target="_blank">{$current_external_membership_id_group_title}: {$current_external_membership_id_field_title}</a>{/capture}
+                        {ts 1=$group_link}Current external membership id field is %1{/ts}
+                    {/if}
+                </span>
             {/if}
             </td>
         </tr>
