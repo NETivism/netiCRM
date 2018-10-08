@@ -46504,3 +46504,39 @@ msgstr ""
 
 msgid "Internal error"
 msgstr ""
+
+msgid "LinePay Only"
+msgstr ""
+
+msgid "LinePay Channel ID"
+msgstr ""
+
+msgid "LinePay Channel Secret Key"
+msgstr ""
+
+#: CRM/Member/Import/Form/UploadFile.php
+msgid "Create or search contact when new membership doesn't match ID"
+msgstr ""
+
+msgid "Update current membership data"
+msgstr ""
+
+msgid "Don't use any rule"
+msgstr ""
+
+msgid "The field used to search membership"
+msgstr ""
+
+#: CRM/Custom/Form/Field.php
+msgid "External Membership ID Field"
+msgstr ""
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid "Is this field used for corresponding membership data when importing? The external membership ID field only can apply to one custom field at one time."
+msgstr ""
+
+msgid "If you enable this, the origin external membership ID field setting will be replaced."
+msgstr ""
+
+msgid "Current external membership ID field is %1"
+msgstr ""
