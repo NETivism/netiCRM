@@ -57,11 +57,11 @@
             <fieldset>
             <legend>{ts}Preview Widget and Get Code{/ts}</legend>
             <div class="col1">
-                {if $widget_id}
+                {if $widget_id && $iframeCode}
                     <div class="description">
                         {ts}Click <strong>Save & Preview</strong> to save any changes to your settings, and preview the widget again on this page.{/ts}
                     </div>
-                    {include file="CRM/Contribute/Page/Widget.tpl" widgetId=$widget_id cpageId=$cpageId}<br />
+                    {$iframeCode}
                 {else}
                     <div class="description">
                         {ts}Click <strong>Save & Preview</strong> to save your settings and preview the widget on this page.{/ts}<br />
@@ -71,13 +71,13 @@
             </div>
             <div class="col2">
                 {* Include "get widget code" section if widget has been created for this page and is_active. *}
-                {if $widget_id}
+                {if $widget_id && $iframePlain}
                     <div class="description">
                         {ts}Add this widget to any web page by copying and pasting the code below.{/ts}
                     </div>
-                    <textarea rows="8" cols="50" name="widget_code" id="widget_code">{include file="CRM/Contribute/Page/Widget.tpl" widgetId=$widget_id cpageId=$cpageId}</textarea>
+                    <textarea rows="4" cols="50" name="widget_code" id="widget_code" onfocus="this.select();">{$iframePlain}</textarea>
                     <br />
-                    <strong><a href="#" onclick="Widget.widget_code.select(); return false;">&raquo; Select Code</a></strong>
+                    <strong><a href="#" onclick="Widget.widget_code.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i> {ts}Copy{/ts}</a></strong>
                 {else}
                     <div class="description">
                         {ts}The code for adding this widget to web pages will be displayed here after you click <strong>Save and Preview</strong>.{/ts}

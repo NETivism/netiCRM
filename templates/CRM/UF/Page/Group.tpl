@@ -37,9 +37,10 @@
     <br />
     <form name="html_code" action="{crmURL p='civicrm/admin/uf/group' q="action=profile&gid=$gid"}">
     <div id="standalone-form">
-        <textarea rows="20" cols="80" name="profile" id="profile">{$profile}</textarea>
+        <a href="#" onclick="html_code.profile.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts}</span></a> 
+        <textarea rows="3"  name="profile" id="profile" style="width:100%;" onfocus="this.select();">{$profile}</textarea>
         <div class="spacer"></div>    
-        <a href="#" onclick="html_code.profile.select(); return false;" class="button"><span>Select HTML Code</span></a> 
+        <a href="#" onclick="html_code.profile.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts}</span></a> 
     </div>
     <div class="action-link-button">
         &nbsp; <a href="{crmURL p='civicrm/admin/uf/group' q="reset=1"}">&raquo;  {ts}Back to Profile Listings{/ts}</a>
