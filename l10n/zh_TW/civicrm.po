@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-10-03 10:32+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-10-08 08:51+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46661,3 +46661,43 @@ msgstr "JSON 資料格式錯誤"
 
 msgid "Internal error"
 msgstr "內部錯誤"
+
+msgid "LinePay Only"
+msgstr "只有  LinePay"
+
+msgid "LinePay Channel ID"
+msgstr ""
+
+msgid "LinePay Channel Secret Key"
+msgstr ""
+
+#: CRM/Member/Import/Form/UploadFile.php
+msgid "Create or search contact when new membership doesn't match ID"
+msgstr "透過編號找不到會員資料時，新增或尋找對應規則的聯絡人"
+
+msgid "Update current membership data"
+msgstr "更新現有的會員資料"
+
+msgid "Don't use any rule"
+msgstr "不何用任何規則"
+
+msgid "The field used to search membership"
+msgstr "尋找對應會員資料的欄位"
+
+#: CRM/Custom/Form/Field.php
+msgid "External Membership ID Field"
+msgstr "作為外部會員編號欄位"
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid ""
+"Is this field used for corresponding membership data when importing? The "
+"external membership ID field only can apply to one custom field at one time."
+msgstr "此欄位是否當作對應外部會員資料的編號？通常用於匯入資料來源有其他的編號系統。此欄位同一時間只能設定於一個自訂欄位。"
+
+msgid ""
+"If you enable this, the origin external membership ID field setting will be "
+"replaced."
+msgstr "如果啟用此項目，原外部會員編號欄位設定將會被取代。"
+
+msgid "Current external membership ID field is %1"
+msgstr "目前用於外部會員編號的自訂欄位為%1"
