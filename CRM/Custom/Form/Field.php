@@ -542,7 +542,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
 
       $this->addElement('checkbox',
         'is_external_membership_id',
-        ts('Is this Field as External Membership ID')
+        ts('External Membership ID Field')
       );
     }
   }

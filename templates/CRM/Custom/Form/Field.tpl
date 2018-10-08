@@ -161,11 +161,11 @@ function custom_option_html_type( ) {
             <td class="html-adjust">{$form.is_external_membership_id.html}
             {if $action neq 4}
                 <span class="description">
-                    {ts}Enabled if this field is used for coresponding membership data when importing.{/ts}
+                    {ts}Is this field used for corresponding membership data when importing? The external membership ID field only can apply to one custom field at one time.{/ts}<br/>
                     {if $current_external_membership_id_field_title}
                         {capture assign=group_url}{crmURL p='civicrm/admin/custom/group/field' q="reset=1&action=browse&gid=`$current_external_membership_id_group_id`" h=0 a=1 fe=1}{/capture}
                         {capture assign=group_link}<a href="{$group_url}" target="_blank">{$current_external_membership_id_group_title}: {$current_external_membership_id_field_title}</a>{/capture}
-                        {ts 1=$group_link}Current external membership id field is %1{/ts}
+                        {ts}If you enable this, the origin external membership ID field setting will be replaced.{/ts}<br/>{ts 1=$group_link}Current external membership ID field is %1{/ts}
                     {/if}
                 </span>
             {/if}

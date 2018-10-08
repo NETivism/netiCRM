@@ -99,7 +99,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
-    $createContactMode[] = $this->addElement('advcheckbox', 'createContact', NULL, ts('Create or search contact when new membership doesn\'t match id'));
+    $createContactMode[] = $this->addElement('advcheckbox', 'createContact', NULL, ts('Create or search contact when new membership doesn\'t match ID'));
     $createContactMode[] = $this->addElement('advcheckbox', 'updateMembership', NULL, ts('Update current membership data'));
     $label = ts('Import mode');
     $this->addGroup($createContactMode, 'createContactMode', $label);
@@ -142,7 +142,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       }
     }
 
-    $this->add('select', 'dataReferenceField', ts('The field use to search membership'), $referenceFieldOptions);
+    $this->add('select', 'dataReferenceField', ts('The field used to search membership'), $referenceFieldOptions);
 
     //get the saved mapping details
     require_once "CRM/Core/BAO/Mapping.php";
