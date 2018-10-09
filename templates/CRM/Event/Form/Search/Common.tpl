@@ -53,7 +53,7 @@
     <td class="crm-event-form-block-participant_pay_later">{$form.participant_pay_later.html}&nbsp;{$form.participant_pay_later.label}</td> 
 </tr>
 <tr>
-    <td class="crm-event-form-block-participant_fee_level">{$form.participant_fee_level.label}<br />{$form.participant_fee_level.html}</td>
+    <td class="crm-event-form-block-participant_fee_level">{$form.participant_fee_id.label}<br />{$form.participant_fee_id.html}</td>
      <td class="crm-event-form-block-participant_fee_amount"><label>{ts}Fee Amount{/ts}</label><br />
      	{$form.participant_fee_amount_low.label} &nbsp; {$form.participant_fee_amount_low.html} &nbsp;&nbsp; 
 	{$form.participant_fee_amount_high.label} &nbsp; {$form.participant_fee_amount_high.html}
@@ -94,4 +94,4 @@ cj('#participant_fee_level').autocomplete( feeUrl, { width : 180, selectFirst : 
                                          }).bind( 'click', function( ) { cj( "input#participant_fee_id" ).val(''); });
 </script>
 {/literal}
-{include file="CRM/common/chosen.tpl" selector="select[name^=participant_status_id],select[name^=participant_role_id]"}
+{include file="CRM/common/chosen.tpl" selector="select[name^=participant_status_id],select[name^=participant_role_id],select[name^=participant_fee_id]" select_width=300}

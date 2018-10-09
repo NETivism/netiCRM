@@ -279,10 +279,36 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'participant_fee_id':
-        $feeLabel = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $value, 'label');
-        if ($value) {
-          $query->_where[$grouping][] = "civicrm_participant.fee_level $op '$feeLabel'";
-          $query->_qill[$grouping][] = ts("Fee level") . " $op $feeLabel";
+        $feeLabels = array();
+        if (is_array($value)) {
+          foreach ($value as $k => $val) {
+            list($priceType, $val) = explode(':', $val);
+            if ($priceType == 'priceset') {
+              if (is_numeric($val)) {
+                $label = CRM_Core_DAO::singleValueQuery("SELECT CONCAT(cf.label, '-', cv.label) FROM civicrm_price_field_value cv INNER JOIN civicrm_price_field cf ON cv.price_field_id = cf.id WHERE cv.id = %1", array(1 => array($val, 'Integer')));
+                if ($label) {
+                  $feeLabels[] = CRM_Core_DAO::escapeString(trim($label));
+                }
+              }
+              else {
+                $feeLabels[] = CRM_Core_DAO::escapeString(trim($val));
+              }
+            }
+            else {
+              $label = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $val, 'label');
+              if ($label) {
+                $feeLabels[] = CRM_Core_DAO::escapeString(trim($label));
+              }
+            }
+          }
+        }
+        else {
+          $feeLabels[] = CRM_Core_DAO::escapeString(trim($value));
+        }
+        if (!empty($feeLabels)) {
+          $feeLabel = implode('|', $feeLabels);
+          $query->_where[$grouping][] = "civicrm_participant.fee_level REGEXP '$feeLabel'";
+          $query->_qill[$grouping][] = ts("Fee level") . " IN ". implode(', ', $feeLabels);
         }
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
         return;
@@ -554,11 +580,56 @@ class CRM_Event_BAO_Query {
 
     $form->add('text', 'event_id', ts('Event Name'), array('id' => 'event_id'));
     $form->add('text', 'event_type', ts('Event Type'));
-    $form->add('text', 'participant_fee_level', ts('Fee Level'));
+    $levels = array();
+    $where = array();
+    $where[] = "ce.entity_table = 'civicrm_event'";
+    if ($form->_eventId) {
+      $where[] = "ce.entity_id = $form->_eventId";
+      $levels = CRM_Price_BAO_Field::getPriceLevels($where);
+      $eventFeeBlock = array();
+      CRM_Core_OptionGroup::getAssoc("civicrm_event.amount.{$form->_eventId}", $eventFeeBlock, TRUE);
+      if (!empty($eventFeeBlock)){
+        foreach($eventFeeBlock as $amount_id => $detail) {
+          $levels[$amount_id] = $detail['label'] . ' - ' . $detail['value'];
+        }
+      }
+      $form->addSelect('participant_fee_id', ts('Fee Level'), $levels, array('multiple' => 'multiple'));
+    }
+    else {
+      /* 
+      // remove this because performance issue
+      $levels = CRM_Price_BAO_Field::getPriceLevels($where);
+      $optionGruops = $eventIds = $eventTitles = array();
+      $dao = CRM_Core_DAO::executeQuery("SELECT id, name FROM civicrm_option_group WHERE name LIKE 'civicrm_event.amount.%'");
+      while($dao->fetch()) {
+        $optionGroups[] = $dao->id;
+        $eid = str_replace('civicrm_event.amount.', '', $dao->name);
+        if (is_numeric($eid)) {
+          $eventIds['option:'.$dao->id] = $eid;
+        }
+      }
+      $eventIdStr = implode(',', $eventIds);
+      $dao = CRM_Core_DAO::executeQuery("SELECT id, title FROM civicrm_event WHERE id IN ($eventIdStr)");
+      while($dao->fetch()) {
+        $eventTitles[$dao->id] = $dao->title;
+      }
+      $optionGroups = implode(',', $optionGroups);
+      $dao = CRM_Core_DAO::executeQuery("SELECT id, label, value, option_group_id FROM civicrm_option_value WHERE option_group_id IN ($optionGroups) ORDER BY option_group_id DESC, weight ASC");
+      while($dao->fetch()) {
+        if (!empty($eventIds[$dao->option_group_id])) {
+          $eventTitle = $eventTitles[$eventIds[$dao->option_group_id]];
+          $levels[$eventTitle]['option:'.$dao->id] = $dao->label . ': ' .$dao->value;
+        }
+        else {
+          $levels[ts('Others')]['option:'.$dao->id] = $dao->label. ': ' .$dao->value;
+        }
+      }
+      */
+      $form->addElement('text', 'participant_fee_id', ts('Fee Level'));
+    }
 
     //elements for assigning value operation
     $form->add('hidden', 'event_type_id', '', array('id' => 'event_type_id'));
-    $participantFeeId = &$form->add('hidden', 'participant_fee_id', '', array('id' => 'participant_fee_id'));
 
     $form->addDate('event_start_date_low', ts('Event Dates - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('event_end_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));

@@ -132,6 +132,7 @@ Copyright (c) 2011 by Harvest
       this.disable_search_threshold = this.options.disable_search_threshold || 0;
       this.disable_search = this.options.disable_search || false;
       this.search_contains = this.options.search_contains || false;
+      this.width_define = this.options.width_define || 150;
       this.choices = 0;
       this.single_backstroke_delete = this.options.single_backstroke_delete || false;
       return this.max_selected_options = this.options.max_selected_options || Infinity;
@@ -327,7 +328,7 @@ Copyright (c) 2011 by Harvest
       var container_div, dd_top, dd_width, sf_width;
       this.container_id = this.form_field.id.length ? this.form_field.id.replace(/[^\w]/g, '_') : this.generate_field_id();
       this.container_id += "_chzn";
-      this.f_width = this.form_field_jq.outerWidth() > 80 ? this.form_field_jq.outerWidth() : 150;
+      this.f_width = this.form_field_jq.outerWidth() > 80 ? this.form_field_jq.outerWidth() : this.width_define;
       container_div = $("<div />", {
         id: this.container_id,
         "class": "chzn-container" + (this.is_rtl ? ' chzn-rtl' : ''),

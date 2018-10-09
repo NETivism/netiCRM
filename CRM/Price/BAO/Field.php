@@ -610,5 +610,62 @@ WHERE  id IN (" . implode(',', array_keys($priceFields)) . ')';
       $error['_qf_default'] = ts("Please select at least one option from price set.");
     }
   }
+
+  static public function getPriceLevels($where = array()) {
+    if (empty($where)) {
+      $where = " (1) ";
+    }
+    else {
+      $where = ' '. implode(' AND ', $where).' ';
+    }
+    $label = "";
+    if (strstr($where, 'entity_id')) {
+      $label = "cv.label as label, cf.label as field_label, cv.id, cv.amount";
+    }
+    else {
+      if (strstr($where, 'entity_table') && strstr($where, 'civicrm_event')) {
+        $label = "CONCAT(cf.label, '-', cv.label) as label, e.title as field_label, cv.id, cv.amount";
+      }
+      else if (strstr($where, 'entity_table') && strstr($where, 'civicrm_contribution_page')) {
+        $label = "CONCAT(cf.label, '-', cv.label) as label, p.title as field_label, cv.id, cv.amount";
+      }
+      else {
+        $label = "CONCAT(cf.label, '-', cv.label) label, ps.title as field_label, cv.id, cv.amount";
+      }
+    }
+    $query = "
+SELECT $label
+FROM civicrm_price_field_value cv
+LEFT JOIN civicrm_price_field cf
+  ON cv.price_field_id = cf.id
+LEFT JOIN civicrm_price_set_entity ce
+  ON ce.price_set_id = cf.price_set_id
+LEFT JOIN civicrm_event e
+  ON e.id = ce.entity_id AND ce.entity_table = 'civicrm_event'
+LEFT JOIN civicrm_contribution_page p
+  ON p.id = ce.entity_id AND ce.entity_table = 'civicrm_contribution_page'
+LEFT JOIN civicrm_price_set ps
+  ON ce.price_set_id = ps.id
+WHERE $where
+ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
+";
+    $dao = CRM_Core_DAO::executeQuery($query);
+    $levels = array();
+    while ($dao->fetch()) {
+      if ($dao->field_label) {
+        $levels[$dao->field_label]['priceset:'.$dao->id] = $dao->field_label.' - '.$dao->label . ": " . $dao->amount;
+      }
+      else {
+        $levels['priceset:'.$dao->id] = $dao->label.': '. $dao->amount;
+      }
+    }
+    foreach($levels as $label => &$lev) {
+      if (is_array($lev) && count($lev) > 1) {
+        $lev['priceset:'.$label] = $label.' ('.ts('All').')';
+      }
+    }
+
+    return $levels;
+  }
 }
 
