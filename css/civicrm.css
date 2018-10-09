@@ -2802,9 +2802,6 @@ span.icon {
     margin: 10px 0;
 }
 
-.crm-accordion-closed .crm-accordion-header {
-}
-
 .crm-accordion-open>.crm-accordion-header {
     background: #EEE;
 }
@@ -2818,6 +2815,10 @@ span.icon {
 }
 .crm-accordion-open {
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+}
+.crm-accordion-closed>.crm-accordion-header:hover {
+    background: #575757;
+    color:#FFF;
 }
 
 /* ==================================================================================== */
@@ -3580,11 +3581,6 @@ table.crm-info-panel td.label {
 .crm-form-block {
     color:#3E3E3E;
 }
-.crm-accordion-header:hover {
-    background: #575757;
-    color:#FFF;
-}
-
 #contact-summary .crm-accordion-header {
     background-color:transparent;
     color: #3e3e3e;
@@ -3757,7 +3753,7 @@ div#crm-toolTip
 .ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
  width: 40%;
 }
-.crm-form-block-search > .crm-accordion-wrapper > .crm-accordion-header {
+.crm-accordion-header {
   border: 0;
   background: none;
 }
