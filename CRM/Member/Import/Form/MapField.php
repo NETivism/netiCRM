@@ -201,9 +201,11 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         unset($this->_mapperFields[$value]);
       }
       $highlightedFieldsArray = array('membership_start_date', 'membership_type_id');
-      $highlightedFieldsArray[] = $this->controller->exportValue('UploadFile', 'dataReferenceField');
-      foreach ($highlightedFieldsArray as $name) {
-        $highlightedFields[] = $name;
+      if($this->get('onDuplicate') & CRM_Member_Import_Parser::DUPLICATE_UPDATE){
+        $highlightedFieldsArray[] = $this->get('dataReferenceField');
+        foreach ($highlightedFieldsArray as $name) {
+          $highlightedFields[] = $name;
+        }
       }
     }
     elseif ($this->_onDuplicate == CRM_Member_Import_Parser::DUPLICATE_SKIP) {
@@ -540,45 +542,48 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         CRM_Member_Import_Parser::CONTACT_HOUSEHOLD => 'Household',
         CRM_Member_Import_Parser::CONTACT_ORGANIZATION => 'Organization',
       );
-      $dedupeRuleGroup = $self->get('dedupeRuleGroup');
-      if(!empty($dedupeRuleGroup)) {
-        $ruleParams = array('id' => $dedupeRuleGroup);
-      }
-      else{
-        // default rule group
-        $ruleParams = array(
-          'contact_type' => $contactType,
-          'level' => 'Strict',
-        );
-      }
-      require_once 'CRM/Dedupe/BAO/RuleGroup.php';
-      list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($ruleParams);
-      $weightSum = 0;
-      foreach ($importKeys as $key => $val) {
-        if (array_key_exists($val, $ruleFields)) {
-          $weightSum += $ruleFields[$val];
+      $createContactOption = $self->get('createContactOption');
+      if($createContactOption != CRM_Member_Import_Parser::CONTACT_DONTCREATE){
+        $dedupeRuleGroup = $self->get('dedupeRuleGroup');
+        if(!empty($dedupeRuleGroup)) {
+          $ruleParams = array('id' => $dedupeRuleGroup);
         }
-      }
-      foreach ($ruleFields as $field => $weight) {
-        $fieldMessage .= ' ' . $field . '(weight ' . $weight . ')';
-      }
+        else{
+          // default rule group
+          $ruleParams = array(
+            'contact_type' => $contactType,
+            'level' => 'Strict',
+          );
+        }
+        require_once 'CRM/Dedupe/BAO/RuleGroup.php';
+        list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($ruleParams);
+        $weightSum = 0;
+        foreach ($importKeys as $key => $val) {
+          if (array_key_exists($val, $ruleFields)) {
+            $weightSum += $ruleFields[$val];
+          }
+        }
+        foreach ($ruleFields as $field => $weight) {
+          $fieldMessage .= ' ' . $field . '(weight ' . $weight . ')';
+        }
 
-      foreach ($requiredFields as $field => $title) {
-        if (!in_array($field, $importKeys)) {
-          if ($field == 'membership_contact_id') {
-            if ((($weightSum >= $threshold || in_array('external_identifier', $importKeys)) &&
-                $self->_onDuplicate != CRM_Member_Import_Parser::DUPLICATE_UPDATE
-              ) ||
-              in_array('membership_id', $importKeys)
-            ) {
-              continue;
+        foreach ($requiredFields as $field => $title) {
+          if (!in_array($field, $importKeys)) {
+            if ($field == 'membership_contact_id') {
+              if ((($weightSum >= $threshold || in_array('external_identifier', $importKeys)) &&
+                  $self->_onDuplicate != CRM_Member_Import_Parser::DUPLICATE_UPDATE
+                ) ||
+                in_array('membership_id', $importKeys)
+              ) {
+                continue;
+              }
+              else {
+                $errors['_qf_default'] .= ts('Missing required contact matching fields.') . " $fieldMessage " . ts('(Sum of all weights should be greater than or equal to threshold: %1).', array(1 => $threshold)) . ' ' . ts('(OR Membership ID if update mode.)') . '<br />';
+              }
             }
             else {
-              $errors['_qf_default'] .= ts('Missing required contact matching fields.') . " $fieldMessage " . ts('(Sum of all weights should be greater than or equal to threshold: %1).', array(1 => $threshold)) . ' ' . ts('(OR Membership ID if update mode.)') . '<br />';
+              $errors['_qf_default'] .= ts('Missing required field: %1', array(1 => $title)) . '<br />';
             }
-          }
-          else {
-            $errors['_qf_default'] .= ts('Missing required field: %1', array(1 => $title)) . '<br />';
           }
         }
       }

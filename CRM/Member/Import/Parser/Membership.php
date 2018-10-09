@@ -443,10 +443,19 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         array_unshift($values, "Required parameter missing: Status");
         return CRM_Member_Import_Parser::ERROR;
       }
+      if($this->_dataReferenceField == 'membership_id' && $formatValues['membership_id']){
+        $membership_id = $formatValues['membership_id'];
+      }else if(preg_match('/^custom_/', $this->_dataReferenceField) ){
+        $field_id = str_replace('custom_', '', $this->_dataReferenceField);
+        list($custom_table, $custom_field, $ignore) = CRM_Core_BAO_CustomField::getTableColumnGroup($field_id);
+        $sql = "SELECT entity_id FROM $custom_table WHERE $custom_field = %1";
+        $params = array(1 => array($formatValues[$this->_dataReferenceField], 'String'));
+        $membership_id = CRM_Core_DAO::singleValueQuery($sql, $params);
+      }
 
-      if ($formatValues['membership_id']) {
+      if ($membership_id) {
         $dao = new CRM_Member_BAO_Membership();
-        $dao->id = $formatValues['membership_id'];
+        $dao->id = $membership_id;
         if ($dao->find(TRUE)) {
           $dates = array('join_date', 'start_date', 'end_date');
           foreach ($dates as $v) {
@@ -456,17 +465,21 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
           }
           $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
             CRM_Core_DAO::$_nullObject,
-            $formatValues['membership_id'],
+            $membership_id,
             'Membership'
           );
 
           $ids = array(
-            'membership' => $formatValues['membership_id'],
+            'membership' => $membership_id,
             'userId' => $session->get('userID'),
           );
           $newMembership = &CRM_Member_BAO_Membership::create($formatted, $ids, TRUE, 'Membership Renewal');
           if (civicrm_error($newMembership)) {
-            array_unshift($values, $newMembership['is_error'] . " for Membership ID " . $formatValues['membership_id'] . ". Row was skipped.");
+            if($this->_dataReferenceField == 'membership_id'){
+              array_unshift($values, $newMembership['is_error'] . " for Membership ID " . $formatValues['membership_id'] . ". Row was skipped.");
+            }else{
+              array_unshift($values, $newMembership['is_error'] . " for Custom field and ID: " . $this->_dataReferenceField . ": " . $formatValues[$this->_dataReferenceField] . ". Row was skipped.");
+            }
             return CRM_Member_Import_Parser::ERROR;
           }
           else {

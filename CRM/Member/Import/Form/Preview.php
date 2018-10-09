@@ -154,6 +154,7 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
     $invalidRowCount = $this->get('invalidRowCount');
     $conflictRowCount = $this->get('conflictRowCount');
     $onDuplicate = $this->get('onDuplicate');
+    $dataReferenceField = $this->get('dataReferenceField');
 
     $config = CRM_Core_Config::singleton();
     $seperator = $config->fieldSeparator;
@@ -200,7 +201,8 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       $skipColumnHeader,
       CRM_Member_Import_Parser::MODE_IMPORT,
       $this->get('contactType'),
-      $onDuplicate
+      $onDuplicate,
+      $dataReferenceField
     );
 
     // add all the necessary variables to the form

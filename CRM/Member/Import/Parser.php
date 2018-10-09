@@ -48,11 +48,6 @@ abstract class CRM_Member_Import_Parser {
   CONST CONTACT_NOIDCREATE = 1, CONTACT_AUTOCREATE = 2, CONTACT_DONTCREATE = 4;
 
   /**
-   * membership data update by selected corresponse field.
-   */
-  CONST DATA_UPDATE = 1;
-
-  /**
    * various parser modes
    */
   CONST MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
@@ -266,6 +261,7 @@ abstract class CRM_Member_Import_Parser {
     $mode = self::MODE_PREVIEW,
     $contactType = self::CONTACT_INDIVIDUAL,
     $onDuplicate = self::DUPLICATE_SKIP,
+    $dataReferenceField = '',
     $createContactOption = self::CONTACT_NOIDCREATE,
     $dedupeRuleGroupId = 0
   ) {
@@ -276,6 +272,7 @@ abstract class CRM_Member_Import_Parser {
     $this->_contactType = $contactType;
     $this->_createContactOption = $createContactOption;
     $this->_dedupeRuleGroupId = $dedupeRuleGroupId;
+    $this->_dataReferenceField = $dataReferenceField;
 
     $this->init();
 

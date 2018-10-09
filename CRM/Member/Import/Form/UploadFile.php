@@ -213,13 +213,13 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       }else{
         $createContactOption = CRM_Member_Import_Parser::CONTACT_AUTOCREATE;
       }
-      $onDuplicate = CRM_Contribute_Import_Parser::DUPLICATE_UPDATE;
     }else{
       $createContactOption = CRM_Member_Import_Parser::CONTACT_DONTCREATE;
-      $onDuplicate += CRM_Contribute_Import_Parser::DUPLICATE_SKIP;
     }
     if(!empty($createContactMode['updateMembership'])){
-      $updateDataOption += CRM_Member_Import_Parser::DATA_UPDATE;
+      $onDuplicate = CRM_Contribute_Import_Parser::DUPLICATE_UPDATE;
+    }else{
+      $onDuplicate = CRM_Contribute_Import_Parser::DUPLICATE_SKIP;
     }
 
     $this->set('onDuplicate', $onDuplicate);
@@ -227,6 +227,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     $this->set('dateFormats', $dateFormats);
     $this->set('savedMapping', $savedMapping);
     $this->set('createContactOption', $createContactOption);
+    $this->set('dataReferenceField', $dataReferenceField);
 
     $session = CRM_Core_Session::singleton();
     $session->set("dateTypes", $dateFormats);
