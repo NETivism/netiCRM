@@ -176,7 +176,6 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     $defaults = $this->_submitValues;
     if (!$defaults['createContactMode']){
       $defaults['createContactMode']['createContact'] = 1;
-      $defaults['createContactMode']['updateMembership'] = 1;
     }
     if (!$defaults['contactType']) {
       $defaults['contactType'] = CRM_Member_Import_Parser::CONTACT_INDIVIDUAL;
