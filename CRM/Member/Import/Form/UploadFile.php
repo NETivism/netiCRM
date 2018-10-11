@@ -208,6 +208,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     if(!empty($createContactMode['createContact'])){
       if(!empty($dedupeRuleGroup)){
+        $this->set('dedupeRuleGroup', $dedupeRuleGroup);
         $createContactOption = CRM_Member_Import_Parser::CONTACT_NOIDCREATE;
       }else{
         $createContactOption = CRM_Member_Import_Parser::CONTACT_AUTOCREATE;
