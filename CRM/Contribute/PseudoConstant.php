@@ -323,6 +323,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &pcPage($id = NULL) {
     if (!self::$pcPage) {
+      self::$pcPage = array();
       $dao = CRM_Core_DAO::executeQuery("SELECT pcp.id, pcp.title, pcp.contact_id, c.sort_name, pcp.contact_id, c.external_identifier FROM civicrm_pcp pcp INNER JOIN civicrm_contact c ON c.id = pcp.contact_id");
       while($dao->fetch()){
         if ($dao->external_identifier) {
