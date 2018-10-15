@@ -49,20 +49,20 @@
                <span class="description">
                 {ts}Check this box if the first row of your file consists of field names (Example: 'Contact ID', 'Amount').{/ts}</span>
            </td>
+       <tr class="crm-member-import-uploadfile-from-block-createContactMode">
+           <td class="label" >{$form.createContactMode.label}</td>
+           <td>{$form.createContactMode.html}</td>
+       </tr>
+       <tr class="create-new-contact"><td class="label">{$form.createContactOption.label}{help id="id-createContactOption"}</td><td>{$form.createContactOption.html}</td></tr>
        <tr class="crm-member-import-uploadfile-from-block-contactType">
            <td class="label">{$form.contactType.label}</tdt>
-	   <td>{$form.contactType.html}<br />
+     <td>{$form.contactType.html}<br />
                 <span class="description">
                 {ts}Select 'Individual' if you are importing memberships for individual persons.{/ts}
                 {ts}Select 'Organization' or 'Household' if you are importing memberships made by contacts of that type. (NOTE: Some built-in contact types may not be enabled for your site.){/ts}
                 </span>
            </td>
        </tr>
-       <tr class="crm-member-import-uploadfile-from-block-createContactMode">
-           <td class="label" >{$form.createContactMode.label}</td>
-           <td>{$form.createContactMode.html}</td>
-       </tr>
-       <tr class="create-new-contact"><td class="label">{$form.createContactOption.label}{help id="id-createContactOption"}</td><td>{$form.createContactOption.html}</td></tr>
        <tr class="dedupe-rule-group">
          <td class="label">{$form.dedupeRuleGroup.label}</td>
          <td>
@@ -92,15 +92,24 @@
  <script>{literal}
 cj(document).ready(function($){
   var showHideCreateContact = function(init){
-    if($('#createContactMode\\\[createContact\\\]:checked').length > 0){
-      $('.dedupe-rule-group').show();
+    if($('#createContactMode\\\[createMembership\\\]:checked').length > 0){
+      $("tr.create-new-contact").show('normal');
+      if($('.create-new-contact input[type=radio]:checked').val() != {/literal}{$hideCreateContactOption}{literal}){
+        $('.crm-member-import-uploadfile-from-block-contactType').show('normal');
+        $('.dedupe-rule-group').show('normal');
+      }else{
+        $('.crm-member-import-uploadfile-from-block-contactType').hide('normal');
+        $('.dedupe-rule-group').hide('normal');
+      }
     }else{
-      $('.dedupe-rule-group').hide();
+      $("tr.create-new-contact").hide('normal');
+      $('.dedupe-rule-group').hide('normal');
+      $('.crm-member-import-uploadfile-from-block-contactType').hide('normal');
     }
     if($('#createContactMode\\\[updateMembership\\\]:checked').length > 0){
-      $('.crm-member-import-uploadfile-from-block-dataReferenceField').show();
+      $('.crm-member-import-uploadfile-from-block-dataReferenceField').show('normal');
     }else{
-      $('.crm-member-import-uploadfile-from-block-dataReferenceField').hide();
+      $('.crm-member-import-uploadfile-from-block-dataReferenceField').hide('normal');
     }
   }
   var showHideDedupeRule = function(){
@@ -122,6 +131,7 @@ cj(document).ready(function($){
   }
 
   $(".crm-member-import-uploadfile-from-block-createContactMode input.form-checkbox").click(showHideCreateContact);
+  $('.create-new-contact input[type=radio]').click(showHideCreateContact);
   $("input[name=contactType]").click(showHideDedupeRule);
   $("tr.create-new-contact label.crm-form-elem").css('display', 'block');
   $("tr.create-new-contact").find("br").remove();

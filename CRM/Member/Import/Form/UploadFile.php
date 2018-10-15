@@ -99,11 +99,18 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
-    $createContactMode[] = $this->addElement('advcheckbox', 'createContact', NULL, ts('Create or search contact when new membership doesn\'t match ID'));
+    $createContactMode[] = $this->addElement('advcheckbox', 'createMembership', NULL, ts('Insert new Membership'));
     $createContactMode[] = $this->addElement('advcheckbox', 'updateMembership', NULL, ts('Update current membership data'));
     $label = ts('Import mode');
     $this->addGroup($createContactMode, 'createContactMode', $label);
     $this->addRule('createContactMode', ts('%1 is a required field.', array(1 => $label)), 'required');
+
+    $duplicateContactOptions = array(
+      CRM_Member_Import_Parser::CONTACT_NOIDCREATE => ts('Create contact only on identifier not import'),
+      CRM_Member_Import_Parser::CONTACT_AUTOCREATE => ts('Create contact when not found'),
+      CRM_Member_Import_Parser::CONTACT_DONTCREATE => ts('Do not create or update contact'),
+    );
+    $this->addRadio('createContactOption', ts('Create New Contact'), $duplicateContactOptions, NULL, '<br>');
 
     //contact types option
     $contactOptions = array();
@@ -114,7 +121,6 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     }
     $this->addRadio('contactType', ts('Contact Type'), $contactOptions);
 
-    $dedupeRule[] = ts('Don\'t use any rule');
     foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
       $fields = array();
       foreach($groupValues['fields'] as $name){
@@ -129,6 +135,8 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . implode(', ', $fields) .')';
     }
     $this->add('select', 'dedupeRuleGroup', ts('Dedupe Rule of Contact'), $dedupeRule);
+
+    $this->assign('hideCreateContactOption', CRM_Member_Import_Parser::CONTACT_DONTCREATE);
 
     $referenceFieldOptions = array(
       'membership_id' => ts('Membership ID'),
@@ -175,7 +183,10 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
   public function setDefaultValues(){
     $defaults = $this->_submitValues;
     if (!$defaults['createContactMode']){
-      $defaults['createContactMode']['createContact'] = 1;
+      $defaults['createContactMode']['createMembership'] = 1;
+    }
+    if (!$defaults['createContactOption']) {
+      $defaults['createContactOption'] = CRM_Member_Import_Parser::CONTACT_NOIDCREATE;
     }
     if (!$defaults['contactType']) {
       $defaults['contactType'] = CRM_Member_Import_Parser::CONTACT_INDIVIDUAL;
@@ -203,31 +214,24 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     $dateFormats = $this->controller->exportValue($this->_name, 'dateFormats');
     $savedMapping = $this->controller->exportValue($this->_name, 'savedMapping');
     $createContactMode = $this->controller->exportValue($this->_name, 'createContactMode');
+    $createContactOption = $this->controller->exportValue($this->_name, 'createContactOption');
     $dedupeRuleGroup = $this->controller->exportValue($this->_name, 'dedupeRuleGroup');
     $dataReferenceField = $this->controller->exportValue($this->_name, 'dataReferenceField');
 
-    if(!empty($createContactMode['createContact'])){
-      if(!empty($dedupeRuleGroup)){
-        $this->set('dedupeRuleGroup', $dedupeRuleGroup);
-        $createContactOption = CRM_Member_Import_Parser::CONTACT_NOIDCREATE;
-      }else{
-        $createContactOption = CRM_Member_Import_Parser::CONTACT_AUTOCREATE;
-      }
-    }else{
-      $createContactOption = CRM_Member_Import_Parser::CONTACT_DONTCREATE;
-    }
     if(!empty($createContactMode['updateMembership'])){
-      $onDuplicate = CRM_Contribute_Import_Parser::DUPLICATE_UPDATE;
+      $onDuplicate = CRM_Member_Import_Parser::DUPLICATE_UPDATE;
+      $this->set('dataReferenceField', $dataReferenceField);
     }else{
-      $onDuplicate = CRM_Contribute_Import_Parser::DUPLICATE_SKIP;
+      $onDuplicate = CRM_Member_Import_Parser::DUPLICATE_SKIP;
     }
+    $onDuplicate = empty($createContactMode['updateMembership']) ? CRM_Member_Import_Parser::DUPLICATE_SKIP : CRM_Member_Import_Parser::DUPLICATE_UPDATE;
 
+    $this->set('dedupeRuleGroup', $dedupeRuleGroup);
     $this->set('onDuplicate', $onDuplicate);
     $this->set('contactType', $contactType);
     $this->set('dateFormats', $dateFormats);
     $this->set('savedMapping', $savedMapping);
     $this->set('createContactOption', $createContactOption);
-    $this->set('dataReferenceField', $dataReferenceField);
 
     $session = CRM_Core_Session::singleton();
     $session->set("dateTypes", $dateFormats);

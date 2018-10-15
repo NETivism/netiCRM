@@ -502,6 +502,9 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
               array_unshift($values, $newMembership['is_error'] . " for Custom field and ID: " . $this->_dataReferenceField . ": " . $paramValues[$this->_dataReferenceField] . ". Row was skipped.");
             }
             return CRM_Member_Import_Parser::ERROR;
+          }else{
+            $this->_newMemberships[] = $newMembership->id;
+            return CRM_Member_Import_Parser::VALID;
           }
         }
         else {

@@ -197,9 +197,12 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     //membership id is required.
     if ($this->_onDuplicate == CRM_Member_Import_Parser::DUPLICATE_UPDATE) {
       $highlightedFieldsArray = array('membership_start_date', 'membership_type_id');
-      $highlightedFieldsArray[] = $this->get('dataReferenceField');
-      $this->_mapperFields[$this->get('dataReferenceField')] .= " (".ts('match to membership record').")";
-
+      $dataReferenceField = $this->get('dataReferenceField');
+      $highlightedFieldsArray[] = $dataReferenceField;
+      $this->_mapperFields[$dataReferenceField] .= " (".ts('match to membership record').")";
+      if($dataReferenceField != 'membership_id'){
+        unset($this->_mapperFields['membership_id']);
+      }
     }
     elseif ($this->_onDuplicate == CRM_Member_Import_Parser::DUPLICATE_SKIP) {
       unset($this->_mapperFields['membership_id']);
