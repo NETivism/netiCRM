@@ -75,8 +75,7 @@ class CRM_Core_Permission {
    */
   static function check($str) {
     $config = CRM_Core_Config::singleton();
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userPermissionClass) . '.php');
-    return eval('return ' . $config->userPermissionClass . '::check( $str ); ');
+    return call_user_func(array($config->userPermissionClass, 'check'), $str);
   }
 
   /**
