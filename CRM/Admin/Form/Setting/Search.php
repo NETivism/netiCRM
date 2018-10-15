@@ -69,12 +69,8 @@ class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
       array('' => ts('- select -')) + $profiles
     );
     require_once 'CRM/Core/OptionGroup.php';
-    $options = array(ts('Contact Name') => 1) + array_flip(CRM_Core_OptionGroup::values('contact_autocomplete_options',
-        FALSE, FALSE, TRUE
-      ));
-    $this->addCheckBox('autocompleteContactSearch', 'Autocomplete Contact Search', $options,
-      NULL, NULL, NULL, NULL, array('&nbsp;&nbsp;')
-    );
+    $options = array(ts('Contact Name') => 1) + array_flip(CRM_Core_OptionGroup::values('contact_autocomplete_options', FALSE, FALSE, TRUE));
+    $this->addCheckBox('autocompleteContactSearch', ts('Autocomplete Contact Search'), $options);
     $element = $this->getElement('autocompleteContactSearch');
     $element->_elements[0]->_flagFrozen = TRUE;
     parent::buildQuickForm();
