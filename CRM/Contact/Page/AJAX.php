@@ -40,6 +40,7 @@ require_once 'CRM/Utils/Type.php';
 class CRM_Contact_Page_AJAX {
   static function getContactList() {
     require_once 'CRM/Core/BAO/Preferences.php';
+    $perm = CRM_Core_Permission::check('access CiviCRM');
     $name = CRM_Utils_Array::value('s', $_GET);
     $name = CRM_Utils_Type::escape($name, 'String');
     $limit = '10';
@@ -140,9 +141,9 @@ class CRM_Contact_Page_AJAX {
 
     //CRM-5954
     $query = "
-            SELECT id {$field_data_name}, sort_name, nick_name
+            SELECT id {$field_data_name}, sort_name, nick_name, sic_code, legal_identifier, external_identifier, contact_type
             FROM (
-                SELECT cc.id as id {$field_data}, sort_name, nick_name
+                SELECT cc.id as id {$field_data}, sort_name, nick_name, sic_code, legal_identifier, external_identifier, contact_type
                 FROM civicrm_contact cc {$from}
         {$aclFrom}
         {$additionalFrom}
@@ -163,15 +164,28 @@ class CRM_Contact_Page_AJAX {
     $dao = CRM_Core_DAO::executeQuery($query);
     $contactList = NULL;
     while ($dao->fetch()) {
-      $d = '';
+      $d = $id = '';
+      if ($perm) {
+        $id = !empty($dao->external_identifier) ? " [$dao->id - $dao->external_identifier]" : " [$dao->id]";
+        if ($dao->contact_type == 'Organization') {
+          if (!empty($dao->sic_code)) {
+            $d = "-$dao->sic_code";
+          }
+        }
+        else {
+          if (!empty($dao->legal_identifier)) {
+            $d = '-' . substr($dao->legal_identifier, 0, 1) . str_repeat('*', strlen($dao->legal_identifier) - 7) . substr($dao->legal_identifier, -6, 6);
+          }
+        }
+      }
       if ($dao->data) {
-        $d = ' :: '.str_replace(array("\n", "\r", "\t"), '', $dao->data);
+        $d .= ' :: '.str_replace(array("\n", "\r", "\t"), '', $dao->data);
       }
       if ($config->includeNickNameInName && !empty($dao->nick_name)) {
-        $d = "$dao->sort_name ({$dao->nick_name})" . $d;
+        $d = "$dao->sort_name ({$dao->nick_name})" . $d . $id;
       }
       else {
-        $d = "$dao->sort_name" . $d;
+        $d = $dao->sort_name . $d . $id;
       }
       echo $contactList = "$d|$dao->id\n";
     }
