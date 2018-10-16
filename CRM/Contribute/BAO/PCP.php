@@ -282,19 +282,22 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
   static function honorRoll($pcpId) {
     $query = "
             SELECT cc.id, cs.pcp_roll_nickname, cs.pcp_personal_note,
-                   cc.total_amount, cc.currency
+                   SUM(cc.total_amount) as total_amount, cc.currency, COUNT(cc.id) as total_count, cc.contribution_recur_id
             FROM civicrm_contribution cc 
                  LEFT JOIN civicrm_contribution_soft cs ON cc.id = cs.contribution_id
             WHERE cs.pcp_id = {$pcpId}
                   AND cs.pcp_display_in_roll = 1 
                   AND contribution_status_id = 1 
-                  AND is_test = 0";
+                  AND is_test = 0
+            GROUP BY cc.contact_id, cc.contribution_recur_id";
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     $honor = array();
     require_once 'CRM/Utils/Money.php';
     while ($dao->fetch()) {
       $honor[$dao->id]['nickname'] = ucwords($dao->pcp_roll_nickname);
       $honor[$dao->id]['total_amount'] = CRM_Utils_Money::format($dao->total_amount, $dao->currency);
+      $honor[$dao->id]['total_count'] = $dao->total_count;
+      $honor[$dao->id]['is_recur'] = $dao->contribution_recur_id ? 1 : 0;
       $honor[$dao->id]['personal_note'] = $dao->pcp_personal_note;
     }
     return $honor;
