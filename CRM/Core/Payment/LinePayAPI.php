@@ -91,7 +91,7 @@ class CRM_Core_Payment_LinePayAPI {
   protected $_channelSecret;
 
   protected $_apiTypes = array(
-    'query' => '/v2/payments',
+    'query' => '/v2/payments?orderId={orderId}&transactionId={transactionId}',
     'request' => '/v2/payments/request',
     'confirm' => '/v2/payments/{transactionId}/confirm',
     // not supportted api types
@@ -103,6 +103,9 @@ class CRM_Core_Payment_LinePayAPI {
     #'recurring/check' => '/v2/payments/preapprovedPay/{regKey}/check',
     #'recurring/expire' => '/v2/payments/preapprovedPay/{regKey}/expire',
   );
+
+  protected $_apiGetMethodTypes = array('query', 'authorization', 'recurring/check');
+  protected $_apiMethod;
 
   function __construct($apiParams){
     extract($apiParams);
@@ -119,6 +122,11 @@ class CRM_Core_Payment_LinePayAPI {
     else {
       $this->_apiURL = $isTest ? self::LINEPAY_TEST : self::LINEPAY_PROD; 
       $this->_apiURL .= $this->_apiTypes[$this->_apiType];
+      if(in_array($this->_apiType, $this->_apiGetMethodTypes)){
+        $this->_apiMethod = 'GET';
+      }else{
+        $this->_apiMethod = 'POST';
+      }
     }
   }
 
@@ -159,17 +167,18 @@ class CRM_Core_Payment_LinePayAPI {
     if (!empty($post['orderId'])) {
       $orderId = $post['orderId'];
     }
-    if (!empty($params['transactionId'])) {
-      $transactionId = $params['transactionId'];
+    if (!empty($post['transactionId'])) {
+      $transactionId = $post['transactionId'];
     }
 
     // change api url base on parameter
-    if (preg_match('/{([a-z0-9]*)}/i', $this->_apiURL, $matches)) {
+    while (preg_match('/{([a-z0-9]*)}/i', $this->_apiURL, $matches)) {
       $search = $matches[0];
       $replace = $params[$matches[1]];
       $newApiURL = str_replace($search, $replace, $this->_apiURL);
       if ($newApiURL == $this->_apiURL) {
         CRM_Core_Error::fatal("Required params '$search' of this API type $this->_apiURL");
+        break;
       }
       else {
         $this->_apiURL = $newApiURL;
@@ -194,12 +203,8 @@ class CRM_Core_Payment_LinePayAPI {
       }
       // api response multiple records
       elseif (!empty($this->_response->info) && is_array($this->_response->info)) {
-        $res = new stdClass();
-        $res = $this->_response;
-        unset($res->info);
-        unset($record['response']);
         foreach($this->_response->info as $idx => $info) {
-          $r = clone $res;
+          $r = clone $this->_response;
           $r->info = $info;
           if (!empty($info->transactionId)) {
             $record['response'] = $r;
@@ -266,9 +271,11 @@ class CRM_Core_Payment_LinePayAPI {
       'X-LINE-ChannelSecret: ' . $this->_channelSecret, // 32 bytes
       #'X-LINE-MerchantDeviceType' => '',
     );
-    $opt[CURLOPT_POST] = TRUE;
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
-    $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    if($this->_apiMethod == 'POST'){
+      $opt[CURLOPT_POST] = TRUE;
+      $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    }
     curl_setopt_array($ch, $opt);
 
     $result = curl_exec($ch);
