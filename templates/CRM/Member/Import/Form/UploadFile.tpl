@@ -94,13 +94,8 @@ cj(document).ready(function($){
   var showHideCreateContact = function(init){
     if($('#createContactMode\\\[createMembership\\\]:checked').length > 0){
       $("tr.create-new-contact").show('normal');
-      if($('.create-new-contact input[type=radio]:checked').val() != {/literal}{$hideCreateContactOption}{literal}){
-        $('.crm-member-import-uploadfile-from-block-contactType').show('normal');
-        $('.dedupe-rule-group').show('normal');
-      }else{
-        $('.crm-member-import-uploadfile-from-block-contactType').hide('normal');
-        $('.dedupe-rule-group').hide('normal');
-      }
+      $('.crm-member-import-uploadfile-from-block-contactType').show('normal');
+      $('.dedupe-rule-group').show('normal');
     }else{
       $("tr.create-new-contact").hide('normal');
       $('.dedupe-rule-group').hide('normal');

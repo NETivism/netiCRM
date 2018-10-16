@@ -456,7 +456,8 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       }
       if($this->_dataReferenceField == 'membership_id' && $paramValues['membership_id']){
         $membership_id = $paramValues['membership_id'];
-      }else if(preg_match('/^custom_/', $this->_dataReferenceField) ){
+      }
+      else if(preg_match('/^custom_/', $this->_dataReferenceField) ){
         $field_id = str_replace('custom_', '', $this->_dataReferenceField);
         list($custom_table, $custom_field, $ignore) = CRM_Core_BAO_CustomField::getTableColumnGroup($field_id);
         $sql = "SELECT entity_id FROM $custom_table WHERE $custom_field = %1";
@@ -498,11 +499,13 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
           if (civicrm_error($newMembership)) {
             if($this->_dataReferenceField == 'membership_id'){
               array_unshift($values, $newMembership['is_error'] . " for Membership ID " . $paramValues['membership_id'] . ". Row was skipped.");
-            }else{
+            }
+            else{
               array_unshift($values, $newMembership['is_error'] . " for Custom field and ID: " . $this->_dataReferenceField . ": " . $paramValues[$this->_dataReferenceField] . ". Row was skipped.");
             }
             return CRM_Member_Import_Parser::ERROR;
-          }else{
+          }
+          else{
             $this->_newMemberships[] = $newMembership->id;
             return CRM_Member_Import_Parser::VALID;
           }

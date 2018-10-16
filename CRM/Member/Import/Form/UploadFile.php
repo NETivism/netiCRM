@@ -136,19 +136,15 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     }
     $this->add('select', 'dedupeRuleGroup', ts('Dedupe Rule of Contact'), $dedupeRule);
 
-    $this->assign('hideCreateContactOption', CRM_Member_Import_Parser::CONTACT_DONTCREATE);
-
-    $referenceFieldOptions = array(
-      'membership_id' => ts('Membership ID'),
-    );
-    if(!empty($config->external_membership_id_field_id)){
+    if(!empty($config->externalMembershipIdFieldId)){
       $sql = "SELECT f.label AS field_label, g.title AS group_title FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
-      $param = array(1 => array($config->external_membership_id_field_id, Integer));
+      $param = array(1 => array($config->externalMembershipIdFieldId, Integer));
       $dao = CRM_Core_DAO::executeQuery($sql, $param);
       if($dao->fetch()){
-        $referenceFieldOptions['custom_'.$config->external_membership_id_field_id] = ts('Custom Field')." - ".$dao->group_title.": ".$dao->field_label;
+        $referenceFieldOptions['custom_'.$config->externalMembershipIdFieldId] = ts('Custom Field')." - ".$dao->group_title.": ".$dao->field_label;
       }
     }
+    $referenceFieldOptions['membership_id'] = ts('Membership ID');
 
     $this->add('select', 'dataReferenceField', ts('The field used to search membership'), $referenceFieldOptions);
 
@@ -184,6 +180,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     $defaults = $this->_submitValues;
     if (!$defaults['createContactMode']){
       $defaults['createContactMode']['createMembership'] = 1;
+      $defaults['createContactMode']['updateMembership'] = 1;
     }
     if (!$defaults['createContactOption']) {
       $defaults['createContactOption'] = CRM_Member_Import_Parser::CONTACT_NOIDCREATE;
@@ -221,7 +218,8 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     if(!empty($createContactMode['updateMembership'])){
       $onDuplicate = CRM_Member_Import_Parser::DUPLICATE_UPDATE;
       $this->set('dataReferenceField', $dataReferenceField);
-    }else{
+    }
+    else{
       $onDuplicate = CRM_Member_Import_Parser::DUPLICATE_SKIP;
     }
     $onDuplicate = empty($createContactMode['updateMembership']) ? CRM_Member_Import_Parser::DUPLICATE_SKIP : CRM_Member_Import_Parser::DUPLICATE_UPDATE;

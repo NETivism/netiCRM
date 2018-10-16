@@ -246,7 +246,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     }
 
     $config = CRM_Core_Config::singleton();
-    if(!empty($config->external_membership_id_field_id) && $config->external_membership_id_field_id == $this->_id){
+    if(!empty($config->externalMembershipIdFieldId) && $config->externalMembershipIdFieldId == $this->_id){
       $defaults['is_external_membership_id'] = 1;
     }
 
@@ -528,7 +528,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $type = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $this->_gid, 'extends');
     if($type == 'Membership'){
       $config = CRM_Core_Config::singleton();
-      $current_external_membership_id_field_id = $config->external_membership_id_field_id;
+      $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
       if(!empty($current_external_membership_id_field_id) && $current_external_membership_id_field_id != $this->_id){
         $sql = "SELECT f.label AS field_label, g.title AS group_title, f.custom_group_id FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
         $param = array(1 => array($current_external_membership_id_field_id, Integer));
@@ -892,19 +892,21 @@ AND    option_group_id = %2";
 
     if($type == 'Membership'){
       $config = CRM_Core_Config::singleton();
-      $current_external_membership_id_field_id = $config->external_membership_id_field_id;
+      $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
 
       if(empty($this->_id)){
         $this_field_id = CRM_Core_DAO::singleValueQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'civicrm_custom_field'");
-      }else{
+      }
+      else{
         $this_field_id = $this->_id;
       }
 
       if($current_external_membership_id_field_id != $this_field_id ){
-        $add['external_membership_id_field_id'] = $this_field_id;
-      }else{
+        $add['externalMembershipIdFieldId'] = $this_field_id;
+      }
+      else{
         if(!$this->controller->exportValues('is_external_membership_id')){
-          $add['external_membership_id_field_id'] = False;
+          $add['externalMembershipIdFieldId'] = False;
         }
       }
       CRM_Core_BAO_ConfigSetting::add($add);
