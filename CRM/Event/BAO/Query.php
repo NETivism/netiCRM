@@ -293,7 +293,7 @@ class CRM_Event_BAO_Query {
                     $feeLabels[] = CRM_Core_DAO::escapeString(trim($daoLabel->field_label));
                   }
                   else {
-                    $feeLabels[] = CRM_Core_DAO::escapeString(trim($daoLabel->field_label.' - '.$daoLabel->value_label));
+                    $feeLabels[] = CRM_Core_DAO::escapeString(trim($daoLabel->field_label.'-'.$daoLabel->value_label));
                   }
                 }
               }

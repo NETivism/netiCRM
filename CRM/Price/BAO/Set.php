@@ -613,26 +613,7 @@ WHERE  id = %1";
       }
     }
 
-    $amount_level = array();
-    $totalParticipant = 0;
-    if (is_array($lineItem)) {
-      foreach ($lineItem as $values) {
-        $totalParticipant += $values['participant_count'];
-        if ($values['html_type'] == 'Text') {
-          $amount_level[] = $values['label'] . ': ' . $values['qty'];
-          continue;
-        }
-        $amount_level[] = $values['field_title'].' - '.$values['label'].': '.$values['qty'];
-      }
-    }
-
-    $displayParticipantCount = '';
-    if ($totalParticipant > 0) {
-      $displayParticipantCount = ' ' . ts('Participant Count') . ': ' . $totalParticipant;
-    }
-
-    require_once 'CRM/Core/BAO/CustomOption.php';
-    $params['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amount_level) . $displayParticipantCount . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+    $params['amount_level'] = self::amountLevelText($lineItem);
     $params['amount'] = $totalPrice;
   }
 
@@ -785,6 +766,28 @@ WHERE  pset.id = %1 $where";
     }
 
     return $pricesetFieldCount[$sid];
+  }
+
+  public static function amountLevelText($lineItem) {
+    $amount_level = array();
+    $totalParticipant = 0;
+    if (is_array($lineItem)) {
+      foreach ($lineItem as $values) {
+        $totalParticipant += $values['participant_count'];
+        if ($values['html_type'] == 'Text') {
+          $amount_level[] = $values['label'].'x'.$values['qty'].':'.$values['line_total'];
+          continue;
+        }
+        $amount_level[] = $values['field_title'].'-'.$values['label'].'x'.$values['qty'].':'.$values['line_total'];
+      }
+    }
+
+    $displayParticipantCount = '';
+    if ($totalParticipant > 0) {
+      $displayParticipantCount = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . ts('Participant Count') . ':' . $totalParticipant;
+    }
+
+    return CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amount_level) . $displayParticipantCount . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
   }
 }
 
