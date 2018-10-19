@@ -890,7 +890,7 @@ AND    option_group_id = %2";
 
     $type = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $this->_gid, 'extends');
 
-    if($type == 'Membership'){
+    if($type == 'Membership' && !empty($params['is_external_membership_id'])){
       $config = CRM_Core_Config::singleton();
       $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
 
