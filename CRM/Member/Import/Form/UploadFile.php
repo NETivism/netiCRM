@@ -145,6 +145,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       }
     }
     $referenceFieldOptions['membership_id'] = ts('Membership ID');
+    $this->set('referenceFieldOptions', $referenceFieldOptions);
 
     $this->add('select', 'dataReferenceField', ts('The field used to search membership'), $referenceFieldOptions);
 
@@ -216,20 +217,25 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     $dataReferenceField = $this->controller->exportValue($this->_name, 'dataReferenceField');
 
     if(!empty($createContactMode['updateMembership'])){
+      $importMode += CRM_Member_Import_Parser::IMPORT_UPDATE;
       $onDuplicate = CRM_Member_Import_Parser::DUPLICATE_UPDATE;
       $this->set('dataReferenceField', $dataReferenceField);
     }
     else{
       $onDuplicate = CRM_Member_Import_Parser::DUPLICATE_SKIP;
     }
-    $onDuplicate = empty($createContactMode['updateMembership']) ? CRM_Member_Import_Parser::DUPLICATE_SKIP : CRM_Member_Import_Parser::DUPLICATE_UPDATE;
 
+    if(!empty($createContactMode['createMembership'])){
+      $importMode += CRM_Member_Import_Parser::IMPORT_CREATE;
+      $this->set('createContactOption', $createContactOption);
+    }
+
+    $this->set('importMode', $importMode);
     $this->set('dedupeRuleGroup', $dedupeRuleGroup);
     $this->set('onDuplicate', $onDuplicate);
     $this->set('contactType', $contactType);
     $this->set('dateFormats', $dateFormats);
     $this->set('savedMapping', $savedMapping);
-    $this->set('createContactOption', $createContactOption);
 
     $session = CRM_Core_Session::singleton();
     $session->set("dateTypes", $dateFormats);

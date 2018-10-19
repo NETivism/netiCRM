@@ -195,29 +195,26 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
 
     //CRM-2219 removing other required fields since for updation only
     //membership id is required.
-    if ($this->_onDuplicate == CRM_Member_Import_Parser::DUPLICATE_UPDATE) {
-      $highlightedFieldsArray = array('membership_start_date', 'membership_type_id');
+    $importMode = $this->get('importMode');
+    if ($importMode & CRM_Member_Import_Parser::IMPORT_UPDATE) {
+      $highlightedFields = array_merge($highlightedFields, array('membership_start_date', 'membership_type_id'));
       $dataReferenceField = $this->get('dataReferenceField');
-      $highlightedFieldsArray[] = $dataReferenceField;
-      $this->_mapperFields[$dataReferenceField] .= " (".ts('match to membership record').")";
+      $highlightedFields[] = $dataReferenceField;
+      $this->_mapperFields[$dataReferenceField] .= " " . ts('(match to membership record)');
       if($dataReferenceField != 'membership_id'){
         unset($this->_mapperFields['membership_id']);
       }
     }
-    elseif ($this->_onDuplicate == CRM_Member_Import_Parser::DUPLICATE_SKIP) {
+    if ($importMode & CRM_Member_Import_Parser::IMPORT_CREATE) {
       unset($this->_mapperFields['membership_id']);
-      $highlightedFieldsArray = array('membership_contact_id', 'external_identifier', 'membership_start_date', 'membership_type_id');
-    }
-    foreach ($highlightedFieldsArray as $name) {
-      $highlightedFields[] = $name;
-    }
-    $createContactOption = $this->get('createContactOption');
-    if($createContactOption == CRM_Member_Import_Parser::CONTACT_NOIDCREATE){
+      $highlightedFields = array_merge($highlightedFields, array('membership_contact_id', 'external_identifier', 'membership_start_date', 'membership_type_id'));
+
       $dedupeRuleGroup = $this->get('dedupeRuleGroup');
       if(!empty($dedupeRuleGroup)) {
         $ruleParams = array('id' => $dedupeRuleGroup);
       }
       else{
+        $contactType = $self->get('contactType');
         // default rule group
         $ruleParams = array(
           'contact_type' => $contactType,
@@ -227,7 +224,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       $dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
       $dedupeFields = array_merge($dedupeFields, array('membership_contact_id', 'external_identifier'));
       foreach ($dedupeFields as $fieldName) {
-        $this->_mapperFields[$fieldName] .= ' '. ts('(match to contact)');
+        $this->_mapperFields[$fieldName] .= ' ' . ts('(match to contact)');
         $highlightedFields[] = $fieldName;
       }
     }
@@ -528,27 +525,23 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       foreach ($fields['mapper'] as $mapperPart) {
         $importKeys[] = $mapperPart[0];
       }
+
       // FIXME: should use the schema titles, not redeclare them
       $requiredFields = array(
-        'membership_contact_id' => ts('Contact ID'),
         'membership_type_id' => ts('Membership Type'),
         'membership_start_date' => ts('Membership Start Date'),
       );
 
-      $contactTypeId = $self->get('contactType');
-      $contactTypes = array(
-        CRM_Member_Import_Parser::CONTACT_INDIVIDUAL => 'Individual',
-        CRM_Member_Import_Parser::CONTACT_HOUSEHOLD => 'Household',
-        CRM_Member_Import_Parser::CONTACT_ORGANIZATION => 'Organization',
-      );
-      $createContactOption = $self->get('createContactOption');
-      if($createContactOption != CRM_Member_Import_Parser::CONTACT_DONTCREATE){
+      $importMode = $self->get('importMode');
+
+      if($importMode & CRM_Member_Import_Parser::IMPORT_CREATE){
         $dedupeRuleGroup = $self->get('dedupeRuleGroup');
         if(!empty($dedupeRuleGroup)) {
           $ruleParams = array('id' => $dedupeRuleGroup);
         }
         else{
           // default rule group
+          $contactType = $self->get('contactType');
           $ruleParams = array(
             'contact_type' => $contactType,
             'level' => 'Strict',
@@ -562,28 +555,32 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             $weightSum += $ruleFields[$val];
           }
         }
-        foreach ($ruleFields as $field => $weight) {
-          $fieldMessage .= ' ' . $field . '(weight ' . $weight . ')';
-        }
-
-        foreach ($requiredFields as $field => $title) {
-          if (!in_array($field, $importKeys)) {
-            if ($field == 'membership_contact_id') {
-              if ((($weightSum >= $threshold || in_array('external_identifier', $importKeys)) &&
-                  $self->_onDuplicate != CRM_Member_Import_Parser::DUPLICATE_UPDATE
-                ) ||
-                in_array('membership_id', $importKeys)
-              ) {
-                continue;
-              }
-              else {
-                $errors['_qf_default'] .= ts('Missing required contact matching fields.') . " $fieldMessage " . ts('(Sum of all weights should be greater than or equal to threshold: %1).', array(1 => $threshold)) . ' ' . ts('(OR Membership ID if update mode.)') . '<br />';
-              }
-            }
-            else {
-              $errors['_qf_default'] .= ts('Missing required field: %1', array(1 => $title)) . '<br />';
-            }
+        if($weightSum < $threshold){
+          $daoContact = new CRM_Contact_DAO_Contact();
+          $daoEmail = new CRM_Core_DAO_Email();
+          $daoPhone = new CRM_Core_DAO_Phone();
+          $daoAddress = new CRM_Core_DAO_Address();
+          $fields = $daoContact->fields() + $daoEmail->fields() + $daoPhone->fields() + $daoAddress->fields();
+          unset($daoContact);
+          unset($daoEmail);
+          unset($daoPhone);
+          unset($daoAddress);
+          foreach ($ruleFields as $field => $weight) {
+            $fieldLable = $fields[$field]['title'];
+            $fieldMessage .= ' ' . $fieldLable . ' (' . ts('Weight') . ': ' . $weight . ')';
           }
+          $errors['_qf_default'] .= ts('Missing required contact matching fields.') . " $fieldMessage " . ts('(Sum of all weights should be greater than or equal to threshold: %1).', array(1 => $threshold)) . '<br />'; 
+        }
+      }else{
+        // $importMode is CRM_Member_Import_Parser::IMPORT_UPDATE AND not IMPORT_CREATE
+        $dataReferenceField = $self->get('dataReferenceField');
+        $referenceFieldOptions = $self->get('referenceFieldOptions');
+        $requiredFields[$dataReferenceField] = $referenceFieldOptions[$dataReferenceField];
+      }
+
+      foreach ($requiredFields as $field => $title) {
+        if (!in_array($field, $importKeys)) {
+          $errors['_qf_default'] .= ts('Missing required field: %1', array(1 => $title)) . '<br />';
         }
       }
     }

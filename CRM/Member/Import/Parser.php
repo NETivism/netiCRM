@@ -43,6 +43,11 @@ abstract class CRM_Member_Import_Parser {
   CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
 
   /**
+   * import mode
+   */ 
+  CONST IMPORT_CREATE = 1, IMPORT_UPDATE = 2;
+
+  /**
    * import contact when import member
    */
   CONST CONTACT_NOIDCREATE = 1, CONTACT_AUTOCREATE = 2, CONTACT_DONTCREATE = 4;
