@@ -103,7 +103,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     $error = array();
 
-    if (empty($this->_paymentProcessor['user_name'])) {
+    if (empty($this->_paymentProcessor['user_name']) && strlen($this->_paymentProcessor['user_name']) == 0) {
       $error[] = ts('UserID is not set in the Administer CiviCRM &raquo; Payment Processor.');
     }
 
@@ -141,6 +141,16 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    *
    */
   function doTransferCheckout(&$params, $component) {
+    $cid = $params['contributionID'];
+    $iid = $params['civicrm_instrument_id'];
+    if($cid && $iid){
+      $options = array(
+        1 => array($iid, 'Integer'),
+        2 => array($cid, 'Integer'),
+      );
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET payment_instrument_id = %1 WHERE id = %2", $options);
+    }
+
     if($this->_instrumentType == 'linepay'){
       $this->_mobilePayment->doRequest($params);
       return;
@@ -348,7 +358,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
   static function addNote($note, &$contribution){
     require_once 'CRM/Core/BAO/Note.php';
-    $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n\nError: ".$note."\n===============================\n";
+    $note = date("Y/m/d H:i:s "). ts("Transaction record").": \n\n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($note_exists)){
       $note_id = array( 'id' => reset(array_keys($note_exists)) );

@@ -97,10 +97,7 @@ class CRM_Core_Payment_LinePay {
       CRM_Utils_System::redirect($this->_linePayAPI->_response->info->paymentUrl->web);
     }
     else{
-      $contribution = self::prepareContribution($contributionId);
-      $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
-      $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
-      CRM_Core_Payment_Mobile::addNote($note, $contribution);
+      $this->addResponseMessageToNote($contributionId);
       CRM_Core_Error::fatal($note);
     }
   }
@@ -119,7 +116,7 @@ class CRM_Core_Payment_LinePay {
       $params = $get;
     }
     if(empty($params['ppid'])){
-      CRM_Core_Error::fatal('PaymentProcessor id must be given in url query.');
+      CRM_Core_Error::fatal(ts('Could not find payment processor meta information'));
     }
     $linePayAPI = new CRM_Core_Payment_LinePay($params['ppid'], 'confirm');
     $linePayAPI->doConfirm($params);
@@ -163,9 +160,7 @@ class CRM_Core_Payment_LinePay {
       }
       else{
         $ipn->failed($objects, $transaction, $error);
-        $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
-        $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
-        CRM_Core_Payment_Mobile::addNote($note, $contribution);
+        $this->addResponseMessageToNote($contribution);
         $thankyou_url = self::prepareThankYouUrl($params['qfKey'], True);
       }
     }
@@ -174,6 +169,95 @@ class CRM_Core_Payment_LinePay {
     }
 
     CRM_Utils_System::redirect($thankyou_url);
+  }
+
+  /**
+   * $get = array(
+   *   'id' => $contribution->id,
+   * )
+   */
+  static function query($url_params, $get = array()){
+    if(empty($get)){
+      foreach ($_GET as $key => $value) {
+        if($key == 'q')continue;
+        $get[$key] = $value;
+      }
+    }
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $get['id'];
+    if($contribution->find(TRUE)){
+      $result_note = ts('Update the contribution manually.');
+
+      // Sync to linapay server
+      $ppid = $contribution->payment_processor_id;
+      $linePay = new CRM_Core_Payment_LinePay($ppid, 'query');
+
+      $params = array(
+        'orderId' => $contribution->id,
+        'transactionId' => $contribution->trxn_id,
+      );
+      $linePay->_linePayAPI->request($params);
+      if(!empty($linePay->_linePayAPI->_response->info)){
+        $info = $linePay->_linePayAPI->_response->info;
+        if(is_array($info)){
+          foreach ($info as $transaction) {
+            if($transaction->transactionId == $contribution->trxn_id)break;
+          }
+        }
+
+        // record original cancel_date, status_id data.
+        $origin_cancel_date = $contribution->cancel_date;
+        $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
+        $origin_status_id = $contribution->contribution_status_id;
+
+        // check info
+        $result_note .= "\n".ts('Sync to Linepay server success.');
+
+        // check refundList
+        if(!empty($transaction->refundList)){
+          // find refund, check original status
+          $refund = $transaction->refundList[0];
+          $cancel_date = $refund->refundTransactionDate;
+          $cancel_date = date('YmdHis', strtotime($cancel_date));
+          $contribution->cancel_date = $cancel_date;
+          $contribution->contribution_status_id = 3;
+          if($origin_cancel_date == $contribution->cancel_date && $origin_status_id == $contribution->contribution_status_id){
+            $result_note .= "\n".ts('There are no any change.');
+          }else{
+            $contribution->save();
+            $result_note .= "\n".ts('The contribution has been canceled.');
+          }
+        }
+        // else{
+
+        // }
+        // finish check info
+        CRM_Core_Payment_Mobile::addNote($result_note, $contribution);
+
+      }
+      else{
+        $result_note = ts('The response has errors, please check the note.');
+        $linePay->addResponseMessageToNote($contribution);
+
+      }
+      // finish sync to linepay server
+      unset($contribution);
+
+      $query = http_build_query($get);
+      $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
+      CRM_Core_Error::statusBounce($result_note, $redirect);
+    }else{
+      CRM_Core_Error::fatal(ts('Wrong contribution ID in url query'));
+    }
+  }
+
+  private function addResponseMessageToNote($contribution){
+    if(is_numeric($contribution)){
+      $contribution = self::prepareContribution($contribution);
+    }
+    $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
+    $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
+    CRM_Core_Payment_Mobile::addNote($note, $contribution);
   }
 
   private static function prepareContribution($contributionId){

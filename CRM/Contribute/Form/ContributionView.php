@@ -64,6 +64,13 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $this->assign('has_expire_date', TRUE);
       $this->assign('expire_date', $values['expire_date']);
     }
+    if($instrument == 'Line Pay'){
+      $get = $_GET;
+      unset($get['q']);
+      $query = http_build_query($get);
+      $sync_url = CRM_Utils_System::url('civicrm/linepay/query', $query);
+      $this->assign('sync_url', $sync_url);
+    }
 
     $softParams = array('contribution_id' => $values['contribution_id']);
     if ($softContribution = CRM_Contribute_BAO_Contribution::getSoftContribution($softParams, TRUE)) {
