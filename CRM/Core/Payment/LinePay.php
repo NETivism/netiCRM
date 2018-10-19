@@ -101,11 +101,14 @@ class CRM_Core_Payment_LinePay {
       $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
       $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
       CRM_Core_Payment_Mobile::addNote($note, $contribution);
-      CRM_Core_Error::fatal('PaymentProcessor id must be given in url query.');
+      CRM_Core_Error::fatal($note);
     }
   }
 
-  static function confirm($get = array()){
+  /**
+   * $url_params should be array('civicrm', 'contribute', 'transact')
+   */
+  static function confirm($url_params, $get = array()){
     if(empty($get)){
       foreach ($_GET as $key => $value) {
         if($key == 'q')continue;
