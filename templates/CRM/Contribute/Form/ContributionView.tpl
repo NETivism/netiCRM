@@ -139,7 +139,14 @@
       <td>{$expire_date|crmDate}</td>
   </tr>
   {/if}
-	
+
+  {if $sync_url}
+  <tr>
+      <td class="label">{ts}Sync Data with Payment Processor Provider{/ts}</td>
+      <td><a href="{$sync_url}">{ts}Sync Now{/ts}</a></td>
+  </tr>
+  {/if}
+
 	{if $payment_instrument eq 'Check'}
         <tr>
             <td class="label">{ts}Check Number{/ts}</td>
