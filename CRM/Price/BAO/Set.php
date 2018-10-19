@@ -619,16 +619,16 @@ WHERE  id = %1";
       foreach ($lineItem as $values) {
         $totalParticipant += $values['participant_count'];
         if ($values['html_type'] == 'Text') {
-          $amount_level[] = $values['label'] . ' - ' . $values['qty'];
+          $amount_level[] = $values['label'] . ': ' . $values['qty'];
           continue;
         }
-        $amount_level[] = $values['field_title'].'-'.$values['label'].': '.$values['qty'];
+        $amount_level[] = $values['field_title'].' - '.$values['label'].': '.$values['qty'];
       }
     }
 
     $displayParticipantCount = '';
     if ($totalParticipant > 0) {
-      $displayParticipantCount = ' ' . ts('Participant Count') . ' -' . $totalParticipant;
+      $displayParticipantCount = ' ' . ts('Participant Count') . ': ' . $totalParticipant;
     }
 
     require_once 'CRM/Core/BAO/CustomOption.php';

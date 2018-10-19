@@ -653,7 +653,13 @@ ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
     $levels = array();
     while ($dao->fetch()) {
       if ($dao->field_label) {
-        $levels[$dao->field_label]['priceset:'.$dao->id] = $dao->field_label.' - '.$dao->label . ": " . $dao->amount;
+        if ($dao->field_label === $dao->label) {
+          // when text field, we only need first label
+          $levels[$dao->field_label]['priceset:'.$dao->id] = $dao->field_label.": " . $dao->amount;
+        }
+        else {
+          $levels[$dao->field_label]['priceset:'.$dao->id] = $dao->field_label.' - '.$dao->label . ": " . $dao->amount;
+        }
       }
       else {
         $levels['priceset:'.$dao->id] = $dao->label.': '. $dao->amount;
