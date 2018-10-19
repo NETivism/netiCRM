@@ -64,7 +64,8 @@ class CRM_Core_Payment_LinePay {
       $event->id = $params['eventID'];
       $event->find(1);
       $page_title = $event->title;
-    }else{
+    }
+    else{
       $contribution_pgae = new CRM_Contribute_DAO_ContributionPage();
       $contribution_pgae->id = $params['contributionPageID'];
       $contribution_pgae->find(1);
@@ -94,19 +95,28 @@ class CRM_Core_Payment_LinePay {
         $contribution->save();
       }
       CRM_Utils_System::redirect($this->_linePayAPI->_response->info->paymentUrl->web);
-    }else{
+    }
+    else{
       $contribution = self::prepareContribution($contributionId);
       $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
       $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
       CRM_Core_Payment_Mobile::addNote($note, $contribution);
-      CRM_Core_Error::fatal('PaymentProcessor id must be given in url query.');
+      CRM_Core_Error::fatal($note);
     }
   }
 
-  static function confirm(){
-    foreach ($_GET as $key => $value) {
-      if($key == 'q')continue;
-      $params[$key] = $value;
+  /**
+   * $url_params should be array('civicrm', 'contribute', 'transact')
+   */
+  static function confirm($url_params, $get = array()){
+    if(empty($get)){
+      foreach ($_GET as $key => $value) {
+        if($key == 'q')continue;
+        $params[$key] = $value;
+      }
+    }
+    else{
+      $params = $get;
     }
     if(empty($params['ppid'])){
       CRM_Core_Error::fatal('PaymentProcessor id must be given in url query.');
@@ -135,7 +145,8 @@ class CRM_Core_Payment_LinePay {
       $input['component'] = 'event';
       $ids['participant'] = $params['pid'];
       $ids['event'] = $params['eid'];
-    }else{
+    }
+    else{
       $input['component'] = 'contribute';
     }
     $ids['contribution'] = $contribution->id;
@@ -149,14 +160,16 @@ class CRM_Core_Payment_LinePay {
         $objects['contribution']->receive_date = date('YmdHis');
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
         $thankyou_url = self::prepareThankYouUrl($params['qfKey']);
-      }else{
+      }
+      else{
         $ipn->failed($objects, $transaction, $error);
         $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
         $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
         CRM_Core_Payment_Mobile::addNote($note, $contribution);
         $thankyou_url = self::prepareThankYouUrl($params['qfKey'], True);
       }
-    }else{
+    }
+    else{
       $thankyou_url = self::prepareThankYouUrl($params['qfKey'], True);
     }
 

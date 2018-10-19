@@ -124,7 +124,8 @@ class CRM_Core_Payment_LinePayAPI {
       $this->_apiURL .= $this->_apiTypes[$this->_apiType];
       if(in_array($this->_apiType, $this->_apiGetMethodTypes)){
         $this->_apiMethod = 'GET';
-      }else{
+      }
+      else{
         $this->_apiMethod = 'POST';
       }
     }
