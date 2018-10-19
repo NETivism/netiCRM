@@ -228,9 +228,9 @@ class CRM_Core_Payment_LinePay {
             $result_note .= "\n".ts('The contribution has been canceled.');
           }
         }
-        // else{
-
-        // }
+        else{
+          $result_note .= "\n".ts('There are no any change.');
+        }
         // finish check info
         CRM_Core_Payment_Mobile::addNote($result_note, $contribution);
 

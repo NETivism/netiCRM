@@ -1,7 +1,7 @@
 <?php
 require_once 'CiviTest/CiviUnitTestCase.php';
 
-class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
+class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   public $DBResetRequired = FALSE;
   protected $_apiversion;
   protected $_processor;
@@ -17,9 +17,6 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     // test if drupal bootstraped
     if(!defined('DRUPAL_ROOT')){
       die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
-    }
-    if(!module_exists('civicrm_allpay')){
-      die("You must enable civicrm_allpay module first before test.");
     }
     $payment_page = variable_get('civicrm_demo_payment_page', array());
     $class_name = 'Payment_Mobile';

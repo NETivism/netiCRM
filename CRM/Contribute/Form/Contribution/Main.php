@@ -594,10 +594,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       }
     }
     if ($this->_pcpId) {
-      require_once 'CRM/Contribute/BAO/PCP.php';
-      if ($pcpSupporter = CRM_Contribute_BAO_PCP::displayName($this->_pcpId)) {
-        $this->assign('pcpSupporterText', ts('This contribution is being made thanks to effort of <strong>%1</strong>, who supports our campaign. You can support it as well - once you complete the donation, you will be able to create your own Personal Campaign Page!', array(1 => $pcpSupporter)));
-      }
       $this->assign('pcp', TRUE);
       $this->add('checkbox', 'pcp_display_in_roll', ts('Show my contribution in the public honor roll'), NULL, NULL,
         array('onclick' => "showHideByValue('pcp_display_in_roll','','nameID|nickID|personalNoteID','block','radio',false); pcpAnonymous( );")

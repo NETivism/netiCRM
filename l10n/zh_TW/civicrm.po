@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-10-08 08:51+0000\n"
+"PO-Revision-Date: 2018-10-19 07:45+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46692,7 +46692,7 @@ msgstr "作為外部會員編號欄位"
 msgid ""
 "Is this field used for corresponding membership data when importing? The "
 "external membership ID field only can apply to one custom field at one time."
-msgstr "此欄位是否當作對應外部會員資料的編號？通常用於匯入資料來源有其他的編號系統。此欄位同一時間只能設定於一個自訂欄位。"
+msgstr "此欄位是否當作對應外部會員資料的編號？通常用於匯入資料來源有其他的編號系統。此功能同一時間只能設定於一個自訂欄位。"
 
 msgid ""
 "If you enable this, the origin external membership ID field setting will be "
@@ -46701,3 +46701,29 @@ msgstr "如果啟用此項目，原外部會員編號欄位設定將會被取代
 
 msgid "Current external membership ID field is %1"
 msgstr "目前用於外部會員編號的自訂欄位為%1"
+
+#: CRM/Core/Payment/LinePay.php
+msgid "Update the contribution manually."
+msgstr "手動觸發更新捐款。"
+
+msgid "There are no any change."
+msgstr "沒有任何更動。"
+
+msgid "The contribution has been canceled."
+msgstr "這筆捐款已取消。"
+
+msgid "The response has errors, please check the note."
+msgstr "金流商回傳資料有誤，請檢查註記以取得進一步說明。"
+
+msgid "Wrong contribution ID in url query"
+msgstr "網址代入的捐款編號不正確。"
+
+msgid "Sync to Linepay server success."
+msgstr "成功與 Linepay 伺服器同步資料。"
+
+#: templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Sync Data with Payment Processor Provider"
+msgstr "與金流商同步資料"
+
+msgid "Sync Now"
+msgstr "立刻同步"

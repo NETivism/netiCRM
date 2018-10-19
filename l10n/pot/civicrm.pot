@@ -46540,3 +46540,29 @@ msgstr ""
 
 msgid "Current external membership ID field is %1"
 msgstr ""
+
+#: CRM/Core/Payment/LinePay.php
+msgid "Update the contribution manually."
+msgstr ""
+
+msgid "There are no any change."
+msgstr ""
+
+msgid "The contribution has been canceled."
+msgstr ""
+
+msgid "The response has errors, please check the note."
+msgstr ""
+
+msgid "Wrong contribution ID in url query"
+msgstr ""
+
+msgid "Sync to Linepay server success."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Sync Data with Payment Processor Provider"
+msgstr ""
+
+msgid "Sync Now"
+msgstr ""
