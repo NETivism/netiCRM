@@ -83,13 +83,6 @@
     {$intro_text}
   </div>
 <!--intro-separator-->
-
-  {if $pcpSupporterText}
-    <div class="crm-section pcpSupporterText-section">
-      <div class="content">{$pcpSupporterText}</div>
-    </div>
-  {/if}
-
   {* User account registration option. Displays if enabled for one of the profiles on this page. *}
   {include file="CRM/common/CMSUser.tpl"}
   {include file="CRM/Contribute/Form/Contribution/MembershipBlock.tpl" context="makeContribution"}
