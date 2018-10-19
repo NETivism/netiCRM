@@ -285,9 +285,16 @@ class CRM_Event_BAO_Query {
             list($priceType, $val) = explode(':', $val);
             if ($priceType == 'priceset') {
               if (is_numeric($val)) {
-                $label = CRM_Core_DAO::singleValueQuery("SELECT CONCAT(cf.label, '-', cv.label) FROM civicrm_price_field_value cv INNER JOIN civicrm_price_field cf ON cv.price_field_id = cf.id WHERE cv.id = %1", array(1 => array($val, 'Integer')));
-                if ($label) {
-                  $feeLabels[] = CRM_Core_DAO::escapeString(trim($label));
+                $daoLabel = CRM_Core_DAO::executeQuery("SELECT cf.label as field_label, cv.label as value_label FROM civicrm_price_field_value cv INNER JOIN civicrm_price_field cf ON cv.price_field_id = cf.id WHERE cv.id = %1 LIMIT 1", array(1 => array($val, 'Integer')));
+                $daoLabel->fetch();
+
+                if ($daoLabel) {
+                  if ($daoLabel->field_label === $daoLabel->value_label) {
+                    $feeLabels[] = CRM_Core_DAO::escapeString(trim($daoLabel->field_label));
+                  }
+                  else {
+                    $feeLabels[] = CRM_Core_DAO::escapeString(trim($daoLabel->field_label.' - '.$daoLabel->value_label));
+                  }
                 }
               }
               else {
@@ -596,35 +603,7 @@ class CRM_Event_BAO_Query {
       $form->addSelect('participant_fee_id', ts('Fee Level'), $levels, array('multiple' => 'multiple'));
     }
     else {
-      /* 
-      // remove this because performance issue
-      $levels = CRM_Price_BAO_Field::getPriceLevels($where);
-      $optionGruops = $eventIds = $eventTitles = array();
-      $dao = CRM_Core_DAO::executeQuery("SELECT id, name FROM civicrm_option_group WHERE name LIKE 'civicrm_event.amount.%'");
-      while($dao->fetch()) {
-        $optionGroups[] = $dao->id;
-        $eid = str_replace('civicrm_event.amount.', '', $dao->name);
-        if (is_numeric($eid)) {
-          $eventIds['option:'.$dao->id] = $eid;
-        }
-      }
-      $eventIdStr = implode(',', $eventIds);
-      $dao = CRM_Core_DAO::executeQuery("SELECT id, title FROM civicrm_event WHERE id IN ($eventIdStr)");
-      while($dao->fetch()) {
-        $eventTitles[$dao->id] = $dao->title;
-      }
-      $optionGroups = implode(',', $optionGroups);
-      $dao = CRM_Core_DAO::executeQuery("SELECT id, label, value, option_group_id FROM civicrm_option_value WHERE option_group_id IN ($optionGroups) ORDER BY option_group_id DESC, weight ASC");
-      while($dao->fetch()) {
-        if (!empty($eventIds[$dao->option_group_id])) {
-          $eventTitle = $eventTitles[$eventIds[$dao->option_group_id]];
-          $levels[$eventTitle]['option:'.$dao->id] = $dao->label . ': ' .$dao->value;
-        }
-        else {
-          $levels[ts('Others')]['option:'.$dao->id] = $dao->label. ': ' .$dao->value;
-        }
-      }
-      */
+      // performance issue, use only text search
       $form->addElement('text', 'participant_fee_id', ts('Fee Level'));
     }
 
