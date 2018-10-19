@@ -603,6 +603,9 @@ SELECT civicrm_custom_group.name as name,
       if (CRM_Utils_Array::value(0, $submittedRole)) {
         $roleID = $submittedRole[0];
       }
+      else {
+        $defaults[$this->_id]["role_id"][1] = 1;
+      }
       $submittedEvent = $this->getElementValue('event_id');
       if ($submittedEvent[0]) {
         $eventID = $submittedEvent[0];
