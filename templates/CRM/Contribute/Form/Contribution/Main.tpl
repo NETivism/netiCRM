@@ -112,6 +112,7 @@
                 {ts}To modify or cancel future contributions please contact us{/ts}
                 {/if}
             {/if}
+          </span>
         </p>
       </div>
     </div>{*recur section*}
