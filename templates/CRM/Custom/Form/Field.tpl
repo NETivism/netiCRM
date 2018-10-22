@@ -117,6 +117,14 @@ function custom_option_html_type( ) {
         cj("#optionsPerLine").hide();
     }
 
+    {/literal}{if $form.is_external_membership_id}{literal}
+    if( html_type_name == 'Text'){
+        cj('.crm-custom-field-form-block-is_external_membership_id').show();
+    }else{
+        cj('.crm-custom-field-form-block-is_external_membership_id').hide();
+    }
+    {/literal}{/if}{literal}
+
     {/literal}{if $action eq 1}{literal}
     clearSearchBoxes( );
     {/literal}{/if}{literal}
@@ -146,6 +154,24 @@ function custom_option_html_type( ) {
             <td class="label">{$form.text_length.label}</td>
             <td class="html-adjust">{$form.text_length.html}</td> 
         </tr>
+
+        {if $form.is_external_membership_id}
+        <tr class="crm-custom-field-form-block-is_external_membership_id">
+            <td class="label">{$form.is_external_membership_id.label}</td>
+            <td class="html-adjust">{$form.is_external_membership_id.html}
+            {if $action neq 4}
+                <span class="description">
+                    {ts}Is this field used for corresponding membership data when importing? The external membership ID field only can apply to one custom field at one time.{/ts}<br/>
+                    {if $current_external_membership_id_field_title}
+                        {capture assign=group_url}{crmURL p='civicrm/admin/custom/group/field' q="reset=1&action=browse&gid=`$current_external_membership_id_group_id`" h=0 a=1 fe=1}{/capture}
+                        {capture assign=group_link}<a href="{$group_url}" target="_blank">{$current_external_membership_id_group_title}: {$current_external_membership_id_field_title}</a>{/capture}
+                        {ts}If you enable this, the origin external membership ID field setting will be replaced.{/ts}<br/>{ts 1=$group_link}Current external membership ID field is %1{/ts}
+                    {/if}
+                </span>
+            {/if}
+            </td>
+        </tr>
+        {/if}
         
         <tr id='showoption' {if $action eq 1 or $action eq 2 }class="hide-block"{/if}>
             <td colspan="2">
