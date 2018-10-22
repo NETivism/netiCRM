@@ -245,6 +245,11 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
       $dontShowLink = substr($defaults['html_type'], -14) == 'State/Province' || substr($defaults['html_type'], -7) == 'Country' ? 1 : 0;
     }
 
+    $config = CRM_Core_Config::singleton();
+    if(!empty($config->externalMembershipIdFieldId) && $config->externalMembershipIdFieldId == $this->_id){
+      $defaults['is_external_membership_id'] = 1;
+    }
+
     if (isset($dontShowLink)) {
       $this->assign('dontShowLink', $dontShowLink);
     }
@@ -517,6 +522,27 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
         'done',
         ts('Done'),
         array('onclick' => "location.href='$url'")
+      );
+    }
+
+    $type = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $this->_gid, 'extends');
+    if($type == 'Membership'){
+      $config = CRM_Core_Config::singleton();
+      $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
+      if(!empty($current_external_membership_id_field_id) && $current_external_membership_id_field_id != $this->_id){
+        $sql = "SELECT f.label AS field_label, g.title AS group_title, f.custom_group_id FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
+        $param = array(1 => array($current_external_membership_id_field_id, Integer));
+        $dao = CRM_Core_DAO::executeQuery($sql, $param);
+        if($dao->fetch()){
+          $this->assign('current_external_membership_id_field_title', $dao->field_label);
+          $this->assign('current_external_membership_id_group_title', $dao->group_title);
+          $this->assign('current_external_membership_id_group_id', $dao->custom_group_id);
+        }
+      }
+
+      $this->addElement('checkbox',
+        'is_external_membership_id',
+        ts('External Membership ID Field')
       );
     }
   }
@@ -860,6 +886,34 @@ AND    option_group_id = %2";
       $dataTypeKey = $params['data_type'][0];
       $params['html_type'] = self::$_dataToHTML[$params['data_type'][0]][$params['data_type'][1]];
       $params['data_type'] = self::$_dataTypeKeys[$params['data_type'][0]];
+    }
+
+    $type = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $this->_gid, 'extends');
+
+    if($type == 'Membership' && !empty($params['is_external_membership_id'])){
+      $config = CRM_Core_Config::singleton();
+      $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
+
+      if(empty($this->_id)){
+        $this_field_id = CRM_Core_DAO::singleValueQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'civicrm_custom_field'");
+      }
+      else{
+        $this_field_id = $this->_id;
+      }
+
+      if($current_external_membership_id_field_id != $this_field_id ){
+        $add['externalMembershipIdFieldId'] = $this_field_id;
+      }
+      else{
+        if(!$this->controller->exportValues('is_external_membership_id')){
+          $add['externalMembershipIdFieldId'] = False;
+        }
+      }
+      CRM_Core_BAO_ConfigSetting::add($add);
+
+      // also delete the CRM_Core_Config key from the database
+      $cache = &CRM_Utils_Cache::singleton();
+      $cache->delete('CRM_Core_Config');
     }
 
     //fix for 'is_search_range' field.

@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-10-19 07:45+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-10-19 11:14+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10315,19 +10315,19 @@ msgstr "自動更新會員資格"
 
 #: CRM/Contribute/DAO/ContributionSoft.php
 msgid "Soft Contribution ID"
-msgstr ""
+msgstr "間接貢獻編號"
 
 #: CRM/Contribute/DAO/ContributionSoft.php
 msgid "Pcp Display In Roll"
-msgstr ""
+msgstr "個人募款頁-列於名冊"
 
 #: CRM/Contribute/DAO/ContributionSoft.php
 msgid "Pcp Roll Nickname"
-msgstr ""
+msgstr "個人募款頁-顯示暱稱"
 
 #: CRM/Contribute/DAO/ContributionSoft.php
 msgid "Pcp Personal Note"
-msgstr ""
+msgstr "個人募款頁-個人留言"
 
 #: CRM/Contribute/DAO/PCPBlock.php
 msgid "Tellfriend Limit"
@@ -19097,7 +19097,7 @@ msgstr "間接貢獻人姓名"
 
 #: CRM/Report/Form/Contribute/SoftCredit.php
 msgid "Soft Credit Id"
-msgstr ""
+msgstr "間接貢獻紀錄編號"
 
 #: CRM/Report/Form/Contribute/SoftCredit.php
 msgid "Contributor Name"
@@ -42404,11 +42404,11 @@ msgstr "間接貢獻"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Contribution Soft Credit ID"
-msgstr "間接貢獻記錄編號"
+msgstr "間接貢獻紀錄編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The numeric ID of the Soft Credit"
-msgstr "間接貢獻記錄編號"
+msgstr "間接貢獻的數字編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The amount of the soft credit"

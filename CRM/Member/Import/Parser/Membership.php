@@ -411,16 +411,27 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       $indieFields = $tempIndieFields;
     }
 
-    $formatValues = array();
+    $paramValues = array();
     foreach ($params as $key => $field) {
       if ($field == NULL || $field === '') {
         continue;
       }
 
-      $formatValues[$key] = $field;
+      $paramValues[$key] = $field;
     }
 
-    $formatError = _civicrm_membership_formatted_param($formatValues, $formatted, TRUE);
+    //import contribution record according to select contact type
+    if ($this->_createContactOption !== self::CONTACT_DONTCREATE &&
+      ($paramValues['membership_contact_id'] || $paramValues['external_identifier'])
+    ) {
+      $paramValues['contact_type'] = $this->_contactType;
+    }
+    elseif ($onDuplicate == CRM_Member_Import_Parser::DUPLICATE_UPDATE && $paramValues[$this->_dataReferenceField]
+    ) {
+      $paramValues['contact_type'] = $this->_contactType;
+    }
+
+    $formatError = _civicrm_membership_formatted_param($paramValues, $formatted, TRUE);
 
     if ($formatError) {
       array_unshift($values, $formatError['error_message']);
@@ -443,10 +454,20 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         array_unshift($values, "Required parameter missing: Status");
         return CRM_Member_Import_Parser::ERROR;
       }
+      if($this->_dataReferenceField == 'membership_id' && $paramValues['membership_id']){
+        $membership_id = $paramValues['membership_id'];
+      }
+      else if(preg_match('/^custom_/', $this->_dataReferenceField) ){
+        $field_id = str_replace('custom_', '', $this->_dataReferenceField);
+        list($custom_table, $custom_field, $ignore) = CRM_Core_BAO_CustomField::getTableColumnGroup($field_id);
+        $sql = "SELECT entity_id FROM $custom_table WHERE $custom_field = %1";
+        $queryParams = array(1 => array($paramValues[$this->_dataReferenceField], 'String'));
+        $membership_id = CRM_Core_DAO::singleValueQuery($sql, $queryParams);
+      }
 
-      if ($formatValues['membership_id']) {
+      if ($membership_id) {
         $dao = new CRM_Member_BAO_Membership();
-        $dao->id = $formatValues['membership_id'];
+        $dao->id = $membership_id;
         if ($dao->find(TRUE)) {
           $dates = array('join_date', 'start_date', 'end_date');
           foreach ($dates as $v) {
@@ -456,26 +477,41 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
           }
           $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
             CRM_Core_DAO::$_nullObject,
-            $formatValues['membership_id'],
+            $membership_id,
             'Membership'
           );
 
           $ids = array(
-            'membership' => $formatValues['membership_id'],
+            'membership' => $membership_id,
             'userId' => $session->get('userID'),
           );
           $newMembership = &CRM_Member_BAO_Membership::create($formatted, $ids, TRUE, 'Membership Renewal');
+          // Workaround: why $formatted have reminder_date value 'null'
+          // reference: CRM_Member_BAO_Membership::add(&$params, &$ids)
+          if($formatted['reminder_date'] == 'null'){
+            unset($formatted['reminder_date']);
+          }
+          $this->_newMemberships[] = $newMembership->id;
+          if(empty($paramValues['membership_contact_id'])){
+            $paramValues['membership_contact_id'] = $newMembership->contact_id;
+          }
+
           if (civicrm_error($newMembership)) {
-            array_unshift($values, $newMembership['is_error'] . " for Membership ID " . $formatValues['membership_id'] . ". Row was skipped.");
+            if($this->_dataReferenceField == 'membership_id'){
+              array_unshift($values, $newMembership['is_error'] . " for Membership ID " . $paramValues['membership_id'] . ". Row was skipped.");
+            }
+            else{
+              array_unshift($values, $newMembership['is_error'] . " for Custom field and ID: " . $this->_dataReferenceField . ": " . $paramValues[$this->_dataReferenceField] . ". Row was skipped.");
+            }
             return CRM_Member_Import_Parser::ERROR;
           }
-          else {
+          else{
             $this->_newMemberships[] = $newMembership->id;
             return CRM_Member_Import_Parser::VALID;
           }
         }
         else {
-          array_unshift($values, "Matching Membership record not found for Membership ID " . $formatValues['membership_id'] . ". Row was skipped.");
+          array_unshift($values, "Matching Membership record not found for Membership ID " . $paramValues['membership_id'] . ". Row was skipped.");
           return CRM_Member_Import_Parser::ERROR;
         }
       }
@@ -492,7 +528,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $endDate = CRM_Utils_Date::customFormat($formatted['end_date'], '%Y-%m-%d');
     $joinDate = CRM_Utils_Date::customFormat($formatted['join_date'], '%Y-%m-%d');
 
-    $checkContactId = CRM_Import_Parser_Contact::checkContactById($params, 'membership_contact_id');
+    $checkContactId = $this->checkContactById($paramValues);
     $errDisp = "";
 
     if ($this->_createContactOption == self::CONTACT_DONTCREATE) {
@@ -513,8 +549,8 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     // using duplicate rule when we don't have contact id and external identifier
     if (empty($checkContactId)) {
       //retrieve contact id using contact dedupe rule
-      $formatValues['contact_type'] = $this->_contactType;
-      $found = civicrm_check_contact_dedupe($formatValues);
+      $paramValues['contact_type'] = $this->_contactType;
+      $found = civicrm_check_contact_dedupe($paramValues);
 
       if (civicrm_duplicate($found)) {
         $matchedIDs = explode(',', $found['error_message']['params'][0]);
@@ -676,16 +712,15 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     }
     elseif (!CRM_Utils_Array::value('is_override', $formatted)) {
       if (empty($calcStatus)) {
-        array_unshift($values, "Status in import row (" . $formatValues['status_id'] . ") does not match calculated status based on your configured Membership Status Rules. Record was not imported.");
+        array_unshift($values, "Status in import row (" . $paramValues['status_id'] . ") does not match calculated status based on your configured Membership Status Rules. Record was not imported.");
         return CRM_Member_Import_Parser::ERROR;
       }
       elseif ($formatted['status_id'] != $calcStatus['id']) {
         //Status Hold" is either NOT mapped or is FALSE
-        array_unshift($values, "Status in import row (" . $formatValues['status_id'] . ") does not match calculated status based on your configured Membership Status Rules (" . $calcStatus['name'] . "). Record was not imported.");
+        array_unshift($values, "Status in import row (" . $paramValues['status_id'] . ") does not match calculated status based on your configured Membership Status Rules (" . $calcStatus['name'] . "). Record was not imported.");
         return CRM_Member_Import_Parser::ERROR;
       }
     }
-
     $newMembership = civicrm_contact_membership_create($formatted);
     if (civicrm_error($newMembership)) {
       array_unshift($values, $newMembership['error_message']);
@@ -695,5 +730,42 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $this->_newMemberships[] = $newMembership['id'];
     return CRM_Member_Import_Parser::VALID;
   }
-}
 
+
+  function checkContactById($params) {
+    $pass = $contactID = 0;
+    $checkCid = new CRM_Contact_DAO_Contact();
+    if (!empty($params['external_identifier'])) {
+      $checkCid->external_identifier = $params['external_identifier'];
+      $checkCid->is_deleted = 0;
+      if($checkCid->find(TRUE)){
+        $contactID = $checkCid->id;
+      }
+    }
+
+    if (!empty($params['membership_contact_id'])) {
+      if (!empty($contactID)) {
+        if ($contactID != $params['membership_contact_id'] ){
+          $pass = FALSE;
+        }
+        else {
+          $pass = $contactID;
+        }
+      }
+      else {
+        $checkCid->id = $params['membership_contact_id'];
+        $checkCid->is_deleted = 0;
+        if($checkCid->find(TRUE)){
+          $contactID = $checkCid->id;
+          $pass = $contactID;
+        }
+      }
+    }
+    elseif(!empty($contactID)) {
+      $pass = $contactID;
+    }
+    $checkCid->free();
+
+    return $pass;
+  }
+}

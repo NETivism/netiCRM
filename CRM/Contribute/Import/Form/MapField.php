@@ -195,7 +195,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
 
       //modify field title only for update mode. CRM-3245
       foreach (array('contribution_id', 'invoice_id', 'trxn_id') as $key) {
-        $this->_mapperFields[$key] .= " (match to contribution record)";
+        $this->_mapperFields[$key] .= " (".ts('match to contribution record').")";
         $highlightedFields[] = $key;
       }
     }
