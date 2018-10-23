@@ -223,7 +223,12 @@ class CRM_Core_Report_Excel {
       $writer->openToBrowser($fileName);
     }
     else {
-      $filePath = $config->uploadDir.$fileName;
+      if (strpos($fileName, $config->uploadDir) === 0) {
+        $filePath = $fileName;
+      }
+      else {
+        $filePath = $config->uploadDir.$fileName;
+      }
       $writer->openToFile($filePath);
     }
     $writer

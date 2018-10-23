@@ -366,7 +366,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     );
     require_once 'CRM/Dedupe/BAO/Rule.php';
     $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
-    $softCreditFields = array();
+    $softCreditFields = $pcpCreatorFields = array();
     if (is_array($fieldsArray)) {
       foreach ($fieldsArray as $value) {
         //skip if there is no dupe rule
@@ -374,13 +374,20 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
           continue;
         }
         $softCreditFields[$value] = $contactFields[trim($value)]['title'];
+        $pcpCreatorFields['pcp_'.$value] = $contactFields[trim($value)]['title'];
       }
     }
 
     $softCreditFields['contact_id'] = ts('Contact ID');
     $softCreditFields['external_identifier'] = ts('External Identifier');
-
     $sel2['soft_credit'] = $softCreditFields;
+
+
+    $pcpCreatorFields['pcp_contact_id'] = ts('Contact ID');
+    $pcpCreatorFields['pcp_external_identifier'] = ts('External Identifier');
+    $sel2['pcp_creator'] = $pcpCreatorFields;
+    $this->set('softCreditFieldsWords', $softCreditFields);
+    $this->set('pcpCreatorFieldsWords', $pcpCreatorFields);
 
     // end of soft credit section
 
@@ -406,10 +413,14 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
             $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
             $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : NULL;
-            $softField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
+            $softField = isset($mappingContactType[$i]) && $mapName == ts('Soft Credit') ? $mappingContactType[$i] : 0;
+            $pcpField = isset($mappingContactType[$i]) && $mapName == ts('Personal Campaign Page Creator') ? $mappingContactType[$i] : 0;
 
             if ($softField) {
               $defaults["mapper[$i]"] = array($mappingHeader, $softField);
+            }
+            elseif ($pcpField) {
+              $defaults["mapper[$i]"] = array($mappingHeader, $pcpField);
             }
             elseif ($websiteTypeId) {
               if (!$websiteTypeId) {
@@ -514,7 +525,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       $session = CRM_Core_Session::singleton();
       $session->setStatus(NULL);
     }
-
     $this->setDefaults($defaults);
 
     $this->addButtons(array(
@@ -678,8 +688,10 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $config = CRM_Core_Config::singleton();
     $seperator = $config->fieldSeparator;
 
-    $mapper = $mapperKeys = $mapperKeysMain = $mapperSoftCredit = $softCreditFields = $mapperPhoneType = array();
+    $mapper = $mapperKeys = $mapperKeysMain = $mapperSoftCredit = $softCreditFields = $pcpCreatorFields = $mapperPhoneType = $mapperPCP = array();
     $mapperKeysOrigin = $this->controller->exportValue($this->_name, 'mapper');
+    $softCreditFieldsWords = $this->get('softCreditFieldsWords');
+    $pcpCreatorFieldsWords = $this->get('pcpCreatorFieldsWords');
 
     $mapperWeight = $params['weight'];
     for ($i=0; $i < count($mapperWeight); $i++) {
@@ -717,8 +729,12 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
 
       if (isset($mapperKeys[$i][0]) && $mapperKeys[$i][0] == 'soft_credit') {
         $mapperSoftCredit[$i] = $mapperKeys[$i][1];
-        list($first, $second) = explode('_', $mapperSoftCredit[$i]);
-        $softCreditFields[$i] = ucwords($first . " " . $second);
+        $words = explode('_', $mapperSoftCredit[$i]);
+        $softCreditFields[$i] = $softCreditFieldsWords[$mapperSoftCredit[$i]];
+      }
+      elseif (isset($mapperKeys[$i][0]) && $mapperKeys[$i][0] == 'pcp_creator') {
+        $mapperPCP[$i] = $mapperKeys[$i][1];
+        $pcpCreatorFields[$i] = $pcpCreatorFieldsWords[$mapperPCP[$i]];
       }
       else {
         if ($selOne && is_numeric($selOne)) {
@@ -740,7 +756,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         }
 
         $mapperSoftCredit[$i] = $softCreditFields[$i] = NULL;
-        $softCreditFields[$i] = NULL;
+        $mapperPCP[$i] = $pcpCreatorFields[$i] = NULL;
       }
       foreach ($mapperParams as $mapperParamKey => $mapperParamVal) {
         ${$mapperParamKey}[$i] = $$mapperParamVal;
@@ -749,6 +765,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
 
     $this->set('mapper', $mapper);
     $this->set('softCreditFields', $softCreditFields);
+    $this->set('pcpCreatorFields', $pcpCreatorFields);
     //set main contact properties.
     $properties = array(
       'ims' => 'mapperImProvider',
@@ -803,7 +820,15 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         }
 
         //reuse contact_type field in db to store fields associated with soft credit
-        $updateMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : 'NULL';
+        if (isset($mapperSoftCredit[$i])) {
+          $updateMappingFields->contact_type = $mapperSoftCredit[$i];
+        }
+        elseif (isset($mapperPCP[$i])) {
+          $updateMappingFields->contact_type = $mapperPCP[$i];
+        }
+        else {
+          $updateMappingFields->contact_type = 'NULL';
+        }
         $updateMappingFields->save();
       }
     }
@@ -844,13 +869,21 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         }
 
         //reuse contact_type field in db to store fields associated with soft credit
-        $saveMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : 'NULL';
+        if (isset($mapperSoftCredit[$i])) {
+          $saveMappingFields->contact_type = $mapperSoftCredit[$i];
+        }
+        elseif (isset($mapperPCP[$i])) {
+          $saveMappingFields->contact_type = $mapperPCP[$i];
+        }
+        else {
+          $saveMappingFields->contact_type = 'NULL';
+        }
         $saveMappingFields->save();
       }
       $this->set('savedMapping', $saveMappingFields->mapping_id);
     }
 
-    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvider);
+    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvidea, $mapperPCP);
     $parser->run($fileName, $seperator, $mapper, $skipColumnHeader,
       CRM_Contribute_Import_Parser::MODE_PREVIEW, $this->get('contactType')
     );

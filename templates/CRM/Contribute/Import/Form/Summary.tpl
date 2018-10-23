@@ -106,6 +106,24 @@
         </td>
     </tr>
     {/if}
+
+    {if $validPCPRowCount }
+    <tr><td class="label">{ts}Soft Credits{/ts}</td>
+        <td class="data">{$validPCPRowCount}</td>
+        <td class="explanation">{ts}Rows where a PCP records was successfully assigned to a contact.{/ts}</td>
+    </tr>
+    {/if}
+
+    {if $invalidPCPRowCount }
+    <tr class="error"><td class="label">{ts}Unmatched PCP Rows (skipped){/ts}</td>
+        <td class="data">{$invalidPCPRowCount}</td>
+        <td class="explanation">{ts}Rows with a requested PCP assignment where no matching contact was found (based on the supplied soft credit contact data). These contribution rows have been skipped (not imported).{/ts}
+            {if $invalidPCPRowCount}
+                <p><a href="{$downloadPCPErrorRecordsUrl}">{ts}Download Errors{/ts}</a></p>
+            {/if}
+        </td>
+    </tr>
+    {/if}
     
     {if $validPledgePaymentRowCount }
     <tr><td class="label">{ts}Pledge Payments Applied{/ts}</td>

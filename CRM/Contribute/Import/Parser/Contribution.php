@@ -52,6 +52,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   private $_contributionTypeIndex;
 
   protected $_mapperSoftCredit;
+  protected $_mapperPCP;
   //protected $_mapperPhoneType;
 
   /**
@@ -67,10 +68,11 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   /**
    * class constructor
    */
-  function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL) {
+  function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL, $mapperPCP = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
     $this->_mapperSoftCredit = &$mapperSoftCredit;
+    $this->_mapperPCP = &$mapperPCP;
     $this->_mapperLocType = &$mapperLocType;
     $this->_mapperPhoneType = &$mapperPhoneType;
     $this->_mapperWebsiteType = $mapperWebsiteType;
@@ -90,10 +92,43 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $this->_importableContactFields = $fields;
 
     $fields = array_merge($fields,
-      array('soft_credit' => array('title' => ts('Soft Credit'),
+      array(
+        'soft_credit' => array(
+          'title' => ts('Soft Credit'),
           'softCredit' => TRUE,
           'headerPattern' => '/Soft Credit/i',
-        ))
+        ),
+        'pcp_id' => array(
+          'title' => ts('Personal Campaign Page ID'),
+          'softCredit' => TRUE,
+          'headerPattern' => '/Personal Campaign Page ID/i',
+        ),
+        'pcp_page' => array(
+          'title' => ts('Personal Campaign Page Title'),
+          'softCredit' => TRUE,
+          'headerPattern' => '/Personal Campaign Page Title/i',
+        ),
+        'pcp_creator' => array(
+          'title' => ts('Personal Campaign Page Creator'),
+          'softCredit' => TRUE,
+          'headerPattern' => '/Personal Campaign Page Creator/i',
+        ),
+        'pcp_display_in_roll' => array(
+          'title' => ts('Pcp Display In Roll'),
+          'softCredit' => TRUE,
+          'headerPattern' => '/Pcp Display In Roll/i',
+        ),
+        'pcp_roll_nickname' => array(
+          'title' => ts('Pcp Roll Nickname'),
+          'softCredit' => TRUE,
+          'headerPattern' => '/Pcp Roll Nickname/i',
+        ),
+        'pcp_personal_note' => array(
+          'title' => ts('Pcp Personal Note'),
+          'softCredit' => TRUE,
+          'headerPattern' => '/Personal Campaign Page/i',
+        ),
+      )
     );
 
     // add pledge fields only if its is enabled
@@ -120,6 +155,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $this->setActiveFieldPhoneTypes($this->_mapperPhoneType);
     $this->setActiveFieldWebsiteTypes($this->_mapperWebsiteType);
     $this->setActiveFieldImProviders($this->_mapperImProvider);
+    $this->setActiveFieldPCP($this->_mapperPCP);
 
     // FIXME: we should do this in one place together with Form/MapField.php
     $index = 0;
@@ -236,8 +272,9 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     //for date-Formats
     $session = CRM_Core_Session::singleton();
     $dateType = $session->get("dateTypes");
+    $addedError = NULL;
     foreach ($params as $key => $val) {
-      $is_deleted = NULL;
+      $contactExists = NULL;
       if ($val) {
         switch ($key) {
           case 'receive_date':
@@ -284,20 +321,47 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             }
             break;
           case 'contribution_contact_id':
-            $is_deleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'id');
-            if ($is_deleted) {
-              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
+            $contactExists = CRM_Import_Parser_Contact::checkContactById(array('contribution_contact_id' => $params['contribution_contact_id']), 'contribution_contact_id');
+            if (!$contactExists) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
             }
             break;
           case 'external_identifier':
-            $is_deleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'external_identifier');
-            if ($is_deleted) {
-              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('External Identifier').'-'.$val)), $errorMessage);
+            $contactExists = CRM_Import_Parser_Contact::checkContactById(array('external_identifier' => $params['external_identifier']), 'contribution_contact_id');
+            if (!$contactExists) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
+            }
+          case 'soft_credit':
+            if ((!empty($params['soft_credit']['external_identifier']) || !empty($params['soft_credit']['contact_id'])) && !empty($val)) {
+              $contactExists = CRM_Import_Parser_Contact::checkContactById($params['soft_credit'], 'contact_id');
+              if (!$contactExists) {
+                CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('Soft Credit').' - '.ts('Contact ID'))), $errorMessage);
+              }
+            }
+            break;
+          case 'pcp_creator':
+            if ((!empty($params['pcp_creator']['pcp_external_identifier']) || !empty($params['pcp_creator']['pcp_contact_id'])) && !empty($val)) {
+              $contactExists = CRM_Import_Parser_Contact::checkContactById(array(
+                'external_identifier' => $params['pcp_creator']['pcp_external_identifier'],
+                'contact_id' => $params['pcp_creator']['pcp_contact_id'],
+              ), 'contact_id');
+              if (!$contactExists) {
+                CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('Personal Campaign Page Creator'))), $errorMessage);
+              }
+            }
+            break;
+          case 'pcp_display_in_roll':
+          case 'pcp_roll_nickname':
+          case 'pcp_personal_note':
+            if (!array_key_exists('pcp_id', $params) && !array_key_exists('pcp_page', $params) && !array_key_exists('pcp_creator', $params) && !$addedError) {
+              $addedError = TRUE;
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('PCP related field needs PCP page title or id or user'), $errorMessage);
             }
             break;
         }
       }
     }
+
     //date-Format part ends
 
     $params['contact_type'] = 'Contribution';
@@ -445,8 +509,12 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       elseif (CRM_Utils_Array::value('error_data', $formatError) == 'pledge_payment') {
         return CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR;
       }
+      elseif (CRM_Utils_Array::value('error_data', $formatError) == 'pcp_creator') {
+        return CRM_Contribute_Import_Parser::PCP_ERROR;
+      }
       return CRM_Contribute_Import_Parser::ERROR;
     }
+
 
     if ($onDuplicate != CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
       $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
@@ -514,6 +582,10 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             return CRM_Contribute_Import_Parser::SOFT_CREDIT;
           }
 
+          if (CRM_Utils_Array::value('pcp_creator_id', $formatted)) {
+            return CRM_Contribute_Import_Parser::PCP;
+          }
+
           // process pledge payment assoc w/ the contribution
           return self::processPledgePayments($formatted);
         }
@@ -565,7 +637,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       if (civicrm_duplicate($found)) {
         $matchedIDs = explode(',', $found['error_message']['params'][0]);
         if (count($matchedIDs) > 1) {
-          $errDisp = "Multiple matching contact records detected for this row. The contribution was not imported";
+          $errDisp = ts("Multiple matching contact records detected for this row. The contribution was not imported");
           array_unshift($values, $errDisp);
           return CRM_Contribute_Import_Parser::ERROR;
         }
@@ -615,7 +687,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             $errDisp = ts('Missing required contact matching fields.')." - ".implode('|', $dispArray);
           }
           else {
-            $errDisp = "No matching Contact found for (" . implode('|', $dispArray) . ")";
+            $errDisp = ts("No matching results for "). ":" . implode('|', $dispArray) . "";
           }
           $doCreateContact = FALSE;
         }

@@ -55,6 +55,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $dataValues = $this->get('dataValues');
     $mapper = $this->get('mapper');
     $softCreditFields = $this->get('softCreditFields');
+    $pcpCreatorFields = $this->get('pcpCreatorFields');
     $invalidRowCount = $this->get('invalidRowCount');
     $conflictRowCount = $this->get('conflictRowCount');
     $mismatchCount = $this->get('unMatchCount');
@@ -94,7 +95,8 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     }
 
 
-    $properties = array('mapper', 'softCreditFields',
+    $properties = array(
+      'mapper', 'softCreditFields', 'pcpCreatorFields',
       'dataValues', 'columnCount',
       'totalRowCount', 'validRowCount',
       'invalidRowCount', 'conflictRowCount',
@@ -162,13 +164,18 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $mapper = $this->get('mapperKeys');
     $mapperKeys = array();
     $mapperSoftCredit = array();
+    $mapperPCP = array();
     foreach ($mapper as $key => $value) {
       $mapperKeys[$key] = $mapper[$key][0];
       if (isset($mapper[$key][0]) && $mapper[$key][0] == 'soft_credit') {
         $mapperSoftCredit[$key] = $mapper[$key][1];
       }
+      elseif (isset($mapper[$key][0]) && $mapper[$key][0] == 'pcp_creator') {
+        $mapperPCP[$key] = $mapper[$key][1];
+      }
       else {
         $mapperSoftCredit[$key] = NULL;
+        $mapperPCP[$key] = NULL;
       }
     }
     $properties = array(
@@ -181,7 +188,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     foreach ($properties as $propertyName => $propertyVal) {
       $$propertyVal = $this->get($propertyName);
     }
-    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeys, $mapperSoftCredit, $mapperLocType, $mapperPhoneType, $mapperWebsiteType, $mapperImProvider);
+    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeys, $mapperSoftCredit, $mapperLocType, $mapperPhoneType, $mapperWebsiteType, $mapperImProvider, $mapperPCP);
 
     $mapFields = $this->get('fields');
 

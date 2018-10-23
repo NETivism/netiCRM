@@ -64,10 +64,12 @@
                 <td class="form-item even-row{if $wizard.currentStepName == 'Preview'} labels{/if}">
                     {if $wizard.currentStepName == 'Preview'}
 		    	{if $softCreditFields && $softCreditFields[$i] != ''}
-			    {$mapper[$i]} - {$softCreditFields[$i]}
-			{else}
-			    {$mapper[$i]}
-			{/if}    
+            {$mapper[$i]} - {$softCreditFields[$i]}
+          {elseif $pcpCreatorFields && $pcpCreatorFields[$i] != ''}
+            {$mapper[$i]} - {$pcpCreatorFields[$i]}
+          {else}
+            {$mapper[$i]}
+          {/if}
                     {else}
                         {$form.mapper[$i].html}
                         <div class="drag-handler"></div>

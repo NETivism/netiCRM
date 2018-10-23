@@ -550,8 +550,11 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
     $values['is_error'] = 1;
     $values['error_message'] = $msg;
-    if (isset($data)) {
+    if (isset($data) && is_array($data)) {
       $values = array_merge($values, $data);
+    }
+    elseif(is_string($data)) {
+      $values['error_data'] = $data;
     }
     return $values;
   }

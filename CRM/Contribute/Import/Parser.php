@@ -39,7 +39,7 @@ require_once 'CRM/Utils/Type.php';
 require_once 'CRM/Contribute/Import/Field.php';
 
 abstract class CRM_Contribute_Import_Parser {
-  CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 3, CONFLICT = 4, STOP = 5, DUPLICATE = 6, MULTIPLE_DUPE = 7, NO_MATCH = 8, SOFT_CREDIT = 9, SOFT_CREDIT_ERROR = 10, PLEDGE_PAYMENT = 11, PLEDGE_PAYMENT_ERROR = 12;
+  CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 3, CONFLICT = 4, STOP = 5, DUPLICATE = 6, MULTIPLE_DUPE = 7, NO_MATCH = 8, SOFT_CREDIT = 9, SOFT_CREDIT_ERROR = 10, PLEDGE_PAYMENT = 11, PLEDGE_PAYMENT_ERROR = 12, PCP = 13, PCP_ERROR = 14;
 
   /**
    * import contact when import contribution
@@ -109,6 +109,16 @@ abstract class CRM_Contribute_Import_Parser {
   protected $_invalidSoftCreditRowCount;
 
   /**
+   * running total number of valid pcp rows
+   */
+  protected $_validPCPRowCount;
+
+  /**
+   * running total number of invalid pcp rows
+   */
+  protected $_invalidPCPRowCount;
+
+  /**
    * running total number of valid pledge payment rows
    */
   protected $_validPledgePaymentRowCount;
@@ -137,6 +147,11 @@ abstract class CRM_Contribute_Import_Parser {
    * array of pledge payment error lines, bounded by MAX_ERROR
    */
   protected $_softCreditErrors;
+
+  /**
+   * array of pledge payment error lines, bounded by MAX_ERROR
+   */
+  protected $_pcpErrors;
 
   /**
    * total number of conflict lines
@@ -231,6 +246,13 @@ abstract class CRM_Contribute_Import_Parser {
   protected $_softCreditErrorsFileName;
 
   /**
+   * filename of pcp error data
+   *
+   * @var string
+   */
+  protected $_pcpErrorsFileName;
+
+  /**
    * filename of conflict data
    *
    * @var string
@@ -315,6 +337,7 @@ abstract class CRM_Contribute_Import_Parser {
     $this->_conflicts = array();
     $this->_pledgePaymentErrors = array();
     $this->_softCreditErrors = array();
+    $this->_pcpErrors = array();
 
     $this->_fileSize = number_format(filesize($fileName) / 1024.0, 2);
 
@@ -397,6 +420,15 @@ abstract class CRM_Contribute_Import_Parser {
         }
       }
 
+      if ($returnCode == self::PCP) {
+        $this->_validPCPRowCount++;
+        $this->_validCount++;
+        if ($mode == self::MODE_MAPFIELD) {
+          $this->_rows[] = $values;
+          $this->_activeFieldCount = max($this->_activeFieldCount, count($values));
+        }
+      }
+
       if ($returnCode == self::WARNING) {
         $this->_warningCount++;
         if ($this->_warningCount < $this->_maxWarningCount) {
@@ -437,6 +469,18 @@ abstract class CRM_Contribute_Import_Parser {
           }
           array_unshift($values, $recordNumber);
           $this->_softCreditErrors[] = $values;
+        }
+      }
+
+      if ($returnCode == self::PCP_ERROR) {
+        $this->_invalidPCPRowCount++;
+        if ($this->_invalidPCPRowCount < $this->_maxErrorCount) {
+          $recordNumber = $this->_lineCount;
+          if ($this->_haveColumnHeader) {
+            $recordNumber--;
+          }
+          array_unshift($values, $recordNumber);
+          $this->_pcpErrors[] = $values;
         }
       }
 
@@ -523,6 +567,17 @@ abstract class CRM_Contribute_Import_Parser {
         self::exportCSV($this->_softCreditErrorsFileName, $headers, $this->_softCreditErrors);
       }
 
+      if ($this->_invalidPCPRowCount) {
+        // removed view url for invlaid contacts
+        $headers = array_merge(array(ts('Line Number'),
+            ts('Reason'),
+          ),
+          $customHeaders
+        );
+        $this->_pcpErrorsFileName = self::errorFileName(self::PCP_ERROR);
+        self::exportCSV($this->_pcpErrorsFileName, $headers, $this->_pcpErrors);
+      }
+
       if ($this->_conflictCount) {
         $headers = array_merge(array(ts('Line Number'),
             ts('Reason'),
@@ -578,6 +633,12 @@ abstract class CRM_Contribute_Import_Parser {
   function setActiveFieldSoftCredit($elements) {
     for ($i = 0; $i < count($elements); $i++) {
       $this->_activeFields[$i]->_softCreditField = $elements[$i];
+    }
+  }
+
+  function setActiveFieldPCP($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_pcpField = $elements[$i];
     }
   }
 
@@ -652,6 +713,12 @@ abstract class CRM_Contribute_Import_Parser {
             $params[$this->_activeFields[$i]->_name] = array();
           }
           $params[$this->_activeFields[$i]->_name][$this->_activeFields[$i]->_softCreditField] = $this->_activeFields[$i]->_value;
+        }
+        if (isset($this->_activeFields[$i]->_pcpField)) {
+          if (!isset($params[$this->_activeFields[$i]->_name])) {
+            $params[$this->_activeFields[$i]->_name] = array();
+          }
+          $params[$this->_activeFields[$i]->_name][$this->_activeFields[$i]->_pcpField] = $this->_activeFields[$i]->_value;
         }
 
         if (isset($this->_activeFields[$i]->_hasLocationType)) {
@@ -807,6 +874,8 @@ abstract class CRM_Contribute_Import_Parser {
     $store->set('invalidRowCount', $this->_invalidRowCount);
     $store->set('invalidSoftCreditRowCount', $this->_invalidSoftCreditRowCount);
     $store->set('validSoftCreditRowCount', $this->_validSoftCreditRowCount);
+    $store->set('validPCPRowCount', $this->_validPCPRowCount);
+    $store->set('invalidPCPRowCount', $this->_invalidPCPRowCount);
     $store->set('invalidPledgePaymentRowCount', $this->_invalidPledgePaymentRowCount);
     $store->set('validPledgePaymentRowCount', $this->_validPledgePaymentRowCount);
     $store->set('conflictRowCount', $this->_conflictCount);
@@ -840,6 +909,10 @@ abstract class CRM_Contribute_Import_Parser {
 
     if ($this->_invalidSoftCreditRowCount) {
       $store->set('softCreditErrorsFileName', $this->_softCreditErrorsFileName);
+    }
+
+    if ($this->_invalidPCPRowCount) {
+      $store->set('pcpErrorsFileName', $this->_pcpErrorsFileName);
     }
 
     if ($mode == self::MODE_IMPORT) {
@@ -892,7 +965,7 @@ abstract class CRM_Contribute_Import_Parser {
     }
 
     $config = CRM_Core_Config::singleton();
-    $fileName = $config->uploadDir . "sqlImport";
+    $fileName = "sqlImport";
 
     switch ($type) {
       case CRM_Contribute_Import_Parser::ERROR:
@@ -922,6 +995,10 @@ abstract class CRM_Contribute_Import_Parser {
 
       case CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR:
         $fileName .= '.pledgePaymentErrors.xlsx';
+        break;
+
+      case CRM_Contribute_Import_Parser::PCP_ERROR:
+        $fileName .= '.pcpErrors.xlsx';
         break;
     }
 
@@ -962,6 +1039,10 @@ abstract class CRM_Contribute_Import_Parser {
 
       case CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR:
         $fileName = 'Import_Pledge_Payment_Errors.xlsx';
+        break;
+
+      case CRM_Contribute_Import_Parser::PCP_ERROR:
+        $fileName = 'Import_PCP_Errors.xlsx';
         break;
     }
 

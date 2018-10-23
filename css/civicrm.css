@@ -5029,6 +5029,9 @@ tbody.scrollContent tr.alternateRow {
   border: 1px solid #999999;
   background-color: #F6F6F6;
 }
+.crm-container .report .error td {
+  background-color: #fef5f1;
+}
 
 /* double line right border for last cell in a horizontal grouping */
 .crm-container table.report td.splitter {

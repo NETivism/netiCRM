@@ -282,7 +282,15 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       if ($id = CRM_Utils_Array::value('softID', $params)) {
         $csParams['id'] = $params['softID'];
       }
-      $csParams['pcp_display_in_roll'] = $params['pcp_display_in_roll'] ? 1 : 0;
+      if ($pcpId = CRM_Utils_Array::value('pcp_id', $params)) {
+        $pcp = new CRM_Contribute_DAO_PCP();
+        $pcp->id = $pcpId;
+        if ($pcp->find()) {
+          $csParams['pcp_id'] = $pcpId;
+        }
+        $pcp->free();
+      }
+      $csParams['pcp_display_in_roll'] = !empty($params['pcp_display_in_roll']) ? 1 : 0;
       foreach (array('pcp_roll_nickname', 'pcp_personal_note') as $val) {
         if (CRM_Utils_Array::value($val, $params)) {
           $csParams[$val] = $params[$val];

@@ -72,7 +72,7 @@ function civicrm_verify_mandatory(&$params, $daoName = NULL, $keys = array(
  *
  * @return <type>
  */
-function &civicrm_create_error($msg, $data = NULL) {
+function civicrm_create_error($msg, $data = NULL) {
   return CRM_Core_Error::createAPIError($msg, $data);
 }
 
@@ -755,7 +755,6 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
   $fields = CRM_Event_DAO_Participant::fields();
   _civicrm_store_values($fields, $params, $values);
 
-  require_once 'CRM/Core/OptionGroup.php';
   $customFields = CRM_Core_BAO_CustomField::getFields('Participant');
 
   foreach ($params as $key => $value) {
@@ -836,7 +835,6 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
             $participantRoles[$k] = $v;
           }
         }
-        require_once 'CRM/Core/DAO.php';
         $values['role_id'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, $participantRoles);
         unset($values[$key]);
         break;
@@ -895,7 +893,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
 
   _civicrm_store_values($fields, $params, $values);
 
-  require_once 'CRM/Core/OptionGroup.php';
   $customFields = CRM_Core_BAO_CustomField::getFields('Contribution');
 
   foreach ($params as $key => $value) {
@@ -927,7 +924,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
 
       case 'contact_type':
         //import contribution record according to select contact type
-        require_once 'CRM/Contact/DAO/Contact.php';
         $contactType = new CRM_Contact_DAO_Contact();
         //when insert mode check contact id or external identifire
         if ($params['contribution_contact_id'] || $params['external_identifier']) {
@@ -992,7 +988,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         break;
 
       case 'contribution_type':            
-        require_once 'CRM/Contribute/PseudoConstant.php';
         $contriTypes = CRM_Contribute_PseudoConstant::contributionType( );
         foreach ( $contriTypes as $val => $type ) {
           if ( strtolower( $value ) == strtolower( $type ) ) {
@@ -1006,7 +1001,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         break;
 
       case 'payment_instrument':
-        require_once 'CRM/Core/OptionGroup.php';
         $values['payment_instrument_id'] = CRM_Core_OptionGroup::getValue('payment_instrument', $value);
         if (!CRM_Utils_Array::value('payment_instrument_id', $values)) {
           return civicrm_create_error("Payment Instrument is not valid: $value");
@@ -1014,14 +1008,17 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         break;
 
       case 'contribution_status_id':
-        require_once 'CRM/Core/OptionGroup.php';
-        if (!$values['contribution_status_id'] = CRM_Core_OptionGroup::getValue('contribution_status', $value)) {
+        $contribution_status_id = 0;
+        $contribution_status_id = CRM_Core_OptionGroup::getValue('contribution_status', $value);
+        if (empty($values['contribution_status_id'])) {
           return civicrm_create_error("Contribution Status is not valid: $value");
+        }
+        else {
+          $values['contribution_status_id'] = $value;
         }
         break;
 
       case 'honor_type_id':
-        require_once 'CRM/Core/OptionGroup.php';
         $values['honor_type_id'] = CRM_Core_OptionGroup::getValue('honor_type', $value);
         if (!CRM_Utils_Array::value('honor_type_id', $values)) {
           return civicrm_create_error("Honor Type is not valid: $value");
@@ -1035,7 +1032,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         $contactId = CRM_Utils_Array::value('contact_id', $params['soft_credit']);
         $externalId = CRM_Utils_Array::value('external_identifier', $params['soft_credit']);
         if ($contactId || $externalId) {
-          require_once 'CRM/Contact/DAO/Contact.php';
           $contact = new CRM_Contact_DAO_Contact();
           $contact->id = $contactId;
           $contact->external_identifier = $externalId;
@@ -1128,7 +1124,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
             $contributionContactID = $params['contribution_contact_id'];
           }
           elseif (CRM_Utils_Array::value('external_identifier', $params)) {
-            require_once 'CRM/Contact/DAO/Contact.php';
             $contact = new CRM_Contact_DAO_Contact();
             $contact->external_identifier = $params['external_identifier'];
             if ($contact->find(TRUE)) {
@@ -1167,7 +1162,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         }
         else {
           //check if there are any pledge related to this contact, with payments pending or in progress
-          require_once 'CRM/Pledge/BAO/Pledge.php';
           $pledgeDetails = CRM_Pledge_BAO_Pledge::getContactPledges($contributionContactID);
 
           if (empty($pledgeDetails)) {
@@ -1182,7 +1176,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         }
 
         //we need to check if oldest payment amount equal to contribution amount
-        require_once 'CRM/Pledge/BAO/PledgePayment.php';
         $pledgePaymentDetails = CRM_Pledge_BAO_PledgePayment::getOldestPledgePayment($values['pledge_id']);
 
         if ($pledgePaymentDetails['amount'] == $totalAmount) {
@@ -1192,15 +1185,112 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
           return civicrm_create_error('Contribution and Pledge Payment amount mismatch for this record. Contribution row was skipped.', 'pledge_payment');
         }
         break;
+      case 'pcp_id':
+        if (!CRM_Utils_Rule::integer($value)) {
+          return civicrm_create_error("$key not a valid Id: $value", 'pcp_creator');
+        }
+        $values['pcp_id'] = $value;
+        break;
+      case 'pcp_page':
+        if (empty($values['pcp_id']) && !empty($value)) {
+          $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_pcp WHERE title = %1", array(1 => array($value, 'String')));
+          $dao->fetch();
+          if ($dao->N > 1) {
+            $err = civicrm_create_error("Multiple PCP page found by this title: $value", 'pcp_creator');
+            return $err;
+          }
+          else {
+            if (!empty($dao->id)) {
+              $values['pcp_id'] = $dao->id;
+            }
+            else {
+              return civicrm_create_error("We cannot find PCP page: $value", 'pcp_creator');
+            }
+          }
+        }
+        break;
+      case 'pcp_creator':
+        if (empty($values['pcp_id'])) {
+          // validate contact id and external identifier.
+          $contactId = CRM_Utils_Array::value('pcp_contact_id', $params['pcp_creator']);
+          $externalId = CRM_Utils_Array::value('pcp_external_identifier', $params['pcp_creator']);
+          if ($contactId || $externalId) {
+            $contact = new CRM_Contact_DAO_Contact();
+            $contact->id = $contactId;
+            $contact->external_identifier = $externalId;
 
+            $errorMsg = NULL;
+            if (!$contact->find(TRUE)) {
+              $errorMsg = ts("No match found for specified Soft Credit contact data. Row was skipped.");
+            }
+            elseif ($params['contact_type'] != $contact->contact_type) {
+              $errorMsg = ts("PCP Creator Contact Type is wrong: %1", array(1 => $contact->contact_type));
+            }
+
+            if ($errorMsg) {
+              return civicrm_create_error($errorMsg, 'pcp_creator');
+            }
+
+            // finally get soft credit contact id.
+            $values['pcp_creator_id'] = $contact->id;
+          }
+          else {
+            // get the contact id from dupicate contact rule, if more than one contact is returned
+            // we should return error, since current interface allows only one-one mapping
+            foreach($params['pcp_creator'] as $k => $v) {
+              $newk = preg_replace('/^pcp_/i', '', $k);
+              $pcpParams[$newk] = $v;
+            }
+
+            $pcpParams['contact_type'] = $params['contact_type'];
+
+            $error = _civicrm_duplicate_formatted_contact($pcpParams);
+
+            if (isset($error['error_message']['params'][0])) {
+              $matchedIDs = explode(',', $error['error_message']['params'][0]);
+
+              // check if only one contact is found
+              if (count($matchedIDs) > 1) {
+                return civicrm_create_error($error['error_message']['message'], 'pcp_creator');
+              }
+              else {
+                $values['pcp_creator_id'] = $matchedIDs[0];
+              }
+            }
+          }
+          if (!empty($values['pcp_creator_id'])) {
+            $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_pcp WHERE contact_id = %1", array(1 => array($values['pcp_creator_id'], 'Integer')));
+            $dao->fetch();
+            if ($dao->N > 1) {
+              // multiple pcp found
+              return civicrm_create_error(ts("Multiple matching contact records detected for this row. The contribution was not imported"), 'pcp_creator');
+            }
+            elseif(!empty($dao->id)) {
+              $values['pcp_id'] = $dao->id;
+            }
+          }
+        }
+        break;
+      case 'pcp_display_in_roll':
+      case 'pcp_roll_nickname':
+      case 'pcp_personal_note':
+        $values[$key] = $value;
+        break;
       default:
         break;
+    }
+  }
+  if (!empty($params['pcp_roll_nickname']) || !empty($params['pcp_display_in_roll']) || !empty($params['pcp_personal_note'])) {
+    if (empty($values['pcp_id'])) {
+      return civicrm_create_error("pcp related record found but no any specify PCP page found", 'pcp_creator');
     }
   }
 
   if (array_key_exists('note', $params)) {
     $values['note'] = $params['note'];
   }
+
+  _civicrm_custom_format_params($params, $values, 'Contribution');
 
   if ($create) {
     // CRM_Contribute_BAO_Contribution::add() handles contribution_source
