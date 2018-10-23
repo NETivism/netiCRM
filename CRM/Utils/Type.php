@@ -293,6 +293,19 @@ class CRM_Utils_Type {
         }
         break;
 
+      case 'Json':
+        if (CRM_Utils_Rule::json($data)) {
+          return $data;
+        }
+        break;
+
+      case 'Alphanumeric':
+        if (CRM_Utils_Rule::alphanumeric($data)) {
+          return $data;
+        }
+        break;
+
+
       default:
         CRM_Core_Error::fatal("Cannot recognize $type for $data");
         break;
