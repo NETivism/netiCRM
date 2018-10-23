@@ -457,7 +457,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       if($this->_dataReferenceField == 'membership_id' && $paramValues['membership_id']){
         $membership_id = $paramValues['membership_id'];
       }
-      else if(preg_match('/^custom_/', $this->_dataReferenceField) ){
+      else if(preg_match('/^custom_/', $this->_dataReferenceField) && !empty($paramValues[$this->_dataReferenceField])){
         $field_id = str_replace('custom_', '', $this->_dataReferenceField);
         list($custom_table, $custom_field, $ignore) = CRM_Core_BAO_CustomField::getTableColumnGroup($field_id);
         $sql = "SELECT entity_id FROM $custom_table WHERE $custom_field = %1";
@@ -579,6 +579,8 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
 
         $dispArray = array();
+        // workaround for #23859
+        $this->_importableContactFields['sort_name']['title'] = ts('Sort Name');
         foreach ($fieldsArray as $value) {
           if ($doCreateContact) {
             if (!array_key_exists(trim($value), $params)) {
@@ -634,6 +636,10 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         $errDisp = "Mismatch of External identifier :" . $paramValues['external_identifier'] . " and Contact Id:" . $formatted['contact_id'];
       }
     }
+
+    // cache all for CRM_Contribute_Import_Parser::DUPLICATE_SKIP
+    array_unshift($values, $errDisp);
+    return CRM_Member_Import_Parser::ERROR;
   }
 
   /**
