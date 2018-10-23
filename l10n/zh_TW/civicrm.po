@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-10-19 11:14+0000\n"
+"PO-Revision-Date: 2018-10-22 09:25+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46727,3 +46727,12 @@ msgstr "與金流商同步資料"
 
 msgid "Sync Now"
 msgstr "立刻同步"
+
+msgid "PCP related field needs PCP page title or id or user"
+msgstr "個人募款頁欄位至少需要個人募款頁標題，或是編號，或是個人募款頁建立者。"
+
+msgid "Personal Campaign Page Creator"
+msgstr "個人募款頁建立者"
+
+msgid "Could not find contact by %1"
+msgstr "無法以 %1 找到聯絡人"
