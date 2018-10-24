@@ -550,7 +550,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     if (empty($checkContactId)) {
       //retrieve contact id using contact dedupe rule
       $paramValues['contact_type'] = $this->_contactType;
-      $found = civicrm_check_contact_dedupe($paramValues);
+      $found = civicrm_check_contact_dedupe($paramValues, $this->_dedupeRuleGroupId);
 
       if (civicrm_duplicate($found)) {
         $matchedIDs = explode(',', $found['error_message']['params'][0]);
