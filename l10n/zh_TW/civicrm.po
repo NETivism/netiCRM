@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-10-22 09:25+0000\n"
+"PO-Revision-Date: 2018-10-24 03:12+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -29580,7 +29580,7 @@ msgstr "間接貢獻"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 msgid "Rows where a soft credit was successfully assigned to a contact."
-msgstr ""
+msgstr "成功為聯絡人匯入間接貢獻的行數。"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 msgid "Unmatched Soft Credit Rows (skipped)"
@@ -29591,7 +29591,7 @@ msgid ""
 "Rows with a requested soft credit assignment where no matching contact was "
 "found (based on the supplied soft credit contact data). These contribution "
 "rows have been skipped (not imported)."
-msgstr ""
+msgstr "間接貢獻資料匯入時找不到對應的聯絡人（根據欄位對應時指定的聯絡人欄位）。這些捐款資料將會忽略，不進行匯入。"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 msgid "Pledge Payments Applied"
@@ -46736,3 +46736,18 @@ msgstr "個人募款頁建立者"
 
 msgid "Could not find contact by %1"
 msgstr "無法以 %1 找到聯絡人"
+
+msgid "PCP Contributions"
+msgstr "個人募款頁的捐款紀錄"
+
+msgid "Rows where a PCP records was successfully assigned to a contact."
+msgstr "成功匯入個人募款頁相關資訊的捐款資料。"
+
+msgid "Unmatched PCP Rows (skipped)"
+msgstr "未成功配對個人募款頁的捐款（略過）"
+
+msgid ""
+"Rows with a requested PCP assignment where no matching contact was found "
+"(based on the supplied soft credit contact data). These contribution rows "
+"have been skipped (not imported)."
+msgstr "匯入資料中有個人募款頁相關欄位，但無法成功配對到現有的個人募款頁資料，此類的捐款資料將會略過。"

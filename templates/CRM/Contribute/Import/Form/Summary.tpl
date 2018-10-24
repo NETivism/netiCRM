@@ -108,7 +108,7 @@
     {/if}
 
     {if $validPCPRowCount }
-    <tr><td class="label">{ts}Soft Credits{/ts}</td>
+    <tr><td class="label">{ts}PCP Contributions{/ts}</td>
         <td class="data">{$validPCPRowCount}</td>
         <td class="explanation">{ts}Rows where a PCP records was successfully assigned to a contact.{/ts}</td>
     </tr>

@@ -46575,3 +46575,15 @@ msgstr ""
 
 msgid "Could not find contact by %1"
 msgstr ""
+
+msgid "PCP Contributions"
+msgstr ""
+
+msgid "Rows where a PCP records was successfully assigned to a contact."
+msgstr ""
+
+msgid "Unmatched PCP Rows (skipped)"
+msgstr ""
+
+msgid "Rows with a requested PCP assignment where no matching contact was found (based on the supplied soft credit contact data). These contribution rows have been skipped (not imported)."
+msgstr ""
