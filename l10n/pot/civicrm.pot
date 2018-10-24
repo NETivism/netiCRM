@@ -46587,3 +46587,6 @@ msgstr ""
 
 msgid "Rows with a requested PCP assignment where no matching contact was found (based on the supplied soft credit contact data). These contribution rows have been skipped (not imported)."
 msgstr ""
+
+msgid "If the provider needs server IP address, the IP address of this website is %1"
+msgstr ""
