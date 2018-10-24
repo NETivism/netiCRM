@@ -380,10 +380,11 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
     echo "Generating civicrm-version file\n";
     $git_tag = `git describe --tags`;
-    list($git_tag) = explode('-', $git_tag);
+    list($git_tag, $subver) = explode('-', $git_tag);
     $git_revision = `git rev-parse --short HEAD`;
+    $git_revision = trim($git_revision);
     $this->smarty->assign('git_revision', $git_revision);
-    $this->smarty->assign('git_tag', $git_tag);
+    $this->smarty->assign('git_tag', $git_tag.'+'.$subver);
     file_put_contents($this->phpCodePath . "civicrm-version.txt", $this->smarty->fetch('civicrm_version.tpl'));
   }
 
