@@ -3942,6 +3942,7 @@ CREATE TABLE civicrm_price_field (
      label varchar(255) NOT NULL   COMMENT 'Text for form field label (also friendly name for administering this field).',
      html_type enum('Text', 'Select', 'Radio', 'CheckBox') NOT NULL   ,
      is_enter_qty tinyint   DEFAULT 0 COMMENT 'Enter a quantity for this field?',
+     max_value int unsigned   DEFAULT NULL COMMENT 'Max number of participants per field options',
      help_pre text    COMMENT 'Description and/or help text to display before this field.',
      help_post text    COMMENT 'Description and/or help text to display after this field.',
      weight int   DEFAULT 1 COMMENT 'Order in which the fields should appear',

@@ -69,6 +69,13 @@
       <add>1.8</add>
   </field>
   <field>
+      <name>max_value</name>
+      <type>int unsigned</type>
+      <default>NULL</default>
+      <comment>Max number of participants per field options</comment>
+      <add>3.3</add>
+  </field>
+  <field>
       <name>help_pre</name>
       <type>text</type>
       <localizable>true</localizable>

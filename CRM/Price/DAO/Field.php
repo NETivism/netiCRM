@@ -116,6 +116,12 @@ class CRM_Price_DAO_Field extends CRM_Core_DAO
    */
   public $is_enter_qty;
   /**
+   * Max number of participants per field options
+   *
+   * @var int unsigned
+   */
+  public $max_value;
+  /**
    * Description and/or help text to display before this field.
    *
    * @var text
@@ -253,6 +259,12 @@ class CRM_Price_DAO_Field extends CRM_Core_DAO
         'is_enter_qty' => array(
           'name' => 'is_enter_qty',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+        ) ,
+        'max_value' => array(
+          'name' => 'max_value',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Max Value') ,
+          'default' => 'UL',
         ) ,
         'help_pre' => array(
           'name' => 'help_pre',
