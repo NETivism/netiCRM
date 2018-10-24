@@ -121,7 +121,13 @@ cj(document).ready(function($){
           }
         }
       });
-      $("#dedupeRuleGroup").val($("#dedupeRuleGroup option:visible:first").attr("value"));
+      var $option = $("#dedupeRuleGroup option").filter(function(){
+        if($(this).css('display') == 'none'){
+          return false;
+        }
+        return true;
+      });
+      $("#dedupeRuleGroup").val($option.val());
     });
   }
 
