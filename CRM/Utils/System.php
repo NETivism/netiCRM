@@ -836,7 +836,7 @@ class CRM_Utils_System {
       );
       if (file_exists($verFile)) {
         $str = file_get_contents($verFile);
-        $parts = explode(' ', $str);
+        $parts = explode('+', $str, 2);
         $version = trim($parts[0]);
       }
       else {
@@ -1090,7 +1090,7 @@ class CRM_Utils_System {
       return FALSE;
     }
     else {
-      $codeVersion = CRM_Utils_System::version();
+      // $codeVersion = CRM_Utils_System::version();
 
       // if db.ver < code.ver, time to upgrade
       /* // remove for neticrm will use neticrm_update for upgrade handling
