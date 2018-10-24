@@ -118,16 +118,31 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       if (CRM_Contact_BAO_ContactType::isActive($type)) {
         $contactOptions[$type] = ts($type);
       }
+      $selectableFields[$type] = &CRM_Member_BAO_Membership::importableFields($type);
     }
     $this->addRadio('contactType', ts('Contact Type'), $contactOptions);
 
     foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
+      $contentType = $groupValues['contact_type'];
       $fields = array();
       foreach($groupValues['fields'] as $name){
+
+        // If selection has field like 'sort_name', dont add it.
+        if(!array_key_exists($name, $selectableFields[$contentType])){
+          $dontAdd = true;
+          break;
+        }
+
         if (isset($this->_dedupeRuleFields[$name])) {
           $fields[] = $this->_dedupeRuleFields[$name];
         }
       }
+
+      if($dontAdd){
+        $dontAdd = false;
+        continue;
+      }
+
       $label = ts($groupValues['contact_type']);
       if ($groupValues['is_default']) {
         $label .= ts('Default');
