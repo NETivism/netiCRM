@@ -351,9 +351,12 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
             array('price' => json_encode(array($elementName, $priceVal)))
           );
 
+          $count[$opId] = $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), array('size' => "1", 'min' => 1, 'step' => 1, 'price' => json_encode(array($elementName, $opId))));
+
           // CRM-6902
           if (in_array($opId, $freezeOptions)) {
             $choice[$opId]->freeze();
+            $count[$opId]->freeze();
           }
         }
 
