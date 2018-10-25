@@ -34,19 +34,17 @@ class CRM_Core_Report_Excel {
   private static $_singleton = NULL;
 
   static function &singleton($type) {
-    if (self::$_singleton === NULL) {
-      switch($type) {
-        case 'excel':
-          $writer = WriterFactory::create(Type::XLSX);
-          break;
-        case 'csv':
-          $writer = WriterFactory::create(Type::CSV);
-          $writer->setShouldAddBOM(TRUE); // this is default
-          break;
-      }
-      self::$_singleton = $writer;
+    switch($type) {
+      case 'csv':
+        $writer = WriterFactory::create(Type::CSV);
+        $writer->setShouldAddBOM(TRUE); // this is default
+        break;
+      case 'excel':
+      default:
+        $writer = WriterFactory::create(Type::XLSX);
+        break;
     }
-    return self::$_singleton;
+    return $writer;
   }
   /**
    * Code copied from phpMyAdmin (v2.6.1-pl3)
