@@ -1014,7 +1014,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
           return civicrm_create_error("Contribution Status is not valid: $value");
         }
         else {
-          $values['contribution_status_id'] = $value;
+          $values['contribution_status_id'] = $contribution_status_id;
         }
         break;
 
