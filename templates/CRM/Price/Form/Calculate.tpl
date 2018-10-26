@@ -57,7 +57,11 @@ cj("#priceset select, #priceset input").each(function () {
         }
         
         if( cj(this).attr('checked') ) {
-          cj('#'+countEleName).show();
+          $countEle = cj('#'+countEleName);
+          $countEle.show();
+          if($countEle.val() == 0){
+            $countEle.val(1);
+          }
           addPrice = calculateCheckbox(fdName, ele);
           if(!price[ele]){
             price[ele] = 0;
