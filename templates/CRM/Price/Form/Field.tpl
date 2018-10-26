@@ -91,6 +91,11 @@
            </td>
         </tr>
         {/if}
+      <tr class="crm-price-field-form-block-max_value">
+              <td class="label">{$form.max_value.label}</td>
+              <td>{$form.max_value.html}
+              </td>
+            </tr>
  
     </table>
     <div class="spacer"></div>
@@ -110,11 +115,6 @@
               <td>{$form.count.html}<br />
                 <span class="description">{ts}Enter a value here if you want to increment the number of registered participants per unit against the maximum number of participants allowed for this event.{/ts}</span>
                 {help id="id-participant-count"}
-              </td>
-            </tr>
-	    <tr class="crm-price-field-form-block-max_value">
-              <td class="label">{$form.max_value.label}</td>
-              <td>{$form.max_value.html}
               </td>
             </tr>
 	    <tr class="crm-price-field-form-block-description">
