@@ -163,7 +163,9 @@ WHERE     %2.id = %1";
    *                          lineItem array)
    *
    * @return void
-   * @access static  */
+   * @access public
+   * @static
+   */
   static function format($fid, &$params, &$fields, &$values) {
     if (empty($params["price_{$fid}"])) {
       return;

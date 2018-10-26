@@ -119,8 +119,8 @@ cj("#priceset select, #priceset input").each(function () {
             count = 1;
           }
           addprice = singlePrice * count;
-          totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
-          price[ele] = addprice;
+          totalfee   = parseFloat(totalfee) + addprice;
+          price[ele] = parseFloat(price[ele]) + addprice;
         }
         
         //event driven calculation of element.
@@ -138,7 +138,7 @@ cj("#priceset select, #priceset input").each(function () {
           }
           addprice = singlePrice * count;
           totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
-          price[ele] = addprice;
+          price[ele]   = parseFloat(price[ele]) + addprice - parseFloat(price[ele]);
           
           display( totalfee );
         });
@@ -152,15 +152,17 @@ cj("#priceset select, #priceset input").each(function () {
         if ( textval ) {
           eval( 'var option = '+ cj(this).attr('price') );
           ele         = option[0];
-          if ( ! price[ele] ) {
-           price[ele] = 0;
-          }
-          optionPart = String(option[1]).split(optionSep);
-          addprice   = parseFloat( optionPart[0] );
-          var curval  = textval * addprice;
-          if ( textval >= 0 ) {
-            totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
-            price[ele] = curval;
+          if(cj('[name='+ele+'][type="radio"],[name^='+ele+'][type="checkbox"]').length == 0){
+            if ( ! price[ele] ) {
+             price[ele] = 0;
+            }
+            optionPart = String(option[1]).split(optionSep);
+            addprice   = parseFloat( optionPart[0] );
+            var curval  = textval * addprice;
+            if ( textval >= 0 ) {
+              totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
+              price[ele] = curval;
+            }
           }
         }
         

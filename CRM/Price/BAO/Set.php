@@ -560,8 +560,8 @@ WHERE  id = %1";
           if ($params["price_{$id}"] == 0) {
             continue;
           }
-        $params["price_{$id}"] = array($params["price_{$id}"] => 1);
-        $optionValueId = CRM_Utils_Array::key(1, $params["price_{$id}"]);
+        $optionValueId = $params["price_{$id}"];
+        $params["price_{$id}"] = array($params["price_{$id}"] => $params["price_{$id}_{$optionValueId}_count"]);
         $optionLabel = $field['options'][$optionValueId]['label'];
         $params['amount_priceset_level_radio'] = array();
         $params['amount_priceset_level_radio'][$optionValueId] = $optionLabel;
@@ -604,6 +604,7 @@ WHERE  id = %1";
             else {
               $checkboxLevel = array_keys($params['amount_priceset_level_checkbox']);
             }
+            $params["price_{$id}"][$optionId] = $params["price_{$id}_{$optionId}_count"];
           }
           CRM_Price_BAO_LineItem::format($id, $params, $field, $lineItem);
           foreach ($optionIds as $optionId) {
