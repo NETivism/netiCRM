@@ -93,7 +93,18 @@
             r.style.display = 'none';
         }
     }
-    {/literal}
-    {* hide and display the appropriate blocks as directed by the php code *}
     on_load_init_blocks( showRows, hideBlocks, '' );
+    cj(document).ready(function($){
+      $("input[name=max_value]").change(function(){
+        if($(this).val()) {
+          $("input[name^=option_max_value]").val('').attr("disabled", true);
+          $("input[name^=option_count]").val('1').attr("readonly", true);
+        }
+        else {
+          $("input[name^=option_max_value]").removeAttr("disabled");
+          $("input[name^=option_count]").removeAttr("readonly");
+        }
+      });
+    });
+    {/literal}
 </script>

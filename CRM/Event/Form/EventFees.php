@@ -417,6 +417,7 @@ SELECT  id, html_type
 
       foreach ($lineItems[$participantID] as $lineId => $items) {
         $fieldId = $items['price_field_id'];
+        $optionId = $items['price_field_value_id'];
         $htmlType = CRM_Utils_Array::value($fieldId, $htmlTypes);
         if (!$htmlType) {
           continue;
@@ -430,15 +431,13 @@ SELECT  id, html_type
           if (!is_array($fieldOptValues)) {
             continue;
           }
-
-          foreach ($fieldOptValues as $optionId) {
-            if ($htmlType == "CheckBox") {
-              $defaults["price_{$fieldId}"][$optionId] = TRUE;
-            }
-            else {
-              $defaults["price_{$fieldId}"] = $optionId;
-              break;
-            }
+          if ($htmlType == "CheckBox") {
+            $defaults["price_{$fieldId}"][$optionId] = TRUE;
+            $defaults["price_{$fieldId}_${optionId}_count"] = $items['participant_count'];
+          }
+          else {
+            $defaults["price_{$fieldId}"] = $optionId;
+            break;
           }
         }
       }
