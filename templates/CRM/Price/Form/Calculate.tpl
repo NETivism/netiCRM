@@ -38,6 +38,7 @@ var symbol         = '{/literal}{$currencySymbol}{literal}';
 var optionSep      = '|';
 var priceSet = price = [];
 cj("#priceset select, #priceset input").each(function () {
+  var addprice, singlePrice, countEleName, $countEle, fdName, ele, optionPart;
   if ( cj(this).attr('price') ) {
     var thetype = cj(this)[0].tagName == "INPUT" ? cj(this).attr('type') : cj(this)[0].tagName.toLowerCase();
     switch( thetype ) {
@@ -45,23 +46,57 @@ cj("#priceset select, #priceset input").each(function () {
         //default calcution of element. 
         eval( 'var option = ' + cj(this).attr('price') ) ;
         ele        = option[0];
-        optionPart = option[1].split(optionSep);
-        addprice   = parseFloat( optionPart[0] );    
+        optionPart = String(option[1]).split(optionSep);
+        singlePrice   = parseFloat( optionPart[0] );
+        fdName = cj(this).attr('name').replace(/\[\d+\]/,'');
+        countEleName = fdName+'_'+ele+'_count';
+
+        var $countEle = cj('#'+countEleName);
+        if($countEle.val() == '' || $countEle.val() == 0){
+          participantCount($countEle, 'hide');
+        }
         
         if( cj(this).attr('checked') ) {
-          totalfee   += addprice;
-          price[ele] += addprice;
+          $countEle = cj('#'+countEleName);
+          participantCount($countEle, show);
+          if($countEle.val() == 0){
+            $countEle.val(1);
+          }
+          addPrice = calculateCheckbox(fdName, ele);
+          if(!price[ele]){
+            price[ele] = 0;
+          }
+          totalfee   += addPrice;
+          price[ele] += addPrice;
         }
 
         //event driven calculation of element.
         cj(this).click( function(){
+          var fieldName = cj(this).attr('name').replace(/\[\d+\]/,'');
+          eval( 'var opt = ' + cj(this).attr('price') ) ;
+          var el        = opt[0];
+          var optPart = String(opt[1]).split(optionSep);
+          var countEle = fieldName+'_'+el+'_count';
+          $countEle = cj('#'+countEle);
           if ( cj(this).attr('checked') )  {
-            totalfee   += addprice;
-            price[ele] += addprice;
-          } else {
-            totalfee   -= addprice;
-            price[ele] -= addprice;
+            participantCount($countEle, 'show');
+            if($countEle.length > 0){
+              if(!$countEle.val() || $countEle.val() == 0){
+                $countEle.val(1);
+              }
+            }
           }
+          else {
+            $countEle.val("0");
+            participantCount($countEle, 'hide');
+          }
+          addPrice = calculateCheckbox(fieldName, el);
+          if(!price[el]){
+            price[el] = 0;
+          }
+          subtractPrice = addPrice - price[el];
+          totalfee   += subtractPrice;
+          price[el] += subtractPrice;
           display( totalfee );
         });
         display( totalfee );
@@ -71,21 +106,50 @@ cj("#priceset select, #priceset input").each(function () {
         //default calcution of element. 
         eval( 'var option = ' + cj(this).attr('price') ); 
         ele        = option[0];
-        optionPart = option[1].split(optionSep);
-        addprice   = parseFloat( optionPart[0] );
+        optionPart = String(option[1]).split(optionSep);
+        singlePrice   = parseFloat( optionPart[0] );
+        countEleName = ele+'_'+cj(this).attr('value')+'_count';
         if ( ! price[ele] ) {
           price[ele] = 0;
         }
+
+        $countEle = cj('#'+countEleName);
+        if($countEle.val() == '' || $countEle.val() == 0){
+          $countEle.hide();
+        }
         
         if( cj(this).attr('checked') ) {
-          totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
-          price[ele] = addprice;
+          $countEle = cj('#'+countEleName);
+          if($countEle.length > 0){
+            participantCount($countEle, 'show');
+            if(!$countEle.val()){
+              $countEle.val(1);
+            }
+            count = $countEle.val();
+          }else{
+            count = 1;
+          }
+          addprice = singlePrice * count;
+          totalfee   = parseFloat(totalfee) + addprice;
+          price[ele] = parseFloat(price[ele]) + addprice;
         }
         
         //event driven calculation of element.
         cj(this).click( function(){ 
+          cj('[id^='+ele+'][id$="_count"]').not('#'+countEleName).val("").hide();
+          $countEle = cj('#'+countEleName);
+          if($countEle.length > 0){
+            participantCount($countEle, 'show');
+            if(!$countEle.val()){
+              $countEle.val(1);
+            }
+            count = $countEle.val();
+          }else{
+            count = 1;
+          }
+          addprice = singlePrice * count;
           totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
-          price[ele] = addprice;
+          price[ele]   = parseFloat(price[ele]) + addprice - parseFloat(price[ele]);
           
           display( totalfee );
         });
@@ -99,15 +163,17 @@ cj("#priceset select, #priceset input").each(function () {
         if ( textval ) {
           eval( 'var option = '+ cj(this).attr('price') );
           ele         = option[0];
-          if ( ! price[ele] ) {
-           price[ele] = 0;
-          }
-          optionPart = option[1].split(optionSep);
-          addprice   = parseFloat( optionPart[0] );
-          var curval  = textval * addprice;
-          if ( textval >= 0 ) {
-            totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
-            price[ele] = curval;
+          if(cj('[name='+ele+'][type="radio"],[name^='+ele+'][type="checkbox"]').length == 0){
+            if ( ! price[ele] ) {
+             price[ele] = 0;
+            }
+            optionPart = String(option[1]).split(optionSep);
+            addprice   = parseFloat( optionPart[0] );
+            var curval  = textval * addprice;
+            if ( textval >= 0 ) {
+              totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
+              price[ele] = curval;
+            }
           }
         }
         
@@ -170,21 +236,59 @@ cj("#priceset select, #priceset input").each(function () {
 function calculateText( object ) {
   eval( 'var option = ' + cj(object).attr('price') );
   ele = option[0];
-  if ( ! price[ele] ) {
-    price[ele] = 0;
+  if(cj('[name='+ele+']').is('input.form-radio')){
+    opid = option[1];
+    cj('[name='+ele+'][value='+opid+']').trigger('click');
   }
-  var optionPart = option[1].split(optionSep);
-  addprice    = parseFloat( optionPart[0] );
-  var textval = parseFloat( cj(object).attr('value') );
-  var curval  = textval * addprice;
-  if ( textval >= 0 ) {
-    totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
-    price[ele] = curval;
-  } else {
-    totalfee   = parseFloat(totalfee) - parseFloat(price[ele]);	
-    price[ele] = parseFloat('0');
+  else if(cj('[name^='+ele+'][type="checkbox"]').length > 0){
+    fdName = ele;
+    ele = option[1];
+    addPrice = calculateCheckbox(fdName, ele);
+    subtractPrice = addPrice - price[ele];
+    totalfee   += subtractPrice;
+    price[ele] += subtractPrice;
+    display( totalfee );
+
   }
-  display( totalfee );  
+  else{
+    if ( ! price[ele] ) {
+      price[ele] = 0;
+    }
+    var optionPart = String(option[1]).split(optionSep);
+    addprice    = parseFloat( optionPart[0] );
+    var textval = parseFloat( cj(object).attr('value') );
+    var curval  = textval * addprice;
+    if ( textval >= 0 ) {
+      totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
+      price[ele] = curval;
+    } else {
+      totalfee   = parseFloat(totalfee) - parseFloat(price[ele]);	
+      price[ele] = parseFloat('0');
+    }
+    display( totalfee );  
+  }
+}
+
+function calculateCheckbox( fdName , ele){
+  var $fd = cj('[id="'+fdName+'['+ele+']"]');
+  eval( 'var opt = ' + $fd.attr('price') ) ;
+  var optionPart = String(opt[1]).split(optionSep);
+  var singlePrice = optionPart[0];
+  var countEleName = fdName+'_'+ele+'_count';
+  var count = cj('#'+countEleName).val();
+  return parseFloat(singlePrice) * parseInt(count);
+}
+
+function participantCount(ele, type) {
+  if (type == 'show') {
+    ele.css({"display":"inline", "maxWidth":"50px", "textAlign":"right"});
+    ele.before('<span class="x"> x <span>');
+    ele.show();
+  }
+  else {
+    ele.closest('div').find('.x').remove();
+    ele.hide();
+  }
 }
 
 //display calculated amount

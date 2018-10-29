@@ -47,7 +47,8 @@
                 {assign var="count" value="1"}
                 {foreach name=outer key=key item=item from=$form.$element_name}
                     {if is_numeric($key) }
-                        <span class="price-set-option-content ">{$form.$element_name.$key.html}</span>
+                        {capture assign="element_count"}{$element_name}_{$key}_count{/capture}
+                        <span class="price-set-option-content">{$form.$element_name.$key.html}{$form.$element_count.html}</span>
                         {if $count == $element.options_per_line}
                             </div><div class="price-set-row">
                             {assign var="count" value="1"}
