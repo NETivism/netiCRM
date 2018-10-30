@@ -81,11 +81,8 @@
             <td class="nowrap">{$row.order}</td>
             <td>{if $row.is_required eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
             <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
-{*
-            <td>{if $row.active_on}{$row.active_on|date_format:"%Y-%m-%d"}{/if}</td>
-            <td>{if $row.expire_on}{$row.expire_on|date_format:"%Y-%m-%d"}{/if}</td>
-*}
-            <td>{if $row.html_type eq "Text / Numeric Quantity"}{$row.price|crmMoney}{else}<a href="{crmURL p="civicrm/admin/price/field/option" q="action=browse&reset=1&sid=$sid&fid=$fid"}">{ts}Edit Price Options{/ts}</a>{/if}</td>
+            {capture assign=typeLocalized}{ts}Text / Numeric Quantity{/ts}{/capture}
+            <td>{if $row.html_type eq $typeLocalized}{$row.price|crmMoney}{else}<a href="{crmURL p="civicrm/admin/price/field/option" q="action=browse&reset=1&sid=$sid&fid=$fid"}">{ts}Edit Price Options{/ts}</a>{/if}</td>
             <td>{$row.action|replace:'xx':$row.id}</td>
             <td class="order hiddenElement">{$row.weight}</td>
         </tr>
