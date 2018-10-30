@@ -1730,6 +1730,7 @@ UPDATE  civicrm_participant
     SELECT  line.id as lineId,
             line.entity_id as entity_id,
             line.qty,
+            line.participant_count,
             value.count,
             field.html_type
       FROM  civicrm_line_item line
@@ -1741,12 +1742,15 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
     $lineItem = CRM_Core_DAO::executeQuery($sql);
     $countDetails = $participantCount = array();
     while ($lineItem->fetch()) {
-      $count = $lineItem->count;
-      if (!$count) {
-        $count = 0;
-      }
+      $count = $lineItem->count ? $lineItem->count : 0;
       if ($lineItem->html_type == 'Text') {
-        $count *= $lineItem->qty;
+        $count = $lineItem->qty*$count;
+      }
+      elseif($lineItem->qty){
+        $count = $lineItem->qty*$count;
+      }
+      else {
+        $count = $lineItem->count;
       }
       $countDetails[$lineItem->entity_id][$lineItem->lineId] = $count;
     }
