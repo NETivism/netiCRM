@@ -2274,6 +2274,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
             SELECT      $mailing.id,
                         $mailing.name, 
                         $job.status,
+                        $mailing.subject,
                         MIN($job.scheduled_date) as scheduled_date, 
                         MIN($job.start_date) as start_date,
                         MAX($job.end_date) as end_date,
@@ -2313,6 +2314,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
       $rows[] = array(
         'id' => $dao->id,
         'name' => $dao->name,
+        'subject' => $dao->subject,
         'status' => $dao->status ? $dao->status : 'Not scheduled',
         'created_date' => CRM_Utils_Date::customFormat($dao->created_date),
         'scheduled' => CRM_Utils_Date::customFormat($dao->scheduled_date),

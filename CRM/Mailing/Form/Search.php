@@ -44,13 +44,12 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
     $this->add('text', 'mailing_name', ts('Mailing Name'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'title')
     );
+    $this->add('text', 'mailing_subject', ts('Mailing Subject'), CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'subject'));
 
     $this->addDate('mailing_from', ts('From'), FALSE, array('formatType' => 'searchDate'));
     $this->addDate('mailing_to', ts('To'), FALSE, array('formatType' => 'searchDate'));
 
-    $this->add('text', 'sort_name', ts('Created or Sent by'),
-      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name')
-    );
+    $this->add('text', 'sort_name', ts('Created or Sent by'));
 
     /*
     require_once 'CRM/Campaign/BAO/Campaign.php';
@@ -90,7 +89,7 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
 
     $parent = $this->controller->getParent();
     if (!empty($params)) {
-      $fields = array('mailing_name', 'mailing_from', 'mailing_to', 'sort_name', 'campaign_id', 'mailing_status');
+      $fields = array('mailing_name', 'mailing_from', 'mailing_to', 'sort_name', 'campaign_id', 'mailing_status', 'mailing_subject');
       foreach ($fields as $field) {
         if (isset($params[$field]) &&
           !CRM_Utils_System::isNull($params[$field])

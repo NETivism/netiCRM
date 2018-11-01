@@ -144,6 +144,11 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
         array(
+          'name' => ts('Mailing Subject'),
+          'sort' => 'subject',
+          'direction' => CRM_Utils_Sort::DONTCARE,
+        ),
+        array(
           'name' => ts('Mailing Visibility'),
           'sort' => 'visibility',
           'direction' => CRM_Utils_Sort::DONTCARE,
@@ -493,7 +498,18 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
       }
     }
 
-    require_once 'CRM/Utils/Date.php';
+    $subject = $this->_parent->get('mailing_subject');
+
+    if ($subject) {
+      $clauses[] = 'subject LIKE %9';
+      if (strpos($title, '%') !== FALSE) {
+        $params[9] = array($subject, 'String', FALSE);
+      }
+      else {
+        $params[9] = array($subject, 'String', TRUE);
+      }
+    }
+
 
     $from = $this->_parent->get('mailing_from');
     if (!CRM_Utils_System::isNull($from)) {
