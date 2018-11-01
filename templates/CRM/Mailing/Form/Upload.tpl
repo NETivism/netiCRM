@@ -150,6 +150,27 @@
             }
         }).width(popupWidth - horizontalPadding).height(popupHeight - verticalPadding);
       });
+      function addAnEventListener(obj,evt,func){
+        if ('addEventListener' in obj){
+          obj.addEventListener(evt, func, false);
+        }
+        else if ('attachEvent' in obj){//IE
+          obj.attachEvent('on'+evt, func);
+        }
+      }
+
+      function iFrameListener(e){
+        if (event.origin.match(/neticrm\.tw/)) {
+          var data = e.data;
+          cj('.externalSite').dialog('close')
+          cj("#compose_id")[0].scrollIntoView();
+          CKEDITOR.instances['html_message'].setData(data);
+        }
+      }
+
+
+      addAnEventListener(window, 'message', iFrameListener);
+
     });
 </script>
 {/literal}
