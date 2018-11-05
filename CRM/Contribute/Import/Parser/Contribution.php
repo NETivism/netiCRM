@@ -275,6 +275,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $addedError = NULL;
     foreach ($params as $key => $val) {
       $contactExists = NULL;
+      $isDeleted = NULL;
       if ($val) {
         switch ($key) {
           case 'receive_date':
@@ -321,16 +322,29 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             }
             break;
           case 'contribution_contact_id':
-            $contactExists = CRM_Import_Parser_Contact::checkContactById(array('contribution_contact_id' => $params['contribution_contact_id']), 'contribution_contact_id');
-            if (!$contactExists) {
-              CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
+            if ($this->_createContactOption == self::CONTACT_NOIDCREATE) {
+							$contactExists = CRM_Import_Parser_Contact::checkContactById(array('contribution_contact_id' => $params['contribution_contact_id']), 'contribution_contact_id');
+							if (!$contactExists) {
+                CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
+              }
+            }
+            $isDeleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'id');
+            if ($isDeleted) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
             }
             break;
           case 'external_identifier':
-            $contactExists = CRM_Import_Parser_Contact::checkContactById(array('external_identifier' => $params['external_identifier']), 'contribution_contact_id');
-            if (!$contactExists) {
-              CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
+            if ($this->_createContactOption == self::CONTACT_NOIDCREATE) {
+              $contactExists = CRM_Import_Parser_Contact::checkContactById(array('external_identifier' => $params['external_identifier']), 'contribution_contact_id');
+              if (!$contactExists) {
+                CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('External Identifier').'-'.$val)), $errorMessage);
+              }
             }
+            $isDeleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'external_identifier');
+            if ($isDeleted) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('External Identifier').'-'.$val)), $errorMessage);
+            }
+            break;
           case 'soft_credit':
             if ((!empty($params['soft_credit']['external_identifier']) || !empty($params['soft_credit']['contact_id'])) && !empty($val)) {
               $contactExists = CRM_Import_Parser_Contact::checkContactById($params['soft_credit'], 'contact_id');

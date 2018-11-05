@@ -885,7 +885,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
 
     $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvidea, $mapperPCP);
     $parser->run($fileName, $seperator, $mapper, $skipColumnHeader,
-      CRM_Contribute_Import_Parser::MODE_PREVIEW, $this->get('contactType')
+      CRM_Contribute_Import_Parser::MODE_PREVIEW, $this->get('contactType'),
+      CRM_Contribute_Import_Parser::DUPLICATE_SKIP, $this->get('createContactOption'), $this->get('dedupeRuleGroup')
     );
 
     // add all the necessary variables to the form
