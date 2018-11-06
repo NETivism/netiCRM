@@ -125,6 +125,12 @@
      <access_callback>1</access_callback>
   </item>
   <item>
+     <path>civicrm/track/report</path>
+     <title>Track</title>
+     <page_callback>CRM_Track_Page_Track</page_callback>
+     <access_arguments>access CiviCRM;access CiviContribute;access CiviEvent</access_arguments>
+  </item>
+  <item>
      <path>civicrm/linepay/confirm</path>
      <page_callback>CRM_Core_Payment_LinePay::confirm</page_callback> 
      <access_callback>1</access_callback>
