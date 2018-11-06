@@ -46590,3 +46590,6 @@ msgstr ""
 
 msgid "If the provider needs server IP address, the IP address of this website is %1"
 msgstr ""
+
+msgid "Each"
+msgstr ""

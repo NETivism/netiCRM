@@ -395,6 +395,7 @@ WHERE     ct.id = cp.contribution_type_id AND
       'label',
       'html_type',
       'is_enter_qty',
+      'max_value',
       'help_post',
       'is_display_amounts',
       'options_per_line',
@@ -560,22 +561,22 @@ WHERE  id = %1";
           if ($params["price_{$id}"] == 0) {
             continue;
           }
-        $optionValueId = $params["price_{$id}"];
-        $params["price_{$id}"] = array($params["price_{$id}"] => $params["price_{$id}_{$optionValueId}_count"]);
-        $optionLabel = $field['options'][$optionValueId]['label'];
-        $params['amount_priceset_level_radio'] = array();
-        $params['amount_priceset_level_radio'][$optionValueId] = $optionLabel;
-        if (isset($radioLevel)) {
-          $radioLevel = array_merge($radioLevel,
-            array_keys($params['amount_priceset_level_radio'])
-          );
-        }
-        else {
-          $radioLevel = array_keys($params['amount_priceset_level_radio']);
-        }
-        CRM_Price_BAO_LineItem::format($id, $params, $field, $lineItem);
-        $totalPrice += $lineItem[$optionValueId]['line_total'];
-        break;
+          $optionValueId = $params["price_{$id}"];
+          $params["price_{$id}"] = array($params["price_{$id}"] => $params["price_{$id}_{$optionValueId}_count"]);
+          $optionLabel = $field['options'][$optionValueId]['label'];
+          $params['amount_priceset_level_radio'] = array();
+          $params['amount_priceset_level_radio'][$optionValueId] = $optionLabel;
+          if (isset($radioLevel)) {
+            $radioLevel = array_merge($radioLevel,
+              array_keys($params['amount_priceset_level_radio'])
+            );
+          }
+          else {
+            $radioLevel = array_keys($params['amount_priceset_level_radio']);
+          }
+          CRM_Price_BAO_LineItem::format($id, $params, $field, $lineItem);
+          $totalPrice += $lineItem[$optionValueId]['line_total'];
+          break;
 
         case 'Select':
           $params["price_{$id}"] = array($params["price_{$id}"] => 1);
