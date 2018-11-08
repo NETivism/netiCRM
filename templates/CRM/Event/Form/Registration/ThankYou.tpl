@@ -46,7 +46,7 @@
        </div><br /><br />
     {/if}  
 
-    <div id="help">
+    <div {if $payment_result_type eq 4}class="messages error"{else}id="help"{/if}>
         {if $isOnWaitlist}
             <p>
                 <span class="bold">{ts}You have been added to the WAIT LIST for this event.{/ts}</span>
@@ -67,7 +67,7 @@
             </div>
           {/if}
         {elseif $payment_result_type eq 4 and $paidEvent}
-          <h3 class="crm-error">{ts}Payment failed.{/ts}</h3>
+          <h3>{ts}Payment failed.{/ts}</h3>
           {ts}We were unalbe to process your payment. Your will not been charged in this transaction.{/ts}
           {ts}Possible reason{/ts}:
           <ul>

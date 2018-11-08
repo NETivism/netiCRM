@@ -979,6 +979,9 @@ SELECT id
         $params['attributes'] = 'data-parent='.$params['parent'];
         unset($params['parent']);
       }
+      else {
+        $params['attributes'] = 'null';
+      }
     }
 
     $customField = CRM_Core_BAO_CustomField::create($params);
