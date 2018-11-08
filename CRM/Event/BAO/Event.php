@@ -1465,7 +1465,7 @@ WHERE civicrm_event.is_active = 1
             require_once 'CRM/Core/BAO/CustomField.php';
             if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name)) {
               $query = "
-SELECT html_type, data_type
+SELECT html_type, data_type, date_format
 FROM   civicrm_custom_field
 WHERE  id = $cfID
 ";
@@ -1493,10 +1493,18 @@ WHERE  id = $cfID
                   $customVal = (float )($params[$name]);
                 }
                 elseif ($dao->data_type == 'Date') {
-                  $date = CRM_Utils_Date::format($params[$name], NULL, 'invalidDate');
-                  if ($date != 'invalidDate') {
-                    $customVal = $date;
+                  $customFormat = NULL;
+                  if ($dao->date_format) {
+                    $supportableFormats = array(
+                      'mm/dd' => "%B %E%f $customTimeFormat",
+                      'dd-mm' => "%E%f %B $customTimeFormat",
+                      'yy' => "%Y $customTimeFormat",
+                    );
+                    if (array_key_exists($dao->date_format, $supportableFormats)) {
+                      $customFormat = $supportableFormats["$format"];
+                    }
                   }
+                  $customVal = CRM_Utils_Date::customFormat($params[$name], $customFormat);
                 }
                 else {
                   $customVal = $params[$name];
