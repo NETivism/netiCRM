@@ -251,6 +251,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     if ($this->_sid) {
       require_once 'CRM/Price/BAO/Set.php';
       CRM_Price_BAO_Set::checkPermission($this->_sid);
+      $this->assign('sid', $this->_sid);
     }
     //as url contain $sid so append breadcrumb dynamically.
     $breadcrumb = array(array('title' => ts('Price Fields'),

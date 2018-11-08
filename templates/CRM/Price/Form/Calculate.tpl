@@ -58,7 +58,7 @@ cj("#priceset select, #priceset input").each(function () {
         
         if( cj(this).attr('checked') ) {
           $countEle = cj('#'+countEleName);
-          participantCount($countEle, show);
+          participantCount($countEle, 'show');
           if($countEle.val() == 0){
             $countEle.val(1);
           }
@@ -282,7 +282,10 @@ function calculateCheckbox( fdName , ele){
 function participantCount(ele, type) {
   if (type == 'show') {
     ele.css({"display":"inline", "maxWidth":"50px", "textAlign":"right"});
-    ele.before('<span class="x"> x <span>');
+    var prev = ele.prev();
+    if(prev.is(':not(.x)') || prev.length == 0){
+      ele.before('<span class="x"> x <span>');
+    }
     ele.show();
   }
   else {

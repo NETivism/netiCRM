@@ -93,7 +93,10 @@
         {/if}
       <tr class="crm-price-field-form-block-max_value">
               <td class="label">{$form.max_value.label}</td>
-              <td>{$form.max_value.html}
+              <td>{$form.max_value.html}<br/>
+                <span class="description">
+                  {ts}This will disable the max participants settings of the options in this field.{/ts}
+                </span>
               </td>
             </tr>
  

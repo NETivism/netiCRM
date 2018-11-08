@@ -170,12 +170,10 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
         if ($maxValue) {
           $readonly = array('readonly' => true);
         }
+        $this->assign('field_max_value', $maxValue);
       }
-      $ele = $this->add('text', 'count', ts('Participants Count'), $readonly);
+      $ele = $this->add('text', 'count', ts('Participants Count'));
       $this->addRule('count', ts('Please enter a valid Max Participants.'), 'positiveInteger');
-      if ($maxValue) {
-        $this->setDefaults(array('count' => 1));  
-      }
 
       $ele = $this->add('text', 'max_value', ts('Max Participants'), $readonly);
       $this->addRule('max_value', ts('Please enter a valid Max Participants.'), 'positiveInteger');
