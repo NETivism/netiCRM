@@ -1015,6 +1015,11 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     // next drop the column from the custom value table
     self::createField($field, 'delete');
 
+    if ($field->id && $field->html_type == 'Select') {
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_custom_field SET attributes = NULL WHERE attributes LIKE %1", array(
+        1 => array('data-parent='.$field->id,'String')
+      ));
+    }
     $field->delete();
     return;
   }
