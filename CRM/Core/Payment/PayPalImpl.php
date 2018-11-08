@@ -424,7 +424,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
 
     $url = ($component == 'event') ? 'civicrm/event/register' : 'civicrm/contribute/transact';
     $returnURL = CRM_Utils_System::url($url, "_qf_ThankYou_display=1&qfKey={$params['qfKey']}", TRUE, NULL, FALSE);
-    $cancelURL = CRM_Utils_System::url($url, "reset=1&id=".$params['contributionPageID'].$testingParam, TRUE, NULL, FALSE);
+    $cancelURL = CRM_Utils_System::url($url, "_qf_ThankYou_display=1&qfKey={$params['qfKey']}&payment_result_type=4", TRUE, NULL, FALSE);
 
     $paypalParams = array('business' => $this->_paymentProcessor['user_name'],
       'notify_url' => $notifyURL,

@@ -85,9 +85,12 @@
     {if $lineItems.$participant_id}
         <td>
         {foreach from=$lineItems.$participant_id item=line name=lineItemsIter}
-	    {if $line.html_type eq 'Text'}{$line.label}{else}{$line.field_title} - {$line.label}{/if}: {$line.qty}
+            {if $line.html_type eq 'Text'}{$line.label}{else}{$line.field_title}-{$line.label}x{$line.qty}{/if}: {$line.line_total}
             {if ! $smarty.foreach.lineItemsIter.last}<br />{/if}
         {/foreach}
+        <br>
+        <hr>
+        {$row.participant_fee_amount|crmMoney:$row.participant_fee_currency}
         </td>
     {else}
         <td class="crm-participant-participant_fee_level">{if !$row.paid && !$row.participant_fee_level} {ts}(no fee){/ts}{else} {$row.participant_fee_level} ({$row.participant_fee_amount|crmMoney:$row.participant_fee_currency}){/if}</td>

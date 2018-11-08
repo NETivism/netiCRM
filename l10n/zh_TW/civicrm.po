@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-10-24 07:31+0000\n"
+"PO-Revision-Date: 2018-11-08 09:11+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46756,3 +46756,18 @@ msgid ""
 "If the provider needs server IP address, the IP address of this website is "
 "%1"
 msgstr "若金流機制需填入 IP 位址，本網站的 IP 為「 %1 」"
+
+msgid "Each"
+msgstr "單價"
+
+#: templates/CRM/Price/Form/Field.tpl
+msgid ""
+"This depends on the field setting. You can change it on <a href=\"%1\">the "
+"field setting page</a>."
+msgstr "此功能因欄位有設「參加者最多人數」而停用，要修改欄位的「參加者最多人數」請到<a href=\"%1\">價格欄位設定頁面</a>。"
+
+#: templates/CRM/Price/Form/Option.tpl
+msgid ""
+"This will disable the max participants settings of the options in this "
+"field."
+msgstr "啟用此設定會停用此欄位下各選項的「參加者最多人數」功能。"

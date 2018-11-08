@@ -228,11 +228,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
       if (in_array($eventComponentId, $this->_extendComponentId)) {
         // count
-        $this->add('text', 'option_count[' . $i . ']', ts('Participant Count'), $attributes['count']);
+        $this->addNumber('option_count[' . $i . ']', ts('Participant Count'), array('min' => 0));
         $this->addRule('option_count[' . $i . ']', ts('Please enter a valid Participants Count.'), 'positiveInteger');
 
         // max_value
-        $this->add('text', 'option_max_value[' . $i . ']', ts('Max Participants'), $attributes['max_value']);
+        $this->addNumber('option_max_value[' . $i . ']', ts('Max Participants'), array('min' => 0));
         $this->addRule('option_max_value[' . $i . ']', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
         // description

@@ -990,6 +990,9 @@ div.spacer,
     vertical-align:middle;
     padding-left: 1px;
 }
+.crm-container input[type="number"]{
+    width:80px;
+}
 
 .crm-container .form-submit-inline {
     margin: 0em 0.5em 0.25em 0em;

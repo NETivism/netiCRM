@@ -414,7 +414,6 @@ SELECT  id, html_type
       while ($fieldDAO->fetch()) {
         $htmlTypes[$fieldDAO->id] = $fieldDAO->html_type;
       }
-
       foreach ($lineItems[$participantID] as $lineId => $items) {
         $fieldId = $items['price_field_id'];
         $optionId = $items['price_field_value_id'];
@@ -433,7 +432,11 @@ SELECT  id, html_type
           }
           if ($htmlType == "CheckBox") {
             $defaults["price_{$fieldId}"][$optionId] = TRUE;
-            $defaults["price_{$fieldId}_${optionId}_count"] = $items['participant_count'];
+            $defaults["price_{$fieldId}_${optionId}_count"] = $items['qty'];
+          }
+          elseif ($htmlType == "Radio" && $items['qty']) {
+            $defaults["price_{$fieldId}"] = $optionId;
+            $defaults["price_{$fieldId}_${optionId}_count"] = $items['qty'];
           }
           else {
             $defaults["price_{$fieldId}"] = $optionId;

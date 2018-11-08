@@ -691,10 +691,14 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
    */
   public static function paymentResultType(&$form, $params, $status = NULL, $message = NULL){
     if(empty($status)){
-      $contribution = new CRM_Contribute_BAO_Contribution();
-      $contribution->copyValues($params);
-      if($contribution->find(TRUE)) {
-        $status = $contribution->contribution_status_id;
+      // trying to get status from GET
+      $status = CRM_Utils_Request::retrieve('payment_result_type', 'Int', $form);
+      if (empty($status)) {
+        $contribution = new CRM_Contribute_BAO_Contribution();
+        $contribution->copyValues($params);
+        if($contribution->find(TRUE)) {
+          $status = $contribution->contribution_status_id;
+        }
       }
     }
 
@@ -713,10 +717,15 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
         }
         break;
       case 4: // failed
+        CRM_Utils_System::setTitle(ts('Payment failed.'));
         $form->assign('payment_result_type', 4);
         break;
     }
-    $form->assign('payment_result_message', $message);
+
+    if (empty($message)) {
+      $message = CRM_Utils_Request::retrieve('payment_result_message', 'String', $form);
+      $form->assign('payment_result_message', $message);
+    }
   }
 
   /**

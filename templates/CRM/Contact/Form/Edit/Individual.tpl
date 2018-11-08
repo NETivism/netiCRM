@@ -158,7 +158,7 @@ var checkSimilar = {$checkSimilar};
 var dataUrl        = "{/literal}{$employerDataURL}{literal}";
 var newContactText = "{/literal}({ts}new contact record{/ts}){literal}";
 cj('#current_employer').autocomplete( dataUrl, { 
-                                      width        : 250, 
+                                      width        : 350, 
                                       selectFirst  : false,
                                       matchCase    : true, 
                                       matchContains: true
@@ -189,14 +189,15 @@ if ( employerId ) {
         async   : false,
         success : function(html){
             //fixme for showing address in div
-            htmlText = html.split( '|' , 2);
-            cj('input#current_employer').val(htmlText[0]);
+            var htmlText = html.split( '|' , 2);
+            var employerName = htmlText[0].split(' :: ');
+            cj('input#current_employer').val(employerName[0]);
             cj('input#current_employer_id').val(htmlText[1]);
         }
     }); 
 }
 
-cj("input#current_employer").click( function( ) {
+cj("input#current_employer").change( function( ) {
     cj("input#current_employer_id").val('');
 });
 </script>
