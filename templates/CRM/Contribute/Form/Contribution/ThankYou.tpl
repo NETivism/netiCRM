@@ -49,7 +49,7 @@
     </div><br /><br />
     {/if}  
 
-    <div id="help">
+    <div {if $payment_result_type eq 4}class="messages error"{else}id="help"{/if}>
       {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
       {if $payment_result_type eq 1 && $is_monetary}
         <h3>{ts}Congratulations! Your payment has been completed!{/ts}</h3>
@@ -65,7 +65,7 @@
           </div>
         {/if}
       {elseif $payment_result_type eq 4 && $is_monetary}
-        <h3 class="crm-error">{ts}Payment failed.{/ts}</h3>
+        <h3>{ts}Payment failed.{/ts}</h3>
         {ts}We were unable to process your payment. You will not be charged in this transaction.{/ts}
         {ts}Possible reason{/ts}:
         <ul>

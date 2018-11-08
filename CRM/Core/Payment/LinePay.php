@@ -286,7 +286,7 @@ class CRM_Core_Payment_LinePay {
 
   private static function prepareThankYouUrl($qfKey, $failed = false){
     $query = "_qf_ThankYou_display=1&qfKey={$qfKey}";
-    $query .= $failed ? '&result=4' : '&result=1';
+    $query .= $failed ? '&payment_result_type=4' : '&payment_result_type=1';
     $url = CRM_Utils_System::url('civicrm/contribute/transact', $query, True, NULL, False);
     $url = self::validateUrlIsHttps($url);
     return $url;

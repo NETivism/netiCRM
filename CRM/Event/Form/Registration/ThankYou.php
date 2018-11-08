@@ -66,6 +66,15 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     $customGroup = $this->get('customProfile');
     $this->assign('customProfile', $customGroup);
     CRM_Utils_System::setTitle(CRM_Utils_Array::value('thankyou_title', $this->_values['event']));
+
+    $primaryParticipant = $this->get('registerByID');
+    if ($primaryParticipant) {
+      $contributionId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantPayment', $primaryParticipant, 'contribution_id', 'participant_id');
+      if ($contributionId) {
+        $params['id'] = $contributionId;
+        CRM_Contribute_BAO_Contribution_Utils::paymentResultType($this, $params);
+      }
+    }
   }
 
   /**
