@@ -352,7 +352,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           );
 
           // only enable qty / participant selection when specify max value
-          if (!empty($field->max_value)) {
+          if (!empty($field->max_value) || $field->max_value == '0') {
             $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), array('size' => "1", 'min' => 1, 'step' => 1, 'price' => json_encode(array($elementName, $opId))));
             $participantCount[$opId] = $qf->getElement($elementName.'_'.$opId.'_count');
           }
@@ -431,7 +431,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
             array('price' => json_encode(array($opt['id'], $priceVal)))
           );
 
-          if (!empty($field->max_value)) {
+          if (!empty($field->max_value) || $field->max_value == '0') {
             $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), array('size' => "1", 'min' => 1, 'step' => 1, 'price' => json_encode(array($elementName, $opId))));
             $participantCount[$opId] = $qf->getElement($elementName.'_'.$opId.'_count');
           }

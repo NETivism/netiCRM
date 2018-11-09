@@ -46601,3 +46601,11 @@ msgstr ""
 #: templates/CRM/Price/Form/Option.tpl
 msgid "This will disable the max participants settings of the options in this field."
 msgstr ""
+
+#: CRM/Price/Form/Field.php
+msgid "Allow Changing Count"
+msgstr ""
+
+#: templates/CRM/Price/Form/Field.tpl
+msgid "The quantity of each option can be changed when registration."
+msgstr ""

@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-11-08 09:11+0000\n"
+"PO-Revision-Date: 2018-11-09 08:44+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -18664,7 +18664,7 @@ msgstr "父層工作"
 
 #: CRM/Project/DAO/Task.php templates/CRM/Pledge/Page/Payment.tpl
 msgid "Due Date"
-msgstr "已過日期"
+msgstr "截止日期"
 
 #: CRM/Project/DAO/Task.php
 msgid "Task Class"
@@ -27874,7 +27874,7 @@ msgstr "請包括您致敬的人的名稱，及 Email。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/PaymentReminders.tpl
 msgid "Days prior to each scheduled payment due date."
-msgstr "請輸入數字，數字代表每個排程付款日的前幾日。"
+msgstr "天前（於已排定的截止日期）。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/PaymentReminders.tpl
 msgid "Reminders for each scheduled payment."
@@ -28276,7 +28276,7 @@ msgstr "他們也可以設定一個間隔(例如每'3'個月)嗎？"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "days prior to each scheduled payment due date."
-msgstr "天前（於已排定的付款日期）。"
+msgstr "天前（於已排定的截止日期）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "reminders for each scheduled payment."
@@ -46771,3 +46771,11 @@ msgid ""
 "This will disable the max participants settings of the options in this "
 "field."
 msgstr "啟用此設定會停用此欄位下各選項的「參加者最多人數」功能。"
+
+#: CRM/Price/Form/Field.php
+msgid "Allow Changing Count"
+msgstr "允許報名時輸入張數"
+
+#: templates/CRM/Price/Form/Field.tpl
+msgid "The quantity of each option can be changed when registration."
+msgstr "若勾選，此欄位的各選項將允許報名者個別填入張數。"

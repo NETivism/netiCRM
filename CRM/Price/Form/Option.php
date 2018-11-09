@@ -169,10 +169,15 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
         $maxValue = CRM_Core_DAO::getFieldValue('CRM_Price_BAO_Field', $this->_fid, 'max_value');
         if ($maxValue) {
           $readonly = array('readonly' => true);
+          $number = array('min' => 0, 'max' => 1);
         }
         $this->assign('field_max_value', $maxValue);
       }
-      $ele = $this->add('text', 'count', ts('Participants Count'));
+      if($maxValue){
+        $ele = $this->addNumber('count', ts('Participants Count'), $number);
+      }else{
+        $ele = $this->add('text', 'count', ts('Participants Count'));
+      }
       $this->addRule('count', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
       $ele = $this->add('text', 'max_value', ts('Max Participants'), $readonly);

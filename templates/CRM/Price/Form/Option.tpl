@@ -56,7 +56,7 @@
                   {$form.max_value.html}{if $field_max_value}<br/>
                   <span class="description">
                     {capture assign=field_page}{crmURL p='civicrm/admin/price/field' q="action=update&reset=1&sid=`$sid`&fid=`$fid`" h=0 a=1 fe=1}{/capture}
-                    {ts 1=$field_page}This depends on field setting. You can change it on <a href="%1">field setting page</a>.{/ts}
+                    {ts 1=$field_page}This depends on the field setting. You can change it on <a href="%1">the field setting page</a>.{/ts}
                   </span>{/if}
                 </td>
             </tr>
