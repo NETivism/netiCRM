@@ -672,7 +672,8 @@ class CRM_Core_SelectValues {
    * Map date plugin and actual format that is used by PHP
    */
   static function datePluginToPHPFormats() {
-    $dateInputFormats = array("mm/dd/yy" => 'm/d/Y',
+    $dateInputFormats = array(
+      "mm/dd/yy" => 'm/d/Y',
       "dd/mm/yy" => 'd/m/Y',
       "yy-mm-dd" => 'Y-m-d',
       "dd-mm-yy" => 'd-m-Y',
@@ -687,6 +688,30 @@ class CRM_Core_SelectValues {
       "yy-mm" => 'Y-m',
       "mm/yy" => 'm/Y',
       "yy" => 'Y',
+    );
+    return $dateInputFormats;
+  }
+
+  /**
+   * Map date plugin and actual format that is used by PHP
+   */
+  static function datePluginToPOSIXFormats() {
+    $dateInputFormats = array(
+      "mm/dd/yy" => '%m/%d/%Y',
+      "dd/mm/yy" => '%d/%m/%Y',
+      "yy-mm-dd" => '%Y-%m-%d',
+      "dd-mm-yy" => '%d-%m-%Y',
+      "dd.mm.yy" => '%d.%m.%Y',
+      "M d, yy" => '%b %d, %Y',
+      "d M yy" => '%d %b %Y',
+      "MM d, yy" => '%B %d, %Y',
+      "d MM yy" => '%d %B %Y',
+      "DD, d MM yy" => '%d %B %Y',
+      "mm/dd" => '%m/%d',
+      "dd-mm" => '%d-%m',
+      "yy-mm" => '%Y-%m',
+      "mm/yy" => '%m/%Y',
+      "yy" => '%Y',
     );
     return $dateInputFormats;
   }
