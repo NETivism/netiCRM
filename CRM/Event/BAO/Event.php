@@ -1336,6 +1336,8 @@ WHERE civicrm_event.is_active = 1
       foreach ($fields as $name => $field) {
         $index = $field['title'];
         $customFieldName = NULL;
+        $customVal = $displayValue = '';
+        $skip = FALSE;
         if ($name === 'organization_name') {
           $values[$index] = $params[$name];
         }
@@ -1465,7 +1467,7 @@ WHERE civicrm_event.is_active = 1
             require_once 'CRM/Core/BAO/CustomField.php';
             if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name)) {
               $query = "
-SELECT html_type, data_type, date_format
+SELECT html_type, data_type, date_format, time_format
 FROM   civicrm_custom_field
 WHERE  id = $cfID
 ";
@@ -1493,18 +1495,30 @@ WHERE  id = $cfID
                   $customVal = (float )($params[$name]);
                 }
                 elseif ($dao->data_type == 'Date') {
-                  $customFormat = NULL;
-                  if ($dao->date_format) {
-                    $supportableFormats = array(
-                      'mm/dd' => "%B %E%f $customTimeFormat",
-                      'dd-mm' => "%E%f %B $customTimeFormat",
-                      'yy' => "%Y $customTimeFormat",
-                    );
-                    if (array_key_exists($dao->date_format, $supportableFormats)) {
-                      $customFormat = $supportableFormats["$format"];
+                  $posixFormats = CRM_Core_SelectValues::datePluginToPOSIXFormats();
+                  if (!empty($params[$name . '_time'])) {
+                    $customFormat = $config->dateformatDatetime;
+                    if ($dao->date_format && !empty($posixFormats[$dao->date_format])) {
+                      $customFormat = $posixFormats[$dao->date_format];
+                      if (!empty($dao->time_format)) {
+                        if ($dao->time_format == 1) {
+                          $customFormat .= ' %I:%M %P';
+                        }
+                        else {
+                          $customFormat .= ' %H:%M';
+                        }
+                      }
                     }
+                    $customVal = $displayValue = CRM_Utils_Date::customFormat(CRM_Utils_Date::processDate($params[$name], $params[$name . '_time']), $customFormat);
                   }
-                  $customVal = CRM_Utils_Date::customFormat($params[$name], $customFormat);
+                  else {
+                    $customFormat = $config->dateformatFull;
+                    if ($dao->date_format && !empty($posixFormats[$dao->date_format])) {
+                      $customFormat = $posixFormats[$dao->date_format];
+                    }
+                    $customVal = $displayValue = CRM_Utils_Date::customFormat(CRM_Utils_Date::processDate($params[$name]), $customFormat);
+                  }
+                  $skip = TRUE;
                 }
                 else {
                   $customVal = $params[$name];
@@ -1514,7 +1528,9 @@ WHERE  id = $cfID
                 require_once 'CRM/Contact/BAO/Query.php';
                 $query = new CRM_Contact_BAO_Query($params, $returnProperties, $fields);
                 $options = &$query->_options;
-                $displayValue = CRM_Core_BAO_CustomField::getDisplayValue($customVal, $cfID, $options);
+                if (!$skip) {
+                  $displayValue = CRM_Core_BAO_CustomField::getDisplayValue($customVal, $cfID, $options);
+                }
 
                 //Hack since we dont have function to check empty.
                 //FIXME in 2.3 using crmIsEmptyArray()
