@@ -259,8 +259,12 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $sel2['ParticipantRole'] = $participantRole;
     $sel2['ParticipantEventName'] = CRM_Event_PseudoConstant::event(NULL, FALSE, "( is_template IS NULL OR is_template != 1 )");
     $sel2['ParticipantEventType'] = $eventType;
-    $sel2['Contribution'] = CRM_Contribute_PseudoConstant::contributionType();
-    $sel2['ContributionPage'] = CRM_Contribute_PseudoConstant::contributionType();
+
+    // use this because we needs all types include in-active #24107
+    $contributionTypes = array();
+    CRM_Core_PseudoConstant::populate($contributionTypes, 'CRM_Contribute_DAO_ContributionType', TRUE, 'name', '', NULL, 'id');
+    $sel2['Contribution'] = $contributionTypes;
+    $sel2['ContributionPage'] = $contributionTypes;
     $sel2['Relationship'] = $allRelationshipType;
 
     $sel2['Individual'] = CRM_Contact_BAO_ContactType::subTypePairs('Individual', FALSE, NULL);
