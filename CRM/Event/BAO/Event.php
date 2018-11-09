@@ -1493,18 +1493,7 @@ WHERE  id = $cfID
                   $customVal = (float )($params[$name]);
                 }
                 elseif ($dao->data_type == 'Date') {
-                  $customFormat = NULL;
-                  if ($dao->date_format) {
-                    $supportableFormats = array(
-                      'mm/dd' => "%B %E%f $customTimeFormat",
-                      'dd-mm' => "%E%f %B $customTimeFormat",
-                      'yy' => "%Y $customTimeFormat",
-                    );
-                    if (array_key_exists($dao->date_format, $supportableFormats)) {
-                      $customFormat = $supportableFormats["$format"];
-                    }
-                  }
-                  $customVal = CRM_Utils_Date::customFormat($params[$name], $customFormat);
+                  $customVal = $params[$name];
                 }
                 else {
                   $customVal = $params[$name];
