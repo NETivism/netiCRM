@@ -46593,3 +46593,28 @@ msgstr ""
 
 msgid "Each"
 msgstr ""
+
+#: templates/CRM/Price/Form/Field.tpl
+msgid "This depends on the field setting. You can change it on <a href=\"%1\">the field setting page</a>."
+msgstr ""
+
+#: templates/CRM/Price/Form/Option.tpl
+msgid "This will disable the max participants settings of the options in this field."
+msgstr ""
+
+#: CRM/Price/Form/Field.php
+msgid "Allow Changing Count"
+msgstr ""
+
+#: templates/CRM/Price/Form/Field.tpl
+msgid "The quantity of each option can be changed when registration."
+msgstr ""
+
+msgid "A copy of the price field has been created"
+msgstr ""
+
+msgid "Are you sure you want to make a copy of this price field?"
+msgstr ""
+
+msgid "A copy of the price set has been created"
+msgstr ""

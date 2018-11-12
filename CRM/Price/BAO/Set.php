@@ -401,6 +401,7 @@ WHERE     ct.id = cp.contribution_type_id AND
       'options_per_line',
       'is_active',
       'visibility_id',
+      'max_value',
     );
     if ($required == TRUE) {
       $priceFields[] = 'is_required';
@@ -518,6 +519,9 @@ WHERE  id = %1";
         $optionsMaxValueTotal = 0;
         $optionsMaxValueDetails = array();
         foreach ($form->_priceSet['fields'] as $field) {
+          if(isset($field['max_value'])){
+            $optionsMaxValueDetails['fields'][$field['id']]['max_value'] = $field['max_value'];
+          }
           foreach ($field['options'] as $option) {
             $maxVal = CRM_Utils_Array::value('max_value', $option, 0);
             $optionsMaxValueDetails['fields'][$field['id']]['options'][$option['id']] = $maxVal;

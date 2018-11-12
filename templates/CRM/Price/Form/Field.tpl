@@ -29,6 +29,8 @@
     function option_html_type(form) { 
         var html_type = document.getElementById("html_type");
         if (typeof html_type.options === 'undefined') {
+          var html_type_name = html_type.value;
+          setFields(html_type_name);
           return;
         }
         var html_type_name = html_type.options[html_type.selectedIndex].value;
@@ -45,11 +47,12 @@
         }
 
         if (html_type_name == 'Radio' || html_type_name == 'CheckBox') {
-	    cj("#optionsPerLine").show( );
+            cj("#optionsPerLine").show( );
         } else {
-	    cj("#optionsPerLine").hide( );
-	    cj("#optionsPerLineDef").hide( );
+            cj("#optionsPerLine").hide( );
+            cj("#optionsPerLineDef").hide( );
         }
+        setFields(html_type_name);
 
         var radioOption, checkBoxOption;
 
@@ -67,6 +70,35 @@
             }
         }
 	
+    }
+
+    function setFields(html_type_name){
+      cj('.crm-price-field-form-block-max_value label .crm-marker').remove();
+      cj('.crm-price-field-form-block-max_value .description').hide();
+      cj('.crm-price-field-form-block-allow_count').hide();
+      cj('.crm-price-field-form-block-max_value').hide();
+      cj('#max_value').removeClass('required');
+
+      if (html_type_name == 'Radio' || html_type_name == 'CheckBox') {
+        cj('.crm-price-field-form-block-allow_count').show();
+        cj('.crm-price-field-form-block-max_value label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
+        cj('#max_value').addClass('required');
+        cj('.crm-price-field-form-block-max_value .description').show();
+        onChangeAllowCount();
+      }
+      else if(html_type_name == 'Text'){
+        cj('.crm-price-field-form-block-max_value').show();
+      }
+    }
+
+    function onChangeAllowCount(){
+      if(cj('#allow_count').prop('checked')){
+        cj('.crm-price-field-form-block-max_value').show('slow');
+      }
+      else{
+        cj('.crm-price-field-form-block-max_value').hide('slow');
+        cj('#max_value').val("");
+      }
     }
 </script>
 {/literal}
@@ -91,11 +123,21 @@
            </td>
         </tr>
         {/if}
+      <tr class="crm-price-field-form-block-allow_count">
+        <td class="label">{$form.allow_count.label}</td>
+        <td>{$form.allow_count.html}<br/>
+          <span class="description">
+            {ts}The quantity of each option can be changed when registration.{/ts}
+          </span></td>
+      </tr>
       <tr class="crm-price-field-form-block-max_value">
-              <td class="label">{$form.max_value.label}</td>
-              <td>{$form.max_value.html}
-              </td>
-            </tr>
+        <td class="label">{$form.max_value.label}</td>
+        <td>{$form.max_value.html}<br/>
+          <span class="description">
+            {ts}This will disable the max participants settings of the options in this field.{/ts}
+          </span>
+        </td>
+      </tr>
  
     </table>
     <div class="spacer"></div>

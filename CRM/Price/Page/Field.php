@@ -73,6 +73,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     if (!isset(self::$_actionLinks)) {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to delete this price field?');
+      $copyExtra = ts('Are you sure you want to make a copy of this price field?');
       self::$_actionLinks = array(
         CRM_Core_Action::UPDATE => array(
           'name' => ts('Edit Price Field'),
@@ -97,6 +98,13 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
           'extra' => 'onclick = "enableDisable( %%fid%%,\'' . 'CRM_Price_BAO_Field' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Price'),
+        ),
+        CRM_Core_Action::COPY => array(
+          'name' => ts('Copy'),
+          'url' => CRM_Utils_System::currentPath(),
+          'qs' => 'action=copy&sid=%%sid%%&fid=%%fid%%',
+          'title' => ts('Make a Copy of Price Field'),
+          'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
         CRM_Core_Action::DELETE => array(
           'name' => ts('Delete'),
@@ -206,6 +214,29 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     $controller->run();
   }
 
+
+  /**
+   * This function is to make a copy of a price set, including
+   * all the fields in the page
+   *
+   * @return void
+   * @access public
+   */
+  function copy() {
+    $sid = CRM_Utils_Request::retrieve('sid', 'Positive',
+      $this, TRUE, 0, 'GET'
+    );
+
+    $fid = CRM_Utils_Request::retrieve('fid', 'Positive',
+      $this, TRUE, 0, 'GET'
+    );
+
+    require_once 'CRM/Price/BAO/Set.php';
+    $copy = CRM_Price_BAO_Field::copy($fid);
+
+    CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/price/field', "action=update&reset=1&sid={$sid}&fid={$copy->id}"));
+  }
+
   /**
    * Run the page.
    *
@@ -269,6 +300,11 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
         }
         $this->assign('contexts', $priceSetContexts);
       }
+    }
+    elseif ($action & CRM_Core_Action::COPY) {
+      $session = CRM_Core_Session::singleton();
+      CRM_Core_Session::setStatus(ts("A copy of the price field has been created"));
+      $this->copy();
     }
 
     if ($this->_sid) {

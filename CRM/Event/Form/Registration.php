@@ -1277,10 +1277,9 @@ WHERE  v.option_group_id = g.id
           continue;
         }
         foreach ($value as $optId => $optVal) {
-          $currentMaxValue = $optionsCountDetails[$priceFieldId]['options'][$optId] * $optVal;
-          if (!$currentMaxValue) {
-            $currentMaxValue = 1;
-          }
+          $fieldCountName = $valKey.'_'.$optId.'_count';
+          $optCount = array_key_exists($fieldCountName, $values) ? $values[$fieldCountName] : $optVal;
+          $currentMaxValue = $optionsCountDetails[$priceFieldId]['options'][$optId] * $optCount;
           $optionMaxValues[$priceFieldId][$optId] = $currentMaxValue + CRM_Utils_Array::value($optId, $optionMaxValues[$priceFieldId], 0);
         }
       }
@@ -1289,12 +1288,18 @@ WHERE  v.option_group_id = g.id
     //validate for option max value.
     foreach ($optionMaxValues as $fieldId => $values) {
       $options = CRM_Utils_Array::value('options', $feeBlock[$fieldId], array());
+      $fieldTotal = 0;
       foreach ($values as $optId => $total) {
         $optMax = $optionsMaxValueDetails[$fieldId]['options'][$optId];
         $total += CRM_Utils_Array::value('db_total_count', $options[$optId], 0);
         if ($optMax && $total > $optMax) {
           $errors[$currentParticipantNum]["price_{$fieldId}"] = ts('It looks like this field participant count extending its maximum limit.');
         }
+        $fieldTotal += $total;
+      }
+      $fieldMax = $optionsMaxValueDetails[$fieldId]['max_value'];
+      if(!empty($fieldMax) && $fieldTotal > $fieldMax){
+        $errors[$currentParticipantNum]["price_{$fieldId}"] = ts('It looks like this field participant count extending its maximum limit.');
       }
     }
 

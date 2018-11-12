@@ -127,6 +127,10 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
         require_once 'CRM/Utils/Money.php';
         $defaults['price'] = CRM_Utils_Money::format($defaults['amount'], NULL, '%a');
       }
+
+      if(isset($defaults['max_value']) && $defaults['max_value'] >= 0){
+        $defaults['allow_count'] = 1;
+      }
     }
     else {
       $defaults['is_active'] = 1;
@@ -182,7 +186,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $this->add('text', 'count', ts('Participant Count'), $attributes['count']);
       $this->addRule('count', ts('Participant Count should be a positive number'), 'positiveInteger');
 
-      $this->add('text', 'max_value', ts('Max Participants'), $attributes['max_value']);
+      $this->addElement('checkbox', 'allow_count', ts('Allow Changing Count'), NULL, array('onclick' => 'onChangeAllowCount();'));
+
+      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value']+array('min' => 0));
       $this->addRule('max_value', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
       $this->add('textArea', 'description', ts('Description'), $attributes['description']);
@@ -366,6 +372,14 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $errors['label'] = ts('Name already exists in Database.');
     }
 
+    if(($form->_action & CRM_Core_Action::ADD || $form->_action & CRM_Core_Action::UPDATE) && $fields['allow_count']){
+      if(!is_numeric($fields['max_value']) || $fields['max_value'] == ''){
+        $errors['max_value'] = ts('must be a numeric value');
+      }
+      elseif($fields['max_value'] < 0){
+        $errors['max_value'] = ts("greater than or equal to '%1'", array(1 => 0));
+      }
+    }
 
     if ((is_numeric(CRM_Utils_Array::value('count', $fields)) &&
         CRM_Utils_Array::value('count', $fields) == 0

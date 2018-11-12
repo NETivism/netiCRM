@@ -155,7 +155,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
     }
     elseif ($action & CRM_Core_Action::COPY) {
       $session = CRM_Core_Session::singleton();
-      CRM_Core_Session::setStatus("A copy of the price set has been created");
+      CRM_Core_Session::setStatus(ts("A copy of the price set has been created"));
       $this->copy();
     }
     else {

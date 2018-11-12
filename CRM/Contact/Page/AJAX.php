@@ -166,15 +166,15 @@ class CRM_Contact_Page_AJAX {
     while ($dao->fetch()) {
       $d = $id = '';
       if ($perm) {
-        $id = !empty($dao->external_identifier) ? " [$dao->id - $dao->external_identifier]" : " [$dao->id]";
+        $id = !empty($dao->external_identifier) ? " :: [$dao->id - $dao->external_identifier]" : " :: [$dao->id]";
         if ($dao->contact_type == 'Organization') {
           if (!empty($dao->sic_code)) {
-            $d = "-$dao->sic_code";
+            $d = " :: $dao->sic_code";
           }
         }
         else {
           if (!empty($dao->legal_identifier)) {
-            $d = '-' . substr($dao->legal_identifier, 0, 1) . str_repeat('*', strlen($dao->legal_identifier) - 7) . substr($dao->legal_identifier, -6, 6);
+            $d = ' :: ' . substr($dao->legal_identifier, 0, 1) . str_repeat('*', strlen($dao->legal_identifier) - 7) . substr($dao->legal_identifier, -6, 6);
           }
         }
       }

@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-10-30 06:41+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-11-12 06:14+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18664,7 +18664,7 @@ msgstr "父層工作"
 
 #: CRM/Project/DAO/Task.php templates/CRM/Pledge/Page/Payment.tpl
 msgid "Due Date"
-msgstr "已過日期"
+msgstr "截止日期"
 
 #: CRM/Project/DAO/Task.php
 msgid "Task Class"
@@ -27874,7 +27874,7 @@ msgstr "請包括您致敬的人的名稱，及 Email。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/PaymentReminders.tpl
 msgid "Days prior to each scheduled payment due date."
-msgstr "請輸入數字，數字代表每個排程付款日的前幾日。"
+msgstr "天前（於已排定的截止日期）。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/PaymentReminders.tpl
 msgid "Reminders for each scheduled payment."
@@ -28276,7 +28276,7 @@ msgstr "他們也可以設定一個間隔(例如每'3'個月)嗎？"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "days prior to each scheduled payment due date."
-msgstr "天前（於已排定的付款日期）。"
+msgstr "天前（於已排定的截止日期）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "reminders for each scheduled payment."
@@ -46759,3 +46759,32 @@ msgstr "若金流機制需填入 IP 位址，本網站的 IP 為「 %1 」"
 
 msgid "Each"
 msgstr "單價"
+
+#: templates/CRM/Price/Form/Field.tpl
+msgid ""
+"This depends on the field setting. You can change it on <a href=\"%1\">the "
+"field setting page</a>."
+msgstr "此功能因欄位有設「參加者最多人數」而停用，要修改欄位的「參加者最多人數」請到<a href=\"%1\">價格欄位設定頁面</a>。"
+
+#: templates/CRM/Price/Form/Option.tpl
+msgid ""
+"This will disable the max participants settings of the options in this "
+"field."
+msgstr "啟用此設定會停用此欄位下各選項的「參加者最多人數」功能。"
+
+#: CRM/Price/Form/Field.php
+msgid "Allow Changing Count"
+msgstr "允許報名時輸入張數"
+
+#: templates/CRM/Price/Form/Field.tpl
+msgid "The quantity of each option can be changed when registration."
+msgstr "若勾選，此欄位的各選項將允許報名者個別填入張數。"
+
+msgid "A copy of the price field has been created"
+msgstr "已建立複製的價目表欄位"
+
+msgid "Are you sure you want to make a copy of this price field?"
+msgstr "您確定複製這個價目表欄位？"
+
+msgid "A copy of the price set has been created"
+msgstr "已建立複製的價目表"

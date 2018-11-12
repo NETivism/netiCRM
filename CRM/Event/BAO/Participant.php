@@ -555,12 +555,15 @@ INNER JOIN  civicrm_price_field field       ON ( value.price_field_id = field.id
 
     $lineItem = CRM_Core_DAO::executeQuery($sql, array(1 => array($eventId, 'Positive')));
     while ($lineItem->fetch()) {
-      $count = $lineItem->count;
-      if (!$count) {
-        $count = 0;
-      }
+      $count = $lineItem->count ? $lineItem->count : 0;
       if ($lineItem->html_type == 'Text') {
-        $count *= $lineItem->qty;
+        $count = $lineItem->qty*$count;
+      }
+      elseif($lineItem->qty){
+        $count = $lineItem->qty*$count;
+      }
+      else {
+        $count = $lineItem->count;
       }
       $optionsCount[$lineItem->valueId] = $count + CRM_Utils_Array::value($lineItem->valueId, $optionsCount, 0);
     }
