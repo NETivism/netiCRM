@@ -46609,3 +46609,12 @@ msgstr ""
 #: templates/CRM/Price/Form/Field.tpl
 msgid "The quantity of each option can be changed when registration."
 msgstr ""
+
+msgid "A copy of the price field has been created"
+msgstr ""
+
+msgid "Are you sure you want to make a copy of this price field?"
+msgstr ""
+
+msgid "A copy of the price set has been created"
+msgstr ""

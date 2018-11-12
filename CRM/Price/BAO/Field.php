@@ -692,5 +692,30 @@ ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
 
     return $levels;
   }
+
+  /**
+   * This function is to make a copy of a price field, including
+   * all the fields
+   *
+   * @param int $id the price field id to copy
+   *
+   * @return the copy object
+   * @access public
+   * @static
+   */
+  static function copy($fid) {
+    $fieldsFix = array(
+      'suffix' => array(
+        'label' => ' ' . ts("Copy"),
+      )
+    );
+    $copy = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Field', array('id' => $fid), NULL, $fieldsFix);
+    $fieldValues = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_FieldValue', array('price_field_id' => $fid), array('price_field_id' => $copy->id));
+
+    require_once 'CRM/Utils/Hook.php';
+    CRM_Utils_Hook::copy('PriceField', $copy);
+    return $copy;
+
+  }
 }
 

@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-11-09 08:44+0000\n"
+"PO-Revision-Date: 2018-11-12 06:14+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46779,3 +46779,12 @@ msgstr "允許報名時輸入張數"
 #: templates/CRM/Price/Form/Field.tpl
 msgid "The quantity of each option can be changed when registration."
 msgstr "若勾選，此欄位的各選項將允許報名者個別填入張數。"
+
+msgid "A copy of the price field has been created"
+msgstr "已建立複製的價目表欄位"
+
+msgid "Are you sure you want to make a copy of this price field?"
+msgstr "您確定複製這個價目表欄位？"
+
+msgid "A copy of the price set has been created"
+msgstr "已建立複製的價目表"
