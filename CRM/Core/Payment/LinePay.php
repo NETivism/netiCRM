@@ -45,6 +45,7 @@ class CRM_Core_Payment_LinePay {
     $contributionId = $params['contributionID'];
     $paymentProcessorId = $params['payment_processor'];
     $confirmQuery = "qfKey={$qfKey}&cid={$contributionId}&ppid={$paymentProcessorId}";
+    $path = CRM_Utils_System::currentPath();
 
     if(!empty($params['participantID'])){
       $confirmQuery.="&pid={$params['participantID']}";
@@ -54,9 +55,8 @@ class CRM_Core_Payment_LinePay {
     }
 
     $confirmUrl = CRM_Utils_System::url('civicrm/linepay/confirm', $confirmQuery, True, NULL, False);
-    $confirmUrl = self::validateUrlIsHttps($confirmUrl);
 
-    $cancelUrl = self::prepareThankYouUrl($qfKey, True);
+    $cancelUrl = self::prepareThankYouUrl($path, $qfKey, True);
 
     // page title, description
     if(!empty($params['eventID'])){
@@ -137,6 +137,7 @@ class CRM_Core_Payment_LinePay {
     $requestParams['currency'] = $config->defaultCurrency;
     $result = $this->_linePayAPI->request($requestParams);
     $is_success = $this->_linePayAPI->_success;
+    $thankYouPath = 'civicrm/contribute/transact';
 
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
@@ -145,6 +146,7 @@ class CRM_Core_Payment_LinePay {
       $input['component'] = 'event';
       $ids['participant'] = $params['pid'];
       $ids['event'] = $params['eid'];
+      $thankYouPath = 'civicrm/event/register';
     }
     else{
       $input['component'] = 'contribute';
@@ -159,16 +161,16 @@ class CRM_Core_Payment_LinePay {
         $input['amount'] = $contribution->amount;
         $objects['contribution']->receive_date = date('YmdHis');
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
-        $thankyou_url = self::prepareThankYouUrl($params['qfKey']);
+        $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey']);
       }
       else{
         $ipn->failed($objects, $transaction, $error);
         $this->addResponseMessageToNote($contribution);
-        $thankyou_url = self::prepareThankYouUrl($params['qfKey'], True);
+        $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], True);
       }
     }
     else{
-      $thankyou_url = self::prepareThankYouUrl($params['qfKey'], True);
+      $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], True);
     }
 
     CRM_Utils_System::redirect($thankyou_url);
@@ -284,18 +286,10 @@ class CRM_Core_Payment_LinePay {
     return new CRM_Core_Payment_LinePayAPI($apiParams);
   }
 
-  private static function prepareThankYouUrl($qfKey, $failed = false){
+  private static function prepareThankYouUrl($path, $qfKey, $failed = false){
     $query = "_qf_ThankYou_display=1&qfKey={$qfKey}";
     $query .= $failed ? '&payment_result_type=4' : '&payment_result_type=1';
-    $url = CRM_Utils_System::url('civicrm/contribute/transact', $query, True, NULL, False);
-    $url = self::validateUrlIsHttps($url);
-    return $url;
-  }
-
-  private static function validateUrlIsHttps($url){
-    if( ( !empty($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on' ) || ( !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ){
-      $url = str_replace('http://', 'https://', $url);
-    }
+    $url = CRM_Utils_System::url($path, $query, True, NULL, False);
     return $url;
   }
 }
