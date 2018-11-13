@@ -46618,3 +46618,9 @@ msgstr ""
 
 msgid "A copy of the price set has been created"
 msgstr ""
+
+msgid "You cannot schedule a mailing without any recipients."
+msgstr ""
+
+msgid "Visit %1 to choose your recipients again."
+msgstr ""
