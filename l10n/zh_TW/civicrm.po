@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-11-12 06:14+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-11-13 08:27+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46788,3 +46788,9 @@ msgstr "您確定複製這個價目表欄位？"
 
 msgid "A copy of the price set has been created"
 msgstr "已建立複製的價目表"
+
+msgid "You cannot schedule a mailing without any recipients."
+msgstr "無法排程，因為本電子報沒有選出任何收件人。"
+
+msgid "Visit %1 to choose your recipients again."
+msgstr "你可以到 %1 重新選擇你的收件人。"
