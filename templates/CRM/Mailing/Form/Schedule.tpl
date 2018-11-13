@@ -50,6 +50,15 @@
     </tr>
   </tbody>
 </table>
+{if $count <= 0}
+  <div class="messages error">
+    {ts}You cannot schedule a mailing without any recipients.{/ts}
+    {if $backURL}
+      {capture assign=selectRecipients}<a href="{$backURL}">{ts}Select Recipients{/ts}</a>{/capture}
+      {ts 1=$selectRecipients}Visit %1 to choose your recipients again.{/ts}
+    {/if}
+  </div>
+{/if}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
 
 {if $preview}

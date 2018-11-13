@@ -66,6 +66,12 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       $this->_mailingID = CRM_Utils_Request::retrieve('mid', 'Integer', $this, TRUE);
       $this->_scheduleFormOnly = TRUE;
     }
+    if ($this->_scheduleFormOnly) {
+      $this->_recipientsCount = CRM_Mailing_BAO_Recipients::mailingSize($this->_mailingID);
+    }
+    else {
+      $this->_recipientsCount = $this->get('count');
+    }
   }
 
   /**
@@ -77,14 +83,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
    */
   function setDefaultValues() {
     $defaults = array();
-    if ($this->_scheduleFormOnly) {
-      require_once 'CRM/Mailing/BAO/Recipients.php';
-      $count = CRM_Mailing_BAO_Recipients::mailingSize($this->_mailingID);
-    }
-    else {
-      $count = $this->get('count');
-    }
-    $this->assign('count', $count);
+    $this->assign('count', $this->_recipientsCount);
     $defaults['now'] = 1;
     return $defaults;
   }
@@ -104,6 +103,15 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
 
     $this->addFormRule(array('CRM_Mailing_Form_Schedule', 'formRule'), $this);
 
+    $disabled = array();
+    if ($this->_recipientsCount <= 0) {
+      $disabled = array('disabled' => 'disabled');
+      $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+      if (CRM_Utils_Rule::qfKey($qfKey)){
+        $this->assign('backURL', CRM_Utils_System::url("civicrm/mailing/send", "_qf_Group_display=true&qfKey=".$qfKey));
+      }
+    }
+
     if ($this->_scheduleFormOnly) {
       $title = ts('Schedule Mailing') . ' - ' . CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing',
         $this->_mailingID,
@@ -115,6 +123,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
           'name' => ts('Submit Mailing'),
           'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
           'isDefault' => TRUE,
+          'js' => $disabled,
         ),
         array(
           'type' => 'cancel',
@@ -135,6 +144,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
             'name' => ts('Submit Mailing'),
             'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
             'isDefault' => TRUE,
+            'js' => $disabled,
           ),
         );
       }
@@ -148,7 +158,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
             'name' => ts('Submit Mailing'),
             'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
             'isDefault' => TRUE,
-            'js' => array('data' => 'submit-once'),
+            'js' => array('data' => 'submit-once') + $disabled,
           ),
           array(
             'type' => 'cancel',
