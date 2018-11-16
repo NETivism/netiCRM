@@ -351,7 +351,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     // get all contribution status
     $contributionStatuses = CRM_Core_OptionGroup::values('contribution_status', FALSE, FALSE, FALSE, NULL, 'name', FALSE);
     $taxReceiptTypes = array();
-    CRM_Core_PseudoConstant::populate($taxReceiptTypes, 'CRM_Contribute_DAO_ContributionType', FALSE, 'name', 'is_active', 'is_taxreceipt=1');
+    CRM_Core_PseudoConstant::populate($taxReceiptTypes, 'CRM_Contribute_DAO_ContributionType', FALSE, 'name', 'is_active', 'is_taxreceipt<>0');
     $taxReceiptImplements = CRM_Utils_Hook::availableHooks('civicrm_validateTaxReceipt');
     $taxReceiptImplements = count($taxReceiptImplements);
 
@@ -395,7 +395,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
       if (empty($result->receipt_id) || empty($result->receipt_date) || $result->contribution_status_id != 1 || !$deductible) {
         unset($links[CRM_Core_Action::PREVIEW]);
       }
-      if ($result->contribution_status_id != 1 || empty($taxReceiptTypes[$result->contribution_type_id]) || !$taxReceiptImplements) {
+      if (empty($taxReceiptTypes[$result->contribution_type_id]) || !$taxReceiptImplements) {
         unset($links[CRM_Core_Action::FOLLOWUP]);
       }
       $row['action'] = CRM_Core_Action::formLink($links, $mask, $actions);
