@@ -322,9 +322,10 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           $label .= CRM_Utils_Money::format(CRM_Utils_Array::value($valueFieldName, $customOption[$optionKey]));
         }
 
-        $element = &$qf->addNumber($elementName, $label, array_merge(array('size' => "4", 'min' => 0, 'step' => 1), array('price' => json_encode(array($optionKey, $priceVal)))),
+        $qf->addNumber($elementName, $label, array_merge(array('size' => "4", 'min' => 0, 'step' => 1), array('price' => json_encode(array($optionKey, $priceVal)))),
           $useRequired && $field->is_required
         );
+        $element = $qf->getElement($elementName);
 
         // CRM-6902
         if (in_array($optionKey, $freezeOptions)) {

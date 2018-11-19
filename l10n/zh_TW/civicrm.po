@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-11-13 08:27+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-11-19 04:10+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46770,7 +46770,7 @@ msgstr "此功能因欄位有設「參加者最多人數」而停用，要修改
 msgid ""
 "This will disable the max participants settings of the options in this "
 "field."
-msgstr "啟用此設定會停用此欄位下各選項的「參加者最多人數」功能。"
+msgstr "輸入大於 0 的數值會停用此欄位下各選項的「參加者最多人數」功能。若要保留各選項的「參加者最多人數」功能請填 0 。"
 
 #: CRM/Price/Form/Field.php
 msgid "Allow Changing Count"
