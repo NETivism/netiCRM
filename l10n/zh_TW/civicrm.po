@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-11-19 09:08+0000\n"
+"PO-Revision-Date: 2018-11-19 14:14+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -15658,7 +15658,7 @@ msgstr "此活動尚未設定活動費用選項或價格表。<br />請按<a hre
 #: CRM/Event/Form/Registration.php
 msgid ""
 "It looks like this field participant count extending its maximum limit."
-msgstr "您欲報名的人數已超過活動名額上限囉，您可回上頁修改報名人數"
+msgstr "您欲報名的人數已超過活動場次名額上限囉，您可在下方修改報名人數"
 
 #: CRM/Event/Form/Registration.php
 msgid "Select at least one option from Event Fee(s)."
