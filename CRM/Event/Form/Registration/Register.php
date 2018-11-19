@@ -800,14 +800,12 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $recordedOptionsCount = CRM_Event_BAO_Participant::priceSetOptionsCount($form->_eventId, $skipParticipants);
 
     foreach ($form->_feeBlock as & $field) {
-      if(!empty($field['max_value'])){
-        continue;
-      }
       $optionFullIds = array();
       $fieldId = $field['id'];
       if (!is_array($field['options'])) {
         continue;
       }
+      $sumCount = 0;
       foreach ($field['options'] as & $option) {
         $optId = $option['id'];
         $count = CRM_Utils_Array::value('count', $option, 0);
@@ -815,9 +813,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         $dbTotalCount = CRM_Utils_Array::value($optId, $recordedOptionsCount, 0);
         $currentTotalCount = CRM_Utils_Array::value($optId, $currentOptionsCount, 0);
         $totalCount = $currentTotalCount + $dbTotalCount;
+        $sumCount += $dbTotalCount;
 
         $isFull = FALSE;
-        if ($maxValue &&
+        if (empty($field['max_value']) && $maxValue &&
           (($totalCount >= $maxValue) || ($totalCount + $count > $maxValue))
         ) {
           $isFull = TRUE;
@@ -827,7 +826,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         //here option is not full,
         //but we don't want to allow participant to increase
         //seats at the time of re-walking registration.
-        if ($count &&
+        if (empty($field['max_value']) && $count &&
           $form->_allowConfirmation &&
           !empty($formattedPriceSetDefaults)
         ) {
@@ -841,6 +840,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         $option['is_full'] = $isFull;
         $option['db_total_count'] = $dbTotalCount;
         $option['total_option_count'] = $totalCount;
+      }
+
+      if(!empty($field['max_value']) && $field['max_value'] <= $sumCount){
+        foreach ($field['options'] as & $option) {
+          $optId = $option['id'];
+          $optionFullIds[$optId] = $optId;
+          $option['is_full'] = TRUE;
+        }
       }
 
       //ignore option full for offline registration.
