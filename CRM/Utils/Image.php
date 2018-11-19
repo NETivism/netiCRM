@@ -45,7 +45,17 @@ class CRM_Utils_Image {
     else {
       $widthCal = (int) round($height / $aspect);
     }
-    if (!$upscale && ($width >= $widthCal || $height >= $heightCal)) {
+    if (!$upscale) {
+      if ($this->info['width'] >= $width && $this->info['height'] >= $height) {
+        $width = (int) round($widthCal);
+        $height = (int) round($heightCal);
+      }
+      else {
+        $width = $this->info['width'];
+        $height = $this->info['height'];
+      }
+    }
+    else {
       $width = (int) round($widthCal);
       $height = (int) round($heightCal);
     }
@@ -144,7 +154,7 @@ class CRM_Utils_Image {
     return FALSE;
   }
 
-  function resize($width, $height, $upscale) {
+  function resize($width, $height) {
     $this->convert['width'] = (int) round($width);
     $this->convert['height'] = (int) round($height);
 
@@ -217,7 +227,7 @@ class CRM_Utils_Image {
 
   function scale($width, $height, $upscale = FALSE) {
     list($width, $height) = $this->getConvertDimensions($width, $height, $upscale);
-    if ($this->resize($width, $height, $upscale)) {
+    if ($this->resize($width, $height)) {
       $this->sharpen();
       return $this->save();
     }
@@ -230,7 +240,7 @@ class CRM_Utils_Image {
     $scale = max($width / $this->info['width'], $height / $this->info['height']);
     $x = ($this->info['width'] * $scale - $width) / 2;
     $y = ($this->info['height'] * $scale - $height) / 2;
-    if ($this->resize($this->info['width'] * $scale, $this->info['height'] * $scale, $upscale)) {
+    if ($this->resize($this->info['width'] * $scale, $this->info['height'] * $scale)) {
       if ($this->crop($x, $y, $width, $height)) {
         $this->sharpen();
         return $this->save();

@@ -354,7 +354,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
   private function _resizeImage($fileName, $resizedName, $w, $h) {
     $image = new CRM_Utils_Image($fileName, $resizedName);
     $resized = $image->scale($w, $h);
-    return $resizedName;
+    $config = CRM_Core_Config::singleton();
+    return $config->imageUploadURL.basename($resizedName);
   }
 
 }
