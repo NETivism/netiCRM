@@ -81,7 +81,12 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
                     // By #22714, Only check expire_date, ignore checking instrument.
                     $sql = "SELECT c.expire_date FROM civicrm_participant_payment p INNER JOIN civicrm_contribution c ON c.id = p.contribution_id WHERE p.participant_id = %1 AND c.payment_processor_id IS NOT NULL";
                     $expirationDay = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($participantId, 'Positive')));
-                    if(empty($expirationDay)){
+                    if (!empty($expirationDay)){
+                        if (strstr($expirationDay, '00:00:00')) {
+                          $expirationDay = str_replace('00:00:00', '23:59:59', $expirationDay);
+                        }
+                    }
+                    else {
                         //get the expiration and registration pending time.
                         $baseTime = strtotime($values['register_date']);
                         $plusDay = ceil($expirationTime/24);
