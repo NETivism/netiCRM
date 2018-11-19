@@ -293,15 +293,14 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
         $value = CRM_Utils_Array::value('imageOption', $params, FALSE);
         if ($value == 'image') {
           if ($imageFile) {
-
+            $imageFileName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $imageFile);
+            $ext = str_replace($imageFileName, '', $imageFile);
             // to check wether GD is installed or not
             $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
             if($gdSupport) {
-              if($imageFile) {
-                $error = false;
-                $params['image'] = $this->_resizeImage($imageFile, "_full", 800, 200);
-                $params['thumbnail'] = $this->_resizeImage($imageFile, "_thumb", 200, 50);
-              }
+              $error = false;
+              $params['image'] = $this->_resizeImage($imageFile, $imageFileName."_full".$ext, 1200, 1200);
+              $params['thumbnail'] = $this->_resizeImage($imageFile, $imageFileName."_thumb".$ext, 480, 480);
             }
             else {
               $error = true;
@@ -352,53 +351,10 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
    *
    * @return Path to image
    */
-  private function _resizeImage($filename, $resizedName, $width, $height ) {
-    // figure out the new filename
-    $pathParts = pathinfo($filename);
-    $newFilename = $pathParts['dirname']."/".$pathParts['filename'].$resizedName.".".$pathParts['extension'];
-
-    // get image about original image
-    $imageInfo = getimagesize($filename);
-    $widthOrig = $imageInfo[0];
-    $heightOrig = $imageInfo[1];
-
-    if($widthOrig > $width){
-      $widthNew = $width;
-      $heightNew = $heightOrig * $widthNew / $widthOrig;
-    }else{
-      $widthNew = $widthOrig;
-      $heightNew = $heightOrig;
-    }
-    $image = imagecreatetruecolor($widthNew, $heightNew);
-    
-    if($imageInfo['mime'] == 'image/gif') {
-      $source = imagecreatefromgif($filename);
-    }
-    elseif($imageInfo['mime'] == 'image/png') {
-      $source = imagecreatefrompng($filename);
-    }
-    else {
-      $source = imagecreatefromjpeg($filename);
-    }
-
-    
-    // resize
-    imagecopyresized($image, $source, 0, 0, 0, 0, $widthNew, $heightNew, $widthOrig, $heightOrig);
-
-    // save the resized image
-    $fp = fopen($newFilename, 'w+');
-    ob_start();
-    ImageJPEG($image);
-    $image_buffer = ob_get_contents();
-    ob_end_clean();
-    ImageDestroy($image);
-    fwrite($fp, $image_buffer);
-    rewind($fp);
-    fclose($fp);
-
-    // return the URL to link to
-    $config = CRM_Core_Config::singleton();
-    return $config->imageUploadURL.basename($newFilename);
+  private function _resizeImage($fileName, $resizedName, $w, $h) {
+    $image = new CRM_Utils_Image($fileName, $resizedName);
+    $resized = $image->scale($w, $h);
+    return $resizedName;
   }
 
 }
