@@ -109,23 +109,44 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       $params['visitDateEnd'] = $end;
     }
     $selector = new CRM_Track_Selector_Track($params);
-    $dao = $selector->getQuery("COUNT(id) as `count`, referrer_type", 'GROUP BY referrer_type');
+    $dao = $selector->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN entity_id > 0 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start", 'GROUP BY referrer_type');
 
     $return = array();
     $total = 0;
+    $start = $end = 0;
     while($dao->fetch()){
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
       $total = $total+$dao->count;
+      if (!$start && !$end) {
+        $start = strtotime($dao->start);
+        $end = strtotime($dao->end);
+      }
+      else {
+        $start = strtotime($dao->start) < $start ? strtotime($dao->start) : $start;
+        $end = strtotime($dao->end) > $end ? strtotime($dao->end) : $end;
+      }
       $return[$type] = array(
         'name' => $type,
         'label' => empty($dao->referrer_type) ? ts("Unknown") : ts($dao->referrer_type),
         'count' => $dao->count,
+        'count_goal' => $dao->goal,
       );
     }
+    // sort by count
+    uasort($return, array(self, 'cmp'));
     foreach($return as $type => $data) {
       $return[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
+      $return[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
+      $return[$type]['start'] = date('Y-m-d H:i:s', $start);
+      $return[$type]['end'] = date('Y-m-d H:i:s', $end);
     }
-
     return $return;
+  }
+
+  public static function cmp($a, $b) {
+    if ($a['count'] == $b['count']) {
+      return 0;
+    }
+    return ($a['count'] > $b['count']) ? -1 : 1;
   }
 }

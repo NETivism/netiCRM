@@ -218,6 +218,13 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
           'qs' => $urlParams . '&action=preview',
           'uniqueName' => 'test_drive',
         ),
+        CRM_Core_Action::REOPEN => array(
+          'name' => ts('Traffic Source'),
+          'title' => ts('Test-drive'),
+          'url' => 'civicrm/track/report',
+          'qs' => 'reset=1&ptype=civicrm_contribution_page&pid=%%id%%',
+          'uniqueName' => 'traffic_source',
+        ),
       );
     }
 
@@ -355,7 +362,11 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($id);
       $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id);
       foreach($pageStatistics['track'] as &$track) {
-        $track['display'] = "{$track['percent']}% ({$track['count']} ".ts('People').")";
+        $track['display'] = '<div>'.ts("%1 achieved", array(1 => "{$track['percent_goal']}% ({$track['count_goal']}".ts('People').")"))."</div><div style='color:grey'>".ts("Total")." {$track['percent']}% ({$track['count']}".ts('People').")</div>";
+      }
+      if ($track['start'] && $track['end']) {
+        $this->assign('period_start', CRM_Utils_Date::customFormat($track['start'], $config->dateformatFull));
+        $this->assign('period_end', CRM_Utils_Date::customFormat($track['end'], $config->dateformatFull));
       }
       unset($pageStatistics['page']['title']);
       $this->assign('contribution_page_statistics', $pageStatistics);

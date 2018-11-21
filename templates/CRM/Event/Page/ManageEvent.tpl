@@ -95,6 +95,7 @@
                         {if $row.participant_listing_id}
                             <li><a title="Participant Listing" class="action-item" href="{crmURL p='civicrm/event/participant' q="reset=1&id=`$row.id`"}">{ts}Public Participant Listing{/ts}</a></li>
                         {/if}
+                        <li><a title="Traffic Source" class="action-item" href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_event&pid=`$row.id`"}" target="_blank">{ts}Traffic Source{/ts}</a></li>
                       </ul>
                     </span>
                   </div>

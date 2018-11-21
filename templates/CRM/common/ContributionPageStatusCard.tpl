@@ -55,12 +55,15 @@
 {/if}
 <br/>
 <div>
-  <h5><a href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_contribution_page&pid=`$statistics.page.id`"}">{ts}Traffic Source{/ts}</a></h5>
+  <h5>
+    <a href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_contribution_page&pid=`$statistics.page.id`"}" target="_blank">{ts}Traffic Source{/ts}</a>
+    {if $period_start && $period_end}<sup>{$period_start} ~ {$period_end}</sup>{/if}
+  </h5>
   {if $statistics.track}
   <div class="track-outter">
     {foreach from=$statistics.track item=source}
     <div class="track-inner type-{$source.name}">
-      <div>{$source.label}</div>
+      <div><strong>{$source.label}</strong></div>
       <div>{if $source.display}{$source.display}{else}{$source.percent}%{/if}</div>
     </div>
     {/foreach}
@@ -69,7 +72,7 @@
 </div>
 <br/>
 <div class="grey-background">
-  <a href="{crmURL p='civicrm/contribute/search' q="reset=1&pid=`$statistics.page.id`&force=1&status=1&test=0" h=0 a=1 fe=1}">
+  <a href="{crmURL p='civicrm/contribute/search' q="reset=1&pid=`$statistics.page.id`&force=1&status=1&test=0" h=0 a=1 fe=1}" target="_blank">
     {if $statistics.achievement}
     <div>
       {if $statistics.achievement.type == "amount"}

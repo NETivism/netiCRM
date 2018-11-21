@@ -41,6 +41,7 @@
                 <li><a class="crm-participant-listing" href="{$participantListingURL}" target="_blank">{ts}Public Participant Listing{/ts}</a></li>
                 {/if}
                 {/if}
+                <li><a class="crm-traffic-source" href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_event&pid=`$id`"}" target="_blank">{ts}Traffic Source{/ts}</a></li>
               </ul>
     	      </div>
     	    </div>
