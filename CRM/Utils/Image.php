@@ -51,6 +51,7 @@ class CRM_Utils_Image {
         $height = (int) round($heightCal);
       }
       else {
+        $this->convert['skip'] = TRUE;
         $width = $this->info['width'];
         $height = $this->info['height'];
       }
@@ -132,7 +133,11 @@ class CRM_Utils_Image {
     $tmpDir = CRM_Utils_System::cmsDir('temp');
     $tempName = tempnam($tmpDir, 'crmgd_');
 
-    if (function_exists($function)) {
+    if ($this->convert['skip']) {
+      @copy($this->source, $this->destination);
+      return $success;
+    }
+    elseif (function_exists($function)) {
       if ($extension == 'jpeg') {
         $success = $function($this->resource, $tempName, $this->convert['quality']); 
       }
@@ -227,7 +232,10 @@ class CRM_Utils_Image {
 
   function scale($width, $height, $upscale = FALSE) {
     list($width, $height) = $this->getConvertDimensions($width, $height, $upscale);
-    if ($this->resize($width, $height)) {
+    if ($this->convert['skip']) {
+      return $this->save();
+    }
+    elseif ($this->resize($width, $height)) {
       $this->sharpen();
       return $this->save();
     }
