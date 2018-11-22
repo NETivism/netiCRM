@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-11-19 09:08+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-11-22 04:53+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11313,7 +11313,7 @@ msgstr "使用預設圖像"
 
 #: CRM/Contribute/Form/ManagePremiums.php
 msgid "Do not display an image"
-msgstr "請勿顯示圖像"
+msgstr "不要顯示圖片"
 
 #: CRM/Contribute/Form/ManagePremiums.php
 msgid "Premium Image"
@@ -15658,7 +15658,7 @@ msgstr "此活動尚未設定活動費用選項或價格表。<br />請按<a hre
 #: CRM/Event/Form/Registration.php
 msgid ""
 "It looks like this field participant count extending its maximum limit."
-msgstr "您欲報名的人數已超過活動名額上限囉，您可回上頁修改報名人數"
+msgstr "您欲報名的人數已超過活動場次名額上限囉，您可在下方修改報名人數"
 
 #: CRM/Event/Form/Registration.php
 msgid "Select at least one option from Event Fee(s)."
@@ -29234,22 +29234,17 @@ msgid ""
 msgstr "（選填）產品 SKU 或編碼。若使用此設定，在此輸入的值將會顯示在捐款者收據。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid ""
-"A thumbnail picture for this premium will be displayed on the contribution "
-"page if you provide one. When a contributor clicks on the thumbnail, a full-"
-"size image is displayed in a pop-up window. Images must be in GIF, JPEG, or "
-"PNG format, and the full-size image may be no larger than 500 pixels wide x "
-"500 pixels high. Thumbnails should be approximately 100 x 100 pixels."
-msgstr "如果您提供一個此感謝禮的縮圖，它會被展示在募款頁。當捐款人按下縮圖，一個完整大小的圖像會在彈出的視窗顯示。圖像必需是GIF、JPEG，或PNG格式，及完整尺寸的長寬不會大過500x500 pixels。縮圖約為100x100像素。"
+msgid "Image must be in GIF, JPEG, or PNG format."
+msgstr "圖片必須是GIF、JPEG，或PNG格式。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
 "You can upload an image from your computer OR enter a URL for an image "
 "already on the Web. If you chose to upload an image file, a 'thumbnail' "
 "version will be automatically created for you. If you don't have an image "
-"available at this time, you may also choose to display a 'No Image "
-"Available' icon - by selecting the 'default image'."
-msgstr "您可以從您的電腦上傳一個圖片，或輸入圖片的url。如果您選擇上傳圖片，縮圖將會自動產生。如果您此時沒有圖片可使用，您可勾選「預設圖片」，將顯示「沒有圖像」icon。"
+"available at this time, you may also choose 'Do not display an image' "
+"option."
+msgstr "您可以從您的電腦上傳一個圖片，或輸入圖片的網址（URL）。如果您選擇上傳圖片，縮圖將會自動產生。如果您此時沒有圖片可使用，您也可選擇「不要顯示圖片」。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
@@ -46794,3 +46789,6 @@ msgstr "無法排程，因為本電子報沒有選出任何收件人。"
 
 msgid "Visit %1 to choose your recipients again."
 msgstr "你可以到 %1 重新選擇你的收件人。"
+
+msgid "Image will be resized to %1 pixels."
+msgstr "圖片將會縮放至 %1 像素"
