@@ -225,7 +225,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
         'role_id' => CRM_Utils_Array::value('default_role_id', $values['event']),
       );
 
-      if (CRM_Event_BAO_Event::checkRegistration($params)) {
+      if (CRM_Event_BAO_Event::alreadyRegistered($params)) {
         $statusMessage = ts("Oops. It looks like you are already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator.");
       }
       elseif ($hasWaitingList) {

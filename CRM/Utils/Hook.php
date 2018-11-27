@@ -1015,5 +1015,20 @@ class CRM_Utils_Hook {
       2, &$contributionId, &$receipt, &$null, &$null, &$null, 'civicrm_validateTaxReceipt'
     ));
   }
+
+  /**
+   * Add registration validation here
+   *
+   * @param $contributionId
+   */
+  static function checkRegistration($contactID, $fields, $self, $isAdditional, &$result){
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+
+    return call_user_func_array(array($config->userHookClass, 'invoke'), array(
+      5, &$contactID, &$fields, &$self, &$isAdditional, &$result, 'civicrm_checkRegistration'
+    ));
+  }
 }
 

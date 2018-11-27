@@ -1035,7 +1035,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $params['is_primary'] = 1;
     if (!$this->_allowConfirmation) {
       // check if the participant is already registered
-      $params['contact_id'] = self::checkRegistration($params, $this, FALSE, TRUE);
+      $params['contact_id'] = self::getRegistrationContactID($params, $this, FALSE);
     }
 
     if (CRM_Utils_Array::value('image_URL', $params)) {
@@ -1406,54 +1406,32 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    *
    * @param array $fields  the input form values(anonymous user)
    * @param array $self    event data
+   * @param boolean $isAdditional  if it's additional participant
    *
    * @return void
    * @access public
    */
-  function checkRegistration($fields, &$self, $isAdditional = FALSE, $returnContactId = FALSE) {
-    // CRM-3907, skip check for preview registrations
-    // CRM-4320 participant need to walk wizard
-    if (!$returnContactId && ($self->_mode == 'test' || $self->_allowConfirmation)) {
+  function checkRegistration($fields, &$self, $isAdditional = FALSE) {
+    if ($self->_mode == 'test') {
       return FALSE;
     }
 
     $contactID = NULL;
-    $session = CRM_Core_Session::singleton();
-    if (!$isAdditional) {
-      $contactID = parent::getContactID();
+    $contactID = self::getRegistrationContactID($fields, $self, $isAdditional);
+
+    // implement hook for change registrion check
+    CRM_Utils_Hook::checkRegistration($contactID, $fields, $self, $isAdditional, $result);
+    if (!empty($result)) {
+      return $result;
     }
 
-    if (!$contactID &&
-      is_array($fields) &&
-      !empty($fields)
-    ) {
-
-      //CRM-6996
-      //as we are allowing w/ same email address,
-      //lets check w/ other contact params.
-      $params = $fields;
-
-      // respect dedupe rule for all registeration. pervent too email centeralized registeration
-      // unset email from dedupe params for 'additional participant wizard' case only
-      if (isset($params["email-{$self->_bltID}"]) && $isAdditional) {
-        unset($params["email-{$self->_bltID}"]);
-      }
-      require_once 'CRM/Dedupe/Finder.php';
-      $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
-
-      // disable permission based on cache since event registration is public page/feature.
-      $dedupeParams['check_permission'] = FALSE;
-      $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
-      $contactID = CRM_Utils_Array::value(0, $ids);
+    // skip check when confirm by mail link
+    if ($self->_allowConfirmation) {
+      return FALSE;
     }
-
-    if ($returnContactId) {
-      // CRM-7377
-      // return contactID if contact already exists
-      return $contactID;
-    }
-
     if ($contactID) {
+      $session = CRM_Core_Session::singleton();
+
       // check if contact exists but email not the same
       if (isset($fields['_qf_default']) && $fields['cms_create_account']) {
         $dao = new CRM_Core_DAO_UFMatch();
@@ -1494,13 +1472,31 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           }
 
           if ($isAdditional) {
-            $status = ts("Oops. It looks like this participant is already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator.");
-            $session->setStatus($status);
             return $participant->id;
           }
         }
       }
     }
+  }
+
+  public static function getRegistrationContactID($fields, $self, $isAdditional){
+    $contactID = NULL;
+    if (!$isAdditional) {
+      $contactID = $self->getContactID();
+    }
+    if (!$contactID && is_array($fields) && !empty($fields)) {
+      //CRM-6996
+      //as we are allowing w/ same email address,
+      //lets check w/ other contact params.
+      $params = $fields;
+      $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
+
+      // disable permission based on cache since event registration is public page/feature.
+      $dedupeParams['check_permission'] = FALSE;
+      $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
+      $contactID = CRM_Utils_Array::value(0, $ids);
+    }
+    return $contactID;
   }
 
   public function getTitle() {
