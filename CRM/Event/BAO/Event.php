@@ -1753,7 +1753,7 @@ WHERE  ce.loc_block_id = $locBlockId";
       if ($roleId = CRM_Utils_Array::value('default_role_id', $values['event'])) {
         $params['role_id'] = $roleId;
       }
-      $alreadyRegistered = self::checkRegistration($params);
+      $alreadyRegistered = self::alreadyRegistered($params);
     }
 
     if (CRM_Utils_Array::value('allow_same_participant_emails', $values['event']) ||
@@ -1770,7 +1770,7 @@ WHERE  ce.loc_block_id = $locBlockId";
      * @return boolean $alreadyRegistered true/false
      * @access public
      */
-  function checkRegistration($params) {
+  function alreadyRegistered($params) {
     $alreadyRegistered = FALSE;
     if (!CRM_Utils_Array::value('contact_id', $params)) {
       return $alreadyRegistered;
