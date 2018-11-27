@@ -70,6 +70,10 @@ class CRM_Utils_Geocode_Google {
     if (!CRM_Utils_Array::value('country', $values)) {
       return FALSE;
     }
+    // we need a valid street addr, city or state. else we ignore
+    if (empty($values['sreet_address']) && empty($values['city']) && empty($values['state_province'])) {
+      return FALSE;
+    }
 
     $config = CRM_Core_Config::singleton();
 
