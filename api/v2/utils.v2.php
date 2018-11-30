@@ -1040,9 +1040,6 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
           if (!$contact->find(TRUE)) {
             $errorMsg = ts("No match found for specified Soft Credit contact data. Row was skipped.");
           }
-          elseif ($params['contact_type'] != $contact->contact_type) {
-            $errorMsg = ts("Soft Credit Contact Type is wrong: %1", array(1 => $contact->contact_type));
-          }
 
           if ($errorMsg) {
             return civicrm_create_error($errorMsg, 'soft_credit');
