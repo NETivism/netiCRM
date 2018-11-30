@@ -289,7 +289,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
                   AND cs.pcp_display_in_roll = 1 
                   AND contribution_status_id = 1 
                   AND is_test = 0
-            GROUP BY cc.contact_id, cc.contribution_recur_id";
+            GROUP BY cc.contact_id, cc.contribution_recur_id, cs.pcp_roll_nickname";
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     $honor = array();
     require_once 'CRM/Utils/Money.php';
