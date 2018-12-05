@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-11-22 04:53+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-12-05 03:27+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35183,11 +35183,11 @@ msgstr "此欄位中的解釋文字會顯示給使用者。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Date this field becomes effective (optional)"
-msgstr "此欄位失效時間（選填）"
+msgstr "此欄位生效時間。如果有填，需在生效時間後，參加者才能在報名頁面看到此欄位。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Date this field expires (optional)"
-msgstr "此欄位到期時間（選填）"
+msgstr "此欄位到期時間。如果有填，需在到期時間前，參加者才能在報名頁面看到此欄位。"
 
 #: templates/CRM/Price/Form/OptionFields.tpl msgctxt "menu"
 msgid "Price Field Options"
@@ -46792,3 +46792,6 @@ msgstr "你可以到 %1 重新選擇你的收件人。"
 
 msgid "Image will be resized to %1 pixels."
 msgstr "圖片將會縮放至 %1 像素"
+
+msgid "Expire time can't earlier than or as same as the active time."
+msgstr "到期時間不能早於或等於啟用時間"

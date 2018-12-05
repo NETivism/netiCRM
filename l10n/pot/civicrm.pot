@@ -46622,3 +46622,5 @@ msgstr ""
 msgid "Image will be resized to %1 pixels."
 msgstr ""
 
+msgid "Expire time can't earlier than or as same as the active time."
+msgstr ""
