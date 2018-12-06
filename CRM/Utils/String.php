@@ -419,8 +419,17 @@ class CRM_Utils_String {
    */
   static function htmlToText($html) {
     require_once 'packages/html2text/rcube_html2text.php';
-    $converter = new rcube_html2text($html);
+    $converter = new rcube_html2text($html, FALSE, TRUE, 0);
     return $converter->get_text();
+  }
+
+  static function htmlPurifier($html, $allowed_tags = array()) {
+    require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.safe-includes.php';
+    $purifierConfig = HTMLPurifier_Config::createDefault();
+    $purifierConfig->set('HTML.AllowedElements', $allowed_tags);
+    $purifierConfig->set('Output.Newline', "\n");
+    $purifier = new HTMLPurifier($purifierConfig);
+    return $purifier->purify($html);
   }
 
   static function extractName($string, &$params) {

@@ -67,9 +67,11 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
             $fullPage = $this->getAttribute('fullpage');
             if($perm) {
               $allowedContent = "editor.config.allowedContent = true;";
+              $allowedCkeditor = TRUE;
             }
             else{
               $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height];';";
+              $allowedCkeditor = FALSE;
             }
             if ($fullPage) {
               $fullPage = "editor.config.fullPage = true;";
@@ -77,7 +79,8 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
             else {
               $fullPage = "editor.config.fullPage = false;";
             }
-            $html = parent::toHtml() . "<script type='text/javascript'>
+            if ($allowedCkeditor) {
+              $html = parent::toHtml() . "<script type='text/javascript'>
                 cj( function( ) {
                     if (cj('#{$name}').hasClass('ckeditor-processed')) {
                       return;
@@ -98,6 +101,10 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
                     }
                 }); 
             </script>";
+            }
+            else {
+              $html = parent::toHtml();
+            }
             return $html;
         }
     }

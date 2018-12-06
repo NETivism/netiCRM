@@ -1460,6 +1460,22 @@ SELECT id
       }
     }
 
+    if ($customFields[$customFieldId]['html_type'] == 'RichTextEditor') {
+      if ($value) {
+        $perm = CRM_Core_Permission::check('access CiviCRM');
+        if (!$perm) {
+          $value = CRM_Utils_String::htmlPurifier($value); // purge html
+          if ($value) {
+            $value = nl2br($value, FALSE); // needs this again convert to br
+          }
+          else {
+            $value = '';
+          }
+        }
+      }
+    }
+
+
     if ($customFields[$customFieldId]['html_type'] == 'Multi-Select' ||
       $customFields[$customFieldId]['html_type'] == 'AdvMulti-Select'
     ) {
