@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-12-05 03:27+0000\n"
+"PO-Revision-Date: 2018-12-06 03:41+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -35183,11 +35183,11 @@ msgstr "此欄位中的解釋文字會顯示給使用者。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Date this field becomes effective (optional)"
-msgstr "此欄位生效時間。如果有填，需在生效時間後，參加者才能在報名頁面看到此欄位。"
+msgstr "此欄位開始生效時間。如果有填，在生效時間後，參加者即可在報名頁面看到此欄位。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Date this field expires (optional)"
-msgstr "此欄位到期時間。如果有填，需在到期時間前，參加者才能在報名頁面看到此欄位。"
+msgstr "此欄位到期時間。如果有填，在到期時間之後，參加者就不會再報名頁面看到此欄位。"
 
 #: templates/CRM/Price/Form/OptionFields.tpl msgctxt "menu"
 msgid "Price Field Options"
