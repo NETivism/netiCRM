@@ -901,6 +901,28 @@ WHERE  contribution_id = {$this->_id}
     //add receipt for offline contribution
     $this->addElement('checkbox', 'is_email_receipt', ts('Send Payment Notification').'?', NULL);
 
+    // add mail from address select box
+    $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
+    if (!empty($this->_values['contribution_page_id'])) {
+      $page = array();
+      CRM_Contribute_BAO_ContributionPage::setValues($this->_values['contribution_page_id'], $page);
+      if (!empty($page['receipt_from_email'])) {
+        if ($page['receipt_from_name']) {
+          $mailAddr = "{$page['receipt_from_name']} <{$page['receipt_from_email']}>";
+        }
+        else {
+          $mailAddr = "{$page['receipt_from_email']}";
+        }
+        $pageFromAddress = array($mailAddr => htmlspecialchars($mailAddr));
+      }
+    }
+    $emails = array(
+      ts('Contribution Page') => $pageFromAddress,
+      ts('Default') => $fromEmails['default'],
+      ts('Your Email') => $fromEmails['contact'],
+    );
+    $this->addSelect('from_email_address', ts('FROM Email Address'), $emails);
+
     // add receipt id text area
     $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly', 'class' => 'readonly'));
     $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);

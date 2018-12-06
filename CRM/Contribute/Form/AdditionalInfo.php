@@ -136,10 +136,14 @@ class CRM_Contribute_Form_AdditionalInfo {
       );
     }
 
+    $pages = CRM_Contribute_PseudoConstant::contributionPage();
+    foreach($pages as $pageId => $pageName) {
+      $pages[$pageId] .= " (ID: $pageId)";
+    }
     $form->add('select', 'contribution_page_id',
       ts('Contribution Page'),
       array('' => ts('- select -')) +
-      CRM_Contribute_PseudoConstant::contributionPage(NULL, TRUE)
+      $pages
     );
 
     $form->add('textarea', 'note', ts('Notes'), array("rows" => 4, "cols" => 60));
@@ -442,9 +446,15 @@ class CRM_Contribute_Form_AdditionalInfo {
     $this->assign('currency', $params['currency']);
     $this->assign('receive_date', CRM_Utils_Date::processDate($params['receive_date']));
 
-    $session = CRM_Core_Session::singleton();
-    $userID = $session->get('userID');
-    list($userName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($userID);
+    if ($params['from_email_address']) {
+      $fromEmailAddress = $params['from_email_address'];
+    }
+    else{
+      $session = CRM_Core_Session::singleton();
+      $userID = $session->get('userID');
+      list($userName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($userID);
+      $fromEmailAddress = "$userName <$userEmail>";
+    }
 
     require_once 'CRM/Core/BAO/MessageTemplates.php';
     list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
@@ -452,7 +462,7 @@ class CRM_Contribute_Form_AdditionalInfo {
         'groupName' => 'msg_tpl_workflow_contribution',
         'valueName' => 'contribution_offline_receipt',
         'contactId' => $params['contact_id'],
-        'from' => "$userName <$userEmail>",
+        'from' => $fromEmailAddress,
         'toName' => $contributorDisplayName,
         'toEmail' => $contributorEmail,
         'isTest' => $form->_mode == 'test',

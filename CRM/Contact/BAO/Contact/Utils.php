@@ -886,5 +886,51 @@ Group By  componentId";
       return current($id);
     }
   }
+
+  static function fromEmailAddress($contactId){
+    $session = CRM_Core_Session::singleton();
+    if (!$contactId) {
+      $contactId = $session->get('userID');
+    }
+
+    $email = $defaultEmail = $domainEmail = $onHold = array();
+    $contactEmail = CRM_Core_BAO_Email::allEmails($contactId);
+    $fromDisplayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactId, 'display_name');
+
+    $emailAdded = array();
+    foreach ($contactEmail as $item) {
+      $mail = $item['email'];
+      if ($mail) {
+        if (!empty($emailAdded[$mail])) {
+          continue;
+        }
+        if ($item['on_hold']) {
+          continue;
+        }
+        $emailAdded[$mail] = 1;
+        $mailAddr = '"' . $fromDisplayName . '" <' . $mail . '> ';
+        $mailSuffix = ts($item['locationType']);
+
+        if ($item['is_primary']) {
+          $mailSuffix .= ' ' . ts('(preferred)');
+        }
+      }
+      $email[$mailAddr] = htmlspecialchars($mailAddr.$mailSuffix);
+    }
+
+    // now add domain from addresses
+    $domainFrom = CRM_Core_PseudoConstant::fromEmailAddress();
+    $default = array_shift($domainFrom);
+    foreach (array_keys($domainFrom) as $k) {
+      $dmail = $domainFrom[$k];
+      $domainEmail[$dmail] = htmlspecialchars($dmail);
+    }
+    $defaultEmail = array($default => htmlspecialchars($default));
+    return array(
+      'contact' => $email,
+      'default' => $defaultEmail,
+      'domain' => $domainEmail,
+    );
+  }
 }
 
