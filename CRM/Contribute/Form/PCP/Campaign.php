@@ -45,10 +45,17 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   public function preProcess() {
     // we do not want to display recently viewed items, so turn off
     $this->assign('displayRecent', FALSE);
+    $context = $this->controller->get('context');
+    if ($context) {
+      $this->_context = $context;
+    }
+    else {
+      $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
+    }
 
-    $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_key = CRM_Utils_Request::retrieve('key', 'String', $this);
     $this->assign('context', $this->_context);
+    $this->set('context', $this->_context);
 
     $this->_pageId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $this->_contactID = CRM_Utils_Request::retrieve('contactID', 'Positive', $this, FALSE);
@@ -327,13 +334,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     CRM_Core_Session::setStatus(ts("Your Personal Campaign Page has been %1 %2 %3",
         array(1 => $pageStatus, 2 => $approvalMessage, 3 => $notifyStatus)
       ));
-    if (!$this->_pageId) {
-      $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
-    }
-    elseif ($this->_context == 'standalone') {
-      $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
-    }
-    elseif ($this->_context == 'dashboard') {
+    if ($this->_context == 'dashboard') {
       // $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
       if (!empty($params['key'])) {
         $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/pcp', "_qf_PCP_display=true&qfKey=".$params['key']));
@@ -341,6 +342,12 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       else {
         $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/pcp', "reset=1"));
       }
+    }
+    elseif (!$this->_pageId) {
+      $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
+    }
+    elseif ($this->_context == 'standalone') {
+      $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
     }
   }
 }
