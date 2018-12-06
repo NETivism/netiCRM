@@ -148,9 +148,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     $summary_contrib['LastDurationProvince']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, array('contribution' => 1, 'seperate_other' => 1), array('contribution' => $filter_time+$filter_recur));
     $summary_contrib['LastDurationProvince']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,array('contribution' => 1, 'seperate_other' => 1), array('contribution' => $filter_time+$filter_not_recur));
-    if($_GET['debug']){
-      dpm($summary_contrib);
-    }
 
     if (empty($this->is_custom_date)) {
       $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_recur));
@@ -249,10 +246,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $referrerTypesIdx = array_intersect_key($referrerTypesIdx, $referrerTypesAvailable);
     $durationTrack = array_values($durationTrack);
     $referrerTypesIdx = array_values($referrerTypesIdx);
-
-    if($_GET['debug']){
-      dpm($duration_track);
-    }
 
     $chart = array(
       'id' => 'chart-duration-track',
