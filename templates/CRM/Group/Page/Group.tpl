@@ -27,6 +27,9 @@
 {if $action ne 1 and $action ne 2 and $action ne 8 and $groupPermission eq 1}
 <div class="crm-actions-ribbon action-link-button">
     <a accesskey="N" href="{crmURL p='civicrm/group/add' q='reset=1'}" id="newGroup" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Group{/ts}</a>
+    {if $customGroupSearchId}
+    <a href="{crmURL p='civicrm/contact/search/custom' q="reset=1&csid=$customGroupSearchId"}" id="newGroup" class="button"><i class="zmdi zmdi-search-in-file"></i>{ts}Contact Search{/ts}</a>
+    {/if}
 </div>
 {/if} {* action ne add or edit *}
 {if $action ne 2 AND $action ne 8}	
@@ -115,7 +118,10 @@
 </div>
 {if $action ne 1 and $action ne 2 and $action ne 8 and $groupPermission eq 1}
 <div class="crm-actions-ribbon action-link-button">
-        <a accesskey="N" href="{crmURL p='civicrm/group/add' q='reset=1'}" id="newGroup" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Group{/ts}</a>
+    <a accesskey="N" href="{crmURL p='civicrm/group/add' q='reset=1'}" id="newGroup" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Group{/ts}</a>
+    {if $customGroupSearchId}
+    <a href="{crmURL p='civicrm/contact/search/custom' q="reset=1&csid=$customGroupSearchId"}" id="newGroup" class="button"><i class="zmdi zmdi-search-in-file"></i>{ts}Contact Search{/ts}</a>
+    {/if}
 </div>
 {/if} {* action ne add or edit *}
 </div>

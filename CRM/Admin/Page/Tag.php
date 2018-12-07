@@ -185,6 +185,12 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
     }
 
     $this->assign('rows', $values);
+
+    $customSearchList = CRM_Core_OptionGroup::values('custom_search', FALSE, FALSE, FALSE, NULL, 'name');
+    $customGroupSearchId = array_search('CRM_Contact_Form_Search_Custom_Group', $customSearchList);
+    if ($customGroupSearchId) {
+      $this->assign('customGroupSearchId', $customGroupSearchId);
+    }
   }
 }
 

@@ -227,6 +227,11 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $this->_sortByCharacter = '';
       $this->set('sortByCharacter', '');
     }
+    $customSearchList = CRM_Core_OptionGroup::values('custom_search', FALSE, FALSE, FALSE, NULL, 'name');
+    $customGroupSearchId = array_search('CRM_Contact_Form_Search_Custom_Group', $customSearchList);
+    if ($customGroupSearchId) {
+      $this->assign('customGroupSearchId', $customGroupSearchId);
+    }
 
     $query = " SELECT COUNT(*) FROM civicrm_group";
     $groupExists = CRM_Core_DAO::singleValueQuery($query);

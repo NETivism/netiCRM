@@ -39,6 +39,10 @@
             <div class="crm-actions-ribbon">
         	    <div class="action-link-button">
                     <a href="{crmURL q="action=add&reset=1"}" id="newTag" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Tag{/ts}</a>
+                    
+                    {if $customGroupSearchId}
+                    <a href="{crmURL p='civicrm/contact/search/custom' q="reset=1&csid=$customGroupSearchId"}" id="newGroup" class="button"><i class="zmdi zmdi-search-in-file"></i>{ts}Contact Search{/ts}</a>
+                    {/if}
                     {if $adminTagSet}
                         <!-- <a href="{crmURL q="action=add&reset=1&tagset=1"}" id="newTagSet" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Tag Set{/ts}</span></a> -->
                     {/if}
@@ -81,6 +85,9 @@
             <div class="crm-actions-ribbon">
                 <div class="action-link-button">
                     <a href="{crmURL q="action=add&reset=1"}" id="newTag" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Tag{/ts}</a>
+                    {if $customGroupSearchId}
+                    <a href="{crmURL p='civicrm/contact/search/custom' q="reset=1&csid=$customGroupSearchId"}" id="newGroup" class="button"><i class="zmdi zmdi-search-in-file"></i>{ts}Contact Search{/ts}</a>
+                    {/if}
                     {if $adminTagSet}
                         <!-- <a href="{crmURL q="action=add&reset=1&tagset=1"}" id="newTagSet" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Tag Set{/ts}</span></a> -->
                     {/if}
