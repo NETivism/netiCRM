@@ -101,6 +101,15 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
   protected $_hasSearchableORInSelector;
 
   /**
+   * is this profile has searchable field
+   * or is any field having in selector true.
+   *
+   * @var boolean.
+   * @access protected
+   */
+  protected $_groupInfo;
+
+  /**
    * Function to set variables up before form is built
    *
    * @return void
@@ -114,13 +123,28 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     else{
       $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
     }
+    $groupInfo = array();
     if ($this->_gid) {
-      $this->_title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'title');
-      CRM_Utils_System::setTitle($this->_title . ' - ' . ts('CiviCRM Profile Fields'));
+      $params = array('id' => $this->_gid);
+      CRM_Core_BAO_UFGroup::retrieve($params, $groupInfo);
+      $ufJoin = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_gid);
+      $groupInfo['usage'] = implode(',', array_unique($ufJoin));
+      $this->_groupInfo = $groupInfo;
 
-      $url = CRM_Utils_System::url('civicrm/admin/uf/group/field',
-        "reset=1&action=browse&gid={$this->_gid}"
+      $this->_title = $this->_groupInfo['title'];
+      CRM_Utils_System::setTitle($this->_title . ' - ' . ts('CiviCRM Profile Fields'));
+      $this->assign('groupTitle', $this->_title);
+
+
+      $url = CRM_Utils_System::url('civicrm/admin/uf/group/field', "reset=1&action=browse&gid={$this->_gid}");
+      CRM_Utils_System::resetBreadCrumb();
+			$breadcrumbs = array(
+        array('title' => ts('Home'), 'url' => CRM_Utils_System::url()),
+        array('title' => ts('Administer CiviCRM'), 'url' => CRM_Utils_System::url('civicrm/admin', 'reset=1')),
+        array('title' => ts('Profile'), 'url' =>  CRM_Utils_System::url('admin/uf/group', 'reset=1')),
+        array('title' => ts('CiviCRM Profile Fields'), 'url' => $url),
       );
+      CRM_Utils_System::appendBreadCrumb($breadcrumbs);
 
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext($url);
@@ -134,22 +158,18 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $this->_fields = &CRM_Contact_BAO_Contact::importableFields('All', TRUE, TRUE, TRUE);
     $this->_fields = array_merge(CRM_Activity_BAO_Activity::exportableFields('Activity'), $this->_fields);
     if (CRM_Core_Permission::access('CiviContribute')) {
-      require_once "CRM/Contribute/BAO/Contribution.php";
       $this->_fields = array_merge(CRM_Contribute_BAO_Contribution::getContributionFields(), $this->_fields);
     }
 
     if (CRM_Core_Permission::access('CiviMember')) {
-      require_once 'CRM/Member/BAO/Membership.php';
       $this->_fields = array_merge(CRM_Member_BAO_Membership::getMembershipFields(), $this->_fields);
     }
 
     if (CRM_Core_Permission::access('CiviEvent')) {
-      require_once 'CRM/Event/BAO/Query.php';
       $this->_fields = array_merge(CRM_Event_BAO_Query::getParticipantFields(TRUE), $this->_fields);
     }
 
     if (CRM_Core_Permission::access('Quest')) {
-      require_once 'CRM/Quest/BAO/Student.php';
       $this->_fields = array_merge(CRM_Quest_BAO_Student::exportableFields(), $this->_fields);
     }
 
@@ -175,6 +195,13 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       require_once 'CRM/Core/DAO.php';
       $fieldTitle = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $this->_id, 'label');
       $this->assign('fieldTitle', $fieldTitle);
+    }
+
+    // add current fields
+    if ($this->_gid) {
+      $page = new CRM_UF_Page_Field();
+      $page->setVar('_gid', $this->_gid);
+      $page->browse();
     }
   }
 
@@ -280,9 +307,16 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($fields['Organization'][$key]);
       }
     }
+    if (strstr($this->_groupInfo['usage'], 'User ') ||
+      strstr($this->_groupInfo['usage'], 'CiviContribute') ||
+      strstr($this->_groupInfo['usage'], 'CiviEvent')) {
+      unset($fields['Household']);
+      unset($fields['Organization']);
+    }
 
     // add current employer for individuals
-    $fields['Contact']['id'] = array('name' => 'id',
+    $fields['Contact']['id'] = array(
+      'name' => 'id',
       'title' => ts('Internal Contact ID'),
     );
 
@@ -333,7 +367,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       $fields['Student'] = &CRM_Quest_BAO_Student::exportableFields();
     }
 
-    if (CRM_Core_Permission::access('CiviContribute')) {
+    if (CRM_Core_Permission::access('CiviContribute') && strstr($this->_groupInfo['usage'], 'CiviContribute')) {
       $contribFields = &CRM_Contribute_BAO_Contribution::getContributionFields();
       if (!empty($contribFields)) {
         unset($contribFields['is_test']);
@@ -343,8 +377,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       }
     }
 
-    if (CRM_Core_Permission::access('CiviEvent')) {
-      require_once 'CRM/Event/BAO/Query.php';
+    if (CRM_Core_Permission::access('CiviEvent') && strstr($this->_groupInfo['usage'], 'CiviEvent')) {
       $participantFields = &CRM_Event_BAO_Query::getParticipantFields(TRUE);
       if (!empty($participantFields)) {
         unset($participantFields['external_identifier']);
@@ -358,7 +391,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       }
     }
 
-    if (CRM_Core_Permission::access('CiviMember')) {
+    if (CRM_Core_Permission::access('CiviMember') && strstr($this->_groupInfo['usage'], 'CiviContribute')) {
       require_once 'CRM/Member/BAO/Membership.php';
       $membershipFields = &CRM_Member_BAO_Membership::getMembershipFields();
       unset($membershipFields['membership_id']);
@@ -374,7 +407,11 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     }
 
     $activityFields = CRM_Activity_BAO_Activity::exportableFields('Activity');
-    if (!empty($activityFields)) {
+    if (!strstr($this->_groupInfo['usage'], 'Profile') &&
+      !strstr($this->_groupInfo['usage'], 'User') &&
+      !strstr($this->_groupInfo['usage'], 'CiviEvent') &&
+      !strstr($this->_groupInfo['usage'], 'CiviContribute') &&
+      !empty($activityFields)) {
       unset($activityFields['activity_id']);
       unset($activityFields['source_contact_id']);
       unset($activityFields['is_test']);
@@ -438,26 +475,31 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 
     $this->_location_types = array(ts('Primary')) + $this->_location_types;
 
-    $contactTypes = !empty($contactTypes) ? array('Contact' => ts('Contacts')) + $contactTypes : array();
-    $sel1 = array('' => ts('- select -')) + $contactTypes;
+    $sel1 = array('' => ts('- select -')) + array('Contact' => ts('Contact info'));
+    $contactTypes = !empty($contactTypes) ? $contactTypes : array();
+    foreach($contactTypes as $ctype => $label) {
+      if (!empty($fields[$ctype])) {
+        $sel1[$ctype] = $label;
+      }
+    }
 
     if (CRM_Core_Permission::access('Quest')) {
       $sel1['Student'] = ts('Students');
     }
 
-    if (!empty($activityFields)) {
+    if (!empty($fields['Activity'])) {
       $sel1['Activity'] = ts('Activity');
     }
 
-    if (CRM_Core_Permission::access('CiviEvent')) {
+    if (CRM_Core_Permission::access('CiviEvent') && !empty($fields['Participant'])) {
       $sel1['Participant'] = ts('Participants');
     }
 
-    if (!empty($contribFields)) {
+    if (CRM_Core_Permission::access('CiviContribute') && !empty($fields['Contribution'])) {
       $sel1['Contribution'] = ts('Contributions');
     }
 
-    if (!empty($membershipFields)) {
+    if (CRM_Core_Permission::access('CiviMember') && !empty($fields['Membership'])) {
       $sel1['Membership'] = ts('Membership');
     }
 
@@ -510,7 +552,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       'onblur' => 'showLabel();mixProfile();',
     );
 
-    $sel = &$this->addElement('hierselect', 'field_name', ts('Field Name'), $extra);
+    $sel = &$this->addElement('hierselect', 'field_name', ts('Please select a field name'), $extra);
 
     $formValues = array();
     $formValues = $this->exportValues();

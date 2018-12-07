@@ -33,6 +33,10 @@
     {else}
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div> 
         <table class="form-layout-compressed">
+        <tr class="crm-uf-field-form-block-is_active">
+            <td class="label">{$form.is_active.label}</td>
+            <td>{$form.is_active.html}</td>
+        </tr>
         <tr class="crm-uf-field-form-block-field_name">
             <td class="label">{$form.field_name.label}</td>
             <td>{$form.field_name.html}<br />
@@ -48,16 +52,6 @@
             <td>{$form.is_required.html}<br />
             <span class="description">{ts}Are users required to complete this field?{/ts}</span></td>
         </tr>
-        <tr class="crm-uf-field-form-block-is_view">
-            <td class="label">{$form.is_view.label}</td>
-            <td>{$form.is_view.html}<br />
-            <span class="description">&nbsp;{ts}If checked, users can view but not edit this field.{/ts}<br />&nbsp;{ts}NOTE: View Only fields can not be included in Profile Search forms.{/ts}</span></td>
-        </tr>
-        <tr class="crm-uf-field-form-block-visibility">
-            <td class="label">{$form.visibility.label}</td>
-            <td>{$form.visibility.html}<br />
-            <span class="description">&nbsp;{ts}Is this field hidden from other users ('User and User Admin Only'), or is it visible to others and potentially searchable in the Profile Search form ('Public Pages' or 'Public Pages and Listings')? When visibility is 'Public Pages and Listings', users can also click the field value when viewing a contact in order to locate other contacts with the same value(s) (i.e. other contacts who live in Poland).{/ts}</span></td>
-        </tr>                                                     
         <tr class="crm-uf-field-form-block-is_searchable">
             <td class="label"><div id="is_search_label">{$form.is_searchable.label}</div></td>
             <td><div id="is_search_html">{$form.is_searchable.html}<br />
@@ -70,7 +64,7 @@
         </tr>
         <tr class="crm-uf-field-form-block-help_post">
             <td class="label">{$form.help_post.label}{if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_uf_field' field='help_post' id=$fieldId}{/if}</td>
-            <td>{$form.help_post.html|crmReplace:class:huge}<br /> 
+            <td>{$form.help_post.html|crmReplace:class:big}<br /> 
             <span class="description">&nbsp;{ts}Explanatory text displayed to users for this field (can include HTML formatting tags).{/ts}</span></td>
         </tr>
         <tr class="crm-uf-field-form-block-weight"> 
@@ -78,19 +72,84 @@
             <td>&nbsp;{$form.weight.html}<br />
             <span class="description">&nbsp;{ts}Weight controls the order in which fields are displayed within a profile. Enter a positive integer - lower numbers are displayed ahead of higher numbers.{/ts}</span></td>
         </tr>
-        <tr class="crm-uf-field-form-block-is_active">
-            <td class="label">{$form.is_active.label}</td>
-            <td>{$form.is_active.html}</td>
-        </tr>
+        <tr>
+          <td colspan=2>
+          <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+            <div class="crm-accordion-header">
+              <div class="zmdi crm-accordion-pointer"></div> 
+              {ts}Advanced options{/ts}
+            </div><!-- /.crm-accordion-header -->
+            <div class="crm-accordion-body">
+              <table>
+              <tr class="crm-uf-field-form-block-is_view">
+                  <td class="label">{$form.is_view.label}</td>
+                  <td>{$form.is_view.html}<br />
+                  <span class="description">&nbsp;{ts}If checked, users can view but not edit this field.{/ts}<br />&nbsp;{ts}NOTE: View Only fields can not be included in Profile Search forms.{/ts}</span></td>
+              </tr>
+              <tr class="crm-uf-field-form-block-visibility">
+                  <td class="label">{$form.visibility.label}</td>
+                  <td>{$form.visibility.html}<br />
+                  <span class="description">&nbsp;{ts}Is this field hidden from other users ('User and User Admin Only'), or is it visible to others and potentially searchable in the Profile Search form ('Public Pages' or 'Public Pages and Listings')? When visibility is 'Public Pages and Listings', users can also click the field value when viewing a contact in order to locate other contacts with the same value(s) (i.e. other contacts who live in Poland).{/ts}</span></td>
+              </tr>                                                     
+              </table>
+            </div><!-- /.crm-accordion-body -->
+          </div><!-- /.crm-accordion-wrapper -->
+        </td></tr>
         </table>
     {/if}
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+    <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+      <div class="crm-accordion-header">
+        <div class="zmdi crm-accordion-pointer"></div> 
+        {ts 1=$groupTitle}%1 - CiviCRM Profile Fields{/ts}
+      </div><!-- /.crm-accordion-header -->
+      <div class="crm-accordion-body">
+        {strip}
+        {* handle enable/disable actions*}
+ 	{include file="CRM/common/enableDisable.tpl"}
+ 	{include file="CRM/common/jsortable.tpl"}
+        <table id="options" class="display">
+            <thead>
+            <tr>
+                <th>{ts}Field Name{/ts}</th>
+                <th>{ts}Visibility{/ts}</th>
+                <th>{ts}Searchable?{/ts}</th>
+                <th>{ts}In Selector?{/ts}</th>
+                <th id="order" class="sortable">{ts}Order{/ts}</th>
+                <th>{ts}Active{/ts}</th>	
+                <th>{ts}Required{/ts}</th>	
+                <th>{ts}View Only{/ts}</th>	
+                <th>{ts}Reserved{/ts}</th>
+                <th></th>
+		<th class="hiddenElement"></th>
+            </tr>
+            </thead>
+            {foreach from=$ufField item=row}
+            <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if} {if $row.id == $fieldId}editing{/if}">
+                <td>{$row.label}<br/>({$row.field_type})</td>
+                <td>{$row.visibility_display}</td>
+                <td>{if $row.is_searchable   eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+                <td>{if $row.in_selector     eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+                <td class="nowrap">{$row.order}</td>
+                <td id="row_{$row.id}_status">{if $row.is_active eq 1}       {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+                <td>{if $row.is_required     eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+                <td>{if $row.is_view         eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+                <td>{if $row.is_reserved     eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+                <td>{if $row.id != $fieldId}{$row.action|replace:'xx':$row.id}{/if}</td>
+                <td class="order hiddenElement">{$row.weight}</td>
+            </tr>
+            {/foreach}
+        </table>
+        {/strip}
+      </div><!-- /.crm-accordion-body -->
+    </div><!-- /.crm-accordion-wrapper -->
 </div>
 
  {$initHideBoxes}
 
 {literal}
 <script type="text/javascript">
+cj().crmaccordions(); 
 cj("#field_name\\[0\\]").bind( 'change', function( ) {
   cj("#field_name\\[1\\]").chosen({
     "search_contains": true,
