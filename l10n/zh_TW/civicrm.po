@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-12-06 03:41+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-12-07 05:23+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12650,11 +12650,11 @@ msgstr "小於且等於"
 
 #: CRM/Core/DAO/MappingField.php
 msgid "IN"
-msgstr "在選項中"
+msgstr "包含"
 
 #: CRM/Core/DAO/MappingField.php
 msgid "NOT IN"
-msgstr "不在選項中"
+msgstr "不包含"
 
 #: CRM/Core/DAO/MappingField.php
 msgid "LIKE"
@@ -33991,7 +33991,7 @@ msgstr "顯示會員類型、費用及描述？"
 msgid ""
 "You need to have at least one <a href=\"%1\">Membership Type</a> to enable "
 "Member Signup."
-msgstr "您至少需要有一種<a href=\"%1\">會員類型</a>，才能啟用會員註冊。"
+msgstr "您至少需要有一個公開的<a href=\"%1\">會員類型</a>，才能啟用會員註冊。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid ""

@@ -315,7 +315,7 @@ class CRM_Event_BAO_Query {
         if (!empty($feeLabels)) {
           $feeLabel = implode('|', $feeLabels);
           $query->_where[$grouping][] = "civicrm_participant.fee_level REGEXP '$feeLabel'";
-          $query->_qill[$grouping][] = ts("Fee level") . " IN ". implode(', ', $feeLabels);
+          $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.implode(', ', $feeLabels);
         }
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
         return;
