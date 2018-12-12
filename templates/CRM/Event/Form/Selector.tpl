@@ -97,7 +97,7 @@
     {/if}
     <td class="right nowrap crm-paticipant-contribution_total_amount">
       {$row.contribution_total_amount|crmMoney:$row.contribution_currency}<br>
-      {if $row.contribution_status}({$row.contribution_status}){/if}
+      {if $row.contribution_status}({$row.contribution_status} {if $row.contribution_id}<a href="{crmURL p='civicrm/contact/view/contribution' q="civicrm/contact/view/contribution?reset=1&id=`$row.contribution_id`&cid=`$row.contact_id`&action=view&context=participant&selectedChild=contribute&compId=`$row.participant_id`&compAction=4&compContext=participant&key=`$qfKey`"}" target="_blank">{ts}View{/ts}{/if}){/if}
     </td>
     <td class="crm-participant-participant_register_date">{$row.participant_register_date|crmDate}</td>	
     <td class="crm-participant-participant_status crm-participant_status_{$row.participant_status_id}">{$row.participant_status}</td>
