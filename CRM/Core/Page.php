@@ -299,7 +299,8 @@ class CRM_Core_Page {
    * @return void
    */
   function reset() {
-    self::$_session->resetScope($this->_name);
+    self::$_session->resetScope($this->_scope);
+    self::$_session->purgeExpired();
   }
 
   /**
