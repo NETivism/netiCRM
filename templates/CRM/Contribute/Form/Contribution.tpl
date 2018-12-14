@@ -215,6 +215,9 @@
             <td>{$form.soft_credit_to.html} {help id="id-soft_credit"}</td>
         </tr>
 	    {if $action eq 2 and $form.pcp_made_through_id.value[0]} {* Include PCP honor roll fields if contrib came from PCP page *}
+          <tr class="crm-contribution-form-block-pcp_made_through_id"><td class="label">{$form.pcp_made_through_id.label}</td>
+            <td>{$form.pcp_made_through_id.html}</td>
+          </tr>
     	    <tr class="crm-contribution-form-block-pcp_display_in_roll"><td class="label">{$form.pcp_display_in_roll.label}</td>
     	        <td>{$form.pcp_display_in_roll.html}</td>
     	    </tr>
@@ -240,7 +243,7 @@
 
     {*include custom data js file*}
     {include file="CRM/common/customData.tpl"}
-
+{include file="CRM/common/chosen.tpl" selector="#payment_instrument_id, #pcp_made_through_id"}
 {literal}
 <script type="text/javascript">
     cj( function( ) {
