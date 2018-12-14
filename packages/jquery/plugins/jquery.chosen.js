@@ -344,7 +344,7 @@ Copyright (c) 2011 by Harvest
       this.container.addClass("chzn-container-" + (this.is_multiple ? "multi" : "single"));
       this.dropdown = this.container.find('div.chzn-drop').first();
       dd_top = this.container.height();
-      dd_width = this.f_width - get_side_border_padding(this.dropdown);
+      dd_width = this.f_width;
       this.dropdown.css({
         "width": dd_width + "px",
         "top": dd_top + "px"
