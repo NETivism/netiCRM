@@ -121,7 +121,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
         $valueParams = array('price_field_id' => $this->_fid);
 
         require_once 'CRM/Price/BAO/FieldValue.php';
-        CRM_Price_BAO_FieldValue::retrieve($valueParams, $defaults);
+        CRM_Price_BAO_FieldValue::retrieve($valueParams, $fieldValues);
+        foreach ($fieldValues as $key => $value) {
+          if($key == 'is_active')continue;
+          $defaults[$key] = $value;
+        }
 
         // fix the display of the monetary value, CRM-4038
         require_once 'CRM/Utils/Money.php';
@@ -571,7 +575,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $params['option_description'] = array(1 => $params['description']);
       $params['option_weight'] = array(1 => $params['weight']);
       $params['option_member'] = array(1 => $params['is_member']);
-      $params['is_active'] = array(1 => 1);
+      $params['option_is_active'] = array(1 => 1);
       unset($params['max_value']);
     }
 
