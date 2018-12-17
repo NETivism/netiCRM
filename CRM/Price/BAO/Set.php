@@ -402,6 +402,8 @@ WHERE     ct.id = cp.contribution_type_id AND
       'is_active',
       'visibility_id',
       'max_value',
+      'active_on', 
+      'expire_on',
     );
     if ($required == TRUE) {
       $priceFields[] = 'is_required';
@@ -651,6 +653,7 @@ WHERE  id = %1";
     require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::buildAmount('contribution', $form, $feeBlock);
 
+    $hasField = false;
     foreach ($feeBlock as $field) {
       if (CRM_Utils_Array::value('visibility', $field) == 'public' || $className == 'CRM_Contribute_Form_Contribution') {
         $options = CRM_Utils_Array::value('options', $field);
@@ -658,8 +661,17 @@ WHERE  id = %1";
           continue;
         }
 
-        CRM_Price_BAO_Field::addQuickFormElement($form, 'price_' . $field['id'], $field['id'], FALSE, CRM_Utils_Array::value('is_required', $field, FALSE), NULL, $options);
+        $element = CRM_Price_BAO_Field::addQuickFormElement($form, 'price_' . $field['id'], $field['id'], FALSE, CRM_Utils_Array::value('is_required', $field, FALSE), NULL, $options);
+        if(!empty($element)){
+          $hasField = TRUE;
+        }
+
       }
+    }
+    if(!$hasField){
+      $status = ts('There are no active field in the price set.');
+      $session = CRM_Core_Session::singleton();
+      $session->setStatus($status);
     }
   }
 

@@ -468,6 +468,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
     if (isset($qf->_online) && $qf->_online) {
       $element->freeze();
     }
+    return $element;
   }
 
   /**
