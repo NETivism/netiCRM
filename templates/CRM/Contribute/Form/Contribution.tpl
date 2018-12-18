@@ -243,7 +243,7 @@
 
     {*include custom data js file*}
     {include file="CRM/common/customData.tpl"}
-{include file="CRM/common/chosen.tpl" selector="#payment_instrument_id, #pcp_made_through_id"}
+{include file="CRM/common/chosen.tpl" selector="select#payment_instrument_id, select#pcp_made_through_id"}
 {literal}
 <script type="text/javascript">
     cj( function( ) {
