@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-12-07 05:23+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2018-12-17 04:17+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25935,7 +25935,7 @@ msgstr[0] "%count 筆"
 
 #: templates/CRM/common/searchResultTasks.tpl
 msgid "Actual Registered participant count"
-msgstr "實際報名參加者人數"
+msgstr "本搜尋之所有報名人數"
 
 #: templates/CRM/common/searchResultTasks.tpl
 #: templates/CRM/Contact/Form/Search/ResultTasks.tpl
@@ -35183,11 +35183,11 @@ msgstr "此欄位中的解釋文字會顯示給使用者。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Date this field becomes effective (optional)"
-msgstr "此欄位開始生效時間。如果有填，在生效時間後，參加者即可在報名頁面看到此欄位。"
+msgstr "此欄位開始生效時間。如果有填，在生效時間後，參加者 / 捐款者即可在報名頁或募款頁看到此欄位。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Date this field expires (optional)"
-msgstr "此欄位到期時間。如果有填，在到期時間之後，參加者就不會再報名頁面看到此欄位。"
+msgstr "此欄位到期時間。如果有填，在到期時間之後，參加者 / 捐款者就不會再在報名頁或募款頁看到此欄位。"
 
 #: templates/CRM/Price/Form/OptionFields.tpl msgctxt "menu"
 msgid "Price Field Options"
@@ -46795,3 +46795,6 @@ msgstr "圖片將會縮放至 %1 像素"
 
 msgid "Expire time can't earlier than or as same as the active time."
 msgstr "到期時間不能早於或等於啟用時間"
+
+msgid "There are no active field in the price set."
+msgstr "目前沒有啟用的價目表欄位，請連繫活動主辦單位。"

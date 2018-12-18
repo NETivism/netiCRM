@@ -46624,3 +46624,6 @@ msgstr ""
 
 msgid "Expire time can't earlier than or as same as the active time."
 msgstr ""
+
+msgid "There are no active field in the price set."
+msgstr ""

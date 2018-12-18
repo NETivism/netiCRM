@@ -231,7 +231,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
       return NULL;
     }
 
-    if($qf instanceof CRM_Event_Form_Registration_Register){
+    if($qf instanceof CRM_Event_Form_Registration_Register || $qf instanceof CRM_Contribute_Form_Contribution_Main){
       if(!empty($field->active_on)){
         if(time() < strtotime($field->active_on)){
           return NULL;
@@ -468,6 +468,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
     if (isset($qf->_online) && $qf->_online) {
       $element->freeze();
     }
+    return $element;
   }
 
   /**
