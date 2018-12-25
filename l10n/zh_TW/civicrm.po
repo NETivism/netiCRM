@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-12-17 04:17+0000\n"
+"PO-Revision-Date: 2018-12-25 10:03+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46798,3 +46798,18 @@ msgstr "到期時間不能早於或等於啟用時間"
 
 msgid "There are no active field in the price set."
 msgstr "目前沒有啟用的價目表欄位，請連繫活動主辦單位。"
+
+msgid "Background image"
+msgstr "背景圖片"
+
+msgid "Background image of mobile"
+msgstr "手機背景圖片"
+
+msgid "The background image used in the special style."
+msgstr "上傳用於特別募款頁的背景圖片"
+
+msgid "The background image of mobile used in the special style."
+msgstr "上傳手機版時使用的，用於特別募款頁的背景圖片"
+
+msgid "Is this Online Contribution Page in the Special Style?"
+msgstr "是否啟用此頁面的「特別募款頁」樣式？"
