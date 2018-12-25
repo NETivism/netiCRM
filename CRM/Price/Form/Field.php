@@ -121,7 +121,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
         $valueParams = array('price_field_id' => $this->_fid);
 
         require_once 'CRM/Price/BAO/FieldValue.php';
-        CRM_Price_BAO_FieldValue::retrieve($valueParams, $defaults);
+        CRM_Price_BAO_FieldValue::retrieve($valueParams, $fieldValues);
+        foreach ($fieldValues as $key => $value) {
+          if($key == 'is_active')continue;
+          $defaults[$key] = $value;
+        }
 
         // fix the display of the monetary value, CRM-4038
         require_once 'CRM/Utils/Money.php';
@@ -146,6 +150,13 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Price_DAO_Field', $fieldValues);
       $defaults['options_per_line'] = 1;
       $defaults['is_display_amounts'] = 1;
+    }
+
+    if(!empty($defaults['active_on'])){
+      list($defaults['active_on'], $defaults['active_on_time']) = CRM_Utils_Date::setDateDefaults(CRM_Utils_Array::value('active_on', $defaults), 'activityDateTime');
+    }
+    if(!empty($defaults['expire_on'])){
+      list($defaults['expire_on'], $defaults['expire_on_time']) = CRM_Utils_Date::setDateDefaults(CRM_Utils_Array::value('expire_on', $defaults), 'activityDateTime');
     }
 
     return $defaults;
@@ -280,16 +291,10 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     );
 
     // active_on
-    $date_options = array(
-      //'format' => 'dmY His',
-      'minYear' => date('Y'),
-      'maxYear' => date('Y') + 5,
-      'addEmptyOption' => TRUE,
-    );
-    $this->add('date', 'active_on', ts('Active On'), $date_options);
+    $this->addDateTime('active_on', ts('Active On'), false, $date_options);
 
     // expire_on
-    $this->add('date', 'expire_on', ts('Expire On'), $date_options);
+    $this->addDateTime('expire_on', ts('Expire On'), false, $date_options);
 
     // is required ?
     $this->add('checkbox', 'is_required', ts('Required?'));
@@ -506,6 +511,14 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       }
     }
 
+    if(!empty($fields['active_on']) && !empty($fields['expire_on'])){
+      $active_on = CRM_Utils_Date::processDate($fields['active_on'], $fields['active_on_time']);
+      $expire_on = CRM_Utils_Date::processDate($fields['expire_on'], $fields['expire_on_time']);
+      if(strtotime($active_on) >= strtotime($expire_on)){
+        $errors["active_on_time"] = ts('Expire time can\'t earlier than or as same as the active time.');
+      }
+    }
+
     return empty($errors) ? TRUE : $errors;
   }
 
@@ -526,8 +539,8 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     $params['is_required'] = CRM_Utils_Array::value('is_required', $params, FALSE);
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_member'] = CRM_Utils_Array::value('is_member', $params, FALSE);
-    $params['active_on'] = CRM_Utils_Date::format(CRM_Utils_Array::value('active_on', $params));
-    $params['expire_on'] = CRM_Utils_Date::format(CRM_Utils_Array::value('expire_on', $params));
+    $params['active_on'] = CRM_Utils_Date::processDate($params['active_on'], $params['active_on_time']);
+    $params['expire_on'] = CRM_Utils_Date::processDate($params['expire_on'], $params['expire_on_time']);
     $params['visibility_id'] = CRM_Utils_Array::value('visibility_id', $params, FALSE);
     $params['count'] = CRM_Utils_Array::value('count', $params, FALSE);
 
@@ -562,7 +575,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $params['option_description'] = array(1 => $params['description']);
       $params['option_weight'] = array(1 => $params['weight']);
       $params['option_member'] = array(1 => $params['is_member']);
-      $params['is_active'] = array(1 => 1);
+      $params['option_is_active'] = array(1 => 1);
       unset($params['max_value']);
     }
 

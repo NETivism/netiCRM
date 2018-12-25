@@ -382,6 +382,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
           $row['contribution_total_amount'] = $dao->total_amount;
           $row['contribution_currency'] = $dao->currency;
           $row['contribution_status'] = $statusContribution[$dao->contribution_status_id];
+          $row['contribution_id'] = $dao->id;
         }
       }
 

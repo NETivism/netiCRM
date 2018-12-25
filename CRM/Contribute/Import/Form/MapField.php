@@ -188,7 +188,10 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     //CRM-2219 removing other required fields since for updation only
     //invoice id or trxn id or contribution id is required.
     if ($this->_onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
-      $remove = array('contribution_contact_id', 'email', 'first_name', 'last_name', 'external_identifier');
+      $remove = array(
+        'contribution_contact_id', 'email', 'first_name', 'last_name', 'external_identifier', 
+        'soft_credit', 'pcp_id', 'pcp_page', 'pcp_creator', 'pcp_display_in_roll', 'pcp_roll_nickname', 'pcp_personal_note',
+      );
       foreach ($remove as $value) {
         unset($this->_mapperFields[$value]);
       }

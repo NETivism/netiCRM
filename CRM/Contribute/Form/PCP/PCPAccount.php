@@ -62,6 +62,10 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     $this->_pageId = CRM_Utils_Request::retrieve('pageId', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
+    if ($this->_context) {
+      $this->controller->set('context', $this->_context);
+    }
     if ($this->_id) {
       $this->_contactID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id');
     }

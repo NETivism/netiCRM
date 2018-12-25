@@ -1089,7 +1089,6 @@ WHERE  contribution_id = {$this->_id}
         array('' => ts('- select -')) +
         CRM_Contribute_PseudoConstant::pcPage()
       );
-      $ele->freeze();
       $this->addElement('checkbox', 'pcp_display_in_roll', ts('Pcp Display In Roll'), NULL,
         array('onclick' => "return showHideByValue('pcp_display_in_roll','','nameID|nickID|personalNoteID','table-row','radio',false);")
       );
@@ -1520,6 +1519,9 @@ WHERE  contribution_id = {$this->_id}
 
       foreach ($fields as $f) {
         $params[$f] = CRM_Utils_Array::value($f, $formValues);
+      }
+      if (!empty($params['pcp_made_through_id'])) {
+        $params['pcp_id'] = $params['pcp_made_through_id'];
       }
 
       if ($softID = CRM_Utils_Array::value('softID', $this->_values)) {

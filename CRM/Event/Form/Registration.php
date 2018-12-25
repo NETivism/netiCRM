@@ -1292,7 +1292,7 @@ WHERE  v.option_group_id = g.id
       foreach ($values as $optId => $total) {
         $optMax = $optionsMaxValueDetails[$fieldId]['options'][$optId];
         $total += CRM_Utils_Array::value('db_total_count', $options[$optId], 0);
-        if ($optMax && $total > $optMax) {
+        if (empty($fieldMax) && $optMax && $total > $optMax) {
           $errors[$currentParticipantNum]["price_{$fieldId}"] = ts('It looks like this field participant count extending its maximum limit.');
         }
         $fieldTotal += $total;

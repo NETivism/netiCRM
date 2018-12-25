@@ -2251,6 +2251,9 @@ table.campaign td,
     top         : 0;
     right       : 0;
 }
+.crm-container .cms_name-section {
+    position: relative;
+}
 
 /* class for text area resizer jquery plugin*/
 div.grippie {

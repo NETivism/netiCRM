@@ -209,29 +209,24 @@
               </td>
            </tr>
 
-<!-- Dates price field is available feature - not implemented yet. dgg
         <tr class="crm-price-field-form-block-active_on">
            <td class="label">{$form.active_on.label}</td>
-           <td>{$form.active_on.html}</td>
+           <td>{include file="CRM/common/jcalendar.tpl" elementName=active_on}
+            {if $action neq 4}
+              <div class="description">{ts}Date this field becomes effective (optional){/ts}</div>
+            {/if}
+           </td>
         </tr>
-        {if $action neq 4}
-        <tr>
-           <td>&nbsp;</td>
-           <td class="description">{ts}Date this field becomes effective (optional){/ts}</td>
-        </tr>
-        {/if}
 
         <tr class="crm-price-field-form-block-expire_on">
            <td class="label">{$form.expire_on.label}</td>
-           <td>{$form.expire_on.html}</td>
+           <td>{include file="CRM/common/jcalendar.tpl" elementName=expire_on}
+            {if $action neq 4}
+              <div class="description">{ts}Date this field expires (optional){/ts}</div>
+            {/if}
+
+           </td>
         </tr>
-        {if $action neq 4}
-        <tr>
-           <td>&nbsp;</td>
-           <td class="description">{ts}Date this field expires (optional){/ts}</td>
-        </td>
-        {/if}
--->
 
         <tr class="crm-price-field-form-block-is_required">
            <td class="label">{$form.is_required.label}</td>

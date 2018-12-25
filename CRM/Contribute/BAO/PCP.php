@@ -282,14 +282,14 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
   static function honorRoll($pcpId) {
     $query = "
             SELECT cc.id, cs.pcp_roll_nickname, cs.pcp_personal_note,
-                   SUM(cc.total_amount) as total_amount, cc.currency, COUNT(cc.id) as total_count, cc.contribution_recur_id
+                   SUM(cc.total_amount) as total_amount, cc.currency, COUNT(cc.id) as total_count, cc.contribution_recur_id, MAX(cc.receive_date) as last_receive_date
             FROM civicrm_contribution cc 
-                 LEFT JOIN civicrm_contribution_soft cs ON cc.id = cs.contribution_id
+                 INNER JOIN civicrm_contribution_soft cs ON cc.id = cs.contribution_id
             WHERE cs.pcp_id = {$pcpId}
                   AND cs.pcp_display_in_roll = 1 
                   AND contribution_status_id = 1 
                   AND is_test = 0
-            GROUP BY cc.contact_id, cc.contribution_recur_id";
+            GROUP BY cc.contact_id, cc.contribution_recur_id, cs.pcp_roll_nickname";
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     $honor = array();
     require_once 'CRM/Utils/Money.php';
@@ -299,6 +299,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
       $honor[$dao->id]['total_count'] = $dao->total_count;
       $honor[$dao->id]['is_recur'] = $dao->contribution_recur_id ? 1 : 0;
       $honor[$dao->id]['personal_note'] = $dao->pcp_personal_note;
+      $honor[$dao->id]['last_receive_date'] = $dao->last_receive_date;
     }
     return $honor;
   }

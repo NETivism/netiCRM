@@ -46622,3 +46622,23 @@ msgstr ""
 msgid "Image will be resized to %1 pixels."
 msgstr ""
 
+msgid "Expire time can't earlier than or as same as the active time."
+msgstr ""
+
+msgid "There are no active field in the price set."
+msgstr ""
+
+msgid "Background image"
+msgstr ""
+
+msgid "Background image of mobile"
+msgstr ""
+
+msgid "The background image used in the special style."
+msgstr ""
+
+msgid "The background image of mobile used in the special style."
+msgstr ""
+
+msgid "Is this Online Contribution Page in the Special Style?"
+msgstr ""

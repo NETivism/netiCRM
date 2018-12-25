@@ -50,6 +50,7 @@ class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
   static function add(&$params, &$ids) {
     $membershipLog = new CRM_Member_DAO_MembershipLog();
     $membershipLog->copyValues($params);
+    $membershipLog->modified_date = date('Ymd');
 
     $membershipLog->save();
     $membershipLog->free();

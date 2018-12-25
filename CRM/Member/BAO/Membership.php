@@ -1494,10 +1494,7 @@ AND civicrm_membership.is_test = %2";
           $format
         ),
         'modified_id' => $currentMembership['contact_id'],
-        'modified_date' => CRM_Utils_Date::customFormat(
-          $currentMembership['today_date'],
-          $format
-        ),
+        'modified_date' => date('Ymd'),
         'renewal_reminder_date' => CRM_Utils_Date::customFormat(
           $currentMembership['reminder_date'],
           $format
