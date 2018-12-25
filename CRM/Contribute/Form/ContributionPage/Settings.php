@@ -39,6 +39,8 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
   protected $_contributionType = NULL;
 
+  CONST IS_SPECIAL = 2;
+
   /**
    * Function to set variables up before form is built
    *
@@ -100,10 +102,29 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
       CRM_Utils_System::setTitle(ts('Title and Settings'));
     }
     $defaults = parent::setDefaultValues();
+
+    $is_active = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+      $this->_id,
+      'is_active'
+    );
+    $defaults['is_special'] = $is_active & self::IS_SPECIAL;
+
     // in update mode, we need to set custom data subtype to tpl
     if (CRM_Utils_Array::value('contribution_type_id', $defaults)) {
       $this->assign('customDataSubType', $defaults["contribution_type_id"]);
     }
+    $background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+      $this->_id,
+      'background_URL'
+    );
+    $this->assign('background_URL', $background_URL);
+    $mobile_background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+      $this->_id,
+      'mobile_background_URL'
+    );
+    $this->assign('mobile_background_URL', $mobile_background_URL);
+    $defaults['deleteBackgroundImage'] = '';
+    $defaults['deleteMobileBackgroundImage'] = '';
     return $defaults;
   }
 
@@ -155,7 +176,9 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addRule('goal_amount', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
 
     // is this page active ?
-    $this->addElement('checkbox', 'is_active', ts('Is this Online Contribution Page Active?'));
+    $this->addElement('checkbox', 'is_active', ts('Is this Online Contribution Page Active?'), NULL, array('onclick' => "showSpecial()"));
+
+    $this->addElement('checkbox', 'is_special', ts('Is this Online Contribution Page in the Special Style?'), NULL, array('onclick' => "showSpecial()"));
 
     // should the honor be enabled
     $this->addElement('checkbox', 'honor_block_is_active', ts('Honoree Section Enabled'), NULL, array('onclick' => "showHonor()"));
@@ -169,6 +192,15 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addDateTime('end_date', ts('End Date'));
 
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_Settings', 'formRule'));
+
+
+    $this->add('file', 'uploadBackgroundImage', ts('Background image'));
+    $this->add('file', 'uploadMobileBackgroundImage', ts('Background image of mobile'));
+    $config = CRM_Core_Config::singleton();
+    $this->controller->addActions($config->imageUploadDir, array('uploadBackgroundImage', 'uploadMobileBackgroundImage'));
+
+    $this->add('hidden', 'deleteBackgroundImage');
+    $this->add('hidden', 'deleteMobileBackgroundImage');
 
     parent::buildQuickForm();
   }
@@ -216,6 +248,9 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     }
 
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
+    if($params['is_active'] && $params['is_special']){
+      $params['is_active'] = 3;
+    }
     $params['is_credit_card_only'] = CRM_Utils_Array::value('is_credit_card_only', $params, FALSE);
     $params['honor_block_is_active'] = CRM_Utils_Array::value('honor_block_is_active', $params, FALSE);
     $params['is_for_organization'] = CRM_Utils_Array::value('is_organization', $params) ? CRM_Utils_Array::value('is_for_organization', $params, FALSE) : 0;
@@ -231,6 +266,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
       $params['goal_recurring'] = 'null';
     }
 
+
     if (!$params['honor_block_is_active']) {
       $params['honor_block_title'] = NULL;
       $params['honor_block_text'] = NULL;
@@ -239,6 +275,31 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     require_once 'CRM/Contribute/BAO/ContributionPage.php';
     $customFields = CRM_Core_BAO_CustomField::getFields('ContributionPage', FALSE, FALSE, CRM_Utils_Array::value('contribution_type_id', $params));
     $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params, $customFields, $this->_id, 'ContributionPage');
+
+    $config = CRM_Core_Config::singleton();
+
+    $deleteBackgroundImage = CRM_Utils_Array::value('deleteBackgroundImage', $params);
+    $deleteMobileBackgroundImage = CRM_Utils_Array::value('deleteMobileBackgroundImage', $params);
+    unset($params['deleteBackgroundImage']);
+    unset($params['deleteMobileBackgroundImage']);
+
+    if(!empty($deleteBackgroundImage)){
+      $params['background_URL'] = '';
+    }
+    if(!empty($deleteMobileBackgroundImage)){
+      $params['mobile_background_URL'] = '';
+    }
+
+    $uploadBackgroundImage = CRM_Utils_Array::value('uploadBackgroundImage', $params);
+    if(!empty($uploadBackgroundImage)){
+      $params['background_URL'] = str_replace($config->imageUploadDir, $config->imageUploadURL, $uploadBackgroundImage['name']);
+    }
+
+    $uploadMobileBackgroundImage = CRM_Utils_Array::value('uploadMobileBackgroundImage', $params);
+    if(!empty($uploadMobileBackgroundImage)){
+      $params['mobile_background_URL'] = str_replace($config->imageUploadDir, $config->imageUploadURL, $uploadMobileBackgroundImage['name']);
+    }
+
 
     $dao = &CRM_Contribute_BAO_ContributionPage::create($params);
 

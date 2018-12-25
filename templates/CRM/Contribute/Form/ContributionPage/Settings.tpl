@@ -55,6 +55,63 @@
     {/if}
 	  </td>
 	</tr>
+    <tr class="crm-contribution-contributionpage-settings-form-block-is_special">
+        <td>&nbsp;</td><td>{$form.is_special.html}{$form.is_special.label}</td>
+    </tr>
+    <tr class="crm-contribution-contributionpage-settings-form-block-uploadBackgroundImage">
+        <td class="label">{$form.uploadBackgroundImage.label}<div class="label-test">{ts}{/ts}</div></td>
+        <td class="value">
+            {if $background_URL}
+            <img style="max-height: 103px;" src="{$background_URL}">
+            <a class="delete-image" href="javascript:void(0);" data-field="deleteBackgroundImage">{ts}Delete{/ts}</a>
+            <br/>
+            {/if}
+            {$form.uploadBackgroundImage.html}<br />
+        <span class="description">{ts}The background image used in the special style.{/ts}</span></td>
+    </tr>
+    <tr class="crm-contribution-contributionpage-settings-form-block-uploadMobileBackgroundImage">
+        <td class="label">{$form.uploadMobileBackgroundImage.label}<div class="label-test">{ts}test{/ts}</div></td>
+        <td class="value">
+            {if $mobile_background_URL}
+            <img style="max-height: 103px;" src="{$mobile_background_URL}">
+            <a class="delete-image" href="javascript:void(0);" data-field="deleteMobileBackgroundImage">{ts}Delete{/ts}</a>
+            <br/>
+            {/if}
+            {$form.uploadMobileBackgroundImage.html}<br />
+        <span class="description">{ts}The background image of mobile used in the special style.{/ts}</span></td>
+    </tr>
+    {literal}
+    <script type="text/javascript">
+        cj(function($){
+            $('.delete-image').click(function(){
+                deleteFieldName = $(this).attr('data-field');
+                $('[name='+deleteFieldName+']').val(1);
+                $(this).parent().find('img').css('filter','brightness(50%)');
+            });
+        });
+        showSpecial();
+        function showSpecial() {
+            var checkbox = document.getElementsByName("is_active");
+            var checkbox2 = document.getElementsByName("is_special");
+            if (checkbox[0].checked) {
+                document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-is_special")[0].style.display = 'table-row';
+                if(checkbox2[0].checked){
+                    document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadBackgroundImage")[0].style.display = 'table-row';
+                    document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadMobileBackgroundImage")[0].style.display = 'table-row';
+                }else{
+                    document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadBackgroundImage")[0].style.display = 'none';
+                    document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadMobileBackgroundImage")[0].style.display = 'none';
+
+                }
+
+            } else {
+                document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-is_special")[0].style.display = 'none';
+                document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadBackgroundImage")[0].style.display = 'none';
+                document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadMobileBackgroundImage")[0].style.display = 'none';
+            }
+        }
+    </script>
+    {/literal}
 	<tr class="crm-contribution-contributionpage-settings-form-block-title"><td class="label">{$form.title.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contribution_page' field='title' id=$id}{/if}</td><td>{$form.title.html}<br/>
             <span class="description">{ts}This title will be displayed at the top of the page.<br />Please use only alphanumeric, spaces, hyphens and dashes for Title.{/ts}</td>
 	</tr>
@@ -111,7 +168,7 @@
             </tr>
             </table>
         </td>
-  </tr>
+    </tr>
 	<tr class="crm-contribution-contributionpage-settings-form-block-honor_block_is_active">
 	    <td>&nbsp;</td><td>{$form.honor_block_is_active.html}{$form.honor_block_is_active.label} {help id="id-honoree_section"}</td>
 	</tr>
