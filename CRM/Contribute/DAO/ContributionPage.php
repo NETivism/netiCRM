@@ -333,6 +333,18 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    */
   public $currency;
   /**
+   * Background image url on contribution page of special style.
+   *
+   * @var string
+   */
+  public $background_URL;
+  /**
+   * Background image url on contribution page of special style in mobile.
+   *
+   * @var string
+   */
+  public $mobile_background_URL;
+  /**
    * class constructor
    *
    * @access public
@@ -610,6 +622,22 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
           'headerPattern' => '/cur(rency)?/i',
           'dataPattern' => '/^[A-Z]{3}$/i',
           'export' => true,
+          'default' => 'UL',
+        ) ,
+        'background_URL' => array(
+          'name' => 'background_URL',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Background Url') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
+        ) ,
+        'mobile_background_URL' => array(
+          'name' => 'mobile_background_URL',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Mobile Background Url') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
           'default' => 'UL',
         ) ,
       );

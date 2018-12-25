@@ -3572,7 +3572,9 @@ CREATE TABLE civicrm_contribution_page (
      end_date datetime    COMMENT 'Date and time that this page ends. May be NULL if no defined end date/time',
      created_id int unsigned    COMMENT 'FK to civicrm_contact, who created this contribution page',
      created_date datetime    COMMENT 'Date and time that contribution page was created.',
-     currency varchar(3)   DEFAULT NULL COMMENT '3 character string, value from config setting or input via user.' 
+     currency varchar(3)   DEFAULT NULL COMMENT '3 character string, value from config setting or input via user.',
+     background_URL varchar(255)   DEFAULT NULL COMMENT 'Background image url on contribution page of special style.',
+     mobile_background_URL varchar(255)   DEFAULT NULL COMMENT 'Background image url on contribution page of special style in mobile.' 
 ,
     PRIMARY KEY ( id )
  
