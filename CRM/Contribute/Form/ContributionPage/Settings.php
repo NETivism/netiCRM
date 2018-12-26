@@ -39,8 +39,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
   protected $_contributionType = NULL;
 
-  CONST IS_SPECIAL = 2;
-
   /**
    * Function to set variables up before form is built
    *
@@ -108,7 +106,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
         $this->_id,
         'is_active'
       );
-      $defaults['is_special'] = $is_active & self::IS_SPECIAL;
+      $defaults['is_special'] = $is_active & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL;
 
       $background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
         $this->_id,

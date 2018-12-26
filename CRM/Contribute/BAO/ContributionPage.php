@@ -40,6 +40,9 @@ require_once 'CRM/Contribute/DAO/ContributionPage.php';
  */
 class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_ContributionPage {
 
+  CONST IS_ACTIVE = 1;
+  CONST IS_SPECIAL = 2;
+
   /**
    * takes an associative array and creates a contribution page object
    *
