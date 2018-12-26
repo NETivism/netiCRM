@@ -59,7 +59,7 @@
         <td>&nbsp;</td><td>{$form.is_special.html}{$form.is_special.label}</td>
     </tr>
     <tr class="crm-contribution-contributionpage-settings-form-block-uploadBackgroundImage">
-        <td class="label">{$form.uploadBackgroundImage.label}<div class="label-test">{ts}{/ts}</div></td>
+        <td class="label">{$form.uploadBackgroundImage.label}</td>
         <td class="value">
             {if $background_URL}
             <img style="max-height: 103px;" src="{$background_URL}">
@@ -70,7 +70,7 @@
         <span class="description">{ts}The background image used in the special style.{/ts}</span></td>
     </tr>
     <tr class="crm-contribution-contributionpage-settings-form-block-uploadMobileBackgroundImage">
-        <td class="label">{$form.uploadMobileBackgroundImage.label}<div class="label-test">{ts}test{/ts}</div></td>
+        <td class="label">{$form.uploadMobileBackgroundImage.label}</td>
         <td class="value">
             {if $mobile_background_URL}
             <img style="max-height: 103px;" src="{$mobile_background_URL}">

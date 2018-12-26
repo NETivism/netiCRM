@@ -103,28 +103,31 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     }
     $defaults = parent::setDefaultValues();
 
-    $is_active = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
-      $this->_id,
-      'is_active'
-    );
-    $defaults['is_special'] = $is_active & self::IS_SPECIAL;
+    if(!empty($this->_id)){
+      $is_active = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+        $this->_id,
+        'is_active'
+      );
+      $defaults['is_special'] = $is_active & self::IS_SPECIAL;
+
+      $background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+        $this->_id,
+        'background_URL'
+      );
+      $this->assign('background_URL', $background_URL);
+      $mobile_background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+        $this->_id,
+        'mobile_background_URL'
+      );
+      $this->assign('mobile_background_URL', $mobile_background_URL);
+      $defaults['deleteBackgroundImage'] = '';
+      $defaults['deleteMobileBackgroundImage'] = '';
+    }
 
     // in update mode, we need to set custom data subtype to tpl
     if (CRM_Utils_Array::value('contribution_type_id', $defaults)) {
       $this->assign('customDataSubType', $defaults["contribution_type_id"]);
     }
-    $background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
-      $this->_id,
-      'background_URL'
-    );
-    $this->assign('background_URL', $background_URL);
-    $mobile_background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
-      $this->_id,
-      'mobile_background_URL'
-    );
-    $this->assign('mobile_background_URL', $mobile_background_URL);
-    $defaults['deleteBackgroundImage'] = '';
-    $defaults['deleteMobileBackgroundImage'] = '';
     return $defaults;
   }
 
