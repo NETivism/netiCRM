@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2018-12-25 10:03+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2018-12-28 10:15+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9443,11 +9443,11 @@ msgstr "活動參加者"
 
 #: CRM/Contact/Form/Search.php
 msgid "Contacts in Group: %1"
-msgstr "聯絡人群組"
+msgstr "群組「 %1 」中的聯絡人"
 
 #: CRM/Contact/Form/Search.php
 msgid "Add to Group: %1"
-msgstr "新增到群組"
+msgstr "加到群組「%1」"
 
 #: CRM/Contact/Form/Search/Simple.php
 msgid "- select a state -"
@@ -10013,7 +10013,7 @@ msgstr "活動-將聯絡人加入活動"
 
 #: CRM/Contact/Task.php
 msgid "Schedule/Send a Mass Mailing"
-msgstr "Email-排程寄送電子報"
+msgstr "寄送電子報（大量郵件）給聯絡人"
 
 #: CRM/Contribute/BAO/ContributionPage.php
 msgid "Automatically Generated"
