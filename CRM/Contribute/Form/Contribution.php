@@ -946,7 +946,6 @@ WHERE  contribution_id = {$this->_id}
       $this->addElement('hidden', 'update_related_component', 0);
     }
 
-    $this->addElement('hidden', 'soft_contact_id', '', array('id' => 'soft_contact_id'));
     $this->add('select', 'contribution_status_id',
       ts('Contribution Status'),
       $status,
