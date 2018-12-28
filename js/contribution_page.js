@@ -1,8 +1,8 @@
 (function($){
 
-  window.jq = $;
+  'use strict';
 
-  ContribPage = {
+  window.ContribPage = {
     backgroundImageUrl : window.ContribPageParams.backgroundImageUrl,
     currentContribType : "recur", // "recur", "single"
     currentContribInstrument : "creditCard", // "creditCard", "other"
@@ -12,6 +12,7 @@
     currentPriceAmount : 0,
     currentFormStep : 1,
     currentSelectedPremiums : [],
+    defaultPriceOption : {},
     singleContribMsgTitle : "您的定期支持十分重要",
     singleContribMsgText : "我們十分需要您的定期定額。",
     textAgreeTerms: "我已閱讀，並同意<a href='javascript:void(0);'>隱私權條款</a>",
@@ -22,13 +23,13 @@
 
       $('body.frontend.page-civicrm-contribute-transact').css('background-image','url('+window.ContribPageParams.backgroundImageUrl+')');
 
-      $content = $('#main');
+      var $content = $('#main');
       $content.prepend($('#intro_text'));
       $('.sharethis').appendTo('body');
 
       this.prepareProgressBar();
 
-      $("<div class='logo-block'></div>").append($('#logo img').addClass('logo-img')).appendTo($('#intro_text'));
+      // $("<div class='logo-block'></div>").append($('#logo img').addClass('logo-img')).appendTo($('#intro_text'));
 
       this.textTerms = $('.custom_11-section .description').text();
 
@@ -44,7 +45,7 @@
 
         this.prepareContribTypeForm();
 
-        this.preparePremiumField();
+        // this.preparePremiumField();
 
         this.prepareTermMsg();
 
@@ -75,7 +76,7 @@
         });
 
         $('.custom_80-section').find('tr').each(function(){
-          $this = $(this);
+          var $this = $(this);
           if($this.find('input').length == 0){
             $this.hide();
           }
@@ -91,7 +92,7 @@
       if(this.currentPage == 'thankyou'){
 
         $('.crm-section').find('tr').each(function(){
-          $this = $(this);
+          var $this = $(this);
           if($this.find('.freeze-unchecked').length > 0){
             $this.hide();
           }
@@ -112,7 +113,6 @@
     },
 
     setDefaultValues: function(){
-      this.defaultPriceOption = {};
       $('[data-default="1"][data-grouping]').each(
         function(i, ele){
           var contribType = ele.dataset.grouping;
@@ -130,6 +130,7 @@
           }
         }
       );
+      console.log(ContribPage.defaultPriceOption);
 
       if($('[name="is_recur"]:checked').val() == 1){
         this.currentContribType = 'recur';
@@ -164,7 +165,6 @@
         });
       }
 
-
     },
 
     prepareStepInfo: function(){
@@ -182,7 +182,7 @@
 
     prepareRecurBtnMsg: function(){
       var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg"><h2>'+this.singleContribMsgTitle+'</h2><p>'+this.singleContribMsgText+'</p></div></div>');
-      $singleBtn = this.createGreyBtn("我要單筆捐款");
+      var $singleBtn = this.createGreyBtn("我要單筆捐款");
       $singleBtn.find('a').click(function(event){
         $msgBox.animate({opacity: 0},500,function(){
           $msgBox.hide();
@@ -191,7 +191,7 @@
         });
         event.preventDefault();
       });
-      $recurBtn = this.createBlueBtn("維持定期捐款");
+      var $recurBtn = this.createBlueBtn("維持定期捐款");
       $recurBtn.find('a').click(function(event){
         ContribPage.setContributeType('recur');
         ContribPage.quitMsgBox();
@@ -385,20 +385,20 @@
     prepareContribTypeForm: function(){
       $('.contrib-step-1').prepend($('<div class="contrib-type-block custom-block"><label>點選捐款方式</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
       if($('[name=is_recur][value=1]').length > 0){
-        $recurBtn = this.createBtn("線上定期","custom-recur-btn");
+        var $recurBtn = this.createBtn("線上定期","custom-recur-btn");
         $recurBtn.click(function(){
           ContribPage.setContributeType('recur');
         });
         $('.contrib-type-btn').append($recurBtn);
       }
       if($('[name=is_recur]').length==0 || $('[name=is_recur][value=0]').length > 0){
-        $singleBtn = this.createBtn("線上單筆","custom-single-btn");
+        var $singleBtn = this.createBtn("線上單筆","custom-single-btn");
         $singleBtn.click(function(){
           ContribPage.setContributeType('single');
         });
         $('.contrib-type-btn').append($singleBtn);
       }
-      $otherInstrumentBtn = this.createBtn("其他方式","other-instrument-btn");
+      var $otherInstrumentBtn = this.createBtn("其他方式","other-instrument-btn");
       $otherInstrumentBtn.click(function(){
         ContribPage.setContribInstrument('other');
       })
@@ -413,7 +413,7 @@
       if(!this.currentPriceOption){
         other_amount = this.currentPriceAmount;
       }
-      $other_amount_block = $('<div class="custom-other-amount-block"><label for="custom-other-amount">自訂金額</label><input placeholder="000" name="custom-other-amount" id="custom-other-amount" type="number" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
+      var $other_amount_block = $('<div class="custom-other-amount-block"><label for="custom-other-amount">自訂金額</label><input placeholder="000" name="custom-other-amount" id="custom-other-amount" type="number" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
       $other_amount_block.find('input').keyup(function(){
         var reg = new RegExp(/\d+/);
         if(reg.test($(this).val())){
@@ -434,8 +434,8 @@
     preparePremiumField: function(){
       window.$multi_select = $multi_select = $('<select multiple></select>');
       $('.custom_77-section .content td').each(function(i, e){
-        $e = $(e);
-        $input = $e.find('.crm-form-elem input');
+        var $e = $(e);
+        var $input = $e.find('.crm-form-elem input');
         if($input.attr('name').search('都不要') >= 0){
           return;
         }
@@ -736,8 +736,8 @@
     },
 
     prepareAfterAll: function(){
+      $('.payment_options-group').hide();
       $('#main').css('opacity', 1);
-      $('.payment_options-group').show();
       $('#page').css('background', 'none').css('height','unset');
 
     }
@@ -745,12 +745,12 @@
 
   };
 
-  $(function(){
+  $(document).one('ready', function () {
     try{
-      ContribPage.preparePage();
+      window.ContribPage.preparePage();
     }catch(e){
-      ContribPage.prepareAfterAll();
+      window.ContribPage.prepareAfterAll();
     }
-    ContribPage.prepareAfterAll();
+    window.ContribPage.prepareAfterAll();
   });
 })(jQuery);

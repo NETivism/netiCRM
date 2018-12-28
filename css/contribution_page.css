@@ -24,13 +24,17 @@ body.frontend.page-civicrm-contribute-transact {
 body #page{
   background: none;
 }
-.frontend .main#main {
-  background: none;
+.frontend.frontend-fullbg .main#main {
+  background: none !important;
   opacity: 0;
   -webkit-transition: opacity linear .5s;
        -o-transition: opacity linear .5s;
           transition: opacity linear .5s;
 }
+.logo-img{
+  height: 80px;
+}
+
 body.frontend #content{
   background-color: transparent;
 }
