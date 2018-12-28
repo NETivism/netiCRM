@@ -56,6 +56,12 @@ table td { padding: 2px 4px; }
 .single-page-header { height: 200px; position: relative; }
 .single-page-header .info {position: absolute; top: 45px; left: 50px; max-width:250px; }
 .single-page-header .info .address { margin-bottom: 10px;}
+
+.stamp-wrapper{position: relative;}
+.stamp-img{position: absolute;}
+.big-stamp{bottom: 0;max-height: 103px;left: 1px;}
+.small-stamp{top: 0;max-height: 43px;left: 70px;z-index: -1;}
+
 {/literal}
 </style>
 </head>
