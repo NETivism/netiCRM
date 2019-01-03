@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Coupon</base>
+  <class>CouponEntity</class>
+  <name>civicrm_coupon_entity</name>
+  <comment>Allow civicrm to add coupon to various entity.</comment>
+  <add>4.0</add>
+  <log>false</log>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>ID for internal usage</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+      <name>id</name>
+      <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>coupon_id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>FK to coupon id</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey> 
+      <name>coupon_id</name> 
+      <table>civicrm_coupon</table> 
+      <key>id</key> 
+      <add>4.0</add> 
+      <onDelete>CASCADE</onDelete>
+  </foreignKey> 
+  <field>
+      <name>entity_table</name>
+      <type>varchar</type>
+      <length>64</length>
+      <comment>Entity table like civicrm_event or civicrm_price_option.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>entity_id</name>
+      <type>int unsigned</type>
+      <comment>Entity id like event_id or price_option_id</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>index_entity_table_id</name>
+      <fieldName>entity_table</fieldName>
+      <fieldName>entity_id</fieldName>
+      <add>4.0</add>
+  </index>
+</table>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Coupon</base>
+  <class>CouponTrack</class>
+  <name>civicrm_coupon_track</name>
+  <comment>Allow civicrm to add coupon to various entity.</comment>
+  <add>4.0</add>
+  <log>false</log>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>ID for internal usage</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+      <name>id</name>
+      <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>coupon_id</name>
+      <type>int unsigned</type>
+      <comment>FK to coupon id</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey> 
+      <name>coupon_id</name> 
+      <table>civicrm_coupon</table> 
+      <key>id</key> 
+      <add>4.0</add> 
+      <onDelete>CASCADE</onDelete>
+  </foreignKey> 
+  <field>
+      <name>contact_id</name>
+      <type>int unsigned</type>
+      <default>NULL</default>
+      <comment>FK to contact id</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey> 
+      <name>contact_id</name> 
+      <table>civicrm_contact</table> 
+      <key>id</key> 
+      <add>4.0</add> 
+      <onDelete>SET NULL</onDelete>
+  </foreignKey> 
+  <field>
+      <name>contribution_id</name>
+      <type>int unsigned</type>
+      <default>NULL</default>
+      <comment>FK to contribution id, means used.</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey> 
+      <name>contribution_id</name> 
+      <table>civicrm_contribution</table> 
+      <key>id</key> 
+      <add>4.0</add> 
+      <onDelete>SET NULL</onDelete>
+  </foreignKey> 
+  <field>
+      <name>used_date</name>
+      <type>datetime</type>
+      <comment>Used date time of this coupon track.</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>index_used_date</name>
+      <fieldName>used_date</fieldName>
+      <add>4.0</add>
+  </index>
+</table>

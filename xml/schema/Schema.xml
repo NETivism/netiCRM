@@ -14,6 +14,7 @@
 <xi:include href="Mailing/files.xml"           parse="xml" />
 <xi:include href="Mailing/Event/files.xml"     parse="xml" />  
 <xi:include href="Contribute/files.xml"        parse="xml" />  
+<xi:include href="Coupon/files.xml"            parse="xml" />  
 <xi:include href="SMS/files.xml"               parse="xml" />
 <xi:include href="Project/files.xml"           parse="xml" />
 <xi:include href="Member/files.xml"            parse="xml" />

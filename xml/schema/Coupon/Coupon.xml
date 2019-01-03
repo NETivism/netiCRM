@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Coupon</base>
+  <class>Coupon</class>
+  <name>civicrm_coupon</name>
+  <comment>Allow civicrm to add coupon to various entity.</comment>
+  <add>4.0</add>
+  <log>false</log>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>ID for internal usage</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+      <name>id</name>
+      <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>start_date</name>
+      <type>datetime</type>
+      <comment>Start date of this coupon.</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>index_start_date</name>
+      <fieldName>start_date</fieldName>
+      <add>4.0</add>
+  </index>
+  <field>
+      <name>end_date</name>
+      <type>datetime</type>
+      <comment>End date of this coupon.</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>index_end_date</name>
+      <fieldName>end_date</fieldName>
+      <add>4.0</add>
+  </index>
+  <field>
+      <name>code</name>
+      <type>varchar</type>
+      <length>255</length>
+      <required>true</required>
+      <comment>Code of this coupon</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>index_code</name>
+      <fieldName>code</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+      <name>coupon_type</name>
+      <type>varchar</type>
+      <length>32</length>
+      <required>true</required>
+      <comment>Coupon type shoule be one of percent and monetary.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>discount</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>Amount of discount, actual or percentage</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>minimal_amount</name>
+      <type>int unsigned</type>
+      <comment>Minimal amount before apply discount.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>count_max</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>Max number of times this code can be used.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>description</name>
+      <type>varchar</type>
+      <length>255</length>
+      <required>true</required>
+      <comment>Discount description</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>is_active</name>
+      <type>boolean</type>
+      <comment>Is this discount active?</comment>
+      <add>4.0</add>
+  </field>
+</table>

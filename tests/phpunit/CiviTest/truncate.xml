@@ -87,6 +87,10 @@
 
   <civicrm_premiums_product />
 
+  <civicrm_coupon />
+
+  <civicrm_coupon_entity />
+
   <civicrm_sms_provider />
 
   <civicrm_project />
@@ -268,6 +272,8 @@
   <civicrm_contribution_product />
 
   <civicrm_contribution_soft />
+
+  <civicrm_coupon_track />
 
   <civicrm_membership_payment />
 
