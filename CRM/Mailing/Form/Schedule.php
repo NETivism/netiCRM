@@ -330,11 +330,15 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     //when user perform mailing from search context
     //redirect it to search result CRM-3711.
     $ssID = $this->get('ssID');
+    $gid = $this->get('smog');
     if ($ssID &&
       $this->_searchBasedMailing &&
       !CRM_Mailing_Info::workflowEnabled()
     ) {
-      if ($this->_action == CRM_Core_Action::BASIC) {
+      if (!empty($gid)) { // special case for group search
+        return $this->controller->setDestination(CRM_Utils_System::url('civicrm/group/search', 'reset=1&force=1&context=smog&gid='.$gid));
+      }
+      elseif ($this->_action == CRM_Core_Action::BASIC) {
         $fragment = 'search';
       }
       elseif ($this->_action == CRM_Core_Action::PROFILE) {

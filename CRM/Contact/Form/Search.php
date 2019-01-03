@@ -240,7 +240,8 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    */
   static function &validContext() {
     if (!(self::$_validContext)) {
-      self::$_validContext = array('smog' => 'Show members of group',
+      self::$_validContext = array(
+        'smog' => 'Show members of group',
         'amtg' => 'Add members to group',
         'basic' => 'Basic Search',
         'search' => 'Search',
@@ -375,6 +376,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
       // also set the group title
       $groupValues = array('id' => $this->_groupID, 'title' => $this->_group[$this->_groupID]);
+      $this->set('gid', $this->_groupID);
       $this->assign_by_ref('group', $groupValues);
 
       // also set ssID if this is a saved search

@@ -59,6 +59,9 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $this->_searchBasedMailing = CRM_Contact_Form_Search::isSearchContext($this->get('context'));
     if ($this->_searchBasedMailing) {
       $searchParams = $this->controller->exportValues();
+      if ($this->controller->get('context') == 'smog' && !empty($this->controller->get('gid'))) {
+        $this->set('smog', $this->controller->get('gid'));
+      }
       // number of records that were selected - All or Few.
       $this->_resultSelectOption = $searchParams['radio_ts'];
       if (CRM_Utils_Array::value('task', $searchParams) == 20) {
