@@ -563,4 +563,6 @@ function enableHonorType( ) {
 </script>
 {include file="CRM/common/betterContributionForm.tpl"}
 {/if}{*ppType*}
-{$special_style}
+{if $special_style}
+  {include file="CRM/common/contributionPageSpecial.tpl"}
+{/if}

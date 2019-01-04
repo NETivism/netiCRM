@@ -596,19 +596,9 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
 
     if($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL){
-      $js .= '<script type="text/javascript">
-        (function($){
-          window.ContribPageParams = {
-            backgroundImageUrl : "'.$this->_values['background_URL'].'",
-            currentPage : "'.$this->_attributes['name'].'"
-          };
-        })(jQuery);
-      </script>'."\n";
-      $js .= '<script type="text/javascript" src="' .$config->resourceBase . 'js/contribution_page.js"></script>';
-      $css = '<link rel="stylesheet" href="' . $config->resourceBase . 'css/contribution_page.css">';
-      $special = $js . "\n". $css;
-
-      $this->assign('special_style', $special);
+      $this->assign('intro_text', $this->_values['intro_text']);
+      $this->assign('backgroundImageUrl', $this->_values['background_URL']);
+      $this->assign('special_style', 1);
     }
 
 

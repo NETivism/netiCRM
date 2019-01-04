@@ -281,3 +281,9 @@
       <span class="hide-block disable-submit-message">{ts 1=`$backlink`}Order submitted. You can create another <a href="%1">here</a>.{/ts}</span>
     </div>
 </div>
+{if $special_style}
+  {include file="CRM/common/contributionPageSpecial.tpl"}
+  <div id="intro_text" class="crm-section intro_text-section">
+    {$intro_text}
+  </div>
+{/if}

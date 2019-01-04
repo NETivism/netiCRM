@@ -331,3 +331,9 @@
     {/if}
 	
 </div>
+{if $special_style}
+  {include file="CRM/common/contributionPageSpecial.tpl"}
+  <div id="intro_text" class="crm-section intro_text-section">
+    {$intro_text}
+  </div>
+{/if}

@@ -7,7 +7,7 @@
       backgroundImageUrl : window.ContribPageParams.backgroundImageUrl,
       currentContribType : "recur", // "recur", "single"
       currentContribInstrument : "creditCard", // "creditCard", "other"
-      currentPage : window.ContribPageParams.currentPage, // "Main", "Confirm", "ThankYou"
+      currentPage : $('#crm-container>form').attr('id'), // "Main", "Confirm", "ThankYou"
       currentPageState : "loading", // "loading", "success"
       currentPriceOption : '',
       currentPriceAmount : 0,
@@ -16,8 +16,6 @@
       defaultPriceOption : {},
       singleContribMsgTitle : "您的定期支持十分重要",
       singleContribMsgText : "我們十分需要您的定期定額。",
-      textAgreeTerms: "我已閱讀，並同意<a href='javascript:void(0);'>隱私權條款</a>",
-      textTerms: "ooo",
       arrayPremiumsImg : {},
 
       preparePage: function(){
@@ -25,20 +23,18 @@
         $('body.frontend.page-civicrm-contribute-transact').css('background-image','url('+window.ContribPageParams.backgroundImageUrl+')');
 
         var $content = $('#main');
-        $content.prepend($('#intro_text'));
+        $content.prepend($('#intro_text').prepend($('h1.page-title')));
         $('.sharethis').appendTo('body');
 
         this.prepareProgressBar();
-
-        // $("<div class='logo-block'></div>").append($('#logo img').addClass('logo-img')).appendTo($('#intro_text'));
-
-        this.textTerms = $('.custom_11-section .description').text();
 
         this.prepareStepInfo();
 
         if(this.currentPage == 'Main'){
 
           this.setDefaultValues();
+
+          // this.prepareRecurBtnMsg();
 
           this.prepareForm();
 
@@ -47,10 +43,6 @@
           this.prepareContribTypeForm();
 
           // this.preparePremiumField();
-
-          this.prepareTermMsg();
-
-          this.prepareTerm();
 
           $('.instrument-info-panel').append($('#footer_text').hide());
 
@@ -61,7 +53,6 @@
           $('p.paypal').append('<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input name="cmd" type="hidden" value="_s-xclick" /> <input name="charset" type="hidden" value="utf-8" /> <input name="hosted_button_id" type="hidden" value="N2E54SZA5BLW4" /> <input alt="PayPal － 更安全、更簡單的線上付款方式！" border="0" name="submit" src="https://www.paypal.com/zh_HK/i/btn/btn_donateCC_LG.gif" type="image" /> <img alt="" border="0" height="1" src="https://www.paypalobjects.com/zh_TW/i/scr/pixel.gif" width="1" /></form>');
         }
         if(this.currentPage == 'confirm'){
-          $('[id^=mu_kuan_ye_zi_ding_lan_wei__] .crm-accordion-body table:nth-child(2) .html-adjust').prependTo('#Confirm');
 
           $('.crm-section').each(function(){
             var $parent = $(this);
@@ -76,17 +67,6 @@
             }
           });
 
-          $('.custom_80-section').find('tr').each(function(){
-            var $this = $(this);
-            if($this.find('input').length == 0){
-              $this.hide();
-            }
-          })
-
-          $('.custom_11-section .elem-label').text('我已閱讀並同意內容');
-
-          $('.custom_77-section tt').html('<span class="freeze-icon freeze-radio-checked"></span>');
-
           // this.preparePremiumField();
         }
 
@@ -98,8 +78,6 @@
               $this.hide();
             }
           });
-
-          $('.custom_77-section tt').html('<span class="freeze-icon freeze-radio-checked"></span>');
         }
       },
 
@@ -131,8 +109,6 @@
             }
           }
         );
-        console.log(ContribPage == window.ContribPage);
-        console.log(ContribPage);
         window.a = window.ContribPage;
 
         if($('[name="is_recur"]:checked').val() == 1){
@@ -160,14 +136,6 @@
             this.setDefaultPriceOption();
           }
         }
-
-        var $selectedPrimiumsInput = $('.custom_77-section input.form-checkbox:checked');
-        if($selectedPrimiumsInput.length > 0){
-          $selectedPrimiumsInput.each(function(){
-            ContribPage.currentSelectedPremiums.push($(this).attr('id'));
-          });
-        }
-
       },
 
       prepareStepInfo: function(){
@@ -207,28 +175,6 @@
         });
         $msgBox.appendTo($('body')).find('.error-msg').append($singleBtn).append($recurBtn);
         $msgBox.hide();
-      },
-
-      prepareTermMsg: function(){
-        var $msgTermBox = ContribPage.$msgTermBox = $('<div class="error-msg-bg"><div class="error-msg"><p>'+this.textTerms+'</p></div></div>');
-        var $closeBtn = this.createGreyBtn("關閉");
-        $closeBtn.find('a').click(function(event){
-          $msgTermBox.animate({opacity: 0},500,function(){
-            $msgTermBox.hide();
-            $msgTermBox.css('opacity', 1);
-          });
-          event.preventDefault();
-        });
-        $msgTermBox.click(function(event){
-          if(event.originalEvent.target.classList.contains("error-msg-bg")){
-            $msgTermBox.animate({opacity: 0},500,function(){
-              $msgTermBox.hide();
-              $msgTermBox.css('opacity', 1);
-            });
-          }
-        });
-        $msgTermBox.appendTo($('body')).find('.error-msg').append($closeBtn);
-        $msgTermBox.hide();
       },
 
       prepareProgressBar: function(){
@@ -300,19 +246,27 @@
         $('.contrib-step-1')
           .append($('.payment_options-group'))
           .append('<div class="custom-price-set-section">')
+          .append($('.payment_processor-section'))
           .append(this.createStepBtnBlock(['next-step']));
-        $('.contrib-step-2')
-          .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section'))
-          // .find('.last-step').addClass('hide-as-show-all');
-        $('.contrib-step-2')
-          .append($('.email-section'))
-          .append($('.custom_pre_profile-group'))
-          .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
-        $('.contrib-step-3')
-          .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('hide-as-show-all').addClass('crm-section'))
-          .append($('.custom_post_profile-group'))
-          .append($('.custom_77-section'))
-          .append($('.crm-submit-buttons'));
+        var exec_step = 2;
+        if($('.custom_pre_profile-group fieldset').length >= 1){
+          $('.contrib-step-'+exec_step)
+            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            .append($('.custom_pre_profile-group'))
+            .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
+          exec_step += 1;
+        }
+        if($('.custom_post_profile-group fieldset').length >= 1){
+          $('.contrib-step-'+exec_step)
+            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            .append($('.custom_post_profile-group'))
+            .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
+          exec_step += 1;
+        }
+        exec_step -= 1;
+        console.log($('.contrib-step-'+exec_step).find('.step-action-wrapper'));
+        $('.contrib-step-'+exec_step).find('.step-action-wrapper').has('.next-step').remove();
+        $('.contrib-step-'+exec_step).append($('.crm-submit-buttons'));
         $('.contrib-step').hide();
         $('.crm-contribution-main-form-block').hide();
 
@@ -364,7 +318,7 @@
       },
 
       createStepBtnBlock: function(objs){
-        var $step_block = $('<div>');
+        var $step_block = $('<div class="step-action-wrapper">');
         objs.forEach(function(obj_name){
           if(obj_name == 'last-step'){
             $step_block.append(ContribPage.createGreyBtn('上一步').addClass(obj_name).click(function(event){
@@ -397,6 +351,7 @@
         if($('[name=is_recur]').length==0 || $('[name=is_recur][value=0]').length > 0){
           var $singleBtn = this.createBtn("線上單筆","custom-single-btn");
           $singleBtn.click(function(){
+            // ContribPage.$msgBox.show();
             ContribPage.setContributeType('single');
           });
           $('.contrib-type-btn').append($singleBtn);
@@ -452,20 +407,6 @@
             $multi_select.append($option);
             
           }
-        });
-
-        $('.custom_77-section .content').append($multi_select);
-        $multi_select.imagepicker({show_label: true});
-        $multi_select.change(function(){
-          ContribPage.setSelectedPremiums($(this).val());
-        });
-      },
-
-      prepareTerm: function(){
-        $('.custom_11-section .description').hide();
-        $('.custom_11-section .elem-label').html(this.textAgreeTerms);
-        $('.custom_11-section .elem-label a').click(function(){
-          ContribPage.$msgTermBox.show().css({opacity: 0}).animate({opacity: 1});
         });
       },
 

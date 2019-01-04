@@ -563,7 +563,7 @@ input#custom-other-amount::placeholder {
 }
 
 /** intro text */ 
-#intro_text h1{
+#main h1{
   color: #FFFFFF;
   font-size: 72px;
   font-family:  "Open Sans","Helvetica Neue",Helvetica,Arial,"微軟正黑體","Microsoft JhengHei",sans-serif;
@@ -634,9 +634,6 @@ body .crm-container .crm-section>.content {
 .crm-container .crm-form-textfield {
   display: block;
 }
-body .crm-container-md .crm-form-elem input.form-text{
-  width: 100%;
-}
 
 body .crm-container-md .crm-form-elem input[type="text"], 
 body .crm-container-md .crm-form-elem input[type="number"], 
@@ -675,36 +672,6 @@ body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focu
 
 
 /* UI style*/
-body .crm-container-md .crm-form-radio {
-  border: 1px solid var(--active-color) !important;
-  border-radius: 5px !important;
-  min-height: 40px;
-  text-align: center;
-  vertical-align: middle;
-  width: 100%;
-  padding: 0;
-  overflow: hidden;
-}
-body .crm-container-md .crm-form-radio .elem-label::before,
-body .crm-container-md .crm-form-radio .elem-label::after{
-  content: none;
-}
-
-body .crm-container-md .crm-form-radio .form-radio + .elem-label{
-    display: block;
-    color: var(--active-color);
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    padding: 11px 0;
-    margin: 0;
-    height: 100%;
-}
-body .crm-container-md .crm-form-radio .form-radio:checked + .elem-label{
-  background: var(--active-color);
-  color: white;
-}
 .instrument-section .content {
   display: flex;
 }
@@ -716,16 +683,9 @@ body .crm-container-md .crm-form-radio .form-radio:checked + .elem-label{
   font-size: 13px;
 }
 
-.crm-container.crm-container-md form#Main table.form-layout-compressed tbody,
-form#Main .receipt_type .content,
-form#Main .custom_4-section .content, 
-form#Main .custom_76-section .content, 
-form#Main .custom_9-section .content .r-name-items,
-.custom-receipt-row, 
-/* for dev7 */ 
-form#Main .custom_4-section .content .r-name-items{
-    
-    display: flex;
+.crm-container-md .crm-form-elem textarea, 
+.crm-container-md .crm-form-elem textarea.form-textarea{
+  width: 100%;
 }
 
 .custom-receipt-row{
