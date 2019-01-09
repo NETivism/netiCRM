@@ -407,7 +407,7 @@ body .crm-container fieldset{
 
 .price-set-btn div {
   font-size: 14px;
-  font-weight: bold;
+  font-weight: normal;
   padding: 28px 0 20px 0;
   border-bottom: 1px solid #d8d8d8;
   cursor: pointer;
@@ -426,6 +426,10 @@ body .crm-container fieldset{
 .price-set-btn div.active span.description,
 .price-set-btn div:hover span.description {
   color: var(--active-color);
+}
+.price-set-btn div.active, 
+.price-set-btn div.active span.description{
+  font-weight: 900;  
 }
 
 .price-set-btn div:before {
@@ -448,15 +452,15 @@ body .crm-container fieldset{
        -o-transition: all ease-in-out .2s;
           transition: all ease-in-out .2s;
 }
-.custom-other-amount-block {
+.custom-input-block{
   height: 76px;
   line-height: 76px;
 }
-label[for="custom-other-amount"]{
+.custom-input-block label{
   font-size: 12px;
   padding: 0 10px;
 }
-#custom-other-amount{
+.custom-input-block input.custom-input{
   border-radius: 15px;
   height: 30px;
   background: #d8d8d8;
@@ -469,14 +473,14 @@ label[for="custom-other-amount"]{
        -o-transition: all ease-in-out .2s;
           transition: all ease-in-out .2s;
 }
-#custom-other-amount.active,
-#custom-other-amount.active:hover{
+.custom-input-block input.active,
+.custom-input-block input.active:hover{
   background: var(--active-color);
 }
-input#custom-other-amount:hover {
+.custom-input-block input:hover {
   background: grey;
 }
-input#custom-other-amount::placeholder {
+.custom-input-block input::placeholder {
   color: white;
 }
 #custom-other-amount+a{
@@ -598,12 +602,14 @@ input#custom-other-amount::placeholder {
   border: 3px solid var(--active-color);
   float: right;
   border-radius: 10px;
-  width: 150px;
+  /*width: 150px;*/
   overflow: hidden;
   height: 30px;
 }
 .info-is-recur {
-  width: 40%;
+  padding-left: 5px;
+  padding-right: 5px;
+  /*width: 40%;*/
   background: var(--active-color);
   color: white;
   text-align: center;
@@ -613,8 +619,10 @@ input#custom-other-amount::placeholder {
   line-height: 24px;
 }
 .info-price{
+  padding-left: 5px;
+  padding-right: 5px;
   display: inline-block;
-  width: 60%;
+  /*width: 60%;*/
   text-align: center;
 
 }
@@ -759,7 +767,7 @@ form#ThankYou #help{
 
 form#Confirm .display-block p,
 form#ThankYou .display-block p{
-  display: none;
+  /*display: none;*/
 }
 
 

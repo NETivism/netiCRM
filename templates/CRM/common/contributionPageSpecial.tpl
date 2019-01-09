@@ -2,7 +2,12 @@
   {literal}
   (function($){
     window.ContribPageParams = {
-      backgroundImageUrl : "{/literal}{$backgroundImageUrl}{literal}"
+      backgroundImageUrl : "{/literal}{$backgroundImageUrl}{literal}",
+      ts: {
+        "Installments" : "{/literal}{ts}Installments{/ts}{literal}",
+        "Other Amount" : "{/literal}{ts}Other Amount{/ts}{literal}",
+        "no limit" : "{/literal}{ts}no limit{/ts}{literal}",
+      }
     };
   })(jQuery);
   {/literal}

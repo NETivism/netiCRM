@@ -40,6 +40,8 @@
 
           this.preparePriceSetBlock();
 
+          this.setDefaultPriceOption();
+
           this.prepareContribTypeForm();
 
           // this.preparePremiumField();
@@ -113,6 +115,9 @@
 
         if($('[name="is_recur"]:checked').val() == 1){
           this.currentContribType = 'recur';
+          if($('#installments').val()){
+            this.installments = $('#installments').val();
+          }
         }else{
           this.currentContribType = 'single';
         }
@@ -132,8 +137,6 @@
           var reg_id = new RegExp(/[\?&]?id=/);
           if(!reg_id.test(location.search)){
             this.currentFormStep = 2;
-          }else{
-            this.setDefaultPriceOption();
           }
         }
       },
@@ -247,32 +250,32 @@
           .append($('.payment_options-group'))
           .append('<div class="custom-price-set-section">')
           .append($('.payment_processor-section'))
+          .append($('#billing-payment-block'))
           .append(this.createStepBtnBlock(['next-step']));
         var exec_step = 2;
         if($('.custom_pre_profile-group fieldset').length >= 1){
           $('.contrib-step-'+exec_step)
-            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            // .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            .append(this.createStepBtnBlock(['priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
             .append($('.custom_pre_profile-group'))
             .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
           exec_step += 1;
         }
         if($('.custom_post_profile-group fieldset').length >= 1){
           $('.contrib-step-'+exec_step)
-            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            // .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            .append(this.createStepBtnBlock(['priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
             .append($('.custom_post_profile-group'))
             .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
           exec_step += 1;
         }
         exec_step -= 1;
-        console.log($('.contrib-step-'+exec_step).find('.step-action-wrapper'));
         $('.contrib-step-'+exec_step).find('.step-action-wrapper').has('.next-step').remove();
         $('.contrib-step-'+exec_step).append($('.crm-submit-buttons'));
         $('.contrib-step').hide();
         $('.crm-contribution-main-form-block').hide();
 
-        if($("#billing-payment-block").length){
-          $("#billing-payment-block").insertBefore($('.custom_pre_profile-group'));
-        }else{
+        if($("#billing-payment-block").length == 0){
           $('.crm-section payment_processor-section').insertBefore($('.custom_pre_profile-group'));
         }
 
@@ -365,8 +368,8 @@
         if(!this.currentPriceOption){
           other_amount = this.currentPriceAmount;
         }
-        var $other_amount_block = $('<div class="custom-other-amount-block"><label for="custom-other-amount">自訂金額</label><input placeholder="000" name="custom-other-amount" id="custom-other-amount" type="number" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
-        $other_amount_block.find('input').keyup(function(){
+        var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">自訂金額</label><input placeholder="0" name="custom-other-amount" id="custom-other-amount" type="number" class="custom-input" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
+        var doClickOtherAmount = function(){
           var reg = new RegExp(/\d+/);
           if(reg.test($(this).val())){
             ContribPage.setPriceOption();
@@ -374,12 +377,29 @@
           }else{
             // $('#custom-other-amount').next().css('display', 'none');
           }
-        });
+        };
+        $other_amount_block.find('input').keyup(doClickOtherAmount).click(doClickOtherAmount);
         $('.btn-submit-other-amount').click(function(){
           ContribPage.setFormStep(2);
           event.preventDefault();
         });
         $('.priceSet-block').append($other_amount_block);
+
+        if($('[name=is_recur][value=1]').length > 0){
+          var installments = this.installments;
+          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">定期定額 期數</label><input placeholder="無限期" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
+          var doClickInstallments = function(){
+            var installments = $(this).val();
+            if(installments == 0){
+              $(this).val("");
+            }
+            ContribPage.setInstallments(installments);
+          };
+          $installments_block.find('input').keyup(doClickInstallments).click(doClickInstallments);
+          $('.priceSet-block').append($installments_block);
+        }
+
+
         this.updatePriceSetOption();
       },
 
@@ -426,7 +446,7 @@
               var $option = $('<div data-amount="'+val+'"><span class="amount">'+amount+'</span><span class="description">'+reg_result[2]+'</span></div>');
               $option.click(function(){
                 ContribPage.setPriceOption($(this).data('amount'));
-                ContribPage.setFormStep(2);
+                // ContribPage.setFormStep(2);
               });
               $('.price-set-btn').append($option);
             }
@@ -440,7 +460,8 @@
         this.currentPriceOption = val;
         if(this.currentPriceOption){
           $('.amount-section [value="'+this.currentPriceOption+'"]').click();
-          this.setPriceAmount($('.price-set-btn div[data-amount='+this.currentPriceOption+'] .amount').text());
+          var amount = $('.price-set-btn div[data-amount='+this.currentPriceOption+'] .amount').text();
+          this.setPriceAmount(amount);
           // $('.btn-submit-other-amount').hide();
         }else{
           $('.amount-section .crm-form-radio:last-child input').click();
@@ -498,8 +519,8 @@
             this.currentPriceAmount = this.defaultPriceOption[this.currentContribType].replace(',','');
           }
 
-          this.setDefaultPriceOption();
           this.updateContributeType();
+          this.setDefaultPriceOption();
         }
       },
 
@@ -525,11 +546,17 @@
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-single-btn').addClass('selected');
           $('.info-is-recur').text('單筆捐款');
+          $('.custom-installments-block').hide();
         }
         if(this.currentContribType == 'recur'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-recur-btn').addClass('selected');
-          $('.info-is-recur').text('每月捐款');
+          if(!this.installments){
+            $('.info-is-recur').text('每月捐款');
+          }else{
+            $('.info-is-recur').text(this.installments+'期每月捐款');
+          }
+          $('.custom-installments-block').show();
         }
         this.updatePriceSetOption();
       },
@@ -570,13 +597,6 @@
             });
           }
         });
-
-        if(this.currentContribType == 'recur'){
-          $("#billing-payment-block").hide();
-          $('#civicrm-instrument-dummy-1').prop("checked", true);
-        }else{
-          $("#billing-payment-block").show();
-        }
 
         $('.step-text').removeClass('active');
         if(this.currentPage == 'Main'){
@@ -656,6 +676,18 @@
             });
           }
         }
+      },
+
+      setInstallments: function(installments) {
+        if(this.installments != installments){
+          this.installments = installments;
+          $('#installments').val(installments)
+          this.updateInstallments();
+        }
+      },
+
+      updateInstallments: function(){
+        this.updateContributeType();
       },
 
       isArraysEqual: function(a, b) {
