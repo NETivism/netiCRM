@@ -313,7 +313,7 @@ class CRM_Event_BAO_Query {
           $feeLabels[] = CRM_Core_DAO::escapeString(trim($value));
         }
         if (!empty($feeLabels)) {
-          $feeLabel = implode('|', $feeLabels);
+          $feeLabel = implode('|', preg_replace('/[()*^$%\[\]]/', '.', $feeLabels));
           $query->_where[$grouping][] = "civicrm_participant.fee_level REGEXP '$feeLabel'";
           $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.implode(', ', $feeLabels);
         }

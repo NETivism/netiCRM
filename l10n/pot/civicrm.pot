@@ -46642,3 +46642,45 @@ msgstr ""
 
 msgid "Is this Online Contribution Page in the Special Style?"
 msgstr ""
+
+msgid "Single Contribution"
+msgstr ""
+
+msgid "Every-Month Recurring Contribution"
+msgstr ""
+
+msgid "Installments Recurring Contribution"
+msgstr ""
+
+msgid "Amount Step"
+msgstr ""
+
+msgid "Profile Step"
+msgstr ""
+
+msgid "Confirm Step"
+msgstr ""
+
+msgid "Payment Step"
+msgstr ""
+
+msgid "Not any"
+msgstr ""
+
+msgid "Choose Amount Option or Custom Amount"
+msgstr ""
+
+msgid "Single or Recurring Contribution"
+msgstr ""
+
+msgid "I want contribute once."
+msgstr ""
+
+msgid "I want recurring contribution."
+msgstr ""
+
+msgid "Your Recurring Contribution is Very Important for Us."
+msgstr ""
+
+msgid "We hope you can support us via recurring contribution."
+msgstr ""

@@ -213,8 +213,10 @@ class CRM_Contact_Task {
       }
 
       if (CRM_Core_Permission::access('CiviMail')) {
-        self::$_tasks[20] = array('title' => ts('Schedule/Send a Mass Mailing'),
-          'class' => array('CRM_Mailing_Form_Group',
+        self::$_tasks[20] = array(
+          'title' => ts('Schedule/Send a Mass Mailing'),
+          'class' => array(
+            'CRM_Mailing_Form_Group',
             'CRM_Mailing_Form_Settings',
             'CRM_Mailing_Form_Upload',
             'CRM_Mailing_Form_Test',
