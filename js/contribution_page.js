@@ -2,6 +2,8 @@
 
   'use strict';
 
+  var ts = window.ContribPageParams.ts;
+
   $(document).one('ready', function () {
     window.ContribPage = {
       backgroundImageUrl : window.ContribPageParams.backgroundImageUrl,
@@ -14,8 +16,8 @@
       currentFormStep : 1,
       currentSelectedPremiums : [],
       defaultPriceOption : {},
-      singleContribMsgTitle : "您的定期支持十分重要",
-      singleContribMsgText : "我們十分需要您的定期定額。",
+      singleContribMsgTitle : ts["Your Recurring Contribution is Very Important for Us."],
+      singleContribMsgText : false,
       arrayPremiumsImg : {},
 
       preparePage: function(){
@@ -34,7 +36,7 @@
 
           this.setDefaultValues();
 
-          // this.prepareRecurBtnMsg();
+          this.prepareRecurBtnMsg();
 
           this.prepareForm();
 
@@ -51,8 +53,6 @@
           $('.instrument-info-panel h3').click(function(){
             $(this).toggleClass('open');
           });
-
-          $('p.paypal').append('<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input name="cmd" type="hidden" value="_s-xclick" /> <input name="charset" type="hidden" value="utf-8" /> <input name="hosted_button_id" type="hidden" value="N2E54SZA5BLW4" /> <input alt="PayPal － 更安全、更簡單的線上付款方式！" border="0" name="submit" src="https://www.paypal.com/zh_HK/i/btn/btn_donateCC_LG.gif" type="image" /> <img alt="" border="0" height="1" src="https://www.paypalobjects.com/zh_TW/i/scr/pixel.gif" width="1" /></form>');
         }
         if(this.currentPage == 'confirm'){
 
@@ -101,12 +101,12 @@
             var label = $(ele).next().text();
             if(regExp.test(label)){
               if(contribType == 'recurring'){
-                window.ContribPage.defaultPriceOption['recur'] = regExp.exec(label)[1].replace(',','');
+                window.ContribPage.defaultPriceOption['recur'] = $(ele).val();
               }else if(contribType == 'non-recurring'){
-                window.ContribPage.defaultPriceOption['single'] = regExp.exec(label)[1].replace(',','');
+                window.ContribPage.defaultPriceOption['single'] = $(ele).val();
               }else if(contribType == ''){
-                window.ContribPage.defaultPriceOption['recur'] = regExp.exec(label)[1].replace(',','');
-                window.ContribPage.defaultPriceOption['single'] = regExp.exec(label)[1].replace(',','');
+                window.ContribPage.defaultPriceOption['recur'] = $(ele).val();
+                window.ContribPage.defaultPriceOption['single'] = $(ele).val();
               }
             }
           }
@@ -139,24 +139,28 @@
             this.currentFormStep = 2;
           }
         }
+
+        if($('#footer_text').length){
+          this.singleContribMsgText = $('#footer_text').html();
+        }
       },
 
       prepareStepInfo: function(){
         var $stepInfo = $('<div class="custom-step-info"></div>');
-        $stepInfo.append('<span class="step-text step-text-1">填寫捐款金額</span>');
+        $stepInfo.append('<span class="step-text step-text-1">'+ts['Amount Step']+'</span>');
         $stepInfo.append('<span class="step-triangle">▶</span>');
-        $stepInfo.append('<span class="step-text step-text-2 step-text-3 step-text-4">填寫捐款人資料及收據</span>');
+        $stepInfo.append('<span class="step-text step-text-2 step-text-3 step-text-4">'+ts['Profile Step']+'</span>');
         $stepInfo.append('<span class="step-triangle">▶</span>');
-        $stepInfo.append('<span class="step-text step-text-5">確認填寫資訊</span>');
+        $stepInfo.append('<span class="step-text step-text-5">'+ts['Confirm Step']+'</span>');
         $stepInfo.append('<span class="step-triangle">▶</span>');
-        $stepInfo.append('<span class="step-text step-text-6">信用卡資料</span>');
+        $stepInfo.append('<span class="step-text step-text-6">'+ts['Payment Step']+'</span>');
         $stepInfo.insertBefore('#content');
         this.updateFormStep();
       },
 
       prepareRecurBtnMsg: function(){
-        var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg"><h2>'+this.singleContribMsgTitle+'</h2><p>'+this.singleContribMsgText+'</p></div></div>');
-        var $singleBtn = this.createGreyBtn("我要單筆捐款");
+        var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg"><h2>'+this.singleContribMsgTitle+'</h2>'+this.singleContribMsgText+'</div></div>');
+        var $singleBtn = this.createGreyBtn(ts['I want contribute once.']);
         $singleBtn.find('a').click(function(event){
           $msgBox.animate({opacity: 0},500,function(){
             $msgBox.hide();
@@ -165,7 +169,7 @@
           });
           event.preventDefault();
         });
-        var $recurBtn = this.createBlueBtn("維持定期捐款");
+        var $recurBtn = this.createBlueBtn(ts['I want recurring contribution.']);
         $recurBtn.find('a').click(function(event){
           ContribPage.setContributeType('recur');
           ContribPage.quitMsgBox();
@@ -283,39 +287,8 @@
           if($('label.error').length){
             ContribPage.updateShowAllStep();
           }
-        })
-        
-        // for receipt
-        var dom_crr = '<div class="custom-receipt-row"><span class="custom-receipt-row-label"></span></div>';
-        var $dom_need = $(dom_crr);
-        $dom_need.find('.custom-receipt-row-label')
-        .text('需要')
-        .after($('.custom_80-section [value=3]').closest('.crm-form-elem'))
-        .after($('.custom_80-section [value=1]').closest('.crm-form-elem'));
-        var $dom_dont = $(dom_crr);
-        $dom_dont.find('.custom-receipt-row-label')
-        .text('免寄')
-        .after($('.custom_80-section [value=2]').closest('.crm-form-elem'))
-        .after($('.custom_80-section [value=0]').closest('.crm-form-elem'));
-        $('.custom_80-section .content')
-        .prepend($dom_need)
-        .prepend($dom_dont);
-
-        $('[name="custom_80"]').each(function(){
-          var $this = $(this);
-          var $label = $this.next();
-          var txt = $label.text();
-          var reg = new RegExp(/-(.+)/);
-          if(reg.test(txt)){
-            var new_txt = reg.exec(txt)[1];
-            $label.text(new_txt);
-          }
         });
-
-        setTimeout(function(){
-          $('[for="r_name_custom"] .elem-label').text('自訂');
-        }, 2000);
-
+        
         this.updateFormStep();
         
       },
@@ -324,13 +297,13 @@
         var $step_block = $('<div class="step-action-wrapper">');
         objs.forEach(function(obj_name){
           if(obj_name == 'last-step'){
-            $step_block.append(ContribPage.createGreyBtn('上一步').addClass(obj_name).click(function(event){
+            $step_block.append(ContribPage.createGreyBtn(ts['<< Previous']).addClass(obj_name).click(function(event){
               ContribPage.setFormStep(ContribPage.currentFormStep - 1);
               event.preventDefault();
             }));  
           }
           if(obj_name == 'next-step'){
-            $step_block.append(ContribPage.createBlueBtn('下一步').addClass(obj_name).click(function(event){
+            $step_block.append(ContribPage.createBlueBtn(ts['Next >>']).addClass(obj_name).click(function(event){
               ContribPage.setFormStep(ContribPage.currentFormStep + 1);
               event.preventDefault();
             }));
@@ -343,19 +316,22 @@
       },
 
       prepareContribTypeForm: function(){
-        $('.contrib-step-1').prepend($('<div class="contrib-type-block custom-block"><label>點選捐款方式</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
+        $('.contrib-step-1').prepend($('<div class="contrib-type-block custom-block"><label>'+ts['Single or Recurring Contribution']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
         if($('[name=is_recur][value=1]').length > 0){
-          var $recurBtn = this.createBtn("線上定期","custom-recur-btn");
+          var $recurBtn = this.createBtn(ts["Recurring contributions"],"custom-recur-btn");
           $recurBtn.click(function(){
             ContribPage.setContributeType('recur');
           });
           $('.contrib-type-btn').append($recurBtn);
         }
         if($('[name=is_recur]').length==0 || $('[name=is_recur][value=0]').length > 0){
-          var $singleBtn = this.createBtn("線上單筆","custom-single-btn");
+          var $singleBtn = this.createBtn(ts["Single Contribution"],"custom-single-btn");
           $singleBtn.click(function(){
-            // ContribPage.$msgBox.show();
-            ContribPage.setContributeType('single');
+            if(ContribPage.singleContribMsgText){
+              ContribPage.$msgBox.show();
+            }else{
+              ContribPage.setContributeType('single');
+            }
           });
           $('.contrib-type-btn').append($singleBtn);
         }
@@ -363,12 +339,12 @@
       },
 
       preparePriceSetBlock: function(){
-        $('<div class="priceSet-block custom-block"><label>點選金額或自訂金額</label><div class="price-set-btn"></div></div>').appendTo($('.custom-price-set-section'));
+        $('<div class="priceSet-block custom-block"><label>'+ts['Choose Amount Option or Custom Amount']+'</label><div class="price-set-btn"></div></div>').appendTo($('.custom-price-set-section'));
         var other_amount = '';
         if(!this.currentPriceOption){
           other_amount = this.currentPriceAmount;
         }
-        var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">自訂金額</label><input placeholder="0" name="custom-other-amount" id="custom-other-amount" type="number" class="custom-input" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
+        var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="0" name="custom-other-amount" id="custom-other-amount" type="number" class="custom-input" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
         var doClickOtherAmount = function(){
           var reg = new RegExp(/\d+/);
           if(reg.test($(this).val())){
@@ -387,7 +363,7 @@
 
         if($('[name=is_recur][value=1]').length > 0){
           var installments = this.installments;
-          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">定期定額 期數</label><input placeholder="無限期" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
+          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['Installments']+'</label><input placeholder="無限期" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
           var doClickInstallments = function(){
             var installments = $(this).val();
             if(installments == 0){
@@ -408,7 +384,7 @@
         $('.custom_77-section .content td').each(function(i, e){
           var $e = $(e);
           var $input = $e.find('.crm-form-elem input');
-          if($input.attr('name').search('都不要') >= 0){
+          if($input.attr('name').search(ts['Not any']) >= 0){
             return;
           }
           if(ContribPage.currentPage == 'Main' || ($input.attr('type') == 'hidden' && $input.val() == 1)){
@@ -498,7 +474,7 @@
       },
 
       /**
-       * 如果 setContributeType 的時候要做 setContribInstrument 
+       * WHEN setContributeType DO setContribInstrument 
        * @param {[type]} type [description]
        */
       setContributeType: function(type) {
@@ -516,7 +492,7 @@
             $('[name=is_recur][value=1]').click();
           }
           if(this.defaultPriceOption[this.currentContribType]){
-            this.currentPriceAmount = this.defaultPriceOption[this.currentContribType].replace(',','');
+            this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
           }
 
           this.updateContributeType();
@@ -545,16 +521,16 @@
         if(this.currentContribType == 'single'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-single-btn').addClass('selected');
-          $('.info-is-recur').text('單筆捐款');
+          $('.info-is-recur').text(ts['Single Contribution']);
           $('.custom-installments-block').hide();
         }
         if(this.currentContribType == 'recur'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-recur-btn').addClass('selected');
           if(!this.installments){
-            $('.info-is-recur').text('每月捐款');
+            $('.info-is-recur').text(ts['Every-Month Recurring Contribution']);
           }else{
-            $('.info-is-recur').text(this.installments+'期每月捐款');
+            $('.info-is-recur').text(this.installments+ts['Installments Recurring Contribution']);
           }
           $('.custom-installments-block').show();
         }
@@ -664,7 +640,7 @@
 
           if(!this.currentSelectedPremiums || this.currentSelectedPremiums.length == 0){
             $('.custom_77-section .content td').find('.crm-form-checkbox input').prop('checked', false);
-            $('input#custom_77\\\[都不要\\\]').prop('checked', true);
+            $('input#custom_77\\\['+ts['Not any']+'\\\]').prop('checked', true);
           }else{
             $('.custom_77-section .content td').find('.crm-form-checkbox input').each(function(){
               var $this = $(this);

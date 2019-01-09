@@ -552,9 +552,6 @@ body .crm-container fieldset{
 .contrib-step-1 .crm-button-type-upload a{
   line-height: 2.6em;
 }
-.contrib-step-1 .crm-button-type-upload a::after{
-  content: " >>";
-}
 
 
 .crm-container input.form-submit:focus,
