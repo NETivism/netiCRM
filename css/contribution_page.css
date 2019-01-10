@@ -286,6 +286,7 @@ form#Main .crm-contribution-main-form-block{
     padding: 60px 20px 120px;
     margin: 0;
     background-size: cover;
+    background-position: center;
     background-image: var(--mobile-background-url);
   }
   .progress-block{
