@@ -18,7 +18,6 @@
       currentFormStep : 1,
       currentSelectedPremiums : [],
       defaultPriceOption : {},
-      singleContribMsgTitle : ts["Your Recurring Contribution is Very Important for Us."],
       singleContribMsgText : false,
       arrayPremiumsImg : {},
 
@@ -168,7 +167,7 @@
       },
 
       prepareRecurBtnMsg: function(){
-        var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg"><h2>'+this.singleContribMsgTitle+'</h2>'+this.singleContribMsgText+'</div></div>');
+        var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg">'+this.singleContribMsgText+'</div></div>');
         var $singleBtn = this.createGreyBtn(ts['I want contribute once.']);
         $singleBtn.find('a').click(function(event){
           $msgBox.animate({opacity: 0},500,function(){
