@@ -46679,8 +46679,5 @@ msgstr ""
 msgid "I want recurring contribution."
 msgstr ""
 
-msgid "Your Recurring Contribution is Very Important for Us."
-msgstr ""
-
-msgid "We hope you can support us via recurring contribution."
+msgid "Non-recurring contribution hint message."
 msgstr ""
