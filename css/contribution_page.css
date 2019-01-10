@@ -13,12 +13,14 @@ body.logged-in #admin-sidebar{
 body.frontend.page-civicrm-contribute-transact {
   min-height: 100vh;
   background-color: var(--active-color);
+  background-image: var(--background-url);
   -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;
-    height: 100vh;
-    background-attachment: fixed;
+  background-size: cover;
+  height: 100vh;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 body #page{
@@ -104,7 +106,7 @@ form#Main .crm-contribution-main-form-block{
 }
 
 #billing-payment-block.need-credit-card{
-  
+
 }
 
 .error-msg-bg {
@@ -267,7 +269,9 @@ form#Main .crm-contribution-main-form-block{
 
 @media screen and (max-width: 480px) {
   body.frontend.page-civicrm-contribute-transact {
-    /*background-attachment: scroll;*/
+    background-size: unset;
+    background-position: unset;
+    background: unset;
   }
   .custom-step-info{
     position: fixed;
@@ -278,8 +282,11 @@ form#Main .crm-contribution-main-form-block{
   #intro_text {
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
-    text-align: center;
+    margin-bottom: 0;
+    padding: 60px 20px 120px;
+    margin: 0;
+    background-size: cover;
+    background-image: var(--mobile-background-url);
   }
   .progress-block{
     order: 1;

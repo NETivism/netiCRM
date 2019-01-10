@@ -7,6 +7,7 @@
   $(document).one('ready', function () {
     window.ContribPage = {
       backgroundImageUrl : window.ContribPageParams.backgroundImageUrl,
+      mobileBackgroundImageUrl : window.ContribPageParams.mobileBackgroundImageUrl,
       isCreditCardOnly : window.ContribPageParams.credit_card_only,
       currentContribType : "recur", // "recur", "single"
       currentContribInstrument : "creditCard", // "creditCard", "other"
@@ -23,7 +24,8 @@
 
       preparePage: function(){
 
-        $('body.frontend.page-civicrm-contribute-transact').css('background-image','url('+window.ContribPageParams.backgroundImageUrl+')');
+        document.querySelector('body').style.setProperty('--background-url', 'url('+window.ContribPageParams.backgroundImageUrl+')');
+        document.querySelector('body').style.setProperty('--mobile-background-url', 'url('+window.ContribPageParams.mobileBackgroundImageUrl+')');
 
         var $content = $('#main');
         $content.prepend($('#intro_text').prepend($('h1.page-title')));

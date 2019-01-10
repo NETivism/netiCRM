@@ -293,12 +293,14 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
     $uploadBackgroundImage = CRM_Utils_Array::value('uploadBackgroundImage', $params);
     if(!empty($uploadBackgroundImage)){
-      $params['background_URL'] = str_replace($config->imageUploadDir, $config->imageUploadURL, $uploadBackgroundImage['name']);
+      $newBackgroundImage = $this->compressImage($uploadBackgroundImage['name'], 1920, 50);
+      $params['background_URL'] = str_replace($config->imageUploadDir, $config->imageUploadURL, $newBackgroundImage);
     }
 
     $uploadMobileBackgroundImage = CRM_Utils_Array::value('uploadMobileBackgroundImage', $params);
     if(!empty($uploadMobileBackgroundImage)){
-      $params['mobile_background_URL'] = str_replace($config->imageUploadDir, $config->imageUploadURL, $uploadMobileBackgroundImage['name']);
+      $newBackgroundImage = $this->compressImage($uploadMobileBackgroundImage['name'], 480, 100);
+      $params['mobile_background_URL'] = str_replace($config->imageUploadDir, $config->imageUploadURL, $newBackgroundImage);
     }
 
 
@@ -317,6 +319,43 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    */
   public function getTitle() {
     return ts('Title and Settings');
+  }
+
+  private function compressImage($filename, $width, $quality) {
+    // to check wether GD is installed or not
+    $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
+    if($gdSupport) {
+      $pathParts = pathinfo($filename);
+      $newFilename = $pathParts['dirname']."/".$pathParts['filename']."_compressed.".$pathParts['extension'];
+      $imageInfo = getimagesize($filename);
+      $widthOrig = $imageInfo[0];
+      $heightOrig = $imageInfo[1];
+
+      if($imageInfo['mime'] == 'image/gif') {
+        $source = imagecreatefromgif($filename);
+      }
+      elseif($imageInfo['mime'] == 'image/png') {
+        $source = imagecreatefrompng($filename);
+      }
+      else {
+        $source = imagecreatefromjpeg($filename);
+      }
+
+      if($widthOrig > $width){
+        $widthNew = $width;
+        $heightNew = $heightOrig * $widthNew / $widthOrig;
+        $image = imagecreatetruecolor($widthNew, $heightNew);
+        imagecopyresampled($image, $source, 0, 0, 0, 0, $widthNew, $heightNew, $widthOrig, $heightOrig);
+      }else{
+        $image = $source;
+      }
+
+      imagejpeg($image, $newFilename, $quality);
+      return $newFilename;
+
+    }else{
+      return false;
+    }
   }
 }
 

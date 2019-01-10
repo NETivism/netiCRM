@@ -136,7 +136,7 @@
 	    <td class ="label">{$form.intro_text.label}<br />{help id="id-intro_msg"}</td><td>{$form.intro_text.html}</td>
 	</tr>
 	<tr class="crm-contribution-contributionpage-settings-form-block-footer_text">
-	    <td class ="label">{$form.footer_text.label}<br />{help id="id-footer_msg"}</td><td>{$form.footer_text.html}</td>
+	    <td class ="label"><div class="footer_text-label">{$form.footer_text.label}<br />{help id="id-footer_msg"}</div><div class="non_recurring_hint_msg-label">{ts}Non-recurring contribution hint message.{/ts}</div></td><td>{$form.footer_text.html}</td>
 	</tr>
 	<tr class="crm-contribution-contributionpage-settings-form-block-start_date">
 	    <td class ="label">{$form.start_date.label} {help id="id-start_date"}</td>
@@ -211,6 +211,18 @@
             $("input[name=goal_recurring],input[name=goal_amount]").prop("readonly", false);
           }
         });
+
+        var doChangeSpecialStyle = function(){
+            if($('#is_special:checked').length){
+                $('.non_recurring_hint_msg-label').show();
+                $('.footer_text-label').hide();
+            }else{
+                $('.non_recurring_hint_msg-label').hide();
+                $('.footer_text-label').show();
+            }
+        }
+        doChangeSpecialStyle();
+        $('#is_special').change(doChangeSpecialStyle);
 			});
 		</script>
 	{/literal}

@@ -3,6 +3,7 @@
   (function($){
     window.ContribPageParams = {
       backgroundImageUrl : "{/literal}{$backgroundImageUrl}{literal}",
+      mobileBackgroundImageUrl : "{/literal}{$mobileBackgroundImageUrl}{literal}",
       credit_card_only : "{/literal}{$credit_card_only}{literal}",
       ts: {
         "Single Contribution" : "{/literal}{ts}Single Contribution{/ts}{literal}",
