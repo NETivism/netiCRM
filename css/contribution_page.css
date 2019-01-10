@@ -53,16 +53,12 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   display: none;
 }
 
-body.frontend #footer, .region-page-bottom {
-  display: none;
-}
-
 .crm-submit-buttons{
   display: flex;
 }
 
 .crm-container>form{
-  width: 300px;
+  position: relative;
   margin: 0 auto;
 }
 
@@ -87,20 +83,29 @@ form#Main .crm-contribution-main-form-block{
 }
 .contrib-step.type-is-front {
   z-index: unset;
-  display: none;
+  display: block;
   max-width: unset;
   overflow: unset;
   
   
 }
-.contrib-step.type-is-hide {
+
+.contrib-step.type-is-fade-out {
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+.contrib-step.type-is-fade-in {
+  z-index: 1;
+}
+
+.payment_processor-section.need-credit-card{
+
+}
+
+#billing-payment-block.need-credit-card{
   
 }
-.contrib-step.type-is-show {
-
-}
-
-
 
 .error-msg-bg {
   z-index: 50;
@@ -149,22 +154,16 @@ form#Main .crm-contribution-main-form-block{
     border-radius: 5px;
     overflow: hidden;
   }
-  .header#header {
-    display: none;
-    /*background: transparent;
-    position: absolute;
-    width: 100%;
-    margin: 0 auto;
-    border: none;*/
-  }
   #main-inner {
     z-index: 3;
     margin-right: 0;
-    margin-top: 60px;
+    margin-top: 70px;
   }
   .frontend .main#main {
     width: 1024px;
     margin: 0 auto;
+    display: flex;
+    align-items: stretch;
   }
   #expenditure-ratio-box{
     width: 480px;
@@ -173,9 +172,11 @@ form#Main .crm-contribution-main-form-block{
   }
   #intro_text {
     width: 480px;
-    height: 235px;
+    height: auto;
     margin-top: 70px;
-    position: fixed;
+    margin-bottom: 0;
+    padding: 40px 20px;
+    background-color: rgba(0,0,0,0.8);
   }
   body.frontend fieldset legend {
     background: none;
@@ -441,17 +442,21 @@ body .crm-container fieldset{
 }
 .price-set-btn div span.description {
   font-weight: normal;
-  width: 184px;
-  line-height: 1.2em;
+  font-size: 40px;
   position: absolute;
   right: 0;
-  top: 1.5em;
+  top: 20px;
   color: black;
   margin: 0;
   -webkit-transition: all ease-in-out .2s;
        -o-transition: all ease-in-out .2s;
           transition: all ease-in-out .2s;
 }
+.price-set-btn div span.description.multitext {
+  font-size: 18px;
+  width: 180px;
+  line-height: 1.2em;
+} 
 .custom-input-block{
   height: 76px;
   line-height: 76px;
@@ -734,6 +739,9 @@ body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focu
 }
 .last_name-section {
   margin-right: 2%;
+}
+body .crm-container-md div[class*="crm-section state_province-"] .content{
+  display: flex;
 }
 body .crm-container-md div[class*="crm-section state_province-"] .crm-form-elem{
   margin-right: 7px;

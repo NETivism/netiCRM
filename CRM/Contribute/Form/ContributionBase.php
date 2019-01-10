@@ -599,6 +599,15 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->assign('intro_text', $this->_values['intro_text']);
       $this->assign('backgroundImageUrl', $this->_values['background_URL']);
       $this->assign('special_style', 1);
+
+      $query_params = array(
+        1 => array($this->_id, 'Integer'),
+      );
+      $payment_instruments = CRM_Core_DAO::singleValueQuery("SELECT payment_instruments FROM civicrm_instrument WHERE entity_id = %1 AND entity_table = 'civicrm_contribution_page'", $query_params);
+      $active_instruments = unserialize($payment_instruments);
+      if(count($active_instruments) == 1 && isset($active_instruments['credit_card'])){
+        $this->assign('credit_card_only', 1);
+      }
     }
 
 

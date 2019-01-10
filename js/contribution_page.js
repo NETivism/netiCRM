@@ -7,6 +7,7 @@
   $(document).one('ready', function () {
     window.ContribPage = {
       backgroundImageUrl : window.ContribPageParams.backgroundImageUrl,
+      isCreditCardOnly : window.ContribPageParams.credit_card_only,
       currentContribType : "recur", // "recur", "single"
       currentContribInstrument : "creditCard", // "creditCard", "other"
       currentPage : $('#crm-container>form').attr('id'), // "Main", "Confirm", "ThankYou"
@@ -94,6 +95,7 @@
       },
 
       setDefaultValues: function(){
+        var defaultPriceOption = window.ContribPage.defaultPriceOption;
         $('[data-default="1"][data-grouping]').each(
           function(i, ele){
             var contribType = ele.dataset.grouping;
@@ -101,17 +103,22 @@
             var label = $(ele).next().text();
             if(regExp.test(label)){
               if(contribType == 'recurring'){
-                window.ContribPage.defaultPriceOption['recur'] = $(ele).val();
+                defaultPriceOption['recur'] = $(ele).val();
               }else if(contribType == 'non-recurring'){
-                window.ContribPage.defaultPriceOption['single'] = $(ele).val();
+                defaultPriceOption['single'] = $(ele).val();
               }else if(contribType == ''){
-                window.ContribPage.defaultPriceOption['recur'] = $(ele).val();
-                window.ContribPage.defaultPriceOption['single'] = $(ele).val();
+                defaultPriceOption['recur'] = $(ele).val();
+                defaultPriceOption['single'] = $(ele).val();
               }
             }
           }
         );
-        window.a = window.ContribPage;
+        if(!defaultPriceOption['single']){
+          defaultPriceOption['single'] = $('[data-grouping][data-grouping!="recurring"]').first().val();
+        }
+        if(!defaultPriceOption['recur']){
+          defaultPriceOption['recur'] = $('[data-grouping][data-grouping!="non-recurring"]').first().val();
+        }
 
         if($('[name="is_recur"]:checked').val() == 1){
           this.currentContribType = 'recur';
@@ -259,28 +266,33 @@
         var exec_step = 2;
         if($('.custom_pre_profile-group fieldset').length >= 1){
           $('.contrib-step-'+exec_step)
-            // .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
-            .append(this.createStepBtnBlock(['priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            // .append(this.createStepBtnBlock(['priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
             .append($('.custom_pre_profile-group'))
             .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
           exec_step += 1;
         }
         if($('.custom_post_profile-group fieldset').length >= 1){
           $('.contrib-step-'+exec_step)
-            // .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
-            .append(this.createStepBtnBlock(['priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            // .append(this.createStepBtnBlock(['priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
             .append($('.custom_post_profile-group'))
             .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
           exec_step += 1;
         }
         exec_step -= 1;
         $('.contrib-step-'+exec_step).find('.step-action-wrapper').has('.next-step').remove();
-        $('.contrib-step-'+exec_step).append($('.crm-submit-buttons'));
-        $('.contrib-step').hide();
+        $('.contrib-step-'+exec_step)
+          .append(this.createStepBtnBlock(['last-step']).addClass('hide-as-show-all').addClass('crm-section'))
+          .append($('.crm-submit-buttons'));
         $('.crm-contribution-main-form-block').hide();
 
         if($("#billing-payment-block").length == 0){
           $('.crm-section payment_processor-section').insertBefore($('.custom_pre_profile-group'));
+        }
+
+        if(this.isCreditCardOnly){
+          $('.payment_processor-section, #billing-payment-block').hide();
         }
 
         $('#crm-container>form').submit(function(){
@@ -344,17 +356,26 @@
         if(!this.currentPriceOption){
           other_amount = this.currentPriceAmount;
         }
-        var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="0" name="custom-other-amount" id="custom-other-amount" type="number" class="custom-input" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
+        var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="'+ts['Type here']+'" name="custom-other-amount" id="custom-other-amount" type="number" min="0" class="custom-input" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
         var doClickOtherAmount = function(){
-          var reg = new RegExp(/\d+/);
-          if(reg.test($(this).val())){
+          var reg = new RegExp(/^$|^\d+$/);
+          var amount = $(this).val();
+          if(reg.test(amount) && parseInt(amount) > 0){
             ContribPage.setPriceOption();
-            ContribPage.setPriceAmount($(this).val());
-          }else{
-            // $('#custom-other-amount').next().css('display', 'none');
+            ContribPage.setPriceAmount(amount);
+          }
+          else if(amount != ''){
+            $(this).val(0);
           }
         };
         $other_amount_block.find('input').keyup(doClickOtherAmount).click(doClickOtherAmount);
+        $other_amount_block.find('input').blur(function(){
+          var amount = $(this).val();
+          var defaultOption = ContribPage.defaultPriceOption[ContribPage.currentContribType];
+          if(amount == '' && defaultOption){
+            ContribPage.setPriceOption(defaultOption);
+          }
+        });
         $('.btn-submit-other-amount').click(function(){
           ContribPage.setFormStep(2);
           event.preventDefault();
@@ -419,7 +440,13 @@
               var reg_result = reg.exec(text);
               var amount = reg_result[1];
               var val = $this.find('input').val();
-              var $option = $('<div data-amount="'+val+'"><span class="amount">'+amount+'</span><span class="description">'+reg_result[2]+'</span></div>');
+              var words = reg_result[2];
+              if(words.length > 7){
+                var multitext_class = ' multitext';
+              }else{
+                var multitext_class = '';
+              }
+              var $option = $('<div data-amount="'+val+'"><span class="amount">'+amount+'</span><span class="description'+multitext_class+'">'+words+'</span></div>');
               $option.click(function(){
                 ContribPage.setPriceOption($(this).data('amount'));
                 // ContribPage.setFormStep(2);
@@ -491,9 +518,6 @@
             this.setContribInstrument('creditCard');
             $('[name=is_recur][value=1]').click();
           }
-          if(this.defaultPriceOption[this.currentContribType]){
-            this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
-          }
 
           this.updateContributeType();
           this.setDefaultPriceOption();
@@ -535,9 +559,25 @@
           $('.custom-installments-block').show();
         }
         this.updatePriceSetOption();
+
+        if(this.defaultPriceOption[this.currentContribType]){
+          this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
+        }
       },
 
       setFormStep: function(step) {
+        if(this.currentFormStep == 1 && step == 2 && this.currentContribType == 'recur'){
+          // Check instrument is credit card
+          if($('#civicrm-instrument-dummy-1:checked').length == 0){
+            $('#billing-payment-block').append('<label generated="true" class="error" style="color: rgb(238, 85, 85); padding-left: 10px;">'+ts['You cannot set up a recurring contribution if you are not paying online by credit card.']+'</label>');
+            setTimeout(function(){
+              $('#billing-payment-block .error').remove();
+            }, 5000);
+            return;
+          }
+        }
+
+
         $('.hide-as-show-all').show();
         if(this.currentFormStep != step){
           this.currentFormStep = step;
@@ -555,24 +595,30 @@
             * type-is-front
           */
           if($this.hasClass('type-is-front') && !$this.hasClass(currentStepClassName)){
-            $this.fadeOut('slow', function(){
-              // $this.removeClass('active-contrib-step');
-              $this.removeClass('type-is-front').addClass('type-is-back');
-              $this.css({
-                'display':'block'
-              })
-            });
+            /** first scroll to top 0.5 second */
+            setTimeout(function(){
+              $this.removeClass('type-is-front').addClass('type-is-fade-out').css({'opacity': 1});
+              /** then fade change */
+              $this.animate({'opacity': 0} ,500, function(){
+                $this.removeClass('type-is-fade-out').addClass('type-is-back');
+              });
+            }, 500);
           }
-          if($this.hasClass(currentStepClassName)){
-            $this.removeClass('type-is-back').addClass('type-is-front');
-            $this.fadeIn('slow', function(){
-              // $this.addClass('active-contrib-step');
-              $this.css({
-                'position':''
+          else if($this.hasClass(currentStepClassName)){
+            /** first scroll to top 0.5 second */
+            $('html,body').animate({ scrollTop: 0 }, 500, function(){
+              $this.removeClass('type-is-back').addClass('type-is-fade-in').css({'opacity': 0});
+              /** then fade change */
+              $this.animate({'opacity': 1} ,500,  function(){
+                $this.removeClass('type-is-fade-in').addClass('type-is-front');
               });
             });
           }
+          else if(!$this.hasClass('type-is-back')){
+            $this.addClass('type-is-back');
+          }
         });
+
 
         $('.step-text').removeClass('active');
         if(this.currentPage == 'Main'){
@@ -591,8 +637,7 @@
         $('[class*=contrib-step-]').each(function(){
           var $this = $(this);
           if($this.hasClass('contrib-step-1'))return ;
-          $this.removeClass('type-is-back').addClass('type-is-front');
-          $this.fadeIn('slow');
+          $this.removeClass('type-is-back').addClass('type-is-front').css({opacity: 1});
         });
         ContribPage.currentFormStep = 2;
       },
