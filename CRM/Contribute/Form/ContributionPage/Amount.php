@@ -182,6 +182,10 @@ SELECT id
       $this->addElement('text', 'additional_reminder_day', ts('Send additional reminders'), array('size' => 3));
     }
 
+    if($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL) {
+      $this->assign('special_style', 1);
+    }
+
     //add currency element.
     $this->addCurrency('currency', ts('Currency'));
 

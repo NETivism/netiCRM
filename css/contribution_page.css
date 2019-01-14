@@ -64,9 +64,6 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   margin: 0 auto;
 }
 
-form#Main .crm-contribution-main-form-block{
-  /*display: none;*/
-}
 .crm-custom-data-view {
   display: none;
 }
@@ -178,7 +175,7 @@ form#Main .crm-contribution-main-form-block{
     margin-top: 70px;
     margin-bottom: 0;
     padding: 40px 20px;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.5);
   }
   body.frontend fieldset legend {
     background: none;
@@ -222,14 +219,6 @@ form#Main .crm-contribution-main-form-block{
   }
 
 }
-
-/*@media screen and (min-width: 481px) {
-  
-  .instrument-info-panel {
-    width: 450px;
-    transform: translateX(-75px);
-  }
-}*/
 
 @media screen and (max-width: 1023px) {
   #header{
@@ -449,6 +438,7 @@ body .crm-container fieldset{
   font-weight: bold;
 }
 .price-set-btn div span.description {
+  text-align: right;
   font-weight: normal;
   font-size: 40px;
   position: absolute;
@@ -612,14 +602,12 @@ body .crm-container fieldset{
   border: 3px solid var(--active-color);
   float: right;
   border-radius: 10px;
-  /*width: 150px;*/
   overflow: hidden;
   height: 30px;
 }
 .info-is-recur {
   padding-left: 5px;
   padding-right: 5px;
-  /*width: 40%;*/
   background: var(--active-color);
   color: white;
   text-align: center;
@@ -632,7 +620,6 @@ body .crm-container fieldset{
   padding-left: 5px;
   padding-right: 5px;
   display: inline-block;
-  /*width: 60%;*/
   text-align: center;
 
 }
@@ -734,14 +721,7 @@ body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focu
   margin-bottom: 25px;
 }
 
-.description.upload-person-only-info {
-    position: absolute;
-    bottom: -30px;
-    right: 20px;
-}
-
 .last_name-section , .first_name-section {
-
     width: 49%;
     display: inline-block;
 }
@@ -778,188 +758,6 @@ form#ThankYou #help{
   display: none;
 }
 
-form#Confirm .display-block p,
-form#ThankYou .display-block p{
-  /*display: none;*/
-}
-
-
-/* Premiums 感謝禮*/ 
-form#Main .custom_77-section .content table.form-layout-compressed{
-  display: none;
-}
-.thumbnail p{
-  color: var(--marked-color);
-  font-weight: bold;
-  font-size: 16px;
-}
-.image_wrapper {
-  height: 135px;
-  overflow: hidden;
-  border-radius: 5px;
-  background: #e8e8e8;
-  width: 270px;
-  -webkit-transition: all ease-in-out .2s;
-       -o-transition: all ease-in-out .2s;
-          transition: all ease-in-out .2s;
-  position: relative;
-}
-.selected .image_wrapper{
-  background: var(--active-color);
-}
-.image_hide .image_wrapper{
-  display: none;
-}
-.image_wrapper img {
-  width: 160px;
-          transform: rotate(-25deg)translate(30px,30px);
-       -o-transform: rotate(-25deg)translate(30px,30px);
-      -ms-transform: rotate(-25deg)translate(30px,30px);
-     -moz-transform: rotate(-25deg)translate(30px,30px);
-  -webkit-transform: rotate(-25deg)translate(30px,30px);
-}
-.image_wrapper:before{
-  content: " ";
-  display: block;
-  position: absolute;
-  opacity: 0;
-  -webkit-transition: all ease-in-out .2s;
-       -o-transition: all ease-in-out .2s;
-          transition: all ease-in-out .2s;
-  border: 3px solid var(--active-color);
-  width: 264px;
-  height: 129px;
-  border-radius: 4px;
-}
-.thumbnail:hover .image_wrapper:before,
-form#Confirm .thumbnail .image_wrapper:before,
-form#ThankYou .thumbnail .image_wrapper:before{
-  opacity: 1;
-}
-.crm-container-md ul.thumbnails.image_picker_selector li .thumbnail{
-  border: none;
-  -webkit-transition: all ease-in-out .2s;
-       -o-transition: all ease-in-out .2s;
-          transition: all ease-in-out .2s;
-  /*border-radius: 5px;*/
-  cursor: pointer;
-}
-.crm-container-md ul.thumbnails.image_picker_selector li .thumbnail.selected{
-  background: transparent;
-  /*color: white;*/
-}
-
-form#Confirm .image_picker_selector,
-form#ThankYou .image_picker_selector {
-  pointer-events: none;
-}
-
-.image_wrapper:after {
-    content: " ";
-    position: absolute;
-    /* color: white; */
-    content: "";
-    width: 9px;
-    height: 4px;
-    top: 5px;
-    right: 7px;
-    z-index: 1;
-    opacity: 0;
-    margin-left: -18px;
-    border: 3px solid white;
-    border-top: none;
-    border-right: none;
-    background: transparent;
-    -moz-transform: rotate(-45deg);
-    -o-transform: rotate(-45deg);
-    -ms-transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-    -webkit-transition: all 0.15s ease-in-out;
-    -o-transition: all 0.15s ease-in-out;
-    transition: all 0.15s ease-in-out;
-    box-sizing: content-box;
-}
-.selected .image_wrapper:after {
-  opacity: 1;
-}
-
-/* 我已閱讀並同意宣言內容 */
-body .crm-container-md .custom_11-section  .crm-form-radio {
-  border: unset !important;
-  text-align: left;
-  margin-left: 20px;
-  overflow: unset;
-}
-body .crm-container-md  .custom_11-section .crm-form-radio .form-radio + .elem-label{
-
-  line-height: 2.5em;
-}
-body .crm-container-md  .custom_11-section .crm-form-radio .form-radio:checked + .elem-label{
-  background: transparent;
-  color: var(--active-color);
-}
-body .crm-container-md .custom_11-section .crm-form-radio .elem-label::after{
-  left: -7px;
-  transform: translateY(-50%);
-  top: 50%;
-  border-radius: 50%;
-  background-clip: padding-box;
-  position: absolute;
-  content: "";
-  width: 14px;
-  height: 14px;
-  cursor: pointer;
-  background-color: transparent;
-  border: 2px solid var(--active-color);
-  -webkit-border-radius: 50%;
-  border-radius: 50%;
-  box-sizing: content-box;
-  background-clip: padding-box;
-  -webkit-transition: all 0.15s ease-in-out;
-       -o-transition: all 0.15s ease-in-out;
-          transition: all 0.15s ease-in-out;
-}
-
-body .crm-container-md .custom_11-section .crm-form-radio .form-radio:checked + .elem-label::after {
-  border: 2px solid var(--active-color);
-  background: var(--active-color);
-}
-
-
-body .crm-container-md .custom_11-section .crm-form-radio .elem-label::before {
-  position: absolute;
-  content: "";
-  width: 9px;
-  height: 4px;
-  top: 50%;
-  left: 0;
-  z-index: 1;
-  opacity: 0;
-  margin-left: -18px;
-  border: 3px solid white;
-  border-top: none;
-  border-right: none;
-  background: transparent;
-     -moz-transform: translateY(-50%)rotate(-45deg);
-       -o-transform: translateY(-50%)rotate(-45deg);
-      -ms-transform: translateY(-50%)rotate(-45deg);
-  -webkit-transform: translateY(-50%)rotate(-45deg);
-          transform: translateY(-50%)rotate(-45deg);
-  -webkit-transition: all 0.15s ease-in-out;
-       -o-transition: all 0.15s ease-in-out;
-          transition: all 0.15s ease-in-out;
-  box-sizing: content-box;
-}
-body .crm-container-md .custom_11-section .crm-form-radio .form-radio:checked + .elem-label::before {
-  opacity: 1;
-}
-
-body .crm-container-md .custom_11-section a, 
-body .crm-container-md .custom_11-section a:hover, 
-body .crm-container-md .custom_11-section a:active {
-  color: var(--marked-color);
-}
 
 .crm-submit-buttons .crm-button {
   width: 100%;
@@ -987,10 +785,6 @@ body .crm-container-md .custom_11-section a:active {
   display: none;
 }
 
-/* 部份名稱  */
-.crm-container label[for="r_name_half"] {
-  display: none;
-}
 
 
 /** message text */ 

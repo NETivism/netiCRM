@@ -48,7 +48,8 @@
         {if $paymentProcessor}
         <tr class="crm-contribution-contributionpage-amount-form-block-payment_processor"><th scope="row" class="label" width="20%">{$form.payment_processor.label}</th>
             <td>{$form.payment_processor.html}<br />
-            <span class="description">{ts}Select the payment processor to be used for contributions submitted from this contribution page (unless you are soliciting non-monetary / in-kind contributions only).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}</span></td>
+            <span class="description">{ts}Select the payment processor to be used for contributions submitted from this contribution page (unless you are soliciting non-monetary / in-kind contributions only).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}<br />
+            {ts}Cause you use special style. If you only choose 'Credit Card', the payment processor and instrument form will be hidden on the contribution page. Contributor don't need to choose these selections.{/ts}</span></td>
         </tr>
           {if $form.payment_instrument}
           <tr class="crm-contribution-contributionpage-amount-form-block-payment_instrument"><td></td><td>

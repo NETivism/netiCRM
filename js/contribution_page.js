@@ -48,8 +48,6 @@
 
           this.prepareContribTypeForm();
 
-          // this.preparePremiumField();
-
           $('.instrument-info-panel').append($('#footer_text').hide());
 
           $('.instrument-info-panel h3').click(function(){
@@ -70,8 +68,6 @@
               });
             }
           });
-
-          // this.preparePremiumField();
         }
 
         if(this.currentPage == 'thankyou'){
@@ -401,33 +397,6 @@
         this.updatePriceSetOption();
       },
 
-      preparePremiumField: function(){
-        window.$multi_select = $multi_select = $('<select multiple></select>');
-        $('.custom_77-section .content td').each(function(i, e){
-          var $e = $(e);
-          var $input = $e.find('.crm-form-elem input');
-          if($input.attr('name').search(ts['Not any']) >= 0){
-            return;
-          }
-          if(ContribPage.currentPage == 'Main' || ($input.attr('type') == 'hidden' && $input.val() == 1)){
-            var val = $input.attr('name');
-            if($input.prop('checked')){
-              var selected = ' selected="selected" ';
-            }else{
-              var selected = '';
-            }
-            var label = $e.find('.elem-label').text();
-            if(ContribPage.arrayPremiumsImg[val]){
-              var img_src = ' data-img-src="'+ContribPage.arrayPremiumsImg[val]+'" ';
-            }
-            var img_label = ' data-img-label="'+label+'" ';
-            var $option = $('<option value="'+val+'" '+img_src+img_label+selected+' >'+label+'</option>');
-            $multi_select.append($option);
-            
-          }
-        });
-      },
-
       updatePriceSetOption: function(){
         $('.price-set-btn').html("");
         var reg = new RegExp(/^NT\$ ([\d\,]+) ?(.*)$/);
@@ -442,7 +411,7 @@
               var amount = reg_result[1];
               var val = $this.find('input').val();
               var words = reg_result[2];
-              if(words.length > 7){
+              if(words.length > 6){
                 var multitext_class = ' multitext';
               }else{
                 var multitext_class = '';
