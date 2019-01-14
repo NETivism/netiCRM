@@ -600,5 +600,19 @@
    <adminGroup>Configure</adminGroup>
    <icon>admin/small/36.png</icon>
    <weight>500</weight>
-</item>
+  </item>
+  <item>
+     <path>civicrm/admin/coupon</path>
+     <title>Coupon</title>
+     <page_callback>CRM_Coupon_Page_Coupon</page_callback>
+     <access_arguments>administer CiviCRM;access CiviContribute;edit contributions</access_arguments>
+     <weight>380</weight>
+  </item>
+  <item>
+     <path>civicrm/admin/coupon/add</path>
+     <title>Coupon</title>
+     <page_callback>CRM_Coupon_Form_Coupon</page_callback>
+     <access_arguments>administer CiviCRM;access CiviContribute</access_arguments>
+     <weight>380</weight>
+  </item>
 </menu>
