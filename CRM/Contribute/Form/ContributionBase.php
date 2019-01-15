@@ -595,7 +595,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       self::cancelRecurring();
     }
 
-    if($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL && $_GET['snippet'] != 4){
+    if($_GET['style'] == 'origin'){
+      $this->set('style', 'origin');
+    }
+    if($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL && $_GET['snippet'] != 4 && $this->get('style') != 'origin'){
       $this->assign('intro_text', $this->_values['intro_text']);
       $this->assign('backgroundImageUrl', $this->_values['background_URL']);
       $this->assign('mobileBackgroundImageUrl', $this->_values['mobile_background_URL']);

@@ -42,6 +42,7 @@ body.frontend #content{
 }
 #main-inner {
   max-width: 500px;
+  opacity: 0;
 }
 #intro_text {
   color: white;
@@ -324,8 +325,7 @@ body {
 
 .custom-block>label{
   color: var(--active-color);
-  font-size: 12px;
-  margin: 10px 0;
+  margin: 15px 0 5px;
 }
 
 body .crm-container .header-dark {
@@ -460,16 +460,17 @@ body .crm-container fieldset{
   line-height: 76px;
 }
 .custom-input-block label{
-  font-size: 12px;
-  padding: 0 10px;
+  font-size: 1rem;
+  padding: 0 10px 0 0;
 }
 .custom-input-block input.custom-input{
-  border-radius: 15px;
-  height: 30px;
+  font-size: 1rem;
+  border-radius: 20px;
+  height: 40px;
   background: #d8d8d8;
   border: none;
   font-weight: bold;
-  padding: 0 20px;
+  padding: 0 15px;
   color: white;
   width: 150px;
   -webkit-transition: all ease-in-out .2s;
@@ -684,10 +685,6 @@ body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focu
   width: 100%;
   margin-right: 8px;
 }
-.civicrm-instrument-dummy label.crm-form-radio{
-  font-size: 13px;
-}
-
 .crm-container-md .crm-form-elem textarea, 
 .crm-container-md .crm-form-elem textarea.form-textarea{
   width: 100%;
@@ -818,6 +815,14 @@ body .crm-container div.display-block {
   display: none !important;
 }
 
+.progress-bar-wrapper{
+  width: 100%;
+}
+.progress-button{
+  display: none;
+}
+
+/*
 .progress-block{
   margin: 2em 0;
 }
@@ -845,7 +850,7 @@ body .crm-container div.display-block {
   color: white;
   text-align: center;
 }
-
+*/
 
 /** Other instrument*/
 

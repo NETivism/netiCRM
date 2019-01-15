@@ -30,8 +30,6 @@
         $content.prepend($('#intro_text').prepend($('h1.page-title')));
         $('.sharethis').appendTo('body');
 
-        this.prepareProgressBar();
-
         this.prepareStepInfo();
 
         if(this.currentPage == 'Main'){
@@ -188,38 +186,6 @@
         $msgBox.hide();
       },
 
-      prepareProgressBar: function(){
-        if(Drupal.settings.contribution_amount && Drupal.settings.contribution_goal_amount){
-          var progressNumber = this.progressNumber = parseInt(Drupal.settings.contribution_amount);
-          var progressGoal = this.progressGoal = parseInt(Drupal.settings.contribution_goal_amount);
-          var progressType = this.progressType = "amount";
-        }else if(Drupal.settings.contribution_count && Drupal.settings.contribution_goal_count){
-          var progressNumber = this.progressNumber = parseInt(Drupal.settings.contribution_count);
-          var progressGoal = this.progressGoal = parseInt(Drupal.settings.contribution_goal_count);
-          var progressType = this.progressType = "count";
-        }
-
-        if(progressNumber && progressGoal){
-          $item = $("<div class='progress-block'><div class='progress-wrapper'><div class='progress-bar'></div></div></div>").appendTo('#intro_text');
-          if(progressNumber > progressGoal ){
-            var percentage = 100;
-          }else{
-            var percentage = ((progressNumber / progressGoal) * 100).toFixed(0);
-          }
-          $('.progress-bar').css('width', percentage + '%');
-
-          if(progressType == 'amount'){
-          progressNumber = progressNumber.toLocaleString();
-            progressGoal = progressGoal.toLocaleString();
-            $('.progress-block').prepend('<div class="progress-former-text">已募得&nbsp;'+ percentage +'%</div>');
-            $('.progress-block').append('<div class="progress-text">NT$&nbsp;'+progressNumber+'&nbsp;/&nbsp;'+progressGoal+'</div>');
-          }else if(progressType == 'count'){
-            $('.progress-block').append('<div class="progress-text">已有 '+progressNumber+'&nbsp;/&nbsp;'+progressGoal+' 位捐款人參與行動改變環境</div>');
-          }
-        }
-        
-      },
-
       quitMsgBox: function(){
 
         var $msgBox = ContribPage.$msgBox;
@@ -255,6 +221,7 @@
         $(dom_step).insertBefore('.crm-contribution-main-form-block');
 
         $('.contrib-step-1')
+          .append($('.progress-block'))
           .append($('.payment_options-group'))
           .append('<div class="custom-price-set-section">')
           .append($('.payment_processor-section'))
@@ -325,7 +292,7 @@
       },
 
       prepareContribTypeForm: function(){
-        $('.contrib-step-1').prepend($('<div class="contrib-type-block custom-block"><label>'+ts['Single or Recurring Contribution']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
+        $('.priceSet-block').before($('<div class="contrib-type-block custom-block"><label>'+ts['Single or Recurring Contribution']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
         if($('[name=is_recur][value=1]').length > 0){
           var $recurBtn = this.createBtn(ts["Recurring contributions"],"custom-recur-btn");
           $recurBtn.click(function(){
@@ -369,7 +336,7 @@
         $other_amount_block.find('input').blur(function(){
           var amount = $(this).val();
           var defaultOption = ContribPage.defaultPriceOption[ContribPage.currentContribType];
-          if(amount == '' && defaultOption){
+          if((amount == '' && defaultOption) || amount == 0){
             ContribPage.setPriceOption(defaultOption);
           }
         });
@@ -698,7 +665,7 @@
 
       prepareAfterAll: function(){
         $('.payment_options-group').hide();
-        $('#main').css('opacity', 1);
+        $('#main, #main-inner').css('opacity', 1);
         $('#page').css('background', 'none').css('height','unset');
 
       }
