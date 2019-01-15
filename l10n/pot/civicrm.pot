@@ -46684,3 +46684,6 @@ msgstr ""
 
 msgid "Cause you use special style. If you only choose 'Credit Card', the payment processor and instrument form will be hidden on the contribution page. Contributor don't need to choose these selections."
 msgstr ""
+
+msgid "Cause you use special style. You can't use price set mode."
+msgstr ""
