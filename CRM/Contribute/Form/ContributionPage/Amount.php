@@ -329,6 +329,12 @@ SELECT id
       if ($hasMembershipBlk) {
         $errors['price_set_id'] = ts('You cannot enable both Price Set and Membership Signup on the same online contribution page.');
       }
+      $params = array('id' => $self->_id);
+      CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $values, array('is_active'));
+
+      if($values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL) {
+        $errors['price_set_id'] = ts("Cause you use special style. You can't use price set mode.");
+      }
     }
     else {
       if (isset($fields['is_monetary'])) {

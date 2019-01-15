@@ -815,7 +815,7 @@ body .crm-container div.display-block {
   display: none !important;
 }
 
-.progress-bar-wrapper{
+.crm-container div.progress-cell.progress-bar-wrapper{
   width: 100%;
 }
 .progress-button{

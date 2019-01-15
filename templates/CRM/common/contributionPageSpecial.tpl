@@ -4,7 +4,9 @@
     window.ContribPageParams = {
       backgroundImageUrl : "{/literal}{$backgroundImageUrl}{literal}",
       mobileBackgroundImageUrl : "{/literal}{$mobileBackgroundImageUrl}{literal}",
-      credit_card_only : "{/literal}{$credit_card_only}{literal}",
+      creditCardOnly : "{/literal}{$credit_card_only}{literal}",
+      minAmount : "{/literal}{$min_amount}{literal}",
+      maxAmount : "{/literal}{$max_amount}{literal}",
       ts: {
         "Single Contribution" : "{/literal}{ts}Single Contribution{/ts}{literal}",
         "Recurring contributions" : "{/literal}{ts}Recurring contributions{/ts}{literal}",
@@ -23,10 +25,10 @@
         "I want contribute once." : "{/literal}{ts}I want contribute once.{/ts}{literal}",
         "I want recurring contribution." : "{/literal}{ts}I want recurring contribution.{/ts}{literal}",
         "Your Recurring Contribution is Very Important for Us." : "{/literal}{ts}Your Recurring Contribution is Very Important for Us.{/ts}{literal}",
-        "We hope you can support us via recurring contribution." : "{/literal}{ts}We hope you can support us via recurring contribution.{/ts}{literal}",
-        "You cannot set up a recurring contribution if you are not paying online by credit card." : "{/literal}{ts}You cannot set up a recurring contribution if you are not paying online by credit card.{/ts}{literal}",
         "<< Previous" : "{/literal}{ts}<< Previous{/ts}{literal}",
         "Next >>" : "{/literal}{ts}Next >>{/ts}{literal}",
+        "Contribution amount must be at least %1" : "{/literal}{ts 1=$min_amount}Contribution amount must be at least %1{/ts}{literal}",
+        "Contribution amount cannot be more than %1." : "{/literal}{ts 1=$max_amount}Contribution amount cannot be more than %1.{/ts}{literal}",
       }
     };
   })(jQuery);

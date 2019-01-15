@@ -603,6 +603,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->assign('backgroundImageUrl', $this->_values['background_URL']);
       $this->assign('mobileBackgroundImageUrl', $this->_values['mobile_background_URL']);
       $this->assign('special_style', 1);
+      $this->assign('min_amount', (float) $this->_values['min_amount']);
+      $this->assign('max_amount', (float) $this->_values['max_amount']);
 
       $query_params = array(
         1 => array($this->_id, 'Integer'),

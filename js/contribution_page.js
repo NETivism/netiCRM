@@ -8,7 +8,7 @@
     window.ContribPage = {
       backgroundImageUrl : window.ContribPageParams.backgroundImageUrl,
       mobileBackgroundImageUrl : window.ContribPageParams.mobileBackgroundImageUrl,
-      isCreditCardOnly : window.ContribPageParams.credit_card_only,
+      isCreditCardOnly : window.ContribPageParams.creditCardOnly,
       currentContribType : "recur", // "recur", "single"
       currentContribInstrument : "creditCard", // "creditCard", "other"
       currentPage : $('#crm-container>form').attr('id'), // "Main", "Confirm", "ThankYou"
@@ -316,35 +316,37 @@
 
       preparePriceSetBlock: function(){
         $('<div class="priceSet-block custom-block"><label>'+ts['Choose Amount Option or Custom Amount']+'</label><div class="price-set-btn"></div></div>').appendTo($('.custom-price-set-section'));
-        var other_amount = '';
-        if(!this.currentPriceOption){
-          other_amount = this.currentPriceAmount;
+        if($('#amount_other').length){
+          var other_amount = '';
+          if(!this.currentPriceOption){
+            other_amount = this.currentPriceAmount;
+          }
+          var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="'+ts['Type here']+'" name="custom-other-amount" id="custom-other-amount" type="number" min="0" class="custom-input" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
+          var doClickOtherAmount = function(){
+            var reg = new RegExp(/^$|^\d+$/);
+            var amount = $(this).val();
+            if(reg.test(amount) && parseInt(amount) > 0){
+              ContribPage.setPriceOption();
+              ContribPage.setPriceAmount(amount);
+            }
+            else if(amount != ''){
+              $(this).val(0);
+            }
+          };
+          $other_amount_block.find('input').keyup(doClickOtherAmount).click(doClickOtherAmount);
+          $other_amount_block.find('input').blur(function(){
+            var amount = $(this).val();
+            var defaultOption = ContribPage.defaultPriceOption[ContribPage.currentContribType];
+            if((amount == '' && defaultOption) || amount == 0){
+              ContribPage.setPriceOption(defaultOption);
+            }
+          });
+          $('.btn-submit-other-amount').click(function(){
+            ContribPage.setFormStep(2);
+            event.preventDefault();
+          });
+          $('.priceSet-block').append($other_amount_block);
         }
-        var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="'+ts['Type here']+'" name="custom-other-amount" id="custom-other-amount" type="number" min="0" class="custom-input" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
-        var doClickOtherAmount = function(){
-          var reg = new RegExp(/^$|^\d+$/);
-          var amount = $(this).val();
-          if(reg.test(amount) && parseInt(amount) > 0){
-            ContribPage.setPriceOption();
-            ContribPage.setPriceAmount(amount);
-          }
-          else if(amount != ''){
-            $(this).val(0);
-          }
-        };
-        $other_amount_block.find('input').keyup(doClickOtherAmount).click(doClickOtherAmount);
-        $other_amount_block.find('input').blur(function(){
-          var amount = $(this).val();
-          var defaultOption = ContribPage.defaultPriceOption[ContribPage.currentContribType];
-          if((amount == '' && defaultOption) || amount == 0){
-            ContribPage.setPriceOption(defaultOption);
-          }
-        });
-        $('.btn-submit-other-amount').click(function(){
-          ContribPage.setFormStep(2);
-          event.preventDefault();
-        });
-        $('.priceSet-block').append($other_amount_block);
 
         if($('[name=is_recur][value=1]').length > 0){
           var installments = this.installments;
@@ -503,17 +505,29 @@
       },
 
       setFormStep: function(step) {
-        if(this.currentFormStep == 1 && step == 2 && this.currentContribType == 'recur'){
+        if(this.currentFormStep == 1 && step == 2){
           // Check instrument is credit card
-          if($('#civicrm-instrument-dummy-1:checked').length == 0){
-            $('#billing-payment-block').append('<label generated="true" class="error" style="color: rgb(238, 85, 85); padding-left: 10px;">'+ts['You cannot set up a recurring contribution if you are not paying online by credit card.']+'</label>');
+          var error_msg = [];
+          if(this.currentContribType == 'recur' && $('#civicrm-instrument-dummy-1:checked').length == 0){
+            error_msg.push('You cannot set up a recurring contribution if you are not paying online by credit card.');
+          }
+          if(window.ContribPageParams.minAmount && !this.currentPriceOption && this.currentPriceAmount < parseInt(window.ContribPageParams.minAmount)){
+            error_msg.push('Contribution amount must be at least %1');
+            }
+          if(window.ContribPageParams.maxAmount && !this.currentPriceOption && this.currentPriceAmount > parseInt(window.ContribPageParams.maxAmount)){
+            error_msg.push('Contribution amount cannot be more than %1.');
+          }
+
+          if(error_msg.length){
+            error_msg.forEach(function(term){
+              $('.contrib-step-1 .step-action-wrapper').before($('<label generated="true" class="error" style="color: rgb(238, 85, 85); padding-left: 10px;">'+ts[term]+'</label>'))
+            });
             setTimeout(function(){
-              $('#billing-payment-block .error').remove();
+              $('.contrib-step-1 .error').remove();
             }, 5000);
             return;
           }
         }
-
 
         $('.hide-as-show-all').show();
         if(this.currentFormStep != step){
