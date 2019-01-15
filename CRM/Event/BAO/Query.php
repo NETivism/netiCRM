@@ -282,7 +282,7 @@ class CRM_Event_BAO_Query {
         $feeLabels = array();
         if (is_array($value)) {
           foreach ($value as $k => $val) {
-            list($priceType, $val) = explode(':', $val);
+            list($priceType, $val) = explode(':', $val, 2);
             if ($priceType == 'priceset') {
               if (is_numeric($val)) {
                 $daoLabel = CRM_Core_DAO::executeQuery("SELECT cf.label as field_label, cv.label as value_label FROM civicrm_price_field_value cv INNER JOIN civicrm_price_field cf ON cv.price_field_id = cf.id WHERE cv.id = %1 LIMIT 1", array(1 => array($val, 'Integer')));
@@ -313,7 +313,7 @@ class CRM_Event_BAO_Query {
           $feeLabels[] = CRM_Core_DAO::escapeString(trim($value));
         }
         if (!empty($feeLabels)) {
-          $feeLabel = implode('|', preg_replace('/[()*^$%\[\]]/', '.', $feeLabels));
+          $feeLabel = implode('|', preg_replace('/[()*^$%\[\]\|]/', '.', $feeLabels));
           $query->_where[$grouping][] = "civicrm_participant.fee_level REGEXP '$feeLabel'";
           $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.implode(', ', $feeLabels);
         }
