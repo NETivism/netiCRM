@@ -94,4 +94,4 @@ cj('#participant_fee_level').autocomplete( feeUrl, { width : 180, selectFirst : 
                                          }).bind( 'click', function( ) { cj( "input#participant_fee_id" ).val(''); });
 </script>
 {/literal}
-{include file="CRM/common/chosen.tpl" selector="select[name^=participant_status_id],select[name^=participant_role_id],select[name^=participant_fee_id]" select_width=300}
+{include file="CRM/common/chosen.tpl" selector="select[name^=participant_status_id],select[name^=participant_role_id],select[name^=participant_fee_id]" select_width=400}
