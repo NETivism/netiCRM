@@ -3279,9 +3279,11 @@ div#civicrm-dashboard form {
   margin-bottom: 40px;
 }
 .chartist-wrapper::after {
+  /* chart height problem (#23858)
   content:"";
   display:block;
   clear:both;
+  */
 }
 .chartist-chart {
   position: relative;
