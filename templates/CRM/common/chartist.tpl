@@ -23,8 +23,9 @@ if (!$crmChartistAdded) {
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
   
   {php}
-    $chartClasses = array('chartist-chart','ct-major-twelfth');
+    $chartClasses = array('chartist-chart');
     $chartist = $this->get_template_vars('chartist');
+    $chartClasses[] = !empty($chartist['ratioClass']) ? $chartist['ratioClass'] : 'ct-major-twelfth';
     
     $chartClasses[] = 'ct-chart-' . strtolower($chartist['type']);
 
@@ -43,7 +44,6 @@ if (!$crmChartistAdded) {
     $chartClasses = implode(' ', $chartClasses);
     $this->assign('chartClasses', $chartClasses);
   {/php}
-  
   {if $chartist.id}
     <div id="{$chartist.id}" class="{$chartClasses}"></div>
   {else}
