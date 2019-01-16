@@ -95,6 +95,8 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         'utm_campaign' => 'utm_campaign',
         'utm_term' => 'utm_term',
         'utm_content' => 'utm_content',
+        'start' => ts('Start Date'),
+        'end' => ts('End Date'),
       );
       $this->_drillDown = $this->_base;
       foreach($get as $filter => $value) {
@@ -328,7 +330,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       while($recordDAO->fetch()) {
         foreach($records[$recordDAO->id] as $resultId) {
           $url = str_replace(array('%%cid%%', '%%id%%'), array($recordDAO->cid, $recordDAO->id), $this->_referencedRecordUrl[$table]);
-          $results[$resultId]['entity_id'] = $this->_referencedRecordType[$table].': '.'<a href="'.CRM_Utils_System::url($this->_drillDown.'&entity_id='.$recordDAO->id).'">'.$recordDAO->sort_name.'</a><a href="'.CRM_Utils_System::url($url).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
+          $results[$resultId]['entity_id'] = $this->_referencedRecordType[$table].': '.'<a href="'.CRM_Utils_System::url($this->_drillDown.'&entity_id=%').'">'.$recordDAO->sort_name.'</a><a href="'.CRM_Utils_System::url($url).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
         }
       }
     }
@@ -360,8 +362,16 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       $args[4] = array($this->_referrerNetwork, 'String');
     }
     if ($this->_entityId) {
-      $where[] = "entity_id = %5";
-      $args[5] = array($this->_entityId, 'Integer');
+      if (is_numeric($this->_entityId)) {
+        $where[] = "entity_id = %5";
+        $args[5] = array($this->_entityId, 'Integer');
+      }
+      else {
+        if ($this->_entityId == '%') {
+          $where[] = "entity_id IS NOT NULL";
+          $args[5] = array(0, 'Integer');
+        }
+      }
     }
     if ($this->_visitDateStart) {
       $where[] = "visit_date >= %6";
@@ -496,6 +506,10 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
             case 'utm_content':
               $filters[$name]['value_display'] = $value;
               break;
+            case 'start':
+            case 'end':
+              $filters[$name]['value_display'] = $value;
+              break;
           }
         }
       }
@@ -507,6 +521,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     if ($filters = $page->get('filters')) {
       $page->assign('filters', $filters);
     }
+    $page->assign('drill_down_base', $this->_drillDown);
   }
 
   function breadcrumbs($page) {

@@ -1,28 +1,51 @@
+<div class="crm-block crm-form-block">
+  {if !$filters.start}
+    {ts}Start Date{/ts}: <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin">
+    {include file="CRM/common/jcalendar.tpl" elementId=start action=4}
+  {/if}
+  {if !$filters.end}
+    {ts}End Date{/ts}: <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="end" type="text" id="end" class="form-text form-text dateplugin">
+    {include file="CRM/common/jcalendar.tpl" elementId=end action=4}
+  {/if}
+  {if !$filters.start || !$filters.end}
+    <a id="submit-filter" class="button" href="{crmURL q=$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
+  {/if}
+</div>
 {if $filters}
 <div class="crm-block crm-form-block">
   {foreach from=$filters item=filter key=name}
-    <span class="filter-box"><i class="zmdi zmdi-filter-list"></i> {$filter.title}: {$filter.value_display}<a href="{crmURL q=$filter.url}" class="zmdi zmdi-close-circle"></a></span>
+    <span class="filter-box">
+      <i class="zmdi zmdi-filter-list"></i>
+      {if $name == "start"}
+        {$filter.title} &gt;= {$filter.value_display}
+      {elseif $name == "end"}
+        {$filter.title} &lt;= {$filter.value_display}
+      {else}
+        {$filter.title}={$filter.value_display}
+      {/if}
+      <a href="{crmURL q=$filter.url}" class="zmdi zmdi-close-circle"></a></span>
   {/foreach}
 </div>
 {/if}
-{if $chart_track}
-<div class="row">
-  <div class="col-xs-12">
-    <div class="box mdl-shadow--2dp">
-      <div class="box-content">
-        {include file="CRM/common/chartist.tpl" chartist=$chart_track}
-      </div>
+<div class="crm-accordion-wrapper crm-contribution_search_form-accordion {if $filters}crm-accordion-closed{else}crm-accordion-open{/if}">
+  <div class="crm-accordion-header crm-master-accordion-header">
+    <div class="zmdi crm-accordion-pointer"></div> {ts}Summary{/ts}
+  </div><!-- /.crm-accordion-header -->
+  <div class="crm-accordion-body">
+    {if $chart_track}
+    <div class="chart-display">
+      {include file="CRM/common/chartist.tpl" chartist=$chart_track}
     </div>
-  </div>
-</div>
-{/if}
+    {/if}
+  </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
 
-<div class="row">
+<div class="crm-block crm-content-block">
 {include file="CRM/common/pager.tpl" location="top"}
 {if $rows }
 {include file="CRM/common/jsortable.tpl"}
 {strip}
-<table id="mailing_event">
+<table id="crm-track">
   <thead>
   <tr>
   {foreach from=$columnHeaders item=header}
@@ -54,10 +77,38 @@
     </div>    
 {/if}  
 
-
 {include file="CRM/common/pager.tpl" location="bottom"}
 </div>
 
+{literal}
+<script type="text/javascript">
+cj(function() {
+  cj('a#submit-filter').click(function(e){
+    var href = cj(this).attr('href');
+    var appendQuery = [];
+    if (cj('#start').val()) {
+      appendQuery.push('start='+cj('#start').val());
+    }
+    if (cj('#end').val()) {
+      appendQuery.push('end='+cj('#end').val());
+    }
+    if (appendQuery.length > 0){
+      href += '&'+appendQuery.join('&');
+      cj(this).attr('href', href); 
+    }
+    console.log(href);
+  });
+  cj().crmaccordions();
+  cj('.crm-accordion-header').click(function() {
+    cj('.crm-accordion-body').find('.chartist-chart').each(function(i, e) {
+      setTimeout(function(){
+        e.__chartist__.update();
+      }, 300);
+    });
+  });
+});
+</script>
+{/literal}
 {if $pager and ( $pager->_totalPages > 1 )}
 {literal}
 <script type="text/javascript">
@@ -67,7 +118,6 @@
       submitPagerData( this );
     }); 
   });
- 
   function submitPagerData( el ) {
       var urlParams= '';
       var jumpTo   = cj(el).parent( ).children('input[type=text]').val( );

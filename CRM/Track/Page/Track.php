@@ -22,7 +22,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'state' => CRM_Utils_Request::retrieve('state', 'Integer', $null),
       'referrerType' => CRM_Utils_Request::retrieve('rtype', 'String', $null),
       'referrerNetwork' => CRM_Utils_Request::retrieve('rnetwork', 'String', $null),
-      'entityId' => CRM_Utils_Request::retrieve('entity_id', 'Positive', $null),
+      'entityId' => CRM_Utils_Request::retrieve('entity_id', 'String', $null),
       'utmSource' => CRM_Utils_Request::retrieve('utm_source', 'String', $null),
       'utmMedium' => CRM_Utils_Request::retrieve('utm_medium', 'String', $null),
       'utmCampaign' => CRM_Utils_Request::retrieve('utm_campaign', 'String', $null),
@@ -70,7 +70,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
 
     CRM_Utils_System::setTitle($selector->getTitle());
     $this->assign('title', $selector->getTitle());
-    self::chart($this, 'chart_track', $params);
+    self::chart($this, 'chart_track', $params, array('ratioClass' => 'ct-double-octave'));
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
@@ -82,7 +82,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     return parent::run();
   }
 
-  public static function chart($page, $chartName, $selectorParams) {
+  public static function chart($page, $chartName, $selectorParams, $chartParams = NULL) {
     $referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
     $label = $dates = array();
     $dummy = $data = $legend = array();
@@ -147,6 +147,9 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'withLegend' => true,
       'autoDateLabel' => true,
     );
+    if (is_array($chartParams)) {
+      $chart += $chartParams;
+    }
     $page->assign($chartName, $chart);
   }
 }
