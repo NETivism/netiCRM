@@ -13,11 +13,6 @@ body.logged-in #admin-sidebar{
 body.frontend.page-civicrm-contribute-transact {
   min-height: 100vh;
   background-color: var(--active-color);
-  background-image: var(--background-url);
-  -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-  background-size: cover;
   height: 100vh;
   background-attachment: fixed;
   background-position: center;
