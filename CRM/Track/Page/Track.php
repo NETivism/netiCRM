@@ -67,6 +67,47 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $controller->setEmbedded(TRUE);
     $controller->run();
 
+    // another statistics
+    $stat = array();
+    $statistics = new CRM_Track_Selector_Track($params);
+    $dao = $statistics->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN entity_id > 0 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start", 'GROUP BY referrer_type');
+    while($dao->fetch()){
+      $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
+      $total = $total+$dao->count;
+      $stat[$type] = array(
+        'name' => $type,
+        'label' => empty($dao->referrer_type) ? ts("Unknown") : ts($dao->referrer_type),
+        'count' => $dao->count,
+        'count_goal' => $dao->goal,
+      );
+    }
+    // sort by count
+    uasort($stat, array('CRM_Core_BAO_Track', 'cmp'));
+    foreach($stat as $type => $data) {
+      $stat[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
+      $stat[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
+    }
+    foreach($stat as &$st) {
+      $st['display'] = '<div>'.ts("%1 achieved", array(1 => "{$st['percent_goal']}% ({$st['count_goal']}".ts('People').")"))."</div><div style='color:grey'>".ts("Total")." {$st['percent']}% ({$st['count']}".ts('People').")</div>";
+    }
+    $this->assign('summary', $stat);
+
+    /*
+    CRM_Utils_System::setTitle(ts('Configure Contribution Page')." - ".$page['title']);
+    if (!$this->get('filters')) {
+      $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id);
+      foreach($pageStatistics['track'] as &$track) {
+        $track['display'] = '<div>'.ts("%1 achieved", array(1 => "{$track['percent_goal']}% ({$track['count_goal']}".ts('People').")"))."</div><div style='color:grey'>".ts("Total")." {$track['percent']}% ({$track['count']}".ts('People').")</div>";
+      }
+      if ($track['start'] && $track['end']) {
+        $this->assign('period_start', CRM_Utils_Date::customFormat($track['start'], $config->dateformatFull));
+        $this->assign('period_end', CRM_Utils_Date::customFormat($track['end'], $config->dateformatFull));
+      }
+      unset($pageStatistics['page']['title']);
+      unset($pageStatistics['duration']);
+      $this->assign('summary', $pageStatistics);
+    }
+    */
 
     CRM_Utils_System::setTitle($selector->getTitle());
     $this->assign('title', $selector->getTitle());

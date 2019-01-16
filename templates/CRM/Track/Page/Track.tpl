@@ -32,6 +32,25 @@
     <div class="zmdi crm-accordion-pointer"></div> {ts}Summary{/ts}
   </div><!-- /.crm-accordion-header -->
   <div class="crm-accordion-body">
+    {if $summary}
+    <style>{literal}
+			.track-outer {
+				display: flex;
+        justify-content: space-between;
+			}
+			.track-inner {
+				flex: 0 0 20%;
+			}
+    {/literal}</style>
+		<div class="box-content track-outer">
+			{foreach from=$summary item=source}
+			<div class="track-inner type-{$source.name}">
+				<div><strong>{$source.label}</strong></div>
+				<div>{if $source.display}{$source.display}{else}{$source.percent}%{/if}</div>
+			</div>
+			{/foreach}
+		</div>
+    {/if}
     {if $chart_track}
     <div class="chart-display">
       {include file="CRM/common/chartist.tpl" chartist=$chart_track}
