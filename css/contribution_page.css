@@ -718,9 +718,10 @@ body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focu
   margin-bottom: 25px;
 }
 
-.last_name-section , .first_name-section {
-    width: 49%;
-    display: inline-block;
+.last_name-section, .first_name-section {
+  width: 49%;
+  display: inline-block;
+  vertical-align: top;
 }
 .last_name-section {
   margin-right: 2%;
