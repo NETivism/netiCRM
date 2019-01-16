@@ -5,8 +5,8 @@
       backgroundImageUrl : "{/literal}{$backgroundImageUrl}{literal}",
       mobileBackgroundImageUrl : "{/literal}{$mobileBackgroundImageUrl}{literal}",
       creditCardOnly : "{/literal}{$credit_card_only}{literal}",
-      minAmount : "{/literal}{$min_amount}{literal}",
-      maxAmount : "{/literal}{$max_amount}{literal}",
+      minAmount : {/literal}{if $min_amount}"{$min_amount}"{else}false{/if}{literal},
+      maxAmount : {/literal}{if $max_amount}"{$max_amount}"{else}false{/if}{literal},
       ts: {
         "Single Contribution" : "{/literal}{ts}Single Contribution{/ts}{literal}",
         "Recurring contributions" : "{/literal}{ts}Recurring contributions{/ts}{literal}",
