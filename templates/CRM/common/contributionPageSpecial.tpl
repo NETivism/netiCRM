@@ -35,4 +35,17 @@
   {/literal}
 </script>
 <script type="text/javascript" src="{$config->resourceBase}/js/contribution_page.js"></script>
-<link rel="stylesheet" href="{$config->resourceBase}/css/contribution_page.css">
+
+<style>
+{literal}
+@media screen and (min-width: 480px) {
+  body.frontend.page-civicrm-contribute-transact{
+    background: url({/literal}{$backgroundImageUrl}{literal});
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+    background-size: cover;
+  }
+}
+{/literal}
+</style>
