@@ -16,10 +16,8 @@
       currentPriceOption : '',
       currentPriceAmount : 0,
       currentFormStep : 1,
-      currentSelectedPremiums : [],
       defaultPriceOption : {},
       singleContribMsgText : false,
-      arrayPremiumsImg : {},
 
       preparePage: function(){
 
@@ -230,8 +228,7 @@
         var exec_step = 2;
         if($('.custom_pre_profile-group fieldset').length >= 1){
           $('.contrib-step-'+exec_step)
-            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
-            // .append(this.createStepBtnBlock(['priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
+            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section'))
             .append($('.custom_pre_profile-group'))
             .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
           exec_step += 1;
@@ -239,10 +236,14 @@
         if($('.custom_post_profile-group fieldset').length >= 1){
           $('.contrib-step-'+exec_step)
             .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
-            // .append(this.createStepBtnBlock(['priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
             .append($('.custom_post_profile-group'))
             .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
           exec_step += 1;
+        }
+        if($('.premiums-group').length && $('.custom_post_profile-group fieldset').length){
+          $('.custom_post_profile-group').after($('.premiums-group'));
+        }else if($('.premiums-group').length && $('.custom_pre_profile-group fieldset').length){
+          $('.custom_pre_profile-group').after($('.premiums-group'));
         }
         exec_step -= 1;
         $('.contrib-step-'+exec_step).find('.step-action-wrapper').has('.next-step').remove();
@@ -628,26 +629,6 @@
           $('.other-instrument-btn').addClass('selected');
         }
         
-      },
-
-      setSelectedPremiums: function(selection){
-        if(!this.isArraysEqual(this.currentSelectedPremiums, selection)){
-          this.currentSelectedPremiums = selection;
-
-          if(!this.currentSelectedPremiums || this.currentSelectedPremiums.length == 0){
-            $('.custom_77-section .content td').find('.crm-form-checkbox input').prop('checked', false);
-            $('input#custom_77\\\['+ts['Not any']+'\\\]').prop('checked', true);
-          }else{
-            $('.custom_77-section .content td').find('.crm-form-checkbox input').each(function(){
-              var $this = $(this);
-              if($.inArray($this.attr('id'), ContribPage.currentSelectedPremiums) !== -1){
-                $this.prop('checked', true);
-              }else{
-                $this.prop('checked', false);
-              }
-            });
-          }
-        }
       },
 
       setInstallments: function(installments) {
