@@ -614,7 +614,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       );
       CRM_Utils_System::addHTMLHead($object);
 
-
+      /** civicrm_instrument is not the table included by civicrm, and afraid of it ban the contributor.
       $query_params = array(
         1 => array($this->_id, 'Integer'),
       );
@@ -623,6 +623,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if(count($active_instruments) == 1 && isset($active_instruments['credit_card'])){
         $this->assign('credit_card_only', 1);
       }
+      */
     }
 
 

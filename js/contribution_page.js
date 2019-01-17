@@ -7,9 +7,7 @@
   $(document).one('ready', function () {
 
     window.ContribPage = {
-      backgroundImageUrl : window.ContribPageParams.backgroundImageUrl,
-      mobileBackgroundImageUrl : window.ContribPageParams.mobileBackgroundImageUrl,
-      isCreditCardOnly : window.ContribPageParams.creditCardOnly,
+      // isCreditCardOnly : window.ContribPageParams.creditCardOnly,
       currentContribType : "recur", // "recur", "single"
       currentContribInstrument : "creditCard", // "creditCard", "other"
       currentPage : $('#crm-container>form').attr('id'), // "Main", "Confirm", "ThankYou"
@@ -21,8 +19,6 @@
       singleContribMsgText : false,
 
       preparePage: function(){
-
-        document.querySelector('body').style.setProperty('--background-url', 'url('+window.ContribPageParams.backgroundImageUrl+')');
         document.querySelector('body').style.setProperty('--mobile-background-url', 'url('+window.ContribPageParams.mobileBackgroundImageUrl+')');
 
         var $content = $('#main');
@@ -269,9 +265,11 @@
           $('.crm-section payment_processor-section').insertBefore($('.custom_pre_profile-group'));
         }
 
+        /** Afraid it ban the contributor
         if(this.isCreditCardOnly){
           $('.payment_processor-section, #billing-payment-block').hide();
         }
+        */
 
         $('#crm-container>form').submit(function(){
           if($('label.error').length){
@@ -360,7 +358,7 @@
 
         if($('[name=is_recur][value=1]').length > 0){
           var installments = this.installments;
-          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['Installments']+'</label><input placeholder="無限期" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
+          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['Installments']+'</label><input placeholder="'+ts["no limit"]+'" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
           var doClickInstallments = function(){
             var installments = $(this).val();
             if(installments == 0){
@@ -685,6 +683,7 @@
     try{
       window.ContribPage.preparePage();
     }catch(e){
+      console.log(e);
       window.ContribPage.prepareAfterAll();
     }
     window.ContribPage.prepareAfterAll();

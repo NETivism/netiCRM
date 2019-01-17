@@ -4,7 +4,7 @@
     window.ContribPageParams = {
       backgroundImageUrl : "{/literal}{$backgroundImageUrl}{literal}",
       mobileBackgroundImageUrl : "{/literal}{$mobileBackgroundImageUrl}{literal}",
-      creditCardOnly : "{/literal}{$credit_card_only}{literal}",
+      // creditCardOnly : "{/literal}{$credit_card_only}{literal}",
       minAmount : {/literal}{if $min_amount}"{$min_amount}"{else}false{/if}{literal},
       maxAmount : {/literal}{if $max_amount}"{$max_amount}"{else}false{/if}{literal},
       {/literal}{if $thankyou_text and $payment_result_type eq 4}thankyouTitle : "{$thankyou_title}",{/if}{literal}
@@ -31,13 +31,15 @@
         "Contribution amount must be at least %1" : "{/literal}{ts 1=$min_amount}Contribution amount must be at least %1{/ts}{literal}",
         "Contribution amount cannot be more than %1." : "{/literal}{ts 1=$max_amount}Contribution amount cannot be more than %1.{/ts}{literal}",
         "Payment failed." : "{/literal}{ts}Payment failed.{/ts}{literal}",
+        "no limit" : "{/literal}{ts}no limit{/ts}{literal}",
       }
     };
   })(jQuery);
   {/literal}
 </script>
 <script type="text/javascript" src="{$config->resourceBase}/js/contribution_page.js"></script>
-
+<img class="pre-load-background-images" src="{/literal}{$backgroundImageUrl}{literal}" alt="" style="display: none;">
+<img class="pre-load-background-images" src="{/literal}{$mobilBackgroundImageUrl}{literal}" alt="" style="display: none;">
 <style>
 {literal}
 @media screen and (min-width: 480px) {
@@ -47,9 +49,7 @@
       -moz-background-size: cover;
       -o-background-size: cover;
     background-size: cover;
-    min-height: 100vh;
-    background-color: var(--active-color);
-    height: 100vh;
+    background-color: white;
     background-attachment: fixed;
     background-position: center;
   }
