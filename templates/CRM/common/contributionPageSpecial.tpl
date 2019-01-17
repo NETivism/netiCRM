@@ -45,6 +45,11 @@
       -moz-background-size: cover;
       -o-background-size: cover;
     background-size: cover;
+    min-height: 100vh;
+    background-color: var(--active-color);
+    height: 100vh;
+    background-attachment: fixed;
+    background-position: center;
   }
 }
 {/literal}

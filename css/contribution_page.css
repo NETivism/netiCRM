@@ -9,15 +9,6 @@ body.logged-in #admin-sidebar{
   display: none;
 }
 
-
-body.frontend.page-civicrm-contribute-transact {
-  min-height: 100vh;
-  background-color: var(--active-color);
-  height: 100vh;
-  background-attachment: fixed;
-  background-position: center;
-}
-
 body #page{
   background: none;
 }
@@ -450,15 +441,15 @@ body .crm-container fieldset{
   width: 180px;
   line-height: 1.2em;
 } 
-.custom-input-block{
+.crm-container .custom-input-block{
   height: 76px;
   line-height: 76px;
 }
-.custom-input-block label{
+.crm-container .custom-input-block label{
   font-size: 1rem;
   padding: 0 10px 0 0;
 }
-.custom-input-block input.custom-input{
+.crm-container .custom-input-block input.custom-input{
   font-size: 1rem;
   border-radius: 20px;
   height: 40px;
