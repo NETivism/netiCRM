@@ -315,7 +315,7 @@ body {
 }
 
 body .crm-container .header-dark {
-  display: inline-block;
+  display: block;
   position: relative;
   top: 0;
   margin-bottom: 20px;
@@ -330,7 +330,7 @@ body .crm-container .header-dark {
 body .header-dark:before {
   content: " ";
   border-bottom: 1px solid #CFCEC3;
-  width: 300px;
+  width: 100%;
   height: 20px;
   position: absolute;
   display: block;
@@ -463,33 +463,15 @@ body .crm-container fieldset{
        -o-transition: all ease-in-out .2s;
           transition: all ease-in-out .2s;
 }
-.custom-input-block input.active,
-.custom-input-block input.active:hover{
+.crm-container .custom-input-block input.active,
+.crm-container .custom-input-block input.active:hover{
   background: var(--active-color);
 }
-.custom-input-block input:hover {
+.crm-container .custom-input-block input:hover {
   background: grey;
 }
-.custom-input-block input::placeholder {
+.crm-container .custom-input-block input::placeholder {
   color: white;
-}
-#custom-other-amount+a{
-  height: 30px;
-  width: 30px;
-  background: var(--active-color);
-  border-radius: 50%;
-  display: none;
-  color: white;
-  cursor: pointer;
-  vertical-align: middle;
-  position: relative;
-  margin-left: 10px;
-}
-#custom-other-amount+a>span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
 }
 
 .last-step-btn, 
@@ -671,8 +653,8 @@ body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focu
   width: 100%;
   margin-right: 8px;
 }
-.crm-container-md .crm-form-elem textarea, 
-.crm-container-md .crm-form-elem textarea.form-textarea{
+body .crm-container-md .crm-form-elem textarea, 
+body .crm-container-md .crm-form-elem textarea.form-textarea{
   width: 100%;
 }
 
@@ -809,35 +791,6 @@ body .crm-container div.display-block {
   display: none;
 }
 
-/*
-.progress-block{
-  margin: 2em 0;
-}
-.progress-wrapper ,
-.progress-bar{
-  display: block;
-  border-radius: 15px;
-  height: 30px;
-  font-size: 18px;
-}
-.progress-wrapper {
-  width: 100%;
-  background: white;
-  height: 30px;
-  overflow: hidden;
-}
-.progress-former-text {
-  text-align: left;
-}
-.progress-text{
-  text-align: right;
-}
-.progress-bar{
-  background: var(--active-color);
-  color: white;
-  text-align: center;
-}
-*/
 
 /** Other instrument*/
 
@@ -882,6 +835,22 @@ body .crm-container div.display-block {
   text-align: center;
 }
 
+/* Premium */
+.premiums-listings td:first-child{
+  max-width: 6%;
+}
+
+body .crm-container .premiums-listings .premium-img + .premium-info{
+  max-width: 58%;
+  padding: 10px 0 10px 10px;
+}
+
+body .crm-container .premiums-listings .premium-img{
+  max-width: 30%;
+}
+
+/* Premium - end */
+
 .same-as-wrapper{
   line-height: 2em;
 }
@@ -889,3 +858,4 @@ body .crm-container div.display-block {
 #expenditure-ratio-box{
   color: white;
 }
+

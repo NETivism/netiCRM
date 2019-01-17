@@ -7,6 +7,7 @@
       creditCardOnly : "{/literal}{$credit_card_only}{literal}",
       minAmount : {/literal}{if $min_amount}"{$min_amount}"{else}false{/if}{literal},
       maxAmount : {/literal}{if $max_amount}"{$max_amount}"{else}false{/if}{literal},
+      {/literal}{if $thankyou_text and $payment_result_type eq 4}thankyouTitle : "{$thankyou_title}",{/if}{literal}
       ts: {
         "Single Contribution" : "{/literal}{ts}Single Contribution{/ts}{literal}",
         "Recurring contributions" : "{/literal}{ts}Recurring contributions{/ts}{literal}",
@@ -29,6 +30,7 @@
         "Next >>" : "{/literal}{ts}Next >>{/ts}{literal}",
         "Contribution amount must be at least %1" : "{/literal}{ts 1=$min_amount}Contribution amount must be at least %1{/ts}{literal}",
         "Contribution amount cannot be more than %1." : "{/literal}{ts 1=$max_amount}Contribution amount cannot be more than %1.{/ts}{literal}",
+        "Payment failed." : "{/literal}{ts}Payment failed.{/ts}{literal}",
       }
     };
   })(jQuery);

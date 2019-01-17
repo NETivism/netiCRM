@@ -5,6 +5,7 @@
   var ts = window.ContribPageParams.ts;
 
   $(document).one('ready', function () {
+
     window.ContribPage = {
       backgroundImageUrl : window.ContribPageParams.backgroundImageUrl,
       mobileBackgroundImageUrl : window.ContribPageParams.mobileBackgroundImageUrl,
@@ -28,9 +29,9 @@
         $content.prepend($('#intro_text').prepend($('h1.page-title')));
         $('.sharethis').appendTo('body');
 
-        this.prepareStepInfo();
-
         if(this.currentPage == 'Main'){
+
+          this.prepareStepInfo();
 
           this.setDefaultValues();
 
@@ -50,7 +51,9 @@
             $(this).toggleClass('open');
           });
         }
-        if(this.currentPage == 'confirm'){
+        if(this.currentPage == 'Confirm'){
+
+          this.prepareStepInfo();
 
           $('.crm-section').each(function(){
             var $parent = $(this);
@@ -66,14 +69,24 @@
           });
         }
 
-        if(this.currentPage == 'thankyou'){
-
+        if(this.currentPage == 'ThankYou'){
           $('.crm-section').find('tr').each(function(){
             var $this = $(this);
             if($this.find('.freeze-unchecked').length > 0){
               $this.hide();
             }
           });
+          $('#intro_text>*').each(function(){
+            if(!$(this).is('.page-title')){
+              $(this).remove();
+            }
+          });
+          $('.page-title').after($('#thankyou_text'));
+
+          if(ContribPageParams.thankyouTitle){
+            $('.page-title').text(ContribPageParams.thankyouTitle);
+            document.title = document.title.replace(ts["Payment failed."], ContribPageParams.thankyouTitle);
+          }
         }
       },
 
@@ -322,7 +335,7 @@
           if(!this.currentPriceOption){
             other_amount = this.currentPriceAmount;
           }
-          var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="'+ts['Type here']+'" name="custom-other-amount" id="custom-other-amount" type="number" min="0" class="custom-input" value="'+other_amount+'"></input><a class="btn-submit-other-amount"><span>▶</span></a></div>');
+          var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="'+ts['Type here']+'" name="custom-other-amount" id="custom-other-amount" type="number" min="0" class="custom-input" value="'+other_amount+'"></input></div>');
           var doClickOtherAmount = function(){
             var reg = new RegExp(/^$|^\d+$/);
             var amount = $(this).val();
@@ -341,10 +354,6 @@
             if((amount == '' && defaultOption) || amount == 0){
               ContribPage.setPriceOption(defaultOption);
             }
-          });
-          $('.btn-submit-other-amount').click(function(){
-            ContribPage.setFormStep(2);
-            event.preventDefault();
           });
           $('.priceSet-block').append($other_amount_block);
         }
@@ -405,7 +414,6 @@
           $('.amount-section [value="'+this.currentPriceOption+'"]').click();
           var amount = $('.price-set-btn div[data-amount='+this.currentPriceOption+'] .amount').text();
           this.setPriceAmount(amount);
-          // $('.btn-submit-other-amount').hide();
         }else{
           $('.amount-section .crm-form-radio:last-child input').click();
         }
@@ -430,10 +438,8 @@
       },
 
       updatePriceAmount: function(){
-        // $('.btn-submit-other-amount').css('display', 'hide');
         $('.info-price-amount').text(this.currentPriceAmount);
         if(this.currentPriceAmount && !this.currentPriceOption){
-          // $('.btn-submit-other-amount').css('display', 'inline-block');
           $('input#custom-other-amount').addClass('active');
         }else{
           $('input#custom-other-amount').val('').removeClass('active');
@@ -485,23 +491,31 @@
         if(this.currentContribType == 'single'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-single-btn').addClass('selected');
-          $('.info-is-recur').text(ts['Single Contribution']);
           $('.custom-installments-block').hide();
         }
         if(this.currentContribType == 'recur'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-recur-btn').addClass('selected');
+          $('.custom-installments-block').show();
+        }
+        this.updateContribInfoLabel();
+        this.updatePriceSetOption();
+
+        if(this.defaultPriceOption[this.currentContribType]){
+          this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
+        }
+      },
+
+      updateContribInfoLabel: function(){
+        if(this.currentContribType == 'single'){
+          $('.info-is-recur').text(ts['Single Contribution']);
+        }
+        if(this.currentContribType == 'recur'){
           if(!this.installments){
             $('.info-is-recur').text(ts['Every-Month Recurring Contribution']);
           }else{
             $('.info-is-recur').text(this.installments+ts['Installments Recurring Contribution']);
           }
-          $('.custom-installments-block').show();
-        }
-        this.updatePriceSetOption();
-
-        if(this.defaultPriceOption[this.currentContribType]){
-          this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
         }
       },
 
@@ -578,7 +592,7 @@
           if($(window).width() <= 480){
             $('.custom-step-info').scrollLeft($('.custom-step-info span.active').offset().left-($('.custom-step-info span.active').width()/2));
           }
-        }else if(this.currentPage == 'confirm'){
+        }else if(this.currentPage == 'Confirm'){
           $('.custom-step-info').scrollLeft($('.step-text-5').offset().left);
           $('.step-text-5').addClass('active');
         }
@@ -640,7 +654,7 @@
       },
 
       updateInstallments: function(){
-        this.updateContributeType();
+        this.updateContribInfoLabel();
       },
 
       isArraysEqual: function(a, b) {
@@ -667,6 +681,7 @@
 
 
     };
+
     try{
       window.ContribPage.preparePage();
     }catch(e){

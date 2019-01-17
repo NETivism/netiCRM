@@ -30,7 +30,7 @@
 {include file="CRM/common/TrackingFields.tpl"}
 
 <div class="crm-block crm-contribution-thankyou-form-block">
-    {if $thankyou_text and $payment_result_type neq 4}
+    {if ($thankyou_text and $payment_result_type neq 4) or $special_style}
         <div id="thankyou_text" class="crm-section thankyou_text-section">
             {$thankyou_text}
         </div>
