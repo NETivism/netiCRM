@@ -1,7 +1,5 @@
 <?php
-/**
- * Page for invoking report templates
- */
+
 class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
 
   /**
@@ -84,8 +82,8 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     else {
       // if action is delete do the needful.
       if ($action & (CRM_Core_Action::DELETE)) {
-        $usedBy = &CRM_Coupon_BAO_Coupon::getUsedBy($id);
-        if (empty($usedBy)) {
+        $usedFor = &CRM_Coupon_BAO_Coupon::getUsedBy($id);
+        if (empty($usedFor)) {
           // prompt to delete
           $session = &CRM_Core_Session::singleton();
           $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/coupon', 'action=browse'));
@@ -99,13 +97,13 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         else {
           // add breadcrumb
           $this->assign('usedCouponSetTitle', CRM_Coupon_BAO_Coupon::getTitle($sid));
-          $this->assign('usedBy', $usedBy);
+          $this->assign('usedFor', $usedFor);
           $comps = array("Event" => "civicrm_event",
             "Contribution" => "civicrm_contribution_page",
           );
           $contexts = array();
           foreach ($comps as $name => $table) {
-            if (array_key_exists($table, $usedBy)) {
+            if (array_key_exists($table, $usedFor)) {
               $contexts[] = $name;
             }
           }
@@ -122,7 +120,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   function browse() {
     // get all coupon
     $coupon = array();
-    $usedBy = array(
+    $usedFor = array(
       'civicrm_event' => ts('Event'),
       'civicrm_price_field_value' => ts('Price Option'),
     );
@@ -145,13 +143,13 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     }
     while ($dao->fetch()) {
       if (!empty($coupon[$dao->id]) && !empty($dao->entity_table)) {
-        $coupon[$dao->id]['used_by'][$dao->entity_table] = $usedBy[$dao->entity_table];
+        $coupon[$dao->id]['used_for'][$dao->entity_table] = $usedFor[$dao->entity_table];
         continue;
       }
       $coupon[$dao->id] = array();
       foreach($dao as $field => $value) {
         if ($field == 'entity_table') {
-          $coupon[$dao->id]['used_by'][$dao->entity_table] = $usedBy[$dao->entity_table];
+          $coupon[$dao->id]['used_for'][$dao->entity_table] = $usedFor[$dao->entity_table];
         }
         if ($field == 'entity_id' || $field[0] == '_') {
           continue;
@@ -173,6 +171,11 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       }
 
       $coupon[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action, array('id' => $dao->id));
+    }
+    $couponIds = array_keys($coupon);
+    $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed($couponIds);
+    foreach($couponUses as $couponId => $count) {
+      $coupon[$couponId]['count_max'] = $count." / ".$coupon[$couponId]['count_max'];
     }
     $this->assign('rows', $coupon);
   }

@@ -89,6 +89,27 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return CRM_Core_DAO::executeQuery($sql, $args);
   }
 
+  function getCouponUsed($ids) {
+    $result = array_fill_keys($ids, 0);
+    if (!empty($ids)) {
+      $couponIds = implode(',', $ids);
+      $sql = "SELECT c.id, COUNT(*) as `count` FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id WHERE ct.used_date IS NOT NULL AND ct.coupon_id IN({$couponIds}) GROUP BY ct.coupon_id";
+      $dao = CRM_Core_DAO::executeQuery($sql);
+      while($dao->fetch()) {
+        $result[$dao->id] = $dao->count;
+      }
+    }
+    return $result;
+  }
+
+  function getCouponUsedBy($ids) {
+    if (!empty($ids)) {
+      $couponIds = implode(',', $ids);
+      $sql = "SELECT c.*, ct.*, contact.sort_name, contrib.total_amount FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contact contact ON ct.contact_id = contact.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND ct.coupon_id IN({$couponIds})";
+      return CRM_Core_DAO::executeQuery($sql);
+    }
+  }
+
   static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Coupon_DAO_Coupon', $params, $defaults);
   }

@@ -609,10 +609,10 @@
      <weight>380</weight>
   </item>
   <item>
-     <path>civicrm/admin/coupon/add</path>
-     <title>Coupon</title>
-     <page_callback>CRM_Coupon_Form_Coupon</page_callback>
-     <access_arguments>administer CiviCRM;access CiviContribute</access_arguments>
+     <path>civicrm/admin/coupon/track</path>
+     <title>Coupon Used Info</title>
+     <page_callback>CRM_Coupon_Page_CouponTrack</page_callback>
+     <access_arguments>administer CiviCRM;access CiviContribute;edit contributions</access_arguments>
      <weight>380</weight>
   </item>
 </menu>
