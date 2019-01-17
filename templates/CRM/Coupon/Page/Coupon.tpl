@@ -28,7 +28,7 @@
         <th id="coupon-type">{ts}Coupon Type{/ts}</th>
         <th>{ts}Discounted Fees{/ts}</th>
         <th>{ts}Minimum Amount{/ts}</th>
-        <th>{ts}Maximum Uses{/ts}</th>
+        <th>{ts}Used{/ts} / {ts}Max{/ts}</th>
         <th>{ts}Description{/ts}</th>
         <th>{ts}Used For{/ts}</th>
         <th>{ts}Enabled?{/ts}</th>
@@ -44,9 +44,9 @@
         <td class="coupon-type">{ts}{$row.coupon_type|ucfirst}{/ts}</td>
         <td class="coupon-discount">{if $row.coupon_type == 'percentage'}{$row.discount}%{else}${$row.discount}{/if}</td>
         <td class="coupon-minimum">{$row.minimal_amount}</td>
-        <td class="coupon-count-max">{$row.count_max}</td>
+        <td class="coupon-count-max"><a href="{crmURL p="civicrm/admin/coupon/track" q="reset=1&coupon_id=`$row.id`"}" target="_blank">{$row.count_max}</a></td>
         <td class="coupon-description">{$row.description}</td>
-        <td class="coupon-extends">{', '|implode:$row.used_by}</td>
+        <td class="coupon-extends">{', '|implode:$row.used_for}</td>
         <td id="row_{$row.id}_status" class="crm-coupon-is_active">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
         <td>{$row.action|replace:'xx':$row.id}</td>
       </tr>
