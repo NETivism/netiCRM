@@ -1079,8 +1079,7 @@ WHERE  contribution_id = {$this->_id}
         $element->freeze();
       }
     }
-
-    if (CRM_Utils_Array::value('pcp_made_through_id', $defaults) &&
+    if (CRM_Utils_Array::value('soft_contact_id', $defaults) &&
       $this->_action & CRM_Core_Action::UPDATE
     ) {
       $ele = $this->addElement('select', 'pcp_made_through_id',

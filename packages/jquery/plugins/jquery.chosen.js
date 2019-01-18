@@ -132,7 +132,7 @@ Copyright (c) 2011 by Harvest
       this.disable_search_threshold = this.options.disable_search_threshold || 0;
       this.disable_search = this.options.disable_search || false;
       this.search_contains = this.options.search_contains || false;
-      this.width_define = this.options.width_define || 150;
+      this.width_define = this.options.width_define || 0;
       this.choices = 0;
       this.single_backstroke_delete = this.options.single_backstroke_delete || false;
       return this.max_selected_options = this.options.max_selected_options || Infinity;
@@ -328,11 +328,11 @@ Copyright (c) 2011 by Harvest
       var container_div, dd_top, dd_width, sf_width;
       this.container_id = this.form_field.id.length ? this.form_field.id.replace(/[^\w]/g, '_') : this.generate_field_id();
       this.container_id += "_chzn";
-      this.f_width = this.form_field_jq.outerWidth() > 80 ? this.form_field_jq.outerWidth() : this.width_define;
+      this.f_width = this.form_field_jq.outerWidth() > 80 ? this.form_field_jq.outerWidth() : 160;
       container_div = $("<div />", {
         id: this.container_id,
         "class": "chzn-container" + (this.is_rtl ? ' chzn-rtl' : ''),
-        style: 'width: ' + this.f_width + 'px;'
+        style: this.width_define ?  'width:' + this.width_define + 'px' : 'max-width: ' + this.f_width + 'px;'
       });
       if (this.is_multiple) {
         container_div.html('<ul class="chzn-choices"><li class="search-field"><input type="text" value="' + this.default_text + '" class="default" autocomplete="off" style="width:25px;" /></li></ul><div class="chzn-drop" style="left:-9000px;"><ul class="chzn-results"></ul></div>');
@@ -344,7 +344,7 @@ Copyright (c) 2011 by Harvest
       this.container.addClass("chzn-container-" + (this.is_multiple ? "multi" : "single"));
       this.dropdown = this.container.find('div.chzn-drop').first();
       dd_top = this.container.height();
-      dd_width = this.f_width;
+      dd_width = this.width_define ? this.width_define : this.f_width;
       this.dropdown.css({
         "width": dd_width + "px",
         "top": dd_top + "px"

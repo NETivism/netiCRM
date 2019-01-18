@@ -125,7 +125,7 @@
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
 </div>
 
-{include file="CRM/common/chosen.tpl" selector="select.chosen"}
+{include file="CRM/common/chosen.tpl" selector="select.chosen" select_width="450"}
 {literal}
 <script type="text/javascript">
 cj(function() {
