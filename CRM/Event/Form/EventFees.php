@@ -53,6 +53,29 @@ class CRM_Event_Form_EventFees {
 
     $form->_pId = CRM_Utils_Request::retrieve('participantId', 'Positive', $form);
     $form->_discountId = CRM_Utils_Request::retrieve('discountId', 'Positive', $form);
+    if ($form->_pId && $form->_paymentId) {
+      $dao = new CRM_Event_DAO_ParticipantPayment();
+      $dao->participant_id = $form->_pId;
+      $ids = array();
+      if ($dao->find()) {
+        while($dao->fetch()) {
+          $ids[] = $dao->contribution_id;
+        }
+      }
+      if (!empty($ids)) {
+        $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy($ids, 'contribution_id');
+        $dao->fetch();
+        if ($dao->N > 0) {
+          $coupon = array();
+          foreach($dao as $idx => $value) {
+            if ($idx[0] != '_') {
+              $coupon[$idx] = $value;
+            }
+          }
+          $form->_coupon = $coupon;
+        }
+      }
+    }
 
     require_once 'CRM/Event/BAO/Event.php';
     $form->_fromEmails = CRM_Event_BAO_Event::getFromEmailIds($form->_eventId);
@@ -109,6 +132,11 @@ class CRM_Event_Form_EventFees {
         $form->assign('fee_level', CRM_Utils_Array::value('fee_level', $defaults[$form->_pId]));
       }
       $defaults[$form->_pId]['send_receipt'] = 0;
+
+      if (!empty($form->_coupon)) {
+        $defaults[$form->_pId]['coupon_track_id'] = $form->_coupon['coupon_track_id'];
+        $defaults[$form->_pId]['coupon'] = $form->_coupon['code'];
+      }
     }
     else {
       $defaults[$form->_pId]['send_receipt'] = 1;
@@ -488,11 +516,13 @@ SELECT  id, html_type
 
       //retrieve custom information
       $form->_values = array();
-      require_once "CRM/Event/Form/Registration/Register.php";
+
+      // get event price fields from event setting
+      // borrow registration form
       CRM_Event_Form_Registration::initEventFee($form, $event['id']);
       CRM_Event_Form_Registration_Register::buildAmount($form, TRUE, $form->_discountId);
       $lineItem = array();
-      if (!CRM_Utils_System::isNull(CRM_Utils_Array::value('line_items', $form->_values))) {
+      if (!empty($form->_values['line_items'])) {
         $lineItem[] = $form->_values['line_items'];
       }
       $form->assign('lineItem', empty($lineItem) ? FALSE : $lineItem);

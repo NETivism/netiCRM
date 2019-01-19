@@ -661,7 +661,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $discountedFee = CRM_Utils_Array::value('discount', $form->_values);
     if (is_array($discountedFee) && !empty($discountedFee)) {
       if (!$discountId) {
-        require_once 'CRM/Core/BAO/Discount.php';
         $form->_discountId = $discountId = CRM_Core_BAO_Discount::findSet($form->_eventId, 'civicrm_event');
       }
       if ($discountId) {
@@ -672,8 +671,12 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $form->_feeBlock = array();
     }
 
+    // add coupon field in feeBlock for hook buildAmount
+    if (!empty($form->_coupon)) {
+      $form->_feeBlock['coupon'] = $form->_coupon;
+    }
+
     //its time to call the hook.
-    require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::buildAmount('event', $form, $form->_feeBlock);
 
     //reset required if participant is skipped.
@@ -690,12 +693,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       //format price set fields across option full.
       self::formatFieldsForOptionFull($form);
 
-      require_once 'CRM/Event/BAO/Participant.php';
       $form->addGroup($elements, 'amount', ts('Event Fee(s)'), '<br />');
       $form->add('hidden', 'priceSetId', $form->_priceSetId);
 
-      require_once 'CRM/Price/BAO/Field.php';
-      foreach ($form->_feeBlock as $field) {
+      foreach ($form->_feeBlock as $idx => $field) {
+        if ($idx == 'coupon') {
+          CRM_Coupon_BAO_Coupon::addQuickFormElement($form);
+          continue;
+        }
         if (CRM_Utils_Array::value('visibility', $field) == 'public' ||
           $className == 'CRM_Event_Form_Participant'
         ) {
@@ -735,9 +740,12 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $form->assign('priceSet', $form->_priceSet);
     }
     else {
-      require_once 'CRM/Utils/Money.php';
       $eventFeeBlockValues = array();
-      foreach ($form->_feeBlock as $fee) {
+      foreach ($form->_feeBlock as $idx => $fee) {
+        if ($idx == 'coupon') {
+          CRM_Coupon_BAO_Coupon::addQuickFormElement($form);
+          continue;
+        }
         if (is_array($fee)) {
           $eventFeeBlockValues['amount_id_' . $fee['amount_id']] = $fee['value'];
           $elements[] = &$form->createElement('radio', NULL, '',

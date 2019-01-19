@@ -102,10 +102,16 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $result;
   }
 
-  function getCouponUsedBy($ids) {
+  function getCouponUsedBy($ids, $field = 'ct.coupon_id') {
     if (!empty($ids)) {
+      if (empty($field)) {
+        $field = 'ct.coupon_id';
+      }
+      if (!strstr($field, '.')) {
+        $field = 'ct.'.$field;
+      }
       $couponIds = implode(',', $ids);
-      $sql = "SELECT c.*, ct.*, contact.sort_name, contrib.total_amount FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contact contact ON ct.contact_id = contact.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND ct.coupon_id IN({$couponIds})";
+      $sql = "SELECT c.*, ct.id as coupon_track_id, ct.*, contact.sort_name, contrib.total_amount FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contact contact ON ct.contact_id = contact.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND {$field} IN({$couponIds}) ORDER BY ct.used_date DESC";
       return CRM_Core_DAO::executeQuery($sql);
     }
   }
@@ -133,6 +139,16 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       else {
         unset($params[$key]);
       }
+    }
+  }
+
+  static function addQuickFormElement(&$form) {
+    $ele = $form->add('text', 'coupon', ts('Coupon'), array('placeholder' => ts('Enter coupon code')));
+    if (!empty($form->_coupon['coupon_track_id'])) {
+      $form->add('hidden', 'coupon_track_id', $form->_coupon['coupon_track_id']);
+      $form->assign('coupon', $form->_coupon);
+      $form->assign('coupon_json', json_encode($form->_coupon));
+      $ele->freeze();
     }
   }
 }

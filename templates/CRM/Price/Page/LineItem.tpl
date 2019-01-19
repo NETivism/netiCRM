@@ -38,7 +38,7 @@
                 <th class="right">{ts}Total Price{/ts}</th>
 	 {if $pricesetFieldsCount}<th class="right">{ts}Total Participants{/ts}</th>{/if} 
             </tr>
-                {foreach from=$value item=line}
+            {foreach from=$value item=line}
             <tr>
                 <td>{if $line.html_type eq 'Text'}{$line.label}{else}{$line.field_title} - {$line.label}{/if} {if $line.description}<div class="description">{$line.description}</div>{/if}</td>
                 <td class="right">{$line.qty}</td>
@@ -47,18 +47,22 @@
          {if $pricesetFieldsCount}<td class="right">{$line.participant_count}</td> {/if}
             </tr>
             {/foreach}
+            {if $coupon.coupon_track_id}
+            <tr>
+                <td colspan="{if $pricesetFieldsCount}4{else}3{/if}">{$form.coupon.label} - {$form.coupon.html} - {$coupon.description}</td>
+                <td class="right"><div id="coupon_calc" class="font-red" data-coupon-type="{$coupon.coupon_type}" data-coupon-discount="{$coupon.discount}">{if $coupon.coupon_type == 'monetary'} - {$coupon.discount|crmMoney}{else} - {$coupon.discount}%{/if}</div></td>
+            </tr>
+            {/if}
     </table>
     {/if}
 {/foreach}
 
 <div class="crm-section no-label total_amount-section">
+  <table>
+  <tr>
+    <td class="right">
     <div class="content bold">
-        {if $context EQ "Contribution"}
-            {ts}Total Amount{/ts}:
-        {elseif $context EQ "Event"}
-            {ts}Total Amount{/ts}: 
-        {/if}
-    {$totalAmount|crmMoney}
+      {ts}Total Amount{/ts}: <span id="total-amount-display" data-total-amount="{$totalAmount}">{$totalAmount|crmMoney}</span>
     </div>
     <div class="content bold">
       {if $pricesetFieldsCount}
@@ -78,7 +82,10 @@
       {/foreach}
       {$totalcount}
       {/if}
-     </div>    
+     </div>
+     </td>
+  </tr>
+  </table>
 </div>
 
 {if $hookDiscount.message}
