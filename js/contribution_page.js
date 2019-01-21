@@ -40,38 +40,12 @@
           this.setDefaultPriceOption();
 
           this.prepareContribTypeForm();
-
-          $('.instrument-info-panel').append($('#footer_text').hide());
-
-          $('.instrument-info-panel h3').click(function(){
-            $(this).toggleClass('open');
-          });
         }
         if(this.currentPage == 'Confirm'){
-
           this.prepareStepInfo();
-
-          $('.crm-section').each(function(){
-            var $parent = $(this);
-            if(!$parent.is('.contributor_email-section') && !$parent.is('#intro_text')){
-              $parent.hide();
-              $parent.find('input[type="hidden"]').each(function(){
-                $hidden = $(this);
-                if($hidden.val() != ""){
-                  $parent.css('display','');
-                }
-              });
-            }
-          });
         }
 
         if(this.currentPage == 'ThankYou'){
-          $('.crm-section').find('tr').each(function(){
-            var $this = $(this);
-            if($this.find('.freeze-unchecked').length > 0){
-              $this.hide();
-            }
-          });
           $('#intro_text>*').each(function(){
             if(!$(this).is('.page-title')){
               $(this).remove();
