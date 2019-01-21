@@ -859,3 +859,10 @@ body .crm-container .premiums-listings .premium-img{
   color: white;
 }
 
+/* overwrite */
+.admin-sidebar-mini div#page, 
+.admin-sidebar-open div#page, 
+.admin-header-fixed div#page{
+  padding: 0;
+}
+
