@@ -542,6 +542,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     //format common data, CRM-4062
     $this->formatCommonData($params, $formatted, $contactFields);
+    $formatted['check_permission'] = FALSE;
 
     $relationship = FALSE;
     $createNewContact = TRUE;

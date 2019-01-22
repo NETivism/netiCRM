@@ -657,7 +657,7 @@ function civicrm_contact_check_params(&$params,
     // person does not have permission to carry out de-dupes
     // this is similar to the front end form
     if (isset($params['check_permission'])) {
-      $dedupeParams['check_permission'] = $fields['check_permission'];
+      $dedupeParams['check_permission'] = $params['check_permission'];
     }
 
     $ids = implode(',',
