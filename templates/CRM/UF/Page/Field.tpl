@@ -43,10 +43,12 @@
                 <a href="{crmURL p="civicrm/admin/uf/group" q="action=preview&id=`$gid`&reset=1&field=0&context=field"}" class="button" target="_blank"><span><i class="zmdi zmdi-search-in-file"></i>{ts}Preview{/ts}</span><i class="zmdi zmdi-arrow-right-top"></i>
                 </a>
                 {if !$skipCreate }
-                <a href="{crmURL p="civicrm/profile/create" q="gid=$gid&reset=1"}" class="button" target="_blank"><span><i class="zmdi zmdi-view-web"></i>{ts}Use (create mode){/ts}</span><i class="zmdi zmdi-arrow-right-top"></i>
+                <a href="{crmURL p="civicrm/admin/uf/group" q="action=profile&gid=$gid"}" class="button"><span><i class="zmdi zmdi-view-web"></i>{ts}Publish Online Profile{/ts}</span>
                 </a>
                 {/if}
+                {if !$skipBrowse}
                 <a href="{crmURL p="civicrm/profile" q="gid=$gid&reset=1"}" class="button" target="_blank"><span><i class="zmdi zmdi-view-day"></i>{ts}Public Pages{/ts}</span></a>
+                {/if}
             </div>
         {/if}
         {strip}
@@ -93,10 +95,12 @@
                 <a href="{crmURL p="civicrm/admin/uf/group" q="action=preview&id=`$gid`&reset=1&field=0&context=field"}" class="button" target="_blank"><span><i class="zmdi zmdi-search-in-file"></i>{ts}Preview{/ts}</span><i class="zmdi zmdi-arrow-right-top"></i>
                 </a>
                 {if !$skipCreate }
-                <a href="{crmURL p="civicrm/profile/create" q="gid=$gid&reset=1"}" class="button" target="_blank"><span><i class="zmdi zmdi-view-web"></i>{ts}Use (create mode){/ts}</span><i class="zmdi zmdi-arrow-right-top"></i>
+                <a href="{crmURL p="civicrm/admin/uf/group" q="action=profile&gid=$gid"}" class="button"><span><i class="zmdi zmdi-view-web"></i>{ts}Publish Online Profile{/ts}</span>
                 </a>
                 {/if}
+                {if !$skipBrowse}
                 <a href="{crmURL p="civicrm/profile" q="gid=$gid&reset=1"}" class="button" target="_blank"><span><i class="zmdi zmdi-view-day"></i>{ts}Public Pages{/ts}</span></a>
+                {/if}
             </div>
         {/if}    
         

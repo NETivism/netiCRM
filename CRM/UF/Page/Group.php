@@ -174,7 +174,6 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       }
       elseif ($action & CRM_Core_Action::PROFILE) {
         $this->profileCode();
-        CRM_Utils_System::setTitle(ts('%1 - HTML Form Snippet', array(1 => $this->_title)));
       }
       elseif ($action & CRM_Core_Action::PREVIEW) {
         $this->preview($id, $action);
@@ -217,16 +216,21 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     $template = CRM_Core_Smarty::singleton();
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
     if ($gid) {
-    
+      $this->assign('gid', $gid);
       $iframeSrc = CRM_Utils_System::url('civicrm/profile/create', 'reset=1&embed=1&gid='.$gid, TRUE, NULL, FALSE);
       $this->assign('iframeSrc', $iframeSrc);
       $this->assign('iframeWidth', '100%');
       $iframeCode = trim($template->fetch('CRM/common/iframe.tpl'));
       $this->assign('profile', htmlentities($iframeCode, ENT_NOQUOTES, 'UTF-8'));
+      
       //get the title of uf group
+      $title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gid, 'title');
+      $title = $title . ' - ' . ts('Publish Online Profile');
+      CRM_Utils_System::setTitle($title);
     }
     else {
       $title = 'Profile Form';
+      CRM_Utils_System::setTitle(ts('%1 - HTML Form Snippet', array(1 => $this->_title)));
     }
 
     $this->assign('title', $title);
