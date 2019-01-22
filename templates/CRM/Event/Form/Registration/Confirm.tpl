@@ -89,13 +89,19 @@
     					</div>
             			<div class="clear"></div>
                     {/foreach}
-    		    </div>	
+    		    </div>
+                {if $discount}
+                    <div class="crm-section no-label discount-section">
+                        <div class="content">{$couponDescription}:&nbsp;&nbsp;-{$discount|crmMoney}</div>
+                        <div class="clear"></div>
+                    </div>
+                {/if}	
                 {if $totalAmount}
         			<div class="crm-section no-label total-amount-section">
                 		<div class="content bold">{ts}Total Amount{/ts}:&nbsp;&nbsp;{$totalAmount|crmMoney}</div>
                 		<div class="clear"></div>
                 	</div>
-                {/if}	 		
+                {/if}	
                 {if $hookDiscount.message}
                     <div class="crm-section hookDiscount-section">
                         <em>({$hookDiscount.message})</em>

@@ -65,8 +65,12 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         $args[1] =  array($value, 'String');
       }
       elseif ($field == 'entity_id') {
-        $where[] = "e.entity_id = %2";
-        $args[2] =  array($value, 'Integer');
+        if(is_array($value)){
+          $where[] = "e.entity_id in (".implode(',', $value).")";
+        }else{
+          $where[] = "e.entity_id = %2";
+          $args[2] =  array($value, 'Integer');
+        }
       }
       elseif ($field == 'code') {
         $where[] = "cc.code LIKE %3";
@@ -150,5 +154,82 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       $form->assign('coupon_json', json_encode($form->_coupon));
       $ele->freeze();
     }
+    else{
+      $form->add('hidden', 'coupon_is_valid', false);
+      $form->add('button', 'coupon_valid', ts('Valid'), array('onClick' => 'couponValid();'));
+    }
+  }
+
+  static function validFromCode($code) {
+    $sql = "SELECT * FROM civicrm_coupon WHERE code = %1";
+    $params = array(1 => array($code, 'String'));
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    $isValid = true;
+    $currentTime = time();
+    if($dao->N){
+      $dao->fetch();
+      if(!empty($dao->start_date) && $currentTime < strtotime($dao->start_date)){
+        $isValid = false;
+      }
+      if(!empty($dao->end_date) && $currentTime < strtotime($dao->end_date)){
+        $isValid = false;
+      }
+      if(!$dao->is_active){
+        $isValid = false;
+      }
+
+      $sql = "SELECT count(ct.id) as count FROM civicrm_coupon_track ct LEFT JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE (ct.used_date IS NOT NULL AND ct.coupon_id = %1 AND contrib.contribution_status_id = 1)";
+      $params = array(1 => array($dao->id, 'Integer'));
+      $count = CRM_Core_DAO::singleValueQuery($sql, $params);
+      if($dao->count_max <= $count){
+        $isValid = false;
+      }
+    }
+    else{
+      $isValid = false;
+    }
+    if($isValid){
+      $coupon = array();
+      foreach($dao as $idx => $value) {
+        if ($idx[0] != '_') {
+          $coupon[$idx] = $value;
+        }
+      }
+      return $coupon;
+    }
+    else{
+      return false;
+    }
+  }
+
+  function validEventFromCode($code, $eventId, $entity_table = 'civicrm_event'){
+    $coupon = self::validFromCode($code);
+    if($coupon){
+      $sql = "SELECT entity_id FROM civicrm_coupon_entity ce WHERE coupon_id = %1 AND entity_table = %3 AND entity_id = %2";
+      $params = array(
+        1 => array($coupon['id'], 'Integer'),
+        2 => array($eventId, 'Integer'),
+        3 => array($entity_table, 'String'),
+      );
+      $entity_id = CRM_Core_DAO::singleValueQuery($sql, $params);
+      if(!empty($entity_id)){
+        return $coupon;
+      }
+      else{
+        return False;
+      }
+    }
+  }
+
+  static function addCouponTrack($couponId, $contributionId, $contactId = NULL){
+    $coupon = new CRM_Coupon_DAO_Coupon();
+    $coupon->id = $couponId;
+    $coupon->find(True);
+    $couponTrack = new CRM_Coupon_DAO_Coupon_Track();
+    $couponTrack->coupon_id = $coupon->id;
+    $couponTrack->contribution_id = $contributionId;
+    $couponTrack->contact_id = $contactId;
+    $couponTrack->save();
+    return $couponTrack;
   }
 }

@@ -104,6 +104,14 @@
       {include file="CRM/Price/Form/PriceSet.tpl"}
       {include file="CRM/Price/Form/ParticipantCount.tpl"}
     </fieldset>
+    {if $form.coupon}
+      <div class="crm-section coupon-section">
+        <div class="label">{$form.coupon.label}</div>
+        <div class="content">{$form.coupon.html}{$form.coupon_valid.html}<br/>
+          <span class="description">{$coupon.description}</span>
+        </div>
+      </div>
+    {/if}
     {if $form.payment_processor.label}
       <div class="crm-section payment_processor-section">
         <div class="label">{$form.payment_processor.label}</div>
@@ -130,6 +138,14 @@
         <div class="content">{$form.amount.html}</div>
         <div class="clear"></div>
       </div>
+      {if $form.coupon}
+        <div class="crm-section coupon-section">
+          <div class="label">{$form.coupon.label}</div>
+          <div class="content">{$form.coupon.html}{$form.coupon_valid.html}<br/>
+            <span class="description">{$coupon.description}</span>
+          </div>
+        </div>
+      {/if}
       {if $form.payment_processor.label}
         <div class="crm-section payment_processor-section">
           <div class="label">{$form.payment_processor.label}</div>
@@ -331,6 +347,51 @@
     cj("#register-me").click(function(){
       cj("#register-now").slideDown();
     });
+  }
+  
+  function couponValid(){
+    if(cj('[name=coupon_is_valid]').val() == 1){
+      cj('[name=coupon_is_valid]').val(0);
+      cj('.result').text("");
+      cj('#coupon').removeAttr('readonly');
+      cj('#coupon_valid').val('{/literal}{ts}Valid{/ts}{literal}');
+    }else{
+      var reg = /id=(\d+)/;
+      if(reg.test(location.search)){
+        var event_id = reg.exec(location.search)[1];
+      }
+
+      var code = cj('#coupon').val();
+      var qfKey = cj('[name=qfKey]').val();
+      var param = {
+        code : code, 
+        qfKey : qfKey,
+        event_id : event_id,
+      }
+      cj.ajax({
+        type: "POST", 
+        url: '/civicrm/coupon/ajax/valid',
+        data: param, 
+        async: false, 
+        dataType: 'json', 
+        success: function(data){
+          if(!cj('.coupon-section .content .result').length){
+            cj('.coupon-section .content').append('<div class="result"></div>');
+          }
+          if(data && data['description']){
+            var description = data['description'];
+            cj('[name=coupon_is_valid]').val(1);
+            cj('#coupon').attr('readonly', 'readonly');
+            cj('#coupon_valid').val('{/literal}{ts}Edit{/ts}{literal}');
+          }
+          else{
+            var description = '{/literal}{ts}The coupon is not valid.{/ts}{literal}';
+            cj('[name=coupon_is_valid]').val(0);
+          }
+          cj('.result').text(description);
+        },
+      });
+    }
   }
 </script>
 {/literal} 
