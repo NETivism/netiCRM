@@ -672,8 +672,13 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     }
 
     // add coupon field in feeBlock for hook buildAmount
-    if (!empty($form->_coupon)) {
-      $form->_feeBlock['coupon'] = $form->_coupon;
+    $params = array(
+      'entity_table' => 'civicrm_event',
+      'entity_id' => $form->_id,
+    );
+    $couponDAO = CRM_Coupon_BAO_Coupon::getCouponList($params);
+    if (!empty($couponDAO->N)) {
+      $form->_feeBlock['coupon'] = 1;
     }
 
     //its time to call the hook.
@@ -692,6 +697,18 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
       //format price set fields across option full.
       self::formatFieldsForOptionFull($form);
+
+      // add coupon field in feeBlock for hook buildAmount
+      $activeOptionIds = $form->get('activeOptionIds');
+      $params = array(
+        'entity_table' => 'civicrm_price_field_value',
+        'entity_id' => $activeOptionIds,
+      );
+      $couponDAO = CRM_Coupon_BAO_Coupon::getCouponList($params);
+      if (!empty($couponDAO->N)) {
+        $form->_feeBlock['coupon'] = 1;
+        $form->assign('activeOptionIds', implode(',', $activeOptionIds));
+      }
 
       $form->addGroup($elements, 'amount', ts('Event Fee(s)'), '<br />');
       $form->add('hidden', 'priceSetId', $form->_priceSetId);
@@ -807,6 +824,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $currentOptionsCount = self::getPriceSetOptionCount($form);
     $recordedOptionsCount = CRM_Event_BAO_Participant::priceSetOptionsCount($form->_eventId, $skipParticipants);
 
+    $activeOptionIds = array();
     foreach ($form->_feeBlock as & $field) {
       $optionFullIds = array();
       $fieldId = $field['id'];
@@ -816,6 +834,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $sumCount = 0;
       foreach ($field['options'] as & $option) {
         $optId = $option['id'];
+        $activeOptionIds[$optId] = $optId;
         $count = CRM_Utils_Array::value('count', $option, 0);
         $maxValue = CRM_Utils_Array::value('max_value', $option, 0);
         $dbTotalCount = CRM_Utils_Array::value($optId, $recordedOptionsCount, 0);
@@ -829,6 +848,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         ) {
           $isFull = TRUE;
           $optionFullIds[$optId] = $optId;
+          unset($activeOptionIds[$optId]);
         }
 
         //here option is not full,
@@ -842,6 +862,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
             !CRM_Utils_Array::value($opId, $formattedPriceSetDefaults["price_{$fieldId}"])
           ) {
             $optionFullIds[$optId] = $optId;
+            unset($activeOptionIds[$optId]);
             $isFull = TRUE;
           }
         }
@@ -854,6 +875,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         foreach ($field['options'] as & $option) {
           $optId = $option['id'];
           $optionFullIds[$optId] = $optId;
+          unset($activeOptionIds[$optId]);
           $option['is_full'] = TRUE;
         }
       }
@@ -866,6 +888,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       //finally get option ids in.
       $field['option_full_ids'] = $optionFullIds;
     }
+    $form->set('activeOptionIds', $activeOptionIds);
   }
 
   /**
