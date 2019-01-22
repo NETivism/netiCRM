@@ -542,7 +542,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     //format common data, CRM-4062
     $this->formatCommonData($params, $formatted, $contactFields);
-    $formatted['check_permission'] = FALSE;
+    $formatted['check_permission'] = FALSE; // remove acl join
 
     $relationship = FALSE;
     $createNewContact = TRUE;
@@ -901,6 +901,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             $relatedNewContact = CRM_Contact_BAO_Contact::retrieve($contact, $defaults);
           }
           else {
+            $formatting['check_permission'] = FALSE; // remove acl join
             $relatedNewContact = $this->createContact($formatting, $contactFields,
               $onDuplicate, NULL, FALSE
             );
