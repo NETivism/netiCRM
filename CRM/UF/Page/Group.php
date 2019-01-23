@@ -85,17 +85,19 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           'title' => ts('Edit CiviCRM Profile Group'),
         ),
         CRM_Core_Action::ADD => array(
-          'name' => ts('Use Profile-Create Mode'),
-          'url' => 'civicrm/profile/create',
-          'qs' => 'gid=%%id%%&reset=1',
-          'title' => ts('Use Profile-Create Mode'),
+          'name' => ts('Publish Online Profile'),
+          'url' => 'civicrm/admin/uf/group',
+          'qs' => 'action=profile&gid=%%id%%',
+          'title' => ts('HTML Form Snippet for this Profile'),
         ),
+        /*
         CRM_Core_Action::VIEW => array(
           'name' => ts('Public Pages'),
           'url' => 'civicrm/profile',
           'qs' => 'reset=1&gid=%%id%%',
           'title' => ts('Search in public pages when enabled in profile settings'),
         ),
+        */
         CRM_Core_Action::DISABLE => array(
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_UFGroup' . '\',\'' . 'enable-disable' . '\' );"',
@@ -113,12 +115,6 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           'url' => 'civicrm/admin/uf/group',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete CiviCRM Profile Group'),
-        ),
-        CRM_Core_Action::PROFILE => array(
-          'name' => ts('HTML Form Snippet'),
-          'url' => 'civicrm/admin/uf/group',
-          'qs' => 'action=profile&gid=%%id%%',
-          'title' => ts('HTML Form Snippet for this Profile'),
         ),
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy Profile'),
@@ -278,6 +274,12 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     require_once 'CRM/Utils/Hook.php';
     $ufGroups = CRM_Core_PseudoConstant::ufGroup();
     CRM_Utils_Hook::aclGroup(CRM_Core_Permission::ADMIN, NULL, 'civicrm_uf_group', $ufGroups, $allUFGroups);
+    $restrictType = array(
+      'Contribution',
+      'Membership',
+      'Activity',
+      'Participant',
+    );
 
     foreach ($allUFGroups as $id => $value) {
       $ufGroup[$id] = array();
@@ -308,7 +310,8 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       $groupComponents = array('Contribution', 'Membership', 'Activity', 'Participant');
 
       // drop Create, Edit and View mode links if profile group_type is Contribution, Membership, Activities or Participant
-      if ($value['group_type'] == 'Contribution' || $value['group_type'] == 'Membership' || $value['group_type'] == 'Activity' || $value['group_type'] == 'Participant') {
+      $profileTypes = explode(',', $value['group_type']);
+      if (array_intersect($restrictType, $profileTypes)) {
         $action -= CRM_Core_Action::ADD;
       }
       $groupTypesString = '';
