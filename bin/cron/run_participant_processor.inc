@@ -47,7 +47,7 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
 INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
     WHERE  participant.status_id IN {$statusIds}
      AND   (event.end_date > now() OR event.end_date IS NULL)
-     AND   (event.start_date > now() OR event.start_date IS NULL)
+     AND   (event.start_date < now() OR event.start_date IS NULL)
      AND   event.is_active = 1 
      AND   contact.is_deleted != 1
  ORDER BY  participant.register_date, participant.id 
