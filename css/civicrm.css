@@ -5347,11 +5347,10 @@ tbody.scrollContent tr.alternateRow {
 }
 
 /* Report Summary */
-.page-civicrm-report-summary .page-title:after {
+.crm-container form[action*="/civicrm/admin/contribute/settings"] label[for=is_special]:after {
   content: "beta";
   vertical-align: top;
-  padding-left: 5px;
-  font-size: 13px;
+  font-size: 10px;
   color: #f44336;
 }
 .page-civicrm-report-summary #printer-friendly {

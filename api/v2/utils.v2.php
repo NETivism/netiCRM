@@ -587,6 +587,9 @@ function _civicrm_duplicate_formatted_contact(&$params,
   else {
     require_once 'CRM/Dedupe/Finder.php';
     $dedupeParams = CRM_Dedupe_Finder::formatParams($params, $params['contact_type']);
+    if (isset($params['check_permission'])) {
+      $dedupeParams['check_permission'] = $params['check_permission'];
+    }
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams,
       $params['contact_type'],
       'Strict',
