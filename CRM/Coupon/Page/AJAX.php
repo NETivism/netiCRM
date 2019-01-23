@@ -40,12 +40,19 @@ class CRM_Coupon_Page_AJAX {
   static function validEventFromCode(){
     $code = CRM_Utils_Request::retrieve('code', 'Text', $object, False, '', 'Post');
     $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, False, '', 'Post');
+    $activeOptionIdsText = CRM_Utils_Request::retrieve('activeOptionIds', 'Text', $object, False, '', 'Post');
+    $activeOptionIds = explode(',', $activeOptionIdsText);
+
     if(empty($event_id)){
       $qfKey = CRM_Utils_Request::retrieve('qfKey', 'Text', $object, False, '', 'Post');
       $session = CRM_Core_Session::singleton();
       $event_id = $session->get('id', 'CRM_Event_Controller_Registration_'.$qfKey);
     }
+
     $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $event_id);
+    if(!$coupon && !empty($activeOptionIds)){
+      $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $activeOptionIds, 'civicrm_price_field_value');
+    }
     if($coupon){
       $return = array(
         'description' => $coupon['description'],

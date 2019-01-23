@@ -986,6 +986,29 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     }
 
     if ($self->_values['event']['is_monetary']) {
+      // valid coupon 
+      $coupon = $fields['coupon'];
+      if(!empty($fields['coupon'])){
+        if(CRM_Utils_Array::value('priceSetId', $fields)){
+          $totalAmount = $fields['amount'];
+        }
+        else{
+          $totalAmount = $self->_values['fee'][$fields['amount']]['value'];
+        }
+
+        $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($fields['coupon'], $self->_eventId, 'civicrm_event');
+        if(!empty($coupon)){
+          if($totalAmount < $coupon['minimal_amount']){
+            $errors['coupon'] = ts("The amount is not enough for coupon.");
+          }
+        }
+        else if(CRM_Utils_Array::value('priceSetId', $fields)){
+          // Valid coupon by price set option value
+          
+        }
+      }
+
+
       if (is_array($self->_paymentProcessor)) {
         $payment = &CRM_Core_Payment::singleton($self->_mode, $self->_paymentProcessor, $this);
         $error = $payment->checkConfig($self->_mode);
@@ -1059,6 +1082,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * @return None
    */
   public function postProcess() {
+
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
 

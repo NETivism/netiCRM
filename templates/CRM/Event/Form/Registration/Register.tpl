@@ -354,7 +354,7 @@
       cj('[name=coupon_is_valid]').val(0);
       cj('.result').text("");
       cj('#coupon').removeAttr('readonly');
-      cj('#coupon_valid').val('{/literal}{ts}Valid{/ts}{literal}');
+      cj('#coupon_valid').val('{/literal}{ts}Confirm{/ts}{literal}');
     }else{
       var reg = /id=(\d+)/;
       if(reg.test(location.search)){
@@ -367,6 +367,9 @@
         code : code, 
         qfKey : qfKey,
         event_id : event_id,
+        {/literal}
+        activeOptionIds : "{$activeOptionIds}",
+        {literal}
       }
       cj.ajax({
         type: "POST", 
@@ -382,7 +385,7 @@
             var description = data['description'];
             cj('[name=coupon_is_valid]').val(1);
             cj('#coupon').attr('readonly', 'readonly');
-            cj('#coupon_valid').val('{/literal}{ts}Edit{/ts}{literal}');
+            cj('#coupon_valid').val('{/literal}{ts}Change{/ts}{literal}');
           }
           else{
             var description = '{/literal}{ts}The coupon is not valid.{/ts}{literal}';

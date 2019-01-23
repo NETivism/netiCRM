@@ -156,7 +156,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
     else{
       $form->add('hidden', 'coupon_is_valid', false);
-      $form->add('button', 'coupon_valid', ts('Valid'), array('onClick' => 'couponValid();'));
+      $form->add('button', 'coupon_valid', ts('Confirm'), array('onClick' => 'couponValid();'));
     }
   }
 
@@ -171,7 +171,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       if(!empty($dao->start_date) && $currentTime < strtotime($dao->start_date)){
         $isValid = false;
       }
-      if(!empty($dao->end_date) && $currentTime < strtotime($dao->end_date)){
+      if(!empty($dao->end_date) && strtotime($dao->end_date) < $currentTime){
         $isValid = false;
       }
       if(!$dao->is_active){
@@ -202,14 +202,18 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  function validEventFromCode($code, $eventId, $entity_table = 'civicrm_event'){
+  function validEventFromCode($code, $ids = NULL, $entity_table = 'civicrm_event'){
     $coupon = self::validFromCode($code);
-    if($coupon){
-      $sql = "SELECT entity_id FROM civicrm_coupon_entity ce WHERE coupon_id = %1 AND entity_table = %3 AND entity_id = %2";
+    if(!empty($coupon) && $ids){
+      if(is_array($ids)){
+        $idsText = implode(',', $ids);
+      }else{
+        $idsText = $ids;
+      }
+      $sql = "SELECT entity_id FROM civicrm_coupon_entity ce WHERE entity_id IN ({$idsText}) AND entity_table = %1 AND coupon_id = %2";
       $params = array(
-        1 => array($coupon['id'], 'Integer'),
-        2 => array($eventId, 'Integer'),
-        3 => array($entity_table, 'String'),
+        1 => array($entity_table, 'String'),
+        2 => array($coupon['id'], 'Integer'),
       );
       $entity_id = CRM_Core_DAO::singleValueQuery($sql, $params);
       if(!empty($entity_id)){
@@ -225,7 +229,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     $coupon = new CRM_Coupon_DAO_Coupon();
     $coupon->id = $couponId;
     $coupon->find(True);
-    $couponTrack = new CRM_Coupon_DAO_Coupon_Track();
+    $couponTrack = new CRM_Coupon_DAO_CouponTrack();
     $couponTrack->coupon_id = $coupon->id;
     $couponTrack->contribution_id = $contributionId;
     $couponTrack->contact_id = $contactId;
