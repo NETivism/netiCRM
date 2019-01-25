@@ -206,6 +206,10 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     require_once "CRM/Price/BAO/Set.php";
     $this->assign('pricesetFieldsCount', CRM_Price_BAO_Set::getPricesetCount($this->_priceSetId));
 
+    $this->assign('usedOptionsDiscount', $this->_usedOptionsDiscount);
+    $this->assign('totalDiscount', $this->_totalDiscount);
+    $this->assign('couponDescription', $this->_coupon['description']);
+
     // can we blow away the session now to prevent hackery
     // $this->controller->reset();
     // $session = CRM_Core_Session::singleton();

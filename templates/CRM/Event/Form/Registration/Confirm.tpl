@@ -90,9 +90,9 @@
             			<div class="clear"></div>
                     {/foreach}
     		    </div>
-                {if $discount}
+                {if $couponDescription && !$usedOptionsDiscount}
                     <div class="crm-section no-label discount-section">
-                        <div class="content">{$couponDescription}:&nbsp;&nbsp;-{$discount|crmMoney}</div>
+                        <div class="content">{$couponDescription}:&nbsp;&nbsp;-{$totalDiscount|crmMoney}</div>
                         <div class="clear"></div>
                     </div>
                 {/if}	

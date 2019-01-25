@@ -40,8 +40,10 @@ class CRM_Coupon_Page_AJAX {
   static function validEventFromCode(){
     $code = CRM_Utils_Request::retrieve('code', 'Text', $object, False, '', 'Post');
     $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, False, '', 'Post');
-    $activeOptionIdsText = CRM_Utils_Request::retrieve('activeOptionIds', 'Text', $object, False, '', 'Post');
-    $activeOptionIds = explode(',', $activeOptionIdsText);
+    $activeOptionIdsText = CRM_Utils_Request::retrieve('activePriceOptionIds', 'Text', $object, False, '', 'Post');
+    if(!empty($activeOptionIdsText)){
+      $activeOptionIds = explode(',', $activeOptionIdsText);
+    }
 
     if(empty($event_id)){
       $qfKey = CRM_Utils_Request::retrieve('qfKey', 'Text', $object, False, '', 'Post');
@@ -49,14 +51,31 @@ class CRM_Coupon_Page_AJAX {
       $event_id = $session->get('id', 'CRM_Event_Controller_Registration_'.$qfKey);
     }
 
-    $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $event_id);
-    if(!$coupon && !empty($activeOptionIds)){
+    if(!empty($activeOptionIds)){
       $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $activeOptionIds, 'civicrm_price_field_value');
+    }
+    if(!$coupon){
+      $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $event_id);
     }
     if($coupon){
       $return = array(
         'description' => $coupon['description'],
-      ); 
+      );
+      if($coupon['entity_table'] == 'civicrm_price_field_value'){
+        $return['entity_table'] = 'civicrm_price_field_value';
+        $fields = array();
+        foreach ($coupon['entity_id'] as $vid) {
+          $sql = "SELECT price_field_id FROM civicrm_price_field_value WHERE id = %1";
+          $params = array(1 => array($vid, 'Integer'));
+          $fid = CRM_Core_DAO::singleValueQuery($sql, $params);
+          $fieldName = 'price_'.$fid;
+          $fields[] = array(
+            'fieldName' => $fieldName,
+            'vid' => $vid,
+          );
+        }
+        $return['fields'] = $fields;
+      }
     }
     else{
       $return = array();

@@ -262,41 +262,23 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
           if (CRM_Utils_Array::value('is_primary', $v)) {
             $this->set('primaryParticipantAmount', $this->_amount[$k]['amount']);
           }
-
-          if(CRM_Utils_Array::value('coupon', $v)) {
-            $code = CRM_Utils_Array::value('coupon', $v);
-          }
-          if(CRM_Utils_Array::value('coupon_is_valid', $v)) {
-            $coupon_is_valid = CRM_Utils_Array::value('coupon_is_valid', $v);
-          }
         }
       }
 
-      // Validate Again
-      $eventId = $this->_values['event']['id'];
-      if($coupon_is_valid){
-        $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $eventId);
-        if($coupon && (empty($coupon['minimal_amount']) || $this->_totalAmount >= $coupon['minimal_amount'])){
-          if($coupon['coupon_type'] == 'percentage'){
-            $discount = $this->_totalAmount * $coupon['discount'] / 100;
-          }
-          else if($coupon['coupon_type'] == 'monetary'){
-            $discount = ($this->_totalAmount < $coupon['discount']) ? $this->_totalAmount : $coupon['discount'];
-          }
-          $this->_totalAmount -= $discount;
-          $couponDescription = $coupon['description'];
-          $this->set('couponId', $coupon['id']);
+      if(!empty($this->_usedOptionsDiscount)){
+        foreach ($this->_usedOptionsDiscount as $key => $value) {
+          $this->_lineItem[0][$key]['discount'] = $value;
         }
+        $this->assign('usedOptionsDiscount', $this->_usedOptionsDiscount);
       }
+      $this->assign('totalDiscount', $this->_totalDiscount);
+      $this->assign('couponDescription', $this->_coupon['description']);
 
       // count coupon discount
-
       $this->assign('part', $this->_part);
       $this->set('part', $this->_part);
       $this->assign('amount', $this->_amount);
-      $this->assign('totalAmount', $this->_totalAmount);
-      $this->assign('discount', $discount);
-      $this->assign('couponDescription', $couponDescription);
+      $this->assign('totalAmount', $this->_totalAmount - $this->_totalDiscount);
       $this->set('totalAmount', $this->_totalAmount);
     }
 
@@ -477,6 +459,10 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         }
       }
     }
+    $couponErrors = CRM_Coupon_BAO_Coupon::checkError($self, $self->_params[0]);
+    if(!empty($couponErrors['coupon'])) {
+      $errors['qfKey'] = ts("This coupon is not valid anymore. Please refill your registration.");
+    }
     return $errors;
   }
 
@@ -489,7 +475,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    */
   public function postProcess() {
     require_once 'CRM/Event/BAO/Participant.php';
-
     $now = date('YmdHis');
     $config = CRM_Core_Config::singleton();
     $session = CRM_Core_Session::singleton();
@@ -509,6 +494,20 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $contactID = parent::getContactID();
     }
 
+    CRM_Coupon_BAO_Coupon::countAmount($this, $this->_params[0]);
+    if($this->_totalDiscount){
+      $this->_totalAmount = $this->_totalAmount - $this->_totalDiscount;
+    }
+    $this->set('totalAmount', $this->_totalAmount);
+    if(!empty($this->_usedOptionsDiscount)){
+      foreach ($this->_usedOptionsDiscount as $key => $value) {
+        $this->_lineItem[0][$key]['discount'] = $value;
+      }
+      $this->set('usedOptionsDiscount', $this->_usedOptionsDiscount);
+      $this->set('lineItem', $this->_lineItem);
+    }
+    $this->set('totalDiscount', $this->_totalDiscount);
+    $this->set('couponDescription', $this->_coupon['description']);
 
     // if a discount has been applied, lets now deduct it from the amount
     // and fix the fee level
@@ -1039,10 +1038,10 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     // create contribution record
     $contribution = &CRM_Contribute_BAO_Contribution::add($contribParams, $ids);
 
-    // $couponId = $form->get('couponId');
-    // if(!empty($couponId)){
-    //   CRM_Coupon_BAO_Coupon::addCouponTrack($couponId, $contribution->id, $contribution->contact_id);
-    // }
+    $coupon = $form->get('coupon');
+    if(!empty($coupon)){
+      CRM_Coupon_BAO_Coupon::addCouponTrack($coupon['id'], $contribution->id, $contribution->contact_id);
+    }
 
     // return if pending
     if ($pending || ($contribution->total_amount == 0)) {

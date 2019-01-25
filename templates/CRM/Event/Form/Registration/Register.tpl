@@ -349,8 +349,16 @@
     });
   }
   
+  cj(function(){
+    if(cj('[name=coupon_is_valid]').val() == 1){
+      cj('#coupon').attr('readonly', 'readonly');
+      cj('#coupon_valid').val('{/literal}{ts}Change{/ts}{literal}');
+    }
+  });
+
   function couponValid(){
     if(cj('[name=coupon_is_valid]').val() == 1){
+      cj('.coupon-description').remove();
       cj('[name=coupon_is_valid]').val(0);
       cj('.result').text("");
       cj('#coupon').removeAttr('readonly');
@@ -368,7 +376,7 @@
         qfKey : qfKey,
         event_id : event_id,
         {/literal}
-        activeOptionIds : "{$activeOptionIds}",
+        activePriceOptionIds : "{$activePriceOptionIds}",
         {literal}
       }
       cj.ajax({
@@ -378,20 +386,54 @@
         async: false, 
         dataType: 'json', 
         success: function(data){
-          if(!cj('.coupon-section .content .result').length){
-            cj('.coupon-section .content').append('<div class="result"></div>');
+          cj('.coupon-description').remove();
+          if(!cj('.coupon-section .content .coupon-result').length){
+            cj('.coupon-section .content').append('<div class="coupon-result"></div>');
           }
-          if(data && data['description']){
-            var description = data['description'];
+          if(data){
             cj('[name=coupon_is_valid]').val(1);
             cj('#coupon').attr('readonly', 'readonly');
             cj('#coupon_valid').val('{/literal}{ts}Change{/ts}{literal}');
+
+            var description = data['description'];
+            if(data['fields']){
+              Object.values(data['fields']).forEach(function(fieldObject){
+                console.log(fieldObject);
+                var $field = cj('[name^='+fieldObject['fieldName']+']');
+                var newDivText = '<div class="coupon-description">'+data['description']+'</div>';
+                if($field.is('select')){
+                  $field.after(cj(newDivText));
+                }
+                else if($field.is('[type=checkbox]')){
+                  console.log('[name="'+fieldObject['fieldName']+'['+fieldObject['vid']+']"]');
+                  var $value = cj('[name="'+fieldObject['fieldName']+'['+fieldObject['vid']+']"]');
+                  console.log($value);
+                  $value.closest('label').append(cj(newDivText));
+                }
+                else if($field.is('[type=radio]')){
+                  $field.closest('label').find('[value='+fieldObject['vid']+']').closest('label').append(cj(newDivText));
+
+                }
+                else if($field.is('[type=number]')){
+                  $field.after(cj(newDivText));
+                }
+                // var closest = cj('.price-set-option-content [value='+fid+']').closest('label');
+                // if(!closest.length){
+                //   closest = cj('.price-set-option-content [value='+fid+']').closest('select');
+                // }
+                // closest.append('<div class="coupon-description">'+data['description']+'</div>')
+              });
+            }
+            else if(data['description']){
+              cj('.coupon-result').text(description);
+            }
           }
           else{
             var description = '{/literal}{ts}The coupon is not valid.{/ts}{literal}';
             cj('[name=coupon_is_valid]').val(0);
+            cj('.coupon-result').text(description);
           }
-          cj('.result').text(description);
+          
         },
       });
     }

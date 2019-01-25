@@ -673,6 +673,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
     // add coupon field in feeBlock for hook buildAmount
     $params = array(
+      'date' => date('Y-m-d H:i:s'),
+      'is_active' => 1,
       'entity_table' => 'civicrm_event',
       'entity_id' => $form->_id,
     );
@@ -699,15 +701,17 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       self::formatFieldsForOptionFull($form);
 
       // add coupon field in feeBlock for hook buildAmount
-      $activeOptionIds = $form->get('activeOptionIds');
+      $activeOptionIds = $form->get('activePriceOptionIds');
       $params = array(
+        'date' => date('Y-m-d H:i:s'),
+        'is_active' => 1,
         'entity_table' => 'civicrm_price_field_value',
         'entity_id' => $activeOptionIds,
       );
       $couponDAO = CRM_Coupon_BAO_Coupon::getCouponList($params);
       if (!empty($couponDAO->N)) {
         $form->_feeBlock['coupon'] = 1;
-        $form->assign('activeOptionIds', implode(',', $activeOptionIds));
+        $form->assign('activePriceOptionIds', implode(',', $activeOptionIds));
       }
 
       $form->addGroup($elements, 'amount', ts('Event Fee(s)'), '<br />');
@@ -825,6 +829,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $recordedOptionsCount = CRM_Event_BAO_Participant::priceSetOptionsCount($form->_eventId, $skipParticipants);
 
     $activeOptionIds = array();
+    $allOptions = array();
     foreach ($form->_feeBlock as & $field) {
       $optionFullIds = array();
       $fieldId = $field['id'];
@@ -835,6 +840,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       foreach ($field['options'] as & $option) {
         $optId = $option['id'];
         $activeOptionIds[$optId] = $optId;
+        $allOptions[$optId] = $option;
         $count = CRM_Utils_Array::value('count', $option, 0);
         $maxValue = CRM_Utils_Array::value('max_value', $option, 0);
         $dbTotalCount = CRM_Utils_Array::value($optId, $recordedOptionsCount, 0);
@@ -888,7 +894,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       //finally get option ids in.
       $field['option_full_ids'] = $optionFullIds;
     }
-    $form->set('activeOptionIds', $activeOptionIds);
+    $form->set('activePriceOptionIds', $activeOptionIds);
+    $form->set('allPriceOption', $allOptions);
   }
 
   /**
@@ -986,28 +993,13 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     }
 
     if ($self->_values['event']['is_monetary']) {
-      // valid coupon 
-      $coupon = $fields['coupon'];
-      if(!empty($fields['coupon'])){
-        if(CRM_Utils_Array::value('priceSetId', $fields)){
-          $totalAmount = $fields['amount'];
-        }
-        else{
-          $totalAmount = $self->_values['fee'][$fields['amount']]['value'];
-        }
-
-        $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($fields['coupon'], $self->_eventId, 'civicrm_event');
-        if(!empty($coupon)){
-          if($totalAmount < $coupon['minimal_amount']){
-            $errors['coupon'] = ts("The amount is not enough for coupon.");
-          }
-        }
-        else if(CRM_Utils_Array::value('priceSetId', $fields)){
-          // Valid coupon by price set option value
-          
+      // validate coupon
+      $couponErrors = CRM_Coupon_BAO_Coupon::checkError($self, $fields);
+      if(!empty($couponErrors)){
+        foreach ($couponErrors as $key => $value) {
+          $errors[$key] = $value;
         }
       }
-
 
       if (is_array($self->_paymentProcessor)) {
         $payment = &CRM_Core_Payment::singleton($self->_mode, $self->_paymentProcessor, $this);
@@ -1203,6 +1195,18 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $this->_params = array();
       $this->_params[] = $params;
       $this->set('params', $this->_params);
+
+
+      CRM_Coupon_BAO_Coupon::countAmount($this, $params);
+      if(!empty($this->_usedOptionsDiscount)){
+        foreach ($this->_usedOptionsDiscount as $key => $value) {
+          $this->_lineItem[0][$key]['discount'] = $value;
+        }
+        $this->set('usedOptionsDiscount', $this->_usedOptionsDiscount);
+      }
+      $this->set('totalDiscount', $this->_totalDiscount);
+      $this->set('couponDescription', $this->_coupon['description']);
+
 
       if ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
         //get the button name

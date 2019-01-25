@@ -46,6 +46,18 @@
                 <td class="right">{$line.line_total|crmMoney}</td>
          {if $pricesetFieldsCount}<td class="right">{$line.participant_count}</td> {/if}
             </tr>
+                {if $line.discount}
+                <tr>
+                    <td class="right" colspan="3">
+                        {$couponDescription}
+                    </td>
+                    <td class="right">
+                        - {$line.discount|crmMoney}
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                {/if}
             {/foreach}
             {if $coupon.coupon_track_id}
             <tr>
@@ -61,6 +73,11 @@
   <table>
   <tr>
     <td class="right">
+        {if $couponDescription && !$usedOptionsDiscount}
+            <div class="content">
+                {$couponDescription}:&nbsp;&nbsp;-{$totalDiscount|crmMoney}
+            </div>
+        {/if}
     <div class="content bold">
       {ts}Total Amount{/ts}: <span id="total-amount-display" data-total-amount="{$totalAmount}">{$totalAmount|crmMoney}</span>
     </div>
