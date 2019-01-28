@@ -46690,3 +46690,72 @@ msgstr ""
 
 msgid "Publish Online Profile"
 msgstr ""
+
+msgid "Coupon"
+msgstr ""
+
+msgid "Coupon Type"
+msgstr ""
+
+msgid "Coupon Code"
+msgstr ""
+
+msgid "Add Coupon"
+msgstr ""
+
+msgid "No coupon found."
+msgstr ""
+
+msgid "A copy of this coupon has been created"
+msgstr ""
+
+msgid "Are you sure you want to delete this coupon?"
+msgstr ""
+
+msgid "Are you sure you want to make a copy of this coupon?"
+msgstr ""
+
+msgid "Used"
+msgstr ""
+
+msgid "Since you use coupon, the correct price will display on Confirm page."
+msgstr ""
+
+msgid "Generate Random Code"
+msgstr ""
+
+msgid "Change this field will affect current uses of this coupon."
+msgstr ""
+
+msgid "Limited on Events"
+msgstr ""
+
+msgid "Limited on Price Option"
+msgstr ""
+
+msgid "Monetary"
+msgstr ""
+
+msgid "Maximum Uses"
+msgstr ""
+
+msgid "This short description will appear when user apply this coupon on order."
+msgstr ""
+
+msgid "Enter coupon code"
+msgstr ""
+
+msgid "The coupon is not applied for any selected option."
+msgstr ""
+
+msgid "The coupon is not valid for this selection."
+msgstr ""
+
+msgid "The amount is not enough for coupon. The minimal amount is %1. The summary of validated amount is %2."
+msgstr ""
+
+msgid "Confirm to use"
+msgstr ""
+
+msgid "The coupon is not valid."
+msgstr ""
