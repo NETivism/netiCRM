@@ -78,7 +78,7 @@ class CRM_Coupon_Page_AJAX {
       }
     }
     else{
-      $return = array();
+      $return = NULL;
     }
     $return = json_encode($return);
     print($return);

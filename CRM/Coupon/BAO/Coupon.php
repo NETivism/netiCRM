@@ -176,11 +176,13 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
     else{
       $form->add('hidden', 'coupon_is_valid', false);
-      $form->add('button', 'coupon_valid', ts('Confirm'), array('onClick' => 'couponValid();'));
     }
   }
 
   static function validFromCode($code) {
+    if(empty($code)){
+      return NULL;
+    }
     $sql = "SELECT * FROM civicrm_coupon WHERE code = %1";
     $params = array(1 => array($code, 'String'));
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
@@ -325,14 +327,14 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
           foreach ($coupon['entity_id'] as $optionId) {
             $count = $usedOptionsCount[$optionId];
             $amount = $usedOptions[$optionId]['amount'] * $count;
-            $discount = floor($amount * $coupon['discount'] / 100);
+            $discount = round($amount * $coupon['discount'] / 100);
             $usedOptionsDiscount[$optionId] = $discount;
             $totalDiscount += $discount;
           }
           $form->_usedOptionsDiscount = $usedOptionsDiscount;
           $form->set('usedOptionsDiscount', $usedOptionsDiscount);
         }else{
-          $totalDiscount = floor($totalAmount * $coupon['discount'] / 100);
+          $totalDiscount = round($totalAmount * $coupon['discount'] / 100);
         }
       }
       $form->_totalDiscount = $totalDiscount;
@@ -362,16 +364,20 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       }
 
       if($totalAmount < $coupon['minimal_amount']){
-        $errors['coupon'] = ts("The amount is not enough for coupon. The minimal amount is %1. Your summary of validated amount is only %2.", array(
+        $errors['coupon'] = ts("The amount is not enough for coupon. The minimal amount is %1. The summary of validated amount is %2.", array(
           1 => $coupon['minimal_amount'],
           2 => $totalAmount,
         ));
       }
-    }else if($submitValues['coupon_is_valid']){
+    }
+    else if($submitValues['coupon_is_valid']){
       // If coupon_id_valid is check, Told user that it's not valid since now.
       $errors['coupon'] = ts("The coupon is not valid for this selection.");
-    }else{
+    }
+    else{
       // Only Show notification text.
+      CRM_Core_Session::setStatus(ts('The coupon is not applied for any selected option.'));
+
     }
     return $errors;
   }
