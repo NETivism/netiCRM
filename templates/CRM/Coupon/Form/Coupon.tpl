@@ -72,7 +72,7 @@
     });
     $("#change").click(function(){
       if ($code.attr('readonly')) {
-        var change = window.confirm("{/literal}{ts}Change this will effect current uses of thi coupon.{/ts} {ts}Are you sure you want to continue?{/ts}{literal}");
+        var change = window.confirm("{/literal}{ts}Change this value will effect current uses of this coupon.{/ts} {ts}Are you sure you want to continue?{/ts}{literal}");
         if (change) {
           $code.removeAttr("readonly");
         }
