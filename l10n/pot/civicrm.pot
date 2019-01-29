@@ -46765,3 +46765,6 @@ msgstr ""
 
 msgid "Discounted Percentage"
 msgstr ""
+
+msgid "No any coupon found by this url."
+msgstr ""

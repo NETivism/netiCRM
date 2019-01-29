@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-01-29 02:44+0000\n"
+"PO-Revision-Date: 2019-01-29 07:50+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46942,3 +46942,6 @@ msgstr "使用時間"
 
 msgid "Discounted Percentage"
 msgstr "折扣百分比"
+
+msgid "No any coupon found by this url."
+msgstr "此網址未找到任何優惠碼。"
