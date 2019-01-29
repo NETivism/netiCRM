@@ -46759,3 +46759,9 @@ msgstr ""
 
 msgid "The coupon is not valid."
 msgstr ""
+
+msgid "Used Date"
+msgstr ""
+
+msgid "Discounted Percentage"
+msgstr ""
