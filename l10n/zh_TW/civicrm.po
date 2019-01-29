@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-01-28 09:53+0000\n"
+"PO-Revision-Date: 2019-01-29 02:44+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46893,7 +46893,7 @@ msgid "Used"
 msgstr "已使用"
 
 msgid "Since you use coupon, the correct price will display on Confirm page."
-msgstr "因為您已使用優惠碼，正確的金額將提供在「確認頁」。"
+msgstr "因為您已使用優惠碼，正確的金額將顯示在下一步「確認頁」。"
 
 msgid "Generate Random Code"
 msgstr "隨機產生代碼"
@@ -46902,10 +46902,10 @@ msgid "Change this field will affect current uses of this coupon."
 msgstr "修改這個欄位會影響目前使用的優惠碼。"
 
 msgid "Limited on Events"
-msgstr "限制於活動"
+msgstr "使用於活動"
 
 msgid "Limited on Price Option"
-msgstr "限制於價目表選項"
+msgstr "使用於價目表選項"
 
 msgid "Monetary"
 msgstr "金額"
@@ -46936,3 +46936,9 @@ msgstr "確認使用"
 
 msgid "The coupon is not valid."
 msgstr "此優惠碼是無效的。"
+
+msgid "Used Date"
+msgstr "使用時間"
+
+msgid "Discounted Percentage"
+msgstr "折扣百分比"
