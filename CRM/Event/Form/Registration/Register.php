@@ -676,7 +676,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       'date' => date('Y-m-d H:i:s'),
       'is_active' => 1,
       'entity_table' => 'civicrm_event',
-      'entity_id' => $form->_id,
+      'entity_id' => $form->_eventId,
     );
     $couponDAO = CRM_Coupon_BAO_Coupon::getCouponList($params);
     if (!empty($couponDAO->N)) {
