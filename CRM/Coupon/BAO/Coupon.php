@@ -135,7 +135,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         $field = 'ct.'.$field;
       }
       $couponIds = implode(',', $ids);
-      $sql = "SELECT c.*, ct.id as coupon_track_id, ct.*, contact.sort_name, contrib.total_amount FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contact contact ON ct.contact_id = contact.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND {$field} IN({$couponIds}) ORDER BY ct.used_date DESC";
+      $sql = "SELECT c.*, ct.id as coupon_track_id, ct.*, contact.sort_name, contrib.total_amount, ct.used_date FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contact contact ON ct.contact_id = contact.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND {$field} IN({$couponIds}) ORDER BY ct.used_date DESC";
       return CRM_Core_DAO::executeQuery($sql);
     }
   }
@@ -203,7 +203,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       $sql = "SELECT count(ct.id) as count FROM civicrm_coupon_track ct LEFT JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE (ct.used_date IS NOT NULL AND ct.coupon_id = %1 AND contrib.contribution_status_id = 1)";
       $params = array(1 => array($dao->id, 'Integer'));
       $count = CRM_Core_DAO::singleValueQuery($sql, $params);
-      if($dao->count_max <= $count){
+      if($dao->count_max <= $count && $count != 0){
         $isValid = false;
       }
     }

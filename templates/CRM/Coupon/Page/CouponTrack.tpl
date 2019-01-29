@@ -6,8 +6,9 @@
         <th>{ts}Contact{/ts}</th>
         <th id="coupon-code">{ts}Coupon{/ts}</th>
         <th id="coupon-type">{ts}Coupon Type{/ts}</th>
-        <th>{ts}Discounted Fees{/ts}</th>
+        <th>{ts}Discounted Fees{/ts} / {ts}Percentage{/ts}</th>
         <th>{ts}Total Amount{/ts}</th>
+        <th>{ts}Used Date{/ts}</th>
       </tr>
     </thead>
     {foreach from=$rows item=row}
@@ -17,6 +18,7 @@
         <td class="coupon-type">{ts}{$row.coupon_type|ucfirst}{/ts}</td>
         <td class="coupon-discount">{if $row.coupon_type == 'percentage'}{$row.discount}%{else}${$row.discount}{/if}</td>
         <td class="coupon-total_amount"><a href="{crmURL p="civicrm/contact/view/contribution" q="reset=1&id=`$row.contribution_id`&cid=`$row.contact_id`&action=view"}" target="_blank">{$row.total_amount|crmMoney}</a></td>
+        <td class="coupon-used_date">{$row.used_date}</td>
       </tr>
     {/foreach}
     </table>

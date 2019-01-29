@@ -72,12 +72,27 @@
     });
     $("#change").click(function(){
       if ($code.attr('readonly')) {
-        var change = window.confirm("{/literal}{ts}Change this value will effect current uses of this coupon.{/ts} {ts}Are you sure you want to continue?{/ts}{literal}");
+        var change = window.confirm("{/literal}{ts}Change this field will affect current uses of this coupon.{/ts} {ts}Are you sure you want to continue?{/ts}{literal}");
         if (change) {
           $code.removeAttr("readonly");
         }
       }
     });
+
+    function updateDiscountFeeLabel(){
+      var requiredHtml = $('[for="discount"] span').get(0).outerHTML;
+      console.log($('#coupon_type').val());
+      if($('#coupon_type').val() == 'percentage'){
+        $('[for="discount"]').html("{/literal}{ts}Discounted Percentage{/ts}{literal}"+requiredHtml);
+      }
+      if($('#coupon_type').val() == 'monetary'){
+        $('[for="discount"]').html("{/literal}{ts}Discounted Fees{/ts}{literal}"+requiredHtml);
+      }
+    }
+
+    $('#coupon_type').change(updateDiscountFeeLabel);
+    updateDiscountFeeLabel();
+
   });
   {/literal}</script>
 </div>

@@ -128,7 +128,13 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     $fields = CRM_Coupon_DAO_Coupon::fields();
     $params = $this->controller->exportValues();
     $params['start_date'] = CRM_Utils_Date::processDate($params['start_date'], $params['start_date_time']);
+    if(empty($params['start_date'])){
+      $params['start_date'] = 'NULL';
+    }
     $params['end_date'] = CRM_Utils_Date::processDate($params['end_date'], $params['end_date_time']);
+    if(empty($params['end_date'])){
+      $params['end_date'] = 'NULL';
+    }
 
     $additional = array();
     $coupon = array();
