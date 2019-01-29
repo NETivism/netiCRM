@@ -374,11 +374,11 @@
       cj('.coupon-check-symbol').hide();
     }
     else{
-      var reg = /id=(\d+)/;
-      if(reg.test(location.search)){
-        var event_id = reg.exec(location.search)[1];
-      }
-
+      {/literal}
+        {if $eventId}
+          var event_id = "{$eventId}";
+        {/if}
+      {literal}
       var code = cj('#coupon').val();
       var qfKey = cj('[name=qfKey]').val();
       var param = {

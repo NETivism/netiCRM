@@ -54,7 +54,7 @@ class CRM_Coupon_Page_AJAX {
     if(!empty($activeOptionIds)){
       $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $activeOptionIds, 'civicrm_price_field_value');
     }
-    if(!$coupon){
+    if(!$coupon && !empty($event_id)){
       $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $event_id);
     }
     if($coupon){

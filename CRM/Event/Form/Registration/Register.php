@@ -682,6 +682,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if (!empty($couponDAO->N)) {
       $form->_feeBlock['coupon'] = 1;
     }
+    $form->assign('eventId', $form->_eventId);
 
     //its time to call the hook.
     CRM_Utils_Hook::buildAmount('event', $form, $form->_feeBlock);
