@@ -104,6 +104,14 @@
       {include file="CRM/Price/Form/PriceSet.tpl"}
       {include file="CRM/Price/Form/ParticipantCount.tpl"}
     </fieldset>
+    {if $form.coupon}
+      <div class="crm-section coupon-section">
+        <div class="label">{$form.coupon.label}</div>
+        <div class="content"><span class="coupon-html-wrapper">{$form.coupon.html} <i class="zmdi coupon-check-symbol zmdi-check-circle"></i></span><a id="#coupon_valid" class="button" onclick="couponValid()"><span class="coupon-btn-text">{ts}Confirm to use{/ts}</span></a><br/>
+          <span class="description">{$coupon.description}</span>
+        </div>
+      </div>
+    {/if}
     {if $form.payment_processor.label}
       <div class="crm-section payment_processor-section">
         <div class="label">{$form.payment_processor.label}</div>
@@ -130,6 +138,14 @@
         <div class="content">{$form.amount.html}</div>
         <div class="clear"></div>
       </div>
+      {if $form.coupon}
+        <div class="crm-section coupon-section">
+          <div class="label">{$form.coupon.label}</div>
+          <div class="content"><span class="coupon-html-wrapper">{$form.coupon.html} <i class="zmdi coupon-check-symbol zmdi-check-circle"></i></span><a id="#coupon_valid" class="button" onclick="couponValid()"><span class="coupon-btn-text">{ts}Confirm to use{/ts}</span></a><br/>
+            <span class="description">{$coupon.description}</span>
+          </div>
+        </div>
+      {/if}
       {if $form.payment_processor.label}
         <div class="crm-section payment_processor-section">
           <div class="label">{$form.payment_processor.label}</div>
@@ -331,6 +347,105 @@
     cj("#register-me").click(function(){
       cj("#register-now").slideDown();
     });
+  }
+  
+  cj(function(){
+    if(cj('[name=coupon_is_valid]').val() == 1){
+      cj('#coupon').attr('readonly', 'readonly');
+      cj('.coupon-btn-text').text('{/literal}{ts}Change{/ts}{literal}');
+      cj('.coupon-check-symbol').show()
+      if(cj('#pricesetTotal').length){
+        cj('#pricesetTotal').after("<div class='crm-section'><div class='label'></div><div class='content coupon-total description'>{/literal}{ts}Since you use coupon, the correct price will display on Confirm page.{/ts}{literal}</div></div>");
+      }
+    }
+    else{
+      cj('.coupon-check-symbol').hide();
+    }
+  });
+
+  function couponValid(){
+    if(cj('[name=coupon_is_valid]').val() == 1){
+      cj('.coupon-description').remove();
+      cj('[name=coupon_is_valid]').val(0);
+      cj('.result').text("");
+      cj('#coupon').removeAttr('readonly');
+      cj('.coupon-btn-text').text('{/literal}{ts}Confirm to use{/ts}{literal}');
+      cj('.coupon-total').remove();
+      cj('.coupon-check-symbol').hide();
+    }
+    else{
+      {/literal}
+        {if $eventId}
+          var event_id = "{$eventId}";
+        {/if}
+      {literal}
+      var code = cj('#coupon').val();
+      var qfKey = cj('[name=qfKey]').val();
+      var param = {
+        code : code, 
+        qfKey : qfKey,
+        event_id : event_id,
+        {/literal}
+        activePriceOptionIds : "{$activePriceOptionIds}",
+        {literal}
+      }
+      cj.ajax({
+        type: "POST", 
+        url: '/civicrm/coupon/ajax/valid',
+        data: param, 
+        async: false, 
+        dataType: 'json', 
+        success: function(data){
+          cj('.coupon-description').remove();
+          if(!cj('.coupon-section .content .coupon-result').length){
+            cj('.coupon-section .content').append('<div class="coupon-result"></div>');
+          }else{
+            cj('.coupon-section .content .coupon-result').html("");
+          }
+          if(data){
+            cj('[name=coupon_is_valid]').val(1);
+            cj('#coupon').attr('readonly', 'readonly');
+            cj('.coupon-btn-text').text('{/literal}{ts}Change{/ts}{literal}');
+
+            var description = data['description'];
+            if(data['fields']){
+              Object.values(data['fields']).forEach(function(fieldObject){
+                var $field = cj('[name^='+fieldObject['fieldName']+']');
+                var newDivText = '<div class="coupon-description">'+data['description']+'</div>';
+                if($field.is('select')){
+                  $field.after(cj(newDivText));
+                }
+                else if($field.is('[type=checkbox]')){
+                  var $value = cj('[name="'+fieldObject['fieldName']+'['+fieldObject['vid']+']"]');
+                  $value.closest('label').append(cj(newDivText));
+                }
+                else if($field.is('[type=radio]')){
+                  $field.closest('label').find('[value='+fieldObject['vid']+']').closest('label').append(cj(newDivText));
+
+                }
+                else if($field.is('[type=number]')){
+                  $field.after(cj(newDivText));
+                }
+              });
+            }
+            else if(data['description']){
+              cj('.coupon-result').text(description);
+            }
+
+            if(cj('#pricesetTotal').length){
+              cj('#pricesetTotal').after("<div class='crm-section'><div class='label'></div><div class='content coupon-total description'>{/literal}{ts}Since you use coupon, the correct price will display on Confirm page.{/ts}{literal}</div></div>");
+            }
+            cj('.coupon-check-symbol').show();
+          }
+          else{
+            var description = '{/literal}{ts}The coupon is not valid.{/ts}{literal}';
+            cj('[name=coupon_is_valid]').val(0);
+            cj('.coupon-result').text(description);
+          }
+          
+        },
+      });
+    }
   }
 </script>
 {/literal} 

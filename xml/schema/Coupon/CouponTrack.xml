@@ -70,4 +70,10 @@
       <fieldName>used_date</fieldName>
       <add>4.0</add>
   </index>
+  <field>
+      <name>discount_amount</name>
+      <type>int unsigned</type>
+      <comment>Total discount amount on contribution.</comment>
+      <add>4.0</add>
+  </field>
 </table>

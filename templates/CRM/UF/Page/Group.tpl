@@ -31,19 +31,28 @@
     {include file="CRM/UF/Form/Preview.tpl"}
 {elseif $action eq 8192}
     {* Display HTML Form Snippet Code *}
-    <div id="help">
-        {ts}The HTML code below will display a form consisting of the active fields in this Profile. You can copy this HTML code and paste it into any block or page on ANY website where you want to collect contact information.{/ts} {help id='standalone'}
-    </div>
-    <br />
     <form name="html_code" action="{crmURL p='civicrm/admin/uf/group' q="action=profile&gid=$gid"}">
-    <div id="standalone-form">
-        <a href="#" onclick="html_code.profile.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts}</span></a> 
-        <textarea rows="3"  name="profile" id="profile" style="width:100%;" onfocus="this.select();">{$profile}</textarea>
-        <div class="spacer"></div>    
-        <a href="#" onclick="html_code.profile.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts}</span></a> 
+    <div>
+      <h2>{ts}Link{/ts}</h2>
+      <input name="link_url" value="{crmURL p='civicrm/profile/create' q="gid=$gid&reset=1" a=true}" class="huge"> 
+      <a href="#" onclick="html_code.link_url.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts} {ts}Link{/ts}</span></a> 
+      <a href="{crmURL p='civicrm/profile/create' q="gid=`$gid`&reset=1" a=true}" class="button" target="_blank"><i class="zmdi zmdi-link"></i><span>{ts}Use (create mode){/ts}</span></a> 
+    </div>
+
+    <div>
+      <h2>{ts}HTML Form Snippet{/ts}</h2>
+      <div>
+        <table><tr>
+          <td><textarea rows="7" style="width:26em;" name="profile" id="profile" onfocus="this.select();">{$profile}</textarea></td>
+          <td>
+            {ts}The HTML code below will display a form consisting of the active fields in this Profile. You can copy this HTML code and paste it into any block or page on ANY website where you want to collect contact information.{/ts}<br>
+            <a href="#" onclick="html_code.profile.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts}</span></a> 
+          </td>
+        </tr></table>
+      </div>
     </div>
     <div class="action-link-button">
-        &nbsp; <a href="{crmURL p='civicrm/admin/uf/group' q="reset=1"}">&raquo;  {ts}Back to Profile Listings{/ts}</a>
+        <a href="{crmURL p='civicrm/admin/uf/group/field' q="reset=1&action=browse&gid=$gid"}"><i class="zmdi zmdi-arrow-left"></i>{ts}Back to Profile Listings{/ts}</a>
     </div>
     </form>
 

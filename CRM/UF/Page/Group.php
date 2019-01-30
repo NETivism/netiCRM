@@ -85,17 +85,19 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           'title' => ts('Edit CiviCRM Profile Group'),
         ),
         CRM_Core_Action::ADD => array(
-          'name' => ts('Use Profile-Create Mode'),
-          'url' => 'civicrm/profile/create',
-          'qs' => 'gid=%%id%%&reset=1',
-          'title' => ts('Use Profile-Create Mode'),
+          'name' => ts('Publish Online Profile'),
+          'url' => 'civicrm/admin/uf/group',
+          'qs' => 'action=profile&gid=%%id%%',
+          'title' => ts('HTML Form Snippet for this Profile'),
         ),
+        /*
         CRM_Core_Action::VIEW => array(
           'name' => ts('Public Pages'),
           'url' => 'civicrm/profile',
           'qs' => 'reset=1&gid=%%id%%',
           'title' => ts('Search in public pages when enabled in profile settings'),
         ),
+        */
         CRM_Core_Action::DISABLE => array(
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_UFGroup' . '\',\'' . 'enable-disable' . '\' );"',
@@ -113,12 +115,6 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           'url' => 'civicrm/admin/uf/group',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete CiviCRM Profile Group'),
-        ),
-        CRM_Core_Action::PROFILE => array(
-          'name' => ts('HTML Form Snippet'),
-          'url' => 'civicrm/admin/uf/group',
-          'qs' => 'action=profile&gid=%%id%%',
-          'title' => ts('HTML Form Snippet for this Profile'),
         ),
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy Profile'),
@@ -174,7 +170,6 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       }
       elseif ($action & CRM_Core_Action::PROFILE) {
         $this->profileCode();
-        CRM_Utils_System::setTitle(ts('%1 - HTML Form Snippet', array(1 => $this->_title)));
       }
       elseif ($action & CRM_Core_Action::PREVIEW) {
         $this->preview($id, $action);
@@ -217,16 +212,21 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     $template = CRM_Core_Smarty::singleton();
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
     if ($gid) {
-    
+      $this->assign('gid', $gid);
       $iframeSrc = CRM_Utils_System::url('civicrm/profile/create', 'reset=1&embed=1&gid='.$gid, TRUE, NULL, FALSE);
       $this->assign('iframeSrc', $iframeSrc);
       $this->assign('iframeWidth', '100%');
       $iframeCode = trim($template->fetch('CRM/common/iframe.tpl'));
       $this->assign('profile', htmlentities($iframeCode, ENT_NOQUOTES, 'UTF-8'));
+      
       //get the title of uf group
+      $title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gid, 'title');
+      $title = $title . ' - ' . ts('Publish Online Profile');
+      CRM_Utils_System::setTitle($title);
     }
     else {
       $title = 'Profile Form';
+      CRM_Utils_System::setTitle(ts('%1 - HTML Form Snippet', array(1 => $this->_title)));
     }
 
     $this->assign('title', $title);
@@ -274,6 +274,12 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     require_once 'CRM/Utils/Hook.php';
     $ufGroups = CRM_Core_PseudoConstant::ufGroup();
     CRM_Utils_Hook::aclGroup(CRM_Core_Permission::ADMIN, NULL, 'civicrm_uf_group', $ufGroups, $allUFGroups);
+    $restrictType = array(
+      'Contribution',
+      'Membership',
+      'Activity',
+      'Participant',
+    );
 
     foreach ($allUFGroups as $id => $value) {
       $ufGroup[$id] = array();
@@ -304,7 +310,8 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       $groupComponents = array('Contribution', 'Membership', 'Activity', 'Participant');
 
       // drop Create, Edit and View mode links if profile group_type is Contribution, Membership, Activities or Participant
-      if ($value['group_type'] == 'Contribution' || $value['group_type'] == 'Membership' || $value['group_type'] == 'Activity' || $value['group_type'] == 'Participant') {
+      $profileTypes = explode(',', $value['group_type']);
+      if (array_intersect($restrictType, $profileTypes)) {
         $action -= CRM_Core_Action::ADD;
       }
       $groupTypesString = '';

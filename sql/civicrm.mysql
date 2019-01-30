@@ -4540,7 +4540,8 @@ CREATE TABLE civicrm_coupon_track (
      coupon_id int unsigned    COMMENT 'FK to coupon id',
      contact_id int unsigned   DEFAULT NULL COMMENT 'FK to contact id',
      contribution_id int unsigned   DEFAULT NULL COMMENT 'FK to contribution id, means used.',
-     used_date datetime    COMMENT 'Used date time of this coupon track.' 
+     used_date datetime    COMMENT 'Used date time of this coupon track.',
+     discount_amount int unsigned    COMMENT 'Total discount amount on contribution.' 
 ,
     PRIMARY KEY ( id )
  

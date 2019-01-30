@@ -111,6 +111,12 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
    */
   public $used_date;
   /**
+   * Total discount amount on contribution.
+   *
+   * @var int unsigned
+   */
+  public $discount_amount;
+  /**
    * class constructor
    *
    * @access public
@@ -173,6 +179,11 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
           'name' => 'used_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Used Date') ,
+        ) ,
+        'discount_amount' => array(
+          'name' => 'discount_amount',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Discount Amount') ,
         ) ,
       );
     }

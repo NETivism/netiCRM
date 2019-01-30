@@ -6294,3 +6294,19 @@ input.crm-form-textfield,
   display: flex;
   justify-content: center;
 }
+
+/** Coupon */
+#priceset .coupon-description{
+  color: red;
+  padding-left: 10px;
+}
+.coupon-html-wrapper{
+  position: relative;
+}
+.region-content div .coupon-check-symbol{
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  color: #1faa00;
+}

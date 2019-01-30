@@ -232,6 +232,11 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     //get the additional participant ids.
     $this->_additionalParticipantIds = $this->get('additionalParticipantIds');
 
+    // For coupon
+    $this->_usedOptionsDiscount = $this->get('usedOptionsDiscount');
+    $this->_totalDiscount = $this->get('totalDiscount');
+    $this->_coupon = $this->get('coupon');
+
     $config = CRM_Core_Config::singleton();
 
     if (!$this->_values) {

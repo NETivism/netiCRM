@@ -661,7 +661,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $discountedFee = CRM_Utils_Array::value('discount', $form->_values);
     if (is_array($discountedFee) && !empty($discountedFee)) {
       if (!$discountId) {
-        require_once 'CRM/Core/BAO/Discount.php';
         $form->_discountId = $discountId = CRM_Core_BAO_Discount::findSet($form->_eventId, 'civicrm_event');
       }
       if ($discountId) {
@@ -672,8 +671,20 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $form->_feeBlock = array();
     }
 
+    // add coupon field in feeBlock for hook buildAmount
+    $params = array(
+      'date' => date('Y-m-d H:i:s'),
+      'is_active' => 1,
+      'entity_table' => 'civicrm_event',
+      'entity_id' => $form->_eventId,
+    );
+    $couponDAO = CRM_Coupon_BAO_Coupon::getCouponList($params);
+    if (!empty($couponDAO->N)) {
+      $form->_feeBlock['coupon'] = 1;
+    }
+    $form->assign('eventId', $form->_eventId);
+
     //its time to call the hook.
-    require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::buildAmount('event', $form, $form->_feeBlock);
 
     //reset required if participant is skipped.
@@ -690,12 +701,28 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       //format price set fields across option full.
       self::formatFieldsForOptionFull($form);
 
-      require_once 'CRM/Event/BAO/Participant.php';
+      // add coupon field in feeBlock for hook buildAmount
+      $activeOptionIds = $form->get('activePriceOptionIds');
+      $params = array(
+        'date' => date('Y-m-d H:i:s'),
+        'is_active' => 1,
+        'entity_table' => 'civicrm_price_field_value',
+        'entity_id' => $activeOptionIds,
+      );
+      $couponDAO = CRM_Coupon_BAO_Coupon::getCouponList($params);
+      if (!empty($couponDAO->N)) {
+        $form->_feeBlock['coupon'] = 1;
+        $form->assign('activePriceOptionIds', implode(',', $activeOptionIds));
+      }
+
       $form->addGroup($elements, 'amount', ts('Event Fee(s)'), '<br />');
       $form->add('hidden', 'priceSetId', $form->_priceSetId);
 
-      require_once 'CRM/Price/BAO/Field.php';
-      foreach ($form->_feeBlock as $field) {
+      foreach ($form->_feeBlock as $idx => $field) {
+        if ($idx == 'coupon') {
+          CRM_Coupon_BAO_Coupon::addQuickFormElement($form);
+          continue;
+        }
         if (CRM_Utils_Array::value('visibility', $field) == 'public' ||
           $className == 'CRM_Event_Form_Participant'
         ) {
@@ -735,9 +762,12 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $form->assign('priceSet', $form->_priceSet);
     }
     else {
-      require_once 'CRM/Utils/Money.php';
       $eventFeeBlockValues = array();
-      foreach ($form->_feeBlock as $fee) {
+      foreach ($form->_feeBlock as $idx => $fee) {
+        if ($idx == 'coupon') {
+          CRM_Coupon_BAO_Coupon::addQuickFormElement($form);
+          continue;
+        }
         if (is_array($fee)) {
           $eventFeeBlockValues['amount_id_' . $fee['amount_id']] = $fee['value'];
           $elements[] = &$form->createElement('radio', NULL, '',
@@ -799,6 +829,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $currentOptionsCount = self::getPriceSetOptionCount($form);
     $recordedOptionsCount = CRM_Event_BAO_Participant::priceSetOptionsCount($form->_eventId, $skipParticipants);
 
+    $activeOptionIds = array();
+    $allOptions = array();
     foreach ($form->_feeBlock as & $field) {
       $optionFullIds = array();
       $fieldId = $field['id'];
@@ -808,6 +840,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $sumCount = 0;
       foreach ($field['options'] as & $option) {
         $optId = $option['id'];
+        $activeOptionIds[$optId] = $optId;
+        $allOptions[$optId] = $option;
         $count = CRM_Utils_Array::value('count', $option, 0);
         $maxValue = CRM_Utils_Array::value('max_value', $option, 0);
         $dbTotalCount = CRM_Utils_Array::value($optId, $recordedOptionsCount, 0);
@@ -821,6 +855,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         ) {
           $isFull = TRUE;
           $optionFullIds[$optId] = $optId;
+          unset($activeOptionIds[$optId]);
         }
 
         //here option is not full,
@@ -834,6 +869,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
             !CRM_Utils_Array::value($opId, $formattedPriceSetDefaults["price_{$fieldId}"])
           ) {
             $optionFullIds[$optId] = $optId;
+            unset($activeOptionIds[$optId]);
             $isFull = TRUE;
           }
         }
@@ -846,6 +882,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         foreach ($field['options'] as & $option) {
           $optId = $option['id'];
           $optionFullIds[$optId] = $optId;
+          unset($activeOptionIds[$optId]);
           $option['is_full'] = TRUE;
         }
       }
@@ -858,6 +895,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       //finally get option ids in.
       $field['option_full_ids'] = $optionFullIds;
     }
+    $form->set('activePriceOptionIds', $activeOptionIds);
+    $form->set('allPriceOption', $allOptions);
   }
 
   /**
@@ -955,6 +994,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     }
 
     if ($self->_values['event']['is_monetary']) {
+      // validate coupon
+      $couponErrors = CRM_Coupon_BAO_Coupon::checkError($self, $fields);
+      if(!empty($couponErrors)){
+        foreach ($couponErrors as $key => $value) {
+          $errors[$key] = $value;
+        }
+      }
+
       if (is_array($self->_paymentProcessor)) {
         $payment = &CRM_Core_Payment::singleton($self->_mode, $self->_paymentProcessor, $this);
         $error = $payment->checkConfig($self->_mode);
@@ -1028,6 +1075,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * @return None
    */
   public function postProcess() {
+
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
 
@@ -1148,6 +1196,18 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $this->_params = array();
       $this->_params[] = $params;
       $this->set('params', $this->_params);
+
+
+      CRM_Coupon_BAO_Coupon::countAmount($this, $params);
+      if(!empty($this->_usedOptionsDiscount)){
+        foreach ($this->_usedOptionsDiscount as $key => $value) {
+          $this->_lineItem[0][$key]['discount'] = $value;
+        }
+        $this->set('usedOptionsDiscount', $this->_usedOptionsDiscount);
+      }
+      $this->set('totalDiscount', $this->_totalDiscount);
+      $this->set('couponDescription', $this->_coupon['description']);
+
 
       if ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
         //get the button name

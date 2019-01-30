@@ -149,7 +149,15 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
     $select['group'] = ts('Group(s)');
     $select['tag'] = ts('Tag(s)');
 
+    $isSearchable = $inSelector = NULL;
+
     while ($ufFieldBAO->fetch()) {
+      if ($ufFieldBAO->is_searchable) {
+        $isSearchable = TRUE;
+      }
+      if ($ufFieldBAO->inSelector) {
+        $inSelector = TRUE;
+      }
       $ufField[$ufFieldBAO->id] = array();
       $phoneType = $locType = '';
       CRM_Core_DAO::storeValues($ufFieldBAO, $ufField[$ufFieldBAO->id]);
@@ -177,6 +185,10 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
           'gid' => $this->_gid,
         )
       );
+    }
+
+    if (!$isSearchable && !$inSelector) {
+      $this->assign('skipBrowse', TRUE);
     }
 
     $returnURL = CRM_Utils_System::url('civicrm/admin/uf/group/field',

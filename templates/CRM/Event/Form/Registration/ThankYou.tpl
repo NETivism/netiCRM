@@ -122,6 +122,12 @@
             			<div class="clear"></div>
                     {/foreach}
                 </div>
+                {if $couponDescription && !$usedOptionsDiscount}
+                    <div class="crm-section no-label discount-section">
+                        <div class="content">{$couponDescription}:&nbsp;&nbsp;-{$totalDiscount|crmMoney}</div>
+                        <div class="clear"></div>
+                    </div>
+                {/if}   
                 {if $totalAmount}
         			<div class="crm-section no-label total-amount-section">
                 		<div class="content bold">{ts}Event Total{/ts}:&nbsp;&nbsp;{$totalAmount|crmMoney}</div>

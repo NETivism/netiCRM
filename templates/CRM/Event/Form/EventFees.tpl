@@ -27,26 +27,23 @@
     <table class="form-layout">
     {if $priceSet}
     	{if $action eq 2 and $hasPayment} {* Updating *}
-            {if $lineItem}
-                <tr class="crm-event-eventfees-form-block-line_items">
-                    <td class="label">{ts}Event Fees{/ts}</td>
-                    <td>{include file="CRM/Price/Page/LineItem.tpl" context="Event"}</td>
-                </tr>
-            {else}
-                <tr class="crm-event-eventfees-form-block-event_level">
-                    <td class="label">{ts}Event Level{/ts}</td>
-                    <td>{$fee_level}&nbsp;{if $fee_amount}- {$fee_amount|crmMoney:$fee_currency}{/if}</td>
-                </tr>
-            {/if}
-        {else} {* New participant *}
-    	<fieldset id="priceset" class="crm-group priceset-group">
-            <tr class="crm-event-eventfees-form-block-price_set_amount">  
-            <td class="label" style="padding-top: 10px;">{$form.amount.label}</td>
-	    <td class="view-value"><table class="form-layout">{include file="CRM/Price/Form/PriceSet.tpl"}</td>
-     	</fieldset>
-    </table>
-
-    {/if}	
+        {if $lineItem}
+          <tr class="crm-event-eventfees-form-block-line_items">
+            <td class="label">{ts}Event Fees{/ts}</td>
+            <td>{include file="CRM/Price/Page/LineItem.tpl" context="Event"}</td>
+          </tr>
+        {else}
+          <tr class="crm-event-eventfees-form-block-event_level">
+            <td class="label">{ts}Event Level{/ts}</td>
+            <td>{$fee_level}&nbsp;{if $fee_amount}- {$fee_amount|crmMoney:$fee_currency}{/if}</td>
+          </tr>
+        {/if}
+      {else} {* New participant *}
+        <tr class="crm-event-eventfees-form-block-price_set_amount">
+          <td class="label" style="padding-top: 10px;">{$form.amount.label}</td>
+          <td class="view-value"><table class="form-layout">{include file="CRM/Price/Form/PriceSet.tpl"}</table></td>
+        </tr>
+      {/if}
     {else} {* NOT Price Set *}
      <tr>
      <td class ='html-adjust' colspan=2>
@@ -75,6 +72,12 @@
             <br />&nbsp;&nbsp;<span class="description">{ts}Event Fee Level (if applicable).{/ts}</span>
         {/if}
         </td></tr>
+        {if $coupon.coupon_track_id}
+          <tr class="crm-event-eventfees-form-block-coupon">
+            <td class="label">{$form.coupon.label}</td>
+            <td>{$form.coupon.html} - {$coupon.description}</td>
+          </tr>
+        {/if}
      	</table>
      </td>
      </tr>
@@ -121,8 +124,7 @@
             invert              = 0
         }
     {/if}
-    </table>
-
+    </table>{* paid table *}
 {/if}
 
 {* credit card block when it is live or test mode*}
