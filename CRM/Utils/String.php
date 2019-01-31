@@ -397,7 +397,14 @@ class CRM_Utils_String {
    * @static
    */
   static function strtoboolstr($str) {
-    if (preg_match('/^(y(es)?|t(rue)?|1)$/i', $str)) {
+    $tsstr = ts($str);
+    if ($tsstr == ts('Yes')) {
+      return '1';
+    }
+    elseif ($tsstr == ts('No')) {
+      return '0';
+    }
+    elseif (preg_match('/^(y(es)?|t(rue)?|1)$/i', $str)) {
       return '1';
     }
     elseif (preg_match('/^(n(o)?|f(alse)?|0)$/i', $str)) {
