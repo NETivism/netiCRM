@@ -590,7 +590,7 @@ WHERE  mailing_id = %1
 INSERT INTO civicrm_mailing_recipients ( mailing_id, contact_id, email_id )
 SELECT %1, i.contact_id, i.email_id
 FROM       civicrm_contact contact_a
-INNER JOIN I_$job_id i ON contact_a.id = i.contact_id
+INNER JOIN I_$job_id i ON contact_a.id = i.contact_id AND contact_a.is_opt_out = 0 AND contact_a.do_not_email = 0 AND contact_a.is_deceased = 0
            $groupJoin
            {$aclFrom}
            {$aclWhere}
