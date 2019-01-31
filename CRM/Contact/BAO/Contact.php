@@ -290,7 +290,6 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
 
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
-
     $contact = self::add($params);
     if (!$contact) {
       // CRM_Core_Error::fatal( ts( 'THe contact was not created, not set up to handle error' ) );
@@ -1529,7 +1528,7 @@ ORDER BY civicrm_email.is_primary DESC";
     list($data, $contactDetails) = self::formatProfileContactParams($params, $fields, $contactID, $ufGroupId, $ctype);
 
     // manage is_opt_out
-    if (array_key_exists('is_opt_out', $fields)) {
+    if (array_key_exists('is_opt_out', $fields) && array_key_exists('is_opt_out', $params)) {
       $wasOptOut = CRM_Utils_Array::value('is_opt_out', $contactDetails, FALSE);
       $isOptOut = CRM_Utils_Array::value('is_opt_out', $params, FALSE);
       $data['is_opt_out'] = $isOptOut;

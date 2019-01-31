@@ -1965,6 +1965,9 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         //CRM-4360
         $params[$key] = $this->checkGender($val);
       }
+      elseif ($key == 'is_opt_out') {
+        $params[$key] = CRM_Utils_String::strtoboolstr($val);
+      }
     }
 
     //now format custom data.
@@ -2010,6 +2013,9 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       }
 
       if ($key == 'id' && isset($field)) {
+        $formatted[$key] = $field;
+      }
+      if ($key == 'is_opt_out' && isset($field)) {
         $formatted[$key] = $field;
       }
 
@@ -2109,6 +2115,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         }
       }
     }
+
     // check for primary location type, whether it is already present for the contact or not, CRM-4423
     if (CRM_Utils_Array::value('id', $formatted) && isset($formatted['location'])) {
       $primaryLocationTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($formatted['id'], TRUE);
