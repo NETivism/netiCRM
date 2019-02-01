@@ -88,39 +88,20 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     }
 
     if ($this->_id) {
-      $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
-        $this->_id,
-        'title'
-      );
-      CRM_Utils_System::setTitle(ts('Title and Settings (%1)',
-          array(1 => $title)
-        ));
+      $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
+      CRM_Utils_System::setTitle(ts('Title and Settings (%1)', array(1 => $title)));
+
+      $background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'background_URL');
+      $this->assign('background_URL', $background_URL);
+      $mobile_background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'mobile_background_URL');
+      $this->assign('mobile_background_URL', $mobile_background_URL);
+      $defaults['deleteBackgroundImage'] = '';
+      $defaults['deleteMobileBackgroundImage'] = '';
     }
     else {
       CRM_Utils_System::setTitle(ts('Title and Settings'));
     }
     $defaults = parent::setDefaultValues();
-
-    if(!empty($this->_id)){
-      $is_active = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
-        $this->_id,
-        'is_active'
-      );
-      $defaults['is_special'] = $is_active & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL;
-
-      $background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
-        $this->_id,
-        'background_URL'
-      );
-      $this->assign('background_URL', $background_URL);
-      $mobile_background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
-        $this->_id,
-        'mobile_background_URL'
-      );
-      $this->assign('mobile_background_URL', $mobile_background_URL);
-      $defaults['deleteBackgroundImage'] = '';
-      $defaults['deleteMobileBackgroundImage'] = '';
-    }
 
     // in update mode, we need to set custom data subtype to tpl
     if (CRM_Utils_Array::value('contribution_type_id', $defaults)) {
@@ -195,10 +176,12 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_Settings', 'formRule'));
 
 
-    $this->add('file', 'uploadBackgroundImage', ts('Background image'));
-    $this->add('file', 'uploadMobileBackgroundImage', ts('Background image of mobile'));
+    $this->addElement('file', 'uploadBackgroundImage', ts('Background image'));
+    $this->addElement('file', 'uploadMobileBackgroundImage', ts('Background image of mobile'));
+    $this->addUploadElement('uploadBackgroundImage');
+    $this->addUploadElement('uploadMobileBackgroundImage');
     $config = CRM_Core_Config::singleton();
-    $this->controller->addActions($config->imageUploadDir, array('uploadBackgroundImage', 'uploadMobileBackgroundImage'));
+
 
     $this->add('hidden', 'deleteBackgroundImage');
     $this->add('hidden', 'deleteMobileBackgroundImage');
@@ -215,12 +198,27 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    * @static
    * @access public
    */
-  static function formRule($values) {
+  static function formRule($values, $files, $self) {
     $errors = array();
 
     //CRM-4286
     if (strstr($values['title'], '/')) {
       $errors['title'] = ts("Please do not use '/' in Title");
+    }
+
+    foreach(array('uploadBackgroundImage', 'uploadMobileBackgroundImage') as $fieldName) {
+      if (isset($files[$fieldName]) && !empty($files[$fieldName]['tmp_name'])) {
+        $maxWidth = 2000;
+        $maxHeight = 2000;
+        $tmpName = $files[$name]['tmp_name'];
+        list($width, $height) = getimagesize($tmpName);
+        if ($width && $height) {
+          if ($width > $maxWidth || $height > $maxHeight) {
+            $image = new CRM_Utils_Image($tmpName, $tmpName);
+            $resized = $image->scale($maxWidth, $maxHeight);
+          }
+        }
+      }
     }
 
     return $errors;
@@ -290,19 +288,12 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     if(!empty($deleteMobileBackgroundImage)){
       $params['mobile_background_URL'] = '';
     }
-
-    $uploadBackgroundImage = CRM_Utils_Array::value('uploadBackgroundImage', $params);
-    if(!empty($uploadBackgroundImage)){
-      $newBackgroundImage = $this->compressImage($uploadBackgroundImage['name'], 1920, 50);
-      $params['background_URL'] = str_replace($config->imageUploadDir, $config->imageUploadURL, $newBackgroundImage);
+    if(!empty($params['uploadBackgroundImage']['name'])){
+      $params['background_URL'] = $config->customFileUploadURL.basename($params['uploadBackgroundImage']['name']);
     }
-
-    $uploadMobileBackgroundImage = CRM_Utils_Array::value('uploadMobileBackgroundImage', $params);
-    if(!empty($uploadMobileBackgroundImage)){
-      $newBackgroundImage = $this->compressImage($uploadMobileBackgroundImage['name'], 480, 100);
-      $params['mobile_background_URL'] = str_replace($config->imageUploadDir, $config->imageUploadURL, $newBackgroundImage);
+    if(!empty($params['uploadMobileBackgroundImage']['name'])){
+      $params['mobile_background_URL'] = $config->customFileUploadURL.basename($params['uploadMobileBackgroundImage']['name']);
     }
-
 
     $dao = &CRM_Contribute_BAO_ContributionPage::create($params);
 
@@ -319,43 +310,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    */
   public function getTitle() {
     return ts('Title and Settings');
-  }
-
-  private function compressImage($filename, $width, $quality) {
-    // to check wether GD is installed or not
-    $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
-    if($gdSupport) {
-      $pathParts = pathinfo($filename);
-      $newFilename = $pathParts['dirname']."/".$pathParts['filename']."_compressed.".$pathParts['extension'];
-      $imageInfo = getimagesize($filename);
-      $widthOrig = $imageInfo[0];
-      $heightOrig = $imageInfo[1];
-
-      if($imageInfo['mime'] == 'image/gif') {
-        $source = imagecreatefromgif($filename);
-      }
-      elseif($imageInfo['mime'] == 'image/png') {
-        $source = imagecreatefrompng($filename);
-      }
-      else {
-        $source = imagecreatefromjpeg($filename);
-      }
-
-      if($widthOrig > $width){
-        $widthNew = $width;
-        $heightNew = $heightOrig * $widthNew / $widthOrig;
-        $image = imagecreatetruecolor($widthNew, $heightNew);
-        imagecopyresampled($image, $source, 0, 0, 0, 0, $widthNew, $heightNew, $widthOrig, $heightOrig);
-      }else{
-        $image = $source;
-      }
-
-      imagejpeg($image, $newFilename, $quality);
-      return $newFilename;
-
-    }else{
-      return false;
-    }
   }
 }
 

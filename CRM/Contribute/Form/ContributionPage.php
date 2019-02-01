@@ -248,6 +248,7 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
         $defaults['is_recur_only'] = 1;
         $defaults['is_recur'] = 1;
       }
+      $defaults['is_special'] = $defaults['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL;
     }
     else {
       $defaults['is_active'] = 1;
