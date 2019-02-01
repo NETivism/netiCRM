@@ -172,7 +172,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       'url', 'wikiURL',
       'domain', 'numberOfDigit',
       'date', 'currentDate',
-      'asciiFile', 'htmlFile', 'utf8File',
+      'asciiFile', 'htmlFile', 'utf8File', 'imageFile',
       'objectExists', 'optionExists', 'postalCode', 'money', 'positiveInteger',
       'xssString', 'fileExists', 'autocomplete', 'validContact',
     );

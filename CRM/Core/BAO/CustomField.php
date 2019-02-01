@@ -856,6 +856,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           (($useRequired || ($useRequired && $field->is_required)) && !$search)
         );
         $qf->addUploadElement($elementName);
+        $qf->addRule($elementName, ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '2000x2000x90xSKIP');
         break;
 
       case 'Select State/Province':

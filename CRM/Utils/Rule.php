@@ -582,6 +582,66 @@ class CRM_Utils_Rule {
   }
 
   /**
+   * see how file rules are written in HTML/QuickForm/file.php
+   * Checks to make sure the uploaded file is html
+   *
+   * @param     array     Uploaded file info (from $_FILES)
+   *            string    WIDTH HEIGHT QUALITY SKIPVERIFY with x between
+   * @access    private
+   *
+   * @return    bool      true if file has been uploaded, false otherwise
+   */
+  static function imageFile($elementValue, $format = NULL) {
+    if (!empty($format)) {
+      list($maxWidth, $maxHeight, $quality, $skip) = explode('x', $format);
+    }
+    if (empty($maxWidth) || empty($maxHeight)) {
+      $maxWidth = 2000;
+      $maxHeight = 2000;
+    }
+    $quality = !empty($quality) ? $quality : 90;
+    $skip = !empty($skip) ? TRUE : FALSE;
+    $valid = TRUE;
+    if (is_array($elementValue['tmp_name'])) {
+      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+        if (!empty($tmpName)) {
+          list($width, $height) = getimagesize($tmpName);
+          if ($width && $height) {
+            if ($width > $maxWidth || $height > $maxHeight) {
+              $image = new CRM_Utils_Image($tmpName, $tmpName, $quality);
+              $resized = $image->scale($maxWidth, $maxHeight);
+            }
+          }
+          else {
+            $valid = FALSE;
+          }
+        }
+      }
+    }
+    else {
+      $tmpName = $elementValue['tmp_name'];
+      if (!empty($tmpName)) {
+        list($width, $height) = getimagesize($tmpName);
+        if ($width && $height) {
+          if ($width > $maxWidth || $height > $maxHeight) {
+            $image = new CRM_Utils_Image($tmpName, $tmpName);
+            $resized = $image->scale($maxWidth, $maxHeight);
+          }
+        }
+        else {
+          $valid = FALSE;
+        }
+      }
+    }
+    if (!empty($skip)) {
+      return TRUE;
+    }
+    else {
+      return $valid;
+    }
+  }
+
+  /**
    * Check if there is a record with the same name in the db
    *
    * @param string $value     the value of the field we are checking

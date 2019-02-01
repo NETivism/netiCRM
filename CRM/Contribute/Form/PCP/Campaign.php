@@ -128,7 +128,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     //        $this->add('textarea', 'page_text', ts('Your Message'), null, false );
 
     $maxAttachments = 5;
-    require_once 'CRM/Core/BAO/File.php';
     CRM_Core_BAO_File::buildAttachment($this, 'civicrm_pcp', $this->_pageId, $maxAttachments, array('accept' => 'image/x-png,image/gif,image/jpeg', 'multiple' => 'multiple'));
 
     $this->addElement('checkbox', 'is_thermometer', ts('Progress Bar'));
@@ -168,19 +167,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     }
     if (strlen($fields['donate_link_text']) >= 64) {
       $errors['donate_link_text'] = ts('Button Text must be less than 64 characters.');
-    }
-    if (isset($files['attachFile']) && is_array($files['attachFile']['tmp_name'])) {
-      $maxWidth = 2000;
-      $maxHeight = 2000;
-      foreach($files['attachFile']['tmp_name'] as $tmpName) {
-        list($width, $height) = getimagesize($tmpName);
-        if ($width && $height) {
-          if ($width > $maxWidth || $height > $maxHeight) {
-            $image = new CRM_Utils_Image($tmpName, $tmpName);
-            $resized = $image->scale($maxWidth, $maxHeight);
-          }
-        }
-      }
     }
 
     return $errors;

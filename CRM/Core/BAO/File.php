@@ -334,12 +334,8 @@ AND       CEF.entity_id    = %2";
       $form->addFile("attachFile[]", ts('Attach File'), $attributes);
       $form->setMaxFileSize($maxFileSize * 1024 * 1024);
       $form->assign('maxFileSize', $maxFileSize);
-      $form->addRule(
-        "attachFile[]",
-        ts('File size should be less than %1 MByte(s)', array(1 => $maxFileSize)),
-        'maxfilesize',
-        $maxFileSize * 1024 * 1024
-      );
+      $form->addRule("attachFile[]", ts('File size should be less than %1 MByte(s)', array(1 => $maxFileSize)), 'maxfilesize', $maxFileSize * 1024 * 1024);
+      $form->addRule('attachFile[]', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '2000x2000');
     }
 
     $attachmentInfo = self::attachmentInfo($entityTable, $entityID);

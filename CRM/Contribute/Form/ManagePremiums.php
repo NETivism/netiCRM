@@ -147,6 +147,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->addRule('thumbnailUrl', 'Please enter the valid URL to display a thumbnail of this image.', 'url');
 
     $this->add('file', 'uploadFile', ts('Image File Name'), 'onChange="select_option();"');
+    $this->addRule('uploadFile', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '1000x1000');
 
 
     $this->add('text', 'price', ts('Market Value'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'price'), TRUE);
@@ -216,15 +217,6 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
         if (!$params['thumbnailUrl']) {
           $errors['thumbnailUrl'] = "Thumbnail URL is Reqiured ";
         }
-      }
-    }
-
-    $fileLocation = $files['uploadFile']['tmp_name'];
-    if ($fileLocation != "") {
-      list($width, $height) = getimagesize($fileLocation);
-
-      if (($width < 80 || $width > 500) || ($height < 80 || $height > 500)) {
-        //$errors ['uploadFile'] = "Please Enter files with dimensions between 80 x 80 and 500 x 500," . " Dimensions of this file is ".$width."X".$height;
       }
     }
 

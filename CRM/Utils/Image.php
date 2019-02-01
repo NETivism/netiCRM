@@ -12,6 +12,9 @@ class CRM_Utils_Image {
         $destination = CRM_Utils_File::existsRename($destination);
       }
     }
+    if (empty($quality)) {
+      $quality = 90;
+    }
     $this->source = $source;
     $this->destination = $destination;
 

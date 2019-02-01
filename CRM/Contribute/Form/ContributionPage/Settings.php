@@ -180,6 +180,9 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addElement('file', 'uploadMobileBackgroundImage', ts('Background image of mobile'));
     $this->addUploadElement('uploadBackgroundImage');
     $this->addUploadElement('uploadMobileBackgroundImage');
+    $this->addRule('uploadBackgroundImage', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '2000x2000');
+    $this->addRule('uploadMobileBackgroundImage', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '2000x2000');
+
     $config = CRM_Core_Config::singleton();
 
 
@@ -204,21 +207,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     //CRM-4286
     if (strstr($values['title'], '/')) {
       $errors['title'] = ts("Please do not use '/' in Title");
-    }
-
-    foreach(array('uploadBackgroundImage', 'uploadMobileBackgroundImage') as $fieldName) {
-      if (isset($files[$fieldName]) && !empty($files[$fieldName]['tmp_name'])) {
-        $maxWidth = 2000;
-        $maxHeight = 2000;
-        $tmpName = $files[$name]['tmp_name'];
-        list($width, $height) = getimagesize($tmpName);
-        if ($width && $height) {
-          if ($width > $maxWidth || $height > $maxHeight) {
-            $image = new CRM_Utils_Image($tmpName, $tmpName);
-            $resized = $image->scale($maxWidth, $maxHeight);
-          }
-        }
-      }
     }
 
     return $errors;
