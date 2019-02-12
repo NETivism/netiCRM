@@ -404,6 +404,9 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
   }
 
   static function checkError($form, $submitValues) {
+    if(empty($submitValues['coupon'])){
+      return ;
+    }
     $coupon = self::getCouponFromFormSubmit($form, $submitValues);
     if(!empty($coupon)){
       $usedOptionsCount = $coupon['usedOptionsCount'];
