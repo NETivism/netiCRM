@@ -82,32 +82,18 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     else {
       // if action is delete do the needful.
       if ($action & (CRM_Core_Action::DELETE)) {
-        $usedFor = &CRM_Coupon_BAO_Coupon::getUsedBy($id);
-        if (empty($usedFor)) {
+        $coupon = new CRM_Coupon_DAO_Coupon();
+        $coupon->id = $id;
+        $coupon->find(TRUE);
+        if (!empty($coupon->N)) {
           // prompt to delete
           $session = &CRM_Core_Session::singleton();
           $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/coupon', 'action=browse'));
-          $controller = new CRM_Core_Controller_Simple('CRM_Coupon_Form_CouponDelete', 'Delete Coupon', NULL);
-          // $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, false, 0);
-          $controller->set('id', $id);
+          $controller = new CRM_Core_Controller_Simple('CRM_Coupon_Form_DeleteCoupon', 'Delete Coupon', NULL);
+          $controller->set('id', $coupon->id);
           $controller->setEmbedded(TRUE);
           $controller->process();
           $controller->run();
-        }
-        else {
-          // add breadcrumb
-          $this->assign('usedCouponSetTitle', CRM_Coupon_BAO_Coupon::getTitle($sid));
-          $this->assign('usedFor', $usedFor);
-          $comps = array("Event" => "civicrm_event",
-            "Contribution" => "civicrm_contribution_page",
-          );
-          $contexts = array();
-          foreach ($comps as $name => $table) {
-            if (array_key_exists($table, $usedFor)) {
-              $contexts[] = $name;
-            }
-          }
-          $this->assign('contexts', $contexts);
         }
       }
 
@@ -191,5 +177,23 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $controller->setEmbedded(TRUE);
     $controller->process();
     $controller->run();
+  }
+
+
+  /**
+   * This function is to make a copy of a coupon, including
+   * all the fields in the page
+   *
+   * @return void
+   * @access public
+   */
+  function copy() {
+    $id = CRM_Utils_Request::retrieve('id', 'Positive',
+      $this, TRUE, 0, 'GET'
+    );
+
+    CRM_Coupon_BAO_Coupon::copy($id);
+
+    CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
   }
 }

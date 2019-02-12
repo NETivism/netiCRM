@@ -46768,3 +46768,21 @@ msgstr ""
 
 msgid "No any coupon found by this url."
 msgstr ""
+
+msgid "The Coupon '%1 (%2)' has been deleted."
+msgstr ""
+
+msgid "The Coupon '%1 (%2)' has not been deleted!"
+msgstr ""
+
+msgid "Delete Coupon"
+msgstr ""
+
+msgid "WARNING: Deleting this coupon will result in the loss of all '%1 (%2)' data."
+msgstr ""
+
+msgid "Enable Coupon"
+msgstr ""
+
+msgid "Disable Coupon"
+msgstr ""

@@ -33,6 +33,20 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     self::saveCouponEntity($coupon->id, $additional);
   }
 
+  /**
+   * update the is_active flag in the db
+   *
+   * @param  int      $id         id of the database record
+   * @param  boolean  $is_active  value we want to set the is_active field
+   *
+   * @return Object             DAO object on sucess, null otherwise
+   * @static
+   * @access public
+   */
+  static function setIsActive($id, $isActive) {
+    return CRM_Core_DAO::setFieldValue('CRM_Coupon_DAO_Coupon', $id, 'is_active', $isActive);
+  }
+
   function saveCouponEntity($couponId, $data) {
     if (empty($couponId) || !is_numeric($couponId)) {
       return;
@@ -51,6 +65,49 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         }
       }
     }
+  }
+
+  public static function deleteCoupon($id) {
+    $coupon = new CRM_Coupon_DAO_Coupon();
+    $coupon->id = $id;
+    $coupon->find(TRUE);
+
+    $entity = new CRM_Coupon_DAO_CouponEntity();
+    $entity->coupon_id = $id;
+    $entity->find();
+    while($entity->fetch()){
+      $entity->delete();
+    }
+
+    $track = new CRM_Coupon_DAO_CouponTrack();
+    $track->coupon_id = $id;
+    $track->find();
+    while($track->fetch()){
+      $track->delete();
+    }
+
+    $coupon->delete();
+    return TRUE;
+  }
+
+  public static function copy($id) {
+    $maxId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_coupon");
+
+    $fieldsFix = array(
+      'prefix' => array(
+        'code' => '__Copy_id_' . ($maxId + 1) . '_',
+      ),
+    );
+
+    $copy = &CRM_Core_DAO::copyGeneric('CRM_Coupon_DAO_Coupon', array('id' => $id), NULL, $fieldsFix);
+
+    //copying all the blocks pertaining to the price set
+    $copyCouponEntity = &CRM_Core_DAO::copyGeneric('CRM_Coupon_DAO_CouponEntity', array('coupon_id' => $id), array('coupon_id' => $copy->id));
+    $copy->save();
+
+    require_once 'CRM/Utils/Hook.php';
+    CRM_Utils_Hook::copy('Coupon', $copy);
+    return $copy;
   }
 
   function getCouponList($filter, $returnFetchedResult = False) {

@@ -1,6 +1,8 @@
 {if $action eq 1 or $action eq 2 or $action eq 4}
   {* action = add / update / view *}
   {include file="CRM/Coupon/Form/Coupon.tpl"}
+{elseif $action eq 8}
+  {include file="CRM/Coupon/Form/DeleteCoupon.tpl"}
 {else}
   {* action = browse *}
 
@@ -16,6 +18,8 @@
 		</div>
 	{/if}
   {if $rows}
+    {* handle enable/disable actions*}
+    {include file="CRM/common/enableDisable.tpl"}
     {include file="CRM/common/jsortable.tpl hasPager=1}
     {strip}
     <table id="coupon" class="display crm-coupon-listing">
