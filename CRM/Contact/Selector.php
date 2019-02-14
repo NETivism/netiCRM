@@ -535,7 +535,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
 
     if ($this->_ufGroupID) {
       require_once 'CRM/Core/PseudoConstant.php';
-      $locationTypes = CRM_Core_PseudoConstant::locationType();
+      $locationTypes = CRM_Core_PseudoConstant::locationType(false, 'name');
 
       $names = array();
       static $skipFields = array('group', 'tag');
