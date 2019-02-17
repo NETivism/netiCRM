@@ -40,50 +40,58 @@ class CRM_Coupon_Page_AJAX {
   static function validEventFromCode(){
     $code = CRM_Utils_Request::retrieve('code', 'Text', $object, False, '', 'Post');
     $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, False, '', 'Post');
-    $activeOptionIdsText = CRM_Utils_Request::retrieve('activePriceOptionIds', 'Text', $object, False, '', 'Post');
-    if(!empty($activeOptionIdsText)){
-      $activeOptionIds = explode(',', $activeOptionIdsText);
-    }
-
     if(empty($event_id)){
       $qfKey = CRM_Utils_Request::retrieve('qfKey', 'Text', $object, False, '', 'Post');
       $session = CRM_Core_Session::singleton();
       $event_id = $session->get('id', 'CRM_Event_Controller_Registration_'.$qfKey);
     }
 
-    if(!empty($activeOptionIds)){
-      $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $activeOptionIds, 'civicrm_price_field_value');
+    $activeOptionIdsText = CRM_Utils_Request::retrieve('activePriceOptionIds', 'Text', $object, False, '', 'Post');
+    if(!empty($activeOptionIdsText)){
+      $activeOptionIds = explode(',', $activeOptionIdsText);
     }
-    if(!$coupon && !empty($event_id)){
+
+    if (!empty($event_id)) {
       $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $event_id);
-    }
-    if($coupon){
-      $return = array(
-        'description' => $coupon['description'],
-      );
-      if($coupon['entity_table'] == 'civicrm_price_field_value'){
-        $return['entity_table'] = 'civicrm_price_field_value';
-        $fields = array();
-        foreach ($coupon['entity_id'] as $vid) {
-          $sql = "SELECT price_field_id FROM civicrm_price_field_value WHERE id = %1";
-          $params = array(1 => array($vid, 'Integer'));
-          $fid = CRM_Core_DAO::singleValueQuery($sql, $params);
-          $fieldName = 'price_'.$fid;
-          $fields[] = array(
-            'fieldName' => $fieldName,
-            'vid' => $vid,
-          );
+      if($coupon){
+        // this coupon doesn't specify any event, check price field value
+        if (empty($coupon['used_for']['civicrm_event']) && !empty($coupon['used_for']['civicrm_price_field_value'])) {
+          $matches = array_intersect($coupon['used_for']['civicrm_price_field_value'], $activeOptionIds);
+          if (!empty($matches)) {
+            $coupon['used_for']['civicrm_price_field_value'] = $matches;
+            $json = self::prepareJson($coupon);
+          }
         }
-        $return['fields'] = $fields;
+        else {
+          $json = self::prepareJson($coupon);
+        }
       }
     }
-    else{
-      $return = NULL;
+    if ($json) {
+      echo $json;
     }
-    $return = json_encode($return);
-    print($return);
-    exit;
+    CRM_Utils_System::civiExit();
   }
 
-
+  public static function prepareJson($coupon) {
+		$return = array(
+			'description' => $coupon['description'],
+		);
+		if (!empty($coupon['used_for']['civicrm_price_field_value'])) {
+			$fvids = $coupon['used_for']['civicrm_price_field_value'];
+			$return['entity_table'] = 'civicrm_price_field_value';
+			$fields = array();
+			$sql = "SELECT price_field_id, id FROM civicrm_price_field_value WHERE id IN(".implode(',', $fvids).")";
+			$dao = CRM_Core_DAO::executeQuery($sql);
+			while($dao->fetch()) {
+				$fieldName = 'price_'.$dao->price_field_id;
+				$fields[] = array(
+					'fieldName' => $fieldName,
+					'vid' => $dao->id,
+				);
+			}
+			$return['fields'] = $fields;
+		}
+    return json_encode($return);
+  }
 }

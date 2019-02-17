@@ -110,6 +110,42 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $copy;
   }
 
+  public static function getCoupon($id = NULL, $code = NULL) {
+    static $coupons = array();
+    if ($code && !empty($coupons[$code])) {
+      return $coupons[$code];
+    }
+    if ($id && !empty($coupons[$id])) {
+      return $coupons[$id];
+    }
+    $filter = array();
+    if ($id && is_numeric($id)) {
+      $filter['id'] = $id;
+    }
+    if ($code) {
+      $filter['code'] = $code;
+    }
+    $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
+    $coupon = array();
+    while($dao->fetch()) {
+      if (empty($coupon)) {
+        foreach($dao as $idx => $value) {
+          if ($idx[0] != '_') {
+            $coupon[$idx] = $value;
+          }
+        }
+      }
+      unset($coupon['entity_table']);
+      unset($coupon['entity_id']);
+      if (!empty($dao->entity_table)) {
+        $coupon['used_for'][$dao->entity_table][$dao->entity_id] = $dao->entity_id;
+      }
+    }
+    $coupons[$coupon['id']] = $coupon;
+    $coupons[$coupon['code']] = $coupon;
+    return $coupon;
+  }
+
   function getCouponList($filter, $returnFetchedResult = False) {
     $sql = "SELECT cc.*, e.entity_table, e.entity_id FROM civicrm_coupon cc LEFT JOIN civicrm_coupon_entity e ON cc.id = e.coupon_id WHERE ";
     $where = $args = array();
@@ -240,75 +276,66 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     if(empty($code)){
       return NULL;
     }
-    $sql = "SELECT * FROM civicrm_coupon WHERE code = %1";
-    $params = array(1 => array($code, 'String'));
-    $dao = CRM_Core_DAO::executeQuery($sql, $params);
-    $isValid = true;
-    $currentTime = time();
-    if($dao->N){
-      $dao->fetch();
-      if(!empty($dao->start_date) && $currentTime < strtotime($dao->start_date)){
-        $isValid = false;
+    $coupon = self::getCoupon(NULL, $code);
+    $currentTime = CRM_REQUEST_TIME;
+    if(!empty($coupon) && $coupon['code'] == $code){
+      if(!empty($coupon['start_date']) && $currentTime < strtotime($coupon['start_date'])){
+        return FALSE;
       }
-      if(!empty($dao->end_date) && strtotime($dao->end_date) < $currentTime){
-        $isValid = false;
+      if(!empty($coupon['end_date']) && $currentTime > strtotime($coupon['end_date'])){
+        return FALSE;
       }
-      if(!$dao->is_active){
-        $isValid = false;
+      if(!$coupon['is_active']){
+        return FALSE;
       }
 
-      $sql = "SELECT count(ct.id) as count FROM civicrm_coupon_track ct LEFT JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE (ct.used_date IS NOT NULL AND ct.coupon_id = %1 AND contrib.contribution_status_id = 1)";
-      $params = array(1 => array($dao->id, 'Integer'));
-      $count = CRM_Core_DAO::singleValueQuery($sql, $params);
-      if($dao->count_max <= $count && $count != 0){
-        $isValid = false;
-      }
-    }
-    else{
-      $isValid = false;
-    }
-    if($isValid){
-      $coupon = array();
-      foreach($dao as $idx => $value) {
-        if ($idx[0] != '_') {
-          $coupon[$idx] = $value;
+      // whatever status , used is used.
+      $couponCount = self::getCouponUsed(array($coupon['id']));
+      $coupon['used'] = $couponCount[$coupon['id']];
+      if (!empty($coupon['count_max'])) {
+        if($coupon['count_max'] <= $coupon['used'] && $coupon['used'] != 0){
+          return FALSE;
         }
       }
+
+      // success
       return $coupon;
     }
-    else{
-      return false;
-    }
+    return FALSE;
   }
 
-  function validEventFromCode($code, $ids = NULL, $entity_table = 'civicrm_event') {
+  function validEventFromCode($code, $eventId, $additionalVerify = array()) {
     $coupon = self::validFromCode($code);
-    if(!empty($coupon) && !empty($ids)){
-      if(is_array($ids)){
-        $idsText = implode(',', $ids);
-      }else{
-        $idsText = $ids;
-      }
-      $sql = "SELECT entity_id, entity_table FROM civicrm_coupon_entity ce WHERE entity_id IN ({$idsText}) AND entity_table = %1 AND coupon_id = %2";
-      $params = array(
-        1 => array($entity_table, 'String'),
-        2 => array($coupon['id'], 'Integer'),
-      );
-      $dao = CRM_Core_DAO::executeQuery($sql, $params);
-      $entity_ids = array(); 
-      while($dao->fetch()){
-        $coupon['entity_table'] = $entity_table;
-        $entity_id = $dao->entity_id;
-        $entity_ids[$entity_id] = $entity_id;
-      }
-      $coupon['entity_id'] = $entity_ids;
-      if(!empty($coupon['entity_id'])){
-        return $coupon;
-      }
-      else{
-        return False;
+    if (empty($coupon)) {
+      return FALSE;
+    }
+
+    // always validate event when given eventId
+    if (!empty($eventId)) {
+      // we limited used for specific event, but this event id not listed
+      if (!empty($coupon['used_for']['civicrm_event']) && empty($coupon['used_for']['civicrm_event'][$eventId])) {
+        return FALSE;
       }
     }
+    
+    // validate additional
+    if (count($additionalVerify)) {
+      foreach($additionalVerify as $entityTable => $entityIds) {
+        $matches = array();
+        if (!is_array($entityIds)) {
+          $entityIds = explode(',', $entityIds);
+        }
+
+        // only validate when coupon setting has limited specify entity table
+        if (!empty($coupon['used_for'][$entityTable])) {
+          $matches = array_intersect($coupon['used_for'][$entityTable], $entityIds);
+          if (empty($matches)) {
+            return FALSE;
+          }
+        }
+      }
+    }
+    return $coupon;
   }
 
   static function getCouponFromFormSubmit($form, $fields){
@@ -338,7 +365,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
 
         if(!empty($usedOptionsCount)){
           $usedOptionsCountText = implode(',', array_keys($usedOptionsCount));
-          $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $usedOptionsCountText, 'civicrm_price_field_value');     
+          $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $form->_eventId, array('civicrm_price_field_value' => $usedOptionsCountText));
         }
       }
       else{

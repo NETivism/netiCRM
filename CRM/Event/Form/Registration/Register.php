@@ -702,7 +702,18 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       self::formatFieldsForOptionFull($form);
 
       // add coupon field in feeBlock for hook buildAmount
-      $activeOptionIds = $form->get('activePriceOptionIds');
+      $activeOptionIds = $form->get('activePriceOptionIds'); // we wont have this price option when  formatFieldsForOptionFull not triggered
+      if (empty($activeOptionIds)) {
+         $activeOptionIds = array();
+         $priceSet = $form->get('priceSet'); 
+         foreach($priceSet['fields'] as $priceField) {
+           foreach($priceField['options'] as $priceOption) {
+             if ($priceOption['is_active']) {
+               $activeOptionIds[] = $priceOption['id'];
+             }
+           }
+         }
+      }
       $params = array(
         'date' => date('Y-m-d H:i:s'),
         'is_active' => 1,
