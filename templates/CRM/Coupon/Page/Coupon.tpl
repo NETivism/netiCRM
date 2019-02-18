@@ -15,6 +15,7 @@
     </form>
 		<div class="action-link-button">
 			<a href="{crmURL p='civicrm/admin/coupon' q="action=add&reset=1"}" id="newCoupon" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Coupon{/ts}</span></a>
+      <a href="{crmURL p='civicrm/admin/coupon' q="action=export&code=`$smarty.get.code`"}" class="button"><span><i class="zmdi zmdi-download"></i>{ts}Export{/ts}</span></a>
 		</div>
 	{/if}
   {if $rows}
@@ -61,6 +62,7 @@
     {if NOT ($action eq 1 or $action eq 2) }
     <div class="action-link-button">
       <a href="{crmURL p='civicrm/admin/coupon' q="action=add&reset=1"}" id="newCoupon" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Coupon{/ts}</span></a>
+      <a href="{crmURL p='civicrm/admin/coupon' q="action=export&code=`$smarty.get.code`"}" class="button"><span><i class="zmdi zmdi-download"></i>{ts}Export{/ts}</span></a>
     </div>
     {/if}
   {else}
