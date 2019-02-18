@@ -44,7 +44,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         ),
         CRM_Core_Action::ENABLE => array(
           'name' => ts('Enable'),
-          'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Coupon_BAO_Coupon' . '\',\'' . 'enable-disable' . '\' );"',
+          'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Coupon_BAO_Coupon' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Coupon'),
         ),
