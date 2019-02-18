@@ -1040,7 +1040,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
     $coupon = $form->get('coupon');
     if(!empty($coupon)){
-      CRM_Coupon_BAO_Coupon::addCouponTrack($coupon['id'], $contribution->id, $contribution->contact_id);
+      CRM_Coupon_BAO_Coupon::addCouponTrack($coupon['id'], $contribution->id, $contribution->contact_id, $form->_totalDiscount);
     }
 
     // return if pending

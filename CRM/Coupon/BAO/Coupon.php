@@ -29,7 +29,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
     $coupon = self::add($data);
 
-    // logic to process limit entities  
+    // logic to process limit entities
     self::saveCouponEntity($coupon->id, $additional);
   }
 
@@ -50,7 +50,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
   function saveCouponEntity($couponId, $data) {
     if (empty($couponId) || !is_numeric($couponId)) {
       return;
-    } 
+    }
     self::formatCouponEntity($data);
     CRM_Core_DAO::executeQuery('DELETE FROM civicrm_coupon_entity WHERE coupon_id = %1', array(1 => array($couponId, 'Integer')));
     foreach($data as $entity_table => $entities) {
@@ -123,9 +123,10 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       $filter['id'] = $id;
     }
     if ($code) {
-      $filter['code'] = $code;
+      $filter['code='] = $code;
     }
-    $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
+    $dao = self::getCouponList($filter);
+
     $coupon = array();
     while($dao->fetch()) {
       if (empty($coupon)) {
@@ -180,6 +181,10 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       elseif ($field == 'date') {
         $where[] = "(cc.start_date < %6 OR cc.start_date is NULL) AND (%6 < cc.end_date OR cc.end_date IS NULL)";
         $args[6] = array($value, 'String');
+      }
+      elseif ($field == 'code=') {
+        $where[] = "cc.code = %7";
+        $args[7] =  array($value, 'String');
       }
     }
     if (empty($where)) {
@@ -317,7 +322,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         return FALSE;
       }
     }
-    
+
     // validate additional
     if (count($additionalVerify)) {
       foreach($additionalVerify as $entityTable => $entityIds) {
@@ -342,9 +347,10 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     $code = $fields['coupon'];
     if(!empty($code)){
       if(CRM_Utils_Array::value('priceSetId', $fields)){
-        // Get 2 used array 
+        // Get the used arraies
         $usedOptionsCount = array();
         $usedOptions = array();
+        $usedOptionsSum = array();
         $totalAmount = 0;
         foreach ($fields as $fieldKey => $value) {
           if(preg_match('/^price_\d+$/', $fieldKey) && !empty($value)){
@@ -357,15 +363,16 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
                 }
                 $usedOptionsCount[$optionKey] = $count;
                 $usedOptions[$optionKey] = $option = $form->_values['fee'][$fieldId]['options'][$optionKey];
+                $usedOptionsSum[$optionKey] = $count * $option['amount'];
+                // $totalAmount += $usedOptionsSum[$optionKey];
               }
             }
-            $totalAmount += $count * $option['amount'];
           }
         }
 
         if(!empty($usedOptionsCount)){
           $usedOptionsCountText = implode(',', array_keys($usedOptionsCount));
-          $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $form->_eventId, array('civicrm_price_field_value' => $usedOptionsCountText));
+          $additionalVerify = array('civicrm_price_field_value' => $usedOptionsCountText);
         }
       }
       else{
@@ -380,11 +387,21 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         }
       }
       if(empty($coupon)){
-        $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $form->_eventId);
+        $coupon = self::validEventFromCode($code, $form->_eventId, $additionalVerify);
       }
       if(!empty($coupon)){
         $coupon['usedOptionsCount'] = $usedOptionsCount;
         $coupon['usedOptions'] = $usedOptions;
+
+        // Count correct totalAmount by $coupon used for
+        if(!empty($coupon['used_for']['civicrm_price_field_value'])){
+          $matches = array_intersect($coupon['used_for']['civicrm_price_field_value'], array_keys($usedOptionsSum));
+          $totalAmount = 0;
+          foreach ($matches as $entity_id) {
+            $totalAmount += $usedOptionsSum[$entity_id];
+          }
+        }
+
         $coupon['totalAmount'] = $totalAmount;
         return $coupon;
       }
@@ -406,20 +423,8 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       }
       else{
         // coupon_type == percentage
-        if($coupon['entity_table'] == 'civicrm_price_field_value'){
-          $usedOptionsDiscount = array();
-          foreach ($coupon['entity_id'] as $optionId) {
-            $count = $usedOptionsCount[$optionId];
-            $amount = $usedOptions[$optionId]['amount'] * $count;
-            $discount = round($amount * $coupon['discount'] / 100);
-            $usedOptionsDiscount[$optionId] = $discount;
-            $totalDiscount += $discount;
-          }
-          $form->_usedOptionsDiscount = $usedOptionsDiscount;
-          $form->set('usedOptionsDiscount', $usedOptionsDiscount);
-        }else{
-          $totalDiscount = round($totalAmount * $coupon['discount'] / 100);
-        }
+        // the civicrm_price_field_value's totalamount is calculate when getCouponFromFormSubmit()
+        $totalDiscount = round($totalAmount * $coupon['discount'] / 100);
       }
       $form->_totalDiscount = $totalDiscount;
       $form->_coupon = $coupon;
@@ -442,13 +447,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
 
       // Coupon is valid, But we don't check the amount.
       // Check the amount is enough to minimal_amount.
-      if($coupon['entity_table'] == 'civicrm_price_field_value'){
-        $totalAmount = 0;
-        foreach ($coupon['entity_id'] as $optionId) {
-          $count = $usedOptionsCount[$optionId];
-          $totalAmount += $usedOptions[$optionId]['amount'] * $count;
-        }
-      }
+      // the civicrm_price_field_value's totalamount is calculate when getCouponFromFormSubmit()
 
       if($totalAmount < $coupon['minimal_amount']){
         $errors['coupon'] = ts("The amount is not enough for coupon. The minimal amount is %1. The summary of validated amount is %2.", array(
@@ -469,7 +468,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $errors;
   }
 
-  static function addCouponTrack($couponId, $contributionId, $contactId = NULL) {
+  static function addCouponTrack($couponId, $contributionId, $contactId = NULL, $discountAmount = NULL) {
     $coupon = new CRM_Coupon_DAO_Coupon();
     $coupon->id = $couponId;
     $coupon->find(True);
@@ -478,6 +477,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     $couponTrack->contribution_id = $contributionId;
     $couponTrack->contact_id = $contactId;
     $couponTrack->used_date = date('Y-m-d H:i:s');
+    $couponTrack->discount_amount = $discountAmount;
     $couponTrack->save();
     return $couponTrack;
   }

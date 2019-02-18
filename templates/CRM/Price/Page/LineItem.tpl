@@ -61,8 +61,8 @@
             {/foreach}
             {if $coupon.coupon_track_id}
             <tr>
-                <td colspan="{if $pricesetFieldsCount}4{else}3{/if}">{$form.coupon.label} - {$form.coupon.html} - {$coupon.description}</td>
-                <td class="right"><div id="coupon_calc" class="font-red" data-coupon-type="{$coupon.coupon_type}" data-coupon-discount="{$coupon.discount}">{if $coupon.coupon_type == 'monetary'} - {$coupon.discount|crmMoney}{else} - {$coupon.discount}%{/if}</div></td>
+                <td colspan="{if $pricesetFieldsCount}4{else}3{/if}">{ts}Coupon{/ts} - {$coupon.code} - {$coupon.description}</td>
+                <td class="right"><div id="coupon_calc" class="font-red" data-coupon-type="{$coupon.coupon_type}" data-coupon-discount="{$coupon.discount}">{if $coupon.coupon_type == 'monetary'} - {$coupon.discount|crmMoney}{else} - {$coupon.discount_amount|crmMoney}{/if}</div></td>
             </tr>
             {/if}
     </table>

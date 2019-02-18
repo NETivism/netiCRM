@@ -54,6 +54,7 @@ class CRM_Event_Form_EventFees {
     $form->_pId = CRM_Utils_Request::retrieve('participantId', 'Positive', $form);
     $form->_discountId = CRM_Utils_Request::retrieve('discountId', 'Positive', $form);
     if ($form->_pId && $form->_paymentId) {
+      // Coupon, Same as CRM/Event/Form/ParticipantView.php
       $dao = new CRM_Event_DAO_ParticipantPayment();
       $dao->participant_id = $form->_pId;
       $ids = array();
@@ -230,7 +231,8 @@ class CRM_Event_Form_EventFees {
         }
       }
 
-      $form->assign('totalAmount', CRM_Utils_Array::value('fee_amount', $defaults[$form->_pId]));
+      $discount = $form->_coupon ? $form->_coupon['discount_amount'] : 0;
+      $form->assign('totalAmount', CRM_Utils_Array::value('fee_amount', $defaults[$form->_pId]) - $discount);
       if ($form->_action == CRM_Core_Action::UPDATE) {
         $fee_level = $defaults[$form->_pId]['fee_level'];
         CRM_Event_BAO_Participant::fixEventLevel($fee_level);

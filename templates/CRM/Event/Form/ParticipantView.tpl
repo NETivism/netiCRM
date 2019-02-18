@@ -104,6 +104,12 @@
                 <td>{$fee_level}&nbsp;{if $fee_amount}- {$fee_amount|crmMoney:$fee_currency}{/if}</td>
             {/if}
         </tr>
+        {if !$lineItem AND $coupon.coupon_track_id}
+        <tr>
+            <td class="label">{ts}Coupon{/ts}</td>
+            <td>{$coupon.code} - {$coupon.description} <span id="coupon_calc" class="font-red" data-coupon-type="{$coupon.coupon_type}" data-coupon-discount="{$coupon.discount}">{if $coupon.coupon_type == 'monetary'} - {$coupon.discount|crmMoney}{else} - {$coupon.discount_amount|crmMoney}%{/if}</span></td>
+        </tr>
+        {/if}
     {/if}
     {foreach from=$note item="rec"}
 	    {if $rec }

@@ -424,6 +424,7 @@
 
                 }
                 else if($field.is('[type=number]')){
+                  $field = $field.filter('#'+fieldObject['fieldName']);
                   $field.after(cj(newDivText));
                 }
               });

@@ -15,8 +15,6 @@
       <tr id="row_{$row.id}"class=" crm-coupon crm-coupon-{$row.id} {cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
         <td class="coupon-contact"><a href="{crmURL p="civicrm/contact/view" q="reset=1&cid=`$row.contact_id`"}" target="_blank">{$row.sort_name}</a></td>
         <td class="coupon-code"><a href="{crmURL p="civicrm/admin/coupon" q="action=browse&code=`$row.code`"}">{$row.code} - {$row.description}</a></td>
-        <td class="coupon-type">{ts}{$row.coupon_type|ucfirst}{/ts}</td>
-        <td class="coupon-discount">{if $row.coupon_type == 'percentage'}{$row.discount}%{else}${$row.discount}{/if}</td>
         <td class="coupon-total_amount"><a href="{crmURL p="civicrm/contact/view/contribution" q="reset=1&id=`$row.contribution_id`&cid=`$row.contact_id`&action=view"}" target="_blank">{$row.total_amount|crmMoney}</a></td>
         <td class="coupon-used_date">{$row.used_date}</td>
       </tr>

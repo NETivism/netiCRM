@@ -74,24 +74,24 @@ class CRM_Coupon_Page_AJAX {
   }
 
   public static function prepareJson($coupon) {
-		$return = array(
-			'description' => $coupon['description'],
-		);
-		if (!empty($coupon['used_for']['civicrm_price_field_value'])) {
-			$fvids = $coupon['used_for']['civicrm_price_field_value'];
-			$return['entity_table'] = 'civicrm_price_field_value';
-			$fields = array();
-			$sql = "SELECT price_field_id, id FROM civicrm_price_field_value WHERE id IN(".implode(',', $fvids).")";
-			$dao = CRM_Core_DAO::executeQuery($sql);
-			while($dao->fetch()) {
-				$fieldName = 'price_'.$dao->price_field_id;
-				$fields[] = array(
-					'fieldName' => $fieldName,
-					'vid' => $dao->id,
-				);
-			}
-			$return['fields'] = $fields;
-		}
+    $return = array(
+      'description' => $coupon['description'],
+    );
+    if (!empty($coupon['used_for']['civicrm_price_field_value'])) {
+      $fvids = $coupon['used_for']['civicrm_price_field_value'];
+      $return['entity_table'] = 'civicrm_price_field_value';
+      $fields = array();
+      $sql = "SELECT price_field_id, id FROM civicrm_price_field_value WHERE id IN(".implode(',', $fvids).")";
+      $dao = CRM_Core_DAO::executeQuery($sql);
+      while($dao->fetch()) {
+        $fieldName = 'price_'.$dao->price_field_id;
+        $fields[] = array(
+          'fieldName' => $fieldName,
+          'vid' => $dao->id,
+        );
+      }
+      $return['fields'] = $fields;
+    }
     return json_encode($return);
   }
 }

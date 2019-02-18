@@ -100,11 +100,36 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     // Get Line Items
     $lineItem = CRM_Price_BAO_LineItem::getLineItems($participantID);
 
+    // Find coupon Track
+    // same as CRM/Event/Form/EventFees.php
+    $dao = new CRM_Event_DAO_ParticipantPayment();
+    $dao->participant_id = $participantID;
+    $ids = array();
+    if ($dao->find()) {
+      while($dao->fetch()) {
+        $ids[] = $dao->contribution_id;
+      }
+    }
+    if (!empty($ids)) {
+      $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy($ids, 'contribution_id');
+      $dao->fetch();
+      if ($dao->N > 0) {
+        $coupon = array();
+        foreach($dao as $idx => $value) {
+          if ($idx[0] != '_') {
+            $coupon[$idx] = $value;
+          }
+        }
+        $this->assign('coupon', $coupon);
+        $discountAmount = $coupon['discount_amount'];
+      }
+    }
+
     if (!CRM_Utils_System::isNull($lineItem)) {
       $values[$participantID]['lineItem'][] = $lineItem;
     }
 
-    $values[$participantID]['totalAmount'] = CRM_Utils_Array::value('fee_amount', $values[$participantID]);
+    $values[$participantID]['totalAmount'] = CRM_Utils_Array::value('fee_amount', $values[$participantID]) - $discountAmount;
 
     // Get registered_by contact ID and display_name if participant was registered by someone else (CRM-4859)
     if (CRM_Utils_Array::value('participant_registered_by_id', $values[$participantID])) {
