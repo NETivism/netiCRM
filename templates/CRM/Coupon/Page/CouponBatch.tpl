@@ -1,3 +1,6 @@
+		<div class="action-link-button">
+			<a href="{crmURL p='civicrm/admin/coupon' q="action=add&reset=1&batch=1"}" id="newCoupon" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Bulk{/ts} {ts}Create{/ts} {ts}Coupon{/ts}</span></a>
+		</div>
 {if $rows}
   {include file="CRM/common/jsortable.tpl hasPager=1}
   {strip}
