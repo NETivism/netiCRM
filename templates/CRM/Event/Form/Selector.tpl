@@ -88,12 +88,21 @@
             {if $line.html_type eq 'Text'}{$line.label}{else}{$line.field_title}-{$line.label}x{$line.qty}{/if}: {$line.line_total}
             {if ! $smarty.foreach.lineItemsIter.last}<br />{/if}
         {/foreach}
-        <br>
         <hr>
         {$row.participant_fee_amount|crmMoney:$row.participant_fee_currency}
+        {if $row.coupon}
+          <hr>
+          {ts}Coupon{/ts}-{$row.coupon.code}-{$row.coupon.description}: -{$row.coupon.discount_amount}
+        {/if}
+        <br>
         </td>
     {else}
-        <td class="crm-participant-participant_fee_level">{if !$row.paid && !$row.participant_fee_level} {ts}(no fee){/ts}{else} {$row.participant_fee_level} ({$row.participant_fee_amount|crmMoney:$row.participant_fee_currency}){/if}</td>
+        <td class="crm-participant-participant_fee_level">{if !$row.paid && !$row.participant_fee_level} {ts}(no fee){/ts}{else} {$row.participant_fee_level} ({$row.participant_fee_amount|crmMoney:$row.participant_fee_currency}){/if}
+        {if $row.coupon}
+          <hr>
+          {ts}Coupon{/ts}-{$row.coupon.code}-{$row.coupon.description}: -{$row.coupon.discount_amount}
+        {/if}
+        </td>
     {/if}
     <td class="right nowrap crm-paticipant-contribution_total_amount">
       {$row.contribution_total_amount|crmMoney:$row.contribution_currency}<br>

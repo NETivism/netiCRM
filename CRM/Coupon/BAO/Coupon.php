@@ -186,6 +186,10 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         $where[] = "cc.code = %7";
         $args[7] =  array($value, 'String');
       }
+      elseif ($field == 'description') {
+        $where[] = "cc.description LIKE %8";
+        $args[8] =  array("%$value%", 'String');
+      }
     }
     if (empty($where)) {
       $where[] = ' (1) ';
@@ -354,7 +358,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         $usedOptionsCount = array();
         $usedOptions = array();
         $usedOptionsSum = array();
-        $totalAmount = 0;
+        $totalAmount = $fields['amount'];
         foreach ($fields as $fieldKey => $value) {
           if(preg_match('/^price_\d+$/', $fieldKey) && !empty($value)){
             $fieldId = str_replace('price_', '', $fieldKey);

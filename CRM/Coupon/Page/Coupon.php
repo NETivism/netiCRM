@@ -123,6 +123,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $filter['entity_table'] = CRM_Utils_Request::retrieve('entity_table', 'String', $this);
     $filter['entity_id'] = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this);
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
+    $filter['description'] = CRM_Utils_Request::retrieve('description', 'String', $this);
     $filter['id'] = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     foreach($filter as $f => $v) {
       if(empty($v)) {
@@ -188,6 +189,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $filter['entity_table'] = CRM_Utils_Request::retrieve('entity_table', 'String', $this);
     $filter['entity_id'] = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this);
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
+    $filter['description'] = CRM_Utils_Request::retrieve('description', 'String', $this);
     $filter['id'] = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     foreach($filter as $f => $v) {
       if(empty($v)) {

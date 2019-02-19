@@ -321,7 +321,6 @@
   });
   var lockfield = function($obj){
     $obj.attr('title', '{/literal}{ts}To change your personal info, go My Account page for further setting.{/ts}{literal}');
-    $obj.attr("readonly", "readonly").addClass("readonly");
     if($obj.parent('.crm-form-elem').length){
       $obj.parent('.crm-form-elem').addClass('crm-form-readonly');
     }
@@ -351,8 +350,6 @@
   
   cj(function(){
     if(cj('[name=coupon_is_valid]').val() == 1){
-      cj('#coupon').attr('readonly', 'readonly');
-      cj('.coupon-btn-text').text('{/literal}{ts}Change{/ts}{literal}');
       cj('.coupon-check-symbol').show()
       if(cj('#pricesetTotal').length){
         cj('#pricesetTotal').after("<div class='crm-section'><div class='label'></div><div class='content coupon-total description'>{/literal}{ts}Since you use coupon, the correct price will display on Confirm page.{/ts}{literal}</div></div>");
@@ -361,17 +358,18 @@
     else{
       cj('.coupon-check-symbol').hide();
     }
+
+    cj('#coupon').keyup(function(){
+      var active_code = cj(this).data('active-code');
+      if(active_code && cj(this).val() != active_code){
+        clearCouponMessage();
+      }
+    });
   });
 
   function couponValid(){
     if(cj('[name=coupon_is_valid]').val() == 1){
-      cj('.coupon-description').remove();
-      cj('[name=coupon_is_valid]').val(0);
-      cj('.result').text("");
-      cj('#coupon').removeAttr('readonly');
-      cj('.coupon-btn-text').text('{/literal}{ts}Confirm to use{/ts}{literal}');
-      cj('.coupon-total').remove();
-      cj('.coupon-check-symbol').hide();
+      clearCouponMessage();
     }
     else{
       {/literal}
@@ -403,9 +401,9 @@
             cj('.coupon-section .content .coupon-result').html("");
           }
           if(data){
+            cj('#coupon').data('active-code', code);
+
             cj('[name=coupon_is_valid]').val(1);
-            cj('#coupon').attr('readonly', 'readonly');
-            cj('.coupon-btn-text').text('{/literal}{ts}Change{/ts}{literal}');
 
             var description = data['description'];
             if(data['fields']){
@@ -447,6 +445,15 @@
         },
       });
     }
+  }
+
+  function clearCouponMessage(){
+    cj('.coupon-description').remove();
+    cj('[name=coupon_is_valid]').val(0);
+    cj('.coupon-result').text("");
+    cj('.coupon-total').remove();
+    cj('.coupon-check-symbol').hide();
+    cj('#coupon').data('active-code', '');
   }
 </script>
 {/literal} 

@@ -7,12 +7,31 @@
   {* action = browse *}
 
 	{if NOT ($action eq 1 or $action eq 2) }
-    <form>
-      <label>{ts}Coupon Code{/ts}: <input name="code" type="text" value="{$smarty.get.code}"></label>
-      {if $clear_filter}
-			<a href="{crmURL p='civicrm/admin/coupon' q="reset=1"}" class="button"><span><i class="zmdi zmdi-close"></i> {ts}Reset{/ts}</span></a>
-      {/if}
-    </form>
+    <div class="crm-block crm-form-block crm-form-block-search crm-event-search-form-block">
+      <div class="crm-accordion-wrapper crm-coupon_search_form-accordion {if $smarty.get.code or $smarty.get.description}crm-accordion-open{else}crm-accordion-closed{/if}">
+        <div class="crm-accordion-header crm-master-accordion-header">
+          <div class="zmdi crm-accordion-pointer"></div> {ts}Edit Search Criteria{/ts}
+        </div>
+        <div class="crm-accordion-body">
+          <form method="get">
+            <label>{ts}Coupon Code{/ts}: <input name="code" type="text" value="{$smarty.get.code}"></label>
+            <label>{ts}Description{/ts}: <input name="description" type="text" value="{$smarty.get.description}"></label>
+            <button type="submit">{ts}Submit{/ts}</button>
+            {if $clear_filter}
+            <a href="{crmURL p='civicrm/admin/coupon' q="reset=1"}" class="button"><span><i class="zmdi zmdi-close"></i> {ts}Reset{/ts}</span></a>
+            {/if}
+          </form>
+        </div>
+      </div>
+    </div>
+    {literal}
+    <script type="text/javascript">
+    cj(function() {
+       cj().crmaccordions(); 
+    });
+    </script>
+    {/literal}
+
 		<div class="action-link-button">
 			<a href="{crmURL p='civicrm/admin/coupon' q="action=add&reset=1&prefix=`$default_prefix`"}" id="newCoupon" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Coupon{/ts}</span></a>
       <a href="{crmURL p='civicrm/admin/coupon' q="action=export&code=`$smarty.get.code`"}" class="button"><span><i class="zmdi zmdi-download"></i>{ts}Export{/ts}</span></a>

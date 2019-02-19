@@ -398,6 +398,21 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         $lineItems[$row['participant_id']] = CRM_Price_BAO_LineItem::getLineItems($row['participant_id']);
       }
 
+      if(!empty($row['contribution_id'])){
+        $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy(array($row['contribution_id']), 'contribution_id');
+        $dao->fetch();
+        if ($dao->N > 0) {
+          $coupon = array();
+          foreach($dao as $idx => $value) {
+            if ($idx[0] != '_') {
+              $coupon[$idx] = $value;
+            }
+          }
+          $row['coupon'] = $coupon;
+        }
+        $dao->free();
+      }
+
       $viewRoles = array();
       foreach (explode($sep, $row['participant_role_id']) as $k => $v) {
         $viewRoles[] = $participantRoles[$v];
