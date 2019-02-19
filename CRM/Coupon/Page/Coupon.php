@@ -116,6 +116,25 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       'civicrm_event' => ts('Event'),
       'civicrm_price_field_value' => ts('Price Option'),
     );
+    $this->assign('usedForName', $usedFor);
+
+    $priceSets = CRM_Price_BAO_Field::getPriceLevels();
+    $priceOptions = array();
+    foreach($priceSets as $set => &$field) {
+      foreach($field as $key => $val) {
+        $field_id = str_replace('priceset:', '', $key);
+        if (is_numeric($field_id)) {
+          $priceOptions[$field_id] = $val;
+        }
+      }
+      if(is_string($field)){
+        $field_id = str_replace('priceset:', '', $set);
+        if (is_numeric($field_id)) {
+          $priceOptions[$field_id] = $field;
+        }
+      }
+    }
+
     $entityTable = CRM_Utils_Request::retrieve('entity_table', 'String', $this, FALSE);
     $entityId = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this, FALSE);
 
@@ -146,13 +165,23 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
     while ($dao->fetch()) {
       if (!empty($coupon[$dao->id]) && !empty($dao->entity_table)) {
-        $coupon[$dao->id]['used_for'][$dao->entity_table] = $usedFor[$dao->entity_table];
+        if($dao->entity_table == 'civicrm_event'){
+          $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $dao->entity_id, 'title');
+        }
+        elseif($dao->entity_table == 'civicrm_price_field_value'){
+          $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = $priceOptions[$dao->entity_id];
+        }
         continue;
       }
       $coupon[$dao->id] = array();
       foreach($dao as $field => $value) {
         if ($field == 'entity_table') {
-          $coupon[$dao->id]['used_for'][$dao->entity_table] = $usedFor[$dao->entity_table];
+          if($dao->entity_table == 'civicrm_event'){
+            $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $dao->entity_id, 'title');
+          }
+          elseif($dao->entity_table == 'civicrm_price_field_value'){
+            $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = $priceOptions[$dao->entity_id];
+          }
         }
         if ($field == 'entity_id' || $field[0] == '_') {
           continue;

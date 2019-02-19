@@ -20,6 +20,7 @@
             {if $clear_filter}
             <a href="{crmURL p='civicrm/admin/coupon' q="reset=1"}" class="button"><span><i class="zmdi zmdi-close"></i> {ts}Reset{/ts}</span></a>
             {/if}
+            <div class="description">{ts}Enter partial words of code to search (such as prefix words of code).{/ts}</div>
           </form>
         </div>
       </div>
@@ -55,7 +56,7 @@
         <th>{ts}Minimum Amount{/ts}</th>
         <th>{ts}Used{/ts} / {ts}Max{/ts}</th>
         <th>{ts}Description{/ts}</th>
-        <th>{ts}Used For{/ts}</th>
+        <th>{ts}Used for{/ts}</th>
         <th>{ts}Enabled?{/ts}</th>
         <th></th>
       </tr>
@@ -71,7 +72,24 @@
         <td class="coupon-minimum">{$row.minimal_amount}</td>
         <td class="coupon-count-max"><a href="{crmURL p="civicrm/admin/coupon/track" q="reset=1&coupon_id=`$row.id`"}" target="_blank">{$row.count_max}</a></td>
         <td class="coupon-description">{$row.description}</td>
-        <td class="coupon-extends">{', '|implode:$row.used_for}</td>
+        <td class="coupon-extends">
+          {foreach from=$row.used_for key=entity_type item=entities}
+            <div>
+              {$usedForName.$entity_type}:&nbsp;
+              {if $entity_type eq 'civicrm_event'}
+                {assign var=events value=null}
+                {foreach from=$entities key=id item=name}
+                  {capture append=events}
+                    <a href="{crmURL p='civicrm/event/manage/eventInfo' q="reset=1&action=update&id=`$id`" h=0 a=1 fe=1}" target="_blank">{$name}</a>
+                  {/capture}
+                {/foreach}
+                {', '|implode:$events}
+              {elseif $entity_type eq 'civicrm_price_field_value'}
+                {', '|implode:$entities}
+              {/if}
+            </div>
+          {/foreach}
+        </td>
         <td id="row_{$row.id}_status" class="crm-coupon-is_active">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
         <td>{$row.action|replace:'xx':$row.id}</td>
       </tr>

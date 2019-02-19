@@ -46795,3 +46795,6 @@ msgstr ""
 
 msgid "You can't bulk update these coupon after create. Are you sure to procceed?"
 msgstr ""
+
+msgid "Enter partial words of code to search (such as prefix words of code)."
+msgstr ""

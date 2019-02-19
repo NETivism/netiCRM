@@ -836,6 +836,20 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $this->_params['fee_amount'] = $this->get('primaryParticipantAmount');
     }
 
+    if(!empty($contribution)){
+      $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy(array($contribution->id), 'contribution_id');
+      $dao->fetch();
+      if ($dao->N > 0) {
+        $coupon = array();
+        foreach($dao as $idx => $value) {
+          if ($idx[0] != '_') {
+            $coupon[$idx] = $value;
+          }
+        }
+        $this->_params['coupon'] = $coupon;
+      }
+    }
+
     // add participant record
     $participant = $this->addParticipant($this->_params, $contactID);
     $this->_participantIDS[] = $participant->id;
@@ -919,6 +933,12 @@ WHERE  v.option_group_id = g.id
     }
     elseif (is_array($params['participant_register_date']) && !empty($params['participant_register_date'])) {
       $registerDate = CRM_Utils_Date::format($params['participant_register_date']);
+    }
+
+    if(!empty($params['coupon'])){
+      $coupon = $params['coupon'];
+      $couponDescription = ts('Coupon').'-'.$coupon['code'].'-'.$coupon['description'].': -'.$coupon['discount_amount'];
+      $params['amount_level'] .= $couponDescription.CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
     }
 
     $participantParams = array('id' => CRM_Utils_Array::value('participant_id', $params),
