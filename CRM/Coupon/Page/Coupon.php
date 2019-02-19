@@ -132,6 +132,9 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     if (count($filter)) {
       $this->assign('clear_filter', 1);
     }
+    if (!empty($filter['code']) && strstr($filter['code'], '-')) {
+      $this->assign('default_prefix', $filter['code']);
+    }
 
     $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
     if ($dao->N) {

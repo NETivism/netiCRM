@@ -104,7 +104,12 @@
     var $code = $("input[name=code]");
     $("#generate-random").click(function(){
       var random = Math.random().toString(36).substring(2, 10);
-      $code.val(random);
+      if ($code.val().indexOf('-')) {
+        $code.val($code.val() + random);
+      }
+      else {
+        $code.val(random);
+      }
     });
     $("#change").click(function(){
       if ($code.attr('readonly')) {

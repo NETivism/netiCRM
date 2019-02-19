@@ -13,6 +13,7 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
     $this->_batch = CRM_Utils_Request::retrieve('batch', 'String', $this, FALSE);
+    $this->_prefix = CRM_Utils_Request::retrieve('prefix', 'String', $this, FALSE);
     if (!empty($this->_id)) {
       $params = array('id' => $this->_id);
       CRM_Coupon_BAO_Coupon::retrieve($params, $this->_defaults);
@@ -23,6 +24,8 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     }
     if ($this->_batch) {
       CRM_Utils_System::setTitle(ts('Bulk').' '.ts('Create').' '.ts("Coupon"));
+      $session = CRM_Core_Session::singleton();
+      $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/coupon/batch', 'reset=1'));
     }
   }
 
@@ -92,9 +95,8 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     $this->addNumber('discount', ts('Discounted Fees'), NULL, TRUE);
     $this->addNumber('minimal_amount', ts('Minimum Amount'), NULL, TRUE);
     if ($this->_batch) {
-      $ele = $this->addNumber('count_max', ts('Maximum Uses'), array('min' => 1, 'max' => 1), TRUE);
+      $ele = $this->addNumber('count_max', ts('Maximum Uses'), array('min' => 1, 'max' => 100), TRUE);
       $this->setDefaults(array('count_max' => 1));
-      $ele->freeze();
     }
     else {
       $this->addNumber('count_max', ts('Maximum Uses'), NULL, FALSE);
@@ -154,6 +156,9 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
 
     }
     else {
+      if ($this->_prefix) {
+        $defaults['code'] = $this->_prefix;
+      }
       $defaults['is_active'] = 1;
     }
     return $defaults;
@@ -228,7 +233,6 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
         CRM_Coupon_BAO_Coupon::create($coupon);
         unset($coupon['code']);
       }
-
     }
     else {
       // single
