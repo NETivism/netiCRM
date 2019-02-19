@@ -14,9 +14,9 @@
         </div>
         <div class="crm-accordion-body">
           <form method="get">
-            <label>{ts}Coupon Code{/ts}: <input name="code" type="text" value="{$smarty.get.code}"></label>
-            <label>{ts}Description{/ts}: <input name="description" type="text" value="{$smarty.get.description}"></label>
-            <button type="submit">{ts}Submit{/ts}</button>
+            <label>{ts}Coupon Code{/ts}&nbsp;&nbsp;<input name="code" type="text" value="{$smarty.get.code}"></label>&nbsp;&nbsp;&nbsp;{ts}and{/ts}&nbsp;&nbsp;&nbsp;
+            <label>{ts}Description{/ts}&nbsp;&nbsp;<input name="description" type="text" value="{$smarty.get.description}"></label>&nbsp;&nbsp;&nbsp;
+            <button type="submit">{ts}Search{/ts}</button>
             {if $clear_filter}
             <a href="{crmURL p='civicrm/admin/coupon' q="reset=1"}" class="button"><span><i class="zmdi zmdi-close"></i> {ts}Reset{/ts}</span></a>
             {/if}
