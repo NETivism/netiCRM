@@ -12,6 +12,7 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
   public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
+    $this->_batch = CRM_Utils_Request::retrieve('batch', 'String', $this, FALSE);
     if (!empty($this->_id)) {
       $params = array('id' => $this->_id);
       CRM_Coupon_BAO_Coupon::retrieve($params, $this->_defaults);
@@ -20,12 +21,29 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
       }
       CRM_Utils_System::setTitle(ts("Coupon").': '.$this->_defaults['code']);
     }
+    if ($this->_batch) {
+      CRM_Utils_System::setTitle(ts('Bulk').' '.ts('Create').' '.ts("Coupon"));
+    }
   }
 
   static function formRule($fields, $files, $form) {
     $errors = array();
+    if (!empty($fields['batch_prefix'])) {
+      // check action
+      if ($form->_action != CRM_Core_Action::ADD) {
+        $errors['batch_prefix'] = ts("You can only use batch on create new coupon");
+      }
+
+      // check prefix exists or not
+      $duplicated = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_coupon WHERE code LIKE %1", array(
+        1 => array($fields['batch_prefix'].'-%', 'String'),
+      ));
+      if ($duplicated) {
+        $errors['batch_prefix'] = ts('Name already exists in Database.');
+      }
+    }
     if (!empty($fields['code'])) {
-      if (!preg_match('/^[0-9a-z]+$/i', $fields['code'])) {
+      if (!preg_match('/^[0-9a-z-]+$/i', $fields['code'])) {
         $errors['code'] = ts('Name can only consist of alpha-numeric characters');
       }
       $id = $form->_id ? $form->_id : 0;
@@ -57,7 +75,13 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     else {
       $attr = array();
     }
-    $this->add('text', 'code', ts('Coupon Code'), $attr, TRUE);
+    if ($this->_batch && $this->_action == CRM_Core_Action::ADD) {
+      $this->add('text', 'batch_prefix', ts('Coupon Code Prefix'), $attr, TRUE);
+      $this->addNumber('num_generate', ts('Number to Generate'), array('min' => 1, 'max' => 1000), TRUE);
+    }
+    else {
+      $this->add('text', 'code', ts('Coupon Code'), $attr, TRUE);
+    }
     $this->add('text', 'description', ts('Description'), NULL, TRUE);
     $this->addDateTime('start_date', ts('Start Date'), false);
     $this->addDateTime('end_date', ts('End Date'), false);
@@ -67,7 +91,14 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     ), NULL, TRUE);
     $this->addNumber('discount', ts('Discounted Fees'), NULL, TRUE);
     $this->addNumber('minimal_amount', ts('Minimum Amount'), NULL, TRUE);
-    $this->addNumber('count_max', ts('Maximum Uses'), NULL, FALSE);
+    if ($this->_batch) {
+      $ele = $this->addNumber('count_max', ts('Maximum Uses'), array('min' => 1, 'max' => 1), TRUE);
+      $this->setDefaults(array('count_max' => 1));
+      $ele->freeze();
+    }
+    else {
+      $this->addNumber('count_max', ts('Maximum Uses'), NULL, FALSE);
+    }
 
     $events = CRM_Event_BAO_Event::getEvents(TRUE);
     if (!empty($events)) {
@@ -90,8 +121,9 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     $this->add('checkbox', 'is_active', ts('Active?'));
     $this->addButtons(array(
         array('type' => 'next',
-          'name' => ts('Save'),
+          'name' => $this->_batch ? ts('Bulk').' '.ts('Create') : ts('Save'),
           'isDefault' => TRUE,
+          'js' => array('data' => $this->_batch ? 'batch-create' : ''),
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),
@@ -121,12 +153,23 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
       }
 
     }
+    else {
+      $defaults['is_active'] = 1;
+    }
     return $defaults;
   }
 
   public function postProcess() {
     $fields = CRM_Coupon_DAO_Coupon::fields();
     $params = $this->controller->exportValues();
+    if (!empty($params['batch_prefix']) && !empty($params['num_generate'])) {
+      $batchPrefix = $params['batch_prefix'];
+      $numGenerate = $params['num_generate'];
+      unset($param['batch_prefix']);
+      unset($param['num_generate']);
+      unset($param['code']);
+    }
+
     $params['start_date'] = CRM_Utils_Date::processDate($params['start_date'], $params['start_date_time']);
     if(empty($params['start_date'])){
       $params['start_date'] = 'NULL';
@@ -150,9 +193,29 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     // format additional
     CRM_Coupon_BAO_Coupon::formatCouponEntity($additional);
     $coupon += $additional;
-    if ($this->_id) {
+
+    if ($this->_id && !$prefix) {
       $coupon['id'] = $this->_id;
     }
-    CRM_Coupon_BAO_Coupon::create($coupon);
+    if ($batchPrefix && $numGenerate) {
+      // batch
+      $generated = array();
+			$seed = mt_rand(201, 9999);
+			$plus = mt_rand(1, 200);
+			for($i = 1; $i <= $numGenerate; $i++) {
+        $code = '';
+				$n = $i*$seed+$plus;
+				$code = str_replace(array('=','+','/'),'',base64_encode($n));
+				$generated[$code] = 1;
+        $code = $batchPrefix.'-'.$code;
+        $coupon['code'] = $code;
+        CRM_Coupon_BAO_Coupon::create($coupon);
+        unset($coupon['code']);
+			}
+    }
+    else {
+      // single
+      CRM_Coupon_BAO_Coupon::create($coupon);
+    }
   }
 }

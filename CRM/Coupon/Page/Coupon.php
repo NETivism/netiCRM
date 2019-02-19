@@ -79,6 +79,10 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       CRM_Core_Session::setStatus(ts("A copy of this coupon has been created"));
       $this->copy();
     }
+    elseif ($action & CRM_Core_Action::EXPORT) {
+      $this->export();
+      CRM_Utils_System::civiExit();
+    }
     else {
       // if action is delete do the needful.
       if ($action & (CRM_Core_Action::DELETE)) {
@@ -164,6 +168,36 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       $coupon[$couponId]['count_max'] = $count." / ".$coupon[$couponId]['count_max'];
     }
     $this->assign('rows', $coupon);
+    return $coupon;
+  }
+
+  function export() {
+    $coupon = $this->browse();
+    foreach($coupon as &$c) {
+      unset($c['action']);
+      unset($c['entity_table']);
+      unset($c['used_for']);
+      unset($c['N']);
+      $c['discount'] = $c['coupon_type'] == 'percentage' ? $c['discount'].'%' : $c['discount'];
+      $c['coupon_type'] = ts(ucfirst($c['coupon_type']));
+    }
+    $header = array(
+      ts('ID'),
+      ts('Start Date'),
+      ts('End Date'),
+      ts('Coupon Code'),
+      ts('Coupon Type'),
+      ts('Discounted Fees'),
+      ts('Minimum Amount'),
+      ts('Used').' / '.ts('Max'),
+      ts('Description'),
+      ts('Enabled?'),
+    );
+    $code = CRM_Utils_Request::retrieve('code', 'String', $this);
+    if ($code) {
+      $code = '-'.trim($code, '-');
+    }
+    CRM_Core_Report_Excel::writeExcelFile('coupon-export'.$code.'.xlsx', $header, $coupon);
   }
 
   function edit($id, $action) {

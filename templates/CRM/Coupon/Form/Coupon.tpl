@@ -1,6 +1,24 @@
 
 <div class="crm-form-block">
 <table class="form-layout">
+  {if $form.batch_prefix}
+  <tr class="crm-coupon-form-batch_prefix">
+    <td class="label">{$form.batch_prefix.label}</td>
+    <td>
+      {$form.batch_prefix.html} - RANDOMCODE 
+      <div class="description">{ts}Name can only consist of alpha-numeric characters{/ts}</div>
+    </td>
+  </tr>
+  {/if}
+  {if $form.num_generate}
+  <tr class="crm-coupon-form-num_generate">
+    <td class="label">{$form.num_generate.label}</td>
+    <td>
+      {$form.num_generate.html}
+    </td>
+  </tr>
+  {/if}
+  {if $form.code}
   <tr class="crm-coupon-form-code">
     <td class="label">{$form.code.label}</td>
     <td>
@@ -13,6 +31,7 @@
       <div class="description">{ts}Name can only consist of alpha-numeric characters{/ts}</div>
     </td>
   </tr>
+  {/if}
   <tr class="crm-coupon-form-description">
     <td class="label">{$form.description.label}</td>
     <td>
@@ -65,6 +84,23 @@
   {include file="CRM/common/chosen.tpl" selector="select#civicrm_event,select#civicrm_price_field_value"}
   <script>{literal}
   cj(document).ready(function($){
+    var $batch = $("input[data=batch-create]");
+    if ($batch.length) {
+      $batch.click(function(e){
+        e.preventDefault();
+        var form = $(this).closest('form')[0];
+        if (form.checkValidity()){
+          var procceed = window.confirm("{/literal}{ts}You can't bulk update these coupon after create. Are you sure to procceed?{/ts}{literal}");
+          if (procceed) {
+            form.submit(); 
+          }
+        } 
+        else {
+          form.reportValidity();
+        }
+      });
+    }
+    
     var $code = $("input[name=code]");
     $("#generate-random").click(function(){
       var random = Math.random().toString(36).substring(2, 10);

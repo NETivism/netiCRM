@@ -46786,3 +46786,12 @@ msgstr ""
 
 msgid "Disable Coupon"
 msgstr ""
+
+msgid "Coupon Code Prefix"
+msgstr ""
+
+msgid "Number to Generate"
+msgstr ""
+
+msgid "You can't bulk update these coupon after create. Are you sure to procceed?"
+msgstr ""
