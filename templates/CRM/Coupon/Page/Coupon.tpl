@@ -20,8 +20,9 @@
 	{/if}
   {if $rows}
     {* handle enable/disable actions*}
+    {include file="CRM/common/pager.tpl" location="top"}
     {include file="CRM/common/enableDisable.tpl"}
-    {include file="CRM/common/jsortable.tpl hasPager=1}
+    {include file="CRM/common/jsortable.tpl}
     {strip}
     <table id="coupon" class="display crm-coupon-listing">
     <thead>
@@ -57,6 +58,7 @@
       </tr>
     {/foreach}
     </table>
+    {include file="CRM/common/pager.tpl" location="bottom"}
     {/strip}
 
     {if NOT ($action eq 1 or $action eq 2) }

@@ -9,6 +9,8 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
    */
   private static $_actionLinks;
 
+  protected $_pager = NULL;
+
   /**
    * Get the action links for this page.
    *
@@ -122,7 +124,6 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $filter['entity_id'] = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this);
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
     $filter['id'] = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-    $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
     foreach($filter as $f => $v) {
       if(empty($v)) {
         unset($filter[$f]);
@@ -131,6 +132,14 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     if (count($filter)) {
       $this->assign('clear_filter', 1);
     }
+
+    $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
+    if ($dao->N) {
+      $this->pager($dao->N);
+      list($filter['offset'], $filter['limit']) = $this->_pager->getOffsetAndRowCount();
+      unset($dao);
+    }
+    $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
     while ($dao->fetch()) {
       if (!empty($coupon[$dao->id]) && !empty($dao->entity_table)) {
         $coupon[$dao->id]['used_for'][$dao->entity_table] = $usedFor[$dao->entity_table];
@@ -172,15 +181,24 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   }
 
   function export() {
-    $coupon = $this->browse();
-    foreach($coupon as &$c) {
-      unset($c['action']);
-      unset($c['entity_table']);
-      unset($c['used_for']);
-      unset($c['N']);
-      $c['discount'] = $c['coupon_type'] == 'percentage' ? $c['discount'].'%' : $c['discount'];
-      $c['coupon_type'] = ts(ucfirst($c['coupon_type']));
+    $filter = array();
+    $filter['entity_table'] = CRM_Utils_Request::retrieve('entity_table', 'String', $this);
+    $filter['entity_id'] = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this);
+    $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
+    $filter['id'] = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    foreach($filter as $f => $v) {
+      if(empty($v)) {
+        unset($filter[$f]);
+      }
     }
+
+    $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
+    if ($filter['code']) {
+      $code = '-'.trim($filter['code'], '-');
+    }
+    $filename = 'coupon-export'.$code.'.xlsx';
+    $writer = CRM_Core_Report_Excel::singleton('excel');
+    $writer->openToBrowser($filename);
     $header = array(
       ts('ID'),
       ts('Start Date'),
@@ -193,11 +211,33 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       ts('Description'),
       ts('Enabled?'),
     );
-    $code = CRM_Utils_Request::retrieve('code', 'String', $this);
-    if ($code) {
-      $code = '-'.trim($code, '-');
+    $writer->addRow($header);
+
+    $exists = array();
+    while ($dao->fetch()) {
+      if (!empty($exists[$dao->id])) {
+        continue;
+      }
+      $exists[$dao->id] = 1;
+      $coupon = array();
+      foreach($dao as $field => $value) {
+        if ($field == 'entity_table' || $field == 'entity_id' || $field[0] == '_' || $field == 'N') {
+          continue;
+        }
+        else {
+          $coupon[$field] = $value;
+        }
+      }
+      $coupon['discount'] = $coupon['coupon_type'] == 'percentage' ? $coupon['discount'].'%' : (int)$coupon['discount'];
+-     $coupon['coupon_type'] = ts(ucfirst($coupon['coupon_type']));
+
+      $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed(array($coupon['id']));
+      $coupon['count_max'] = $couponUses[$coupon['id']]." / ".$coupon['count_max'];
+      $writer->addRow($coupon);
+      unset($coupon);
+      unset($couponUses);
     }
-    CRM_Core_Report_Excel::writeExcelFile('coupon-export'.$code.'.xlsx', $header, $coupon);
+    $writer->close();
   }
 
   function edit($id, $action) {
@@ -229,5 +269,21 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     CRM_Coupon_BAO_Coupon::copy($id);
 
     CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
+  }
+
+  function pager($total) {
+    $params = array(); 
+    $params['status'] = '';
+    $params['csvString'] = NULL;
+    $params['buttonTop'] = 'PagerTopButton';
+    $params['buttonBottom'] = 'PagerBottomButton';
+    $params['rowCount'] = $this->get(CRM_Utils_Pager::PAGE_ROWCOUNT);
+    if (!$params['rowCount']) {
+      $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
+    }
+
+    $params['total'] = $total;
+    $this->_pager = new CRM_Utils_Pager($params);
+    $this->assign_by_ref('pager', $this->_pager);
   }
 }

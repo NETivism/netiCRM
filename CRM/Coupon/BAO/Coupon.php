@@ -191,7 +191,10 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       $where[] = ' (1) ';
     }
     $sql .= implode(' AND ', $where);
-    $sql .= " ORDER BY cc.id DESC, e.entity_table, e.entity_id ASC";
+    $sql .= " ORDER BY cc.id DESC, e.entity_table, e.entity_id ASC ";
+    if (isset($filter['offset']) && !empty($filter['limit'])) {
+      $sql .= " LIMIT {$filter['offset']}, {$filter['limit']} ";
+    }
     $dao = CRM_Core_DAO::executeQuery($sql, $args);
     if(!$returnFetchedResult){
       return $dao;

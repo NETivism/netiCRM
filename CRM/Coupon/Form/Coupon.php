@@ -77,7 +77,7 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     }
     if ($this->_batch && $this->_action == CRM_Core_Action::ADD) {
       $this->add('text', 'batch_prefix', ts('Coupon Code Prefix'), $attr, TRUE);
-      $this->addNumber('num_generate', ts('Number to Generate'), array('min' => 1, 'max' => 1000), TRUE);
+      $this->addNumber('num_generate', ts('Number to Generate'), array('min' => 1, 'max' => 20000), TRUE);
     }
     else {
       $this->add('text', 'code', ts('Coupon Code'), $attr, TRUE);
@@ -200,18 +200,35 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     if ($batchPrefix && $numGenerate) {
       // batch
       $generated = array();
-			$seed = mt_rand(201, 9999);
-			$plus = mt_rand(1, 200);
-			for($i = 1; $i <= $numGenerate; $i++) {
-        $code = '';
-				$n = $i*$seed+$plus;
-				$code = str_replace(array('=','+','/'),'',base64_encode($n));
-				$generated[$code] = 1;
+      $seed = mt_rand(101, 200);
+      $plus = mt_rand(1, 100);
+      $try = 0;
+      while(count($generated) < $numGenerate) {
+        $seed = $seed+mt_rand(1,10);
+        for($i = 10000; $i < 10000+$numGenerate; $i++) {
+          $code = '';
+          $n = $i*$seed+$plus;
+          $code = str_replace(array('=','+','/'),'',base64_encode($n));
+          $code  = str_shuffle($code);
+          $generated[$code] = 1;
+          if($try) {
+            if (count($generated) >= $numGenerate) {
+              break;
+            }
+          }
+        }
+        $try++;
+        if ($try > 2) {
+          break;
+        }
+      }
+      foreach($generated as $code => $dontcare) {
         $code = $batchPrefix.'-'.$code;
         $coupon['code'] = $code;
         CRM_Coupon_BAO_Coupon::create($coupon);
         unset($coupon['code']);
-			}
+      }
+
     }
     else {
       // single
