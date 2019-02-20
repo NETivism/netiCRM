@@ -971,6 +971,12 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $params['amount_level'] = $params['amount_level'] . ts(' (multiple participants)') . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
     }
 
+    $coupon = $form->get('coupon');
+    if(!empty($coupon)){
+      $couponDescription = ts('Coupon').'-'.$coupon['code'].'-'.$coupon['description'].': -'.$form->_totalDiscount;
+      $params['amount_level'] .= $couponDescription.CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+    }
+
     $contribParams = array(
       'contact_id' => $contactID,
       'contribution_type_id' => $form->_values['event']['contribution_type_id'] ?
@@ -1038,7 +1044,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     // create contribution record
     $contribution = &CRM_Contribute_BAO_Contribution::add($contribParams, $ids);
 
-    $coupon = $form->get('coupon');
     if(!empty($coupon)){
       CRM_Coupon_BAO_Coupon::addCouponTrack($coupon['id'], $contribution->id, $contribution->contact_id, $form->_totalDiscount);
     }
