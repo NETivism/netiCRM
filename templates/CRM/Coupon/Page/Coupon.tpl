@@ -8,7 +8,7 @@
 
 	{if NOT ($action eq 1 or $action eq 2) }
     <div class="crm-block crm-form-block crm-form-block-search crm-event-search-form-block">
-      <div class="crm-accordion-wrapper crm-coupon_search_form-accordion {if $smarty.get.code or $smarty.get.description}crm-accordion-open{else}crm-accordion-closed{/if}">
+      <div class="crm-accordion-wrapper crm-coupon_search_form-accordion crm-accordion-open">
         <div class="crm-accordion-header crm-master-accordion-header">
           <div class="zmdi crm-accordion-pointer"></div> {ts}Edit Search Criteria{/ts}
         </div>
