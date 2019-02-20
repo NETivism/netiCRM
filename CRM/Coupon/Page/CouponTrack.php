@@ -4,7 +4,12 @@ class CRM_Coupon_Page_CouponTrack extends CRM_Core_Page {
 
   function run() {
     $couponId = CRM_Utils_Request::retrieve('coupon_id', 'Positive', $this);
-    $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy(array($couponId));
+    if ($couponId) {
+      $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy(array($couponId));
+    }
+    else {
+      $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy();
+    }
 
     while ($dao->fetch()) {
       $used[$dao->id] = array();
