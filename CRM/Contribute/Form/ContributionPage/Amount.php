@@ -72,6 +72,12 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
 
     $filter = array();
     $grouping = array('recurring' => ts('Recurring Contribution'), 'non-recurring' => ts('Non-recurring Contribution'));
+    if (!empty($this->_membershipBlock) && !empty($this->_membershipBlock['membership_types'])) {
+      $membershipTypes = CRM_Member_PseudoConstant::membershipType();
+      foreach($this->_membershipBlock['membership_types'] as $mTypeId) {
+        $grouping['membership-'.$mTypeId] = ts('Membership').':'.$membershipTypes[$mTypeId];
+      }
+    }
     for ($i = 1; $i <= self::NUM_OPTION; $i++) {
       // label
       $this->add('text', "label[$i]", ts('Label'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'label'));

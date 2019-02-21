@@ -456,9 +456,26 @@ function enableHonorType( ) {
   cj(document).ready(function($){
     var amountGrouping = function(init){
       var amountFilter = function() {
+        var isRecur = $("input[name=is_recur]:checked").val() == '1' ? 1 : 0;
+        var isMembership = $('#membership-listings').length > 0 ? 1 : 0;
         $("input[name=amount]").each(function() {
           var $label = $(this).closest('label.crm-form-elem');
-          if (isRecur == '1') {
+          if (isMembership) {
+            // dont care recurring or not, just filter by membership type if needed
+            var selectedMember = $("#membership input[name=selectMembership]:checked").val();
+            if (selectedMember) {
+              var grouping = $(this).data('grouping');
+              if (grouping) {
+                if (grouping == 'membership-'+selectedMember) {
+                  $label.show();
+                }
+                else {
+                  $label.hide();
+                }
+              }
+            }
+          }
+          else if (isRecur) {
             if ($(this).data('grouping') == 'non-recurring') {
               $label.hide();
             }
@@ -475,22 +492,18 @@ function enableHonorType( ) {
             }
           }
         });
+        if ($("input[name=amount]:visible").length === 1) {
+          $("input[name=amount]:visible").prop('checked', true);
+        }
       }
       $('.crm-section.amount-section label').css("display", "block");
       $('.crm-section.amount-section br').remove();
-      var isRecur = $("input[name=is_recur]:checked").val();
       if (init) {
         amountFilter();
         // whatever, show current selected option
         $("input[name=amount]:checked").closest("label.crm-form-elem").show();
       }
       else {
-        if (isRecur == 1) {
-          var dataFilter = 'recurring';
-        }
-        else {
-          var dataFilter = 'non-recurring';
-        }
         $("input[name=amount]").removeProp("checked");
         amountFilter();
         var $default = $("input[name=amount][data-default=1]:visible");
@@ -517,6 +530,11 @@ function enableHonorType( ) {
         enablePeriod(cj(this));
       });
       enablePeriod(cj('input[name=is_recur]:checked'));
+    }
+    if (cj('input[name=selectMembership]').length > 1) {
+      cj('input[name=selectMembership]').click(function(){
+        amountGrouping();
+      });
     }
 
     // don't submit at input

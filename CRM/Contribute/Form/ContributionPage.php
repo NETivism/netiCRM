@@ -83,6 +83,14 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
   protected $_priceSetID = NULL;
 
   /**
+   * store membership block settings
+   *
+   * @var array
+   * @access protected
+   */
+  protected $_membershipBlock = NULL;
+
+  /**
    * Function to set variables up before form is built
    *
    * @return void
@@ -115,6 +123,16 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
       if ($this->_action == CRM_Core_Action::UPDATE) {
         $this->_single = TRUE;
+      }
+
+      $dao = new CRM_Member_DAO_MembershipBlock();
+      $dao->entity_table = 'civicrm_contribution_page';
+      $dao->entity_id = $this->_id;
+      if ($dao->find(TRUE)) {
+        CRM_Core_DAO::storeValues($dao, $this->_membershipBlock);
+        if (!empty($this->_membershipBlock['membership_types'])) {
+          $this->_membershipBlock['membership_types'] = explode(',', $this->_membershipBlock['membership_types']);
+        }
       }
 
       $session = CRM_Core_Session::singleton();
