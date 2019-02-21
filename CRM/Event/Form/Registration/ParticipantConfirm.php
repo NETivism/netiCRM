@@ -78,8 +78,18 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     $this->_csContactID = NULL;
     if ($csContactId && $this->_eventId) {
       $session = CRM_Core_Session::singleton();
-      if ($csContactId == $session->get('userID')) {
-        $this->_csContactID = $csContactId;
+      $currentContact = $session->get('userID');
+      // logged in contact
+      if (!empty($currentContact)) {
+        if ($csContactId == $currentContact) {
+          $this->_csContactID = $csContactId;
+        }
+        else {
+          $this->_csContactID = NULL;
+          $config = CRM_Core_Config::singleton();
+          $statusMessage = ts('Current logged in contact is not the same contact of participant. Please log out first and try again.');
+          CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1", FALSE, NULL, FALSE, TRUE));
+        }
       }
       else {
         require_once 'CRM/Contact/BAO/Contact/Permission.php';

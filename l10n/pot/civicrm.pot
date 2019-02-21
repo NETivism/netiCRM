@@ -46798,3 +46798,6 @@ msgstr ""
 
 msgid "Enter partial words of code to search (such as prefix words of code)."
 msgstr ""
+
+msgid "Current logged in contact is not the same contact of participant. Please log out first and try again."
+msgstr ""

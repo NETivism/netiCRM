@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-02-21 04:30+0000\n"
+"PO-Revision-Date: 2019-02-21 06:08+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46977,3 +46977,8 @@ msgstr "一旦產生之後，您僅能一個一個編輯優惠碼，無法再批
 
 msgid "Enter partial words of code to search (such as prefix words of code)."
 msgstr "可輸入優惠碼部分文字（例如批次優惠碼的前綴字）"
+
+msgid ""
+"Current logged in contact is not the same contact of participant. Please log"
+" out first and try again."
+msgstr "目前登入的聯絡人，跟您欲報名的參加者是不同的人，需請您登出後再試一次。"
