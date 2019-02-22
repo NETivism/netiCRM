@@ -221,140 +221,115 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       }
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       CRM_Utils_System::setTitle(ts('Contribute Now'));
-      // CRM_Utils_Hook::alterContent($page, 'page', $pageTemplateFile, $this);
       CRM_Utils_System::theme('page', $page);
     }
   }
 
   static function validate(){
-
-    $contribution = new CRM_Contribute_DAO_Contribution();
-    $contribution->id = $_POST['cid'];
-    $contribution->find(TRUE);
-
-    $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
-    $paymentProcessor->id = $contribution->payment_processor_id;
-    $paymentProcessor->find(TRUE);
+    $paymentProcessor_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $_POST['cid'], 'payment_processor_id');
+    $merchantIdentifier = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $paymentProcessor_id, 'signature');
 
     if(arg(2) == 'applepay'){
       // Refs: Document: [Requesting an Apple Pay Payment Session] https://goo.gl/CJAe4M
       $data = array(
-        'merchantIdentifier' => $paymentProcessor->signature,
+        'merchantIdentifier' => $merchantIdentifier,
         'displayName' => 'test',
         'initiative' => 'web',
         'initiativeContext' => $_POST['domain_name'],
       );
       $url = $_POST['validationURL'];
-      $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
-      '. json_encode($data).'
-      END';
-      $result = exec($cmd);
-    }
+      $file_path = '/var/www/html/cert/apple-pay-cert.pem';
 
+      $ch = curl_init($url);
+      $opt = array();
+      $opt[CURLOPT_RETURNTRANSFER] = TRUE;
+      $opt[CURLOPT_POST] = TRUE;
+      $opt[CURLOPT_HTTPHEADER] = array("Content-Type: application/json");
+      $opt[CURLOPT_POSTFIELDS] = json_encode($data);
+      $opt[CURLOPT_SSLCERT] = $file_path;
+      curl_setopt_array($ch, $opt);
+
+      $result = curl_exec($ch);
+      $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      if ($result === FALSE) {
+        $errno = curl_errno($ch);
+        $err = curl_error($ch);
+        $curlError = array($errno => $err);
+      }
+      else{
+        $curlError = array();
+      }
+      curl_close($ch);
+    }
     echo $result;
     CRM_Utils_System::civiExit();
   }
 
   static function transact(){
-    if(strtolower($paymentProcessor->password) == 'neweb'){
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $_POST['cid'];
+    $contribution->find(TRUE);
+
+    // Prepare objects to put in checkout function.
+    $originPaymentProcessorId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $contribution->payment_processor_id, 'user_name');
+    $merchantPaymentProcessor = new CRM_Core_DAO_PaymentProcessor();
+    $merchantPaymentProcessor->id = $originPaymentProcessorId;
+    $merchantPaymentProcessor->find(TRUE);
+    $objects = array(
+      'contribution' => $contribution,
+      'payment_processor' => $merchantPaymentProcessor,
+    );
+
+    if(strstr($_GET['q'], 'applepay')){
       $type = 'applepay';
-      $contribution = new CRM_Contribute_DAO_Contribution();
-      $contribution->id = $_POST['cid'];
-      $contribution->find(TRUE);
+    }
+      
+    // call mobile checkout function
+    $ppProvider = $_POST['provider'];
+    $module_name = 'civicrm_'.strtolower($ppProvider);
+    if (module_load_include('inc', $module_name, $module_name.'.checkout') === FALSE) {
+      CRM_Core_Error::fatal('Module '.$module_name.' doesn\'t exists.');
+    }
 
-      $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
-      $paymentProcessor->id = $contribution->payment_processor_id;
-      $paymentProcessor->find(TRUE);
+    $checkout_func = '_'.$module_name.'_mobile_checkout';
+    $return = call_user_func($checkout_func, $type, $_POST, $objects);     
 
-      $data = array(
-        'userid' => $paymentProcessor->signature,
-        'passwd' => $paymentProcessor->subject,
-        'merchantnumber' => $paymentProcessor->user_name,
-        'ordernumber' => $contribution->id,
-        'applepay_token' => $_POST['applepay_token'],
-        'depositflag' => 0,
-        'consumerip' => CRM_Utils_System::ipAddress(),
-      );
-
-      if(empty($paymentProcessor->url_site)){
-        module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.checkout');
-        if(function_exists('_civicrm_neweb_get_mobile_params')){
-          $payment_params = _civicrm_neweb_get_mobile_params();
-        }else{
-          $error = "Can't get params from module when transact: civicrm_neweb";
-          CRM_Core_Error::debug_log_message($error);
-          $note .= $error;
-          CRM_Core_Payment_Mobile::addNote($note, $contribution);
-        }
-
-        $_test = $_POST['is_test']? '_test' : '';
-        $url = $payment_params['transact_url'.$_test];
-      }else{
-        $url = preg_replace('/\/$/', '', trim($paymentProcessor->url_site)).'/ccaccept';
-      }
-      $cmd = 'curl --request POST --url "'.$url.'" -H "Content-Type: application/json" --data @- <<END 
-      '. json_encode($data).'
-      END';
-
-      $record = array(
-        'cid' => $contribution->id,
-        'post_data_transact' => $cmd,
-      );
-      drupal_write_record('civicrm_contribution_neweb', $record, 'cid');
-
-      $result = exec($cmd);
-
-      $record = array(
-        'cid' => $contribution->id,
-        'return_data' => $result,
-      );
-      $result = json_decode($result);
-
-      $record['created'] = time();
-      $record['prc'] = $result->prc;
-      $record['src'] = $result->src;
-      $record['bankrc'] = $result->bankresponsecode;
-      $record['approvalcode'] = $result->approvalcode;
-      drupal_write_record('civicrm_contribution_neweb', $record, 'cid');
-      $is_success = ($result->prc == 0 && $result->src == 0);
+    if(!empty($return)){
+      // execute ipn transact
       $participant_id = $_POST['pid'];
       $event_id = $_POST['eid'];
-    }
-
-    // ipn transact
-    $ipn = new CRM_Core_Payment_BaseIPN();
-    $input = $ids = $objects = array();
-    if(!empty($participant_id) && !empty($event_id)){
-      $input['component'] = 'event';
-      $ids['participant'] = $participant_id;
-      $ids['event'] = $event_id;
-    }else{
-      $input['component'] = 'contribute';
-    }
-    $ids['contribution'] = $contribution->id;
-    $ids['contact'] = $contribution->contact_id;
-    $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
-    if($validate_result){
-      $transaction = new CRM_Core_Transaction();
-      if($is_success){
-        $input['payment_instrument_id'] = $contribution->payment_instrument_id;
-        $input['amount'] = $contribution->amount;
-        $objects['contribution']->receive_date = date('YmdHis');
-        $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
-
-        $result = array('is_success' => 1);
+      $ipn = new CRM_Core_Payment_BaseIPN();
+      $input = $ids = $objects = array();
+      if(!empty($participant_id) && !empty($event_id)){
+        $input['component'] = 'event';
+        $ids['participant'] = $participant_id;
+        $ids['event'] = $event_id;
       }else{
-        $ipn->failed($objects, $transaction, $error);
-        $note .= $error . "Prc: {$result_object->prc}, Src: {$result_object->src}";
-        self::addNote($note, $contribution);
-        $result = array('is_success' => 0);
+        $input['component'] = 'contribute';
+      }
+      $ids['contribution'] = $contribution->id;
+      $ids['contact'] = $contribution->contact_id;
+      $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
+      if($validate_result){
+        $transaction = new CRM_Core_Transaction();
+        if($return['is_success']){
+          $input['payment_instrument_id'] = $contribution->payment_instrument_id;
+          $input['amount'] = $contribution->amount;
+          $objects['contribution']->receive_date = date('YmdHis');
+          $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
+
+          $result = array('is_success' => 1);
+        }else{
+          $ipn->failed($objects, $transaction, $error);
+          $note = $error . $return['message'];
+          self::addNote($note, $contribution);
+          $result = array('is_success' => 0);
+        }
       }
     }
 
-    if($type == 'applepay'){
-      echo json_encode($result);
-      CRM_Utils_System::civiExit();
-    }
+    echo json_encode($return);
+    CRM_Utils_System::civiExit();
   }
 
   static function addNote($note, &$contribution){
