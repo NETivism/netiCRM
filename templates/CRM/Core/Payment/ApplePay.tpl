@@ -117,29 +117,31 @@
                 data: data,
                 dataType: "json",
                 success: function (result){
-                  try{
+                  try {
                     dd("Validate Success");
-                    merchantSession = window.applePayProcess.merchantSession = JSON.parse(result.merchantSession);
-                    dd(merchantSession);
-                    
-                    session.completeMerchantValidation(merchantSession);
-                  }catch(err){
+                    session.completeMerchantValidation(result);
+                  } catch(err) {
                     dd("ERR");
                     dd(err);
                   }
                 }
               });
             };
+
             session.onpaymentauthorized = function(event){
+              dd(event.payment);
               dd(event);
               dd("Start transact");
-              data = {
+              var data = {
                 cid : window.applePayProcess.cid,
-                applepay_token : event.payment.token,
+                token : event.payment.token.paymentData,
+                description : window.applePayProcess.description,
+                provider : window.applePayProcess.provider,
                 is_test : window.applePayProcess.is_test,
               };
               data.pid = window.applePayProcess.pid ? window.applePayProcess.pid : undefined;
               data.eid = window.applePayProcess.eid ? window.applePayProcess.eid : undefined;
+              dd(data);
 
               $.ajax({
                 type: "POST",
@@ -147,7 +149,6 @@
                 data: data,
                 dataType: "json",
                 success: function (result){
-                  dd(result);
                   if(result.is_success){
                     dd("Transact Success");
                     dd(ApplePaySession.STATUS_SUCCESS);
@@ -162,23 +163,17 @@
                         location.href = "/civicrm/contribute/transact?_qf_ThankYou_display=true&qfKey="+window.applePayProcess.qfKey;
                       }
                     },5000);
-                    
-
-
                   }else{
+                    // Anyway redirect to thankyou Page
                     dd(ApplePaySession.STATUS_FAILURE);
                     session.completePayment(JSON.parse(ApplePaySession.STATUS_FAILURE));
-
                   }
                 }
               });
-
-
             };
 
             session.oncancel = function(){
               dd("Cancel");
-              
             };
 
             session.begin();
@@ -252,7 +247,11 @@
     } 
 }
 .console {
+  {/literal}
+  {if !$is_test}
     display: none;
+  {/if}
+  {literal}
 }
 </style>
 
