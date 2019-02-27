@@ -287,11 +287,10 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     // call mobile checkout function
     $ppProvider = $_POST['provider'];
     $module_name = 'civicrm_'.strtolower($ppProvider);
-    if (module_load_include('inc', $module_name, $module_name.'.checkout') === FALSE) {
-      CRM_Core_Error::fatal('Module '.$module_name.' doesn\'t exists.');
+    $checkout_func = $module_name.'_mobile_checkout';
+    if(!function_exists($checkout_func)){
+      return CRM_Core_Error::fatal('Function '.$checkout_func.' doesn\'t exists.');
     }
-
-    $checkout_func = '_'.$module_name.'_mobile_checkout';
     $return = call_user_func($checkout_func, $type, $_POST, $objects);     
 
     if(!empty($return)){
