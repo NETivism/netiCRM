@@ -60,6 +60,8 @@ DROP TABLE IF EXISTS civicrm_participant;
 DROP TABLE IF EXISTS civicrm_event;
 DROP TABLE IF EXISTS civicrm_membership_payment;
 DROP TABLE IF EXISTS civicrm_coupon_track;
+DROP TABLE IF EXISTS civicrm_contribution_tappay_log;
+DROP TABLE IF EXISTS civicrm_contribution_tappay;
 DROP TABLE IF EXISTS civicrm_contribution_soft;
 DROP TABLE IF EXISTS civicrm_contribution_product;
 DROP TABLE IF EXISTS civicrm_contribution;
@@ -4524,6 +4526,60 @@ CREATE TABLE civicrm_contribution_soft (
      CONSTRAINT FK_civicrm_contribution_soft_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_contribution_soft_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_contribution_soft_pcp_id FOREIGN KEY (pcp_id) REFERENCES civicrm_pcp(id) ON DELETE SET NULL  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_tappay
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_tappay (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'TapPay ID',
+     contribution_id int unsigned NOT NULL   COMMENT 'Contribuution ID',
+     contribution_recur_id int unsigned    COMMENT 'Contribuution Recur ID',
+     order_number varchar(255)    COMMENT 'Used in parameters of transact. Same as contribution trxn id.',
+     card_secret varchar(255)    COMMENT 'Card Secret',
+     card_key varchar(255)    COMMENT 'Card Key',
+     rec_trade_id varchar(255)    COMMENT 'Record Trade ID',
+     bincode int unsigned    COMMENT 'The first 6 words of card number.',
+     lastfour int unsigned    COMMENT 'The last four words of card number.' 
+,
+    PRIMARY KEY ( id )
+ 
+    ,     INDEX tappay_order_number(
+        order_number
+  )
+  ,     INDEX UI_rec_trade_id(
+        rec_trade_id
+  )
+  
+,      
+     CONSTRAINT FK_civicrm_contribution_tappay_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_contribution_tappay_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_tappay_log
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_tappay_log (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'TapPay Log ID',
+     contribution_id int unsigned NOT NULL   COMMENT 'Contribuution ID',
+     url varchar(255)    COMMENT 'Request URL',
+     date datetime    COMMENT 'Request Date Time',
+     post_data text    COMMENT 'Request Post Data',
+     return_data text    COMMENT 'Request Return Data' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+,      
+     CONSTRAINT FK_civicrm_contribution_tappay_log_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

@@ -273,6 +273,10 @@
 
   <civicrm_contribution_soft />
 
+  <civicrm_contribution_tappay />
+
+  <civicrm_contribution_tappay_log />
+
   <civicrm_coupon_track />
 
   <civicrm_membership_payment />
