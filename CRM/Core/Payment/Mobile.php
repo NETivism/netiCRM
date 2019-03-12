@@ -240,7 +240,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $url = $_POST['validationURL'];
       $file_name = 'applepaycert_'.$mobile_paymentProcessor_id.'.inc';
       $file_path = CRM_Utils_System::cmsRootPath() . '/' . CRM_Utils_System::confPath().'/' . $file_name;
-      dd($file_path);
 
       $ch = curl_init($url);
       $opt = array();
