@@ -101,19 +101,19 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       list($sortName, $email) = CRM_Contact_BAO_Contact::getContactDetails($contribution['contact_id']);
       $paymentProcessor = $payment['paymentProcessor'];
       $prime = CRM_Utils_Request::retrieve('prime', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
-			$tappayParams = array(
-				'apiType' => 'pay_by_prime',
-				'partnerKey' => $paymentProcessor['password'],
-			);
-			$api = new CRM_Core_Payment_TapPayAPI($tappayParams);
-			$data = array(
-				'prime' => $prime,
-				'partner_key' => $paymentProcessor['password'],
-				'merchant_id' => $paymentProcessor['user_name'],
-				'amount' => $contribution['currency'] == 'TWD' ? (int)$contribution['total_amount'] : $contribution['total_amount'],
-				'currency' => $contribution['currency'],
-				'details' => $contribution['amount_level'], // item name
-				'cardholder'=> array(
+      $tappayParams = array(
+        'apiType' => 'pay_by_prime',
+        'partnerKey' => $paymentProcessor['password'],
+      );
+      $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
+      $data = array(
+        'prime' => $prime,
+        'partner_key' => $paymentProcessor['password'],
+        'merchant_id' => $paymentProcessor['user_name'],
+        'amount' => $contribution['currency'] == 'TWD' ? (int)$contribution['total_amount'] : $contribution['total_amount'],
+        'currency' => $contribution['currency'],
+        'details' => $contribution['amount_level'], // item name
+        'cardholder'=> array(
           'phone_number'=> '+886900000000', #required #TODO
           'name' => $sortName, # required
           'email' => $email, #required
@@ -121,9 +121,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'address' => '',     //optional
           'national_id' => '', //optional
         ),
-				'remember' => $contribution['contribution_recur_id'] ? TRUE : FALSE,
+        'remember' => $contribution['contribution_recur_id'] ? TRUE : FALSE,
         'contribution_id' => $id,
-			);
+      );
       $result = $api->request($data);
       $response = array('status' => $result->status, 'msg' => $result->message);
       echo json_encode($response);
