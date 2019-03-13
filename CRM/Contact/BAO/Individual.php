@@ -212,38 +212,42 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
           $tokenFields[] = $token;
         }
       }
-      require_once 'CRM/Utils/Address.php';
-      require_once 'CRM/Core/BAO/Preferences.php';
-
 
       //build the sort name.
-      //check if display name is english, then apply default format
-      $format = CRM_Core_BAO_Preferences::value('sort_name_format');
-      $format = str_replace('contact.', '', $format);
-      $sortName = CRM_Utils_Address::format($formatted, $format,
-        FALSE, FALSE, TRUE, $tokenFields
-      );
+      $sortFormat = CRM_Core_BAO_Preferences::value('sort_name_format');
+      $sortFormat = str_replace('contact.', '', $sortFormat);
+      $sortName = CRM_Utils_Address::format($formatted, $sortFormat, FALSE, FALSE, TRUE, $tokenFields);
       $sortName = trim($sortName);
 
-      // build the display name.
-      //check if display name is english, then apply default format
-      $format = CRM_Core_BAO_Preferences::value('display_name_format');
-      $format = str_replace('contact.', '', $format);
-      $displayName = CRM_Utils_Address::format($formatted, $format,
-        FALSE, FALSE, TRUE, $tokenFields
-      );
+      //build the display name.
+      $displayFormat = CRM_Core_BAO_Preferences::value('display_name_format');
+      $displayFormat = str_replace('contact.', '', $displayFormat);
+      $displayName = CRM_Utils_Address::format($formatted, $displayFormat, FALSE, FALSE, TRUE, $tokenFields);
       $displayName = trim($displayName);
 
-      $default_format = "{first_name}{ }{last_name}";
-      if (!preg_replace('/\w+|[-_]+/', '', $sortName)) {
+      // Chinese
+      $chineseName = preg_match('/\p{Han}+/u', $sortName);
+      // Korean
+      $koreanName = preg_match('/\p{Hangul}+/u', $sortName);
+      // Japanese
+      $japaneseName = (preg_match('/\p{Hiragana}+/u', $sortName) || preg_match('/\p{Katakana}+/u', $sortName));
+
+      if ($chineseName || $koreanName || $japaneseName) {
+        if ($sortFormat != '{last_name}{first_name}') {
+          $sortName = CRM_Utils_Address::format($formatted, '{last_name}{first_name}', FALSE, FALSE, TRUE, $tokenFields);
+        }
+        if ($displayFormat != '{last_name}{first_name}{ }{individual_prefix}') {
+          $displayName = CRM_Utils_Address::format($formatted, '{last_name}{first_name}{ }{individual_prefix}', FALSE, FALSE, TRUE, $tokenFields);
+        }
+      }
+      else{
+        // use western style
+        $default_format = "{first_name}{ }{last_name}";
         $sortName = CRM_Utils_Address::format($formatted, $default_format, FALSE, FALSE, TRUE, $tokenFields);
-        $sortName = preg_replace('/[\r\n]+$/m', '', $sortName);
-        $is_eng = TRUE;
-      }
-      if (!preg_replace('/\w+|[-_]+/', '', $displayName) || $is_eng) {
         $displayName = CRM_Utils_Address::format($formatted, $default_format, FALSE, FALSE, TRUE, $tokenFields);
-        $displayName = preg_replace('/[\r\n]+$/m', '', $displayName);
       }
+      $sortName = trim($sortName);
+      $displayName = trim($displayName);
     }
 
     //start further check for email.
