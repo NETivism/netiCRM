@@ -25846,7 +25846,10 @@ msgid "close"
 msgstr ""
 
 #: templates/CRM/common/fatal.tpl
-msgid "Sorry. A non-recoverable error has occurred."
+msgid ""
+"We are very sorry that there an error occurred. "
+"Please contact system administrator for further support. "
+"Thanks for your help in improving this open source project."
 msgstr ""
 
 #: templates/CRM/common/fatal.tpl

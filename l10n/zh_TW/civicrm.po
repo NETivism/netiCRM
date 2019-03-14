@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-02-21 06:08+0000\n"
+"PO-Revision-Date: 2019-03-13 07:18+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -25845,8 +25845,11 @@ msgid "close"
 msgstr "關閉"
 
 #: templates/CRM/common/fatal.tpl
-msgid "Sorry. A non-recoverable error has occurred."
-msgstr "抱歉，發生無法回復的錯誤。"
+msgid ""
+"We are very sorry that there an error occurred. Please contact system "
+"administrator for further support. Thanks for your help in improving this "
+"open source project."
+msgstr "非常抱歉，有一個錯誤發生了，請您與系統管理員聯繫以取得進一步的協助，也謝謝您於改善此開源專案的協助。"
 
 #: templates/CRM/common/fatal.tpl
 msgid "Error Details"
