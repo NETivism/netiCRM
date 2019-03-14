@@ -119,6 +119,33 @@ class CRM_Core_Payment_TapPayAPI {
     $this->_request = $post;
     $this->_curl();
     if ($this->_success && !empty($this->_response)) {
+
+      // Record tappay data
+      $tappay = new CRM_Contribute_DAO_TapPay();
+      if($this->_contribution_id) {
+        $tappay->contribution_id = $this->_contribution_id;
+        $tappay->find(TRUE);
+        $tappay->contribution_recur_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_contribution_id, 'contribution_recur_id');
+      }
+      $response = $this->_response;
+      if($response->card_secret) {
+        $tappay->card_token = $response->card_secret->card_token;
+        $tappay->card_key = $response->card_secret->card_key;
+      }
+      if($response->card_info) {
+        $tappay->last_four = $response->card_info->last_four;
+        $tappay->bin_code = $response->card_info->bin_code;
+        $tappay->expiry_date = $response->card_info->expiry_date;
+      }
+      if($response->rec_trade_id) {
+        $tappay->rec_trade_id = $response->rec_trade_id;
+      }
+      if($response->order_number) {
+        $tappay->order_number = $response->order_number;
+      }
+      $tappay->save();
+      // record tappay data finished.
+
       return $this->_response;
     }
     else {

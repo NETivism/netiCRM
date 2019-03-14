@@ -105,11 +105,11 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    */
   public $order_number;
   /**
-   * Card Secret
+   * Card Token
    *
    * @var string
    */
-  public $card_secret;
+  public $card_token;
   /**
    * Card Key
    *
@@ -125,15 +125,15 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
   /**
    * The first 6 words of card number.
    *
-   * @var int unsigned
+   * @var string
    */
-  public $bincode;
+  public $bin_code;
   /**
    * The last four words of card number.
    *
-   * @var int unsigned
+   * @var string
    */
-  public $lastfour;
+  public $last_four;
   /**
    * class constructor
    *
@@ -196,10 +196,10 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
-        'card_secret' => array(
-          'name' => 'card_secret',
+        'card_token' => array(
+          'name' => 'card_token',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Card Secret') ,
+          'title' => ts('Card Token') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
@@ -217,15 +217,19 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
-        'bincode' => array(
-          'name' => 'bincode',
-          'type' => CRM_Utils_Type::T_INT,
+        'bin_code' => array(
+          'name' => 'bin_code',
+          'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bin Code') ,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
         ) ,
-        'lastfour' => array(
-          'name' => 'lastfour',
-          'type' => CRM_Utils_Type::T_INT,
+        'last_four' => array(
+          'name' => 'last_four',
+          'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Last Four') ,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
         ) ,
       );
     }

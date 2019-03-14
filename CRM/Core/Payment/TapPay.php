@@ -90,11 +90,18 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   public static function payByPrime() {
     // validate sessions
     $id = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+    $pid = CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject, False, NULL, 'REQUEST'); // TODO
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $class = CRM_Utils_Request::retrieve('class', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $payment = CRM_Core_Payment_TapPay::getAssociatedSession($qfKey, $class);
 
     if ($payment && !empty($payment['paymentProcessor'])) {
+      $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $id, 'trxn_id');
+      if(empty($trxn_id)){
+        $trxn_id = 'tappay_'.str_replace('.', '_', microtime(TRUE));
+        CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'trxn_id', $trxn_id);
+      }
+
       $contribution = $ids = array();
       $params = array('id' => $id);
       CRM_Contribute_BAO_Contribution::getValues($params, $contribution, $ids);
@@ -112,6 +119,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'merchant_id' => $paymentProcessor['user_name'],
         'amount' => $contribution['currency'] == 'TWD' ? (int)$contribution['total_amount'] : $contribution['total_amount'],
         'currency' => $contribution['currency'],
+        'order_number' => $contribution['trxn_id'],
         'details' => $contribution['amount_level'], // item name
         'cardholder'=> array(
           'phone_number'=> '+886900000000', #required #TODO
@@ -125,7 +133,36 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'contribution_id' => $id,
       );
       $result = $api->request($data);
-      $response = array('status' => $result->status, 'msg' => $result->message);
+      $response = array('status' => $result->status, 'msg' => $result->msg);
+
+      // ipn transact
+      $ipn = new CRM_Core_Payment_BaseIPN();
+      $input = $ids = $objects = array();
+      if(!empty($pid)){
+        $input['component'] = 'event';
+        $ids['participant'] = $pid;
+        $ids['event'] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $pid, 'event_id');
+      }
+      else{
+        $input['component'] = 'contribute';
+      }
+      $ids['contribution'] = $id;
+      $ids['contact'] = $contribution['contact_id'];
+      $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
+      if($validate_result){
+        $transaction = new CRM_Core_Transaction();
+        if($response['status'] == 0){
+          $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
+          $input['amount'] = $objects['contribution']->amount;
+          $objects['contribution']->receive_date = date('YmdHis');
+          $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
+        }
+        else{
+          $ipn->failed($objects, $transaction, $error);
+        }
+        self::addNote($response['msg'], $objects['contribution']);
+      }
+
       echo json_encode($response);
       CRM_Utils_System::civiExit();
     }
@@ -153,5 +190,26 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $session = CRM_Core_Session::singleton();
     $payment = $session->get($scope);
     return $payment;
+  }
+
+  static function addNote($note, &$contribution){
+    require_once 'CRM/Core/BAO/Note.php';
+    $note = date("Y/m/d H:i:s "). ts("Transaction record").": \n\n".$note."\n===============================\n";
+    $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
+    if(count($note_exists)){
+      $note_id = array( 'id' => reset(array_keys($note_exists)) );
+      $note = $note . reset($note_exists);
+    }
+    else{
+      $note_id = NULL;
+    }
+    $noteParams = array(
+      'entity_table'  => 'civicrm_contribution',
+      'note'          => $note,
+      'entity_id'     => $contribution->id,
+      'contact_id'    => $contribution->contact_id,
+      'modified_date' => date('Ymd')
+    );
+    CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 }

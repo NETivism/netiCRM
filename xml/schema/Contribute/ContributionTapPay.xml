@@ -64,12 +64,12 @@
       <add>4.0</add>
   </index>   
   <field>
-      <name>card_secret</name>
-      <uniqueName>card_secret</uniqueName>
-      <title>Card Secret</title>
+      <name>card_token</name>
+      <uniqueName>card_token</uniqueName>
+      <title>Card Token</title>
       <type>varchar</type>
       <length>255</length>
-      <comment>Card Secret</comment>
+      <comment>Card Token</comment>
       <add>4.0</add>
   </field>   
   <field>
@@ -96,18 +96,20 @@
       <add>4.0</add>
   </index>
   <field>
-      <name>bincode</name>
-      <uniqueName>bincode</uniqueName>
+      <name>bin_code</name>
+      <uniqueName>bin_code</uniqueName>
       <title>Bin Code</title>
-      <type>int unsigned</type>
+      <type>varchar</type>
+      <length>32</length>
       <comment>The first 6 words of card number.</comment>
       <add>4.0</add>
   </field>
   <field>
-      <name>lastfour</name>
-      <uniqueName>lastfour</uniqueName>
+      <name>last_four</name>
+      <uniqueName>last_four</uniqueName>
       <title>Last Four</title>
-      <type>int unsigned</type>
+      <type>varchar</type>
+      <length>32</length>
       <comment>The last four words of card number.</comment>
       <add>4.0</add>
   </field>

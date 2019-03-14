@@ -4540,11 +4540,11 @@ CREATE TABLE civicrm_contribution_tappay (
      contribution_id int unsigned NOT NULL   COMMENT 'Contribuution ID',
      contribution_recur_id int unsigned    COMMENT 'Contribuution Recur ID',
      order_number varchar(255)    COMMENT 'Used in parameters of transact. Same as contribution trxn id.',
-     card_secret varchar(255)    COMMENT 'Card Secret',
+     card_token varchar(255)    COMMENT 'Card Token',
      card_key varchar(255)    COMMENT 'Card Key',
      rec_trade_id varchar(255)    COMMENT 'Record Trade ID',
-     bincode int unsigned    COMMENT 'The first 6 words of card number.',
-     lastfour int unsigned    COMMENT 'The last four words of card number.' 
+     bin_code varchar(32)    COMMENT 'The first 6 words of card number.',
+     last_four varchar(32)    COMMENT 'The last four words of card number.' 
 ,
     PRIMARY KEY ( id )
  
