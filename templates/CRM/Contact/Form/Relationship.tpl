@@ -389,16 +389,9 @@ cj('#addCurrentEmployer').hide( );
 cj('#addCurrentEmployee').hide( );
 
 cj(document).ready(function(){
-  if ( cj.browser.msie ) {
-       cj('#rel_contact').keyup( function(e) {
-         if( e.keyCode == 9 || e.keyCode == 13 ) {
-	     return false;
-	     }
-         cj("input[name=rel_contact_id]").val('');
-    }); } else {
-         cj('#rel_contact').focus( function() {
-         cj("input[name=rel_contact_id]").val('');
-}); }
+  cj('#rel_contact').focus( function() {
+    cj("input[name=rel_contact_id]").val('');
+  });
 });
 
 {/literal}{if $searchRows || $callAjax}{literal} 
