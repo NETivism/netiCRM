@@ -2704,7 +2704,7 @@ WHERE  id IN ( $groupIDs )
       $names = CRM_Utils_Array::value($value, $tagNames);
     }
 
-    $etTable = "`civicrm_entity_tag-" . $value . "`";
+    $etTable = "`civicrm_entity_tag-" . uniqid(). "`";
     $this->_tables[$etTable] = $this->_whereTables[$etTable] = " LEFT JOIN civicrm_entity_tag {$etTable} ON ( {$etTable}.entity_id = contact_a.id  AND {$etTable}.entity_table = 'civicrm_contact' ) ";
 
     // CRM-10338
