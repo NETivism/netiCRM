@@ -384,5 +384,68 @@ class CRM_Utils_Array {
 
     return $array;
   }
+
+  /**
+   * Get a single value from an array-tree.
+   *
+   * @param array $values
+   *   Ex: ['foo' => ['bar' => 123]].
+   * @param array $path
+   *   Ex: ['foo', 'bar'].
+   * @param mixed $default
+   * @return mixed
+   *   Ex 123.
+   */
+  public static function pathGet($values, $path, $default = NULL) {
+    foreach ($path as $key) {
+      if (!is_array($values) || !isset($values[$key])) {
+        return $default;
+      }
+      $values = $values[$key];
+    }
+    return $values;
+  }
+
+  /**
+   * Check if a key isset which may be several layers deep.
+   *
+   * This is a helper for when the calling function does not know how many layers deep
+   * the path array is so cannot easily check.
+   *
+   * @param array $values
+   * @param array $path
+   * @return bool
+   */
+  public static function pathIsset($values, $path) {
+    foreach ($path as $key) {
+      if (!is_array($values) || !isset($values[$key])) {
+        return FALSE;
+      }
+      $values = $values[$key];
+    }
+    return TRUE;
+  }
+
+  /**
+   * Set a single value in an array tree.
+   *
+   * @param array $values
+   *   Ex: ['foo' => ['bar' => 123]].
+   * @param array $pathParts
+   *   Ex: ['foo', 'bar'].
+   * @param $value
+   *   Ex: 456.
+   */
+  public static function pathSet(&$values, $pathParts, $value) {
+    $r = &$values;
+    $last = array_pop($pathParts);
+    foreach ($pathParts as $part) {
+      if (!isset($r[$part])) {
+        $r[$part] = array();
+      }
+      $r = &$r[$part];
+    }
+    $r[$last] = $value;
+  }
 }
 

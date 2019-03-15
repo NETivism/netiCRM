@@ -53,12 +53,12 @@ class HTML_QuickForm_text extends HTML_QuickForm_input
      * @access    public
      * @return    void
      */
-    function HTML_QuickForm_text($elementName=null, $elementLabel=null, $attributes=null)
+    function __construct($elementName=null, $elementLabel=null, $attributes=null)
     {
         if (empty($attributes)) {
           $attributes = array();
         }
-        HTML_QuickForm_input::HTML_QuickForm_input($elementName, $elementLabel, $attributes);
+        parent::__construct($elementName, $elementLabel, $attributes);
         $this->_persistantFreeze = true;
         $this->setType('text');
     } //end constructor
