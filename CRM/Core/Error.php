@@ -195,6 +195,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     CRM_Core_Error::backtrace('backTrace', TRUE);
 
     if ($config->initialized) {
+      http_response_code(500);
       $content = $template->fetch('CRM/common/fatal.tpl');
       echo CRM_Utils_System::theme('page', $content, TRUE);
     }
@@ -257,6 +258,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     // fallback
     CRM_Core_Error::debug_var('Fatal Error Details', $vars);
     CRM_Core_Error::backtrace('backTrace', TRUE);
+    http_response_code(500);
     self::output($config->fatalErrorTemplate, $vars);
     self::abend(CRM_Core_Error::FATAL_ERROR);
   }
@@ -605,7 +607,11 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       }
       $null = CRM_Core_DAO::$_nullObject;
       CRM_Utils_Hook::alterContent($content, 'page', $tplFile, $null);
-      echo $content;
+      $json = array(
+        'status' => '-1',
+        'error' => "$content",
+      );
+      echo json_encode($json);
     }
     else{
       $config = CRM_Core_Config::singleton();

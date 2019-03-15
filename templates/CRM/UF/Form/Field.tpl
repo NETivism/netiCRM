@@ -27,7 +27,7 @@
 <div class="crm-block crm-form-block crm-uf-field-form-block">
     {if $action eq 8}
       	<div class="messages status">
-          
+           
             {ts}WARNING: Deleting this profile field will remove it from Profile forms and listings. If this field is used in any 'stand-alone' Profile forms, you will need to update those forms to remove this field.{/ts} {ts}Do you want to continue?{/ts}
       </div>
     {else}
@@ -98,6 +98,7 @@
         </table>
     {/if}
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+    {if $action neq 8}
     <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
       <div class="crm-accordion-header">
         <div class="zmdi crm-accordion-pointer"></div> 
@@ -143,6 +144,7 @@
         {/strip}
       </div><!-- /.crm-accordion-body -->
     </div><!-- /.crm-accordion-wrapper -->
+    {/if}
 </div>
 
  {$initHideBoxes}
