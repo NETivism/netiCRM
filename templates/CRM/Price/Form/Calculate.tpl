@@ -107,6 +107,9 @@ cj("#priceset select, #priceset input").each(function () {
           totalfee   += subtractPrice;
           price[el] += subtractPrice;
           display( totalfee );
+          $countEl.focus(function(){
+            cj(this).select();
+          });
         });
         display( totalfee );
         break;
@@ -165,6 +168,9 @@ cj("#priceset select, #priceset input").each(function () {
           price[ele]   = parseFloat(price[ele]) + addprice - parseFloat(price[ele]);
           
           display( totalfee );
+          $countEle.focus(function(){
+            cj(this).select();
+          });
         });
         display( totalfee );
         break;

@@ -1383,6 +1383,28 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     return FALSE;
   }
 
+  public function checkLanguage($lang) {
+    $lang = trim($lang);
+    if (empty($lang)) {
+      return FALSE;
+    }
+    $allLanguages = CRM_Core_I18n_PseudoConstant::languages();
+    if ($langKey = array_search($lang, $allLanguages)) {
+      return $langKey;
+    }
+    if (isset($allLanguages[$lang])) {
+      return $lang;
+    }
+    if (strstr($lang, '_')) {
+      list($pre, $post) = explode('_', $lang);
+      $lang = strtolower($pre). '_' . strtoupper($post);
+      if (isset($allLanguages[$lang])) {
+        return $lang;
+      }
+    }
+    return FALSE;
+  }
+
   /**
    * function to check if an error in Core( non-custom fields ) field
    *
@@ -1423,6 +1445,12 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
           case 'is_deceased':
             if (CRM_Utils_String::strtoboolstr($value) === FALSE) {
               self::addToErrorMsg(ts('Is Deceased'), $errorMessage);
+            }
+            break;
+
+          case 'preferred_language':
+            if (!self::checkLanguage($value)) {
+              self::addToErrorMsg(ts('Preferred Language'), $errorMessage);
             }
             break;
 
@@ -1968,6 +1996,9 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       elseif ($key == 'is_opt_out') {
         $params[$key] = CRM_Utils_String::strtoboolstr($val);
       }
+      elseif ($key == 'preferred_language' && !empty($val)) {
+        $params[$key] = $this->checkLanguage($val);
+      }
     }
 
     //now format custom data.
@@ -2011,7 +2042,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         // preferred_communication_method forcefully
         $formatValues['contact_type'] = $formatted['contact_type'];
       }
-
       if ($key == 'id' && isset($field)) {
         $formatted[$key] = $field;
       }
