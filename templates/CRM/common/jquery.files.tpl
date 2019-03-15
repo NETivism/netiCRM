@@ -86,8 +86,6 @@ js/jquery/jquery.crmasmselect.js
 js/jquery/jquery.crmtooltip.js
 js/jquery/jquery.disablesubmit.js
 
-packages/fontawesome/css/font-awesome.min.css
-
 packages/mdl/material.indigo-pink.min.css
 packages/mdl/mdl.custom.css
 packages/mdl/material.min.js
