@@ -101,9 +101,9 @@ class HTML_QuickForm_group extends HTML_QuickForm_element
      * @access    public
      * @return    void
      */
-    function __construct($elementName=null, $elementLabel=null, $elements=null, $separator=null, $appendName = true)
+    function __construct($elementName=null, $elementLabel=null, $elements=null, $separator=null, $appendName = true, $attributes = null)
     {
-        parent::__construct($elementName, $elementLabel);
+        parent::__construct($elementName, $elementLabel, $attributes);
         $this->_type = 'group';
         if (isset($elements) && is_array($elements)) {
             $this->setElements($elements);

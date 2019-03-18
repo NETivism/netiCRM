@@ -55,7 +55,7 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
     var $_options = array(
         'format'           => 'dMY',
         'minYear'          => 2001,
-        'maxYear'          => 2010,
+        'maxYear'          => 2030,
         'addEmptyOption'   => false,
         'emptyOptionValue' => '',
         'emptyOptionText'  => '&nbsp;',
@@ -125,10 +125,14 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
                                'months_short'  => CRM_Utils_Date::getAbbrMonthNames(), 
                                'months_long'   => CRM_Utils_Date::getFullMonthNames() 
                                );
-        parent::__construct($elementName, $elementLabel, $attributes);
+        parent::__construct($elementName, $elementLabel, null, null, null, $attributes);
         $this->_persistantFreeze = true;
         $this->_appendName = true;
         $this->_type = 'date';
+
+        // http://pear.php.net/bugs/bug.php?id=18171
+        $this->_options['maxYear'] = date('Y');
+
         // set the options, do not bother setting bogus ones
         if (is_array($options)) {
             foreach ($options as $name => $value) {

@@ -120,7 +120,7 @@ class HTML_QuickForm_hierselect extends HTML_QuickForm_group
      */
     function __construct($elementName=null, $elementLabel=null, $attributes=null, $separator=null)
     {
-        parent::__construct($elementName, $elementLabel, $attributes);
+        parent::__construct($elementName, $elementLabel, null, null, null, $attributes);
         $this->_persistantFreeze = true;
         if (isset($separator)) {
             $this->_separator = $separator;
@@ -227,20 +227,21 @@ class HTML_QuickForm_hierselect extends HTML_QuickForm_group
      */
     function _setOptions()
     {
-        $toLoad = '';
+        $arrayKeys = [];
         foreach (array_keys($this->_elements) AS $key) {
-            if(is_string($this->_options[$key]))continue;
-            if (eval("return isset(\$this->_options[{$key}]{$toLoad});") ) {
-                $array = eval("return \$this->_options[{$key}]{$toLoad};");
+          if (isset($this->_options[$key])) {
+            if ((empty($arrayKeys)) || CRM_Utils_Array::pathIsset($this->_options[$key], $arrayKeys)) {
+              $array = empty($arrayKeys) ? $this->_options[$key] : CRM_Utils_Array::pathGet($this->_options[$key], $arrayKeys);
                 if (is_array($array)) {
                     $select =& $this->_elements[$key];
                     $select->_options = array();
                     $select->loadArray($array);
 
-                    $value  = is_array($v = $select->getValue()) ? $v[0] : key($array);
-                    $toLoad .= '[\''.$value.'\']';
-                }
+                    $value = is_array($v = $select->getValue()) ? $v[0] : key($array);
+                    $arrayKeys[] = $value;
+              }
             }
+          }
         }
     } // end func _setOptions
     
@@ -363,7 +364,8 @@ class HTML_QuickForm_hierselect extends HTML_QuickForm_group
             if ($js != '') {
                 $js .= ",\n";
             }
-            $js .= '"'.$optValue.'":"'.addcslashes($options,'"').'"';
+            $js .= '"'.$optValue.'":'.json_encode($options, JSON_UNESCAPED_UNICODE);
+
         }
     }
 

@@ -40,9 +40,9 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
      * @access  public
      * @return  void
      */
-    function HTML_QuickForm_ckeditor($elementName=null, $elementLabel=null, $attributes=null, $options=array())
+    function __construct($elementName=null, $elementLabel=null, $attributes=null, $options=array())
     {
-        HTML_QuickForm_element::HTML_QuickForm_element($elementName, $elementLabel, $attributes);
+        parent::__construct($elementName, $elementLabel, $attributes);
         $this->_persistantFreeze = true;
         $this->_type = 'CKeditor';
         // set editor height smaller if schema defines rows as 4 or less
