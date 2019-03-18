@@ -588,23 +588,26 @@ SELECT $select
                       $customValue['id'] = $dao->$idName;
                       $customValue['data'] = $fileDAO->uri;
                       $customValue['fid'] = $fileDAO->id;
-                      $customValue['fileURL'] = CRM_Utils_System::url('civicrm/file', "reset=1&id={$fileDAO->id}&eid={$dao->$entityIDName}", FALSE, NULL, FALSE);
+                      $fileHash = CRM_Core_BAO_File::generateFileHash($dao->$entityIDName, $fileDAO->id);
+                      $customValue['fileURL'] = CRM_Utils_System::url('civicrm/file', "reset=1&id={$fileDAO->id}&eid={$dao->$entityIDName}&fcs=$fileHash", FALSE, NULL, FALSE);
                       $customValue['displayURL'] = $customValue['fileURL'];
                       $deleteExtra = ts('Are you sure you want to delete attached file.');
                       $deleteURL = array(CRM_Core_Action::DELETE =>
                         array(
                           'name' => ts('Delete Attached File'),
                           'url' => 'civicrm/file',
-                          'qs' => 'reset=1&id=%%id%%&eid=%%eid%%&fid=%%fid%%&action=delete',
+                          'qs' => 'reset=1&id=%%id%%&eid=%%eid%%&fid=%%fid%%&action=delete&fcs=%%fcs%%',
                           'extra' =>
                           'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) this.href+=\'&confirmed=1\'; else return false;"',
                         ),
                       );
                       $customValue['deleteURL'] = CRM_Core_Action::formLink($deleteURL,
                         CRM_Core_Action::DELETE,
-                        array('id' => $fileDAO->id,
+                        array(
+                          'id' => $fileDAO->id,
                           'eid' => $dao->$entityIDName,
                           'fid' => $fieldID,
+                          'fcs' => $fileHash
                         )
                       );
                       $customValue['fileName'] = CRM_Utils_File::cleanFileName(basename($fileDAO->uri));

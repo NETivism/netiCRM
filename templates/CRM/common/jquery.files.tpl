@@ -27,7 +27,8 @@
  * If you MODIFY this file, please make sure you also modify jquery.tpl.
  * We will unify the two files in a future release
  *}
-packages/jquery/jquery.js
+packages/jquery/jquery-1.12.4.js
+packages/jquery/jquery-migrate-1.4.1.js
 packages/jquery/jquery-ui/js/jquery-ui-1.9.1.custom.min.js
 packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.9.1.custom.css
 packages/jquery/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$config->lcMessages|replace:'_':'-'}.js
@@ -51,8 +52,6 @@ packages/jquery/plugins/jquery.tableHeader.js
 
 {*allow select/unselect checkboxes functionality only for search*}
 packages/jquery/plugins/checkboxselect.js
-
-packages/jquery/plugins/jquery.textarearesizer.js
 
 packages/jquery/plugins/jquery.form.js
 
@@ -87,12 +86,10 @@ js/jquery/jquery.crmasmselect.js
 js/jquery/jquery.crmtooltip.js
 js/jquery/jquery.disablesubmit.js
 
-packages/fontawesome/css/font-awesome.min.css
-
 packages/mdl/material.indigo-pink.min.css
 packages/mdl/mdl.custom.css
 packages/mdl/material.min.js
 
 packages/material-design-iconic-font/css/material-design-iconic-font.min.css
-
 packages/Sortable/Sortable.min.js
+

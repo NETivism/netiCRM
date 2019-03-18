@@ -70,9 +70,9 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      * @since     1.0
      * @access    public
      */
-    function HTML_QuickForm_file($elementName=null, $elementLabel=null, $attributes=null)
+    function __construct($elementName=null, $elementLabel=null, $attributes=null)
     {
-        HTML_QuickForm_input::HTML_QuickForm_input($elementName, $elementLabel, $attributes);
+        parent::__construct($elementName, $elementLabel, $attributes);
         $this->setType('file');
     } //end constructor
     
@@ -189,8 +189,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
                 return $this->onQuickFormEvent('updateValue', null, $caller);
                 break;
             case 'createElement':
-                $className = get_class($this);
-                $this->$className($arg[0], $arg[1], $arg[2]);
+                $this->__construct($arg[0], $arg[1], $arg[2]);
                 break;
         }
         return true;
@@ -207,7 +206,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      * @access   public
      * @return   bool    Whether the file was moved successfully
      */
-    function moveUploadedFile($dest, $fileName = NULL)
+    function moveUploadedFile($dest, $fileName = '')
     {
         if ($dest != ''  && substr($dest, -1) != '/') {
             $dest .= '/';
@@ -411,28 +410,25 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
         if (isset($_FILES[$elementName])) {
             return $_FILES[$elementName];
         } elseif (false !== ($pos = strpos($elementName, '['))) {
-            $base  = str_replace(
-                        array('\\', '\''), array('\\\\', '\\\''),
-                        substr($elementName, 0, $pos)
-                    ); 
-            $idx   = "['" . str_replace(
-                        array('\\', '\'', ']', '['), array('\\\\', '\\\'', '', "']['"),
-                        substr($elementName, $pos + 1, -1)
-                     ) . "']";
-            $props = array('name', 'type', 'size', 'tmp_name', 'error');
-            $code  = "if (!isset(\$_FILES['{$base}']['name']{$idx})) {\n" .
-                     "    return null;\n" .
-                     "} else {\n" .
-                     "    \$value = array();\n";
-            foreach ($props as $prop) {
-                $code .= "    \$value['{$prop}'] = \$_FILES['{$base}']['{$prop}']{$idx};\n";
+            $base = substr($elementName, 0, $pos);
+            $idx = explode('][', str_replace(["['", "']", '["', '"]'], ['[', ']', '[', ']'], substr($elementName, $pos + 1, -1)));
+            $idx = array_merge([$base, 'name'], $idx);
+            if (!CRM_Utils_Array::pathIsset($_FILES, $idx)) {
+                return NULL;
             }
-            return eval($code . "    return \$value;\n}\n");
+            else {
+                $props = ['name', 'type', 'size', 'tmp_name', 'error'];
+                $value = [];
+                foreach ($props as $prop) {
+                    $idx[1] = $prop;
+                    $value[$prop] = CRM_Utils_Array::pathGet($_FILES, $idx);
+                }
+                return $value;
+             }
         } else {
             return null;
         }
     }
-
     // }}}
 } // end class HTML_QuickForm_file
 ?>

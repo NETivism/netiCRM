@@ -1,1 +1,1 @@
-var cj = jQuery.noConflict(true);
+window.cj = jQuery.noConflict(true);

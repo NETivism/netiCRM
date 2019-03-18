@@ -174,7 +174,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       CRM_Core_Session::registerAndRetrieveSessionObjects(array("_{$name}_container", array('CiviCRM', $this->_scope)));
     }
 
-    $this->HTML_QuickForm_Controller($name, $modal);
+    parent::__construct($name, $modal);
 
     // let the constructor initialize this, should happen only once
     if (!isset(self::$_template)) {

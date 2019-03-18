@@ -286,9 +286,9 @@ class HTML_QuickForm extends HTML_Common
      * @param    bool        $trackSubmit       (optional)Whether to track if the form was submitted by adding a special hidden field
      * @access   public
      */
-    function HTML_QuickForm($formName='', $method='post', $action='', $target='', $attributes=null, $trackSubmit = false)
+    function __construct($formName='', $method='post', $action='', $target='', $attributes=null, $trackSubmit = false)
     {
-        HTML_Common::HTML_Common($attributes);
+        parent::__construct($attributes);
         $method = (strtoupper($method) == 'GET') ? 'get' : 'post';
         $action = CRM_Utils_System::postURL( $action );
         // $action = ($action == '') ? $_SERVER['PHP_SELF'] : $action;
@@ -855,28 +855,26 @@ class HTML_QuickForm extends HTML_Common
             return $this->getElementValue($elementName);
 
         } elseif (false !== ($pos = strpos($elementName, '['))) {
-            $base = str_replace(
-                        array('\\', '\''), array('\\\\', '\\\''), 
-                        substr($elementName, 0, $pos)
-                    );
-            $idx  = "['" . str_replace(
-                        array('\\', '\'', ']', '['), array('\\\\', '\\\'', '', "']['"), 
-                        substr($elementName, $pos + 1, -1)
-                    ) . "']";
+            $base = substr($elementName, 0, $pos);
+            $idx = explode('][', str_replace(["['", "']", '["', '"]'], ['[', ']', '[', ']'], substr($elementName, $pos + 1, -1)));
             if (isset($this->_submitValues[$base])) {
-                $value = eval("return (isset(\$this->_submitValues['{$base}']{$idx})) ? \$this->_submitValues['{$base}']{$idx} : null;");
+                $value = CRM_Utils_Array::pathGet($this->_submitValues[$base], $idx);
             }
 
             if ((is_array($value) || null === $value) && isset($this->_submitFiles[$base])) {
-                $props = array('name', 'type', 'size', 'tmp_name', 'error');
-                $code  = "if (!isset(\$this->_submitFiles['{$base}']['name']{$idx})) {\n" .
-                         "    return null;\n" .
-                         "} else {\n" .
-                         "    \$v = array();\n";
-                foreach ($props as $prop) {
-                    $code .= "    \$v = HTML_QuickForm::arrayMerge(\$v, \$this->_reindexFiles(\$this->_submitFiles['{$base}']['{$prop}']{$idx}, '{$prop}'));\n";
+                if (!CRM_Utils_Array::pathIsset($this->_submitFiles[$base], array_merge(['name'], $idx))) {
+                    $fileValue = NULL;
                 }
-                $fileValue = eval($code . "    return \$v;\n}\n");
+                else {
+                    $props = ['name', 'type', 'size', 'tmp_name', 'error'];
+                    $fileValue = [];
+                    foreach ($props as $prop) {
+                        $fileValue = HTML_QuickForm::arrayMerge(
+                          $fileValue,
+                          $this->_reindexFiles(CRM_Utils_Array::pathGet($this->_submitFiles[$base], array_merge([$prop], $idx)), $prop)
+                        );
+                    }
+                }
                 if (null !== $fileValue) {
                     $value = null === $value? $fileValue: HTML_QuickForm::arrayMerge($value, $fileValue);
                 }
@@ -1269,11 +1267,8 @@ class HTML_QuickForm extends HTML_Common
                     if (false === strpos($elName, '[')) {
                         $this->_submitValues[$elName] = $this->_recursiveFilter($filter, $value);
                     } else {
-                        $idx  = "['" . str_replace(
-                                    array('\\', '\'', ']', '['), array('\\\\', '\\\'', '', "']['"), 
-                                    $elName
-                                ) . "']";
-                        eval("\$this->_submitValues{$idx} = \$this->_recursiveFilter(\$filter, \$value);");
+                        $keys = explode('[', trim(str_replace(["['", "']", '["', '"]'], ['[', '', '[', ''], $elName), ']['));
+                        CRM_Utils_Array::pathSet($this->_submitValues, $keys, $this->_recursiveFilter($filter, $value));
                     }
                 }
             }
@@ -1555,15 +1550,10 @@ class HTML_QuickForm extends HTML_Common
                         if (false === ($pos = strpos($target, '['))) {
                             $isUpload = !empty($this->_submitFiles[$target]);
                         } else {
-                            $base = str_replace(
-                                        array('\\', '\''), array('\\\\', '\\\''),
-                                        substr($target, 0, $pos) 
-                                    ); 
-                            $idx  = "['" . str_replace(
-                                        array('\\', '\'', ']', '['), array('\\\\', '\\\'', '', "']['"), 
-                                        substr($target, $pos + 1, -1)
-                                    ) . "']";
-                            eval("\$isUpload = isset(\$this->_submitFiles['{$base}']['name']{$idx});");
+                            $base = substr($target, 0, $pos);
+                            $idx = explode('][', str_replace(["['", "']", '["', '"]'], ['[', ']', '[', ']'], substr($target, $pos + 1, -1)));
+                            $idx = array_merge([$base, 'name'], $idx);
+                            $isUpload = CRM_Utils_Array::pathIsset($this->_submitFiles, $idx);
                         }
                         if ($isUpload && (!isset($submitValue['error']) || UPLOAD_ERR_NO_FILE == $submitValue['error'])) {
                             continue 2;
@@ -2065,7 +2055,7 @@ class HTML_QuickForm extends HTML_Common
      * @return bool     whether $value is an error
      * @static
      */
-    function isError($value)
+    public static function isError($value)
     {
         return (is_object($value) && is_a($value, 'html_quickform_error'));
     } // end func isError
@@ -2081,7 +2071,7 @@ class HTML_QuickForm extends HTML_Common
      * @return  string  error message
      * @static
      */
-    function errorMessage($value)
+    static function errorMessage($value)
     {
         // make the variable static so that it only has to do the defining on the first call
         static $errorMessages;
@@ -2144,13 +2134,13 @@ class HTML_QuickForm_Error extends PEAR_Error {
     * @param int   $level intensity of the error (PHP error code)
     * @param mixed $debuginfo any information that can inform user as to nature of the error
     */
-    function HTML_QuickForm_Error($code = QUICKFORM_ERROR, $mode = PEAR_ERROR_RETURN,
+    function __construct($code = QUICKFORM_ERROR, $mode = PEAR_ERROR_RETURN,
                          $level = E_USER_NOTICE, $debuginfo = null)
     {
         if (is_int($code)) {
-            $this->PEAR_Error(HTML_QuickForm::errorMessage($code), $code, $mode, $level, $debuginfo);
+            parent::__construct(HTML_QuickForm::errorMessage($code), $code, $mode, $level, $debuginfo);
         } else {
-            $this->PEAR_Error("Invalid error code: $code", QUICKFORM_ERROR, $mode, $level, $debuginfo);
+            parent::__construct("Invalid error code: $code", QUICKFORM_ERROR, $mode, $level, $debuginfo);
         }
     }
 
