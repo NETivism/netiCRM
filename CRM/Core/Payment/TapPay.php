@@ -132,6 +132,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'remember' => $contribution['contribution_recur_id'] ? TRUE : FALSE,
         'contribution_id' => $id,
       );
+
+      // Allow further manipulation of the arguments via custom hooks ..
+      $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
+      $paymentClass = self::singleton($mode, $paymentProcessor);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
+
       $result = $api->request($data);
       $response = array('status' => $result->status, 'msg' => $result->msg);
 
