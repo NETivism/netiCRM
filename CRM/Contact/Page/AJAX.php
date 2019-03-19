@@ -56,6 +56,7 @@ class CRM_Contact_Page_AJAX {
           $selectText = $value;
           $value = "address";
           $suffix = 'sts';
+          break;
         case 'phone':
         case 'email':
           $select[] = ($value == 'address') ? $selectText : $value;
@@ -111,18 +112,36 @@ class CRM_Contact_Page_AJAX {
     $config = CRM_Core_Config::singleton();
 
     if ($config->includeWildCardInName) {
-      $strSearch = "%$name%";
+      $strSearch = "%".strtolower($name)."%";
     }
     else {
-      $strSearch = "$name%";
+      $strSearch = strtolower($name)."%";
     }
 
+    $whereClauses = array();
+    $whereClauses[] = "LOWER(sort_name) LIKE '$strSearch'";
+    $whereClauses[] = "cc.external_identifier LIKE '$strSearch'";
+    $whereClauses[] = "cc.legal_identifier LIKE '$strSearch'";
+    $whereClauses[] = "cc.sic_code LIKE '$strSearch'";
+
+    // exactly contact id
+    if (is_numeric($name)) {
+      $whereClauses[] = "cc.id = '$name'";
+    }
+
+    // nickname
     if ($config->includeNickNameInName) {
-      $whereClause = " WHERE (LOWER(sort_name) LIKE '$strSearch' OR LOWER(nick_name) LIKE '$strSearch') {$where}";
+      $whereClauses[] = "LOWER(nick_name) LIKE '$strSearch'";
     }
-    else {
-      $whereClause = " WHERE sort_name LIKE '$strSearch' {$where} ";
+
+    // phone
+    if (in_array('phone', $list)) {
+      $field = "REPLACE(phe.phone, '-', '')";
+      $phoneSearch = str_replace('-', '', $strSearch);
+      $whereClauses[] = "$field LIKE '$phoneSearch'";
     }
+
+    $whereClause = ' WHERE ( '.implode(" OR ", $whereClauses).' ) '.$where;
 
     $additionalFrom = '';
     if ($relType) {
