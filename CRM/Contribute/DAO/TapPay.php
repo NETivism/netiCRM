@@ -135,6 +135,17 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    */
   public $last_four;
   /**
+   * Used date time of this coupon track.
+   *
+   * @var date
+   */
+  public $expiry_date;
+  /**
+   *
+   * @var blob
+   */
+  public $data;
+  /**
    * class constructor
    *
    * @access public
@@ -180,7 +191,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribuution ID') ,
-          'required' => true,
+          'default' => 'UL',
           'FKClassName' => 'CRM_Contribute_DAO_Contribution',
         ) ,
         'contribution_recur_id' => array(
@@ -230,6 +241,16 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'title' => ts('Last Four') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
+        ) ,
+        'expiry_date' => array(
+          'name' => 'expiry_date',
+          'type' => CRM_Utils_Type::T_DATE,
+          'title' => ts('Expiry Date') ,
+        ) ,
+        'data' => array(
+          'name' => 'data',
+          'type' => CRM_Utils_Type::T_BLOB,
+          'title' => ts('Data') ,
         ) ,
       );
     }

@@ -22,7 +22,7 @@
       <name>contribution_id</name>
       <uniqueName>contribution_id</uniqueName>
       <type>int unsigned</type>
-      <required>true</required>
+      <default>NULL</default>
       <title>Contribuution ID</title>
       <comment>Contribuution ID</comment>
       <add>4.0</add>
@@ -32,7 +32,7 @@
     <table>civicrm_contribution</table> 
     <key>id</key> 
     <add>4.0</add> 
-    <onDelete>CASCADE</onDelete>
+    <onDelete>SET NULL</onDelete>
   </foreignKey>
   <field>
       <name>contribution_recur_id</name>
@@ -112,5 +112,16 @@
       <length>32</length>
       <comment>The last four words of card number.</comment>
       <add>4.0</add>
+  </field>
+  <field>
+      <name>expiry_date</name>
+      <type>date</type>
+      <comment>Used date time of this coupon track.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+    <name>data</name>
+    <type>blob</type>
+    <add>4.0</add>
   </field>
 </table>

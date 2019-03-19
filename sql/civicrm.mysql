@@ -4537,14 +4537,16 @@ CREATE TABLE civicrm_contribution_tappay (
 
 
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'TapPay ID',
-     contribution_id int unsigned NOT NULL   COMMENT 'Contribuution ID',
+     contribution_id int unsigned   DEFAULT NULL COMMENT 'Contribuution ID',
      contribution_recur_id int unsigned    COMMENT 'Contribuution Recur ID',
      order_number varchar(255)    COMMENT 'Used in parameters of transact. Same as contribution trxn id.',
      card_token varchar(255)    COMMENT 'Card Token',
      card_key varchar(255)    COMMENT 'Card Key',
      rec_trade_id varchar(255)    COMMENT 'Record Trade ID',
      bin_code varchar(32)    COMMENT 'The first 6 words of card number.',
-     last_four varchar(32)    COMMENT 'The last four words of card number.' 
+     last_four varchar(32)    COMMENT 'The last four words of card number.',
+     expiry_date date    COMMENT 'Used date time of this coupon track.',
+     data blob     
 ,
     PRIMARY KEY ( id )
  
@@ -4556,7 +4558,7 @@ CREATE TABLE civicrm_contribution_tappay (
   )
   
 ,      
-     CONSTRAINT FK_civicrm_contribution_tappay_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_contribution_tappay_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contribution_tappay_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
@@ -4569,7 +4571,7 @@ CREATE TABLE civicrm_contribution_tappay_log (
 
 
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'TapPay Log ID',
-     contribution_id int unsigned NOT NULL   COMMENT 'Contribuution ID',
+     contribution_id int unsigned   DEFAULT NULL COMMENT 'Contribuution ID',
      url varchar(255)    COMMENT 'Request URL',
      date datetime    COMMENT 'Request Date Time',
      post_data text    COMMENT 'Request Post Data',
@@ -4579,7 +4581,7 @@ CREATE TABLE civicrm_contribution_tappay_log (
  
  
 ,      
-     CONSTRAINT FK_civicrm_contribution_tappay_log_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE  
+     CONSTRAINT FK_civicrm_contribution_tappay_log_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

@@ -161,7 +161,7 @@ class CRM_Contribute_DAO_TapPayLog extends CRM_Core_DAO
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribuution ID') ,
-          'required' => true,
+          'default' => 'UL',
           'FKClassName' => 'CRM_Contribute_DAO_Contribution',
         ) ,
         'url' => array(

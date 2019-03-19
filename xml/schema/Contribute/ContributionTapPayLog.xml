@@ -22,7 +22,7 @@
       <name>contribution_id</name>
       <uniqueName>contribution_id</uniqueName>
       <type>int unsigned</type>
-      <required>true</required>
+      <default>NULL</default>
       <title>Contribuution ID</title>
       <comment>Contribuution ID</comment>
       <add>4.0</add>
@@ -32,7 +32,7 @@
     <table>civicrm_contribution</table> 
     <key>id</key> 
     <add>4.0</add> 
-    <onDelete>CASCADE</onDelete>
+    <onDelete>SET NULL</onDelete>
   </foreignKey>
   <field>
       <name>url</name>
