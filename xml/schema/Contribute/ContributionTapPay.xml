@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>TapPay</class>
+  <name>civicrm_contribution_tappay</name>
+  <add>4.0</add>
+  <field>
+      <name>id</name>
+      <uniqueName>tappay_id</uniqueName>
+      <type>int unsigned</type>
+      <required>true</required>
+      <title>TapPay ID</title>
+      <comment>TapPay ID</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>contribution_id</name>
+      <uniqueName>contribution_id</uniqueName>
+      <type>int unsigned</type>
+      <default>NULL</default>
+      <title>Contribuution ID</title>
+      <comment>Contribuution ID</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey> 
+    <name>contribution_id</name> 
+    <table>civicrm_contribution</table> 
+    <key>id</key> 
+    <add>4.0</add> 
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+      <name>contribution_recur_id</name>
+      <uniqueName>contribution_recur_id</uniqueName>
+      <type>int unsigned</type>
+      <title>Contribuution Recur ID</title>
+      <comment>Contribuution Recur ID</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey> 
+    <name>contribution_recur_id</name> 
+    <table>civicrm_contribution_recur</table> 
+    <key>id</key> 
+    <add>4.0</add> 
+    <onDelete>SET NULL</onDelete>
+  </foreignKey> 
+  <field>
+      <name>order_number</name>
+      <uniqueName>order_number</uniqueName>
+      <title>Contribution Trxn ID</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Used in parameters of transact. Same as contribution trxn id.</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>tappay_order_number</name>
+      <fieldName>order_number</fieldName>      
+      <add>4.0</add>
+  </index>   
+  <field>
+      <name>card_token</name>
+      <uniqueName>card_token</uniqueName>
+      <title>Card Token</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Card Token</comment>
+      <add>4.0</add>
+  </field>   
+  <field>
+      <name>card_key</name>
+      <uniqueName>card_key</uniqueName>
+      <title>Card Key</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Card Key</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>rec_trade_id</name>
+      <uniqueName>rec_trade_id</uniqueName>
+      <title>Record Trade ID</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Record Trade ID</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>UI_rec_trade_id</name>
+      <fieldName>rec_trade_id</fieldName>      
+      <add>4.0</add>
+  </index>
+  <field>
+      <name>bin_code</name>
+      <uniqueName>bin_code</uniqueName>
+      <title>Bin Code</title>
+      <type>varchar</type>
+      <length>32</length>
+      <comment>The first 6 words of card number.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>last_four</name>
+      <uniqueName>last_four</uniqueName>
+      <title>Last Four</title>
+      <type>varchar</type>
+      <length>32</length>
+      <comment>The last four words of card number.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>expiry_date</name>
+      <type>date</type>
+      <comment>Used date time of this coupon track.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+    <name>data</name>
+    <comment>Newest return data.</comment>
+    <type>text</type>
+    <add>4.0</add>
+  </field>
+</table>
