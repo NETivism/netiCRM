@@ -46816,3 +46816,15 @@ msgstr ""
 
 msgid "Participant Name, Phone or Email"
 msgstr ""
+
+msgid "TapPay Payment"
+msgstr ""
+
+msgid "Partner Key"
+msgstr ""
+
+msgid "App ID"
+msgstr ""
+
+msgid "App Key"
+msgstr ""
