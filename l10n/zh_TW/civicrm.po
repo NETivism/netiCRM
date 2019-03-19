@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-03-13 07:18+0000\n"
+"PO-Revision-Date: 2019-03-19 08:11+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46985,3 +46985,15 @@ msgid ""
 "Current logged in contact is not the same contact of participant. Please log"
 " out first and try again."
 msgstr "目前登入的聯絡人，跟您欲報名的參加者是不同的人，需請您登出後再試一次。"
+
+msgid "Name, Phone or Email"
+msgstr "姓名、電話或Email"
+
+msgid "Member Name, Phone or Email"
+msgstr "會員姓名、電話或Email"
+
+msgid "Contributor Name, Phone or Email"
+msgstr "捐款人姓名、電話或Email"
+
+msgid "Participant Name, Phone or Email"
+msgstr "參加者姓名、電話或Email"
