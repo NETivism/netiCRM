@@ -141,8 +141,9 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    */
   public $expiry_date;
   /**
+   * Newest return data.
    *
-   * @var blob
+   * @var text
    */
   public $data;
   /**
@@ -249,7 +250,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
         ) ,
         'data' => array(
           'name' => 'data',
-          'type' => CRM_Utils_Type::T_BLOB,
+          'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Data') ,
         ) ,
       );

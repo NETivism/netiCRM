@@ -128,6 +128,7 @@ class CRM_Core_Payment_TapPayAPI {
         $tappay->contribution_recur_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_contribution_id, 'contribution_recur_id');
       }
       $response = $this->_response;
+      $tappay->data = json_encode($response);
       if($response->card_secret) {
         $tappay->card_token = $response->card_secret->card_token;
         $tappay->card_key = $response->card_secret->card_key;
@@ -135,7 +136,11 @@ class CRM_Core_Payment_TapPayAPI {
       if($response->card_info) {
         $tappay->last_four = $response->card_info->last_four;
         $tappay->bin_code = $response->card_info->bin_code;
-        $tappay->expiry_date = $response->card_info->expiry_date;
+        if(!empty($response->card_info->expiry_date)){
+          $year = substr($response->card_info->expiry_date, 0, 4);
+          $month = substr($response->card_info->expiry_date, 4, 2);
+          $tappay->expiry_date = $year.'-'.$month.'-01';
+        }
       }
       if($response->rec_trade_id) {
         $tappay->rec_trade_id = $response->rec_trade_id;

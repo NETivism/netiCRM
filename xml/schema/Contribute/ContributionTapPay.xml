@@ -121,7 +121,8 @@
   </field>
   <field>
     <name>data</name>
-    <type>blob</type>
+    <comment>Newest return data.</comment>
+    <type>text</type>
     <add>4.0</add>
   </field>
 </table>

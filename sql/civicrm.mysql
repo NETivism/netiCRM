@@ -4546,7 +4546,7 @@ CREATE TABLE civicrm_contribution_tappay (
      bin_code varchar(32)    COMMENT 'The first 6 words of card number.',
      last_four varchar(32)    COMMENT 'The last four words of card number.',
      expiry_date date    COMMENT 'Used date time of this coupon track.',
-     data blob     
+     data text    COMMENT 'Newest return data.' 
 ,
     PRIMARY KEY ( id )
  
