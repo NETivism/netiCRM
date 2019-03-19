@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-03-19 08:11+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-03-19 09:38+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46997,3 +46997,15 @@ msgstr "捐款人姓名、電話或Email"
 
 msgid "Participant Name, Phone or Email"
 msgstr "參加者姓名、電話或Email"
+
+msgid "TapPay Payment"
+msgstr "TapPay 支付"
+
+msgid "Partner Key"
+msgstr "帳號金鑰（Partner Key）"
+
+msgid "App ID"
+msgstr "應用程式 App ID"
+
+msgid "App Key"
+msgstr "應用程式 App Key"
