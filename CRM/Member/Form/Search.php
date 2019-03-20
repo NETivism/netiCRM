@@ -224,7 +224,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
    * @return void
    */
   function buildQuickForm() {
-    $this->addElement('text', 'sort_name', ts('Member Name or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
+    $this->addElement('text', 'sort_name', ts('Member Name, Phone or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
     require_once 'CRM/Member/BAO/Query.php';
     CRM_Member_BAO_Query::buildSearchForm($this);

@@ -2790,6 +2790,8 @@ WHERE  id IN ( $groupIDs )
       if ($config->includeEmailInName) {
         $sub[] = " ( civicrm_email.email = '$value' ) ";
       }
+      // phone
+      $sub[] = " ( REPLACE(civicrm_phone.phone, '-', '') = '".str_replace('-', '', $value)."' ) ";
     }
     elseif (strpos($name, ',') !== FALSE) {
       // if we have a comma in the string, search for the entire string
@@ -2820,6 +2822,8 @@ WHERE  id IN ( $groupIDs )
       if ($config->includeEmailInName) {
         $sub[] = " ( civicrm_email.email $op $value ) ";
       }
+      // phone
+      $sub[] = " ( REPLACE(civicrm_phone.phone, '-', '') $op ".str_replace('-', '', $value)." ) ";
     }
     else {
       //Else, the string should be treated as a series of keywords to be matched with match ANY/ match ALL depending on Civi config settings (see CiviAdmin)
@@ -2884,6 +2888,9 @@ WHERE  id IN ( $groupIDs )
           if ($config->includeEmailInName) {
             $fieldsub[] = " ( civicrm_email.email $op $value ) ";
           }
+          // phone
+          $fieldsub[] = " ( REPLACE(civicrm_phone.phone, '-', '') $op ".str_replace('-', '', $value)." ) ";
+
           $sub[] = ' ( ' . implode(' OR ', $fieldsub) . ' ) ';
           // I seperated the glueing in two.  The first stage should always be OR because we are searching for matches in *ANY* of these fields
         }
@@ -2893,9 +2900,10 @@ WHERE  id IN ( $groupIDs )
     $sub = ' ( ' . implode($subGlue, $sub) . ' ) ';
 
     $this->_where[$grouping][] = $sub;
+    $this->_tables['civicrm_phone'] = $this->_whereTables['civicrm_phone'] = 1;
     if ($config->includeEmailInName) {
       $this->_tables['civicrm_email'] = $this->_whereTables['civicrm_email'] = 1;
-      $this->_qill[$grouping][] = ts('Name or Email ') . ts($op) . " &ldquo;{$name}&rdquo;";
+      $this->_qill[$grouping][] = ts('Name, Phone or Email').' ' . ts($op) . " &ldquo;{$name}&rdquo;";
     }
     else {
       $this->_qill[$grouping][] = ts('Name like') . " &ldquo;{$name}&rdquo;";
