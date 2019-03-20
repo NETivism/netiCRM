@@ -195,10 +195,6 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
 }
 
 function civicrm_mysql_real_escape_string($string) {
-  static $dao = NULL;
-  if (!$dao) {
-    $dao = new CRM_Core_DAO();
-  }
-  return $dao->escape($string);
+  return CRM_Core_DAO::escapeString($string);
 }
 
