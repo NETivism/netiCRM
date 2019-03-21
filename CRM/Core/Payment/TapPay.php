@@ -113,6 +113,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'partnerKey' => $paymentProcessor['password'],
       );
       $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
+      $details = !empty($contribution['amount_level']) ? $contribution['source'].'-'.$contribution['amount_level'] : $contribution['source'];
       $data = array(
         'prime' => $prime,
         'partner_key' => $paymentProcessor['password'],
@@ -120,7 +121,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'amount' => $contribution['currency'] == 'TWD' ? (int)$contribution['total_amount'] : $contribution['total_amount'],
         'currency' => $contribution['currency'],
         'order_number' => $contribution['trxn_id'],
-        'details' => $contribution['amount_level'], // item name
+        'details' => $details, // item name
         'cardholder'=> array(
           'phone_number'=> '+886900000000', #required #TODO
           'name' => $sortName, # required
