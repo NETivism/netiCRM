@@ -117,8 +117,8 @@ class CRM_Core_Payment_TapPayAPI {
     }
 
     $this->_request = $post;
-    $this->_curl();
-    if ($this->_success && !empty($this->_response)) {
+    $result = $this->_curl();
+    if ($result['status'] && !empty($this->_response)) {
 
       // Record tappay data
       $tappay = new CRM_Contribute_DAO_TapPay();

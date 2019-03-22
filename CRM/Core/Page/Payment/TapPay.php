@@ -35,6 +35,7 @@ class CRM_Core_Page_Payment_TapPay extends CRM_Core_Page {
         $session = CRM_Core_Session::singleton();
         $array = $session->get(CRM_Core_Session::USER_CONTEXT);
         $redirect = end($array);
+        $this->assign('fail_redirect', str_replace('&amp;', '&', $redirect));
         $this->assign('redirect', str_replace('&amp;', '&', $redirect) . '&payment_result_type=1');
 
         // back url when double submitted

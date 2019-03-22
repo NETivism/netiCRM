@@ -105,6 +105,7 @@ cj(document).ready(function($){
   var className = '{/literal}{$class_name}{literal}';
   var endpoint = '{/literal}{crmURL p="civicrm/tappay/paybyprime"}{literal}';
   var redirect = '{/literal}{$redirect}{literal}';
+  var failRedirect = '{/literal}{$fail_redirect}{literal}';
   var contributionID = {/literal}{$contribution_id}{literal};
   var request = '';
   var lock = false;
@@ -244,6 +245,9 @@ cj(document).ready(function($){
               $(".tp-field .overlay").remove();
               $("#make-payment").removeProp("disabled");
               $("#error-message").html('<div>'+data.msg+'</div>');
+              setCookie(qfKey, 1, 3600);
+              window.onbeforeunload = null;
+              window.location.href = failRedirect;
             }
           })
           .fail(function() {
