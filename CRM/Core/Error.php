@@ -628,12 +628,16 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    */
   public static function purge() {
     $config = CRM_Core_Config::singleton();
-    $filename = "{$config->configAndLogDir}CiviCRM." . md5($config->dsn . $config->userFrameworkResourceURL) . '.log';
-    $files = glob($filename.'*');
-    if (!empty($files)) {
-      foreach($files as $f) {
-        if ($f != $filename && filemtime($f) < strtotime('now - 3month')) {
-          unlink($f);
+    $dir1 = $config->configAndLogDir;
+    $dir2 = str_replace("smartycli", "smartyfpm-fcgi", $dir1);
+    foreach(array($dir1, $dir2) as $dir) {
+      $filename = "{$dir}CiviCRM." . md5($config->dsn . $config->userFrameworkResourceURL) . '.log';
+      $files = glob($filename.'*');
+      if (!empty($files)) {
+        foreach($files as $f) {
+          if ($f != $filename && filemtime($f) < strtotime('now - 3month')) {
+            unlink($f);
+          }
         }
       }
     }
