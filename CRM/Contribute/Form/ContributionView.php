@@ -64,7 +64,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $this->assign('has_expire_date', TRUE);
       $this->assign('expire_date', $values['expire_date']);
     }
-    if($instrument == 'Line Pay'){
+    if(strtoupper($instrument) == 'LINE PAY'){
       $get = $_GET;
       unset($get['q']);
       $query = http_build_query($get);
