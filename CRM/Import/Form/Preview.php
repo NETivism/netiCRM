@@ -56,6 +56,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $conflictRowCount = $this->get('conflictRowCount');
     $mismatchCount = $this->get('unMatchCount');
     $columnNames = $this->get('columnNames');
+    $this->_dedupeRuleGroupId = $this->get('dedupeRuleGroupId');
 
     //assign column names
     $this->assign('columnNames', $columnNames);
@@ -247,7 +248,11 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
    * @access public
    */
   public function postProcess() {
-
+    // prevent table error and duplicated import
+    $isCompleted = $this->get('complete');
+    if ($isCompleted) {
+      return;
+    }
     $importJobParams = array(
       'doGeocodeAddress' => $this->controller->exportValue('DataSource', 'doGeocodeAddress'),
       'invalidRowCount' => $this->get('invalidRowCount'),

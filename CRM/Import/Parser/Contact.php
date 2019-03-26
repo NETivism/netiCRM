@@ -54,13 +54,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
   protected $_mapperRelatedContactWebsiteType;
   protected $_relationships;
 
-  protected $_emailIndex;
-  protected $_firstNameIndex;
-  protected $_lastNameIndex;
-
-  protected $_householdNameIndex;
-  protected $_organizationNameIndex;
-
   protected $_allEmails;
 
   protected $_phoneIndex;
@@ -100,6 +93,8 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    */
   protected $_unparsedStreetAddressContacts;
 
+  protected $_requiredFields;
+
   /**
    * class constructor
    */
@@ -124,6 +119,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     $this->_mapperRelatedContactWebsiteType = $mapperRelatedContactWebsiteType;
     // get IM service provider type id for related contact
     $this->_mapperRelatedContactImProvider = &$mapperRelatedContactImProvider;
+
   }
 
   /**
@@ -204,33 +200,15 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     $this->setActiveFieldRelatedContactImProvider($this->_mapperRelatedContactImProvider);
 
     $this->_phoneIndex = -1;
-    $this->_emailIndex = -1;
-    $this->_firstNameIndex = -1;
-    $this->_lastNameIndex = -1;
-    $this->_householdNameIndex = -1;
-    $this->_organizationNameIndex = -1;
     $this->_externalIdentifierIndex = -1;
 
     $index = 0;
     foreach ($this->_mapperKeys as $key) {
       if (substr($key, 0, 5) == 'email' && substr($key, 0, 14) != 'email_greeting') {
         $this->_emailIndex = $index;
-        $this->_allEmails = array();
       }
       if (substr($key, 0, 5) == 'phone') {
         $this->_phoneIndex = $index;
-      }
-      if ($key == 'first_name') {
-        $this->_firstNameIndex = $index;
-      }
-      if ($key == 'last_name') {
-        $this->_lastNameIndex = $index;
-      }
-      if ($key == 'household_name') {
-        $this->_householdNameIndex = $index;
-      }
-      if ($key == 'organization_name') {
-        $this->_organizationNameIndex = $index;
       }
 
       if ($key == 'external_identifier') {
@@ -254,6 +232,19 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       CRM_Core_BAO_Preferences::valueOptions('address_options'),
       FALSE
     );
+
+    if (!empty($this->_dedupeRuleGroupId)) {
+      $ruleParams = array('id' => $this->_dedupeRuleGroupId);
+      $this->_requiredFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $supportedFields = CRM_Dedupe_BAO_RuleGroup::supportedFields($this->_contactType);
+      foreach($supportedFields as $array) {
+        foreach($array as $name => $label){
+          if (in_array($name, $this->_requiredFields)) {
+            $this->_dedupeRuleFieldsLabel[$name] = $label;
+          } 
+        }
+      }
+    }
   }
 
   /**
@@ -294,71 +285,39 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     $errorMessage = NULL;
     $errorRequired = FALSE;
-    switch ($this->_contactType) {
-      case 'Individual':
-        $missingNames = array();
-        if ($this->_firstNameIndex < 0 ||
-          !CRM_Utils_Array::value($this->_firstNameIndex, $values)
-        ) {
-          $errorRequired = TRUE;
-          $missingNames[] = ts('First Name');
-        }
-        if ($this->_lastNameIndex < 0 ||
-          !CRM_Utils_Array::value($this->_lastNameIndex, $values)
-        ) {
-          $errorRequired = TRUE;
-          $missingNames[] = ts('Last Name');
-        }
-        if ($errorRequired) {
-          $and = ' ' . ts('and') . ' ';
-          $errorMessage = ts('Missing required fields:') . ' ' . implode($and, $missingNames);
-        }
-        break;
+    $missingNames = array();
 
-      case 'Household':
-        if ($this->_householdNameIndex < 0 ||
-          !CRM_Utils_Array::value($this->_householdNameIndex, $values)
-        ) {
+    if (!empty($this->_requiredFields)) {
+      foreach($this->_requiredFields as $fieldName) {
+        if ($fieldName == 'email' && !$this->_emailIndex) {
           $errorRequired = TRUE;
-          $errorMessage = ts('Missing required fields:') . ' ' . ts('Household Name');
+          $missingNames[] = ts('Email Address');
         }
-        break;
-
-      case 'Organization':
-        if ($this->_organizationNameIndex < 0 ||
-          !CRM_Utils_Array::value($this->_organizationNameIndex, $values)
-        ) {
-          $errorRequired = TRUE;
-          $errorMessage = ts('Missing required fields:') . ' ' . ts('Organization Name');
+        else {
+          if (!in_array($fieldName, $this->_mapperKeys)) {
+            $errorRequired = TRUE;
+            $missingNames[] = $this->_dedupeRuleFieldsLabel[$fieldName];
+          }
         }
-        break;
+      }
     }
 
     $statusFieldName = $this->_statusFieldName;
 
+    // missing required dedupe fields, fail
+    if ($errorRequired && !$this->_updateWithId) {
+      $errorMessage = ts('Missing required fields:') . implode(' '.ts('and').' ', $missingNames);
+      array_unshift($values, $errorMessage);
+      $importRecordParams = array($statusFieldName => 'ERROR', "${statusFieldName}Msg" => $errorMessage);
+      $this->updateImportRecord($values[count($values) - 1], $importRecordParams);
+
+      return CRM_Import_Parser::ERROR;
+    }
+
+    // If the email address isn't valid, fail
     if ($this->_emailIndex >= 0) {
-      /* If we don't have the required fields, fail */
-
-      if ($this->_contactType == 'Individual' && !$this->_updateWithId) {
-        if ($errorRequired && !CRM_Utils_Array::value($this->_emailIndex, $values)) {
-          if ($errorMessage) {
-            $errorMessage .= ' ' . ts('OR') . ' ' . ts('Email Address');
-          }
-          else {
-            $errorMessage = ts('Missing required field:') . ' ' . ts('Email Address');
-          }
-          array_unshift($values, $errorMessage);
-          $importRecordParams = array($statusFieldName => 'ERROR', "${statusFieldName}Msg" => $errorMessage);
-          $this->updateImportRecord($values[count($values) - 1], $importRecordParams);
-
-          return CRM_Import_Parser::ERROR;
-        }
-      }
-
       $email = CRM_Utils_Array::value($this->_emailIndex, $values);
-      if ($email) {
-        /* If the email address isn't valid, bail */
-
+      if (!empty($email)) {
         if (!CRM_Utils_Rule::email($email)) {
           $errorMessage = ts('Invalid Email address');
           array_unshift($values, $errorMessage);
@@ -367,33 +326,14 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
           return CRM_Import_Parser::ERROR;
         }
-
-        /* otherwise, count it and move on */
-
-        $this->_allEmails[$email] = $this->_lineCount;
       }
-    }
-    elseif ($errorRequired && !$this->_updateWithId) {
-      if ($errorMessage) {
-        $errorMessage .= ' ' . ts('OR') . ' ' . ts('Email Address');
-      }
-      else {
-        $errorMessage = ts('Missing required field:') . ' ' . ts('Email Address');
-      }
-      array_unshift($values, $errorMessage);
-      $importRecordParams = array($statusFieldName => 'ERROR', "${statusFieldName}Msg" => $errorMessage);
-      $this->updateImportRecord($values[count($values) - 1], $importRecordParams);
-
-      return CRM_Import_Parser::ERROR;
     }
 
     //check for duplicate external Identifier
     $externalID = CRM_Utils_Array::value($this->_externalIdentifierIndex, $values);
     if ($externalID) {
       /* If it's a dupe,external Identifier  */
-      if ($externalDupe = CRM_Utils_Array::value($externalID,
-          $this->_allExternalIdentifiers
-        )) {
+      if ($externalDupe = CRM_Utils_Array::value($externalID, $this->_allExternalIdentifiers)) {
         $errorMessage = ts('External Identifier conflicts with record %1', array(1 => $externalDupe));
         array_unshift($values, $errorMessage);
         $importRecordParams = array($statusFieldName => 'ERROR', "${statusFieldName}Msg" => $errorMessage);

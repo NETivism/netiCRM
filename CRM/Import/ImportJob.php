@@ -264,6 +264,9 @@ class CRM_Import_ImportJob {
       $this->_mapperWebsiteTypes,
       $this->_mapperRelatedContactWebsiteType
     );
+    if (!empty($form->_dedupeRuleGroupId)) {
+      $this->_parser->_dedupeRuleGroupId = $form->_dedupeRuleGroupId;
+    }
     $this->_parser->_job = $this;
     $this->_parser->run($this->_tableName, $mapperFields,
       CRM_Import_Parser::MODE_IMPORT,

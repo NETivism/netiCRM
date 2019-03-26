@@ -47,6 +47,9 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
+    // prevent duplicated import if user back to last step from browser
+    $this->set('complete', TRUE);
+
     // set the error message path to display
     $errorFile = $this->assign('errorFile', $this->get('errorFile'));
 
