@@ -49,6 +49,7 @@
            {if $showIsDefault} 
             <th>{ts}Default{/ts}</th>
            {/if}
+            <th>{ts}Filter{/ts}</th>
             <th>{ts}Reserved?{/ts}</th>
             <th>{ts}Enabled?{/ts}</th>
             <th></th>
@@ -63,6 +64,7 @@
            {if $showIsDefault} 
             <td class="crm-admin-optionValue-default_value">{$row.default_value}</td> 
            {/if}
+            <td class="crm-admin-optionValue-filter">{$row.filter}</td>
             <td class="crm-admin-optionValue-is_reserved">{if $row.is_reserved eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td id="row_{$row.id}_status" class="crm-admin-optionValue-is_active">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
             <td>{$row.action|replace:'xx':$row.id}</td>

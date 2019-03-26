@@ -156,6 +156,10 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     $this->add('checkbox', 'is_active', ts('Enabled?'));
     $this->add('checkbox', 'is_default', ts('Default Option?'));
     $this->add('checkbox', 'is_optgroup', ts('Option Group?'));
+    $ele = $this->add('checkbox', 'filter', ts('Filter'));
+    if ($this->_gName = 'contact_edit_options') {
+      $ele = $ele->freeze();
+    }
 
     if ($this->_action & CRM_Core_Action::UPDATE && $isReserved) {
       $this->freeze(array('name', 'description', 'is_active'));

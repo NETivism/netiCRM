@@ -66,6 +66,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    * @access public
    */
   function run() {
+    set_time_limit(1800);
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this, FALSE, 0);
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 0);
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);

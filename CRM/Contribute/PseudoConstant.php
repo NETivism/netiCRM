@@ -172,12 +172,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   public static function &contributionPage($id = NULL, $isActive = FALSE) {
-    if (!self::$contributionPage) {
-      CRM_Core_PseudoConstant::populate(self::$contributionPage,
-        'CRM_Contribute_DAO_ContributionPage',
-        $isActive, 'title'
-      );
+    if ($isActive) {
+      CRM_Core_PseudoConstant::populate(self::$contributionPage, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title');
     }
+    else {
+      CRM_Core_PseudoConstant::populate(self::$contributionPage, 'CRM_Contribute_DAO_ContributionPage', TRUE, 'title');
+    }
+    ksort(self::$contributionPage);
     if ($id) {
       $pageTitle = CRM_Utils_Array::value($id, self::$contributionPage);
       return $pageTitle;
