@@ -98,7 +98,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if ($payment && !empty($payment['paymentProcessor'])) {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $id, 'trxn_id');
       if(empty($trxn_id)){
-        $trxn_id = 'tappay_'.str_replace('.', '_', microtime(TRUE));
+        $rand = rand(1000, 9999);
+        $cr_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $id, 'contribution_recur_id');
+        if(!empty($cr_id)){
+          $trxn_id = 'tp_'.$id.'_'.$cr_id.'_'.$rand;
+        }else{
+          $trxn_id = 'tp_'.$id.'_'.$rand;
+        }
         CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'trxn_id', $trxn_id);
       }
 
@@ -123,7 +129,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'order_number' => $contribution['trxn_id'],
         'details' => $details, // item name
         'cardholder'=> array(
-          'phone_number'=> '+886900000000', #required #TODO
+          'phone_number'=> '', #required #TODO
           'name' => $sortName, # required
           'email' => $email, #required
           'zip_code' => '',    //optional
