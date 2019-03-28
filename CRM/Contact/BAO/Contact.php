@@ -2708,10 +2708,11 @@ LEFT JOIN civicrm_address add2 ON ( add1.master_id = add2.id )
 
           // make url in different language
           $base = CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/');
-          $base = $config->userSystem->languageNegotiationURL($base);
-
-          $redirect = $base.$_GET['q'].'?'.$url['query'];
-          CRM_Utils_System::redirect($redirect);
+          $baseLang = $config->userSystem->languageNegotiationURL($base);
+          if ($base != $baseLang) {
+            $redirect = $base.$_GET['q'].'?'.$url['query'];
+            CRM_Utils_System::redirect($redirect);
+          }
         }
       }
     }
