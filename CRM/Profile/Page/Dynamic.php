@@ -185,13 +185,24 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       // $profileFields array can be used for customized display of field labels and values in Profile/View.tpl
       $profileFields = array();
       $labels = array();
-
+      $idx = 0;
       foreach ($fields as $name => $field) {
-        $labels[$field['title']] = preg_replace('/\s+|\W+/', '_', $name);
+        $idx++;
+        $fieldName = preg_replace('/\s+|\W+/', '_', $name);
+        if (empty($field['title'])) {
+          $labels[$idx] = $fieldName;
+        }
+        else {
+          $labels[$field['title']] = $fieldName;
+        }
       }
 
+      $idx = 0;
       foreach ($values as $title => $value) {
-        $profileFields[$labels[$title]] = array('label' => $title,
+        $idx++;
+        $key = !empty($title) ? $title : $idx;
+        $profileFields[$key] = array(
+          'label' => $title,
           'value' => $value,
         );
       }
