@@ -62,6 +62,8 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
   protected $_externalIdentifierIndex;
   protected $_allExternalIdentifiers;
+  protected $_internalIdentifierIndex;
+  protected $_allInternalIdentifiers;
   protected $_parseStreetAddress;
   protected $_lastImportContactId;
 
@@ -199,8 +201,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     //set active fields of IM provider of related contact
     $this->setActiveFieldRelatedContactImProvider($this->_mapperRelatedContactImProvider);
 
-    $this->_phoneIndex = -1;
-    $this->_externalIdentifierIndex = -1;
+    $this->_phoneIndex = $this->_externalIdentifierIndex = $this->_internalIdentifierIndex = -1;
 
     $index = 0;
     foreach ($this->_mapperKeys as $key) {
@@ -215,14 +216,16 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         $this->_externalIdentifierIndex = $index;
         $this->_allExternalIdentifiers = array();
       }
+      if ($key == 'id') {
+        $this->_internalIdentifierIndex = $index;
+        $this->_allInternalIdentifiers = array();
+      }
+
       $index++;
     }
 
     $this->_updateWithId = FALSE;
-    if (in_array('id', $this->_mapperKeys) ||
-      ($this->_externalIdentifierIndex >= 0 &&
-        in_array($this->_onDuplicate, array(CRM_Import_Parser::DUPLICATE_UPDATE, CRM_Import_Parser::DUPLICATE_FILL, CRM_Import_Parser::DUPLICATE_SKIP))
-      )
+    if ($this->_internalIdentifierIndex >= 0 || ( $this->_externalIdentifierIndex >= 0 && in_array($this->_onDuplicate, array(CRM_Import_Parser::DUPLICATE_UPDATE, CRM_Import_Parser::DUPLICATE_FILL, CRM_Import_Parser::DUPLICATE_SKIP)) )
     ) {
       $this->_updateWithId = TRUE;
     }
@@ -342,6 +345,40 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       }
       //otherwise, count it and move on
       $this->_allExternalIdentifiers[$externalID] = $this->_lineCount;
+    }
+    
+    //check for duplicate internal Identifier
+    $internalID = CRM_Utils_Array::value($this->_internalIdentifierIndex, $values);
+    if ($internalID) {
+      $errorRequired = FALSE;
+      /* If it's a dupe,external Identifier  */
+      if ($internalDupe = CRM_Utils_Array::value($externalID, $this->_allInternalIdentifiers)) {
+        $errorMessage = ts('Contact ID conflicts with record %1', array(1 => $internalDupe));
+        $errorRequired = TRUE;
+      }
+      else {
+        $isDeleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $internalID, 'is_deleted', 'id');
+        if ($isDeleted) {
+          self::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('Contact ID').'-'.$internalID)), $errorMessage);
+          $errorRequired = TRUE;
+        }
+        else {
+          $contactExists = self::checkContactById(array('id' => $internalID), 'id');
+          if (!$contactExists) {
+            self::addToErrorMsg(ts('Could not find contact by %1', array(1 => ts('Contact ID').'-'.$internalID)), $errorMessage);
+            $errorRequired = TRUE;
+          }
+        }
+      }
+      if ($errorRequired) {
+        array_unshift($values, $errorMessage);
+        $importRecordParams = array($statusFieldName => 'ERROR', "${statusFieldName}Msg" => $errorMessage);
+        $this->updateImportRecord($values[count($values) - 1], $importRecordParams);
+        return CRM_Import_Parser::ERROR;
+      }
+
+      //otherwise, count it and move on
+      $this->_allInternalIdentifiers[$internalID] = $this->_lineCount;
     }
 
     //Checking error in custom data
