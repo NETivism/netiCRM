@@ -46828,3 +46828,9 @@ msgstr ""
 
 msgid "App Key"
 msgstr ""
+
+msgid "The prefix always append 'A' for online payment and 'M' for manual payment for prevent serial issue when date change."
+msgstr ""
+
+msgid "You can have different prefix of each contribution type by filling token '!acc' into this field. And fill the 'Accounting Code' in contribution type setting page."
+msgstr ""
