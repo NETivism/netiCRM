@@ -496,15 +496,15 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       $params['contact_id'] = CRM_Event_Form_Registration_Register::getRegistrationContactID($params, $this, TRUE);
     }
 
-    // if waiting is enabled
+    // if waiting is enabled, and still have seat
+    //get the current page count.
+    $currentCount = self::getParticipantCount($this, $params);
+    if ($button == 'skip') {
+      $currentCount = 'skip';
+    }
+
     if (!$this->_allowConfirmation && is_numeric($this->_availableRegistrations)) {
       $this->_isOnWaitlist = FALSE;
-      //get the current page count.
-      $currentCount = self::getParticipantCount($this, $params);
-      if ($button == 'skip') {
-        $currentCount = 'skip';
-      }
-
       //get the total count.
       $previousCount = self::getParticipantCount($this, $this->_params, TRUE);
       $totalParticipants = $previousCount;
@@ -517,6 +517,13 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
         $this->_isOnWaitlist = TRUE;
       }
       $this->set('isOnWaitlist', $this->_isOnWaitlist);
+      $this->_lineItemParticipantsCount[$addParticipantNum] = $currentCount;
+    }
+
+    // when waiting list enabled and doesn't have any available space
+    if (!$this->_allowConfirmation && $this->_isEventFull && CRM_Utils_Array::value('has_waitlist', $this->_values['event'])) {
+      $this->_isOnWaitlist = TRUE;
+      $this->set('isOnWaitlist', TRUE);
       $this->_lineItemParticipantsCount[$addParticipantNum] = $currentCount;
     }
 
