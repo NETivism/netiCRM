@@ -205,7 +205,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
       }
     }
 
-    if ($this->_onDuplicate == CRM_Import_Parser::DUPLICATE_SKIP) {
+    if ($this->_onDuplicate == CRM_Import_Parser::DUPLICATE_NOCHECK) {
       unset($this->_mapperFields['id']);
     }
     else {
