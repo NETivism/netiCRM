@@ -404,15 +404,34 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
         $errors['_qf_default'] = ts('A person is already registered for this event.');
       }
 
-      //get the complete params.
+      // check when event is full 
+      if($self->_isEventFull){
+        if (!$self->_allowWaitlist && !$self->_allowConfirmation) {
+          $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
+          return $errors;
+        }
+      }
+
+      // get the complete params.
       $params = $self->get('params');
+      $addParticipantNum = substr($self->_name, 12);
+      $params[$addParticipantNum] = $fields; // add current submitted to params
+
+      //check for availability of registrations.
+      if (!$self->_allowConfirmation && is_numeric($self->_availableRegistrations)) {
+        $allParticipantParams = $params;
+        $totalParticipants = self::getParticipantCount($self, $params);
+
+        if ($totalParticipants > $self->_availableRegistrations) {
+          $errors['_qf_default'] = ts("There is only enough space left on this event for %1 participant(s).", array(1 => $self->_availableRegistrations));
+        }
+      }
 
       //take the participant instance.
       $addParticipantNum = substr($self->_name, 12);
 
-      if (is_array($params) &&
-        $self->_values['event']['allow_same_participant_emails'] != 1
-      ) {
+      // check uniq email per participant
+      if (is_array($params) && $self->_values['event']['allow_same_participant_emails'] != 1) {
         foreach ($params as $key => $value) {
           if (($value["email-{$self->_bltID}"] == $fields["email-{$self->_bltID}"]) &&
             $key != $addParticipantNum
