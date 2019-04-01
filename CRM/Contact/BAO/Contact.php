@@ -1005,7 +1005,7 @@ WHERE id={$id}; ";
 
       // check if we can retrieve from database cache
       require_once 'CRM/Core/BAO/Cache.php';
-//      $fields = &CRM_Core_BAO_Cache::getItem('contact fields', $cacheKeyString);
+      $fields = &CRM_Core_BAO_Cache::getItem('contact fields', $cacheKeyString);
 
       if (!$fields) {
         $fields = CRM_Contact_DAO_Contact::import();
