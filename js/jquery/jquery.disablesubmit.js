@@ -49,7 +49,7 @@
           // If attribute is readonly, don't enable.
 
           // Not trigger when jvalidate is not enabled.
-          if( $obj.parents("form").has('.error:visible').length > 0){
+          if( $obj.parents("form").has('.error:visible').length > 0 || $obj.parents("form").has('.crm-error').length > 0){
             var is_block_by_error = true;
           }
           if(submitted < 1 && !is_block_by_error && !$obj.attr("readonly")){
@@ -64,7 +64,7 @@
       $obj.parents("form").on('submit', function(e){
         var $form = $(this);
         window.setTimeout(function(){
-          if( $form.has('.error:visible').length > 0){
+          if( $form.has('.error:visible').length > 0 || $form.has('.crm-error').length > 0){
             var is_block_by_error = true;
           }
           if ($form.data('submitted') === true || is_block_by_error || $obj.attr("readonly")) {

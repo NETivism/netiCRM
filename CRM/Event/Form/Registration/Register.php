@@ -1075,6 +1075,11 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
     }
 
+    // prevent double submission when free event
+    if (empty($fields['additional_participants']) && !$self->_values['event']['is_monetary']) {
+      $self->_preventMultipleSubmission = TRUE;
+    }
+
     return empty($errors) ? TRUE : $errors;
   }
 
