@@ -146,7 +146,7 @@ class CRM_Core_Payment_LinePay {
     $result = $this->_linePayAPI->request($requestParams);
 
     // Timeout condition.
-    if (!empty($this->_linePayAPI->_curlError[28]) && $triedTimes < 3) {
+    while (!empty($this->_linePayAPI->_curlError[28]) && $triedTimes < 3) {
       sleep(30);
       $paymentProcessorId = $this->_paymentProcessId;
       $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, 'query');
