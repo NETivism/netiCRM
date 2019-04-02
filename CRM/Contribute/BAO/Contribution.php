@@ -527,10 +527,6 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
         'contact_type' => $contacType,
         'level' => 'Strict',
       );
-      $dupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
-      if (!is_array($dupeFields)) {
-        $dupeFields = array();
-      }
       foreach ($tmpContactFields as $fieldName => $fieldData) {
         $fieldName = trim($fieldName);
         if (in_array($fieldName, $contactFieldsIgnore)) {

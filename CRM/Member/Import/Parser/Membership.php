@@ -153,6 +153,20 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $this->_parserContact->_dedupeRuleGroupId = $this->_dedupeRuleGroupId;
     $this->_parserContact->_contactLog = ts('Import Contact').' '.ts('From').' '.ts('Import Membership');
     $this->_parserContact->init();
+    
+    // create dedupe fields mapping to prevent each loop query
+    if (!empty($this->_dedupeRuleGroupId)) {
+      $ruleParams = array(
+        'id' => $this->_dedupeRuleGroupId,
+      );
+    }
+    else {
+      $ruleParams = array(
+        'contact_type' => $this->_contactType,
+        'level' => 'Strict',
+      );
+    }
+    $this->_dedupeRuleFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
   }
 
   /**
@@ -565,18 +579,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       }
       else {
         // Using new Dedupe rule for error message handling
-        if (!empty($this->_dedupeRuleGroupId)) {
-          $ruleParams = array(
-            'id' => $this->_dedupeRuleGroupId,
-          );
-        }
-        else {
-          $ruleParams = array(
-            'contact_type' => $this->_contactType,
-            'level' => 'Strict',
-          );
-        }
-        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        $fieldsArray = $this->_dedupeRuleFields;
 
         $dispArray = array();
         // workaround for #23859
