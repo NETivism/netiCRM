@@ -490,6 +490,11 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       }
     }
 
+    // prevent double submission with free event and last additional participant
+    if ($self->isLastParticipant() && !$self->_values['event']['is_monetary']) {
+      $self->_preventMultipleSubmission = TRUE;
+    }
+
     return $errors;
   }
 
