@@ -311,7 +311,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
           'level' => 'Strict',
         );
         require_once 'CRM/Dedupe/BAO/Rule.php';
-        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
 
         foreach ($fieldsArray as $value) {
           if (array_key_exists(trim($value), $params)) {

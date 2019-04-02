@@ -221,7 +221,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
           'level' => 'Strict',
         );
       }
-      $dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
       $dedupeFields = array_merge($dedupeFields, array('membership_contact_id', 'external_identifier'));
       foreach ($dedupeFields as $fieldName) {
         $this->_mapperFields[$fieldName] .= ' ' . ts('(match to contact)');

@@ -215,7 +215,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
           'level' => 'Strict',
         );
       }
-      $dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
       $dedupeFields = array_merge($dedupeFields, array('contribution_contact_id', 'external_identifier'));
       foreach ($dedupeFields as $fieldName) {
         $this->_mapperFields[$fieldName] .= ' '. ts('(match to contact)');
@@ -368,7 +368,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       'level' => 'Strict',
     );
     require_once 'CRM/Dedupe/BAO/Rule.php';
-    $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+    $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
     $softCreditFields = $pcpCreatorFields = array();
     if (is_array($fieldsArray)) {
       foreach ($fieldsArray as $value) {
