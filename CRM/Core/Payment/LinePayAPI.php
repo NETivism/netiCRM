@@ -90,6 +90,8 @@ class CRM_Core_Payment_LinePayAPI {
   protected $_channelId;
   protected $_channelSecret;
 
+  public $_curlError;
+
   protected $_apiTypes = array(
     'query' => '/v2/payments?orderId={orderId}&transactionId={transactionId}',
     'request' => '/v2/payments/request',
@@ -273,6 +275,9 @@ class CRM_Core_Payment_LinePayAPI {
       #'X-LINE-MerchantDeviceType' => '',
     );
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
+    $opt[CURLOPT_CONNECTTIMEOUT] = 10;
+    $opt[CURLOPT_TIMEOUT] = 45;
+
     if($this->_apiMethod == 'POST'){
       $opt[CURLOPT_POST] = TRUE;
       $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -297,6 +302,7 @@ class CRM_Core_Payment_LinePayAPI {
     }
     else {
       $this->_response = NULL;
+      $this->_curlError = $curlError;
     }
     $return = array(
       'success' => $this->_success,
