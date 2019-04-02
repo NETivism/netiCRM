@@ -276,7 +276,7 @@ class CRM_Core_Payment_LinePayAPI {
     );
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
     $opt[CURLOPT_CONNECTTIMEOUT] = 10;
-    $opt[CURLOPT_TIMEOUT] = 25;
+    $opt[CURLOPT_TIMEOUT] = 45;
 
     if($this->_apiMethod == 'POST'){
       $opt[CURLOPT_POST] = TRUE;
