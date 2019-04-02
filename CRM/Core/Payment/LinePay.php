@@ -34,7 +34,15 @@
  */
 
 class CRM_Core_Payment_LinePay {
+
+  private $_paymentProcessId;
+  private $_apiType;
+
+  private $_linePayAPI;
+
   function __construct($paymentProcessorId, $type = 'request') {
+    $this->_paymentProcessId = $paymentProcessorId;
+    $this->_apiType = $type;
     $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, $type);
   }
 
@@ -136,6 +144,19 @@ class CRM_Core_Payment_LinePay {
     $requestParams['amount'] = (int)$contribution->total_amount; // integer
     $requestParams['currency'] = $config->defaultCurrency;
     $result = $this->_linePayAPI->request($requestParams);
+
+    // Timeout condition.
+    if (!empty($this->_linePayAPI->_curlError[28]) && $triedTimes < 3) {
+      sleep(30);
+      $paymentProcessorId = $this->_paymentProcessId;
+      $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, 'query');
+      $params = array(
+        'transactionId' => $params['transactionId'],
+        'orderId' => $params['cid'],
+      );
+      $result = $this->_linePayAPI->request($params);
+      $triedTimes += 1;
+    }
     $is_success = $this->_linePayAPI->_success;
     $thankYouPath = 'civicrm/contribute/transact';
 
