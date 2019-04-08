@@ -121,8 +121,6 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
       );
     }
 
-    $displayName = CRM_Contact_BAO_Contact::displayName($this->_contactId);
-    $this->assign('displayName', $displayName);
 
     $title = $displayName . ' (' . $viewRelationship[$this->_id]['relation'] . ' ' . CRM_Contact_BAO_Contact::displayName($viewRelationship[$this->_id]['cid']) . ')';
 
@@ -223,6 +221,9 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
+
+    $displayName = CRM_Contact_BAO_Contact::displayName($this->_contactId);
+    $this->assign('displayName', $displayName);
 
     // check logged in url permission
     require_once 'CRM/Contact/Page/View.php';
