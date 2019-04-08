@@ -12,6 +12,7 @@ body.logged-in #admin-sidebar{
 body #page{
   background: none;
 }
+.frontend .main#main,
 .frontend.frontend-fullbg .main#main {
   background: none !important;
   opacity: 0;
