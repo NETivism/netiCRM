@@ -328,7 +328,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     $this->addElement('select',
       'relationship_type_id',
       ts('Relationship Type'),
-      array('' => ts('- select relationship type -')) +
+      array('' => ts('- Select Relationship Type -')) +
       CRM_Contact_BAO_Relationship::getContactRelationshipType($this->_contactId,
         $this->_rtype,
         $this->_relationshipId,
@@ -426,7 +426,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     $this->addElement('submit', $this->getButtonName('refresh', 'save'), 'Quick Save', array('class' => 'form-submit', 'id' => 'quick-save'));
     $this->addElement('submit', $this->getButtonName('cancel'), ts('Cancel'), array('class' => 'form-submit'));
 
-    $this->addElement('submit', $this->getButtonName('refresh', 'savedetails'), 'Save Relationship', array('class' => 'form-submit hiddenElement', 'id' => 'details-save'));
+    $this->addElement('submit', $this->getButtonName('refresh', 'savedetails'), ts('Save Relationship'), array('class' => 'form-submit hiddenElement', 'id' => 'details-save'));
     $this->addElement('checkbox', 'add_current_employer', ts('Current Employer'), NULL);
     $this->addElement('checkbox', 'add_current_employee', ts('Current Employee'), NULL);
 

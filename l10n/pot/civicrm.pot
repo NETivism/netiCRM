@@ -46834,3 +46834,6 @@ msgstr ""
 
 msgid "You can have different prefix of each contribution type by filling token '!acc' into this field. And fill the 'Accounting Code' in contribution type setting page."
 msgstr ""
+
+msgid "'s"
+msgstr ""

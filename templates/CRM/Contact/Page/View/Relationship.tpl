@@ -34,7 +34,10 @@
 <div class="crm-block crm-content-block">
   {if $action NEQ 1 AND $action NEQ 2 AND $permission EQ 'edit'}
         <div class="action-link-button">
-            <a accesskey="N" href="{crmURL p='civicrm/contact/view/rel' q="cid=`$contactId`&action=add&reset=1"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Relationship{/ts}</span></a>
+            {if $action eq 4}
+            <a href="{crmURL p='civicrm/contact/view' q="action=browse&selectedChild=rel&reset=1&cid=`$contactId`"}" class="button"><i class="zmdi zmdi-arrow-left"></i>{ts}Back to Listings{/ts}</a>
+            {/if}
+            <a accesskey="N" href="{crmURL p='civicrm/contact/view/rel' q="cid=`$contactId`&action=add&reset=1"}" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Relationship{/ts}</a>
         </div>
   {/if}
   {include file="CRM/common/jsortable.tpl" useAjax=0}   
@@ -72,23 +75,22 @@
 
             {if $relationshipTabContext}
                 <td>
-		   <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$rel.cid`"}">{$rel.name}</a>
+		   <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$rel.cid`"}">{$rel.name}</a>{ts}'s{/ts}
 		        {if ($contactId eq $rel.contact_id_a and $rel.is_permission_a_b eq 1) OR
 			    ($contactId eq $rel.contact_id_b and $rel.is_permission_b_a eq 1) } 
-		    	    <span id="permission-a-b" class="crm-marker permission-relationship"> *</span>
+		    	    <span id="permission-a-b" class="permission-relationship"><i title="{$displayName|strip_tags} {ts}can view and update information for {/ts} {$rel.name}" class="zmdi zmdi-folder-person"></i></span>
 		        {/if}
 		</td>
                 <td class="bold">
-                   的 
                    <a href="{crmURL p='civicrm/contact/view/rel' q="action=view&reset=1&selectedChild=rel&cid=`$contactId`&id=`$rel.id`&rtype=`$rel.rtype`"}">{$rel.relation}</a>
 			{if ($rel.cid eq $rel.contact_id_a and $rel.is_permission_a_b eq 1) OR
 			    ($rel.cid eq $rel.contact_id_b and $rel.is_permission_b_a eq 1) }
-		            <span id="permission-b-a" class="crm-marker permission-relationship"> *</span>
+		            <span id="permission-b-a" class="permission-relationship"><i title="{$rel.name} {ts}can view and update information for {/ts} {$displayName|strip_tags}" class="zmdi zmdi-folder-person"></i></span>
 		        {/if}
 		</td>
             {else}
-                <td>{$rel.name}</td>
-                <td class="bold">的 {$rel.relation}</strong></td>
+                <td>{$rel.name}{ts}'s{/ts}</td>
+                <td class="bold">{$rel.relation}</strong></td>
             {/if}
                 <td>{$rel.start_date|crmDate}</td>
                 <td>{$rel.end_date|crmDate}</td>
@@ -104,7 +106,7 @@
         </div>
 
         <div id="permission-legend" class="crm-content-block">
-	     <span class="crm-marker">* </span>{ts}Indicates a permissioned relationship. This contact can be viewed and updated by the other.{/ts}
+	      <i class="zmdi zmdi-folder-person"></i>{ts}Indicates a permissioned relationship. This contact can be viewed and updated by the other.{/ts}
         </div>
 {/if}
 {* end of code to show current relationships *}
