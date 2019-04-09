@@ -519,15 +519,14 @@ class CRM_Core_Payment_BaseIPN {
 
       $participant->status_id = 1;
       $participant->save();
-    }
+    } // end event
+
     if ($input['net_amount'] == 0 && $input['fee_amount'] != 0) {
       $input['net_amount'] = $input['amount'] - $input['fee_amount'];
     }
     $contribution->contribution_status_id = 1;
-    $contribution->is_test = $input['is_test'];
     $contribution->fee_amount = $input['fee_amount'];
     $contribution->net_amount = $input['net_amount'];
-    $contribution->trxn_id = $input['trxn_id'];
     if (!empty($contribution->receive_date)) {
       $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
     }
@@ -537,11 +536,16 @@ class CRM_Core_Payment_BaseIPN {
     $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
     $contribution->cancel_date = 'null';
 
-    if (CRM_Utils_Array::value('check_number', $input)) {
+    if (isset($input['trxn_id'])) {
+      $contribution->trxn_id = $input['trxn_id'];
+    }
+    if (isset($input['is_test'])) {
+      $contribution->is_test = $input['is_test'];
+    }
+    if (isset($input['check_number'])) {
       $contribution->check_number = $input['check_number'];
     }
-
-    if (CRM_Utils_Array::value('payment_instrument_id', $input)) {
+    if (isset($input['payment_instrument_id'])) {
       $contribution->payment_instrument_id = $input['payment_instrument_id'];
     }
 
