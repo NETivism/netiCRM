@@ -90,7 +90,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   public static function payByPrime() {
     // validate sessions
     $id = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
-    $pid = CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject, False, NULL, 'REQUEST'); // TODO
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $class = CRM_Utils_Request::retrieve('class', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $payment = CRM_Core_Payment_TapPay::getAssociatedSession($qfKey, $class);
@@ -140,7 +139,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
-      self::validateData($result, $id, $pid);
+      self::validateData($result, $id);
 
       $response = array('status' => $result->status, 'msg' => $result->msg);
       echo json_encode($response);
@@ -149,23 +148,23 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return CRM_Utils_System::notFound();
   }
 
-  public static function payByToken($crid = NULL, $cid = NULL) {
+  public static function payByToken($recurringId = NULL, $contributionId = NULL) {
 
-    if(empty($crid)){
-      $crid = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $crid, 'REQUEST');
+    if(empty($recurringId)){
+      $recurringId = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $recurringId, 'REQUEST');
     }
 
     // Find the first contribution
-    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, $cid, 'REQUEST');
-    if(empty($cid)){
+    $contributionId = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, $contributionId, 'REQUEST');
+    if(empty($contributionId)){
       $sql = "SELECT MIN(c.id) FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.id = %1";
-      $params = array(1 => array($crid, 'Positive'));
-      $cid = CRM_Core_DAO::singleValueQuery($sql, $params);
+      $params = array(1 => array($recurringId, 'Positive'));
+      $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
     }
 
     // Clone Contribution
     $contribution = new CRM_Contribute_DAO_Contribution();
-    $contribution->id = $cid;
+    $contribution->id = $contributionId;
     $contribution->find(TRUE);
 
     $c = clone $contribution;
@@ -179,14 +178,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $c->contribution_status_id = 2;
     $c->created_date = date('YmdHis');
     $c->save();
-    CRM_Contribute_BAO_ContributionRecur::syncContribute($crid, $c->id);
+    CRM_Contribute_BAO_ContributionRecur::syncContribute($recurringId, $c->id);
 
     // Update new trxn_id
     $c->trxn_id = self::getContributionTrxnID($c->id);
     $c->save();
 
     $contributionRecur = new CRM_Contribute_DAO_ContributionRecur();
-    $contributionRecur->id = $crid;
+    $contributionRecur->id = $recurringId;
     $contributionRecur->find(TRUE);
 
     $ppid = $contribution->payment_processor_id;
@@ -208,7 +207,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // Prepare tappay api post data
       $details = !empty($contribution['amount_level']) ? $contribution['source'].'-'.$contribution['amount_level'] : $contribution['source'];
       $tappayData = new CRM_Contribute_DAO_TapPay();
-      $tappayData->contribution_id = $cid;
+      $tappayData->contribution_id = $contributionId;
       $tappayData->find(TRUE);
       if (!empty($tappayData->card_key) && !empty($tappayData->card_token)) {
         if ($contributionRecur->currency == 'TWD') {
@@ -244,25 +243,41 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $response;
   }
 
-  private static function validateData($result, $cid = NULL, $pid = NULL) {
-    // ipn transact
-    $ipn = new CRM_Core_Payment_BaseIPN();
+  public static function validateData($result, $contributionId = NULL) {
     $input = $ids = $objects = array();
-    if(!empty($pid)){
+
+    // prepare ids
+    if (empty($contributionId)) {
+      if (!empty($result['order_number'])) {
+        $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $result->order_number, 'id', 'trxn_id');
+      }
+    }
+    if (empty($contributionId)) {
+      return FALSE;
+    }
+    $ids = CRM_Contribute_Contribution::buildIds($contributionId, FALSE);
+
+    // prepare input
+    $input = (array)$result;
+    if(!empty($ids['event'])){
       $input['component'] = 'event';
-      $ids['participant'] = $pid;
-      $ids['event'] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $pid, 'event_id');
     }
     else{
       $input['component'] = 'contribute';
     }
-    $ids['contribution'] = $cid;
-    $ids['contact'] = $ids['event'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $cid, 'contact_id');
+    /* TODO: remove this because this should be done in TapPayAPI
+    if (!empty($input['currency']) && $input['currency'] != 'TWD') {
+      $input['amount'] = $input['amount'] / 100;
+    }
+    */
+
+    // ipn transact
+    $ipn = new CRM_Core_Payment_BaseIPN();
 
     // First use ipn validate
     $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
     if(!$validate_result){
-      return false;
+      return FALSE;
     }
     else {
       $pass = TRUE;
@@ -340,18 +355,18 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $payment;
   }
 
-  static function getContributionTrxnID($cid, $crid = NULL) {
+  static function getContributionTrxnID($contributionId, $recurringId = NULL) {
     $rand = base_convert(rand(16, 255), 10, 16);
-    if(empty($crid)){
-      $crid = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $cid, 'contribution_recur_id');
+    if(empty($recurringId)){
+      $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
     }
 
-    if(!empty($crid)){
-      $trxn_id = 'r_'.$crid.'_'.$cid.'_'.$rand;
+    if(!empty($recurringId)){
+      $trxnId = 'r_'.$recurringId.'_'.$contributionId.'_'.$rand;
     }else{
-      $trxn_id = 'c_'.$cid.'_'.$rand;
+      $trxnId = 'c_'.$contributionId.'_'.$rand;
     }
-    return $trxn_id;
+    return $trxnId;
   }
 
   static function addNote($note, &$contribution){
