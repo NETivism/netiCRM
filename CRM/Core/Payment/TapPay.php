@@ -255,7 +255,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if (empty($contributionId)) {
       return FALSE;
     }
-    $ids = CRM_Contribute_Contribution::buildIds($contributionId, FALSE);
+    $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId, FALSE);
 
     // prepare input
     $input = (array)$result;
