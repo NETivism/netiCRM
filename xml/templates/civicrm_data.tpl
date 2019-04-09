@@ -319,6 +319,8 @@ VALUES
    (@option_group_id_IMProvider, 'GTalk', 4, 'Gtalk', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_IMProvider, 'Jabber',5, 'Jabber',NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_IMProvider, 'Skype', 6, 'Skype', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_IMProvider, 'LINE',  7, 'LINE',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_IMProvider, 'Facebook',  8, 'Facebook',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
 
    (@option_group_id_mobileProvider, 'Sprint'  , 1, 'Sprint'  , NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_mobileProvider, 'Verizon' , 2, 'Verizon' , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),

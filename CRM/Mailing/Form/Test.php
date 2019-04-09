@@ -232,7 +232,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       if ($testParams['test_email']) {
         $emailAdd = explode(',', $testParams['test_email']);
         foreach ($emailAdd as $key => $value) {
-          $email = trim($value);
+          $email = strtolower(trim($value));
           $testParams['emails'][] = $email;
           $emails .= $emails ? ",'$email'" : "'$email'";
           if (!CRM_Utils_Rule::email($email)) {

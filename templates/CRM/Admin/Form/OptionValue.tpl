@@ -74,12 +74,18 @@
             <td class="label">{$form.is_optgroup.label}</td>
             <td>{$form.is_optgroup.html}</td>
         </tr>
-       {if $form.contactOptions}{* contactOptions is exposed for email/postal greeting and addressee types to set filter for contact types *}
+        {if ($form.filter)}
+        <tr class="crm-admin-optionvalue-form-block-filter">
+            <td class="label">{$form.filter.label}</td>
+            <td>{$form.filter.html}</td>
+        </tr>
+        {/if}
+        {if $form.contactOptions}{* contactOptions is exposed for email/postal greeting and addressee types to set filter for contact types *}
         <tr class="crm-admin-optionvalue-form-block-contactOptions">
             <td class="label">{$form.contactOptions.label}</td>
             <td>{$form.contactOptions.html}</td>
         </tr>
-       {/if}  
+        {/if}
       </table> 
      {/if}
          <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>      

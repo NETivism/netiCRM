@@ -272,13 +272,13 @@ class HTML_QuickForm_advmultiselect extends HTML_QuickForm_select
      * @return     void
      * @since      version 0.4.0 (2005-06-25)
      */
-    function HTML_QuickForm_advmultiselect($elementName = null, $elementLabel = null,
+    function __construct($elementName = null, $elementLabel = null,
                                            $options = null, $attributes = null,
                                            $sort = null)
     {
         $opts    = $options;
         $options = null;  // prevent to use the default select element load options
-        $this->HTML_QuickForm_select($elementName, $elementLabel,
+        parent::__construct($elementName, $elementLabel,
             $options, $attributes);
 
         // allow to load options at once and take care of fancy attributes
@@ -725,7 +725,7 @@ class HTML_QuickForm_advmultiselect extends HTML_QuickForm_select
             $attrHidden = $this->_getAttrString($this->_attributesHidden);
 
             // prepare option tables to be displayed as in POST order
-            $append = count($this->_values);
+            $append = ($this->_values === NULL ? 0 : count($this->_values));
             if ($append > 0) {
                 $arrHtmlSelected = array_fill(0, $append, ' ');
             } else {

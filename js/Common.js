@@ -101,68 +101,71 @@ function on_load_init_blocks(showBlocks, hideBlocks, elementType)
     
 }
 
-/** 
+/**
  *  This function is called when we need to show or hide a related form element (target_element)
  *  based on the value (trigger_value) of another form field (trigger_field).
- * 
- * @access public
+ *
+ * @deprecated
  * @param  trigger_field_id     HTML id of field whose onchange is the trigger
  * @param  trigger_value        List of integers - option value(s) which trigger show-element action for target_field
  * @param  target_element_id    HTML id of element to be shown or hidden
  * @param  target_element_type  Type of element to be shown or hidden ('block' or 'table-row')
  * @param  field_type           Type of element radio/select
  * @param  invert               Boolean - if true, we HIDE target on value match; if false, we SHOW target on value match
- * @return none 
-*/
-function showHideByValue(trigger_field_id, trigger_value, target_element_id, target_element_type, field_type, invert ) {
-    if ( target_element_type == null ) {
-        var target_element_type = 'block';
-    } else if ( target_element_type == 'table-row' ) {
-	var target_element_type = '';
-    }
-    
-    if (field_type == 'select') {
-        var trigger = trigger_value.split("|");
-        var selectedOptionValue = document.getElementById(trigger_field_id).options[document.getElementById(trigger_field_id).selectedIndex].value;	
-        
-        var target = target_element_id.split("|");
-        for(var j = 0; j < target.length; j++) {
-            if ( invert ) {  
-                show(target[j], target_element_type);
-            } else {
-                hide(target[j],target_element_type);
-            }
-            for(var i = 0; i < trigger.length; i++) {
-                if (selectedOptionValue == trigger[i]) {
-                    if ( invert ) {  
-                        hide(target[j],target_element_type);
-                    } else {
-                        show(target[j],target_element_type);
-                    }	
-                }
-            }
-        }
- 
-    } else if (field_type == 'radio') {
+ */
+function showHideByValue(trigger_field_id, trigger_value, target_element_id, target_element_type, field_type, invert) {
+  var target, j;
 
-        var target = target_element_id.split("|");
-        for(var j = 0; j < target.length; j++) {
-	    if (document.getElementsByName(trigger_field_id)[0].checked) {
-		if ( invert ) {  
-		    hide(target[j], target_element_type);
-		} else {
-		    show(target[j], target_element_type);
-		 }
-	    } else {
-		if ( invert ) {  
-		    show(target[j], target_element_type);
-		} else {
-		    hide(target[j], target_element_type);
-		}
-	    }
-	}
+  if (field_type == 'select') {
+    var trigger = trigger_value.split("|");
+    var selectedOptionValue = cj('#' + trigger_field_id).val();
+
+    target = target_element_id.split("|");
+    for (j = 0; j < target.length; j++) {
+      if (invert) {
+        cj('#' + target[j]).show();
+      }
+      else {
+        cj('#' + target[j]).hide();
+      }
+      for (var i = 0; i < trigger.length; i++) {
+        if (selectedOptionValue == trigger[i]) {
+          if (invert) {
+            cj('#' + target[j]).hide();
+          }
+          else {
+            cj('#' + target[j]).show();
+          }
+        }
+      }
     }
+
+  }
+  else {
+    if (field_type == 'radio') {
+      target = target_element_id.split("|");
+      for (j = 0; j < target.length; j++) {
+        if (cj('[name="' + trigger_field_id + '"]:first').is(':checked')) {
+          if (invert) {
+            cj('#' + target[j]).hide();
+          }
+          else {
+            cj('#' + target[j]).show();
+          }
+        }
+        else {
+          if (invert) {
+            cj('#' + target[j]).show();
+          }
+          else {
+            cj('#' + target[j]).hide();
+          }
+        }
+      }
+    }
+  }
 }
+
 
 /** 
  *  This function is called when we need to enable or disable a related form element (target_element)
@@ -881,3 +884,12 @@ function mdFormElement(type, label, attr){
   var label_for = id ? ' for="'+id+'"' : '';
   return '<label class="'+ wrap_class.join(' ') +'"' + label_for +'>' + ele + text + '</label>';
 }
+
+(function ($) {
+  // CVE-2015-9251 - Prevent auto-execution of scripts when no explicit dataType was provided
+  $.ajaxPrefilter(function(s) {
+    if (s.crossDomain) {
+      s.contents.script = false;
+    }
+  });
+})(jQuery);

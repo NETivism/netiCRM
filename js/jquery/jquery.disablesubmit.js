@@ -1,22 +1,26 @@
 (function($){
   $(document).ready(function(){
+    var $obj = $('input[data=submit-once]');
 
     // solve last submitted qfkey
     var last_qfkey = getUrlParams('qfKey');
-    if(!last_qfkey && $('[name=qfKey]').length >= 1){
-      last_qfkey = $('[name=qfKey]').val();
-      if(!last_qfkey && $('#last_check_id').length >= 1){
-        last_qfkey = $('#last_check_id').val();
+    if(!last_qfkey){
+      if ($('[name=qfKey]').length >= 1) {
+        last_qfkey = $('[name=qfKey]').val();
+      }
+      else if($('input[name=submit_once_check]').length >= 1){
+        last_qfkey = $('input[name=submit_once_check]').val();
       }
     }
 
     if(last_qfkey){
       last_submitted = getCookie(last_qfkey);
       if(last_submitted == 1){
-        if($('.crm-error').length == 0){
+        if($obj.parents("form").has('.error:visible').length > 0 || $obj.parents("form").has('.crm-error').length > 0) {
+          last_submitted = 0; // submit validate error from backend
+        }
+        else{
           last_submitted = 2; // don't change btn stat anymore.
-        }else{
-          last_submitted = 0;
         }
         setCookie(last_qfkey, last_submitted, 3600);
       }
@@ -30,7 +34,6 @@
       }
     }
     var submitted = getCookie(qfkey);
-    var $obj = $('input[data=submit-once]');
     if($obj.length && qfkey){
       if(submitted == "1" || submitted >= 1){
         $obj.each(function(){
@@ -49,7 +52,7 @@
           // If attribute is readonly, don't enable.
 
           // Not trigger when jvalidate is not enabled.
-          if( $obj.parents("form").has('.error:visible').length > 0){
+          if( $obj.parents("form").has('.error:visible').length > 0 || $obj.parents("form").has('.crm-error').length > 0){
             var is_block_by_error = true;
           }
           if(submitted < 1 && !is_block_by_error && !$obj.attr("readonly")){
@@ -64,7 +67,7 @@
       $obj.parents("form").on('submit', function(e){
         var $form = $(this);
         window.setTimeout(function(){
-          if( $form.has('.error:visible').length > 0){
+          if( $form.has('.error:visible').length > 0 || $form.has('.crm-error').length > 0){
             var is_block_by_error = true;
           }
           if ($form.data('submitted') === true || is_block_by_error || $obj.attr("readonly")) {

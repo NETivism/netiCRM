@@ -32,7 +32,13 @@
         </tr>
         <tr class="crm-form-block-receiptPrefix">
             <td class="label">{$form.receiptPrefix.label}</td><td>{$form.receiptPrefix.html}<br />    
-            <span class="description">{ts}Receipt ID prefix. Can be numberic or alphabetic.{/ts} {ts}Use this screen to configure formats for date display and date input fields. Defaults are provided for standard United States formats. Settings use standard POSIX specifiers.{/ts} {help id='date-format'}</span></td>
+            <span class="description">
+            {ts}The prefix always append 'A' for online payment and 'M' for manual payment for prevent serial issue when date change.{/ts}<br>
+            {ts}You can have different prefix of each contribution type by filling token '!acc' into this field. And fill the 'Accounting Code' in contribution type setting page.{/ts}<br>
+            {ts}Receipt ID prefix. Can be numberic or alphabetic.{/ts}<br>
+            {ts}Use this screen to configure formats for date display and date input fields. Defaults are provided for standard United States formats. Settings use standard POSIX specifiers.{/ts} {help id='date-format'}
+            </span>
+            </td>
         </tr>
         <tr class="crm-form-block-receiptDescription">
             <td class="label">{$form.receiptDescription.label}</td><td>{$form.receiptDescription.html}<br />    

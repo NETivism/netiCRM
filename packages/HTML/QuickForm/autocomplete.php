@@ -84,9 +84,9 @@ class HTML_QuickForm_autocomplete extends HTML_QuickForm_text
      * @access    public
      * @return    void
      */
-    function HTML_QuickForm_autocomplete($elementName = null, $elementLabel = null, $options = null, $attributes = null)
+    function __construct($elementName = null, $elementLabel = null, $options = null, $attributes = null)
     {
-        $this->HTML_QuickForm_text($elementName, $elementLabel, $attributes);
+        parent::__construct($elementName, $elementLabel, $attributes);
         $this->_persistantFreeze = true;
         $this->_type = 'autocomplete';
         if (isset($options)) {
@@ -124,7 +124,7 @@ class HTML_QuickForm_autocomplete extends HTML_QuickForm_text
         $arrayName = str_replace(array('[', ']'), array('__', ''), $this->getName()) . '_values';
 
         $this->updateAttributes(array(
-            'onkeypress' => 'return autocomplete(this, event, ' . $arrayName . ');'
+            'onkeypress' => 'return window.autocomplete(this, event, ' . $arrayName . ');'
         ));
         if ($this->_flagFrozen) {
             $js = '';

@@ -25846,7 +25846,10 @@ msgid "close"
 msgstr ""
 
 #: templates/CRM/common/fatal.tpl
-msgid "Sorry. A non-recoverable error has occurred."
+msgid ""
+"We are very sorry that there an error occurred. "
+"Please contact system administrator for further support. "
+"Thanks for your help in improving this open source project."
 msgstr ""
 
 #: templates/CRM/common/fatal.tpl
@@ -46797,4 +46800,40 @@ msgid "You can't bulk update these coupon after create. Are you sure to procceed
 msgstr ""
 
 msgid "Enter partial words of code to search (such as prefix words of code)."
+msgstr ""
+
+msgid "Current logged in contact is not the same contact of participant. Please log out first and try again."
+msgstr ""
+
+msgid "Name, Phone or Email"
+msgstr ""
+
+msgid "Member Name, Phone or Email"
+msgstr ""
+
+msgid "Contributor Name, Phone or Email"
+msgstr ""
+
+msgid "Participant Name, Phone or Email"
+msgstr ""
+
+msgid "TapPay Payment"
+msgstr ""
+
+msgid "Partner Key"
+msgstr ""
+
+msgid "App ID"
+msgstr ""
+
+msgid "App Key"
+msgstr ""
+
+msgid "The prefix always append 'A' for online payment and 'M' for manual payment for prevent serial issue when date change."
+msgstr ""
+
+msgid "You can have different prefix of each contribution type by filling token '!acc' into this field. And fill the 'Accounting Code' in contribution type setting page."
+msgstr ""
+
+msgid "'s"
 msgstr ""

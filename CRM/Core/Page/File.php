@@ -39,14 +39,20 @@ class CRM_Core_Page_File extends CRM_Core_Page {
     require_once 'CRM/Utils/Request.php';
     require_once 'CRM/Core/DAO.php';
 
-    $eid = CRM_Utils_Request::retrieve('eid', 'Positive', $this, TRUE);
-    $fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this, FALSE);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
+    $entityId = CRM_Utils_Request::retrieve('eid', 'Positive', $this, TRUE);
+    $fieldId = CRM_Utils_Request::retrieve('fid', 'Positive', $this, FALSE);
+    $fileId = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
+    $hash = CRM_Utils_Request::retrieve('fcs', 'Alphanumeric', $this);
+    if (!CRM_Core_BAO_File::validateFileHash($hash, $entityId, $fileId)) {
+      /** because drupal 6 still have problem of this...
+      CRM_Core_Error::fatal('URL for file is not valid');
+      */
+    }
     $quest = CRM_Utils_Request::retrieve('quest', 'String', $this);
     $action = CRM_Utils_Request::retrieve('action', 'String', $this);
 
     require_once 'CRM/Core/BAO/File.php';
-    list($path, $mimeType, $entityTable) = CRM_Core_BAO_File::path($id, $eid, NULL, $quest);
+    list($path, $mimeType, $entityTable) = CRM_Core_BAO_File::path($fileId, $entityId, NULL, $quest);
     $publicFileSection = explode(',', CRM_Core_BAO_File::PUBLIC_ENTITY_TABLE);
     if (!in_array($entityTable, $publicFileSection)) {
       if (!CRM_Core_Permission::check('access uploaded files')) {
@@ -56,17 +62,17 @@ class CRM_Core_Page_File extends CRM_Core_Page {
     }
 
     if (!$path) {
-      CRM_Core_Error::statusBounce('Could not retrieve the file');
+      CRM_Core_Error::fatal('Could not retrieve the file');
     }
 
     $buffer = file_get_contents($path);
     if (!$buffer) {
-      CRM_Core_Error::statusBounce('The file is either empty or you do not have permission to retrieve the file');
+      CRM_Core_Error::fatal('The file is either empty or you do not have permission to retrieve the file');
     }
 
     if ($action & CRM_Core_Action::DELETE) {
       if (CRM_Utils_Request::retrieve('confirmed', 'Boolean', CRM_Core_DAO::$_nullObject)) {
-        CRM_Core_BAO_File::delete($id, $eid, $fid);
+        CRM_Core_BAO_File::delete($fileId, $entityId, $fieldId);
         CRM_Core_Session::setStatus(ts('The attached file has been deleted.'));
 
         $session = CRM_Core_Session::singleton();

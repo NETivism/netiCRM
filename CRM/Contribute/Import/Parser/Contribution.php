@@ -227,6 +227,20 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $this->_parserContact->_dedupeRuleGroupId = $this->_dedupeRuleGroupId;
     $this->_parserContact->_contactLog = ts('Import Contact').' '.ts('From').' '.ts('Import Contribution');
     $this->_parserContact->init();
+
+    // create dedupe fields mapping to prevent each loop query
+    if (!empty($this->_dedupeRuleGroupId)) {
+      $ruleParams = array(
+        'id' => $this->_dedupeRuleGroupId,
+      );
+    }
+    else {
+      $ruleParams = array(
+        'contact_type' => $this->_contactType,
+        'level' => 'Strict',
+      );
+    }
+    $this->_dedupeRuleFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
   }
 
   /**
@@ -673,7 +687,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             'level' => 'Strict',
           );
         }
-        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        $fieldsArray = $this->_dedupeRuleFields;
 
         $dispArray = array();
         foreach ($fieldsArray as $value) {

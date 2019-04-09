@@ -101,6 +101,7 @@ cj(document).ready(function($){
       }
     });
   }
+
   var showHideDedupeRule = function(){
     $("input[name=contactType]:checked").each(function(){
       var contactType = $(this).next('.elem-label').text();
@@ -121,7 +122,13 @@ cj(document).ready(function($){
         }
         return true;
       });
-      $("#dedupeRuleGroup").val($option.val());
+			var selected = $option.filter("[selected=selected]");
+			if (selected.length) {
+				$("#dedupeRuleGroup").val(selected.val());
+			}
+			else {
+				$("#dedupeRuleGroup").val($option.val());
+			}
     });
   }
 

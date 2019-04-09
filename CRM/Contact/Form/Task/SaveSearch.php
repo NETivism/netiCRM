@@ -208,6 +208,12 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     if ($this->_id) {
       $params['id'] = CRM_Contact_BAO_SavedSearch::getName($this->_id, 'id');
     }
+    else {
+      $name = CRM_Utils_String::titleToVar($params['title']);
+      $name = 'sg_'.substr($name, 0, 55);
+      $name .= '_rand'.(string) mt_rand(11, 99);
+      $params['name'] = $name;
+    }
 
     require_once 'CRM/Contact/BAO/Group.php';
     $group = &CRM_Contact_BAO_Group::create($params);

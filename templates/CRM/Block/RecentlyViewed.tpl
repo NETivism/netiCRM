@@ -73,28 +73,16 @@
 		      }		      
 
  		      if ( pos.left >= 150 ) {
-		      	// hack for IE6 and IE7  
-		        if ( cj.browser.msie && ( cj.browser.version.substr( 0,1 ) == '7' ||  cj.browser.version.substr( 0,1 ) == '6' ) ) {
-			    gethtml =   '<ul class="crm-recentview-wrapper" style="display:none;">'+  cj(this).children('ul').html( ) +'</ul>' ;
-			    cj(this).children('ul').remove();			
-			    cj(this).prepend(gethtml );
-			    addStyle += 'margin-top:'+ (eleHeight+2) + 'px;';
-			} else {
 		      	    addStyle += 'margin-left:-'+ (linkCount*30+2) + 'px;';
 			    addStyle += 'margin-top:-'+ (eleHeight+2) + 'px;';
-			}
 		        if (cj(this).children('ul.crm-recentview-wrapper-right').length == '' ) {
 		            cj(this).children('ul').addClass('crm-recentview-wrapper-right');
 		        }
 		        cj(this).children('ul').attr('style', addStyle);
 		      } else {
 		        // hack for IE6 and IE7  
-			if ( cj.browser.msie && ( cj.browser.version.substr( 0,1 ) == '7' ||  cj.browser.version.substr( 0,1 ) == '6' ) ) {
-			    addStyle += 'margin-top:-3px;';
-			} else {   
 		            addStyle += 'margin-left:'+ (eleWidth-1) + 'px;';
 		      	    addStyle += 'margin-top:-'+ (eleHeight+2) + 'px;';
-			}   
 		        if (cj(this).children('ul.crm-recentview-wrapper-left').length == '' ) {
 		      	    cj(this).children('ul').addClass('crm-recentview-wrapper-left');
 		        }

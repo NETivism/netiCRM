@@ -33,8 +33,8 @@
         <table class="crm-info-panel">
 	    {foreach from=$viewRelationship item="row"}
             <tr>
-                <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.cid`"}">{$row.name}</a></td>
-                <td class="label">的{$row.relation}</td> 
+                <td class="label"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.cid`"}">{$row.name}</a>{ts}'s{/ts}</td>
+                <td>{$row.relation}</td> 
             </tr>
             {if $isCurrentEmployer}
                 <tr><td class="label">{ts}Current Employee?{/ts}</td><td>{ts}Yes{/ts}</td></tr>
@@ -55,16 +55,16 @@
             {/foreach}
             {if $row.is_permission_a_b}
                 {if $row.rtype EQ 'a_b' AND $is_contact_id_a}
-                     <tr><td class="label">&nbsp;</td><td><strong>'{$displayName}'</strong> can view and update information for <strong>'{$row.display_name}'</strong></td></tr>
+                     <tr><td class="label"></td><td><strong>'{$displayName}'</strong> {ts}can view and update information for {/ts} <strong>'{$row.display_name}'</strong></td></tr>
                 {else}
-                     <tr><td class="label">&nbsp;</td><td><strong>'{$row.display_name}'</strong> can view and update information for <strong>'{$displayName}'</strong></td></tr>
+                     <tr><td class="label"></td><td><strong>'{$row.display_name}'</strong> {ts}can view and update information for {/ts} <strong>'{$displayName}'</strong></td></tr>
                 {/if}
             {/if}
             {if $row.is_permission_b_a}
                  {if $row.rtype EQ 'a_b' AND $is_contact_id_a}   
-                     <tr><td class="label">&nbsp;</td><td><strong>'{$row.display_name}'</strong> can view and update information for <strong>'{$displayName}'</strong></td></tr>
+                     <tr><td class="label"></td><td><strong>'{$row.display_name}'</strong> {ts}can view and update information for {/ts} <strong>'{$displayName}'</strong></td></tr>
                  {else}
-                     <tr><td class="label">&nbsp;</td><td><strong>'{$displayName}'</strong> can view and update information for <strong>'{$row.display_name}'</strong></td></tr>
+                     <tr><td class="label"></td><td><strong>'{$displayName}'</strong> {ts}can view and update information for {/ts} <strong>'{$row.display_name}'</strong></td></tr>
                  {/if}   
             {/if}
            
@@ -72,7 +72,6 @@
         {/foreach}
         </table>
         {include file="CRM/Custom/Page/CustomDataView.tpl"}
-        <div class="crm-submit-buttons"><input type="button" name='cancel' value="{ts}Done{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q='action=browse&selectedChild=rel'}';"/></div>
         </div>
   {/if}
 
@@ -87,7 +86,7 @@
             {if $action EQ 2} {* action = update *}
             <table class="form-layout-compressed">
              <tr class="crm-relationship-form-block-relationship_type_id">
-               <td class="label">{$form.relationship_type_id.label}</td><td><label>{$sort_name_b}</label></td><td>的{$form.relationship_type_id.html}</td>
+               <td class="label">{$form.relationship_type_id.label}</td><td><label>{$sort_name_b}</label>{ts}'s{/ts} {$form.relationship_type_id.html}</td>
                 {literal}
                 <script type="text/javascript">
                     var relType = 0;
@@ -153,8 +152,7 @@
                     }       
 				  </script>
                 {/literal}
-                <td>{$form.rel_contact.html}</td>
-                <td>的{$form.relationship_type_id.html}</td>
+                <td>{$form.rel_contact.html}{ts}'s{/ts} {$form.relationship_type_id.html}</td>
               </tr>
               </table>
                 <div class="clear"></div>
@@ -203,14 +201,14 @@
                             {if $action eq 1}
                                 <strong>'{$sort_name_a}'</strong> {ts}can view and update information for selected contact(s){/ts}
                             {else}
-                                <strong>'{$sort_name_a}'</strong> 可以查看或更新 <strong>'{$sort_name_b}'</strong> 的資訊
+                                <strong>'{$sort_name_a}'</strong> {ts}can view and update information for {/ts}<strong>'{$sort_name_b}'</strong>
                             {/if}
                         </span>
                         <span id ='permision_a_b-b_a'>
                             {if $action eq 1}
-                                <strong> 所選擇的聯絡人</strong>可以查看或更新 <strong>'{$sort_name_a}'</strong> 的資訊
+                                <strong>{ts}Selected contact(s)</strong> can view and update information for {/ts} <strong>'{$sort_name_a}'</strong>
                             {else}
-                                <strong>'{$sort_name_b}'</strong> 可以查看或更新 <strong>'{$sort_name_a}'</strong> 的資訊
+                                <strong>'{$sort_name_b}'</strong> {ts}can view and update information for {/ts} <strong>'{$sort_name_a}'</strong>
                             {/if}
                         </span>
                         </td>
@@ -221,14 +219,14 @@
                             {if $action eq 1}
                                 <strong>'{$sort_name_a}'</strong> {ts}can view and update information for selected contact(s){/ts}
                             {else}
-                                <strong>'{$sort_name_a}'</strong> 可以查看或更新 <strong>'{$sort_name_b}'</strong> 的資訊
+                                <strong>'{$sort_name_a}'</strong> {ts}can view and update information for {/ts} <strong>'{$sort_name_b}'</strong>
                             {/if}
                         </span>
                         <span id ='permision_b_a-a_b'>
                             {if $action eq 1}
-                                <strong> 所選擇的聯絡人</strong>可以查看或更新 <strong>'{$sort_name_a}'</strong> 的資訊
+                                <strong>{ts}Selected contact(s)</strong> can view and update information for {/ts}<strong>'{$sort_name_a}'</strong>
                             {else}
-                                <strong>'{$sort_name_b}'</strong> 可以查看或更新  <strong>'{$sort_name_a}'</strong> 的資訊
+                                <strong>'{$sort_name_b}'</strong> {ts}can view and update information for {/ts}<strong>'{$sort_name_a}'</strong>
                             {/if}
                         </span>
                         </td>
@@ -389,16 +387,9 @@ cj('#addCurrentEmployer').hide( );
 cj('#addCurrentEmployee').hide( );
 
 cj(document).ready(function(){
-  if ( cj.browser.msie ) {
-       cj('#rel_contact').keyup( function(e) {
-         if( e.keyCode == 9 || e.keyCode == 13 ) {
-	     return false;
-	     }
-         cj("input[name=rel_contact_id]").val('');
-    }); } else {
-         cj('#rel_contact').focus( function() {
-         cj("input[name=rel_contact_id]").val('');
-}); }
+  cj('#rel_contact').focus( function() {
+    cj("input[name=rel_contact_id]").val('');
+  });
 });
 
 {/literal}{if $searchRows || $callAjax}{literal} 

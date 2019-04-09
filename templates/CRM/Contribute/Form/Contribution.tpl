@@ -97,7 +97,7 @@
         <tr  class="crm-contribution-form-block-total_amount">
             <td class="label">{$form.total_amount.label}</td>
     	    <td {$valueStyle}>
-        	    <span id='totalAmount'>{$form.total_amount.html|crmMoney:$form.currency.html|crmReplace:class:eight}</span> 
+        	    <span id='totalAmount'>{$form.currency.html} {$form.total_amount.html|crmReplace:class:eight}</span> 
         	    {if $hasPriceSets}
         	        <span id='totalAmountORPriceSet'> {ts}OR{/ts}</span>
         	        <span id='selectPriceSet'>{$form.price_set_id.html}</span>
@@ -401,6 +401,14 @@ function loadPanes( id ) {
     field_type          ="select"
     invert              = 0
 }
+{include file="CRM/common/showHideByFieldValue.tpl"
+    trigger_field_id    ="is_email_receipt"
+    trigger_value       = 1
+    target_element_id   ="from_email_address"
+    target_element_type ="block"
+    field_type          ="radio"
+    invert              = 0
+}
 {/if} 
 {/if} {* not delete mode if*}      
 
@@ -424,7 +432,7 @@ cj(document).ready(function(){
    else{
      cj('#receipt-option').hide();
    }
-   cj('#have_receipt').live('click', function(){
+   cj('#have_receipt').on('click', function(){
      if(cj(this).attr('checked') == 'checked'){
        var d = new Date();
        cj("#receipt_date").datepicker('setDate', d);

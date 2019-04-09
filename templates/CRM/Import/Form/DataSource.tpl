@@ -62,9 +62,21 @@
       <table class="form-layout-compressed">
          <tr class="crm-import-datasource-form-block-contactType">
 	     <td class="label">{$form.contactType.label}</td>
-             <td>{$form.contactType.html} {help id='contact-type'}&nbsp;&nbsp;&nbsp;
-               <span id="contact-subtype">{$form.subType.label}&nbsp;&nbsp;&nbsp;{$form.subType.html} {help id='contact-sub-type'}</span></td>
+             <td>
+               {$form.contactType.html} {help id='contact-type'}&nbsp;&nbsp;&nbsp;
+               <div id="contact-subtype">{$form.subType.label}&nbsp;&nbsp;&nbsp;{$form.subType.html} {help id='contact-sub-type'}</div>
+             </td>
          </tr>
+        <tr class="dedupe-rule-group">
+          <td class="label">{$form.dedupeRuleGroupId.label}</td>
+          <td>
+            {$form.dedupeRuleGroupId.html}
+            <div class="description">
+              {capture assign='newrule'}{crmURL p='civicrm/contact/deduperules' q='reset=1'}{/capture}
+              {ts 1=$newrule}Use rule you choose above for matching contact in each row. You can also <a href="%1">add new rule</a> anytime.{/ts}
+            </div>
+          </td>
+        </tr>
          <tr class="crm-import-datasource-form-block-onDuplicate">
              <td class="label">{$form.onDuplicate.label}</td>
              <td>{$form.onDuplicate.html} {help id='dupes'}</td>
@@ -100,58 +112,89 @@
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"} </div>
 
   {literal}
-    <script type="text/javascript">
-      cj(document).ready(function() {    
-         //build data source form block
-         buildDataSourceFormBlock();
-         buildSubTypes();
-      });
-      
-      function buildDataSourceFormBlock(dataSource)
-      {
+  <script type="text/javascript">
+    cj(document).ready(function($) {
+      //build data source form block
+      var buildDataSourceFormBlock = function(){
         var dataUrl = {/literal}"{crmURL p=$urlPath h=0 q=$urlPathVar}"{literal};
-
         if (!dataSource ) {
-          var dataSource = cj("#dataSource").val();
+          var dataSource = $("#dataSource").val();
         }
-
         if ( dataSource ) {
           dataUrl = dataUrl + '&dataSource=' + dataSource;
-        } else {
-          cj("#data-source-form-block").html( '' );
+        }
+        else {
+          $("#data-source-form-block").html('');
           return;
         }
-
-        cj("#data-source-form-block").load( dataUrl );
+        $("#data-source-form-block").load( dataUrl );
       }
 
-      function buildSubTypes( )
-      {
-        element = cj("input[name=contactType]:checked").val();
+      var buildSubTypes = function(){
+        var element = cj("input[name=contactType]:checked").val();
         var postUrl = {/literal}"{crmURL p='civicrm/ajax/subtype' h=0 }"{literal};
-        var param = 'parentId='+ element;
-        cj.ajax({ type: "POST", url: postUrl, data: param, async: false, dataType: 'json',
-
-                        success: function(subtype){
-                                                   if ( subtype.length == 0 ) {
-                                                      cj("#subType").empty(); 
-                                                      cj("#contact-subtype").hide();
-                                                   } else {       
-                                                       cj("#contact-subtype").show();   
-                                                       cj("#subType").empty();                                   
-
-                                                       cj("#subType").append("<option value=''>-Select-</option>");  
-                                                       for ( var key in  subtype ) {
-                                                           // stick these new options in the subtype select 
-                                                           cj("#subType").append("<option value="+key+">"+subtype[key]+" </option>");  
-                                                       }
-                                                   } 
-                                       
-
-                                                 }
-  });
-       
+        var param = 'parentType=' + element;
+        $.ajax({
+          type: "POST",
+          url: postUrl,
+          data: param,
+          async: false,
+          dataType: 'json',
+          success: function(subtype){
+            if ( subtype.length == 0 ) {
+              $("#subType").empty();
+              $("#contact-subtype").hide();
+            }
+            else {      
+              $("#contact-subtype").show();  
+              $("#subType").empty();                                  
+              $("#subType").append("<option value=''>{/literal}{ts}-- Select --{/ts}{literal}</option>"); 
+              for ( var key in  subtype ) {
+                // stick these new options in the subtype select
+                $("#subType").append("<option value="+key+">"+subtype[key]+" </option>"); 
+              }
+            }
+          }
+        });
       }
+
+			var showHideDedupeRule = function(){
+				$("input[name=contactType]:checked").each(function(){
+					var contactType = $(this).next('.elem-label').text();
+					$("#dedupeRuleGroupId option").each(function(){
+						if ($(this).attr("value")) {
+							var re = new RegExp("^"+contactType,"g");
+							if(!$(this).text().match(re)){
+								$(this).hide();
+							}
+							else{
+								$(this).show();
+							}
+						}
+					});
+					var $option = $("#dedupeRuleGroupId option").filter(function(){
+						if($(this).css('display') == 'none'){
+							return false;
+						}
+						return true;
+					});
+          var selected = $option.filter("[selected=selected]");
+          if (selected.length) {
+            $("#dedupeRuleGroupId").val(selected.val());
+          }
+          else {
+            $("#dedupeRuleGroupId").val($option.val());
+          }
+				});
+			}
+
+			buildDataSourceFormBlock();
+      buildSubTypes();
+      showHideDedupeRule();
+      $("select[id=dataSource]").change(buildDataSourceFormBlock);
+			$("input[name=contactType]").click(buildSubTypes);
+			$("input[name=contactType]").click(showHideDedupeRule);
+    });
 
     </script>
   {/literal}

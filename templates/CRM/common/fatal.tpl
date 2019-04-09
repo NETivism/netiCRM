@@ -24,8 +24,9 @@
  +--------------------------------------------------------------------+
 *}
 <div class="messages crm-error error-ci">
-  {if $message}{$message}{/if}
-  {if $error.message && $message != $error.message}
-    {$error.message}
-  {/if}
+<strong>{ts}We are very sorry that there an error occurred. Please contact system administrator for further support. Thanks for your help in improving this open source project.{/ts}</strong><br>{ts}Error Code:{/ts}
+{if $message}{$message}{/if}
+{if $error.message && $message != $error.message}
+  {$error.message}
+{/if}
 </div>

@@ -198,7 +198,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     }
 
     // add current fields
-    if ($this->_gid) {
+    if ($this->_gid && !($this->_action & CRM_Core_Action::DELETE)) {
       $page = new CRM_UF_Page_Field();
       $page->setVar('_gid', $this->_gid);
       $page->browse();

@@ -1,6 +1,6 @@
   <table class="form-layout">
     <tr class="odd">
-            <td><label>{ts}Complete OR Partial Name{/ts}</label>&nbsp;{help id='id-advanced-intro'}<br />
+            <td><label>{ts}Name, Phone or Email{/ts}</label>&nbsp;{help id='id-advanced-intro'}<br />
                 {$form.sort_name.html|crmReplace:class:big}
             </td>
             <td>

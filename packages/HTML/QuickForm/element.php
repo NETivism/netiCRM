@@ -89,9 +89,9 @@ class HTML_QuickForm_element extends HTML_Common
      * @access    public
      * @return    void
      */
-    function HTML_QuickForm_element($elementName=null, $elementLabel=null, $attributes=null)
+    function __construct($elementName=null, $elementLabel=null, $attributes=null)
     {
-        HTML_Common::HTML_Common($attributes);
+        parent::__construct($attributes);
         if (isset($elementName)) {
             $this->setName($elementName);
         }
@@ -344,11 +344,8 @@ class HTML_QuickForm_element extends HTML_Common
         if (isset($values[$elementName])) {
             return $values[$elementName];
         } elseif (strpos($elementName, '[')) {
-            $myVar = "['" . str_replace(
-                         array('\\', '\'', ']', '['), array('\\\\', '\\\'', '', "']['"), 
-                         $elementName
-                     ) . "']";
-            return eval("return (isset(\$values$myVar)) ? \$values$myVar : null;");
+            $keys = explode('[', str_replace(']', '', $elementName));
+            return CRM_Utils_Array::pathGet($values, $keys);
         } else {
             return null;
         }
@@ -371,8 +368,7 @@ class HTML_QuickForm_element extends HTML_Common
     {
         switch ($event) {
             case 'createElement':
-                $className = get_class($this);
-                $this->$className($arg[0], $arg[1], $arg[2], $arg[3], $arg[4]);
+                $this->__construct($arg[0], $arg[1], $arg[2], $arg[3], $arg[4]);
                 break;
             case 'addElement':
                 $this->onQuickFormEvent('createElement', $arg, $caller);
@@ -478,13 +474,10 @@ class HTML_QuickForm_element extends HTML_Common
             if (!strpos($name, '[')) {
                 return array($name => $value);
             } else {
-                $valueAry = array();
-                $myIndex  = "['" . str_replace(
-                                array('\\', '\'', ']', '['), array('\\\\', '\\\'', '', "']['"), 
-                                $name
-                            ) . "']";
-                eval("\$valueAry$myIndex = \$value;");
-                return $valueAry;
+                $keys = explode('[', str_replace(']', '', $name));
+                $preparedValue = [];
+                CRM_Utils_Array::pathSet($preparedValue, $keys, $value);
+                return $preparedValue;
             }
         }
     }

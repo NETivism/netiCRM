@@ -269,7 +269,7 @@ class CRM_Member_BAO_Query {
       case 'member_is_primary':
         switch ($value) {
           case 1:
-            $query->_qill[$grouping][] = ts("Primary AND Related Members");
+            $query->_qill[$grouping][] = ts("All Members");
             break;
 
           case 2:

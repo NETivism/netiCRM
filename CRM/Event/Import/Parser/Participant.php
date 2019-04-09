@@ -121,6 +121,19 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
       }
       $index++;
     }
+
+    if (!empty($this->_dedupeRuleGroupId)) {
+      $ruleParams = array(
+        'id' => $this->_dedupeRuleGroupId,
+      );
+    }
+    else {
+      $ruleParams = array(
+        'contact_type' => $this->_contactType,
+        'level' => 'Strict',
+      );
+    }
+    $this->_dedupeRuleFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
   }
 
   /**
@@ -418,13 +431,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
         }
       }
       else {
-        // Using new Dedupe rule.
-        $ruleParams = array(
-          'contact_type' => $this->_contactType,
-          'level' => 'Strict',
-        );
-        require_once 'CRM/Dedupe/BAO/Rule.php';
-        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        $fieldsArray = $this->_dedupeRuleFields;
 
         foreach ($fieldsArray as $value) {
           if (array_key_exists(trim($value), $params)) {

@@ -9,11 +9,11 @@
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016
-# 花玉婷 <klavier1976@netivism.com.tw>, 2016-2018
+# 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-02-21 04:30+0000\n"
+"PO-Revision-Date: 2019-04-08 06:04+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -25845,8 +25845,11 @@ msgid "close"
 msgstr "關閉"
 
 #: templates/CRM/common/fatal.tpl
-msgid "Sorry. A non-recoverable error has occurred."
-msgstr "抱歉，發生無法回復的錯誤。"
+msgid ""
+"We are very sorry that there an error occurred. Please contact system "
+"administrator for further support. Thanks for your help in improving this "
+"open source project."
+msgstr "非常抱歉，有一個錯誤發生了，請您與系統管理員聯繫以取得進一步的協助，也謝謝您於改善此開源專案的協助。"
 
 #: templates/CRM/common/fatal.tpl
 msgid "Error Details"
@@ -27673,7 +27676,7 @@ msgstr "國家/省份"
 msgid ""
 "Indicates a permissioned relationship. This contact can be viewed and "
 "updated by the other."
-msgstr "指定一個允許的關係。此聯絡人將可以與被連結關係的另一聯絡人查看與更新。"
+msgstr "符號表示該聯絡人將可以與被連結關係的另一聯絡人查看與更新。"
 
 #: templates/CRM/Contact/Page/View/Relationship.tpl
 msgid ""
@@ -37869,7 +37872,7 @@ msgstr "選擇的聯絡人"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "can view and update information for"
-msgstr "可以查看和更新後者的資訊"
+msgstr "可以查看和更新"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "selected contact(s)"
@@ -43911,11 +43914,11 @@ msgstr "&raquo; <a href='%1'>聯絡我們</a>"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "can view and update information for "
-msgstr "可以查看和更新後者的資訊"
+msgstr "可以查看和更新"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Selected contact(s)</strong> can view and update information for "
-msgstr "選取的聯絡人</strong>可以查看和更新後者的資訊"
+msgstr "選取的聯絡人</strong>可以查看和更新"
 
 msgid "America South, Central, North and Caribbean"
 msgstr "南美洲、中美洲、北美洲、加勒比海"
@@ -46977,3 +46980,46 @@ msgstr "一旦產生之後，您僅能一個一個編輯優惠碼，無法再批
 
 msgid "Enter partial words of code to search (such as prefix words of code)."
 msgstr "可輸入優惠碼部分文字（例如批次優惠碼的前綴字）"
+
+msgid ""
+"Current logged in contact is not the same contact of participant. Please log"
+" out first and try again."
+msgstr "目前登入的聯絡人，跟您欲報名的參加者是不同的人，需請您登出後再試一次。"
+
+msgid "Name, Phone or Email"
+msgstr "姓名、電話或Email"
+
+msgid "Member Name, Phone or Email"
+msgstr "會員姓名、電話或Email"
+
+msgid "Contributor Name, Phone or Email"
+msgstr "捐款人姓名、電話或Email"
+
+msgid "Participant Name, Phone or Email"
+msgstr "參加者姓名、電話或Email"
+
+msgid "TapPay Payment"
+msgstr "TapPay 支付"
+
+msgid "Partner Key"
+msgstr "帳號金鑰（Partner Key）"
+
+msgid "App ID"
+msgstr "應用程式 App ID"
+
+msgid "App Key"
+msgstr "應用程式 App Key"
+
+msgid ""
+"The prefix always append 'A' for online payment and 'M' for manual payment "
+"for prevent serial issue when date change."
+msgstr "收據前綴會固定加上 'A' 字樣表示從線上來的費用，'M' 字樣表示自行從後台新增的費用，以避免日期不連貫導致的序號不連貫問題。"
+
+msgid ""
+"You can have different prefix of each contribution type by filling token "
+"'!acc' into this field. And fill the 'Accounting Code' in contribution type "
+"setting page."
+msgstr "只要在上面的欄位%y%m前面填入「!acc」，你便可以帶入費用類型的「會計代碼」於收據前綴中。"
+
+msgid "'s"
+msgstr "的"

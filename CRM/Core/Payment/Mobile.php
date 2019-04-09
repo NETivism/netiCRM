@@ -226,8 +226,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function validate(){
-    $paymentProcessor_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $_POST['cid'], 'payment_processor_id');
-    $merchantIdentifier = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $paymentProcessor_id, 'signature');
+    $mobile_paymentProcessor_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $_POST['cid'], 'payment_processor_id');
+    $merchantIdentifier = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $mobile_paymentProcessor_id, 'signature');
 
     if(arg(2) == 'applepay'){
       // Refs: Document: [Requesting an Apple Pay Payment Session] https://goo.gl/CJAe4M
@@ -238,7 +238,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         'initiativeContext' => $_POST['domain_name'],
       );
       $url = $_POST['validationURL'];
-      $file_path = '/var/www/html/cert/apple-pay-cert.pem';
+      $file_name = 'applepaycert_'.$mobile_paymentProcessor_id.'.inc';
+      $file_path = CRM_Utils_System::cmsRootPath() . '/' . CRM_Utils_System::confPath().'/' . $file_name;
 
       $ch = curl_init($url);
       $opt = array();

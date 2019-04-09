@@ -1344,6 +1344,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         );
         $result['file_id'] = $fileID;
 
+
         if ($fileType == "image/jpeg" ||
           $fileType == "image/pjpeg" ||
           $fileType == "image/gif" ||
@@ -1355,11 +1356,11 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
             'entity_id',
             'id'
           );
-          require_once 'CRM/Core/BAO/File.php';
+          $fileHash = CRM_Core_BAO_File::generateFileHash($entityId, $fileID);
           list($path) = CRM_Core_BAO_File::path($fileID, $entityId, NULL, NULL);
           list($imageWidth, $imageHeight) = getimagesize($path);
           $image = CRM_Utils_Image::getImageVars($path);
-          $image['url'] = CRM_Utils_System::url('civicrm/file', "reset=1&id=$fileID&eid=$contactID");
+          $image['url'] = CRM_Utils_System::url('civicrm/file', "reset=1&id=$fileID&eid=$contactID&fcs=$fileHash");
           $result['file_url'] = CRM_Utils_Image::getImageModal($image);
           // for non image files
         }
@@ -1368,7 +1369,8 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
             $fileID,
             'uri'
           );
-          $url = CRM_Utils_System::url('civicrm/file', "reset=1&id=$fileID&eid=$contactID");
+          $fileHash = CRM_Core_BAO_File::generateFileHash($contactID, $fileID);
+          $url = CRM_Utils_System::url('civicrm/file', "reset=1&id=$fileID&eid=$contactID&fcs=$fileHash");
           $result['file_url'] = "<a href=\"$url\">{$uri}</a>";
         }
       }

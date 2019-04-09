@@ -113,7 +113,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    */
   public $_onDuplicate;
 
-  protected $_dedupeFields;
+  protected $_dedupeRuleFields;
 
   /**
    * Attempt to resolve a column name with our mapper fields
@@ -190,29 +190,22 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     $this->_mapperFields = CRM_Core_FieldHierarchy::arrange($this->_mapperFields);
     $this->_importTableName = $this->get('importTableName');
     $this->_onDuplicate = $this->get('onDuplicate');
+    $this->_dedupeRuleGroupId = $this->get('dedupeRuleGroupId');
+    $this->_contactType = $this->get('contactType');
+
     $highlightedFields = array();
-    $highlightedFields[] = 'email';
     $highlightedFields[] = 'external_identifier';
-    //format custom field names, CRM-2676
-    switch ($this->get('contactType')) {
-      case CRM_Import_Parser::CONTACT_INDIVIDUAL:
-        $contactType = 'Individual';
-        $highlightedFields[] = 'first_name';
-        $highlightedFields[] = 'last_name';
-        break;
-
-      case CRM_Import_Parser::CONTACT_HOUSEHOLD:
-        $contactType = 'Household';
-        $highlightedFields[] = 'household_name';
-        break;
-
-      case CRM_Import_Parser::CONTACT_ORGANIZATION:
-        $contactType = 'Organization';
-        $highlightedFields[] = 'organization_name';
-        break;
+    if ($this->_dedupeRuleGroupId) {
+      $ruleParams = array(
+        'id' => $this->_dedupeRuleGroupId,
+      );
+      $this->_dedupeRuleFields[$this->_contactType] = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      foreach($this->_dedupeRuleFields[$this->_contactType] as $highlight) {
+        $highlightedFields[] = $highlight;
+      }
     }
-    $this->_contactType = $contactType;
-    if ($this->_onDuplicate == CRM_Import_Parser::DUPLICATE_SKIP) {
+
+    if ($this->_onDuplicate == CRM_Import_Parser::DUPLICATE_NOCHECK) {
       unset($this->_mapperFields['id']);
     }
     else {
@@ -221,18 +214,20 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
 
     if ($this->_onDuplicate != CRM_Import_Parser::DUPLICATE_NOCHECK) {
       //Mark Dedupe Rule Fields as required, since it's used in matching contact
-      require_once 'CRM/Dedupe/BAO/Rule.php';
       foreach (array('Individual', 'Household', 'Organization') as $cType) {
+        if ($cType == $this->_contactType) {
+          continue; // already added
+        }
         $ruleParams = array(
           'contact_type' => $cType,
           'level' => 'Strict',
         );
-        $this->_dedupeFields[$cType] = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        $this->_dedupeRuleFields[$cType] = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
       }
 
       //Modify mapper fields title if fields are present in dedupe rule
-      if (is_array($this->_dedupeFields[$contactType])) {
-        foreach ($this->_dedupeFields[$contactType] as $val) {
+      if (is_array($this->_dedupeRuleFields[$contactType])) {
+        foreach ($this->_dedupeRuleFields[$contactType] as $val) {
           if ($val == 'state_province_id') {
             $val = 'state_province';
           }
@@ -444,13 +439,13 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
         //Modified the Relationship fields if the fields are
         //present in dedupe rule
         if ($this->_onDuplicate != CRM_Import_Parser::DUPLICATE_NOCHECK &&
-          is_array($this->_dedupeFields[$cType])
+          is_array($this->_dedupeRuleFields[$cType])
         ) {
           static $cTypeArray = array();
           if ($cType != $this->_contactType && !in_array($cType, $cTypeArray)) {
-            foreach ($this->_dedupeFields[$cType] as $val) {
+            foreach ($this->_dedupeRuleFields[$cType] as $val) {
               if ($valTitle = CRM_Utils_Array::value($val, $this->_formattedFieldNames[$cType])) {
-                $this->_formattedFieldNames[$cType][$val] = $valTitle . ' (match to contact)';
+                $this->_formattedFieldNames[$cType][$val] = $valTitle . ' '.ts('(match to contact)');
               }
             }
             $cTypeArray[] = $cType;
@@ -1052,6 +1047,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
       $relatedContactPhoneType, $relatedContactImProvider,
       $mapperWebsiteType, $relatedContactWebsiteType
     );
+    $parser->_dedupeRuleGroupId = $this->_dedupeRuleGroupId;
 
     $primaryKeyName = $this->get('primaryKeyName');
     $statusFieldName = $this->get('statusFieldName');
