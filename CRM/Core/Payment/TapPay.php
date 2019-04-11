@@ -316,7 +316,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       $transaction = new CRM_Core_Transaction();
 
-      if($pass && $result->status == 0){
+      if(!empty($result->status)){
+        $status = $result->status;
+      }else if(!empty($result->record_status)){
+        $status = $result->record_status;
+      }
+      if($pass && $status == 0){
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
         $input['amount'] = $objects['contribution']->amount;
         $objects['contribution']->receive_date = date('YmdHis');
@@ -330,6 +335,82 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     return $isSuccess;
+  }
+
+  public static function syncRecord($contributionId) {
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    $contribution->find(TRUE);
+
+    $ppid = $contribution->payment_processor_id;
+    $mode = $contribution->is_test ? 'test' : 'live';
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
+
+    $tappayParams = array(
+      'apiType' => 'record',
+      'partnerKey' => $paymentProcessor['password'],
+    );
+
+    $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
+    $data = array(
+      'contribution_id' => $contributionId,
+      'partner_key' => $paymentProcessor['password'],
+      'filters' => array(
+        'order_number' => $contribution->trxn_id,
+      ),
+    );
+
+    // Allow further manipulation of the arguments via custom hooks ..
+    $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
+    $paymentClass = self::singleton($mode, $paymentProcessor);
+    CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
+
+    $result = $api->request($data);
+    /*
+    // Sync contribution status in CRM
+    if(!empty($result->trade_records[0])) {
+      $record = $result->trade_records[0];
+      if($record->record_status == 0) {
+        self::validateData($record, $contributionId);
+      }
+      else {
+
+          // record original cancel_date, status_id data.
+          $origin_cancel_date = $contribution->cancel_date;
+          $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
+          $origin_status_id = $contribution->contribution_status_id;
+
+          // check info
+          $result_note .= "\n".ts('Sync to Linepay server success.');
+
+          // check refund
+          if($record->record_status == 3 && $record->refunded_amount == $contribution->total_amount){
+            // find refund, check original status
+            $refund = $transaction->refundList[0];
+            $cancel_date = $refund->refundTransactionDate;
+            $cancel_date = date('YmdHis', strtotime($cancel_date));
+            $contribution->cancel_date = $cancel_date;
+            $contribution->contribution_status_id = 3;
+            if($origin_cancel_date == $contribution->cancel_date && $origin_status_id == $contribution->contribution_status_id){
+              $result_note .= "\n".ts('There are no any change.');
+            }else{
+              $contribution->save();
+              $result_note .= "\n".ts('The contribution has been canceled.');
+            }
+          }
+          else{
+            $result_note .= "\n".ts('There are no any change.');
+          }
+          // finish check info
+          CRM_Core_Payment_Mobile::addNote($result_note, $contribution);
+
+        }
+      }
+    }
+*/
+
+    return $result;
+
   }
 
   public static function getAssociatedSession($qfKey, $class) {
