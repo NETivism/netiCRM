@@ -90,6 +90,16 @@ class CRM_Core_Payment_TapPayAPI {
       CRM_Core_Error::fatal('Required parameters missing: '.implode(',', $missingRequired));
     }
 
+    // Format of amount
+    if(!empty($post['amount'])) {
+      if($post['currency'] == 'TWD') {
+        $post['amount'] = floor($post['amount']);
+      }
+      else {
+        $post['amount'] = floor($post['amount'] * 100);
+      }
+    }
+
     // verify some parameter
     if($this->_apiType == 'pay_by_prime') {
       if(!is_array($post['cardholder'])){
@@ -220,7 +230,7 @@ class CRM_Core_Payment_TapPayAPI {
       if(!empty($response->card_info->expiry_date)){
         $year = substr($response->card_info->expiry_date, 0, 4);
         $month = substr($response->card_info->expiry_date, 4, 2);
-        $tappay->expiry_date = $year.'-'.$month.'-01';
+        $tappay->expiry_date = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
       }
     }
     if($response->rec_trade_id) {
