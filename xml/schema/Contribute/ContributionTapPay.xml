@@ -125,4 +125,26 @@
     <type>text</type>
     <add>4.0</add>
   </field>
+  <field>     
+    <name>is_auto_renew</name>  
+    <comment>Is this card will be renew automatically</comment>
+    <type>boolean</type>
+    <default>0</default>
+    <add>4.0</add>
+  </field>
+  <index>
+    <name>UI_bin_code</name>
+    <fieldName>bin_code</fieldName>
+    <add>4.0</add>
+  </index>
+  <index>
+    <name>UI_last_four</name>
+    <fieldName>last_four</fieldName>
+    <add>4.0</add>
+  </index>
+  <index>
+    <name>UI_expiry_date</name>
+    <fieldName>expiry_date</fieldName>
+    <add>4.0</add>
+  </index>
 </table>

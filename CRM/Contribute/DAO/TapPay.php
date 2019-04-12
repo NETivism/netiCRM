@@ -147,6 +147,12 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    */
   public $data;
   /**
+   * Is this card will be renew automatically
+   *
+   * @var boolean
+   */
+  public $is_auto_renew;
+  /**
    * class constructor
    *
    * @access public
@@ -252,6 +258,10 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'name' => 'data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Data') ,
+        ) ,
+        'is_auto_renew' => array(
+          'name' => 'is_auto_renew',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
         ) ,
       );
     }

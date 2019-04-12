@@ -4546,7 +4546,8 @@ CREATE TABLE civicrm_contribution_tappay (
      bin_code varchar(32)    COMMENT 'The first 6 words of card number.',
      last_four varchar(32)    COMMENT 'The last four words of card number.',
      expiry_date date    COMMENT 'Used date time of this coupon track.',
-     data text    COMMENT 'Newest return data.' 
+     data text    COMMENT 'Newest return data.',
+     is_auto_renew tinyint   DEFAULT 0 COMMENT 'Is this card will be renew automatically' 
 ,
     PRIMARY KEY ( id )
  
@@ -4555,6 +4556,15 @@ CREATE TABLE civicrm_contribution_tappay (
   )
   ,     INDEX UI_rec_trade_id(
         rec_trade_id
+  )
+  ,     INDEX UI_bin_code(
+        bin_code
+  )
+  ,     INDEX UI_last_four(
+        last_four
+  )
+  ,     INDEX UI_expiry_date(
+        expiry_date
   )
   
 ,      
@@ -4579,7 +4589,13 @@ CREATE TABLE civicrm_contribution_tappay_log (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX UI_url(
+        url
+  )
+  ,     INDEX UI_date(
+        date
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_contribution_tappay_log_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;

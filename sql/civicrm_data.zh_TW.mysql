@@ -5283,7 +5283,7 @@ VALUES
  ('PayflowPro',         'PayflowPro',             NULL,1,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
  ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', '行動支付', NULL, 1, 0, '商家編號', '金流商', '帳號', '密碼',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
- ('TapPay', 'TapPay Payment', NULL, 1, 0, 'Merchant ID', 'Partner Key', 'App ID', 'App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, 1);
+ ('TapPay', 'TapPay 支付', NULL, 1, 0, 'Merchant ID', '帳號金鑰（Partner Key）', '應用程式 App ID', '應用程式 App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, 1);
 
 
 -- the fuzzy default dedupe rules
