@@ -151,7 +151,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    *
    * @var boolean
    */
-  public $is_auto_renew;
+  public $auto_renew;
   /**
    * class constructor
    *
@@ -259,9 +259,11 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Data') ,
         ) ,
-        'is_auto_renew' => array(
-          'name' => 'is_auto_renew',
+        'auto_renew' => array(
+          'name' => 'auto_renew',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Auto Renew') ,
+          'required' => true,
         ) ,
       );
     }

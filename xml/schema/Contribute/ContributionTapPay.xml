@@ -126,8 +126,9 @@
     <add>4.0</add>
   </field>
   <field>     
-    <name>is_auto_renew</name>  
+    <name>auto_renew</name>  
     <comment>Is this card will be renew automatically</comment>
+    <required>true</required> 
     <type>boolean</type>
     <default>0</default>
     <add>4.0</add>
