@@ -132,6 +132,12 @@ class CRM_Core_Payment_TapPayAPI {
       // Record tappay data
       self::saveTapPayData($this->_contribution_id, $this->_response);
 
+      // Format of amount
+      $response =& $this->_response;
+      if(!empty($response->amount) && $response->currency != 'TWD') {
+        $response->amount = (float)$response->amount / 100;
+      }
+
       return $this->_response;
     }
     else {
