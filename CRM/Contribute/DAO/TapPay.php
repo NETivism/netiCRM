@@ -147,11 +147,11 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    */
   public $data;
   /**
-   * Is this card will be renew automatically
+   * Used in 3JTSP cards, correspond to auto_renew column in contribution_recur.
    *
-   * @var boolean
+   * @var string
    */
-  public $auto_renew;
+  public $card_status;
   /**
    * class constructor
    *
@@ -259,11 +259,12 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Data') ,
         ) ,
-        'auto_renew' => array(
-          'name' => 'auto_renew',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Auto Renew') ,
-          'required' => true,
+        'card_status' => array(
+          'name' => 'card_status',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Card Status') ,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
         ) ,
       );
     }

@@ -4547,7 +4547,7 @@ CREATE TABLE civicrm_contribution_tappay (
      last_four varchar(32)    COMMENT 'The last four words of card number.',
      expiry_date date    COMMENT 'Used date time of this coupon track.',
      data text    COMMENT 'Newest return data.',
-     auto_renew tinyint NOT NULL  DEFAULT 0 COMMENT 'Is this card will be renew automatically' 
+     card_status varchar(32)    COMMENT 'Used in 3JTSP cards, correspond to auto_renew column in contribution_recur.' 
 ,
     PRIMARY KEY ( id )
  
