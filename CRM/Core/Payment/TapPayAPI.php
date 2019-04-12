@@ -28,12 +28,12 @@ class CRM_Core_Payment_TapPayAPI {
     'pay_by_prime' => '/tpc/payment/pay-by-prime',
     'pay_by_token' => '/tpc/payment/pay-by-token',
     'record' => '/tpc/transaction/query',
+    'trade_history' => '/tpc/transaction/trade-history',
     /* not supportted api types
     'refund' => '/tpc/transaction/refund',
     'cap' => '/tpc/transaction/cap',
     'bind_card' => '/tpc/card/bind',
     'remove_card' => '/tpc/card/remove',
-    'trade_history' => '/tpc/transaction/trade-history',
     'refund_cancel' => '/tpc/transaction/refund/cancel',
     'cap_cancel' => '/tpc/transaction/cap/cancel',
     */
@@ -262,6 +262,9 @@ class CRM_Core_Payment_TapPayAPI {
         break;
       case 'record':
         $fields = explode(',', 'partner_key*,records_per_page,page,filters,order_by');
+        break;
+      case 'trade_history':
+        $fields = explode(',', 'partner_key*,rec_trade_id*');
         break;
     }
     foreach ($fields as $key => &$value) {

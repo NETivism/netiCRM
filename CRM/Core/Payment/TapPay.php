@@ -319,6 +319,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       if(!empty($result->status)){
         $status = $result->status;
       }else if(!empty($result->record_status)){
+        // recordAPI use record_status
         $status = $result->record_status;
       }
       if($pass && $status == 0){
@@ -337,17 +338,38 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $isSuccess;
   }
 
-  public static function syncRecord($contributionId) {
+
+  public static function doExecuteRecur ($paymentProcessorId, $time = NULL) {
+    $executeDay = date('d', $time);
+
+    $sql = "SELECT MIN(c.id) id, contribution_recur_id, r.contribution_status_id, r.end_date FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id = %1 AND r.cycle_day = %2 GROUP BY r.id";
+    $params = array(
+      1 => array('Positive',$paymentProcessorId),
+      2 => array('Positive',$executeDay),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    while ($dao->fetch()) {
+      // execute payment.
+
+      // change status.
+    }
+  }
+
+  public static function syncRecord ($contributionId) {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
+
+    $tappay = new CRM_Contribute_DAO_TapPay();
+    $tappay->contribution_id = $contributionId;
+    $tappay->find(TRUE);
 
     $ppid = $contribution->payment_processor_id;
     $mode = $contribution->is_test ? 'test' : 'live';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
     $tappayParams = array(
-      'apiType' => 'record',
+      'apiType' => 'trade_history',
       'partnerKey' => $paymentProcessor['password'],
     );
 
@@ -355,17 +377,11 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $data = array(
       'contribution_id' => $contributionId,
       'partner_key' => $paymentProcessor['password'],
-      'filters' => array(
-        'order_number' => $contribution->trxn_id,
-      ),
+      'rec_trade_id' => $tappay->rec_trade_id,
     );
 
-    // Allow further manipulation of the arguments via custom hooks ..
-    $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-    $paymentClass = self::singleton($mode, $paymentProcessor);
-    CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
-
     $result = $api->request($data);
+
     /*
     // Sync contribution status in CRM
     if(!empty($result->trade_records[0])) {
