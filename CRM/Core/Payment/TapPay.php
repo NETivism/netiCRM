@@ -355,78 +355,125 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
-  public static function syncRecord ($contributionId) {
+  public static function syncRecord ($url_params, $get = array()) {
+    // apply $_GET to $get , and filted params 'q'
+    if(empty($get)){
+      foreach ($_GET as $key => $value) {
+        if($key == 'q')continue;
+        $get[$key] = $value;
+      }
+    }
+
+    // retrieve contribution_id from $_GET
+    if(empty($contributionId)){
+      $contributionId = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+    }
+
+    // retrieve contribution object
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
 
+    // retrieve tappay data object
     $tappay = new CRM_Contribute_DAO_TapPay();
     $tappay->contribution_id = $contributionId;
     $tappay->find(TRUE);
 
+    // retrieve payment processor object
     $ppid = $contribution->payment_processor_id;
     $mode = $contribution->is_test ? 'test' : 'live';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
+    // setup tappay api
     $tappayParams = array(
-      'apiType' => 'trade_history',
+      'apiType' => 'record',
       'partnerKey' => $paymentProcessor['password'],
     );
-
     $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
+
+    // retrieve record data
     $data = array(
       'contribution_id' => $contributionId,
       'partner_key' => $paymentProcessor['password'],
-      'rec_trade_id' => $tappay->rec_trade_id,
+      'filters' => array(
+        'order_number' => $contribution->trxn_id,
+      ),
     );
-
     $result = $api->request($data);
+    $record = !empty($result->trade_records[0]) ? $result->trade_records[0] : NULL;
 
-    /*
-    // Sync contribution status in CRM
-    if(!empty($result->trade_records[0])) {
-      $record = $result->trade_records[0];
-      if($record->record_status == 0) {
+    // check there are record in return list
+    if(!empty($record)){
+
+      // The status means refund
+      if($record->record_status == 3) {
+
+        // Call trade history api to get refund date.
+        $tappayParams['apiType'] = 'trade_history';
+
+        $api_history = new CRM_Core_Payment_TapPayAPI($tappayParams);
+        $data = array(
+          'contribution_id' => $contributionId,
+          'partner_key' => $paymentProcessor['password'],
+          'rec_trade_id' => $tappay->rec_trade_id,
+        );
+        $result = $api_history->request($data);
+        // Get the refund type history from history list.
+        foreach ($result->trade_history as $history) {
+          if($history->action == 3){
+            break;
+          }
+        }
+        $record->refund_date = date('Y-m-d H:i:s', $history->millis / 1000);
+      }
+
+      $result_note .= "\n".ts('Sync to Tappay server success.');
+
+      // Sync contribution status in CRM
+      if($record->record_status == 0 && $contribution->contribution_status_id != 1) {
         self::validateData($record, $contributionId);
       }
-      else {
+      else if($record->record_status == 3 && $contribution->contribution_status_id != 3) {
+        // record original cancel_date, status_id data.
+        $origin_cancel_date = $contribution->cancel_date;
+        $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
+        $origin_status_id = $contribution->contribution_status_id;
 
-          // record original cancel_date, status_id data.
-          $origin_cancel_date = $contribution->cancel_date;
-          $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
-          $origin_status_id = $contribution->contribution_status_id;
+        // check data
+        $pass = TRUE;
+        if($record->order_number != $contribution->trxn_id) {
+          // order number is not correct.
+          $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$result->order_number}")."\n";
+          $result_note .= $msgText;
+          $pass = FALSE;
+        }
 
-          // check info
-          $result_note .= "\n".ts('Sync to Linepay server success.');
-
-          // check refund
-          if($record->record_status == 3 && $record->refunded_amount == $contribution->total_amount){
-            // find refund, check original status
-            $refund = $transaction->refundList[0];
-            $cancel_date = $refund->refundTransactionDate;
-            $cancel_date = date('YmdHis', strtotime($cancel_date));
-            $contribution->cancel_date = $cancel_date;
-            $contribution->contribution_status_id = 3;
-            if($origin_cancel_date == $contribution->cancel_date && $origin_status_id == $contribution->contribution_status_id){
-              $result_note .= "\n".ts('There are no any change.');
-            }else{
-              $contribution->save();
-              $result_note .= "\n".ts('The contribution has been canceled.');
-            }
-          }
-          else{
-            $result_note .= "\n".ts('There are no any change.');
-          }
-          // finish check info
-          CRM_Core_Payment_Mobile::addNote($result_note, $contribution);
-
+        // check refund
+        if($record->refunded_amount == $contribution->total_amount && $pass) {
+          // find refund, check original status
+          $contribution->cancel_date = $record->refund_date;
+          $contribution->contribution_status_id = 3;
+          $contribution->save();
+          $result_note .= "\n".ts('The contribution has been canceled.');
         }
       }
+      else{
+        $result_note .= "\n".ts('There are no any change.');
+      }
     }
-*/
+    else {
+      $result_note .= "\n".ts('There are no valid record back.');
+    }
 
-    return $result;
+    if (!empty($result_note)) {
+      // CRM_Core_Error::debug_log_message($result_note);
+      CRM_Core_Payment_Mobile::addNote($result_note, $contribution);
+    }
 
+    // redirect to contribution view page
+    $query = http_build_query($get);
+    $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
+    CRM_Core_Error::statusBounce($result_note, $redirect);
   }
 
   public static function getAssociatedSession($qfKey, $class) {
