@@ -342,7 +342,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   public static function doExecuteRecur ($paymentProcessorId, $time = NULL) {
     $executeDay = date('d', $time);
 
-    $sql = "SELECT MIN(c.id) id, contribution_recur_id, r.contribution_status_id, r.end_date FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id = %1 AND r.cycle_day = %2 GROUP BY r.id";
+    // Get same cycle_day recur.
+    $sql = "SELECT MIN(c.id) contribution_id, contribution_recur_id recur_id, r.contribution_status_id status_id, r.end_date end_date, installments FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id = %1 AND r.cycle_day = %2 GROUP BY r.id AND contribution_status_id = 5";
     $params = array(
       1 => array('Positive',$paymentProcessorId),
       2 => array('Positive',$executeDay),
@@ -350,8 +351,48 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
       // execute payment.
+      $changeStatus = FALSE;
+
+      // TODO check if same day
+      if ($time <= strtotime($dao->end_date)) {
+
+        // Check installments
+        $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1";
+        $params = array(
+          1 => array('Positive',$dao->id),
+        );
+        $count = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
+        if ($count < $dao->installments) {
+          // Credit card over date.
+          $tappay = new CRM_Contribute_DAO_TapPay();
+          $tappay->contribution_recur_id = $dao->recur_id;
+          $tappay->find(TRUE);
+          if (strtotime($tappay->expiry_date) <= $time) {
+            // Do sync recur
+          }
+          else {
+            // card expiry.
+            $changeStatus = TRUE;
+          }
+        }
+        else {
+          // installments is full
+          $changeStatus = TRUE;  
+        }
+      }
+      else {
+        // Over end_date
+        $changeStatus = TRUE;
+      }
 
       // change status.
+      if ( $changeStatus ) {
+        $contributionRecur = new CRM_Contribute_DAO_ContributionRecur();
+        $contributionRecur->id = $dao->recur_id;
+        $contributionRecur->find(TRUE);
+        $contributionRecur->contribution_status_id = 1;
+        $contributionRecur->save();
+      }
     }
   }
 
