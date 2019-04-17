@@ -876,22 +876,22 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
       }
       require_once 'CRM/Contact/BAO/Contact/Permission.php';
       while ($relationship->fetch()) {
-        if ($relationship->contact_id_a != $contactId) {
-          if(!CRM_Contact_BAO_Contact_Permission::allow($relationship->contact_id_a, CRM_Core_Permission::VIEW)) {
-            continue;
-          }
-        }
-        if ($relationship->contact_id_b != $contactId) {
-          if(!CRM_Contact_BAO_Contact_Permission::allow($relationship->contact_id_b, CRM_Core_Permission::VIEW)) {
-            continue;
-          }
-        }
         $rid = $relationship->civicrm_relationship_id;
         $cid = $relationship->civicrm_contact_id;
-        if (($permissionedContact) &&
-          (!CRM_Contact_BAO_Contact_Permission::relationship($cid, $contactId))
-        ) {
+        if (($permissionedContact) && (!CRM_Contact_BAO_Contact_Permission::relationship($cid, $contactId))) {
           continue;
+        }
+        else {
+          if ($relationship->contact_id_a != $contactId) {
+            if(!CRM_Contact_BAO_Contact_Permission::allow($relationship->contact_id_a, CRM_Core_Permission::VIEW)) {
+              continue;
+            }
+          }
+          if ($relationship->contact_id_b != $contactId) {
+            if(!CRM_Contact_BAO_Contact_Permission::allow($relationship->contact_id_b, CRM_Core_Permission::VIEW)) {
+              continue;
+            }
+          }
         }
         $values[$rid]['id'] = $rid;
         $values[$rid]['cid'] = $cid;
