@@ -310,6 +310,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           $params['id'] = $recur->id;
           $params['contribution_status_id'] = 5; // from pending to processing
           $params['modified_date'] = date('YmdHis');
+          $params['cycle_day'] = date('d');
           CRM_Contribute_BAO_ContributionRecur::add($params, $null);
         }
       }
@@ -343,46 +344,70 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $executeDay = date('d', $time);
 
     // Get same cycle_day recur.
-    $sql = "SELECT MIN(c.id) contribution_id, contribution_recur_id recur_id, r.contribution_status_id status_id, r.end_date end_date, installments FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id = %1 AND r.cycle_day = %2 GROUP BY r.id AND contribution_status_id = 5";
+    $sql = "SELECT MIN(c.id) contribution_id, contribution_recur_id recur_id, r.contribution_status_id status_id, r.end_date end_date, installments FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id = %1 AND r.cycle_day = %2 GROUP BY r.id AND r.contribution_status_id = 5";
     $params = array(
-      1 => array('Positive',$paymentProcessorId),
-      2 => array('Positive',$executeDay),
+      1 => array($paymentProcessorId, 'Positive'),
+      2 => array($executeDay, 'Positive'),
     );
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
+      $result_note = ts("Recur ID is %1.", array( 1 => $dao->recur_id));
+
+      $receiveDayStart = date('Y-m-d', $time).' 00:00:00';
+      $receiveDayEnd = date('Y-m-d', $time).' 23:59:59';
+      $sqlCount = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1 AND receive_date > '$receiveDayStart' AND receive_date <= '$receiveDayEnd'";
+      $paramsCount = array(
+        1 => array($dao->recur_id, 'Positive'),
+      );
+      $count = CRM_Core_DAO::singleValueQuery($sqlCount, $paramsCount);
+      if ($count >= 1) {
+        break;
+      }
+
       // execute payment.
       $changeStatus = FALSE;
 
-      // TODO check if same day
-      if ($time <= strtotime($dao->end_date)) {
+      // check if there are other contribution in the same day.
+      if (empty($dao->end_date) || $time <= strtotime($dao->end_date)) {
 
-        // Check installments
-        $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1";
-        $params = array(
-          1 => array('Positive',$dao->id),
-        );
-        $count = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
-        if ($count < $dao->installments) {
+        // If recur has installments limit, check installments
+        if (!empty($dao->installments)) {
+          $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1";
+          $paramsContribution = array(
+            1 => array($dao->recur_id, 'Positive'),
+          );
+          $count = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
+        }
+        
+        if (empty($dao->installments) || $count < $dao->installments) {
+
           // Credit card over date.
           $tappay = new CRM_Contribute_DAO_TapPay();
           $tappay->contribution_recur_id = $dao->recur_id;
           $tappay->find(TRUE);
-          if (strtotime($tappay->expiry_date) <= $time) {
+
+          if (empty($tappay->expiry_date) || $time <= strtotime($tappay->expiry_date)) {
             // Do sync recur
+            self::payByToken($dao->recur_id, $dao->contribution_id);
+            CRM_Core_Error::debug_log_message($result_note.ts("Sync recur done."));
           }
           else {
             // card expiry.
             $changeStatus = TRUE;
+            CRM_Core_Error::debug_log_message($result_note.ts("Card Expiry."));
+
           }
         }
         else {
           // installments is full
-          $changeStatus = TRUE;  
+          $changeStatus = TRUE;
+          CRM_Core_Error::debug_log_message($result_note.ts("Installments id full."));
         }
       }
       else {
         // Over end_date
         $changeStatus = TRUE;
+        CRM_Core_Error::debug_log_message(ts("End date is dued."));
       }
 
       // change status.
@@ -508,7 +533,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     if (!empty($result_note)) {
       // CRM_Core_Error::debug_log_message($result_note);
-      CRM_Core_Payment_Mobile::addNote($result_note, $contribution);
+      self::addNote($result_note, $contribution);
     }
 
     // redirect to contribution view page
