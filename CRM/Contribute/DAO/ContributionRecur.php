@@ -211,6 +211,12 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
    */
   public $auto_renew;
   /**
+   * Last expected execute transaction date.
+   *
+   * @var datetime
+   */
+  public $last_execute_date;
+  /**
    * class constructor
    *
    * @access public
@@ -383,6 +389,11 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Auto Renew') ,
           'required' => true,
+        ) ,
+        'last_execute_date' => array(
+          'name' => 'last_execute_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Last Execute Date') ,
         ) ,
       );
     }

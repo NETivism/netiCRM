@@ -188,4 +188,10 @@
       <comment>Some systems allow contributor to set a number of installments - but then auto-renew the subscription or commitment if they do not cancel.</comment>  
       <add>1.6</add>  
   </field>
+  <field>
+       <name>last_execute_date</name>
+       <type>datetime</type>
+       <comment>Last expected execute transaction date.</comment>
+       <add>4.0</add>
+  </field>
 </table>
