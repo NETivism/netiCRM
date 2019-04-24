@@ -942,6 +942,9 @@ ORDER BY   i.contact_id, i.email_id
       $group = new CRM_Contact_DAO_Group();
       $group->id = $testParams['test_group'];
       $contacts = CRM_Contact_BAO_GroupContact::getGroupContacts($group);
+      if (count($contacts) > 50) {
+        return;
+      }
       $queued = array();
       foreach ($contacts as $contact) {
         if (empty($contact->email)) {
