@@ -1364,7 +1364,8 @@ CREATE TABLE civicrm_contribution_recur (
      next_sched_contribution datetime    COMMENT 'At Groundspring this was used by the cron job which triggered payments. If we\'re not doing that but we know about payments, it might still be useful to store for display to org andor contributors.',
      failure_count int unsigned   DEFAULT 0 COMMENT 'Number of failed charge attempts since last success. Business rule could be set to deactivate on more than x failures.',
      failure_retry_date datetime    COMMENT 'At Groundspring we set a business rule to retry failed payments every 7 days - and stored the next scheduled attempt date there.',
-     auto_renew tinyint NOT NULL  DEFAULT 0 COMMENT 'Some systems allow contributor to set a number of installments - but then auto-renew the subscription or commitment if they do not cancel.' 
+     auto_renew tinyint NOT NULL  DEFAULT 0 COMMENT 'Some systems allow contributor to set a number of installments - but then auto-renew the subscription or commitment if they do not cancel.',
+     last_execute_date datetime    COMMENT 'Last expected execute transaction date.' 
 ,
     PRIMARY KEY ( id )
  
