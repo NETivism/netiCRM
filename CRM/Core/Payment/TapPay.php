@@ -463,7 +463,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
-  public static function syncRecord ($url_params, $get = array()) {
+  public static function queryRecord ($url_params, $get = array()) {
     // apply $_GET to $get , and filted params 'q'
     if(empty($get)){
       foreach ($_GET as $key => $value) {
@@ -477,6 +477,15 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $contributionId = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     }
 
+    self::doSyncRecord($contributionId);
+    
+    // redirect to contribution view page
+    $query = http_build_query($get);
+    $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
+    CRM_Core_Error::statusBounce($result_note, $redirect);
+  }
+
+  public static function doSyncRecord($contributionId) {
     // retrieve contribution object
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
@@ -577,11 +586,24 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // CRM_Core_Error::debug_log_message($result_note);
       self::addNote($result_note, $contribution);
     }
+  }
 
-    // redirect to contribution view page
-    $query = http_build_query($get);
-    $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
-    CRM_Core_Error::statusBounce($result_note, $redirect);
+  public static function doSyncLastDaysRecords() {
+    $last2Day = date('Y-m-d 00:00:00', time() - (86400 * 2));
+    $currentDay = date('Y-m-d 23:59:59');
+    $sql = "SELECT id, payment_processor_id, is_test FROM civicrm_contribution WHERE receive_date >= '$last2Day' && receive_date <= '$currentDay'";
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    while ($dao->fetch()) {
+      $result_note = ts("Contribution ID is %1.", array( 1 => $dao->id));
+      // Check payment processor
+      $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      if (strtolower($payment_processor['payment_processor_type']) != 'tappay') {
+        CRM_Core_Error::debug_log_message($result_note.ts("Payment processor of recur is not TapPay."));
+        continue;
+      }
+
+      self::doSyncRecord($dao->id);
+    }
   }
 
   public static function getAssociatedSession($qfKey, $class) {
