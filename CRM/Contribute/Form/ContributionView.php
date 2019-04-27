@@ -64,11 +64,26 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $this->assign('has_expire_date', TRUE);
       $this->assign('expire_date', $values['expire_date']);
     }
-    if(strtoupper($instrument) == 'LINE PAY'){
+
+
+
+    if (strtoupper($instrument) == 'LINE PAY') {
+      $syncType = 'linepay';
+    }
+    else {
+      $sql = "SELECT payment_processor_type FROM civicrm_contribution c INNER JOIN civicrm_payment_processor p ON c.payment_processor_id = p.id WHERE c.id = %1";
+      $params = array(1 => array($id, 'Positive'));
+      $paymentProcessorName = CRM_Core_DAO::singleValueQuery($sql, $params);
+      if(strtolower($paymentProcessorName) == 'tappay') {
+        $syncType = 'tappay';
+      }
+    }
+
+    if (!empty($syncType)) {
       $get = $_GET;
       unset($get['q']);
       $query = http_build_query($get);
-      $sync_url = CRM_Utils_System::url('civicrm/linepay/query', $query);
+      $sync_url = CRM_Utils_System::url("civicrm/{$syncType}/query", $query);
       $this->assign('sync_url', $sync_url);
     }
 

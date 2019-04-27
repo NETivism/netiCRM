@@ -227,6 +227,11 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'details' => $details, // item name
         );
       }
+      else {
+        CRM_Core_Error::fatal(ts('Missing required fields: %1.', array(
+          1 => 'card_key, card_token'
+        )));
+      }
 
       // Allow further manipulation of the arguments via custom hooks ..
       $paymentClass = self::singleton($mode, $paymentProcessor);
@@ -308,8 +313,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         if($contribution->find(TRUE)) {
           // solve recur data.
           $params['id'] = $recur->id;
-          $params['contribution_status_id'] = 5; // from pending to processing
           $params['modified_date'] = date('YmdHis');
+          $params['cycle_day'] = date('d');
           CRM_Contribute_BAO_ContributionRecur::add($params, $null);
         }
       }
@@ -327,6 +332,20 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $input['amount'] = $objects['contribution']->amount;
         $objects['contribution']->receive_date = date('YmdHis');
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
+
+        // Add last_execute_date
+        if(!empty($recur)){
+          // from pending to processing
+          $recur->contribution_status_id = 5;
+
+          // Update last_execute_date
+          $lastExecuteTime = strtotime($recur->last_execute_date);
+          $currentTime = time();
+          if (empty($recur->last_execute_date) || $lastExecuteTime < $currentTime) {
+            $recur->last_execute_date = date('Y-m-d H:i:s', $currentTime);
+            $recur->save();
+          }
+        }
       }
       else{
         // Failed
@@ -339,94 +358,252 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
 
-  public static function doExecuteRecur ($paymentProcessorId, $time = NULL) {
+  public static function doExecuteAllRecur ($time = NULL) {
+    if (empty($time)) {
+      $time = time();
+    }
     $executeDay = date('d', $time);
 
-    $sql = "SELECT MIN(c.id) id, contribution_recur_id, r.contribution_status_id, r.end_date FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id = %1 AND r.cycle_day = %2 GROUP BY r.id";
+    $sql = "SELECT r.id recur_id, r.last_execute_date last_execute_date, c.payment_processor_id payment_processor_id, c.is_test is_test FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.cycle_day = %1 AND r.contribution_status_id = 5 GROUP BY r.id";
     $params = array(
-      1 => array('Positive',$paymentProcessorId),
-      2 => array('Positive',$executeDay),
+      1 => array($executeDay, 'Positive'),
     );
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
-      // execute payment.
+      $result_note = ts("Recur ID is %1.", array( 1 => $dao->recur_id));
 
-      // change status.
+      // Check payment processor
+      $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      if (strtolower($payment_processor['payment_processor_type']) != 'tappay') {
+        CRM_Core_Error::debug_log_message($result_note.ts("Payment processor of recur is not TapPay."));
+        continue;
+      }
+
+      // Check last execute date.
+      $currentDayTime = strtotime(date('Y-m-d', $time));
+      $lastExecuteDayTime = strtotime(date('Y-m-d', strtotime($dao->last_execute_date)));
+      if (!empty($dao->last_execute_date) && $currentDayTime <= $lastExecuteDayTime) {
+        CRM_Core_Error::debug_log_message($result_note.ts("Last execute date of recur is over the date."));
+        continue;
+      }
+
+      self::doCheckRecur($dao->recur_id, $time);
     }
   }
 
-  public static function syncRecord ($contributionId) {
+  public static function doCheckRecur ($recurId, $time = NULL) {
+    if (empty($time)) {
+      $time = time();
+    }
+    // Get same cycle_day recur.
+    $sql = "SELECT c.id contribution_id, r.id recur_id, r.contribution_status_id recur_status_id, r.end_date end_date, installments FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_recur_id = %1 ORDER BY c.id ASC LIMIT 1";
+    $params = array(
+      1 => array($recurId, 'Positive'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    while ($dao->fetch()) {
+
+      $changeStatus = FALSE;
+      $result_note = ts("Recur ID is %1.", array( 1 => $dao->recur_id));
+
+      // check if there are other contribution in the same day.
+      if (empty($dao->end_date) || $time <= strtotime($dao->end_date)) {
+
+        // If recur has installments limit, check installments
+        if (!empty($dao->installments)) {
+          $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1";
+          $paramsContribution = array(
+            1 => array($dao->recur_id, 'Positive'),
+          );
+          $count = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
+        }
+        
+        if (empty($dao->installments) || $count < $dao->installments) {
+
+          // Credit card over date.
+          $tappay = new CRM_Contribute_DAO_TapPay();
+          $tappay->contribution_id = $dao->contribution_id;
+          $tappay->find(TRUE);
+
+          if (empty($tappay->expiry_date) || $time <= strtotime($tappay->expiry_date)) {
+            // Do sync recur
+            self::payByToken($dao->recur_id, $dao->contribution_id);
+            $result_note .= ts("Sync recur done.");
+          }
+          else {
+            // card expiry.
+            $changeStatus = TRUE;
+            $result_note .= ts("Card Expiry.");
+          }
+        }
+        else {
+          // installments is full
+          $changeStatus = TRUE;
+          $result_note .= ts("Installments id full.");
+        }
+      }
+      else {
+        // Over end_date
+        $changeStatus = TRUE;
+        $result_note .= ts("End date is dued.");
+      }
+
+      // change status.
+      if ( $changeStatus ) {
+        $contributionRecur = new CRM_Contribute_DAO_ContributionRecur();
+        $contributionRecur->id = $dao->recur_id;
+        $contributionRecur->find(TRUE);
+        $contributionRecur->contribution_status_id = 1;
+        $contributionRecur->save();
+
+        $result_note .= ts("Update recurring status to 'On Progress'.");
+      }
+
+      CRM_Core_Error::debug_log_message($result_note);
+    }
+  }
+
+  public static function queryRecord ($url_params, $get = array()) {
+    // apply $_GET to $get , and filted params 'q'
+    if(empty($get)){
+      foreach ($_GET as $key => $value) {
+        if($key == 'q')continue;
+        $get[$key] = $value;
+      }
+    }
+
+    // retrieve contribution_id from $_GET
+    if(empty($contributionId)){
+      $contributionId = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+    }
+
+    self::doSyncRecord($contributionId);
+    
+    // redirect to contribution view page
+    $query = http_build_query($get);
+    $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
+    CRM_Core_Error::statusBounce($result_note, $redirect);
+  }
+
+  public static function doSyncRecord($contributionId) {
+    // retrieve contribution object
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
 
+    // retrieve tappay data object
     $tappay = new CRM_Contribute_DAO_TapPay();
     $tappay->contribution_id = $contributionId;
     $tappay->find(TRUE);
 
+    // retrieve payment processor object
     $ppid = $contribution->payment_processor_id;
     $mode = $contribution->is_test ? 'test' : 'live';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
+    // setup tappay api
     $tappayParams = array(
-      'apiType' => 'trade_history',
+      'apiType' => 'record',
       'partnerKey' => $paymentProcessor['password'],
     );
-
     $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
+
+    // retrieve record data
     $data = array(
       'contribution_id' => $contributionId,
       'partner_key' => $paymentProcessor['password'],
-      'rec_trade_id' => $tappay->rec_trade_id,
+      'filters' => array(
+        'order_number' => $contribution->trxn_id,
+      ),
     );
-
     $result = $api->request($data);
+    $record = !empty($result->trade_records[0]) ? $result->trade_records[0] : NULL;
 
-    /*
-    // Sync contribution status in CRM
-    if(!empty($result->trade_records[0])) {
-      $record = $result->trade_records[0];
-      if($record->record_status == 0) {
+    // check there are record in return list
+    if(!empty($record)){
+
+      // The status means refund
+      if($record->record_status == 3) {
+
+        // Call trade history api to get refund date.
+        $tappayParams['apiType'] = 'trade_history';
+
+        $api_history = new CRM_Core_Payment_TapPayAPI($tappayParams);
+        $data = array(
+          'contribution_id' => $contributionId,
+          'partner_key' => $paymentProcessor['password'],
+          'rec_trade_id' => $tappay->rec_trade_id,
+        );
+        $result = $api_history->request($data);
+        // Get the refund type history from history list.
+        foreach ($result->trade_history as $history) {
+          if($history->action == 3){
+            break;
+          }
+        }
+        $record->refund_date = date('Y-m-d H:i:s', $history->millis / 1000);
+      }
+
+      $result_note .= "\n".ts('Sync to Tappay server success.');
+
+      // Sync contribution status in CRM
+      if($record->record_status == 0 && $contribution->contribution_status_id != 1) {
         self::validateData($record, $contributionId);
       }
-      else {
+      else if($record->record_status == 3 && $contribution->contribution_status_id != 3) {
+        // record original cancel_date, status_id data.
+        $origin_cancel_date = $contribution->cancel_date;
+        $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
+        $origin_status_id = $contribution->contribution_status_id;
 
-          // record original cancel_date, status_id data.
-          $origin_cancel_date = $contribution->cancel_date;
-          $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
-          $origin_status_id = $contribution->contribution_status_id;
+        // check data
+        $pass = TRUE;
+        if($record->order_number != $contribution->trxn_id) {
+          // order number is not correct.
+          $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$result->order_number}")."\n";
+          $result_note .= $msgText;
+          $pass = FALSE;
+        }
 
-          // check info
-          $result_note .= "\n".ts('Sync to Linepay server success.');
-
-          // check refund
-          if($record->record_status == 3 && $record->refunded_amount == $contribution->total_amount){
-            // find refund, check original status
-            $refund = $transaction->refundList[0];
-            $cancel_date = $refund->refundTransactionDate;
-            $cancel_date = date('YmdHis', strtotime($cancel_date));
-            $contribution->cancel_date = $cancel_date;
-            $contribution->contribution_status_id = 3;
-            if($origin_cancel_date == $contribution->cancel_date && $origin_status_id == $contribution->contribution_status_id){
-              $result_note .= "\n".ts('There are no any change.');
-            }else{
-              $contribution->save();
-              $result_note .= "\n".ts('The contribution has been canceled.');
-            }
-          }
-          else{
-            $result_note .= "\n".ts('There are no any change.');
-          }
-          // finish check info
-          CRM_Core_Payment_Mobile::addNote($result_note, $contribution);
-
+        // check refund
+        if($record->refunded_amount == $contribution->total_amount && $pass) {
+          // find refund, check original status
+          $contribution->cancel_date = $record->refund_date;
+          $contribution->contribution_status_id = 3;
+          $contribution->save();
+          $result_note .= "\n".ts('The contribution has been canceled.');
         }
       }
+      else{
+        $result_note .= "\n".ts('There are no any change.');
+      }
     }
-*/
+    else {
+      $result_note .= "\n".ts('There are no valid record back.');
+    }
 
-    return $result;
+    if (!empty($result_note)) {
+      // CRM_Core_Error::debug_log_message($result_note);
+      self::addNote($result_note, $contribution);
+    }
+  }
 
+  public static function doSyncLastDaysRecords() {
+    $last2Day = date('Y-m-d 00:00:00', time() - (86400 * 2));
+    $currentDay = date('Y-m-d 23:59:59');
+    $sql = "SELECT id, payment_processor_id, is_test FROM civicrm_contribution WHERE receive_date >= '$last2Day' && receive_date <= '$currentDay'";
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    while ($dao->fetch()) {
+      $result_note = ts("Contribution ID is %1.", array( 1 => $dao->id));
+      // Check payment processor
+      $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      if (strtolower($payment_processor['payment_processor_type']) != 'tappay') {
+        CRM_Core_Error::debug_log_message($result_note.ts("Payment processor of recur is not TapPay."));
+        continue;
+      }
+
+      self::doSyncRecord($dao->id);
+    }
   }
 
   public static function getAssociatedSession($qfKey, $class) {
