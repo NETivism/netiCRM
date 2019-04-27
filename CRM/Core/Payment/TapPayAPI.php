@@ -29,6 +29,7 @@ class CRM_Core_Payment_TapPayAPI {
     'pay_by_token' => '/tpc/payment/pay-by-token',
     'record' => '/tpc/transaction/query',
     'trade_history' => '/tpc/transaction/trade-history',
+    'card_metadata' => '/tpc/direct-pay/get-card-metadata',
     /* not supportted api types
     'refund' => '/tpc/transaction/refund',
     'cap' => '/tpc/transaction/cap',
@@ -119,11 +120,16 @@ class CRM_Core_Payment_TapPayAPI {
     }
 
     // prepare contribution_id for record data.
-    if (!empty($params['contribution_id'])) {
-      $this->_contribution_id = $params['contribution_id'];
+    if (empty($params['contribution_id']) && empty($params['order_number']) && empty($this->_contribution_id)) {
+      CRM_Core_Error::fatal('You need to specify contribution_id or order_nnumber.');
     }
-    else {
-      $this->_contribution_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['order_number'], 'id', 'trxn_id');
+    if (empty($this->_contribution_id)) {
+      if (!empty($params['contribution_id'])) {
+        $this->_contribution_id = $params['contribution_id'];
+      }
+      else {
+        $this->_contribution_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['order_number'], 'id', 'trxn_id');
+      }
     }
 
     $this->_request = $post;
@@ -175,6 +181,8 @@ class CRM_Core_Payment_TapPayAPI {
       $opt[CURLOPT_POST] = TRUE;
       $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
+    var_export($opt);
+    var_export($this->_apiURL);
     curl_setopt_array($ch, $opt);
 
     $recordData = array(
@@ -205,7 +213,7 @@ class CRM_Core_Payment_TapPayAPI {
     if (!empty($result)) {
       $response = json_decode($result);
       $this->_response = $response;
-      $this->_success = $response->status == '0' ? TRUE : FALSE;
+      $this->_success = isset($response->status) && $response->status == '0' ? TRUE : FALSE;
     }
     else {
       $this->_response = NULL;
@@ -245,6 +253,9 @@ class CRM_Core_Payment_TapPayAPI {
     if($response->order_number) {
       $tappay->order_number = $response->order_number;
     }
+    if($response->card_info && $response->card_info->card_status) {
+      $tappay->card_status = $response->card_info->card_status;
+    }
     $tappay->save();
   }
 
@@ -265,6 +276,9 @@ class CRM_Core_Payment_TapPayAPI {
         break;
       case 'trade_history':
         $fields = explode(',', 'partner_key*,rec_trade_id*');
+        break;
+      case 'card_metadata':
+        $fields = explode(',', 'partner_key*,card_key*,card_token*');
         break;
     }
     foreach ($fields as $key => &$value) {

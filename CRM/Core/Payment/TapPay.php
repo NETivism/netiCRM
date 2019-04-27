@@ -248,6 +248,52 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $response;
   }
 
+  public static function cardMetadata($contributionId) {
+    if (empty($contributionId))  {
+      return FALSE;
+    }
+    $tappayData = new CRM_Contribute_DAO_TapPay();
+    $tappayData->contribution_id = $contributionId;
+    if ($tappayData->find(TRUE)) {
+      // 1. check card_token and card_key
+      // 2. get payment processor infomation (partner key)
+      if (!empty($tappayData->card_token) && !empty($tappayData->card_key)) {
+        $contribution = new CRM_Contribute_DAO_Contribution();
+        $contribution->id = $contributionId;
+        if($contribution->find(TRUE)) {
+          $ppid = $contribution->payment_processor_id;
+          $mode = $contribution->is_test ? 'test' : 'live';
+          if ($ppid) {
+            $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
+            $tappayParams = array(
+              'apiType' => 'card_metadata',
+              'partnerKey' => $paymentProcessor['password'],
+              'contribution_id' => $contributionId,
+            );
+            $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
+            $result = $api->request(array(
+              'partner_key' => $paymentProcessor['password'],
+              'card_key' => $tappayData->card_key,
+              'card_token' => $tappayData->card_token,
+            ));
+            // only set auto renew when contribution has recurring
+            if ($result->status == 0 && $contribution->contrinbution_recur_id) {
+              $cardStatus = $result->card_info->card_status;
+              if (!empty($cardStatus) && $cardStatus == 'ACTIVE' || $cardStatsu == 'SUSPENDED') {
+                CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $contribution->contribution_recur_id, 'auto_renew', 1);
+              }
+              else {
+                CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $contribution->contribution_recur_id, 'auto_renew', 0);
+              }
+            }
+            return $result;
+          }
+        }
+      } 
+    }
+    return FALSE;  
+  }
+
   public static function validateData($result, $contributionId = NULL) {
     $input = $ids = $objects = array();
 
