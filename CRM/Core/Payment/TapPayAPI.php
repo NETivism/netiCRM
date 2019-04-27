@@ -181,8 +181,6 @@ class CRM_Core_Payment_TapPayAPI {
       $opt[CURLOPT_POST] = TRUE;
       $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
-    var_export($opt);
-    var_export($this->_apiURL);
     curl_setopt_array($ch, $opt);
 
     $recordData = array(
