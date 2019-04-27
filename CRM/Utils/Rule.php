@@ -769,10 +769,7 @@ class CRM_Utils_Rule {
       $value = $actualElementValue;
     }
 
-    if ($value && !is_numeric($value)) {
-      return FALSE;
-    }
-    return TRUE;
+    return self::positiveInteger($value);
   }
 
   /**
@@ -830,6 +827,26 @@ class CRM_Utils_Rule {
 
   static function qfKey($key) {
     return ($key) ? CRM_Core_Key::valid($key) : FALSE;
+  }
+
+  /**
+   * Validate array recursively checking keys and  values.
+   *
+   * @param array $array
+   * @return bool
+   */
+  protected static function arrayValue($array) {
+    foreach ($array as $key => $item) {
+      if (is_array($item)) {
+        if (!self::xssString($key) || !self::arrayValue($item)) {
+          return FALSE;
+        }
+      }
+      if (!self::xssString($key) || !self::xssString($item)) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 }
 

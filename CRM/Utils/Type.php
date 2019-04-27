@@ -124,13 +124,13 @@ class CRM_Utils_Type {
       case 'Integer':
       case 'Int':
         if (CRM_Utils_Rule::integer($data)) {
-          return $data;
+          return (int) $data;
         }
         break;
 
       case 'Positive':
         if (CRM_Utils_Rule::positiveInteger($data)) {
-          return $data;
+          return (int) $data;
         }
         break;
 
@@ -178,7 +178,7 @@ class CRM_Utils_Type {
         }
 
         if (CRM_Utils_Rule::validContact($data)) {
-          return $data;
+          return (int) $data;
         }
         break;
 
@@ -226,13 +226,13 @@ class CRM_Utils_Type {
       case 'Integer':
       case 'Int':
         if (CRM_Utils_Rule::integer($data)) {
-          return $data;
+          return (int) $data;
         }
         break;
 
       case 'Positive':
         if (CRM_Utils_Rule::positiveInteger($data)) {
-          return $data;
+          return (int) $data;
         }
         break;
 
