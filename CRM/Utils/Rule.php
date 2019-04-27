@@ -468,11 +468,7 @@ class CRM_Utils_Rule {
   }
 
   static function email($value, $checkDomain = FALSE) {
-    static $qfRule = NULL;
-    if (!isset($qfRule)) {
-      $qfRule = new HTML_QuickForm_Rule_Email();
-    }
-    return $qfRule->validate($value, $checkDomain);
+    return (bool) filter_var($value, FILTER_VALIDATE_EMAIL);
   }
 
   static function emailList($list, $checkDomain = FALSE) {
