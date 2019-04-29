@@ -228,6 +228,15 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
         CRM_Core_Session::setStatus(ts('Your did not provided any email address or selected any group. No test mail is sent.'));
         $error = TRUE;
       }
+      if (!empty($testParams['test_group'])) {
+        $group = new CRM_Contact_DAO_Group();
+        $group->id = $testParams['test_group'];
+        $contacts = CRM_Contact_BAO_GroupContact::getGroupContacts($group);
+        if (count($contacts) > 50) {
+          CRM_Core_Session::setStatus(ts('To prevent mass mailing error, no test mail is sent to the group that has more than 50 contacts.'));
+          $error = TRUE;
+        }
+      }
 
       if ($testParams['test_email']) {
         $emailAdd = explode(',', $testParams['test_email']);
@@ -353,10 +362,8 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     }
 
     $testParams['job_id'] = $job->id;
-    $isComplete = FALSE;
-    while (!$isComplete) {
-      $isComplete = CRM_Mailing_BAO_Job::runJobs($testParams);
-    }
+    // prevent infinite running, disable while loop
+    CRM_Mailing_BAO_Job::runJobs($testParams);
 
     if (CRM_Utils_Array::value('sendtest', $testParams)) {
       require_once 'CRM/Mailing/Info.php';

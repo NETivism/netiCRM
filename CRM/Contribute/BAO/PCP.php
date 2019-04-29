@@ -249,11 +249,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
         break;
       case 'num_contact':
         $query = "
-SELECT COUNT(cs.contact_id) as total
-FROM civicrm_pcp pcp 
-LEFT JOIN (SELECT * FROM civicrm_contribution_soft WHERE 1 GROUP BY contact_id ORDER BY contribution_id ASC) cs ON pcp.id = cs.pcp_id  
-LEFT JOIN civicrm_contribution cc ON cs.contribution_id = cc.id
-WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0 GROUP BY cc.contact_id";
+SELECT count(*) FROM (SELECT c.contact_id, 1 as grouping FROM civicrm_contribution c INNER JOIN civicrm_contribution_soft s ON s.contribution_id = c.id WHERE s.pcp_id = %1 AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY c.contact_id) g GROUP BY grouping";
         break;
       case 'num_contribution':
         $query = "
