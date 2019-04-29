@@ -169,6 +169,13 @@ class CRM_Core_Payment_TapPayAPI {
 
   private function _curl() {
     $this->_success = FALSE;
+    if (!empty(getenv('CIVICRM_TEST_DSN'))) {
+      return  array(
+        'success' => FALSE,
+        'status' => NULL,
+        'curlError' => NULL,
+      );
+    }
     $ch = curl_init($this->_apiURL);
     $opt = array();
 
