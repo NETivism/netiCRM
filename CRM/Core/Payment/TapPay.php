@@ -675,6 +675,44 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $payment;
   }
 
+  public static function cardNotify($url_params, $request = NULL) {
+    // Get Input
+    if (empty($request)) {
+      $input = file_get_contents('php://input');
+      $data = json_decode($input);
+    }
+    elseif (is_string($request)){
+      $input = $request;
+      $data = json_decode($request);
+    }else {
+      $data = $request;
+    }
+
+    if (empty($data)) {
+      return 0;
+    }
+
+    // Get contribution ids by token
+    $token = $data->card_token;
+    $sql = "SELECT contribution_id FROM civicrm_contribution_tappay WHERE card_token = %1";
+    $params = array(
+      1 => array($token, 'String'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    while ($dao->fetch()) {
+      dd($dao->contribution_id);
+      $recordData = array(
+        'contribution_id' => $dao->contribution_id,
+        'url' => $_SERVER['HTTP_X_FORWARDED_PROTO'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+        'date' => date('Y-m-d H:i:s'),
+        'post_data' => $input,
+      );
+      CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
+      CRM_Core_Payment_TapPayAPI::saveTapPayData($dao->contribution_id, $data);
+    }
+    return 1;
+  }
+
   static function getContributionTrxnID($contributionId, $recurringId = NULL) {
     $rand = base_convert(rand(16, 255), 10, 16);
     if(empty($recurringId)){

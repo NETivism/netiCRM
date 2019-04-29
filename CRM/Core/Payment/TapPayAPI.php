@@ -29,7 +29,7 @@ class CRM_Core_Payment_TapPayAPI {
     'pay_by_token' => '/tpc/payment/pay-by-token',
     'record' => '/tpc/transaction/query',
     'trade_history' => '/tpc/transaction/trade-history',
-    'card_metadata' => '/tpc/direct-pay/get-card-metadata',
+    'card_metadata' => '/tpc/card/metadata',
     /* not supportted api types
     'refund' => '/tpc/transaction/refund',
     'cap' => '/tpc/transaction/cap',
@@ -121,7 +121,7 @@ class CRM_Core_Payment_TapPayAPI {
 
     // prepare contribution_id for record data.
     if (empty($params['contribution_id']) && empty($params['order_number']) && empty($this->_contribution_id)) {
-      CRM_Core_Error::fatal('You need to specify contribution_id or order_nnumber.');
+      CRM_Core_Error::fatal('You need to specify contribution_id or order_number.');
     }
     if (empty($this->_contribution_id)) {
       if (!empty($params['contribution_id'])) {
@@ -151,7 +151,7 @@ class CRM_Core_Payment_TapPayAPI {
     }
   }
 
-  public function writeRecord($logId, $data = array()) {
+  public static function writeRecord($logId, $data = array()) {
     $recordType = array('contribution_id', 'url', 'date', 'post_data', 'return_data');
 
     $record = new CRM_Contribute_DAO_TapPayLog();
@@ -196,14 +196,14 @@ class CRM_Core_Payment_TapPayAPI {
       'date' => date('Y-m-d H:i:s'),
       'post_data' => $opt[CURLOPT_POSTFIELDS],
     );
-    $lodId = $this->writeRecord(NULL, $recordData);
+    $lodId = self::writeRecord(NULL, $recordData);
 
     $result = curl_exec($ch);
 
     $recordData = array(
       'return_data' => $result,
     );
-    $this->writeRecord($lodId, $recordData);
+    self::writeRecord($lodId, $recordData);
 
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     if ($result === FALSE) {
@@ -242,6 +242,9 @@ class CRM_Core_Payment_TapPayAPI {
     if($response->card_secret) {
       $tappay->card_token = $response->card_secret->card_token;
       $tappay->card_key = $response->card_secret->card_key;
+    }
+    if (!empty($response->card_token)) {
+      $tappay->card_token = $response->card_token;
     }
     if($response->card_info) {
       $tappay->last_four = $response->card_info->last_four;

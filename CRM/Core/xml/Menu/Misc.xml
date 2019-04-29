@@ -167,4 +167,10 @@
      <access_callback>1</access_callback>
      <is_public>true</is_public>
   </item>
+  <item>
+     <path>civicrm/tappay/cardnotify</path>
+     <page_callback>CRM_Core_Payment_TapPay::cardNotify</page_callback> 
+     <access_callback>1</access_callback>
+     <is_public>true</is_public>
+  </item>
 </menu>
