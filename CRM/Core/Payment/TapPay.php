@@ -129,7 +129,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'address' => '',     //optional
           'national_id' => '', //optional
         ),
-        'remember' => $contribution['contribution_recur_id'] ? TRUE : FALSE,
+        'remember' => TRUE,
         'contribution_id' => $id,
       );
 
@@ -154,6 +154,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $recurringId = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $recurringId, 'REQUEST');
     }
 
+    $contributionRecur = new CRM_Contribute_DAO_ContributionRecur();
+    $contributionRecur->id = $recurringId;
+    $contributionRecur->find(TRUE);
+
     // Find the first contribution
     $contributionId = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, $contributionId, 'REQUEST');
     if(empty($contributionId)){
@@ -177,16 +181,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     unset($c->trxn_id);
     $c->contribution_status_id = 2;
     $c->created_date = date('YmdHis');
+    $c->total_amount = $contributionRecur->amount;
     $c->save();
     CRM_Contribute_BAO_ContributionRecur::syncContribute($recurringId, $c->id);
 
     // Update new trxn_id
     $c->trxn_id = self::getContributionTrxnID($c->id);
     $c->save();
-
-    $contributionRecur = new CRM_Contribute_DAO_ContributionRecur();
-    $contributionRecur->id = $recurringId;
-    $contributionRecur->find(TRUE);
 
     $ppid = $contribution->payment_processor_id;
     $mode = $contribution->is_test ? 'test' : 'live';
@@ -342,9 +343,16 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $pass = FALSE;
       }
 
+      if (!empty($objects['contributionRecur'])) {
+        $amount = round($objects['contributionRecur']->amount);
+      }
+      else {
+        $amount = round($contribution->total_amount);
+      }
+
       // check amount
-      if ( round($contribution->total_amount) != $result->amount ) {
-        $msgText = ts("Failuare: Amount values dont match between database and IPN request. Trxn_id is {$contribution->trxn_id}, Data from payment : {$result->amount}, Data in CRM : {$contribution->total_amount}")."\n";
+      if ( $amount != $result->amount ) {
+        $msgText = ts("Failuare: Amount values dont match between database and IPN request. Trxn_id is {$contribution->trxn_id}, Data from payment : {$result->amount}, Data in CRM : {$amount}")."\n";
         CRM_Core_Error::debug_log_message($msgText);
         $note .= $msgText;
         $pass = FALSE;
@@ -360,7 +368,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           // solve recur data.
           $params['id'] = $recur->id;
           $params['modified_date'] = date('YmdHis');
-          $params['cycle_day'] = date('d');
           CRM_Contribute_BAO_ContributionRecur::add($params, $null);
         }
       }
@@ -376,21 +383,21 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       if($pass && $status == 0){
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
         $input['amount'] = $objects['contribution']->amount;
-        $objects['contribution']->receive_date = date('YmdHis');
+        if ($result->transaction_time_millis) {
+          $objects['contribution']->receive_date = date('YmdHis', ($result->transaction_time_millis / 1000));
+        }
+        else {
+          $objects['contribution']->receive_date = date('YmdHis');
+        }
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
 
-        // Add last_execute_date
         if(!empty($recur)){
           // from pending to processing
           $recur->contribution_status_id = 5;
 
-          // Update last_execute_date
-          $lastExecuteTime = strtotime($recur->last_execute_date);
-          $currentTime = time();
-          if (empty($recur->last_execute_date) || $lastExecuteTime < $currentTime) {
-            $recur->last_execute_date = date('Y-m-d H:i:s', $currentTime);
-            $recur->save();
-          }
+          $recur->cycle_day = date('d');
+
+          $recur->save();
         }
       }
       else{
@@ -441,6 +448,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if (empty($time)) {
       $time = time();
     }
+    // Update last_execute_date
+    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution_Recur', $recurId, 'last_execute_date', date('Y-m-d H:i:s', $time));
     // Get same cycle_day recur.
     $sql = "SELECT c.id contribution_id, r.id recur_id, r.contribution_status_id recur_status_id, r.end_date end_date, installments FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_recur_id = %1 ORDER BY c.id ASC LIMIT 1";
     $params = array(
@@ -502,7 +511,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $contributionRecur->contribution_status_id = 1;
         $contributionRecur->save();
 
-        $result_note .= ts("Update recurring status to 'On Progress'.");
+        $result_note .= ts("Update recurring status to 'Finished'.");
       }
 
       CRM_Core_Error::debug_log_message($result_note);
@@ -693,22 +702,26 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     // Get contribution ids by token
-    $token = $data->card_token;
-    $sql = "SELECT contribution_id FROM civicrm_contribution_tappay WHERE card_token = %1";
-    $params = array(
-      1 => array($token, 'String'),
-    );
-    $dao = CRM_Core_DAO::executeQuery($sql, $params);
-    while ($dao->fetch()) {
-      dd($dao->contribution_id);
-      $recordData = array(
-        'contribution_id' => $dao->contribution_id,
-        'url' => $_SERVER['HTTP_X_FORWARDED_PROTO'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
-        'date' => date('Y-m-d H:i:s'),
-        'post_data' => $input,
+    foreach ($data->card_token as $token) {
+      $sql = "SELECT contribution_id FROM civicrm_contribution_tappay WHERE card_token = %1";
+      $params = array(
+        1 => array($token, 'String'),
       );
-      CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
-      CRM_Core_Payment_TapPayAPI::saveTapPayData($dao->contribution_id, $data);
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
+      while ($dao->fetch()) {
+        $recordData = array(
+          'contribution_id' => $dao->contribution_id,
+          'url' => $_SERVER['HTTP_X_FORWARDED_PROTO'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+          'date' => date('Y-m-d H:i:s'),
+          'post_data' => $input,
+        );
+        CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
+
+        // Update contribution_tappay for new expiry_date...etc.
+        $updateData = clone $data;
+        $updateData->card_token = $token;
+        CRM_Core_Payment_TapPayAPI::saveTapPayData($dao->contribution_id, $updateData);
+      }
     }
     return 1;
   }

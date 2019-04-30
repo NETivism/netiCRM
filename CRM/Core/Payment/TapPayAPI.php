@@ -239,12 +239,14 @@ class CRM_Core_Payment_TapPayAPI {
       $tappay->contribution_recur_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
     }
     $tappay->data = json_encode($response);
-    if($response->card_secret) {
-      $tappay->card_token = $response->card_secret->card_token;
-      $tappay->card_key = $response->card_secret->card_key;
-    }
-    if (!empty($response->card_token)) {
-      $tappay->card_token = $response->card_token;
+    if (!empty($tappay->contribution_recur_id)) {
+      if ($response->card_secret) {
+        $tappay->card_token = $response->card_secret->card_token;
+        $tappay->card_key = $response->card_secret->card_key;
+      }
+      if (!empty($response->card_token)) {
+        $tappay->card_token = $response->card_token;
+      }
     }
     if($response->card_info) {
       $tappay->last_four = $response->card_info->last_four;
