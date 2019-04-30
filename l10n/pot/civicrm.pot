@@ -46840,3 +46840,13 @@ msgstr ""
 
 msgid "To prevent mass mailing error, no test mail is sent to the group that has more than 50 contacts."
 msgstr ""
+
+#: CRM/Contribute/BAO/PCP.php
+msgid "%1 status has been updated to %2."
+msgstr ""
+
+msgid "A notification email has been sent to the supporter."
+msgstr ""
+
+msgid "Your Personal Campaign Page"
+msgstr ""

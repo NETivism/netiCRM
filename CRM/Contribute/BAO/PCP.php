@@ -410,13 +410,16 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
     $pcpStatus = $pcpStatus[$is_active];
 
-    CRM_Core_Session::setStatus("$pcpTitle status has been updated to $pcpStatus.");
+    CRM_Core_Session::setStatus(ts("%1 status has been updated to %2.", array(
+      1 => $pcpTitle,
+      2 => $pcpStatus,
+    )));
 
     // send status change mail
     $result = self::sendStatusUpdate($id, $is_active);
 
     if ($result) {
-      CRM_Core_Session::setStatus("A notification email has been sent to the supporter.");
+      CRM_Core_Session::setStatus(ts("A notification email has been sent to the supporter."));
     }
   }
 
@@ -436,7 +439,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    */
   static function sendStatusUpdate($pcpId, $newStatus, $isInitial = FALSE) {
     require_once 'CRM/Contribute/PseudoConstant.php';
-    $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
+    $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus('name');
     $config = CRM_Core_Config::singleton();
 
     if (!isset($pcpStatus[$newStatus])) {
