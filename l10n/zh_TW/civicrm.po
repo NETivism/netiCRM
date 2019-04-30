@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-04-24 00:05+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-04-30 09:43+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47028,3 +47028,13 @@ msgid ""
 "To prevent mass mailing error, no test mail is sent to the group that has "
 "more than 50 contacts."
 msgstr "避免寄送測試信件至錯誤群組，而您選的測試寄送群組超過50個聯絡人，因此我們沒有寄送測試郵件。"
+
+#: CRM/Contribute/BAO/PCP.php
+msgid "%1 status has been updated to %2."
+msgstr "「%1」的狀態已更新為「%2」。"
+
+msgid "A notification email has been sent to the supporter."
+msgstr "通知郵件已寄送給支持者。"
+
+msgid "Your Personal Campaign Page"
+msgstr "您的個人募款頁"

@@ -306,10 +306,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @return array - array reference of all pcp status
    * @static
    */
-  public static function &pcpStatus() {
+  public static function &pcpStatus($columnName = 'label') {
     self::$pcpStatus = array();
     if (!self::$pcpStatus) {
-      self::$pcpStatus = CRM_Core_OptionGroup::values("pcp_status", FALSE, FALSE, FALSE, NULL, 'label');
+      self::$pcpStatus = CRM_Core_OptionGroup::values("pcp_status", FALSE, FALSE, FALSE, NULL, $columnName);
     }
     return self::$pcpStatus;
   }
