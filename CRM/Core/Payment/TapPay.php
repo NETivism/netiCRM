@@ -248,7 +248,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $response;
   }
 
-  public static function cardMetadata($contributionId) {
+  public static function cardMetadata($contributionId, $data = NULL) {
     if (empty($contributionId))  {
       return FALSE;
     }
@@ -271,15 +271,21 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
               'contribution_id' => $contributionId,
             );
             $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
-            $result = $api->request(array(
-              'partner_key' => $paymentProcessor['password'],
-              'card_key' => $tappayData->card_key,
-              'card_token' => $tappayData->card_token,
-            ));
+            if (empty($data)) {
+              $result = $api->request(array(
+                'partner_key' => $paymentProcessor['password'],
+                'card_key' => $tappayData->card_key,
+                'card_token' => $tappayData->card_token,
+              ));
+            }
+            else {
+              $result = $data;
+            }
+
             // only set auto renew when contribution has recurring
-            if ($result->status == 0 && $contribution->contrinbution_recur_id) {
-              $cardStatus = $result->card_info->card_status;
-              if (!empty($cardStatus) && $cardStatus == 'ACTIVE' || $cardStatsu == 'SUSPENDED') {
+            if ($result->status == 0 && $contribution->contribution_recur_id) {
+              $cardStatus = $result->card_info->token_status;
+              if (!empty($cardStatus) && ($cardStatus == 'ACTIVE' || $cardStatus == 'SUSPENDED')) {
                 CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $contribution->contribution_recur_id, 'auto_renew', 1);
               }
               else {
