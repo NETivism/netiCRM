@@ -249,7 +249,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $response;
   }
 
-  public static function cardMetadata($contributionId) {
+  public static function cardMetadata($contributionId, $data = NULL) {
     if (empty($contributionId))  {
       return FALSE;
     }
@@ -272,15 +272,21 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
               'contribution_id' => $contributionId,
             );
             $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
-            $result = $api->request(array(
-              'partner_key' => $paymentProcessor['password'],
-              'card_key' => $tappayData->card_key,
-              'card_token' => $tappayData->card_token,
-            ));
+            if (empty($data)) {
+              $result = $api->request(array(
+                'partner_key' => $paymentProcessor['password'],
+                'card_key' => $tappayData->card_key,
+                'card_token' => $tappayData->card_token,
+              ));
+            }
+            else {
+              $result = $data;
+            }
+
             // only set auto renew when contribution has recurring
-            if ($result->status == 0 && $contribution->contrinbution_recur_id) {
-              $cardStatus = $result->card_info->card_status;
-              if (!empty($cardStatus) && $cardStatus == 'ACTIVE' || $cardStatsu == 'SUSPENDED') {
+            if ($result->status == 0 && $contribution->contribution_recur_id) {
+              $cardStatus = $result->card_info->token_status;
+              if (!empty($cardStatus) && ($cardStatus == 'ACTIVE' || $cardStatus == 'SUSPENDED')) {
                 CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $contribution->contribution_recur_id, 'auto_renew', 1);
               }
               else {
@@ -540,7 +546,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     CRM_Core_Error::statusBounce($result_note, $redirect);
   }
 
-  public static function doSyncRecord($contributionId) {
+  public static function doSyncRecord($contributionId, $data = NULL) {
     // retrieve contribution object
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
@@ -564,15 +570,20 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
 
     // retrieve record data
-    $data = array(
-      'contribution_id' => $contributionId,
-      'partner_key' => $paymentProcessor['password'],
-      'filters' => array(
-        'order_number' => $contribution->trxn_id,
-      ),
-    );
-    $result = $api->request($data);
-    $record = !empty($result->trade_records[0]) ? $result->trade_records[0] : NULL;
+    if (empty($data)) {
+      $params = array(
+        'contribution_id' => $contributionId,
+        'partner_key' => $paymentProcessor['password'],
+        'filters' => array(
+          'order_number' => $contribution->trxn_id,
+        ),
+      );
+      $result = $api->request($params);
+      $record = !empty($result->trade_records[0]) ? $result->trade_records[0] : NULL;
+    }
+    else {
+      $record = $data;
+    }
 
     // check there are record in return list
     if(!empty($record)){
@@ -583,20 +594,22 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         // Call trade history api to get refund date.
         $tappayParams['apiType'] = 'trade_history';
 
-        $api_history = new CRM_Core_Payment_TapPayAPI($tappayParams);
-        $data = array(
-          'contribution_id' => $contributionId,
-          'partner_key' => $paymentProcessor['password'],
-          'rec_trade_id' => $tappay->rec_trade_id,
-        );
-        $result = $api_history->request($data);
-        // Get the refund type history from history list.
-        foreach ($result->trade_history as $history) {
-          if($history->action == 3){
-            break;
+        if (empty($data)) {
+          $api_history = new CRM_Core_Payment_TapPayAPI($tappayParams);
+          $params = array(
+            'contribution_id' => $contributionId,
+            'partner_key' => $paymentProcessor['password'],
+            'rec_trade_id' => $tappay->rec_trade_id,
+          );
+          $result = $api_history->request($params);
+          // Get the refund type history from history list.
+          foreach ($result->trade_history as $history) {
+            if($history->action == 3){
+              break;
+            }
           }
+          $record->refund_date = $history->millis;
         }
-        $record->refund_date = date('Y-m-d H:i:s', $history->millis / 1000);
       }
 
       $result_note .= "\n".ts('Sync to Tappay server success.');
@@ -621,9 +634,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         }
 
         // check refund
+        print_r($record);
+        print_r($contribution);
         if($record->refunded_amount == $contribution->total_amount && $pass) {
           // find refund, check original status
-          $contribution->cancel_date = $record->refund_date;
+          $cancelDate = date('Y-m-d H:i:s', $record->refund_date / 1000);
+          $contribution->cancel_date = $cancelDate;
           $contribution->contribution_status_id = 3;
           $contribution->save();
           $result_note .= "\n".ts('The contribution has been canceled.');
@@ -641,6 +657,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // CRM_Core_Error::debug_log_message($result_note);
       self::addNote($result_note, $contribution);
     }
+    return $record;
   }
 
   public static function doSyncLastDaysRecords() {

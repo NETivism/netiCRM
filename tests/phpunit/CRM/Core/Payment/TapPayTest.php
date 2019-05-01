@@ -8,6 +8,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   protected $_processor;
   protected $_is_test;
   protected $_page_id;
+  protected $_recurFirstContributionId;
 
   /**
    *  Constructor
@@ -112,6 +113,10 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     if(!empty($result['count'])){
       $this->_cid = $result['id'];
     }
+
+    // get latest successful recur contribution
+    $this->_recurFirstContributionId = CRM_Core_DAO::singleValueQuery("SELECT contribution_id FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
+    $this->_refundTrxnId= CRM_Core_DAO::singleValueQuery("SELECT order_number FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
   }
 
   function tearDown() {
@@ -179,7 +184,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       "last_four":"1357",
       "bin_code":"246824",
       "country_code":"GB",
-			"expiry_date":"202211"
+      "expiry_date":"202211"
    },
    "transaction_time_millis":"'.$microtime.'",
    "bank_transaction_time":{  
@@ -318,7 +323,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       "last_four":"1357",
       "bin_code":"246824",
       "country_code":"GB",
-			"expiry_date":"'.$expiryDate.'"
+      "expiry_date":"'.$expiryDate.'"
    },
    "transaction_time_millis":"'.$microtime.'",
    "bank_transaction_time":{  
@@ -396,7 +401,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       "last_four":"1357",
       "bin_code":"246824",
       "country_code":"GB",
-			"expiry_date":"'.$expiryDate.'"
+      "expiry_date":"'.$expiryDate.'"
    },
    "transaction_time_millis":"'.$microtime.'",
    "bank_transaction_time":{  
@@ -467,7 +472,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       "last_four":"1357",
       "bin_code":"246824",
       "country_code":"GB",
-			"expiry_date":"'.$expiryDate.'"
+      "expiry_date":"'.$expiryDate.'"
    },
    "transaction_time_millis":"'.$microtime.'",
    "bank_transaction_time":{  
@@ -502,5 +507,113 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     ### TODO 4th contribution, recurring should be end 
 
     // end, check recurring end
+  }
+
+  function testCardMetadata(){
+    $cardMetadata = (object)(array(
+      'status' => 0,
+      'msg' => 'Success',
+      'card_info' => (object)(array(
+        'issuer' => '',
+        'funding' => 0,
+        'type' => 1,
+        'level' => '',
+        'country' => 'UNITED KINGDOM',
+        'last_four' => '4242',
+        'bin_code' => '424242',
+        'token_status' => 'ACTIVE',
+        'country_code' => 'GB',
+        'expiry_date' => '202211',
+      )),
+      'card_art_info' => (object)(array(
+        'is_real_card_face' => false,
+        'image' => (object)(array(
+          'url' => 'https://ooo.ooo.ooo/TapPay_Card_VISA.png',
+          'width' => 1536,
+          'height' => 960,
+        )),
+        'foreground_color' => '0xffffff',
+        'masked_card_number' => '**** **** **** 4242',
+        'issuer' => '',
+      )),
+    ));
+
+    // before metadata update, recurring and contribution should not have this data. 
+    $this->assertDBQuery(0, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", array( 1 => array($this->_recurFirstContributionId, 'Integer') ));
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_TapPay',
+      $this->_recurFirstContributionId,
+      'card_status',
+      'contribution_id',
+      '',
+      "In line " . __LINE__
+    );
+
+    CRM_Core_Payment_TapPay::cardMetadata($this->_recurFirstContributionId, $cardMetadata);
+
+    // after metadata update, recurring and contribution will have data
+    $this->assertDBQuery(1, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", array( 1 => array($this->_recurFirstContributionId, 'Integer') ));
+  }
+
+  function testRecordSync() {
+    $microtime = round(microtime(true) * 1000);
+
+    // full refund
+    $fullRefundRecord = (object) (array(
+      'cap_millis' => 1554823800000,
+      'bank_result_code' => '00',
+      'merchant_name' => '',
+      'original_amount' => 222,
+      'app_name' => 'oooo',
+      'currency' => 'TWD',
+      'refunded_amount' => 222,
+      'amount' => 222,
+      'time' => 1554798163345,
+      'three_domain_secure' => false,
+      'details' => 'AUTO: unit test',
+      'bank_transaction_id' => 'TP1P0H1U0A0A00',
+      'auth_code' => '960134',
+      'bank_transaction_start_millis' => $microtime,
+      'bank_transaction_end_millis' => $microtime,
+      'pay_by_instalment' => false,
+      'merchant_id' => 'TEST_ESUN',
+      'order_number' => $this->_refundTrxnId,
+      'partial_card_number' => '424242-4242',
+      'rec_trade_id' => 'sample_trade_id',
+      'bank_result_msg' => '',
+      'pay_by_redeem' => false,
+      'cardholder' => (object) (array(
+        'phone_number' => '',
+        'email' => 'ooo@ooo.com',
+        'name' => 'OOO',
+      )),
+      'is_captured' => true,
+      'payment_method' => 'direct_pay',
+      'record_status' => 3,
+      'refund_date' => $microtime,
+    ));
+    CRM_Core_Payment_TapPay::doSyncRecord($this->_recurFirstContributionId, $fullRefundRecord);
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_Contribution',
+      $this->_recurFirstContributionId,
+      'contribution_status_id',
+      'id',
+      $expectedValue = 3,
+      "In line " . __LINE__
+    );
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_Contribution',
+      $this->_recurFirstContributionId,
+      'cancel_date',
+      'id',
+      $expectedValue = date('Y-m-d H:i:s', $microtime/1000),
+      "In line " . __LINE__
+    );
+
+    // TODO
+    #$partialRefundRecord = clone $fullRefundRecord;
+    #$partialRefundRecord->record_status = 2;
+    #$partialRefundRecord->refunded_amount = 100;
+
   }
 }
