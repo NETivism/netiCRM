@@ -634,8 +634,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         }
 
         // check refund
-        print_r($record);
-        print_r($contribution);
         if($record->refunded_amount == $contribution->total_amount && $pass) {
           // find refund, check original status
           $cancelDate = date('Y-m-d H:i:s', $record->refund_date / 1000);
@@ -644,6 +642,34 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           $contribution->save();
           $result_note .= "\n".ts('The contribution has been canceled.');
         }
+      }
+      else if ($record->record_status == 2 && $contribution->contribution_status_id == 1) {
+
+        // record original cancel_date, status_id data.
+        $origin_cancel_date = $contribution->cancel_date;
+        $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
+        $origin_status_id = $contribution->contribution_status_id;
+
+        // check data
+        $pass = TRUE;
+        if($record->order_number != $contribution->trxn_id) {
+          // order number is not correct.
+          $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$result->order_number}")."\n";
+          $result_note .= $msgText;
+          $pass = FALSE;
+        }
+
+        // check refund
+        if($record->amount != $contribution->total_amount && $pass) {
+          // find refund, check original status
+          $contribution->total_amount = $record->amount;
+          $contribution->save();
+          $result_note .= "\n".ts('The contribution has refund: %1', array(1 => $record->refund_amount));
+        }
+        else {
+          $result_note .= "\n".ts('There are no any change.');
+        }
+
       }
       else{
         $result_note .= "\n".ts('There are no any change.');
