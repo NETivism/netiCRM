@@ -89,9 +89,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
     $now = date('YmdHis');
 
     $result = NULL;
-    if ($form->_contributeMode == 'notify' ||
-      $form->_params['is_pay_later']
-    ) {
+    if ($form->_contributeMode == 'notify' || $form->_contributeMode == 'iframe' || $form->_params['is_pay_later']) {
       // this is not going to come back, i.e. we fill in the other details
       // when we get a callback from the payment processor
       // also add the contact ID and contribution ID to the params list

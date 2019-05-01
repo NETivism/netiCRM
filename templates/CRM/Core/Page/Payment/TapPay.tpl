@@ -91,10 +91,6 @@
   </div>
   {/if}
 </div>
-<div class="tp-wrapper">
-  <div class="crm-button crm-button-type-upload"><form id="payment" name="payment"><input id="make-payment" class="form-submit" value="{ts}Make Payment{/ts}" type="submit" disabled="disabled" style="display:none;"></form></div>
-</div>
-<div class="tp-wrapper" id="error-message">
 </div>
 <script src="https://js.tappaysdk.com/tpdirect/v4"></script>
 <script>{literal}
@@ -103,21 +99,19 @@ cj(document).ready(function($){
   var appKey = '{/literal}{$payment_processor.subject}{literal}';
   var qfKey = '{/literal}{$qfKey}{literal}';
   var className = '{/literal}{$class_name}{literal}';
-  var endpoint = '{/literal}{crmURL p="civicrm/tappay/paybyprime"}{literal}';
-  var redirect = '{/literal}{$redirect}{literal}';
-  var failRedirect = '{/literal}{$fail_redirect}{literal}';
-  var contributionID = {/literal}{$contribution_id}{literal};
-  var request = '';
+  var $button = $("input[name={/literal}{$button_name}{literal}]");
+  $button.prop("disabled", 1);
+  //var redirect = '{/literal}{$redirect}{literal}';
+  //var failRedirect = '{/literal}{$fail_redirect}{literal}';
   var lock = false;
   var submitted = getCookie(qfKey);
   if (submitted == "1" || submitted >= 1) {
-    $("#make-payment").remove();
+    $button.remove();
     $('.tp-wrapper').hide();
-    $("#error-message").html('<span>{/literal}{ts 1=$backlink}Order submitted. You can create another <a href="%1">here</a>.{/ts}{literal}</span>').show();
     return;
   }
   else {
-    $("#make-payment").show();
+    $button.show();
   }
 
   if (appID.length <= 0 && appKey.length <= 0) {
@@ -191,10 +185,10 @@ cj(document).ready(function($){
 
   TPDirect.card.onUpdate(function (update) {
     if (update.canGetPrime && !lock) {
-      $("#make-payment").removeProp("disabled");
+      $button.removeProp("disabled");
     }
     else {
-      $("#make-payment").prop("disabled", 1);
+      $button.prop("disabled", 1);
     }
 
     // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']
@@ -208,9 +202,9 @@ cj(document).ready(function($){
     }
   });
 
-  $('#payment').on('submit', function(e){
+  $('#Confirm').on('submit', function(e){
     e.preventDefault();
-    $("#make-payment").prop("disabled", 1); // prevet double submit
+    $button.prop("disabled", 1); // prevet double submit
 
     const tappayStatus = TPDirect.card.getTappayFieldsStatus();
     if (tappayStatus.canGetPrime === true) {
@@ -218,50 +212,18 @@ cj(document).ready(function($){
       TPDirect.card.getPrime(function(result)  {
         window.onbeforeunload = function(){ return true; };
         if (result.status !== 0) {
-          $("#make-payment").removeProp("disabled"); // prevet double submit
+          $button.removeProp("disabled");
         }
         else {
+          window.onbeforeunload = null;
           lock = true;
-          $("#make-payment").prop("disabled", 1); // prevet double submit
-          $("form#payment").append('<i class="zmdi zmdi-spinner zmdi-hc-spin" id="loading"></i>');
+          $button.prop("disabled", 1); // prevet double submit
+          $("form#Confirm").append('<i class="zmdi zmdi-spinner zmdi-hc-spin" id="loading"></i>');
           $(".tp-field").prepend('<div class="overlay"></div>');
-
-          // send prime to server
-          $.ajax({
-            type: "POST",
-            url: endpoint,
-            data: "id="+contributionID+"&qfKey="+qfKey+'&'+'class='+className+'&prime='+result.card.prime,
-            dataType: 'json' 
-          })
-          // redirect to thank you page
-          .done(function(data) {
-            $("#loading").remove();
-            if (data.status === 0) {
-              setCookie(qfKey, 1, 3600);
-              window.onbeforeunload = null;
-              window.location.href = redirect;
-            }
-            else {
-              $(".tp-field .overlay").remove();
-              $("#make-payment").removeProp("disabled");
-              $("#error-message").html('<div>'+data.msg+'</div>');
-              setCookie(qfKey, 1, 3600);
-              window.onbeforeunload = null;
-              window.location.href = failRedirect;
-            }
-          })
-          .fail(function() {
-            $("#loading").remove();
-            $(".tp-field .overlay").remove();
-            $("#make-payment").removeProp("disabled");
-          });
-
+          $("input[name=prime]").val(result.card.prime);
+          $('form#Confirm').unbind('submit').submit();
         }
       });
-    }
-    else {
-      alert('Something goes wrong, please reload window and try again.');
-      return;
     }
   });
 });

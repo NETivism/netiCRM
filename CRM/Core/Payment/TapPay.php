@@ -78,35 +78,59 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doTransferCheckout(&$params, $component) {
-    $currentPath = CRM_Utils_System::currentPath();
-    $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey']);
-    $session = CRM_Core_Session::singleton();
-    $session->pushUserContext($thankyou);
-    $url = CRM_Utils_System::url("civicrm/tappay/directpay", "id={$params['contributionID']}&qfKey={$params['qfKey']}&component={$component}");
-    CRM_Utils_System::redirect($url);
+  function getPaymentFrame() {
+    if (!empty($this->_paymentProcessor)) {
+      $this->_paymentForm->add('hidden', 'prime', '');
+      $this->_paymentForm->assign('button_name', $this->_paymentForm->getButtonName('next'));
+      $this->_paymentForm->assign('payment_processor', $this->_paymentProcessor);
+      $className = get_class($this->_paymentForm);
+      $qfKey = $this->_paymentForm->get('qfKey');
+      // needs payment processor keys
+      // we needs these to process payByPrime
+      $this->_paymentForm->assign('contribution_id', $payment['contributionID']);
+      $this->_paymentForm->assign('class_name', $className);
+      $this->_paymentForm->assign('qfKey', $qfKey);
+
+      // get template and render some element
+      require_once 'CRM/Core/Smarty/resources/String.php';
+      civicrm_smarty_register_string_resource();
+      $config = CRM_Core_Config::singleton();
+      $tplFile = $config->templateDir[0].'CRM/Core/Page/Payment/TapPay.tpl';
+      $tplContent = 'string:'.file_get_contents($tplFile);
+      $smarty = CRM_Core_Smarty::singleton();
+      $html = $smarty->fetch($tplContent);
+      return $html;
+    }
   }
 
-  public static function payByPrime() {
-    // validate sessions
-    $id = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
-    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
-    $class = CRM_Utils_Request::retrieve('class', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
-    $payment = CRM_Core_Payment_TapPay::getAssociatedSession($qfKey, $class);
+  function doTransferCheckout(&$params, $component) {
+    $currentPath = CRM_Utils_System::currentPath();
+    $params['prime'] = CRM_Utils_Type::escape($_POST['prime'], 'String');
+    $params['mode'] = $this->_mode;
+    $paymentResult = self::payByPrime($params);
+    if ($paymentResult['status'] == 0) {
+      $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=1');
+    }
+    else {
+      $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=4&payment_result_message='.$paymentResult['msg']);
+    }
+    CRM_Utils_System::redirect($thankyou);
+  }
 
-    if ($payment && !empty($payment['paymentProcessor'])) {
-      $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $id, 'trxn_id');
+  public static function payByPrime($payment) {
+    if ($payment && !empty($payment['payment_processor_id'])) {
+      $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
       if(empty($trxn_id)){
-        $trxn_id = self::getContributionTrxnID($id);
-        CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'trxn_id', $trxn_id);
+        $trxn_id = self::getContributionTrxnID($payment['contributionID']);
+        CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id', $trxn_id);
       }
 
       $contribution = $ids = array();
-      $params = array('id' => $id);
+      $params = array('id' => $payment['contributionID']);
       CRM_Contribute_BAO_Contribution::getValues($params, $contribution, $ids);
       list($sortName, $email) = CRM_Contact_BAO_Contact::getContactDetails($contribution['contact_id']);
-      $paymentProcessor = $payment['paymentProcessor'];
-      $prime = CRM_Utils_Request::retrieve('prime', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($payment['payment_processor_id'], $payment['mode']);
+      $prime = $payment['prime'];
       $tappayParams = array(
         'apiType' => 'pay_by_prime',
         'partnerKey' => $paymentProcessor['password'],
@@ -130,7 +154,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'national_id' => '', //optional
         ),
         'remember' => $contribution['contribution_recur_id'] ? TRUE : FALSE,
-        'contribution_id' => $id,
+        'contribution_id' => $payment['contributionID'],
       );
 
       // Allow further manipulation of the arguments via custom hooks ..
@@ -139,13 +163,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
-      self::validateData($result, $id);
+      self::validateData($result, $payment['contributionID']);
 
       $response = array('status' => $result->status, 'msg' => $result->msg);
-      echo json_encode($response);
-      CRM_Utils_System::civiExit();
+      return $response;
     }
-    return CRM_Utils_System::notFound();
+    return FALSE;
   }
 
   public static function payByToken($recurringId = NULL, $contributionId = NULL) {
@@ -701,7 +724,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     elseif (is_string($request)){
       $input = $request;
       $data = json_decode($request);
-    }else {
+    }
+    else {
       $data = $request;
     }
 

@@ -1364,6 +1364,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       elseif ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_NOTIFY) {
         $this->set('contributeMode', 'notify');
       }
+      elseif ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_IFRAME) {
+        $this->set('contributeMode', 'iframe');
+      }
     }
   }
 

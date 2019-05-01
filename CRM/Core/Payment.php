@@ -41,7 +41,7 @@ abstract class CRM_Core_Payment {
    * FORM   - we collect it on the same page
    * BUTTON - the processor collects it and sends it back to us via some protocol
    */
-  CONST BILLING_MODE_FORM = 1, BILLING_MODE_BUTTON = 2, BILLING_MODE_NOTIFY = 4;
+  CONST BILLING_MODE_FORM = 1, BILLING_MODE_BUTTON = 2, BILLING_MODE_NOTIFY = 4, BILLING_MODE_IFRAME = 8;
   CONST PAY_LATER_DEFAULT_EXPIRED_DAY = 7; // day, refs #22026
 
   /**
