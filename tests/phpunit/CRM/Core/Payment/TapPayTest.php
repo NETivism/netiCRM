@@ -610,10 +610,31 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       "In line " . __LINE__
     );
 
-    // TODO
-    #$partialRefundRecord = clone $fullRefundRecord;
-    #$partialRefundRecord->record_status = 2;
-    #$partialRefundRecord->refunded_amount = 100;
+    // partial refund
+    $partialRefundRecord = clone $fullRefundRecord;
+    $partialRefundRecord->record_status = 2;
+    $partialRefundRecord->refunded_amount = 100;
+    $partialRefundRecord->amount = 122;
+    CRM_Core_Payment_TapPay::doSyncRecord($this->_recurFirstContributionId, $partialRefundRecord);
 
+    // contribution status id should be also success
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_Contribution',
+      $this->_recurFirstContributionId,
+      'contribution_status_id',
+      'id',
+      $expectedValue = 1,  // contribution still success
+      "In line " . __LINE__
+    );
+
+    // total amount should be supress to 122
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_Contribution',
+      $this->_recurFirstContributionId,
+      'total_amount',
+      'id',
+      $expectedValue = 122,
+      "In line " . __LINE__
+    );
   }
 }
