@@ -385,8 +385,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
    "acquirer":"TW_ESUN",
    "currency":"TWD",
    "card_secret":{
-      "card_token":"a2",
-      "card_key":"b2"
+      "card_token":"a1",
+      "card_key":"b1"
    },
    "rec_trade_id":"sample_trade_id2",
    "bank_transaction_id":"sample_bank_id2",
@@ -429,8 +429,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
-    $this->assertEquals('a2', $dao->card_token, "In line " . __LINE__);
-    $this->assertEquals('b2', $dao->card_key, "In line " . __LINE__);
+    $this->assertEquals('a1', $dao->card_token, "In line " . __LINE__);
+    $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
     
     ### 3rd contribution, change amount
@@ -456,8 +456,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
    "acquirer":"TW_ESUN",
    "currency":"TWD",
    "card_secret":{
-      "card_token":"a3",
-      "card_key":"b3"
+      "card_token":"a1",
+      "card_key":"b1"
    },
    "rec_trade_id":"sample_trade_id3",
    "bank_transaction_id":"sample_bank_id3",
@@ -500,8 +500,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
-    $this->assertEquals('a3', $dao->card_token, "In line " . __LINE__);
-    $this->assertEquals('b3', $dao->card_key, "In line " . __LINE__);
+    $this->assertEquals('a1', $dao->card_token, "In line " . __LINE__);
+    $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
 
     ### TODO 4th contribution, recurring should be end 
@@ -610,10 +610,56 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       "In line " . __LINE__
     );
 
-    // TODO
-    #$partialRefundRecord = clone $fullRefundRecord;
-    #$partialRefundRecord->record_status = 2;
-    #$partialRefundRecord->refunded_amount = 100;
+    // partial refund
+    $partialRefundRecord = clone $fullRefundRecord;
+    $partialRefundRecord->record_status = 2;
+    $partialRefundRecord->refunded_amount = 100;
+    $partialRefundRecord->amount = 122;
+    CRM_Core_Payment_TapPay::doSyncRecord($this->_recurFirstContributionId, $partialRefundRecord);
 
+    // contribution status id should be also success
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_Contribution',
+      $this->_recurFirstContributionId,
+      'contribution_status_id',
+      'id',
+      $expectedValue = 1,  // contribution still success
+      "In line " . __LINE__
+    );
+
+    // total amount should be supress to 122
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_Contribution',
+      $this->_recurFirstContributionId,
+      'total_amount',
+      'id',
+      $expectedValue = 122,
+      "In line " . __LINE__
+    );
+  }
+
+  function testUpdateExpiryDate() {
+    $notifyJson = '{
+  "status" : 0,
+  "msg" : "OK",
+  "card_token" : ["a1"],
+  "card_info" : {
+    "bin_code" : "123456",
+    "last_four" : "4321",
+    "issuer" : "Ignore",
+    "funding" : "Ignore",
+    "type" : "Ignore",
+    "level" : "Ignore",
+    "country" : "Ignore",
+    "country_code" : "Ignore",
+    "expiry_date" : "203012",
+    "token_status" : "ACTIVE"
+  }
+}';
+    CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
+    $dao = CRM_Core_DAO::executeQuery("SELECT expiry_date FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC LIMIT 10", array( 1 => array('a1', 'String')));
+    while($dao->fetch()) {
+      $this->assertEquals('2030-12-31', $dao->expiry_date,  "In line " . __LINE__);
+    }
   }
 }
