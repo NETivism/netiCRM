@@ -126,7 +126,7 @@
     <add>4.0</add>
   </field>
   <field>     
-    <name>card_status</name>  
+    <name>token_status</name>  
     <type>varchar</type> 
     <length>32</length>
     <comment>Used in 3JTSP cards, correspond to auto_renew column in contribution_recur.</comment>

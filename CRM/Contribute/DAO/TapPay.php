@@ -151,7 +151,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    *
    * @var string
    */
-  public $card_status;
+  public $token_status;
   /**
    * class constructor
    *
@@ -259,10 +259,10 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Data') ,
         ) ,
-        'card_status' => array(
-          'name' => 'card_status',
+        'token_status' => array(
+          'name' => 'token_status',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Card Status') ,
+          'title' => ts('Token Status') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
         ) ,

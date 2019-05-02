@@ -264,7 +264,7 @@ class CRM_Core_Payment_TapPayAPI {
       $tappay->order_number = $response->order_number;
     }
     if($response->card_info && $response->card_info->token_status) {
-      $tappay->card_status = $response->card_info->token_status;
+      $tappay->token_status = $response->card_info->token_status;
     }
     $tappay->save();
   }

@@ -6,6 +6,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
   protected $_api = NULL;
 
+  protected $_apiType = NULL;
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
@@ -18,6 +20,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
+    $this->_apiType = $apiType;
   }
 
   /**
@@ -29,10 +32,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode, &$paymentProcessor) {
+  public static function &singleton($mode, &$paymentProcessor, $apiType = '') {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
-      self::$_singleton[$processorName] = new CRM_Core_Payment_TapPay($mode, $paymentProcessor);
+      self::$_singleton[$processorName] = new CRM_Core_Payment_TapPay($mode, $paymentProcessor, $apiType);
     }
     return self::$_singleton[$processorName];
   }
@@ -135,7 +138,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor);
+      $paymentClass = self::singleton($mode, $paymentProcessor, $tappayParams['apiType']);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
@@ -235,7 +238,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
 
       // Allow further manipulation of the arguments via custom hooks ..
-      $paymentClass = self::singleton($mode, $paymentProcessor);
+      $paymentClass = self::singleton($mode, $paymentProcessor, $tappayParams['apiType']);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       // Send tappay pay_by_token post
@@ -389,22 +392,15 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       if($pass && $status == 0){
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
         $input['amount'] = $objects['contribution']->amount;
-        if ($result->transaction_time_millis) {
-          $objects['contribution']->receive_date = date('YmdHis', ($result->transaction_time_millis / 1000));
-        }
-        else {
-          $objects['contribution']->receive_date = date('YmdHis');
-        }
-        $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
-
+        $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
+        $objects['contribution']->receive_date = date('YmdHis', $receiveTime);
         if(!empty($recur)){
           // from pending to processing
           $recur->contribution_status_id = 5;
-
-          $recur->cycle_day = date('d');
-
+          $recur->cycle_day = date('j', $receiveTime);
           $recur->save();
         }
+        $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
       }
       else{
         // Failed
@@ -421,7 +417,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if (empty($time)) {
       $time = time();
     }
-    $executeDay = date('d', $time);
+    $executeDay = date('j', $time);
 
     $sql = "SELECT r.id recur_id, r.last_execute_date last_execute_date, c.payment_processor_id payment_processor_id, c.is_test is_test FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.cycle_day = %1 AND r.contribution_status_id = 5 GROUP BY r.id";
     $params = array(
@@ -429,7 +425,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     );
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
-      $result_note = ts("Recur ID is %1.", array( 1 => $dao->recur_id));
 
       // Check payment processor
       $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
@@ -463,9 +458,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     );
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
-
       $changeStatus = FALSE;
-      $result_note = ts("Recur ID is %1.", array( 1 => $dao->recur_id));
 
       // check if there are other contribution in the same day.
       if (empty($dao->end_date) || $time <= strtotime($dao->end_date)) {
@@ -578,6 +571,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'order_number' => $contribution->trxn_id,
         ),
       );
+
+      // Allow further manipulation of the arguments via custom hooks ..
+      $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
+      $paymentClass = self::singleton($mode, $paymentProcessor, $tappayParams['apiType']);
+      $nullObject = NULL;
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $nullObject, $params);
+
       $result = $api->request($params);
       $record = !empty($result->trade_records[0]) ? $result->trade_records[0] : NULL;
     }
@@ -601,6 +601,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
             'partner_key' => $paymentProcessor['password'],
             'rec_trade_id' => $tappay->rec_trade_id,
           );
+
+          // Allow further manipulation of the arguments via custom hooks ..
+          $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
+          $paymentClass = self::singleton($mode, $paymentProcessor, $tappayParams['apiType']);
+          CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $nullObject, $params);
+
           $result = $api_history->request($params);
           // Get the refund type history from history list.
           foreach ($result->trade_history as $history) {
@@ -692,7 +698,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $sql = "SELECT id, payment_processor_id, is_test FROM civicrm_contribution WHERE receive_date >= '$last2Day' && receive_date <= '$currentDay'";
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
-      $result_note = ts("Contribution ID is %1.", array( 1 => $dao->id));
       // Check payment processor
       $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
       if (strtolower($payment_processor['payment_processor_type']) != 'tappay') {
@@ -769,6 +774,24 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return 1;
   }
 
+  public static function getLatestAPIData($contributionId) {
+    $tappay = new CRM_Contribute_DAO_TapPay();
+    $tappay->contribution_id = $contributionId;
+    $tappay->find(TRUE);
+    return $tappay;
+  }
+
+  public static function getAllApiData($contributionId) {
+    $logs = array();
+    $tappayLog = new CRM_Contribute_DAO_TapPayLog();
+    $tappayLog->contribution_id = $contributionId;
+    $tappayLog->find();
+    while ($tappayLog->fetch()) {
+      $logs[$tappayLog->id] = (array) $tappayLog;
+    }
+    return $logs;
+  }
+
   static function getContributionTrxnID($contributionId, $recurringId = NULL) {
     $rand = base_convert(rand(16, 255), 10, 16);
     if(empty($recurringId)){
@@ -785,22 +808,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
   static function addNote($note, &$contribution){
     require_once 'CRM/Core/BAO/Note.php';
-    $note = date("Y/m/d H:i:s "). ts("Transaction record").": \n\n".$note."\n===============================\n";
-    $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
-    if(count($note_exists)){
-      $note_id = array( 'id' => reset(array_keys($note_exists)) );
-      $note = $note . reset($note_exists);
-    }
-    else{
-      $note_id = NULL;
-    }
-    $noteParams = array(
-      'entity_table'  => 'civicrm_contribution',
-      'note'          => $note,
-      'entity_id'     => $contribution->id,
-      'contact_id'    => $contribution->contact_id,
-      'modified_date' => date('Ymd')
-    );
-    CRM_Core_BAO_Note::add( $noteParams, $note_id );
+    $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
+    CRM_Core_Error::debug_log_message( $note );
   }
 }

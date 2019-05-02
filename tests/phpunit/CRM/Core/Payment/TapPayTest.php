@@ -543,7 +543,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_TapPay',
       $this->_recurFirstContributionId,
-      'card_status',
+      'token_status',
       'contribution_id',
       '',
       "In line " . __LINE__
