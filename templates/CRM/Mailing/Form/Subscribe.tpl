@@ -37,8 +37,10 @@
 
 <table class="form-layout-compressed" style="max-width:600px; margin: 0 auto;">
     <tr class="crm-mailing-subscribe-form-block-email"><td style="min-width:90px;">{$form.email.label}</td><td>{$form.email.html}</td></tr>
+    <tr class="crm-mailing-subscribe-form-block-last_name"><td style="min-width:90px;">{$form.last_name.label}</td><td>{$form.last_name.html}</td></tr>
+    <tr class="crm-mailing-subscribe-form-block-first_name"><td style="min-width:90px;">{$form.first_name.label}</td><td>{$form.first_name.html}</td></tr>
     <tr>
-       <td></td>
+       <td><label>{ts}Subscribe{/ts}</label></td>
        <td>
         {if ! $single} {* Show all public mailing list groups. Page was loaded w/o a specific group param (gid=N not in query string). *}
             <table summary="{ts}Group Listings.{/ts}" class="selector" style="width: auto;">

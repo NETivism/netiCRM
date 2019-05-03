@@ -87,15 +87,10 @@ SELECT   title, description
 
   public function buildQuickForm() {
     // add the email address
-    $this->add('text',
-      'email',
-      ts('Email'),
-      CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email',
-        'email'
-      ),
-      TRUE
-    );
+    $this->add('text', 'email', ts('Email'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email' ), TRUE);
     $this->addRule('email', ts("Please enter a valid email address (e.g. 'yourname@example.com')."), 'email');
+    $this->add('text', 'last_name', ts('Last Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'last_name'), TRUE);
+    $this->add('text', 'first_name', ts('First Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'first_name'), TRUE);
 
     if (!$this->_groupID) {
       // create a selector box of all public groups
@@ -118,14 +113,16 @@ ORDER BY title";
         $row['title'] = $dao->title;
         $row['description'] = $dao->description;
         $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $row['id'];
-        $this->addElement('checkbox',
-          $row['checkbox'],
-          NULL, NULL
-        );
+        $this->addElement('checkbox', $row['checkbox'], NULL, NULL);
         $rows[] = $row;
       }
       if (empty($rows)) {
         CRM_Core_Error::fatal(ts('There are no public mailing list groups to display.'));
+      }
+      if (count($rows) == 1) {
+        $row = reset($rows);
+        $default[CRM_Core_Form::CB_PREFIX.$row['id']] = 1; 
+        $this->setDefaults($default);
       }
       $this->assign('rows', $rows);
       $this->addFormRule(array('CRM_Mailing_Form_Subscribe', 'formRule'));
@@ -178,7 +175,7 @@ ORDER BY title";
         return TRUE;
       }
     }
-    return array('_qf_default' => 'Please select one or more mailing lists.');
+    return array('_qf_default' => ts('%1 is a required field.', array(1 => ts('Subscribe'))));
   }
 
   /**
@@ -201,8 +198,41 @@ ORDER BY title";
         }
       }
     }
+    $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
+    $dedupeParams['check_permission'] = FALSE;
+    $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Strict');
+    if (!empty($ids)) {
+      sort($ids);
+      $contactId = reset($ids);
+    }
+    else {
+      // create contact by params
+      require_once 'api/v3/DeprecatedUtils.php';
+      $formatted = array(
+        'contact_type' => 'Individual',
+        'version' => 3,
+        'last_name' => $params['last_name'],
+        'first_name' => $params['first_name'],
+      );
+      $locationType = CRM_Core_BAO_LocationType::getDefault();
+      $value = array(
+        'email' => $params['email'],
+        'location_type_id' => $locationType->id,
+      );
+      _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
 
-    CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($groups, $params);
+      $formatted['onDuplicate'] = CRM_Import_Parser::DUPLICATE_SKIP;
+      $formatted['fixAddress'] = TRUE;
+      $contact = civicrm_api('contact', 'create', $formatted);
+      if (!civicrm_error($contact)) {
+        $contactId = $contact['id'];
+      }
+      else{
+        $contactId = NULL;
+      }
+    }
+
+    CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($groups, $params, $contactId);
   }
 }
 
