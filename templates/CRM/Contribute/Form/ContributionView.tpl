@@ -59,6 +59,10 @@
 </div>
 <table class="crm-info-panel">
     <tr>
+        <td class="label">{ts}Contribution ID{/ts}</td>
+        <td class="bold">{$id}</td>
+    </tr>
+    <tr>
         <td class="label">{ts}From{/ts}</td>
         <td class="bold"><a href="{crmURL p="civicrm/contact/view" q="cid=$contact_id&reset=1"}">{$displayName}</a></td>
     </tr>
@@ -187,6 +191,20 @@
          
     	</tr>
 	{/if}	
+  {if $tappay_data}
+      <tr>
+          <td class="label">{ts}Card Number{/ts}</td>
+          <td>{$tappay_data->bin_code}**********{$tappay_data->last_four}</td>
+      </tr>
+      <tr>
+          <td class="label">{ts}Card Expiry Date{/ts}</td>
+          <td>{$tappay_data->expiry_date|date_format:"%Y/%m"}</td>
+      </tr>
+      <tr>
+          <td class="label">{ts}Latest Message{/ts}</td>
+          <td>{$tappay_msg}</td>
+      </tr>
+  {/if}
 	{foreach from=$note item="rec"} 
 		{if $rec }
 		    <tr>

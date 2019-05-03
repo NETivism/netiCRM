@@ -49,6 +49,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
    */
   public function preProcess() {
     $id = $this->get('id');
+    $this->assign('id', $id);
     $values = $ids = array();
     $params = array('id' => $id);
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
@@ -66,17 +67,21 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
 
-
-    if (strtoupper($instrument) == 'LINE PAY') {
-      $syncType = 'linepay';
+    $sql = "SELECT payment_processor_type FROM civicrm_contribution c INNER JOIN civicrm_payment_processor p ON c.payment_processor_id = p.id WHERE c.id = %1";
+    $params = array(1 => array($id, 'Positive'));
+    $paymentProcessorName = CRM_Core_DAO::singleValueQuery($sql, $params);
+    if(strtolower($paymentProcessorName) == 'tappay') {
+      $syncType = 'tappay';
+      $tappayData = CRM_Core_Payment_TapPay::getLatestAPIData($id);
+      $tappayDataLogs = CRM_Core_Payment_TapPay::getAllAPIData($id);
+      $this->assign('tappay_data', $tappayData);
+      $tappayObject = json_decode($tappayData->data);
+      $tappayMsg = $tappayObject->msg;
+      $this->assign('tappay_msg', $tappayMsg);
+      $this->assign('tappay_data_logs', $tappayDataLogs);
     }
-    else {
-      $sql = "SELECT payment_processor_type FROM civicrm_contribution c INNER JOIN civicrm_payment_processor p ON c.payment_processor_id = p.id WHERE c.id = %1";
-      $params = array(1 => array($id, 'Positive'));
-      $paymentProcessorName = CRM_Core_DAO::singleValueQuery($sql, $params);
-      if(strtolower($paymentProcessorName) == 'tappay') {
-        $syncType = 'tappay';
-      }
+    elseif (strtolower($instrument) == 'line pay') {
+      $syncType = 'linepay';
     }
 
     if (!empty($syncType)) {
