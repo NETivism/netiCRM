@@ -119,7 +119,11 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->_refundTrxnId = CRM_Core_DAO::singleValueQuery("SELECT order_number FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
     if (!empty($this->_refundTrxnId)) {
       $params = array(1 => array($this->_refundTrxnId, 'String'));
-      $this->_refundAmount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1", $params);
+      $dao = CRM_Core_DAO::executeQuery("SELECT id, total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1", $params);
+      while ($dao->fetch()) {
+        $this->_refundAmount = $dao->total_amount;
+        $this->_refundContributionId = $dao->id;
+      }
     }
   }
 
@@ -561,7 +565,6 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
   function testRecordSync() {
     $microtime = round(microtime(true) * 1000);
-    CRM_Core_Error::fatal("trxn id is ".$this->_refundTrxnId.", And refundAmount is ".$this->_refundAmount);
 
     // full refund
     $fullRefundRecord = (object) (array(
@@ -597,10 +600,10 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       'record_status' => 3,
       'refund_date' => $microtime,
     ));
-    CRM_Core_Payment_TapPay::doSyncRecord($this->_recurFirstContributionId, $fullRefundRecord);
+    CRM_Core_Payment_TapPay::doSyncRecord($this->_refundContributionId, $fullRefundRecord);
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
-      $this->_recurFirstContributionId,
+      $this->_refundContributionId,
       'contribution_status_id',
       'id',
       $expectedValue = 3,
@@ -608,7 +611,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     );
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
-      $this->_recurFirstContributionId,
+      $this->_refundContributionId,
       'cancel_date',
       'id',
       $expectedValue = date('Y-m-d H:i:s', $microtime/1000),
@@ -619,13 +622,13 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $partialRefundRecord = clone $fullRefundRecord;
     $partialRefundRecord->record_status = 2;
     $partialRefundRecord->refunded_amount = 100;
-    $partialRefundRecord->amount = 122;
-    CRM_Core_Payment_TapPay::doSyncRecord($this->_recurFirstContributionId, $partialRefundRecord);
+    $partialRefundRecord->amount = 233;
+    CRM_Core_Payment_TapPay::doSyncRecord($this->_refundContributionId, $partialRefundRecord);
 
     // contribution status id should be also success
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
-      $this->_recurFirstContributionId,
+      $this->_refundContributionId,
       'contribution_status_id',
       'id',
       $expectedValue = 1,  // contribution still success
@@ -635,10 +638,10 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     // total amount should be supress to 122
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
-      $this->_recurFirstContributionId,
+      $this->_refundContributionId,
       'total_amount',
       'id',
-      $expectedValue = 122,
+      $expectedValue = 233,
       "In line " . __LINE__
     );
   }
