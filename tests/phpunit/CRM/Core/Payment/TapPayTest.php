@@ -561,10 +561,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
   function testRecordSync() {
     $microtime = round(microtime(true) * 1000);
-    print($this->_refundTrxnId);
-    $this->expectOutputString($this->_refundTrxnId);
-    print($this->_refundAmount);
-    $this->expectOutputString($this->_refundAmount);
+    CRM_Core_Error::fatal("trxn id is ".$this->_refundTrxnId.", And refundAmount is ".$this->_refundAmount);
 
     // full refund
     $fullRefundRecord = (object) (array(
