@@ -118,7 +118,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->_recurFirstContributionId = CRM_Core_DAO::singleValueQuery("SELECT contribution_id FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
     $this->_refundTrxnId= CRM_Core_DAO::singleValueQuery("SELECT order_number FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
     $params = array(1 => array($this->_recundTrxnId, 'String'));
-    $this->_refundAmount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1");
+    $this->_refundAmount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1", $params);
   }
 
   function tearDown() {
