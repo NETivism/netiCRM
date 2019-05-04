@@ -117,6 +117,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     // get latest successful recur contribution
     $this->_recurFirstContributionId = CRM_Core_DAO::singleValueQuery("SELECT contribution_id FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
     $this->_refundTrxnId= CRM_Core_DAO::singleValueQuery("SELECT order_number FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
+    $params = array(1 => array($this->_recundTrxnId, 'String'));
+    $this->_refundAmount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1");
   }
 
   function tearDown() {
@@ -557,17 +559,21 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
   function testRecordSync() {
     $microtime = round(microtime(true) * 1000);
+    print($this->_refundTrxnId);
+    $this->expectOutputString($this->_refundTrxnId);
+    print($this->_refundAmount);
+    $this->expectOutputString($this->_refundAmount);
 
     // full refund
     $fullRefundRecord = (object) (array(
       'cap_millis' => 1554823800000,
       'bank_result_code' => '00',
       'merchant_name' => '',
-      'original_amount' => 222,
+      'original_amount' => $this->_refundAmount,
       'app_name' => 'oooo',
       'currency' => 'TWD',
-      'refunded_amount' => 222,
-      'amount' => 222,
+      'refunded_amount' => $this->_refundAmount,
+      'amount' => 0,
       'time' => 1554798163345,
       'three_domain_secure' => false,
       'details' => 'AUTO: unit test',
