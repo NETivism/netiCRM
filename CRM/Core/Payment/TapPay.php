@@ -367,19 +367,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $pass = FALSE;
       }
 
+
+
       // recurring validation
-      // certainly this is recurring contribution
-      if($ids['contributionRecur']){
-        $recur = &$objects['contributionRecur'];
-        $contribution = new CRM_Contribute_DAO_Contribution();
-        $contribution->trxn_id = $result->order_number;
-        if($contribution->find(TRUE)) {
-          // solve recur data.
-          $params['id'] = $recur->id;
-          $params['modified_date'] = date('YmdHis');
-          CRM_Contribute_BAO_ContributionRecur::add($params, $null);
-        }
-      }
 
       $transaction = new CRM_Core_Transaction();
 
@@ -394,13 +384,21 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $input['amount'] = $objects['contribution']->amount;
         $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
         $objects['contribution']->receive_date = date('YmdHis', $receiveTime);
-        if(!empty($recur)){
-          // from pending to processing
-          $recur->contribution_status_id = 5;
-          $recur->cycle_day = date('j', $receiveTime);
-          $recur->save();
-        }
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
+        if (!empty($ids['contributionRecur'])) {
+          $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
+          $params = array( 1 => array($ids['contributionRecur'], 'Positive'));
+          $recurTimes = CRM_Core_DAO::singleValueQuery($sql, $params);
+          if ($recurTimes == 1) {
+            $recur_params = array(
+              'id' => $ids['contributionRecur'],
+              'contribution_status_id' => 5,
+            );
+            $null = array();
+            CRM_Contribute_BAO_ContributionRecur::add($recur_params, $null);
+          }
+
+        }
       }
       else{
         // Failed

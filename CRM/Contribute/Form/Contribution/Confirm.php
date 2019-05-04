@@ -1110,6 +1110,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $recurParams['start_date'] = $recurParams['create_date'] = $recurParams['modified_date'] = $now;
     $recurParams['invoice_id'] = $params['invoiceID'];
     $recurParams['contribution_status_id'] = 2;
+    $recurParams['cycle_day'] = date('j');
 
     // we need to add a unique trxn_id to avoid a unique key error
     // in paypal IPN we reset this when paypal sends us the real trxn id, CRM-2991
