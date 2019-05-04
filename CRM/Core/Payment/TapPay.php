@@ -550,7 +550,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     // retrieve payment processor object
     $ppid = $contribution->payment_processor_id;
-    $mode = $contribution->is_test ? 'test' : 'live';
+    $mode = $contribution->is_test ? 'tset' : 'live';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
     // setup tappay api
@@ -647,7 +647,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           $result_note .= "\n".ts('The contribution has been canceled.');
         }
       }
-      else if ($record->record_status == 2 && $contribution->contribution_status_id == 1) {
+      else if ($record->record_status == 2) {
 
         // record original cancel_date, status_id data.
         $origin_cancel_date = $contribution->cancel_date;
@@ -667,6 +667,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         if($record->amount != $contribution->total_amount && $pass) {
           // find refund, check original status
           $contribution->total_amount = $record->amount;
+          $contribution->contribution_status_id = 1;
           $contribution->save();
           $result_note .= "\n".ts('The contribution has refund: %1', array(1 => $record->refund_amount));
         }
