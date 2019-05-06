@@ -143,6 +143,14 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
       $this->_params['currencyID'] = $config->defaultCurrency;
       $this->_params['payment_action'] = 'Sale';
+
+      if ($this->_contributeMode == 'iframe') {
+        $payment = CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
+        if (method_exists($payment, 'getPaymentFrame')) {
+          $frame = $payment->getPaymentFrame();
+          $this->assign('billing_frame', $frame);
+        }
+      }
     }
 
     $this->_params['is_pay_later'] = $this->get('is_pay_later');
@@ -301,7 +309,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       }
       else {
         $contribButton = ts('Make Contribution');
-        $this->assign('button', 'Make Contribution');
+        $this->assign('button', ts('Make Contribution'));
       }
       $this->addButtons(array(
           array('type' => 'back',
