@@ -450,69 +450,87 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     // Update last_execute_date
     CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurId, 'last_execute_date', date('Y-m-d H:i:s', $time));
     // Get same cycle_day recur.
-    $sql = "SELECT c.id contribution_id, r.id recur_id, r.contribution_status_id recur_status_id, r.end_date end_date, installments FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_recur_id = %1 ORDER BY c.id ASC LIMIT 1";
+    $sql = "SELECT c.id contribution_id, r.id recur_id, r.contribution_status_id recur_status_id, r.end_date end_date, r.installments, r.frequency_unit, c.is_test FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_recur_id = %1 ORDER BY c.id ASC LIMIT 1";
     $params = array(
       1 => array($recurId, 'Positive'),
     );
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
-    while ($dao->fetch()) {
-      $changeStatus = FALSE;
+    $dao->fetch();
+    $resultNote = "Syncing recurring $recurId ";
+    $changeStatus = FALSE;
+    $goPayment = $donePayment = FALSE;
+    $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1 AND is_test = %2";
+    $paramsContribution = array(
+      1 => array($dao->recur_id, 'Positive'),
+      2 => array($dao->is_test, 'Integer'),
+    );
+    $successCount = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
 
-      // check if there are other contribution in the same day.
-      if (empty($dao->end_date) || $time <= strtotime($dao->end_date)) {
+    if (!empty($dao->end_date) && $time <= strtotime($dao->end_date)) {
+      $goPayment = TRUE;
+      $reason = 'by end_date not due ...';
+    }
+    elseif (!empty($dao->installments) && $successCount < $dao->installments) {
+      $goPayment = TRUE;
+      $reason = 'by installments not full ...';
+    }
+    elseif (empty($dao->installments) && empty($dao->end_date)) {
+      // Credit card over date.
+      $goPayment = TRUE;
+      $reason = 'by no end date and installments set ...';
+    }
 
-        // If recur has installments limit, check installments
-        if (!empty($dao->installments)) {
-          $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1";
-          $paramsContribution = array(
-            1 => array($dao->recur_id, 'Positive'),
-          );
-          $count = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
-        }
-        
-        if (empty($dao->installments) || $count < $dao->installments) {
-
-          // Credit card over date.
-          $tappay = new CRM_Contribute_DAO_TapPay();
-          $tappay->contribution_id = $dao->contribution_id;
-          $tappay->find(TRUE);
-
-          if (empty($tappay->expiry_date) || $time <= strtotime($tappay->expiry_date)) {
-            // Do sync recur
-            self::payByToken($dao->recur_id, $dao->contribution_id);
-            $resultNote .= ts("Sync recur done.");
-          }
-          else {
-            // card expiry.
-            $changeStatus = TRUE;
-            $resultNote .= ts("Card Expiry.");
-          }
-        }
-        else {
-          // installments is full
-          $changeStatus = TRUE;
-          $resultNote .= ts("Installments id full.");
-        }
+    if ($goPayment) {
+      $tappay = new CRM_Contribute_DAO_TapPay();
+      $tappay->contribution_id = $dao->contribution_id;
+      $tappay->find(TRUE);
+      if ($time <= strtotime($tappay->expiry_date)) {
+        $resultNote .= $reason;
+        $resultNote .= "\n".ts("Sync recur done.");
+        self::payByToken($dao->recur_id, $dao->contribution_id);
+        $donePayment = TRUE;
       }
       else {
-        // Over end_date
-        $changeStatus = TRUE;
-        $resultNote .= ts("End date is dued.");
+        $resultNote .= $reason;
+        $resultNote .= ', but card expiry date due.';
       }
-
-      // change status.
-      if ( $changeStatus ) {
-        $contributionRecur = new CRM_Contribute_DAO_ContributionRecur();
-        $contributionRecur->id = $dao->recur_id;
-        $contributionRecur->find(TRUE);
-        $contributionRecur->contribution_status_id = 1;
-        $contributionRecur->save();
-
-        $resultNote .= ts("Update recurring status to 'Finished'.");
-      }
-
-      CRM_Core_Error::debug_log_message($resultNote);
     }
+
+    // check recurring status change and reason
+    // no else for make sure every rule checked
+
+    if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
+      $resultNote .= "\n". ts("Stop recurring $recurId because this is lastest contribution of this recurring (end date is $dao->end_date).");
+      $changeStatus = TRUE;
+    }
+    if ($donePayment && $dao->frequency_unit == 'month' && !empty($tappay->expiry_date) && date('Ym', $time) == date('Ym', strtotime($tappay->expiry_date))) {
+      $resultNote .= "\n". ts("Stop recurring $recurId because this is lastest contribution of this recurring (expiry date is $tappay->expiry_date).");
+      $changeStatus = TRUE;
+    }
+    if (!empty($dao->end_date) && $time > strtotime($dao->end_date)) {
+      $resultNote .= "\n".ts("Stop recurring $recurId because end date is dued.");
+      $changeStatus = TRUE;
+    }
+    if (!empty($dao->installments) && $successCount >= $dao->installments) {
+      $resultNote .= "\n".ts("Stop recurring $recurId because installments id full.");
+      $changeStatus = TRUE;
+    }
+    if ($time > strtotime($tappay->expiry_date)) {
+      $resultNote .= "\n".ts("Stop recurring $recurId because card expiry date is due.");
+      $changeStatus = TRUE;
+    }
+
+    if ( $changeStatus ) {
+      $contributionRecur = new CRM_Contribute_DAO_ContributionRecur();
+      $contributionRecur->id = $dao->recur_id;
+      $contributionRecur->find(TRUE);
+      $contributionRecur->contribution_status_id = 1;
+      $contributionRecur->save();
+
+      $resultNote .= "\n".ts("Update recurring status to 'Finished'.");
+    }
+
+    CRM_Core_Error::debug_log_message($resultNote);
   }
 
   public static function queryRecord ($url_params, $get = array()) {
