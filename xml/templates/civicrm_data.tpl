@@ -788,7 +788,7 @@ VALUES
  ('PayflowPro',         '{ts escape="sql"}PayflowPro{/ts}',             NULL,1,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
  ('FirstData',          '{ts escape="sql"}FirstData (aka linkpoint){/ts}', '{ts escape="sql"}FirstData (aka linkpoint){/ts}', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', '{ts escape="sql"}Mobile Payment{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', '{ts escape="sql"}Payment Processor Provider{/ts}', '{ts escape="sql"}Account{/ts}', '{ts escape="sql"}Password{/ts}',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
- ('TapPay', '{ts escape="sql"}TapPay Payment{/ts}', NULL, 1, 0, 'Merchant ID', '{ts escape="sql"}Partner Key{/ts}', '{ts}App ID{/ts}', '{ts}App Key{/ts}',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, 1);
+ ('TapPay', '{ts escape="sql"}TapPay Payment{/ts}', NULL, 1, 0, 'Merchant ID', '{ts escape="sql"}Partner Key{/ts}', '{ts}App ID{/ts}', '{ts}App Key{/ts}',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1);
 
 
 -- the fuzzy default dedupe rules
