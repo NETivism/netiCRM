@@ -304,7 +304,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     // manually trigger pay by prime api
     $microtime = round(microtime(true) * 1000);
-    $plusmonth = strtotime('+4 month');
+    $plusmonth = strtotime('+3 month');
     $expiryDate = date('Ym', $plusmonth);
     $lastDayOfMonth = date('Y-m-d', strtotime('last day of this month', $plusmonth));
 
@@ -373,8 +373,12 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
 
+    // verify all recurring related db record
+    //// status will become processing
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', $expectedValue = 5, "In line " . __LINE__);
+
     ### 2nd contribution of recurring
-    $now = strtotime(date('Y-m-5', strtotime('+1 month'))) + 80000; // later of that 5th of month
+    $now = strtotime(date('Y-m-05', strtotime('+1 month'))) + 80000; // later of that 5th of month
     $microtime = ($now + 5)*1000;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
 
@@ -444,7 +448,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     
     ### 3rd contribution, change amount
     $amount = 333;
-    $now = strtotime(date('Y-m-5', strtotime('+2 month'))) + 80000; // later of that 5th of month
+    $now = strtotime(date('Y-m-05', strtotime('+2 month'))) + 80000; // later of that 5th of month
     $microtime = ($now + 5)*1000;
     CRM_Core_DAO::setFieldValue("CRM_Contribute_DAO_ContributionRecur", $recurring->id, 'amount', $amount);
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
@@ -513,9 +517,81 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
 
-    ### TODO 4th contribution, recurring should be end 
+    ### 4th contribution, this should be latest contribution, end recurring
+    $now = strtotime(date('Y-m-05', strtotime('+3 month'))) + 65000; // later of that 5th of month
+    $microtime = ($now + 6)*1000;
+    CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
 
-    // end, check recurring end
+    $recurParams = array(
+      1 => array("r_{$recurring->id}_%", 'String')
+    );
+    $contribution4th = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC LIMIT 1", $recurParams);
+    $contribution4th->fetch();
+    $trxnId4 = $contribution4th->trxn_id;
+    // when no correct info to use api, this shoule be failed first
+    // simulate card token response and validate payment process
+    // simulate response
+    $tokenJson = '{
+   "status":0,
+   "msg":"Success",
+   "amount":'.$amount.',
+   "acquirer":"TW_ESUN",
+   "currency":"TWD",
+   "card_secret":{
+      "card_token":"'.$this->_cardToken.'",
+      "card_key":"b1"
+   },
+   "rec_trade_id":"sample_trade_id2",
+   "bank_transaction_id":"sample_bank_id2",
+   "order_number":"'.$trxnId4.'",
+   "auth_code":"123456",
+   "card_info":{ 
+      "issuer":"",
+      "funding":0,
+      "type":1,
+      "level":"",
+      "country":"UNITED KINGDOM",
+      "last_four":"1357",
+      "bin_code":"246824",
+      "country_code":"GB",
+      "expiry_date":"'.$expiryDate.'"
+   },
+   "transaction_time_millis":"'.$microtime.'",
+   "bank_transaction_time":{  
+      "start_time_millis":"'.$microtime.'",
+      "end_time_millis":"'.$microtime.'"
+   },
+   "bank_result_code":"000",
+   "bank_result_msg":"ABCDEFG"
+}
+';
+    $tokenResponse = json_decode($tokenJson);
+    $this->assertNotEmpty($tokenResponse, "In line " . __LINE__);
+    // because response not through TapPayAPI, we need save data manually
+    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution4th->id, $tokenResponse);
+    CRM_Core_Payment_TapPay::validateData($tokenResponse, $contribution4th->id);
+    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId4, 'String')));
+    $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
+    $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution_tappay WHERE order_number LIKE %1 ORDER BY id DESC", $recurParams);
+
+    $dao = new CRM_Contribute_DAO_TapPay();
+    $dao->contribution_id = $contribution4th->id;
+    $dao->find(TRUE);
+
+    $this->assertEquals($trxnId4, $dao->order_number,  "In line " . __LINE__);
+    $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
+    $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
+    $this->assertNotEmpty($dao->data, "In line " . __LINE__);
+    $this->assertEquals($this->_cardToken, $dao->card_token, "In line " . __LINE__);
+    $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
+
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', $expectedValue = 1, "In line " . __LINE__);
+
+    ### 5th contribution, no further contributions should executed this time
+    $now = strtotime(date('Y-m-05', strtotime('+4 month'))) + 65000; // later of that 5th of month
+    $microtime = ($now + 7)*1000;
+    CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
+    $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
   }
 
   function testCardMetadata(){
@@ -636,7 +712,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       "In line " . __LINE__
     );
 
-    // total amount should be supress to 122
+    // total amount should be supress
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
       $this->_refundContributionId,
