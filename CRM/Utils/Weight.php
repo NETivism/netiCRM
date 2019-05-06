@@ -78,8 +78,7 @@ class CRM_Utils_Weight {
    * @return bool
    */
   static function delWeight($daoName, $fieldID, $fieldValues = NULL, $weightField = 'weight') {
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
-    eval('$object   = new ' . $daoName . '( );');
+    $object = new $daoName();
     $object->id = $fieldID;
     if (!$object->find(TRUE)) {
       return FALSE;
