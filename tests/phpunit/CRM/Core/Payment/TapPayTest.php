@@ -24,6 +24,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     parent::__construct();
     $this->_page_id = 1;
     $this->prepareMailLog();
+    $this->_cardToken = "token".time();
   }
 
   function get_info() {
@@ -315,7 +316,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
    "acquirer":"TW_ESUN",
    "currency":"TWD",
    "card_secret":{
-      "card_token":"a1",
+      "card_token":"'.$this->_cardToken.'",
       "card_key":"b1"
    },
    "rec_trade_id":"sample_trade_id",
@@ -368,7 +369,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
-    $this->assertEquals('a1', $dao->card_token, "In line " . __LINE__);
+    $this->assertEquals($this->_cardToken, $dao->card_token, "In line " . __LINE__);
     $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
 
@@ -393,7 +394,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
    "acquirer":"TW_ESUN",
    "currency":"TWD",
    "card_secret":{
-      "card_token":"a1",
+      "card_token":"'.$this->_cardToken.'",
       "card_key":"b1"
    },
    "rec_trade_id":"sample_trade_id2",
@@ -437,7 +438,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
-    $this->assertEquals('a1', $dao->card_token, "In line " . __LINE__);
+    $this->assertEquals($this->_cardToken, $dao->card_token, "In line " . __LINE__);
     $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
     
@@ -464,7 +465,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
    "acquirer":"TW_ESUN",
    "currency":"TWD",
    "card_secret":{
-      "card_token":"a1",
+      "card_token":"'.$this->_cardToken.'",
       "card_key":"b1"
    },
    "rec_trade_id":"sample_trade_id3",
@@ -508,7 +509,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
-    $this->assertEquals('a1', $dao->card_token, "In line " . __LINE__);
+    $this->assertEquals($this->_cardToken, $dao->card_token, "In line " . __LINE__);
     $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
 
@@ -650,7 +651,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $notifyJson = '{
   "status" : 0,
   "msg" : "OK",
-  "card_token" : ["a1"],
+  "card_token" : ["'.$this->_cardToken.'"],
   "card_info" : {
     "bin_code" : "123456",
     "last_four" : "4321",
@@ -665,7 +666,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   }
 }';
     CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
-    $dao = CRM_Core_DAO::executeQuery("SELECT expiry_date FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC LIMIT 10", array( 1 => array('a1', 'String')));
+    $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC", array( 1 => array($this->_cardToken, 'String')));
     while($dao->fetch()) {
       $this->assertEquals('2030-12-31', $dao->expiry_date,  "In line " . __LINE__);
     }
