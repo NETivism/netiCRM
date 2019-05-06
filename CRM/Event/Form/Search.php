@@ -659,7 +659,16 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
         }
       }
       else {
-        $this->_formValues['participant_fee_id'] = array($feeLevel);
+        if (strstr($feeLevel, 'priceset:') && strstr($feeLevel, ',')) {
+          list($pricesetLabel, $fees) = explode(":", $feeLevel);
+          $fees = explode(",", $fees);
+          foreach($fees as $fee) {
+            $this->_formValues['participant_fee_id'][] = 'priceset:'.$fee;
+          }
+        }
+        else {
+          $this->_formValues['participant_fee_id'] = array($feeLevel);
+        }
       }
     }
 
