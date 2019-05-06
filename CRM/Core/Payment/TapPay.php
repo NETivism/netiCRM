@@ -425,9 +425,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     while ($dao->fetch()) {
 
       // Check payment processor
-      $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
-      if (strtolower($payment_processor['payment_processor_type']) != 'tappay') {
-        CRM_Core_Error::debug_log_message($result_note.ts("Payment processor of recur is not TapPay."));
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
+        CRM_Core_Error::debug_log_message($resultNote.ts("Payment processor of recur is not TapPay."));
         continue;
       }
 
@@ -435,7 +435,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $currentDayTime = strtotime(date('Y-m-d', $time));
       $lastExecuteDayTime = strtotime(date('Y-m-d', strtotime($dao->last_execute_date)));
       if (!empty($dao->last_execute_date) && $currentDayTime <= $lastExecuteDayTime) {
-        CRM_Core_Error::debug_log_message($result_note.ts("Last execute date of recur is over the date."));
+        CRM_Core_Error::debug_log_message($resultNote.ts("Last execute date of recur is over the date."));
         continue;
       }
 
@@ -480,24 +480,24 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           if (empty($tappay->expiry_date) || $time <= strtotime($tappay->expiry_date)) {
             // Do sync recur
             self::payByToken($dao->recur_id, $dao->contribution_id);
-            $result_note .= ts("Sync recur done.");
+            $resultNote .= ts("Sync recur done.");
           }
           else {
             // card expiry.
             $changeStatus = TRUE;
-            $result_note .= ts("Card Expiry.");
+            $resultNote .= ts("Card Expiry.");
           }
         }
         else {
           // installments is full
           $changeStatus = TRUE;
-          $result_note .= ts("Installments id full.");
+          $resultNote .= ts("Installments id full.");
         }
       }
       else {
         // Over end_date
         $changeStatus = TRUE;
-        $result_note .= ts("End date is dued.");
+        $resultNote .= ts("End date is dued.");
       }
 
       // change status.
@@ -508,10 +508,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $contributionRecur->contribution_status_id = 1;
         $contributionRecur->save();
 
-        $result_note .= ts("Update recurring status to 'Finished'.");
+        $resultNote .= ts("Update recurring status to 'Finished'.");
       }
 
-      CRM_Core_Error::debug_log_message($result_note);
+      CRM_Core_Error::debug_log_message($resultNote);
     }
   }
 
@@ -534,7 +534,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     // redirect to contribution view page
     $query = http_build_query($get);
     $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
-    CRM_Core_Error::statusBounce($result_note, $redirect);
+    CRM_Core_Error::statusBounce($resultNote, $redirect);
   }
 
   public static function doSyncRecord($contributionId, $data = NULL) {
@@ -616,7 +616,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         }
       }
 
-      $result_note .= "\n".ts('Sync to Tappay server success.');
+      $resultNote .= "\n".ts('Sync to Tappay server success.');
 
       // Sync contribution status in CRM
       if($record->record_status == 0 && $contribution->contribution_status_id != 1) {
@@ -633,7 +633,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         if($record->order_number != $contribution->trxn_id) {
           // order number is not correct.
           $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$result->order_number}")."\n";
-          $result_note .= $msgText;
+          $resultNote .= $msgText;
           $pass = FALSE;
         }
 
@@ -644,7 +644,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           $contribution->cancel_date = $cancelDate;
           $contribution->contribution_status_id = 3;
           $contribution->save();
-          $result_note .= "\n".ts('The contribution has been canceled.');
+          $resultNote .= "\n".ts('The contribution has been canceled.');
         }
       }
       else if ($record->record_status == 2) {
@@ -659,7 +659,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         if($record->order_number != $contribution->trxn_id) {
           // order number is not correct.
           $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$result->order_number}")."\n";
-          $result_note .= $msgText;
+          $resultNote .= $msgText;
           $pass = FALSE;
         }
 
@@ -669,24 +669,24 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           $contribution->total_amount = $record->amount;
           $contribution->contribution_status_id = 1;
           $contribution->save();
-          $result_note .= "\n".ts('The contribution has refund: %1', array(1 => $record->refund_amount));
+          $resultNote .= "\n".ts('The contribution has refund: %1', array(1 => $record->refund_amount));
         }
         else {
-          $result_note .= "\n".ts('There are no any change.');
+          $resultNote .= "\n".ts('There are no any change.');
         }
 
       }
       else{
-        $result_note .= "\n".ts('There are no any change.');
+        $resultNote .= "\n".ts('There are no any change.');
       }
     }
     else {
-      $result_note .= "\n".ts('There are no valid record back.');
+      $resultNote .= "\n".ts('There are no valid record back.');
     }
 
-    if (!empty($result_note)) {
-      // CRM_Core_Error::debug_log_message($result_note);
-      self::addNote($result_note, $contribution);
+    if (!empty($resultNote)) {
+      // CRM_Core_Error::debug_log_message($resultNote);
+      self::addNote($resultNote, $contribution);
     }
     return $record;
   }
@@ -698,9 +698,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       // Check payment processor
-      $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
-      if (strtolower($payment_processor['payment_processor_type']) != 'tappay') {
-        CRM_Core_Error::debug_log_message($result_note.ts("Payment processor of recur is not TapPay."));
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
+        CRM_Core_Error::debug_log_message($resultNote.ts("Payment processor of recur is not TapPay."));
         continue;
       }
 
