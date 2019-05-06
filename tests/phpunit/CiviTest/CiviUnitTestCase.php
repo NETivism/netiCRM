@@ -461,7 +461,7 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
     $expectedValue, $message
   ) {
     $value = CRM_Core_DAO::getFieldValue($daoName, $searchValue, $returnColumn, $searchColumn, true);
-    $this->assertEquals($value, $expectedValue, $message);
+    $this->assertEquals($expectedValue, $value, $message);
   }
 
   // Compare all values in a single retrieved DB record to an array of expected values
@@ -2008,7 +2008,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
   function checkArrayEquals(&$actual, &$expected) {
     self::unsetId($actual);
     self::unsetId($expected);
-    $this->assertEquals($actual, $expected);
+    $this->assertEquals($expected, $actual);
   }
 
   /*
