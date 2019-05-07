@@ -226,7 +226,12 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function validate(){
-    $mobile_paymentProcessor_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $_POST['cid'], 'payment_processor_id');
+    $contributionId = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+    $validationUrl = CRM_Utils_Request::retrieve('validationURL', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+    $domainName = CRM_Utils_Request::retrieve('domain_name', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+    $isTest = CRM_Utils_Request::retrieve('is_test', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, FALSE, 'REQUEST');
+
+    $mobile_paymentProcessor_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'payment_processor_id');
     $merchantIdentifier = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $mobile_paymentProcessor_id, 'signature');
 
     if(arg(2) == 'applepay'){
@@ -235,13 +240,24 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         'merchantIdentifier' => $merchantIdentifier,
         'displayName' => 'test',
         'initiative' => 'web',
-        'initiativeContext' => $_POST['domain_name'],
+        'initiativeContext' => $domainName,
       );
-      $url = $_POST['validationURL'];
+      $host = '';
+      if (!self::doCheckValidationUrl($validationUrl, $isTest, $host)) {
+        $note = ts('URL: %1 is not accessable, Where ip is %2', array(
+          1 => $validationUrl,
+          2 => $host,
+        ));
+        $contribution = new CRM_Contribute_DAO_Contribution();
+        $contribution->id = $contributionId;
+        $contribution->find(TRUE);
+        self::addNote($note, $contribution);
+        exit;
+      }
       $file_name = 'applepaycert_'.$mobile_paymentProcessor_id.'.inc';
       $file_path = CRM_Utils_System::cmsRootPath() . '/' . CRM_Utils_System::confPath().'/' . $file_name;
 
-      $ch = curl_init($url);
+      $ch = curl_init($validationUrl);
       $opt = array();
       $opt[CURLOPT_RETURNTRANSFER] = TRUE;
       $opt[CURLOPT_POST] = TRUE;
@@ -267,8 +283,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function transact(){
+    $contributionId = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+    $ppProvider = CRM_Utils_Request::retrieve('provider', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
+    $participant_id = CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $event_id = CRM_Utils_Request::retrieve('eid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $post = $_POST;
+
     $contribution = new CRM_Contribute_DAO_Contribution();
-    $contribution->id = $_POST['cid'];
+    $contribution->id = $contributionId;
     $contribution->find(TRUE);
 
     // Prepare objects to put in checkout function.
@@ -286,18 +308,15 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     }
       
     // call mobile checkout function
-    $ppProvider = $_POST['provider'];
     $module_name = 'civicrm_'.strtolower($ppProvider);
     $checkout_func = $module_name.'_mobile_checkout';
     if(!function_exists($checkout_func)){
       return CRM_Core_Error::fatal('Function '.$checkout_func.' doesn\'t exists.');
     }
-    $return = call_user_func($checkout_func, $type, $_POST, $objects);     
+    $return = call_user_func($checkout_func, $type, $post, $objects);
 
     if(!empty($return)){
       // execute ipn transact
-      $participant_id = $_POST['pid'];
-      $event_id = $_POST['eid'];
       $ipn = new CRM_Core_Payment_BaseIPN();
       $input = $ids = $objects = array();
       if(!empty($participant_id) && !empty($event_id)){
@@ -376,6 +395,66 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         'label' => ts('LinePay Channel Secret Key'),
       ),
     );
+  }
+
+  static function doCheckValidationUrl($url, $isTest = FALSE, &$host = NULL) {
+    $isPass = false;
+
+    if (!preg_match('/^https:\/\//', $url)) {
+      return $isPass;
+    }
+    $validateUrl = str_replace("https://", "", $url);
+    $validateUrl = preg_replace("/\/.+$/", "", $validateUrl);
+
+    if ($isTest) {
+      $accessList = array(
+        "apple-pay-gateway-cert.apple.com" => "17.171.85.7",
+        "cn-apple-pay-gateway-cert.apple.com" => "101.230.204.235",
+      );
+    }
+    else {
+      $accessList = array(
+        "apple-pay-gateway-nc-pod1.apple.com" => "17.171.78.7",
+        "apple-pay-gateway-nc-pod2.apple.com" => "17.171.78.71",
+        "apple-pay-gateway-nc-pod3.apple.com" => "17.171.78.135",
+        "apple-pay-gateway-nc-pod4.apple.com" => "17.171.78.199",
+        "apple-pay-gateway-nc-pod5.apple.com" => "17.171.79.12",
+        "apple-pay-gateway-pr-pod1.apple.com" => "17.141.128.7",
+        "apple-pay-gateway-pr-pod2.apple.com" => "17.141.128.71",
+        "apple-pay-gateway-pr-pod3.apple.com" => "17.141.128.135",
+        "apple-pay-gateway-pr-pod4.apple.com" => "17.141.128.199",
+        "apple-pay-gateway-pr-pod5.apple.com" => "17.141.129.12",
+        "apple-pay-gateway-nc-pod1-dr.apple.com" => "17.171.78.9",
+        "apple-pay-gateway-nc-pod2-dr.apple.com" => "17.171.78.73",
+        "apple-pay-gateway-nc-pod3-dr.apple.com" => "17.171.78.137",
+        "apple-pay-gateway-nc-pod4-dr.apple.com" => "17.171.78.201",
+        "apple-pay-gateway-nc-pod5-dr.apple.com" => "17.171.79.13",
+        "apple-pay-gateway-pr-pod1-dr.apple.com" => "17.141.128.9",
+        "apple-pay-gateway-pr-pod2-dr.apple.com" => "17.141.128.73",
+        "apple-pay-gateway-pr-pod3-dr.apple.com" => "17.141.128.137",
+        "apple-pay-gateway-pr-pod4-dr.apple.com" => "17.141.128.201",
+        "apple-pay-gateway-pr-pod5-dr.apple.com" => "17.141.129.13",
+        "cn-apple-pay-gateway-sh-pod1.apple.com" => "101.230.204.232",
+        "cn-apple-pay-gateway-sh-pod1-dr.apple.com" => "101.230.204.233",
+        "cn-apple-pay-gateway-sh-pod2.apple.com" => "101.230.204.242",
+        "cn-apple-pay-gateway-sh-pod2-dr.apple.com" => "101.230.204.243",
+        "cn-apple-pay-gateway-sh-pod3.apple.com" => "101.230.204.240",
+        "cn-apple-pay-gateway-sh-pod3-dr.apple.com" => "101.230.204.241",
+        "cn-apple-pay-gateway-tj-pod1.apple.com" => "60.29.205.104",
+        "cn-apple-pay-gateway-tj-pod1-dr.apple.com" => "60.29.205.105",
+        "cn-apple-pay-gateway-tj-pod2.apple.com" => "60.29.205.106",
+        "cn-apple-pay-gateway-tj-pod2-dr.apple.com" => "60.29.205.107",
+        "cn-apple-pay-gateway-tj-pod3.apple.com" => "60.29.205.108",
+        "cn-apple-pay-gateway-tj-pod3-dr.apple.com" => "60.29.205.109",
+      );
+    }
+
+    $host = gethostbyname($validateUrl);
+    if ($accessList[$validateUrl] == $host) {
+      $isPass = TRUE;
+    }
+
+    return $isPass;
   }
 }
 
