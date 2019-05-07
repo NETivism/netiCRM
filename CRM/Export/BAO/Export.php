@@ -1068,8 +1068,8 @@ class CRM_Export_BAO_Export {
       if (method_exists($parserName, 'errorFileName') &&
         method_exists($parserName, 'saveFileName')
       ) {
-        eval('$errorFileName =' . $parserName . '::errorFileName( $type );');
-        eval('$saveFileName =' . $parserName . '::saveFileName( $type );');
+        $errorFileName = $parserName::errorFileName( $type );
+        $saveFileName = $parserName::saveFileName( $type );
         $config = CRM_Core_Config::singleton();
         $errorFileName = $config->uploadDir . $errorFileName;
         if (!empty($errorFileName) && !empty($saveFileName) ) {

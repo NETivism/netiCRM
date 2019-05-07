@@ -388,7 +388,8 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
         $relationType = new CRM_Contact_DAO_RelationshipType();
         $relationType->id = $id;
         $relationType->find(TRUE);
-        eval('$mapperRelatedContactType[$key] = $relationType->contact_type_' . $second . ';');
+        $contactTypeIndex = 'contact_type_' . $second;
+        $mapperRelatedContactType[$key] = $relationType->$contactTypeIndex;
         $mapperRelated[$key] = $mapper[$key][0];
         $mapperRelatedContactDetails[$key] = $mapper[$key][1];
         $mapperRelatedContactLocType[$key] = $mapper[$key][2];

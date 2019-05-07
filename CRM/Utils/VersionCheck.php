@@ -133,8 +133,7 @@ class CRM_Utils_VersionCheck {
 
         // add &key=count pairs to $url, where key is the last part of the DAO
         foreach ($tables as $daoName => $where) {
-          require_once str_replace('_', '/', $daoName) . '.php';
-          eval("\$dao = new $daoName;");
+          $dao = new $daoName;
           if ($where) {
             $dao->whereAdd($where);
           }

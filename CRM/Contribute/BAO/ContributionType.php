@@ -133,8 +133,8 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
       array('Member', 'MembershipType'),
     );
     foreach ($dependancy as $name) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_" . $name[0] . "_BAO_" . $name[1]) . ".php");
-      eval('$bao = new CRM_' . $name[0] . '_BAO_' . $name[1] . '();');
+      $baoName = 'CRM_' . $name[0] . '_BAO_' . $name[1];
+      $bao = new $baoName();
       $bao->contribution_type_id = $contributionTypeId;
       if ($bao->find(TRUE)) {
         $check = TRUE;

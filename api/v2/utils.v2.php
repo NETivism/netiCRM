@@ -420,8 +420,8 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
     }
 
     if (!array_key_exists($block, $fields)) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Core_DAO_" . $block) . ".php");
-      eval('$fields[$block] =& CRM_Core_DAO_' . $block . '::fields( );');
+      $daoName = 'CRM_Core_DAO_' . $block;
+      $fields[$block] =& $daoName::fields( );
     }
 
     $blockCnt = count($params[$name]);

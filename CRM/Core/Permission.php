@@ -60,8 +60,8 @@ class CRM_Core_Permission {
    */
   public static function getPermission() {
     $config = CRM_Core_Config::singleton();
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userPermissionClass) . '.php');
-    return eval('return ' . $config->userPermissionClass . '::getPermission( );');
+    $className = $config->userPermissionClass;
+    return $className::getPermission( );
   }
 
   /**
@@ -90,8 +90,8 @@ class CRM_Core_Permission {
    */
   public static function whereClause($type, &$tables, &$whereTables, $context = 'contact') {
     $config = CRM_Core_Config::singleton();
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userPermissionClass) . '.php');
-    return eval('return ' . $config->userPermissionClass . '::whereClause( $type, $tables, $whereTables, $context );');
+    $className = $config->userPermissionClass;
+    return $className::whereClause( $type, $tables, $whereTables, $context );
   }
 
   /**
@@ -109,8 +109,8 @@ class CRM_Core_Permission {
    */
   public static function group($groupType, $excludeHidden = TRUE) {
     $config = CRM_Core_Config::singleton();
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userPermissionClass) . '.php');
-    return eval('return ' . $config->userPermissionClass . '::group( $groupType, $excludeHidden );');
+    $className = $config->userPermissionClass;
+    return $className::group( $groupType, $excludeHidden );
   }
 
   public static function customGroup($type = CRM_Core_Permission::VIEW, $reset = FALSE) {

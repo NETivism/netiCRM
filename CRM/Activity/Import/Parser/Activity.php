@@ -311,7 +311,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
           'level' => 'Strict',
         );
         require_once 'CRM/Dedupe/BAO/Rule.php';
-        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
+        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
 
         foreach ($fieldsArray as $value) {
           if (array_key_exists(trim($value), $params)) {
@@ -407,8 +407,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
       }
 
       // validate date.
-      require_once 'CRM/Utils/Rule.php';
-      eval('$valid = CRM_Utils_Rule::' . $ruleName . '( $dateVal );');
+      $valid = CRM_Utils_Rule::$ruleName( $dateVal );
 
       if ($valid) {
         //format date and time to default.

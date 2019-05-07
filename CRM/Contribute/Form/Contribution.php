@@ -824,7 +824,8 @@ WHERE  contribution_id = {$this->_id}
         CRM_Core_Payment_Form::buildDirectDebit($this, TRUE);
       }
       else {
-        eval('CRM_Contribute_Form_AdditionalInfo::build' . $type . '( $this );');
+        $buildFunc = 'build' . $type;
+        CRM_Contribute_Form_AdditionalInfo::$buildFunc( $this );
       }
     }
 

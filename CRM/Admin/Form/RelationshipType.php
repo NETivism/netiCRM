@@ -112,8 +112,8 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
     ) {
       $defaults = $params = array();
       $params = array('id' => $this->_id);
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $this->_BAOName) . ".php");
-      eval($this->_BAOName . '::retrieve( $params, $defaults );');
+      $baoName = $this->_BAOName;
+      $baoName::retrieve( $params, $defaults );
 
       $defaults['contact_types_a'] = $defaults['contact_type_a'];
       if (CRM_Utils_Array::value('contact_sub_type_a', $defaults)) {

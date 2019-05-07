@@ -2399,12 +2399,12 @@ UNION
 
     foreach (array('Email', 'OpenID', 'Phone', 'Address', 'IM') as $block) {
       $name = strtolower($block);
-      require_once "CRM/Core/DAO/{$block}.php";
-      eval("\$blockDAO = new CRM_Core_DAO_$block();");
+      $daoName = "CRM_Core_DAO_{$block}";
+      $blockDAO = new $daoName();
 
       // build the condition.
       if (is_array($criteria)) {
-        eval('$fields =& CRM_Core_DAO_' . $block . '::fields( );');
+        $fields =& $daoName::fields( );
         $conditions = array();
         foreach ($criteria as $field => $value) {
           if (array_key_exists($field, $fields)) {

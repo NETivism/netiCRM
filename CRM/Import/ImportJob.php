@@ -145,7 +145,8 @@ class CRM_Import_ImportJob {
 
   public function setJobParams(&$params) {
     foreach ($params as $param => $value) {
-      eval("\$this->_$param = \$value;");
+      $index = "_".$param;
+      $this->$index = $value;
     }
   }
 

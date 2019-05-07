@@ -345,7 +345,7 @@ class CRM_Core_Block {
       if (!empty($config->enableComponents)) {
         foreach ($components as $componentName => $obj) {
           if (in_array($componentName, $config->enableComponents)) {
-            eval('$obj->creatNewShortcut( $shortCuts );');
+            $obj->creatNewShortcut( $shortCuts );
           }
         }
       }

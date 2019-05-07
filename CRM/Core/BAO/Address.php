@@ -338,8 +338,8 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
 
     // add latitude and longitude and format address if needed
     if (!empty($config->geocodeMethod)) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->geocodeMethod) . '.php');
-      eval($config->geocodeMethod . '::format( $params );');
+      $className = $config->geocodeMethod;
+      $className::format( $params );
     }
   }
 

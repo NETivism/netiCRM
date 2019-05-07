@@ -365,7 +365,7 @@ function _civicrm_location_add(&$params, $locationTypeId = NULL) {
         is_numeric($contact['address'][$addressCount][$field])
       ) {
         $fValue = &$contact['address'][$addressCount][$field];
-        eval('$fValue = CRM_Core_PseudoConstant::' . $fName . '( $fValue );');
+        $fValue = CRM_Core_PseudoConstant::$fName( $fValue );
 
         //kill the reference.
         unset($fValue);
@@ -505,7 +505,7 @@ function _civicrm_location_update($params, $locations) {
         is_numeric($contact['address'][$addressCount][$field])
       ) {
         $fValue = &$contact['address'][$addressCount][$field];
-        eval('$fValue = CRM_Core_PseudoConstant::' . $fName . '( $fValue );');
+        $fValue = CRM_Core_PseudoConstant::$fName( $fValue );
 
         //kill the reference.
         unset($fValue);
@@ -801,8 +801,8 @@ function _civicrm_format_params_v2_to_v3(&$params, $locationTypeId = NULL) {
   // format params array.
   $firstBlockCount = NULL;
   foreach ($blocks as $block) {
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Core_DAO_" . $block) . ".php");
-    eval('$fields =& CRM_Core_DAO_' . $block . '::fields( );');
+    $daoName = 'CRM_Core_DAO_' . $block;
+    $fields =& $daoName::fields( );
     $name = strtolower($block);
     $blockCount = 0;
     if (CRM_Utils_Array::value($name, $params)) {
@@ -894,7 +894,7 @@ function _civicrm_format_params_v2_to_v3(&$params, $locationTypeId = NULL) {
       is_numeric($params['address'][$addressCount][$field])
     ) {
       $fValue = &$params['address'][$addressCount][$field];
-      eval('$fValue = CRM_Core_PseudoConstant::' . $fName . '( $fValue );');
+      $fValue = CRM_Core_PseudoConstant::$fName( $fValue );
 
       //kill the reference.
       unset($fValue);

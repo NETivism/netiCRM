@@ -368,8 +368,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     // set defaults for blocks ( custom data, address, communication preference, notes, tags and groups )
     foreach ($this->_editOptions as $name => $label) {
       if (!in_array($name, array('Address', 'Notes'))) {
-        require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $name) . ".php");
-        eval('CRM_Contact_Form_Edit_' . $name . '::setDefaultValues( $this, $defaults );');
+        $className = 'CRM_Contact_Form_Edit_' . $name;
+        $className::setDefaultValues( $this, $defaults );
       }
     }
 
@@ -737,8 +737,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
   public function buildQuickForm() {
     //load form for child blocks
     if ($this->_addBlockName) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $this->_addBlockName) . ".php");
-      return eval('CRM_Contact_Form_Edit_' . $this->_addBlockName . '::buildQuickForm( $this );');
+      $className = 'CRM_Contact_Form_Edit_' . $this->_addBlockName;
+      return $className::buildQuickForm( $this );
     }
 
     if ($this->_action == CRM_Core_Action::UPDATE) {
@@ -761,8 +761,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
 
     //build contact type specific fields
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $this->_contactType) . ".php");
-    eval('CRM_Contact_Form_Edit_' . $this->_contactType . '::buildQuickForm( $this, $this->_action );');
+    $className = 'CRM_Contact_Form_Edit_' . $this->_contactType;
+    $className::buildQuickForm( $this, $this->_action );
 
     // build Custom data if Custom data present in edit option
     $buildCustomData = NULL;
@@ -791,8 +791,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         $this->_blocks['Address'] = $this->_editOptions['Address'];
         continue;
       }
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $name) . ".php");
-      eval('CRM_Contact_Form_Edit_' . $name . '::buildQuickForm( $this );');
+      $className = 'CRM_Contact_Form_Edit_' . $name;
+      $className::buildQuickForm( $this );
     }
 
     // build location blocks.
