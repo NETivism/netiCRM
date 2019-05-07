@@ -139,8 +139,7 @@
   <item>
      <path>civicrm/linepay/query</path>
      <page_callback>CRM_Core_Payment_LinePay::query</page_callback> 
-     <access_callback>1</access_callback>
-     <is_public>true</is_public>
+     <access_arguments>access CiviContribute</access_arguments>
   </item>
   <item>
      <path>civicrm/coupon/ajax/valid</path>
@@ -157,7 +156,6 @@
   <item>
      <path>civicrm/tappay/cardnotify</path>
      <page_callback>CRM_Core_Payment_TapPay::cardNotify</page_callback> 
-     <access_callback>1</access_callback>
-     <is_public>true</is_public>
+     <access_arguments>access CiviContribute</access_arguments>
   </item>
 </menu>
