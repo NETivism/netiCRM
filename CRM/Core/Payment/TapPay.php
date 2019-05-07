@@ -166,7 +166,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
-      self::validateData($result, $payment['contributionID']);
+      self::doTransaction($result, $payment['contributionID']);
+
+      // update token status after transaction completed
+      if ($result->status === 0 && !empty($contribution['contribution_recur_id'])) {
+        self::cardMetadata($payment['contributionID']); 
+      }
 
       $response = array('status' => $result->status, 'msg' => $result->msg);
       return $response;
@@ -268,7 +273,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $result = $api->request($data);
 
       // Validate the result.
-      self::validateData($result, $c->id, $pid);
+      self::doTransaction($result, $c->id, $pid);
 
       $response = array('status' => $result->status, 'msg' => $result->msg);
     }
@@ -327,7 +332,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return FALSE;  
   }
 
-  public static function validateData($result, $contributionId = NULL) {
+  public static function doTransaction($result, $contributionId = NULL) {
     $input = $ids = $objects = array();
 
     // prepare ids
@@ -661,7 +666,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // Sync contribution status in CRM
       if($record->record_status == 0 && $contribution->contribution_status_id != 1) {
-        self::validateData($record, $contributionId);
+        self::doTransaction($record, $contributionId);
       }
       else if($record->record_status == 3 && $contribution->contribution_status_id != 3) {
         // record original cancel_date, status_id data.
