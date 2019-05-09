@@ -544,7 +544,8 @@
           }
           else if($this.hasClass(currentStepClassName)){
             /** first scroll to top 0.5 second */
-            $('html,body').animate({ scrollTop: 0 }, 500, function(){
+            var topPosition = $('#content-main').offset().top - 30;
+            $('html,body').animate({ scrollTop: topPosition }, 500, function(){
               $this.removeClass('type-is-back').addClass('type-is-fade-in').css({'opacity': 0});
               /** then fade change */
               $this.animate({'opacity': 1} ,500,  function(){
