@@ -41,7 +41,7 @@
   {if $event.summary}
     <div class="event-info-header">
       <div class="crm-section event_summary-section">
-        {$event.summary}
+        {$event.summary|nl2br}
       </div>
     {literal}
     <script type="text/javascript">
