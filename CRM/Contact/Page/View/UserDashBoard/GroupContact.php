@@ -69,6 +69,11 @@ class CRM_Contact_Page_View_UserDashBoard_GroupContact extends CRM_Contact_Page_
     $this->assign_by_ref('groupIn', $in);
     $this->assign_by_ref('groupPending', $pending);
     $this->assign_by_ref('groupOut', $out);
+
+    // Add key for deleting/rejoin group action validation.
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
   }
 
   /**
@@ -91,6 +96,12 @@ class CRM_Contact_Page_View_UserDashBoard_GroupContact extends CRM_Contact_Page_
     );
 
     if ($action == CRM_Core_Action::DELETE) {
+      $key = $_REQUEST['key'];
+      $name = get_class($this);
+      if( !CRM_Core_Key::validate($key, $name) ) {
+        CRM_Core_Error::fatal(ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.'));
+      }
+
       $groupContactId = CRM_Utils_Request::retrieve('gcid', 'Positive',
         CRM_Core_DAO::$_nullObject, TRUE
       );
