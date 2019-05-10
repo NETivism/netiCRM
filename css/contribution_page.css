@@ -208,9 +208,23 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 
 }
 
+
+
 @media screen and (max-width: 1023px) {
-  #header{
-    display: none;
+  #intro_text h1{
+    font-size: 48px;
+  }
+  #intro_text p br{
+    display: inline;
+  }
+  #header-inner {
+    display: flex;
+  }
+  #header-inner #logo {
+    margin: 0;
+  }
+  #header-inner #logo + #name-and-slogan {
+    margin-left: 10px;
   }
   #intro_text{
     max-width: 500px;
@@ -240,18 +254,24 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   .custom-step-info{
     overflow: unset;
   }
-
 }
 
 
 @media screen and (max-width: 480px) {
-  body.frontend.page-civicrm-contribute-transact {
-    background-size: unset;
-    background-position: unset;
-    background: unset;
+  html {
+    height: 100vh !important;
+  }
+  html body.frontend.page-civicrm-contribute-transact {
+    background-size: cover;
+    background-position: center;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)),var(--mobile-background-url);
+    background-attachment: fixed;
+  }
+  #main #intro_text h1 {
+    font-size: 36px;
   }
   .custom-step-info{
-    position: fixed;
+    position: sticky;
     top: 0;
     background-color: var(--active-color);
     left: 0;
@@ -260,12 +280,9 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     display: flex;
     flex-direction: column;
     margin-bottom: 0;
-    padding: 60px 20px 120px;
+    padding: 30px 20px 120px;
     margin: 0;
-    background: #555;
-    background-size: cover;
-    background-position: center;
-    background-image: var(--mobile-background-url);
+    min-height: calc(100vh - 90px);
   }
   .progress-block{
     order: 1;
@@ -273,7 +290,6 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   .logo-block {
     order: 2;
     text-align: center;
-
   }
   .logo-img{
     width: 80%;
@@ -290,6 +306,10 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   }
   .custom-step-info :last-child{
     margin-right: 50vw;
+  }
+  body .crm-container-md .crm-form-select-single select,
+  body .crm-container-md .crm-form-select-single select.form-select {
+    z-index: unset;
   }
 }
 
@@ -478,7 +498,8 @@ body .crm-container fieldset{
 
 .last-step-btn, 
 .crm-button-type-cancel a.button, 
-.crm-button-type-upload a.button{
+.crm-button-type-upload a.button, 
+#checkavailability {
   background-color: #d8d8d8;
   color: white;
   width: 120px;
@@ -493,14 +514,16 @@ body .crm-container fieldset{
        -o-transition: all ease-in-out .2s;
           transition: all ease-in-out .2s;
 }
-.crm-button-type-upload a.button{
+.crm-button-type-upload a.button, 
+#checkavailability {
   background-color: var(--active-color);
   float: right;
 }
 .region-content .last-step-btn:hover, 
 .region-content .last-step-btn:active, 
 .crm-button-type-cancel a.button:hover, 
-.crm-button-type-cancel a.button:active{
+.crm-button-type-cancel a.button:active, 
+#checkavailability:hover, #checkavailability:active {
   background-color: grey;
   color: white;
   text-decoration: none;
@@ -555,17 +578,6 @@ body .crm-container fieldset{
   max-height: unset;
   max-width: unset;
 }
-@media screen and (max-width: 1023px) {
-  #intro_text h1{
-    font-size: 48px;
-  }
-  #intro_text p br{
-    display: inline;
-  }  
-}
-
-
-
 
 /*price info*/
 
@@ -861,10 +873,27 @@ body .crm-container .premiums-listings .premium-img{
   color: white;
 }
 
+/* login form */
+.crm_user_signup-section .content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#checkavailability {
+  line-height: 40px;
+  height: 40px;
+  margin-left: 10px;
+}
+.crm-container .crm_user_signup-section .description {
+  font-size: .85rem;
+}
+
 /* overwrite */
 .admin-sidebar-mini div#page, 
 .admin-sidebar-open div#page, 
 .admin-header-fixed div#page{
   padding: 0;
 }
-
+body.admin-sidebar-mini .neticrm-footer {
+  margin: 0;
+}
