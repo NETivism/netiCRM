@@ -201,13 +201,20 @@
 
         $(dom_step).insertBefore('.crm-contribution-main-form-block');
 
+        if ($('[name=cms_create_account]').length >= 1) {
+          var $cms_create_account = $('[name=cms_create_account]').parent();
+          var $crm_user_signup = $('.crm_user_signup-section');
+        }
         $('.contrib-step-1')
           .append($('.progress-block'))
+          .append($cms_create_account)
+          .append($crm_user_signup)
           .append($('.payment_options-group'))
           .append('<div class="custom-price-set-section">')
           .append($('.payment_processor-section'))
           .append($('#billing-payment-block'))
           .append(this.createStepBtnBlock(['next-step']));
+        $('.contrib-step-1 .step-action-wrapper').addClass('hide-as-show-all');
         var exec_step = 2;
         if($('.custom_pre_profile-group fieldset').length >= 1){
           $('.contrib-step-'+exec_step)
@@ -575,7 +582,13 @@
         $('.hide-as-show-all').hide();
         $('[class*=contrib-step-]').each(function(){
           var $this = $(this);
-          if($this.hasClass('contrib-step-1'))return ;
+          if($this.hasClass('contrib-step-1') && $this.find('.error').length == 0) {
+            return ;
+          }
+          else {
+            // First step need to show.
+            $('.contrib-step-2 .step-action-wrapper.crm-section').hide();
+          }
           $this.removeClass('type-is-back').addClass('type-is-front').css({opacity: 1});
         });
         ContribPage.currentFormStep = 2;

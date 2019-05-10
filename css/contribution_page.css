@@ -498,7 +498,8 @@ body .crm-container fieldset{
 
 .last-step-btn, 
 .crm-button-type-cancel a.button, 
-.crm-button-type-upload a.button{
+.crm-button-type-upload a.button, 
+#checkavailability {
   background-color: #d8d8d8;
   color: white;
   width: 120px;
@@ -513,14 +514,16 @@ body .crm-container fieldset{
        -o-transition: all ease-in-out .2s;
           transition: all ease-in-out .2s;
 }
-.crm-button-type-upload a.button{
+.crm-button-type-upload a.button, 
+#checkavailability {
   background-color: var(--active-color);
   float: right;
 }
 .region-content .last-step-btn:hover, 
 .region-content .last-step-btn:active, 
 .crm-button-type-cancel a.button:hover, 
-.crm-button-type-cancel a.button:active{
+.crm-button-type-cancel a.button:active, 
+#checkavailability:hover, #checkavailability:active {
   background-color: grey;
   color: white;
   text-decoration: none;
@@ -870,10 +873,27 @@ body .crm-container .premiums-listings .premium-img{
   color: white;
 }
 
+/* login form */
+.crm_user_signup-section .content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#checkavailability {
+  line-height: 40px;
+  height: 40px;
+  margin-left: 10px;
+}
+.crm-container .crm_user_signup-section .description {
+  font-size: .85rem;
+}
+
 /* overwrite */
 .admin-sidebar-mini div#page, 
 .admin-sidebar-open div#page, 
 .admin-header-fixed div#page{
   padding: 0;
 }
-
+body.admin-sidebar-mini .neticrm-footer {
+  margin: 0;
+}
