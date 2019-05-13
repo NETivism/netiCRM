@@ -528,6 +528,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $resultNote .= "\n".ts("Sync recur done.");
         self::payByToken($dao->recur_id, $dao->contribution_id);
         $donePayment = TRUE;
+        // Count again for new contribution.
+        $successCount = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
       }
       else {
         $resultNote .= $reason;
