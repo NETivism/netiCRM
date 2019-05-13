@@ -494,21 +494,32 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     );
     $successCount = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
 
-    if (!empty($dao->end_date) && $time <= strtotime($dao->end_date)) {
-      $goPayment = TRUE;
-      $reason = 'by end_date not due ...';
+    if (!empty($dao->end_date)) {
+      if ($time <= strtotime($dao->end_date)) {
+        $goPayment = TRUE;
+        $reason = 'by end_date not due ...';
+      }
+      else {
+        $resultNote .= "Payment doesn't be executed cause the end_date was dued.";
+      }
     }
-    elseif (!empty($dao->installments) && $successCount < $dao->installments) {
-      $goPayment = TRUE;
-      $reason = 'by installments not full ...';
+    elseif (!empty($dao->installments)) {
+      if ($successCount < $dao->installments) {
+        $goPayment = TRUE;
+        $reason = 'by installments not full ...';
+      }
+      else {
+        $resultNote .= "Payment doesn't be executed cause the installments was full.";
+      }
     }
-    elseif (empty($dao->installments) && empty($dao->end_date)) {
-      // Credit card over date.
+    else {
+      // Obviously, the condition is empty($dao->installments) && empty($dao->end_date)
       $goPayment = TRUE;
-      $reason = 'by no end date and installments set ...';
+      $reason = 'by no end_date and installments set ...';
     }
 
     if ($goPayment) {
+      // Check if Credit card over date.
       $tappay = new CRM_Contribute_DAO_TapPay();
       $tappay->contribution_id = $dao->contribution_id;
       $tappay->find(TRUE);
@@ -559,6 +570,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     CRM_Core_Error::debug_log_message($resultNote);
+    return $resultNote;
   }
 
   public static function queryRecord ($url_params, $get = array()) {
