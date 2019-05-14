@@ -46850,3 +46850,9 @@ msgstr ""
 
 msgid "Your Personal Campaign Page"
 msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Otherwise, click the <strong>Make Payment</strong> button below to complete your"
+" registration."
+msgstr ""
