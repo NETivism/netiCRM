@@ -8,6 +8,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
   protected $_apiType = NULL;
 
+  // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
+  public static $_editableFields = array('amount', 'installments', 'end_date', 'cycle_day', 'contribution_status_id');
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable

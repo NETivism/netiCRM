@@ -114,19 +114,34 @@
       {if $action eq 1}{ts}New Recurring Payment{/ts}{else}{ts}Recurring contributions{/ts}{/if}
     </h3>
     <div class="crm-block crm-form-block crm-recurcontrib-form-block">
-      {foreach from=$form key=name item=ele}
-      {if $ele|is_array && $name != 'buttons' && !$name|strstr:"_time"}
       <div class="crm-section">
-        <div class="label">{$ele.label}</div>
         <div class="content">
-          {$ele.html}
-          {if name == 'contribution_status_id' && $ele.freeze}
-            <div class="description"></div>
-          {/if}
+          <table class="crm-info-panel">
+            <tr><td class="label">{ts}From{/ts}</td><td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contactId`" h=0 a=1 fe=1}">{$displayName}</a></td></tr>
+            <tr><td class="label">{ts}Recurring Contribution ID{/ts}</td><td>{$form.id.html}</td></tr>
+            <tr><td class="label">{ts}Amount{/ts}</td><td>{$form.amount.html}</td></tr>
+            <tr><td class="label">{ts}Currency{/ts}</td><td>{$form.currency.html}</td></tr>
+            <tr><td class="label">{ts}Frequency{/ts}</td><td>{ts}every{/ts} {$form.frequency_interval.html} {ts}{$form.frequency_unit.html}{/ts}</td></tr>
+            <tr><td class="label">{ts}Cycle Day{/ts}</td><td>{$form.cycle_day.html} {if $form.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}</td></tr>
+            <tr><td class="label">{ts}Installments{/ts}</td><td>{$form.installments.html}</td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td class="label">{ts}Create date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=create_date}</td></tr>
+            <tr><td class="label">{ts}Start date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=start_date}</td></tr>
+            {if $form.modified_date.html}<tr><td class="label">{ts}Last Modified Date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=modified_date}</td></tr>{/if}
+            {if $form.cancel_date.html}<tr><td class="label">{ts}Cancel Date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=cancel_date}</td></tr>{/if}
+            {if $form.cancel_date.html}<tr><td class="label">{ts}End Date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=end_date}</td></tr>
+            {/if}
+            <tr><td></td><td></td></tr>
+            {if $form.processor_id.html}<tr><td class="label">{ts}Processor ID{/ts}</td><td>{$form.processor_id.html}</td></tr>{/if}
+            {if $form.contribution_status_id neq 3}<tr><td class="label">{ts}Next Sched Contribution{/ts}</td><td>{$form.next_sched_contribution.html|crmDate}</td></tr>{/if}
+
+            {* trxn_id Used in spgateway. refs #16960 - flr. 65 *}
+            <tr><td class="label">{ts}Transaction ID{/ts}</td><td>{$form.trxn_id.html}</td></tr>
+            {if $form.auto_renew.html}<tr><td class="label">{ts}Auto Renew{/ts}</td><td>{$form.auto_renew.html}</td></tr>{/if}
+            <tr><td class="label">{ts}Recurring Status{/ts}</td><td>{$form.contribution_status_id.html}</td></tr>
+          </table>
         </div>
       </div>
-      {/if}
-      {/foreach}
       <div class="crm-section recurcontrib-buttons-section no-label">
         <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
         <div class="clear"></div> 
