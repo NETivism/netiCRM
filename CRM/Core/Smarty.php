@@ -236,5 +236,11 @@ class CRM_Core_Smarty extends Smarty {
     }
     return FALSE;
   }
+
+  function addTemplateDirs($dirs = array()) {
+    if (!empty($dirs) && is_array($dirs)) {
+      $this->template_dir = array_merge($dirs, $this->template_dir);
+    }
+  }
 }
 
