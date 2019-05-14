@@ -201,6 +201,14 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $this->_params[0]['participant_role_id'] = $this->_values['event']['default_role_id'];
     }
 
+    if ($this->_contributeMode == 'iframe') {
+      $payment = CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
+      if (method_exists($payment, 'getPaymentFrame')) {
+        $frame = $payment->getPaymentFrame();
+        $this->assign('billing_frame', $frame);
+      }
+    }
+
     if (isset($this->_values['event']['confirm_title'])) {
       CRM_Utils_System::setTitle($this->_values['event']['confirm_title']);
     }
@@ -353,6 +361,21 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         $this->addButtons(array(
             array('type' => 'back',
               'name' => ts('<< Go Back'),
+            ),
+          )
+        );
+      }
+      elseif ($this->_contributeMode == 'iframe') {
+        $contribButton = ts('Make Payment');
+        $this->addButtons(array(
+            array('type' => 'back',
+              'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+              'name' => ts('<< Go Back'),
+            ),
+            array('type' => 'next',
+              'name' => $contribButton,
+              'isDefault' => TRUE,
+              'js' => array('data' => "submit-once"),
             ),
           )
         );
@@ -673,6 +696,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         elseif (CRM_Utils_Array::value('is_pay_later', $value) ||
           $value['amount'] == 0 ||
           $this->_contributeMode == 'checkout' ||
+          $this->_contributeMode == 'iframe' ||
           $this->_contributeMode == 'notify'
         ) {
           if ($value['amount'] != 0) {
@@ -833,13 +857,14 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
     // for Transfer checkout.
     require_once "CRM/Event/BAO/Event.php";
-    if (($this->_contributeMode == 'checkout' || $this->_contributeMode == 'notify') &&
+    if (($this->_contributeMode == 'checkout' || $this->_contributeMode == 'notify' || $this->_contributeMode == 'iframe') &&
       !CRM_Utils_Array::value('is_pay_later', $params[0]) &&
       !$this->_isOnWaitlist && !$this->_requireApproval &&
       $this->_totalAmount > 0
     ) {
 
       $primaryParticipant = $this->get('primaryParticipant');
+      $primaryParticipant['qfKey'] = $this->controller->_key;
 
       if (!CRM_Utils_Array::value('participantID', $primaryParticipant)) {
         $primaryParticipant['participantID'] = $registerByID;

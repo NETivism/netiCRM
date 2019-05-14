@@ -1275,6 +1275,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       elseif ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_NOTIFY) {
         $this->set('contributeMode', 'notify');
       }
+      elseif ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_IFRAME) {
+        $this->set('contributeMode', 'iframe');
+      }
     }
     else {
       $session = CRM_Core_Session::singleton();

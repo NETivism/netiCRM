@@ -49,6 +49,8 @@
             {else} 	
                 {ts 1=$paymentProcessor.processorName}Click the <strong>Continue</strong> button to checkout to %1, where you will select your payment method and complete the registration.{/ts}
             {/if }
+        {elseif $contributeMode EQ 'iframe' and !$is_pay_later and ! $isAmountzero }
+            {ts}Otherwise, click the <strong>Make Payment</strong> button below to complete your registration.{/ts}
         {else}
             {ts}Otherwise, click the <strong>Continue</strong> button below to complete your registration.{/ts}
         {/if}
@@ -235,14 +237,14 @@
         </div>
     {/if}
     
-    {if $contributeMode NEQ 'notify'} {* In 'notify mode, contributor is taken to processor payment forms next *}
+    {if $contributeMode NEQ 'notify' && $contributeMode NEQ 'iframe'} {* In 'notify mode, contributor is taken to processor payment forms next *}
     <div class="messages status section continue_message-section">
         <p>
         {ts}Your registration will not be submitted until you click the <strong>Continue</strong> button. Please click the button one time only.{/ts}
         </p>
     </div>
     {/if}    
-   
+
     {if $paymentProcessor.payment_processor_type EQ 'Google_Checkout' and $paidEvent and !$is_pay_later and ! $isAmountzero and !$isOnWaitlist and !$isRequireApproval}
         <fieldset><legend>{ts}Checkout with Google{/ts}</legend>
             <div class="crm-section google_checkout-section">
@@ -257,7 +259,12 @@
             </div>
         </fieldset>    
     {/if}
+
 <!--payment-separator-->
+
+    {if $contributeMode eq 'iframe' and ! $is_pay_later and !$isAmountzero and !$isOnWaitlist and !$isRequireApproval }
+       {$billing_frame}
+    {/if}
 
     <div id="crm-submit-buttons" class="crm-submit-buttons">
 	    {include file="CRM/common/formButtons.tpl" location="bottom"}
