@@ -456,9 +456,8 @@ class CRM_Utils_OpenFlashChart {
   function buildChart(&$params, $chart) {
     $openFlashChart = array();
     if ($chart && is_array($params) && !empty($params)) {
-      require_once 'CRM/Utils/OpenFlashChart.php';
       // build the chart objects.
-      eval("\$chartObj = CRM_Utils_OpenFlashChart::" . $chart . '( $params );');
+      $chartObj = CRM_Utils_OpenFlashChart::$chart( $params );
 
       $openFlashChart = array();
       if ($chartObj) {

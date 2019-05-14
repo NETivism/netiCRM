@@ -419,8 +419,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         $path = CRM_Utils_Array::value('path', $cpTables[$table]);
         $fName = CRM_Utils_Array::value('function', $cpTables[$table]);
         if ($path && $fName) {
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $path) . ".php");
-          eval("$path::$fName( $mainId, null, $otherId );");
+          $path::$fName( $mainId, null, $otherId );
         }
         continue;
       }

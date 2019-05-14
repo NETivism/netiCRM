@@ -157,9 +157,8 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     // If there's a dataSource in the query string, we need to load
     // the form from the chosen DataSource class
     if ($this->_dataSourceIsValid) {
-      $this->_dataSourceClassFile = str_replace('_', '/', $this->_dataSource) . ".php";
-      require_once $this->_dataSourceClassFile;
-      eval("{$this->_dataSource}::buildQuickForm( \$this );");
+      $className = $this->_dataSource;
+      $className::buildQuickForm( $this );
     }
 
     // Get list of data sources and display them as options
@@ -335,8 +334,8 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
         $this->_params['import_table_name'] = 'civicrm_import_job_' . md5(uniqid(rand(), TRUE));
       }
 
-      require_once $this->_dataSourceClassFile;
-      eval("$this->_dataSource::postProcess( \$this->_params, \$db );");
+      $className = $this->_dataSource;
+      $className::postProcess( $this->_params, $db );
 
       // We should have the data in the DB now, parse it
       $importTableName = $this->get('importTableName');

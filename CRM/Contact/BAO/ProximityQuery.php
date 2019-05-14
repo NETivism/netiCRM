@@ -297,8 +297,8 @@ $earthDistanceSQL  <= $distance
       CRM_Core_Error::fatal(ts('Proximity searching requires you to set a valid geocoding provider'));
     }
 
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->geocodeMethod) . '.php');
-    eval($config->geocodeMethod . '::format( $proximityAddress );');
+    $className = $config->geocodeMethod;
+    $className::format( $proximityAddress );
     if (!isset($proximityAddress['geo_code_1']) ||
       !isset($proximityAddress['geo_code_2'])
     ) {

@@ -113,7 +113,8 @@ class CRM_Utils_System_Soap {
    */
   function url($path = NULL, $query = NULL, $absolute = TRUE, $fragment = NULL) {
     if (isset(self::$ufClass)) {
-      eval('$url = ' . self::$ufClass . '::url($path, $query, $absolute, $fragment);');
+      $ufClassName = self::$ufClass;
+      $url = $ufClassName::url($path, $query, $absolute, $fragment);
       return $url;
     }
     else {
@@ -155,7 +156,8 @@ class CRM_Utils_System_Soap {
    */
   static function &authenticate($name, $pass) {
     if (isset(self::$ufClass)) {
-      eval('$result =& ' . self::$ufClass . '::authenticate($name, $pass);');
+      $ufClassName = self::$ufClass;
+      $result =& $ufClassName::authenticate($name, $pass);
       return $result;
     }
     else {

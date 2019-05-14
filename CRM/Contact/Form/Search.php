@@ -351,8 +351,8 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       );
     }
     else {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $this->_modeValue['taskClassName']) . '.php');
-      eval('$tasks += ' . $this->_modeValue['taskClassName'] . '::permissionedTaskTitles( $permission );');
+      $taskClassName = $this->_modeValue['taskClassName'];
+      $task += $taskClassName::permissionedTaskTitles( $permission );
     }
 
     if (isset($this->_ssID)) {
@@ -661,23 +661,21 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $this->_selectorName = $this->_modeValue['selectorName'];
 
     if (strpos($this->_selectorName, 'CRM_Contact_Selector') !== FALSE) {
-      eval('$selector = new ' . $this->_selectorName .
-        '( $this->_customSearchClass,
+      $selectorName = $this->_selectorName;
+      $selector = new $selectorName( $this->_customSearchClass,
                      $this->_formValues,
                      $this->_params,
                      $this->_returnProperties,
                      $this->_action,
                      false, true,
-                     $this->_context );'
-      );
+                     $this->_context );
     }
     else {
-      eval('$selector = new ' . $this->_selectorName .
-        '( $this->_params,
+      $selectorName = $this->_selectorName;
+      $selector = new $selectorName( $this->_params,
                      $this->_action,
                      null, false, null,
-                     "search", "advanced" );'
-      );
+                     "search", "advanced" );
     }
     $controller = new CRM_Contact_Selector_Controller($selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),

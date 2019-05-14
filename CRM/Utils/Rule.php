@@ -33,7 +33,6 @@
  *
  */
 
-require_once 'HTML/QuickForm/Rule/Email.php';
 class CRM_Utils_Rule {
 
   static function title($str, $maxLength = 127) {
@@ -155,12 +154,15 @@ class CRM_Utils_Rule {
   }
 
   static function url($url, $checkDomain = FALSE) {
-    $options = array('domain_check' => $checkDomain,
-      'allowed_schemes' => array('http', 'https', 'mailto', 'ftp'),
-    );
-
-    require_once 'Validate.php';
-    return Validate::uri($url, $options);
+    if (!$url) {
+      // If this is required then that should be checked elsewhere - here we are not assuming it is required.
+      return TRUE;
+    }
+    if (preg_match('/^\//', $url)) {
+      // allow relative URL's (CRM-15598)
+      $url = 'http://' . $_SERVER['HTTP_HOST'] . $url;
+    }
+    return (bool) filter_var($url, FILTER_VALIDATE_URL);
   }
 
   static function wikiURL($string) {
@@ -314,15 +316,24 @@ class CRM_Utils_Rule {
       return TRUE;
     }
 
-    if (($value < 0)) {
+    // CRM-13460
+    // ensure number passed is always a string numeral
+    if (!is_numeric($value)) {
+      return FALSE;
+    }
+
+    // note that is_int matches only integer type
+    // and not strings which are only integers
+    // hence we do this here
+    if (preg_match('/^\d+$/', $value)) {
+      return TRUE;
+    }
+
+    if ($value < 0) {
       $negValue = -1 * $value;
       if (is_int($negValue)) {
         return TRUE;
       }
-    }
-
-    if (is_numeric($value) && preg_match('/^\d+$/', $value)) {
-      return TRUE;
     }
 
     return FALSE;
@@ -333,14 +344,34 @@ class CRM_Utils_Rule {
       return ($value < 0) ? FALSE : TRUE;
     }
 
-    if (is_numeric($value) && preg_match('/^\d+$/', $value)) {
+    // CRM-13460
+    // ensure number passed is always a string numeral
+    if (!is_numeric($value)) {
+      return FALSE;
+    }
+
+    if (preg_match('/^\d+$/', $value)) {
       return TRUE;
     }
 
     return FALSE;
   }
 
+  public static function commaSeparatedIntegers($value) {
+    foreach (explode(',', $value) as $val) {
+      if (!self::positiveInteger($val)) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
+
   static function numeric($value) {
+    // lets use a php gatekeeper to ensure this is numeric
+    if (!is_numeric($value)) {
+      return FALSE;
+    }
+
     return preg_match('/(^-?\d\d*\.\d*$)|(^-?\d\d*$)|(^-?\.\d\d*$)/', $value) ? TRUE : FALSE;
   }
 
@@ -437,11 +468,7 @@ class CRM_Utils_Rule {
   }
 
   static function email($value, $checkDomain = FALSE) {
-    static $qfRule = NULL;
-    if (!isset($qfRule)) {
-      $qfRule = new HTML_QuickForm_Rule_Email();
-    }
-    return $qfRule->validate($value, $checkDomain);
+    return (bool) filter_var($value, FILTER_VALIDATE_EMAIL);
   }
 
   static function emailList($list, $checkDomain = FALSE) {
@@ -679,7 +706,7 @@ class CRM_Utils_Rule {
   static function currencyCode($value) {
     static $currencyCodes = NULL;
     if (!$currencyCodes) {
-      $currencyCodes = &CRM_Core_PseudoConstant::currencyCode();
+      $currencyCodes = CRM_Core_PseudoConstant::currencyCode();
     }
     if (in_array($value, $currencyCodes)) {
       return TRUE;
@@ -738,10 +765,7 @@ class CRM_Utils_Rule {
       $value = $actualElementValue;
     }
 
-    if ($value && !is_numeric($value)) {
-      return FALSE;
-    }
-    return TRUE;
+    return self::positiveInteger($value);
   }
 
   /**
@@ -798,8 +822,27 @@ class CRM_Utils_Rule {
   }
 
   static function qfKey($key) {
-    require_once 'CRM/Core/Key.php';
     return ($key) ? CRM_Core_Key::valid($key) : FALSE;
+  }
+
+  /**
+   * Validate array recursively checking keys and  values.
+   *
+   * @param array $array
+   * @return bool
+   */
+  protected static function arrayValue($array) {
+    foreach ($array as $key => $item) {
+      if (is_array($item)) {
+        if (!self::xssString($key) || !self::arrayValue($item)) {
+          return FALSE;
+        }
+      }
+      if (!self::xssString($key) || !self::xssString($item)) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 }
 

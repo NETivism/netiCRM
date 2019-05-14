@@ -270,8 +270,8 @@ class CRM_Core_I18n_Schema {
       $class = 'CRM_Core_I18n_SchemaStructure';
       require_once 'CRM/Core/I18n/SchemaStructure.php';
     }
-    eval("\$indices =& $class::indices();");
-    eval("\$tables  =& $class::tables();");
+    $indices =& $class::indices();
+    $tables  =& $class::tables();
     $queries = array();
     $dao = new CRM_Core_DAO;
 
@@ -346,8 +346,8 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE INDEX queries
    */
   private function createIndexQueries($locale, $table, $class = 'CRM_Core_I18n_SchemaStructure') {
-    eval("\$indices =& $class::indices();");
-    eval("\$columns =& $class::columns();");
+    $indices =& $class::indices();
+    $columns =& $class::columns();
     if (!isset($indices[$table])) {
       return array();
     }
@@ -381,7 +381,7 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE TRIGGER queries
    */
   private function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
-    eval("\$columns =& $class::columns();");
+    $columns =& $class::columns();
     $queries = array();
     $namesTrigger = array();
     $individualNamesTrigger = array();
@@ -466,7 +466,7 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE INDEX queries
    */
   private function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
-    eval("\$columns =& $class::columns();");
+    $columns =& $class::columns();
     $cols = array();
     $dao->query("DESCRIBE {$table}", FALSE);
     while ($dao->fetch()) {

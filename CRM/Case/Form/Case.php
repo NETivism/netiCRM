@@ -175,7 +175,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     //when custom data is included in this page
     CRM_Custom_Form_Customdata::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity');
-    eval("CRM_Case_Form_Activity_{$this->_activityTypeFile}::preProcess( \$this );");
+    $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
+    $className::preProcess( $this );
   }
 
   /**
@@ -190,7 +191,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::DELETE || $this->_action & CRM_Core_Action::RENEW) {
       return TRUE;
     }
-    eval('$defaults = CRM_Case_Form_Activity_' . $this->_activityTypeFile . '::setDefaultValues($this);');
+    $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
+    $defaults = $className::setDefaultValues($this);
     $defaults = array_merge($defaults, CRM_Custom_Form_Customdata::setDefaultValues($this));
     return $defaults;
   }
@@ -258,7 +260,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       )
     );
 
-    eval("CRM_Case_Form_Activity_{$this->_activityTypeFile}::buildQuickForm( \$this );");
+    $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
+    $className::buildQuickForm( $this );
   }
 
   /**
@@ -272,7 +275,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::DELETE || $this->_action & CRM_Core_Action::RENEW) {
       return TRUE;
     }
-    eval('$this->addFormRule' . "(array('CRM_Case_Form_Activity_{$this->_activityTypeFile}', 'formrule'), \$this);");
+    $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
+    $this->addFormRule(array($className, 'formrule'), $this);
     $this->addFormRule(array('CRM_Case_Form_Case', 'formRule'), $this);
   }
 
@@ -332,7 +336,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     // 1. call begin post process
     if ($this->_activityTypeFile) {
-      eval("CRM_Case_Form_Activity_{$this->_activityTypeFile}" . "::beginPostProcess( \$this, \$params );");
+      $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
+      $className::beginPostProcess( $this, $params );
     }
 
     // 2. create/edit case
@@ -391,7 +396,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     // 4. call end post process
     if ($this->_activityTypeFile) {
-      eval("CRM_Case_Form_Activity_{$this->_activityTypeFile}" . "::endPostProcess( \$this, \$params );");
+      $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
+      $className::endPostProcess( $this, $params );
     }
 
     // 5. auto populate activites

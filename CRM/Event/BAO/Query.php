@@ -202,6 +202,15 @@ class CRM_Event_BAO_Query {
         $query->_whereTables['civicrm_discount'] = 1;
         $query->_whereTables['participant_discount_name'] = 1;
       }
+
+      if (CRM_Utils_Array::value('participant_line_item', $query->_returnProperties)) {
+        $query->_select['participant_line_item'] = "line_item.label as participant_line_item";
+        $query->_element['participant_line_item'] = 1;
+        $query->_tables['civicrm_line_item'] = 1;
+        $query->_tables['participant_line_item'] = 1;
+        $query->_whereTables['civicrm_line_item'] = 1;
+        $query->_whereTables['participant_line_item'] = 1;
+      }
     }
   }
 
@@ -279,26 +288,22 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'participant_fee_id':
-        $feeLabels = array();
+        $feeLabels = $priceValues = array();
         if (is_array($value)) {
           foreach ($value as $k => $val) {
             list($priceType, $priceOption) = explode(':', $val, 2);
             if ($priceType == 'priceset') {
-              if (is_numeric($priceOption)) {
-                $daoLabel = CRM_Core_DAO::executeQuery("SELECT cf.label as field_label, cv.label as value_label FROM civicrm_price_field_value cv INNER JOIN civicrm_price_field cf ON cv.price_field_id = cf.id WHERE cv.id = %1 LIMIT 1", array(1 => array($priceOption, 'Integer')));
-                $daoLabel->fetch();
-
-                if ($daoLabel) {
-                  if ($daoLabel->field_label === $daoLabel->value_label) {
-                    $feeLabels[] = CRM_Core_DAO::escapeString(trim($daoLabel->field_label));
-                  }
-                  else {
-                    $feeLabels[] = CRM_Core_DAO::escapeString(trim($daoLabel->field_label.'-'.$daoLabel->value_label));
+              if (CRM_Utils_Rule::positiveInteger($priceOption)) {
+                // refs #25295, price option can search by id
+                $priceValues[] = $priceOption;
+              }
+              elseif (strstr($priceOption, ',')){
+                $commaSeperated = explode(',', $priceOption);
+                foreach($commaSeperated as $cval) {
+                  if (CRM_Utils_Rule::positiveInteger($cval)) {
+                    $priceValues[] = $cval;
                   }
                 }
-              }
-              else {
-                $feeLabels[] = CRM_Core_DAO::escapeString(trim($priceOption));
               }
             }
             else {
@@ -316,6 +321,11 @@ class CRM_Event_BAO_Query {
           $feeLabel = implode('|', preg_replace('/[()*^$%\[\]\|]/', '.', $feeLabels));
           $query->_where[$grouping][] = "civicrm_participant.fee_level REGEXP '$feeLabel'";
           $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.implode(', ', $feeLabels);
+        }
+        elseif (!empty($priceValues)) {
+          $query->_where[$grouping][] = "participant_line_item.price_field_value_id IN (".implode(",", $priceValues).")";
+          $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.implode(', ', $feeLabels);
+          $query->_tables['participant_line_item'] = $query->_whereTables['participant_line_item'] = 1;
         }
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
         return;
@@ -511,6 +521,10 @@ class CRM_Event_BAO_Query {
       case 'participant_discount_name':
         $from = " $side JOIN civicrm_discount discount ON ( civicrm_participant.discount_id = discount.id )";
         $from .= " $side JOIN civicrm_option_group discount_name ON ( discount_name.id = discount.option_group_id ) ";
+        break;
+
+      case 'participant_line_item':
+        $from = " $side JOIN civicrm_line_item participant_line_item ON ( civicrm_participant.id = participant_line_item.entity_id AND participant_line_item.entity_table = 'civicrm_participant')";
         break;
     }
     return $from;

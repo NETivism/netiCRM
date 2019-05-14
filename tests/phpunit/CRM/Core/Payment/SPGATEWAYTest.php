@@ -220,7 +220,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   function testRecurringPaymentNotify(){
     $now = time();
-    $trxn_id = 'ut'.substr($now, -5);
+    $trxn_id = 'ut100000';
     $amount = 222;
 
     // create recurring
@@ -305,7 +305,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "MerchantOrderNo" => $trxn_id,
         "PeriodType" => "M",
         "PeriodAmt" => $amount,
-        "AuthTimes" => "4",
+        "AuthTimes" => "5",
         "DateArray" => "2016-11-24,2016-12-24",
         "TradeNo" => "16112415263934243",
         "AuthCode" => "930637",
@@ -368,7 +368,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "OrderNo" => $trxn_id2,
         "TradeNo" => "16112415263934243",
         "AuthDate" => date("Y-m-d h:i:s",$now),
-        "TotalTimes" => "4",
+        "TotalTimes" => "5",
         "AlreadyTimes" => 2,
         "AuthAmt" => $amount,
         "AuthCode" => "930637",
@@ -429,7 +429,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "OrderNo" => $trxn_id3,
         "TradeNo" => "16112415263934243",
         "AuthDate" => date("Y-m-d h:i:s",$now),
-        "TotalTimes" => "4",
+        "TotalTimes" => "5",
         "AlreadyTimes" => 3,
         "AuthAmt" => $amount,
         "AuthCode" => "930637",
@@ -464,13 +464,58 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid3");
     $this->assertNotEmpty($data, "In line " . __LINE__);
 
-
-    /**
-     * Forth pay, finish recur.
-     */
-
+    // Fourth payment, when missing recurring, trying to syncronize payment
     $now += 86400;
     $trxn_id4 = $trxn_id . "_4";
+    $post = (object) array(
+      'Status' => 'SUCCESS',
+      'Message' => '查詢成功',
+      'Result' => 
+      (object)(array(
+        'MerchantID' => 'abcd',
+        'Amt' => $amount,
+        'TradeNo' => '19022107170243218',
+        'MerchantOrderNo' => $trxn_id4,
+        'TradeStatus' => '1',
+        'PaymentType' => 'CREDIT',
+        'CreateTime' => date('Y-m-d H:i:s'),
+        'PayTime' => date('Y-m-d H:i:s'),
+        'FundTime' => date('Y-m-d', $now + 86400*7),
+        'RespondCode' => '00',
+        'Auth' => '12345',
+        'ECI' => NULL,
+        'CloseAmt' => $amount,
+        'CloseStatus' => '3',
+        'BackBalance' => NULL,
+        'BackStatus' => '0',
+        'RespondMsg' => '授權成功',
+        'Inst' => '0',
+        'InstFirst' => '0',
+        'InstEach' => '0',
+        'PaymentMethod' => 'CREDIT',
+      )),
+    );
+
+    $result = civicrm_spgateway_single_check($trxn_id4, $create_contribution = TRUE, $post);
+    $params = array(
+      1 => array($recurring->id, 'Integer'),
+    );
+    $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
+
+    $params = array(
+      1 => array($trxn_id4, 'String'),
+    );
+    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $this->assertNotEmpty($cid4, "In line " . __LINE__);
+    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid4");
+    $this->assertNotEmpty($data, "In line " . __LINE__);
+
+    /**
+     * Fifth pay, finish recur.
+     */
+    $now += 86400;
+    $trxn_id5 = $trxn_id . "_5";
     $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
 
@@ -479,16 +524,16 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     // $get['is_recur'] = 1;
     $post = array(
       "Status" => "SUCCESS",
-      "Message" => "委託單成立，且首次授權成功",
+      "Message" => "授權成功",
       "Result" => array(
         "RespondCode" => "00",
         "MerchantID" => 'abcd',
         "MerOrderNo" => $trxn_id,
-        "OrderNo" => $trxn_id4,
+        "OrderNo" => $trxn_id5,
         "TradeNo" => "16112415263934243",
         "AuthDate" => date("Y-m-d h:i:s",$now),
-        "TotalTimes" => "4",
-        "AlreadyTimes" => 4,
+        "TotalTimes" => "5",
+        "AlreadyTimes" => 5,
         "AuthAmt" => $amount,
         "AuthCode" => "930637",
         "EscrowBank" => "KGI",
@@ -511,17 +556,17 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $params = array(
       1 => array($recurring->id, 'Integer'),
     );
-    $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
+    $this->assertDBQuery(5, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
     $params = array(
-      1 => array($trxn_id4, 'String'),
+      1 => array($trxn_id5, 'String'),
     );
 
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NOT NULL AND receive_date >= '".date('Y-m-d H:i:s')."'", $params);
-    $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $cid5 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
-    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid4");
+    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid5");
     $this->assertNotEmpty($data, "In line " . __LINE__);
   }
 

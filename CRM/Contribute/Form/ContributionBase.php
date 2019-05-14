@@ -299,6 +299,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
       }
 
+      if (($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL ) && empty($this->_values['custom_post_id']) && empty($this->_values['custom_pre_id'])) {
+        CRM_Core_Error::fatal(ts("You may want to collect information from contributors beyond what is required to make a contribution. For example, you may want to inquire about volunteer availability and skills. Add any number of fields to your contribution form by selecting CiviCRM Profiles (collections of fields) to include at the beginning of the page, and/or at the bottom."));
+      }
+
       // also check for billing informatin
       // get the billing location type
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');

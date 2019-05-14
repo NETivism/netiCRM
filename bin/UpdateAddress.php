@@ -200,7 +200,8 @@ WHERE      {$whereClause}
                     usleep( 50000 );
                 }
                 
-                eval( $config->geocodeMethod . '::format( $params, true );' );
+                $className = $config->geocodeMethod;
+                $className::format( $params, true );
                 array_shift( $params );
                 $maxTries--;
             } while ( ( ! isset( $params['geo_code_1'] ) ) &&

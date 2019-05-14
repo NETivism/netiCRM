@@ -46,12 +46,12 @@ class CRM_Contact_DAO_Factory {
     $class = str_replace('/', '_', $file);
 
     require_once ($file . self::$_suffix);
-
-    $newObj = eval(sprintf("return %s %s%s();",
-        self::$_preCall[$type],
-        $class,
-        self::$_extCall[$type]
-      ));
+    if ($type == 'singleton') {
+      $newObj = $class::singleton();
+    }
+    else {
+      $newObj = new $class();
+    }
 
     return $newObj;
   }

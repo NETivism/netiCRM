@@ -652,14 +652,23 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     $feeLevel = CRM_Utils_Request::retrieve('fee_level', 'String', CRM_Core_DAO::$_nullObject);
 
     if ($feeLevel && $this->_event['id']) {
-      if (strstr($feeLevel, ',')) {
-        $this->_formValues['participant_fee_id'] = explode(',', $feeLevel);
+      if (strstr($feeLevel, '|')) {
+        $this->_formValues['participant_fee_id'] = explode('|', $feeLevel);
         foreach($this->_formValues['participant_fee_id'] as $key => $value) {
           $this->_formValues['participant_fee_id'][$key] = $value;
         }
       }
       else {
-        $this->_formValues['participant_fee_id'] = array($feeLevel);
+        if (strstr($feeLevel, 'priceset:') && strstr($feeLevel, ',')) {
+          list($pricesetLabel, $fees) = explode(":", $feeLevel);
+          $fees = explode(",", $fees);
+          foreach($fees as $fee) {
+            $this->_formValues['participant_fee_id'][] = 'priceset:'.$fee;
+          }
+        }
+        else {
+          $this->_formValues['participant_fee_id'] = array($feeLevel);
+        }
       }
     }
 

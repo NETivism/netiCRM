@@ -684,7 +684,7 @@ WHERE $where
 ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
 ";
     $dao = CRM_Core_DAO::executeQuery($query);
-    $levels = array();
+    $levels = $levelAll = array();
     while ($dao->fetch()) {
       if ($dao->field_label) {
         if ($dao->field_label === $dao->label) {
@@ -698,10 +698,12 @@ ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
       else {
         $levels['priceset:'.$dao->id] = $dao->label.': '. $dao->amount;
       }
+      $levelAll[$dao->field_label][] = $dao->id;
     }
     foreach($levels as $label => &$lev) {
       if (is_array($lev) && count($lev) > 1) {
-        $lev['priceset:'.$label] = $label.' ('.ts('All').')';
+        $commaSeperated = implode(',', $levelAll[$label]);
+        $lev['priceset:'.$commaSeperated] = $label.' ('.ts('All').')';
       }
     }
 

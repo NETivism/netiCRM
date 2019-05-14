@@ -217,8 +217,7 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event {
     );
     require_once 'CRM/Core/BAO/OptionGroup.php';
     foreach ($dependencies as $daoName => $values) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
-      eval('$dao = new ' . $daoName . '( );');
+      $dao = new $daoName( );
       if ($daoName == 'CRM_Core_DAO_OptionGroup') {
         $dao->name = $values['name'];
         $dao->find();

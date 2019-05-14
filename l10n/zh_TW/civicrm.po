@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-04-08 06:04+0000\n"
+"PO-Revision-Date: 2019-05-14 03:47+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47023,3 +47023,24 @@ msgstr "只要在上面的欄位%y%m前面填入「!acc」，你便可以帶入�
 
 msgid "'s"
 msgstr "的"
+
+msgid ""
+"To prevent mass mailing error, no test mail is sent to the group that has "
+"more than 50 contacts."
+msgstr "避免寄送測試信件至錯誤群組，而您選的測試寄送群組超過50個聯絡人，因此我們沒有寄送測試郵件。"
+
+#: CRM/Contribute/BAO/PCP.php
+msgid "%1 status has been updated to %2."
+msgstr "「%1」的狀態已更新為「%2」。"
+
+msgid "A notification email has been sent to the supporter."
+msgstr "通知郵件已寄送給支持者。"
+
+msgid "Your Personal Campaign Page"
+msgstr "您的個人募款頁"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Otherwise, click the <strong>Make Payment</strong> button below to complete "
+"your registration."
+msgstr "請按下方「<strong>付款</strong>」以完成報名。"

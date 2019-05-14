@@ -193,7 +193,8 @@ SELECT  count( id ) as statusCount
             // below 3.2.alpha1
             if (version_compare($rev, '3.2.alpha1') < 0) {
               if (is_callable(array($this, $phpFunctionName))) {
-                eval("\$this->{$phpFunctionName}('$rev');");
+                $functionName = $this->$phpFunctionName;
+                $functionName($rev);
               }
               else {
                 $upgrade->processSQL($rev);
@@ -260,9 +261,8 @@ SELECT  count( id ) as statusCount
 
   function upgrade_2_2_alpha1($rev) {
     for ($stepID = 1; $stepID <= 4; $stepID++) {
-      require_once "CRM/Upgrade/TwoTwo/Form/Step{$stepID}.php";
       $formName = "CRM_Upgrade_TwoTwo_Form_Step{$stepID}";
-      eval("\$form = new $formName( );");
+      $form = new $formName( );
 
       $error = NULL;
       if (!$form->verifyPreDBState($error)) {
@@ -299,9 +299,8 @@ SELECT  count( id ) as statusCount
   }
 
   function upgrade_2_1_2($rev) {
-    require_once "CRM/Upgrade/TwoOne/Form/TwoOneTwo.php";
     $formName = "CRM_Upgrade_TwoOne_Form_TwoOneTwo";
-    eval("\$form = new $formName( '$rev' );");
+    $form = new $formName( $rev );
 
     $error = NULL;
     if (!$form->verifyPreDBState($error)) {

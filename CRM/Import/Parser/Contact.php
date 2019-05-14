@@ -297,7 +297,12 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
           $missingNames[] = ts('Email Address');
         }
         else {
-          if (!in_array($fieldName, $this->_mapperKeys)) {
+          if ($fieldName == 'state_province_id') {
+            if (!in_array('state_province', $this->_mapperKeys)) {
+              $missingNames[] = $this->_dedupeRuleFieldsLabel[$fieldName];
+            }
+          }
+          elseif (!in_array($fieldName, $this->_mapperKeys)) {
             $errorRequired = TRUE;
             $missingNames[] = $this->_dedupeRuleFieldsLabel[$fieldName];
           }
