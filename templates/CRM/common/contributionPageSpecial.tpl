@@ -54,5 +54,10 @@
     background-position: center;
   }
 }
+@media screen and (max-width: 1023px) {
+  body.frontend.page-civicrm-contribute-transact{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)),url({/literal}{$backgroundImageUrl}{literal});
+  }
+}
 {/literal}
 </style>
