@@ -93,6 +93,37 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $params['id'] = $this->_id;
         CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionRecur', $params, $defaults);
       }
+
+      if (CRM_Utils_Array::value('create_date', $defaults)) {
+        list($defaults['create_date'],
+          $defaults['create_date_time']
+        ) = CRM_Utils_Date::setDateDefaults($defaults['create_date'], 'activityDateTime');
+      }
+
+      if (CRM_Utils_Array::value('start_date', $defaults)) {
+        list($defaults['start_date'],
+          $defaults['start_date_time']
+        ) = CRM_Utils_Date::setDateDefaults($defaults['start_date'], 'activityDateTime');
+      }
+
+      if (CRM_Utils_Array::value('modified_date', $defaults)) {
+        list($defaults['modified_date'],
+          $defaults['modified_date_time']
+        ) = CRM_Utils_Date::setDateDefaults($defaults['modified_date'], 'activityDateTime');
+      }
+
+      if (CRM_Utils_Array::value('cancel_date', $defaults)) {
+        list($defaults['cancel_date'],
+          $defaults['cancel_date_time']
+        ) = CRM_Utils_Date::setDateDefaults($defaults['cancel_date'], 'activityDateTime');
+      }
+
+      if (CRM_Utils_Array::value('end_date', $defaults)) {
+        list($defaults['end_date'],
+          $defaults['end_date_time']
+        ) = CRM_Utils_Date::setDateDefaults($defaults['end_date'], 'activityDateTime');
+      }
+
     }
     return $defaults;
   }
@@ -122,18 +153,53 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       'is_test' => ts('Is Test'),
       'cycle_day' => ts('Cycle Day'),
       'next_sched_contribution' => ts('Next Sched Contribution'),
+      'auto_renew' => ts('Auto Renew'),
+      'contribution_status_id' => ts('Contribution Status Id'),
     );
 
-    foreach($field as $name => $label){
-      $ele = $this->add('text', $name, $label, array('size' => 20, 'readonly' => 'readonly'));
-      $ele->freeze();
+    // Get payment processor
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->contribution_recur_id = $this->_id;
+    $contribution->find(TRUE);
+    $is_test = $contribution->is_test ? 'test' : '';
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
+    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, $this);
+    $class = get_class($payment);
+    if (!empty($class::$_editableFields)) {
+      $activeFields = $class::$_editableFields;
     }
-    $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
+    else {
+      $activeFields = array();
+    }
 
-    $ele = $this->add('select', 'contribution_status_id', ts('Recuring Status'), $statuses);
-    if($this->_online){
-      $ele->freeze();
+    foreach ($field as $name => $label) {
+      if (substr($name, -5) == '_date') {
+        $this->addDateTime($name, $label, FALSE, array('formatType' => 'activityDateTime'));
+      }
+      else if( $name == 'contribution_status_id') {
+        $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
+        $ele = $this->add('select', 'contribution_status_id', ts('Recuring Status'), $statuses);
+      }
+      else if (in_array($name, array('installments', 'cycle_day', 'amount'))) {
+        $ele = $this->add('number', $name, $label);
+      }
+      else {
+        $ele = $this->add('text', $name, $label, array('size' => 20));
+      }
+
+      if ( !in_array($name, $activeFields) ) {
+        if (substr($name, -5) == '_date') {
+          $ele = $this->getElement($name);
+          $ele->freeze();
+          $ele = $this->getElement($name.'_time');
+          $ele->freeze();
+        }
+        else {
+          $ele->freeze();
+        }
+      }
     }
+
     // define the buttons
     $this->addButtons(array(
         array('type' => 'next',
@@ -160,6 +226,27 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       $params['id'] = $this->_id;
     }
 
+    $params['create_date'] = CRM_Utils_Date::processDate($params['create_date'],
+      $params['create_date_time'],
+      TRUE
+    );
+    $params['start_date'] = CRM_Utils_Date::processDate($params['start_date'],
+      $params['start_date_time'],
+      TRUE
+    );
+    $params['modified_date'] = CRM_Utils_Date::processDate($params['modified_date'],
+      $params['modified_date_time'],
+      TRUE
+    );
+    $params['cancel_date'] = CRM_Utils_Date::processDate($params['cancel_date'],
+      $params['cancel_date_time'],
+      TRUE
+    );
+    $params['end_date'] = CRM_Utils_Date::processDate($params['end_date'],
+      $params['end_date_time'],
+      TRUE
+    );
+
     // refs #17486. Date format should be YmdHis.
     foreach ($params as $key => $value) {
       if(preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/',$value)){
@@ -172,6 +259,13 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     require_once 'CRM/Contribute/BAO/ContributionRecur.php';
     CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
     CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
+    $session = CRM_Core_Session::singleton();
+    $urlParams = http_build_query(array(
+      'reset' => 1,
+      'id' => $this->_id,
+      'cid' => $this->_contactID,
+    ));
+    $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/contributionrecur', $urlParams));
   }
   //end of function
 }
