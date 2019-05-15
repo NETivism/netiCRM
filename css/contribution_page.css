@@ -301,12 +301,6 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     overflow: hidden;
     z-index: 1;
   }
-  .custom-step-info :first-child{
-    margin-left: 50vw;
-  }
-  .custom-step-info :last-child{
-    margin-right: 50vw;
-  }
   body .crm-container-md .crm-form-select-single select,
   body .crm-container-md .crm-form-select-single select.form-select {
     z-index: unset;
