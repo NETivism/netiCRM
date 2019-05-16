@@ -46856,3 +46856,6 @@ msgid ""
 "Otherwise, click the <strong>Make Payment</strong> button below to complete your"
 " registration."
 msgstr ""
+
+msgid "Suspended"
+msgstr ""
