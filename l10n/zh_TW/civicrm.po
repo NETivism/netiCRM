@@ -47044,3 +47044,6 @@ msgid ""
 "Otherwise, click the <strong>Make Payment</strong> button below to complete "
 "your registration."
 msgstr "請按下方「<strong>付款</strong>」以完成報名。"
+
+msgid "Suspended"
+msgstr "暫停中"
