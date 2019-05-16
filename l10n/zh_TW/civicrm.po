@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-05-16 06:54+0000\n"
+"PO-Revision-Date: 2019-05-16 10:01+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47047,3 +47047,9 @@ msgstr "請按下方「<strong>付款</strong>」以完成報名。"
 
 msgid "Suspended"
 msgstr "暫停中"
+
+msgid "Note Title"
+msgstr "附註主旨"
+
+msgid "Change status to %status%"
+msgstr "狀態改為「%status%」"
