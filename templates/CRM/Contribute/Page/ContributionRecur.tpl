@@ -113,40 +113,53 @@
     <h3>
       {if $action eq 1}{ts}New Recurring Payment{/ts}{else}{ts}Recurring contributions{/ts}{/if}
     </h3>
-    <div class="crm-block crm-form-block crm-recurcontrib-form-block">
-      <div class="crm-section">
-        <div class="content">
-          <table class="crm-info-panel">
-            <tr><td class="label">{ts}From{/ts}</td><td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contactId`" h=0 a=1 fe=1}">{$displayName}</a></td></tr>
-            <tr><td class="label">{ts}Recurring Contribution ID{/ts}</td><td>{$form.id.html}</td></tr>
-            <tr><td class="label">{ts}Amount{/ts}</td><td>{$form.amount.html}</td></tr>
-            <tr><td class="label">{ts}Currency{/ts}</td><td>{$form.currency.html}</td></tr>
-            <tr><td class="label">{ts}Frequency{/ts}</td><td>{ts}every{/ts} {$form.frequency_interval.html} {ts}{$form.frequency_unit.html}{/ts}</td></tr>
-            <tr><td class="label">{ts}Cycle Day{/ts}</td><td>{$form.cycle_day.html} {if $form.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}</td></tr>
-            <tr><td class="label">{ts}Installments{/ts}</td><td>{$form.installments.html}</td></tr>
-            <tr><td></td><td></td></tr>
-            <tr><td class="label">{ts}Create date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=create_date}</td></tr>
-            <tr><td class="label">{ts}Start date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=start_date}</td></tr>
-            {if $form.modified_date.html}<tr><td class="label">{ts}Last Modified Date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=modified_date}</td></tr>{/if}
-            {if $form.cancel_date.html}<tr><td class="label">{ts}Cancel Date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=cancel_date}</td></tr>{/if}
-            {if $form.cancel_date.html}<tr><td class="label">{ts}End Date{/ts}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=end_date}</td></tr>
-            {/if}
-            <tr><td></td><td></td></tr>
-            {if $form.processor_id.html}<tr><td class="label">{ts}Processor ID{/ts}</td><td>{$form.processor_id.html}</td></tr>{/if}
-            {if $form.contribution_status_id neq 3}<tr><td class="label">{ts}Next Sched Contribution{/ts}</td><td>{$form.next_sched_contribution.html|crmDate}</td></tr>{/if}
+    <table class="form-layout-compressed">
+      <tr><td class="label">{ts}From{/ts}</td><td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contactId`" h=0 a=1 fe=1}">{$displayName}</a></td></tr>
+      <tr><td class="label">{$form.id.label}</td><td>{$form.id.html}</td></tr>
+      <tr><td class="label">{$form.amount.label}</td><td>{$form.amount.html}</td></tr>
+      <tr><td class="label">{$form.currency.label}</td><td>{$form.currency.html}</td></tr>
+      <tr><td class="label">{$form.frequency_unit.label}</td><td>{ts}every{/ts} {$form.frequency_interval.html} {ts}{$form.frequency_unit.html}{/ts}</td></tr>
+      <tr><td class="label">{$form.cycle_day.label}</td><td>{$form.cycle_day.html} {if $form.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}</td></tr>
+      <tr><td class="label">{$form.installments.label}</td><td>{$form.installments.html}</td></tr>
+      <tr><td></td><td></td></tr>
+      <tr><td class="label">{$form.create_date.label}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=create_date}</td></tr>
+      <tr><td class="label">{$form.start_date.label}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=start_date}</td></tr>
+      {if $form.modified_date.html}<tr><td class="label">{$form.modified_date.label}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=modified_date}</td></tr>{/if}
+      {if $form.cancel_date.html}<tr><td class="label">{$form.cancel_date.label}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=cancel_date}</td></tr>{/if}
+      {if $form.cancel_date.html}<tr><td class="label">{$form.end_date.label}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=end_date}</td></tr>
+      {/if}
+      <tr><td></td><td></td></tr>
+      {if $form.processor_id.html}<tr><td class="label">{$form.processor_id.label}</td><td>{$form.processor_id.html}</td></tr>{/if}
+      {if $form.contribution_status_id neq 3}<tr><td class="label">{$form.next_sched_contribution.label}</td><td>{$form.next_sched_contribution.html|crmDate}</td></tr>{/if}
 
-            {* trxn_id Used in spgateway. refs #16960 - flr. 65 *}
-            <tr><td class="label">{ts}Transaction ID{/ts}</td><td>{$form.trxn_id.html}</td></tr>
-            {if $form.auto_renew.html}<tr><td class="label">{ts}Auto Renew{/ts}</td><td>{$form.auto_renew.html}</td></tr>{/if}
-            <tr><td class="label">{ts}Recurring Status{/ts}</td><td>{$form.contribution_status_id.html}</td></tr>
-          </table>
-        </div>
-      </div>
-      <div class="crm-section recurcontrib-buttons-section no-label">
-        <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
-        <div class="clear"></div> 
-      </div>
+      {* trxn_id Used in spgateway. refs #16960 - flr. 65 *}
+      <tr><td class="label">{$form.trxn_id.label}</td><td>{$form.trxn_id.html}</td></tr>
+      {if $form.auto_renew.html}<tr><td class="label">{$form.auto_renew.label}</td><td>{$form.auto_renew.html}</td></tr>{/if}
+      <tr><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}</td></tr>
+      <tr><td class="label">{$form.note_title.label}</td><td>{$form.note_title.html}</td></tr>
+      <tr><td class="label">{$form.note_body.label}</td><td>{$form.note_body.html}</td></tr>
+    </table>
+    <div class="crm-section recurcontrib-buttons-section no-label">
+      <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+      <div class="clear"></div> 
     </div>
+    {literal}
+    <script>
+      (function($){
+        $(function(){
+          $('#contribution_status_id').change(function(){
+            var $this = $(this);
+            if ($this.val() != $this.attr('data-origin-type')) {
+              $('#note_title').val("{/literal}{ts}Change status to %status%{/ts}{literal}".replace("%status%", $this.find(":selected").text()));
+            }
+            else {
+              $('#note_title').val("");
+            }
+          })
+        });
+      })(cj);
+    </script>
+    {/literal}
     {* include jscript to warn if unsaved form field changes *}
     {include file="CRM/common/formNavigate.tpl"}
 </div>

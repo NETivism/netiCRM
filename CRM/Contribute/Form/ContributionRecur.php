@@ -178,7 +178,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       }
       else if( $name == 'contribution_status_id') {
         $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
-        $ele = $this->add('select', 'contribution_status_id', ts('Recuring Status'), $statuses);
+        $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'contribution_status_id');
+        $ele = $this->add('select', 'contribution_status_id', $label, $statuses, FALSE, array(
+          'data-origin-type' => $statusId,
+        ));
       }
       else if (in_array($name, array('installments', 'cycle_day', 'amount'))) {
         $ele = $this->add('number', $name, $label);
@@ -199,6 +202,13 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         }
       }
     }
+
+    $this->add('text', 'note_title', ts('Note Title'));
+    $this->add('textarea', 'note_body', ts('Note Text'), array(
+      'rows' => "4",
+      'cols' => "60",
+      'placeholder' => ts("Enter text here")."...",
+    ));
 
     // define the buttons
     $this->addButtons(array(
@@ -253,6 +263,16 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $params[$key] = preg_replace('/-| |:/', '', $value);
       }
     }
+
+    $noteParams = array(
+      'entity_table'  => 'civicrm_contribution_recur',
+      'subject'       => $params['note_title'],
+      'note'          => $params['note_body'],
+      'entity_id'     => $this->_id,
+      'contact_id'    => $this->_contactID,
+      'modified_date' => date('YmdHis')
+    );
+    CRM_Core_BAO_Note::add( $noteParams, NULL );
 
     // save the changes
     $ids = array();

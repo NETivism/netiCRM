@@ -149,7 +149,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
     $note = new CRM_Core_BAO_Note();
 
     if (!isset($params['modified_date'])) {
-      $params['modified_date'] = date("Ymd");
+      $params['modified_date'] = date("YmdHis");
     }
 
     if (!isset($params['privacy'])) {
@@ -232,7 +232,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    */
   static function dataExists(&$params) {
     // return if no data present
-    if (!strlen($params['note'])) {
+    if (!strlen($params['note']) && !strlen($params['subject'])) {
       return FALSE;
     }
     return TRUE;
