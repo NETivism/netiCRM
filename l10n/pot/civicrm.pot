@@ -46859,3 +46859,9 @@ msgstr ""
 
 msgid "Suspended"
 msgstr ""
+
+msgid "Note Title"
+msgstr ""
+
+msgid "Change status to %status%"
+msgstr ""
