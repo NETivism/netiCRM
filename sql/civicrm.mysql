@@ -2825,7 +2825,7 @@ CREATE TABLE civicrm_note (
      entity_id int unsigned NOT NULL   COMMENT 'Foreign key to the referenced item.',
      note text    COMMENT 'Note and/or Comment.',
      contact_id int unsigned    COMMENT 'FK to Contact ID creator',
-     modified_date date    COMMENT 'When was this note last modified/edited',
+     modified_date datetime    COMMENT 'When was this note last modified/edited',
      subject varchar(255)    COMMENT 'subject of note description',
      privacy int    COMMENT 'Foreign Key to Note Privacy Level (which is an option value pair and hence an implicit FK)' 
 ,

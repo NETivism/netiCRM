@@ -113,7 +113,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
   /**
    * When was this note last modified/edited
    *
-   * @var date
+   * @var datetime
    */
   public $modified_date;
   /**
@@ -200,7 +200,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
         ) ,
         'modified_date' => array(
           'name' => 'modified_date',
-          'type' => CRM_Utils_Type::T_DATE,
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Modified Date') ,
         ) ,
         'subject' => array(
