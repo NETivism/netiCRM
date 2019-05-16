@@ -31,6 +31,11 @@
     <div id="help">
         {ts}Manage the rules used to identify potentially duplicate contact records. Scan for duplicates using a selected rule and merge duplicate contact data as needed.{/ts} {help id="id-dedupe-intro"}
     </div>
+    {if $hasperm_administer_dedupe_rules}
+	  <div class="action-link-button">
+      <a href="{crmURL p='civicrm/dedupe/exception' q='reset=1'}" class="button"><span><i class="zmdi zmdi-view-toc"></i>{ts}Dedupe Exceptions{/ts}</span></a>
+    </div>
+    {/if}
     {if $rows}
         {include file="CRM/common/jsortable.tpl"}
         <div id="browseValues">
@@ -67,7 +72,6 @@
     	<a href="{crmURL q="action=add&contact_type=Individual&reset=1"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Dedupe Rule for Individuals{/ts}</span></a>
     	<a href="{crmURL q="action=add&contact_type=Household&reset=1"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Dedupe Rule for Households{/ts}</span></a>
     	<a href="{crmURL q="action=add&contact_type=Organization&reset=1"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Dedupe Rule for Organizations{/ts}</span></a>
-	<a href="{crmURL p='civicrm/dedupe/exception' q='reset=1'}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Dedupe Exceptions{/ts}</span></a>
         </div>
     {/if}
 {/if}
