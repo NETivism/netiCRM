@@ -274,12 +274,30 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     );
     CRM_Core_BAO_Note::add( $noteParams, NULL );
 
+    $session = CRM_Core_Session::singleton();
+    $contactId = $session->get('userID');
+
+    $logValues = array();
+    $recurFields = array_keys((new CRM_Contribute_DAO_ContributionRecur())->fields());
+    foreach ($recurFields as $field) {
+      if (!empty($params[$field])) {
+        $logValues[$field] = $params[$field];
+      }
+    }
+    $logParams = array(
+      'entity_table' => 'civicrm_contribution_recur',
+      'entity_id' => $this->_id,
+      'data' => serialize($logValues),
+      'modified_id' => $contactId,
+      'modified_date' => date('YmdHis'),
+    );
+    CRM_Core_BAO_Log::add( $logParams );
+
     // save the changes
     $ids = array();
     require_once 'CRM/Contribute/BAO/ContributionRecur.php';
     CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
     CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
-    $session = CRM_Core_Session::singleton();
     $urlParams = http_build_query(array(
       'reset' => 1,
       'id' => $this->_id,

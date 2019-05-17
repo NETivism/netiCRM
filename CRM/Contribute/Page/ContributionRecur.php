@@ -71,6 +71,26 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       }
       $values['contribution_status'] = $status[$values['contribution_status_id']];
       $this->assign('recur', $values);
+
+      $logDAO = new CRM_Core_DAO_Log();
+
+      $logDAO->entity_table = 'civicrm_contribution_recur';
+      $logDAO->entity_id = $recur->id;
+      $logDAO->orderBy('modified_date desc');
+      $logDAO->find();
+      while ($logDAO->fetch()) {
+        list($displayName, $ignore) = CRM_Contact_Page_View::getContactDetails($logDAO->modified_id);
+        $log = array(
+          'modified_id' => $logDAO->modified_id,
+          'modified_date' => $logDAO->modified_date,
+          'modified_name' => $displayName,
+          'data' => unserialize($logDAO->data),
+        );
+        $lastData = $log['data'];
+        $logs[] = $log;
+      }
+      $logDAO->free();
+      $this->assign('logs', $logs);
       
       // Recurring Contributions
       $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), CRM_Core_Action::BROWSE);

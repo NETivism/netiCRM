@@ -59,6 +59,40 @@
             -->
             <tr><td class="label">{ts}Recurring Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
           </table>
+
+          <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+            <div class="crm-accordion-header">
+              <div class="zmdi crm-accordion-pointer"></div> 
+              Logs
+            </div>
+            <div class="crm-accordion-body">
+              {foreach  from=$logs item=log}
+                <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+                  <div class="crm-accordion-header">
+                    <div class="zmdi crm-accordion-pointer"></div> 
+                    {$log.modified_date|crmDate} - <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$log.modified_id`" h=0 a=1 fe=1}">{$log.modified_name}</a>
+                  </div>
+                  <div class="crm-accordion-body">
+                    <table class="crm-info-panel">
+                      {foreach from=$log.data key=label item=value}
+                      <tr><td class="label">{$label}</td><td>{$value}</td></tr>
+                      {/foreach}
+                    </table>
+                  </div>
+                </div>
+              {/foreach}
+            </div>
+            
+          </div>
+
+          {literal}
+          <script type="text/javascript">
+          cj(function() {
+            cj().crmaccordions(); 
+          });
+          </script>
+          {/literal}
+
           {* Recurring Contribution *}
           {if $rows}
             {include file="CRM/Contribute/Form/Selector.tpl"}
