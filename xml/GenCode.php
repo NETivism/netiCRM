@@ -180,6 +180,15 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
     // TODO deal with the BAO's too ?
     file_put_contents($this->CoreDAOCodePath . ".listAll.php", $allDAO);
+
+    // AllDAO
+    $this->smarty->clear_all_cache();
+    $this->smarty->clear_all_assign();
+    $this->smarty->assign_by_ref('tables', $tables);
+    $this->beautifier->setInputString($this->smarty->fetch('listAll.tpl'));
+    $this->beautifier->setOutputFile($this->CoreDAOCodePath."AllCoreTables.data.php");
+    $this->beautifier->process();
+    $this->beautifier->save();
   }
 
   function generateCiviTestTruncate($tables) {
@@ -576,6 +585,19 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       $table['foreignKey'] = &$foreign;
     }
 
+    if ($this->value('dynamicForeignKey', $tableXML)) {
+      $dynamicForeign = array();
+      foreach ($tableXML->dynamicForeignKey as $foreignXML) {
+        if ($this->value('drop', $foreignXML, 0) > 0 && version_compare($this->value('drop', $foreignXML, 0), $this->buildVersion, '<=')) {
+          continue;
+        }
+        if (version_compare($this->value('add', $foreignXML, 0), $this->buildVersion, '<=')) {
+          $this->getDynamicForeignKey($foreignXML, $dynamicForeign, $name);
+        }
+      }
+      $table['dynamicForeignKey'] = $dynamicForeign;
+    }
+
     $tables[$name] = &$table;
     return;
   }
@@ -813,6 +835,15 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       'onDelete' => $this->value('onDelete', $foreignXML, FALSE),
     );
     $foreignKeys[$name] = &$foreignKey;
+  }
+
+  public function getDynamicForeignKey(&$foreignXML, &$dynamicForeignKeys) {
+    $foreignKey = array(
+      'idColumn' => trim($foreignXML->idColumn),
+      'typeColumn' => trim($foreignXML->typeColumn),
+      'key' => trim($this->value('key', $foreignXML)),
+    );
+    $dynamicForeignKeys[] = $foreignKey;
   }
 
   protected function value($key, &$object, $default = NULL) {

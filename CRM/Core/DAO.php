@@ -235,6 +235,17 @@ class CRM_Core_DAO extends DB_DataObject {
   }
 
   /**
+   * Returns list of FK relationships.
+   *
+   *
+   * @return array
+   *   Array of CRM_Core_Reference_Interface
+   */
+  public static function getReferenceColumns() {
+    return array();
+  }
+
+  /**
    * returns all the column names of this table
    *
    * @access public
@@ -1332,6 +1343,166 @@ SELECT contact_id
       }
     }
     return NULL;
+  }
+
+  /**
+   * Given a list of fields, create a list of references.
+   *
+   * @param string $className
+   *   BAO/DAO class name.
+   * @return array<CRM_Core_Reference_Interface>
+   */
+  public static function createReferenceColumns($className) {
+    $result = array();
+    $fields = $className::fields();
+    foreach ($fields as $field) {
+      if (isset($field['pseudoconstant'], $field['pseudoconstant']['optionGroupName'])) {
+        $result[] = new CRM_Core_Reference_OptionValue(
+          $className::getTableName(),
+          $field['name'],
+          'civicrm_option_value',
+          CRM_Utils_Array::value('keyColumn', $field['pseudoconstant'], 'value'),
+          $field['pseudoconstant']['optionGroupName']
+        );
+      }
+    }
+    return $result;
+  }
+
+  /**
+   * Find all records which refer to this entity.
+   *
+   * @return array
+   *   Array of objects referencing this
+   */
+  public function findReferences() {
+    $links = self::getReferencesToTable(static::getTableName());
+
+    $occurrences = array();
+    foreach ($links as $refSpec) {
+      /** @var $refSpec CRM_Core_Reference_Interface */
+      $daoName = CRM_Core_DAO_AllCoreTables::getClassForTable($refSpec->getReferenceTable());
+      $result = $refSpec->findReferences($this);
+      if ($result) {
+        while ($result->fetch()) {
+          $obj = new $daoName();
+          $obj->id = $result->id;
+          $occurrences[] = $obj;
+        }
+      }
+    }
+
+    return $occurrences;
+  }
+
+  /**
+   * @return array
+   *   each item has keys:
+   *   - name: string
+   *   - type: string
+   *   - count: int
+   *   - table: string|null SQL table name
+   *   - key: string|null SQL column name
+   */
+  public function getReferenceCounts() {
+    $links = self::getReferencesToTable(static::getTableName());
+
+    $counts = array();
+    foreach ($links as $refSpec) {
+      /** @var $refSpec CRM_Core_Reference_Interface */
+      $count = $refSpec->getReferenceCount($this);
+      if ($count['count'] != 0) {
+        $counts[] = $count;
+      }
+    }
+
+    foreach (CRM_Core_Component::getEnabledComponents() as $component) {
+      /** @var $component CRM_Core_Component_Info */
+      $counts = array_merge($counts, $component->getReferenceCounts($this));
+    }
+    CRM_Utils_Hook::referenceCounts($this, $counts);
+
+    return $counts;
+  }
+
+  /**
+   * List all tables which have hard foreign keys to this table.
+   *
+   * For now, this returns a description of every entity_id/entity_table
+   * reference.
+   * TODO: filter dynamic entity references on the $tableName, based on
+   * schema metadata in dynamicForeignKey which enumerates a restricted
+   * set of possible entity_table's.
+   *
+   * @param string $tableName
+   *   Table referred to.
+   *
+   * @return array
+   *   structure of table and column, listing every table with a
+   *   foreign key reference to $tableName, and the column where the key appears.
+   */
+  public static function getReferencesToTable($tableName) {
+    $refsFound = array();
+    foreach (CRM_Core_DAO_AllCoreTables::getClasses() as $daoClassName) {
+      $links = $daoClassName::getReferenceColumns();
+      $daoTableName = $daoClassName::getTableName();
+
+      foreach ($links as $refSpec) {
+        /** @var $refSpec CRM_Core_Reference_Interface */
+        if ($refSpec->matchesTargetTable($tableName)) {
+          $refsFound[] = $refSpec;
+        }
+      }
+    }
+    return $refsFound;
+  }
+
+  /**
+   * Get all references to contact table.
+   *
+   * This includes core tables, custom group tables, tables added by the merge
+   * hook and  the entity_tag table.
+   *
+   * Refer to CRM-17454 for information on the danger of querying the information
+   * schema to derive this.
+   */
+  public static function getReferencesToContactTable() {
+    if (isset(\Civi::$statics[__CLASS__]) && isset(\Civi::$statics[__CLASS__]['contact_references'])) {
+      return \Civi::$statics[__CLASS__]['contact_references'];
+    }
+    $contactReferences = [];
+    $coreReferences = CRM_Core_DAO::getReferencesToTable('civicrm_contact');
+    foreach ($coreReferences as $coreReference) {
+      if (!is_a($coreReference, 'CRM_Core_Reference_Dynamic')) {
+        $contactReferences[$coreReference->getReferenceTable()][] = $coreReference->getReferenceKey();
+      }
+    }
+    self::appendCustomTablesExtendingContacts($contactReferences);
+
+    // FixME for time being adding below line statically as no Foreign key constraint defined for table 'civicrm_entity_tag'
+    $contactReferences['civicrm_entity_tag'][] = 'entity_id';
+    \Civi::$statics[__CLASS__]['contact_references'] = $contactReferences;
+    return \Civi::$statics[__CLASS__]['contact_references'];
+  }
+
+  /**
+   * Add custom tables that extend contacts to the list of contact references.
+   *
+   * CRM_Core_BAO_CustomGroup::getAllCustomGroupsByBaseEntity seems like a safe-ish
+   * function to be sure all are retrieved & we don't miss subtypes or inactive or multiples
+   * - the down side is it is not cached.
+   *
+   * Further changes should be include tests in the CRM_Core_MergerTest class
+   * to ensure that disabled, subtype, multiple etc groups are still captured.
+   *
+   * @param array $cidRefs
+   */
+  public static function appendCustomTablesExtendingContacts(&$cidRefs) {
+    $customValueTables = CRM_Core_BAO_CustomGroup::getAllCustomGroupsByBaseEntity('Contact');
+    $customValueTables->find();
+    while ($customValueTables->fetch()) {
+      $cidRefs[$customValueTables->table_name] = array('entity_id');
+    }
   }
 }
 

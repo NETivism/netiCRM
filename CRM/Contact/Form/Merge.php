@@ -732,7 +732,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
       $exception->contact_id2 = $cid;
     }
     if ($exception->find(TRUE)) {
-      CRM_Core_Error::fatal(ts('Oops, these contacts seems to be marked as non duplicates.'));
+      CRM_Core_Error::statusBounce(ts('The selected pair of contacts are marked as non duplicates. If these records should be merged, you can remove this exception on the <a href="%1">Dedupe Exceptions</a> page.', array(1 => CRM_Utils_System::url('civicrm/dedupe/exception', 'reset=1'))));
     }
   }
 }
