@@ -76,9 +76,9 @@
       var currentYear = new Date().getFullYear();
       var date_format = cj( element_date ).attr('format');
       var alt_field   = 'input#{$dateFormated}';
-      var yearRange   = currentYear - parseInt( cj( element_date ).attr('startOffset') );
+      var yearRange   = "c-"+ parseInt( cj( element_date ).attr('startOffset') );
           yearRange  += ':';
-          yearRange  += currentYear + parseInt( cj( element_date ).attr('endOffset'  ) );
+          yearRange  += "c+"+ parseInt( cj( element_date ).attr('endOffset'  ) );
       {literal}
 
       var lcMessage = {/literal}"{$config->lcMessages}"{literal};
