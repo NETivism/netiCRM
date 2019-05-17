@@ -43,6 +43,7 @@
         }
         if(this.currentPage == 'Confirm'){
           this.prepareStepInfo();
+          this.updateFormStep(1);
         }
 
         if(this.currentPage == 'ThankYou'){
@@ -138,7 +139,6 @@
         $stepInfo.append('<span class="step-triangle">▶</span>');
         $stepInfo.append('<span class="step-text step-text-6">'+ts['Payment Step']+'</span>');
         $stepInfo.insertBefore('#content');
-        this.updateFormStep();
       },
 
       prepareRecurBtnMsg: function(){
@@ -526,11 +526,11 @@
         $('.hide-as-show-all').show();
         if(this.currentFormStep != step){
           this.currentFormStep = step;
-          this.updateFormStep();
+          this.updateFormStep(1);
         }
       },
 
-      updateFormStep: function() {
+      updateFormStep: function(isScrollAnimate) {
         var currentStepClassName = 'contrib-step-'+this.currentFormStep;
         $('[class*=contrib-step-]').each(function(){
           var $this = $(this);
@@ -551,26 +551,31 @@
           }
           else if($this.hasClass(currentStepClassName)){
             /** first scroll to top 0.5 second */
-            var topPosition = $('#content-main').offset().top - 30;
-            $('html,body').animate({ scrollTop: topPosition }, 500, function(){
+            setTimeout(function(){
               $this.removeClass('type-is-back').addClass('type-is-fade-in').css({'opacity': 0});
               /** then fade change */
               $this.animate({'opacity': 1} ,500,  function(){
                 $this.removeClass('type-is-fade-in').addClass('type-is-front');
               });
-            });
+            }, 500);
           }
           else if(!$this.hasClass('type-is-back')){
             $this.addClass('type-is-back');
           }
         });
 
+        if (isScrollAnimate || this.currentPage == 'Confirm') {
+          var topPosition = $('#content-main').offset().top - 30;
+          $('html,body').animate({ scrollTop: topPosition }, 500);
+        }
 
+        console.log(this.currentFormStep);
+        console.log($('.custom-step-info span.active'));
         $('.step-text').removeClass('active');
         if(this.currentPage == 'Main'){
           $('.step-text-' + this.currentFormStep).addClass('active');
           if($(window).width() <= 480){
-            $('.custom-step-info').scrollLeft($('.custom-step-info span.active').offset().left-($('.custom-step-info span.active').width()/2));
+            $('.custom-step-info').scrollLeft($('.custom-step-info span.active').offset().left-$('.custom-step-info span').offset().left);
           }
         }else if(this.currentPage == 'Confirm'){
           $('.custom-step-info').scrollLeft($('.step-text-5').offset().left);

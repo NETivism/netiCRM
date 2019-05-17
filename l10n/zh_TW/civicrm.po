@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-05-14 03:47+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-05-16 10:01+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27456,7 +27456,7 @@ msgstr "新增去重複規則-組織"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl msgctxt "menu"
 msgid "Dedupe Exceptions"
-msgstr "去重複排除規則"
+msgstr "去重複的例外清單"
 
 #: templates/CRM/Contact/Page/SavedSearch.tpl
 msgid "Saved Search"
@@ -46812,7 +46812,7 @@ msgid "The background image used in the special style."
 msgstr "上傳用於特別募款頁的背景圖片。寬度超過 1920px 的會被調整到 1920px 寬，且會壓縮，避免圖片過大增加開啟頁面的負擔。"
 
 msgid "The background image of mobile used in the special style."
-msgstr "上傳手機版時使用的，用於特別募款頁的背景圖片。寬度超過 480px 的會被調整到 480px 寬。"
+msgstr "上傳手機版時使用的，用於特別募款頁的背景圖片。建議尺寸為480px寬，960px高。寬度超過 480px 的會被調整到 480px 寬。"
 
 msgid "Is this Online Contribution Page in the Special Style?"
 msgstr "是否啟用此頁面的「特別募款頁」樣式？"
@@ -47044,3 +47044,12 @@ msgid ""
 "Otherwise, click the <strong>Make Payment</strong> button below to complete "
 "your registration."
 msgstr "請按下方「<strong>付款</strong>」以完成報名。"
+
+msgid "Suspended"
+msgstr "暫停中"
+
+msgid "Note Title"
+msgstr "附註主旨"
+
+msgid "Change status to %status%"
+msgstr "狀態改為「%status%」"
