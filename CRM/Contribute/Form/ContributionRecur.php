@@ -277,17 +277,24 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     $contactId = $session->get('userID');
 
-    $logValues = array();
     $recurFields = array_keys((new CRM_Contribute_DAO_ContributionRecur())->fields());
+
+    $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
+    $recurDAO->id = $this->_id;
+    $recurDAO->find(TRUE);
+
+    $before = $after = array();
     foreach ($recurFields as $field) {
+      $before[$field] = $recurDAO->$field;
       if (!empty($params[$field])) {
-        $logValues[$field] = $params[$field];
+        $after[$field] = $params[$field];
       }
     }
+    $data = array('before' => $before, 'after' => $after);
     $logParams = array(
       'entity_table' => 'civicrm_contribution_recur',
       'entity_id' => $this->_id,
-      'data' => serialize($logValues),
+      'data' => serialize($data),
       'modified_id' => $contactId,
       'modified_date' => date('YmdHis'),
     );

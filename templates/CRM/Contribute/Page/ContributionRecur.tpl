@@ -63,24 +63,50 @@
           <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
             <div class="crm-accordion-header">
               <div class="zmdi crm-accordion-pointer"></div> 
-              Logs
+              {ts}Change Log:{/ts}
             </div>
             <div class="crm-accordion-body">
-              {foreach  from=$logs item=log}
-                <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
-                  <div class="crm-accordion-header">
-                    <div class="zmdi crm-accordion-pointer"></div> 
-                    {$log.modified_date|crmDate} - <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$log.modified_id`" h=0 a=1 fe=1}">{$log.modified_name}</a>
-                  </div>
-                  <div class="crm-accordion-body">
-                    <table class="crm-info-panel">
-                      {foreach from=$log.data key=label item=value}
-                      <tr><td class="label">{$label}</td><td>{$value}</td></tr>
-                      {/foreach}
-                    </table>
-                  </div>
-                </div>
-              {/foreach}
+              <table class="crm-info-panel">
+                <thead>
+                  <tr>
+                    <th>{ts}Modified Date{/ts}</th>
+                    <th>{ts}Note{/ts}</th>
+                    <th>{ts}Status{/ts}</th>
+                    <th>{ts}Amount{/ts}</th>
+                    <th>{ts}Modified By{/ts}</th>
+                  </tr>
+                </thead>
+                {foreach  from=$logs key=key item=log}
+                  <tr>
+                    <td>{$log.modified_date|crmDate}</td>
+                    <td>
+                      {if $log.note_subject}
+                        {$log.note_subject}
+                      {/if}
+                      {if $log.note}
+                        {if $log.note}
+                          {help id="recur-note-`$key`" text="`$log.note`"}
+                        {/if}
+                      {/if}
+                    </td>
+                    <td>
+                      {if $log.contribution_status}
+                        {$log.contribution_status}
+                      {elseif $log.before_contribution_status AND $log.after_contribution_status}
+                        <span class="disabled">{$log.before_contribution_status}</span> → {$log.after_contribution_status}
+                      {/if}
+                    </td>
+                    <td>
+                      {if $log.amount}
+                        {$log.amount}
+                      {elseif $log.before_amount AND $log.after_amount}
+                        <span class="disabled">{$log.before_amount}</span> → {$log.after_amount}
+                      {/if}
+                    </td>
+                    <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$log.modified_id`" h=0 a=1 fe=1}">{$log.modified_name}</a></td>
+                  </tr>
+                {/foreach}
+              </table>
             </div>
             
           </div>

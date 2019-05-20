@@ -386,6 +386,39 @@ ORDER BY modified_date desc";
   }
 
   /**
+   * retrieve all records and detail data for this entity-id
+   *
+   * @param int  $id ID of the relationship for which records needs to be retrieved.
+   *
+   * @return array    Array of note properties
+   *
+   * @access public
+   * @static
+   */
+  public static function &getNoteDetail($id, $entityTable = 'civicrm_relationship') {
+    $viewNote = array();
+
+    $query = "
+SELECT   id, note, subject, modified_date FROM civicrm_note
+WHERE    entity_table=\"{$entityTable}\"
+  AND    entity_id = %1
+  AND    (note is not null OR subject is not null)
+ORDER BY modified_date desc";
+    $params = array(1 => array($id, 'Integer'));
+
+    $dao = &CRM_Core_DAO::executeQuery($query, $params);
+
+    while ($dao->fetch()) {
+      $viewNote[$dao->id] = array(
+        'note' => $dao->note,
+        'subject' => $dao->subject,
+        'modified_date' => $dao->modified_date,
+      );
+    }
+    return $viewNote;
+  }
+
+  /**
    * Function to get log record count for a Contact
    *
    * @param int $contactId Contact ID

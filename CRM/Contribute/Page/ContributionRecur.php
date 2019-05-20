@@ -72,21 +72,57 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $values['contribution_status'] = $status[$values['contribution_status_id']];
       $this->assign('recur', $values);
 
-      $logDAO = new CRM_Core_DAO_Log();
+      $noteDetail = CRM_Core_BAO_Note::getNoteDetail($this->_id, 'civicrm_contribution_recur');
+      $notes = array();
+      foreach ($noteDetail as $note) {
+        if (!empty($note['modified_date'])) {
+          $notes[$note['modified_date']] = $note;
+        }
+      }
 
+      $logDAO = new CRM_Core_DAO_Log();
       $logDAO->entity_table = 'civicrm_contribution_recur';
       $logDAO->entity_id = $recur->id;
       $logDAO->orderBy('modified_date desc');
       $logDAO->find();
+
+      $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
+
       while ($logDAO->fetch()) {
         list($displayName, $ignore) = CRM_Contact_Page_View::getContactDetails($logDAO->modified_id);
+        $data = unserialize($logDAO->data);
         $log = array(
           'modified_id' => $logDAO->modified_id,
           'modified_date' => $logDAO->modified_date,
           'modified_name' => $displayName,
-          'data' => unserialize($logDAO->data),
         );
-        $lastData = $log['data'];
+
+        if (is_array($data) && !empty($data['before']) && !empty($data['after'])) {
+          $before = $data['before'];
+          $after = $data['after'];
+          if ($before['amount'] == $after['amount']) {
+            $log['amount'] = $after['amount'];
+          }
+          else {
+            $log['before_amount'] = $before['amount'];
+            $log['after_amount'] = $after['amount'];
+          }
+
+          if ($before['contribution_status_id'] == $after['contribution_status_id']) {
+            $log['contribution_status'] = $statuses[$after['contribution_status_id']];
+          }
+          else {
+            $log['before_contribution_status'] = $statuses[$before['contribution_status_id']];
+            $log['after_contribution_status'] = $statuses[$after['contribution_status_id']];
+          }
+        }
+
+        if ($notes[$log['modified_date']]) {
+          $note = $notes[$log['modified_date']];
+          $log['note_subject'] = $note['subject'];
+          $log['note'] = $note['note'];
+        }
+
         $logs[] = $log;
       }
       $logDAO->free();
