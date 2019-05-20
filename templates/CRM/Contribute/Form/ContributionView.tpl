@@ -191,19 +191,13 @@
          
     	</tr>
 	{/if}	
-  {if $tappay_data}
+  {if $record_detail}
+    {foreach from=$record_detail key=label item=value}
       <tr>
-          <td class="label">{ts}Card Number{/ts}</td>
-          <td>{$tappay_data->bin_code}**********{$tappay_data->last_four}</td>
+          <td class="label">{$label}</td>
+          <td>{$value}</td>
       </tr>
-      <tr>
-          <td class="label">{ts}Card Expiry Date{/ts}</td>
-          <td>{$tappay_data->expiry_date|date_format:"%Y/%m"}</td>
-      </tr>
-      <tr>
-          <td class="label">{ts}Latest Message{/ts}</td>
-          <td>{$tappay_msg}</td>
-      </tr>
+    {/foreach}
   {/if}
 	{foreach from=$note item="rec"} 
 		{if $rec }

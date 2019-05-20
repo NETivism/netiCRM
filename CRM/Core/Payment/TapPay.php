@@ -11,6 +11,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
   public static $_editableFields = array('amount', 'installments', 'end_date', 'cycle_day', 'contribution_status_id');
 
+  public static $_cardType = array(
+    1 => 'VISA',
+    2 => 'MasterCard',
+    3 => 'JCB',
+    4 => 'Union Pay',
+    5 => 'AMEX',
+  );
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
@@ -837,14 +845,25 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return 1;
   }
 
-  public static function getLatestAPIData($contributionId) {
-    $tappay = new CRM_Contribute_DAO_TapPay();
-    $tappay->contribution_id = $contributionId;
-    $tappay->find(TRUE);
-    return $tappay;
+  public static function getRecordDetail ($contributionId) {
+    $tappayDAO = new CRM_Contribute_DAO_TapPay();
+    $tappayDAO->contribution_id = $contributionId;
+    $tappayDAO->find(TRUE);
+    $tappayObject = json_decode($tappayDAO->data);
+
+    $returnData = array();
+    $returnData[ts('Record Trade ID')] = $tappayDAO->rec_trade_id;
+    $returnData[ts('Card Number')] = $tappayDAO->bin_code."**********".$tappayDAO->last_four;
+    $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($tappayDAO->expiry_date));
+    if (!empty($tappayObject->card_info)) {
+      $cardInfo = $tappayObject->card_info;
+      $returnData[ts('Card Issuer')] = $cardInfo->issuer;
+      $returnData[ts('Card Type')] = self::$_cardType[$cardInfo->type];
+    }
+    return $returnData;
   }
 
-  public static function getAllApiData($contributionId) {
+  public static function getContributionAllRecordData ($contributionId) {
     $logs = array();
     $tappayLog = new CRM_Contribute_DAO_TapPayLog();
     $tappayLog->contribution_id = $contributionId;

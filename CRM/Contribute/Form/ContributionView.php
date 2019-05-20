@@ -66,21 +66,20 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $this->assign('expire_date', $values['expire_date']);
     }
 
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $id;
+    $contribution->find(TRUE);
+    $is_test = $contribution->is_test ? 'test' : '';
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
+    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, $this);
+    $class = get_class($payment);
 
-    $sql = "SELECT payment_processor_type FROM civicrm_contribution c INNER JOIN civicrm_payment_processor p ON c.payment_processor_id = p.id WHERE c.id = %1";
-    $params = array(1 => array($id, 'Positive'));
-    $paymentProcessorName = CRM_Core_DAO::singleValueQuery($sql, $params);
-    if(strtolower($paymentProcessorName) == 'tappay') {
-      $syncType = 'tappay';
-      $tappayData = CRM_Core_Payment_TapPay::getLatestAPIData($id);
-      $tappayDataLogs = CRM_Core_Payment_TapPay::getAllAPIData($id);
-      $this->assign('tappay_data', $tappayData);
-      $tappayObject = json_decode($tappayData->data);
-      $tappayMsg = $tappayObject->msg;
-      $this->assign('tappay_msg', $tappayMsg);
-      $this->assign('tappay_data_logs', $tappayDataLogs);
+    if (method_exists($class, 'getRecordDetail')) {
+      $recordDetail = $class::getRecordDetail($id);
+      $this->assign('record_detail', $recordDetail);
     }
-    elseif (strtolower($instrument) == 'line pay') {
+
+    if (strtolower($instrument) == 'line pay') {
       $syncType = 'linepay';
     }
 
