@@ -82,6 +82,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     $paymentProcessorName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $contribution->payment_processor_id, 'payment_processor_type');
     if(strtolower($paymentProcessorName) == 'tappay') {
       $syncType = 'tappay';
+    }
     elseif (strtolower($instrument) == 'line pay') {
       $syncType = 'linepay';
     }
