@@ -74,7 +74,7 @@ cj( "#unclosed_cases" ).autocomplete( unclosedCaseUrl, { width : 250, selectFirs
 
 {if $form.target_contact_id.value}
      {literal}
-     var toDataUrl = "{/literal}{crmURL p='civicrm/ajax/checkemail' q='id=1&noemail=1' h=0 }{literal}"; 
+     var toDataUrl = "{/literal}{crmURL p='civicrm/ajax/getemail' q='id=1&noemail=1' h=0 }{literal}"; 
      var target_contact_id = cj.ajax({ url: toDataUrl + "&cid={/literal}{$form.$currentElement.value}{literal}", async: false }).responseText;
      {/literal}
 {/if}

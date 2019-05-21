@@ -661,10 +661,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     $this->assign('dataUrl', $dataUrl);
 
     //tokeninput url
-    $tokenUrl = CRM_Utils_System::url("civicrm/ajax/checkemail",
-      "noemail=1",
-      FALSE, NULL, FALSE
-    );
+    $tokenUrl = CRM_Utils_System::url("civicrm/ajax/getemail", "noemail=1", FALSE, NULL, FALSE);
     $this->assign('tokenUrl', $tokenUrl);
 
     $admin = CRM_Core_Permission::check('administer CiviCRM');

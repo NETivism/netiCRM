@@ -635,6 +635,106 @@ WHERE sort_name LIKE '%$name%'";
    */
   static function getContactEmail() {
     // refs #25270, remove security hole
+    $perm = CRM_Core_Permission::check('access CiviCRM');
+    if (!$perm) {
+      CRM_Utils_System::civiExit();
+    }
+    $contactID = CRM_Utils_Request::retrieve('contact_id', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
+    if (!empty($contactID)) {
+      list($displayName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
+      if ($userEmail) {
+        echo $userEmail;
+      }
+    }
+    else {
+      $noemail = CRM_Utils_Request::retrieve('noemail', 'Integer', CRM_Core_DAO::$_nullObject);
+      $name = CRM_Utils_Request::retrieve('name', 'String', CRM_Core_DAO::$_nullObject);
+      $cid = CRM_Utils_Request::retrieve('cid', 'String', CRM_Core_DAO::$_nullObject);
+      $offset = CRM_Utils_Request::retrieve('offset', 'Integer', CRM_Core_DAO::$_nullObject, FALSE);
+      $offset = $offset ? $offset : 0;
+      $rowCount = CRM_Utils_Request::retrieve('rowcount', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, '20');
+      $queryString = '';
+
+      if ($name) {
+        $name = CRM_Utils_Type::escape($name, 'String');
+        if ($noemail) {
+          $queryString = " cc.sort_name LIKE '%$name%'";
+        }
+        else {
+          $queryString = " ( cc.sort_name LIKE '%$name%' OR ce.email LIKE '%$name%' ) ";
+        }
+      }
+      else {
+        if (CRM_Utils_Rule::PositiveInteger($cid)) {
+          $queryString = " cc.id = $cid";
+        }
+        else {
+          if (strstr($cid, ',')) {
+            $cids = explode(',', $cid);
+            foreach($cids as $idx => $c) {
+              if (!CRM_Utils_Rule::PositiveInteger($c, 'Positive')) {
+                unset($cids[$idx]);
+              }
+            }
+            if (!empty($cids)) {
+              $queryString = " cc.id IN (".implode(',', $cids).")";
+            }
+          }
+        }
+      }
+      if (empty($queryString)) {
+        echo '[]';
+        CRM_Utils_System::civiExit();
+      }
+
+      // add acl clause here
+      list($aclFrom, $aclWhere) = CRM_Contact_BAO_Contact_Permission::cacheClause('cc');
+      if ($aclWhere) {
+        $aclWhere = " AND $aclWhere";
+      }
+      if ($noemail) {
+        $query = "
+  SELECT sort_name name, cc.id
+  FROM civicrm_contact cc 
+     {$aclFrom}
+  WHERE cc.is_deceased = 0 AND {$queryString}
+      {$aclWhere}
+  LIMIT {$offset}, {$rowCount}
+  ";
+
+        $dao = CRM_Core_DAO::executeQuery($query);
+        while ($dao->fetch()) {
+          $result[] = array('name' => $dao->name,
+            'id' => $dao->id,
+          );
+        }
+      }
+      else {
+        $query = "
+  SELECT sort_name name, ce.email, cc.id
+  FROM   civicrm_email ce INNER JOIN civicrm_contact cc ON cc.id = ce.contact_id
+       {$aclFrom}
+  WHERE  ce.on_hold = 0 AND cc.is_deceased = 0 AND cc.do_not_email = 0 AND {$queryString}
+       {$aclWhere}
+  LIMIT {$offset}, {$rowCount}
+  ";
+
+        $dao = CRM_Core_DAO::executeQuery($query);
+
+        while ($dao->fetch()) {
+          $result[] = array('name' => '"' . $dao->name . '" &lt;' . $dao->email . '&gt;',
+            'id' => (CRM_Utils_Array::value('id', $_GET)) ? "{$dao->id}::{$dao->email}" : '"' . $dao->name . '" <' . $dao->email . '>',
+          );
+        }
+      }
+
+      if ($result) {
+        echo json_encode($result);
+      }
+      else {
+        echo '[]';
+      }
+    }
     CRM_Utils_System::civiExit();
   }
 
