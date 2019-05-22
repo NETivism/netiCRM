@@ -43,6 +43,7 @@ class CRM_Dedupe_Merger {
     'job_title', 'last_name', 'legal_identifier', 'legal_name',
     'middle_name', 'nick_name', 'organization_name', 'postal_greeting', 'postal_greeting_custom',
     'preferred_communication_method', 'preferred_mail_format', 'sic_code',
+    'current_employer_id',
   );
 
   // FIXME: consider creating a common structure with cidRefs() and eidRefs()
@@ -248,9 +249,9 @@ class CRM_Dedupe_Merger {
       $tables = array(
         'civicrm_case_contact' => array('CRM_Case_BAO_Case' => 'mergeContacts'),
         'civicrm_group_contact' => array('CRM_Contact_BAO_GroupContact' => 'mergeGroupContact'),
+        'civicrm_relationship' => array('CRM_Contact_BAO_Relationship' => 'mergeRelationships'),
         // Empty array == do nothing - this table is handled by mergeGroupContact
         'civicrm_subscription_history' => array(),
-        'civicrm_relationship' => array('CRM_Contact_BAO_Relationship' => 'mergeRelationships'),
       );
     }
 
@@ -387,13 +388,11 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     $sqls = array();
     foreach ($affected as $table) {
       //here we require custom processing.
-      if (array_key_exists($table, $cpTables)) {
-        $path = CRM_Utils_Array::value('path', $cpTables[$table]);
-        $fName = CRM_Utils_Array::value('function', $cpTables[$table]);
-        if ($path && $fName) {
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $path) . ".php");
-          eval("$path::$fName( $mainId, null, $otherId );");
+      if (isset($cpTables[$table])) {
+        foreach ($cpTables[$table] as $className => $fnName) {
+          $className::$fnName($mainId, $otherId, $sqls);
         }
+        // Skip normal processing
         continue;
       }
 
@@ -421,11 +420,6 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
           $sqls[] = "DELETE FROM $table WHERE $entityId = $otherId AND $entityTable = 'civicrm_contact'";
         }
       }
-    }
-
-    // CRM-6184: if we’re moving relationships, update civicrm_contact.employer_id
-    if (is_array($tables) and in_array('civicrm_relationship', $tables)) {
-      $sqls[] = "UPDATE IGNORE civicrm_contact SET employer_id = $mainId WHERE employer_id = $otherId";
     }
 
     // Allow hook_civicrm_merge() to add SQL statements for the merge operation.
@@ -531,13 +525,14 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
 
         // delete entry from PrevNextCache table so we don't consider the pair next time
         // pair may have been flipped, so make sure we delete using both orders
-        CRM_Core_BAO_PrevNextCache::deletePair($mainId, $otherId, $cacheKeyString);
-        CRM_Core_BAO_PrevNextCache::deletePair($otherId, $mainId, $cacheKeyString);
+        #CRM_Core_BAO_PrevNextCache::deletePair($mainId, $otherId, $cacheKeyString);
+        #CRM_Core_BAO_PrevNextCache::deletePair($otherId, $mainId, $cacheKeyString);
 
         CRM_Core_DAO::freeResult();
         unset($rowsElementsAndInfo, $migrationInfo);
       }
 
+      /*
       if ($cacheKeyString && !$redirectForPerformance) {
         // retrieve next pair of dupes
         $dupePairs = CRM_Core_BAO_PrevNextCache::retrieve($cacheKeyString,
@@ -547,8 +542,9 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
       }
       else {
         // do not proceed. Terminate the loop
-        unset($dupePairs);
       }
+      */
+      unset($dupePairs);
     }
     return $resultStats;
   }
@@ -891,13 +887,16 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
           unset($locTypeValues[$mainLocTypeId]);
 
           // keep 1-1 mapping for address - location type.
-          $js = NULL;
+          $attr = NULL;
           if (in_array($name, $locationBlocks) && !empty($mainLocBlock)) {
-            $js = array('onChange' => "mergeBlock('$name', this, $count );");
+            $attr = array(
+              'data-location-name' => $name,
+              'data-location-id' => $count,
+            );
           }
           $elements[] = array(
             'select', "location[{$name}][$count][locTypeId]", NULL,
-            $defaultLocType + $locTypeValues, $js,
+            $defaultLocType + $locTypeValues, $attr,
           );
           // keep location-type-id same as that of other-contact
           $migrationInfo['location'][$name][$count]['locTypeId'] = $locTypeId;
@@ -1003,7 +1002,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
               );
             }
           }
-          $value = "null";
+          $value = NULL;
           if (CRM_Utils_Array::value('customValue', $otherTree[$gid]['fields'][$fid])) {
             foreach ($otherTree[$gid]['fields'][$fid]['customValue'] as $valueId => $values) {
               $rows["move_custom_$fid"]['other'] = CRM_Core_BAO_CustomGroup::formatCustomValues($values,
@@ -1358,6 +1357,24 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
       CRM_Core_BAO_CustomValueTable::setValues($viewOnlyCustomFields);
     }
 
+    // **** Update contact related info for the main contact
+    if (!empty($submitted)) {
+      $submitted['contact_id'] = $mainId;
+
+      //update current employer field
+      if ($currentEmloyerId = CRM_Utils_Array::value('current_employer_id', $submitted)) {
+        if (!CRM_Utils_System::isNull($currentEmloyerId)) {
+          $submitted['current_employer'] = $submitted['current_employer_id'];
+        }
+        else {
+          $submitted['current_employer'] = '';
+        }
+        unset($submitted['current_employer_id']);
+      }
+
+      CRM_Contact_BAO_Contact::createProfileContact($submitted, CRM_Core_DAO::$_nullArray, $mainId);
+    }
+
     // **** Delete other contact & update prev-next caching
     $otherParams = array(
       'contact_id' => $otherId,
@@ -1374,34 +1391,14 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
       }
 
       civicrm_api('contact', 'delete', $otherParams);
-      CRM_Core_BAO_PrevNextCache::deleteItem($otherId);
     }
     // FIXME: else part
-    /*         else { */
+    else {
+      CRM_Core_Session::setStatus( ts('Do not have sufficient permission to delete duplicate contact.') );
 
-    /*             CRM_Core_Session::setStatus( ts('Do not have sufficient permission to delete duplicate contact.') ); */
-
-    /*         } */
-
-
-    // **** Update contact related info for the main contact
-    if (!empty($submitted)) {
-      $submitted['contact_id'] = $mainId;
-
-      //update current employer field
-      if ($currentEmloyerId = CRM_Utils_Array::value('current_employer_id', $submitted)) {
-        if (!CRM_Utils_System::isNull($currentEmloyerId)) {
-          $submitted['current_employer'] = $submitted['current_employer_id'];
-        } else {
-          $submitted['current_employer'] = '';
-        }
-        unset($submitted['current_employer_id']);
-      }
-
-      CRM_Contact_BAO_Contact::createProfileContact($submitted, CRM_Core_DAO::$_nullArray, $mainId);
-      unset($submitted);
     }
 
+    unset($submitted);
     return TRUE;
   }
 }

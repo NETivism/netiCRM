@@ -56,9 +56,9 @@ table.dedupe-merge td .zmdi-plus {
 <table class="dedupe-merge">
   <tr class="columnheader">
     <th>&nbsp;</th>
-    <th><a target="_blank" href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$other_cid"}">{$other_name}&nbsp;<em>{$other_contact_subtype}</em>({$other_cid})</a> ({ts}duplicate{/ts})</th>
+    <th><a target="_blank" href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$other_cid"}">{$other_name}&nbsp;<em>{$other_contact_subtype}</em>({$other_cid})<i class="zmdi zmdi-arrow-right-top"></i></a>({ts}duplicate{/ts})</th>
     <th>{ts}Mark All{/ts}<br />{$form.toggleSelect.html} <i class="zmdi zmdi-redo"></i></th>
-    <th><a target="_blank" href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$main_cid"}">{$main_name}&nbsp;<em>{$main_contact_subtype}</em>({$main_cid})</a> ({ts}Reserved{/ts}) </th>
+    <th><a target="_blank" href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$main_cid"}">{$main_name}&nbsp;<em>{$main_contact_subtype}</em>({$main_cid})<i class="zmdi zmdi-arrow-right-top"></i></a>({ts}Reserved{/ts}) </th>
   </tr>
   {foreach from=$rows item=row key=field}
      <tr class="{cycle values="odd-row,even-row"}">
@@ -72,26 +72,34 @@ table.dedupe-merge td .zmdi-plus {
         </td>
         <td style='white-space: nowrap'>{if $form.$field}{$form.$field.html} <i class="zmdi zmdi-redo"></i>{else}{ts}n/a{/ts}{/if}</td>
         <td>
-            {if $row.title|substr:0:5 == "Email"   OR 
-                $row.title|substr:0:7 == "Address" OR 
-                $row.title|substr:0:2 == "IM"      OR 
-                $row.title|substr:0:6 == "OpenID"  OR 
-                $row.title|substr:0:5 == "Phone"}
+        {if $row.title|substr:0:5 == "Email"   OR 
+          $row.title|substr:0:7 == "Address" OR 
+          $row.title|substr:0:2 == "IM"      OR 
+          $row.title|substr:0:6 == "OpenID"  OR 
+          $row.title|substr:0:5 == "Phone"}
 
-	        {assign var=position  value=$field|strrpos:'_'}
-                {assign var=blockId   value=$field|substr:$position+1}
-                {assign var=blockName value=$field|substr:14:$position-14}
+          {assign var=position  value=$field|strrpos:'_'}
+          {assign var=blockId   value=$field|substr:$position+1}
+          {assign var=blockName value=$field|substr:14:$position-14}
+          {$form.location.$blockName.$blockId.locTypeId.html} 
 
-                {$form.location.$blockName.$blockId.locTypeId.html}&nbsp;
-                {if $blockName eq 'address'}
-                <span id="main_{$blockName}_{$blockId}_overwrite">{if $row.main}({ts}overwrite{/ts}){else}({ts}add{/ts}){/if}</span>
-                {/if} 
-
-                {$form.location.$blockName.$blockId.operation.html}&nbsp;<br />
+          {if $blockName eq 'email' || $blockName eq 'phone' }
+            <span id="main_{$blockName}_{$blockId}_overwrite" class="{if $row.main}main-row{/if}">
+              {$form.location.$blockName.$blockId.operation.html}
+            </span>
+          {else}
+            <span id="main_{$blockName}_{$blockId}_overwrite">
+              {if $row.main}({ts}overwrite{/ts})<br />{else}({ts}add new{/ts}){/if}
+            </span>
+          {/if}
+        {/if}{* row.title addr ... *}
+          <span id="main_{$blockName}_{$blockId}" class="original-value">
+            {if !is_array($row.main)}
+              {$row.main}
+            {else}
+              {$row.main.fileName}
             {/if}
-            {if $row.main}
-              <div id="main_{$blockName}_{$blockId}" class="original-value">{$row.main}</div>
-            {/if}
+          </span>
         </td>
      </tr>
   {/foreach}
@@ -104,9 +112,9 @@ table.dedupe-merge td .zmdi-plus {
     {if $paramName eq 'move_rel_table_users'}
     <tr class="{cycle values="even-row,odd-row"}">
       <td><i class="zmdi zmdi-forward"></i> {ts}Move related...{/ts}</td>
-      <td><a href="{$params.other_url}">{$params.other_title}</a> ({ts}Contact ID{/ts} {$other_cid})</td>
+      <td>{ts}CMS User{/ts}<a href="{$params.other_url}">{$params.other_title}</a> ({ts}{/ts} {$otherUfName} - {$otherUfId})</td>
       <td style='white-space: nowrap'>{if $otherUfId}{$form.$paramName.html} <i class="zmdi zmdi-redo"></i>{/if}</td>
-      <td>{if $mainUfId}<div><a href="{$params.main_url}">{$params.main_title}</a> ({ts}Contact ID{/ts} {$main_cid})</div>{/if}</td>
+      <td>{if $mainUfId}<div>{ts}CMS User{/ts} <a href="{$params.main_url}">{$params.main_title}</a> ({$mainUfName} - {$mainUfId})</div>{/if}</td>
     </tr>
     {else}
     <tr class="{cycle values="even-row,odd-row"}">
@@ -137,8 +145,34 @@ table.dedupe-merge td .zmdi-plus {
 
 {literal}
 <script type="text/javascript">
-
 cj(document).ready(function(){ 
+  var mainLocBlock = {/literal}{$mainLocBlock}{literal};
+  cj('span[id$=_overwrite]').each(function(){
+    if (cj(this).hasClass('main-row')) {
+      cj(this).find('.form-checkbox').show();
+    }
+    else {
+      cj(this).find('.form-checkbox').prop('checked', true);
+      cj(this).find('.form-checkbox').hide();
+    }
+  });
+  cj('select[data-location-name]').change(function(){
+    var blockname = cj(this).data('location-name');
+    var locationId = cj(this).val();
+    var mainBlock = mainLocBlock['main_'+blockname+locationId] !== 'undefined' ? mainLocBlock['main_'+blockname+locationId] : '';
+    var $block = cj("#main_"+blockname+'_'+cj(this).data('location-id')+'_overwrite');
+    var $originalVal = cj("#main_"+blockname+'_'+cj(this).data('location-id'));
+
+    if (mainBlock) {
+      $block.find('.form-checkbox').show();
+      $originalVal.html(mainBlock);
+    }
+    else {
+      $originalVal.html('');
+      $block.find('.form-checkbox').prop('checked', true);
+      $block.find('.form-checkbox').hide();
+    }
+  });
   cj('table td input.form-checkbox').each(function() {
     var ele = null;
     var element = cj(this).attr('id').split('_',3);
@@ -194,7 +228,7 @@ function doCheckAllIsReplace(){
     var cj_left_td = cj_this.parent().prev();
     var cj_right_td = cj_this.parent().next();
 
-    if(cj_right_td.text().split(/\s+/)[1] == ""){
+    if(cj_right_td.text().split(/\s+/)[1] == "" && cj_left_td.text().split(/\s+/)[1] != ""){
       cj_this.trigger('click');
     }
     else if(cj_this.attr('id').match(/^move_location_/)){
@@ -299,7 +333,7 @@ function checkDataIsErase(cjCheckboxElement){
   }
   
   cj_right_td.find('.zmdi-plus').remove();
-  cj_right_td.find('.original-value').show();
+  cj_right_td.find('.original-value').show().css('display', 'block');
   if (is_erase == 1) {
     cj_right_td.find('.original-value').addClass('zmdi zmdi-minus');
     cj_right_td.append('<div class="zmdi zmdi-plus">'+cj_left_td.html()+'</div>')
