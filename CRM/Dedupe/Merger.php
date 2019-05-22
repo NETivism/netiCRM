@@ -517,7 +517,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         // go ahead with merge if there is no conflict
         if (!CRM_Dedupe_Merger::skipMerge($mainId, $otherId, $migrationInfo, $mode)) {
           CRM_Dedupe_Merger::moveAllBelongings($mainId, $otherId, $migrationInfo);
-          $resultStats['merged'][] = array('main_d' => $mainId, 'other_id' => $otherId);
+          $resultStats['merged'][] = array('main_id' => $mainId, 'other_id' => $otherId);
         }
         else {
           $resultStats['skipped'][] = array('main_d' => $mainId, 'other_id' => $otherId);
@@ -577,9 +577,9 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         unset($migrationInfo[$key]);
         continue;
       }
-      elseif ((in_array(substr($key, 5), CRM_Dedupe_Merger::$validFields) or
+      elseif ((in_array(substr($key, 5), CRM_Dedupe_Merger::$validFields) ||
           substr($key, 0, 12) == 'move_custom_'
-        ) and $val != NULL) {
+        ) && $val != NULL) {
         // Rule: if both main-contact has other-contact, let $mode decide if to merge a
         // particular field or not
         if (!empty($migrationInfo['rows'][$key]['main'])) {

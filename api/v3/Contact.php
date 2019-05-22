@@ -818,16 +818,11 @@ function civicrm_api3_contact_merge($params) {
   $autoFlip = CRM_Utils_Array::value('auto_flip', $params, TRUE);
 
   $dupePairs = array(array('srcID' => CRM_Utils_Array::value('main_id', $params),
-      'dstID' => CRM_Utils_Array::value('other_id', $params),
-    ));
+    'dstID' => CRM_Utils_Array::value('other_id', $params),
+  ));
   $result = CRM_Dedupe_Merger::merge($dupePairs, array(), $mode, $autoFlip);
 
-  if ($result['is_error'] == 0) {
-    return civicrm_api3_create_success();
-  }
-  else {
-    return civicrm_api3_create_error($result['messages']);
-  }
+  return civicrm_api3_create_success($result);
 }
 
 function _civicrm_api3_contact_proximity_spec(&$params) {
