@@ -605,6 +605,7 @@
   </index>
   <field>
     <name>created_date</name>
+    <uniqueName>contact_created_date</uniqueName>
     <type>datetime</type>
     <import>true</import>
     <comment>When was the contact was created.</comment>
@@ -621,6 +622,7 @@
   </index>
   <field>
     <name>modified_date</name>
+    <uniqueName>contact_modified_date</uniqueName>
     <type>datetime</type>
     <comment>When was the contact (or closely related entity) was created or modified or deleted.</comment>
     <headerPattern>/modified(.?date)?/i</headerPattern>

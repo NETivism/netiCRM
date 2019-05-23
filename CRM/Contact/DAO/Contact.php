@@ -876,7 +876,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
         ) ,
-        'created_date' => array(
+        'contact_created_date' => array(
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created Date') ,
@@ -888,7 +888,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'export' => true,
           'default' => 'URRENT_TIMESTAM',
         ) ,
-        'modified_date' => array(
+        'contact_modified_date' => array(
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Modified Date') ,
