@@ -247,9 +247,14 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     $this->assign($defaults);
 
     // also assign the last modifed details
-    require_once 'CRM/Core/BAO/Log.php';
-    $lastModified = &CRM_Core_BAO_Log::lastModified($this->_contactId, 'civicrm_contact');
-    $this->assign_by_ref('lastModified', $lastModified);
+    $lastModified = CRM_Core_BAO_Log::lastModified($this->_contactId, 'civicrm_contact');
+    if (!empty($lastModified)) {
+      $this->assign_by_ref('lastModified', $lastModified);
+      $createdBy = CRM_Core_BAO_Log::lastModified($this->_contactId, 'civicrm_contact', 'asc');
+      if ($createdBy['log_id'] !== $lastModified['log_id']) {
+        $this->assign_by_ref('createdBy', $createdBy);
+      }
+    }
 
     $allTabs = array();
     $weight = 10;

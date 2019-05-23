@@ -1128,8 +1128,14 @@ div.spacer,
 }
 
 .crm-container #record-log {
-    padding: 0.8em 0.8em 0em 0em;
-    text-align: right;
+    padding: 0.5em 0.8em;
+    font-size: .75em;
+    background: #FFF;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    bottom: 0;
+    box-shadow: 0 -1px 8px 1px #eaeaea;
 }
 .crm-container #access {
     padding: 0.8em 0.8em 0em 0em;

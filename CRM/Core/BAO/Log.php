@@ -41,22 +41,23 @@ require_once 'CRM/Core/DAO/Log.php';
 class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
   static $_processed = NULL;
 
-  static function &lastModified($id, $table = 'civicrm_contact') {
-    require_once 'CRM/Core/DAO/Log.php';
-
+  static function lastModified($id, $table = 'civicrm_contact', $order = 'desc') {
     $log = new CRM_Core_DAO_Log();
 
     $log->entity_table = $table;
     $log->entity_id = $id;
-    $log->orderBy('modified_date desc');
+    $log->orderBy('modified_date '.$order);
     $log->limit(1);
-    $result = CRM_Core_DAO::$_nullObject;
+    $result = array();
     if ($log->find(TRUE)) {
       list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($log->modified_id);
-      $result = array('id' => $log->modified_id,
+      $result = array(
+        'log_id' => $log->id,
+        'id' => $log->modified_id,
         'name' => $displayName,
         'image' => $contactImage,
         'date' => $log->modified_date,
+        'data' => $log->data,
       );
     }
     return $result;
