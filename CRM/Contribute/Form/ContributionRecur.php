@@ -158,15 +158,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     );
 
     // Get payment processor
-    $contribution = new CRM_Contribute_DAO_Contribution();
-    $contribution->contribution_recur_id = $this->_id;
-    $contribution->find(TRUE);
-    $is_test = $contribution->is_test ? 'test' : '';
-    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
-    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, $this);
-    $class = get_class($payment);
-    if (!empty($class::$_editableFields)) {
-      $activeFields = $class::$_editableFields;
+    $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_id, 'id', 'contribution_recur_id');
+    $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
+    if (!empty($paymentClass::$_editableFields)) {
+      $activeFields = $paymentClass::$_editableFields;
     }
     else {
       $activeFields = array();
@@ -215,6 +210,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         array('type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
+        ),
+        array('type' => 'cancel',
+          'name' => ts('Cancel'),
         ),
       )
     );

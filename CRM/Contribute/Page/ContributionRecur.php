@@ -171,6 +171,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
+    $this->assign('contributionRecurId', $this->_id);
 
     // check logged in url permission
     require_once 'CRM/Contact/Page/View.php';

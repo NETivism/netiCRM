@@ -456,5 +456,21 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     return $isPass;
   }
+
+  static function getSyncDataUrl ($contributionId) {
+    $payment_instrument_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'payment_instrument_id');
+    $instrument_options = CRM_Core_OptionGroup::values('payment_instrument', FALSE);
+    $instrument = $instrument_options[$payment_instrument_id];
+    if (strtolower($instrument) == 'line pay') {
+      $get = $_GET;
+      unset($get['q']);
+      $query = http_build_query($get);
+      $sync_url = CRM_Utils_System::url("civicrm/linepay/query", $query);
+    }
+    else {
+      $sync_url = NULL;
+    }
+    return $sync_url;
+  }
 }
 

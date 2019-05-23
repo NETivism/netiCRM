@@ -66,33 +66,15 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $this->assign('expire_date', $values['expire_date']);
     }
 
-    $contribution = new CRM_Contribute_DAO_Contribution();
-    $contribution->id = $id;
-    $contribution->find(TRUE);
-    $is_test = $contribution->is_test ? 'test' : '';
-    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
-    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, $this);
-    $class = get_class($payment);
-
-    if (method_exists($class, 'getRecordDetail')) {
-      $recordDetail = $class::getRecordDetail($id);
+    $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($id);
+    if (method_exists($paymentClass, 'getRecordDetail')) {
+      $recordDetail = $paymentClass::getRecordDetail($id);
       $this->assign('record_detail', $recordDetail);
     }
 
-    $paymentProcessorName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $contribution->payment_processor_id, 'payment_processor_type');
-    if(strtolower($paymentProcessorName) == 'tappay') {
-      $syncType = 'tappay';
-    }
-    elseif (strtolower($instrument) == 'line pay') {
-      $syncType = 'linepay';
-    }
-
-    if (!empty($syncType)) {
-      $get = $_GET;
-      unset($get['q']);
-      $query = http_build_query($get);
-      $sync_url = CRM_Utils_System::url("civicrm/{$syncType}/query", $query);
-      $this->assign('sync_url', $sync_url);
+    if (method_exists($paymentClass, 'getSyncDataUrl')) {
+      $syncUrl = $paymentClass::getSyncDataUrl($id);
+      $this->assign('sync_url', $syncUrl);
     }
 
     $softParams = array('contribution_id' => $values['contribution_id']);

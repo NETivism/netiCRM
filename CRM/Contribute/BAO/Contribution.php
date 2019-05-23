@@ -527,6 +527,10 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
         'contact_type' => $contacType,
         'level' => 'Strict',
       );
+      $dupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      if (!is_array($dupeFields)) {
+        $dupeFields = array();
+      }
       foreach ($tmpContactFields as $fieldName => $fieldData) {
         $fieldName = trim($fieldName);
         if (in_array($fieldName, $contactFieldsIgnore)) {
@@ -2571,6 +2575,17 @@ WHERE c.id = $id";
         return $html;
       }
     }
+  }
+
+  static function getPaymentClass($contributionId) {
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    $contribution->find(TRUE);
+    $is_test = $contribution->is_test ? 'test' : '';
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
+    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, $this);
+    $paymentClass = get_class($payment);
+    return $paymentClass;
   }
 }
 

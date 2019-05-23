@@ -600,7 +600,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $contributionId = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     }
 
-    self::doSyncRecord($contributionId);
+    $resultNote = self::doSyncRecord($contributionId);
     
     // redirect to contribution view page
     $query = http_build_query($get);
@@ -759,7 +759,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // CRM_Core_Error::debug_log_message($resultNote);
       self::addNote($resultNote, $contribution);
     }
-    return $record;
+    return $resultNote;
   }
 
   public static function doSyncLastDaysRecords() {
@@ -886,6 +886,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $trxnId = 'c_'.$contributionId.'_'.$rand;
     }
     return $trxnId;
+  }
+
+  static function getSyncDataUrl ($contributionId) {
+    $get = $_GET;
+    unset($get['q']);
+    $query = http_build_query($get);
+    $sync_url = CRM_Utils_System::url("civicrm/tappay/query", $query);
+    return $sync_url;
   }
 
   static function addNote($note, &$contribution){
