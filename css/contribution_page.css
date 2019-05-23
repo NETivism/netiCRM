@@ -258,19 +258,26 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 
 
 @media screen and (max-width: 480px) {
-  html {
-    height: 100vh !important;
-  }
   html body.frontend.page-civicrm-contribute-transact {
+    background: none;
+  }
+  html body.frontend.page-civicrm-contribute-transact:before {
+    content: ' ';
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     background-size: cover;
     background-position: center;
     background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)),var(--mobile-background-url);
-    background-attachment: fixed;
   }
   #main #intro_text h1 {
     font-size: 36px;
   }
   .custom-step-info{
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
     background-color: var(--active-color);
