@@ -73,6 +73,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       return $error;
     }
 
+    self::saveLogData($params);
+
     $recurring = new CRM_Contribute_BAO_ContributionRecur();
     $recurring->copyValues($params);
 
@@ -462,6 +464,48 @@ GROUP BY c.currency";
       'type' => 'Line',
     );
     return $chart;
+  }
+
+  static function saveLogData($params, &$logId = NULL) {
+    if (empty($params['id'])) {
+      $message = ts('Lack of ID in parameters when saving log data.');
+      CRM_Core_Error::debug_log_message($message, TRUE);
+    }
+    else {
+      $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
+      $recurDAO->id = $params['id'];
+      $recurDAO->find(TRUE);
+    }
+
+    $recurFields = array_keys((new CRM_Contribute_DAO_ContributionRecur())->fields());
+
+    $before = $after = array();
+    foreach ($recurFields as $field) {
+      $after[$field] = empty($params[$field]) ? NULL : $params[$field];
+      if (!empty($recurDAO->$field)) {
+        $before[$field] = $recurDAO->$field;
+        if ($after[$field] === NULL) {
+          $after[$field] = $recurDAO->$field;
+        }
+      }
+    }
+    $data = array('before' => $before, 'after' => $after);
+    $session = CRM_Core_Session::singleton();
+    $contactId = $session->get('userID');
+    $logParams = array(
+      'entity_table' => 'civicrm_contribution_recur',
+      'entity_id' => $params['id'],
+      'data' => serialize($data),
+      'modified_id' => $contactId,
+      'modified_date' => date('YmdHis'),
+    );
+    if (!empty($logId)) {
+      $logParams['id'] = $logId;
+    }
+    $log = CRM_Core_BAO_Log::add( $logParams );
+    if (!empty($log->id)) {
+      $logId = $log->id;
+    }
   }
 }
 

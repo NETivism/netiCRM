@@ -278,32 +278,6 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     );
     CRM_Core_BAO_Note::add( $noteParams, NULL );
 
-    $session = CRM_Core_Session::singleton();
-    $contactId = $session->get('userID');
-
-    $recurFields = array_keys((new CRM_Contribute_DAO_ContributionRecur())->fields());
-
-    $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
-    $recurDAO->id = $this->_id;
-    $recurDAO->find(TRUE);
-
-    $before = $after = array();
-    foreach ($recurFields as $field) {
-      $before[$field] = $recurDAO->$field;
-      if (!empty($params[$field])) {
-        $after[$field] = $params[$field];
-      }
-    }
-    $data = array('before' => $before, 'after' => $after);
-    $logParams = array(
-      'entity_table' => 'civicrm_contribution_recur',
-      'entity_id' => $this->_id,
-      'data' => serialize($data),
-      'modified_id' => $contactId,
-      'modified_date' => date('YmdHis'),
-    );
-    CRM_Core_BAO_Log::add( $logParams );
-
     // save the changes
     $ids = array();
     require_once 'CRM/Contribute/BAO/ContributionRecur.php';
@@ -314,6 +288,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       'id' => $this->_id,
       'cid' => $this->_contactID,
     ));
+    $session = CRM_Core_Session::singleton();
     $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/contributionrecur', $urlParams));
   }
   //end of function

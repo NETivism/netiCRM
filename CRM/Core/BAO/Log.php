@@ -75,6 +75,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
     $log = new CRM_Core_DAO_Log();
     $log->copyValues($params);
     $log->save();
+    return $log;
   }
 
   static function register($contactID, $tableName, $tableID, $userID = NULL, $data = NULL) {
