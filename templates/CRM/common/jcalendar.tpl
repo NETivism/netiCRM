@@ -76,10 +76,17 @@
       var currentYear = new Date().getFullYear();
       var date_format = cj( element_date ).attr('format');
       var alt_field   = 'input#{$dateFormated}';
-      var yearRange   = "c-"+ parseInt( cj( element_date ).attr('startOffset') );
-          yearRange  += ':';
-          yearRange  += "c+"+ parseInt( cj( element_date ).attr('endOffset'  ) );
       {literal}
+      if (cj( element_date ).attr('formattype') == "birth") {
+        var yearRange   = currentYear - parseInt( cj( element_date ).attr('startOffset') );
+            yearRange  += ':';
+            yearRange  += currentYear + parseInt( cj( element_date ).attr('endOffset'  ) );
+      }
+      else {
+        var yearRange   = "c-"+ parseInt( cj( element_date ).attr('startOffset') );
+            yearRange  += ':';
+            yearRange  += "c+"+ parseInt( cj( element_date ).attr('endOffset'  ) );
+      }
 
       var lcMessage = {/literal}"{$config->lcMessages}"{literal};
       var localisation = lcMessage.replace("_", "-");
