@@ -855,6 +855,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $returnData[ts('Record Trade ID')] = $tappayDAO->rec_trade_id;
     $returnData[ts('Card Number')] = $tappayDAO->bin_code."**********".$tappayDAO->last_four;
     $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($tappayDAO->expiry_date));
+    $returnData[ts('Status')] = $tappayObject->status;
+    $returnData[ts('Message')] = $tappayObject->msg;
     if (!empty($tappayObject->card_info)) {
       $cardInfo = $tappayObject->card_info;
       $returnData[ts('Card Issuer')] = $cardInfo->issuer;
