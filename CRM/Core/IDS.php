@@ -87,7 +87,7 @@ class CRM_Core_IDS {
       $contents = "
 [General]
     filter_type         = xml
-    filter_path         = {$civicrm_root}/packages/IDS/default_filter.xml
+    filter_path         = {$civicrm_path}/packages/IDS/default_filter.xml
     tmp_path            = $tmpDir
     HTML_Purifier_Path  = IDS/vendors/htmlpurifier/HTMLPurifier.auto.php
     HTML_Purifier_Cache = $tmpDir
@@ -157,7 +157,7 @@ class CRM_Core_IDS {
    *
    * @return boolean
    */
-  private function react(IDS_Report$result) {
+  private function react(IDS_Report $result) {
 
     $impact = $result->getImpact();
     if ($impact >= $this->threshold['kick']) {
@@ -189,26 +189,31 @@ class CRM_Core_IDS {
    */
   private function log($result, $reaction = 0, $impact = NULL) {
     $config = CRM_Core_Config::singleton();
-    $ip = ($_SERVER['SERVER_ADDR'] != '127.0.0.1') ? $_SERVER['SERVER_ADDR'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ?
-      $_SERVER['HTTP_X_FORWARDED_FOR'] :
-      '127.0.0.1'
-    );
+    $ip = $_SERVER['REMOTE_ADDR'];
+    if ($_SERVER['HTTP_X_FORWARDED_FOR']) {
+      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
 
     $data = array();
     $session = CRM_Core_Session::singleton();
     foreach ($result as $event) {
+      $filters = $event->getFilters();
+      $description = array();
+      foreach($filters as $filter) {
+        $description[] = $filter->getId().":".$filter->getDescription();
+      }
+
       $log = array(
         'name' => $event->getName(),
+        'tag' => implode("|", $event->getTags()),
+        'problem' => "\n".implode("\n", $description),
+        'value' => stripslashes($event->getValue()),
         'page' => $_SERVER['REQUEST_URI'],
         'userid' => $session->get('userID'),
-        'session' => session_id() ? session_id() : '0',
         'ip' => $ip,
         'reaction' => $reaction,
         'impact' => $impact,
       );
-      if ($config->debug) {
-        $log['value'] = stripslashes($event->getValue());
-      }
       $data[] = $log;
     }
 
