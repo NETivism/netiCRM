@@ -6316,3 +6316,16 @@ input.crm-form-textfield,
   top: 5px;
   color: #1faa00;
 }
+.crm-container .advanced-float-buttons{
+  position: fixed;
+  z-index:20;
+  top: 50%;
+  right: 0;
+  padding: 5px;
+  background: #FFFFFFAA;
+  box-shadow: -1px -1px 5px 0px #9a9a9a;
+}
+.crm-container .advanced-float-buttons .crm-submit-buttons{
+  margin: 0;
+  padding-left: 10px;
+}

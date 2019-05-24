@@ -1463,6 +1463,13 @@ class CRM_Contact_BAO_Query {
         $this->demographics($values);
         return;
 
+      case 'contact_created_date_low':
+      case 'contact_created_date_high':
+      case 'contact_modified_date_low':
+      case 'contact_modified_date_high':
+        $this->createdModifiedDate($values);
+        return;
+
       case 'log_date_low':
       case 'log_date_high':
         $this->modifiedDates($values);
@@ -3360,6 +3367,17 @@ WHERE  id IN ( $groupIDs )
     self::$_openedPanes['Demographics'] = TRUE;
   }
 
+  function createdModifiedDate($values) {
+    list($name, $op, $value, $grouping, $wildcard) = $values;
+
+    if (($name == 'contact_created_date_low') || ($name == 'contact_created_date_high')) {
+      $this->dateQueryBuilder($values, 'contact_a', 'contact_created_date', 'created_date', ts('Created Date'));
+    }
+    elseif (($name == 'contact_modified_date_low') || ($name == 'contact_modified_date_high')) {
+      $this->dateQueryBuilder($values, 'contact_a', 'contact_modified_date', 'modified_date', ts('Modified Date'));
+    }
+  }
+
   function privacy(&$values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
     //fixed for profile search listing CRM-4633
@@ -3671,6 +3689,8 @@ civicrm_relationship.start_date > {$today}
           'do_not_trade' => 1,
           'is_opt_out' => 1,
           'contact_is_deleted' => 1,
+          'contact_created_date' => 1,
+          'contact_modified_date' => 1,
         );
       }
     }
@@ -4180,6 +4200,8 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
         'do_not_mail' => 1,
         'do_not_sms' => 1,
         'do_not_trade' => 1,
+        'contact_created_date' => 1,
+        'contact_modified_date' => 1,
         'location' =>
         array(
           '1' => array('location_type' => 1,
