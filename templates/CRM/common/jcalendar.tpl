@@ -76,17 +76,10 @@
       var currentYear = new Date().getFullYear();
       var date_format = cj( element_date ).attr('format');
       var alt_field   = 'input#{$dateFormated}';
+      var yearRange   = currentYear - parseInt( cj( element_date ).attr('startOffset') );
+          yearRange  += ':';
+          yearRange  += currentYear + parseInt( cj( element_date ).attr('endOffset'  ) );
       {literal}
-      if (cj( element_date ).attr('formattype') == "birth") {
-        var yearRange   = currentYear - parseInt( cj( element_date ).attr('startOffset') );
-            yearRange  += ':';
-            yearRange  += currentYear + parseInt( cj( element_date ).attr('endOffset'  ) );
-      }
-      else {
-        var yearRange   = "c-"+ parseInt( cj( element_date ).attr('startOffset') );
-            yearRange  += ':';
-            yearRange  += "c+"+ parseInt( cj( element_date ).attr('endOffset'  ) );
-      }
 
       var lcMessage = {/literal}"{$config->lcMessages}"{literal};
       var localisation = lcMessage.replace("_", "-");
@@ -105,7 +98,6 @@
           dateFormat: date_format,
           altField: alt_field,
           altFormat: 'mm/dd/yy',
-          yearRange: yearRange,
           onChangeMonthYear: function(dateText, inst){
             setTimeout(function(){cj('.ui-datepicker-calendar').hide();},1);
           },
