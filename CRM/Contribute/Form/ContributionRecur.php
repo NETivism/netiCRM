@@ -179,7 +179,13 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         ));
       }
       else if (in_array($name, array('installments', 'cycle_day', 'amount'))) {
-        $ele = $this->add('number', $name, $label);
+        if ($name == 'cycle_day') {
+          $attr = array('max' => 28, 'min' => 1);
+        }
+        else {
+          $attr = array('min' => 0);
+        }
+        $ele = $this->add('number', $name, $label, $attr);
       }
       else {
         $ele = $this->add('text', $name, $label, array('size' => 20));
