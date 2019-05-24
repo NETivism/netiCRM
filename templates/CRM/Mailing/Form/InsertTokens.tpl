@@ -347,7 +347,7 @@ if ( isMailing ) {
             width       : '310px',
             resizable   : false,
             bgiframe    : false,
-            position    : { my: "left top", at: "left bottom" },
+            position    : { my: "center", at: "right center", of: window},
             overlay     : { opacity: 0.9, background: "black" },
             beforeclose : function(event, ui) { cj(this).dialog("destroy"); },
             buttons     : { 
