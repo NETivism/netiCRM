@@ -151,8 +151,7 @@ function trackVisit(visitInfo) {
     $.ajax({
       type: "POST",
       url: '/civicrm/ajax/track',
-      data: JSON.stringify(object),
-      dataType: 'json'
+      data: 'data='+encodeURIComponent(JSON.stringify(object))
     });
   });
 }
