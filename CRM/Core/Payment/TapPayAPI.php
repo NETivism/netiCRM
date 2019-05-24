@@ -40,6 +40,8 @@ class CRM_Core_Payment_TapPayAPI {
     */
   );
 
+  protected $_apiNeedSaveData = array('pay_by_prime', 'pay_by_token', 'trade_history');
+
   protected $_contribution_id; // this request relative contribution.
 
   protected $_apiMethod; // In Tappay , Always Use POST.
@@ -135,8 +137,10 @@ class CRM_Core_Payment_TapPayAPI {
     $this->_request = $post;
     $result = $this->_curl();
     if ($result['status'] && !empty($this->_response)) {
-      // Record tappay data
-      self::saveTapPayData($this->_contribution_id, $this->_response);
+      if (in_array($this->_apiType, $this->_apiNeedSaveData)) {
+        // Record tappay data
+        self::saveTapPayData($this->_contribution_id, $this->_response);
+      }
 
       // Format of amount
       $response =& $this->_response;
@@ -240,17 +244,23 @@ class CRM_Core_Payment_TapPayAPI {
     }
     $tappay->data = json_encode($response);
     if (!empty($tappay->contribution_recur_id)) {
-      if ($response->card_secret) {
+      if (!empty($response->card_secret->card_token)) {
         $tappay->card_token = $response->card_secret->card_token;
+      }
+      if (!empty($response->card_secret->card_key)) {
         $tappay->card_key = $response->card_secret->card_key;
       }
       if (!empty($response->card_token)) {
         $tappay->card_token = $response->card_token;
       }
     }
-    if($response->card_info) {
-      $tappay->last_four = $response->card_info->last_four;
-      $tappay->bin_code = $response->card_info->bin_code;
+    if (!empty($response->card_info)) {
+      if (!empty($response->card_info->last_four)) {
+        $tappay->last_four = $response->card_info->last_four;
+      }
+      if (!empty($response->card_info->bin_code)) {
+        $tappay->bin_code = $response->card_info->bin_code;
+      }
       if(!empty($response->card_info->expiry_date)){
         $year = substr($response->card_info->expiry_date, 0, 4);
         $month = substr($response->card_info->expiry_date, 4, 2);
