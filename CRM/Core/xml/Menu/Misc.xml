@@ -79,8 +79,7 @@
   <item>
      <path>civicrm/apibrowser</path>
      <page_callback>CRM_Admin_Page_APIExplorer</page_callback>
-     <access_callback>1</access_callback>
-     <is_public>true</is_public>
+     <access_arguments>administer CiviCRM</access_arguments>
   </item>
   <item>
      <path>civicrm/chartsample</path>
