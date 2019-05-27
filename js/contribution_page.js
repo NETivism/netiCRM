@@ -58,6 +58,11 @@
             $('.page-title').text(ContribPageParams.thankyouTitle);
             document.title = document.title.replace(ts["Payment failed."], ContribPageParams.thankyouTitle);
           }
+          if($(window).width() <= 768) {
+            if ($('.messages.error').length) {
+              $('#intro_text').hide();
+            }
+          }
         }
       },
 
@@ -564,13 +569,11 @@
           }
         });
 
-        if (isScrollAnimate || this.currentPage == 'Confirm') {
+        if (isScrollAnimate && $(window).width() <= 768) {
           var topPosition = $('#content-main').offset().top - 30;
           $('html,body').animate({ scrollTop: topPosition }, 500);
         }
 
-        console.log(this.currentFormStep);
-        console.log($('.custom-step-info span.active'));
         $('.step-text').removeClass('active');
         if(this.currentPage == 'Main'){
           $('.step-text-' + this.currentFormStep).addClass('active');
@@ -665,7 +668,6 @@
 
       prepareAfterAll: function(){
         $('.payment_options-group').hide();
-        $('#main, #main-inner').css('opacity', 1);
         $('#page').css('background', 'none').css('height','unset');
 
       }

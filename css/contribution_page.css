@@ -15,9 +15,6 @@ body #page{
 .frontend .main#main,
 .frontend.frontend-fullbg .main#main {
   background: none !important;
-  -webkit-transition: opacity linear .5s;
-       -o-transition: opacity linear .5s;
-          transition: opacity linear .5s;
 }
 .logo-img{
   height: 80px;
