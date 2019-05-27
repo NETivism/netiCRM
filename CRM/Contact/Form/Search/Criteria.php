@@ -89,6 +89,10 @@ class CRM_Contact_Form_Search_Criteria {
     $attributes['job_title']['size'] = 30;
     $form->addElement('text', 'job_title', ts('Job Title'), $attributes['job_title'], 'size="30"');
 
+    // add nick name
+    $attributes['nick_name']['size'] = 30;
+    $form->addElement('text', 'nick_name', ts('Nick Name'), $attributes['nick_name'], 'size="30"');
+
     //added internal ID
     $attributes['id']['size'] = 30;
     $form->addElement('text', 'id', ts('Contact ID'), $attributes['id'], 'size="30"');
@@ -235,6 +239,12 @@ class CRM_Contact_Form_Search_Criteria {
     //CRM-6138 Preferred Language
     $langPreff = CRM_Core_PseudoConstant::languages();
     $form->add('select', 'preferred_language', ts('Preferred Language'), array('' => ts('- select language -')) + $langPreff);
+
+    // #21360
+    $form->addDateTime('contact_created_date_low', ts('Created On'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDateTime('contact_created_date_high', ts('and'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDateTime('contact_modified_date_low', ts('Modified Between'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDateTime('contact_modified_date_high', ts('and'), FALSE, array('formatType' => 'searchDate'));
   }
 
   static function location(&$form) {

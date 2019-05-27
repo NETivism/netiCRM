@@ -362,6 +362,18 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
    */
   public $is_deleted;
   /**
+   * When was the contact was created.
+   *
+   * @var datetime
+   */
+  public $created_date;
+  /**
+   * When was the contact (or closely related entity) was created or modified or deleted.
+   *
+   * @var datetime
+   */
+  public $modified_date;
+  /**
    * class constructor
    *
    * @access public
@@ -863,6 +875,25 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'where' => 'civicrm_contact.is_deleted',
           'headerPattern' => '',
           'dataPattern' => '',
+        ) ,
+        'contact_created_date' => array(
+          'name' => 'created_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Created Date') ,
+          'required' => false,
+          'import' => true,
+          'where' => 'civicrm_contact.created_date',
+          'headerPattern' => '/created(.?date)?/i',
+          'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
+          'export' => true,
+          'default' => 'URRENT_TIMESTAM',
+        ) ,
+        'contact_modified_date' => array(
+          'name' => 'modified_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Modified Date') ,
+          'required' => false,
+          'default' => 'URRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAM',
         ) ,
       );
     }

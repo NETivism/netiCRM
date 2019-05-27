@@ -603,4 +603,37 @@
     <fieldName>is_deleted</fieldName>
     <add>3.2</add>
   </index>
+  <field>
+    <name>created_date</name>
+    <uniqueName>contact_created_date</uniqueName>
+    <type>datetime</type>
+    <import>true</import>
+    <comment>When was the contact was created.</comment>
+    <headerPattern>/created(.?date)?/i</headerPattern>
+    <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
+    <required>false</required>
+    <default>CURRENT_TIMESTAMP</default>
+    <add>4.0</add>
+  </field>
+  <index>
+    <name>index_created_date</name>
+    <fieldName>created_date</fieldName>
+    <add>4.0</add>
+  </index>
+  <field>
+    <name>modified_date</name>
+    <uniqueName>contact_modified_date</uniqueName>
+    <type>datetime</type>
+    <comment>When was the contact (or closely related entity) was created or modified or deleted.</comment>
+    <headerPattern>/modified(.?date)?/i</headerPattern>
+    <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
+    <required>false</required>
+    <default>CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</default>
+    <add>4.0</add>
+  </field>
+  <index>
+    <name>index_modified_date</name>
+    <fieldName>modified_date</fieldName>
+    <add>4.0</add>
+  </index>
 </table>

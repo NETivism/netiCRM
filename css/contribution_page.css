@@ -15,7 +15,6 @@ body #page{
 .frontend .main#main,
 .frontend.frontend-fullbg .main#main {
   background: none !important;
-  opacity: 0;
   -webkit-transition: opacity linear .5s;
        -o-transition: opacity linear .5s;
           transition: opacity linear .5s;
@@ -29,7 +28,6 @@ body.frontend #content{
 }
 #main-inner {
   max-width: 500px;
-  opacity: 0;
 }
 #intro_text {
   color: white;
@@ -111,7 +109,6 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     border-radius: 10px;
     z-index: 100;
     cursor: default;
-
 }
 
 .custom-step-info{
@@ -258,19 +255,26 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 
 
 @media screen and (max-width: 480px) {
-  html {
-    height: 100vh !important;
-  }
   html body.frontend.page-civicrm-contribute-transact {
+    background: none;
+  }
+  html body.frontend.page-civicrm-contribute-transact:before {
+    content: ' ';
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     background-size: cover;
     background-position: center;
     background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)),var(--mobile-background-url);
-    background-attachment: fixed;
   }
   #main #intro_text h1 {
     font-size: 36px;
   }
   .custom-step-info{
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
     background-color: var(--active-color);
@@ -890,4 +894,11 @@ body .crm-container .premiums-listings .premium-img{
 }
 body.admin-sidebar-mini .neticrm-footer {
   margin: 0;
+}
+.crm-container .messages.crm-error {
+  position: fixed;
+  top: 150px;
+  left: 10%;
+  right: 10%;
+  width: 80%;
 }

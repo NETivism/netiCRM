@@ -78,7 +78,9 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       CRM_Utils_System::notFound();
       CRM_Utils_System::civiExit();
     }
-    $post = file_get_contents('php://input');
+    if (!empty($_POST['data'])) {
+      $post = $_POST['data'];
+    }
     if (empty($post)) {
       CRM_Utils_System::notFound();
       CRM_Utils_System::civiExit();

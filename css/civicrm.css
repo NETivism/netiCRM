@@ -1128,8 +1128,14 @@ div.spacer,
 }
 
 .crm-container #record-log {
-    padding: 0.8em 0.8em 0em 0em;
-    text-align: right;
+    padding: 0.5em 0.8em;
+    font-size: .75em;
+    background: #FFF;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    bottom: 0;
+    box-shadow: 0 -1px 8px 1px #eaeaea;
 }
 .crm-container #access {
     padding: 0.8em 0.8em 0em 0em;
@@ -6309,4 +6315,17 @@ input.crm-form-textfield,
   right: 10px;
   top: 5px;
   color: #1faa00;
+}
+.crm-container .advanced-float-buttons{
+  position: fixed;
+  z-index:20;
+  top: 50%;
+  right: 0;
+  padding: 5px;
+  background: #FFFFFFAA;
+  box-shadow: -1px -1px 5px 0px #9a9a9a;
+}
+.crm-container .advanced-float-buttons .crm-submit-buttons{
+  margin: 0;
+  padding-left: 10px;
 }

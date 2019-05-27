@@ -94,25 +94,25 @@ function trackVisit(visitInfo) {
     object['referrer_type'] = visitInfo.referrer.type;
     object['referrer_network'] = '';
     object['referrer_url'] = '';
+    // detect if from civimail mailing list
+    var queue_id = location.search.match(/civimail_x_q=(\d+)/);
+    var url_id = location.search.match(/civimail_x_u=(\d+)/);
+    if (queue_id && url_id) {
+      object['referrer_type'] = 'email';
+      object['referrer_network'] = 'civimail';
+      object['referrer_url'] = 'external/url.php?qid='+queue_id[1]+'&u='+url_id[1];
+    }
     switch(object['referrer_type']){
       case 'ad':
         object['referrer_network'] = visitInfo.referrer.network;
         break;
       case 'direct':
-        // detect if from civimail mailing list
-        var queue_id = location.search.match(/civimail_x_q=(\d+)/);
-        var url_id = location.search.match(/civimail_x_u=(\d+)/);
-        if (queue_id && url_id) {
-          object['referrer_type'] = 'email';
-          object['referrer_network'] = 'civimail';
-          object['referrer_url'] = 'external/url.php?qid='+queue_id[1]+'&u='+url_id[1];
-        }
-        else {
-          object['referrer_network'] = '';
-        }
+        object['referrer_network'] = '';
         break;
       case 'email':
-        object['referrer_network'] = visitInfo.referrer.client;
+        if (typeof object['referrer_network'] !== 'undefined' && object['referrer_network'] !== 'unknown') {
+          object['referrer_network'] = visitInfo.referrer.client;
+        }
         break;
       case 'internal':
         object['referrer_network'] = '';
@@ -151,8 +151,7 @@ function trackVisit(visitInfo) {
     $.ajax({
       type: "POST",
       url: '/civicrm/ajax/track',
-      data: JSON.stringify(object),
-      dataType: 'json'
+      data: 'data='+encodeURIComponent(JSON.stringify(object))
     });
   });
 }

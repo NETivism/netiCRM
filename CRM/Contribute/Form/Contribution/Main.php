@@ -62,6 +62,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
   public function preProcess() {
     parent::preProcess();
 
+    $defaultFromRequest = array();
+    $defaultFromRequest['amt'] = CRM_Utils_Request::retrieve('_amt', 'Positive', $this, FALSE, NULL, 'REQUEST');
+    $defaultFromRequest['grouping'] = CRM_Utils_Request::retrieve('_grouping', 'String', $this, FALSE, NULL, 'REQUEST');
+    $defaultFromRequest['installments'] = CRM_Utils_Request::retrieve('_installments', 'Integer', $this, FALSE, NULL, 'REQUEST');
+    $defaultFromRequest['ppid'] = CRM_Utils_Request::retrieve('_ppid', 'Positive', $this, FALSE, NULL, 'REQUEST');
+    $defaultFromRequest['membership'] = CRM_Utils_Request::retrieve('_membership', 'Positive', $this, FALSE, NULL, 'REQUEST');
+    $this->_defaultFromRequest = $defaultFromRequest;
+    $this->set('defaultFromRequest', $this->_defaultFromRequest);
+
     $this->_ppType = CRM_Utils_Array::value('type', $_GET);
     require_once 'CRM/Core/Payment/ProcessorForm.php';
     $this->assign('ppType', FALSE);
@@ -69,7 +78,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->assign('ppType', TRUE);
       return CRM_Core_Payment_ProcessorForm::preProcess($this);
     }
-
 
     // make sure we have right permission to edit this user
     $csContactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE, $this->_userID);
@@ -316,6 +324,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     require_once 'CRM/Member/BAO/Membership.php';
     if ($this->_membershipBlock) {
       $this->_defaults['selectMembership'] = $this->_defaultMemTypeId ? $this->_defaultMemTypeId : CRM_Utils_Array::value('membership_type_default', $this->_membershipBlock);
+      if (!empty($this->_defaultFromRequest['grouping']) && strstr($this->_defaultFromRequest['grouping'], 'membership-')) {
+        list($dontcare, $defaultFromRequestMembership) = explode('-', $this->_defaultFromRequest['grouping']);
+        if (CRM_Utils_Type::validate($defaultFromRequestMembership, 'Positive', FALSE)) {
+          $this->_defaults['selectMembership'] = $defaultFromRequestMembership;
+        }
+      }
       if(empty($this->_defaults['selectMembership'])) {
         if($this->_membershipBlock['membership_types']) {
           $membershipTypes = explode(',', $this->_membershipBlock['membership_types']);
@@ -432,6 +446,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             $this->_defaults['payment_processor'] = $pid;
           }
         }
+        if (!empty($this->_defaultFromRequest['ppid'])) {
+          $this->_defaults['payment_processor'] = $this->_defaultFromRequest['ppid'];
+        } 
       }
     }
 
@@ -672,47 +689,51 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    */
   function buildAmount($separateMembershipPayment = FALSE) {
     $elements = array();
+    $defaultFromRequestAmountId = NULL; 
     if (!empty($this->_values['amount'])) {
       // first build the radio boxes
       CRM_Utils_Hook::buildAmount('contribution', $this, $this->_values['amount']);
 
       // set default display
       if (!empty($this->_values['default_amount_id'])) {
-        $this->_defaultAmountRecur = $this->_values['amount'][$this->_values['default_amount_id']]['grouping'];
+        $this->_defaultAmountGrouping = $this->_values['amount'][$this->_values['default_amount_id']]['grouping'];
+        if (!empty($this->_defaultFromRequest['grouping'])) {
+          $this->_defaultAmountGrouping = $this->_defaultFromRequest['grouping'];
+        }
       }
-      
       foreach ($this->_values['amount'] as $amount) {
+        // detect default from request
+        if ($this->_defaultFromRequest['amt'] == $amount['value']) {
+          if (!empty($this->_defaultFromRequest['grouping']) && ($amount['grouping'] == $this->_defaultFromRequest['grouping'] || empty($amount['grouping']))) {
+            $defaultFromRequestAmountId = $amount['amount_id'];
+          }
+          elseif (empty($this->_defaultFromRequest['grouping'])) {
+            $defaultFromRequestAmountId = $amount['amount_id'];
+          }
+        }
+
         // set default price option
         $attributes = array(
           'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
           'data-default' => !empty($amount['filter']) ? 1 : 0,
           'onclick' => 'clearAmountOther();',
         );
-        if (!empty($amount['filter'])) {
-          switch($amount['grouping']) {
-            case 'recurring':
-              if ($amount['grouping'] == $this->_defaultAmountRecur) {
-                $this->_defaults['amount'] = $amount['amount_id'];
-              }
-              break;
-            case 'non-recurring':
-              if ($amount['grouping'] == $this->_defaultAmountRecur) {
-                $this->_defaults['amount'] = $amount['amount_id'];
-              }
-              elseif(empty($this->_defaultAmountRecur)) {
-                $this->_defaults['amount'] = $amount['amount_id'];
-              }
-              break;
-            default:
-              $this->_defaults['amount'] = $amount['amount_id'];
-              break;
-          }
-        }
         $elements[] = &$this->createElement('radio', NULL, '',
           CRM_Utils_Money::format($amount['value']) . ' ' . $amount['label'],
           $amount['amount_id'],
           $attributes
         );
+
+        // add default amount option
+        if (!empty($amount['filter']) && !empty($this->_defaultAmountGrouping) && $amount['grouping'] == $this->_defaultAmountGrouping) {
+          $this->_defaults['amount'] = $amount['amount_id'];
+        }
+      }
+      if (empty($this->_defaults['amount']) && !empty($this->_values['default_amount_id'])) {
+        $this->_defaults['amount'] = $this->_values['default_amount_id'];
+      }
+      if ($defaultFromRequestAmountId) {
+        $this->_defaults['amount'] = $defaultFromRequestAmountId;
       }
     }
 
@@ -748,6 +769,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->assign('is_allow_other_amount', TRUE);
 
       $this->addRule('amount_other', ts('Please enter a valid amount (numbers and decimal point only).'), 'money');
+      if ($this->_defaultFromRequest['amt'] && empty($defaultFromRequestAmountId)) {
+        $this->_defaults['amount'] = 'amount_other_radio';
+        $this->_defaults['amount_other'] = $this->_defaultFromRequest['amt'];
+      }
     }
     else {
       if (!empty($this->_values['amount'])) {
@@ -875,8 +900,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->_defaults['is_recur'] = 1;
     }
     else {
-      if ($this->_values['is_recur'] == 1 && !empty($this->_defaultAmountRecur)) {
-        if ($this->_defaultAmountRecur == 'recurring') {
+      if ($this->_values['is_recur'] == 1 && !empty($this->_defaultAmountGrouping)) {
+        if ($this->_defaultAmountGrouping == 'recurring') {
           $this->_defaults['is_recur'] = 1;
         }
         else {
@@ -937,6 +962,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       'style' => 'max-width:100px',
     );
     $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
+    if (isset($this->_defaultFromRequest['installments'])) { 
+      $this->_defaults['installments'] = $this->_defaultFromRequest['installments'];
+    }
     $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
   }
 

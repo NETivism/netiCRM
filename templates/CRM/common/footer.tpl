@@ -26,15 +26,30 @@
 {include file="CRM/common/version.tpl" assign=version}
 {if isset($contactId) and $contactId} {* Display contact-related footer. *}
     <div class="footer" id="record-log">
-    {if isset($legal_identifier) and $legal_identifier}<span class="col">{ts}Legal Identifier{/ts}: {$legal_identifier}</span>{/if} {if isset($external_identifier) and $external_identifier}<span class="col">{ts}External ID{/ts}:&nbsp;{$external_identifier}</span>{/if}{if $action NEQ 2}<span class="col">&nbsp; &nbsp;{ts}CiviCRM ID{/ts}:&nbsp;{$contactId}</span>{/if}
-    {if isset($lastModified) and $lastModified}
-        <span class="col">
-        {ts}Last Change by{/ts} <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$lastModified.id`"}">{$lastModified.name}</a> ({$lastModified.date|crmDate}) &nbsp;
-	{if $changeLog != '0'}
-	    <a href="{crmURL p='civicrm/contact/view' q="reset=1&action=browse&selectedChild=log&cid=`$contactId`"}">&raquo; {ts}View Change Log{/ts}</a>
-	{/if}
-        </span>
+    <span class="col">
+      <div>
+      {if $action NEQ 2}<i class="zmdi zmdi-memory"></i> {ts}CiviCRM ID{/ts}: {$contactId}{/if}
+      {if isset($legal_identifier) and $legal_identifier}<i class="zmdi zmdi-account-box-o"></i> {ts}Legal Identifier{/ts}: {$legal_identifier}{/if}
+      </div>
+      {if isset($external_identifier) and $external_identifier}<div><i class="zmdi zmdi-share"></i> {ts}External ID{/ts}: {$external_identifier}</div>{/if}
+    </span>
+    {if isset($createdBy) and $createdBy}
+    <span class="col">
+      <div>
+      <i class="zmdi zmdi-time"></i> {ts}Created by{/ts} <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$createdBy.id`"}">{$createdBy.name}</a> ({$createdBy.date|crmDate})
+      </div>
+    </span>
     {/if}
+    <span class="col">
+    {if isset($lastModified) and $lastModified}
+      <div>
+        <i class="zmdi zmdi-time"></i> {ts}Last Change by{/ts} <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$lastModified.id`"}">{$lastModified.name}</a> ({$lastModified.date|crmDate})
+      </div>
+      {if $changeLog != '0'}<div>
+        <a href="{crmURL p='civicrm/contact/view' q="reset=1&action=browse&selectedChild=log&cid=`$contactId`"}"><i class="zmdi zmdi-calendar-note"></i>{ts}View Change Log{/ts}</a>
+      </div>{/if}
+    {/if}
+    </span>
     </div>
 {/if}
 

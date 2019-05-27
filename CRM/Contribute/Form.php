@@ -72,7 +72,8 @@ class CRM_Contribute_Form extends CRM_Core_Form {
 
     if (isset($this->_id)) {
       $params = array('id' => $this->_id);
-      $this->_BAOName::retrieve( $params, $defaults );
+      $baoName = $this->_BAOName;
+      $baoName::retrieve( $params, $defaults );
     }
 
     if ($this->_action == CRM_Core_Action::DELETE) {

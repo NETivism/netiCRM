@@ -1978,6 +1978,7 @@ SELECT source_contact_id
     $template->assign('is_monetary', 1);
     $template->assign('currency', $contribution->currency);
     $template->assign('instrument', $instruments[$contribution->payment_instrument_id]);
+    $template->assign('receive_date', CRM_Utils_Date::customFormat($contribution->receive_date, '%Y/%m/%d'));
 
     // refs #18399
     $source_name_array = explode(':', $contribution->source);
@@ -2241,6 +2242,7 @@ SELECT source_contact_id
         'receipt_id' => $result->receipt_id,
         'receipt_date' => $result->receipt_date,
         'total_amount' => $result->total_amount,
+        'receive_date' => $result->receive_date,
       );
       $records[$result->id]['contribution_type'] = $contribution_type[$result->contribution_type_id];
       $records[$result->id]['instrument'] = $instruments[$result->payment_instrument_id];

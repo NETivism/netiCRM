@@ -1,3 +1,11 @@
+	<div class="advanced-float-buttons">
+    <div class="crm-submit-buttons">
+			{include file="CRM/common/formButtons.tpl" location="top" buttonStyle="width:80px; text-align:center;"}
+		</div>
+    <div class="crm-submit-buttons">
+      <a href="{crmURL p='civicrm/contact/search/advanced' q='reset=1'}" id="resetAdvancedSearch" class="button" style="text-align:center;"><span>{ts}Reset{/ts}</span></a>
+    </div>
+  </div>
   <table class="form-layout">
     <tr class="odd">
             <td><label>{ts}Name, Phone or Email{/ts}</label>&nbsp;{help id='id-advanced-intro'}<br />
@@ -21,14 +29,6 @@
                 {else}
                     &nbsp;
                 {/if}
-            </td>
-            <td class="labels">
-                <div class="crm-submit-buttons">
-                    {include file="CRM/common/formButtons.tpl" location="top" buttonStyle="width:80px; text-align:center;"}
-                </div>
-                <div class="crm-submit-buttons reset-advanced-search">
-                    <a href="{crmURL p='civicrm/contact/search/advanced' q='reset=1'}" id="resetAdvancedSearch" class="button" style="text-align:center;"><span>{ts}Reset{/ts}</span></a>
-                </div>
             </td>
         </tr>
     <tr class="even">
@@ -81,7 +81,7 @@
             <td>&nbsp;</td>
 {/if}
             
-            <td colspan="2">
+            <td>
                 {if $form.deleted_contacts}{$form.deleted_contacts.html} {$form.deleted_contacts.label}{else}&nbsp;{/if}
             </td>
     </tr>
@@ -107,7 +107,7 @@
 {else}
             <td>&nbsp;</td>
 {/if}
-            <td colspan="4">{$form.tag_search.label}  {help id="id-all-tags"}<br />{$form.tag_search.html|crmReplace:class:huge}</td>
+            <td colspan="3">{$form.tag_search.label}  {help id="id-all-tags"}<br />{$form.tag_search.html|crmReplace:class:huge}</td>
         </tr>
         <tr class="odd">
             <td colspan="5">{include file="CRM/common/Tag.tpl"}</td>
@@ -140,7 +140,7 @@
                   </script>
                 {/literal}
             </td>
-            <td colspan="3">
+            <td colspan="2">
                 {$form.preferred_communication_method.label}<br />
                 {$form.preferred_communication_method.html}<br />
                 <div class="spacer"></div>
@@ -152,7 +152,7 @@
                 {$form.contact_source.label}<br />
                 {$form.contact_source.html|crmReplace:class:medium}
             </td>
-            <td colspan="2">
+            <td>
                 {if $form.uf_user}
                     {$form.uf_user.label} {$form.uf_user.html} <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('uf_user', 'Advanced'); return false;" >{ts}clear{/ts}</a>)</span>
                     <div class="description font-italic">
@@ -162,7 +162,11 @@
                     &nbsp;
                 {/if}
             </td>
-            <td colspan="2">
+            <td>
+               {$form.nick_name.label}<br>
+               {$form.nick_name.html|crmReplace:class:medium}
+            </td>
+            <td>
                 {$form.job_title.label}<br />
                 {$form.job_title.html|crmReplace:class:medium}
             </td>
@@ -180,10 +184,24 @@
                  {$form.legal_identifier.label}<br />
                  {$form.legal_identifier.html|crmReplace:class:eight}
              </td>
-            <td colspan="2">
+            <td>
                 {$form.preferred_language.label}<br />
                 {$form.preferred_language.html|crmReplace:class:eight}
             </td>
+        </tr>
+        <tr class="odd">
+             <td colspan="2">
+                 {$form.contact_created_date_low.label}<br>
+                 {include file="CRM/common/jcalendar.tpl" elementName=contact_created_date_low}<br>
+                 {$form.contact_created_date_high.label}<br>
+                 {include file="CRM/common/jcalendar.tpl" elementName=contact_created_date_high}
+             </td>
+             <td colspan="2">
+                 {$form.contact_modified_date_low.label}<br>
+                 {include file="CRM/common/jcalendar.tpl" elementName=contact_modified_date_low}<br>
+                 {$form.contact_modified_date_high.label}<br>
+                 {include file="CRM/common/jcalendar.tpl" elementName=contact_modified_date_high}
+             </td>
         </tr>
     </table>
 
