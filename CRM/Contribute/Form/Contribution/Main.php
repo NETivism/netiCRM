@@ -61,14 +61,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    */
   public function preProcess() {
     parent::preProcess();
+
     $defaultFromRequest = array();
     $defaultFromRequest['amt'] = CRM_Utils_Request::retrieve('_amt', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['grouping'] = CRM_Utils_Request::retrieve('_grouping', 'String', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['installments'] = CRM_Utils_Request::retrieve('_installments', 'Integer', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['ppid'] = CRM_Utils_Request::retrieve('_ppid', 'Positive', $this, FALSE, NULL, 'REQUEST');
-    $defaultFromRequest['instrument'] = CRM_Utils_Request::retrieve('_instrument', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['membership'] = CRM_Utils_Request::retrieve('_membership', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $this->_defaultFromRequest = $defaultFromRequest;
+    $this->set('defaultFromRequest', $this->_defaultFromRequest);
 
     $this->_ppType = CRM_Utils_Array::value('type', $_GET);
     require_once 'CRM/Core/Payment/ProcessorForm.php';
@@ -445,6 +446,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             $this->_defaults['payment_processor'] = $pid;
           }
         }
+        if (!empty($this->_defaultFromRequest['ppid'])) {
+          $this->_defaults['payment_processor'] = $this->_defaultFromRequest['ppid'];
+        } 
       }
     }
 
