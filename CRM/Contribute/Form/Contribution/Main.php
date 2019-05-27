@@ -323,8 +323,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     require_once 'CRM/Member/BAO/Membership.php';
     if ($this->_membershipBlock) {
       $this->_defaults['selectMembership'] = $this->_defaultMemTypeId ? $this->_defaultMemTypeId : CRM_Utils_Array::value('membership_type_default', $this->_membershipBlock);
-      if ($this->_defaultFromRequest['membership']) {
-        $this->_defaults['selectMembership'] = $this->_defaultFromRequest['membership'];
+      if (!empty($this->_defaultFromRequest['grouping']) && strstr($this->_defaultFromRequest['grouping'], 'membership-')) {
+        list($dontcare, $defaultFromRequestMembership) = explode('-', $this->_defaultFromRequest['grouping']);
+        if (CRM_Utils_Type::validate($defaultFromRequestMembership, 'Positive', FALSE)) {
+          $this->_defaults['selectMembership'] = $defaultFromRequestMembership;
+        }
       }
       if(empty($this->_defaults['selectMembership'])) {
         if($this->_membershipBlock['membership_types']) {
