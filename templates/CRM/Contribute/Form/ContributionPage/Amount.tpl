@@ -220,8 +220,7 @@
       var groupCurrent = $tr.find("select[name^=grouping]").val() ? $tr.find("select[name^=grouping]").val() : 'all';
 
       var $trAll = $table.find("select[name^=grouping]").filter(function(){ return !$(this).val(); }).closest("tr");
-      var $trRecur = $table.find("select[name^=grouping]").filter(function(){ return $(this).val() == 'recurring'; }).closest("tr");
-      var $trNon = $table.find("select[name^=grouping]").filter(function(){ return $(this).val() == 'non-recurring'; }).closest("tr");
+      var $trCurrent = $table.find("select[name^=grouping]").filter(function(){ return $(this).val() == groupCurrent; }).closest("tr");
 
       if($checkbox.is(":checked")) {
         // clear all same level checkbox, use that for default
@@ -230,14 +229,9 @@
             $("input[type=checkbox][name^=filter]:checked").removeProp('checked');
             $checkbox.prop("checked", true);
             break;
-          case "recurring":
+          default:
             $trAll.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
-            $trRecur.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
-            $checkbox.prop("checked", true);
-            break;
-          case "non-recurring":
-            $trAll.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
-            $trNon.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
+            $trCurrent.find("input[type=checkbox][name^=filter]:checked").removeProp('checked');
             $checkbox.prop("checked", true);
             break;
         }
