@@ -95,12 +95,6 @@
             }
           }
         );
-        if(!defaultPriceOption['single']){
-          defaultPriceOption['single'] = $('[data-grouping][data-grouping!="recurring"]').first().val();
-        }
-        if(!defaultPriceOption['recur']){
-          defaultPriceOption['recur'] = $('[data-grouping][data-grouping!="non-recurring"]').first().val();
-        }
 
         if($('[name="is_recur"]:checked').val() == 1){
           this.currentContribType = 'recur';
