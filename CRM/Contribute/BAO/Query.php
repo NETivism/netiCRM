@@ -130,6 +130,55 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
     }
+
+    // referrer and landing
+    if (CRM_Utils_Array::value('contribution_traffic_type', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_type'] = "civicrm_track.referrer_type as contribution_traffic_type";
+      $query->_element['contribution_traffic_type'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
+    if (CRM_Utils_Array::value('contribution_traffic_network', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_network'] = "civicrm_track.referrer_network as contribution_traffic_network";
+      $query->_element['contribution_traffic_network'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
+    if (CRM_Utils_Array::value('contribution_traffic_url', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_url'] = "civicrm_track.referrer_url as contribution_traffic_url";
+      $query->_element['contribution_traffic_url'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
+    if (CRM_Utils_Array::value('contribution_traffic_landing', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_landing'] = "civicrm_track.landing as contribution_traffic_landing";
+      $query->_element['contribution_traffic_landing'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
+    
+    /* utm fields */
+    if (CRM_Utils_Array::value('contribution_traffic_utm_source', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_utm_source'] = "civicrm_track.referrer_type as contribution_traffic_utm_source";
+      $query->_element['contribution_traffic_utm_source'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
+    if (CRM_Utils_Array::value('contribution_traffic_utm_medium', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_utm_medium'] = "civicrm_track.referrer_type as contribution_traffic_utm_medium";
+      $query->_element['contribution_traffic_utm_medium'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
+    if (CRM_Utils_Array::value('contribution_traffic_utm_campaign', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_utm_campaign'] = "civicrm_track.referrer_type as contribution_traffic_utm_campaign";
+      $query->_element['contribution_traffic_utm_campaign'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
+    if (CRM_Utils_Array::value('contribution_traffic_utm_term', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_utm_term'] = "civicrm_track.referrer_type as contribution_traffic_utm_term";
+      $query->_element['contribution_traffic_utm_term'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
+    if (CRM_Utils_Array::value('contribution_traffic_utm_content', $query->_returnProperties)) {
+      $query->_select['contribution_traffic_utm_content'] = "civicrm_track.referrer_type as contribution_traffic_utm_content";
+      $query->_element['contribution_traffic_utm_content'] = 1;
+      $query->_tables['civicrm_track'] = 1;
+    }
   }
 
   static function where(&$query) {
@@ -373,6 +422,20 @@ class CRM_Contribute_BAO_Query {
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
+      case 'contribution_traffic_source':
+        /*
+        $value = $strtolower(CRM_Core_DAO::escapeString($value));
+        if ($wildcard) {
+          $value = "%$value%";
+          $op = 'LIKE';
+        }
+        $wc = ($op != 'LIKE') ? "LOWER(civicrm_contribution.source)" : "civicrm_contribution.source";
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
+        $query->_qill[$grouping][] = ts('Contribution Source %1 %2', array(1 => $op, 2 => $quoteValue));
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        */
+        return;
+
       case 'contribution_trxn_id':
       case 'contribution_transaction_id':
         $wc = "LOWER(civicrm_contribution.trxn_id)";
@@ -593,6 +656,10 @@ class CRM_Contribute_BAO_Query {
       case 'civicrm_contribution_soft':
         $from = " $side JOIN civicrm_contribution_soft ON civicrm_contribution_soft.contribution_id = civicrm_contribution.id";
         break;
+
+      case 'civicrm_track':
+        $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_contribution' AND civicrm_track.entity_id = civicrm_contribution.id";
+        break;
     }
     return $from;
   }
@@ -640,6 +707,7 @@ class CRM_Contribute_BAO_Query {
         'contribution_note' => 1,
         'contribution_page_id' => 1,
         'receipt_id' => 1,
+        'contribution_traffic_type' => 1,
       );
 
       // also get all the custom contribution properties

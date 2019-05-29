@@ -272,6 +272,54 @@
          </div>
     </div>
 {/if}
+{if $track}
+    <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+         <div class="crm-accordion-header">
+              <div class="zmdi zmdi-chart"></div> 
+              {ts}Traffic Source{/ts}
+         </div>
+         <div class="crm-accordion-body">			   
+            <table class="crm-info-panel">
+                {if $track.referrer_type}<tr>
+            	    <td class="label">{ts}Referrer Type{/ts}</td>
+                  <td>{ts}{$track.referrer_type}{/ts}</td>
+                </tr>{/if}
+                {if $track.referrer_network}<tr>
+            	    <td class="label">{ts}Referrer Network{/ts}</td>
+                  <td>{ts}{$track.referrer_network}{/ts}</td>
+                </tr>{/if}
+                {if $track.landing}<tr>
+            	    <td class="label">{ts}Landing Page{/ts}</td>
+                  <td><a href="{$track.landing}" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i>{$track.landing}</a></td>
+                </tr>{/if}
+                {if $track.referrer_url}<tr>
+            	    <td class="label">{ts}Referrer URL{/ts}</td>
+                  <td><a href="{$track.referrer_url}" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i>{$track.referrer_url}</a></td>
+                </tr>{/if}
+                {if $track.utm_source}<tr>
+            	    <td class="label">utm_source</td>
+                  <td>{$track.utm_source}</td>
+                </tr>{/if}
+                {if $track.utm_medium}<tr>
+            	    <td class="label">utm_medium</td>
+                  <td>{$track.utm_medium}</td>
+                </tr>{/if}
+                {if $track.utm_campaign}<tr>
+            	    <td class="label">utm_campaign</td>
+                  <td>{$track.utm_campaign}</td>
+                </tr>{/if}
+                {if $track.utm_term}<tr>
+            	    <td class="label">utm_term</td>
+                  <td>{$track.utm_term}</td>
+                </tr>{/if}
+                {if $track.utm_content}<tr>
+            	    <td class="label">utm_content</td>
+                  <td>{$track.utm_content}</td>
+                </tr>{/if}
+            </table>
+         </div>
+    </div>
+{/if}
 {if $payment_processor_billinginfo}
 <fieldset><legend>{ts}Billing{/ts}</legend></fieldset>
   {$payment_processor_billinginfo}

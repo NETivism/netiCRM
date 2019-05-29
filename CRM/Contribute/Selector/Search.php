@@ -79,6 +79,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     'contribution_type',
     'contribution_type_id',
     'contribution_source',
+    'contribution_traffic_type',
     'payment_instrument',
     'created_date',
     'receive_date',
@@ -371,10 +372,10 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
       $row['contribution_status_name'] = CRM_Utils_Array::value($row['contribution_status_id'], $contributionStatuses);
 
       if ($result->is_pay_later && CRM_Utils_Array::value('contribution_status_name', $row) == 'Pending') {
-        $row['contribution_status'] .= ' (' . ts('Pay Later') . ')';
+        $row['contribution_status_suffix'] = '(' . ts('Pay Later') . ')';
       }
       elseif (CRM_Utils_Array::value('contribution_status_name', $row) == 'Pending') {
-        $row['contribution_status'] .= ' (' . ts('Incomplete Transaction') . ')';
+        $row['contribution_status_suffix'] = '(' . ts('Incomplete Transaction') . ')';
       }
 
       if ($row['is_test']) {
