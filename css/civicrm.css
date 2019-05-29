@@ -3493,6 +3493,10 @@ div#civicrm-dashboard form {
     background-color:transparent;
 }
 
+.crm-container table.crm-info-panel {
+  margin-bottom: 1px;
+}
+
 .crm-container div.contact_panel td,
 .crm-container div#contactTopBar td,
 table.crm-info-panel td {
@@ -3529,7 +3533,7 @@ table.crm-info-panel .label  {
 .crm-container div#contactTopBar td,
 .crm-container div.contact_panel td,
 table.crm-info-panel td {
-    background-color: #f4f4ed;
+    background-color: #f1f1f1;
 }
 
 .crm-container div#contactTopBar td.label,
@@ -4954,16 +4958,16 @@ tbody.scrollContent tr.alternateRow {
 
 /* Special case for tr style*/
 .crm-container tr.contribution-status-4 {
-  background-color: #DCC5C5;
+  box-shadow: inset 0 0 100px 100px #DCC5C599;
 }
 .crm-container tr.contribution-status-3 {
-  background-color: #CCCCCC;
+  box-shadow: inset 0 0 100px 100px #DCC5C599;
 }
 .crm-container tr.contribution-status-2 {
-  background-color: #EFEFEF;
+  box-shadow: inset 0 0 100px 100px #e4e6ef99;
 }
 .crm-container tr.contribution-status-1 {
-  background-color: #FFF;
+  box-shadow: inset 0 0 100px 100px #FFFFFF99;
 }
 
 
