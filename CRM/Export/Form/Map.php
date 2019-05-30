@@ -213,6 +213,11 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
 
     if ($buttonName1 == '_qf_Map_next') {
+      if ($this->get('mappingId')) {
+        $params['mappingId'] = $this->get('mappingId');
+        $params['updateMapping'] = 1;
+        unset($params['saveMapping']);
+      }
       $this->updateAndSaveMapping($params);
     }
 
@@ -261,6 +266,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       );
 
       $saveMapping = CRM_Core_BAO_Mapping::add( $mappingParams );
+      $this->set('mappingId', $saveMapping->id);
 
       //save mapping fields
       CRM_Core_BAO_Mapping::saveMappingFields($params, $saveMapping->id);
