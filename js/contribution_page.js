@@ -8,7 +8,7 @@
 
     window.ContribPage = {
       // isCreditCardOnly : window.ContribPageParams.creditCardOnly,
-      currentContribType : "recur", // "recur", "single"
+      currentContribType : "recurring", // "recurring", "single"
       currentContribInstrument : "creditCard", // "creditCard", "other"
       currentPage : $('#crm-container>form').attr('id'), // "Main", "Confirm", "ThankYou"
       currentPageState : "loading", // "loading", "success"
@@ -33,6 +33,8 @@
 
           this.prepareRecurBtnMsg();
 
+          this.checkUrlParamsAction();
+
           this.prepareForm();
 
           this.preparePriceSetBlock();
@@ -40,6 +42,7 @@
           this.setDefaultPriceOption();
 
           this.prepareContribTypeForm();
+
         }
         if(this.currentPage == 'Confirm'){
           this.prepareStepInfo();
@@ -85,24 +88,24 @@
             var label = $(ele).next().text();
             if(regExp.test(label)){
               if(contribType == 'recurring'){
-                defaultPriceOption['recur'] = $(ele).val();
+                defaultPriceOption['recurring'] = $(ele).val();
               }else if(contribType == 'non-recurring'){
-                defaultPriceOption['single'] = $(ele).val();
+                defaultPriceOption['non-recurring'] = $(ele).val();
               }else if(contribType == ''){
-                defaultPriceOption['recur'] = $(ele).val();
-                defaultPriceOption['single'] = $(ele).val();
+                defaultPriceOption['recurring'] = $(ele).val();
+                defaultPriceOption['non-recurring'] = $(ele).val();
               }
             }
           }
         );
 
         if($('[name="is_recur"]:checked').val() == 1){
-          this.currentContribType = 'recur';
+          this.currentContribType = 'recurring';
           if($('#installments').val()){
             this.installments = $('#installments').val();
           }
         }else{
-          this.currentContribType = 'single';
+          this.currentContribType = 'non-recurring';
         }
 
 
@@ -147,13 +150,13 @@
           $msgBox.animate({opacity: 0},500,function(){
             $msgBox.hide();
             $msgBox.css('opacity', 1);
-            ContribPage.setContributeType('single');
+            ContribPage.setContributeType('non-recurring');
           });
           event.preventDefault();
         });
         var $recurBtn = this.createBlueBtn(ts['I want recurring contribution.']);
         $recurBtn.find('a').click(function(event){
-          ContribPage.setContributeType('recur');
+          ContribPage.setContributeType('recurring');
           ContribPage.quitMsgBox();
           event.preventDefault();
         });
@@ -288,7 +291,7 @@
         if($('[name=is_recur][value=1]').length > 0){
           var $recurBtn = this.createBtn(ts["Recurring contributions"],"custom-recur-btn");
           $recurBtn.click(function(){
-            ContribPage.setContributeType('recur');
+            ContribPage.setContributeType('recurring');
           });
           $('.contrib-type-btn').append($recurBtn);
         }
@@ -298,7 +301,7 @@
             if(ContribPage.singleContribMsgText){
               ContribPage.$msgBox.show();
             }else{
-              ContribPage.setContributeType('single');
+              ContribPage.setContributeType('non-recurring');
             }
           });
           $('.contrib-type-btn').append($singleBtn);
@@ -354,10 +357,44 @@
         this.updatePriceSetOption();
       },
 
+      checkUrlParamsAction: function() {
+        var paramString = window.location.search.substring(1);
+        var params = [];
+        paramString.split("&").forEach(function(keyValue) {
+          var keyValueArray = keyValue.split("=");
+          var key = decodeURIComponent(keyValueArray[0]);
+          var value = decodeURIComponent(keyValueArray[1]);
+          params[key] = value;
+        });
+
+        if (params['_ppid'] && params['_ppid'] == $('.payment_processor-section input:checked').val() && 
+          params['_grouping'] && params['_grouping'] == this.currentContribType && 
+          params['_amt'] && params['_amt'] == this.currentPriceAmount && 
+          params['_instrumentid'] ) {
+          ContribPage.currentFormStep = 2;
+          /*
+          var promSkipStep = new Promise(function(resolve, reject) {
+            cj(document).ajaxComplete(function(event, xhr, options) {
+              var url = options.url;
+              if(url.indexOf('civicrm/contribute/transact') != -1 && 
+                url.indexOf('type='+ppid) != -1 && 
+                url.indexOf('snippet=4') != -1 &&
+                xhr.readyState == 4) {
+                resolve();
+              }
+            });
+          }).then(function(){
+            // window.ContribPage.setFormStep(2);
+          });
+          */
+        }
+
+      },
+
       updatePriceSetOption: function(){
         $('.price-set-btn').html("");
         var reg = new RegExp(/^NT\$ ([\d\,]+) ?(.*)$/);
-        var grouping_text = (this.currentContribType == 'recur')?"recurring":"non-recurring";
+        var grouping_text = this.currentContribType;
         $('.amount-section label.crm-form-radio').each(function(ele){
           var $this = $(this);
           var this_grouping = $this.find('input').data('grouping');
@@ -434,11 +471,11 @@
           if(!this.currentContribType){
             return;
           }
-          if(this.currentContribType == 'single'){
+          if(this.currentContribType == 'non-recurring'){
             $('[name=is_recur][value=0]').click();
             this.setContribInstrument('creditCard');
           }
-          if(this.currentContribType == 'recur'){
+          if(this.currentContribType == 'recurring'){
             this.setContribInstrument('creditCard');
             $('[name=is_recur][value=1]').click();
           }
@@ -454,7 +491,7 @@
         }else{
           var amount = this.currentPriceAmount;
         }
-        var grouping_text = (ContribPage.currentContribType == 'recur')?"recurring":"non-recurring";
+        var grouping_text = this.currentContribType;
         $('.amount-section .content .crm-form-radio').each(function(){
           var $this = $(this);
           var text = $this.find('.elem-label').text().replace(',','');
@@ -466,12 +503,12 @@
       },
 
       updateContributeType: function() {
-        if(this.currentContribType == 'single'){
+        if(this.currentContribType == 'non-recurring'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-single-btn').addClass('selected');
           $('.custom-installments-block').hide();
         }
-        if(this.currentContribType == 'recur'){
+        if(this.currentContribType == 'recurring'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-recur-btn').addClass('selected');
           $('.custom-installments-block').show();
@@ -485,10 +522,10 @@
       },
 
       updateContribInfoLabel: function(){
-        if(this.currentContribType == 'single'){
+        if(this.currentContribType == 'non-recurring'){
           $('.info-is-recur').text(ts['Single Contribution']);
         }
-        if(this.currentContribType == 'recur'){
+        if(this.currentContribType == 'recurring'){
           if(!this.installments){
             $('.info-is-recur').text(ts['Every-Month Recurring Contribution']);
           }else{
@@ -501,7 +538,7 @@
         if(this.currentFormStep == 1 && step == 2){
           // Check instrument is credit card
           var error_msg = [];
-          if(this.currentContribType == 'recur' && $('#civicrm-instrument-dummy-1:checked').length == 0){
+          if(this.currentContribType == 'recurring' && $('#civicrm-instrument-dummy-1:checked').length == 0){
             error_msg.push('You cannot set up a recurring contribution if you are not paying online by credit card.');
           }
           if(window.ContribPageParams.minAmount && !this.currentPriceOption && this.currentPriceAmount < parseInt(window.ContribPageParams.minAmount)){
