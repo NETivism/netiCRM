@@ -526,6 +526,11 @@ class CRM_Event_BAO_Query {
       case 'participant_line_item':
         $from = " $side JOIN civicrm_line_item participant_line_item ON ( civicrm_participant.id = participant_line_item.entity_id AND participant_line_item.entity_table = 'civicrm_participant')";
         break;
+
+      case 'civicrm_track_participant':
+        $from = " $side JOIN civicrm_track civicrm_track_participant ON civicrm_track_participant.entity_table = 'civicrm_participant' AND civicrm_participant.id = civicrm_track_participant.entity_id";
+        break;
+
     }
     return $from;
   }

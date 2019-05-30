@@ -697,11 +697,26 @@ CREATE TABLE civicrm_track (
   ,     INDEX index_referrer_network(
         referrer_network
   )
+  ,     INDEX index_referrer_url(
+        referrer_url
+  )
+  ,     INDEX index_landing(
+        landing
+  )
   ,     INDEX index_utm_source(
         utm_source
   )
   ,     INDEX index_utm_medium(
         utm_medium
+  )
+  ,     INDEX index_utm_campaign(
+        utm_campaign
+  )
+  ,     INDEX index_utm_term(
+        utm_term
+  )
+  ,     INDEX index_utm_content(
+        utm_content
   )
   ,     INDEX index_entity_table_id(
         entity_table

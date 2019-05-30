@@ -48,6 +48,7 @@
       <name>visit_date</name>
       <type>datetime</type>
       <required>true</required>
+      <export>true</export>
       <comment>Date time of this visit</comment>
       <add>4.0</add>
   </field>
@@ -92,6 +93,7 @@
       <name>referrer_type</name>
       <type>varchar</type>
       <length>64</length>
+      <export>true</export>
       <comment>Referrer type of inbound visit</comment>
       <add>4.0</add>
   </field>
@@ -104,6 +106,7 @@
       <name>referrer_network</name>
       <type>varchar</type>
       <length>64</length>
+      <export>true</export>
       <comment>Referrer network of inbound visit</comment>
       <add>4.0</add>
   </field>
@@ -114,22 +117,38 @@
   </index>
   <field>
       <name>referrer_url</name>
+      <title>Referrer URL</title>
       <type>varchar</type>
       <length>255</length>
+      <export>true</export>
       <comment>Referrer url of inbound traffic. Null when no referrer</comment>
       <add>4.0</add>
   </field>
+  <index>
+    <name>index_referrer_url</name>
+    <fieldName>referrer_url</fieldName>
+    <add>4.0</add>
+  </index>
   <field>
       <name>landing</name>
+      <title>Landing Page</title>
       <type>varchar</type>
       <length>255</length>
+      <export>true</export>
       <comment>Landing page of this record without protocol and host name</comment>
       <add>4.0</add>
   </field>
+  <index>
+    <name>index_landing</name>
+    <fieldName>landing</fieldName>
+    <add>4.0</add>
+  </index>
   <field>
       <name>utm_source</name>
+      <title>UTM Source</title>
       <type>varchar</type>
       <length>255</length>
+      <export>true</export>
       <comment></comment>
       <add>4.0</add>
   </field>
@@ -140,8 +159,10 @@
   </index>
   <field>
       <name>utm_medium</name>
+      <title>UTM Medium</title>
       <type>varchar</type>
       <length>255</length>
+      <export>true</export>
       <comment></comment>
       <add>4.0</add>
   </field>
@@ -152,25 +173,46 @@
   </index>
   <field>
       <name>utm_campaign</name>
+      <title>UTM Campaign</title>
       <type>varchar</type>
       <length>255</length>
+      <export>true</export>
       <comment></comment>
       <add>4.0</add>
   </field>
+  <index>
+    <name>index_utm_campaign</name>
+    <fieldName>utm_campaign</fieldName>
+    <add>4.0</add>
+  </index>
   <field>
       <name>utm_term</name>
+      <title>UTM Term</title>
       <type>varchar</type>
       <length>255</length>
+      <export>true</export>
       <comment></comment>
       <add>4.0</add>
   </field>
+  <index>
+    <name>index_utm_term</name>
+    <fieldName>utm_term</fieldName>
+    <add>4.0</add>
+  </index>
   <field>
       <name>utm_content</name>
+      <title>UTM Content</title>
       <type>varchar</type>
       <length>255</length>
+      <export>true</export>
       <comment></comment>
       <add>4.0</add>
   </field>
+  <index>
+    <name>index_utm_content</name>
+    <fieldName>utm_content</fieldName>
+    <add>4.0</add>
+  </index>
   <field>
       <name>entity_table</name>
       <type>varchar</type>
