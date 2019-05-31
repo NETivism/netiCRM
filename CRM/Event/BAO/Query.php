@@ -362,36 +362,45 @@ class CRM_Event_BAO_Query {
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
         return;
 
+      case 'participant_status':
       case 'participant_status_id':
+        $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
         $val = array();
         if (is_array($value)) {
           foreach ($value as $k => $v) {
-            if ($v) {
+            if (CRM_Utils_Rule::positiveInteger($k)) {
               $val[$k] = $k;
             }
+            else {
+              $statusId = array_search($v, $statusTypes);
+              if (!empty($statusId)) {
+                $val[$statusId] = $statusId;
+              }
+            }
           }
-          $status = implode(',', $val);
         }
         else {
-          $status = $value;
+          if (CRM_Utils_Rule::positiveInteger($value)) {
+            $val[$value] = $value;
+          }
+          else {
+            $statusId = array_search($value, $statusTypes);
+            if (!empty($statusId)) {
+              $val[$statusId] = $statusId;
+            }
+          }
         }
 
-        if (count($val) > 1) {
-          $op = 'IN';
-          $status = "({$status})";
-        }
+        $op = 'IN';
+        $status = implode(",", $val);
+        $status = "({$status})";
 
         require_once 'CRM/Event/PseudoConstant.php';
-        $statusTypes = CRM_Event_PseudoConstant::participantStatus();
         $names = array();
-
         if (!empty($val)) {
           foreach ($val as $id => $dontCare) {
-            $names[] = ts($statusTypes[$id]);
+            $names[] = $statusTypes[$id];
           }
-        }
-        else {
-          $names[] = ts($statusTypes[$value]);
         }
 
         $query->_qill[$grouping][] = ts('Participant Status %1', array(1 => ts($op))) . ' ' . implode(' ' . ts('or') . ' ', $names);
