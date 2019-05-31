@@ -1717,8 +1717,9 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 }
 
 .crm-container .underline-effect:before {
-    content: "\00BB";
-    margin-right: 5px;
+  content: "\f278";
+  margin-right: 5px;
+  font-family: 'Material-Design-Iconic-Font';
 }
 
 .crm-container #main {

@@ -29,7 +29,7 @@
      {section start=1 name=blocks loop=$blockCount}
        {assign var="x" value=$smarty.section.blocks.index}
        <div class="crm-search-block">
-    <h3>{if $x eq 1}{ts}Include contacts where{/ts}{else}{ts}Also include contacts where{/ts}{/if}</h3>
+    <h3>{if $x eq 1}{ts}Include contacts where{/ts}{else}{ts}or{/ts}{/if}</h3>
 	<table>
         {section name=cols loop=$columnCount[$x]}
             {assign var="i" value=$smarty.section.cols.index}
