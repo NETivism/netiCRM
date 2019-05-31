@@ -33,6 +33,7 @@ UID:{$event.uid}
 SUMMARY:{$event.title|crmICalText}
 {if $event.description}
 DESCRIPTION:{$event.description|crmICalText}
+X-ALT-DESC;FMTTYPE=text/html:{$event.description|crmICalHTML}
 {/if}
 {if $event.event_type}
 CATEGORIES:{$event.event_type|crmICalText}
