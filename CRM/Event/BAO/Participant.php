@@ -732,10 +732,6 @@ GROUP BY  participant.event_id
       require_once 'CRM/Core/DAO/Discount.php';
       $discountFields = CRM_Core_DAO_Discount::export();
       $trackField = CRM_Core_DAO_Track::export();
-      foreach($trackField as &$tfield) {
-        $tfield['where'] = str_replace('civicrm_track.', 'civicrm_track_participant.', $tfield['where']);
-      }
-
       $fields = array_merge($participantFields, $participantStatus, $participantRole, $noteField, $discountFields, $trackField);
 
       // add custom data

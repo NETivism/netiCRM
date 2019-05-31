@@ -42,6 +42,7 @@ class CRM_Event_BAO_Query {
     $fields = array_merge($fields, CRM_Event_DAO_Event::import());
     $fields = array_merge($fields, self::getParticipantFields());
     $fields = array_merge($fields, CRM_Core_DAO_Discount::export());
+    $fields = array_merge($fields, CRM_Core_DAO_Track::export());
 
     return $fields;
   }
@@ -527,10 +528,10 @@ class CRM_Event_BAO_Query {
         $from = " $side JOIN civicrm_line_item participant_line_item ON ( civicrm_participant.id = participant_line_item.entity_id AND participant_line_item.entity_table = 'civicrm_participant')";
         break;
 
-      case 'civicrm_track_participant':
-        $from = " $side JOIN civicrm_track civicrm_track_participant ON civicrm_track_participant.entity_table = 'civicrm_participant' AND civicrm_participant.id = civicrm_track_participant.entity_id";
-        break;
-
+      case 'civicrm_track':
+        if ($mode & CRM_Contact_BAO_Query::MODE_EVENT) {
+          $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_participant' AND civicrm_track.entity_id = civicrm_participant.id";
+        }
     }
     return $from;
   }

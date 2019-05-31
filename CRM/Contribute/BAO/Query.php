@@ -709,7 +709,9 @@ class CRM_Contribute_BAO_Query {
         break;
 
       case 'civicrm_track':
-        $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_contribution' AND civicrm_track.entity_id = civicrm_contribution.id";
+        if ($mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) {
+          $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_contribution' AND civicrm_track.entity_id = civicrm_contribution.id";
+        }
         break;
     }
     return $from;
