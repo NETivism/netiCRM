@@ -68,7 +68,7 @@
     {/if}
     </td>
     <td class="crm-contribution-type crm-contribution-type_{$row.contribution_type_id}">{$row.contribution_type}</td>
-    <td class="crm-contribution-source">{$row.contribution_source}{if $row.contribution_traffic_type}<br>({ts}Traffic Source{/ts}: {ts}{$row.contribution_traffic_type}{/ts}){/if}</td>
+    <td class="crm-contribution-source">{$row.contribution_source}{if $row.contribution_referrer_type}<br>({ts}Traffic Source{/ts}: {ts}{$row.contribution_referrer_type}{/ts}){/if}</td>
     <td class="crm-contribution-created_date">{$row.created_date|crmDate}</td>
     <td class="crm-contribution-receive_date">{$row.receive_date|crmDate}</td>
     {* <td class="crm-contribution-thankyou_date">{$row.thankyou_date|crmDate}</td> *}

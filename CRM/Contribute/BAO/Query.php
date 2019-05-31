@@ -132,59 +132,59 @@ class CRM_Contribute_BAO_Query {
     }
 
     // referrer and landing
-    if (CRM_Utils_Array::value('contribution_traffic_type', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_type'] = "civicrm_track.referrer_type as contribution_traffic_type";
-      $query->_element['contribution_traffic_type'] = 1;
+    if (CRM_Utils_Array::value('contribution_referrer_type', $query->_returnProperties)) {
+      $query->_select['contribution_referrer_type'] = "civicrm_track.referrer_type as contribution_referrer_type";
+      $query->_element['contribution_referrer_type'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
-    if (CRM_Utils_Array::value('contribution_traffic_network', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_network'] = "civicrm_track.referrer_network as contribution_traffic_network";
-      $query->_element['contribution_traffic_network'] = 1;
+    if (CRM_Utils_Array::value('contribution_referrer_network', $query->_returnProperties)) {
+      $query->_select['contribution_referrer_network'] = "civicrm_track.referrer_network as contribution_referrer_network";
+      $query->_element['contribution_referrer_network'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
-    if (CRM_Utils_Array::value('contribution_traffic_url', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_url'] = "civicrm_track.referrer_url as contribution_traffic_url";
-      $query->_element['contribution_traffic_url'] = 1;
+    if (CRM_Utils_Array::value('contribution_referrer_url', $query->_returnProperties)) {
+      $query->_select['contribution_referrer_url'] = "civicrm_track.referrer_url as contribution_referrer_url";
+      $query->_element['contribution_referrer_url'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
-    if (CRM_Utils_Array::value('contribution_traffic_landing', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_landing'] = "civicrm_track.landing as contribution_traffic_landing";
-      $query->_element['contribution_traffic_landing'] = 1;
+    if (CRM_Utils_Array::value('contribution_landing', $query->_returnProperties)) {
+      $query->_select['contribution_landing'] = "civicrm_track.landing as contribution_landing";
+      $query->_element['contribution_landing'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
     
     /* utm fields */
-    if (CRM_Utils_Array::value('contribution_traffic_utm_source', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_utm_source'] = "civicrm_track.referrer_type as contribution_traffic_utm_source";
-      $query->_element['contribution_traffic_utm_source'] = 1;
+    if (CRM_Utils_Array::value('contribution_utm_source', $query->_returnProperties)) {
+      $query->_select['contribution_utm_source'] = "civicrm_track.referrer_type as contribution_utm_source";
+      $query->_element['contribution_utm_source'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
-    if (CRM_Utils_Array::value('contribution_traffic_utm_medium', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_utm_medium'] = "civicrm_track.referrer_type as contribution_traffic_utm_medium";
-      $query->_element['contribution_traffic_utm_medium'] = 1;
+    if (CRM_Utils_Array::value('contribution_utm_medium', $query->_returnProperties)) {
+      $query->_select['contribution_utm_medium'] = "civicrm_track.referrer_type as contribution_utm_medium";
+      $query->_element['contribution_utm_medium'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
-    if (CRM_Utils_Array::value('contribution_traffic_utm_campaign', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_utm_campaign'] = "civicrm_track.referrer_type as contribution_traffic_utm_campaign";
-      $query->_element['contribution_traffic_utm_campaign'] = 1;
+    if (CRM_Utils_Array::value('contribution_utm_campaign', $query->_returnProperties)) {
+      $query->_select['contribution_utm_campaign'] = "civicrm_track.referrer_type as contribution_utm_campaign";
+      $query->_element['contribution_utm_campaign'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
-    if (CRM_Utils_Array::value('contribution_traffic_utm_term', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_utm_term'] = "civicrm_track.referrer_type as contribution_traffic_utm_term";
-      $query->_element['contribution_traffic_utm_term'] = 1;
+    if (CRM_Utils_Array::value('contribution_utm_term', $query->_returnProperties)) {
+      $query->_select['contribution_utm_term'] = "civicrm_track.referrer_type as contribution_utm_term";
+      $query->_element['contribution_utm_term'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
-    if (CRM_Utils_Array::value('contribution_traffic_utm_content', $query->_returnProperties)) {
-      $query->_select['contribution_traffic_utm_content'] = "civicrm_track.referrer_type as contribution_traffic_utm_content";
-      $query->_element['contribution_traffic_utm_content'] = 1;
+    if (CRM_Utils_Array::value('contribution_utm_content', $query->_returnProperties)) {
+      $query->_select['contribution_utm_content'] = "civicrm_track.referrer_type as contribution_utm_content";
+      $query->_element['contribution_utm_content'] = 1;
       $query->_tables['civicrm_track'] = 1;
       $query->_whereTables['civicrm_track'] = 1;
     }
@@ -431,7 +431,7 @@ class CRM_Contribute_BAO_Query {
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
-      case 'contribution_traffic_source':
+      case 'contribution_source':
         /*
         $value = $strtolower(CRM_Core_DAO::escapeString($value));
         if ($wildcard) {
@@ -566,7 +566,7 @@ class CRM_Contribute_BAO_Query {
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
-      case 'contribution_traffic_type':
+      case 'contribution_referrer_type':
         $qill = array();
         $trafficTypes = CRM_Core_PseudoConstant::referrerTypes();
         if (is_array($value)) {
@@ -582,27 +582,27 @@ class CRM_Contribute_BAO_Query {
         $query->_qill[$grouping][] = ts('Referrer Type') .'  -  '.implode(",", $qill);
         $query->_tables['civicrm_track'] = $query->_whereTables['civicrm_track'] = 1;
         return;
-      case 'contribution_traffic_network':
+      case 'contribution_referrer_network':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_track.referrer_network', $op, $value, "String");
         $query->_qill[$grouping][] = ts('Referrer Network').' - '.$value;
         $query->_tables['civicrm_track'] = $query->_whereTables['civicrm_track'] = 1;
         return;
-      case 'contribution_traffic_url':
+      case 'contribution_referrer_url':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_track.referrer_url', $op, $value, "String");
         $query->_qill[$grouping][] = ts('Referrer URL').' - '.$value;
         $query->_tables['civicrm_track'] = $query->_whereTables['civicrm_track'] = 1;
         return;
-      case 'contribution_traffic_landing':
+      case 'contribution_landing':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_track.landing', $op, $value, "String");
         $query->_qill[$grouping][] = ts('Landing Page').' - '.$value;
         $query->_tables['civicrm_track'] = $query->_whereTables['civicrm_track'] = 1;
         return;
-      case 'contribution_traffic_utm_source':
-      case 'contribution_traffic_utm_medium':
-      case 'contribution_traffic_utm_campaign':
-      case 'contribution_traffic_utm_term':
-      case 'contribution_traffic_utm_content':
-        $fieldName = str_replace('contribution_traffic_', '', $name);
+      case 'contribution_utm_source':
+      case 'contribution_utm_medium':
+      case 'contribution_utm_campaign':
+      case 'contribution_utm_term':
+      case 'contribution_utm_content':
+        $fieldName = str_replace('contribution_', '', $name);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_track.'.$fieldName, $op, $value, "String");
         $query->_qill[$grouping][] = $fieldName.' - '.$value;
         $query->_tables['civicrm_track'] = $query->_whereTables['civicrm_track'] = 1;
@@ -760,7 +760,7 @@ class CRM_Contribute_BAO_Query {
         'contribution_note' => 1,
         'contribution_page_id' => 1,
         'receipt_id' => 1,
-        'contribution_traffic_type' => 1,
+        'contribution_referrer_type' => 1,
       );
 
       // also get all the custom contribution properties
@@ -908,19 +908,19 @@ class CRM_Contribute_BAO_Query {
     $trafficTypes = CRM_Core_PseudoConstant::referrerTypes();
     unset($trafficTypes['unknown']);
     $form->addSelect(
-      'contribution_traffic_type',
+      'contribution_referrer_type',
       ts('Referrer Type'),
       $trafficTypes,
       array('multiple' => 'multiple')
     );
-    $form->addElement('text', 'contribution_traffic_network', ts("Referrer Network"));
-    $form->addElement('text', 'contribution_traffic_url', ts("Referrer URL"));
-    $form->addElement('text', 'contribution_traffic_landing', ts("Landing Page"));
-    $form->addElement('text', 'contribution_traffic_utm_source', 'UTM Source');
-    $form->addElement('text', 'contribution_traffic_utm_medium', 'UTM Medium');
-    $form->addElement('text', 'contribution_traffic_utm_campaign', 'UTM Campaign');
-    $form->addElement('text', 'contribution_traffic_utm_term', 'UTM Term');
-    $form->addElement('text', 'contribution_traffic_utm_content', 'UTM Content');
+    $form->addElement('text', 'contribution_referrer_network', ts("Referrer Network"));
+    $form->addElement('text', 'contribution_referrer_url', ts("Referrer URL"));
+    $form->addElement('text', 'contribution_landing', ts("Landing Page"));
+    $form->addElement('text', 'contribution_utm_source', 'UTM Source');
+    $form->addElement('text', 'contribution_utm_medium', 'UTM Medium');
+    $form->addElement('text', 'contribution_utm_campaign', 'UTM Campaign');
+    $form->addElement('text', 'contribution_utm_term', 'UTM Term');
+    $form->addElement('text', 'contribution_utm_content', 'UTM Content');
 
     $form->assign('validCiviContribute', TRUE);
   }

@@ -122,44 +122,44 @@
         <table class="form-layout">
           <tr>
             <td>
-              {$form.contribution_traffic_type.label}<br>
-              {$form.contribution_traffic_type.html}
+              {$form.contribution_referrer_type.label}<br>
+              {$form.contribution_referrer_type.html}
             </td>
             <td>
-              {$form.contribution_traffic_network.label}<br>
-              {$form.contribution_traffic_network.html}
+              {$form.contribution_referrer_network.label}<br>
+              {$form.contribution_referrer_network.html}
             </td>
             <td>
-              {$form.contribution_traffic_landing.label}<br>
-              {$form.contribution_traffic_landing.html}
+              {$form.contribution_landing.label}<br>
+              {$form.contribution_landing.html}
             </td>
             <td>
-              {$form.contribution_traffic_url.label}<br>
-              {$form.contribution_traffic_url.html}
+              {$form.contribution_referrer_url.label}<br>
+              {$form.contribution_referrer_url.html}
             </td>
           </tr>
         </table>
         <table>
           <tr>
             <td>
-              {$form.contribution_traffic_utm_source.label}<br>
-              {$form.contribution_traffic_utm_source.html}
+              {$form.contribution_utm_source.label}<br>
+              {$form.contribution_utm_source.html}
             </td>
             <td>
-              {$form.contribution_traffic_utm_medium.label}<br>
-              {$form.contribution_traffic_utm_medium.html}
+              {$form.contribution_utm_medium.label}<br>
+              {$form.contribution_utm_medium.html}
             </td>
             <td>
-              {$form.contribution_traffic_utm_campaign.label}<br>
-              {$form.contribution_traffic_utm_campaign.html}
+              {$form.contribution_utm_campaign.label}<br>
+              {$form.contribution_utm_campaign.html}
             </td>
             <td>
-              {$form.contribution_traffic_utm_term.label}<br>
-              {$form.contribution_traffic_utm_term.html}
+              {$form.contribution_utm_term.label}<br>
+              {$form.contribution_utm_term.html}
             </td>
             <td>
-              {$form.contribution_traffic_utm_content.label}<br>
-              {$form.contribution_traffic_utm_content.html}
+              {$form.contribution_utm_content.label}<br>
+              {$form.contribution_utm_content.html}
             </td>
           </tr>
         </table>
@@ -174,4 +174,4 @@
 </tr>
 {/if}
 
-{include file="CRM/common/chosen.tpl" selector="#contribution_payment_instrument_id,#contribution_page_id,#contribution_pcp_made_through_id,#contribution_currency_type,#contribution_type_id,#contribution_traffic_type"}
+{include file="CRM/common/chosen.tpl" selector="#contribution_payment_instrument_id,#contribution_page_id,#contribution_pcp_made_through_id,#contribution_currency_type,#contribution_type_id,#contribution_referrer_type"}
