@@ -997,6 +997,11 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
               $fldName = 'contribution_' . $fldName;
             }
           }
+          if ($v[0] == 'Participant' && in_array($fldName, array_keys(CRM_Core_DAO_Track::export()))) {
+            if (substr($fldName, 0, 13) != 'participant_') {
+              $fldName = 'participant_' . $fldName;
+            }
+          }
 
           if ($row) {
             $rowValue = $k;

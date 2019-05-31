@@ -577,7 +577,7 @@ class CRM_Contribute_BAO_Query {
           }
         }
         else {
-          $query->_where[$grouping][] = " civicrm_track.referrer_type $op $value";
+          $query->_where[$grouping][] = " civicrm_track.referrer_type $op '$value'";
         }
         $query->_qill[$grouping][] = ts('Referrer Type') .'  -  '.implode(",", $qill);
         $query->_tables['civicrm_track'] = $query->_whereTables['civicrm_track'] = 1;
@@ -709,9 +709,7 @@ class CRM_Contribute_BAO_Query {
         break;
 
       case 'civicrm_track':
-        if ($mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) {
-          $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_contribution' AND civicrm_track.entity_id = civicrm_contribution.id";
-        }
+        $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_contribution' AND civicrm_track.entity_id = civicrm_contribution.id";
         break;
     }
     return $from;

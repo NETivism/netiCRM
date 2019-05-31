@@ -541,6 +541,7 @@ class CRM_Event_BAO_Query {
         if ($mode & CRM_Contact_BAO_Query::MODE_EVENT) {
           $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_participant' AND civicrm_track.entity_id = civicrm_participant.id";
         }
+        break;
     }
     return $from;
   }
