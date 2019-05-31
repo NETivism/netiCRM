@@ -822,7 +822,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     // Get contribution ids by token
     foreach ($data->card_token as $token) {
-      $sql = "SELECT contribution_id FROM civicrm_contribution_tappay WHERE card_token = %1";
+      $sql = "SELECT contribution_id, contribution_recur_id FROM civicrm_contribution_tappay WHERE card_token = %1";
       $params = array(
         1 => array($token, 'String'),
       );
@@ -840,6 +840,18 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $updateData = clone $data;
         $updateData->card_token = $token;
         CRM_Core_Payment_TapPayAPI::saveTapPayData($dao->contribution_id, $updateData);
+
+        $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $dao->contribution_id, 'auto_renew');
+        if ($autoRenew != 2) {
+          $params = array(
+            'id' => $dao->contribution_recur_id,
+            'auto_renew' => 2,
+          );
+          CRM_Contribute_BAO_ContributionRecur::add($params);
+          $msg = ts("Set auto_renew to 'renewed'.");
+          CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $msg);
+        }
+
       }
     }
     return 1;

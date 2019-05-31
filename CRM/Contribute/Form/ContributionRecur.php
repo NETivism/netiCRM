@@ -268,15 +268,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       }
     }
 
-    $noteParams = array(
-      'entity_table'  => 'civicrm_contribution_recur',
-      'subject'       => $params['note_title'],
-      'note'          => $params['note_body'],
-      'entity_id'     => $this->_id,
-      'contact_id'    => $this->_contactID,
-      'modified_date' => date('YmdHis')
-    );
-    CRM_Core_BAO_Note::add( $noteParams, NULL );
+    CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
 
     // save the changes
     $ids = array();

@@ -507,5 +507,22 @@ GROUP BY c.currency";
       $logId = $log->id;
     }
   }
+
+  static function addNote($recurringId, $title, $body = NULL) {
+    $session = CRM_Core_Session::singleton();
+    $userId = $session->get('userID');
+    if (empty($userId)) {
+      $userId = "NULL";
+    }
+    $noteParams = array(
+      'entity_table'  => 'civicrm_contribution_recur',
+      'subject'       => $title,
+      'note'          => $body,
+      'entity_id'     => $recurringId,
+      'contact_id'    => $userId,
+      'modified_date' => date('YmdHis'),
+    );
+    $note = CRM_Core_BAO_Note::add( $noteParams, NULL );
+  }
 }
 

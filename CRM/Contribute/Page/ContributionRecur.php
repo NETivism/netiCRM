@@ -89,7 +89,9 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
 
       while ($logDAO->fetch()) {
-        list($displayName, $ignore) = CRM_Contact_Page_View::getContactDetails($logDAO->modified_id);
+        if (!empty($logDAO->modified_id)) {
+          list($displayName, $ignore) = CRM_Contact_Page_View::getContactDetails($logDAO->modified_id);
+        }
         $data = unserialize($logDAO->data);
         $log = array(
           'modified_id' => $logDAO->modified_id,
