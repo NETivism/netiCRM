@@ -157,4 +157,9 @@
      <access_callback>1</access_callback>
      <is_public>true</is_public>
   </item>
+  <item>
+     <path>civicrm/tappay/recurtransact</path>
+     <page_callback>CRM_Core_Payment_TapPay::doRecurTransact</page_callback> 
+     <access_arguments>access CiviContribute</access_arguments>
+  </item>
 </menu>

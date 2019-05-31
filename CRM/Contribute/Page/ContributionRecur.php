@@ -140,6 +140,13 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $controller->set('force', 1);
       $controller->process();
       $controller->run();
+
+      $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_id, 'id', 'contribution_recur_id');
+      $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
+      if (method_exists($paymentClass, 'getPaymentTransactUrl')) {
+        $transactUrl = $paymentClass::getPaymentTransactUrl($this->_id);
+        $this->assign('transactUrl', $transactUrl);
+      }
     }
   }
 
