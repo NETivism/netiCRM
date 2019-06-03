@@ -46865,3 +46865,57 @@ msgstr ""
 
 msgid "Change status to %status%"
 msgstr ""
+
+msgid "Failuare: Amount values dont match between database and IPN request. Trxn_id is %1, Data from payment : %2, Data in CRM : %3"
+msgstr ""
+
+msgid "Payment processor of recur is not %1."
+msgstr ""
+
+msgid "Last execute date of recur is over the date."
+msgstr ""
+
+msgid "Finish synchronizing recurring."
+msgstr ""
+
+msgid "Stop recurring %1 because this is lastest contribution of this recurring (end date is %2)."
+msgstr ""
+
+msgid "Stop recurring %1 because this is lastest contribution of this recurring (expiry date is %2)."
+msgstr ""
+
+msgid "Stop recurring %1 because end date is dued."
+msgstr ""
+
+msgid "Stop recurring %1 because installments id full."
+msgstr ""
+
+msgid "Stop recurring %1 because card expiry date is due."
+msgstr ""
+
+msgid "Update recurring status to 'Finished'."
+msgstr ""
+
+msgid "Synchronizing to Tappay server success."
+msgstr ""
+
+msgid "There are no valid record back."
+msgstr ""
+
+msgid "Set 'auto renew' value to 'renewed'."
+msgstr ""
+
+msgid "Record Trade ID"
+msgstr ""
+
+msgid "Card Expiry Date"
+msgstr ""
+
+msgid "Card Issuer"
+msgstr ""
+
+msgid "Process now"
+msgstr ""
+
+msgid "Are you sure you want to process a transaction of %1?"
+msgstr ""
