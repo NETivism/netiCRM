@@ -501,10 +501,10 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     // because response not through TapPayAPI, we need save data manually
     CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution3rd->id, $tokenResponse);
     CRM_Core_Payment_TapPay::doTransaction($tokenResponse, $contribution3rd->id);
-    $this->assertDBQuery($amount, "SELECT total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId3, 'String')));
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId3, 'String')));
     $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
     $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution_tappay WHERE order_number LIKE %1 ORDER BY id DESC", $recurParams);
+    $this->assertDBQuery($amount, "SELECT total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId3, 'String')));
 
     $dao = new CRM_Contribute_DAO_TapPay();
     $dao->contribution_id = $contribution3rd->id;
