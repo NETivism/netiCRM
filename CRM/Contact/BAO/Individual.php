@@ -236,8 +236,11 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
         if ($sortFormat != '{last_name}{first_name}') {
           $sortName = CRM_Utils_Address::format($formatted, '{last_name}{first_name}', FALSE, FALSE, TRUE, $tokenFields);
         }
-        if ($displayFormat != '{last_name}{first_name}{ }{individual_prefix}') {
-          $displayName = CRM_Utils_Address::format($formatted, '{last_name}{first_name}{ }{individual_prefix}', FALSE, FALSE, TRUE, $tokenFields);
+        if ($displayFormat != $sortFormat) {
+          $displayName = CRM_Utils_Address::format($formatted, $displayFormat, FALSE, FALSE, TRUE, $tokenFields);
+        }
+        else {
+          $displayName = $sortName;
         }
       }
       else{
