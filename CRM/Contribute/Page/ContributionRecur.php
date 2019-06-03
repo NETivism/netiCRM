@@ -138,6 +138,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $controller->set('id', NULL);
       $controller->set('recur', $recur->id);
       $controller->set('force', 1);
+      $controller->set('test', $recur->is_test);
       $controller->process();
       $controller->run();
 
