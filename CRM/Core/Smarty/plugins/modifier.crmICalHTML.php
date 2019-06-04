@@ -42,7 +42,7 @@
  * @access public
  */
 
-function smarty_modifier_crmICalText($str) {
-  return CRM_Utils_ICalendar::formatText($str);
+function smarty_modifier_crmICalHTML($str) {
+  return CRM_Utils_ICalendar::formatHTML($str);
 }
 
