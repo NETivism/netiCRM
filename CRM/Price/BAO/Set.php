@@ -696,6 +696,20 @@ WHERE  id = %1";
     return $var;
   }
 
+  public static function getFields($id) {
+    $setTitle = self::getTitle($id);
+    $priceField = new CRM_Price_BAO_Field();
+    $priceField->price_set_id = $id;
+    $priceField->orderBy('weight, label');
+    $priceField->find();
+
+    $fields = array();
+    while ($priceField->fetch()) {
+      $fields[$priceField->id] = $setTitle.": ".$priceField->label." (".ts($priceField->html_type).")";
+    }
+    return $fields;
+  }
+
   /**
    * This function is to make a copy of a price set, including
    * all the fields
