@@ -272,9 +272,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         );
       }
       else {
-        CRM_Core_Error::fatal(ts('Missing required fields: %1.', array(
-          1 => 'card_key, card_token'
-        )));
+        CRM_Core_Error::fatal(ts('Missing required fields').': card_key, card_token');
       }
 
       // Allow further manipulation of the arguments via custom hooks ..
@@ -386,7 +384,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // check trxn_id when pay_by_prime
       if ( !empty($result->card_secret) && !strstr($contribution->trxn_id, $result->order_number)) {
-        $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$result->order_number}")."\n";
+        $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request.").$contribution->trxn_id.": ".$result->order_number."\n";
         CRM_Core_Error::debug_log_message($msgText);
         $note .= $msgText;
         $pass = FALSE;
@@ -401,7 +399,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // check amount
       if ( $amount != $result->amount ) {
-        $msgText = ts("Failuare: Amount values dont match between database and IPN request. Trxn_id is {$contribution->trxn_id}, Data from payment : {$result->amount}, Data in CRM : {$amount}")."\n";
+        $msgText = ts("Failuare: Amount values dont match between database and IPN request. Trxn_id is %1, Data from payment : %2, Data in CRM : %3", array(1 => $contribution->trxn_id, 2 => $result->amount, 3 => $amount))."\n";
         CRM_Core_Error::debug_log_message($msgText);
         $note .= $msgText;
         $pass = FALSE;
@@ -467,7 +465,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
-        CRM_Core_Error::debug_log_message($resultNote.ts("Payment processor of recur is not TapPay."));
+        CRM_Core_Error::debug_log_message($resultNote.ts("Payment processor of recur is not %1.", array(1 => 'TapPay')));
         continue;
       }
 
@@ -537,7 +535,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $tappay->find(TRUE);
       if ($time <= strtotime($tappay->expiry_date)) {
         $resultNote .= $reason;
-        $resultNote .= "\n".ts("Sync recur done.");
+        $resultNote .= "\n".ts("Finish synchronizing recurring.");
         self::payByToken($dao->recur_id, $dao->contribution_id);
         $donePayment = TRUE;
         // Count again for new contribution.
@@ -553,23 +551,23 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     // no else for make sure every rule checked
 
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
-      $resultNote .= "\n". ts("Stop recurring $recurId because this is lastest contribution of this recurring (end date is $dao->end_date).");
+      $resultNote .= "\n". ts("Stop recurring %1 because this is lastest contribution of this recurring (end date is %2).", array(1 => $recurId, 2 => $dao->end_date));
       $changeStatus = TRUE;
     }
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($tappay->expiry_date) && date('Ym', $time) == date('Ym', strtotime($tappay->expiry_date))) {
-      $resultNote .= "\n". ts("Stop recurring $recurId because this is lastest contribution of this recurring (expiry date is $tappay->expiry_date).");
+      $resultNote .= "\n". ts("Stop recurring %1 because this is lastest contribution of this recurring (expiry date is %2).", array(1 => $recurId, 2 => $tappay->expiry_date));
       $changeStatus = TRUE;
     }
     if (!empty($dao->end_date) && $time > strtotime($dao->end_date)) {
-      $resultNote .= "\n".ts("Stop recurring $recurId because end date is dued.");
+      $resultNote .= "\n".ts("Stop recurring %1 because end date is dued.", array(1 => $recurId));
       $changeStatus = TRUE;
     }
     if (!empty($dao->installments) && $successCount >= $dao->installments) {
-      $resultNote .= "\n".ts("Stop recurring $recurId because installments id full.");
+      $resultNote .= "\n".ts("Stop recurring %1 because installments id full.", array(1 => $recurId));
       $changeStatus = TRUE;
     }
     if ($time > strtotime($tappay->expiry_date)) {
-      $resultNote .= "\n".ts("Stop recurring $recurId because card expiry date is due.");
+      $resultNote .= "\n".ts("Stop recurring %1 because card expiry date is due.", array(1 => $recurId));
       $changeStatus = TRUE;
     }
 
@@ -688,7 +686,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         }
       }
 
-      $resultNote .= "\n".ts('Sync to Tappay server success.');
+      $resultNote .= "\n".ts('Synchronizing to Tappay server success.');
 
       // Sync contribution status in CRM
       if($record->record_status == 0 && $contribution->contribution_status_id != 1) {
@@ -704,7 +702,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $pass = TRUE;
         if($record->order_number != $contribution->trxn_id) {
           // order number is not correct.
-          $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$result->order_number}")."\n";
+          $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request.").$contribution->trxn_id.": ".$result->order_number."\n";
           $resultNote .= $msgText;
           $pass = FALSE;
         }
@@ -730,7 +728,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $pass = TRUE;
         if($record->order_number != $contribution->trxn_id) {
           // order number is not correct.
-          $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$result->order_number}")."\n";
+          $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request.").$contribution->trxn_id.": ".$result->order_number."\n";
           $resultNote .= $msgText;
           $pass = FALSE;
         }
@@ -741,7 +739,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           $contribution->total_amount = $record->amount;
           $contribution->contribution_status_id = 1;
           $contribution->save();
-          $resultNote .= "\n".ts('The contribution has refund: %1', array(1 => $record->refund_amount));
+          $resultNote .= "\n".ts('The transaction has already been refunded.')." {$record->refund_amount}";
         }
         else {
           $resultNote .= "\n".ts('There are no any change.');
@@ -772,7 +770,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
-        CRM_Core_Error::debug_log_message($resultNote.ts("Payment processor of recur is not TapPay."));
+        CRM_Core_Error::debug_log_message($resultNote.ts("Payment processor of recur is not %1.", array(1 => 'TapPay')));
         continue;
       }
 
@@ -849,7 +847,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
             'auto_renew' => 2,
           );
           CRM_Contribute_BAO_ContributionRecur::add($params);
-          $msg = ts("Set auto_renew to 'renewed'.");
+          $msg = ts("Set 'auto renew' value to 'renewed'.");
           CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $msg);
         }
 
@@ -891,13 +889,16 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $returnData[ts('Record Trade ID')] = $tappayDAO->rec_trade_id;
     $returnData[ts('Card Number')] = $tappayDAO->bin_code."**********".$tappayDAO->last_four;
     $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($tappayDAO->expiry_date));
-    $returnData[ts('Status')] = $tappayObject->status;
-    $returnData[ts('Message')] = $tappayObject->msg;
+    $returnData[ts('Response Code')] = $tappayObject->status;
+    $returnData[ts('Response Message')] = $tappayObject->msg;
     if (!empty($tappayObject->card_info)) {
       $cardInfo = $tappayObject->card_info;
       $returnData[ts('Card Issuer')] = $cardInfo->issuer;
       $returnData[ts('Card Type')] = self::$_cardType[$cardInfo->type];
     }
+    $tokenStatus = strtolower($tappayDAO->token_status);
+    $support3jtsp = array('active', 'suspend');
+    $returnData[ts('Support 3JTSP')] = in_array($tokenStatus, $support3jtsp) ? ts("Yes") : ts("No");
     return $returnData;
   }
 
