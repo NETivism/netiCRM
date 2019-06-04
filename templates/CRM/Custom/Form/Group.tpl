@@ -34,7 +34,9 @@
     </tr>
     <tr>
         <td class="label">{$form.extends.label}</td>
-        <td>{$form.extends.html} {help id="id-extends"}</td>
+        <td>{$form.extends.html} {help id="id-extends"}
+        {include file="CRM/common/chosen.tpl" selector='#extends\\\\[1\\\\]'}
+        </td>
     </tr>
     <tr>
         <td class="label">{$form.weight.label}</td>
@@ -85,7 +87,23 @@
 {$initHideBlocks}
 {literal}
 <script type="text/Javascript">
+cj(document).ready(function() {
+  if (cj('#extends\\[1\\]').find("option").length <= 0) {
+    cj('#extends_1__chzn').hide();
+  }
+  cj('#extends\\[0\\]').change(function() {
+    if (cj('#extends\\[1\\]').find("option").length > 0) {
+      cj('#extends\\[1\\]').trigger("liszt:updated");
+      cj('select#extends\\[1\\]').css('display', 'none');
+      cj('#extends_1__chzn').show();
+    }
+    else {
+      cj('select#extends\\[1\\]').css('display', 'none');
+      cj('#extends_1__chzn').hide();
+    }
+  });
 
+});
 showHideStyle( );
 
 var  isGroupEmpty = "{/literal}{$isGroupEmpty}{literal}";
@@ -145,6 +163,7 @@ function showRange()
 
 // In update mode, when 'extends' is set to an option which doesn't have 
 // any options in 2nd selector (for subtypes)  -
+/*
 var subtypes = document.getElementById('extends[1]');
 if ( subtypes ) {
      if ( subtypes.options.length <= 0 ) {
@@ -153,5 +172,6 @@ if ( subtypes ) {
           subtypes.style.display = 'inline';
      }
 }
+*/
 </script>
 {/literal}

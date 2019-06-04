@@ -147,6 +147,9 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         CRM_Price_BAO_FieldValue::add($options, $optionsIds);
       }
     }
+    if (CRM_Utils_Array::value('custom', $params) && is_array($params['custom'])) {
+      CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_price_field', $priceField->id);
+    }
 
     $transaction->commit();
     return $priceField;
