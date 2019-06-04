@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-06-03 11:41+0000\n"
+"PO-Revision-Date: 2019-06-04 10:40+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47045,6 +47045,13 @@ msgid ""
 "your registration."
 msgstr "請按下方「<strong>付款</strong>」以完成報名。"
 
+#: CRM/Contact/Form/Merge.php
+msgid ""
+"The selected pair of contacts are marked as non duplicates. If these records"
+" should be merged, you can remove this exception   on the <a "
+"href=\"%1\">Dedupe Exceptions</a> page."
+msgstr ""
+
 msgid "Suspended"
 msgstr "暫停中"
 
@@ -47113,3 +47120,12 @@ msgstr "立刻執行扣款"
 
 msgid "Are you sure you want to process a transaction of %1?"
 msgstr "你確定要執行 ID: %1 捐款的扣款動作？"
+
+msgid "Response Code"
+msgstr "回傳狀態代碼"
+
+msgid "Response Message"
+msgstr "回傳訊息"
+
+msgid "Support 3JTSP"
+msgstr "支援 3JTSP"
