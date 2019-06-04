@@ -479,7 +479,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
    * @static
    * @access public
    */
-  static function merge($dupePairs = array(), $cacheParams = array(), $mode = 'safe', $autoFlip = TRUE, $redirectForPerformance = FALSE) {
+  static function merge($dupePairs = array(), $cacheParams = array(), $mode = 'safe', $autoFlip = TRUE, $redirectForPerformance = FALSE, $action = CRM_Core_Action::PREVIEW) {
     $cacheKeyString = CRM_Utils_Array::value('cache_key_string', $cacheParams);
     $resultStats = array('merged' => array(), 'skipped' => array());
 
@@ -515,12 +515,26 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         $migrationInfo['rows'] = &$rowsElementsAndInfo['rows'];
 
         // go ahead with merge if there is no conflict
-        if (!CRM_Dedupe_Merger::skipMerge($mainId, $otherId, $migrationInfo, $mode)) {
-          CRM_Dedupe_Merger::moveAllBelongings($mainId, $otherId, $migrationInfo);
-          $resultStats['merged'][] = array('main_id' => $mainId, 'other_id' => $otherId);
+        $reason = array();
+        if (!CRM_Dedupe_Merger::skipMerge($mainId, $otherId, $migrationInfo, $mode, $reason)) {
+          if ($action != CRM_Core_Action::PREVIEW) {
+            CRM_Dedupe_Merger::moveAllBelongings($mainId, $otherId, $migrationInfo);
+            $stat = 'merged';
+          }
+          else {
+            $stat = 'merge_preview';
+          }
+          $resultStats[$stat][] = array(
+            'main_id' => $mainId,
+            'other_id' => $otherId,
+          );
         }
         else {
-          $resultStats['skipped'][] = array('main_d' => $mainId, 'other_id' => $otherId);
+          $resultStats['skipped'][] = array(
+            'main_d' => $mainId,
+            'other_id' => $otherId,
+            'reason' => $reason,
+          );
         }
 
         // delete entry from PrevNextCache table so we don't consider the pair next time
@@ -563,7 +577,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
    * @static
    * @access public
    */
-  static function skipMerge($mainId, $otherId, &$migrationInfo, $mode = 'safe') {
+  static function skipMerge($mainId, $otherId, &$migrationInfo, $mode = 'safe', &$reason) {
     $conflicts = array();
     $migrationData = array(
       'old_migration_info' => $migrationInfo,
@@ -647,6 +661,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     $conflicts = $migrationData['fields_in_conflict'];
 
     if (!empty($conflicts)) {
+      $reason = $conflicts;
       foreach ($conflicts as $key => $val) {
         if ($val === NULL and $mode == 'safe') {
           // un-resolved conflicts still present. Lets skip this merge.

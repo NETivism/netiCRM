@@ -817,10 +817,19 @@ function civicrm_api3_contact_merge($params) {
   $mode = CRM_Utils_Array::value('mode', $params, 'safe');
   $autoFlip = CRM_Utils_Array::value('auto_flip', $params, TRUE);
 
-  $dupePairs = array(array('srcID' => CRM_Utils_Array::value('main_id', $params),
-    'dstID' => CRM_Utils_Array::value('other_id', $params),
-  ));
-  $result = CRM_Dedupe_Merger::merge($dupePairs, array(), $mode, $autoFlip);
+  $dupePairs = array(
+    array(
+      'srcID' => CRM_Utils_Array::value('main_id', $params),
+      'dstID' => CRM_Utils_Array::value('other_id', $params),
+    ),
+  );
+  if (isset($params['action'])) {
+    $action = $params['action'];
+  }
+  else {
+    $action = CRM_Core_Action::preview;
+  }
+  $result = CRM_Dedupe_Merger::merge($dupePairs, array(), $mode, $autoFlip, FALSE, $action);
 
   return civicrm_api3_create_success($result);
 }
