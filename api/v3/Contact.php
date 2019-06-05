@@ -827,7 +827,7 @@ function civicrm_api3_contact_merge($params) {
     $action = $params['action'];
   }
   else {
-    $action = CRM_Core_Action::preview;
+    $action = CRM_Core_Action::PREVIEW;
   }
   $result = CRM_Dedupe_Merger::merge($dupePairs, array(), $mode, $autoFlip, FALSE, $action);
 
