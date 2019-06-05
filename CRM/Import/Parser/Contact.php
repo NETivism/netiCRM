@@ -239,6 +239,19 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     if (!empty($this->_dedupeRuleGroupId)) {
       $ruleParams = array('id' => $this->_dedupeRuleGroupId);
       $this->_requiredFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      // correct sort_name / display_name problem
+      $hasSortName = array_search('sort_name', $this->_requiredFields);
+      $hasDisplayName = array_search('display_name', $this->_requiredFields);
+      if ($hasSortName !== FALSE) {
+        unset($this->_requiredFields[$hasSortName]);
+      }
+      if ($hasDisplayName !== FALSE) {
+        unset($this->_requiredFields[$hasDisplayName]);
+      }
+      if ($hasSortName !== FALSE || $hasDisplayName !== FALSE) {
+        $this->_requiredFields[] = 'last_name';
+        $this->_requiredFields[] = 'first_name';
+      }
       $supportedFields = CRM_Dedupe_BAO_RuleGroup::supportedFields($this->_contactType);
       foreach($supportedFields as $array) {
         foreach($array as $name => $label){
