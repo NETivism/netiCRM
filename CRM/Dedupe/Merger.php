@@ -531,7 +531,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         }
         else {
           $resultStats['skipped'][] = array(
-            'main_d' => $mainId,
+            'main_id' => $mainId,
             'other_id' => $otherId,
             'reason' => $reason,
           );

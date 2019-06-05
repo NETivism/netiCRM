@@ -815,12 +815,12 @@ LIMIT    0, {$limit}
  */
 function civicrm_api3_contact_merge($params) {
   $mode = CRM_Utils_Array::value('mode', $params, 'safe');
-  $autoFlip = CRM_Utils_Array::value('auto_flip', $params, TRUE);
+  $autoFlip = CRM_Utils_Array::value('auto_flip', $params, FALSE);
 
   $dupePairs = array(
     array(
-      'srcID' => CRM_Utils_Array::value('main_id', $params),
-      'dstID' => CRM_Utils_Array::value('other_id', $params),
+      'dstID' => CRM_Utils_Array::value('main_id', $params),
+      'srcID' => CRM_Utils_Array::value('other_id', $params),
     ),
   );
   if (isset($params['action'])) {
