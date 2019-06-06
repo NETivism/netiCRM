@@ -1403,7 +1403,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     require_once 'CRM/Core/DAO.php';
 
     $dao = new CRM_Core_DAO();
-    $queryString = 'SELECT civicrm_uf_group.id, title, civicrm_uf_group.is_active, is_reserved, group_type
+    $queryString = 'SELECT civicrm_uf_group.id, title, civicrm_uf_group.is_active, is_reserved, group_type, name
                         FROM civicrm_uf_group
                         LEFT JOIN civicrm_uf_join ON (civicrm_uf_group.id = uf_group_id)';
     $p = array();
@@ -1438,7 +1438,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       ) {
         continue;
       }
-      $ufGroups[$dao->id]['name'] = $dao->title;
+      $ufGroups[$dao->id]['name'] = $dao->name;
       $ufGroups[$dao->id]['title'] = $dao->title;
       $ufGroups[$dao->id]['is_active'] = $dao->is_active;
       $ufGroups[$dao->id]['group_type'] = $dao->group_type;
