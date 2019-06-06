@@ -46869,7 +46869,6 @@ msgstr ""
 
 msgid "Change status to %status%"
 msgstr ""
-msgstr ""
 
 msgid "Failuare: Amount values dont match between database and IPN request. Trxn_id is %1, Data from payment : %2, Data in CRM : %3"
 msgstr ""
@@ -46923,4 +46922,13 @@ msgid "Process now"
 msgstr ""
 
 msgid "Are you sure you want to process a transaction of %1?"
+msgstr ""
+
+msgid "Response Code"
+msgstr ""
+
+msgid "Response Message"
+msgstr ""
+
+msgid "Support 3JTSP"
 msgstr ""

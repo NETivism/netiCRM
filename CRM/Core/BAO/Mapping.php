@@ -1224,6 +1224,12 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     if ($component) {
       $structure = CRM_Core_FieldHierarchy::$hierarchy;
       if (isset($structure[$component])) {
+        if ($component == 'event') {
+          unset($structure[$component]['participant_is_test']);
+        }
+        else {
+          unset($structure[$component]['is_test']);
+        }
         foreach($structure[$component] as $fieldName => $skip) {
           $ufFields[$component][$fieldName] = array(
             'name' => $fieldName,
@@ -1254,11 +1260,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           }
           if (strstr($field['name'], '-')) {
             list($fieldName, $locationTypeId) = explode('-', $field['name']);
-            if(empty($field['location_type_id'])){
-              if (!is_numeric($locationTypeId)) {
-                $field['location_type_id'] = $defaultLocationType->id;
-              }
-            }
+            $field['location_type_id'] = ' ';
           }
           if ($field['field_type'] == 'Contact') {
             $field['field_type'] = 'Individual';

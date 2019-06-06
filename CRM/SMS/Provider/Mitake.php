@@ -165,7 +165,8 @@ class SmsData {
     switch ($format_type) {
       case 'SS': // Single Short
         $param = array(
-          'encoding'=>'UTF8',
+          'CharsetURL' => 'UTF8',
+          'encoding' => 'UTF8',
           'dstaddr' => $this->dest,
           'smbody' => $this->body,
           'clientID' => $this->clientID,
@@ -187,7 +188,7 @@ class SmsData {
         break;
 
       case 'MS': // Multiple Short
-        $data['get'] = 'encoding=UTF8';
+        $data['get'] = 'CharsetURL=UTF8&encoding=UTF8';
         if(!empty($this->clientID)){
           $data['post'] = '['.$this->clientID.']';
         }

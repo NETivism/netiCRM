@@ -1532,6 +1532,9 @@ SELECT $select
       case 'Address':
         return 'civicrm_address';
 
+      case 'PriceField':
+        return 'civicrm_price_field';
+
       default:
         $query = "
 SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 0 )";
@@ -1542,7 +1545,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
           return 'civicrm_contact';
         }
         else {
-          CRM_Core_Error::fatal();
+          CRM_Core_Error::fatal("Selected used for table not exists.");
         }
     }
   }

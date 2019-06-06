@@ -79,7 +79,14 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-    require_once 'CRM/Price/BAO/Field.php';
+    // add custom field support
+    $this->_cdType = CRM_Utils_Array::value('type', $_GET);
+    $this->assign('cdType', FALSE);
+    if ($this->_cdType) {
+      $this->assign('cdType', TRUE);
+      return CRM_Custom_Form_CustomData::preProcess($this);
+    }
+
 
     $this->_sid = CRM_Utils_Request::retrieve('sid', 'Positive', $this);
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this);
@@ -95,6 +102,24 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     }
 
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
+
+    // when custom data is included in this page
+	  $this->assign('customDataType', 'PriceField');
+    if ($this->_fid) {
+      $this->assign('entityID', $this->_fid);
+      $this->assign('customDataSubType', $this->_fid);
+    }
+
+    if (CRM_Utils_Array::value("hidden_custom", $_POST)) {
+      $this->set('type', 'PriceField');
+      $this->set('subType', $this->_fid);
+      $this->set('entityId', $this->_fid);
+
+      CRM_Custom_Form_CustomData::preProcess($this);
+      CRM_Custom_Form_CustomData::buildQuickForm($this);
+      CRM_Custom_Form_CustomData::setDefaultValues($this);
+    }
+
   }
 
   /**
@@ -107,6 +132,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * @access public
    */
   function setDefaultValues() {
+    if ($this->_cdType) {
+      return CRM_Custom_Form_CustomData::setDefaultValues($this);
+    }
     $defaults = array();
 
     // is it an edit operation ?
@@ -171,6 +199,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    // custom data related
+    if ($this->_cdType) {
+      return CRM_Custom_Form_CustomData::buildQuickForm($this);
+    }
+
     // lets trim all the whitespace
     $this->applyFilter('__ALL__', 'trim');
 
@@ -591,6 +624,8 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $ids['id'] = $this->_fid;
     }
 
+    $customFields = CRM_Core_BAO_CustomField::getFields('PriceField');
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params, $customFields, $this->_fid, 'PriceField');
     $priceField = CRM_Price_BAO_Field::create($params, $ids);
 
     if (!is_a($priceField, 'CRM_Core_Error')) {
