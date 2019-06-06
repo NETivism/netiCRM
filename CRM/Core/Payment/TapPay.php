@@ -190,7 +190,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return FALSE;
   }
 
-  public static function payByToken($recurringId = NULL, $contributionId = NULL) {
+  public static function payByToken($recurringId = NULL, $contributionId = NULL, $sendMail = TRUE) {
     if(empty($recurringId)){
       $recurringId = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $recurringId, 'REQUEST');
     }
@@ -283,7 +283,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $result = $api->request($data);
 
       // Validate the result.
-      self::doTransaction($result, $c->id, $pid);
+      self::doTransaction($result, $c->id, $sendMail);
 
       $response = array('status' => $result->status, 'msg' => $result->msg);
     }
@@ -342,7 +342,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return FALSE;  
   }
 
-  public static function doTransaction($result, $contributionId = NULL) {
+  public static function doTransaction($result, $contributionId = NULL, $sendMail = TRUE) {
     $input = $ids = $objects = array();
 
     // prepare ids
@@ -422,7 +422,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $input['amount'] = $objects['contribution']->amount;
         $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
         $objects['contribution']->receive_date = date('YmdHis', $receiveTime);
-        $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
+        $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
         if (!empty($ids['contributionRecur'])) {
           $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
           $params = array( 1 => array($ids['contributionRecur'], 'Positive'));
@@ -856,27 +856,11 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return 1;
   }
 
-  public static function doRecurTransact ($url_params, $recurId = NULL) {
-    // apply $_GET to $get , and filted params 'q'
-    if(empty($get)){
-      foreach ($_GET as $key => $value) {
-        if($key == 'q')continue;
-        $get[$key] = $value;
-      }
-    }
-
-    // retrieve recur_id from $_GET
-    if(empty($recurId)){
-      $recurId = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE);
-    }
-
+  public static function doRecurTransact ($recurId = NULL) {
     $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $recurId, 'id', 'contribution_recur_id');
-    $resultNote = self::payByToken($recurId, $contributionId);
+    $resultNote = self::payByToken($recurId, $contributionId, FALSE);
 
-    // redirect to contribution view page
-    $query = http_build_query($get);
-    $redirect = CRM_Utils_System::url('civicrm/contact/view/contributionrecur', $query);
-    CRM_Core_Error::statusBounce($resultNote, $redirect);
+    return $resultNote;
   }
 
   public static function getRecordDetail ($contributionId) {
@@ -932,14 +916,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     unset($get['q']);
     $query = http_build_query($get);
     $sync_url = CRM_Utils_System::url("civicrm/tappay/query", $query);
-    return $sync_url;
-  }
-
-  static function getPaymentTransactUrl ($recurId) {
-    $get = $_GET;
-    unset($get['q']);
-    $query = http_build_query($get);
-    $sync_url = CRM_Utils_System::url("civicrm/tappay/recurtransact", $query);
     return $sync_url;
   }
 

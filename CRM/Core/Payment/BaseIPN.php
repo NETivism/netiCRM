@@ -372,7 +372,7 @@ class CRM_Core_Payment_BaseIPN {
     return FALSE;
   }
 
-  function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE) {
+  function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE, $sendMail = TRUE) {
     $values = array();
     CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
     $contribution = &$objects['contribution'];
@@ -616,7 +616,9 @@ class CRM_Core_Payment_BaseIPN {
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
 
-    self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
+    if (!empty($sendMail)) {
+      self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
+    }
 
     CRM_Core_Error::debug_log_message("Success: Database updated and mail sent");
   }

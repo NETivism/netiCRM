@@ -130,9 +130,7 @@
           <div class="crm-submit-buttons">
             <input type="button" name='cancel' value="{ts}Back to Listings{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q="action=browse&selectedChild=contribute&cid=`$contactId`"}';"/>
             <a class="button" href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$contributionRecurId`&cid=`$contactId`&action=update"}" accesskey="e"><i class="zmdi zmdi-edit"></i>{ts}edit{/ts}</a>
-            {if $transactUrl}
-              <a class="button" href="{$transactUrl}" onclick="return confirm ('{ts}Are you sure you want to process a transaction of %1?{/ts}')">{ts}Process now{/ts}</a>
-            {/if}
+            {$form.$submit_name.html}
           </div>
         </div>
     {/if}
