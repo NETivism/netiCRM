@@ -83,7 +83,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $logDAO = new CRM_Core_DAO_Log();
       $logDAO->entity_table = 'civicrm_contribution_recur';
       $logDAO->entity_id = $recur->id;
-      $logDAO->orderBy('modified_date desc');
+      $logDAO->orderBy('id desc');
       $logDAO->find();
 
       $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -144,6 +144,11 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
       $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_id, 'id', 'contribution_recur_id');
       $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
+      if (method_exists($paymentClass, 'getRecordDetail')) {
+        $recordDetail = $paymentClass::getRecordDetail($contributionId);
+        $this->assign('record_detail', $recordDetail);
+      }
+
       if (method_exists($paymentClass, 'doRecurTransact')) {
         $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);
         $controllerTransact->setEmbedded(TRUE);

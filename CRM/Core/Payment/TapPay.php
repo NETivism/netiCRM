@@ -398,14 +398,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
 
       // check amount
-      if ( $amount != $result->amount ) {
+      if ( !empty($result->amount) && $amount != $result->amount ) {
         $msgText = ts("Failuare: Amount values dont match between database and IPN request. Trxn_id is %1, Data from payment : %2, Data in CRM : %3", array(1 => $contribution->trxn_id, 2 => $result->amount, 3 => $amount))."\n";
         CRM_Core_Error::debug_log_message($msgText);
         $note .= $msgText;
         $pass = FALSE;
       }
 
-
+      $note .= ts("Response Code").': '.$result->status."\n".ts("Response Message").': '.$result->msg."\n";
 
       // recurring validation
 
@@ -440,9 +440,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
       else{
         // Failed
-        $ipn->failed($objects, $transaction, $error);
+        $ipn->failed($objects, $transaction, $note);
       }
-      self::addNote($result->msg, $objects['contribution']);
+      self::addNote($note, $objects['contribution']);
     }
 
     return $isSuccess;

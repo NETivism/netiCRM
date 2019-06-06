@@ -51,6 +51,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @static
    */
   static function add(&$params, &$ids) {
+
     // pre-processing hooks
     require_once 'CRM/Utils/Hook.php';
     if (CRM_Utils_Array::value('id', $params)) {
@@ -73,7 +74,11 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       return $error;
     }
 
-    self::saveLogData($params);
+    if ($params['id']) {
+      $oldRecurring = new CRM_Contribute_BAO_ContributionRecur();
+      $oldRecurring->id = $params['id'];
+      $oldRecurring->find(TRUE);
+    }
 
     $recurring = new CRM_Contribute_BAO_ContributionRecur();
     $recurring->copyValues($params);
@@ -83,8 +88,12 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       $config = CRM_Core_Config::singleton();
       $recurring->currency = $config->defaultCurrency;
     }
+    $recurring->modified_date = date('YmdHis');
 
     $result = $recurring->save();
+
+    $params['id'] = $recurring->id;
+    self::saveLogData($recurring, $oldRecurring, $logId);
 
     // create post-processing hooks
     if (CRM_Utils_Array::value('id', $params)) {
@@ -466,14 +475,18 @@ GROUP BY c.currency";
     return $chart;
   }
 
-  static function saveLogData($params, &$logId = NULL) {
-    if (empty($params['id'])) {
+  static function saveLogData($params, $before = NULL, &$logId = NULL) {
+    $params = (object) $params;
+    if (empty($params->id)) {
       $message = ts('Lack of ID in parameters when saving log data.');
       CRM_Core_Error::debug_log_message($message, TRUE);
     }
+    else if (!empty($before)) {
+      $recurDAO = (object) $before;
+    }
     else {
       $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
-      $recurDAO->id = $params['id'];
+      $recurDAO->id = $params->id;
       $recurDAO->find(TRUE);
     }
 
@@ -481,12 +494,11 @@ GROUP BY c.currency";
 
     $before = $after = array();
     foreach ($recurFields as $field) {
-      $after[$field] = empty($params[$field]) ? NULL : $params[$field];
-      if (!empty($recurDAO->$field)) {
-        $before[$field] = $recurDAO->$field;
-        if ($after[$field] === NULL) {
-          $after[$field] = $recurDAO->$field;
-        }
+      $before[$field] = empty($recurDAO->$field) ? NULL : $recurDAO->$field;
+      $after[$field] = empty($params->$field) ? NULL : $params->$field;
+      // $params Only save modified value, So copy from before.
+      if (!empty($recurDAO->$field) && $after[$field] === NULL) {
+        $after[$field] = $recurDAO->$field; 
       }
     }
     $data = array('before' => $before, 'after' => $after);
@@ -494,7 +506,7 @@ GROUP BY c.currency";
     $contactId = $session->get('userID');
     $logParams = array(
       'entity_table' => 'civicrm_contribution_recur',
-      'entity_id' => $params['id'],
+      'entity_id' => $params->id,
       'data' => serialize($data),
       'modified_id' => $contactId,
       'modified_date' => date('YmdHis'),
@@ -503,9 +515,6 @@ GROUP BY c.currency";
       $logParams['id'] = $logId;
     }
     $log = CRM_Core_BAO_Log::add( $logParams );
-    if (!empty($log->id)) {
-      $logId = $log->id;
-    }
   }
 
   static function addNote($recurringId, $title, $body = NULL) {

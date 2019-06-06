@@ -42,7 +42,7 @@
             <tr><td class="label">{ts}Start date{/ts}</td><td>{$recur.start_date|crmDate}</td></tr>
             {if $recur.modified_date}<tr><td class="label">{ts}Last Modified Date{/ts}</td><td>{$recur.modified_date|crmDate}</td></tr>{/if}
             {if $recur.cancel_date}<tr><td class="label">{ts}Cancel Date{/ts}</td><td>{$recur.cancel_date|crmDate}</td></tr>{/if}
-            {if $recur.cancel_date}<tr><td class="label">{ts}End Date{/ts}</td><td>{$recur.end_date|crmDate}</td></tr>
+            {if $recur.end_date}<tr><td class="label">{ts}End Date{/ts}</td><td>{$recur.end_date|crmDate}</td></tr>
             {/if}
             <tr><td></td><td></td></tr>
             {if $recur.processor_id}<tr><td class="label">{ts}Processor ID{/ts}</td><td>{$recur.processor_id}</td></tr>{/if}
@@ -58,6 +58,17 @@
             {if $recur.payment_processor}<tr><td class="label">{ts}Payment processor:{/ts}</td><td>{$recur.payment_processor}</td></tr>{/if}
             -->
             <tr><td class="label">{ts}Recurring Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
+
+            {if $record_detail}
+            <tr><td></td><td></td></tr>
+              {foreach from=$record_detail key=label item=value}
+                <tr>
+                    <td class="label">{$label}</td>
+                    <td>{$value}</td>
+                </tr>
+              {/foreach}
+            {/if}
+
           </table>
 
           <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
