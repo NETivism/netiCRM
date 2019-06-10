@@ -889,9 +889,12 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     }
 
     //set only primary participant's params for transfer checkout.
-    if (($this->_contributeMode == 'checkout' || $this->_contributeMode == 'notify')
+    if (($this->_contributeMode == 'checkout' || $this->_contributeMode == 'notify' || $this->_contributeMode == 'iframe')
       && CRM_Utils_Array::value('is_primary', $this->_params)
     ) {
+      if (!empty($contribution->payment_processor_id)) {
+        $this->_params['payment_processor_id'] = $contribution->payment_processor_id;
+      }
       $this->_params['participantID'] = $participant->id;
       $this->set('primaryParticipant', $this->_params);
     }

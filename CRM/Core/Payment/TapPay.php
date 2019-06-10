@@ -158,7 +158,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'amount' => $contribution['currency'] == 'TWD' ? (int)$contribution['total_amount'] : $contribution['total_amount'],
         'currency' => $contribution['currency'],
         'order_number' => $contribution['trxn_id'],
-        'details' => $details, // item name
+        'details' => mb_substr($details, 0, 98), // item name
         'cardholder'=> array(
           'phone_number'=> '', #required #TODO
           'name' => $sortName, # required
@@ -268,7 +268,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'amount' => $amount,
           'currency' => $contributionRecur->currency,
           'order_number' => $contribution['trxn_id'],
-          'details' => $details, // item name
+          'details' => mb_substr($details, 0, 98), // item name
         );
       }
       else {
