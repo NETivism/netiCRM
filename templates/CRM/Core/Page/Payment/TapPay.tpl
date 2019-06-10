@@ -92,7 +92,7 @@
   {/if}
 </div>
 </div>
-<script src="https://js.tappaysdk.com/tpdirect/v4"></script>
+<script src="https://js.tappaysdk.com/tpdirect/v5.1.0"></script>
 <script>{literal}
 cj(document).ready(function($){
   var appID = '{/literal}{$payment_processor.signature}{literal}';
@@ -125,24 +125,28 @@ cj(document).ready(function($){
 
   appID = parseInt(appID);
   TPDirect.setupSDK(appID, appKey, '{/literal}{if $payment_processor.is_test}sandbox{else}production{/if}{literal}');
+  var cardFields = {
+    number: {
+      // css selector
+      element: '#card-number',
+      placeholder: '____ ____ ____ ____'
+    },
+    expirationDate: {
+      // DOM object
+      element: document.getElementById('card-expiration-date'),
+      placeholder: 'MM / YY'
+    },
+    ccv: {
+      element: '#card-ccv',
+      placeholder: '000'
+    }
+  };
+
+  // delete ccv if needed
+  {/literal}{if $hideccv}delete cardFields['ccv'];{/if}{literal}
 
   TPDirect.card.setup({
-    fields: {
-      number: {
-        // css selector
-        element: '#card-number',
-        placeholder: '____ ____ ____ ____'
-      },
-      expirationDate: {
-        // DOM object
-        element: document.getElementById('card-expiration-date'),
-        placeholder: 'MM / YY'
-      },
-      ccv: {
-        element: '#card-ccv',
-        placeholder: '000'
-      }
-    },
+    fields: cardFields,
     styles: {
       // Style all elements
       'input': {
@@ -228,3 +232,4 @@ cj(document).ready(function($){
   });
 });
 {/literal}</script>
+<!--TapPay.tpl-->
