@@ -263,6 +263,7 @@
             ContribPage.updateShowAllStep();
           }
         });
+        $("")
         
         this.updateFormStep();
         
@@ -345,7 +346,7 @@
 
         if($('[name=is_recur][value=1]').length > 0){
           var installments = this.installments;
-          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['Installments']+'</label><input placeholder="'+ts["no limit"]+'" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
+          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['monthly']+ts['Installments']+'</label><input placeholder="'+ts["no limit"]+'" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
           var doClickInstallments = function(){
             var installments = $(this).val();
             if(installments == 0){
