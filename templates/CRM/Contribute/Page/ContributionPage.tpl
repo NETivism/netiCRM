@@ -33,12 +33,11 @@
 
     {include file="CRM/Contribute/Form/SearchContribution.tpl"}  
     {if NOT ($action eq 1 or $action eq 2) }
-    	<table class="form-layout-compressed">
-    	<tr>
-	    <td><a href="{$newPageURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Contribution Page{/ts}</span></a></td>
-            <td style="vertical-align: top"><a class="button" href="{crmURL p="civicrm/admin/pcp" q="reset=1"}"><span>{ts}Manage Personal Campaign Pages{/ts}</span></a> {help id="id-pcp-intro" file="CRM/Contribute/Page/PCP.hlp"}</td>
-    	</tr>
-    	</table>
+      <div class="action-link-button">
+	      <a href="{$newPageURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Contribution Page{/ts}</span></a>
+        <a class="button" href="{crmURL p="civicrm/track/report" q="reset=1&ptype=civicrm_contribution_page"}"><i class="zmdi zmdi-chart"></i><span>{ts}Traffic Source{/ts}</span></a>
+        <a class="button" href="{crmURL p="civicrm/admin/pcp" q="reset=1"}"><i class="zmdi zmdi-accounts-list"></i><span>{ts}Manage Personal Campaign Pages{/ts}</span></a> {help id="id-pcp-intro" file="CRM/Contribute/Page/PCP.hlp"}
+      </div>
     {/if}
 
     {if $rows}

@@ -163,11 +163,9 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->defaults = array();
 
     /* 
-         * we allow the controller to set force/reset externally, useful when we are being 
-         * driven by the wizard framework 
-         */
-
-
+     * we allow the controller to set force/reset externally, useful when we are being 
+     * driven by the wizard framework 
+     */
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
     $this->_pageId = CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject);
@@ -208,7 +206,6 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       );
     }
 
-    require_once 'CRM/Contact/BAO/Query.php';
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $selector = new CRM_Contribute_Selector_Search($this->_queryParams,
       $this->_action,

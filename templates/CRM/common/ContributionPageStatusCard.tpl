@@ -56,7 +56,7 @@
 <br/>
 <div>
   <h5>
-    <a href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_contribution_page&pid=`$statistics.page.id`"}" target="_blank">{ts}Traffic Source{/ts}</a>
+    <a href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_contribution_page&pid=`$statistics.page.id`"}" target="_blank"><i class="zmdi zmdi-chart"></i>{ts}Traffic Source{/ts}</a>
     {if $period_start && $period_end}<sup>{$period_start} ~ {$period_end}</sup>{/if}
   </h5>
   {if $statistics.track}

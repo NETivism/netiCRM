@@ -42,6 +42,7 @@ class CRM_Event_BAO_Query {
     $fields = array_merge($fields, CRM_Event_DAO_Event::import());
     $fields = array_merge($fields, self::getParticipantFields());
     $fields = array_merge($fields, CRM_Core_DAO_Discount::export());
+    $fields = array_merge($fields, CRM_Core_DAO_Track::export());
 
     return $fields;
   }
@@ -361,36 +362,45 @@ class CRM_Event_BAO_Query {
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
         return;
 
+      case 'participant_status':
       case 'participant_status_id':
+        $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
         $val = array();
         if (is_array($value)) {
           foreach ($value as $k => $v) {
-            if ($v) {
+            if (CRM_Utils_Rule::positiveInteger($k)) {
               $val[$k] = $k;
             }
+            else {
+              $statusId = array_search($v, $statusTypes);
+              if (!empty($statusId)) {
+                $val[$statusId] = $statusId;
+              }
+            }
           }
-          $status = implode(',', $val);
         }
         else {
-          $status = $value;
+          if (CRM_Utils_Rule::positiveInteger($value)) {
+            $val[$value] = $value;
+          }
+          else {
+            $statusId = array_search($value, $statusTypes);
+            if (!empty($statusId)) {
+              $val[$statusId] = $statusId;
+            }
+          }
         }
 
-        if (count($val) > 1) {
-          $op = 'IN';
-          $status = "({$status})";
-        }
+        $op = 'IN';
+        $status = implode(",", $val);
+        $status = "({$status})";
 
         require_once 'CRM/Event/PseudoConstant.php';
-        $statusTypes = CRM_Event_PseudoConstant::participantStatus();
         $names = array();
-
         if (!empty($val)) {
           foreach ($val as $id => $dontCare) {
-            $names[] = ts($statusTypes[$id]);
+            $names[] = $statusTypes[$id];
           }
-        }
-        else {
-          $names[] = ts($statusTypes[$value]);
         }
 
         $query->_qill[$grouping][] = ts('Participant Status %1', array(1 => ts($op))) . ' ' . implode(' ' . ts('or') . ' ', $names);
@@ -525,6 +535,12 @@ class CRM_Event_BAO_Query {
 
       case 'participant_line_item':
         $from = " $side JOIN civicrm_line_item participant_line_item ON ( civicrm_participant.id = participant_line_item.entity_id AND participant_line_item.entity_table = 'civicrm_participant')";
+        break;
+
+      case 'civicrm_track':
+        if ($mode & CRM_Contact_BAO_Query::MODE_EVENT) {
+          $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_participant' AND civicrm_track.entity_id = civicrm_participant.id";
+        }
         break;
     }
     return $from;

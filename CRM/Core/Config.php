@@ -470,6 +470,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
 
     if ($this->debug) {
+      ini_set('xdebug.var_display_max_data', 5000);
       $civicrm_path = rtrim($civicrm_root, '/').DIRECTORY_SEPARATOR;
       if (file_exists($civicrm_path.'civicrm-version.txt')) {
         $this->version = file_get_contents($civicrm_path.'civicrm-version.txt');

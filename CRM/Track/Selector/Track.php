@@ -52,6 +52,11 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
   /**
    * for the submitted transaction which eneityId we had?
    */
+  private $_entityTable;
+
+  /**
+   * for the submitted transaction which eneityId we had?
+   */
   private $_entityId;
 
   /**
@@ -408,6 +413,10 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     if ($this->_utmContent) {
       $where[] = "utm_content= %13";
       $args[13] = array($this->_utmContent, 'String');
+    }
+    if ($this->_entityTable) {
+      $where[] = "entity_table = %14";
+      $args[14] = array($this->_entityTable, 'String');
     }
 
     $where = implode(" AND ", $where);

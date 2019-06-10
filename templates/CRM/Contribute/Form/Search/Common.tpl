@@ -111,6 +111,62 @@
 	<td><label>{ts}Currency{/ts}</label> <br />
 	{$form.contribution_currency_type.html}</td>
 </tr>
+<tr>
+	<td colspan="2">
+    <div class="crm-accordion-wrapper crm-accordion-open">
+      <div class="crm-accordion-header">
+        <div class="zmdi crm-accordion-pointer"></div>
+        {ts}Traffic Source{/ts}
+      </div>
+      <div class="crm-accordion-body">
+        <table class="form-layout">
+          <tr>
+            <td>
+              {$form.contribution_referrer_type.label}<br>
+              {$form.contribution_referrer_type.html}
+            </td>
+            <td>
+              {$form.contribution_referrer_network.label}<br>
+              {$form.contribution_referrer_network.html}
+            </td>
+            <td>
+              {$form.contribution_landing.label}<br>
+              {$form.contribution_landing.html}
+            </td>
+            <td>
+              {$form.contribution_referrer_url.label}<br>
+              {$form.contribution_referrer_url.html}
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td>
+              {$form.contribution_utm_source.label}<br>
+              {$form.contribution_utm_source.html}
+            </td>
+            <td>
+              {$form.contribution_utm_medium.label}<br>
+              {$form.contribution_utm_medium.html}
+            </td>
+            <td>
+              {$form.contribution_utm_campaign.label}<br>
+              {$form.contribution_utm_campaign.html}
+            </td>
+            <td>
+              {$form.contribution_utm_term.label}<br>
+              {$form.contribution_utm_term.html}
+            </td>
+            <td>
+              {$form.contribution_utm_content.label}<br>
+              {$form.contribution_utm_content.html}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </td>
+</tr>
 {if $contributeGroupTree}
 <tr>
 	<td colspan="2">
@@ -118,4 +174,4 @@
 </tr>
 {/if}
 
-{include file="CRM/common/chosen.tpl" selector="#contribution_payment_instrument_id,#contribution_page_id,#contribution_pcp_made_through_id,#contribution_currency_type,#contribution_type_id"}
+{include file="CRM/common/chosen.tpl" selector="#contribution_payment_instrument_id,#contribution_page_id,#contribution_pcp_made_through_id,#contribution_currency_type,#contribution_type_id,#contribution_referrer_type"}

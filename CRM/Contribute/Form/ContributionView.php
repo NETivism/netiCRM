@@ -120,6 +120,10 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
         $values["recur_info_url"] = CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$values['contribution_recur_id']}&cid={$values['contact_id']}");
       }
     }
+    $track = CRM_Core_BAO_Track::getTrack('civicrm_contribution', $id);
+    if (!empty($track)) {
+      $this->assign('track', $track);
+    }
 
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Contribution', $this, $id, 0, $values['contribution_type_id']);
     CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);

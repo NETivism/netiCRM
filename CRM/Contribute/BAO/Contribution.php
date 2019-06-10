@@ -566,6 +566,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       $expFieldProduct = CRM_Contribute_DAO_Product::export();
       $expFieldsContrib = CRM_Contribute_DAO_ContributionProduct::export();
       $typeField = CRM_Contribute_DAO_ContributionType::export();
+      $trackField = CRM_Core_DAO_Track::export();
       $optionField = CRM_Core_OptionValue::getFields($mode = 'contribute');
       $contributionStatus = array('contribution_status' => array('title' => ts('Contribution Status'),
           'name' => 'contribution_status',
@@ -584,7 +585,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
         ));
 
       $fields = array_merge($impFields, $typeField, $contributionStatus, $optionField, $expFieldProduct,
-        $expFieldsContrib, $contributionNote, $contributionRecurId,
+        $expFieldsContrib, $contributionNote, $contributionRecurId, $trackField, 
         CRM_Core_BAO_CustomField::getFieldsForImport('Contribution')
       );
 

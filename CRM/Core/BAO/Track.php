@@ -145,6 +145,34 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     return $return;
   }
 
+  public static function getTrack($entityTable, $entityId) {
+    if (!empty($entityTable) && is_numeric($entityId)) {
+      $params = array(
+        'entityTable' => $entityTable,
+        'entityId' => $entityId,
+      );
+      $selector = new CRM_Track_Selector_Track($params);
+      $dao = $selector->getQuery();
+      $dao->fetch();
+      if ($dao->N) {
+				$track = new CRM_Core_DAO_Track();
+        $fields = $track->fields();
+        $values = array();
+				foreach ($fields as $name => $value) {
+					$dbName = $value['name'];
+					if (isset($dao->$dbName) && $dao->$dbName !== 'null') {
+						$values[$dbName] = $dao->$dbName;
+						if ($name != $dbName) {
+							$values[$name] = $dao->$dbName;
+						}
+					}
+				}
+        return $values;
+      }
+      return array();
+    } 
+  }
+
   public static function cmp($a, $b) {
     if ($a['count'] == $b['count']) {
       return 0;
