@@ -69,6 +69,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $defaultFromRequest['instrument'] = CRM_Utils_Request::retrieve('_instrument', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['ppid'] = CRM_Utils_Request::retrieve('_ppid', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['membership'] = CRM_Utils_Request::retrieve('_membership', 'Positive', $this, FALSE, NULL, 'REQUEST');
+    $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
+    if (isset($defaultFromRequest['instrument']) && empty($instruments[$defaultFromRequest['instrument']])) {
+      unset($defaultFromRequest['instrument']);
+    }
     $this->_defaultFromRequest = $defaultFromRequest;
     $this->set('defaultFromRequest', $this->_defaultFromRequest);
 
