@@ -361,7 +361,7 @@ class CRM_Core_BAO_Block {
    * @static
    */
   static function blockDelete($blockName, $params) {
-    $baoString = 'CRM_Core_DAO_' . $name;
+    $baoString = 'CRM_Core_DAO_' . $blockName;
     $block = new $baoString( );
 
     $block->copyValues($params);
