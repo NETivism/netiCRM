@@ -426,6 +426,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       //retrieve custom field information
       $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $this, $this->_id, 0, $this->_values['contribution_type_id']);
       $this->_values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
+      $customValues = CRM_Core_BAO_CustomValueTable::getEntityValues($this->_id, 'ContributionPage');
+      if (!empty($customValues)) {
+        foreach($customValues as $customFieldId => $val) {
+          $this->_values['custom_'.$customFieldId] = $val;
+        }
+      }
 
       $this->set('values', $this->_values);
       $this->set('fields', $this->_fields);
