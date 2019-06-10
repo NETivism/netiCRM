@@ -248,6 +248,10 @@
           $('.crm-section payment_processor-section').insertBefore($('.custom_pre_profile-group'));
         }
 
+        if ($(".is_for_organization-section").length > 0) {
+          $(".is_for_organization-section, #for_organization").insertBefore('.custom_pre_profile-group');
+        }
+
         /** Afraid it ban the contributor
         if(this.isCreditCardOnly){
           $('.payment_processor-section, #billing-payment-block').hide();
