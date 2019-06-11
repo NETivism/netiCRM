@@ -85,14 +85,13 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     // make sure we have right permission to edit this user
-    $csContactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE, $this->_userID);
+    $csContactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE, NULL);
+    $csString = CRM_Utils_Request::retrieve('cs', 'String', $this, FALSE, NULL);
+    $currentUserID = $this->_userID;
 
-    require_once 'CRM/Contact/BAO/Contact.php';
-    if ($csContactID != $this->_userID) {
-      require_once 'CRM/Contact/BAO/Contact/Permission.php';
+    if (!empty($csContactID) && !empty($csString) && $currentUserID != $csContactID) {
       if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactID, $this)) {
-        $session = CRM_Core_Session::singleton();
-        $session->set('userID', $csContactID);
+        $this->set('csContactID', $csContactID);
         $this->_userID = $csContactID;
       }
     }
@@ -988,7 +987,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $errors = array();
     $amount = self::computeAmount($fields, $self);
 
-    $checked = $self->checkDuplicate($fields, $self);
+    $checked = $self->checkDuplicateAccount($fields, $self);
     if (is_array($checked)) {
       $errors += $checked;
     }
@@ -1400,18 +1399,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
   }
 
-  function checkDuplicate($fields, &$self) {
+  function checkDuplicateAccount($fields, &$self) {
     // CRM-3907, skip check for preview registrations
     if ($self->_mode == 'test') {
       return FALSE;
     }
 
-    $contactID = NULL;
     $session = CRM_Core_Session::singleton();
-    if (!$isAdditional) {
-      $contactID = $session->get('userID');
-    }
-    if (!$contactID && is_array($fields) && !empty($fields)) {
+    $currentUserID = $session->get('userID');
+    if (!$currentUserID && is_array($fields) && !empty($fields) && $fields['cms_create_account']) {
       $params = $fields;
       $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
 
@@ -1421,16 +1417,16 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $contactID = CRM_Utils_Array::value(0, $ids);
       if ($contactID) {
         // check if contact exists but email not the same
-        if (isset($fields['_qf_default']) && $fields['cms_create_account']) {
+        if (isset($fields['_qf_default'])) {
           $dao = new CRM_Core_DAO_UFMatch();
           $dao->contact_id = $contactID;
           $dao->find(TRUE);
-          if (!empty($dao->uf_name) && ($dao->uf_name !== $fields['email-5'])) {
+          if (!empty($dao->uf_name) && ($dao->uf_name !== $fields['email-'.$this->_bltID])) {
             // errors because uf_name(email) will update to new value
             // then the drupal duplicate email check may failed
             // we should validate and stop here before confirm stage
             $url = CRM_Utils_System::url('user', "destination=" . urlencode("civicrm/contribute/transact?reset=1&id={$self->_values['id']}"));
-            return array('email-5' => ts('Accroding your profile, you are one of our registered user. Please <a href="%1">login</a> to proceed.', array(1 => $url)));
+            return array('email-'.$this->_bltID => ts('Accroding your profile, you are one of our registered user. Please <a href="%1">login</a> to proceed.', array(1 => $url)));
           }
         }
       }

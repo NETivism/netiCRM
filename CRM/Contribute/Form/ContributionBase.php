@@ -220,7 +220,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $session->set('pastContributionID', $this->_id);
     }
 
-    $this->_userID = $session->get('userID');
+    $this->_userID = $this->get('csContactID') ? $this->get('csContactID') : $session->get('userID');
     $this->_mid = NULL;
     if ($this->_userID) {
       $this->assign('contact_id', $this->_userID);
@@ -802,7 +802,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     if ($id) {
       require_once 'CRM/Core/BAO/UFGroup.php';
       require_once 'CRM/Profile/Form.php';
-      $session = CRM_Core_Session::singleton();
       $contactID = $this->_userID;
 
       // we don't allow conflicting fields to be
