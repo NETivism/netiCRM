@@ -54,7 +54,7 @@ abstract class CRM_Import_Parser {
   /**
    * various Contact types
    */
-  CONST CONTACT_INDIVIDUAL = 1, CONTACT_HOUSEHOLD = 2, CONTACT_ORGANIZATION = 4;
+  CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
   CONST DEFAULT_TIMEOUT = 30;
 
   protected $_tableName;
