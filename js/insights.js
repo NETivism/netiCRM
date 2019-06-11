@@ -79,7 +79,7 @@ function trackVisit(visitInfo) {
       object['page_type'] = 'civicrm_contribution_page';
     }
     else if (location.href.match(/civicrm\/profile\/create/)) {
-      object['page_type'] = 'civicrm_profile';
+      object['page_type'] = 'civicrm_uf_group';
     }
     var page_id = location.search.match(/id=(\d+)/);
     if (page_id) {
