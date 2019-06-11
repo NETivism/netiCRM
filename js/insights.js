@@ -110,7 +110,7 @@ function trackVisit(visitInfo) {
         object['referrer_network'] = '';
         break;
       case 'email':
-        if (typeof object['referrer_network'] !== 'undefined' && object['referrer_network'] !== 'unknown') {
+        if (typeof visitInfo.referrer.client !== 'undefined' && visitInfo.referrer.client !== 'unknown') {
           object['referrer_network'] = visitInfo.referrer.client;
         }
         break;
