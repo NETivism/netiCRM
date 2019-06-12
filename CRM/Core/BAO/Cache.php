@@ -61,7 +61,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
    * @static
    * @access public
    */
-  static function &getItem($group, $path, $componentID = NULL) {
+  static function &getItem($group, $path, $componentID = NULL, $createdTime = 0) {
     if (self::$_cache === NULL) {
       self::$_cache = array();
     }
@@ -75,6 +75,20 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
         $dao->group_name = $group;
         $dao->path = $path;
         $dao->component_id = $componentID;
+        if ($createdTime) {
+          if (is_numeric($createdTime)) {
+            $createdTime = CRM_Utils_Type::escape($createdTime, 'Positive');
+            if ($createdTime) {
+              $dao->whereAdd("UNIX_TIMESTAMP(created_date) >= $createdTime");
+            }
+          }
+          else {
+            $createdTime = CRM_Utils_Type::escape($createdTime, 'Date');
+            if ($createdTime) {
+              $dao->whereAdd("created_date >= '$createdTime'");
+            }
+          }
+        }
 
         $data = NULL;
         if ($dao->find(TRUE)) {
@@ -168,6 +182,32 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     $argString = "CRM_CT_CI_{$group}_{$componentID}";
     unset(self::$_cache[$argString]);
     $cache->delete($argString);
+  }
+
+  static function deleteItem($group, $path, $componentID = NULL) {
+    $dao = new CRM_Core_DAO_Cache();
+    $dao->group_name = $group;
+    $dao->path = $path;
+    $dao->component_id = $componentID;
+
+    // get a lock so that multiple ajax requests on the same page
+    // dont trample on each other
+    // CRM-11234
+    $lockName = "civicrm.cache.{$group}_{$path}._{$componentID}";
+    $lock = new CRM_Core_Lock($lockName);
+    if (!$lock->isAcquired()) {
+      CRM_Core_Error::fatal();
+    }
+
+    $success = FALSE;
+    if ($dao->find(TRUE)) {
+      $dao->delete();
+      $success = TRUE;
+    }
+    $lock->release();
+    $dao->free();
+
+    return $success;
   }
 
   static function deleteGroup($group = NULL) {

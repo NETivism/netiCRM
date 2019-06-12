@@ -25,6 +25,9 @@
 *}
 {if $action eq 2 || $action eq 16}
 <div class="form-item">
+  {if $pager}
+  {include file="CRM/common/pager.tpl" location="top"}
+  {/if}
   <table>
     <tr class="columnheader"><th>{ts}Contact{/ts} 1</th><th>{ts}Contact{/ts} 2 ({ts}Duplicate{/ts})</th><th>{ts}Threshold{/ts}</th><th>&nbsp;</th></tr>
     {foreach from=$main_contacts item=main key=main_id}
@@ -34,8 +37,8 @@
 	{if $gid}{assign var="qParams" value="$qParams&gid=`$gid`"}{/if}
         {capture assign=merge}<a target="_blank" href="{crmURL p='civicrm/contact/merge' q="`$qParams`"}">{ts}merge{/ts}</a>{/capture}
         <tr id="dupeRow_{$main.srcID}_{$main.dstID}" class="{cycle values="odd-row,even-row"}">
-          <td>{$srcLink}</td>
-          <td>{$dstLink}</td>
+          <td>{$srcLink} ({ts}ID{/ts}: {$main.srcID})</td>
+          <td>{$dstLink} ({ts}ID{/ts}: {$main.dstID})</td>
           <td>{$main.weight}</td>
           <td style="text-align: right;">
 	  {if $main.canMerge}
@@ -45,7 +48,7 @@
 	  {else}
 	       <em>{ts}Insufficient access rights - cannot merge{/ts}</em>
 	  {/if}
-	  </td>
+        </td>
         </tr>
     {/foreach}
   </table>
@@ -65,15 +68,19 @@
       {/foreach}
     </table>
   {/if}
+  {if $pager}
+  {include file="CRM/common/pager.tpl" location="bottom"}
+  {/if}
 </div>
-
+<div class="crm-actions-ribbon">
+  <a href="{$smarty.server.REQUEST_URI|replace:'action=update':'action=renew'}" class="button">{ts}Refresh{/ts}</a>
 {if $context eq 'search'}
    <a href="{$backURL}" class="button"><span>&raquo; {ts}Done{/ts}</span></a>
 {else}
    {capture assign=backURL}{crmURL p="civicrm/contact/dedupefind" q="reset=1&rgid=`$rgid`&action=preview" a=1}{/capture}
    <a href="{$backURL}" class="button"><span>&raquo; {ts}Done{/ts}</span></a>
 {/if}
-<div style="clear: both;"></div>
+</div>
 {else}
 {include file="CRM/Contact/Form/DedupeFind.tpl"}
 {/if}
