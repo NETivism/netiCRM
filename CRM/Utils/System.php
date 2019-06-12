@@ -57,10 +57,8 @@ class CRM_Utils_System {
     if (!isset($_GET[$config->userFrameworkURLVar])) {
       return '';
     }
-
-    return self::url($_GET[$config->userFrameworkURLVar],
-      CRM_Utils_System::getLinksUrl($urlVar, $includeReset, $includeForce)
-    );
+    $links = CRM_Utils_System::getLinksUrl($urlVar, $includeReset, $includeForce);
+    return self::url(self::currentPath(), $links, FALSE, NULL, FALSE);
   }
 
   /**
@@ -82,6 +80,7 @@ class CRM_Utils_System {
     $qs = array();
     $arrays = array();
 
+    $config = CRM_Core_Config::singleton();
     if (!empty($_SERVER['QUERY_STRING'])) {
       $qs = explode('&', str_replace('&amp;', '&', $_SERVER['QUERY_STRING']));
       for ($i = 0, $cnt = count($qs); $i < $cnt; $i++) {
@@ -115,16 +114,16 @@ class CRM_Utils_System {
       if ($name == 'snippet') {
         continue;
       }
+      if (isset($config->userFrameworkURLVar) && $name == $config->userFrameworkURLVar) {
+        continue;
+      }
 
       if ($name != 'reset' || $includeReset) {
         $querystring[] = $name . '=' . $value;
       }
     }
-
     $querystring = array_merge($querystring, array_unique($arrays));
-    $querystring = array_map('htmlentities', $querystring);
-
-    return implode('&amp;', $querystring) . (!empty($querystring) ? '&amp;' : '') . $urlVar . '=';
+    return implode('&', $querystring) . (!empty($querystring) ? '&' : '') . $urlVar . '=';
   }
 
   /**
