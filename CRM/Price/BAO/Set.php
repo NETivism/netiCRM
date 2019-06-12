@@ -521,13 +521,16 @@ WHERE  id = %1";
         $optionsMaxValueTotal = 0;
         $optionsMaxValueDetails = array();
         foreach ($form->_priceSet['fields'] as $field) {
-          if(isset($field['max_value'])){
+          if (isset($field['max_value']) && !empty($field['max_value'])) {
             $optionsMaxValueDetails['fields'][$field['id']]['max_value'] = $field['max_value'];
+            $optionsMaxValueTotal += $field['max_value'];
           }
-          foreach ($field['options'] as $option) {
-            $maxVal = CRM_Utils_Array::value('max_value', $option, 0);
-            $optionsMaxValueDetails['fields'][$field['id']]['options'][$option['id']] = $maxVal;
-            $optionsMaxValueTotal += $maxVal;
+          else {
+            foreach ($field['options'] as $option) {
+              $maxVal = CRM_Utils_Array::value('max_value', $option, 0);
+              $optionsMaxValueDetails['fields'][$field['id']]['options'][$option['id']] = $maxVal;
+              $optionsMaxValueTotal += $maxVal;
+            }
           }
         }
         $form->_priceSet['optionsMaxValueTotal'] = $optionsMaxValueTotal;
