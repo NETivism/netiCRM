@@ -33,7 +33,7 @@
       <th>{ts}Contact{/ts} 1 ({ts}duplicate{/ts})</th>
       <th>{ts}Contact{/ts} 2 ({ts}Reserved{/ts})</th>
       <th>{ts}Threshold{/ts}</th>
-      <th>{ts}Batch Merge{/ts}?</th>
+      <!--<th>{ts}Batch Merge{/ts}?</th>-->
       <th>{ts}Conflicting Rows{/ts}</th>
       <th></th>
     </tr>
@@ -47,7 +47,7 @@
           <td>{$dstLink} ({ts}ID{/ts}: {$main.dstID})</td>
           <td>{$srcLink} ({ts}ID{/ts}: {$main.srcID})</td>
           <td>{$main.weight}</td>
-          <td>{if $main.batchMerge}<i class="zmdi zmdi-check"></i>{else}<i class="zmdi zmdi-close-circle"></i>{/if}</td>
+          <!--<td>{if $main.batchMerge}<i class="zmdi zmdi-check"></i>{else}<i class="zmdi zmdi-close-circle"></i>{/if}</td>-->
           <td>{if $main.conflicts}{"<br>"|implode:$main.conflicts}{/if}</td>
           <td style="text-align: right;">
 	  {if $main.canMerge}
