@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-05-16 10:01+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2019-06-06 04:31+0000\n"
+"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3818,7 +3818,7 @@ msgstr "通知信"
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 #: templates/CRM/Contribute/Page/Premium.tpl
 msgid "SKU"
-msgstr "庫存單位（SKU）"
+msgstr "產品編號（SKU）"
 
 #: CRM/Contribute/DAO/Product.php CRM/Contribute/Form/ManagePremiums.php
 msgid "Options"
@@ -4605,17 +4605,17 @@ msgstr "沒有在 管理 CiviCRM &raquo; 金流機制 中設定密碼。"
 #: CRM/Core/Payment/GWIPN.php CRM/Core/Payment/NewwebIPN.php
 msgid ""
 "Failuare: OrderNumber values doesn't match between database and IPN request"
-msgstr ""
+msgstr "失敗：資料庫和 IPN 傳輸的 OrderNumber 資料不相符。"
 
 #: CRM/Core/Payment/GWIPN.php CRM/Core/Payment/NewwebIPN.php
 msgid "Failuare: Amount values dont match between database and IPN request"
-msgstr ""
+msgstr "失敗：資料庫和 IPN 傳輸的金額資料不相符。"
 
 #: CRM/Core/Payment/GWIPN.php CRM/Core/Payment/NewwebIPN.php
 msgid ""
 "Failuare: Transaction number and system response number doesn't match. "
 "Please contact us for further assistant."
-msgstr ""
+msgstr "失敗：交易資料和系統回覆資料比對不相符，請洽管理人員詢問進一步的資料。"
 
 #: CRM/Core/Payment/GWIPN.php CRM/Core/Payment/NewwebIPN.php
 #: CRM/Core/Payment/Newweb.php
@@ -29234,7 +29234,7 @@ msgstr "感謝禮名稱（可以是：產品、服務、捐款等）此為這套
 msgid ""
 "Optional product SKU or code. If used, this value will be included in "
 "contributor receipts."
-msgstr "（選填）產品 SKU 或編碼。若使用此設定，在此輸入的值將會顯示在捐款者收據。"
+msgstr "（選填）產品編號 SKU 或編碼。若使用此設定，在此輸入的值將會顯示在捐款者收據。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "Image must be in GIF, JPEG, or PNG format."
@@ -47045,6 +47045,13 @@ msgid ""
 "your registration."
 msgstr "請按下方「<strong>付款</strong>」以完成報名。"
 
+#: CRM/Contact/Form/Merge.php
+msgid ""
+"The selected pair of contacts are marked as non duplicates. If these records"
+" should be merged, you can remove this exception   on the <a "
+"href=\"%1\">Dedupe Exceptions</a> page."
+msgstr ""
+
 msgid "Suspended"
 msgstr "暫停中"
 
@@ -47053,3 +47060,72 @@ msgstr "附註主旨"
 
 msgid "Change status to %status%"
 msgstr "狀態改為「%status%」"
+
+msgid ""
+"Failuare: Amount values dont match between database and IPN request. Trxn_id"
+" is %1, Data from payment : %2, Data in CRM : %3"
+msgstr "失敗：資料庫和 IPN 傳輸的交易編號資料不相符。交易編號為  %1 ，傳輸資料為 %2 ，CRM 資料庫中的資料為 %3。"
+
+msgid "Payment processor of recur is not %1."
+msgstr "定期定額金流不是 %1"
+
+msgid "Last execute date of recur is over the date."
+msgstr "此定期定額已執行過了，「上次執行日期」已超過扣款判斷時間。"
+
+msgid "Finish synchronizing recurring."
+msgstr "定期定額同步更新完成"
+
+msgid ""
+"Stop recurring %1 because this is lastest contribution of this recurring "
+"(end date is %2)."
+msgstr "%1 定期定額將結束，因為結束日期為 %2 ，此筆已是最後捐款。"
+
+msgid ""
+"Stop recurring %1 because this is lastest contribution of this recurring "
+"(expiry date is %2)."
+msgstr "%1 定期定額將結束，因為卡片到期日期為 %2 ，此筆已是最後捐款。"
+
+msgid "Stop recurring %1 because end date is dued."
+msgstr "%1 定期定額將結束，因為結束日期已過期。"
+
+msgid "Stop recurring %1 because installments id full."
+msgstr "%1 定期定額將結束，因為期數已滿。"
+
+msgid "Stop recurring %1 because card expiry date is due."
+msgstr "%1 定期定額將結束，因為卡片到期日已過期。"
+
+msgid "Update recurring status to 'Finished'."
+msgstr "更新定期定額狀態為「已完成」。"
+
+msgid "Synchronizing to Tappay server success."
+msgstr "成功跟 Tappay 伺服器同步。"
+
+msgid "There are no valid record back."
+msgstr "沒有收到有效的資料。"
+
+msgid "Set 'auto renew' value to 'renewed'."
+msgstr "將「自動更新」值設為「已更新」。"
+
+msgid "Record Trade ID"
+msgstr "交易識別碼"
+
+msgid "Card Expiry Date"
+msgstr "卡片到期日"
+
+msgid "Card Issuer"
+msgstr "發卡行"
+
+msgid "Process now"
+msgstr "立刻執行扣款"
+
+msgid "Are you sure you want to process a transaction of %1?"
+msgstr "你確定要執行 ID: %1 捐款的扣款動作？"
+
+msgid "Response Code"
+msgstr "回傳狀態代碼"
+
+msgid "Response Message"
+msgstr "回傳訊息"
+
+msgid "Support 3JTSP"
+msgstr "支援 3JTSP"

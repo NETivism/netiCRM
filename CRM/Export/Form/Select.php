@@ -191,6 +191,7 @@ FROM   {$this->_componentTable}
           $this->set('mappingObject', $mappingObject);
         }
       }
+      $this->buildMapping();
       $this->set('force', 0);
       $this->postProcess();
       $this->controller->nextPage();

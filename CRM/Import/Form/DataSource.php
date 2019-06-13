@@ -48,6 +48,14 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
   private $_dataSourceClassFile;
 
+  private $_dedupeRuleGroupId;
+
+  private $_dedupeRuleGroups;
+
+  private $_dedupeRuleFields;
+
+  private $_contactTypes;
+
   /**
    * Function to set variables up before form is built
    *
@@ -112,6 +120,29 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       $templateFile = "CRM/Import/Form/" . $dataSourcePath[3] . ".tpl";
       $this->assign('dataSourceFormTemplateFile', $templateFile);
     }
+
+    if (CRM_Contact_BAO_ContactType::isActive('Individual')) {
+      $this->_contactTypes[CRM_Import_Parser::CONTACT_INDIVIDUAL] = ts('Individual');
+    }
+    if (CRM_Contact_BAO_ContactType::isActive('Household')) {
+      $this->_contactTypes[CRM_Import_Parser::CONTACT_HOUSEHOLD] = ts('Household');
+    }
+    if (CRM_Contact_BAO_ContactType::isActive('Organization')) {
+      $this->_contactTypes[CRM_Import_Parser::CONTACT_ORGANIZATION] = ts('Organization');
+    }
+    foreach ($this->_contactTypes as $type => $tsName) {
+      $supportFields = CRM_Dedupe_BAO_RuleGroup::supportedFields($type);
+      foreach($supportFields as $array) {
+        foreach($array as $name => $label){
+          if (!isset($this->_dedupeRuleFields[$name])) {
+            $this->_dedupeRuleFields[$name] = $label;
+          } 
+        }
+      }
+    }
+
+    $dedupeGroupParams = array('level' => 'Strict');
+    $this->_dedupeRuleGroups = CRM_Dedupe_BAO_RuleGroup::getDetailsByParams($dedupeGroupParams);
   }
 
   /**
@@ -137,9 +168,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     $this->assign('urlPath', "civicrm/import");
     $this->assign('urlPathVar', 'snippet=4');
 
-    $this->add('select', 'dataSource', ts('Data Source'), $dataSources, TRUE,
-      array('onchange' => 'buildDataSourceFormBlock(this.value);')
-    );
+    $this->add('select', 'dataSource', ts('Data Source'), $dataSources, TRUE);
     $this->setDefaults(array('dataSource' => 'CRM_Import_DataSource_CSV'));
 
     // duplicate handling options
@@ -176,38 +205,38 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       $this->setDefaults(array('savedMapping' => $loadeMapping));
     }
 
-    $this->setDefaults(array('onDuplicate' =>
-        CRM_Import_Parser::DUPLICATE_SKIP,
-      ));
-    $js = array('onClick' => "buildSubTypes();");
-    // contact types option
-    require_once 'CRM/Contact/BAO/ContactType.php';
-    $contactOptions = array();
-    if (CRM_Contact_BAO_ContactType::isActive('Individual')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Individual'), CRM_Import_Parser::CONTACT_INDIVIDUAL, $js
-      );
-    }
-    if (CRM_Contact_BAO_ContactType::isActive('Household')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Household'), CRM_Import_Parser::CONTACT_HOUSEHOLD, $js
-      );
-    }
-    if (CRM_Contact_BAO_ContactType::isActive('Organization')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Organization'), CRM_Import_Parser::CONTACT_ORGANIZATION, $js
-      );
-    }
+    $this->setDefaults(array('onDuplicate' => CRM_Import_Parser::DUPLICATE_SKIP));
 
-    $this->addGroup($contactOptions, 'contactType',
-      ts('Contact Type')
-    );
+    // contact types option
+    $contactOptions = array();
+    foreach($this->_contactTypes as $type => $tsName) {
+      $contactOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, $tsName, $type, $js);
+    }
+    $this->addGroup($contactOptions, 'contactType', ts('Contact Type'));
 
     $this->addElement('select', 'subType', ts('Subtype'));
 
     $this->setDefaults(array('contactType' =>
         CRM_Import_Parser::CONTACT_INDIVIDUAL,
       ));
+
+    foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
+      $fields = array();
+      foreach($groupValues['fields'] as $name){
+        if (isset($this->_dedupeRuleFields[$name])) {
+          $fields[] = $this->_dedupeRuleFields[$name];
+        }
+      }
+      $label = ts($groupValues['contact_type']);
+      if ($groupValues['is_default']) {
+        $label .= ts('Default');
+      }
+      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . implode(', ', $fields) .')';
+    }
+    $this->addSelect('dedupeRuleGroupId', ts('Dedupe Rule of Contact'), $dedupeRule);
+    if ($dedupeRuleGroupId = $this->get('dedupeRuleGroupId')) {
+      $this->setDefaults(array('dedupeRuleGroupId' => $dedupeRuleGroupId));
+    }
 
     require_once 'CRM/Core/Form/Date.php';
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
@@ -290,6 +319,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       $this->set('dateFormats', $dateFormats);
       $this->set('savedMapping', $savedMapping);
       $this->set('dataSource', $this->_params['dataSource']);
+      $this->set('dedupeRuleGroupId', $this->_params['dedupeRuleGroupId']);
       $this->set('skipColumnHeader', CRM_Utils_Array::value('skipColumnHeader', $this->_params));
 
       $session = CRM_Core_Session::singleton();

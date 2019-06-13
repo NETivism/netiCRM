@@ -9,6 +9,7 @@
       maxAmount : {/literal}{if $max_amount}"{$max_amount}"{else}false{/if}{literal},
       {/literal}{if $thankyou_text and $payment_result_type eq 4}thankyouTitle : "{$thankyou_title}",{/if}{literal}
       ts: {
+        "monthly" : "{/literal}{ts}monthly{/ts}{literal}",
         "Single Contribution" : "{/literal}{ts}Single Contribution{/ts}{literal}",
         "Recurring contributions" : "{/literal}{ts}Recurring contributions{/ts}{literal}",
         "Other Amount" : "{/literal}{ts}Other Amount{/ts}{literal}",

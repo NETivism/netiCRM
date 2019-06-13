@@ -271,6 +271,13 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $sel2['Household'] = CRM_Contact_BAO_ContactType::subTypePairs('Household', FALSE, NULL);
     $sel2['Organization'] = CRM_Contact_BAO_ContactType::subTypePairs('Organization', FALSE, NULL);
 
+    $priceSets = CRM_Price_BAO_Set::getAssoc();
+    $priceFields = array();
+    foreach($priceSets as $sid => $dontcare) {
+      $priceFields += CRM_Price_BAO_Set::getFields($sid);
+    }
+    $sel2['PriceField'] = $priceFields;
+
     foreach ($sel2 as $main => $sub) {
       if (!empty($sel2[$main])) {
         if ($main == 'Relationship') {

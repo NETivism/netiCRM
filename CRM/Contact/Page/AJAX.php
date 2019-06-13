@@ -717,25 +717,48 @@ LIMIT {$offset}, {$rowCount}
   static function buildSubTypes() {
     $parent = CRM_Utils_Array::value('parentId', $_POST);
 
-    switch ($parent) {
-      case 1:
-        $contactType = 'Individual';
-        break;
+    if (is_numeric($parent)) {
+      switch ($parent) {
+        case 1:
+          $contactType = 'Individual';
+          break;
 
-      case 2:
-        $contactType = 'Household';
-        break;
+        case 2:
+          $contactType = 'Household';
+          break;
 
-      case 4:
-        $contactType = 'Organization';
-        break;
+        case 4:
+          $contactType = 'Organization';
+          break;
+      }
+    }
+    else {
+      $parentType = CRM_Utils_Array::value('parentType', $_POST);
+      $parentType = strtolower($parentType);
+      switch ($parentType) {
+        case 'individual':
+          $contactType = 'Individual';
+          break;
+
+        case 'household':
+          $contactType = 'Household';
+          break;
+
+        case 'organization':
+          $contactType = 'Organization';
+          break;
+      }
     }
 
-    require_once 'CRM/Contact/BAO/ContactType.php';
-    $subTypes = CRM_Contact_BAO_ContactType::subTypePairs($contactType, FALSE, NULL);
-    asort($subTypes);
+    if ($contactType) {
+      $subTypes = CRM_Contact_BAO_ContactType::subTypePairs($contactType, FALSE, NULL);
+      asort($subTypes);
+    }
+    else {
+      $subTypes = array();
+    }
     echo json_encode($subTypes);
-    exit;
+    CRM_Utils_System::civiExit();
   }
 
   /**

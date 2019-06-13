@@ -24,6 +24,11 @@
  +--------------------------------------------------------------------+
 *}
 {*Javascript function controls showing and hiding of form elements based on html type.*}
+{if $cdType}
+<div class="crm-block crm-form-block crm-price-field-form-block-customdata">
+	{include file="CRM/Custom/Form/CustomData.tpl"}
+</div>
+{else}
 {literal}
 <script type="text/Javascript">
     function option_html_type(form) { 
@@ -241,6 +246,23 @@
             <td>{$form.is_active.html}</td>
         </tr>
      </table>
+    <div id="customData"></div>
+    {*include custom data js file*}
+    {include file="CRM/common/customData.tpl"}
+    {literal}
+      <script type="text/javascript">
+        cj(document).ready(function() {
+          {/literal}
+          {if $customDataSubType}
+            buildCustomData( '{$customDataType}', {$customDataSubType} );
+          {else}
+            buildCustomData( '{$customDataType}' );
+          {/if}
+          {literal}
+        });
+      </script>
+    {/literal}
+
      <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
   </div>
  
@@ -255,3 +277,5 @@
         <a href="{crmURL p="civicrm/admin/event/field/option" q="reset=1&action=browse&fid=`$id`"}" class="button"><span>{ts}Multiple Choice Options{/ts}</span></a>
     </div>
 {/if}
+
+{/if}{* end cdtype *}

@@ -521,13 +521,16 @@ WHERE  id = %1";
         $optionsMaxValueTotal = 0;
         $optionsMaxValueDetails = array();
         foreach ($form->_priceSet['fields'] as $field) {
-          if(isset($field['max_value'])){
+          if (isset($field['max_value']) && !empty($field['max_value'])) {
             $optionsMaxValueDetails['fields'][$field['id']]['max_value'] = $field['max_value'];
+            $optionsMaxValueTotal += $field['max_value'];
           }
-          foreach ($field['options'] as $option) {
-            $maxVal = CRM_Utils_Array::value('max_value', $option, 0);
-            $optionsMaxValueDetails['fields'][$field['id']]['options'][$option['id']] = $maxVal;
-            $optionsMaxValueTotal += $maxVal;
+          else {
+            foreach ($field['options'] as $option) {
+              $maxVal = CRM_Utils_Array::value('max_value', $option, 0);
+              $optionsMaxValueDetails['fields'][$field['id']]['options'][$option['id']] = $maxVal;
+              $optionsMaxValueTotal += $maxVal;
+            }
           }
         }
         $form->_priceSet['optionsMaxValueTotal'] = $optionsMaxValueTotal;
@@ -694,6 +697,20 @@ WHERE  id = %1";
       $var[] = $priceField->id;
     }
     return $var;
+  }
+
+  public static function getFields($id) {
+    $setTitle = self::getTitle($id);
+    $priceField = new CRM_Price_BAO_Field();
+    $priceField->price_set_id = $id;
+    $priceField->orderBy('weight, label');
+    $priceField->find();
+
+    $fields = array();
+    while ($priceField->fetch()) {
+      $fields[$priceField->id] = $setTitle.": ".$priceField->label." (".ts($priceField->html_type).")";
+    }
+    return $fields;
   }
 
   /**
