@@ -113,7 +113,8 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $url = CRM_Utils_System::url('civicrm/contact/view/contributionrecur',
       'reset=1&id='.$recurId.'&cid=' . $contactId
     );
-    CRM_Utils_System::redirect($url);
+    $message = ts("The contribution record has been processed.").ts("Total Payments: %1", array(1));
+    CRM_Core_Error::statusBounce($message, $url);
   }
   //end of function
 }
