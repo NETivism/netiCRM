@@ -152,7 +152,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       if (method_exists($paymentClass, 'doRecurTransact')) {
         $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);
         $controllerTransact->setEmbedded(TRUE);
-        $controllerTransact->set('id', $recur->id);
+        $controllerTransact->set('recurId', $recur->id);
+        $controllerTransact->set('contributionId', $contributionId);
         $controllerTransact->set('contactId', $recur->contact_id);
         $controllerTransact->process();
         $controllerTransact->run();

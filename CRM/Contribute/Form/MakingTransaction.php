@@ -62,6 +62,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
   public $_contactID;
 
   function preProcess() {
+    $this->_preventMultipleSubmission = TRUE;
   }
 
   /**
@@ -84,7 +85,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $id = $this->get('id');
+    $id = $this->get('recurId');
 
     $name = $this->getButtonName('submit');
     $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", $id)."')"));
@@ -99,9 +100,9 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    * @return None
    */
   public function postProcess() {
-    $recurId = $this->get('id');
+    $recurId = $this->get('recurId');
+    $contributionId = $this->get('contributionId');
 
-    $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $recurId, 'id', 'contribution_recur_id');
     $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
     if (method_exists($paymentClass, 'doRecurTransact')) {
       $result = $paymentClass::doRecurTransact($recurId);
@@ -112,8 +113,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $url = CRM_Utils_System::url('civicrm/contact/view/contributionrecur',
       'reset=1&id='.$recurId.'&cid=' . $contactId
     );
-    $session->replaceUserContext($url);
-
+    CRM_Utils_System::redirect($url);
   }
   //end of function
 }
