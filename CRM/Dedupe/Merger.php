@@ -1416,5 +1416,24 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     unset($submitted);
     return TRUE;
   }
+
+  static function formatReason($conflicts) {
+    static $lables;
+    if (empty($labels)) {
+      $labels = array();
+    }
+    $needToFind = array_diff_key($conflicts, $labels);
+    $fields = CRM_Contact_DAO_Contact::$_fields;
+    foreach($needToFind as $conflict => $dontcare) {
+      $field = str_replace('move_', '', $conflict);
+      if (isset($fields[$field])) {
+        $labels[$conflict] = $fields[$field]['title'];
+      }
+      else {
+        $labels[$conflict] = str_replace('_', ' ', $field);
+      }
+    }
+    return array_intersect_key($labels, $conflicts);
+  }
 }
 

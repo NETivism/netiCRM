@@ -469,6 +469,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
     elseif (!$redirect) {
       $redirect = $session->readUserContext();
+      if (!$redirect) {
+        $redirect = '/';
+      }
     }
     CRM_Utils_System::redirect($redirect);
   }

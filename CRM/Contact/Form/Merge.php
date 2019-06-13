@@ -147,12 +147,12 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     $other               = &$rowsElementsAndInfo['other_details'];
 
     if ($main['contact_id'] != $cid) {
-      CRM_Core_Error::statusBounce(ts('The main contact record does not exist'), FALSE);
+      CRM_Core_Error::statusBounce(ts('The main contact record does not exist')." (".ts("Contact ID").":{$cid}) ");
       $this->_hasError = TRUE;
     }
 
     if ($other['contact_id'] != $oid) {
-      CRM_Core_Error::statusBounce(ts('The other contact record does not exist'), FALSE);
+      CRM_Core_Error::statusBounce(ts('The other contact record does not exist')." (".ts("Contact ID").":{$oid}) ");
       $this->_hasError = TRUE;
     }
 

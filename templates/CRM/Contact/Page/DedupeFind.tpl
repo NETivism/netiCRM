@@ -29,7 +29,14 @@
   {include file="CRM/common/pager.tpl" location="top"}
   {/if}
   <table>
-    <tr class="columnheader"><th>{ts}Contact{/ts} 1</th><th>{ts}Contact{/ts} 2 ({ts}Duplicate{/ts})</th><th>{ts}Threshold{/ts}</th><th>&nbsp;</th></tr>
+    <tr class="columnheader">
+      <th>{ts}Contact{/ts} 1 ({ts}duplicate{/ts})</th>
+      <th>{ts}Contact{/ts} 2 ({ts}Reserved{/ts})</th>
+      <th>{ts}Threshold{/ts}</th>
+      <th>{ts}Batch Merge{/ts}?</th>
+      <th>{ts}Conflicting Rows{/ts}</th>
+      <th></th>
+    </tr>
     {foreach from=$main_contacts item=main key=main_id}
         {capture assign=srcLink}<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$main.srcID`"}">{$main.srcName}</a>{/capture}
         {capture assign=dstLink}<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$main.dstID`"}">{$main.dstName}</a>{/capture}
@@ -37,9 +44,11 @@
 	{if $gid}{assign var="qParams" value="$qParams&gid=`$gid`"}{/if}
         {capture assign=merge}<a target="_blank" href="{crmURL p='civicrm/contact/merge' q="`$qParams`"}">{ts}merge{/ts}</a>{/capture}
         <tr id="dupeRow_{$main.srcID}_{$main.dstID}" class="{cycle values="odd-row,even-row"}">
-          <td>{$srcLink} ({ts}ID{/ts}: {$main.srcID})</td>
           <td>{$dstLink} ({ts}ID{/ts}: {$main.dstID})</td>
+          <td>{$srcLink} ({ts}ID{/ts}: {$main.srcID})</td>
           <td>{$main.weight}</td>
+          <td>{if $main.batchMerge}<i class="zmdi zmdi-check"></i>{else}<i class="zmdi zmdi-close-circle"></i>{/if}</td>
+          <td>{if $main.conflicts}{"<br>"|implode:$main.conflicts}{/if}</td>
           <td style="text-align: right;">
 	  {if $main.canMerge}
               {$merge}
@@ -75,10 +84,10 @@
 <div class="crm-actions-ribbon">
   <a href="{$smarty.server.REQUEST_URI|replace:'action=update':'action=renew'}" class="button">{ts}Refresh{/ts}</a>
 {if $context eq 'search'}
-   <a href="{$backURL}" class="button"><span>&raquo; {ts}Done{/ts}</span></a>
+   <a href="{$backURL}" class="button"><span>{ts}Done{/ts}</span></a>
 {else}
    {capture assign=backURL}{crmURL p="civicrm/contact/dedupefind" q="reset=1&rgid=`$rgid`&action=preview" a=1}{/capture}
-   <a href="{$backURL}" class="button"><span>&raquo; {ts}Done{/ts}</span></a>
+   <a href="{$backURL}" class="button"><span>{ts}Done{/ts}</span></a>
 {/if}
 </div>
 {else}

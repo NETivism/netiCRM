@@ -71,7 +71,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $this->_cachePath = $this->_context == 'search' ? 'search_dedupe_dupes_' : 'dedupe_dupes_';
     $this->_cachePath .= $this->_gid.'_'.$this->_rgid;
     $this->_currentPage = CRM_Utils_Request::retrieve(CRM_Utils_Pager::PAGE_ID, 'Integer', $this, FALSE, 1);
-    $this->_numPerPage = CRM_Utils_Request::retrieve(CRM_Utils_Pager::PAGE_ROWCOUNT, 'Integer', $this, FALSE, CRM_Utils_Pager::ROWCOUNT);
+    $this->_numPerPage = CRM_Utils_Request::retrieve(CRM_Utils_Pager::PAGE_ROWCOUNT, 'Integer', $this, FALSE, 25);
 
     $session = CRM_Core_Session::singleton();
     $contactIds = $session->get('selectedSearchContactIds');
@@ -127,12 +127,12 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
           $this->_cids[$dupe[1]] = 1;
         }
         $this->_cidString = implode(', ', array_keys($this->_cids));
-        $sql = "SELECT id, display_name FROM civicrm_contact WHERE id IN ($this->_cidString) ORDER BY sort_name";
+        $sql = "SELECT id, sort_name FROM civicrm_contact WHERE id IN ($this->_cidString) ORDER BY sort_name";
         $dao = new CRM_Core_DAO();
         $dao->query($sql);
         $displayNames = array();
         while ($dao->fetch()) {
-          $displayNames[$dao->id] = $dao->display_name;
+          $displayNames[$dao->id] = $dao->sort_name;
         }
         // FIXME: sort the contacts; $displayName
         // is already sort_name-sorted, so use that
@@ -149,15 +149,32 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
             $srcID = $dupes[1];
             $dstID = $dupes[0];
           }
-
           $canMerge = (CRM_Contact_BAO_Contact_Permission::allow($dstID, CRM_Core_Permission::EDIT) && CRM_Contact_BAO_Contact_Permission::allow($srcID, CRM_Core_Permission::EDIT));
+
+          $conflicts = array();
+          $batchMerge = TRUE;
+          if ($canMerge) {
+            $dupePairs = array(
+              0 => array(
+                'dstID' => $dstID,
+                'srcID' => $srcID,
+              ),
+            );
+            $testResult = CRM_Dedupe_Merger::merge($dupePairs, array(), 'safe', FALSE, FALSE, CRM_Core_Action::PREVIEW);
+            if (!empty($testResult['skipped'])) {
+              $conflicts = CRM_Dedupe_Merger::formatReason($testResult['skipped'][0]['reason']);
+              $batchMerge = FALSE;
+            }
+          }
 
           $mainContacts[] = array('srcID' => $srcID,
             'srcName' => $displayNames[$srcID],
             'dstID' => $dstID,
             'dstName' => $displayNames[$dstID],
             'weight' => $dupes[2],
+            'conflicts' => $conflicts,
             'canMerge' => $canMerge,
+            'batchMerge' => $batchMerge,
           );
         }
         $this->_mainContacts = $mainContacts;
@@ -250,7 +267,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $params['buttonBottom'] = 'PagerBottomButton';
     $params['rowCount'] = $this->get(CRM_Utils_Pager::PAGE_ROWCOUNT);
     if (!$params['rowCount']) {
-      $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
+      $params['rowCount'] = $this->_numPerPage;
     }
 
     $params['total'] = $total;
