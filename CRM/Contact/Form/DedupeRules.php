@@ -111,8 +111,8 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
   public function buildQuickForm() {
     $this->add('text', 'name', ts('Rule Name'));
     $levelType = array(
-      'Fuzzy' => ts('Fuzzy'),
       'Strict' => ts('Strict'),
+      'Fuzzy' => ts('Fuzzy'),
     );
     $ruleLevel = $this->add('select', 'level', ts('Level'), $levelType);
 
