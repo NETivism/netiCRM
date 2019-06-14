@@ -40,12 +40,12 @@
     {foreach from=$main_contacts item=main key=main_id}
         {capture assign=srcLink}<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$main.srcID`"}">{$main.srcName}</a>{/capture}
         {capture assign=dstLink}<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$main.dstID`"}">{$main.dstName}</a>{/capture}
-	{assign var="qParams" value="reset=1&cid=`$main.srcID`&oid=`$main.dstID`&action=update&rgid=`$rgid`"}
+        {assign var="qParams" value="reset=1&cid=`$main.dstID`&oid=`$main.srcID`&action=update&rgid=`$rgid`"}
 	{if $gid}{assign var="qParams" value="$qParams&gid=`$gid`"}{/if}
         {capture assign=merge}<a target="_blank" href="{crmURL p='civicrm/contact/merge' q="`$qParams`"}">{ts}merge{/ts}</a>{/capture}
         <tr id="dupeRow_{$main.srcID}_{$main.dstID}" class="{cycle values="odd-row,even-row"}">
-          <td>{$dstLink} ({ts}ID{/ts}: {$main.dstID})</td>
           <td>{$srcLink} ({ts}ID{/ts}: {$main.srcID})</td>
+          <td>{$dstLink} ({ts}ID{/ts}: {$main.dstID})</td>
           <td>{$main.weight}</td>
           <!--<td>{if $main.batchMerge}<i class="zmdi zmdi-check"></i>{else}<i class="zmdi zmdi-close-circle"></i>{/if}</td>-->
           <td>{if $main.conflicts}{"<br>"|implode:$main.conflicts}{/if}</td>
@@ -82,12 +82,14 @@
   {/if}
 </div>
 <div class="crm-actions-ribbon">
-  <a href="{$smarty.server.REQUEST_URI|replace:'action=update':'action=renew'}" class="button">{ts}Refresh{/ts}</a>
 {if $context eq 'search'}
-   <a href="{$backURL}" class="button"><span>{ts}Done{/ts}</span></a>
+   <!--<a href="{$smarty.server.REQUEST_URI|replace:'action=update':'action=map'}" class="button"><i class="zmdi zmdi-arrow-merge"></i> {ts}Batch Merge{/ts}</a>-->
+   <a href="{$smarty.server.REQUEST_URI|replace:'action=update':'action=renew'}" class="button"><i class="zmdi zmdi-refresh"></i> {ts}Refresh{/ts}</a>
+   <a href="{$backURL}" class="button">{ts}Done{/ts}</a>
 {else}
-   {capture assign=backURL}{crmURL p="civicrm/contact/dedupefind" q="reset=1&rgid=`$rgid`&action=preview" a=1}{/capture}
-   <a href="{$backURL}" class="button"><span>{ts}Done{/ts}</span></a>
+   <!--<a href="{$smarty.server.REQUEST_URI|replace:'action=update':'action=map'}" class="button"><i class="zmdi zmdi-arrow-merge"></i> {ts}Batch Merge{/ts}</a>-->
+   <a href="{$smarty.server.REQUEST_URI|replace:'action=update':'action=renew'}" class="button"><i class="zmdi zmdi-refresh"></i> {ts}Refresh{/ts}</a>
+   <a href="{$backURL}" class="button">{ts}Done{/ts}</a>
 {/if}
 </div>
 {else}

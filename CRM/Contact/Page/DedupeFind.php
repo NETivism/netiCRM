@@ -74,27 +74,41 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $this->_numPerPage = CRM_Utils_Request::retrieve(CRM_Utils_Pager::PAGE_ROWCOUNT, 'Integer', $this, FALSE, 25);
 
     $session = CRM_Core_Session::singleton();
-    $contactIds = $session->get('selectedSearchContactIds');
-    if ($this->_context == 'search' || !empty($contactIds)) {
+    $this->_contactIds = $session->get('selectedSearchContactIds');
+    if ($this->_context == 'search' || !empty($this->_contactIds)) {
       $this->_context = 'search';
-      $this->assign('backURL', $session->readUserContext());
+      $str = implode('|',$this->_contactIds);
+      $this->_cachePath .= '_'.md5($str);
+      $backURL = $session->readUserContext();
     }
+    else {
+      $backURL = CRM_Utils_System::url('civicrm/contact/dedupefind', "reset=1&rgid={$this->rgid}&action=preview");
+    }
+    $this->assign('backURL', $this->get('backURL'));
     if ($action & CRM_Core_Action::RENEW) {
+      $success = $this->purgeFoundDupes();
+      CRM_Utils_System::redirect($backURL);
+    }
+    elseif ($action & CRM_Core_Action::MAP) {
+      $merged = $this->batchMergeDupes(); 
+      $session->setStatus(ts("Merged %1 pairs of contacts.", array(1 => count($merged))));
       $this->purgeFoundDupes();
-      $url = CRM_Utils_System::url('civicrm/contact/dedupefind', "reset=1&action=update&rgid={$this->_rgid}&gid={$this->_gid}&cid={$this->_cid}");
+      $url = CRM_Utils_System::url('civicrm/contact/dedupefind', "reset=1&rgid={$this->rgid}&action=preview");
       CRM_Utils_System::redirect($url);
     }
-    if ($action & CRM_Core_Action::UPDATE || $action & CRM_Core_Action::BROWSE) {
+    elseif ($action & CRM_Core_Action::UPDATE || $action & CRM_Core_Action::BROWSE) {
       $this->action = CRM_Core_Action::UPDATE;
 
       // get cache when available
       $foundDupes = $this->getFoundDupes();
+
       if (empty($foundDupes)) {
         if ($this->_gid) {
           $foundDupes = CRM_Dedupe_Finder::dupesInGroup($this->_rgid, $this->_gid);
         }
-        elseif (!empty($contactIds)) {
-          $foundDupes = CRM_Dedupe_Finder::dupes($this->_rgid, $contactIds);
+        // do not cache this
+        elseif (!empty($this->_contactIds)) {
+          $foundDupes = CRM_Dedupe_Finder::dupes($this->_rgid, $this->_contactIds);
         }
         else {
           $foundDupes = CRM_Dedupe_Finder::dupes($this->_rgid);
@@ -110,18 +124,16 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
 
         $session = CRM_Core_Session::singleton();
         $session->setStatus(ts("No possible duplicates were found using %1 rule.", array(1 => $ruleGroup->name)));
-        $url = CRM_Utils_System::url('civicrm/contact/deduperules', "reset=1");
-        if ($this->_context == 'search') {
-          $url = $session->readUserContext();
-        }
-        CRM_Utils_System::redirect($url);
+        CRM_Utils_System::redirect($backURL);
       }
       else {
         $this->_cids = array();
         if (count($foundDupes) > $this->_numPerPage) {
           $this->pager(count($foundDupes));
         }
+        // pager slice
         $foundDupes = array_slice($foundDupes, ($this->_currentPage-1)*$this->_numPerPage, $this->_numPerPage);
+
         foreach ($foundDupes as $dupe) {
           $this->_cids[$dupe[0]] = 1;
           $this->_cids[$dupe[1]] = 1;
@@ -143,11 +155,11 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
         $userId = $session->get('userID');
         $mainContacts = array();
         foreach ($foundDupes as $dupes) {
-          $srcID = $dupes[0];
-          $dstID = $dupes[1];
+          $dstID = $dupes[0];
+          $srcID = $dupes[1];
           if ($dstID == $userId) {
-            $srcID = $dupes[1];
-            $dstID = $dupes[0];
+            $dstID = $dupes[1];
+            $srcID = $dupes[0];
           }
           $canMerge = (CRM_Contact_BAO_Contact_Permission::allow($dstID, CRM_Core_Permission::EDIT) && CRM_Contact_BAO_Contact_Permission::allow($srcID, CRM_Core_Permission::EDIT));
 
@@ -257,6 +269,55 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
 
   function purgeFoundDupes() {
     return CRM_Core_BAO_Cache::deleteItem('Dedupe Found Dupes', $this->_cachePath);
+  }
+
+  function batchMergeDupes() {
+    $session = CRM_Core_Session::singleton();
+    $userId = $session->get('userID');
+    $foundDupes = $this->getFoundDupes();
+    $merged = $delay = $pairs = $temp = array();
+    if (!empty($foundDupes)) {
+      // calculate delay merge
+      foreach ($foundDupes as $dupes) {
+        $dstID = $dupes[0];
+        $srcID = $dupes[1];
+        if ($dstID == $userId) {
+          $dstID = $dupes[1];
+          $srcID = $dupes[0];
+        }
+        $pairs[] = array(
+          'src' => $srcID,
+          'dst' => $dstID,
+        );
+        $temp[$srcID]++;
+      }
+      foreach($pairs as $pair) {
+        if (isset($temp[$pair['dst']])) { // delay only when dst exists on src
+          $delay[$pair['dst']] = 1;
+        }
+      }
+
+      // first run - delay some pairs for later merge
+      foreach ($pairs as $key => $pair) {
+        if (isset($delay[$pair['src']])) {
+          continue;
+        }
+        $dupePairs = array(
+          0 => array(
+            'srcID' => $pair['src'],
+            'dstID' => $pair['dst'],
+          ),
+        );
+        $result = CRM_Dedupe_Merger::merge($dupePairs, array(), 'safe', FALSE, FALSE, CRM_Core_Action::UPDATE);
+        if (!empty($result['merged'][0])) {
+          $merged[] = $result['merged'][0];
+          unset($pairs[$key]);
+        }
+      }
+
+      // second run - run remain pairs
+    }
+    return $merged;
   }
 
   function pager($total) {
