@@ -157,10 +157,13 @@ class CRM_Utils_REST {
 
     if (CRM_Utils_Array::value('json', $_REQUEST)) {
       header('Content-Type: text/javascript');
-      $json = json_encode(array_merge($result));
       if (CRM_Utils_Array::value('debug', $_REQUEST)) {
-        return CRM_Utils_REST::jsonFormated($json);
+        return json_encode(array_merge($result), JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES + JSON_UNESCAPED_UNICODE);
       }
+      if (CRM_Utils_Array::value('pretty', $_REQUEST)) {
+        return json_encode(array_merge($result), JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES + JSON_UNESCAPED_UNICODE);
+      }
+      $json = json_encode(array_merge($result));
       return $json;
     }
 
@@ -187,84 +190,6 @@ class CRM_Utils_REST {
 
     $xml .= "</ResultSet>\n";
     return $xml;
-  }
-
-  function jsonFormated($json) {
-    $tabcount = 0;
-    $result = '';
-    $inquote = FALSE;
-    $inarray = FALSE;
-    $ignorenext = FALSE;
-
-    $tab = "\t";
-    $newline = "\n";
-
-    for ($i = 0; $i < strlen($json); $i++) {
-      $char = $json[$i];
-
-      if ($ignorenext) {
-        $result .= $char;
-        $ignorenext = FALSE;
-      }
-      else {
-        switch ($char) {
-          case '{':
-            if ($inquote) {
-              $result .= $char;
-            }
-            else {
-              $inarray = FALSE;
-              $tabcount++;
-              $result .= $char . $newline . str_repeat($tab, $tabcount);
-            }
-            break;
-
-          case '}':
-            if ($inquote) {
-              $result .= $char;
-            }
-            else {
-              $tabcount--;
-              $result = trim($result) . $newline . str_repeat($tab, $tabcount) . $char;
-            }
-            break;
-
-          case ',':
-            if ($inquote || $inarray) {
-              $result .= $char;
-            }
-            else $result .= $char . $newline . str_repeat($tab, $tabcount);
-            break;
-
-          case '"':
-            $inquote = !$inquote;
-            $result .= $char;
-            break;
-
-          case '\\':
-            if ($inquote) {
-              $ignorenext = TRUE;
-            }
-            $result .= $char;
-            break;
-
-          case '[':
-            $inarray = TRUE;
-            $result .= $char;
-            break;
-
-          case ']':
-            $inarray = FALSE;
-            $result .= $char;
-            break;
-
-          default:
-            $result .= $char;
-        }
-      }
-    }
-
-    return $result;
   }
 
   function handle() {
@@ -408,6 +333,7 @@ class CRM_Utils_REST {
 
     // trap all fatal errors
     CRM_Core_Error::setCallback(array('CRM_Utils_REST', 'fatal'));
+    $params['sequential'] = 1;
     $result = civicrm_api($args[1], $args[2], $params);
     CRM_Core_Error::setCallback();
 
