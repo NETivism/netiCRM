@@ -135,6 +135,14 @@ class CRM_Utils_REST {
     return self::output($result);
   }
 
+  function bootAndRun() {
+    $response = $this->loadCMSBootstrap();
+    if (is_array($response)) {
+      return self::output($response);
+    }
+    return $this->run();
+  }
+
   function output(&$result) {
     $hier = FALSE;
     if (is_scalar($result)) {
