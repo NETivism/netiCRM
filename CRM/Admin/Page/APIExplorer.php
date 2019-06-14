@@ -74,12 +74,7 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
     if(defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED == 1){
       return TRUE;
     }
-    else{
-      $pattern = '/dev.*neticrm\.tw/';
-      if(preg_match($pattern, $_SERVER['HTTP_HOST'])){
-        return TRUE;
-      }
-    }
     return FALSE;
   }
+
 }
