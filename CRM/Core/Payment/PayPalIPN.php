@@ -70,6 +70,8 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     $recur = &$objects['contributionRecur'];
+    $recurParams = array();
+    $recurParams['id'] = $recur->id;
 
     // make sure the invoice ids match
     // make sure the invoice is valid and matches what we have in the contribution record
@@ -86,7 +88,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     foreach ($dates as $date) {
       $name = "{$date}_date";
       if ($recur->$name) {
-        $recur->$name = CRM_Utils_Date::isoToMysql($recur->$name);
+        $recurParams['name'] = CRM_Utils_Date::isoToMysql($recur->$name);
       }
     }
     $sendNotification = FALSE;
@@ -96,36 +98,36 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     $txnType = $_POST['txn_type'];
     switch ($txnType) {
       case 'subscr_signup':
-        $recur->create_date = $now;
+        $recurParams['create_date'] = $now;
         //some times subscr_signup response come after the
         //subscr_payment and set to pending mode.
         $statusID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur',
           $recur->id, 'contribution_status_id'
         );
         if ($statusID != 5) {
-          $recur->contribution_status_id = 2;
+          $recurParams['contribution_status_id'] = 2;
         }
-        $recur->processor_id = $_POST['subscr_id'];
-        $recur->trxn_id = $recur->processor_id;
+        $recurParams['processor_id'] = $_POST['subscr_id'];
+        $recurParams['trxn_id'] = $recur->processor_id;
         $sendNotification = TRUE;
         $subscriptionPaymentStatus = CRM_Core_Payment::RECURRING_PAYMENT_START;
         break;
 
       case 'subscr_eot':
-        $recur->contribution_status_id = 1;
-        $recur->end_date = $now;
+        $recurParams['contribution_status_id'] = 1;
+        $recurParams['end_date'] = $now;
         $sendNotification = TRUE;
         $subscriptionPaymentStatus = CRM_Core_Payment::RECURRING_PAYMENT_END;
         break;
 
       case 'subscr_cancel':
-        $recur->contribution_status_id = 3;
-        $recur->cancel_date = $now;
+        $recurParams['contribution_status_id'] = 3;
+        $recurParams['cancel_date'] = $now;
         break;
 
       case 'subscr_failed':
-        $recur->contribution_status_id = 4;
-        $recur->cancel_date = $now;
+        $recurParams['contribution_status_id'] = 4;
+        $recurParams['cancel_date'] = $now;
         break;
 
       case 'subscr_modify':
@@ -135,21 +137,24 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
 
       case 'subscr_payment':
         if ($first) {
-          $recur->start_date = $now;
+          $recurParams['start_date'] = $now;
         }
         else {
-          $recur->modified_date = $now;
+          $recurParams['modified_date'] = $now;
         }
 
         // make sure the contribution status is not done
         // since order of ipn's is unknown
         if ($recur->contribution_status_id != 1) {
-          $recur->contribution_status_id = 5;
+          $recurParams['contribution_status_id'] = 5;
         }
         break;
     }
 
-    $recur->save();
+    CRM_Contribute_BAO_ContributionRecur::add($recurParams);
+    foreach ($recurParams as $key => $value) {
+      $recur->$key = $value;
+    }
 
     if ($sendNotification) {
       //send recurring Notification email for user

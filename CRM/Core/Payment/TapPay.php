@@ -572,11 +572,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     if ( $changeStatus ) {
-      $contributionRecur = new CRM_Contribute_DAO_ContributionRecur();
-      $contributionRecur->id = $dao->recur_id;
-      $contributionRecur->find(TRUE);
-      $contributionRecur->contribution_status_id = 1;
-      $contributionRecur->save();
+      $recurParams = array();
+      $recurParams['id'] = $dao->recur_id;
+      $recurParams['contribution_status_id'] = 1;
+      CRM_Contribute_BAO_ContributionRecur::add($recurParams);
 
       $resultNote .= "\n".ts("Update recurring status to 'Finished'.");
     }
@@ -856,9 +855,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return 1;
   }
 
-  public static function doRecurTransact ($recurId = NULL) {
+  public static function doRecurTransact ($recurId = NULL, $sendMail = FALSE) {
     $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $recurId, 'id', 'contribution_recur_id');
-    $resultNote = self::payByToken($recurId, $contributionId, FALSE);
+    $resultNote = self::payByToken($recurId, $contributionId, $sendMail);
 
     return $resultNote;
   }
