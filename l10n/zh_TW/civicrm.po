@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-06-17 04:03+0000\n"
+"PO-Revision-Date: 2019-06-17 07:04+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47129,3 +47129,6 @@ msgstr "回傳訊息"
 
 msgid "Support 3JTSP"
 msgstr "支援 3JTSP"
+
+msgid "Carefully. You should never make this publicly."
+msgstr "請謹慎使用。你永遠不應該讓公開這個。"
