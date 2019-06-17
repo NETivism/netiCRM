@@ -132,7 +132,7 @@ cj(function($) {
       $('#result').text(data);
     },'text');
     link="<a href='"+query+"' title='open in a new tab' target='_blank'>ajax query</a>&nbsp;";
-    var RESTquery = Drupal.settings.resourceBase + "../extern/rest.php"+ query.substring(restURL.length,query.length) + "&api_key={yoursitekey}&key={yourkey}";
+    var RESTquery = Drupal.settings.resourceBase + "../extern/rest.php"+ query.substring(restURL.length,query.length);
     $("#link").html(link+" <a href='"+RESTquery+"' title='open in a new tab' target='_blank'>REST query</a>");
 
     

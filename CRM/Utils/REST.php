@@ -102,7 +102,7 @@ class CRM_Utils_REST {
     }
 
     // Test to see if I can pull the data I need, since I know I have a good value.
-    $user = &CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', $api_key);
+    $contactId = &CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
 
     $session->set('api_key', $api_key);
     $session->set('key', $result[2]);
@@ -219,7 +219,7 @@ class CRM_Utils_REST {
       if ((count($args) != 3) && ($args[1] != 'login') && ($args[1] != 'ping')) {
         return self::error('Unknown function invocation.');
       }
-      $store = NULL;
+      $store = CRM_Core_DAO::$_nullObject;
       if ($args[1] == 'login') {
         $name = CRM_Utils_Request::retrieve('name', 'String', $store, FALSE, NULL, 'REQUEST');
         $pass = CRM_Utils_Request::retrieve('pass', 'String', $store, FALSE, NULL, 'REQUEST');
@@ -244,12 +244,11 @@ class CRM_Utils_REST {
     //  This used to be done in the authenticate function, but that was bad...trust me
     // first check for civicrm site key
     if (!CRM_Utils_System::authenticateKey(FALSE)) {
-      $docLink = CRM_Utils_System::docURL2("Managing Scheduled Jobs", TRUE, NULL, NULL, NULL, "wiki");
       $key = CRM_Utils_array::value('key', $_REQUEST);
       if (empty($key)) {
-        return self::error("FATAL: mandatory param 'key' missing. More info at: " . $docLink);
+        return self::error("FATAL: mandatory param 'key' missing or incorrect.");
       }
-      return self::error("FATAL: 'key' is incorrect. More info at: " . $docLink);
+      return self::error("FATAL: 'key' is incorrect.");
     }
 
 
@@ -275,11 +274,30 @@ class CRM_Utils_REST {
     // an ajax interface), we need to check to see if they are carring a valid user's
     // secret key.
     if (!$valid_user) {
-      $api_key = CRM_Utils_Request::retrieve('api_key', 'String', $store, FALSE, NULL, 'REQUEST');
+      if (isset($_SERVER['HTTP_X_CIVICRM_API_KEY'])) {
+        $api_key = $_SERVER['HTTP_X_CIVICRM_API_KEY'];
+      }
+      else {
+        $api_key = CRM_Utils_Request::retrieve('api_key', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+      }
       if (!$api_key || strtolower($api_key) == 'null') {
         return ("FATAL:mandatory param 'api_key' (user key) missing");
       }
-      $valid_user = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
+      $api_key = CRM_Utils_Type::escape($api_key, 'String');
+      $contactId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
+      if ($contactId) {
+        $uid = CRM_Core_BAO_UFMatch::getUFId($contactId);
+        if ($uid) {
+          CRM_Utils_System::loadBootStrap(array('uid' => $uid), FALSE);
+          $ufId = CRM_Utils_System::getLoggedInUfID();
+          if (CRM_Utils_System::isUserLoggedIn() && $ufId == $uid) {
+            $valid_user = $contactId;
+          }
+        }
+        if (!$valid_user) {
+          return self::error("Provided api_key doesn't has available user account");
+        }
+      }
     }
 
     // If we didn't find a valid user either way, then die.
@@ -585,14 +603,16 @@ class CRM_Utils_REST {
 
   function loadCMSBootstrap() {
     $q = CRM_Utils_array::value('q', $_REQUEST);
-    $args = explode('/', $q);
+    if (!empty($q)) {
+      $args = explode('/', $q);
+    }
 
     // If the function isn't in the civicrm namespace or request
     // is for login or ping
     if (empty($args) ||
-      $args[0] != 'civicrm' ||
-      ((count($args) != 3) && ($args[1] != 'login') && ($args[1] != 'ping')) ||
-      $args[1] == 'ping'
+        $args[0] != 'civicrm' ||
+        ((count($args) != 3) && ($args[1] != 'login') && ($args[1] != 'ping')) ||
+        $args[1] == 'ping'
     ) {
       return;
     }
@@ -617,7 +637,13 @@ class CRM_Utils_REST {
 
     if (!$uid) {
       $store = NULL;
-      $api_key = CRM_Utils_Request::retrieve('api_key', 'String', $store, FALSE, NULL, 'REQUEST');
+      if (isset($_SERVER['HTTP_X_CIVICRM_API_KEY'])) {
+        $api_key = $_SERVER['HTTP_X_CIVICRM_API_KEY'];
+      }
+      else {
+        $api_key = CRM_Utils_Request::retrieve('api_key', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+      }
+      $api_key = CRM_Utils_Type::escape($api_key, 'String');
       $contact_id = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
       if ($contact_id) {
         $uid = CRM_Core_BAO_UFMatch::getUFId($contact_id);
@@ -625,7 +651,7 @@ class CRM_Utils_REST {
     }
 
     if ($uid) {
-      CRM_Utils_System::loadBootStrap(array('uid' => $uid), TRUE, FALSE);
+      CRM_Utils_System::loadBootStrap(array('uid' => $uid), FALSE);
     }
   }
 }
