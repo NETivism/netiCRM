@@ -200,19 +200,14 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
         $dao->free();
       }
       else {
-        // filter duplicates here
-        // CRM-7058
-        // might be better to do this in the query, but that logic is a bit complex
-        // and it decides when to use distinct based on input criteria, which needs
-        // to be fixed and optimized.
-        $alreadySeen = array();
         while ($dao->fetch()) {
-          if (!array_key_exists($dao->contact_id, $alreadySeen)) {
+          if (!empty($dao->id)) {
+            $form->_additionalIds[$dao->id] = $dao->id;
+          }
+          if (!array_key_exists($dao->contact_id, $form->_contactIds)) {
             $form->_contactIds[$dao->_contact_id] = $dao->contact_id;
-            $alreadySeen[$dao->contact_id] = 1;
           }
         }
-        unset($alreadySeen);
         $dao->free();
       }
     }
