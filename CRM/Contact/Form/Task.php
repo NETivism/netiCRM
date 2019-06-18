@@ -200,19 +200,14 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
         $dao->free();
       }
       else {
-        // filter duplicates here
-        // CRM-7058
-        // might be better to do this in the query, but that logic is a bit complex
-        // and it decides when to use distinct based on input criteria, which needs
-        // to be fixed and optimized.
-        $alreadySeen = array();
         while ($dao->fetch()) {
-          if (!array_key_exists($dao->contact_id, $alreadySeen)) {
-            $form->_contactIds[] = $dao->contact_id;
-            $alreadySeen[$dao->contact_id] = 1;
+          if (!empty($dao->id)) {
+            $form->_additionalIds[$dao->id] = $dao->id;
+          }
+          if (!array_key_exists($dao->contact_id, $form->_contactIds)) {
+            $form->_contactIds[$dao->_contact_id] = $dao->contact_id;
           }
         }
-        unset($alreadySeen);
         $dao->free();
       }
     }
@@ -222,12 +217,21 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       $insertString = array();
       foreach ($values as $name => $value) {
         if (substr($name, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
-          $contactID = substr($name, CRM_Core_Form::CB_PREFIX_LEN);
+          $id = substr($name, CRM_Core_Form::CB_PREFIX_LEN);
+          if (strstr($id, '_')) {
+            list($contactID, $additionalID) = explode('_', $id, 2);
+          }
+          else {
+            $contactID = $id;
+          }
           if ($useTable) {
             $insertString[] = " ( {$contactID} ) ";
           }
           else {
-            $form->_contactIds[] = substr($name, CRM_Core_Form::CB_PREFIX_LEN);
+            $form->_contactIds[$contactID] = $contactID;
+            if (is_numeric($additionalID)) {
+              $form->_additionalIds[$additionalID] = $additionalID;
+            }
           }
         }
       }

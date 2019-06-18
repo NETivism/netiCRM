@@ -17,6 +17,8 @@
       currentFormStep : 1,
       defaultPriceOption : {},
       singleContribMsgText : false,
+      executingAnimationCount : 0,
+      complete : 0,
 
       preparePage: function(){
         document.querySelector('body').style.setProperty('--mobile-background-url', 'url('+window.ContribPageParams.mobileBackgroundImageUrl+')');
@@ -375,8 +377,26 @@
         if (params['_ppid'] && params['_ppid'] == $('.payment_processor-section input:checked').val() && 
           params['_grouping'] && params['_grouping'] == this.currentContribType && 
           params['_amt'] && params['_amt'] == this.currentPriceAmount && 
-          params['_instrumentid'] ) {
-          ContribPage.currentFormStep = 2;
+          params['_instrument'] ) {
+          cj(document).ajaxComplete(function( event, xhr, settings ) {
+            if(settings.url.substring(0,38) == '/civicrm/contribute/transact?snippet=4' && 
+              cj(xhr.responseText).find('input[id^=civicrm-instrument-dummy]:checked').length) {
+              // setTimeout(function(){
+              // }, 1000);
+              xhr.complete(function(){
+                var interval = setInterval(function(){
+                  if(cj('input[id^=civicrm-instrument-dummy]:checked').length && window.ContribPage.complete){
+                    if(cj('input[id^=civicrm-instrument-dummy]:checked').val() == params['_instrument']){
+                      window.ContribPage.setFormStep(2);
+                      clearInterval(interval);
+                    }
+                  }
+                }, 100);
+              })
+              cj(event.currentTarget).unbind('ajaxComplete');
+            }
+          });
+
           /*
           var promSkipStep = new Promise(function(resolve, reject) {
             cj(document).ajaxComplete(function(event, xhr, options) {
@@ -478,10 +498,8 @@
           }
           if(this.currentContribType == 'non-recurring'){
             $('[name=is_recur][value=0]').click();
-            this.setContribInstrument('creditCard');
           }
           if(this.currentContribType == 'recurring'){
-            this.setContribInstrument('creditCard');
             $('[name=is_recur][value=1]').click();
           }
 
@@ -582,20 +600,24 @@
           */
           if($this.hasClass('type-is-front') && !$this.hasClass(currentStepClassName)){
             /** first scroll to top 0.5 second */
+            window.ContribPage.executingAnimationCount++;
             setTimeout(function(){
               $this.removeClass('type-is-front').addClass('type-is-fade-out').css({'opacity': 1});
               /** then fade change */
               $this.animate({'opacity': 0} ,500, function(){
+                window.ContribPage.executingAnimationCount--;
                 $this.removeClass('type-is-fade-out').addClass('type-is-back');
               });
             }, 500);
           }
           else if($this.hasClass(currentStepClassName)){
             /** first scroll to top 0.5 second */
+            window.ContribPage.executingAnimationCount++;
             setTimeout(function(){
               $this.removeClass('type-is-back').addClass('type-is-fade-in').css({'opacity': 0});
               /** then fade change */
               $this.animate({'opacity': 1} ,500,  function(){
+                window.ContribPage.executingAnimationCount--;
                 $this.removeClass('type-is-fade-in').addClass('type-is-front');
               });
             }, 500);
@@ -605,7 +627,7 @@
           }
         });
 
-        if (isScrollAnimate && $(window).width() <= 768) {
+        if (isScrollAnimate) {
           var topPosition = $('#content-main').offset().top - 30;
           $('html,body').animate({ scrollTop: topPosition }, 500);
         }
@@ -647,34 +669,6 @@
 
       },
 
-      setContribInstrument: function(insType) { 
-        if(this.currentContribInstrument !== insType){
-          this.currentContribInstrument = insType;
-          if(insType == 'other'){
-            this.setContributeType('');
-          }
-          this.updateContribInstrument();
-        }
-      },
-
-      updateContribInstrument: function() {
-        $('.contrib-type-btn div').removeClass('selected');
-        if(this.currentContribInstrument == 'creditCard'){
-          $('#footer_text').animate({'opacity': 0} ,500, function(){
-            $('#footer_text').hide();
-            $('.priceSet-block').show().css({'opacity': 0}).animate({'opacity': 1} ,500);
-          });
-        }
-        if(this.currentContribInstrument == 'other'){
-          $('.priceSet-block').animate({'opacity': 0}, 500, function(){
-            $('.priceSet-block').hide();
-            $('#footer_text').show().css({'opacity': 0}).animate({'opacity': 1} ,500);
-          });
-          $('.other-instrument-btn').addClass('selected');
-        }
-        
-      },
-
       setInstallments: function(installments) {
         if(this.installments != installments){
           this.installments = installments;
@@ -705,7 +699,12 @@
       prepareAfterAll: function(){
         $('.payment_options-group').hide();
         $('#page').css('background', 'none').css('height','unset');
-
+        var interval = setInterval(function(){
+          if (window.ContribPage.executingAnimationCount == 0) {
+            window.ContribPage.complete = 1;
+            clearInterval(interval);
+          }
+        }, 100);
       }
 
 
