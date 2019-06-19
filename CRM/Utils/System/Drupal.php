@@ -508,33 +508,87 @@ class CRM_Utils_System_Drupal {
    * @param $name string  optional username for login
    * @param $pass string  optional password for login
    */
-  static function loadBootStrap($name = NULL, $pass = NULL) {
+  static function loadBootStrap($params = array(), $throwError = TRUE) {
     //take the cms root path.
     $cmsPath = self::cmsRootPath();
 
     if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
-      echo '<br />Sorry, could not able to locate bootstrap.inc.';
-      exit();
+      if ($throwError) {
+        throw new Exception('Sorry, could not locate bootstrap.inc');
+      }
+      return FALSE;
     }
 
     chdir($cmsPath);
     require_once 'includes/bootstrap.inc';
     @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-    global $user;
-
+    // explicitly setting error reporting, since we cannot handle drupal related notices
+    // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code
+    // causes grief with debugging scripts
+		global $user;
     if (empty($user)) {
-      echo '<br />Sorry, could not able to load drupal bootstrap.';
-      exit();
+      if ($throwError) {
+        throw new Exception('Sorry, could not load drupal bootstrap.');
+      }
+      return FALSE;
     }
 
-    //load user, we need to check drupal permissions.
-    $name = $name ? $name : trim(CRM_Utils_Array::value('name', $_REQUEST));
-    $pass = $pass ? $pass : trim(CRM_Utils_Array::value('pass', $_REQUEST));
-    if ($name) {
-      $user = user_authenticate(array('name' => $name, 'pass' => $pass));
-      if (empty($user->uid)) {
-        echo '<br />Sorry, unrecognized username or password.';
-        exit();
+    // we have user to load
+		if (!empty($params)) {
+      $config = CRM_Core_Config::singleton();
+      $version = $config->userSystem->version;
+      $uid = CRM_Utils_Array::value('uid', $params);
+
+      if (!$uid) {
+        //load user, we need to check drupal permissions.
+        $name = CRM_Utils_Array::value('name', $params, FALSE) ? $params['name'] : trim(CRM_Utils_Array::value('name', $_REQUEST));
+        $pass = CRM_Utils_Array::value('pass', $params, FALSE) ? $params['pass'] : trim(CRM_Utils_Array::value('pass', $_REQUEST));
+
+        if ($name) {
+          if($version >= 6 && $version < 7){
+            $user = user_authenticate(array('name' => $name, 'pass' => $pass));
+            if (empty($user->uid)) {
+              if ($throwError) {
+                throw new Exception('Sorry, unrecognized username or password.');
+              }
+              return FALSE;
+            }
+            else {
+              $uid = $user->uid;
+            }
+          }
+          elseif ($version >= 7 && $version < 8){
+            $uid = user_authenticate($name, $pass);
+            if (empty($uid)) {
+              if ($throwError) {
+                throw new Exception('Sorry, unrecognized username or password.');
+              }
+              return FALSE;
+            }
+          }
+        }
+      }
+      if ($uid) {
+        if ($version >= 6 && $version < 7) {
+          $account = user_load(array('uid' => $uid));
+          if ($account && $account->uid) {
+            global $user;
+            $user = $account;
+            return TRUE;
+          }
+        }
+        if ($version >= 7 && $version < 8) {
+          $account = user_load($uid);
+          if ($account && $account->uid) {
+            global $user;
+            $user = $account;
+            return TRUE;
+          }
+        }
+      }
+
+      if ($throwError) {
+        throw new Exception('Sorry, can not load CMS user account.');
       }
     }
   }
@@ -595,15 +649,8 @@ class CRM_Utils_System_Drupal {
    * @return int $userID logged in user uf id.
    */
   public static function getLoggedInUfID() {
-    $ufID = NULL;
-    if (function_exists('user_is_logged_in') &&
-      user_is_logged_in() &&
-      function_exists('user_uid_optional_to_arg')
-    ) {
-      $ufID = user_uid_optional_to_arg(array());
-    }
-
-    return $ufID;
+    global $user;
+    return isset($user) && $user->uid ? $user->uid : 0;
   }
 
   function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {

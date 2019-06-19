@@ -90,13 +90,13 @@ class civicrm_CLI {
 
          // this does not return on failure
          // require_once 'CRM/Utils/System.php';
-         CRM_Utils_System::authenticateScript( true,$user,$pass );
+         CRM_Utils_System::authenticateScript(true, $user, $pass);
 
          // bootstrap CMS environment
          global $civicrm_root;
          $_SERVER['SCRIPT_FILENAME'] = "$civicrm_root/bin/cli.php";
          require_once 'CRM/Utils/System.php';
-         CRM_Utils_System::loadBootStrap($user, $pass);
+         CRM_Utils_System::loadBootStrap(array('user' => $user, 'pass' => $pass));
     }
 
     function setEnv() {

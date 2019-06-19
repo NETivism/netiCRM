@@ -23,7 +23,7 @@ function civicrm_api3_entity_get($params) {
 
       // Check for entities with a master file ("api/v3/MyEntity.php")
     $parts = explode(".", $file);
-      if (end($parts) == "php" && $file != "utils.php" && !preg_match('/Tests?.php$/', $file) ) {
+      if (end($parts) == "php" && $file != "utils.php" && !preg_match('/Tests?.php$/', $file) && $file != 'DeprecatedUtils.php') {
       // without the ".php"
       $entities[] = substr($file, 0, -4);
     }

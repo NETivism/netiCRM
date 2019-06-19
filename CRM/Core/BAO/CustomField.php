@@ -456,13 +456,12 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
       }
 
       // check if we can retrieve from database cache
-      require_once 'CRM/Core/BAO/Cache.php';
       $fields = &CRM_Core_BAO_Cache::getItem('contact fields', "custom importableFields $cacheKey");
 
+      $extends = '';
       if ($fields === NULL) {
         $cfTable = self::getTableName();
 
-        $extends = '';
         if (is_array($customDataType)) {
           $value = NULL;
           foreach ($customDataType as $dataType) {
@@ -481,6 +480,9 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           if ($value) {
             $extends = "AND   $cgTable.extends IN ( $value ) ";
           }
+        }
+        elseif (!empty($customDataType)){
+          $extends = "AND   $cgTable.extends IN ('{$customDataType}') ";
         }
 
         if ($onlyParent) {
@@ -528,7 +530,6 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         }
 
         // also get the permission stuff here
-        require_once 'CRM/Core/Permission.php';
         $permissionClause = CRM_Core_Permission::customGroupClause(CRM_Core_Permission::VIEW,
           "{$cgTable}.", TRUE
         );
@@ -541,6 +542,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
 
         $fields = array();
         while (($dao->fetch()) != NULL) {
+          $fields[$dao->id]['name'] = 'custom_'.$dao->id;
           $fields[$dao->id]['label'] = $dao->label;
           $fields[$dao->id]['groupTitle'] = $dao->title;
           $fields[$dao->id]['data_type'] = $dao->data_type;

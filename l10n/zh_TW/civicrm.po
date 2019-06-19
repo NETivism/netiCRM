@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-06-06 04:31+0000\n"
-"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-06-17 07:04+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3713,7 +3713,7 @@ msgstr "帳單編號"
 #: CRM/Contribute/DAO/Contribution.php
 #: CRM/Contribute/DAO/ContributionRecur.php CRM/Pledge/DAO/Pledge.php
 msgid "Cancel Date"
-msgstr "取消日期"
+msgstr "失敗或取消日期"
 
 #: CRM/Contribute/DAO/Contribution.php CRM/Contribute/Form/Contribution.php
 #: CRM/Contribute/Form/Task/Status.php
@@ -22906,7 +22906,7 @@ msgid ""
 "CMS theme does, you can replace CiviCRM's primary CSS file (css/civicrm.css)"
 " with a customized version. Use this field to specify the URL of the "
 "replacement CSS file."
-msgstr "如果您想修改CiviCRM螢幕的外貌，及感覺超出您的內容訊息系統，您可以自訂版本取代CiviCRM的CSS檔案(css/civicrm.css)。使用此字段指定的URL替換 CSS文件。"
+msgstr "如果您想修改外觀，您可以自定義CSS網址路徑以覆蓋樣式。自定義的CSS需要以https連線開頭，並且會在CRM預設的樣式之後才載入，因此您亦可複寫既有的CRM系統樣式。"
 
 #: templates/CRM/Admin/Form/Setting/Url.hlp
 msgid ""
@@ -47064,7 +47064,7 @@ msgstr "狀態改為「%status%」"
 msgid ""
 "Failuare: Amount values dont match between database and IPN request. Trxn_id"
 " is %1, Data from payment : %2, Data in CRM : %3"
-msgstr "失敗：資料庫和 IPN 傳輸的交易編號資料不相符。交易編號為  %1 ，傳輸資料為 %2 ，CRM 資料庫中的資料為 %3。"
+msgstr "失敗：資料庫和 IPN 傳輸的金額資料不相符。交易編號為  %1 ，傳輸資料的金額為 %2 ，CRM 資料庫中的金額資料為 %3。"
 
 msgid "Payment processor of recur is not %1."
 msgstr "定期定額金流不是 %1"
@@ -47129,3 +47129,6 @@ msgstr "回傳訊息"
 
 msgid "Support 3JTSP"
 msgstr "支援 3JTSP"
+
+msgid "Carefully. You should never make this publicly."
+msgstr "請謹慎使用。你永遠不應該讓公開這個。"
