@@ -46,6 +46,15 @@ class CRM_Dedupe_Merger {
     'current_employer_id',
   );
 
+  static $locationBlocks = array(
+    'email' => 'Email',
+    'phone' => 'Phone',
+    'im' => 'IM',
+    'openid' => 'OpenID',
+    'address' => 'Address',
+    'website' => 'Website',
+  );
+
   // FIXME: consider creating a common structure with cidRefs() and eidRefs()
   // FIXME: the sub-pages references by the URLs should
   // be loaded dynamically on the merge form instead
@@ -388,7 +397,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     // there's a UNIQUE restriction on ($field, some_other_field) pair
     $sqls = array();
     foreach ($affected as $table) {
-      //here we require custom processing.
+      // here we require custom processing.
       if (isset($cpTables[$table])) {
         foreach ($cpTables[$table] as $className => $fnName) {
           $className::$fnName($mainId, $otherId, $sqls);
@@ -411,8 +420,12 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
           $preOperationSqls = self::operationSql($mainId, $otherId, $table, $tableOperations);
           $sqls = array_merge($sqls, $preOperationSqls);
 
-          $sqls[] = "UPDATE IGNORE $table SET $field = $mainId WHERE $field = $otherId";
-          $sqls[] = "DELETE FROM $table WHERE $field = $otherId";
+          // skip location related table, because moveAllBelongings has done this
+          $shortName = str_replace('civicrm_', '', $table);
+          if (!isset(self::$locationBlocks[$shortName])) {
+            $sqls[] = "UPDATE IGNORE $table SET $field = $mainId WHERE $field = $otherId";
+            $sqls[] = "DELETE FROM $table WHERE $field = $otherId";
+          }
         }
       }
       if (isset($eidRefs[$table])) {
@@ -797,10 +810,10 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     }
 
     // handle location blocks.
-    $locationBlocks = array('email', 'phone', 'address');
+    $locationBlockNames = array_keys(self::$locationBlocks);
     $locations = array();
 
-    foreach ($locationBlocks as $block) {
+    foreach ($locationBlockNames as $block) {
       foreach (array('main' => $mainId, 'other' => $otherId) as $moniker => $cid) {
         $cnt = 1;
         $values = civicrm_api($block, 'get', array('contact_id' => $cid, 'version' => 3));
@@ -841,7 +854,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
 
     $mainLocBlock = $locBlockIds = array();
     $locBlockIds['main'] = $locBlockIds['other'] = array();
-    foreach (array('Email', 'Phone', 'IM', 'OpenID', 'Address') as $block) {
+    foreach (self::$locationBlocks as $block) {
       $name = strtolower($block);
       foreach (array('main', 'other') as $moniker) {
         $locIndex = CRM_Utils_Array::value($moniker, $locations);
@@ -1110,13 +1123,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
 
     // **** Do location related migration:
     if (!empty($locBlocks)) {
-      $locComponent = array(
-        'email' => 'Email',
-        'phone' => 'Phone',
-        'im' => 'IM',
-        'openid' => 'OpenID',
-        'address' => 'Address',
-      );
+      $locComponent = self::$locationBlocks;
 
       $primaryBlockIds = CRM_Contact_BAO_Contact::getLocBlockIds($mainId, array('is_primary' => 1));
       $billingBlockIds = CRM_Contact_BAO_Contact::getLocBlockIds($mainId, array('is_billing' => 1));
