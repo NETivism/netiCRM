@@ -6310,3 +6310,13 @@ input.crm-form-textfield,
   top: 5px;
   color: #1faa00;
 }
+
+/* Flex */
+.crm-container .flex-general {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0;
+}
+.crm-container .flex-general > * {
+  margin: 0 10px;
+}

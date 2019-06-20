@@ -36,20 +36,20 @@
  * Page for displaying list of contact Subtypes
  */
 class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
+  const PUBLIC_API = 'Activity,Contact,Contribution,Participant,Membership,Address,Email,Phone,CustomValue,Group,Tag';
 
   function run() {
     if($this->allowVisit()){
       CRM_Utils_System::setTitle(ts('API explorer and generator'));
-      $result = civicrm_api('Entity', 'get', array(
-        'sequential' => 1,
-        'version' => 3,
-      ));
-      self::$_template->assign('entities', $result);
+      $publicAPI = explode(',', self::PUBLIC_API);
+
+      self::$_template->assign('entities', $publicAPI);
 
       $civicrm_path = '/'.drupal_get_path('module', 'civicrm').'/';
       drupal_add_js(array('resourceBase' => $civicrm_path), 'setting');
 
-      $this->assign('admin', user_access("administer CiviCRM"));
+      $config = CRM_Core_Config::singleton();
+      $this->assign('admin', user_access("administer CiviCRM") && $config->debug);
     }
     return parent::run();
   }
@@ -74,12 +74,7 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
     if(defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED == 1){
       return TRUE;
     }
-    else{
-      $pattern = '/dev.*neticrm\.tw/';
-      if(preg_match($pattern, $_SERVER['HTTP_HOST'])){
-        return TRUE;
-      }
-    }
     return FALSE;
   }
+
 }

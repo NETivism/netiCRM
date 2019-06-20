@@ -512,6 +512,8 @@ class CRM_Core_SelectValues {
         'contact_id' => array('title' => ts('Internal Contact ID')),
       );
       $exportFields = array_merge(CRM_Contact_BAO_Contact::exportableFields(), $additionalFields);
+      $exportFields['state_province_name'] = $exportFields['state_province'];
+      $exportFields['state_province']['title'] = ts('State Abbreviation');
 
       $values = array_merge(array_keys($exportFields));
       unset($values[0]);
@@ -529,7 +531,7 @@ class CRM_Core_SelectValues {
         }
         //keys for $tokens should be constant. $token Values are changed for Custom Fields. CRM-3734
         if ($customFieldId = CRM_Core_BAO_CustomField::getKeyID($val)) {
-          $tokens["{contact.$val}"] = $customFields[$customFieldId]['label'] . " :: " . $customFields[$customFieldId]['groupTitle'];
+          $tokens["{contact.$val}"] = ts('Custom Field')."-".$customFields[$customFieldId]['groupTitle'].": ".$customFields[$customFieldId]['label'];
         }
         else {
           $tokens["{contact.$val}"] = $exportFields[$val]['title'];

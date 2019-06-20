@@ -201,7 +201,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     //set active fields of IM provider of related contact
     $this->setActiveFieldRelatedContactImProvider($this->_mapperRelatedContactImProvider);
 
-    $this->_phoneIndex = $this->_externalIdentifierIndex = $this->_internalIdentifierIndex = -1;
+    $this->_emailIndex = $this->_phoneIndex = $this->_externalIdentifierIndex = $this->_internalIdentifierIndex = -1;
 
     $index = 0;
     foreach ($this->_mapperKeys as $key) {
@@ -305,7 +305,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     if (!empty($this->_requiredFields)) {
       foreach($this->_requiredFields as $fieldName) {
-        if ($fieldName == 'email' && !$this->_emailIndex) {
+        if ($fieldName == 'email' && $this->_emailIndex < 0) {
           $errorRequired = TRUE;
           $missingNames[] = ts('Email Address');
         }
