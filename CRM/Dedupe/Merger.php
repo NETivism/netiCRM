@@ -232,6 +232,7 @@ class CRM_Dedupe_Merger {
         'civicrm_project' => array('owner_entity_table' => 'owner_entity_id'),
         'civicrm_task' => array('owner_entity_table' => 'owner_entity_id'),
         'civicrm_task_status' => array('responsible_entity_table' => 'responsible_entity_id', 'target_entity_table' => 'target_entity_id'),
+        'civicrm_entity_tag' => array('entity_table' => 'entity_id'),
       );
 
       // Allow hook_civicrm_merge() to adjust $eidRefs
@@ -1386,16 +1387,11 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         }
         unset($submitted['current_employer_id']);
       }
-
+      $submitted['log_data'] = ts('Updated contact') . ' - '.ts('merge duplicate contacts');
       CRM_Contact_BAO_Contact::createProfileContact($submitted, CRM_Core_DAO::$_nullArray, $mainId);
     }
 
     // **** Delete other contact & update prev-next caching
-    $otherParams = array(
-      'contact_id' => $otherId,
-      'id' => $otherId,
-      'version' => 3,
-    );
     if (CRM_Core_Permission::check('merge duplicate contacts') &&
       CRM_Core_Permission::check('delete contacts')
     ) {
@@ -1404,8 +1400,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         $query = "UPDATE civicrm_contact SET external_identifier = null WHERE id = {$otherId}";
         CRM_Core_DAO::executeQuery($query);
       }
-
-      civicrm_api('contact', 'delete', $otherParams);
+      CRM_Contact_BAO_Contact::deleteContact($otherId, FALSE, FALSE, ts('Delete Contact').' - '.ts('merge duplicate contacts'));
     }
     // FIXME: else part
     else {

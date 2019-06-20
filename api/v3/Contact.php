@@ -280,6 +280,7 @@ function _civicrm_api3_contact_get_supportanomalies(&$params, &$options) {
 function civicrm_api3_contact_delete($params) {
 
   $contactID = CRM_Utils_Array::value('id', $params);
+  $log = CRM_Utils_Array::value('log_data', $params);
 
   $session = CRM_Core_Session::singleton();
   if ($contactID == $session->get('userID')) {
@@ -287,7 +288,7 @@ function civicrm_api3_contact_delete($params) {
   }
   $restore = CRM_Utils_Array::value('restore', $params) ? $params['restore'] : FALSE;
   $skipUndelete = CRM_Utils_Array::value('skip_undelete', $params) ? $params['skip_undelete'] : FALSE;
-  if (CRM_Contact_BAO_Contact::deleteContact($contactID, $restore, $skipUndelete)) {
+  if (CRM_Contact_BAO_Contact::deleteContact($contactID, $restore, $skipUndelete, $log)) {
     return civicrm_api3_create_success();
   }
   else {

@@ -1480,7 +1480,6 @@ SELECT contact_id
     self::appendCustomTablesExtendingContacts($contactReferences);
 
     // FixME for time being adding below line statically as no Foreign key constraint defined for table 'civicrm_entity_tag'
-    $contactReferences['civicrm_entity_tag'][] = 'entity_id';
     \Civi::$statics[__CLASS__]['contact_references'] = $contactReferences;
     return \Civi::$statics[__CLASS__]['contact_references'];
   }
