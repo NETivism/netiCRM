@@ -1421,11 +1421,18 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
 
   static function formatReason($conflicts) {
     static $lables;
+    static $customFields;
     if (empty($labels)) {
       $labels = array();
     }
+    if (empty($customFields)) {
+      $cfields = CRM_Core_BAO_CustomField::getFields();
+      foreach($cfields as $fld) {
+        $customFields[$fld['name']]['title'] = $fld['groupTitle'].'::'.$fld['label'];
+      }
+    }
     $needToFind = array_diff_key($conflicts, $labels);
-    $fields = CRM_Contact_DAO_Contact::$_fields;
+    $fields = array_merge(CRM_Contact_DAO_Contact::$_fields, $customFields);
     foreach($needToFind as $conflict => $dontcare) {
       $field = str_replace('move_', '', $conflict);
       if (isset($fields[$field])) {
