@@ -4505,6 +4505,7 @@ ul.ui-sortable {
 .crm-button-type-upload a.button:visited,
 .crm-button-type-upload .form-submit,
 .crm-button-type-next .form-submit,
+.crm-container .form-submit[name*=_upload_],
 .crm-container #register-me,
 .crm-container a.button.crm-register-button {
   color: #fff;
