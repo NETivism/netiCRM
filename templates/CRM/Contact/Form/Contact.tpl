@@ -33,7 +33,14 @@
 {/if}
 <span style="float:right;"><a href="#expand" id="expand">{ts}Expand all tabs{/ts}</a></span>
 <div class="crm-submit-buttons">
+{if !$isDuplicate}
+   {$form._qf_Contact_refresh_dedupe.html}
    {include file="CRM/common/formButtons.tpl"}
+{else}
+   <span class="crm-button crm-button_qf_Contact_upload_duplicate">
+     {$form._qf_Contact_upload_duplicate.html}
+   </span>
+{/if}
 </div>
 <div class="crm-jquery-accordion">
 <div class="crm-accordion-wrapper crm-contactDetails-accordion crm-accordion-open">
@@ -83,17 +90,6 @@
  	        </td>
  	    </tr>
         </table>
-
-        {*  add dupe buttons *}
-        <span class="crm-button crm-button_qf_Contact_refresh_dedupe">
-            {$form._qf_Contact_refresh_dedupe.html}
-        </span>
-        {if $isDuplicate}
-            <span class="crm-button crm-button_qf_Contact_upload_duplicate">
-                {$form._qf_Contact_upload_duplicate.html}
-            </span>
-        {/if}
-        <div class="spacer"></div>
    </div>
  </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
