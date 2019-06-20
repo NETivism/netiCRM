@@ -1432,7 +1432,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
       }
     }
     $needToFind = array_diff_key($conflicts, $labels);
-    $fields = array_merge(CRM_Contact_DAO_Contact::$_fields, $customFields);
+    $fields = array_merge(CRM_Contact_DAO_Contact::fields(), $customFields);
     foreach($needToFind as $conflict => $dontcare) {
       $field = str_replace('move_', '', $conflict);
       if (isset($fields[$field])) {
