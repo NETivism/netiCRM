@@ -109,7 +109,7 @@ class CRM_Core_Payment_LinePay {
     }
     else{
       $this->addResponseMessageToNote($contributionId);
-      CRM_Core_Error::fatal($note);
+      CRM_Core_Error::fatal($this->_linePayAPI->_response->returnMessage);
     }
   }
 
