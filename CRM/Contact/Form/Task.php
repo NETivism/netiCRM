@@ -205,7 +205,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
             $form->_additionalIds[$dao->id] = $dao->id;
           }
           if (!array_key_exists($dao->contact_id, $form->_contactIds)) {
-            $form->_contactIds[$dao->_contact_id] = $dao->contact_id;
+            $form->_contactIds[$dao->contact_id] = $dao->contact_id;
           }
         }
         $dao->free();

@@ -13,7 +13,7 @@
     body { margin:0; padding: 0; }
   </style>{/literal}
 </head>
-<body>
+<body class="crm-embed">
 <script type="text/javascript" src="{$config->userFrameworkResourceURL}js/iframeresizer.contentwindow.js"></script>
 <div class="crm-container">
 {$embedBody}

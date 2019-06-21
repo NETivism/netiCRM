@@ -97,4 +97,24 @@
     <td class="nowrap"><a href="{crmURL p='civicrm/admin/setting/debug' q='reset=1'}" id="idDebug">&raquo; {ts}Debugging{/ts}</a></td>
     <td>{ts}Enable debugging features including display of template variables and backtracing.{/ts}</td>
 </tr>
+{if $site_key}
+<tr>
+    <td class="nowrap">&raquo; CiviCRM {ts}Private Key{/ts}</td>
+    <td>
+      {ts}Carefully. You should never make this publicly.{/ts}
+      <div id="site-key"><a href="#" id="show-sitekey">{ts}Show{/ts} ***********</a><textarea rows="1" style="display:none; width: 100%;">{$site_key}</textarea></div>
+    </td>
+</tr>
+{/if}
 </table>
+{literal}<script>
+cj(document).ready(function($){
+  $("#show-sitekey").click(function(){
+    $("#site-key > textarea").show();
+    $(this).remove();
+  });
+  $("#site-key > textarea").click(function(){
+    $(this).select();
+  });
+});
+</script>{/literal}

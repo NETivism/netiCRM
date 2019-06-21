@@ -40,7 +40,9 @@ require_once 'CRM/Core/Page.php';
  */
 class CRM_Admin_Page_Setting extends CRM_Core_Page {
   function run() {
-
+    if (defined('CIVICRM_SITE_KEY')) {
+      $this->assign("site_key", CIVICRM_SITE_KEY);
+    }
     CRM_Utils_System::setTitle(ts("Global Settings"));
 
     parent::run();

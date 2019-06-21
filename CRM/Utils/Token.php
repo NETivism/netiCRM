@@ -302,7 +302,7 @@ class CRM_Utils_Token {
    */
   public static function &replaceOrgTokens($str, &$org, $html = FALSE, $escapeSmarty = FALSE) {
     self::$_tokens['org'] = array_merge(array_keys(CRM_Contact_BAO_Contact::importableFields('Organization')),
-      array('address', 'display_name', 'checksum', 'contact_id')
+      array('address', 'display_name', 'checksum', 'contact_id', 'state_province_name')
     );
 
     $cv = NULL;
@@ -567,7 +567,7 @@ class CRM_Utils_Token {
       /* This should come from UF */
 
       self::$_tokens[$key] = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
-        array('checksum', 'contact_id')
+        array('checksum', 'contact_id', 'state_province_name')
       );
     }
 
@@ -598,7 +598,7 @@ class CRM_Utils_Token {
       /* This should come from UF */
 
       self::$_tokens['contact'] = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
-        array('checksum', 'contact_id')
+        array('checksum', 'contact_id', 'state_province_name')
       );
     }
 
@@ -617,6 +617,10 @@ class CRM_Utils_Token {
       require_once 'CRM/Contact/BAO/Contact/Utils.php';
       $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contact['contact_id']);
       $value = "cs={$cs}";
+    }
+    elseif ($token == 'state_province_name') {
+      $value = CRM_Utils_Array::retrieveValueRecursive($contact, $token);
+      $value = ts($value);
     }
     else {
       $value = CRM_Utils_Array::retrieveValueRecursive($contact, $token);

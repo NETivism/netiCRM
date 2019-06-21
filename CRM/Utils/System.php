@@ -453,8 +453,12 @@ class CRM_Utils_System {
   }
 
   static function authenticateKey($abort = TRUE) {
-    // also make sure the key is sent and is valid
-    $key = trim(CRM_Utils_Array::value('key', $_REQUEST));
+    if (isset($_SERVER['HTTP_X_CIVICRM_SITE_KEY'])) {
+      $key = $_SERVER['HTTP_X_CIVICRM_SITE_KEY'];
+    }
+    else {
+      $key = trim(CRM_Utils_Array::value('key', $_REQUEST));
+    }
 
     $docAdd = "More info at:" . CRM_Utils_System::docURL2("Command-line Script Configuration", TRUE);
 
@@ -1159,10 +1163,10 @@ class CRM_Utils_System {
    * @param $name string  optional username for login
    * @param $pass string  optional password for login
    */
-  static function loadBootStrap($name = NULL, $pass = NULL) {
+  static function loadBootStrap($params, $throwError = TRUE) {
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userFrameworkClass) . '.php');
-    return call_user_func("{$config->userFrameworkClass}::loadBootStrap", $name, $pass);
+    return call_user_func(array($config->userFrameworkClass, "loadBootStrap"), $params, $throwError);
   }
 
   /**

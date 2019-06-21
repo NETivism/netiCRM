@@ -6334,3 +6334,13 @@ input.crm-form-textfield,
   margin: 0;
   padding-left: 10px;
 }
+
+/* Flex */
+.crm-container .flex-general {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0;
+}
+.crm-container .flex-general > * {
+  margin: 0 10px;
+}
