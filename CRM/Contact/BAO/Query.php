@@ -392,6 +392,9 @@ class CRM_Contact_BAO_Query {
       $this->_returnProperties = self::defaultReturnProperties($mode);
     }
     else {
+      if (isset($returnProperties['state_province_name']) && !isset($returnProperties['state_province'])) {
+        $returnProperties['state_province'] = 1;
+      }
       $this->_returnProperties = &$returnProperties;
     }
 
