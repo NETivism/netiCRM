@@ -199,7 +199,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
       $ruleParams = array(
         'id' => $this->_dedupeRuleGroupId,
       );
-      $this->_dedupeRuleFields[$this->_contactType] = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $this->_dedupeRuleFields[$this->_contactType] = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
       foreach($this->_dedupeRuleFields[$this->_contactType] as $highlight) {
         $highlightedFields[] = $highlight;
       }
@@ -222,7 +222,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
           'contact_type' => $cType,
           'level' => 'Strict',
         );
-        $this->_dedupeRuleFields[$cType] = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        $this->_dedupeRuleFields[$cType] = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
       }
 
       //Modify mapper fields title if fields are present in dedupe rule
