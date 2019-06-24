@@ -85,7 +85,14 @@ class CRM_Core_Payment_LinePay {
     $config = CRM_Core_Config::singleton();
     $requestParams = array();
     if ($config->userFramework == 'Drupal') {
-      $requestParams['productImageUrl'] = theme_get_setting('logo');
+      $logoUrl = theme_get_setting('logo');
+      if (substr($logoUrl, 0, 1) == '/') {
+        $logoUrl = $_SERVER['HTTP_ORIGIN'].$logoUrl;
+      }
+      else if(substr($logoUrl, 0, 4) != 'http') {
+        $logoUrl = $_SERVER['HTTP_ORIGIN'].'/'.$logoUrl;
+      }
+      $requestParams['productImageUrl'] = $logoUrl;
     }
     $requestParams['orderId'] = $params['contributionID'];
     $requestParams['productName'] = $description;
