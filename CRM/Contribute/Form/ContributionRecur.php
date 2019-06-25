@@ -75,6 +75,13 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       $this->_online = FALSE;
     }
     $dao->free();
+
+    $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_id, 'id', 'contribution_recur_id');
+    $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
+    // Get payment processor
+    if (!empty($paymentClass::$_hideFields)) {
+      $this->assign('hide_fields', $paymentClass::$_hideFields);
+    }
   }
 
   /**

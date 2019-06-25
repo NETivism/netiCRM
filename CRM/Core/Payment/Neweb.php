@@ -12,6 +12,8 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
 
   static protected $_params = array();
 
+  public static $_hideFields = array('invoice_id', 'trxn_id');
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable

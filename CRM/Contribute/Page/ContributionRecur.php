@@ -159,6 +159,11 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
         $controllerTransact->run();
       }
 
+      // Get payment processor
+      if (!empty($paymentClass::$_hideFields)) {
+        $this->assign('hide_fields', $paymentClass::$_hideFields);
+      }
+
     }
   }
 

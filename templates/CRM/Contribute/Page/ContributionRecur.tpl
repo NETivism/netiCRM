@@ -49,9 +49,13 @@
             {if $recur.contribution_status_id neq 3}<tr><td class="label">{ts}Next Sched Contribution{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
 
             {* trxn_id Used in spgateway. refs #16960 - flr. 65 *}
+            {if $hide_fields}{if 'trxn_id'|in_array:$hide_fields}<!--{/if}{/if}
             <tr><td class="label">{ts}Transaction ID{/ts}</td><td>{$recur.trxn_id}</td></tr>
-            <!--
+            {if $hide_fields}{if 'trxn_id'|in_array:$hide_fields}-->{/if}{/if}
+            {if $hide_fields}{if 'invoice_id'|in_array:$hide_fields}<!--{/if}{/if}
             {if $recur.invoice_id}<tr><td class="label">{ts}Invoice ID{/ts}</td><td>{$recur.invoice_id}</td></tr>{/if}
+            {if $hide_fields}{if 'invoice_id'|in_array:$hide_fields}-->{/if}{/if}
+            <!--
             {if $recur.failure_count}<tr><td class="label">{ts}Failure Count{/ts}</td><td>{$recur.failure_count}</td></tr>{/if}
             {if $recur.next_sched_contribution}<tr><td class="label">{ts}Failure Retry Date{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
             {if $recur.auto_renew}<tr><td class="label">{ts}Auto Renew{/ts}</td><td>{if $recur.auto_renew}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td></tr>{/if}
@@ -208,7 +212,10 @@
       {if $form.contribution_status_id neq 3}<tr><td class="label">{$form.next_sched_contribution.label}</td><td>{$form.next_sched_contribution.html|crmDate}</td></tr>{/if}
 
       {* trxn_id Used in spgateway. refs #16960 - flr. 65 *}
+      {if $hide_fields}{if 'trxn_id'|in_array:$hide_fields}<!--{/if}{/if}
       <tr><td class="label">{$form.trxn_id.label}</td><td>{$form.trxn_id.html}</td></tr>
+      {if $hide_fields}{if 'trxn_id'|in_array:$hide_fields}-->{/if}{/if}
+
       {if $form.auto_renew.html}<tr><td class="label">{$form.auto_renew.label}</td><td>{$form.auto_renew.html}</td></tr>{/if}
       <tr><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}</td></tr>
       <tr><td class="label">{$form.note_title.label}</td><td>{$form.note_title.html}</td></tr>
