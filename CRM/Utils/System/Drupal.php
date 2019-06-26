@@ -757,5 +757,19 @@ class CRM_Utils_System_Drupal {
     }
     return $civicrm_conf_path;
   }
+
+  function getLogoURL() {
+    $logoURL = theme_get_setting('logo');
+    if (empty($logoURL)) {
+      $logoURL = theme_get_setting('logo_path');
+    }
+    if (substr($logoURL, 0, 1) == '/') {
+      $logoURL = $_SERVER['HTTP_ORIGIN'].$logoURL;
+    }
+    else if(substr($logoURL, 0, 4) != 'http') {
+      $logoURL = $_SERVER['HTTP_ORIGIN'].'/'.$logoURL;
+    }
+    return $logoURL;
+  }
 }
 

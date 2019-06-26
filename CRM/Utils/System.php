@@ -1360,5 +1360,15 @@ class CRM_Utils_System {
     $config = CRM_Core_Config::singleton();
     return $config->userSystem->confPath();
   }
+
+  /**
+   * Get CMS logo URL
+   *
+   * @return boolean.
+   */
+  public static function getLogoURL() {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->getLogoURL();
+  }
 }
 
