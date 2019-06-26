@@ -42,12 +42,11 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     else {
       // in thirty mins same session visit same page and not completed
       // we treat as same visit
-      $sameSession = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_track WHERE session_key = %1 AND visit_date > %2 AND page_type = %3 AND page_id = %4 AND state < %5 ORDER BY visit_date DESC LIMIT 1", array(
+      $sameSession = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_track WHERE session_key = %1 AND visit_date > %2 AND page_type = %3 AND page_id = %4 ORDER BY visit_date DESC LIMIT 1", array(
         1 => array($params['session_key'], 'String'),
         2 => array(date('Y-m-d H:i:s', time() - self::SESSION_LIMIT), 'String'),
         3 => array($params['page_type'], 'String'),
-        4 => array($params['page_id'], 'Integer'),
-        5 => array(self::LAST_STATE, 'Integer')
+        4 => array($params['page_id'], 'Integer')
       ));
       
       if ($sameSession->fetch()) {

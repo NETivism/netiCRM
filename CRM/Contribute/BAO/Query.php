@@ -76,6 +76,7 @@ class CRM_Contribute_BAO_Query {
       $query->_element['contribution_id'] = 1;
       $query->_tables['civicrm_contribution'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
+      $query->_groupByComponentClause = ' GROUP BY civicrm_contribution.id';
     }
 
     // get contribution_type
