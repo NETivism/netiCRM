@@ -238,7 +238,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     if (!empty($this->_dedupeRuleGroupId)) {
       $ruleParams = array('id' => $this->_dedupeRuleGroupId);
-      $this->_requiredFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $this->_requiredFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
       // correct sort_name / display_name problem
       $hasSortName = array_search('sort_name', $this->_requiredFields);
       $hasDisplayName = array_search('display_name', $this->_requiredFields);

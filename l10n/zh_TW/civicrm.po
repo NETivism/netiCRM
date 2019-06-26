@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-06-17 07:04+0000\n"
+"PO-Revision-Date: 2019-06-20 04:16+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -2873,7 +2873,7 @@ msgstr "刪除聯絡人頭像"
 
 #: CRM/Contact/Form/Contact.php CRM/Profile/Form.php
 msgid "Save Matching Contact"
-msgstr "儲存對應的聯絡人"
+msgstr "確定儲存聯絡人"
 
 #: CRM/Contact/Form/Contact.php CRM/Contact/Form/RelatedContact.php
 msgid "Your %1 contact record has been saved."
@@ -8714,7 +8714,7 @@ msgstr "，或者與現有聯絡人合併"
 msgid ""
 "If you're sure this record is not a duplicate, click the 'Save Matching "
 "Contact' button below."
-msgstr "若你仍確定此聯絡人非重複資料，請在「聯絡人詳情」區域下方，按下「確定儲存聯絡人」以進行儲存。"
+msgstr "若你仍確定此聯絡人非重複資料，請按下「確定儲存聯絡人」以進行儲存。"
 
 #: CRM/Contact/Form/Contact.php
 msgid "No matching contact found."
@@ -47131,4 +47131,4 @@ msgid "Support 3JTSP"
 msgstr "支援 3JTSP"
 
 msgid "Carefully. You should never make this publicly."
-msgstr "請謹慎使用。你永遠不應該讓公開這個。"
+msgstr "請謹慎使用。你永遠不應該讓這個公開呈現。"
