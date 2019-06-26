@@ -669,7 +669,7 @@ GROUP BY  participant.event_id
           'level' => 'Strict',
         );
         require_once 'CRM/Dedupe/BAO/Rule.php';
-        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
 
         if (is_array($fieldsArray)) {
           foreach ($fieldsArray as $value) {

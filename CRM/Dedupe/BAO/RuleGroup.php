@@ -373,6 +373,13 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     $ruleBao->find();
     $ruleFields = array();
     while ($ruleBao->fetch()) {
+      if (strstr($ruleBao->rule_table, 'civicrm_value_')) {
+        $customFieldId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $ruleBao->rule_field, 'id', 'column_name');
+        if (!empty($customFieldId)) {
+          $ruleFields['custom_'.$customFieldId] = $ruleBao->rule_weight;
+          continue;
+        }
+      }
       $ruleFields[$ruleBao->rule_field] = $ruleBao->rule_weight;
     }
 
