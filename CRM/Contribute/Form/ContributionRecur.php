@@ -211,7 +211,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       }
     }
 
-    $this->add('text', 'note_title', ts('Note Title'));
+    $this->add('text', 'note_title', ts('Note Title'), array(
+      'readonly' => 'readonly',
+    ));
     $this->add('textarea', 'note_body', ts('Note Text'), array(
       'rows' => "4",
       'cols' => "60",
