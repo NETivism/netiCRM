@@ -205,9 +205,18 @@ cj(document).ready(function($){
       $("#card-type-img").prop("src", src + 'card.svg');
     }
   });
+	$("#Confirm").bind("keypress", function (e) {
+    if (e.keyCode == 13) {
+      e.preventDefault();
+      return false;
+    }
+	});
 
   $('#Confirm').on('submit', function(e){
-    e.preventDefault();
+    var $buttonPressed = $(this).find("input[type=submit]:focus");
+    if ($buttonPressed.attr('name') === $button.attr('name')) {
+      e.preventDefault();
+    }
     $button.prop("disabled", 1); // prevet double submit
 
     const tappayStatus = TPDirect.card.getTappayFieldsStatus();
