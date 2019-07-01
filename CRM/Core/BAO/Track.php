@@ -33,11 +33,13 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $params['session_key'] = session_id();
     $track = new CRM_Core_DAO_Track();
     if (!empty($params['id']) && is_numeric($params['id'])) {
+      CRM_Utils_Hook::pre('edit', 'Track', $params['id'], $params);
       $track->id = $params['id'];
       $track->find(TRUE);
       $track->copyValues($params);
       $track->counter++;
       $track->update();
+      CRM_Utils_Hook::post('edit', 'Track', $track->id, $track);
     }
     else {
       // in thirty mins same session visit same page and not completed
@@ -50,6 +52,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       ));
       
       if ($sameSession->fetch()) {
+        CRM_Utils_Hook::pre('edit', 'Track', $sameSession->id, $params);
         $track->id = $sameSession->id;
         $track->find(TRUE);
         if ($params['state'] < $track->state) {
@@ -60,10 +63,13 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
           $track->counter++;
         }
         $track->update();
+        CRM_Utils_Hook::post('edit', 'Track', $track->id, $track);
       }
       else {
+        CRM_Utils_Hook::pre('create', 'Track', NULL, $params);
         $track->copyValues($params);
         $track->insert();
+        CRM_Utils_Hook::post('create', 'Track', $track->id, $track);
       }
     }
     return $track;
