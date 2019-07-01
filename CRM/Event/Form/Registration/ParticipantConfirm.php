@@ -189,7 +189,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     //To show the event location on maps directly on event info page
     $config = CRM_Core_Config::singleton();
     if (CRM_Utils_Array::value('is_map', $values['event'])) {
-      $locations = CRM_Event_BAO_Event::getMapInfo($this->_id);
+      $locations = CRM_Event_BAO_Event::getMapInfo($this->_eventId);
       $this->assign('locationsJson', json_encode($locations));
       $this->assign_by_ref('locations', $locations);
       $this->assign('mapProvider', $config->mapProvider);
