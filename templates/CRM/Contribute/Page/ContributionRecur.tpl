@@ -85,7 +85,8 @@
                 <thead>
                   <tr>
                     <th>{ts}Modified Date{/ts}</th>
-                    <th>{ts}Note{/ts}</th>
+                    <th>{ts}Note Title{/ts}</th>
+                    <th>{ts}Note Text{/ts}</th>
                     <th>{ts}Status{/ts}</th>
                     <th>{ts}Amount{/ts}</th>
                     <th>{ts}Modified By{/ts}</th>
@@ -98,10 +99,10 @@
                       {if $log.note_subject}
                         {$log.note_subject}
                       {/if}
+                    </td>
+                    <td>
                       {if $log.note}
-                        {if $log.note}
-                          {help id="recur-note-`$key`" text="`$log.note`"}
-                        {/if}
+                        {$log.note}
                       {/if}
                     </td>
                     <td>
