@@ -497,8 +497,10 @@ class CRM_Export_BAO_Export {
       else {
         $where .= " AND $componentClause";
       }
-      $field = preg_replace('/ IN.+$/', '', $componentClause);
-      $orderBy = " ORDER BY FIELD($field,".implode(',', $ids).") ";
+      if (count($ids) < 1000) {
+        $field = preg_replace('/ IN.+$/', '', $componentClause);
+        $orderBy = " ORDER BY FIELD($field,".implode(',', $ids).") ";
+      }
     }
 
     $queryString = "$select $from $where";
