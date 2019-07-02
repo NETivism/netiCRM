@@ -838,7 +838,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
         'contact_type' => $contactType,
         'level' => 'Strict',
       );
-      $dupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $dupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
       if (!is_array($dupeFields)) {
         $dupeFields = array();
       }

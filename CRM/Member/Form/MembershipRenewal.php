@@ -464,19 +464,23 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
     }
     $this->_membershipId = $this->_id;
 
+    $session = CRM_Core_Session::singleton();
+    $userID = $session->get('userID');
     // check for test membership.
     $isTestMembership = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_Membership', $this->_membershipId, 'is_test');
-    $renewMembership = CRM_Member_BAO_Membership::renewMembership($this->_contactID,
+    $renewMembership = CRM_Member_BAO_Membership::renewMembership(
+      $this->_contactID,
       $this->_memType,
-      $isTestMembership, $this, NULL
+      $isTestMembership,
+      $this,
+      NULL,
+      $userID
     );
 
     $endDate = CRM_Utils_Date::processDate($renewMembership->end_date);
 
     require_once 'CRM/Contact/BAO/Contact/Location.php';
     // Retrieve the name and email of the current user - this will be the FROM for the receipt email
-    $session = CRM_Core_Session::singleton();
-    $userID = $session->get('userID');
     list($userName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($userID);
 
     $memType = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType', $renewMembership->membership_type_id, 'name');

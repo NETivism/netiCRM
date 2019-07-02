@@ -1765,7 +1765,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         'level' => 'Strict',
       );
       require_once 'CRM/Dedupe/BAO/Rule.php';
-      $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
 
       $tmpConatctField = array();
       if (is_array($fieldsArray)) {
