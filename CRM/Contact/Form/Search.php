@@ -352,7 +352,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
     else {
       $taskClassName = $this->_modeValue['taskClassName'];
-      $task += $taskClassName::permissionedTaskTitles( $permission );
+      $tasks += $taskClassName::permissionedTaskTitles( $permission );
     }
 
     if (isset($this->_ssID)) {
