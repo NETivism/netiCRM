@@ -478,8 +478,22 @@ class CRM_Utils_String {
    * Function to add include files needed for jquery
    */
   static function addJqueryFiles(&$html) {
+    $config = CRM_Core_Config::singleton();
     $smarty = CRM_Core_Smarty::singleton();
-    return $smarty->fetch('CRM/common/jquery.tpl') . $html;
+    $buffer = $smarty->fetch('CRM/common/jquery.files.tpl');
+    $lines  = preg_split( '/\s+/', $buffer );
+    $jquery = '';
+    $css = '';
+    foreach ( $lines as $line ) {
+      if ( strpos( $line, '.js' ) !== false ) {
+        $jquery .= '<script type="text/javascript" src="'.$config->resourceBase.$line.'"></script>'."\n";
+      }
+      else if ( strpos( $line, '.css' ) !== false ) {
+        $css .= '<link crossorigin="anonymous" media="all" rel="stylesheet" href="'.$config->resourceBase.$line.'" itemprop="url" />';
+      }
+    }
+    $jquery .= '<script type="text/javascript">var cj = jQuery.noConflict(); $ = cj;</script>'."\n";
+    return $css.$jquery.$html;
   }
 
   /**
