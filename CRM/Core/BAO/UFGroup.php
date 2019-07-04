@@ -2252,7 +2252,8 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       NULL,
       $fieldsFix
     );
-    $copy->name = preg_replace('/_\d+$/', '_'.$copy->id, $copy->name);
+    $copy->name = preg_replace('/_\d+$/', '', $copy->name);
+    $copy->name .= '_'.$copy->id;
     $copy->save();
 
     $copyUFField = &CRM_Core_DAO::copyGeneric('CRM_Core_BAO_UFField',

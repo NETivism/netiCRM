@@ -9,7 +9,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   protected $_apiType = NULL;
 
   // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
-  public static $_editableFields = array('amount', 'installments', 'end_date', 'cycle_day', 'contribution_status_id');
+  public static $_editableFields = array('amount', 'installments', 'end_date', 'cycle_day', 'contribution_status_id', 'note_title', 'note_body');
 
   public static $_hideFields = array('invoice_id', 'trxn_id');
 

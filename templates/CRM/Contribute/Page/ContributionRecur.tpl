@@ -219,30 +219,61 @@
 
       {if $form.auto_renew.html}<tr><td class="label">{$form.auto_renew.label}</td><td>{$form.auto_renew.html}</td></tr>{/if}
       <tr><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}</td></tr>
+      {if $form.note_title.html}
       <tr><td class="label">{$form.note_title.label}</td><td>{$form.note_title.html}</td></tr>
+      {/if}
+      {if $form.note_body.html}
       <tr><td class="label">{$form.note_body.label}</td><td>{$form.note_body.html}</td></tr>
+      {/if}
     </table>
     <div class="crm-section recurcontrib-buttons-section no-label">
       <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
       <div class="clear"></div> 
     </div>
+    {if $form.note_title.html}
     {literal}
     <script>
       (function($){
         $(function(){
           $('#contribution_status_id').change(function(){
             var $this = $(this);
-            if ($this.val() != $this.attr('data-origin-type')) {
-              $('#note_title').val("{/literal}{ts}Change status to %status%{/ts}{literal}".replace("%status%", $this.find(":selected").text()));
+            if ($this.val() != $this.attr('data-origin-status')) {
+              $('#note_title').data('status', $this.find(":selected").text());
             }
             else {
-              $('#note_title').val("");
+              $('#note_title').data('status', '');
             }
-          })
+            console.log($('#note_title').data('status'));
+            updateNoteTitle()
+          });
+
+          $('#amount').change(function(){
+            var $this = $(this);
+            if ($this.val() != $this.attr('data-origin-amount')) {
+              $('#note_title').data('amount', parseFloat($this.val()));
+            }
+            else {
+              $('#note_title').data('amount', '');
+            }
+            updateNoteTitle()
+          });
+
+          function updateNoteTitle(){
+            var textArray = [];
+            if ($('#note_title').data('status')) {
+              console.log($('#note_title').data('status'));
+              textArray.push("{/literal}{ts}Change status to %status%{/ts}{literal}".replace("%status%", $('#note_title').data('status')))
+            }
+            if ($('#note_title').data('amount')) {
+              textArray.push("{/literal}{ts}Change amount{/ts}{literal}");
+            }
+            $('#note_title').val(textArray.join(','));
+          }
         });
       })(cj);
     </script>
     {/literal}
+    {/if}
     {* include jscript to warn if unsaved form field changes *}
     {include file="CRM/common/formNavigate.tpl"}
 </div>

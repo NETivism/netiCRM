@@ -182,7 +182,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
         $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'contribution_status_id');
         $ele = $this->add('select', 'contribution_status_id', $label, $statuses, FALSE, array(
-          'data-origin-type' => $statusId,
+          'data-origin-status' => $statusId,
         ));
       }
       else if (in_array($name, array('installments', 'cycle_day', 'amount'))) {
@@ -191,6 +191,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         }
         else {
           $attr = array('min' => 0);
+        }
+        if ($name == 'amount') {
+          $amount = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'amount');
+          $attr['data-origin-amount'] = number_format($amount);
         }
         $ele = $this->add('number', $name, $label, $attr);
       }
@@ -211,14 +215,19 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       }
     }
 
-    $this->add('text', 'note_title', ts('Note Title'), array(
-      'readonly' => 'readonly',
-    ));
-    $this->add('textarea', 'note_body', ts('Note Text'), array(
-      'rows' => "4",
-      'cols' => "60",
-      'placeholder' => ts("Enter text here")."...",
-    ));
+    if (in_array('note_title', $activeFields)) {
+      $this->add('text', 'note_title', ts('Note Title'), array(
+        'readonly' => 'readonly',
+        'size' => 60,
+      ));
+    }
+    if (in_array('note_body', $activeFields)) {
+      $this->add('textarea', 'note_body', ts('Note Text'), array(
+        'rows' => "4",
+        'cols' => "60",
+        'placeholder' => ts("Enter text here")."...",
+      ));
+    }
 
     // define the buttons
     $this->addButtons(array(
