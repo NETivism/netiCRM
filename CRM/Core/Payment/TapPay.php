@@ -456,6 +456,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $time = time();
     }
     $executeDay = date('j', $time);
+    $currentDate = date('Y-m-01 00:00:00', $time);
 
     // #25443, only trigger when current month doesn't have any contribution yet
     $sql = "
@@ -465,7 +466,7 @@ SELECT
   c.payment_processor_id payment_processor_id,
   c.is_test is_test,
   (SELECT MAX(receive_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id) AS last_success_date,
-  DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') as current_month_start
+  '$currentDate' as current_month_start
 FROM
   civicrm_contribution_recur r
 INNER JOIN
@@ -474,7 +475,7 @@ ON
   r.id = c.contribution_recur_id
 WHERE
   r.cycle_day = %1 AND
-  (SELECT MAX(receive_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id) < DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00')
+  (SELECT MAX(receive_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id) < '$currentDate'
 AND r.contribution_status_id = 5
 GROUP BY r.id
 LIMIT 0, 100
@@ -550,14 +551,14 @@ LIMIT 0, 100
       $reason = 'by no end_date and installments set ...';
     }
 
+    $tappay = new CRM_Contribute_DAO_TapPay();
+    $tappay->contribution_id = $dao->contribution_id;
+    $tappay->find(TRUE);
     if ($goPayment) {
       // Check if Credit card over date.
-      $tappay = new CRM_Contribute_DAO_TapPay();
-      $tappay->contribution_id = $dao->contribution_id;
-      $tappay->find(TRUE);
       if ($time <= strtotime($tappay->expiry_date)) {
         $resultNote .= $reason;
-        $resultNote .= "\n".ts("Finish synchronizing recurring.");
+        $resultNote .= ts("Finish synchronizing recurring.");
         self::payByToken($dao->recur_id, $dao->contribution_id);
         $donePayment = TRUE;
         // Count again for new contribution.
@@ -864,8 +865,8 @@ LIMIT 0, 100
         // Update contribution_tappay for new expiry_date only. *DO NOT* touch other fields
         $year = $month = $expiry_date = NULL;
         if ($data->card_info->expiry_date) {
-          $year = substr($response->card_info->expiry_date, 0, 4);
-					$month = substr($response->card_info->expiry_date, 4, 2);
+          $year = substr($data->card_info->expiry_date, 0, 4);
+          $month = substr($data->card_info->expiry_date, 4, 2);
 					$expiry_date = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
           if ($expiry_date != $dao->expiry_date  && strtotime($expiry_date) > strtotime($dao->expiry_date)) {
             $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE contribution_id = %2";
