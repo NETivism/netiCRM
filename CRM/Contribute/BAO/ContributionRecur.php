@@ -484,8 +484,7 @@ GROUP BY c.currency";
   static function saveLogData($params, $before = NULL, &$logId = NULL, $message = NULL) {
     $params = (object) $params;
     if (empty($params->id)) {
-      $message = ts('Lack of ID in parameters when saving log data.');
-      CRM_Core_Error::debug_log_message($message, TRUE);
+      CRM_Core_Error::debug_log_message(ts('Lack of ID in parameters when saving log data.'), TRUE);
     }
     else if (!empty($before)) {
       $recurDAO = (object) $before;
