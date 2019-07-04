@@ -457,13 +457,33 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
     $executeDay = date('j', $time);
 
-    $sql = "SELECT r.id recur_id, r.last_execute_date last_execute_date, c.payment_processor_id payment_processor_id, c.is_test is_test FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.cycle_day = %1 AND r.contribution_status_id = 5 GROUP BY r.id";
+    // #25443, only trigger when current month doesn't have any contribution yet
+    $sql = "
+SELECT
+  r.id recur_id,
+  r.last_execute_date last_execute_date,
+  c.payment_processor_id payment_processor_id,
+  c.is_test is_test,
+  (SELECT MAX(receive_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id) AS last_success_date,
+  DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') as current_month_start
+FROM
+  civicrm_contribution_recur r
+INNER JOIN
+  civicrm_contribution c
+ON
+  r.id = c.contribution_recur_id
+WHERE
+  r.cycle_day = %1 AND
+  (SELECT MAX(receive_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id) < DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00')
+AND r.contribution_status_id = 5
+GROUP BY r.id
+LIMIT 0, 100
+";
     $params = array(
       1 => array($executeDay, 'Positive'),
     );
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
-
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
@@ -574,12 +594,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     if ( $changeStatus ) {
+      $resultNote .= "\n".ts("Update recurring status to 'Completed'.");
       $recurParams = array();
       $recurParams['id'] = $dao->recur_id;
       $recurParams['contribution_status_id'] = 1;
+      $recurParams['message'] = $resultNote;
       CRM_Contribute_BAO_ContributionRecur::add($recurParams);
-
-      $resultNote .= "\n".ts("Update recurring status to 'Finished'.");
     }
 
     CRM_Core_Error::debug_log_message($resultNote);
@@ -819,10 +839,15 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if (empty($data)) {
       return 0;
     }
+    $requestURL = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
+    $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 
     // Get contribution ids by token
     foreach ($data->card_token as $token) {
-      $sql = "SELECT contribution_id, contribution_recur_id FROM civicrm_contribution_tappay WHERE card_token = %1";
+      if (empty($token)) {
+        continue;
+      }
+      $sql = "SELECT contribution_id, contribution_recur_id, expiry_date FROM civicrm_contribution_tappay WHERE card_token = %1";
       $params = array(
         1 => array($token, 'String'),
       );
@@ -830,28 +855,33 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       while ($dao->fetch()) {
         $recordData = array(
           'contribution_id' => $dao->contribution_id,
-          'url' => $_SERVER['HTTP_X_FORWARDED_PROTO'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+          'url' => $requestURL,
           'date' => date('Y-m-d H:i:s'),
           'post_data' => $input,
         );
         CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
 
-        // Update contribution_tappay for new expiry_date...etc.
-        $updateData = clone $data;
-        $updateData->card_token = $token;
-        CRM_Core_Payment_TapPayAPI::saveTapPayData($dao->contribution_id, $updateData);
-
-        $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $dao->contribution_id, 'auto_renew');
-        if ($autoRenew != 2) {
-          $params = array(
-            'id' => $dao->contribution_recur_id,
-            'auto_renew' => 2,
-          );
-          CRM_Contribute_BAO_ContributionRecur::add($params);
-          $msg = ts("Set 'auto renew' value to 'renewed'.");
-          CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $msg);
+        // Update contribution_tappay for new expiry_date only. *DO NOT* touch other fields
+        $year = $month = $expiry_date = NULL;
+        if ($data->card_info->expiry_date) {
+          $year = substr($response->card_info->expiry_date, 0, 4);
+					$month = substr($response->card_info->expiry_date, 4, 2);
+					$expiry_date = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
+          if ($expiry_date != $dao->expiry_date  && strtotime($expiry_date) > strtotime($dao->expiry_date)) {
+            $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE contribution_id = %2";
+            CRM_Core_DAO::executeQuery($sql, array(
+              1 => array($expiry_date, 'String'),
+              2 => array($dao->contribution_id, 'Integer'),
+            ));
+            $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $dao->contribution_id, 'auto_renew');
+            $params = array(
+              'id' => $dao->contribution_recur_id,
+              'auto_renew' => 2,
+              'message' => ts("Update expiry date from {$dao->expiry_date} to $expiry_date"),
+            );
+            CRM_Contribute_BAO_ContributionRecur::add($params);
+          }
         }
-
       }
     }
     return 1;
