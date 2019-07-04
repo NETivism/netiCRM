@@ -46935,3 +46935,6 @@ msgstr ""
 
 msgid "Carefully. You should never make this publicly."
 msgstr ""
+
+msgid "Change amount"
+msgstr ""
