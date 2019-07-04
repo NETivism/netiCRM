@@ -616,11 +616,14 @@ class CRM_Core_Payment_BaseIPN {
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
 
-    if (!empty($sendMail)) {
-      self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
+    // #25671, add support for hook change mailing notification trigger
+    if (!$sendMail || !empty($input['do_not_mail'])) {
+      CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and no mail sent.");
     }
-
-    CRM_Core_Error::debug_log_message("Success: Database updated and mail sent");
+    else {
+      self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
+      CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and mail sent");
+    }
   }
 
   function getBillingID(&$ids) {
