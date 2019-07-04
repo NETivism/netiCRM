@@ -93,7 +93,13 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $result = $recurring->save();
 
     $params['id'] = $recurring->id;
-    self::saveLogData($recurring, $oldRecurring, $logId);
+    if ($ids['log']) {
+      $logId = $ids['log'];
+    }
+    if (!empty($params['message'])) {
+      $message = $params['message'];
+    }
+    self::saveLogData($recurring, $oldRecurring, $logId, $message);
 
     // create post-processing hooks
     if (CRM_Utils_Array::value('id', $params)) {
@@ -475,7 +481,7 @@ GROUP BY c.currency";
     return $chart;
   }
 
-  static function saveLogData($params, $before = NULL, &$logId = NULL) {
+  static function saveLogData($params, $before = NULL, &$logId = NULL, $message = NULL) {
     $params = (object) $params;
     if (empty($params->id)) {
       $message = ts('Lack of ID in parameters when saving log data.');
@@ -502,6 +508,9 @@ GROUP BY c.currency";
       }
     }
     $data = array('before' => $before, 'after' => $after);
+    if (!empty($message)) {
+      $data['message'] = $message;
+    }
     $session = CRM_Core_Session::singleton();
     $contactId = $session->get('userID');
     $logParams = array(
