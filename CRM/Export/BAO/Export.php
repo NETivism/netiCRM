@@ -1103,6 +1103,7 @@ class CRM_Export_BAO_Export {
       require_once ($ext->classToPath($customSearchClass));
     }
     $search = new $customSearchClass($formValues);
+    $search->_isExport = TRUE;
 
     $includeContactIDs = FALSE;
     if ($formValues['radio_ts'] == 'ts_sel') {
