@@ -617,7 +617,7 @@ class CRM_Core_Payment_BaseIPN {
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
 
     // #25671, add support for hook change mailing notification trigger
-    if (!$sendMail || !empty($input['do_not_mail'])) {
+    if (!$sendMail || !empty($input['do_not_email'])) {
       CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and no mail sent.");
     }
     else {
