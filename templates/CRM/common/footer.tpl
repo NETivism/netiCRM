@@ -45,10 +45,10 @@
       <div>
         <i class="zmdi zmdi-time"></i> {ts}Last Change by{/ts} <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$lastModified.id`"}">{$lastModified.name}</a> ({$lastModified.date|crmDate})
       </div>
-      {if $changeLog != '0'}<div>
-        <a href="{crmURL p='civicrm/contact/view' q="reset=1&action=browse&selectedChild=log&cid=`$contactId`"}"><i class="zmdi zmdi-calendar-note"></i>{ts}View Change Log{/ts}</a>
-      </div>{/if}
     {/if}
+    {if $changeLog != '0'}<div>
+      <a href="{crmURL p='civicrm/contact/view' q="reset=1&action=browse&selectedChild=log&cid=`$contactId`"}"><i class="zmdi zmdi-calendar-note"></i>{ts}View Change Log{/ts}</a>
+    </div>{/if}
     </span>
     </div>
 {/if}
