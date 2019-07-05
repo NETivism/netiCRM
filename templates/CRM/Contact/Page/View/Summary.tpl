@@ -389,26 +389,59 @@
         </div>
 		<div class="clear"></div>
     </div>
- <script type="text/javascript"> 
- var selectedTab  = 'summary';
- var spinnerImage = '<img src="{$config->resourceBase}i/loading.gif" style="width:10px;height:10px"/>';
- {if $selectedChild}selectedTab = "{$selectedChild}";{/if}  
- {literal}
- function fixTabAbort(event,ui){
-//	jQuery(ui.tab).data("cache.tabs",(jQuery(ui.panel).html() == "") ? false : true);
+<script type="text/javascript"> 
+{literal}
+cj(document).ready(function($){
+  var defaultTab = 0; 
+  if (typeof location.search !== "undefined" && location.search.indexOf('selectedChild=') !== -1) {
+    var matches = location.search.match(/selectedChild=([^&]+)/);
+    if (matches && typeof matches[1] === 'string') {
+      var $selectedTab = $("#tab_"+matches[1]);
+      if ($selectedTab.length) {
+        defaultTab = $selectedTab.index();
+      }
     }
+  }
+  var historyObj = {"tab":defaultTab};
+  $("#mainTabContainer").tabs({
+    active: defaultTab,
+    beforeLoad: function(event, ui){
+      if ($(ui.panel).html()) {    // If content already there...
+        event.preventDefault();    // cache this panel, don't load this again
+      }
+      else {
+        ui.tab.find("a.ui-tabs-anchor").append('<i class="zmdi zmdi-refresh zmdi-hc-spin"></i>');
+      }
+    },
+    load: function(event, ui){
+      ui.tab.find('.zmdi-refresh').remove();
+    },
+    activate: function(){
+      var currentTab = $("#mainTabContainer .ui-tabs-active").prop("id").replace("tab_", "");
+      if (typeof location.search !== "undefined" && location.search.indexOf('selectedChild=') !== -1) { 
+        var matches = location.search.match(/selectedChild=[^&]+/);
+        if (matches && typeof matches[0] === 'string') {
+          var href = location.href.replace(matches[0], "selectedChild="+currentTab);
+        }
+      }
+      else {
+        var href = location.href.indexOf("?") ? location.href+"&selectedChild="+currentTab : location.href+"?selectedChild="+currentTab;
+      }
+      if (typeof historyObj.visited !== "undefined") {
+        history.replaceState(historyObj, "", href);
+      }
+      else {
+        historyObj["visited"] = 1;
+        history.pushState(historyObj, "", href);
+      }
+    }
+  });
+  cj(".crm-tab-button").addClass("ui-corner-bottom");     
+  // remember browse history
 
-//explicitly stop spinner
-function stopSpinner( ) {
- cj('li.crm-tab-button').each(function(){ cj(this).find('span').text(' ');})	 
-}
- cj( function() {
-     var tabIndex = cj('#tab_' + selectedTab).prevAll().length;
-     cj("#mainTabContainer").tabs({ selected: tabIndex, spinner: spinnerImage,cache: true, select: fixTabAbort, load: stopSpinner});
-     cj(".crm-tab-button").addClass("ui-corner-bottom");     
- });
- {/literal}
- </script>
+});
+{/literal}
+</script>
 
 {/if}
 {literal}
