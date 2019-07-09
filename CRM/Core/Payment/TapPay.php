@@ -465,7 +465,7 @@ SELECT
   r.last_execute_date last_execute_date,
   c.payment_processor_id payment_processor_id,
   c.is_test is_test,
-  (SELECT MAX(receive_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id) AS last_success_date,
+  (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) AS last_created_date,
   '$currentDate' as current_month_start
 FROM
   civicrm_contribution_recur r
@@ -475,7 +475,7 @@ ON
   r.id = c.contribution_recur_id
 WHERE
   r.cycle_day = %1 AND
-  (SELECT MAX(receive_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id) < '$currentDate'
+  (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
 AND r.contribution_status_id = 5
 GROUP BY r.id
 LIMIT 0, 100
