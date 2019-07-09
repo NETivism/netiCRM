@@ -1829,6 +1829,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
 
     $counted = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 1', 'label');
     $notcounted = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 0', 'label');
+    $participantRoles = CRM_Event_PseudoConstant::participantRole(NULL, 'filter = 1');
     $setting['neticrm_event_stat']['state'] = array();
     foreach ($counted as $key => $value) {
       $setting['neticrm_event_stat']['state'][$key] = array('name' => $value, 'isfinish' => 'counted');
@@ -1837,7 +1838,20 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
       $setting['neticrm_event_stat']['state'][$key] = array('name' => $value, 'isfinish' => 'notcounted');
     }
 
-    $sql = "SELECT cp.id, cp.status_id FROM civicrm_participant cp LEFT JOIN civicrm_contact cc ON cc.id = cp.contact_id WHERE cp.event_id = %1 AND cp.is_test = 0 AND cc.is_deleted = 0";
+    if (!empty($participantRoles)) {
+      $roleOr = array();
+      $roleWhere = '';
+      foreach($participantRoles as $roleId => $roleName) {
+        $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
+      }
+      if (!empty($roleOr)) {
+        $roleWhere = " AND (".implode(' OR ', $roleOr).") ";
+      }
+    }
+    $sql = "SELECT cp.id, cp.status_id
+    FROM civicrm_participant cp
+    INNER JOIN (SELECT id, REPLACE(role_id, '".CRM_Core_DAO::VALUE_SEPARATOR."', ',') as role_ids FROM civicrm_participant) pp ON pp.id = cp.id
+    LEFT JOIN civicrm_contact cc ON cc.id = cp.contact_id WHERE cp.event_id = %1 AND cp.is_test = 0 AND cc.is_deleted = 0 $roleWhere";
     $query = CRM_Core_DAO::executeQuery($sql, array(1 => array($event_id, 'Integer')));
     $participant_status = array();
     while ($query->fetch()) {
