@@ -384,7 +384,13 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
       $where[] = ' ( participant.is_test = 0 OR participant.is_test IS NULL ) ';
     }
     if (!empty($participantRoles)) {
-      $where[] = ' participant.role_id IN ( ' . implode(', ', array_keys($participantRoles)) . ' ) ';
+      $roleOr = array();
+      foreach($participantRoles as $roleId => $roleName) {
+        $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
+      }
+      if (!empty($roleOr)) {
+        $where[] = " (".implode(' OR ', $roleOr).") ";
+      }
     }
 
     $eventParams = array(1 => array($eventId, 'Positive'));
@@ -398,9 +404,11 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
 
       $query = "
     SELECT  participant.id id,
-            event.event_full_text as event_full_text
-      FROM  civicrm_participant participant 
-INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
+            event.event_full_text as event_full_text,
+            pp.role_ids
+      FROM  civicrm_participant participant
+      INNER JOIN (SELECT id, REPLACE(role_id, '".CRM_Core_DAO::VALUE_SEPARATOR."', ',') as role_ids FROM civicrm_participant) pp ON pp.id = participant.id
+      INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
             {$whereClause}";
 
       $participantIds = array();
@@ -431,6 +439,7 @@ INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
             event.event_full_text as event_full_text,
             event.max_participants as max_participants
       FROM  civicrm_participant participant 
+INNER JOIN (SELECT id, REPLACE(role_id, '".CRM_Core_DAO::VALUE_SEPARATOR."', ',') as role_ids FROM civicrm_participant) pp ON pp.id = participant.id
 INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
 INNER JOIN  civicrm_contact contact ON (participant.contact_id = contact.id)
             {$whereClause}";
