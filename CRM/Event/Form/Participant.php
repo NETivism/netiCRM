@@ -1430,9 +1430,9 @@ cj(function() {
         //insert payment record for this participation
         if (!$ids['contribution']) {
           require_once 'CRM/Event/DAO/ParticipantPayment.php';
-          foreach ($this->_contactIds as $num => $contactID) {
+          foreach ($participants as $num => $part) {
             $ppDAO = new CRM_Event_DAO_ParticipantPayment();
-            $ppDAO->participant_id = $participants[$num]->id;
+            $ppDAO->participant_id = $part->id;
             $ppDAO->contribution_id = $contributions[$num]->id;
             $ppDAO->save();
           }

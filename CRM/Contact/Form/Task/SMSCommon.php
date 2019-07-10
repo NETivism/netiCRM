@@ -122,8 +122,8 @@ class CRM_Contact_Form_Task_SMSCommon {
       foreach ($allToPhone as $value) {
         list($contactId, $phone) = explode('::', trim($value));
         if ($contactId) {
-          $form->_contactIds[] = $contactId;
-          $form->_toContactPhone[] = $phone;
+          $form->_contactIds[$contactId] = $contactId;
+          $form->_toContactPhone[$contactId] = $phone;
         }
       }
       $toSetDefault = TRUE;
@@ -145,6 +145,7 @@ class CRM_Contact_Form_Task_SMSCommon {
         $targetID = CRM_Utils_Array::key('Activity Targets', $activityContacts);
         //target contacts limit check
         $ids = array_keys(CRM_Activity_BAO_ActivityContact::getNames($id, $targetID));
+        $ids = array_combine($ids, $ids);
 
         if (count($ids) > 1) {
           $extendTargetContacts++;
@@ -191,7 +192,7 @@ class CRM_Contact_Form_Task_SMSCommon {
       // make a copy of all contact details
       $form->_allContactDetails = $form->_contactDetails;
 
-      foreach ($form->_contactIds as $key => $contactId) {
+      foreach ($form->_contactIds as $contactId) {
 
         // Clear $mobilePhone variable
         $mobilePhone = NULL;
@@ -247,7 +248,7 @@ class CRM_Contact_Form_Task_SMSCommon {
           $phone = $value['phone'];
         }
         else {
-          $phone = CRM_Utils_Array::value($key, $form->_toContactPhone);
+          $phone = CRM_Utils_Array::value($contactId, $form->_toContactPhone);
         }
 
         if ($phone) {
@@ -388,8 +389,8 @@ class CRM_Contact_Form_Task_SMSCommon {
     $formattedContactDetails = array();
     $tempPhones = array();
 
-    foreach ($form->_contactIds as $key => $contactId) {
-      $phone = $form->_toContactPhone[$key];
+    foreach ($form->_contactIds as $contactId) {
+      $phone = $form->_toContactPhone[$contactId];
 
       if ($phone) {
         $phoneKey = "{$contactId}::{$phone}";
