@@ -4,8 +4,8 @@
  */
 
 class CRM_Core_Payment_TapPayAPI {
-  CONST TAPPAY_TEST = 'https://prod.tappaysdk.com/';
-  CONST TAPPAY_PROD = 'https://sandbox.tappaysdk.com';
+  CONST TAPPAY_TEST = 'https://sandbox.tappaysdk.com';
+  CONST TAPPAY_PROD = 'https://prod.tappaysdk.com';
 
   public static $_currencies = array(
     'USD' => 'USD',
@@ -65,7 +65,7 @@ class CRM_Core_Payment_TapPayAPI {
       CRM_Core_Error::fatal('API type not supported currently or given wrong type');
     }
     else {
-      $this->_apiURL = $isTest ? self::TAPPAY_TEST : self::TAPPAY_PROD; 
+      $this->_apiURL = $apiParams['isTest'] ? self::TAPPAY_TEST : self::TAPPAY_PROD; 
       $this->_apiURL .= $this->_apiTypes[$this->_apiType];
       $this->_apiMethod = 'POST';
     }

@@ -150,6 +150,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $tappayParams = array(
         'apiType' => 'pay_by_prime',
         'partnerKey' => $paymentProcessor['password'],
+        'isTest' => $contribution['is_test'],
       );
       $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
       $details = !empty($contribution['amount_level']) ? $contribution['source'].'-'.$contribution['amount_level'] : $contribution['source'];
@@ -247,6 +248,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $tappayParams = array(
         'apiType' => 'pay_by_token',
         'partnerKey' => $paymentProcessor['password'],
+        'isTest' => $c->is_test,
       );
       $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
 
@@ -313,6 +315,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
               'apiType' => 'card_metadata',
               'partnerKey' => $paymentProcessor['password'],
               'contribution_id' => $contributionId,
+              'isTest' => $contribution->is_test,
             );
             $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
             if (empty($data)) {
@@ -649,6 +652,7 @@ LIMIT 0, 100
     $tappayParams = array(
       'apiType' => 'record',
       'partnerKey' => $paymentProcessor['password'],
+      'isTest' => $contribution->is_test,
     );
     $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
 
