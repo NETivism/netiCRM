@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-06-20 04:16+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-07-04 08:12+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47059,7 +47059,7 @@ msgid "Note Title"
 msgstr "附註主旨"
 
 msgid "Change status to %status%"
-msgstr "狀態改為「%status%」"
+msgstr "狀態改變-%status%"
 
 msgid ""
 "Failuare: Amount values dont match between database and IPN request. Trxn_id"
@@ -47132,3 +47132,6 @@ msgstr "支援 3JTSP"
 
 msgid "Carefully. You should never make this publicly."
 msgstr "請謹慎使用。你永遠不應該讓這個公開呈現。"
+
+msgid "Change amount"
+msgstr "金額改變"
