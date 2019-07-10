@@ -208,9 +208,6 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   #intro_text h1{
     font-size: 48px;
   }
-  #intro_text p br{
-    display: inline;
-  }
   #header-inner {
     display: flex;
   }
@@ -564,9 +561,6 @@ body .crm-container fieldset{
 }
 #intro_text p{
   font-size: 16px;
-}
-#intro_text p br{
-  display: none;
 }
 #intro_text #logo img{
   width: 362px;

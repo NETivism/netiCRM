@@ -154,15 +154,15 @@ cj(document).ready(function($){
       $('#stat_ps_graph2').toggle();
       $('.substate-div').toggle();
     }
-    if($('#stat_ps .expand-icon').hasClass('fa-plus-square')){
+    if($('#stat_ps .expand-icon').hasClass('zmdi-plus-square')){
       setCookie('collapseParticipantCount', 0);
       $("#stat_ps_graph1").animate({'opacity':0.3});
-      $('#stat_ps .expand-icon').removeClass('fa-plus-square').addClass('fa-minus-square-o');
+      $('#stat_ps .expand-icon').removeClass('zmdi-plus-square').addClass('zmdi-minus-square');
     }
     else{
       setCookie('collapseParticipantCount', 1);
       $("#stat_ps_graph1").animate({'opacity':1});
-      $('#stat_ps .expand-icon').addClass('fa-plus-square').removeClass('fa-minus-square-o');
+      $('#stat_ps .expand-icon').addClass('zmdi-plus-square').removeClass('zmdi-minus-square');
     }
   }
   $('#stat_ps .expand-icon, #stat_ps .stat_ps_graph').click(function() {
@@ -194,10 +194,10 @@ cj(document).ready(function($){
       var label = state;
     }
 
-    var icon = name ? 'fa-users' : 'fa-square';
+    var icon = name ? 'zmdi-account-circle' : 'zmdi-circle';
     
     return $('<' + htmlTag + '>')
-      .append($('<span class="fa '+icon+'">').css({
+      .append($('<span class="zmdi '+icon+'">').css({
         'color': color,
         'margin-right': '10px'
       }))

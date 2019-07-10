@@ -46858,7 +46858,7 @@ msgid ""
 msgstr ""
 
 #: CRM/Contact/Form/Merge.php
-msgid "The selected pair of contacts are marked as non duplicates. If these records should be merged, you can remove this exception   on the <a href=\"%1\">Dedupe Exceptions</a> page."
+msgid "The selected pair of contacts are marked as non duplicates. If these records should be merged, you can remove this exception on the <a href=\"%1\">Dedupe Exceptions</a> page."
 msgstr ""
 
 msgid "Suspended"
@@ -46934,4 +46934,7 @@ msgid "Support 3JTSP"
 msgstr ""
 
 msgid "Carefully. You should never make this publicly."
+msgstr ""
+
+msgid "Change amount"
 msgstr ""
