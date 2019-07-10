@@ -673,6 +673,12 @@ SELECT civicrm_custom_group.name as name,
 
   public function buildQuickForm() {
     if ($this->_showFeeBlock) {
+      if (CRM_Core_Permission::access('CiviContribute')) {
+        $this->assign('accessContribution', TRUE);
+      }
+      else {
+        $this->assign('accessContribution', FALSE);
+      }
       return CRM_Event_Form_EventFees::buildQuickForm($this);
     }
 
