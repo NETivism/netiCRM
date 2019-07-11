@@ -169,8 +169,8 @@ class CRM_Contact_Form_Task_EmailCommon {
       foreach ($allToEmails as $value) {
         list($contactId, $email) = explode('::', $value);
         if ($contactId) {
-          $form->_contactIds[] = $contactId;
-          $form->_toContactEmails[] = $email;
+          $form->_contactIds[$contactId] = $contactId;
+          $form->_toContactEmails[$contactId] = $email;
         }
       }
       $toSetDefault = TRUE;
@@ -199,7 +199,7 @@ class CRM_Contact_Form_Task_EmailCommon {
       // make a copy of all contact details
       $form->_allContactDetails = $form->_contactDetails;
 
-      foreach ($form->_contactIds as $key => $contactId) {
+      foreach ($form->_contactIds as $contactId) {
         $value = $form->_contactDetails[$contactId];
         if ($value['do_not_email'] || empty($value['email']) || CRM_Utils_Array::value('is_deceased', $value) || $value['on_hold']) {
           $suppressedEmails++;
@@ -213,7 +213,7 @@ class CRM_Contact_Form_Task_EmailCommon {
             $email = $value['email'];
           }
           else {
-            $email = $form->_toContactEmails[$key];
+            $email = $form->_toContactEmails[$contactId];
           }
           $toArray[] = array('name' => '"' . $value['sort_name'] . '" &lt;' . $email . '&gt;',
             'id' => "$contactId::{$email}",
@@ -361,9 +361,9 @@ class CRM_Contact_Form_Task_EmailCommon {
     $formattedContactDetails = array();
     $tempEmails = array();
 
-    foreach ($form->_contactIds as $key => $contactId) {
+    foreach ($form->_contactIds as $contactId) {
       if (is_numeric($contactId) && !empty($contactId)) {
-        $email = $form->_toContactEmails[$key];
+        $email = $form->_toContactEmails[$contactId];
         // prevent duplicate emails if same email address is selected CRM-4067
         // we should allow same emails for different contacts
         $emailKey = "{$contactId}::{$email}";

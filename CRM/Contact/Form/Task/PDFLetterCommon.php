@@ -204,7 +204,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $first = TRUE;
 
     $domain = CRM_Core_BAO_Domain::getDomain();
-    foreach ($form->_contactIds as $item => $contactId) {
+    foreach ($form->_contactIds as $contactId) {
       $params = array('contact_id' => $contactId);
 
       list($contact) = $mailing->getDetails($params, $returnProperties, FALSE);

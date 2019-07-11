@@ -179,7 +179,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
 
     $rows = array();
 
-    foreach ($this->_contactIds as $key => $contactID) {
+    foreach ($this->_contactIds as $contactID) {
       $params[] = array(CRM_Core_Form::CB_PREFIX . $contactID,
         '=', 1, 0, 0,
       );
