@@ -804,6 +804,46 @@ LIMIT 0, 100
     }
   }
 
+  public static function doStatusCheck() {
+    // update recurring status when end date is due
+    $currentDay = date('Y-m-d 00:00:00');
+    $sql = "SELECT r.id, r.end_date, r.contribution_status_id, c.payment_processor_id, c.is_test FROM civicrm_contribution_recur r
+ INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id
+ WHERE r.end_date IS NOT NULL AND r.end_date < %1 AND r.contribution_status_id = 5 GROUP BY r.id";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(
+      1 => array($currentDay, 'String'),
+    ));
+    while ($dao->fetch()) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      if ($dao->id && strtolower($paymentProcessor['payment_processor_type']) == 'tappay') {
+        $params = array(
+          'id' => $dao->id,
+          'contribution_status_id' => 1,
+          'message' => ts("Update status to completed because end date is due."),
+        );
+        CRM_Contribute_BAO_ContributionRecur::add($params);
+      }
+    }
+
+    // update recurring status when card expiry date is due
+    $sql = "SELECT r.id, MAX(t.expiry_date) as expiry_date, r.contribution_status_id FROM civicrm_contribution_recur r
+ INNER JOIN civicrm_contribution_tappay t ON t.contribution_recur_id = r.id
+ WHERE t.expiry_date IS NOT NULL AND r.contribution_status_id = 5 GROUP BY r.id HAVING MAX(t.expiry_date) < %1";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(
+      1 => array($currentDay, 'String'),
+    ));
+    while ($dao->fetch()) {
+      if ($dao->id) {
+        $params = array(
+          'id' => $dao->id,
+          'contribution_status_id' => 1,
+          'message' => ts("Update status to completed because card expiry date is due."),
+        );
+        CRM_Contribute_BAO_ContributionRecur::add($params);
+      }
+    }
+  }
+
   public static function getAssociatedSession($qfKey, $class) {
     if(!$qfKey){
       return FALSE;
@@ -873,10 +913,10 @@ LIMIT 0, 100
           $month = substr($data->card_info->expiry_date, 4, 2);
 					$expiry_date = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
           if ($expiry_date != $dao->expiry_date  && strtotime($expiry_date) > strtotime($dao->expiry_date)) {
-            $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE contribution_id = %2";
+            $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE card_token = %2";
             CRM_Core_DAO::executeQuery($sql, array(
               1 => array($expiry_date, 'String'),
-              2 => array($dao->contribution_id, 'Integer'),
+              2 => array($token, 'String'),
             ));
             $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $dao->contribution_id, 'auto_renew');
             $params = array(
