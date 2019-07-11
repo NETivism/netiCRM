@@ -720,7 +720,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         // set default price option
         $attributes = array(
           'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
-          'data-default' => !empty($amount['filter']) ? 1 : 0,
+          'data-default' => (!empty($amount['filter']) && empty($this->_defaultFromRequest['amt'])) ? 1 : 0,
           'onclick' => 'clearAmountOther();',
         );
         $elements[] = &$this->createElement('radio', NULL, '',
@@ -750,8 +750,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $title = ts('Contribution Amount');
     if ($this->_values['is_allow_other_amount']) {
       if (!empty($this->_values['amount'])) {
+        if (!empty($this->_defaultFromRequest['amt'])) {
+          $attr = array('data-default' => 1);
+        }
         $elements[] = &$this->createElement('radio', NULL, '',
-          ts('Other Amount'), 'amount_other_radio'
+          ts('Other Amount'), 'amount_other_radio', $attr
         );
 
         $this->addGroup($elements, 'amount', $title, '<br />');
