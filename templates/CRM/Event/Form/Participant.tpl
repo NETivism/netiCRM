@@ -590,9 +590,14 @@
       cj('#send_confirmation_receipt').hide();
       cj('#send_receipt').attr('checked', false);
     }
-    else
-    if(is_counted){
-      cj('#send_confirmation_receipt').show();
+    else {
+      if(is_counted){
+        cj('#send_confirmation_receipt').show();
+      }
+      else {
+        cj('#send_receipt').attr('checked', false);
+        cj('#send_confirmation_receipt').hide();
+      }
     }
   }
 
