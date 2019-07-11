@@ -93,6 +93,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactID, $this)) {
         $this->set('csContactID', $csContactID);
         $this->_userID = $csContactID;
+        $this->assign('contact_id', $this->_userID);
       }
     }
 
