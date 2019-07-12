@@ -647,11 +647,11 @@ class CRM_Utils_Hook {
    * @return void
    * @access public
    */
-  static function export(&$exportTempTable, &$headerRows, &$sqlColumns, &$exportMode) {
+  static function export(&$exportTempTable, &$headerRows, &$sqlColumns, &$exportMode, $mappingId) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
-    return $className::invoke(  4, $exportTempTable, $headerRows, $sqlColumns, $exportMode, $null, 'civicrm_export' );
+    return $className::invoke(  5, $exportTempTable, $headerRows, $sqlColumns, $exportMode, $mappingId, 'civicrm_export' );
   }
 
   /**
