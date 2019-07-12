@@ -223,6 +223,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
 
     //get the csv file
     require_once "CRM/Export/BAO/Export.php";
+    $mappingId = $this->get('mappingId');
     CRM_Export_BAO_Export::exportComponents($this->get('selectAll'),
       $this->get('componentIds'),
       $this->get('queryParams'),
@@ -233,7 +234,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       $this->get('componentClause'),
       $this->get('componentTable'),
       $this->get('mergeSameAddress'),
-      $this->get('mergeSameHousehold')
+      $this->get('mergeSameHousehold'),
+      $mappingId
     );
   }
 

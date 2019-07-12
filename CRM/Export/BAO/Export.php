@@ -70,7 +70,8 @@ class CRM_Export_BAO_Export {
     $componentClause = NULL,
     $componentTable = NULL,
     $mergeSameAddress = FALSE,
-    $mergeSameHousehold = FALSE
+    $mergeSameHousehold = FALSE,
+    $mappingId = NULL
   ) {
     set_time_limit(1800);
     $headerRows = $returnProperties = array();
@@ -995,7 +996,7 @@ class CRM_Export_BAO_Export {
 
     // call export hook
     require_once 'CRM/Utils/Hook.php';
-    CRM_Utils_Hook::export($exportTempTable, $headerRows, $sqlColumns, $exportMode);
+    CRM_Utils_Hook::export($exportTempTable, $headerRows, $sqlColumns, $exportMode, $mappingId);
 
     // now write the CSV file
     self::writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode);
