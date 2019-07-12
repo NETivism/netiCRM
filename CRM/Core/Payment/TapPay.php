@@ -331,7 +331,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
             // only set auto renew when contribution has recurring
             if ($result->status == 0 && $contribution->contribution_recur_id) {
+              // set card status.
               $cardStatus = $result->card_info->token_status;
+              $tappayData->token_status = $cardStatus;
+              $tappayData->save();
+
+              // set auto_renew to contribution recur
               if (!empty($cardStatus) && ($cardStatus == 'ACTIVE' || $cardStatus == 'SUSPENDED')) {
                 CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $contribution->contribution_recur_id, 'auto_renew', 1);
               }
@@ -956,9 +961,10 @@ LIMIT 0, 100
       $returnData[ts('Card Issuer')] = $cardInfo->issuer;
       $returnData[ts('Card Type')] = self::$_cardType[$cardInfo->type];
     }
-    $tokenStatus = strtolower($tappayDAO->token_status);
-    $support3jtsp = array('active', 'suspend');
-    $returnData[ts('Support 3JTSP')] = in_array($tokenStatus, $support3jtsp) ? ts("Yes") : ts("No");
+    if (!empty($tappayDAO->contribution_recur_id)) {
+      $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $tappayDAO->contribution_recur_id, 'auto_renew');
+      $returnData[ts('Support 3JTSP')] = $autoRenew ? ts("Yes") : ts("No");
+    }
     return $returnData;
   }
 
