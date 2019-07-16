@@ -212,9 +212,14 @@ cj(document).ready(function($){
     }
 	});
 
+  $button.click(function(){
+    if (!$button.prop("disabled")) {
+      $button.data('clicked', true);
+    }
+  });
+
   $('#Confirm').on('submit', function(e){
-    var $buttonPressed = $(this).find("input[type=submit]:focus");
-    if ($buttonPressed.attr('name') === $button.attr('name')) {
+    if ($button.data('clicked')) {
       e.preventDefault();
     }
     $button.prop("disabled", 1); // prevet double submit
@@ -226,6 +231,7 @@ cj(document).ready(function($){
         window.onbeforeunload = function(){ return true; };
         if (result.status !== 0) {
           $button.removeProp("disabled");
+          $button.data('clicked', null);
         }
         else {
           window.onbeforeunload = null;
