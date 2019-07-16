@@ -700,11 +700,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       CRM_Utils_Hook::buildAmount('contribution', $this, $this->_values['amount']);
 
       // set default display
-      if (!empty($this->_values['default_amount_id'])) {
+      if (!empty($this->_defaultFromRequest['grouping'])) {
+        $this->_defaultAmountGrouping = $this->_defaultFromRequest['grouping'];
+      }
+      elseif (!empty($this->_values['default_amount_id'])) {
         $this->_defaultAmountGrouping = $this->_values['amount'][$this->_values['default_amount_id']]['grouping'];
-        if (!empty($this->_defaultFromRequest['grouping'])) {
-          $this->_defaultAmountGrouping = $this->_defaultFromRequest['grouping'];
-        }
       }
       foreach ($this->_values['amount'] as $amount) {
         // detect default from request
