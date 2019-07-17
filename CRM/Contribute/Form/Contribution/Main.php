@@ -695,15 +695,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
   function buildAmount($separateMembershipPayment = FALSE) {
     $elements = array();
     $defaultFromRequestAmountId = NULL; 
+    // set default display
+    if (!empty($this->_defaultFromRequest['grouping'])) {
+      $this->_defaultAmountGrouping = $this->_defaultFromRequest['grouping'];
+    }
     if (!empty($this->_values['amount'])) {
       // first build the radio boxes
       CRM_Utils_Hook::buildAmount('contribution', $this, $this->_values['amount']);
 
-      // set default display
-      if (!empty($this->_defaultFromRequest['grouping'])) {
-        $this->_defaultAmountGrouping = $this->_defaultFromRequest['grouping'];
-      }
-      elseif (!empty($this->_values['default_amount_id'])) {
+      if (!empty($this->_values['default_amount_id'])) {
         $this->_defaultAmountGrouping = $this->_values['amount'][$this->_values['default_amount_id']]['grouping'];
       }
       foreach ($this->_values['amount'] as $amount) {

@@ -21,7 +21,9 @@
       complete : 0,
 
       preparePage: function(){
-        document.querySelector('body').style.setProperty('--mobile-background-url', 'url('+window.ContribPageParams.mobileBackgroundImageUrl+')');
+        if (window.ContribPageParams.mobileBackgroundImageUrl) {
+          document.querySelector('body').style.setProperty('--mobile-background-url', 'url('+window.ContribPageParams.mobileBackgroundImageUrl+')');
+        }
 
         var $content = $('#main');
         $content.prepend($('#intro_text').prepend($('h1.page-title')));
@@ -126,6 +128,9 @@
           if(!reg_id.test(location.search)){
             this.currentFormStep = 2;
           }
+        }
+        else if ($('#amount_other').val()) {
+          this.currentPriceAmount = $('#amount_other').val();
         }
 
         if($('#footer_text').length){
