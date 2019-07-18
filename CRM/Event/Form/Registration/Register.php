@@ -154,8 +154,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           if(is_array($uffield)){
             if($uffield['data_type'] == 'File'){
               if(!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['customValue'][1]['data'])){
-                $proto = explode('/', $_SERVER['SERVER_PROTOCOL']);
-                $image = strtolower($proto[0]) . '://' . $_SERVER['HTTP_HOST'] . $uffield['customValue'][1]['fileURL'];
+                $image = $_SERVER['HTTP_ORIGIN'] . $uffield['customValue'][1]['fileURL'];
                 $meta_ogimg = array(
                   'tag' => 'meta',
                   'attributes' => array(

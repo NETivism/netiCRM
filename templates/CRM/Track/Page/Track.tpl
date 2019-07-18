@@ -39,7 +39,7 @@
         justify-content: space-between;
 			}
 			.track-inner {
-				flex: 0 0 20%;
+				flex: 0 0 1;
 			}
     {/literal}</style>
 		<div class="box-content track-outer">

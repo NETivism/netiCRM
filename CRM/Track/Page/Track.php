@@ -136,13 +136,15 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'visit_date ASC'
     );
     while($dao->fetch()){
-      if(empty($dao->referrer_type)){
-        continue;
-      }
       $dates[$dao->visit_day] = 1;
-      $dummy[$dao->referrer_type][$dao->visit_day] = (int)$dao->count;
+      if(empty($dao->referrer_type)){
+        $dummy['unknown'][$dao->visit_day] += (int)$dao->count;
+      }
+      else {
+        $dummy[$dao->referrer_type][$dao->visit_day] += (int)$dao->count;
+      }
     }
-
+    
     // prepare period label for chartist
     $start = !empty($selectorParams['visitDateStart']) ? $selectorParams['visitDateStart'] : key($dates);
     end($dates);

@@ -16,7 +16,7 @@
     display: flex;
   }
   .track-inner {
-    flex: 0 0 20%;
+    flex: 0 0 1;
   }
   .grey-background{
     background: #eee;
