@@ -89,7 +89,7 @@ class CRM_Core_Payment_LinePay {
     }
     $requestParams['orderId'] = $params['contributionID'];
     $requestParams['productName'] = $description;
-    $requestParams['amount'] = $params['amount']; // integer
+    $requestParams['amount'] = (int)$params['amount']; // integer
     $requestParams['currency'] = $config->defaultCurrency; // please use contribution currency
     $requestParams['confirmUrlType'] = 'CLIENT';
     $requestParams['confirmUrl'] = $confirmUrl;

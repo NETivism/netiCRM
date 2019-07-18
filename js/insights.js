@@ -31,7 +31,7 @@ function getHostNameFromUrl(url) {
   return url.indexOf(a.hostname) != -1 ? a.hostname : '';
 }
 
-function referrerInfo() {
+function loadReferrer() {
   var dateTime = Date.now();
   var timestamp = Math.floor(dateTime / 1000);
   var referrerInfo = sessionStorage.getItem('referrerInfo');
@@ -45,7 +45,10 @@ function referrerInfo() {
   }
   else {
     var url = window.location.href;
-    var referrer = document.referrer;
+    var referrer = '';
+    if (typeof document.referrer !== 'undefined') {
+      referrer = document.referrer;
+    }
     inbound.referrer.parse(url, referrer, function (err, visitInfo) {
       // set to sessionStorage because we need to make sure same browser different session have diffrent result
       visitInfo.landing = location.href.replace(location.origin, '');
@@ -159,6 +162,6 @@ function trackVisit(visitInfo) {
 var currentScriptSrc = document.currentScript.src;
 var inboundSrc = currentScriptSrc.replace(/insights\.js.*$/, 'inbound.js');
 loadScript(inboundSrc, function(){
-  referrerInfo();
+  loadReferrer();
 });
 

@@ -186,8 +186,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
               if(is_array($uffield)){
                 if($uffield['field_type'] == 'File'){
                   if(!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['field_value']['data'])){
-                    $proto = explode('/', $_SERVER['SERVER_PROTOCOL']);
-                    $image = strtolower($proto[0]) . '://' . $_SERVER['HTTP_HOST'] . $uffield['field_value']['fileURL'];
+                    $image = $_SERVER['HTTP_ORIGIN'] . $uffield['field_value']['fileURL'];
                     $meta_ogimg = array(
                       'tag' => 'meta',
                       'attributes' => array(
