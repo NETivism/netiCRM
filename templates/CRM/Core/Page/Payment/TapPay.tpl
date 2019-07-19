@@ -66,12 +66,11 @@
 }
 {/literal}</style>
 <div class="tp-wrapper">
-  <label class="tp-label">信用卡卡號</label>
+  <label class="tp-label">{ts}Credit Card Number{/ts}</label>
   <div>
     <img src="https://js.tappaysdk.com/tpdirect/image/visa.svg" alt="" class="tp-card">
     <img src="https://js.tappaysdk.com/tpdirect/image/mastercard.svg" class="tp-card">
     <img src="https://js.tappaysdk.com/tpdirect/image/jcb.svg" alt="" class="tp-card">
-    <img src="https://js.tappaysdk.com/tpdirect/image/amex.svg" alt="" class="tp-card">
   </div>
 </div>
 <div class="tp-wrapper">
@@ -81,12 +80,12 @@
 </div>
 <div class="tp-wrapper">
   <div {if $hideccv}class="tp-card-expiration-date"{/if}>
-    <label class="tp-label">到期月年</label>
+    <label class="tp-label">{ts}Expiration Date{/ts}</label>
     <div class="tp-field card-expiration-date" id="card-expiration-date"></div>
   </div>
   {if !$hideccv}
   <div>
-    <label class="tp-label">檢查碼</label>
+    <label class="tp-label" title="{ts}Please enter a valid Credit Card Verification Number{/ts}">{ts}CCV{/ts} <i class="zmdi zmdi-help"></i></label>
     <div class="tp-field card-ccv" id="card-ccv"></div>
   </div>
   {/if}
