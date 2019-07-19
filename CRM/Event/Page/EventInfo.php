@@ -287,7 +287,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
           if(is_array($uffield)){
             if($uffield['data_type'] == 'File'){
               if(!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['customValue'][1]['data'])){
-                $image = $_SERVER['HTTP_ORIGIN'] . $uffield['customValue'][1]['fileURL'];
+                $image = $config->customFileUploadURL . $uffield['customValue'][1]['data'];
                 $meta_ogimg = array(
                   'tag' => 'meta',
                   'attributes' => array(
