@@ -165,20 +165,21 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         'content' => $descript,
       ),
     );
-        if(is_array($this->_values['custom_data_view'])){
+    if(is_array($this->_values['custom_data_view'])){
+      $config = CRM_Core_Config::singleton();
       foreach ($this->_values['custom_data_view'] as $ufg) {
         foreach($ufg as $ufg_inner){
           if(is_array($ufg_inner['fields'])){
             foreach ($ufg_inner['fields'] as $uffield) {
               if(is_array($uffield)){
                 if($uffield['field_type'] == 'File'){
-                  if(!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['field_value']['data'])){
-                    $image = $_SERVER['HTTP_ORIGIN'] . $uffield['field_value']['fileURL'];
+                  if(!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['field_value']['data'])){
+                    $image = $config->customFileUploadURL . $uffield['field_value']['data'];
                     $meta_ogimg = array(
                       'tag' => 'meta',
                       'attributes' => array(
                         'property' => 'og:image',
-                        'value' => $image,
+                        'content' => $image,
                       ),
                     );
                     break;
