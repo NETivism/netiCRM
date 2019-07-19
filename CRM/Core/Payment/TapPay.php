@@ -582,33 +582,38 @@ LIMIT 0, 100
     // no else for make sure every rule checked
 
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
-      $resultNote .= "\n". ts("Stop recurring %1 because this is lastest contribution of this recurring (end date is %2).", array(1 => $recurId, 2 => $dao->end_date));
+      $resultNote .= "\n". ts("This is lastest contribution of this recurring (end date is %1).", array(1 => $recurId, 2 => $dao->end_date));
       $changeStatus = TRUE;
     }
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($tappay->expiry_date) && date('Ym', $time) == date('Ym', strtotime($tappay->expiry_date))) {
-      $resultNote .= "\n". ts("Stop recurring %1 because this is lastest contribution of this recurring (expiry date is %2).", array(1 => $recurId, 2 => $tappay->expiry_date));
+      $resultNote .= "\n". ts("This is lastest contribution of this recurring (expiry date is %1).", array(1 => $tappay->expiry_date));
       $changeStatus = TRUE;
     }
     if (!empty($dao->end_date) && $time > strtotime($dao->end_date)) {
-      $resultNote .= "\n".ts("Stop recurring %1 because end date is dued.", array(1 => $recurId));
+      $statusNote = ts("End date is due.");
+      $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
     if (!empty($dao->installments) && $successCount >= $dao->installments) {
-      $resultNote .= "\n".ts("Stop recurring %1 because installments id full.", array(1 => $recurId));
+      $statusNote = ts("Installments is full.");
+      $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
     if ($time > strtotime($tappay->expiry_date)) {
-      $resultNote .= "\n".ts("Stop recurring %1 because card expiry date is due.", array(1 => $recurId));
+      $statusNote = ts("Card expiry date is due.");
+      $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
 
     if ( $changeStatus ) {
-      $resultNote .= "\n".ts("Update recurring status to 'Completed'.");
+      $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
+      $resultNote .= "\n".$statusNoteTitle;
       $recurParams = array();
       $recurParams['id'] = $dao->recur_id;
       $recurParams['contribution_status_id'] = 1;
       $recurParams['message'] = $resultNote;
       CRM_Contribute_BAO_ContributionRecur::add($recurParams);
+      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
     }
 
     CRM_Core_Error::debug_log_message($resultNote);
@@ -824,9 +829,12 @@ LIMIT 0, 100
         $params = array(
           'id' => $dao->id,
           'contribution_status_id' => 1,
-          'message' => ts("Update status to completed because end date is due."),
+          'message' => ts("End date is due."),
         );
         CRM_Contribute_BAO_ContributionRecur::add($params);
+        $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $params['message']);
+
       }
     }
 
@@ -842,9 +850,11 @@ LIMIT 0, 100
         $params = array(
           'id' => $dao->id,
           'contribution_status_id' => 1,
-          'message' => ts("Update status to completed because card expiry date is due."),
+          'message' => ts("Card expiry date is due."),
         );
         CRM_Contribute_BAO_ContributionRecur::add($params);
+        $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $params['message']);
       }
     }
   }
