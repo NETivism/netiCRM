@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-07-19 07:09+0000\n"
+"PO-Revision-Date: 2019-07-19 07:52+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47085,13 +47085,13 @@ msgid "This is lastest contribution of this recurring (expiry date is %1)."
 msgstr "卡片到期日期為 %1 ，此筆已是最後捐款。"
 
 msgid "End date is due."
-msgstr "結束日期已過期"
+msgstr "結束日期已過期。"
 
 msgid "Installments is full."
-msgstr "期數已滿"
+msgstr "期數已滿。"
 
 msgid "Card expiry date is due."
-msgstr "卡片到期日已過"
+msgstr "卡片到期日已過。"
 
 msgid "Synchronizing to Tappay server success."
 msgstr "成功跟 Tappay 伺服器同步。"
@@ -47131,3 +47131,6 @@ msgstr "請謹慎使用。你永遠不應該讓這個公開呈現。"
 
 msgid "Change amount"
 msgstr "金額改變"
+
+msgid "Auto renews status"
+msgstr "自動更新狀態"
