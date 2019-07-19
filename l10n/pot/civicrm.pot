@@ -46938,3 +46938,6 @@ msgstr ""
 
 msgid "Change amount"
 msgstr ""
+
+msgid "Auto renews status"
+msgstr ""
