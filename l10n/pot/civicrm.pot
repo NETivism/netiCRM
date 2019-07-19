@@ -46941,3 +46941,9 @@ msgstr ""
 
 msgid "Auto renews status"
 msgstr ""
+
+msgid "Credit Card Number"
+msgstr ""
+
+msgid "CCV"
+msgstr ""
