@@ -607,6 +607,7 @@ LIMIT 0, 100
 
     if ( $changeStatus ) {
       $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
+      $statusNote .= ts("Auto renews status");
       $resultNote .= "\n".$statusNoteTitle;
       $recurParams = array();
       $recurParams['id'] = $dao->recur_id;
@@ -833,7 +834,8 @@ LIMIT 0, 100
         );
         CRM_Contribute_BAO_ContributionRecur::add($params);
         $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
-        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $params['message']);
+        $statusNote = $params['message'] . ts("Auto renews status");
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
 
       }
     }
@@ -854,7 +856,8 @@ LIMIT 0, 100
         );
         CRM_Contribute_BAO_ContributionRecur::add($params);
         $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
-        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $params['message']);
+        $statusNote = $params['message'] . ts("Auto renews status");
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
       }
     }
   }
