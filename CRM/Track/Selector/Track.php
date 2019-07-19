@@ -342,6 +342,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
 
   function getQuery($select = '*', $groupBy = NULL, $offset = NULL, $rowCount = NULL, $sort = NULL) {
     $where = $args = array();
+    $where[] = "referrer_type IS NOT NULL";
     if ($this->_pageType) {
       $where[] = "page_type = %1";
       $args[1] = array($this->_pageType, 'String');
@@ -351,7 +352,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       $args[2] = array($this->_pageId, 'Integer');
     }
     if ($this->_referrerType) {
-      $where[] = "(IFNULL(referrer_type, 'unknown') = %3 OR referrer_type = %3)";
+      $where[] = "referrer_type = %3";
       $args[3] = array($this->_referrerType, 'String');
     }
     if ($this->_referrerNetwork) {

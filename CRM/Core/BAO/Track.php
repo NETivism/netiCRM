@@ -62,13 +62,13 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
         if ($track->state <= self::FIRST_STATE) {
           $track->counter++;
         }
+        if (!empty($track->entity_id) && empty($track->referrer_type)) {
+          $track->referrer_type = 'unknown';
+        }
         $track->update();
         CRM_Utils_Hook::post('edit', 'Track', $track->id, $track);
       }
       else {
-        if (empty($params['referrer_type'])) {
-          $params['referrer_type'] = 'unknown';
-        }
         CRM_Utils_Hook::pre('create', 'Track', NULL, $params);
         $track->copyValues($params);
         $track->insert();
