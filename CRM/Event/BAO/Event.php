@@ -1007,9 +1007,8 @@ WHERE civicrm_event.is_active = 1
    * @access public
    */
   static function sendMail($contactID, &$values, $participantId, $isTest = FALSE, $returnMessageText = FALSE) {
-    require_once 'CRM/Core/BAO/UFGroup.php';
-
     $template = CRM_Core_Smarty::singleton();
+    $config = CRM_Core_Config::singleton();
     $gIds = array(
       'custom_pre_id' => $values['custom_pre_id'],
       'custom_post_id' => $values['custom_post_id'],
@@ -1114,6 +1113,22 @@ WHERE civicrm_event.is_active = 1
           ),
           'PDFFilename' => 'eventReceipt.pdf',
         );
+        if ($config->enableEventCheckinQrcode) {
+          $checkinCodeFile = CRM_Event_BAO_Participant::checkinCode($contactID, $participantId);
+          $qrcodeName = 'qrcode-'.$participantId;
+          $embedImages = array(
+            $qrcodeName => array(
+              'fullPath' => $checkinCodeFile,
+              'mime_type' => 'image/png',
+              'cleanName' => $qrcodeName.'.png',
+            ),
+          );
+
+          if (!empty($embedImages)) {
+            $sendTemplateParams['tplParams']['checkinCode'] = "<img src=\"cid:$qrcodeName\">";
+            $sendTemplateParams['images'] = $embedImages;
+          }
+        }
 
         // address required during receipt processing (pdf and email receipt)
         if ($displayAddress = CRM_Utils_Array::value('address', $values)) {
