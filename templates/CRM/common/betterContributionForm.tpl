@@ -11,6 +11,28 @@ cj(function($){
     //var OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd|crm-even/)[0];
     //$('.receipt_type').addClass(OddOrEven);
 
+    // Check if is_for_organization is on
+    if ($('#is_for_organization').length) {
+      $('.receipt_type').css({'height':0,'margin':0,'overflow':'hidden'});
+      $('#is_for_organization').change(function(){
+        if ($('#is_for_organization').is(':checked')) {
+          $('#r_company').prop('checked', true);
+          {/literal}{if $receiptYesNo}{literal}
+          $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').prop('checked', false).closest('tr').hide();
+          {/literal}{/if}{literal}
+        }
+        else {
+          $('#r_person').prop('checked', true);
+          {/literal}{if $receiptYesNo}{literal}
+          $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').closest('tr').show();
+          {/literal}{/if}{literal}
+        }
+        $('#same_as').prop('checked',false);
+        $('.receipt_type input').trigger('change');
+        doUpdateName();
+      });
+    }
+
     $('#custom_{/literal}{$receiptTitle}{literal}').addClass('ignore-required');
     $('#custom_{/literal}{$receiptSerial}{literal}').addClass('ignore-required');
 
@@ -33,8 +55,10 @@ cj(function($){
       if($('#r_company').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Organization{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Sic Code{/ts}{literal}");
-        $(same_as).prop('checked',false);
-        $('.same-as-wrapper').hide('fast');
+        if ($('#is_for_organization').length == 0) {
+          $(same_as).prop('checked',false);
+          $('.same-as-wrapper').hide('fast');
+        }
       }
       doUpdateName();
     });
@@ -87,7 +111,7 @@ cj(function($){
     $r_name_items_md.insertBefore($r_name_items_md_parent);
     $r_name_items_md.wrapAll('<div class="r-name-items"></div>');
 
-    $('#last_name,#first_name,#legal_identifier').keyup(doUpdateName);
+    $('#last_name,#first_name,#legal_identifier,#organization_name,#sic_code').keyup(doUpdateName);
     $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(doUpdateName);
     doUpdateName();
 
@@ -276,7 +300,7 @@ cj(function($){
    * Update last_name, first_name, and id to receipt fileds. Should trigger when any related fields change.
    */
   function doUpdateName(){
-    if($('#r_person').is(':checked')){
+    if($('#r_person').is(':checked') || ($('#r_company').is(':checked') && $('#is_for_organization').is(':checked'))){
       // $('#same_as').parents('.same-as-wrapper').show('slow');
     }
     else{
@@ -288,7 +312,7 @@ cj(function($){
 
     // For Name
     if($('#same_as').is(':checked') && $('#r_company').is(':checked') && $('#is_for_organization').length > 0 && $('#is_for_organization').is(':checked')){
-      $('#custom_{/literal}{$receiptTitle}{literal}').val($('#organization_name').val());
+      $('#custom_{/literal}{$receiptTitle}{literal}').val($('#organization_name').val()).attr('readonly', 'readonly');
     }else if($('#same_as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
       $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val()).attr('readonly','readonly');
     }
@@ -298,7 +322,7 @@ cj(function($){
 
     // For ReceiptSerial Number
     if($('#same_as').is(':checked') && $('#r_company').is(':checked') && $('#is_for_organization').length > 0 && $('#is_for_organization').is(':checked')){
-      $('#custom_{/literal}{$receiptSerial}{literal}').val($('#sic_code').val());
+      $('#custom_{/literal}{$receiptSerial}{literal}').val($('#sic_code').val()).attr('readonly', 'readonly');
     }else if($('#same_as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
       if(/^_+$/.test($('#legal_identifier').val())){
         $('#custom_{/literal}{$receiptSerial}{literal}').val("").attr('readonly', 'readonly');
