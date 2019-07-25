@@ -133,6 +133,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     CRM_Utils_System::redirect($thankyou);
   }
 
+  function cancelRecuringMessage() {
+    $text = '<p>'.ts("Please edit recurring and change status to 'Completed'.").'</p>';
+    $js = '<script>cj(".ui-dialog-buttonset button").hide();</script>';
+    return $text . $js;
+  }
+
   public static function payByPrime($payment) {
     if ($payment && !empty($payment['payment_processor_id'])) {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
@@ -801,7 +807,7 @@ LIMIT 0, 100
   public static function doSyncLastDaysRecords() {
     $last2Day = date('Y-m-d 00:00:00', time() - (86400 * 2));
     $currentDay = date('Y-m-d 23:59:59');
-    $sql = "SELECT id, payment_processor_id, is_test FROM civicrm_contribution WHERE receive_date >= '$last2Day' && receive_date <= '$currentDay'";
+    $sql = "SELECT c.id, payment_processor_id, c.is_test FROM civicrm_contribution c INNER JOIN civicrm_payment_processor p ON p.id = payment_processor_id WHERE receive_date >= '$last2Day' AND receive_date <= '$currentDay' AND p.name = 'Tappay' ";
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       // Check payment processor

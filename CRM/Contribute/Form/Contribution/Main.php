@@ -1065,7 +1065,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     if (isset($fields['is_recur']) && $fields['is_recur']) {
       $installments = CRM_Utils_Array::value('installments', $fields);
-      if (strlen($installments) !== 0 && $installments <= 1){
+      if (!empty($installments) && $installments <= 1){
         $errors['installments'] = ts('Installments should be greater than %1.', array(1 => '1'));
       }
       if ($fields['frequency_interval'] <= 0) {
