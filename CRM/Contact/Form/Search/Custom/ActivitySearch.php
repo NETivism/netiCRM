@@ -297,10 +297,9 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     if ($includeContactIDs) {
       $contactIDs = array();
       foreach ($this->_formValues as $id => $value) {
-        if ($value &&
-          substr($id, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX
-        ) {
-          $contactIDs[] = substr($id, CRM_Core_Form::CB_PREFIX_LEN);
+        list($id, $additionalID) = CRM_Core_Form::cbExtract($id); 
+        if ($value && !empty($id)) {
+          $contactIDs[] = $id;
         }
       }
 

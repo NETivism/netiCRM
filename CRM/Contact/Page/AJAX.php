@@ -1081,10 +1081,8 @@ WHERE sort_name LIKE '%$name%'";
   }
 
   static function _convertToId($name) {
-    if (substr($name, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
-      $cId = substr($name, CRM_Core_Form::CB_PREFIX_LEN);
-    }
-    return $cId;
+    list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
+    return $contactID;
   }
 
   static function getAddressDisplay() {

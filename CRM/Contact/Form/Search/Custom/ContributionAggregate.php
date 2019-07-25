@@ -191,10 +191,9 @@ civicrm_contact AS contact_a
     if ($includeContactIDs) {
       $contactIDs = array();
       foreach ($this->_formValues as $id => $value) {
-        if ($value &&
-          substr($id, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX
-        ) {
-          $contactIDs[] = substr($id, CRM_Core_Form::CB_PREFIX_LEN);
+        list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
+        if ($value && !empty($contactID)) {
+          $contactIDs[] = $contactID;
         }
       }
 

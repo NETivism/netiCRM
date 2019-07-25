@@ -100,8 +100,9 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
     $ids = array();
     if ($values['radio_ts'] == 'ts_sel') {
       foreach ($values as $name => $value) {
-        if (substr($name, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
-          $ids[] = substr($name, CRM_Core_Form::CB_PREFIX_LEN);
+        list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
+        if ($value && !empty($contactID)) {
+          $ids[] = $contactID;
         }
       }
     }
