@@ -1,6 +1,6 @@
 <div class="crm-block crm-form-block">
   {if !$filters.start}
-    {ts}Start Date{/ts}: <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin">
+    {ts}Start Date{/ts}: <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin" value="{$defaultStartDate}">
     {include file="CRM/common/jcalendar.tpl" elementId=start action=4}
   {/if}
   {if !$filters.end}
@@ -36,10 +36,11 @@
     <style>{literal}
 			.track-outer {
 				display: flex;
-        justify-content: space-between;
+        justify-content: center;
 			}
 			.track-inner {
-				flex: 0 0 1;
+				flex: 0 0 auto;
+        padding: 0 8px;
 			}
     {/literal}</style>
 		<div class="box-content track-outer">
@@ -115,14 +116,18 @@ cj(function() {
       href += '&'+appendQuery.join('&');
       cj(this).attr('href', href); 
     }
-    console.log(href);
   });
   cj().crmaccordions();
   cj('.crm-accordion-header').click(function() {
+    cj('.crm-accordion-body').find('.chartist-chart').hide();
+    cj('.crm-accordion-body').find('center').remove();
+    cj('.crm-accordion-body').append('<center><div class="zmdi zmdi-replay zmdi-hc-spin" style="font-size:2em;"></div></center>');
     cj('.crm-accordion-body').find('.chartist-chart').each(function(i, e) {
       setTimeout(function(){
+        cj('.crm-accordion-body').find('.chartist-chart').show();
         e.__chartist__.update();
-      }, 300);
+        cj('.crm-accordion-body').find('center').remove();
+      }, 1000);
     });
   });
 });
