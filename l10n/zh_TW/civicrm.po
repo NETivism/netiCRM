@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-07-19 10:10+0000\n"
+"PO-Revision-Date: 2019-07-24 05:32+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47140,3 +47140,9 @@ msgstr "信用卡號碼"
 
 msgid "CCV"
 msgstr "檢查碼"
+
+msgid "Check In Code"
+msgstr "報到碼"
+
+msgid "Please edit recurring and change status to 'Completed'."
+msgstr "請直接編輯定期定額，並將狀態設為「已完成」。"

@@ -83,6 +83,7 @@ class CRM_Utils_Mail {
     $textMessage = CRM_Utils_Array::value('text', $params);
     $htmlMessage = CRM_Utils_Array::value('html', $params);
     $attachments = CRM_Utils_Array::value('attachments', $params);
+    $embedImages = CRM_Utils_Array::value('images', $params);
 
     // CRM-6224
     if (trim(CRM_Utils_String::htmlToText($htmlMessage)) == '') {
@@ -138,6 +139,17 @@ class CRM_Utils_Mail {
         $msg->addAttachment($attach['fullPath'],
           $attach['mime_type'],
           $attach['cleanName']
+        );
+      }
+    }
+    if (!empty($embedImages)) {
+      foreach ($embedImages as $imageID => $attach) {
+        $msg->addHTMLImage(
+          $attach['fullPath'],
+          $attach['mime_type'],
+          $attach['cleanName'],
+          TRUE,
+          $imageID
         );
       }
     }

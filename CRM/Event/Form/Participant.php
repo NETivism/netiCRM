@@ -1685,6 +1685,23 @@ cj(function() {
           'PDFFilename' => 'Attendee_confirm_copy.pdf',
         );
 
+        if ($config->enableEventCheckinQrcode) {
+          $checkinCodeFile = CRM_Event_BAO_Participant::checkinCode($contactID, $participants[$num]->id);
+          $qrcodeName = 'qrcode-'.$participants[$num]->id;
+          $embedImages = array(
+            $qrcodeName => array(
+              'fullPath' => $checkinCodeFile,
+              'mime_type' => 'image/png',
+              'cleanName' => $qrcodeName.'.png',
+            ),
+          );
+
+          if (!empty($embedImages)) {
+            $sendTemplateParams['tplParams']['checkinCode'] = "<img src=\"cid:$qrcodeName\">";
+            $sendTemplateParams['images'] = $embedImages;
+          }
+        }
+
         // try to send emails only if email id is present
         // and the do-not-email option is not checked for that contact
         if ($this->_contributorEmail and !$this->_toDoNotEmail) {

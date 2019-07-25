@@ -1877,5 +1877,13 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
       return CRM_Utils_System::url('civicrm/event/confirm', 'reset=1&participantId='.$id.'&cs='.$cs);
     }
   }
+
+  static function checkinCode($contactId, $id) {
+    $contactChecksum = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId, NULL, $limit);
+    $checkinUrl = CRM_Utils_System::url('civicrm/event/checkin', "reset=1&participantId={$id}&cs=".$contactChecksum, TRUE, FALSE, FALSE);
+    $qrcode = new CRM_Utils_QRCode($checkinUrl);
+    $filename = 'qrcode_'.$id.'_'.$contactChecksum;
+    return $qrcode->fileImg($filename);
+  }
 }
 
