@@ -8,7 +8,7 @@
     {include file="CRM/common/jcalendar.tpl" elementId=end action=4}
   {/if}
   {if !$filters.start || !$filters.end}
-    <a id="submit-filter" class="button" href="{crmURL q=$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
+    <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
   {/if}
 </div>
 {if $filters}
@@ -151,14 +151,14 @@ cj(function() {
       {foreach from=$pager->_linkData item=val key=k }
       {if $k neq 'crmPID' && $k neq 'force' && $k neq 'q' } 
       {literal}
-        urlParams += '&{/literal}{$k}={$val}{literal}';
+        urlParams += '{/literal}{$k}={$val}{literal}&';
       {/literal}
       {/if}
       {/foreach}
       {literal}
-      urlParams += '&crmPID='+parseInt(jumpTo);
-      var submitUrl = {/literal}'{crmURL p="civicrm/mailing/report/event" q="force=1" h=0 }'{literal};
-      document.location = submitUrl+urlParams;
+      urlParams += 'crmPID='+parseInt(jumpTo);
+      var submitUrl = '{/literal}{crmURL p="civicrm/track/report"}{literal}';
+      document.location = submitUrl+"?"+urlParams;
   }
 </script>
 {/literal}

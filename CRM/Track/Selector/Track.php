@@ -523,7 +523,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     if ($filters = $page->get('filters')) {
       $page->assign('filters', $filters);
     }
-    $page->assign('drill_down_base', $this->_drillDown);
+    $page->assign('drill_down_base', CRM_Utils_System::url($this->_drillDown));
   }
 
   function breadcrumbs($page) {
