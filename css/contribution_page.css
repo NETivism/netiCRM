@@ -682,9 +682,6 @@ body .crm-container-md .crm-form-elem textarea.form-textarea{
   display: none;
 }
 
-.receipt_type{
-  overflow: unset !important;
-}
 .crm-container .crm-section.receipt_type{
   margin-bottom: 25px;
 }
