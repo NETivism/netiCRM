@@ -1,6 +1,6 @@
 <div class="crm-block crm-form-block">
   {if !$filters.start}
-    {ts}Start Date{/ts}: <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin">
+    {ts}Start Date{/ts}: <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin" value="{$defaultStartDate}">
     {include file="CRM/common/jcalendar.tpl" elementId=start action=4}
   {/if}
   {if !$filters.end}
@@ -8,7 +8,7 @@
     {include file="CRM/common/jcalendar.tpl" elementId=end action=4}
   {/if}
   {if !$filters.start || !$filters.end}
-    <a id="submit-filter" class="button" href="{crmURL q=$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
+    <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
   {/if}
 </div>
 {if $filters}
@@ -36,10 +36,11 @@
     <style>{literal}
 			.track-outer {
 				display: flex;
-        justify-content: space-between;
+        justify-content: center;
 			}
 			.track-inner {
-				flex: 0 0 1;
+				flex: 0 0 auto;
+        padding: 0 8px;
 			}
     {/literal}</style>
 		<div class="box-content track-outer">
@@ -115,14 +116,18 @@ cj(function() {
       href += '&'+appendQuery.join('&');
       cj(this).attr('href', href); 
     }
-    console.log(href);
   });
   cj().crmaccordions();
   cj('.crm-accordion-header').click(function() {
+    cj('.crm-accordion-body').find('.chartist-chart').hide();
+    cj('.crm-accordion-body').find('center').remove();
+    cj('.crm-accordion-body').append('<center><div class="zmdi zmdi-replay zmdi-hc-spin" style="font-size:2em;"></div></center>');
     cj('.crm-accordion-body').find('.chartist-chart').each(function(i, e) {
       setTimeout(function(){
+        cj('.crm-accordion-body').find('.chartist-chart').show();
         e.__chartist__.update();
-      }, 300);
+        cj('.crm-accordion-body').find('center').remove();
+      }, 1000);
     });
   });
 });
@@ -146,14 +151,14 @@ cj(function() {
       {foreach from=$pager->_linkData item=val key=k }
       {if $k neq 'crmPID' && $k neq 'force' && $k neq 'q' } 
       {literal}
-        urlParams += '&{/literal}{$k}={$val}{literal}';
+        urlParams += '{/literal}{$k}={$val}{literal}&';
       {/literal}
       {/if}
       {/foreach}
       {literal}
-      urlParams += '&crmPID='+parseInt(jumpTo);
-      var submitUrl = {/literal}'{crmURL p="civicrm/mailing/report/event" q="force=1" h=0 }'{literal};
-      document.location = submitUrl+urlParams;
+      urlParams += 'crmPID='+parseInt(jumpTo);
+      var submitUrl = '{/literal}{crmURL p="civicrm/track/report"}{literal}';
+      document.location = submitUrl+"?"+urlParams;
   }
 </script>
 {/literal}

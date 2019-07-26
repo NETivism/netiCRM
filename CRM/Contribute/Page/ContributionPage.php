@@ -360,7 +360,8 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       // statistics
       CRM_Utils_System::setTitle(ts('Configure Contribution Page')." - ".$page['title']);
       $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($id);
-      $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id);
+      $last3month = date('Y-m-01', strtotime('-3 months'));
+      $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id, $last3month);
       foreach($pageStatistics['track'] as &$track) {
         $track['display'] = '<div>'.ts("%1 achieved", array(1 => "{$track['percent_goal']}% ({$track['count_goal']}".ts('People').")"))."</div><div style='color:grey'>".ts("Total")." {$track['percent']}% ({$track['count']}".ts('People').")</div>";
       }
