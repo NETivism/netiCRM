@@ -1228,5 +1228,21 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
     return $element;
   }
+
+  public static function cbExtract($value) {
+    $id = $additionalID = NULL;
+    if (substr($value, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
+      $val = substr($value, CRM_Core_Form::CB_PREFIX_LEN);
+      if (strstr($val, '_')) {
+        list($id, $additionalID) = explode('_', $val, 2);
+      }
+      else {
+        if (is_numeric($val)) {
+          $id = $val;
+        }
+      }
+    }
+    return array($id, $additionalID);
+  }
 }
 

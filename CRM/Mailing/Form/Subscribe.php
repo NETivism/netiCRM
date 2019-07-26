@@ -193,8 +193,9 @@ ORDER BY title";
     }
     else {
       foreach ($params as $name => $dontCare) {
-        if (substr($name, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
-          $groups[] = substr($name, CRM_Core_Form::CB_PREFIX_LEN);
+        list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
+        if (!empty($contactID)) {
+          $groups[] = $contactID;
         }
       }
     }

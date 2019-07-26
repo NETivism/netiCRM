@@ -1092,7 +1092,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  function exportCustom($customSearchClass, $formValues, $order) {
+  static function exportCustom($customSearchClass, $formValues, $order) {
     require_once "CRM/Core/Extensions.php";
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {

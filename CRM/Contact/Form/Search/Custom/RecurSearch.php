@@ -368,7 +368,7 @@ $having
   function where($includeContactIDs = false) {
     $sql = ' ( 1 ) ';
     if ($includeContactIDs) {
-      $this->includeContactIDs($sql, $this->_formValues);
+      self::includeContactIDs($sql, $this->_formValues);
     }
     return $sql;
   }
@@ -377,13 +377,12 @@ $having
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues) {
+  public static function includeContactIDs(&$sql, &$formValues) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
-      if ($value &&
-        substr($id, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX
-      ) {
-        $contactIDs[] = substr($id, CRM_Core_Form::CB_PREFIX_LEN);
+      list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
+      if ($value && !empty($contactID)) {
+        $contactIDs[] = $contactID;
       }
     }
 

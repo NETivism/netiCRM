@@ -3067,8 +3067,9 @@ WHERE  id IN ( $groupIDs )
 
     $contactIds = array();
     foreach ($this->_params as $id => $values) {
-      if (substr($values[0], 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
-        $contactIds[] = substr($values[0], CRM_Core_Form::CB_PREFIX_LEN);
+      list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
+      if (!empty($contactID)) {
+        $contactIds[] = $contactID;
       }
     }
     if (!empty($contactIds)) {
