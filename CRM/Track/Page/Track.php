@@ -29,7 +29,15 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'utmTerm' => CRM_Utils_Request::retrieve('utm_term', 'String', $null),
       'utmContent' => CRM_Utils_Request::retrieve('utm_content', 'String', $null),
     );
-    if ($start = CRM_Utils_Request::retrieve('start', 'Date', $null)) {
+
+    // only appear 3 month data by default
+    $last3month = date('Y-m-01', strtotime('-3 month'));
+    $start = CRM_Utils_Request::retrieve('start', 'Date', $null);
+    if (empty($start)) {
+      $this->assign('defaultStartDate', $last3month);
+      $params['visitDateStart'] = $last3month;
+    }
+    else {
       $params['visitDateStart'] = $start;
     }
     if ($end = CRM_Utils_Request::retrieve('end', 'Date', $null)) {

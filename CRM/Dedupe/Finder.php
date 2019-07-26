@@ -287,6 +287,10 @@ class CRM_Dedupe_Finder {
           if (CRM_Utils_Array::value($field, $flat)) {
             $params[$table][$field] = $flat[$field];
           }
+          // refs #25998, need support primary field from email
+          elseif (CRM_Utils_Array::value($field.'-Primary', $flat)) {
+            $params[$table][$field] = $flat[$field.'-Primary'];
+          }
         }
       }
     }

@@ -46948,5 +46948,8 @@ msgstr ""
 msgid "CCV"
 msgstr ""
 
+msgid "Check In Code"
+msgstr ""
+
 msgid "Please edit recurring and change status to 'Completed'."
 msgstr ""
