@@ -260,7 +260,7 @@ class CRM_Dedupe_Finder {
     // the -digit to civicrm_address.location_type_id and -Primary to civicrm_address.is_primary
     foreach ($flat as $key => $value) {
       $matches = array();
-      if (preg_match('/(.*)-(\d+|Primary)$/', $key, $matches)) {
+      if (preg_match('/([^-]*)-(\d+|Primary)(-\d+)*$/', $key, $matches)) {
         $flat[$matches[1]] = $value;
         unset($flat[$key]);
       }
