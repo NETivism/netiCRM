@@ -982,7 +982,15 @@ LIMIT 0, 100
     }
     if (!empty($tappayDAO->contribution_recur_id)) {
       $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $tappayDAO->contribution_recur_id, 'auto_renew');
-      $returnData[ts('Support 3JTSP')] = $autoRenew ? ts("Yes") : ts("No");
+      if (empty($autoRenew)) {
+        $returnData[ts('Support 3JTSP')] = ts("No");
+      }
+      else if($autoRenew == 1) {
+        $returnData[ts('Support 3JTSP')] = ts("Yes");
+      }
+      else if($autoRenew == 2) {
+        $returnData[ts('Support 3JTSP')] = ts("updated");
+      }
     }
     return $returnData;
   }
