@@ -46962,3 +46962,6 @@ msgstr ""
 
 msgid "Contribution Created Date"
 msgstr ""
+
+msgid "Check to Exclude; uncheck to Include"
+msgstr ""
