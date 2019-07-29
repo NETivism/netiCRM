@@ -49,7 +49,7 @@
                 {if $index < 10} {* Hack to skip QF field properties that are not checkbox elements. *}
                     {assign var="index" value=`$index+1`}
                 {else}
-                    {if $element.html_type EQ 'CheckBox' AND  $smarty.foreach.outer.last EQ 1} {* Put 'match ANY / match ALL' checkbox in separate row. *}
+                    {if $element.html_type EQ 'CheckBox' AND  ( $form.$element_name.$key.html|strstr:"CiviCRM_OP_OR" OR $form.$element_name.$key.html|strstr:"CiviCRM_OP_EXCLUDE")} {* Put 'match ANY / match ALL' checkbox in separate row. *}
                         </tr>
                         <tr>
                         <td class="op-checkbox" colspan="{$element.options_per_line}" style="padding-top: 0px;">{$form.$element_name.$key.html}</td>

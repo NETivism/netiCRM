@@ -64,7 +64,7 @@ function loadPanes( id ) {
 <div class="crm-accordion-wrapper crm-search_criteria_basic-accordion crm-accordion-open">
  <div class="crm-accordion-header">
   <div class="zmdi crm-accordion-pointer"></div>
-  {ts}Basic Criteria{/ts} 
+  {ts}Contact Information{/ts} 
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
         {include file="CRM/Contact/Form/Search/Criteria/Basic.tpl"}

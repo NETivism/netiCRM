@@ -356,8 +356,19 @@ SELECT label, value
               //ignoring $op value for checkbox and multi select
               $sqlValue = array();
               $sqlOP = ' AND ';
+              $innerOP = 'LIKE';
               $sqlOPlabel = ts('match ALL');
+              $sqlOPlabelAddition = ts('Include');
+              $isExclude = FALSE;
               if ($field['html_type'] == 'CheckBox') {
+                //if user check 'CiviCRM_OP_EXCLUDE' change to not like
+                if (!empty($value['CiviCRM_OP_EXCLUDE'])) {
+                  $innerOP = 'NOT LIKE';
+                  $sqlOPlabelAddition = ts('Exclude');
+                  $isExclude = TRUE;
+                }
+                unset($value['CiviCRM_OP_EXCLUDE']);
+
                 foreach ($value as $k => $v) {
                   if ($v) {
                     if ($k == 'CiviCRM_OP_OR') {
@@ -366,14 +377,19 @@ SELECT label, value
                       continue;
                     }
 
-                    $sqlValue[] = "( $sql like '%" . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . $k . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . "%' ) ";
+                    $sqlValue[] = "( $sql $innerOP '%" . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . $k . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . "%' ) ";
                   }
                 }
                 //if user check only 'CiviCRM_OP_OR' check box
                 //of custom checkbox field, then ignore this field.
                 if (!empty($sqlValue)) {
-                  $this->_where[$grouping][] = ' ( ' . implode($sqlOP, $sqlValue) . ' ) ';
-                  $this->_qill[$grouping][] = "{$field['label']} $op $qillValue ( $sqlOPlabel )";
+                  $whereQuery = implode($sqlOP, $sqlValue);
+
+                  if ($isExclude) {
+                    $whereQuery .= ' OR NULLIF(' . $sql . ", '') IS NULL";
+                  }
+                  $this->_where[$grouping][] = ' ( ' . $whereQuery . ' ) ';
+                  $this->_qill[$grouping][] = "{$field['label']} $sqlOPlabelAddition $sqlOPlabel $qillValue ";
                 }
                 // for multi select
               }
