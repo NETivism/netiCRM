@@ -355,7 +355,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
         'created_date' => array(
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Created Date') ,
+          'title' => ts('Contribution Created Date') ,
           'import' => true,
           'where' => 'civicrm_contribution.created_date',
           'headerPattern' => '/created(.?date)?/i',
