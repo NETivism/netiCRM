@@ -140,7 +140,9 @@ class CRM_Event_Form_EventFees {
       }
     }
     else {
-      $defaults[$form->_pId]['send_receipt'] = 1;
+      if ($form->get('single')) {
+        $defaults[$form->_pId]['send_receipt'] = 1;
+      }
       if ($form->_eventId && CRM_Utils_Array::value('confirm_email_text', $details[$form->_eventId])) {
         //set receipt text
         $defaults[$form->_pId]['receipt_text'] = $details[$form->_eventId]['confirm_email_text'];

@@ -533,7 +533,7 @@ WHERE id={$contactId}; ";
     //Primary Phone
     $form->addElement('text',
       "phone[1][phone]",
-      ts('Primary Phone'),
+      ts('Phone'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_Phone',
         'phone'
       )
@@ -541,7 +541,7 @@ WHERE id={$contactId}; ";
     //Primary Email
     $form->addElement('text',
       "email[1][email]",
-      ts('Primary Email'),
+      ts('Email'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email',
         'email'
       )
