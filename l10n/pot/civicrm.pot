@@ -46953,3 +46953,12 @@ msgstr ""
 
 msgid "Please edit recurring and change status to 'Completed'."
 msgstr ""
+
+msgid "Contact Created Date"
+msgstr ""
+
+msgid "Contact Modified Date"
+msgstr ""
+
+msgid "Contribution Created Date"
+msgstr ""

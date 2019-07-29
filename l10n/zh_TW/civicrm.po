@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-07-24 05:32+0000\n"
+"PO-Revision-Date: 2019-07-29 04:42+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47146,3 +47146,12 @@ msgstr "報到碼"
 
 msgid "Please edit recurring and change status to 'Completed'."
 msgstr "請直接編輯定期定額，並將狀態設為「已完成」。"
+
+msgid "Contact Created Date"
+msgstr "聯絡人建立日期"
+
+msgid "Contact Modified Date"
+msgstr "聯絡人修改日期"
+
+msgid "Contribution Created Date"
+msgstr "捐款建立日期"
