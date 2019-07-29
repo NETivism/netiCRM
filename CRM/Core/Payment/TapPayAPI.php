@@ -30,6 +30,7 @@ class CRM_Core_Payment_TapPayAPI {
     'record' => '/tpc/transaction/query',
     'trade_history' => '/tpc/transaction/trade-history',
     'card_metadata' => '/tpc/card/metadata',
+    'card_notify_api_sandbox' => '/tpc/sandbox/test/card-notify',
     /* not supportted api types
     'refund' => '/tpc/transaction/refund',
     'cap' => '/tpc/transaction/cap',
@@ -121,16 +122,18 @@ class CRM_Core_Payment_TapPayAPI {
       }
     }
 
-    // prepare contribution_id for record data.
-    if (empty($params['contribution_id']) && empty($params['order_number']) && empty($this->_contribution_id)) {
-      CRM_Core_Error::fatal('You need to specify contribution_id or order_number.');
-    }
-    if (empty($this->_contribution_id)) {
-      if (!empty($params['contribution_id'])) {
-        $this->_contribution_id = $params['contribution_id'];
+    if ($this->_apiType != 'card_notify_api_sandbox') {
+      // prepare contribution_id for record data.
+      if (empty($params['contribution_id']) && empty($params['order_number']) && empty($this->_contribution_id)) {
+        CRM_Core_Error::fatal('You need to specify contribution_id or order_number.');
       }
-      else {
-        $this->_contribution_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['order_number'], 'id', 'trxn_id');
+      if (empty($this->_contribution_id)) {
+        if (!empty($params['contribution_id'])) {
+          $this->_contribution_id = $params['contribution_id'];
+        }
+        else {
+          $this->_contribution_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['order_number'], 'id', 'trxn_id');
+        }
       }
     }
 
@@ -314,6 +317,8 @@ class CRM_Core_Payment_TapPayAPI {
       case 'card_metadata':
         $fields = explode(',', 'partner_key*,card_key*,card_token*');
         break;
+      case 'card_notify_api_sandbox':
+        $fields = explode(',', 'partner_key*,card_key*,card_token*,tsp_notify_url');
     }
     foreach ($fields as $key => &$value) {
       if(!strstr($value, '*') && $is_required) {
