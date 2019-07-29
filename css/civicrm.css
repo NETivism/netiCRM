@@ -4917,7 +4917,15 @@ tbody.scrollContent tr.alternateRow {
 }
 .crm-container td.op-checkbox label {
   font-weight: normal;
-  font-style: italic;
+  font-size: 0.83em;
+  margin-left: 16px;
+}
+.op-checkbox input.form-checkbox:before {
+  font-family: 'Material-Design-Iconic-Font';
+  content: '\f1c6';
+  color: #777;
+  margin-left: -15px;
+  position: absolute;
 }
 
 .crm-container .form-layout td.label-left,
