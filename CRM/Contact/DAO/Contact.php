@@ -879,7 +879,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
         'contact_created_date' => array(
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Created Date') ,
+          'title' => ts('Contact Created Date') ,
           'required' => false,
           'import' => true,
           'where' => 'civicrm_contact.created_date',
@@ -891,7 +891,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
         'contact_modified_date' => array(
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Modified Date') ,
+          'title' => ts('Contact Modified Date') ,
           'required' => false,
           'default' => 'URRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAM',
         ) ,
