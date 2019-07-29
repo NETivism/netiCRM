@@ -151,23 +151,14 @@
         {if $addressSequence.postal_code}
 		<div class="crm-section {$form.address.$index.postal_code.id}-section">
             <div class="label">{$form.address.$index.postal_code.label}</div>
-            <div class="content">{$form.address.$index.postal_code.html}
-                {if $form.address.$index.postal_code_suffix.html}
-                     - {$form.address.$index.postal_code_suffix.html}    
-                    <br class="spacer"/>
-                    <span class="description">{ts}Enter optional 'add-on' code after the dash ('plus 4' code for U.S. addresses).{/ts}</span>
-                {/if}
-            </div>
+            <div class="content">{$form.address.$index.postal_code.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
         {if $addressSequence.street_address}
 		<div class="crm-section {$form.address.$index.street_address.id}-section">
             <div class="label">{$form.address.$index.street_address.label}</div>
-            <div class="content">{$form.address.$index.street_address.html}    
-                <br class="spacer"/>
-                <span class="description">{ts}Street number, street name, apartment/unit/suite - OR P.O. box{/ts}</span>
-            </div>
+            <div class="content">{$form.address.$index.street_address.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
