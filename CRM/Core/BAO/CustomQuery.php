@@ -374,7 +374,12 @@ SELECT label, value
                 foreach ($value as $k => $v) {
                   if ($v) {
                     if ($k == 'CiviCRM_OP_OR') {
-                      $sqlOP = ' OR ';
+                      if ($isExclude) {
+                        $sqlOP = ' AND ';
+                      }
+                      else {
+                        $sqlOP = ' OR ';
+                      }
                       $sqlOPlabel = ts('match ANY');
                       continue;
                     }
