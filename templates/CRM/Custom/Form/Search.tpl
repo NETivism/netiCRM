@@ -94,7 +94,15 @@
                 {/if}  
             {else}
                 <td class="label">{$form.$element_name.label}</td><td>
-                {if $element.data_type neq 'Date'}
+                {if $element.html_type eq 'CheckBox'}
+                    {foreach name=outer key=key item=item from=$form.$element_name}
+                        {if is_numeric($key)} {* Hack to skip QF field properties that are not checkbox elements. *}
+                            {$form.$element_name.$key.html}
+                        {elseif $form.$element_name.$key.html|strstr:"CiviCRM_OP_OR" OR $form.$element_name.$key.html|strstr:"CiviCRM_OP_EXCLUDE"}
+                            <div class="op-checkbox">{$form.$element_name.$key.html}</div>
+                        {/if}
+                    {/foreach}
+                {elseif $element.data_type neq 'Date'}
                     {$form.$element_name.html}
                 {elseif $element.skip_calendar NEQ true }
                     {include file="CRM/common/jcalendar.tpl" elementName=$element_name}    

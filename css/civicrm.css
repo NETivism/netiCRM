@@ -4915,7 +4915,7 @@ tbody.scrollContent tr.alternateRow {
   border: 0px none;
   vertical-align: top;
 }
-.crm-container td.op-checkbox label {
+.crm-container .op-checkbox label {
   font-weight: normal;
   font-size: 0.83em;
   margin-left: 16px;
