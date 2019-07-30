@@ -3067,13 +3067,9 @@ WHERE  id IN ( $groupIDs )
 
     $contactIds = array();
     foreach ($this->_params as $id => $values) {
-      list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
+      list($contactID, $additionalID) = CRM_Core_Form::cbExtract($values[0]);
       if (!empty($contactID)) {
         $contactIds[] = $contactID;
-      }
-      // For email task, function CRM_Contact_BAO_Query::apiQuery in CRM_Mailing_BAO_Mailing
-      else if (substr($values[0], 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
-        $contactIds[] = substr($values[0], CRM_Core_Form::CB_PREFIX_LEN);
       }
     }
     if (!empty($contactIds)) {

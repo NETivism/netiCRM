@@ -355,7 +355,6 @@ SELECT label, value
 
               //ignoring $op value for checkbox and multi select
               $sqlValue = array();
-              $sqlOP = ' AND ';
               $innerOP = 'LIKE';
               $sqlOPlabel = ts('match ALL');
               $sqlOPlabelAddition = ts('Include');
@@ -366,13 +365,21 @@ SELECT label, value
                   $innerOP = 'NOT LIKE';
                   $sqlOPlabelAddition = ts('Exclude');
                   $isExclude = TRUE;
+                  $sqlOP = ' OR ';
+                }
+                else {
+                  $sqlOP = ' AND ';
                 }
                 unset($value['CiviCRM_OP_EXCLUDE']);
-
                 foreach ($value as $k => $v) {
                   if ($v) {
                     if ($k == 'CiviCRM_OP_OR') {
-                      $sqlOP = ' OR ';
+                      if ($isExclude) {
+                        $sqlOP = ' AND ';
+                      }
+                      else {
+                        $sqlOP = ' OR ';
+                      }
                       $sqlOPlabel = ts('match ANY');
                       continue;
                     }
@@ -396,7 +403,12 @@ SELECT label, value
               else {
                 foreach ($value as $k => $v) {
                   if ($v == 'CiviCRM_OP_OR') {
-                    $sqlOP = ' OR ';
+                    if ($isExclude) {
+                      $sqlOP = ' AND ';
+                    }
+                    else {
+                      $sqlOP = ' OR ';
+                    }
                     $sqlOPlabel = ts('match ANY');
                     continue;
                   }
