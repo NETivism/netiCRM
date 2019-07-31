@@ -243,6 +243,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   function testRecurringPaymentNotify(){
     ### 1st contribution of recurring
     $now = time();
+    $basemonth = strtotime(date('Y-m',time()) . '-01 00:00:01');
     $amount = 222;
 
     // create recurring
@@ -304,7 +305,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     // manually trigger pay by prime api
     $microtime = round(microtime(true) * 1000);
-    $plusmonth = strtotime('+3 month');
+    $plusmonth = strtotime('+3 month', $basemonth);
     $expiryDate = date('Ym', $plusmonth);
     $lastDayOfMonth = date('Y-m-d', strtotime('last day of this month', $plusmonth));
 
@@ -378,7 +379,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', $expectedValue = 5, "In line " . __LINE__);
 
     ### 2nd contribution of recurring
-    $now = strtotime(date('Y-m-05', strtotime('+1 month'))) + 80000; // later of that 5th of month
+    $now = strtotime(date('Y-m-05', strtotime('+1 month', $basemonth))) + 80000; // later of that 5th of month
     $microtime = ($now + 5)*1000;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
 
@@ -448,7 +449,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     
     ### 3rd contribution, change amount
     $amount = 333;
-    $now = strtotime(date('Y-m-05', strtotime('+2 month'))) + 80000; // later of that 5th of month
+    $now = strtotime(date('Y-m-05', strtotime('+2 month', $basemonth))) + 80000; // later of that 5th of month
     $microtime = ($now + 5)*1000;
     CRM_Core_DAO::setFieldValue("CRM_Contribute_DAO_ContributionRecur", $recurring->id, 'amount', $amount);
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
@@ -518,7 +519,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
 
     ### 4th contribution, this should be latest contribution, end recurring
-    $now = strtotime(date('Y-m-05', strtotime('+3 month'))) + 65000; // later of that 5th of month
+    $now = strtotime(date('Y-m-05', strtotime('+3 month', $basemonth))) + 65000; // later of that 5th of month
     $microtime = ($now + 6)*1000;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
 
@@ -588,7 +589,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', $expectedValue = 1, "In line " . __LINE__);
 
     ### 5th contribution, no further contributions should executed this time
-    $now = strtotime(date('Y-m-05', strtotime('+4 month'))) + 65000; // later of that 5th of month
+    $now = strtotime(date('Y-m-05', strtotime('+4 month', $basemonth))) + 65000; // later of that 5th of month
     $microtime = ($now + 7)*1000;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
     $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
