@@ -218,14 +218,16 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       // selected contacts only
       // need to perform action on only selected contacts
       $insertString = array();
+      $alreadySeen = array();
       foreach ($values as $name => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
-        if (!empty($contactID)) {
+        if (!empty($contactID) && !array_key_exists($contactID, $alreadySeen)) {
+          $alreadySeen[$contactID] = 1;
           if ($useTable) {
             $insertString[] = " ( {$contactID} ) ";
           }
           else {
-            $form->_contactIds[$contactID] = $contactID;
+            $form->_contactIds[] = $contactID;
             if (!empty($additionalID) && is_numeric($additionalID)) {
               $form->_additionalIds[$additionalID] = $additionalID;
             }
