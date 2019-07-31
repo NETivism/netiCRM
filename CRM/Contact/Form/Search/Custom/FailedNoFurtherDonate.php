@@ -121,7 +121,7 @@ $having
     return "civicrm_contact AS contact INNER JOIN 
  (SELECT ca.* FROM civicrm_contribution ca LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = ca.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ca.id WHERE ca.is_test = 0 AND ca.contribution_status_id = 4 AND pp.id IS NULL AND mp.id IS NULL ORDER BY ca.created_date DESC) failed ON failed.contact_id = contact.id
    LEFT JOIN 
- (SELECT cb.* FROM civicrm_contribution cb LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = cb.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = cb.id WHERE cb.is_test = 0 AND cb.contribution_status_id = 1 AND pp.id IS NULL AND mp.id IS NULL ORDER BY cb.created_date DESC) success ON success.contact_id = contact.id
+(SELECT MIN(cb.created_date) created_date, cb.total_amount, cb.contact_id, cc.id FROM civicrm_contribution cb LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = cb.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = cb.id LEFT JOIN civicrm_contribution cc ON cb.contact_id = cc.contact_id WHERE cb.is_test = 0 AND cb.contribution_status_id = 1 AND pp.id IS NULL AND mp.id IS NULL AND cc.is_test = 0 AND cc.contribution_status_id = 4 AND cc.created_date < cb.created_date GROUP BY cc.id ORDER BY cb.created_date DESC) success ON success.id = failed.id
 ";
   }
 
