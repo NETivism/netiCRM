@@ -78,7 +78,8 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     // another statistics
     $stat = array();
     $statistics = new CRM_Track_Selector_Track($params);
-    $dao = $statistics->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN entity_id > 0 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start", 'GROUP BY referrer_type');
+    $dao = $statistics->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN state >= 4 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start", 'GROUP BY referrer_type');
+
     while($dao->fetch()){
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
       $total = $total+$dao->count;
