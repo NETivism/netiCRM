@@ -133,13 +133,11 @@
               {$form.contribution_landing.label}<br>
               {$form.contribution_landing.html}
             </td>
-            <td>
+            <td colspan=2>
               {$form.contribution_referrer_url.label}<br>
               {$form.contribution_referrer_url.html}
             </td>
           </tr>
-        </table>
-        <table>
           <tr>
             <td>
               {$form.contribution_utm_source.label}<br>
