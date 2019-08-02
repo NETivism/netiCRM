@@ -219,8 +219,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     else {
       $session->set('pastContributionID', $this->_id);
     }
-
-    $this->_userID = $session->get('userID');
+    
+    // #25950, do not force userID to current logged user. 
+    // this will cause user data being overwrite by some admin
+    // instead use session based data storage to check main state contact id
+    $this->_userID = $this->get('userID');
     $this->_mid = NULL;
     if ($this->_userID) {
       $this->assign('contact_id', $this->_userID);
