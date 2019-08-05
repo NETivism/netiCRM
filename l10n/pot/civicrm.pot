@@ -46965,3 +46965,18 @@ msgstr ""
 
 msgid "Check to Exclude; uncheck to Include"
 msgstr ""
+
+msgid "Check In"
+msgstr ""
+
+msgid "Check-in Date"
+msgstr ""
+
+msgid "Press confirm to process check-in for this participant."
+msgstr ""
+
+msgid "This participant is not registered."
+msgstr ""
+
+msgid "This participant already checked in before. No further action needed."
+msgstr ""
