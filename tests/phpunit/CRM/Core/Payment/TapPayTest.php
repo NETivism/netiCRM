@@ -742,6 +742,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     "token_status" : "ACTIVE"
   }
 }';
+    $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
     CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
     $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC", array( 1 => array($this->_cardToken, 'String')));
     while($dao->fetch()) {
