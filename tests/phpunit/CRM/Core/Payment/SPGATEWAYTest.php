@@ -506,8 +506,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       1 => array($trxn_id4, 'String'),
     );
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
-    $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NOT NULL AND receive_date >= '".date('Y-m-d H:i:s')."'", $params);
     $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $this->assertNotEmpty($cid4, "In line " . __LINE__);
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid4");
     $this->assertNotEmpty($data, "In line " . __LINE__);
 

@@ -29,7 +29,15 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'utmTerm' => CRM_Utils_Request::retrieve('utm_term', 'String', $null),
       'utmContent' => CRM_Utils_Request::retrieve('utm_content', 'String', $null),
     );
-    if ($start = CRM_Utils_Request::retrieve('start', 'Date', $null)) {
+
+    // only appear 3 month data by default
+    $last3month = date('Y-m-01', strtotime('-3 month'));
+    $start = CRM_Utils_Request::retrieve('start', 'Date', $null);
+    if (empty($start)) {
+      $this->assign('defaultStartDate', $last3month);
+      $params['visitDateStart'] = $last3month;
+    }
+    else {
       $params['visitDateStart'] = $start;
     }
     if ($end = CRM_Utils_Request::retrieve('end', 'Date', $null)) {
@@ -70,7 +78,8 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     // another statistics
     $stat = array();
     $statistics = new CRM_Track_Selector_Track($params);
-    $dao = $statistics->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN entity_id > 0 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start", 'GROUP BY referrer_type');
+    $dao = $statistics->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN state >= 4 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start", 'GROUP BY referrer_type');
+
     while($dao->fetch()){
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
       $total = $total+$dao->count;
@@ -140,9 +149,9 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
         continue;
       }
       $dates[$dao->visit_day] = 1;
-      $dummy[$dao->referrer_type][$dao->visit_day] = (int)$dao->count;
+      $dummy[$dao->referrer_type][$dao->visit_day] += (int)$dao->count;
     }
-
+    
     // prepare period label for chartist
     $start = !empty($selectorParams['visitDateStart']) ? $selectorParams['visitDateStart'] : key($dates);
     end($dates);

@@ -327,6 +327,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
     //search task action
     if ($this->_id || $this->_contactId || $this->_context == 'standalone') {
       $this->_single = TRUE;
+      $this->set('single', TRUE);
       $this->assign('urlPath', 'civicrm/contact/view/participant');
       if (!$this->_id && !$this->_contactId) {
         if ($this->_eID) {
@@ -370,6 +371,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
       parent::preProcess();
 
       $this->_single = FALSE;
+      $this->set('single', FALSE);
       $this->_contactId = NULL;
 
       //set ajax path, this used for custom data building
@@ -673,6 +675,12 @@ SELECT civicrm_custom_group.name as name,
 
   public function buildQuickForm() {
     if ($this->_showFeeBlock) {
+      if (CRM_Core_Permission::access('CiviContribute')) {
+        $this->assign('accessContribution', TRUE);
+      }
+      else {
+        $this->assign('accessContribution', FALSE);
+      }
       return CRM_Event_Form_EventFees::buildQuickForm($this);
     }
 
@@ -1603,44 +1611,16 @@ cj(function() {
         'module' => !empty($participants[0]->registered_by_id) ? 'CiviEvent_Additional' : 'CiviEvent',
         'entity_id' => $params['event_id'],
       );
-      $eventCustomGroups = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
-      foreach($eventCustomGroups as $k => $v){
+
+      $eventUfJoin = array();
+      $eventUfIds = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
+
+      foreach($eventUfIds as $k => $v){
         if($k > 1) {
           break;
         }
         if(!empty($v)){
-          $customGroupVars[$k] = CRM_Event_BAO_Event::buildCustomDisplay(
-            $eventCustomGroups[$k],
-            NULL,
-            $participants[0]->contact_id,
-            $template,
-            $participants[0]->id,
-            $participants[0]->is_test,
-            TRUE
-          );
-        }
-      }
-
-      $customGroup = array();
-      if(!empty($customGroupVars)){
-        foreach($customGroupVars as $k => $v){
-          if(!empty($v[1]['_grouptitle'])){
-            $grouptitle = $v[1]['_grouptitle'];
-            foreach($v[0] as $label => $value){
-              $customGroup[$grouptitle][$label] = $value;
-            }
-          }
-        } 
-      }
-      else{
-        // format submitted data
-        foreach ($params['custom'] as $fieldID => $values) {
-          foreach ($values as $fieldValue) {
-            $customValue = array('data' => $fieldValue['value']);
-            $customFields[$fieldID]['id'] = $fieldID;
-            $formattedValue = CRM_Core_BAO_CustomGroup::formatCustomValues($customValue, $customFields[$fieldID], TRUE);
-            $customGroup[$customFields[$fieldID]['groupTitle']][$customFields[$fieldID]['label']] = str_replace('&nbsp;', '', $formattedValue);
-          }
+          $eventUfJoin[$k] = $v;
         }
       }
 
@@ -1649,9 +1629,46 @@ cj(function() {
         list($this->_contributorDisplayName, $this->_contributorEmail, $this->_toDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($contactID);
 
         $this->_contributorDisplayName = ($this->_contributorDisplayName == ' ') ? $this->_contributorEmail : $this->_contributorDisplayName;
-        $this->assign('customGroup', $customGroup);
         $this->assign('contactID', $contactID);
         $this->assign('participantID', $participants[$num]->id);
+
+        // build custom data and profile display
+        $this->assign('customGroup', '');
+        $customGroup = $customGroupVars = array();
+        foreach($eventUfJoin as $k => $v) {
+          $customGroupVars[$k] = CRM_Event_BAO_Event::buildCustomDisplay(
+            $v,
+            NULL,
+            $contactID,
+            $template,
+            $participants[$num]->id,
+            $participants[$num]->is_test,
+            TRUE
+          );
+        }
+        if(!empty($customGroupVars)){
+          foreach($customGroupVars as $k => $v){
+            if(!empty($v[1]['_grouptitle'])){
+              $grouptitle = $v[1]['_grouptitle'];
+              foreach($v[0] as $label => $value){
+                $customGroup[$grouptitle][$label] = $value;
+              }
+            }
+          } 
+        }
+        if (!empty($params['custom'])) {
+          // format submitted data
+          foreach ($params['custom'] as $fieldID => $values) {
+            foreach ($values as $fieldValue) {
+              $customFields = array();
+              $customValue = array('data' => $fieldValue['value']);
+              $customFields[$fieldID]['id'] = $fieldID;
+              $formattedValue = CRM_Core_BAO_CustomGroup::formatCustomValues($customValue, $customFields[$fieldID], TRUE);
+              $customGroup[$customFields[$fieldID]['groupTitle']][$customFields[$fieldID]['label']] = str_replace('&nbsp;', '', $formattedValue);
+            }
+          }
+        }
+        $this->assign('customGroup', $customGroup);
 
         if ($this->_isPaidEvent) {
           // fix amount for each of participants ( for bulk mode )
@@ -1679,6 +1696,23 @@ cj(function() {
           'PDFFilename' => 'Attendee_confirm_copy.pdf',
         );
 
+        if ($config->enableEventCheckinQrcode) {
+          $checkinCodeFile = CRM_Event_BAO_Participant::checkinCode($contactID, $participants[$num]->id);
+          $qrcodeName = 'qrcode-'.$participants[$num]->id;
+          $embedImages = array(
+            $qrcodeName => array(
+              'fullPath' => $checkinCodeFile,
+              'mime_type' => 'image/png',
+              'cleanName' => $qrcodeName.'.png',
+            ),
+          );
+
+          if (!empty($embedImages)) {
+            $sendTemplateParams['tplParams']['checkinCode'] = "<img src=\"cid:$qrcodeName\">";
+            $sendTemplateParams['images'] = $embedImages;
+          }
+        }
+
         // try to send emails only if email id is present
         // and the do-not-email option is not checked for that contact
         if ($this->_contributorEmail and !$this->_toDoNotEmail) {
@@ -1698,10 +1732,7 @@ cj(function() {
           list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
           if ($mailSent) {
             $sent[] = $contactID;
-            require_once 'CRM/Activity/BAO/Activity.php';
-            foreach ($participants as $ids => $values) {
-              CRM_Activity_BAO_Activity::addActivity($values, 'Email');
-            }
+            CRM_Activity_BAO_Activity::addActivity($participants[$num], 'Email');
           }
           else {
             $notSent[] = $contactID;

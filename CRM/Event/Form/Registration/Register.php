@@ -129,7 +129,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $descript = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $descript);
     $descript = strip_tags($descript);
     $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r)+/", ' ', $descript);
-    $descript = substr($descript,0,150);
+    $descript = substr($descript, 0, 150);
     $meta[] = array(
       'tag' => 'meta',
       'attributes' => array(
@@ -148,14 +148,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $event->_id = $this->_eventId;
     $values = $this->_values;
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree("Event", $event, $event->_id, 0, $values['event']['event_type_id']);
+    $config = CRM_Core_Config::singleton();
     foreach($groupTree as $ufg_inner){
       if(is_array($ufg_inner['fields'])){
         foreach ($ufg_inner['fields'] as $uffield) {
           if(is_array($uffield)){
             if($uffield['data_type'] == 'File'){
               if(!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['customValue'][1]['data'])){
-                $proto = explode('/', $_SERVER['SERVER_PROTOCOL']);
-                $image = strtolower($proto[0]) . '://' . $_SERVER['HTTP_HOST'] . $uffield['customValue'][1]['fileURL'];
+                $image = $config->customFileUploadURL . $uffield['customValue'][1]['data'];
                 $meta_ogimg = array(
                   'tag' => 'meta',
                   'attributes' => array(

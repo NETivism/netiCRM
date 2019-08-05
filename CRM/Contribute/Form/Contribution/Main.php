@@ -60,27 +60,35 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    * @access public
    */
   public function preProcess() {
+    // #25950 instead set userID on every page, set on main state only
+    // This will prevent admin contact data being overwrited
+    // This need to before contributionBase preProcess
+    if ($this->get('userID') === NULL) {
+      $session = CRM_Core_Session::singleton();
+      $this->_userID = $session->get('userID') ? $session->get('userID') : 0;
+    }
+    else {
+      $this->_userID = $this->get('userID');
+    }
+    $this->set('userID', $this->_userID);
     parent::preProcess();
 
     $this->_ppType = CRM_Utils_Array::value('type', $_GET);
-    require_once 'CRM/Core/Payment/ProcessorForm.php';
     $this->assign('ppType', FALSE);
     if ($this->_ppType) {
       $this->assign('ppType', TRUE);
       return CRM_Core_Payment_ProcessorForm::preProcess($this);
     }
 
-
     // make sure we have right permission to edit this user
     $csContactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE, $this->_userID);
-
-    require_once 'CRM/Contact/BAO/Contact.php';
     if ($csContactID != $this->_userID) {
       require_once 'CRM/Contact/BAO/Contact/Permission.php';
       if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactID, $this)) {
         $session = CRM_Core_Session::singleton();
-        $session->set('userID', $csContactID);
-        $this->_userID = $csContactID;
+        $session->set('userID', $csContactID);  // used by all the loggin system
+        $this->set('userID', $csContactID);     // used by contributionBase
+        $this->_userID = $csContactID;          // used by current follow up
       }
     }
 
@@ -165,21 +173,21 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         'content' => $descript,
       ),
     );
-        if(is_array($this->_values['custom_data_view'])){
+    if(is_array($this->_values['custom_data_view'])){
+      $config = CRM_Core_Config::singleton();
       foreach ($this->_values['custom_data_view'] as $ufg) {
         foreach($ufg as $ufg_inner){
           if(is_array($ufg_inner['fields'])){
             foreach ($ufg_inner['fields'] as $uffield) {
               if(is_array($uffield)){
                 if($uffield['field_type'] == 'File'){
-                  if(!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['field_value']['data'])){
-                    $proto = explode('/', $_SERVER['SERVER_PROTOCOL']);
-                    $image = strtolower($proto[0]) . '://' . $_SERVER['HTTP_HOST'] . $uffield['field_value']['fileURL'];
+                  if(!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['field_value']['data'])){
+                    $image = $config->customFileUploadURL . $uffield['field_value']['data'];
                     $meta_ogimg = array(
                       'tag' => 'meta',
                       'attributes' => array(
                         'property' => 'og:image',
-                        'value' => $image,
+                        'content' => $image,
                       ),
                     );
                     break;
@@ -1029,7 +1037,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     if (isset($fields['is_recur']) && $fields['is_recur']) {
       $installments = CRM_Utils_Array::value('installments', $fields);
-      if (strlen($installments) !== 0 && $installments <= 1){
+      if (!empty($installments) && $installments <= 1){
         $errors['installments'] = ts('Installments should be greater than %1.', array(1 => '1'));
       }
       if ($fields['frequency_interval'] <= 0) {

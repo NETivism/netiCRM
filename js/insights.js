@@ -31,10 +31,10 @@ function getHostNameFromUrl(url) {
   return url.indexOf(a.hostname) != -1 ? a.hostname : '';
 }
 
-function referrerInfo() {
+function loadReferrer() {
   var dateTime = Date.now();
   var timestamp = Math.floor(dateTime / 1000);
-  var referrerInfo = sessionStorage.getItem('referrerInfo');
+  var referrerInfo = localStorage.getItem('referrerInfo');
   if (referrerInfo) {
     referrerInfo = JSON.parse(referrerInfo);
   }
@@ -44,22 +44,27 @@ function referrerInfo() {
     trackVisit(referrerInfo);
   }
   else {
+    localStorage.removeItem('referrerInfo');
     var url = window.location.href;
-    var referrer = document.referrer;
+    var referrer = '';
+    if (typeof document.referrer !== 'undefined') {
+      referrer = document.referrer;
+    }
     inbound.referrer.parse(url, referrer, function (err, visitInfo) {
-      // set to sessionStorage because we need to make sure same browser different session have diffrent result
+      // set to localStorage because we need to make sure same browser with different tab has same referrer result.
+      // use 30mins time to check if this is same session.
       visitInfo.landing = location.href.replace(location.origin, '');
       visitInfo.timestamp = timestamp;
       if (referrerInfo && typeof referrerInfo.referrer !== 'undefined') {
         if (visitInfo.referrer.type !== 'direct' && visitInfo.referrer.type !== 'internal') {
-          sessionStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
+          localStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
         }
         else {
           visitInfo = referrerInfo;
         }
       }
       else {
-        sessionStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
+        localStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
       }
       trackVisit(visitInfo);
     });
@@ -160,6 +165,6 @@ function trackVisit(visitInfo) {
 var currentScriptSrc = document.currentScript.src;
 var inboundSrc = currentScriptSrc.replace(/insights\.js.*$/, 'inbound.js');
 loadScript(inboundSrc, function(){
-  referrerInfo();
+  loadReferrer();
 });
 

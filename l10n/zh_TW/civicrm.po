@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-07-10 05:50+0000\n"
+"PO-Revision-Date: 2019-07-29 07:13+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -11938,7 +11938,7 @@ msgstr "選取則檢查「任一」符合；不選取則檢查「所有」符合
 
 #: CRM/Core/BAO/CustomField.php
 msgid "Check to match ANY; uncheck to match ALL"
-msgstr "選取則檢查「任一」符合；不選取則檢查「所有」符合"
+msgstr "勾選則搜尋「任一」符合；未勾選則搜尋「所有」符合。"
 
 #: CRM/Core/BAO/CustomField.php
 msgid "Select a valid contact for %1."
@@ -47061,6 +47061,9 @@ msgstr "附註主旨"
 msgid "Change status to %status%"
 msgstr "狀態改變-%status%"
 
+msgid "Change status to %1"
+msgstr "狀態改變-%1"
+
 msgid ""
 "Failuare: Amount values dont match between database and IPN request. Trxn_id"
 " is %1, Data from payment : %2, Data in CRM : %3"
@@ -47075,27 +47078,20 @@ msgstr "此定期定額已執行過了，「上次執行日期」已超過扣款
 msgid "Finish synchronizing recurring."
 msgstr "定期定額同步更新完成"
 
-msgid ""
-"Stop recurring %1 because this is lastest contribution of this recurring "
-"(end date is %2)."
-msgstr "%1 定期定額將結束，因為結束日期為 %2 ，此筆已是最後捐款。"
+msgid "This is lastest contribution of this recurring (end date is %1)."
+msgstr "結束日期為 %1 ，此筆已是最後捐款。"
 
-msgid ""
-"Stop recurring %1 because this is lastest contribution of this recurring "
-"(expiry date is %2)."
-msgstr "%1 定期定額將結束，因為卡片到期日期為 %2 ，此筆已是最後捐款。"
+msgid "This is lastest contribution of this recurring (expiry date is %1)."
+msgstr "卡片到期日期為 %1 ，此筆已是最後捐款。"
 
-msgid "Stop recurring %1 because end date is dued."
-msgstr "%1 定期定額將結束，因為結束日期已過期。"
+msgid "End date is due."
+msgstr "結束日期已過期。"
 
-msgid "Stop recurring %1 because installments id full."
-msgstr "%1 定期定額將結束，因為期數已滿。"
+msgid "Installments is full."
+msgstr "期數已滿。"
 
-msgid "Stop recurring %1 because card expiry date is due."
-msgstr "%1 定期定額將結束，因為卡片到期日已過期。"
-
-msgid "Update recurring status to 'Finished'."
-msgstr "更新定期定額狀態為「已完成」。"
+msgid "Card expiry date is due."
+msgstr "卡片到期日已過。"
 
 msgid "Synchronizing to Tappay server success."
 msgstr "成功跟 Tappay 伺服器同步。"
@@ -47135,3 +47131,30 @@ msgstr "請謹慎使用。你永遠不應該讓這個公開呈現。"
 
 msgid "Change amount"
 msgstr "金額改變"
+
+msgid "Auto renews status"
+msgstr "自動更新狀態"
+
+msgid "Credit Card Number"
+msgstr "信用卡號碼"
+
+msgid "CCV"
+msgstr "檢查碼"
+
+msgid "Check In Code"
+msgstr "報到碼"
+
+msgid "Please edit recurring and change status to 'Completed'."
+msgstr "請直接編輯定期定額，並將狀態設為「已完成」。"
+
+msgid "Contact Created Date"
+msgstr "聯絡人建立日期"
+
+msgid "Contact Modified Date"
+msgstr "聯絡人修改日期"
+
+msgid "Contribution Created Date"
+msgstr "捐款建立日期"
+
+msgid "Check to Exclude; uncheck to Include"
+msgstr "勾選進行「排除」搜尋；未勾選則進行「包含」搜尋"

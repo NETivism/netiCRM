@@ -46870,6 +46870,9 @@ msgstr ""
 msgid "Change status to %status%"
 msgstr ""
 
+msgid "Change status to %1"
+msgstr ""
+
 msgid "Failuare: Amount values dont match between database and IPN request. Trxn_id is %1, Data from payment : %2, Data in CRM : %3"
 msgstr ""
 
@@ -46882,22 +46885,19 @@ msgstr ""
 msgid "Finish synchronizing recurring."
 msgstr ""
 
-msgid "Stop recurring %1 because this is lastest contribution of this recurring (end date is %2)."
+msgid "This is lastest contribution of this recurring (end date is %1)."
 msgstr ""
 
-msgid "Stop recurring %1 because this is lastest contribution of this recurring (expiry date is %2)."
+msgid "This is lastest contribution of this recurring (expiry date is %1)."
 msgstr ""
 
-msgid "Stop recurring %1 because end date is dued."
+msgid "End date is due."
 msgstr ""
 
-msgid "Stop recurring %1 because installments id full."
+msgid "Installments is full."
 msgstr ""
 
-msgid "Stop recurring %1 because card expiry date is due."
-msgstr ""
-
-msgid "Update recurring status to 'Finished'."
+msgid "Card expiry date is due."
 msgstr ""
 
 msgid "Synchronizing to Tappay server success."
@@ -46937,4 +46937,31 @@ msgid "Carefully. You should never make this publicly."
 msgstr ""
 
 msgid "Change amount"
+msgstr ""
+
+msgid "Auto renews status"
+msgstr ""
+
+msgid "Credit Card Number"
+msgstr ""
+
+msgid "CCV"
+msgstr ""
+
+msgid "Check In Code"
+msgstr ""
+
+msgid "Please edit recurring and change status to 'Completed'."
+msgstr ""
+
+msgid "Contact Created Date"
+msgstr ""
+
+msgid "Contact Modified Date"
+msgstr ""
+
+msgid "Contribution Created Date"
+msgstr ""
+
+msgid "Check to Exclude; uncheck to Include"
 msgstr ""
