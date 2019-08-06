@@ -541,7 +541,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       // if we find more than one contact, use the first one
       $contact_id = CRM_Utils_Array::value(0, $ids);
       $contactID = &CRM_Contact_BAO_Contact::createProfileContact($params, $fields, $contact_id, $addToGroups);
-      $this->set('contactID', $contactID);
     }
     else {
       $ctype = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'contact_type');
@@ -549,6 +548,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         NULL, $ctype
       );
     }
+    $this->set('contactID', $contactID);
 
     //get email primary first if exist
     $subscribtionEmail = array('email' => CRM_Utils_Array::value('email-Primary', $params));
@@ -564,7 +564,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     // If onbehalf-of-organization contribution / signup, add organization
     // and it's location.
     if (isset($params['is_for_organization']) && isset($behalfOrganization['organization_name'])) {
+      $this->set('behalfContactID', $contactID);
+      $behalfOrganization['log_data'] = $params['log_data'];
       self::processOnBehalfOrganization($behalfOrganization, $contactID, $this->_values, $this->_params);
+      $this->set('contactID', $contactID);
+      $this->set('behalfOrganizationID', $contactID);
     }
 
     // lets store the contactID in the session
