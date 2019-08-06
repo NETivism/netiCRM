@@ -30,7 +30,7 @@ class CRM_Core_Payment_TapPayAPI {
     'record' => '/tpc/transaction/query',
     'trade_history' => '/tpc/transaction/trade-history',
     'card_metadata' => '/tpc/card/metadata',
-    'card_notify_api_sandbox' => '/tpc/sandbox/test/card-notify',
+    'card_notify_api_sandbox' => '/tpc/sandbox/card/metadata/notify',
     /* not supportted api types
     'refund' => '/tpc/transaction/refund',
     'cap' => '/tpc/transaction/cap',
