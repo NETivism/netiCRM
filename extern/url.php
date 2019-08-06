@@ -18,7 +18,7 @@ if ( ! $queue_id || ! $url_id ) {
 }
 
 $url = CRM_Mailing_Event_BAO_TrackableURLOpen::track($queue_id, $url_id);
-$url_parsed = parse_url($url);
+$url_parsed = CRM_Utils_String::parseUrl($url);
 // CRM-7103
 // looking for additional query variables and append them when redirecting
 $query_param = $_GET;
@@ -31,13 +31,14 @@ if ($url_parsed['host'] === $_SERVER['HTTP_HOST']) {
 
 if (!empty($query_param)) {
   $query_string = http_build_query($query_param);
-
-  if(stristr($url, '?')) {
-    $url .= '&'. $query_string;
+  if (empty($url_parsed['query'])) {
+    $url_parsed['query'] = $query_string;
   }
   else {
-    $url .= '?'. $query_string;
+    $url_parsed['query'] = rtrim($url_parsed['query'], '&') . '&' . $query_string;
   }
+
+  $url = CRM_Utils_String::buildUrl($url_parsed);
 }
 
 CRM_Utils_System::redirect($url);

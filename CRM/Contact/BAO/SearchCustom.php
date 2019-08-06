@@ -105,6 +105,7 @@ class CRM_Contact_BAO_SearchCustom {
 
     // instantiate the new class
     $customClass = new $customSearchClass( $formValues );
+    $customClass->_ssID = $ssID;
 
     return $customClass;
   }
