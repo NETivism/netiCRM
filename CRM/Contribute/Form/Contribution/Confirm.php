@@ -164,7 +164,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $this->_params['address'][1]['country'] = CRM_Core_PseudoConstant::countryIsoCode($this->_params['address'][1]['country_id']);
       }
       if (!empty($this->_params['address'][1]['state_province_id'])) {
-        $this->_params['address'][1]['state_province'] = CRM_Core_PseudoConstant::stateProvinceAbbreviation($this->_params['address'][1]['state_province_id']);
+        $this->_params['address'][1]['state_province_name'] = CRM_Core_PseudoConstant::stateProvince($this->_params['address'][1]['state_province_id']);
       }
       // hardcode blocks for now. We might shift to generalized model in 3.1 which uses profiles
       foreach (array('phone', 'email', 'address') as $loc) {

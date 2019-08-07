@@ -245,18 +245,18 @@
     </div>
     {/if}
     
-    {if $onBehalfName}
-    <div class="crm-group onBehalf_display-group">
+    {if $onBehalfParams}
+    <div class="crm-group onBehalf_display-group label-left">
         <div class="header-dark">
             {ts}On Behalf Of{/ts}
         </div>
-        <div class="display-block">
-            <strong>{$onBehalfName}</strong><br />
-            {$onBehalfAddress|nl2br}
+        {foreach from=$onBehalfParams item=item key=key}
+        <div class="crm-section">
+            <div class="label"><label>{$key}</label></div>
+            <div class="content">{$item}</div>
+            <div class="clear"></div>
         </div>
-        <div class="display-block">
-            {$onBehalfEmail}
-        </div>
+        {/foreach}
     </div>
     {/if}
 
