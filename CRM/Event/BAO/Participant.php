@@ -197,6 +197,8 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
 
     if (CRM_Utils_Array::value('id', $params)) {
       $status = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $params['id'], 'status_id');
+      $participantStatus = CRM_Event_PseudoConstant::participantstatus();
+      $attendedStatusId = array_search('Attended', $participantStatus);
     }
 
     $participant = &self::add($params);
@@ -215,7 +217,8 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
 
     //CRM-5403
     //for update mode
-    if (self::isPrimaryParticipant($participant->id) && $status) {
+    //#25962, during check-in procedure, do not update others status id
+    if (self::isPrimaryParticipant($participant->id) && $status && $status != $attendedStatusId) {
       self::updateParticipantStatus($participant->id, $status, $participant->status_id);
     }
 
