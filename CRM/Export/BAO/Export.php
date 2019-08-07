@@ -318,7 +318,7 @@ class CRM_Export_BAO_Export {
         }
 
         // unset non exportable fields for components
-        $nonExpoFields = array('groups', 'tags', 'notes', 'contribution_status_id',
+        $nonExpoFields = array('contribution_status_id',
           'pledge_status_id', 'pledge_payment_status_id',
         );
         foreach ($nonExpoFields as $value) {

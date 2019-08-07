@@ -60,6 +60,17 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    * @access public
    */
   public function preProcess() {
+    // #25950 instead set userID on every page, set on main state only
+    // This will prevent admin contact data being overwrited
+    // This need to before contributionBase preProcess
+    if ($this->get('userID') === NULL) {
+      $session = CRM_Core_Session::singleton();
+      $this->_userID = $session->get('userID') ? $session->get('userID') : 0;
+    }
+    else {
+      $this->_userID = $this->get('userID');
+    }
+    $this->set('userID', $this->_userID);
     parent::preProcess();
 
     $defaultFromRequest = array();
@@ -77,7 +88,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->set('defaultFromRequest', $this->_defaultFromRequest);
 
     $this->_ppType = CRM_Utils_Array::value('type', $_GET);
-    require_once 'CRM/Core/Payment/ProcessorForm.php';
     $this->assign('ppType', FALSE);
     if ($this->_ppType) {
       $this->assign('ppType', TRUE);
@@ -92,8 +102,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if (!empty($csContactID) && !empty($csString) && $currentUserID != $csContactID) {
       if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactID, $this)) {
         $this->set('csContactID', $csContactID);
-        $this->_userID = $csContactID;
-        $this->assign('contact_id', $this->_userID);
+        $session = CRM_Core_Session::singleton();
+        $session->set('userID', $csContactID);  // used by all the loggin system
+        $this->set('userID', $csContactID);     // used by contributionBase
+        $this->_userID = $csContactID;          // used by current follow up
       }
     }
 

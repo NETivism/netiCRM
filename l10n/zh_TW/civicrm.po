@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-07-29 07:13+0000\n"
+"PO-Revision-Date: 2019-08-05 08:19+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47158,3 +47158,18 @@ msgstr "捐款建立日期"
 
 msgid "Check to Exclude; uncheck to Include"
 msgstr "勾選進行「排除」搜尋；未勾選則進行「包含」搜尋"
+
+msgid "Check In"
+msgstr "報到"
+
+msgid "Check-in Date"
+msgstr "報到日期"
+
+msgid "Press confirm to process check-in for this participant."
+msgstr "按下確認後，將為此參加者進行報到。"
+
+msgid "This participant is not registered."
+msgstr "此參加者並未完成報名登記。"
+
+msgid "This participant already checked in before. No further action needed."
+msgstr "此參加者先前就已完成報到，無須再次報到。"
