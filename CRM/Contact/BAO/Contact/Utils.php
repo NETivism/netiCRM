@@ -546,7 +546,6 @@ WHERE id={$contactId}; ";
         'email'
       )
     );
-    $form->addRule('email[1][email]', ts('%1 is a required field.', array(1 => ts('E-mail'))), 'required');
     //build the address block
     require_once 'CRM/Contact/Form/Edit/Address.php';
     CRM_Contact_Form_Edit_Address::buildQuickForm($form);
