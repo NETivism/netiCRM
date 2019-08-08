@@ -31,13 +31,13 @@
 
         if(this.currentPage == 'Main'){
 
-          this.prepareStepInfo();
-
           this.setDefaultValues();
 
-          this.prepareRecurBtnMsg();
-
           this.checkUrlParamsAction();
+
+          this.prepareStepInfo();
+
+          this.prepareRecurBtnMsg();
 
           this.prepareForm();
 
@@ -383,6 +383,7 @@
           params['_grouping'] && params['_grouping'] == this.currentContribType && 
           params['_amt'] && params['_amt'] == this.currentPriceAmount && 
           params['_instrument'] ) {
+          window.ContribPage.currentFormStep = 2;
           cj(document).ajaxComplete(function( event, xhr, settings ) {
             if(settings.url.substring(0,38) == '/civicrm/contribute/transact?snippet=4' && 
               cj(xhr.responseText).find('input[id^=civicrm-instrument-dummy]:checked').length) {
@@ -391,8 +392,8 @@
               xhr.complete(function(){
                 var interval = setInterval(function(){
                   if(cj('input[id^=civicrm-instrument-dummy]:checked').length && window.ContribPage.complete){
-                    if(cj('input[id^=civicrm-instrument-dummy]:checked').val() == params['_instrument']){
-                      window.ContribPage.setFormStep(2);
+                    if(cj('input[id^=civicrm-instrument-dummy]:checked').val() != params['_instrument']){
+                      window.ContribPage.setFormStep(1);
                       clearInterval(interval);
                     }
                   }
