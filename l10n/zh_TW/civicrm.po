@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-08-07 07:31+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2019-08-08 09:51+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47173,3 +47173,6 @@ msgstr "此參加者並未完成報名登記。"
 
 msgid "This participant already checked in before. No further action needed."
 msgstr "此參加者先前就已完成報到，無須再次報到。"
+
+msgid "You can only check in event with event manager."
+msgstr "活動報到作業，需要活動管理員才有辦法完成喔。"
