@@ -989,7 +989,10 @@ LIMIT 0, 100
         $returnData[ts('Support 3JTSP')] = ts("Yes");
       }
       else if($autoRenew == 2) {
-        $returnData[ts('Support 3JTSP')] = ts("updated");
+        $sql = "SELECT MAX(tl.date) FROM civicrm_contribution_tappay_log tl INNER JOIN civicrm_contribution c ON tl.contribution_id = c.id WHERE c.contribution_recur_id = %1 AND tl.url LIKE '%civicrm/tappay/cardnotify' GROUP BY tl.contribution_id";
+        $params = array(1 => array($tappayDAO->contribution_recur_id, 'Positive'));
+        $updatedDate = CRM_Core_DAO::singleValueQuery($sql, $params);
+        $returnData[ts('Support 3JTSP')] = $updatedDate . ' ' . ts("updated");
       }
     }
     return $returnData;
