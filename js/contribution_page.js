@@ -313,7 +313,7 @@
           });
           $('.contrib-type-btn').append($singleBtn);
         }
-        this.updateContributeType();
+        this.updateContributeType(false);
       },
 
       preparePriceSetBlock: function(){
@@ -503,7 +503,7 @@
             $('[name=is_recur][value=1]').click();
           }
 
-          this.updateContributeType();
+          this.updateContributeType(true);
           this.setDefaultPriceOption();
         }
       },
@@ -525,7 +525,7 @@
         })
       },
 
-      updateContributeType: function() {
+      updateContributeType: function(isSelectDefaultOption) {
         if(this.currentContribType == 'non-recurring'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-single-btn').addClass('selected');
@@ -539,7 +539,7 @@
         this.updateContribInfoLabel();
         this.updatePriceSetOption();
 
-        if(this.defaultPriceOption[this.currentContribType]){
+        if(isSelectDefaultOption && this.defaultPriceOption[this.currentContribType]){
           this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
         }
       },
