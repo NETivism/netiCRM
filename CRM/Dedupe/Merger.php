@@ -55,6 +55,8 @@ class CRM_Dedupe_Merger {
     'website' => 'Website',
   );
 
+  static $dupePairsSorted = array();
+
   // FIXME: consider creating a common structure with cidRefs() and eidRefs()
   // FIXME: the sub-pages references by the URLs should
   // be loaded dynamically on the merge form instead
@@ -1444,5 +1446,67 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     }
     return array_intersect_key($labels, $conflicts);
   }
-}
 
+
+  /**
+   * Prioritize parent-child relationship of dupes
+   */
+  public static function treeDupes($dupes) {
+    $tree = array();
+    $referenced = array();
+    $unique = array();
+    foreach ($dupes as $pair) {
+      $parent = $pair[0];
+      $child = $pair[1];
+      $unique[$parent] = 1;
+      $unique[$child] = 1;
+      if (!isset($tree[$child])) {
+        $tree[$child] = array();
+      }
+      if (!empty($parent) && !isset($referenced[$child])) {
+        $tree[$parent][$child] =& $tree[$child];
+        $referenced[$child] = 1;
+      }
+    }
+    foreach($tree as $parent => &$child) {
+      if (empty($child)) {
+        unset($tree[$parent]);
+      }
+      if ($referenced[$parent]) {
+        // it's not root
+        unset($tree[$parent]);
+      }
+    }
+    ksort($tree);
+    return $tree;
+  }
+
+  /**
+   * Sort dupes by deepest tree(children) to root(parent)
+   */
+  function sortDupes($dupePairs) {
+    self::$dupePairsSorted = array();
+    $dupeTree = CRM_Dedupe_Merger::treeDupes($dupePairs);
+    $iterator = new RecursiveArrayIterator($dupeTree);
+    iterator_apply($iterator, array(self, 'recursiveIterator'), array($iterator));
+    return self::$dupePairsSorted;
+  }
+  function recursiveIterator($iterator) {
+    while ( $iterator -> valid() ) {
+      if ( $iterator->hasChildren() ) {
+        self::recursiveIterator($iterator->getChildren());
+        $children = $iterator->current();
+        if (empty($children)) {
+          $iterator->next();
+          continue;
+        }
+      }
+      $parent = $iterator->key();
+      $pair = $iterator->current();
+      foreach ($pair as $child => $dontcare){
+        self::$dupePairsSorted[] = array($parent, $child);
+      }
+      $iterator->next();
+    }
+  }
+}

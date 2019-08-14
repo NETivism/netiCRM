@@ -302,13 +302,23 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     // clean up all sessions older than $cacheTimeIntervalDays days
     $cacheTimeIntervalDays = 2;
 
-    if (mt_rand(1, 100000) % 1396 == 0) {
+    if (mt_rand(1, 100000) % $cacheCleanUpNumber == 0) {
       $sql = "
 DELETE FROM civicrm_cache
 WHERE       group_name = 'CiviCRM Session'
 AND         created_date < date_sub( NOW( ), INTERVAL $cacheTimeIntervalDays day )
 ";
       CRM_Core_DAO::executeQuery($sql);
+    }
+  }
+
+  static function getItemCreatedDate($group, $path, $componentID = NULL) {
+    $dao = new CRM_Core_DAO_Cache();
+    $dao->group_name = $group;
+    $dao->path = $path;
+    $dao->component_id = $componentID;
+    if ($dao->find(TRUE)) {
+      return $dao->created_date;
     }
   }
 }
