@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-08-14 07:52+0000\n"
+"PO-Revision-Date: 2019-08-14 07:56+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -26783,7 +26783,7 @@ msgstr "聯絡人是否有網站帳號？"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Location.tpl
 msgid "Location search uses the PRIMARY location for each contact by default."
-msgstr "地點搜尋使預設會找尋聯絡人的「預設」地址資料。"
+msgstr "未選取任何地點類型，則搜尋聯絡人的「預設」地址資料。"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Location.tpl
 msgid ""
