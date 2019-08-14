@@ -54,6 +54,8 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $participantID = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $statusTypes = CRM_Event_PseudoConstant::participantStatus();
+    $statusAttended = array_search('Attended', $statusTypes);
+    $statusPositive = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Positive'" );
     $params = array('id' => $participantID);
 
     CRM_Event_BAO_Participant::getValues($params,
@@ -65,6 +67,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
       require_once 'CRM/Core/Error.php';
       CRM_Core_Error::statusBounce(ts('The requested participant record does not exist (possibly the record was deleted).'));
     }
+    $contactID = $values[$participantID]['contact_id'];
 
     CRM_Event_BAO_Participant::resolveDefaults($values[$participantID]);
 
@@ -88,6 +91,10 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     }
     if ($values[$participantID]['is_test']) {
       $values[$participantID]['status'] .= ' (test) ';
+    }
+    $config = CRM_Core_Config::singleton();
+    if ($config->enableEventCheckinQrcode && $values[$participantID]['status_id'] != $statusAttended && !empty($statusPositive[$values[$participantID]['status_id']])) {
+      $values[$participantID]['checkinUrl'] = CRM_Event_BAO_Participant::checkinUrl($values[$participantID]['contact_id'], $participantID);
     }
 
     // Get Note

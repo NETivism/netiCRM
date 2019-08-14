@@ -60,7 +60,10 @@
         {/if}
 	    	<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$contact_id"}" title="view contact record">{$displayName}</a>
 	    	<div class="crm-submit-buttons">
-	    	    <a class="button" href="{crmURL p='civicrm/event/badge' q="reset=1&context=view&id=$id&cid=$contact_id"}" title="{ts}Print Event Name Badge{/ts}"><span><div class="zmdi zmdi-print"></div> {ts}Print Name Badge{/ts}</span></a>
+                <a class="button" href="{crmURL p='civicrm/event/badge' q="reset=1&context=view&id=$id&cid=$contact_id"}" title="{ts}Print Event Name Badge{/ts}"><span><div class="zmdi zmdi-print"></div> {ts}Print Name Badge{/ts}</span></a>
+                {if $checkinUrl}
+                <a class="button" href="{$checkinUrl}"><span><div class="zmdi zmdi-assignment-account"></div> {ts}Check In{/ts}</span></a>
+                {/if}
 	    	</div>
 	    </td>
 	</tr>
