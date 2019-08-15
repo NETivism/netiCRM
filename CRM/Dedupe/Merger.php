@@ -838,15 +838,10 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
               if ($moniker == 'other' && !empty($value[$valueField]) && $locationsExists['main'][$block][$value[$valueField]]) {
                 continue;
               }
-              if ($block == 'address') {
-                CRM_Core_BAO_Address::fixAddress($value);
-                $display = CRM_Utils_Address::format($value);
-                $locations[$moniker][$block][$cnt] = $value;
-                $locations[$moniker][$block][$cnt]['display'] = $display;
+              if (empty($value[$valueField])) {
+                continue;
               }
-              else {
-                $locations[$moniker][$block][$cnt] = $value;
-              }
+              $locations[$moniker][$block][$cnt] = $value;
               if (!empty($value[$valueField])) {
                 $locationsExists[$moniker][$block][$value[$valueField]] = 1;
               }
@@ -858,6 +853,9 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
             $value = $values['values'][$id];
             // check if value exists in main, if exists, skipped
             if ($moniker == 'other' && !empty($value[$valueField]) && $locationsExists['main'][$block][$value[$valueField]]) {
+              continue;
+            }
+            if (empty($value[$valueField])) {
               continue;
             }
             $locations[$moniker][$block][$cnt] = $value;
@@ -1419,6 +1417,16 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
       $submitted['log_data'] = ts('Updated contact') . ' - '.ts('merge duplicate contacts');
       CRM_Contact_BAO_Contact::createProfileContact($submitted, CRM_Core_DAO::$_nullArray, $mainId);
     }
+
+    // **** After migrate, check email on-hold data on other contact when email is duplicated
+    $dao = CRM_Core_DAO::executeQuery("SELECT email, on_hold, hold_date FROM civicrm_email WHERE on_hold = 1 AND contact_id = %1", array(1 => array($otherId, 'Integer')));
+    while($dao->fetch()) {
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_email SET on_hold = 1, hold_date = %1 WHERE contact_id = %2 AND email = %3", array(
+        1 => array($dao->hold_date, 'String'),
+        2 => array($mainId, 'Integer'),
+        3 => array($dao->email, 'String')
+      ));
+    }    
 
     // **** Delete other contact & update prev-next caching
     if (CRM_Core_Permission::check('merge duplicate contacts') &&
