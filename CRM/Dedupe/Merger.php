@@ -1138,6 +1138,10 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         }
       }
     }
+    // indicate is human form submit that not select any table to move
+    if (empty($moveTables) && !empty($migrationInfo['qfKey'])) {
+      $moveTables = array('none');
+    }
 
     // **** Do location related migration:
     if (!empty($locBlocks)) {
