@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-08-08 09:51+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-08-14 07:56+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8449,11 +8449,11 @@ msgstr "- 字尾 -"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Phone"
-msgstr "主要電話"
+msgstr "預設電話"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Email"
-msgstr "主要 Email"
+msgstr "預設 Email"
 
 #: CRM/Contact/BAO/GroupNestingCache.php
 msgid "We detected a cycle which we cant handle. aborting"
@@ -8666,7 +8666,7 @@ msgstr "%1 已存在。"
 
 #: CRM/Contact/Form/Contact.php
 msgid "One %1 should be marked as primary."
-msgstr "一個 %1 需被標示為主要項目。"
+msgstr "一個 %1 需被標示為預設項目。"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Only one %1 can be marked as primary."
@@ -9654,7 +9654,7 @@ msgstr "沒有寄 Email 給聯絡人，因為沒有聯絡人的 Email、或是�
 #: CRM/Contact/Form/Task/EmailCommon.php
 msgid ""
 "Email was not sent to %1 because primary email address (%2) is On Hold."
-msgstr "不會傳送 Email 給 %1，因為主要 Email 位址(%2)被凍結。"
+msgstr "不會傳送 Email 給 %1，因為預設 Email 位址(%2)被凍結。"
 
 #: CRM/Contact/Form/Task/HookSample.php
 msgid "Back to Search"
@@ -16026,7 +16026,7 @@ msgstr "選擇要匯出的欄位"
 
 #: CRM/Export/Form/Select.php
 msgid "Export PRIMARY fields"
-msgstr "匯出主要欄位"
+msgstr "匯出預設欄位"
 
 #: CRM/Export/Form/Select.php
 msgid "Select fields for export"
@@ -23860,7 +23860,7 @@ msgid ""
 "page to define one or more general Email Addresses that can be selected as "
 "an alternative. EXAMPLE: <em>\"Client Services\" "
 "&lt;clientservices@example.org&gt;</em>"
-msgstr "預設狀況中，CiviCRM 在傳送 Email 給聯絡人時，會使用主要 Email 為 Email 寄件者。但是，您可以在此頁面，加入一個或更多的 Email 寄件者 。例如：<em>\"Client Services\" &lt;clientservices@example.org&gt;</em>"
+msgstr "預設狀況中，CiviCRM 在傳送 Email 給聯絡人時，會使用預設 Email 為 Email 寄件者。但是，您可以在此頁面，加入一個或更多的 Email 寄件者 。例如：<em>\"Client Services\" &lt;clientservices@example.org&gt;</em>"
 
 #: templates/CRM/Admin/Page/Options.tpl templates/CRM/Report/Page/Options.tpl
 msgid ""
@@ -26367,7 +26367,7 @@ msgstr "電子報指定信箱?"
 #: templates/CRM/Contact/Form/Edit/OpenID.tpl
 #: templates/CRM/Contact/Form/Edit/Phone.tpl
 msgid "Primary?"
-msgstr "主要？"
+msgstr "預設？"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 msgid "Delete Email Block"
@@ -26783,7 +26783,7 @@ msgstr "聯絡人是否有網站帳號？"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Location.tpl
 msgid "Location search uses the PRIMARY location for each contact by default."
-msgstr "地點搜尋使預設會找尋聯絡人的「主要」地址資料。"
+msgstr "未選取任何地點類型，則搜尋聯絡人的「預設」地址資料。"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Location.tpl
 msgid ""
@@ -32464,7 +32464,7 @@ msgid ""
 "<strong>Export PRIMARY fields</strong> provides the most commonly used data "
 "values. This includes primary address information, preferred phone and "
 "email."
-msgstr "<strong>匯出主要欄位</strong>提供最常使用的資料值。此包括主要地址資料，建議電話及Email。"
+msgstr "<strong>匯出預設欄位</strong>提供最常使用的資料值。此包括預設地址資料，建議電話及Email。"
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid ""
@@ -33224,7 +33224,7 @@ msgstr[0] "CiviCRM 系統偵測到 %count 筆記錄與現存聯絡人 Email 相�
 msgid ""
 "CiviCRM does not allow multiple contact records to have the same primary "
 "email address."
-msgstr "CiviCRM 不允許多個聯絡人記錄同時擁有相同的主要 Email。"
+msgstr "CiviCRM 不允許多個聯絡人記錄同時擁有相同的預設 Email。"
 
 #: templates/CRM/Import/Form/Summary.tpl
 msgid ""
@@ -35955,7 +35955,7 @@ msgstr ""
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
 "In addition, you must include a Primary Email Address field in the profile."
-msgstr "此外，你必須要有一個主要的電子郵件地址。"
+msgstr "此外，你必須要有一個預設的電子郵件地址。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -42036,7 +42036,7 @@ msgstr "預設地址"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is this address the contact's primary address?"
-msgstr "此地址是否為聯絡人的主要地址？"
+msgstr "此地址是否為聯絡人的預設地址？"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is Billing Address"
@@ -42117,7 +42117,7 @@ msgstr "預設電子郵件"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is this address the contact's primary email?"
-msgstr "是否為聯絡人的主要電子郵件位址？"
+msgstr "是否為聯絡人的預設電子郵件位址？"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is Billing Email"
@@ -42137,7 +42137,7 @@ msgstr "預設電話"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is this the contact's primary phone?"
-msgstr "是否為聯絡人的主要電話？"
+msgstr "是否為聯絡人的預設電話？"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is Billing Phone"
