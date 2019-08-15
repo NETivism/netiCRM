@@ -1941,6 +1941,26 @@ ORDER BY civicrm_email.is_primary DESC";
       }
     }
 
+    // prepare saved greeting values
+    if ($contactID) {
+      $contactParams = array('id' => $contactID);
+      $returnProperties = $retrieved = array();
+      foreach(self::$_greetingTypes as $greeting) {
+        if (empty($data[$greeting.'_id'])) {
+          $returnProperties[] = $greeting.'_id';
+        }
+        if (empty($data[$greeting.'_custom'])) {
+          $returnProperties[] = $greeting.'_custom';
+        }
+      }
+      CRM_Core_DAO::commonRetrieve('CRM_Contact_DAO_Contact', $contactParams, $retrieved, $returnProperties);
+      foreach($retrieved as $key => $value) {
+        if ($key != 'id') {
+          $data[$key] = $value;
+        }
+      }
+    }
+
     // log
     if (isset($params['log_data'])) {
       $data['log_data'] = $params['log_data'];
