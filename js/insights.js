@@ -161,8 +161,7 @@ function trackVisit(visitInfo) {
   });
 }
 
-var currentScriptSrc = document.currentScript.src;
-var inboundSrc = currentScriptSrc.replace(/insights\.js.*$/, 'inbound.js');
+var inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
 loadScript(inboundSrc, function(){
   loadReferrer();
 });
