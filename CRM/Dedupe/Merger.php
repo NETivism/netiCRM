@@ -50,9 +50,18 @@ class CRM_Dedupe_Merger {
     'email' => 'Email',
     'phone' => 'Phone',
     'im' => 'IM',
-    'openid' => 'OpenID',
+    'open_id' => 'OpenID',
     'address' => 'Address',
     'website' => 'Website',
+  );
+
+  static $locationValueField = array(
+    'email' => 'email',
+    'phone' => 'phone',
+    'im' => 'name',
+    'open_id' => 'openid',
+    'address' => 'display',
+    'website' => 'url',
   );
 
   static $dupePairsSorted = array();
@@ -813,16 +822,22 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
 
     // handle location blocks.
     $locationBlockNames = array_keys(self::$locationBlocks);
-    $locations = array();
+    $locations = $locationsExists = array();
 
     foreach ($locationBlockNames as $block) {
       foreach (array('main' => $mainId, 'other' => $otherId) as $moniker => $cid) {
         $cnt = 1;
         $values = civicrm_api($block, 'get', array('contact_id' => $cid, 'version' => 3));
         $count = $values['count'];
+        $valueField = self::$locationValueField[$block];
         if ($count) {
+          $value = array();
           if ($count > $cnt) {
             foreach ($values['values'] as $value) {
+              // check if value exists in main, if exists, skipped
+              if ($moniker == 'other' && !empty($value[$valueField]) && $locationsExists['main'][$block][$value[$valueField]]) {
+                continue;
+              }
               if ($block == 'address') {
                 CRM_Core_BAO_Address::fixAddress($value);
                 $display = CRM_Utils_Address::format($value);
@@ -832,20 +847,22 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
               else {
                 $locations[$moniker][$block][$cnt] = $value;
               }
-
+              if (!empty($value[$valueField])) {
+                $locationsExists[$moniker][$block][$value[$valueField]] = 1;
+              }
               $cnt++;
             }
           }
           else {
             $id = $values['id'];
-            if ($block == 'address') {
-              CRM_Core_BAO_Address::fixAddress($values['values'][$id]);
-              $display = CRM_Utils_Address::format($values['values'][$id]);
-              $locations[$moniker][$block][$cnt] = $values['values'][$id];
-              $locations[$moniker][$block][$cnt]['display'] = $display;
+            $value = $values['values'][$id];
+            // check if value exists in main, if exists, skipped
+            if ($moniker == 'other' && !empty($value[$valueField]) && $locationsExists['main'][$block][$value[$valueField]]) {
+              continue;
             }
-            else {
-              $locations[$moniker][$block][$cnt] = $values['values'][$id];
+            $locations[$moniker][$block][$cnt] = $value;
+            if (!empty($value[$valueField])) {
+              $locationsExists[$moniker][$block][$value[$valueField]] = 1;
             }
           }
         }
@@ -1121,7 +1138,6 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         }
       }
     }
-
 
     // **** Do location related migration:
     if (!empty($locBlocks)) {
