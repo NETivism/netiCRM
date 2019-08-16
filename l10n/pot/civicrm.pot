@@ -46980,3 +46980,6 @@ msgstr ""
 
 msgid "This participant already checked in before. No further action needed."
 msgstr ""
+
+msgid "You can only check in event with event manager."
+msgstr ""

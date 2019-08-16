@@ -61,5 +61,5 @@
       </div>
       {/if}
     </div>
-  </div><!-Event Info Contact-->
+  </div><!-Event Info Content-->
 </div>
