@@ -317,14 +317,15 @@ function participantCount(ele, type) {
 
 //display calculated amount
 function display( totalfee ) {
-    var totalEventFee  = formatMoney( totalfee, 2, seperator, thousandMarker);
-    document.getElementById('pricevalue').innerHTML = "<b>"+symbol+"</b> "+totalEventFee;
-    scriptfee   = totalfee;
-    scriptarray = price;
-    cj('#total_amount').val( totalfee );
-    
-    ( totalfee < 0 ) ? cj('table#pricelabel').addClass('disabled') : cj('table#pricelabel').removeClass('disabled');
-    
+  totalfee = parseFloat(parseFloat(totalfee).toFixed(2));
+  window.totalfee = parseFloat(parseFloat(window.totalfee).toFixed(2));
+  var totalEventFee  = formatMoney( totalfee, 2, seperator, thousandMarker);
+  document.getElementById('pricevalue').innerHTML = "<b>"+symbol+"</b> "+totalEventFee;
+  scriptfee   = totalfee;
+  scriptarray = price;
+  cj('#total_amount').val( totalfee );
+  
+  ( totalfee < 0 ) ? cj('table#pricelabel').addClass('disabled') : cj('table#pricelabel').removeClass('disabled');
 }
 
 //money formatting/localization
