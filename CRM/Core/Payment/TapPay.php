@@ -466,6 +466,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
 
   public static function doExecuteAllRecur ($time = NULL) {
+    // Every request only execute once.
+    global $isExecuted;
+    if ($isExecuted) {
+      return ;
+    }
+    $isExecuted = TRUE;
+
     if (empty($time)) {
       $time = time();
     }
