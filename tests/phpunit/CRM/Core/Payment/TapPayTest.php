@@ -381,6 +381,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     ### 2nd contribution of recurring
     $now = strtotime(date('Y-m-05', strtotime('+1 month', $basemonth))) + 80000; // later of that 5th of month
     $microtime = ($now + 5)*1000;
+    global $isTapPayAllRecurExecuted;
+    $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
 
     $recurParams = array(
@@ -521,6 +523,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     ### 4th contribution, this should be latest contribution, end recurring
     $now = strtotime(date('Y-m-05', strtotime('+3 month', $basemonth))) + 65000; // later of that 5th of month
     $microtime = ($now + 6)*1000;
+    global $isTapPayAllRecurExecuted;
+    $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
 
     $recurParams = array(
@@ -591,6 +595,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     ### 5th contribution, no further contributions should executed this time
     $now = strtotime(date('Y-m-05', strtotime('+4 month', $basemonth))) + 65000; // later of that 5th of month
     $microtime = ($now + 7)*1000;
+    global $isTapPayAllRecurExecuted;
+    $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
     $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
   }
