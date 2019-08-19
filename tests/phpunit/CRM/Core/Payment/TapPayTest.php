@@ -454,6 +454,8 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $now = strtotime(date('Y-m-05', strtotime('+2 month', $basemonth))) + 80000; // later of that 5th of month
     $microtime = ($now + 5)*1000;
     CRM_Core_DAO::setFieldValue("CRM_Contribute_DAO_ContributionRecur", $recurring->id, 'amount', $amount);
+    global $isTapPayAllRecurExecuted;
+    $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
 
     $recurParams = array(
