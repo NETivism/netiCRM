@@ -378,10 +378,11 @@
           var value = decodeURIComponent(keyValueArray[1]);
           params[key] = value;
         });
+        var amount = this.currentPriceAmount.replace(',','');
 
         if (params['_ppid'] && params['_ppid'] == $('.payment_processor-section input:checked').val() && 
           params['_grouping'] && params['_grouping'] == this.currentContribType && 
-          params['_amt'] && params['_amt'] == this.currentPriceAmount && 
+          params['_amt'] && params['_amt'] == amount &&
           params['_instrument'] ) {
           window.ContribPage.currentFormStep = 2;
           cj(document).ajaxComplete(function( event, xhr, settings ) {
