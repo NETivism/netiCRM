@@ -355,8 +355,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     CRM_Core_DAO::init($this->dsn);
 
     $factoryClass = $this->DAOFactoryClass;
-    require_once str_replace('_', DIRECTORY_SEPARATOR, $factoryClass) . '.php';
-    CRM_Core_DAO::setFactory(new $factoryClass());
+    $factory = new $factoryClass();
+    CRM_Core_DAO::setFactory($factory);
   }
 
   /**

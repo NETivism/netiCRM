@@ -964,9 +964,7 @@ FROM   civicrm_domain
 
     foreach ($ids as $id) {
       if (isset($_DB_DATAOBJECT['RESULTS'][$id])) {
-        if (is_resource($_DB_DATAOBJECT['RESULTS'][$id]->result)) {
-          mysqli_free_result($_DB_DATAOBJECT['RESULTS'][$id]->result);
-        }
+        $_DB_DATAOBJECT['RESULTS'][$id]->free();
         unset($_DB_DATAOBJECT['RESULTS'][$id]);
       }
 
@@ -1154,6 +1152,11 @@ SELECT contact_id
     static $_dao = NULL;
 
     if (!$_dao) {
+      if (!defined('CIVICRM_DSN')) {
+        $search = array("\\", "\x00", "\n", "\r", "'", '"', "\x1a");
+        $replace = array("\\\\", "\\0", "\\n", "\\r", "\'", '\"', "\\Z");
+        return str_replace($search, $replace, $string);
+      }
       $_dao = new CRM_Core_DAO();
     }
     return $_dao->escape($string);

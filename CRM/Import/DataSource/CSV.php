@@ -166,7 +166,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
       }
 
       $first = FALSE;
-      $row = array_map('civicrm_mysql_real_escape_string', $row);
+      $row = array_map(array('CRM_Core_DAO', 'escapeString'), $row);
       $sql .= "('" . implode("', '", $row) . "')";
       $count++;
 
@@ -193,8 +193,3 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     return $result;
   }
 }
-
-function civicrm_mysql_real_escape_string($string) {
-  return CRM_Core_DAO::escapeString($string);
-}
-
