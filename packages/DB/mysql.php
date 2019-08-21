@@ -231,7 +231,7 @@ class DB_mysql extends DB_common
                         ? $dsn['client_flags'] : null;
         }
 
-        $connect_function = $persistent ? 'mysql_pconnect' : 'mysql_connect';
+        $connect_function = 'mysqli_connect';
 
         $ini = ini_get('track_errors');
         $php_errormsg = '';
@@ -793,10 +793,10 @@ class DB_mysql extends DB_common
      */
     function escapeSimple($str)
     {
-        if (function_exists('mysql_real_escape_string')) {
-            return @mysql_real_escape_string($str, $this->connection);
+        if (function_exists('mysqli_real_escape_string')) {
+            return @mysqli_real_escape_string($str, $this->connection);
         } else {
-            return @mysql_escape_string($str);
+            return @mysqli_escape_string($str);
         }
     }
 

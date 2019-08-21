@@ -15,7 +15,7 @@ if($drupal_root && is_dir($drupal_root)){
 
 if(!defined('CIVICRM_DSN')&&!empty($GLOBALS['mysql_user'])){
   $dbName = !empty($GLOBALS['mysql_db']) ? $GLOBALS['mysql_db'] : 'civicrm_tests_dev';
-  define('CIVICRM_DSN', "mysql://{$GLOBALS['mysql_user']}:{$GLOBALS['mysql_pass']}@{$GLOBALS['mysql_host']}/{$dbName}?new_link=true");
+  define('CIVICRM_DSN', "mysqli://{$GLOBALS['mysql_user']}:{$GLOBALS['mysql_pass']}@{$GLOBALS['mysql_host']}/{$dbName}?new_link=true");
 }
 
 
@@ -27,10 +27,10 @@ if(!defined("CIVICRM_DSN")) {
   else {
     echo "\nFATAL: no DB connection configured (CIVICRM_DSN). \nYou can either create/edit " . __DIR__ . "/civicrm.settings.local.php\n";
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-      echo "OR set it in your shell:\n \$export CIVICRM_TEST_DSN=mysql://db_username:db_password@localhost/civicrm_tests_dev \n";
+      echo "OR set it in your shell:\n \$export CIVICRM_TEST_DSN=mysqli://db_username:db_password@localhost/civicrm_tests_dev \n";
     }
     else {
-      echo "OR set it in your shell:\n SETX CIVICRM_TEST_DSN mysql://db_username:db_password@localhost/civicrm_tests_dev \n
+      echo "OR set it in your shell:\n SETX CIVICRM_TEST_DSN mysqli://db_username:db_password@localhost/civicrm_tests_dev \n
       (you will need to open a new command shell before it takes effect)";
     }
     echo "\n\n

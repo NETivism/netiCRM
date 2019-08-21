@@ -148,25 +148,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
 
     // create the error array
-    $error = array();
-    $error['callback'] = $pearError->getCallback();
-    $error['code'] = $pearError->getCode();
-    $error['message'] = $pearError->getMessage();
-    $error['mode'] = $pearError->getMode();
-    $error['debug_info'] = $pearError->getDebugInfo();
-    $error['type'] = $pearError->getType();
-    $error['user_info'] = $pearError->getUserInfo();
-    $error['to_string'] = $pearError->toString();
-    if (function_exists('mysql_error') &&
-      mysql_error()
-    ) {
-      $mysql_error = mysql_error() . ', ' . mysql_errno();
-      $template->assign_by_ref('mysql_code', $mysql_error);
+    $error = self::getErrorDetails($pearError);
 
-      // execute a dummy query to clear error stack
-      mysql_query('select 1');
-    }
-    elseif (function_exists('mysqli_error')) {
+    if (function_exists('mysqli_error')) {
       $dao = new CRM_Core_DAO();
 
       // we do it this way, since calling the function
@@ -185,6 +169,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
           mysqli_query($link, 'select 1');
         }
       }
+    }
+    elseif (function_exists('mysql_error') && mysql_error()) {
+      $mysql_error = mysql_error() . ', ' . mysql_errno();
+      $template->assign_by_ref('mysql_code', $mysql_error);
+
+      // execute a dummy query to clear error stack
+      mysql_query('select 1');
     }
 
     $template->assign_by_ref('error', $error);
@@ -500,7 +491,22 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   public static function exceptionHandler($pearError) {
+    CRM_Core_Error::debug_var('Fatal Error Details', self::getErrorDetails($pearError));
+    CRM_Core_Error::backtrace('backTrace', TRUE);
+    throw new PEAR_Exception($pearError->getMessage(), $pearError);
+  }
+
+  /**
+   * this function is used to return error details
+   *
+   * @param $pearError
+   *
+   * @return array $error
+   */
+  public static function getErrorDetails($pearError) {
+    // create the error array
     $error = array();
+    $error['callback'] = $pearError->getCallback();
     $error['code'] = $pearError->getCode();
     $error['message'] = $pearError->getMessage();
     $error['mode'] = $pearError->getMode();
@@ -509,8 +515,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $error['user_info'] = $pearError->getUserInfo();
     $error['to_string'] = $pearError->toString();
 
-    throw new PEAR_Exception($pearError->getMessage(), $pearError);
+    return $error;
   }
+
 
   /**
    * Error handler to quietly catch otherwise fatal smtp transport errors.

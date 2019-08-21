@@ -7,4 +7,4 @@
 
 // Set the data-source for the test database. Tables in this database will be periodically
 // deleted, truncated, etc.
-// define( 'CIVICRM_DSN', "mysql://db_username:db_password@localhost/civicrm_tests_dev" );
+// define( 'CIVICRM_DSN', "mysqli://db_username:db_password@localhost/civicrm_tests_dev" );

@@ -49,7 +49,7 @@
  * // example of a class (that does not use the 'auto generated tables data')
  * class mytable extends DB_DataObject {
  *     // mandatory - set the table
- *     var $_database_dsn = "mysql://username:password@localhost/database";
+ *     var $_database_dsn = "mysqli://username:password@localhost/database";
  *     var $__table = "mytable";
  *     function table() {
  *         return array(

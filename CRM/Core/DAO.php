@@ -965,7 +965,7 @@ FROM   civicrm_domain
     foreach ($ids as $id) {
       if (isset($_DB_DATAOBJECT['RESULTS'][$id])) {
         if (is_resource($_DB_DATAOBJECT['RESULTS'][$id]->result)) {
-          mysql_free_result($_DB_DATAOBJECT['RESULTS'][$id]->result);
+          mysqli_free_result($_DB_DATAOBJECT['RESULTS'][$id]->result);
         }
         unset($_DB_DATAOBJECT['RESULTS'][$id]);
       }
