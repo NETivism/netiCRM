@@ -771,5 +771,15 @@ class CRM_Utils_System_Drupal {
     }
     return $logoURL;
   }
+
+  function transliteration($string) {
+    require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
+    $purgedName = '';
+    if (module_exists('transliteration')) {
+      $purgedName = strtolower(transliteration_clean_filename($string));
+      $purgedName = trim($purgedName, '_');
+    }
+    return $purgedName;
+  }
 }
 

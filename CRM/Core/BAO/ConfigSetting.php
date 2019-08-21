@@ -473,10 +473,10 @@ WHERE  id = %1
       FALSE,
       'REQUEST'
     );
-    if ($config->userFramework == 'Drupal' &&
-      $resetSessionTable
-    ) {
-      db_query("DELETE FROM {sessions} WHERE 1");
+    if ($config->userFramework == 'Drupal' && $resetSessionTable) {
+			$dbUf = CRM_Core_BAO_CMSUser::dbHandle($config);
+			$dbUf->query("DELETE FROM sessions WHERE 1");
+			$dbUf->disconnect();
       $moveStatus .= ts('Drupal session table cleared.') . '<br />';
     }
     else {

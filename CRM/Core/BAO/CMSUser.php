@@ -385,49 +385,6 @@ class CRM_Core_BAO_CMSUser {
     return $result;
   }
 
-  /**
-   * Function to create a user in Drupal.
-   *
-   * @param array  $params associated array
-   * @param string $mail email id for cms user
-   *
-   * @return uid if user exists, false otherwise
-   *
-   * @access public
-   * @static
-   */
-  static function createDrupalUser(&$params, $mail) {
-    $values['values'] = array(
-      'name' => $params['cms_name'],
-      'mail' => $params[$mail],
-      'op' => 'Create new account',
-    );
-    if (!variable_get('user_email_verification', TRUE)) {
-      $values['values']['pass']['pass1'] = $params['cms_pass'];
-      $values['values']['pass']['pass2'] = $params['cms_pass'];
-    }
-    $values['values']['civicrm_register'] = TRUE;
-
-    $config = CRM_Core_Config::singleton();
-
-    // we also need to redirect b
-    $config->inCiviCRM = TRUE;
-
-    $res = drupal_execute('user_register', $values);
-
-    $config->inCiviCRM = FALSE;
-
-    if (form_get_errors()) {
-      return FALSE;
-    }
-
-    //Fetch id of newly added user
-    $id_sql = "SELECT uid FROM {$config->userFrameworkUsersTableName} where name = '%s'";
-    $id_query = db_query($id_sql, $params['cms_name']);
-    $id_row = db_fetch_array($id_query);
-    return $id_row['uid'];
-  }
-
   static function &dbHandle(&$config) {
     CRM_Core_Error::ignoreException();
     $db_uf = DB::connect($config->userFrameworkDSN);

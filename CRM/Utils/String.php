@@ -86,32 +86,29 @@ class CRM_Utils_String {
    */
   static function munge($name, $char = '_', $len = 63) {
     // replace all white space and non-alpha numeric with $char
+    $mungedName = '';
     $name = preg_replace('/[-.]+/', $char, $name);
 
-    // dirty way to detect chinese
+    // dirty way to detect non-english character
     preg_match('/[^0-9a-z-_]+/i', $name, $matches);
 
     // any chinese appear, should go transliteration (to prevent duplication)
     if (!empty($matches) && trim($matches[0])) {
-      require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
-      if (module_exists('transliteration')) {
-        global $conf;
-        $conf['transliteration_enable'] = TRUE;
-        $purged_name = strtolower(transliteration_clean_filename($name));
-        $purged_name = trim($purged_name, '_');
-        $purged_name = preg_replace('/[-.]+/', $char, $purged_name); // prevent transliteration convert dash
-      }
+			$config = CRM_Core_Config::singleton();
+			$mungedName = $config->userSystem->transliteration($name);
     }
-    else {
-      $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name));
+
+    if (empty($mungedName)) {
+      $mungedName = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name));
     }
+    $mungedName = preg_replace('/[-.]+/', $char, $mungedName); // prevent transliteration convert dash
 
     if ($len) {
       // lets keep variable names short
-      return substr($purged_name, 0, $len);
+      return substr($mungedName, 0, $len);
     }
     else {
-      return $purged_name;
+      return $mungedName;
     }
   }
 

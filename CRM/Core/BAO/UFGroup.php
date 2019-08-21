@@ -1268,10 +1268,8 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     // do a menu rebuild if we are on drupal, so it gets all the new menu entries
     // for user account
     $config = CRM_Core_Config::singleton();
-    if ($menuRebuild &&
-      $config->userFramework == 'Drupal'
-    ) {
-      menu_rebuild();
+    if ($menuRebuild && $config->userFramework == 'Drupal') {
+      $config->userSystem->updateCategories();
     }
   }
 

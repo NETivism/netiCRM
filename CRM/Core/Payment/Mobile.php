@@ -230,11 +230,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $validationUrl = CRM_Utils_Request::retrieve('validationURL', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $domainName = CRM_Utils_Request::retrieve('domain_name', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $isTest = CRM_Utils_Request::retrieve('is_test', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, FALSE, 'REQUEST');
+    $path = CRM_Utils_Request::retrieve('q', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $arg = explode('/', $path);
 
     $mobile_paymentProcessor_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'payment_processor_id');
     $merchantIdentifier = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $mobile_paymentProcessor_id, 'signature');
 
-    if(arg(2) == 'applepay'){
+
+    if($arg[2] == 'applepay'){
       // Refs: Document: [Requesting an Apple Pay Payment Session] https://goo.gl/CJAe4M
       $data = array(
         'merchantIdentifier' => $merchantIdentifier,
