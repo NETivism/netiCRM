@@ -169,7 +169,7 @@ function &civicrm_membership_type_update(&$params) {
 
     foreach ($fields as $name => $field) {
       if (array_key_exists($field['name'], $params)) {
-        $membershipTypeBAO->$field['name'] = $params[$field['name']];
+        $membershipTypeBAO->{$field['name']} = $params[$field['name']];
       }
     }
     $membershipTypeBAO->save();
