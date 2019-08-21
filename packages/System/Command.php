@@ -138,7 +138,7 @@ class System_Command {
      * 
      * @access public
      */
-    function System_Command($in_shell = null)
+    function __construct($in_shell = null)
     {
         // Defining constants
         $this->options = array(
@@ -406,8 +406,10 @@ class System_Command {
         // Register to be run on shutdown
         if (!empty($this->options['SHUTDOWN'])) {
             $line = "system(\"{$this->systemCommand}$suffix\");";
-            $function = create_function('', $line);
-            register_shutdown_function($function);
+            $command = $this->systemCommand.$suffix;
+            register_shutdown_function(function() use ($command){
+              system($command);
+            });
             return true;
         } 
         else {
@@ -572,13 +574,13 @@ class System_Command_Error extends PEAR_Error
     // }}}
     // {{{ constructor
 
-    function System_Command_Error($code = SYSTEM_COMMAND_ERROR, $mode = PEAR_ERROR_RETURN,
+    function __construct($code = SYSTEM_COMMAND_ERROR, $mode = PEAR_ERROR_RETURN,
               $level = E_USER_NOTICE, $debuginfo = null)
     {
         if (is_int($code)) {
-            $this->PEAR_Error(System_Command::errorMessage($code), $code, $mode, $level, $debuginfo);
+            parent::__construct(System_Command::errorMessage($code), $code, $mode, $level, $debuginfo);
         } else {
-            $this->PEAR_Error("Invalid error code: $code", SYSTEM_COMMAND_ERROR, $mode, $level, $debuginfo);
+            parent::__construct("Invalid error code: $code", SYSTEM_COMMAND_ERROR, $mode, $level, $debuginfo);
         }
     }
     

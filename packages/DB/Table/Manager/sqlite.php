@@ -167,7 +167,7 @@ class DB_Table_Manager_sqlite {
         $start_pos = strpos($sql, '(');
         $end_pos = strrpos($sql, ')');
         $column_names = substr($sql, $start_pos+1, $end_pos-$start_pos-1);
-        $column_names = split(',', $column_names);
+        $column_names = explode(',', $column_names);
 
         $definition = array();
         $count = count($column_names);
@@ -207,7 +207,7 @@ class DB_Table_Manager_sqlite {
         $start_pos = strpos($sql, '(');
         $end_pos = strrpos($sql, ')');
         $column_names = substr($sql, $start_pos+1, $end_pos-$start_pos-1);
-        $column_names = split(',', $column_names);
+        $column_names = explode(',', $column_names);
 
         $definition = array();
         $definition['unique'] = true;

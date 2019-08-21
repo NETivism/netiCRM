@@ -77,7 +77,7 @@ class HTML_Common
      * @param    int     $tabOffset      Indent offset in tabs
      * @access   public
      */
-    function __construct($attributes = null, $tabOffset = 0)
+    function HTML_Common($attributes = null, $tabOffset = 0)
     {
         $this->setAttributes($attributes);
         $this->setTabOffset($tabOffset);

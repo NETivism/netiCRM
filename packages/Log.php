@@ -100,6 +100,9 @@ class Log
                             '%{function}'   => '%7$s',
                             '%{class}'      => '%8$s',
                             '%\{'           => '%%{');
+    public function __construct()
+    {
+    }
 
     /**
      * Utility function which wraps PHP's class_exists() function to ensure

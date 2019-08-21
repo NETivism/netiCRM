@@ -75,7 +75,7 @@ class GatewayRequest
 
 	var $txOption3 = "";
 
-   function GatewayRequest()   
+   function __construct()
    {
       // Empty Constructor
    }

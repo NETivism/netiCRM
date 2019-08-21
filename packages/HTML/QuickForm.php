@@ -569,10 +569,10 @@ class HTML_QuickForm extends HTML_Common
      * @return    HTML_QuickForm_Element
      * @throws    HTML_QuickForm_Error
      */
-    function &createElement($elementType)
+    function createElement($elementType)
     {
         $args    =  func_get_args();
-        $element =& HTML_QuickForm::_loadElement('createElement', $elementType, array_slice($args, 1));
+        $element = HTML_QuickForm::_loadElement('createElement', $elementType, array_slice($args, 1));
         return $element;
     } // end func createElement
 
@@ -590,7 +590,7 @@ class HTML_QuickForm extends HTML_Common
      * @return    HTML_QuickForm_Element
      * @throws    HTML_QuickForm_Error
      */
-    function &_loadElement($event, $type, $args)
+    function _loadElement($event, $type, $args)
     {
         $type = strtolower($type);
         if (!HTML_QuickForm::isTypeRegistered($type)) {
@@ -606,7 +606,7 @@ class HTML_QuickForm extends HTML_Common
                 $args[$i] = null;
             }
         }
-        $err = $elementObject->onQuickFormEvent($event, $args, $this);
+        $err = $elementObject->onQuickFormEvent($event, $args, isset($this) ? $this : null);
         if ($err !== true) {
             return $err;
         }
@@ -629,11 +629,11 @@ class HTML_QuickForm extends HTML_Common
      * @access   public
      * @throws   HTML_QuickForm_Error
      */
-    function &addElement($element)
+    function addElement($element)
     {
         if (is_object($element) && is_subclass_of($element, 'html_quickform_element')) {
            $elementObject = &$element;
-           $elementObject->onQuickFormEvent('updateValue', null, $this);
+           $elementObject->onQuickFormEvent('updateValue', null, isset($this) ? $this : null);
         } else {
             $args = func_get_args();
             $elementObject =& $this->_loadElement('addElement', $element, array_slice($args, 1));
@@ -692,7 +692,7 @@ class HTML_QuickForm extends HTML_Common
     * @return   HTML_QuickForm_element  reference to inserted element
     * @throws   HTML_QuickForm_Error
     */
-    function &insertElementBefore(&$element, $nameAfter)
+    function insertElementBefore(&$element, $nameAfter)
     {
         if (!empty($this->_duplicateIndex[$nameAfter])) {
             $error = PEAR::raiseError(null, QUICKFORM_INVALID_ELEMENT_NAME, null, E_USER_WARNING, 'Several elements named "' . $nameAfter . '" exist in HTML_QuickForm::insertElementBefore().', 'HTML_QuickForm_Error', true);
@@ -734,7 +734,7 @@ class HTML_QuickForm extends HTML_Common
         } else {
             $this->_duplicateIndex[$elementName][] = $targetIdx;
         }
-        $element->onQuickFormEvent('updateValue', null, $this);
+        $element->onQuickFormEvent('updateValue', null, isset($this) ? $this : null);
         if ($this->_freezeAll) {
             $element->freeze();
         }
@@ -994,7 +994,7 @@ class HTML_QuickForm extends HTML_Common
     function updateElementAttr($elements, $attrs)
     {
         if (is_string($elements)) {
-            $elements = split('[ ]?,[ ]?', $elements);
+            $elements = preg_split('/[ ]?,[ ]?/', $elements);
         }
         foreach (array_keys($elements) as $key) {
             if (is_object($elements[$key]) && is_a($elements[$key], 'HTML_QuickForm_element')) {

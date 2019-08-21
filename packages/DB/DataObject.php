@@ -3865,7 +3865,7 @@ class DB_DataObject extends DB_DataObject_Overload
             foreach($array as $k) {
                 $case[strtolower($k)] = $k;
             }
-            if ((substr(phpversion(),0,1) == 5) && isset($case[strtolower($element)])) {
+            if ((substr(phpversion(),0,1) > 4) && isset($case[strtolower($element)])) {
                 trigger_error("PHP5 set/get calls should match the case of the variable",E_USER_WARNING);
                 $element = strtolower($element);
             }
@@ -4240,17 +4240,11 @@ class DB_DataObject extends DB_DataObject_Overload
     {
         global $_DB_DATAOBJECT;
           
-        if (isset($_DB_DATAOBJECT['RESULTS'][$this->_DB_resultid])) {
-            if ( is_resource( $_DB_DATAOBJECT['RESULTS'][$this->_DB_resultid]->result ) ) {
-                mysql_free_result( $_DB_DATAOBJECT['RESULTS'][$this->_DB_resultid]->result );
-            }
-            unset($_DB_DATAOBJECT['RESULTS'][$this->_DB_resultid]);
-        }
-
         if (isset($_DB_DATAOBJECT['RESULTFIELDS'][$this->_DB_resultid])) {
             unset($_DB_DATAOBJECT['RESULTFIELDS'][$this->_DB_resultid]);
         }
         if (isset($_DB_DATAOBJECT['RESULTS'][$this->_DB_resultid])) {     
+            $_DB_DATAOBJECT['RESULTS'][$this->_DB_resultid]->free();
             unset($_DB_DATAOBJECT['RESULTS'][$this->_DB_resultid]);
         }
         // clear the staticGet cache as well.
@@ -4258,6 +4252,17 @@ class DB_DataObject extends DB_DataObject_Overload
         // this is a huge bug in DB!
         if (isset($_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5])) {
             $_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5]->num_rows = array();
+        }
+        if (is_array($this->_link_loaded)) {
+            foreach ($this->_link_loaded as $do) {
+                if (
+                        !empty($this->{$do}) &&
+                        is_object($this->{$do}) &&
+                       method_exists($this->{$do}, 'free')
+                    ) {
+                    $this->{$do}->free();
+                }
+            }
         }
         
     }
@@ -4269,7 +4274,34 @@ class DB_DataObject extends DB_DataObject_Overload
     function _get_keys()  { return $this->keys();  }
     
     
-    
+		/**
+		 * Get a string to append to the query log depending on time taken.
+		 *
+		 * This is to allow easier grepping for slow queries.
+		 *
+		 * @param float $timeTaken
+		 *
+		 * @return string
+		 */
+		public function getAlertLevel($timeTaken) {
+			if ($timeTaken >= 20) {
+				return '(very-very-very-slow)';
+			}
+			if ($timeTaken > 10) {
+				return '(very-very-slow)';
+			}
+			if ($timeTaken > 5) {
+				return '(very-slow)';
+			}
+			if ($timeTaken > 1) {
+				return '(slow)';
+			}
+			return '';
+		}
+		public function lastInsertId() {
+			$DB = &$_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5];
+			return $DB->lastInsertId();
+		}
     
 }
 // technially 4.3.2RC1 was broken!!

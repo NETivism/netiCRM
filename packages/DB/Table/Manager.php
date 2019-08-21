@@ -856,8 +856,9 @@ class DB_Table_Manager {
         if (PEAR::isError($list)) {
             return $list;
         }
-        array_walk($list, create_function('&$value,$key',
-                                          '$value = trim(strtolower($value));'));
+        array_walk($list, function(&$value, $key){
+          $value = trim(strtolower($value));
+        });
         return in_array(strtolower($table), $list);
     }
 
@@ -1680,10 +1681,12 @@ class DB_Table_Manager {
         foreach ($table_indexes[$type] as $index_name => $index_fields) {
             if (strtolower($index_name) == strtolower($newIdxName)) {
                 $index_found = true;
-                array_walk($cols, create_function('&$value,$key',
-                                  '$value = trim(strtolower($value));'));
-                array_walk($index_fields, create_function('&$value,$key',
-                                  '$value = trim(strtolower($value));'));
+                array_walk($cols, function(&$value, $key) {
+                  $value = trim(strtolower($value));
+                });
+                array_walk($index_fields, function(&$value, $key) {
+                  $value = trim(strtolower($value));
+                });
                 foreach ($index_fields as $index_field) {
                     if (($key = array_search($index_field, $cols)) !== false) {
                         unset($cols[$key]);

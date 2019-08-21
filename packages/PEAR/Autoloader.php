@@ -94,7 +94,9 @@ class PEAR_Autoloader extends PEAR
     function addAutoload($method, $classname = null)
     {
         if (is_array($method)) {
-            array_walk($method, create_function('$a,&$b', '$b = strtolower($b);'));
+            array_walk($method, function($a, &$b){
+              $b = strtolower($b); 
+            });
             $this->_autoload_map = array_merge($this->_autoload_map, $method);
         } else {
             $this->_autoload_map[strtolower($method)] = $classname;
@@ -197,7 +199,7 @@ class PEAR_Autoloader extends PEAR
      * @return mixed  The return value from the aggregated method, or a PEAR
      *                error if the called method was unknown.
      */
-    function __call($method, $args, &$retval)
+    function __call($method, $args)
     {
         $method = strtolower($method);
         if (empty($this->_method_map[$method]) && isset($this->_autoload_map[$method])) {

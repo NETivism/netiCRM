@@ -41,7 +41,10 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
   public function buildQuickForm() {
-    $contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    self::commonBuildQuickForm($this);
+  }
+  public static function commonBuildQuickForm($self) {
+    $contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $self);
     $urlParams = "action=add&reset=1&cid={$contactId}&selectedChild=activity&atype=";
 
     $url = CRM_Utils_System::url('civicrm/contact/view/activity',
@@ -63,10 +66,10 @@ class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
 
     $activityTypes += $otherTypes;
 
-    $this->assign('activityTypes', $activityTypes);
-    $this->assign('url', $url);
+    $self->assign('activityTypes', $activityTypes);
+    $self->assign('url', $url);
 
-    $this->assign('suppressForm', TRUE);
+    $self->assign('suppressForm', TRUE);
   }
 }
 

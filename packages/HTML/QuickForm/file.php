@@ -169,18 +169,14 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      * @access    public
      * @return    bool
      */
-    function onQuickFormEvent($event, $arg, &$caller)
+    function onQuickFormEvent($event, $arg, $caller = null)
     {
         switch ($event) {
             case 'updateValue':
                 if ($caller->getAttribute('method') == 'get') {
                     return PEAR::raiseError('Cannot add a file upload field to a GET method form');
                 }
-                $value = $this->_findValue();
-                if (null === $value) {
-                  $value = $this->_findValue($caller->_defaultValues);
-                }
-                $this->_value = $value;
+                $this->_value = $this->_findValue();
                 $caller->updateAttributes(array('enctype' => 'multipart/form-data'));
                 $caller->setMaxFileSize();
                 break;
@@ -388,8 +384,11 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
     * @access    private
     * @return    mixed
     */
-    function _findValue(&$values)
+    function _findValue()
     {
+        if (empty($_FILES)) {
+            return null;
+        }
         $elementName = $this->getName();
         $elementName = preg_replace('/\[\]$/', '', $elementName);
         if (!empty($values)) {

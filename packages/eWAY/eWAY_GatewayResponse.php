@@ -53,7 +53,7 @@ class GatewayResponse
 	var $txAuthCode            = "";
 	var $txError               = "";
 
-	function GatewayResponse()
+	function __construct()
 	{
 	   // Empty Constructor
    }

@@ -120,7 +120,7 @@ class HTML_QuickForm_hierselect extends HTML_QuickForm_group
      */
     function __construct($elementName=null, $elementLabel=null, $attributes=null, $separator=null)
     {
-        parent::__construct($elementName, $elementLabel, null, null, null, $attributes);
+        parent::__construct($elementName, $elementLabel, $attributes);
         $this->_persistantFreeze = true;
         if (isset($separator)) {
             $this->_separator = $separator;
@@ -478,7 +478,7 @@ class HTML_QuickForm_hierselect extends HTML_QuickForm_group
     // }}}
     // {{{ onQuickFormEvent()
 
-    function onQuickFormEvent($event, $arg, &$caller)
+    function onQuickFormEvent($event, $arg, $caller = null)
     {
         if ('updateValue' == $event) {
             // we need to call setValue() so that the secondary option

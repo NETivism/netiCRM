@@ -602,8 +602,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     }
 
     //build other activity links
-    require_once 'CRM/Activity/Form/ActivityLinks.php';
-    CRM_Activity_Form_ActivityLinks::buildQuickForm();
+    CRM_Activity_Form_ActivityLinks::commonBuildQuickForm($this);
 
     //enable form element (ActivityLinks sets this true)
     $this->assign('suppressForm', FALSE);

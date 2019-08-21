@@ -97,7 +97,7 @@ class CRM_Contribute_Form_AdditionalInfo {
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution');
 
-    $this->addDateTime('thankyou_date', ts('Thank-you Sent'), FALSE, array('formatType' => 'activityDateTime'));
+    $form->addDateTime('thankyou_date', ts('Thank-you Sent'), FALSE, array('formatType' => 'activityDateTime'));
 
     // add various amounts
     $element = &$form->add('text', 'non_deductible_amount', ts('Non-deductible Amount'),

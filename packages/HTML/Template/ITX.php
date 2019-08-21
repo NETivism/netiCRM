@@ -115,14 +115,14 @@ class HTML_Template_ITX extends HTML_Template_IT
     *
     * @see    HTML_Template_IT()
     */
-    function __construct($root = '')
+    function HTML_Template_ITX($root = '')
     {
 
         $this->checkblocknameRegExp = '@' . $this->blocknameRegExp . '@';
         $this->functionRegExp = '@' . $this->functionPrefix . '(' .
                                 $this->functionnameRegExp . ')\s*\(@sm';
 
-        parent::__construct($root);
+        $this->HTML_Template_IT($root);
     } // end func constructor
 
     function init()

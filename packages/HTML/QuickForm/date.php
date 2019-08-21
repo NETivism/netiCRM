@@ -125,7 +125,7 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
                                'months_short'  => CRM_Utils_Date::getAbbrMonthNames(), 
                                'months_long'   => CRM_Utils_Date::getFullMonthNames() 
                                );
-        parent::__construct($elementName, $elementLabel, null, null, null, $attributes);
+        parent::__construct($elementName, $elementLabel, $attributes);
         $this->_persistantFreeze = true;
         $this->_appendName = true;
         $this->_type = 'date';
@@ -212,7 +212,9 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
                             $this->_options['maxYear'],
                             $this->_options['minYear'] > $this->_options['maxYear']? -1: 1
                         );
-                        array_walk($options, create_function('&$v,$k','$v = substr($v,-2);')); 
+                        array_walk($options, function(&$v ,$k){
+                          $v = substr($v, -2);
+                        });
                         $emptyText = ts('-year-');
                         break;
                     case 'h':
@@ -221,7 +223,9 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
                         break;
                     case 'g':
                         $options = $this->_createOptionList(1, 12);
-                        array_walk($options, create_function('&$v,$k', '$v = intval($v);'));
+                        array_walk($options, function(&$v, $k) {
+                          $v = intval($v);
+                        });
                         break;
                     case 'H':
                         $options = $this->_createOptionList(0, 23);
@@ -387,7 +391,7 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
     // }}}
     // {{{ onQuickFormEvent()
 
-    function onQuickFormEvent($event, $arg, &$caller)
+    function onQuickFormEvent($event, $arg, $caller = null)
     {
         if ('updateValue' == $event) {
             // we need to call setValue(), 'cause the default/constant value

@@ -145,9 +145,9 @@ class DB_common extends PEAR
      *
      * @return void
      */
-    function DB_common()
+    function __construct()
     {
-        $this->PEAR('DB_Error');
+        parent::__construct('DB_Error');
     }
 
     // }}}
@@ -1873,14 +1873,14 @@ class DB_common extends PEAR
      *
      * @see PEAR_Error
      */
-    function &raiseError($code = DB_ERROR, $mode = null, $options = null,
+    function raiseError($code = DB_ERROR, $mode = null, $options = null,
                          $userinfo = null, $nativecode = null)
     {
         // The error is yet a DB error object
         if (is_object($code)) {
             // because we the static PEAR::raiseError, our global
             // handler should be used if it is set
-            if ($mode === null && !empty($this->_default_error_mode)) {
+            if ($mode === null && isset($this) && !empty($this->_default_error_mode)) {
                 $mode    = $this->_default_error_mode;
                 $options = $this->_default_error_options;
             }
@@ -1889,7 +1889,7 @@ class DB_common extends PEAR
             return $tmp;
         }
 
-        if ($userinfo === null) {
+        if ($userinfo === null && isset($this)) {
             $userinfo = $this->last_query;
         }
 
@@ -2243,6 +2243,10 @@ class DB_common extends PEAR
                 $array[$key] = '';
             }
         }
+    }
+
+    function lastInsertId() {
+        throw new \RuntimeException("Not implemented: " . get_class($this) . '::lastInsertId');
     }
 
     // }}}
