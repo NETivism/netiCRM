@@ -51,8 +51,8 @@ function loadReferrer() {
       if (typeof visitInfo.campaign !== 'undefined' && typeof referrerInfo.campaign === 'undefined') {
         referrerInfo.campaign = visitInfo.campaign;
         localStorage.setItem('referrerInfo', JSON.stringify(referrerInfo));
-        trackVisit(referrerInfo);
       }
+      trackVisit(referrerInfo);
     });
   }
   else {
