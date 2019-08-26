@@ -206,7 +206,7 @@ WHERE  subtype.name IS NOT NULL AND subtype.parent_id IS NOT NULL {$ctWHERE}
    *function to  retrieve all subtypes
    *
    *@param array $contactType.
-   *@return  list of all subtypes OR list of subtypes associated to
+   *@return  array list of all subtypes OR list of subtypes associated to
    *a given basic contact type
    *@static
    *
@@ -226,7 +226,7 @@ WHERE  subtype.name IS NOT NULL AND subtype.parent_id IS NOT NULL {$ctWHERE}
    *function to retrieve subtype pairs with name as 'subtype-name' and 'label' as value
    *
    *@param array $contactType.
-   *@return list of subtypes with name as 'subtype-name' and 'label' as value
+   *@return array list of subtypes with name as 'subtype-name' and 'label' as value
    *@static
    *
    */

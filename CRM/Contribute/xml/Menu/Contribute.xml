@@ -209,6 +209,7 @@
      <path>civicrm/contact/view/contributionrecur</path>
      <title>Recurring Contributions</title>
      <page_callback>CRM_Contribute_Page_ContributionRecur</page_callback>
+     <access_arguments>access CiviContribute</access_arguments>
   </item>
   <item>
      <path>civicrm/contact/view/contribution/additionalinfo</path>
