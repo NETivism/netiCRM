@@ -88,7 +88,7 @@ class CRM_Core_Payment_LinePay {
       $requestParams['productImageUrl'] = CRM_Utils_System::getLogoURL();
     }
     $requestParams['orderId'] = $params['contributionID'];
-    $requestParams['productName'] = $description;
+    $requestParams['productName'] = strip_tags($description);
     $requestParams['amount'] = (int)$params['amount']; // integer
     $requestParams['currency'] = $config->defaultCurrency; // please use contribution currency
     $requestParams['confirmUrlType'] = 'CLIENT';
@@ -283,7 +283,7 @@ class CRM_Core_Payment_LinePay {
     }
     $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
     $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
-    CRM_Core_Payment_Mobile::addNote($note, $contribution);
+    CRM_Core_Payment_Mobile::addNote($note, $contribution); 
   }
 
   private static function prepareContribution($contributionId){
