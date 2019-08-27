@@ -243,11 +243,12 @@ cj(function($){
     doClearNameIdErrorMessage();
     var $sameas = $('#same_as');
     var error = [];
+    var legalIdentifier = $('#legal_identifier').val();
     if( $sameas.is(':checked') && $('#r_person').is(':checked')){
       if($('#legal_identifier').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').hasClass('required')){
         if($('#legal_identifier').val() == '' ){
           error['legal_identifier'] = '{/literal}{ts}Please fill legal identifier to upload data.{/ts}{literal}';
-        }else if(!validTWID($('#legal_identifier').val())){
+        }else if(!validTWID(legalIdentifier) && !validResidentID(legalIdentifier)){
           error['legal_identifier'] = '{/literal}{ts}Invalid value for field(s){/ts}{literal}';
         }
       }
@@ -420,7 +421,7 @@ cj(function($){
       $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
     }
     var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
-    if(validTWID(value) || validOrgID(value)){
+    if(validTWID(value) || validOrgID(value) || validResidentID(value)){
       $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
       return true;
     }else{
@@ -492,6 +493,27 @@ function validOrgID(value){
   if(value=='')return true;
   var checkRegex = RegExp("^[0-9]{8}$");
   if(checkRegex.test(value)){
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Validate Resident Permit ID, Should match Resident Permit ID formula.
+ * @param  String value
+ * @return boolean
+ */
+function validResidentID (value) {
+  if (value=='') return true;
+  value = value.toUpperCase();
+  var tab = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
+  var c = (tab.indexOf(value.substr(0,1))+10) +''+ (tab.indexOf(value.substr(1,1))%10) + value.substr(2,8);
+  var checkCode = parseInt(c.substr(0,1));
+  for (var i = 1; i >= 9; i++) {
+    checkCode += parseInt(c.substr(i, 1)) * (10 - i);
+  }
+  checkCode += parseInt(c.substr(10, 1));
+  if (checkCode % 10 == 0) {
     return true;
   }
   return false;

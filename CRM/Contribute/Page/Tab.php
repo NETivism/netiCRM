@@ -97,7 +97,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    *
    */
   static function &recurLinks() {
-    if (!(self::$_links)) {
+    if (!(self::$_links) && CRM_Core_Permission::check('access CiviContribute')) {
       self::$_links = array(
         CRM_Core_Action::VIEW => array(
           'name' => ts('View'),
@@ -105,19 +105,21 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
           'url' => 'civicrm/contact/view/contributionrecur',
           'qs' => 'reset=1&id=%%id%%&cid=%%cid%%',
         ),
-        CRM_Core_Action::UPDATE => array(
+      );
+      if (CRM_Core_Permission::check('edit contributions')) {
+        self::$_links[CRM_Core_Action::UPDATE] = array(
           'name' => ts('Edit'),
           'title' => ts('Edit Recurring Payment'),
           'url' => 'civicrm/contact/view/contributionrecur',
           'qs' => 'reset=1&action=update&id=%%id%%&cid=%%cid%%',
-        ),
-        CRM_Core_Action::DISABLE => array(
+        );
+        self::$_links[CRM_Core_Action::DISABLE] = array(
           'name' => ts('Cancel'),
           'title' => ts('Cancel'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_ContributionRecur' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
-        ),
-      );
+        );
+      }
     }
     return self::$_links;
   }
