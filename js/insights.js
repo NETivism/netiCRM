@@ -40,7 +40,7 @@ function loadReferrer() {
   }
 
   // if someone visit this site over 30mins, we need to get referrer again
-  if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && referrerInfo.timestamp - timestamp < 1800) {
+  if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && timestamp - referrerInfo.timestamp < 1800) {
     // check if campaign exists
     var url = window.location.href;
     var referrer = '';
@@ -51,8 +51,8 @@ function loadReferrer() {
       if (typeof visitInfo.campaign !== 'undefined' && typeof referrerInfo.campaign === 'undefined') {
         referrerInfo.campaign = visitInfo.campaign;
         localStorage.setItem('referrerInfo', JSON.stringify(referrerInfo));
-        trackVisit(referrerInfo);
       }
+      trackVisit(referrerInfo);
     });
   }
   else {
