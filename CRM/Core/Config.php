@@ -403,7 +403,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     CRM_Utils_File::createDir($this->configAndLogDir);
 
     // if settings are not available, go down the full path
-    if (empty($variables['userFrameworkResourceURL']) || $_GET['reset_variables']) {
+    if (empty($variables['userFrameworkResourceURL']) || !empty($_GET['reset_variables'])) {
       // Step 1. get system variables with their hardcoded defaults
       $defaultVariables = get_object_vars($this);
       $variables = array_merge($defaultVariables, $variables);

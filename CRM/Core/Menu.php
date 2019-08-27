@@ -424,7 +424,7 @@ class CRM_Core_Menu {
   }
 
   static function &getAdminLinks() {
-    $links = &self::get('admin');
+    $links = self::get('admin');
 
     if (!$links ||
       !isset($links['breadcrumb'])
@@ -618,7 +618,7 @@ UNION (
     }
 
     if (!empty($menuPath)) {
-      $i18n = &CRM_Core_I18n::singleton();
+      $i18n = CRM_Core_I18n::singleton();
       $i18n->localizeTitles($menuPath);
     }
     return $menuPath;

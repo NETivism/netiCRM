@@ -96,7 +96,9 @@ class CRM_Core_I18n {
   function initialize() {
     $config = CRM_Core_Config::singleton();
     if ($config->initialized && !$this->_initConfig) {
-      $this->_customTranslateFunction = $config->customTranslateFunction;
+      if (!empty($config->customTranslateFunction)) {
+        $this->_customTranslateFunction = $config->customTranslateFunction;
+      }
       if (!empty($config->localeCustomStrings)) {
         $this->_localeCustomStrings = $config->localeCustomStrings;
       }

@@ -549,7 +549,7 @@ class CRM_Contact_BAO_Query {
 
       // if this is a hierarchical name, we ignore it
       $names = explode('-', $name);
-      if (count($names > 1) && isset($names[1]) && is_numeric($names[1])) {
+      if (is_array($name) && count($names > 1) && isset($names[1]) && is_numeric($names[1])) {
         continue;
       }
 

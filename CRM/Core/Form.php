@@ -200,7 +200,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   function &add($type, $name, $label = '',
     $attributes = '', $required = FALSE, $javascript = NULL
   ) {
-    $element = &$this->addElement($type, $name, $label, $attributes, $javascript);
+    $element = $this->addElement($type, $name, $label, $attributes, $javascript);
     if (HTML_QuickForm::isError($element)) {
       CRM_Core_Error::fatal(HTML_QuickForm::errorMessage($element));
     }
@@ -349,7 +349,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
     $this->buildQuickForm();
 
-    $defaults = &$this->setDefaultValues();
+    $defaults = $this->setDefaultValues();
     unset($defaults['qfKey']);
     unset($defaults['pageKey']);
 
@@ -411,7 +411,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         if (in_array($button['type'], array('next', 'upload')) && $button['name'] === 'Save') {
           $attrs = array_merge($attrs, (array('accesskey' => 'S')));
         }
-        $prevnext[] = &$this->createElement('submit', $buttonName, $button['name'], $attrs);
+        $prevnext[] = $this->createElement('submit', $buttonName, $button['name'], $attrs);
       }
       if (CRM_Utils_Array::value('isDefault', $button)) {
         $this->setDefaultAction($button['type']);
@@ -762,10 +762,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     else {
       foreach ($values as $key => $var) {
         if (!$flipValues) {
-          $options[] = &HTML_QuickForm::createElement('checkbox', $var, NULL, $key);
+          $options[] = HTML_QuickForm::createElement('checkbox', $var, NULL, $key);
         }
         else {
-          $options[] = &HTML_QuickForm::createElement('checkbox', $key, NULL, $var);
+          $options[] = HTML_QuickForm::createElement('checkbox', $key, NULL, $var);
         }
       }
     }
