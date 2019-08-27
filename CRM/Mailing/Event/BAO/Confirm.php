@@ -143,11 +143,6 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     $b = CRM_Utils_Mail::setMimeParams($message);
     $h = &$message->headers($headers);
     $mailer = &$config->getMailer();
-
-    require_once 'CRM/Mailing/BAO/Mailing.php';
-    PEAR::setErrorHandling(PEAR_ERROR_CALLBACK,
-      array('CRM_Core_Error', 'nullHandler')
-    );
     if (is_object($mailer)) {
       $mailer->send($email, $h, $b);
       CRM_Core_Error::setCallback();

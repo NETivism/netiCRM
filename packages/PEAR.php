@@ -702,9 +702,9 @@ class PEAR
         $stack[] = array($def_mode, $def_options);
 
         if ($object !== null) {
-            $object->setErrorHandling($mode, $options);
+            $object->setErrorHandling($object, $mode, $options);
         } else {
-            PEAR::setErrorHandling($mode, $options);
+            PEAR::setErrorHandling(NULL, $mode, $options);
         }
         $stack[] = array($mode, $options);
         return true;
@@ -724,9 +724,9 @@ class PEAR
         list($mode, $options) = $stack[sizeof($stack) - 1];
         array_pop($stack);
         if ($object !== null) {
-            $object->setErrorHandling($mode, $options);
+            $object->setErrorHandling($object, $mode, $options);
         } else {
-            PEAR::setErrorHandling($mode, $options);
+            PEAR::setErrorHandling(NULL, $mode, $options);
         }
         return true;
     }

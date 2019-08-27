@@ -478,21 +478,14 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $error->_errorsByLevel = array();
   }
 
-  /* used for the API, rise the exception instead of catching/fatal it */
-
-  public static function setRaiseException() {
-    //deprecated        PEAR::setErrorHandling( PEAR_ERROR_EXCEPTION);
-    PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, array('CRM_Core_Error', 'exceptionHandler'));
-  }
 
   public static function ignoreException($callback = NULL) {
     if (!$callback) {
       $callback = array('CRM_Core_Error', 'nullHandler');
     }
 
-    PEAR::setErrorHandling(PEAR_ERROR_CALLBACK,
-      $callback
-    );
+    $GLOBALS['_PEAR_default_error_mode'] = PEAR_ERROR_CALLBACK;
+    $GLOBALS['_PEAR_default_error_options'] = $callback;
   }
 
   public static function exceptionHandler($pearError) {
@@ -550,9 +543,8 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     if (!$callback) {
       $callback = array('CRM_Core_Error', 'handle');
     }
-    PEAR::setErrorHandling(PEAR_ERROR_CALLBACK,
-      $callback
-    );
+    $GLOBALS['_PEAR_default_error_mode'] = PEAR_ERROR_CALLBACK;
+    $GLOBALS['_PEAR_default_error_options'] = $callback;
   }
 
   public static function &createAPIError($msg, $data = NULL) {

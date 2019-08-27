@@ -297,7 +297,7 @@ class CRM_Core_Session {
     else {
       $session = &$this->_session[$this->_key][$prefix];
       if (empty($session)) {
-        $session['expired'] = CRM_REQUEST_TIME + EXPIRED_TIME;
+        $session['expired'] = CRM_REQUEST_TIME + self::EXPIRED_TIME;
       }
     }
 

@@ -303,9 +303,6 @@ SELECT     civicrm_email.id as email_id
     $mailer = &$config->getMailer();
 
     require_once 'CRM/Mailing/BAO/Mailing.php';
-    PEAR::setErrorHandling(PEAR_ERROR_CALLBACK,
-      array('CRM_Core_Error', 'nullHandler')
-    );
     if (is_object($mailer)) {
       $mailer->send($email, $h, $b);
       CRM_Core_Error::setCallback();
