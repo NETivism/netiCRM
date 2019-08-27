@@ -100,6 +100,9 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    * @return None
    */
   public function postProcess() {
+    if (!CRM_Core_Permission::check('edit contributions')) {
+      return FALSE;
+    }
     $recurId = $this->get('recurId');
     $contributionId = $this->get('contributionId');
 

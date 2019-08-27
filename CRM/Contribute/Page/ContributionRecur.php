@@ -129,7 +129,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       }
       $logDAO->free();
       $this->assign('logs', $logs);
-      
+
       // Recurring Contributions
       $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), CRM_Core_Action::BROWSE);
       $controller->setEmbedded(TRUE);
@@ -149,7 +149,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
         $this->assign('record_detail', $recordDetail);
       }
 
-      if (method_exists($paymentClass, 'doRecurTransact')) {
+      if (method_exists($paymentClass, 'doRecurTransact') && CRM_Core_Permission::check('edit contributions')) {
         $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);
         $controllerTransact->setEmbedded(TRUE);
         $controllerTransact->set('recurId', $recur->id);
@@ -162,6 +162,11 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       // Get payment processor
       if (!empty($paymentClass::$_hideFields)) {
         $this->assign('hide_fields', $paymentClass::$_hideFields);
+      }
+
+      // show 'edit' button depends on permission.
+      if (CRM_Core_Permission::check('edit contributions')) {
+        $this->assign('is_editable', true);
       }
 
     }
