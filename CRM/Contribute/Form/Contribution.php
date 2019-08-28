@@ -924,6 +924,9 @@ WHERE  contribution_id = {$this->_id}
       ts('Default') => $fromEmails['default'],
       ts('Your Email') => $fromEmails['contact'],
     );
+    if (CRM_Core_Permission::check('access CiviContribute')) {
+      $emails[ts('Other')] = $fromEmails['domain'];
+    }
     $this->addSelect('from_email_address', ts('FROM Email Address'), $emails);
 
     // add receipt id text area
