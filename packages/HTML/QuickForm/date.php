@@ -125,7 +125,7 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
                                'months_short'  => CRM_Utils_Date::getAbbrMonthNames(), 
                                'months_long'   => CRM_Utils_Date::getFullMonthNames() 
                                );
-        parent::__construct($elementName, $elementLabel, $attributes);
+        parent::__construct($elementName, $elementLabel, NULL, NULL, NULL, $attributes);
         $this->_persistantFreeze = true;
         $this->_appendName = true;
         $this->_type = 'date';
