@@ -40,8 +40,20 @@ function loadReferrer() {
   }
 
   // if someone visit this site over 30mins, we need to get referrer again
-  if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && referrerInfo.timestamp - timestamp < 1800) {
-    trackVisit(referrerInfo);
+  if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && timestamp - referrerInfo.timestamp < 1800) {
+    // check if campaign exists
+    var url = window.location.href;
+    var referrer = '';
+    if (typeof document.referrer !== 'undefined') {
+      referrer = document.referrer;
+    }
+    inbound.referrer.parse(url, referrer, function(err, visitInfo){
+      if (typeof visitInfo.campaign !== 'undefined' && typeof referrerInfo.campaign === 'undefined') {
+        referrerInfo.campaign = visitInfo.campaign;
+        localStorage.setItem('referrerInfo', JSON.stringify(referrerInfo));
+      }
+      trackVisit(referrerInfo);
+    });
   }
   else {
     localStorage.removeItem('referrerInfo');
@@ -162,8 +174,7 @@ function trackVisit(visitInfo) {
   });
 }
 
-var currentScriptSrc = document.currentScript.src;
-var inboundSrc = currentScriptSrc.replace(/insights\.js.*$/, 'inbound.js');
+var inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
 loadScript(inboundSrc, function(){
   loadReferrer();
 });

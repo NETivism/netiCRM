@@ -1951,16 +1951,26 @@ SELECT source_contact_id
       $values['contribution_type_id'] = $contribution->contribution_type_id;
     }
 
+    $sort_name = $custom_values[$custom_title] ? $custom_values[$custom_title] : $contact->sort_name;
     if ($contact->contact_type == 'Individual') {
-      $legal_identifier = $custom_values[$custom_serial] ? $custom_values[$custom_serial] : $contact->legal_identifier;
+      if ($contact->sort_name == $sort_name) {
+        $legal_identifier = $custom_values[$custom_serial] ? $custom_values[$custom_serial] : $contact->legal_identifier;
+      }
+      else {
+        $legal_identifier = $custom_values[$custom_serial];
+      }
       $template->assign('serial_id', $legal_identifier);
     }
     elseif ($contact->contact_type == 'Organization') {
-      $sic_code = $custom_values[$custom_serial] ? $custom_values[$custom_serial] : $contact->sic_code;
+      if ($contact->sort_name == $sort_name) {
+        $sic_code = $custom_values[$custom_serial] ? $custom_values[$custom_serial] : $contact->sic_code;
+      }
+      else {
+        $sic_code = $custom_values[$custom_serial];
+      }
       $template->assign('serial_id', $sic_code);
     }
 
-    $sort_name = $custom_values[$custom_title] ? $custom_values[$custom_title] : $contact->sort_name;
     $addressee = !empty($contact->addressee_custom) ? $contact->addressee_custom : (!empty($contact->addressee_display) ? $contact->addressee_display : $contact->sort_name);
     $template->assign('id' , $contribution->id);
     $template->assign('addressee', $addressee);
