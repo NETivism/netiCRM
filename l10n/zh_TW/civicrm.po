@@ -47178,4 +47178,4 @@ msgid "You can only check in event with event manager."
 msgstr "活動報到作業，需要活動管理員才有辦法完成喔。"
 
 msgid "You has been successfully subscribed to the %1 mailing list."
-msgstr "您已成功訂閱%3"
+msgstr "您已成功訂閱%1"
