@@ -38,7 +38,7 @@
   })(jQuery);
   {/literal}
 </script>
-<script type="text/javascript" src="{$config->resourceBase}/js/contribution_page.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js"></script>
 <img class="pre-load-background-images" src="{/literal}{$backgroundImageUrl}{literal}" alt="" style="display: none;">
 <img class="pre-load-background-images" src="{/literal}{$mobilBackgroundImageUrl}{literal}" alt="" style="display: none;">
 <style>

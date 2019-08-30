@@ -46983,3 +46983,6 @@ msgstr ""
 
 msgid "You can only check in event with event manager."
 msgstr ""
+
+msgid "You has been successfully subscribed to the %1 mailing list."
+msgstr ""
