@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-08-14 07:56+0000\n"
+"PO-Revision-Date: 2019-08-30 09:23+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47176,3 +47176,6 @@ msgstr "此參加者先前就已完成報到，無須再次報到。"
 
 msgid "You can only check in event with event manager."
 msgstr "活動報到作業，需要活動管理員才有辦法完成喔。"
+
+msgid "You has been successfully subscribed to the %1 mailing list."
+msgstr "您已成功訂閱%3"

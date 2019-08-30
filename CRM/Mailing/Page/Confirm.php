@@ -44,8 +44,8 @@ class CRM_Mailing_Page_Confirm extends CRM_Core_Page {
     $hash = CRM_Utils_Request::retrieve('h', 'String', CRM_Core_DAO::$_nullObject);
 
     if (!$contact_id ||
-      !$subscribe_id ||
-      !$hash
+    !$subscribe_id ||
+    !$hash
     ) {
       CRM_Core_Error::fatal(ts("Missing input parameters"));
     }
@@ -58,6 +58,7 @@ class CRM_Mailing_Page_Confirm extends CRM_Core_Page {
     else {
       $this->assign('success', TRUE);
       $this->assign('group', $result);
+      CRM_Utils_System::setTitle(ts("You has been successfully subscribed to the %1 mailing list.", array(1 => $result)));
     }
 
     require_once 'CRM/Contact/BAO/Contact/Location.php';
