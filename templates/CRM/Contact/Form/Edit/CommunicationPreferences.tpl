@@ -107,12 +107,13 @@
                  <td>
                      <br /><span class="label">{$form.preferred_language.label}</span>
                      <br />{$form.preferred_language.html}
-                </td>
+                     <br />{$form.preferred_mail_format.label} &nbsp;
+                     <br />
+                        {$form.preferred_mail_format.html} {help id="id-emailFormat" file="CRM/Contact/Form/Contact.hlp"}
+                 </td>
         </tr>
         <tr>
-            <td>{$form.is_opt_out.html} {$form.is_opt_out.label} {help id="id-optOut" file="CRM/Contact/Form/Contact.hlp"}</td>
-            <td>{$form.preferred_mail_format.label} &nbsp;
-                {$form.preferred_mail_format.html} {help id="id-emailFormat" file="CRM/Contact/Form/Contact.hlp"}
+            <td>
             </td>
 
         </tr>
