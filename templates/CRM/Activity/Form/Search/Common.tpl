@@ -62,12 +62,9 @@
 <tr>
   {if $form.activity_tags }
     <td><label>{ts}Activity Tag(s){/ts}</label>
-      <div id ="Tags" class="listing-box">
-         {foreach from=$form.activity_tags item="tag_val"}
-              <div class="{cycle values="odd-row,even-row"}">
-                   {$tag_val.html}
-              </div>
-         {/foreach}
+      <div id ="Tags">
+        {$form.activity_tags.html}
+      </div>
     </td>
   {/if}
   <td colspan="2">

@@ -391,7 +391,7 @@ class CRM_Activity_BAO_Query {
 
     $activity_tags = CRM_Core_BAO_Tag::getTags('civicrm_activity');
     if (!empty($activity_tags)) {
-      $form->addElement('select', 'activity_tags', ts('Activity Tag(s)'), $activity_tags, $attrmultiple);
+      $form->addSelect('activity_tags', ts('Activity Tag(s)'), $activity_tags, $attrmultiple);
     }
 
     require_once ('CRM/Campaign/BAO/Survey.php');
