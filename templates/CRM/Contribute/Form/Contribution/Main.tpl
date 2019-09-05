@@ -166,7 +166,7 @@
       <div class="clear"></div>
     </div>
     <div id="billing-payment-block"></div>
-    {include file="CRM/common/paymentBlock.tpl'}
+    {include file="CRM/common/paymentBlock.tpl"}
   {elseif $is_pay_later}
     <div class="crm-section pay_later_receipt-section">
       <div class="label">{ts}Payment Method{/ts}</div>
@@ -191,8 +191,8 @@
   {/if}
 
 
-  {if $form.is_for_organization}
-     {include file=CRM/Contact/Form/OnBehalfOf.tpl}
+  {if $is_for_organization}
+      {include file=CRM/Contact/Form/OnBehalfOf.tpl}
   {/if}
 
 
