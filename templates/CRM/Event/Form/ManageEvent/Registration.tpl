@@ -264,6 +264,12 @@
                 <span class="description">{ts}Links only displays on free event.{/ts}</span>
                 </td>
              </tr>
+             <tr class="crm-event-manage-registration-form-block-is_qrcode">
+                <td class="label">{$form.is_qrcode.label}</td>
+                <td>{$form.is_qrcode.html}
+                <span class="description">{ts}Email will include event check in code.{/ts}</span>
+                </td>
+             </tr>
            </table>
       </div>
     </div>  

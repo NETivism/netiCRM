@@ -5610,7 +5610,7 @@ INSERT INTO civicrm_uf_field
 	   (22, 7, 			 'city',				  1, 		   0, 			4, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '鄉鎮市區',  						'Contact', 	   NULL,  NULL),
 	   (23, 7, 			 'state_province', 		  1, 		   0, 			5, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '縣市',  						'Contact', 	   NULL,  NULL),
 	   (24, 7, 			 'postal_code', 		  1, 		   0, 			6, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '郵遞區號',  				'Contact', 	   NULL,  NULL),
-	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '主要 Email',  				'Contact', 	   NULL,  NULL),
+	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '預設 Email',  				'Contact', 	   NULL,  NULL),
 	   (26, 7, 			 'group', 				  1, 		   0, 			8, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '群組',  					'Contact', 	   NULL,  NULL),
 	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   '標籤/Tag', 						'Contact', 	   NULL,  NULL),
 	   (28  ,7  	    ,'gender'  				 ,1  	      ,0  			,10  	,'User and User Admin Only' ,0  		 ,0  			,NULL,  			 '性別'  						,'Individual' ,NULL,  NULL),
@@ -9627,7 +9627,12 @@ registration process.{/ts}
 {/foreach}
 {/if}
 
-
+{if $checkinCode}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{ts}Check In{/ts}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{$checkinUrl}
+{/if}
 ', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -10077,6 +10082,12 @@ registration process.{/ts}</p>
         </tr>
        {/foreach}
       {/foreach}
+     {/if}
+     {if $checkinCode}
+     <tr>
+        <td {$labelStyle}>{ts}Check In Code{/ts}</td>
+        <td {$valueStyle}>{$checkinCode}</td>
+     </tr>
      {/if}
 
     </table>
@@ -10365,7 +10376,12 @@ registration process.{/ts}
 {/foreach}
 {/if}
 
-
+{if $checkinCode}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{ts}Check In{/ts}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{$checkinUrl}
+{/if}
 ', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -10815,6 +10831,12 @@ registration process.{/ts}</p>
         </tr>
        {/foreach}
       {/foreach}
+     {/if}
+     {if $checkinCode}
+     <tr>
+        <td {$labelStyle}>{ts}Check In Code{/ts}</td>
+        <td {$valueStyle}>{$checkinCode}</td>
+     </tr>
      {/if}
 
     </table>
@@ -11105,7 +11127,13 @@ registration process.{/ts}
 {/foreach}
 {/foreach}
 {/if}
-', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+{if $checkinCode}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{ts}Check In{/ts}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{$checkinUrl}
+{/if}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -11558,6 +11586,13 @@ registration process.{/ts}</p>
          {capture assign=cancelUrl}{crmURL p=\'civicrm/event/cancel\' q="reset=1&participantId=`$participantID`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
          <a href="{$cancelUrl}">{ts}Go to a web page where you can cancel your registration online{/ts}</a>
         </td>
+      </tr>
+      {/if}
+
+      {if $checkinCode}
+      <tr>
+        <td {$labelStyle}>{ts}Check In Code{/ts}</td>
+        <td {$valueStyle}>{$checkinCode}</td>
       </tr>
       {/if}
 
@@ -11847,7 +11882,13 @@ registration process.{/ts}
 {/foreach}
 {/foreach}
 {/if}
-', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+{if $checkinCode}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{ts}Check In{/ts}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{$checkinUrl}
+{/if}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -12300,6 +12341,13 @@ registration process.{/ts}</p>
          {capture assign=cancelUrl}{crmURL p=\'civicrm/event/cancel\' q="reset=1&participantId=`$participantID`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
          <a href="{$cancelUrl}">{ts}Go to a web page where you can cancel your registration online{/ts}</a>
         </td>
+      </tr>
+      {/if}
+
+      {if $checkinCode}
+      <tr>
+        <td {$labelStyle}>{ts}Check In Code{/ts}</td>
+        <td {$valueStyle}>{$checkinCode}</td>
       </tr>
       {/if}
 

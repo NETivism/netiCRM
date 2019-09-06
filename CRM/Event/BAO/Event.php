@@ -1112,7 +1112,7 @@ WHERE civicrm_event.is_active = 1
           ),
           'PDFFilename' => 'eventReceipt.pdf',
         );
-        if ($config->enableEventCheckinQrcode) {
+        if ($values['event']['is_qrcode']) {
           $checkinCodeFile = CRM_Event_BAO_Participant::checkinCode($contactID, $participantId);
           $qrcodeName = 'qrcode-'.$participantId;
           $embedImages = array(
@@ -1127,6 +1127,8 @@ WHERE civicrm_event.is_active = 1
             $sendTemplateParams['tplParams']['checkinCode'] = "<img src=\"cid:$qrcodeName\">";
             $sendTemplateParams['images'] = $embedImages;
           }
+          $checkinUrl = CRM_Event_BAO_Participant::checkinUrl($contactID, $participantId);
+          $sendTemplateParams['tplParams']['checkinUrl'] = $checkinUrl;
         }
 
         // address required during receipt processing (pdf and email receipt)

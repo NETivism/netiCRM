@@ -4697,6 +4697,7 @@ CREATE TABLE civicrm_event (
      start_date datetime    COMMENT 'Date and time that event starts.',
      end_date datetime    COMMENT 'Date and time that event ends. May be NULL if no defined end date/time',
      is_online_registration tinyint   DEFAULT 0 COMMENT 'If true, include registration link on Event Info page.',
+     is_qrcode tinyint   DEFAULT 0 COMMENT 'If true, include qrcode image on event registered email notification.',
      registration_link_text varchar(255)    COMMENT 'Text for link to Event Registration form which is displayed on Event Information screen when is_online_registration is true.',
      registration_start_date datetime    COMMENT 'Date and time that online registration starts.',
      registration_end_date datetime    COMMENT 'Date and time that online registration ends.',

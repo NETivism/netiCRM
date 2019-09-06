@@ -1494,7 +1494,7 @@ cj(function() {
       $this->assign('module', 'Event Registration');
       //use of the message template below requires variables in different format
       $event = $events = array();
-      $returnProperties = array('fee_label', 'start_date', 'end_date', 'is_show_location', 'title');
+      $returnProperties = array('fee_label', 'start_date', 'end_date', 'is_show_location', 'title', 'is_qrcode');
 
       //get all event details.
       CRM_Core_DAO::commonRetrieveAll('CRM_Event_DAO_Event', 'id', $params['event_id'], $events, $returnProperties);
@@ -1696,7 +1696,7 @@ cj(function() {
           'PDFFilename' => 'Attendee_confirm_copy.pdf',
         );
 
-        if ($config->enableEventCheckinQrcode) {
+        if ($event['is_qrcode']) {
           $checkinCodeFile = CRM_Event_BAO_Participant::checkinCode($contactID, $participants[$num]->id);
           $qrcodeName = 'qrcode-'.$participants[$num]->id;
           $embedImages = array(
@@ -1711,6 +1711,8 @@ cj(function() {
             $sendTemplateParams['tplParams']['checkinCode'] = "<img src=\"cid:$qrcodeName\">";
             $sendTemplateParams['images'] = $embedImages;
           }
+          $checkinUrl = CRM_Event_BAO_Participant::checkinUrl($contactID, $participants[$num]->id);
+          $sendTemplateParams['tplParams']['checkinUrl'] = $checkinUrl;
         }
 
         // try to send emails only if email id is present
