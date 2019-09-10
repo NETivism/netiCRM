@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-08-30 09:51+0000\n"
+"PO-Revision-Date: 2019-09-10 04:36+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -10592,7 +10592,7 @@ msgstr "選擇年份（逐月）"
 
 #: CRM/Contribute/Form/Contribution/Confirm.php
 msgid "Anonymous"
-msgstr "匿名者"
+msgstr "匿名"
 
 #: CRM/Contribute/Form/Contribution/Confirm.php
 msgid "Make Contribution"
@@ -45061,7 +45061,7 @@ msgstr "如果選「是」，PDF 版本的信件內文，將「不會」夾帶�
 msgid "Do not attach PDF copy to receipts"
 msgstr "信件不要夾帶 PDF"
 
-msgid "Type here"
+msgid "Type Here"
 msgstr "請輸入"
 
 #: CRM/Report/Form/Contact/Participte.php
@@ -45551,7 +45551,7 @@ msgid "Tax Invoice Giving"
 msgstr "發票捐贈"
 
 msgid "Please fill legal identifier to upload data."
-msgstr "上傳資料至國稅局需要身份證字號"
+msgstr "上傳資料至國稅局需要身份證字號或統一證號"
 
 msgid "Campaign owner profile"
 msgstr "個人募款頁創建者個人資料"
@@ -46820,10 +46820,10 @@ msgstr "是否啟用此頁面的「特別募款頁」樣式？"
 msgid "Single Contribution"
 msgstr "單筆捐款"
 
-msgid "Every-Month Recurring Contribution"
+msgid "Every-Month Recurring Contributions"
 msgstr "每月捐款"
 
-msgid "Installments Recurring Contribution"
+msgid "Installments Recurring Contributions"
 msgstr "期每月捐款"
 
 msgid "Amount Step"
@@ -46844,13 +46844,13 @@ msgstr "都不要"
 msgid "Choose Amount Option or Custom Amount"
 msgstr "點選金額或自訂金額"
 
-msgid "Single or Recurring Contribution"
+msgid "Single or Recurring Contributions"
 msgstr "點選捐款方式"
 
-msgid "I want contribute once."
+msgid "Change to Single Contribution"
 msgstr "我要單筆捐款"
 
-msgid "I want recurring contribution."
+msgid "Stay on Recurring Contributions"
 msgstr "維持定期捐款"
 
 msgid "Non-recurring contribution hint message."
@@ -47179,3 +47179,13 @@ msgstr "活動報到作業，需要活動管理員才有辦法完成喔。"
 
 msgid "You has been successfully subscribed to the %1 mailing list."
 msgstr "您已成功訂閱%1"
+
+#: templates/CRM/common/contributionPageSpecial.tpl
+msgid "No Limit"
+msgstr "不限"
+
+msgid "Recurring Contributions"
+msgstr "定期捐款"
+
+msgid "Monthly Installments"
+msgstr "每月定期定額期數"

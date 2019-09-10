@@ -372,6 +372,17 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $this->_defaults = array_merge($this->_defaults, $getDefaults);
     }
 
+    // readonly for specify field
+    if ($contactID) {
+      $readonlyFields = array('last_name', 'first_name', "email-{$this->_bltID}");
+      foreach($readonlyFields as $fld) {
+        if (!empty($this->_elementIndex[$fld]) && !empty($this->_defaults[$fld])) {
+          $element = $this->getElement($fld);
+          $element->updateAttributes(array('readonly' => 'readonly'));
+        }
+      }
+    }
+
     return $this->_defaults;
   }
 
