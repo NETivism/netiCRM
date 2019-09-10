@@ -359,7 +359,7 @@ cj(function($){
     // Anonymity
     if($('#r_name_hide:checked').val()){
       if($('#last_name,#first_name').length>1){
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{ts}Anonymity{/ts}{literal}');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{ts}Anonymous{/ts}{literal}');
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
     }

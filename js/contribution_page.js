@@ -147,7 +147,7 @@
 
       prepareRecurBtnMsg: function(){
         var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg">'+this.singleContribMsgText+'</div></div>');
-        var $singleBtn = this.createGreyBtn(ts['I want contribute once.']);
+        var $singleBtn = this.createGreyBtn(ts['Change to Single Contribution']);
         $singleBtn.find('a').click(function(event){
           $msgBox.animate({opacity: 0},500,function(){
             $msgBox.hide();
@@ -156,7 +156,7 @@
           });
           event.preventDefault();
         });
-        var $recurBtn = this.createBlueBtn(ts['I want recurring contribution.']);
+        var $recurBtn = this.createBlueBtn(ts['Stay on Recurring Contributions']);
         $recurBtn.find('a').click(function(event){
           ContribPage.setContributeType('recurring');
           ContribPage.quitMsgBox();
@@ -294,9 +294,9 @@
       },
 
       prepareContribTypeForm: function(){
-        $('.priceSet-block').before($('<div class="contrib-type-block custom-block"><label>'+ts['Single or Recurring Contribution']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
+        $('.priceSet-block').before($('<div class="contrib-type-block custom-block"><label>'+ts['Single or Recurring Contributions']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
         if($('[name=is_recur][value=1]').length > 0){
-          var $recurBtn = this.createBtn(ts["Recurring contributions"],"custom-recur-btn");
+          var $recurBtn = this.createBtn(ts["Recurring Contributions"],"custom-recur-btn");
           $recurBtn.click(function(){
             ContribPage.setContributeType('recurring');
           });
@@ -323,7 +323,7 @@
           if(!this.currentPriceOption){
             other_amount = this.currentPriceAmount;
           }
-          var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="'+ts['Type here']+'" name="custom-other-amount" id="custom-other-amount" type="number" min="0" class="custom-input" value="'+other_amount+'"></input></div>');
+          var $other_amount_block = $('<div class="custom-other-amount-block custom-input-block"><label for="custom-other-amount">'+ts['Other Amount']+'</label><input placeholder="'+ts['Type Here']+'" name="custom-other-amount" id="custom-other-amount" type="number" min="0" class="custom-input" value="'+other_amount+'"></input></div>');
           var doClickOtherAmount = function(){
             var reg = new RegExp(/^$|^\d+$/);
             var amount = $(this).val();
@@ -348,7 +348,7 @@
 
         if($('[name=is_recur][value=1]').length > 0){
           var installments = this.installments;
-          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['monthly']+ts['Installments']+'</label><input placeholder="'+ts["no limit"]+'" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
+          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['Monthly Installments']+'</label><input placeholder="'+ts["No Limit"]+'" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
           var doClickInstallments = function(){
             var installments = $(this).val();
             if(installments == 0){
@@ -550,9 +550,9 @@
         }
         if(this.currentContribType == 'recurring'){
           if(!this.installments){
-            $('.info-is-recur').text(ts['Every-Month Recurring Contribution']);
+            $('.info-is-recur').text(ts['Every-Month Recurring Contributions']);
           }else{
-            $('.info-is-recur').text(this.installments+ts['Installments Recurring Contribution']);
+            $('.info-is-recur').text(this.installments+ts['Installments Recurring Contributions']);
           }
         }
       },
