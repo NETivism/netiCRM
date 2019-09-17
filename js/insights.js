@@ -159,7 +159,7 @@ function trackVisit(visitInfo) {
         object[utmKey] = visitInfo.campaign[utmKey];
       }
     }
-    if (typeof navigator.doNotTrack === 'object' && navigator.doNotTrack) {
+    if (typeof navigator.doNotTrack === 'string' && navigator.doNotTrack) {
       object['referrer_type'] = 'unknown';
       object['referrer_network'] = '';
       object['referrer_url'] = '';
