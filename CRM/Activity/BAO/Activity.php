@@ -2230,6 +2230,10 @@ AND cl.modified_id  = c.id
         $Activityfields = array(
           'activity_type' => array('title' => ts('Activity Type'), 'type' => CRM_Utils_Type::T_STRING),
           'activity_status' => array('title' => ts('Activity Status'), 'type' => CRM_Utils_Type::T_STRING),
+          'target_contact_id' => array('title' => ts('Target Contact ID'), 'type' => CRM_Utils_Type::T_STRING),
+          'target_contact_name' => array('title' => ts('Target Contact Name'), 'type' => CRM_Utils_Type::T_STRING),
+          'assign_contact_id' => array('title' => ts('Assigned to Contact ID'), 'type' => CRM_Utils_Type::T_STRING),
+          'assign_contact_name' => array('title' => ts('Assigned to Contact'), 'type' => CRM_Utils_Type::T_STRING),
         );
         $fields = array_merge($Activityfields, $exportableFields);
       }
