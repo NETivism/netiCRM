@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-09-10 04:36+0000\n"
+"PO-Revision-Date: 2019-09-17 10:41+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47189,3 +47189,21 @@ msgstr "定期捐款"
 
 msgid "Monthly Installments"
 msgstr "每月定期定額期數"
+
+msgid "Type here"
+msgstr "請輸入"
+
+msgid "Every-Month Recurring Contribution"
+msgstr "每月捐款"
+
+msgid "Installments Recurring Contribution"
+msgstr "期每月捐款"
+
+msgid "Single or Recurring Contribution"
+msgstr "點選捐款方式"
+
+msgid "I want contribute once."
+msgstr "我要單筆捐款"
+
+msgid "I want recurring contribution."
+msgstr "維持定期捐款"

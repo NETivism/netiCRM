@@ -33,6 +33,16 @@
         "Contribution amount cannot be more than %1." : "{/literal}{ts 1=$max_amount}Contribution amount cannot be more than %1.{/ts}{literal}",
         "Payment failed." : "{/literal}{ts}Payment failed.{/ts}{literal}",
         "No Limit" : "{/literal}{ts}No Limit{/ts}{literal}",
+        // Original wordings
+        "monthly" : "{/literal}{ts}monthly{/ts}{literal}",
+        "Recurring contributions" : "{/literal}{ts}Recurring contributions{/ts}{literal}",
+        "Every-Month Recurring Contribution" : "{/literal}{ts}Every-Month Recurring Contribution{/ts}{literal}",
+        "Installments Recurring Contribution" : "{/literal}{ts}Installments Recurring Contribution{/ts}{literal}",
+        "Type here" : "{/literal}{ts}Type here{/ts}{literal}",
+        "Single or Recurring Contribution" : "{/literal}{ts}Single or Recurring Contribution{/ts}{literal}",
+        "I want contribute once." : "{/literal}{ts}I want contribute once.{/ts}{literal}",
+        "I want recurring contribution." : "{/literal}{ts}I want recurring contribution.{/ts}{literal}",
+        "no limit" : "{/literal}{ts}no limit{/ts}{literal}",
       }
     };
   })(jQuery);

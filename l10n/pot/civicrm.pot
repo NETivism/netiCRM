@@ -46996,3 +46996,22 @@ msgstr ""
 
 msgid "Monthly Installments"
 msgstr ""
+
+msgid "Type here"
+msgstr ""
+
+msgid "Every-Month Recurring Contribution"
+msgstr ""
+
+msgid "Installments Recurring Contribution"
+msgstr ""
+
+msgid "Single or Recurring Contribution"
+msgstr ""
+
+msgid "I want contribute once."
+msgstr ""
+
+msgid "I want recurring contribution."
+msgstr ""
+
