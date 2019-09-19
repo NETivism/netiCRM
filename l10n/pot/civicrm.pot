@@ -47017,3 +47017,25 @@ msgstr ""
 
 msgid "Assigned to Contact ID"
 msgstr ""
+
+# CRM/Contact/Page/DedupeFind.php
+msgid "This list is cached result, generated at %1."
+msgstr ""
+
+msgid "You can renew this list by click \"Refresh\" button."
+msgstr ""
+
+msgid "Batch Merge"
+msgstr ""
+
+msgid "Are you sure want to batch merge contact data?\nThis action can not be undone."
+msgstr ""
+
+msgid "Merged %1 pairs of contacts."
+msgstr ""
+
+msgid "Skipped %1 pairs of contacts"
+msgstr ""
+
+msgid "Contact id %1 has been updated and contact id %2 has been deleted."
+msgstr ""

@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-09-18 08:19+0000\n"
+"PO-Revision-Date: 2019-09-19 09:42+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -42638,7 +42638,7 @@ msgstr "CiviCRM 任務的對象"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Target Contact ID"
-msgstr "對象的聯絡人編號"
+msgstr "目標聯絡人編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The contact who is the activity's target."
@@ -42646,7 +42646,7 @@ msgstr "這個聯絡人是此任務的對象。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "CiviCRM Target Contact ID"
-msgstr "CiviCRM 對象的聯絡人編號"
+msgstr "CiviCRM 目標聯絡人編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Text Link"
@@ -47210,3 +47210,27 @@ msgstr "維持定期捐款"
 
 msgid "Assigned to Contact ID"
 msgstr "分派給聯絡人編號"
+
+# CRM/Contact/Page/DedupeFind.php
+msgid "This list is cached result, generated at %1."
+msgstr "此列表為快取結果，產生於 %1。"
+
+msgid "You can renew this list by click \"Refresh\" button."
+msgstr "您可按「重新整理」按鈕刷新此列表。"
+
+msgid "Batch Merge"
+msgstr "批次合併"
+
+msgid ""
+"Are you sure want to batch merge contact data?\n"
+"This action can not be undone."
+msgstr "您確定要進行批次合併嗎？\n此動作不能復原。"
+
+msgid "Merged %1 pairs of contacts."
+msgstr "合併了 %1 組聯絡人。"
+
+msgid "Skipped %1 pairs of contacts"
+msgstr "跳過了 %1 組聯絡人。"
+
+msgid "Contact id %1 has been updated and contact id %2 has been deleted."
+msgstr "編號 %1 聯絡人已更新，且編號 %2 聯絡人已刪除。"
