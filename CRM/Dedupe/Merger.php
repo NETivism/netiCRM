@@ -1415,6 +1415,12 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         unset($submitted['current_employer_id']);
       }
       $submitted['log_data'] = ts('Updated contact') . ' - '.ts('merge duplicate contacts');
+      
+      // if ext id is submitted then set it null for contact to be deleted to prevent already exists
+      if (!empty($submitted['external_identifier'])) {
+        $query = "UPDATE civicrm_contact SET external_identifier = null WHERE id = {$otherId}";
+        CRM_Core_DAO::executeQuery($query);
+      }
       CRM_Contact_BAO_Contact::createProfileContact($submitted, CRM_Core_DAO::$_nullArray, $mainId);
     }
 
@@ -1432,11 +1438,6 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     if (CRM_Core_Permission::check('merge duplicate contacts') &&
       CRM_Core_Permission::check('delete contacts')
     ) {
-      // if ext id is submitted then set it null for contact to be deleted
-      if (CRM_Utils_Array::value('external_identifier', $submitted)) {
-        $query = "UPDATE civicrm_contact SET external_identifier = null WHERE id = {$otherId}";
-        CRM_Core_DAO::executeQuery($query);
-      }
       CRM_Contact_BAO_Contact::deleteContact($otherId, FALSE, FALSE, ts('Delete Contact').' - '.ts('merge duplicate contacts'));
     }
     // FIXME: else part

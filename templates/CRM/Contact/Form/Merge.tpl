@@ -70,7 +70,7 @@ table.dedupe-merge td .zmdi-plus {
                {$row.other.fileName}
            {/if} 
         </td>
-        <td style='white-space: nowrap'>{if $form.$field}{$form.$field.html} <i class="zmdi zmdi-redo"></i>{else}{ts}n/a{/ts}{/if}</td>
+        <td style='white-space: nowrap'>{if $form.$field}<label>{$form.$field.html} <i class="zmdi zmdi-redo"></i></label>{else}{ts}n/a{/ts}{/if}</td>
         <td>
         {if $row.title|substr:0:5 == "Email"   OR 
           $row.title|substr:0:7 == "Address" OR 
@@ -112,15 +112,15 @@ table.dedupe-merge td .zmdi-plus {
     {if $paramName eq 'move_rel_table_users'}
     <tr class="{cycle values="even-row,odd-row"}">
       <td><i class="zmdi zmdi-forward"></i> {ts}Move related...{/ts}</td>
-      <td>{ts}CMS User{/ts}<a href="{$params.other_url}">{$params.other_title}</a> ({ts}{/ts} {$otherUfName} - {$otherUfId})</td>
-      <td style='white-space: nowrap'>{if $otherUfId}{$form.$paramName.html} <i class="zmdi zmdi-redo"></i>{/if}</td>
-      <td>{if $mainUfId}<div>{ts}CMS User{/ts} <a href="{$params.main_url}">{$params.main_title}</a> ({$mainUfName} - {$mainUfId})</div>{/if}</td>
+      <td>{ts}CMS User{/ts}<a href="{$params.other_url}" target="_blank">{$params.other_title}</a> ({ts}{/ts} {$otherUfName} - {$otherUfId})</td>
+      <td style='white-space: nowrap'>{if $otherUfId}<label>{$form.$paramName.html} <i class="zmdi zmdi-redo"></i></label>{/if}</td>
+      <td>{if $mainUfId}<div>{ts}CMS User{/ts} <a href="{$params.main_url}" target="_blank">{$params.main_title}</a> ({$mainUfName} - {$mainUfId})</div>{/if}</td>
     </tr>
     {else}
     <tr class="{cycle values="even-row,odd-row"}">
-      <td><i class="zmdi zmdi-forward"></i> {ts}Move related...{/ts}</td><td><a href="{$params.other_url}">{$params.title}</a> ({ts}Contact ID{/ts} {$other_cid})</td>
-      <td style='white-space: nowrap'>{$form.$paramName.html} <i class="zmdi zmdi-redo"></i></td>
-      <td><div><a href="{$params.main_url}">{$params.title}</a> ({ts}Contact ID{/ts} {$main_cid}){if $form.operation.$paramName.add.html}&nbsp;{$form.operation.$paramName.add.html}{/if}</div></td>
+      <td><i class="zmdi zmdi-forward"></i> {ts}Move related...{/ts}</td><td><a href="{$params.other_url}" target="_blank">{$params.title}</a> ({ts}Contact ID{/ts} {$other_cid})</td>
+      <td style='white-space: nowrap'><label>{$form.$paramName.html} <i class="zmdi zmdi-redo"></i></label></td>
+      <td><div><a href="{$params.main_url}" target="_blank">{$params.title}</a> ({ts}Contact ID{/ts} {$main_cid}){if $form.operation.$paramName.add.html}&nbsp;{$form.operation.$paramName.add.html}{/if}</div></td>
     </tr>
     {/if}
   {/foreach}
@@ -238,8 +238,7 @@ function doCheckAllIsReplace(){
       right_check_box.trigger('change');
     }
     else{
-      var cj_left_left_td = cj_left_td.prev();
-      if(cj_left_left_td.text().match("{/literal}{ts}Move related...{/ts}{literal}")){
+      if(cj_this.attr("id").match(/^move_rel_table_/)){
         cj_this.attr('checked',true);
         checkDataIsErase(cj_this);
       }
@@ -305,14 +304,17 @@ function checkDataIsErase(cjCheckboxElement){
   var cj_right_td = cjCheckboxElement.closest('td').next();
 
   if(cjCheckboxElement.length <= 0){
-    console.log('The query element cjCheckboxElement have error, Please check your code.');
+    //console.log('The query element cjCheckboxElement have error, Please check your code.');
     return ;
   }
 
 
   var is_erase = 0;
 
-  if(cjCheckboxElement.attr('id').match(/^move_/) && cjCheckboxElement.attr('checked')){
+  if(cjCheckboxElement.attr('id').match(/^move_rel_table_/) && cjCheckboxElement.attr('checked')){
+    is_erase = 3;
+  }
+  else if(cjCheckboxElement.attr('id').match(/^move_/) && cjCheckboxElement.attr('checked')){
     if(!cjCheckboxElement.attr('id').match(/^move_location_/)){
       is_erase = 1;
     }
@@ -333,6 +335,7 @@ function checkDataIsErase(cjCheckboxElement){
   }
   
   cj_right_td.find('.zmdi-plus').remove();
+  cj_left_td.removeClass('disabled');
   cj_right_td.find('.original-value').show().css('display', 'block');
   if (is_erase == 1) {
     cj_right_td.find('.original-value').addClass('zmdi zmdi-minus');
@@ -341,6 +344,11 @@ function checkDataIsErase(cjCheckboxElement){
   else if (is_erase == 2) { // append
     cj_right_td.find('.original-value').hide();
     cj_right_td.append('<div class="zmdi zmdi-plus">'+cj_left_td.html()+'</div>')
+  }
+  else if (is_erase == 3) { // left delete
+    cj_right_td.find('.original-value').addClass('zmdi zmdi-minus');
+    cj_right_td.append('<div class="zmdi zmdi-plus">'+cj_left_td.html()+'</div>')
+    cj_left_td.addClass('disabled');
   }
   else {
     cj_right_td.find('.original-value').removeClass('zmdi-minus');
