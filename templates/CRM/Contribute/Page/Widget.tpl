@@ -177,5 +177,5 @@
     
 </script>
 {/literal}
-<script type="text/javascript" src="{$config->userFrameworkResourceURL}/extern/widget.php?cpageId={$cpageId}&widgetId={$widget_id}&language={$tsLocale}"></script>
+<script type="text/javascript" src="{$config->userFrameworkResourceURL}extern/widget.php?cpageId={$cpageId}&widgetId={$widgetId}&language={$tsLocale}"></script>
 

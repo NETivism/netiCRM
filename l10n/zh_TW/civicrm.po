@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-08-14 07:56+0000\n"
+"PO-Revision-Date: 2019-09-19 09:42+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -10592,7 +10592,7 @@ msgstr "選擇年份（逐月）"
 
 #: CRM/Contribute/Form/Contribution/Confirm.php
 msgid "Anonymous"
-msgstr "匿名者"
+msgstr "匿名"
 
 #: CRM/Contribute/Form/Contribution/Confirm.php
 msgid "Make Contribution"
@@ -42638,7 +42638,7 @@ msgstr "CiviCRM 任務的對象"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Target Contact ID"
-msgstr "對象的聯絡人編號"
+msgstr "目標聯絡人編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The contact who is the activity's target."
@@ -42646,7 +42646,7 @@ msgstr "這個聯絡人是此任務的對象。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "CiviCRM Target Contact ID"
-msgstr "CiviCRM 對象的聯絡人編號"
+msgstr "CiviCRM 目標聯絡人編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Text Link"
@@ -45061,7 +45061,7 @@ msgstr "如果選「是」，PDF 版本的信件內文，將「不會」夾帶�
 msgid "Do not attach PDF copy to receipts"
 msgstr "信件不要夾帶 PDF"
 
-msgid "Type here"
+msgid "Type Here"
 msgstr "請輸入"
 
 #: CRM/Report/Form/Contact/Participte.php
@@ -45551,7 +45551,7 @@ msgid "Tax Invoice Giving"
 msgstr "發票捐贈"
 
 msgid "Please fill legal identifier to upload data."
-msgstr "上傳資料至國稅局需要身份證字號"
+msgstr "上傳資料至國稅局需要身份證字號或統一證號"
 
 msgid "Campaign owner profile"
 msgstr "個人募款頁創建者個人資料"
@@ -46820,10 +46820,10 @@ msgstr "是否啟用此頁面的「特別募款頁」樣式？"
 msgid "Single Contribution"
 msgstr "單筆捐款"
 
-msgid "Every-Month Recurring Contribution"
+msgid "Every-Month Recurring Contributions"
 msgstr "每月捐款"
 
-msgid "Installments Recurring Contribution"
+msgid "Installments Recurring Contributions"
 msgstr "期每月捐款"
 
 msgid "Amount Step"
@@ -46844,13 +46844,13 @@ msgstr "都不要"
 msgid "Choose Amount Option or Custom Amount"
 msgstr "點選金額或自訂金額"
 
-msgid "Single or Recurring Contribution"
+msgid "Single or Recurring Contributions"
 msgstr "點選捐款方式"
 
-msgid "I want contribute once."
+msgid "Change to Single Contribution"
 msgstr "我要單筆捐款"
 
-msgid "I want recurring contribution."
+msgid "Stay on Recurring Contributions"
 msgstr "維持定期捐款"
 
 msgid "Non-recurring contribution hint message."
@@ -47176,3 +47176,61 @@ msgstr "此參加者先前就已完成報到，無須再次報到。"
 
 msgid "You can only check in event with event manager."
 msgstr "活動報到作業，需要活動管理員才有辦法完成喔。"
+
+msgid "You has been successfully subscribed to the %1 mailing list."
+msgstr "您已成功訂閱%1"
+
+#: templates/CRM/common/contributionPageSpecial.tpl
+msgid "No Limit"
+msgstr "不限"
+
+msgid "Recurring Contributions"
+msgstr "定期捐款"
+
+msgid "Monthly Installments"
+msgstr "每月定期定額期數"
+
+msgid "Type here"
+msgstr "請輸入"
+
+msgid "Every-Month Recurring Contribution"
+msgstr "每月捐款"
+
+msgid "Installments Recurring Contribution"
+msgstr "期每月捐款"
+
+msgid "Single or Recurring Contribution"
+msgstr "點選捐款方式"
+
+msgid "I want contribute once."
+msgstr "我要單筆捐款"
+
+msgid "I want recurring contribution."
+msgstr "維持定期捐款"
+
+msgid "Assigned to Contact ID"
+msgstr "分派給聯絡人編號"
+
+# CRM/Contact/Page/DedupeFind.php
+msgid "This list is cached result, generated at %1."
+msgstr "此列表為快取結果，產生於 %1。"
+
+msgid "You can renew this list by click \"Refresh\" button."
+msgstr "您可按「重新整理」按鈕刷新此列表。"
+
+msgid "Batch Merge"
+msgstr "批次合併"
+
+msgid ""
+"Are you sure want to batch merge contact data?\n"
+"This action can not be undone."
+msgstr "您確定要進行批次合併嗎？\n此動作不能復原。"
+
+msgid "Merged %1 pairs of contacts."
+msgstr "合併了 %1 組聯絡人。"
+
+msgid "Skipped %1 pairs of contacts"
+msgstr "跳過了 %1 組聯絡人。"
+
+msgid "Contact id %1 has been updated and contact id %2 has been deleted."
+msgstr "編號 %1 聯絡人已更新，且編號 %2 聯絡人已刪除。"

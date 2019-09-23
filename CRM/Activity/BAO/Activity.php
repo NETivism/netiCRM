@@ -652,11 +652,8 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     $admin = FALSE, $caseId = NULL, $context = NULL
   ) {
     //step 1: Get the basic activity data
-    require_once 'CRM/Core/OptionGroup.php';
-    $bulkActivityTypeID = CRM_Core_OptionGroup::getValue('activity_type',
-      'Bulk Email',
-      'name'
-    );
+    $optionValues = CRM_Core_OptionGroup::values('activity_type', FALSE, FALSE,  FALSE, "AND v.name = 'Bulk Email'", 'label', $onlyActive = FALSE);
+    $bulkActivityTypeID = key($optionValues);
 
     $config = CRM_Core_Config::singleton();
 

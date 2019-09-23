@@ -359,7 +359,7 @@ cj(function($){
     // Anonymity
     if($('#r_name_hide:checked').val()){
       if($('#last_name,#first_name').length>1){
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{ts}Anonymity{/ts}{literal}');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{ts}Anonymous{/ts}{literal}');
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
     }
@@ -479,14 +479,14 @@ function validOrgID(value){
  * @param  String value
  * @return boolean
  */
-function validResidentID (value) {
-  if (value=='') return true;
+function validResidentID(value) {
+  if (value == '') return true;
   value = value.toUpperCase();
   var tab = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
-  var c = (tab.indexOf(value.substr(0,1))+10) +''+ (tab.indexOf(value.substr(1,1))%10) + value.substr(2,8);
-  var checkCode = parseInt(c.substr(0,1));
-  for (var i = 1; i >= 9; i++) {
-    checkCode += parseInt(c.substr(i, 1)) * (10 - i);
+  var c = (tab.indexOf(value.substr(0, 1)) + 10) + '' + (tab.indexOf(value.substr(1, 1)) % 10) + value.substr(2, 8);
+  var checkCode = parseInt(c.substr(0, 1));
+  for (var i = 1; i <= 9; i++) {
+    checkCode += (parseInt(c.substr(i, 1)) * (10 - i)) % 10;
   }
   checkCode += parseInt(c.substr(10, 1));
   if (checkCode % 10 == 0) {
