@@ -47015,3 +47015,5 @@ msgstr ""
 msgid "I want recurring contribution."
 msgstr ""
 
+msgid "Assigned to Contact ID"
+msgstr ""
