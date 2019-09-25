@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-09-19 09:42+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2019-09-25 04:30+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47234,3 +47234,29 @@ msgstr "跳過了 %1 組聯絡人。"
 
 msgid "Contact id %1 has been updated and contact id %2 has been deleted."
 msgstr "編號 %1 聯絡人已更新，且編號 %2 聯絡人已刪除。"
+
+msgid "Total recipients number is calculated by these conditions."
+msgstr "收件人總數根據下列條件推算"
+
+msgid "Recipients still alive."
+msgstr "收件人仍在世"
+
+msgid "Recipients still subscribing selected group."
+msgstr "收件人仍訂閱您欲發送的群組"
+
+msgid "Recipients does not opt-out site-wide message."
+msgstr "收件人並未選擇退出全站的訊息"
+
+msgid "\"Do Not Mail\" not checked in recipients privacy option."
+msgstr "收件人的聯絡偏好隱私中，並未勾選「不要寄 Email」"
+
+msgid "Email address did not \"On Hold\" by bounced record."
+msgstr "欲遞送的電子郵件信箱，並未因先前的退信而標記為「凍結」"
+
+msgid ""
+"Recipient list and total recipients number will be re-calculated base on "
+"contact privacy and subscribing data when mailing start."
+msgstr "收件人清單和收件人總數將會於電子報遞送開始時，重新根據聯絡人的隱私和訂閱等選項計算。"
+
+msgid "Once mailing job start, the recipients list will be freezed."
+msgstr "一旦郵件遞送工作開始，收件人清單就不會再改變。"
