@@ -1,0 +1,11 @@
+{htxt id="total-recipients"}
+  <p>{ts}Total recipients number is calculated by these conditions.{/ts}</p>
+  <ul>
+    <li>{ts}Recipients still alive.{/ts}</li>
+    <li>{ts}Recipients still subscribing selected group.{/ts}</li>
+    <li>{ts}Recipients does not opt-out site-wide message.{/ts}</li>
+    <li>{ts}"Do Not Mail" not checked in recipients privacy option.{/ts}</li>
+    <li>{ts}Email address did not "On Hold" by bounced record.{/ts}</li>
+  </ul>
+  <p>{ts}Recipient list and total recipients number will be re-calculated base on contact privacy and subscribing data when mailing start.{/ts}  {ts}Once mailing job start, the recipients list will be freezed.{/ts}</p>
+{/htxt}

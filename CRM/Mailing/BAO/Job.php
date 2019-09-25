@@ -273,20 +273,26 @@ WHERE j.job_type = 'child'
     // Select all the mailing jobs that are created from
     // when the mailing is submitted or scheduled.
     $query = "
-SELECT j.*
+SELECT j.*, m.dedupe_email
   FROM $jobTable j
   INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
 WHERE j.is_test = 0
   AND ( j.start_date IS null AND j.scheduled_date <= $currentTime AND j.status = 'Scheduled' AND j.end_date IS null )
   AND ( j.job_type is NULL OR j.job_type <> 'child' )
-ORDER BY j.scheduled_date ASC, j.start_date ASC";
+ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 3";
     $job->query($query);
 
     require_once 'CRM/Core/Lock.php';
 
     // For each of the "Parent Jobs" we find, we split them into
     // X Number of child jobs
+    $processedMailing = array();
     while ($job->fetch()) {
+      // refs #22088 calculate recipients before job start
+      if (!isset($processedMailing[$job->mailing_id])) {
+        CRM_Mailing_BAO_Mailing::getRecipients($job->mailing_id, $job->mailing_id, NULL, NULL, TRUE, $job->dedupe_email);
+        $processedMailing[$job->mailing_id] = TRUE;
+      }
       // still use job level lock for each child job
       $lockName = "civimail.job.{$job->id}";
 
@@ -361,9 +367,10 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     }
     else {
       // Creating 'child jobs'
+      $jobLimit = $offset;
       for ($i = 0; $i < $recipient_count; $i = $i + $offset) {
         $params[6][0] = $i;
-        $params[7][0] = $offset;
+        $params[7][0] = $jobLimit;
         CRM_Core_DAO::executeQuery($sql, $params);
       }
     }
