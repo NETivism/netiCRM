@@ -117,52 +117,32 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
     }
 
-    $meta = array();
-    $meta[] = array(
-      'tag' => 'meta',
-      'attributes' => array(
-        'property' => 'og:title',
-        'content' => $this->_values['event']['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
-      ),
-    );
-    $descript = $this->_values['event']['description'];
-    $descript = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $descript);
-    $descript = strip_tags($descript);
-    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r)+/", ' ', $descript);
-    $descript = trim(mb_substr($descript, 0, 150));
-    $meta[] = array(
-      'tag' => 'meta',
-      'attributes' => array(
-        'property' => 'description',
-        'content' => $descript,
-      ),
-    );
-    $meta[] = array(
-      'tag' => 'meta',
-      'attributes' => array(
-        'property' => 'og:description',
-        'content' => $descript,
-      ),
-    );
+
+    // Prepare params used for meta.
+    $params = array();
+    $siteName = CRM_Utils_System::variable_get('site_name', 'Drupal');
+    $params['site'] = $siteName;
+    $params['title'] = $this->_values['event']['title'] . ' - ' . $siteName;
+
+    $description = $this->_values['event']['description'];
+    $description = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $description);
+    $description = strip_tags($description);
+    $description = preg_replace("/(?:(?:&nbsp;)|\n|\r)+/", ' ', $description);
+    $description = trim(mb_substr($description, 0, 150));
+    $params['description'] = $description;
+
     $event = new stdClass();
     $event->_id = $this->_eventId;
     $values = $this->_values;
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree("Event", $event, $event->_id, 0, $values['event']['event_type_id']);
     $config = CRM_Core_Config::singleton();
-    foreach($groupTree as $ufg_inner){
-      if(is_array($ufg_inner['fields'])){
+    foreach ($groupTree as $ufg_inner) {
+      if (is_array($ufg_inner['fields'])) {
         foreach ($ufg_inner['fields'] as $uffield) {
-          if(is_array($uffield)){
-            if($uffield['data_type'] == 'File'){
-              if(!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['customValue'][1]['data'])){
+          if (is_array($uffield)) {
+            if ($uffield['data_type'] == 'File') {
+              if (!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['customValue'][1]['data'])) {
                 $image = $config->customFileUploadURL . $uffield['customValue'][1]['data'];
-                $meta_ogimg = array(
-                  'tag' => 'meta',
-                  'attributes' => array(
-                    'property' => 'og:image',
-                    'content' => $image,
-                  ),
-                );
                 break;
                 break;
                 break;
@@ -172,24 +152,15 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         }
       }
     }
-    if(!empty($meta_ogimg)){
-      $meta[] = $meta_ogimg;
-    }else{
+    if (empty($image)) {
       preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $values['event']['description'], $matches);
-      if(count($matches)>=2){
+      if (count($matches) >= 2) {
         $image = $matches[1];
-        $meta[] = array(
-          'tag' => 'meta',
-          'attributes' => array(
-            'property' => 'og:image',
-            'content' => $image,
-          ),
-        );
       }
     }
-    foreach ($meta as $key => $value) {
-      CRM_Utils_System::addHTMLHead($value);
-    }
+    $params['image'] = $image;
+    CRM_Utils_System::setPageMetaInfo($params);
+
 
   }
 
