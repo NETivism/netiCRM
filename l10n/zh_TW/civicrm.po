@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-09-18 08:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2019-10-03 07:22+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42638,7 +42638,7 @@ msgstr "CiviCRM 任務的對象"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Target Contact ID"
-msgstr "對象的聯絡人編號"
+msgstr "目標聯絡人編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The contact who is the activity's target."
@@ -42646,7 +42646,7 @@ msgstr "這個聯絡人是此任務的對象。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "CiviCRM Target Contact ID"
-msgstr "CiviCRM 對象的聯絡人編號"
+msgstr "CiviCRM 目標聯絡人編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Text Link"
@@ -47210,3 +47210,56 @@ msgstr "維持定期捐款"
 
 msgid "Assigned to Contact ID"
 msgstr "分派給聯絡人編號"
+
+# CRM/Contact/Page/DedupeFind.php
+msgid "This list is cached result, generated at %1."
+msgstr "此列表為快取結果，產生於 %1。"
+
+msgid "You can renew this list by click \"Refresh\" button."
+msgstr "您可按「重新整理」按鈕刷新此列表。"
+
+msgid "Batch Merge"
+msgstr "批次合併"
+
+msgid ""
+"Are you sure want to batch merge contact data?\n"
+"This action can not be undone."
+msgstr "您確定要進行批次合併嗎？\n此動作不能復原。"
+
+msgid "Merged %1 pairs of contacts."
+msgstr "合併了 %1 組聯絡人。"
+
+msgid "Skipped %1 pairs of contacts"
+msgstr "跳過了 %1 組聯絡人。"
+
+msgid "Contact id %1 has been updated and contact id %2 has been deleted."
+msgstr "編號 %1 聯絡人已更新，且編號 %2 聯絡人已刪除。"
+
+msgid "Total recipients number is calculated by these conditions."
+msgstr "收件人總數根據下列條件推算"
+
+msgid "Recipients still alive."
+msgstr "收件人仍在世"
+
+msgid "Recipients still subscribing selected group."
+msgstr "收件人仍訂閱您欲發送的群組"
+
+msgid "Recipients does not opt-out site-wide message."
+msgstr "收件人並未選擇退出全站的訊息"
+
+msgid "\"Do Not Mail\" not checked in recipients privacy option."
+msgstr "收件人的聯絡偏好隱私中，並未勾選「不要寄 Email」"
+
+msgid "Email address did not \"On Hold\" by bounced record."
+msgstr "欲遞送的電子郵件信箱，並未因先前的退信而標記為「凍結」"
+
+msgid ""
+"Recipient list and total recipients number will be re-calculated base on "
+"contact privacy and subscribing data when mailing start."
+msgstr "收件人清單和收件人總數將會於電子報遞送開始時，重新根據聯絡人的隱私和訂閱等選項計算。"
+
+msgid "Once mailing job start, the recipients list will be freezed."
+msgstr "一旦郵件遞送工作開始，收件人清單就不會再改變。"
+
+msgid "Email will include event check in code."
+msgstr "通知信函將會包括報到碼。"

@@ -147,6 +147,12 @@
         $stepInfo.append('<span class="step-text step-text-5">'+ts['Confirm Step']+'</span>');
         $stepInfo.append('<span class="step-triangle">▶</span>');
         $stepInfo.append('<span class="step-text step-text-6">'+ts['Payment Step']+'</span>');
+        $stepInfo.find('.step-text').each(function(i, e){
+          var $e = $(e);
+          if( /Step/.exec($e.text()) ) {
+            $e.text($e.text().replace(' Step', ''));
+          }
+        })
         $stepInfo.insertBefore('#content');
       },
 

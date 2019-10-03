@@ -47017,3 +47017,52 @@ msgstr ""
 
 msgid "Assigned to Contact ID"
 msgstr ""
+
+# CRM/Contact/Page/DedupeFind.php
+msgid "This list is cached result, generated at %1."
+msgstr ""
+
+msgid "You can renew this list by click \"Refresh\" button."
+msgstr ""
+
+msgid "Batch Merge"
+msgstr ""
+
+msgid "Are you sure want to batch merge contact data?\nThis action can not be undone."
+msgstr ""
+
+msgid "Merged %1 pairs of contacts."
+msgstr ""
+
+msgid "Skipped %1 pairs of contacts"
+msgstr ""
+
+msgid "Contact id %1 has been updated and contact id %2 has been deleted."
+msgstr ""
+
+msgid "Total recipients number is calculated by these conditions."
+msgstr ""
+
+msgid "Recipients still alive."
+msgstr "" 
+
+msgid "Recipients still subscribing selected group."
+msgstr "" 
+
+msgid "Recipients does not opt-out site-wide message."
+msgstr "" 
+
+msgid "\"Do Not Mail\" not checked in recipients privacy option."
+msgstr "" 
+
+msgid "Email address did not \"On Hold\" by bounced record."
+msgstr "" 
+
+msgid "Recipient list and total recipients number will be re-calculated base on contact privacy and subscribing data when mailing start."
+msgstr "" 
+
+msgid "Once mailing job start, the recipients list will be freezed."
+msgstr "" 
+
+msgid "Email will include event check in code."
+msgstr ""

@@ -109,6 +109,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 }
 
 .custom-step-info{
+  text-align: center;
   position: absolute;
   top: -30px;
   width: 100%;

@@ -152,7 +152,7 @@ $having
   }
 
   function buildForm(&$form){
-    for ($i = 2; $i <= 10; $i++) {
+    for ($i = 1; $i <= 10; $i++) {
       $option[$i] = $i;
     }
     $form->addSelect('contribution_count', ts('month'), $option);
