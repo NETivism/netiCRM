@@ -298,8 +298,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       // check if form is active
       if (!$this->_values['is_active']) {
-        // form is inactive, die a fatal death
-        CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
+        if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {
+
+          // form is inactive, die a fatal death
+          CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
+        }
       }
 
       if (($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL ) && empty($this->_values['custom_post_id']) && empty($this->_values['custom_pre_id'])) {
