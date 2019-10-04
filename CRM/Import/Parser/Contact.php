@@ -1167,8 +1167,10 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     //CRM-5125
     //add custom fields for contact sub type
-    if (!empty($this->_contactSubType)) {
-      $csType = $this->_contactSubType;
+    if (!empty($this)) {
+      if (!empty($this->_contactSubType)) {
+        $csType = $this->_contactSubType;
+      }
     }
 
     if (CRM_Utils_Array::value('contact_sub_type', $params)) {
