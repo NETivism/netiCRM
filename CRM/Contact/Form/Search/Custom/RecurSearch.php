@@ -98,6 +98,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.contribution_status_id' => 'contribution_status_id',
       'lrd.last_receive_date' => 'last_receive_date',
       'lfd.last_failed_date' => 'last_failed_date',
+      'c.contribution_page_id' => 'contribution_page_id',
     );
     $this->_columns = array(
       ts('ID') => 'id',
@@ -114,6 +115,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Most Recent').' '.ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
       ts('Last Failed Date') => 'last_failed_date',
+      ts('Contribution Page ID') => 'contribution_page_id',
       0 => 'total_count',
     );
   }
@@ -440,6 +442,14 @@ $having
       $row['completed_count'] = '0 / '.$row['total_count'];
     }
     unset($row['total_count']);
+
+    if ($row['contribution_page_id'] && empty($this->_isExport)) {
+      $params = array(
+        'p' => 'civicrm/admin/contribute',
+        'q' => "action=update&reset=1&id={$row['contribution_page_id']}",
+      );
+      $row['contribution_page_id'] = '<a href='.CRM_Utils_System::crmURL($params).'>'. $row['contribution_page_id'].'</a>';
+    }
 
     $date = array('start_date', 'end_date', 'cancel_date');
     foreach($date as $d){
