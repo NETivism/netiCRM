@@ -444,7 +444,7 @@ $having
     }
     unset($row['total_count']);
 
-    if ($row['contribution_page_id']) {
+    if ($row['contribution_page_id'] && empty($this->_isExport)) {
       $params = array(
         'p' => 'civicrm/admin/contribute',
         'q' => "action=update&reset=1&id={$row['contribution_page_id']}",
