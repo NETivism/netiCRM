@@ -374,7 +374,7 @@ AND       CEF.entity_id    = %2";
     &$params,
     $entityTable,
     $entityID = NULL,
-    $maxAttachments
+    $maxAttachments = 0
   ) {
 
     // delete current attachments if applicable
