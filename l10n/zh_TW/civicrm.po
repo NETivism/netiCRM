@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-10-03 07:22+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-10-04 08:01+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47263,3 +47263,6 @@ msgstr "一旦郵件遞送工作開始，收件人清單就不會再改變。"
 
 msgid "Email will include event check in code."
 msgstr "通知信函將會包括報到碼。"
+
+msgid "This mailing event doesn't include any group."
+msgstr "此電子報的收件者未包含任何群組。"

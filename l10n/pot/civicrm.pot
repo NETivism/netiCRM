@@ -47066,3 +47066,6 @@ msgstr ""
 
 msgid "Email will include event check in code."
 msgstr ""
+
+msgid "This mailing event doesn't include any group."
+msgstr ""
