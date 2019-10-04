@@ -198,6 +198,11 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
       }
     }
 
+    // If you doesn't choose any group as receiver and send test email. You will see this message when unsubscribing mailing group.
+    if ( empty($group_ids) && empty($base_group_ids) ) {
+      CRM_Core_Error::fatal(ts('This mailing event doesn\'t include any group.'));
+    }
+
     //Pass the groups to be unsubscribed from through a hook.
     require_once 'CRM/Utils/Hook.php';
     $group_ids = array_keys($groups);
