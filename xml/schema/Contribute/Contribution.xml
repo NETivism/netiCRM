@@ -117,7 +117,8 @@
   <field> 
       <name>created_date</name> 
       <type>datetime</type> 
-      <import>true</import>
+      <import>false</import>
+      <export>true</export>
       <headerPattern>/created(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
       <comment>when was contribution submitted</comment> 

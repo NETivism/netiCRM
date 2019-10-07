@@ -5608,7 +5608,7 @@ INSERT INTO civicrm_uf_field
 	   (22, 7, 			 'city',				  1, 		   0, 			4, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '鄉鎮市區',  						'Contact', 	   NULL,  NULL),
 	   (23, 7, 			 'state_province', 		  1, 		   0, 			5, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '縣市',  						'Contact', 	   NULL,  NULL),
 	   (24, 7, 			 'postal_code', 		  1, 		   0, 			6, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '郵遞區號',  				'Contact', 	   NULL,  NULL),
-	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '主要 Email',  				'Contact', 	   NULL,  NULL),
+	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '預設 Email',  				'Contact', 	   NULL,  NULL),
 	   (26, 7, 			 'group', 				  1, 		   0, 			8, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '群組',  					'Contact', 	   NULL,  NULL),
 	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   '標籤/Tag', 						'Contact', 	   NULL,  NULL),
 	   (28  ,7  	    ,'gender'  				 ,1  	      ,0  			,10  	,'User and User Admin Only' ,0  		 ,0  			,NULL,  			 '性別'  						,'Individual' ,NULL,  NULL),
