@@ -4645,6 +4645,8 @@ ul.ui-sortable {
   position: relative;
   text-indent: -9999em;
   overflow: hidden;
+  width: 24px;
+  height: 24px;
   line-height: 1;
   font-size: 24px;
   color: #6D7294;
@@ -4662,10 +4664,10 @@ ul.ui-sortable {
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   text-align: center;
   text-indent: 0;
   font-family: 'Material-Design-Iconic-Font';
-  font-size: inherit;
 }
 
 /* clear printer friendly float */
