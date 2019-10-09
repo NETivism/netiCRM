@@ -664,7 +664,7 @@ ORDER BY   i.contact_id, i.email_id
     $patterns[] = '\\\\\{\w+\.\w+\\\\\}|\{\{\w+\.\w+\}\}';
     $patterns[] = '\{\w+\.\w+\}';
 
-    $patterns = '{' . join('|', $patterns) . '}im';
+    $patterns = '{' . join('|', $patterns) . '}imu';
 
     return $patterns;
   }
