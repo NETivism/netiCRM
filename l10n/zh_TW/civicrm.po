@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-10-04 08:01+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2019-10-09 06:56+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29774,7 +29774,7 @@ msgstr "此頁面現在<strong>停用中</strong>（訪客無法訪問此頁）�
 msgid ""
 "When you are ready to make this page live, click <a href='%1'>Title and "
 "Settings</a> and update the <strong>Active?</strong> checkbox."
-msgstr "當您已準備好啟用此頁，按<a href='%1'>標題及設定</a>及更新<strong>應用中？</strong>勾選框。"
+msgstr "若您已準備好啟用此募款頁，請前往<a href='%1'>標題與設定</a>勾選<strong>啟用</strong>，即可使用正式募款頁網址。"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid ""
