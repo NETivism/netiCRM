@@ -39,6 +39,7 @@
  	{include file="CRM/common/enableDisable.tpl"}
         <table class="selector">
         <tr class="columnheader">
+            <th >{ts}ID{/ts}</th>
             <th >{ts}Name{/ts}</th>
             <th >{ts}Processor Type{/ts}</th>
             <th >{ts}Description{/ts}</th>
@@ -48,6 +49,7 @@
         </tr>
         {foreach from=$rows item=row}
         <tr id="row_{$row.id}" class="crm-payment_processor {cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
+            <td class="crm-payment_processor-id">{$row.id}</td>
             <td class="crm-payment_processor-name">{$row.name}</td>
             <td class="crm-payment_processor-payment_processor_type">{$row.payment_processor_type}</td>
             <td class="crm-payment_processor-description">{$row.description}</td>
