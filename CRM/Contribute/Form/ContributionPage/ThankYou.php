@@ -88,6 +88,20 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
 
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_ThankYou', 'formRule'));
 
+    // tokens
+    $tokens = array();
+    $tokens = CRM_Core_SelectValues::contactTokens();
+    $this->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
+
+    $this->add('select', 'token2', ts('Insert Tokens'),
+      $tokens, FALSE,
+      array(
+        'size' => "5",
+        'multiple' => TRUE,
+        'onclick' => "return tokenReplHtml(this);",
+      )
+    );
+
     parent::buildQuickForm();
   }
 

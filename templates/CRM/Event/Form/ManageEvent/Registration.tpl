@@ -225,8 +225,20 @@
            <table class="form-layout-compressed">
              <tr class="crm-event-manage-registration-form-block-confirm_email_text">
                <td scope="row" class="label" width="20%">{$form.confirm_email_text.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='confirm_email_text' id=$eventID}{/if}</td>
-               <td>{$form.confirm_email_text.html}<br />
-                   <span class="description">{ts}Additional message or instructions to include in confirmation email.{/ts}</span>
+               <td>
+                  <span class="helpIcon" id="helphtml">
+                      <a class="token-trigger" href="#" onClick="return showToken('Html', 2);">{$form.token2.label}</a>
+                      {help id="id-token-html" file="CRM/Contact/Form/Task/Email.hlp"}
+                      <div id="tokenHtml" style="display:none;">
+                          <input style="border:1px solid #999999;" type="text" id="filter2" size="20" name="filter2" onkeyup="filter(this, 2)"/><br />
+                          <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
+                          {$form.token2.html}
+                      </div>
+                  </span>
+                  <br>
+                  <br>
+                  {$form.confirm_email_text.html}<br />
+                  <span class="description">{ts}Additional message or instructions to include in confirmation email.{/ts}</span>
                </td>
              </tr>
              <tr class="crm-event-manage-registration-form-block-confirm_from_name">
@@ -363,4 +375,7 @@ invert              = 0
 
     {/literal}
 </script>
+{* This for token popup *}
+{include file="CRM/Mailing/Form/InsertTokens.tpl"}
+{* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}

@@ -1191,11 +1191,6 @@ class CRM_Utils_Token {
    * @return array
    */
   public static function formatTokensForDisplay($tokens) {
-    $sorted = $output = array();
-
-    // Sort in ascending order by ignoring word case
-    natcasesort($tokens);
-
     return json_encode($tokens);
   }
 }

@@ -44,6 +44,12 @@ var isMailing    = false;
     text_message = "sms_text_message";
     html_message = "html_message";
     isMailing = true;
+{elseif $form.formName eq 'ThankYou'}
+    html_message = "receipt_text"; // contribution thank you
+    isMailing = false;
+{elseif $form.formName eq 'Registration'}
+    html_message = "confirm_email_text"; // event registration notification
+    isMailing = false;
 {else}
     {literal}
     text_message = "text_message";
@@ -347,7 +353,7 @@ if ( isMailing ) {
             width       : '310px',
             resizable   : false,
             bgiframe    : false,
-            position    : { my: "center", at: "right center", of: window},
+            position    : { my: "right center", at: "right center", of: window},
             overlay     : { opacity: 0.9, background: "black" },
             beforeclose : function(event, ui) { cj(this).dialog("destroy"); },
             buttons     : { 

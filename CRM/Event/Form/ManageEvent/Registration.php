@@ -314,6 +314,20 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
     $this->assign('default_from_target', 'confirm_from_email');
     $this->assign('default_from_value', $defaultFromMail);
+
+    // tokens
+    $tokens = array();
+    $tokens = CRM_Core_SelectValues::contactTokens();
+    $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
+
+    $form->add('select', 'token2', ts('Insert Tokens'),
+      $tokens, FALSE,
+      array(
+        'size' => "5",
+        'multiple' => TRUE,
+        'onclick' => "return tokenReplHtml(this);",
+      )
+    );
   }
 
   function buildThankYouBlock(&$form) {
