@@ -247,7 +247,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       );
 
       // #18853, tokenize thank you top text
-      $receiptText = $template->getTemplateVars('receipt_text');
+      $receiptText = $template->get_template_vars('receipt_text');
       if($receiptText) {
         $receiptText = self::tokenize($contactID, $receiptText); 
         $template->assign('receipt_text', $receiptText);
