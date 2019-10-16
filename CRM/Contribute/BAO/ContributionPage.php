@@ -176,7 +176,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       CRM_Utils_Array::value('onbehalf_dupe_alert', $values) ||
       $returnMessageText
     ) {
-      $template = &CRM_Core_Smarty::singleton();
+      $template = CRM_Core_Smarty::singleton();
 
       // get the billing location type
       if (!array_key_exists('related_contact', $values)) {
@@ -246,6 +246,13 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         'priceSetID' => CRM_Utils_Array::value('priceSetID', $values),
       );
 
+      // #18853, tokenize thank you top text
+      $receiptText = $template->getTemplateVars('receipt_text');
+      if($receiptText) {
+        $receiptText = self::tokenize($contactID, $receiptText); 
+        $template->assign('receipt_text', $receiptText);
+      }
+
       if ($contributionTypeId = CRM_Utils_Array::value('contribution_type_id', $values)) {
         $tplParams['contributionTypeId'] = $contributionTypeId;
         $tplParams['contributionTypeName'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType',
@@ -288,8 +295,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         'PDFFilename' => 'receipt.pdf',
       );
 
-      require_once 'CRM/Core/BAO/MessageTemplates.php';
-
+      
       if ($returnMessageText) {
         list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
         return array('subject' => $subject,
@@ -766,6 +772,23 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       );
     }
     return array();
+  }
+
+  function tokenize($contactId, $input) {
+    $output = $input;
+    $tokens = CRM_Utils_Token::getTokens($input);
+    if (isset($tokens['contact'])) {
+      $returnProperties = array();
+      foreach ($tokens['contact'] as $name) {
+        $returnProperties[$name] = 1;
+      }
+      $contactParams = array('contact_id' => $contactId);
+      list($contact) = CRM_Mailing_BAO_Mailing::getDetails($contactParams, $returnProperties, FALSE);
+      $contact = $contact[$contactId];
+
+      $output = CRM_Utils_Token::replaceContactTokens($input, $contact, FALSE, $tokens, FALSE, TRUE);
+    }
+    return $output;
   }
 }
 
