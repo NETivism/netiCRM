@@ -1097,6 +1097,15 @@ WHERE civicrm_event.is_active = 1
           $participantParams
         );
 
+        // #18853, tokenize thank you top text
+        $confirmText = CRM_Utils_Array::value('confirm_email_text', $values['event']);
+        if($confirmText) {
+          $confirmText = self::tokenize($contactID, $confirmText); 
+          $eventVar = $template->get_template_vars('event');
+          $eventVar['confirm_email_text'] = $confirmText;
+          $template->assign('event', $eventVar);
+        }
+
         $sendTemplateParams = array(
           'groupName' => 'msg_tpl_workflow_event',
           'valueName' => 'event_online_receipt',
@@ -1106,7 +1115,7 @@ WHERE civicrm_event.is_active = 1
           'isTest' => $isTest,
           'tplParams' => array(
             'email' => $email,
-            'confirm_email_text' => CRM_Utils_Array::value('confirm_email_text', $values['event']),
+            'confirm_email_text' => $confirmText,
             'isShowLocation' => CRM_Utils_Array::value('is_show_location', $values['event']),
             'participantID' => $participantId,
           ),
@@ -2036,5 +2045,21 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
     $templateObject->assign('share_google_calendar', 'http://www.google.com/calendar/event?'.http_build_query($gcal));
   }
 
+  function tokenize($contactId, $input) {
+    $output = $input;
+    $tokens = CRM_Utils_Token::getTokens($input);
+    if (isset($tokens['contact'])) {
+      $returnProperties = array();
+      foreach ($tokens['contact'] as $name) {
+        $returnProperties[$name] = 1;
+      }
+      $contactParams = array('contact_id' => $contactId);
+      list($contact) = CRM_Mailing_BAO_Mailing::getDetails($contactParams, $returnProperties, FALSE);
+      $contact = $contact[$contactId];
+
+      $output = CRM_Utils_Token::replaceContactTokens($input, $contact, FALSE, $tokens, FALSE, TRUE);
+    }
+    return $output;
+  }
 }
 
