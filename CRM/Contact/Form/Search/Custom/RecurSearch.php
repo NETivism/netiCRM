@@ -137,7 +137,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, array('id'))) {
         continue;
       }
-      if($field == 'remain_installments'){
+      if ($field == 'remain_installments' || strstr($field, 'amount') || strstr($field, '_id')) {
         $type = "INTEGER(10) default NULL";
       }
       else{
