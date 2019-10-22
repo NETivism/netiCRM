@@ -34,7 +34,7 @@
  */
 
 require_once 'CRM/Contact/Form/Search/Interface.php';
-class CRM_Contact_Form_Search_Custom_ContribSYBNT implements CRM_Contact_Form_Search_Interface {
+class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
 
@@ -84,7 +84,7 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT implements CRM_Contact_Form_Se
     }
   }
 
-  function setDefaultValues() {
+  function setDefaultValues($form) {
     $thisYear = date('Y');
     $lastYear = date('Y', strtotime('-1 year'));
     $defaults = array(
@@ -95,6 +95,7 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT implements CRM_Contact_Form_Se
       'include_min_amount' => 100,
       'include_max_amount' => 0,
     );
+    $form->set(CRM_Utils_Sort::SORT_ID, '4_d');
     return $defaults;
   }
 
@@ -162,11 +163,12 @@ AND        contrib_1.is_test = 0
            $where
 GROUP BY   contact.id
            $having
-ORDER BY   receive_amount desc
 ";
     if ($onlyIDs) {
       $sql = "SELECT contact_a.contact_id FROM ($sql) contact_a WHERE (1) ";
     }
+
+    $this->addSortOffset($sql, $offset, $rowcount, $sort);
 
     return $sql;
   }
