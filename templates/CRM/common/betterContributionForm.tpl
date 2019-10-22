@@ -12,25 +12,17 @@ cj(function($){
     //$('.receipt_type').addClass(OddOrEven);
 
     // Check if is_for_organization is on
-    if ($('#is_for_organization').length) {
+    var $is_for_organization = $('[name="is_for_organization"]');
+    if ($is_for_organization.length) {
       $('.receipt_type').css({'height':0,'margin':0,'overflow':'hidden'});
-      $('#is_for_organization').change(function(){
-        if ($('#is_for_organization').is(':checked')) {
-          $('#r_company').prop('checked', true);
-          {/literal}{if $receiptYesNo}{literal}
-          $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').prop('checked', false).closest('tr').hide();
-          {/literal}{/if}{literal}
-        }
-        else {
-          $('#r_person').prop('checked', true);
-          {/literal}{if $receiptYesNo}{literal}
-          $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').closest('tr').show();
-          {/literal}{/if}{literal}
-        }
-        $('#same_as').prop('checked',false);
-        $('.receipt_type input').trigger('change');
-        doUpdateName();
-      });
+      if ($is_for_organization.attr('type') == 'checkbox') {
+        $is_for_organization.change(function(){
+          doChangeSameAsTarget();
+        });
+      }
+      else if($is_for_organization.attr('type') == 'hidden'){
+        doChangeSameAsTarget();
+      }
     }
 
     $('#custom_{/literal}{$receiptTitle}{literal}').addClass('ignore-required');
@@ -55,7 +47,7 @@ cj(function($){
       if($('#r_company').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Organization{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Sic Code{/ts}{literal}");
-        if ($('#is_for_organization').length == 0) {
+        if ($('[name="is_for_organization"]').length == 0) {
           $(same_as).prop('checked',false);
           $('.same-as-wrapper').hide('fast');
         }
@@ -301,7 +293,15 @@ cj(function($){
    * Update last_name, first_name, and id to receipt fileds. Should trigger when any related fields change.
    */
   function doUpdateName(){
-    if($('#r_person').is(':checked') || ($('#r_company').is(':checked') && $('#is_for_organization').is(':checked'))){
+    var $is_for_organization = $('[name="is_for_organization"]');
+    if($is_for_organization.is('[type="checkbox"]') && $is_for_organization.is(':checked')) {
+      var is_for_organization = 1;
+    }
+    else if($is_for_organization.is('[type="hidden"]') && $is_for_organization.val() == 1) {
+      var is_for_organization = 1;
+    }
+
+    if($('#r_person').is(':checked') || ($('#r_company').is(':checked') && is_for_organization)){
       // $('#same_as').parents('.same-as-wrapper').show('slow');
     }
     else{
@@ -312,7 +312,7 @@ cj(function($){
     }
 
     // For Name
-    if($('#same_as').is(':checked') && $('#r_company').is(':checked') && $('#is_for_organization').length > 0 && $('#is_for_organization').is(':checked')){
+    if($('#same_as').is(':checked') && $('#r_company').is(':checked') && is_for_organization){
       $('#custom_{/literal}{$receiptTitle}{literal}').val($('#organization_name').val()).attr('readonly', 'readonly');
     }else if($('#same_as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
       $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val()).attr('readonly','readonly');
@@ -322,7 +322,7 @@ cj(function($){
     }
 
     // For ReceiptSerial Number
-    if($('#same_as').is(':checked') && $('#r_company').is(':checked') && $('#is_for_organization').length > 0 && $('#is_for_organization').is(':checked')){
+    if($('#same_as').is(':checked') && $('#r_company').is(':checked') && is_for_organization){
       $('#custom_{/literal}{$receiptSerial}{literal}').val($('#sic_code').val()).attr('readonly', 'readonly');
     }else if($('#same_as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
       if(/^_+$/.test($('#legal_identifier').val())){
@@ -338,16 +338,30 @@ cj(function($){
     //Full Name
     if($('#r_name_full:checked').val()){
       if($('#last_name,#first_name').length>1){
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
+        if (is_for_organization) {
+          $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
+        }
+        else {
+          $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
+        }
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
     }
 
     // Part of Name
     if($('#r_name_half:checked').val()){
-      if($('#last_name,#first_name').length>1){
-        var last_name = $('#last_name').val()?$('#last_name').val():"";
-        var first_name = $('#first_name').val()?$('#first_name').val():"";
+      if (is_for_organization) {
+        var name = $('#organization_name').val();
+        if (name.length > 2) {
+          name = name.substr(0,1) + "*".repeat(name.length - 2) + name.substr(-1);
+        }
+        else {
+          name = "*".repeat(name.length);
+        }
+      }
+      else if($('#last_name,#first_name').length>1){
+        var last_name = $('#last_name').val() ? $('#last_name').val() : "";
+        var first_name = $('#first_name').val() ? $('#first_name').val() : "";
         if(last_name || first_name){
           var last_name_leng = last_name.length;
           if(last_name_leng){
@@ -375,6 +389,8 @@ cj(function($){
           var name = "";
         }
 
+      }
+      if (name) {
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val(name);
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
@@ -428,6 +444,31 @@ cj(function($){
       $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
       return false;
     }
+  }
+
+  function doChangeSameAsTarget(){
+    var $is_for_organization = $('[name="is_for_organization"]');
+    if($is_for_organization.is('[type="checkbox"]') && $is_for_organization.is(':checked')) {
+      var is_for_organization = 1;
+    }
+    else if($is_for_organization.is('[type="hidden"]') && $is_for_organization.val() == 1) {
+      var is_for_organization = 1;
+    }
+    if (is_for_organization) {
+      $('#r_company').prop('checked', true);
+      {/literal}{if $receiptYesNo}{literal}
+      $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').prop('checked', false).closest('tr').hide();
+      {/literal}{/if}{literal}
+    }
+    else {
+      $('#r_person').prop('checked', true);
+      {/literal}{if $receiptYesNo}{literal}
+      $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').closest('tr').show();
+      {/literal}{/if}{literal}
+    }
+    $('#same_as').prop('checked',false);
+    $('.receipt_type input').trigger('change');
+    doUpdateName();
   }
 
 /**
