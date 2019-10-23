@@ -47,7 +47,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, array('id'))) {
         continue;
       }
-      if($field == 'amount'){
+      if(strstr($field,'amount')){
         $type = "INTEGER(10) default NULL";
       }
       else{
