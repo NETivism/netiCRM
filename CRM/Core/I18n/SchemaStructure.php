@@ -68,8 +68,10 @@ class CRM_Core_I18n_SchemaStructure
           'name' => "varchar(128)",
           'from_name' => "varchar(128)",
           'subject' => "varchar(128)",
+          'body_preview' => "varchar(128)",
           'body_text' => "longtext",
           'body_html' => "longtext",
+          'body_json' => "longtext",
         ) ,
         'civicrm_premiums' => array(
           'premiums_intro_title' => "varchar(255)",
