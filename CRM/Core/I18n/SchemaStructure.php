@@ -137,6 +137,7 @@ class CRM_Core_I18n_SchemaStructure
           'footer_text' => "text",
           'honor_block_title' => "varchar(255)",
           'honor_block_text' => "text",
+          'installments_option' => "text",
         ) ,
         'civicrm_membership_block' => array(
           'new_title' => "varchar(255)",

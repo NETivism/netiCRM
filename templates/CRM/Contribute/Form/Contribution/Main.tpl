@@ -99,11 +99,17 @@
           {$form.frequency_unit.label}: {$form.frequency_unit.html}
         </div>
         {/if}
-        <div class="recur-element" id="recur-options-installmnts">
-          {$form.installments.label}: {$form.installments.html}
-        </div>
+        {if $form.installments.html}
+          <div class="recur-element" id="recur-options-installmnts">
+            {$form.installments.label}: {$form.installments.html}
+          </div>
+        {/if}
         <p>
-          <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time.{/ts}
+          {if $form.installments.html}
+            <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time.{/ts}
+          {else}
+            <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can choose to cancel at any time.{/ts}
+          {/if}
             {if $is_email_receipt}
                 {ts}You will receive an email receipt for each recurring contribution.{/ts} 
                 {if $receipt_from_email}

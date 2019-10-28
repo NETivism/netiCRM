@@ -102,6 +102,10 @@
                         <td>{$form.recur_frequency_unit.html}<br />
                         <span class="description">{ts}Select recurring units supported for recurring payments.{/ts}</span></td>
                     </tr>
+                    <tr class="crm-contribution-form-block-show_installments_option"><th scope="row" class="label">{$form.show_installments_option.label}<span class="marker" title="This field is required.">*</span></th>
+                        <td>{$form.show_installments_option.html}<br />
+                        <span class="description">{ts}Select 'Yes' if you want to give users to choose the installments of recurring contribution.{/ts}</span></td>
+                    </tr>
                   </table>
                 </td>
             </tr>

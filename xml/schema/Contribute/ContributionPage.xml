@@ -348,6 +348,17 @@
       <comment>3 character string, value from config setting or input via user.</comment>
       <add>3.3</add>   
   </field> 
+  <field> 
+       <name>installments_option</name> 
+       <title>Installments Option</title>
+       <type>text</type> 
+       <htmlType>textarea</htmlType>
+       <rows>4</rows>
+       <cols>60</cols>
+       <localizable>true</localizable>
+       <comment>Use options for donor to select recurring installments.</comment> 
+       <add>1.3</add> 
+  </field> 
   <field>      
       <name>background_URL</name>   
       <type>varchar</type>   
