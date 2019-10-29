@@ -133,6 +133,12 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    */
   public $premiums_display_min_contribution;
   /**
+   * No thank you text for premium page display.
+   *
+   * @var string
+   */
+  public $premiums_nothanks_text;
+  /**
    * class constructor
    *
    * @access public
@@ -207,6 +213,13 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Premiums Display Min Contribution') ,
           'required' => true,
+        ) ,
+        'premiums_nothanks_text' => array(
+          'name' => 'premiums_nothanks_text',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Premiums Nothanks Text') ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
         ) ,
       );
     }

@@ -1487,7 +1487,8 @@ CREATE TABLE civicrm_premiums (
      premiums_intro_text text    COMMENT 'Displayed in <div> at top of Premiums section of page. Text and HTML allowed.',
      premiums_contact_email varchar(100)    COMMENT 'This email address is included in receipts if it is populated and a premium has been selected.',
      premiums_contact_phone varchar(50)    COMMENT 'This phone number is included in receipts if it is populated and a premium has been selected.',
-     premiums_display_min_contribution tinyint NOT NULL   COMMENT 'Boolean. Should we automatically display minimum contribution amount text after the premium descriptions.' 
+     premiums_display_min_contribution tinyint NOT NULL   COMMENT 'Boolean. Should we automatically display minimum contribution amount text after the premium descriptions.',
+     premiums_nothanks_text varchar(128)    COMMENT 'No thank you text for premium page display.' 
 ,
     PRIMARY KEY ( id )
  
@@ -1514,7 +1515,10 @@ CREATE TABLE civicrm_product (
      thumbnail varchar(255)    COMMENT 'Full or relative URL to image thumbnail.',
      price decimal(20,2)    COMMENT 'Sell price or market value for premiums. For tax-deductible contributions, this will be stored as non_deductible_amount in the contribution record.',
      currency varchar(3)   DEFAULT NULL COMMENT '3 character string, value from config setting or input via user.',
+     calculate_mode varchar(32)   DEFAULT accumulate COMMENT 'Calculate by accumulate or by min-amount of contribution',
+     installments int   DEFAULT 0 COMMENT 'Num of installments when calculate mode is accumulate.',
      min_contribution decimal(20,2)    COMMENT 'Minimum contribution required to be eligible to select this premium.',
+     min_contribution_recur decimal(20,2)    COMMENT 'Minimum recurring contribution amount required to be eligible to select this premium.',
      cost decimal(20,2)    COMMENT 'Actual cost of this product. Useful to determine net return from sale or using this as an incentive.',
      is_active tinyint NOT NULL   COMMENT 'Disabling premium removes it from the premiums_premium join table below.',
      period_type enum('rolling', 'fixed')   DEFAULT 'rolling' COMMENT 'Rolling means we set start/end based on current day, fixed means we set start/end for current year or month

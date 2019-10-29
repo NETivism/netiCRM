@@ -85,6 +85,21 @@
       <comment>3 character string, value from config setting or input via user.</comment>
       <add>3.2</add>
   </field>
+  <field>
+      <name>calculate_mode</name>
+      <type>varchar</type>
+      <length>32</length>
+      <default>accumulate</default>
+      <comment>Calculate by accumulate or by min-amount of contribution</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>installments</name>
+      <type>int</type>
+      <default>0</default>
+      <comment>Num of installments when calculate mode is accumulate.</comment>
+      <add>4.0</add>
+  </field>
   <field>     
       <name>min_contribution</name>
       <title>Minimum Contribution</title>
@@ -92,7 +107,14 @@
       <comment>Minimum contribution required to be eligible to select this premium.</comment>  
       <add>1.4</add>  
   </field>
-  <field>     
+  <field>
+      <name>min_contribution_recur</name>
+      <title>Minimum Contribution of Recurring</title>
+      <type>decimal</type>
+      <comment>Minimum recurring contribution amount required to be eligible to select this premium.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
       <name>cost</name>
       <title>Cost</title>
       <type>decimal</type> 
@@ -149,13 +171,11 @@
       <comment>Frequency unit and interval allow option to store actual delivery frequency for a subscription or service.</comment>
       <add>1.4</add>  
   </field>
-  <field>     
+  <field>
       <name>frequency_interval</name>
       <title>Frequency Interval</title>
       <type>int</type>
-      <comment>Number of units for delivery frequency of subscription, service, membership (e.g. every 3 Months).</comment>  
-      <add>1.4</add>  
+      <comment>Number of units for delivery frequency of subscription, service, membership (e.g. every 3 Months).</comment>
+      <add>1.4</add>
   </field>
-  
-  
 </table>

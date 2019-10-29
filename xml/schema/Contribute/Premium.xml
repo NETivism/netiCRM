@@ -77,5 +77,11 @@
       <comment>Boolean. Should we automatically display minimum contribution amount text after the premium descriptions.</comment>  
       <add>1.4</add>  
   </field>
-  
+  <field>
+      <name>premiums_nothanks_text</name>
+      <type>varchar</type>
+      <length>128</length>
+      <comment>No thank you text for premium page display.</comment>
+      <add>4.0</add>
+  </field>
 </table>
