@@ -945,16 +945,18 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
     $this->addGroup($elements, 'is_recur', NULL, '<br />');
 
-    $attributes['installments'] = array(
-      'placeholder' => ts('No Limit'),
-      'min' => 2,
-      'style' => 'max-width:100px',
-    );
-    $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
-    if (isset($this->_defaultFromRequest['installments'])) { 
-      $this->_defaults['installments'] = $this->_defaultFromRequest['installments'];
+    if ($this->_values['installments_option']) {
+      $attributes['installments'] = array(
+        'placeholder' => ts('No Limit'),
+        'min' => 2,
+        'style' => 'max-width:100px',
+      );
+      $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
+      if (isset($this->_defaultFromRequest['installments'])) { 
+        $this->_defaults['installments'] = $this->_defaultFromRequest['installments'];
+      }
+      $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
     }
-    $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
   }
 
   /**

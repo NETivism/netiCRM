@@ -333,6 +333,12 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    */
   public $currency;
   /**
+   * Use options for donor to select recurring installments.
+   *
+   * @var text
+   */
+  public $installments_option;
+  /**
    * Background image url on contribution page of special style.
    *
    * @var string
@@ -623,6 +629,13 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
           'dataPattern' => '/^[A-Z]{3}$/i',
           'export' => true,
           'default' => 'UL',
+        ) ,
+        'installments_option' => array(
+          'name' => 'installments_option',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Installments Option') ,
+          'rows' => 4,
+          'cols' => 60,
         ) ,
         'background_URL' => array(
           'name' => 'background_URL',

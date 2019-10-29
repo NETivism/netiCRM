@@ -357,7 +357,7 @@
           $('.priceSet-block').append($other_amount_block);
         }
 
-        if($('[name=is_recur][value=1]').length > 0){
+        if($('[name=installments]').length > 0 ){
           var installments = this.installments;
           var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['Monthly Installments']+'</label><input placeholder="'+ts["No Limit"]+'" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
           var doClickInstallments = function(){
