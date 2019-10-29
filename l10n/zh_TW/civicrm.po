@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-10-09 06:56+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-10-29 09:24+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28080,7 +28080,7 @@ msgid ""
 "of installments you specify. You can leave the number of installments blank "
 "if you want to make an open-ended commitment. In either case, you can choose"
 " to cancel at any time."
-msgstr "我們將依照您指定的方式（每月或每年），由您的信用卡定時扣款。若您未指定捐贈期數，我們將持續扣款至您主動告知停止捐款為止。"
+msgstr "我們將依照您指定的方式，由您的信用卡定時扣款。若您未指定捐贈期數，我們將持續扣款至您主動告知停止捐款為止。"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid ""
@@ -47266,3 +47266,19 @@ msgstr "通知信函將會包括報到碼。"
 
 msgid "This mailing event doesn't include any group."
 msgstr "此電子報的收件者未包含任何群組。"
+
+msgid "Installments Option"
+msgstr "期數選項"
+
+msgid "Show Installments Option"
+msgstr "提供期數選項"
+
+msgid ""
+"Your recurring contribution will be processed automatically for the number "
+"of installments you specify. You can choose to cancel at any time."
+msgstr "我們將依照您指定的方式，由您的信用卡定時扣款。會持續扣款至您主動告知停止捐款為止。"
+
+msgid ""
+"Select 'Yes' if you want to give users to choose the installments of "
+"recurring contribution."
+msgstr "如果您想讓捐款者自訂定期定額的捐款期數，請選「是」。若想讓定期定額持續扣款直至捐款人連絡告知停止捐款，請選「否」。"
