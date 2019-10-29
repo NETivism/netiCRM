@@ -49,10 +49,22 @@
 <div id="crm-container" class="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
 {* Check for Status message for the page (stored in session->getStatus). Status is cleared on retrieval. *}
 {if $session->getStatus(false)}
-<div class="messages status">
-
-  {$session->getStatus(true)}
+{assign var="statuses" value=$session->getStatus(true)}
+{foreach from=$statuses key=message_type item=status}
+<div class="messages {$message_type}">
+    {if is_array($status)}
+        {foreach name=statLoop item=statItem from=$status}
+            {if $smarty.foreach.statLoop.first}
+                {if $statItem}<h3>{$statItem}</h3><div class='spacer'></div>{/if}
+            {else}               
+               <ul><li>{$statItem}</li></ul>
+            {/if}                
+        {/foreach}
+    {else}
+        {$status}
+    {/if}
 </div>
+{/foreach}
 {/if}
 
 {if isset($display_name) and $display_name}

@@ -192,6 +192,24 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
     return self::$_links;
   }
   /**
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
+  public static function getReferenceColumns()
+  {
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'event_id', 'civicrm_event', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'status_id', 'civicrm_participant_status_type', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'registered_by_id', 'civicrm_participant', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'discount_id', 'civicrm_discount', 'id');
+    }
+    return Civi::$statics[__CLASS__]['links'];
+  }
+  /**
    * returns all the column names of this table
    *
    * @access public

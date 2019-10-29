@@ -31,6 +31,11 @@
       <comment>FK to civicrm_contribution_page.id</comment>
       <add>2.2</add>
   </field>
+  <dynamicForeignKey>
+      <idColumn>entity_id</idColumn>
+      <typeColumn>entity_table</typeColumn>
+      <add>2.2</add>
+  </dynamicForeignKey>
   <foreignKey> 
       <name>entity_id</name> 
       <table>civicrm_contribution_page</table> 

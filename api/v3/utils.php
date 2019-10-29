@@ -282,6 +282,7 @@ function _civicrm_api3_get_DAO($name) {
   }
 
   //hack to deal with incorrectly named BAO/DAO - see CRM-10859 - remove after rename
+  $name = strtolower($name);
   if($name == 'price_set'){
     return 'CRM_Price_DAO_Set';
   }
@@ -297,6 +298,12 @@ function _civicrm_api3_get_DAO($name) {
   }
   if($name == 'mailing_recipients' || $name == 'MailingRecipients'){
     return 'CRM_Mailing_BAO_Recipients';
+  }
+  if($name == 'im') {
+    return 'CRM_Core_BAO_IM';
+  }
+  if($name == 'open_id') {
+    return 'CRM_Core_BAO_OpenID';
   }
 
 

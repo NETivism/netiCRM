@@ -463,10 +463,16 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    */
   public static function statusBounce($status, $redirect = NULL) {
     $session = CRM_Core_Session::singleton();
-    if (!$redirect) {
-      $redirect = $session->readUserContext();
+    $session->setStatus($status, $append = TRUE, 'warning');
+    if ($redirect === FALSE) {
+      return; 
     }
-    $session->setStatus($status);
+    elseif (!$redirect) {
+      $redirect = $session->readUserContext();
+      if (!$redirect) {
+        $redirect = '/';
+      }
+    }
     CRM_Utils_System::redirect($redirect);
   }
 

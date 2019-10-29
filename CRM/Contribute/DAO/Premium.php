@@ -149,6 +149,20 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
     parent::__construct();
   }
   /**
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
+  public static function getReferenceColumns()
+  {
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName() , 'entity_id', NULL, 'id', 'entity_table');
+    }
+    return Civi::$statics[__CLASS__]['links'];
+  }
+  /**
    * returns all the column names of this table
    *
    * @access public

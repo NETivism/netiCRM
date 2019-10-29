@@ -545,36 +545,37 @@ class CRM_Core_Session {
    *
    * @param $status string the status message
    * @param $append boolean if you want to append or set new status
+   * @param $status when you want to define new type of status. default: status, warning, error
    *
    * @static  *
    * @return void
    */
-  static function setStatus($status, $append = TRUE) {
+  static function setStatus($status, $append = TRUE, $type = 'status') {
     $session = self::singleton();
     $session->initialize();
 
-    if (isset(self::$_singleton->_session[self::$_singleton->_key]['status'])) {
+    if (isset(self::$_singleton->_session[self::$_singleton->_key]['status'][$type])) {
       if ($append) {
         if (is_array($status)) {
-          if (is_array(self::$_singleton->_session[self::$_singleton->_key]['status'])) {
-            self::$_singleton->_session[self::$_singleton->_key]['status'] += $status;
+          if (is_array(self::$_singleton->_session[self::$_singleton->_key]['status'][$type])) {
+            self::$_singleton->_session[self::$_singleton->_key]['status'][$type] += $status;
           }
           else {
-            $currentStatus = self::$_singleton->_session[self::$_singleton->_key]['status'];
+            $currentStatus = self::$_singleton->_session[self::$_singleton->_key]['status'][$type];
             // add an empty element to the beginning which will go in the <h3>
-            self::$_singleton->_session[self::$_singleton->_key]['status'] = array('', $currentStatus) + $status;
+            self::$_singleton->_session[self::$_singleton->_key]['status'][$type] = array('', $currentStatus) + $status;
           }
         }
         else {
-          self::$_singleton->_session[self::$_singleton->_key]['status'] .= " $status";
+          self::$_singleton->_session[self::$_singleton->_key]['status'][$type] .= " $status";
         }
       }
       else {
-        self::$_singleton->_session[self::$_singleton->_key]['status'] = " $status";
+        self::$_singleton->_session[self::$_singleton->_key]['status'][$type] = "$status";
       }
     }
     else {
-      self::$_singleton->_session[self::$_singleton->_key]['status'] = $status;
+      self::$_singleton->_session[self::$_singleton->_key]['status'][$type] = $status;
     }
   }
 

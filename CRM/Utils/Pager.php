@@ -82,7 +82,7 @@ class CRM_Utils_Pager extends Pager_Sliding {
       $params['status'] = ts('Contacts %%StatusMessage%%');
     }
 
-    $params['path'] = CRM_Utils_System::makeURL(CRM_Utils_System::currentPath());
+    $params['path'] = '';
 
     $this->initialize($params);
 
@@ -156,6 +156,8 @@ class CRM_Utils_Pager extends Pager_Sliding {
 
     $params['totalItems'] = $params['total'];
     $params['append'] = TRUE;
+    $params['fileName'] = '';
+    $params['fixFileName'] = FALSE;
     $params['separator'] = '';
     $params['spacesBeforeSeparator'] = 1;
     $params['spacesAfterSeparator'] = 1;

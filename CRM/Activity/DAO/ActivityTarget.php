@@ -125,6 +125,21 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
     return self::$_links;
   }
   /**
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
+  public static function getReferenceColumns()
+  {
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'activity_id', 'civicrm_activity', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'target_contact_id', 'civicrm_contact', 'id');
+    }
+    return Civi::$statics[__CLASS__]['links'];
+  }
+  /**
    * returns all the column names of this table
    *
    * @access public

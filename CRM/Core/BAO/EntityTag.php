@@ -291,13 +291,13 @@ class CRM_Core_BAO_EntityTag extends CRM_Core_DAO_EntityTag {
         INNER JOIN civicrm_entity_tag et ON ( ct.id = et.tag_id AND
             et.entity_id    = {$contactID} AND
             et.entity_table = 'civicrm_contact' AND
-            ct.is_tagset = 0 )";
+            ct.is_tagset = 0 ) GROUP BY et.entity_id, et.tag_id";
 
     $dao = CRM_Core_DAO::executeQuery($query);
 
     if ($count) {
       $dao->fetch();
-      return $dao->cnt;
+      return $dao->N;
     }
 
     while ($dao->fetch()) {

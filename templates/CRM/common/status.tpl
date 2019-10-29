@@ -24,11 +24,10 @@
  +--------------------------------------------------------------------+
 *}
 {* Check for Status message for the page (stored in session->getStatus). Status is cleared on retrieval. *}
-
 {if $session->getStatus(false)}
-    {assign var="status" value=$session->getStatus(true)}
-    <div class="messages status">
-    	&nbsp;
+    {assign var="statuses" value=$session->getStatus(true)}
+    {foreach from=$statuses key=message_type item=status}
+    <div class="messages {$message_type}">
         {if is_array($status)}
             {foreach name=statLoop item=statItem from=$status}
                 {if $smarty.foreach.statLoop.first}
@@ -41,11 +40,11 @@
             {$status}
         {/if}
     </div>
+    {/foreach}
 {/if}
 
 {if ! $urlIsPublic AND $config->debug}
-    <div class="messages status">
-      
-        &nbsp;{ts}WARNING: Debug is currently enabled in Global Settings.{/ts} {docURL page="Debugging"}
+    <div class="messages warning">
+        {ts}WARNING: Debug is currently enabled in Global Settings.{/ts} {docURL page="Debugging"}
     </div>
 {/if}

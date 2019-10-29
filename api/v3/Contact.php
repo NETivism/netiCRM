@@ -280,6 +280,7 @@ function _civicrm_api3_contact_get_supportanomalies(&$params, &$options) {
 function civicrm_api3_contact_delete($params) {
 
   $contactID = CRM_Utils_Array::value('id', $params);
+  $log = CRM_Utils_Array::value('log_data', $params);
 
   $session = CRM_Core_Session::singleton();
   if ($contactID == $session->get('userID')) {
@@ -287,7 +288,7 @@ function civicrm_api3_contact_delete($params) {
   }
   $restore = CRM_Utils_Array::value('restore', $params) ? $params['restore'] : FALSE;
   $skipUndelete = CRM_Utils_Array::value('skip_undelete', $params) ? $params['skip_undelete'] : FALSE;
-  if (CRM_Contact_BAO_Contact::deleteContact($contactID, $restore, $skipUndelete)) {
+  if (CRM_Contact_BAO_Contact::deleteContact($contactID, $restore, $skipUndelete, $log)) {
     return civicrm_api3_create_success();
   }
   else {
@@ -815,19 +816,23 @@ LIMIT    0, {$limit}
  */
 function civicrm_api3_contact_merge($params) {
   $mode = CRM_Utils_Array::value('mode', $params, 'safe');
-  $autoFlip = CRM_Utils_Array::value('auto_flip', $params, TRUE);
+  $autoFlip = CRM_Utils_Array::value('auto_flip', $params, FALSE);
 
-  $dupePairs = array(array('srcID' => CRM_Utils_Array::value('main_id', $params),
-      'dstID' => CRM_Utils_Array::value('other_id', $params),
-    ));
-  $result = CRM_Dedupe_Merger::merge($dupePairs, array(), $mode, $autoFlip);
-
-  if ($result['is_error'] == 0) {
-    return civicrm_api3_create_success();
+  $dupePairs = array(
+    array(
+      'dstID' => CRM_Utils_Array::value('main_id', $params),
+      'srcID' => CRM_Utils_Array::value('other_id', $params),
+    ),
+  );
+  if (isset($params['action'])) {
+    $action = $params['action'];
   }
   else {
-    return civicrm_api3_create_error($result['messages']);
+    $action = CRM_Core_Action::PREVIEW;
   }
+  $result = CRM_Dedupe_Merger::merge($dupePairs, array(), $mode, $autoFlip, FALSE, $action);
+
+  return civicrm_api3_create_success($result);
 }
 
 function _civicrm_api3_contact_proximity_spec(&$params) {
