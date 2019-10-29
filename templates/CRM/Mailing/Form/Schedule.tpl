@@ -44,8 +44,9 @@
     </tr>
     <tr class="crm-mailing-schedule-form-block-start_date">
         <td class="label">{$form.start_date.label}</td>
-        <td>{include file="CRM/common/jcalendar.tpl" elementName=start_date}
-            <div class="description">{ts}Set a date and time when you want CiviMail to start sending this mailing.{/ts}</div>
+        <td>
+            <div>{ts}Set a date and time when you want CiviMail to start sending this mailing.{/ts}</div>
+            {include file="CRM/common/jcalendar.tpl" elementName=start_date}
         </td>
     </tr>
   </tbody>
@@ -60,6 +61,9 @@
   </div>
 {/if}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
+<div class="help">
+  {ts}Recipient list and total recipients number will be re-calculated base on contact privacy and subscribing data when mailing start.{/ts}  {ts}Once mailing job start, the recipients list will be freezed.{/ts}
+</div>
 
 {if $preview}
 <div class="crm-accordion-wrapper crm-plain_text_email-accordion crm-accordion-closed">
@@ -97,11 +101,11 @@ cj(function() {
 
 {literal}
 cj(function() {
-   cj('#start_date').change( function( ) { 
-       if ( cj(this).val( ) ) {
-          cj('#now').attr( 'checked', false );
-       }
-   });
+  cj('#start_date').change( function( ) { 
+    if ( cj(this).val( ) ) {
+      cj('#now').attr( 'checked', false );
+    }
+  });
 });
 {/literal}
 </script>

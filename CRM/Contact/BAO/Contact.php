@@ -666,7 +666,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
    * @access public
    * @static
    */
-  function deleteContact($id, $restore = FALSE, $skipUndelete = FALSE) {
+  function deleteContact($id, $restore = FALSE, $skipUndelete = FALSE, $reason = NULL) {
     require_once 'CRM/Activity/BAO/Activity.php';
 
     if (!$id) {
@@ -737,7 +737,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
       $contact->delete();
     }
     else {
-      self::contactTrashRestore($contact->id);
+      self::contactTrashRestore($contact->id, FALSE, $reason);
     }
 
     //delete the contact id from recently view
@@ -890,18 +890,19 @@ WHERE id={$id}; ";
    *
    *  @return void
    */
-  function contactTrashRestore($contactId, $restore = FALSE) {
+  function contactTrashRestore($contactId, $restore = FALSE, $reason = NULL) {
     require_once 'CRM/Core/BAO/Log.php';
     $params = array(1 => array($contactId, 'Integer'));
     $isDelete = ' is_deleted = 1 ';
+    $reason = $reason ? $reason : ($restore ? ts('Restore Contacts') : ts('Delete Contact'));
     if ($restore) {
       $isDelete = ' is_deleted = 0 ';
-      CRM_Core_BAO_Log::register($contactId, 'civicrm_contact', $contactId, NULL, ts('Restore Contacts'));
+      CRM_Core_BAO_Log::register($contactId, 'civicrm_contact', $contactId, NULL, $reason);
     }
     else {
       $query = "DELETE FROM civicrm_uf_match WHERE contact_id = %1";
       CRM_Core_DAO::executeQuery($query, $params);
-      CRM_Core_BAO_Log::register($contactId, 'civicrm_contact', $contactId, NULL, ts('Delete Contact'));
+      CRM_Core_BAO_Log::register($contactId, 'civicrm_contact', $contactId, NULL, $reason);
     }
 
 
@@ -1936,6 +1937,26 @@ ORDER BY civicrm_email.is_primary DESC";
         }
         elseif (!$contactID) {
           $data[$key] = 0;
+        }
+      }
+    }
+
+    // prepare saved greeting values
+    if ($contactID) {
+      $contactParams = array('id' => $contactID);
+      $returnProperties = $retrieved = array();
+      foreach(self::$_greetingTypes as $greeting) {
+        if (empty($data[$greeting.'_id'])) {
+          $returnProperties[] = $greeting.'_id';
+        }
+        if (empty($data[$greeting.'_custom'])) {
+          $returnProperties[] = $greeting.'_custom';
+        }
+      }
+      CRM_Core_DAO::commonRetrieve('CRM_Contact_DAO_Contact', $contactParams, $retrieved, $returnProperties);
+      foreach($retrieved as $key => $value) {
+        if ($key != 'id') {
+          $data[$key] = $value;
         }
       }
     }

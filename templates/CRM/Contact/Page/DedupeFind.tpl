@@ -25,18 +25,30 @@
 *}
 {if $action eq 2 || $action eq 16}
 <div class="form-item">
+  {if $pager}
+  {include file="CRM/common/pager.tpl" location="top"}
+  {/if}
   <table>
-    <tr class="columnheader"><th>{ts}Contact{/ts} 1</th><th>{ts}Contact{/ts} 2 ({ts}Duplicate{/ts})</th><th>{ts}Threshold{/ts}</th><th>&nbsp;</th></tr>
+    <tr class="columnheader">
+      <th>{ts}Contact{/ts} 1 ({ts}duplicate{/ts})</th>
+      <th>{ts}Contact{/ts} 2 ({ts}Reserved{/ts})</th>
+      <th>{ts}Threshold{/ts}</th>
+      <th>{ts}Batch Merge{/ts}?</th>
+      <th>{ts}Conflicting Rows{/ts}</th>
+      <th></th>
+    </tr>
     {foreach from=$main_contacts item=main key=main_id}
         {capture assign=srcLink}<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$main.srcID`"}">{$main.srcName}</a>{/capture}
         {capture assign=dstLink}<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$main.dstID`"}">{$main.dstName}</a>{/capture}
-	{assign var="qParams" value="reset=1&cid=`$main.srcID`&oid=`$main.dstID`&action=update&rgid=`$rgid`"}
+        {assign var="qParams" value="reset=1&cid=`$main.dstID`&oid=`$main.srcID`&action=update&rgid=`$rgid`"}
 	{if $gid}{assign var="qParams" value="$qParams&gid=`$gid`"}{/if}
         {capture assign=merge}<a target="_blank" href="{crmURL p='civicrm/contact/merge' q="`$qParams`"}">{ts}merge{/ts}</a>{/capture}
         <tr id="dupeRow_{$main.srcID}_{$main.dstID}" class="{cycle values="odd-row,even-row"}">
-          <td>{$srcLink}</td>
-          <td>{$dstLink}</td>
+          <td>{$srcLink} ({ts}ID{/ts}: {$main.srcID})</td>
+          <td>{$dstLink} ({ts}ID{/ts}: {$main.dstID})</td>
           <td>{$main.weight}</td>
+          <td>{if $main.batchMerge}<i class="zmdi zmdi-check"></i>{else}<i class="zmdi zmdi-close-circle"></i>{/if}</td>
+          <td>{if $main.conflicts}{"<br>"|implode:$main.conflicts}{/if}</td>
           <td style="text-align: right;">
 	  {if $main.canMerge}
               {$merge}
@@ -45,7 +57,7 @@
 	  {else}
 	       <em>{ts}Insufficient access rights - cannot merge{/ts}</em>
 	  {/if}
-	  </td>
+        </td>
         </tr>
     {/foreach}
   </table>
@@ -65,15 +77,31 @@
       {/foreach}
     </table>
   {/if}
+  {if $pager}
+  {include file="CRM/common/pager.tpl" location="bottom"}
+  {/if}
 </div>
-
+<div class="crm-actions-ribbon">
 {if $context eq 'search'}
-   <a href="{$backURL}" class="button"><span>&raquo; {ts}Done{/ts}</span></a>
+   <!--<a href="{$renewURL|replace:'action=renew':'action=map'}" class="button batch-merge"><i class="zmdi zmdi-arrow-merge"></i> {ts}Batch Merge{/ts}</a>-->
+   <a href="{$backURL}" class="button">{ts}Done{/ts}</a>
 {else}
-   {capture assign=backURL}{crmURL p="civicrm/contact/dedupefind" q="reset=1&rgid=`$rgid`&action=preview" a=1}{/capture}
-   <a href="{$backURL}" class="button"><span>&raquo; {ts}Done{/ts}</span></a>
+   <!--<a href="{$renewURL|replace:'action=renew':'action=map'}" class="button batch-merge"><i class="zmdi zmdi-arrow-merge"></i> {ts}Batch Merge{/ts}</a>-->
+   <a href="{$renewURL}" class="button"><i class="zmdi zmdi-refresh"></i> {ts}Refresh{/ts}</a>
+   <a href="{$backURL}" class="button">{ts}Done{/ts}</a>
 {/if}
-<div style="clear: both;"></div>
+<script>{literal}
+cj(document).ready(function($){
+  $("a.batch-merge").click(function(e){
+      var proceed = confirm("{/literal}{ts}Are you sure want to batch merge contact data?\nThis action can not be undone.{/ts}{literal}");
+      if (!proceed) {
+        e.preventDefault();
+        return false;
+      }
+  });
+});
+{/literal}</script>
+</div>
 {else}
 {include file="CRM/Contact/Form/DedupeFind.tpl"}
 {/if}

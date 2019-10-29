@@ -226,6 +226,11 @@
       <comment>Entity id like contribution id or participant id</comment>
       <add>4.0</add>
   </field>
+  <dynamicForeignKey>
+      <idColumn>entity_id</idColumn>
+      <typeColumn>entity_table</typeColumn>
+      <add>4.2</add>
+  </dynamicForeignKey>
   <index>
     <name>index_entity_table_id</name>
     <fieldName>entity_table</fieldName>
