@@ -296,7 +296,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
           'title' => ts('Calculate Mode') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
-          'default' => 'ccumulat',
+          'default' => 'UL',
         ) ,
         'installments' => array(
           'name' => 'installments',

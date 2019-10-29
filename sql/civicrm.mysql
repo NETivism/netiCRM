@@ -1515,7 +1515,7 @@ CREATE TABLE civicrm_product (
      thumbnail varchar(255)    COMMENT 'Full or relative URL to image thumbnail.',
      price decimal(20,2)    COMMENT 'Sell price or market value for premiums. For tax-deductible contributions, this will be stored as non_deductible_amount in the contribution record.',
      currency varchar(3)   DEFAULT NULL COMMENT '3 character string, value from config setting or input via user.',
-     calculate_mode varchar(32)   DEFAULT accumulate COMMENT 'Calculate by accumulate or by min-amount of contribution',
+     calculate_mode varchar(32)   DEFAULT NULL COMMENT 'Calculate by accumulate or by min-amount of contribution',
      installments int   DEFAULT 0 COMMENT 'Num of installments when calculate mode is accumulate.',
      min_contribution decimal(20,2)    COMMENT 'Minimum contribution required to be eligible to select this premium.',
      min_contribution_recur decimal(20,2)    COMMENT 'Minimum recurring contribution amount required to be eligible to select this premium.',

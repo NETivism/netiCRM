@@ -89,7 +89,7 @@
       <name>calculate_mode</name>
       <type>varchar</type>
       <length>32</length>
-      <default>accumulate</default>
+      <default>NULL</default>
       <comment>Calculate by accumulate or by min-amount of contribution</comment>
       <add>4.0</add>
   </field>
