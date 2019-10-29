@@ -448,6 +448,12 @@ registration process.{/ts}</p>
        {/foreach}
       {/foreach}
      {/if}
+     {if $checkinCode}
+     <tr>
+        <td {$labelStyle}>{ts}Check In Code{/ts}</td>
+        <td {$valueStyle}>{$checkinCode}</td>
+     </tr>
+     {/if}
 
     </table>
    </td>

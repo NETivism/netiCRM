@@ -80,7 +80,19 @@
     <tr class="crm-contribution-contributionpage-thankyou-form-block-receipt_text">
 	<td class="label">{$form.receipt_text.label}{if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contribution_page' field='receipt_text' id=$id}{/if}
 	</td>
-	<td class="html-adjust">{$form.receipt_text.html}<br />
+	<td class="html-adjust">
+        <span class="helpIcon" id="helphtml">
+            <a class="token-trigger" href="#" onClick="return showToken('Html', 2);">{$form.token2.label}</a>
+            {help id="id-token-html" file="CRM/Contact/Form/Task/Email.hlp"}
+            <div id="tokenHtml" style="display:none;">
+                <input style="border:1px solid #999999;" type="text" id="filter2" size="20" name="filter2" onkeyup="filter(this, 2)"/><br />
+                <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
+                {$form.token2.html}
+            </div>
+        </span>
+        <br>
+        <br>
+        {$form.receipt_text.html}<br />
 	    <span class="description">{ts}Enter a message you want included at the beginning of emailed payment notifiction. NOTE: This text will be included in both TEXT and HTML versions of payment notificationsemails so we do not recommend including HTML tags / formatting here.{/ts}<br /></span>
 	</td>
     </tr>
@@ -124,6 +136,7 @@
  {/literal} 
 </script>
 
+{* This for token popup *}
+{include file="CRM/Mailing/Form/InsertTokens.tpl"}
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
-

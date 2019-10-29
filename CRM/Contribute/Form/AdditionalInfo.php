@@ -435,6 +435,9 @@ class CRM_Contribute_Form_AdditionalInfo {
       $form->assign('customGroup', $customGroup);
     }
 
+    if ($params['receipt_text']) {
+      $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
+    }
     $form->assign_by_ref('formValues', $params);
     require_once 'CRM/Contact/BAO/Contact/Location.php';
     require_once 'CRM/Utils/Mail.php';

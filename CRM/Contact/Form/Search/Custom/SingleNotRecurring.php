@@ -45,7 +45,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, array('id'))) {
         continue;
       }
-      if($field == 'amount'){
+      if(strstr($field,'amount') || strstr($field, 'count') || strstr($field, '_id')){
         $type = "INTEGER(10) default NULL";
       }
       else{
@@ -152,7 +152,7 @@ $having
   }
 
   function buildForm(&$form){
-    for ($i = 2; $i <= 10; $i++) {
+    for ($i = 1; $i <= 10; $i++) {
       $option[$i] = $i;
     }
     $form->addSelect('contribution_count', ts('month'), $option);

@@ -68,8 +68,10 @@ class CRM_Core_I18n_SchemaStructure
           'name' => "varchar(128)",
           'from_name' => "varchar(128)",
           'subject' => "varchar(128)",
+          'body_preview' => "varchar(128)",
           'body_text' => "longtext",
           'body_html' => "longtext",
+          'body_json' => "longtext",
         ) ,
         'civicrm_premiums' => array(
           'premiums_intro_title' => "varchar(255)",
@@ -137,6 +139,7 @@ class CRM_Core_I18n_SchemaStructure
           'footer_text' => "text",
           'honor_block_title' => "varchar(255)",
           'honor_block_text' => "text",
+          'installments_option' => "text",
         ) ,
         'civicrm_membership_block' => array(
           'new_title' => "varchar(255)",

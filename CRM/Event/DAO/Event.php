@@ -141,6 +141,12 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO
    */
   public $is_online_registration;
   /**
+   * If true, include qrcode image on event registered email notification.
+   *
+   * @var boolean
+   */
+  public $is_qrcode;
+  /**
    * Text for link to Event Registration form which is displayed on Event Information screen when is_online_registration is true.
    *
    * @var string
@@ -522,6 +528,11 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO
           'name' => 'is_online_registration',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Online Registration') ,
+        ) ,
+        'is_qrcode' => array(
+          'name' => 'is_qrcode',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Is qrcode checkin enabled') ,
         ) ,
         'registration_link_text' => array(
           'name' => 'registration_link_text',

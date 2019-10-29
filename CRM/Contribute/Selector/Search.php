@@ -79,7 +79,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     'contribution_type',
     'contribution_type_id',
     'contribution_source',
-    'contribution_traffic_type',
+    'contribution_referrer_type',
     'payment_instrument',
     'created_date',
     'receive_date',

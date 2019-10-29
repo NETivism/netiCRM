@@ -162,51 +162,29 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
     $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
 
-    $meta = array();
-    $meta[] = array(
-      'tag' => 'meta',
-      'attributes' => array(
-        'property' => 'og:title',
-        'content' => $this->_values['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
-      ),
-    );
+    // Prepare params used for meta.
+    $params = array();
+    $siteName = CRM_Utils_System::variable_get('site_name', 'Drupal');
+    $params['site'] = $siteName;
+    $params['title'] = $this->_values['title'] . ' - ' . $siteName;
 
-    $descript = $this->_values['intro_text'];
-    $descript = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $descript);
-    $descript = strip_tags($descript);
-    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r)/", '', $descript);
-    $descript = trim(mb_substr($descript, 0, 150));
-    $meta[] = array(
-      'tag' => 'meta',
-      'attributes' => array(
-        'name' => 'description',
-        'content' => $descript,
-      ),
-    );
-    $meta[] = array(
-      'tag' => 'meta',
-      'attributes' =>  array(
-        'property' => 'og:description',
-        'content' => $descript,
-      ),
-    );
-    if(is_array($this->_values['custom_data_view'])){
+    $description = $this->_values['intro_text'];
+    $description = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $description);
+    $description = strip_tags($description);
+    $description = preg_replace("/(?:(?:&nbsp;)|\n|\r)/", '', $description);
+    $description = trim(mb_substr($description, 0, 150));
+    $params['description'] = $description;
+
+    if (is_array($this->_values['custom_data_view'])) {
       $config = CRM_Core_Config::singleton();
       foreach ($this->_values['custom_data_view'] as $ufg) {
-        foreach($ufg as $ufg_inner){
-          if(is_array($ufg_inner['fields'])){
+        foreach ($ufg as $ufg_inner) {
+          if (is_array($ufg_inner['fields'])) {
             foreach ($ufg_inner['fields'] as $uffield) {
-              if(is_array($uffield)){
-                if($uffield['field_type'] == 'File'){
-                  if(!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['field_value']['data'])){
+              if (is_array($uffield)) {
+                if ($uffield['field_type'] == 'File') {
+                  if (!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['field_value']['data'])) {
                     $image = $config->customFileUploadURL . $uffield['field_value']['data'];
-                    $meta_ogimg = array(
-                      'tag' => 'meta',
-                      'attributes' => array(
-                        'property' => 'og:image',
-                        'content' => $image,
-                      ),
-                    );
                     break;
                     break;
                     break;
@@ -218,24 +196,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
       }
     }
-    if(!empty($meta_ogimg)){
-      $meta[] = $meta_ogimg;
-    }else{
+
+    if (empty($image)) {
       preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['intro_text'], $matches);
-      if(count($matches)>=2){
+      if (count($matches) >= 2) {
         $image = $matches[1];
-        $meta[] = array(
-          'tag' => 'meta',
-          'attributes' => array(
-            'property' => 'og:image',
-            'content' => $image,
-          ),
-        );
       }
     }
-    foreach ($meta as $key => $value) {
-      CRM_Utils_System::addHTMLHead($value);
-    }
+    $params['image'] = $image;
+    CRM_Utils_System::setPageMetaInfo($params);
 
   }
 
@@ -976,16 +945,18 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
     $this->addGroup($elements, 'is_recur', NULL, '<br />');
 
-    $attributes['installments'] = array(
-      'placeholder' => ts('no limit'),
-      'min' => 2,
-      'style' => 'max-width:100px',
-    );
-    $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
-    if (isset($this->_defaultFromRequest['installments'])) { 
-      $this->_defaults['installments'] = $this->_defaultFromRequest['installments'];
+    if ($this->_values['installments_option']) {
+      $attributes['installments'] = array(
+        'placeholder' => ts('No Limit'),
+        'min' => 2,
+        'style' => 'max-width:100px',
+      );
+      $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
+      if (isset($this->_defaultFromRequest['installments'])) { 
+        $this->_defaults['installments'] = $this->_defaultFromRequest['installments'];
+      }
+      $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
     }
-    $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
   }
 
   /**

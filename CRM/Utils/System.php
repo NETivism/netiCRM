@@ -1370,5 +1370,70 @@ class CRM_Utils_System {
     $config = CRM_Core_Config::singleton();
     return $config->userSystem->getLogoURL();
   }
+
+  /**
+   * Set Html Head Meta
+   * Contains: site, title, image, description
+   */
+  public static function setPageMetaInfo($params) {
+    extract($params);
+
+    // Set params to meta attributes array.
+    $metaAttributes[] = array(
+      'name' => 'description',
+      'content' => $description,
+    );
+
+    $metaAttributes[] =  array(
+      'property' => 'og:description',
+      'content' => $description,
+    );
+    $metaAttributes[] = array(
+      'property' => 'og:title',
+      'content' => $title,
+    );
+    $metaAttributes[] = array(
+      'property' => 'og:image',
+      'content' => $image,
+    );
+
+    $metaAttributes[] = array(
+      'name' => 'twitter:card',
+      'content' => 'summary',
+    );
+    $metaAttributes[] = array(
+      'name' => 'twitter:site',
+      'content' => $site,
+    );
+    $metaAttributes[] = array(
+      'name' => 'twitter:title',
+      'content' => $title,
+    );
+    $metaAttributes[] =  array(
+      'name' => 'twitter:description',
+      'content' => $description,
+    );
+    $metaAttributes[] = array(
+      'name' => 'twitter:image',
+      'content' => $image,
+    );
+
+    // Use html head utils to inject tags
+    foreach ($metaAttributes as $value) {
+      if (!empty($value['content'])) {
+        // tags should be like this:
+        // array(
+        //   'tag' => 'meta',
+        //   'attributes' > array(
+        //     'attributeName' => 'attributeValue',
+        //   ),
+        // )
+        CRM_Utils_System::addHTMLHead(array(
+          'tag' => 'meta',
+          'attributes' => $value,
+        ));
+      }
+    }
+  }
 }
 

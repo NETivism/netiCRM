@@ -93,7 +93,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
       $values[$participantID]['status'] .= ' (test) ';
     }
     $config = CRM_Core_Config::singleton();
-    if ($config->enableEventCheckinQrcode && $values[$participantID]['status_id'] != $statusAttended && !empty($statusPositive[$values[$participantID]['status_id']])) {
+    if ($values[$participantID]['status_id'] != $statusAttended && !empty($statusPositive[$values[$participantID]['status_id']])) {
       $values[$participantID]['checkinUrl'] = CRM_Event_BAO_Participant::checkinUrl($values[$participantID]['contact_id'], $participantID);
     }
 

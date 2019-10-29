@@ -126,6 +126,13 @@
        <localizable>true</localizable>
   </field>
   <field>
+       <name>body_preview</name>
+       <type>varchar</type>
+       <length>128</length>
+       <comment>Preview of body on mail listing page.</comment>
+       <localizable>true</localizable>
+  </field>
+  <field>
        <name>body_text</name>
        <type>longtext</type>
        <comment>Body of the mailing in text format.</comment>
@@ -135,6 +142,12 @@
        <name>body_html</name>
        <type>longtext</type>
        <comment>Body of the mailing in html format.</comment>
+       <localizable>true</localizable>
+  </field>
+  <field>
+       <name>body_json</name>
+       <type>longtext</type>
+       <comment>Body of the mailing in json format.</comment>
        <localizable>true</localizable>
   </field>
   <field>

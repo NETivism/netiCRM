@@ -45041,7 +45041,7 @@ msgstr ""
 msgid "Do not attach PDF copy to receipts"
 msgstr ""
 
-msgid "Type here"
+msgid "Type Here"
 msgstr ""
 
 #: CRM/Report/Form/Contact/Participte.php
@@ -46649,10 +46649,10 @@ msgstr ""
 msgid "Single Contribution"
 msgstr ""
 
-msgid "Every-Month Recurring Contribution"
+msgid "Every-Month Recurring Contributions"
 msgstr ""
 
-msgid "Installments Recurring Contribution"
+msgid "Installments Recurring Contributions"
 msgstr ""
 
 msgid "Amount Step"
@@ -46673,13 +46673,13 @@ msgstr ""
 msgid "Choose Amount Option or Custom Amount"
 msgstr ""
 
-msgid "Single or Recurring Contribution"
+msgid "Single or Recurring Contributions"
 msgstr ""
 
-msgid "I want contribute once."
+msgid "Change to Single Contribution"
 msgstr ""
 
-msgid "I want recurring contribution."
+msgid "Stay on Recurring Contributions"
 msgstr ""
 
 msgid "Non-recurring contribution hint message."
@@ -46982,4 +46982,90 @@ msgid "This participant already checked in before. No further action needed."
 msgstr ""
 
 msgid "You can only check in event with event manager."
+msgstr ""
+
+msgid "You has been successfully subscribed to the %1 mailing list."
+msgstr ""
+
+#: templates/CRM/common/contributionPageSpecial.tpl
+msgid "No Limit"
+msgstr ""
+
+msgid "Recurring Contributions"
+msgstr ""
+
+msgid "Monthly Installments"
+msgstr ""
+
+msgid "Type here"
+msgstr ""
+
+msgid "Every-Month Recurring Contribution"
+msgstr ""
+
+msgid "Installments Recurring Contribution"
+msgstr ""
+
+msgid "Single or Recurring Contribution"
+msgstr ""
+
+msgid "I want contribute once."
+msgstr ""
+
+msgid "I want recurring contribution."
+msgstr ""
+
+msgid "Assigned to Contact ID"
+msgstr ""
+
+# CRM/Contact/Page/DedupeFind.php
+msgid "This list is cached result, generated at %1."
+msgstr ""
+
+msgid "You can renew this list by click \"Refresh\" button."
+msgstr ""
+
+msgid "Batch Merge"
+msgstr ""
+
+msgid "Are you sure want to batch merge contact data?\nThis action can not be undone."
+msgstr ""
+
+msgid "Merged %1 pairs of contacts."
+msgstr ""
+
+msgid "Skipped %1 pairs of contacts"
+msgstr ""
+
+msgid "Contact id %1 has been updated and contact id %2 has been deleted."
+msgstr ""
+
+msgid "Total recipients number is calculated by these conditions."
+msgstr ""
+
+msgid "Recipients still alive."
+msgstr "" 
+
+msgid "Recipients still subscribing selected group."
+msgstr "" 
+
+msgid "Recipients does not opt-out site-wide message."
+msgstr "" 
+
+msgid "\"Do Not Mail\" not checked in recipients privacy option."
+msgstr "" 
+
+msgid "Email address did not \"On Hold\" by bounced record."
+msgstr "" 
+
+msgid "Recipient list and total recipients number will be re-calculated base on contact privacy and subscribing data when mailing start."
+msgstr "" 
+
+msgid "Once mailing job start, the recipients list will be freezed."
+msgstr "" 
+
+msgid "Email will include event check in code."
+msgstr ""
+
+msgid "This mailing event doesn't include any group."
 msgstr ""

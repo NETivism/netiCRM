@@ -652,11 +652,8 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     $admin = FALSE, $caseId = NULL, $context = NULL
   ) {
     //step 1: Get the basic activity data
-    require_once 'CRM/Core/OptionGroup.php';
-    $bulkActivityTypeID = CRM_Core_OptionGroup::getValue('activity_type',
-      'Bulk Email',
-      'name'
-    );
+    $optionValues = CRM_Core_OptionGroup::values('activity_type', FALSE, FALSE,  FALSE, "AND v.name = 'Bulk Email'", 'label', $onlyActive = FALSE);
+    $bulkActivityTypeID = key($optionValues);
 
     $config = CRM_Core_Config::singleton();
 
@@ -2233,6 +2230,10 @@ AND cl.modified_id  = c.id
         $Activityfields = array(
           'activity_type' => array('title' => ts('Activity Type'), 'type' => CRM_Utils_Type::T_STRING),
           'activity_status' => array('title' => ts('Activity Status'), 'type' => CRM_Utils_Type::T_STRING),
+          'target_contact_id' => array('title' => ts('Target Contact ID'), 'type' => CRM_Utils_Type::T_STRING),
+          'target_contact_name' => array('title' => ts('Target Contact Name'), 'type' => CRM_Utils_Type::T_STRING),
+          'assign_contact_id' => array('title' => ts('Assigned to Contact ID'), 'type' => CRM_Utils_Type::T_STRING),
+          'assign_contact_name' => array('title' => ts('Assigned to Contact'), 'type' => CRM_Utils_Type::T_STRING),
         );
         $fields = array_merge($Activityfields, $exportableFields);
       }

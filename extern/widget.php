@@ -47,6 +47,10 @@ $template = CRM_Core_Smarty::singleton( );
 $cpageId  = CRM_Utils_Request::retrieve( 'cpageId', 'Positive', CRM_Core_DAO::$_nullObject );
 $widgetId = CRM_Utils_Request::retrieve( 'widgetId', 'Positive', CRM_Core_DAO::$_nullObject );
 
+if (!CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Widget', $cpageId, 'is_active', 'contribution_page_id')) {
+  CRM_Utils_System::civiExit();
+}
+
 $data = CRM_Contribute_BAO_Widget::getContributionPageData( $cpageId, $widgetId );
 
 $output = '

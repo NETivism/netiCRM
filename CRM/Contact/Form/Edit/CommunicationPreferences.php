@@ -93,7 +93,6 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
     $form->assign('commPreference', $commPreference);
 
     $form->add('select', 'preferred_mail_format', ts('Email Format'), CRM_Core_SelectValues::pmf());
-    $form->add('checkbox', 'is_opt_out', ts('NO BULK EMAILS (User Opt Out)'));
 
     //check contact type and build filter clause accordingly for greeting types, CRM-4575
     $greetings = self::getGreetingFields($form->_contactType);

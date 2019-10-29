@@ -588,6 +588,9 @@ class CRM_Export_BAO_Export {
         $count++;
         $row = array();
 
+        $activityTargetNames = NULL;
+        $activityAssignNames = NULL;
+
         //first loop through returnproperties so that we return what is required, and in same order.
         $relationshipField = 0;
         foreach ($returnProperties as $field => $value) {
@@ -726,6 +729,29 @@ class CRM_Export_BAO_Export {
           }
           else {
             $fieldValue = '';
+          }
+
+          if (strstr($field, 'target_contact')) {
+            if (empty($activityTargetNames)) {
+              $activityTargetNames = CRM_Activity_BAO_ActivityTarget::getTargetNames($dao->activity_id);
+            }
+            if (strstr($field, '_name')) {
+              $fieldValue = reset($activityTargetNames);
+            }
+            if (strstr($field, '_id')) {
+              $fieldValue = reset(array_keys($activityTargetNames));
+            }
+          }
+          if (strstr($field, 'assign_contact')) {
+            if (empty($activityAssignNames)) {
+              $activityAssignNames = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($dao->activity_id);
+            }
+            if (strstr($field, '_name')) {
+              $fieldValue = reset($activityAssignNames);
+            }
+            if (strstr($field, '_id')) {
+              $fieldValue = reset(array_keys($activityAssignNames));
+            }
           }
 
           if ($field == 'id') {

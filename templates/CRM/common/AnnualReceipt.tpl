@@ -21,9 +21,9 @@ table td { padding: 2px 4px; }
 
 .receipt-body {clear:both; position: relative; }
 .receipt-body table, .receipt-body td { border:0px; }
-.receipt-body table .col-1 { width: 24%; }
+.receipt-body table .col-1 { width: 50%; }
 .receipt-body table .col-1:after { content: "：";}
-.receipt-body table .col-2 {width: 48.6%;}
+.receipt-body table .col-2 {width: 50%;}
 .receipt-body .content { float: left; maring:0; margin-left:10px; padding-left:10px;}
 .receipt-body .content li { margin: 8px 0;}
 .receipt-body .stamp { position: absolute; left:50%;}
@@ -37,9 +37,11 @@ table td { padding: 2px 4px; }
 .receipt-record table td { border: 1px solid #777; font-size: 10pt; padding: 1px 4px;}
 .receipt-record .annual-total { text-align: right; font-size: 11pt; margin-right: 5px; }
 
-.receipt-signature { margin: 50px 0 0 0; }
-.receipt-signature table td.label { font-size: 11pt; text-align: right; }
-.receipt-signature table td.value { font-size: 11pt; text-align: left; }
+.receipt-signature { margin: 110px 0 0 0; }
+.receipt-signature>table { table-layout: fixed; }
+.receipt-signature table td.label { width: 40%; font-size: 11pt; text-align: right; }
+.receipt-signature table td.label:after { content: "：" }
+.receipt-signature table td.value { width: 60%; font-size: 11pt; text-align: left; }
 
 .receipt-footer {clear:both; position: relative; margin-top: 10px; font-size: 10pt;}
 .receipt-footer table {font-size: 10pt;}
@@ -58,9 +60,10 @@ table td { padding: 2px 4px; }
 .single-page-header .info .address { margin-bottom: 10px;}
 
 .stamp-wrapper{position: relative;}
-.stamp-img{position: absolute;}
-.big-stamp{bottom: 0;max-height: 103px;left: 1px;}
-.small-stamp{top: 0;max-height: 43px;left: 70px;z-index: -1;}
+.stamp-img{position: absolute;z-index: -1;bottom: 0;}
+.stamp-img[src$="/"]{display: none;}
+.big-stamp{max-height: 103px;left: 10px;}
+.small-stamp{max-height: 43px;left: 10px;}
 
 {/literal}
 </style>

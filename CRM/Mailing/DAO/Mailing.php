@@ -157,6 +157,12 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
    */
   public $subject;
   /**
+   * Preview of body on mail listing page.
+   *
+   * @var string
+   */
+  public $body_preview;
+  /**
    * Body of the mailing in text format.
    *
    * @var longtext
@@ -168,6 +174,12 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
    * @var longtext
    */
   public $body_html;
+  /**
+   * Body of the mailing in json format.
+   *
+   * @var longtext
+   */
+  public $body_json;
   /**
    * Should we track URL click-throughs for this mailing?
    *
@@ -374,6 +386,13 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
+        'body_preview' => array(
+          'name' => 'body_preview',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Body Preview') ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ) ,
         'body_text' => array(
           'name' => 'body_text',
           'type' => CRM_Utils_Type::T_LONGTEXT,
@@ -383,6 +402,11 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
           'name' => 'body_html',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Body Html') ,
+        ) ,
+        'body_json' => array(
+          'name' => 'body_json',
+          'type' => CRM_Utils_Type::T_LONGTEXT,
+          'title' => ts('Body Json') ,
         ) ,
         'url_tracking' => array(
           'name' => 'url_tracking',

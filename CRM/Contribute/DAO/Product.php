@@ -134,11 +134,29 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
    */
   public $currency;
   /**
+   * Calculate by accumulate or by min-amount of contribution
+   *
+   * @var string
+   */
+  public $calculate_mode;
+  /**
+   * Num of installments when calculate mode is accumulate.
+   *
+   * @var int
+   */
+  public $installments;
+  /**
    * Minimum contribution required to be eligible to select this premium.
    *
    * @var float
    */
   public $min_contribution;
+  /**
+   * Minimum recurring contribution amount required to be eligible to select this premium.
+   *
+   * @var float
+   */
+  public $min_contribution_recur;
   /**
    * Actual cost of this product. Useful to determine net return from sale or using this as an incentive.
    *
@@ -272,10 +290,28 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
           'size' => CRM_Utils_Type::FOUR,
           'default' => 'UL',
         ) ,
+        'calculate_mode' => array(
+          'name' => 'calculate_mode',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Calculate Mode') ,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+          'default' => 'UL',
+        ) ,
+        'installments' => array(
+          'name' => 'installments',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Installments') ,
+        ) ,
         'min_contribution' => array(
           'name' => 'min_contribution',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Minimum Contribution') ,
+        ) ,
+        'min_contribution_recur' => array(
+          'name' => 'min_contribution_recur',
+          'type' => CRM_Utils_Type::T_MONEY,
+          'title' => ts('Minimum Contribution of Recurring') ,
         ) ,
         'cost' => array(
           'name' => 'cost',

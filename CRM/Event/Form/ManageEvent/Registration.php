@@ -295,6 +295,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->registerRule('emailList', 'callback', 'emailList', 'CRM_Utils_Rule');
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->addYesNo('is_email_confirm', ts('Send Confirmation Email?'), NULL, NULL, array('onclick' => "return showHideByValue('is_email_confirm','','confirmEmail','block','radio',false);"));
+    $form->addYesNo('is_qrcode', ts('Check In Code')."?");
     $form->addWysiwyg('confirm_email_text', ts('Text'), $attributes['confirm_email_text']);
     $form->add('text', 'cc_confirm', ts('CC Confirmation To'), CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event', 'cc_confirm'));
     $form->addRule("cc_confirm", ts('Please enter a valid list of comma delimited email addresses'), 'emailList');
@@ -313,6 +314,20 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
     $this->assign('default_from_target', 'confirm_from_email');
     $this->assign('default_from_value', $defaultFromMail);
+
+    // tokens
+    $tokens = array();
+    $tokens = CRM_Core_SelectValues::contactTokens();
+    $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
+
+    $form->add('select', 'token2', ts('Insert Tokens'),
+      $tokens, FALSE,
+      array(
+        'size' => "5",
+        'multiple' => TRUE,
+        'onclick' => "return tokenReplHtml(this);",
+      )
+    );
   }
 
   function buildThankYouBlock(&$form) {

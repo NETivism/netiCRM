@@ -42,6 +42,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
   protected $_tableName = NULL;
   protected $_filled = NULL;
   protected $_context = NULL;
+  protected $_cpage = NULL;
   
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -50,6 +51,12 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
     if(empty($this->_tableName)){
       $this->_tableName = "civicrm_temp_custom_recursearch";
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
+      $this->_cpage = array();
+      $sql = "SELECT id, title FROM civicrm_contribution_page WHERE is_active != 0;";
+      $dao = CRM_Core_DAO::executeQuery($sql);
+      while ($dao->fetch()) {
+        $this->_cpage[$dao->id] = $dao->title;
+      }
       $this->_cstatus[1] = ts('Recurring ended');
       $this->_gender = CRM_Core_PseudoConstant::gender();
       $this->_config = CRM_Core_Config::singleton();
@@ -98,6 +105,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.contribution_status_id' => 'contribution_status_id',
       'lrd.last_receive_date' => 'last_receive_date',
       'lfd.last_failed_date' => 'last_failed_date',
+      'c.contribution_page_id' => 'contribution_page_id',
     );
     $this->_columns = array(
       ts('ID') => 'id',
@@ -114,6 +122,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Most Recent').' '.ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
       ts('Last Failed Date') => 'last_failed_date',
+      ts('Contribution Page ID') => 'contribution_page_id',
       0 => 'total_count',
     );
   }
@@ -128,7 +137,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, array('id'))) {
         continue;
       }
-      if($field == 'remain_installments'){
+      if ($field == 'remain_installments' || strstr($field, 'amount') || strstr($field, '_id')) {
         $type = "INTEGER(10) default NULL";
       }
       else{
@@ -244,6 +253,11 @@ $having
       $clauses[] = "(r.installments IS NULL OR r.installments = 0)";
     }
 
+    $contributionPage = $this->_formValues['contribution_page'];
+    if (!empty($contributionPage)) {
+      $clauses[] = "c.contribution_page_id IN (".implode(",", $contributionPage).")";
+    }
+
     return implode(' AND ', $clauses);
   }
 
@@ -295,11 +309,15 @@ $having
     }
     $form->addElement('select', 'installments', ts('Installments Left'), $installments);
 
+    $contributionPage = $this->_cpage;
+    $attrs = array('multiple' => 'multiple');
+    $form->addElement('select', 'contribution_page', ts('Contribution Page'), $contributionPage, $attrs);
+
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('status', 'installments', 'sort_name', 'email'));
+    $form->assign('elements', array('status', 'installments', 'sort_name', 'email', 'contribution_page'));
   }
 
   function setDefaultValues() {
@@ -440,6 +458,14 @@ $having
       $row['completed_count'] = '0 / '.$row['total_count'];
     }
     unset($row['total_count']);
+
+    if ($row['contribution_page_id'] && empty($this->_isExport)) {
+      $params = array(
+        'p' => 'civicrm/admin/contribute',
+        'q' => "action=update&reset=1&id={$row['contribution_page_id']}",
+      );
+      $row['contribution_page_id'] = '<a href="'.CRM_Utils_System::crmURL($params).'" title="'. $this->_cpage[$row['contribution_page_id']].'">'. $row['contribution_page_id'].'</a>';
+    }
 
     $date = array('start_date', 'end_date', 'cancel_date');
     foreach($date as $d){

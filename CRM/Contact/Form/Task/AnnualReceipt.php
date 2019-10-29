@@ -154,8 +154,12 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         $html = '<div class="page-break" style="page-break-after: always;"></div>';
       }
       $config = &CRM_Core_Config::singleton();
-      $template->assign('imageBigStampUrl', $config->imageUploadDir . $config->imageBigStampName);
-      $template->assign('imageSmallStampUrl', $config->imageUploadDir . $config->imageSmallStampName);
+      if (!empty($config->imageBigStampName)){
+        $template->assign('imageBigStampUrl', $config->imageUploadDir . $config->imageBigStampName);
+      }
+      if (!empty($config->imageSmallStampName)) {
+        $template->assign('imageSmallStampUrl', $config->imageUploadDir . $config->imageSmallStampName);
+      }
       $html .= CRM_Contribute_BAO_Contribution::getAnnualReceipt($contact_id, $option, $template);
       self::pushFile($html);
 

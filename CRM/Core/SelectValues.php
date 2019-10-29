@@ -508,7 +508,8 @@ class CRM_Core_SelectValues {
     if (!$tokens) {
       require_once 'CRM/Contact/BAO/Contact.php';
       require_once 'CRM/Core/BAO/CustomField.php';
-      $additionalFields = array('checksum' => array('title' => ts('Checksum')),
+      $additionalFields = array(
+        'checksum' => array('title' => ts('Checksum')),
         'contact_id' => array('title' => ts('Internal Contact ID')),
       );
       $exportFields = array_merge(CRM_Contact_BAO_Contact::exportableFields(), $additionalFields);
@@ -520,10 +521,24 @@ class CRM_Core_SelectValues {
 
       //FIXME:skipping some tokens for time being.
       $skipTokens = array('is_bulkmail', 'group', 'tag', 'contact_sub_type', 'note',
-        'is_deceased', 'deceased_date', 'legal_identifier', 'contact_sub_type', 'user_unique_id',
+        'is_deceased', 'deceased_date', 'legal_identifier', 'contact_sub_type', 'user_unique_id', 'contact_is_deleted'
       );
       $customFields = array();
       $customFields = CRM_Core_BAO_CustomField::getFields('Individual');
+      $structure = CRM_Core_FieldHierarchy::$hierarchy;
+      foreach($structure as $component => $fields) {
+        foreach($fields as $fieldName => $dontcare) {
+          if (in_array($fieldName, $skipTokens)) {
+            continue;
+          }
+          $tokenField = array_search($fieldName, $values);
+          if (!$tokenField){
+            continue;
+          }
+          $tokens["{contact.$fieldName}"] = $exportFields[$fieldName]['title'];
+          unset($values[$tokenField]);
+        }
+      }
 
       foreach ($values as $key => $val) {
         if (in_array($val, $skipTokens)) {

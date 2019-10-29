@@ -142,6 +142,11 @@ SELECT id
       );
       // $this->addElement('checkbox', 'is_recur_interval', ts('Support recurring intervals'));
       $this->addElement('hidden', 'is_recur_interval', 0);
+      $options = array(
+        1 => ts('Yes'),
+        0 => ts('No'),
+      );
+      $this->addRadio('show_installments_option', ts("Show Installments Option"), $options);
     }
 
     // add pay later options
@@ -268,6 +273,13 @@ SELECT id
       $defaults['payment_processor'] = array_fill_keys(explode(CRM_Core_DAO::VALUE_SEPARATOR,
           $defaults['payment_processor']
         ), '1');
+    }
+
+    if (!isset($defaults['installments_option'])) {
+      $defaults['show_installments_option'] = 1;
+    }
+    else {
+      $defaults['show_installments_option'] = $defaults['installments_option'] ? 1 : 0;
     }
     return $defaults;
   }
@@ -442,6 +454,8 @@ SELECT id
         array_keys($params['recur_frequency_unit'])
       );
       $params['is_recur_interval'] = CRM_Utils_Array::value('is_recur_interval', $params, FALSE);
+
+      $params['installments_option'] = CRM_Utils_Array::value('show_installments_option', $params, '1');
     }
 
     if (array_key_exists('payment_processor', $params) && !CRM_Utils_System::isNull($params['payment_processor'])) {

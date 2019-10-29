@@ -124,7 +124,7 @@
                         <tr class="report-contents crm-report crm-report-criteria-filter crm-report-criteria-filter-{$tableName}" {if $field.no_display} style="display: none;"{/if}>
                             <td class="label report-contents">{$field.title}</td>
                             <td class="report-contents">{$form.$fieldOp.html}</td>
-                            <td>
+                            <td class="report-options">
                                <span id="{$filterVal}_cell">{$form.$filterVal.label}&nbsp;{$form.$filterVal.html}</span>
                                <span id="{$filterMin}_max_cell">{$form.$filterMin.label}&nbsp;{$form.$filterMin.html}&nbsp;&nbsp;{$form.$filterMax.label}&nbsp;{$form.$filterMax.html}</span>
                             </td>
@@ -186,7 +186,7 @@
 	}
   cj(document).ready(function(){
     {/literal}
-    {include file="CRM/common/chosen.tpl" selector='select#groups' nowrapper=1}
+    {include file="CRM/common/chosen.tpl" selector='select#groups,td.report-options select' nowrapper=1}
     {literal}
   });
     </script>

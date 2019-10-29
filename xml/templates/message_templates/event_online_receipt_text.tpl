@@ -274,3 +274,10 @@ registration process.{/ts}
 {/foreach}
 {/foreach}
 {/if}
+
+{if $checkinCode}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{ts}Check In{/ts}
+==========================================================={if $pricesetFieldsCount }===================={/if}
+{$checkinUrl}
+{/if}

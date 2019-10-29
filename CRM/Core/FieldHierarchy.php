@@ -4,7 +4,9 @@ class CRM_Core_FieldHierarchy {
     'reserved' => array(
       'do_not_import' => 1,
       'id' => 1,
+      'contact_id' => 1,
       'external_identifier' => 1,
+      'checksum' => 1,
     ),
     'household' => array(
       'household_name' => 1,
@@ -38,6 +40,7 @@ class CRM_Core_FieldHierarchy {
       'postal_code' => 1,
       'postal_code_suffix' => 1,
       'state_province' => 1,
+      'state_province_name' => 1,
       'city' => 1,
       'street_address' => 1,
       'master_id' => 1,

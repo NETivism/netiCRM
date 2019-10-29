@@ -17,6 +17,15 @@
     tds.forEach(function(elem, i){ elem.textContent = window.fixedColumnsData[$i][i]});
   }
 
+  // Solve arrangement when last step condition.
+  var draggableElements = Array.apply(null, document.querySelectorAll('tr.draggable'));
+  document.querySelectorAll('[name^="weight\["]').forEach(function(elem){
+    var mapperId = /weight\[(\d+)\]/.exec(elem.name)[1];
+    var order = Number(elem.value);
+    var $target = document.querySelector('#mapper\\[' + mapperId + '\\]\\[0\\]').parentNode.parentNode;
+    draggableElements[order].appendChild($target);
+  });
+
   var tbody = document.getElementById('map-field').querySelector('tbody');
   var config = { attributes: true, childList: true };
   var observer = new MutationObserver(function(){
@@ -33,6 +42,7 @@
     draggable:'tr.draggable',
     onUpdate: function(event){
       var elem = event.srcElement.querySelectorAll('tr.draggable');
+      console.log(elem);
       elem.forEach(function(item, i){
         var input = item.querySelector('[name^="mapper"][name$="[0]"]');
         if(input){
