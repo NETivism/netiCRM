@@ -47082,3 +47082,5 @@ msgstr ""
 msgid "Select 'Yes' if you want to give users to choose the installments of recurring contribution."
 msgstr ""
 
+msgid "You have to use credit card for recurring contribution."
+msgstr ""
