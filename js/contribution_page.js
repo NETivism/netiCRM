@@ -13,7 +13,7 @@
       currentPage : $('#crm-container>form').attr('id'), // "Main", "Confirm", "ThankYou"
       currentPageState : "loading", // "loading", "success"
       currentPriceOption : '',
-      currentPriceAmount : 0,
+      currentPriceAmount : "0",
       currentFormStep : 1,
       defaultPriceOption : {},
       singleContribMsgText : false,
@@ -384,7 +384,7 @@
           var value = decodeURIComponent(keyValueArray[1]);
           params[key] = value;
         });
-        var amount = this.currentPriceAmount.replace(',','');
+        var amount = this.currentPriceAmount.toString().replace(',','');
 
         if (params['_ppid'] && params['_ppid'] == $('.payment_processor-section input:checked').val() && 
           params['_grouping'] && params['_grouping'] == this.currentContribType && 
