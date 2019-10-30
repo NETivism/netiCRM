@@ -47084,3 +47084,9 @@ msgstr ""
 
 msgid "You have to use credit card for recurring contribution."
 msgstr ""
+
+msgid "Income Category"
+msgstr ""
+
+msgid "Payment Mode"
+msgstr ""

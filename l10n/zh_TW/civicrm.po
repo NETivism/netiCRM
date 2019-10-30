@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-10-29 12:11+0000\n"
+"PO-Revision-Date: 2019-10-30 07:36+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47285,3 +47285,9 @@ msgstr "如果您想讓捐款者自訂定期定額的捐款期數，請選「是
 
 msgid "You have to use credit card for recurring contribution."
 msgstr "信用卡才能進行定期捐款"
+
+msgid "Income Category"
+msgstr "收入用途/類別"
+
+msgid "Payment Mode"
+msgstr "繳費方式"
