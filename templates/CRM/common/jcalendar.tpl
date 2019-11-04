@@ -97,6 +97,7 @@
           showButtonPanel: true,
           dateFormat: date_format,
           altField: alt_field,
+          yearRange: yearRange,
           altFormat: 'mm/dd/yy',
           onChangeMonthYear: function(dateText, inst){
             setTimeout(function(){cj('.ui-datepicker-calendar').hide();},1);
