@@ -50,8 +50,6 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Miscellaneous'));
 
-    $this->addYesNo('contactUndelete', ts('Contact Trash & Undelete'));
-
     // FIXME: for now, disable logging for multilingual sites
     $domain = new CRM_Core_DAO_Domain;
     $domain->find(TRUE);
