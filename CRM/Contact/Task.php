@@ -302,7 +302,7 @@ class CRM_Contact_Task {
         $tasks = array(
           self::RESTORE => self::$_tasks[self::RESTORE]['title'],
         );
-        if (CRM_Core_Permissoin::check('delete contacts permanantly')) {
+        if (CRM_Core_Permission::check('delete contacts permanantly')) {
           $tasks[self::DELETE_PERMANENTLY] = self::$_tasks[self::DELETE_PERMANENTLY]['title'];
         }
       }
