@@ -19,6 +19,7 @@
       singleContribMsgText : false,
       executingAnimationCount : 0,
       complete : 0,
+      installments : '',
 
       preparePage: function(){
         if (window.ContribPageParams.mobileBackgroundImageUrl) {
@@ -105,7 +106,7 @@
 
         if($('[name="is_recur"]:checked').val() == 1){
           this.currentContribType = 'recurring';
-          if($('#installments').val()){
+          if($('#installments').length){
             this.installments = $('#installments').val();
           }
         }else{
@@ -562,7 +563,7 @@
           $('.info-is-recur').text(ts['Single Contribution']);
         }
         if(this.currentContribType == 'recurring'){
-          if(!this.installments){
+          if(!this.installments || this.installments == "0"){
             $('.info-is-recur').text(ts['Every-Month Recurring Contributions']);
           }else{
             $('.info-is-recur').text(this.installments+ts['Installments Recurring Contributions']);
@@ -683,6 +684,9 @@
       },
 
       setInstallments: function(installments) {
+        if(installments) {
+          installments = parseInt(installments);
+        }
         if(this.installments != installments){
           this.installments = installments;
           $('#installments').val(installments)
