@@ -949,7 +949,6 @@ LIMIT 0, 100
               1 => array($expiry_date, 'String'),
               2 => array($token, 'String'),
             ));
-            $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $dao->contribution_id, 'auto_renew');
             $params = array(
               'id' => $dao->contribution_recur_id,
               'auto_renew' => 2,
