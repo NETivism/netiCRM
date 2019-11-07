@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-10-30 07:36+0000\n"
+"PO-Revision-Date: 2019-11-06 13:33+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47079,10 +47079,10 @@ msgid "Finish synchronizing recurring."
 msgstr "定期定額同步更新完成"
 
 msgid "This is lastest contribution of this recurring (end date is %1)."
-msgstr "結束日期為 %1 ，此筆已是最後捐款。"
+msgstr "結束日期 %1"
 
 msgid "This is lastest contribution of this recurring (expiry date is %1)."
-msgstr "卡片到期日期為 %1 ，此筆已是最後捐款。"
+msgstr "卡片到期 %1"
 
 msgid "End date is due."
 msgstr "結束日期已過期。"
