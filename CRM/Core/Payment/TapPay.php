@@ -595,7 +595,7 @@ LIMIT 0, 100
     // no else for make sure every rule checked
 
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
-      $statusNote = ts("This is lastest contribution of this recurring (end date is %1).", array(1 => $dao->end_date));
+      $statusNote = ts("This is lastest contribution of this recurring (end date is %1).", array(1 => date('Y-m-d', strtotime($dao->end_date))));
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
     }
