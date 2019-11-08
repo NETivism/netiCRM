@@ -215,7 +215,7 @@
           dom_step += '<div class="crm-container crm-container-md contrib-step contrib-step-'+i+'"></div>';
         }
 
-        $(dom_step).insertBefore('.crm-contribution-main-form-block');
+        $(dom_step).css('opacity', 0).insertBefore('.crm-contribution-main-form-block');
 
         if ($('[name=cms_create_account]').length >= 1) {
           var $cms_create_account = $('[name=cms_create_account]').parent();
@@ -618,7 +618,7 @@
             setTimeout(function(){
               $this.removeClass('type-is-front').addClass('type-is-fade-out').css({'opacity': 1});
               /** then fade change */
-              $this.animate({'opacity': 0} ,500, function(){
+              $this.animate({'opacity': 0} ,300, function(){
                 window.ContribPage.executingAnimationCount--;
                 $this.removeClass('type-is-fade-out').addClass('type-is-back');
               });
@@ -630,7 +630,7 @@
             setTimeout(function(){
               $this.removeClass('type-is-back').addClass('type-is-fade-in').css({'opacity': 0});
               /** then fade change */
-              $this.animate({'opacity': 1} ,500,  function(){
+              $this.animate({'opacity': 1} ,300,  function(){
                 window.ContribPage.executingAnimationCount--;
                 $this.removeClass('type-is-fade-in').addClass('type-is-front');
               });
@@ -714,6 +714,16 @@
       },
 
       prepareAfterAll: function(){
+        $('body').addClass('special-page-finish');
+        if (window.innerWidth < 1024) {
+          setTimeout(function(){
+            $('#intro_text').css({
+              'max-height': 'unset',
+              'padding-top': '',
+              'padding-bottom': '',
+            });
+          }, 1000);
+        }
         $('.payment_options-group').hide();
         $('#page').css('background', 'none').css('height','unset');
         var interval = setInterval(function(){
