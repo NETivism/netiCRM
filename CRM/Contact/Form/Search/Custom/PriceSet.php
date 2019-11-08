@@ -118,13 +118,13 @@ SELECT c.id as contact_id,
        p.id as participant_id, 
        l.price_field_value_id as price_field_value_id, 
        l.qty
-FROM   civicrm_contact c,
-       civicrm_participant  p,
-       civicrm_line_item    l       
-WHERE  c.id = p.contact_id
-AND    p.event_id = {$this->_eventID}
-AND    p.id = l.entity_id
-AND    l.entity_table ='civicrm_participant'
+FROM   civicrm_contact c
+       INNER JOIN civicrm_participant p ON c.id = p.contact_id
+       INNER JOIN civicrm_price_set_entity pe ON p.event_id = pe.entity_id AND pe.entity_table = 'civicrm_event'
+       INNER JOIN civicrm_price_field pf ON pe.price_set_id = pf.price_set_id
+       INNER JOIN civicrm_line_item l ON p.id = l.entity_id AND l.entity_table = 'civicrm_participant' AND l.price_field_id = pf.id
+WHERE
+  pe.entity_id = {$this->_eventID}
 ORDER BY c.id, l.price_field_value_id;
 ";
 
