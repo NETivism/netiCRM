@@ -33,6 +33,45 @@ body.frontend #content{
   display: none;
 }
 
+/** loading placeholder */
+.crm-container>form {
+  transition: opacity 500 linear;
+}
+body:not(.special-page-finish) .crm-container>form {
+  display: none;
+}
+body:not(.special-page-finish) .crm-container>form {
+  opacity: 0;
+}
+@media screen and (min-width: 1024px) {
+  #intro_text {
+    transition: opacity .5s linear;
+    -webkit-transition: opacity .5s linear;
+    -moz-transition: opacity .5s linear;
+    -ms-transition: opacity .5s linear;
+    -o-transition: opacity .5s linear;
+  }
+  body:not(.special-page-finish) #intro_text {
+    opacity: 0;
+  }
+}
+@media screen and (max-width: 1023.9px) {
+  #intro_text {
+    transition: max-height .3s linear ,padding .1s linear;
+    -webkit-transition: max-height .3s linear ,padding .1s linear;
+    -moz-transition: max-height .3s linear ,padding .1s linear;
+    -ms-transition: max-height .3s linear ,padding .1s linear;
+    -o-transition: max-height .3s linear ,padding .1s linear;
+    max-height: 100vh;
+  }
+  body:not(.special-page-finish) #intro_text {
+    padding-top: 0;
+    padding-bottom: 0;
+    max-height: 0;
+  }
+}
+
+
 body .crm-container-md table.crm-custom-data-view, 
 body .crm-container-md table.crm-custom-data-view.no-border{
   display: none;
@@ -68,8 +107,6 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   display: block;
   max-width: unset;
   overflow: unset;
-  
-  
 }
 
 .contrib-step.type-is-fade-out {
@@ -123,6 +160,9 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 }
 
 @media screen and (min-width: 1024px) {
+  #content-main {
+    min-height: calc(100vh - 360px);
+  }
   #page {
     overflow: hidden;
   }
@@ -206,6 +246,9 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 
 
 @media screen and (max-width: 1023px) {
+  #content-main {
+    min-height: calc(100vh - 90px);
+  }
   #intro_text h1{
     font-size: 48px;
   }
@@ -281,7 +324,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     margin-bottom: 0;
     padding: 30px 20px 120px;
     margin: 0;
-    min-height: calc(100vh - 90px);
+    min-height: 0;
   }
   .progress-block{
     order: 1;
