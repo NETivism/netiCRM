@@ -23,7 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{if $form.attachFile.0 || $currentAttachmentURL}
+{assign var=emptyStringKey value=""}
+
+{if $form.attachFile.$emptyStringKey || $currentAttachmentURL}
 {if $action EQ 4 AND $currentAttachmentURL} {* For View action we exclude the form fields and just show any current attachments. *}
     <tr>
         <td class="label"><label>{ts}Current Attachment(s){/ts}</label></td>
@@ -47,10 +49,10 @@
    {/if}
     <div id="attachments">
     <table class="form-layout-compressed">
-    {if $form.attachFile.0}
+    {if $form.attachFile.$emptyStringKey}
             <tr>
-                <td class="label">{$form.attachFile.0.label}</td>
-                <td>{$form.attachFile.0.html}<br />
+                <td class="label">{$form.attachFile.$emptyStringKey.label}</td>
+                <td>{$form.attachFile.$emptyStringKey.html}<br />
                   {if $context EQ 'pcpCampaign'}
                       <div class="description">{ts}You can upload a picture or image to include on your page. Your file should be in .jpg, .gif, or .png format.{/ts}</div>
                   {/if}
