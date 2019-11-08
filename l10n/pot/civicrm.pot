@@ -47090,3 +47090,7 @@ msgstr ""
 
 msgid "Payment Mode"
 msgstr ""
+
+# templates/CRM/Contribute/Page/ContributionPage.tpl
+msgid "Special Style"
+msgstr ""

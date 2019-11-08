@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-11-06 13:33+0000\n"
+"PO-Revision-Date: 2019-11-08 08:25+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47291,3 +47291,6 @@ msgstr "收入用途/類別"
 
 msgid "Payment Mode"
 msgstr "繳費方式"
+
+msgid "Special Style"
+msgstr "特別募款頁"
