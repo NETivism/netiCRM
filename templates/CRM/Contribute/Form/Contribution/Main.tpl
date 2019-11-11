@@ -442,18 +442,8 @@ function enableHonorType( ) {
     }
   }
   showHidePayPalExpressOption();
-{/literal}{/if}
-  var recur_support = {$recur_support};{literal}
-  var check_recur_support = function(pid){
-    var payment_processor_id = parseInt(pid);
-    if(recur_support.indexOf(payment_processor_id) === -1){
-      cj("input[name=is_recur][value=0]").attr("checked", 1);
-    }
-  }
+{/literal}{/if}{literal}
   cj("input[name=payment_processor]").click(function(){
-    if(cj("input[name=is_recur][value=1]").attr("checked")){
-      check_recur_support(cj(this).val());
-    }
     if(cj(this).val() == 0){
       cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$pay_later_receipt|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');
     }

@@ -80,7 +80,3 @@
 </table>
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
-<script type="text/javascript">
-    // Always open attachment div by default for this form
-    show('attachments');
-</script>

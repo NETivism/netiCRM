@@ -681,6 +681,16 @@ return array(
     'class' => 'CRM_Contribute_DAO_ContributionSoft',
     'table' => 'civicrm_contribution_soft',
   ) ,
+  'CRM_Contribute_DAO_TapPay' => array(
+    'name' => 'TapPay',
+    'class' => 'CRM_Contribute_DAO_TapPay',
+    'table' => 'civicrm_contribution_tappay',
+  ) ,
+  'CRM_Contribute_DAO_TapPayLog' => array(
+    'name' => 'TapPayLog',
+    'class' => 'CRM_Contribute_DAO_TapPayLog',
+    'table' => 'civicrm_contribution_tappay_log',
+  ) ,
   'CRM_Coupon_DAO_CouponTrack' => array(
     'name' => 'CouponTrack',
     'class' => 'CRM_Coupon_DAO_CouponTrack',

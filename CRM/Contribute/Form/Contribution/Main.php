@@ -472,7 +472,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
       }
     }
-    $this->assign('recur_support', json_encode($recur_support));
+    // The parameter $recur_support is removed from tpl files in #21986, but may be used later..
 
     if (count($pps)) {
       if (CRM_Utils_Array::value('is_pay_later', $this->_values)) {

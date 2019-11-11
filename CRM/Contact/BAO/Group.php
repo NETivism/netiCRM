@@ -336,8 +336,8 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
 
     // form the name only if missing: CRM-627
     if (!CRM_Utils_Array::value('name', $params) && !CRM_Utils_Array::value('id', $params)) {
-      require_once 'CRM/Utils/String.php';
       $params['name'] = CRM_Utils_String::titleToVar($params['title']);
+      $params['name'] .= '_'.CRM_Utils_String::createRandom(2, CRM_Utils_String::ALPHANUMERIC);
     }
 
     // convert params if array type

@@ -46,13 +46,6 @@
             </td>
         </tr>
      {if $admin}
-        <tr class="crm-miscellaneous-form-block-contactUndelete">
-          <td class="label">{$form.contactUndelete.label}</td>
-          <td>
-            {$form.contactUndelete.html}<br />
-            <p class="description">{ts}If enabled, deleted contacts will be moved to trash (instead of being destroyed). Users with the proper permission are able to search for the deleted contacts and restore them (or delete permanently).{/ts}</p>
-          </td>
-        </tr>
         <tr class="crm-miscellaneous-form-block-logging">
           <td class="label">{$form.logging.label}</td>
           <td>

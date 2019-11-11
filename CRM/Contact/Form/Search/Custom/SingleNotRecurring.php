@@ -26,6 +26,7 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
       'c.payment_instrument_id' => 'payment_instrument_id',
       'ROUND(SUM(c.total_amount))' => 'receive_amount',
       'COUNT(c.id)' => 'completed_count',
+      'MAX(c.contribution_recur_id)' => 'last_success_contribution_recur_id'
     );
     $this->_columns = array(
       ts('ID') => 'id',
@@ -116,7 +117,7 @@ $having
 
 
   function tempFrom() {
-    return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 AND c.contribution_status_id = 1 AND NULLIF(c.contribution_recur_id, 0) IS NULL";
+    return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 AND c.contribution_status_id = 1 ";
   }
 
   /**
@@ -147,6 +148,7 @@ $having
     $count = $this->_formValues['contribution_count'];
     $clauses = array();
     $clauses[] = "COUNT(c.id) >= $count";
+    $clauses[] = "last_success_contribution_recur_id IS NULL";
     return implode(' AND ', $clauses);
     return '';
   }

@@ -2174,8 +2174,8 @@ SELECT source_contact_id
       );
       $tplParams['recordHeader'] = !empty($option['recordHeader']) ? $option['recordHeader'] :  array(
           ts('Receipt ID'),
-          ts('Contribution Types'),
-          ts('Payment Instrument'),
+          ts('Income Category'),
+          ts('Payment Mode'),
           ts('Receipt Date'),
           ts('Total Amount'),
         );

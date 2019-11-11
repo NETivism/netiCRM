@@ -526,6 +526,9 @@ ORDER BY is_active DESC, id ASC
       CRM_Core_DAO::storeValues($dao, $contributionPage[$dao->id]);
       $contributionPage[$dao->id]['contribution_type'] = $contributionTypes[$dao->contribution_type_id];
 
+      $contributionPage[$dao->id]['is_active'] = $dao->is_active & CRM_Contribute_BAO_ContributionPage::IS_ACTIVE;
+      $contributionPage[$dao->id]['is_special'] = ($dao->is_active & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL) ? 1 : 0;
+
       $action = self::checkPerm($contributionPage[$dao->id]);
 
       //build the configure links.

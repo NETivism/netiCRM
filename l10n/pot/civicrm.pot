@@ -47069,3 +47069,28 @@ msgstr ""
 
 msgid "This mailing event doesn't include any group."
 msgstr ""
+
+msgid "Installments Option"
+msgstr ""
+
+msgid "Show Installments Option"
+msgstr ""
+
+msgid "Your recurring contribution will be processed automatically for the number of installments you specify. You can choose to cancel at any time."
+msgstr ""
+
+msgid "Select 'Yes' if you want to give users to choose the installments of recurring contribution."
+msgstr ""
+
+msgid "You have to use credit card for recurring contribution."
+msgstr ""
+
+msgid "Income Category"
+msgstr ""
+
+msgid "Payment Mode"
+msgstr ""
+
+# templates/CRM/Contribute/Page/ContributionPage.tpl
+msgid "Special Style"
+msgstr ""

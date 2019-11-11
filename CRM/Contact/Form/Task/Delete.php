@@ -87,7 +87,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
       CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
     }
     $this->_restore = (CRM_Utils_Request::retrieve('restore', 'Boolean', $this) or CRM_Utils_Array::value('task', $values) == CRM_Contact_Task::RESTORE);
-    $this->assign('trash', $config->contactUndelete and !$this->_skipUndelete);
+    $this->assign('trash', !$this->_skipUndelete);
     $this->assign('restore', $this->_restore);
 
     if ($this->_restore) {

@@ -44,12 +44,13 @@
                             <i class="zmdi zmdi-undo"></i>{ts}Restore from Trash{/ts}
                           </a>
                         </li>
-                        
-                        <li class="crm-delete-action crm-contact-permanently-delete action-link-button">
-                          <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId&skip_undelete=1"}" class="delete button" title="{ts}Delete Permanently{/ts}">
-                            <i class="zmdi zmdi-delete"></i>{ts}Delete Permanently{/ts}
-                          </a>
-                        </li>
+                          {if call_user_func(array('CRM_Core_Permission','check'), 'delete contacts permanantly')}
+                            <li class="crm-delete-action crm-contact-permanently-delete action-link-button">
+                            <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId&skip_undelete=1"}" class="delete button" title="{ts}Delete Permanently{/ts}">
+                                <i class="zmdi zmdi-delete"></i>{ts}Delete Permanently{/ts}
+                            </a>
+                            </li>
+                          {/if}
                         {else}
                         <li class="crm-delete-action crm-contact-delete action-link-button">
                           <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId"}" class="delete button" title="{ts}Delete{/ts}">

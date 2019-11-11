@@ -530,7 +530,7 @@ LIMIT 0, 100
       $time = time();
     }
     // Update last_execute_date
-    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurId, 'last_execute_date', date('Y-m-d H:i:s', $time));
+    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurId, 'last_execute_date', date('Y-m-d H:i:s'));
     // Get same cycle_day recur.
     $sql = "SELECT c.id contribution_id, r.id recur_id, r.contribution_status_id recur_status_id, r.end_date end_date, r.installments, r.frequency_unit, c.is_test FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.contribution_recur_id = %1 ORDER BY c.id ASC LIMIT 1";
     $params = array(
@@ -595,24 +595,26 @@ LIMIT 0, 100
     // no else for make sure every rule checked
 
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
-      $resultNote .= "\n". ts("This is lastest contribution of this recurring (end date is %1).", array(1 => $recurId, 2 => $dao->end_date));
+      $statusNote = ts("This is lastest contribution of this recurring (end date is %1).", array(1 => date('Y-m-d', strtotime($dao->end_date))));
+      $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
     }
-    if ($donePayment && $dao->frequency_unit == 'month' && !empty($tappay->expiry_date) && date('Ym', $time) == date('Ym', strtotime($tappay->expiry_date))) {
-      $resultNote .= "\n". ts("This is lastest contribution of this recurring (expiry date is %1).", array(1 => $tappay->expiry_date));
+    elseif ($donePayment && $dao->frequency_unit == 'month' && !empty($tappay->expiry_date) && date('Ym', $time) == date('Ym', strtotime($tappay->expiry_date))) {
+      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", array(1 => date('Y/m',strtotime($tappay->expiry_date))));
+      $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
     }
-    if (!empty($dao->end_date) && $time > strtotime($dao->end_date)) {
+    elseif (!empty($dao->end_date) && $time > strtotime($dao->end_date)) {
       $statusNote = ts("End date is due.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
-    if (!empty($dao->installments) && $successCount >= $dao->installments) {
+    elseif (!empty($dao->installments) && $successCount >= $dao->installments) {
       $statusNote = ts("Installments is full.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
-    if ($time > strtotime($tappay->expiry_date)) {
+    elseif ($time > strtotime($tappay->expiry_date)) {
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
@@ -620,7 +622,7 @@ LIMIT 0, 100
 
     if ( $changeStatus ) {
       $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
-      $statusNote .= ts("Auto renews status");
+      $statusNote .= ' '.ts("Auto renews status");
       $resultNote .= "\n".$statusNoteTitle;
       $recurParams = array();
       $recurParams['id'] = $dao->recur_id;
@@ -949,7 +951,6 @@ LIMIT 0, 100
               1 => array($expiry_date, 'String'),
               2 => array($token, 'String'),
             ));
-            $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $dao->contribution_id, 'auto_renew');
             $params = array(
               'id' => $dao->contribution_recur_id,
               'auto_renew' => 2,
