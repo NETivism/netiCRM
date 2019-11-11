@@ -171,6 +171,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $controller->set('cid', $this->_contactId);
     $controller->run();
 
+    $this->associatedContribution();
+
     $search_values = array(
       'membership_id' => $this->_id,
     );
@@ -304,6 +306,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     }
 
     if ($this->_action & CRM_Core_Action::VIEW) {
+      $this->setContext();
       $this->view();
     }
     elseif ($this->_action & (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD | CRM_Core_Action::DELETE | CRM_Core_Action::RENEW)) {

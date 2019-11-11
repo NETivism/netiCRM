@@ -64,11 +64,6 @@ class CRM_Member_Form_MembershipView extends CRM_Core_Form {
 
       CRM_Member_BAO_Membership::retrieve($params, $values);
 
-      // build associated contributions
-      require_once 'CRM/Member/Page/Tab.php';
-      CRM_Member_Page_Tab::associatedContribution($values['contact_id'], $id, $values['is_test']);
-
-
       //Provide information about membership source when it is the result of a relationship (CRM-1901)
       $values['owner_membership_id'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_Membership',
         $id,
@@ -152,8 +147,6 @@ END AS 'relType'
         NULL,
         $recentOther
       );
-
-      CRM_Member_Page_Tab::setContext($values['contact_id']);
 
       $memType = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership", $id, "membership_type_id");
 
