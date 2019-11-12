@@ -124,7 +124,7 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
     //set the context for redirection for any task actions
     $session = CRM_Core_Session::singleton();
 
-    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $form);
     require_once 'CRM/Utils/Rule.php';
     $urlParams = 'force=1';
     if (CRM_Utils_Rule::qfKey($qfKey)) {
