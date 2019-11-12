@@ -62,7 +62,7 @@ SELECT    civicrm_contact.display_name,
           civicrm_email.id
 FROM      civicrm_contact
 LEFT JOIN civicrm_email ON ( civicrm_contact.id = civicrm_email.contact_id {$primaryClause} {$locationClause} )
-WHERE     civicrm_contact.id = %1";
+WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
 
     $params = array(1 => array($id, 'Integer'));
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
