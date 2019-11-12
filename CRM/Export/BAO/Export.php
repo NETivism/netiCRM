@@ -481,6 +481,16 @@ class CRM_Export_BAO_Export {
       );
     }
 
+    // Privacy in notes should be public.
+    if (CRM_Utils_Array::value('notes', $returnProperties)) {
+      $oldClause = "contact_a.id = civicrm_note.entity_id";
+      $newClause = " ( $oldClause AND (civicrm_note.privacy = 0 OR civicrm_note.privacy IS NULL )) ";
+      $from = str_replace($oldClause,
+        $newClause,
+        $from
+      );
+    }
+
     if ($componentTable) {
       $from .= " INNER JOIN $componentTable ctTable ON ctTable.contact_id = contact_a.id ";
       if ($order) {
