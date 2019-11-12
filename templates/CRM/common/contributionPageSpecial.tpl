@@ -49,12 +49,12 @@
   {/literal}
 </script>
 <script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js"></script>
-<img class="pre-load-background-images" src="{/literal}{$backgroundImageUrl}{literal}" alt="" style="display: none;">
-<img class="pre-load-background-images" src="{/literal}{$mobilBackgroundImageUrl}{literal}" alt="" style="display: none;">
+<img class="pre-load-background-images" src="{$backgroundImageUrl}" alt="" style="display: none;">
+<img class="pre-load-background-images" src="{$mobileBackgroundImageUrl}" alt="" style="display: none;">
 <style>
 {literal}
 @media screen and (min-width: 480px) {
-  body.frontend.page-civicrm-contribute-transact{
+  body.frontend{
     background: url({/literal}{$backgroundImageUrl}{literal});
       -webkit-background-size: cover;
       -moz-background-size: cover;
@@ -66,7 +66,7 @@
   }
 }
 @media screen and (max-width: 1023px) {
-  body.frontend.page-civicrm-contribute-transact{
+  body.frontend{
     background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)),url({/literal}{$backgroundImageUrl}{literal});
   }
 }

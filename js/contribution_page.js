@@ -252,7 +252,9 @@
           $('.custom_pre_profile-group').after($('.premiums-group'));
         }
         exec_step -= 1;
-        $('.contrib-step-'+exec_step).find('.step-action-wrapper').has('.next-step').remove();
+        if ($('.contrib-step-'+exec_step+' .step-action-wrapper .next-step').length > 0) {
+          $('.contrib-step-'+exec_step+' .step-action-wrapper').remove();
+        }
         $('.contrib-step-'+exec_step)
           .append(this.createStepBtnBlock(['last-step']).addClass('hide-as-show-all').addClass('crm-section'))
           .append($('.crm-submit-buttons'));
