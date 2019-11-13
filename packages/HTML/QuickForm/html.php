@@ -66,7 +66,7 @@ class HTML_QuickForm_html extends HTML_QuickForm_static
     * @access public
     * @return void 
     */
-    function accept(&$renderer)
+    function accept(&$renderer, $required = null, $error = null)
     {
         $renderer->renderHtml($this);
     } // end func accept

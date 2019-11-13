@@ -123,7 +123,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     }
   }
 
-  function buildQuery() {}
+  function buildQuery($applyLimit = null) {}
 
   private function sqlToArray($sql, $params) {
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);

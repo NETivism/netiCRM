@@ -176,7 +176,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function addDefaultButtons($title, $nextType = 'next', $backType = 'back') {
+  function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
     $this->addButtons(array(
         array('type' => $nextType,
           'name' => $title,

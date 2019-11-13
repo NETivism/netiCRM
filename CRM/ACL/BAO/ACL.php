@@ -344,7 +344,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
    * @return array    - Assoc. array of the ACL rule's properties
    * @access public
    */
-  public function toArray() {
+  public function toArray($format = '%s', $hideEmpty = null) {
     $result = array();
 
     if (!self::$_fieldKeys) {

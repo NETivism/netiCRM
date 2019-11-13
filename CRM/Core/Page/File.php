@@ -72,7 +72,7 @@ class CRM_Core_Page_File extends CRM_Core_Page {
 
     if ($action & CRM_Core_Action::DELETE) {
       if (CRM_Utils_Request::retrieve('confirmed', 'Boolean', CRM_Core_DAO::$_nullObject)) {
-        CRM_Core_BAO_File::delete($fileId, $entityId, $fieldId);
+        CRM_Core_BAO_File::del($fileId, $entityId, $fieldId);
         CRM_Core_Session::setStatus(ts('The attached file has been deleted.'));
 
         $session = CRM_Core_Session::singleton();

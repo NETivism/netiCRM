@@ -375,7 +375,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    *
    * @return None
    */
-  public function postProcess() {
+  public function postProcess($params = null) {
     if ($this->_action & CRM_Core_Action::DELETE) {
       $statusMsg = NULL;
 

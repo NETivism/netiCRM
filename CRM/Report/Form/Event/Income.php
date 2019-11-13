@@ -281,7 +281,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $this->_limit = ($pageId - 1) * self::ROW_COUNT_LIMIT;
   }
 
-  function setPager() {
+  function setPager($rowCount = null) {
     require_once 'CRM/Utils/Pager.php';
     $params = array('total' => $this->_rowsFound,
       'rowCount' => self::ROW_COUNT_LIMIT,

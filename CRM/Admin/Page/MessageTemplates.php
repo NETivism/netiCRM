@@ -134,7 +134,7 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
     return self::$_links;
   }
 
-  function action(&$object, $action, &$values, &$links, $permission) {
+  function action(&$object, $action, &$values, &$links, $permission, $forceAction = null){
     if ($object->workflow_id) {
       // do not expose action link for reverting to default if the template did not diverge or we just reverted it now
       if (!in_array($object->id, array_keys($this->_revertible)) or
@@ -218,7 +218,7 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
    * @return void
    * @access public
    */
-  function browse($action = NULL, $sort) {
+  function browse($action = NULL, $sort = NULL) {
     if ($this->_action & CRM_Core_Action::ADD) {
       return;
     }

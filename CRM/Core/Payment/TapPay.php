@@ -30,7 +30,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    */
   private static $_singleton = NULL;
 
-  function __construct($mode, &$paymentProcessor) {
+  function __construct($mode, &$paymentProcessor, &$paymentForm, $apiType) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_apiType = $apiType;
@@ -45,10 +45,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode, &$paymentProcessor, $apiType = '') {
+  public static function &singleton($mode, &$paymentProcessor, $paymentForm = NULL) {
+    $args = func_get_args();
+    if (isset($args[3])) {
+      $apiType = $args[3];
+    }
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
-      self::$_singleton[$processorName] = new CRM_Core_Payment_TapPay($mode, $paymentProcessor, $apiType);
+      self::$_singleton[$processorName] = new CRM_Core_Payment_TapPay($mode, $paymentProcessor, $paymentForm, $apiType);
     }
     return self::$_singleton[$processorName];
   }
@@ -182,7 +186,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor, $tappayParams['apiType']);
+      $paymentClass = self::singleton($mode, $paymentProcessor, NULL, $tappayParams['apiType']);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
@@ -286,7 +290,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
 
       // Allow further manipulation of the arguments via custom hooks ..
-      $paymentClass = self::singleton($mode, $paymentProcessor, $tappayParams['apiType']);
+      $paymentClass = self::singleton($mode, $paymentProcessor, NULL, $tappayParams['apiType']);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       // Send tappay pay_by_token post
@@ -694,7 +698,7 @@ LIMIT 0, 100
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor, $tappayParams['apiType']);
+      $paymentClass = self::singleton($mode, $paymentProcessor, NULL, $tappayParams['apiType']);
       $nullObject = NULL;
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $nullObject, $params);
 
@@ -724,7 +728,7 @@ LIMIT 0, 100
 
           // Allow further manipulation of the arguments via custom hooks ..
           $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-          $paymentClass = self::singleton($mode, $paymentProcessor, $tappayParams['apiType']);
+          $paymentClass = self::singleton($mode, $paymentProcessor, NULL, $tappayParams['apiType']);
           CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $nullObject, $params);
 
           $result = $api_history->request($params);

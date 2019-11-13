@@ -130,7 +130,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   /**
    * override function browse()
    */
-  function browse($action = NULL, $sort) {
+  function browse($action = NULL, $sort = NULL) {
     $adminTagSet = FALSE;
     if (CRM_Core_Permission::check('administer Tagsets')) {
       $adminTagSet = TRUE;

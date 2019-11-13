@@ -126,7 +126,7 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
    *
    * @return void
    */
-  function run($newArgs) {
+  function run($newArgs = NULL) {
     $this->preProcess();
     if (isset($_GET['runJobs']) || CRM_Utils_Array::value('2', $newArgs) == 'queue') {
       require_once 'CRM/Mailing/BAO/Job.php';

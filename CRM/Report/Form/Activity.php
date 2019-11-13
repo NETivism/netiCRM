@@ -366,7 +366,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $this->_groupBy = "GROUP BY " . implode(', ', $this->_groupBy) . " ";
   }
 
-  function buildACLClause($tableAlias) {
+  function buildACLClause($tableAlias = 'contact_a') {
     //override for ACL( Since Cotact may be source
     //contact/assignee or target also it may be null )
 

@@ -47,7 +47,7 @@ class PEAR_ChannelFile_Parser extends PEAR_XMLParser
         $this->_logger = &$l;
     }
 
-    function parse($data, $file)
+    function parse($data, $file = NULL)
     {
         if (PEAR::isError($err = parent::parse($data, $file))) {
             return $err;

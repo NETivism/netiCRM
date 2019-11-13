@@ -141,7 +141,7 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
     parent::preProcess();
   }
 
-  function setDefaultValues() {
+  function setDefaultValues($freeze = null) {
     return parent::setDefaultValues();
   }
 

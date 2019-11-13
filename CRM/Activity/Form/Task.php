@@ -173,7 +173,7 @@ SELECT source_contact_id
    * @return void
    * @access public
    */
-  function addDefaultButtons($title, $nextType = 'next', $backType = 'back') {
+  function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
     $this->addButtons(array(
         array('type' => $nextType,
           'name' => $title,

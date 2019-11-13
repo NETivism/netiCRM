@@ -92,7 +92,7 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
    */
   public function postProcess() {
     require_once 'CRM/Core/BAO/File.php';
-    CRM_Core_BAO_File::delete($this->_id, $this->_eid, $this->_fid);
+    CRM_Core_BAO_File::del($this->_id, $this->_eid, $this->_fid);
     CRM_Core_Session::setStatus(ts('The attached file has been deleted.'));
 
     $session = CRM_Core_Session::singleton();
