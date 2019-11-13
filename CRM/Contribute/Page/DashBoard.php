@@ -160,12 +160,12 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       }
 
       $contrib_this_year = $summary_contrib['ContribThisYear'];
-      $this->assign('this_year_sum_non_recur', array_sum($contrib_this_year['not_recur']['sum']));
-      $this->assign('this_year_sum_recur', array_sum($contrib_this_year['recur']['sum']));
-      $this->assign('this_year_count_non_recur', array_sum($contrib_this_year['not_recur']['count']));
-      $this->assign('this_year_count_recur', array_sum($contrib_this_year['recur']['count']));
-      $this->assign('this_year_people_non_recur', array_sum($contrib_this_year['not_recur']['people']));
-      $this->assign('this_year_people_recur', array_sum($contrib_this_year['recur']['people']));
+      $this->assign('this_year_sum_non_recur', @array_sum($contrib_this_year['not_recur']['sum']));
+      $this->assign('this_year_sum_recur', @array_sum($contrib_this_year['recur']['sum']));
+      $this->assign('this_year_count_non_recur', @array_sum($contrib_this_year['not_recur']['count']));
+      $this->assign('this_year_count_recur', @array_sum($contrib_this_year['recur']['count']));
+      $this->assign('this_year_people_non_recur', @array_sum($contrib_this_year['not_recur']['people']));
+      $this->assign('this_year_people_recur', @array_sum($contrib_this_year['recur']['people']));
       $recur_year_sum = self::getDataForChart($year_month_label, $contrib_this_year['recur']);
       $not_recur_year_sum = self::getDataForChart($year_month_label, $contrib_this_year['not_recur']);
       for ($i=1; $i < 12; $i++) {
@@ -194,9 +194,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $this->assign('chart_this_year', $chart);
     }
 
-    foreach ($this->duration_array as $date) {
-      $recur_index = array_search($date, $summary_contrib['LastDurationContrib']['recur']['label']);
-    }
     $recur_duration_sum = self::getDataForChart($this->duration_array, $summary_contrib['LastDurationContrib']['recur']);
     $not_recur_duration_sum = self::getDataForChart($this->duration_array, $summary_contrib['LastDurationContrib']['not_recur']);
 
@@ -366,8 +363,12 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $i++;
     }
     $this->assign('contribution_page_stat', $cp_stat);
-
-    $this->assign('page_col_n', (12 / $dao->N));
+    if ($dao->N > 0) {
+      $this->assign('page_col_n', (12 / $dao->N));
+    }
+    else {
+      $this->assign('page_col_n', (12 / 3));
+    }
 
 
     // last 30 days count
@@ -530,6 +531,9 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
   private static function getDataForChart($label_array, $summary_array, $type='sum') {
     $return_array = array();
+    if (!is_array($summary_array['label'])) {
+      $summary_array['label'] = array();
+    }
     foreach ($label_array as $label) {
       $recur_index = array_search($label, $summary_array['label']);
       if((!empty($recur_index) || $recur_index === 0 ) && !empty($summary_array[$type][$recur_index])){

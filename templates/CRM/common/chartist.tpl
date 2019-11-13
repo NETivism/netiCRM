@@ -36,7 +36,9 @@ if (!$crmChartistAdded) {
     if (array_key_exists('isFillDonut', $chartist)) {
       $chartClasses[] = 'ct-chart-fill-donut';
     }
-
+    if (!is_array($chartist['classes'])) {
+      $chartist['classes'] = array();
+    }
     if (count($chartist['classes']) > 0) {
       $chartClasses = array_merge($chartClasses, $chartist['classes']); 
     }

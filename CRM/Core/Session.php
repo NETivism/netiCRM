@@ -483,7 +483,7 @@ class CRM_Core_Session {
             $crmEleCount++;
           }
           elseif(empty($object['expired'])) {
-            $this->_session[$this->_key][$prefix]['expired'] = CRM_REQUEST_TIME + EXPIRED_TIME;
+            $this->_session[$this->_key][$prefix]['expired'] = CRM_REQUEST_TIME + self::EXPIRED_TIME;
           }
         }
       }
@@ -496,7 +496,7 @@ class CRM_Core_Session {
             $rootEleCount++;
           }
           elseif(empty($object['expired'])) {
-            $this->_session[$prefix]['expired'] = CRM_REQUEST_TIME + EXPIRED_TIME;
+            $this->_session[$prefix]['expired'] = CRM_REQUEST_TIME + self::EXPIRED_TIME;
           }
         }
       }
