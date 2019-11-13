@@ -89,7 +89,7 @@
         $('[data-default="1"][data-grouping]').each(
           function(i, ele){
             var contribType = ele.dataset.grouping;
-            var regExp = /NT\$ ([\d,]+)/;
+            var regExp = /NT\$ ([\d\,\.]+)/;
             var label = $(ele).next().text();
             if(regExp.test(label)){
               if(contribType == 'recurring'){
@@ -119,7 +119,7 @@
             this.currentPriceAmount = $('#amount_other').val();
           }else{
             this.currentPriceOption = $('[name="amount"]:checked').val();
-            var reg = new RegExp(/^NT\$ ([\d\,]+)/);
+            var reg = new RegExp(/^NT\$ ([\d\,\.]+)/);
             var option_label = $('[name="amount"]:checked').parent().text();
             if(reg.test(option_label)){
               this.currentPriceAmount = reg.exec(option_label)[1];
@@ -252,7 +252,9 @@
           $('.custom_pre_profile-group').after($('.premiums-group'));
         }
         exec_step -= 1;
-        $('.contrib-step-'+exec_step).find('.step-action-wrapper').has('.next-step').remove();
+        if ($('.contrib-step-'+exec_step+' .step-action-wrapper .next-step').length > 0) {
+          $('.contrib-step-'+exec_step+' .step-action-wrapper').remove();
+        }
         $('.contrib-step-'+exec_step)
           .append(this.createStepBtnBlock(['last-step']).addClass('hide-as-show-all').addClass('crm-section'))
           .append($('.crm-submit-buttons'));
@@ -432,12 +434,12 @@
 
       updatePriceSetOption: function(){
         $('.price-set-btn').html("");
-        var reg = new RegExp(/^NT\$ ([\d\,]+) ?(.*)$/);
+        var reg = new RegExp(/^NT\$ ([\d\,\.]+) ?(.*)$/);
         var grouping_text = this.currentContribType;
         $('.amount-section label.crm-form-radio').each(function(ele){
           var $this = $(this);
-          var this_grouping = $this.find('input').data('grouping');
-          if(this_grouping == grouping_text || this_grouping == ''){
+          var this_grouping = $this.find('input').attr('data-grouping');
+          if(this_grouping == grouping_text || this_grouping == undefined || this_grouping == ''){
             var text = $(this).find('.elem-label').text();
             if(reg.test(text)){
               var reg_result = reg.exec(text);
@@ -451,7 +453,7 @@
               }
               var $option = $('<div data-amount="'+val+'"><span class="amount">'+amount+'</span><span class="description'+multitext_class+'">'+words+'</span></div>');
               $option.click(function(){
-                ContribPage.setPriceOption($(this).data('amount'));
+                ContribPage.setPriceOption($(this).attr('data-amount'));
                 // ContribPage.setFormStep(2);
               });
               $('.price-set-btn').append($option);

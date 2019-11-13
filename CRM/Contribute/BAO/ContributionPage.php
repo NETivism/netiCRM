@@ -181,7 +181,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       // get the billing location type
       if (!array_key_exists('related_contact', $values)) {
         $locationTypes = &CRM_Core_PseudoConstant::locationType();
-        $billingLocationTypeId = array_search('Billing', $locationTypes);
+        $billingLocationTypeId = array_search(ts('Billing'), $locationTypes);
       }
       else {
         // presence of related contact implies onbehalf of org case,
