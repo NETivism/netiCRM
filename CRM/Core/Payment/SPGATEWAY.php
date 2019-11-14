@@ -120,7 +120,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
   }
 
-  function cancelRecuringMessage(){
+  function cancelRecuringMessage($recurID){
     if (function_exists("_civicrm_spgateway_cancel_recuring_message")) {
       return _civicrm_spgateway_cancel_recuring_message(); 
     }else{

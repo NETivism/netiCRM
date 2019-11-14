@@ -112,9 +112,9 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
     }
   }
 
-  function cancelRecuringMessage(){
+  function cancelRecuringMessage($recurID){
     if (function_exists("_civicrm_neweb_cancel_recuring_message")) {
-      return _civicrm_neweb_cancel_recuring_message(); 
+      return _civicrm_neweb_cancel_recuring_message($recurID); 
     }else{
       CRM_Core_Error::fatal('Module civicrm_neweb doesn\'t exists.');
     }
