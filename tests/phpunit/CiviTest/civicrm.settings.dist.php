@@ -1,5 +1,11 @@
 <?php
 $drupal_root = getenv("DRUPAL_ROOT");
+if (empty($drupal_root)) {
+  $drupal_root = '/var/www/html';  
+  if (!file_exists($drupal_root.'/CHANGELOG.txt')) {
+    die('No drupal installed or no environment variable drupal_root');
+  }
+}
 
 if($drupal_root && is_dir($drupal_root)){
   define('DRUPAL_ROOT', $drupal_root);

@@ -186,7 +186,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL, $tappayParams['apiType']);
+      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
@@ -290,7 +290,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
 
       // Allow further manipulation of the arguments via custom hooks ..
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL, $tappayParams['apiType']);
+      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       // Send tappay pay_by_token post
@@ -632,7 +632,7 @@ LIMIT 0, 100
       $recurParams['id'] = $dao->recur_id;
       $recurParams['contribution_status_id'] = 1;
       $recurParams['message'] = $resultNote;
-      CRM_Contribute_BAO_ContributionRecur::add($recurParams);
+      CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
       CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
     }
 
@@ -698,9 +698,8 @@ LIMIT 0, 100
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL, $tappayParams['apiType']);
-      $nullObject = NULL;
-      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $nullObject, $params);
+      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, CRM_Core_DAO::$_nullObject, $params);
 
       $result = $api->request($params);
       $record = !empty($result->trade_records[0]) ? $result->trade_records[0] : NULL;
@@ -728,8 +727,8 @@ LIMIT 0, 100
 
           // Allow further manipulation of the arguments via custom hooks ..
           $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-          $paymentClass = self::singleton($mode, $paymentProcessor, NULL, $tappayParams['apiType']);
-          CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $nullObject, $params);
+          $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+          CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, CRM_Core_DAO::$_nullObject, $params);
 
           $result = $api_history->request($params);
           // Get the refund type history from history list.
@@ -851,7 +850,7 @@ LIMIT 0, 100
           'contribution_status_id' => 1,
           'message' => ts("End date is due."),
         );
-        CRM_Contribute_BAO_ContributionRecur::add($params);
+        CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
         $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
         $statusNote = $params['message'] . ts("Auto renews status");
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
@@ -873,7 +872,7 @@ LIMIT 0, 100
           'contribution_status_id' => 1,
           'message' => ts("Card expiry date is due."),
         );
-        CRM_Contribute_BAO_ContributionRecur::add($params);
+        CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
         $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
         $statusNote = $params['message'] . ts("Auto renews status");
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
@@ -960,7 +959,7 @@ LIMIT 0, 100
               'auto_renew' => 2,
               'message' => ts("Update expiry date from {$dao->expiry_date} to $expiry_date"),
             );
-            CRM_Contribute_BAO_ContributionRecur::add($params);
+            CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
           }
         }
       }

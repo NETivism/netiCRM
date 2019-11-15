@@ -13,6 +13,8 @@ require_once 'tests/phpunit/CRM/Mailing/BAO/QueryTestDataProvider.php';
 class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase 
 {
 
+    use CRMTraits_Mailing_MailingTrait;
+
     function get_info( ) 
     {
         return array(
@@ -56,11 +58,7 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase
      */
     function testSearch( $fv, $count, $ids, $full )
     {
-        $op = new PHPUnit_Extensions_Database_Operation_Insert( );
-        $op->execute( $this->_dbconn,
-                      new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
-                             dirname(__FILE__)
-                             . '/queryDataset.xml') );
+        $this->loadMailingDeliveryDataSet();
 
         $params = CRM_Contact_BAO_Query::convertFormValues( $fv );
         $obj = new CRM_Contact_BAO_Query( $params );

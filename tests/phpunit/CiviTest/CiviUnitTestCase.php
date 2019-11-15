@@ -50,7 +50,7 @@ define('API_LATEST_VERSION', 3);
  *  Common functions for unit tests
  *  @package CiviCRM
  */
-class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
+class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
 
   /**
    *  Database has been initialized
@@ -125,11 +125,10 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
    *  @param  string $dataName
    */
   function __construct($name = NULL, array $data = array(), $dataName = '') {
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_PARSE & ~E_NOTICE);
     parent::__construct($name, $data, $dataName);
 
     // we need warning and error reporting
-    error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
-
     if (!empty($GLOBALS['mysql_db'])) {
       self::$_dbName = $GLOBALS['mysql_db'];
     }
@@ -141,10 +140,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
     self::$utils = new Utils($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass']);
     $queries = array(
       "USE ".self::$_dbName.';',
-      "SET foreign_key_checks = 0",
-      // SQL mode needs to be strict, that's our standard
-      "SET SQL_MODE = 'STRICT_ALL_TABLES';",
-      "SET global innodb_flush_log_at_trx_commit = 2;",
     );
     foreach ($queries as $query) {
       if (self::$utils->do_query($query) === FALSE) {
@@ -286,12 +281,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
       exit(1);
     }
 
-    //  Get and save a connection to the database
-    $this->_dbconn = $this->getConnection();
-
-    // "initialize" CiviCRM to avoid problems when running single tests
-    // FIXME: look at it closer in second stage
-
     // initialize the object once db is loaded
     require_once 'CRM/Core/Config.php';
     $config = CRM_Core_Config::singleton();
@@ -315,10 +304,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
 
     //flush component settings
     CRM_Core_Component::getEnabledComponents(TRUE);
-
-    // $tablesToTruncate = array('civicrm_contact');
-    // $this->quickCleanup($tablesToTruncate);
-    error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
   }
 
   /**
@@ -342,7 +327,7 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
     self::$populateOnce = NULL;
     $this->DBResetRequired = TRUE;
 
-    $this->_dbconn = $this->getConnection();
+    // $this->_dbconn = $this->getConnection();
     $this->_populateDB();
     $this->tempDirs = array();
   }
@@ -351,7 +336,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
    *  Common teardown functions for all unit tests
    */
   protected function tearDown() {
-    error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
     $this->cleanTempDirs();
   }
 
@@ -853,11 +837,11 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
    * @return int $id of contribution type created
    */
   function contributionTypeCreate($apiversion = 3) {
-    $op = new PHPUnit_Extensions_Database_Operation_Insert();
+    // $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $path = dirname(__FILE__) . '/../api/v' . $apiversion . '/dataset/contribution_types.xml';
     $dataset = $this->createXMLDataSet($path);
 
-    $op->execute($this->_dbconn, $dataset);
+    // $op->execute($this->_dbconn, $dataset);
 
     require_once 'CRM/Contribute/PseudoConstant.php';
     CRM_Contribute_PseudoConstant::flush('contributionType');
