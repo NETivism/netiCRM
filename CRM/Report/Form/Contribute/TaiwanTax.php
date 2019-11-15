@@ -307,6 +307,10 @@ GROUP BY receipt_title, receipt_serial";
           $rows[$n]['civicrm_contribution_receive_date'] = $this->_chineseYear($row['civicrm_contribution_receive_date']);
         }
 
+        if(!empty($row['receipt_title'])) {
+          $rows[$n]['receipt_title'] = mb_strtoupper($row['receipt_title']);
+        }
+
         // donor's name when not enough personal id
         if(!empty($row['civicrm_contribution_total_amount'])){
           $rows[$n]['civicrm_contribution_total_amount'] = round($row['civicrm_contribution_total_amount']);
