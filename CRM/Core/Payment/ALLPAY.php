@@ -120,7 +120,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
-  function cancelRecuringMessage(){
+  function cancelRecuringMessage($recurID){
     if (function_exists("_civicrm_allpay_cancel_recuring_message")) {
       return _civicrm_allpay_cancel_recuring_message(); 
     }else{

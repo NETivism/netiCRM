@@ -137,7 +137,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     CRM_Utils_System::redirect($thankyou);
   }
 
-  function cancelRecuringMessage() {
+  function cancelRecuringMessage($recurID) {
     $text = '<p>'.ts("Please edit recurring and change status to 'Completed'.").'</p>';
     $js = '<script>cj(".ui-dialog-buttonset button").hide();</script>';
     return $text . $js;

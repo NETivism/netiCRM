@@ -170,7 +170,7 @@ WHERE  inst.report_id = %1";
     return CRM_Utils_Mail::send($params);
   }
 
-  static function export2xls(&$form, &$rows) {
+  static function export2xls(&$form, &$rows, $fileName = NULL) {
     require_once 'CRM/Utils/Money.php';
     $config = CRM_Core_Config::singleton();
 
@@ -222,7 +222,9 @@ WHERE  inst.report_id = %1";
       }
     }
     $config = CRM_Core_Config::singleton();
-    $fileName = 'report_' . CRM_REQUEST_TIME . '.xlsx';
+    if (empty($fileName)) {
+      $fileName = 'report_' . CRM_REQUEST_TIME . '.xlsx';
+    }
     CRM_Core_Report_Excel::writeExcelFile($fileName, $headers, $displayRows, $download = TRUE);
     CRM_Utils_System::civiExit();
   }

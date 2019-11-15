@@ -47094,3 +47094,7 @@ msgstr ""
 # templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Special Style"
 msgstr ""
+
+# CRM/Report/Form/Contribute/TaiwanTax.php
+msgid "Your SIC Code"
+msgstr ""

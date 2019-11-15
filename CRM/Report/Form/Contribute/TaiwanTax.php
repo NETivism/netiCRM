@@ -261,6 +261,16 @@ GROUP BY receipt_title, receipt_serial";
     parent::postProcess();
   }
 
+  function endPostProcess($rows) {
+    if ($this->_outputMode == 'csv') {
+      $year = $rows[0]['civicrm_contribution_receive_date'];
+      CRM_Report_Utils_Report::export2xls($this, $rows, $year . '_' . ts('Your SIC Code'). '.xlsx');
+    }
+    else {
+      parent::endPostProcess($rows);
+    }
+  }
+
   function alterDisplay(&$rows) {
     // change columnheader
     $columnHeaders = $this->_columnHeaders;
@@ -295,6 +305,10 @@ GROUP BY receipt_title, receipt_serial";
         // chinese year
         if(!empty($row['civicrm_contribution_receive_date'])){
           $rows[$n]['civicrm_contribution_receive_date'] = $this->_chineseYear($row['civicrm_contribution_receive_date']);
+        }
+
+        if(!empty($row['receipt_title'])) {
+          $rows[$n]['receipt_title'] = mb_strtoupper($row['receipt_title']);
         }
 
         // donor's name when not enough personal id
