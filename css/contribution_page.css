@@ -43,7 +43,110 @@ body:not(.special-page-finish) .crm-container>form {
 body:not(.special-page-finish) .crm-container>form {
   opacity: 0;
 }
+.loading-placeholder-wrapper {
+  overflow: hidden;
+  transition: opacity 1s linear;
+  position: absolute;
+  width: 100%;
+}
+.special-page-finish .loading-placeholder-wrapper{
+  opacity: 0;
+}
+.loading-placeholder-wrapper::before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 1;
+  width: 500%;
+  margin-left: -250%;
+  -webkit-animation: placeholder-animation 0.8s linear infinite;
+  animation: placeholder-animation 0.8s linear infinite;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 46%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 54%) 50% 50%;
+}
+@-webkit-keyframes placeholder-animation {
+  0% {
+    transform: translate3d(-30%, 0, 0); }
+  100% {
+    transform: translate3d(30%, 0, 0); } }
+
+@keyframes placeholder-animation {
+  0% {
+    transform: translate3d(-30%, 0, 0); }
+  100% {
+    transform: translate3d(30%, 0, 0); } }
+
+.placeholder-row {
+  width: 100%;
+  display: flex;
+  margin-top: 44px;
+  position: relative;
+}
+.placeholder-btn-row {
+  background-color: #d8d8d8;
+  height: 80px;
+  justify-content: space-between;
+  border-radius: 10px;
+}
+.placeholder-btn-row>* {
+  width: calc(50% - .5px);
+}
+.placeholder-row::before {
+  position: absolute;
+  top: -29px;
+  font-size: 16px;
+  color: #d8d8d8;
+}
+.placeholder-btn-row::before {
+  content: "點選捐款方式";
+}
+.placeholder-amount-row::before {
+  content: "點選金額或自訂金額";
+}
+.placeholder-amount-row {
+  height: 340px;
+  flex-wrap: wrap;
+}
+.placeholder-amount-row>* {
+  position: relative;
+  width: 100%;
+  height: 85px;
+  border-bottom: 1px solid #d8d8d8;
+}
+.placeholder-amount-row>*::before {
+  background-color: #d8d8d8;
+  height: 36px;
+  width: 62px;
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 28px;
+}
+.placeholder-amount-row>*::after {
+  background-color: #d8d8d8;
+  height: 36px;
+  width: 160px;
+  content: " ";
+  position: absolute;
+  right: 0;
+  top: 28px;
+}
 @media screen and (min-width: 1024px) {
+  body.frontend .main#main::before {
+    position: absolute;
+    content: " ";
+    width: 480px;
+    margin-top: 70px;
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    transition: opacity, .5s linear;
+    height: 590px;
+  }
+  body.frontend.special-page-finish .main#main::before {
+    opacity: 0;
+  }
   #intro_text {
     transition: opacity .5s linear;
     -webkit-transition: opacity .5s linear;
@@ -160,6 +263,9 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 }
 
 @media screen and (min-width: 1024px) {
+  body:not(.special-page-finish) #content-main{
+    height: 550px;
+  }
   #content-main {
     min-height: calc(100vh - 360px);
   }
@@ -171,7 +277,8 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   }
   body.frontend #content-main, 
   body.frontend #content-header + #content-main {
-    padding: 20px 35px;
+    margin: 20px 35px;
+    padding: 0;
     background: #fff;
     border-radius: 5px;
     overflow: hidden;
