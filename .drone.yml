@@ -5,7 +5,7 @@ pipeline:
       - TZ=Asia/Taipei
       - RUNPORT=8080
       - DRUPAL_ROOT=/var/www/html
-      - CIVICRM_TEST_DSN=mysqli://root@localhost/neticrmci
+      - CIVICRM_TEST_DSN=mysqli://root@127.0.0.1/neticrmci
       - DRUPAL=7.67
       - NETICRM=develop
     commands:
