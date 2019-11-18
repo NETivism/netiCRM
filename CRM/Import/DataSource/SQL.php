@@ -66,12 +66,12 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
   }
 
 
-  public function postProcess(&$params, &$db) {
-    require_once 'CRM/Import/ImportJob.php';
+  public function postProcess(&$form, &$db) {
+    $params = $form->_params;
     $importJob = new CRM_Import_ImportJob(CRM_Utils_Array::value('import_table_name', $params),
       $params['sqlQuery'], TRUE
     );
-    $this->set('importTableName', $importJob->getTableName());
+    $form->set('importTableName', $importJob->getTableName());
   }
 }
 

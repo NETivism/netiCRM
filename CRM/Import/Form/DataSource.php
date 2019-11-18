@@ -335,7 +335,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       }
 
       $className = $this->_dataSource;
-      $className::postProcess( $this->_params, $db );
+      $className::postProcess( $this, $db );
 
       // We should have the data in the DB now, parse it
       $importTableName = $this->get('importTableName');
