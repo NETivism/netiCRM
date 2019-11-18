@@ -928,8 +928,8 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
       $customGroupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $customGroupId, 'title');
 
-      if (strlen($customGroupName) > 13) {
-        $customGroupName = substr($customGroupName, 0, 10) . '...';
+      if (mb_strlen($customGroupName) > 13) {
+        $customGroupName = mb_substr($customGroupName, 0, 10) . '...';
       }
 
       return $customGroupName;
