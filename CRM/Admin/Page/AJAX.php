@@ -216,7 +216,7 @@ class CRM_Admin_Page_AJAX {
                 $classname = 'CRM_Core_'.$pp['class_name']; 
                 $payment = new $classname($contrib->is_test, $contrib->payment_processor_id);
                 if(method_exists($payment, 'cancelRecuringMessage')){
-                  $status = $payment->cancelRecuringMessage();  
+                  $status = $payment->cancelRecuringMessage($recordID);  
                 }
               }
             }  

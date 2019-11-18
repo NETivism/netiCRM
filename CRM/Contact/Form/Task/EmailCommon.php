@@ -256,8 +256,9 @@ class CRM_Contact_Form_Task_EmailCommon {
         $url = CRM_Utils_System::url('civicrm/dashboard', 'reset=1');
       }
       else {
+        $contactId = reset($form->_contactIds);
         $url = CRM_Utils_System::url('civicrm/contact/view',
-          "&show=1&action=browse&cid={$form->_contactIds[0]}&selectedChild=activity"
+          "&show=1&action=browse&cid={$contactId}&selectedChild=activity"
         );
       }
 

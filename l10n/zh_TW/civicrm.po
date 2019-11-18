@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-11-08 08:25+0000\n"
+"PO-Revision-Date: 2019-11-15 06:58+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47292,5 +47292,10 @@ msgstr "收入用途/類別"
 msgid "Payment Mode"
 msgstr "繳費方式"
 
+# templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Special Style"
 msgstr "特別募款頁"
+
+# CRM/Report/Form/Contribute/TaiwanTax.php
+msgid "Your SIC Code"
+msgstr "八碼統編自行更改"
