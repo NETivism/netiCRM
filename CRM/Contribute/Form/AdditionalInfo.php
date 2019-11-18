@@ -183,11 +183,11 @@ class CRM_Contribute_Form_AdditionalInfo {
     //PaymentReminders section
     $form->add('hidden', 'hidden_PaymentReminders', 1);
     $form->add('text', 'initial_reminder_day', ts('Send Initial Reminder'), array('size' => 3));
-    $this->addRule('initial_reminder_day', ts('Please enter a valid reminder day.'), 'positiveInteger');
+    $form->addRule('initial_reminder_day', ts('Please enter a valid reminder day.'), 'positiveInteger');
     $form->add('text', 'max_reminders', ts('Send up to'), array('size' => 3));
-    $this->addRule('max_reminders', ts('Please enter a valid No. of reminders.'), 'positiveInteger');
+    $form->addRule('max_reminders', ts('Please enter a valid No. of reminders.'), 'positiveInteger');
     $form->add('text', 'additional_reminder_day', ts('Send additional reminders'), array('size' => 3));
-    $this->addRule('additional_reminder_day', ts('Please enter a valid additional reminder day.'), 'positiveInteger');
+    $form->addRule('additional_reminder_day', ts('Please enter a valid additional reminder day.'), 'positiveInteger');
   }
 
   /**
