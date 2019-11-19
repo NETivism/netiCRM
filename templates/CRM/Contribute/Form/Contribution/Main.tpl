@@ -23,6 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $special_style}
+  {include file="CRM/common/contributionPageSpecial.tpl" page="main"}
+{/if}
 {if $ppType}
   {include file="CRM/Core/BillingBlock.tpl"}
   {if $paymentProcessor.description}
@@ -577,6 +580,3 @@ function enableHonorType( ) {
 </script>
 {include file="CRM/common/betterContributionForm.tpl"}
 {/if}{*ppType*}
-{if $special_style}
-  {include file="CRM/common/contributionPageSpecial.tpl"}
-{/if}
