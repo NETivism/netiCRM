@@ -34,25 +34,34 @@ body.frontend #content{
 }
 
 /** loading placeholder */
-.crm-container>form {
-  transition: opacity 500 linear;
-}
-body:not(.special-page-finish) .crm-container>form {
-  display: none;
-}
-body:not(.special-page-finish) .crm-container>form {
+body:not(.special-page-finish) .crm-container>form>* {
   opacity: 0;
-}
-.loading-placeholder-wrapper {
-  overflow: hidden;
-  transition: opacity 1s linear;
   position: absolute;
+  z-index: -1;
+}
+div.loading-placeholder-wrapper {
+  transition: opacity .5s linear;
+}
+body:not(.special-page-finish) .crm-container>form>div.loading-placeholder-wrapper {
+  opacity: 1;
+}
+.crm-container>form>div.placeholder-form {
   width: 100%;
+}
+.crm-container>form>div.placeholder-intro-text {
+  width: 480px;
+}
+body .crm-container>form>div.loading-placeholder-wrapper {
+  opacity: 0;
+  z-index: 1;
+  overflow: hidden;
+  position: absolute;
+  height: 560px;
 }
 .special-page-finish .loading-placeholder-wrapper{
   opacity: 0;
 }
-.loading-placeholder-wrapper::before {
+.placeholder-item::before {
   content: " ";
   position: absolute;
   top: 0;
@@ -64,34 +73,65 @@ body:not(.special-page-finish) .crm-container>form {
   margin-left: -250%;
   -webkit-animation: placeholder-animation 0.8s linear infinite;
   animation: placeholder-animation 0.8s linear infinite;
+}
+.placeholder-intro-text .placeholder-item::before {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 46%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 54%) 50% 50%;
+}
+.placeholder-form .placeholder-item::before {
   background: linear-gradient(to right, rgba(255, 255, 255, 0) 46%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 54%) 50% 50%;
 }
 @-webkit-keyframes placeholder-animation {
   0% {
-    transform: translate3d(-30%, 0, 0); }
+    transform: translate3d(-30%, 0, 0);
+  }
   100% {
-    transform: translate3d(30%, 0, 0); } }
+    transform: translate3d(30%, 0, 0);
+  }
+}
 
 @keyframes placeholder-animation {
   0% {
-    transform: translate3d(-30%, 0, 0); }
+    transform: translate3d(-30%, 0, 0);
+  }
   100% {
-    transform: translate3d(30%, 0, 0); } }
-
-.placeholder-row {
+    transform: translate3d(30%, 0, 0);
+  }
+}
+.placeholder-form .placeholder-row {
   width: 100%;
-  display: flex;
+  position: relative;
+  margin-top: 20px;
+}
+#Main .placeholder-form .placeholder-row {
   margin-top: 44px;
+}
+.placeholder-item{
+  height: 27px;
+  width: 100%;
+  overflow: hidden;
   position: relative;
 }
-.placeholder-btn-row {
+.placeholder-form .placeholder-item{
   background-color: #d8d8d8;
+}
+.placeholder-intro-text .placeholder-item{
+  background: #6d6d6d;
+}
+.placeholder-btn-row {
+  display: flex;
   height: 80px;
   justify-content: space-between;
   border-radius: 10px;
 }
 .placeholder-btn-row>* {
   width: calc(50% - .5px);
+  height: 80px;
+}
+.placeholder-btn-row>*:nth-child(1) {
+  border-radius:10px 0 0 10px;
+}
+.placeholder-btn-row>*:nth-child(2) {
+  border-radius:0 10px 10px 0;
 }
 .placeholder-row::before {
   position: absolute;
@@ -105,26 +145,45 @@ body:not(.special-page-finish) .crm-container>form {
 .placeholder-amount-row::before {
   content: "點選金額或自訂金額";
 }
-.placeholder-amount-row {
-  height: 340px;
-  flex-wrap: wrap;
-}
-.placeholder-amount-row>* {
-  position: relative;
+.placeholder-amount-item {
   width: 100%;
-  height: 85px;
+  position: relative;
   border-bottom: 1px solid #d8d8d8;
+  height: 85px;
 }
-.placeholder-amount-row>*::before {
+.placeholder-p-row>* {
+  margin-bottom: 27px;
+}
+
+.placeholder-p-row>*:nth-child(1) {
+  width: 40%;
+}
+.placeholder-p-row>*:nth-child(2) {
+  width: 60%;
+}
+.placeholder-p-row>*:nth-child(3) {
+  width: 80%;
+}
+.placeholder-p-row>*:nth-child(4) {
+  width: 100%;
+}
+.placeholder-title-row>* {
+  height: 50px;
+  width: 240px;
+}
+
+.placeholder-title-row {
+  margin-bottom: 25px;
+}
+.placeholder-amount {
   background-color: #d8d8d8;
   height: 36px;
   width: 62px;
   content: " ";
-  position: absolute;
   left: 0;
   top: 28px;
 }
-.placeholder-amount-row>*::after {
+.placeholder-label {
   background-color: #d8d8d8;
   height: 36px;
   width: 160px;
@@ -134,6 +193,12 @@ body:not(.special-page-finish) .crm-container>form {
   top: 28px;
 }
 @media screen and (min-width: 1024px) {
+  .crm-container>form>div.placeholder-intro-text {
+    top: -20px;
+    width: 480px;
+    right: 510px;
+    padding: 40px 20px;
+  }
   body.frontend .main#main::before {
     position: absolute;
     content: " ";
@@ -141,21 +206,21 @@ body:not(.special-page-finish) .crm-container>form {
     margin-top: 70px;
     margin-bottom: 0;
     background-color: rgba(0,0,0,0.5);
-    transition: opacity, .5s linear;
+    transition: opacity .5s linear;
     height: 590px;
   }
   body.frontend.special-page-finish .main#main::before {
     opacity: 0;
   }
-  #intro_text {
+  body:not(.special-page-finish) #intro_text {
+    opacity: 0;
+  }
+  body.special-page-finish #intro_text {
     transition: opacity .5s linear;
     -webkit-transition: opacity .5s linear;
     -moz-transition: opacity .5s linear;
     -ms-transition: opacity .5s linear;
     -o-transition: opacity .5s linear;
-  }
-  body:not(.special-page-finish) #intro_text {
-    opacity: 0;
   }
 }
 @media screen and (max-width: 1023.9px) {
@@ -171,6 +236,9 @@ body:not(.special-page-finish) .crm-container>form {
     padding-top: 0;
     padding-bottom: 0;
     max-height: 0;
+  }
+  .placeholder-intro-text {
+    display: none;
   }
 }
 
@@ -277,11 +345,9 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   }
   body.frontend #content-main, 
   body.frontend #content-header + #content-main {
-    margin: 20px 35px;
-    padding: 0;
+    padding: 20px 35px;
     background: #fff;
     border-radius: 5px;
-    overflow: hidden;
   }
   #main-inner {
     z-index: 3;
@@ -1026,8 +1092,8 @@ body .crm-container .premiums-listings .premium-img{
 }
 
 /* overwrite */
-.admin-sidebar-mini div#page, 
-.admin-sidebar-open div#page, 
+.admin-sidebar-mini div#page,
+.admin-sidebar-open div#page,
 .admin-header-fixed div#page{
   padding: 0;
 }

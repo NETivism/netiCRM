@@ -1,3 +1,52 @@
+<div class='loading-placeholder-wrapper placeholder-intro-text'>
+<div class='placeholder-row placeholder-title-row'>
+    <div class='placeholder-item'></div>
+  </div>
+  <div class='placeholder-row placeholder-p-row'>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+  </div>
+</div>
+{if $page eq "main"}
+<div class='loading-placeholder-wrapper placeholder-form'>
+  <div class='placeholder-row placeholder-btn-row'>
+    <span class='placeholder-item'></span>
+    <span class='placeholder-item'></span>
+  </div>
+  <div class='placeholder-row placeholder-amount-row'>
+    <div class='placeholder-amount-item'>
+      <div class='placeholder-item placeholder-amount'></div>
+      <div class='placeholder-item placeholder-label'></div>
+    </div>
+    <div class='placeholder-amount-item'>
+      <div class='placeholder-item placeholder-amount'></div>
+      <div class='placeholder-item placeholder-label'></div>
+    </div>
+    <div class='placeholder-amount-item'>
+      <div class='placeholder-item placeholder-amount'></div>
+      <div class='placeholder-item placeholder-label'></div>
+    </div>
+    <div class='placeholder-amount-item'>
+      <div class='placeholder-item placeholder-amount'></div>
+      <div class='placeholder-item placeholder-label'></div>
+    </div>
+  </div>
+</div>
+{else}
+<div class='loading-placeholder-wrapper placeholder-form'>
+<div class='placeholder-row placeholder-title-row'>
+    <div class='placeholder-item'></div>
+  </div>
+  <div class='placeholder-row placeholder-p-row'>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+  </div>
+</div>
+{/if}
 <script type="text/javascript">
   {literal}
   (function($){

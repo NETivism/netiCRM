@@ -21,10 +21,6 @@
       complete : 0,
       installments : '',
 
-      preparePlaceholder: function() {
-        $('#content-main').prepend($("<div class='loading-placeholder-wrapper'><div class='placeholder-row placeholder-btn-row'><span class='placeholder-item'></span><span class='placeholder-item'></span></div><div class='placeholder-row placeholder-amount-row'><div class='placeholder-item'></div><div class='placeholder-item'></div><div class='placeholder-item'></div><div class='placeholder-item'></div></div></div>"));
-      },
-
       preparePage: function(){
         if (window.ContribPageParams.mobileBackgroundImageUrl) {
           document.querySelector('body').style.setProperty('--mobile-background-url', 'url('+window.ContribPageParams.mobileBackgroundImageUrl+')');
@@ -745,12 +741,6 @@
 
 
     };
-
-    try{
-      window.ContribPage.preparePlaceholder();
-    } catch(e) {
-      console.log(e);
-    }
 
     try{
       window.ContribPage.preparePage();
