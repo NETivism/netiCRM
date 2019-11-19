@@ -1333,9 +1333,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         }
 
         require_once 'CRM/Event/Form/Registration/Confirm.php';
-        CRM_Event_Form_Registration_Confirm::fixLocationFields($value, $fields);
+        $this->fixLocationFields($value, $fields);
 
-        $contactID = &CRM_Event_Form_Registration_Confirm::updateContactFields($contactID, $value, $fields);
+        $contactID = $this->updateContactFields($contactID, $value, $fields);
 
         // lets store the contactID in the session
         // we dont store in userID in case the user is doing multiple
