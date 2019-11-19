@@ -20,6 +20,27 @@ pipeline:
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js
+  build:
+    image: netivism/neticrm-ci:drone
+    environment:
+      - TZ=Asia/Taipei
+      - RUNPORT=8080
+      - DRUPAL_ROOT=/var/www/html
+      - CIVICRM_TEST_DSN=mysqli://root@127.0.0.1/neticrmci
+      - DRUPAL=7.67
+      - NETICRM=develop
+    commands:
+      - /usr/bin/supervisord &
+      - /init.sh
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js
   notify:
     image: drillster/drone-email
     skip_verify: true
