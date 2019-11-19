@@ -109,7 +109,7 @@
 
     <td>{$row.activity_date_time|crmDate}</td>
 
-    <td>{if $row.activity_duration}{$row.activity_duration}hr{/if}</td>
+    <td>{if $row.activity_duration}{$row.activity_duration}{ts}minutes{/ts}{/if}</td>
 
     <td>{$row.activity_status}</td>
 

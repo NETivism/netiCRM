@@ -726,6 +726,9 @@
             });
           }, 1000);
         }
+        setTimeout(function(){
+          $('.loading-placeholder-wrapper').remove();
+        }, 1000);
         $('.payment_options-group').hide();
         $('#page').css('background', 'none').css('height','unset');
         var interval = setInterval(function(){
