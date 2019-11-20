@@ -13,7 +13,7 @@ before_install:
   - git submodule update
   - docker pull netivism/neticrm-ci:drone-php7
   - git clone -b drone-php7 https://github.com/NETivism/docker-neticrm-ci.git
-  - docker run -d --name neticrm-ci-php7 -p 8080:8080 -v  -v $TRAVIS_BUILD_DIR:/mnt/neticrm-7/civicrm -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci" netivism/neticrm-ci:drone-php7
+  - docker run -d --name neticrm-ci-php7 -p 8080:8080 -v $TRAVIS_BUILD_DIR:/mnt/neticrm-7/civicrm -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci" netivism/neticrm-ci:drone-php7
   - docker exec neticrm-ci-php7 /mnt/neticrm-7/civicrm/docker-neticrm-ci/container/init.sh
 
 script:
