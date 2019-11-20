@@ -4088,10 +4088,10 @@ civicrm_relationship.start_date > {$today}
 
     // hack $select
     $select = "
-SELECT COUNT( civicrm_contribution.total_amount ) as total_count,
-       SUM(   civicrm_contribution.total_amount ) as total_amount,
-       AVG(   civicrm_contribution.total_amount ) as total_avg,
-       civicrm_contribution.currency              as currency";
+SELECT COUNT( cc.total_amount ) as total_count,
+       SUM(   cc.total_amount ) as total_amount,
+       AVG(   cc.total_amount ) as total_avg,
+       cc.currency              as currency";
 
     // make sure contribution is completed - CRM-4989
     $where .= " AND civicrm_contribution.contribution_status_id = 1 ";
@@ -4103,7 +4103,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as total_count,
     $summary['total'] = array();
     $summary['total']['count'] = $summary['total']['amount'] = $summary['total']['avg'] = "n/a";
 
-    $query = "$select $from $where GROUP BY currency";
+    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $where GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
     $params = array();
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);
@@ -4125,17 +4125,17 @@ SELECT COUNT( civicrm_contribution.total_amount ) as total_count,
 
     // hack $select
     $select = "
-SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
-       SUM(   civicrm_contribution.total_amount ) as cancel_amount,
-       AVG(   civicrm_contribution.total_amount ) as cancel_avg,
-       civicrm_contribution.currency              as currency";
+SELECT COUNT( cc.total_amount ) as cancel_count,
+       SUM(   cc.total_amount ) as cancel_amount,
+       AVG(   cc.total_amount ) as cancel_avg,
+       cc.currency              as currency";
 
     $where .= " AND civicrm_contribution.cancel_date IS NOT NULL ";
     if ($context == 'search') {
       $where .= " AND contact_a.is_deleted = 0 ";
     }
 
-    $query = "$select $from $where GROUP BY currency";
+    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $where GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
     $dao = CRM_Core_DAO::executeQuery($query, $params);
 
     if ($dao->N <= 1) {
@@ -4327,7 +4327,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
       }
 
       if (!$appendTimeStamp) {
-        $firstDate = substr($date, 0, 8);
+        $firstDate = substr($firstDate, 0, 8);
       }
       $firstDateFormat = CRM_Utils_Date::customFormat($firstDate);
 
@@ -4502,7 +4502,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
             $v = trim($v);
             $val[] = "'" . CRM_Utils_Type::escape($v, $dataType) . "'";
           }
-          $value = "(" . implode($val, ",") . ")";
+          $value = "(" . implode(",", $val) . ")";
         }
         return "$clause $value";
 
