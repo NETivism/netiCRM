@@ -269,6 +269,9 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $opt[CURLOPT_CAINFO] = $cafile_path;
       curl_setopt_array($ch, $opt);
 
+      $cmd = 'curl --request POST --url "'.$validationUrl.'" --cacert '.$cafile_path.' --cert '.$file_path.' -H "Content-Type: application/json" --data "'. json_encode($data).'"';
+      CRM_Core_Error::debug('cmd', $cmd);
+
       $result = curl_exec($ch);
       $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       if ($result === FALSE) {
@@ -279,6 +282,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       else{
         $curlError = array();
       }
+
+      CRM_Core_Error::debug('applepay_filepath', $file_path);
+      CRM_Core_Error::debug('applepay_validate_post', $_POST);
+      CRM_Core_Error::debug('applepay_validate_get', $_GET);
+      CRM_Core_Error::debug('applepay_validate_curl_result', $result);
+      CRM_Core_Error::debug('applepay_validate_curl_status', $status);
+      CRM_Core_Error::debug('applepay_validate_curl_error', $curlError);
+
       curl_close($ch);
     }
     echo $result;
@@ -309,7 +320,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     if(strstr($_GET['q'], 'applepay')){
       $type = 'applepay';
     }
-      
     // call mobile checkout function
     $module_name = 'civicrm_'.strtolower($ppProvider);
     $checkout_func = $module_name.'_mobile_checkout';
@@ -319,6 +329,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $return = call_user_func($checkout_func, $type, $post, $objects);
 
     if(!empty($return)){
+
+      CRM_Core_Error::debug('applepay_transact_post', $_POST);
+      CRM_Core_Error::debug('applepay_transact_get', $_GET);
+      CRM_Core_Error::debug('applepay_transact_checkout_result', $return);
+
       // execute ipn transact
       $ipn = new CRM_Core_Payment_BaseIPN();
       $input = $ids = $objects = array();
