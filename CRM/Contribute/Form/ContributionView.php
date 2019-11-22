@@ -53,7 +53,11 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     $values = $ids = array();
     $params = array('id' => $id);
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
+    $compContext = CRM_Utils_Request::retrieve('compContext', 'String', $this);
+    $compId = CRM_Utils_Request::retrieve('compId', 'String', $this);
     $this->assign('context', $context);
+    $this->assign('compContext', $compContext);
+    $this->assign('compId', $compId);
 
     require_once 'CRM/Contribute/BAO/Contribution.php';
     CRM_Contribute_BAO_Contribution::getValues($params, $values, $ids);
