@@ -73,8 +73,8 @@ class CRM_Core_ClassLoader {
   }
 
   function loadClass($class) {
-    if (empty($this->_include_path)){
-      $this->_include_paths = explode(PATH_SEPARATOR, get_include_path());
+    if (empty(self::$_include_paths)){
+      self::$_include_paths = explode(PATH_SEPARATOR, get_include_path());
     }
     if ( FALSE === strpos($class, '\\') ) {
       if(isset($this->_composer_classmap[$class])){
@@ -82,7 +82,7 @@ class CRM_Core_ClassLoader {
         return;
       }
       $file = strtr($class, '_', '/') . '.php';
-      foreach ($this->_include_paths as $base_dir) {
+      foreach (self::$_include_paths as $base_dir) {
         $file = $base_dir.DIRECTORY_SEPARATOR.$file;
         if (file_exists($file) ){
           require $file;
