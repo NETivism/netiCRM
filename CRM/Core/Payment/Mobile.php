@@ -256,6 +256,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       }
       $file_name = 'applepaycert_'.$mobile_paymentProcessor_id.'.inc';
       $file_path = CRM_Utils_System::cmsRootPath() . '/' . CRM_Utils_System::confPath().'/' . $file_name;
+      $config = CRM_Core_Config::singleton();
+      $cafile_path = CRM_Utils_System::cmsRootPath().$config->resourceBase.'cert/cacert.pem';
 
       $ch = curl_init($validationUrl);
       $opt = array();
@@ -264,6 +266,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $opt[CURLOPT_HTTPHEADER] = array("Content-Type: application/json");
       $opt[CURLOPT_POSTFIELDS] = json_encode($data);
       $opt[CURLOPT_SSLCERT] = $file_path;
+      $opt[CURLOPT_CAINFO] = $cafile_path;
       curl_setopt_array($ch, $opt);
 
       $result = curl_exec($ch);
