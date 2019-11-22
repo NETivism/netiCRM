@@ -259,8 +259,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       }
       $file_name = 'applepaycert_'.$mobile_paymentProcessor_id.'.inc';
       $file_path = CRM_Utils_System::cmsRootPath() . '/' . CRM_Utils_System::confPath().'/' . $file_name;
-      $config = CRM_Core_Config::singleton();
-      $cafile_path = CRM_Utils_System::cmsRootPath().$config->resourceBase.'cert/cacert.pem';
+      global $civicrm_root;
+      $cafile_path = $civicrm_root.'cert/cacert.pem';
 
       $ch = curl_init($validationUrl);
       $opt = array();
