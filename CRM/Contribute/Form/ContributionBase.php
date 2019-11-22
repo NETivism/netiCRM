@@ -621,11 +621,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->assign('special_style', 1);
       $this->assign('min_amount', (float) $this->_values['min_amount']);
       $this->assign('max_amount', (float) $this->_values['max_amount']);
+      $version = '3.2.3';
       $object = array(
         'tag' => 'link',
         'attributes' =>  array(
           'rel' => 'stylesheet',
-          'href' => $config->resourceBase.'css/contribution_page.css',
+          'href' => $config->resourceBase.'css/contribution_page.css?ver='. $version,
         ),
       );
       CRM_Utils_System::addHTMLHead($object);
