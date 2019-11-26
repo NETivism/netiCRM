@@ -130,7 +130,7 @@ class CRM_Contact_Form_Task_AddToOrganization extends CRM_Contact_Form_Task {
     if (CRM_Utils_Array::value('_qf_AddToOrganization_refresh', $_POST)) {
       $searchParams['contact_type'] = array('Organization' => 'Organization');
       $searchParams['rel_contact'] = $params['name'];
-      CRM_Contact_Form_Relationship::search($searchParams);
+      CRM_Contact_Form_Relationship::search($searchParams, $this);
       $this->set('searchDone', 1);
       return;
     }

@@ -160,8 +160,8 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $details = array_replace(array_flip($this->_contributionIds), $details);
     $params = $this->controller->exportValues($this->_name);
 
-    self::makeReceipt($details, $params['window_envelope']);
-    self::makePDF();
+    $this->makeReceipt($details, $params['window_envelope']);
+    $this->makePDF();
     CRM_Utils_System::civiExit();
   }
 
@@ -177,7 +177,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
   public function makePDF($download = TRUE) {
     $template = &CRM_Core_Smarty::singleton();
-    $pages = self::popFile();
+    $pages = $this->popFile();
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/Receipt.tpl');
     $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, 'Receipt.pdf', 'portrait', 'a4', $download);
@@ -285,7 +285,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values);
 
       // do not use array to prevent memory exhusting
-      self::pushFile($html);
+      $this->pushFile($html);
       // dump to file then retrive lately
 
       // reset template values before processing next transactions

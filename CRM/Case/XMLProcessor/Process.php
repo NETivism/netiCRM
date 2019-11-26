@@ -308,7 +308,8 @@ AND        a.is_deleted = 0
 
     // check for max instance
     $caseType = CRM_Case_BAO_Case::getCaseType($params['caseID']);
-    $maxInstance = self::getMaxInstance($caseType, $params['activityTypeName']);
+    $process = new CRM_Case_XMLProcessor_Process();
+    $maxInstance = $process->getMaxInstance($caseType, $params['activityTypeName']);
 
     return $maxInstance ? ($count < $maxInstance ? FALSE : TRUE) : FALSE;
   }

@@ -260,7 +260,15 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
   function setModeValues() {
     if (!self::$_modeValues) {
-      self::$_modeValues = array(1 => array('selectorName' => (property_exists($this, '_selectorName') && $this->_selectorName) ? $this->_selectorName : 'CRM_Contact_Selector',
+      if (isset($this)) {
+        $selectorName = (property_exists($this, '_selectorName') && $this->_selectorName) ? $this->_selectorName : 'CRM_Contact_Selector';
+      }
+      else {
+        $selectorName = 'CRM_Contact_Selector';
+      }
+      self::$_modeValues = array(
+        1 => array(
+          'selectorName' => $selectorName,
           'selectorLabel' => ts('Contacts'),
           'taskFile' => "CRM/Contact/Form/Search/ResultTasks.tpl",
           'taskContext' => NULL,

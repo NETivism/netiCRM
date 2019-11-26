@@ -122,7 +122,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
           'url' => $path,
         )));
     CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Search Results'),
-          'url' => self::getSearchURL(),
+          'url' => $this->getSearchURL(),
         )));
 
     if ($image_URL = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_contactId, 'image_URL')) {

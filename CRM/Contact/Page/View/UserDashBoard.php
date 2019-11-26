@@ -58,14 +58,16 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL; function __construct() {
+  static $_links = NULL;
+  
+  function __construct() {
     parent::__construct();
 
     $check = CRM_Core_Permission::check('access Contact Dashboard');
 
     if (!$check) {
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/dashboard', 'reset=1'));
-      break;
+      return;
     }
 
     $this->_contactId = CRM_Utils_Request::retrieve('id', 'Positive', $this);

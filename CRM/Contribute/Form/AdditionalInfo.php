@@ -320,7 +320,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    * @return None.
    */
   function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
-    $this->assign('receiptType', 'contribution');
+    $form->assign('receiptType', 'contribution');
     // Retrieve Contribution Type Name from contribution_type_id
     $params['contributionType_name'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType',
       $params['contribution_type_id']
@@ -353,10 +353,10 @@ class CRM_Contribute_Form_AdditionalInfo {
         $params['product_name'] = $productDAO->name;
         $params['product_sku'] = $productDAO->sku;
       }
-      $this->assign('fulfilled_date', CRM_Utils_Date::processDate($params['fulfilled_date']));
+      $form->assign('fulfilled_date', CRM_Utils_Date::processDate($params['fulfilled_date']));
     }
 
-    $this->assign('ccContribution', $ccContribution);
+    $form->assign('ccContribution', $ccContribution);
     if ($ccContribution) {
       //build the name.
       $name = CRM_Utils_Array::value('billing_first_name', $params);
@@ -365,7 +365,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       }
       $name .= ' ' . CRM_Utils_Array::value('billing_last_name', $params);
       $name = trim($name);
-      $this->assign('billingName', $name);
+      $form->assign('billingName', $name);
 
       //assign the address formatted up for display
       $addressParts = array("street_address" => "billing_street_address-{$form->_bltID}",
@@ -380,13 +380,13 @@ class CRM_Contribute_Form_AdditionalInfo {
         $addressFields[$name] = CRM_Utils_Array::value($field, $params);
       }
       require_once 'CRM/Utils/Address.php';
-      $this->assign('address', CRM_Utils_Address::format($addressFields));
+      $form->assign('address', CRM_Utils_Address::format($addressFields));
 
       $date = CRM_Utils_Date::format($params['credit_card_exp_date']);
       $date = CRM_Utils_Date::mysqlToIso($date);
-      $this->assign('credit_card_type', CRM_Utils_Array::value('credit_card_type', $params));
-      $this->assign('credit_card_exp_date', $date);
-      $this->assign('credit_card_number',
+      $form->assign('credit_card_type', CRM_Utils_Array::value('credit_card_type', $params));
+      $form->assign('credit_card_exp_date', $date);
+      $form->assign('credit_card_number',
         CRM_Utils_System::mungeCreditCard($params['credit_card_number'])
       );
     }
@@ -444,10 +444,10 @@ class CRM_Contribute_Form_AdditionalInfo {
     list($contributorDisplayName,
       $contributorEmail
     ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
-    $this->assign('contactID', $params['contact_id']);
-    $this->assign('contributionID', $params['contribution_id']);
-    $this->assign('currency', $params['currency']);
-    $this->assign('receive_date', CRM_Utils_Date::processDate($params['receive_date']));
+    $form->assign('contactID', $params['contact_id']);
+    $form->assign('contributionID', $params['contribution_id']);
+    $form->assign('currency', $params['currency']);
+    $form->assign('receive_date', CRM_Utils_Date::processDate($params['receive_date']));
 
     if ($params['from_email_address']) {
       $fromEmailAddress = $params['from_email_address'];

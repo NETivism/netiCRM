@@ -116,8 +116,8 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         }
       }
       CRM_Utils_Hook::postProcess(get_class($this), $this);
-      self::makeReceipt($this->_contactIds, $this->option);
-      self::makePDF();
+      $this->makeReceipt($this->_contactIds, $this->option);
+      $this->makePDF();
     }
     CRM_Utils_System::civiExit();
   }
@@ -134,7 +134,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
 
   public function makePDF($download = TRUE) {
     $template = &CRM_Core_Smarty::singleton();
-    $pages = self::popFile();
+    $pages = $this->popFile();
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/AnnualReceipt.tpl');
     $filename = 'AnnualReceipt'.$this->_year.'.pdf';
@@ -161,7 +161,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         $template->assign('imageSmallStampUrl', $config->imageUploadDir . $config->imageSmallStampName);
       }
       $html .= CRM_Contribute_BAO_Contribution::getAnnualReceipt($contact_id, $option, $template);
-      self::pushFile($html);
+      $this->pushFile($html);
 
       // reset template values before processing next transactions
       $template->clearTemplateVars();

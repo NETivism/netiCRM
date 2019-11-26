@@ -2599,7 +2599,7 @@ WHERE c.id = $id";
     }
     $is_test = $contribution->is_test ? 'test' : '';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
-    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, $this);
+    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, NULL);
     $paymentClass = get_class($payment);
     return $paymentClass;
   }

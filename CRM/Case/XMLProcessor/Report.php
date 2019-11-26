@@ -636,7 +636,7 @@ LIMIT  1
     if ($printReport) {
       return CRM_Utils_String::redaction($string, $replaceString);
     }
-    elseif ($this->_isRedact) {
+    elseif (is_object($this) && $this->_isRedact) {
       $regexToReplaceString = CRM_Utils_String::regex($string, $this->_redactionRegexRules);
       return CRM_Utils_String::redaction($string, array_merge($this->_redactionStringRules, $regexToReplaceString));
     }
