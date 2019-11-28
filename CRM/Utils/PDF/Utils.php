@@ -44,7 +44,7 @@ class CRM_Utils_PDF_Utils {
   static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $fileName = CRM_Utils_File::makeFileName($fileName);
-    $dest = $config->templateCompileDir .$fileName;
+    $dest = $config->uploadDir.$fileName;
     $paperSize = $paperSize ? $paperSize : 'a4';
 
     // make whole html first
@@ -67,6 +67,7 @@ class CRM_Utils_PDF_Utils {
         header('Content-Disposition: inline; filename=' . $fileName);
         header('Pragma: no-cache');
         echo file_get_contents($pdf);
+        unlink($pdf);
       }
       else {
         return $dest;
@@ -169,22 +170,20 @@ class CRM_Utils_PDF_Utils {
 
     if (exec("test -x $wkhtmltopdf && echo 1")) {
       $temp_prefix = 'pdf_';
-      $temp_dir = '/tmp';
-      $dest = $dest ? $dest : tempnam($temp_dir, $temp_prefix);
+      $temp_dir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+      $dest = $dest ? $dest : tempnam($temp_dir, $temp_prefix).".pdf";
       if (preg_match('/^http:\/\//i', $html)) {
         $source = $html;
       }
       else {
-        $source = tempnam($temp_dir, 'pdfsrc_') . '.htm';
-        while (file_exists($source)) {
-          $source = tempnam($temp_dir, 'pdfsrc_') . '.htm';
-        }
+        $source = $dest . '.htm';
         file_put_contents($source, $html);
         // release memory before wkhtmltopdf
         unset($html);
       }
       $exec = $wkhtmltopdf . escapeshellcmd(" $option $source $dest");
       exec($exec);
+      unlink($source);
 
       return $dest;
     }
