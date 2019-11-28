@@ -1320,6 +1320,9 @@ WHERE  contribution_id = {$this->_id}
       $this->_params['pcp_personal_note'] = $params['pcp_personal_note'];
 
       //Add common data to formatted params
+      if ($this->_honorID) {
+        $params['honorID'] = $this->_honorID;
+      }
       CRM_Contribute_Form_AdditionalInfo::postProcessCommon($params, $this->_params);
 
       if (empty($this->_params['invoice_id'])) {
@@ -1562,6 +1565,9 @@ WHERE  contribution_id = {$this->_id}
       $ids['contribution'] = $params['id'] = $this->_id;
 
       //Add Additinal common information  to formatted params
+      if ($this->_honorID) {
+        $formValues['honorID'] = $this->_honorID;
+      }
       CRM_Contribute_Form_AdditionalInfo::postProcessCommon($formValues, $params);
 
       //create contribution.
