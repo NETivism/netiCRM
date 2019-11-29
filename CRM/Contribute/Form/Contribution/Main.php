@@ -228,7 +228,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       require_once "CRM/Core/BAO/CustomGroup.php";
       $removeCustomFieldTypes = array('Contribution', 'Membership');
       require_once 'CRM/Contribute/BAO/Contribution.php';
-      $contribFields = &CRM_Contribute_BAO_Contribution::getContributionFields();
+      $contribFields = CRM_Contribute_BAO_Contribution::getContributionFields();
 
       // remove component related fields
       foreach ($this->_fields as $name => $dontCare) {

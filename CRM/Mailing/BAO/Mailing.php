@@ -2768,7 +2768,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         'onkeyup' => "return verify(this)",
       )
     );
-    $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
+    $action = CRM_Utils_Request::retrieve('action', 'String', $form, FALSE);
     if ((CRM_Utils_System::getClassName($form) == 'CRM_Contact_Form_Task_PDF') &&
       $action == CRM_Core_Action::VIEW
     ) {

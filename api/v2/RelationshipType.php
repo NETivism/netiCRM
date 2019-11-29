@@ -154,7 +154,8 @@ function civicrm_relationship_types_get($params = NULL) {
   }
   $relationType->find();
   while ($relationType->fetch()) {
-    _civicrm_object_to_array(clone($relationType), $relationshipType);
+    $obj = clone($relationType);
+    _civicrm_object_to_array($obj, $relationshipType);
     $relationshipTypes[] = $relationshipType;
   }
   return $relationshipTypes;

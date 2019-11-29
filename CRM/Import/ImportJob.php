@@ -464,11 +464,16 @@ class CRM_Import_ImportJob {
                   ORDER BY TABLE_NAME";
     $result = CRM_Core_DAO::executeQuery($query, array($database));
     $incompleteImportTables = array();
+    /* #24589
+    // Very confuse code here
+    // this will trigger "Using $this when not in object context error"
+    // and never get incomplete import table because lack of status field
     while ($importTable = $result->fetch()) {
       if (!$this->isComplete($importTable)) {
         $incompleteImportTables[] = $importTable;
       }
     }
+    */
     return $incompleteImportTables;
   }
 }

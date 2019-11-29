@@ -272,7 +272,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
     }
     else {
 
-      $pledgeBlock = CRM_Pledge_BAO_PledgeBlock::getPledgeBlock($this->_id);
+      $pledgeBlock = CRM_Pledge_BAO_PledgeBlock::getPledgeBlock($form->_id);
 
       //build form for pledge creation.
       $pledgeOptions = array('0' => ts('I want to make a one-time contribution'),
