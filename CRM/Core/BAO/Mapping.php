@@ -373,16 +373,6 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       $compArray['Student'] = 'Student';
     }
 
-    //we need to unset groups, tags, notes for component export
-    require_once 'CRM/Export/Form/Select.php';
-    if ($exportMode != CRM_Export_Form_Select::CONTACT_EXPORT) {
-      foreach (array('groups', 'tags', 'notes') as $value) {
-        unset($fields['Individual'][$value]);
-        unset($fields['Household'][$value]);
-        unset($fields['Organization'][$value]);
-      }
-    }
-
     if (($mappingType == 'Search Builder') || ($exportMode == CRM_Export_Form_Select::CONTRIBUTE_EXPORT)) {
       if (CRM_Core_Permission::access('CiviContribute')) {
         require_once 'CRM/Contribute/BAO/Contribution.php';
