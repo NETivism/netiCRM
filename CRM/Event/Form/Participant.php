@@ -1717,8 +1717,8 @@ cj(function() {
         }
 
         // try to send emails only if email id is present
-        // and the do-not-email option is not checked for that contact
-        if ($this->_contributorEmail and !$this->_toDoNotEmail) {
+        // and skip do-not-email option because it's not batch mail #26895
+        if ($this->_contributorEmail) {
           $sendTemplateParams['from'] = $receiptFrom;
           $sendTemplateParams['toName'] = $this->_contributorDisplayName;
           $sendTemplateParams['toEmail'] = $this->_contributorEmail;

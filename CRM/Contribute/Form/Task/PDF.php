@@ -187,7 +187,9 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
   }
 
   public function makeReceipt($details, $window_envelope = NULL) {
-    $this->_tmpreceipt = tempnam('/tmp', 'receipt');
+    $config = CRM_Core_Config::singleton();
+    $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+    $this->_tmpreceipt = tempnam($tmpDir, 'receipt');
     if (is_numeric($details)) {
       $details = &CRM_Contribute_Form_Task_Status::getDetails($details);
     }

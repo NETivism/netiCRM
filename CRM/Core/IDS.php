@@ -78,7 +78,7 @@ class CRM_Core_IDS {
 
     $configFile = $config->configAndLogDir . 'Config.IDS.ini';
     if (!file_exists($configFile)) {
-      $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+      $tmpDir = $config->configAndLogDir;
       // also clear the stat cache in case we are upgrading
       clearstatcache();
 

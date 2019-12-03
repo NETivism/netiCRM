@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-11-15 06:58+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2019-12-03 06:49+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34743,7 +34743,7 @@ msgid ""
 "start date is set to January 1. A person signs up for membership on February"
 " 15th, 2008. Their membership start date is set to January 1, 2008 - and the"
 " end date is December 31, 2008."
-msgstr "<strong>固定期間會員資格 - 1個月：</strong>固定時期開始日期被設在一月一日。一個人於二零零八年二月十五日報名會員。他的會員資格開始日期被設在二零零八年一月一日 - 結束日期時二零零八年十二月三十一日。"
+msgstr "<strong>固定期間會員資格 - 一年：</strong>固定時期開始日期被設在一月一日。一個人於二零零八年二月十五日報名會員。他的會員資格開始日期被設在二零零八年一月一日 - 結束日期時二零零八年十二月三十一日。"
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid ""
@@ -34757,7 +34757,7 @@ msgid ""
 "<strong>Rolling Membership Period - 1 Year Duration:</strong> A person signs"
 " up on February 15th, 2008. Their membership start date is February 15th, "
 "2008 - and the end date is February 14th, 2009."
-msgstr "<strong>定期續約會員資格 - 1年：</strong>一個人在二零零八年二月十五日報名。他的會員資格開始日期是二零零八年二月十五日 - 結束日期是二零零九年二月十四日。"
+msgstr "<strong>依繳費日計算會員資格 - 1年：</strong>一個人在二零零八年二月十五日報名。他的會員資格開始日期是二零零八年二月十五日 - 結束日期是二零零九年二月十四日。"
 
 #: templates/CRM/Member/Page/MembershipType.tpl
 msgid ""
@@ -45551,7 +45551,7 @@ msgid "Tax Invoice Giving"
 msgstr "發票捐贈"
 
 msgid "Please fill legal identifier to upload data."
-msgstr "上傳資料至國稅局需要身份證字號或統一證號"
+msgstr "上傳資料至國稅局需要身份證字號或外來人口統一證號"
 
 msgid "Campaign owner profile"
 msgstr "個人募款頁創建者個人資料"

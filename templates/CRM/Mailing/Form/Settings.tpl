@@ -65,7 +65,10 @@
   <fieldset><legend>{ts}Online Publication{/ts}</legend>
   	<table class="form-layout">
 		<tr class="crm-mailing-group-form-block-visibility">
-   		<td class="label">{ts}{$form.visibility.label}{/ts}</td><td>{$form.visibility.html} {help id="mailing-visibility"}
+   		<td class="label">{ts}{$form.visibility.label}{/ts}</td><td>{$form.visibility.html}
+           <div class="description">
+              {ts}Choose <strong>public pages</strong> if you want the content of this mailing to be viewable by everyone who has the permission of <strong>"view public CiviMail content"</strong>, <strong>user and user admin only</strong> means that only users that received the mailing or administrators can view the content of this email{/ts}
+           </div>
    		</td>
    		</tr>
   	</table>
