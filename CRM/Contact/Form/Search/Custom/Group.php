@@ -114,7 +114,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         'class' => 'advmultiselect',
       )
     );
-    $andOr = &$form->addElement('checkbox', 'andOr', 'Combine With (AND, Uncheck For OR)', NULL,
+    $andOr = &$form->addElement('checkbox', 'andOr', 'Search with tag (check for AND, uncheck For OR)', NULL,
       array('checked' => 'checked')
     );
 
