@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-11-15 06:58+0000\n"
+"PO-Revision-Date: 2019-12-03 06:20+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45551,7 +45551,7 @@ msgid "Tax Invoice Giving"
 msgstr "發票捐贈"
 
 msgid "Please fill legal identifier to upload data."
-msgstr "上傳資料至國稅局需要身份證字號或統一證號"
+msgstr "上傳資料至國稅局需要身份證字號或外來人口統一證號"
 
 msgid "Campaign owner profile"
 msgstr "個人募款頁創建者個人資料"
