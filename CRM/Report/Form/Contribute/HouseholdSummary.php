@@ -43,7 +43,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
 
   protected $_summary = NULL; function __construct() {
 
-    self::validRelationships();
+    $this->validRelationships();
 
     $this->_columns = array(
       'civicrm_contact_household' =>
@@ -315,17 +315,15 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
     $this->relationTypes = $relationTypes = array();
 
     $params = array('contact_type_b' => 'Household');
-    $typesA = &civicrm_relationship_types_get($params);
+    $typesA = civicrm_relationship_types_get($params);
     foreach ($typesA as $rel) {
       $relationTypes[$rel['id']][$rel['id'] . '_b_a'] = $rel['label_b_a'];
-      //$this->relationTypes[$rel['id'].'_b_a'] = $rel['label_b_a'];
     }
 
     $params = array('contact_type_a' => 'Household');
-    $typesB = &civicrm_relationship_types_get($params);
+    $typesB = civicrm_relationship_types_get($params);
     foreach ($typesB as $rel) {
       $relationTypes[$rel['id']][$rel['id'] . '_a_b'] = $rel['label_a_b'];
-      //$this->relationTypes[$rel['id'].'_a_b'] = $rel['label_a_b'];
     }
 
     ksort($relationTypes);

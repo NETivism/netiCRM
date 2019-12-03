@@ -719,7 +719,7 @@ SELECT count(id)
     $configureActionLinks = self::configureActionLinks();
 
     // form all action links
-    $perm = array_sum(array_keys($this->actionLinks()));
+    $perm = array_sum(array_keys(self::actionLinks()));
 
     //add configure actions links.
     $perm += array_sum(array_keys($configureActionLinks));

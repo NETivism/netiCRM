@@ -650,7 +650,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       && $this->isLastParticipant()
     ) {
       require_once 'CRM/Event/Form/Registration/Register.php';
-      CRM_Event_Form_Registration_Register::processRegistration($this->_params, NULL);
+      $this->processRegistration($this->_params, NULL);
     }
   }
 

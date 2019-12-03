@@ -1306,7 +1306,8 @@ cj(function() {
           array_keys($this->_params['participant_role_id'])
         );
       }
-      $participants[] = CRM_Event_Form_Registration::addParticipant($this->_params, $contactID);
+      $eventRegisterForm = new CRM_Event_Form_Registration();
+      $participants[] = $eventRegisterForm->addParticipant($this->_params, $contactID);
 
       //add custom data for participant
       require_once 'CRM/Core/BAO/CustomValueTable.php';

@@ -281,8 +281,8 @@ class CRM_Contribute_Form_AdditionalInfo {
 
     if (CRM_Utils_Array::value('honor_type_id', $params)) {
       require_once 'CRM/Contribute/BAO/Contribution.php';
-      if ($this->_honorID) {
-        $honorId = CRM_Contribute_BAO_Contribution::createHonorContact($params, $this->_honorID);
+      if ($params['honorID']) {
+        $honorId = CRM_Contribute_BAO_Contribution::createHonorContact($params, $params['honorID']);
       }
       else {
         $honorId = CRM_Contribute_BAO_Contribution::createHonorContact($params);

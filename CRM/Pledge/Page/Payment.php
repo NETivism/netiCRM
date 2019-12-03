@@ -52,7 +52,7 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
     require_once 'CRM/Pledge/Page/Tab.php';
-    CRM_Pledge_Page_Tab::setContext();
+    $this->setContext();
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $this->edit();
@@ -110,6 +110,69 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
     $controller->set('id', $pledgePaymentId);
 
     return $controller->run();
+  }
+
+  function setContext() {
+    $context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
+
+    $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
+    //validate the qfKey
+    require_once 'CRM/Utils/Rule.php';
+    if (!CRM_Utils_Rule::qfKey($qfKey)) {
+      $qfKey = NULL;
+    }
+
+    switch ($context) {
+      case 'dashboard':
+      case 'pledgeDashboard':
+        $url = CRM_Utils_System::url('civicrm/pledge', 'reset=1');
+        break;
+
+      case 'search':
+        $urlParams = 'force=1';
+        if ($qfKey) {
+          $urlParams .= "&qfKey=$qfKey";
+        }
+
+        $url = CRM_Utils_System::url('civicrm/pledge/search', $urlParams);
+        break;
+
+      case 'user':
+        $url = CRM_Utils_System::url('civicrm/user', 'reset=1');
+        break;
+
+      case 'pledge':
+        $url = CRM_Utils_System::url('civicrm/contact/view',
+          "reset=1&force=1&cid={$this->_contactId}&selectedChild=pledge"
+        );
+        break;
+
+      case 'home':
+        $url = CRM_Utils_System::url('civicrm/dashboard', 'force=1');
+        break;
+
+      case 'activity':
+        $url = CRM_Utils_System::url('civicrm/contact/view',
+          "reset=1&force=1&cid={$this->_contactId}&selectedChild=activity"
+        );
+        break;
+
+      case 'standalone':
+        $url = CRM_Utils_System::url('civicrm/dashboard', 'reset=1');
+        break;
+
+      default:
+        $cid = NULL;
+        if ($this->_contactId) {
+          $cid = '&cid=' . $this->_contactId;
+        }
+        $url = CRM_Utils_System::url('civicrm/pledge/search',
+          'force=1' . $cid
+        );
+        break;
+    }
+    $session = CRM_Core_Session::singleton();
+    $session->pushUserContext($url);
   }
 }
 
