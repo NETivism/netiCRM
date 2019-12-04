@@ -133,6 +133,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
    * @var string
    */
   protected $_context = NULL;
+  protected $_compContext = NULL;
 
   protected $_defaults;
 
@@ -172,6 +173,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->_test = CRM_Utils_Request::retrieve('test', 'Boolean', $this);
     $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive', $this);
     $this->_context = empty($this->get('context')) ? CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search') : $this->get('context');
+    $this->_compContext = $this->get('compContext');
 
     $this->assign("context", $this->_context);
 
@@ -212,7 +214,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       NULL,
       $this->_single,
       $this->_limit,
-      $this->_context
+      $this->_context,
+      $this->_compContext
     );
     $prefix = NULL;
     if ($this->_context == 'user') {
@@ -390,7 +393,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
         NULL,
         $this->_single,
         $this->_limit,
-        $this->_context
+        $this->_context,
+        $this->_compContext
       );
       $sortOrder = $selector->getSortOrder(CRM_Core_Action::VIEW);
       $this->controller->set('sortOrder',$sortOrder);
@@ -422,7 +426,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       NULL,
       $this->_single,
       $this->_limit,
-      $this->_context
+      $this->_context,
+      $this->_compContext
     );
     $selector->setKey($this->controller->_key);
 
