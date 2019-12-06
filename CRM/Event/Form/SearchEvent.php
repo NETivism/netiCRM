@@ -47,6 +47,13 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     }
 
     $this->_showHide->addToTemplate();
+
+    $this->_event_type_id = CRM_Utils_Request::retrieve('event_type_id', 'String', $this);
+    if ($this->_event_type_id && is_string($this->_event_type_id)) {
+      $this->setDefaults(array(
+        'event_type_id' => explode(',', $this->_event_type_id),
+      ));
+    }
     return $defaults;
   }
 
@@ -61,7 +68,7 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     $this->add('text', 'title', ts('Find'), array(CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event', 'title')));
     $event_type = CRM_Core_OptionGroup::values('event_type', FALSE);
     $attrs = array('multiple' => 'multiple');
-    $this->addElement('select', 'event_type_id', 'Contribution Type', $event_type, $attrs);
+    $this->addElement('select', 'event_type_id', 'Event Type', $event_type, $attrs);
     $this->addButtons(array(
         array(
           'type' => 'refresh',
