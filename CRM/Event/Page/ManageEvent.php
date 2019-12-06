@@ -182,13 +182,12 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
 
     $this->search();
 
-    $config = CRM_Core_Config::singleton();
 
     $params = array();
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
     $this->_searchResult = CRM_Utils_Request::retrieve('searchResult', 'Boolean', $this);
+    $this->_event_type_id = CRM_Utils_Request::retrieve('event_type_id', 'String', $this);
 
-    $whereClause = $this->whereClause($params, FALSE, $this->_force);
     $params = array();
     $whereClause = $this->whereClause($params, TRUE, $this->_force);
     // because is_template != 1 would be to simple
@@ -295,11 +294,11 @@ ORDER BY start_date desc
       return;
     }
 
-    $form = new CRM_Core_Controller_Simple('CRM_Event_Form_SearchEvent', ts('Search Events'), CRM_Core_Action::ADD);
-    $form->setEmbedded(TRUE);
-    $form->setParent($this);
-    $form->process();
-    $form->run();
+    $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_SearchEvent', ts('Search Events'), CRM_Core_Action::ADD);
+    $controller->setEmbedded(TRUE);
+    $controller->setParent($this);
+    $controller->process();
+    $controller->run();
   }
 
   function whereClause(&$params, $sortBy = TRUE, $force) {
@@ -325,6 +324,13 @@ ORDER BY start_date desc
           if ($v) {
             $val[$k] = $k;
           }
+        }
+        $type = implode(',', $val);
+      }
+      else {
+        $value = explode(',', $value);
+        foreach($value as $v) {
+            $val[$v] = $v;
         }
         $type = implode(',', $val);
       }
