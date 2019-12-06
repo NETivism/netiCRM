@@ -211,6 +211,7 @@ body .crm-container>form>div.loading-placeholder-wrapper {
   }
   body.frontend.special-page-finish .main#main::before {
     opacity: 0;
+    z-index: -1;
   }
   body:not(.special-page-finish) #intro_text {
     opacity: 0;
