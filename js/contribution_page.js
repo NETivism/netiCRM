@@ -352,8 +352,9 @@
           $other_amount_block.find('input').keyup(doClickOtherAmount).click(doClickOtherAmount);
           $other_amount_block.find('input').blur(function(){
             var amount = $(this).val();
-            var defaultOption = ContribPage.defaultPriceOption[ContribPage.currentContribType];
-            if((amount == '' && defaultOption) || amount == 0){
+            var isSelectAmountOption = $('.amount-section label.crm-form-radio input:not([value="amount_other_radio"]):checked').length;
+            if((amount == '' || amount == 0) && !isSelectAmountOption){
+              var defaultOption = ContribPage.defaultPriceOption[ContribPage.currentContribType];
               ContribPage.setPriceOption(defaultOption);
             }
           });
