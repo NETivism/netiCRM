@@ -273,23 +273,25 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $this->add('text', 'option_label[' . $i . ']', ts('Label'), $attributes['label']);
 
       // amount
+      $attributes['amount']['size'] = 8;
       $this->add('text', 'option_amount[' . $i . ']', ts('Amount'), $attributes['amount']);
       $this->addRule('option_amount[' . $i . ']', ts('Please enter a valid amount for this field.'), 'money');
 
       if (in_array($eventComponentId, $this->_extendComponentId)) {
         // count
-        $this->addNumber('option_count[' . $i . ']', ts('Participant Count'), array('min' => 0));
+        $this->addNumber('option_count[' . $i . ']', ts('Participant Count'), array('min' => 0, 'size' => 4));
         $this->addRule('option_count[' . $i . ']', ts('Please enter a valid Participants Count.'), 'positiveInteger');
 
         // max_value
-        $this->addNumber('option_max_value[' . $i . ']', ts('Max Participants'), array('min' => 0));
+        $this->addNumber('option_max_value[' . $i . ']', ts('Max Participants'), array('min' => 0, 'size' => 4));
         $this->addRule('option_max_value[' . $i . ']', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
         // description
-        $this->add('textArea', 'option_description[' . $i . ']', ts('Description'), array('rows' => 1, 'cols' => 40));
+        $this->add('textArea', 'option_description[' . $i . ']', ts('Description'), array('rows' => 1, 'cols' => 20));
       }
 
       // weight
+      $attributes['weight']['size'] = 2;
       $this->add('text', 'option_weight[' . $i . ']', ts('Order'), $attributes['weight']);
 
       // is member only?
