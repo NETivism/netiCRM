@@ -684,7 +684,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       // first build the radio boxes
       CRM_Utils_Hook::buildAmount('contribution', $this, $this->_values['amount']);
 
-      if (!empty($this->_values['default_amount_id'])) {
+      if (!empty($this->_values['default_amount_id']) && empty($this->_defaultAmountGrouping)) {
         $this->_defaultAmountGrouping = $this->_values['amount'][$this->_values['default_amount_id']]['grouping'];
       }
       foreach ($this->_values['amount'] as $amount) {
