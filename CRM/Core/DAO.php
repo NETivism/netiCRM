@@ -48,10 +48,14 @@ class CRM_Core_DAO extends DB_DataObject {
   static $_nullObject = NULL;
   static $_nullArray = array();
   static $_dbColumnValueCache = NULL;
-  CONST NOT_NULL = 1, IS_NULL = 2, 
+  CONST 
+  NOT_NULL = 1,
+  IS_NULL = 2, 
   DB_DAO_NOTNULL = 128, 
-  VALUE_SEPARATOR = "", BULK_INSERT_COUNT = 200, 
-  BULK_INSERT_HIGH_COUNT = 200, BULK_MAIL_INSERT_COUNT = 10;
+  VALUE_SEPARATOR = "", // equal to SQL Query: SELECT CHAR(1) or PHP chr(1)
+  BULK_INSERT_COUNT = 200, 
+  BULK_INSERT_HIGH_COUNT = 200,
+  BULK_MAIL_INSERT_COUNT = 10;
 
   /**
    * the factory class for this application
