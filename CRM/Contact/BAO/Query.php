@@ -1479,6 +1479,9 @@ class CRM_Contact_BAO_Query {
         return;
 
       case 'changed_by':
+        $this->changeBy($values);
+        return;
+      case 'changed_log':
         $this->changeLog($values);
         return;
 
@@ -3328,7 +3331,7 @@ WHERE  id IN ( $groupIDs )
    * @return void
    * @access public
    */
-  function changeLog(&$values) {
+  function changeBy(&$values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
     $targetName = $this->getWhereValues('changed_by', $grouping);
@@ -3342,6 +3345,18 @@ WHERE  id IN ( $groupIDs )
     $this->_where[$grouping][] = "contact_b_log.sort_name LIKE '%$name%'";
     $this->_tables['civicrm_log'] = $this->_whereTables['civicrm_log'] = 1;
     $this->_qill[$grouping][] = ts('Changed by') . ": $name";
+  }
+
+  function changeLog($values) {
+    list($name, $op, $value, $grouping, $wildcard) = $values;
+
+    $detail = CRM_Core_DAO::escapeString(trim($value));
+    if (!strstr($detail, '%')) {
+      $detail = "%".$detail."%";
+    }
+    $this->_where[$grouping][] = "civicrm_log.data LIKE '$detail'";
+    $this->_tables['civicrm_log'] = $this->_whereTables['civicrm_log'] = 1;
+    $this->_qill[$grouping][] = ts('Change Log') . " ".ts("LIKE")." $value";
   }
 
   function modifiedDates($values) {
