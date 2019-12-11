@@ -486,6 +486,16 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     if(!empty($couponErrors['coupon'])) {
       $errors['qfKey'] = ts("This coupon is not valid anymore. Please refill your registration.");
     }
+
+    $self->_feeBlock = &$self->_values['fee'];
+    CRM_Event_Form_Registration_Register::formatFieldsForOptionFull($self);
+    $priceErrors = self::validatePriceSet($self, $self->_params);
+    foreach ($priceErrors as $participantPriceError) {
+      if (!empty($participantPriceError)) {
+        $errors['qfKey'] = ts('It seems that the space of priceset options is full when you are making registration. Please make another one <a href="%1">here</a>.', array(1 => CRM_Utils_System::url('civicrm/event/register', "id={$self->_values['event']['id']}&reset=1")));
+        break;
+      }
+    }
     return $errors;
   }
 

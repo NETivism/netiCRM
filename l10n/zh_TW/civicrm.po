@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-12-11 06:42+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2019-12-11 11:56+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47305,3 +47305,9 @@ msgstr "多值處理"
 
 msgid "Multi-value data can separate to multiple column."
 msgstr "輸出成方便分割一欄多值至多欄的格式"
+
+#: CRM/Event/Form/Registration/Confirm.php
+msgid ""
+"It seems that the space of priceset options is full when you are making "
+"registration. Please make another one <a href=\"%1\">here</a>."
+msgstr "您欲報名的活動人數已超過活動場次名額上限囉，可能是在報名過程中有其他人佔滿名額了，請重新回到<a href=\"%1\">這裡</a>填寫報名表單。"

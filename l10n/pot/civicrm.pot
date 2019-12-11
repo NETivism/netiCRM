@@ -47104,3 +47104,7 @@ msgstr ""
 
 msgid "Multi-value data can separate to multiple column."
 msgstr ""
+
+# CRM/Event/Form/Registration/Confirm.php
+msgid "It seems that the space of priceset options is full when you are making registration. Please make another one <a href=\"%1\">here</a>."
+msgstr ""
