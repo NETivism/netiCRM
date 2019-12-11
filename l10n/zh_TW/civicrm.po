@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-12-03 06:49+0000\n"
+"PO-Revision-Date: 2019-12-11 06:42+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47299,3 +47299,9 @@ msgstr "特別募款頁"
 # CRM/Report/Form/Contribute/TaiwanTax.php
 msgid "Your SIC Code"
 msgstr "八碼統編自行更改"
+
+msgid "Multiple Value Handling"
+msgstr "多值處理"
+
+msgid "Multi-value data can separate to multiple column."
+msgstr "輸出成方便分割一欄多值至多欄的格式"

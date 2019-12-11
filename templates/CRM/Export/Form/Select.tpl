@@ -55,6 +55,16 @@
 		<div class="clear"></div> 
       {/if}
   </div>
+  <div id="map" class="crm-section crm-export-separate_mode-section">
+      {if $form.separate_mode}
+        <div class="label crm-label-export-separate_mode">
+            {$form.separate_mode.label}
+        </div>
+        <div class="content crm-content-export-separate_mode">
+            {$form.separate_mode.html}
+        </div>
+      {/if}
+  </div>
   
   {if $taskName eq 'Export Contacts'}
   <div class="crm-section crm-export-mergeOptions-section">
