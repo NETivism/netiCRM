@@ -190,6 +190,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     }
 
     if (!$allNull) {
+      $contact->modified_date = date('YmdHis');
       $contact->save();
 
       require_once 'CRM/Core/BAO/Log.php';
