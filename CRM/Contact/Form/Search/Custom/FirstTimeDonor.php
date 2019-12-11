@@ -18,6 +18,7 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
     $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
     unset($statuses[5]);
     unset($statuses[6]);
+    unset($statuses[7]);
     ksort($statuses);
     $this->_cstatus = $statuses;
     $this->_recurringStatus = array(
@@ -100,17 +101,12 @@ PRIMARY KEY (id)
     $select = implode(", \n" , $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
-    $having = $this->tempHaving();
-    if ($having) {
-      $having = " HAVING $having ";
-    }
 
     $sql = "
 SELECT $select
 FROM   $from
 WHERE  $where
 GROUP BY contact.id
-$having
 ";
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
@@ -135,7 +131,7 @@ $having
 
 
   function tempFrom() {
-    return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
+    return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id INNER JOIN (SELECT MIN(receive_date) AS min_receive_date, contact_id FROM civicrm_contribution GROUP BY contact_id) c2 ON c.contact_id = c2.contact_id AND c.receive_date = c2.min_receive_date LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
   }
 
   /**
@@ -143,20 +139,19 @@ $having
    */
   function tempWhere(){
     $clauses = array();
-    $clauses[] = "contact.is_deleted = 0 AND pp.id IS NULL AND mp.id IS NULL";
+    $clauses[] = "contact.is_deleted = 0 AND c.is_test = 0 AND pp.id IS NULL AND mp.id IS NULL";
 
-    return implode(' AND ', $clauses);
-  }
+    $status = CRM_Utils_Array::value('status', $this->_formValues);
+    if (is_array($status)) {
+      $clauses[] = "c.contribution_status_id IN (".implode(',', array_keys($status)).")";
+    }
 
-  function tempHaving(){
-    $clauses = array();
-    $clauses[] = "COUNT(c.id) = 1";
     return implode(' AND ', $clauses);
   }
 
   function buildForm(&$form){
     // Define the search form fields here
-    
+
     $form->addDateRange('receive_date', ts('First time donation donors').' - '.ts('From'), NULL, FALSE);
     $statuses = $this->_cstatus;
     $form->addCheckBox('status', ts('Contribution Status'), $statuses, NULL, NULL, NULL, NULL, '&nbsp;', TRUE);
@@ -186,7 +181,7 @@ $having
     }
 
     if (!empty($this->_formValues['status'])) {
-      $statuses = $this->_formValues['status'];
+      $statuses = array_keys($this->_formValues['status']);
       foreach($statuses as $v) {
         $selectedStatus[] = $this->_cstatus[$v];
       }
@@ -200,7 +195,7 @@ $having
     if (!empty($this->_formValues['contribution_page_id'])) {
       $qill[1]['contributionPage'] = ts('Contribution Page').': '.$this->_contributionPage[$this->_formValues['contribution_page_id']];
     }
-    return $qill;  
+    return $qill;
   }
 
   function setBreadcrumb() {
@@ -258,11 +253,6 @@ $having
     }
     if ($receive_date_to) {
       $clauses[] = "receive_date <= '$receive_date_to 23:59:59'";
-    }
-
-    $status = CRM_Utils_Array::value('status', $this->_formValues);
-    if (is_array($status)) {
-      $clauses[] = "contribution_status_id IN (".implode(',', $status).")";
     }
 
     $recurring = CRM_Utils_Array::value('recurring', $this->_formValues);
