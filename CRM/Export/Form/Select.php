@@ -240,6 +240,11 @@ FROM   {$this->_componentTable}
       $this->addGroup($mergeHousehold, 'merge_same_household', ts('Merge Same Household'), '<br/>');
     }
 
+    $options = array(
+      '1' => ts('Multi-value data can separate to multiple column.'),
+    );
+    $this->addCheckBox('separate_mode', ts('Multiple Value Handling'), $options, NULL, NULL, NULL, NULL, '', TRUE);
+
     $this->buildMapping();
 
     $this->setDefaults(array('exportOption' => self::EXPORT_SELECTED));
@@ -266,7 +271,7 @@ FROM   {$this->_componentTable}
   public function postProcess() {
     $exportOption = $this->controller->exportValue($this->_name, 'exportOption');
     $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
-    $merge_same_household = $this->controller->exportValue($this->_name, 'merge_same_household');
+    $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
 
     $submitted = $this->controller->exportValues();
     if (isset($submitted['mapping'])) {
@@ -281,6 +286,14 @@ FROM   {$this->_componentTable}
     else {
       $this->set('mappingId', NULL);
     }
+
+    if (!empty($submitted['separate_mode'])) {
+      $separateMode = TRUE;
+    }
+    else {
+      $separateMode = FALSE;
+    }
+    $this->set('separateMode', $separateMode);
 
     $mergeSameAddress = $mergeSameHousehold = FALSE;
     if ($merge_same_address['merge_same_address'] == 1) {
@@ -305,7 +318,9 @@ FROM   {$this->_componentTable}
         $this->_componentClause,
         $this->_componentTable,
         $mergeSameAddress,
-        $mergeSameHousehold
+        $mergeSameHousehold,
+        NULL,
+        $separateMode
       );
     }
 

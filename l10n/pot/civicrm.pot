@@ -47098,3 +47098,9 @@ msgstr ""
 # CRM/Report/Form/Contribute/TaiwanTax.php
 msgid "Your SIC Code"
 msgstr ""
+
+msgid "Multiple Value Handling"
+msgstr ""
+
+msgid "Multi-value data can separate to multiple column."
+msgstr ""

@@ -71,7 +71,8 @@ class CRM_Export_BAO_Export {
     $componentTable = NULL,
     $mergeSameAddress = FALSE,
     $mergeSameHousehold = FALSE,
-    $mappingId = NULL
+    $mappingId = NULL,
+    $separateMode = FALSE
   ) {
     set_time_limit(1800);
     $headerRows = $returnProperties = array();
@@ -858,9 +859,7 @@ class CRM_Export_BAO_Export {
                     list($url, $ignore1, $ignore2) = CRM_Core_BAO_File::url($fieldValue, NULL);
                     $row[$field . $relationField] = $url;
                   }else{
-                    $row[$field . $relationField] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID,
-                      $relationQuery[$field]->_options
-                    );
+                    $row[$field . $relationField] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $relationQuery[$field]->_options, NULL, $separateMode);
                   }
                 }
                 elseif (in_array($relationField, array('email_greeting', 'postal_greeting', 'addressee'))) {
@@ -895,14 +894,13 @@ class CRM_Export_BAO_Export {
             }
           }
           elseif (isset($fieldValue) && $fieldValue != '') {
-
             //check for custom data
             if ($cfID = CRM_Core_BAO_CustomField::getKeyID($field)) {
               if($query->_fields[$field]['data_type'] == 'File' && !empty($dao->$field)){
                 list($url, $ignore1, $ignore2) = CRM_Core_BAO_File::url($dao->$field, NULL);
                 $row[$field] = $url;
               }else{
-                $row[$field] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $query->_options);
+                $row[$field] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $query->_options, NULL, $separateMode);
               }
             }
             elseif (array_key_exists($field, $multipleSelectFields)) {
