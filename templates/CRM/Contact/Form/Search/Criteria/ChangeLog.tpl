@@ -31,6 +31,10 @@
                 {$form.changed_by.html}
             </td>
             <td>
+                {$form.changed_log.label}<br />
+                {$form.changed_log.html}
+            </td>
+            <td>
                 {$form.log_date_low.label}<br />
 	            {include file="CRM/common/jcalendar.tpl" elementName=log_date_low}&nbsp;
 		        {$form.log_date_high.label}&nbsp; 
