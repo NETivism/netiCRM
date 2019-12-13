@@ -898,7 +898,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
       }
       else {
-        $this->_defaults['is_recur'] = 0;
+        $this->_defaults['is_recur'] = 1;
       }
     }
 
