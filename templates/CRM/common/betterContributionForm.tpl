@@ -41,7 +41,7 @@ cj(function($){
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
-        $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Legal Identifier{/ts}{literal}");
+        $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}ID number{/ts}{literal}");
         $('.same-as-wrapper').show('fast');
       }
       if($('#r_company').is(':checked')){
@@ -91,7 +91,7 @@ cj(function($){
     var hornor_name = [
       mdFormElement('radio', '{/literal}{ts}Full Name{/ts}{literal}', {name:'receipt_name', id:'r_name_full', value:'r_name_full'{/literal}{if $receipt_name eq 'r_name_full'}, checked: 'checked'{/if}{literal}}),
       mdFormElement('radio', '{/literal}{ts}Part of Name{/ts}{literal}', {name:'receipt_name', id:'r_name_half', value:'r_name_half'{/literal}{if $receipt_name eq 'r_name_half'}, checked: 'checked'{/if}{literal}}),
-      mdFormElement('radio', '{/literal}{ts}Anonymity{/ts}{literal}', {name:'receipt_name', id:'r_name_hide', value:'r_name_hide'{/literal}{if $receipt_name eq 'r_name_hide'}, checked: 'checked'{/if}{literal}}),
+      mdFormElement('radio', '{/literal}{ts}Anonymous{/ts}{literal}', {name:'receipt_name', id:'r_name_hide', value:'r_name_hide'{/literal}{if $receipt_name eq 'r_name_hide'}, checked: 'checked'{/if}{literal}}),
       mdFormElement('radio', '{/literal}{ts}Custom Name{/ts}{literal}', {name:'receipt_name', id:'r_name_custom', value:'r_name_custom'{/literal}{if $receipt_name eq 'r_name_custom'}, checked: 'checked'{/if}{literal}})
     ];
     var items = hornor_name.join('');
@@ -253,7 +253,7 @@ cj(function($){
       if(Object.keys(error).length > 0 && isShowError){
         $sameas.prop('checked', false);
         if($('.name-id-error').length === 0){
-          $sameas.parent().append('<label for="same_as" generated="true" class="error name-id-error" style="color: rgb(238, 85, 85); padding-left: 10px;">{/literal}{ts}Please verify name and Legal Identifier fields.{/ts}{literal}</label>');
+          $sameas.parent().append('<label for="same_as" generated="true" class="error name-id-error" style="color: rgb(238, 85, 85); padding-left: 10px;">{/literal}{ts}Please verify name and ID/Tax Number fields.{/ts}{literal}</label>');
           for(var id in error){
             var $element = $('#'+id);
             if(!$element.is('.error')){

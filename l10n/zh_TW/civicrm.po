@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-12-11 11:56+0000\n"
+"PO-Revision-Date: 2019-12-16 16:54+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44963,7 +44963,7 @@ msgstr "這是您透過 <a href=\"%1\">%2</a> 所產生的繳費單。"
 msgid ""
 "You need to follow instruction below to complete transaction before "
 "<strong>%1</strong> (expire date)."
-msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
+msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
 
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
 msgid ""
@@ -47306,8 +47306,26 @@ msgstr "多值處理"
 msgid "Multi-value data can separate to multiple column."
 msgstr "輸出成方便分割一欄多值至多欄的格式"
 
-#: CRM/Event/Form/Registration/Confirm.php
+# CRM/Event/Form/Registration/Confirm.php
 msgid ""
 "It seems that the space of priceset options is full when you are making "
 "registration. Please make another one <a href=\"%1\">here</a>."
 msgstr "您欲報名的活動人數已超過活動場次名額上限囉，可能是在報名過程中有其他人佔滿名額了，請重新回到<a href=\"%1\">這裡</a>填寫報名表單。"
+
+msgid "ID/Tax Number"
+msgstr "身份證字號"
+
+msgid "ID number"
+msgstr "身份證字號"
+
+msgid "Please verify name and ID/Tax Number fields."
+msgstr "請確認聯絡人姓名或身份證字號欄位是否填寫正確"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Field for the name used of donor acknowledgement"
+msgstr "捐款徵信名稱使用的欄位"
+
+msgid ""
+"You need to follow instruction below to complete transaction before "
+"<strong>%1</strong> (Payment deadline)."
+msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
