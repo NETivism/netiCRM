@@ -522,7 +522,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
         'legal_identifier' => array(
           'name' => 'legal_identifier',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Legal Identifier') ,
+          'title' => ts('ID/Tax Number') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
           'import' => true,

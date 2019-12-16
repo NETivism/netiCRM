@@ -102,7 +102,7 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addElement('text', 'external_identifier', ts('External ID'), $attributes['external_identifier'], 'size="30"');
 
     $attributes['legal_identifier']['size'] = 30;
-    $form->addElement('text', 'legal_identifier', ts('Legal Identifier'), $attributes['legal_identifier'], 'size="30"');
+    $form->addElement('text', 'legal_identifier', ts('ID/Tax Number'), $attributes['legal_identifier'], 'size="30"');
 
     $config = &CRM_Core_Config::singleton();
     if (CRM_Core_Permission::check('access deleted contacts')) {
