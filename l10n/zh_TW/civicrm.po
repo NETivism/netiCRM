@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-12-16 16:54+0000\n"
+"PO-Revision-Date: 2019-12-17 08:57+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44963,7 +44963,7 @@ msgstr "這是您透過 <a href=\"%1\">%2</a> 所產生的繳費單。"
 msgid ""
 "You need to follow instruction below to complete transaction before "
 "<strong>%1</strong> (expire date)."
-msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
+msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
 
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
 msgid ""
@@ -47328,4 +47328,29 @@ msgstr "捐款徵信名稱使用的欄位"
 msgid ""
 "You need to follow instruction below to complete transaction before "
 "<strong>%1</strong> (Payment deadline)."
-msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
+msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
+
+#: civicrm_spgateway.notify.inc
+msgid "Payment deadline"
+msgstr "繳費期限"
+
+msgid "Print payment slip"
+msgstr "列印繳費單"
+
+msgid "Note: Payment confirmation takes 3-4 working days."
+msgstr "備註：完成繳費後，商店約需 3~4 個工作天確認繳費成功。"
+
+msgid "Convenience Store Payment Code"
+msgstr "便利商店繳費代碼"
+
+msgid "Payment slip"
+msgstr "繳費單"
+
+msgid "Payment Instructions"
+msgstr "步驟說明"
+
+msgid "Bank code"
+msgstr "繳費銀行代碼"
+
+msgid "Virtual account number"
+msgstr "繳費虛擬帳號"
