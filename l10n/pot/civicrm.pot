@@ -47124,3 +47124,28 @@ msgstr ""
 
 msgid "You need to follow instruction below to complete transaction before <strong>%1</strong> (Payment deadline)."
 msgstr ""
+
+#: civicrm_spgateway.notify.inc
+msgid "Payment deadline"
+msgstr ""
+
+msgid "Print payment slip"
+msgstr ""
+
+msgid "Note: Payment confirmation takes 3-4 working days."
+msgstr ""
+
+msgid "Convenience Store Payment Code"
+msgstr ""
+
+msgid "Payment slip"
+msgstr ""
+
+msgid "Payment Instructions"
+msgstr ""
+
+msgid "Bank code"
+msgstr ""
+
+msgid "Virtual account number"
+msgstr ""

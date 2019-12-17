@@ -29,7 +29,7 @@
     <span class="col">
       <div>
       {if $action NEQ 2}<i class="zmdi zmdi-memory"></i> {ts}CiviCRM ID{/ts}: {$contactId}{/if}
-      {if isset($legal_identifier) and $legal_identifier}<i class="zmdi zmdi-account-box-o"></i> {ts}ID/Tax Number{/ts}: {$legal_identifier}{/if}
+      {if isset($legal_identifier) and $legal_identifier}<i class="zmdi zmdi-account-box-o"></i> {ts}Legal Identifier{/ts}: {$legal_identifier}{/if}
       </div>
       {if isset($external_identifier) and $external_identifier}<div><i class="zmdi zmdi-share"></i> {ts}External ID{/ts}: {$external_identifier}</div>{/if}
     </span>
