@@ -12,13 +12,13 @@
       <div class="progress-amount-goal">{if $achievement.type == "amount"}{ts}Goal Amount{/ts} <span>{$achievement.goal|crmMoney:null:null:true}</span>{else}{ts}Goal Subscription{/ts} <span>{$achievement.goal}</span>{ts}People{/ts}{/if}</div>
     </div>
     <div class="progress-wrapper">
-      <div class="progress-cell progress-bar-wrapper">
+      <div class="progress-cell progress-bar-wrapper" {if !$intro_text}style="width:100%;"{/if}>
         <div class="progress-bar" style="width:0px;" data-current="{$percent_css}"></div>
         <div class="progress-pointer" style="left:0px;margin-left:0;opacity:0">{ts 1="`$achievement.percent`%"}%1 achieved{/ts}</div>
       </div>
       {if $intro_text}
       <div class="progress-cell progress-button">
-        <div class="button"><span>{ts}Donate Now{/ts}</span></div>
+        <div class="button"><span>{if $achievement.button}{ts}{$achievement.button}{/ts}{else}{ts}Donate Now{/ts}{/if}</span></div>
       </div>
       {/if}
     </div>
