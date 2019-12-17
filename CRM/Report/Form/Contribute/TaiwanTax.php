@@ -78,7 +78,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
           ),
           'legal_identifier' =>
           array(
-            'title' => ts('ID/Tax Number'),
+            'title' => ts('Legal Identifier'),
             'required' => TRUE,
             'no_repeat' => FALSE,
           ),

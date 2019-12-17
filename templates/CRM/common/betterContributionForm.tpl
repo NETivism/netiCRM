@@ -41,7 +41,7 @@ cj(function($){
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
-        $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}ID number{/ts}{literal}");
+        $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Legal Identifier{/ts}{literal}");
         $('.same-as-wrapper').show('fast');
       }
       if($('#r_company').is(':checked')){
@@ -253,7 +253,7 @@ cj(function($){
       if(Object.keys(error).length > 0 && isShowError){
         $sameas.prop('checked', false);
         if($('.name-id-error').length === 0){
-          $sameas.parent().append('<label for="same_as" generated="true" class="error name-id-error" style="color: rgb(238, 85, 85); padding-left: 10px;">{/literal}{ts}Please verify name and ID/Tax Number fields.{/ts}{literal}</label>');
+          $sameas.parent().append('<label for="same_as" generated="true" class="error name-id-error" style="color: rgb(238, 85, 85); padding-left: 10px;">{/literal}{ts}Please verify name and Legal Identifier fields.{/ts}{literal}</label>');
           for(var id in error){
             var $element = $('#'+id);
             if(!$element.is('.error')){

@@ -6,12 +6,12 @@ class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_
 
     $this->_columns = array(ts('Contact Id') => 'contact_id',
       ts('Name') => 'display_name',
-      ts('ID/Tax Number') => 'legal_identifier',
+      ts('Legal Identifier') => 'legal_identifier',
     );
   }
 
   function buildForm(&$form) {
-    $form->add('text', 'legal_identifier', ts('ID/Tax Number'));
+    $form->add('text', 'legal_identifier', ts('Legal Identifier'));
     $form->add('text', 'display_name', ts('Display Name'));
   }
 

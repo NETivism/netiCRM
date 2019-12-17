@@ -12,7 +12,7 @@
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
         <table class="form-layout-compressed">
             <tr class="crm-contact-custom-search-ssn-form-block">
-                <td><label>{ts}ID/Tax Number{/ts}</label></td>
+                <td><label>{ts}Legal Identifier{/ts}</label></td>
                 <td>{$form.legal_identifier.html}</td>
             </tr>
             <tr class="crm-contact-custom-search-ssn-form-name">
