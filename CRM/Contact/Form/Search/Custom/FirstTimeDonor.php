@@ -45,21 +45,24 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
-      'c.receive_date' => 'receive_date',
+      'c2.min_receive_date' => 'receive_date',
       'ROUND(c.total_amount,0)' => 'amount',
       'c.contribution_recur_id' => 'contribution_recur_id',
       'c.contribution_status_id' => 'contribution_status_id',
       'c.contribution_page_id' => 'contribution_page_id',
       'c.payment_instrument_id' => 'instrument_id',
       'c.contribution_type_id' => 'contribution_type_id',
+      'ROUND(sum.total_amount)' => 'total_amount',
     );
     $this->_columns = array(
-      ts('ID') => 'id',
+      ts('Contact ID') => 'id',
       ts('Name') => 'sort_name',
-      ts('Amount') => 'amount',
+      ts('First Amount') => 'amount',
       ts('Payment Instrument') => 'instrument_id',
-      ts('Receive Date') => 'receive_date',
+      ts('Created Date') => 'receive_date',
       ts('Contribution Type') => 'contribution_type_id',
+      ts('Contribution Status') => 'contribution_status_id',
+      ts('Total Receive Amount') => 'total_amount',
     );
   }
   function buildTempTable() {
@@ -142,14 +145,21 @@ GROUP BY contact.id
     $sub_where_clauses[] = 'pp.id IS NULL';
     $sub_where_clauses[] = 'mp.id IS NULL';
     $sub_where_clause = implode(' AND ', $sub_where_clauses);
-    $sub_query = "SELECT MIN(receive_date) AS min_receive_date, contact_id FROM civicrm_contribution c
+    $sub_query = "SELECT MIN(IFNULL(receive_date, created_date)) AS min_receive_date, contact_id FROM civicrm_contribution c
       LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
       LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
       WHERE $sub_where_clause GROUP BY contact_id";
+    $sub_where_clauses[] = 'c.contribution_status_id = 1';
+    $sub_where_clause = implode(' AND ', $sub_where_clauses);
+    $sub_query_sum = "SELECT SUM(total_amount) AS total_amount,  contact_id FROM civicrm_contribution c
+    LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
+    LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
+    WHERE $sub_where_clause GROUP BY contact_id";
 
     return " civicrm_contact AS contact
       INNER JOIN civicrm_contribution c ON c.contact_id = contact.id
-      INNER JOIN ($sub_query) c2 ON c.contact_id = c2.contact_id AND c.receive_date = c2.min_receive_date";
+      INNER JOIN ($sub_query) c2 ON c.contact_id = c2.contact_id AND (c.receive_date = c2.min_receive_date OR c.created_date = c2.min_receive_date)
+      LEFT JOIN ($sub_query_sum) sum ON sum.contact_id = c.contact_id";
   }
 
   /**
@@ -321,7 +331,7 @@ GROUP BY contact.id
   function &columns(){
     return $this->_columns;
   }
-  
+
   function summary(){
     // return $summary;
   }
@@ -332,6 +342,12 @@ GROUP BY contact.id
     }
     if (!empty($row['contribution_type_id'])) {
       $row['contribution_type_id'] = $this->_contributionType[$row['contribution_type_id']];
+    }
+    if (!empty($row['contribution_status_id'])) {
+      $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
+    }
+    if (empty($row['total_amount'])) {
+      $row['total_amount'] = 0;
     }
   }
 
