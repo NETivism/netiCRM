@@ -649,6 +649,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->assign('receiptTitle',$config->receiptTitle);
     $this->assign('receiptSerial',$config->receiptSerial);
     $this->assign('receiptDonorCredit',$config->receiptDonorCredit);
+    $this->assign('forbidCustomDonorCredit',$config->forbidCustomDonorCredit);
 
     if(!empty($this->_submitValues['same_as_post'])){
       $this->assign('same_as',$this->_submitValues['same_as_post']);
