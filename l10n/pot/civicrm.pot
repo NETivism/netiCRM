@@ -47149,3 +47149,6 @@ msgstr ""
 
 msgid "Virtual account number"
 msgstr ""
+
+msgid "First Amount"
+msgstr ""

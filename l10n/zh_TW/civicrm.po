@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-12-18 07:37+0000\n"
+"PO-Revision-Date: 2019-12-18 10:35+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47354,3 +47354,6 @@ msgstr "繳費銀行代碼"
 
 msgid "Virtual account number"
 msgstr "繳費虛擬帳號"
+
+msgid "First Amount"
+msgstr "首次捐款金額"
