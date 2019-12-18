@@ -27,6 +27,8 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
       0 => ts("Non-recurring Contribution"),
     );
     $this->_contributionPage = CRM_Contribute_PseudoConstant::contributionPage();
+    $this->_instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
+    $this->_contributionType = CRM_Contribute_PseudoConstant::contributionType();
     $this->_config = CRM_Core_Config::singleton();
     $this->buildColumn();
     if (!empty($formValues)) {
@@ -48,12 +50,16 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
       'c.contribution_recur_id' => 'contribution_recur_id',
       'c.contribution_status_id' => 'contribution_status_id',
       'c.contribution_page_id' => 'contribution_page_id',
+      'c.payment_instrument_id' => 'instrument_id',
+      'c.contribution_type_id' => 'contribution_type_id',
     );
     $this->_columns = array(
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Amount') => 'amount',
+      ts('Payment Instrument') => 'instrument_id',
       ts('Receive Date') => 'receive_date',
+      ts('Contribution Type') => 'contribution_type_id',
     );
   }
   function buildTempTable() {
@@ -131,7 +137,23 @@ GROUP BY contact.id
 
 
   function tempFrom() {
-    return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id INNER JOIN (SELECT MIN(receive_date) AS min_receive_date, contact_id FROM civicrm_contribution GROUP BY contact_id) c2 ON c.contact_id = c2.contact_id AND c.receive_date = c2.min_receive_date LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
+    $status = CRM_Utils_Array::value('status', $this->_formValues);
+    $sub_where_clauses = array();
+    $sub_where_clauses[] = 'c.is_test = 0';
+    $sub_where_clauses[] = 'pp.id IS NULL';
+    $sub_where_clauses[] = 'mp.id IS NULL';
+    if (is_array($status)) {
+      $sub_where_clauses[] = "c.contribution_status_id IN (".implode(',', array_keys($status)).")";
+    }
+    $sub_where_clause = implode(' AND ', $sub_where_clauses);
+    $sub_query = "SELECT MIN(receive_date) AS min_receive_date, contact_id FROM civicrm_contribution c
+      LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
+      LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
+      WHERE $sub_where_clause GROUP BY contact_id";
+
+    return " civicrm_contact AS contact
+      INNER JOIN civicrm_contribution c ON c.contact_id = contact.id
+      INNER JOIN ($sub_query) c2 ON c.contact_id = c2.contact_id AND c.receive_date = c2.min_receive_date";
   }
 
   /**
@@ -139,12 +161,7 @@ GROUP BY contact.id
    */
   function tempWhere(){
     $clauses = array();
-    $clauses[] = "contact.is_deleted = 0 AND c.is_test = 0 AND pp.id IS NULL AND mp.id IS NULL";
-
-    $status = CRM_Utils_Array::value('status', $this->_formValues);
-    if (is_array($status)) {
-      $clauses[] = "c.contribution_status_id IN (".implode(',', array_keys($status)).")";
-    }
+    $clauses[] = "contact.is_deleted = 0";
 
     return implode(' AND ', $clauses);
   }
@@ -309,6 +326,12 @@ GROUP BY contact.id
   }
 
   function alterRow(&$row) {
+    if (!empty($row['instrument_id'])) {
+      $row['instrument_id'] = $this->_instruments[$row['instrument_id']];
+    }
+    if (!empty($row['contribution_type_id'])) {
+      $row['contribution_type_id'] = $this->_contributionType[$row['contribution_type_id']];
+    }
   }
 
   /**

@@ -867,9 +867,6 @@ body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focu
 
 
 /* UI style*/
-.instrument-section .content {
-  display: flex;
-}
 .civicrm-instrument-dummy {
   width: 100%;
   margin-right: 8px;
