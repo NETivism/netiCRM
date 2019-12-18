@@ -137,14 +137,10 @@ GROUP BY contact.id
 
 
   function tempFrom() {
-    $status = CRM_Utils_Array::value('status', $this->_formValues);
     $sub_where_clauses = array();
     $sub_where_clauses[] = 'c.is_test = 0';
     $sub_where_clauses[] = 'pp.id IS NULL';
     $sub_where_clauses[] = 'mp.id IS NULL';
-    if (is_array($status)) {
-      $sub_where_clauses[] = "c.contribution_status_id IN (".implode(',', array_keys($status)).")";
-    }
     $sub_where_clause = implode(' AND ', $sub_where_clauses);
     $sub_query = "SELECT MIN(receive_date) AS min_receive_date, contact_id FROM civicrm_contribution c
       LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
@@ -270,6 +266,11 @@ GROUP BY contact.id
     }
     if ($receive_date_to) {
       $clauses[] = "receive_date <= '$receive_date_to 23:59:59'";
+    }
+
+    $status = CRM_Utils_Array::value('status', $this->_formValues);
+    if (is_array($status)) {
+      $clauses[] = "contribution_status_id IN (".implode(',', array_keys($status)).")";
     }
 
     $recurring = CRM_Utils_Array::value('recurring', $this->_formValues);
