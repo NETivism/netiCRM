@@ -27,6 +27,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'receiptTitle', ts('Field for receipt title'), $option);
     $this->addElement('select', 'receiptSerial', ts('Field for receipt serial number'), $option);
     $this->addElement('select', 'receiptDonorCredit', ts('Field for the name used of donor acknowledgement'), $option);
+    $this->add('checkbox', 'forbidCustomDonorCredit', ts('Forbid above name field from being customized'));
 
     $addressFields = array(
       'is_primary' => ts('Is Primary Address'),
@@ -99,6 +100,10 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       }
     }else{
       $error = true;
+    }
+
+    if (empty($params['forbidCustomDonorCredit'])) {
+      $params['forbidCustomDonorCredit'] = FALSE;
     }
 
     parent::commonProcess($params);

@@ -47149,3 +47149,12 @@ msgstr ""
 
 msgid "Virtual account number"
 msgstr ""
+
+msgid "First Amount"
+msgstr ""
+
+msgid "If checked, the name used of donor acknowledgement can't be customized by contributor. The options will be \"Full Name\" and \"Part of Name\"."
+msgstr ""
+
+msgid "Forbid above name field from being customized"
+msgstr ""
