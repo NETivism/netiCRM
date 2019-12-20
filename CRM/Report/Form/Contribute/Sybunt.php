@@ -236,6 +236,9 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
             }
           }
           else {
+            if ($fieldName == 'yid' && $tableName == 'civicrm_contribution') {
+              $field['clause'] = str_replace('$value', CRM_Utils_Array::value("{$fieldName}_value", $this->_params), $field['clause']);
+            }
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
               $clause = $this->whereClause($field,
