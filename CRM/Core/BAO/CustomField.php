@@ -1753,7 +1753,7 @@ SELECT $columnName
       $params['fk_field_name'] = 'id';
       $params['fk_attributes'] = 'ON DELETE SET NULL';
     }
-    if ($field->default_value) {
+    if (!in_array($field->html_type, array('CheckBox', 'Radio', 'Select', 'Multi-Select', 'AdvMulti-Select', 'Autocomplete-Select')) && !empty($field->default_value)) {
       $params['default'] = "'{$field->default_value}'";
     }
 
