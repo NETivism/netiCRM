@@ -539,7 +539,7 @@
           if(text.match(' '+amount+' ') && (this_grouping == grouping_text || this_grouping == '')){
             ContribPage.setPriceOption($this.find('input').val());
           }
-        })
+        });
       },
 
       updateContributeType: function(isSelectDefaultOption) {
@@ -563,13 +563,13 @@
 
       updateContribInfoLabel: function(){
         if(this.currentContribType == 'non-recurring'){
-          $('.info-is-recur').text(ts['Single Contribution']);
+          $('.info-is-recur').text(ts['One-time Contribution']);
         }
         if(this.currentContribType == 'recurring'){
           if(!this.installments || this.installments == "0"){
-            $('.info-is-recur').text(ts['Every-Month Recurring Contributions']);
+            $('.info-is-recur').text(ts['Monthly Recurring Contributions']);
           }else{
-            $('.info-is-recur').text(this.installments+ts['Installments Recurring Contributions']);
+            $('.info-is-recur').text(this.installments+' '+ts['Installments Contributions']);
           }
         }
       },
