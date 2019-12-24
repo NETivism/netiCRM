@@ -1320,7 +1320,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param int  $templateId message template id
    * @param int  $check      check if mail should be send on hold, desease or do not email
    */
-  public static function sendEmailTemplate($fromId, $toId, $template_id, $check = FALSE) {
+  public static function sendEmailTemplate($from, $toId, $template_id, $check = FALSE) {
     $returnProperties = array(
       'sort_name' => 1,
       'email' => 1,
@@ -1330,9 +1330,17 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       'display_name' => 1,
       'preferred_mail_format' => 1,
     );
-    list($details) = CRM_Mailing_BAO_Mailing::getDetails(array($fromId, $toId), $returnProperties, FALSE, FALSE);
+    $getDetails = array($toId);
+    if (is_numeric($from)) {
+      $fromId = $from;
+      $getDetails[] = $fromId;
+      $from = NULL;
+    }
+    else {
+      $fromId = NULL;
+    }
+    list($details) = CRM_Mailing_BAO_Mailing::getDetails($getDetails, $returnProperties, FALSE, FALSE);
     if (!empty($details)) {
-      $fromDetails = $details[$fromId];
       $toDetails = $details[$toId];
       $contactIds = array($toId);
 
@@ -1356,7 +1364,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $html,
         NULL, // emailAddress
         $fromId, // sender contact id
-        NULL, // formatted from address
+        $from, // formatted from address
         NULL, // attachments
         NULL, // cc
         NULL, // bcc

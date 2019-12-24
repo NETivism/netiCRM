@@ -896,5 +896,20 @@ class CRM_Utils_Hook {
       5, &$contactID, &$fields, &$self, &$isAdditional, &$result, 'civicrm_checkRegistration'
     ));
   }
+
+  /**
+   * Modify params when save payment result data
+   *
+   * @param $contributionId
+   */
+  static function alterAPIResponse($response, &$object, $provider, $apiType = ''){
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+
+    return call_user_func_array(array($config->userHookClass, 'invoke'), array(
+      4, &$response, &$object, &$provider, &$apiType, &$null, 'civicrm_alterAPIResponse'
+    ));
+  }
 }
 

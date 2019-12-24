@@ -47158,3 +47158,12 @@ msgstr ""
 
 msgid "Forbid above name field from being customized"
 msgstr ""
+
+msgid "One-time Contribution"
+msgstr ""
+
+msgid "Monthly Recurring Contributions"
+msgstr ""
+
+msgid "Installments Contributions"
+msgstr ""
