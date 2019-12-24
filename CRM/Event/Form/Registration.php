@@ -728,6 +728,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
             // change file upload description
             $this->_uploadedFiles[$key] = $field['name'];
           }
+          if ($contactID && $field['data_type'] == 'File' && $field['is_required'] && $this->_allowConfirmation) {
+            $field['is_required'] = FALSE;
+          }
           //make the field optional if primary participant
           //have been skip the additional participant.
           if ($button == 'skip') {
