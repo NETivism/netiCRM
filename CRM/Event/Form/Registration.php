@@ -1307,11 +1307,18 @@ WHERE  v.option_group_id = g.id
         if (!$hasOptMaxValue) {
           continue;
         }
-        foreach ($value as $optId => $optVal) {
-          $fieldCountName = $valKey.'_'.$optId.'_count';
-          $optCount = array_key_exists($fieldCountName, $values) ? $values[$fieldCountName] : $optVal;
-          $currentMaxValue = $optionsCountDetails[$priceFieldId]['options'][$optId] * $optCount;
-          $optionMaxValues[$priceFieldId][$optId] = $currentMaxValue + CRM_Utils_Array::value($optId, $optionMaxValues[$priceFieldId], 0);
+        $options = $optionsCountDetails[$priceFieldId]['options'];
+        foreach ($options as $optId => $optCount) {
+          if (!empty($value[$optId]) && $value[$optId] == TRUE) {
+            $optVal = $value[$optId];
+            $fieldCountName = $valKey.'_'.$optId.'_count';
+            $optCount = array_key_exists($fieldCountName, $values) ? $values[$fieldCountName] : $optVal;
+            $currentMaxValue = $options[$optId] * $optCount;
+            $optionMaxValues[$priceFieldId][$optId] = $currentMaxValue + CRM_Utils_Array::value($optId, $optionMaxValues[$priceFieldId], 0);
+          }
+          else if(empty($optionMaxValues[$priceFieldId][$optId])) {
+            $optionMaxValues[$priceFieldId][$optId] = 0;
+          }
         }
       }
     }
