@@ -243,7 +243,7 @@ class CRM_Contact_Form_Search_Criteria {
     // #21360
     $form->addDateTime('contact_created_date_low', ts('Created On'), FALSE, array('formatType' => 'searchDate'));
     $form->addDateTime('contact_created_date_high', ts('and'), FALSE, array('formatType' => 'searchDate'));
-    $form->addDateTime('contact_modified_date_low', ts('Modified Between'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDateTime('contact_modified_date_low', ts('Last Modified Date'), FALSE, array('formatType' => 'searchDate'));
     $form->addDateTime('contact_modified_date_high', ts('and'), FALSE, array('formatType' => 'searchDate'));
   }
 

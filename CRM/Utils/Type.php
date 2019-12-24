@@ -203,7 +203,7 @@ class CRM_Utils_Type {
 
 
     if ($abort) {
-      CRM_Core_Error::fatal("$data is not of the type $type");
+      CRM_Core_Error::fatal("Provided data is not of the type $type");
     }
     return NULL;
   }
@@ -307,13 +307,13 @@ class CRM_Utils_Type {
 
 
       default:
-        CRM_Core_Error::fatal("Cannot recognize $type for $data");
+        CRM_Core_Error::fatal("Cannot recognize $type for data");
         break;
     }
 
     if ($abort) {
       $data = htmlentities($data);
-      CRM_Core_Error::fatal("$name (value: $data) is not of the type $type");
+      CRM_Core_Error::fatal("$name is not of the type $type");
     }
 
     return NULL;

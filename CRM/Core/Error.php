@@ -610,18 +610,17 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     if (isset($_GET['snippet']) && $_GET['snippet']) {
       if($_GET['snippet'] == CRM_Core_Smarty::PRINT_SNIPPET ||
         $_GET['snippet'] == CRM_Core_Smarty::PRINT_NOFORM) {
-        $content = $template->fetch('CRM/common/snippet.tpl');
+        $content = $vars['message'];
+        $json = array(
+          'status' => '-1',
+          'error' => "$content",
+        );
+        echo json_encode($json);
       }
       else {
         $content = $template->fetch('CRM/common/print.tpl');
+        echo $content;
       }
-      $null = CRM_Core_DAO::$_nullObject;
-      CRM_Utils_Hook::alterContent($content, 'page', $tplFile, $null);
-      $json = array(
-        'status' => '-1',
-        'error' => "$content",
-      );
-      echo json_encode($json);
     }
     else{
       $config = CRM_Core_Config::singleton();
