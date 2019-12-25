@@ -101,7 +101,7 @@
   })(jQuery);
   {/literal}
 </script>
-<script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js?ver=3.2.3"></script>
+<script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js?ver=3.2.4"></script>
 <img class="pre-load-background-images" src="{$backgroundImageUrl}" alt="" style="display: none;">
 <img class="pre-load-background-images" src="{$mobileBackgroundImageUrl}" alt="" style="display: none;">
 <style>
