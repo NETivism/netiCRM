@@ -480,7 +480,7 @@
       updatePriceOption: function(){
         $('.price-set-btn div').removeClass('active');
         if(this.currentPriceOption){
-          $('.price-set-btn div[data-amount='+this.currentPriceOption+']').addClass('active');  
+          $('.price-set-btn div[data-amount='+this.currentPriceOption+']').addClass('active');
         }
       },
 
@@ -556,7 +556,7 @@
         this.updateContribInfoLabel();
         this.updatePriceSetOption();
 
-        if(isSelectDefaultOption && this.defaultPriceOption[this.currentContribType]){
+        if(this.currentPriceOption && isSelectDefaultOption && this.defaultPriceOption[this.currentContribType]){
           this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
         }
       },
