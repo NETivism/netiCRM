@@ -92,6 +92,10 @@
         "I want contribute once." : "{/literal}{ts}I want contribute once.{/ts}{literal}",
         "I want recurring contribution." : "{/literal}{ts}I want recurring contribution.{/ts}{literal}",
         "no limit" : "{/literal}{ts}no limit{/ts}{literal}",
+        "One-time Contribution" : "{/literal}{ts}One-time Contribution{/ts}{literal}",
+        "Monthly Recurring Contributions" : "{/literal}{ts}Monthly Recurring Contributions{/ts}{literal}",
+        "One-time Contribution" : "{/literal}{ts}One-time Contribution{/ts}{literal}",
+        "Installments Contributions" : "{/literal}{ts}Installments Contributions{/ts}{literal}",
       }
     };
   })(jQuery);
