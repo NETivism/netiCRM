@@ -229,6 +229,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     unset($c->cancel_date);
     unset($c->cancel_reason);
     unset($c->invoice_id);
+    unset($c->receipt_date);
     unset($c->receipt_id);
     unset($c->trxn_id);
     $c->contribution_status_id = 2;
