@@ -95,7 +95,9 @@
         "One-time Contribution" : "{/literal}{ts}One-time Contribution{/ts}{literal}",
         "Monthly Recurring Contributions" : "{/literal}{ts}Monthly Recurring Contributions{/ts}{literal}",
         "One-time Contribution" : "{/literal}{ts}One-time Contribution{/ts}{literal}",
-        "Installments Contributions" : "{/literal}{ts}Installments Contributions{/ts}{literal}"
+        "Installments Contributions" : "{/literal}{ts}Installments Contributions{/ts}{literal}",
+        "One-time" : "{/literal}{ts}One-time{/ts}{literal}",
+        "Recurring" : "{/literal}{ts}Recurring{/ts}{literal}"
       }
     };
   })(jQuery);

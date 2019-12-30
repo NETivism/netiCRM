@@ -47167,3 +47167,9 @@ msgstr ""
 
 msgid "Installments Contributions"
 msgstr ""
+
+msgid "One-time"
+msgstr ""
+
+msgid "Recurring"
+msgstr ""

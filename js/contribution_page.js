@@ -159,7 +159,7 @@
 
       prepareRecurBtnMsg: function(){
         var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg">'+this.singleContribMsgText+'</div></div>');
-        var $singleBtn = this.createGreyBtn(ts['Change to Single Contribution']);
+        var $singleBtn = this.createGreyBtn(ts['One-time']);
         $singleBtn.find('a').click(function(event){
           $msgBox.animate({opacity: 0},500,function(){
             $msgBox.hide();
@@ -168,7 +168,7 @@
           });
           event.preventDefault();
         });
-        var $recurBtn = this.createBlueBtn(ts['Stay on Recurring Contributions']);
+        var $recurBtn = this.createBlueBtn(ts['Recurring']);
         $recurBtn.find('a').click(function(event){
           ContribPage.setContributeType('recurring');
           ContribPage.quitMsgBox();
