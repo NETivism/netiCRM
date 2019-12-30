@@ -335,7 +335,7 @@ class CRM_Contribute_BAO_Query {
         require_once 'CRM/Contribute/PseudoConstant.php';
         $cPage = $value;
         $pages = CRM_Contribute_PseudoConstant::contributionPage();
-        $query->_where[$grouping][] = "civicrm_contribution.contribution_page_id = $cPage";
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_page_id", $op, $cPage, "Integer");;
         $query->_qill[$grouping][] = ts('Contribution Page - %1', array(1 => $pages[$cPage]));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
