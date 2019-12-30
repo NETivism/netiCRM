@@ -47173,3 +47173,6 @@ msgstr ""
 
 msgid "Recurring"
 msgstr ""
+
+msgid "One-time or Recurring Contributions"
+msgstr ""

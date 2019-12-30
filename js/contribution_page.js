@@ -308,7 +308,7 @@
       },
 
       prepareContribTypeForm: function(){
-        $('.priceSet-block').before($('<div class="contrib-type-block custom-block"><label>'+ts['Single or Recurring Contributions']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
+        $('.priceSet-block').before($('<div class="contrib-type-block custom-block"><label>'+ts['One-time or Recurring Contributions']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
         if($('[name=is_recur][value=1]').length > 0){
           var $recurBtn = this.createBtn(ts["Recurring Contributions"],"custom-recur-btn");
           $recurBtn.click(function(){
@@ -317,7 +317,7 @@
           $('.contrib-type-btn').append($recurBtn);
         }
         if($('[name=is_recur]').length==0 || $('[name=is_recur][value=0]').length > 0){
-          var $singleBtn = this.createBtn(ts["Single Contribution"],"custom-single-btn");
+          var $singleBtn = this.createBtn(ts["One-time Contribution"],"custom-single-btn");
           $singleBtn.click(function(){
             if(ContribPage.singleContribMsgText){
               ContribPage.$msgBox.show();
