@@ -47176,3 +47176,9 @@ msgstr ""
 
 msgid "One-time or Recurring Contributions"
 msgstr ""
+
+msgid "ApplePay only can be used with Apple device."
+msgstr ""
+
+msgid "Please use Safari to process ApplePay Payment."
+msgstr ""

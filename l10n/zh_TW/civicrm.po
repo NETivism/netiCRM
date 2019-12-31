@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-12-30 10:46+0000\n"
+"PO-Revision-Date: 2019-12-31 09:39+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47383,3 +47383,9 @@ msgstr "維持定期捐款"
 
 msgid "One-time or Recurring Contributions"
 msgstr "點選捐款方式"
+
+msgid "ApplePay only can be used with Apple device."
+msgstr "Apple 相關裝置才能使用 ApplePay"
+
+msgid "Please use Safari to process ApplePay Payment."
+msgstr "請轉到 Safari 瀏覽器再進行付款手續"
