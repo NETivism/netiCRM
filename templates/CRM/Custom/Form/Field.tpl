@@ -70,7 +70,7 @@ function custom_option_html_type( ) {
         checkBoxOption = 'checkbox'+i	
         if ( data_type_id < 4 ) {
             if ( html_type_name != "Text") {
-                if ( html_type_name == "CheckBox" || html_type_name == "Multi-Select") {
+                if ( html_type_name == "CheckBox" || html_type_name == "Multi-Select" || html_type_name == "AdvMulti-Select") {
                     cj("#"+checkBoxOption).show();
                     cj("#"+radioOption).hide();
                 } else {
