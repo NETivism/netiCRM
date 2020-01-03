@@ -503,10 +503,17 @@ function enableHonorType( ) {
         $("input[name=amount]:checked").closest("label.crm-form-elem").show();
       }
       else {
-        $("input[name=amount]").removeProp("checked");
-        amountFilter();
-        var $default = $("input[name=amount][data-default=1]:visible");
-        $default.prop("checked", true);
+        var amountOther = $("input[name=amount_other]").val();
+        var checkedEle = $("input[name=amount]:checked");
+        if (checkedEle.prop('value') == 'amount_other_radio' && amountOther ) {
+          amountFilter();
+        }
+        else {
+          $("input[name=amount]").removeProp("checked");
+          amountFilter();
+          var $default = $("input[name=amount][data-default=1]:visible");
+          $default.prop("checked", true);
+        }
       }
     }
     var enablePeriod = function($isRecur){

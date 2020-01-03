@@ -139,12 +139,6 @@ body .crm-container>form>div.loading-placeholder-wrapper {
   font-size: 16px;
   color: #d8d8d8;
 }
-.placeholder-btn-row::before {
-  content: "點選捐款方式";
-}
-.placeholder-amount-row::before {
-  content: "點選金額或自訂金額";
-}
 .placeholder-amount-item {
   width: 100%;
   position: relative;

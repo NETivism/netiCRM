@@ -1168,8 +1168,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     // get the tokens added in subject and message
     $messageToken = CRM_Utils_Token::getTokens($text);
     $subjectToken = CRM_Utils_Token::getTokens($subject);
-    $messageToken = array_merge($messageToken, CRM_Utils_Token::getTokens($html));
-    $allTokens = array_merge($messageToken, $subjectToken);
+    $htmlToken = CRM_Utils_Token::getTokens($html);
+    $allTokens = array_merge_recursive($messageToken, $subjectToken, $htmlToken);
 
     require_once 'CRM/Utils/Mail.php';
     if (!$from) {
@@ -1278,8 +1278,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       }
 
       if ($values['preferred_mail_format'] == 'HTML' || $values['preferred_mail_format'] == 'Both') {
-        $tokenHtml = CRM_Utils_Token::replaceContactTokens($html, $values, TRUE, $messageToken, FALSE, $escapeSmarty);
-        $tokenHtml = CRM_Utils_Token::replaceDomainTokens($tokenHtml, $domain, TRUE, $messageToken, $escapeSmarty);
+        $tokenHtml = CRM_Utils_Token::replaceContactTokens($html, $values, TRUE, $htmlToken, FALSE, $escapeSmarty);
+        $tokenHtml = CRM_Utils_Token::replaceDomainTokens($tokenHtml, $domain, TRUE, $htmlToken, $escapeSmarty);
         $tokenHtml = CRM_Utils_Token::replaceHookTokens($tokenHtml, $values, $categories, TRUE, $escapeSmarty);
       }
       else {
@@ -1320,7 +1320,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param int  $templateId message template id
    * @param int  $check      check if mail should be send on hold, desease or do not email
    */
-  public static function sendEmailTemplate($fromId, $toId, $template_id, $check = FALSE) {
+  public static function sendEmailTemplate($from, $toId, $template_id, $check = FALSE) {
     $returnProperties = array(
       'sort_name' => 1,
       'email' => 1,
@@ -1330,9 +1330,17 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       'display_name' => 1,
       'preferred_mail_format' => 1,
     );
-    list($details) = CRM_Mailing_BAO_Mailing::getDetails(array($fromId, $toId), $returnProperties, FALSE, FALSE);
+    $getDetails = array($toId);
+    if (is_numeric($from)) {
+      $fromId = $from;
+      $getDetails[] = $fromId;
+      $from = NULL;
+    }
+    else {
+      $fromId = NULL;
+    }
+    list($details) = CRM_Mailing_BAO_Mailing::getDetails($getDetails, $returnProperties, FALSE, FALSE);
     if (!empty($details)) {
-      $fromDetails = $details[$fromId];
       $toDetails = $details[$toId];
       $contactIds = array($toId);
 
@@ -1356,7 +1364,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $html,
         NULL, // emailAddress
         $fromId, // sender contact id
-        NULL, // formatted from address
+        $from, // formatted from address
         NULL, // attachments
         NULL, // cc
         NULL, // bcc

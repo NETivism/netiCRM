@@ -698,7 +698,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
     }
 
     if ($restore) {
-      self::contactTrashRestore($contact->id, TRUE);
+      self::contactTrashRestore($contact->id, TRUE, $reason);
       return TRUE;
     }
 

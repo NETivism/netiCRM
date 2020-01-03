@@ -142,7 +142,7 @@ class CRM_Core_Payment_TapPayAPI {
     if ($result['status'] && !empty($this->_response)) {
       if (in_array($this->_apiType, $this->_apiNeedSaveData)) {
         // Record tappay data
-        self::saveTapPayData($this->_contribution_id, $this->_response);
+        self::saveTapPayData($this->_contribution_id, $this->_response, $this->_apiType);
       }
 
       // Format of amount
@@ -238,7 +238,7 @@ class CRM_Core_Payment_TapPayAPI {
     return $return;
   }
 
-  static public function saveTapPayData($contributionId, $response) {
+  static public function saveTapPayData($contributionId, $response, $apiType = '') {
     $tappay = new CRM_Contribute_DAO_TapPay();
     if($contributionId) {
       $tappay->contribution_id = $contributionId;
@@ -293,6 +293,7 @@ class CRM_Core_Payment_TapPayAPI {
     if($response->card_info && $response->card_info->token_status) {
       $tappay->token_status = $response->card_info->token_status;
     }
+    CRM_Utils_Hook::alterAPIResponse($response, $tappay, 'TapPay', $apiType);
     $tappay->save();
   }
 
