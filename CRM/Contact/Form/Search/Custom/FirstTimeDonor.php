@@ -7,8 +7,9 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  protected $_recurringStatus = array();   
+  protected $_recurringStatus = array();
   protected $_contributionPage = NULL;
+  protected $_contributionSummary = array();
 
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -16,10 +17,6 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
     $this->_filled = FALSE;
     $this->_tableName = 'civicrm_temp_custom_FirstTimeDonor';
     $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
-    unset($statuses[5]);
-    unset($statuses[6]);
-    unset($statuses[7]);
-    ksort($statuses);
     $this->_cstatus = $statuses;
     $this->_recurringStatus = array(
       2 => ts('All'),
@@ -41,28 +38,26 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
   }
 
   function buildColumn(){
-    $this->_queryColumns = array( 
+    $this->_queryColumns = array(
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
       'c2.min_receive_date' => 'receive_date',
       'ROUND(c.total_amount,0)' => 'amount',
       'c.contribution_recur_id' => 'contribution_recur_id',
-      'c.contribution_status_id' => 'contribution_status_id',
       'c.contribution_page_id' => 'contribution_page_id',
       'c.payment_instrument_id' => 'instrument_id',
       'c.contribution_type_id' => 'contribution_type_id',
-      'ROUND(sum.total_amount)' => 'total_amount',
     );
     $this->_columns = array(
       ts('Contact ID') => 'id',
       ts('Name') => 'sort_name',
       ts('First Amount') => 'amount',
+      ts('Contribution Page') => 'contribution_page_id',
+      ts('Recurring Contribution') => 'contribution_recur_id',
       ts('Payment Instrument') => 'instrument_id',
-      ts('Created Date') => 'receive_date',
       ts('Contribution Type') => 'contribution_type_id',
-      ts('Contribution Status') => 'contribution_status_id',
-      ts('Total Receive Amount') => 'total_amount',
+      ts('Created Date') => 'receive_date',
     );
   }
   function buildTempTable() {
@@ -144,22 +139,16 @@ GROUP BY contact.id
     $sub_where_clauses[] = 'c.is_test = 0';
     $sub_where_clauses[] = 'pp.id IS NULL';
     $sub_where_clauses[] = 'mp.id IS NULL';
+    $sub_where_clauses[] = 'c.contribution_status_id = 1';
     $sub_where_clause = implode(' AND ', $sub_where_clauses);
     $sub_query = "SELECT MIN(IFNULL(receive_date, created_date)) AS min_receive_date, contact_id FROM civicrm_contribution c
       LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
       LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
       WHERE $sub_where_clause GROUP BY contact_id";
-    $sub_where_clauses[] = 'c.contribution_status_id = 1';
-    $sub_where_clause = implode(' AND ', $sub_where_clauses);
-    $sub_query_sum = "SELECT SUM(total_amount) AS total_amount,  contact_id FROM civicrm_contribution c
-    LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
-    LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
-    WHERE $sub_where_clause GROUP BY contact_id";
 
     return " civicrm_contact AS contact
       INNER JOIN civicrm_contribution c ON c.contact_id = contact.id
-      INNER JOIN ($sub_query) c2 ON c.contact_id = c2.contact_id AND (c.receive_date = c2.min_receive_date OR c.created_date = c2.min_receive_date)
-      LEFT JOIN ($sub_query_sum) sum ON sum.contact_id = c.contact_id";
+      INNER JOIN ($sub_query) c2 ON c.contact_id = c2.contact_id AND (c.receive_date = c2.min_receive_date OR c.created_date = c2.min_receive_date)";
   }
 
   /**
@@ -176,20 +165,17 @@ GROUP BY contact.id
     // Define the search form fields here
 
     $form->addDateRange('receive_date', ts('First time donation donors').' - '.ts('From'), NULL, FALSE);
-    $statuses = $this->_cstatus;
-    $form->addCheckBox('status', ts('Contribution Status'), $statuses, NULL, NULL, NULL, NULL, '&nbsp;', TRUE);
 
     $recurring = $form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
     $form->addSelect('contribution_page_id', ts('Contribution Page'), array('' => ts('- select -')) + $this->_contributionPage);
 
-    $form->assign('elements', array('receive_date', 'status', 'recurring', 'contribution_page_id'));
+    $form->assign('elements', array('receive_date', 'recurring', 'contribution_page_id'));
   }
 
   function setDefaultValues() {
     return array(
       'receive_date_from' => date('Y-m-01', time() - 86400*90),
       'recurring' => 2,
-      'status[1]' => 1,
     );
   }
 
@@ -203,13 +189,7 @@ GROUP BY contact.id
       $qill[1]['receiveDateRange'] = ts("Receive Date").': '. $from . '~' . $to;
     }
 
-    if (!empty($this->_formValues['status'])) {
-      $statuses = array_keys($this->_formValues['status']);
-      foreach($statuses as $v) {
-        $selectedStatus[] = $this->_cstatus[$v];
-      }
-      $qill[1]['status'] = ts('Status').': '.implode(', ', $selectedStatus);
-    }
+    $qill[1]['status'] = ts('Status').': '.$this->_cstatus[1];
 
     if (!empty($this->_formValues['recurring'])) {
       $qill[1]['recurring'] = ts('Recurring Contribution').': '.$this->_recurringStatus[$this->_formValues['recurring']];
@@ -278,11 +258,6 @@ GROUP BY contact.id
       $clauses[] = "receive_date <= '$receive_date_to 23:59:59'";
     }
 
-    $status = CRM_Utils_Array::value('status', $this->_formValues);
-    if (is_array($status)) {
-      $clauses[] = "contribution_status_id IN (".implode(',', array_keys($status)).")";
-    }
-
     $recurring = CRM_Utils_Array::value('recurring', $this->_formValues);
     if ($recurring != 2) {
       if ($recurring) {
@@ -333,21 +308,38 @@ GROUP BY contact.id
   }
 
   function summary(){
+    $sum = $this->_contributionSummary['total']['amount'];
+    $this->_contributionSummary['total']['amount'] = CRM_Utils_Money::format($sum);
+    $count = $this->_contributionSummary['total']['count'];
+    $this->_contributionSummary['total']['avg'] = CRM_Utils_Money::format($sum / $count);
+    $smarty = CRM_Core_Smarty::singleton();
+    $smarty->assign('contributionSummary', $this->_contributionSummary);
     // return $summary;
   }
 
   function alterRow(&$row) {
+    $this->_contributionSummary['total']['amount'] += $row['amount'];
+    $this->_contributionSummary['total']['count']++;
+    if (!empty($row['amount'])) {
+      $row['amount'] = CRM_Utils_Money::format($row['amount']);
+    }
     if (!empty($row['instrument_id'])) {
       $row['instrument_id'] = $this->_instruments[$row['instrument_id']];
     }
     if (!empty($row['contribution_type_id'])) {
       $row['contribution_type_id'] = $this->_contributionType[$row['contribution_type_id']];
     }
-    if (!empty($row['contribution_status_id'])) {
-      $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
+    if (!empty($row['contribution_recur_id'])) {
+      $contactId = $row['id'];
+      $recurId = $row['contribution_recur_id'];
+      $row['contribution_recur_id'] = "<a href='".CRM_Utils_System::url('civicrm/contact/view/contributionrecur',"reset=1&id={$recurId}&cid={$contactId}")."' target='_blank'>".ts("Recurring contributions")."</a>";
     }
-    if (empty($row['total_amount'])) {
-      $row['total_amount'] = 0;
+    else {
+      $row['contribution_recur_id'] = ts('One-time Contribution');
+    }
+    if (!empty($row['contribution_page_id'])) {
+      $pageId = $row['contribution_page_id'];
+      $row['contribution_page_id'] = "<a href='".CRM_Utils_System::url('civicrm/admin/contribute', 'action=update&reset=1&id='.$pageId)."' target='_blank'>". $this->_contributionPage[$pageId]."</a>";
     }
   }
 
