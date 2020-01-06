@@ -207,7 +207,7 @@ class CRM_Core_IDS {
         'name' => $event->getName(),
         'tag' => implode("|", $event->getTags()),
         'problem' => "\n".implode("\n", $description),
-        'value' => stripslashes($event->getValue()),
+        'value' => $event->getValue(),
         'page' => $_SERVER['REQUEST_URI'],
         'userid' => $session->get('userID'),
         'ip' => $ip,
@@ -216,8 +216,10 @@ class CRM_Core_IDS {
       );
       $data[] = $log;
     }
-
-    CRM_Core_Error::debug_var('IDS Detector Details', $data);
+    if (!empty($data)) {
+      $data['post'] = $_POST;
+      CRM_Core_Error::debug_var('IDS Detector Details', $data);
+    }
     return TRUE;
   }
 
