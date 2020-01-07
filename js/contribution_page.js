@@ -274,15 +274,22 @@
         }
         */
 
+        // For login user. first_name and last_name field will be locked, and the hint will be displayed.
+        if ($('body.is-civicrm-user').length) {
+          $("body.is-civicrm-user .first_name-section").bind("DOMSubtreeModified", function() {
+            $('body.is-civicrm-user .first_name-section .description').insertAfter('body.is-civicrm-user .first_name-section');
+          });
+        }
+
+
         $('#crm-container>form').submit(function(){
           if($('label.error').length){
             ContribPage.updateShowAllStep();
           }
         });
-        $("")
-        
+
         this.updateFormStep();
-        
+
       },
 
       createStepBtnBlock: function(objs){
