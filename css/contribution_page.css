@@ -820,9 +820,9 @@ body .crm-container .crm-section>.label {
 body .crm-container .crm-section>.content {
   margin-left: 0;
 }
-.crm-container .crm-form-textfield {
+/* .crm-container .crm-form-textfield {
   display: block;
-}
+} */
 
 body .crm-container-md .crm-form-elem input[type="text"], 
 body .crm-container-md .crm-form-elem input[type="number"], 
@@ -1099,8 +1099,13 @@ body.admin-sidebar-mini .neticrm-footer {
   right: 10%;
   width: 80%;
 }
-body .crm-container-md .crm-form-readonly {
+body .crm-container-md .last_name-section .crm-form-readonly,
+body .crm-container-md .first_name-section .crm-form-readonly {
   display: block;
+}
+body #crm-container.crm-container-md .crm-form-elem::after {
+  top: 7px;
+  right: 8px;
 }
 
 /* for login user */
