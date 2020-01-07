@@ -216,7 +216,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       civicrm_smarty_register_string_resource();
       $smarty = &CRM_Core_Smarty::singleton();
       foreach (array('text', 'html') as $elem) {
-        $$elem = $smarty->fetch("string:{$$elem}");
+        $$elem = $smarty->fetch("string:{*msg_tpl-$messageTemplateID-$elem*}{$$elem}");
       }
 
       $message = new Mail_mime("\n");
@@ -268,7 +268,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $messageSubject = CRM_Utils_Token::replaceComponentTokens($messageSubject, $contact, $tokens[$value], TRUE);
       $messageSubject = CRM_Utils_Token::replaceHookTokens($messageSubject, $contactId, $categories, TRUE);
 
-      $messageSubject = $smarty->fetch("string:{$messageSubject}");
+      $messageSubject = $smarty->fetch("string:{*msg_tpl-$messageTemplateID-subject*}{$messageSubject}");
 
       $headers = array(
         'From' => $from,
@@ -481,7 +481,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $smarty->assign($name, $value);
     }
     foreach (array('subject', 'text', 'html') as $elem) {
-      $$elem = $smarty->fetch("string:{$$elem}");
+      $$elem = $smarty->fetch("string:{*".$params['groupName']."-".$params['valueName'].'-'.$elem."*}{$$elem}");
     }
 
     // send the template, honouring the target user’s preferences (if any)
