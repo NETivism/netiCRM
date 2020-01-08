@@ -2033,13 +2033,13 @@ SELECT source_contact_id
     }
 
     // get primary location email if no email exist( for billing location).
-    if (!$email) {
-      list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
-    }
+    list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
+    list($displayName, $phone) = CRM_Contact_BAO_Contact_Location::getPhoneDetails($contactID);
 
     // set email in the template here
     $tplParams = array(
       'email' => $email,
+      'phone' => $phone,
       'receiptFromEmail' => $values['receipt_from_email'],
       'contactID' => $contactID,
       'contributionID' => $values['contribution_id'],
@@ -2110,9 +2110,8 @@ SELECT source_contact_id
     }
 
     // get primary location email if no email exist( for billing location).
-    if (!$email) {
-      list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
-    }
+    list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
+    list($displayName, $phone) = CRM_Contact_BAO_Contact_Location::getPhoneDetails($contact_id);
 
     // set email in the template here
     if(!empty($records)){
@@ -2157,6 +2156,7 @@ SELECT source_contact_id
 
       $tplParams = array(
         'email' => $email,
+        'phone' => $phone,
         'receiptFromEmail' => $values['receipt_from_email'],
         'contactID' => $contact_id,
         'sort_name' => $sort_name,
@@ -2186,7 +2186,6 @@ SELECT source_contact_id
         'valueName' => 'receipt_letter_annual',
         'contactId' => $contact_id,
         'tplParams' => $tplParams,
-        'isTest' => $isTest,
       );
 
       list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);

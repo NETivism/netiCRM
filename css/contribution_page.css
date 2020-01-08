@@ -820,9 +820,9 @@ body .crm-container .crm-section>.label {
 body .crm-container .crm-section>.content {
   margin-left: 0;
 }
-.crm-container .crm-form-textfield {
+/* .crm-container .crm-form-textfield {
   display: block;
-}
+} */
 
 body .crm-container-md .crm-form-elem input[type="text"], 
 body .crm-container-md .crm-form-elem input[type="number"], 
@@ -1098,4 +1098,48 @@ body.admin-sidebar-mini .neticrm-footer {
   left: 10%;
   right: 10%;
   width: 80%;
+}
+body .crm-container-md .last_name-section .crm-form-readonly,
+body .crm-container-md .first_name-section .crm-form-readonly {
+  display: block;
+}
+body #crm-container.crm-container-md .crm-form-elem::after {
+  top: 7px;
+  right: 8px;
+}
+
+/* for login user */
+#admin-header, #admin-sidebar, .simplemenu-block {
+  display: none;
+}
+body.admin-sidebar-open .neticrm-footer {
+  margin: 0;
+}
+@media screen and (max-width: 960px) {
+  #civicrm-menu, #admin-header, #admin-menu {
+    display: none;
+  }
+  body.is-neticrm-admin .neticrm-footer, 
+  body.is-civicrm-user .neticrm-footer {
+    width: auto
+  }
+  body.is-neticrm-admin #page, 
+  body.is-civicrm-user #page, 
+  body.civicrm-menu-enabled #page, 
+  body.admin-menu #page {
+    width: auto;
+  }
+  body.is-neticrm-admin .limiter, 
+  body.is-civicrm-user .limiter, 
+  body.civicrm-menu-enabled .limiter, 
+  body.admin-menu .limiter, 
+  body.is-neticrm-admin.frontend .limiter, 
+  body.is-civicrm-user.frontend .limiter, 
+  body.civicrm-menu-enabled.frontend .limiter, 
+  body.admin-menu.frontend .limiter {
+    width: auto;
+  }
+  body.civicrm-menu-enabled.is-civicrm-user {
+    margin-top: 0 !important;
+  }
 }
