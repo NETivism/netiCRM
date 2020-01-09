@@ -26,7 +26,7 @@ casper.on('page.error', function(msg, trace) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start('http://127.0.0.1:' + port, function() {
-        this.capture('login.png');
+        //this.capture('login.png');
     });
     casper.waitForSelector("form#user-login-form input[name='name']", function success() {
         test.assertExists("form#user-login-form input[name='name']");
@@ -52,7 +52,7 @@ casper.test.begin('Resurrectio test', function(test) {
     }); /* submit form */
 
     casper.thenOpen('http://127.0.0.1:' + port + '/civicrm/contact/add?reset=1&ct=Individual', function() {
-        this.capture('add_individual.png');
+        //this.capture('add_individual.png');
     });
     casper.waitForSelector("input[name='last_name']", function success() {
         this.sendKeys("input[name='last_name']", last_name);
@@ -101,7 +101,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#phone_1_phone_type_id");
     });
     casper.then(function() {
-        this.capture('form_write_done.png');
+        //this.capture('form_write_done.png');
     });
     casper.waitForSelector("form[name=Contact] input[type=submit][value='Save']", function success() {
         test.assertExists("form[name=Contact] input[type=submit][value='Save']");
@@ -112,7 +112,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
     casper.then(function() {
-        this.capture('personal_info.png');
+        //this.capture('personal_info.png');
     })
     casper.then(function() {
         test.assertTitle(first_name + ' ' + last_name + ' | netiCRM');
