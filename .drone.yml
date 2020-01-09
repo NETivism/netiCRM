@@ -20,6 +20,7 @@ pipeline:
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contact.test.js
   build:
     image: netivism/neticrm-ci:drone
     environment:
