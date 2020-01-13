@@ -879,7 +879,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  function addNumber($name, $label, $attributes, $required) {
+  function addNumber($name, $label, $attributes = NULL, $required = NULL) {
     return $this->add('number', $name, $label, $attributes, $required);
   }
 
