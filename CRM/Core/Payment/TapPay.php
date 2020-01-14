@@ -574,7 +574,8 @@ LIMIT 0, 100
     }
 
     $tappay = new CRM_Contribute_DAO_TapPay();
-    $tappay->contribution_id = $dao->contribution_id;
+    $tappay->contribution_recur_id = $recurId;
+    $tappay->orderBy("contribution_id DESC");
     $tappay->find(TRUE);
     if ($goPayment) {
       // Check if Credit card over date.
