@@ -618,7 +618,7 @@ UNION (
     }
 
     if (!empty($menuPath)) {
-      $i18n = &CRM_Core_I18n::singleton();
+      $i18n = CRM_Core_I18n::singleton();
       $i18n->localizeTitles($menuPath);
     }
     return $menuPath;
