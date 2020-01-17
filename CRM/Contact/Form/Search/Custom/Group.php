@@ -264,11 +264,15 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         //search for smart group contacts
         foreach ($this->_excludeGroups as $keys => $values) {
           if (in_array($values, $smartGroup)) {
+            $contactIdField = "contact_a.id";
             $ssId = CRM_Utils_Array::key($values, $smartGroup);
 
             $smartSql = CRM_Contact_BAO_SavedSearch::contactIDsSQL($ssId);
+            if (strstr($smartSql, "contact_a.contact_id")) {
+              $contactIdField = "contact_a.contact_id";
+            }
 
-            $smartSql = $smartSql . " AND contact_a.id NOT IN ( 
+            $smartSql = $smartSql . " AND $contactIdField NOT IN (
                               SELECT contact_id FROM civicrm_group_contact 
                               WHERE civicrm_group_contact.group_id = {$values} AND civicrm_group_contact.status = 'Removed')";
 
@@ -327,17 +331,21 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       foreach ($this->_includeGroups as $keys => $values) {
         if (in_array($values, $smartGroup)) {
 
+          $contactIdField = "contact_a.id";
           $ssId = CRM_Utils_Array::key($values, $smartGroup);
 
           $smartSql = CRM_Contact_BAO_SavedSearch::contactIDsSQL($ssId);
+          if (strstr($smartSql, "contact_a.contact_id")) {
+            $contactIdField = "contact_a.contact_id";
+          }
 
-          $smartSql .= " AND contact_a.id NOT IN ( 
+          $smartSql .= " AND $contactIdField NOT IN (
                               SELECT contact_id FROM civicrm_group_contact
                               WHERE civicrm_group_contact.group_id = {$values} AND civicrm_group_contact.status = 'Removed')";
 
           //used only when exclude group is selected
           if ($xGroups != 0) {
-            $smartSql .= " AND contact_a.id NOT IN (SELECT contact_id FROM  Xg_{$this->_tableName})";
+            $smartSql .= " AND $contactIdField NOT IN (SELECT contact_id FROM  Xg_{$this->_tableName})";
           }
 
           $smartGroupQuery = " INSERT IGNORE INTO Ig_{$this->_tableName}(contact_id) 

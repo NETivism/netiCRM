@@ -246,18 +246,20 @@ class CRM_Core_Payment_TapPayAPI {
       $tappay->contribution_recur_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
     }
     if (!empty($tappay->contribution_recur_id)) {
-      // clone first contribution tappay data
-      $firstTappay = new CRM_Contribute_DAO_TapPay();
-      $firstTappay->contribution_recur_id = $tappay->contribution_recur_id;
-      $firstTappay->find(TRUE);
-      if ($firstTappay->contribution_id != $tappay->contribution_id) {
-        $tappay->card_token = $firstTappay->card_token;
-        $tappay->card_key = $firstTappay->card_key;
-        $tappay->expiry_date = $firstTappay->expiry_date;
-        $tappay->last_four = $firstTappay->last_four;
-        $tappay->bin_code = $firstTappay->bin_code;
+      // clone last contribution tappay data
+      $lastTappay = new CRM_Contribute_DAO_TapPay();
+      $lastTappay->contribution_recur_id = $tappay->contribution_recur_id;
+      $lastTappay->orderBy("contribution_id DESC");
+      $lastTappay->find(TRUE);
+
+      if ($lastTappay->contribution_id != $tappay->contribution_id) {
+        $tappay->card_token = $lastTappay->card_token;
+        $tappay->card_key = $lastTappay->card_key;
+        $tappay->expiry_date = $lastTappay->expiry_date;
+        $tappay->last_four = $lastTappay->last_four;
+        $tappay->bin_code = $lastTappay->bin_code;
       }
-      $firstTappay->free();
+      $lastTappay->free();
     }
     $tappay->data = json_encode($response);
     if (!empty($tappay->contribution_recur_id)) {

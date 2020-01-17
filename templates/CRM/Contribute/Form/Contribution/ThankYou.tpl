@@ -56,6 +56,9 @@
     </div><br /><br />
     {/if}  
 
+    <div class="crmdata-contact" style="display:none">{$contact_id}</div>
+    <div class="crmdata-contribution" style="display:none">{$contribution_id}</div>
+    <div class="crmdata-contribution-type" style="display:none">{$contribution_type_id}</div>
     <div {if $payment_result_type eq 4}class="messages error"{else}id="help"{/if}>
       {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
       {if $payment_result_type eq 1 && $is_monetary}
@@ -138,28 +141,28 @@
         </div>
         <div class="display-block">
           {if $trxn_id}
-          <div><label>{ts}Transaction ID{/ts}:</label> <strong>{$trxn_id}</strong></div>
+          <div><label>{ts}Transaction ID{/ts}:</label> <strong class="crmdata-trxn-id">{$trxn_id}</strong></div>
           {/if}
           {if $payment_instrument}
-          <div><label>{ts}Payment Instrument{/ts}:</label> {$payment_instrument}</div>
+          <div><label>{ts}Payment Instrument{/ts}:</label> <span class="crmdata-instrument">{$payment_instrument}</span></div>
           {/if}
         	{if $lineItem and $priceSetID}
     	    {if !$amount}{assign var="amount" value=0}{/if}
     	    {assign var="totalAmount" value=$amount}
                 {include file="CRM/Price/Page/LineItem.tpl" context="Contribution"}
             {elseif $membership_amount } 
-                {$membership_name} {ts}Membership{/ts}: <strong>{$membership_amount|crmMoney}</strong><br />
+                {$membership_name} {ts}Membership{/ts}: <strong>{$membership_amount|crmMoney}<span class="crmdata-amount-member" style="display:none">{$membership_amount}</span></strong><br />
                 {if $amount}
                     {if ! $is_separate_payment }
-    		    {ts}Amount{/ts}: <strong>{$amount|crmMoney}</strong><br />
+    		    {ts}Amount{/ts}: <strong>{$amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
     	        {else}
-    		    {ts}Additional Contribution{/ts}: <strong>{$amount|crmMoney}</strong><br />
+    		    {ts}Additional Contribution{/ts}: <strong>{$amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
       	        {/if}
                 {/if} 		
                 <strong> -------------------------------------------</strong><br />
-                {ts}Total{/ts}: <strong>{$amount+$membership_amount|crmMoney}</strong><br />
+                {ts}Total{/ts}: <strong>{$amount+$membership_amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount+$membership_amount}</span></strong><br />
             {else}
-                {ts}Amount{/ts}: <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}</strong><br />
+                {ts}Amount{/ts}: <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
             {/if}
             {if $receive_date}
             {ts}Date{/ts}: <strong>{$receive_date|crmDate}</strong><br />
@@ -186,6 +189,11 @@
                     {ts}You will receive an email receipt for each recurring contribution.{/ts}
                 {/if}
                 </p>
+                <span class="crmdata-recur" style="display:none">Y</span>
+                <span class="crmdata-installments" style="display:none">{$installments}</span>
+                <span class="crmdata-frequency-unit" style="display:none">{$frequency_unit}</span>
+            {else}
+                <span class="crmdata-recur" style="display:none">N</span>
             {/if}{*is_recur*}
             {if $is_pledge}
                 {if $pledge_frequency_interval GT 1}

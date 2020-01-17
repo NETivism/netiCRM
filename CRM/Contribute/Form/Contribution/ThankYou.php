@@ -68,6 +68,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     }
     CRM_Utils_System::setTitle($this->_values['thankyou_title']);
     if ($this->_contributionID) {
+      $this->assign('contribution_id', $this->_contributionID);
       $params['id'] = $this->_contributionID;
       CRM_Contribute_BAO_Contribution_Utils::paymentResultType($this, $params);
     }

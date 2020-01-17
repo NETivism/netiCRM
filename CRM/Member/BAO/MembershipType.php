@@ -296,7 +296,12 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
 
       // today is always join date, in case of Online join date
       // is equal to current system date
-      $toDay = explode('-', $joinDate);
+      if ($startDate) {
+        $toDay = explode('-', $startDate);
+      }
+      else {
+        $toDay = explode('-', $joinDate);
+      }
 
       // get year from join date
       $year = $toDay[0];
@@ -332,10 +337,12 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
 
         // if join date is less than start date as well as rollover date
         // then decrement the year by 1
-        if (($joinDate < $fixedStartDate) && ($joinDate < $actualRolloverDate)) {
+        /* #27316, doesn't know why should back for 1 year. comment out will have expect result
+        if (($joinDate < $fixedStartDate) && ($joinDate < $actualRolloverDate) && $) {
           $year = $year - 1;
           $actualRolloverDate = date('Y-m-d', mktime(0, 0, 0, $rolloverMonth, $rolloverDay, $year));
         }
+        */
 
         // calculate start date if join date is in rollover window
         // if join date is greater than the rollover date,

@@ -578,7 +578,8 @@ LIMIT 0, 100
     }
 
     $tappay = new CRM_Contribute_DAO_TapPay();
-    $tappay->contribution_id = $dao->contribution_id;
+    $tappay->contribution_recur_id = $recurId;
+    $tappay->orderBy("contribution_id DESC");
     $tappay->find(TRUE);
     if ($goPayment) {
       // Check if Credit card over date.
@@ -598,6 +599,12 @@ LIMIT 0, 100
 
     // check recurring status change and reason
     // no else for make sure every rule checked
+    // and get latest tappay check
+    $tappay->free();
+    $tappay = new CRM_Contribute_DAO_TapPay();
+    $tappay->contribution_recur_id = $recurId;
+    $tappay->orderBy("contribution_id DESC");
+    $tappay->find(TRUE);
 
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
       $statusNote = ts("This is lastest contribution of this recurring (end date is %1).", array(1 => date('Y-m-d', strtotime($dao->end_date))));

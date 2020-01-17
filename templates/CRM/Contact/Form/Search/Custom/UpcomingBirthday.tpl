@@ -140,5 +140,6 @@
 cj(function() {
    cj().crmaccordions(); 
 });
-</script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector='select#limit_groups' nowrapper=1}
+</script>
