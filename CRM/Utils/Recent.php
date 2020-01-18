@@ -184,7 +184,7 @@ class CRM_Utils_Recent {
 
     $tempRecent = self::$_recent;
 
-    self::$_recent = '';
+    self::$_recent = array();
 
     // rebuild recent.
     for ($i = 0; $i < count($tempRecent); $i++) {
