@@ -1523,7 +1523,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
                     $limitCodes = $countryIsoCodes;
                   }
 
-                  if (self::in_value($stateValue['country'], $limitCodes) || self::in_value($stateValue['country'], CRM_Core_PseudoConstant::country())) {
+                  if (self::in_value($stateValue['country'], $limitCodes) || self::in_value($stateValue['country'], CRM_Core_PseudoConstant::country()) || self::in_value($stateValue['country'], $countryNames)) {
                     continue;
                   }
                   else {

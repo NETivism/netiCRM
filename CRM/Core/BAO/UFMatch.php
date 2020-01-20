@@ -244,7 +244,8 @@ WHERE     openid = %1";
       require_once 'CRM/Core/Transaction.php';
       $transaction = new CRM_Core_Transaction();
 
-      if (!empty($_POST) && !$isLogin) {
+      // very dirty way use POST as verify parameter
+      if (!empty($_POST) && !$isLogin && isset($_POST['_qf_default'])) {
         $params = $_POST;
         $params['email'] = $uniqId;
 
@@ -269,14 +270,20 @@ WHERE     openid = %1";
           $dao = new CRM_Core_DAO();
           $dao->contact_id = $ids[0];
         }
+        else {
+          // not only verify by dedupe rule
+          // also fallback to email only check, refs #26873
+          if (isset($_POST['_qf_default']) && empty($_POST['last_name'])) {
+            $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($uniqId, $ctype);
+          }
+        }
       }
       else {
-        require_once 'CRM/Contact/BAO/Contact.php';
         if ($uf == 'Standalone') {
-          $dao = &CRM_Contact_BAO_Contact::matchContactOnOpenId($uniqId, $ctype);
+          $dao = CRM_Contact_BAO_Contact::matchContactOnOpenId($uniqId, $ctype);
         }
         else {
-          $dao = &CRM_Contact_BAO_Contact::matchContactOnEmail($uniqId, $ctype);
+          $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($uniqId, $ctype);
         }
       }
 
@@ -370,6 +377,7 @@ AND    domain_id    = %4
             4 => $conflict,
           )
         );
+        CRM_Core_Error::debug_var('ufmatch_error', $msg);
         unset($conflict);
       }
     }
