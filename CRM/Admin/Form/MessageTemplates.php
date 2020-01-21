@@ -187,7 +187,7 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
     );
 
     $this->add('textarea', 'msg_text', ts('Text Message'),
-      "cols=50 rows=6"
+      "cols=50 rows=6 style='width:98%'"
     );
 
     // if not a system message use a wysiwyg editor, CRM-5971
@@ -198,7 +198,7 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       )
     ) {
       $this->add('textarea', 'msg_html', ts('HTML Message'),
-        "cols=50 rows=6"
+        "cols=50 rows=6 style='width:98%'"
       );
     }
     else {
