@@ -28,6 +28,7 @@ script:
   - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js"
   - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js"
   - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contact.test.js"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/edit_contact.test.js"
 
 notifications:
   email:
