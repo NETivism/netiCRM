@@ -472,6 +472,9 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     if ($accessList[$validateUrl] == $host) {
       $isPass = TRUE;
     }
+    else if ($validateUrl == 'apple-pay-gateway.apple.com' && in_array($host, $accessList)) {
+      $isPass = TRUE;
+    }
 
     return $isPass;
   }
