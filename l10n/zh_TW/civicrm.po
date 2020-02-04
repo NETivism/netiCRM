@@ -1,6 +1,6 @@
 # 
 # Translators:
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2019
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2020
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-12-31 09:39+0000\n"
+"PO-Revision-Date: 2020-02-04 07:33+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47388,4 +47388,4 @@ msgid "ApplePay only can be used with Apple device."
 msgstr "Apple 相關裝置才能使用 ApplePay"
 
 msgid "Please use Safari to process ApplePay Payment."
-msgstr "請轉到 Safari 瀏覽器再進行付款手續"
+msgstr "需使用支援 Apple Pay 的 Safari 瀏覽器進行付款手續"
