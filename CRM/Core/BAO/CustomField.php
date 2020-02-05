@@ -833,15 +833,17 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         $customOption = CRM_Core_BAO_CustomOption::valuesByID($field->id,
           $field->option_group_id
         );
+        // refs #27350, use advcheckbox to add hidden element
+        // that when user remove all check, this will set custom field to null
         $check = array();
         foreach ($customOption as $v => $l) {
-          $check[] = &$qf->addElement('checkbox', $v, NULL, $l);
+          $check[] = &$qf->addElement('advcheckbox', $v, NULL, $l);
         }
         if ($search && count($check) > 1) {
-          $check[] = &$qf->addElement('checkbox', 'CiviCRM_OP_OR', NULL, ts('Check to match ANY; uncheck to match ALL'));
+          $check[] = &$qf->addElement('advcheckbox', 'CiviCRM_OP_OR', NULL, ts('Check to match ANY; uncheck to match ALL'));
         }
         if ($search) {
-          $check[] = &$qf->addElement('checkbox', 'CiviCRM_OP_EXCLUDE', NULL, ts('Check to Exclude; uncheck to Include'));
+          $check[] = &$qf->addElement('advcheckbox', 'CiviCRM_OP_EXCLUDE', NULL, ts('Check to Exclude; uncheck to Include'));
         }
         $qf->addGroup($check, $elementName, $label);
         if (($useRequired || ($useRequired && $field->is_required)) && !$search) {
