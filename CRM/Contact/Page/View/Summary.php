@@ -255,6 +255,14 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
         $this->assign_by_ref('lastModified', $lastModified);
       }
     }
+    else {
+      if (!empty($contact->created_date)) {
+        $createdBy = array(
+          'date' => $contact->created_date,
+        );  
+        $this->assign_by_ref('createdBy', $createdBy);
+      }
+    }
 
     $allTabs = array();
     $weight = 10;
