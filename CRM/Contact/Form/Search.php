@@ -292,6 +292,14 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
           'resultContext' => 'Search',
           'taskClassName' => 'CRM_Activity_Task',
         ),
+        5 => array('selectorName' => 'CRM_Member_Selector_Search',
+          'selectorLabel' => ts('Membership'),
+          'taskFile' => "CRM/common/searchResultTasks.tpl",
+          'taskContext' => NULL,
+          'resultFile' => 'CRM/Member/Form/Selector.tpl',
+          'resultContext' => 'Search',
+          'taskClassName' => 'CRM_Member_Task',
+        ),
       );
     }
   }
@@ -326,6 +334,10 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
     if (!CRM_Core_Permission::check('view all activities')) {
       unset($select['4']);
+    }
+
+    if (!CRM_Core_Permission::access('CiviMember')) {
+      unset($select['5']);
     }
 
     return $select;
