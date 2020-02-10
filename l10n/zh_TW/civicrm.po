@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-02-04 07:33+0000\n"
+"PO-Revision-Date: 2020-02-10 15:08+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47389,3 +47389,6 @@ msgstr "Apple 相關裝置才能使用 ApplePay"
 
 msgid "Please use Safari to process ApplePay Payment."
 msgstr "需使用支援 Apple Pay 的 Safari 瀏覽器進行付款手續"
+
+msgid "Card expiry date has been updated."
+msgstr "卡片效期資料已更新。"
