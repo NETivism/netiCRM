@@ -2778,9 +2778,20 @@ WHERE  id IN ( $groupIDs )
     list($name, $op, $value, $grouping, $wildcard) = $values;
     $newName = $name;
     $name = trim($value);
+    $idSearch = FALSE;
 
     if (empty($name)) {
       return;
+    }
+
+    // refs #27215 force contact id search on specific prefix number
+    if (preg_match('/^\^[1-9]\d*$/', trim($value))) {
+      $value = str_replace('^', '', $value);
+      if(CRM_Utils_Rule::positiveInteger($value)) {
+        $this->_where[$grouping][] = "( contact_a.id = '$value') ";
+        $this->_qill[$grouping][] =  ts("Contact ID") .' = '. " &ldquo;{$value}&rdquo;";
+        return;
+      }
     }
 
     $config = CRM_Core_Config::singleton();
@@ -2864,18 +2875,25 @@ WHERE  id IN ( $groupIDs )
         $name = substr($name, 0, -1);
         $pieces = array($name);
       }
+      elseif ($value[0] !== '0' && CRM_Utils_Rule::positiveInteger(trim($value))) {
+        $pieces = array(trim($value));
+      }
       else {
         $pieces = explode(' ', $name);
       }
       foreach ($pieces as $piece) {
         $value = $strtolower(CRM_Core_DAO::escapeString(trim($piece)));
+        $pieceVal = $value;
         if (strlen($value)) {
           // Added If as a sanitization - without it, when you do an OR search, any string with
           // double spaces (i.e. "  ") or that has a space after the keyword (e.g. "OR: ") will
           // return all contacts because it will include a condition similar to "OR contact
           // name LIKE '%'".  It might be better to replace this with array_filter.
           $fieldsub = array();
-          if ($wildcard) {
+          if ($pieceVal[0] !== '0' && CRM_Utils_Rule::positiveInteger($pieceVal)) {
+            $value = "'$value'";
+          }
+          elseif ($wildcard) {
             if ($config->includeWildCardInName) {
               $value = "'%$value%'";
             }
@@ -2904,6 +2922,12 @@ WHERE  id IN ( $groupIDs )
           // phone
           $fieldsub[] = " ( REPLACE(civicrm_phone.phone, '-', '') $op ".str_replace('-', '', $value)." ) ";
 
+          // contact id
+          if ($pieceVal[0] !== '0' && CRM_Utils_Rule::positiveInteger($pieceVal)) {
+            $fieldsub[] = " ( contact_a.id  = $value )";
+            $idSearch = TRUE;
+          }
+
           $sub[] = ' ( ' . implode(' OR ', $fieldsub) . ' ) ';
           // I seperated the glueing in two.  The first stage should always be OR because we are searching for matches in *ANY* of these fields
         }
@@ -2914,13 +2938,19 @@ WHERE  id IN ( $groupIDs )
 
     $this->_where[$grouping][] = $sub;
     $this->_tables['civicrm_phone'] = $this->_whereTables['civicrm_phone'] = 1;
+    $qill = '';
     if ($config->includeEmailInName) {
       $this->_tables['civicrm_email'] = $this->_whereTables['civicrm_email'] = 1;
-      $this->_qill[$grouping][] = ts('Name, Phone or Email').' ' . ts($op) . " &ldquo;{$name}&rdquo;";
+      $qill = ts('Name, Phone or Email').' ' . ts($op) . " &ldquo;{$name}&rdquo;";
+
     }
     else {
-      $this->_qill[$grouping][] = ts('Name like') . " &ldquo;{$name}&rdquo;";
+      $qill = ts('Name like') . " &ldquo;{$name}&rdquo;";
     }
+    if ($idSearch) {
+      $qill .= ' '.ts('or').' '. ts("Contact ID") .' = '. " &ldquo;{$value}&rdquo;";
+    }
+    $this->_qill[$grouping][] = $qill;
   }
 
   /**
