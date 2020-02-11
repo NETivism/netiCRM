@@ -4391,6 +4391,12 @@ ul.ui-sortable {
 .crm-accordion-wrapper .bigSelect {
   max-width: 10rem;
 }
+.crm-container input[type="text"][name*="contribution_utm_"],
+.crm-container input[type="text"][name*="contribution_referrer_"],
+.crm-container input[type="text"][name="contribution_landing"]
+ {
+  max-width: 120px;
+}
 .one-sidebar .crm-accordion-wrapper .twelve,
 .one-sidebar .crm-accordion-wrapper .medium,
 .one-sidebar .crm-accordion-wrapper .big,

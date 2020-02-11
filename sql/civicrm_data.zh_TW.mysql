@@ -5251,13 +5251,13 @@ VALUES
 INSERT INTO `civicrm_preferences_date`
   (name, start, end, date_format, time_format, description)
 VALUES
-  ( 'activityDate'    ,  20, 10, '',    '',   'Date for activities including contributions: receive, receipt, cancel. membership: join, start, renew. case: start, end.'         ),
-  ( 'activityDateTime',  20, 10, '',    1,   'Date and time for activity: scheduled. participant: registered.'                                                                  ),
+  ( 'activityDate'    ,  30, 10, '',    '',   'Date for activities including contributions: receive, receipt, cancel. membership: join, start, renew. case: start, end.'         ),
+  ( 'activityDateTime',  30, 10, '',    1,   'Date and time for activity: scheduled. participant: registered.'                                                                  ),
   ( 'birth'           , 100,  0, '',    '',   'Birth and deceased dates. Only year, month and day fields are supported.'                                                         ),
   ( 'creditCard'      ,   0, 10, 'M Y', '',   'Month and year only for credit card expiration.'                                                                                  ),
-  ( 'custom'          ,  20, 20, '',    '',   'Uses date range passed in by form field. Can pass in a posix date part parameter. Start and end offsets defined here are ignored.'),
+  ( 'custom'          ,  30, 20, '',    '',   'Uses date range passed in by form field. Can pass in a posix date part parameter. Start and end offsets defined here are ignored.'),
   ( 'mailing'         ,   0,  1, '',    '',   'Date and time. Used for scheduling mailings.'                                                                                      ),
-  ( 'searchDate'        ,  20, 20, '',    '',   'Used in search forms.'                                                                                                            );
+  ( 'searchDate'        ,  30, 20, '',    '',   'Used in search forms.'                                                                                                            );
 
 
 -- various processor options

@@ -47182,3 +47182,6 @@ msgstr ""
 
 msgid "Please use Safari to process ApplePay Payment."
 msgstr ""
+
+msgid "Card expiry date has been updated."
+msgstr ""

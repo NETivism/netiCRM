@@ -143,21 +143,7 @@ class CRM_Contact_Form_Search_Criteria {
     );
 
     require_once 'CRM/Contact/Form/Search.php';
-    $componentModes = &CRM_Contact_Form_Search::getModeSelect();
-
-    // unset contributions or participants if user does not have
-    // permission on them
-    if (!CRM_Core_Permission::access('CiviContribute')) {
-      unset($componentModes['2']);
-    }
-
-    if (!CRM_Core_Permission::access('CiviEvent')) {
-      unset($componentModes['3']);
-    }
-
-    if (!CRM_Core_Permission::check('view all activities')) {
-      unset($componentModes['4']);
-    }
+    $componentModes = CRM_Contact_Form_Search::getModeSelect();
 
     if (count($componentModes) > 1) {
       $form->addElement('select',

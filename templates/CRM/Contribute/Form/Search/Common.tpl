@@ -24,8 +24,12 @@
  +--------------------------------------------------------------------+
 *}
 <tr>
-	<td colspan="2"><label>{$form.contribution_month.label}</label> <br />
-	{include file="CRM/common/jcalendar.tpl" elementName=contribution_month}</td>
+	<td><label>{$form.contribution_month.label}</label> <br />
+  {include file="CRM/common/jcalendar.tpl" elementName=contribution_month}</td>
+  <td>
+    {$form.contribution_source.label} <br />
+    {$form.contribution_source.html}
+</td>
 </tr>
 <tr>
 	<td>{$form.contribution_created_date_low.label} <br />
@@ -58,6 +62,13 @@
 	{$form.contribution_status_id.html} </td>
 </tr>
 <tr>
+	<td><label>{ts}Contribution Type{/ts}</label> <br />
+	{$form.contribution_type_id.html}</td>
+	<td><label>{ts}Contribution Page{/ts}</label> <br />
+	{$form.contribution_page_id.html}</td>
+</tr>
+<tr>
+<tr>
 	<td>
     <div>
       <label>{ts}Paid By{/ts}</label> 
@@ -66,8 +77,15 @@
     <div>
       {$form.contribution_check_number.label} {$form.contribution_check_number.html}
     </div>
+    <div>{$form.contribution_receipt_date_isnull.html}{$form.contribution_receipt_date_isnull.label}</div>
+    <div>{$form.contribution_thankyou_date_isnull.html}{$form.contribution_thankyou_date_isnull.label}</div>
+    <div>{$form.contribution_pay_later.html}{$form.contribution_pay_later.label}</div>
+    <div>{$form.contribution_test.html}{$form.contribution_test.label}</div>
 	</td>
 	<td>
+    <div>
+      {$form.contribution_id.label} {$form.contribution_id.html}
+    </div>
     <div>
       {$form.contribution_transaction_id.label} {$form.contribution_transaction_id.html}
     </div>
@@ -75,41 +93,25 @@
       {$form.contribution_receipt_id.label} {$form.contribution_receipt_id.html}
     </div>
     <div>
+      {$form.contribution_recur_id.label} {$form.contribution_recur_id.html}
+    </div>
+    <div>
       {$form.contribution_recurring.label}{$form.contribution_recurring.html}
     </div>
   </td>
 </tr>
-<tr>
-	<td>
-	{$form.contribution_receipt_date_isnull.html}{$form.contribution_receipt_date_isnull.label}<br />
-	{$form.contribution_thankyou_date_isnull.html}{$form.contribution_thankyou_date_isnull.label}
-	</td>
-	<td>
-	{$form.contribution_pay_later.html}{$form.contribution_pay_later.label}<br />
-	{$form.contribution_test.html}{$form.contribution_test.label}</td>
-</tr>
-<tr>
-	<td><label>{ts}Contribution Type{/ts}</label> <br />
-	{$form.contribution_type_id.html}</td>
-	<td><label>{ts}Contribution Page{/ts}</label> <br />
-	{$form.contribution_page_id.html}</td>
-</tr>
-<tr>
 	<td>{$form.contribution_in_honor_of.label} <br />
 	{$form.contribution_in_honor_of.html}</td>
-	<td>{$form.contribution_source.label} <br />
-	{$form.contribution_source.html}</td>
+	<td>
+  	{$form.contribution_currency_type.label} <br />
+  	{$form.contribution_currency_type.html}
+  </td>
 </tr>
 <tr>
 	<td>{$form.contribution_pcp_made_through_id.label} <br />
 	{$form.contribution_pcp_made_through_id.html}</td>
 	<td>{$form.contribution_pcp_display_in_roll.label}
 	{$form.contribution_pcp_display_in_roll.html}<span class="crm-clear-link">(<a href="javascript:unselectRadio('contribution_pcp_display_in_roll','{$form.formName}')">{ts}clear{/ts}</a>)</span></td>
-</tr>
-
-<tr>
-	<td><label>{ts}Currency{/ts}</label> <br />
-	{$form.contribution_currency_type.html}</td>
 </tr>
 <tr>
 	<td colspan="2">
