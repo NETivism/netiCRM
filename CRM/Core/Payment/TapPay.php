@@ -988,12 +988,14 @@ LIMIT 0, 100
       $contribution_recur_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $id, 'contribution_recur_id');
     }
 
-    $paramsRecurId = array(1 => array($contribution_recur_id, 'Positive'));
-    $sqlGroupExpiryDates = "SELECT GROUP_CONCAT(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1;";
-    $originExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsRecurId);
+    $card_token = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TapPay', $contribution_recur_id, 'card_token', 'contribution_recur_id');
+    $paramsToken = array(1 => array($card_token, 'String'));
+    $sqlGroupExpiryDates = "SELECT GROUP_CONCAT(expiry_date) FROM civicrm_contribution_tappay WHERE card_token = %1;";
+    $originExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsToken);
 
     $returnMessage =  ts("There are no any change.");
 
+    $paramsRecurId = array(1 => array($contribution_recur_id, 'Positive'));
     $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id DESC LIMIT 1;";
     $contributionId = CRM_Core_DAO::singleValueQuery($sql, $paramsRecurId);
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -1030,15 +1032,15 @@ LIMIT 0, 100
           if ($expiryTimestamp >= time()) {
             $newExpiryDate = date('Y-m-d', $expiryTimestamp);
 
-            $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE contribution_recur_id = %2";
+            $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE card_token = %2";
             $params = array(
               1 => array($newExpiryDate, 'String'),
-              2 => array($contribution_recur_id, 'Positive'),
+              2 => array($card_token, 'String'),
             );
             CRM_Core_DAO::executeQuery($sql, $params);
-  
-            $newExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsRecurId);
-  
+
+            $newExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsToken);
+
             if ($newExpiryDates != $originExpiryDates) {
               $returnMessage = ts("Card expiry date has been updated.");
             }
