@@ -1024,20 +1024,34 @@ LIMIT 0, 100
           // Update expiry date`
           $year = substr($result->card_info->expiry_date, 0, 4);
           $month = substr($result->card_info->expiry_date, 4, 2);
-          $newExpiryDate = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
+          $expiryTimestamp = strtotime('last day of this month', strtotime($year.'-'.$month.'-01'));
 
-          $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE contribution_recur_id = %2";
-          $params = array(
-            1 => array($newExpiryDate, 'String'),
-            2 => array($contribution_recur_id, 'Positive'),
-          );
-          CRM_Core_DAO::executeQuery($sql, $params);
+          // check expiry_date is over current time.
+          if ($expiryTimestamp >= time()) {
+            $newExpiryDate = date('Y-m-d', $expiryTimestamp);
 
-          $newExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsRecurId);
-
-          if ($newExpiryDates != $originExpiryDates) {
-            $returnMessage = ts("Card expiry date has been updated.");
+            $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE contribution_recur_id = %2";
+            $params = array(
+              1 => array($newExpiryDate, 'String'),
+              2 => array($contribution_recur_id, 'Positive'),
+            );
+            CRM_Core_DAO::executeQuery($sql, $params);
+  
+            $newExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsRecurId);
+  
+            if ($newExpiryDates != $originExpiryDates) {
+              $returnMessage = ts("Card expiry date has been updated.");
+            }
+            else {
+              $returnMessage = ts("Card expiry date has been already newest.");
+            }
           }
+          else {
+            $returnMessage = ts("Card expiry date on the server is still not up-to-date.").ts("If there has any problem, please contact payment provider.");
+          }
+        }
+        else {
+          $returnMessage = ts("There are some problem on API.").ts("If there has any problem, please contact payment provider.");
         }
       }
     }

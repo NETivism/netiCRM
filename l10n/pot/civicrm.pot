@@ -47197,3 +47197,15 @@ msgid "%count month old"
 msgid_plural "%count months old"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Card expiry date has been already newest."
+msgstr ""
+
+msgid "Card expiry date on the server is still not up-to-date."
+msgstr ""
+
+msgid "If there has any problem, please contact payment provider."
+msgstr ""
+
+msgid "There are some problem on API."
+msgstr ""
