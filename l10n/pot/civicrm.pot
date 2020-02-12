@@ -47185,3 +47185,15 @@ msgstr ""
 
 msgid "Card expiry date has been updated."
 msgstr ""
+
+#: templates/CRM/Contact/Page/View/Demographics.tpl
+msgid "%count year old"
+msgid_plural "%count years old"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/CRM/Contact/Page/View/Demographics.tpl
+msgid "%count month old"
+msgid_plural "%count months old"
+msgstr[0] ""
+msgstr[1] ""
