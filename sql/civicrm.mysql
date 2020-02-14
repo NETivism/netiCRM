@@ -122,13 +122,13 @@ DROP TABLE IF EXISTS civicrm_im;
 DROP TABLE IF EXISTS civicrm_entity_tag;
 DROP TABLE IF EXISTS civicrm_entity_financial_trxn;
 DROP TABLE IF EXISTS civicrm_entity_file;
-DROP TABLE IF EXISTS civicrm_entity_batch;
 DROP TABLE IF EXISTS civicrm_email;
 DROP TABLE IF EXISTS civicrm_dashboard;
 DROP TABLE IF EXISTS civicrm_custom_field;
 DROP TABLE IF EXISTS civicrm_custom_group;
 DROP TABLE IF EXISTS civicrm_country;
 DROP TABLE IF EXISTS civicrm_cache;
+DROP TABLE IF EXISTS civicrm_entity_batch;
 DROP TABLE IF EXISTS civicrm_batch;
 DROP TABLE IF EXISTS civicrm_price_set_entity;
 DROP TABLE IF EXISTS civicrm_price_set;
@@ -2348,14 +2348,51 @@ CREATE TABLE civicrm_batch (
      created_id int unsigned    COMMENT 'FK to Contact ID',
      created_date datetime    COMMENT 'When was this item created',
      modified_id int unsigned    COMMENT 'FK to Contact ID',
-     modified_date datetime    COMMENT 'When was this item created' 
+     modified_date datetime    COMMENT 'When was this item created',
+     status_id int unsigned NOT NULL   COMMENT 'fk to Batch Status options in civicrm_option_values',
+     type_id int unsigned    COMMENT 'fk to Batch Type options in civicrm_option_values',
+     data longtext    COMMENT 'Save serialized batch related data' 
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     UNIQUE INDEX UI_name(
+        name
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_batch_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_batch_modified_id FOREIGN KEY (modified_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_entity_batch
+-- *
+-- * Batch entities (Contributions, Participants, Contacts) to a batch.
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_entity_batch (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'primary key',
+     entity_table varchar(64)    COMMENT 'physical tablename for entity being joined to file, e.g. civicrm_contact',
+     entity_id int unsigned NOT NULL   COMMENT 'FK to entity table specified in entity_table column.',
+     batch_id int unsigned NOT NULL   COMMENT 'FK to civicrm_batch' 
+,
+    PRIMARY KEY ( id )
+ 
+    ,     INDEX index_entity(
+        entity_table
+      , entity_id
+  )
+  ,     UNIQUE INDEX UI_batch_entity(
+        batch_id
+      , entity_id
+      , entity_table
+  )
+  
+,      
+     CONSTRAINT FK_civicrm_entity_batch_batch_id FOREIGN KEY (batch_id) REFERENCES civicrm_batch(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
@@ -2584,37 +2621,6 @@ CREATE TABLE civicrm_email (
   
 ,      
      CONSTRAINT FK_civicrm_email_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
-)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
-
--- /*******************************************************
--- *
--- * civicrm_entity_batch
--- *
--- * Batch entities (Contributions, Participants, Contacts) to a batch.
--- *
--- *******************************************************/
-CREATE TABLE civicrm_entity_batch (
-
-
-     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'primary key',
-     entity_table varchar(64)    COMMENT 'physical tablename for entity being joined to file, e.g. civicrm_contact',
-     entity_id int unsigned NOT NULL   COMMENT 'FK to entity table specified in entity_table column.',
-     batch_id int unsigned NOT NULL   COMMENT 'FK to civicrm_batch' 
-,
-    PRIMARY KEY ( id )
- 
-    ,     INDEX index_entity(
-        entity_table
-      , entity_id
-  )
-  ,     UNIQUE INDEX UI_batch_entity(
-        batch_id
-      , entity_id
-      , entity_table
-  )
-  
-,      
-     CONSTRAINT FK_civicrm_entity_batch_batch_id FOREIGN KEY (batch_id) REFERENCES civicrm_batch(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
