@@ -398,6 +398,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
         $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
       );
+      $row['membership_id'] = $result->membership_id;
 
       $rows[] = $row;
     }
@@ -470,8 +471,25 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
         $pre = array(
           array('desc' => ts('Contact Type')),
           array(
+            'name' => '#',
+            'title' => ts('Membership ID'),
+            'sort' => 'membership_id',
+            'direction' => CRM_Utils_Sort::DONTCARE,
+          ),
+          array(
             'name' => ts('Name'),
             'sort' => 'sort_name',
+            'direction' => CRM_Utils_Sort::DONTCARE,
+          ),
+        );
+        self::$_columnHeaders = array_merge($pre, self::$_columnHeaders);
+      }
+      else {
+        $pre = array(
+          array(
+            'name' => '#',
+            'title' => ts('Membership ID'),
+            'sort' => 'membership_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
           ),
         );

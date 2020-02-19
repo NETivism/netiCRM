@@ -34,7 +34,7 @@
   <th scope="col" title="Select Rows">{$form.toggleSelect.html}</th> 
 {/if}
   {foreach from=$columnHeaders item=header}
-    <th scope="col">
+    <th scope="col" {if $header.title}title="{$header.title}"{/if}>
     {if $header.sort}
       {assign var='key' value=$header.sort}
       {$sort->_response.$key.link}
@@ -54,6 +54,9 @@
           <td>{$form.$cbName.html}</td> 
        {/if}
        <td>{$row.contact_type}</td>
+    {/if}
+    <td>{$row.membership_id}</td>
+    {if ! $single }
        <td class="crm-search-display_name">
             <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View contact record{/ts}">{$row.sort_name}</a>
         </td> 

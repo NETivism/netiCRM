@@ -35,7 +35,7 @@
       <th scope="col" title="Select Rows">{$form.toggleSelect.html}</th> 
     {/if}
     {foreach from=$columnHeaders item=header}
-        <th scope="col">
+        <th scope="col" {if $header.title}title="{$header.title}"{/if}>
         {if $header.sort}
           {assign var='key' value=$header.sort}
           {$sort->_response.$key.link}
