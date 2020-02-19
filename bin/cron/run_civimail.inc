@@ -13,9 +13,11 @@ function run_civimail() {
   if(!$config->mailerJobSize){
     $config->mailerJobSize = 200;
   }
+  /* wait #26390
   if ($config->mailerBatchLimit < 400) {
     $config->mailerBatchLimit = 400;
   }
+   */
     
   // Split up the parent jobs into multiple child jobs
   date_default_timezone_set("Asia/Taipei");

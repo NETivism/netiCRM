@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-02-11 06:47+0000\n"
+"PO-Revision-Date: 2020-02-12 06:16+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -27511,7 +27511,7 @@ msgstr "年齡"
 #: templates/CRM/Contact/Page/View/Demographics.tpl
 msgid "%count year"
 msgid_plural "%count years"
-msgstr[0] "%count 歲"
+msgstr[0] "%count 年"
 
 #: templates/CRM/Contact/Page/View/Demographics.tpl
 msgid "%count month"
@@ -47392,3 +47392,28 @@ msgstr "需使用支援 Apple Pay 的 Safari 瀏覽器進行付款手續"
 
 msgid "Card expiry date has been updated."
 msgstr "卡片效期資料已更新。"
+
+#: templates/CRM/Contact/Page/View/Demographics.tpl
+msgid "%count year old"
+msgid_plural "%count years old"
+msgstr[0] "%count 歲"
+
+#: templates/CRM/Contact/Page/View/Demographics.tpl
+msgid "%count month old"
+msgid_plural "%count months old"
+msgstr[0] "%count 個月"
+
+msgid "Card expiry date has been already newest."
+msgstr "信用卡到期日已是最新的，毋需更新。"
+
+msgid "Card expiry date on the server is still not up-to-date."
+msgstr "金流商伺服器的信用卡到期日仍是舊的。"
+
+msgid "If there has any problem, please contact payment provider."
+msgstr "若仍有問題，請與我們聯繫，我們會與金流廠商確認問題。"
+
+msgid "There are some problem on API."
+msgstr "API 有異常情況。"
+
+msgid "Are you sure you want to sync all expiry dates of this token?"
+msgstr "你確定要同步此 Token 所有捐款的信用卡到期日資料？這將無法復原。"

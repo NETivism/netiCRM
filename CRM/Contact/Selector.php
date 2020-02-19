@@ -834,6 +834,12 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       self::$_columnHeaders = array(
         array('desc' => ts('Contact Type')),
         array(
+          'name' => '#',
+          'title' => ts('Contact ID'),
+          'sort' => 'contact_id',
+          'direction' => CRM_Utils_Sort::DONTCARE,
+        ),
+        array(
           'name' => ts('Name'),
           'sort' => 'sort_name',
           'direction' => CRM_Utils_Sort::ASCENDING,

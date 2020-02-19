@@ -1391,6 +1391,12 @@ class CRM_Contact_BAO_Query {
         $this->notes($values);
         return;
 
+      case 'age':
+      case 'age_low':
+      case 'age_high':
+        $this->age($values);
+        return;
+
       case 'uf_user':
         $this->ufUser($values);
         return;
@@ -2763,9 +2769,34 @@ WHERE  id IN ( $groupIDs )
     else {
       $value = "'$value'";
     }
-    $sub = " ( civicrm_email.email $op $value )";
     $this->_where[$grouping][] = " ( civicrm_note.note $op $value ) ";
     $this->_qill[$grouping][] = ts('Note') . " $op - '$n'";
+  }
+
+  /**
+   * where / qill clause for age
+   *
+   * @return void
+   * @access public
+   */
+  function age(&$values) {
+    list($name, $op, $value, $grouping, $wildcard) = $values;
+
+    $val = CRM_Utils_Type::escape($value, 'Integer');
+    if ($val) {
+      if ($name == 'age') {
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) = '$val' ) ";
+        $this->_qill[$grouping][] = ts('Age') . " = $val";
+      }
+      elseif($name == 'age_low') {
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) >= '$val' ) ";
+        $this->_qill[$grouping][] = ts('Age') . " >= $val";
+      }
+      elseif($name == 'age_high') {
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) <= '$value' ) ";
+        $this->_qill[$grouping][] = ts('Age') . " <= $val";
+      }
+    }
   }
 
   /**

@@ -47185,3 +47185,30 @@ msgstr ""
 
 msgid "Card expiry date has been updated."
 msgstr ""
+
+#: templates/CRM/Contact/Page/View/Demographics.tpl
+msgid "%count year old"
+msgid_plural "%count years old"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/CRM/Contact/Page/View/Demographics.tpl
+msgid "%count month old"
+msgid_plural "%count months old"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Card expiry date has been already newest."
+msgstr ""
+
+msgid "Card expiry date on the server is still not up-to-date."
+msgstr ""
+
+msgid "If there has any problem, please contact payment provider."
+msgstr ""
+
+msgid "There are some problem on API."
+msgstr ""
+
+msgid "Are you sure you want to sync all expiry dates of this token?"
+msgstr ""

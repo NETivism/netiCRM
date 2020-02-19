@@ -37,7 +37,7 @@
           </th>
       {/if}
       {foreach from=$columnHeaders item=header}
-        <th scope="col">
+        <th scope="col" {if $header.title}title="{$header.title}"{/if}>
         {if $header.sort}
           {assign var='key' value=$header.sort}
           {$sort->_response.$key.link}
@@ -63,6 +63,7 @@
               {$row.status}</td>
             {/if}
             <td>{$row.contact_type}</td>
+            <td>{$row.contact_id}</td>
             <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
             {foreach from=$row item=value key=key} 
                {if ($key neq "checkbox") and ($key neq "action") and ($key neq "contact_type") and ($key neq "status") and ($key neq "sort_name") and ($key neq "contact_id") and ($key neq "contact_sub_type")}
@@ -93,6 +94,7 @@
                 {$row.status}</td>
             {/if}
             <td>{$row.contact_type}</td>	
+            <td>{$row.contact_id}</td>
             <td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{if $row.is_deleted}<del>{/if}{$row.sort_name}{if $row.nick_name} ({$row.nick_name}){/if}{if $row.is_deleted}</del>{/if}</a></td>
             {if $action eq 512 or $action eq 256}
               <td class="overflow-safe{if $row.on_hold} status-hold{/if}">{$row.email}{if $row.on_hold}&nbsp;(On Hold){/if}</td>
