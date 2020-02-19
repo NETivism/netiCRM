@@ -194,11 +194,13 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
       if ($key == 'activity_date_time') {
         if ($val) {
           $dateValue = self::formatDate($val, $dateType);
-          if ($dateValue) {
-            $params[$key] = $dateValue;
+          if (!CRM_Utils_Rule::dateTime($dateValue)) {
+            if (!CRM_Utils_Rule::date($dateValue)) {
+              CRM_Import_Parser_Contact::addToErrorMsg('Activity date', $errorMessage);
+            }
           }
-          else {
-            CRM_Import_Parser_Contact::addToErrorMsg('Activity date', $errorMessage);
+          elseif ($dateValue) {
+            $params[$key] = $dateValue;
           }
         }
       }
@@ -393,34 +395,8 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     $dateParams = array($dateKey => $date);
 
     require_once 'CRM/Utils/Date.php';
-    if (CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey)) {
-      $dateVal = $dateParams[$dateKey];
-      $ruleName = 'date';
-      if ($dateType == 1) {
-        $matches = array();
-        if (preg_match("/(\s(([01]\d)|[2][0-3]):([0-5]\d))$/", $date, $matches)) {
-          $ruleName = 'dateTime';
-          if (strpos($date, '-') !== FALSE) {
-            $dateVal .= array_shift($matches);
-          }
-        }
-      }
-
-      // validate date.
-      $valid = CRM_Utils_Rule::$ruleName( $dateVal );
-
-      if ($valid) {
-        //format date and time to default.
-        if ($ruleName == 'dateTime') {
-          $dateVal = CRM_Utils_Date::customFormat(preg_replace("/(:|\s)?/", "", $dateVal), '%Y%m%d%H%i');
-          //hack to add seconds
-          $dateVal .= '00';
-        }
-        $formattedDate = $dateVal;
-      }
-    }
-
-    return $formattedDate;
+    CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);
+    return $dateParams[$dateKey];
   }
 }
 

@@ -1,3 +1,52 @@
+<div class='loading-placeholder-wrapper placeholder-intro-text'>
+<div class='placeholder-row placeholder-title-row'>
+    <div class='placeholder-item'></div>
+  </div>
+  <div class='placeholder-row placeholder-p-row'>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+  </div>
+</div>
+{if $page eq "main"}
+<div class='loading-placeholder-wrapper placeholder-form'>
+  <div class='placeholder-row placeholder-btn-row'>
+    <span class='placeholder-item'></span>
+    <span class='placeholder-item'></span>
+  </div>
+  <div class='placeholder-row placeholder-amount-row'>
+    <div class='placeholder-amount-item'>
+      <div class='placeholder-item placeholder-amount'></div>
+      <div class='placeholder-item placeholder-label'></div>
+    </div>
+    <div class='placeholder-amount-item'>
+      <div class='placeholder-item placeholder-amount'></div>
+      <div class='placeholder-item placeholder-label'></div>
+    </div>
+    <div class='placeholder-amount-item'>
+      <div class='placeholder-item placeholder-amount'></div>
+      <div class='placeholder-item placeholder-label'></div>
+    </div>
+    <div class='placeholder-amount-item'>
+      <div class='placeholder-item placeholder-amount'></div>
+      <div class='placeholder-item placeholder-label'></div>
+    </div>
+  </div>
+</div>
+{else}
+<div class='loading-placeholder-wrapper placeholder-form'>
+<div class='placeholder-row placeholder-title-row'>
+    <div class='placeholder-item'></div>
+  </div>
+  <div class='placeholder-row placeholder-p-row'>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+    <div class='placeholder-item'></div>
+  </div>
+</div>
+{/if}
 <script type="text/javascript">
   {literal}
   (function($){
@@ -43,12 +92,18 @@
         "I want contribute once." : "{/literal}{ts}I want contribute once.{/ts}{literal}",
         "I want recurring contribution." : "{/literal}{ts}I want recurring contribution.{/ts}{literal}",
         "no limit" : "{/literal}{ts}no limit{/ts}{literal}",
+        "One-time Contribution" : "{/literal}{ts}One-time Contribution{/ts}{literal}",
+        "Monthly Recurring Contributions" : "{/literal}{ts}Monthly Recurring Contributions{/ts}{literal}",
+        "Installments Contributions" : "{/literal}{ts}Installments Contributions{/ts}{literal}",
+        "One-time" : "{/literal}{ts}One-time{/ts}{literal}",
+        "Recurring" : "{/literal}{ts}Recurring{/ts}{literal}",
+        "One-time or Recurring Contributions" : "{/literal}{ts}One-time or Recurring Contributions{/ts}{literal}"
       }
     };
   })(jQuery);
   {/literal}
 </script>
-<script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js?ver=3.2.6"></script>
 <img class="pre-load-background-images" src="{$backgroundImageUrl}" alt="" style="display: none;">
 <img class="pre-load-background-images" src="{$mobileBackgroundImageUrl}" alt="" style="display: none;">
 <style>

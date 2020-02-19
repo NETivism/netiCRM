@@ -877,10 +877,12 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         }
         else {
           $processed = FALSE;
+          /* Remove problematical code on php 7 #24589
           if (CRM_Core_Permission::access('Quest', FALSE)) {
             require_once 'CRM/Quest/BAO/Student.php';
             $processed = CRM_Quest_BAO_Student::buildStudentForm($this, $field);
           }
+          */
           if (!$processed) {
             if (substr($name, 0, 7) === 'do_not_' or substr($name, 0, 3) === 'is_') {
               if ($details->$name) {

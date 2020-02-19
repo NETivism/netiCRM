@@ -66,7 +66,7 @@ class CRM_Core_Page_File extends CRM_Core_Page {
     }
 
     $buffer = file_get_contents($path);
-    if (!$buffer) {
+    if ($buffer === FALSE) {
       CRM_Core_Error::fatal('The file is either empty or you do not have permission to retrieve the file');
     }
 

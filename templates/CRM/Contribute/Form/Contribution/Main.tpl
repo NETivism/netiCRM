@@ -23,6 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $special_style}
+  {include file="CRM/common/contributionPageSpecial.tpl" page="main"}
+{/if}
 {if $ppType}
   {include file="CRM/Core/BillingBlock.tpl"}
   {if $paymentProcessor.description}
@@ -500,10 +503,17 @@ function enableHonorType( ) {
         $("input[name=amount]:checked").closest("label.crm-form-elem").show();
       }
       else {
-        $("input[name=amount]").removeProp("checked");
-        amountFilter();
-        var $default = $("input[name=amount][data-default=1]:visible");
-        $default.prop("checked", true);
+        var amountOther = $("input[name=amount_other]").val();
+        var checkedEle = $("input[name=amount]:checked");
+        if (checkedEle.prop('value') == 'amount_other_radio' && amountOther ) {
+          amountFilter();
+        }
+        else {
+          $("input[name=amount]").removeProp("checked");
+          amountFilter();
+          var $default = $("input[name=amount][data-default=1]:visible");
+          $default.prop("checked", true);
+        }
       }
     }
     var enablePeriod = function($isRecur){
@@ -577,6 +587,3 @@ function enableHonorType( ) {
 </script>
 {include file="CRM/common/betterContributionForm.tpl"}
 {/if}{*ppType*}
-{if $special_style}
-  {include file="CRM/common/contributionPageSpecial.tpl"}
-{/if}

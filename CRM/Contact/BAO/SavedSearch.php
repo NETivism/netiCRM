@@ -150,22 +150,17 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
         require_once 'CRM/Contact/BAO/SearchCustom.php';
         return CRM_Contact_BAO_SearchCustom::contactIDSQL(NULL, $id);
       }
-      else {
-        $tables = $whereTables = array($contact => 1);
-        $where = CRM_Contact_BAO_SavedSearch::whereClause($id, $tables, $whereTables);
-        if (!$where) {
-          $where = '( 1 )';
-        }
-        $from = CRM_Contact_BAO_Query::fromClause($whereTables);
-        return "
+    }
+    $tables = $whereTables = array();
+    $where = CRM_Contact_BAO_SavedSearch::whereClause($id, $tables, $whereTables);
+    if (!$where) {
+      $where = '( 1 )';
+    }
+    $from = CRM_Contact_BAO_Query::fromClause($whereTables);
+    return "
 SELECT contact_a.id
 $from
 WHERE  $where";
-      }
-    }
-    else {
-      CRM_Core_Error::fatal('No contactID clause');
-    }
   }
 
   static function fromWhereEmail($id) {

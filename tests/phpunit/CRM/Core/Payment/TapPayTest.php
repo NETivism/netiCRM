@@ -208,7 +208,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     $this->assertNotEmpty($primeResponse, "In line " . __LINE__);
     // because response not through TapPayAPI, we need save data manually
-    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution->id, $primeResponse);
+    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution->id, $primeResponse, 'pay_by_prime');
     CRM_Core_Payment_TapPay::doTransaction($primeResponse, $contribution->id);
 
     // verify contribution status after trigger
@@ -347,7 +347,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $primeResponse = json_decode($primeJson);
     $this->assertNotEmpty($primeResponse, "In line " . __LINE__);
     // because response not through TapPayAPI, we need save data manually
-    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution->id, $primeResponse);
+    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution->id, $primeResponse, 'pay_by_prime');
     CRM_Core_Payment_TapPay::doTransaction($primeResponse, $contribution->id);
 
     // verify contribution status after trigger
@@ -431,7 +431,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $tokenResponse = json_decode($tokenJson);
     $this->assertNotEmpty($tokenResponse, "In line " . __LINE__);
     // because response not through TapPayAPI, we need save data manually
-    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution2nd->id, $tokenResponse);
+    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution2nd->id, $tokenResponse, 'pay_by_token');
     CRM_Core_Payment_TapPay::doTransaction($tokenResponse, $contribution2nd->id);
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId2, 'String')));
     $this->assertDBQuery(2, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
@@ -504,7 +504,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $tokenResponse = json_decode($tokenJson);
     $this->assertNotEmpty($tokenResponse, "In line " . __LINE__);
     // because response not through TapPayAPI, we need save data manually
-    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution3rd->id, $tokenResponse);
+    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution3rd->id, $tokenResponse, 'pay_by_token');
     CRM_Core_Payment_TapPay::doTransaction($tokenResponse, $contribution3rd->id);
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId3, 'String')));
     $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
@@ -575,7 +575,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $tokenResponse = json_decode($tokenJson);
     $this->assertNotEmpty($tokenResponse, "In line " . __LINE__);
     // because response not through TapPayAPI, we need save data manually
-    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution4th->id, $tokenResponse);
+    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution4th->id, $tokenResponse, 'pay_by_token');
     CRM_Core_Payment_TapPay::doTransaction($tokenResponse, $contribution4th->id);
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId4, 'String')));
     $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);

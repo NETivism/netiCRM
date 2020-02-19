@@ -29,9 +29,9 @@
     
     {if $annual.count}
         <tr>
-            <th class="contriTotalLeft right">{ts}Current Year to-date{/ts} - {$annual.amount}</th>
-            <th class="right"> &nbsp; {ts}# Contributions{/ts} - {$annual.count}</th>
-            <th class="right contriTotalRight"> &nbsp; {ts}Avg Amount{/ts} - {$annual.avg}</th>
+            <th class="contriTotalLeft right">{ts}Current Year to-date{/ts}: {$annual.amount}</th>
+            <th class="right"> &nbsp; {ts}# Contributions{/ts}: {$annual.count}</th>
+            <th class="right contriTotalRight"> &nbsp; {ts}Avg Amount{/ts}: {$annual.avg}</th>
             {if $contributionSummary.cancel.amount}
                 <td>&nbsp;</td>
             {/if}
@@ -41,12 +41,12 @@
     {if $contributionSummary }
       <tr>
           {if $contributionSummary.total.amount}
-            <th class="contriTotalLeft right"> &nbsp; {ts}Avg Amount{/ts} - {$contributionSummary.total.avg}</th>
-            <th class="right"> &nbsp; {ts}# Contributions{/ts} - {$contributionSummary.total.count}</th>
-            <th class="right contriTotalRight">{ts}Total Amount{/ts} - {$contributionSummary.total.amount}</th>
+            <th class="contriTotalLeft right">{ts}Avg Amount{/ts}: {$contributionSummary.total.avg}</th>
+            <th class="right">{ts}Completed{/ts} {ts}# Contributions{/ts}: {$contributionSummary.total.count}</th>
+            <th class="right contriTotalRight">{ts 1=$contributionSummary.total.amount}Total amount of completed contributions is %1.{/ts}</th>
           {/if}
           {if $contributionSummary.cancel.amount}
-            <th class="disabled right contriTotalRight"> &nbsp; {ts}Total Cancelled Amount{/ts} - {$contributionSummary.cancel.amount}</th>
+            <th class="font-red right contriTotalRight">{ts}Total Cancelled Amount{/ts} {$contributionSummary.cancel.amount}</th>
           {/if}
       </tr>  
     {/if}

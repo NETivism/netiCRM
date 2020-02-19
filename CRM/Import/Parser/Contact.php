@@ -1167,7 +1167,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     //CRM-5125
     //add custom fields for contact sub type
-    if (!empty($this)) {
+    if (isset($this)) {
       if (!empty($this->_contactSubType)) {
         $csType = $this->_contactSubType;
       }
@@ -1322,11 +1322,13 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       ) {
         //CRM-5125
         //supporting custom data of related contact subtypes
-        if (array_key_exists($key, $this->_relationships)) {
-          $relation = $key;
-        }
-        elseif (CRM_Utils_Array::key($key, $this->_relationships)) {
-          $relation = CRM_Utils_Array::key($key, $this->_relationships);
+        if (isset($this)) {
+          if (array_key_exists($key, $this->_relationships)) {
+            $relation = $key;
+          }
+          elseif (CRM_Utils_Array::key($key, $this->_relationships)) {
+            $relation = CRM_Utils_Array::key($key, $this->_relationships);
+          }
         }
         if (!empty($relation)) {
           list($id, $first, $second) = CRM_Utils_System::explode('_', $relation, 3);
@@ -1521,7 +1523,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
                     $limitCodes = $countryIsoCodes;
                   }
 
-                  if (self::in_value($stateValue['country'], $limitCodes) || self::in_value($stateValue['country'], CRM_Core_PseudoConstant::country())) {
+                  if (self::in_value($stateValue['country'], $limitCodes) || self::in_value($stateValue['country'], CRM_Core_PseudoConstant::country()) || self::in_value($stateValue['country'], $countryNames)) {
                     continue;
                   }
                   else {
@@ -1581,7 +1583,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
           //custom email/postal greeting, custom addressee, CRM-4575
 
           case 'email_greeting':
-            $emailGreetingFilter = array('contact_type' => $this->_contactType,
+            $emailGreetingFilter = array('contact_type' => $params['contact_type'],
               'greeting_type' => 'email_greeting',
             );
             if (!self::in_value($value, CRM_Core_PseudoConstant::greeting($emailGreetingFilter))) {
@@ -1590,7 +1592,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             break;
 
           case 'postal_greeting':
-            $postalGreetingFilter = array('contact_type' => $this->_contactType,
+            $postalGreetingFilter = array('contact_type' => $params['contact_type'],
               'greeting_type' => 'postal_greeting',
             );
             if (!self::in_value($value, CRM_Core_PseudoConstant::greeting($postalGreetingFilter))) {
@@ -1599,7 +1601,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             break;
 
           case 'addressee':
-            $addresseeFilter = array('contact_type' => $this->_contactType,
+            $addresseeFilter = array('contact_type' => $params['contact_type'],
               'greeting_type' => 'addressee',
             );
             if (!self::in_value($value, CRM_Core_PseudoConstant::greeting($addresseeFilter))) {

@@ -190,6 +190,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     }
 
     if (!$allNull) {
+      $contact->modified_date = date('YmdHis');
       $contact->save();
 
       require_once 'CRM/Core/BAO/Log.php';
@@ -697,7 +698,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
     }
 
     if ($restore) {
-      self::contactTrashRestore($contact->id, TRUE);
+      self::contactTrashRestore($contact->id, TRUE, $reason);
       return TRUE;
     }
 

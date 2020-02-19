@@ -81,7 +81,7 @@ class CRM_Event_Badge {
     $eventID = $participant['event_id'];
     $this->event = self::retrieveEvent($eventID);
     //call function to create labels
-    self::createLabels($participants);
+    $this->createLabels($participants);
     CRM_Utils_System::civiExit(1);
   }
 

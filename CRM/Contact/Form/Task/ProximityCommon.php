@@ -118,7 +118,7 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
       'country' => 'prox_country_id',
     );
     CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap);
-    CRM_Core_BAO_Address::fixAllStateSelects($this, $defaults);
+    CRM_Core_BAO_Address::fixAllStateSelects($form, $defaults);
     $form->addFormRule(array('CRM_Contact_Form_Task_ProximityCommon', 'formRule'), $form);
   }
 

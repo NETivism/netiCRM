@@ -47094,3 +47094,94 @@ msgstr ""
 # templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Special Style"
 msgstr ""
+
+# CRM/Report/Form/Contribute/TaiwanTax.php
+msgid "Your SIC Code"
+msgstr ""
+
+msgid "Multiple Value Handling"
+msgstr ""
+
+msgid "Multi-value data can separate to multiple column."
+msgstr ""
+
+# CRM/Event/Form/Registration/Confirm.php
+msgid "It seems that the space of priceset options is full when you are making registration. Please make another one <a href=\"%1\">here</a>."
+msgstr ""
+
+msgid "ID/Tax Number"
+msgstr ""
+
+msgid "ID number"
+msgstr ""
+
+msgid "Please verify name and ID/Tax Number fields."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Field for the name used of donor acknowledgement"
+msgstr ""
+
+msgid "You need to follow instruction below to complete transaction before <strong>%1</strong> (Payment deadline)."
+msgstr ""
+
+#: civicrm_spgateway.notify.inc
+msgid "Payment deadline"
+msgstr ""
+
+msgid "Print payment slip"
+msgstr ""
+
+msgid "Note: Payment confirmation takes 3-4 working days."
+msgstr ""
+
+msgid "Convenience Store Payment Code"
+msgstr ""
+
+msgid "Payment slip"
+msgstr ""
+
+msgid "Payment Instructions"
+msgstr ""
+
+msgid "Bank code"
+msgstr ""
+
+msgid "Virtual account number"
+msgstr ""
+
+msgid "First Amount"
+msgstr ""
+
+msgid "If checked, the name used of donor acknowledgement can't be customized by contributor. The options will be \"Full Name\" and \"Part of Name\"."
+msgstr ""
+
+msgid "Forbid above name field from being customized"
+msgstr ""
+
+msgid "One-time Contribution"
+msgstr ""
+
+msgid "Monthly Recurring Contributions"
+msgstr ""
+
+msgid "Installments Contributions"
+msgstr ""
+
+msgid "One-time"
+msgstr ""
+
+msgid "Recurring"
+msgstr ""
+
+msgid "One-time or Recurring Contributions"
+msgstr ""
+
+msgid "ApplePay only can be used with Apple device."
+msgstr ""
+
+msgid "Please use Safari to process ApplePay Payment."
+msgstr ""
+
+msgid "Card expiry date has been updated."
+msgstr ""

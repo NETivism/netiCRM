@@ -265,6 +265,9 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     if (!empty($entityFiles[$entityTable][$entityID])) {
       return $entityFiles[$entityTable][$entityID];
     }
+    else {
+      $entityFiles[$entityTable][$entityID] = array();
+    }
 
     list($sql, $params) = self::sql($entityTable, $entityID, NULL);
     $dao = CRM_Core_DAO::executeQuery($sql, $params);

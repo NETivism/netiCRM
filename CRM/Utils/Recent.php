@@ -162,7 +162,7 @@ class CRM_Utils_Recent {
       if (!($tempRecent[$i]['id'] == $recentItem['id'] &&
           $tempRecent[$i]['type'] == $recentItem['type']
         )) {
-        self::$_recent[] = $tempRecent[$i];
+        self::$_recent .= $tempRecent[$i];
       }
     }
 
@@ -184,7 +184,7 @@ class CRM_Utils_Recent {
 
     $tempRecent = self::$_recent;
 
-    self::$_recent = '';
+    self::$_recent = array();
 
     // rebuild recent.
     for ($i = 0; $i < count($tempRecent); $i++) {

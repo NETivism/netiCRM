@@ -338,8 +338,15 @@ class CRM_Contact_Form_Task_SMSCommon {
       if (!empty($fields['sms_text_message'])) {
         $messageCheck = CRM_Utils_Array::value('sms_text_message', $fields);
         $messageCheck = str_replace("\r\n", "\n", $messageCheck);
-        if ($messageCheck && (strlen($messageCheck) > CRM_SMS_Provider::MAX_SMS_CHAR)) {
-          $errors['sms_text_message'] = ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_SMS_CHAR));
+        if(preg_match ("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)){
+          if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR)) {
+            $errors['sms_text_message'] = ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_ZH_SMS_CHAR));
+          }
+        }
+        else {
+          if ($messageCheck && (strlen($messageCheck) > CRM_SMS_Provider::MAX_SMS_CHAR)) {
+            $errors['sms_text_message'] = ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_SMS_CHAR));
+          }
         }
       }
     }

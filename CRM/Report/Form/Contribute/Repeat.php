@@ -276,7 +276,7 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
   }
 
   function groupBy($tableCol = FALSE) {
-    $this->_groupBy = "";
+    $this->_groupBy = array();
     if (is_array($this->_params['group_bys']) &&
       !empty($this->_params['group_bys'])
     ) {

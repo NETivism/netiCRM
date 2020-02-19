@@ -200,22 +200,14 @@ class CRM_Core_Page {
     CRM_Utils_Hook::pageRun($this);
 
     if ($this->_print) {
-      if ($this->_print == CRM_Core_Smarty::PRINT_SNIPPET ||
-        $this->_print == CRM_Core_Smarty::PRINT_PDF
-      ) {
+      if ($this->_print == CRM_Core_Smarty::PRINT_SNIPPET) {
         $content = self::$_template->fetch('CRM/common/snippet.tpl');
       }
       else {
         $content = self::$_template->fetch('CRM/common/print.tpl');
       }
       CRM_Utils_Hook::alterContent($content, 'page', $pageTemplateFile, $this);
-      if ($this->_print == CRM_Core_Smarty::PRINT_PDF) {
-        require_once 'CRM/Utils/PDF/Utils.php';
-        CRM_Utils_PDF_Utils::html2pdf($content, "{$this->_name}.pdf");
-      }
-      else {
-        echo $content;
-      }
+      echo $content;
       CRM_Utils_System::civiExit();
     }
     $config = CRM_Core_Config::singleton();

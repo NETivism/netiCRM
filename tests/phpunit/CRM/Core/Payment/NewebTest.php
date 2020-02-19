@@ -202,7 +202,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       "cid" => $contribution->id,
       );
 
-    civicrm_neweb_ipn();
+    civicrm_neweb_ipn('Credit');
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -318,7 +318,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       "crid" => $recurring->id,
     );
 
-    civicrm_neweb_ipn();
+    civicrm_neweb_ipn('Credit');
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(

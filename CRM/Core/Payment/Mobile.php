@@ -259,6 +259,8 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       }
       $file_name = 'applepaycert_'.$mobile_paymentProcessor_id.'.inc';
       $file_path = CRM_Utils_System::cmsRootPath() . '/' . CRM_Utils_System::confPath().'/' . $file_name;
+      global $civicrm_root;
+      $cafile_path = $civicrm_root.'cert/cacert.pem';
 
       $ch = curl_init($validationUrl);
       $opt = array();
@@ -267,7 +269,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $opt[CURLOPT_HTTPHEADER] = array("Content-Type: application/json");
       $opt[CURLOPT_POSTFIELDS] = json_encode($data);
       $opt[CURLOPT_SSLCERT] = $file_path;
+      $opt[CURLOPT_CAINFO] = $cafile_path;
       curl_setopt_array($ch, $opt);
+
+      $cmd = 'curl --request POST --url "'.$validationUrl.'" --cacert '.$cafile_path.' --cert '.$file_path.' -H "Content-Type: application/json" --data "'. json_encode($data).'"';
+      CRM_Core_Error::debug('cmd', $cmd);
 
       $result = curl_exec($ch);
       $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -279,6 +285,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       else{
         $curlError = array();
       }
+
+      CRM_Core_Error::debug('applepay_filepath', $file_path);
+      CRM_Core_Error::debug('applepay_validate_post', $_POST);
+      CRM_Core_Error::debug('applepay_validate_get', $_GET);
+      CRM_Core_Error::debug('applepay_validate_curl_result', $result);
+      CRM_Core_Error::debug('applepay_validate_curl_status', $status);
+      CRM_Core_Error::debug('applepay_validate_curl_error', $curlError);
+
       curl_close($ch);
     }
     echo $result;
@@ -309,7 +323,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     if(strstr($_GET['q'], 'applepay')){
       $type = 'applepay';
     }
-      
     // call mobile checkout function
     $module_name = 'civicrm_'.strtolower($ppProvider);
     $checkout_func = $module_name.'_mobile_checkout';
@@ -319,6 +332,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $return = call_user_func($checkout_func, $type, $post, $objects);
 
     if(!empty($return)){
+
+      CRM_Core_Error::debug('applepay_transact_post', $_POST);
+      CRM_Core_Error::debug('applepay_transact_get', $_GET);
+      CRM_Core_Error::debug('applepay_transact_checkout_result', $return);
+
       // execute ipn transact
       $ipn = new CRM_Core_Payment_BaseIPN();
       $input = $ids = $objects = array();
@@ -338,6 +356,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
           $input['payment_instrument_id'] = $contribution->payment_instrument_id;
           $input['amount'] = $contribution->amount;
           $objects['contribution']->receive_date = date('YmdHis');
+          $objects['contribution']->trxn_id = 'ap_'.$ids['contribution'];
           $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
 
           $result = array('is_success' => 1);
@@ -454,6 +473,9 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     $host = gethostbyname($validateUrl);
     if ($accessList[$validateUrl] == $host) {
+      $isPass = TRUE;
+    }
+    else if ($validateUrl == 'apple-pay-gateway.apple.com' && in_array($host, $accessList)) {
       $isPass = TRUE;
     }
 

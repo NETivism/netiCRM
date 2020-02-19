@@ -335,7 +335,7 @@ class CRM_Contribute_BAO_Query {
         require_once 'CRM/Contribute/PseudoConstant.php';
         $cPage = $value;
         $pages = CRM_Contribute_PseudoConstant::contributionPage();
-        $query->_where[$grouping][] = "civicrm_contribution.contribution_page_id = $cPage";
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_page_id", $op, $cPage, "Integer");;
         $query->_qill[$grouping][] = ts('Contribution Page - %1', array(1 => $pages[$cPage]));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
@@ -516,6 +516,7 @@ class CRM_Contribute_BAO_Query {
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_recur_id",
           $op, $value, "Integer"
         );
+        $query->_qill[$grouping][] = ts('Recurring Contributions ID').' '.$op. ' '.$value;
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
@@ -786,6 +787,8 @@ class CRM_Contribute_BAO_Query {
     require_once 'CRM/Utils/Money.php';
 
     //added contribution source
+    $form->addElement('text', 'contribution_id', ts('Contribution ID'));
+    $form->addElement('text', 'contribution_recur_id', ts('Recurring Contributions ID'));
     $form->addElement('text', 'contribution_source', ts('Contribution Source'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution', 'source'));
 
     $form->addDate('contribution_created_date_low', ts('Created Date - From'), FALSE, array('formatType' => 'searchDate'));
@@ -807,7 +810,7 @@ class CRM_Contribute_BAO_Query {
 
     //adding select option for curreny type -- CRM-4711
     $form->add('select', 'contribution_currency_type',
-      ts('Currency Type'),
+      ts('Currency'),
       array('' => ts('- select -')) +
       CRM_Core_PseudoConstant::currencySymbols('name')
     );
@@ -879,7 +882,7 @@ class CRM_Contribute_BAO_Query {
     $form->addElement('text', 'contribution_check_number', ts('Check Number'));
 
     //add field for pcp display in roll search
-    $form->addYesNo('contribution_pcp_display_in_roll', ts('Display In Roll ?'));
+    $form->addYesNo('contribution_pcp_display_in_roll', ts('Personal Campaign Page').' - '.ts('Display In Roll ?'));
 
     // add all the custom  searchable fields
     require_once 'CRM/Core/BAO/CustomGroup.php';

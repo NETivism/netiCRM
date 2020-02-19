@@ -510,7 +510,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
   function testNonCreditNotify(){
     // update
-    $cid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_allpay ORDER BY id DESC LIMIT 0,1");
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay ORDER BY cid DESC LIMIT 0,1");
     $_POST = array(
       'MerchantID' => $cid,
       'TEST1' => 'AAA',

@@ -309,7 +309,7 @@ class CRM_Report_Form extends CRM_Core_Form {
   }
 
   function preProcess() {
-    self::preProcessCommon();
+    $this->preProcessCommon();
     if (!$this->_id) {
       self::addBreadCrumb();
     }

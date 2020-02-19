@@ -91,8 +91,9 @@ cj(function($){
     var hornor_name = [
       mdFormElement('radio', '{/literal}{ts}Full Name{/ts}{literal}', {name:'receipt_name', id:'r_name_full', value:'r_name_full'{/literal}{if $receipt_name eq 'r_name_full'}, checked: 'checked'{/if}{literal}}),
       mdFormElement('radio', '{/literal}{ts}Part of Name{/ts}{literal}', {name:'receipt_name', id:'r_name_half', value:'r_name_half'{/literal}{if $receipt_name eq 'r_name_half'}, checked: 'checked'{/if}{literal}}),
-      mdFormElement('radio', '{/literal}{ts}Anonymity{/ts}{literal}', {name:'receipt_name', id:'r_name_hide', value:'r_name_hide'{/literal}{if $receipt_name eq 'r_name_hide'}, checked: 'checked'{/if}{literal}}),
+      {/literal}{if !$forbidCustomDonorCredit}{literal}
       mdFormElement('radio', '{/literal}{ts}Custom Name{/ts}{literal}', {name:'receipt_name', id:'r_name_custom', value:'r_name_custom'{/literal}{if $receipt_name eq 'r_name_custom'}, checked: 'checked'{/if}{literal}})
+      {/literal}{/if}{literal}
     ];
     var items = hornor_name.join('');
 
@@ -349,7 +350,7 @@ cj(function($){
     }
 
     // Part of Name
-    if($('#r_name_half:checked').val()){
+    else if($('#r_name_half:checked').val()){
       if (is_for_organization) {
         var name = $('#organization_name').val();
         if (name.length > 2) {
@@ -396,20 +397,15 @@ cj(function($){
       }
     }
 
-    // Anonymity
-    if($('#r_name_hide:checked').val()){
-      if($('#last_name,#first_name').length>1){
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{ts}Anonymous{/ts}{literal}');
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
-      }
-    }
-
     // Custom Name
-    if($('#r_name_custom:checked').val()){
+    else if($('#r_name_custom:checked').val()){
       if($('#last_name,#first_name').length>1){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
       }
+    }
+    else {
+      $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
     }
 
     $('#custom_{/literal}{$receiptTitle}{literal} input.required:visible:not([type=checkbox])').trigger('blur');

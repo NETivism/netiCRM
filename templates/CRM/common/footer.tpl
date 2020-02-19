@@ -36,7 +36,12 @@
     {if isset($createdBy) and $createdBy}
     <span class="col">
       <div>
-      <i class="zmdi zmdi-time"></i> {ts}Created by{/ts} <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$createdBy.id`"}">{$createdBy.name}</a> ({$createdBy.date|crmDate})
+      <i class="zmdi zmdi-time"></i>
+      {if $createdBy.id}
+        {ts}Created by{/ts} <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$createdBy.id`"}">{$createdBy.name}</a> ({$createdBy.date|crmDate})
+      {else}
+        {ts}Created On{/ts} {$createdBy.date|crmDate}
+      {/if}
       </div>
     </span>
     {/if}

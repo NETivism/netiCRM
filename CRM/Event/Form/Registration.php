@@ -728,6 +728,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
             // change file upload description
             $this->_uploadedFiles[$key] = $field['name'];
           }
+          if ($contactID && $field['data_type'] == 'File' && $field['is_required'] && $this->_allowConfirmation) {
+            $field['is_required'] = FALSE;
+          }
           //make the field optional if primary participant
           //have been skip the additional participant.
           if ($button == 'skip') {
@@ -899,6 +902,184 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $this->set('primaryParticipant', $this->_params);
     }
     $this->assign('action', $this->_action);
+  }
+
+  /**
+    *Function to process Registration of free event
+    *
+    *@param  array $param Form valuess 
+    *@param  int contactID
+    *
+    *@return None
+    *access public
+    *
+    */
+
+  public function processRegistration($params, $contactID = NULL) {
+    $session = CRM_Core_Session::singleton();
+    $this->_participantInfo = array();
+
+    // CRM-4320, lets build array of cancelled additional participant ids
+    // those are drop or skip by primary at the time of confirmation.
+    // get all in and then unset those are confirmed.
+    $cancelledIds = $this->_additionalParticipantIds;
+
+    $participantCount = array();
+    foreach ($params as $participantNum => $record) {
+      if ($record == 'skip') {
+        $participantCount[$participantNum] = 'skip';
+      }
+      elseif ($participantNum) {
+        $participantCount[$participantNum] = 'participant';
+      }
+    }
+
+    foreach ($params as $key => $value) {
+      if ($value != 'skip') {
+        $fields = NULL;
+
+        // setting register by Id and unset contactId.
+        if (!CRM_Utils_Array::value('is_primary', $value)) {
+          $contactID = NULL;
+          $registerByID = $this->get('registerByID');
+          if ($registerByID) {
+            $value['registered_by_id'] = $registerByID;
+          }
+          if (CRM_Utils_Array::value("email-{$this->_bltID}", $value)) {
+            $this->_participantInfo[] = $value["email-{$this->_bltID}"];
+          }
+          else {
+            $this->_participantInfo[] = $value['first_name'] . ' ' . $value['last_name'];
+          }
+        }
+
+        require_once 'CRM/Event/Form/Registration/Confirm.php';
+        $this->fixLocationFields($value, $fields);
+
+        $contactID = $this->updateContactFields($contactID, $value, $fields);
+
+        // lets store the contactID in the session
+        // we dont store in userID in case the user is doing multiple
+        // transactions etc
+        // for things like tell a friend
+        if (!$this->getContactID() && CRM_Utils_Array::value('is_primary', $value)) {
+          $session->set('transaction.userID', $contactID);
+        }
+
+        //lets get the status if require approval or waiting.
+        require_once 'CRM/Event/PseudoConstant.php';
+        $waitingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Waiting'");
+        if ($this->_isOnWaitlist && !$this->_allowConfirmation) {
+          $value['participant_status_id'] = array_search('On waitlist', $waitingStatuses);
+        }
+        elseif ($this->_requireApproval && !$this->_allowConfirmation) {
+          $value['participant_status_id'] = array_search('Awaiting approval', $waitingStatuses);
+        }
+
+        $this->set('value', $value);
+        $this->confirmPostProcess($contactID, NULL, NULL);
+
+        //lets get additional participant id to cancel.
+        if ($this->_allowConfirmation && is_array($cancelledIds)) {
+          $additonalId = CRM_Utils_Array::value('participant_id', $value);
+          if ($additonalId && $key = array_search($additonalId, $cancelledIds)) {
+            unset($cancelledIds[$key]);
+          }
+        }
+      }
+    }
+
+    // update status and send mail to cancelled additonal participants, CRM-4320
+    if ($this->_allowConfirmation && is_array($cancelledIds) && !empty($cancelledIds)) {
+      require_once 'CRM/Event/BAO/Participant.php';
+      require_once 'CRM/Event/PseudoConstant.php';
+      $cancelledId = array_search('Cancelled',
+        CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'")
+      );
+      CRM_Event_BAO_Participant::transitionParticipants($cancelledIds, $cancelledId);
+    }
+
+    //set information about additional participants if exists
+    if (count($this->_participantInfo)) {
+      $this->set('participantInfo', $this->_participantInfo);
+    }
+
+    //send mail Confirmation/Receipt
+    require_once "CRM/Event/BAO/Event.php";
+    if ($this->_contributeMode != 'checkout' ||
+      $this->_contributeMode != 'notify'
+    ) {
+      $isTest = FALSE;
+      if ($this->_action & CRM_Core_Action::PREVIEW) {
+        $isTest = TRUE;
+      }
+
+      //handle if no additional participant.
+      if (!$registerByID) {
+        $registerByID = $this->get('registerByID');
+      }
+      $primaryContactId = $this->get('primaryContactId');
+
+      //build an array of custom profile and assigning it to template.
+      $additionalIDs = CRM_Event_BAO_Event::buildCustomProfile($registerByID, NULL,
+        $primaryContactId, $isTest, TRUE
+      );
+
+      //lets carry all paticipant params w/ values.
+      foreach ($additionalIDs as $participantID => $contactId) {
+        $participantNum = NULL;
+        if ($participantID == $registerByID) {
+          $participantNum = 0;
+        }
+        else {
+          if ($participantNum = array_search('participant', $participantCount)) {
+            unset($participantCount[$participantNum]);
+          }
+        }
+        if ($participantNum === NULL)
+        break;
+
+        //carry the participant submitted values.
+        $this->_values['params'][$participantID] = $params[$participantNum];
+      }
+
+      //lets send  mails to all with meanigful text, CRM-4320.
+      $this->assign('isOnWaitlist', $this->_isOnWaitlist);
+      $this->assign('isRequireApproval', $this->_requireApproval);
+
+      foreach ($additionalIDs as $participantID => $contactId) {
+        if ($participantID == $registerByID) {
+          //set as Primary Participant
+          $this->assign('isPrimary', 1);
+
+          $customProfile = CRM_Event_BAO_Event::buildCustomProfile($participantID, $this->_values, NULL, $isTest);
+
+          if (count($customProfile)) {
+            $this->assign('customProfile', $customProfile);
+            $this->set('customProfile', $customProfile);
+          }
+        }
+        else {
+          $this->assign('isPrimary', 0);
+          $this->assign('customProfile', NULL);
+        }
+
+        // Add variable for generate cancel link
+        if(!$this->_values['event']['is_monetary'] && $this->_values['event']['allow_cancel_by_link']){
+          $checksumLife = 'inf';
+          if ($endDate = CRM_Utils_Array::value('end_date', $this->_values['event'])) {
+            $checksumLife = (CRM_Utils_Date::unixTime($endDate) - time()) / (60 * 60);
+          }
+          $checksumValue = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId, NULL, $checksumLife);
+          $this->assign('hasCancelLink', TRUE);
+          $this->assign('checksumValue', $checksumValue);
+          $this->assign('participantID', $participantID);
+        }
+
+        //send Confirmation mail to Primary & additional Participants if exists
+        CRM_Event_BAO_Event::sendMail($contactId, $this->_values, $participantID, $isTest);
+      }
+    }
   }
 
   /**
@@ -1304,11 +1485,18 @@ WHERE  v.option_group_id = g.id
         if (!$hasOptMaxValue) {
           continue;
         }
-        foreach ($value as $optId => $optVal) {
-          $fieldCountName = $valKey.'_'.$optId.'_count';
-          $optCount = array_key_exists($fieldCountName, $values) ? $values[$fieldCountName] : $optVal;
-          $currentMaxValue = $optionsCountDetails[$priceFieldId]['options'][$optId] * $optCount;
-          $optionMaxValues[$priceFieldId][$optId] = $currentMaxValue + CRM_Utils_Array::value($optId, $optionMaxValues[$priceFieldId], 0);
+        $options = $optionsCountDetails[$priceFieldId]['options'];
+        foreach ($options as $optId => $optCount) {
+          if (!empty($value[$optId]) && $value[$optId] == TRUE) {
+            $optVal = $value[$optId];
+            $fieldCountName = $valKey.'_'.$optId.'_count';
+            $optCount = array_key_exists($fieldCountName, $values) ? $values[$fieldCountName] : $optVal;
+            $currentMaxValue = $options[$optId] * $optCount;
+            $optionMaxValues[$priceFieldId][$optId] = $currentMaxValue + CRM_Utils_Array::value($optId, $optionMaxValues[$priceFieldId], 0);
+          }
+          else if(empty($optionMaxValues[$priceFieldId][$optId])) {
+            $optionMaxValues[$priceFieldId][$optId] = 0;
+          }
         }
       }
     }
@@ -1374,6 +1562,105 @@ WHERE  v.option_group_id = g.id
     $this->set('availableRegistrations', $this->_availableRegistrations);
   }
 
+  /**
+   * function to update contact fields
+   *
+   * @return void
+   * @access public
+   */
+  public function updateContactFields($contactID, $params, $fields) {
+    //add the contact to group, if add to group is selected for a
+    //particular uf group
+
+    // get the add to groups
+    $addToGroups = array();
+
+    if (!empty($this->_fields)) {
+      foreach ($this->_fields as $key => $value) {
+        if (CRM_Utils_Array::value('add_to_group_id', $value)) {
+          $addToGroups[$value['add_to_group_id']] = $value['add_to_group_id'];
+        }
+      }
+    }
+
+    // check for profile double opt-in and get groups to be subscribed
+    require_once 'CRM/Core/BAO/UFGroup.php';
+    $subscribeGroupIds = CRM_Core_BAO_UFGroup::getDoubleOptInGroupIds($params, $contactID);
+
+    foreach ($addToGroups as $k) {
+      if (array_key_exists($k, $subscribeGroupIds)) {
+        unset($addToGroups[$k]);
+      }
+    }
+
+    // since we are directly adding contact to group lets unset it from mailing
+    if (!empty($addToGroups)) {
+      foreach ($addToGroups as $groupId) {
+        if (isset($subscribeGroupIds[$groupId])) {
+          unset($subscribeGroupIds[$groupId]);
+        }
+      }
+    }
+
+    require_once "CRM/Contact/BAO/Contact.php";
+    $params['log_data'] = !empty($params['log_data']) ? $params['log_data'] : ts('Event').' - '.$this->_eventId;
+    if ($contactID) {
+      $ctype = CRM_Core_DAO::getFieldValue("CRM_Contact_DAO_Contact",
+        $contactID,
+        "contact_type"
+      );
+      $contactID = &CRM_Contact_BAO_Contact::createProfileContact($params,
+        $fields,
+        $contactID,
+        $addToGroups,
+        NULL,
+        $ctype
+      );
+    }
+    else {
+      // when we have allow_same_participant_emails = 1
+      // don't take email address in dedupe params - CRM-4886
+      // here we are making dedupe weak - so to make dedupe
+      // more effective please update individual 'Strict' rule.
+      $allowSameEmailAddress = CRM_Utils_Array::value('allow_same_participant_emails', $this->_values['event']);
+      require_once 'CRM/Dedupe/Finder.php';
+      //suppress "email-Primary" when allow_same_participant_emails = 1
+      if ($allowSameEmailAddress &&
+        ($email = CRM_Utils_Array::value('email-Primary', $params)) &&
+        (CRM_Utils_Array::value('registered_by_id', $params))
+      ) {
+        //skip dedupe check only for additional participants
+        unset($params['email-Primary']);
+      }
+      $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
+      // disable permission based on cache since event registration is public page/feature.
+      $dedupeParams['check_permission'] = FALSE;
+      $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
+
+      // if we find more than one contact, use the first one
+      $contact_id = $ids[0];
+      if (isset($email)) {
+        $params['email-Primary'] = $email;
+      }
+
+      $contactID = &CRM_Contact_BAO_Contact::createProfileContact($params, $fields, $contact_id, $addToGroups);
+      $this->set('contactID', $contactID);
+    }
+
+    //get email primary first if exist
+    $subscribtionEmail = array('email' => CRM_Utils_Array::value('email-Primary', $params));
+    if (!$subscribtionEmail['email']) {
+      $subscribtionEmail['email'] = CRM_Utils_Array::value("email-{$this->_bltID}", $params);
+    }
+    // subscribing contact to groups
+    if (!empty($subscribeGroupIds) && $subscribtionEmail['email']) {
+      require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
+      CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($subscribeGroupIds, $subscribtionEmail, $contactID);
+    }
+
+    return $contactID;
+  }
+
   function setParticipantCustomDefault($participantId, $fields, &$defaults){
     $participantDefault = array();
     CRM_Core_BAO_UFGroup::setComponentDefaults($fields, $participantId, 'Event', $participantDefault);
@@ -1394,6 +1681,40 @@ WHERE  v.option_group_id = g.id
         }
       }
     }
+  }
+
+  /**
+   * Fix the Location Fields
+   *
+   * @return void
+   * @access public
+   */
+  public function fixLocationFields(&$params, &$fields) {
+    if (!empty($this->_fields)) {
+      foreach ($this->_fields as $name => $dontCare) {
+        $fields[$name] = 1;
+      }
+    }
+
+    if (is_array($fields)) {
+      if (!array_key_exists('first_name', $fields)) {
+        $nameFields = array('first_name', 'middle_name', 'last_name');
+        foreach ($nameFields as $name) {
+          $fields[$name] = 1;
+          if (array_key_exists("billing_$name", $params)) {
+            $params[$name] = $params["billing_{$name}"];
+            $params['preserveDBName'] = TRUE;
+          }
+        }
+      }
+    }
+
+    // also add location name to the array
+    if ($this->_values['event']['is_monetary']) {
+      $params["address_name-{$this->_bltID}"] = CRM_Utils_Array::value("billing_first_name", $params) . ' ' . CRM_Utils_Array::value("billing_middle_name", $params) . ' ' . CRM_Utils_Array::value("billing_last_name", $params);
+      $fields["address_name-{$this->_bltID}"] = 1;
+    }
+    $fields["email-{$this->_bltID}"] = 1;
   }
 
   public function track($pageName = '') {

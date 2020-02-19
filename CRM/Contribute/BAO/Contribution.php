@@ -2033,13 +2033,13 @@ SELECT source_contact_id
     }
 
     // get primary location email if no email exist( for billing location).
-    if (!$email) {
-      list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
-    }
+    list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
+    list($displayName, $phone) = CRM_Contact_BAO_Contact_Location::getPhoneDetails($contactID);
 
     // set email in the template here
     $tplParams = array(
       'email' => $email,
+      'phone' => $phone,
       'receiptFromEmail' => $values['receipt_from_email'],
       'contactID' => $contactID,
       'contributionID' => $values['contribution_id'],
@@ -2110,9 +2110,8 @@ SELECT source_contact_id
     }
 
     // get primary location email if no email exist( for billing location).
-    if (!$email) {
-      list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
-    }
+    list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
+    list($displayName, $phone) = CRM_Contact_BAO_Contact_Location::getPhoneDetails($contact_id);
 
     // set email in the template here
     if(!empty($records)){
@@ -2157,6 +2156,7 @@ SELECT source_contact_id
 
       $tplParams = array(
         'email' => $email,
+        'phone' => $phone,
         'receiptFromEmail' => $values['receipt_from_email'],
         'contactID' => $contact_id,
         'sort_name' => $sort_name,
@@ -2186,7 +2186,6 @@ SELECT source_contact_id
         'valueName' => 'receipt_letter_annual',
         'contactId' => $contact_id,
         'tplParams' => $tplParams,
-        'isTest' => $isTest,
       );
 
       list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
@@ -2241,7 +2240,7 @@ SELECT source_contact_id
     $args = array(
       1 => array($contact_id, 'Integer'),
     );
-    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.$date_field_name) as receipt_date, c.receive_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_id, c.$date_field_name ASC";
+    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.$date_field_name) as receipt_date, c.receive_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY NULLIF(c.receipt_id, ''), c.$date_field_name ASC";
     $result = CRM_Core_DAO::executeQuery($query, $args);
    
     $contribution_type = array();
@@ -2599,7 +2598,7 @@ WHERE c.id = $id";
     }
     $is_test = $contribution->is_test ? 'test' : '';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
-    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, $this);
+    $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor);
     $paymentClass = get_class($payment);
     return $paymentClass;
   }

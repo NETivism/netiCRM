@@ -324,11 +324,11 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
       $cc_filter = $filter['contribution'];
       if(!empty($cc_filter) && is_array($cc_filter)){
         if(!empty($cc_filter['start_date'])){
-          $cc_and[] = "receive_date >= '{$cc_filter['start_date']}'";
+          $cc_and[] = "receive_date >= '{$cc_filter['start_date']} 00:00:00'";
           unset($cc_filter['start_date']);
         }
         if(!empty($cc_filter['end_date'])){
-          $cc_and[] = "receive_date <= '{$cc_filter['end_date']}'";
+          $cc_and[] = "receive_date <= '{$cc_filter['end_date']} 23:59:59'";
           unset($cc_filter['end_date']);
         }
         foreach ($cc_filter as $key => $value) {
@@ -361,8 +361,6 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
 
 
     $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field label FROM $table $contribution_query GROUP BY label $order_by";
-    // dpm($sql);
-    // return ;
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     $returnArray = array();

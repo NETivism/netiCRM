@@ -171,6 +171,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
                             ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$mailing'
                     WHERE
                                         $mg.mailing_id = {$mailing_id}
+                        AND             $job.is_test   = 0
                         AND             $mg.group_type = 'Exclude'";
     $mailingGroup->query($excludeSubMailing);
 
@@ -186,6 +187,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
                             ON          $ec.event_queue_id = $eq.id
                     WHERE
                                         $mg.mailing_id = {$mailing_id}
+                        AND             $job.is_test   = 0
                         AND             $mg.group_type = 'Exclude'";
     $mailingGroup->query($excludeClickedMailing);
 
@@ -201,6 +203,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
                             ON          $eo.event_queue_id = $eq.id
                     WHERE
                                         $mg.mailing_id = {$mailing_id}
+                        AND             $job.is_test   = 0
                         AND             $mg.group_type = 'Exclude'";
     $mailingGroup->query($excludeOpenedMailing);
 
@@ -2768,7 +2771,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         'onkeyup' => "return verify(this)",
       )
     );
-    $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
+    $action = CRM_Utils_Request::retrieve('action', 'String', $form, FALSE);
     if ((CRM_Utils_System::getClassName($form) == 'CRM_Contact_Form_Task_PDF') &&
       $action == CRM_Core_Action::VIEW
     ) {

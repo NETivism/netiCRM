@@ -486,6 +486,18 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     if(!empty($couponErrors['coupon'])) {
       $errors['qfKey'] = ts("This coupon is not valid anymore. Please refill your registration.");
     }
+
+    if (!empty($self->_values['fee'])) {
+      $self->_feeBlock = &$self->_values['fee'];
+      CRM_Event_Form_Registration_Register::formatFieldsForOptionFull($self);
+      $priceErrors = self::validatePriceSet($self, $self->_params);
+      foreach ($priceErrors as $participantPriceError) {
+        if (!empty($participantPriceError)) {
+          $errors['qfKey'] = ts('It seems that the space of priceset options is full when you are making registration. Please make another one <a href="%1">here</a>.', array(1 => CRM_Utils_System::url('civicrm/event/register', "id={$self->_values['event']['id']}&reset=1")));
+          break;
+        }
+      }
+    }
     return $errors;
   }
 
@@ -639,7 +651,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         $value['amount'] = $this->_totalAmount;
       }
 
-      $contactID = &$this->updateContactFields($contactID, $value, $fields);
+      $contactID = $this->updateContactFields($contactID, $value, $fields);
 
       // lets store the contactID in the session
       // we dont store in userID in case the user is doing multiple
@@ -1100,141 +1112,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     return $contribution;
   }
 
-  /**
-   * Fix the Location Fields
-   *
-   * @return void
-   * @access public
-   */
-  public function fixLocationFields(&$params, &$fields) {
-    if (!empty($this->_fields)) {
-      foreach ($this->_fields as $name => $dontCare) {
-        $fields[$name] = 1;
-      }
-    }
-
-    if (is_array($fields)) {
-      if (!array_key_exists('first_name', $fields)) {
-        $nameFields = array('first_name', 'middle_name', 'last_name');
-        foreach ($nameFields as $name) {
-          $fields[$name] = 1;
-          if (array_key_exists("billing_$name", $params)) {
-            $params[$name] = $params["billing_{$name}"];
-            $params['preserveDBName'] = TRUE;
-          }
-        }
-      }
-    }
-
-    // also add location name to the array
-    if ($this->_values['event']['is_monetary']) {
-      $params["address_name-{$this->_bltID}"] = CRM_Utils_Array::value("billing_first_name", $params) . ' ' . CRM_Utils_Array::value("billing_middle_name", $params) . ' ' . CRM_Utils_Array::value("billing_last_name", $params);
-      $fields["address_name-{$this->_bltID}"] = 1;
-    }
-    $fields["email-{$this->_bltID}"] = 1;
-  }
-
-  /**
-   * function to update contact fields
-   *
-   * @return void
-   * @access public
-   */
-  public function updateContactFields($contactID, $params, $fields) {
-    //add the contact to group, if add to group is selected for a
-    //particular uf group
-
-    // get the add to groups
-    $addToGroups = array();
-
-    if (!empty($this->_fields)) {
-      foreach ($this->_fields as $key => $value) {
-        if (CRM_Utils_Array::value('add_to_group_id', $value)) {
-          $addToGroups[$value['add_to_group_id']] = $value['add_to_group_id'];
-        }
-      }
-    }
-
-    // check for profile double opt-in and get groups to be subscribed
-    require_once 'CRM/Core/BAO/UFGroup.php';
-    $subscribeGroupIds = CRM_Core_BAO_UFGroup::getDoubleOptInGroupIds($params, $contactID);
-
-    foreach ($addToGroups as $k) {
-      if (array_key_exists($k, $subscribeGroupIds)) {
-        unset($addToGroups[$k]);
-      }
-    }
-
-    // since we are directly adding contact to group lets unset it from mailing
-    if (!empty($addToGroups)) {
-      foreach ($addToGroups as $groupId) {
-        if (isset($subscribeGroupIds[$groupId])) {
-          unset($subscribeGroupIds[$groupId]);
-        }
-      }
-    }
-
-    require_once "CRM/Contact/BAO/Contact.php";
-    $params['log_data'] = !empty($params['log_data']) ? $params['log_data'] : ts('Event').' - '.$this->_eventId;
-    if ($contactID) {
-      $ctype = CRM_Core_DAO::getFieldValue("CRM_Contact_DAO_Contact",
-        $contactID,
-        "contact_type"
-      );
-      $contactID = &CRM_Contact_BAO_Contact::createProfileContact($params,
-        $fields,
-        $contactID,
-        $addToGroups,
-        NULL,
-        $ctype
-      );
-    }
-    else {
-      // when we have allow_same_participant_emails = 1
-      // don't take email address in dedupe params - CRM-4886
-      // here we are making dedupe weak - so to make dedupe
-      // more effective please update individual 'Strict' rule.
-      $allowSameEmailAddress = CRM_Utils_Array::value('allow_same_participant_emails', $this->_values['event']);
-      require_once 'CRM/Dedupe/Finder.php';
-      //suppress "email-Primary" when allow_same_participant_emails = 1
-      if ($allowSameEmailAddress &&
-        ($email = CRM_Utils_Array::value('email-Primary', $params)) &&
-        (CRM_Utils_Array::value('registered_by_id', $params))
-      ) {
-        //skip dedupe check only for additional participants
-        unset($params['email-Primary']);
-      }
-      $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
-      // disable permission based on cache since event registration is public page/feature.
-      $dedupeParams['check_permission'] = FALSE;
-      $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
-
-      // if we find more than one contact, use the first one
-      $contact_id = $ids[0];
-      if (isset($email)) {
-        $params['email-Primary'] = $email;
-      }
-
-      $contactID = &CRM_Contact_BAO_Contact::createProfileContact($params, $fields, $contact_id, $addToGroups);
-      $this->set('contactID', $contactID);
-    }
-
-    //get email primary first if exist
-    $subscribtionEmail = array('email' => CRM_Utils_Array::value('email-Primary', $params));
-    if (!$subscribtionEmail['email']) {
-      $subscribtionEmail['email'] = CRM_Utils_Array::value("email-{$this->_bltID}", $params);
-    }
-    // subscribing contact to groups
-    if (!empty($subscribeGroupIds) && $subscribtionEmail['email']) {
-      require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
-      CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($subscribeGroupIds, $subscribtionEmail, $contactID);
-    }
-
-    return $contactID;
-  }
-
   public function getTitle() {
     return ts('Confirm Your Registration Information');
   }
 }
-

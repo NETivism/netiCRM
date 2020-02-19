@@ -505,7 +505,11 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         $this->assign('searchKey', $qfKey);
         $url = CRM_Utils_System::url($urlString, $urlParams);
         break;
-
+      case 'contributionrecur':
+      case 'recur':
+        $componentId = CRM_Utils_Request::retrieve('compId', 'Positive', $this);
+        $url = CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$componentId}&cid={$this->_contactId}");
+        break;
       default:
         $cid = NULL;
         if ($this->_contactId) {

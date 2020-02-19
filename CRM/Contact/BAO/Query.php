@@ -1479,6 +1479,9 @@ class CRM_Contact_BAO_Query {
         return;
 
       case 'changed_by':
+        $this->changeBy($values);
+        return;
+      case 'changed_log':
         $this->changeLog($values);
         return;
 
@@ -2775,9 +2778,20 @@ WHERE  id IN ( $groupIDs )
     list($name, $op, $value, $grouping, $wildcard) = $values;
     $newName = $name;
     $name = trim($value);
+    $idSearch = FALSE;
 
     if (empty($name)) {
       return;
+    }
+
+    // refs #27215 force contact id search on specific prefix number
+    if (preg_match('/^\^[1-9]\d*$/', trim($value))) {
+      $value = str_replace('^', '', $value);
+      if(CRM_Utils_Rule::positiveInteger($value)) {
+        $this->_where[$grouping][] = "( contact_a.id = '$value') ";
+        $this->_qill[$grouping][] =  ts("Contact ID") .' = '. " &ldquo;{$value}&rdquo;";
+        return;
+      }
     }
 
     $config = CRM_Core_Config::singleton();
@@ -2861,18 +2875,25 @@ WHERE  id IN ( $groupIDs )
         $name = substr($name, 0, -1);
         $pieces = array($name);
       }
+      elseif ($value[0] !== '0' && CRM_Utils_Rule::positiveInteger(trim($value))) {
+        $pieces = array(trim($value));
+      }
       else {
         $pieces = explode(' ', $name);
       }
       foreach ($pieces as $piece) {
         $value = $strtolower(CRM_Core_DAO::escapeString(trim($piece)));
+        $pieceVal = $value;
         if (strlen($value)) {
           // Added If as a sanitization - without it, when you do an OR search, any string with
           // double spaces (i.e. "  ") or that has a space after the keyword (e.g. "OR: ") will
           // return all contacts because it will include a condition similar to "OR contact
           // name LIKE '%'".  It might be better to replace this with array_filter.
           $fieldsub = array();
-          if ($wildcard) {
+          if ($pieceVal[0] !== '0' && CRM_Utils_Rule::positiveInteger($pieceVal)) {
+            $value = "'$value'";
+          }
+          elseif ($wildcard) {
             if ($config->includeWildCardInName) {
               $value = "'%$value%'";
             }
@@ -2901,6 +2922,12 @@ WHERE  id IN ( $groupIDs )
           // phone
           $fieldsub[] = " ( REPLACE(civicrm_phone.phone, '-', '') $op ".str_replace('-', '', $value)." ) ";
 
+          // contact id
+          if ($pieceVal[0] !== '0' && CRM_Utils_Rule::positiveInteger($pieceVal)) {
+            $fieldsub[] = " ( contact_a.id  = $value )";
+            $idSearch = TRUE;
+          }
+
           $sub[] = ' ( ' . implode(' OR ', $fieldsub) . ' ) ';
           // I seperated the glueing in two.  The first stage should always be OR because we are searching for matches in *ANY* of these fields
         }
@@ -2911,13 +2938,19 @@ WHERE  id IN ( $groupIDs )
 
     $this->_where[$grouping][] = $sub;
     $this->_tables['civicrm_phone'] = $this->_whereTables['civicrm_phone'] = 1;
+    $qill = '';
     if ($config->includeEmailInName) {
       $this->_tables['civicrm_email'] = $this->_whereTables['civicrm_email'] = 1;
-      $this->_qill[$grouping][] = ts('Name, Phone or Email').' ' . ts($op) . " &ldquo;{$name}&rdquo;";
+      $qill = ts('Name, Phone or Email').' ' . ts($op) . " &ldquo;{$name}&rdquo;";
+
     }
     else {
-      $this->_qill[$grouping][] = ts('Name like') . " &ldquo;{$name}&rdquo;";
+      $qill = ts('Name like') . " &ldquo;{$name}&rdquo;";
     }
+    if ($idSearch) {
+      $qill .= ' '.ts('or').' '. ts("Contact ID") .' = '. " &ldquo;{$value}&rdquo;";
+    }
+    $this->_qill[$grouping][] = $qill;
   }
 
   /**
@@ -3328,7 +3361,7 @@ WHERE  id IN ( $groupIDs )
    * @return void
    * @access public
    */
-  function changeLog(&$values) {
+  function changeBy(&$values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
     $targetName = $this->getWhereValues('changed_by', $grouping);
@@ -3342,6 +3375,18 @@ WHERE  id IN ( $groupIDs )
     $this->_where[$grouping][] = "contact_b_log.sort_name LIKE '%$name%'";
     $this->_tables['civicrm_log'] = $this->_whereTables['civicrm_log'] = 1;
     $this->_qill[$grouping][] = ts('Changed by') . ": $name";
+  }
+
+  function changeLog($values) {
+    list($name, $op, $value, $grouping, $wildcard) = $values;
+
+    $detail = CRM_Core_DAO::escapeString(trim($value));
+    if (!strstr($detail, '%')) {
+      $detail = "%".$detail."%";
+    }
+    $this->_where[$grouping][] = "civicrm_log.data LIKE '$detail'";
+    $this->_tables['civicrm_log'] = $this->_whereTables['civicrm_log'] = 1;
+    $this->_qill[$grouping][] = ts('Change Log') . " ".ts("LIKE")." $value";
   }
 
   function modifiedDates($values) {
@@ -4088,10 +4133,10 @@ civicrm_relationship.start_date > {$today}
 
     // hack $select
     $select = "
-SELECT COUNT( civicrm_contribution.total_amount ) as total_count,
-       SUM(   civicrm_contribution.total_amount ) as total_amount,
-       AVG(   civicrm_contribution.total_amount ) as total_avg,
-       civicrm_contribution.currency              as currency";
+SELECT COUNT( cc.total_amount ) as total_count,
+       SUM(   cc.total_amount ) as total_amount,
+       AVG(   cc.total_amount ) as total_avg,
+       cc.currency              as currency";
 
     // make sure contribution is completed - CRM-4989
     $where .= " AND civicrm_contribution.contribution_status_id = 1 ";
@@ -4103,7 +4148,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as total_count,
     $summary['total'] = array();
     $summary['total']['count'] = $summary['total']['amount'] = $summary['total']['avg'] = "n/a";
 
-    $query = "$select $from $where GROUP BY currency";
+    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $where GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
     $params = array();
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);
@@ -4125,17 +4170,17 @@ SELECT COUNT( civicrm_contribution.total_amount ) as total_count,
 
     // hack $select
     $select = "
-SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
-       SUM(   civicrm_contribution.total_amount ) as cancel_amount,
-       AVG(   civicrm_contribution.total_amount ) as cancel_avg,
-       civicrm_contribution.currency              as currency";
+SELECT COUNT( cc.total_amount ) as cancel_count,
+       SUM(   cc.total_amount ) as cancel_amount,
+       AVG(   cc.total_amount ) as cancel_avg,
+       cc.currency              as currency";
 
     $where .= " AND civicrm_contribution.cancel_date IS NOT NULL ";
     if ($context == 'search') {
       $where .= " AND contact_a.is_deleted = 0 ";
     }
 
-    $query = "$select $from $where GROUP BY currency";
+    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $where GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
     $dao = CRM_Core_DAO::executeQuery($query, $params);
 
     if ($dao->N <= 1) {
@@ -4327,7 +4372,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
       }
 
       if (!$appendTimeStamp) {
-        $firstDate = substr($date, 0, 8);
+        $firstDate = substr($firstDate, 0, 8);
       }
       $firstDateFormat = CRM_Utils_Date::customFormat($firstDate);
 
@@ -4502,7 +4547,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
             $v = trim($v);
             $val[] = "'" . CRM_Utils_Type::escape($v, $dataType) . "'";
           }
-          $value = "(" . implode($val, ",") . ")";
+          $value = "(" . implode(",", $val) . ")";
         }
         return "$clause $value";
 

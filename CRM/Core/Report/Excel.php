@@ -28,12 +28,17 @@
 
 require_once 'Spout/Autoloader/autoload.php';
 use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Common\Type;
 
 class CRM_Core_Report_Excel {
   private static $_singleton = NULL;
 
   static function &singleton($type) {
+    return self::writer($type);
+  }
+
+  static function writer($type) {
     switch($type) {
       case 'csv':
         $writer = WriterFactory::create(Type::CSV);
@@ -46,6 +51,20 @@ class CRM_Core_Report_Excel {
     }
     return $writer;
   }
+
+  static function reader($type) {
+    switch($type) {
+      case 'csv':
+        $reader = ReaderFactory::create(Type::CSV);
+        break;
+      case 'excel':
+      default:
+        $reader = ReaderFactory::create(Type::XLSX);
+        break;
+    }
+    return $reader;
+  }
+
   /**
    * Code copied from phpMyAdmin (v2.6.1-pl3)
    * File: PHPMYADMIN/libraries/export/csv.php
@@ -213,6 +232,22 @@ class CRM_Core_Report_Excel {
   static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE) {
     return self::writeExportFile('excel', $fileName, $header, $rows, $download);
   }
+
+  static function readExcelFile($fileName) {
+    if (file_exists($fileName)) {
+      $reader = self::reader(Type::XLSX);
+      $reader->setTempFolder('/tmp/');
+      $reader->open($fileName);
+      $iterator = $reader->getSheetIterator();
+      $iterator->rewind();
+      $sheet = $iterator->current();
+      // only get first sheet
+      $rows = $sheet->getRowIterator();
+      // return row iterator
+      return $rows;
+    }
+    return NULL;
+  }
   
   static function writeExportFile($type = 'excel', $fileName, &$header, &$rows, $download = TRUE) {
     $config = CRM_Core_Config::singleton();
@@ -240,5 +275,6 @@ class CRM_Core_Report_Excel {
       return $filePath;
     }
   }
+
 }
 

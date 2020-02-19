@@ -78,7 +78,7 @@ class CRM_Core_IDS {
 
     $configFile = $config->configAndLogDir . 'Config.IDS.ini';
     if (!file_exists($configFile)) {
-      $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+      $tmpDir = $config->configAndLogDir;
       // also clear the stat cache in case we are upgrading
       clearstatcache();
 
@@ -207,7 +207,7 @@ class CRM_Core_IDS {
         'name' => $event->getName(),
         'tag' => implode("|", $event->getTags()),
         'problem' => "\n".implode("\n", $description),
-        'value' => stripslashes($event->getValue()),
+        'value' => $event->getValue(),
         'page' => $_SERVER['REQUEST_URI'],
         'userid' => $session->get('userID'),
         'ip' => $ip,
@@ -216,8 +216,10 @@ class CRM_Core_IDS {
       );
       $data[] = $log;
     }
-
-    CRM_Core_Error::debug_var('IDS Detector Details', $data);
+    if (!empty($data)) {
+      $data['post'] = $_POST;
+      CRM_Core_Error::debug_var('IDS Detector Details', $data);
+    }
     return TRUE;
   }
 

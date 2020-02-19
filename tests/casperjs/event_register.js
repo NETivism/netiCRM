@@ -4,7 +4,7 @@
 var system = require('system'); 
 var port = system.env.RUNPORT; 
 
-var url = (port == '80') ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
+var url = (port == '80') ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port;
 var item = {
   url_prefix: url,
   event_name_1: '無名額限制，填表完成送出',
@@ -24,7 +24,7 @@ function getPageTitle(title){
 casper.test.begin('Event register page test ...',4,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&action=preview&id=1', function() {
     var page_title = getPageTitle(item.event_name_1);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     casper.capture("picture/event_register_1_0.png");
   });
 
@@ -55,7 +55,7 @@ casper.test.begin('Event register page test ...',4,function(test){
 casper.test.begin('Event register page test ...',6,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=2', function() {
     var page_title = getPageTitle(item.event_name_2);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_2_0.png");
   });
 
@@ -94,7 +94,7 @@ casper.test.begin('Event register page test ...',6,function(test){
 casper.test.begin('Event register page test ...',9,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=3', function() {
     var page_title = getPageTitle(item.event_name_3);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_3_0.png");
   });
 
@@ -111,7 +111,7 @@ casper.test.begin('Event register page test ...',9,function(test){
 
   casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_3);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_3_2.png");
     this.thenOpen(item.url_prefix + '/civicrm/event/register?reset=1&id=3');
   });
@@ -119,7 +119,7 @@ casper.test.begin('Event register page test ...',9,function(test){
 
   casper.then(function(){
     var page_title = getPageTitle(item.event_name_3);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_3_3.png");
     var email = 'test2@soossovk.com';
     this.fill('#Register',{
@@ -131,7 +131,7 @@ casper.test.begin('Event register page test ...',9,function(test){
 
   casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_3);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_3_5.png");
     test.assertExists('#help p');
     text = this.evaluate( function(){ return __utils__.findOne('#help').textContent; } );
@@ -153,7 +153,7 @@ casper.test.begin('Event register page test ...',9,function(test){
 casper.test.begin('Event register page test ...',9,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=4', function() {
     var page_title = getPageTitle(item.event_name_4);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_4_0.png");
   });
 
@@ -171,7 +171,7 @@ casper.test.begin('Event register page test ...',9,function(test){
   casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_4);
     // Checked-1
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_4_2.png");
     // Checked-2 
     test.assertExists('#help p');
@@ -184,7 +184,7 @@ casper.test.begin('Event register page test ...',9,function(test){
   // Second register.
   casper.then(function(){
     var page_title  = getPageTitle(item.event_name_4);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_4_3.png");
     test.assertExists('.messages.status');
     // Checked-3 
@@ -207,7 +207,7 @@ casper.test.begin('Event register page test ...',9,function(test){
 casper.test.begin('Event register page test ...',12,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=5', function() {
     var page_title = getPageTitle(item.event_name_5);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_5_0.png");
   });
 
@@ -225,7 +225,7 @@ casper.test.begin('Event register page test ...',12,function(test){
   casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_5);
     // Checked-1
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_5_2.png");
     // Checked-2 
     test.assertExists('#help p');
@@ -238,7 +238,7 @@ casper.test.begin('Event register page test ...',12,function(test){
   // Second register.
   casper.then(function(){
     var page_title  = getPageTitle(item.event_name_5);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_5_3.png");
     test.assertExists('.messages');
     // Checked-3 
@@ -253,7 +253,7 @@ casper.test.begin('Event register page test ...',12,function(test){
 
   casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_5);
-    test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
+    test.assertTitle(page_title,'Event register page (' + page_title + ')');
     this.capture("picture/event_register_5_5.png");
     test.assertExists('#help p');
     text = this.evaluate( function(){ return __utils__.findOne('#help').textContent; } );

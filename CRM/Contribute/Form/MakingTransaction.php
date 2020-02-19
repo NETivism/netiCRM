@@ -90,6 +90,10 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $name = $this->getButtonName('submit');
     $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", $id)."')"));
     $this->assign('submit_name', $name);
+
+    $name = $this->getButtonName('upload');
+    $this->addElement('submit', $name, ts("Sync Now"));
+    $this->assign('update_notify', $name);
   }
 
   /**
@@ -106,9 +110,19 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $recurId = $this->get('recurId');
     $contributionId = $this->get('contributionId');
 
+    $isActionUpdate = $this->exportValue('_qf_MakingTransaction_upload');
+
     $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
-    if (method_exists($paymentClass, 'doRecurTransact')) {
-      $result = $paymentClass::doRecurTransact($recurId);
+    if ($isActionUpdate) {
+      if (method_exists($paymentClass, 'doRecurUpdate')) {
+        $resultMessage = $paymentClass::doRecurUpdate($recurId, 'recur');
+      }
+    }
+    else {
+      if (method_exists($paymentClass, 'doRecurTransact')) {
+        $result = $paymentClass::doRecurTransact($recurId);
+        $resultMessage = ts("Total Payments: %1", array(1));
+      }
     }
 
     $contactId = $this->get('contactId');
@@ -116,7 +130,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $url = CRM_Utils_System::url('civicrm/contact/view/contributionrecur',
       'reset=1&id='.$recurId.'&cid=' . $contactId
     );
-    $message = ts("The contribution record has been processed.").ts("Total Payments: %1", array(1));
+    $message = ts("The contribution record has been processed.").$resultMessage;
     CRM_Core_Error::statusBounce($message, $url);
   }
   //end of function

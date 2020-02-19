@@ -833,6 +833,8 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         $customOption = CRM_Core_BAO_CustomOption::valuesByID($field->id,
           $field->option_group_id
         );
+        // refs #27350, use advcheckbox to add hidden element
+        // that when user remove all check, this will set custom field to null
         $check = array();
         foreach ($customOption as $v => $l) {
           $check[] = &$qf->addElement('advcheckbox', $v, NULL, $l);
@@ -1041,7 +1043,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
    * @static
    * @access public
    */
-  static function getDisplayValue($value, $id, &$options, $contactID = NULL) {
+  static function getDisplayValue($value, $id, &$options, $contactID = NULL, $exportMode = FALSE) {
     $option = &$options[$id];
     $attributes = &$option['attributes'];
     $html_type = $attributes['html_type'];
@@ -1053,7 +1055,8 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
       $html_type,
       $data_type,
       $format,
-      $contactID
+      $contactID,
+      $exportMode
     );
   }
 
@@ -1062,7 +1065,8 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     $html_type,
     $data_type,
     $format = NULL,
-    $contactID = NULL
+    $contactID = NULL,
+    $exportMode = FALSE
   ) {
     $display = $value;
 
@@ -1127,7 +1131,25 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           }
         }
         if (!empty($v)) {
-          $display = implode(', ', $v);
+          if ($exportMode && count($option) > 1) {
+            // format export data by options orders
+            $returnValue = array();
+            foreach($option as $value => $label) {
+              if ($value == 'attributes') {
+                continue;
+              }
+              if (in_array($label, $v)) {
+                $returnValue[] = $label;
+              }
+              else {
+                $returnValue[] = '';
+              }
+            }
+            $display = implode(',', $returnValue);
+          }
+          else {
+            $display = implode(', ', $v);
+          }
         }
         break;
 
@@ -1733,7 +1755,7 @@ SELECT $columnName
       $params['fk_field_name'] = 'id';
       $params['fk_attributes'] = 'ON DELETE SET NULL';
     }
-    if ($field->default_value) {
+    if (!in_array($field->html_type, array('CheckBox', 'Radio', 'Select', 'Multi-Select', 'AdvMulti-Select', 'Autocomplete-Select')) && !empty($field->default_value)) {
       $params['default'] = "'{$field->default_value}'";
     }
 

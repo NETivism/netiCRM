@@ -61,19 +61,20 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     $form->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
   }
 
-  function postProcess(&$params, &$db) {
+  function postProcess(&$form, &$db) {
+    $params = $form->_params;
     $file = $params['uploadFile']['name'];
 
     $result = self::_CsvToTable($db, $file, $params['skipColumnHeader'],
       CRM_Utils_Array::value('import_table_name', $params)
     );
 
-    $this->set('originalColHeader', CRM_Utils_Array::value('original_col_header', $result));
+    $form->set('originalColHeader', CRM_Utils_Array::value('original_col_header', $result));
 
     $table = $result['import_table_name'];
     require_once 'CRM/Import/ImportJob.php';
     $importJob = new CRM_Import_ImportJob($table);
-    $this->set('importTableName', $importJob->getTableName());
+    $form->set('importTableName', $importJob->getTableName());
   }
 
   /**

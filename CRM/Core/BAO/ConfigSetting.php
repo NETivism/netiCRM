@@ -217,7 +217,7 @@ class CRM_Core_BAO_ConfigSetting {
       // on multi-lang sites based on request and civicrm_uf_match
       if ($multiLang) {
         require_once 'CRM/Utils/Request.php';
-        $lcMessagesRequest = CRM_Utils_Request::retrieve('lcMessages', 'String', $this);
+        $lcMessagesRequest = CRM_Utils_Request::retrieve('lcMessages', 'String', CRM_Core_DAO::$_nullObject);
         $languageLimit = array();
         if (array_key_exists('languageLimit', $defaults) && is_array($defaults['languageLimit'])) {
           $languageLimit = $defaults['languageLimit'];

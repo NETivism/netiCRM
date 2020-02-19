@@ -8,6 +8,7 @@ class CRM_Core_ClassLoader {
    */
   private static $_singleton = NULL;
   private static $_composer_classmap = array();
+  private static $_include_paths = array();
 
   /**
    * @param bool $force
@@ -72,22 +73,18 @@ class CRM_Core_ClassLoader {
   }
 
   function loadClass($class) {
+    if (empty(self::$_include_paths)){
+      self::$_include_paths = explode(PATH_SEPARATOR, get_include_path());
+    }
     if ( FALSE === strpos($class, '\\') ) {
       if(isset($this->_composer_classmap[$class])){
         require $this->_composer_classmap[$class];
         return;
       }
-      $file_by_ver = strtr($class, '_', '/') . '.'.PHP_MAJOR_VERSION.'_'.PHP_MINOR_VERSION.'.php';
       $file = strtr($class, '_', '/') . '.php';
-      $include_paths = explode(PATH_SEPARATOR, get_include_path());
-      foreach ($include_paths as $base_dir) {
-        $file_by_ver = $base_dir.DIRECTORY_SEPARATOR.$file_by_ver;
+      foreach (self::$_include_paths as $base_dir) {
         $file = $base_dir.DIRECTORY_SEPARATOR.$file;
-        if (file_exists($file_by_ver) ){
-          require $file_by_ver;
-          return;
-        }
-        elseif (file_exists($file) ){
+        if (file_exists($file) ){
           require $file;
           return;
         }

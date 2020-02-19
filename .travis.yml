@@ -1,98 +1,34 @@
-dist: trusty
+dist: xenial
 sudo: required
 language: php
 
-php:
-  - 5.5
-  - 5.6
-
-env:
-  - RUNPORT=8080
-
 services:
-  - mysql
+  - docker
 
 git:
   submodules: false
 
-addons:
-  apt:
-    packages:
-    - php5-cgi
-    - php5-fpm
-    - php5-mysql
-    - php5-curl
-    - php5-gd
-    - net-tools
-
 before_install:
   - git submodule init
   - git submodule update
-  - echo -e "[mysqld]\ninnodb_large_prefix = true\ninnodb_file_format = Barracuda\ninnodb_file_format_max = barracuda\ninnodb_file_per_table  = 1" | sudo tee -a /etc/mysql/my.cnf
-  - sudo service mysql restart
-
-install:
-  # casperjs
-  - wget https://github.com/n1k0/casperjs/archive/master.tar.gz -O /tmp/casper.tar.gz
-  - tar -xf /tmp/casper.tar.gz
-  - export PATH="$PWD/casperjs-master/bin:$PATH"
-
-  # add composer's global bin directory to the path
-  # see: https://github.com/drush-ops/drush#install---composer
-  - export PATH="$HOME/.config/composer/vendor/bin:$PATH"
-
-  # install drush globally
-  - composer global require drush/drush:7.0.0
-
-  # php environment
-  - echo 'date.timezone="Asia/Taipei"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - echo 'error_reporting=E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - echo 'xdebug.max_nesting_level=500' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  
-  # navigate out of module directory to prevent blown stack by recursive module lookup
-  - cd ../..
-  - ln -s $(readlink -e $(cd -)) civicrm
-
-  # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e "CREATE DATABASE neticrmci CHARACTER SET utf8 COLLATE utf8_general_ci;"
-  - mysql -e "CREATE USER 'neticrm'@'localhost' IDENTIFIED BY 'neticrm';"
-  - mysql -e "GRANT ALL ON neticrmci.* TO 'neticrm'@'127.0.0.1';"
-  - php -d sendmail_path=`which true` ~/.config/composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysqli://neticrm:neticrm@127.0.0.1/neticrmci --account-pass=123456 --site-name=netiCRM --enable=transliteration neticrmci 
-
-  # reference and enable civicrm in build site
-  - ln -s $(readlink -e $(cd -)) neticrmci/$(ls neticrmci -1 | tail -1)/sites/all/modules/civicrm
-  - cd neticrmci/$(ls neticrmci -1 | tail -1)
-  - export DRUPAL_ROOT=$PWD
-  - chmod -R 777 sites/default
-  - drush --yes pm-download simpletest
-  - drush --yes pm-enable civicrm simpletest
-  - drush --yes pm-enable civicrm_allpay civicrm_neweb civicrm_spgateway
-  - drush --yes variable-set civicrm_demo_sample_data 1
-  - drush --yes variable-set civicrm_demo_sample_data_ci 1
-  - drush --yes pm-enable civicrm_demo
-  - drush --yes variable-set error_level 0
-  - mkdir -p $DRUPAL_ROOT/sites/default/files/neweb
-  - mkdir -p $DRUPAL_ROOT/sites/default/files/neweb_test
-  - chmod -R 777 $DRUPAL_ROOT/sites/default/files
-  # start a web server on port 8080, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8080 >& /dev/null &
-  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
-
-before_script:
-  - export CIVICRM_TEST_DSN=mysqli://root@127.0.0.1/neticrmci
-  - echo 'date_default_timezone_set("Asia/Taipei");' >> $DRUPAL_ROOT/sites/default/settings.php
-  - echo 'ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);' >> $DRUPAL_ROOT/sites/default/settings.php
+  - docker pull netivism/neticrm-ci:drone-php7
+  - git clone -b drone-php7 https://github.com/NETivism/docker-neticrm-ci.git
+  - docker run -d --name neticrm-ci-php7 -p 8080:8080 -v $TRAVIS_BUILD_DIR:/mnt/neticrm-7/civicrm -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" netivism/neticrm-ci:drone-php7
+  - docker exec neticrm-ci-php7 /mnt/neticrm-7/civicrm/docker-neticrm-ci/container/init.sh
 
 script:
-  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
-  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
-  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php
-  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
-  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
-  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
-  #- cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
-  #- cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
-  #- drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
+  - docker ps
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contact.test.js"
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/edit_contact.test.js"
 
 notifications:
   email:

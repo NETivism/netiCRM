@@ -228,7 +228,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       require_once "CRM/Core/BAO/CustomGroup.php";
       $removeCustomFieldTypes = array('Contribution', 'Membership');
       require_once 'CRM/Contribute/BAO/Contribution.php';
-      $contribFields = &CRM_Contribute_BAO_Contribution::getContributionFields();
+      $contribFields = CRM_Contribute_BAO_Contribution::getContributionFields();
 
       // remove component related fields
       foreach ($this->_fields as $name => $dontCare) {
@@ -649,6 +649,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->assign('receiptTitle',$config->receiptTitle);
     $this->assign('receiptSerial',$config->receiptSerial);
     $this->assign('receiptDonorCredit',$config->receiptDonorCredit);
+    $this->assign('forbidCustomDonorCredit',$config->forbidCustomDonorCredit);
 
     if(!empty($this->_submitValues['same_as_post'])){
       $this->assign('same_as',$this->_submitValues['same_as_post']);
@@ -684,7 +685,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       // first build the radio boxes
       CRM_Utils_Hook::buildAmount('contribution', $this, $this->_values['amount']);
 
-      if (!empty($this->_values['default_amount_id'])) {
+      if (!empty($this->_values['default_amount_id']) && empty($this->_defaultAmountGrouping)) {
         $this->_defaultAmountGrouping = $this->_values['amount'][$this->_values['default_amount_id']]['grouping'];
       }
       foreach ($this->_values['amount'] as $amount) {
@@ -898,7 +899,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
       }
       else {
-        $this->_defaults['is_recur'] = 0;
+        $this->_defaults['is_recur'] = 1;
       }
     }
 

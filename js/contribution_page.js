@@ -159,7 +159,7 @@
 
       prepareRecurBtnMsg: function(){
         var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg">'+this.singleContribMsgText+'</div></div>');
-        var $singleBtn = this.createGreyBtn(ts['Change to Single Contribution']);
+        var $singleBtn = this.createGreyBtn(ts['One-time']);
         $singleBtn.find('a').click(function(event){
           $msgBox.animate({opacity: 0},500,function(){
             $msgBox.hide();
@@ -168,7 +168,7 @@
           });
           event.preventDefault();
         });
-        var $recurBtn = this.createBlueBtn(ts['Stay on Recurring Contributions']);
+        var $recurBtn = this.createBlueBtn(ts['Recurring']);
         $recurBtn.find('a').click(function(event){
           ContribPage.setContributeType('recurring');
           ContribPage.quitMsgBox();
@@ -274,15 +274,23 @@
         }
         */
 
+        // For login user. first_name and last_name field will be locked, and the hint will be displayed.
+        if ($('body.is-civicrm-user').length) {
+          $('body.is-civicrm-user .first_name-section .description').insertAfter('body.is-civicrm-user .first_name-section');
+          $("body.is-civicrm-user .first_name-section").bind("DOMSubtreeModified", function() {
+            $('body.is-civicrm-user .first_name-section .description').insertAfter('body.is-civicrm-user .first_name-section');
+          });
+        }
+
+
         $('#crm-container>form').submit(function(){
           if($('label.error').length){
             ContribPage.updateShowAllStep();
           }
         });
-        $("")
-        
+
         this.updateFormStep();
-        
+
       },
 
       createStepBtnBlock: function(objs){
@@ -308,7 +316,7 @@
       },
 
       prepareContribTypeForm: function(){
-        $('.priceSet-block').before($('<div class="contrib-type-block custom-block"><label>'+ts['Single or Recurring Contributions']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
+        $('.priceSet-block').before($('<div class="contrib-type-block custom-block"><label>'+ts['One-time or Recurring Contributions']+'</label><div class="contrib-type-btn"></div></div><div class="instrument-info-panel custom-block"></div>'));
         if($('[name=is_recur][value=1]').length > 0){
           var $recurBtn = this.createBtn(ts["Recurring Contributions"],"custom-recur-btn");
           $recurBtn.click(function(){
@@ -317,7 +325,7 @@
           $('.contrib-type-btn').append($recurBtn);
         }
         if($('[name=is_recur]').length==0 || $('[name=is_recur][value=0]').length > 0){
-          var $singleBtn = this.createBtn(ts["Single Contribution"],"custom-single-btn");
+          var $singleBtn = this.createBtn(ts["One-time Contribution"],"custom-single-btn");
           $singleBtn.click(function(){
             if(ContribPage.singleContribMsgText){
               ContribPage.$msgBox.show();
@@ -352,8 +360,9 @@
           $other_amount_block.find('input').keyup(doClickOtherAmount).click(doClickOtherAmount);
           $other_amount_block.find('input').blur(function(){
             var amount = $(this).val();
-            var defaultOption = ContribPage.defaultPriceOption[ContribPage.currentContribType];
-            if((amount == '' && defaultOption) || amount == 0){
+            var isSelectAmountOption = $('.amount-section label.crm-form-radio input:not([value="amount_other_radio"]):checked').length;
+            if((amount == '' || amount == 0) && !isSelectAmountOption){
+              var defaultOption = ContribPage.defaultPriceOption[ContribPage.currentContribType];
               ContribPage.setPriceOption(defaultOption);
             }
           });
@@ -479,7 +488,7 @@
       updatePriceOption: function(){
         $('.price-set-btn div').removeClass('active');
         if(this.currentPriceOption){
-          $('.price-set-btn div[data-amount='+this.currentPriceOption+']').addClass('active');  
+          $('.price-set-btn div[data-amount='+this.currentPriceOption+']').addClass('active');
         }
       },
 
@@ -538,7 +547,7 @@
           if(text.match(' '+amount+' ') && (this_grouping == grouping_text || this_grouping == '')){
             ContribPage.setPriceOption($this.find('input').val());
           }
-        })
+        });
       },
 
       updateContributeType: function(isSelectDefaultOption) {
@@ -555,20 +564,20 @@
         this.updateContribInfoLabel();
         this.updatePriceSetOption();
 
-        if(isSelectDefaultOption && this.defaultPriceOption[this.currentContribType]){
+        if(this.currentPriceOption && isSelectDefaultOption && this.defaultPriceOption[this.currentContribType]){
           this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
         }
       },
 
       updateContribInfoLabel: function(){
         if(this.currentContribType == 'non-recurring'){
-          $('.info-is-recur').text(ts['Single Contribution']);
+          $('.info-is-recur').text(ts['One-time Contribution']);
         }
         if(this.currentContribType == 'recurring'){
           if(!this.installments || this.installments == "0"){
-            $('.info-is-recur').text(ts['Every-Month Recurring Contributions']);
+            $('.info-is-recur').text(ts['Monthly Recurring Contributions']);
           }else{
-            $('.info-is-recur').text(this.installments+ts['Installments Recurring Contributions']);
+            $('.info-is-recur').text(this.installments+' '+ts['Installments Contributions']);
           }
         }
       },
@@ -726,6 +735,9 @@
             });
           }, 1000);
         }
+        setTimeout(function(){
+          $('.loading-placeholder-wrapper').remove();
+        }, 1000);
         $('.payment_options-group').hide();
         $('#page').css('background', 'none').css('height','unset');
         var interval = setInterval(function(){

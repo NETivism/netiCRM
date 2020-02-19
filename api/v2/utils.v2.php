@@ -122,8 +122,7 @@ function civicrm_duplicate($error) {
 function _civicrm_store_values(&$fields, &$params, &$values) {
   $valueFound = FALSE;
 
-  $keys = array_intersect_key($params, $fields);
-  foreach ($fields as $name => $field) {
+  foreach ($fields as $name => $dontcare) {
     // ignore all ids for now
     if ($name === 'id' || substr($name, -1, 3) === '_id') {
       continue;
@@ -203,17 +202,6 @@ function _civicrm_add_formatted_param(&$values, &$params) {
   require_once 'CRM/Contact/BAO/Contact.php';
   $contactFields = CRM_Contact_DAO_Contact::fields();
   _civicrm_store_values($contactFields, $values, $params);
-
-  if (isset($values['contact_type'])) {
-    /* we're an individual/household/org property */
-
-
-
-    $fields[$values['contact_type']] = CRM_Contact_DAO_Contact::fields();
-
-    _civicrm_store_values($fields[$values['contact_type']], $values, $params);
-    return TRUE;
-  }
 
   if (isset($values['individual_prefix'])) {
     if (CRM_Utils_Array::value('prefix_id', $params)) {

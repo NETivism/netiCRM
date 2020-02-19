@@ -679,7 +679,10 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    * @return None
    *
    */
-  function search(&$params) {
+  function search(&$params, $object = NULL) {
+    if (isset($this)) {
+      $object = $this;
+    }
     //max records that will be listed
     $searchValues = array();
     if (CRM_Utils_Array::value('rel_contact', $params)) {
@@ -692,7 +695,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     }
     $contactTypeAdded = FALSE;
 
-    $excludedContactIds = array($this->_contactId);
+    $excludedContactIds = array($object->_contactId);
 
     if ($params['relationship_type_id']) {
       $relationshipType = new CRM_Contact_DAO_RelationshipType();
@@ -709,8 +712,8 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
           $subType = $relationshipType->contact_sub_type_a;
         }
 
-        $this->set('contact_type', $type);
-        $this->set('contact_sub_type', $subType);
+        $object->set('contact_type', $type);
+        $object->set('contact_sub_type', $subType);
         if ($type == 'Individual' || $type == 'Organization' || $type == 'Household') {
           $searchValues[] = array('contact_type', '=', $type, 0, 0);
           $contactTypeAdded = TRUE;
@@ -730,7 +733,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     $contactBAO = new CRM_Contact_BAO_Contact();
     $query = new CRM_Contact_BAO_Query($searchValues);
     $searchCount = $query->searchQuery(0, 0, NULL, TRUE);
-    $this->set('searchCount', $searchCount);
+    $object->set('searchCount', $searchCount);
     if ($searchCount <= self::MAX_RELATIONSHIPS) {
       // get the result of the search
       $result = $query->searchQuery(0, 50, NULL);
@@ -765,13 +768,13 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
         );
       }
 
-      $this->set('searchRows', $searchRows);
-      $this->set('duplicateRelationship', $duplicateRelationship);
+      $object->set('searchRows', $searchRows);
+      $object->set('duplicateRelationship', $duplicateRelationship);
     }
     else {
       // resetting the session variables if many records are found
-      $this->set('searchRows', NULL);
-      $this->set('duplicateRelationship', NULL);
+      $object->set('searchRows', NULL);
+      $object->set('duplicateRelationship', NULL);
     }
   }
 

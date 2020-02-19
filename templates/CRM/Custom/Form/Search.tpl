@@ -35,7 +35,7 @@
     <table class="form-layout-compressed">
     {foreach from=$cd_edit.fields item=element key=field_id}
       {assign var="element_name" value='custom_'|cat:$field_id}
-      {if $element.options_per_line != 0}
+      {if $element.options_per_line && $element.options_per_line > 0}
          <tr>
            <td class="label">{$form.$element_name.label}</td>
            <td>
@@ -95,11 +95,16 @@
             {else}
                 <td class="label">{$form.$element_name.label}</td><td>
                 {if $element.html_type eq 'CheckBox'}
+                    {assign var="index" value="1"}
                     {foreach name=outer key=key item=item from=$form.$element_name}
-                        {if is_numeric($key)} {* Hack to skip QF field properties that are not checkbox elements. *}
-                            {$form.$element_name.$key.html}
-                        {elseif $form.$element_name.$key.html|strstr:"CiviCRM_OP_OR" OR $form.$element_name.$key.html|strstr:"CiviCRM_OP_EXCLUDE"}
-                            <div class="op-checkbox">{$form.$element_name.$key.html}</div>
+                        {if $index < 10} {* Hack to skip QF field properties that are not checkbox elements. *}
+                            {assign var="index" value=`$index+1`}
+                        {else}
+                            {if $key != 'CiviCRM_OP_OR' AND $key != 'CiviCRM_OP_EXCLUDE'} {* Hack to skip QF field properties that are not checkbox elements. *}
+                                {$form.$element_name.$key.html}
+                            {elseif $form.$element_name.$key.html|strstr:"CiviCRM_OP_OR" OR $form.$element_name.$key.html|strstr:"CiviCRM_OP_EXCLUDE"}
+                                <div class="op-checkbox">{$form.$element_name.$key.html}</div>
+                            {/if}
                         {/if}
                     {/foreach}
                 {elseif $element.data_type neq 'Date'}

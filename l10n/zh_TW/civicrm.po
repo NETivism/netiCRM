@@ -1,6 +1,6 @@
 # 
 # Translators:
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2019
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2020
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2019-11-08 08:25+0000\n"
+"PO-Revision-Date: 2020-02-11 06:47+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -27511,7 +27511,7 @@ msgstr "年齡"
 #: templates/CRM/Contact/Page/View/Demographics.tpl
 msgid "%count year"
 msgid_plural "%count years"
-msgstr[0] "%count 年"
+msgstr[0] "%count 歲"
 
 #: templates/CRM/Contact/Page/View/Demographics.tpl
 msgid "%count month"
@@ -34743,7 +34743,7 @@ msgid ""
 "start date is set to January 1. A person signs up for membership on February"
 " 15th, 2008. Their membership start date is set to January 1, 2008 - and the"
 " end date is December 31, 2008."
-msgstr "<strong>固定期間會員資格 - 1個月：</strong>固定時期開始日期被設在一月一日。一個人於二零零八年二月十五日報名會員。他的會員資格開始日期被設在二零零八年一月一日 - 結束日期時二零零八年十二月三十一日。"
+msgstr "<strong>固定期間會員資格 - 一年：</strong>固定時期開始日期被設在一月一日。一個人於二零零八年二月十五日報名會員。他的會員資格開始日期被設在二零零八年一月一日 - 結束日期時二零零八年十二月三十一日。"
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid ""
@@ -34757,7 +34757,7 @@ msgid ""
 "<strong>Rolling Membership Period - 1 Year Duration:</strong> A person signs"
 " up on February 15th, 2008. Their membership start date is February 15th, "
 "2008 - and the end date is February 14th, 2009."
-msgstr "<strong>定期續約會員資格 - 1年：</strong>一個人在二零零八年二月十五日報名。他的會員資格開始日期是二零零八年二月十五日 - 結束日期是二零零九年二月十四日。"
+msgstr "<strong>依繳費日計算會員資格 - 1年：</strong>一個人在二零零八年二月十五日報名。他的會員資格開始日期是二零零八年二月十五日 - 結束日期是二零零九年二月十四日。"
 
 #: templates/CRM/Member/Page/MembershipType.tpl
 msgid ""
@@ -45551,7 +45551,7 @@ msgid "Tax Invoice Giving"
 msgstr "發票捐贈"
 
 msgid "Please fill legal identifier to upload data."
-msgstr "上傳資料至國稅局需要身份證字號或統一證號"
+msgstr "上傳資料至國稅局需要身份證字號或外來人口統一證號"
 
 msgid "Campaign owner profile"
 msgstr "個人募款頁創建者個人資料"
@@ -47019,7 +47019,7 @@ msgid ""
 "You can have different prefix of each contribution type by filling token "
 "'!acc' into this field. And fill the 'Accounting Code' in contribution type "
 "setting page."
-msgstr "只要在上面的欄位%y%m前面填入「!acc」，你便可以帶入費用類型的「會計代碼」於收據前綴中。"
+msgstr "只要在上面的欄位 %Y%m 前面填入「!acc」，你便可以帶入費用類型的「會計代碼」於收據前綴中。"
 
 msgid "'s"
 msgstr "的"
@@ -47292,5 +47292,103 @@ msgstr "收入用途/類別"
 msgid "Payment Mode"
 msgstr "繳費方式"
 
+# templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Special Style"
 msgstr "特別募款頁"
+
+# CRM/Report/Form/Contribute/TaiwanTax.php
+msgid "Your SIC Code"
+msgstr "八碼統編自行更改"
+
+msgid "Multiple Value Handling"
+msgstr "多值處理"
+
+msgid "Multi-value data can separate to multiple column."
+msgstr "輸出成方便分割一欄多值至多欄的格式"
+
+# CRM/Event/Form/Registration/Confirm.php
+msgid ""
+"It seems that the space of priceset options is full when you are making "
+"registration. Please make another one <a href=\"%1\">here</a>."
+msgstr "您欲報名的活動人數已超過活動場次名額上限囉，可能是在報名過程中有其他人佔滿名額了，請重新回到<a href=\"%1\">這裡</a>填寫報名表單。"
+
+msgid "ID/Tax Number"
+msgstr "身份證字號"
+
+msgid "ID number"
+msgstr "身份證字號"
+
+msgid "Please verify name and ID/Tax Number fields."
+msgstr "請確認聯絡人姓名或身份證字號欄位是否填寫正確"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Field for the name used of donor acknowledgement"
+msgstr "捐款徵信名稱使用的欄位"
+
+msgid ""
+"You need to follow instruction below to complete transaction before "
+"<strong>%1</strong> (Payment deadline)."
+msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
+
+#: civicrm_spgateway.notify.inc
+msgid "Payment deadline"
+msgstr "繳費期限"
+
+msgid "Print payment slip"
+msgstr "列印繳費單"
+
+msgid "Note: Payment confirmation takes 3-4 working days."
+msgstr "備註：完成繳費後，商店約需 3~4 個工作天確認繳費成功。"
+
+msgid "Convenience Store Payment Code"
+msgstr "便利商店繳費代碼"
+
+msgid "Payment slip"
+msgstr "繳費單"
+
+msgid "Payment Instructions"
+msgstr "步驟說明"
+
+msgid "Bank code"
+msgstr "繳費銀行代碼"
+
+msgid "Virtual account number"
+msgstr "繳費虛擬帳號"
+
+msgid "First Amount"
+msgstr "首次捐款金額"
+
+msgid ""
+"If checked, the name used of donor acknowledgement can't be customized by "
+"contributor. The options will be \"Full Name\" and \"Part of Name\"."
+msgstr "若此欄打勾，募款頁的「捐款徵信名稱」欄位只限「全名」、「部份名稱」兩個選項。"
+
+msgid "Forbid above name field from being customized"
+msgstr "不提供捐款人自訂徵信名稱"
+
+msgid "One-time Contribution"
+msgstr "單筆捐款"
+
+msgid "Monthly Recurring Contributions"
+msgstr "每月捐款"
+
+msgid "Installments Contributions"
+msgstr "期每月捐款"
+
+msgid "One-time"
+msgstr "我要單筆捐款"
+
+msgid "Recurring"
+msgstr "維持定期捐款"
+
+msgid "One-time or Recurring Contributions"
+msgstr "點選捐款方式"
+
+msgid "ApplePay only can be used with Apple device."
+msgstr "Apple 相關裝置才能使用 ApplePay"
+
+msgid "Please use Safari to process ApplePay Payment."
+msgstr "需使用支援 Apple Pay 的 Safari 瀏覽器進行付款手續"
+
+msgid "Card expiry date has been updated."
+msgstr "卡片效期資料已更新。"
