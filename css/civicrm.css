@@ -4382,15 +4382,13 @@ ul.ui-sortable {
   color: #333 !important;
 }
 
-.crm-accordion-wrapper .twelve,
-.crm-accordion-wrapper .medium,
-.crm-accordion-wrapper .big,
-.crm-accordion-wrapper .twenty,
-.crm-accordion-wrapper .huge,
-.crm-accordion-wrapper .huge40,
-.crm-accordion-wrapper .bigSelect {
-  max-width: 10rem;
-}
+.crm-accordion-wrapper .twelve { max-width: 12rem; }
+.crm-accordion-wrapper .medium { max-width: 15rem; }
+.crm-accordion-wrapper .big { max-width: 18rem; }
+.crm-accordion-wrapper .twenty { max-width: 20rem; }
+.crm-accordion-wrapper .huge40 { max-width: 40rem; }
+.crm-accordion-wrapper .huge { max-width: 50rem; }
+.crm-accordion-wrapper .bigSelect  { max-width: 15rem; }
 .crm-container input[type="text"][name*="contribution_utm_"],
 .crm-container input[type="text"][name*="contribution_referrer_"],
 .crm-container input[type="text"][name="contribution_landing"]
