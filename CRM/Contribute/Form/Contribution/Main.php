@@ -102,8 +102,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if (!empty($csContactID) && !empty($csString) && $currentUserID != $csContactID) {
       if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactID, $this)) {
         $this->set('csContactID', $csContactID);
-        $session = CRM_Core_Session::singleton();
-        $session->set('userID', $csContactID);  // used by all the loggin system
         $this->set('userID', $csContactID);     // used by contributionBase
         $this->_userID = $csContactID;          // used by current follow up
       }
