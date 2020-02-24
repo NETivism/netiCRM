@@ -42,6 +42,14 @@
         </td>    
       </tr>
       <tr>
+        <td>
+           {$form.age_low.label|replace:'-':'<br />'}&nbsp;&nbsp;
+           {$form.age_low.html}&nbsp;&nbsp;&nbsp;
+           {$form.age_high.label}&nbsp;&nbsp;
+           {$form.age_high.html}
+        </td>    
+      </tr>
+      <tr>
          <td>
             {$form.gender.label}<br />
             {$form.gender.html}<span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('gender', 'Advanced'); return false;" >{ts}clear{/ts}</a>)</span>

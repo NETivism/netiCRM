@@ -47212,3 +47212,6 @@ msgstr ""
 
 msgid "Are you sure you want to sync all expiry dates of this token?"
 msgstr ""
+
+msgid "Age - From"
+msgstr ""
