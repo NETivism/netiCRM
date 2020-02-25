@@ -169,7 +169,6 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       $params = array('id' => $this->_id);
       $defaults = array();
       $this->_batch = self::retrieve($params, $defaults);
-      $this->
     }
   }
 
@@ -203,7 +202,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       'modified_id' => 'null',
       'modified_date' => 'null',
       'status_id' => $statusId,
-      'type_id' => self::$_batchType['auto'],
+      'type_id' => self::$_batchType['Auto'],
       'data' => $arguments,
     );
     $batch = self::create($params);
@@ -268,8 +267,38 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
         call_user_func($this->_batch->data['finish_callback']);
       }
     }
-    // after finish, don't forget to delete job.
+
+    // after finish, don't forget to delete job, and change status of batch
     $this->dupeDelete();
+    $completeStatus = self::$_batchStatus['Completed'];
+    $params = array(
+      'id' => $this->_id,
+      'modified_id' => $this->_batch['created_id'],
+      'modified_date' => date('YmdHis'),
+      'status_id' => $completeStatus,
+    );
+    $this->_batch = self::create($params);
+
+    // notify author of this batch by email
+    list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
+    list($toName, $toEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_batch['created_id'], FALSE);
+    $sendTemplateParams = array(
+      'groupName' => 'msg_tpl_workflow_batch',
+      'valueName' => 'batch_complete_notification',
+      'contactId' => $this->_batch['created_id'],
+      'from' => "$domainEmailName <$domainEmailAddress>",
+      'toEmail' => "$toName <$toEmail>",
+      'tplParams' => array(
+        'label' => $this->_batch['label'],
+        'description' => $this->_batch['description'],
+        'created_id' => $this->_batch['created_id'],
+        'created_date' => $this->_batch['created_date'],
+        'modified_id' => $this->_batch['modified_id'],
+        'modified_date' => $this->_batch['modified_date'],
+        'status_id' => $this->_batch['status_id'],
+      ),
+    );
+    CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
   }
 
 

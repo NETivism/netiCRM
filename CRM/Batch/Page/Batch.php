@@ -79,17 +79,59 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
    * Browse all entities.
    */
   public function browse() {
-    $status = CRM_Utils_Request::retrieve('status', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, 1);
-    $this->assign('status', $status);
     $this->search();
+    $label = CRM_Utils_Request::retrieve('label', 'Positive', $this);
+    $statusIds = CRM_Utils_Request::retrieve('status_id', 'Positive', $this);
+    $typeIds = CRM_Utils_Request::retrieve('type_id', 'Positive', $this);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    $action = array_sum(array_keys($this->links()));
+
+    $batchStatusLabel = CRM_Core_OptionGroup::values('batch_status');
+    $batchTypeLabel = CRM_Core_OptionGroup::values('batch_type');
+
+    $dao = new CRM_Batch_DAO_Batch();
+    if ($label) {
+      $dao->whereAdd("label LIKE '%".CRM_Utils_Type::escape($label, 'String')."%'");
+    }
+    if ($statusIds && is_array($statusIds)) {
+      $dao->whereAdd("status_id IN (".implode(",", $statusIds).")");
+    }
+    if ($typeIds && is_array($typeIds)) {
+      $dao->whereAdd("status_id IN (".implode(",", $typeIds).")");
+    }
+    $dao->orderBy('created_date DESC');
+    $dao->find();
+
+    $rows = array();
+    while ($dao->fetch()) {
+      $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->created_id);
+      $row['id'] = $dao->id;
+      $row['label'] = $dao->label; 
+      $row['created_by'] = $contact[0];
+      $row['created_date'] = $dao->created_date;
+      $row['modified_date'] = $dao->modified_date;
+      $row['batch_status'] = $batchStatusLabel[$dao->status_id];
+      $row['batch_type'] = $batchTypeLabel[$dao->type_id];
+      $row['action'] = CRM_Core_Action::formLink(self::links(), $action, array(
+        'id' => $dao->id, 'qfKey' => $qfKey)
+      );
+      $rows[$dao->id] = $row;
+    }
+    $this->assign('rows', $rows);
+
+    // Let template know if user has run a search or not
+    /*
+    if ($this->get('whereClause')) {
+      $this->assign('isSearch', 1);
+    }
+    else {
+      $this->assign('isSearch', 0);
+    }
+    */
   }
 
   public function search() {
-    if ($this->_action & (CRM_Core_Action::ADD |
-        CRM_Core_Action::UPDATE |
-        CRM_Core_Action::DELETE
-      )
-    ) {
+    if ($this->_action & (CRM_Core_Action::ADD | CRM_Core_Action::UPDATE | CRM_Core_Action::DELETE) ) {
       return;
     }
 
