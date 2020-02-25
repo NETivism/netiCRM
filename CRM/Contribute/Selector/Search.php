@@ -384,7 +384,8 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->contribution_id;
 
-      $actions = array('id' => $result->contribution_id,
+      $actions = array(
+        'id' => $result->contribution_id,
         'cid' => $result->contact_id,
         'cxt' => $this->_context,
       );
@@ -455,11 +456,6 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     if (!isset(self::$_columnHeaders)) {
       self::$_columnHeaders = array(
         array(
-          'name' => ts('ID'),
-          'sort' => 'id',
-          'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
           'name' => ts('Transaction ID'),
           'sort' => 'trxn_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
@@ -524,8 +520,25 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
         $pre = array(
           array('desc' => ts('Contact Type')),
           array(
+            'name' => '#',
+            'title' => ts('Contribution ID'),
+            'sort' => 'id',
+            'direction' => CRM_Utils_Sort::DONTCARE,
+          ),
+          array(
             'name' => ts('Name'),
             'sort' => 'sort_name',
+            'direction' => CRM_Utils_Sort::DONTCARE,
+          ),
+        );
+        self::$_columnHeaders = array_merge($pre, self::$_columnHeaders);
+      }
+      else {
+        $pre = array(
+          array(
+            'name' => '#',
+            'title' => ts('Contribution ID'),
+            'sort' => 'id',
             'direction' => CRM_Utils_Sort::DONTCARE,
           ),
         );

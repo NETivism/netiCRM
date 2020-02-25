@@ -1153,14 +1153,23 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     if ($userID == NULL) {
       $session = CRM_Core_Session::singleton();
       $userID = $session->get('userID');
+
+      // #27589 when anonymous user trigger this, use self as message sender
+      if (empty($userID) && count($contactIds) == 1) {
+        $userID = reset($contactIds);
+      }
     }
 
-    list($fromDisplayName, $fromEmail, $fromDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($userID);
-    if (!$fromEmail) {
-      return array(count($contactDetails), 0, count($contactDetails));
-    }
-    if (!trim($fromDisplayName)) {
-      $fromDisplayName = $fromEmail;
+    if (!$from) {
+      list($fromDisplayName, $fromEmail, $fromDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($userID);
+      if (!$fromEmail) {
+        return array(count($contactDetails), 0, count($contactDetails));
+      }
+
+      if (!trim($fromDisplayName)) {
+        $fromDisplayName = $fromEmail;
+      }
+      $from = "$fromDisplayName <$fromEmail>";
     }
 
     //CRM-4575
@@ -1171,16 +1180,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $htmlToken = CRM_Utils_Token::getTokens($html);
     $allTokens = array_merge_recursive($messageToken, $subjectToken, $htmlToken);
 
-    require_once 'CRM/Utils/Mail.php';
-    if (!$from) {
-      $from = "$fromDisplayName <$fromEmail>";
-    }
-
     //create the meta level record first ( email activity )
-    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type',
-      'Email',
-      'name'
-    );
+    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name');
 
     // CRM-6265: save both text and HTML parts in details (if present)
     if ($html and $text) {
@@ -1189,8 +1190,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     else {
       $details = $html ? $html : $text;
     }
-
-    $activityParams = array('source_contact_id' => $userID,
+    
+    $activityParams = array(
+      'source_contact_id' => $userID,
       'activity_type_id' => $activityTypeID,
       'activity_date_time' => date('YmdHis'),
       'subject' => $subject,
@@ -1752,12 +1754,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       if (!self::$_importableFields) {
         self::$_importableFields = array();
       }
-      if (!$status) {
-        $fields = array('' => array('title' => ts('- do not import -')));
-      }
-      else {
-        $fields = array('' => array('title' => ts('- Activity Fields -')));
-      }
+      $fields = array('' => array('title' => ts('- Activity Fields -')));
 
       require_once 'CRM/Activity/DAO/Activity.php';
       $tmpFields = CRM_Activity_DAO_Activity::import();
