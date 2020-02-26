@@ -432,6 +432,10 @@ class CRM_Contact_Form_Search_Criteria {
 
     $form->addDate('deceased_date_low', ts('Deceased Dates - From'), FALSE, array('formatType' => 'birth'));
     $form->addDate('deceased_date_high', ts('To'), FALSE, array('formatType' => 'birth'));
+
+    $attribute = array('min' => '0');
+    $form->addNumber('age_low', ts('Age - From'), $attribute);
+    $form->addNumber('age_high', ts('To'), $attribute);
   }
 
   static function notes(&$form) {
