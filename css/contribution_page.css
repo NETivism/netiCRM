@@ -353,7 +353,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     width: 1024px;
     margin: 0 auto;
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
   }
   #expenditure-ratio-box{
     width: 480px;
