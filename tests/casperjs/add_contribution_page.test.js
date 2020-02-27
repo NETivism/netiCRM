@@ -59,7 +59,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('1_Title.png');
+        // this.capture('1_Title.png');
     });
 
     /* click Continue >> */
@@ -119,7 +119,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
     
     casper.then(function() {
-        this.capture('2_Amount.png');
+        // this.capture('2_Amount.png');
     });
 
     /* click submit */
@@ -136,7 +136,7 @@ casper.test.begin('Resurrectio test', function(test) {
     */
     
     casper.then(function() {
-        this.capture('3_Memberships.png');
+        // this.capture('3_Memberships.png');
     });
     /* click submit */
     casper.waitForSelector("form#MembershipBlock input[type=submit][value='Continue >>']", function success() {
@@ -168,7 +168,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('4_Thanks.png');
+        // this.capture('4_Thanks.png');
     });
 
     /* click submit */
@@ -193,7 +193,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('5_Tell.png');
+        // this.capture('5_Tell.png');
     });
     
     /* click submit */
@@ -230,7 +230,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('6_Include.png');
+        // this.capture('6_Include.png');
     });
     
     /* click submit */
@@ -263,7 +263,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('7_Premimums.png');
+        // this.capture('7_Premimums.png');
     });
 
     /* click submit */
@@ -285,9 +285,6 @@ casper.test.begin('Resurrectio test', function(test) {
         this.click('#is_active');
     }, function fail() {
         test.assertExists('#is_active');
-    });
-    casper.then(function() {
-        this.capture('test1.png');
     });
 
     /* filled up About(ckeditor) */
@@ -318,7 +315,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('8_Widget.png');
+        // this.capture('8_Widget.png');
     });
 
     /* click submit */
@@ -351,7 +348,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('9_Enable.png');
+        // this.capture('9_Enable.png');
     });
 
     /* click submit */
