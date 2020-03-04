@@ -124,7 +124,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $params['prime'] = CRM_Utils_Type::escape($_POST['prime'], 'String');
     $params['mode'] = $this->_mode;
     $paymentResult = self::payByPrime($params);
-    if ($paymentResult['status'] == 0) {
+    if ($paymentResult['status'] == "0") {
       $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=1');
     }
     else {
@@ -428,13 +428,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       $transaction = new CRM_Core_Transaction();
 
-      if(!empty($result->status)){
+      if(isset($result->status)){
         $status = $result->status;
       }else if(!empty($result->record_status)){
         // recordAPI use record_status
         $status = $result->record_status;
       }
-      if($pass && $status == 0){
+      if($pass && $status == "0"){
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
         $input['amount'] = $objects['contribution']->amount;
         $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
