@@ -578,6 +578,9 @@ class CRM_Report_Form extends CRM_Core_Form {
         $operations = $this->getOperationPair(CRM_Utils_Array::value('operatorType', $field),
           $fieldName
         );
+        if (!empty($field['operationPair']) && is_array($field['operationPair'])) {
+          $operations = array_intersect_key($field['operationPair'], $operations);
+        }
 
         $filters[$table][$fieldName] = $field;
 
