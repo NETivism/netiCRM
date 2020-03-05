@@ -221,13 +221,14 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
 
     foreach ($params as $key => $val) {
       if ($val && ($key == 'participant_register_date')) {
-        if (CRM_Utils_Date::convertToDefaultDate($params, $dateType, $key)) {
-          if (!CRM_Utils_Rule::date($params[$key])) {
+        $dateValue = self::formatDate($val, $dateType);
+        if (!CRM_Utils_Rule::dateTime($dateValue)) {
+          if (!CRM_Utils_Rule::date($dateValue)) {
             CRM_Import_Parser_Contact::addToErrorMsg('Register Date', $errorMessage);
           }
         }
         else {
-          CRM_Import_Parser_Contact::addToErrorMsg('Register Date', $errorMessage);
+          $params[$key] = $dateValue;
         }
       }
       elseif ($val && ($key == 'participant_role_id' || $key == 'participant_role')) {
@@ -306,13 +307,14 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     foreach ($params as $key => $val) {
       if ($val) {
         if ($key == 'participant_register_date') {
-          if (CRM_Utils_Date::convertToDefaultDate($params, $dateType, $key)) {
-            if (!CRM_Utils_Rule::date($params[$key])) {
+          $dateValue = self::formatDate($val, $dateType);
+          if (!CRM_Utils_Rule::dateTime($dateValue)) {
+            if (!CRM_Utils_Rule::date($dateValue)) {
               CRM_Import_Parser_Contact::addToErrorMsg('Register Date', $errorMessage);
             }
           }
           else {
-            CRM_Import_Parser_Contact::addToErrorMsg('Register Date', $errorMessage);
+            $params[$key] = $dateValue;
           }
         }
         if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
@@ -524,5 +526,24 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
    * @access public
    */
   function fini() {}
+
+  static function formatDate($date, $dateType) {
+    $formattedDate = NULL;
+    if (empty($date)) {
+      return $formattedDate;
+    }
+
+    //1. first convert date to default format.
+    //2. append time to default formatted date (might be removed during format)
+    //3. validate date / date time.
+    //4. If date and time then convert to default date time format.
+
+    $dateKey = 'date';
+    $dateParams = array($dateKey => $date);
+
+    require_once 'CRM/Utils/Date.php';
+    CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);
+    return $dateParams[$dateKey];
+  }
 }
 

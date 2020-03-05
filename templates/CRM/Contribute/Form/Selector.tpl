@@ -35,7 +35,7 @@
         <th scope="col" title="Select Rows">{$form.toggleSelect.html}</th> 
     {/if}
     {foreach from=$columnHeaders item=header}
-        <th scope="col">
+        <th scope="col" {if $header.title}title="{$header.title}"{/if}>
         {if $header.sort}
           {assign var='key' value=$header.sort}
           {$sort->_response.$key.link}
@@ -54,11 +54,13 @@
         {if $context eq 'Search' }       
     	    {assign var=cbName value=$row.checkbox}
     	    <td>{$form.$cbName.html}</td> 
- 	{/if}
-  	<td>{$row.contact_type}</td>	
-    	<td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
+          <td>{$row.contact_type}</td>	
+        {/if}
     {/if}
     <td class="crm-contribution-id">{$row.id}</td>
+    {if !$single}
+      <td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
+    {/if}
     <td class="crm-contribution-trxn-id">{$row.trxn_id}</td>
     <td class="crm-contribution-receipt-id">{$row.receipt_id}</td>
     <td class="crm-contribution-instrument">{$row.payment_instrument}</td>

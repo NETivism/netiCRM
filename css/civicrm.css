@@ -2670,8 +2670,6 @@ span.icon {
     color:#333;
 }
 
-.light-icon, .ui-widget-content .light-icon {background-image:url("../packages/jquery/jquery-ui-1.8.11/css/custom-theme/images/ui-icons_3e3e3e_256x240.png")}
-.dark-icon {background-image:url("../packages/jquery/jquery-ui-1.8.11/css/custom-theme/images/ui-icons_222222_256x240.png")}
 .red-icon {background-image:url("../i/icons/jquery-ui-8A1F11.png")}
 
 .edit-icon { background-position: -66px -114px;}
@@ -2680,9 +2678,7 @@ span.icon {
 .back-icon { background-position: -2px -65px;}
 .delete-icon { background-position: -179px -99px;}
 .details-icon { background-position: -129px -112px;}
-.button:hover .delete-icon {
-    background-image:url("../packages/jquery/jquery-ui-1.8.11/css/custom-theme/images/ui-icons_8d2c27_256x240.png")!important;
-}
+.button:hover .delete-icon {}
 
 .restore-icon { background-position:0px -66px;background-image:url("../i/icons/jquery-ui-91CE00.png"); }
 .button:hover .restore-icon {background-image:url("../i/icons/jquery-ui-91CE00.png"); }
@@ -4382,29 +4378,18 @@ ul.ui-sortable {
   color: #333 !important;
 }
 
-.crm-accordion-wrapper .twelve,
-.crm-accordion-wrapper .medium,
-.crm-accordion-wrapper .big,
-.crm-accordion-wrapper .twenty,
-.crm-accordion-wrapper .huge,
-.crm-accordion-wrapper .huge40,
-.crm-accordion-wrapper .bigSelect {
-  max-width: 10rem;
-}
+.crm-accordion-wrapper .twelve { max-width: 12rem; }
+.crm-accordion-wrapper .medium { max-width: 15rem; }
+.crm-accordion-wrapper .big { max-width: 18rem; }
+.crm-accordion-wrapper .twenty { max-width: 20rem; }
+.crm-accordion-wrapper .huge40 { max-width: 40rem; }
+.crm-accordion-wrapper .huge { max-width: 50rem; }
+.crm-accordion-wrapper .bigSelect  { max-width: 15rem; }
 .crm-container input[type="text"][name*="contribution_utm_"],
 .crm-container input[type="text"][name*="contribution_referrer_"],
 .crm-container input[type="text"][name="contribution_landing"]
  {
   max-width: 120px;
-}
-.one-sidebar .crm-accordion-wrapper .twelve,
-.one-sidebar .crm-accordion-wrapper .medium,
-.one-sidebar .crm-accordion-wrapper .big,
-.one-sidebar .crm-accordion-wrapper .twenty,
-.one-sidebar .crm-accordion-wrapper .huge,
-.one-sidebar .crm-accordion-wrapper .huge40,
-.one-sidebar .crm-accordion-wrapper .bigSelect {
-  max-width: 8rem;
 }
 .crm-accordion-wrapper > .crm-submit-buttons {
   padding: 6px 18px;

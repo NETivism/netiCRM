@@ -92,7 +92,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $this->assign('submit_name', $name);
 
     $name = $this->getButtonName('upload');
-    $this->addElement('submit', $name, ts("Sync Now"));
+    $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".ts("Are you sure you want to sync all expiry dates of this token?", $id)."')"));
     $this->assign('update_notify', $name);
   }
 

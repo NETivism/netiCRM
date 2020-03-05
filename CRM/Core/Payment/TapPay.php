@@ -991,12 +991,14 @@ LIMIT 0, 100
       $contribution_recur_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $id, 'contribution_recur_id');
     }
 
-    $paramsRecurId = array(1 => array($contribution_recur_id, 'Positive'));
-    $sqlGroupExpiryDates = "SELECT GROUP_CONCAT(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1;";
-    $originExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsRecurId);
+    $card_token = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TapPay', $contribution_recur_id, 'card_token', 'contribution_recur_id');
+    $paramsToken = array(1 => array($card_token, 'String'));
+    $sqlGroupExpiryDates = "SELECT GROUP_CONCAT(expiry_date) FROM civicrm_contribution_tappay WHERE card_token = %1;";
+    $originExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsToken);
 
     $returnMessage =  ts("There are no any change.");
 
+    $paramsRecurId = array(1 => array($contribution_recur_id, 'Positive'));
     $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id DESC LIMIT 1;";
     $contributionId = CRM_Core_DAO::singleValueQuery($sql, $paramsRecurId);
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -1027,20 +1029,34 @@ LIMIT 0, 100
           // Update expiry date`
           $year = substr($result->card_info->expiry_date, 0, 4);
           $month = substr($result->card_info->expiry_date, 4, 2);
-          $newExpiryDate = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
+          $expiryTimestamp = strtotime('last day of this month', strtotime($year.'-'.$month.'-01'));
 
-          $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE contribution_recur_id = %2";
-          $params = array(
-            1 => array($newExpiryDate, 'String'),
-            2 => array($contribution_recur_id, 'Positive'),
-          );
-          CRM_Core_DAO::executeQuery($sql, $params);
+          // check expiry_date is over current time.
+          if ($expiryTimestamp >= time()) {
+            $newExpiryDate = date('Y-m-d', $expiryTimestamp);
 
-          $newExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsRecurId);
+            $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE card_token = %2";
+            $params = array(
+              1 => array($newExpiryDate, 'String'),
+              2 => array($card_token, 'String'),
+            );
+            CRM_Core_DAO::executeQuery($sql, $params);
 
-          if ($newExpiryDates != $originExpiryDates) {
-            $returnMessage = ts("Card expiry date has been updated.");
+            $newExpiryDates = CRM_Core_DAO::singleValueQuery($sqlGroupExpiryDates, $paramsToken);
+
+            if ($newExpiryDates != $originExpiryDates) {
+              $returnMessage = ts("Card expiry date has been updated.");
+            }
+            else {
+              $returnMessage = ts("Card expiry date has been already newest.");
+            }
           }
+          else {
+            $returnMessage = ts("Card expiry date on the server is still not up-to-date.").ts("If there has any problem, please contact payment provider.");
+          }
+        }
+        else {
+          $returnMessage = ts("There are some problem on API.").ts("If there has any problem, please contact payment provider.");
         }
       }
     }
