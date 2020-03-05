@@ -247,7 +247,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     );
 
     $attributes = array('onclick' => "showHideUpload();");
-    $options = array(ts('Upload Content'), ts('Compose On-screen'));
+    $options = array(ts('Upload Content'), ts('Compose On-screen'), ts('Traditional editor'));
 
     $this->addRadio('upload_type', ts('I want to'), $options, $attributes, "&nbsp;&nbsp;");
 
