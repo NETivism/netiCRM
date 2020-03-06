@@ -308,13 +308,26 @@ GROUP BY contact.id
   }
 
   function summary(){
-    $sum = $this->_contributionSummary['total']['amount'];
-    $this->_contributionSummary['total']['amount'] = CRM_Utils_Money::format($sum);
-    $count = $this->_contributionSummary['total']['count'];
-    $this->_contributionSummary['total']['avg'] = CRM_Utils_Money::format($sum / $count);
-    $smarty = CRM_Core_Smarty::singleton();
-    $smarty->assign('contributionSummary', $this->_contributionSummary);
-    // return $summary;
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    $count = $this->count();
+
+    $summary['search_results'] = array(
+      'label' => ts('Search Results'),
+      'value' => '',
+    );
+    $query = CRM_Core_DAO::executeQuery("SELECT SUM(amount) as amount_sum, AVG(amount) as amount_avg FROM {$this->_tableName} WHERE 1");
+    $query->fetch();
+    
+    if ($query->amount_sum) {
+      $amount_sum = CRM_Utils_Money::format($query->amount_sum, '$');
+      $amount_avg = CRM_Utils_Money::format($query->amount_sum, '$');
+      $summary['search_results']['value'] = ts('Total amount of completed contributions is %1.', array(1 => $amount_sum)).' '.ts('Count').": ".$count." ".ts('times').' / '.ts('Average').": ".$amount_avg;
+    }
+
+    return $summary;
   }
 
   function alterRow(&$row) {
