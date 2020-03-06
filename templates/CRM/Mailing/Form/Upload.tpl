@@ -66,6 +66,11 @@
 </table>
 
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
+{include file="CRM/common/mailingEditor.tpl"}
+{$form.mailing_content_data.html}
+</fieldset>
+
+<fieldset id="compose_old_id"><legend>{ts}Traditional editor{/ts}</legend>
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl" upload=1 noAttach=1}
 </fieldset>
 
@@ -114,18 +119,29 @@
 {literal}
 <script type="text/javascript">
     showHideUpload();
-    function showHideUpload()
-    { 
-	if (document.getElementsByName("upload_type")[0].checked) {
-            hide('compose_id');
-	    cj('.crm-mailing-upload-form-block-template').hide();
-	    show('upload_id');	
-        } else {
-            show('compose_id');
-	    cj('.crm-mailing-upload-form-block-template').show();
-	    hide('upload_id');
-            verify( );
+    function showHideUpload() {
+	    if (document.getElementsByName("upload_type")[0].checked) {
+        hide('compose_id');
+        hide('compose_old_id')
+        cj('.crm-mailing-upload-form-block-template').hide();
+        show('upload_id');
+      }
+      else {
+        hide('upload_id');
+        // for json data field (new compose mode)
+        if (document.getElementsByName("upload_type")[1].checked) {
+          hide('compose_old_id');
+          show('compose_id');
         }
+
+        // for ckeditor (old compose mode)
+        if (document.getElementsByName("upload_type")[2].checked) {
+          hide('compose_id');
+          show('compose_old_id');
+          cj('.crm-mailing-upload-form-block-template').show();
+          verify();
+        }
+      }
     }
     cj(document).ready(function(){
       // show dialog for online tempalte
