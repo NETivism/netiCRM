@@ -47215,3 +47215,6 @@ msgstr ""
 
 msgid "Age - From"
 msgstr ""
+
+msgid "Age search will exclude deceased contact."
+msgstr ""

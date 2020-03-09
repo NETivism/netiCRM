@@ -4391,15 +4391,6 @@ ul.ui-sortable {
  {
   max-width: 120px;
 }
-.one-sidebar .crm-accordion-wrapper .twelve,
-.one-sidebar .crm-accordion-wrapper .medium,
-.one-sidebar .crm-accordion-wrapper .big,
-.one-sidebar .crm-accordion-wrapper .twenty,
-.one-sidebar .crm-accordion-wrapper .huge,
-.one-sidebar .crm-accordion-wrapper .huge40,
-.one-sidebar .crm-accordion-wrapper .bigSelect {
-  max-width: 8rem;
-}
 .crm-accordion-wrapper > .crm-submit-buttons {
   padding: 6px 18px;
 }

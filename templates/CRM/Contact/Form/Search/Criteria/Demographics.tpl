@@ -27,7 +27,7 @@
     <table class="form-layout">
        <tr>
         <td>
-            {$form.birth_date_low.label|replace:'-':'<br />'}&nbsp;&nbsp; 
+            {$form.birth_date_low.label}&nbsp;&nbsp; 
 	        {include file="CRM/common/jcalendar.tpl" elementName=birth_date_low}&nbsp;&nbsp;&nbsp;
             {$form.birth_date_high.label}&nbsp;&nbsp;
             {include file="CRM/common/jcalendar.tpl" elementName=birth_date_high}
@@ -35,7 +35,7 @@
        </tr>
       <tr>
         <td>
-           {$form.deceased_date_low.label|replace:'-':'<br />'}&nbsp;&nbsp;
+           {$form.deceased_date_low.label}&nbsp;&nbsp;
            {include file="CRM/common/jcalendar.tpl" elementName=deceased_date_low}&nbsp;&nbsp;&nbsp;
            {$form.deceased_date_high.label}&nbsp;&nbsp;
            {include file="CRM/common/jcalendar.tpl" elementName=deceased_date_high}
@@ -43,15 +43,16 @@
       </tr>
       <tr>
         <td>
-           {$form.age_low.label|replace:'-':'<br />'}&nbsp;&nbsp;
+           {$form.age_low.label}&nbsp;&nbsp;
            {$form.age_low.html}&nbsp;&nbsp;&nbsp;
            {$form.age_high.label}&nbsp;&nbsp;
            {$form.age_high.html}
+           <div class="description">{ts}Age search will exclude deceased contact.{/ts}<div>
         </td>    
       </tr>
       <tr>
          <td>
-            {$form.gender.label}<br />
+            {$form.gender.label}&nbsp;&nbsp;
             {$form.gender.html}<span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('gender', 'Advanced'); return false;" >{ts}clear{/ts}</a>)</span>
          </td>
       </tr>

@@ -2783,7 +2783,10 @@ WHERE  id IN ( $groupIDs )
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
     $val = CRM_Utils_Type::escape($value, 'Integer');
-    if ($val) {
+    if ($val && $name) {
+      $this->_where[$grouping][999] = "( contact_a.is_deceased = 0 )";
+      $this->_qill[$grouping][999] = ts('Contact is deceased') . ' ' . ts("IS NULL");
+
       if ($name == 'age') {
         $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) = '$val' ) ";
         $this->_qill[$grouping][] = ts('Age') . " = $val";
@@ -2796,6 +2799,8 @@ WHERE  id IN ( $groupIDs )
         $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) <= '$value' ) ";
         $this->_qill[$grouping][] = ts('Age') . " <= $val";
       }
+      
+      self::$_openedPanes['Demographics'] = TRUE;
     }
   }
 

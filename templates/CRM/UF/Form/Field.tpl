@@ -88,8 +88,7 @@
               </tr>
               <tr class="crm-uf-field-form-block-in_selector">
                   <td class="label"><div id="in_selector_label">{$form.in_selector.label}</div></td>
-                  <td><div id="in_selector_html">{$form.in_selector.html}<br />         
-                  <span id="in_selector_desSpan" class="description">{ts}Is this field included as a column in the search results table? This setting applies only to fields with 'Public Pages' or 'Public Pages and Listings' visibility.{/ts}</span></div></td>
+                  <td><div id="in_selector_html">{$form.in_selector.html}</div></td>
               </tr>
               </table>
             </div><!-- /.crm-accordion-body -->
@@ -234,27 +233,24 @@ function showLabel( ) {
            hide("is_search_label");
            hide("is_search_html");
            hide("is_search_desSpan");
-           hide("in_selector_label");
-           hide("in_selector_html");
-           hide("in_selector_desSpan");
            cj("#is_searchable").attr('checked',false);
-       } else {
+       }
+       else {
            if ( ! cj("#is_view").attr('checked') ) {
                show("is_search_label");
                show("is_search_html");
                show("is_search_desSpan");
            }
-           var fldName = cj("#field_name\\[1\\]").val();
-           if ( fldName == 'group' || fldName == 'tag' ) { 
-               hide("in_selector_label");
-               hide("in_selector_html");
-               hide("in_selector_desSpan");
-           } else {
-               show("in_selector_label");
-               show("in_selector_html");
-               show("in_selector_desSpan");
-           }
        }
+        var fldName = cj("#field_name\\[1\\]").val();
+        if ( fldName == 'group' || fldName == 'tag' ) { 
+            hide("in_selector_label");
+            hide("in_selector_html");
+        }
+        else {
+            show("in_selector_label");
+            show("in_selector_html");
+        }
    }
 
    cj("#field_name\\[1\\]").bind( 'change blur', function( ) {
