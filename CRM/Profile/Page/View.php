@@ -68,7 +68,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
     // disable anon user for access some profile
     $ufid = $session->get("ufID");
     if(empty($ufid)){
-      CRM_Core_Error::fatal();
+      CRM_Core_Error::fatal(ts("You must be logged in to view this page."));
       return;
     }
 

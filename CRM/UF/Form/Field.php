@@ -690,7 +690,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     // store the submitted values in an array
     $params = $this->controller->exportValues('Field');
     if ($params['visibility'] == 'User and User Admin Only') {
-      $params['is_searchable'] = $params['in_selector'] = 0;
+      $params['is_searchable'] = 0;
     }
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
