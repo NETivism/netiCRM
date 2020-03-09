@@ -9,7 +9,6 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
   protected $_filled = NULL;
   protected $_recurringStatus = array();
   protected $_contributionPage = NULL;
-  protected $_contributionSummary = array();
 
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -318,21 +317,19 @@ GROUP BY contact.id
       'label' => ts('Search Results'),
       'value' => '',
     );
-    $query = CRM_Core_DAO::executeQuery("SELECT SUM(amount) as amount_sum, AVG(amount) as amount_avg FROM {$this->_tableName} WHERE 1");
+    $query = CRM_Core_DAO::executeQuery("SELECT SUM(amount) as amount_sum FROM {$this->_tableName} WHERE 1");
     $query->fetch();
     
     if ($query->amount_sum) {
       $amount_sum = CRM_Utils_Money::format($query->amount_sum, '$');
-      $amount_avg = CRM_Utils_Money::format($query->amount_sum, '$');
-      $summary['search_results']['value'] = ts('Total amount of completed contributions is %1.', array(1 => $amount_sum)).' '.ts('Count').": ".$count." ".ts('times').' / '.ts('Average').": ".$amount_avg;
+      $amount_avg = CRM_Utils_Money::format($query->amount_sum / $count, '$');
+      $summary['search_results']['value'] = ts('Total amount of completed contributions is %1.', array(1 => $amount_sum)).' / '.ts('for')." ".$count." ".ts('People').' / '.ts('Average').": ".$amount_avg;
     }
 
     return $summary;
   }
 
   function alterRow(&$row) {
-    $this->_contributionSummary['total']['amount'] += $row['amount'];
-    $this->_contributionSummary['total']['count']++;
     if (!empty($row['amount'])) {
       $row['amount'] = CRM_Utils_Money::format($row['amount']);
     }
