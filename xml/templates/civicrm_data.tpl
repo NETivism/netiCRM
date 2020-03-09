@@ -724,7 +724,8 @@ VALUES
 -- default batch statuses
    (@option_group_id_batch_status, '{ts escape="sql"}Completed{/ts}', 1, 'Completed', NULL, 0, 0, 1, NULL, 0, 1, 1, NULL, @domainID, NULL),
    (@option_group_id_batch_status, '{ts escape="sql"}Pending{/ts}', 2, 'Pending', NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, @domainID, NULL),
-   (@option_group_id_batch_status, '{ts escape="sql"}Running{/ts}', 3, 'Running', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL);
+   (@option_group_id_batch_status, '{ts escape="sql"}Running{/ts}', 3, 'Running', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL),
+   (@option_group_id_batch_status, '{ts escape="sql"}Canceled{/ts}', 4, 'Canceled', NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, @domainID, NULL);
 
 
 -- URL preferences

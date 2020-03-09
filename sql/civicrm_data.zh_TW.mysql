@@ -5015,7 +5015,8 @@ VALUES
 -- default batch statuses
    (@option_group_id_batch_status, '已完成', 1, 'Completed', NULL, 0, 0, 1, NULL, 0, 1, 1, NULL, @domainID, NULL),
    (@option_group_id_batch_status, '待處理', 2, 'Pending', NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, @domainID, NULL),
-   (@option_group_id_batch_status, '進行中', 3, 'Running', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL);
+   (@option_group_id_batch_status, '進行中', 3, 'Running', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL),
+   (@option_group_id_batch_status, '已取消', 4, 'Canceled', NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, @domainID, NULL);
 
 
 -- URL preferences

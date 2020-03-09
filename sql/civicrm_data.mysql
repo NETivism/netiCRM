@@ -5015,7 +5015,8 @@ VALUES
 -- default batch statuses
    (@option_group_id_batch_status, 'Completed', 1, 'Completed', NULL, 0, 0, 1, NULL, 0, 1, 1, NULL, @domainID, NULL),
    (@option_group_id_batch_status, 'Pending', 2, 'Pending', NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, @domainID, NULL),
-   (@option_group_id_batch_status, 'Running', 3, 'Running', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL);
+   (@option_group_id_batch_status, 'Running', 3, 'Running', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL),
+   (@option_group_id_batch_status, 'Canceled', 4, 'Canceled', NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, @domainID, NULL);
 
 
 -- URL preferences
