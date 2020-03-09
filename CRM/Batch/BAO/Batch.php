@@ -47,20 +47,27 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $batchId = CRM_Utils_Array::value('id', $params);
     if (!$batchId) {
       $op = 'create';
-      $params['name'] = CRM_Utils_String::titleToVar($params['title']);
+      if (empty($params['name'])) {
+        $params['name'] = CRM_Utils_String::titleToVar($params['title']);
+      }
     }
     CRM_Utils_Hook::pre($op, 'Batch', $batchId, $params);
     $batch = new CRM_Batch_DAO_Batch();
     if (!empty($params['data'])) {
       if (is_array($params['data'])) {
-        $params['data'] = serialize($params);
+        $params['data'] = serialize($params['data']);
       }
     }
     $batch->copyValues($params);
     $batch->save();
 
     CRM_Utils_Hook::post($op, 'Batch', $batch->id, $batch);
-    $batch->data = unserialize($batch->data);
+
+    $params = array(
+      'id' => $batch->id,
+    );
+    $defaults = array();
+    $batch = self::retrieve($params, $defaults);
     return $batch;
   }
 
@@ -96,7 +103,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    *   array of statuses 
    */
   public static function batchStatus() {
-    self::$_batchStatus = CRM_Core_OptionGroup::values('batch_status', FALSE, FALSE, FALSE, NULL, 'name');
+    self::$_batchStatus = CRM_Core_OptionGroup::values('batch_status', TRUE, FALSE, FALSE, NULL, 'name');
     return self::$_batchStatus;
   }
 
@@ -107,7 +114,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    *   array of batches
    */
   public static function batchType() {
-    self::$_batchType = CRM_Core_OptionGroup::values('batch_type', FALSE, FALSE, FALSE, NULL, 'name');
+    self::$_batchType = CRM_Core_OptionGroup::values('batch_type', TRUE, FALSE, FALSE, NULL, 'name');
     return self::$_batchType;
   }
 
@@ -123,16 +130,16 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     unset($status['Completed']);
     unset($status['Canceled']);
     $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".implode(',', $status).") ORDER BY created_date ASC LIMIT 1";
-    $dao = CRM_Core_DAO::singleValueQuery($sql, array(
-      1 => array($type['auto'], 'Integer'),
+    $batchId = CRM_Core_DAO::singleValueQuery($sql, array(
+      1 => array($type['Auto'], 'Integer'),
     ));
 
     $message = '';
-    if (!empty($dao->id)) {
+    if (!empty($batchId)) {
       // check if running currently or running over 1 hour
-      $batch = new CRM_Batch_BAO_Batch($dao->id);
+      $batch = new CRM_Batch_BAO_Batch($batchId);
       $running = $batch->dupeCheck();
-      if ($running->value) {
+      if (!empty($running) && $running->value) {
         if (CRM_REQUEST_TIME - $running->timestamp > 3600) {
           if ($batch->dupeDelete()) {
             $message = ts('Found batch job number %1 running over 1 hour. We delete this job then start another batch job number %2.', array(1 => $running->value, 2 => $batch->_id));
@@ -146,7 +153,12 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
         }
       }
       else {
-        $batch->process();
+        if (empty($batch->_batch->data)) {
+          $batch->finish();
+        }
+        else {
+          $batch->process();
+        }
         $message = ts('Success processing queuing batch.');
       }
     }
@@ -211,13 +223,19 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
     // after saved start logic, trigger logic to handling before start warehousing
     // do not use start callback to process rows. use process instead.
-    if (isset($this->_batch->data['start_callback'])) {
-      if (!empty($this->_batch['start_callback_args'])) {
-        call_user_func_array($this->_batch['start_callback'], $this->_batch['start_callback_args']);
+    if (isset($this->_batch->data['startCallback'])) {
+      if (!empty($this->_batch->data['startCallbackArgs'])) {
+        $started = call_user_func_array($this->_batch->data['startCallback'], $this->_batch->data['startCallbackArgs']);
       }
       else {
-        call_user_func($this->_batch['start_callback']);
+        $started = call_user_func($this->_batch->data['startCallback']);
       }
+    }
+    if ($started === FALSE) {
+      $cancelStatus = self::$_batchStatus['Canceled'];
+      $this->_batch->status_id = $cancelStatus;
+      $this->saveBatch();
+      return FALSE;
     }
     return $this->_batch;
   }
@@ -231,22 +249,35 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * @return null
    */
   public function process($force = FALSE) {
+    global $civicrm_batch;
+    $civicrm_batch = $this->_batch;
     // start processing, insert record in db to prevent duplicate running
     $this->dupeInsert();
 
     // real processing logic 
-    if (isset($this->_batch->data['process_callback'])) {
+    if (isset($this->_batch->data['processCallback'])) {
       // TODO - still need a way to calculate processed rows
-      if (!empty($this->_batch['process_callback_args'])) {
-        call_user_func_array($this->_batch['process_callback'], $this->_batch['process_callback_args']);
+      if (!empty($this->_batch->data['processCallbackArgs'])) {
+        call_user_func_array($this->_batch->data['processCallback'], $this->_batch->data['processCallbackArgs']);
       }
       else {
-        call_user_func($this->_batch['process_callback']);
+        call_user_func($this->_batch->data['processCallback']);
       }
     }
 
     // end processing
     $this->dupeDelete();
+
+    // check batch is finished or not
+    if ($this->_batch->data['processed'] >= $this->_batch->data['total'] || $this->_batch->data['isCompleted']) {
+      $finishStatus = self::$_batchStatus['Completed'];
+      $this->_batch->status_id = $finishStatus;
+      $this->saveBatch();
+      $this->finish();
+    }
+    else {
+      $this->saveBatch();
+    }
   }
 
   /**
@@ -259,43 +290,44 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    */
   public function finish() {
     // before finish, trigger logic to handling ending of batch
-    if (isset($this->_batch->data['finish_callback'])) {
-      if (!empty($this->_batch->data['finish_callback_args']) && is_array($this->_batch->data['finish_callback_args'])) {
-        call_user_func_array($this->_batch->data['finish_callback'], $this->_batch->data['finish_callback_args']);
+    if (isset($this->_batch->data['finishCallback'])) {
+      if (!empty($this->_batch->data['finishCallbackArgs']) && is_array($this->_batch->data['finishCallbackArgs'])) {
+        $finished = call_user_func_array($this->_batch->data['finishCallback'], $this->_batch->data['finishCallbackArgs']);
       }
       else {
-        call_user_func($this->_batch->data['finish_callback']);
+        $finished = call_user_func($this->_batch->data['finishCallback']);
       }
     }
 
     // after finish, don't forget to delete job, and change status of batch
     $this->dupeDelete();
+    if ($finished === FALSE) {
+      return;
+    }
+
     $completeStatus = self::$_batchStatus['Completed'];
-    $params = array(
-      'id' => $this->_id,
-      'modified_id' => $this->_batch['created_id'],
-      'modified_date' => date('YmdHis'),
-      'status_id' => $completeStatus,
-    );
-    $this->_batch = self::create($params);
+    $this->_batch->modified_id = $this->_batch->created_id;
+    $this->_batch->modified_date = date('YmdHis');
+    $this->_batch->status_id = $completeStatus;
+    $this->saveBatch();
 
     // notify author of this batch by email
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
-    list($toName, $toEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_batch['created_id'], FALSE);
+    list($toName, $toEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_batch->created_id, FALSE);
     $sendTemplateParams = array(
       'groupName' => 'msg_tpl_workflow_batch',
       'valueName' => 'batch_complete_notification',
-      'contactId' => $this->_batch['created_id'],
+      'contactId' => $this->_batch->created_id,
       'from' => "$domainEmailName <$domainEmailAddress>",
       'toEmail' => "$toName <$toEmail>",
       'tplParams' => array(
-        'label' => $this->_batch['label'],
-        'description' => $this->_batch['description'],
-        'created_id' => $this->_batch['created_id'],
-        'created_date' => $this->_batch['created_date'],
-        'modified_id' => $this->_batch['modified_id'],
-        'modified_date' => $this->_batch['modified_date'],
-        'status_id' => $this->_batch['status_id'],
+        'label' => $this->_batch->label,
+        'description' => $this->_batch->description,
+        'created_id' => $this->_batch->created_id,
+        'created_date' => $this->_batch->created_date,
+        'modified_id' => $this->_batch->modified_id,
+        'modified_date' => $this->_batch->modified_date,
+        'status_id' => $this->_batch->status_id,
       ),
     );
     CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
@@ -308,7 +340,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * @return object|bool
    */
   protected function dupeCheck() {
-    $dao = new CRM_Core_DAO_Sequence();
+    $dao = new CRM_Core_BAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
       return $dao;
@@ -322,7 +354,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * @return object
    */
   protected function dupeInsert() {
-    $dao = new CRM_Core_DAO_Sequence();
+    $dao = new CRM_Core_BAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
       $dao->timestamp = time();
@@ -343,11 +375,21 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * @return bool
    */
   protected function dupeDelete() {
-    $dao = new CRM_Core_DAO_Sequence();
+    $dao = new CRM_Core_BAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
       return $dao->delete();
     }
     return FALSE;
+  }
+
+  protected function saveBatch() {
+    $params = array();
+    foreach($this->_batch as $key => $val) {
+      $params[$key] = $val;
+    }
+    $params['id'] = $this->_id;
+    $batch = self::create($params);
+    $this->_batch = $batch;
   }
 }

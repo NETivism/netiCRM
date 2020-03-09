@@ -99,11 +99,16 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     if ($typeIds && is_array($typeIds)) {
       $dao->whereAdd("status_id IN (".implode(",", $typeIds).")");
     }
-    $dao->orderBy('created_date DESC');
+    $dao->orderBy('created_date ASC');
     $dao->find();
 
     $rows = array();
     while ($dao->fetch()) {
+      $meta = NULL;
+      $row = array();
+      if ($dao->data) {
+        $meta = unserialize($dao->data);
+      }
       $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->created_id);
       $row['id'] = $dao->id;
       $row['label'] = $dao->label; 
@@ -112,6 +117,9 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       $row['modified_date'] = $dao->modified_date;
       $row['batch_status'] = $batchStatusLabel[$dao->status_id];
       $row['batch_type'] = $batchTypeLabel[$dao->type_id];
+      if (!empty($meta['total'])) {
+        $row['processed'] = $meta['processed'].' / '.$meta['total'];
+      }
       $row['action'] = CRM_Core_Action::formLink(self::links(), $action, array(
         'id' => $dao->id, 'qfKey' => $qfKey)
       );

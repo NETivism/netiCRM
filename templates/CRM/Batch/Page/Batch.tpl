@@ -24,6 +24,7 @@
       <th class="crm-batch-created_date">{ts}Created Date{/ts}</th>
       <th class="crm-batch-modified_date">{ts}Modified Date{/ts}</th>
       <th class="crm-batch-type">{ts}Batch Type{/ts}</th>
+      <th class="crm-batch-processed">{ts}Completed{/ts}/{ts}Total{/ts}</th>
       <th class="crm-batch-status">{ts}Batch Status{/ts}</th>
       <th></th>
     </tr>
@@ -36,6 +37,7 @@
       <td class="crm-batch-created_date">{$row.created_date|crmDate}</td>
       <td class="crm-batch-modified_date">{$row.modified_date|crmDate}</td>
       <td class="crm-batch-type">{$row.batch_type}</td>
+      <td class="crm-batch-processed">{$row.processed}</td>
       <td class="crm-batch-status">{$row.batch_status}</td>
       <td class="action">{$row.action}</td>
     </tr>
