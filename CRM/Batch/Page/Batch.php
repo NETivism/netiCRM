@@ -79,7 +79,18 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
    * Browse all entities.
    */
   public function browse() {
-    $this->search();
+    $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+
+    // search form and search critaria
+    if ($id) {
+      if ($this->_action & CRM_Core_Action::EXPORT) {
+        $this->processDownload($id);
+        return;
+      }
+    }
+    else {
+      $this->search();
+    }
     $label = CRM_Utils_Request::retrieve('label', 'Positive', $this);
     $statusIds = CRM_Utils_Request::retrieve('status_id', 'Positive', $this);
     $typeIds = CRM_Utils_Request::retrieve('type_id', 'Positive', $this);
@@ -90,6 +101,9 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $batchTypeLabel = CRM_Core_OptionGroup::values('batch_type');
 
     $dao = new CRM_Batch_DAO_Batch();
+    if ($id) {
+      $dao->whereAdd("id = '".CRM_Utils_Type::escape($id, 'Positive')."'");
+    }
     if ($label) {
       $dao->whereAdd("label LIKE '%".CRM_Utils_Type::escape($label, 'String')."%'");
     }
@@ -103,6 +117,8 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $dao->find();
 
     $rows = array();
+
+    $currentUser = CRM_Core_Session::singleton()->get("userID");
     while ($dao->fetch()) {
       $meta = NULL;
       $row = array();
@@ -120,9 +136,16 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       if (!empty($meta['total'])) {
         $row['processed'] = $meta['processed'].' / '.$meta['total'];
       }
-      $row['action'] = CRM_Core_Action::formLink(self::links(), $action, array(
-        'id' => $dao->id, 'qfKey' => $qfKey)
-      );
+
+      // batch action should also verify permission
+      if (!empty($meta['download']) && $currentUser == $dao->created_id) {
+        if (isset($meta['download']['file']) && file_exists($meta['download']['file'])) {
+          $row['action'] = '<a href="'.CRM_Utils_System::url("civicrm/admin/batch", "reset=1&id={$dao->id}&action=export").'" class="download">'.ts("Download").'</a>';
+        }
+      }
+      else {
+        $row['action'] = 'n/a';
+      }
       $rows[$dao->id] = $row;
     }
     $this->assign('rows', $rows);
@@ -150,4 +173,34 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $form->run();
   }
 
+  public function processDownload($id) {
+    $params = array(
+      'id' => $id,
+    );
+    $defaults = array();
+    $batch = CRM_Batch_BAO_Batch::retrieve($params, $defaults);
+    $currentUser = CRM_Core_Session::singleton()->get("userID");
+    if ($currentUser == $batch->created_id) {
+      if (isset($batch->data['download'])) {
+        if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file'])) {
+          if (isset($batch->data['download']['header'])) {
+            if (is_array($batch->data['download']['header'])) {
+              foreach($batch->data['download']['header'] as $header) {
+                header($header);
+              }
+            }
+            else {
+              header($batch->data['download']['header']);
+            }
+          }
+          $fp = fopen($batch->data['download']['file'], "r");
+          while(!feof($fp)) {
+            echo fread($fp, 4096);
+            flush();
+          }
+          CRM_Utils_System::civiExit();
+        }
+      }
+    }
+  }
 }

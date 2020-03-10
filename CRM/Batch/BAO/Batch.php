@@ -276,6 +276,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       $this->finish();
     }
     else {
+      $this->_batch->modified_date = date('YmdHis');
       $this->saveBatch();
     }
   }
@@ -315,21 +316,26 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
     list($toName, $toEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_batch->created_id, FALSE);
     $sendTemplateParams = array(
-      'groupName' => 'msg_tpl_workflow_batch',
+      'groupName' => 'msg_tpl_workflow_meta',
       'valueName' => 'batch_complete_notification',
       'contactId' => $this->_batch->created_id,
       'from' => "$domainEmailName <$domainEmailAddress>",
       'toEmail' => "$toName <$toEmail>",
       'tplParams' => array(
+        'batch_id' => $this->_id, 
         'label' => $this->_batch->label,
         'description' => $this->_batch->description,
         'created_id' => $this->_batch->created_id,
         'created_date' => $this->_batch->created_date,
         'modified_id' => $this->_batch->modified_id,
         'modified_date' => $this->_batch->modified_date,
+        'expire_date' => date('Y-m-d H:i:s', strtotime($this->_batch->created_date) + 86400*8),
         'status_id' => $this->_batch->status_id,
       ),
     );
+    if ($this->_batch->data['total']) {
+      $sendTemplateParams['tplParams']['total'] = $this->_batch->data['total'];
+    }
     CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
   }
 
@@ -339,8 +345,8 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * 
    * @return object|bool
    */
-  protected function dupeCheck() {
-    $dao = new CRM_Core_BAO_Sequence();
+  public function dupeCheck() {
+    $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
       return $dao;
@@ -353,18 +359,18 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * 
    * @return object
    */
-  protected function dupeInsert() {
-    $dao = new CRM_Core_BAO_Sequence();
+  public function dupeInsert() {
+    $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
-      $dao->timestamp = time();
+      $dao->timestamp = microtime(true);
       $dao->value = $this->_id;
-      $dao->save();
+      $dao->update();
     }
     else {
-      $dao->timestamp = time();
+      $dao->timestamp = microtime(true);
       $dao->value = $this->_id;
-      $dao->save();
+      $dao->insert();
     }
     return $dao;
   }
@@ -374,16 +380,16 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * 
    * @return bool
    */
-  protected function dupeDelete() {
-    $dao = new CRM_Core_BAO_Sequence();
+  public function dupeDelete() {
+    $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
-    if ($dao->find(TRUE)) {
+    if ($dao->find()) {
       return $dao->delete();
     }
     return FALSE;
   }
 
-  protected function saveBatch() {
+  public function saveBatch() {
     $params = array();
     foreach($this->_batch as $key => $val) {
       $params[$key] = $val;

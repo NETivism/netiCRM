@@ -38,8 +38,8 @@
  *
  */
 class CRM_Export_BAO_Export {
-  CONST EXPORT_ROW_COUNT = 50;
-  CONST EXPORT_BATCH_THRESHOLD = 300;
+  CONST EXPORT_ROW_COUNT = 2000;
+  CONST EXPORT_BATCH_THRESHOLD = 10000;
   CONST VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
   CONST DISPLAY_SEPARATOR = '|';
 
@@ -599,7 +599,7 @@ class CRM_Export_BAO_Export {
         $file = $config->uploadDir.self::getExportFileName($exportMode);
         $batch = new CRM_Batch_BAO_Batch();
         $batchParams = array(
-          'label' => ts('Batch').': '.self::getExportFileName($exportMode),
+          'label' => ts('Export').': '.self::getExportFileName($exportMode),
           'startCallback' => NULL,
           'startCallback_args' => NULL,
           'processCallback' => array(__CLASS__, __FUNCTION__),
@@ -607,13 +607,22 @@ class CRM_Export_BAO_Export {
           'finishCallback' => array(__CLASS__, 'batchFinish'),
           'finishCallbackArgs' => NULL,
           'exportFile' => $file,
+          'download' => array(
+            'header' => array(
+              'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              'Content-Disposition: attachment;filename="'.self::getExportFileName($exportMode).'"',
+            ),
+            'file' => $file,
+          ),
+          'actionPermission' => '',
           'total' => $totalNumRows,
           'processed' => 0,
         );
         $batch->start($batchParams);
 
         // redirect to notice page
-        CRM_Utils_System::civiExit();
+        CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
       }
     }
     else {
@@ -627,6 +636,10 @@ class CRM_Export_BAO_Export {
       $dao = CRM_Core_DAO::executeQuery($limitQuery);
 
       if ($dao->N <= 0) {
+        break;
+      }
+      // every batch only process threshold
+      if ($count >= self::EXPORT_BATCH_THRESHOLD && !empty($civicrm_batch)) {
         break;
       }
 
@@ -1040,14 +1053,11 @@ class CRM_Export_BAO_Export {
       $componentDetails = array();
       $dao->free();
 
+      // continue process next run
+      $offset += $rowCount;
       // only process one batch a time
       if (!empty($civicrm_batch)) {
         $civicrm_batch->data['processed'] += $count;
-        break;
-      }
-      // continue process next run
-      else {
-        $offset += $rowCount;
       }
     }
 
