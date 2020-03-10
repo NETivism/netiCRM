@@ -24,7 +24,7 @@
   </field>
   <field>
       <name>timestamp</name>
-      <type>timestamp</type>
+      <type>double</type>
       <add>4.0</add>
   </field>
 </table>

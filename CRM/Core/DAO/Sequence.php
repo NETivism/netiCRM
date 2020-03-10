@@ -98,7 +98,7 @@ class CRM_Core_DAO_Sequence extends CRM_Core_DAO
   public $value;
   /**
    *
-   * @var timestamp
+   * @var double
    */
   public $timestamp;
   /**
@@ -138,7 +138,7 @@ class CRM_Core_DAO_Sequence extends CRM_Core_DAO
         ) ,
         'timestamp' => array(
           'name' => 'timestamp',
-          'type' => CRM_Utils_Type::T_TIMESTAMP,
+          'type' => CRM_Utils_Type::T_DOUBLE,
           'title' => ts('Timestamp') ,
         ) ,
       );
