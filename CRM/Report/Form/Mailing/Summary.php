@@ -168,17 +168,23 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     $this->_columns['civicrm_mailing_event_opened'] = array(
       'dao' => 'CRM_Mailing_DAO_Mailing',
       'fields' => array(
-        'open_count' => array(
+        'unique_open_count' => array(
           'name' => 'id',
-          'title' => ts('Opened'),
+          'title' => ts('Unique Tracked Opens'),
+          'alias' => 'mailing_event_opened_civireport',
+          'dbAlias' => 'mailing_event_opened_civireport.event_queue_id',
         ),
-        'open_rate' => array(
-          'title' => 'Confirmed Open Rate',
+        'unique_open_rate' => array(
+          'title' => ts('Unique Open Rate'),
           'statistics' => array(
             'calc' => 'PERCENTAGE',
-            'top' => 'civicrm_mailing_event_opened.open_count',
+            'top' => 'civicrm_mailing_event_opened.unique_open_count',
             'base' => 'civicrm_mailing_event_delivered.delivered_count',
           ),
+        ),
+        'open_count' => array(
+          'name' => 'id',
+          'title' => ts('Total Opens'),
         ),
       ),
     );
@@ -186,16 +192,21 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     $this->_columns['civicrm_mailing_event_trackable_url_open'] = array(
       'dao' => 'CRM_Mailing_DAO_Mailing',
       'fields' => array(
+        'unique_click_count' => array(
+          'name' => 'id',
+          'title' => ts('Unique Click-throughs'),
+          'alias' => 'mailing_event_trackable_url_open_civireport',
+          'dbAlias' => 'mailing_event_trackable_url_open_civireport.event_queue_id',
+        ),
         'click_count' => array(
           'name' => 'id',
-          'title' => ts('Clicks'),
+          'title' => ts('Total Clicks'),
         ),
         'CTR' => array(
-          'title' => 'Click through Rate',
-          'default' => 0,
+          'title' => ts('Unique Click-throughs Rate'),
           'statistics' => array(
             'calc' => 'PERCENTAGE',
-            'top' => 'civicrm_mailing_event_trackable_url_open.click_count',
+            'top' => 'civicrm_mailing_event_trackable_url_open.unique_click_count',
             'base' => 'civicrm_mailing_event_delivered.delivered_count',
           ),
         ),
@@ -204,8 +215,8 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
           'default' => 0,
           'statistics' => array(
             'calc' => 'PERCENTAGE',
-            'top' => 'civicrm_mailing_event_trackable_url_open.click_count',
-            'base' => 'civicrm_mailing_event_opened.open_count',
+            'top' => 'civicrm_mailing_event_trackable_url_open.unique_click_count',
+            'base' => 'civicrm_mailing_event_opened.unique_open_count',
           ),
         ),
       ),
@@ -251,10 +262,19 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     $count_tables = array(
       'civicrm_mailing_event_queue',
       'civicrm_mailing_event_delivered',
-      'civicrm_mailing_event_opened',
       'civicrm_mailing_event_bounce',
+      'civicrm_mailing_event_opened',
       'civicrm_mailing_event_trackable_url_open',
       'civicrm_mailing_event_unsubscribe',
+    );
+    $distinctCountColumns = array(
+      'civicrm_mailing_event_queue.queue_count',
+      'civicrm_mailing_event_delivered.delivered_count',
+      'civicrm_mailing_event_bounce.bounce_count',
+      'civicrm_mailing_event_opened.unique_open_count',
+      'civicrm_mailing_event_trackable_url_open.unique_click_count',
+      'civicrm_mailing_event_unsubscribe.unsubscribe_count',
+      'civicrm_mailing_event_unsubscribe.optout_count',
     );
 
     $select = array();
@@ -282,7 +302,11 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
             }
             else {
               if (in_array($tableName, $count_tables)) {
-                $select[] = "count(DISTINCT {$field['dbAlias']}) as {$tableName}_{$fieldName}";
+                $distinct = '';
+                if (in_array("{$tableName}.{$fieldName}", $distinctCountColumns)) {
+                  $distinct = 'DISTINCT';
+                }
+                $select[] = "count($distinct {$field['dbAlias']}) as {$tableName}_{$fieldName}";
               }
               else {
                 $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
