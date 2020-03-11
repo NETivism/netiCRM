@@ -45,9 +45,6 @@
 	<div class="crm-results-block">
     {* Search request has returned 1 or more matching rows. Display results and collapse the search criteria fieldset. *}
         {* This section handles form elements for action task select and submit *}
-        <div>
-        {include file="CRM/Contribute/Page/ContributionTotals.tpl"}
-        </div>
        <div class="crm-search-tasks">
         {include file="CRM/Contact/Form/Search/ResultTasks.tpl"}
 		</div>

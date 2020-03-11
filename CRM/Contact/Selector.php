@@ -185,7 +185,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       require_once 'CRM/Core/BAO/UFGroup.php';
       $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(CRM_Core_Action::VIEW,
         CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY |
-        CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY,
+        CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY |
+        CRM_Core_BAO_UFGroup::ADMIN_VISIBILITY,
         FALSE, $this->_ufGroupID
       );
       self::$_columnHeaders = NULL;
@@ -376,7 +377,14 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       $direction = CRM_Utils_Sort::ASCENDING;
       $empty = TRUE;
       if (!self::$_columnHeaders) {
-        self::$_columnHeaders = array(array('name' => ''),
+        self::$_columnHeaders = array(
+          array('name' => ''),
+          array(
+            'name' => '#',
+            'title' => ts('Contact ID'),
+            'sort' => 'contact_id',
+            'direction' => CRM_Utils_Sort::DONTCARE,
+          ),
           array(
             'name' => ts('Name'),
             'sort' => 'sort_name',
@@ -433,7 +441,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
           self::$_columnHeaders = array();
         }
         else {
-          self::$_columnHeaders[] = array('desc' => ts('Actions'));
+          self::$_columnHeaders[] = array('desc' => ts('Actions'), 'name' => ts('Action'));
         }
       }
       return self::$_columnHeaders;

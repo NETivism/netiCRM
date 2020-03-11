@@ -97,6 +97,14 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             'options' => $contactTypes,
             'default' => array('Individual'),
           ),
+          'legal_identifier' => 
+          array(
+            'title' => ts('Legal Identifier'),
+            'operationPair' => array(
+              'nnll' => ts('Is not empty (Null)'),
+              'nll' => ts('Is empty (Null)'),
+            ),
+          ),
         ),
       ),
       'civicrm_contribution' =>
@@ -243,8 +251,24 @@ ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribut
   }
 
   function where() {
+    $params = $this->_params;
+
+    // #27716, remove default null operation, because we will use REGEXP after parent build query
+    if (isset($this->_params['legal_identifier_op'])) {
+      $this->_params['legal_identifier_op'] = 'has';
+    }
     parent::where();
-    $this->_where .= "AND ({$this->_specialCase} NOT REGEXP '^[0-9]{8}$')";
+    
+    // contact doesn't has legal identifier
+    if (isset($params['legal_identifier_op']) && $params['legal_identifier_op'] == 'nll') {
+      // force empty string to go null
+      $this->_where .= "AND (NULLIF({$this->_specialCase}, '') IS NULL)";
+    }
+    // only contacts has legal identifier
+    else {
+      // empty string will go null, then regexp can filter out
+      $this->_where .= "AND (NULLIF({$this->_specialCase}, '') NOT REGEXP '^[0-9]{8}$')";
+    }
   }
 
   function groupBy(){

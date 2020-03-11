@@ -125,8 +125,10 @@
               this.currentPriceAmount = reg.exec(option_label)[1];
             }
           }
+          // 'last step' button from confirm page.
           var reg_id = new RegExp(/[\?&]?id=/);
-          if(!reg_id.test(location.search)){
+          var reg_retry = /retry=1/;
+          if(!reg_id.test(location.search) || reg_retry.test(location.search)){
             this.currentFormStep = 2;
           }
         }
@@ -421,22 +423,6 @@
               cj(event.currentTarget).unbind('ajaxComplete');
             }
           });
-
-          /*
-          var promSkipStep = new Promise(function(resolve, reject) {
-            cj(document).ajaxComplete(function(event, xhr, options) {
-              var url = options.url;
-              if(url.indexOf('civicrm/contribute/transact') != -1 && 
-                url.indexOf('type='+ppid) != -1 && 
-                url.indexOf('snippet=4') != -1 &&
-                xhr.readyState == 4) {
-                resolve();
-              }
-            });
-          }).then(function(){
-            // window.ContribPage.setFormStep(2);
-          });
-          */
         }
 
       },

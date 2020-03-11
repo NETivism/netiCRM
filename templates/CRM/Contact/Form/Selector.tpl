@@ -64,9 +64,9 @@
             {/if}
             <td>{$row.contact_type}</td>
             <td>{$row.contact_id}</td>
-            <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
+            <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}{if $row.nick_name} ({$row.nick_name}){/if}</a></td>
             {foreach from=$row item=value key=key} 
-               {if ($key neq "checkbox") and ($key neq "action") and ($key neq "contact_type") and ($key neq "status") and ($key neq "sort_name") and ($key neq "contact_id") and ($key neq "contact_sub_type")}
+               {if ($key neq "checkbox") and ($key neq "action") and ($key neq "contact_type") and ($key neq "status") and ($key neq "sort_name") and ($key neq "contact_id") and ($key neq "contact_sub_type") and ($key neq "nick_name")}
                 <td>
                 {if $key EQ "household_income_total" }
                     {$value|crmMoney}
@@ -75,7 +75,6 @@
                 {else}
                     {$value}
                 {/if}
-                     &nbsp;
                  </td>
                {/if}
             {/foreach}
@@ -106,8 +105,8 @@
               <td>{$row.phone}</td> 
            {else}
               {foreach from=$row item=value key=key}
-                {if ($key neq "checkbox") and ($key neq "action") and ($key neq "contact_type") and ($key neq "contact_sub_type") and ($key neq "status") and ($key neq "sort_name") and ($key neq "contact_id")}
-                 <td>{$value}&nbsp;</td>
+                {if ($key neq "checkbox") and ($key neq "action") and ($key neq "contact_type") and ($key neq "contact_sub_type") and ($key neq "status") and ($key neq "sort_name") and ($key neq "contact_id") and ($key neq "nick_name")}
+                 <td>{$value}</td>
                 {/if}   
               {/foreach}
             {/if}
