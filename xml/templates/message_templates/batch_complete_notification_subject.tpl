@@ -1,1 +1,1 @@
-{ts}Batch Notification{/ts} - {$title} {ts}Completed{/ts}
+{ts}Batch Notification{/ts} - {$label} {ts}Completed{/ts}

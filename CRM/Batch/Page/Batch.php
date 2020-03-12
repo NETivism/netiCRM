@@ -97,6 +97,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
     $action = array_sum(array_keys($this->links()));
 
+    $batchStatus = CRM_Batch_BAO_Batch::batchStatus();
     $batchStatusLabel = CRM_Core_OptionGroup::values('batch_status');
     $batchTypeLabel = CRM_Core_OptionGroup::values('batch_type');
 
@@ -139,8 +140,20 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
 
       // batch action should also verify permission
       if (!empty($meta['download']) && $currentUser == $dao->created_id) {
-        if (isset($meta['download']['file']) && file_exists($meta['download']['file'])) {
+        $completedStatus = $batchStatus['Completed'];
+        $canceledStatus = $batchStatus['Canceled'];
+        if (isset($meta['download']['file']) && file_exists($meta['download']['file']))  {
           $row['action'] = '<a href="'.CRM_Utils_System::url("civicrm/admin/batch", "reset=1&id={$dao->id}&action=export").'" class="download">'.ts("Download").'</a>';
+          if ($dao->status_id == $completedStatus || $dao->status_id == $canceledStatus) {
+            $row['expired_date'] = date('Y-m-d H:i:s', strtotime($dao->modified_date) + 86400*CRM_Batch_BAO_Batch::EXPIRE_DAY);
+            // reset action string when expired
+            if (strtotime($row['expired_date']) < time()) {
+              $row['action'] = ts("Download")." - ".ts("Expired");
+            }
+            $row['action'] .= '<br>';
+            $expiredDate = CRM_Utils_Date::customFormat($row['expired_date']);
+            $row['action'] .= ts('Expired Date').": ".$expiredDate;
+          }
         }
       }
       else {
@@ -182,7 +195,8 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $currentUser = CRM_Core_Session::singleton()->get("userID");
     if ($currentUser == $batch->created_id) {
       if (isset($batch->data['download'])) {
-        if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file'])) {
+        $expireStamp = strtotime($batch->modified_date) + 86400 * CRM_Batch_BAO_Batch::EXPIRE_DAY;
+        if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file']) && $expireStamp > time()) {
           if (isset($batch->data['download']['header'])) {
             if (is_array($batch->data['download']['header'])) {
               foreach($batch->data['download']['header'] as $header) {

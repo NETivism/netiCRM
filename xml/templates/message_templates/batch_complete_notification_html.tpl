@@ -13,9 +13,9 @@
 <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-batch_complete" style="font-family: Arial, Verdana, sans-serif; text-align: left;"> 
 
   <tr>
-    <td {$headerStyle} colspan="2">
+    <th {$headerStyle} colspan="2">
       {ts}Summary{/ts}
-    </td>
+    </th>
   </tr>
 
   <tr>
@@ -29,7 +29,7 @@
 
   <tr>
     <td {$labelStyle}>
-      {ts}Complete Date{/ts}
+      {ts}End Date{/ts}
     </td>
     <td {$valueStyle}>
       {$modified_date|crmDate}
@@ -38,7 +38,7 @@
 
   <tr>
     <td {$labelStyle}>
-      {ts}Expire Date{/ts}
+      {ts}Expired Date{/ts}
     </td>
     <td {$valueStyle}>
       {$expire_date|crmDate}
@@ -58,14 +58,16 @@
   {/if}
 
   <tr>
-    <td {$headerStyle} colspan="2">
+    <th {$headerStyle} colspan="2">
       {ts}You can check result by login to the website.{/ts}
-    </td>
+    </th>
   </tr>
   <tr>
-    <td {$label} colspan="2">
-      <a href="{crmURL p='civicrm/admin/batch' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}">{ts}Link{/ts}</a><br>
-      {crmURL p='civicrm/admin/batch' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}
+    <td {$labelStyle}>
+      {ts}Link{/ts}
+    </td>
+    <td {$valueStyle}>
+      <a href="{crmURL p='civicrm/admin/batch' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}">{crmURL p='civicrm/admin/batch' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}</a><br>
     </td>
   </tr>
 </table>

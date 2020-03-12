@@ -10,6 +10,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   const QUEUE_NAME = 'batch_auto';
 
   /**
+   * expire day
+   */
+  const EXPIRE_DAY = 8;
+
+  /**
    * Batch id to load
    * @var int
    */
@@ -162,7 +167,47 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
         $message = ts('Success processing queuing batch.');
       }
     }
+    if (date('G') >= 3 && date('G') <= 6) {
+      self::expireBatch();
+    }
     return $message;
+  }
+
+  /**
+   * Run last queuing batching
+   *
+   * @return string
+   *   message that indicate current running status
+   */
+  public static function expireBatch() {
+    $type = self::batchType();
+    $status = self::batchStatus();
+    unset($status['Running']);
+    unset($status['Pending']);
+    $purgeDay = self::EXPIRE_DAY*4;
+    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL ORDER BY modified_date ASC";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(
+      1 => array($type['Auto'], 'Integer'),
+    ));
+    $expires = array();
+    while($dao->fetch()) {
+      $params = array(
+        'id' => $dao->id,
+      );
+      $defaults = array();
+      $batch = CRM_Batch_BAO_Batch::retrieve($params, $defaults);
+      if ($batch->id) {
+        if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file'])) {
+          @unlink($batch->data['download']['file']);
+        }
+        $batch->delete();
+        $expires[] = $dao->id;
+      }
+    }
+    if (count($expires)) {
+      return 'Batch ids in '.implode(",", $expires).' has been expires';
+    }
+    return '';
   }
 
   /**
@@ -320,7 +365,8 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       'valueName' => 'batch_complete_notification',
       'contactId' => $this->_batch->created_id,
       'from' => "$domainEmailName <$domainEmailAddress>",
-      'toEmail' => "$toName <$toEmail>",
+      'toName' => $toName,
+      'toEmail' => $toEmail,
       'tplParams' => array(
         'batch_id' => $this->_id, 
         'label' => $this->_batch->label,
@@ -329,7 +375,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
         'created_date' => $this->_batch->created_date,
         'modified_id' => $this->_batch->modified_id,
         'modified_date' => $this->_batch->modified_date,
-        'expire_date' => date('Y-m-d H:i:s', strtotime($this->_batch->created_date) + 86400*8),
+        'expire_date' => date('Y-m-d H:i:s', strtotime($this->_batch->modified_date) + 86400*self::EXPIRE_DAY),
         'status_id' => $this->_batch->status_id,
       ),
     );

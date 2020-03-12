@@ -520,7 +520,7 @@ class CRM_Export_BAO_Export {
     }
 
     $queryString = "$select $from $where";
-    $countQuery = "SELECT COUNT(*) $from $where";
+    $countQuery = "SELECT contact_a.id $from $where";
 
     $groupBy = "";
     if (CRM_Utils_Array::value('tags', $returnProperties) ||
@@ -592,7 +592,8 @@ class CRM_Export_BAO_Export {
     $count = 0;
 
     if (empty($civicrm_batch)) {
-      $totalNumRows = CRM_Core_DAO::singleValueQuery($countQuery);
+      $countDAO = CRM_Core_DAO::executeQuery($countQuery);
+      $totalNumRows = $countDAO->N;
       if ($totalNumRows > self::EXPORT_BATCH_THRESHOLD) {
         // start batch
         $config = CRM_Core_Config::singleton();
@@ -626,7 +627,7 @@ class CRM_Export_BAO_Export {
       }
     }
     else {
-      if (isset($civicrm_batch->data['processed'])) {
+      if (isset($civicrm_batch->data['processed']) && !empty($civicrm_batch->data['processed'])) {
         $offset = $civicrm_batch->data['processed'] ;
       }
     }
@@ -636,10 +637,6 @@ class CRM_Export_BAO_Export {
       $dao = CRM_Core_DAO::executeQuery($limitQuery);
 
       if ($dao->N <= 0) {
-        break;
-      }
-      // every batch only process threshold
-      if ($count >= self::EXPORT_BATCH_THRESHOLD && !empty($civicrm_batch)) {
         break;
       }
 
@@ -1055,13 +1052,17 @@ class CRM_Export_BAO_Export {
 
       // continue process next run
       $offset += $rowCount;
-      // only process one batch a time
+
+      // every batch only process threshold
       if (!empty($civicrm_batch)) {
-        $civicrm_batch->data['processed'] += $count;
+        if ($count >= self::EXPORT_BATCH_THRESHOLD) {
+          break;
+        }
       }
     }
-
-    self::writeDetailsToTable($exportTempTable, $componentDetails, $sqlColumns);
+    if (!empty($civicrm_batch) && $count) {
+      $civicrm_batch->data['processed'] += $count;
+    }
 
     // do merge same address and merge same household processing
     if ($mergeSameAddress) {

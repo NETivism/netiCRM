@@ -2,8 +2,8 @@
 ===========================================================
 
 {ts}Create Date{/ts}: {$created_date|crmDate}
-{ts}Complete Date{/ts}: {$modified_date|crmDate}
-{ts}Expire Date{/ts}: {$expire_date|crmDate}
+{ts}End Date{/ts}: {$modified_date|crmDate}
+{ts}Expired Date{/ts}: {$expire_date|crmDate}
 {if $total}{ts}Total{/ts}: {$total} {ts}rows{/ts}{/if}
 
 ===========================================================
