@@ -656,7 +656,19 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     $tableDAO = CRM_Core_DAO::executeQuery($query, $params);
     $importTables = array();
     while ($tableDAO->fetch()) {
-      $importTables[] = $tableDAO->import_table;
+      $microtime = str_replace('civicrm_import_job_', '', $tableDAO->import_table);
+      list($microtime) = explode('_', $microtime);
+      // check if over 30 days
+      if (is_numeric($microtime)) {
+        $microtime = (int) $microtime;
+        if (CRM_REQUEST_TIME - $microtime > 86400*30) {
+          $importTables[] = $tableDAO->import_table;
+        }
+      }
+      // no microtime format
+      else {
+        $importTables[] = $tableDAO->import_table;
+      }
     }
     if (!empty($importTables)) {
       $importTable = implode(',', $importTables);

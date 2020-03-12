@@ -47218,3 +47218,57 @@ msgstr ""
 
 msgid "Age search will exclude deceased contact."
 msgstr ""
+
+#: CRM/Batch/BAO/Batch.php
+msgid ""
+"Found batch job number %1 running over 1 hour. We delete this job then start "
+"another batch job number %2."
+msgstr ""
+
+#: CRM/Batch/BAO/Batch.php
+msgid "We still have running batch job in queue recently."
+msgstr ""
+
+#: CRM/Batch/BAO/Batch.php
+msgid "Success processing queuing batch."
+msgstr ""
+
+#: CRM/Batch/DAO/Batch.php
+msgid "Batch ID"
+msgstr ""
+
+#: CRM/Batch/DAO/Batch.php
+msgid "Batch Name"
+msgstr ""
+
+#: CRM/Batch/DAO/Batch.php CRM/Batch/Form/Search.php
+msgid "Batch Status"
+msgstr ""
+
+#: CRM/Batch/DAO/Batch.php CRM/Batch/Form/Search.php
+msgid "Batch Type"
+msgstr ""
+
+#: CRM/Batch/DAO/Batch.php
+msgid "Batch Data"
+msgstr ""
+
+#: CRM/Batch/Page/Batch.php
+msgid "Batch Processing"
+msgstr ""
+
+#: CRM/Batch/Page/Batch.php
+msgid "Download"
+msgstr ""
+
+#: CRM/Batch/Page/Batch.php
+msgid "Search Batches"
+msgstr ""
+
+#: CRM/Batch/Page/Batch.php
+msgid "Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."
+msgstr ""
+
+#: CRM/Core/xml/Menu/Admin.xml
+msgid "Batch Job List"
+msgstr ""
