@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-03-12 12:17+0000\n"
+"PO-Revision-Date: 2020-03-13 05:41+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47480,3 +47480,15 @@ msgstr "因為您欲處理的資料超過限額，我們將之排程為批次作
 #: CRM/Core/xml/Menu/Admin.xml
 msgid "Batch Job List"
 msgstr "批次作業列表"
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "Batch Complete Notification"
+msgstr "批次作業完成通知"
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "Batch Notification"
+msgstr "批次作業通知"
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "You can check result by login to the website."
+msgstr "你可以點擊連結來登入網站查看結果"
