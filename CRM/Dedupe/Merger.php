@@ -431,7 +431,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
           $preOperationSqls = self::operationSql($mainId, $otherId, $table, $tableOperations);
           $sqls = array_merge($sqls, $preOperationSqls);
 
-          // skip location related table, because moveAllBelongings has done this
+          // skip location related table, because move All Belongings has done this
           $shortName = str_replace('civicrm_', '', $table);
           if (!isset(self::$locationBlocks[$shortName])) {
             $sqls[] = "UPDATE IGNORE $table SET $field = $mainId WHERE $field = $otherId";
@@ -610,15 +610,22 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     );
     $allLocationTypes = CRM_Core_PseudoConstant::locationType();
 
+    // skip these field for conflict detection
+    $validFields = CRM_Dedupe_Merger::$validFields;
+    foreach(array('do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_phone', 'do_not_trade', 'is_opt_out', 'preferred_communication_method')  as $fld) {
+      $exists = array_search($fld, $validFields);
+      if ($exists !== FALSE) {
+        unset($validFields[$exists]);
+      }
+    }
+
     foreach ($migrationInfo as $key => $val) {
       if ($val === "null") {
         // Rule: no overwriting with empty values in any mode
         unset($migrationInfo[$key]);
         continue;
       }
-      elseif ((in_array(substr($key, 5), CRM_Dedupe_Merger::$validFields) ||
-          substr($key, 0, 12) == 'move_custom_'
-        ) && $val != NULL) {
+      elseif ((in_array(substr($key, 5), $validFields) || substr($key, 0, 12) == 'move_custom_') && $val != NULL) {
         // Rule: if both main-contact has other-contact, let $mode decide if to merge a
         // particular field or not
         if (!empty($migrationInfo['rows'][$key]['main'])) {
@@ -790,7 +797,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
             $label = '<i class="zmdi zmdi-square-o"></i>';
           }
           if ($label === '1') {
-            $label = '<i class="zmdi zmdi-check-square"></i>';
+            $label = '<i class="zmdi zmdi-check-square"></i>'.ts('Yes').'';
           }
         } elseif ($field == 'individual_prefix' || $field == 'prefix_id') {
           $label = CRM_Utils_Array::value('prefix', $contact);
@@ -812,6 +819,17 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
           if (is_array($value) &&
               !CRM_Utils_Array::value(1, $value)) {
             $value[1] = NULL;
+          }
+
+          // preferred communication should merge instead replace
+          if ($field == 'preferred_communication_method' && !empty($value)) {
+            if (empty($main[$field])) {
+              $commuArray = $other[$field];
+            }
+            else {
+              $commuArray = array_merge($main[$field], array_diff($other[$field], $main[$field]));
+            }
+            $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $commuArray) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
           }
           $elements[] = array('advcheckbox', "move_$field", NULL, NULL, NULL, $value);
           $migrationInfo["move_$field"] = $value;
@@ -1107,10 +1125,22 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
       if ($value == $qfZeroBug) {
         $value = '0';
       }
-      if ((in_array(substr($key, 5), CRM_Dedupe_Merger::$validFields) or
-          substr($key, 0, 12) == 'move_custom_'
-        ) and $value != NULL) {
-        $submitted[substr($key, 5)] = $value;
+      if ((in_array(substr($key, 5), self::$validFields) || substr($key, 0, 12) == 'move_custom_') and $value != NULL) {
+        // do not something should only add when value is 1
+        if (substr($key, 5, 7) == 'do_not_' || substr($key, 5) == 'is_opt_out') {
+          if ($value == '1') {
+            $submitted[substr($key, 5)] = $value;
+          }
+          else {
+            // respect human submit form
+            if (!empty($migrationInfo['qfKey'])) {
+              $submitted[substr($key, 5)] = $value;
+            }
+          }
+        }
+        else {
+          $submitted[substr($key, 5)] = $value;
+        }
       }
       elseif (substr($key, 0, 14) == 'move_location_' and $value != NULL) {
         $locField = explode('_', $key);
@@ -1353,7 +1383,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
 
       // delete the main contact's file
       if (!empty($fileIds[$mainId])) {
-        CRM_Core_BAO_File::deleteFileReferences($fileIds[$mainId], $mainId, $customId);
+        CRM_Core_BAO_File::delete($fileIds[$mainId], $mainId, $customId);
       }
 
       // move the other contact's file to main contact

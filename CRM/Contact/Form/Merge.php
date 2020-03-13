@@ -188,6 +188,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
 
     // add elements
     foreach ($rowsElementsAndInfo['elements'] as $element) {
+      // special case for communication method
       $this->addElement($element[0],
         $element[1],
         array_key_exists('2', $element) ? $element[2] : NULL,
