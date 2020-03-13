@@ -39,7 +39,8 @@ cj(function($) {
     CRMapi(params.entity, 'getFields', {}, {
       success:function (data) {
         h = {/literal}'<strong>{ts escape="js"}Fields{/ts}:</strong>'{literal};
-        $.each(data.values, function(key, value) {
+        $.each(data.values, function(item, value) {
+          var key = value.name;
           var required = value.required ? " required" : "";
           if (typeof value.title == 'undefined' && typeof value.label !== 'undefined') {
             value['title'] = value.label;

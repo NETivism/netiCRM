@@ -89,7 +89,8 @@ class CRM_Import_ImportJob {
 
       // FIXME: we should regen this table's name if it exists rather than drop it
       if (!$tableName) {
-        $tableName = 'civicrm_import_job_' . md5(uniqid(rand(), TRUE));
+        $tableName = str_replace('.', '_', microtime(TRUE));
+        $tableName = 'civicrm_import_job_' . $tableName;
       }
       $db->query("DROP TABLE IF EXISTS $tableName");
       $db->query("CREATE TABLE $tableName ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci $createSql");
