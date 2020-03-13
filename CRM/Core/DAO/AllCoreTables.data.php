@@ -341,10 +341,15 @@ return array(
     'class' => 'CRM_Price_DAO_SetEntity',
     'table' => 'civicrm_price_set_entity',
   ) ,
-  'CRM_Core_DAO_Batch' => array(
+  'CRM_Batch_DAO_Batch' => array(
     'name' => 'Batch',
-    'class' => 'CRM_Core_DAO_Batch',
+    'class' => 'CRM_Batch_DAO_Batch',
     'table' => 'civicrm_batch',
+  ) ,
+  'CRM_Batch_DAO_EntityBatch' => array(
+    'name' => 'EntityBatch',
+    'class' => 'CRM_Batch_DAO_EntityBatch',
+    'table' => 'civicrm_entity_batch',
   ) ,
   'CRM_Core_DAO_Cache' => array(
     'name' => 'Cache',
@@ -375,11 +380,6 @@ return array(
     'name' => 'Email',
     'class' => 'CRM_Core_DAO_Email',
     'table' => 'civicrm_email',
-  ) ,
-  'CRM_Core_DAO_EntityBatch' => array(
-    'name' => 'EntityBatch',
-    'class' => 'CRM_Core_DAO_EntityBatch',
-    'table' => 'civicrm_entity_batch',
   ) ,
   'CRM_Core_DAO_EntityFile' => array(
     'name' => 'EntityFile',

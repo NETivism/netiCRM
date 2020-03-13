@@ -29,4 +29,5 @@
 <xi:include href="Pledge/files.xml"            parse="xml" />  
 <xi:include href="Report/files.xml"            parse="xml" />  
 <xi:include href="Price/files.xml"             parse="xml" /> 
+<xi:include href="Batch/files.xml"             parse="xml" /> 
 </database>
