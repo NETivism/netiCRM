@@ -47272,3 +47272,15 @@ msgstr ""
 #: CRM/Core/xml/Menu/Admin.xml
 msgid "Batch Job List"
 msgstr ""
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "Batch Complete Notification"
+msgstr ""
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "Batch Notification"
+msgstr ""
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "You can check result by login to the website."
+msgstr ""
