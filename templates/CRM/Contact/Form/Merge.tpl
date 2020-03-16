@@ -147,6 +147,10 @@ table.dedupe-merge td .zmdi-plus {
 <script type="text/javascript">
 cj(document).ready(function(){ 
   var mainLocBlock = {/literal}{$mainLocBlock}{literal};
+  var otherLocationTypeId = {/literal}{$otherLocationTypeId}{literal};
+  var overwriteStr = '{/literal}{ts}overwrite{/ts}{literal}';
+  var addnewStr = '{/literal}{ts}add new{/ts}{literal}';
+  
   cj('span[id$=_overwrite]').each(function(){
     if (cj(this).hasClass('main-row')) {
       cj(this).find('.form-checkbox').show();
@@ -171,6 +175,13 @@ cj(document).ready(function(){
       $originalVal.html('');
       $block.find('.form-checkbox').prop('checked', true);
       $block.find('.form-checkbox').hide();
+    }
+
+    if (cj(this).data("location-name") == 'address' && cj(this).val() == otherLocationTypeId) {
+      cj("#main_address_"+cj(this).data("location-id")+'_overwrite').html('('+addnewStr+')');
+    }
+    else {
+      cj("#main_address_"+cj(this).data("location-id")+'_overwrite').html('('+overwriteStr+')');
     }
   });
   cj('table td input.form-checkbox').each(function() {
