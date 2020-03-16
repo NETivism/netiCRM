@@ -1398,7 +1398,7 @@ class CRM_Utils_System {
 
     $metaAttributes[] = array(
       'name' => 'twitter:card',
-      'content' => 'summary',
+      'content' => 'summary_large_image',
     );
     $metaAttributes[] = array(
       'name' => 'twitter:site',
