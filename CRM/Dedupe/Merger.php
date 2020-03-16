@@ -536,7 +536,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
           $resultStats['skipped'][] = array(
             'main_id' => $mainId,
             'other_id' => $otherId,
-            'reason' => "Contact id ".implode(",", $deleted).' is/were deleted.',
+            'reason' => array("Contact id ".implode(",", $deleted).' is/were deleted.'),
           );
           continue;
         }
