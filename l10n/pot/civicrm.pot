@@ -47284,3 +47284,10 @@ msgstr ""
 #: xml/templates/message_templates/batch_complete_notification_html.tpl
 msgid "You can check result by login to the website."
 msgstr ""
+
+#: CRM/Report/Form/Event/Income.php
+msgid "Event Income"
+msgstr ""
+
+msgid "Registered Participant"
+msgstr ""
