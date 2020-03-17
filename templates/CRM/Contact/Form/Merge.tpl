@@ -147,6 +147,10 @@ table.dedupe-merge td .zmdi-plus {
 <script type="text/javascript">
 cj(document).ready(function(){ 
   var mainLocBlock = {/literal}{$mainLocBlock}{literal};
+  var otherLocationTypeId = {/literal}{$otherLocationTypeId}{literal};
+  var overwriteStr = '{/literal}{ts}overwrite{/ts}{literal}';
+  var addnewStr = '{/literal}{ts}add new{/ts}{literal}';
+  
   cj('span[id$=_overwrite]').each(function(){
     if (cj(this).hasClass('main-row')) {
       cj(this).find('.form-checkbox').show();
@@ -171,6 +175,13 @@ cj(document).ready(function(){
       $originalVal.html('');
       $block.find('.form-checkbox').prop('checked', true);
       $block.find('.form-checkbox').hide();
+    }
+
+    if (cj(this).data("location-name") == 'address' && cj(this).val() == otherLocationTypeId) {
+      cj("#main_address_"+cj(this).data("location-id")+'_overwrite').html('('+addnewStr+')');
+    }
+    else {
+      cj("#main_address_"+cj(this).data("location-id")+'_overwrite').html('('+overwriteStr+')');
     }
   });
   cj('table td input.form-checkbox').each(function() {
@@ -225,23 +236,24 @@ cj(document).ready(function(){
 function doCheckAllIsReplace(){
   cj('[id^="move_"]').each(function(){
     var cj_this = cj(this);
-    var cj_left_td = cj_this.parent().prev();
-    var cj_right_td = cj_this.parent().next();
+    var cj_left_td = cj_this.closest('td').prev();
+    var cj_right_td = cj_this.closest('td').next();
 
     if(cj_right_td.text().split(/\s+/)[1] == "" && cj_left_td.text().split(/\s+/)[1] != ""){
       cj_this.trigger('click');
     }
-    else if(cj_this.attr('id').match(/^move_location_/)){
+    if(cj_this.attr('id').match(/^move_preferred_communication_method/)) {
+      cj_this.trigger('click');
+    }
+    if(cj_this.attr('id').match(/^move_location_/)){
       cj_this.trigger('click');
       var right_check_box = cj_right_td.find('input[type="checkbox"]')
       right_check_box.attr('checked',true);
       right_check_box.trigger('change');
     }
-    else{
-      if(cj_this.attr("id").match(/^move_rel_table_/)){
-        cj_this.attr('checked',true);
-        checkDataIsErase(cj_this);
-      }
+    if(cj_this.attr("id").match(/^move_rel_table_/)){
+      cj_this.attr('checked',true);
+      checkDataIsErase(cj_this);
     }
   })
 }
@@ -315,7 +327,10 @@ function checkDataIsErase(cjCheckboxElement){
     is_erase = 3;
   }
   else if(cjCheckboxElement.attr('id').match(/^move_/) && cjCheckboxElement.attr('checked')){
-    if(!cjCheckboxElement.attr('id').match(/^move_location_/)){
+    if (cjCheckboxElement.attr('id').match(/^move_preferred_communication_method/)) {
+      is_erase = 2;
+    }
+    else if(!cjCheckboxElement.attr('id').match(/^move_location_/)){
       is_erase = 1;
     }
     else if(cj_right_td.find('input[type="checkbox"]').length > 0 && typeof cj_right_td.find('input[type="checkbox"]').attr('checked') == "undefined"){
@@ -342,7 +357,7 @@ function checkDataIsErase(cjCheckboxElement){
     cj_right_td.append('<div class="zmdi zmdi-plus">'+cj_left_td.html()+'</div>')
   }
   else if (is_erase == 2) { // append
-    cj_right_td.find('.original-value').hide();
+    // cj_right_td.find('.original-value').hide();
     cj_right_td.append('<div class="zmdi zmdi-plus">'+cj_left_td.html()+'</div>')
   }
   else if (is_erase == 3) { // left delete

@@ -2224,15 +2224,30 @@ class CRM_Contact_BAO_Query {
           continue;
 
         case 'civicrm_phone':
-          $from .= " $side JOIN civicrm_phone ON (contact_a.id = civicrm_phone.contact_id AND civicrm_phone.is_primary = 1) ";
+          if ($primaryLocation) {
+            $from .= " $side JOIN civicrm_phone ON (contact_a.id = civicrm_phone.contact_id AND civicrm_phone.is_primary = 1) ";
+          }
+          else {
+            $from .= " $side JOIN civicrm_phone ON (contact_a.id = civicrm_phone.contact_id) ";
+          }
           continue;
 
         case 'civicrm_email':
-          $from .= " $side JOIN civicrm_email ON (contact_a.id = civicrm_email.contact_id AND civicrm_email.is_primary = 1) ";
+          if ($primaryLocation) {
+            $from .= " $side JOIN civicrm_email ON (contact_a.id = civicrm_email.contact_id AND civicrm_email.is_primary = 1) ";
+          }
+          else {
+            $from .= " $side JOIN civicrm_email ON (contact_a.id = civicrm_email.contact_id) ";
+          }
           continue;
 
         case 'civicrm_im':
-          $from .= " $side JOIN civicrm_im ON (contact_a.id = civicrm_im.contact_id AND civicrm_im.is_primary = 1) ";
+          if ($primaryLocation) {
+            $from .= " $side JOIN civicrm_im ON (contact_a.id = civicrm_im.contact_id AND civicrm_im.is_primary = 1) ";
+          }
+          else {
+            $from .= " $side JOIN civicrm_im ON (contact_a.id = civicrm_im.contact_id) ";
+          }
           continue;
 
         case 'im_provider':
@@ -2788,15 +2803,15 @@ WHERE  id IN ( $groupIDs )
       $this->_qill[$grouping][999] = ts('Contact is deceased') . ' ' . ts("IS NULL");
 
       if ($name == 'age') {
-        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) = '$val' ) ";
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) = '$val' ) ";
         $this->_qill[$grouping][] = ts('Age') . " = $val";
       }
       elseif($name == 'age_low') {
-        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) >= '$val' ) ";
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) >= '$val' ) ";
         $this->_qill[$grouping][] = ts('Age') . " >= $val";
       }
       elseif($name == 'age_high') {
-        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) <= '$value' ) ";
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) <= '$value' ) ";
         $this->_qill[$grouping][] = ts('Age') . " <= $val";
       }
       
@@ -3036,6 +3051,7 @@ WHERE  id IN ( $groupIDs )
     }
 
     $this->_tables['civicrm_email'] = $this->_whereTables['civicrm_email'] = 1;
+    $this->_primaryLocation = FALSE;
   }
 
   /**

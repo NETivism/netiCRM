@@ -313,14 +313,20 @@ GROUP BY contact.id
     }
     $count = $this->count();
 
-    $summary['search_results'] = array(
-      'label' => ts('Search Results'),
-      'value' => '',
-    );
-    $query = CRM_Core_DAO::executeQuery("SELECT SUM(amount) as amount_sum FROM {$this->_tableName} WHERE 1");
+    $sql = "SELECT SUM(amount) as amount_sum FROM {$this->_tableName}";
+    $whereClause = $this->where();
+    if (!empty($whereClause)) {
+      $sql .= " WHERE $whereClause";
+    }
+
+    $query = CRM_Core_DAO::executeQuery($sql);
     $query->fetch();
-    
+
     if ($query->amount_sum) {
+      $summary['search_results'] = array(
+        'label' => ts('Search Results'),
+        'value' => '',
+      );
       $amount_sum = CRM_Utils_Money::format($query->amount_sum, '$');
       $amount_avg = CRM_Utils_Money::format($query->amount_sum / $count, '$');
       $summary['search_results']['value'] = ts('Total amount of completed contributions is %1.', array(1 => $amount_sum)).' / '.ts('for')." ".$count." ".ts('People').' / '.ts('Average').": ".$amount_avg;

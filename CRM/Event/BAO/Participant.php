@@ -404,6 +404,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
       //build the where clause.
       $whereClause = ' WHERE ' . implode(' AND ', $where);
       $whereClause .= " AND participant.status_id = $onWaitlistStatusId ";
+      $whereClause .= " AND contact.is_deleted = 0 ";
 
       $query = "
     SELECT  participant.id id,
@@ -412,6 +413,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
       FROM  civicrm_participant participant
       INNER JOIN (SELECT id, REPLACE(role_id, '".CRM_Core_DAO::VALUE_SEPARATOR."', ',') as role_ids FROM civicrm_participant) pp ON pp.id = participant.id
       INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
+      INNER JOIN  civicrm_contact contact ON ( contact.id = participant.contact_id )
             {$whereClause}";
 
       $participantIds = array();
