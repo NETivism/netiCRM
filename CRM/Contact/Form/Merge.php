@@ -188,6 +188,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
 
     // add elements
     foreach ($rowsElementsAndInfo['elements'] as $element) {
+      // special case for communication method
       $this->addElement($element[0],
         $element[1],
         array_key_exists('2', $element) ? $element[2] : NULL,
@@ -205,6 +206,16 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
 
     $this->assign('rel_tables', $rowsElementsAndInfo['rel_tables']);
     $this->assign('userContextURL', $session->readUserContext());
+
+    // add other location type id
+    $allLocationTypes = CRM_Core_PseudoConstant::locationType(TRUE, 'name');
+    $otherLocationTypeId = array_search('Other', $allLocationTypes);
+    if ($otherLocationTypeId) {
+      $this->assign('otherLocationTypeId', $otherLocationTypeId);
+    }
+    else {
+      $this->assign('otherLocationTypeId', 0);
+    }
   }
 
   function setDefaultValues() {

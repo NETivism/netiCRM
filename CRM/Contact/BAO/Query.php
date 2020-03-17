@@ -2788,15 +2788,15 @@ WHERE  id IN ( $groupIDs )
       $this->_qill[$grouping][999] = ts('Contact is deceased') . ' ' . ts("IS NULL");
 
       if ($name == 'age') {
-        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) = '$val' ) ";
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) = '$val' ) ";
         $this->_qill[$grouping][] = ts('Age') . " = $val";
       }
       elseif($name == 'age_low') {
-        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) >= '$val' ) ";
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) >= '$val' ) ";
         $this->_qill[$grouping][] = ts('Age') . " >= $val";
       }
       elseif($name == 'age_high') {
-        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(contact_a.birth_date, 5)) <= '$value' ) ";
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) <= '$value' ) ";
         $this->_qill[$grouping][] = ts('Age') . " <= $val";
       }
       
