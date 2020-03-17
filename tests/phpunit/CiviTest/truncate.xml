@@ -139,6 +139,8 @@
 
   <civicrm_batch />
 
+  <civicrm_entity_batch />
+
   <civicrm_cache />
 
   <civicrm_country />
@@ -150,8 +152,6 @@
   <civicrm_dashboard />
 
   <civicrm_email />
-
-  <civicrm_entity_batch />
 
   <civicrm_entity_file />
 

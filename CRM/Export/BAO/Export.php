@@ -38,7 +38,8 @@
  *
  */
 class CRM_Export_BAO_Export {
-  CONST EXPORT_ROW_COUNT = 300;
+  CONST EXPORT_ROW_COUNT = 2000;
+  CONST EXPORT_BATCH_THRESHOLD = 10000;
   CONST VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
   CONST DISPLAY_SEPARATOR = '|';
 
@@ -74,6 +75,9 @@ class CRM_Export_BAO_Export {
     $mappingId = NULL,
     $separateMode = FALSE
   ) {
+    global $civicrm_batch;
+    $allArgs = func_get_args();
+
     set_time_limit(1800);
     $headerRows = $returnProperties = array();
     $primary = $paymentFields = FALSE;
@@ -516,6 +520,7 @@ class CRM_Export_BAO_Export {
     }
 
     $queryString = "$select $from $where";
+    $countQuery = "SELECT contact_a.id $from $where";
 
     $groupBy = "";
     if (CRM_Utils_Array::value('tags', $returnProperties) ||
@@ -541,7 +546,8 @@ class CRM_Export_BAO_Export {
     if ($queryMode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {
       $groupBy = " GROUP BY civicrm_activity.id ";
     }
-    $queryString .= $groupBy . $orderBy ;
+    $queryString .= $groupBy . $orderBy;
+    $countQuery .=  $groupBy . $orderBy;
 
     //hack for student data
     require_once 'CRM/Core/OptionGroup.php';
@@ -577,15 +583,54 @@ class CRM_Export_BAO_Export {
     $componentDetails = $headerRows = $sqlColumns = array();
     $setHeader = TRUE;
     $fieldOrder = array();
-
-    $rowCount = self::EXPORT_ROW_COUNT;
     $offset = 0;
 
-    $count = -1;
-
     // for CRM-3157 purposes
-    require_once 'CRM/Core/I18n.php';
-    $i18n = &CRM_Core_I18n::singleton();
+    $i18n = CRM_Core_I18n::singleton();
+
+    $rowCount = self::EXPORT_ROW_COUNT;
+    $count = 0;
+
+    if (empty($civicrm_batch)) {
+      $countDAO = CRM_Core_DAO::executeQuery($countQuery);
+      $totalNumRows = $countDAO->N;
+      if ($totalNumRows > self::EXPORT_BATCH_THRESHOLD) {
+        // start batch
+        $config = CRM_Core_Config::singleton();
+        $file = $config->uploadDir.self::getExportFileName($exportMode);
+        $batch = new CRM_Batch_BAO_Batch();
+        $batchParams = array(
+          'label' => ts('Export').': '.self::getExportFileName($exportMode),
+          'startCallback' => NULL,
+          'startCallback_args' => NULL,
+          'processCallback' => array(__CLASS__, __FUNCTION__),
+          'processCallbackArgs' => $allArgs,
+          'finishCallback' => array(__CLASS__, 'batchFinish'),
+          'finishCallbackArgs' => NULL,
+          'exportFile' => $file,
+          'download' => array(
+            'header' => array(
+              'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              'Content-Disposition: attachment;filename="'.self::getExportFileName($exportMode).'"',
+            ),
+            'file' => $file,
+          ),
+          'actionPermission' => '',
+          'total' => $totalNumRows,
+          'processed' => 0,
+        );
+        $batch->start($batchParams);
+
+        // redirect to notice page
+        CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
+      }
+    }
+    else {
+      if (isset($civicrm_batch->data['processed']) && !empty($civicrm_batch->data['processed'])) {
+        $offset = $civicrm_batch->data['processed'] ;
+      }
+    }
 
     while (1) {
       $limitQuery = "{$queryString} LIMIT {$offset}, {$rowCount}";
@@ -596,7 +641,6 @@ class CRM_Export_BAO_Export {
       }
 
       while ($dao->fetch()) {
-        $count++;
         $row = array();
 
         $activityTargetNames = NULL;
@@ -1000,18 +1044,25 @@ class CRM_Export_BAO_Export {
         // add component info
         // write the row to a file
         $componentDetails[] = $row;
+        $count++;
+      }
+      self::writeDetailsToTable($exportTempTable, $componentDetails, $sqlColumns);
+      $componentDetails = array();
+      $dao->free();
 
-        // output every $rowCount rows
-        if ($count % $rowCount == 0) {
-          self::writeDetailsToTable($exportTempTable, $componentDetails, $sqlColumns);
-          $componentDetails = array();
+      // continue process next run
+      $offset += $rowCount;
+
+      // every batch only process threshold
+      if (!empty($civicrm_batch)) {
+        if ($count >= self::EXPORT_BATCH_THRESHOLD) {
+          break;
         }
       }
-      $dao->free();
-      $offset += $rowCount;
     }
-
-    self::writeDetailsToTable($exportTempTable, $componentDetails, $sqlColumns);
+    if (!empty($civicrm_batch) && $count) {
+      $civicrm_batch->data['processed'] += $count;
+    }
 
     // do merge same address and merge same household processing
     if ($mergeSameAddress) {
@@ -1033,9 +1084,15 @@ class CRM_Export_BAO_Export {
     CRM_Utils_Hook::export($exportTempTable, $headerRows, $sqlColumns, $exportMode, $mappingId);
 
     // now write the CSV file
-    self::writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode);
-
-    CRM_Utils_System::civiExit();
+    if ($civicrm_batch) {
+      $fileUri = $civicrm_batch->data['exportFile']; 
+      self::writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileUri);
+      return;
+    }
+    else {
+      self::writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode);
+      CRM_Utils_System::civiExit();
+    }
   }
 
   /**
@@ -1617,6 +1674,59 @@ GROUP BY civicrm_primary_id ";
     $writer->close();
   }
 
+  static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
+    $writer = CRM_Core_Report_Excel::singleton('excel');
+    $writer->openToFile($fileName.'.new');
+
+    if (!is_file($fileName)){
+      $writer->addRow($headerRows);
+    }
+    else{
+      $reader = CRM_Core_Report_Excel::reader('excel');
+      $reader->setTempFolder('/tmp/');
+      $reader->open($fileName);
+      foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
+        // Add sheets in the new file, as we read new sheets in the existing one
+        if ($sheetIndex !== 1) {
+          $writer->addNewSheetAndMakeItCurrent();
+        }
+
+        foreach ($sheet->getRowIterator() as $row) {
+          // ... and copy each row into the new spreadsheet
+          $writer->addRow($row);
+        }
+      }
+    }
+
+    $query = "SELECT * FROM $exportTempTable";
+    $dao = CRM_Core_DAO::executeQuery($query);
+    while ($dao->fetch()) {
+      $row = array();
+      foreach ($sqlColumns as $column => $sqlColumn) {
+        $arr = explode(' ', $sqlColumn);
+        $column = $arr[0];
+        $fieldValue = $dao->$column;
+        if (strstr($fieldValue, self::VALUE_SEPARATOR)){
+          $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
+          $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
+          $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
+        }
+        if(strlen($fieldValue) < 15){
+          $row[$column] = CRM_Utils_String::toNumber($fieldValue);
+        }
+        else{
+          $row[$column] = $fieldValue;
+        }
+      }
+      $writer->addRow($row);
+    }
+    $writer->close();
+    if (is_file($fileName)){
+      unlink($fileName);
+    }
+    rename($fileName.'.new', $fileName);
+  }
+
   /**
    * Function to manipulate header rows for relationship fields
    *
@@ -1629,6 +1739,10 @@ GROUP BY civicrm_primary_id ";
         $header = implode('-', $split);
       }
     }
+  }
+
+  function batchFinish() {
+
   }
 }
 

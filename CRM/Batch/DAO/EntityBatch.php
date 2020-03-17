@@ -33,7 +33,7 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_Batch extends CRM_Core_DAO
+class CRM_Batch_DAO_EntityBatch extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -41,7 +41,7 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_batch';
+  static $_tableName = 'civicrm_entity_batch';
   /**
    * static instance to hold the field values
    *
@@ -81,58 +81,34 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO
    */
   static $_log = false;
   /**
-   * Unique Address ID
+   * primary key
    *
    * @var int unsigned
    */
   public $id;
   /**
-   * Variable name/programmatic handle for this batch.
+   * physical tablename for entity being joined to file, e.g. civicrm_contact
    *
    * @var string
    */
-  public $name;
+  public $entity_table;
   /**
-   * Friendly Name.
-   *
-   * @var string
-   */
-  public $label;
-  /**
-   * Description of this batch set.
-   *
-   * @var text
-   */
-  public $description;
-  /**
-   * FK to Contact ID
+   * FK to entity table specified in entity_table column.
    *
    * @var int unsigned
    */
-  public $created_id;
+  public $entity_id;
   /**
-   * When was this item created
-   *
-   * @var datetime
-   */
-  public $created_date;
-  /**
-   * FK to Contact ID
+   * FK to civicrm_batch
    *
    * @var int unsigned
    */
-  public $modified_id;
-  /**
-   * When was this item created
-   *
-   * @var datetime
-   */
-  public $modified_date;
+  public $batch_id;
   /**
    * class constructor
    *
    * @access public
-   * @return civicrm_batch
+   * @return civicrm_entity_batch
    */
   function __construct()
   {
@@ -148,8 +124,7 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO
   {
     if (!(self::$_links)) {
       self::$_links = array(
-        'created_id' => 'civicrm_contact:id',
-        'modified_id' => 'civicrm_contact:id',
+        'batch_id' => 'civicrm_batch:id',
       );
     }
     return self::$_links;
@@ -164,8 +139,8 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO
   {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'created_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'modified_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'batch_id', 'civicrm_batch', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName() , 'entity_id', NULL, 'id', 'entity_table');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
@@ -184,46 +159,23 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ) ,
-        'name' => array(
-          'name' => 'name',
+        'entity_table' => array(
+          'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Name') ,
+          'title' => ts('Entity Table') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
         ) ,
-        'label' => array(
-          'name' => 'label',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Label') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'description' => array(
-          'name' => 'description',
-          'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Description') ,
-          'rows' => 4,
-          'cols' => 80,
-        ) ,
-        'created_id' => array(
-          'name' => 'created_id',
+        'entity_id' => array(
+          'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+          'required' => true,
         ) ,
-        'created_date' => array(
-          'name' => 'created_date',
-          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Created Date') ,
-        ) ,
-        'modified_id' => array(
-          'name' => 'modified_id',
+        'batch_id' => array(
+          'name' => 'batch_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'modified_date' => array(
-          'name' => 'modified_date',
-          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Modified Date') ,
+          'required' => true,
+          'FKClassName' => 'CRM_Batch_DAO_Batch',
         ) ,
       );
     }
@@ -237,8 +189,7 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO
    */
   function getTableName()
   {
-    global $dbLocale;
-    return self::$_tableName . $dbLocale;
+    return self::$_tableName;
   }
   /**
    * returns if this table needs to be logged
@@ -264,7 +215,7 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['batch'] = & $fields[$name];
+            self::$_import['entity_batch'] = & $fields[$name];
           } else {
             self::$_import[$name] = & $fields[$name];
           }
@@ -287,7 +238,7 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['batch'] = & $fields[$name];
+            self::$_export['entity_batch'] = & $fields[$name];
           } else {
             self::$_export[$name] = & $fields[$name];
           }
