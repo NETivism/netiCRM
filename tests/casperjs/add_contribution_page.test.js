@@ -15,6 +15,9 @@ function makeid(length) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(baseURL, function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0-0: Login. **');
+        casper.echo('=====================================');
         // this.capture('login.png');
     });
     casper.waitForSelector("form#user-login-form input[name='name']", function success() {
@@ -40,8 +43,11 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("form#user-login-form input[type=submit][value='Log in']");
     }); /* submit form */
 
-    /* open some url */
+    /* open add contribution page */
     casper.thenOpen(baseURL + "civicrm/admin/contribute/add?reset=1&action=add", function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0-1: Enter "New Contribution Page" Page. **');
+        casper.echo('=====================================');
     });
 
     casper.wait(2000);
@@ -52,6 +58,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* sendKeys to Title */
     casper.waitForSelector("form#Settings input[name='title']", function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 1: Title. **');
+        casper.echo('=====================================');
         test.assertExists("form#Settings input[name='title']");
         this.sendKeys("form#Settings input[name='title']", makeid(10));
     }, function fail() {
@@ -77,6 +86,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* click pay later */
     casper.waitForSelector('#is_pay_later', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 2: Amounts. **');
+        casper.echo('=====================================');
         test.assertExists('#is_pay_later');
         this.click('#is_pay_later');
     }, function fail() {
@@ -136,6 +148,9 @@ casper.test.begin('Resurrectio test', function(test) {
     */
     
     casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 3: Memberships. **');
+        casper.echo('=====================================');
         // this.capture('3_Memberships.png');
     });
     /* click submit */
@@ -153,6 +168,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* sendKeys to Thank-you Page Title */
     casper.waitForSelector("#thankyou_title", function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 4: Thanks. **');
+        casper.echo('=====================================');
         test.assertExists("#thankyou_title");
         this.sendKeys("#thankyou_title", makeid(10));
     }, function fail() {
@@ -181,11 +199,14 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     /*
-    * Step 5: Amounts
+    * Step 5: Tell
     */
 
     /* click Tell a Friend enabled? */
     casper.waitForSelector('#tf_is_active', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 5: Tell. **');
+        casper.echo('=====================================');
         test.assertExists('#tf_is_active');
         this.click('#tf_is_active');
     }, function fail() {
@@ -211,6 +232,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* select Include Profile(top of page) */
     casper.waitForSelector("#custom_pre_id", function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 6: Include. **');
+        casper.echo('=====================================');
         test.assertExists("#custom_pre_id");
         this.evaluate(function () {
             document.querySelector("#custom_pre_id").selectedIndex = 1;
@@ -248,6 +272,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* click Premiums Section Enabled? */
     casper.waitForSelector('#premiums_active', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 7: Premimums. **');
+        casper.echo('=====================================');
         test.assertExists('#premiums_active');
         this.click('#premiums_active');
     }, function fail() {
@@ -281,6 +308,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* click Enable Widget? */
     casper.waitForSelector('#is_active', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 8: Widget. **');
+        casper.echo('=====================================');
         test.assertExists('#is_active');
         this.click('#is_active');
     }, function fail() {
@@ -333,6 +363,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* click Enable Personal Campaign Pages (for this contribution page)? */
     casper.waitForSelector('#is_active', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 9: Enable. **');
+        casper.echo('=====================================');
         test.assertExists('#is_active');
         this.click('#is_active');
     }, function fail() {

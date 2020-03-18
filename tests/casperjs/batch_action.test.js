@@ -17,7 +17,7 @@ var organization_name = makeid(5);
 function list_contacts_and_select_three(test) {
     /* find contacts */
     casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
-    //    this.capture('find_contacts.png');
+        // his.capture('find_contacts.png');
     });
     casper.waitForSelector('#contact_type_chzn_o_1', function success() {
         test.assertExists('#contact_type_chzn_o_1');
@@ -67,6 +67,9 @@ function list_contacts_and_select_three(test) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(baseURL, function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0: Login. **');
+        casper.echo('=====================================');
         // this.capture('login.png');
     });
     casper.waitForSelector("form#user-login-form input[name='name']", function success() {
@@ -98,6 +101,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* add organization */
     casper.thenOpen(baseURL + "civicrm/contact/add?reset=1&ct=Organization", function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 1: Add to Organization. **');
+        casper.echo('=====================================');
         // this.capture('add_organization.png');
     });
     casper.waitForSelector("form[name=Contact] input[name='organization_name']", function success() {
@@ -197,6 +203,12 @@ casper.test.begin('Resurrectio test', function(test) {
      * Record Activity 
      */
 
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 2: Record Activity. **');
+        casper.echo('=====================================');
+    });
+
     list_contacts_and_select_three(test);
 
     /* select Record Activity for Contacts */
@@ -248,6 +260,12 @@ casper.test.begin('Resurrectio test', function(test) {
      * Batch Profile Update for Contact
      */
     
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 3: Batch Profile Update for Contact. **');
+        casper.echo('=====================================');
+    });
+
     list_contacts_and_select_three(test);
 
     /* select Batch Profile Update for Contact */
@@ -347,6 +365,12 @@ casper.test.begin('Resurrectio test', function(test) {
      * Export Contacts
      */
 
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 4: Export Contacts. **');
+        casper.echo('=====================================');
+    });
+
     list_contacts_and_select_three(test);
 
     /* select Export Contacts */
@@ -402,10 +426,13 @@ casper.test.begin('Resurrectio test', function(test) {
     /*
      * Merge Contacts - 1 Merge
      */
-
+    
     /* find contacts */
     casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
-    //    this.capture('find_contacts.png');
+        casper.echo('=====================================');
+        casper.echo('** Step 5-1: Merge Contacts - Merge. **');
+        casper.echo('=====================================');
+        // this.capture('find_contacts.png');
     });
     casper.waitForSelector('#contact_type_chzn_o_1', function success() {
         test.assertExists('#contact_type_chzn_o_1');
@@ -482,7 +509,10 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* find contacts */
     casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
-    //    this.capture('find_contacts.png');
+        casper.echo('=====================================');
+        casper.echo('** Step 5-2: Merge Contacts - Mark this pair as not a duplicate. **');
+        casper.echo('=====================================');
+        // this.capture('find_contacts.png');
     });
     casper.waitForSelector('#contact_type_chzn_o_1', function success() {
         test.assertExists('#contact_type_chzn_o_1');
@@ -561,6 +591,12 @@ casper.test.begin('Resurrectio test', function(test) {
      * Tag Contacts 
      */
     
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 6: Tag Contacts. **');
+        casper.echo('=====================================');
+    });
+    
     list_contacts_and_select_three(test);
     
     /* select Tag Contacts */
@@ -609,6 +645,12 @@ casper.test.begin('Resurrectio test', function(test) {
     /*
      * Add Contacts to Group - 1 Add Contact To Existing Group
      */
+
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 7-1: Add Contacts to Group - Add Contact To Existing Group. **');
+        casper.echo('=====================================');
+    });
 
     list_contacts_and_select_three(test);
 
@@ -660,6 +702,12 @@ casper.test.begin('Resurrectio test', function(test) {
     /*
      * Add Contacts to Group - 2 Create New Group
      */
+
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 7-2: Add Contacts to Group - Create New Group. **');
+        casper.echo('=====================================');
+    });
 
     list_contacts_and_select_three(test);
 
@@ -717,6 +765,12 @@ casper.test.begin('Resurrectio test', function(test) {
     /*
      * New Smart Group
      */
+
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 8: New Smart Group. **');
+        casper.echo('=====================================');
+    });
 
     list_contacts_and_select_three(test);
 
@@ -784,6 +838,12 @@ casper.test.begin('Resurrectio test', function(test) {
     /*
      * Delete Contacts 
      */
+    
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 9: Delete Contacts. **');
+        casper.echo('=====================================');
+    });
     
     list_contacts_and_select_three(test);
 

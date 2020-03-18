@@ -14,6 +14,9 @@ function makeid(length) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(baseURL, function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0: Login. **');
+        casper.echo('=====================================');
         // this.capture('login.png');
     });
     casper.waitForSelector("form#user-login-form input[name='name']", function success() {
@@ -50,6 +53,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* filled up add event form */
     casper.waitForSelector('form#EventInfo', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 1: Info and Settings. **');
+        casper.echo('=====================================');
         test.assertExists('form#EventInfo');
         this.fill('form#EventInfo', {
             'event_type_id': '1',
@@ -69,6 +75,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* select State/Province */
     casper.waitForSelector("#address_1_state_province_id", function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 2: Event Location. **');
+        casper.echo('=====================================');
         test.assertExists("#address_1_state_province_id");
         this.evaluate(function () {
             document.querySelector("#address_1_state_province_id").selectedIndex = 1;
@@ -95,6 +104,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* click fees */
     casper.waitForSelector('li#tab_fee a', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 3: Fees. **');
+        casper.echo('=====================================');
         test.assertExists('li#tab_fee a');
         this.click('li#tab_fee a');
     }, function fail() {
@@ -183,6 +195,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* click Online Registration */
     casper.waitForSelector('li#tab_registration a', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 4: Online Registration. **');
+        casper.echo('=====================================');
         test.assertExists('li#tab_registration a');
         this.click('li#tab_registration a');
     }, function fail() {
@@ -248,6 +263,9 @@ casper.test.begin('Resurrectio test', function(test) {
     
     /* click Tell a Friend */
     casper.waitForSelector('li#tab_friend a', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 5: Tell a Friend. **');
+        casper.echo('=====================================');
         test.assertExists('li#tab_friend a');
         this.click('li#tab_friend a');
     }, function fail() {

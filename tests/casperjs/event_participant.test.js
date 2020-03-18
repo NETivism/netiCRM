@@ -14,6 +14,9 @@ function makeid(length) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(baseURL, function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0: Login. **');
+        casper.echo('=====================================');
         // this.capture('login.png');
     });
     casper.waitForSelector("form#user-login-form input[name='name']", function success() {
@@ -41,6 +44,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* open CiviEvent Dashboard */
     casper.thenOpen(baseURL + "civicrm/event?reset=1", function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 1: Pick an Event. **');
+        casper.echo('=====================================');
     });
 
     /* click sort by id */
@@ -66,6 +72,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* click Register New Participant */
     casper.waitForSelector('ul#actions li:nth-child(2) a', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 2: Register New Participant To It. **');
+        casper.echo('=====================================');
         test.assertExists('ul#actions li:nth-child(2) a');
         this.click('ul#actions li:nth-child(2) a');
     }, function fail() {
@@ -131,6 +140,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
         /* click edit event */
         casper.waitForSelector('table.selector .row-action .action-item:nth-child(2)', function success() {
+            casper.echo('=====================================');
+            casper.echo('** Step 3: Edit Event Participant. **');
+            casper.echo('=====================================');
             test.assertExists('table.selector .row-action .action-item:nth-child(2)');
             this.click('table.selector .row-action .action-item:nth-child(2)');
         }, function fail() {

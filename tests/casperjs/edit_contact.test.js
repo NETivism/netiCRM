@@ -26,6 +26,9 @@ casper.on('page.error', function(msg, trace) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start('http://127.0.0.1:' + port, function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0: Login. **');
+        casper.echo('=====================================');
         // this.capture('login.png');
     });
 
@@ -70,6 +73,9 @@ casper.test.begin('Resurrectio test', function(test) {
     });
     // to crm edit contact page
     casper.waitForSelector("a.edit", function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 1: Edit Contact. **');
+        casper.echo('=====================================');
         var edit_url = this.evaluate(function() {
             return document.querySelector("a.edit").href;
         });
@@ -143,6 +149,9 @@ casper.test.begin('Resurrectio test', function(test) {
     // to personal information page
     casper.wait(2000);
     casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 2: Check If Contact Information Correct. **');
+        casper.echo('=====================================');
         // this.capture('personal_info.png');
     })
     // check name

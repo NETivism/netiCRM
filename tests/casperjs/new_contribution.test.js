@@ -15,6 +15,9 @@ function makeid(length) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(baseURL, function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0: Login. **');
+        casper.echo('=====================================');
         // this.capture('login.png');
     });
     casper.waitForSelector("form#user-login-form input[name='name']", function success() {
@@ -42,6 +45,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* open new contribution page */
     casper.thenOpen(baseURL + "civicrm/contribute/add?reset=1&action=add&context=standalone", function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 1: New Contribution. **');
+        casper.echo('=====================================');
     });
 
     casper.wait(2000);
@@ -184,7 +190,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#custom_4_-1");
     });
     
-    /* click  Additional Details */
+    /* click Additional Details */
     casper.waitForSelector('#AdditionalDetail', function success() {
         test.assertExists('#AdditionalDetail');
         this.click('#AdditionalDetail');
@@ -264,6 +270,9 @@ casper.test.begin('Resurrectio test', function(test) {
     
     /* check success message */
     casper.waitForSelector(".messages", function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 2: Check If New Contribution Success. **');
+        casper.echo('=====================================');
         test.assertExists(".messages");
         var message = this.evaluate(function () {
             return document.querySelector(".messages").textContent;
@@ -275,6 +284,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* click edit contribution */
     casper.waitForSelector('table.selector .row-action .action-item:nth-child(2)', function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 3: Edit Contribution. **');
+        casper.echo('=====================================');
         test.assertExists('table.selector .row-action .action-item:nth-child(2)');
         this.click('table.selector .row-action .action-item:nth-child(2)');
     }, function fail() {
@@ -331,6 +343,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* check success message */
     casper.waitForSelector(".messages", function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 4: Check If Edit Contribution Success. **');
+        casper.echo('=====================================');
         test.assertExists(".messages");
         var message = this.evaluate(function () {
             return document.querySelector(".messages").textContent;
