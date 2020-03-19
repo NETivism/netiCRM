@@ -26,6 +26,9 @@ casper.on('page.error', function(msg, trace) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start('http://127.0.0.1:' + port, function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0: Login. **');
+        casper.echo('=====================================');
         //this.capture('login.png');
     });
     casper.waitForSelector("form#user-login-form input[name='name']", function success() {
@@ -55,6 +58,9 @@ casper.test.begin('Resurrectio test', function(test) {
         //this.capture('add_individual.png');
     });
     casper.waitForSelector("input[name='last_name']", function success() {
+        casper.echo('=====================================');
+        casper.echo('** Step 1: Add Individual. **');
+        casper.echo('=====================================');
         this.sendKeys("input[name='last_name']", last_name);
     }, function fail() {
         test.assertExists("input[name='last_name']");
@@ -115,6 +121,9 @@ casper.test.begin('Resurrectio test', function(test) {
         //this.capture('personal_info.png');
     })
     casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 2: Check If Personal Information Correct. **');
+        casper.echo('=====================================');
         test.assertTitle(first_name + ' ' + last_name + ' | netiCRM');
     });
     casper.waitForSelector("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardLeft > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > a", function success() {
