@@ -81,7 +81,7 @@ abstract class CRM_Contribute_Import_Parser {
   /**
    * total number of lines in file
    */
-  protected $_lineCount;
+  protected $_rowCount;
 
   /**
    * total number of non empty lines
@@ -267,13 +267,6 @@ abstract class CRM_Contribute_Import_Parser {
   protected $_duplicateFileName;
 
   /**
-   * whether the file has a column header or not
-   *
-   * @var boolean
-   */
-  protected $_haveColumnHeader;
-
-  /**
    * Dedupe group id for contact matching
    *
    * @var integer 
@@ -299,36 +292,26 @@ abstract class CRM_Contribute_Import_Parser {
   }
 
   abstract function init();
-  function run($fileName,
-    $seperator = ',',
+  function run($tableName,
     &$mapper,
-    $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,
     $contactType = self::CONTACT_INDIVIDUAL,
+    $primaryKeyName = '_id',
+    $statusFieldName = '_status',
     $onDuplicate = self::DUPLICATE_SKIP,
+    $statusID = NULL,
+    $totalRowCount = NULL,
     $createContactOption = self::CONTACT_NOIDCREATE,
     $dedupeRuleGroupId = 0
   ) {
-    if (!is_array($fileName)) {
-      CRM_Core_Error::fatal();
-    }
-    $fileName = $fileName['name'];
+
     $this->_contactType = $contactType;
     $this->_createContactOption = $createContactOption;
     $this->_dedupeRuleGroupId = $dedupeRuleGroupId;
 
     $this->init();
 
-    $this->_haveColumnHeader = $skipColumnHeader;
-
-    $this->_seperator = $seperator;
-
-    $fd = fopen($fileName, "r");
-    if (!$fd) {
-      return FALSE;
-    }
-
-    $this->_lineCount = $this->_warningCount = $this->_validSoftCreditRowCount = $this->_validPledgePaymentRowCount = 0;
+    $this->_rowCount = $this->_warningCount = $this->_validSoftCreditRowCount = $this->_validPledgePaymentRowCount = 0;
     $this->_invalidRowCount = $this->_validCount = $this->_invalidSoftCreditRowCount = $this->_invalidPledgePaymentRowCount = 0;
     $this->_totalCount = $this->_conflictCount = 0;
 
@@ -339,7 +322,12 @@ abstract class CRM_Contribute_Import_Parser {
     $this->_softCreditErrors = array();
     $this->_pcpErrors = array();
 
-    $this->_fileSize = number_format(filesize($fileName) / 1024.0, 2);
+
+    $status = '';
+
+    $this->_tableName = $tableName;
+    $this->_primaryKeyName = $primaryKeyName;
+    $this->_statusFieldName = $statusFieldName;
 
     if ($mode == self::MODE_MAPFIELD) {
       $this->_rows = array();
@@ -348,29 +336,37 @@ abstract class CRM_Contribute_Import_Parser {
       $this->_activeFieldCount = count($this->_activeFields);
     }
 
-    while (!feof($fd)) {
-      $this->_lineCount++;
 
-      $values = fgetcsv($fd, 20000, $seperator);
-      if (!$values) {
-        continue;
-      }
+    // this is for import progress indicator
+    if ($statusID) {
+      $skip = 50;
+      // $skip = 1;
+      $config = CRM_Core_Config::singleton();
+      $statusFile = "{$config->uploadDir}status_{$statusID}.txt";
+      $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
+      $contents = json_encode(array(0, $status));
 
-      self::encloseScrub($values);
+      file_put_contents($statusFile, $contents);
 
-      // skip column header if we're not in mapfield mode
-      if ($mode != self::MODE_MAPFIELD && $skipColumnHeader) {
-        $skipColumnHeader = FALSE;
-        continue;
-      }
+      $startTimestamp = $currTimestamp = $prevTimestamp = time();
+    }
+    
+    // get the contents of the temp. import table
+    $query = "SELECT * FROM $tableName";
+    if ($mode == self::MODE_IMPORT) {
+      $query .= " WHERE $statusFieldName = 'NEW'";
+    }
+    $dao = new CRM_Core_DAO();
+    $db = $dao->getDatabaseConnection();
+    $result = $db->query($query);
 
-      /* trim whitespace around the values */
+    while ($values = $result->fetchRow(DB_FETCHMODE_ORDERED)) {
+      $this->_rowCount++;
 
       $empty = TRUE;
       foreach ($values as $k => $v) {
         $values[$k] = trim($v, " \t\r\n");
       }
-
       if (CRM_Utils_System::isNull($values)) {
         continue;
       }
@@ -388,6 +384,38 @@ abstract class CRM_Contribute_Import_Parser {
       }
       elseif ($mode == self::MODE_IMPORT) {
         $returnCode = $this->import($onDuplicate, $values);
+
+        // this is for import progress indicator
+        if ($statusID && (($this->_rowCount % $skip) == 0)) {
+          $currTimestamp = time();
+          $totalTime = ($currTimestamp - $startTimestamp);
+          $time = ($currTimestamp - $prevTimestamp);
+          $recordsLeft = $totalRowCount - $this->_rowCount;
+          if ($recordsLeft < 0) {
+            $recordsLeft = 0;
+          }
+          $estimatedTime = ($recordsLeft / $skip) * $time;
+          $estMinutes = floor($estimatedTime / 60);
+          $timeFormatted = '';
+          if ($estMinutes > 1) {
+            $timeFormatted = $estMinutes . ' ' . ts('minutes') . ' ';
+            $estimatedTime = $estimatedTime - ($estMinutes * 60);
+          }
+          $timeFormatted .= round($estimatedTime) . ' ' . ts('seconds');
+          $processedPercent = (int )(($this->_rowCount * 100) / $totalRowCount);
+          $statusMsg = ts('%1 of %2 records - %3 remaining',
+            array(1 => $this->_rowCount, 2 => $totalRowCount, 3 => $timeFormatted)
+          );
+          $status = "
+<div class=\"description\">
+&nbsp; <strong>{$statusMsg}</strong>
+</div>
+";
+
+          $contents = json_encode(array($processedPercent, $status));
+          file_put_contents($statusFile, $contents);
+          $prevTimestamp = $currTimestamp;
+        }
       }
       else {
         $returnCode = self::ERROR;
@@ -439,10 +467,7 @@ abstract class CRM_Contribute_Import_Parser {
       if ($returnCode == self::ERROR) {
         $this->_invalidRowCount++;
         if ($this->_invalidRowCount < $this->_maxErrorCount) {
-          $recordNumber = $this->_lineCount;
-          if ($this->_haveColumnHeader) {
-            $recordNumber--;
-          }
+          $recordNumber = $this->_rowCount;
           array_unshift($values, $recordNumber);
           $this->_errors[] = $values;
         }
@@ -451,10 +476,7 @@ abstract class CRM_Contribute_Import_Parser {
       if ($returnCode == self::PLEDGE_PAYMENT_ERROR) {
         $this->_invalidPledgePaymentRowCount++;
         if ($this->_invalidPledgePaymentRowCount < $this->_maxErrorCount) {
-          $recordNumber = $this->_lineCount;
-          if ($this->_haveColumnHeader) {
-            $recordNumber--;
-          }
+          $recordNumber = $this->_rowCount;
           array_unshift($values, $recordNumber);
           $this->_pledgePaymentErrors[] = $values;
         }
@@ -463,10 +485,7 @@ abstract class CRM_Contribute_Import_Parser {
       if ($returnCode == self::SOFT_CREDIT_ERROR) {
         $this->_invalidSoftCreditRowCount++;
         if ($this->_invalidSoftCreditRowCount < $this->_maxErrorCount) {
-          $recordNumber = $this->_lineCount;
-          if ($this->_haveColumnHeader) {
-            $recordNumber--;
-          }
+          $recordNumber = $this->_rowCount;
           array_unshift($values, $recordNumber);
           $this->_softCreditErrors[] = $values;
         }
@@ -475,10 +494,7 @@ abstract class CRM_Contribute_Import_Parser {
       if ($returnCode == self::PCP_ERROR) {
         $this->_invalidPCPRowCount++;
         if ($this->_invalidPCPRowCount < $this->_maxErrorCount) {
-          $recordNumber = $this->_lineCount;
-          if ($this->_haveColumnHeader) {
-            $recordNumber--;
-          }
+          $recordNumber = $this->_rowCount;
           array_unshift($values, $recordNumber);
           $this->_pcpErrors[] = $values;
         }
@@ -486,24 +502,17 @@ abstract class CRM_Contribute_Import_Parser {
 
       if ($returnCode == self::CONFLICT) {
         $this->_conflictCount++;
-        $recordNumber = $this->_lineCount;
-        if ($this->_haveColumnHeader) {
-          $recordNumber--;
-        }
+        $recordNumber = $this->_rowCount;
         array_unshift($values, $recordNumber);
         $this->_conflicts[] = $values;
       }
 
       if ($returnCode == self::DUPLICATE) {
         if ($returnCode == self::MULTIPLE_DUPE) {
-          /* TODO: multi-dupes should be counted apart from singles
-                     * on non-skip action */
+          // TODO: multi-dupes should be counted apart from singles on non-skip action
         }
         $this->_duplicateCount++;
-        $recordNumber = $this->_lineCount;
-        if ($this->_haveColumnHeader) {
-          $recordNumber--;
-        }
+        $recordNumber = $this->_rowCount;
         array_unshift($values, $recordNumber);
         $this->_duplicates[] = $values;
         if ($onDuplicate != self::DUPLICATE_SKIP) {
@@ -521,9 +530,11 @@ abstract class CRM_Contribute_Import_Parser {
       if ($this->_maxLinesToProcess > 0 && $this->_validCount >= $this->_maxLinesToProcess) {
         break;
       }
+
+      // clean up memory from dao's
+      CRM_Core_DAO::freeResult();
     }
 
-    fclose($fd);
 
     if ($mode == self::MODE_PREVIEW || $mode == self::MODE_IMPORT) {
       $customHeaders = $mapper;
@@ -860,7 +871,7 @@ abstract class CRM_Contribute_Import_Parser {
    */
   function set($store, $mode = self::MODE_SUMMARY) {
     $store->set('fileSize', $this->_fileSize);
-    $store->set('lineCount', $this->_lineCount);
+    $store->set('lineCount', $this->_rowCount);
     $store->set('seperator', $this->_seperator);
     $store->set('fields', $this->getSelectValues());
     $store->set('fieldTypes', $this->getSelectTypes());
@@ -936,26 +947,6 @@ abstract class CRM_Contribute_Import_Parser {
    */
   static function exportCSV($fileName, $header, $data) {
     CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
-  }
-
-  /**
-   * Remove single-quote enclosures from a value array (row)
-   *
-   * @param array $values
-   * @param string $enclosure
-   *
-   * @return void
-   * @static
-   * @access public
-   */
-  static function encloseScrub(&$values, $enclosure = "'") {
-    if (empty($values)) {
-      return;
-    }
-
-    foreach ($values as $k => $v) {
-      $values[$k] = preg_replace("/^$enclosure(.*) $enclosure$/", '$1', $v);
-    }
   }
 
   function errorFileName($type) {

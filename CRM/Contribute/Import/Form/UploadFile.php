@@ -84,25 +84,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
   public function buildQuickForm() {
 
     //Setting Upload File Size
-    $config = CRM_Core_Config::singleton();
-    if ($config->maxImportFileSize >= 8388608) {
-      $uploadFileSize = 8388608;
-    }
-    else {
-      $uploadFileSize = $config->maxImportFileSize;
-    }
-    $uploadSize = round(($uploadFileSize / (1024 * 1024)), 2);
-
-    $this->assign('uploadSize', $uploadSize);
-
-    $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
-
-    $this->addRule('uploadFile', ts('A valid file must be uploaded.'), 'uploadedfile');
-    $this->addRule('uploadFile', ts('File size should be less than %1 MBytes (%2 bytes)', array(1 => $uploadSize, 2 => $uploadFileSize)), 'maxfilesize', $uploadFileSize);
-    $this->setMaxFileSize($uploadFileSize);
-    $this->addRule('uploadFile', ts('Input file must be in CSV format'), 'utf8File');
-
-    $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
+    CRM_Import_DataSource_CSV::buildQuickForm($this);
 
     $duplicateOptions = array(
       CRM_Contribute_Import_Parser::DUPLICATE_SKIP => ts('Insert new contributions'),
@@ -191,6 +173,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
    */
   public function postProcess() {
     $this->controller->resetPage('MapField');
+    $this->_params = $this->controller->exportValues($this->_name);
 
     $fileName = $this->controller->exportValue($this->_name, 'uploadFile');
     $skipColumnHeader = $this->controller->exportValue($this->_name, 'skipColumnHeader');
@@ -217,17 +200,35 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     $session->set("dateTypes", $dateFormats);
 
-    $config = CRM_Core_Config::singleton();
-    $seperator = $config->fieldSeparator;
+    // Get the PEAR::DB object
+    $dao = new CRM_Core_DAO();
+    $db = $dao->getDatabaseConnection();
+
+    //hack to prevent multiple tables.
+    $this->_params['import_table_name'] = $this->get('importTableName');
+    if (!$this->_params['import_table_name']) {
+      $tableName = str_replace('.', '_', microtime(TRUE));
+      $this->_params['import_table_name'] = 'civicrm_import_job_' . $tableName;
+    }
+    CRM_Import_DataSource_CSV::postProcess($this, $this->_params, $db);
+    $importTableName = $this->get('importTableName');
+    $fieldNames = CRM_Import_DataSource_CSV::prepareImportTable($db, $importTableName);
 
     $mapper = array();
 
     $parser = new CRM_Contribute_Import_Parser_Contribution($mapper);
     $parser->setMaxLinesToProcess(100);
-    $parser->run($fileName, $seperator,
+    $parser->run(
+      $importTableName,
       $mapper,
-      $skipColumnHeader,
-      CRM_Contribute_Import_Parser::MODE_MAPFIELD, $contactType
+      CRM_Contribute_Import_Parser::MODE_MAPFIELD,
+      $contactType,
+      $fieldNames['pk'],
+      $fieldNames['status'],
+      CRM_Contribute_Import_Parser::DUPLICATE_SKIP,
+      NULL, 
+      NULL,
+      CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE
     );
 
     // add all the necessary variables to the form

@@ -57,7 +57,7 @@ abstract class CRM_Import_DataSource {
    *
    * @access public
    */
-  abstract public function preProcess(&$form);
+  abstract public static function preProcess(&$form);
 
   /**
    * This is function is called by the form object to get the DataSource's
@@ -67,18 +67,45 @@ abstract class CRM_Import_DataSource {
    * @return None (operates directly on form argument)
    * @access public
    */
-  abstract public function buildQuickForm(&$form);
+  abstract public static function buildQuickForm(&$form);
 
   /**
    * Function to process the form
    *
    * @access public
    */
-  abstract public function postProcess(&$params, &$db);
+  abstract public static function postProcess(&$form, &$params, &$db);
 
   public function checkPermission() {
     $info = $this->getInfo();
     return empty($info['permissions']) || CRM_Core_Permission::check($info['permissions']);
+  }
+
+  /**
+   * Add a PK and status column to the import table so we can track our progress
+   * Returns the name of the primary key and status columns
+   *
+   * @return array
+   * @access private
+   */
+  public static function prepareImportTable($db, $importTableName, $statusFieldName = '_status', $primaryKeyName = '_id') {
+    /* Make sure the PK is always last! We rely on this later.
+     * Should probably stop doing that at some point, but it
+     * would require moving to associative arrays rather than
+     * relying on numerical order of the fields. This could in
+     * turn complicate matters for some DataSources, which
+     * would also not be good. Decisions, decisions...
+     */
+
+    $alterQuery = "ALTER TABLE $importTableName
+                       ADD COLUMN $statusFieldName VARCHAR(32)
+                            DEFAULT 'NEW' NOT NULL,
+                       ADD COLUMN ${statusFieldName}Msg TEXT,
+                       ADD COLUMN $primaryKeyName INT PRIMARY KEY NOT NULL
+                               AUTO_INCREMENT";
+    $db->query($alterQuery);
+
+    return array('status' => $statusFieldName, 'pk' => $primaryKeyName);
   }
 }
 

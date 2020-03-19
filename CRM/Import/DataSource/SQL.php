@@ -43,9 +43,9 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     );
   }
 
-  public function preProcess(&$form) {}
+  public static function preProcess(&$form) {}
 
-  public function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $form->add('hidden', 'hidden_dataSource', 'CRM_Import_DataSource_SQL');
     $form->add('textarea', 'sqlQuery', ts('Specify SQL Query'), 'rows=10 cols=45', TRUE);
     $form->addFormRule(array('CRM_Import_DataSource_SQL', 'formRule'), $form);
@@ -66,12 +66,11 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
   }
 
 
-  public function postProcess(&$params, &$db) {
-    require_once 'CRM/Import/ImportJob.php';
+  public static function postProcess(&$form, &$params, &$db) {
     $importJob = new CRM_Import_ImportJob(CRM_Utils_Array::value('import_table_name', $params),
       $params['sqlQuery'], TRUE
     );
-    $this->set('importTableName', $importJob->getTableName());
+    $form->set('importTableName', $importJob->getTableName());
   }
 }
 

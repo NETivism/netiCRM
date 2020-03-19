@@ -163,12 +163,9 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
+    $columnNames = array();
     $this->_mapperFields = $this->get('fields');
-
-    $this->_columnCount = $this->get('columnCount');
-    $this->assign('columnCount', $this->_columnCount);
     $this->_dataValues = $this->get('dataValues');
-    $this->assign('dataValues', $this->_dataValues);
 
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
     $this->_onDuplicate = $this->get('onDuplicate', isset($onDuplicate) ? $onDuplicate : "");
@@ -176,13 +173,29 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
       $this->assign('rowDisplayCount', 3);
-      /* if we had a column header to skip, stash it for later */
 
-      $this->_columnHeaders = $this->_dataValues[0];
+      $columnNames = $this->_columnHeaders = $this->get('originalColHeader');
+      array_unshift($this->_dataValues, $this->_columnHeaders);
     }
     else {
+      $this->assign('skipColumnHeader', NULL);
       $this->assign('rowDisplayCount', 2);
+
+      // get the field names from the temp. DB table
+      $dao = new CRM_Core_DAO();
+      $db = $dao->getDatabaseConnection();
+
+      $columnsQuery = "SHOW FIELDS FROM $this->_importTableName
+                         WHERE Field NOT LIKE '\_%'";
+      $columnsResult = $db->query($columnsQuery);
+      while ($row = $columnsResult->fetchRow(DB_FETCHMODE_ASSOC)) {
+        $columnNames[] = $row['Field'];
+      }
     }
+    $this->_columnCount = count($columnNames);
+    $this->assign('dataValues', $this->_dataValues);
+    $this->assign('columnCount', $this->_columnCount);
+
     $highlightedFields = array();
     $highlightedFields[] = 'contribution_type';
     //CRM-2219 removing other required fields since for updation only
@@ -475,7 +488,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         }
         else {
           // Otherwise guess the default from the form of the data
-          $mappedHeaderKey = $this->defaultFromData($dataPatterns, $i);
+          // do not use data as mapping patterns, cause too many wrong match
+          // $mappedHeaderKey = $this->defaultFromData($dataPatterns, $i);
           $mappedLocationId = !empty($mappedHeaderKey) && !empty($this->_locationFields[$mappedHeaderKey]) ? $defaultLocationType->id : 0;
         }
         if ($mappedLocationId) {
