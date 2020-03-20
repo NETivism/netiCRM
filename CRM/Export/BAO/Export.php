@@ -547,7 +547,7 @@ class CRM_Export_BAO_Export {
       $groupBy = " GROUP BY civicrm_activity.id ";
     }
     $queryString .= $groupBy . $orderBy;
-    $countQuery .=  $groupBy . $orderBy;
+    $countQuery .=  $groupBy;
 
     //hack for student data
     require_once 'CRM/Core/OptionGroup.php';
