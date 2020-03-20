@@ -68,6 +68,24 @@ class CRM_Utils_System_Drupal {
     if (empty($user)) {
       self::loadBootStrap();
     }
+
+    // #27780, correct SameSite for chrome 80
+    if (CRM_Utils_System::isSSL()) {
+      $sparams = session_get_cookie_params();
+      if (PHP_VERSION_ID < 70300) {
+        setcookie(session_name(), session_id(), time()+$sparams['lifetime'], '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
+      }
+      else {
+        setcookie(session_name(), session_id(), array(
+          'expires' => time()+$sparams['lifetime'],
+          'path' => '/',
+          'domain' => $sparams['domain'],
+          'secure' => TRUE,
+          'httponly' => TRUE,
+          'samesite' => 'None',
+        ));
+      }
+    }
   }
 
   /**
