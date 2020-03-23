@@ -37,6 +37,15 @@
     </td> 
 </tr>
 
+<tr> 
+    <td class="crm-event-form-block-participant_register_date_low">  
+       {$form.participant_register_date_low.label}<br />{include file="CRM/common/jcalendar.tpl" elementName=participant_register_date_low}
+    </td>
+    <td class="crm-event-form-block-participant_register_date_high"> 
+       {$form.participant_register_date_high.label}<br />{include file="CRM/common/jcalendar.tpl" elementName=participant_register_date_high}
+    </td> 
+</tr>
+
 <tr>
     <td class="crm-event-form-block-participant_status"><label>{ts}Participant Status{/ts}</label> 
       <br />
