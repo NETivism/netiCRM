@@ -76,7 +76,7 @@ class CRM_Utils_System_Drupal {
         $lifetime = 0;
       }
       else{
-        $lifetime = CRM_REQUEST_TIME + $lifetime;
+        $lifetime = CRM_REQUEST_TIME + $sparams['lifetime'];
       }
       if (PHP_VERSION_ID < 70300) {
         setcookie(session_name(), session_id(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
