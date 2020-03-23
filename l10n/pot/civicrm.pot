@@ -47291,3 +47291,6 @@ msgstr ""
 
 msgid "Registered Participant"
 msgstr ""
+
+msgid "Registered - From"
+msgstr ""
