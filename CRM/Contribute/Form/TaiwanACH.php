@@ -1,6 +1,6 @@
 <?php
 
-class CRM_Contribute_Form_ACH extends CRM_Core_Form {
+class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
   protected $_contactId = NULL;
   protected $_id = NULL;
@@ -22,7 +22,7 @@ class CRM_Contribute_Form_ACH extends CRM_Core_Form {
     }
 
     //CRM_Custom_Form_Customdata::preProcess($this);
-    $this->addFormRule(array('CRM_Contribute_Form_ACH', 'formRule'), $this);
+    $this->addFormRule(array('CRM_Contribute_Form_TaiwanACH', 'formRule'), $this);
   }
 
   function buildQuickForm() {

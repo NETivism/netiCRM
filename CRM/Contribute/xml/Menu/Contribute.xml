@@ -314,9 +314,9 @@
      <is_public>true</is_public>
   </item>
   <item>
-     <path>civicrm/contribute/ach</path>
+     <path>civicrm/contribute/taiwanach</path>
      <title>New ACH</title>
-     <page_callback>CRM_Contribute_Form_ACH</page_callback>
+     <page_callback>CRM_Contribute_Form_TaiwanACH</page_callback>
      <access_arguments>access CiviContribute,edit contributions</access_arguments>
   </item>
 </menu>
