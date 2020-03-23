@@ -61,3 +61,4 @@ cj(document).ready( function($) {
 });
 </script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector="select#ach_bank_code" select_width="300"}

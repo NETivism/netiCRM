@@ -37,10 +37,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       'postoffice' => ts('Post Office'),
     ), NULL, TRUE);
 
-    $bankCode = array(
-      '000808' => 'E.Sun Bank',
-      '000700' => 'Chunghwa Post',
-    );
+    $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
     $this->addSelect('ach_bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
 
     $this->addSelect('ach_postoffice_acc_type', ts('Post Office Account Type'), array(
