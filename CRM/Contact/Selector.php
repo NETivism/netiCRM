@@ -448,7 +448,14 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     }
     elseif (!empty($this->_returnProperties)) {
 
-      self::$_columnHeaders = array(array('name' => ''),
+      self::$_columnHeaders = array(
+        array('name' => ''),
+        array(
+          'name' => '#',
+          'title' => ts('Contact ID'),
+          'sort' => 'contact_id',
+          'direction' => CRM_Utils_Sort::DONTCARE,
+        ),
         array(
           'name' => ts('Name'),
           'sort' => 'sort_name',
