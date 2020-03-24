@@ -10,7 +10,7 @@
   </tr>
   <tr>
     <td class="label">{$form.ach_total_amount.label}</td>
-    <td>{$form.ach_total_amount.html}</td>
+    <td>{$form.currency.html} {$form.ach_total_amount.html}</td>
   </tr>
   <tr>
     <td class="label">{$form.ach_payment_type.label}</td>
@@ -42,6 +42,12 @@
     <td>{$form.ach_identifier_number.html}</td>
   </tr>
 </table>
+
+{*Custom Data*}
+{include file="CRM/Custom/Form/CustomData.tpl"}
+
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+
 {literal}
 <script type="text/javascript">
 cj(document).ready( function($) {

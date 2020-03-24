@@ -21,7 +21,8 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $this->_id = NULL;
     }
 
-    //CRM_Custom_Form_Customdata::preProcess($this);
+    $this->set('type', 'Contribution');
+    CRM_Custom_Form_CustomData::preProcess($this);
     $this->addFormRule(array('CRM_Contribute_Form_TaiwanACH', 'formRule'), $this);
   }
 
@@ -46,11 +47,22 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       2 => ts('postal transfer'),
     ));
 
-    $this->add('text', 'ach_bank_branch', ts('Bank Branch'), NULL, TRUE);
+    $this->add('text', 'ach_bank_branch', ts('Bank Branch'));
     $this->add('text', 'ach_bank_account', ts('ACH').' - '.ts('Bank Account Number'), NULL, TRUE);
     $this->add('text', 'ach_identifier_number', ts('ACH').' - '.ts('Legal Identifier').'/'.ts('SIC Code'), NULL, TRUE);
 
-    //CRM_Custom_Form_Customdata::buildQuickForm($this);
+    CRM_Custom_Form_CustomData::buildQuickForm($this);
+
+    $this->addButtons(array(
+        array('type' => 'upload',
+          'name' => ts('Save'),
+          'isDefault' => TRUE,
+        ),
+        array('type' => 'cancel',
+          'name' => ts('Cancel'),
+        ),
+      )
+    );
   }
 
   public static function formRule($fields, $files, $self) {
@@ -77,6 +89,26 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     if (CRM_Utils_Array::value('contact_select_id', $submittedValues)) {
       $this->_contactId = $submittedValues['contact_select_id'][1];
     }
-    
+
+    $params = array();
+    if ($this->_id) {
+      $params['id'] = $this->_id;
+    }
+    $params['contact_id'] = $this->_contactId;
+    foreach($submittedValues as $key => $value) {
+      if (in_array($key, array('hidden_custom', 'MAX_FILE_SIZE', 'qfKey', 'contact', 'contact_select_id', 'profiles'))) {
+        continue;
+      }
+      if (strstr($key, 'custom_')) {
+        $key = preg_replace('/^(custom_\d+)(.*)$/', '$1', $key);
+        $params['data'][$key] = $value;
+        continue;
+      }
+      if (strstr($key, 'ach')) {
+        $key = preg_replace('/^ach_/', '', $key);
+      }
+      $params[$key] = $value;
+    }
+    // CRM_Contribute_BAO_TaiwanACH::create($params);
   }
 }
