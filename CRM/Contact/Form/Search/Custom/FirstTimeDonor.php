@@ -336,7 +336,7 @@ GROUP BY contact.id
   }
 
   function alterRow(&$row) {
-    if (!empty($row['amount'])) {
+    if (!empty($row['amount']) && empty($this->_isExport)) {
       $row['amount'] = CRM_Utils_Money::format($row['amount']);
     }
     if (!empty($row['instrument_id'])) {
@@ -345,15 +345,18 @@ GROUP BY contact.id
     if (!empty($row['contribution_type_id'])) {
       $row['contribution_type_id'] = $this->_contributionType[$row['contribution_type_id']];
     }
-    if (!empty($row['contribution_recur_id'])) {
-      $contactId = $row['id'];
-      $recurId = $row['contribution_recur_id'];
-      $row['contribution_recur_id'] = "<a href='".CRM_Utils_System::url('civicrm/contact/view/contributionrecur',"reset=1&id={$recurId}&cid={$contactId}")."' target='_blank'>".ts("Recurring contributions")."</a>";
+    if (empty($this->_isExport)) {
+      if (!empty($row['contribution_recur_id'])) {
+        $contactId = $row['id'];
+        $recurId = $row['contribution_recur_id'];
+        $row['contribution_recur_id'] = "<a href='".CRM_Utils_System::url('civicrm/contact/view/contributionrecur',"reset=1&id={$recurId}&cid={$contactId}")."' target='_blank'>".ts("Recurring contributions")."</a>";
+      }
+      else {
+        $row['contribution_recur_id'] = ts('One-time Contribution');
+      }
     }
-    else {
-      $row['contribution_recur_id'] = ts('One-time Contribution');
-    }
-    if (!empty($row['contribution_page_id'])) {
+
+    if (!empty($row['contribution_page_id']) && empty($this->_isExport)) {
       $pageId = $row['contribution_page_id'];
       $row['contribution_page_id'] = "<a href='".CRM_Utils_System::url('civicrm/admin/contribute', 'action=update&reset=1&id='.$pageId)."' target='_blank'>". $this->_contributionPage[$pageId]."</a>";
     }
