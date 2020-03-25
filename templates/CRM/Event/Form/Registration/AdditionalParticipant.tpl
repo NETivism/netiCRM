@@ -76,6 +76,10 @@
 {include file="CRM/UF/Form/Block.tpl" fields=$additionalCustomPost} 
 {include file="CRM/common/moveEmail.tpl"}
 
+{if $isCaptcha}
+  {include file='CRM/common/ReCAPTCHA.tpl'}
+{/if}
+
 <div id="crm-submit-buttons">
     {include file="CRM/common/formButtons.tpl"}
 </div>
