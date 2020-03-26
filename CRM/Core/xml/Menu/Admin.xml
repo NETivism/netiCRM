@@ -622,4 +622,11 @@
      <access_arguments>administer CiviCRM;access CiviContribute;edit contributions</access_arguments>
      <weight>380</weight>
   </item>
+  <item>
+     <path>civicrm/admin/batch</path>
+     <title>Batch Job List</title>
+     <page_callback>CRM_Batch_Page_Batch</page_callback>
+     <access_arguments>administer CiviCRM</access_arguments>
+     <weight>400</weight>
+  </item>
 </menu>

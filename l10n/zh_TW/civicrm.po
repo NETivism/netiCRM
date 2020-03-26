@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-02-26 04:53+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-03-23 08:37+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47423,3 +47423,82 @@ msgstr "年齡 - 自"
 
 msgid "Age search will exclude deceased contact."
 msgstr "年齡搜尋將排除已過世的聯絡人。"
+
+#: CRM/Batch/BAO/Batch.php
+msgid ""
+"Found batch job number %1 running over 1 hour. We delete this job then start"
+" another batch job number %2."
+msgstr "批次作業編號 %1 進行了超過 1 小時，我們將會清除這個批次作業後，再進行下一個批次作業 編號 %2。"
+
+#: CRM/Batch/BAO/Batch.php
+msgid "We still have running batch job in queue recently."
+msgstr "目前仍有正在運作中的批次作業。"
+
+#: CRM/Batch/BAO/Batch.php
+msgid "Success processing queuing batch."
+msgstr "成功執行了一個批次作業排程。"
+
+#: CRM/Batch/DAO/Batch.php
+msgid "Batch ID"
+msgstr "批次作業編號"
+
+#: CRM/Batch/DAO/Batch.php
+msgid "Batch Name"
+msgstr "批次名稱"
+
+#: CRM/Batch/DAO/Batch.php CRM/Batch/Form/Search.php
+msgid "Batch Status"
+msgstr "批次狀態"
+
+#: CRM/Batch/DAO/Batch.php CRM/Batch/Form/Search.php
+msgid "Batch Type"
+msgstr "批次類型"
+
+#: CRM/Batch/DAO/Batch.php
+msgid "Batch Data"
+msgstr "批次資料"
+
+#: CRM/Batch/Page/Batch.php
+msgid "Batch Processing"
+msgstr "批次作業進行中"
+
+#: CRM/Batch/Page/Batch.php
+msgid "Download"
+msgstr "下載"
+
+#: CRM/Batch/Page/Batch.php
+msgid "Search Batches"
+msgstr "搜尋批次作業"
+
+#: CRM/Batch/Page/Batch.php
+msgid ""
+"Because of the large amount of data you are about to perform, we have "
+"scheduled this job for the batch process. You will receive an email "
+"notification when the work is completed."
+msgstr "因為您欲處理的資料超過限額，我們將之排程為批次作業如下。批次作業將會在背景進行，您則會於作業完成時收到 Email 通知。"
+
+#: CRM/Core/xml/Menu/Admin.xml
+msgid "Batch Job List"
+msgstr "批次作業列表"
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "Batch Complete Notification"
+msgstr "批次作業完成通知"
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "Batch Notification"
+msgstr "批次作業通知"
+
+#: xml/templates/message_templates/batch_complete_notification_html.tpl
+msgid "You can check result by login to the website."
+msgstr "你可以點擊連結來登入網站查看結果"
+
+#: CRM/Report/Form/Event/Income.php
+msgid "Event Income"
+msgstr "活動收入"
+
+msgid "Registered Participant"
+msgstr "已報名參加者"
+
+msgid "Registered - From"
+msgstr "登記日期 - 從"

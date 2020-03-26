@@ -134,7 +134,8 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
 
     // FIXME: we should regen this table's name if it exists rather than drop it
     if (!$table) {
-      $table = 'civicrm_import_job_' . md5(uniqid(rand(), TRUE));
+      $tableName = str_replace('.', '_', microtime(TRUE));
+      $table = 'civicrm_import_job_' . $tableName;
     }
 
     $db->query("DROP TABLE IF EXISTS $table");

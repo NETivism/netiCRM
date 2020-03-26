@@ -17,7 +17,7 @@ var organization_name = makeid(5);
 function list_contacts_and_select_three(test) {
     /* find contacts */
     casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
-    //    this.capture('find_contacts.png');
+        // his.capture('find_contacts.png');
     });
     casper.waitForSelector('#contact_type_chzn_o_1', function success() {
         test.assertExists('#contact_type_chzn_o_1');
@@ -67,6 +67,9 @@ function list_contacts_and_select_three(test) {
 
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(baseURL, function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 0: Login. **');
+        casper.echo('=====================================');
         // this.capture('login.png');
     });
     casper.waitForSelector("form#user-login-form input[name='name']", function success() {
@@ -98,6 +101,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* add organization */
     casper.thenOpen(baseURL + "civicrm/contact/add?reset=1&ct=Organization", function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 1: Add to Organization. **');
+        casper.echo('=====================================');
         // this.capture('add_organization.png');
     });
     casper.waitForSelector("form[name=Contact] input[name='organization_name']", function success() {
@@ -197,6 +203,12 @@ casper.test.begin('Resurrectio test', function(test) {
      * Record Activity 
      */
 
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 2: Record Activity. **');
+        casper.echo('=====================================');
+    });
+
     list_contacts_and_select_three(test);
 
     /* select Record Activity for Contacts */
@@ -248,6 +260,12 @@ casper.test.begin('Resurrectio test', function(test) {
      * Batch Profile Update for Contact
      */
     
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 3: Batch Profile Update for Contact. **');
+        casper.echo('=====================================');
+    });
+
     list_contacts_and_select_three(test);
 
     /* select Batch Profile Update for Contact */
@@ -347,6 +365,12 @@ casper.test.begin('Resurrectio test', function(test) {
      * Export Contacts
      */
 
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 4: Export Contacts. **');
+        casper.echo('=====================================');
+    });
+
     list_contacts_and_select_three(test);
 
     /* select Export Contacts */
@@ -399,6 +423,462 @@ casper.test.begin('Resurrectio test', function(test) {
         // this.capture('export_done.png');
     });
 
+    /*
+     * Merge Contacts - 1 Merge
+     */
+    
+    /* find contacts */
+    casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 5-1: Merge Contacts - Merge. **');
+        casper.echo('=====================================');
+        // this.capture('find_contacts.png');
+    });
+    casper.waitForSelector('#contact_type_chzn_o_1', function success() {
+        test.assertExists('#contact_type_chzn_o_1');
+        this.click('#contact_type_chzn_o_1');
+    }, function fail() {
+        test.assertExists('#contact_type_chzn_o_1');
+    });
+    casper.then(function() {
+        // this.capture('click_individual.png');
+    });
+    casper.waitForSelector('#_qf_Basic_refresh', function success() {
+        test.assertExists('#_qf_Basic_refresh');
+        this.click('#_qf_Basic_refresh');
+    }, function fail() {
+        test.assertExists('#_qf_Basic_refresh"]');
+    });
+
+    /* all contacts */
+    casper.wait(2000);
+    casper.then(function() {
+        // this.capture('all_contacts.png');
+    });
+    
+    /* check top 2 checkbox */
+    casper.waitForSelector('table.selector tr:nth-child(1) td:nth-child(1) input', function success() {
+        test.assertExists('table.selector tr:nth-child(1) td:nth-child(1) input');
+        this.click('table.selector tr:nth-child(1) td:nth-child(1) input');
+    }, function fail() {
+        test.assertExists('table.selector tr:nth-child(1) td:nth-child(1) input');
+    });
+    casper.waitForSelector('table.selector tr:nth-child(2) td:nth-child(1) input', function success() {
+        test.assertExists('table.selector tr:nth-child(2) td:nth-child(1) input');
+        this.click('table.selector tr:nth-child(2) td:nth-child(1) input');
+    }, function fail() {
+        test.assertExists('table.selector tr:nth-child(2) td:nth-child(1) input');
+    });
+
+    /* select Merge Contacts */
+    casper.waitForSelector("#task", function success() {
+        test.assertExists("#task");
+        this.evaluate(function () {
+            document.querySelector("#task").selectedIndex = 10;
+        });
+    }, function fail() {
+        test.assertExists("#task");
+    });
+    casper.waitForSelector("form[name=Basic] input[type=submit][value='Go']", function success() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+        this.click("form[name=Basic] input[type=submit][value='Go']");
+    }, function fail() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        // this.capture('merge_contacts.png');
+    });
+
+    /* click Merge */
+    casper.waitForSelector("form[name=Merge] input[type=submit][value='Merge']", function success() {
+        test.assertExists("form[name=Merge] input[type=submit][value='Merge']");
+        this.click("form[name=Merge] input[type=submit][value='Merge']");
+    }, function fail() {
+        test.assertExists("form[name=Merge] input[type=submit][value='Merge']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+    
+
+    /*
+     * Merge Contacts - 2 Mark this pair as not a duplicate
+     */
+
+    /* find contacts */
+    casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 5-2: Merge Contacts - Mark this pair as not a duplicate. **');
+        casper.echo('=====================================');
+        // this.capture('find_contacts.png');
+    });
+    casper.waitForSelector('#contact_type_chzn_o_1', function success() {
+        test.assertExists('#contact_type_chzn_o_1');
+        this.click('#contact_type_chzn_o_1');
+    }, function fail() {
+        test.assertExists('#contact_type_chzn_o_1');
+    });
+    casper.then(function() {
+        // this.capture('click_individual.png');
+    });
+    casper.waitForSelector('#_qf_Basic_refresh', function success() {
+        test.assertExists('#_qf_Basic_refresh');
+        this.click('#_qf_Basic_refresh');
+    }, function fail() {
+        test.assertExists('#_qf_Basic_refresh"]');
+    });
+
+    /* all contacts */
+    casper.wait(2000);
+    casper.then(function() {
+        // this.capture('all_contacts.png');
+    });
+    
+    /* check top 2 checkbox */
+    casper.waitForSelector('table.selector tr:nth-child(1) td:nth-child(1) input', function success() {
+        test.assertExists('table.selector tr:nth-child(1) td:nth-child(1) input');
+        this.click('table.selector tr:nth-child(1) td:nth-child(1) input');
+    }, function fail() {
+        test.assertExists('table.selector tr:nth-child(1) td:nth-child(1) input');
+    });
+    casper.waitForSelector('table.selector tr:nth-child(2) td:nth-child(1) input', function success() {
+        test.assertExists('table.selector tr:nth-child(2) td:nth-child(1) input');
+        this.click('table.selector tr:nth-child(2) td:nth-child(1) input');
+    }, function fail() {
+        test.assertExists('table.selector tr:nth-child(2) td:nth-child(1) input');
+    });
+
+    /* select Merge Contacts */
+    casper.waitForSelector("#task", function success() {
+        test.assertExists("#task");
+        this.evaluate(function () {
+            document.querySelector("#task").selectedIndex = 10;
+        });
+    }, function fail() {
+        test.assertExists("#task");
+    });
+    casper.waitForSelector("form[name=Basic] input[type=submit][value='Go']", function success() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+        this.click("form[name=Basic] input[type=submit][value='Go']");
+    }, function fail() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+    }); /* submit form */
+    casper.wait(2000);
+
+    /* click Mark this pair as not a duplicate. */
+    casper.waitForSelector('#notDuplicate', function success() {
+        test.assertExists('#notDuplicate');
+        this.click('#notDuplicate');
+    }, function fail() {
+        test.assertExists('#notDuplicate');
+    });
+
+    /* click something */
+    casper.waitForSelector('div.ui-dialog-buttonset button:nth-child(2)', function success() {
+        test.assertExists('div.ui-dialog-buttonset button:nth-child(2)');
+        this.click('div.ui-dialog-buttonset button:nth-child(2)');
+    }, function fail() {
+        test.assertExists('div.ui-dialog-buttonset button:nth-child(2)');
+    });
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /*
+     * Tag Contacts 
+     */
+    
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 6: Tag Contacts. **');
+        casper.echo('=====================================');
+    });
+    
+    list_contacts_and_select_three(test);
+    
+    /* select Tag Contacts */
+    casper.waitForSelector("#task", function success() {
+        test.assertExists("#task");
+        this.evaluate(function () {
+            document.querySelector("#task").selectedIndex = 11;
+        });
+    }, function fail() {
+        test.assertExists("#task");
+    });
+    casper.waitForSelector("form[name=Basic] input[type=submit][value='Go']", function success() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+        this.click("form[name=Basic] input[type=submit][value='Go']");
+    }, function fail() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+    }); /* submit form */
+    casper.wait(2000);
+
+    /* click something */
+    casper.waitForSelector('tr.crm-contact-task-addtotag-form-block-tag div.listing-box div:first-child input', function success() {
+        test.assertExists('tr.crm-contact-task-addtotag-form-block-tag div.listing-box div:first-child input');
+        this.click('tr.crm-contact-task-addtotag-form-block-tag div.listing-box div:first-child input');
+    }, function fail() {
+        test.assertExists('tr.crm-contact-task-addtotag-form-block-tag div.listing-box div:first-child input');
+    });
+    casper.then(function() {
+        // this.capture('tag_contacts.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("form#AddToTag input[type=submit][value='Tag Contacts']", function success() {
+        test.assertExists("form#AddToTag input[type=submit][value='Tag Contacts']");
+        this.click("form#AddToTag input[type=submit][value='Tag Contacts']");
+    }, function fail() {
+        test.assertExists("form#AddToTag input[type=submit][value='Tag Contacts']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+    casper.then(function() {
+        // this.capture('tag_success.png');
+    });
+    
+    /*
+     * Add Contacts to Group - 1 Add Contact To Existing Group
+     */
+
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 7-1: Add Contacts to Group - Add Contact To Existing Group. **');
+        casper.echo('=====================================');
+    });
+
+    list_contacts_and_select_three(test);
+
+    /* select Add Contacts to Group */
+    casper.waitForSelector("#task", function success() {
+        test.assertExists("#task");
+        this.evaluate(function () {
+            document.querySelector("#task").selectedIndex = 2;
+        });
+    }, function fail() {
+        test.assertExists("#task");
+    });
+    casper.waitForSelector("form[name=Basic] input[type=submit][value='Go']", function success() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+        this.click("form[name=Basic] input[type=submit][value='Go']");
+    }, function fail() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+    }); /* submit form */
+    casper.wait(2000);
+
+    /* select dropdown */
+    casper.waitForSelector("#group_id", function success() {
+        test.assertExists("#group_id");
+        this.evaluate(function () {
+            document.querySelector("#group_id").selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("#group_id");
+    });
+    casper.then(function() {
+        // this.capture('select_group.png');
+    });
+    
+    /* click submit */
+    casper.waitForSelector("form#AddToGroup input[type=submit][value='Confirm']", function success() {
+        test.assertExists("form#AddToGroup input[type=submit][value='Confirm']");
+        this.click("form#AddToGroup input[type=submit][value='Confirm']");
+    }, function fail() {
+        test.assertExists("form#AddToGroup input[type=submit][value='Confirm']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+    casper.then(function() {
+        // this.capture('add_to_group_success.png');
+    });
+
+    /*
+     * Add Contacts to Group - 2 Create New Group
+     */
+
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 7-2: Add Contacts to Group - Create New Group. **');
+        casper.echo('=====================================');
+    });
+
+    list_contacts_and_select_three(test);
+
+    /* select Add Contacts to Group */
+    casper.waitForSelector("#task", function success() {
+        test.assertExists("#task");
+        this.evaluate(function () {
+            document.querySelector("#task").selectedIndex = 2;
+        });
+    }, function fail() {
+        test.assertExists("#task");
+    });
+    casper.waitForSelector("form[name=Basic] input[type=submit][value='Go']", function success() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+        this.click("form[name=Basic] input[type=submit][value='Go']");
+    }, function fail() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+    }); /* submit form */
+    casper.wait(2000);
+
+    /* click Create New Group */
+    casper.waitForSelector('#CIVICRM_QFID_1_4', function success() {
+        test.assertExists('#CIVICRM_QFID_1_4');
+        this.click('#CIVICRM_QFID_1_4');
+    }, function fail() {
+        test.assertExists('#CIVICRM_QFID_1_4');
+    });
+
+    /* sendKeys to Group Name */
+    casper.waitForSelector("#title", function success() {
+        test.assertExists("#title");
+        this.sendKeys("#title", makeid(5));
+    }, function fail() {
+        test.assertExists("#title");
+    });
+    casper.then(function() {
+        // this.capture('create_new_group.png');
+    });
+
+    /* click Confirm */
+    casper.waitForSelector("form#AddToGroup input[type=submit][value='Confirm']", function success() {
+        test.assertExists("form#AddToGroup input[type=submit][value='Confirm']");
+        this.click("form#AddToGroup input[type=submit][value='Confirm']");
+    }, function fail() {
+        test.assertExists("form#AddToGroup input[type=submit][value='Confirm']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+    casper.then(function() {
+        // this.capture('create_new_group_success.png');
+    });
+
+    /*
+     * New Smart Group
+     */
+
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 8: New Smart Group. **');
+        casper.echo('=====================================');
+    });
+
+    list_contacts_and_select_three(test);
+
+    /* click All records */
+    casper.waitForSelector('#CIVICRM_QFID_ts_all_4', function success() {
+        test.assertExists('#CIVICRM_QFID_ts_all_4');
+        this.click('#CIVICRM_QFID_ts_all_4');
+    }, function fail() {
+        test.assertExists('#CIVICRM_QFID_ts_all_4');
+    });
+
+    /* select Add Contacts to Group */
+    casper.waitForSelector("#task", function success() {
+        test.assertExists("#task");
+        this.evaluate(function () {
+            document.querySelector("#task").selectedIndex = 4;
+        });
+    }, function fail() {
+        test.assertExists("#task");
+    });
+    casper.waitForSelector("form[name=Basic] input[type=submit][value='Go']", function success() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+        this.click("form[name=Basic] input[type=submit][value='Go']");
+    }, function fail() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+    }); /* submit form */
+    casper.wait(2000);
+
+    /* sendKeys */
+    casper.waitForSelector("#title", function success() {
+        test.assertExists("#title");
+        this.sendKeys("#title", makeid(5));
+    }, function fail() {
+        test.assertExists("#title");
+    });
+    casper.then(function() {
+        // this.capture('add_to_smart_group.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("form#SaveSearch input[type=submit][value='Save Smart Group']", function success() {
+        test.assertExists("form#SaveSearch input[type=submit][value='Save Smart Group']");
+        this.click("form#SaveSearch input[type=submit][value='Save Smart Group']");
+    }, function fail() {
+        test.assertExists("form#SaveSearch input[type=submit][value='Save Smart Group']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+    
+    casper.then(function() {
+        // this.capture('smart_group_success.png');
+    });
+
+    /* click Done */
+    casper.waitForSelector("form#Result input[type=submit][value='Done']", function success() {
+        test.assertExists("form#Result input[type=submit][value='Done']");
+        this.click("form#Result input[type=submit][value='Done']");
+    }, function fail() {
+        test.assertExists("form#Result input[type=submit][value='Done']");
+    }); /* submit form */
+    casper.wait(2000);
+
+    /*
+     * Delete Contacts 
+     */
+    
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 9: Delete Contacts. **');
+        casper.echo('=====================================');
+    });
+    
+    list_contacts_and_select_three(test);
+
+    /* select Add Contacts to Group */
+    casper.waitForSelector("#task", function success() {
+        test.assertExists("#task");
+        this.evaluate(function () {
+            document.querySelector("#task").selectedIndex = 17;
+        });
+    }, function fail() {
+        test.assertExists("#task");
+    });
+    casper.waitForSelector("form[name=Basic] input[type=submit][value='Go']", function success() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+        this.click("form[name=Basic] input[type=submit][value='Go']");
+    }, function fail() {
+        test.assertExists("form[name=Basic] input[type=submit][value='Go']");
+    }); /* submit form */
+    casper.wait(2000);
+
+    /* click submit */
+    casper.waitForSelector("form#Delete input[type=submit][value='Delete Contact(s)']", function success() {
+        test.assertExists("form#Delete input[type=submit][value='Delete Contact(s)']");
+        this.click("form#Delete input[type=submit][value='Delete Contact(s)']");
+    }, function fail() {
+        test.assertExists("form#Delete input[type=submit][value='Delete Contact(s)']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+    casper.then(function() {
+        // this.capture('delete_contacts_success.png');
+    });
+    
     casper.run(function() {
         test.done();
     });
