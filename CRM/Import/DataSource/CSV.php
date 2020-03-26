@@ -72,7 +72,12 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
 
     $table = $result['import_table_name'];
     $importJob = new CRM_Import_ImportJob($table);
-    $form->set('importTableName', $importJob->getTableName());
+    $tableName = $importJob->getTableName();
+    $form->set('importTableName', $tableName);
+
+    $fields = parent::prepareImportTable($tableName);
+    $form->set('primaryKeyName', $fields['primaryKeyName']);
+    $form->set('statusFieldName', $fields['statusFieldName']);
   }
 
   /**

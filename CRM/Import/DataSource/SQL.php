@@ -70,7 +70,12 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     $importJob = new CRM_Import_ImportJob(CRM_Utils_Array::value('import_table_name', $params),
       $params['sqlQuery'], TRUE
     );
-    $form->set('importTableName', $importJob->getTableName());
+    $tableName = $importJob->getTableName();
+    $form->set('importTableName', $tableName);
+
+    $fields = parent::prepareImportTable($tableName);
+    $form->set('primaryKeyName', $fields['primaryKeyName']);
+    $form->set('statusFieldName', $fields['statusFieldName']);
   }
 }
 

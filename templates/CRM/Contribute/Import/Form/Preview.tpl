@@ -23,6 +23,53 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{literal}
+<script type="text/javascript">
+function setIntermediate( ) {
+  var dataUrl = "{/literal}{$statusUrl}{literal}";
+  cj.getJSON( dataUrl, function( response ) {
+     var dataStr = response.toString();
+     var result  = dataStr.split(",");
+     cj("#intermediate").html( result[1] );
+     if( result[0] < 100 ){
+       cj("#importProgressBar .ui-progressbar-value").css({display:'block'});
+       cj("#importProgressBar .ui-progressbar-value").animate({width: result[0]+"%"}, 4000);
+       cj("#status").text( result[0]+"%" + "{/literal}{ts}Completed{/ts}{literal}");
+     }
+   });
+}
+
+function pollLoop( ){
+  setIntermediate( );
+  window.setTimeout( pollLoop, 15000 ); // 15 sec
+}
+
+function verify( ) {
+  if (! confirm('{/literal}{ts}Are you sure you want to Import now{/ts}{literal}?') ) {
+    return false;
+  }
+
+  cj("#id-processing").show( ).dialog({
+    modal         : true,
+    width         : 350,
+    height        : 250,
+    resizable     : false,
+    bgiframe      : true,
+    draggable     : true,
+    closeOnEscape : false,
+    overlay       : { opacity: 0.5, background: "black" },
+    open          : function ( ) {
+      cj("#id-processing").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").remove();
+    }
+  });
+  cj("#importProgressBar").progressbar({value:0});
+  cj("#importProgressBar").show();
+  pollLoop();
+}
+</script>
+{/literal}
+
+
 {* Contribution Import Wizard - Step 3 (preview import results prior to actual data loading) *}
 {* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
 <div class="crm-block crm-form-block crm-contribution-import-preview-form-block id="upload-file">

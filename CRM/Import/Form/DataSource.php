@@ -340,15 +340,16 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
       // We should have the data in the DB now, parse it
       $importTableName = $this->get('importTableName');
-      $fieldNames = $this->_prepareImportTable($db, $importTableName);
+      $primaryKeyName = $this->get('primaryKeyName');
+      $statusFieldName = $this->get('statusFieldName');
       $mapper = array();
 
       $parser = new CRM_Import_Parser_Contact($mapper);
       $parser->setMaxLinesToProcess(100);
       $parser->run($importTableName, $mapper,
         CRM_Import_Parser::MODE_MAPFIELD, $contactType,
-        $fieldNames['pk'], $fieldNames['status'],
-        DUPLICATE_SKIP, NULL, NULL, FALSE, CRM_Import_Parser::DEFAULT_TIMEOUT, $contactSubType
+        $primaryKeyName, $statusFieldName,
+        CRM_Import_Parser::DUPLICATE_SKIP, NULL, NULL, FALSE, CRM_Import_Parser::DEFAULT_TIMEOUT, $contactSubType
       );
 
       // add all the necessary variables to the form
@@ -357,43 +358,6 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     else {
       CRM_Core_Error::fatal("Invalid DataSource on form post. This shouldn't happen!");
     }
-  }
-
-  /**
-   * Add a PK and status column to the import table so we can track our progress
-   * Returns the name of the primary key and status columns
-   *
-   * @return array
-   * @access private
-   */
-  private function _prepareImportTable($db, $importTableName) {
-    /* TODO: Add a check for an existing _status field;
-         *  if it exists, create __status instead and return that
-         */
-
-    $statusFieldName = '_status';
-    $primaryKeyName = '_id';
-
-    $this->set('primaryKeyName', $primaryKeyName);
-    $this->set('statusFieldName', $statusFieldName);
-
-    /* Make sure the PK is always last! We rely on this later.
-         * Should probably stop doing that at some point, but it
-         * would require moving to associative arrays rather than
-         * relying on numerical order of the fields. This could in
-         * turn complicate matters for some DataSources, which
-         * would also not be good. Decisions, decisions...
-         */
-
-    $alterQuery = "ALTER TABLE $importTableName
-                       ADD COLUMN $statusFieldName VARCHAR(32)
-                            DEFAULT 'NEW' NOT NULL,
-                       ADD COLUMN ${statusFieldName}Msg TEXT,
-                       ADD COLUMN $primaryKeyName INT PRIMARY KEY NOT NULL
-                               AUTO_INCREMENT";
-    $db->query($alterQuery);
-
-    return array('status' => $statusFieldName, 'pk' => $primaryKeyName);
   }
 
   /**

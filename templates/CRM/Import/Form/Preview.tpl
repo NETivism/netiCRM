@@ -43,7 +43,7 @@ function setIntermediate( ) {
 
 function pollLoop( ){
   setIntermediate( );
-  window.setTimeout( pollLoop, 5000 ); // 5 sec
+  window.setTimeout( pollLoop, 15000 ); // 15 sec
 }
 
 function verify( ) {

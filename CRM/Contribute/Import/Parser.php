@@ -49,17 +49,29 @@ abstract class CRM_Contribute_Import_Parser {
   /**
    * various parser modes
    */
-  CONST MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
+  CONST
+    MODE_MAPFIELD = CRM_Import_Parser::MODE_MAPFIELD,
+    MODE_PREVIEW = CRM_Import_Parser::MODE_PREVIEW,
+    MODE_SUMMARY = CRM_Import_Parser::MODE_SUMMARY,
+    MODE_IMPORT = CRM_Import_Parser::MODE_IMPORT;
 
   /**
    * codes for duplicate record handling
    */
-  CONST DUPLICATE_SKIP = 1, DUPLICATE_REPLACE = 2, DUPLICATE_UPDATE = 4, DUPLICATE_FILL = 8, DUPLICATE_NOCHECK = 16;
+  CONST
+    DUPLICATE_SKIP = CRM_Import_Parser::DUPLICATE_SKIP,
+    DUPLICATE_REPLACE = CRM_Import_Parser::DUPLICATE_REPLACE,
+    DUPLICATE_UPDATE = CRM_Import_Parser::DUPLICATE_UPDATE,
+    DUPLICATE_FILL = CRM_Import_Parser::DUPLICATE_FILL,
+    DUPLICATE_NOCHECK = CRM_Import_Parser::DUPLICATE_NOCHECK;
 
   /**
    * various Contact types
    */
-  CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
+  CONST
+    CONTACT_INDIVIDUAL = CRM_Import_Parser::CONTACT_INDIVIDUAL,
+    CONTACT_HOUSEHOLD = CRM_Import_Parser::CONTACT_HOUSEHOLD,
+    CONTACT_ORGANIZATION = CRM_Import_Parser::CONTACT_ORGANIZATION;
 
   protected $_fileName;
 
@@ -271,7 +283,7 @@ abstract class CRM_Contribute_Import_Parser {
    *
    * @var integer 
    */
-  protected $_dedupeRuleGroupId;
+  public $_dedupeRuleGroupId;
 
   /**
    * Create contact mode
@@ -307,7 +319,9 @@ abstract class CRM_Contribute_Import_Parser {
 
     $this->_contactType = $contactType;
     $this->_createContactOption = $createContactOption;
-    $this->_dedupeRuleGroupId = $dedupeRuleGroupId;
+    if (!empty($dedupeRuleGroupId)) {
+      $this->_dedupeRuleGroupId = $dedupeRuleGroupId;
+    }
 
     $this->init();
 

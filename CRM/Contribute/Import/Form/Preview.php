@@ -56,8 +56,6 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $mapper = $this->get('mapper');
     $softCreditFields = $this->get('softCreditFields');
     $pcpCreatorFields = $this->get('pcpCreatorFields');
-    $invalidRowCount = $this->get('invalidRowCount');
-    $conflictRowCount = $this->get('conflictRowCount');
     $mismatchCount = $this->get('unMatchCount');
 
     //get the mapping name displayed if the mappingId is set
@@ -108,6 +106,14 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     foreach ($properties as $property) {
       $this->assign($property, $this->get($property));
     }
+
+    $statusID = $this->get('statusID');
+    if (!$statusID) {
+      $statusID = md5(uniqid(rand(), TRUE));
+      $this->set('statusID', $statusID);
+    }
+    $statusUrl = CRM_Utils_System::url('civicrm/ajax/status', "id={$statusID}", FALSE, NULL, FALSE);
+    $this->assign('statusUrl', $statusUrl);
   }
 
   /**
@@ -124,7 +130,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
         ),
         array('type' => 'next',
           'name' => ts('Import Now >>'),
-          'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+          'js' => array('onclick' => "return verify( );"),
           'isDefault' => TRUE,
         ),
         array('type' => 'cancel',
@@ -152,32 +158,27 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
    * @access public
    */
   public function postProcess() {
-    $fileName = $this->controller->exportValue('UploadFile', 'uploadFile');
-    $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
-    $invalidRowCount = $this->get('invalidRowCount');
-    $conflictRowCount = $this->get('conflictRowCount');
+    // prevent table error and duplicated import
+    $isCompleted = $this->get('complete');
+    if ($isCompleted) {
+      return;
+    }
+    $config = CRM_Core_Config::singleton();
     $onDuplicate = $this->get('onDuplicate');
 
-    $config = CRM_Core_Config::singleton();
-    $seperator = $config->fieldSeparator;
-
-    $mapper = $this->get('mapperKeys');
-    $mapperKeys = array();
-    $mapperSoftCredit = array();
-    $mapperPCP = array();
-    foreach ($mapper as $key => $value) {
-      $mapperKeys[$key] = $mapper[$key][0];
-      if (isset($mapper[$key][0]) && $mapper[$key][0] == 'soft_credit') {
-        $mapperSoftCredit[$key] = $mapper[$key][1];
-      }
-      elseif (isset($mapper[$key][0]) && $mapper[$key][0] == 'pcp_creator') {
-        $mapperPCP[$key] = $mapper[$key][1];
-      }
-      else {
-        $mapperSoftCredit[$key] = NULL;
-        $mapperPCP[$key] = NULL;
-      }
-    }
+    $importJobParams = array(
+      'invalidRowCount' => $this->get('invalidRowCount'),
+      'conflictRowCount' => $this->get('conflictRowCount'),
+      'onDuplicate' => $this->get('onDuplicate'),
+      'mapper' => $this->get('mapperKeys'),
+      'contactType' => $this->get('contactType'),
+      'primaryKeyName' => $this->get('primaryKeyName'),
+      'statusFieldName' => $this->get('statusFieldName'),
+      'statusID' => $this->get('statusID'),
+      'totalRowCount' => $this->get('totalRowCount'),
+      'dedupeRuleGroupId' => $this->get('dedupeRuleGroup'),
+      'createContactOption' => $this->get('createContactOption'),
+    );
     $properties = array(
       'ims' => 'mapperImProvider',
       'phones' => 'mapperPhoneType',
@@ -186,35 +187,29 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       'locations' => 'locations',
     );
     foreach ($properties as $propertyName => $propertyVal) {
-      $$propertyVal = $this->get($propertyName);
+      $importJobParams[$propertyVal] = $this->get($propertyName);
     }
-    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeys, $mapperSoftCredit, $mapperLocType, $mapperPhoneType, $mapperWebsiteType, $mapperImProvider, $mapperPCP);
 
-    $mapFields = $this->get('fields');
+    $tableName = $this->get('importTableName');
+    $importJob = new CRM_Contribute_Import_ImportJob_Contribution($tableName);
+    $importJob->setJobParams($importJobParams);
 
-    foreach ($mapper as $key => $value) {
-      $header = array();
-      if (isset($mapFields[$mapper[$key][0]])) {
-        $header[] = $mapFields[$mapper[$key][0]];
-      }
-      $mapperFields[] = implode(' - ', $header);
-    }
-    $parser->run($fileName, $seperator,
-      $mapperFields,
-      $skipColumnHeader,
-      CRM_Contribute_Import_Parser::MODE_IMPORT,
-      $this->get('contactType'),
-      $onDuplicate,
-      $this->get('createContactOption'),
-      $this->get('dedupeRuleGroup')
-    );
+    // update cache before starting with runImport
+    $session = &CRM_Core_Session::singleton();
+    $userID = $session->get('userID');
+    CRM_ACL_BAO_Cache::updateEntry($userID);
+
+    // run the import
+    $importJob->runImport($this);
+
+    // update cache after we done with runImport
+    CRM_ACL_BAO_Cache::updateEntry($userID);
 
     // add all the necessary variables to the form
-    $parser->set($this, CRM_Contribute_Import_Parser::MODE_IMPORT);
+    $importJob->setFormVariables($this);
 
     // check if there is any error occured
-
-    $errorStack = &CRM_Core_Error::singleton();
+    $errorStack = CRM_Core_Error::singleton();
     $errors = $errorStack->getErrors();
 
     $errorMessage = array();
@@ -224,8 +219,10 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
         $errorMessage[] = $value['message'];
       }
 
-      $errorFile = $fileName['name'] . '.error.log';
-
+      // there is no fileName since this is a sql import
+      // so fudge it
+      $config = CRM_Core_Config::singleton();
+      $errorFile = $config->uploadDir . "sqlImport.error.log";
       if ($fd = fopen($errorFile, 'w')) {
         fwrite($fd, implode('\n', $errorMessage));
       }
@@ -233,7 +230,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
 
       $this->set('errorFile', $errorFile);
 
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::ERROR . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = 'type='. CRM_Contribute_Import_Parser::ERROR . '&parser=CRM_Contribute_Import_Parser';
       $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
 
       $urlParams = 'type=' . CRM_Contribute_Import_Parser::CONFLICT . '&parser=CRM_Contribute_Import_Parser';
@@ -242,6 +239,9 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       $urlParams = 'type=' . CRM_Contribute_Import_Parser::NO_MATCH . '&parser=CRM_Contribute_Import_Parser';
       $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
+
+    //do not drop table, leave it to auto purge
+    $importJob->isComplete();
   }
 }
 

@@ -212,7 +212,8 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     }
     CRM_Import_DataSource_CSV::postProcess($this, $this->_params, $db);
     $importTableName = $this->get('importTableName');
-    $fieldNames = CRM_Import_DataSource_CSV::prepareImportTable($db, $importTableName);
+    $primaryKeyName = $this->get('primaryKeyName');
+    $statusFieldName = $this->get('statusFieldName');
 
     $mapper = array();
 
@@ -223,8 +224,8 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
       $mapper,
       CRM_Contribute_Import_Parser::MODE_MAPFIELD,
       $contactType,
-      $fieldNames['pk'],
-      $fieldNames['status'],
+      $primaryKeyName,
+      $statusFieldName,
       CRM_Contribute_Import_Parser::DUPLICATE_SKIP,
       NULL, 
       NULL,

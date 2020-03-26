@@ -277,8 +277,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     );
 
     $tableName = $this->get('importTableName');
-    require_once 'CRM/Import/ImportJob.php';
-    $importJob = new CRM_Import_ImportJob($tableName);
+    $importJob = new CRM_Import_ImportJob_Contact($tableName);
     $importJob->setJobParams($importJobParams);
 
     // update cache before starting with runImport
@@ -329,9 +328,8 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
-    //hack to clean db
-    //if job complete drop table.
-    $importJob->isComplete(TRUE);
+    //do not drop table, leave it to auto purge
+    $importJob->isComplete();
   }
 
   /**
