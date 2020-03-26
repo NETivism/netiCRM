@@ -214,6 +214,7 @@
 			_debug(_data);
 			let data = JSON.stringify(_data, undefined, 4);
 			$(_dataLoadSource).val(data);
+			$.nmEditor.instance.data = _data;
 		},
 		sort: function(order, section) {
 			if (_data["sections"][section]) {
@@ -416,6 +417,7 @@
 											for (let blockID in _data.sections[section].blocks) {
 												let blockData = blocksData[blockID];
 												_nmeBlock.add(blockData, "edit", blocksContainer);
+												_nmeBlockControl.render(blockID, blockData.type);
 											}
 
 											_editable();
@@ -443,6 +445,7 @@
 			_nme = new nmEditor();
 			_nme.init();
 			$.nmEditor.instance = _nme;
+			$.nmEditor.instance.data = _data;
 		}
 	};
 
@@ -641,41 +644,23 @@
 	}
 
 	var _nmeBlockControl = {
-		render: function(type) {
+		render: function(id, type) {
 			let output = "",
-					blockType = typeof type !== undefined ? type : "";
-
-			// nmeBlock control: start
-			output += "<div class='nme-block-control'>";
-
-			// nmeBlock control - move
-			output + "<div class='nme-block-move'>" +
-			"<span class='handle-drag handle-btn' data-type='drag'><i class='zmdi " + _controlIconClass.drag + "'></i></span>" +
-			"<span class='handle-prev handle-btn' data-type='prev'><i class='zmdi " + _controlIconClass.prev + "'></i></span>" +
-			"<span class='handle-next handle-btn' data-type='next'><i class='zmdi " + _controlIconClass.next + "'></i></span>" +
-			"</div>";
-
-			// nmeBlock control - actions
-			output += "<div class='nme-block-actions'>";
+					blockID = typeof id !== "undefined" ? id : "",
+					blockType = typeof type !== "undefined" ? type : "",
+					$block = $(".nme-block[data-id='" + blockID + "']");
 
 			// nmeBlock control - extended actions
-			if (_editActions.extended[blockType]) {
-				let elemExtendedActions = _editActions.extended[blockType];
+			if ($block.length && _editActions.extended[blockType]) {
+				let extendedActions = _editActions.extended[blockType];
 
-				for (let k in elemExtendedActions) {
-					let action = elemExtendedActions[k];
+				for (let k in extendedActions) {
+					let action = extendedActions[k];
 					output += "<span class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></span>";
 				}
+
+				$block.find(".nme-block-actions").prepend(output);
 			}
-
-			// nmeBlock control - default actions
-			output += "<span class='handle-clone handle-btn' data-type='clone'><i class='zmdi " + _controlIconClass.clone + "'></i></span>" +
-			"<span class='handle-delete handle-btn' data-type='delete'><i class='zmdi " + _controlIconClass.delete + "'></i></span>";
-
-			// nmeBlock control: end
-			output += "</div>";
-
-			return output;
 		},
 		init: function() {
 			$(".nme-block-control").on("click", ".handle-btn", function() {
@@ -709,8 +694,9 @@
 
 				// image
 				if (handleType == "image") {
-					nmeImceTargetID = blockDomID;
-					var win = window.open('/imce&app=nme|sendto@nmeImce', 'nme_imce', 'width=640, height=480');
+					window.nmeImce.targetID = blockID;
+					window.nmeImce.targetSection = section;
+					var win = window.open('/imce&app=nme|sendto@nmeImce.afterInsert', 'nme_imce', 'width=640, height=480');
 				}
 
 				// link
@@ -871,26 +857,45 @@
 	 */
 
 	// IMCE客製公用函式，用來介接圖片上傳功能
-	window.nmeImce = function(file, imceWindow) {
-		// _debug(file);
-		// _debug(imceWindow); // TypeError: cyclic object value
-		// console.log(file);
-		// console.log(imceWindow);
-		if (nmeImceTargetID) {
-			let $target = $("#" + nmeImceTargetID);
+	window.nmeImce = {
+		targetID: "",
+		targetSection: "",
+		afterInsert: function(file, imceWindow) {
+			// _debug(file);
+			// _debug(imceWindow); // TypeError: cyclic object value
+			// console.log(file);
+			// console.log(imceWindow);
+			let blockID = window.nmeImce.targetID,
+					section = window.nmeImce.targetSection,
+					fileURL = file.url,
+					fileName = file.name;
 
-			if ($target.length) {
-				let $imgContainer = $target.find(".nme-image"),
-						img = "<img class='nc-img' src='" + file.url + "' alt='" + file.name + "' />";
-				
-				$imgContainer.html(img);
+			if (blockID) {
+				let $target = $(".nme-block[data-id='" + blockID + "']");
+
+				if ($target.length) {
+					let $img = $target.find(".nmee-image");
+
+					if ($img.length) {
+						// Update dom properties of the target image
+						$img.attr({
+							"src": file.url,
+							"alt": file.name
+						});
+
+						// Update json data of the target image
+						if (_data["sections"][section]["blocks"][blockID]) {
+							_data["sections"][section]["blocks"][blockID]["data"]["url"] = fileURL;
+							_data["sections"][section]["blocks"][blockID]["data"]["fileName"] = fileName;
+							_nmeData.update();
+						}
+					}
+				}
 			}
+
+			imceWindow.close();
 		}
-
-		imceWindow.close();
-	}
-
-	window.nmeImceTargetID = "";
+	};
 
 	/**
 	 * ============================
@@ -903,6 +908,7 @@
 	 */
 	nmEditor.prototype = {
 		constructor: nmEditor,
+		data: {},
 		init: function() {
       _nmEditorInit();
 
