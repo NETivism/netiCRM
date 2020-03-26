@@ -344,6 +344,14 @@
 
 									case "button":
 										$nmebElem.html(block.data);
+										$nmebElem.replaceWith(function(){
+											return this.outerHTML.replace("<a", "<div").replace("</a", "</div");
+										});
+										$nmebElem = $nmeb.find(".nme-elem");
+										$nmebElem.addClass("nme-editable");
+										$nmebElem.attr({
+											"data-type": "text"
+										});
 										break;
 
 									case "image":
