@@ -1,0 +1,40 @@
+<!--
+Template name: block--button.html
+Base on: block--button--mailchimp.html
+
+===================================
+Class name mapping of nmeEditor and mailchimp:
+===================================
+nmeb-button nmeb | mcnButtonBlock
+nmeb-outer | mcnButtonBlockOuter
+nmeb-inner | mcnButtonBlockInner
+nmeb-content-container | mcnButtonContentContainer
+nmeb-content | mcnButtonContent
+nmee-button nme-elem | mcnButton
+
+===================================
+Setting mapping
+===================================
+block (nmeb-inner): block padding
+elemContainer (nmeb-content-container): button border, background
+elemContainerInner (nmeb-content): button padding, font-family, font-size
+elem (nme-elem): button font, text, color
+-->
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-button nmeb" style="min-width: 100%;">
+  <tbody class="nmeb-outer">
+    <tr>
+      <td class="nmeb-inner" data-settings-target="block" style="padding-top: 0; padding-right: 18px; padding-bottom: 18px; padding-left:18px;" valign="top" align="center">
+        <table border="0" cellpadding="0" cellspacing="0" class="nmeb-content-container" data-settings-target="elemContainer"  style="border-collapse: separate !important; border-radius: 3px; background-color: rgb(0, 159, 199);">
+          <tbody>
+            <tr>
+              <td align="center" valign="middle" class="nmeb-content" data-settings-target="elemContainerInner" style="font-family: Helvetica; font-size: 18px; padding: 18px;">
+                <a class="nmee-button nme-elem" title="[Button Text HERE]" href="#" target="_blank" data-settings-target="elem" style="font-weight: bold; letter-spacing: -0.5px; line-height: 100%; text-align: center; text-decoration: none; color: rgb(255, 255, 255);">[Button Text HERE]</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

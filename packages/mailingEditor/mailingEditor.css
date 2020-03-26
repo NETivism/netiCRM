@@ -94,7 +94,7 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 }
 .nme-blocks {
   margin: 0 auto;
-  max-width: 600px; 
+  max-width: 680px;
 }
 .nme-block {
   border: 1px solid transparent;
@@ -270,6 +270,11 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
   letter-spacing: 2px;
 }
 
+/* nme item: image */
+.nmee-image {
+  max-width: 100% !important;
+}
+
 /* nme edit */
 .nme-edit {
   position: absolute;
@@ -308,4 +313,14 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 }
 .blue-background-class {
   background: rgba(3, 169, 244, 0.1);
+}
+#mailing_content_data {
+  width: 100%;
+  height: 400px;
+}
+#nme-mail-header {
+  background: #ccc;
+}
+#nme-mail-footer {
+  background: #555;
 }
