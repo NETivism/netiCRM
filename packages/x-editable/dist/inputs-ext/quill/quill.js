@@ -82,6 +82,8 @@ $(function(){
             var toolbarOptions = [
               ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
               [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+              [{ 'size': ['small', false, 'large', 'huge'] }],
+              [{ 'align': [] }],
               [{ 'list': 'ordered'}, { 'list': 'bullet' }],
               ['link'],
               //['image']

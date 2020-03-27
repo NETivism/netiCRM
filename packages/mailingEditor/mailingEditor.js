@@ -282,16 +282,17 @@
 	};
 
 	var _nmeBlock = {
-		add: function(data, mode, target) {
-			let block = !_objIsEmpty(data) ? data : null;
+		add: function(data, mode, target, method) {
+			let block = !_objIsEmpty(data) ? data : null,
+					addMethod = typeof method !== "undefined" ? method : "append";
 
 			if (block && block.type) {
 				let output = "",
-						blockMode = typeof mode !== undefined ? mode : "view",
+						blockMode = typeof mode !== "undefined" ? mode : "view",
 						blockType = block.type,
 						blockSection = block.section,
 						blockID = block.id ? block.id : blockType + "-" + _renderID(),
-						$target = typeof target !== undefined ? $(target) : "";
+						$target = typeof target !== "undefined" ? $(target) : "";
 
 				// If the mode is 'edit', render nmeBlock control buttons.
 				if (blockMode == "edit") {
@@ -306,7 +307,20 @@
 						blockEditContent = blockEditContent.replace("{nmeBlockSection}", blockSection);
 						blockEditContent = blockEditContent.replace("{nmeBlockContent}", blockContent);
 						output = blockEditContent;
-						$target.append(output);
+
+						switch (addMethod) {
+							case "append":
+								$target.append(output);
+								break;
+
+							case "before":
+								$target.before(output);
+								break;
+
+							case "after":
+								$target.after(output);
+								break;
+						}
 
 						let $nmeb = $(".nme-block[data-id='" + blockID + "']").find(".nmeb"),
 								$nmebInner = $nmeb.find(".nmeb-inner"),
@@ -375,11 +389,30 @@
 				}
 			}
 		},
-		clone: function() {
+		clone: function(data, target) {
+			let cloneData = !_objIsEmpty(data) ? data : null,
+					$target = typeof target !== undefined ? $(target) : "";
 
+			if ($target.length) {
+				_nmeBlock.add(cloneData, "edit", target, "after");
+			}
 		},
-		delete: function() {
+		delete: function(data) {
+			let block = !_objIsEmpty(data) ? data : null,
+					blockID = block.id,
+					section = block.section,
+					$block = $(".nme-block[data-id='" + blockID + "']");
 
+			if ($block.length) {
+				// Delete DOM
+				$block.remove();
+
+				// Remove block data
+				if (_data["sections"][section]["blocks"][blockID]) {
+					delete _data["sections"][section]["blocks"][blockID];
+					_nmeData.update();
+				}
+			}
 		}
 	};
 
@@ -484,7 +517,7 @@
 
 				$editableElem.on("save", function(e, params) {
 					console.log("save");
-					// console.log(params);
+					console.log(params);
 					let $this = $(this),
 							blockID = $this.data("id"),
 							blockType = $this.data("type"),
@@ -682,7 +715,8 @@
 						sectionID = "nme-mail-" + section,
 						sectionInner = "#" + sectionID + " .nme-mail-inner",
 						blocksContainer = sectionInner + " .nme-blocks",
-						$target = $block.find(".nme-" + blockType);
+						$elem = $block.find(".nme-elem"),
+						$elemContainer = $elem.parent(".nmeb-content");
 
 				// $block.addClass(ACTIVE_CLASS);
 				// Block control: move group
@@ -695,9 +729,15 @@
 
 					cloneData.id = cloneBlockID;
 					_data["sections"][section]["blocks"][cloneBlockID] = cloneData;
-					_nmeBlock.add(cloneData, "edit", blocksContainer);
+					_nmeBlock.clone(cloneData, "#" + blockDomID);
 					_sortables[section]["order"] = _sortables[section]["inst"].toArray();
 					_nmeData.sort(_sortables[section]["order"], section);
+				}
+
+				// delete
+				if (handleType == "delete") {
+					let deleteData = Object.assign({}, _data["sections"][section]["blocks"][blockID]);
+					_nmeBlock.delete(deleteData);
 				}
 
 				// image
@@ -710,10 +750,10 @@
 				// link
 				if (handleType == "link") {
 					let	editBlockID = "nme-edit-" + blockDomID,
-							editItemID = "nme-edit-" + handleType + "-item-" + blockDomID;
+					editItemID = "nme-edit-" + handleType + "-item-" + blockDomID;
 
-					if ($target.length && !$target.find(".nme-edit").length) {
-						let editItemVal = $target.data("link") ? $target.data("link") : "";
+					if ($elemContainer.length && !$elemContainer.find(".nme-edit").length) {
+						let editItemVal = $elem.data("link") ? $elem.data("link") : "";
 						let nmeEdit = "<div id='" + editBlockID + "' class='nme-edit' data-target='" + blockDomID + "'>" +
 							"<div class='" + INNER_CLASS + "'>" +
 							"<div class='nme-edit-link-item nme-edit-item'>" +
@@ -731,11 +771,10 @@
 							"</div>" + // .inner
 							"</div>"; // .nme-edit
 
-
-						$block.addClass(EDIT_CLASS);
-
 						// 將編輯表單放入對應的元件內
-						$target.addClass(EDIT_CLASS).append(nmeEdit);
+						$block.addClass(EDIT_CLASS);
+						$elem.addClass(EDIT_CLASS);
+						$elemContainer.addClass(EDIT_CLASS).append(nmeEdit);
 						let $editBlock = $("#" + editBlockID),
 								$editItem = $("#" + editItemID);
 
@@ -750,14 +789,20 @@
 								let editItemVal = $editItem.val();
 
 								if ($.trim(editItemVal)) {
-									$target.attr("data-link", editItemVal);
+									$elem.attr("data-link", editItemVal);
+
+									if (_data["sections"][section]["blocks"][blockID]) {
+										_data["sections"][section]["blocks"][blockID]["link"] = editItemVal;
+										_nmeData.update();
+									}
 								}
 							}
 
 							$editBlock.remove();
 							$block.removeClass(EDIT_CLASS);
-							$target.removeClass(EDIT_CLASS);
-						 });
+							$elem.removeClass(EDIT_CLASS);
+							$elemContainer.removeClass(EDIT_CLASS);
+						});
 					}
 				}
 			});
