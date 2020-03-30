@@ -72,6 +72,15 @@ function verify( ) {
 
 {* Contribution Import Wizard - Step 3 (preview import results prior to actual data loading) *}
 {* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
+
+<div id="id-processing" class="hiddenElement">
+  <h3>{ts}Processing{/ts} ...</h3>
+  <div id="status"></div>
+  <div class="progressBar" id="importProgressBar"></div>
+  <div id="intermediate"></div>
+  <div id="error_status"></div>
+</div>
+
 <div class="crm-block crm-form-block crm-contribution-import-preview-form-block id="upload-file">
  {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
  {include file="CRM/common/WizardHeader.tpl"}

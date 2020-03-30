@@ -130,7 +130,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
         ),
         array('type' => 'next',
           'name' => ts('Import Now >>'),
-          'js' => array('onclick' => "return verify( );"),
+          'js' => array('onclick' => "return verify();"),
           'isDefault' => TRUE,
         ),
         array('type' => 'cancel',

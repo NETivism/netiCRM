@@ -54,8 +54,8 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       $this->_primaryKeyName,
       $this->_statusFieldName,
       $this->_onDuplicate,
-      NULL, 
-      NULL,
+      $this->_statusID, 
+      $this->_totalRowCount,
       $this->_createContactOption,
       $this->_dedupeRuleGroupId
     );
