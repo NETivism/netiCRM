@@ -166,6 +166,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $columnNames = array();
     $this->_mapperFields = $this->get('fields');
     $this->_dataValues = $this->get('dataValues');
+    $this->_importTableName = $this->get('importTableName');
 
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
     $this->_onDuplicate = $this->get('onDuplicate', isset($onDuplicate) ? $onDuplicate : "");
