@@ -70,7 +70,7 @@ class CRM_Utils_System_Drupal {
     }
 
     // #27780, correct SameSite for chrome 80
-    if (CRM_Utils_System::isSSL()) {
+    if (CRM_Utils_System::isSSL() && CRM_Utils_System::sameSiteCheck()) {
       $sparams = session_get_cookie_params();
       if (!$sparams['lifetime']) {
         $lifetime = 0;
@@ -78,6 +78,7 @@ class CRM_Utils_System_Drupal {
       else{
         $lifetime = CRM_REQUEST_TIME + $sparams['lifetime'];
       }
+
       if (PHP_VERSION_ID < 70300) {
         setcookie(session_name(), session_id(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
       }
