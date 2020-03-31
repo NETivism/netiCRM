@@ -95,6 +95,17 @@
     return !isNaN(parseFloat(n)) && isFinite(n);
 	}
 
+	var _swapArrayVal = function(arr, a, b) {
+    if (typeof arr !== "undefined") {
+      var a_index = arr.indexOf(a);
+      var b_index = arr.indexOf(b);
+      var temp = arr[a_index];
+      arr[a_index] = arr[b_index];
+      arr[b_index] = temp;
+      return arr;
+    }
+  }
+
 	var _isJsonString = function(str) {
 		try {
 			var json = JSON.parse(str);
@@ -226,7 +237,6 @@
 					docViewBottom = docViewTop + $(window).outerHeight();
 
 			$elem.each(function(e) {
-				console.log(e);
 				let	$this = $(this),
 						elemID = $this.attr("id"),
 						elemTop = typeof buffer !== "undefined" ? $this.offset().top : $this.offset().top,
@@ -355,7 +365,8 @@
 						blockType = block.type,
 						blockSection = block.section,
 						blockID = block.id ? block.id : blockType + "-" + _renderID(),
-						$target = typeof target !== "undefined" ? $(target) : "";
+						$target = typeof target !== "undefined" ? $(target) : "",
+						disallowSortType = ["header", "footer"];
 
 				// If the mode is 'edit', render nmeBlock control buttons.
 				if (blockMode == "edit") {
@@ -363,12 +374,19 @@
 					//_nmeBlockControl.render(blockType);
 					if ($target.length) {
 						let blockContent = _tpl.block[blockType],
-								blockEditContent = _tpl.block.edit;
+								blockEditContent = _tpl.block.edit,
+								blockSortable = "true";
+
+						if (disallowSortType.includes(blockType)) {
+							blockSortable = "false";
+						}
 
 						blockEditContent = blockEditContent.replace(/{nmeBlockID}/g, blockID);
 						blockEditContent = blockEditContent.replace("{nmeBlockType}", blockType);
 						blockEditContent = blockEditContent.replace("{nmeBlockSection}", blockSection);
 						blockEditContent = blockEditContent.replace("{nmeBlockContent}", blockContent);
+						blockEditContent = blockEditContent.replace("{nmeBlockSortable}", blockSortable);
+
 						output = blockEditContent;
 
 						switch (addMethod) {
@@ -632,7 +650,7 @@
 			_sortables[nmeBlocksSection] = {};
 			_sortables[nmeBlocksSection]["inst"] = new Sortable(nmeBlocks, {
 				animation: 150,
-				draggable: ".nme-block",
+				draggable: ".nme-block[data-sortable='true']",
 				dragClass: "handle-drag",
 				ghostClass: 'nme-block-dragging',
 				onUpdate: function (evt) {
@@ -889,10 +907,37 @@
 						sectionInner = "#" + sectionID + " .nme-mail-inner",
 						blocksContainer = sectionInner + " .nme-blocks",
 						$elem = $block.find(".nme-elem"),
-						$elemContainer = $elem.parent(".nmeb-content");
+						$elemContainer = $elem.parent(".nmeb-content"),
+						blockSortInst = _sortables[section]["inst"],
+						blocksSortOrder = _sortables[section]["order"];
 
 				// $block.addClass(ACTIVE_CLASS);
 				// Block control: move group
+				// prev
+				if (handleType == "prev") {
+					let $prevBlock = $block.prev(".nme-block"),
+							prevBlockID = $prevBlock.length ? $prevBlock.attr("data-id") : "";
+
+					if (prevBlockID && $prevBlock.data("sortable")) {
+						blocksSortOrder = _swapArrayVal(blocksSortOrder, blockID, prevBlockID);
+						_sortables[section]["order"] = blocksSortOrder;
+						blockSortInst.sort(blocksSortOrder);
+						_nmeData.sort(blocksSortOrder, section);
+					}
+				}
+
+				// next
+				if (handleType == "next") {
+					let $nextBlock = $block.next(".nme-block"),
+							nextBlockID = $nextBlock.length ? $nextBlock.attr("data-id") : "";
+
+					if (nextBlockID && $nextBlock.data("sortable")) {
+						blocksSortOrder = _swapArrayVal(blocksSortOrder, blockID, nextBlockID);
+						_sortables[section]["order"] = blocksSortOrder;
+						blockSortInst.sort(blocksSortOrder);
+						_nmeData.sort(blocksSortOrder, section);
+					}
+				}
 
 				// Block control: actions group
 				// clone
