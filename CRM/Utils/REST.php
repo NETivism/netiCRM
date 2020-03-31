@@ -163,7 +163,31 @@ class CRM_Utils_REST {
       $result = self::error('Could not interpret return values from function.');
     }
 
-    if (CRM_Utils_Array::value('json', $_REQUEST)) {
+    if (CRM_Utils_Array::value('xml', $_REQUEST)) {
+      if (isset($result['count'])) {
+
+
+        $count = ' count="' . $result['count'] . '" ';
+      }
+      else $count = "";
+      $xml = "<?xml version=\"1.0\"?>
+        <ResultSet xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" $count>
+        ";
+      // check if this is a single element result (contact_get etc)
+      // or multi element
+      if ($hier) {
+        foreach ($result['values'] as $n => $v) {
+          $xml .= "<Result>\n" . CRM_Utils_Array::xml($v) . "</Result>\n";
+        }
+      }
+      else {
+        $xml .= "<Result>\n" . CRM_Utils_Array::xml($result) . "</Result>\n";
+      }
+
+      $xml .= "</ResultSet>\n";
+      return $xml;
+    }
+    else {
       header('Content-Type: text/javascript');
       if (CRM_Utils_Array::value('debug', $_REQUEST)) {
         return json_encode(array_merge($result), JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES + JSON_UNESCAPED_UNICODE);
@@ -174,30 +198,6 @@ class CRM_Utils_REST {
       $json = json_encode(array_merge($result));
       return $json;
     }
-
-
-    if (isset($result['count'])) {
-
-
-      $count = ' count="' . $result['count'] . '" ';
-    }
-    else $count = "";
-    $xml = "<?xml version=\"1.0\"?>
-      <ResultSet xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" $count>
-      ";
-    // check if this is a single element result (contact_get etc)
-    // or multi element
-    if ($hier) {
-      foreach ($result['values'] as $n => $v) {
-        $xml .= "<Result>\n" . CRM_Utils_Array::xml($v) . "</Result>\n";
-      }
-    }
-    else {
-      $xml .= "<Result>\n" . CRM_Utils_Array::xml($result) . "</Result>\n";
-    }
-
-    $xml .= "</ResultSet>\n";
-    return $xml;
   }
 
   function handle() {
