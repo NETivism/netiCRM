@@ -63,6 +63,7 @@
 			}
 		},
 		_sortables = {},
+		_pickrs = [],
 		_tpl = {
 			mail: {
 				"col-1-full-width": ""
@@ -190,7 +191,69 @@
     if (output) {
       return output;
 		}
-  }
+	}
+
+	var _elemIsOnScreen = function(elem, mode, buffer) {
+		let $elem = $(elem),
+				screenMode = typeof mode !== "undefined" ? mode : "default",
+				scrollBuffer = typeof buffer !== "undefined" ? parseInt(buffer) : 0;
+
+		if ($elem.length) {
+			let docViewTop = $(window).scrollTop(),
+					docViewBottom = docViewTop + $(window).outerHeight(),
+					elemTop = typeof buffer !== "undefined" ? $elem.offset().top + scrollBuffer : $elem.offset().top,
+					elemBottom = elemTop + $elem.outerHeight();
+
+			/*
+			console.log("elemTop: " + elemTop);
+			console.log("elemBottom: " + elemBottom);
+			console.log("docViewTop: " + docViewTop);
+			console.log("docViewBottom: " + docViewBottom);
+			*/
+
+			if (mode == "default") {
+				return ((elemTop >= docViewTop && elemTop <= docViewBottom) || (elemBottom >= docViewTop && elemBottom <= docViewBottom) || (docViewTop >= elemTop && docViewTop <= elemBottom));
+			}
+		}
+	};
+
+	var _onScreenCenterElem = function(elem) {
+		let $elem = $(elem),
+				elemsYaxisRange = {};
+
+		if ($elem.length) {
+			let docViewTop = $(window).scrollTop(),
+					docViewBottom = docViewTop + $(window).outerHeight();
+
+			$elem.each(function(e) {
+				console.log(e);
+				let	$this = $(this),
+						elemID = $this.attr("id"),
+						elemTop = typeof buffer !== "undefined" ? $this.offset().top : $this.offset().top,
+						elemBottom = elemTop + $this.outerHeight(),
+						elemYaxisRange = [elemTop, elemBottom];
+
+				elemsYaxisRange[elemID] = elemYaxisRange;
+			});
+
+			_debug(elemsYaxisRange, "onScreenCenterElem");
+
+			$(window).scroll(function() {
+				let scrollTop = $(window).scrollTop();
+				$elem.removeClass("on-screen-center");
+
+				for (let blockID in elemsYaxisRange) {
+					let yMin = elemsYaxisRange[blockID][0],
+							yMax = elemsYaxisRange[blockID][1];
+
+					if (scrollTop >= yMin && scrollTop <= yMax) {
+						_debug(blockID);
+						$("#" + blockID).addClass("on-screen-center");
+					}
+				}
+			});
+		}
+	}
 
 	/**
 	 * Main
@@ -331,6 +394,16 @@
 						if ($nmeb.length) {
 							$nmeb.attr("data-id", blockID);
 
+							// Set styles
+							for (let styleTarget in block.styles) {
+								let $styleTarget = $nmeb.find("[data-settings-target='" + styleTarget + "']");
+
+								for (let styleProperty in block.styles[styleTarget]) {
+									let styleValue = block.styles[styleTarget][styleProperty];
+									$styleTarget.css(styleProperty, styleValue);
+								}
+							}
+
 							if ($nmebElem.length) {
 								$nmebElem.attr({
 									"data-id": blockID,
@@ -383,6 +456,7 @@
 								}
 
 								_editable();
+								_colorable();
 							}
 						}
 					}
@@ -463,8 +537,10 @@
 
 											_editable();
 											_sortable();
+											_colorable();
 											_nmeBlockControl.init();
 											_nmePanels();
+											_onScreenCenterElem(".nme-block");
 										}
 									}
 								}
@@ -574,6 +650,100 @@
 			});
 
 			_sortables[nmeBlocksSection]["order"] = _sortables[nmeBlocksSection]["inst"].toArray();
+		});
+	};
+
+	var _colorable = function() {
+		var pickrInit = function(elemID) {
+			let targetSelector = "#" + elemID,
+					$target = $(targetSelector);
+
+			if ($target.length) {
+				const pickr = new Pickr({
+					el: targetSelector,
+					theme: 'nano',
+					lockOpacity: true,
+					useAsButton: true,
+					swatches: [
+						'#F44336',
+						'#E91E63',
+						'#9C27B0',
+						'#673AB7',
+						'#3F51B5',
+						'#2196F3',
+						'#03A9F4',
+						'#00BCD4',
+						'#009688',
+						'#4CAF50',
+						'#8BC34A',
+						'#CDDC39',
+						'#FFEB3B',
+						'#FFC107',
+						'#FF9800',
+						'#FF5722',
+						'#795548',
+						'#9E9E9E',
+						'#607D8B',
+						'#000000',
+						'#FFFFFF'
+					],
+					components: {
+						// Main components
+						preview: true,
+						opacity: true,
+						hue: true,
+
+						// Input / output Options
+						interaction: {
+							hex: true,
+							input: true
+						}
+					}
+				});
+
+				pickr.on("init", function(instance) {
+					$(pickr._root.button).addClass("pickr-initialized");
+				});
+
+				pickr.on("change", function(color, instance) {
+					let $button = $(pickr._root.button),
+							$block = $button.closest(".nme-block"),
+							blockType = $block.data("type");
+					/*
+					console.log('change');
+					console.log(color);
+					console.log(instance);
+					*/
+					pickr.applyColor();
+				});
+
+				pickr.on("save", function(color, instance) {
+					let $button = $(pickr._root.button),
+							$block = $button.closest(".nme-block"),
+							blockID = $block.data("id"),
+							section = $block.data("section"),
+							blockType = $block.data("type");
+					/*
+					console.log('save');
+					console.log(color);
+					console.log(instance);
+					*/
+
+					if (blockType == "button") {
+						let bgColor = color.toHEXA().toString();
+						$block.find("[data-settings-target='elemContainer']").css("background-color", bgColor);
+						_data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
+						_nmeData.update();
+					}
+				});
+			}
+		};
+
+		$(".handle-style:not(.pickr-initialized)").each(function() {
+			let pickrID = this.id;
+			pickrInit(pickrID);
+			_pickrs.push(pickrID);
+			// console.log(_pickrs); // has a issue
 		});
 	};
 
@@ -697,14 +867,17 @@
 
 				for (let k in extendedActions) {
 					let action = extendedActions[k];
-					output += "<span class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></span>";
+					//output += "<span class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></span>";
+					output += "<button id='" + blockID + "-handle-" + action + "' type='button' class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></button>";
 				}
 
 				$block.find(".nme-block-actions").prepend(output);
 			}
 		},
 		init: function() {
-			$(".nme-block-control").on("click", ".handle-btn", function() {
+			$(".nme-block-control").on("click", ".handle-btn", function(event) {
+				event.preventDefault();
+
 				let $handle = $(this),
 						handleType = $handle.data("type"),
 						$block = $handle.closest(".nme-block"),
