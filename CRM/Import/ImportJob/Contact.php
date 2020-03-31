@@ -47,6 +47,41 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
   }
 
   public function runImport(&$form) {
+    global $civicrm_batch;
+    $allArgs = func_get_args();
+    if (empty($civicrm_batch)) {
+      if ($this->_totalRowCount > CRM_Import_ImportJob::BATCH_THRESHOLD) {
+        $fileName = str_replace('civicrm_import_job_', '', $this->_tableName);
+        $config = CRM_Core_Config::singleton();
+        $file = $config->uploadDir.'/import_contact_'.$fileName.'.zip';
+        $batchParams = array(
+          'label' => ts('Import Contacts'),
+          'startCallback' => NULL,
+          'startCallback_args' => NULL,
+          'processCallback' => array(__CLASS__, __FUNCTION__),
+          'processCallbackArgs' => $allArgs,
+          'finishCallback' => array(__CLASS__, 'batchFinish'), // should zip all errors
+          'finishCallbackArgs' => NULL,
+          'download' => array(
+            'header' => array(
+              'Content-Type: application/zip',
+              'Content-Transfer-Encoding: Binary',
+              'Content-Disposition: attachment;filename="'.$file.'"',
+            ),
+            'file' => $file,
+          ),
+          'actionPermission' => '',
+          'total' => $this->_totalRowCount,
+          'processed' => 0,
+        );
+        $batch = new CRM_Batch_BAO_Batch();
+        $batch->start($batchParams);
+
+        // redirect to notice page
+        CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
+      }
+    }
     $mapper = $this->_mapper;
     $mapperFields = array();
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
@@ -165,6 +200,9 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       $this->_parser->_dedupeRuleGroupId = $form->_dedupeRuleGroupId;
     }
     $this->_parser->_job = $this;
+    if (!empty($civicrm_batch)) {
+      $this->_parser->setMaxLinesToProcess(CRM_Import_ImportJob::BATCH_LIMIT);
+    }
     $this->_parser->run($this->_tableName, $mapperFields,
       CRM_Import_Parser::MODE_IMPORT,
       $this->_contactType,
@@ -174,7 +212,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       $this->_statusID,
       $this->_totalRowCount,
       $this->_doGeocodeAddress,
-      CRM_Import_Parser::DEFAULT_TIMEOUT,
+      NULL,
       $this->_contactSubType
     );
 
@@ -185,18 +223,21 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     if ($relatedContactIds) {
       $contactIds = array_merge($contactIds, $relatedContactIds);
       if ($form) {
+        $form->_relatedCount = count($relatedContactIds);
         $form->set('relatedCount', count($relatedContactIds));
       }
     }
 
     if ($this->_newGroupName || count($this->_groups)) {
       if ($form) {
+        $form->_groupAdditions = $this->_groupAdditions;
         $form->set('groupAdditions', $this->_groupAdditions);
       }
     }
 
     if ($this->_newTagName || count($this->_tag)) {
       if ($form) {
+        $form->_newTagName = $this->_tagAdditions;
         $form->set('tagAdditions', $this->_tagAdditions);
       }
     }

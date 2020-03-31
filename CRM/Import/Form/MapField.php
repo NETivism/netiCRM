@@ -1055,7 +1055,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
       CRM_Import_Parser::MODE_PREVIEW,
       $this->get('contactType'),
       $primaryKeyName, $statusFieldName, $this->_onDuplicate,
-      NULL, NULL, FALSE, CRM_Import_Parser::DEFAULT_TIMEOUT, $this->get('contactSubType')
+      NULL, NULL, FALSE, NULL, $this->get('contactSubType')
     );
 
     // add all the necessary variables to the form

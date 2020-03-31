@@ -39,6 +39,10 @@ require_once 'CRM/Core/DAO.php';
  * This class acts like a psuedo-BAO for transient import job tables
  */
 class CRM_Import_ImportJob {
+  /**
+   * default segementation of import job
+   */
+  CONST BATCH_THRESHOLD = 5, BATCH_LIMIT = 5;
 
   protected $_tableName;
   protected $_primaryKeyName;

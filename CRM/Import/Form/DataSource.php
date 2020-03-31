@@ -349,7 +349,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       $parser->run($importTableName, $mapper,
         CRM_Import_Parser::MODE_MAPFIELD, $contactType,
         $primaryKeyName, $statusFieldName,
-        CRM_Import_Parser::DUPLICATE_SKIP, NULL, NULL, FALSE, CRM_Import_Parser::DEFAULT_TIMEOUT, $contactSubType
+        CRM_Import_Parser::DUPLICATE_SKIP, NULL, NULL, FALSE, NULL, $contactSubType
       );
 
       // add all the necessary variables to the form

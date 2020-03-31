@@ -55,7 +55,6 @@ abstract class CRM_Import_Parser {
    * various Contact types
    */
   CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
-  CONST DEFAULT_TIMEOUT = 30;
 
   protected $_tableName;
 
@@ -263,11 +262,10 @@ abstract class CRM_Import_Parser {
     $statusID = NULL,
     $totalRowCount = NULL,
     $doGeocodeAddress = FALSE,
-    $timeout = CRM_Import_Parser::DEFAULT_TIMEOUT,
+    $offset = NULL,
     $contactSubType = NULL
   ) {
 
-    // TODO: Make the timeout actually work
     $this->_onDuplicate = $onDuplicate;
 
     switch ($contactType) {
