@@ -10,6 +10,10 @@
 <script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.js"></script>
 <script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/quill.js"></script>
 
+<!-- pickr -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css"/>
+<script src="{$config->resourceBase}packages/pickr/dist/pickr.min.js"></script>
+
 <!-- mailingEditor -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
 <script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
@@ -17,7 +21,9 @@
 <script type="text/javascript">
 (function ($) {
 	$(function() {
-		$(".nme-container").nmEditor();
+		$(".nme-container").nmEditor({
+			debugMode: true
+		});
 	});
 })(jQuery);
 </script>
