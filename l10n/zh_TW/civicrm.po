@@ -8,13 +8,13 @@
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2020
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
-# charlesc <yeouhsin@gmail.com>, 2013-2014,2016
+# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-03-23 08:37+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2020-03-26 08:45+0000\n"
+"Last-Translator: charlesc <yeouhsin@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18660,7 +18660,7 @@ msgstr ""
 
 #: CRM/Project/DAO/Task.php
 msgid "Task Parent"
-msgstr "父層工作"
+msgstr "上層任務"
 
 #: CRM/Project/DAO/Task.php templates/CRM/Pledge/Page/Payment.tpl
 msgid "Due Date"
@@ -22945,7 +22945,7 @@ msgstr "保留的標籤無法刪除。擁有「管理保留標籤」權限的使
 
 #: templates/CRM/Admin/Form/Tag.tpl templates/CRM/Group/Form/Edit.tpl
 msgid "Remove Parent?"
-msgstr "移除父層？"
+msgstr "移除上層？"
 
 #: templates/CRM/Admin/Form/Tag.tpl
 msgid "Are you sure you want to delete <b>%1</b> Tag?"
@@ -32754,7 +32754,7 @@ msgstr "當群組被列在資料表單及電子報訂閱表格，群組描述會
 
 #: templates/CRM/Group/Form/Edit.tpl
 msgid "Parent Groups"
-msgstr "父層群組"
+msgstr "上層群組"
 
 #: templates/CRM/Group/Form/Edit.tpl
 msgid "Associated Organization"

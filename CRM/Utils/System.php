@@ -1434,5 +1434,50 @@ class CRM_Utils_System {
       }
     }
   }
+
+
+  /**
+   * SameSite cookie compatibility check
+   * 
+   * from https://www.chromium.org/updates/same-site/incompatible-clients
+   */
+  function sameSiteCheck() {
+    $useragent = $_SERVER['HTTP_USER_AGENT'];
+    $isIOS = preg_match('/(iP.+; CPU .*OS (\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $ios);
+    if ($isIOS && $ios[2] == '12') {
+      return FALSE; 
+    }
+    $safariStr = preg_match('/Version\/.* Safari\//i', $useragent);
+    $isChromiumBased = preg_match('/Chrom(e|ium)/i', $useragent); 
+    $isSafari = !empty($safariStr) && !$isChromiumBased;
+    if ($isSafari) {
+      $isMAC = preg_match('/(Macintosh;.*Mac OS X (\d+)_(\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $mac);
+      if ($isMAC && $mac['2'] == '10' && $mac['3'] == '14') {
+        return FALSE;
+      }
+    }
+
+    $isUcBrowser = preg_match('/UCBrowser\//i', $useragent);
+    if ($isUcBrowser) {
+      preg_match('/UCBrowser\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $ucVersion);
+      if ($ucVersion[1] < 12) { // major
+        return FALSE;
+      }
+      if ($ucVersion[2] < 13) { // minor
+        return FALSE;
+      }
+      if ($ucVersion[3] < 2) { // buil
+        return FALSE;
+      }
+    }
+
+    if ($isChromiumBased) {
+      preg_match('/Chrome\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $chVersion);
+      if ($chVersion[1] >= 51 && $chVersion[1] <= 66) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
 }
 
