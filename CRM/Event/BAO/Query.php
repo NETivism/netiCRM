@@ -361,7 +361,12 @@ class CRM_Event_BAO_Query {
         }
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
         return;
-
+      case 'participant_register_date_low':
+      case 'participant_register_date_high':
+        $query->dateQueryBuilder($values,
+          'civicrm_participant', 'participant_register_date', 'register_date', 'Registered'
+        );
+        return;
       case 'participant_status':
       case 'participant_status_id':
         $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
@@ -642,6 +647,9 @@ class CRM_Event_BAO_Query {
 
     $form->addDate('event_start_date_low', ts('Event Dates - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('event_end_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
+
+    $form->addDate('participant_register_date_low', ts('Registered - From'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDate('participant_register_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
 
     require_once 'CRM/Event/PseudoConstant.php';
     $attrs = array('multiple' => 'multiple');
