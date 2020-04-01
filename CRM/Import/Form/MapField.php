@@ -680,10 +680,6 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
       $session = CRM_Core_Session::singleton();
       $session->setStatus(ts('The data columns in this import file appear to be different from the saved mapping. Please verify that you have selected the correct saved mapping before continuing.'));
     }
-    else {
-      $session = CRM_Core_Session::singleton();
-      $session->setStatus(NULL);
-    }
 
     $this->setDefaults($defaults);
 

@@ -551,6 +551,7 @@ class CRM_Core_Session {
    * @return void
    */
   static function setStatus($status, $append = TRUE, $type = 'status') {
+    if (empty($status)) { return; }
     $session = self::singleton();
     $session->initialize();
 
