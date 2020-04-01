@@ -118,7 +118,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    *
    * @var CRM_Core_Session
    */
-  static protected $_session;
+  static public $_session;
 
   /**
    * The parent of this form if embedded
@@ -177,10 +177,8 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     parent::__construct($name, $modal);
 
     // let the constructor initialize this, should happen only once
-    if (!isset(self::$_template)) {
-      self::$_template = CRM_Core_Smarty::singleton();
-      self::$_session = CRM_Core_Session::singleton();
-    }
+    $this->initTemplate();
+    $this->initSession();
 
     $snippet = CRM_Utils_Array::value('snippet', $_REQUEST);
     //$snippet = CRM_Utils_Request::retrieve( 'snippet', 'Integer', $this, false, null, $_REQUEST );
@@ -217,6 +215,17 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     $this->_destination = CRM_Utils_Request::retrieve('destination', 'String', $this,
       FALSE, NULL, $_REQUEST
     );
+  }
+
+  function initSession() {
+    if (!isset(self::$_session)) {
+      self::$_session = CRM_Core_Session::singleton();
+    }
+  }
+  function initTemplate() {
+    if (!isset(self::$_template)) {
+      self::$_template = CRM_Core_Smarty::singleton();
+    }
   }
 
   function fini() {

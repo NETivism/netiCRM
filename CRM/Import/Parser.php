@@ -465,7 +465,7 @@ abstract class CRM_Import_Parser {
       }
 
       // if we are done processing the maxNumber of lines, break
-      if ($this->_maxLinesToProcess > 0 && $this->_validCount >= $this->_maxLinesToProcess) {
+      if ($this->_maxLinesToProcess > 0 && $this->_rowCount >= $this->_maxLinesToProcess) {
         break;
       }
 
@@ -830,7 +830,7 @@ abstract class CRM_Import_Parser {
    * @return void
    * @access public
    */
-  function set($store, $mode = self::MODE_SUMMARY) {
+  function set(&$store, $mode = self::MODE_SUMMARY) {
     $store->set('rowCount', $this->_rowCount);
     $store->set('fields', $this->getSelectValues());
     $store->set('fieldTypes', $this->getSelectTypes());

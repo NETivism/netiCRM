@@ -56,11 +56,11 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         $file = $config->uploadDir.'/import_contact_'.$fileName.'.zip';
         $batchParams = array(
           'label' => ts('Import Contacts'),
-          'startCallback' => NULL,
+          'startCallback' => array($this, 'batchStartCallback'),
           'startCallback_args' => NULL,
           'processCallback' => array($this, __FUNCTION__),
           'processCallbackArgs' => $allArgs,
-          'finishCallback' => array(__CLASS__, 'batchFinish'), // should zip all errors
+          'finishCallback' => array(__CLASS__, 'batchFinishCallback'), // should zip all errors
           'finishCallbackArgs' => NULL,
           'download' => array(
             'header' => array(
@@ -82,6 +82,11 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
       }
     }
+    else {
+      // unserialized batch object need re-init controller
+      $this->prepareSessionObject($form);
+    }
+
     $mapper = $this->_mapper;
     $mapperFields = array();
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
@@ -200,7 +205,9 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       $this->_parser->_dedupeRuleGroupId = $form->_dedupeRuleGroupId;
     }
     $this->_parser->_job = $this;
-    if (!empty($civicrm_batch)) {
+
+    // set max process lines per batch
+    if ($civicrm_batch) {
       $this->_parser->setMaxLinesToProcess(CRM_Import_ImportJob::BATCH_LIMIT);
     }
     $this->_parser->run($this->_tableName, $mapperFields,
@@ -219,11 +226,9 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     // set all processed data to form
     $this->_parser->set($form, CRM_Import_Parser::MODE_IMPORT);
     $processedRowCount = $form->get('rowCount');
-    dpm($processedRowCount);
     if ($processedRowCount > 0 && !empty($civicrm_batch)) {
       $civicrm_batch->data['processed'] += $processedRowCount;
     }
-    dpm($civicrm_batch->data);
 
     $contactIds = $this->_parser->getImportedContacts();
 
@@ -249,6 +254,30 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         $form->_newTagName = $this->_tagAdditions;
         $form->set('tagAdditions', $this->_tagAdditions);
       }
+    }
+  }
+
+  public function prepareSessionObject(&$form) {
+    $form->controller->initTemplate();
+    $form->controller->initSession();
+    $name = $form->controller->_name;
+    $scope = CRM_Utils_System::getClassName($form->controller);
+    $scope .= '_'.$form->controller->_key;
+    CRM_Core_Session::registerAndRetrieveSessionObjects(array("_{$name}_container", array('CiviCRM', $scope)));
+  }
+
+  public function batchStartCallback() {
+    global $civicrm_batch;
+    if ($civicrm_batch) {
+      $query = "SELECT COUNT(*) FROM $this->_tableName WHERE $this->_statusFieldName != 'NEW'";
+      $processed = CRM_Core_DAO::singleValueQuery($query);
+      $civicrm_batch->data['processed'] += $processed;
+    }
+  }
+
+  public function batchFinishCallback() {
+    global $civicrm_batch;
+    if ($civicrm_batch) {
     }
   }
 
