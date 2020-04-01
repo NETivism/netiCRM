@@ -910,6 +910,7 @@ abstract class CRM_Import_Parser {
       }
     }
     $data = $errorValues;
+    // TODO - append to exists excel files
     CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
   }
 

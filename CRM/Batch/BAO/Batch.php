@@ -294,10 +294,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * @return null
    */
   public function process($force = FALSE) {
-    global $civicrm_batch;
-    $civicrm_batch = $this->_batch;
     // start processing, insert record in db to prevent duplicate running
     $this->dupeInsert();
+
+    global $civicrm_batch;
+    $civicrm_batch = $this->_batch;
 
     // real processing logic 
     if (isset($this->_batch->data['processCallback'])) {
@@ -310,9 +311,6 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       }
     }
 
-    // end processing
-    $this->dupeDelete();
-
     // check batch is finished or not
     if ($this->_batch->data['processed'] >= $this->_batch->data['total'] || $this->_batch->data['isCompleted']) {
       $finishStatus = self::$_batchStatus['Completed'];
@@ -324,6 +322,9 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       $this->_batch->modified_date = date('YmdHis');
       $this->saveBatch();
     }
+
+    // end processing
+    $this->dupeDelete();
   }
 
   /**

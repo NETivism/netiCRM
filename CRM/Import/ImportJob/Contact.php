@@ -58,7 +58,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
           'label' => ts('Import Contacts'),
           'startCallback' => NULL,
           'startCallback_args' => NULL,
-          'processCallback' => array(__CLASS__, __FUNCTION__),
+          'processCallback' => array($this, __FUNCTION__),
           'processCallbackArgs' => $allArgs,
           'finishCallback' => array(__CLASS__, 'batchFinish'), // should zip all errors
           'finishCallbackArgs' => NULL,
@@ -215,6 +215,15 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       NULL,
       $this->_contactSubType
     );
+
+    // set all processed data to form
+    $this->_parser->set($form, CRM_Import_Parser::MODE_IMPORT);
+    $processedRowCount = $form->get('rowCount');
+    dpm($processedRowCount);
+    if ($processedRowCount > 0 && !empty($civicrm_batch)) {
+      $civicrm_batch->data['processed'] += $processedRowCount;
+    }
+    dpm($civicrm_batch->data);
 
     $contactIds = $this->_parser->getImportedContacts();
 
