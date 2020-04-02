@@ -104,6 +104,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   private static $pcPage;
 
   /**
+   * Personal campaign pages
+   * @var array
+   * @static
+   */
+  private static $taiwanACH;
+
+  /**
    * Get all the financial types
    *
    * @access public
@@ -339,6 +346,33 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
       return CRM_Utils_Array::value($id, self::$pcPage);
     }
     return self::$pcPage;
+  }
+
+  /**
+   * Get all Taiwan ACH Bank Code
+   *
+   * @access public
+   *
+   * @return array - array reference of all pcp if any
+   * @static
+   */
+  public static function &taiwanACH() {
+    global $civicrm_root;
+    if (!self::$taiwanACH) {
+      $fp = fopen($civicrm_root.'xml/templates/taiwan_ach.tpl', 'r');
+      $parent = '';
+      while(($data = fgetcsv($fp, 100)) !== FALSE) {
+        if (empty($data[1])) {
+          $parent = $data[0];
+          continue;
+        }
+        else {
+          self::$taiwanACH[$parent][$data[0]] = $data[0].' '.$data[1];
+        }
+      }
+      fclose($fp); 
+    }
+    return self::$taiwanACH;
   }
 }
 
