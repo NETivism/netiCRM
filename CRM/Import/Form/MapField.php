@@ -1047,6 +1047,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
 
     $primaryKeyName = $this->get('primaryKeyName');
     $statusFieldName = $this->get('statusFieldName');
+    $parser->_skipColumnHeader = $this->get('skipColumnHeader');
     $parser->run($this->_importTableName, $mapper,
       CRM_Import_Parser::MODE_PREVIEW,
       $this->get('contactType'),

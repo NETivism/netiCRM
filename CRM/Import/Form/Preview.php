@@ -81,18 +81,20 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       $this->set('tag', $tag);
     }
 
+    $tableName = $this->get('importTableName');
+    $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
     if ($invalidRowCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::ERROR . '&parser=CRM_Import_Parser';
+      $urlParams = 'type=' . CRM_Import_Parser::ERROR . '&parser=CRM_Import_Parser&file='.$fileName;
       $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
     if ($conflictRowCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::CONFLICT . '&parser=CRM_Import_Parser';
+      $urlParams = 'type=' . CRM_Import_Parser::CONFLICT . '&parser=CRM_Import_Parser&file='.$fileName;
       $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
     if ($mismatchCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser';
+      $urlParams = 'type=' . CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser&file='.$fileName;
       $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 

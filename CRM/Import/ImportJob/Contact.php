@@ -52,21 +52,22 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     if (empty($civicrm_batch)) {
       if ($this->_totalRowCount > CRM_Import_ImportJob::BATCH_THRESHOLD) {
         $fileName = str_replace('civicrm_import_job_', '', $this->_tableName);
+        $fileName = 'import_contact_'.$fileName.'.zip';
         $config = CRM_Core_Config::singleton();
-        $file = $config->uploadDir.'/import_contact_'.$fileName.'.zip';
+        $file = $config->uploadDir.$fileName;
         $batchParams = array(
           'label' => ts('Import Contacts'),
           'startCallback' => array($this, 'batchStartCallback'),
           'startCallback_args' => NULL,
           'processCallback' => array($this, __FUNCTION__),
           'processCallbackArgs' => $allArgs,
-          'finishCallback' => array(__CLASS__, 'batchFinishCallback'), // should zip all errors
+          'finishCallback' => array($this, 'batchFinishCallback'), // should zip all errors
           'finishCallbackArgs' => NULL,
           'download' => array(
             'header' => array(
               'Content-Type: application/zip',
               'Content-Transfer-Encoding: Binary',
-              'Content-Disposition: attachment;filename="'.$file.'"',
+              'Content-Disposition: attachment;filename="'.$fileName.'"',
             ),
             'file' => $file,
           ),
@@ -210,6 +211,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     if ($civicrm_batch) {
       $this->_parser->setMaxLinesToProcess(CRM_Import_ImportJob::BATCH_LIMIT);
     }
+    $this->_parser->_skipColumnHeader = $form->get('skipColumnHeader');
     $this->_parser->run($this->_tableName, $mapperFields,
       CRM_Import_Parser::MODE_IMPORT,
       $this->_contactType,
@@ -226,8 +228,10 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     // set all processed data to form
     $this->_parser->set($form, CRM_Import_Parser::MODE_IMPORT);
     $processedRowCount = $form->get('rowCount');
-    if ($processedRowCount > 0 && !empty($civicrm_batch)) {
-      $civicrm_batch->data['processed'] += $processedRowCount;
+    if (!empty($civicrm_batch)) {
+      if ($processedRowCount > 0) {
+        $civicrm_batch->data['processed'] += $processedRowCount;
+      }
     }
 
     $contactIds = $this->_parser->getImportedContacts();
@@ -277,7 +281,37 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
   public function batchFinishCallback() {
     global $civicrm_batch;
-    if ($civicrm_batch) {
+    if (!empty($civicrm_batch)) {
+      $zipFile = $civicrm_batch->data['download']['file'];
+      $zip = new ZipArchive();
+
+      if ($zip->open($zipFile, ZipArchive::CREATE) == TRUE) {
+        $config = CRM_Core_Config::singleton();
+        $fileName = str_replace('civicrm_import_job_', 'import_', $this->_tableName);
+        $errorFiles = array();
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::ERROR, $fileName);
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::CONFLICT, $fileName);
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::DUPLICATE, $fileName);
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::NO_MATCH, $fileName);
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, $fileName);
+        foreach($errorFiles as $idx => $fileName) {
+          $filePath = $config->uploadDir.$fileName;
+          if (is_file($filePath)) {
+            $zip->addFile($filePath, $fileName);
+          }
+          else {
+            unset($errorFiles[$idx]);
+          }
+        }
+        print_r($zip);
+        $zip->close();
+
+        print_r($errorFiles);
+        // purge zipped files
+        foreach($errorFiles as $fileName) {
+          unlink($config->uploadDir.$fileName);
+        }
+      }
     }
   }
 

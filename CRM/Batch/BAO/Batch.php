@@ -268,7 +268,6 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
     global $civicrm_batch;
     $civicrm_batch = $this->_batch;
-    dpm($civicrm_batch);
 
     // after saved start logic, trigger logic to handling before start warehousing
     // do not use start callback to process rows. use process instead.
@@ -344,6 +343,8 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * @return null
    */
   public function finish() {
+    global $civicrm_batch;
+    $civicrm_batch = $this->_batch;
     // before finish, trigger logic to handling ending of batch
     if (isset($this->_batch->data['finishCallback'])) {
       $args = array();
