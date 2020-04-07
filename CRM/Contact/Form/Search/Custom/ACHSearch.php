@@ -33,7 +33,7 @@
  *
  */
 
-class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
+class CRM_Contact_Form_Search_Custom_ACHSearch extends CRM_Contact_Form_Search_Custom_RecurSearch implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
   protected $_cstatus = NULL;
@@ -46,39 +46,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
   
   function __construct(&$formValues){
     parent::__construct($formValues);
-    $this->_filled = FALSE;
-    $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
-    if(empty($this->_tableName)){
-      $this->_tableName = "civicrm_temp_custom_recursearch";
-      $this->_cpage = CRM_Contribute_PseudoConstant::contributionPage();
-      $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
-      $this->_cstatus[1] = ts('Recurring ended');
-      $this->_gender = CRM_Core_PseudoConstant::gender();
-      $this->_config = CRM_Core_Config::singleton();
-      $this->buildColumn();
-    }
-
-    $lowDate = CRM_Utils_Request::retrieve('start', 'Timestamp',
-      CRM_Core_DAO::$_nullObject
-    );
-    if ($lowDate) {
-      $lowDate = CRM_Utils_Type::escape($lowDate, 'Timestamp');
-      $date = CRM_Utils_Date::setDateDefaults($lowDate);
-      $this->_formValues['start_date_from'] = $date[0];
-    }
-
-    $highDate = CRM_Utils_Request::retrieve('end', 'Timestamp',
-      CRM_Core_DAO::$_nullObject
-    );
-    if ($highDate) {
-      $highDate = CRM_Utils_Type::escape($highDate, 'Timestamp');
-      $date = CRM_Utils_Date::setDateDefaults($highDate);
-      $this->_formValues['start_date_to'] = $date[0];
-    }
-    $cstatus_id = CRM_Utils_Request::retrieve('status', 'Int', CRM_Core_DAO::$_nullObject);
-    if (!empty($cstatus_id)){
-      $this->_formValues['status'] = $cstatus_id;
-    }
+    $this->_tableName = 'civicrm_temp_custom_achsearch';
   }
 
   function buildColumn(){
@@ -273,46 +241,45 @@ $having
   }
 
   function buildForm(&$form){
-    // Define the search form fields here
-    if (!empty($this->_mode)) {
-      $form->set($this->_mode);
-      $form->assign('mode', $this->_mode);
-    }
+    // parent include start_date, status, installments, sort_name, email, contribution_page_id
+    parent::buildForm($form);
+
+    // rest is ach specify form
+    $form->addDateRange('create_date', ts('Recurring Contribution').' - '.ts('Create Date'), NULL, FALSE);
+    $form->addSelect('stamp_verification', ts('Stamp Verification Status'), array(
+      0 => ts('Pending'),
+      1 => ts('Completed'),
+      2 => ts('Failed'),
+    ));
+    $form->addDateRange('end_date', ts('Recurring Contribution').' - '.ts('End Date'), NULL, FALSE);
+    $form->addSelect('payment_type', ts('Payment Instrument'), array(
+      '' => ts('-- select --'),
+      'bank' => ts('Bank'),
+      'postoffice' => ts('Post Office'),
+    ));
+    $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
+    $form->addSelect('bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
+    $form->add('text', 'bank_account', ts('Bank Account Number'));
+    $form->add('text', 'identifier_number', ts('Legal Identifier').'/'.ts('SIC Code'));
+
+    // stamp veriction complete date === recurring start date == import date
+    // so using exists start_date element
+    $ele = $form->getElement('start_date_from');
+    $ele->_label = ts('Stamp Verication Date') .'/'.ts('Recurring Contribution').' - '.ts('Start Date');
     
-    if ($this->_mode != 'booster') {
-      $form->addDateRange('start_date', ts('First recurring date'), NULL, FALSE);
-      $form->addElement('text', 'sort_name', ts('Contact Name'));
-      $form->addElement('text', 'email', ts('Email'));
-    }
-    else {
-      $defaults = $this->setDefaultValues();
-      $form->setDefaults($defaults);
-    }
-    
-    $statuses = $this->_cstatus;
-    unset($statuses[6]);
-    unset($statuses[4]);
-    krsort($statuses);
-    $form->addRadio('status', ts('Recurring Status'), $statuses, array('allowClear' => TRUE));
-
-    $installments = array(
-      '' => ts('- select -'),
-      '0' => ts('no installments specified'),
-    );
-    for ($i = 1; $i <= 6; $i++) {
-      $installments[$i] = ts('%1 installments left', array(1 => $i));
-    }
-    $form->addElement('select', 'installments', ts('Installments Left'), $installments);
-
-    $contributionPage = $this->_cpage;
-    $attrs = array('multiple' => 'multiple');
-    $form->addElement('select', 'contribution_page', ts('Contribution Page'), $contributionPage, $attrs);
-
-    /**
-     * If you are using the sample template, this array tells the template fields to render
-     * for the search form.
-     */
-    $form->assign('elements', array('status', 'installments', 'sort_name', 'email', 'contribution_page'));
+    $form->assign('elements', array(
+      'create_date',
+      'status',
+      'stamp_verification',
+      'start_date',
+      'end_date',
+      'payment_type',
+      'bank_code',
+      'bank_account',
+      'identifier_number',
+      'sort_name',
+      'contribution_page',
+    ));
   }
 
   function setDefaultValues() {
@@ -326,12 +293,7 @@ $having
   }
 
   function setTitle() {
-    if ($this->_mode == 'booster') {
-      CRM_utils_System::setTitle(ts('End of recurring contribution'));
-    }
-    else {
-      CRM_utils_System::setTitle(ts('Custom Search').' - '.ts('Recurring Contribution'));
-    }
+    CRM_utils_System::setTitle(ts('Custom Search').' - '.ts('ACH Search'));
   }
 
   function setBreadcrumb() {
@@ -482,7 +444,7 @@ $having
    * Define the smarty template used to layout the search form and results listings.
    */
   function templateFile(){
-    return 'CRM/Contact/Form/Search/Custom/RecurSearch.tpl';
+    return 'CRM/Contact/Form/Search/Custom/ACHSearch.tpl';
   }
 
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {

@@ -47,6 +47,12 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       2 => ts('postal transfer'),
     ));
 
+    $this->addSelect('ach_stamp_verification', ts('Stamp Verification Status'), array(
+      0 => ts('Pending'),
+      1 => ts('Completed'),
+      2 => ts('Failed'),
+    ));
+
     $this->add('text', 'ach_bank_branch', ts('Bank Branch'));
     $this->add('text', 'ach_bank_account', ts('ACH').' - '.ts('Bank Account Number'), NULL, TRUE);
     $this->add('text', 'ach_identifier_number', ts('ACH').' - '.ts('Legal Identifier').'/'.ts('SIC Code'), NULL, TRUE);

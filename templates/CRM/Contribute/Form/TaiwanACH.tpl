@@ -41,6 +41,10 @@
     <td class="label">{$form.ach_identifier_number.label}</td>
     <td>{$form.ach_identifier_number.html}</td>
   </tr>
+  <tr>
+    <td class="label">{$form.ach_stamp_verification.label}</td>
+    <td>{$form.ach_stamp_verification.html}</td>
+  </tr>
 </table>
 
 {*Custom Data*}
