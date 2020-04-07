@@ -229,14 +229,20 @@ class CRM_Core_Report_Excel {
     return self::writeExportFile('csv', $fileName, $header, $rows, $download);
   }
 
-  static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE) {
-    return self::writeExportFile('excel', $fileName, $header, $rows, $download);
+  static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE, $append = FALSE) {
+    if ($append) {
+      return self::appendExcelFile($fileName, $header, $rows);
+    }
+    else {
+      return self::writeExportFile('excel', $fileName, $header, $rows, $download);
+    }
   }
 
   static function readExcelFile($fileName) {
     if (file_exists($fileName)) {
+      $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
       $reader = self::reader(Type::XLSX);
-      $reader->setTempFolder('/tmp/');
+      $reader->setTempFolder($tmpDir);
       $reader->open($fileName);
       $iterator = $reader->getSheetIterator();
       $iterator->rewind();
@@ -276,5 +282,45 @@ class CRM_Core_Report_Excel {
     }
   }
 
+  static function appendExcelFile($fileName, &$header, &$rows) {
+    $config = CRM_Core_Config::singleton();
+    if (strpos($fileName, $config->uploadDir) === 0) {
+      $filePath = $fileName;
+    }
+    else {
+      $filePath = $config->uploadDir.$fileName;
+    }
+    $writer = CRM_Core_Report_Excel::singleton('excel');
+    $writer->openToFile($filePath.'.new');
+
+    if (!is_file($filePath)){
+      $writer->addRow($header);
+    }
+    else{
+      $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
+      $reader = CRM_Core_Report_Excel::reader('excel');
+      $reader->setTempFolder($tmpDir);
+      $reader->open($filePath);
+      foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
+        // Add sheets in the new file, as we read new sheets in the existing one
+        if ($sheetIndex !== 1) {
+          $writer->addNewSheetAndMakeItCurrent();
+        }
+
+        foreach ($sheet->getRowIterator() as $row) {
+          // ... and copy each row into the new spreadsheet
+          $writer->addRow($row);
+        }
+      }
+    }
+    $writer
+      ->addRows($rows)
+      ->close();
+
+    if (is_file($filePath)){
+      unlink($filePath);
+    }
+    rename($filePath.'.new', $filePath);
+  }
 }
 

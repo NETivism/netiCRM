@@ -43,7 +43,7 @@ function setIntermediate( ) {
 
 function pollLoop( ){
   setIntermediate( );
-  window.setTimeout( pollLoop, 5000 ); // 5 sec
+  window.setTimeout( pollLoop, 15000 ); // 15 sec
 }
 
 function verify( ) {
@@ -61,6 +61,7 @@ function verify( ) {
     closeOnEscape : false,
     overlay       : { opacity: 0.5, background: "black" },
     open          : function ( ) {
+      console.log(55555);
       cj("#id-processing").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").remove();
     }
   });

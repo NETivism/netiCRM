@@ -163,12 +163,10 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
+    $columnNames = array();
     $this->_mapperFields = $this->get('fields');
-
-    $this->_columnCount = $this->get('columnCount');
-    $this->assign('columnCount', $this->_columnCount);
     $this->_dataValues = $this->get('dataValues');
-    $this->assign('dataValues', $this->_dataValues);
+    $this->_importTableName = $this->get('importTableName');
 
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
     $this->_onDuplicate = $this->get('onDuplicate', isset($onDuplicate) ? $onDuplicate : "");
@@ -176,13 +174,29 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
       $this->assign('rowDisplayCount', 3);
-      /* if we had a column header to skip, stash it for later */
 
-      $this->_columnHeaders = $this->_dataValues[0];
+      $columnNames = $this->_columnHeaders = $this->get('originalColHeader');
+      array_unshift($this->_dataValues, $this->_columnHeaders);
     }
     else {
+      $this->assign('skipColumnHeader', NULL);
       $this->assign('rowDisplayCount', 2);
+
+      // get the field names from the temp. DB table
+      $dao = new CRM_Core_DAO();
+      $db = $dao->getDatabaseConnection();
+
+      $columnsQuery = "SHOW FIELDS FROM $this->_importTableName
+                         WHERE Field NOT LIKE '\_%'";
+      $columnsResult = $db->query($columnsQuery);
+      while ($row = $columnsResult->fetchRow(DB_FETCHMODE_ASSOC)) {
+        $columnNames[] = $row['Field'];
+      }
     }
+    $this->_columnCount = count($columnNames);
+    $this->assign('dataValues', $this->_dataValues);
+    $this->assign('columnCount', $this->_columnCount);
+
     $highlightedFields = array();
     $highlightedFields[] = 'contribution_type';
     //CRM-2219 removing other required fields since for updation only
@@ -475,7 +489,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         }
         else {
           // Otherwise guess the default from the form of the data
-          $mappedHeaderKey = $this->defaultFromData($dataPatterns, $i);
+          // do not use data as mapping patterns, cause too many wrong match
+          // $mappedHeaderKey = $this->defaultFromData($dataPatterns, $i);
           $mappedLocationId = !empty($mappedHeaderKey) && !empty($this->_locationFields[$mappedHeaderKey]) ? $defaultLocationType->id : 0;
         }
         if ($mappedLocationId) {
@@ -524,10 +539,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       $session = CRM_Core_Session::singleton();
       $session->setStatus(ts('The data columns in this import file appear to be different from the saved mapping. Please verify that you have selected the correct saved mapping before continuing.'));
     }
-    else {
-      $session = CRM_Core_Session::singleton();
-      $session->setStatus(NULL);
-    }
+
     $this->setDefaults($defaults);
 
     $this->addButtons(array(
@@ -886,10 +898,23 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       $this->set('savedMapping', $saveMappingFields->mapping_id);
     }
 
+    $importTableName = $this->get('importTableName');
+    $primaryKeyName = $this->get('primaryKeyName');
+    $statusFieldName = $this->get('statusFieldName');
     $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvidea, $mapperPCP);
-    $parser->run($fileName, $seperator, $mapper, $skipColumnHeader,
-      CRM_Contribute_Import_Parser::MODE_PREVIEW, $this->get('contactType'),
-      CRM_Contribute_Import_Parser::DUPLICATE_SKIP, $this->get('createContactOption'), $this->get('dedupeRuleGroup')
+
+    $parser->run(
+      $importTableName,
+      $mapper,
+      CRM_Contribute_Import_Parser::MODE_PREVIEW,
+      $this->get('contactType'),
+      $primaryKeyName,
+      $statusFieldName,
+      CRM_Contribute_Import_Parser::DUPLICATE_SKIP,
+      NULL,
+      NULL,
+      $this->get('createContactOption'),
+      $this->get('dedupeRuleGroup')
     );
 
     // add all the necessary variables to the form

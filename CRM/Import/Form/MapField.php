@@ -680,10 +680,6 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
       $session = CRM_Core_Session::singleton();
       $session->setStatus(ts('The data columns in this import file appear to be different from the saved mapping. Please verify that you have selected the correct saved mapping before continuing.'));
     }
-    else {
-      $session = CRM_Core_Session::singleton();
-      $session->setStatus(NULL);
-    }
 
     $this->setDefaults($defaults);
 
@@ -1051,11 +1047,12 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
 
     $primaryKeyName = $this->get('primaryKeyName');
     $statusFieldName = $this->get('statusFieldName');
+    $parser->_skipColumnHeader = $this->get('skipColumnHeader');
     $parser->run($this->_importTableName, $mapper,
       CRM_Import_Parser::MODE_PREVIEW,
       $this->get('contactType'),
       $primaryKeyName, $statusFieldName, $this->_onDuplicate,
-      NULL, NULL, FALSE, CRM_Import_Parser::DEFAULT_TIMEOUT, $this->get('contactSubType')
+      NULL, NULL, FALSE, NULL, $this->get('contactSubType')
     );
 
     // add all the necessary variables to the form
