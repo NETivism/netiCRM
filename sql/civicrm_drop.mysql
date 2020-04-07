@@ -61,6 +61,7 @@ DROP TABLE IF EXISTS civicrm_membership_block;
 DROP TABLE IF EXISTS civicrm_membership;
 DROP TABLE IF EXISTS civicrm_pcp;
 DROP TABLE IF EXISTS civicrm_contribution_widget;
+DROP TABLE IF EXISTS civicrm_taiwanach;
 DROP TABLE IF EXISTS civicrm_contribution_page;
 DROP TABLE IF EXISTS civicrm_mailing_event_unsubscribe;
 DROP TABLE IF EXISTS civicrm_mailing_event_trackable_url_open;

@@ -225,6 +225,8 @@
 
   <civicrm_contribution_page />
 
+  <civicrm_taiwanach />
+
   <civicrm_contribution_widget />
 
   <civicrm_pcp />
