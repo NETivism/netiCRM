@@ -273,7 +273,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       // set some fake input values so we can reuse IPN code
       $input['amount'] = $contribution->total_amount;
       $input['is_test'] = $contribution->is_test;
-      $input['fee_amount'] = $contribution-"收執聯",>fee_amount;
+      $input['fee_amount'] = $contribution->fee_amount;
       $input['net_amount'] = $contribution->net_amount;
       $input['trxn_id'] = $contribution->trxn_id;
       $input['trxn_date'] = isset($contribution->trxn_date) ? $contribution->trxn_date : NULL;
