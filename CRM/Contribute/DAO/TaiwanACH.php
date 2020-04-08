@@ -153,11 +153,11 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
    */
   public $identifier_number;
   /**
-   * Authenticate Code in Reply File.
+   * Stamp Verification Status
    *
-   * @var string
+   * @var int unsigned
    */
-  public $authenticate_code;
+  public $stamp_verification;
   /**
    * Some Custom Record Data
    *
@@ -222,50 +222,30 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Taiwan ACH ID') ,
           'required' => true,
-          'import' => true,
-          'where' => 'civicrm_taiwanach.id',
-          'headerPattern' => '',
-          'dataPattern' => '',
-          'export' => true,
         ) ,
         'contribution_contact_id' => array(
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
           'required' => true,
-          'import' => true,
-          'where' => 'civicrm_taiwanach.contact_id',
-          'headerPattern' => '/contact(.?id)?/i',
-          'dataPattern' => '/^\d+$/',
-          'export' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
         ) ,
         'contribution_recur_id' => array(
           'name' => 'contribution_recur_id',
           'type' => CRM_Utils_Type::T_INT,
+          'required' => true,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
         ) ,
         'contribution_page_id' => array(
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution Page ID') ,
-          'import' => true,
-          'where' => 'civicrm_taiwanach.contribution_page_id',
-          'headerPattern' => '',
-          'dataPattern' => '/^\d+$/',
-          'export' => true,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
         ) ,
         'total_amount' => array(
           'name' => 'total_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Total Amount') ,
-          'required' => true,
-          'import' => true,
-          'where' => 'civicrm_taiwanach.total_amount',
-          'headerPattern' => '/^total|(.?^am(ou)?nt)/i',
-          'dataPattern' => '/^\d+(\.\d{2})?$/',
-          'export' => true,
         ) ,
         'currency' => array(
           'name' => 'currency',
@@ -273,12 +253,6 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'title' => ts('Currency') ,
           'maxlength' => 3,
           'size' => CRM_Utils_Type::FOUR,
-          'import' => true,
-          'where' => 'civicrm_taiwanach.currency',
-          'headerPattern' => '/cur(rency)?/i',
-          'dataPattern' => '/^[A-Z]{3}$/i',
-          'export' => true,
-          'default' => 'UL',
         ) ,
         'payment_type' => array(
           'name' => 'payment_type',
@@ -322,12 +296,10 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
-        'authenticate_code' => array(
-          'name' => 'authenticate_code',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Authenticate Code') ,
-          'maxlength' => 3,
-          'size' => CRM_Utils_Type::FOUR,
+        'stamp_verification' => array(
+          'name' => 'stamp_verification',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Stamp Verification') ,
         ) ,
         'data' => array(
           'name' => 'data',

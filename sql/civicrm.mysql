@@ -3699,17 +3699,17 @@ CREATE TABLE civicrm_taiwanach (
 
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Taiwan ACH  ID',
      contact_id int unsigned NOT NULL   COMMENT 'FK to Contact ID',
-     contribution_recur_id int unsigned    COMMENT 'Conditional foreign key to civicrm_contribution_recur id. Each contribution made in connection with a recurring contribution carries a foreign key to the recurring contribution record. This assumes we can track these processor initiated events.',
+     contribution_recur_id int unsigned NOT NULL   COMMENT 'Conditional foreign key to civicrm_contribution_recur id. Each contribution made in connection with a recurring contribution carries a foreign key to the recurring contribution record. This assumes we can track these processor initiated events.',
      contribution_page_id int unsigned    COMMENT 'The Contribution Page which triggered this contribution',
-     total_amount decimal(20,2) NOT NULL   COMMENT 'Total amount of this contribution. Use market value for non-monetary gifts.',
-     currency varchar(3)   DEFAULT NULL COMMENT '3 character string, value from config setting or input via user.',
+     total_amount decimal(20,2)    COMMENT 'Total amount of this contribution. Use market value for non-monetary gifts.',
+     currency varchar(3)    COMMENT '3 character string, value from config setting or input via user.',
      payment_type varchar(32)    COMMENT 'Payment Type of ACH.',
      bank_code varchar(32)    COMMENT 'Bank Code of ACH Account.',
      postoffice_acc_type varchar(32)    COMMENT 'Post Office Account Type of ACH Account.',
      bank_branch varchar(32)    COMMENT 'Bank Branch of ACH Account.',
      bank_account varchar(32)    COMMENT 'Bank Account of ACH Account.',
      identifier_number varchar(128)    COMMENT 'Identifier Number of ACH Account.',
-     authenticate_code varchar(3)    COMMENT 'Authenticate Code in Reply File.',
+     stamp_verification int unsigned    COMMENT 'Stamp Verification Status',
      data text    COMMENT 'Some Custom Record Data' 
 ,
     PRIMARY KEY ( id )
@@ -3717,7 +3717,7 @@ CREATE TABLE civicrm_taiwanach (
  
 ,      
      CONSTRAINT FK_civicrm_taiwanach_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
-     CONSTRAINT FK_civicrm_taiwanach_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL,      
+     CONSTRAINT FK_civicrm_taiwanach_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_taiwanach_contribution_page_id FOREIGN KEY (contribution_page_id) REFERENCES civicrm_contribution_page(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
