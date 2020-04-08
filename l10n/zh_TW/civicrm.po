@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-04-06 10:06+0000\n"
-"Last-Translator: 淑涵 詹 <amy0222@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-04-08 10:25+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47503,3 +47503,9 @@ msgstr "已報名參加者"
 
 msgid "Registered - From"
 msgstr "登記日期 - 從"
+
+msgid "Copied receipt only"
+msgstr "單聯收據"
+
+msgid "Default Receipt Type"
+msgstr "預設收據格式"
