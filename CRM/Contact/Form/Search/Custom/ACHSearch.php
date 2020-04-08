@@ -47,46 +47,51 @@ class CRM_Contact_Form_Search_Custom_ACHSearch extends CRM_Contact_Form_Search_C
   function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_tableName = 'civicrm_temp_custom_achsearch';
+    $this->buildColumn();
   }
 
   function buildColumn(){
     $this->_queryColumns = array( 
       'r.id' => 'id',
-      'contact.sort_name' => 'sort_name',
       'r.contact_id' => 'contact_id',
+      'contact.sort_name' => 'sort_name',
       'contact_email.email' => 'email',
       'ROUND(r.amount,0)' => 'amount',
-      'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'completed_count',
-      'CAST(r.installments AS SIGNED) - COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'remain_installments',
-      'r.installments' => 'installments',
+      'r.contribution_status_id' => 'contribution_status_id',
       'r.start_date' => 'start_date',
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
-      'COUNT(c.id)' => 'total_count',
       'ROUND(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount',
       'MAX(c.created_date)' => 'current_created_date',
-      'r.contribution_status_id' => 'contribution_status_id',
       'lrd.last_receive_date' => 'last_receive_date',
       'lfd.last_failed_date' => 'last_failed_date',
       'c.contribution_page_id' => 'contribution_page_id',
+      'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'completed_count',
+      'COUNT(c.id)' => 'total_count',
+      /*
+      'ach.stamp_verification' => 'stamp_verification',
+      'ach.bank_account' => 'bank_account',
+      'ach.data' => 'ach_data',
+      */
     );
     $this->_columns = array(
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Amount') => 'amount',
-      ts('Remain Installments') => 'remain_installments',
-      ts('Processed Installments').' /<br>'.ts('Total Installments') => 'installments',
       ts('Start Date') => 'start_date',
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
       ts('Recurring Status') => 'contribution_status_id',
-      ts('Completed Donation').'/<br>'.ts('Total Count') => 'completed_count',
       ts('Total Receive Amount') => 'receive_amount',
       ts('Most Recent').' '.ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
       ts('Last Failed Date') => 'last_failed_date',
       ts('Contribution Page ID') => 'contribution_page_id',
+      ts('Completed Donation').'/<br>'.ts('Total Count') => 'completed_count',
       0 => 'total_count',
+      ts('Bank Account') => 'bank_account',
+      //ts('Stamp Verification'). ' - '.ts('Cancelled or Failed Date') => 'ach_data',
+      //ts('Stamp Verification'). ' - '.ts('Cancelled or Failed Reason') => 'ach_data',
     );
   }
 
@@ -100,14 +105,14 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, array('id'))) {
         continue;
       }
-      if ($field == 'remain_installments' || strstr($field, 'amount') || strstr($field, '_id')) {
+      if (strstr($field, 'amount') || preg_match('/.*id$/', $field)) {
         $type = "INTEGER(10) default NULL";
+      }
+      elseif(strstr($field, '_date')){
+        $type = 'DATETIME NULL default NULL';
       }
       else{
         $type = "VARCHAR(32) default ''";
-      }
-      if(strstr($field, '_date')){
-        $type = 'DATETIME NULL default NULL';
       }
       $sql .= "{$field} {$type},\n";
     }
@@ -173,6 +178,7 @@ $having
 
 
   function tempFrom() {
+    // TODO - join ach table
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
@@ -211,10 +217,6 @@ $having
     if($email){
       $clauses[] = "(`email` LIKE '%$email%')";
     }
-    $installments = $this->_formValues['installments'];
-    if ($installments === '0') {
-      $clauses[] = "(r.installments IS NULL OR r.installments = 0)";
-    }
 
     $contributionPage = $this->_formValues['contribution_page'];
     if (!empty($contributionPage)) {
@@ -225,14 +227,6 @@ $having
   }
 
   function tempHaving(){
-    $clauses = array();
-    $installments = $this->_formValues['installments'];
-    if (is_numeric($installments) && $installments != '0') {
-      $clauses[] = "(remain_installments = $installments)";
-    }
-    if(count($clauses)){
-      return implode(' AND ', $clauses);
-    }
     return '';
   }
 
@@ -283,12 +277,6 @@ $having
   }
 
   function setDefaultValues() {
-    if ($this->_mode == 'booster') {
-      return array(
-        'status' => 5,
-        'installments' => '1',
-      );
-    }
     return array();
   }
 
@@ -297,7 +285,6 @@ $having
   }
 
   function setBreadcrumb() {
-    CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
   function count(){
@@ -396,17 +383,6 @@ $having
 
   function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
-    $processedInstallments = $row['installments'] - $row['remain_installments'];
-    if(empty($row['installments'])){
-      $row['remain_installments'] = ts('no limit');
-      $row['installments'] = $row['completed_count'].' / '.ts('no limit');
-    }
-    else {
-      $row['installments'] = $processedInstallments.' / '.$row['installments'];
-    }
-    if($row['remain_installments'] < 0){
-       $row['remain_installments'] = ts('Over %1',array( 1 => -$row['remain_installments']));
-    }
     
     if ($row['completed_count']) {
       $row['completed_count'] = $row['completed_count'].' / '.$row['total_count'];
