@@ -157,6 +157,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       return;
     }
 
+    // If not use linepay, We need another payment processor.
     $qfKey = $params['qfKey'];
     $paymentProcessor = $this->_paymentProcessor;
 
@@ -207,6 +208,12 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       print($page);
       CRM_Utils_System::civiExit();
+    }
+    else if ($this->_instrumentType == 'googlepay') {
+      $checkoutFunction = $module_name.'_do_transfer_checkout';
+      $mode = $is_test ? 'test':'';
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_paymentProcessor['user_name'], $mode);
+      $checkoutFunction($params, $component, $paymentProcessor, $is_test);
     }
   }
 
