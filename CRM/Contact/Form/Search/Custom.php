@@ -111,6 +111,19 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
       $this->_customClass->buildForm($this);
     }
     parent::buildQuickForm();
+
+    // add additional tasks when custom search
+    if (method_exists($this->_customClass, 'tasks') && !empty($this->_elementIndex['task'])) {
+      $tasks = $this->_customClass::tasks();
+
+      // re-build tasks drop down select
+      CRM_Contact_Task::initTasks($tasks);
+      $permission = CRM_Core_Permission::getPermission();
+      $tasks = array('' => ts('- actions -'));
+      $tasks += CRM_Contact_Task::permissionedTaskTitles($permission);
+      $this->removeElement('task');
+      $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
+    }
   }
 
   function getTemplateFileName() {
