@@ -86,7 +86,7 @@ DROP TABLE IF EXISTS civicrm_membership_block;
 DROP TABLE IF EXISTS civicrm_membership;
 DROP TABLE IF EXISTS civicrm_pcp;
 DROP TABLE IF EXISTS civicrm_contribution_widget;
-DROP TABLE IF EXISTS civicrm_taiwanach;
+DROP TABLE IF EXISTS civicrm_contribution_taiwanach;
 DROP TABLE IF EXISTS civicrm_contribution_page;
 DROP TABLE IF EXISTS civicrm_mailing_event_unsubscribe;
 DROP TABLE IF EXISTS civicrm_mailing_event_trackable_url_open;
@@ -3691,10 +3691,10 @@ CREATE TABLE civicrm_contribution_page (
 
 -- /*******************************************************
 -- *
--- * civicrm_taiwanach
+-- * civicrm_contribution_taiwanach
 -- *
 -- *******************************************************/
-CREATE TABLE civicrm_taiwanach (
+CREATE TABLE civicrm_contribution_taiwanach (
 
 
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Taiwan ACH  ID',
@@ -3716,9 +3716,9 @@ CREATE TABLE civicrm_taiwanach (
  
  
 ,      
-     CONSTRAINT FK_civicrm_taiwanach_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
-     CONSTRAINT FK_civicrm_taiwanach_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE CASCADE,      
-     CONSTRAINT FK_civicrm_taiwanach_contribution_page_id FOREIGN KEY (contribution_page_id) REFERENCES civicrm_contribution_page(id) ON DELETE SET NULL  
+     CONSTRAINT FK_civicrm_contribution_taiwanach_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_contribution_taiwanach_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_contribution_taiwanach_contribution_page_id FOREIGN KEY (contribution_page_id) REFERENCES civicrm_contribution_page(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

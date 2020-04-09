@@ -41,7 +41,7 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_taiwanach';
+  static $_tableName = 'civicrm_contribution_taiwanach';
   /**
    * static instance to hold the field values
    *
@@ -168,7 +168,7 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
    * class constructor
    *
    * @access public
-   * @return civicrm_taiwanach
+   * @return civicrm_contribution_taiwanach
    */
   function __construct()
   {
@@ -344,7 +344,7 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['taiwanach'] = & $fields[$name];
+            self::$_import['contribution_taiwanach'] = & $fields[$name];
           } else {
             self::$_import[$name] = & $fields[$name];
           }
@@ -367,7 +367,7 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['taiwanach'] = & $fields[$name];
+            self::$_export['contribution_taiwanach'] = & $fields[$name];
           } else {
             self::$_export[$name] = & $fields[$name];
           }
