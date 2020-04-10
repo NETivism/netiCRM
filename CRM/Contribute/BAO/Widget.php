@@ -88,8 +88,11 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
     CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
 
     // total donors
-    $query = "SELECT count( id ) as count FROM   civicrm_contribution  WHERE is_test = 0 AND contribution_status_id = 1 AND contribution_page_id = %1";
-    $data['num_donors'] = CRM_Core_DAO::singleValueQuery($query, array(1 => array($contributionPageID, 'Integer')));
+    $query = "SELECT count(id) as count, SUM(total_amount) as total FROM civicrm_contribution  WHERE is_test = 0 AND contribution_status_id = 1 AND contribution_page_id = %1 GROUP BY contribution_page_id";
+    $dao = CRM_Core_DAO::executeQuery($query, array(1 => array($contributionPageID, 'Integer')));
+    $dao->fetch();
+    $data['num_donors'] = $dao->count;
+    $data['money_raised'] = $dao->total;
 
     // goal
     $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($contributionPageID);

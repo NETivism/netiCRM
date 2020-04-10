@@ -764,11 +764,11 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       return array(
         'type' => $type,
         'goal' => $goal,
-        'current' => $current,
+        'current' => !empty($current) ? $current : 0,
         'percent' => $percent,
         'achieved' => $percent >= 100 ? TRUE : FALSE,
-        'count' => $dao->count,
-        'sum' => $dao->sum,
+        'count' => !empty($dao->count) ? $dao->count : 0,
+        'sum' => !empty($dao->sum) ? $dao->sum : 0,
       );
     }
     return array();
