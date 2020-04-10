@@ -386,7 +386,7 @@ class CRM_Core_PseudoConstant {
     }
 
     if (!$all) {
-      $object->$filter >= 1;
+      $object->whereAdd("$filter >= 1");
     }
 
     $object->find();
