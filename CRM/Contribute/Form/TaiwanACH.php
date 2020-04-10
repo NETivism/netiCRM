@@ -115,6 +115,6 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       }
       $params[$key] = $value;
     }
-    // CRM_Contribute_BAO_TaiwanACH::create($params);
+    CRM_Contribute_BAO_TaiwanACH::add($params);
   }
 }
