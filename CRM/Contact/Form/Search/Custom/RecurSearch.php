@@ -352,7 +352,7 @@ $having
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
-    $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
+    $fields = !$onlyIDs ? "*" : "contact_a.contact_id, id" ;
 
     if(!$this->_filled){
       $this->fillTable();
@@ -381,7 +381,7 @@ $having
   function where($includeContactIDs = false) {
     $sql = ' ( 1 ) ';
     if ($includeContactIDs) {
-      self::includeContactIDs($sql, $this->_formValues);
+      self::includeContactIDs($sql, $this->_formValues, $this->_isExport);
     }
     return $sql;
   }
@@ -390,18 +390,28 @@ $having
     return '';
   }
 
-  public static function includeContactIDs(&$sql, &$formValues) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
-      if ($value && !empty($contactID)) {
+      if ($isExport) {
+        if ($value && !empty($additionalID)) {
+          $contactIDs[] = $additionalID;
+        }
+      }
+      elseif ($value && !empty($contactID)) {
         $contactIDs[] = $contactID;
       }
     }
 
     if (!empty($contactIDs)) {
       $contactIDs = implode(', ', $contactIDs);
-      $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
+      if ($isExport) {
+        $sql .= " AND contact_a.id IN ( $contactIDs )";
+      }
+      else {
+        $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
+      }
     }
   }
 

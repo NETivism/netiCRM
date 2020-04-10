@@ -33,7 +33,7 @@
  *
  */
 
-class CRM_Contact_Form_Search_Custom_ACHSearch extends CRM_Contact_Form_Search_Custom_RecurSearch implements CRM_Contact_Form_Search_Interface {
+class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Search_Custom_RecurSearch implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
   protected $_cstatus = NULL;
@@ -301,7 +301,7 @@ $having
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
-    $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
+    $fields = !$onlyIDs ? "*" : "contact_a.contact_id, id" ;
 
     if(!$this->_filled){
       $this->fillTable();
@@ -330,7 +330,7 @@ $having
   function where($includeContactIDs = false) {
     $sql = ' ( 1 ) ';
     if ($includeContactIDs) {
-      self::includeContactIDs($sql, $this->_formValues);
+      self::includeContactIDs($sql, $this->_formValues,$this->_isExport);
     }
     return $sql;
   }
@@ -339,18 +339,28 @@ $having
     return '';
   }
 
-  public static function includeContactIDs(&$sql, &$formValues) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
-      if ($value && !empty($contactID)) {
+      if ($isExport) {
+        if ($value && !empty($additionalID)) {
+          $contactIDs[] = $additionalID;
+        }
+      }
+      elseif ($value && !empty($contactID)) {
         $contactIDs[] = $contactID;
       }
     }
 
     if (!empty($contactIDs)) {
       $contactIDs = implode(', ', $contactIDs);
-      $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
+      if ($isExport) {
+        $sql .= " AND contact_a.id IN ( $contactIDs )";
+      }
+      else {
+        $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
+      }
     }
   }
 
@@ -425,6 +435,21 @@ $having
 
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
+  }
+
+  function tasks() {
+    return array(
+      1001 => array(
+        'title' => ts('Export ACH Stamp Verification File'),
+        'class' => array('CRM_Contact_Form_Task_TaiwanACHExportVerification'),
+        'result' => TRUE,
+      ),
+      1002 => array(
+        'title' => ts('Export ACH Transaction File'),
+        'class' => array('CRM_Contact_Form_Task_TaiwanACHExportTransaction'),
+        'result' => TRUE,
+      ),
+    );
   }
 }
 
