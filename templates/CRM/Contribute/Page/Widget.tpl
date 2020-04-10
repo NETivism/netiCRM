@@ -177,5 +177,11 @@
     
 </script>
 {/literal}
-<script type="text/javascript" src="{$config->userFrameworkResourceURL}extern/widget.php?cpageId={$cpageId}&widgetId={$widgetId}&language={$tsLocale}"></script>
+{if $jsonData}
+  <script>
+     var jsondata = {$jsonData};
+  </script>
+{else}
+  <script type="text/javascript" src="{$config->userFrameworkResourceURL}extern/widget.php?cpageId={$cpageId}&widgetId={$widgetId}&language={$tsLocale}"></script>
+{/if}
 
