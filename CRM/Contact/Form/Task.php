@@ -221,17 +221,21 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       $alreadySeen = array();
       foreach ($values as $name => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
-        if (!empty($contactID) && !array_key_exists($contactID, $alreadySeen)) {
-          $alreadySeen[$contactID] = 1;
+        if (!empty($contactID)) {
           if ($useTable) {
-            $insertString[] = " ( {$contactID} ) ";
+            if (!array_key_exists($contactID, $alreadySeen)) {
+              $insertString[] = " ( {$contactID} ) ";
+            }
           }
           else {
-            $form->_contactIds[] = $contactID;
+            if (!array_key_exists($contactID, $alreadySeen)) {
+              $form->_contactIds[] = $contactID;
+            }
             if (!empty($additionalID) && is_numeric($additionalID)) {
               $form->_additionalIds[$additionalID] = $additionalID;
             }
           }
+          $alreadySeen[$contactID] = 1;
         }
       }
       if (!empty($insertString)) {
