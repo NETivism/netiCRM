@@ -328,7 +328,6 @@ $having
   }
 
   function where($includeContactIDs = false) {
-    dpm($includeContactIDs);
     $sql = ' ( 1 ) ';
     if ($includeContactIDs) {
       self::includeContactIDs($sql, $this->_formValues,$this->_isExport);
