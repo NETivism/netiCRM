@@ -756,6 +756,7 @@ class CRM_Utils_System_Drupal {
     $version = $config->userSystem->version;
     switch($type) {
       case 'temp':
+      case 'tmp':
         return file_directory_temp();
       case 'public':
         if ($version >= 6 && $version < 7){

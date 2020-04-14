@@ -604,9 +604,10 @@
   <item>
      <path>civicrm/admin/coupon</path>
      <title>Coupon</title>
+     <adminGroup>CiviEvent</adminGroup>
      <page_callback>CRM_Coupon_Page_Coupon</page_callback>
      <access_arguments>administer CiviCRM;access CiviContribute;edit contributions</access_arguments>
-     <weight>380</weight>
+     <weight>800</weight>
   </item>
   <item>
      <path>civicrm/admin/coupon/batch</path>
@@ -625,6 +626,7 @@
   <item>
      <path>civicrm/admin/batch</path>
      <title>Batch Job List</title>
+     <adminGroup>Manage</adminGroup>
      <page_callback>CRM_Batch_Page_Batch</page_callback>
      <access_arguments>administer CiviCRM</access_arguments>
      <weight>400</weight>

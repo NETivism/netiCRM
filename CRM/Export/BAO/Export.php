@@ -547,7 +547,7 @@ class CRM_Export_BAO_Export {
       $groupBy = " GROUP BY civicrm_activity.id ";
     }
     $queryString .= $groupBy . $orderBy;
-    $countQuery .=  $groupBy . $orderBy;
+    $countQuery .=  $groupBy;
 
     //hack for student data
     require_once 'CRM/Core/OptionGroup.php';
@@ -1144,6 +1144,7 @@ class CRM_Export_BAO_Export {
   function invoke() {
     $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject);
     $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject);
+    $fileName = CRM_Utils_Request::retrieve('file', 'String', CRM_Core_DAO::$_nullObject);
     if (empty($parserName) || empty($type)) {
       return;
     }
@@ -1157,13 +1158,12 @@ class CRM_Export_BAO_Export {
     if ($parserClass[0] == 'CRM' &&
       count($parserClass) >= 3
     ) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $parserName) . ".php");
       // ensure the functions exists
       if (method_exists($parserName, 'errorFileName') &&
         method_exists($parserName, 'saveFileName')
       ) {
-        $errorFileName = $parserName::errorFileName( $type );
-        $saveFileName = $parserName::saveFileName( $type );
+        $errorFileName = $parserName::errorFileName( $type, $fileName);
+        $saveFileName = $parserName::saveFileName( $type, $fileName);
         $config = CRM_Core_Config::singleton();
         $errorFileName = $config->uploadDir . $errorFileName;
         if (!empty($errorFileName) && !empty($saveFileName) ) {
@@ -1682,8 +1682,9 @@ GROUP BY civicrm_primary_id ";
       $writer->addRow($headerRows);
     }
     else{
+      $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
       $reader = CRM_Core_Report_Excel::reader('excel');
-      $reader->setTempFolder('/tmp/');
+      $reader->setTempFolder($tmpDir);
       $reader->open($fileName);
       foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
         // Add sheets in the new file, as we read new sheets in the existing one

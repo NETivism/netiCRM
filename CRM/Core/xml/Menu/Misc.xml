@@ -125,7 +125,9 @@
   </item>
   <item>
      <path>civicrm/track/report</path>
-     <title>Track</title>
+     <title>Traffic Source</title>
+     <adminGroup>CiviReport</adminGroup>
+     <weight>800</weight>
      <page_callback>CRM_Track_Page_Track</page_callback>
      <access_arguments>access CiviCRM;access CiviContribute;access CiviEvent</access_arguments>
   </item>
