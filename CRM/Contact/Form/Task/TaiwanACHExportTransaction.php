@@ -4,24 +4,32 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
   function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts("Export ACH Transaction File"));
+    // get selector defined form values
+    $formValues = $this->get('formValues');
     $this->_hasProblem = FALSE;
-    if (!empty(count($this->_additionalIds))) {
-      CRM_Core_Session::setStatus(ts('Number of selected contributions: %1', array(1 => count($this->_additionalIds))));
+    if (empty($formValues['payment_type'])) {
+      $this->_hasProblem = TRUE;
+      CRM_Core_Session::setStatus(ts('You need to search payment type of ACH then you can export data.'));
     }
-    else {
+    elseif (empty(count($this->_additionalIds))) {
       $this->_hasProblem = TRUE;
       CRM_Core_Session::setStatus(ts('Sorry. No results found.'));
+    }
+    else {
+      CRM_Core_Session::setStatus(ts('Number of selected contributions: %1', array(1 => count($this->_additionalIds))));
     }
   }
 
   public function buildQuickForm() {
     if (!$this->_hasProblem) {
+      $formValues = $this->get('formValues');
       $options = array(
-        '' => ts('-- Select --'),
         'bank' => ts('Bank'),
         'postoffice' => ts('Post Office'),
       );
-      $this->addSelect('payment_type', ts('Payment Instrument'), $options, NULL, TRUE);
+      $ele = $this->addSelect('payment_type', ts('Payment Instrument'), $options, NULL, TRUE);
+      $this->setDefaults(array('payment_type' => $formValues['payment_type']));
+      $ele->freeze();
 
       $options = array(
         'txt' => 'txt'.' - '.ts('Format that submit to bank.'),
@@ -32,6 +40,14 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
       
       // add rules
       $this->addFormRule(array('CRM_Contact_Form_Task_TaiwanACHExportTransaction', 'formRule'), $this);
+    }
+    else {
+      $buttons = array();
+      $buttons[] = array(
+        'type' => 'back',
+        'name' => ts('Previous'),
+      );
+      $this->addButtons($buttons);
     }
   }
 
