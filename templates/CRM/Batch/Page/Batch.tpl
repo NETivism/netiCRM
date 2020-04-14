@@ -33,8 +33,13 @@
     <tbody>
     {foreach from=$rows item=row}
     <tr class="{cycle values="odd-row,even-row"} {$row.class}">
-      <td class="crm-batch-name">{$row.id}</td>
-      <td class="crm-batch-name">{$row.label}</td>
+      <td class="crm-batch-id">{$row.id}</td>
+      <td class="crm-batch-name">
+        {$row.label}
+        {if $row.description}
+        <div class="description">{$row.description}</div>
+        {/if}
+      </td>
       <td class="crm-batch-created_by">{$row.created_by}</td>
       <td class="crm-batch-created_date">{$row.created_date|crmDate}</td>
       <td class="crm-batch-modified_date">{$row.modified_date|crmDate}</td>

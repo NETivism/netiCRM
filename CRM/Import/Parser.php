@@ -55,7 +55,6 @@ abstract class CRM_Import_Parser {
    * various Contact types
    */
   CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
-  CONST DEFAULT_TIMEOUT = 30;
 
   protected $_tableName;
 
@@ -85,12 +84,7 @@ abstract class CRM_Import_Parser {
   protected $_invalidRowCount;
 
   /**
-   * maximum number of invalid rows to store
-   */
-  protected $_maxErrorCount;
-
-  /**
-   * array of error lines, bounded by MAX_ERROR
+   * array of error lines
    */
   protected $_errors;
 
@@ -130,17 +124,12 @@ abstract class CRM_Import_Parser {
   protected $_unMatch;
 
   /**
-   * maximum number of warnings to store
-   */
-  protected $_maxWarningCount = self::MAX_WARNINGS;
-
-  /**
    * total number of contacts with unparsed addresses
    */
   protected $_unparsedAddressCount;
 
   /**
-   * array of warning lines, bounded by MAX_WARNING
+   * array of warning lines
    */
   protected $_warnings;
 
@@ -206,7 +195,14 @@ abstract class CRM_Import_Parser {
    *
    * @var string
    */
-  protected $_misMatchFilemName;
+  protected $_misMatchFileName;
+
+  /**
+   * filename of unparsed adderss
+   *
+   * @var string
+   */
+  protected $_unparsedAddressFileName;
 
   protected $_primaryKeyName;
   protected $_statusFieldName;
@@ -247,9 +243,13 @@ abstract class CRM_Import_Parser {
    */
   public $_contactLog;
 
+  /**
+   * import source have column header or not.
+   */
+  public $_skipColumnHeader;
+
   function __construct() {
     $this->_maxLinesToProcess = 0;
-    $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
   abstract function init();
@@ -263,11 +263,10 @@ abstract class CRM_Import_Parser {
     $statusID = NULL,
     $totalRowCount = NULL,
     $doGeocodeAddress = FALSE,
-    $timeout = CRM_Import_Parser::DEFAULT_TIMEOUT,
+    $offset = NULL,
     $contactSubType = NULL
   ) {
 
-    // TODO: Make the timeout actually work
     $this->_onDuplicate = $onDuplicate;
 
     switch ($contactType) {
@@ -342,10 +341,7 @@ abstract class CRM_Import_Parser {
     $result = $db->query($query);
 
     while ($values = $result->fetchRow(DB_FETCHMODE_ORDERED)) {
-      $this->_rowCount++;
-
       /* trim whitespace around the values */
-
       $empty = TRUE;
       foreach ($values as $k => $v) {
         $values[$k] = trim($v, " \t\r\n");
@@ -354,7 +350,12 @@ abstract class CRM_Import_Parser {
         continue;
       }
 
+      $this->_rowCount++;
       $this->_totalCount++;
+      $lineNum = $values[count($values) - 1];
+      if ($this->_skipColumnHeader) {
+        $lineNum++;
+      }
 
       if ($mode == self::MODE_MAPFIELD) {
         $returnCode = $this->mapField($values);
@@ -415,30 +416,21 @@ abstract class CRM_Import_Parser {
         }
       }
 
-      if ($returnCode & self::WARNING) {
-        $this->_warningCount++;
-        if ($this->_warningCount < $this->_maxWarningCount) {
-          $this->_warningCount[] = $line;
-        }
-      }
-
       if ($returnCode & self::ERROR) {
         $this->_invalidRowCount++;
-        if ($this->_invalidRowCount < $this->_maxErrorCount) {
-          array_unshift($values, $this->_rowCount);
-          $this->_errors[] = $values;
-        }
+        array_unshift($values, $lineNum);
+        $this->_errors[] = $values;
       }
 
       if ($returnCode & self::CONFLICT) {
         $this->_conflictCount++;
-        array_unshift($values, $this->_rowCount);
+        array_unshift($values, $lineNum);
         $this->_conflicts[] = $values;
       }
 
       if ($returnCode & self::NO_MATCH) {
         $this->_unMatchCount++;
-        array_unshift($values, $this->_rowCount);
+        array_unshift($values, $lineNum);
         $this->_unMatch[] = $values;
       }
 
@@ -448,7 +440,7 @@ abstract class CRM_Import_Parser {
                      * on non-skip action */
         }
         $this->_duplicateCount++;
-        array_unshift($values, $this->_rowCount);
+        array_unshift($values, $lineNum);
         $this->_duplicates[] = $values;
         if ($onDuplicate != self::DUPLICATE_SKIP) {
           $this->_validCount++;
@@ -457,7 +449,7 @@ abstract class CRM_Import_Parser {
 
       if ($returnCode & self::UNPARSED_ADDRESS_WARNING) {
         $this->_unparsedAddressCount++;
-        array_unshift($values, $this->_rowCount);
+        array_unshift($values, $lineNum);
         $this->_unparsedAddresses[] = $values;
       }
       // we give the derived class a way of aborting the process
@@ -467,7 +459,7 @@ abstract class CRM_Import_Parser {
       }
 
       // if we are done processing the maxNumber of lines, break
-      if ($this->_maxLinesToProcess > 0 && $this->_validCount >= $this->_maxLinesToProcess) {
+      if ($this->_maxLinesToProcess > 0 && $this->_rowCount >= $this->_maxLinesToProcess) {
         break;
       }
 
@@ -475,18 +467,17 @@ abstract class CRM_Import_Parser {
       CRM_Core_DAO::freeResult();
     }
 
-
     if ($mode == self::MODE_PREVIEW || $mode == self::MODE_IMPORT) {
       $customHeaders = $mapper;
 
-      $customfields = &CRM_Core_BAO_CustomField::getFields($this->_contactType);
+      $customfields = CRM_Core_BAO_CustomField::getFields($this->_contactType);
       foreach ($customHeaders as $key => $value) {
         if ($id = CRM_Core_BAO_CustomField::getKeyID($value)) {
           $customHeaders[$key] = $customfields[$id][0];
         }
       }
 
-      require_once 'CRM/Core/Report/Excel.php';
+      $fileName = str_replace('civicrm_import_job_', 'import_', $this->_tableName);
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
         $headers = array_merge(array(ts('Line Number'),
@@ -494,7 +485,7 @@ abstract class CRM_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_errorFileName = self::errorFileName(self::ERROR);
+        $this->_errorFileName = self::saveFileName(self::ERROR, $fileName);
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
@@ -503,7 +494,7 @@ abstract class CRM_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_conflictFileName = self::errorFileName(self::CONFLICT);
+        $this->_conflictFileName = self::saveFileName(self::CONFLICT, $fileName);
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
@@ -513,7 +504,7 @@ abstract class CRM_Import_Parser {
           $customHeaders
         );
 
-        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE);
+        $this->_duplicateFileName = self::saveFileName(self::DUPLICATE, $fileName);
         self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
       if ($this->_unMatchCount) {
@@ -523,8 +514,8 @@ abstract class CRM_Import_Parser {
           $customHeaders
         );
 
-        $this->_misMatchFilemName = self::errorFileName(self::NO_MATCH);
-        self::exportCSV($this->_misMatchFilemName, $headers, $this->_unMatch);
+        $this->_misMatchFileName = self::saveFileName(self::NO_MATCH, $fileName);
+        self::exportCSV($this->_misMatchFileName, $headers, $this->_unMatch);
       }
       if ($this->_unparsedAddressCount) {
         $headers = array_merge(array(ts('Line Number'),
@@ -532,11 +523,10 @@ abstract class CRM_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_errorFileName = self::errorFileName(self::UNPARSED_ADDRESS_WARNING);
-        self::exportCSV($this->_errorFileName, $headers, $this->_unparsedAddresses);
+        $this->_unparsedAddressFileName = self::saveFileName(self::UNPARSED_ADDRESS_WARNING, $fileName);
+        self::exportCSV($this->_unparsedAddressFileName, $headers, $this->_unparsedAddresses);
       }
     }
-    //echo "$this->_totalCount,$this->_invalidRowCount,$this->_conflictCount,$this->_duplicateCount";
     return $this->fini();
   }
 
@@ -832,7 +822,7 @@ abstract class CRM_Import_Parser {
    * @return void
    * @access public
    */
-  function set($store, $mode = self::MODE_SUMMARY) {
+  function set(&$store, $mode = self::MODE_SUMMARY) {
     $store->set('rowCount', $this->_rowCount);
     $store->set('fields', $this->getSelectValues());
     $store->set('fieldTypes', $this->getSelectTypes());
@@ -871,7 +861,7 @@ abstract class CRM_Import_Parser {
     }
 
     if ($this->_unMatchCount) {
-      $store->set('mismatchFileName', $this->_misMatchFilemName);
+      $store->set('mismatchFileName', $this->_misMatchFileName);
     }
 
     if ($mode == self::MODE_IMPORT) {
@@ -881,10 +871,9 @@ abstract class CRM_Import_Parser {
         $store->set('duplicatesFileName', $this->_duplicateFileName);
       }
       if ($this->_unparsedAddressCount) {
-        $store->set('errorsFileName', $this->_errorFileName);
+        $store->set('unparsedAddressFileName', $this->_unparsedAddressFileName);
       }
     }
-    //echo "$this->_totalCount,$this->_invalidRowCount,$this->_conflictCount,$this->_duplicateCount";
   }
 
   /**
@@ -912,7 +901,13 @@ abstract class CRM_Import_Parser {
       }
     }
     $data = $errorValues;
-    CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
+    global $civicrm_batch;
+    if (!empty($civicrm_batch)) {
+      CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE, $append = TRUE);
+    }
+    else {
+      CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE, $append = FALSE);
+    }
   }
 
   /**
@@ -947,14 +942,18 @@ abstract class CRM_Import_Parser {
     }
   }
 
-  function errorFileName($type) {
-    $fileName = NULL;
-    if (empty($type)) {
-      return $fileName;
+  function errorFileName($type, $prefix = NULL) {
+    $fileName = self::saveFileName($type, $prefix);
+    return $fileName;
+  }
+
+  function saveFileName($type, $prefix = NULL) {
+    if (empty($prefix)) {
+      $prefix = 'import';
     }
+    $fileName = $prefix;
 
     $config = CRM_Core_Config::singleton();
-    $fileName = "sqlImport";
     switch ($type) {
       case CRM_Import_Parser::ERROR:
         $fileName .= '.errors';
@@ -974,36 +973,6 @@ abstract class CRM_Import_Parser {
 
       case CRM_Import_Parser::UNPARSED_ADDRESS_WARNING:
         $fileName .= '.unparsedAddress';
-        break;
-    }
-
-    return $fileName . '.xlsx';
-  }
-
-  function saveFileName($type) {
-    $fileName = NULL;
-    if (empty($type)) {
-      return $fileName;
-    }
-    switch ($type) {
-      case CRM_Import_Parser::ERROR:
-        $fileName = 'Import_Errors';
-        break;
-
-      case CRM_Import_Parser::CONFLICT:
-        $fileName = 'Import_Conflicts';
-        break;
-
-      case CRM_Import_Parser::DUPLICATE:
-        $fileName = 'Import_Duplicates';
-        break;
-
-      case CRM_Import_Parser::NO_MATCH:
-        $fileName = 'Import_Mismatch';
-        break;
-
-      case CRM_Import_Parser::UNPARSED_ADDRESS_WARNING:
-        $fileName = 'Import_Unparsed_Address';
         break;
     }
 

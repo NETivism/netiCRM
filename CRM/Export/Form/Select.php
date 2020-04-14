@@ -102,7 +102,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
         $modeVar = strtoupper($componentName[1]) . '_EXPORT';
         $this->_exportMode = constant("self::$modeVar");
         $componentClass = 'CRM_'.$componentName[1].'_Form_Task';
-        $componentClass::preProcessCommon($this, TRUE);
+        $componentClass::preProcessCommon($this);
         $values = $this->controller->exportValues('Search');
       }
       else {
@@ -115,21 +115,21 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
     switch ($componentMode) {
       case 2:
         require_once "CRM/Contribute/Form/Task.php";
-        CRM_Contribute_Form_Task::preProcessCommon($this, TRUE);
+        CRM_Contribute_Form_Task::preProcessCommon($this);
         $this->_exportMode = self::CONTRIBUTE_EXPORT;
         $componentName = array('', 'Contribute');
         break;
 
       case 3:
         require_once "CRM/Event/Form/Task.php";
-        CRM_Event_Form_Task::preProcessCommon($this, TRUE);
+        CRM_Event_Form_Task::preProcessCommon($this);
         $this->_exportMode = self::EVENT_EXPORT;
         $componentName = array('', 'Event');
         break;
 
       case 4:
         require_once "CRM/Activity/Form/Task.php";
-        CRM_Activity_Form_Task::preProcessCommon($this, TRUE);
+        CRM_Activity_Form_Task::preProcessCommon($this);
         $this->_exportMode = self::ACTIVITY_EXPORT;
         $componentName = array('', 'Activity');
         break;
@@ -142,7 +142,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       $taskName = $contactTasks[$this->_task];
 
       require_once "CRM/Contact/Form/Task.php";
-      CRM_Contact_Form_Task::preProcessCommon($this, TRUE);
+      CRM_Contact_Form_Task::preProcessCommon($this);
     }
     else {
       $this->assign('taskName', "Export $componentName[1]");

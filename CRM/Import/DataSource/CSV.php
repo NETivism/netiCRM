@@ -40,9 +40,9 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     return array('title' => ts('Comma-Separated Values (CSV)'));
   }
 
-  function preProcess(&$form) {}
+  public static function preProcess(&$form) {}
 
-  function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $form->add('hidden', 'hidden_dataSource', 'CRM_Import_DataSource_CSV');
 
     $config = CRM_Core_Config::singleton();
@@ -61,8 +61,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     $form->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
   }
 
-  function postProcess(&$form, &$db) {
-    $params = $form->_params;
+  public static function postProcess(&$form, &$params, &$db) {
     $file = $params['uploadFile']['name'];
 
     $result = self::_CsvToTable($db, $file, $params['skipColumnHeader'],
@@ -72,9 +71,13 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     $form->set('originalColHeader', CRM_Utils_Array::value('original_col_header', $result));
 
     $table = $result['import_table_name'];
-    require_once 'CRM/Import/ImportJob.php';
     $importJob = new CRM_Import_ImportJob($table);
-    $form->set('importTableName', $importJob->getTableName());
+    $tableName = $importJob->getTableName();
+    $form->set('importTableName', $tableName);
+
+    $fields = parent::prepareImportTable($tableName);
+    $form->set('primaryKeyName', $fields['primaryKeyName']);
+    $form->set('statusFieldName', $fields['statusFieldName']);
   }
 
   /**

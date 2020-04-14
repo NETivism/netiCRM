@@ -41,6 +41,21 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
    * Get action Links.
    */
   public function &links() {
+    if (!(self::$_links)) {
+      $links = array();
+
+      if (CRM_Core_Permission::check('administer CiviCRM')) {
+        $links[CRM_Core_Action::UPDATE] = array(
+          'name' => ts('Edit'),
+          'url' => 'civicrm/admin/batch',
+          'qs' => 'action=update&id=%%id%%',
+          'title' => ts('Edit'),
+        );
+      }
+
+      self::$_links = $links;
+    }
+    return self::$_links;
   }
 
   /**
@@ -60,7 +75,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
    *   name of this page.
    */
   public function editName() {
-    return ts('Batch Processing');
+    return ts('Batch');
   }
 
   /**
@@ -120,6 +135,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $rows = array();
 
     $currentUser = CRM_Core_Session::singleton()->get("userID");
+    $action = array_sum(array_keys($this->links()));
     while ($dao->fetch()) {
       $meta = NULL;
       $row = array();
@@ -129,6 +145,9 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->created_id);
       $row['id'] = $dao->id;
       $row['label'] = $dao->label; 
+      if ($dao->description) {
+        $row['description'] = $dao->description;
+      }
       $row['created_by'] = $contact[0];
       $row['created_date'] = $dao->created_date;
       $row['modified_date'] = $dao->modified_date;
@@ -137,20 +156,21 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       if (!empty($meta['total'])) {
         $row['processed'] = $meta['processed'].' / '.$meta['total'];
       }
+      $row['action'] = CRM_Core_Action::formLink(self::links(), $action, array('id' => $dao->id));
 
       // batch action should also verify permission
       if (!empty($meta['download']) && $currentUser == $dao->created_id) {
         $completedStatus = $batchStatus['Completed'];
         $canceledStatus = $batchStatus['Canceled'];
         if (isset($meta['download']['file']) && file_exists($meta['download']['file']))  {
-          $row['action'] = '<a href="'.CRM_Utils_System::url("civicrm/admin/batch", "reset=1&id={$dao->id}&action=export").'" class="download">'.ts("Download").'</a>';
+          $download = '<a href="'.CRM_Utils_System::url("civicrm/admin/batch", "reset=1&id={$dao->id}&action=export").'" class="download">'.ts("Download").'</a>';
           if ($dao->status_id == $completedStatus || $dao->status_id == $canceledStatus) {
             $row['expired_date'] = date('Y-m-d H:i:s', strtotime($dao->modified_date) + 86400*CRM_Batch_BAO_Batch::EXPIRE_DAY);
             // reset action string when expired
             if (strtotime($row['expired_date']) < time()) {
-              $row['action'] = ts("Download")." - ".ts("Expired");
+              $download = ts("Download")." - ".ts("Expired");
             }
-            $row['action'] .= '<br>';
+            $row['action'] .= $download.'<br>';
             $expiredDate = CRM_Utils_Date::customFormat($row['expired_date']);
             $row['action'] .= ts('Expired Date').": ".$expiredDate;
           }
