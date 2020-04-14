@@ -1,6 +1,6 @@
-<!--
-Template name: block--title.html
-Base on: block--text--mailchimp.html
+{*
+Template name: blockTitle.tpl
+Base on: example/templates/block/block--text--mailchimp.html
 
 ===================================
 Class name mapping of nmeEditor and mailchimp:
@@ -19,9 +19,11 @@ block (nmeb-inner): block padding
 elemContainer (nmeb-content-container): none
 elemContainerInner (nmeb-content): none
 elem (nme-elem): title font, text, color
--->
+*}
 
-<table data-id="{nmeBlockID}" data-type="{nmeBlockType}" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-title nmeb" style="min-width: 100%;">
+<div class="nme-tpl" data-template-level="block" data-template-name="title">
+{* Template Content: BEGIN *}
+<table data-id="[nmeBlockID]" data-type="[nmeBlockType]" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-title nmeb" style="min-width: 100%;">
   <tbody class="nmeb-outer">
     <tr>
       <td valign="top" class="nmeb-inner" data-settings-target="block">
@@ -52,3 +54,5 @@ elem (nme-elem): title font, text, color
     </tr>
   </tbody>
 </table>
+{* Template Content: END *}
+</div>

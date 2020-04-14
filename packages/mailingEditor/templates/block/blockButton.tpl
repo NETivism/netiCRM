@@ -1,6 +1,6 @@
-<!--
-Template name: block--button.html
-Base on: block--button--mailchimp.html
+{*
+Template name: blockButton.tpl
+Base on: example/templates/block/block--button--mailchimp.html
 
 ===================================
 Class name mapping of nmeEditor and mailchimp:
@@ -19,9 +19,11 @@ block (nmeb-inner): block padding
 elemContainer (nmeb-content-container): button border, background
 elemContainerInner (nmeb-content): button padding, font-family, font-size
 elem (nme-elem): button font, text, color
--->
+*}
 
-<table data-id="{nmeBlockID}" data-type="{nmeBlockType}" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-button nmeb" style="min-width: 100%;">
+<div class="nme-tpl" data-template-level="block" data-template-name="button">
+{* Template Content: BEGIN *}
+<table data-id="[nmeBlockID]" data-type="[nmeBlockType]" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-button nmeb" style="min-width: 100%;">
   <tbody class="nmeb-outer">
     <tr>
       <td class="nmeb-inner" data-settings-target="block" style="padding-top: 0; padding-right: 18px; padding-bottom: 18px; padding-left:18px; text-align: center;" valign="top" align="center">
@@ -38,3 +40,5 @@ elem (nme-elem): button font, text, color
     </tr>
   </tbody>
 </table>
+{* Template Content: END *}
+</div>

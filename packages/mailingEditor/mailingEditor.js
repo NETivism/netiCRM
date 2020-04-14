@@ -63,19 +63,7 @@
 		},
 		_sortables = {},
 		_pickrs = [],
-		_tpl = {
-			mail: {
-				"col-1-full-width": ""
-			},
-			block: {
-				"title": "",
-				"paragraph": "",
-				"image": "",
-				"button": "",
-				"edit": ""
-			},
-			elem: {}
-		};
+		_tpl = {};
 
 	/**
 	 * ============================
@@ -376,8 +364,8 @@
 						let	output = "", 
 								blockContent = _tpl.block[blockType];
 
-						blockContent = blockContent.replace(/{nmeBlockID}/g, blockID);
-						blockContent = blockContent.replace("{nmeBlockType}", blockType);
+						blockContent = blockContent.replace(/\[nmeBlockID\]/g, blockID);
+						blockContent = blockContent.replace("[nmeBlockType]", blockType);
 
 						console.log(blockContent);
 						$target.append(blockContent);
@@ -397,11 +385,11 @@
 							blockSortable = "false";
 						}
 
-						blockEditContent = blockEditContent.replace(/{nmeBlockID}/g, blockID);
-						blockEditContent = blockEditContent.replace("{nmeBlockType}", blockType);
-						blockEditContent = blockEditContent.replace("{nmeBlockSection}", blockSection);
-						blockEditContent = blockEditContent.replace("{nmeBlockContent}", blockContent);
-						blockEditContent = blockEditContent.replace("{nmeBlockSortable}", blockSortable);
+						blockEditContent = blockEditContent.replace(/\[nmeBlockContent\]/g, blockContent);
+						blockEditContent = blockEditContent.replace(/\[nmeBlockID\]/g, blockID);
+						blockEditContent = blockEditContent.replace(/\[nmeBlockType\]/g, blockType);
+						blockEditContent = blockEditContent.replace(/\[nmeBlockSection\]/g, blockSection);
+						blockEditContent = blockEditContent.replace(/\[nmeBlockSortable\]/g, blockSortable);
 
 						output = blockEditContent;
 
@@ -525,68 +513,39 @@
 	};
 
 	var _nmeMain = function() {
-		/*
-		let mailTpl = _loadTemplate('mail--col-1-full-width', 'mail');
-		console.log(mailTpl);
-		*/
+		if (!$(_main).length) {
+			let mailTplName =  _data.settings.template ?  _data.settings.template : "col-1-full-width",
+					mailTpl = _tpl["mail"][mailTplName];
 
-		let tplCurrentLoadItems = 0,
-				tplTotal = _getLength(_tpl);
+			$(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
+			$(_main).children(".inner").append(mailTpl);
 
-		for (let tplLevel in _tpl) {
-			for (let tplName in _tpl[tplLevel]) {
-				let tplPath = "/sites/all/modules/civicrm/packages/mailingEditor/templates/" +
-				tplLevel + "/" + tplLevel + "--" + tplName + ".html";
+			if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
+				for (let section in _data.sections) {
+					if (!_sectionIsEmpty(section)) {
+						let blocksData = _data.sections[section].blocks,
+								sectionID = "nme-mail-" + section,
+								sectionInner = "#" + sectionID + " .nme-mail-inner",
+								blocksContainer = sectionInner + " .nme-blocks";
 
-				$.ajax({
-					url: tplPath,
-					method: "GET",
-					async: true,
-					success: function(response) {
-						tplCurrentLoadItems++;
-						_tpl[tplLevel][tplName] = response;
-						//_debug(_tpl);
+						$(sectionInner).append("<div id='" + sectionID + "-blocks' class='nme-blocks' data-section='" + section + "'></div>");
 
-						if (tplCurrentLoadItems == tplTotal) {
-							if (!$(_main).length) {
-								let mailTpl = _tpl["mail"]["col-1-full-width"];
-
-								$(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
-								$(_main).children(".inner").append(mailTpl);
-
-								if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
-									for (let section in _data.sections) {
-										if (!_sectionIsEmpty(section)) {
-											let blocksData = _data.sections[section].blocks,
-													sectionID = "nme-mail-" + section,
-													sectionInner = "#" + sectionID + " .nme-mail-inner",
-													blocksContainer = sectionInner + " .nme-blocks";
-
-											$(sectionInner).append("<div id='" + sectionID + "-blocks' class='nme-blocks' data-section='" + section + "'></div>");
-											for (let blockID in _data.sections[section].blocks) {
-												let blockData = blocksData[blockID];
-												_nmeBlock.add(blockData, "edit", blocksContainer);
-												_nmeBlockControl.render(blockID, blockData.type);
-											}
-
-											_editable();
-											_sortable();
-											_colorable();
-											_nmeBlockControl.init();
-											_nmePanels();
-											_onScreenCenterElem(".nme-block");
-										}
-									}
-								}
-							}
+						// Render blocks from data
+						for (let blockID in _data.sections[section].blocks) {
+							let blockData = blocksData[blockID];
+							_nmeBlock.add(blockData, "edit", blocksContainer);
+							_nmeBlockControl.render(blockID, blockData.type);
 						}
-					},
-					error: function(xhr, status, error) {
-						_debug("xhr:" + xhr + '\n' + "status:" + status + '\n' + "error:" + error);
-						return false;
+
+						_editable();
+						_sortable();
+						_colorable();
+						_nmeBlockControl.init();
+						_nmePanels();
+						_onScreenCenterElem(".nme-block");
 					}
-				});
-			};
+				}
+			}
 		}
 
 		/*
@@ -829,98 +788,6 @@
 		else {
 			return true;
 		}
-	}
-
-	var _loadTemplate = function(name, level, target, mode, data) {
-		let tplName = typeof name !== undefined ? name : "",
-				tplLevel = typeof level !== undefined ? level : "",
-				tplTarget = typeof target !== undefined ? target : "",
-				tplLoadMode = typeof mode !== undefined && mode ? mode : "storage",
-				tplData = !_objIsEmpty(data) ? data : null,
-				tplAlreadyStored = false,
-				tplOutput = "";
-
-		if (tplName && tplLevel) {
-			let $tplTarget = $(tplTarget);
-
-			function loadTemplateFinalTask() {
-				tplOutput = _tpl[tplLevel][tplName];
-
-				if ($tplTarget.length) {
-					if (tplLoadMode == "direct") {
-						$tplTarget.html(tplOutput);
-					}
-				}
-				else {
-					if (tplLoadMode == "storage") {
-						return tplOutput;
-					}
-				}
-			}
-
-			if (_tpl[tplLevel][tplName]) {
-				tplAlreadyStored = true;
-			}
-
-			if (tplAlreadyStored) {
-				loadTemplateFinalTask();
-			}
-			else {
-				let tplPath = "/sites/all/modules/civicrm/packages/mailingEditor/templates/" +
-						tplLevel + "/" + tplLevel + "--" + tplName + ".html";
-
-				$.ajax({
-					url: tplPath,
-					method: "GET",
-					async: true,
-					success: function(response) {
-						_tpl[tplLevel][tplName] = response;
-						loadTemplateFinalTask();
-						_debug(_tpl);
-					},
-					error: function(xhr, status, error) {
-						_debug("xhr:" + xhr + '\n' + "status:" + status + '\n' + "error:" + error);
-						return false;
-					}
-				});
-			}
-
-			/*	
-					if (tplLoadMode == "direct") {
-						$tplTarget.load(tplPath, function(response, status, xhr) {
-							if (status == "success") {
-								_tpl[tplLevel][tplName] = response;
-
-								if (tplLevel == "mail") {
-									if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
-										for (let section in _data.sections) {
-											if (!_sectionIsEmpty(section)) {
-												let blocksContainer = "#nme-mail-" + section + " .nme-mail-inner";
-												console.log(blocksContainer);
-												for (let block in _data.sections[section].blocks) {
-													console.log(block);
-													//_nmeBlock.add(block, "edit", blocksContainer);
-												}
-											}
-										}						
-									}
-									else {
-									}
-								}
-								// _debug(_tpl);
-							}
-
-							if (status == "error" && _debugMode) {
-								let msg = "Sorry but there was an error: \n" + xhr.status + " " + xhr.statusText;
-								_debug(msg);
-							}
-						});
-						*/
-		}
-	};
-
-	var _loadTemplates = function() {
-
 	}
 
 	var _nmeBlockControl = {
@@ -1254,20 +1121,42 @@
 		data: {},
 		init: function() {
       _nmEditorInit();
-
+		},
+		render: function() {
+			// Load Data
 			if (_dataLoadMode == "field") {
 				_dataLoadSource = _nmeOptions.dataLoadSource;
 				_nmeData.get.field(_dataLoadSource);
 			}
-		},
-		render: function() {
-			_nmeMain();
-			/*
-			_editable();
-			_sortable();
-			_nmeBlockControl.init();
-			_nmePanels();
-			*/
+
+			// Load templates
+			let $nmeTplItems = $(".nme-tpl");
+
+			if ($nmeTplItems.length) {
+				let tplTotal = $nmeTplItems.length;
+
+				$nmeTplItems.each(function(i) {
+					let $this = $(this),
+							tplName = $this.data("template-name"),
+							tplLevel = $this.data("template-level"),
+							tplOutput = $this.html();
+
+					if (!_tpl.hasOwnProperty(tplLevel)) {
+						_tpl[tplLevel] = {};
+					}
+
+					_tpl[tplLevel][tplName] = tplOutput;
+
+					// After loading all the templates completely
+					if ((tplTotal - 1) == i) {
+						// Remove templates from back-end stage
+						$nmeTplItems.remove();
+
+						// Execute the main function
+						_nmeMain();
+					}
+				});
+			}
 		},
 		open: function(elem) {
 			var $elem = $(elem);

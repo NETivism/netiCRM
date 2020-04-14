@@ -1,6 +1,6 @@
-<!--
-Template name: block--image.html
-Base on: block--image--mailchimp.html
+{*
+Template name: blockImage.tpl
+Base on: example/templates/block/block--image--mailchimp.html
 
 ===================================
 Class name mapping of nmeEditor and mailchimp:
@@ -19,9 +19,11 @@ block (nmeb-inner): block padding
 elemContainer (nmeb-content-container): none
 elemContainerInner (nmeb-content): image align
 elem (nme-elem): none
--->
+*}
 
-<table data-id="{nmeBlockID}" data-type="{nmeBlockType}" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-image nmeb" style="min-width: 100%;">
+<div class="nme-tpl" data-template-level="block" data-template-name="image">
+{* Template Content: BEGIN *}
+<table data-id="[nmeBlockID]" data-type="[nmeBlockType]" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-image nmeb" style="min-width: 100%;">
   <tbody class="nmeb-outer">
     <tr>
       <td valign="top" style="padding: 9px" class="nmeb-inner" data-settings-target="block">
@@ -38,3 +40,5 @@ elem (nme-elem): none
     </tr>
   </tbody>
 </table>
+{* Template Content: END *}
+</div>

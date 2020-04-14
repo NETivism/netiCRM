@@ -28,6 +28,7 @@
 })(jQuery);
 </script>
 {/literal}
+{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 <!-- mailingEditor files end -->
 
 <!-- mailingEditor HTML start -->

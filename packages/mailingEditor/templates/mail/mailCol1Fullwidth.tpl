@@ -1,3 +1,5 @@
+<div class="nme-tpl" data-template-level="mail" data-template-name="col-1-full-width">
+{* Template Content: BEGIN *}
 <center>
   <!-- Body Table: BEGIN -->
   <table id="nme-body-table" align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
@@ -15,7 +17,7 @@
                     <tbody>
                       <tr>
                         <td valign="top" class="nme-mail-inner">
-                           <!-- Mail Header Content HERE -->
+                          <!-- Mail Header Content HERE -->
                         </td>
                       </tr>
                     </tbody>
@@ -63,3 +65,5 @@
   </table>
   <!-- Body Table: END -->
 </center>
+{* Template Content: END *}
+</div>

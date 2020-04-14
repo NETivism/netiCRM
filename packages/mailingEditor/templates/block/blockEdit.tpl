@@ -1,8 +1,10 @@
-<div id="nme-block-{nmeBlockID}" data-id="{nmeBlockID}" class="nme-block" data-type="{nmeBlockType}" data-section="{nmeBlockSection}" data-sortable="{nmeBlockSortable}">
+<div class="nme-tpl" data-template-level="block" data-template-name="edit">
+{* Template Content: BEGIN *}
+<div id="nme-block-[nmeBlockID]" data-id="[nmeBlockID]" class="nme-block" data-type="[nmeBlockType]" data-section="[nmeBlockSection]" data-sortable="[nmeBlockSortable]">
   <div class="nme-block-inner">
     <div class="nme-block-content">
       <!-- Block Content HERE -->
-      {nmeBlockContent}
+      [nmeBlockContent]
     </div>	
     <div class="nme-block-control">
       <div class="nme-block-move">
@@ -16,4 +18,6 @@
       </div>
     </div>	
   </div>
+</div>
+{* Template Content: END *}
 </div>
