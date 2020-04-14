@@ -93,6 +93,12 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
     $dao->fetch();
     $data['num_donors'] = $dao->count;
     $data['money_raised'] = $dao->total;
+    if (empty($data['num_donors'])) {
+      $data['num_donors'] = 0;
+    }
+    if (empty($data['money_raised'])) {
+      $data['money_raised'] = 0;
+    }
 
     // goal
     $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($contributionPageID);
