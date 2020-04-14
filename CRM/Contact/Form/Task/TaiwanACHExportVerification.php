@@ -1,9 +1,8 @@
 <?php
-
-class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_Task {
+class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form_Task {
   function preProcess() {
     parent::preProcess();
-    CRM_Utils_System::setTitle(ts("Export ACH Transaction File"));
+    CRM_Utils_System::setTitle(ts("Export ACH Verification File"));
     // get selector defined form values
     $formValues = $this->get('formValues');
     $this->_hasProblem = FALSE;
@@ -40,7 +39,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
       $this->addDefaultButtons(ts('Export'));
       
       // add rules
-      $this->addFormRule(array('CRM_Contact_Form_Task_TaiwanACHExportTransaction', 'formRule'), $this);
+      $this->addFormRule(array('CRM_Contact_Form_Task_TaiwanACHExportVerification', 'formRule'), $this);
     }
     else {
       $buttons = array();
