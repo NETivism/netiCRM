@@ -34,8 +34,24 @@
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-        <h3>{ts}Have Donations{/ts}</h3>
+
         <table class="form-layout-compressed">
+            <tr class="crm-contact-custom-search-contribSYBNT-form-block-contribution_type_id">
+                <td class="label">
+                  {$form.contribution_type_id.label}
+                </td>
+                <td colspan="2">
+                  {$form.contribution_type_id.html}
+                  {include file="CRM/common/chosen.tpl" selector="#contribution_type_id"}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <h3>{ts}Have Donations{/ts}</h3>
+                </td>
+                <td colspan="2">
+                </td>
+            </tr>
             <tr class="crm-contact-custom-search-contribSYBNT-form-block-inclusion_date_one">
                 <td class="label"><label>{ts}Date{/ts}</label></td>
                 <td>{ts}From{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=include_start_date}</td>
@@ -46,9 +62,13 @@
                 <td>{ts}Min{/ts}: {$form.include_min_amount.html}</td>
                 <td>{ts}Max{/ts}: {$form.include_max_amount.html}</td>
             </tr>
-        </table> 
-        <h3>{ts}Without Donations{/ts}</h3>
-        <table class="form-layout-compressed">
+            <tr>
+                <td class="label">
+                    <h3>{ts}Without Donations{/ts}</h3>
+                </td>
+                <td colspan="2">
+                </td>
+            </tr>
             <tr class="crm-contact-custom-search-contribSYBNT-form-block-exclusion_date">
                 <td class="label"><label>{ts}Date{/ts}</label></td>
                 <td>{ts}From{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=exclude_start_date}</td>

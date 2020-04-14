@@ -416,7 +416,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
         'fee_amount' => array(
           'name' => 'fee_amount',
           'type' => CRM_Utils_Type::T_MONEY,
-          'title' => ts('Fee Amount') ,
+          'title' => ts('Transaction Fee Amount') ,
           'import' => true,
           'where' => 'civicrm_contribution.fee_amount',
           'headerPattern' => '/fee(.?am(ou)?nt)?/i',

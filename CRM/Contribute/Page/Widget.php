@@ -18,7 +18,10 @@ class CRM_Contribute_Page_Widget extends CRM_Core_Page {
         }
       }
       $this->assign('form', $form);
+      $jsonData = CRM_Contribute_BAO_Widget::getContributionPageData($id, $widget->id);
+      $this->assign('jsonData', json_encode($jsonData));
       $template = CRM_Core_Smarty::singleton();
+
       $widgetCode = $template->fetch('CRM/Contribute/Page/Widget.tpl');
 
       $this->assign('embedBody', $widgetCode);
