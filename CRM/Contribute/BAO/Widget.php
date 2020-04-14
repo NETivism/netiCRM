@@ -85,7 +85,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
 
     // prepare all contribution page variable
     $page = array();
-    CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+    CRM_Contribute_BAO_ContributionPage::setValues($contributionPageID, $page);
 
     // total donors
     $query = "SELECT count(id) as count, SUM(total_amount) as total FROM civicrm_contribution  WHERE is_test = 0 AND contribution_status_id = 1 AND contribution_page_id = %1 GROUP BY contribution_page_id";
