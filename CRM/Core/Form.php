@@ -426,7 +426,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       // hack - addGroup uses an array to express variable spacing, read from the last element
       $spacing[] = CRM_Utils_Array::value('spacing', $button, self::ATTR_SPACING);
     }
-    $this->addGroup($prevnext, 'buttons', '', $spacing, FALSE);
+    return $this->addGroup($prevnext, 'buttons', '', $spacing, FALSE);
   }
 
   /**
@@ -709,7 +709,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     self::$_template->isAssigned($var, $value);
   }
 
-  function &addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
+  function addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
     $options = array();
     $attributes = $attributes ? $attributes : array();
     $allowClear = !empty($attributes['allowClear']) ? TRUE : FALSE;
@@ -735,11 +735,12 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     if ($dontKnow) {
       $choice[] = &$this->createElement('radio', NULL, '22', ts("Don't Know"), '2', $attribute);
     }
-    $group = &$this->addGroup($choice, $id, $title);
+    $group = $this->addGroup($choice, $id, $title);
 
     if ($required) {
       $this->addRule($id, ts('%1 is a required field.', array(1 => $title)), 'required');
     }
+    return $group;
   }
 
   function addCheckBox($id, $title, $values, $other = NULL,
@@ -770,7 +771,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       }
     }
 
-    $this->addGroup($options, $id, $title, $separator);
+    $ele = $this->addGroup($options, $id, $title, $separator);
 
     if ($other) {
       $this->addElement('text', $id . '_other', ts('Other'), $attributes[$id . '_other']);
@@ -782,6 +783,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         'required'
       );
     }
+    return $ele;
   }
 
   function resetValues() {
@@ -817,7 +819,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       }
       $buttons[] = $nextButton;
     }
-    $this->addButtons($buttons);
+    return $this->addButtons($buttons);
   }
 
   function addDateRange($name, $label = 'From', $dateFormat = 'searchDate', $required = FALSE) {
@@ -827,20 +829,22 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   function addSelectByOption($name, $label, $prefix = NULL, $required = NULL, $extra = NULL, $select = '- select -') {
     if ($prefix) {
-      $this->addElement('select', $name . '_id' . $prefix, $label,
+      $ele = $this->addElement('select', $name . '_id' . $prefix, $label,
         array('' => $select) + CRM_Core_OptionGroup::values($name), $extra
       );
       if ($required) {
         $this->addRule($name . '_id' . $prefix, ts('Please select %1', array(1 => $label)), 'required');
       }
+      return $ele;
     }
     else {
-      $this->addElement('select', $name . '_id', $label,
+      $ele = $this->addElement('select', $name . '_id', $label,
         array('' => $select) + CRM_Core_OptionGroup::values($name), $extra
       );
       if ($required) {
         $this->addRule($name . '_id', ts('Please select %1', array(1 => $label)), 'required');
       }
+      return $ele;
     }
   }
 
@@ -858,25 +862,28 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       $editor = 'joomlaeditor';
     }
 
-    $this->addElement($editor, $name, $label, $attributes);
+    $ele = $this->addElement($editor, $name, $label, $attributes);
     $this->assign('editor', $editor);
+    return $ele;
   }
 
   function addCountry($id, $title, $required = NULL, $extra = NULL) {
-    $this->addElement('select', $id, $title,
+    $ele = $this->addElement('select', $id, $title,
       array('' => ts('- select -')) + CRM_Core_PseudoConstant::country(), $extra
     );
     if ($required) {
       $this->addRule($id, ts('Please select %1', array(1 => $title)), 'required');
     }
+    return $ele;
   }
 
   function addSelect($name, $label, $options, $attributes = NULL, $required = NULL, $others = NULL) {
-    $this->addElement('select', $name, $label, $options, $attributes);
+    $ele = $this->addElement('select', $name, $label, $options, $attributes);
 
     if ($required) {
       $this->addRule($name, ts('Please select %1', array(1 => $label)), 'required');
     }
+    return $ele;
   }
 
   function addNumber($name, $label, $attributes = NULL, $required = NULL) {
@@ -1161,12 +1168,13 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     if (!$required) {
       $currencies = array( ''=> ts( '- select -' ) ) + $currencies;
     }
-    $this->add('select', $name, $label, $currencies, $required);
+    $ele = $this->add('select', $name, $label, $currencies, $required);
     if (!$defaultCurrency) {
       $config = CRM_Core_Config::singleton();
       $defaultCurrency = $config->defaultCurrency;
     }
     $this->setDefaults(array($name => $defaultCurrency));
+    return $ele;
   }
 
   function addFieldRequiredRule(&$errors,$fields,$files){
