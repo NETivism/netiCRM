@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-04-08 10:25+0000\n"
+"PO-Revision-Date: 2020-04-14 05:04+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47509,3 +47509,6 @@ msgstr "單聯收據"
 
 msgid "Default Receipt Type"
 msgstr "預設收據格式"
+
+msgid "Transaction Fee Amount"
+msgstr "交易手續費"

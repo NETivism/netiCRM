@@ -162,7 +162,7 @@ AND    co.id IN ( $contribIDs )";
       );
 
 
-      $row['fee_amount'] = &$this->add('text', "fee_amount_{$row['contribution_id']}", ts('Fee Amount'),
+      $row['fee_amount'] = &$this->add('text', "fee_amount_{$row['contribution_id']}", ts('Transaction Fee Amount'),
         $attributes['fee_amount']
       );
       $this->addRule("fee_amount_{$row['contribution_id']}", ts('Please enter a valid amount.'), 'money');

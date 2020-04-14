@@ -47300,3 +47300,6 @@ msgstr ""
 
 msgid "Default Receipt Type"
 msgstr ""
+
+msgid "Transaction Fee Amount"
+msgstr ""
