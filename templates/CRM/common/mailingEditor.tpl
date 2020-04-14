@@ -34,117 +34,66 @@
 {* TODO: Replace DEMO with framework content with correct version (generated after loading json) *}
 <div class="demo">
 	<div class="nme-container">
-		<div id="nme-blocks" class="nme-blocks">
-			<div id="nme-block-1" data-id="nme-block-1" class="nme-block" data-type="image">
-				<div class="nme-block-inner">
-					<div class="nme-block-content">
-						<div class="nme-image nme-item"><img src="https://unsplash.it/1360/600?image=972" alt=""></div>
-					</div>	
-					<div class="nme-block-control">
-						<div class="nme-block-move">
-							<span class="handle-drag handle-btn" data-type="drag"><i class="zmdi zmdi-arrows"></i></span>
-							<span class="handle-prev handle-btn" data-type="prev"><i class="zmdi zmdi-long-arrow-up"></i></span>
-							<span class="handle-next handle-btn" data-type="next"><i class="zmdi zmdi-long-arrow-down"></i></span>
-						</div>
-						<div class="nme-block-actions">
-							<span class="handle-link handle-btn" data-type="link"><i class="zmdi zmdi-link"></i></span>
-							<span class="handle-image handle-btn" data-type="image"><i class="zmdi zmdi-image"></i></span>
-							<span class="handle-clone handle-btn" data-type="clone"><i class="zmdi zmdi-collection-plus"></i></span>
-							<span class="handle-delete handle-btn" data-type="delete"><i class="zmdi zmdi-delete"></i></span>
-						</div>
-					</div>	
-				</div>
-			</div>
-			<div id="nme-block-2" data-id="nme-block-2" class="nme-block" data-type="title">
-				<div class="nme-block-inner">
-					<div class="nme-block-content">
-						<h3 class="nme-title nme-item"><div class='nme-editable' id='demo-nme-title' data-type='text'>請輸入標題</div></h3>
-					</div>	
-					<div class="nme-block-control">
-						<div class="nme-block-move">
-							<span class="handle-drag handle-btn" data-type="drag"><i class="zmdi zmdi-arrows"></i></span>
-							<span class="handle-prev handle-btn" data-type="prev"><i class="zmdi zmdi-long-arrow-up"></i></span>
-							<span class="handle-next handle-btn" data-type="next"><i class="zmdi zmdi-long-arrow-down"></i></span>
-						</div>
-						<div class="nme-block-actions">
-							<span class="handle-style handle-btn"><i class="zmdi zmdi-format-color-fill"></i></span>
-							<span class="handle-clone handle-btn"><i class="zmdi zmdi-collection-plus"></i></span>
-							<span class="handle-delete handle-btn"><i class="zmdi zmdi-delete"></i></span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="nme-block-3" data-id="nme-block-3" class="nme-block" data-type="text">
-				<div class="nme-block-inner">
-					<div class="nme-block-content">
-						<div class="nme-text nme-item">
-							<div class='nme-editable' id='demo-nme-text' data-type='xquill' data-placeholder='請輸入段落文字' data-title='Enter comments'>請輸入段落文字</div>
-						</div>
-					</div>	
-					<div class="nme-block-control">
-						<div class="nme-block-move">
-							<span class="handle-drag handle-btn" data-type="drag"><i class="zmdi zmdi-arrows"></i></span>
-							<span class="handle-prev handle-btn" data-type="prev"><i class="zmdi zmdi-long-arrow-up"></i></span>
-							<span class="handle-next handle-btn" data-type="next"><i class="zmdi zmdi-long-arrow-down"></i></span>
-						</div>
-						<div class="nme-block-actions">
-							<span class="handle-style handle-btn"><i class="zmdi zmdi-format-color-fill"></i></span>
-							<span class="handle-clone handle-btn"><i class="zmdi zmdi-collection-plus"></i></span>
-							<span class="handle-delete handle-btn"><i class="zmdi zmdi-delete"></i></span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="nme-block-4" data-id="nme-block-4" class="nme-block" data-type="button">
-				<div class="nme-block-inner">
-					<div class="nme-block-content">
-						<div class="nme-button nme-item"><div class='nme-editable btn' id='demo-nme-button' data-type='text'>按鈕</div></div>
-					</div>	
-					<div class="nme-block-control">
-						<div class="nme-block-move">
-							<span class="handle-drag handle-btn" data-type="drag"><i class="zmdi zmdi-arrows"></i></span>
-							<span class="handle-prev handle-btn" data-type="prev"><i class="zmdi zmdi-long-arrow-up"></i></span>
-							<span class="handle-next handle-btn" data-type="next"><i class="zmdi zmdi-long-arrow-down"></i></span>
-						</div>
-						<div class="nme-block-actions">
-							<span class="handle-link handle-btn" data-type="link"><i class="zmdi zmdi-link"></i></span>
-							<span class="handle-style handle-btn"><i class="zmdi zmdi-format-color-fill"></i></span>
-							<span class="handle-clone handle-btn" data-type="clone"><i class="zmdi zmdi-collection-plus"></i></span>
-							<span class="handle-delete handle-btn" data-type="delete"><i class="zmdi zmdi-delete"></i></span>
-						</div>
-					</div>	
-				</div>
-			</div>
-		</div>
  		<div class="nme-setting-panels">
 			<div class="nme-setting-panels-inner">
-				<div class="nme-global-setting nme-setting-panel">
-					<div class="nme-setting-panel-inner">
-						<h3 class="nme-setting-panel-title">整體設定</h3>
-						<div class="nme-setting-panel-content"></div>
-					</div>
+				<div class="nme-setting-panels-header">
+					<ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
+						<li><a class="is-active" data-target-id="nme-tpl-select" href="#nme-tpl-select">選擇範本</a></li>
+						<li><a data-target-id="nme-add-block" href="#nme-add-block">新增區塊</a></li>
+						<li><a data-target-id="nme-global-setting" href="#nme-global-setting">整體設定</a></li>
+					</ul>
 				</div>
-				<div class="nme-block-setting nme-setting-panel">
-					<div class="nme-setting-panel-inner">
-						<h3 class="nme-setting-panel-title">區塊設定</h3>
-						<div class="nme-setting-panel-content"></div>
+				<div class="nme-setting-panels-content">
+					<div id="nme-tpl-select" class="nme-tpl-select nme-setting-panel is-active">
+						<div class="nme-setting-panel-inner">
+							<h3 class="nme-setting-panel-title">範本</h3>
+							<div class="nme-setting-panel-content">
+								<ul class="nme-tpl-list nme-block-list">
+									<li>單欄+三欄</li>
+									<li>單欄+三欄+左右左</li>
+									<li>全單欄</li>
+									<li>單欄+4則左圖文</li>
+									<li>單欄+5則圖文</li>
+								</ul>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="nme-add-block nme-setting-panel">
-					<div class="nme-setting-panel-inner">
-						<h3 class="nme-setting-panel-title">新增區塊</h3>
-						<div class="nme-setting-panel-content">
-							<ul class="nme-block-preview-list">
-								<li>標題</li>
-								<li>文字</li>
-								<li>圖片</li>
-							</ul>
+					<div id="nme-add-block" class="nme-add-block nme-setting-panel">
+						<div class="nme-setting-panel-inner">
+							<h3 class="nme-setting-panel-title">區塊</h3>
+							<div class="nme-setting-panel-content">
+								<ul class="nme-block-list">
+									<li>標題</li>
+									<li>文字</li>
+									<li>圖片</li>
+									<li>按鈕</li>
+									<li>單欄圖文</li>
+									<li>兩欄圖文</li>
+									<li>三欄圖文</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="nme-global-setting" class="nme-global-setting nme-setting-panel">
+						<div class="nme-setting-panel-inner">
+							<h3 class="nme-setting-panel-title">整體設定</h3>
+							<div class="nme-setting-panel-content"></div>
 						</div>
 					</div>
 				</div>
-			<div class="nme-setting-panels-trigger"><i class="zmdi zmdi-plus"></i></div>
-			</div>
-		</div>
+				<div class="nme-setting-panels-footer">
+					<div class="preview-mode switch-toggle-container">
+						<label class="switch-toggle">
+							<input class="switch-toggle-input" type="checkbox">
+							<span class="switch-toggle-slider"></span>
+						</label>
+						<div class="switch-toggle-label">預覽模式</div>
+					</div>
+
+				</div>
+			</div> <!-- setting panels inner -->
+			<div class="nme-setting-panels-trigger"><i class="zmdi zmdi-email"></i><div class="trigger-label">電子報進階設定</div></div>
+		</div> <!-- setting panels -->
 	</div>
 </div>
 <!-- mailingEditor HTML end -->

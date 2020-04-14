@@ -57,8 +57,7 @@
 			default: ["clone", "delete"],
 			extended: {
 				image: ["link", "image"],
-				title: ["link", "style"],
-				paragraph: ["style"],
+				title: ["link"],
 				button: ["link", "style"]
 			}
 		},
@@ -368,6 +367,23 @@
 						$target = typeof target !== "undefined" ? $(target) : "",
 						disallowSortType = ["header", "footer"];
 
+				if (blockMode == "view") {
+					//_loadTemplate("block--edit", "block", "default", targetContainer);
+					//_nmeBlockControl.render(blockType);
+					console.log(target);
+					if ($target.length) {
+						console.log("1");
+						let	output = "", 
+								blockContent = _tpl.block[blockType];
+
+						blockContent = blockContent.replace(/{nmeBlockID}/g, blockID);
+						blockContent = blockContent.replace("{nmeBlockType}", blockType);
+
+						console.log(blockContent);
+						$target.append(blockContent);
+					}
+				}
+
 				// If the mode is 'edit', render nmeBlock control buttons.
 				if (blockMode == "edit") {
 					//_loadTemplate("block--edit", "block", "default", targetContainer);
@@ -572,6 +588,41 @@
 				});
 			};
 		}
+
+		/*
+		$("#Upload").submit(function(event) {
+			event.preventDefault();
+			let mailTpl = _tpl["mail"]["col-1-full-width"];
+			$(_container).append("<div class='nme-mail-output'></div>");
+			$(".nme-mail-output").append(mailTpl);
+
+			if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
+				for (let section in _data.sections) {
+					if (!_sectionIsEmpty(section)) {
+						let blocksData = _data.sections[section].blocks,
+								sectionID = "nme-mail-" + section,
+								sectionInner = "#" + sectionID + " .nme-mail-inner",
+								blocksContainer = ".nme-mail-output " + sectionInner;
+
+						for (let blockID in _data.sections[section].blocks) {
+							let blockData = blocksData[blockID];
+							console.log(blockData);
+							_nmeBlock.add(blockData, "view", blocksContainer);
+						}
+					}
+				}
+
+				setTimeout(function() {
+					let output = $(".nme-mail-output").html();
+					console.log(CKEDITOR.instances['html_message']);
+					console.log(output);
+					output += output + "{domain.address}{action.optOutUrl}";
+					CKEDITOR.instances['html_message'].setData(output);
+					return true;
+				}, 1000);
+			}
+		});
+		*/
 	};
 
 	/* Main Help function */
@@ -895,6 +946,7 @@
 		init: function() {
 			$(".nme-block-control").on("click", ".handle-btn", function(event) {
 				event.preventDefault();
+				event.stopPropagation();
 
 				let $handle = $(this),
 						handleType = $handle.data("type"),
@@ -907,7 +959,8 @@
 						sectionInner = "#" + sectionID + " .nme-mail-inner",
 						blocksContainer = sectionInner + " .nme-blocks",
 						$elem = $block.find(".nme-elem"),
-						$elemContainer = $elem.parent(".nmeb-content"),
+						$elemContainer = $elem.closest(".nmeb-content-container"),
+						$elemContainerInner = $elem.parent(".nmeb-content"),
 						blockSortInst = _sortables[section]["inst"],
 						blocksSortOrder = _sortables[section]["order"];
 
@@ -1028,7 +1081,8 @@
 	};
 
 	var _nmePanels = function() {
-		$(".nme-setting-panels").on("click", ".nme-setting-panels-trigger", function() {
+		$(".nme-setting-panels").on("click", ".nme-setting-panels-trigger", function(event) {
+			event.preventDefault();
 			var $panels = $(".nme-setting-panels");
 			if ($panels.hasClass("is-opened")) {
 				$panels.removeClass("is-opened");
@@ -1038,6 +1092,24 @@
 				$panels.addClass("is-opened");
 				$("body").addClass("nme-panel-is-opened");
 			}
+		});
+
+		$(".nme-setting-panels-tabs").on("click", "a", function(event) {
+			event.preventDefault();
+			let $thisTabLink = $(this),
+					$thisTab = $thisTabLink.parent("li"),
+					$tabContainer = $thisTab.parent("ul"),
+					$tabItems = $tabContainer.children("li"),
+					$tabLinks = $tabItems.children("a"),
+					tatgetContents = $tabContainer.data("target-contents"),
+					$targetContents = $("." + tatgetContents),
+					targetID = $thisTabLink.data("target-id"),
+					$targetTabContent = $("#" + targetID);
+
+			$tabLinks.removeClass(ACTIVE_CLASS);
+			$targetContents.removeClass(ACTIVE_CLASS);
+			$thisTabLink.addClass(ACTIVE_CLASS);
+			$targetTabContent.addClass(ACTIVE_CLASS);
 		});
 	};
 
