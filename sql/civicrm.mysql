@@ -3701,8 +3701,6 @@ CREATE TABLE civicrm_contribution_taiwanach (
      contact_id int unsigned NOT NULL   COMMENT 'FK to Contact ID',
      contribution_recur_id int unsigned NOT NULL   COMMENT 'Conditional foreign key to civicrm_contribution_recur id. Each contribution made in connection with a recurring contribution carries a foreign key to the recurring contribution record. This assumes we can track these processor initiated events.',
      contribution_page_id int unsigned    COMMENT 'The Contribution Page which triggered this contribution',
-     total_amount decimal(20,2)    COMMENT 'Total amount of this contribution. Use market value for non-monetary gifts.',
-     currency varchar(3)    COMMENT '3 character string, value from config setting or input via user.',
      payment_type varchar(32)    COMMENT 'Payment Type of ACH.',
      bank_code varchar(32)    COMMENT 'Bank Code of ACH Account.',
      postoffice_acc_type varchar(32)    COMMENT 'Post Office Account Type of ACH Account.',

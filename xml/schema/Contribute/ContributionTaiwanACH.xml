@@ -62,19 +62,6 @@
     <key>id</key> 
     <onDelete>SET NULL</onDelete>
   </foreignKey>
-  <field>     
-    <name>total_amount</name>  
-    <type>decimal</type> 
-    <comment>Total amount of this contribution. Use market value for non-monetary gifts.</comment>  
-    <add>4.0</add>  
-  </field>
-  <field>     
-    <name>currency</name>   
-    <type>varchar</type>   
-    <length>3</length>
-    <comment>3 character string, value from config setting or input via user.</comment>
-    <add>4.0</add>   
-  </field> 
   <field>
     <name>payment_type</name>
     <title>Payment Type</title>

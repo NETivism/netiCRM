@@ -105,18 +105,6 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
    */
   public $contribution_page_id;
   /**
-   * Total amount of this contribution. Use market value for non-monetary gifts.
-   *
-   * @var float
-   */
-  public $total_amount;
-  /**
-   * 3 character string, value from config setting or input via user.
-   *
-   * @var string
-   */
-  public $currency;
-  /**
    * Payment Type of ACH.
    *
    * @var string
@@ -241,18 +229,6 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution Page ID') ,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ) ,
-        'total_amount' => array(
-          'name' => 'total_amount',
-          'type' => CRM_Utils_Type::T_MONEY,
-          'title' => ts('Total Amount') ,
-        ) ,
-        'currency' => array(
-          'name' => 'currency',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Currency') ,
-          'maxlength' => 3,
-          'size' => CRM_Utils_Type::FOUR,
         ) ,
         'payment_type' => array(
           'name' => 'payment_type',
