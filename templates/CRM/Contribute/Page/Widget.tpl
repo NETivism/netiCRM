@@ -117,7 +117,7 @@
         <div id="crm_cpid_{$cpageId}_amt_raised" class="crm-amount-raised"></div>
         <div id="crm_cpid_{$cpageId}_amt_hi" class="crm-amount-high"></div>
     </div>
-    <div class="crm-amount-bar">
+    <div class="crm-amount-bar" id="crm-amount-bar">
         <div class="crm-amount-fill" id="crm_cpid_{$cpageId}_amt_fill"><span id="crm_cpid_{$cpageId}_percentage" class="crm-percentage"></span></div>
     </div>
     {if $form.url_logo.value}
@@ -165,9 +165,12 @@
         document.getElementById('crm_cpid_'+cpid+'_comments').innerHTML     = jsondata.about;
         document.getElementById('crm_cpid_'+cpid+'_btn_txt').innerHTML      = jsondata.button_title;
         document.getElementById('crm_cpid_'+cpid+'_campaign').innerHTML     = jsondata.campaign_start;
-        if ( jsondata.money_raised_percentage ) {
+        if ( jsondata.money_target) {
             document.getElementById('crm_cpid_'+cpid+'_amt_fill').style.width   = parseInt(jsondata.money_raised_percentage) > 100 ? "100%" : jsondata.money_raised_percentage;
             document.getElementById('crm_cpid_'+cpid+'_percentage').innerHTML   = jsondata.money_raised_percentage;
+        }
+        else {
+            document.getElementById('crm-amount-bar').style.display = 'none';
         }
         if ( !jsondata.is_active ) {
             document.getElementById('crm_cpid_'+cpid+'_button').innerHTML   = jsondata.home_url;
@@ -177,5 +180,11 @@
     
 </script>
 {/literal}
-<script type="text/javascript" src="{$config->userFrameworkResourceURL}extern/widget.php?cpageId={$cpageId}&widgetId={$widgetId}&language={$tsLocale}"></script>
+{if $jsonData}
+  <script>
+     var jsondata = {$jsonData};
+  </script>
+{else}
+  <script type="text/javascript" src="{$config->userFrameworkResourceURL}extern/widget.php?cpageId={$cpageId}&widgetId={$widgetId}&language={$tsLocale}"></script>
+{/if}
 

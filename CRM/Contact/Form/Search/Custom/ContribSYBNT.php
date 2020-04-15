@@ -38,8 +38,12 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
 
   protected $_formValues;
 
+  protected $_contribution_type_id;
+
   function __construct(&$formValues) {
     $this->_formValues = $formValues;
+
+    $this->_contribution_type_id = CRM_Contribute_PseudoConstant::contributionType();
 
     $this->_columns = array(
       ts('Contact Id') => 'contact_id',
@@ -66,12 +70,19 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
 
     foreach ($this->_dates as $name => $title) {
       if (CRM_Utils_Array::value($name, $this->_formValues)) {
-        $this->{$name} = CRM_Utils_Date::processDate($this->_formValues[$name]);
+        if (strstr($name, 'end_date')) {
+          $this->{$name} = CRM_Utils_Date::processDate($this->_formValues[$name], '23:59:59');
+        }
+        else {
+          $this->{$name} = CRM_Utils_Date::processDate($this->_formValues[$name]);
+        }
       }
     }
   }
 
   function buildForm(&$form) {
+    $form->addSelect('contribution_type_id', ts('Contribution Type'), $this->_contribution_type_id, array('multiple' => 'multiple'));
+
     foreach ($this->_amounts as $name => $title) {
       $form->add('text',
         $name,
@@ -82,6 +93,7 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
     foreach ($this->_dates as $name => $title) {
       $form->addDate($name, $title, FALSE);
     }
+
   }
 
   function setDefaultValues($form) {
@@ -101,6 +113,15 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
 
   function qill() {
     $qill = array();
+    if (!empty($this->_formValues['contribution_type_id'])) {
+      foreach ($this->_formValues['contribution_type_id'] as $type_id) {
+        $contribution_type[] = $this->_contribution_type_id[$type_id];
+      }
+      $qill[1]['contributionType'] = ts('Contribution Type').': '.implode(', ', $contribution_type);
+    }
+    else {
+      $qill[1]['contributionType'] = ts('Contribution Type').': '.ts('All');
+    }
     if ($this->_formValues['include_start_date'] && $this->_formValues['include_end_date']) {
       $qill[1]['includeDate'] = ts('Have Donations').': '.$this->_formValues['include_start_date'] . ' ~ ' . $this->_formValues['include_end_date'];
     }
@@ -203,6 +224,11 @@ count(contrib_1.id) AS completed_count
       $clauses[] = "contrib_1.receive_date <= {$this->include_end_date}";
     }
 
+    $contribution_type_ids = $this->_formValues['contribution_type_id'];
+    if (!empty($contribution_type_ids)) {
+      $clauses[] = "contrib_1.contribution_type_id IN (".implode(",", $contribution_type_ids).")";
+    }
+
     if ($this->exclude_start_date || $this->exclude_end_date) {
       // first create temp table to store contact ids
       $sql = "DROP TEMPORARY TABLE IF EXISTS XG_CustomSearch_SYBNT";
@@ -219,6 +245,10 @@ count(contrib_1.id) AS completed_count
 
       if ($this->exclude_end_date) {
         $excludeClauses[] = "c.receive_date <= {$this->exclude_end_date}";
+      }
+
+      if (!empty($contribution_type_ids)) {
+        $excludeClauses[] = "c.contribution_type_id IN (".implode(",", $contribution_type_ids).")";
       }
 
       $excludeClause = NULL;

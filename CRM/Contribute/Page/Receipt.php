@@ -11,6 +11,13 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
     $this->_type = CRM_Utils_Request::retrieve('type', 'String', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
 
+    if (empty($this->_type)) {
+      $config = CRM_Core_Config::singleton();
+      if (!empty($config->receiptTypeDefault)) {
+        $this->_type = $config->receiptTypeDefault;
+      }
+    }
+
     // check logged in url permission
     require_once 'CRM/Contact/Page/View.php';
     CRM_Contact_Page_View::checkUserPermission($this);

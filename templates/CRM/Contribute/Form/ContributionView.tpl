@@ -98,7 +98,7 @@
 	{/if}
 	{if $fee_amount}
 	    <tr>
-	        <td class="label">{ts}Fee Amount{/ts}</td>
+	        <td class="label">{ts}Transaction Fee Amount{/ts}</td>
 	        <td>{$fee_amount|crmMoney:$currency}</td>
 	    </tr>
 	{/if}

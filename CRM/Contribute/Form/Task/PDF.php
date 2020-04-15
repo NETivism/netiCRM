@@ -206,6 +206,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
           'original' => ts('Original Receipts'),
         );
         break;
+      // refs #28069, to respect default template
+      // we need this workaround to print copy only receipt
+      case 'copy_only':
+        $print_type = array(
+          'copy' => ts('Copy Receipts'),
+        );
+        $window_envelope = '';
+        break;
       case 'none':
       default:
         $print_type = array(
@@ -247,6 +255,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
       $template = &CRM_Core_Smarty::singleton();
       $template->assign('print_type', $print_type);
+      $template->assign('print_type_count', count($print_type));
       $template->assign('single_page_letter', $window_envelope);
       $template->assign('domain_name', $domain->name);
       $template->assign('domain_email', $location['email'][1]['email']);
@@ -299,6 +308,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
   static public function getPrintingTypes(){
     return array(
+      'copy_only' => ts('Copied receipt only'),
       'none' => ts('Contain copied receipt without address'),
       'single_page_letter' => ts('Single page with address letter'),
       'single_page_letter_with_copied' => ts('Single page with address letter and copied receipt'),

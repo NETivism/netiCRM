@@ -35,6 +35,10 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     );
     $this->addElement('select', 'receiptAddrType', ts('Address Fields'), $addressFields);
 
+    // default receipt type setting
+    $receiptTypes = CRM_Contribute_Form_Task_PDF::getPrintingTypes();
+    $this->addElement('select', 'receiptTypeDefault', ts('Default Receipt Type'), array( '' => ts('-- Select --')) + $receiptTypes);
+
     // https://github.com/NETivism/netiCRM/blob/develop/CRM/Contribute/Form/ManagePremiums.php#L291-L321
     $this->add('file', 'uploadBigStamp', ts('The stamp of organization.'));
     $this->add('file', 'uploadSmallStamp', ts('The stamp of the person in charge.'));
