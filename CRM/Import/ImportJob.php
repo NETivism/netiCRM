@@ -96,9 +96,10 @@ class CRM_Import_ImportJob {
     if (!$this->_statusFieldName) {
       CRM_Core_Error::fatal("Could not get name of the import status field");
     }
-    $query = "SELECT * FROM $this->_tableName
-                  WHERE  $this->_statusFieldName = 'NEW' LIMIT 1";
-    $result = CRM_Core_DAO::executeQuery($query);
+    $query = "SELECT * FROM $this->_tableName WHERE $this->_statusFieldName = %1 LIMIT 1";
+    $result = CRM_Core_DAO::executeQuery($query, array(
+      1 => array(CRM_Import_Parser::PENDING, 'Integer'),
+    ));
     if ($result->fetch()) {
       return FALSE;
     }

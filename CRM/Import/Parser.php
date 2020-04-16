@@ -39,7 +39,8 @@ require_once 'CRM/Utils/Type.php';
 require_once 'CRM/Import/Field.php';
 
 abstract class CRM_Import_Parser {
-  CONST MAX_ERRORS = 5000, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256;
+  CONST MAX_ERRORS = 5000, MAX_WARNINGS = 25;
+  CONST PENDING = 0, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256;
 
   /**
    * various parser modes
@@ -248,6 +249,11 @@ abstract class CRM_Import_Parser {
    */
   public $_skipColumnHeader;
 
+  /**
+   * import source have column header or not.
+   */
+  public static $_statusNames;
+
   function __construct() {
     $this->_maxLinesToProcess = 0;
   }
@@ -334,7 +340,7 @@ abstract class CRM_Import_Parser {
     // get the contents of the temp. import table
     $query = "SELECT * FROM $tableName";
     if ($mode == self::MODE_IMPORT) {
-      $query .= " WHERE $statusFieldName = 'NEW'";
+      $query .= " WHERE $statusFieldName = '".self::PENDING."'";
     }
     $dao = new CRM_Core_DAO();
     $db = $dao->getDatabaseConnection();
@@ -887,20 +893,17 @@ abstract class CRM_Import_Parser {
    * @access public
    */
   static function exportCSV($fileName, $header, $data) {
-    //hack to remove '_status', '_statusMsg' and '_id' from error file
+    // remove '_status', '_statusMsg' and '_id' from error file
     $errorValues = array();
-    $dbRecordStatus = array('IMPORTED', 'ERROR', 'DUPLICATE', 'INVALID', 'NEW');
-    foreach ($data as $rowCount => $rowValues) {
-      $count = 0;
-      foreach ($rowValues as $key => $val) {
-        if (in_array($val, $dbRecordStatus) && $count == (count($rowValues) - 3)) {
-          break;
-        }
-        $errorValues[$rowCount][$key] = $val;
-        $count++;
+    $firstRow = reset($data);
+    $colNum = count($firstRow);
+    foreach ($data as $rowCount => $values) {
+      for($i = 0; $i < $colNum - 3; $i++) {
+        $errorValues[$rowCount][$i] = $values[$i];
       }
     }
     $data = $errorValues;
+
     global $civicrm_batch;
     if (!empty($civicrm_batch)) {
       CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE, $append = TRUE);
@@ -919,26 +922,41 @@ abstract class CRM_Import_Parser {
    * @return void
    * @access public
    */
-  public function updateImportRecord($id, &$params) {
+  public function updateImportStatus($id, $params) {
     $statusFieldName = $this->_statusFieldName;
     $primaryKeyName = $this->_primaryKeyName;
 
-    if ($statusFieldName && $primaryKeyName) {
-      $dao = new CRM_Core_DAO();
-      $db = $dao->getDatabaseConnection();
+    if ($statusFieldName && $primaryKeyName && is_numeric($id)) {
+      $msg = !empty($params["${statusFieldName}Msg"]) ? $params["${statusFieldName}Msg"] : '';
+      $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, ${statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
+      CRM_Core_DAO::executeQuery($query, array(
+        1 => array($params[$statusFieldName], 'String'),
+        2 => array($msg, 'String'),
+        3 => array($id, 'Integer'),
+      ));
+    }
+  }
 
-      $query = "UPDATE $this->_tableName
-                      SET    $statusFieldName      = ?,
-                             ${statusFieldName}Msg = ?
-                      WHERE  $primaryKeyName       = ?";
-      $args = array($params[$statusFieldName],
-        CRM_Utils_Array::value("${statusFieldName}Msg", $params),
-        $id,
+  public static function statusName($status = NULL) {
+    if (empty(self::$_statusNames)) {
+      self::$_statusNames = array(
+        self::PENDING => ts('Pending'),
+        self::VALID => ts('Imported'),
+        self::WARNING => ts('Warning'),
+        self::ERROR => ts('Error'),
+        self::CONFLICT => ts('Conflict'),
+        self::STOP => ts('Stopped'),
+        self::DUPLICATE => ts('Duplicated'),
+        self::MULTIPLE_DUPE => ts('Mutiple Duplicate'),
+        self::NO_MATCH => ts('Mismatched'),
+        self::UNPARSED_ADDRESS_WARNING => ts('Unparsed Address'),
       );
-
-      //print "Running query: $query<br/>With arguments: ".$params[$statusFieldName].", ".$params["${statusFieldName}Msg"].", $id<br/>";
-
-      $db->query($query, $args);
+    }
+    if ($status) {
+      return self::$_statusNames[$status];
+    }
+    else {
+      return self::$_statusNames;
     }
   }
 
