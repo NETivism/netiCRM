@@ -205,7 +205,9 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       }
     }
     if (count($expires)) {
-      return 'Batch ids in '.implode(",", $expires).' has been expires';
+      $msg = 'Batch ids in '.implode(",", $expires).' has been expires';
+      CRM_Core_Error::debug_log_message($msg);
+      return $msg;
     }
     return '';
   }
