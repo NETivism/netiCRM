@@ -212,6 +212,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       $this->_parser->setMaxLinesToProcess(CRM_Import_ImportJob::BATCH_LIMIT);
     }
     $this->_parser->_skipColumnHeader = $form->get('skipColumnHeader');
+    $this->_parser->_dateFormats = $form->get('dateFormats');
     $this->_parser->run($this->_tableName, $mapperFields,
       CRM_Import_Parser::MODE_IMPORT,
       $this->_contactType,

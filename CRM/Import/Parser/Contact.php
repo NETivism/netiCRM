@@ -1164,8 +1164,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    *  @access public
    */
   function isErrorInCustomData($params, &$errorMessage) {
-    $session = CRM_Core_Session::singleton();
-    $dateType = $session->get("dateTypes");
+    $dateType = $this->_dateFormats;
 
     //CRM-5125
     //add custom fields for contact sub type
@@ -1413,8 +1412,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     require_once 'CRM/Core/OptionGroup.php';
     foreach ($params as $key => $value) {
       if ($value) {
-        $session = CRM_Core_Session::singleton();
-        $dateType = $session->get("dateTypes");
+        $dateType = $this->_dateFormats;
 
         switch ($key) {
           case 'birth_date':
@@ -1963,8 +1961,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     }
 
     //format date first
-    $session = CRM_Core_Session::singleton();
-    $dateType = $session->get("dateTypes");
+    $dateType = $this->_dateFormats;
     foreach ($params as $key => $val) {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
         //we should not update Date to null, CRM-4062

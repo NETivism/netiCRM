@@ -321,9 +321,6 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       $this->set('dedupeRuleGroupId', $this->_params['dedupeRuleGroupId']);
       $this->set('skipColumnHeader', CRM_Utils_Array::value('skipColumnHeader', $this->_params));
 
-      $session = CRM_Core_Session::singleton();
-      $session->set('dateTypes', $dateFormats);
-
       // Get the PEAR::DB object
       $dao = new CRM_Core_DAO();
       $db = $dao->getDatabaseConnection();
