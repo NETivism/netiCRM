@@ -200,7 +200,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
         if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file'])) {
           @unlink($batch->data['download']['file']);
         }
-        $batch->delete();
+        // $batch->delete(); // do not delete batch db record, purge file only
         $expires[] = $dao->id;
       }
     }
