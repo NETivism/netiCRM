@@ -126,10 +126,20 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     if ($statusIds && is_array($statusIds)) {
       $dao->whereAdd("status_id IN (".implode(",", $statusIds).")");
     }
+    else {
+      $status = CRM_Batch_BAO_Batch::batchStatus();
+      $allstatus = $status;
+      unset($status['Running']);
+      unset($status['Pending']);
+      $purgeDay = CRM_Batch_BAO_Batch::EXPIRE_DAY * 4;
+      $where = "(DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) > NOW() AND status_id IN (".implode(',', $status).")) OR status_id IN({$allstatus['Running']}, {$allstatus['Pending']})";
+
+      $dao->whereAdd($where);
+    }
     if ($typeIds && is_array($typeIds)) {
       $dao->whereAdd("status_id IN (".implode(",", $typeIds).")");
     }
-    $dao->orderBy('created_date ASC');
+    $dao->orderBy('created_date DESC');
     $dao->find();
 
     $rows = array();

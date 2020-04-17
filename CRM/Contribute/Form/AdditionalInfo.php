@@ -108,7 +108,7 @@ class CRM_Contribute_Form_AdditionalInfo {
     if ($form->_online) {
       $element->freeze();
     }
-    $element = &$form->add('text', 'fee_amount', ts('Fee Amount'),
+    $element = &$form->add('text', 'fee_amount', ts('Transaction Fee Amount'),
       $attributes['fee_amount']
     );
     $form->addRule('fee_amount', ts('Please enter a valid amount.'), 'money');

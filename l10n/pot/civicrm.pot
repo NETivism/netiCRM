@@ -47294,3 +47294,12 @@ msgstr ""
 
 msgid "Registered - From"
 msgstr ""
+
+msgid "Copied receipt only"
+msgstr ""
+
+msgid "Default Receipt Type"
+msgstr ""
+
+msgid "Transaction Fee Amount"
+msgstr ""

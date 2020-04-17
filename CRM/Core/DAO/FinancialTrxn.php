@@ -238,7 +238,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
         'fee_amount' => array(
           'name' => 'fee_amount',
           'type' => CRM_Utils_Type::T_MONEY,
-          'title' => ts('Fee Amount') ,
+          'title' => ts('Transaction Fee Amount') ,
         ) ,
         'net_amount' => array(
           'name' => 'net_amount',
