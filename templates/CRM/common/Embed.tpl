@@ -4,7 +4,7 @@
 <head>
   <title>{if $pageTitle}{$pageTitle|strip_tags}{/if}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <base target="_parent">
+  <base target="{if $sameOrigin}_parent{else}_blank{/if}">
   <style type="text/css" media="screen, print">@import url({$config->resourceBase}css/civicrm.css);</style>
   {if $config->customCSSURL}
   <link rel="stylesheet" href="{$config->customCSSURL}" type="text/css" media="all"/>
