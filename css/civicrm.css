@@ -5232,6 +5232,9 @@ tbody.scrollContent tr.alternateRow {
 .crm-contribute-booster #attendee-not-donor {
   background-image: url(images/card/card-contribute-attendee-not-donor@2x.png);
 }
+.crm-contribute-booster #recur-donor {
+  background-image: url(images/card/card-recur-donor@2x.png);
+}
 
 @media screen and (max-width: 1440px) {
   .crm-contribute-booster .mdl-card {
