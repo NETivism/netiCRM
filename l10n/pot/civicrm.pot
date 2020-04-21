@@ -47309,3 +47309,6 @@ msgstr ""
 
 msgid "Visit Online Form"
 msgstr ""
+
+msgid "Payment processor needs Google account with credit card."
+msgstr ""
