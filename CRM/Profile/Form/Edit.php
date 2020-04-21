@@ -145,9 +145,8 @@ SELECT module
    * @access public
    */
   public function buildQuickForm() {
-    // add the hidden field to redirect the postProcess from
-    require_once 'CRM/UF/Form/Group.php';
-    require_once 'CRM/Core/DAO/UFGroup.php';
+    // add gid to hidden field prevent session lost
+    $this->addElement('hidden', 'gid', $this->_gid);
 
     // set the title
     CRM_Utils_System::setTitle($this->_ufGroup['title']);
