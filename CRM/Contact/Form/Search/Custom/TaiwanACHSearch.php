@@ -65,14 +65,12 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       'MAX(c.created_date)' => 'current_created_date',
       'lrd.last_receive_date' => 'last_receive_date',
       'lfd.last_failed_date' => 'last_failed_date',
-      'c.contribution_page_id' => 'contribution_page_id',
+      'ach.contribution_page_id' => 'contribution_page_id',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'completed_count',
       'COUNT(c.id)' => 'total_count',
-      /*
       'ach.stamp_verification' => 'stamp_verification',
       'ach.bank_account' => 'bank_account',
       'ach.data' => 'ach_data',
-      */
     );
     $this->_columns = array(
       ts('ID') => 'id',
@@ -180,9 +178,10 @@ $having
   function tempFrom() {
     // TODO - join ach table
     return "civicrm_contribution_recur AS r 
-    INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
     INNER JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
+    INNER JOIN civicrm_contribution_taiwanach ach ON r.id = ach.contribution_recur_id
+    LEFT JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(receive_date) AS last_receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lrd ON lrd.rid = r.id
     LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(cancel_date) AS last_failed_date FROM civicrm_contribution WHERE contribution_status_id = 4 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lfd ON lfd.rid = r.id";
   }
@@ -417,8 +416,10 @@ $having
       }
     }
 
-    $action = array_sum(array_keys(CRM_Contribute_Page_Tab::recurLinks()));
-    $row['action'] = CRM_Core_Action::formLink(CRM_Contribute_Page_Tab::recurLinks(), $action,
+    $links = CRM_Contribute_Page_Tab::recurLinks();
+    $links[CRM_Core_Action::UPDATE]['url'] = 'civicrm/contribute/taiwanach';
+    $action = array_sum(array_keys($links));
+    $row['action'] = CRM_Core_Action::formLink($links, $action,
       array('cid' => $row['contact_id'],
         'id' => $row['id'],
         'cxt' => 'contribution',
