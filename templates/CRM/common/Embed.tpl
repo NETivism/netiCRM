@@ -21,6 +21,7 @@
 
 <script>{literal}
 // safari fix for 3rd cookie
+if (typeof cj !== "undefined") {
 cj(document).ready(function($){
 
 var userAgent = navigator.userAgent.toLowerCase();
@@ -53,6 +54,7 @@ if (userAgent && referrer) {
 }
 
 });
+}
 {/literal}</script>
 </body>
 </html>
