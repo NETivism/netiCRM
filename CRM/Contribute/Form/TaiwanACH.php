@@ -30,7 +30,11 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     if (empty($this->_contactId) && $this->_action & CRM_Core_Action::ADD) {
       CRM_Contact_Form_NewContact::buildQuickForm($this);
     }
-    $this->addSelect('ach_contribution_page_id', ts('Contribution Page'), CRM_Contribute_PseudoConstant::contributionPage(), NULL, TRUE);
+    $pages = CRM_Contribute_PseudoConstant::contributionPage();
+    foreach($pages as $pid => $page) {
+      $pages[$pid] = $page." (ID:$pid)";
+    }
+    $this->addSelect('ach_contribution_page_id', ts('Contribution Page'), $pages, NULL, TRUE);
     $this->addMoney('ach_total_amount', ts('Total Amount'), TRUE);
     $this->addSelect('ach_payment_type', ts('ACH').' - '.ts('Payment Instrument'), array(
       '' => ts('-- select --'),
