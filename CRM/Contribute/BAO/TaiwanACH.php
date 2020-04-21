@@ -126,5 +126,56 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     );
     $note = CRM_Core_BAO_Note::add( $noteParams, NULL );
   }
+
+  static function getTaiwanACHDatas($recurringIds) {
+
+  }
+
+  static function doExportVerification($recurringIds, $params = array(), $type = 'txt') {
+    // Generate Body Table
+
+    // If type != 
+
+    // Generate Header
+
+    // Generate Footer
+
+    // Export File
+    if ($type == 'txt') {
+      self::doExportTXTFile($fileName);
+    }
+    else {
+      self::doExportXSLFile($fileName);
+    }
+  }
+
+  static function doExportTransaction($recurringIds, $params = array(),$type = 'txt') {
+    // Export File
+
+    // Generate Header
+
+    // Generate Body
+
+    // Generate Footer
+
+    // Export file
+  }
+
+  static private function doExportTXTFile($fileName, $txt) {
+    $config = CRM_Core_Config::singleton();
+    $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+    $this->_tmpreceipt = tempnam($tmpDir, 'TaiwanACH');
+    $fileName = CRM_Utils_File::makeFileName($fileName);
+    file_put_contents($this->_tmpreceipt, $export, FILE_APPEND);
+    header('Content-type: application/pdf');
+    header('Content-Disposition: inline; filename=' . $fileName);
+    header('Pragma: no-cache');
+    echo $export;
+    exit;
+  }
+
+  static private function doExportXSLFile($fileName, $txt) {
+
+  }
 }
 
