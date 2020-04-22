@@ -58,6 +58,7 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       'contact_email.email' => 'email',
       'ROUND(r.amount,0)' => 'amount',
       'r.contribution_status_id' => 'contribution_status_id',
+      'r.create_date' => 'create_date',
       'r.start_date' => 'start_date',
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
@@ -69,7 +70,10 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'completed_count',
       'COUNT(c.id)' => 'total_count',
       'ach.stamp_verification' => 'stamp_verification',
+      'ach.payment_type' => 'payment_type',
       'ach.bank_account' => 'bank_account',
+      'ach.bank_code' => 'bank_code',
+      'ach.identifier_number' => 'identifier_number',
       'ach.data' => 'ach_data',
     );
     $this->_columns = array(
@@ -176,7 +180,6 @@ $having
 
 
   function tempFrom() {
-    // TODO - join ach table
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
     INNER JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
@@ -191,46 +194,12 @@ $having
    */
   function tempWhere(){
     $clauses = array();
-    $clauses[] = "(r.contact_id = contact.id)";
     $clauses[] = "(r.is_test = 0)";
-
-    $startDateFrom = CRM_Utils_Date::processDate($this->_formValues['start_date_from']);
-    if ($startDateFrom) {
-      $clauses[] = "(r.start_date >= '$startDateFrom')";
-    }
-    $startDateTo = CRM_Utils_Date::processDate($this->_formValues['start_date_to'].' 23:59:59');
-    if ($startDateTo) {
-      $clauses[] = "(r.start_date <= '$startDateTo')";
-    }
-
-    if ($this->_formValues['status'] && is_numeric($this->_formValues['status'])) {
-      $clauses[] = "(r.contribution_status_id = {$this->_formValues['status']})";
-    }
-
-    $sort_name = $this->_formValues['sort_name'];
-    if($sort_name){
-      $clauses[] = "(`sort_name` LIKE '%$sort_name%')";
-    }
-
-    $email = $this->_formValues['email'];
-    if($email){
-      $clauses[] = "(`email` LIKE '%$email%')";
-    }
-
-    $contributionPage = $this->_formValues['contribution_page'];
-    if (!empty($contributionPage)) {
-      $clauses[] = "c.contribution_page_id IN (".implode(",", $contributionPage).")";
-    }
-
     return implode(' AND ', $clauses);
   }
 
   function tempHaving(){
     return '';
-  }
-
-  function prepareForm(&$form) {
-    $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
   }
 
   function buildForm(&$form){
@@ -240,6 +209,7 @@ $having
     // rest is ach specify form
     $form->addDateRange('create_date', ts('Recurring Contribution').' - '.ts('Create Date'), NULL, FALSE);
     $form->addSelect('stamp_verification', ts('Stamp Verification Status'), array(
+      '' => ts('-- select --'),
       0 => ts('Pending'),
       1 => ts('Completed'),
       2 => ts('Failed'),
@@ -327,7 +297,62 @@ $having
   }
 
   function where($includeContactIDs = false) {
-    $sql = ' ( 1 ) ';
+    $clauses = array();
+
+    $dateFields = array(
+      'create_date',
+      'start_date',
+      'end_date',
+    );
+    foreach($dateFields as $fieldName) {
+      if (!empty($this->_formValues[$fieldName.'_from'])) {
+        $dateFrom = CRM_Utils_Date::processDate($this->_formValues[$fieldName.'_from']);
+        $clauses[] = "($fieldName >= '$dateFrom')";
+      }
+      if (!empty($this->_formValues[$fieldName.'_to'])) {
+        $dateTo = CRM_Utils_Date::processDate($this->_formValues[$fieldName.'_to'].' 23:59:59');
+        $clauses[] = "($fieldName <= '$dateTo')";
+      }
+    }
+
+    if ($this->_formValues['status'] && is_numeric($this->_formValues['status'])) {
+      $clauses[] = "(contribution_status_id = '{$this->_formValues['status']}')";
+    }
+
+    if (isset($this->_formValues['stamp_verification']) && is_numeric($this->_formValues['stamp_verification'])) {
+      $clauses[] = "(stamp_verification = '{$this->_formValues['stamp_verification']}')";
+    }
+
+    $achFields = array(
+      'payemtn_type',
+      'bank_code',
+      'bank_account',
+      'identifier_number',
+    );
+
+    foreach($achFields as $fieldName) {
+      if (isset($this->_formValues[$fieldName]) && !empty($this->_formValues[$fieldName])) {
+        $clauses[] = "($fieldName LIKE '{$this->_formValues[$fieldName]}')";
+      }
+    }
+
+    $sort_name = $this->_formValues['sort_name'];
+    if($sort_name){
+      $clauses[] = "(sort_name LIKE '%$sort_name%')";
+    }
+
+    $contributionPage = $this->_formValues['contribution_page'];
+    if (!empty($contributionPage)) {
+      $clauses[] = "contribution_page_id IN (".implode(",", $contributionPage).")";
+    }
+
+    if (!empty($clauses)) {
+      $sql = implode(' AND ', $clauses);
+    }
+    else {
+      $sql = ' ( 1 ) ';
+    }
+
     if ($includeContactIDs) {
       self::includeContactIDs($sql, $this->_formValues,$this->_isExport);
     }
@@ -417,7 +442,11 @@ $having
     }
 
     $links = CRM_Contribute_Page_Tab::recurLinks();
-    $links[CRM_Core_Action::UPDATE]['url'] = 'civicrm/contribute/taiwanach';
+    unset($links[CRM_Core_Action::DISABLE]);
+    // add ach link
+    $links[CRM_Core_Action::ADD] = $links[CRM_Core_Action::UPDATE];
+    $links[CRM_Core_Action::ADD]['name'] .= 'ACH';
+    $links[CRM_Core_Action::ADD]['url'] = 'civicrm/contribute/taiwanach';
     $action = array_sum(array_keys($links));
     $row['action'] = CRM_Core_Action::formLink($links, $action,
       array('cid' => $row['contact_id'],
@@ -431,7 +460,7 @@ $having
    * Define the smarty template used to layout the search form and results listings.
    */
   function templateFile(){
-    return 'CRM/Contact/Form/Search/Custom/ACHSearch.tpl';
+    return 'CRM/Contact/Form/Search/Custom/TaiwanACHSearch.tpl';
   }
 
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
