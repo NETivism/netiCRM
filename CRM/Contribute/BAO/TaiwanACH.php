@@ -127,11 +127,44 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $note = CRM_Core_BAO_Note::add( $noteParams, NULL );
   }
 
-  static function getTaiwanACHDatas($recurringIds) {
+  static function getValue($recurringId) {
+    $output = array();
+
+    $taiwanACH = new CRM_Contribute_DAO_TaiwanACH();
+    $taiwanACH->contribution_recur_id = $recurringId;
+    $taiwanACH->find(TRUE);
+    $taiwanACHFields = $taiwanACH->fields();
+    foreach ($taiwanACHFields as $field) {
+      $fieldName = $field['name'];
+      if ($fieldName != 'data') {
+        $output[$fieldName] = $taiwanACH->$fieldName;
+      }
+    }
+
+    $recurring = new CRM_Contribute_DAO_ContributionRecur();
+    $recurring->id = $recurringId;
+    $recurring->find(TRUE);
+    $recurringFields = $recurring->fields();
+    foreach ($recurringFields as $field) {
+      $fieldName = $field['name'];
+      if ($fieldName != 'id') {
+        $output[$fieldName] = $recurring->$fieldName;
+      }
+    }
+
+    $customFields = unserialize($taiwanACH->data);
+    foreach ($customFields as $key => $value) {
+      $output[$key] = $value;
+    }
+
+    return $output;
+  }
+
+  static function getTaiwanACHDatas($recurringIds = array()) {
 
   }
 
-  static function doExportVerification($recurringIds, $params = array(), $type = 'txt') {
+  static function doExportVerification($recurringIds = array(), $params = array(), $type = 'txt') {
     // Generate Body Table
 
     // If type != 
