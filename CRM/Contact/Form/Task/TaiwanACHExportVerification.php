@@ -72,5 +72,9 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
   public function postProcess() {
     // $this->_contactIds  <== contact id
     // $this->_additionalIds <== recurring id
+    $params = array(
+      'file_name' => time().'.txt',
+    );
+    CRM_Contribute_BAO_TaiwanACH::doExportVerification($this->_additionalIds, $params);
   }
 }

@@ -155,24 +155,51 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   }
 
   static function getTaiwanACHDatas($recurringIds = array()) {
-
+    $achDatas = array();
+    foreach ($recurringIds as $recurringId) {
+      $achDatas[$recurringId] = self::getValue($recurringId);
+    }
+    return $achDatas;
   }
 
   static function doExportVerification($recurringIds = array(), $params = array(), $type = 'txt') {
     // Generate Body Table
+    $fileName = $params['file_name'];
 
-    // If type != 
 
-    // Generate Header
 
-    // Generate Footer
+    // If type != 'txt'
+    if ($type == 'txt') {
+      // Generate Header
+      $date = $params['date'];
+      $time = $params['time'];
+      $account = CRM_Core_BAO_PaymentProcessor::getPayment();
+      $header = array(
+        'BOF',
+        'ACHP02',
+        $date,
+        $time,
+        $account,
+        'V10',
+        ' ',
+      );
+      // Generate Footer
+      $total = count($recurringIds);
+      $footer = array(
+        'EOF',
+        $total,
+        ' ',
+      );
+
+    }
+
 
     // Export File
     if ($type == 'txt') {
-      self::doExportTXTFile($fileName);
+      self::doExportTXTFile($fileName, $table);
     }
     else {
-      self::doExportXSLFile($fileName);
+      self::doExportXSLFile($fileName, $table);
     }
   }
 
@@ -191,13 +218,13 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   static private function doExportTXTFile($fileName, $txt) {
     $config = CRM_Core_Config::singleton();
     $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
-    $this->_tmpreceipt = tempnam($tmpDir, 'TaiwanACH');
     $fileName = CRM_Utils_File::makeFileName($fileName);
-    file_put_contents($this->_tmpreceipt, $export, FILE_APPEND);
-    header('Content-type: application/pdf');
-    header('Content-Disposition: inline; filename=' . $fileName);
+    $fileFullPath = $tmpDir.'/'.$fileName;
+    file_put_contents($fileFullPath, $txt, FILE_APPEND);
+    header('Content-type: text/plain');
+    header('Content-Disposition: attachment; filename=' . $fileName);
     header('Pragma: no-cache');
-    echo $export;
+    echo file_get_contents($fileFullPath);
     exit;
   }
 
