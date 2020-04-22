@@ -133,12 +133,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $taiwanACH = new CRM_Contribute_DAO_TaiwanACH();
     $taiwanACH->contribution_recur_id = $recurringId;
     $taiwanACH->find(TRUE);
+    $taiwanACH->data = unserialize($taiwanACH->data);
     $taiwanACHFields = $taiwanACH->fields();
     foreach ($taiwanACHFields as $field) {
       $fieldName = $field['name'];
-      if ($fieldName != 'data') {
-        $output[$fieldName] = $taiwanACH->$fieldName;
-      }
+      $output[$fieldName] = $taiwanACH->$fieldName;
     }
 
     $recurring = new CRM_Contribute_DAO_ContributionRecur();
@@ -150,11 +149,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       if ($fieldName != 'id') {
         $output[$fieldName] = $recurring->$fieldName;
       }
-    }
-
-    $customFields = unserialize($taiwanACH->data);
-    foreach ($customFields as $key => $value) {
-      $output[$key] = $value;
     }
 
     return $output;
