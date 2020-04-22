@@ -35,12 +35,15 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $pages[$pid] = $page." (ID:$pid)";
     }
     $this->addSelect('ach_contribution_page_id', ts('Contribution Page'), $pages, NULL, TRUE);
-    $this->addMoney('ach_total_amount', ts('Total Amount'), TRUE);
+    $this->addMoney('ach_amount', ts('Total Amount'), TRUE);
     $this->addSelect('ach_payment_type', ts('ACH').' - '.ts('Payment Instrument'), array(
       '' => ts('-- select --'),
       'bank' => ts('Bank'),
       'postoffice' => ts('Post Office'),
     ), NULL, TRUE);
+
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(False, False, 'payment_processor_type = "TaiwanACH"');
+    $this->addSelect('ach_processor_id', ts('Payment Processor'), $processors, NULL, TRUE);
 
     $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
     $this->addSelect('ach_bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
@@ -118,6 +121,9 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
         $key = preg_replace('/^ach_/', '', $key);
       }
       $params[$key] = $value;
+    }
+    if ($this->_action) {
+      $params['contribution_status_id'] = 2;
     }
     $result = CRM_Contribute_BAO_TaiwanACH::add($params);
     if ($result->contribution_recur_id) {

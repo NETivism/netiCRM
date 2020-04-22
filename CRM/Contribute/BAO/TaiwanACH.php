@@ -70,14 +70,16 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $taiwanACH = new CRM_Contribute_DAO_TaiwanACH();
     $taiwanACH->copyValues($params);
 
-    $recurParams = array(
-      'contact_id' => $params['contact_id'],
-      'amount' => $params['total_amount'],
-      'currency' => $params['currency'],
-      'frequency_interval' => 1,
-      'start_date' => date('YmdHis'),
-      'create_date' => date('YmdHis'),
-    );
+    $recurring = new CRM_Contribute_DAO_ContributionRecur();
+    $recurParams = array();
+    $recurringFields = $recurring->fields();
+    foreach ($recurringFields as $field) {
+      $fieldName = $field['name'];
+      if (isset($params[$fieldName])) {
+        $recurParams[$fieldName] = $params[$fieldName];
+      }
+    }
+    $recurParams['create_date'] = date('YmdHis');
     $ids = array();
     if (!empty($taiwanACH->contribution_recur_id)) {
       $recurParams['id'] = $taiwanACH->contribution_recur_id;

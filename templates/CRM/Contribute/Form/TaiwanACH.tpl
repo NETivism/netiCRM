@@ -9,8 +9,12 @@
     <td>{$form.ach_contribution_page_id.html}</td>
   </tr>
   <tr>
-    <td class="label">{$form.ach_total_amount.label}</td>
-    <td>{$form.currency.html} {$form.ach_total_amount.html}</td>
+    <td class="label">{$form.ach_amount.label}</td>
+    <td>{$form.currency.html} {$form.ach_amount.html}</td>
+  </tr>
+  <tr>
+    <td class="label">{$form.ach_processor_id.label}</td>
+    <td>{$form.ach_processor_id.html}</td>
   </tr>
   <tr>
     <td class="label">{$form.ach_payment_type.label}</td>
