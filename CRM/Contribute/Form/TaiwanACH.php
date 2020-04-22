@@ -119,6 +119,13 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       }
       $params[$key] = $value;
     }
-    CRM_Contribute_BAO_TaiwanACH::add($params);
+    $result = CRM_Contribute_BAO_TaiwanACH::add($params);
+    if ($result->contribution_recur_id) {
+      $session = CRM_Core_Session::singleton();
+      $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/contributionrecur', 'reset=1&id='.$result->contribution_recur_id.'&cid='.$result->contact_id));
+    }
+    else {
+      $session->replaceUserContext(CRM_Utils_System::url('civicrm/contribute/taiwanach', 'reset=1'));
+    }
   }
 }

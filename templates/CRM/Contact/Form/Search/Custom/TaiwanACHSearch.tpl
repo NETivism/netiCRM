@@ -125,3 +125,4 @@ cj(function() {
 });
 </script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector="select#bank_code" select_width="300"}
