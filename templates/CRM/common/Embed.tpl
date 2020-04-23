@@ -29,9 +29,9 @@ var userAgent = navigator.userAgent.toLowerCase();
 var referrer = document.referrer;
 if (userAgent && referrer) {
   var isSafari = userAgent.indexOf("safari") != -1 && userAgent.indexOf("chrome") == -1;
-  //var noCookiePermission = document.cookie == "" || typeof document.cookie == 'undefined';
+  var hasCookiePermission = document.cookie.indexOf("hasCookiePermission=1") != -1;
   var hasForm = $("form").length;
-  if (isSafari && hasForm) {
+  if (hasForm && (isSafari || !hasCookiePermission)) {
     $('<div id="safari-overlay" align="center"><i class="zmdi zmdi-refresh zmdi-hc-spin"></i></div>').insertAfter("form:eq(0)");
     $("form").hide();
     window.setTimeout(function(){

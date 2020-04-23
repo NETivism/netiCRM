@@ -335,6 +335,7 @@ class CRM_Core_Invoke {
         $embed = CRM_Utils_Request::retrieve('embed', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE);
         if ($embed) {
           // #28162, check if Same Origin
+          setcookie('hasCookiePermission', 1, 0, '/');
           $sameOrigin = FALSE;
           if (!empty($_SERVER['HTTP_REFERER'])) {
             $url = parse_url($_SERVER['HTTP_REFERER']);
