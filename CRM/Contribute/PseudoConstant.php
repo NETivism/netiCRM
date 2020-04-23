@@ -374,5 +374,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     }
     return self::$taiwanACH;
   }
+
+  public static function taiwanACHStampVerification() {
+    return array(
+      0 => ts('Pending'),
+      1 => ts('Completed'),
+      2 => ts('Failed'),
+    );
+  }
 }
 

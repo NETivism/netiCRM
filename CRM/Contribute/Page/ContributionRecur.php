@@ -72,6 +72,16 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $values['contribution_status'] = $status[$values['contribution_status_id']];
       $this->assign('recur', $values);
 
+      // ach
+      $ach = CRM_Contribute_BAO_TaiwanACH::getValue($recur->id);
+      if ($ach) {
+        $stampStatus = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
+        $ach['stamp_verification_label'] = $stampStatus[$ach['stamp_verification']];
+        $this->assign('ach', $ach);
+      }
+
+
+      // log
       $noteDetail = CRM_Core_BAO_Note::getNoteDetail($this->_id, 'civicrm_contribution_recur');
       $notes = array();
       foreach ($noteDetail as $note) {
