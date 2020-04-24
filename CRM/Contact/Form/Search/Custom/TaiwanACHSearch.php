@@ -69,6 +69,7 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       'ach.contribution_page_id' => 'contribution_page_id',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'completed_count',
       'COUNT(c.id)' => 'total_count',
+      'ach.id' => 'ach_id',
       'ach.stamp_verification' => 'stamp_verification',
       'ach.payment_type' => 'payment_type',
       'ach.bank_account' => 'bank_account',
@@ -447,10 +448,13 @@ $having
     $links[CRM_Core_Action::ADD] = $links[CRM_Core_Action::UPDATE];
     $links[CRM_Core_Action::ADD]['name'] .= 'ACH';
     $links[CRM_Core_Action::ADD]['url'] = 'civicrm/contribute/taiwanach';
+    $links[CRM_Core_Action::ADD]['qs'] = 'reset=1&action=update&id=%%ach_id%%&cid=%%cid%%';
     $action = array_sum(array_keys($links));
     $row['action'] = CRM_Core_Action::formLink($links, $action,
-      array('cid' => $row['contact_id'],
+      array(
+        'cid' => $row['contact_id'],
         'id' => $row['id'],
+        'ach_id' => $row['#dao']['ach_id'],
         'cxt' => 'contribution',
       )
     );
