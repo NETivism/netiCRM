@@ -4,6 +4,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
   protected $_contactId = NULL;
   protected $_id = NULL;
+  protected $_recurringId = NULL;
   protected $_action = NULL;
 
   function preProcess() {
@@ -19,6 +20,13 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::ADD) {
       $this->_id = NULL;
+    }
+    if ($this->_id) {
+      $this->_recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TaiwanACH', $this->_id, 'contribution_recur_id');
+    }
+    $this->_processors = CRM_Core_PseudoConstant::paymentProcessor(False, False, 'payment_processor_type = "TaiwanACH"');
+    if (empty($this->_processors)) {
+      CRM_Core_Error::fatal("You need setup TaiwanACH Payment Processor first.");
     }
 
     $this->set('type', 'Contribution');
@@ -42,8 +50,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       'postoffice' => ts('Post Office'),
     ), NULL, TRUE);
 
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(False, False, 'payment_processor_type = "TaiwanACH"');
-    $this->addSelect('ach_processor_id', ts('Payment Processor'), $processors, NULL, TRUE);
+    $this->addSelect('ach_processor_id', ts('Payment Processor'), $this->_processors, NULL, TRUE);
 
     $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
     $this->addSelect('ach_bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
@@ -91,6 +98,27 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
     return $errors;
   }
+
+  function setDefaultValues() {
+    $defaults = array();
+    if ($this->_id && $this->_recurringId) {
+      $achValues = CRM_Contribute_BAO_TaiwanACH::getValue($this->_recurringId);
+      foreach($achValues as $idx => $val) {
+        if ($idx == 'data') {
+          foreach($val as $fld => $valCustom) {
+            if (strstr($fld, 'custom_')) {
+              $defaults[$fld.'_-'] = $valCustom;
+            }
+          }
+        }
+        else {
+          $defaults['ach_'.$idx] = $val;
+        }
+      }
+    }
+    return $defaults;
+  }
+
   function postProcess() {
     $submittedValues = $this->controller->exportValues($this->_name);
 
