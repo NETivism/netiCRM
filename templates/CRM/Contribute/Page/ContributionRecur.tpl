@@ -96,7 +96,7 @@
                 <tr><td class="label">{ts}Stamp Verification Result{/ts}</td><td> get verficiation failed record</td></tr>
               {/if}
               <tr><td class="label">{ts}Payment Instrument{/ts}</td><td>{ts}{$ach.payment_type}{/ts}</td></tr>
-              {if $ach.payment_type == 'bank'}
+              {if $ach.payment_type == 'ACH Bank'}
                 <tr><td class="label">{ts}Bank Identification Number{/ts}</td><td>{ts}{$ach.bank_code}{/ts}</td></tr>
                 <tr><td class="label">{ts}Bank Branch{/ts}</td><td>{ts}{$ach.bank_branch}{/ts}</td></tr>
               {else}

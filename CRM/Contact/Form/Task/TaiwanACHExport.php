@@ -15,6 +15,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     // Check is same processor id
     $achDatas = CRM_Contribute_BAO_TaiwanACH::getTaiwanACHDatas($this->_additionalIds);
     foreach ($achDatas as $achData) {
+      // Check processor_id
       if (empty($achData['processor_id'])) {
         $this->_hasProblem = TRUE;
         $messages[] = ts('The ACH you selected has no payment processor setting.');
@@ -27,8 +28,23 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
         $messages[] = ts('All ACH you selected needs same payment processor setting.');
         break;
       }
+
+      // Check payment type
+      if (empty($achData['payment_type'])) {
+        $this->_hasProblem = TRUE;
+        $messages[] = ts('The ACH you selected has no payment type.');
+      }
+      if (empty($paymentType)) {
+        $paymentType = $achData['payment_type'];
+      }
+      else if ($paymentType != $achData['payment_type']) {
+        $this->_hasProblem = TRUE;
+        $messages[] = ts('All ACH you selected needs same payment type.');
+        break;
+      }
     }
 
+    $messages = array_unique($messages);
     if ($this->_hasProblem) {
       $message = implode('<br>', $messages);
       CRM_Core_Error::statusBounce($message);

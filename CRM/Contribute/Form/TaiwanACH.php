@@ -1,14 +1,12 @@
 <?php
 
 class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
-
   protected $_contactId = NULL;
   protected $_id = NULL;
-  protected $_recurringId = NULL;
+  protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
   function preProcess() {
-    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
     if ($this->_contactId) {
       $this->assign('contact_id', $this->_contactId);
@@ -22,7 +20,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $this->_id = NULL;
     }
     if ($this->_id) {
-      $this->_recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TaiwanACH', $this->_id, 'contribution_recur_id');
+      $this->_contributionRecurId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TaiwanACH', $this->_id, 'contribution_recur_id');
     }
     $this->_processors = CRM_Core_PseudoConstant::paymentProcessor(False, False, 'payment_processor_type = "TaiwanACH"');
     if (empty($this->_processors)) {
@@ -35,8 +33,10 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
   }
 
   function buildQuickForm() {
-    if (empty($this->_contactId) && $this->_action & CRM_Core_Action::ADD) {
-      CRM_Contact_Form_NewContact::buildQuickForm($this);
+    if ($this->_action & CRM_Core_Action::ADD) {
+      if (empty($this->_contactId)) {
+        CRM_Contact_Form_NewContact::buildQuickForm($this);
+      }
     }
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
     foreach($pages as $pid => $page) {
@@ -46,8 +46,8 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     $this->addMoney('ach_amount', ts('Total Amount'), TRUE);
     $this->addSelect('ach_payment_type', ts('ACH').' - '.ts('Payment Instrument'), array(
       '' => ts('-- select --'),
-      'bank' => ts('Bank'),
-      'postoffice' => ts('Post Office'),
+      'ACH Bank' => ts('Bank'),
+      'ACH Post' => ts('Post Office'),
     ), NULL, TRUE);
 
     $this->addSelect('ach_processor_id', ts('Payment Processor'), $this->_processors, NULL, TRUE);
@@ -101,8 +101,8 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
   function setDefaultValues() {
     $defaults = array();
-    if ($this->_id && $this->_recurringId) {
-      $achValues = CRM_Contribute_BAO_TaiwanACH::getValue($this->_recurringId);
+    if ($this->_id && $this->_contributionRecurId) {
+      $achValues = CRM_Contribute_BAO_TaiwanACH::getValue($this->_contributionRecurId);
       foreach($achValues as $idx => $val) {
         if ($idx == 'data') {
           foreach($val as $fld => $valCustom) {
@@ -119,6 +119,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     return $defaults;
   }
 
+
   function postProcess() {
     $submittedValues = $this->controller->exportValues($this->_name);
 
@@ -128,8 +129,8 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     }
 
     $params = array();
-    if ($this->_id) {
-      $params['id'] = $this->_id;
+    if ($this->_contributionRecurId) {
+      $params['contribution_recur_id'] = $this->_contributionRecurId;
     }
     $params['contact_id'] = $this->_contactId;
     foreach($submittedValues as $key => $value) {
@@ -146,7 +147,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       }
       $params[$key] = $value;
     }
-    if ($this->_action) {
+    if ($this->_action & CRM_Core_Action::ADD) {
       $params['contribution_status_id'] = 2;
     }
     $result = CRM_Contribute_BAO_TaiwanACH::add($params);
