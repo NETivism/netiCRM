@@ -14,7 +14,9 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     }
     // Check is same processor id
     $achDatas = CRM_Contribute_BAO_TaiwanACH::getTaiwanACHDatas($this->_additionalIds);
-    foreach ($achDatas as $achData) {
+    $unverificationIds = array();
+    foreach ($this->_additionalIds as $key => $recurringId) {
+      $achData = $achDatas[$recurringId];
       // Check processor_id
       if (empty($achData['processor_id'])) {
         $this->_hasProblem = TRUE;
@@ -42,7 +44,20 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
         $messages[] = ts('All ACH you selected needs same payment type.');
         break;
       }
+
+      // Check stamp verification status
+      if ($achData['stamp_verification'] != 0) {
+        unset($this->_additionalIds[$key]);
+        $unverificationIds[] = $recurringId;
+      }
     }
+
+    $unverificationCount = count($unverificationIds);
+    if ($unverificationCount > 0) {
+      $messages[] = ts('There are %1 recurrings are over verification, they will not be export.', array(1 => $unverificationCount));
+    }
+
+    $this->_paymentType = $achData['payment_type'];
 
     $messages = array_unique($messages);
     if ($this->_hasProblem) {
@@ -60,10 +75,14 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     if (!$this->_hasProblem) {
       $options = array(
         '' => ts('-- select --'),
-        'bank' => ts('Bank'),
-        'postoffice' => ts('Post Office'),
+        'ACH Bank' => ts('Bank'),
+        'ACH Post' => ts('Post Office'),
       );
-      $this->addSelect('payment_type', ts('Payment Instrument'), $options, NULL, TRUE);
+      $ele = $this->addSelect('payment_type', ts('Payment Instrument'), $options, NULL, TRUE);
+      if (!empty($this->_paymentType)) {
+        $this->setDefaults(array('payment_type' => $this->_paymentType));
+        $ele->freeze();
+      }
 
       $this->addDateTime('datetime', ts('Output Time'), TRUE, array('formatType' => 'searchDate'));
 
@@ -92,11 +111,6 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
       'datetime' => date('Y-m-d'),
       'datetime_time' => date('H:i:s'),
     );
-    if (!empty($this->_formValues['payment_type'])) {
-      $defaults['payment_type'] = $this->_formValues['payment_type'];
-      $paymentTypeEle = $this->getElement('payment_type');
-      $paymentTypeEle->freeze();
-    }
     return $defaults;
   }
 
@@ -104,9 +118,9 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     $errors = array();
     if (!empty($fields['payment_type'])) {
       $paymentType = $fields['payment_type'];
-      $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution_taiwanach WHERE payment_type = %1 AND contribution_recur_id IN (%2)", array(
+      $ids = implode(",", $self->_additionalIds);
+      $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution_taiwanach WHERE payment_type = %1 AND contribution_recur_id IN ($ids)", array(
         1 => array($paymentType, 'String'),
-        2 => array(implode(",", $self->_additionalIds), 'String'),
       ));
       $dao->fetch();
       if ($dao->N != count($self->_additionalIds)) {
