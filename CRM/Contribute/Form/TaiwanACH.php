@@ -8,6 +8,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
   function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     if ($this->_contactId) {
       $this->assign('contact_id', $this->_contactId);
       list($displayName) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_contactId);
