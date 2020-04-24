@@ -165,36 +165,79 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   }
 
   static function doExportVerification($recurringIds = array(), $params = array(), $type = 'txt') {
-    // Generate Body Table
+    // Assign params
     $fileName = $params['file_name'];
+    // $table = $bodyTable = array();
+    $table = array();
+    $achDatas = self::getTaiwanACHDatas($recurringIds);
+    $firstAch = reset($achDatas);
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($firstAch['processor_id'], '');
 
+    // account = ['user_name']
+    // sic_code = ['password']
+    // bank code = ['signature']
 
+    // Generate Header
+    $date = $params['date'];
+    $account = $paymentProcessor['user_name'];
+    $table[] = array(
+      'BOF',
+      'ACHP02',
+      $date,
+      $account,
+      'V10',
+      str_repeat(' ', 193),
+    );
 
-    // If type != 'txt'
-    if ($type == 'txt') {
-      // Generate Header
-      $date = $params['date'];
-      $time = $params['time'];
-      $account = CRM_Core_BAO_PaymentProcessor::getPayment();
-      $header = array(
-        'BOF',
-        'ACHP02',
-        $date,
-        $time,
-        $account,
-        'V10',
+    // Generate Body Table
+    $i = 1;
+    foreach ($achDatas as $achData) {
+      $bankAccount = str_pad($achData['bank_account'], 14, "0", STR_PAD_LEFT);
+      $identifier_number = str_pad($achData['identifier_number'], 10, " ", STR_PAD_LEFT);
+      $table[] = array(
+        $i,
+        '530',
+        $paymentProcessor['password'],
+        $achData['bank_code'],
+        $bankAccount,
+        $identifier_number,
+        $identifier_number,
+        'A',
+        $params['date'],
+        $paymentProcessor['signature'],
+        str_pad($achData['contribution_recur_id'], 20, " ", STR_PAD_LEFT),
+        'N',
         ' ',
-      );
-      // Generate Footer
-      $total = count($recurringIds);
-      $footer = array(
-        'EOF',
-        $total,
+        str_repeat(' ', 8),
         ' ',
+        str_repeat(' ', 8),
+        str_repeat(' ', 20),
+        str_repeat(' ', 53),
       );
-
+      $i++;
     }
 
+    // Generate Footer
+    $total = str_pad(count($recurringIds), 8, "0", STR_PAD_LEFT);;
+    $table[] = array(
+      'EOF',
+      $total,
+      str_repeat(' ', 209),
+    );
+
+    // Add civicrm_log file
+    $entity_table = 'civicrm_contribution_taiwanach_verification';
+    $lastVerificationId = CRM_Core_DAO::singleValueQuery("SELECT max(entity_id) FROM civicrm_log WHERE entity_table = '$entity_table'");
+    $verificationId = $lastVerificationId + 1;
+    $fileName .= '_'.$verificationId;
+    $log = new CRM_Core_DAO_Log();
+    $log->entity_table = 'civicrm_contribution_taiwanach_verification';
+    $log->entity_id = $verificationId;
+    $log->data = implode(',', $recurringIds);
+    $log->modified_date = date('Y-m-d H:i:s');
+    $session = CRM_Core_Session::singleton();
+    $log->modified_id = $session->get('userID');
+    $log->save();
 
     // Export File
     if ($type == 'txt') {
@@ -217,9 +260,18 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // Export file
   }
 
-  static private function doExportTXTFile($fileName, $txt) {
+  static private function doExportTXTFile($fileName, $table) {
+    // arrange txt
+    $txt = '';
+    foreach ($table as $row) {
+      $lines[] = implode('',$row);
+    }
+    $txt = implode("\n", $lines);
+
+    // export file
     $config = CRM_Core_Config::singleton();
     $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+    $fileName .= '.txt';
     $fileName = CRM_Utils_File::makeFileName($fileName);
     $fileFullPath = $tmpDir.'/'.$fileName;
     file_put_contents($fileFullPath, $txt, FILE_APPEND);
