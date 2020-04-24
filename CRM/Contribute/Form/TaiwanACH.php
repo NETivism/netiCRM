@@ -111,6 +111,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
           $defaults[$key.'_-'] = $value;
         }
       }
+      $defaults['currency'] = $values['currency'];
 
       return $defaults;
     }

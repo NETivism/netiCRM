@@ -36,6 +36,10 @@
 require_once 'CRM/Contribute/DAO/TaiwanACH.php';
 class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
+  public static $_editableFields = array('amount', 'installments', 'end_date', 'contribution_status_id', 'note_title', 'note_body');
+
+  public static $_hideFields = array('invoice_id', 'trxn_id');
+
   /**
    * takes an associative array and creates a contribution object
    *
