@@ -59,11 +59,13 @@
 {literal}
 <script type="text/javascript">
 cj(document).ready( function($) {
-  $("tr.ach-bank-code, tr.ach-postoffice-acc-type, tr.ach-bank-branch").hide();
-  $("select#ach_payment_type").change(function(){
+  doCheckACHPaymentType();
+  $("select#ach_payment_type").change(doCheckACHPaymentType);
+
+  function doCheckACHPaymentType() {
     $("tr.ach-bank-code, tr.ach-postoffice-acc-type, tr.ach-bank-branch").hide();
-    if ($(this).val()) {
-      if ($(this).val() == 'bank') {
+    if ($("select#ach_payment_type").val()) {
+      if ($("select#ach_payment_type").val() == 'ACH Bank') {
         $("tr.ach-bank-code").show();
         $("tr.ach-bank-branch").show();
       }
@@ -71,7 +73,7 @@ cj(document).ready( function($) {
         $("tr.ach-postoffice-acc-type").show();
       }
     }
-  });
+  }
 });
 </script>
 {/literal}

@@ -356,7 +356,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @return array - array reference of all pcp if any
    * @static
    */
-  public static function &taiwanACH() {
+  public static function &taiwanACH($code = '') {
     global $civicrm_root;
     if (!self::$taiwanACH) {
       $fp = fopen($civicrm_root.'xml/templates/taiwan_ach.tpl', 'r');
@@ -371,6 +371,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
         }
       }
       fclose($fp); 
+    }
+    if (!empty($code)) {
+      foreach (self::$taiwanACH as $banks) {
+        if (!empty($banks[$code])) {
+          return $banks[$code];
+        }
+      }
     }
     return self::$taiwanACH;
   }
