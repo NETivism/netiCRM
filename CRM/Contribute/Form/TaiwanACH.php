@@ -1,13 +1,12 @@
 <?php
 
 class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
-
   protected $_contactId = NULL;
+  protected $_id = NULL;
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
   function preProcess() {
-    $this->_contributionRecurId = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
     if ($this->_contactId) {
       $this->assign('contact_id', $this->_contactId);
@@ -19,6 +18,13 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::ADD) {
       $this->_id = NULL;
+    }
+    if ($this->_id) {
+      $this->_contributionRecurId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TaiwanACH', $this->_id, 'contribution_recur_id');
+    }
+    $this->_processors = CRM_Core_PseudoConstant::paymentProcessor(False, False, 'payment_processor_type = "TaiwanACH"');
+    if (empty($this->_processors)) {
+      CRM_Core_Error::fatal("You need setup TaiwanACH Payment Processor first.");
     }
 
     $this->set('type', 'Contribution');
@@ -44,8 +50,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       'ACH Post' => ts('Post Office'),
     ), NULL, TRUE);
 
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(False, False, 'payment_processor_type = "TaiwanACH"');
-    $this->addSelect('ach_processor_id', ts('Payment Processor'), $processors, NULL, TRUE);
+    $this->addSelect('ach_processor_id', ts('Payment Processor'), $this->_processors, NULL, TRUE);
 
     $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
     $this->addSelect('ach_bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
@@ -95,27 +100,28 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
   }
 
   function setDefaultValues() {
-    if (!empty($this->_contributionRecurId)) {
-      $values = CRM_Contribute_BAO_TaiwanACH::getValue($this->_contributionRecurId);
-      $formFields = array_keys($this->_elementIndex);
-      foreach ($formFields as $formField) {
-        if (strpos($formField, 'ach_') === 0) {
-          $field = preg_replace('/^ach_/', '', $formField);
-          if (isset($values[$field])) {
-            $defaults[$formField] = $values[$field];
+    $defaults = array();
+    if ($this->_id && $this->_contributionRecurId) {
+      $achValues = CRM_Contribute_BAO_TaiwanACH::getValue($this->_contributionRecurId);
+      foreach($achValues as $idx => $val) {
+        if ($idx == 'data') {
+          foreach($val as $fld => $valCustom) {
+            if (strstr($fld, 'custom_')) {
+              $defaults[$fld.'_-'] = $valCustom;
+            }
           }
         }
-      }
-      foreach ($values['data'] as $key => $value) {
-        if (isset($value)) {
-          $defaults[$key.'_-'] = $value;
+        else {
+          $defaults['ach_'.$idx] = $val;
         }
       }
       $defaults['currency'] = $values['currency'];
 
       return $defaults;
     }
+    return $defaults;
   }
+
 
   function postProcess() {
     $submittedValues = $this->controller->exportValues($this->_name);
