@@ -801,7 +801,7 @@ VALUES
  ('FirstData',          '{ts escape="sql"}FirstData (aka linkpoint){/ts}', '{ts escape="sql"}FirstData (aka linkpoint){/ts}', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', '{ts escape="sql"}Mobile Payment{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', '{ts escape="sql"}Payment Processor Provider{/ts}', '{ts escape="sql"}Account{/ts}', '{ts escape="sql"}Password{/ts}',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
  ('TapPay', '{ts escape="sql"}TapPay Payment{/ts}', NULL, 1, 0, 'Merchant ID', '{ts escape="sql"}Partner Key{/ts}', '{ts}App ID{/ts}', '{ts}App Key{/ts}',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
- ('TaiwanACH', '{ts escape="sql"}Taiwan ACH Payment{/ts}', NULL, 1, 0, '{ts}Bank Account Number{/ts}', '{ts}Sic Code{/ts}', '{ts}Bank Identification Number{/ts}', NULL,  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0);
+ ('TaiwanACH', '{ts escape="sql"}Taiwan ACH Payment{/ts}', NULL, 1, 0, '{ts}Bank Account Number{/ts}', '{ts}Sic Code{/ts}', '{ts}Bank Identification Number{/ts}', '{ts}Post Delegate Institution Code{/ts}',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0);
 
 
 -- the fuzzy default dedupe rules

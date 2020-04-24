@@ -90,10 +90,10 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $errors['contact[1]'] = ts('Please select a contact or create new contact');
     }
 
-    if ($fields['ach_payment_type'] == 'bank' && empty($fields['ach_bank_code'])) {
+    if ($fields['ach_payment_type'] == 'ACH Bank' && empty($fields['ach_bank_code'])) {
       $errors['ach_bank_code'] = ts('%1 is a required field.', array(1 => ts('Bank Code')));
     }
-    if ($fields['ach_payment_type'] == 'postoffice' && empty($fields['ach_postoffice_acc_type'])) {
+    if ($fields['ach_payment_type'] == 'ACH Post' && empty($fields['ach_postoffice_acc_type'])) {
       $errors['ach_postoffice_acc_type'] = ts('%1 is a required field.', array(1 => ts('Post Office Account Type')));
     }
 
@@ -116,7 +116,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
           $defaults['ach_'.$idx] = $val;
         }
       }
-      $defaults['currency'] = $values['currency'];
+      $defaults['currency'] = $achValues['currency'];
 
       return $defaults;
     }
