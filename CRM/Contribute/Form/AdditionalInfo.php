@@ -339,6 +339,18 @@ class CRM_Contribute_Form_AdditionalInfo {
    * @return None.
    */
   function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+    if (!empty($params['is_attach_receipt'])) {
+      $receiptTask = new CRM_Contribute_Form_Task_PDF();
+      $receiptTask->makeReceipt($params['contribution_id'], 'copy_only');
+      $pdfFilePath = $receiptTask->makePDF(False);
+      $pdfFileName = strstr($pdfFilePath, 'Receipt');
+      $pdfParams =  array(
+        'fullPath' => $pdfFilePath,
+        'mime_type' => 'application/pdf',
+        'cleanName' => $pdfFileName,
+      );
+    }
+
     $this->assign('receiptType', 'contribution');
     // Retrieve Contribution Type Name from contribution_type_id
     $params['contributionType_name'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType',
@@ -479,18 +491,22 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
     require_once 'CRM/Core/BAO/MessageTemplates.php';
-    list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
-      array(
-        'groupName' => 'msg_tpl_workflow_contribution',
-        'valueName' => 'contribution_offline_receipt',
-        'contactId' => $params['contact_id'],
-        'from' => $fromEmailAddress,
-        'toName' => $contributorDisplayName,
-        'toEmail' => $contributorEmail,
-        'isTest' => $form->_mode == 'test',
-        'PDFFilename' => 'receipt.pdf',
-      )
+    $templateParams = array(
+      'groupName' => 'msg_tpl_workflow_contribution',
+      'valueName' => 'contribution_offline_receipt',
+      'contactId' => $params['contact_id'],
+      'from' => $fromEmailAddress,
+      'toName' => $contributorDisplayName,
+      'toEmail' => $contributorEmail,
+      'isTest' => $form->_mode == 'test',
     );
+    if (!empty($params['is_attach_receipt'])) {
+      $templateParams['attachments'][] = $pdfParams;
+    }
+    else {
+      $templateParams['PDFFilename'] = 'receipt.pdf';
+    }
+    list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams);
 
     return $sendReceipt;
   }

@@ -907,8 +907,11 @@ WHERE  contribution_id = {$this->_id}
 
     //add receipt for offline contribution
     $this->addElement('checkbox', 'is_email_receipt', ts('Send Payment Notification').'?', NULL, array(
-      'onclick' => "return showHideByValue('is_email_receipt',1,'from_email_address','block','radio',false);",
+      'onclick' => "showHideByValue('is_email_receipt',1,'from_email_address','block','radio',false);showHideByValue('is_email_receipt',1,'is_attach_receipt','block','radio',false);",
     ));
+
+    //add receipt for offline contribution
+    $this->addElement('checkbox', 'is_attach_receipt', ts('Attach Receipt').'?');
 
     // add mail from address select box
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
