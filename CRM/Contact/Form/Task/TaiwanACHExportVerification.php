@@ -9,8 +9,8 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     parent::buildQuickForm();
   }
 
-  function setDefaultValues($form) {
-    return parent::setDefaultValues($form);
+  function setDefaultValues() {
+    return parent::setDefaultValues();
   }
 
   public function formRule($fields, $files, $self) {
