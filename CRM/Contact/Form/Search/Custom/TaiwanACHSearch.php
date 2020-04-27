@@ -218,8 +218,8 @@ $having
     $form->addDateRange('end_date', ts('Recurring Contribution').' - '.ts('End Date'), NULL, FALSE);
     $form->addSelect('payment_type', ts('Payment Instrument'), array(
       '' => ts('-- select --'),
-      'bank' => ts('Bank'),
-      'postoffice' => ts('Post Office'),
+      'ACH Bank' => ts('Bank'),
+      'ACH Post' => ts('Post Office'),
     ));
     $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
     $form->addSelect('bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
@@ -262,8 +262,12 @@ $having
       $this->fillTable();
       $this->_filled = TRUE;
     }
-    $value = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM {$this->_tableName}");
-    return $value;
+    $sql = "SELECT COUNT(*)" . $this->from() . " WHERE ". $this->where();
+    $count = CRM_Core_DAO::singleValueQuery($sql);
+    if ($count) {
+      return $count;
+    }
+    return 0;
   }
 
 
@@ -325,7 +329,7 @@ $having
     }
 
     $achFields = array(
-      'payemtn_type',
+      'payment_type',
       'bank_code',
       'bank_account',
       'identifier_number',
