@@ -164,6 +164,7 @@ class CRM_Utils_REST {
     }
 
     if (CRM_Utils_Array::value('xml', $_REQUEST)) {
+      header('Content-Type: text/xml');
       if (isset($result['count'])) {
 
 
@@ -188,7 +189,7 @@ class CRM_Utils_REST {
       return $xml;
     }
     else {
-      header('Content-Type: text/javascript');
+      header('Content-Type: application/json; charset=utf-8');
       if (CRM_Utils_Array::value('debug', $_REQUEST)) {
         return json_encode(array_merge($result), JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES + JSON_UNESCAPED_UNICODE);
       }
