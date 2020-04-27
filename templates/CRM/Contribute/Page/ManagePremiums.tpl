@@ -78,7 +78,10 @@
     <div class="messages status">
         {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/managePremiums' q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}No premium products have been created for your site. You can <a href='%1'>add one</a>.{/ts}
-    </div>  
+    </div>
+    <div class="action-link-button">
+      <a href="{crmURL q="action=add&reset=1"}" id="newManagePremium" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Premium{/ts}</a>
+    </div>
     {/if}	  
 {/if}
 {/if}

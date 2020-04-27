@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-04-21 11:02+0000\n"
+"PO-Revision-Date: 2020-04-27 02:32+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -30118,7 +30118,7 @@ msgstr "最少捐款"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "Add Premium"
-msgstr "編輯感謝禮"
+msgstr "新增感謝禮"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid ""

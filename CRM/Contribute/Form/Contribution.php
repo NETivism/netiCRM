@@ -773,6 +773,12 @@ WHERE  contribution_id = {$this->_id}
     if ($dao->find(TRUE)) {
       $paneNames[ts('Premium Information')] = 'Premium';
     }
+    else if (!empty($this->_id)) {
+      $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $this->_id, 'product_id', 'contribution_id' );
+      if (!empty($selectedProductId)) {
+        $paneNames[ts('Premium Information')] = 'Premium';
+      }
+    }
 
     $ccPane = NULL;
     if ($this->_mode) {
