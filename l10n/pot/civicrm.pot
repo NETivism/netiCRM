@@ -47312,3 +47312,9 @@ msgstr ""
 
 msgid "Payment processor needs Google account with credit card."
 msgstr ""
+
+msgid "Email Receipt"
+msgstr ""
+
+msgid "Add receipt as attachment in email."
+msgstr ""
