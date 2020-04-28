@@ -181,6 +181,10 @@
             <input type="button" name='cancel' value="{ts}Back to Listings{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q="action=browse&selectedChild=contribute&cid=`$contactId`"}';"/>
             {if $is_editable}
               <a class="button" href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$contributionRecurId`&cid=`$contactId`&action=update"}" accesskey="e"><i class="zmdi zmdi-edit"></i>{ts}edit{/ts}</a>
+
+              {if $ach}
+                <a class="button" href="{crmURL p='civicrm/contribute/taiwanach' q="reset=1&id=`$ach.id`&cid=`$contactId`&action=update"}" accesskey="e"><i class="zmdi zmdi-edit"></i>{ts}edit ACH{/ts}</a>
+              {/if}
             {/if}
             {$form.$submit_name.html}
           </div>
