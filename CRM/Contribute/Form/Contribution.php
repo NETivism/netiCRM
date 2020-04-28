@@ -911,7 +911,7 @@ WHERE  contribution_id = {$this->_id}
     ));
 
     //add receipt for offline contribution
-    $this->addElement('checkbox', 'is_attach_receipt', ts('Attach Receipt').'?');
+    $this->addElement('checkbox', 'is_attach_receipt', ts('Email Receipt').'?');
 
     // add mail from address select box
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
