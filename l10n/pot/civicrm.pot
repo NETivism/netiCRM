@@ -47303,3 +47303,18 @@ msgstr ""
 
 msgid "Transaction Fee Amount"
 msgstr ""
+
+msgid "Your browser doesn't support embed form. Click button below to finish online form."
+msgstr ""
+
+msgid "Visit Online Form"
+msgstr ""
+
+msgid "Payment processor needs Google account with credit card."
+msgstr ""
+
+msgid "Email Receipt"
+msgstr ""
+
+msgid "Add receipt as attachment in email."
+msgstr ""

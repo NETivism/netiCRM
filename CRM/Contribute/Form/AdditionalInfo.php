@@ -64,6 +64,25 @@ class CRM_Contribute_Form_AdditionalInfo {
       }
       $form->assign('premiums', TRUE);
     }
+    // Display Item if it's selected even if it disabled. refs #28171
+    if (!empty($form->_id) && get_class($form) == 'CRM_Contribute_Form_Contribution') {
+      $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $form->_id, 'product_id', 'contribution_id' );
+      if (!empty($selectedProductId) && empty($sel1[$selectedProductId])) {
+        $dao = new CRM_Contribute_DAO_Product();
+        $dao->id = $selectedProductId;
+        $dao->find(TRUE);
+        $sel1[$dao->id] = $dao->name . " ( " . $dao->sku . " ) ( ".ts('Disable')." )";
+        $min_amount[$dao->id] = $dao->min_contribution;
+        $options = explode(',', $dao->options);
+        foreach ($options as $k => $v) {
+          $options[$k] = trim($v);
+        }
+        if ($options[0] != '') {
+          $sel2[$dao->id] = $options;
+        }
+        $form->assign('premiums', TRUE);
+      }
+    }
     $form->_options = $sel2;
     $form->assign('mincontribution', $min_amount);
     $sel = &$form->addElement('hierselect', "product_name", ts('Premium'), 'onclick="showMinContrib();"');

@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-04-14 05:04+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-04-28 11:53+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30118,7 +30118,7 @@ msgstr "最少捐款"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "Add Premium"
-msgstr "編輯感謝禮"
+msgstr "新增感謝禮"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid ""
@@ -47512,3 +47512,20 @@ msgstr "預設收據格式"
 
 msgid "Transaction Fee Amount"
 msgstr "交易手續費"
+
+msgid ""
+"Your browser doesn't support embed form. Click button below to finish online"
+" form."
+msgstr "你的瀏覽器並未支援嵌入表單，請您點擊下方按鈕以完成線上填表"
+
+msgid "Visit Online Form"
+msgstr "前往線上表單"
+
+msgid "Payment processor needs Google account with credit card."
+msgstr "需有 Google 帳號、且已綁定信用卡才可使用"
+
+msgid "Email Receipt"
+msgstr "電子郵件收據"
+
+msgid "Add receipt as attachment in email."
+msgstr "寄送時同時開立收據在附檔給捐款人。"
