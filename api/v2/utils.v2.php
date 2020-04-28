@@ -127,7 +127,8 @@ function _civicrm_store_values(&$fields, &$params, &$values) {
     if ($name === 'id' || substr($name, -1, 3) === '_id') {
       continue;
     }
-    if (CRM_Utils_Array::value($name, $params)) {
+    $value = CRM_Utils_Array::value($name, $params);
+    if ($value || $value === '0' || $value === 0) {
       $values[$name] = $params[$name];
       $valueFound = TRUE;
     }
