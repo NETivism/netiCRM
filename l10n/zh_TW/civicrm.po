@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-04-27 02:32+0000\n"
+"PO-Revision-Date: 2020-04-28 11:53+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47523,3 +47523,9 @@ msgstr "前往線上表單"
 
 msgid "Payment processor needs Google account with credit card."
 msgstr "需有 Google 帳號、且已綁定信用卡才可使用"
+
+msgid "Email Receipt"
+msgstr "電子郵件收據"
+
+msgid "Add receipt as attachment in email."
+msgstr "寄送時同時開立收據在附檔給捐款人。"
