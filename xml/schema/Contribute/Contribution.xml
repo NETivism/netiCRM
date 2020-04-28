@@ -164,6 +164,7 @@
       <name>fee_amount</name>    
       <type>decimal</type>    
       <import>true</import>
+      <title>Transaction Fee Amount</title>
       <headerPattern>/fee(.?am(ou)?nt)?/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
       <comment>actual processor fee if known - may be 0.</comment>
