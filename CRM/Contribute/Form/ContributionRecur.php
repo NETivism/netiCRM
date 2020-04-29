@@ -78,21 +78,21 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
 
     $hideFields = NULL;
     $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'processor_id');
+    $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
     if (!empty($processorId)) {
-      $processorType = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $processorId, 'payment_processor_type');
-      $baoName = 'CRM_Contribute_BAO_'.$processorType;
-      if (class_exists($baoName) && !empty($baoName::$_hideFields)) {
-        $hideFields = $baoName::$_hideFields;
-      }
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $isTest ? 'test':'live');
+      $paymentClass = get_class($paymentProcessor);
     }
-    if (is_null($hideFields)) {
+    if (empty($paymentClass)) {
       $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_id, 'id', 'contribution_recur_id');
       if (!empty($contributionId)) {
         $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
         // Get payment processor
-        if (!empty($paymentClass::$_hideFields)) {
-          $hideFields = $paymentClass::$_hideFields;
-        }
+      }
+    }
+    if (!empty($paymentClass)) {
+      if (!empty($paymentClass::$_hideFields)) {
+        $hideFields = $paymentClass::$_hideFields;
       }
     }
     $this->assign('hide_fields', $hideFields);
@@ -181,20 +181,21 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     // Get payment processor or Payment Processor DAO to get $activeFields
     $activeFields = NULL;
     $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'processor_id');
+    $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
     if (!empty($processorId)) {
-      $processorType = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $processorId, 'payment_processor_type');
-      $baoName = 'CRM_Contribute_BAO_'.$processorType;
-      if (class_exists($baoName) && !empty($baoName::$_editableFields)) {
-        $activeFields = $baoName::$_editableFields;
-      }
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $isTest ? 'test':'live');
+      $paymentClass = get_class($paymentProcessor);
     }
-    if (is_null($activeFields)) {
+    if (empty($paymentClass)) {
       $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_id, 'id', 'contribution_recur_id');
       if (!empty($contributionId)) {
         $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
-        if (!empty($paymentClass::$_editableFields)) {
-          $activeFields = $paymentClass::$_editableFields;
-        }
+        // Get payment processor
+      }
+    }
+    if (!empty($paymentClass)) {
+      if (!empty($paymentClass::$_editableFields)) {
+        $activeFields = $paymentClass::$_editableFields;
       }
     }
 
