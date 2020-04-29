@@ -205,18 +205,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
 
       // Add civicrm_log file
-      $entity_table = 'civicrm_contribution_taiwanach_verification';
-      $lastVerificationId = CRM_Core_DAO::singleValueQuery("SELECT entity_id FROM civicrm_log WHERE entity_table = '$entity_table' AND entity_id = %1", array(1 => array($params['date'], 'String')));
-      $verificationId = $lastVerificationId + 1;
       $log = new CRM_Core_DAO_Log();
       $log->entity_table = 'civicrm_contribution_taiwanach_verification';
-      $log->entity_id = $verificationId;
+      $log->entity_id = $params['date'];
       $log->data = implode(',', $recurringIds);
       $log->modified_date = date('Y-m-d H:i:s');
       $session = CRM_Core_Session::singleton();
       $log->modified_id = $session->get('userID');
       $log->save();
-      $fileName .= '_'.$verificationId;
 
       // Export File
       self::doExportTXTFile($fileName, $table);

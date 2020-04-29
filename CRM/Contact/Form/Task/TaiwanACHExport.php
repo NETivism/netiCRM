@@ -1,5 +1,8 @@
 <?php
 class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
+
+  protected $_achDatas = array();
+
   function preProcess() {
     parent::preProcess();
     // get selector defined form values
@@ -13,7 +16,8 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
       $messages[] = ts('Number of selected contributions: %1', array(1 => count($this->_additionalIds)));
     }
     // Check is same processor id
-    $achDatas = CRM_Contribute_BAO_TaiwanACH::getTaiwanACHDatas($this->_additionalIds);
+    $this->_achDatas = CRM_Contribute_BAO_TaiwanACH::getTaiwanACHDatas($this->_additionalIds);
+    $achDatas = &$this->_achDatas;
     $unverificationIds = array();
     foreach ($this->_additionalIds as $key => $recurringId) {
       $achData = $achDatas[$recurringId];
