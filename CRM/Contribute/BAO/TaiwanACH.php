@@ -78,6 +78,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     else {
       $taiwanACH = new CRM_Contribute_DAO_TaiwanACH();
     }
+    $originData = unserialize($taiwanACH->data);
+    if (empty($originData)) {
+      $originData = array();
+    }
+    $paramsData = $params['data'];
+    $mergedData = array_merge($originData, $paramsData);
     $taiwanACH->copyValues($params);
 
     $recurring = new CRM_Contribute_DAO_ContributionRecur();
@@ -105,8 +111,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $taiwanACH->currency = $config->defaultCurrency;
     }
 
-    if (isset($taiwanACH->data) && is_array($taiwanACH->data)) {
-      $taiwanACH->data = serialize($taiwanACH->data);
+    if (isset($mergedData) && is_array($mergedData)) {
+      $taiwanACH->data = serialize($mergedData);
     }
 
     $result = $taiwanACH->save();
