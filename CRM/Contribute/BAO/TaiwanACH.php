@@ -186,25 +186,27 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // $table = $bodyTable = array();
     $table = array();
     $achDatas = self::getTaiwanACHDatas($recurringIds);
+
+
     $firstAch = reset($achDatas);
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($firstAch['processor_id'], '');
     $params['paymentProcessor'] = $paymentProcessor;
 
-    // account = ['user_name']
-    // sic_code = ['password']
-    // bank code = ['signature']
-    // post_account = ['subject']
-    if (strstr($officeType, 'Bank')) {
-      $table = self::getBankDataTable($achDatas, $params);
-    }
-    else if (strstr($officeType, 'Post')) {
-      $table = self::getPostDataTable($achDatas, $params);
-    }
-
-    // Add civicrm_log file
-    $entity_table = 'civicrm_contribution_taiwanach_verification';
-    $lastVerificationId = CRM_Core_DAO::singleValueQuery("SELECT max(entity_id) FROM civicrm_log WHERE entity_table = '$entity_table'");
     if ($type == 'txt') {
+      // account = ['user_name']
+      // sic_code = ['password']
+      // bank code = ['signature']
+      // post_account = ['subject']
+      if (strstr($officeType, 'Bank')) {
+        $table = self::getBankVerifyTable($achDatas, $params);
+      }
+      else if (strstr($officeType, 'Post')) {
+        $table = self::getPostVerifyTable($achDatas, $params);
+      }
+
+      // Add civicrm_log file
+      $entity_table = 'civicrm_contribution_taiwanach_verification';
+      $lastVerificationId = CRM_Core_DAO::singleValueQuery("SELECT entity_id FROM civicrm_log WHERE entity_table = '$entity_table' AND entity_id = %1", array(1 => array($params['date'], 'String')));
       $verificationId = $lastVerificationId + 1;
       $log = new CRM_Core_DAO_Log();
       $log->entity_table = 'civicrm_contribution_taiwanach_verification';
@@ -214,31 +216,48 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $session = CRM_Core_Session::singleton();
       $log->modified_id = $session->get('userID');
       $log->save();
-    }
-    else {
-      $verificationId = $lastVerificationId;
-    }
-    $fileName .= '_'.$verificationId;
+      $fileName .= '_'.$verificationId;
 
-    // Export File
-    if ($type == 'txt') {
+      // Export File
       self::doExportTXTFile($fileName, $table);
     }
     else {
+      $table = $achDatas;
       self::doExportXSLFile($fileName, $table);
     }
   }
 
-  static function doExportTransaction($recurringIds, $params = array(),$type = 'txt') {
-    // Export File
+  static function doExportTransaction($recurringIds, $params = array(), $officeType = 'bank', $type = 'txt') {
+    // Assign params
+    $fileName = $params['file_name'];
+    // $table = $bodyTable = array();
+    $table = array();
+    $achDatas = self::getTaiwanACHDatas($recurringIds);
 
-    // Generate Header
 
-    // Generate Body
+    $firstAch = reset($achDatas);
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($firstAch['processor_id'], '');
+    $params['paymentProcessor'] = $paymentProcessor;
 
-    // Generate Footer
+    if ($type == 'txt') {
+      // account = ['user_name']
+      // sic_code = ['password']
+      // bank code = ['signature']
+      // post_account = ['subject']
+      if (strstr($officeType, 'Bank')) {
+        $table = self::getBankTransactTable($achDatas, $params);
+      }
+      else if (strstr($officeType, 'Post')) {
+        $table = self::getPostTransactTable($achDatas, $params);
+      }
 
-    // Export file
+      // Export File
+      self::doExportTXTFile($fileName, $table);
+    }
+    else {
+      $table = $achDatas;
+      self::doExportXSLFile($fileName, $table);
+    }
   }
 
   static private function doExportTXTFile($fileName, $table) {
@@ -275,7 +294,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     CRM_Utils_System::civiExit();
   }
 
-  static private function getBankDataTable($achDatas, $params) {
+  static private function getBankVerifyTable($achDatas, $params) {
     $paymentProcessor = $params['paymentProcessor'];
 
     // Generate Header
@@ -319,7 +338,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     // Generate Footer
-    $total = str_pad(count($achData), 8, "0", STR_PAD_LEFT);;
+    $total = str_pad(count($achData), 8, "0", STR_PAD_LEFT);
     $table[] = array(
       'EOF',
       $total,
@@ -329,7 +348,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     return $table;
   }
 
-  static private function getPostDataTable($achDatas, $params) {
+  static private function getPostVerifyTable($achDatas, $params) {
     $paymentProcessor = $params['paymentProcessor'];
 
     // Generate Body Table
@@ -357,7 +376,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     // Generate Footer
-    $total = str_pad(count($achData), 6, "0", STR_PAD_LEFT);;
+    $total = str_pad(count($achData), 6, "0", STR_PAD_LEFT);
     $table[] = array(
       2,
       $paymentProcessor['subject'],
@@ -373,6 +392,183 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     );
 
     return $table;
+  }
+
+  static private function getBankTransactTable($achDatas, $params) {
+    $paymentProcessor = $params['paymentProcessor'];
+
+    // Generate Header
+    $date = $params['date'];
+    $time = $params['time'];
+    $account = $paymentProcessor['user_name'];
+    $sendBankCode = str_pad($paymentProcessor['signature'], 7, "0", STR_PAD_LEFT);
+    $table[] = array(
+      'BOF',
+      'ACHP01',
+      $date,
+      $time,
+      $account,
+      '9990250',
+      'V10',
+      str_repeat(' ', 210),
+    );
+
+    // Generate Body Table
+    $i = 1;
+    $totalAmount = 0;
+    foreach ($achDatas as $achData) {
+      $contribution = self::createContributionByACHData($achData);
+      $bankAccount = str_pad($achData['bank_account'], 14, "0", STR_PAD_RIGHT);
+      $identifier_number = str_pad($achData['identifier_number'], 10, " ", STR_PAD_RIGHT);
+      $table[] = array(
+        'N',
+        'SD',
+        str_pad($i, 8, '0', STR_PAD_LEFT),
+        '530',
+        $sendBankCode,
+        $paymentProcessor['user_name'],
+        $achData['bank_code'],
+        $bankAccount,
+        $achData['amount'],
+        str_repeat(' ', 2),
+        'B',
+        $paymentProcessor['password'],
+        $identifier_number,
+        str_repeat(' ', 6),
+        str_repeat(' ', 8),
+        str_repeat(' ', 8),
+        ' ',
+        $identifier_number,
+        str_pad($contribution->id, 20, " ", STR_PAD_RIGHT),
+        str_repeat(' ', 10),
+        str_repeat('0', 5),
+        str_repeat(' ', 10),
+        str_repeat(' ', 39),
+      );
+      $i++;
+      $totalAmount += $achDatas['amount'];
+    }
+
+    // Generate Footer
+    $total = str_pad(count($achData), 8, "0", STR_PAD_LEFT);
+    $totalAmount = str_pad($totalAmount, 16, "0", STR_PAD_LEFT);
+    $table[] = array(
+      'EOF',
+      'ACHP01',
+      $params['transact_date'],
+      $sendBankCode,
+      '9990250',
+      $total,
+      $totalAmount,
+      str_repeat(' ', 8),
+      str_repeat(' ', 187),
+    );
+
+    return $table;
+  }
+
+  static private function getPostTransactTable($achDatas, $params) {
+    $paymentProcessor = $params['paymentProcessor'];
+
+    // Generate Body Table
+    $i = 1;
+    $totalAmount = 0;
+    foreach ($achDatas as $achData) {
+      $contributionParams = array(
+        'contact_id' => $achData['contact_id'],
+        'total_amount' => $achData['amount'],
+        'create_date' => date('Y-m-d H:i:s'),
+        'contribution_recur_id' => $achData['contribution_recur_id'],
+      );
+      $ids = array();
+      $contribution = CRM_Contribute_BAO_Contribution::add($contributionParams, $ids);
+      $bankAccount = str_pad($achData['bank_account'], 14, "0", STR_PAD_RIGHT);
+      $identifier_number = str_pad($achData['identifier_number'], 10, " ", STR_PAD_LEFT);
+      $totalAmount += $achData['amount'];
+      $table[] = array(
+        1,
+        ($achData['postoffice_acc_type'] == 1)? 'P' : 'G',
+        $paymentProcessor['subject'],
+        str_repeat(' ', 4),
+        $params['date'],
+        'S',
+        str_repeat(' ', 2),
+        $bankAccount,
+        str_repeat(' ', 10),
+        str_pad($achData['amount'], 9, "0", STR_PAD_LEFT).'00',
+        str_pad($contribution->id, 20, " ", STR_PAD_LEFT),
+        1,
+        " ",
+        " ",
+        " ",
+        str_repeat(' ', 2),
+        $params['date'],
+        str_repeat(' ', 5),
+        str_repeat(' ', 20),
+        str_repeat(' ', 10),
+      );
+      $i++;
+    }
+
+    // Generate Footer
+    $total = str_pad(count($achData), 7, "0", STR_PAD_LEFT);
+    $totalAmount = str_pad($totalAmount, 11, '0', STR_PAD_LEFT).'00';
+    $table[] = array(
+      2,
+      ' ',
+      $paymentProcessor['subject'],
+      str_repeat(' ', 4),
+      $params['date'],
+      'S',
+      str_repeat(' ', 2),
+      $total,
+      $totalAmount,
+      str_repeat(' ', 16),
+      str_repeat('0', 7),
+      str_repeat('0', 13),
+      str_repeat(' ', 45),
+    );
+    return $table;
+  }
+
+  static private function createContributionByACHData($achData) {
+    $countContribOfThisRecur = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", array(1 => array($achData['contribution_recur_id'], 'Integer')));
+    $page = new CRM_Contribute_DAO_ContributionPage();
+    $page->id = $achData['contribution_page_id'];
+    $page->find(TRUE);
+    $instrumentIds = CRM_Core_OptionGroup::values('payment_instrument', FALSE, FALSE, FALSE, "AND v.name = 'ACH Bank'", 'value');
+    $instrumentId = reset($instrumentIds);
+    foreach ($achData['data'] as $key => $value) {
+      if (strstr($key, 'custom_')) {
+        $customFieldID = CRM_Core_BAO_CustomField::getKeyID($key);
+        if ($customFieldID) {
+          CRM_Core_BAO_CustomField::formatCustomField($customFieldID, $customData, $value, 'contribution');
+        }
+      }
+    }
+    $contributionParams = array(
+      'contact_id' => $achData['contact_id'],
+      'total_amount' => $achData['amount'],
+      'create_date' => date('Y-m-d H:i:s'),
+      'contribution_recur_id' => $achData['contribution_recur_id'],
+      'contribution_type_id' => $page->contribution_type_id,
+      'contribution_status_id' => 2,
+      'invoice_id' => $achData['invoice_id'].'_'.($countContribOfThisRecur+1),
+      'payment_processor_id' => $achData['processor_id'],
+      'is_test' => $achData['is_test'],
+      'currency' => $achData['currency'],
+      'payment_instrument_id' => $instrumentId,
+      'custom' => $customData,
+    );
+    $ids = array();
+    $contribution = CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);
+    if (!empty($contribution->id)) {
+      $contribution->trxn_id = $contribution->id;
+      $contribution->save();
+    }
+
+    return $contribution;
+
   }
 }
 

@@ -26,7 +26,7 @@
 <div class="crm-block crm-form-block crm-contact-task-taiwanach-export-transaction">
    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
    <table class="form-layout-compressed">
-   <tr class="crm-contact-task-taiwanach-datetime-type">
+   <tr class="crm-contact-task-taiwanach-datetime">
       <td class="label">{$form.datetime.label}</td>
       <td>{include file="CRM/common/jcalendar.tpl" elementName="datetime"}</td>
    </tr>

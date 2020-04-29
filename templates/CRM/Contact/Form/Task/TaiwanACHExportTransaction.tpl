@@ -26,9 +26,13 @@
 <div class="crm-block crm-form-block crm-contact-task-taiwanach-export-transaction">
    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
    <table class="form-layout-compressed">
-   <tr class="crm-contact-task-taiwanach-datetime-type">
+   <tr class="crm-contact-task-taiwanach-datetime">
       <td class="label">{$form.datetime.label}</td>
       <td>{include file="CRM/common/jcalendar.tpl" elementName="datetime"}</td>
+   </tr>
+   <tr class="crm-contact-task-taiwanach-transact_date">
+      <td class="label">{$form.transact_date.label}</td>
+      <td>{include file="CRM/common/jcalendar.tpl" elementName="transact_date"}</td>
    </tr>
    <tr class="crm-contact-task-taiwanach-payment-type">
       <td class="label">{$form.payment_type.label}</td>
