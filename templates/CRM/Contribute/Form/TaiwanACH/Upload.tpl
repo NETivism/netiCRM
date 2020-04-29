@@ -1,3 +1,5 @@
+{include file="CRM/common/WizardHeader.tpl"}
+
 <table class="form-layout-compressed">
   <tr>
     <td class="label">{$form.uploadFile.label}</td>
