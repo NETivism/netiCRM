@@ -308,6 +308,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // Generate Body Table
     $i = 1;
     foreach ($achDatas as $achData) {
+      $achData['invoice_id'] = $params['date'].'_'.$i;
+      CRM_Contribute_BAO_TaiwanACH::add($achData);
       $bankAccount = str_pad($achData['bank_account'], 14, "0", STR_PAD_RIGHT);
       $identifier_number = str_pad($achData['identifier_number'], 10, " ", STR_PAD_LEFT);
       $table[] = array(

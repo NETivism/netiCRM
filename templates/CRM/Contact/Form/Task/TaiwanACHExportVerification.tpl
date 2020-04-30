@@ -30,6 +30,12 @@
       <td class="label">{$form.datetime.label}</td>
       <td>{include file="CRM/common/jcalendar.tpl" elementName="datetime"}</td>
    </tr>
+   {if $is_need_confirm}
+      <tr class="crm-contact-task-taiwanach-is_overwrite">
+         <td class="label">{$form.is_overwrite.label}</td>
+         <td>{$form.is_overwrite.html}</td>
+      </tr>
+   {/if}
    <tr class="crm-contact-task-taiwanach-payment-type">
       <td class="label">{$form.payment_type.label}</td>
       <td>{$form.payment_type.html}</td>
