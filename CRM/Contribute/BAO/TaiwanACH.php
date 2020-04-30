@@ -180,7 +180,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     return $achDatas;
   }
 
-  static function doExportVerification($recurringIds = array(), $params = array(), $officeType = 'bank', $type = 'txt') {
+  static function doExportVerification($recurringIds = array(), &$params = array(), $officeType = 'bank', $type = 'txt') {
     // Assign params
     $fileName = $params['file_name'];
     // $table = $bodyTable = array();
@@ -223,7 +223,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
   }
 
-  static function doExportTransaction($recurringIds, $params = array(), $officeType = 'bank', $type = 'txt') {
+  static function doExportTransaction($recurringIds, &$params = array(), $officeType = 'bank', $type = 'txt') {
     // Assign params
     $fileName = $params['file_name'];
     // $table = $bodyTable = array();
@@ -234,6 +234,21 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $firstAch = reset($achDatas);
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($firstAch['processor_id'], '');
     $params['paymentProcessor'] = $paymentProcessor;
+
+    // Add civicrm_log file
+    $lastTransactLogTime = CRM_Core_DAO::singleValueQuery("SELECT MAX(entity_id) FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_transaction'");
+    if (empty($lastTransactLogTime)){
+      $lastTransactLogTime = '000000';
+    }
+    else{
+      $lastTransactLogTime = str_pad($lastTransactLogTime , 6, '0', STR_PAD_LEFT);
+    }
+    $timezone = date_default_timezone_get();
+    date_default_timezone_set('GMT');
+    $lastTransactLogTimeId = strtotime('19700101T'.$lastTransactLogTime);
+    $transactLogTimeId = $lastTransactLogTimeId + 1;
+    $params['transact_id'] = $transactLogTime = date('Gis', $transactLogTimeId);
+    date_default_timezone_set($timezone);
 
     if ($type == 'txt') {
       // account = ['user_name']
@@ -246,6 +261,15 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       else if (strstr($officeType, 'Post')) {
         $table = self::getPostTransactTable($achDatas, $params);
       }
+
+      $log = new CRM_Core_DAO_Log();
+      $log->entity_table = 'civicrm_contribution_taiwanach_transaction';
+      $log->entity_id = $params['transact_id'];
+      $log->data = implode(',', $params['contribution_ids']);
+      $log->modified_date = date('Y-m-d H:i:s');
+      $session = CRM_Core_Session::singleton();
+      $log->modified_id = $session->get('userID');
+      $log->save();
 
       // Export File
       self::doExportTXTFile($fileName, $table);
@@ -290,7 +314,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     CRM_Utils_System::civiExit();
   }
 
-  static private function getBankVerifyTable($achDatas, $params) {
+  static private function getBankVerifyTable($achDatas, &$params) {
     $paymentProcessor = $params['paymentProcessor'];
 
     // Generate Header
@@ -346,7 +370,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     return $table;
   }
 
-  static private function getPostVerifyTable($achDatas, $params) {
+  static private function getPostVerifyTable($achDatas, &$params) {
     $paymentProcessor = $params['paymentProcessor'];
 
     // Generate Body Table
@@ -392,12 +416,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     return $table;
   }
 
-  static private function getBankTransactTable($achDatas, $params) {
+  static private function getBankTransactTable($achDatas, &$params) {
     $paymentProcessor = $params['paymentProcessor'];
 
     // Generate Header
     $date = $params['date'];
-    $time = $params['time'];
+    $time = str_pad($params['transact_id'], 6, '0', STR_PAD_LEFT);
     $account = $paymentProcessor['user_name'];
     $sendBankCode = str_pad($paymentProcessor['signature'], 7, "0", STR_PAD_LEFT);
     $table[] = array(
@@ -416,6 +440,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $totalAmount = 0;
     foreach ($achDatas as $achData) {
       $contribution = self::createContributionByACHData($achData);
+      $params['contribution_ids'][] = $contribution->id;
       $bankAccount = str_pad($achData['bank_account'], 14, "0", STR_PAD_RIGHT);
       $identifier_number = str_pad($achData['identifier_number'], 10, " ", STR_PAD_RIGHT);
       $table[] = array(
@@ -465,7 +490,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     return $table;
   }
 
-  static private function getPostTransactTable($achDatas, $params) {
+  static private function getPostTransactTable($achDatas, &$params) {
     $paymentProcessor = $params['paymentProcessor'];
 
     // Generate Body Table

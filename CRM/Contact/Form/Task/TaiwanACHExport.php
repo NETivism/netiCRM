@@ -3,6 +3,12 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
   protected $_achDatas = array();
 
+  protected $_paymentType = NULL;
+
+  protected $_hasProblem = NULL;
+
+  protected $_formValues = array();
+
   function preProcess() {
     parent::preProcess();
     // get selector defined form values
@@ -48,17 +54,6 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
         $messages[] = ts('All ACH you selected needs same payment type.');
         break;
       }
-
-      // Check stamp verification status
-      if ($achData['stamp_verification'] != 0) {
-        unset($this->_additionalIds[$key]);
-        $unverificationIds[] = $recurringId;
-      }
-    }
-
-    $unverificationCount = count($unverificationIds);
-    if ($unverificationCount > 0) {
-      $messages[] = ts('There are %1 recurrings are over verification, they will not be export.', array(1 => $unverificationCount));
     }
 
     $this->_paymentType = $achData['payment_type'];

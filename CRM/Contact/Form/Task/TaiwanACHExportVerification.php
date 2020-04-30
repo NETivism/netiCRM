@@ -4,6 +4,32 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
   function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts("Export ACH Verification File"));
+    $isError = FALSE;
+    $notUnverified = array();
+    $notPending = array();
+    $msgs = array();
+
+    foreach ($this->_achDatas as $id => $achData) {
+      if ($achData['contribution_status_id'] != 2) {
+        $notPending[] = $achData['id'];
+        $isError = TRUE;
+      }
+      if ($achData['stamp_verification'] != 0) {
+        $notUnverified[] = $achData['id'];
+        $isError = TRUE;
+      }
+    }
+    if (!empty($isError)) {
+      if (!empty($notPending)) {
+        $msgs[] = ts('All selected recurrings need pending. There are %1 recurrings not pending.', array(1 => count($notPending)));
+      }
+      if (!empty($notUnverified)) {
+        $msgs[] = ts('All selected recurrings need unverified. There are %1 recurrings not unverified.', array(1 => count($notUnverified)));
+      }
+      $msg = implode('<br/>', $msgs);
+      CRM_Core_Error::statusBounce($msg);
+    }
+
     if (!empty($this->_achDatas)) {
       $countHaveInvoiceId = '';
       foreach ($this->_achDatas as $recurId => $achData) {
