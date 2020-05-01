@@ -49,6 +49,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     $submittedValues = $this->controller->exportValues($this->_name);
     if ($submittedValues['uploadFile']['name']) {
       $content = file_get_contents($submittedValues['uploadFile']['name']);
+      $result = CRM_Contribute_BAO_TaiwanACH::parseUpload($content);
       $result = NULL;
       $result = array(
         'process_id' => '123456789', // export batch id, should be unique every generate
@@ -70,7 +71,6 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
           ),
         ),
       );
-      // $result = CRM_Contribute_BAO_TaiwanACH::parseUpload();
       $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $contributionType = CRM_Contribute_PseudoConstant::contributionType();
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
