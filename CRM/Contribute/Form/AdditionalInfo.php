@@ -508,6 +508,27 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
     list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams);
 
+    if (!empty($params['is_attach_receipt'])) {
+      $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+      if (!empty($activityTypeId)) {
+        if (empty($userID)) {
+          $session = CRM_Core_Session::singleton();
+          $userID = $session->get('userID');
+        }
+        $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+        $activityParams = array(
+          'activity_type_id' => $activityTypeId,
+          'activity_record_id' => $params['contribution_id'],
+          'activity_date_time' => date('Y-m-d H:i:s'),
+          'status_id' => $statusId,
+          'subject' => $params['source'] .' - '.ts('Email Receipt'),
+          'target_contact_id' => $params['contact_id'],
+          'source_contact_id' => $userID,
+        );
+        CRM_Activity_BAO_Activity::create($activityParams);
+      }
+    }
+
     return $sendReceipt;
   }
 
