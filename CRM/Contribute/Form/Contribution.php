@@ -913,6 +913,10 @@ WHERE  contribution_id = {$this->_id}
     //add receipt for offline contribution
     $this->addElement('checkbox', 'is_attach_receipt', ts('Email Receipt').'?');
 
+    $optionGroupId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name = 'activity_type'");
+    $haveAttachReceiptOption = CRM_Core_DAO::singleValueQuery("SELECT name FROM civicrm_option_value WHERE name = 'Email Receipt' AND option_group_id = %1", array(1 => array($optionGroupId, 'Positive')));
+    $this->assign('have_attach_receipt_option', $haveAttachReceiptOption);
+
     // add mail from address select box
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
     if (!empty($this->_values['contribution_page_id'])) {
