@@ -50,27 +50,27 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     if ($submittedValues['uploadFile']['name']) {
       $content = file_get_contents($submittedValues['uploadFile']['name']);
       $result = CRM_Contribute_BAO_TaiwanACH::parseUpload($content);
-      $result = NULL;
-      $result = array(
-        'process_id' => '123456789', // export batch id, should be unique every generate
-        'import_type' => 'transaction', // transaction or validation
-        'payment_type' => 'ACH Bank', // ACH Bank or ACH Post
-        'lines' => array(           // each line is a recurring (when verification) or a contriubtion (when transaction)
-          '123' => array(
-            'id' => 123,
-            'trxn_id' => '123',
-            'receipt_id' => 'abc-123',
-            'payment_instrument_id' => 1,
-            'contribution_type_id' => 1,
-            'source' => 'ach generate ...',
-            'created_date' => '2020-01-22 10:01:55',
-            'receive_date' => '2020-01-22 10:02:03',
-            'contribution_status_id' => 2,
-            'total_amount' => 101.00,
-            'currency' => 'TWD',
-          ),
-        ),
-      );
+      // $result = NULL;
+      // $result = array(
+      //   'process_id' => '123456789', // export batch id, should be unique every generate
+      //   'import_type' => 'transaction', // transaction or validation
+      //   'payment_type' => 'ACH Bank', // ACH Bank or ACH Post
+      //   'lines' => array(           // each line is a recurring (when verification) or a contriubtion (when transaction)
+      //     '123' => array(
+      //       'id' => 123,
+      //       'trxn_id' => '123',
+      //       'receipt_id' => 'abc-123',
+      //       'payment_instrument_id' => 1,
+      //       'contribution_type_id' => 1,
+      //       'source' => 'ach generate ...',
+      //       'created_date' => '2020-01-22 10:01:55',
+      //       'receive_date' => '2020-01-22 10:02:03',
+      //       'contribution_status_id' => 2,
+      //       'total_amount' => 101.00,
+      //       'currency' => 'TWD',
+      //     ),
+      //   ),
+      // );
       $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $contributionType = CRM_Contribute_PseudoConstant::contributionType();
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();

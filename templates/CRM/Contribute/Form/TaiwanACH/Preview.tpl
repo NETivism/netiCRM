@@ -23,7 +23,7 @@
       <thead>
         <th>{ts}Contribution ID{/ts}</th>
         <th>{ts}Transaction ID{/ts}</th>
-        <th>{ts}Receipt ID{/ts}</th>
+        <th>{ts}Invoice ID{/ts}</th>
         <th>{ts}Payment Instrument{/ts}</th>
         <th>{ts}Amount{/ts}</th>
         <th>{ts}Type{/ts}</th>
@@ -37,7 +37,7 @@
         <tr>
           <td>{$line.id}</td>
           <td>{$line.trxn_id}</td>
-          <td>{$line.receipt_id}</td>
+          <td>{$line.invoice_id}</td>
           <td>{$line.payment_instrument}</td>
           <td>{$line.total_amount|crmMoney}</td>
           <td>{$line.contribution_type}</td>

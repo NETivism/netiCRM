@@ -38,11 +38,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static $_txtFormat = array();
 
-  CONST BANK = 1;
-  CONST POST = 2;
+  CONST BANK = 'ACH Bank';
+  CONST POST = 'ACH Post';
 
-  CONST VERIFICATION = 1;
-  CONST TRANSACTION = 2;
+  CONST VERIFICATION = 'verification';
+  CONST TRANSACTION = 'transaction';
 
   public static function getTxtFormatArray() {
     if (empty(self::$_txtFormat)) {
@@ -780,6 +780,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $lines = count($rows);
     $instrumentType = '';
     $processType = '';
+    $resolvedData = array();
+    // Consider instrument type and process type, Transfer row text to array.
     for ($i = 0; $i < $lines; $i++) {
       $row = $rows[$i];
       if ($i == 0) {
@@ -809,16 +811,72 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $header = self::doCheckParseRow($row, $instrumentType, $processType, 'header');
         }
         else if($instrumentType == self::POST) {
-          $row[] = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
+          $resolvedData[] = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
         }
       }
       else if ($i == ($lines -1)) {
         $footer = self::doCheckParseRow($row, $instrumentType, $processType, 'footer');
       }
       else {
-        $row[] = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
+        $resolvedData[] = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
       }
     }
+
+    // Rearrange data, Add id to key so that it's easy to find the row.
+    $rearrangeData = array();
+    foreach ($resolvedData as $data) {
+      if ($instrumentType == self::BANK) {
+        $rearrangeData[$data[10]] = $data;
+      }
+      else if ($instrumentType == self::POST) {
+        $rearrangeData[$data[9]] = $data;
+      }
+    }
+
+
+    // Get id and data which need to process from civicrm_log
+    if ($instrumentType == self::BANK) {
+      if ($processType == self::VERIFICATION) {
+        $entityId = $header[2];
+      }
+      if ($processType == self::TRANSACTION) {
+        $entityId = $header[3];
+      }
+    }
+
+    $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_$processType' AND entity_id = %1 ORDER BY modified_date DESC LIMIT 1";
+    $params = array( 1 => array($entityId, 'String'));
+    $data = CRM_Core_DAO::singleValueQuery($sql, $params);
+    $processIds = explode(',', $data);
+    $processedData = array();
+    foreach ($processIds as $id) {
+      // if $processType = 'verification' => 'contribution_recur_id'
+      // if $processType = 'transaction' => 'contribution_id'
+      $parsedData = $rearrangeData[$id];
+      if ($instrumentType == self::BANK) {
+        if ($processType == self::VERIFICATION) {
+          $data = self::doProcessVerification($id, $parsedData);
+        }
+        if ($processType == self::TRANSACTION) {
+          $data = self::doProcessTransaction($id, $parsedData);
+        }
+        $processedData[$data['id']] = $data;
+      }
+      if ($instrumentType == self::POST) {
+        if ($processType == self::VERIFICATION) {
+        }
+        if ($processType == self::TRANSACTION) {
+        }
+      }
+    }
+
+    $result = array(
+      'import_type' => $processType,
+      'payment_type' => $instrumentType,
+    );
+    $result['process_id'] = $entityId;
+    $result['lines'] = $processedData;
+    return $result;
   }
 
   static function doCheckParseRow($row = '', $instrumentType = self::BANK, $processType = self::VERIFICATION, $headerOrFooter = 'body') {
@@ -869,7 +927,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
             3 => $format[$wordCount],
           ));
         }
-        $returnArray[] = $row;
+        $returnArray[] = trim($str);
       }
     }
 
@@ -897,6 +955,52 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       CRM_Core_Error::statusBounce(ts("Format is not correct. Input format is '%1'", array(1 => $formatString)));
     }
     return $regexp;
+  }
+
+  static function doProcessVerification($recurId, $parsedData, $isPreview = TRUE) {
+    $arrayLen = count($parsedData);
+    if ($arrayLen == 18 ) {
+      $processType = 'ACH Bank';
+    }
+    if ($arrayLen == 14 ) {
+      $processType = 'ACH Post';
+    }
+    $taiwanACHData = self::getValue($recurId);
+    $instrumentId = CRM_Core_OptionGroup::values('payment_instrument', FALSE, FALSE, FALSE, "AND v.name = '$processType'", 'value');
+    $instrumentId = reset($instrumentId);
+    $contributionTypeId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $taiwanACHData['contribution_page_id'], 'contribution_type_id');
+
+
+    $result = array(
+      'id' => $recurId,
+      'trxn_id' => $taiwanACHData['trxn_id'],
+      'invoice_id' => $taiwanACHData['invoice_id'],
+      'payment_instrument_id' => $instrumentId,
+      'contribution_type_id' => $contributionTypeId,
+      'source' => ts('ach generate ...'),
+      'created_date' => $taiwanACHData['create_date'],
+      'receive_date' => $taiwanACHData['start_date'],
+      'contribution_status_id' => $taiwanACHData['contribution_status_id'],
+      'total_amount' => $taiwanACHData['amount'],
+      'currency' => $taiwanACHData['currency'],
+    );
+    if ($taiwanACHData['contribution_status_id'] == 5 && $taiwanACHData['stamp_verification'] == 0) {
+      if ($parsedData[11] == 'R') {
+        if ($parsedData[12] == '0') {
+          $result['contribution_status_id'] = 1;
+        }
+        else {
+          $result['contribution_status_id'] = 2;
+        }
+      }
+    }
+    if ($isPreview) {
+      return $result;
+    }
+  }
+
+  static function doProcessTransaction($contributionId, $parsedData, $isPreview = TRUE) {
+    
   }
 }
 
