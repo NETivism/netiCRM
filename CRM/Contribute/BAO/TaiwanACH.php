@@ -873,9 +873,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $result = array(
       'import_type' => $processType,
       'payment_type' => $instrumentType,
+      'parsed_data' => $rearrangeData,
     );
     $result['process_id'] = $entityId;
-    $result['lines'] = $processedData;
+    $result['processed_data'] = $processedData;
     return $result;
   }
 
@@ -958,18 +959,18 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   }
 
   static function doProcessVerification($recurId, $parsedData, $isPreview = TRUE) {
+    // Consider type is Bank or Post
     $arrayLen = count($parsedData);
     if ($arrayLen == 18 ) {
-      $processType = 'ACH Bank';
+      $processType = self::BANK;
     }
     if ($arrayLen == 14 ) {
-      $processType = 'ACH Post';
+      $processType = self::POST;
     }
     $taiwanACHData = self::getValue($recurId);
     $instrumentId = CRM_Core_OptionGroup::values('payment_instrument', FALSE, FALSE, FALSE, "AND v.name = '$processType'", 'value');
     $instrumentId = reset($instrumentId);
     $contributionTypeId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $taiwanACHData['contribution_page_id'], 'contribution_type_id');
-
 
     $result = array(
       'id' => $recurId,
@@ -979,24 +980,54 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'contribution_type_id' => $contributionTypeId,
       'source' => ts('ach generate ...'),
       'created_date' => $taiwanACHData['create_date'],
-      'receive_date' => $taiwanACHData['start_date'],
+      'start_date' => date('Y-m-d H:i:s'),
       'contribution_status_id' => $taiwanACHData['contribution_status_id'],
       'total_amount' => $taiwanACHData['amount'],
       'currency' => $taiwanACHData['currency'],
     );
-    if ($taiwanACHData['contribution_status_id'] == 5 && $taiwanACHData['stamp_verification'] == 0) {
-      if ($parsedData[11] == 'R') {
-        if ($parsedData[12] == '0') {
-          $result['contribution_status_id'] = 1;
+    $isError = FALSE;
+    $messages = array();
+    if ($taiwanACHData['contribution_status_id'] == 2 && $taiwanACHData['stamp_verification'] == 0) {
+      if ($processType == self::BANK) {
+        if ($parsedData[11] == 'R') {
+          if ($parsedData[12] == '0') {
+            $result['contribution_status_id'] = 5;
+          }
+          else {
+            $result['contribution_status_id'] = 4;
+            $failed_reason = $parsedData[12];
+          }
         }
         else {
-          $result['contribution_status_id'] = 2;
+          $isError = TRUE;
+          $messages[] = ts("Type of upload file should be a responding file.");
         }
       }
+    }
+    else {
+      $isError = TRUE;
+      $messages[] = ts("Status of recurring: %1 should be 'pending'.", array(1 => $recurId));
+    }
+    if ($isError) {
+      CRM_Core_Error::statusBounce(implode('<br/>', $messages));
     }
     if ($isPreview) {
       return $result;
     }
+
+    // if $isPreview is FALSE, Execute modify CRM data.
+    $taiwanACHData['contribution_status_id'] = $result['contribution_status_id'];
+    if ($taiwanACHData['contribution_status_id'] == 5) {
+      $taiwanACHData['start_date'] = $result['start_date'];
+      $taiwanACHData['stamp_verification'] = 1;
+    }
+    else if ($taiwanACHData['contribution_status_id'] == 4){
+      $taiwanACHData['data']['verification_failed_reason'] = $failed_reason;
+      $taiwanACHData['data']['verification_failed_date'] = date('Y-m-d H:i:s');
+      $taiwanACHData['stamp_verification'] = 2;
+    }
+    self::add($taiwanACHData);
+    return $result;
   }
 
   static function doProcessTransaction($contributionId, $parsedData, $isPreview = TRUE) {

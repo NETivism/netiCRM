@@ -55,7 +55,29 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
       //   'process_id' => '123456789', // export batch id, should be unique every generate
       //   'import_type' => 'transaction', // transaction or validation
       //   'payment_type' => 'ACH Bank', // ACH Bank or ACH Post
-      //   'lines' => array(           // each line is a recurring (when verification) or a contriubtion (when transaction)
+      //   'parsed_data' => array(              // each line is the parsed result of the file
+      //     '123' => array(                    // Recur_id
+      //       0 => '000001',
+      //       1 => '530',
+      //       2 => '43214321',
+      //       3 => '0012345',
+      //       4 => '0000000000123456',
+      //       5 => '12341234',
+      //       6 => '12341234',
+      //       7 => 'A',
+      //       8 => '20200501',
+      //       9 => '0071130',
+      //       10 => '123',
+      //       11 => 'R',
+      //       12 => '0',
+      //       13 => '',
+      //       14 => '',
+      //       15 => '',
+      //       16 => '',
+      //       17 => '',
+      //     ),
+      //   ),
+      //   'processed_data' => array(       // each line is the result of a recurring (when verification) or a contriubtion (when transaction)
       //     '123' => array(
       //       'id' => 123,
       //       'trxn_id' => '123',
@@ -75,7 +97,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
       $contributionType = CRM_Contribute_PseudoConstant::contributionType();
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
       $counter = array();
-      foreach($result['lines'] as &$line) {
+      foreach($result['processed_data'] as &$line) {
         if (!empty($line['payment_instrument_id'])) {
           $line['payment_instrument'] = $paymentInstrument[$line['payment_instrument_id']];
         }

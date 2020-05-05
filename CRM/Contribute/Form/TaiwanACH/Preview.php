@@ -60,23 +60,15 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
 
   function postProcess() {
     // send parseResult into BAO
-    switch($this->_parseResult['payment_type']) {
-      case 'ACH Bank':
-        if ($this->_parseResult['import_type'] == 'verification') {
-
-        }
-        elseif ($this->_parseResult['import_type'] == 'transaction') {
-
-        }
-        break;
-      case 'ACH Post':
-        if ($this->_parseResult['import_type'] == 'verification') {
-
-        }
-        elseif ($this->_parseResult['import_type'] == 'transaction') {
-
-        }
-        break;
+    if ($this->_parseResult['import_type'] == 'verification') {
+      foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
+        $this->_processResult[$id] = CRM_Contribute_BAO_TaiwanACH::doProcessVerification($id, $this->_parseResult['parsed_data'][$id], FALSE);
+      }
+    }
+    elseif ($this->_parseResult['import_type'] == 'transaction') {
+      foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
+        $this->_processResult[$id] = CRM_Contribute_BAO_TaiwanACH::doProcessTransaction($id, $this->_parseResult['parsed_data'][$id], FALSE);
+      }
     }
   }
 
