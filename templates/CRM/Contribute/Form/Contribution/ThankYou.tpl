@@ -351,7 +351,7 @@
 
     {capture assign=product_id}{ts}Contribution Page{/ts}-{$id}{/capture}
     {if !$trxn_id}
-      {assign var=transaction_id value=$contribution_id}
+      {capture assign=transaction_id}{ts}Contribution ID{/ts}-{$contribution_id}{/capture}
     {else}
       {assign var=transaction_id value=$trxn_id}
     {/if}
