@@ -362,6 +362,6 @@
     {/if}
     {include file="CRM/common/DataLayer.tpl" dataLayerType='purchase' transaction_id=$transaction_id total_amount=$product_amount product_name=$contributionPage.title product_id=$product_id product_amount=$product_amount product_category=$product_category product_quantity=1}
     {if $payment_result_type eq 4 && $is_monetary}
-      {include file="CRM/common/DataLayer.tpl" dataLayerType='refund'}
+      {include file="CRM/common/DataLayer.tpl" dataLayerType='refund' transaction_id=$transaction_id}
     {/if}
 </div>

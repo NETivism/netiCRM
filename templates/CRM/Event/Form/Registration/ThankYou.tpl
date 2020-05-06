@@ -326,6 +326,6 @@
     {assign var=total_amount value=$totalAmount}
     {include file="CRM/common/DataLayer.tpl" dataLayerType='purchase' transaction_id=$transaction_id total_amount=$product_amount product_name=$event.title product_id=$product_id product_amount=$product_amount product_category=$event.event_type product_quantity=1}
     {if $payment_result_type eq 4 && $paidEvent}
-      {include file="CRM/common/DataLayer.tpl" dataLayerType='refund'}
+      {include file="CRM/common/DataLayer.tpl" dataLayerType='refund' transaction_id=$transaction_id}
     {/if}
 </div>
