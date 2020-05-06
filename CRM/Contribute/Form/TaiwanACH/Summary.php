@@ -7,6 +7,8 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
   protected $_action = NULL;
 
   function preProcess() {
+    $this->_processResult = $this->get('processResult');
+    $this->assign('processed_result', $this->_processResult);
   }
 
   function buildQuickForm() {

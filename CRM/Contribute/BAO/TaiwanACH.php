@@ -373,6 +373,22 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $table = self::getPostVerifyTable($achDatas, $params);
       }
 
+      $checkResults = $table['check_results'];
+      $isError = FALSE;
+      foreach($checkResults as $lineType => $check) {
+        if (!empty($check['is_error'])) {
+          $isError = TRUE;
+          foreach ($check['messages'] as $message) {
+            $messages[] = ts('Error on line %1:', array(1 => $lineType)).$message;
+          }
+        }
+      }
+      if ($isError) {
+        CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+      }
+
+      unset($table['check_results']);
+
       // Add civicrm_log file
       $log = new CRM_Core_DAO_Log();
       $log->entity_table = 'civicrm_contribution_taiwanach_verification';
@@ -431,6 +447,20 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $table = self::getPostTransactTable($achDatas, $params);
       }
 
+      $checkResults = $table['check_results'];
+      $isError = FALSE;
+      foreach($checkResults as $lineType => $check) {
+        if (!empty($check['is_error'])) {
+          $isError = TRUE;
+          foreach ($check['messages'] as $message) {
+            $messages[] = ts('Error on line %1:', array(1 => $lineType)).$message;
+          }
+        }
+      }
+      if ($isError) {
+        CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+      }
+
       $log = new CRM_Core_DAO_Log();
       $log->entity_table = 'civicrm_contribution_taiwanach_transaction';
       $log->entity_id = $params['transact_id'];
@@ -485,17 +515,18 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static private function getBankVerifyTable($achDatas, &$params) {
     $paymentProcessor = $params['paymentProcessor'];
+    $orgBankCode = str_pad($paymentProcessor['signature'], 7, '0', STR_PAD_LEFT);
 
     // Generate Header
     $header = array(
       'BOF',
       'ACHP02',
       $params['date'],
-      $paymentProcessor['signature'],
+      $orgBankCode,
       'V10',
       str_repeat(' ', 193),
     );
-    self::doCheckParseRow($header, self::BANK, self::VERIFICATION, 'header');
+    $checkResults['header'] = self::doCheckParseRow($header, self::BANK, self::VERIFICATION, 'header');
     $table[] = $header;
 
     // Generate Body Table
@@ -513,7 +544,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_pad($achData['identifier_number'], 20, ' ', STR_PAD_RIGHT),
         'A',
         $params['date'],
-        $paymentProcessor['signature'],
+        $orgBankCode,
         str_pad($achData['contribution_recur_id'], 40, ' ', STR_PAD_RIGHT),
         'N',
         ' ',
@@ -523,7 +554,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 20),
         str_repeat(' ', 53),
       );
-    self::doCheckParseRow($row, self::BANK, self::VERIFICATION, 'body');
+      $checkResults[$i] = self::doCheckParseRow($row, self::BANK, self::VERIFICATION, 'body');
       $table[] = $row;
       $i++;
     }
@@ -535,7 +566,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $total,
       str_repeat(' ', 209),
     );
-    self::doCheckParseRow($footer, self::BANK, self::VERIFICATION, 'footer');
+    $checkResults['footer'] = self::doCheckParseRow($footer, self::BANK, self::VERIFICATION, 'footer');
+    $table['check_results'] = $checkResults;
     $table[] = $footer;
 
     return $table;
@@ -565,7 +597,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         ' ',
         str_repeat(' ', 26),
       );
-      self::doCheckParseRow($row, self::POST, self::VERIFICATION, 'body');
+      $checkResults[$i] = self::doCheckParseRow($row, self::POST, self::VERIFICATION, 'body');
       $table[] = $row;
       $i++;
     }
@@ -585,7 +617,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       str_repeat('0', 6),
       str_repeat(' ', 54),
     );
-    self::doCheckParseRow($footer, self::POST, self::VERIFICATION, 'footer');
+    $checkResults['footer'] = self::doCheckParseRow($footer, self::POST, self::VERIFICATION, 'footer');
+    $table['check_results'] = $checkResults;
     $table[] = $footer;
 
     return $table;
@@ -601,12 +634,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'ACHP01',
       $date,
       $time = str_pad($params['transact_id'], 6, '0', STR_PAD_LEFT),
-      $paymentProcessor['signature'],
+      str_pad($paymentProcessor['signature'], 7, '0', STR_PAD_LEFT),
       '9990250',
       'V10',
       str_repeat(' ', 210),
     );
-    self::doCheckParseRow($header, self::BANK, self::TRANSACTION, 'header');
+    $checkResults['header'] = self::doCheckParseRow($header, self::BANK, self::TRANSACTION, 'header');
     $table[] = $header;
 
     // Generate Body Table
@@ -641,7 +674,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 20),
         str_repeat(' ', 39),
       );
-      self::doCheckParseRow($row, self::BANK, self::TRANSACTION, 'body');
+      $checkResults[$i] = self::doCheckParseRow($row, self::BANK, self::TRANSACTION, 'body');
       $table[] = $row;
       $i++;
       $totalAmount += $achDatas['amount'];
@@ -661,7 +694,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       str_repeat(' ', 8),
       str_repeat(' ', 187),
     );
-    self::doCheckParseRow($footer, self::BANK, self::TRANSACTION, 'footer');
+    $checkResults['footer'] = self::doCheckParseRow($footer, self::BANK, self::TRANSACTION, 'footer');
+    $table['check_results'] = $checkResults;
     $table[] = $footer;
 
     return $table;
@@ -707,7 +741,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 20),
         str_repeat(' ', 10),
       );
-      self::doCheckParseRow($row, self::POST, self::TRANSACTION, 'body');
+      $checkResults[$i] = self::doCheckParseRow($row, self::POST, self::TRANSACTION, 'body');
       $table[] = $row;
       $i++;
     }
@@ -730,7 +764,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       str_repeat('0', 13),
       str_repeat(' ', 45),
     );
-    self::doCheckParseRow($footer, self::POST, self::TRANSACTION, 'footer');
+    $checkResults['footer'] = self::doCheckParseRow($footer, self::POST, self::TRANSACTION, 'footer');
+    $table['check_results'] = $checkResults;
     $table[] = $footer;
     return $table;
   }
@@ -780,9 +815,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $lines = count($rows);
     $instrumentType = '';
     $processType = '';
+    $isError = FALSE;
     $resolvedData = array();
     // Consider instrument type and process type, Transfer row text to array.
     for ($i = 0; $i < $lines; $i++) {
+      $bodyLine = NULL;
       $row = $rows[$i];
       if ($i == 0) {
         $wordCount = strlen($row);
@@ -809,16 +846,38 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         }
         if ($instrumentType == self::BANK) {
           $header = self::doCheckParseRow($row, $instrumentType, $processType, 'header');
+          if (!empty($header['is_error'])) {
+            $isError = TRUE;
+            foreach ($header['messages'] as $message) {
+              $messages[] = ts('Header have wrong value :').$message;
+            }
+          }
         }
         else if($instrumentType == self::POST) {
-          $resolvedData[] = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
+          $bodyLine = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
         }
       }
       else if ($i == ($lines -1)) {
         $footer = self::doCheckParseRow($row, $instrumentType, $processType, 'footer');
+        if (!empty($footer['is_error'])) {
+          $isError = TRUE;
+          foreach ($footer['messages'] as $message) {
+            $messages[] = ts('Footer have wrong value :').$message;
+          }
+        }
       }
       else {
-        $resolvedData[] = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
+        $bodyLine = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
+      }
+      if (!empty($bodyLine)) {
+        $resolvedData[] = $bodyLine;
+        if (!empty($bodyLine['is_error'])) {
+          $isError = TRUE;
+          foreach ($bodyLine['messages'] as $message) {
+            $lineOrder = ($instrumentType == self::POST) ? $i+1 : $i;
+            $messages[] = ts('The data of order %1 have wrong value :', $lineOrder).$message;
+          }
+        }
       }
     }
 
@@ -847,36 +906,44 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_$processType' AND entity_id = %1 ORDER BY modified_date DESC LIMIT 1";
     $params = array( 1 => array($entityId, 'String'));
     $data = CRM_Core_DAO::singleValueQuery($sql, $params);
-    $processIds = explode(',', $data);
-    $processedData = array();
-    foreach ($processIds as $id) {
-      // if $processType = 'verification' => 'contribution_recur_id'
-      // if $processType = 'transaction' => 'contribution_id'
-      $parsedData = $rearrangeData[$id];
-      if ($instrumentType == self::BANK) {
-        if ($processType == self::VERIFICATION) {
-          $data = self::doProcessVerification($id, $parsedData);
+    if (!empty($data)) {
+      $processIds = explode(',', $data);
+      $processedData = array();
+      foreach ($processIds as $id) {
+        // if $processType = 'verification' => 'contribution_recur_id'
+        // if $processType = 'transaction' => 'contribution_id'
+        $parsedData = $rearrangeData[$id];
+        if (empty($rearrangeData['is_error'])) {
+          if ($instrumentType == self::BANK) {
+            if ($processType == self::VERIFICATION) {
+              $data = self::doProcessVerification($id, $parsedData);
+            }
+            if ($processType == self::TRANSACTION) {
+              $data = self::doProcessTransaction($id, $parsedData);
+            }
+            if (!empty($data['is_error'])) {
+              $isError = TRUE;
+              foreach ($data['messages'] as $message) {
+                $messages[] = ts('There is process error on id: %1', $id).$message;
+              }
+            }
+            $processedData[$data['id']] = $data;
+          }
         }
-        if ($processType == self::TRANSACTION) {
-          $data = self::doProcessTransaction($id, $parsedData);
-        }
-        $processedData[$data['id']] = $data;
       }
-      if ($instrumentType == self::POST) {
-        if ($processType == self::VERIFICATION) {
-        }
-        if ($processType == self::TRANSACTION) {
-        }
+      if ($isError) {
+        CRM_Core_Error::statusBounce(implode('<br/>', $messages));
       }
-    }
 
-    $result = array(
-      'import_type' => $processType,
-      'payment_type' => $instrumentType,
-      'parsed_data' => $rearrangeData,
-    );
-    $result['process_id'] = $entityId;
-    $result['processed_data'] = $processedData;
+      $result = array(
+        'import_type' => $processType,
+        'payment_type' => $instrumentType,
+        'parsed_data' => $rearrangeData,
+      );
+      $result['process_id'] = $entityId;
+      $result['processed_data'] = $processedData;
+
+    }
     return $result;
   }
 
@@ -896,10 +963,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $regexp = self::getRegexpFromFormatString($format[$wordCount]);
           if (!preg_match($regexp, $row[$i])) {
             $isError = TRUE;
-            $msg[] = ts("Row %1 is not correct, input value is %2, format should be %3", array(
-              1 => $i+1,
-              2 => str_replace(' ', "_", $row[$i]),
-              3 => $format[$wordCount],
+            $msg[] = ts("In %1, row %2 is not correct, input value is %3, format should be %4", array(
+              1 => $headerOrFooter,
+              2 => $i+1,
+              3 => str_replace(' ', "_", $row[$i]),
+              4 => $format[$wordCount],
             ));
           }
         }
@@ -909,7 +977,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     else {
       $returnArray = array();
       // Check when input is String
-      for ($i = 0; $i < count($formatKeys); $i++) { 
+      for ($i = 0; $i < count($formatKeys); $i++) {
         $wordCount = $formatKeys[$i];
         if ($i == (count($formatKeys) - 1)) {
           $str = substr($row, $wordCount - 1);
@@ -922,10 +990,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $regexp = self::getRegexpFromFormatString($format[$wordCount]);
         if (!preg_match($regexp, $str)) {
           $isError = TRUE;
-          $msg[] = ts("Word since %1 is not correct, input value is %2, format should be %3", array(
-            1 => $formatKeys[$i],
-            2 => str_replace(' ', "_", $str),
-            3 => $format[$wordCount],
+          $msg[] = ts("In %1, word since %2 is not correct, input value is %3, format should be %4", array(
+            1 => $headerOrFooter,
+            2 => $formatKeys[$i],
+            3 => str_replace(' ', "_", $str),
+            4 => $format[$wordCount],
           ));
         }
         $returnArray[] = trim($str);
@@ -933,7 +1002,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     if ($isError) {
-      CRM_Core_Error::statusBounce(implode('<br/>', $msg));
+      $returnArray['is_error'] = TRUE;
+      $returnArray['messages'] = $msg;
     }
 
     return $returnArray;
@@ -1000,7 +1070,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         }
         else {
           $isError = TRUE;
-          $messages[] = ts("Type of upload file should be a responding file.");
+          $messages[] = ts("Type of upload file is not a responding file.");
         }
       }
     }

@@ -33,7 +33,7 @@
         <th>{ts}Status{/ts}</th>
       </thead>
       <tbody>
-      {foreach from=$parseResult.lines item=line}
+      {foreach from=$processed_result item=line}
         <tr>
           <td>{$line.id}</td>
           <td>{$line.trxn_id}</td>

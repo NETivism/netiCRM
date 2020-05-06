@@ -80,7 +80,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     parent::postProcess();
     $values = $this->exportValues();
     if ($this->_exportParams) {
-      $this->_exportParams['file_name'] = 'ACHVerification'.$values['datetime'].'_'.$values['datetime_time'];
+      $this->_exportParams['file_name'] = 'ACH_Verification'.$values['datetime'].'_'.$values['datetime_time'];
     }
     CRM_Contribute_BAO_TaiwanACH::doExportVerification($this->_additionalIds, $this->_exportParams, $values['payment_type'], $values['export_format']);
   }

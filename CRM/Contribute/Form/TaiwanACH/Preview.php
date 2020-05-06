@@ -60,6 +60,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
 
   function postProcess() {
     // send parseResult into BAO
+    // Considering type is Bank or Post in process function
     if ($this->_parseResult['import_type'] == 'verification') {
       foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
         $this->_processResult[$id] = CRM_Contribute_BAO_TaiwanACH::doProcessVerification($id, $this->_parseResult['parsed_data'][$id], FALSE);
@@ -70,6 +71,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
         $this->_processResult[$id] = CRM_Contribute_BAO_TaiwanACH::doProcessTransaction($id, $this->_parseResult['parsed_data'][$id], FALSE);
       }
     }
+    $this->set('processResult', $this->_processResult);
   }
 
   /**
