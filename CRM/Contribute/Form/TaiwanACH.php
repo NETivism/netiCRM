@@ -151,8 +151,25 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       }
       $params[$key] = $value;
     }
-    if ($this->_action & CRM_Core_Action::ADD) {
-      $params['contribution_status_id'] = 2;
+    // recur_status_id default is 2 or recur value
+    $params['contribution_status_id'] = 2;
+    if (($this->_action & CRM_Core_Action::UPDATE) && !empty($this->_contributionRecurId)) {
+      $params['contribution_status_id'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_contributionRecurId, 'contribution_status_id');
+      $stampVerification = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TaiwanACH', $this->_contributionRecurId, 'stamp_verification', 'contribution_recur_id');
+    }
+    // if stampVerification Change, check status_id and stamp verification.
+    if ($stampVerification != $params['stamp_verification']) {
+      if($params['contribution_status_id'] == 2) {
+        if ($params['stamp_verification'] == 1) {
+          $params['contribution_status_id'] = 5;
+        }
+        else if($params['stamp_verification'] == 2) {
+          $params['contribution_status_id'] = 4;
+        }
+      }
+      else if ($params['stamp_verification'] == 0){
+        $params['contribution_status_id'] = 2;
+      }
     }
     $result = CRM_Contribute_BAO_TaiwanACH::add($params);
     if ($result->contribution_recur_id) {

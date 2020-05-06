@@ -386,7 +386,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       if ($isError) {
         CRM_Core_Error::statusBounce(implode('<br/>', $messages));
       }
-
       unset($table['check_results']);
 
       // Add civicrm_log file
@@ -460,6 +459,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       if ($isError) {
         CRM_Core_Error::statusBounce(implode('<br/>', $messages));
       }
+      unset($table['check_results']);
 
       $log = new CRM_Core_DAO_Log();
       $log->entity_table = 'civicrm_contribution_taiwanach_transaction';

@@ -80,8 +80,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'processor_id');
     $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
     if (!empty($processorId)) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $isTest ? 'test':'live');
-      $paymentClass = get_class($paymentProcessor);
+      $test = $isTest ? 'test':'live';
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $test);
+      $payment = &CRM_Core_Payment::singleton($test, $paymentProcessor);
+      $paymentClass = get_class($payment);
     }
     if (empty($paymentClass)) {
       $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_id, 'id', 'contribution_recur_id');
@@ -183,8 +185,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'processor_id');
     $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
     if (!empty($processorId)) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $isTest ? 'test':'live');
-      $paymentClass = get_class($paymentProcessor);
+      $test = $isTest ? 'test':'live';
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $test);
+      $payment = &CRM_Core_Payment::singleton($test, $paymentProcessor);
+      $paymentClass = get_class($payment);
     }
     if (empty($paymentClass)) {
       $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_id, 'id', 'contribution_recur_id');
