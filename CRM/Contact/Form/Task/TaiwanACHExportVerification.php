@@ -84,8 +84,14 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     // $this->_additionalIds <== recurring id
     parent::postProcess();
     $values = $this->exportValues();
-    $date = $values['datetime'];
+    $date = date('Ymd', strtotime($values['datetime']));
+    if ($values['is_overwrite']) {
+      $sql = "UPDATE civicrm_contribution_recur SET invoice_id = NULL WHERE invoice_id LIKE %1";
+      $params = array( 1 => array("{$date}_%", 'String'));
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    }
     $this->_exportParams['file_name'] = 'ACH_Verification_'.$date;
+    $this->_exportParams['date'] = $date;
     CRM_Contribute_BAO_TaiwanACH::doExportVerification($this->_additionalIds, $this->_exportParams, $values['payment_type'], $values['export_format']);
   }
 }

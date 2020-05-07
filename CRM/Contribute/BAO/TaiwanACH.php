@@ -264,7 +264,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $recurParams[$fieldName] = $params[$fieldName];
       }
     }
-    $recurParams['create_date'] = date('YmdHis');
+    if (empty($recurParams['create_date'])) {
+      $recurParams['create_date'] = date('YmdHis');
+    }
     $ids = array();
     if (!empty($taiwanACH->contribution_recur_id)) {
       $recurParams['id'] = $taiwanACH->contribution_recur_id;
@@ -393,7 +395,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $log->entity_table = 'civicrm_contribution_taiwanach_verification';
       $log->entity_id = $params['date'];
       $log->data = implode(',', $recurringIds);
-      $log->modified_date = date('Y-m-d H:i:s');
+      $log->modified_date = $params['date'].'120000';
       $session = CRM_Core_Session::singleton();
       $log->modified_id = $session->get('userID');
       $log->save();
@@ -465,7 +467,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $log->entity_table = 'civicrm_contribution_taiwanach_transaction';
       $log->entity_id = $params['transact_id'];
       $log->data = implode(',', $params['contribution_ids']);
-      $log->modified_date = date('Y-m-d H:i:s');
+      $log->modified_date = date('Ymd', strtotime($params['transact_date'])).str_pad($params['transact_id'], 6, '0', STR_PAD_LEFT);
       $session = CRM_Core_Session::singleton();
       $log->modified_id = $session->get('userID');
       $log->save();
@@ -647,7 +649,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $totalAmount = 0;
     foreach ($achDatas as $achData) {
       $contribution = self::createContributionByACHData($achData);
-      $invoice_id = "{$params['transact_id']}_$i";
+      $invoice_id = "{$params['transact_date']}_{$params['transact_id']}_$i";
       CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'invoice_id', $invoice_id);
       $params['contribution_ids'][] = $contribution->id;
       $identifier_number = str_pad($achData['identifier_number'], 10, ' ', STR_PAD_RIGHT);
@@ -773,7 +775,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   }
 
   static private function createContributionByACHData($achData) {
-    $countContribOfThisRecur = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", array(1 => array($achData['contribution_recur_id'], 'Integer')));
     $page = new CRM_Contribute_DAO_ContributionPage();
     $page->id = $achData['contribution_page_id'];
     $page->find(TRUE);
@@ -795,7 +796,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'contribution_type_id' => $page->contribution_type_id,
       'contribution_status_id' => 2,
       'contribution_page_id' => $achData['contribution_page_id'],
-      'invoice_id' => $achData['invoice_id'].'_'.($countContribOfThisRecur+1),
       'payment_processor_id' => $achData['processor_id'],
       'is_test' => $achData['is_test'],
       'currency' => $achData['currency'],
@@ -911,7 +911,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
     }
 
-    $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_$processType' AND entity_id = %1 ORDER BY modified_date DESC LIMIT 1";
+    $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_$processType' AND entity_id = %1 ORDER BY id DESC LIMIT 1";
     $params = array( 1 => array($entityId, 'String'));
     $data = CRM_Core_DAO::singleValueQuery($sql, $params);
     if (!empty($data)) {
@@ -1057,6 +1057,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $contributionTypeId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $taiwanACHData['contribution_page_id'], 'contribution_type_id');
 
     $result = $taiwanACHData;
+    $result['id'] = $taiwanACHData['contribution_recur_id'];
     $result['total_amount'] = $result['amount'];
     $result['contribution_type_id'] = $contributionTypeId;
     $result['start_date'] = $startDate;
@@ -1104,7 +1105,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
     else if ($taiwanACHData['contribution_status_id'] == 4){
       $taiwanACHData['data']['verification_failed_reason'] = $failed_reason;
-      $taiwanACHData['data']['verification_failed_date'] = date('Y-m-d H:i:s');
+      $taiwanACHData['data']['verification_failed_date'] = $startDate.'120000';
       $taiwanACHData['stamp_verification'] = 2;
     }
     self::add($taiwanACHData);
