@@ -3,6 +3,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
 
   function preProcess() {
     parent::preProcess();
+    $this->_exportParams = array();
     CRM_Utils_System::setTitle(ts("Export ACH Verification File"));
     $isError = FALSE;
     $notUnverified = array();
@@ -45,11 +46,15 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
 
   public function buildQuickForm() {
     parent::buildQuickForm();
+    $this->addDate('datetime', ts('Output Time'), TRUE, array('formatType' => 'searchDate'));
     $this->addYesNo('is_overwrite', ts('overwrite').'?');
   }
 
   function setDefaultValues() {
-    return parent::setDefaultValues();
+    $defaults = array(
+      'datetime' => date('Y-m-d'),
+    );
+    return $defaults;
   }
 
   public function formRule($fields, $files, $self) {
@@ -79,9 +84,8 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     // $this->_additionalIds <== recurring id
     parent::postProcess();
     $values = $this->exportValues();
-    if ($this->_exportParams) {
-      $this->_exportParams['file_name'] = 'ACH_Verification'.$values['datetime'].'_'.$values['datetime_time'];
-    }
+    $date = $values['datetime'];
+    $this->_exportParams['file_name'] = 'ACH_Verification_'.$date;
     CRM_Contribute_BAO_TaiwanACH::doExportVerification($this->_additionalIds, $this->_exportParams, $values['payment_type'], $values['export_format']);
   }
 }

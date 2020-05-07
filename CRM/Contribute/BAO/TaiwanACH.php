@@ -431,7 +431,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     date_default_timezone_set('GMT');
     $lastTransactLogTimeId = strtotime('19700101T'.$lastTransactLogTime);
     $transactLogTimeId = $lastTransactLogTimeId + 1;
-    $params['transact_id'] = $transactLogTime = date('Gis', $transactLogTimeId);
+    $params['transact_id'] = (int) date('Gis', $transactLogTimeId);
     date_default_timezone_set($timezone);
 
     if ($type == 'txt') {
@@ -628,12 +628,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $paymentProcessor = $params['paymentProcessor'];
 
     // Generate Header
-    $date = $params['date'];
+    $date = $params['transact_date'];
     $header = array(
       'BOF',
       'ACHP01',
       $date,
-      $time = str_pad($params['transact_id'], 6, '0', STR_PAD_LEFT),
+      str_pad($params['transact_id'], 6, '0', STR_PAD_LEFT),
       str_pad($paymentProcessor['signature'], 7, '0', STR_PAD_LEFT),
       '9990250',
       'V10',
@@ -647,6 +647,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $totalAmount = 0;
     foreach ($achDatas as $achData) {
       $contribution = self::createContributionByACHData($achData);
+      $invoice_id = "{$params['transact_id']}_$i";
+      CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'invoice_id', $invoice_id);
       $params['contribution_ids'][] = $contribution->id;
       $identifier_number = str_pad($achData['identifier_number'], 10, ' ', STR_PAD_RIGHT);
       $row = array(
@@ -792,6 +794,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'contribution_recur_id' => $achData['contribution_recur_id'],
       'contribution_type_id' => $page->contribution_type_id,
       'contribution_status_id' => 2,
+      'contribution_page_id' => $achData['contribution_page_id'],
       'invoice_id' => $achData['invoice_id'].'_'.($countContribOfThisRecur+1),
       'payment_processor_id' => $achData['processor_id'],
       'is_test' => $achData['is_test'],
@@ -884,11 +887,16 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // Rearrange data, Add id to key so that it's easy to find the row.
     $rearrangeData = array();
     foreach ($resolvedData as $data) {
-      if ($instrumentType == self::BANK) {
-        $rearrangeData[$data[10]] = $data;
+      if ($processType == self::VERIFICATION) {
+        if ($instrumentType == self::BANK) {
+          $rearrangeData[$data[10]] = $data;
+        }
+        else if ($instrumentType == self::POST) {
+          $rearrangeData[$data[9]] = $data;
+        }
       }
-      else if ($instrumentType == self::POST) {
-        $rearrangeData[$data[9]] = $data;
+      else if ($processType = self::TRANSACTION) {
+        $rearrangeData[$data[18]] = $data;
       }
     }
 
@@ -919,6 +927,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               $data = self::doProcessVerification($id, $parsedData);
             }
             if ($processType == self::TRANSACTION) {
+              if (empty($parsedData)) {
+                $rearrangeData[$id] = $parsedData = array(
+                  'is_success' => TRUE,
+                  'receive_date' => $header[2].'120000',
+                );
+              }
               $data = self::doProcessTransaction($id, $parsedData);
             }
             if (!empty($data['is_error'])) {
@@ -1033,28 +1047,25 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $arrayLen = count($parsedData);
     if ($arrayLen == 18 ) {
       $processType = self::BANK;
+      $startDate = $parsedData[8];
     }
     if ($arrayLen == 14 ) {
       $processType = self::POST;
+      $startDate = $parsedData[3];
     }
     $taiwanACHData = self::getValue($recurId);
-    $instrumentId = CRM_Core_OptionGroup::values('payment_instrument', FALSE, FALSE, FALSE, "AND v.name = '$processType'", 'value');
-    $instrumentId = reset($instrumentId);
     $contributionTypeId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $taiwanACHData['contribution_page_id'], 'contribution_type_id');
 
-    $result = array(
-      'id' => $recurId,
-      'trxn_id' => $taiwanACHData['trxn_id'],
-      'invoice_id' => $taiwanACHData['invoice_id'],
-      'payment_instrument_id' => $instrumentId,
-      'contribution_type_id' => $contributionTypeId,
-      'source' => ts('ach generate ...'),
-      'created_date' => $taiwanACHData['create_date'],
-      'start_date' => date('Y-m-d H:i:s'),
-      'contribution_status_id' => $taiwanACHData['contribution_status_id'],
-      'total_amount' => $taiwanACHData['amount'],
-      'currency' => $taiwanACHData['currency'],
-    );
+    $result = $taiwanACHData;
+    $result['total_amount'] = $result['amount'];
+    $result['contribution_type_id'] = $contributionTypeId;
+    $result['start_date'] = $startDate;
+
+    // check invoice_id
+    // check Amount
+    // check Recurring Status
+    // check Stamp Verification
+
     $isError = FALSE;
     $messages = array();
     if ($taiwanACHData['contribution_status_id'] == 2 && $taiwanACHData['stamp_verification'] == 0) {
@@ -1101,7 +1112,98 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   }
 
   static function doProcessTransaction($contributionId, $parsedData, $isPreview = TRUE) {
-    
+    // Consider type is Bank or Post
+    $arrayLen = count($parsedData);
+    if ($arrayLen == 23 ) {
+      $processType = self::BANK;
+      $errorCode = $parsedData[9];
+      $cancelDate = $parsedData[14];
+    }
+    if ($arrayLen == 20 ) {
+      $processType = self::POST;
+      $errorCode = $parsedData[15];
+      $cancelDate = $parsedData[4] + 19110000;
+    }
+    // if $parsedData = array('is_success' => TRUE, 'receive_date' => '2020XXXX');
+    // The contribution is successed.
+
+    // check invoice_id
+    // check trxn_id
+    // check Amount
+    // check Recurring Status
+
+
+    $pass = TRUE;
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    $contribution->find(TRUE);
+    $result = (array) $contribution;
+    if ($parsedData['is_success']) {
+      $result['contribution_status_id'] = 1;
+      $result['receive_date'] = $parsedData['receive_date'];
+    }
+    else {
+      $result['contribution_status_id'] = 4;
+      $result['cancel_date'] = $cancelDate.'120000';
+      $result['cancel_reason'] = $errorCode;
+      $pass = FALSE;
+    }
+
+    // when $isPreview = TRUE, interrupt and return preview data.
+    if ($isPreview) {
+      return $result;
+    }
+
+    // Execute ipn.
+    $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId, FALSE);
+
+    // prepare input
+    $input = $result;
+    if(!empty($ids['event'])){
+      $input['component'] = 'event';
+    }
+    else{
+      $input['component'] = 'contribute';
+    }
+
+    // ipn transact
+    $ipn = new CRM_Core_Payment_BaseIPN();
+
+    // First use ipn validate
+    $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
+    if(!$validate_result){
+      return FALSE;
+    }
+    else {
+      $contribution = $objects['contribution'];
+      $transaction = new CRM_Core_Transaction();
+
+      if($pass){
+        $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
+        $input['amount'] = $objects['contribution']->amount;
+        $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
+        $objects['contribution']->receive_date = date('YmdHis', $receiveTime);
+        $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
+        if (!empty($ids['contributionRecur'])) {
+          $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
+          $params = array( 1 => array($ids['contributionRecur'], 'Positive'));
+          $recurTimes = CRM_Core_DAO::singleValueQuery($sql, $params);
+          if ($recurTimes == 1) {
+            $recur_params = array(
+              'id' => $ids['contributionRecur'],
+              'contribution_status_id' => 5,
+            );
+            $null = array();
+            CRM_Contribute_BAO_ContributionRecur::add($recur_params, $null);
+          }
+        }
+      }
+      else{
+        // Failed
+        $ipn->failed($objects, $transaction, $note);
+      }
+      self::addNote($note, $objects['contribution']);
+    }
   }
 }
 

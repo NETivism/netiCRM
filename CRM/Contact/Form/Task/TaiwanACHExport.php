@@ -83,8 +83,6 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
         $ele->freeze();
       }
 
-      $this->addDateTime('datetime', ts('Output Time'), TRUE, array('formatType' => 'searchDate'));
-
       $options = array(
         'txt' => 'txt'.' - '.ts('Format that submit to bank.'),
         'xlsx' => 'xlsx'.' - '.ts('Format that human can read.'),
@@ -103,14 +101,6 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
       );
       $this->addButtons($buttons);
     }
-  }
-
-  function setDefaultValues() {
-    $defaults = array(
-      'datetime' => date('Y-m-d'),
-      'datetime_time' => date('H:i:s'),
-    );
-    return $defaults;
   }
 
   public function formRule($fields, $files, $self) {
@@ -135,10 +125,6 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
   public function postProcess() {
     // $this->_contactIds  <== contact id
     // $this->_additionalIds <== recurring id
-    $values = $this->exportValues();
-    $this->_exportParams = array(
-      'date' => date('Ymd', strtotime($values['datetime'])),
-      'time' => date('His', strtotime($values['datetime_time'])),
-    );
+
   }
 }
