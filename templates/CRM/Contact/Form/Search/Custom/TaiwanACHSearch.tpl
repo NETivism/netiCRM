@@ -1,12 +1,10 @@
 {* handle enable/disable actions*}
 {include file="CRM/common/enableDisable.tpl"}
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
-{if $mode == 'booster'}
-<div class="crm-custom-search-description">
-  <p>{ts}You should trying to invite them again when donors at the end of recurring contribution.{/ts}</p>
-  <p>{ts}When you reach them, don't forget to present how much thanks you have received their donation. If you can send some project report to them, they may want to join you again after reading your needs.{/ts}</p>
-</div>
-{/if}
+<div class="action-link-button">
+	<a href="{crmURL p="civicrm/contribute/taiwanach" q="reset=1"}" class="button" target="_blank"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}New ACH{/ts}</span></a>
+	<a href="{crmURL p="civicrm/contribute/taiwanach/import" q="reset=1"}" class="button" target="_blank"><span><i class="zmdi zmdi-archive"></i>{ts}Import ACH{/ts}</span></a>
+</div> 
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if !$rows}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>

@@ -50,49 +50,6 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     if ($submittedValues['uploadFile']['name']) {
       $content = file_get_contents($submittedValues['uploadFile']['name']);
       $result = CRM_Contribute_BAO_TaiwanACH::parseUpload($content);
-      // $result = NULL;
-      // $result = array(
-      //   'process_id' => '123456789', // export batch id, should be unique every generate
-      //   'import_type' => 'transaction', // transaction or validation
-      //   'payment_type' => 'ACH Bank', // ACH Bank or ACH Post
-      //   'parsed_data' => array(              // each line is the parsed result of the file
-      //     '123' => array(                    // Recur_id
-      //       0 => '000001',
-      //       1 => '530',
-      //       2 => '43214321',
-      //       3 => '0012345',
-      //       4 => '0000000000123456',
-      //       5 => '12341234',
-      //       6 => '12341234',
-      //       7 => 'A',
-      //       8 => '20200501',
-      //       9 => '0071130',
-      //       10 => '123',
-      //       11 => 'R',
-      //       12 => '0',
-      //       13 => '',
-      //       14 => '',
-      //       15 => '',
-      //       16 => '',
-      //       17 => '',
-      //     ),
-      //   ),
-      //   'processed_data' => array(       // each line is the result of a recurring (when verification) or a contriubtion (when transaction)
-      //     '123' => array(
-      //       'id' => 123,
-      //       'trxn_id' => '123',
-      //       'receipt_id' => 'abc-123',
-      //       'payment_instrument_id' => 1,
-      //       'contribution_type_id' => 1,
-      //       'source' => 'ach generate ...',
-      //       'created_date' => '2020-01-22 10:01:55',
-      //       'receive_date' => '2020-01-22 10:02:03',
-      //       'contribution_status_id' => 2,
-      //       'total_amount' => 101.00,
-      //       'currency' => 'TWD',
-      //     ),
-      //   ),
-      // );
       $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $contributionType = CRM_Contribute_PseudoConstant::contributionType();
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
@@ -118,12 +75,35 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
         }
       }
       $result['counter'] = $counter;
+      if ($result['import_type'] == 'transaction') {
+        $results['columns'] = array(
+          'id' => ts('Contribution ID'),
+          'trxn_id' => ts('Transaction ID'),
+          'invoice_id' => ts('Invoice ID'),
+          'payment_instrument' => ts('Payment Instrument'),
+          'total_amount' => ts('Amount'),
+          'contribution_type' => ts('Type'),
+          'source' => ts('Source'),
+          'created_date' => ts('Created Date'),
+          'receive_date' => ts('Received'),
+          'contribution_status' => ts('Status'),
+        );
+      }
+      else {
+        $results['columns'] = array(
+          'id' => ts('Recurring Contribution ID'),
+          'invoice_id' => ts('Invoice ID'),
+          'instrument_type' => ts('Payment Instrument'),
+          'created_date' => ts('Created Date'),
+          'verify_date' => ts('Verify Date'),
+          'start_date' => ts('Start Date'),
+          'contribution_status_id' => ts('Recurring Status'),
+          'Amount' => ts('Amount'),
+          'verification_failed_date' => ts('Stamp Verification').' - '.ts('Failed Date'),
+          'verification_failed_reason' => ts('Stamp Verification').' - '.ts('Failed Reason'),
+        );
+      }
       $this->set('parseResult', $result);
-      // should return parsed result
-      // eg. payment_type, validation file or transaction file
-      // eg. lines of transaction and validation
-      // eg. if it's transaction response, need to bring which contribution was successful payment from civicrm_log
-
     }
   }
 

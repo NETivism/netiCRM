@@ -251,7 +251,7 @@ $having
   }
 
   function setTitle() {
-    CRM_utils_System::setTitle(ts('Custom Search').' - '.ts('ACH Search'));
+    CRM_utils_System::setTitle(ts('ACH Search'));
   }
 
   function setBreadcrumb() {
