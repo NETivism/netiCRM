@@ -76,7 +76,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
       }
       $result['counter'] = $counter;
       if ($result['import_type'] == 'transaction') {
-        $results['columns'] = array(
+        $result['columns'] = array(
           'id' => ts('Contribution ID'),
           'trxn_id' => ts('Transaction ID'),
           'invoice_id' => ts('Invoice ID'),
@@ -90,7 +90,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
         );
       }
       else {
-        $results['columns'] = array(
+        $result['columns'] = array(
           'id' => ts('Recurring Contribution ID'),
           'invoice_id' => ts('Invoice ID'),
           'instrument_type' => ts('Payment Instrument'),
