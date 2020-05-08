@@ -21,30 +21,24 @@
     </div>
     <table class="form-layout-compressed">
       <thead>
-        <th>{ts}Contribution ID{/ts}</th>
-        <th>{ts}Transaction ID{/ts}</th>
-        <th>{ts}Receipt ID{/ts}</th>
-        <th>{ts}Payment Instrument{/ts}</th>
-        <th>{ts}Amount{/ts}</th>
-        <th>{ts}Type{/ts}</th>
-        <th>{ts}Source{/ts}</th>
-        <th>{ts}Created Date{/ts}</th>
-        <th>{ts}Received{/ts}</th>
-        <th>{ts}Status{/ts}</th>
+        <tr>
+          {foreach from=$parseResult.columns item=columnHeader}
+            <th>{$columnHeader}</th>
+          {/foreach}
+        </tr>
       </thead>
       <tbody>
-      {foreach from=$processed_result item=line}
+      {foreach from=$parseResult.processed_data item=line}
         <tr>
-          <td>{$line.id}</td>
-          <td>{$line.trxn_id}</td>
-          <td>{$line.receipt_id}</td>
-          <td>{$line.payment_instrument}</td>
-          <td>{$line.total_amount|crmMoney}</td>
-          <td>{$line.contribution_type}</td>
-          <td>{$line.source}</td>
-          <td>{$line.created_date|crmDate}</td>
-          <td>{$line.receive_date|crmDate}</td>
-          <td>{$line.contribution_status}</td>
+          {foreach from=$parseResult.columns item=columnHeader key=column}
+            {if $column|strstr:"amount"}
+              <td>{$line.$column|crmMoney}</td>
+            {elseif $column|strstr:"date"}
+              <td>{$line.$column|crmDate}</td>
+            {else}
+              <td>{$line.$column}</td>
+            {/if}
+          {/foreach}
         </tr>
       {/foreach}
       </tbody>

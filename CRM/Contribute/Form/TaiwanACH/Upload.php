@@ -53,6 +53,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
       $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $contributionType = CRM_Contribute_PseudoConstant::contributionType();
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
+      $stampStatus = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
       $counter = array();
       foreach($result['processed_data'] as &$line) {
         if (!empty($line['payment_instrument_id'])) {
@@ -63,6 +64,9 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
         }
         if (!empty($line['contribution_status_id'])) {
           $line['contribution_status'] = $contributionStatus[$line['contribution_status_id']];
+        }
+        if (isset($line['stamp_verification'])) {
+          $line['stamp_verification_status'] = $stampStatus[$line['stamp_verification']];
         }
         switch($line['contribution_status_id']) {
           case 1:
@@ -93,12 +97,13 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
         $result['columns'] = array(
           'id' => ts('Recurring Contribution ID'),
           'invoice_id' => ts('Invoice ID'),
-          'instrument_type' => ts('Payment Instrument'),
-          'created_date' => ts('Created Date'),
+          'payment_type' => ts('Payment Instrument'),
+          'create_date' => ts('Created Date'),
           'verify_date' => ts('Verify Date'),
           'start_date' => ts('Start Date'),
-          'contribution_status_id' => ts('Recurring Status'),
-          'Amount' => ts('Amount'),
+          'contribution_status' => ts('Recurring Status'),
+          'amount' => ts('Amount'),
+          'stamp_verification_status' => ts('Stamp Verification Status'),
           'verification_failed_date' => ts('Stamp Verification').' - '.ts('Failed Date'),
           'verification_failed_reason' => ts('Stamp Verification').' - '.ts('Failed Reason'),
         );
