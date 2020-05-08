@@ -404,8 +404,25 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       self::doExportTXTFile($fileName, $table);
     }
     else {
-      $table = $achDatas;
-      self::doExportXSLFile($fileName, $table);
+      $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
+      $bankCode = call_user_func_array('array_merge', $bankCode);
+      foreach ($achDatas as $key => $achData) {
+        $bankName = preg_replace('/^\d{7} (.+)$/', '$1', $bankCode[$achData['bank_code']]);
+        $row = array(
+          'Order Number' => $key+1,
+          'Contact Id' => $achData['contact_id'],
+          'Display Name' => CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $achData['contact_id'], 'display_name'),
+          'Bank Code' => $achData['bank_code'],
+          'Bank Name' => $bankName,
+          'Bank Account' => $achData['bank_account'],
+        );
+        $tableByBankCode[$achData['bank_code']][] = $row;
+      }
+      ksort($tableByBankCode);
+      $header = array_keys($row);
+      array_walk($header, 'ts');
+      $body = call_user_func_array('array_merge',$tableByBankCode);
+      self::doExportXSLFile($fileName, $header, $body);
     }
   }
 
@@ -503,14 +520,13 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     CRM_Utils_System::civiExit();
   }
 
-  static private function doExportXSLFile($fileName, $table) {
+  static private function doExportXSLFile($fileName, $header, $body) {
     $fileName .= '.xlsx';
 
-    $header = array_shift($table);
     CRM_Core_Report_Excel::writeExcelFile(
       $fileName,
       $header,
-      $table
+      $body
     );
     CRM_Utils_System::civiExit();
   }

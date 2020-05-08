@@ -64,7 +64,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
   public function validate() {
     $pass = TRUE;
     $values = $this->exportValues();
-    if (!$values['is_overwrite']) {
+    if (!$values['is_overwrite'] && $values['export_format'] == 'txt') {
       $dates = date("Ymd", strtotime($values['datetime']));
       $entity_table = 'civicrm_contribution_taiwanach_verification';
       $lastInvoiceId = CRM_Core_DAO::singleValueQuery("SELECT entity_id FROM civicrm_log WHERE entity_table = '$entity_table' AND entity_id = %1", array(1 => array($dates, 'String')));
