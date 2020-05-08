@@ -104,11 +104,18 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   private static $pcPage;
 
   /**
-   * Personal campaign pages
+   * Taiwan ACH bank code and name
    * @var array
    * @static
    */
   private static $taiwanACH;
+  
+  /**
+   * Taiwan ACH return failed code and reason
+   * @var array
+   * @static
+   */
+  private static $taiwanACHFailedReason;
 
   /**
    * Get all the financial types
@@ -388,6 +395,36 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
       1 => ts('Completed'),
       2 => ts('Failed'),
     );
+  }
+
+  /**
+   * Get all Taiwan ACH failed code and reason
+   *
+   * @access public
+   *
+   * @return array - array reference of all pcp if any
+   * @static
+   */
+  public static function &taiwanACHFailedReason() {
+    global $civicrm_root;
+    if (!self::$taiwanACHFailedReason) {
+      $fp = fopen($civicrm_root.'xml/templates/taiwan_ach_failed_reason.tpl', 'r');
+      $parent = '';
+      while(($data = fgetcsv($fp, 100)) !== FALSE) {
+        if (empty($data[1])) {
+          $parent = explode('_', $data[0]);
+          $instrumentName = $parent[0];
+          $processType = $parent[1];
+          $column = $parent[2];
+          continue;
+        }
+        else {
+          self::$taiwanACHFailedReason[$instrumentName][$processType][$column][$data[0]] = $data[1];
+        }
+      }
+      fclose($fp);
+    }
+    return self::$taiwanACHFailedReason;
   }
 }
 

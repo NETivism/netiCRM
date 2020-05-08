@@ -80,6 +80,9 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
         if ($ach['bank_code']) {
           $ach['bank_code'] = CRM_Contribute_PseudoConstant::taiwanACH($ach['bank_code']);
         }
+        if ($ach['stamp_verification'] == 2) {
+          $ach['stamp_verification_reason'] = $ach['data']['verification_failed_reason'];
+        }
         $this->assign('ach', $ach);
       }
 

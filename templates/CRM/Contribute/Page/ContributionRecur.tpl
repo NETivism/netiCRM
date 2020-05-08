@@ -93,7 +93,7 @@
               {elseif $ach.stamp_verification == 1}
                 <tr><td class="label">{ts}Stamp Verification Date{/ts}</td><td>{$recur.start_date|crmDate}</td></tr>
               {elseif $ach.stamp_verification == 2}
-                <tr><td class="label">{ts}Stamp Verification Result{/ts}</td><td> get verficiation failed record</td></tr>
+                <tr><td class="label">{ts}Stamp Verification Result{/ts}</td><td>{$ach.stamp_verification_reason}</td></tr>
               {/if}
               <tr><td class="label">{ts}Payment Instrument{/ts}</td><td>{ts}{$ach.payment_type}{/ts}</td></tr>
               {if $ach.payment_type == 'ACH Bank'}

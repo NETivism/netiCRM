@@ -817,6 +817,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'currency' => $achData['currency'],
       'payment_instrument_id' => $instrumentId,
       'custom' => $customData,
+      'source' => 'ACH Bank',
     );
     $ids = array();
     $contribution = CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);
@@ -832,6 +833,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   static function parseUpload($content) {
     $rows = explode("\n", $content);
     $lines = count($rows);
+    if (strlen($rows[$lines-1]) == 0) {
+      unset($rows[$lines-1]);
+      $lines = count($rows);
+    }
     $instrumentType = '';
     $processType = '';
     $isError = FALSE;
@@ -1076,7 +1081,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $result['id'] = $taiwanACHData['contribution_recur_id'];
     $result['total_amount'] = $result['amount'];
     $result['contribution_type_id'] = $contributionTypeId;
-    $result['start_date'] = $startDate;
+    $result['start_date'] = $startDate.'120000';
 
     // check invoice_id
     // check Amount
@@ -1089,11 +1094,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       if ($processType == self::BANK) {
         if ($parsedData[11] == 'R') {
           if ($parsedData[12] == '0') {
-            $result['contribution_status_id'] = 5;
+            $result['stamp_verification'] = 1;
           }
           else {
-            $result['contribution_status_id'] = 4;
-            $failed_reason = $parsedData[12];
+            $result['stamp_verification'] = 2;
+            $allFailedReason = CRM_Contribute_PseudoConstant::taiwanACHFailedReason();
+            $failedReason = $allFailedReason[$processType][self::VERIFICATION][12][$parsedData[12]];
+            $result['verification_failed_reason'] = $failedReason;
+            $result['verification_failed_date'] = $startDate.'120000';
           }
         }
         else {
@@ -1114,15 +1122,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     // if $isPreview is FALSE, Execute modify CRM data.
-    $taiwanACHData['contribution_status_id'] = $result['contribution_status_id'];
-    if ($taiwanACHData['contribution_status_id'] == 5) {
+    $taiwanACHData['stamp_verification'] = $result['stamp_verification'];
+    if ($result['stamp_verification'] == 1) {
       $taiwanACHData['start_date'] = $result['start_date'];
-      $taiwanACHData['stamp_verification'] = 1;
+      $taiwanACHData['contribution_status_id'] = 5;
     }
-    else if ($taiwanACHData['contribution_status_id'] == 4){
-      $taiwanACHData['data']['verification_failed_reason'] = $failed_reason;
-      $taiwanACHData['data']['verification_failed_date'] = $startDate.'120000';
-      $taiwanACHData['stamp_verification'] = 2;
+    else if ($result['stamp_verification'] == 2){
+      $taiwanACHData['data']['verification_failed_reason'] = $result['verification_failed_reason'];
+      $taiwanACHData['data']['verification_failed_date'] =$result['verification_failed_date'];
     }
     self::add($taiwanACHData);
     return $result;

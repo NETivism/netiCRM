@@ -163,11 +163,8 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
         if ($params['stamp_verification'] == 1) {
           $params['contribution_status_id'] = 5;
         }
-        else if($params['stamp_verification'] == 2) {
-          $params['contribution_status_id'] = 4;
-        }
       }
-      else if ($params['stamp_verification'] == 0){
+      else if ($params['stamp_verification'] == 0 || $params['stamp_verification'] == 2){
         $params['contribution_status_id'] = 2;
       }
     }
