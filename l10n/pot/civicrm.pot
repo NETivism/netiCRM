@@ -47327,3 +47327,6 @@ msgstr ""
 
 msgid "Important!! Your contacts quota is over %1. Some of functions is disabled (Import Contact, Add new contact ... etc.). Please contact %2 to upgrade your plan."
 msgstr ""
+
+msgid "Post Delegate Institution Code"
+msgstr ""
