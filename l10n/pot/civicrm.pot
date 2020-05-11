@@ -47330,3 +47330,6 @@ msgstr ""
 
 msgid "Post Delegate Institution Code"
 msgstr ""
+
+msgid "Taiwan ACH Payment"
+msgstr ""
