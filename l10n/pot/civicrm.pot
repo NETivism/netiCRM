@@ -47318,3 +47318,12 @@ msgstr ""
 
 msgid "Add receipt as attachment in email."
 msgstr ""
+
+msgid "The quota of contacts is %1 to full. Please contact %2 to upgrade your plan. You can read %3 know what will happen when reaching limit."
+msgstr ""
+
+msgid "Congraturation! You have reached %1 of contacts quota. Please contact %2 to upgrade your plan. You can read %3 to know what will happen when reaching limit."
+msgstr ""
+
+msgid "Important!! Your contacts quota is over %1. Some of functions is disabled (Import Contact, Add new contact ... etc.). Please contact %2 to upgrade your plan."
+msgstr ""

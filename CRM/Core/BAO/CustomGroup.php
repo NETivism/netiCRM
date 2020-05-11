@@ -596,7 +596,7 @@ SELECT $select
                         array(
                           'name' => ts('Delete Attached File'),
                           'url' => 'civicrm/file',
-                          'qs' => 'reset=1&id=%%id%%&eid=%%eid%%&fid=%%fid%%&action=delete&fcs=%%fcs%%',
+                          'qs' => 'reset=1&id=%%id%%&eid=%%eid%%&fid=%%fid%%&action=delete&stay=1&fcs=%%fcs%%',
                           'extra' =>
                           'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) this.href+=\'&confirmed=1\'; else return false;"',
                         ),

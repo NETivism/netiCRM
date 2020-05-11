@@ -69,8 +69,10 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
 
     $primaryParticipant = $this->get('registerByID');
     if ($primaryParticipant) {
+      $this->assign('registerByID', $primaryParticipant);
       $contributionId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantPayment', $primaryParticipant, 'contribution_id', 'participant_id');
       if ($contributionId) {
+        $this->assign('contribution_id', $contributionId);
         $params['id'] = $contributionId;
         CRM_Contribute_BAO_Contribution_Utils::paymentResultType($this, $params);
       }
