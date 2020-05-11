@@ -47330,3 +47330,6 @@ msgstr ""
 
 msgid "Goal Recurring Amount"
 msgstr ""
+
+msgid "Post Delegate Institution Code"
+msgstr ""
