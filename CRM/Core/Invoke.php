@@ -334,8 +334,18 @@ class CRM_Core_Invoke {
       else {
         $embed = CRM_Utils_Request::retrieve('embed', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE);
         if ($embed) {
+          // #28162, check if Same Origin
+          setcookie('hasCookiePermission', 1, 0, '/');
+          $sameOrigin = FALSE;
+          if (!empty($_SERVER['HTTP_REFERER'])) {
+            $url = parse_url($_SERVER['HTTP_REFERER']);
+            if ($url['host'] == $_SERVER['HTTP_HOST']) {
+              $sameOrigin = TRUE;
+            }
+          }
           $profile = CRM_UF_Page_Group::profile();
           $template = CRM_Core_Smarty::singleton();
+          $template->assign('sameOrigin', $sameOrigin);
           $template->assign('embedBody', $profile);
           $content = $template->fetch('CRM/common/Embed.tpl');
           echo $content; 

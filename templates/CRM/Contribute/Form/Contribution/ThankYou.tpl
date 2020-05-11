@@ -146,23 +146,27 @@
           {if $payment_instrument}
           <div><label>{ts}Payment Instrument{/ts}:</label> <span class="crmdata-instrument">{$payment_instrument}</span></div>
           {/if}
-        	{if $lineItem and $priceSetID}
-    	    {if !$amount}{assign var="amount" value=0}{/if}
-    	    {assign var="totalAmount" value=$amount}
-                {include file="CRM/Price/Page/LineItem.tpl" context="Contribution"}
+            {if $lineItem and $priceSetID}
+              {if !$amount}{assign var="amount" value=0}{assign var="product_amount" value=0}{/if}
+              {assign var="totalAmount" value=$amount}
+              {assign var="product_amount" value=$amount}
+              {include file="CRM/Price/Page/LineItem.tpl" context="Contribution"}
             {elseif $membership_amount } 
-                {$membership_name} {ts}Membership{/ts}: <strong>{$membership_amount|crmMoney}<span class="crmdata-amount-member" style="display:none">{$membership_amount}</span></strong><br />
-                {if $amount}
-                    {if ! $is_separate_payment }
-    		    {ts}Amount{/ts}: <strong>{$amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
-    	        {else}
-    		    {ts}Additional Contribution{/ts}: <strong>{$amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
-      	        {/if}
-                {/if} 		
-                <strong> -------------------------------------------</strong><br />
-                {ts}Total{/ts}: <strong>{$amount+$membership_amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount+$membership_amount}</span></strong><br />
+              {$membership_name} {ts}Membership{/ts}: <strong>{$membership_amount|crmMoney}<span class="crmdata-amount-member" style="display:none">{$membership_amount}</span></strong><br />
+              {if $amount}
+                {if ! $is_separate_payment }
+                  {ts}Amount{/ts}: <strong>{$amount|crmMoney}</strong><br />
+                  {capture assign=product_amount}{$amount}{/capture}
+                {else}
+                  {ts}Additional Contribution{/ts}: <strong>{$amount|crmMoney}</strong><br />
+                {/if}
+              {/if} 		
+              <strong> -------------------------------------------</strong><br />
+              {ts}Total{/ts}: <strong>{$amount+$membership_amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount+$membership_amount}</span></strong><br />
+              {capture assign=product_amount}{$amount+$membership_amount}{/capture}
             {else}
-                {ts}Amount{/ts}: <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
+              {ts}Amount{/ts}: <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
+              {capture assign=product_amount}{$amount}{/capture}
             {/if}
             {if $receive_date}
             {ts}Date{/ts}: <strong>{$receive_date|crmDate}</strong><br />
@@ -344,5 +348,20 @@
         {$thankyou_footer}
     </div>
     {/if}
-	
+
+    {capture assign=product_id}{ts}Contribution Page{/ts}-{$id}{/capture}
+    {if !$trxn_id}
+      {capture assign=transaction_id}{ts}Contribution ID{/ts}-{$contribution_id}{/capture}
+    {else}
+      {assign var=transaction_id value=$trxn_id}
+    {/if}
+    {if $is_recur}
+      {capture assign=product_category}{ts}Recurring Contribution{/ts}{/capture}
+    {else}
+      {capture assign=product_category}{ts}Non-recurring Contribution{/ts}{/capture}
+    {/if}
+    {include file="CRM/common/DataLayer.tpl" dataLayerType='purchase' transaction_id=$transaction_id total_amount=$product_amount product_name=$contributionPage.title product_id=$product_id product_amount=$product_amount product_category=$product_category product_quantity=1}
+    {if $payment_result_type eq 4 && $is_monetary}
+      {include file="CRM/common/DataLayer.tpl" dataLayerType='refund' transaction_id=$transaction_id}
+    {/if}
 </div>

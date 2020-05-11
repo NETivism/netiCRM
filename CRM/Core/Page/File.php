@@ -74,9 +74,16 @@ class CRM_Core_Page_File extends CRM_Core_Page {
       if (CRM_Utils_Request::retrieve('confirmed', 'Boolean', CRM_Core_DAO::$_nullObject)) {
         CRM_Core_BAO_File::delete($fileId, $entityId, $fieldId);
         CRM_Core_Session::setStatus(ts('The attached file has been deleted.'));
-
+        $stay = CRM_Utils_Request::retrieve('stay', 'Boolean', CRM_Core_DAO::$_nullObject);
         $session = CRM_Core_Session::singleton();
         $toUrl = $session->popUserContext();
+
+        if (!empty($stay) && !empty($_SERVER['HTTP_REFERER'])) {
+          $url = parse_url($_SERVER['HTTP_REFERER']);
+          if ($url['host'] === $_SERVER['SERVER_NAME']) {
+            $toUrl = $_SERVER['HTTP_REFERER'];
+          }
+        }
         CRM_Utils_System::redirect($toUrl);
       }
       else {

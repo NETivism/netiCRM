@@ -2602,9 +2602,9 @@ class CRM_Contact_BAO_Query {
         $qill .= ' ' . implode(' ' . ts('or') . ' ', $names);
       }
       if (!empty($statii) && $op != 'IS NULL') {
-        foreach($statii as $v){
+        foreach($statii as $k => $v){
           $v = trim($v, "'");
-          $statii_qill[] = ts($v);
+          $statii_qill[$k] = ts($v);
         }
         $qill .= " " . ts('AND') . " " . ts('Group Status') . ' - ' . implode(' ' . ts('or') . ' ', $statii_qill);
       }

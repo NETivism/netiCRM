@@ -47303,3 +47303,36 @@ msgstr ""
 
 msgid "Transaction Fee Amount"
 msgstr ""
+
+msgid "Your browser doesn't support embed form. Click button below to finish online form."
+msgstr ""
+
+msgid "Visit Online Form"
+msgstr ""
+
+msgid "Payment processor needs Google account with credit card."
+msgstr ""
+
+msgid "Email Receipt"
+msgstr ""
+
+msgid "Add receipt as attachment in email."
+msgstr ""
+
+msgid "The quota of contacts is %1 to full. Please contact %2 to upgrade your plan. You can read %3 know what will happen when reaching limit."
+msgstr ""
+
+msgid "Congraturation! You have reached %1 of contacts quota. Please contact %2 to upgrade your plan. You can read %3 to know what will happen when reaching limit."
+msgstr ""
+
+msgid "Important!! Your contacts quota is over %1. Some of functions is disabled (Import Contact, Add new contact ... etc.). Please contact %2 to upgrade your plan."
+msgstr ""
+
+msgid "Goal Recurring Amount"
+msgstr ""
+
+msgid "Post Delegate Institution Code"
+msgstr ""
+
+msgid "Taiwan ACH Payment"
+msgstr ""

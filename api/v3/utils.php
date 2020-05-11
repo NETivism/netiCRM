@@ -659,9 +659,9 @@ function _civicrm_api3_get_options_from_params(&$params, $queryObject = false, $
 
 
   $options = array(
-    'offset' => $offset,
+    'offset' => CRM_Utils_Rule::integer($offset) ? $offset : NULL,
     'sort' => $sort,
-    'limit' => $limit,
+    'limit' => CRM_Utils_Rule::integer($limit) ? $limit : NULL,
     'return' => !empty($returnProperties) ? $returnProperties : NULL,
   );
   if (!$queryObject) {

@@ -184,7 +184,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
     }
 
     if (!$this->_gid) {
-      $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this, FALSE, 0, 'GET');
+      $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this, FALSE, 0, 'REQUEST');
     }
 
     //get values for captch and dupe update.

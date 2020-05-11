@@ -127,7 +127,9 @@
             <table class="form-layout-compressed">
               <tr class="crm-contribution-contributionpage-settings-form-block-goal_amount" id="goal_amount_row">
                   <td>{$form.goal_amount.label}: $ {$form.goal_amount.html} {ts}or{/ts} 
-                  {$form.goal_recurring.label}:{$form.goal_recurring.html} {ts}People{/ts}</td>
+                  {$form.goal_recurring.label}:{$form.goal_recurring.html} {ts}People{/ts} {ts}or{/ts} 
+                  {$form.goal_recuramount.label}:{$form.goal_recuramount.html}
+                  </td>
               </tr>
             </table>
         </td>
@@ -197,18 +199,13 @@
 				{literal}
 
         // progress bar setting
-        $("input[name=goal_amount],input[name=goal_recurring]").change(function(){
+        $("input[name^=goal_]").change(function(){
           var name = $(this).prop("name");
           if ($(this).val()) {
-            if (name == "goal_amount") {
-              $("input[name=goal_recurring]").val("").prop("readonly", true);
-            }
-            else {
-              $("input[name=goal_amount]").val("").prop("readonly", true);
-            }
+            $("input[name^=goal_]").not($(this)).val("").prop("readonly", true);
           }
           else {
-            $("input[name=goal_recurring],input[name=goal_amount]").prop("readonly", false);
+            $("input[name^=goal_]").val("").prop("readonly", false);
           }
         });
 
