@@ -358,6 +358,31 @@ class CRM_Utils_REST {
       );
     }
 
+    // check options, all options should be inside option object
+    $disableOptions = array(
+      'sort', 'limit', 'rowCount', 'offset'
+    );
+    foreach($disableOptions as $opt) {
+      if (isset($params[$opt])) unset($params[$opt]);
+      if (isset($params['option.'.$opt])) unset($params['option.'.$opt]);
+      if (isset($params['option_'.$opt])) unset($params['option_'.$opt]);
+    }
+    if (isset($params['options'])) {
+      $options =& $params['options'];
+      // don't allow sort for query security concern
+      if (isset($options['sort'])) unset($options['sort']);
+
+      if (isset($options['limit']) && !CRM_Utils_Rule::integer($options['limit'])) {
+        return self::error('limit in options should be integer.');
+      }
+      if (isset($options['limit']) && $options['limit'] > 100) {
+        return self::error('limit in options can\'t not larger than 100.');
+      }
+      if (isset($options['offset']) && !CRM_Utils_Rule::integer($options['offset'])) {
+        return self::error('offset in options should be integer.');
+      }
+    }
+
     // trap all fatal errors
     CRM_Core_Error::setCallback(array('CRM_Utils_REST', 'fatal'));
     $params['sequential'] = 1;

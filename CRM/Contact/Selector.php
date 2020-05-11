@@ -611,6 +611,9 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
 
     //check explicitly added contact to a Smart Group.
     $groupID = CRM_Utils_Array::key('1', $this->_formValues['group']);
+    if ($groupID) {
+      $hasChildren = CRM_Contact_BAO_GroupNesting::hasChildGroups($groupID);
+    }
 
     while ($result->fetch()) {
       $row = array();
@@ -705,7 +708,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       }
 
       if ($output != CRM_Core_Selector_Controller::EXPORT && $this->_searchContext == 'smog') {
-        if (empty($result->status) && $groupID) {
+        if ((empty($result->status) || $hasChildren) && $groupID) {
           $contactID = $result->contact_id;
           if ($contactID) {
             $gcParams = array(

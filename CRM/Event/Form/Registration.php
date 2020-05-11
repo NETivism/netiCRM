@@ -280,6 +280,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       require_once 'CRM/Event/BAO/Event.php';
       $params = array('id' => $this->_eventId);
       CRM_Event_BAO_Event::retrieve($params, $this->_values['event']);
+      $this->_values['event']['event_type'] = CRM_Event_PseudoConstant::eventType($this->_values['event']['event_type_id']);
 
       require_once 'CRM/Event/BAO/Participant.php';
       //check for additional participants.
