@@ -2,14 +2,20 @@
   <div class="progress-block">
     <div class="progress-amount">
       <div class="progress-amount-raised bubble">
-        {if $achievement.type == "amount"}
+        {if $achievement.type|strstr:"amount"}
           {capture assign=amount_achieved}<span>{$achievement.current|crmMoney:null:null:true}</span>{/capture}
           {ts 1=$amount_achieved}Raised %1{/ts}
         {else}
           <span>{$achievement.current}</span> {ts}People{/ts}
         {/if}
       </div>
-      <div class="progress-amount-goal">{if $achievement.type == "amount"}{ts}Goal Amount{/ts} <span>{$achievement.goal|crmMoney:null:null:true}</span>{else}{ts}Goal Subscription{/ts} <span>{$achievement.goal}</span>{ts}People{/ts}{/if}</div>
+      <div class="progress-amount-goal">
+        {if $achievement.type|strstr:"amount"}
+          {$achievement.label} <span>{$achievement.goal|crmMoney:null:null:true}</span>
+        {elseif $achievement.type == "recurring"}
+          {$achievement.label} <span>{$achievement.goal}</span>{ts}People{/ts}
+        {/if}
+      </div>
     </div>
     <div class="progress-wrapper">
       <div class="progress-cell progress-bar-wrapper" {if !$intro_text}style="width:100%;"{/if}>
