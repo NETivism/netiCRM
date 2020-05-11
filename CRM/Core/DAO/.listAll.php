@@ -112,6 +112,7 @@ $dao['Confirm'] = 'CRM_Mailing_Event_DAO_Confirm';
 $dao['TrackableURLOpen'] = 'CRM_Mailing_Event_DAO_TrackableURLOpen';
 $dao['Unsubscribe'] = 'CRM_Mailing_Event_DAO_Unsubscribe';
 $dao['ContributionPage'] = 'CRM_Contribute_DAO_ContributionPage';
+$dao['TaiwanACH'] = 'CRM_Contribute_DAO_TaiwanACH';
 $dao['Widget'] = 'CRM_Contribute_DAO_Widget';
 $dao['PCP'] = 'CRM_Contribute_DAO_PCP';
 $dao['Membership'] = 'CRM_Member_DAO_Membership';

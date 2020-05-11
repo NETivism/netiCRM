@@ -68,7 +68,7 @@
       <table class="form-layout-compressed">
         {if $context neq 'standalone'}
             <tr>
-                <td class="font-size12pt label"><strong><strong>{ts}Contributor{/ts}</strong></td><td class="font-size12pt"><strong>{$displayName}</strong></td>
+                <td class="font-size12pt label"><strong>{ts}Contributor{/ts}</strong></td><td class="font-size12pt"><strong>{$displayName}</strong></td>
             </tr>
         {else}
             {include file="CRM/Contact/Form/NewContact.tpl"}

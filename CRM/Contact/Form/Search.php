@@ -363,7 +363,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
     // some tasks.. what do we want to do with the selected contacts ?
     $tasks = array('' => ts('- actions -'));
-    if ($this->_componentMode == 1) {
+    if ($this->_componentMode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
       $tasks += CRM_Contact_Task::permissionedTaskTitles($permission,
         CRM_Utils_Array::value('deleted_contacts',
           $this->_formValues
@@ -681,6 +681,9 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $this->_selectorName = $this->_modeValue['selectorName'];
 
     if (strpos($this->_selectorName, 'CRM_Contact_Selector') !== FALSE) {
+      if (!empty($this->_customSearchClass)) {
+        $this->controller->set('customSearchClass', $this->_customSearchClass);
+      }
       $selectorName = $this->_selectorName;
       $selector = new $selectorName( $this->_customSearchClass,
                      $this->_formValues,
