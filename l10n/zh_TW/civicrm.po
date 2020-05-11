@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-05-11 08:14+0000\n"
+"PO-Revision-Date: 2020-05-11 08:25+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47552,3 +47552,6 @@ msgstr "定期目標金額"
 
 msgid "Post Delegate Institution Code"
 msgstr "郵局委託機構代號"
+
+msgid "Taiwan ACH Payment"
+msgstr "台灣ACH代收代付"
