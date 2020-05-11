@@ -99,7 +99,6 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
           'invoice_id' => ts('Invoice ID'),
           'payment_type' => ts('Payment Instrument'),
           'create_date' => ts('Created Date'),
-          'verify_date' => ts('Verify Date'),
           'start_date' => ts('Start Date'),
           'contribution_status' => ts('Recurring Status'),
           'amount' => ts('Amount'),

@@ -534,12 +534,13 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   static private function getBankVerifyTable($achDatas, &$params) {
     $paymentProcessor = $params['paymentProcessor'];
     $orgBankCode = str_pad($paymentProcessor['signature'], 7, '0', STR_PAD_LEFT);
+    $date = str_pad(($params['date'] - 19110000), 8, '0', STR_PAD_LEFT);
 
     // Generate Header
     $header = array(
       'BOF',
       'ACHP02',
-      $params['date'],
+      $date,
       $orgBankCode,
       'V10',
       str_repeat(' ', 193),
@@ -561,7 +562,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_pad($achData['identifier_number'], 10, ' ', STR_PAD_RIGHT),
         str_pad($achData['identifier_number'], 20, ' ', STR_PAD_RIGHT),
         'A',
-        $params['date'],
+        $date,
         $orgBankCode,
         str_pad($achData['contribution_recur_id'], 40, ' ', STR_PAD_RIGHT),
         'N',
@@ -646,7 +647,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $paymentProcessor = $params['paymentProcessor'];
 
     // Generate Header
-    $date = $params['transact_date'];
+    $date = str_pad(($params['transact_date'] - 19110000), 8, '0', STR_PAD_LEFT);
     $header = array(
       'BOF',
       'ACHP01',
@@ -706,7 +707,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $footer = array(
       'EOF',
       'ACHP01',
-      $params['transact_date'],
+      $date,
       str_pad($paymentProcessor['signature'], 7, '0', STR_PAD_LEFT),
       '9990250',
       $total,
@@ -723,6 +724,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static private function getPostTransactTable($achDatas, &$params) {
     $paymentProcessor = $params['paymentProcessor'];
+    $date = $params['transact_date'] - 19110000;
+    $month = floor($date / 100);
 
     // Generate Body Table
     $i = 1;
@@ -744,7 +747,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         ($achData['postoffice_acc_type'] == 1)? 'P' : 'G',
         $paymentProcessor['subject'],
         str_repeat(' ', 4),
-        $params['date'],
+        $date,
         'S',
         str_repeat(' ', 2),
         $bankAccount,
@@ -756,7 +759,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         ' ',
         ' ',
         str_repeat(' ', 2),
-        $params['date'],
+        $month,
         str_repeat(' ', 5),
         str_repeat(' ', 20),
         str_repeat(' ', 10),
@@ -925,7 +928,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // Get id and data which need to process from civicrm_log
     if ($instrumentType == self::BANK) {
       if ($processType == self::VERIFICATION) {
-        $entityId = $header[2];
+        $entityId = $header[2] + 19110000;
       }
       if ($processType == self::TRANSACTION) {
         $entityId = $header[3];
@@ -1068,11 +1071,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $arrayLen = count($parsedData);
     if ($arrayLen == 18 ) {
       $processType = self::BANK;
-      $startDate = $parsedData[8];
     }
     if ($arrayLen == 14 ) {
       $processType = self::POST;
-      $startDate = $parsedData[3];
     }
     $taiwanACHData = self::getValue($recurId);
     $contributionTypeId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $taiwanACHData['contribution_page_id'], 'contribution_type_id');
@@ -1081,7 +1082,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $result['id'] = $taiwanACHData['contribution_recur_id'];
     $result['total_amount'] = $result['amount'];
     $result['contribution_type_id'] = $contributionTypeId;
-    $result['start_date'] = $startDate.'120000';
+    $result['start_date'] = ts('Process Date');
 
     // check invoice_id
     // check Amount
@@ -1095,13 +1096,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         if ($parsedData[11] == 'R') {
           if ($parsedData[12] == '0') {
             $result['stamp_verification'] = 1;
+            $result['contribution_status_id'] = 5;
           }
           else {
             $result['stamp_verification'] = 2;
             $allFailedReason = CRM_Contribute_PseudoConstant::taiwanACHFailedReason();
             $failedReason = $allFailedReason[$processType][self::VERIFICATION][12][$parsedData[12]];
             $result['verification_failed_reason'] = $failedReason;
-            $result['verification_failed_date'] = $startDate.'120000';
+            $result['verification_failed_date'] = ts('Process Date');
           }
         }
         else {
@@ -1124,12 +1126,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // if $isPreview is FALSE, Execute modify CRM data.
     $taiwanACHData['stamp_verification'] = $result['stamp_verification'];
     if ($result['stamp_verification'] == 1) {
-      $taiwanACHData['start_date'] = $result['start_date'];
-      $taiwanACHData['contribution_status_id'] = 5;
+      $taiwanACHData['start_date'] = date('Y-m-d H:i:s');
+      $taiwanACHData['contribution_status_id'] = $result['contribution_status_id'];
     }
     else if ($result['stamp_verification'] == 2){
       $taiwanACHData['data']['verification_failed_reason'] = $result['verification_failed_reason'];
-      $taiwanACHData['data']['verification_failed_date'] =$result['verification_failed_date'];
+      $taiwanACHData['data']['verification_failed_date'] = date('Y-m-d H:i:s');
     }
     self::add($taiwanACHData);
     return $result;
@@ -1141,12 +1143,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     if ($arrayLen == 23 ) {
       $processType = self::BANK;
       $errorCode = $parsedData[9];
-      $cancelDate = $parsedData[14];
     }
     if ($arrayLen == 20 ) {
       $processType = self::POST;
       $errorCode = $parsedData[15];
-      $cancelDate = $parsedData[4] + 19110000;
     }
     // if $parsedData = array('is_success' => TRUE, 'receive_date' => '2020XXXX');
     // The contribution is successed.
@@ -1164,11 +1164,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $result = (array) $contribution;
     if ($parsedData['is_success']) {
       $result['contribution_status_id'] = 1;
-      $result['receive_date'] = $parsedData['receive_date'];
+      $result['receive_date'] = ts('Process Date');
     }
     else {
       $result['contribution_status_id'] = 4;
-      $result['cancel_date'] = $cancelDate.'120000';
+      $result['cancel_date'] = ts('Process Date');
       $result['cancel_reason'] = $errorCode;
       $pass = FALSE;
     }
