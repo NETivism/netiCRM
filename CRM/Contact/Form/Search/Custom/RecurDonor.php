@@ -199,6 +199,10 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   function setDefaultValues() {
   }
 
+  function setTitle() {
+    CRM_utils_System::setTitle(ts('Recurring Donors Search'));
+  }
+
   function count(){
     if(!$this->_filled){
       $this->fillTable();

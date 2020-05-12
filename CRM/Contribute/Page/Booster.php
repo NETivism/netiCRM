@@ -28,7 +28,7 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
 #        array(
 #          'id' => 'recur-donor',
 #          'class' => 'mdl-card-theme',
-#          'title' => ts('Recurring donors search'),
+#          'title' => ts('Recurring Donors Search'),
 #          'description' => ts('Explore your past, present or future recurring donors to support your organization.'),
 #          'link' => CRM_Utils_System::url('civicrm/search/RecurDonor'),
 #        ),
