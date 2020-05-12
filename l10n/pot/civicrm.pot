@@ -47336,3 +47336,27 @@ msgstr ""
 
 msgid "Taiwan ACH Payment"
 msgstr ""
+
+msgid "Recurring Donors Search"
+msgstr ""
+
+msgid "Explore your past, present or future recurring donors to support your organization."
+msgstr ""
+
+msgid "Recurring donors matter! Explore your past, present or future recurring donors to support your organization."
+msgstr ""
+
+msgid "active donors (and no past recurring donation)"
+msgstr ""
+
+msgid "inactive donors (past recurring donors)"
+msgstr ""
+
+msgid "recurring donors (no matter active or inactive)"
+msgstr ""
+
+msgid "not recurring donors (no matter with/without one-time donation)"
+msgstr ""
+
+msgid "giving level filter"
+msgstr ""
