@@ -47547,6 +47547,9 @@ msgid ""
 "your plan."
 msgstr "【重要通知】目前聯絡人的容量已達 %1 ，我們即將停用前台頁面，例如募款頁、活動報名頁等。邀請您透過<a href='%2' target='_blank'>客服系統</a>，辦理方案升級，讓線上收捐、報名不中斷！"
 
+msgid "Goal Recurring Amount"
+msgstr "定期目標金額"
+
 msgid "Post Delegate Institution Code"
 msgstr "郵局委託機構代號"
 

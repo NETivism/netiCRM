@@ -238,11 +238,17 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
 
       // fix the display of the monetary value, CRM-4038
       require_once 'CRM/Utils/Money.php';
-      if (isset($defaults['goal_amount'])) {
+      if (isset($defaults['goal_recurring']) && isset($defaults['goal_amount'])) {
+        $defaults['goal_recuramount'] = ceil($defaults['goal_amount']);
+        $defaults['display_progress_bar'] = 1;
+        unset($defaults['goal_amount']);
+        unset($defaults['goal_recurring']);
+      }
+      elseif (isset($defaults['goal_amount'])) {
         $defaults['goal_amount'] = ceil($defaults['goal_amount']);
         $defaults['display_progress_bar'] = 1;
       }
-      if (isset($defaults['goal_recurring'])) {
+      elseif (isset($defaults['goal_recurring'])) {
         $defaults['goal_recurring'] = ceil($defaults['goal_recurring']);
         $defaults['display_progress_bar'] = 1;
       }
