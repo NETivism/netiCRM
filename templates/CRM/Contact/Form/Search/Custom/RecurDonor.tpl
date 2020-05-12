@@ -2,8 +2,7 @@
 {include file="CRM/common/enableDisable.tpl"}
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
 <div class="crm-custom-search-description">
-  <p>{ts}{/ts}</p>
-  <p>{ts}{/ts}</p>
+  <p>{ts}Recurring donors matter! Explore your past, present or future recurring donors to support your organization.{/ts}</p>
 </div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if !$rows}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
@@ -49,14 +48,14 @@
 {/if}
 
 {if $rows}
-	<div class="crm-results-block">
+  <div class="crm-results-block">
     {* Search request has returned 1 or more matching rows. Display results and collapse the search criteria fieldset. *}
         {* This section handles form elements for action task select and submit *}
        <div class="crm-search-tasks">        
         {include file="CRM/Contact/Form/Search/ResultTasks.tpl"}
-		</div>
+    </div>
         {* This section displays the rows along and includes the paging controls *}
-	    <div class="crm-search-results">
+      <div class="crm-search-results">
 
         {include file="CRM/common/pager.tpl" location="top"}
 
@@ -114,8 +113,16 @@
 {/if}
 {literal}
 <script type="text/javascript">
-cj(function() {
-   cj().crmaccordions(); 
+cj(function($) {
+  $().crmaccordions(); 
+  $("#search_criteria").change(function(){
+    if($(this).val() == 'never') {
+      $("tr.crm-contact-custom-search-form-row-amount_low, tr.crm-contact-custom-search-form-row-contribution_page_id, tr.crm-contact-custom-search-form-row-contribution_type_id").hide();
+    }
+    else {
+      $("tr.crm-contact-custom-search-form-row-amount_low, tr.crm-contact-custom-search-form-row-contribution_page_id, tr.crm-contact-custom-search-form-row-contribution_type_id").show();
+    }
+  });
 });
 </script>
 {/literal}

@@ -5201,15 +5201,17 @@ tbody.scrollContent tr.alternateRow {
 
 /* Contribute booster */
 /* path: civicrm/contribute/booster */
+.crm-contribute-booster .crm-section-content {
+  display: flex;
+}
 .crm-contribute-booster .mdl-card {
-  width: 340px;
-  min-height: 360px;
+  min-height: 350px;
 }
 .crm-contribute-booster .mdl-card-theme .mdl-card__title {
   display: none;
 }
 .crm-contribute-booster .mdl-card-theme .mdl-card__supporting-text {
-  padding-top: 260px;
+  padding-top: calc(75%);
 }
 .crm-contribute-booster #first-time-donor {
   background-image: url(images/card/card-contribute-first-time-donor@2x.png);
@@ -5234,15 +5236,6 @@ tbody.scrollContent tr.alternateRow {
 }
 .crm-contribute-booster #recur-donor {
   background-image: url(images/card/card-recur-donor@2x.png);
-}
-
-@media screen and (max-width: 1440px) {
-  .crm-contribute-booster .mdl-card {
-    width: 300px;
-  }
-  .crm-contribute-booster .mdl-card-theme .mdl-card__supporting-text {
-    padding-top: 240px;
-  }
 }
 
 /* Contribute Page */
