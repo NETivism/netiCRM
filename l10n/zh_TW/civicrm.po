@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-05-12 10:10+0000\n"
+"PO-Revision-Date: 2020-05-13 05:38+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47548,7 +47548,7 @@ msgid ""
 msgstr "【重要通知】目前聯絡人的容量已達 %1 ，我們即將停用前台頁面，例如募款頁、活動報名頁等。邀請您透過<a href='%2' target='_blank'>客服系統</a>，辦理方案升級，讓線上收捐、報名不中斷！"
 
 msgid "Goal Recurring Amount"
-msgstr ""
+msgstr "定期目標金額"
 
 msgid "Post Delegate Institution Code"
 msgstr "郵局委託機構代號"
