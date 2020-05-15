@@ -55,7 +55,6 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       'r.id' => 'id',
       'r.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
-      'contact_email.email' => 'email',
       'ROUND(r.amount,0)' => 'amount',
       'r.contribution_status_id' => 'contribution_status_id',
       'r.create_date' => 'create_date',
@@ -183,7 +182,6 @@ $having
   function tempFrom() {
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
-    INNER JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
     INNER JOIN civicrm_contribution_taiwanach ach ON r.id = ach.contribution_recur_id
     LEFT JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(receive_date) AS last_receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lrd ON lrd.rid = r.id
