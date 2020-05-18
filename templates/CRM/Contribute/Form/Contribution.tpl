@@ -126,6 +126,12 @@
                 <td class="label">{$form.from_email_address.label}</td>
                 <td>{$form.from_email_address.html}</td>
             </tr>
+            {if $have_attach_receipt_option}
+            <tr id="is_attach_receipt" class="crm-contribution-form-block-is_attach_receipt">
+                <td class="label">{$form.is_attach_receipt.label}</td>
+                <td>{$form.is_attach_receipt.html}</td>
+            </tr>
+            {/if}
             <tr id="receiptDate" class="crm-contribution-form-block-receipt_date">
                 <td class="label">{$form.receipt_date.label}</td>
                 <td>{include file="CRM/common/jcalendar.tpl" elementName=receipt_date}<br />
@@ -171,6 +177,12 @@
                     <div class="label">{$form.from_email_address.label}</div>
                     <div>{$form.from_email_address.html}</div>
                   </div>
+                  {if $have_attach_receipt_option}
+                  <div id="is_attach_receipt" class="crm-contribution-form-block-is_attach_receipt">
+                    <div class="label">{$form.is_attach_receipt.label}</div>
+                    <div>{$form.is_attach_receipt.html}<span class="description">{ts}Add receipt as attachment in email.{/ts}</span></div>
+                  </div>
+                  {/if}
                   <div class="crm-receipt-option">
                     <div class="label">{$form.receipt_date.label}</div>
                     <div>{include file="CRM/common/jcalendar.tpl" elementName=receipt_date}<br />
@@ -407,6 +419,14 @@ function loadPanes( id ) {
     trigger_field_id    ="is_email_receipt"
     trigger_value       = 1
     target_element_id   ="from_email_address"
+    target_element_type ="block"
+    field_type          ="radio"
+    invert              = 0
+}
+{include file="CRM/common/showHideByFieldValue.tpl"
+    trigger_field_id    ="is_email_receipt"
+    trigger_value       = 1
+    target_element_id   ="is_attach_receipt"
     target_element_type ="block"
     field_type          ="radio"
     invert              = 0
