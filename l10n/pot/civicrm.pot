@@ -47360,3 +47360,15 @@ msgstr ""
 
 msgid "giving level filter"
 msgstr ""
+
+msgid "Yearly Installments"
+msgstr ""
+
+msgid "Yearly Recurring Contributions"
+msgstr ""
+
+msgid "Months Recurring Contributions"
+msgstr ""
+
+msgid "Years Recurring Contributions"
+msgstr ""
