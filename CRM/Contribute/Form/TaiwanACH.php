@@ -62,7 +62,11 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       2 => ts('postal transfer'),
     ));
 
-    $this->addSelect('ach_stamp_verification', ts('Stamp Verification Status'), CRM_Contribute_PseudoConstant::taiwanACHStampVerification());
+    $stampVerification = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
+    if ($this->_action & CRM_Core_Action::ADD) {
+      unset($stampVerification[1], $stampVerification[2]);
+    }
+    $this->addSelect('ach_stamp_verification', ts('Stamp Verification Status'), $stampVerification);
 
     $this->add('text', 'ach_bank_branch', ts('Bank Branch'));
     $this->add('text', 'ach_bank_account', ts('ACH').' - '.ts('Bank Account Number'), NULL, TRUE);
@@ -97,6 +101,19 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $errors['ach_postoffice_acc_type'] = ts('%1 is a required field.', array(1 => ts('Post Office Account Type')));
     }
 
+    if($fields['ach_identifier_number']) {
+      $err = FALSE;
+      if(strlen($fields['ach_identifier_number']) != 10) {
+        $err = TRUE;
+      }
+      if (!preg_match('/[a-z]{1,2}[0-9]{8,9}/i', $fields['ach_identifier_number'])) {
+        $err = TRUE;
+      }
+      if ($err) {
+        $errors['ach_identifier_number'] = ts('%1 has error on format.', array(1 => ts('ACH').' - '.ts('Legal Identifier')));
+      }
+    }
+
     return $errors;
   }
 
@@ -119,6 +136,12 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $defaults['currency'] = $achValues['currency'];
 
       return $defaults;
+    }
+    elseif($this->_contactId) {
+      $legalIdentitifer = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_contactId, 'legal_identifier');
+      if (!empty($legalIdentitifer)) {
+        $defaults['ach_identifier_number'] = $legalIdentitifer;
+      }
     }
     return $defaults;
   }
