@@ -585,6 +585,7 @@ SELECT $select
 
                     if ($fileDAO->find(TRUE)) {
                       $entityIDName = "{$table}_entity_id";
+                      $customValue = array();
                       $customValue['id'] = $dao->$idName;
                       $customValue['data'] = $fileDAO->uri;
                       $customValue['fid'] = $fileDAO->id;
