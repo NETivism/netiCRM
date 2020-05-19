@@ -284,10 +284,13 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $recurDAO->find();
     require_once 'CRM/Contribute/PseudoConstant.php';
     $contributionStatus = CRM_Contribute_Pseudoconstant::contributionStatus();
+    $paymentProcessors = CRM_Core_PseudoConstant::paymentProcessor();
 
     while ($recurDAO->fetch()) {
       $params[$recurDAO->id]['id'] = $recurDAO->id;
       $params[$recurDAO->id]['contactId'] = $recurDAO->contact_id;
+      $params[$recurDAO->id]['payment_processor'] = $paymentProcessors[$recurDAO->processor_id];
+      $params[$recurDAO->id]['payment_processor_id'] = $recurDAO->processor_id;
       $params[$recurDAO->id]['start_date'] = $recurDAO->start_date;
       $params[$recurDAO->id]['end_date'] = $recurDAO->end_date;
       $params[$recurDAO->id]['cancel_date'] = $recurDAO->cancel_date;

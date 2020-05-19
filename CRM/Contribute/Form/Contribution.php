@@ -229,8 +229,13 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->assign('context', $this->_context);
 
-    //set the contribution mode.
+    // set the contribution mode.
     $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $this);
+    // check if mode available
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND name != 'ACH'");
+    if(empty($processors)) {
+      $this->_mode = NULL;
+    }
 
     $this->assign('contributionMode', $this->_mode);
 
@@ -242,7 +247,6 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     //only valid processors get display to user
     if ($this->_mode) {
       $validProcessors = array();
-      $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 )");
       foreach ($processors as $ppID => $label) {
         require_once 'CRM/Core/BAO/PaymentProcessor.php';
         require_once 'CRM/Core/Payment.php';

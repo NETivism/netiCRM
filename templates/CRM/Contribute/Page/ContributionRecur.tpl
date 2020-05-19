@@ -196,6 +196,7 @@
     <table class="selector">
         <tr class="columnheader">
             <th scope="col">#</th>
+            <th scope="col">{ts}Payment Processor{/ts}</th>
             <th scope="col">{ts}Amount{/ts}</th>
             <th scope="col">{ts}Frequency{/ts}</th>
             <th scope="col">{ts}Start Date{/ts}</th>
@@ -211,6 +212,7 @@
             {assign var=id value=$row.id}
             <tr id="row_{$row.id}" class="{cycle values="even-row,odd-row"}{if NOT $row.is_active} disabled{/if}">
                 <td>{$row.id}</td>
+                <td>{$row.payment_processor}</td>
                 <td>{$row.amount|crmMoney}</td>
                 <td>{ts}every{/ts} {$row.frequency_interval} {$row.frequency_unit} </td>
                 <td>{$row.start_date|crmDate}</td>
