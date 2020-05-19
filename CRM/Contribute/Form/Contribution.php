@@ -232,7 +232,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     // set the contribution mode.
     $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $this);
     // check if mode available
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND name != 'ACH'");
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
     if(empty($processors)) {
       $this->_mode = NULL;
     }

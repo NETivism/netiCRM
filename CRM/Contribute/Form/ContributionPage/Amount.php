@@ -99,7 +99,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
 
     $this->addElement('checkbox', 'is_monetary', ts('Execute real-time monetary transactions'),NULL,array('onclick' => "showHideAmountBlock( this, 'is_monetary' );"));
 
-    $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "name != 'ACH'");
+    $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "payment_processor_type != 'TaiwanACH'");
     $recurringPaymentProcessor = array();
 
     if (!empty($paymentProcessor)) {

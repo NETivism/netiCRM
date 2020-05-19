@@ -321,14 +321,14 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     $this->preProcess();
 
     // check if we can process credit card contribs
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND name != 'ACH'");
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
     if (count($processors) > 0) {
       $this->assign('newCredit', TRUE);
     }
     else {
       $this->assign('newCredit', FALSE);
     }
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN (1) AND name = 'ACH'");
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN (1) AND payment_processor_type = 'TaiwanACH'");
     if (count($processors) > 0) {
       $this->assign('newACH', TRUE);
     }
