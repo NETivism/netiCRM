@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-05-18 14:03+0000\n"
+"PO-Revision-Date: 2020-05-20 07:10+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47595,3 +47595,129 @@ msgstr "期每月捐款"
 
 msgid "Years Recurring Contributions"
 msgstr "期每年捐款"
+
+msgid "Taiwan ACH ID"
+msgstr ""
+
+msgid "Post Office Account Type"
+msgstr "郵局帳號類型"
+
+msgid "Bank Branch"
+msgstr "銀行分行"
+
+msgid "Identifier Number"
+msgstr "身分證字號/統一編號"
+
+msgid "Stamp Verification"
+msgstr "核印狀態"
+
+msgid "Error on line %1:"
+msgstr "第 %1 行有錯誤："
+
+msgid "Word count of txt is wrong: %1"
+msgstr "第 %1 欄的字數有誤。"
+
+msgid "Header have wrong value."
+msgstr "首行資料有誤。"
+
+msgid "Footer have wrong value."
+msgstr "尾行資料有誤。"
+
+msgid "The data of order %1 have wrong value."
+msgstr "第 %1 項有錯誤資料。"
+
+msgid "There is process error on id: %1"
+msgstr "編號 %1 的資料執行時發生錯誤。"
+
+msgid "In %1, row %2 is not correct, input value is %3, format should be %4"
+msgstr "第 %1 行的第 %2 欄資料格式有誤，格式應為 %4 ，收到的字串為 %3。"
+
+msgid ""
+"In %1, word since %2 is not correct, input value is %3, format should be %4"
+msgstr "第 %1 行的第 %2 個字元開始的資料格式有誤，格式應為 %4 ，收到的字串為 %3。"
+
+msgid "Format is not correct. Input format is '%1'"
+msgstr "格式有誤，輸入的格式為「%1」。"
+
+msgid "Process Date"
+msgstr "執行日期"
+
+msgid "Type of upload file is not a responding file."
+msgstr "上傳的檔案格式並非回傳檔格式。"
+
+msgid "Status of recurring: %1 should be 'pending'."
+msgstr "定期定額編號: %1 狀態應為「待處理」。"
+
+msgid "ACH Type"
+msgstr "ACH 類型"
+
+msgid "Bank"
+msgstr "銀行"
+
+msgid "Post Office"
+msgstr "郵局"
+
+msgid "Bank book"
+msgstr "存簿"
+
+msgid "Postal transfer"
+msgstr "劃撥"
+
+msgid "Stamp Verification Status"
+msgstr "核印狀態"
+
+msgid "ACH"
+msgstr "台灣 ACH 代收代付"
+
+msgid "ACH Search"
+msgstr "台灣 ACH 搜尋"
+
+msgid "Bank Account"
+msgstr "銀行帳戶"
+
+msgid "Export ACH Stamp Verification File"
+msgstr "匯出 ACH 核印檔"
+
+msgid "Export ACH Transaction File"
+msgstr "匯出 ACH 扣款檔"
+
+msgid "%1 has error on format."
+msgstr "%1 格式有誤。"
+
+msgid "Export ACH Verification File"
+msgstr "匯出 ACH 核印檔"
+
+msgid ""
+"All selected recurrings must be pending. There are %1 recurrings not "
+"pending."
+msgstr "所有選取的定期定額狀態應為「待處理」，有 %1 筆定期定額狀態不正確。"
+
+msgid ""
+"All selected recurrings must be unverified. There are %1 recurrings not "
+"unverified."
+msgstr "所有選取的定期定額核印狀態應為「未核印」，有 %1 筆定期定額狀態不正確。"
+
+msgid ""
+"There are %1 recurrings have invoice ID, This behavior will overwrite them."
+msgstr "有 %1 筆定期定額已有產生核印對應的帳單編號，完成此動作將覆寫這些資料。"
+
+msgid "Verification Date"
+msgstr "核印日期"
+
+msgid ""
+"There already have file exported in the same day, if you want to rewrite it,"
+" please check 'rewrite' then submit."
+msgstr "在同一個核印日期已有匯出核印檔，若您要覆寫，請勾選「覆寫」並送出。"
+
+msgid ""
+"All selected recurrings must be in process. There are %1 recurrings not in "
+"process."
+msgstr "所有選取的定期定額狀態應為「進行中」，有 %1 筆定期定額狀態不正確。"
+
+msgid ""
+"All selected recurrings must be verified. There are %1 recurrings yet "
+"verified."
+msgstr "所有選取的定期定額核印狀態應為「核印完成」，有 %1 筆定期定額狀態不正確。"
+
+msgid "Rewrite"
+msgstr "覆寫"

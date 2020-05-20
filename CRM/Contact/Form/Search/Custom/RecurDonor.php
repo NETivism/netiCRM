@@ -142,7 +142,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       (SELECT recur.*, MAX(con.id) as contribution_id FROM civicrm_contribution_recur recur INNER JOIN civicrm_contribution con ON con.contribution_recur_id = recur.id AND con.contribution_status_id = 1 AND con.is_test = 0 WHERE recur.is_test = 0 AND recur.contribution_status_id = 5 GROUP BY recur.id) AS r1 
       ON r1.contact_id = contact.id
     LEFT JOIN 
-      (SELECT recur.*, MAX(con.id) as contribution_id FROM civicrm_contribution_recur recur INNER JOIN civicrm_contribution con ON con.contribution_recur_id = recur.id AND con.contribution_status_id = 1 AND con.is_test = 0 WHERE recur.is_test = 0 AND recur.contribution_status_id IN (1,6,7) GROUP BY recur.id) AS r2
+      (SELECT recur.*, MAX(con.id) as contribution_id FROM civicrm_contribution_recur recur INNER JOIN civicrm_contribution con ON con.contribution_recur_id = recur.id AND con.contribution_status_id = 1 AND con.is_test = 0 WHERE recur.is_test = 0 AND recur.contribution_status_id IN (1,3,6,7) GROUP BY recur.id) AS r2
       ON r2.contact_id = contact.id
     ";
   }
