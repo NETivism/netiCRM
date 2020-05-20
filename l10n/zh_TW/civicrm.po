@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-05-20 07:10+0000\n"
+"PO-Revision-Date: 2020-05-20 07:39+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47554,7 +47554,7 @@ msgid "Post Delegate Institution Code"
 msgstr "郵局委託機構代號"
 
 msgid "Taiwan ACH Payment"
-msgstr "台灣ACH代收代付"
+msgstr "ACH 代收代付"
 
 msgid "Recurring Donors Search"
 msgstr "定期定額捐款人搜尋"
@@ -47667,7 +47667,7 @@ msgid "Stamp Verification Status"
 msgstr "核印狀態"
 
 msgid "ACH"
-msgstr "台灣 ACH 代收代付"
+msgstr "ACH 代收代付"
 
 msgid "ACH Search"
 msgstr "台灣 ACH 搜尋"
@@ -47721,3 +47721,21 @@ msgstr "所有選取的定期定額核印狀態應為「核印完成」，有 %1
 
 msgid "Rewrite"
 msgstr "覆寫"
+
+msgid "Stamp Verication Date"
+msgstr "核印日期"
+
+msgid "Import ACH"
+msgstr "匯入 ACH 回覆檔"
+
+msgid "New ACH"
+msgstr "新增 ACH 資料"
+
+msgid "Procecss Info"
+msgstr "解析資訊"
+
+msgid "Process ID"
+msgstr "回覆檔編號"
+
+msgid "Import Type"
+msgstr "回覆檔類型"
