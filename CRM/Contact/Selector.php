@@ -720,7 +720,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
             CRM_Core_DAO::commonRetrieve('CRM_Contact_DAO_GroupContact', $gcParams, $gcDefaults);
 
             if (empty($gcDefaults)) {
-              $row['status'] = ts('Smart');
+              $row['status'] = ts('Smart').'/'.ts('Children');
             }
             else {
               $row['status'] = $gc[$gcDefaults['status']];
