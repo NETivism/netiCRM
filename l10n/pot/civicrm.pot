@@ -47486,3 +47486,21 @@ msgstr ""
 
 msgid "Rewrite"
 msgstr ""
+
+msgid "Stamp Verication Date"
+msgstr ""
+
+msgid "Import ACH"
+msgstr ""
+
+msgid "New ACH"
+msgstr ""
+
+msgid "Procecss Info"
+msgstr ""
+
+msgid "Process ID"
+msgstr ""
+
+msgid "Import Type"
+msgstr ""
