@@ -392,7 +392,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     // First use ipn validate
     $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
-    if(!$validate_result){
+    if (!$validate_result) {
       return FALSE;
     }
     else {
@@ -428,13 +428,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       $transaction = new CRM_Core_Transaction();
 
-      if(isset($result->status)){
+      if (isset($result->status)) {
         $status = $result->status;
-      }else if(!empty($result->record_status)){
+      }
+      else if (!empty($result->record_status)) {
         // recordAPI use record_status
         $status = $result->record_status;
       }
-      if($pass && $status == "0"){
+      if ($pass && in_array($status, array("0", "1"))) {
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
         $input['amount'] = $objects['contribution']->amount;
         $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
@@ -749,7 +750,7 @@ LIMIT 0, 100
       $resultNote .= "\n".ts('Synchronizing to Tappay server success.');
 
       // Sync contribution status in CRM
-      if($record->record_status == 0 && $contribution->contribution_status_id != 1) {
+      if (in_array($record->record_status, array("1", "0")) && $contribution->contribution_status_id != 1) {
         self::doTransaction($record, $contributionId);
       }
       else if($record->record_status == 3 && $contribution->contribution_status_id != 3) {
