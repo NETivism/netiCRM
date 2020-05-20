@@ -22,10 +22,10 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     }
     if (!empty($isError)) {
       if (!empty($notPending)) {
-        $msgs[] = ts('All selected recurrings need pending. There are %1 recurrings not pending.', array(1 => count($notPending)));
+        $msgs[] = ts('All selected recurrings must be pending. There are %1 recurrings not pending.', array(1 => count($notPending)));
       }
       if (!empty($notUnverified)) {
-        $msgs[] = ts('All selected recurrings need unverified. There are %1 recurrings not unverified.', array(1 => count($notUnverified)));
+        $msgs[] = ts('All selected recurrings must be unverified. There are %1 recurrings not unverified.', array(1 => count($notUnverified)));
       }
       $msg = implode('<br/>', $msgs);
       CRM_Core_Error::statusBounce($msg);
@@ -46,7 +46,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
 
   public function buildQuickForm() {
     parent::buildQuickForm();
-    $this->addDate('datetime', ts('Output Time'), TRUE, array('formatType' => 'searchDate'));
+    $this->addDate('datetime', ts('Verification Date'), TRUE, array('formatType' => 'searchDate'));
     $this->addYesNo('is_overwrite', ts('overwrite').'?');
   }
 

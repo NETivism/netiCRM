@@ -21,10 +21,10 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
     }
     if (!empty($isError)) {
       if (!empty($notInProcess)) {
-        $msgs[] = ts('All selected recurrings need in process. There are %1 recurrings not in process.', array(1 => count($notInProcess)));
+        $msgs[] = ts('All selected recurrings must be in process. There are %1 recurrings not in process.', array(1 => count($notInProcess)));
       }
       if (!empty($unverified)) {
-        $msgs[] = ts('All selected recurrings need verified. There are %1 recurrings yet verified.', array(1 => count($unverified)));
+        $msgs[] = ts('All selected recurrings must be verified. There are %1 recurrings yet verified.', array(1 => count($unverified)));
       }
       $msg = implode('<br/>', $msgs);
       CRM_Core_Error::statusBounce($msg);

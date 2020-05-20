@@ -47,7 +47,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     }
     $this->addSelect('ach_contribution_page_id', ts('Contribution Page'), $pages, NULL, TRUE);
     $this->addMoney('ach_amount', ts('Total Amount'), TRUE);
-    $this->addSelect('ach_payment_type', ts('ACH').' - '.ts('Payment Instrument'), array(
+    $this->addSelect('ach_payment_type', ts('ACH Type').' - '.ts('Payment Instrument'), array(
       '' => ts('-- select --'),
       'ACH Bank' => ts('Bank'),
       'ACH Post' => ts('Post Office'),
@@ -60,8 +60,8 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
     $this->addSelect('ach_postoffice_acc_type', ts('Post Office Account Type'), array(
       '' => ts('-- select --'),
-      1 => ts('bank book'),
-      2 => ts('postal transfer'),
+      1 => ts('Bank book'),
+      2 => ts('Postal transfer'),
     ));
 
     $stampVerification = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();

@@ -893,7 +893,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           if (!empty($header['is_error'])) {
             $isError = TRUE;
             foreach ($header['messages'] as $message) {
-              $messages[] = ts('Header have wrong value :').$message;
+              $messages[] = ts('Header have wrong value.').' : '.$message;
             }
           }
         }
@@ -906,7 +906,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         if (!empty($footer['is_error'])) {
           $isError = TRUE;
           foreach ($footer['messages'] as $message) {
-            $messages[] = ts('Footer have wrong value :').$message;
+            $messages[] = ts('Footer have wrong value.').' : '.$message;
           }
         }
       }
@@ -919,7 +919,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $isError = TRUE;
           foreach ($bodyLine['messages'] as $message) {
             $lineOrder = ($instrumentType == self::POST) ? $i+1 : $i;
-            $messages[] = ts('The data of order %1 have wrong value :', $lineOrder).$message;
+            $messages[] = ts('The data of order %1 have wrong value.', $lineOrder).' : '.$message;
           }
         }
       }
