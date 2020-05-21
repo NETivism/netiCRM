@@ -100,7 +100,9 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.wait(2000);
-    test.assertDoesntExist('.crm-error');
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
 
 
     /*
@@ -153,7 +155,9 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[type=submit][value='Save and New']");
     }); /* submit form */
     casper.wait(2000);
-    test.assertDoesntExist('.crm-error');
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
 
 
     /* 2. Select */
@@ -230,7 +234,9 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[type=submit][value='Save and New']");
     }); /* submit form */
     casper.wait(2000);
-    test.assertDoesntExist('.crm-error');
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
 
 
     /* 3. Radio */
@@ -307,7 +313,9 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[type=submit][value='Save and New']");
     }); /* submit form */
     casper.wait(2000);
-    test.assertDoesntExist('.crm-error');
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
 
 
     /* 4. Checkbox */
@@ -384,7 +392,9 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[type=submit][value='Save and New']");
     }); /* submit form */
     casper.wait(2000);
-    test.assertDoesntExist('.crm-error');
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
 
 
     /* 5. Multi-Select */
@@ -461,7 +471,9 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[type=submit][value='Save and New']");
     }); /* submit form */
     casper.wait(2000);
-    test.assertDoesntExist('.crm-error');
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
     
     /* 6. Advanced Multi-Select */
     /* sendKeys to Field Label */
@@ -537,7 +549,9 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[type=submit][value='Save and New']");
     }); /* submit form */
     casper.wait(2000);
-    test.assertDoesntExist('.crm-error');
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
 
      
     /* 7. Autocomplete Select */
@@ -614,8 +628,599 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[type=submit][value='Save and New']");
     }); /* submit form */
     casper.wait(2000);
-    test.assertDoesntExist('.crm-error');
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
 
+    /*
+     * Add 14 different types of field
+     */
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 3: Add Integer, Number, Money, Note, Date, Yes or No, State/Province, Country, File, Link, Contact Reference fields. **');
+        casper.echo('=====================================');
+    });
+
+    /* 1. Integer */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-1: Add Integer field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Integer' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    casper.then(function() {
+        this.capture('Integer.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 2. Number */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-2: Add Number field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Number' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 2;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    casper.then(function() {
+        this.capture('Number.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 3. Money */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-3: Add Money field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Money' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 3;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    casper.then(function() {
+        this.capture('Money.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 4-1. Note TextArea */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-4-1: Add Note TextArea field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Note_TextArea' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 4;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+    casper.waitForSelector("select[name='data_type[1]']", function success() {
+        test.assertExists("select[name='data_type[1]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[1]']").selectedIndex = 0;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[1]']");
+    });
+
+    casper.then(function() {
+        this.capture('Note_TextArea.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 4-2. Note WYSIWYG Editor */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-4-2: Add Note WYSIWYG Editor field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Note_WYSIWYG_Editor' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 4;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+    casper.waitForSelector("select[name='data_type[1]']", function success() {
+        test.assertExists("select[name='data_type[1]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[1]']").selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[1]']");
+    });
+
+    casper.then(function() {
+        this.capture('Note_WYSIWYG_Editor.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 5. Date */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-5: Add Date field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Date' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 5;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    /* click Data and Input Field Type to invoke onclick event */
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.click("select[name='data_type[0]']");
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    /* select Date Format */
+    casper.waitForSelector("select[name='date_format']", function success() {
+        test.assertExists("select[name='date_format']");
+        this.evaluate(function () {
+            document.querySelector("select[name='date_format']").selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("select[name='date_format']");
+    });
+
+    casper.then(function() {
+        this.capture('Date.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+        
+    /* 6. Yes or No */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-6: Add Yes or No field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Yes_or_No' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 6;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    casper.then(function() {
+        this.capture('Yes_or_No.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    })
+
+    /* 7-1. State/Province Select */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-7-1: Add State/Province Select field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'State_Province_Select' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 7;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+    casper.waitForSelector("select[name='data_type[1]']", function success() {
+        test.assertExists("select[name='data_type[1]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[1]']").selectedIndex = 0;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[1]']");
+    });
+
+    casper.then(function() {
+        this.capture('State_Province_Select.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 7-2. State/Province Multi-Select */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-7-1: Add State/Province Select field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'State_Province_Multi_Select' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 7;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+    casper.waitForSelector("select[name='data_type[1]']", function success() {
+        test.assertExists("select[name='data_type[1]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[1]']").selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[1]']");
+    });
+
+    casper.then(function() {
+        this.capture('State_Province_Multi_Select.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 8-1. Country Select */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-8-1: Add Country Select field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Country_Select' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 8;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+    casper.waitForSelector("select[name='data_type[1]']", function success() {
+        test.assertExists("select[name='data_type[1]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[1]']").selectedIndex = 0;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[1]']");
+    });
+
+    casper.then(function() {
+        this.capture('Country_Select.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 8-2. Country Multi Select */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-8-2: Add Country Multi Select field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Country_Multi_Select' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 8;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+    casper.waitForSelector("select[name='data_type[1]']", function success() {
+        test.assertExists("select[name='data_type[1]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[1]']").selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[1]']");
+    });
+
+    casper.then(function() {
+        this.capture('Country_Multi_Select.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 9. File */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-9: Add File field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'File' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 9;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    casper.then(function() {
+        this.capture('File.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+    
+    /* 10. Link */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-10: Add Link field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Link' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 10;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    casper.then(function() {
+        this.capture('Link.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+
+    /* 11. Contact Reference */
+    /* sendKeys to Field Label */
+    casper.waitForSelector("input[name='label']", function success() {
+        casper.echo('** Step 3-11: Add Contact Reference field. **');
+        test.assertExists("input[name='label']");
+        this.sendKeys("input[name='label']", 'Contact_Reference' + id);
+    }, function fail() {
+        test.assertExists("input[name='label']");
+    });
+
+    /* select Data and Input Field Type*/
+    casper.waitForSelector("select[name='data_type[0]']", function success() {
+        test.assertExists("select[name='data_type[0]']");
+        this.evaluate(function () {
+            document.querySelector("select[name='data_type[0]']").selectedIndex = 11;
+            document.querySelector("select[name='data_type[0]']").onchange();
+        });
+    }, function fail() {
+        test.assertExists("select[name='data_type[0]']");
+    });
+
+    casper.then(function() {
+        this.capture('Contact_Reference.png');
+    });
+
+    /* click submit */
+    casper.waitForSelector("input[type=submit][value='Save and New']", function success() {
+        test.assertExists("input[type=submit][value='Save and New']");
+        this.click("input[type=submit][value='Save and New']");
+    }, function fail() {
+        test.assertExists("input[type=submit][value='Save and New']");
+    }); /* submit form */
+    casper.wait(2000);
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error');
+    });
+    
     casper.run(function() {
         test.done();
     });
