@@ -463,7 +463,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       self::addNote($note, $objects['contribution']);
     }
 
-    return $isSuccess;
   }
 
 

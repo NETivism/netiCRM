@@ -47372,3 +47372,135 @@ msgstr ""
 
 msgid "Years Recurring Contributions"
 msgstr ""
+
+msgid "Taiwan ACH ID"
+msgstr ""
+
+msgid "Post Office Account Type"
+msgstr ""
+
+msgid "Bank Branch"
+msgstr ""
+
+msgid "Identifier Number"
+msgstr ""
+
+msgid "Stamp Verification"
+msgstr ""
+
+msgid "Error on line %1:"
+msgstr ""
+
+msgid "Word count of txt is wrong: %1"
+msgstr ""
+
+msgid "Header have wrong value."
+msgstr ""
+
+msgid "Footer have wrong value."
+msgstr ""
+
+msgid "The data of order %1 have wrong value."
+msgstr ""
+
+msgid "There is process error on id: %1"
+msgstr ""
+
+msgid "In %1, row %2 is not correct, input value is %3, format should be %4"
+msgstr ""
+
+msgid "In %1, word since %2 is not correct, input value is %3, format should be %4"
+msgstr ""
+
+msgid "Format is not correct. Input format is '%1'"
+msgstr ""
+
+msgid "Process Date"
+msgstr ""
+
+msgid "Type of upload file is not a responding file."
+msgstr ""
+
+msgid "Status of recurring: %1 should be 'pending'."
+msgstr ""
+
+msgid "ACH Type"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
+msgid "Post Office"
+msgstr ""
+
+msgid "Bank book"
+msgstr ""
+
+msgid "Postal transfer"
+msgstr ""
+
+msgid "Stamp Verification Status"
+msgstr ""
+
+msgid "ACH"
+msgstr ""
+
+msgid "ACH Search"
+msgstr ""
+
+msgid "Bank Account"
+msgstr ""
+
+msgid "Export ACH Stamp Verification File"
+msgstr ""
+
+msgid "Export ACH Transaction File"
+msgstr ""
+
+msgid "%1 has error on format."
+msgstr ""
+
+msgid "Export ACH Verification File"
+msgstr ""
+
+msgid "All selected recurrings must be pending. There are %1 recurrings not pending."
+msgstr ""
+
+msgid "All selected recurrings must be unverified. There are %1 recurrings not unverified."
+msgstr ""
+
+msgid "There are %1 recurrings have invoice ID, This behavior will overwrite them."
+msgstr ""
+
+msgid "Verification Date"
+msgstr ""
+
+msgid "There already have file exported in the same day, if you want to rewrite it, please check 'rewrite' then submit."
+msgstr ""
+
+msgid "All selected recurrings must be in process. There are %1 recurrings not in process."
+msgstr ""
+
+msgid "All selected recurrings must be verified. There are %1 recurrings yet verified."
+msgstr ""
+
+msgid "Rewrite"
+msgstr ""
+
+msgid "Stamp Verication Date"
+msgstr ""
+
+msgid "Import ACH"
+msgstr ""
+
+msgid "New ACH"
+msgstr ""
+
+msgid "Procecss Info"
+msgstr ""
+
+msgid "Process ID"
+msgstr ""
+
+msgid "Import Type"
+msgstr ""
