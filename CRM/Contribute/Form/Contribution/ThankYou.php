@@ -75,11 +75,15 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
 
     // add dataLayer for gtm
     if(CRM_Utils_Array::value('trxn_id', $this->_params)) {
-      $this->assign('transaction_id', $this->_params['trxn_id']);
+      $transactionId = $this->_params['trxn_id'];
     }
     else {
-      $this->assign('transaction_id', $this->_contributionID);
+      $transactionId = ts('Contribution ID').'-'.$this->_contributionID;
     }
+    if ($this->_action & CRM_Core_Action::PREVIEW) {
+      $transactionId = 'test-'.$transactionId;
+    }
+    $this->assign('transaction_id', $transactionId);
     $this->assign('product_id', ts('Contribution Page').'-'.$this->_values['id']);
     $this->assign('product_name', $this->_values['title']);
     if ($this->_values['is_recur']) {
@@ -101,7 +105,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     $this->assign('dataLayerType', 'purchase');
     $smarty = CRM_Core_Smarty::singleton();
     $dataLayer = $smarty->fetch('CRM/common/DataLayer.tpl');
-    if ($paymentResultStatus != 1) {
+    if ($paymentResultStatus == 4) {
       $this->assign('dataLayerType', 'refund');
       $dataLayer .= $smarty->fetch('CRM/common/DataLayer.tpl');
     }
@@ -181,10 +185,10 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     }
 
     if ($membershipTypeID) {
-      $transactionID = $this->get('membership_trx_id');
+      $memberTrxnId= $this->get('membership_trx_id');
       $membershipAmount = $this->get('membership_amount');
       $renewalMode = $this->get('renewal_mode');
-      $this->assign('membership_trx_id', $transactionID);
+      $this->assign('membership_trx_id', $memberTrxnId);
       $this->assign('membership_amount', $membershipAmount);
       $this->assign('renewal_mode', $renewalMode);
 
