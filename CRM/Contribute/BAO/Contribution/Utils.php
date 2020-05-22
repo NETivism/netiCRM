@@ -724,6 +724,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
       $message = CRM_Utils_Request::retrieve('payment_result_message', 'String', $form);
       $form->assign('payment_result_message', $message);
     }
+    return $status;
   }
 
   /**

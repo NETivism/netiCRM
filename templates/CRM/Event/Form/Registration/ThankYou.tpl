@@ -309,23 +309,4 @@
         {include file="CRM/Event/Page/iCalLinks.tpl"}
     {/if} 
 
-    {capture assign=product_id}{ts}Event{/ts}-{$event.id}{/capture}
-    {if !$trxn_id}
-      {if $contribution_id}
-        {capture assign=transaction_id}{ts}Contribution ID{/ts}-{$contribution_id}{/capture}
-      {else}
-        {capture assign=transaction_id}{ts}Participant Id{/ts}-{$registerByID}{/capture}
-      {/if}
-    {else}
-      {assign var=transaction_id value=$trxn_id}
-    {/if}
-    {if !$totalAmount}
-      {assign var=totalAmount value=0}
-    {/if}
-    {assign var=product_amount value=$totalAmount}
-    {assign var=total_amount value=$totalAmount}
-    {include file="CRM/common/DataLayer.tpl" dataLayerType='purchase' transaction_id=$transaction_id total_amount=$product_amount product_name=$event.title product_id=$product_id product_amount=$product_amount product_category=$event.event_type product_quantity=1}
-    {if $payment_result_type eq 4 && $paidEvent}
-      {include file="CRM/common/DataLayer.tpl" dataLayerType='refund' transaction_id=$transaction_id}
-    {/if}
 </div>
