@@ -491,12 +491,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $seq->timestamp = microtime(TRUE);
     $seq->insert();
 
-    for ($i=0; $i < 15; $i++) { 
-      sleep(1);
-      CRM_Core_Error::debug_log_message($i, TRUE);
-    }
-
-    /*
     if (empty($time)) {
       $time = time();
     }
@@ -547,7 +541,6 @@ LIMIT 0, 100
 
       self::doCheckRecur($dao->recur_id, $time);
     }
-    */
 
     $checkSeq = new CRM_Core_DAO_Sequence();
     unset($seq->timestamp);
