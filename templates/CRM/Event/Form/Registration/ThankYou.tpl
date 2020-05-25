@@ -46,6 +46,8 @@
        </div><br /><br />
     {/if}  
 
+    <div class="crmdata-contribution" style="display:none">{$contribution_id}</div>
+    <div class="crmdata-event-type" style="display:none">{$event.event_type_id}</div>
     <div {if $payment_result_type eq 4}class="messages error"{else}id="help"{/if}>
         {if $isOnWaitlist}
             <p>
@@ -130,7 +132,10 @@
                 {/if}   
                 {if $totalAmount}
         			<div class="crm-section no-label total-amount-section">
-                		<div class="content bold">{ts}Event Total{/ts}:&nbsp;&nbsp;{$totalAmount|crmMoney}</div>
+                		<div class="content bold">
+                            {ts}Event Total{/ts}:&nbsp;&nbsp;{$totalAmount|crmMoney}
+                            <span class="crmdata-amount" style="display:none">{$totalAmount}</span>
+                        </div>
                 		<div class="clear"></div>
                 	</div>
                     {if $hookDiscount.message}
@@ -148,13 +153,13 @@
             {/if}
             {if $trxn_id}
                 <div class="crm-section no-label trxn_id-section">
-                    <div class="content bold">{ts}Transaction #{/ts}: {$trxn_id}</div>
+                    <div class="content bold">{ts}Transaction #{/ts}: <strong class="crmdata-trxn-id">{$trxn_id}</strong></div>
             		<div class="clear"></div>
             	</div>
             {/if}
             {if $payment_instrument}
               <div class="crm-section no-label trxn_id-section">
-                <div class="content bold">{ts}Payment Instrument{/ts}: {$payment_instrument}</div>
+                <div class="content bold">{ts}Payment Instrument{/ts}: <span class="crmdata-instrument">{$payment_instrument}</span></div>
               </div>
             {/if}
         </div>
@@ -303,4 +308,5 @@
     {if $event.is_public }
         {include file="CRM/Event/Page/iCalLinks.tpl"}
     {/if} 
+
 </div>

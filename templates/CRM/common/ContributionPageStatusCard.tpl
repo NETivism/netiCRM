@@ -76,7 +76,7 @@
   <a href="{crmURL p='civicrm/contribute/search' q="reset=1&pid=`$statistics.page.id`&force=1&status=1&test=0" h=0 a=1 fe=1}" target="_blank">
     {if $statistics.achievement}
     <div>
-      {if $statistics.achievement.type == "amount"}
+      {if $statistics.achievement.type|strstr:"amount"}
         {capture assign=achieved}{$statistics.achievement.current|crmMoney}{/capture}
         {ts 1="`$achieved`"}%1 achieved{/ts}
         {if $statistics.achievement.goal} / {$statistics.achievement.goal|crmMoney}{/if}

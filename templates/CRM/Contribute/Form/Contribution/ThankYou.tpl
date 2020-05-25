@@ -85,7 +85,12 @@
           <li>{ts}Network or system error. Please try again a minutes later, if you still can't success, please contact us for further assistance.{/ts}</li>
         {/if}
         </ul>
-        {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id" h=0 }{/capture}
+
+        {if $action & 1024}
+            {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id&action=preview&retry=1" h=0 }{/capture}
+        {else}
+            {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id&retry=1" h=0 }{/capture}
+        {/if}
         {ts 1=$contribution_page_url}We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry.{/ts}
       {elseif $is_pay_later && $is_monetary}
         <h3>{ts}Keep supporting it. Payment has not been completed yet with entire process.{/ts}</h3>
@@ -146,23 +151,22 @@
           {if $payment_instrument}
           <div><label>{ts}Payment Instrument{/ts}:</label> <span class="crmdata-instrument">{$payment_instrument}</span></div>
           {/if}
-        	{if $lineItem and $priceSetID}
-    	    {if !$amount}{assign var="amount" value=0}{/if}
-    	    {assign var="totalAmount" value=$amount}
-                {include file="CRM/Price/Page/LineItem.tpl" context="Contribution"}
+            {if $lineItem and $priceSetID}
+              {assign var="totalAmount" value=$amount}
+              {include file="CRM/Price/Page/LineItem.tpl" context="Contribution"}
             {elseif $membership_amount } 
-                {$membership_name} {ts}Membership{/ts}: <strong>{$membership_amount|crmMoney}<span class="crmdata-amount-member" style="display:none">{$membership_amount}</span></strong><br />
-                {if $amount}
-                    {if ! $is_separate_payment }
-    		    {ts}Amount{/ts}: <strong>{$amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
-    	        {else}
-    		    {ts}Additional Contribution{/ts}: <strong>{$amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
-      	        {/if}
-                {/if} 		
-                <strong> -------------------------------------------</strong><br />
-                {ts}Total{/ts}: <strong>{$amount+$membership_amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount+$membership_amount}</span></strong><br />
+              {$membership_name} {ts}Membership{/ts}: <strong>{$membership_amount|crmMoney}<span class="crmdata-amount-member" style="display:none">{$membership_amount}</span></strong><br />
+              {if $amount}
+                {if ! $is_separate_payment }
+                  {ts}Amount{/ts}: <strong>{$amount|crmMoney}</strong><br />
+                {else}
+                  {ts}Additional Contribution{/ts}: <strong>{$amount|crmMoney}</strong><br />
+                {/if}
+              {/if} 		
+              <strong> -------------------------------------------</strong><br />
+              {ts}Total{/ts}: <strong>{$amount+$membership_amount|crmMoney}<span class="crmdata-amount" style="display:none">{$amount+$membership_amount}</span></strong><br />
             {else}
-                {ts}Amount{/ts}: <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
+              {ts}Amount{/ts}: <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}<span class="crmdata-amount" style="display:none">{$amount}</span></strong><br />
             {/if}
             {if $receive_date}
             {ts}Date{/ts}: <strong>{$receive_date|crmDate}</strong><br />
@@ -344,5 +348,4 @@
         {$thankyou_footer}
     </div>
     {/if}
-	
 </div>

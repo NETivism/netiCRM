@@ -164,6 +164,7 @@ class CRM_Utils_REST {
     }
 
     if (CRM_Utils_Array::value('xml', $_REQUEST)) {
+      header('Content-Type: text/xml');
       if (isset($result['count'])) {
 
 
@@ -188,7 +189,7 @@ class CRM_Utils_REST {
       return $xml;
     }
     else {
-      header('Content-Type: text/javascript');
+      header('Content-Type: application/json; charset=utf-8');
       if (CRM_Utils_Array::value('debug', $_REQUEST)) {
         return json_encode(array_merge($result), JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES + JSON_UNESCAPED_UNICODE);
       }
@@ -355,6 +356,31 @@ class CRM_Utils_REST {
           'reason' => 'Destructive HTTP GET',
         )
       );
+    }
+
+    // check options, all options should be inside option object
+    $disableOptions = array(
+      'sort', 'limit', 'rowCount', 'offset'
+    );
+    foreach($disableOptions as $opt) {
+      if (isset($params[$opt])) unset($params[$opt]);
+      if (isset($params['option.'.$opt])) unset($params['option.'.$opt]);
+      if (isset($params['option_'.$opt])) unset($params['option_'.$opt]);
+    }
+    if (isset($params['options'])) {
+      $options =& $params['options'];
+      // don't allow sort for query security concern
+      if (isset($options['sort'])) unset($options['sort']);
+
+      if (isset($options['limit']) && !CRM_Utils_Rule::integer($options['limit'])) {
+        return self::error('limit in options should be integer.');
+      }
+      if (isset($options['limit']) && $options['limit'] > 100) {
+        return self::error('limit in options can\'t not larger than 100.');
+      }
+      if (isset($options['offset']) && !CRM_Utils_Rule::integer($options['offset'])) {
+        return self::error('offset in options should be integer.');
+      }
     }
 
     // trap all fatal errors

@@ -130,12 +130,15 @@ SELECT module
    AND uf_group_id = %1
 ";
     $params = array(1 => array($this->_gid, 'Integer'));
-    $dao = &CRM_Core_DAO::executeQuery($query, $params);
+    $dao = CRM_Core_DAO::executeQuery($query, $params);
     if (!$dao->fetch()) {
       CRM_Core_Error::fatal(ts('The requested Profile (gid=%1) is not configured to be used for \'Profile\' edit and view forms in its Settings. Contact the site administrator if you need assistance.',
           array(1 => $this->_gid)
         ));
     }
+
+    // prepare this value
+    $this->_postURL = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_UFGroup", $this->_gid, 'post_URL');
   }
 
   /**
@@ -145,9 +148,8 @@ SELECT module
    * @access public
    */
   public function buildQuickForm() {
-    // add the hidden field to redirect the postProcess from
-    require_once 'CRM/UF/Form/Group.php';
-    require_once 'CRM/Core/DAO/UFGroup.php';
+    // add gid to hidden field prevent session lost
+    $this->addElement('hidden', 'gid', $this->_gid);
 
     // set the title
     CRM_Utils_System::setTitle($this->_ufGroup['title']);
@@ -267,9 +269,11 @@ SELECT module
       $session->set('last_check_id',$last_check_id);
 
       $url = CRM_Utils_System::url('civicrm/profile/create', "reset=1&gid={$gidString}");
+      $session->replaceUserContext($url);
     }
-
-    $session->replaceUserContext($url);
+    else {
+      $session->replaceUserContext($this->_postURL);
+    }
   }
 
   /**

@@ -155,6 +155,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addElement('checkbox', 'display_progress_bar', ts('Progress Bar'), NULL, array('onclick' => "showHideByValue('display_progress_bar',true,'goal_amount_row','table-row','radio',false);"));
     $this->add('number', 'goal_amount', ts('Goal Amount'), array('min' => 0));
     $this->add('number', 'goal_recurring', ts('Goal Subscription'), array('min' => 0));
+    $this->add('number', 'goal_recuramount', ts('Goal Recurring Amount'), array('min' => 0));
     $this->addRule('goal_amount', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
 
     // is this page active ?
@@ -246,11 +247,19 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $params['end_date'] = CRM_Utils_Date::processDate($params['end_date'], $params['end_date_time'], TRUE);
 
     if ($params['display_progress_bar']) {
-      $params['goal_amount'] = CRM_Utils_Rule::cleanMoney($params['goal_amount']);
+      if ($params['goal_recuramount']) {
+        $params['goal_amount'] = CRM_Utils_Rule::cleanMoney($params['goal_recuramount']);
+        $params['goal_recurring'] = 0;
+        unset($params['goal_recuramount']);
+      }
+      else {
+        $params['goal_amount'] = CRM_Utils_Rule::cleanMoney($params['goal_amount']);
+      }
     }
     else {
       $params['goal_amount'] = 'null';
       $params['goal_recurring'] = 'null';
+      $params['goal_recuramount'] = 'null';
     }
 
 
