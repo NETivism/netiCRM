@@ -45,8 +45,6 @@
 
           this.preparePriceSetBlock();
 
-          this.setDefaultPriceOption();
-
           this.prepareContribTypeForm();
 
         }
@@ -121,7 +119,8 @@
         if($('[name="amount"]:checked').length > 0){
           if($('[name="amount"]:checked').val() == 'amount_other_radio'){
             this.currentPriceAmount = $('#amount_other').val();
-          }else{
+          }
+          else{
             this.currentPriceOption = $('[name="amount"]:checked').val();
             var reg = new RegExp(/^NT\$ ([\d\,\.]+)/);
             var option_label = $('[name="amount"]:checked').parent().text();
@@ -480,7 +479,8 @@
           $('.amount-section [value="'+this.currentPriceOption+'"]').click();
           var amount = $('.price-set-btn div[data-amount='+this.currentPriceOption+'] .amount').text();
           this.setPriceAmount(amount);
-        }else{
+        }
+        else {
           $('.amount-section .crm-form-radio:last-child input').click();
         }
         this.updatePriceOption();
@@ -530,26 +530,9 @@
           }
 
           this.updateContributeType(true);
-          this.setDefaultPriceOption();
         }
       },
 
-      setDefaultPriceOption: function(){
-        if(typeof this.currentPriceAmount == 'string'){
-          var amount = this.currentPriceAmount.replace(',','');
-        }else{
-          var amount = this.currentPriceAmount;
-        }
-        var grouping_text = this.currentContribType;
-        $('.amount-section .content .crm-form-radio').each(function(){
-          var $this = $(this);
-          var text = $this.find('.elem-label').text().replace(',','');
-          var this_grouping = $this.find('input').attr('data-grouping');
-          if(text.match(' '+amount+' ') && (this_grouping == grouping_text || this_grouping == '')){
-            ContribPage.setPriceOption($this.find('input').val());
-          }
-        });
-      },
 
       updateContributeType: function(isSelectDefaultOption) {
         if(this.currentContribType == 'non-recurring'){
@@ -571,8 +554,18 @@
         this.updateContribInfoLabel();
         this.updatePriceSetOption();
 
-        if(this.currentPriceOption && isSelectDefaultOption && this.defaultPriceOption[this.currentContribType]){
-          this.setPriceOption(this.defaultPriceOption[this.currentContribType]);
+        if (isSelectDefaultOption) {
+          var newPriceOption = this.defaultPriceOption[this.currentContribType] ? this.defaultPriceOption[this.currentContribType] : '';
+          this.setPriceOption(newPriceOption);
+        }
+        else {
+          if (this.currentPriceOption) {
+            this.setPriceOption(this.currentPriceOption);
+          }
+          else {
+            this.setPriceOption();
+            this.setPriceAmount(this.currentPriceAmount);
+          }
         }
       },
 
