@@ -175,7 +175,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '18' => 'X(2)',
               '20' => '9(14)',
               '34' => 'X(10)',
-              '44' => '9(11,2)',
+              '44' => '9(11)',
               '55' => 'X(20)',
               '75' => 'X(1)',
               '76' => 'X(1)',
@@ -196,10 +196,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '17' => 'X(1)',
               '18' => 'X(2)',
               '20' => '9(7)',
-              '27' => '9(13,2)',
+              '27' => '9(13)',
               '40' => 'X(16)',
               '56' => '9(7)',
-              '63' => '9(13,2)',
+              '63' => '9(13)',
               '76' => 'X(45)',
             ),
           ),
@@ -438,7 +438,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($firstAch['processor_id'], '');
     $params['paymentProcessor'] = $paymentProcessor;
 
-    // Add civicrm_log file
+    // Add civicrm_log data
     $lastTransactLogTime = CRM_Core_DAO::singleValueQuery("SELECT MAX(entity_id) FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_transaction'");
     if (empty($lastTransactLogTime)){
       $lastTransactLogTime = '000000';
@@ -620,7 +620,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $row = array(
         1,
         $paymentProcessor['subject'],
-        str_repeat(' ', 3),
+        str_repeat(' ', 4),
         $params['date'],
         '001',
         str_pad($i, 6, '0', STR_PAD_LEFT),
@@ -748,17 +748,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $i = 1;
     $totalAmount = 0;
     foreach ($achDatas as $achData) {
-      $contributionParams = array(
-        'contact_id' => $achData['contact_id'],
-        'total_amount' => $achData['amount'],
-        'create_date' => date('Y-m-d H:i:s'),
-        'contribution_recur_id' => $achData['contribution_recur_id'],
-      );
-      $ids = array();
-      $contribution = CRM_Contribute_BAO_Contribution::add($contributionParams, $ids);
+      $contribution = self::createContributionByACHData($achData);
+      $invoice_id = "{$params['transact_date']}_{$params['transact_id']}_$i";
+      CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'invoice_id', $invoice_id);
+      $params['contribution_ids'][] = $contribution->id;
       $bankAccount = str_pad($achData['bank_account'], 14, '0', STR_PAD_RIGHT);
-      $identifier_number = str_pad($achData['identifier_number'], 10, ' ', STR_PAD_LEFT);
-      $totalAmount += $achData['amount'];
+      $totalAmount += (INT) $achData['amount'];
       $row = array(
         1,
         ($achData['postoffice_acc_type'] == 1)? 'P' : 'G',
@@ -769,7 +764,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 2),
         $bankAccount,
         str_repeat(' ', 10),
-        str_pad($achData['amount'], 9, '0', STR_PAD_LEFT).'00',
+        str_pad((INT) $achData['amount'], 9, '0', STR_PAD_LEFT).'00',
         str_pad($contribution->id, 20, ' ', STR_PAD_LEFT),
         1,
         ' ',
@@ -778,7 +773,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 2),
         $month,
         str_repeat(' ', 5),
-        str_repeat(' ', 20),
+        str_pad($params['transact_id'], 20, ' ', STR_PAD_LEFT),
         str_repeat(' ', 10),
       );
       $checkResults[$i] = self::doCheckParseRow($row, self::POST, self::TRANSACTION, 'body');
@@ -794,7 +789,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       ' ',
       $paymentProcessor['subject'],
       str_repeat(' ', 4),
-      $params['date'],
+      $date,
       'S',
       str_repeat(' ', 2),
       $total,
@@ -941,7 +936,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
     }
 
-
     // Get id and data which need to process from civicrm_log
     if ($instrumentType == self::BANK) {
       if ($processType == self::VERIFICATION) {
@@ -949,6 +943,15 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
       if ($processType == self::TRANSACTION) {
         $entityId = $header[3];
+      }
+    }
+    else if ($instrumentType == self::POST) {
+      $firstLine = reset($rearrangeData);
+      if ($processType == self::VERIFICATION) {
+        $entityId = $firstLine[3];
+      }
+      if ($processType == self::TRANSACTION) {
+        $entityId = $firstLine[18];
       }
     }
 
@@ -963,27 +966,22 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         // if $processType = 'transaction' => 'contribution_id'
         $parsedData = $rearrangeData[$id];
         if (empty($rearrangeData['is_error'])) {
-          if ($instrumentType == self::BANK) {
-            if ($processType == self::VERIFICATION) {
-              $data = self::doProcessVerification($id, $parsedData);
-            }
-            if ($processType == self::TRANSACTION) {
-              if (empty($parsedData)) {
-                $rearrangeData[$id] = $parsedData = array(
-                  'is_success' => TRUE,
-                  'receive_date' => $header[2].'120000',
-                );
-              }
-              $data = self::doProcessTransaction($id, $parsedData);
-            }
-            if (!empty($data['is_error'])) {
-              $isError = TRUE;
-              foreach ($data['messages'] as $message) {
-                $messages[] = ts('There is process error on id: %1', $id).$message;
-              }
-            }
-            $processedData[$data['id']] = $data;
+          if ($processType == self::VERIFICATION) {
+            $data = self::doProcessVerification($id, $parsedData);
           }
+          if ($processType == self::TRANSACTION) {
+            $rearrangeData[$id] = $parsedData = array(
+              'is_success' => TRUE,
+            );
+            $data = self::doProcessTransaction($id, $parsedData);
+          }
+          if (!empty($data['is_error'])) {
+            $isError = TRUE;
+            foreach ($data['messages'] as $message) {
+              $messages[] = ts('There is process error on id: %1', $id).$message;
+            }
+          }
+          $processedData[$data['id']] = $data;
         }
       }
       if ($isError) {
@@ -1126,6 +1124,20 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         else {
           $isError = TRUE;
           $messages[] = ts("Type of upload file is not a responding file.");
+        }
+      }
+      else if ($processType == self::POST) {
+        if (empty($parsedData[11]) && empty($parsedData[12])) {
+          $result['stamp_verification'] = 1;
+          $result['contribution_status_id'] = 5;
+        }
+        else {
+          $result['stamp_verification'] = 2;
+          $allFailedReason = CRM_Contribute_PseudoConstant::taiwanACHFailedReason();
+          $failedReason = $allFailedReason[$processType][self::VERIFICATION][11][$parsedData[11]]."\n";
+          $failedReason .= $allFailedReason[$processType][self::VERIFICATION][12][$parsedData[12]];
+          $result['verification_failed_reason'] = $failedReason;
+          $result['verification_failed_date'] = ts('Process Date');
         }
       }
     }
