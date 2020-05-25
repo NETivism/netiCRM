@@ -80,6 +80,7 @@
         {/if}
     <div class="content bold">
       {ts}Total Amount{/ts}: <span id="total-amount-display" data-total-amount="{$totalAmount}">{$totalAmount|crmMoney}</span>
+      <span class="crmdata-amount" style="display:none">{$totalAmount}</span>
     </div>
     <div class="content bold">
       {if $pricesetFieldsCount}

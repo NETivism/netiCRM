@@ -20,6 +20,7 @@
       executingAnimationCount : 0,
       complete : 0,
       installments : '',
+      installmentsFrequencyUnit: 'month',
 
       preparePage: function(){
         if (window.ContribPageParams.mobileBackgroundImageUrl) {
@@ -113,6 +114,9 @@
           this.currentContribType = 'non-recurring';
         }
 
+        if ($('[name=frequency_unit]').length) {
+          this.installmentsFrequencyUnit = $('[name=frequency_unit]').val();
+        }
 
         if($('[name="amount"]:checked').length > 0){
           if($('[name="amount"]:checked').val() == 'amount_other_radio'){
@@ -211,7 +215,6 @@
       },
 
       prepareForm: function() {
-        
         var dom_step = '';
         for (var i = 1; i <= 3; i++) {
           dom_step += '<div class="crm-container crm-container-md contrib-step contrib-step-'+i+'"></div>';
@@ -283,7 +286,6 @@
             $('body.is-civicrm-user .first_name-section .description').insertAfter('body.is-civicrm-user .first_name-section');
           });
         }
-
 
         $('#crm-container>form').submit(function(){
           if($('label.error').length){
@@ -373,7 +375,8 @@
 
         if($('[name=installments]').length > 0 ){
           var installments = this.installments;
-          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+ts['Monthly Installments']+'</label><input placeholder="'+ts["No Limit"]+'" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
+          var frequencyUnitWords = ( this.installmentsFrequencyUnit == 'year' ) ? ts['Yearly Installments'] : ts['Monthly Installments'];
+          var $installments_block = $('<div class="custom-installments-block custom-input-block"><label for="custom-installments">'+frequencyUnitWords+'</label><input placeholder="'+ts["No Limit"]+'" name="custom-installments" id="custom-installments" type="number" class="custom-input active" min="0" value="'+installments+'"></input></div>');
           var doClickInstallments = function(){
             var installments = $(this).val();
             if(installments == 0){
@@ -385,8 +388,20 @@
           $('.priceSet-block').append($installments_block);
         }
 
+        // For frequency units
+        if ($('#frequency_unit').length) {
+          $('#recur-options-interval').insertAfter('.custom-installments-block');
+          $('#frequency_unit').change(this.updateFrequencyUnit);
+        }
 
         this.updatePriceSetOption();
+      },
+
+      updateFrequencyUnit: function(){
+        window.ContribPage.installmentsFrequencyUnit = $(this).val();
+        var frequencyUnitWords = ( window.ContribPage.installmentsFrequencyUnit == 'year' ) ? ts['Yearly Installments'] : ts['Monthly Installments'];
+        $('.custom-installments-block label').text(frequencyUnitWords);
+        window.ContribPage.updateContribInfoLabel();
       },
 
       checkUrlParamsAction: function() {
@@ -541,11 +556,17 @@
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-single-btn').addClass('selected');
           $('.custom-installments-block').hide();
+          if ($('#recur-options-interval').length) {
+            $('#recur-options-interval').hide();
+          }
         }
         if(this.currentContribType == 'recurring'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-recur-btn').addClass('selected');
           $('.custom-installments-block').show();
+          if ($('#recur-options-interval').length) {
+            $('#recur-options-interval').show();
+          }
         }
         this.updateContribInfoLabel();
         this.updatePriceSetOption();
@@ -560,10 +581,18 @@
           $('.info-is-recur').text(ts['One-time Contribution']);
         }
         if(this.currentContribType == 'recurring'){
+          if (this.installmentsFrequencyUnit == 'year') {
+            var unitText = ts['Yearly Recurring Contributions'];
+            var unitSuffixText = ts['Years Recurring Contributions'];
+          }
+          else {
+            var unitText = ts['Monthly Recurring Contributions'];
+            var unitSuffixText = ts['Months Recurring Contributions'];
+          }
           if(!this.installments || this.installments == "0"){
-            $('.info-is-recur').text(ts['Monthly Recurring Contributions']);
+            $('.info-is-recur').text(unitText);
           }else{
-            $('.info-is-recur').text(this.installments+' '+ts['Installments Contributions']);
+            $('.info-is-recur').text(this.installments+' '+unitSuffixText);
           }
         }
       },

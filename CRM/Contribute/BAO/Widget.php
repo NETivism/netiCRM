@@ -153,12 +153,16 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
       $data['goal_type'] = $achievement['type'];
       $data['money_target'] = $achievement['goal'];
       $data['money_raised_percentage'] = $achievement['percent']."%";
-      if ($achievement['type'] == 'amount') {
-        $data['money_target_display'] = ts('Goal Amount') . ': ' . CRM_Utils_Money::format($achievement['goal']);
+      if ($achievement['type'] == 'recuramount') {
+        $data['money_target_display'] = $achievement['label'] . ': ' . CRM_Utils_Money::format($achievement['goal']);
+        $data['money_raised'] = ts('%1 achieved', array(1 => CRM_Utils_Money::format($achievement['current'])));
+      }
+      elseif ($achievement['type'] == 'amount') {
+        $data['money_target_display'] = $achievement['label'] . ': ' . CRM_Utils_Money::format($achievement['goal']);
         $data['money_raised'] = ts('%1 achieved', array(1 => CRM_Utils_Money::format($achievement['current'])));
       }
       elseif ($achievement['type'] == 'recurring') {
-        $data['money_target_display'] = ts('Goal Subscription') . ': ' . $achievement['goal'] ." ". ts("People");
+        $data['money_target_display'] = $achievement['label'] . ': ' . $achievement['goal'] ." ". ts("People");
         $data['money_raised'] = ts('%1 achieved', array(1 => $achievement['current'])) . " ". ts("People");
       }
     }

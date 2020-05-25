@@ -64,6 +64,25 @@ class CRM_Contribute_Form_AdditionalInfo {
       }
       $form->assign('premiums', TRUE);
     }
+    // Display Item if it's selected even if it disabled. refs #28171
+    if (!empty($form->_id) && get_class($form) == 'CRM_Contribute_Form_Contribution') {
+      $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $form->_id, 'product_id', 'contribution_id' );
+      if (!empty($selectedProductId) && empty($sel1[$selectedProductId])) {
+        $dao = new CRM_Contribute_DAO_Product();
+        $dao->id = $selectedProductId;
+        $dao->find(TRUE);
+        $sel1[$dao->id] = $dao->name . " ( " . $dao->sku . " ) ( ".ts('Disable')." )";
+        $min_amount[$dao->id] = $dao->min_contribution;
+        $options = explode(',', $dao->options);
+        foreach ($options as $k => $v) {
+          $options[$k] = trim($v);
+        }
+        if ($options[0] != '') {
+          $sel2[$dao->id] = $options;
+        }
+        $form->assign('premiums', TRUE);
+      }
+    }
     $form->_options = $sel2;
     $form->assign('mincontribution', $min_amount);
     $sel = &$form->addElement('hierselect', "product_name", ts('Premium'), 'onclick="showMinContrib();"');
@@ -320,6 +339,18 @@ class CRM_Contribute_Form_AdditionalInfo {
    * @return None.
    */
   function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+    if (!empty($params['is_attach_receipt'])) {
+      $receiptTask = new CRM_Contribute_Form_Task_PDF();
+      $receiptTask->makeReceipt($params['contribution_id'], 'copy_only');
+      $pdfFilePath = $receiptTask->makePDF(False);
+      $pdfFileName = strstr($pdfFilePath, 'Receipt');
+      $pdfParams =  array(
+        'fullPath' => $pdfFilePath,
+        'mime_type' => 'application/pdf',
+        'cleanName' => $pdfFileName,
+      );
+    }
+
     $this->assign('receiptType', 'contribution');
     // Retrieve Contribution Type Name from contribution_type_id
     $params['contributionType_name'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType',
@@ -460,18 +491,43 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
     require_once 'CRM/Core/BAO/MessageTemplates.php';
-    list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
-      array(
-        'groupName' => 'msg_tpl_workflow_contribution',
-        'valueName' => 'contribution_offline_receipt',
-        'contactId' => $params['contact_id'],
-        'from' => $fromEmailAddress,
-        'toName' => $contributorDisplayName,
-        'toEmail' => $contributorEmail,
-        'isTest' => $form->_mode == 'test',
-        'PDFFilename' => 'receipt.pdf',
-      )
+    $templateParams = array(
+      'groupName' => 'msg_tpl_workflow_contribution',
+      'valueName' => 'contribution_offline_receipt',
+      'contactId' => $params['contact_id'],
+      'from' => $fromEmailAddress,
+      'toName' => $contributorDisplayName,
+      'toEmail' => $contributorEmail,
+      'isTest' => $form->_mode == 'test',
     );
+    if (!empty($params['is_attach_receipt'])) {
+      $templateParams['attachments'][] = $pdfParams;
+    }
+    else {
+      $templateParams['PDFFilename'] = 'receipt.pdf';
+    }
+    list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams);
+
+    if (!empty($params['is_attach_receipt'])) {
+      $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+      if (!empty($activityTypeId)) {
+        if (empty($userID)) {
+          $session = CRM_Core_Session::singleton();
+          $userID = $session->get('userID');
+        }
+        $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+        $activityParams = array(
+          'activity_type_id' => $activityTypeId,
+          'activity_record_id' => $params['contribution_id'],
+          'activity_date_time' => date('Y-m-d H:i:s'),
+          'status_id' => $statusId,
+          'subject' => $params['source'] .' - '.ts('Email Receipt'),
+          'target_contact_id' => $params['contact_id'],
+          'source_contact_id' => $userID,
+        );
+        CRM_Activity_BAO_Activity::create($activityParams);
+      }
+    }
 
     return $sendReceipt;
   }

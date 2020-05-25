@@ -468,7 +468,6 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
 
     // reassign resource base to be the full url, CRM-4660
     $config->resourceBase = $config->userFrameworkResourceURL;
-    $config->useFrameworkRelativeBase = $config->userFrameworkBaseURL;
 
     if (empty($gid)) {
       $gid = CRM_Utils_Request::retrieve('gid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
@@ -485,7 +484,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     $profile = trim($template->fetch('CRM/Form/default.tpl'));
     // not sure how to circumvent our own navigation system to generate the right form url
     $form_url = CRM_Utils_System::url('civicrm/profile/create', 'gid=' . $gid . '&reset=1', FALSE);
-    $form_url = str_replace($config->useFrameworkRelativeBase, '', $form_url);
+    $form_url = str_replace($config->userFrameworkBaseURL, '', $form_url);
     $profile = str_replace('civicrm/admin/uf/group', $form_url, $profile);
 
     // add jquery files

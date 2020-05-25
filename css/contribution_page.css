@@ -960,6 +960,11 @@ form#ThankYou #help{
   display: none;
 }
 
+/** frequency unit */
+#recur-options-interval {
+  margin-left: 0;
+}
+
 
 
 /** message text */ 

@@ -63,6 +63,7 @@
   </field> 
   <field>    
       <name>fee_amount</name>    
+      <title>Transaction Fee Amount</title>
       <type>decimal</type>    
       <comment>actual processor fee if known - may be 0.</comment>
       <add>1.3</add>    

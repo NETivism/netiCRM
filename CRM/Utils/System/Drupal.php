@@ -254,16 +254,20 @@ class CRM_Utils_System_Drupal {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
     if($version >= 6 && $version < 7){
-      // $head 應該塞入 "<meta brabrabra.... >"
-      $line = '<' . $head['tag'] . ' ';
-      foreach ($head['attributes'] as $key => $value) {
-        $line .=  $key . "='$value' ";
+      if ($head['type'] == 'markup' && $head['markup']) {
+        drupal_set_html_head($head['markup']);
       }
-      $line .= '>';
-      if(!empty($head['value'])){
-        $line .= $head['value'] . '</' . $head['tag'] . '>';
+      else {
+        $line = '<' . $head['tag'] . ' ';
+        foreach ($head['attributes'] as $key => $value) {
+          $line .=  $key . "='$value' ";
+        }
+        $line .= '>';
+        if(!empty($head['value'])){
+          $line .= $head['value'] . '</' . $head['tag'] . '>';
+        }
+        drupal_set_html_head($line);
       }
-      drupal_set_html_head($line);
       return;
     }
     elseif($version >= 7 && $version < 8){
@@ -280,7 +284,10 @@ class CRM_Utils_System_Drupal {
           $head_key = $key . '-' . $value;
         }
       }
-      drupal_add_html_head($element,$head_key);
+      if (empty($head_key)) {
+        $head_key = substr(md5(serialize($head)), 0, 32);
+      }
+      drupal_add_html_head($element, $head_key);
       return;
     }
   }
