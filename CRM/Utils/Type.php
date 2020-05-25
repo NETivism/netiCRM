@@ -102,6 +102,11 @@ class CRM_Utils_Type {
       case 16384:
         $string = 'Mediumblob';
         break;
+
+      case 32768;
+        $string = 'Double';
+        break;
+
     }
 
     return (isset($string)) ? $string : "";
@@ -244,6 +249,7 @@ class CRM_Utils_Type {
         break;
 
       case 'Float':
+      case 'Double':
       case 'Money':
         if (CRM_Utils_Rule::numeric($data)) {
           return $data;
