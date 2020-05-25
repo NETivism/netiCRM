@@ -542,6 +542,7 @@ LIMIT 0, 100
       self::doCheckRecur($dao->recur_id, $time);
     }
 
+    // Delete the sequence data of this process.
     $checkSeq = new CRM_Core_DAO_Sequence();
     unset($seq->timestamp);
     $seqArray = (array) $seq;
