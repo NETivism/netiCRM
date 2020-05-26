@@ -64,6 +64,7 @@
           <th id="sortable">{ts}Name{/ts}</th>
           <th>{ts}ID{/ts}</th>
           <th id="nosort">{ts}Description{/ts}</th>
+          <th>{ts}Mode{/ts}</th>
           <th>{ts}Group Type{/ts}</th>
           <th>{ts}Visibility{/ts}</th>
           {if $groupOrg}
@@ -77,6 +78,7 @@
             <td>{$row.title}</td>	
             <td>{$row.id}</td>
             <td>{$row.description|mb_truncate:80:"...":true}</td>
+            <td>{$row.mode}</td>	
             <td>{$row.group_type}</td>	
             <td>{$row.visibility}</td>
             {if $groupOrg}
