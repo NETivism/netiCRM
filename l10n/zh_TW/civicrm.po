@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-05-25 10:13+0000\n"
+"PO-Revision-Date: 2020-05-26 05:17+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47745,3 +47745,6 @@ msgstr "模式"
 
 msgid "Filter search by group mode."
 msgstr "以群組模式過濾搜尋"
+
+msgid "recurring donors (multiple times, active now and inactive past)"
+msgstr "現在有進行中的定期定額、且過去也曾經有定期定額的人"

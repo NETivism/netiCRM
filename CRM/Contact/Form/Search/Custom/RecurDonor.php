@@ -163,6 +163,9 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       case 'inactive':
         $having = " COUNT(r1.id) = 0 AND COUNT(r2.id) > 0 ";
         break;
+      case 'intersection':
+        $having = " COUNT(r1.id) > 0 AND COUNT(r2.id) > 0 ";
+        break;
       case 'all':
         $having = " COUNT(r1.id) > 0 OR COUNT(r2.id) > 0 ";
         break;
@@ -177,6 +180,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     $options = array(
       'active' => ts('active donors (and no past recurring donation)'),
       'inactive' => ts('inactive donors (past recurring donors)'),
+      'intersection' => ts('recurring donors (multiple times, active now and inactive past)'),
       'all' => ts('recurring donors (no matter active or inactive)'),
       'never' => ts('not recurring donors (no matter with/without one-time donation)'),
     );

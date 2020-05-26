@@ -47510,3 +47510,6 @@ msgstr ""
 
 msgid "Filter search by group mode."
 msgstr ""
+
+msgid "recurring donors (multiple times, active now and inactive past)"
+msgstr ""
