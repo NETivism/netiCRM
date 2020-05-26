@@ -47513,3 +47513,6 @@ msgstr ""
 
 msgid "recurring donors (multiple times, active now and inactive past)"
 msgstr ""
+
+msgid "Upcoming Birthdays Search"
+msgstr ""
