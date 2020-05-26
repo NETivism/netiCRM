@@ -4782,6 +4782,8 @@ VALUES
   (@option_group_id_csearch , '捐款失敗後 7 天內無再次捐款者'          ,20, 'CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate', NULL, 0, NULL, 20, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '單筆捐款滿 3 次'          ,21, 'CRM_Contact_Form_Search_Custom_SingleNotRecurring', NULL, 0, NULL, 21, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '參加過活動但尚未捐款'          ,22, 'CRM_Contact_Form_Search_Custom_AttendeeNotDonor', NULL, 0, NULL, 22, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '定期定額捐款人搜尋'          ,23, 'CRM_Contact_Form_Search_Custom_RecurDonor', NULL, 0, NULL, 23, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '搜尋即將到來的生日'          ,24, 'CRM_Contact_Form_Search_Custom_', NULL, 0, NULL, 24, '', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , '支持者報表（概況）',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '在您的系統上，為支持者記錄提供地址和電話訊息組成的名單。', 0, 0, 1, NULL, NULL),
@@ -5297,7 +5299,7 @@ VALUES
  ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', '行動支付', NULL, 1, 0, '商家編號', '金流商', '帳號', '密碼',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
  ('TapPay', 'TapPay 支付', NULL, 1, 0, 'Merchant ID', '帳號金鑰（Partner Key）', '應用程式 App ID', '應用程式 App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
- ('TaiwanACH', 'Taiwan ACH Payment', NULL, 1, 0, '銀行帳戶號碼', '統一編號', '銀行代碼', 'Post Delegate Institution Code',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0);
+ ('TaiwanACH', 'ACH 代收代付', NULL, 1, 0, '銀行帳戶號碼', '統一編號', '銀行代碼', '郵局委託機構代號',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0);
 
 
 -- the fuzzy default dedupe rules
