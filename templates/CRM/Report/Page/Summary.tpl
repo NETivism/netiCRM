@@ -113,7 +113,7 @@
           <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
             <tr>
               <th>
-                {ts}Payment Instrument{/ts}
+                {ts}Contribution Types{/ts}
               </th>
               {foreach from=$static_label item=label}
               <th>
