@@ -492,7 +492,8 @@ VALUES
   (@option_group_id_csearch , '{ts escape="sql" 1="3"}Single donation over %1 times{/ts}'          ,21, 'CRM_Contact_Form_Search_Custom_SingleNotRecurring', NULL, 0, NULL, 21, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Attendee but not donor{/ts}'          ,22, 'CRM_Contact_Form_Search_Custom_AttendeeNotDonor', NULL, 0, NULL, 22, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Recurring Donors Search{/ts}'          ,23, 'CRM_Contact_Form_Search_Custom_RecurDonor', NULL, 0, NULL, 23, '', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , '{ts escape="sql"}Upcoming Birthdays Search{/ts}'          ,24, 'CRM_Contact_Form_Search_Custom_', NULL, 0, NULL, 24, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}Upcoming Birthdays Search{/ts}'          ,24, 'CRM_Contact_Form_Search_Custom_UpcomingBirthdays', NULL, 0, NULL, 24, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}ACH Search{/ts}'          ,25, 'CRM_Contact_Form_Search_Custom_TaiwanACHSearch', NULL, 0, NULL, 25, '', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , '{ts escape="sql"}Constituent Report (Summary){/ts}',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '{ts escape="sql"}Provides a list of address and telephone information for constituent records in your system.{/ts}', 0, 0, 1, NULL, NULL),
