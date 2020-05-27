@@ -299,8 +299,9 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
         $newLinks = $links;
         $values[$object->id] = array();
         CRM_Core_DAO::storeValues($object, $values[$object->id]);
+        $values[$object->id]['mode'] = ts('Normal');
         if ($object->saved_search_id) {
-          $values[$object->id]['title'] .= ' (' . ts('Smart Group') . ')';
+          $values[$object->id]['mode'] = ts('Smart');
           // check if custom search, if so fix view link
           $customSearchID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch',
             $object->saved_search_id,
@@ -422,6 +423,17 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
     if ($inactive_status && $active_status) {
       $clauses[] = '(groups.is_active = 0 OR groups.is_active = 1 )';
+    }
+
+    $group_mode = $this->get('group_mode');
+    if (isset($group_mode) && is_array($group_mode) && count($group_mode) == 1) {
+      $key = key($group_mode);
+      if (empty($key)) {
+        $clauses[] = '(groups.saved_search_id IS NULL)';
+      }
+      else {
+        $clauses[] = '(groups.saved_search_id IS NOT NULL)';
+      }
     }
 
     if ($sortBy &&
