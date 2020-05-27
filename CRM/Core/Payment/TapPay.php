@@ -1,7 +1,9 @@
 <?php
 
 class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
-  
+
+  const QUEUE_NAME = 'tappay_batch_all_recur';
+
   protected $_mode = NULL;
 
   protected $_api = NULL;
@@ -467,12 +469,27 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
 
   public static function doExecuteAllRecur ($time = NULL) {
-    // Every request only execute once.
-    global $isTapPayAllRecurExecuted;
-    if ($isTapPayAllRecurExecuted) {
-      return ;
+    // Check sequence;
+    $seq = new CRM_Core_DAO_Sequence();
+    $seq->name = self::QUEUE_NAME;
+
+    if ($seq->find(TRUE)) {
+      if ( $seq->value && (CRM_REQUEST_TIME - $seq->timestamp) < 1800) {
+        // last process is executing.
+        CRM_Core_Error::debug_log_message("Last process is still executing. Interupt now.", TRUE);
+        return ;
+      }
+      else {
+        // no last process or last process is overdue.
+        // delete last sequence if it exist
+        CRM_Core_Error::debug_log_message("There are a overdue process in DB, delete it.", TRUE);
+        $seq->delete();
+      }
     }
-    $isTapPayAllRecurExecuted = TRUE;
+    // insert new sequence
+    $seq->value = date('YmdHis');
+    $seq->timestamp = microtime(TRUE);
+    $seq->insert();
 
     if (empty($time)) {
       $time = time();
@@ -523,6 +540,15 @@ LIMIT 0, 100
       }
 
       self::doCheckRecur($dao->recur_id, $time);
+    }
+
+    // Delete the sequence data of this process.
+    $checkSeq = new CRM_Core_DAO_Sequence();
+    unset($seq->timestamp);
+    $seqArray = (array) $seq;
+    $checkSeq->copyValues($seqArray);
+    if ($checkSeq->find(TRUE)) {
+      $checkSeq->delete();
     }
   }
 

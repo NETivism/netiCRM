@@ -35,6 +35,12 @@
                 {ts}Complete OR partial group name.{/ts}
             </span>
         </td>
+        <td>{$form.group_mode.label}<br />
+            {$form.group_mode.html}<br />
+            <span class="description font-italic">
+                {ts}Filter search by group mode.{/ts}
+            </span>
+        </td>
         <td>{$form.group_type.label}<br />
             {$form.group_type.html}<br />
             <span class="description font-italic">

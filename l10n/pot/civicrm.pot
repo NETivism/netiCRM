@@ -47504,3 +47504,15 @@ msgstr ""
 
 msgid "Import Type"
 msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Filter search by group mode."
+msgstr ""
+
+msgid "recurring donors (multiple times, active now and inactive past)"
+msgstr ""
+
+msgid "Upcoming Birthdays Search"
+msgstr ""
