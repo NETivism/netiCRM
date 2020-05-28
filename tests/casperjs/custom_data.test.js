@@ -1220,7 +1220,100 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.then(function() {
         test.assertDoesntExist('.crm-error');
     });
+
     
+    /*
+     * Add Set of Custom Fields
+    */
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 4: Check Preview. **');
+        casper.echo('=====================================');
+    });
+
+    /* open custom data page */
+    casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
+        this.capture('back_to_custom_data_page.png');
+    });
+
+    casper.wait(2000);
+
+    /* go to Custom Fields page */
+    casper.waitForSelector("#option11", function success() {
+        casper.echo('** Step 4-1: Get all id. **');
+        test.assertExists("#option11");
+        var id = this.evaluate(function () {
+            return document.getElementById('option11').rows.length - 1;
+        });
+        this.open(baseURL + "civicrm/admin/custom/group/field?reset=1&action=browse&gid=" + id);
+    }, function fail() {
+        test.assertExists("#option11");
+    });
+    casper.wait(2000);
+    casper.then(function() {
+        this.capture('Custom_Fields.png');
+    });
+
+    /* get all fields id */
+    var ids = [];
+    casper.then(function() {
+        var urls = this.evaluate(function() {
+            var all_links = document.querySelectorAll("a[title='Preview Custom Field']");
+            var all_urls = [];
+            for(var i = 0; i < all_links.length; i++) {
+                all_urls.push(all_links[i].href);
+            }
+            return all_urls;
+        });
+        ids = urls.map(function(url) {
+            var splits = url.split('=');
+            return splits[splits.length - 1];
+        });
+    });
+
+    /* open custom data page */
+    casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
+        this.capture('back_to_custom_data_page.png');
+    });
+
+    casper.wait(2000);
+    /* got to Custom Fields page */
+    casper.waitForSelector("#option11", function success() {
+        test.assertExists("#option11");
+        var id = this.evaluate(function () {
+            return document.getElementById('option11').rows.length - 1;
+        });
+        this.open(baseURL + "civicrm/admin/custom/group?action=preview&reset=1&id=" + id);
+    }, function fail() {
+        test.assertExists("#option11");
+    });
+    casper.wait(2000);
+    casper.then(function() {
+        this.capture('Preview.png');
+    });
+
+    /* check all text input exist */
+    casper.then(function() {
+        casper.echo('** Step 4-2: Check all text input exist. **');
+        var text_ids = this.evaluate(function() {
+            var all_text = document.getElementById('Preview').querySelectorAll('input[type="text"]:not(.hiddenElement), input[type="file"]');
+            var text_ids = [];
+            for(var i = 0; i < all_text.length; i++){
+                var sp = all_text[i].id.split('_');
+                text_ids.push(sp[1]);
+            }
+            return text_ids;
+        });
+        text_ids.forEach(function(text_id) {
+            for(var i = 0; i < ids.length; i++) {
+                if(ids[i] == text_id) {
+                    ids.splice(i, 1);
+                    break;
+                }
+            }
+        }, this);
+    });
+
     casper.run(function() {
         test.done();
     });
