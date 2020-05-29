@@ -142,6 +142,8 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $message = '';
     if (!empty($batchId)) {
       // check if running currently or running over 1 hour
+      // delay start to prevent cron duplicate running
+      sleep(mt_rand(5, 15));
       $batch = new CRM_Batch_BAO_Batch($batchId);
       $running = $batch->dupeCheck();
       if (!empty($running) && $running->value) {
@@ -155,6 +157,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
         }
         else {
           $message = ts('We still have running batch job in queue recently.');
+          CRM_Core_Error::debug_log_message($message);
         }
       }
       else {
