@@ -22,6 +22,47 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
   }
 
   public function runImport(&$form) {
+    global $civicrm_batch;
+    $allArgs = func_get_args();
+    if (empty($civicrm_batch)) {
+      if ($this->_totalRowCount > CRM_Import_ImportJob::BATCH_THRESHOLD) {
+        $fileName = str_replace('civicrm_import_job_', '', $this->_tableName);
+        $fileName = 'import_contribution_'.$fileName.'.zip';
+        $config = CRM_Core_Config::singleton();
+        $file = $config->uploadDir.$fileName;
+        $batchParams = array(
+          'label' => ts('Import Contacts'),
+          'startCallback' => array($this, 'batchStartCallback'),
+          'startCallback_args' => NULL,
+          'processCallback' => array($this, __FUNCTION__),
+          'processCallbackArgs' => $allArgs,
+          'finishCallback' => array($this, 'batchFinishCallback'),
+          'finishCallbackArgs' => NULL,
+          'download' => array(
+            'header' => array(
+              'Content-Type: application/zip',
+              'Content-Transfer-Encoding: Binary',
+              'Content-Disposition: attachment;filename="'.$fileName.'"',
+            ),
+            'file' => $file,
+          ),
+          'actionPermission' => '',
+          'total' => $this->_totalRowCount,
+          'processed' => 0,
+        );
+        $batch = new CRM_Batch_BAO_Batch();
+        $batch->start($batchParams);
+
+        // redirect to notice page
+        CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
+      }
+    }
+    else {
+      // unserialized batch object need re-init controller
+      $this->prepareSessionObject($form);
+    }
+
     $mapper = $this->_mapper;
     $mapperFields = array();
     $mapperSoftCredit = array();
@@ -46,6 +87,13 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     }
 
     $this->_parser->_job = $this;
+
+    // set max process lines per batch
+    if ($civicrm_batch) {
+      $this->_parser->setMaxLinesToProcess(CRM_Import_ImportJob::BATCH_LIMIT);
+    }
+    $this->_parser->_skipColumnHeader = $form->get('skipColumnHeader');
+    $this->_parser->_dateFormats = $form->get('dateFormats');
     $this->_parser->run(
       $this->_tableName,
       $mapperFields,
@@ -60,5 +108,74 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       $this->_dedupeRuleGroupId
     );
     $this->_parser->set($form, CRM_Contribute_Import_Parser::MODE_IMPORT);
+  }
+
+  public function prepareSessionObject(&$form) {
+    $form->controller->initTemplate();
+    $form->controller->initSession();
+    $name = $form->controller->_name;
+    $scope = CRM_Utils_System::getClassName($form->controller);
+    $scope .= '_'.$form->controller->_key;
+    CRM_Core_Session::registerAndRetrieveSessionObjects(array("_{$name}_container", array('CiviCRM', $scope)));
+  }
+
+  public function batchStartCallback() {
+    global $civicrm_batch;
+    if ($civicrm_batch) {
+      $query = "SELECT COUNT(*) FROM $this->_tableName WHERE $this->_statusFieldName != %1";
+      $processed = CRM_Core_DAO::singleValueQuery($query, array(
+        1 => array(CRM_Import_Parser::PENDING, 'Integer')
+      ));
+      $civicrm_batch->data['processed'] += $processed;
+    }
+  }
+
+  public function batchFinishCallback() {
+    global $civicrm_batch;
+    if (!empty($civicrm_batch)) {
+      // calculate import results from table
+      $query = "SELECT $this->_statusFieldName as status, COUNT(*) as count FROM $this->_tableName WHERE 1 GROUP BY $this->_statusFieldName";
+      $dao = CRM_Core_DAO::executeQuery($query);
+      $statusCount = array();
+      while($dao->fetch()) {
+        $name = CRM_Import_Parser::statusName($dao->status);
+        $statusCount[$name] = $dao->count;
+      }
+      $name = CRM_Import_Parser::statusName(CRM_Import_Parser::VALID);
+      if (!isset($statusCount[$name])) {
+        $statusCount[$name] = 0;
+      }
+      $civicrm_batch->data['statusCount'] = $statusCount;
+
+      // zip error files from table
+      $zipFile = $civicrm_batch->data['download']['file'];
+      $zip = new ZipArchive();
+
+      if ($zip->open($zipFile, ZipArchive::CREATE) == TRUE) {
+        $config = CRM_Core_Config::singleton();
+        $fileName = str_replace('civicrm_import_job_', 'import_', $this->_tableName);
+        $errorFiles = array();
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::ERROR, $fileName);
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::CONFLICT, $fileName);
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::DUPLICATE, $fileName);
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::NO_MATCH, $fileName);
+        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, $fileName);
+        foreach($errorFiles as $idx => $fileName) {
+          $filePath = $config->uploadDir.$fileName;
+          if (is_file($filePath)) {
+            $zip->addFile($filePath, $fileName);
+          }
+          else {
+            unset($errorFiles[$idx]);
+          }
+        }
+        $zip->close();
+
+        // purge zipped files
+        foreach($errorFiles as $fileName) {
+          unlink($config->uploadDir.$fileName);
+        }
+      }
+    }
   }
 }

@@ -189,6 +189,8 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $this->set('dateFormats', $dateFormats);
     $this->set('savedMapping', $savedMapping);
     $this->set('dedupeRuleGroup', $dedupeRuleGroup);
+    $this->set('skipColumnHeader', $skipColumnHeader);
+
     if ($onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
       $createContactOption = CRM_Contribute_Import_Parser::CONTACT_DONTCREATE; 
       $this->set('createContactOption', $createContactOption);

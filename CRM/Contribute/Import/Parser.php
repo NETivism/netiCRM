@@ -39,7 +39,9 @@ require_once 'CRM/Utils/Type.php';
 require_once 'CRM/Contribute/Import/Field.php';
 
 abstract class CRM_Contribute_Import_Parser {
-  CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 3, CONFLICT = 4, STOP = 5, DUPLICATE = 6, MULTIPLE_DUPE = 7, NO_MATCH = 8, SOFT_CREDIT = 9, SOFT_CREDIT_ERROR = 10, PLEDGE_PAYMENT = 11, PLEDGE_PAYMENT_ERROR = 12, PCP = 13, PCP_ERROR = 14;
+  CONST MAX_ERRORS = 250, MAX_WARNINGS = 25;
+  CONST PENDING = 0, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256, SOFT_CREDIT_ERROR = 512, PLEDGE_PAYMENT_ERROR = 1024, PCP_ERROR = 2048;
+  CONST SOFT_CREDIT = 65536, PLEDGE_PAYMENT = 131072, PCP = 262144; 
 
   /**
    * import contact when import contribution
@@ -293,6 +295,11 @@ abstract class CRM_Contribute_Import_Parser {
   protected $_createContactOption;
 
   /**
+   * import source have column header or not.
+   */
+  public $_skipColumnHeader;
+
+  /**
    * contact type
    *
    * @var int
@@ -385,7 +392,12 @@ abstract class CRM_Contribute_Import_Parser {
         continue;
       }
 
+      $this->_rowCount++;
       $this->_totalCount++;
+      $lineNum = $values[count($values) - 1];
+      if ($this->_skipColumnHeader) {
+        $lineNum++;
+      }
 
       if ($mode == self::MODE_MAPFIELD) {
         $returnCode = $this->mapField($values);
@@ -471,53 +483,34 @@ abstract class CRM_Contribute_Import_Parser {
         }
       }
 
-      if ($returnCode == self::WARNING) {
-        $this->_warningCount++;
-        if ($this->_warningCount < $this->_maxWarningCount) {
-          $this->_warningCount[] = $line;
-        }
-      }
-
       if ($returnCode == self::ERROR) {
         $this->_invalidRowCount++;
-        if ($this->_invalidRowCount < $this->_maxErrorCount) {
-          $recordNumber = $this->_rowCount;
-          array_unshift($values, $recordNumber);
-          $this->_errors[] = $values;
-        }
+        array_unshift($values, $lineNum);
+        $this->_errors[] = $values;
       }
 
       if ($returnCode == self::PLEDGE_PAYMENT_ERROR) {
         $this->_invalidPledgePaymentRowCount++;
-        if ($this->_invalidPledgePaymentRowCount < $this->_maxErrorCount) {
-          $recordNumber = $this->_rowCount;
-          array_unshift($values, $recordNumber);
-          $this->_pledgePaymentErrors[] = $values;
-        }
+        array_unshift($values, $lineNum);
+        $this->_pledgePaymentErrors[] = $values;
       }
 
       if ($returnCode == self::SOFT_CREDIT_ERROR) {
         $this->_invalidSoftCreditRowCount++;
-        if ($this->_invalidSoftCreditRowCount < $this->_maxErrorCount) {
-          $recordNumber = $this->_rowCount;
-          array_unshift($values, $recordNumber);
-          $this->_softCreditErrors[] = $values;
-        }
+        $recordNumber = $this->_rowCount;
+        array_unshift($values, $lineNum);
+        $this->_softCreditErrors[] = $values;
       }
 
       if ($returnCode == self::PCP_ERROR) {
         $this->_invalidPCPRowCount++;
-        if ($this->_invalidPCPRowCount < $this->_maxErrorCount) {
-          $recordNumber = $this->_rowCount;
-          array_unshift($values, $recordNumber);
-          $this->_pcpErrors[] = $values;
-        }
+        array_unshift($values, $lineNum);
+        $this->_pcpErrors[] = $values;
       }
 
       if ($returnCode == self::CONFLICT) {
         $this->_conflictCount++;
-        $recordNumber = $this->_rowCount;
-        array_unshift($values, $recordNumber);
+        array_unshift($values, $lineNum);
         $this->_conflicts[] = $values;
       }
 
@@ -526,12 +519,8 @@ abstract class CRM_Contribute_Import_Parser {
           // TODO: multi-dupes should be counted apart from singles on non-skip action
         }
         $this->_duplicateCount++;
-        $recordNumber = $this->_rowCount;
-        array_unshift($values, $recordNumber);
+        array_unshift($values, $lineNum);
         $this->_duplicates[] = $values;
-        if ($onDuplicate != self::DUPLICATE_SKIP) {
-          $this->_validCount++;
-        }
       }
 
       // we give the derived class a way of aborting the process
@@ -961,6 +950,53 @@ abstract class CRM_Contribute_Import_Parser {
    */
   static function exportCSV($fileName, $header, $data) {
     CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
+  }
+
+  /**
+   * Update the record with PK $id in the import database table
+   *
+   * @param int $id
+   * @param array $params
+   *
+   * @return void
+   * @access public
+   */
+  public function updateImportStatus($id, $params) {
+    $statusFieldName = $this->_statusFieldName;
+    $primaryKeyName = $this->_primaryKeyName;
+
+    if ($statusFieldName && $primaryKeyName && is_numeric($id)) {
+      $msg = !empty($params["${statusFieldName}Msg"]) ? $params["${statusFieldName}Msg"] : '';
+      $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, ${statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
+      CRM_Core_DAO::executeQuery($query, array(
+        1 => array($params[$statusFieldName], 'String'),
+        2 => array($msg, 'String'),
+        3 => array($id, 'Integer'),
+      ));
+    }
+  }
+
+  public static function statusName($status = NULL) {
+    if (empty(self::$_statusNames)) {
+      self::$_statusNames = array(
+        self::PENDING => ts('Pending'),
+        self::VALID => ts('Imported'),
+        self::WARNING => ts('Warning'),
+        self::ERROR => ts('Error'),
+        self::CONFLICT => ts('Conflict'),
+        self::STOP => ts('Stopped'),
+        self::DUPLICATE => ts('Duplicated'),
+        self::MULTIPLE_DUPE => ts('Mutiple Duplicate'),
+        self::NO_MATCH => ts('Mismatched'),
+        self::UNPARSED_ADDRESS_WARNING => ts('Unparsed Address'),
+      );
+    }
+    if ($status) {
+      return self::$_statusNames[$status];
+    }
+    else {
+      return self::$_statusNames;
+    }
   }
 
   function errorFileName($type) {

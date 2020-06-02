@@ -56,6 +56,8 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $mapper = $this->get('mapper');
     $softCreditFields = $this->get('softCreditFields');
     $pcpCreatorFields = $this->get('pcpCreatorFields');
+    $invalidRowCount = $this->get('invalidRowCount');
+    $conflictRowCount = $this->get('conflictRowCount');
     $mismatchCount = $this->get('unMatchCount');
 
     //get the mapping name displayed if the mappingId is set
@@ -77,18 +79,20 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       $this->assign('rowDisplayCount', 2);
     }
 
+    $tableName = $this->get('importTableName');
+    $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
     if ($invalidRowCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::ERROR . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = 'type=' . CRM_Contribute_Import_Parser::ERROR . '&parser=CRM_Contribute_Import_Parser&file='.$fileName;
       $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
     if ($conflictRowCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::CONFLICT . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = 'type=' . CRM_Contribute_Import_Parser::CONFLICT . '&parser=CRM_Contribute_Import_Parser&file='.$fileName;
       $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
     if ($mismatchCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::NO_MATCH . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = 'type=' . CRM_Contribute_Import_Parser::NO_MATCH . '&parser=CRM_Contribute_Import_Parser&file='.$fileName;
       $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
@@ -230,13 +234,15 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
 
       $this->set('errorFile', $errorFile);
 
-      $urlParams = 'type='. CRM_Contribute_Import_Parser::ERROR . '&parser=CRM_Contribute_Import_Parser';
+      $tableName = $this->get('importTableName');
+      $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
+      $urlParams = 'type='. CRM_Contribute_Import_Parser::ERROR . '&parser=CRM_Contribute_Import_Parser&file='.$fileName;
       $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
 
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::CONFLICT . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = 'type=' . CRM_Contribute_Import_Parser::CONFLICT . '&parser=CRM_Contribute_Import_Parser&file='.$fileName;
       $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
 
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::NO_MATCH . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = 'type=' . CRM_Contribute_Import_Parser::NO_MATCH . '&parser=CRM_Contribute_Import_Parser&file='.$fileName;
       $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
