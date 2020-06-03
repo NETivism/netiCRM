@@ -91,6 +91,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
           'created_date' => ts('Created Date'),
           'receive_date' => ts('Received'),
           'contribution_status' => ts('Status'),
+          'cancel_reason' => ts('Failed Reason'),
         );
       }
       else {

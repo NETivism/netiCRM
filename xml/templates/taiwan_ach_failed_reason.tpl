@@ -66,7 +66,7 @@ ACH Post_verification_12,
 3,3	身分證號不符
 4,4	印鑑不符
 9,9	其他
-ACH Post_verification_15,
+ACH Post_transaction_15,
 01,01	結存不足	
 02,02	未申請代繳或用戶號碼錯誤	
 03,03	已終止代繳	

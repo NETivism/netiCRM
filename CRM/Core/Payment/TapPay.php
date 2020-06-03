@@ -521,6 +521,7 @@ WHERE
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
 AND r.contribution_status_id = 5
 GROUP BY r.id
+ORDER BY r.id
 LIMIT 0, 100
 ";
     $params = array(

@@ -773,7 +773,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 2),
         $month,
         str_repeat(' ', 5),
-        str_pad($params['transact_id'], 20, ' ', STR_PAD_LEFT),
+        str_pad("{$params['transact_id']}_{$contribution->id}", 20, ' ', STR_PAD_LEFT),
         str_repeat(' ', 10),
       );
       $checkResults[$i] = self::doCheckParseRow($row, self::POST, self::TRANSACTION, 'body');
@@ -932,7 +932,13 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         }
       }
       else if ($processType = self::TRANSACTION) {
-        $rearrangeData[$data[18]] = $data;
+        if ($instrumentType == self::BANK) {
+          $rearrangeData[$data[18]] = $data;
+        }
+        else if ($instrumentType == self::POST) {
+          $ids = explode('_', $data[18]);
+          $rearrangeData[$ids[1]] = $data;
+        }
       }
     }
 
@@ -951,15 +957,16 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $entityId = $firstLine[3];
       }
       if ($processType == self::TRANSACTION) {
-        $entityId = $firstLine[18];
+        $ids = explode('_', $firstLine[18]);
+        $entityId = $ids[0];
       }
     }
 
     $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_$processType' AND entity_id = %1 ORDER BY id DESC LIMIT 1";
     $params = array( 1 => array($entityId, 'String'));
-    $data = CRM_Core_DAO::singleValueQuery($sql, $params);
-    if (!empty($data)) {
-      $processIds = explode(',', $data);
+    $dataIds = CRM_Core_DAO::singleValueQuery($sql, $params);
+    if (!empty($dataIds)) {
+      $processIds = explode(',', $dataIds);
       $processedData = array();
       foreach ($processIds as $id) {
         // if $processType = 'verification' => 'contribution_recur_id'
@@ -970,9 +977,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
             $data = self::doProcessVerification($id, $parsedData);
           }
           if ($processType == self::TRANSACTION) {
-            $rearrangeData[$id] = $parsedData = array(
-              'is_success' => TRUE,
-            );
+            if ($instrumentType == self::BANK && empty($parsedData)) {
+              $parsedData = array(
+                'is_success' => TRUE,
+              );
+            }
             $data = self::doProcessTransaction($id, $parsedData);
           }
           if (!empty($data['is_error'])) {
@@ -984,19 +993,19 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $processedData[$data['id']] = $data;
         }
       }
-      if ($isError) {
-        CRM_Core_Error::statusBounce(implode('<br/>', $messages));
-      }
-
-      $result = array(
-        'import_type' => $processType,
-        'payment_type' => $instrumentType,
-        'parsed_data' => $rearrangeData,
-      );
-      $result['process_id'] = $entityId;
-      $result['processed_data'] = $processedData;
 
     }
+    if ($isError) {
+      CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+    }
+
+    $result = array(
+      'import_type' => $processType,
+      'payment_type' => $instrumentType,
+      'parsed_data' => $rearrangeData,
+    );
+    $result['process_id'] = $entityId;
+    $result['processed_data'] = $processedData;
     return $result;
   }
 
@@ -1168,15 +1177,16 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessTransaction($contributionId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = count($parsedData);
-    if ($arrayLen == 23 ) {
-      $processType = self::BANK;
-      $errorCode = $parsedData[9];
-    }
+    $arrayLen = max(array_keys($parsedData))+1;
     if ($arrayLen == 20 ) {
       $processType = self::POST;
       $errorCode = $parsedData[15];
     }
+    else {
+      $processType = self::BANK;
+      $errorCode = $parsedData[9];
+    }
+
     // if $parsedData = array('is_success' => TRUE, 'receive_date' => '2020XXXX');
     // The contribution is successed.
 
@@ -1191,14 +1201,27 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
     $result = (array) $contribution;
-    if ($parsedData['is_success']) {
+    $isSuccess = FALSE;
+    if ($processType == self::BANK && $parsedData['is_success']) {
+      $isSuccess = TRUE;
+    }
+    if ($processType == self::POST && empty($errorCode)) {
+      $isSuccess = TRUE;
+    }
+    if ($isSuccess) {
       $result['contribution_status_id'] = 1;
       $result['receive_date'] = ts('Process Date');
     }
     else {
       $result['contribution_status_id'] = 4;
       $result['cancel_date'] = ts('Process Date');
-      $result['cancel_reason'] = $errorCode;
+      $allFailedReason = CRM_Contribute_PseudoConstant::taiwanACHFailedReason();
+      if ($processType == self::BANK) {
+        $result['cancel_reason'] = $allFailedReason[$processType][self::TRANSACTION][9][$parsedData[9]];
+      }
+      else if($processType == self::POST) {
+        $result['cancel_reason'] = $allFailedReason[$processType][self::TRANSACTION][15][$parsedData[15]];
+      }
       $pass = FALSE;
     }
 
@@ -1236,6 +1259,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $input['amount'] = $objects['contribution']->amount;
         $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
         $objects['contribution']->receive_date = date('YmdHis', $receiveTime);
+        $sendMail = TRUE;
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
         if (!empty($ids['contributionRecur'])) {
           $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
@@ -1253,7 +1277,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
       else{
         // Failed
-        $ipn->failed($objects, $transaction, $note);
+        $ipn->failed($objects, $transaction, $result['cancel_reason']);
+        $note = $result['cancel_reason'];
       }
       self::addNote($note, $objects['contribution']);
     }
