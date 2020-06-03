@@ -531,7 +531,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     foreach ($table as $row) {
       $lines[] = implode('',$row);
     }
-    $txt = implode("\n", $lines);
+    $txt = implode("\r\n", $lines);
 
     // export file
     $config = CRM_Core_Config::singleton();
