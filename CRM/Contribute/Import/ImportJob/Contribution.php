@@ -31,7 +31,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
         $config = CRM_Core_Config::singleton();
         $file = $config->uploadDir.$fileName;
         $batchParams = array(
-          'label' => ts('Import Contacts'),
+          'label' => ts('Import Contributions'),
           'startCallback' => array($this, 'batchStartCallback'),
           'startCallback_args' => NULL,
           'processCallback' => array($this, __FUNCTION__),
@@ -108,6 +108,20 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       $this->_dedupeRuleGroupId
     );
     $this->_parser->set($form, CRM_Contribute_Import_Parser::MODE_IMPORT);
+    $processedRowCount = $form->get('rowCount');
+    if (!empty($civicrm_batch)) {
+      if ($processedRowCount > 0) {
+        $civicrm_batch->data['processed'] += $processedRowCount;
+      }
+      else {
+        // when no pending records to process, finish this job.
+        $query = "SELECT * FROM $this->_tableName WHERE $this->_statusFieldName = 'NEW'";
+        $dao = CRM_Core_DAO::executeQuery($query);
+        if (!$dao->N && $civicrm_batch->data['processed'] > 0) {
+          $civicrm_batch->data['processed'] = $civicrm_batch->data['total'];
+        }
+      }
+    }
   }
 
   public function prepareSessionObject(&$form) {

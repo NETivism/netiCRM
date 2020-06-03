@@ -233,6 +233,14 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       if ($processedRowCount > 0) {
         $civicrm_batch->data['processed'] += $processedRowCount;
       }
+      else {
+        // when no pending records to process, finish this job.
+        $query = "SELECT * FROM $this->_tableName WHERE $this->_statusFieldName = 'NEW'";
+        $dao = CRM_Core_DAO::executeQuery($query);
+        if (!$dao->N && $civicrm_batch->data['processed'] > 0) {
+          $civicrm_batch->data['processed'] = $civicrm_batch->data['total'];
+        }
+      }
     }
 
     $contactIds = $this->_parser->getImportedContacts();

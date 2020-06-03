@@ -348,7 +348,6 @@ abstract class CRM_Import_Parser {
 
     while ($values = $result->fetchRow(DB_FETCHMODE_ORDERED)) {
       /* trim whitespace around the values */
-      $empty = TRUE;
       foreach ($values as $k => $v) {
         $values[$k] = trim($v, " \t\r\n");
       }

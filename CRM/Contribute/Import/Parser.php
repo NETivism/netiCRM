@@ -382,9 +382,6 @@ abstract class CRM_Contribute_Import_Parser {
     $result = $db->query($query);
 
     while ($values = $result->fetchRow(DB_FETCHMODE_ORDERED)) {
-      $this->_rowCount++;
-
-      $empty = TRUE;
       foreach ($values as $k => $v) {
         $values[$k] = trim($v, " \t\r\n");
       }
@@ -874,7 +871,7 @@ abstract class CRM_Contribute_Import_Parser {
    */
   function set($store, $mode = self::MODE_SUMMARY) {
     $store->set('fileSize', $this->_fileSize);
-    $store->set('lineCount', $this->_rowCount);
+    $store->set('rowCount', $this->_rowCount);
     $store->set('seperator', $this->_seperator);
     $store->set('fields', $this->getSelectValues());
     $store->set('fieldTypes', $this->getSelectTypes());
