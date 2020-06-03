@@ -789,7 +789,7 @@ class CRM_Contribute_BAO_Query {
     //added contribution source
     $form->addNumber('contribution_id', ts('Contribution ID'));
     $form->addNumber('contribution_recur_id', ts('Recurring Contributions ID'));
-    $form->addElement('text', 'contribution_source', ts('Contribution Source'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution', 'source'));
+    $form->addElement('text', 'contribution_source', ts('Source'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution', 'source'));
 
     $form->addDate('contribution_created_date_low', ts('Created Date - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('contribution_created_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
