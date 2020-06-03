@@ -264,12 +264,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $recurParams[$fieldName] = $params[$fieldName];
       }
     }
-    if (empty($recurParams['create_date'])) {
-      $recurParams['create_date'] = date('YmdHis');
-    }
     $ids = array();
     if (!empty($taiwanACH->contribution_recur_id)) {
       $recurParams['id'] = $taiwanACH->contribution_recur_id;
+    }
+    else if (empty($recurParams['create_date'])) {
+      $recurParams['create_date'] = date('YmdHis');
     }
     $recurring = CRM_Contribute_BAO_ContributionRecur::add($recurParams, $ids);
     if (empty($taiwanACH->contribution_recur_id)) {
@@ -449,8 +449,18 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $timezone = date_default_timezone_get();
     date_default_timezone_set('GMT');
     $lastTransactLogTimeId = strtotime('19700101T'.$lastTransactLogTime);
-    $transactLogTimeId = $lastTransactLogTimeId + 1;
+
+    $sequence = new CRM_Core_DAO_Sequence();
+    $sequence->name = "ACH Transaction";
+    $lastSequenceID = 0;
+    if ($sequence->find(TRUE)) {
+      $lastSequenceID = $sequence->value;
+    }
+    $transactLogTimeId = max($lastTransactLogTimeId, $lastSequenceID) + 1;
     $params['transact_id'] = (int) date('Gis', $transactLogTimeId);
+    $sequence->value = $transactLogTimeId;
+    $sequence->timestamp = CRM_REQUEST_TIME;
+    $sequence->save();
     date_default_timezone_set($timezone);
 
     if ($type == 'txt') {
@@ -596,7 +606,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     // Generate Footer
-    $total = str_pad(count($achData), 8, '0', STR_PAD_LEFT);
+    $total = str_pad(count($achDatas), 8, '0', STR_PAD_LEFT);
     $footer = array(
       'EOF',
       $total,
@@ -639,7 +649,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     // Generate Footer
-    $total = str_pad(count($achData), 6, '0', STR_PAD_LEFT);
+    $total = str_pad(count($achDatas), 6, '0', STR_PAD_LEFT);
     $footer = array(
       2,
       $paymentProcessor['subject'],
@@ -715,11 +725,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $checkResults[$i] = self::doCheckParseRow($row, self::BANK, self::TRANSACTION, 'body');
       $table[] = $row;
       $i++;
-      $totalAmount += $achDatas['amount'];
+      $totalAmount += (int) $achData['amount'];
     }
 
     // Generate Footer
-    $total = str_pad(count($achData), 8, '0', STR_PAD_LEFT);
+    $total = str_pad(count($achDatas), 8, '0', STR_PAD_LEFT);
     $totalAmount = str_pad($totalAmount, 16, '0', STR_PAD_LEFT);
     $footer = array(
       'EOF',
@@ -782,7 +792,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     // Generate Footer
-    $total = str_pad(count($achData), 7, '0', STR_PAD_LEFT);
+    $total = str_pad(count($achDatas), 7, '0', STR_PAD_LEFT);
     $totalAmount = str_pad($totalAmount, 11, '0', STR_PAD_LEFT).'00';
     $footer = array(
       2,
@@ -978,7 +988,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           }
           if ($processType == self::TRANSACTION) {
             if ($instrumentType == self::BANK && empty($parsedData)) {
-              $parsedData = array(
+              $rearrangeData[$id] = $parsedData = array(
                 'is_success' => TRUE,
               );
             }

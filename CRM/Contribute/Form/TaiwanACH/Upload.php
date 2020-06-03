@@ -68,14 +68,14 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
         if (isset($line['stamp_verification'])) {
           $line['stamp_verification_status'] = $stampStatus[$line['stamp_verification']];
         }
-        switch($line['contribution_status_id']) {
-          case 1:
-            $counter[ts('Complete Donation')]++;
-            break;
-          case 2:
-          default:
-            $counter[ts('Failure Count')]++;
-            break;
+        if ($line['contribution_status_id'] == 1 && $result['import_type'] == 'transaction') {
+          $counter[ts('Completed Donation')]++;
+        }
+        else if ($line['contribution_status_id'] == 5 && $result['import_type'] == 'verification') {
+          $counter[ts('Completed Donation')]++;
+        }
+        else {
+          $counter[ts('Failure Count')]++;
         }
       }
       $result['counter'] = $counter;

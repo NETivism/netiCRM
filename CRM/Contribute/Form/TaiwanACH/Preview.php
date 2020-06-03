@@ -5,6 +5,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   protected $_id = NULL;
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
+  protected $_parseResult = NULL;
 
   function preProcess() {
     $this->addFormRule(array('CRM_Contribute_Form_TaiwanACH_Preview', 'formRule'), $this);

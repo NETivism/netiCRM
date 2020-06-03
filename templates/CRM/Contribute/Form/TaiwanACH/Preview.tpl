@@ -33,9 +33,7 @@
           {foreach from=$parseResult.columns item=columnHeader key=column}
             {if $column|strstr:"amount"}
               <td>{$line.$column|crmMoney}</td>
-            {elseif $column|strstr:"receive_date"}
-              <td>{$line.$column}</td>
-            {elseif $column|strstr:"date"}
+            {elseif $column|strstr:"created_date"}
               <td>{$line.$column|crmDate}</td>
             {else}
               <td>{$line.$column}</td>

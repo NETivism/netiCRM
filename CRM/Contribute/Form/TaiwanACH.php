@@ -71,7 +71,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     $this->addSelect('ach_stamp_verification', ts('Stamp Verification Status'), $stampVerification);
 
     $this->add('text', 'ach_bank_branch', ts('Bank Branch'));
-    $this->add('text', 'ach_bank_account', ts('ACH').' - '.ts('Bank Account Number'), NULL, TRUE);
+    $this->add('text', 'ach_bank_account', ts('ACH').' - '.ts('Account Number'), NULL, TRUE);
     $this->add('text', 'ach_identifier_number', ts('ACH').' - '.ts('Legal Identifier').'/'.ts('SIC Code'), NULL, TRUE);
 
     CRM_Custom_Form_CustomData::buildQuickForm($this);
@@ -105,10 +105,10 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
     if($fields['ach_identifier_number']) {
       $err = FALSE;
-      if(strlen($fields['ach_identifier_number']) != 10) {
+      if(strlen($fields['ach_identifier_number']) != 10 && strlen($fields['ach_identifier_number']) != 8) {
         $err = TRUE;
       }
-      if (!preg_match('/[a-z]{1,2}[0-9]{8,9}/i', $fields['ach_identifier_number'])) {
+      if (!preg_match('/[a-z]{0,2}[0-9]{8,9}/i', $fields['ach_identifier_number'])) {
         $err = TRUE;
       }
       if ($err) {

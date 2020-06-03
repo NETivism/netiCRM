@@ -61,6 +61,7 @@
 cj(document).ready( function($) {
   doCheckACHPaymentType();
   $("select#ach_payment_type").change(doCheckACHPaymentType);
+  $("#ach_identifier_number").keyup(doCheckTWorOrgID).blur(doCheckTWorOrgID);
 
   function doCheckACHPaymentType() {
     $("tr.ach-bank-code, tr.ach-postoffice-acc-type, tr.ach-bank-branch").hide();
@@ -74,7 +75,95 @@ cj(document).ready( function($) {
       }
     }
   }
+
+  /**
+   * Valid receipt id field
+   * @return boolean  passed or not
+   */
+  function doCheckTWorOrgID(){
+    while($('#ach_identifier_number').parent().find('.error-twid').length>=1){
+      $('#ach_identifier_number').parent().find('.error-twid').remove();
+    }
+    var value = $('#ach_identifier_number').val();
+    if(validTWID(value) || validOrgID(value) || validResidentID(value)){
+      $('#ach_identifier_number').removeClass('error');
+      return true;
+    }else{
+      $('#ach_identifier_number').addClass('error').parent().append('<label for="ach_identifier_number" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
+      return false;
+    }
+  }
 });
+
+/**
+ * Validate TW ID, Should match TW ID formula.
+ * @param  String value
+ * @return boolean
+ */
+function validTWID(value){
+  if(value=='')return true;
+  value = value.toUpperCase();
+  var tab = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
+  var A1 = new Array (1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3 );
+  var A2 = new Array (0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5 );
+  var Mx = new Array (9,8,7,6,5,4,3,2,1,1);
+
+  if ( value.length != 10 ){
+    return false;
+  }
+  var i = tab.indexOf( value.charAt(0) );
+  if ( i == -1 ){
+    return false;
+  }
+  var sum = A1[i] + A2[i]*9;
+
+  for( i=1; i<10; i++ ){
+    var v = parseInt( value.charAt(i) );
+    if ( isNaN(v) ){
+      return false;
+    }
+    sum = sum + v * Mx[i];
+  }
+  if ( sum % 10 != 0 ){
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Validate Organize ID. Should be 8 numbers.
+ * @param  String value
+ * @return boolean
+ */
+function validOrgID(value){
+  if(value=='')return true;
+  var checkRegex = RegExp("^[0-9]{8}$");
+  if(checkRegex.test(value)){
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Validate Resident Permit ID, Should match Resident Permit ID formula.
+ * @param  String value
+ * @return boolean
+ */
+function validResidentID(value) {
+  if (value == '') return true;
+  value = value.toUpperCase();
+  var tab = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
+  var c = (tab.indexOf(value.substr(0, 1)) + 10) + '' + (tab.indexOf(value.substr(1, 1)) % 10) + value.substr(2, 8);
+  var checkCode = parseInt(c.substr(0, 1));
+  for (var i = 1; i <= 9; i++) {
+    checkCode += (parseInt(c.substr(i, 1)) * (10 - i)) % 10;
+  }
+  checkCode += parseInt(c.substr(10, 1));
+  if (checkCode % 10 == 0) {
+    return true;
+  }
+  return false;
+}
 </script>
 {/literal}
 {include file="CRM/common/chosen.tpl" selector="select#ach_bank_code" select_width="300"}

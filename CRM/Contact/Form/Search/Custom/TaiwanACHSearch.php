@@ -221,7 +221,7 @@ $having
     ));
     $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
     $form->addSelect('bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
-    $form->add('text', 'bank_account', ts('Bank Account Number'));
+    $form->add('text', 'bank_account', ts('Account Number'));
     $form->add('text', 'identifier_number', ts('Legal Identifier').'/'.ts('SIC Code'));
 
     // stamp veriction complete date === recurring start date == import date
