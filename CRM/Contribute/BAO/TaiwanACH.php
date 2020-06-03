@@ -856,7 +856,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   }
 
   static function parseUpload($content) {
-    $rows = explode("\n", $content);
+    if (strstr($content, "\r\n")) {
+      $rows = explode("\r\n", $content);
+    }
+    else {
+      $rows = explode("\n", $content);
+    }
     $lines = count($rows);
     if (strlen($rows[$lines-1]) == 0) {
       unset($rows[$lines-1]);
