@@ -13,6 +13,10 @@ function makeid(length) {
     return result;
 }
 
+casper.on('remote.message', function (msg) {
+    this.echo('remote message caught: ' + msg);
+});
+
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(baseURL, function() {
         casper.echo('=====================================');
@@ -1240,7 +1244,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* go to Custom Fields page */
     casper.waitForSelector("#option11", function success() {
-        casper.echo('** Step 4-1: Get all id. **');
+        casper.echo('** Step 4-1: Get all expacted id. **');
         test.assertExists("#option11");
         var id = this.evaluate(function () {
             return document.getElementById('option11').rows.length - 1;
@@ -1292,10 +1296,10 @@ casper.test.begin('Resurrectio test', function(test) {
         this.capture('Preview.png');
     });
 
-    /* check all text input exist */
+    /* get all text input id */
     var ids_for_check = [];
     casper.then(function() {
-        casper.echo('** Step 4-2: Check all text input exist. **');
+        casper.echo('** Step 4-2: Get all text input id. **');
         var text_ids = this.evaluate(function() {
             var all_text = document.getElementById('Preview').querySelectorAll('input[type="text"]:not(.hiddenElement), input[type="file"]');
             var text_ids = [];
@@ -1308,21 +1312,11 @@ casper.test.begin('Resurrectio test', function(test) {
         text_ids.forEach(function(text_id) {
             ids_for_check.push(text_id);
         });
-
-        // ids_for_check.push(text_ids);
-        // text_ids.forEach(function(text_id) {
-        //     for(var i = 0; i < ids.length; i++) {
-        //         if(ids[i] == text_id) {
-        //             ids.splice(i, 1);
-        //             break;
-        //         }
-        //     }
-        // }, this);
     });
 
-    /* check all select exist */
+    /* get all select id */
     casper.then(function() {
-        casper.echo('** Step 4-3: Check all select exist. **');
+        casper.echo('** Step 4-3: Get all select id. **');
         var select_ids = this.evaluate(function() {
             var all_select = document.getElementById('Preview').querySelectorAll('select');
             var select_ids = [];
@@ -1337,9 +1331,9 @@ casper.test.begin('Resurrectio test', function(test) {
         });
     });
 
-    /* check all radio input exist */
+    /* get all radio input id */
     casper.then(function() {
-        casper.echo('** Step 4-4: Check all radio input exist. **');
+        casper.echo('** Step 4-4: Get all radio input id. **');
         var radio_ids = this.evaluate(function() {
             var all_radio = document.getElementById('Preview').querySelectorAll('input[type="radio"]');
             var radio_ids = [];
@@ -1354,9 +1348,9 @@ casper.test.begin('Resurrectio test', function(test) {
         });
     });
 
-    /* check all checkbox input exist */
+    /* get all checkbox input id */
     casper.then(function() {
-        casper.echo('** Step 4-5: Check all checkbox input exist. **');
+        casper.echo('** Step 4-5: Get all checkbox input id. **');
         var checkbox_ids = this.evaluate(function() {
             var all_checkbox = document.getElementById('Preview').querySelectorAll('input[type="checkbox"]');
             var checkbox_ids = [];
@@ -1371,9 +1365,9 @@ casper.test.begin('Resurrectio test', function(test) {
         });
     });
 
-    /* check all textarea exist */
+    /* get all textarea id */
     casper.then(function() {
-        casper.echo('** Step 4-6: Check all textarea exist. **');
+        casper.echo('** Step 4-6: Get all textarea id. **');
         var textarea_ids = this.evaluate(function() {
             var all_textarea = document.getElementById('Preview').querySelectorAll('textarea');
             var textarea_ids = [];
@@ -1408,6 +1402,62 @@ casper.test.begin('Resurrectio test', function(test) {
             return a - b;
         });
         test.assertEquals(ids, id_no_duplicate);
+    });
+
+    /*
+     * Check Add Contact
+    */
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 5: Check Add Contact. **');
+        casper.echo('=====================================');
+    });
+
+    /* open custom data page */
+    casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
+        this.capture('back_to_custom_data_page.png');
+    });
+    casper.wait(2000);
+
+    /* get custom data id */
+    var custom_id = 0;
+    casper.waitForSelector("#option11", function success() {
+        casper.echo('** Step 5-1: Get custom data id. **');
+        test.assertExists("#option11");
+        custom_id = this.evaluate(function () {
+            return document.getElementById('option11').rows.length - 1;
+        });
+    }, function fail() {
+        test.assertExists("#option11");
+    });
+
+    /* open new individual page */
+    casper.thenOpen(baseURL + "civicrm/contact/add?reset=1&ct=Individual", function() {
+        this.capture('add_individual.png');
+    });
+    casper.wait(2000);
+
+    /* check all text input exist */
+    var ids_for_check = [];
+    casper.then(function() {
+        casper.echo('** Step 5-2: Check all text input exist. **');
+        var selector = "#customData" + custom_id + ">table>tbody";
+        casper.waitForSelector(selector, function success() {
+            var ids_for_check = this.evaluate(function(selector) {
+                var all_tr = document.querySelectorAll(selector + ">tr");
+                var ids_for_check = [];
+                for(var i = 0; i < all_tr.length; i++) {
+                    var class_name = all_tr[i].className.split(' ')[1];
+                    var id = class_name.split('_')[1];
+                    ids_for_check.push(id);
+                }
+
+                return ids_for_check;
+            }, selector);
+            test.assertEquals(ids, ids_for_check);
+        }, function fail() {
+            test.assertExists(selector);
+        });
     });
 
 
