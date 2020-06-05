@@ -35,12 +35,13 @@
   <div id="ltype">
     {strip}
         {* handle enable/disable actions*}
-       {include file="CRM/common/enableDisableApi.tpl"}
+       {include file="CRM/common/enableDisable.tpl"}
         <br/><table class="selector row-highlight">
         <tr class="columnheader">
             <th >{ts}Provider Details{/ts}</th>
             <th >{ts}Username{/ts}</th>
-      <th >{ts}API Parameters{/ts}</th>
+            <th >{ts}API Parameters{/ts}</th>
+            <th >{ts}Default?{/ts}</th>
             <th >{ts}Action{/ts}</th>
         </tr>
         {foreach from=$rows item=row}
@@ -52,8 +53,8 @@
             <td class="crm-provider-username">{$row.username}
         </td>
             <td class="crm-api-params">{if $row.api_params eq null}<em>{ts}no parameters{/ts}</em>{else}<pre>{$row.api_params}</pre>{/if}</td>
-
-          <td>{$row.action|replace:'xx':$row.id}</td>
+            <td class="crm-provider-is_default">{if $row.is_default eq 1}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Default{/ts}" />{/if}&nbsp;</td>
+          <td class="crm-provider-action">{$row.action|replace:'xx':$row.id}</td>
         </tr>
         {/foreach}
         </table>
