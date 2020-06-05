@@ -909,15 +909,23 @@ body .crm-container-md div[class*="crm-section state_province-"] .content{
 body .crm-container-md div[class*="crm-section state_province-"] .crm-form-elem{
   margin-right: 7px;
 }
-body .crm-container-md div[class*="crm-section state_province-"] .crm-form-select-single .form-select{
-  width: 7rem; 
+body .crm-container-md div[class*="crm-section state_province-"] .crm-form-select-single .form-select {
+  width: 9rem; 
+}
+body .crm-container-md div[class*="crm-section state_province-"] input[name^="city-"] {
+  width: 9rem;
+}
+body .crm-container-md div[class*="crm-section state_province-"] input[name^="postal_code-"] {
+  width: 7rem;
+  /* overwrite civicrm.css */
+  max-width: 7rem;
 }
 .crm-section.state_province-1-section .content .crm-form-textfield {
   display: inline-block;
   margin-right: 0;
 }
 .crm-form-post-code {
-  width: 60px;
+  width: 7rem;
 }
 
 .crm-container.crm-container-md tr {
