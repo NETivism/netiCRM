@@ -82,24 +82,12 @@ abstract class CRM_Import_DataSource {
   }
 
   public function prepareImportTable($tableName, $statusFieldName = '_status', $primaryKeyName = '_id') {
-    $tableName;
-    $dao = new CRM_Core_DAO();
-    $db = $dao->getDatabaseConnection();
-    /* Make sure the PK is always last! We rely on this later.
-     * Should probably stop doing that at some point, but it
-     * would require moving to associative arrays rather than
-     * relying on numerical order of the fields. This could in
-     * turn complicate matters for some DataSources, which
-     * would also not be good. Decisions, decisions...
-     */
-
     $alterQuery = "ALTER TABLE $tableName
-                       ADD COLUMN $statusFieldName VARCHAR(32)
-                            DEFAULT 'NEW' NOT NULL,
-                       ADD COLUMN ${statusFieldName}Msg TEXT,
-                       ADD COLUMN $primaryKeyName INT PRIMARY KEY NOT NULL
-                               AUTO_INCREMENT";
-    $db->query($alterQuery);
+      ADD COLUMN $statusFieldName INT DEFAULT 0 NOT NULL,
+      ADD COLUMN ${statusFieldName}Msg TEXT,
+      ADD COLUMN $primaryKeyName INT PRIMARY KEY NOT NULL
+      AUTO_INCREMENT";
+    CRM_Core_DAO::executeQuery($alterQuery);
 
     return array('statusFieldName' => $statusFieldName, 'primaryKeyName' => $primaryKeyName);
   }

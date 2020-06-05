@@ -126,10 +126,20 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     if ($statusIds && is_array($statusIds)) {
       $dao->whereAdd("status_id IN (".implode(",", $statusIds).")");
     }
+    else {
+      $status = CRM_Batch_BAO_Batch::batchStatus();
+      $allstatus = $status;
+      unset($status['Running']);
+      unset($status['Pending']);
+      $purgeDay = CRM_Batch_BAO_Batch::EXPIRE_DAY * 4;
+      $where = "(DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) > NOW() AND status_id IN (".implode(',', $status).")) OR status_id IN({$allstatus['Running']}, {$allstatus['Pending']})";
+
+      $dao->whereAdd($where);
+    }
     if ($typeIds && is_array($typeIds)) {
       $dao->whereAdd("status_id IN (".implode(",", $typeIds).")");
     }
-    $dao->orderBy('created_date ASC');
+    $dao->orderBy('created_date DESC');
     $dao->find();
 
     $rows = array();
@@ -156,25 +166,30 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       if (!empty($meta['total'])) {
         $row['processed'] = $meta['processed'].' / '.$meta['total'];
       }
+      if ($meta['statusCount']) {
+        $row['statusCount'] = $meta['statusCount'];
+      }
       $row['action'] = CRM_Core_Action::formLink(self::links(), $action, array('id' => $dao->id));
 
       // batch action should also verify permission
       if (!empty($meta['download']) && $currentUser == $dao->created_id) {
         $completedStatus = $batchStatus['Completed'];
         $canceledStatus = $batchStatus['Canceled'];
+        $actions = array();
         if (isset($meta['download']['file']) && file_exists($meta['download']['file']))  {
           $download = '<a href="'.CRM_Utils_System::url("civicrm/admin/batch", "reset=1&id={$dao->id}&action=export").'" class="download">'.ts("Download").'</a>';
           if ($dao->status_id == $completedStatus || $dao->status_id == $canceledStatus) {
-            $row['expired_date'] = date('Y-m-d H:i:s', strtotime($dao->modified_date) + 86400*CRM_Batch_BAO_Batch::EXPIRE_DAY);
+            $actions['expiredDate'] = date('Y-m-d H:i:s', strtotime($dao->modified_date) + 86400*CRM_Batch_BAO_Batch::EXPIRE_DAY);
             // reset action string when expired
-            if (strtotime($row['expired_date']) < time()) {
-              $download = ts("Download")." - ".ts("Expired");
+            if (strtotime($actions['expiredDate']) < time()) {
+              $actions['downloadExpired'] = ts('Download').' - '.ts("Expired");
             }
-            $row['action'] .= $download.'<br>';
-            $expiredDate = CRM_Utils_Date::customFormat($row['expired_date']);
-            $row['action'] .= ts('Expired Date').": ".$expiredDate;
+            else {
+              $actions['download'] = $download;
+            }
           }
         }
+        $row['actions'] = $actions;
       }
       else {
         $row['action'] = 'n/a';

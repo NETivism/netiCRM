@@ -597,10 +597,11 @@ class CRM_Export_BAO_Export {
       if ($totalNumRows > self::EXPORT_BATCH_THRESHOLD) {
         // start batch
         $config = CRM_Core_Config::singleton();
-        $file = $config->uploadDir.self::getExportFileName($exportMode);
+        $fileName = self::getExportFileName($exportMode);
+        $file = $config->uploadDir.$fileName;
         $batch = new CRM_Batch_BAO_Batch();
         $batchParams = array(
-          'label' => ts('Export').': '.self::getExportFileName($exportMode),
+          'label' => ts('Export').': '.$fileName,
           'startCallback' => NULL,
           'startCallback_args' => NULL,
           'processCallback' => array(__CLASS__, __FUNCTION__),
@@ -611,7 +612,7 @@ class CRM_Export_BAO_Export {
           'download' => array(
             'header' => array(
               'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-              'Content-Disposition: attachment;filename="'.self::getExportFileName($exportMode).'"',
+              'Content-Disposition: attachment;filename="'.$fileName.'"',
             ),
             'file' => $file,
           ),
@@ -1060,9 +1061,6 @@ class CRM_Export_BAO_Export {
         }
       }
     }
-    if (!empty($civicrm_batch) && $count) {
-      $civicrm_batch->data['processed'] += $count;
-    }
 
     // do merge same address and merge same household processing
     if ($mergeSameAddress) {
@@ -1086,7 +1084,13 @@ class CRM_Export_BAO_Export {
     // now write the CSV file
     if ($civicrm_batch) {
       $fileUri = $civicrm_batch->data['exportFile']; 
-      self::writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileUri);
+      $query = "SELECT * FROM $exportTempTable";
+      $dao = CRM_Core_DAO::executeQuery($query);
+      CRM_Core_Error::debug_log_message("expect $count rows, temp table rows $dao->N");
+      if (!empty($count) && $count == $dao->N) {
+        self::writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileUri);
+        $civicrm_batch->data['processed'] += $count;
+      }
       return;
     }
     else {
@@ -1675,6 +1679,23 @@ GROUP BY civicrm_primary_id ";
   }
 
   static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
+    $new = $fileName.'.new';
+    $sleepCounter = 0;
+    while(file_exists($new)) {
+      $sleepCounter++;
+      sleep(2);
+      // timeout
+      if ($sleepCounter > 90) {
+        $query = "SELECT * FROM $exportTempTable";
+        $dao = CRM_Core_DAO::executeQuery($query);
+        $dao->fetch();
+        foreach ($sqlColumns as $column => $sqlColumn) {
+          $error .= $column." => ".$dao->$column."\n";
+        }
+        CRM_Core_Error::fatal("Batch exporting error on previous exporting still writing to file (wait over 180 seconds). Rows from $error doesn't write correctly.");
+        break;
+      }
+    }
     $writer = CRM_Core_Report_Excel::singleton('excel');
     $writer->openToFile($fileName.'.new');
 
