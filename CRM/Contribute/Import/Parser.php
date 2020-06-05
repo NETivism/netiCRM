@@ -540,76 +540,42 @@ abstract class CRM_Contribute_Import_Parser {
       CRM_Core_DAO::freeResult();
     }
 
-
     if ($mode == self::MODE_PREVIEW || $mode == self::MODE_IMPORT) {
       $customHeaders = $mapper;
 
-      $customfields = &CRM_Core_BAO_CustomField::getFields('Contribution');
+      $customfields = CRM_Core_BAO_CustomField::getFields('Contribution');
       foreach ($customHeaders as $key => $value) {
         if ($id = CRM_Core_BAO_CustomField::getKeyID($value)) {
           $customHeaders[$key] = $customfields[$id][0];
         }
       }
+      $headers = array_merge(array(ts('Line Number'), ts('Reason')), $customHeaders);
+
       if ($this->_invalidRowCount) {
-        // removed view url for invlaid contacts
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Reason'),
-          ),
-          $customHeaders
-        );
         $this->_errorFileName = self::errorFileName(self::ERROR);
         CRM_Import_Parser::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
 
       if ($this->_invalidPledgePaymentRowCount) {
-        // removed view url for invlaid contacts
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Reason'),
-          ),
-          $customHeaders
-        );
         $this->_pledgePaymentErrorsFileName = self::errorFileName(self::PLEDGE_PAYMENT_ERROR);
         CRM_Import_Parser::exportCSV($this->_pledgePaymentErrorsFileName, $headers, $this->_pledgePaymentErrors);
       }
 
       if ($this->_invalidSoftCreditRowCount) {
-        // removed view url for invlaid contacts
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Reason'),
-          ),
-          $customHeaders
-        );
         $this->_softCreditErrorsFileName = self::errorFileName(self::SOFT_CREDIT_ERROR);
         CRM_Import_Parser::exportCSV($this->_softCreditErrorsFileName, $headers, $this->_softCreditErrors);
       }
 
       if ($this->_invalidPCPRowCount) {
-        // removed view url for invlaid contacts
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Reason'),
-          ),
-          $customHeaders
-        );
         $this->_pcpErrorsFileName = self::errorFileName(self::PCP_ERROR);
         CRM_Import_Parser::exportCSV($this->_pcpErrorsFileName, $headers, $this->_pcpErrors);
       }
 
       if ($this->_conflictCount) {
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Reason'),
-          ),
-          $customHeaders
-        );
         $this->_conflictFileName = self::errorFileName(self::CONFLICT);
         CRM_Import_Parser::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
-        $headers = array_merge(array(ts('Line Number'),
-            ts('View Contribution URL'),
-          ),
-          $customHeaders
-        );
-
         $this->_duplicateFileName = self::errorFileName(self::DUPLICATE);
         CRM_Import_Parser::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }

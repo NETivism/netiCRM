@@ -537,33 +537,33 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
     $formatError = _civicrm_contribute_formatted_param($paramValues, $formatted, TRUE);
 
-    if ($formatError) {
+    if (civicrm_error($formatError)) {
+      $errorMsg = $formatError['error_message'];
       if (CRM_Utils_Array::value('error_data', $formatError) == 'soft_credit') {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, "${statusFieldName}Msg" => 'Soft credit format error');
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, "${statusFieldName}Msg" => $errorMsg);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR;
       }
       elseif (CRM_Utils_Array::value('error_data', $formatError) == 'pledge_payment') {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, "${statusFieldName}Msg" => 'Pledge format error');
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR, "${statusFieldName}Msg" => $errorMsg);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR;
       }
       elseif (CRM_Utils_Array::value('error_data', $formatError) == 'pcp_creator') {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, "${statusFieldName}Msg" => 'PCP creator format error');
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PCP_ERROR, "${statusFieldName}Msg" => $errorMsg);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Contribute_Import_Parser::PCP_ERROR;
       }
       else {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => 'Pledge format error');
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => $errorMsg);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Contribute_Import_Parser::ERROR;
       }
     }
-
 
     if ($onDuplicate != CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
       $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted, CRM_Core_DAO::$_nullObject, NULL, 'Contribution');
@@ -823,14 +823,16 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     if (civicrm_error($newContribution)) {
       if (is_array($newContribution['error_message'])) {
         if ($newContribution['error_message']['params'][0]) {
-          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::DUPLICATE, "${statusFieldName}Msg" => $newContribution['error_message']['params'][0]);
+          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::DUPLICATE, "${statusFieldName}Msg" => ts('On duplicate entrie').':'.$newContribution['error_message']['params'][0]);
           $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
+          array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
           return CRM_Contribute_Import_Parser::DUPLICATE;
         }
       }
       else {
         $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => $newContribution['error_message']);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
+        array_unshift($values, $newContribution['error_message']);
         return CRM_Contribute_Import_Parser::ERROR;
       }
     }
