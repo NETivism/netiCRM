@@ -169,11 +169,14 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
         $config = CRM_Core_Config::singleton();
         $fileName = str_replace('civicrm_import_job_', 'import_', $this->_tableName);
         $errorFiles = array();
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::ERROR, $fileName);
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::CONFLICT, $fileName);
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::DUPLICATE, $fileName);
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::NO_MATCH, $fileName);
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, $fileName);
+        $errorFiles[] = CRM_Contribute_Import_Parser::saveFileName(CRM_Contribute_Import_Parser::ERROR, $fileName);
+        $errorFiles[] = CRM_Contribute_Import_Parser::saveFileName(CRM_Contribute_Import_Parser::CONFLICT, $fileName);
+        $errorFiles[] = CRM_Contribute_Import_Parser::saveFileName(CRM_Contribute_Import_Parser::DUPLICATE, $fileName);
+        $errorFiles[] = CRM_Contribute_Import_Parser::saveFileName(CRM_Contribute_Import_Parser::NO_MATCH, $fileName);
+        $errorFiles[] = CRM_Contribute_Import_Parser::saveFileName(CRM_Contribute_Import_Parser::UNPARSED_ADDRESS_WARNING, $fileName);
+        $errorFiles[] = CRM_Contribute_Import_Parser::saveFileName(CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, $fileName);
+        $errorFiles[] = CRM_Contribute_Import_Parser::saveFileName(CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR, $fileName);
+        $errorFiles[] = CRM_Contribute_Import_Parser::saveFileName(CRM_Contribute_Import_Parser::PCP_ERROR, $fileName);
         foreach($errorFiles as $idx => $fileName) {
           $filePath = $config->uploadDir.$fileName;
           if (is_file($filePath)) {

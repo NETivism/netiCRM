@@ -250,7 +250,7 @@ abstract class CRM_Import_Parser {
   public $_skipColumnHeader;
 
   /**
-   * import source have column header or not.
+   * Status Name for import records
    */
   public static $_statusNames;
 
@@ -959,12 +959,12 @@ abstract class CRM_Import_Parser {
     }
   }
 
-  function errorFileName($type, $prefix = NULL) {
+  public static function errorFileName($type, $prefix = NULL) {
     $fileName = self::saveFileName($type, $prefix);
     return $fileName;
   }
 
-  function saveFileName($type, $prefix = NULL) {
+  public static function saveFileName($type, $prefix = NULL) {
     if (empty($prefix)) {
       $prefix = 'import';
     }
