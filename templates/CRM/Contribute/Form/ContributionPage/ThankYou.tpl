@@ -119,11 +119,28 @@
   </td>
     </tr>
     </table>
+    {if $form.is_send_sms}
+        <table class="form-layout-compressed">
+            <tr class="crm-contribution-contributionpage-thankyou-form-block-is_send_sms">
+                <td class="label"></td>
+                <td class="html-adjust">{$form.is_send_sms.html}{$form.is_send_sms.label}<br />
+                    <span class="description">{ts}Check this box if you want an SMS message to be sent automatically.{/ts}</span>
+                </td>
+            </tr>
+        </table>
+        <table id="smsDetails" class="form-layout-compressed">
+            <tr class="crm-contribution-contributionpage-thankyou-form-block-sms_text">
+                <td class="label">{$form.sms_text.label}</td>
+                <td class="html-adjust">{$form.sms_text.html}</td>
+            </tr>
+        </table>
+    {/if}
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 	 
 <script type="text/javascript">
  showReceipt();
+ showSMS();
  {literal}
      function showReceipt() {
         var checkbox = document.getElementsByName("is_email_receipt");
@@ -133,6 +150,16 @@
             document.getElementById("receiptDetails").style.display = "none";
         }  
      } 
+     function showSMS() {
+        var checkbox = document.getElementsByName("is_send_sms");
+        if (checkbox.length) {
+            if (checkbox[0].checked) {
+                document.getElementById("smsDetails").style.display = "block";
+            } else {
+                document.getElementById("smsDetails").style.display = "none";
+            }
+        }
+     }
  {/literal} 
 </script>
 

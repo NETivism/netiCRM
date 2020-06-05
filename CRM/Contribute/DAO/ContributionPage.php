@@ -351,6 +351,18 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    */
   public $mobile_background_URL;
   /**
+   * if true, it will automatically send mobile SMS message to successful donor.
+   *
+   * @var boolean
+   */
+  public $is_send_sms;
+  /**
+   * SMS message content.
+   *
+   * @var text
+   */
+  public $sms_text;
+  /**
    * class constructor
    *
    * @access public
@@ -667,6 +679,17 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
           'default' => 'UL',
+        ) ,
+        'is_send_sms' => array(
+          'name' => 'is_send_sms',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+        ) ,
+        'sms_text' => array(
+          'name' => 'sms_text',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Sms Text') ,
+          'rows' => 6,
+          'cols' => 50,
         ) ,
       );
     }

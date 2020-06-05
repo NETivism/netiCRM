@@ -88,6 +88,11 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
 
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_ThankYou', 'formRule'));
 
+    if (CRM_SMS_BAO_Provider::activeProviderCount()) {
+      $this->addElement('checkbox', 'is_send_sms', ts('Send SMS when success?'), NULL, array('onclick' => "showSMS()"));
+      $this->add('textarea', 'sms_text', ts('SMS Text'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'sms_text'));
+    }
+
     // tokens
     $tokens = array();
     $tokens = CRM_Core_SelectValues::contactTokens();
