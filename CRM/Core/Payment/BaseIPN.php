@@ -385,7 +385,7 @@ class CRM_Core_Payment_BaseIPN {
       CRM_Contribute_BAO_ContributionPage::setValues($contribution->contribution_page_id, $values);
       $contribution->source = !empty($contribution->source) ? $contribution->source : $values['title'];
 
-      if ($values['is_email_receipt']) {
+      if ($values['is_email_receipt'] || $values['is_send_sms']) {
         $contribution->receipt_date = self::$_now;
       }
 
@@ -623,6 +623,12 @@ class CRM_Core_Payment_BaseIPN {
     else {
       self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
       CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and mail sent");
+    }
+
+    if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
+      $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, array('is_default' => 1));
+      $provider = reset($defaultProvider);
+      list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text']);
     }
   }
 
