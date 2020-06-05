@@ -1164,11 +1164,10 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    *  @access public
    */
   function isErrorInCustomData($params, &$errorMessage) {
-    $dateType = $this->_dateFormats;
-
     //CRM-5125
     //add custom fields for contact sub type
     if (isset($this)) {
+      $dateType = $this->_dateFormats;
       if (!empty($this->_contactSubType)) {
         $csType = $this->_contactSubType;
       }
