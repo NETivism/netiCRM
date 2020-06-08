@@ -58,7 +58,6 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
   private static $_contributionLinks;
   private static $_configureActionLinks;
   private static $_onlineContributionLinks;
-  private static $_exportLinks;
 
   private static $_links = NULL;
 
@@ -201,22 +200,13 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    */
   function &onlineContributionLinks() {
     if (!isset(self::$_onlineContributionLinks)) {
-      $urlString = 'civicrm/contribute/transact';
-      $urlParams = 'reset=1&id=%%id%%';
       self::$_onlineContributionLinks = array(
         CRM_Core_Action::RENEW => array(
-          'name' => ts('Live Page'),
-          'title' => ts('Live Page'),
-          'url' => $urlString,
-          'qs' => $urlParams,
-          'uniqueName' => 'live_page',
-        ),
-        CRM_Core_Action::PREVIEW => array(
-          'name' => ts('Test-drive'),
-          'title' => ts('Test-drive'),
-          'url' => $urlString,
-          'qs' => $urlParams . '&action=preview',
-          'uniqueName' => 'test_drive',
+          'name' => ts('Dashlets'),
+          'title' => ts('Dashlets'),
+          'url' => 'civicrm/admin/contribute',
+          'qs' => 'action=update&reset=1&id=%%id%%',
+          'uniqueName' => 'dashlets',
         ),
         CRM_Core_Action::REOPEN => array(
           'name' => ts('Traffic Source'),
@@ -272,35 +262,17 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
           'qs' => "{$urlParams}&start={$yearDate}&end={$yearNow}",
           'uniqueName' => 'fiscal_year_to_date',
         ),
-      );
-    }
-
-    return self::$_contributionLinks;
-  }
-
-  /**
-   * Get the export links.
-   *
-   * @return array $_exportLinks
-   *
-   */
-  function &exportLinks() {
-    if (!isset(self::$_exportLinks)) {
-      $urlString = 'civicrm/contribute/search';
-      $urlParams = 'reset=1&pid=%%id%%&force=1&test=0';
-
-      self::$_exportLinks = array(
         CRM_Core_Action::CLOSE=> array(
           'name' => ts('Export Contributions'),
           'title' => ts('Export Contributions'),
-          'url' => $urlString,
-          'qs' => $urlParams,
+          'url' => 'civicrm/contribute/search',
+          'qs' => 'reset=1&pid=%%id%%&force=1&test=0',
           'uniqueName' => 'export_contributions',
         ),
       );
     }
 
-    return self::$_exportLinks;
+    return self::$_contributionLinks;
   }
 
   /**
@@ -358,7 +330,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $config = CRM_Core_Config::singleton();
 
       // statistics
-      CRM_Utils_System::setTitle(ts('Configure Contribution Page')." - ".$page['title']);
+      CRM_Utils_System::setTitle(ts('Dashlets')." - ".$page['title']);
       $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($id);
       $last3month = date('Y-m-01', strtotime('-3 months'));
       $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id, $last3month);
@@ -371,19 +343,6 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       }
       unset($pageStatistics['page']['title']);
       $this->assign('contribution_page_statistics', $pageStatistics);
-
-      //build the configure links
-      /*
-      $sectionInfo = CRM_Contribute_BAO_ContributionPage::getSectionInfo(array($id));
-      $sectionInfo = reset($sectionInfo);
-      $perm = self::checkPerm($sectionsInfo);
-      $links = array();
-      $links['configure'] = CRM_Core_Action::formLink(self::formatConfigureLinks($sectionInfo), $perm, array('id' => $pid), ts('Configure'), TRUE);      //build the contributions links.
-      $links['contribution'] = CRM_Core_Action::formLink(self::contributionLinks(), $perm, array('id' => $pid), ts('Contributions'), TRUE);
-      //export links.
-      $links['export'] = CRM_Core_Action::formLink(self::exportLinks(), $perm, array('id' => $pid), ts('Export'), TRUE);
-      $this->assign("contribution_page_links", $links);
-      */
 
       // assign vars to templates
       $this->assign('id', $id);
@@ -545,14 +504,6 @@ ORDER BY is_active DESC, id ASC
         $action,
         array('id' => $dao->id),
         ts('Contributions'),
-        TRUE
-      );
-
-      //export links.
-      $contributionPage[$dao->id]['exportLinks'] = CRM_Core_Action::formLink(self::exportLinks(),
-        $action,
-        array('id' => $dao->id),
-        ts('Export'),
         TRUE
       );
 
@@ -729,9 +680,6 @@ SELECT count(id)
 
     //add contribution search links.
     $perm += array_sum(array_keys(self::contributionLinks()));
-
-    //add export links
-    $perm += array_sum(array_keys(self::exportLinks()));
 
     if ($page['is_active']) {
       $perm -= CRM_Core_Action::ENABLE;

@@ -6343,6 +6343,19 @@ input.crm-form-textfield,
   margin: 0 10px;
 }
 
+.crm-container .flex-general button,
+.crm-container .flex-general input[type="button"],
+.crm-container .flex-general .button,
+.crm-container .flex-general a.button:link,
+.crm-container .flex-general a.button:visited,
+.crm-container .flex-general .form-submit {
+  margin: 0;
+}
+
+.crm-container a.button.url-copy {
+  margin: 0 0 0 -21px !important;
+}
+
 /* RWD block */
 @media screen and (max-width: 768px) {
   .crm-container .crm-block-rwd {
