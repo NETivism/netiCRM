@@ -940,14 +940,14 @@ abstract class CRM_Import_Parser {
     if (empty(self::$_statusNames)) {
       self::$_statusNames = array(
         self::PENDING => ts('Pending'),
-        self::VALID => ts('Imported'),
+        self::VALID => ts('Records Imported'),
         self::WARNING => ts('Warning'),
-        self::ERROR => ts('Error'),
-        self::CONFLICT => ts('Conflict'),
-        self::STOP => ts('Stopped'),
-        self::DUPLICATE => ts('Duplicated'),
+        self::ERROR => ts('Invalid Rows (skipped)'),
+        self::CONFLICT => ts('Conflicting Rows (skipped)'),
+        self::STOP => ts('Stop'),
+        self::DUPLICATE => ts('Duplicate Rows'),
         self::MULTIPLE_DUPE => ts('Mutiple Duplicate'),
-        self::NO_MATCH => ts('Mismatched'),
+        self::NO_MATCH => ts('Mismatched Rows (skipped)'),
         self::UNPARSED_ADDRESS_WARNING => ts('Unparsed Address'),
       );
     }
