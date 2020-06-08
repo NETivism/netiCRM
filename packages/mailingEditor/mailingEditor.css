@@ -92,10 +92,6 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
   border: 2px solid #ccc;
   background: #fff;
 }
-.nme-blocks {
-  margin: 0 auto;
-  max-width: 680px;
-}
 .nme-block {
   border: 1px solid transparent;
 }
@@ -151,6 +147,7 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block.is-edit .nme-block-control {
   display: flex;
   justify-content: space-between;
+  min-height: 42px;
 }
 .nme-container .nme-block .nme-title {
   font-size: 1.5rem;
@@ -400,10 +397,7 @@ ul.nme-block-list > li:hover {
 .nme-block .nmeb-content {
   position: relative;
 }
-.nme-block table {
-  margin: 0;
-  width: auto;
-}
+.ql-toolbar.ql-snow { background: #fff; }
 .ql-size-small { font-size: .75em; }
 .ql-size-large { font-size: 1.5em; }
 .ql-size-huge { font-size: 2.5em; }
@@ -468,4 +462,192 @@ ul.nme-block-list > li:hover {
 }
 .nme-mail-output {
   display: none;
+}
+.nme-container table {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+.nme-container table[width="100%"] {
+  width: 100%;
+}
+.nme-mail-container {
+  max-width: 680px;
+  border-collapse: collapse;
+  mso-table-lspace: 0;
+  mso-table-rspace: 0;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+.nme-elem[style*="text-align: center"] + .editable-container .ql-editor {
+  text-align: center;
+}
+.nme-confirm-popup {
+  position: relative;
+  margin: 40px auto;
+  padding: 20px 30px;
+  text-align: left;
+  max-width: 400px;
+  background: #fff;
+}
+.nme-preview-popup {
+  position: relative;
+  background: #fff;
+}
+.nme-preview-popup .inner {
+}
+.nme-preview-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+.nme-preview-toolbar {
+  padding: 15px 20px;
+}
+.nme-preview-content {
+  height: 85vh;
+  overflow-y: auto;
+}
+.preview-content {
+  height: 85vh;
+}
+.nme-preview-mode-btn {
+  margin: 0 10px;
+  padding: 5px 15px;
+  font-size: 1.125rem;
+  color: #3F51B5;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #3F51B5;
+  background: #fff;
+}
+.nme-preview-mode-btn.is-active {
+  color: #fff;
+  background: #3F51B5;
+}
+.nme-preview-panel {
+  display: none;
+}
+.nme-preview-panel.is-active {
+  display: block;
+}
+.nme-preview-panel .preview-container {
+  box-sizing: content-box;
+}
+.nme-preview-iframe {
+  width: 100%;
+  height: 100%;
+}
+/*
+.nme-preview-popup .mfp-close {
+  display: block;
+  width: 100%;
+  padding: 11px 15px;
+  letter-spacing: 2px;
+  text-align: center;
+  font-size: .8125rem;
+  color: #000;
+  border-radius: 0;
+  border: 1px solid #000;
+  background: transparent;
+}
+*/
+
+.desktop-preview-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+/*
+.desktop-preview-container {
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scale(.6) translate(-50%);
+  transform: scale(.6) translate(-50%);
+  left: 50%;
+  position: absolute;
+  width: 1366px;
+  height: 800px;
+  border-radius: 6px;
+  border-style: solid;
+  border-color: black;
+  border-width: 24px 24px 80px;
+  background-color: black;
+}
+.desktop-preview-container:after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 1600px;
+  height: 60px;
+  margin: 80px 0 0 -110px;
+  background: black;
+  border-radius: 6px;
+}
+.desktop-preview-container:before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 250px;
+  height: 30px;
+  bottom: -110px;
+  left: 50%;
+  -webkit-transform: translate(-50%);
+  transform: translate(-50%);
+  background: #f1f1f1;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  z-index: 1;
+}
+.desktop-preview-container .preview-content {
+  width: 1366px;
+  height: 800px;
+  overflow: hidden;
+  border: none;
+}
+*/
+
+/* The device with borders */
+.mobile-preview-container {
+  position: relative;
+  width: 360px;
+  height: 640px;
+  margin: auto;
+  border: 16px black solid;
+  border-top-width: 60px;
+  border-bottom-width: 60px;
+  border-radius: 36px;
+}
+
+/* The horizontal line on the top of the device */
+.mobile-preview-container:before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 5px;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #333;
+  border-radius: 10px;
+}
+
+/* The circle on the bottom of the device */
+.mobile-preview-container:after {
+  content: '';
+  display: block;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  left: 50%;
+  bottom: -65px;
+  transform: translate(-50%, -50%);
+  background: #333;
+  border-radius: 50%;
+}
+
+/* The screen (or content) of the device */
+.mobile-preview-container .preview-content {
+  width: 360px;
+  height: 640px;
+  background: white;
 }
