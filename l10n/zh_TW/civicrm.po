@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-03 07:02+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2020-06-08 06:07+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29756,7 +29756,7 @@ msgstr "前往募款頁"
 msgid ""
 "Create links to this contribution page by copying and pasting the following "
 "URL into any web page."
-msgstr "或複製下方URL，貼到任何需要的地方。"
+msgstr "複製網址貼到網路上，即可讓別人連結你的募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid ""
@@ -47562,27 +47562,27 @@ msgstr "定期定額捐款人搜尋"
 msgid ""
 "Explore your past, present or future recurring donors to support your "
 "organization."
-msgstr "根據定期定額的捐款狀況，找出四種類型的人，以維繫捐款關係或是重新啟動捐款。"
+msgstr "根據定期定額的捐款狀況，找出五種類型的人，以維繫捐款關係或是重新啟動捐款。"
 
 msgid ""
 "Recurring donors matter! Explore your past, present or future recurring "
 "donors to support your organization."
-msgstr "定期定額捐款人是組織的重要支柱！根據定期定額的捐款狀況，找出四種類型的人，透過電子郵件、簡訊、電話進行分眾溝通或一對一聯繫，不論是要維繫關係或是重新啟動捐款，都能事半功倍。"
+msgstr "定期定額捐款人是組織的重要支柱！根據定期定額的捐款狀況，找出五種類型的人，透過電子郵件、簡訊、電話進行分眾溝通或一對一聯繫，不論是要維繫關係或是重新啟動捐款，都能事半功倍。"
 
 msgid "active donors (and no past recurring donation)"
-msgstr "現在有進行中的定期捐款的人（過去沒有）"
+msgstr "1.現在有進行中(過去沒有）"
 
 msgid "inactive donors (past recurring donors)"
-msgstr "曾經有/現在沒有進行中的定期定額的人"
+msgstr "2.曾經有/且現在沒有"
 
 msgid "recurring donors (no matter active or inactive)"
-msgstr "現在有進行中的定期定額的人，或是，曾經有定期定額的人"
+msgstr "4.現在有/或曾經有"
 
 msgid "not recurring donors (no matter with/without one-time donation)"
-msgstr "不曾有過定期定額的人（不管有無單筆）"
+msgstr "5.不曾有(不管有無單筆)"
 
 msgid "giving level filter"
-msgstr "單筆金額篩選區間"
+msgstr "單期金額篩選區間"
 
 msgid "Yearly Installments"
 msgstr "每年定期定額期數"
@@ -47747,7 +47747,10 @@ msgid "Filter search by group mode."
 msgstr "以群組模式過濾搜尋"
 
 msgid "recurring donors (multiple times, active now and inactive past)"
-msgstr "現在有進行中的定期定額、且過去也曾經有定期定額的人"
+msgstr "3.現在有/且曾經有"
 
 msgid "Upcoming Birthdays Search"
 msgstr "搜尋即將到來的生日"
+
+msgid "Shorten URL"
+msgstr "縮短網址"

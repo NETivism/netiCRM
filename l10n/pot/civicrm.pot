@@ -47516,3 +47516,6 @@ msgstr ""
 
 msgid "Upcoming Birthdays Search"
 msgstr ""
+
+msgid "Shorten URL"
+msgstr ""
