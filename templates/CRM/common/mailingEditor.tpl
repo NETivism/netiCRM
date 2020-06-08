@@ -14,6 +14,10 @@
 <link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css"/>
 <script src="{$config->resourceBase}packages/pickr/dist/pickr.min.js"></script>
 
+<!-- Magnific Popup -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css">
+<script src="{$config->resourceBase}packages/Magnific-Popup/dist/jquery.magnific-popup.js"></script>
+
 <!-- mailingEditor -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
 <script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
@@ -85,7 +89,7 @@
 				<div class="nme-setting-panels-footer">
 					<div class="preview-mode switch-toggle-container">
 						<label class="switch-toggle">
-							<input class="switch-toggle-input" type="checkbox">
+							<input class="switch-toggle-input nme-preview-mode-switch" type="checkbox" value="1">
 							<span class="switch-toggle-slider"></span>
 						</label>
 						<div class="switch-toggle-label">預覽模式</div>

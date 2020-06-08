@@ -58,7 +58,8 @@
 			extended: {
 				image: ["link", "image"],
 				title: ["link"],
-				button: ["link", "style"]
+				button: ["link", "style"],
+				header: ["link", "image"]
 			}
 		},
 		_sortables = {},
@@ -78,7 +79,7 @@
     return $.get(url);
 	}
 
-  var _isNumeric = function(n) { 
+  var _isNumeric = function(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 	}
 
@@ -150,6 +151,20 @@
 	  return queryString;
 	}
 
+	var _htmlUnescape = function(input) {
+		let doc = new DOMParser().parseFromString(input, "text/html");
+		return doc.documentElement.textContent;
+	};
+
+	var _htmlEscape = function(input) {
+		return input
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#039;");
+	};
+
   var _getViewport = function() {
     _viewport = {
       width  : window.innerWidth,
@@ -161,7 +176,7 @@
   var _updateUrlHash = function(hash) {
     var hash = typeof hash !== "undefined" ? "#" + hash : "";
 
-    if (hash) {    
+    if (hash) {
       if (history.pushState) {
         history.pushState(null, null, hash);
       }
@@ -342,7 +357,7 @@
 	};
 
 	var _nmeBlock = {
-		add: function(data, mode, target, method) {
+		add: function(data, mode, $target, method) {
 			let block = !_objIsEmpty(data) ? data : null,
 					addMethod = typeof method !== "undefined" ? method : "append";
 
@@ -352,23 +367,93 @@
 						blockType = block.type,
 						blockSection = block.section,
 						blockID = block.id ? block.id : blockType + "-" + _renderID(),
-						$target = typeof target !== "undefined" ? $(target) : "",
 						disallowSortType = ["header", "footer"];
 
 				if (blockMode == "view") {
 					//_loadTemplate("block--edit", "block", "default", targetContainer);
 					//_nmeBlockControl.render(blockType);
-					console.log(target);
 					if ($target.length) {
-						console.log("1");
-						let	output = "", 
+						let	output = "",
 								blockContent = _tpl.block[blockType];
 
 						blockContent = blockContent.replace(/\[nmeBlockID\]/g, blockID);
-						blockContent = blockContent.replace("[nmeBlockType]", blockType);
+						blockContent = blockContent.replace(/\[nmeBlockType\]/g, blockType);
 
-						console.log(blockContent);
 						$target.append(blockContent);
+
+						let $nmeb = $target.find(".nmeb[data-id='" + blockID + "']"),
+								$nmebInner = $nmeb.find(".nmeb-inner"),
+								$nmebContentContainer = $nmeb.find(".nmeb-content-container"),
+								$nmebContent = $nmeb.find(".nmeb-content"),
+								$nmebElem = $nmeb.find(".nme-elem");
+
+						if ($nmeb.length) {
+							// Set styles
+							for (let styleTarget in block.styles) {
+								let $styleTarget = $nmeb.find("[data-settings-target='" + styleTarget + "']");
+
+								for (let styleProperty in block.styles[styleTarget]) {
+									let styleValue = block.styles[styleTarget][styleProperty];
+									$styleTarget.css(styleProperty, styleValue);
+								}
+							}
+
+							if ($nmebElem.length) {
+								let decodeContent = "";
+								$nmebElem.attr({
+									"data-id": blockID,
+									"data-section": blockSection
+								});
+
+								switch (blockType) {
+									case "title":
+										$nmebElem.html(block.data);
+										break;
+
+									case "paragraph":
+										decodeContent = _htmlUnescape(block.data.html);
+										$nmebElem.html(decodeContent);
+										break;
+
+									case "button":
+										$nmebElem.html(block.data);
+										break;
+
+									case "image":
+										$nmebElem.attr({
+											"src": block.data.url,
+											"width": block.data.width,
+											"height": block.data.height,
+											"alt": block.data.fileName
+										});
+										break;
+
+										case "header":
+											$nmebElem.attr({
+												"src": block.data.url,
+												"width": block.data.width,
+												//"height": block.data.height,
+												"alt": block.data.fileName
+											});
+											$nmebElem.removeAttr("height"); // temp
+											break;
+
+										case "footer":
+											decodeContent = _htmlUnescape(block.data.html);
+											$nmebElem.html(decodeContent);
+											break;
+
+									default:
+										$nmebElem.html(block.data);
+										break;
+								}
+
+								// ＴODO: Link may need to be verified
+								if (block.link) {
+									$nmebElem.wrap("<a href='" + block.link + "'></a>");
+								}
+							}
+						}
 					}
 				}
 
@@ -407,7 +492,8 @@
 								break;
 						}
 
-						let $nmeb = $(".nme-block[data-id='" + blockID + "']").find(".nmeb"),
+						let $block = $(".nme-block[data-id='" + blockID + "']"),
+								$nmeb = $block.find(".nmeb"),
 								$nmebInner = $nmeb.find(".nmeb-inner"),
 								$nmebContentContainer = $nmeb.find(".nmeb-content-container"),
 								$nmebContent = $nmeb.find(".nmeb-content"),
@@ -427,6 +513,7 @@
 							}
 
 							if ($nmebElem.length) {
+								let decodeContent = "";
 								$nmebElem.attr({
 									"data-id": blockID,
 									"data-section": blockSection
@@ -448,7 +535,8 @@
 											"data-placeholder": "請輸入段落文字...",
 											"data-title": "Enter comments"
 										});
-										$nmebElem.html(block.data.html);
+										decodeContent = _htmlUnescape(block.data.html);
+										$nmebElem.html(decodeContent);
 										break;
 
 									case "button":
@@ -472,6 +560,26 @@
 										});
 										break;
 
+										case "header":
+											$nmebElem.attr({
+												"src": block.data.url,
+												"width": block.data.width,
+												"height": block.data.height,
+												"alt": block.data.fileName
+											});
+											break;
+
+										case "footer":
+											$nmebElem.addClass("nme-editable");
+											$nmebElem.attr({
+												"data-type": "xquill",
+												"data-placeholder": "請輸入段落文字...",
+												"data-title": "Enter comments"
+											});
+											decodeContent = _htmlUnescape(block.data.html);
+											$nmebElem.html(decodeContent);
+											break;
+
 									default:
 										$nmebElem.html(block.data);
 										break;
@@ -480,17 +588,31 @@
 								_editable();
 								_colorable();
 							}
+
+							// Check control permission of each block
+							if (block.control) {
+								if (!block.control.sortable) {
+									$block.find(".nme-block-move .handle-btn").remove();
+								}
+
+								if (!block.control.clone) {
+									$block.find(".handle-clone").remove();
+								}
+
+								if (!block.control.delete) {
+									$block.find(".handle-delete").remove();
+								}
+							}
 						}
 					}
 				}
 			}
 		},
-		clone: function(data, target) {
-			let cloneData = !_objIsEmpty(data) ? data : null,
-					$target = typeof target !== undefined ? $(target) : "";
+		clone: function(data, $target) {
+			let cloneData = !_objIsEmpty(data) ? data : null;
 
 			if ($target.length) {
-				_nmeBlock.add(cloneData, "edit", target, "after");
+				_nmeBlock.add(cloneData, "edit", $target, "after");
 			}
 		},
 		delete: function(data) {
@@ -514,7 +636,7 @@
 
 	var _nmeMain = function() {
 		if (!$(_main).length) {
-			let mailTplName =  _data.settings.template ?  _data.settings.template : "col-1-full-width",
+			let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
 					mailTpl = _tpl["mail"][mailTplName];
 
 			$(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
@@ -533,7 +655,7 @@
 						// Render blocks from data
 						for (let blockID in _data.sections[section].blocks) {
 							let blockData = blocksData[blockID];
-							_nmeBlock.add(blockData, "edit", blocksContainer);
+							_nmeBlock.add(blockData, "edit", $(blocksContainer));
 							_nmeBlockControl.render(blockID, blockData.type);
 						}
 
@@ -542,46 +664,200 @@
 						_colorable();
 						_nmeBlockControl.init();
 						_nmePanels();
+						_nmePreview.init();
 						_onScreenCenterElem(".nme-block");
 					}
 				}
 			}
-		}
 
-		/*
-		$("#Upload").submit(function(event) {
-			event.preventDefault();
-			let mailTpl = _tpl["mail"]["col-1-full-width"];
-			$(_container).append("<div class='nme-mail-output'></div>");
-			$(".nme-mail-output").append(mailTpl);
+			let specificEventButtons = ["_qf_Upload_back", "_qf_Upload_upload", "_qf_Upload_upload_save", "_qf_Upload_cancel"];
+			$(".form-submit[name='_qf_Upload_back'], .form-submit[name='_qf_Upload_cancel']").attr("data-sumbit-permission", 0);
+			$(".form-submit[name='_qf_Upload_upload'], .form-submit[name='_qf_Upload_upload_save']").attr("data-sumbit-permission", 0);
 
-			if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
-				for (let section in _data.sections) {
-					if (!_sectionIsEmpty(section)) {
-						let blocksData = _data.sections[section].blocks,
-								sectionID = "nme-mail-" + section,
-								sectionInner = "#" + sectionID + " .nme-mail-inner",
-								blocksContainer = ".nme-mail-output " + sectionInner;
+			$("#Upload").on("click", ".form-submit", function(event) {
+				let buttonName = $(this).attr("name"),
+						submitPermission = $(this).attr("data-sumbit-permission"),
+						$form = $(this).closest("form");
+				console.log(submitPermission);
+				if (specificEventButtons.indexOf(buttonName) != -1) {
+					if (submitPermission == 0) {
+						console.log("no");
+						event.preventDefault();
+					}
 
-						for (let blockID in _data.sections[section].blocks) {
-							let blockData = blocksData[blockID];
-							console.log(blockData);
-							_nmeBlock.add(blockData, "view", blocksContainer);
+					if (buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
+						_nmeMailOutput();
+
+						var checkMailOutputTimer = setInterval(checkMailOutput, 500);
+
+						let previewContent = "";
+						function checkMailOutput() {
+							if ($("#nme-mail-output-frame").length) {
+								previewContent = $("#nme-mail-output-frame").contents().find("body").html();
+
+								if (previewContent) {
+									clearInterval(checkMailOutputTimer);
+									previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
+									console.log(previewContent);
+									CKEDITOR.instances['html_message'].setData(previewContent);
+									$form.submit();
+								}
+							}
 						}
 					}
-				}
 
-				setTimeout(function() {
-					let output = $(".nme-mail-output").html();
-					console.log(CKEDITOR.instances['html_message']);
-					console.log(output);
-					output += output + "{domain.address}{action.optOutUrl}";
-					CKEDITOR.instances['html_message'].setData(output);
-					return true;
-				}, 1000);
+					if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_cancel") {
+						_submitConfirm($(this));
+					}
+				}
+			});
+		}
+	};
+
+	var _nmeMailOutput = function() {
+		let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
+				mailTpl = _tpl["mail"][mailTplName],
+				baseTpl = _tpl["base"]["base"],
+				output = "";
+
+		if (!$(".nme-mail-output").length) {
+			$(_container).append("<div class='nme-mail-output'><div class='nme-mail-output-content'></div><iframe id='nme-mail-output-frame'></iframe></div>");
+		}
+
+		let mailFrame = document.getElementById("nme-mail-output-frame").contentWindow.document,
+				$mailOutputContent = $(".nme-mail-output-content");
+
+		mailFrame.open();
+		mailFrame.write(baseTpl);
+		mailFrame.close();
+
+		let $mailFrameBody = $("#nme-mail-output-frame").contents().find("body");
+
+		$mailOutputContent.html(mailTpl);
+
+		if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
+			for (let section in _data.sections) {
+				if (!_sectionIsEmpty(section)) {
+					let blocksData = _data.sections[section].blocks,
+							sectionID = "nme-mail-" + section,
+							sectionInner = "#" + sectionID + " .nme-mail-inner",
+							$blocksContainer = $mailOutputContent.find(sectionInner);
+
+					for (let blockID in _data.sections[section].blocks) {
+						let blockData = blocksData[blockID];
+						console.log(blockData);
+						_nmeBlock.add(blockData, "view", $blocksContainer);
+					}
+				}
 			}
-		});
-		*/
+
+			let mailOutputContent = $mailOutputContent.html();
+			$mailFrameBody.html(mailOutputContent);
+		}
+	};
+
+	var _nmePreview = {
+		init: function() {
+			if (!$("#nme-preview-popup").length) {
+				let previewPopup = "<div id='nme-preview-popup' class='nme-preview-popup mfp-hide'>" +
+					"<div class='inner'>" +
+					"<div class='nme-preview-toolbar'>" +
+					"<div class='nme-preview-title'>電子報預覽模式</div>" +
+					"<div class='nme-preview-mode'>" +
+					"<button type='button' class='nme-preview-mode-btn is-active' data-mode='desktop'>電腦</button>" +
+					"<button type='button' class='nme-preview-mode-btn' data-mode='mobile'>手機</button>" +
+					"</div>" +
+					"<button type='button' class='nme-preview-close'>結束預覽</button>" +
+					"</div>" +
+					"<div class='nme-preview-content'>" +
+					"<div class='nme-preview-panels'>" +
+					"<div class='nme-preview-panel nme-preview-desktop-panel is-active' data-mode='desktop'><div class='desktop-preview-container preview-container'><div class='preview-content'></div></div></div>" +
+					"<div class='nme-preview-panel nme-preview-mobile-panel' data-mode='mobile'><div class='mobile-preview-container preview-container'><div class='preview-content'></div></div></div>" +
+					"</div>" +
+					"</div>" +
+					"</div>" +
+					"</div>";
+
+				$(_container).append(previewPopup);
+				$(".nme-preview-panel").each(function() {
+					//iframe.contentWindow.document.write(html); [0].contentWindow.document;
+					let mode = $(this).data("mode");
+					$(this).find(".preview-content").append("<iframe id='nme-preview-iframe-" + mode + "' class='nme-preview-iframe'></iframe>");
+				});
+
+				$("#nme-preview-popup").on("click", ".nme-preview-close", function() {
+					_nmePreview.close();
+				});
+			}
+
+			$(".nme-container").on("change", ".nme-preview-mode-switch", function() {
+				if ($(this).is(":checked")) {
+					setTimeout(function() { _nmePreview.open(); }, 500);
+				}
+				else {
+					_nmePreview.close();
+				}
+			});
+		},
+		open: function() {
+			$.magnificPopup.open({
+				items: {
+					src: "#nme-preview-popup"
+				},
+				type: "inline",
+				mainClass: "mfp-preview-popup",
+				preloader: true,
+				closeOnBgClick: false,
+				showCloseBtn: false,
+				callbacks: {
+					open: function() {
+						$("body").addClass("mfp-is-active");
+						_nmeMailOutput();
+
+						var checkMailOutputTimer = setInterval(checkMailOutput, 500);
+
+						let previewContent = "";
+						function checkMailOutput() {
+							if ($("#nme-mail-output-frame").length) {
+								previewContent = $("#nme-mail-output-frame").contents().find("body").html();
+
+								if (previewContent) {
+									clearInterval(checkMailOutputTimer);
+									previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
+									$(".nme-preview-iframe").each(function() {
+										let previewFrameID = $(this).attr("id"),
+												previewFrame = document.getElementById(previewFrameID).contentWindow.document;
+
+										previewFrame.open();
+										previewFrame.write(previewContent);
+										previewFrame.close();
+									});
+
+									// preview mode switch
+									$(".nme-preview-mode-btn").on("click", function() {
+										let mode = $(this).data("mode");
+										console.log(mode);
+										$(".nme-preview-mode-btn").removeClass("is-active");
+										$(this).addClass("is-active");
+										$(".nme-preview-panel").removeClass("is-active");
+										$(".nme-preview-panel[data-mode='" + mode + "']").addClass("is-active");
+									});
+								}
+							}
+						}
+					},
+					close: function() {
+						$("body").removeClass("mfp-is-active");
+					},
+				}
+			});
+		},
+		close: function() {
+			if ($(".nme-preview-mode-switch").is(":checked")) {
+				$(".nme-preview-mode-switch").prop("checked", false);
+			}
+			$.magnificPopup.close();
+		}
 	};
 
 	/* Main Help function */
@@ -772,6 +1048,49 @@
 			pickrInit(pickrID);
 			_pickrs.push(pickrID);
 			// console.log(_pickrs); // has a issue
+		});
+	};
+
+	var _submitConfirm = function($trigger) {
+		let confirmPopup = "";
+		if (!$("#nme-confirm-popup").length) {
+			confirmPopup += "<div id='nme-confirm-popup' class='nme-confirm-popup mfp-hide'>" +
+				"<div class='inner'>" +
+				"<div class='nme-confirm-message'><p>您即將離開電子報編輯工作區，如不儲存編輯內容將流失！</p>" +
+				"<div class='nme-confirm-actions'>" +
+				"<button type='button' class='nme-confirm-true'>確定離開工作區</button>" +
+				"<button type='button' class='nme-confirm-false'>取消</button>" +
+				"</div>" +
+				"</div>" +
+				"</div>";
+			$(_container).append(confirmPopup);
+			$("#nme-confirm-popup").on("click", ".nme-confirm-true", function() {
+				$trigger.attr("data-sumbit-permission", 1);
+				$trigger.click();
+			});
+			$("#nme-confirm-popup").on("click", ".nme-confirm-false", function() {
+				$trigger.attr("data-sumbit-permission", 0);
+				$.magnificPopup.close();
+			});
+		}
+
+		$.magnificPopup.open({
+			items: {
+				src: "#nme-confirm-popup"
+			},
+			type: "inline",
+			mainClass: "mfp-confirm-popup",
+			preloader: true,
+			closeOnBgClick: false,
+			showCloseBtn: false,
+			callbacks: {
+				open: function() {
+					$("body").addClass("mfp-is-active");
+				},
+				close: function() {
+					$("body").removeClass("mfp-is-active");
+				},
+			}
 		});
 	};
 
@@ -1049,7 +1368,7 @@
         if (label) {
           window.console.log("===== " + label + " =====");
         }
-        
+
         if (typeof item === "object") {
           window.console.log(JSON.parse(JSON.stringify(item)));
         }
@@ -1139,7 +1458,7 @@
 					let $this = $(this),
 							tplName = $this.data("template-name"),
 							tplLevel = $this.data("template-level"),
-							tplOutput = $this.html();
+							tplOutput = $this.val();
 
 					if (!_tpl.hasOwnProperty(tplLevel)) {
 						_tpl[tplLevel] = {};
@@ -1198,7 +1517,7 @@
 
     // Plugin implementation
     _qs = _parseQueryString(_query);
-    
+
     if (_nmeOptions.debugMode && _qs.debug) {
       _debugMode = _qs.debug;
     }
@@ -1209,7 +1528,7 @@
 
 		return this;
 	};
-	 
+
 	// Plugin defaults options
 	$.fn.nmEditor.defaults = {
 		dataLoadMode: "dom",
