@@ -84,6 +84,7 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
       ts('Recurring Status') => 'contribution_status_id',
+      ts('Stamp Verification') => 'stamp_verification',
       ts('Total Receive Amount') => 'receive_amount',
       ts('Most Recent').' '.ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
@@ -435,6 +436,18 @@ $having
         'q' => "action=update&reset=1&id={$row['contribution_page_id']}",
       );
       $row['contribution_page_id'] = '<a href="'.CRM_Utils_System::crmURL($params).'" title="'. $this->_cpage[$row['contribution_page_id']].'">'. $row['contribution_page_id'].'</a>';
+    }
+
+    if (isset($row['stamp_verification'])) {
+      if ($row['stamp_verification'] == 0) {
+        $row['stamp_verification'] = ts('Pending');
+      }
+      if ($row['stamp_verification'] == 1) {
+        $row['stamp_verification'] = ts('Completed');
+      }
+      if ($row['stamp_verification'] == 2) {
+        $row['stamp_verification'] = '<strong class="disabled">'.ts('Failed').'</strong>';
+      }
     }
 
     $date = array('start_date', 'end_date', 'cancel_date');
