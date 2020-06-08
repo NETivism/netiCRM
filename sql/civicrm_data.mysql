@@ -4606,6 +4606,7 @@ VALUES
    (@option_group_id_act, 'PhoneBank',                          29, 'PhoneBank', NULL,0, 0, 29, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, 'WalkList',                           30, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, 'Petition',                           31, 'Petition', NULL,0, 0, 31, '', 0, 1, 1, @campaignCompId, NULL),
+   (@option_group_id_act, 'Email Receipt',                      32, 'Email Receipt', NULL, 1, 0, 32, '', 0, 1, 1, @contributeCompId, NULL),
 
    (@option_group_id_gender, 'Female',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, 'Male',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
@@ -4781,6 +4782,9 @@ VALUES
   (@option_group_id_csearch , 'After payment failed but not retry in 7 days'          ,20, 'CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate', NULL, 0, NULL, 20, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'Single donation over 3 times'          ,21, 'CRM_Contact_Form_Search_Custom_SingleNotRecurring', NULL, 0, NULL, 21, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'Attendee but not donor'          ,22, 'CRM_Contact_Form_Search_Custom_AttendeeNotDonor', NULL, 0, NULL, 22, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'Recurring Donors Search'          ,23, 'CRM_Contact_Form_Search_Custom_RecurDonor', NULL, 0, NULL, 23, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'Upcoming Birthdays Search'          ,24, 'CRM_Contact_Form_Search_Custom_UpcomingBirthdays', NULL, 0, NULL, 24, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'ACH Search'          ,25, 'CRM_Contact_Form_Search_Custom_TaiwanACHSearch', NULL, 0, NULL, 25, '', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , 'Constituent Report (Summary)',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  'Provides a list of address and telephone information for constituent records in your system.', 0, 0, 1, NULL, NULL),
@@ -5295,7 +5299,8 @@ VALUES
  ('PayflowPro',         'PayflowPro',             NULL,1,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
  ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', 'Mobile Payment', NULL, 1, 0, 'Merchant ID', 'Payment Processor Provider', 'Account', 'Password',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
- ('TapPay', 'TapPay Payment', NULL, 1, 0, 'Merchant ID', 'Partner Key', 'App ID', 'App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1);
+ ('TapPay', 'TapPay Payment', NULL, 1, 0, 'Merchant ID', 'Partner Key', 'App ID', 'App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
+ ('TaiwanACH', 'Taiwan ACH Payment', NULL, 1, 0, 'Bank Account Number', 'Sic Code', 'Bank Identification Number', 'Post Delegate Institution Code',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0);
 
 
 -- the fuzzy default dedupe rules

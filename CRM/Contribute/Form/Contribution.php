@@ -229,8 +229,13 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->assign('context', $this->_context);
 
-    //set the contribution mode.
+    // set the contribution mode.
     $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $this);
+    // check if mode available
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
+    if(empty($processors)) {
+      $this->_mode = NULL;
+    }
 
     $this->assign('contributionMode', $this->_mode);
 
@@ -242,7 +247,6 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     //only valid processors get display to user
     if ($this->_mode) {
       $validProcessors = array();
-      $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 )");
       foreach ($processors as $ppID => $label) {
         require_once 'CRM/Core/BAO/PaymentProcessor.php';
         require_once 'CRM/Core/Payment.php';
@@ -773,6 +777,12 @@ WHERE  contribution_id = {$this->_id}
     if ($dao->find(TRUE)) {
       $paneNames[ts('Premium Information')] = 'Premium';
     }
+    else if (!empty($this->_id)) {
+      $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $this->_id, 'product_id', 'contribution_id' );
+      if (!empty($selectedProductId)) {
+        $paneNames[ts('Premium Information')] = 'Premium';
+      }
+    }
 
     $ccPane = NULL;
     if ($this->_mode) {
@@ -901,8 +911,16 @@ WHERE  contribution_id = {$this->_id}
 
     //add receipt for offline contribution
     $this->addElement('checkbox', 'is_email_receipt', ts('Send Payment Notification').'?', NULL, array(
-      'onclick' => "return showHideByValue('is_email_receipt',1,'from_email_address','block','radio',false);",
+      'onclick' => "showHideByValue('is_email_receipt',1,'from_email_address','block','radio',false);showHideByValue('is_email_receipt',1,'is_attach_receipt','block','radio',false);",
     ));
+
+    //add receipt for offline contribution
+    $this->addElement('checkbox', 'is_attach_receipt', ts('Email Receipt').'?');
+
+    $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    if (!empty($haveAttachReceiptOption)) {
+      $this->assign('have_attach_receipt_option', 1);
+    }
 
     // add mail from address select box
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();

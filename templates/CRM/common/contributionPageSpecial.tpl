@@ -59,6 +59,7 @@
       {/literal}{if $thankyou_text and $payment_result_type eq 4}thankyouTitle : "{$thankyou_title}",{/if}{literal}
       ts: {
         "Monthly Installments" : "{/literal}{ts}Monthly Installments{/ts}{literal}",
+        "Yearly Installments" : "{/literal}{ts}Yearly Installments{/ts}{literal}",
         "Single Contribution" : "{/literal}{ts}Single Contribution{/ts}{literal}",
         "Recurring Contributions" : "{/literal}{ts}Recurring Contributions{/ts}{literal}",
         "Other Amount" : "{/literal}{ts}Other Amount{/ts}{literal}",
@@ -84,6 +85,7 @@
         "No Limit" : "{/literal}{ts}No Limit{/ts}{literal}",
         // Original wordings
         "monthly" : "{/literal}{ts}monthly{/ts}{literal}",
+        "yearly" : "{/literal}{ts}yearly{/ts}{literal}",
         "Recurring contributions" : "{/literal}{ts}Recurring contributions{/ts}{literal}",
         "Every-Month Recurring Contribution" : "{/literal}{ts}Every-Month Recurring Contribution{/ts}{literal}",
         "Installments Recurring Contribution" : "{/literal}{ts}Installments Recurring Contribution{/ts}{literal}",
@@ -94,6 +96,9 @@
         "no limit" : "{/literal}{ts}no limit{/ts}{literal}",
         "One-time Contribution" : "{/literal}{ts}One-time Contribution{/ts}{literal}",
         "Monthly Recurring Contributions" : "{/literal}{ts}Monthly Recurring Contributions{/ts}{literal}",
+        "Yearly Recurring Contributions" : "{/literal}{ts}Yearly Recurring Contributions{/ts}{literal}",
+        "Months Recurring Contributions" : "{/literal}{ts}Months Recurring Contributions{/ts}{literal}",
+        "Years Recurring Contributions" : "{/literal}{ts}Years Recurring Contributions{/ts}{literal}",
         "Installments Contributions" : "{/literal}{ts}Installments Contributions{/ts}{literal}",
         "One-time" : "{/literal}{ts}One-time{/ts}{literal}",
         "Recurring" : "{/literal}{ts}Recurring{/ts}{literal}",

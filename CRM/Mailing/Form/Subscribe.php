@@ -224,6 +224,7 @@ ORDER BY title";
 
       $formatted['onDuplicate'] = CRM_Import_Parser::DUPLICATE_SKIP;
       $formatted['fixAddress'] = TRUE;
+      $formatted['log_data'] = ts("Mailing List Subscription");
       $contact = civicrm_api('contact', 'create', $formatted);
       if (!civicrm_error($contact)) {
         $contactId = $contact['id'];

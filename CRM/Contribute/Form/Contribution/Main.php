@@ -283,6 +283,19 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
       }
     }
+    else if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
+      !empty($_GET['retry']) &&
+      !empty($_GET['reset']) &&
+      empty($_GET['snippet'])
+    ) {
+      // use session info prepopulate civicrm form value, #20784
+      $userContributionPrepopulate = $session->get('user_contribution_prepopulate');
+      if (!empty($userContributionPrepopulate) && REQUEST_TIME <= $userContributionPrepopulate['expires']) {
+        unset($userContributionPrepopulate['expires']);
+        $this->_defaults = $userContributionPrepopulate;
+        return $this->_defaults;
+      }
+    }
     else{
       if (isset($this->_fields['group'])) {
         CRM_Contact_BAO_Group::publicDefaultGroups($this->_defaults);

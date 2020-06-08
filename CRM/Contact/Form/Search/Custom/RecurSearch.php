@@ -50,13 +50,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
     $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
     if(empty($this->_tableName)){
       $this->_tableName = "civicrm_temp_custom_recursearch";
+      $this->_cpage = CRM_Contribute_PseudoConstant::contributionPage();
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
-      $this->_cpage = array();
-      $sql = "SELECT id, title FROM civicrm_contribution_page WHERE is_active != 0;";
-      $dao = CRM_Core_DAO::executeQuery($sql);
-      while ($dao->fetch()) {
-        $this->_cpage[$dao->id] = $dao->title;
-      }
       $this->_cstatus[1] = ts('Recurring ended');
       $this->_gender = CRM_Core_PseudoConstant::gender();
       $this->_config = CRM_Core_Config::singleton();
@@ -357,7 +352,7 @@ $having
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
-    $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
+    $fields = !$onlyIDs ? "*" : "contact_a.contact_id, id" ;
 
     if(!$this->_filled){
       $this->fillTable();
@@ -386,7 +381,7 @@ $having
   function where($includeContactIDs = false) {
     $sql = ' ( 1 ) ';
     if ($includeContactIDs) {
-      self::includeContactIDs($sql, $this->_formValues);
+      self::includeContactIDs($sql, $this->_formValues, $this->_isExport);
     }
     return $sql;
   }
@@ -395,18 +390,28 @@ $having
     return '';
   }
 
-  public static function includeContactIDs(&$sql, &$formValues) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
-      if ($value && !empty($contactID)) {
+      if ($isExport) {
+        if ($value && !empty($additionalID)) {
+          $contactIDs[] = $additionalID;
+        }
+      }
+      elseif ($value && !empty($contactID)) {
         $contactIDs[] = $contactID;
       }
     }
 
     if (!empty($contactIDs)) {
       $contactIDs = implode(', ', $contactIDs);
-      $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
+      if ($isExport) {
+        $sql .= " AND contact_a.id IN ( $contactIDs )";
+      }
+      else {
+        $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
+      }
     }
   }
 

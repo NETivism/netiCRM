@@ -41,10 +41,14 @@
     
         <div class="action-link-button">
           {if $action eq 16 and $permission EQ 'edit'}
-            {capture assign=newContribURL}{crmURL p="civicrm/contact/view/contribution" q="reset=1&action=add&cid=`$contactId`&context=contribution"}{/capture}
             <a accesskey="N" href="{$newContribURL}" class="button">{ts}Record Contribution (Check, Cash, EFT ...){/ts}</a>
             {if $newCredit}
+              {capture assign=newContribURL}{crmURL p="civicrm/contact/view/contribution" q="reset=1&action=add&cid=`$contactId`&context=contribution"}{/capture}
               <a accesskey="N" href="{$newCreditURL}" class="button">{ts}Submit Credit Card Contribution{/ts}</a>
+            {/if}
+            {if $newACH}
+              {capture assign=newACHURL}{crmURL p="civicrm/contribute/taiwanach" q="reset=1&action=add&cid=`$contactId`&context=contribution"}{/capture}
+              <a href="{$newACHURL}" class="button">{ts}New ACH{/ts}</a>
             {/if}
           {/if}
           <a href="{crmURL p="civicrm/contact/task/annualreceipt" q="reset=1&cid=`$contactId`"}" class="button" target="_blank">{ts}Print Annual Receipt{/ts}</a>

@@ -1740,12 +1740,13 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       );
     }
     elseif (substr($fieldName, 0, 4) === 'url-') {
-      $form->addElement('text', $name, $title,
+      $form->add('text', $name, $title,
         array_merge(CRM_Core_DAO::getAttribute('CRM_Core_DAO_Website', 'url'),
           array('onfocus' => "if (!this.value) {  this.value='http://';} else return false",
             'onblur' => "if ( this.value == 'http://') {  this.value='';} else return false",
           )
-        )
+        ),
+        $required
       );
 
       $form->addRule($name, ts('Enter a valid Website.'), 'url');

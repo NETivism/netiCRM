@@ -47294,3 +47294,225 @@ msgstr ""
 
 msgid "Registered - From"
 msgstr ""
+
+msgid "Copied receipt only"
+msgstr ""
+
+msgid "Default Receipt Type"
+msgstr ""
+
+msgid "Transaction Fee Amount"
+msgstr ""
+
+msgid "Your browser doesn't support embed form. Click button below to finish online form."
+msgstr ""
+
+msgid "Visit Online Form"
+msgstr ""
+
+msgid "Payment processor needs Google account with credit card."
+msgstr ""
+
+msgid "Email Receipt"
+msgstr ""
+
+msgid "Add receipt as attachment in email."
+msgstr ""
+
+msgid "The quota of contacts is %1 to full. Please contact %2 to upgrade your plan. You can read %3 know what will happen when reaching limit."
+msgstr ""
+
+msgid "Congraturation! You have reached %1 of contacts quota. Please contact %2 to upgrade your plan. You can read %3 to know what will happen when reaching limit."
+msgstr ""
+
+msgid "Important!! Your contacts quota is over %1. Some of functions is disabled (Import Contact, Add new contact ... etc.). Please contact %2 to upgrade your plan."
+msgstr ""
+
+msgid "Goal Recurring Amount"
+msgstr ""
+
+msgid "Post Delegate Institution Code"
+msgstr ""
+
+msgid "Taiwan ACH Payment"
+msgstr ""
+
+msgid "Recurring Donors Search"
+msgstr ""
+
+msgid "Explore your past, present or future recurring donors to support your organization."
+msgstr ""
+
+msgid "Recurring donors matter! Explore your past, present or future recurring donors to support your organization."
+msgstr ""
+
+msgid "active donors (and no past recurring donation)"
+msgstr ""
+
+msgid "inactive donors (past recurring donors)"
+msgstr ""
+
+msgid "recurring donors (no matter active or inactive)"
+msgstr ""
+
+msgid "not recurring donors (no matter with/without one-time donation)"
+msgstr ""
+
+msgid "giving level filter"
+msgstr ""
+
+msgid "Yearly Installments"
+msgstr ""
+
+msgid "Yearly Recurring Contributions"
+msgstr ""
+
+msgid "Months Recurring Contributions"
+msgstr ""
+
+msgid "Years Recurring Contributions"
+msgstr ""
+
+msgid "Taiwan ACH ID"
+msgstr ""
+
+msgid "Post Office Account Type"
+msgstr ""
+
+msgid "Bank Branch"
+msgstr ""
+
+msgid "Identifier Number"
+msgstr ""
+
+msgid "Stamp Verification"
+msgstr ""
+
+msgid "Error on line %1:"
+msgstr ""
+
+msgid "Word count of txt is wrong: %1"
+msgstr ""
+
+msgid "Header have wrong value."
+msgstr ""
+
+msgid "Footer have wrong value."
+msgstr ""
+
+msgid "The data of order %1 have wrong value."
+msgstr ""
+
+msgid "There is process error on id: %1"
+msgstr ""
+
+msgid "In %1, row %2 is not correct, input value is %3, format should be %4"
+msgstr ""
+
+msgid "In %1, word since %2 is not correct, input value is %3, format should be %4"
+msgstr ""
+
+msgid "Format is not correct. Input format is '%1'"
+msgstr ""
+
+msgid "Process Date"
+msgstr ""
+
+msgid "Type of upload file is not a responding file."
+msgstr ""
+
+msgid "Status of recurring: %1 should be 'pending'."
+msgstr ""
+
+msgid "ACH Type"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
+msgid "Post Office"
+msgstr ""
+
+msgid "Bank book"
+msgstr ""
+
+msgid "Postal transfer"
+msgstr ""
+
+msgid "Stamp Verification Status"
+msgstr ""
+
+msgid "ACH"
+msgstr ""
+
+msgid "ACH Search"
+msgstr ""
+
+msgid "Bank Account"
+msgstr ""
+
+msgid "Export ACH Stamp Verification File"
+msgstr ""
+
+msgid "Export ACH Transaction File"
+msgstr ""
+
+msgid "%1 has error on format."
+msgstr ""
+
+msgid "Export ACH Verification File"
+msgstr ""
+
+msgid "All selected recurrings must be pending. There are %1 recurrings not pending."
+msgstr ""
+
+msgid "All selected recurrings must be unverified. There are %1 recurrings not unverified."
+msgstr ""
+
+msgid "There are %1 recurrings have invoice ID, This behavior will overwrite them."
+msgstr ""
+
+msgid "Verification Date"
+msgstr ""
+
+msgid "There already have file exported in the same day, if you want to rewrite it, please check 'rewrite' then submit."
+msgstr ""
+
+msgid "All selected recurrings must be in process. There are %1 recurrings not in process."
+msgstr ""
+
+msgid "All selected recurrings must be verified. There are %1 recurrings yet verified."
+msgstr ""
+
+msgid "Rewrite"
+msgstr ""
+
+msgid "Stamp Verication Date"
+msgstr ""
+
+msgid "Import ACH"
+msgstr ""
+
+msgid "New ACH"
+msgstr ""
+
+msgid "Procecss Info"
+msgstr ""
+
+msgid "Process ID"
+msgstr ""
+
+msgid "Import Type"
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Filter search by group mode."
+msgstr ""
+
+msgid "recurring donors (multiple times, active now and inactive past)"
+msgstr ""
+
+msgid "Upcoming Birthdays Search"
+msgstr ""

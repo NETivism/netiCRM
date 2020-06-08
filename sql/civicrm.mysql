@@ -86,6 +86,7 @@ DROP TABLE IF EXISTS civicrm_membership_block;
 DROP TABLE IF EXISTS civicrm_membership;
 DROP TABLE IF EXISTS civicrm_pcp;
 DROP TABLE IF EXISTS civicrm_contribution_widget;
+DROP TABLE IF EXISTS civicrm_contribution_taiwanach;
 DROP TABLE IF EXISTS civicrm_contribution_page;
 DROP TABLE IF EXISTS civicrm_mailing_event_unsubscribe;
 DROP TABLE IF EXISTS civicrm_mailing_event_trackable_url_open;
@@ -3686,6 +3687,36 @@ CREATE TABLE civicrm_contribution_page (
 ,      
      CONSTRAINT FK_civicrm_contribution_page_contribution_type_id FOREIGN KEY (contribution_type_id) REFERENCES civicrm_contribution_type(id) ,      
      CONSTRAINT FK_civicrm_contribution_page_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_taiwanach
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_taiwanach (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Taiwan ACH  ID',
+     contact_id int unsigned NOT NULL   COMMENT 'FK to Contact ID',
+     contribution_recur_id int unsigned NOT NULL   COMMENT 'Conditional foreign key to civicrm_contribution_recur id. Each contribution made in connection with a recurring contribution carries a foreign key to the recurring contribution record. This assumes we can track these processor initiated events.',
+     contribution_page_id int unsigned    COMMENT 'The Contribution Page which triggered this contribution',
+     payment_type varchar(32)    COMMENT 'Payment Type of ACH.',
+     bank_code varchar(32)    COMMENT 'Bank Code of ACH Account.',
+     postoffice_acc_type varchar(32)    COMMENT 'Post Office Account Type of ACH Account.',
+     bank_branch varchar(32)    COMMENT 'Bank Branch of ACH Account.',
+     bank_account varchar(32)    COMMENT 'Bank Account of ACH Account.',
+     identifier_number varchar(128)    COMMENT 'Identifier Number of ACH Account.',
+     stamp_verification int unsigned    COMMENT 'Stamp Verification Status',
+     data text    COMMENT 'Some Custom Record Data' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+,      
+     CONSTRAINT FK_civicrm_contribution_taiwanach_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_contribution_taiwanach_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_contribution_taiwanach_contribution_page_id FOREIGN KEY (contribution_page_id) REFERENCES civicrm_contribution_page(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

@@ -85,11 +85,20 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
 
     // prepare all contribution page variable
     $page = array();
-    CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+    CRM_Contribute_BAO_ContributionPage::setValues($contributionPageID, $page);
 
     // total donors
-    $query = "SELECT count( id ) as count FROM   civicrm_contribution  WHERE is_test = 0 AND contribution_status_id = 1 AND contribution_page_id = %1";
-    $data['num_donors'] = CRM_Core_DAO::singleValueQuery($query, array(1 => array($contributionPageID, 'Integer')));
+    $query = "SELECT count(id) as count, SUM(total_amount) as total FROM civicrm_contribution  WHERE is_test = 0 AND contribution_status_id = 1 AND contribution_page_id = %1 GROUP BY contribution_page_id";
+    $dao = CRM_Core_DAO::executeQuery($query, array(1 => array($contributionPageID, 'Integer')));
+    $dao->fetch();
+    $data['num_donors'] = $dao->count;
+    $data['money_raised'] = $dao->total;
+    if (empty($data['num_donors'])) {
+      $data['num_donors'] = 0;
+    }
+    if (empty($data['money_raised'])) {
+      $data['money_raised'] = 0;
+    }
 
     // goal
     $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($contributionPageID);
@@ -144,12 +153,16 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
       $data['goal_type'] = $achievement['type'];
       $data['money_target'] = $achievement['goal'];
       $data['money_raised_percentage'] = $achievement['percent']."%";
-      if ($achievement['type'] == 'amount') {
-        $data['money_target_display'] = ts('Goal Amount') . ': ' . CRM_Utils_Money::format($achievement['goal']);
+      if ($achievement['type'] == 'recuramount') {
+        $data['money_target_display'] = $achievement['label'] . ': ' . CRM_Utils_Money::format($achievement['goal']);
+        $data['money_raised'] = ts('%1 achieved', array(1 => CRM_Utils_Money::format($achievement['current'])));
+      }
+      elseif ($achievement['type'] == 'amount') {
+        $data['money_target_display'] = $achievement['label'] . ': ' . CRM_Utils_Money::format($achievement['goal']);
         $data['money_raised'] = ts('%1 achieved', array(1 => CRM_Utils_Money::format($achievement['current'])));
       }
       elseif ($achievement['type'] == 'recurring') {
-        $data['money_target_display'] = ts('Goal Subscription') . ': ' . $achievement['goal'] ." ". ts("People");
+        $data['money_target_display'] = $achievement['label'] . ': ' . $achievement['goal'] ." ". ts("People");
         $data['money_raised'] = ts('%1 achieved', array(1 => $achievement['current'])) . " ". ts("People");
       }
     }

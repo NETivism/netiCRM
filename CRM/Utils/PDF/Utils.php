@@ -60,7 +60,12 @@ class CRM_Utils_PDF_Utils {
     $html = self::makeHTML($values, FALSE);
 
     if ($config->wkhtmltopdfPath) {
-      $option = "--page-size '$paperSize'";
+      if ($config->wkhtmltopdfOption) {
+        $option = $config->wkhtmltopdfOption;
+      }
+      else {
+        $option = "--page-size '$paperSize'";
+      }
       $pdf = self::wkhtmltopdf($html, $dest, $option);
       if ($download) {
         header('Content-type: application/pdf');

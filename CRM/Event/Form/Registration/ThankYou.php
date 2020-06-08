@@ -69,11 +69,57 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
 
     $primaryParticipant = $this->get('registerByID');
     if ($primaryParticipant) {
+      $this->assign('registerByID', $primaryParticipant);
       $contributionId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantPayment', $primaryParticipant, 'contribution_id', 'participant_id');
       if ($contributionId) {
+        $this->assign('contribution_id', $contributionId);
         $params['id'] = $contributionId;
-        CRM_Contribute_BAO_Contribution_Utils::paymentResultType($this, $params);
+        $paymentResultStatus = CRM_Contribute_BAO_Contribution_Utils::paymentResultType($this, $params);
       }
+    }
+
+    // add dataLayer for gtm
+    if ($this->_trxnId) {
+      $transactionId = $this->_trxnId;
+    }
+    else {
+      if ($contributionId) {
+        $transactionId = ts('Contribution ID').'-'.$contributionId;
+      }
+      else {
+        $transactionId = ts('Participant Id').'-'.$primaryParticipant;
+      }
+    }
+    if ($this->_action & CRM_Core_Action::PREVIEW) {
+      $transactionId = 'test-'.$transactionId;
+    }
+    $this->assign('transaction_id', $transactionId);
+    $this->assign('product_id', ts('Event').'-'.$this->_eventId);
+    $this->assign('product_name', $this->_values['event']['title']);
+    $this->assign('product_category', $this->_values['event']['event_type']);
+    $participantCount = self::getParticipantCount($this, $this->_params);
+    $this->assign('product_quantity', $participantCount);
+    if ($this->_totalAmount) {
+      $this->assign('product_amount', $this->_totalAmount);
+      $this->assign('total_amount', $this->_totalAmount);
+    }
+    else {
+      $this->assign('product_amount', 0);
+      $this->assign('total_amount', 0);
+    }
+    $this->assign('dataLayerType', 'purchase');
+    $smarty = CRM_Core_Smarty::singleton();
+    $dataLayer = $smarty->fetch('CRM/common/DataLayer.tpl');
+    if (isset($paymentResultStatus) && $paymentResultStatus == 4) {
+      $this->assign('dataLayerType', 'refund');
+      $dataLayer .= $smarty->fetch('CRM/common/DataLayer.tpl');
+    }
+    if (!empty($dataLayer)) {
+      $obj = array(
+        'type' => 'markup',
+        'markup' => $dataLayer."\n",
+      );
+      CRM_Utils_System::addHTMLHead($obj);
     }
   }
 

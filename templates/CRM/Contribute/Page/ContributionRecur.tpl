@@ -28,7 +28,7 @@
 
 {if $action eq 4} {* when action is view *}
     {if $recur}
-        <h3>{ts}Recurring contributions{/ts}</h3>
+        <h3>{ts}Recurring contributions{/ts} {if $ach}(ACH){/if}</h3>
         <div class="crm-block crm-content-block crm-recurcontrib-view-block">
           <table class="crm-info-panel">
             <tr><td class="label">{ts}From{/ts}</td><td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contactId`" h=0 a=1 fe=1}">{$displayName}</a></td></tr>
@@ -67,7 +67,6 @@
             {if $recur.payment_processor}<tr><td class="label">{ts}Payment processor:{/ts}</td><td>{$recur.payment_processor}</td></tr>{/if}
             -->
             <tr><td class="label">{ts}Recurring Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
-
             {if $record_detail}
             <tr><td></td><td></td></tr>
               {foreach from=$record_detail key=label item=value}
@@ -79,6 +78,36 @@
             {/if}
 
           </table>
+
+          {if $ach}
+          <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+            <div class="crm-accordion-header">
+              <div class="zmdi crm-accordion-pointer"></div> 
+              {ts}ACH{/ts}
+            </div>
+            <div class="crm-accordion-body">
+              <table class="crm-info-panel">
+              <tr><td class="label">{ts}Stamp Verification Status{/ts}</td><td>{$ach.stamp_verification_label}</td></tr>
+              {if $ach.stamp_verification == 0}
+                <tr><td class="label">{ts}Stamp Verification Date{/ts}</td><td>{ts}None{/ts}</td></tr>
+              {elseif $ach.stamp_verification == 1}
+                <tr><td class="label">{ts}Stamp Verification Date{/ts}</td><td>{$recur.start_date|crmDate}</td></tr>
+              {elseif $ach.stamp_verification == 2}
+                <tr><td class="label">{ts}Stamp Verification Result{/ts}</td><td>{$ach.stamp_verification_reason}</td></tr>
+              {/if}
+              <tr><td class="label">{ts}Payment Instrument{/ts}</td><td>{ts}{$ach.payment_type}{/ts}</td></tr>
+              {if $ach.payment_type == 'ACH Bank'}
+                <tr><td class="label">{ts}Bank Identification Number{/ts}</td><td>{ts}{$ach.bank_code}{/ts}</td></tr>
+                <tr><td class="label">{ts}Bank Branch{/ts}</td><td>{ts}{$ach.bank_branch}{/ts}</td></tr>
+              {else}
+                <tr><td class="label">{ts}Post Office Account Type{/ts}</td><td>{ts}{$ach.postoffice_acc_typ}{/ts}</td></tr>
+              {/if}
+              <tr><td class="label">{ts}Bank Account Number{/ts}</td><td>{ts}{$ach.bank_account}{/ts}</td></tr>
+              <tr><td class="label">{ts}Legal Identifier{/ts}</td><td>{ts}{$ach.identifier_number}{/ts}</td></tr>
+              </table>
+            </div>
+          </div>
+          {/if}
 
           <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
             <div class="crm-accordion-header">
@@ -152,6 +181,10 @@
             <input type="button" name='cancel' value="{ts}Back to Listings{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q="action=browse&selectedChild=contribute&cid=`$contactId`"}';"/>
             {if $is_editable}
               <a class="button" href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$contributionRecurId`&cid=`$contactId`&action=update"}" accesskey="e"><i class="zmdi zmdi-edit"></i>{ts}edit{/ts}</a>
+
+              {if $ach}
+                <a class="button" href="{crmURL p='civicrm/contribute/taiwanach' q="reset=1&id=`$ach.id`&cid=`$contactId`&action=update"}" accesskey="e"><i class="zmdi zmdi-edit"></i>{ts}edit ACH{/ts}</a>
+              {/if}
             {/if}
             {$form.$submit_name.html}
           </div>
@@ -163,6 +196,7 @@
     <table class="selector">
         <tr class="columnheader">
             <th scope="col">#</th>
+            <th scope="col">{ts}Payment Processor{/ts}</th>
             <th scope="col">{ts}Amount{/ts}</th>
             <th scope="col">{ts}Frequency{/ts}</th>
             <th scope="col">{ts}Start Date{/ts}</th>
@@ -178,6 +212,7 @@
             {assign var=id value=$row.id}
             <tr id="row_{$row.id}" class="{cycle values="even-row,odd-row"}{if NOT $row.is_active} disabled{/if}">
                 <td>{$row.id}</td>
+                <td>{$row.payment_processor}</td>
                 <td>{$row.amount|crmMoney}</td>
                 <td>{ts}every{/ts} {$row.frequency_interval} {$row.frequency_unit} </td>
                 <td>{$row.start_date|crmDate}</td>

@@ -737,6 +737,7 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     $template = &CRM_Core_Smarty::singleton();
+    $template->clearTemplateVars();
     // CRM_Core_Error::debug('tpl',$template);
     //assign honor infomation to receiptmessage
     if ($honarID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',

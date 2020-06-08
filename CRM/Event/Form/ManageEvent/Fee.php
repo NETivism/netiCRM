@@ -267,7 +267,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
     $this->addCurrency('currency', ts('Currency'), FALSE);
 
     require_once 'CRM/Contribute/PseudoConstant.php';
-    $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor();
+    $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "payment_processor_type != 'TaiwanACH'");
     $this->assign('paymentProcessor', $paymentProcessor);
 
     $this->addCheckBox('payment_processor', ts('Payment Processor'),

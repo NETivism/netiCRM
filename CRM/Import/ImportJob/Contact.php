@@ -212,6 +212,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       $this->_parser->setMaxLinesToProcess(CRM_Import_ImportJob::BATCH_LIMIT);
     }
     $this->_parser->_skipColumnHeader = $form->get('skipColumnHeader');
+    $this->_parser->_dateFormats = $form->get('dateFormats');
     $this->_parser->run($this->_tableName, $mapperFields,
       CRM_Import_Parser::MODE_IMPORT,
       $this->_contactType,
@@ -231,6 +232,14 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     if (!empty($civicrm_batch)) {
       if ($processedRowCount > 0) {
         $civicrm_batch->data['processed'] += $processedRowCount;
+      }
+      else {
+        // when no pending records to process, finish this job.
+        $query = "SELECT * FROM $this->_tableName WHERE $this->_statusFieldName = 'NEW'";
+        $dao = CRM_Core_DAO::executeQuery($query);
+        if (!$dao->N && $civicrm_batch->data['processed'] > 0) {
+          $civicrm_batch->data['processed'] = $civicrm_batch->data['total'];
+        }
       }
     }
 
@@ -273,8 +282,10 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
   public function batchStartCallback() {
     global $civicrm_batch;
     if ($civicrm_batch) {
-      $query = "SELECT COUNT(*) FROM $this->_tableName WHERE $this->_statusFieldName != 'NEW'";
-      $processed = CRM_Core_DAO::singleValueQuery($query);
+      $query = "SELECT COUNT(*) FROM $this->_tableName WHERE $this->_statusFieldName != %1";
+      $processed = CRM_Core_DAO::singleValueQuery($query, array(
+        1 => array(CRM_Import_Parser::PENDING, 'Integer')
+      ));
       $civicrm_batch->data['processed'] += $processed;
     }
   }
@@ -282,6 +293,21 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
   public function batchFinishCallback() {
     global $civicrm_batch;
     if (!empty($civicrm_batch)) {
+      // calculate import results from table
+      $query = "SELECT $this->_statusFieldName as status, COUNT(*) as count FROM $this->_tableName WHERE 1 GROUP BY $this->_statusFieldName";
+      $dao = CRM_Core_DAO::executeQuery($query);
+      $statusCount = array();
+      while($dao->fetch()) {
+        $name = CRM_Import_Parser::statusName($dao->status);
+        $statusCount[$name] = $dao->count;
+      }
+      $name = CRM_Import_Parser::statusName(CRM_Import_Parser::VALID);
+      if (!isset($statusCount[$name])) {
+        $statusCount[$name] = 0;
+      }
+      $civicrm_batch->data['statusCount'] = $statusCount;
+
+      // zip error files from table
       $zipFile = $civicrm_batch->data['download']['file'];
       $zip = new ZipArchive();
 
@@ -303,10 +329,8 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
             unset($errorFiles[$idx]);
           }
         }
-        print_r($zip);
         $zip->close();
 
-        print_r($errorFiles);
         // purge zipped files
         foreach($errorFiles as $fileName) {
           unlink($config->uploadDir.$fileName);

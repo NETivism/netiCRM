@@ -58,7 +58,7 @@ class CRM_Contact_Task {
    */
   static $_optionalTasks = NULL;
 
-  static function initTasks() {
+  static function initTasks($addTask = NULL) {
     if (!self::$_tasks) {
       self::$_tasks = array(
         1 => array('title' => ts('Add Contacts to Group'),
@@ -233,6 +233,11 @@ class CRM_Contact_Task {
       CRM_Utils_Hook::searchTasks('contact', self::$_tasks);
 
       asort(self::$_tasks);
+    }
+    if ($addTask) {
+      foreach($addTask as $idx => $add) {
+        self::$_tasks[$idx] = $add;
+      }
     }
   }
 

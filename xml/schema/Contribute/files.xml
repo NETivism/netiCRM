@@ -10,6 +10,7 @@
 <xi:include href="ContributionLinePay.xml"  parse="xml" />
 <xi:include href="ContributionTapPay.xml"   parse="xml" />
 <xi:include href="ContributionTapPayLog.xml"  parse="xml" />
+<xi:include href="ContributionTaiwanACH.xml"  parse="xml" />
 <xi:include href="Premium.xml"              parse="xml" />
 <xi:include href="Product.xml"              parse="xml" />
 <xi:include href="PremiumsProduct.xml"      parse="xml" />

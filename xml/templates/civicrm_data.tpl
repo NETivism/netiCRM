@@ -312,6 +312,7 @@ VALUES
    (@option_group_id_act, '{ts escape="sql"}PhoneBank{/ts}',                          29, 'PhoneBank', NULL,0, 0, 29, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, '{ts escape="sql"}WalkList{/ts}',                           30, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, '{ts escape="sql"}Petition{/ts}',                           31, 'Petition', NULL,0, 0, 31, '', 0, 1, 1, @campaignCompId, NULL),
+   (@option_group_id_act, '{ts escape="sql"}Email Receipt{/ts}',                      32, 'Email Receipt', NULL, 1, 0, 32, '', 0, 1, 1, @contributeCompId, NULL),
 
    (@option_group_id_gender, '{ts escape="sql"}Female{/ts}',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, '{ts escape="sql"}Male{/ts}',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
@@ -490,6 +491,9 @@ VALUES
   (@option_group_id_csearch , '{ts escape="sql" 1="7"}After payment failed but not retry in %1 days{/ts}'          ,20, 'CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate', NULL, 0, NULL, 20, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql" 1="3"}Single donation over %1 times{/ts}'          ,21, 'CRM_Contact_Form_Search_Custom_SingleNotRecurring', NULL, 0, NULL, 21, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Attendee but not donor{/ts}'          ,22, 'CRM_Contact_Form_Search_Custom_AttendeeNotDonor', NULL, 0, NULL, 22, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}Recurring Donors Search{/ts}'          ,23, 'CRM_Contact_Form_Search_Custom_RecurDonor', NULL, 0, NULL, 23, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}Upcoming Birthdays Search{/ts}'          ,24, 'CRM_Contact_Form_Search_Custom_UpcomingBirthdays', NULL, 0, NULL, 24, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}ACH Search{/ts}'          ,25, 'CRM_Contact_Form_Search_Custom_TaiwanACHSearch', NULL, 0, NULL, 25, '', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , '{ts escape="sql"}Constituent Report (Summary){/ts}',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '{ts escape="sql"}Provides a list of address and telephone information for constituent records in your system.{/ts}', 0, 0, 1, NULL, NULL),
@@ -800,7 +804,8 @@ VALUES
  ('PayflowPro',         '{ts escape="sql"}PayflowPro{/ts}',             NULL,1,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
  ('FirstData',          '{ts escape="sql"}FirstData (aka linkpoint){/ts}', '{ts escape="sql"}FirstData (aka linkpoint){/ts}', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', '{ts escape="sql"}Mobile Payment{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', '{ts escape="sql"}Payment Processor Provider{/ts}', '{ts escape="sql"}Account{/ts}', '{ts escape="sql"}Password{/ts}',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
- ('TapPay', '{ts escape="sql"}TapPay Payment{/ts}', NULL, 1, 0, 'Merchant ID', '{ts escape="sql"}Partner Key{/ts}', '{ts}App ID{/ts}', '{ts}App Key{/ts}',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1);
+ ('TapPay', '{ts escape="sql"}TapPay Payment{/ts}', NULL, 1, 0, 'Merchant ID', '{ts escape="sql"}Partner Key{/ts}', '{ts}App ID{/ts}', '{ts}App Key{/ts}',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
+ ('TaiwanACH', '{ts escape="sql"}Taiwan ACH Payment{/ts}', NULL, 1, 0, '{ts}Bank Account Number{/ts}', '{ts}Sic Code{/ts}', '{ts}Bank Identification Number{/ts}', '{ts}Post Delegate Institution Code{/ts}',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0);
 
 
 -- the fuzzy default dedupe rules

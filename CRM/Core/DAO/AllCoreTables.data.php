@@ -561,6 +561,11 @@ return array(
     'class' => 'CRM_Contribute_DAO_ContributionPage',
     'table' => 'civicrm_contribution_page',
   ) ,
+  'CRM_Contribute_DAO_TaiwanACH' => array(
+    'name' => 'TaiwanACH',
+    'class' => 'CRM_Contribute_DAO_TaiwanACH',
+    'table' => 'civicrm_contribution_taiwanach',
+  ) ,
   'CRM_Contribute_DAO_Widget' => array(
     'name' => 'Widget',
     'class' => 'CRM_Contribute_DAO_Widget',

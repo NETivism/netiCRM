@@ -44,9 +44,29 @@
       <td class="crm-batch-created_date">{$row.created_date|crmDate}</td>
       <td class="crm-batch-modified_date">{$row.modified_date|crmDate}</td>
       <td class="crm-batch-type">{$row.batch_type}</td>
-      <td class="crm-batch-processed">{$row.processed}</td>
+      <td class="crm-batch-processed">
+        {$row.processed}
+        {if $row.statusCount}
+        <i class="zmdi zmdi-equalizer"></i></br>
+        <ul>
+          {foreach from=$row.statusCount item=count key=status}
+            <li>{$status}: {$count}</li>
+          {/foreach}
+        </ul>
+        {/if}
+      </td>
       <td class="crm-batch-status">{$row.batch_status}</td>
-      <td class="action">{$row.action}</td>
+      <td class="action">
+        {$row.action}
+        {if $row.actions}
+          {if $row.actions.download}
+            <i class="zmdi zmdi-download"></i> {$row.actions.download}
+          {elseif $row.actions.downloadExpired}
+            <i class="zmdi zmdi-cloud-off"></i> {$row.actions.downloadExpired}
+          {/if}
+          {if $row.actions.expiredDate}<br>{ts}Expired Date{/ts}: {$row.actions.expiredDate|crmDate}{/if}
+        {/if}
+      </td>
     </tr>
     {/foreach}
     </tbody>

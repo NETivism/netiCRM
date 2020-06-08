@@ -9,12 +9,13 @@
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020
+# 淑涵 詹 <amy0222@netivism.com.tw>, 2020
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-03-26 08:45+0000\n"
-"Last-Translator: charlesc <yeouhsin@gmail.com>\n"
+"PO-Revision-Date: 2020-06-03 07:02+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13046,23 +13047,23 @@ msgstr "前天"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous 2 Years"
-msgstr "上上年度"
+msgstr "前兩年度"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous 2 Quarters"
-msgstr "上上季"
+msgstr "前兩季"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous 2 Months"
-msgstr "上上個月"
+msgstr "前兩個月"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous 2 Weeks"
-msgstr "上上週"
+msgstr "前兩週"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous 2 Days"
-msgstr "兩天前"
+msgstr "前兩天"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Year"
@@ -30117,7 +30118,7 @@ msgstr "最少捐款"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "Add Premium"
-msgstr "編輯感謝禮"
+msgstr "新增感謝禮"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid ""
@@ -32782,7 +32783,7 @@ msgstr "以群組類別過濾搜尋。"
 
 #: templates/CRM/Group/Form/Search.tpl
 msgid "Filter search by visibility."
-msgstr "顯示過濾搜尋。"
+msgstr "以公開呈現與否過濾搜尋。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
@@ -43884,7 +43885,7 @@ msgid "Taiwan Bank"
 msgstr "台灣銀行"
 
 msgid "Account Number"
-msgstr "匯款帳號"
+msgstr "帳戶號碼"
 
 msgid "ATM"
 msgstr "ATM"
@@ -47502,3 +47503,251 @@ msgstr "已報名參加者"
 
 msgid "Registered - From"
 msgstr "登記日期 - 從"
+
+msgid "Copied receipt only"
+msgstr "單聯收據"
+
+msgid "Default Receipt Type"
+msgstr "預設收據格式"
+
+msgid "Transaction Fee Amount"
+msgstr "交易手續費"
+
+msgid ""
+"Your browser doesn't support embed form. Click button below to finish online"
+" form."
+msgstr "你的瀏覽器並未支援嵌入表單，請您點擊下方按鈕以完成線上填表"
+
+msgid "Visit Online Form"
+msgstr "前往線上表單"
+
+msgid "Payment processor needs Google account with credit card."
+msgstr "需有 Google 帳號、且已綁定信用卡才可使用"
+
+msgid "Email Receipt"
+msgstr "電子郵件收據"
+
+msgid "Add receipt as attachment in email."
+msgstr "寄送時同時開立收據在附檔給捐款人。"
+
+msgid ""
+"The quota of contacts is %1 to full. Please contact %2 to upgrade your plan."
+" You can read %3 know what will happen when reaching limit."
+msgstr "聯絡人的容量已經使用了 %1 ，請利用<a href='%2' target='_blank'>客服系統</a>進行方案升級。當聯絡人達到100%，您將不能再匯入名單。請參閱<a href='%3' target='_blank'>《當我達到聯絡人容量上限，會發生什麼事？》</a>"
+
+msgid ""
+"Congraturation! You have reached %1 of contacts quota. Please contact %2 to "
+"upgrade your plan. You can read %3 to know what will happen when reaching "
+"limit."
+msgstr "恭喜您，因為您積極募款辦活動，已累積支持者數量到達方案人數的 %1 ！邀請您透過<a href='%2' target='_blank'>客服系統</a>辦理方案升級，以募集更多支持者。目前您無法再從後台新增聯絡人（包括匯入、手動新增），當聯絡人達120%，會停用前台頁面。詳情請參閱<a href='%3' target='_blank'>《當我達到聯絡人容量上限，會發生什麼事？》</a>"
+
+msgid ""
+"Important!! Your contacts quota is over %1. Some of functions is disabled "
+"(Import Contact, Add new contact ... etc.). Please contact %2 to upgrade "
+"your plan."
+msgstr "【重要通知】目前聯絡人的容量已達 %1 ，我們即將停用前台頁面，例如募款頁、活動報名頁等。邀請您透過<a href='%2' target='_blank'>客服系統</a>，辦理方案升級，讓線上收捐、報名不中斷！"
+
+msgid "Goal Recurring Amount"
+msgstr "定期目標金額"
+
+msgid "Post Delegate Institution Code"
+msgstr "郵局委託機構代號"
+
+msgid "Taiwan ACH Payment"
+msgstr "ACH 代收代付"
+
+msgid "Recurring Donors Search"
+msgstr "定期定額捐款人搜尋"
+
+msgid ""
+"Explore your past, present or future recurring donors to support your "
+"organization."
+msgstr "根據定期定額的捐款狀況，找出四種類型的人，以維繫捐款關係或是重新啟動捐款。"
+
+msgid ""
+"Recurring donors matter! Explore your past, present or future recurring "
+"donors to support your organization."
+msgstr "定期定額捐款人是組織的重要支柱！根據定期定額的捐款狀況，找出四種類型的人，透過電子郵件、簡訊、電話進行分眾溝通或一對一聯繫，不論是要維繫關係或是重新啟動捐款，都能事半功倍。"
+
+msgid "active donors (and no past recurring donation)"
+msgstr "現在有進行中的定期捐款的人（過去沒有）"
+
+msgid "inactive donors (past recurring donors)"
+msgstr "曾經有/現在沒有進行中的定期定額的人"
+
+msgid "recurring donors (no matter active or inactive)"
+msgstr "現在有進行中的定期定額的人，或是，曾經有定期定額的人"
+
+msgid "not recurring donors (no matter with/without one-time donation)"
+msgstr "不曾有過定期定額的人（不管有無單筆）"
+
+msgid "giving level filter"
+msgstr "單筆金額篩選區間"
+
+msgid "Yearly Installments"
+msgstr "每年定期定額期數"
+
+msgid "Yearly Recurring Contributions"
+msgstr "每年捐款"
+
+msgid "Months Recurring Contributions"
+msgstr "期每月捐款"
+
+msgid "Years Recurring Contributions"
+msgstr "期每年捐款"
+
+msgid "Taiwan ACH ID"
+msgstr ""
+
+msgid "Post Office Account Type"
+msgstr "郵局帳號類型"
+
+msgid "Bank Branch"
+msgstr "銀行分行"
+
+msgid "Identifier Number"
+msgstr "身分證字號/統一編號"
+
+msgid "Stamp Verification"
+msgstr "核印狀態"
+
+msgid "Error on line %1:"
+msgstr "第 %1 行有錯誤："
+
+msgid "Word count of txt is wrong: %1"
+msgstr "第 %1 欄的字數有誤。"
+
+msgid "Header have wrong value."
+msgstr "首行資料有誤。"
+
+msgid "Footer have wrong value."
+msgstr "尾行資料有誤。"
+
+msgid "The data of order %1 have wrong value."
+msgstr "第 %1 項有錯誤資料。"
+
+msgid "There is process error on id: %1"
+msgstr "編號 %1 的資料執行時發生錯誤。"
+
+msgid "In %1, row %2 is not correct, input value is %3, format should be %4"
+msgstr "第 %1 行的第 %2 欄資料格式有誤，格式應為 %4 ，收到的字串為 %3。"
+
+msgid ""
+"In %1, word since %2 is not correct, input value is %3, format should be %4"
+msgstr "第 %1 行的第 %2 個字元開始的資料格式有誤，格式應為 %4 ，收到的字串為 %3。"
+
+msgid "Format is not correct. Input format is '%1'"
+msgstr "格式有誤，輸入的格式為「%1」。"
+
+msgid "Process Date"
+msgstr "執行日期"
+
+msgid "Type of upload file is not a responding file."
+msgstr "上傳的檔案格式並非回傳檔格式。"
+
+msgid "Status of recurring: %1 should be 'pending'."
+msgstr "定期定額編號: %1 狀態應為「待處理」。"
+
+msgid "ACH Type"
+msgstr "ACH 類型"
+
+msgid "Bank"
+msgstr "銀行"
+
+msgid "Post Office"
+msgstr "郵局"
+
+msgid "Bank book"
+msgstr "存簿"
+
+msgid "Postal transfer"
+msgstr "劃撥"
+
+msgid "Stamp Verification Status"
+msgstr "核印狀態"
+
+msgid "ACH"
+msgstr "ACH 代收代付"
+
+msgid "ACH Search"
+msgstr "台灣 ACH 搜尋"
+
+msgid "Bank Account"
+msgstr "銀行帳戶"
+
+msgid "Export ACH Stamp Verification File"
+msgstr "匯出 ACH 核印檔"
+
+msgid "Export ACH Transaction File"
+msgstr "匯出 ACH 扣款檔"
+
+msgid "%1 has error on format."
+msgstr "%1 格式有誤。"
+
+msgid "Export ACH Verification File"
+msgstr "匯出 ACH 核印檔"
+
+msgid ""
+"All selected recurrings must be pending. There are %1 recurrings not "
+"pending."
+msgstr "所有選取的定期定額狀態應為「待處理」，有 %1 筆定期定額狀態不正確。"
+
+msgid ""
+"All selected recurrings must be unverified. There are %1 recurrings not "
+"unverified."
+msgstr "所有選取的定期定額核印狀態應為「未核印」，有 %1 筆定期定額狀態不正確。"
+
+msgid ""
+"There are %1 recurrings have invoice ID, This behavior will overwrite them."
+msgstr "有 %1 筆定期定額已有產生核印對應的帳單編號，完成此動作將覆寫這些資料。"
+
+msgid "Verification Date"
+msgstr "核印日期"
+
+msgid ""
+"There already have file exported in the same day, if you want to rewrite it,"
+" please check 'rewrite' then submit."
+msgstr "在同一個核印日期已有匯出核印檔，若您要覆寫，請勾選「覆寫」並送出。"
+
+msgid ""
+"All selected recurrings must be in process. There are %1 recurrings not in "
+"process."
+msgstr "所有選取的定期定額狀態應為「進行中」，有 %1 筆定期定額狀態不正確。"
+
+msgid ""
+"All selected recurrings must be verified. There are %1 recurrings yet "
+"verified."
+msgstr "所有選取的定期定額核印狀態應為「核印完成」，有 %1 筆定期定額狀態不正確。"
+
+msgid "Rewrite"
+msgstr "覆寫"
+
+msgid "Stamp Verication Date"
+msgstr "核印日期"
+
+msgid "Import ACH"
+msgstr "匯入 ACH 回覆檔"
+
+msgid "New ACH"
+msgstr "新增 ACH 資料"
+
+msgid "Procecss Info"
+msgstr "解析資訊"
+
+msgid "Process ID"
+msgstr "回覆檔編號"
+
+msgid "Import Type"
+msgstr "回覆檔類型"
+
+msgid "Mode"
+msgstr "模式"
+
+msgid "Filter search by group mode."
+msgstr "以群組模式過濾搜尋"
+
+msgid "recurring donors (multiple times, active now and inactive past)"
+msgstr "現在有進行中的定期定額、且過去也曾經有定期定額的人"
+
+msgid "Upcoming Birthdays Search"
+msgstr "搜尋即將到來的生日"

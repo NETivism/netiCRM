@@ -85,8 +85,12 @@
         {/literal}
         </script>
         <tr class="crm-form-block-receiptAddrType">
-            <td class="label">{$form.receiptAddrType.label}</td><td>{$form.receiptAddrType.html}<br />
-            <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
+            <td class="label">{$form.receiptAddrType.label}</td>
+            <td>{$form.receiptAddrType.html}</td>
+        </tr>
+        <tr class="crm-form-block-receiptTypeDefault">
+            <td class="label">{$form.receiptTypeDefault.label}</td>
+            <td>{$form.receiptTypeDefault.html}</td>
         </tr>
         <tr class="crm-form-block-uploadBigStamp">
             <td class="label">{$form.uploadBigStamp.label}<div class="label-test">{ts}test{/ts}</div></td>

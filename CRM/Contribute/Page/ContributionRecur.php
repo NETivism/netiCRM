@@ -72,6 +72,22 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $values['contribution_status'] = $status[$values['contribution_status_id']];
       $this->assign('recur', $values);
 
+      // ach
+      $ach = CRM_Contribute_BAO_TaiwanACH::getValue($recur->id);
+      if ($ach) {
+        $stampStatus = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
+        $ach['stamp_verification_label'] = $stampStatus[$ach['stamp_verification']];
+        if ($ach['bank_code']) {
+          $ach['bank_code'] = CRM_Contribute_PseudoConstant::taiwanACH($ach['bank_code']);
+        }
+        if ($ach['stamp_verification'] == 2) {
+          $ach['stamp_verification_reason'] = $ach['data']['verification_failed_reason'];
+        }
+        $this->assign('ach', $ach);
+      }
+
+
+      // log
       $noteDetail = CRM_Core_BAO_Note::getNoteDetail($this->_id, 'civicrm_contribution_recur');
       $notes = array();
       foreach ($noteDetail as $note) {
@@ -166,7 +182,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       }
 
       // Get payment processor
-      if (!empty($paymentClass::$_hideFields)) {
+      if (!empty($paymentClass) && !empty($paymentClass::$_hideFields)) {
         $this->assign('hide_fields', $paymentClass::$_hideFields);
       }
 
