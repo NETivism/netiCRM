@@ -81,25 +81,7 @@
                     </span>
                   </div>
                 </li>
-                <li>
-                  <div class="crm-event-links">
-                    <i class="zmdi zmdi-link"></i>
-                    <span id="event-links-{$row.id}" class="btn-slide">{ts}Event Links{/ts}
-                      <ul class="panel" id="panel_links_{$row.id}">
-                        <li><a title="Register Participant" class="action-item" href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$row.id`"}">{ts}Register Participant{/ts}</a></li>
-                        <li><a title="Event Info" class="action-item" href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.id`" fe='true'}" target="_blank">{ts}Event Info{/ts}</a></li>
-                        {if $row.is_online_registration}
-                            <li><a title="Online Registration (Test-drive)" class="action-item" href="{crmURL p='civicrm/event/register' q="reset=1&action=preview&id=`$row.id`"}">{ts}Registration (Test-drive){/ts}</a></li>
-                            <li><a title="Online Registration (Live)" class="action-item" href="{crmURL p='civicrm/event/register' q="reset=1&id=`$row.id`" fe='true'}" target="_blank">{ts}Registration (Live){/ts}</a></li>
-                        {/if}
-                        {if $row.participant_listing_id}
-                            <li><a title="Participant Listing" class="action-item" href="{crmURL p='civicrm/event/participant' q="reset=1&id=`$row.id`"}">{ts}Public Participant Listing{/ts}</a></li>
-                        {/if}
-                        <li><a title="Traffic Source" class="action-item" href="{crmURL p='civicrm/track/report' q="reset=1&ptype=civicrm_event&pid=`$row.id`"}" target="_blank">{ts}Traffic Source{/ts}</a></li>
-                      </ul>
-                    </span>
-                  </div>
-                </li>
+                <li><a href="{crmURL p='civicrm/event/links' q="reset=1&id=`$row.id`"}" title="{ts}Event Links{/ts}"><i class="zmdi zmdi-link"></i>{ts}Event Links{/ts}</a></li>
               </ul>
             </td> 
             <td class="crm-event-start_date">{$row.start_date|crmDate} ~<br />{$row.end_date|crmDate}</td>
