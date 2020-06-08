@@ -21,7 +21,7 @@ elemContainerInner (nmeb-content): none
 elem (nme-elem): title font, text, color
 *}
 
-<div class="nme-tpl" data-template-level="block" data-template-name="title">
+<textarea class="nme-tpl" data-template-level="block" data-template-name="title">
 {* Template Content: BEGIN *}
 <table data-id="[nmeBlockID]" data-type="[nmeBlockType]" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-title nmeb" style="min-width: 100%;">
   <tbody class="nmeb-outer">
@@ -55,4 +55,4 @@ elem (nme-elem): title font, text, color
   </tbody>
 </table>
 {* Template Content: END *}
-</div>
+</textarea>

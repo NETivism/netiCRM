@@ -21,7 +21,7 @@ elemContainerInner (nmeb-content): button padding, font-family, font-size
 elem (nme-elem): button font, text, color
 *}
 
-<div class="nme-tpl" data-template-level="block" data-template-name="button">
+<textarea class="nme-tpl" data-template-level="block" data-template-name="button">
 {* Template Content: BEGIN *}
 <table data-id="[nmeBlockID]" data-type="[nmeBlockType]" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-button nmeb" style="min-width: 100%;">
   <tbody class="nmeb-outer">
@@ -31,7 +31,7 @@ elem (nme-elem): button font, text, color
           <tbody>
             <tr>
               <td align="center" valign="middle" class="nmeb-content" data-settings-target="elemContainerInner" style="font-family: Helvetica; font-size: 18px; padding: 18px;">
-                <a class="nmee-button nme-elem" title="[Button Text HERE]" href="#" target="_blank" data-settings-target="elem" style="font-weight: bold; letter-spacing: -0.5px; line-height: 100%; text-align: center; text-decoration: none; color: rgb(255, 255, 255);">[Button Text HERE]</a>
+                <a class="nmee-button nme-elem" href="#" target="_blank" data-settings-target="elem" style="font-weight: bold; letter-spacing: -0.5px; line-height: 100%; text-align: center; text-decoration: none; color: rgb(255, 255, 255);">[Button Text HERE]</a>
               </td>
             </tr>
           </tbody>
@@ -41,4 +41,4 @@ elem (nme-elem): button font, text, color
   </tbody>
 </table>
 {* Template Content: END *}
-</div>
+</textarea>

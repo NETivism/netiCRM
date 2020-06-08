@@ -1,4 +1,4 @@
-<div class="nme-tpl" data-template-level="mail" data-template-name="col-1-full-width">
+<textarea class="nme-tpl" data-template-level="mail" data-template-name="col-1-full-width">
 {* Template Content: BEGIN *}
 <center>
   <!-- Body Table: BEGIN -->
@@ -13,7 +13,7 @@
               <tr>
                 <!-- Mail Header: BEGIN -->
                 <td id="nme-mail-header" align="center" valign="top">
-                  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="nme-mail-container">
+                  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="nme-mail-container" style="border-collapse: collapse; mso-table-lspace: 0;mso-table-rspace: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; max-width: 680px !important;">
                     <tbody>
                       <tr>
                         <td valign="top" class="nme-mail-inner">
@@ -27,8 +27,8 @@
               </tr>
               <tr>
                 <!-- Mail Body: BEGIN -->
-                <td id="nme-mail-body" align="center" valign="top">
-                  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="nme-mail-container">
+                <td id="nme-mail-body" align="center" valign="top"">
+                  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="nme-mail-container" style="border-collapse: collapse; mso-table-lspace: 0;mso-table-rspace: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; max-width: 680px !important; background-color: #fff;">
                     <tbody>
                       <tr>
                         <td valign="top" class="nme-mail-inner">
@@ -43,7 +43,7 @@
               <tr>
                 <!-- Mail Footer: BEGIN -->
                 <td id="nme-mail-footer" align="center" valign="top">
-                  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="nme-mail-container">
+                  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="nme-mail-container" style="border-collapse: collapse; mso-table-lspace: 0;mso-table-rspace: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; max-width: 680px !important;">
                     <tbody>
                       <tr>
                         <td valign="top" class="nme-mail-inner">
@@ -66,4 +66,4 @@
   <!-- Body Table: END -->
 </center>
 {* Template Content: END *}
-</div>
+</textarea>

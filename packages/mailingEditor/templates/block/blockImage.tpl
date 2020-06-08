@@ -21,7 +21,7 @@ elemContainerInner (nmeb-content): image align
 elem (nme-elem): none
 *}
 
-<div class="nme-tpl" data-template-level="block" data-template-name="image">
+<textarea class="nme-tpl" data-template-level="block" data-template-name="image">
 {* Template Content: BEGIN *}
 <table data-id="[nmeBlockID]" data-type="[nmeBlockType]" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-image nmeb" style="min-width: 100%;">
   <tbody class="nmeb-outer">
@@ -41,4 +41,4 @@ elem (nme-elem): none
   </tbody>
 </table>
 {* Template Content: END *}
-</div>
+</textarea>
