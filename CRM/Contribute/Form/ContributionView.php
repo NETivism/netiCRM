@@ -197,6 +197,10 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     $this->assign('lineItem', empty($lineItems) ? FALSE : $lineItems);
     $values['totalAmount'] = $values['total_amount'];
 
+    if ($values['contribution_status_id'] == 1 && CRM_Contribute_BAO_ContributionType::deductible($values['contribution_type_id'])) {
+      $this->assign('is_print_receipt', 1);
+    }
+
     // assign values to the template
     $this->assign($values);
 

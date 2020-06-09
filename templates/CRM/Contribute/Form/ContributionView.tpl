@@ -190,7 +190,7 @@
 	{if $receipt_id}
     	<tr>
     	    <td class="label">{ts}Receipt ID{/ts}</td>
-        	<td>{$receipt_id} (<a href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank">{ts}Print Contribution Receipts{/ts}</a>)</td>
+        	<td>{$receipt_id} {if $is_print_receipt}(<a href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank">{ts}Print Contribution Receipts{/ts}</a>){/if}</td>
          
     	</tr>
 	{/if}	

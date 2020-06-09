@@ -127,7 +127,7 @@
                 <td>{$form.from_email_address.html}</td>
             </tr>
             {if $have_attach_receipt_option}
-            <tr id="is_attach_receipt" class="crm-contribution-form-block-is_attach_receipt">
+            <tr id="attach-receipt-option" class="crm-contribution-form-block-is_attach_receipt">
                 <td class="label">{$form.is_attach_receipt.label}</td>
                 <td>{$form.is_attach_receipt.html}</td>
             </tr>
@@ -164,8 +164,7 @@
                 <div id="receipt-option">
                   {if $email and $outBound_option != 2 and !$receipt_id}
                     <div class="crm-receipt-option crm-contribution-form-block-is_email_receipt">
-                      <div class="label">{$form.is_email_receipt.label}</div>
-                      <div>{$form.is_email_receipt.html} <span class="description">{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}</span></div>
+                      <div>{$form.is_email_receipt.html}{$form.is_email_receipt.label} <span class="description">{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}</span></div>
                     </div>
                   {elseif $context eq 'standalone' and $outBound_option != 2}
                     <div id="email-receipt" style="display:none;" class="crm-contribution-form-block-is_email_receipt">
@@ -178,9 +177,8 @@
                     <div>{$form.from_email_address.html}</div>
                   </div>
                   {if $have_attach_receipt_option}
-                  <div id="is_attach_receipt" class="crm-contribution-form-block-is_attach_receipt">
-                    <div class="label">{$form.is_attach_receipt.label}</div>
-                    <div>{$form.is_attach_receipt.html}<span class="description">{ts}Add receipt as attachment in email.{/ts}</span></div>
+                  <div id="attach-receipt-option" class="crm-contribution-form-block-is_attach_receipt">
+                    <div>{$form.is_attach_receipt.html}{$form.is_attach_receipt.label}<span class="description">{ts}Add receipt as attachment in email.{/ts}</span></div>
                   </div>
                   {/if}
                   <div class="crm-receipt-option">
@@ -426,7 +424,7 @@ function loadPanes( id ) {
 {include file="CRM/common/showHideByFieldValue.tpl"
     trigger_field_id    ="is_email_receipt"
     trigger_value       = 1
-    target_element_id   ="is_attach_receipt"
+    target_element_id   ="attach-receipt-option"
     target_element_type ="block"
     field_type          ="radio"
     invert              = 0
@@ -439,7 +437,7 @@ function loadPanes( id ) {
 
 {/if} {* closing of main custom data if *} 
 
-
+{if !$smarty.get.snippet}
 {literal}
 <script type="text/javascript">
 
@@ -447,6 +445,10 @@ Number.prototype.pad = function (len) {
   return (new Array(len+1).join("0") + this).slice(-len);
 }
 cj(document).ready(function(){
+
+    var $contributionTypeId = cj('#contribution_type_id');
+    var $contributionStatusId = cj('#contribution_status_id');
+
    if(cj('#receipt_date').val()){
      cj('#have_receipt').attr('checked', 'checked');
      cj('#have_receipt').attr('disabled', 'disabled');
@@ -455,17 +457,23 @@ cj(document).ready(function(){
      cj('#receipt-option').hide();
    }
    cj('#have_receipt').on('click', function(){
-     if(cj(this).attr('checked') == 'checked'){
-       var d = new Date();
-       cj("#receipt_date").datepicker('setDate', d);
-       cj("#receipt_date_time").val(d.getHours().pad(2)+':'+d.getMinutes().pad(2));
-       cj('#receipt-option').show();
-     }
-     else{
-       cj('#receipt-option').hide();
-       clearDateTime('receipt_date');
-     }
+      showHideFields();
+      if(cj('#have_receipt').attr('checked') == 'checked'){
+        var d = new Date();
+        cj("#receipt_date").datepicker('setDate', d);
+        cj("#receipt_date_time").val(d.getHours().pad(2)+':'+d.getMinutes().pad(2));
+      }
+      else{
+        clearDateTime('receipt_date');
+      }
    });
+   $contributionTypeId.on('change', function(){
+     showHideFields();
+   });
+   $contributionStatusId.on('change', function(){
+     showHideFields();
+   });
+   showHideFields();
    cj("#manual-receipt-id").click(function(e){
      var okok = confirm("{/literal}{ts}This action will break auto serial number. Please confirm you really want to change receipt number manually.{/ts}{literal}");
      if(okok){
@@ -474,6 +482,25 @@ cj(document).ready(function(){
      }
      unbind("#manual-receipt-id", 'click');
    });
+
+  function showHideFields() {
+    if(cj('#have_receipt').attr('checked') == 'checked'){
+      cj('#receipt-option').show();
+    }
+    else{
+      cj('#receipt-option').hide();
+    }
+    var deductible_type = $contributionTypeId[0].dataset['deductible_type'].split(',');
+    if (deductible_type.includes($contributionTypeId[0].value) && $contributionStatusId[0].value == '1') {
+      cj('#receipt').css('display', 'table-row');
+    }
+    else {
+      cj('#receipt').css('display', 'none');
+      cj('#is_email_receipt').removeAttr('checked');
+      cj('#is_attach_receipt').removeAttr('checked');
+    }
+  }
+
 });
 cj(function() {
    cj().crmaccordions(); 
@@ -553,3 +580,4 @@ cj("#total_amount").css('background-color', '#ffffff');
 }
 </script>
 {/literal}
+{/if}
