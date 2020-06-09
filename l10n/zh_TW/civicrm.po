@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-08 06:07+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-06-09 06:52+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45995,7 +45995,7 @@ msgid "Please provide a Text"
 msgstr ""
 
 msgid "You can configure the SMS message body up to %1 characters"
-msgstr "簡訊內文最多可輸入 %1 個字符"
+msgstr "簡訊一則最多可輸入 %1 個字符，超過將被多扣點數。系統判斷此簡訊可能會超過 1 點，若確定要發送請按下「傳送簡訊」"
 
 msgid "The body of the SMS cannot exceed %1 characters."
 msgstr "簡訊內文不可輸入超過 %1 個字符"
@@ -46131,7 +46131,7 @@ msgstr "簡訊供應商"
 
 #: templates/CRM/Contact/Form/Task/SMSCommon.tpl
 msgid "You can insert up to %1 characters. You have entered %2 characters."
-msgstr "您可以輸入最多 %1 個字符，目前已輸入 %2 個字符。"
+msgstr "一則簡訊最多 %1 個字符，超過將被多扣點數。目前已輸入 %2 個字符。"
 
 #: CRM/Contact/Form/Task/SMSCommon.php
 msgid "Name The SMS"
