@@ -157,25 +157,31 @@
                 <tr id="checkNumber" class="crm-contribution-form-block-check_number"><td class="label">{$form.check_number.label}</td><td>{$form.check_number.html|crmReplace:class:six}</td></tr>
             {/if}
             <tr class="crm-contribution-form-block-trxn_id"><td class="label">{$form.trxn_id.label}</td><td{$valueStyle}>{$form.trxn_id.html|crmReplace:class:twelve} {help id="id-trans_id"}</td></tr>
+            {if $email and $outBound_option != 2 and !$receipt_id}
+              <tr class="crm-contribution-form-block-is_email_receipt">
+                <td></td><td>{$form.is_email_receipt.html}{$form.is_email_receipt.label} <span class="description">{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}</span>
+                  <div id="from_email_address" class="crm-contribution-form-block-from_email_address">
+                    <div class="label">{$form.from_email_address.label}</div>
+                    <div>{$form.from_email_address.html}</div>
+                  </div>
+                </td>
+              </tr>
+            {elseif $context eq 'standalone' and $outBound_option != 2}
+              <tr id="email-receipt" style="display:none;" class="crm-contribution-form-block-is_email_receipt">
+                <td class="label">{$form.is_email_receipt.label}</td>
+                <td>{$form.is_email_receipt.html} <span class="description">{ts}Automatically email a payment notification for this contribution to {/ts}<span id="email-address"></span>?</span>
+                  <div id="from_email_address" class="crm-contribution-form-block-from_email_address">
+                    <div class="label">{$form.from_email_address.label}</div>
+                    <div>{$form.from_email_address.html}</div>
+                  </div>
+                </td>
+              </tr>
+            {/if}
             <tr id="receipt" class="crm-contribution-form-block-receipt">
               <td class="label"><label>{ts}Receipt{/ts}</label></td>
               <td>
                 <div class="have-receipt"><input value="1" class="form-checkbox" type="checkbox" name="have_receipt" id="have_receipt" /> <span class="description">{ts}Have receipt?{/ts}</span></div>
                 <div id="receipt-option">
-                  {if $email and $outBound_option != 2 and !$receipt_id}
-                    <div class="crm-receipt-option crm-contribution-form-block-is_email_receipt">
-                      <div>{$form.is_email_receipt.html}{$form.is_email_receipt.label} <span class="description">{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}</span></div>
-                    </div>
-                  {elseif $context eq 'standalone' and $outBound_option != 2}
-                    <div id="email-receipt" style="display:none;" class="crm-contribution-form-block-is_email_receipt">
-                      <div class="label">{$form.is_email_receipt.label}</div>
-                      <div>{$form.is_email_receipt.html} <span class="description">{ts}Automatically email a payment notification for this contribution to {/ts}<span id="email-address"></span>?</span></div>
-                    </div>
-                  {/if}
-                  <div id="from_email_address" class="crm-contribution-form-block-from_email_address">
-                    <div class="label">{$form.from_email_address.label}</div>
-                    <div>{$form.from_email_address.html}</div>
-                  </div>
                   {if $have_attach_receipt_option}
                   <div id="attach-receipt-option" class="crm-contribution-form-block-is_attach_receipt">
                     <div>{$form.is_attach_receipt.html}{$form.is_attach_receipt.label}<span class="description">{ts}Add receipt as attachment in email.{/ts}</span></div>
@@ -496,7 +502,6 @@ cj(document).ready(function(){
     }
     else {
       cj('#receipt').css('display', 'none');
-      cj('#is_email_receipt').removeAttr('checked');
       cj('#is_attach_receipt').removeAttr('checked');
     }
   }
