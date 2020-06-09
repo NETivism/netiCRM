@@ -79,10 +79,27 @@
     </tr>
     <tr class="crm-contribution-form-block-min_contribution">
        <td class="label">{$form.min_contribution.label}</td>
-       <td class="html-adjust">{$form.min_contribution.html|crmMoney}<br />
-          <span class="description">{ts}The minimum contribution amount required to be eligible to select this premium. If you want to offer it to all contributors regardless of contribution amount, enter '0'. If display of minimum contribution amounts is enabled then this text is displayed:{/ts} <em>{ts}(Contribute at least X to be eligible for this gift.){/ts}</em></span>
-       </td>
+       <td class="html-adjust">{ts}Min Contribution{/ts} {$form.min_contribution.html|crmMoney}</td>
     </tr>
+    <tr class="crm-contribution-form-block-calculate_mode">
+      <td class="label"><label>{ts}Threshold{/ts} - {ts}Recurring Contribution{/ts} <span class="crm-marker">*</span></label></td>
+      <td class="html-adjust">
+        <table class="form-layout-compressed">
+          <tr>
+            <td class="html-adjust">
+              <div class="calculate-mode">{$form.calculate_mode.html}</div>
+              <div class="min-contribution-recur hiddenElement">
+                <label class="mode-first hiddenElement">{ts}Min contribution of first time donation{/ts}</label>
+                <label class="mode-cumulative hiddenElement" >{ts}Grand Total of recurring amount{/ts}</label>
+                {$form.min_contribution_recur.html|crmMoney}
+              </div>
+              <div class="installments hiddenElement">
+                <label>{ts}Calculation when unlimit installments{/ts}</label> {$form.installments.html}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
     <tr class="crm-contribution-form-block-price">
        <td class="label">{$form.price.label}</td>
        <td class="html-adjust">{$form.price.html|crmMoney}<br />
@@ -180,6 +197,30 @@ function select_option() {
   add_upload_file_block('image');
 }
 
+cj(document).ready(function($){
+  var checkMode = function() {
+    $("div.min-contribution-recur, div.installments").css('margin-left', '50px');
+    var $checked = $("input[name=calculate_mode]:checked");
+    var mode = $checked.val();
+    $("div.min-contribution-recur").insertAfter($checked.closest('.crm-form-radio'));
+    if (mode == 'first') {
+      $("div.min-contribution-recur").removeClass('hiddenElement');
+      $('.mode-first').removeClass('hiddenElement');
+      $('.mode-cumulative').addClass('hiddenElement');
+      $('div.installments').addClass('hiddenElement');
+    }
+    else if (mode == 'cumulative') {
+      $("div.min-contribution-recur").removeClass('hiddenElement');
+      $('.mode-first').addClass('hiddenElement');
+      $('.mode-cumulative').removeClass('hiddenElement');
+      $('div.installments').removeClass('hiddenElement');
+    }
+  }
+  $("input[name=calculate_mode]").click(function() {
+    checkMode();
+  });
+  checkMode();
+});
 {/literal}
 </script>
 

@@ -150,14 +150,22 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->addRule('uploadFile', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '1000x1000');
 
 
-    $this->add('text', 'price', ts('Market Value'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'price'), TRUE);
+    $this->addNumber('price', ts('Market Value'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'price'), TRUE);
     $this->addRule('price', ts('Please enter the Market Value for this product.'), 'money');
 
-    $this->add('text', 'cost', ts('Actual Cost of Product'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'cost'));
+    $this->addNumber('cost', ts('Actual Cost of Product'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'cost'));
     $this->addRule('price', ts('Please enter the Actual Cost of Product.'), 'money');
 
-    $this->add('text', 'min_contribution', ts('Minimum Contribution Amount'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'min_contribution'), TRUE);
+    $this->addNumber('min_contribution', ts('Threshold').' - '.ts('Non-Recurring Contribution'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'min_contribution'), TRUE);
     $this->addRule('min_contribution', ts('Please enter a monetary value for the Minimum Contribution Amount.'), 'money');
+
+    $options = array(
+      'first' => ts('Non-Cumulative Mode'),
+      'cumulative' => ts('Cumulative Mode'),
+    );
+    $this->addRadio('calculate_mode', '', $options, NULL, '<br>');
+    $this->addNumber('min_contribution_recur', '');
+    $this->addNumber('installments', '');
 
     $this->add('textarea', 'options', ts('Options'), 'rows=3, cols=60');
 
