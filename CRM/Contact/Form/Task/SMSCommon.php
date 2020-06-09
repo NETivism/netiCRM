@@ -320,7 +320,7 @@ class CRM_Contact_Form_Task_SMSCommon {
    * @param array $fields
    *   The input form values.
    * @param array $dontCare
-   * @param array $self
+   * @param object $self
    *   Additional values form 'this'.
    *
    * @return bool|array
@@ -339,8 +339,10 @@ class CRM_Contact_Form_Task_SMSCommon {
         $messageCheck = CRM_Utils_Array::value('sms_text_message', $fields);
         $messageCheck = str_replace("\r\n", "\n", $messageCheck);
         if(preg_match ("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)){
-          if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR)) {
+          $forceSend = $self->get('force_send');
+          if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR) && !$forceSend) {
             $errors['sms_text_message'] = ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_ZH_SMS_CHAR));
+            $self->set('force_send', TRUE);
           }
         }
         else {
@@ -423,6 +425,10 @@ class CRM_Contact_Form_Task_SMSCommon {
       $smsParams,
       $contactIds
     );
+
+    if ($form->get('force_send')) {
+      $form->set('force_send', FALSE);
+    }
 
     if ($countSuccess > 0) {
       CRM_Core_Session::setStatus(ts('One message was sent successfully.', array(
