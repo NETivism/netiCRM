@@ -169,18 +169,18 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
     $this->add('textarea', 'options', ts('Options'), 'rows=3, cols=60');
 
-    $this->add('select', 'period_type', ts('Period Type'), array('' => '- select -', 'rolling' => 'Rolling', 'fixed' => 'Fixed'));
+    $this->add('select', 'period_type', ts('Period Type'), array('' => ts('- select -'), 'rolling' => ts('rolling'), 'fixed' => ts('fixed')));
 
     $this->add('text', 'fixed_period_start_day', ts('Fixed Period Start Day'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'fixed_period_start_day'));
 
 
-    $this->add('Select', 'duration_unit', ts('Duration Unit'), array('' => '- select period -', 'day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'));
+    $this->add('Select', 'duration_unit', ts('Duration Unit'), array('' => ts('- select -'), 'day' => ts('day'), 'week' => ts('week'), 'month' => ts('month'), 'year' => ts('year')));
 
     $this->add('text', 'duration_interval', ts('Duration'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'duration_interval'));
 
-    $this->add('Select', 'frequency_unit', ts('Frequency Unit'), array('' => '- select period -', 'day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'));
+    $this->add('Select', 'frequency_unit', ts('Frequency Unit'), array('' => ts('- select -'), 'day' => ts('day'), 'week' => ts('week'), 'month' => ts('month'), 'year' => ts('year')));
 
-    $this->add('text', 'frequency_interval', ts('Frequency'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'frequency_interval'));
+    $this->add('text', 'frequency_interval', ts('Frequency Interval'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'frequency_interval'));
 
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
@@ -324,8 +324,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
       }
 
       // fix the money fields
-      foreach (array(
-        'cost', 'price', 'min_contribution') as $f) {
+      foreach (array('cost', 'price', 'min_contribution', 'min_contribution_recur') as $f) {
         $params[$f] = CRM_Utils_Rule::cleanMoney($params[$f]);
       }
 
