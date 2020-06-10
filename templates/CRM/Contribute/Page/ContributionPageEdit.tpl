@@ -37,6 +37,19 @@
     <a href="#" class="button url-shorten" data-url-shorten="url_to_copy"><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
   </span>
 </div>
+{include file="CRM/common/ShortenURL.tpl"}
+<script>{literal}
+  cj(document).ready( function($) {
+    $( "#shorten-url" ).dialog({
+      modal: true,
+      buttons: {
+        Ok: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+  } );
+  {/literal}</script>
 {else}
 <div class="messages">
   {ts}This page is currently <strong>inactive</strong> (not accessible to visitors).{/ts}
