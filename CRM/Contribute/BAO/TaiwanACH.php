@@ -449,18 +449,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $timezone = date_default_timezone_get();
     date_default_timezone_set('GMT');
     $lastTransactLogTimeId = strtotime('19700101T'.$lastTransactLogTime);
-
-    $sequence = new CRM_Core_DAO_Sequence();
-    $sequence->name = "ACH Transaction";
-    $lastSequenceID = 0;
-    if ($sequence->find(TRUE)) {
-      $lastSequenceID = $sequence->value;
-    }
-    $transactLogTimeId = max($lastTransactLogTimeId, $lastSequenceID) + 1;
+    $transactLogTimeId = $lastTransactLogTimeId + 1;
     $params['transact_id'] = (int) date('Gis', $transactLogTimeId);
-    $sequence->value = $transactLogTimeId;
-    $sequence->timestamp = CRM_REQUEST_TIME;
-    $sequence->save();
     date_default_timezone_set($timezone);
 
     if ($type == 'txt') {
@@ -578,7 +568,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // Generate Body Table
     $i = 1;
     foreach ($achDatas as $achData) {
-      $achData['invoice_id'] = $params['date'].'_'.$i;
+      $rand = base_convert(rand(16, 255), 10, 16);
+      $achData['invoice_id'] = "{$params['date']}_{$i}_{$rand}";
       CRM_Contribute_BAO_TaiwanACH::add($achData);
       $row = array(
         str_pad($i, 6, '0', STR_PAD_LEFT),
@@ -693,7 +684,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $totalAmount = 0;
     foreach ($achDatas as $achData) {
       $contribution = self::createContributionByACHData($achData);
-      $invoice_id = "{$params['transact_date']}_{$params['transact_id']}_$i";
+      $rand = base_convert(rand(16, 255), 10, 16);
+      $invoice_id = "{$params['transact_date']}_{$params['transact_id']}_{$i}_{$rand}";
       CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'invoice_id', $invoice_id);
       $params['contribution_ids'][] = $contribution->id;
       $identifier_number = str_pad($achData['identifier_number'], 10, ' ', STR_PAD_RIGHT);
@@ -716,7 +708,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 8),
         ' ',
         str_pad($identifier_number, 20, ' ', STR_PAD_RIGHT),
-        str_pad($contribution->id, 40, ' ', STR_PAD_RIGHT),
+        str_pad($contribution->trxn_id, 40, ' ', STR_PAD_RIGHT),
         str_repeat(' ', 10),
         str_repeat('0', 5),
         str_repeat(' ', 20),
@@ -759,7 +751,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $totalAmount = 0;
     foreach ($achDatas as $achData) {
       $contribution = self::createContributionByACHData($achData);
-      $invoice_id = "{$params['transact_date']}_{$params['transact_id']}_$i";
+      $rand = base_convert(rand(16, 255), 10, 16);
+      $invoice_id = "{$params['transact_date']}_{$params['transact_id']}_{$i}_{$rand}";
       CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'invoice_id', $invoice_id);
       $params['contribution_ids'][] = $contribution->id;
       $bankAccount = str_pad($achData['bank_account'], 14, '0', STR_PAD_RIGHT);
@@ -783,7 +776,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 2),
         $month,
         str_repeat(' ', 5),
-        str_pad("{$params['transact_id']}_{$contribution->id}", 20, ' ', STR_PAD_LEFT),
+        str_pad("{$params['transact_id']}-{$contribution->trxn_id}", 20, ' ', STR_PAD_LEFT),
         str_repeat(' ', 10),
       );
       $checkResults[$i] = self::doCheckParseRow($row, self::POST, self::TRANSACTION, 'body');
@@ -847,12 +840,17 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $ids = array();
     $contribution = CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);
     if (!empty($contribution->id)) {
-      $contribution->trxn_id = $contribution->id;
+      $contribution->trxn_id = self::genTrxnId($contribution);
       $contribution->save();
     }
 
     return $contribution;
 
+  }
+
+  static private function genTrxnId($contribution) {
+    $rand = base_convert(rand(16, 255), 10, 16);
+    return "{$contribution->contribution_recur_id}_{$contribution->id}_{$rand}";
   }
 
   static function parseUpload($content) {
@@ -948,10 +946,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
       else if ($processType = self::TRANSACTION) {
         if ($instrumentType == self::BANK) {
-          $rearrangeData[$data[18]] = $data;
+          $ids = explode('_', $data[18]);
+          $rearrangeData[$ids[1]] = $data;
         }
         else if ($instrumentType == self::POST) {
-          $ids = explode('_', $data[18]);
+          $ids = explode('-', $data[18]);
+          $ids = explode('_', $ids[1]);
           $rearrangeData[$ids[1]] = $data;
         }
       }
@@ -972,7 +972,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $entityId = $firstLine[3];
       }
       if ($processType == self::TRANSACTION) {
-        $ids = explode('_', $firstLine[18]);
+        $ids = explode('-', $firstLine[18]);
         $entityId = $ids[0];
       }
     }
@@ -1093,7 +1093,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $wordFormat = $match[1];
       $wordLength = (int)$match[2];
       if ($wordFormat == 'X') {
-        $regexp = "/^[\w ]{{$wordLength}}$/";
+        $regexp = "/^[\w-_ ]{{$wordLength}}$/";
       }
       elseif ($wordFormat == '9') {
         $regexp = "/^[\d ]{{$wordLength}}$/";
