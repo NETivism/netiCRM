@@ -398,6 +398,24 @@
 						blockID = block.id ? block.id : blockType + "-" + _renderID(),
 						disallowSortType = ["header", "footer"];
 
+				let setStyles = function($nmeb, blockStyles) {
+					if (_domElemExist($nmeb) && Object.getOwnPropertyNames(blockStyles).length > 0) {
+						for (let styleTarget in blockStyles) {
+							let $styleTarget = $nmeb.find("[data-settings-target='" + styleTarget + "']");
+
+							for (let styleProperty in blockStyles[styleTarget]) {
+								let styleValue = blockStyles[styleTarget][styleProperty];
+								$styleTarget.css(styleProperty, styleValue);
+
+								// If style property is 'background-color', also need to set value to 'bgcolor' dom attribute, because some versions of the email application do not support 'background-color'
+								if (styleProperty == "background-color") {
+									$styleTarget.attr("bgcolor", styleValue);
+								}
+							}
+						}
+					}
+				}
+
 				if (blockMode == "view") {
 					//_loadTemplate("block--edit", "block", "default", targetContainer);
 					//_nmeBlockControl.render(blockType);
@@ -418,14 +436,7 @@
 
 						if ($nmeb.length) {
 							// Set styles
-							for (let styleTarget in block.styles) {
-								let $styleTarget = $nmeb.find("[data-settings-target='" + styleTarget + "']");
-
-								for (let styleProperty in block.styles[styleTarget]) {
-									let styleValue = block.styles[styleTarget][styleProperty];
-									$styleTarget.css(styleProperty, styleValue);
-								}
-							}
+							setStyles($nmeb, block.styles);
 
 							if ($nmebElem.length) {
 								let decodeContent = "";
@@ -532,14 +543,7 @@
 							$nmeb.attr("data-id", blockID);
 
 							// Set styles
-							for (let styleTarget in block.styles) {
-								let $styleTarget = $nmeb.find("[data-settings-target='" + styleTarget + "']");
-
-								for (let styleProperty in block.styles[styleTarget]) {
-									let styleValue = block.styles[styleTarget][styleProperty];
-									$styleTarget.css(styleProperty, styleValue);
-								}
-							}
+							setStyles($nmeb, block.styles);
 
 							if ($nmebElem.length) {
 								let decodeContent = "";
@@ -1064,7 +1068,12 @@
 
 					if (blockType == "button") {
 						let bgColor = color.toHEXA().toString();
+
+						// Update color to dom
 						$block.find("[data-settings-target='elemContainer']").css("background-color", bgColor);
+						$block.find("[data-settings-target='elemContainer']").attr("bgcolor", bgColor);
+
+						// Update color to json
 						_data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
 						_nmeData.update();
 					}
