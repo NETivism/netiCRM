@@ -165,6 +165,35 @@
 			.replace(/'/g, "&#039;");
 	};
 
+	var _domElemExist = function($elem) {
+		var $elem = typeof $elem !== "undefined" ? $elem : "";
+
+		if ($elem) {
+			if (typeof $elem === "object" && $elem.length) {
+				return true;
+			}
+
+			if (typeof $elem === "string") {
+				$elem = document.getElementById($elem);
+
+				if ($elem) {
+					if (typeof $elem === "object" && $elem.length) {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		else {
+			return false;
+		}
+	};
+
   var _getViewport = function() {
     _viewport = {
       width  : window.innerWidth,
@@ -372,7 +401,7 @@
 				if (blockMode == "view") {
 					//_loadTemplate("block--edit", "block", "default", targetContainer);
 					//_nmeBlockControl.render(blockType);
-					if ($target.length) {
+					if (_domElemExist($target)) {
 						let	output = "",
 								blockContent = _tpl.block[blockType];
 
@@ -461,7 +490,7 @@
 				if (blockMode == "edit") {
 					//_loadTemplate("block--edit", "block", "default", targetContainer);
 					//_nmeBlockControl.render(blockType);
-					if ($target.length) {
+					if (_domElemExist($target)) {
 						let blockContent = _tpl.block[blockType],
 								blockEditContent = _tpl.block.edit,
 								blockSortable = "true";
@@ -585,6 +614,7 @@
 										break;
 								}
 
+								_nmeBlockControl.render(blockID, blockType);
 								_editable();
 								_colorable();
 							}
@@ -611,7 +641,8 @@
 		clone: function(data, $target) {
 			let cloneData = !_objIsEmpty(data) ? data : null;
 
-			if ($target.length) {
+			if (_domElemExist($target)) {
+				console.log(cloneData);
 				_nmeBlock.add(cloneData, "edit", $target, "after");
 			}
 		},
@@ -656,13 +687,11 @@
 						for (let blockID in _data.sections[section].blocks) {
 							let blockData = blocksData[blockID];
 							_nmeBlock.add(blockData, "edit", $(blocksContainer));
-							_nmeBlockControl.render(blockID, blockData.type);
 						}
 
 						_editable();
 						_sortable();
 						_colorable();
-						_nmeBlockControl.init();
 						_nmePanels();
 						_nmePreview.init();
 						_onScreenCenterElem(".nme-block");
@@ -962,7 +991,7 @@
 			let targetSelector = "#" + elemID,
 					$target = $(targetSelector);
 
-			if ($target.length) {
+			if (_domElemExist($target)) {
 				const pickr = new Pickr({
 					el: targetSelector,
 					theme: 'nano',
@@ -1127,10 +1156,11 @@
 				}
 
 				$block.find(".nme-block-actions").prepend(output);
+				_nmeBlockControl.init();
 			}
 		},
 		init: function() {
-			$(".nme-block-control").on("click", ".handle-btn", function(event) {
+			$(".nme-block-control").off("click").on("click", ".handle-btn", function(event) {
 				event.preventDefault();
 				event.stopPropagation();
 
@@ -1186,7 +1216,7 @@
 
 					cloneData.id = cloneBlockID;
 					_data["sections"][section]["blocks"][cloneBlockID] = cloneData;
-					_nmeBlock.clone(cloneData, "#" + blockDomID);
+					_nmeBlock.clone(cloneData, $("#" + blockDomID));
 					_sortables[section]["order"] = _sortables[section]["inst"].toArray();
 					_nmeData.sort(_sortables[section]["order"], section);
 				}
@@ -1402,7 +1432,7 @@
 			if (blockID) {
 				let $target = $(".nme-block[data-id='" + blockID + "']");
 
-				if ($target.length) {
+				if (_domElemExist($target)) {
 					let $img = $target.find(".nmee-image");
 
 					if ($img.length) {
