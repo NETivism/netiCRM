@@ -47519,3 +47519,6 @@ msgstr ""
 
 msgid "Shorten URL"
 msgstr ""
+
+msgid "Change Payment Method"
+msgstr ""

@@ -99,6 +99,8 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
           $this->_entityTable = 'civicrm_contribution_page';
           break;
       }
+      $this->set('entityId', $this->_entityId);
+      $this->set('entityTable', $this->_entityTable);
 
       $this->_pass = $pass;
     }
