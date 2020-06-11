@@ -40,13 +40,19 @@
 {include file="CRM/common/ShortenURL.tpl"}
 <script>{literal}
   cj(document).ready( function($) {
-    $( "#shorten-url" ).dialog({
+    $("#shorten-url").dialog({
       modal: true,
       buttons: {
-        Ok: function() {
-          $( this ).dialog( "close" );
+        OK: function() {
+          $(this).dialog("close");
         }
-      }
+      },
+      width: "600px",
+      autoOpen: false,
+    });
+
+    $(".url-shorten").click(function(){
+        $("#shorten-url").dialog("open");
     });
   } );
   {/literal}</script>
