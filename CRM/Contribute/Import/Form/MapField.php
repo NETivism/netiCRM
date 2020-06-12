@@ -926,6 +926,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $statusFieldName = $this->get('statusFieldName');
     $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvidea, $mapperPCP);
 
+    $parser->_dateFormats = $this->get('dateFormats');
+    $parser->_skipColumnHeader = $this->get('skipColumnHeader');
     $parser->run(
       $importTableName,
       $mapper,
