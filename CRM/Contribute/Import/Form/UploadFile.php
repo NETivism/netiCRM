@@ -199,9 +199,6 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
       $this->set('createContactOption', $createContactOption);
     }
 
-    $session = CRM_Core_Session::singleton();
-    $session->set("dateTypes", $dateFormats);
-
     // Get the PEAR::DB object
     $dao = new CRM_Core_DAO();
     $db = $dao->getDatabaseConnection();

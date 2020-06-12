@@ -78,12 +78,14 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
         ),
         CRM_Core_Action::ENABLE => array(
           'name' => ts('Enable'),
-          'ref' => 'crm-enable-disable',
+          'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_SMS_BAO_Provider' . '\',\'' . 'disable-enable' . '\' , true);"',
+          'ref' => 'enable-action',
           'title' => ts('Enable Provider'),
         ),
         CRM_Core_Action::DISABLE => array(
           'name' => ts('Disable'),
-          'ref' => 'crm-enable-disable',
+          'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_SMS_BAO_Provider' . '\',\'' . 'enable-disable' . '\' , true);"',
+          'ref' => 'disable-action',
           'title' => ts('Disable Provider'),
         ),
       );

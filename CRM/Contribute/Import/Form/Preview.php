@@ -52,7 +52,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
 
     //get the data from the session
-    $dataValues = $this->get('dataValues');
+    $this->_dataValues = $this->get('dataValues');
     $mapper = $this->get('mapper');
     $softCreditFields = $this->get('softCreditFields');
     $pcpCreatorFields = $this->get('pcpCreatorFields');
@@ -74,10 +74,15 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
       $this->assign('rowDisplayCount', 3);
+
+      $columnNames = $this->_columnHeaders = $this->get('originalColHeader');
+      array_unshift($this->_dataValues, $this->_columnHeaders);
     }
     else {
+      $this->assign('skipColumnHeader', NULL);
       $this->assign('rowDisplayCount', 2);
     }
+    $this->assign('dataValues', $this->_dataValues);
 
     $tableName = $this->get('importTableName');
     $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
@@ -98,8 +103,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
 
 
     $properties = array(
-      'mapper', 'softCreditFields', 'pcpCreatorFields',
-      'dataValues', 'columnCount',
+      'mapper', 'softCreditFields', 'pcpCreatorFields', 'columnCount',
       'totalRowCount', 'validRowCount',
       'invalidRowCount', 'conflictRowCount',
       'downloadErrorRecordsUrl',

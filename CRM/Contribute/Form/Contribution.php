@@ -1392,7 +1392,7 @@ WHERE  contribution_id = {$this->_id}
 
       $this->_params['receive_date'] = $now;
 
-      if (CRM_Utils_Array::value('is_email_receipt', $this->_params) && empty($this->_params['receipt_date'])) {
+      if (CRM_Utils_Array::value('have_receipt', $this->_params) && empty($this->_params['receipt_date'])) {
         $this->_params['receipt_date'] = $now;
       }
       else {
