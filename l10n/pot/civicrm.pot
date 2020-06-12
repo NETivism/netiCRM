@@ -31899,9 +31899,7 @@ msgstr ""
 
 #: templates/CRM/Event/Form/Task/Delete.tpl
 msgid ""
-"Are you sure you want to delete the selected participations? This delete "
-"operation cannot be undone and will delete all transactions and activity "
-"associated with these participations."
+"Are you sure you want to delete the selected participations?"
 msgstr ""
 
 #: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
@@ -47515,4 +47513,13 @@ msgid "recurring donors (multiple times, active now and inactive past)"
 msgstr ""
 
 msgid "Upcoming Birthdays Search"
+msgstr ""
+
+msgid "Shorten URL"
+msgstr ""
+
+msgid "Change Payment Method"
+msgstr ""
+
+msgid "%1 reserved"
 msgstr ""

@@ -457,11 +457,11 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
                   )) {
                   $append = '';
                 }
-                $this->_groupBy[] = "$append {$this->_params['group_bys_freq'][$fieldName]}({$field['dbAlias']})";
+                $groupBy[] = "$append {$this->_params['group_bys_freq'][$fieldName]}({$field['dbAlias']})";
                 $append = TRUE;
               }
               else {
-                $this->_groupBy[] = $field['dbAlias'];
+                $groupBy[] = $field['dbAlias'];
               }
             }
           }
@@ -469,11 +469,11 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       }
 
       if (!empty($this->_statFields) &&
-        (($append && count($this->_groupBy) <= 1) || (!$append)) && !$this->_having
+        (($append && count($groupBy) <= 1) || (!$append)) && !$this->_having
       ) {
         $this->_rollup = " WITH ROLLUP";
       }
-      $this->_groupBy = "GROUP BY " . implode(', ', $this->_groupBy) . " {$this->_rollup} ";
+      $this->_groupBy = "GROUP BY " . implode(', ', $groupBy) . " {$this->_rollup} ";
     }
     else {
       $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id";
@@ -511,6 +511,8 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
   }
 
   function postProcess() {
+    // get the acl clauses built before we assemble the query
+    $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 

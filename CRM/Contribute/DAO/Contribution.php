@@ -366,6 +366,11 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
         'payment_processor_id' => array(
           'name' => 'payment_processor_id',
           'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Payment Processor') ,
+          'export' => true,
+          'where' => 'civicrm_contribution.payment_processor_id',
+          'headerPattern' => '',
+          'dataPattern' => '',
           'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
         ) ,
         'payment_instrument_id' => array(

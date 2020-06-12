@@ -258,7 +258,12 @@ WHERE  id = %1
         $customClass =
           CRM_Contact_BAO_SearchCustom::customClass($ssParams['customSearchID'], $savedSearchID);
         $searchSQL = $customClass->contactIDs();
-        $searchSQL .= " AND " .$additionalWhereClause;
+        if (preg_match('/\s+group\s+by\s+/i', $searchSQL)) {
+          $searchSQL = preg_replace('/\s+group\s+by\s+/i', ' AND '.$additionalWhereClause.' GROUP BY ', $searchSQL);
+        }
+        else {
+          $searchSQL .= " AND " .$additionalWhereClause;
+        }
         $idName = 'contact_id';
       }
       else {
