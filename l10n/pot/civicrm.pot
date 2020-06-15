@@ -47523,3 +47523,18 @@ msgstr ""
 
 msgid "%1 reserved"
 msgstr ""
+
+msgid "Non-Cumulative Mode"
+msgstr ""
+
+msgid "Cumulative Mode"
+msgstr ""
+
+msgid "Min contribution of first time donation"
+msgstr ""
+
+msgid "Grand Total of recurring amount"
+msgstr ""
+
+msgid "Calculation when unlimit installments"
+msgstr ""
