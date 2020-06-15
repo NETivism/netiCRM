@@ -75,7 +75,7 @@
   <tr>
     <td class="font-size11pt"> {ts}Select Records{/ts}:</td>
     <td class="nowrap">
-        {$form.radio_ts.ts_all.html} <label for="{$ts_all_id}">{ts count=$pager->_totalItems plural='All %count records'}The found record{/ts}</label> &nbsp; {if $pager->_totalItems > 1} {$form.radio_ts.ts_sel.html} <label for="{$ts_sel_id}">{ts}Selected records only{/ts}</label>{/if}
+        {$form.radio_ts.ts_all.html} <label for="{$ts_all_id}">{ts count=$pager->_totalItems plural='All %count records'}The found record{/ts}</label> &nbsp; {$form.radio_ts.ts_sel.html} <label for="{$ts_sel_id}">{ts}Selected records only{/ts}</label>
     </td>
   </tr>
   <tr>
@@ -112,19 +112,24 @@
 
 {literal}
 <script type="text/javascript">
-cj(document).ready(function(){
-  cj("input[name=radio_ts]").click(function(){
-    if(cj(this).val() == 'ts_all'){
-      cj("table.selector input[type=checkbox]:checked").prop("checked", false);
+cj(document).ready(function($){
+  $("input[name=toggleSelect]").click(function(){
+    toggleTaskAction(true);
+    toggleCheckboxVals('mark_x_', this);
+  });
+  $("input[name=radio_ts]").click(function(){
+    toggleTaskAction(true);
+    if($(this).val() == 'ts_all'){
+      toggleCheckboxVals('mark_x_', this);
     }
   });
-  cj("table.selector td > input[type=checkbox]").click(function(){
-    cj("input[name=radio_ts][value=ts_sel]").trigger("click");
-    if(!cj(this).prop("checked")){
-      cj('input[name=toggleSelect]').prop("checked", false)
+  $("table.selector td > input[type=checkbox]").click(function(){
+    $("input[name=radio_ts][value=ts_sel]").trigger("click");
+    if(!$(this).prop("checked")){
+      $('input[name=toggleSelect]').prop("checked", false)
     }
   });
-  cj("input[name=radio_ts][value=ts_all]").trigger("click");
+  $("input[name=radio_ts][value=ts_all]").trigger("click");
 });
 </script>
 {/literal}

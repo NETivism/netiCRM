@@ -845,33 +845,38 @@ WHERE  civicrm_participant.id = {$participantId}
   static function deleteParticipant($id) {
     require_once 'CRM/Core/Transaction.php';
 
+    // find related contribution
+    $relatedContributions = array();
+    $participantPayment = new CRM_Event_DAO_ParticipantPayment();
+    $participantPayment->participant_id = $id;
+    $participantPayment->find();
+    while ($participantPayment->fetch()) {
+      $relatedContributions[] = $participantPayment->contribution_id;
+    }
+    
+
     $transaction = new CRM_Core_Transaction();
 
     //delete activity record
-    require_once "CRM/Activity/BAO/Activity.php";
-    $params = array('source_record_id' => $id,
-      // activity type id for event registration
-      'activity_type_id' => 5,
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Event Registration', 'name');
+    $params = array(
+      'source_record_id' => $id,
+      'activity_type_id' => $activityTypeId,
     );
 
     CRM_Activity_BAO_Activity::deleteActivity($params);
 
-    // delete the participant payment record
-    // we need to do this since the cascaded constraints
-    // dont work with join tables
-    require_once 'CRM/Event/BAO/ParticipantPayment.php';
-    $p = array('participant_id' => $id);
-    CRM_Event_BAO_ParticipantPayment::deleteParticipantPayment($p);
+    // #28574, do not delete participant payment
+    // we need to keep payment record on database in case accounting issue
+    #CRM_Event_BAO_ParticipantPayment::deleteParticipantPayment($p);
 
     // cleanup line items.
-    require_once 'CRM/Price/BAO/LineItem.php';
     $participantsId = array();
     $participantsId = self::getAdditionalParticipantIds($id);
     $participantsId[] = $id;
     CRM_Price_BAO_LineItem::deleteLineItems($participantsId, 'civicrm_participant');
 
     //delete note when participant deleted.
-    require_once 'CRM/Core/BAO/Note.php';
     $note = CRM_Core_BAO_Note::getNote($id, 'civicrm_participant');
     $noteId = key($note);
     if ($noteId) {
@@ -880,17 +885,36 @@ WHERE  civicrm_participant.id = {$participantId}
 
     $participant = new CRM_Event_DAO_Participant();
     $participant->id = $id;
+    $participant->find(TRUE);
+    $assigneeId = $participant->contact_id;
     $participant->delete();
 
     $transaction->commit();
 
+    // add note into contribution source
+    $userID = CRM_Core_Session::singleton()->get('userID');
+    $subject = ts('Deleted Participation(s): %1', array(1 => $id));
+    if (!empty($relatedContributions)) {
+      $participant->contributions = $relatedContributions;
+      $line = ts('Contribution ID').' '.implode(',', $relatedContributions);
+      $subject .= ', '.ts('%1 reserved', array(1 => $line));
+    }
+    $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+    $activityParams = array(
+      'activity_type_id' => $activityTypeId,
+      'activity_date_time' => date('Y-m-d H:i:s'),
+      'status_id' => $statusId,
+      'subject' => $subject,
+      'assignee_contact_id' => $assigneeId,
+      'source_contact_id' => $userID,
+    );
+    CRM_Activity_BAO_Activity::create($activityParams);
+
     // delete the recently created Participant
-    require_once 'CRM/Utils/Recent.php';
     $participantRecent = array(
       'id' => $id,
       'type' => 'Participant',
     );
-
     CRM_Utils_Recent::del($participantRecent);
 
     return $participant;

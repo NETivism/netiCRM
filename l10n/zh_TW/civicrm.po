@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-08 06:07+0000\n"
+"PO-Revision-Date: 2020-06-12 04:54+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -4943,7 +4943,7 @@ msgstr "已登記"
 #: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
 msgid ""
 "Delete this participant record along with associated participant record(s)."
-msgstr "刪除此參加者的相關記錄。"
+msgstr "刪除此參加者，以及該位一同報名的額外參加者紀錄。"
 
 #: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
 msgid "Delete only this participant record."
@@ -15808,7 +15808,7 @@ msgstr "刪除報名"
 
 #: CRM/Event/Form/Task/Delete.php
 msgid "Deleted Participation(s): %1"
-msgstr "刪除報名：%1"
+msgstr "已刪除的參加者紀錄：%1"
 
 #: CRM/Event/Form/Task/Delete.php
 msgid "Total Selected Participation(s): %1"
@@ -31891,11 +31891,8 @@ msgid ""
 msgstr "您確定要為已選取參加者設定狀態為「取消」？"
 
 #: templates/CRM/Event/Form/Task/Delete.tpl
-msgid ""
-"Are you sure you want to delete the selected participations? This delete "
-"operation cannot be undone and will delete all transactions and activity "
-"associated with these participations."
-msgstr "您確定要刪除已選取的參加者？此動作不能復原，並且會刪除與這些參加者相關的所有交易與任務。"
+msgid "Are you sure you want to delete the selected participations?"
+msgstr "您確定要刪除已選擇的參加者嗎？"
 
 #: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
 msgid "Enabling Waitlisting and Registration Approval"
@@ -45995,7 +45992,7 @@ msgid "Please provide a Text"
 msgstr ""
 
 msgid "You can configure the SMS message body up to %1 characters"
-msgstr "簡訊內文最多可輸入 %1 個字符"
+msgstr "簡訊一則最多可輸入 %1 個字符，超過將被多扣點數。系統判斷此簡訊可能會超過 1 點，若確定要發送請按下「傳送簡訊」"
 
 msgid "The body of the SMS cannot exceed %1 characters."
 msgstr "簡訊內文不可輸入超過 %1 個字符"
@@ -46131,7 +46128,7 @@ msgstr "簡訊供應商"
 
 #: templates/CRM/Contact/Form/Task/SMSCommon.tpl
 msgid "You can insert up to %1 characters. You have entered %2 characters."
-msgstr "您可以輸入最多 %1 個字符，目前已輸入 %2 個字符。"
+msgstr "一則簡訊最多 %1 個字符，超過將被多扣點數。目前已輸入 %2 個字符。"
 
 #: CRM/Contact/Form/Task/SMSCommon.php
 msgid "Name The SMS"
@@ -47754,3 +47751,9 @@ msgstr "搜尋即將到來的生日"
 
 msgid "Shorten URL"
 msgstr "縮短網址"
+
+msgid "Change Payment Method"
+msgstr "選擇其他付款方式"
+
+msgid "%1 reserved"
+msgstr "%1 已保留"

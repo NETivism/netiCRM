@@ -97,34 +97,36 @@
 {/if}
 {literal}
 <script type="text/javascript">
-cj(function() { 
-    cj().crmaccordions(); 
+cj(function($) { 
+  $().crmaccordions(); 
+  $('#component_mode').change( function( ) {
+    // reset task dropdown if user changes component mode and it exists
+    if ($("#task").length > 0) {
+        $('#task').val( '' );
+    }
+    var selectedValue = $(this).val( );
+    switch ( selectedValue ) {
+      case '2':
+      $('.crm-CiviContribute-accordion').removeClass('crm-accordion-closed').addClass('crm-accordion-open') ;
+      loadPanes('CiviContribute');
+      break;
 
-    cj('#component_mode').change( function( ) {
-        // reset task dropdown if user changes component mode and it exists
-	    if ($("#task").length > 0) {
-	        cj('#task').val( '' );
-	    }
-        var selectedValue = cj(this).val( );
-        switch ( selectedValue ) {
-            case '2':
-            cj('.crm-CiviContribute-accordion').removeClass('crm-accordion-closed').addClass('crm-accordion-open') ;
-            loadPanes('CiviContribute');
-            break;
+      case '3':
+      $('.crm-CiviEvent-accordion').removeClass('crm-accordion-closed').addClass('crm-accordion-open') ;
+      loadPanes('CiviEvent');
+      break;
 
-            case '3':
-            cj('.crm-CiviEvent-accordion').removeClass('crm-accordion-closed').addClass('crm-accordion-open') ;
-            loadPanes('CiviEvent');
-            break;
+      case '4':
+      $('.crm-activity-accordion').removeClass('crm-accordion-closed').addClass('crm-accordion-open') ;
+      loadPanes('activity');
+      break;
 
-            case '4':
-            cj('.crm-activity-accordion').removeClass('crm-accordion-closed').addClass('crm-accordion-open') ;
-            loadPanes('activity');
-            break;
-
-            default:
-        } 
-    });
+      default:
+    } 
+  });
+  $('input[name=radio_ts]').click(function(){
+    $('.crm-search-tasks [disabled=disabled]').removeAttr('disabled');
+  });
 });
 </script>
 {/literal}

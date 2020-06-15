@@ -215,9 +215,22 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
           'level' => 'Strict',
         );
       }
-      $dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
-      $dedupeFields = array_merge($dedupeFields, array('contribution_contact_id', 'external_identifier'));
-      foreach ($dedupeFields as $fieldName) {
+      $this->_dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
+      $this->_dedupeFields = array_merge($dedupeFields, array('contribution_contact_id', 'external_identifier'));
+      // correct sort_name / display_name problem
+      $hasSortName = array_search('sort_name', $dedupeFields);
+      $hasDisplayName = array_search('display_name', $dedupeFields);
+      if ($hasSortName !== FALSE) {
+        unset($this->_dedupeFields[$hasSortName]);
+      }
+      if ($hasDisplayName !== FALSE) {
+        unset($this->_dedupeFields[$hasDisplayName]);
+      }
+      if ($hasSortName !== FALSE || $hasDisplayName !== FALSE) {
+        $this->_dedupeFields[] = 'last_name';
+        $this->_dedupeFields[] = 'first_name';
+      }
+      foreach ($this->_dedupeFields as $fieldName) {
         $this->_mapperFields[$fieldName] .= ' '. ts('(match to contact)');
         $highlightedFields[] = $fieldName;
       }
@@ -368,7 +381,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       'level' => 'Strict',
     );
     require_once 'CRM/Dedupe/BAO/Rule.php';
-    $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
+    $fieldsArray = $this->_dedupeFields;
     $softCreditFields = $pcpCreatorFields = array();
     if (is_array($fieldsArray)) {
       foreach ($fieldsArray as $value) {
@@ -584,6 +597,16 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       }
       require_once 'CRM/Dedupe/BAO/RuleGroup.php';
       list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($ruleParams);
+      if ($ruleFields['sort_name']) {
+        $ruleFields['last_name'] = $ruleFields['sort_name'] / 2;
+        $ruleFields['first_name'] = $ruleFields['sort_name'] / 2;
+      }
+      if ($ruleFields['display_name']) {
+        $ruleFields['last_name'] = $ruleFields['display_name'] / 2;
+        $ruleFields['first_name'] = $ruleFields['display_name'] / 2;
+      }
+      unset($ruleFields['sort_name']);
+      unset($ruleFields['display_name']);
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
         if (array_key_exists($val, $ruleFields)) {

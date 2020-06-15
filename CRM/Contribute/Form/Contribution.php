@@ -872,12 +872,10 @@ WHERE  contribution_id = {$this->_id}
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution');
 
-    $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
-    $deductibleTypeId = implode(',', array_keys($deductibleType));
     $element = $this->add('select', 'contribution_type_id',
       ts('Contribution Type'),
       array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE),
-      TRUE, array('onChange' => "buildCustomData( 'Contribution', this.value );", 'data-deductible_type' => $deductibleTypeId)
+      TRUE, array('onChange' => "buildCustomData( 'Contribution', this.value );")
     );
     if ($this->_online) {
       // $element->freeze( );
@@ -909,7 +907,7 @@ WHERE  contribution_id = {$this->_id}
 
     //add receipt for offline contribution
     $this->addElement('checkbox', 'is_email_receipt', ts('Send Payment Notification').'?', NULL, array(
-      'onclick' => "showHideByValue('is_email_receipt',1,'from_email_address','block','radio',false);showHideByValue('is_email_receipt',1,'attach-receipt-option','block','radio',false);",
+      'onclick' => "showHideByValue('is_email_receipt',1,'from_email_address','block','radio',false);showHideByValue('is_email_receipt',1,'is_attach_receipt','block','radio',false);",
     ));
 
     //add receipt for offline contribution
@@ -1387,7 +1385,7 @@ WHERE  contribution_id = {$this->_id}
 
       $this->_params['receive_date'] = $now;
 
-      if (CRM_Utils_Array::value('is_email_receipt', $this->_params) && empty($this->_params['receipt_date'])) {
+      if (CRM_Utils_Array::value('have_receipt', $this->_params) && empty($this->_params['receipt_date'])) {
         $this->_params['receipt_date'] = $now;
       }
       else {

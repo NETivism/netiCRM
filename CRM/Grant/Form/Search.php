@@ -247,10 +247,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       if (!$this->_single) {
         $this->addElement('checkbox', 'toggleSelect', NULL, NULL, array('onchange' => "toggleTaskAction( true ); return toggleCheckboxVals('mark_x_',this);"));
         foreach ($rows as $row) {
-          $this->addElement('checkbox', CRM_Utils_Array::value('checkbox', $row),
-            NULL, NULL,
-            array('onclick' => " toggleTaskAction( true ); return checkSelectedBox('" . CRM_Utils_Array::value('checkbox', $row) . "', '" . $this->getName() . "');")
-          );
+          $this->addElement('checkbox', CRM_Utils_Array::value('checkbox', $row));
           $grant_id = $row['grant_id'];
         }
       }
@@ -284,7 +281,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
 
-      $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('onchange' => $this->getName() . ".toggleSelect.checked = false; toggleCheckboxVals('mark_x_',this); toggleTaskAction( true );"));
+      $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
       $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
     }
 
