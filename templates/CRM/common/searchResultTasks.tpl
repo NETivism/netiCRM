@@ -24,7 +24,6 @@
  +--------------------------------------------------------------------+
 *}
 {* Form elements for displaying and running action tasks on search results for all component searches. *}
-
 <div id="search-status">
   <table class="form-layout-compressed">
   <tr>
@@ -52,7 +51,7 @@
   <tr>
     <td class="font-size11pt"> {ts}Select Records{/ts}:</td>
     <td class="nowrap">
-        {$form.radio_ts.ts_all.html} <label for="{$ts_all_id}">{ts count=$pager->_totalItems plural='All %count records'}The found record{/ts}</label> &nbsp; {if $pager->_totalItems > 1} {$form.radio_ts.ts_sel.html} <label for="{$ts_sel_id}">{ts}Selected records only{/ts}</label>{/if}
+        {$form.radio_ts.ts_all.html} <label for="{$ts_all_id}">{ts count=$pager->_totalItems plural='All %count records'}The found record{/ts}</label> &nbsp;  {$form.radio_ts.ts_sel.html} <label for="{$ts_sel_id}">{ts}Selected records only{/ts}</label>
     </td>
   </tr>
   <tr>
@@ -74,6 +73,24 @@
 </div>
 {literal}
 <script type="text/javascript">
-toggleTaskAction( );
+cj(document).ready(function($){
+  $("input[name=toggleSelect]").click(function(){
+    toggleTaskAction(true);
+    toggleCheckboxVals('mark_x_', this);
+  });
+  $("input[name=radio_ts]").click(function(){
+    toggleTaskAction(true);
+    if($(this).val() == 'ts_all'){
+      toggleCheckboxVals('mark_x_', this);
+    }
+  });
+  $("table.selector td > input[type=checkbox]").click(function(){
+    $("input[name=radio_ts][value=ts_sel]").trigger("click");
+    if(!$(this).prop("checked")){
+      $('input[name=toggleSelect]').prop("checked", false)
+    }
+  });
+  $("input[name=radio_ts][value=ts_all]").trigger("click");
+});
 </script>
 {/literal}
