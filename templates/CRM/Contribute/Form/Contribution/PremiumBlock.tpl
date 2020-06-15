@@ -30,12 +30,6 @@
 {literal}
 <script type="text/javascript">
 cj(document).ready(function($){
-  $("input[name=amount]").click(function(){
-    detectAmount(this);
-  });
-  $("input[name=amount_other]").change(function(){
-    detectAmount(this);
-  });
   var detectAmount = function(obj) {
     var amount = $(obj).prop('type') == 'text' ? parseInt($(obj).val()) : $(obj).data('amount');
     var grouping = $(obj).data('grouping');
@@ -69,7 +63,8 @@ cj(document).ready(function($){
           return false;
         }
         if ($(this).data('calculate-mode') == 'cumulative') {
-          var installments = $(this).data('installments');
+          var installments = $("input[name=installments]").val() ? $("input[name=installments]").val() : $(this).data('installments');
+          installments = parseInt(installments);
           if (installments) {
             if (amt_recur * installments < $(this).data('min-contribution-recur')) {
               return false;
@@ -89,6 +84,28 @@ cj(document).ready(function($){
     $('tr.product-row.not-available input[name=selectProduct]').prop('disabled', true);
     $('tr.product-row.not-available .premium-info .description').show();
   }
+  var initialize = function (){
+    if ($("input[name=amount_other]").val()) {
+      detectAmount($("input[name=amount_other]")[0]);
+    }
+    else {
+      $("input[name=amount]:checked:eq(0)").each(function(){
+        detectAmount(this);
+      });
+    }
+  }
+  $("input[name=amount]").click(function(){
+    detectAmount(this);
+  });
+  $("input[name=amount_other]").change(function(){
+    detectAmount(this);
+  });
+  $("input[name=installments]").change(function(){
+    initialize();
+  });
+
+  // after page load, use selected value to determin amount
+  initialize();
 });
 </script>
 {/literal}
