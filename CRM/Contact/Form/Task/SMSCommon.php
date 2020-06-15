@@ -87,6 +87,7 @@ class CRM_Contact_Form_Task_SMSCommon {
    * @param CRM_Core_Form $form
    */
   public static function buildQuickForm(&$form) {
+    $form->assign('SMSTask', TRUE);
 
     $toArray = array();
 
