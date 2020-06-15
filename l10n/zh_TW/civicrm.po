@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-15 08:51+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-06-15 09:02+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46116,7 +46116,7 @@ msgstr "簡訊供應商"
 
 #: templates/CRM/Contact/Form/Task/SMSCommon.tpl
 msgid "You can insert up to %1 characters. You have entered %2 characters."
-msgstr "一則簡訊最多 %1 個字符，超過將被多扣點數。目前已輸入 %2 個字符。"
+msgstr "一則簡訊最多 %1 個字，超過將被多扣點數。目前已輸入 %2 個字。"
 
 #: CRM/Contact/Form/Task/SMSCommon.php
 msgid "Name The SMS"
@@ -47772,3 +47772,17 @@ msgstr "首次定期金額達到%1"
 
 msgid "total support of recurring payment at least %1"
 msgstr "預估定期總額達到%1"
+
+msgid ""
+"You can insert up to %1 characters include token. You have entered %2 "
+"characters without token."
+msgstr "一則簡訊包含替代符號文字，最多 %1 個字，超過將被多扣點數。目前輸入的字數不包含替代符號已經有 %2 個字。（發送前無法正確計算加入替代符號後的字數，請斟酌使用）"
+
+msgid "Since you have used tokens. The word count may be wrong."
+msgstr "由於您有插入替代符號，字數統計可能會不準確，超過字數限制將扣超過 1 點。"
+
+msgid ""
+"Use tokens when you are sending sms to a number of recipients, and want to "
+"include their name and / or other values from their contact record "
+"automatically within your message."
+msgstr "當您要將簡訊發送給大量的收件人，並且希望在信件內容中包含聯絡人的名字或其他資料，您可以使用替代符號。"
