@@ -80,6 +80,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $defaultFromRequest['instrument'] = CRM_Utils_Request::retrieve('_instrument', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['ppid'] = CRM_Utils_Request::retrieve('_ppid', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['membership'] = CRM_Utils_Request::retrieve('_membership', 'Positive', $this, FALSE, NULL, 'REQUEST');
+    $defaultFromRequest['gift'] = CRM_Utils_Request::retrieve('_gift', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     if (isset($defaultFromRequest['instrument']) && empty($instruments[$defaultFromRequest['instrument']])) {
       unset($defaultFromRequest['instrument']);
@@ -449,6 +450,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       }
     }
 
+    if (!empty($this->_values['premiums_active']) && $this->_defaultFromRequest['gift']) {
+      $this->_defaults['selectProduct'] = $this->_defaultFromRequest['gift'];
+    }
+
     return $this->_defaults;
   }
 
@@ -715,6 +720,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
           'data-default' => (!empty($amount['filter']) && empty($this->_defaultFromRequest['amt'])) ? 1 : 0,
           'onclick' => 'clearAmountOther();',
+          'data-amount' => $amount['value'],
         );
         $elements[] = &$this->createElement('radio', NULL, '',
           CRM_Utils_Money::format($amount['value']) . ' ' . $amount['label'],
@@ -953,6 +959,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $elements = array();
     if ($this->_values['is_recur'] < 2) {
       $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0);
+    }
+    else {
+      $this->assign('is_recur_only', TRUE);
     }
     $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
     $this->addGroup($elements, 'is_recur', NULL, '<br />');

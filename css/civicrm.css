@@ -4324,6 +4324,17 @@ ul.ui-sortable {
   line-height: 1.4;
   cursor: pointer;
 }
+.crm-container .premiums-listings tr.not-available {
+  color: #AAA !important;
+  font-size: 0.85em;
+}
+.crm-container .premiums-listings tr.not-available .premium-img img {
+  height: 50px;
+  opacity: .5;
+}
+.crm-container .premiums-listings tr.not-available .premium-info .description {
+  color: red;
+}
 
 /* form elements */
 .crm-container input[type="text"], 
