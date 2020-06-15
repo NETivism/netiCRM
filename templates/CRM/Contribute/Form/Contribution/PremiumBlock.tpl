@@ -32,22 +32,15 @@
 cj(document).ready(function($){
   var detectAmount = function(obj) {
     var amount = $(obj).prop('type') == 'text' ? parseInt($(obj).val()) : $(obj).data('amount');
-    var grouping = $(obj).data('grouping');
+    var is_recur = parseInt($("input[name=is_recur]:checked").val());
+    console.log(is_recur);
+    console.log(amount);
     if (amount) {
-      if (grouping == 'recurring') {
+      if (is_recur) {
         return filterPremiumByAmount(0, amount);
       }
-      else if (grouping == 'non-recurring') {
+      else {
         return filterPremiumByAmount(amount, 0);
-      }
-      else if (!grouping) {
-        var is_recur = $("input[name=is_recur]:checked").val();
-        if (is_recur) {
-          return filterPremiumByAmount(0, amount);
-        }
-        else {
-          return filterPremiumByAmount(amount, 0);
-        }
       }
     }
   }
