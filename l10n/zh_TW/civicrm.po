@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-15 05:22+0000\n"
+"PO-Revision-Date: 2020-06-15 08:51+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -29252,18 +29252,6 @@ msgstr "您可以從您的電腦上傳一個圖片，或輸入圖片的網址（
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
-"The minimum contribution amount required to be eligible to select this "
-"premium. If you want to offer it to all contributors regardless of "
-"contribution amount, enter '0'. If display of minimum contribution amounts "
-"is enabled then this text is displayed:"
-msgstr "要獲得此感謝禮的金額條件。若您想將此感謝禮提供給所有捐款者（不論捐款金額），請輸入「0」。如果最少捐款金額為停用狀態，將顯示文字為："
-
-#: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid "(Contribute at least X to be eligible for this gift.)"
-msgstr "（至少要X的捐款才符合此贈品的資格。）"
-
-#: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid ""
 "The market value of this premium (e.g. retail price). For tax-deductible "
 "contributions, this amount will be used to set the non-deductible amount in "
 "the contribution record and receipt."
@@ -47772,3 +47760,15 @@ msgstr "定期總金額預估"
 
 msgid "Calculation when unlimit installments"
 msgstr "選不限期數時，用來替代預估計算的期數"
+
+msgid "This gift will be eligible when your %1."
+msgstr "當%1時，可以選擇此項目。"
+
+msgid "one-time support at least %1"
+msgstr "單次金額達到%1"
+
+msgid "first support of recurring payment at least %1"
+msgstr "首次定期金額達到%1"
+
+msgid "total support of recurring payment at least %1"
+msgstr "預估定期總額達到%1"
