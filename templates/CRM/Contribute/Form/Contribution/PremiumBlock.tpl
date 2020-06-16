@@ -46,7 +46,7 @@ cj(document).ready(function($){
   }
   var filterPremiumByAmount = function(amt, amt_recur){
     $('tr.product-row').addClass('not-available');
-    $('tr.product-row input[name=selectProduct]').prop('disabled', false);
+    $('tr.product-row input[name=selectProduct], tr.product-row.not-available  .premium-options select').prop('disabled', false);
     $('tr.product-row.not-available .premium-info .description').find('.zmdi-alert-triangle').remove();
     var $available = $("input[name=selectProduct]").filter(function(idx){
       if (amt < $(this).data('min-contribution') && amt > 0) {
@@ -75,7 +75,7 @@ cj(document).ready(function($){
     if (!$available.filter(":checked").length) {
       $('input[name=selectProduct]').prop('checked', false);
     }
-    $('tr.product-row.not-available input[name=selectProduct]').prop('disabled', true);
+    $('tr.product-row.not-available input[name=selectProduct], tr.product-row.not-available  .premium-options select').prop('disabled', true);
     $('tr.product-row.not-available .premium-info .description').prepend('<i class="zmdi zmdi-alert-triangle"></i>');
   }
   var initialize = function (){
@@ -95,6 +95,9 @@ cj(document).ready(function($){
     detectAmount(this);
   });
   $("input[name=installments]").change(function(){
+    initialize();
+  });
+  $("input[name=is_recur]").change(function(){
     initialize();
   });
 
@@ -149,6 +152,7 @@ cj(document).ready(function($){
                 <label class="premium-name" for="{$form.selectProduct.$pid.id}">{$row.name}</label>
                 <div>{$row.description|nl2br}</div>
                 {if ($premiumBlock.premiums_display_min_contribution AND $context EQ "makeContribution") OR $preview EQ 1}
+                  {capture assign="limitation"}{/capture}
                   {capture assign="one_time_limit"}{/capture}
                   {capture assign="recur_limit"}{/capture}
                   {if $row.min_contribution > 0 && (!$is_recur_only || $preview == 1)}
@@ -170,9 +174,11 @@ cj(document).ready(function($){
                     {capture assign="limitation"}{$recur_limit}{/capture}
                   {/if}
 
-                  <div class="description">
-                  {ts 1=$limitation}This gift will be eligible when your %1.{/ts}
-                  </div>
+                  {if $limitation}
+                    <div class="description">
+                    {ts 1=$limitation}This gift will be eligible when your %1.{/ts}
+                    </div>
+                  {/if}
                 {/if}
             {if $showSelectOptions }
                 {assign var="pid" value="options_"|cat:$row.id}
