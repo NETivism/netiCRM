@@ -38,7 +38,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
     $this->_params = $this->get('params');
     if(!$this->_pass){
       $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
-      $this->_mode = ($this->_action == 1024) ? 'test' : 'live';
+      $this->_mode = ($this->_action & CRM_Core_Action::PREVIEW) ? 'test' : 'live';
       $pass = TRUE;
 
       $this->_ids = array();
@@ -67,6 +67,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
           $this->_ids = $ids;
           $this->_ids['ufid'] = $ufid;
           $this->_ids['current_contact_id'] = $current_contact_id;
+          $this->_mode = $ids['is_test'] ? 'test' : 'live';
         }
       }
 
@@ -79,6 +80,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
         }
         else{
           $this->_paymentProcessors = $this->get('paymentProcessors');
+          $this->_paymentProcessor = $this->get('paymentProcessor');
           if(!count($this->_paymentProcessors)){
             CRM_Core_Error::fatal(ts("We don't have available method for this payment."));
           }
