@@ -2599,6 +2599,18 @@ UNION
       ),
     );
 
+
+    $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
+    if ($providersCount) {
+      $menu['sms'] = array(
+        'title' => ts('Send SMS'),
+        'weight' => 46,
+        'ref' => 'new-sms',
+        'key' => 'sms',
+        'permissions' => array('view all contacts'),
+      );
+    }
+
     //1. check for component is active.
     //2. check for user permissions.
     //3. check for acls.
