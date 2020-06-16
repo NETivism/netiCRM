@@ -1034,25 +1034,42 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     ) {
       require_once 'CRM/Contribute/DAO/Product.php';
       require_once 'CRM/Utils/Money.php';
+      $premiumTitle = $self->_values['premiums_intro_title'];
       $productDAO = new CRM_Contribute_DAO_Product();
       $productDAO->id = $fields['selectProduct'];
       $productDAO->find(TRUE);
-      $min_amount = $productDAO->min_contribution;
+      // #26455, backward compatibility needed
+      if (is_null($productDAO->min_contribution_recur)) {
+        $productDAO->min_contribution_recur = $productDAO->min_contribution;
+      }
+      if (is_null($productDAO->calculate_mode)) {
+        $productDAO->calculate_mode = 'cumulative';
+      }
+      if (is_null($productDAO->installments)) {
+        $productDAO->installments = 0;
+      }
       if(!empty($fields['is_recur'])){
-        if(!empty($fields['installments'])){
-          $total = $amount * $fields['installments'];
-          if($total < $min_amount){
-            $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
+        if ($productDAO->calculate_mode == 'cumulative') {
+          $installments = !empty($fields['installments']) ? $fields['installments'] : $productDAO->installments;
+          if (empty($installments)) {
+            $installments = 99; // max installments #26445
+          }
+          $total = $amount * $installments;
+          if($total < $productDAO->min_contribution_recur){
+            $msg = ts('total support of recurring payment at least %1', array(1 => CRM_Utils_Money::format($productDAO->min_contribution_recur)));
+            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
           }
         }
-        else{
-          if(empty($amount)){
-            $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
+        elseif ($productDAO->calculate_mode == 'first') {
+          if($total < $productDAO->min_contribution_recur){
+            $msg = ts('first support of recurring payment at least %1', array(1 => CRM_Utils_Money::format($productDAO->min_contribution_recur)));
+            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
           }
         }
       }
-      elseif($amount < $min_amount) {
-        $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
+      elseif($amount < $productDAO->min_contribution) {
+        $msg = ts('one-time support at least %1', array(1 => CRM_Utils_Money::format($productDAO->min_contribution)));
+        $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
       }
     }
 
