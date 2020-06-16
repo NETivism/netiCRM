@@ -2,7 +2,7 @@
 {* Template Content: BEGIN *}
 <center>
   <!-- Body Table: BEGIN -->
-  <table id="nme-body-table" align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
+  <table id="nme-body-table" class="nme-body-table" align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" style="background-color: #222;">
     <tbody>
       <tr>
         <!-- Body Cell: BEGIN -->

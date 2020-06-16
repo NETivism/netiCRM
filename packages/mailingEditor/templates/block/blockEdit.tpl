@@ -1,6 +1,6 @@
 <textarea class="nme-tpl" data-template-level="block" data-template-name="edit">
 {* Template Content: BEGIN *}
-<div id="nme-block-[nmeBlockID]" data-id="[nmeBlockID]" class="nme-block" data-type="[nmeBlockType]" data-section="[nmeBlockSection]" data-sortable="[nmeBlockSortable]">
+<div id="nme-block-[nmeBlockID]" data-id="[nmeBlockID]" class="nme-block" data-type="[nmeBlockType]" data-section="[nmeBlockSection]" data-sortable="[nmeBlockSortable]" data-block-override="[nmeBlockOverride]" data-elem-override="[nmeElemOverride]">
   <div class="nme-block-inner">
     <div class="nme-block-content">
       <!-- Block Content HERE -->

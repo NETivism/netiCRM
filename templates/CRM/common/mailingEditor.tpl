@@ -82,7 +82,75 @@
 					<div id="nme-global-setting" class="nme-global-setting nme-setting-panel">
 						<div class="nme-setting-panel-inner">
 							<h3 class="nme-setting-panel-title">整體設定</h3>
-							<div class="nme-setting-panel-content"></div>
+							<div class="nme-setting-panel-content">
+							<div class="nme-page-setting nme-setting-section" data-setting-group="theme">
+									<div class="nme-setting-section-content">
+									<div id="nme-theme-setting" class="nme-setting-field">
+											<div class="nme-setting-field-label">主題配色</div>
+											<div class="nme-setting-field-content">
+												<div class="crm-form-elem crm-form-select crm-form-select-single">
+													<select id="nme-theme-setting-select" class="nme-setting-select form-select">
+														<option value="default">預設</option>
+														<option value="green">綠色森林</option>
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="nme-page-setting nme-setting-section" data-setting-group="page">
+									<h3 class="nme-setting-section-title">頁面</h3>
+									<div class="nme-setting-section-content">
+										<div id="nme-page-setting-bgcolor" class="nme-setting-field" data-field-type="background-color">
+											<div class="nme-setting-field-label">背景色</div>
+											<div class="nme-setting-field-content"><div id="nme-page-setting-bgcolor-picker" class="nme-setting-picker"></div></div>
+										</div>
+									</div>
+								</div>
+								<div class="nme-title-setting nme-setting-section" data-setting-group="title">
+									<h3 class="nme-setting-section-title">標題</h3>
+									<div class="nme-setting-section-content">
+									<div id="nme-title-setting-fontsize" class="nme-setting-field" data-field-type="font-size">
+											<div class="nme-setting-field-label">文字大小</div>
+											<div class="nme-setting-field-content">
+												<div class="crm-form-elem crm-form-select crm-form-select-single">
+													<select id="nme-title-setting-fontsize-select" class="nme-setting-select form-select">
+														<option value="16px">16px</option>
+														<option value="18px">18px</option>
+														<option value="20px">20px</option>
+														<option value="24px">24px</option>
+														<option value="26px">26px</option>
+														<option value="28px">28px</option>
+														<option value="30px">30px</option>
+														<option value="32px">32px</option>
+														<option value="36px">36px</option>
+														<option value="40px">40px</option>
+														<option value="48px">48px</option>
+														<option value="60px">60px</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div id="nme-title-setting-color" class="nme-setting-field" data-field-type="color">
+											<div class="nme-setting-field-label">文字顏色</div>
+											<div class="nme-setting-field-content"><div id="nme-title-setting-color-picker" class="nme-setting-picker"></div></div>
+										</div>
+									</div>
+								</div>
+								<div class="nme-button-setting nme-setting-section" data-setting-group="button">
+									<h3 class="nme-setting-section-title">按鈕</h3>
+									<div class="nme-setting-section-content">
+										<div id="nme-button-setting-color" class="nme-setting-field" data-field-type="color">
+											<div class="nme-setting-field-label">文字顏色</div>
+											<div class="nme-setting-field-content"><div id="nme-button-setting-color-picker" class="nme-setting-picker"></div></div>
+										</div>
+										<div id="nme-button-setting-bgcolor" class="nme-setting-field" data-field-type="background-color">
+											<div class="nme-setting-field-label">背景色</div>
+											<div class="nme-setting-field-content"><div id="nme-button-setting-bgcolor-picker" class="nme-setting-picker"></div></div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

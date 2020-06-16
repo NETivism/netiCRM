@@ -63,8 +63,64 @@
 			}
 		},
 		_sortables = {},
-		_pickrs = [],
-		_tpl = {};
+		_pickrs = {},
+		_tpl = {},
+		_themes = {
+			"default": {
+				"name": "預設",
+				"styles": {
+					"page" : {
+						"background-color": "#222"
+					},
+					"block": {
+						"color": "#000",
+						"background-color": "#fff"
+					},
+					"title": {
+						"color": "#000"
+					},
+					"subTitle": {
+						"color": "#000"
+					},
+					"button": {
+						"color": "#fff",
+						"background-color": "#3F51B5",
+						"background-color-hover": "#ff0000"
+					},
+					"link": {
+						"color": "#000",
+						"color-hover": "#555"
+					}
+				}
+			},
+			"green": {
+				"name": "綠色森林",
+				"styles": {
+					"page" : {
+						"background-color": "#4CAF50"
+					},
+					"block": {
+						"color": "#000",
+						"background-color": "#fff"
+					},
+					"title": {
+						"color": "#000"
+					},
+					"subTitle": {
+						"color": "#000"
+					},
+					"button": {
+						"color": "#fff",
+						"background-color": "#1B5E20",
+						"background-color-hover": "#2E7D32"
+					},
+					"link": {
+						"color": "#2E7D32",
+						"color-hover": "#388E3C"
+					}
+				}
+			}
+		};
 
 	/**
 	 * ============================
@@ -501,10 +557,13 @@
 				if (blockMode == "edit") {
 					//_loadTemplate("block--edit", "block", "default", targetContainer);
 					//_nmeBlockControl.render(blockType);
+
 					if (_domElemExist($target)) {
 						let blockContent = _tpl.block[blockType],
 								blockEditContent = _tpl.block.edit,
-								blockSortable = "true";
+								blockSortable = "true",
+								blockOverride = typeof block.override.block !== "undefined" ? block.override.block : false,
+								elemOverride = typeof block.override.elem !== "undefined" ? block.override.elem : false;
 
 						if (disallowSortType.includes(blockType)) {
 							blockSortable = "false";
@@ -515,6 +574,8 @@
 						blockEditContent = blockEditContent.replace(/\[nmeBlockType\]/g, blockType);
 						blockEditContent = blockEditContent.replace(/\[nmeBlockSection\]/g, blockSection);
 						blockEditContent = blockEditContent.replace(/\[nmeBlockSortable\]/g, blockSortable);
+						blockEditContent = blockEditContent.replace(/\[nmeBlockOverride\]/g, blockOverride);
+						blockEditContent = blockEditContent.replace(/\[nmeElemOverride\]/g, elemOverride);
 
 						output = blockEditContent;
 
@@ -703,6 +764,7 @@
 				}
 			}
 
+			/*
 			let specificEventButtons = ["_qf_Upload_back", "_qf_Upload_upload", "_qf_Upload_upload_save", "_qf_Upload_cancel"];
 			$(".form-submit[name='_qf_Upload_back'], .form-submit[name='_qf_Upload_cancel']").attr("data-sumbit-permission", 0);
 			$(".form-submit[name='_qf_Upload_upload'], .form-submit[name='_qf_Upload_upload_save']").attr("data-sumbit-permission", 0);
@@ -744,6 +806,7 @@
 					}
 				}
 			});
+			*/
 		}
 	};
 
@@ -784,8 +847,225 @@
 				}
 			}
 
+			if ($mailOutputContent.find(".nme-body-table").length) {
+				$mailOutputContent.find(".nme-body-table").css("background-color", _data.settings.styles.page["backgroun-color"]);
+				$mailOutputContent.find(".nme-body-table").attr("bgcolor", _data.settings.styles.page["backgroun-color"]);
+			}
+
 			let mailOutputContent = $mailOutputContent.html();
 			$mailFrameBody.html(mailOutputContent);
+		}
+	};
+
+	var _nmeGlobalSetting = function() {
+		var pickrInit = function(elemID, defaultColor) {
+			let targetSelector = "#" + elemID,
+					$target = $(targetSelector);
+
+			defaultColor = typeof defaultColor !== undefined ? defaultColor : "#42445a";
+
+			if (_domElemExist($target)) {
+				const pickr = new Pickr({
+					el: targetSelector,
+					theme: 'nano',
+					default: defaultColor,
+					lockOpacity: true,
+					swatches: [
+						'#F44336',
+						'#E91E63',
+						'#9C27B0',
+						'#673AB7',
+						'#3F51B5',
+						'#2196F3',
+						'#03A9F4',
+						'#00BCD4',
+						'#009688',
+						'#4CAF50',
+						'#8BC34A',
+						'#CDDC39',
+						'#FFEB3B',
+						'#FFC107',
+						'#FF9800',
+						'#FF5722',
+						'#795548',
+						'#9E9E9E',
+						'#607D8B',
+						'#000000',
+						'#FFFFFF'
+					],
+					components: {
+						// Main components
+						preview: true,
+						opacity: true,
+						hue: true,
+
+						// Input / output Options
+						interaction: {
+							hex: true,
+							input: true
+						}
+					}
+				});
+
+				pickr.on("init", function(instance) {
+					let pickrID = "pickr-" + elemID;
+					$(pickr._root.button).attr("id", pickrID);
+					$(pickr._root.button).addClass("pickr-initialized");
+					_pickrs[pickrID] = instance;
+				});
+
+				pickr.on("change", function(color, instance) {
+					pickr.applyColor();
+				});
+
+				pickr.on("save", function(color, instance) {
+					let $button = $(pickr._root.button),
+							$field = $button.closest(".nme-setting-field"),
+							fieldType = $field.data("field-type"),
+							$section = $button.closest(".nme-setting-section"),
+							group = $section.data("setting-group"),
+							colorVal = color.toHEXA().toString(),
+							$block,
+							$target;
+					/*
+					console.log('save');
+					console.log(color);
+					console.log(instance);
+					*/
+
+					if (group == "page") {
+						if (fieldType == "background-color") {
+							$target = $("#nme-body-table");
+
+							// Update color to dom
+							$target.css(fieldType, colorVal);
+							$target.attr("bgcolor", colorVal);
+
+							// Update color to json
+							_data["settings"]["styles"]["page"][fieldType] = colorVal;
+						}
+					}
+
+					if (group == "title") {
+						$block = $(".nme-block[data-type='title']");
+
+						if (fieldType == "color") {
+							$target = $block.find(".nme-elem");
+							$target.css(fieldType, colorVal);
+
+							$block.each(function() {
+								let $this = $(this),
+										section = $this.data("section"),
+										blockID = $this.data("id");
+
+								// Update color to json
+								_data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+							});
+						}
+					}
+
+					if (group == "button") {
+						$block = $(".nme-block[data-type='button']:not([data-elem-override='true'])");
+
+						if (fieldType == "color") {
+							$target = $block.find(".nme-elem");
+							$target.css(fieldType, colorVal);
+
+							$block.each(function() {
+								let $this = $(this),
+										section = $this.data("section"),
+										blockID = $this.data("id");
+
+								// Update color to json
+								_data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+							});
+						}
+
+						if (fieldType == "background-color") {
+							$target = $block.find("[data-settings-target='elemContainer']");
+
+							// Update color to dom
+							$target.css(fieldType, colorVal);
+							$target.attr("bgcolor", colorVal);
+
+							$block.each(function() {
+								let $this = $(this),
+										section = $this.data("section"),
+										blockID = $this.data("id");
+
+								// Update color to json
+								_data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+							});
+						}
+					}
+
+					_nmeData.update();
+				});
+			}
+		};
+
+		if ($(".nme-setting-picker").length) {
+			$(".nme-setting-picker").each(function() {
+				let $this = $(this),
+						thisID = $this.attr("id"),
+						$field = $this.closest(".nme-setting-field"),
+						fieldType = $field.data("field-type"),
+						$section = $this.closest(".nme-setting-section"),
+						group = $section.data("setting-group"),
+						defaultColor = _themes["default"]["styles"][group][fieldType];
+
+				pickrInit(thisID, defaultColor);
+			});
+		}
+
+		if ($(".nme-setting-select").length) {
+			$(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
+				let $select = $(this),
+						selectID = $select.attr("id"),
+						val = $select.val(),
+						$field = $select.closest(".nme-setting-field"),
+						fieldType = $field.data("field-type"),
+						$section = $select.closest(".nme-setting-section"),
+						group = $section.data("setting-group"),
+						$block,
+						$target;
+
+				if (selectID == "nme-theme-setting-select") {
+					let themeSettings = _themes[val];
+
+					for (let group in _themes[val]["styles"]) {
+						for (let fieldType in _themes[val]["styles"][group]) {
+							let colorVal = _themes[val]["styles"][group][fieldType],
+									$pickr = $(".nme-setting-section[data-setting-group='" + group + "'] .nme-setting-field[data-field-type='" + fieldType + "'] .pcr-button");
+
+							if ($pickr.length) {
+								let pickrID = $pickr.attr("id"),
+										pickrIns = _pickrs[pickrID];
+
+								pickrIns.setColor(colorVal);
+							}
+						}
+					}
+				}
+
+				if (group == "title") {
+					$block = $(".nme-block[data-type='title']");
+
+					if (fieldType == "font-size") {
+						$target = $block.find(".nme-elem");
+						$target.css(fieldType, val);
+
+						$block.each(function() {
+							let $this = $(this),
+									section = $this.data("section"),
+									blockID = $this.data("id");
+
+							// Update color to json
+							_data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+						});
+					}
+				}
+			});
 		}
 	};
 
@@ -1077,6 +1357,8 @@
 						_data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
 						_nmeData.update();
 					}
+
+					$block.attr("data-elem-override", true);
 				});
 			}
 		};
@@ -1084,7 +1366,7 @@
 		$(".handle-style:not(.pickr-initialized)").each(function() {
 			let pickrID = this.id;
 			pickrInit(pickrID);
-			_pickrs.push(pickrID);
+			// _pickrs.push(pickrID);
 			// console.log(_pickrs); // has a issue
 		});
 	};
@@ -1336,6 +1618,8 @@
 			$thisTabLink.addClass(ACTIVE_CLASS);
 			$targetTabContent.addClass(ACTIVE_CLASS);
 		});
+
+		_nmeGlobalSetting();
 	};
 
 	var _nmEditorInit = function() {
