@@ -4325,14 +4325,14 @@ ul.ui-sortable {
   cursor: pointer;
 }
 .crm-container .premiums-listings tr.not-available {
-  color: #AAA !important;
   font-size: 0.85em;
 }
 .crm-container .premiums-listings tr.not-available .premium-img img {
   height: 50px;
   opacity: .5;
 }
-.crm-container .premiums-listings tr.not-available .premium-info .description {
+.crm-container .premiums-listings tr.not-available .premium-info .description,
+.crm-container .premiums-listings tr.not-available .premium-info .description .zmdi{
   color: red;
 }
 

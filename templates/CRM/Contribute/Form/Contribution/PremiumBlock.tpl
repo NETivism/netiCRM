@@ -47,6 +47,7 @@ cj(document).ready(function($){
   var filterPremiumByAmount = function(amt, amt_recur){
     $('tr.product-row').addClass('not-available');
     $('tr.product-row input[name=selectProduct]').prop('disabled', false);
+    $('tr.product-row.not-available .premium-info .description').find('.zmdi-alert-triangle').remove();
     var $available = $("input[name=selectProduct]").filter(function(idx){
       if (amt < $(this).data('min-contribution') && amt > 0) {
         return false;
@@ -75,7 +76,7 @@ cj(document).ready(function($){
       $('input[name=selectProduct]').prop('checked', false);
     }
     $('tr.product-row.not-available input[name=selectProduct]').prop('disabled', true);
-    $('tr.product-row.not-available .premium-info .description').show();
+    $('tr.product-row.not-available .premium-info .description').prepend('<i class="zmdi zmdi-alert-triangle"></i>');
   }
   var initialize = function (){
     if ($("input[name=amount_other]").val()) {
