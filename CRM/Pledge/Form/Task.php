@@ -85,7 +85,7 @@ class CRM_Pledge_Form_Task extends CRM_Core_Form {
   static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_pledgeIds = array();
 
-    $values = $form->controller->exportValues('Search');
+    $values = $form->controller->exportValues($form->get('searchFormName'));
 
     $form->_task = $values['task'];
     $pledgeTasks = CRM_Pledge_Task::tasks();
@@ -102,10 +102,15 @@ class CRM_Pledge_Form_Task extends CRM_Core_Form {
     }
     else {
       $queryParams = $form->get('queryParams');
+      $sortOrder = NULL;
+      if ($form->get(CRM_Utils_Sort::SORT_ORDER)) {
+        $sortOrder = $form->get(CRM_Utils_Sort::SORT_ORDER);
+      }
+
       $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
         CRM_Contact_BAO_Query::MODE_PLEDGE
       );
-      $result = $query->searchQuery(0, 0, NULL);
+      $result = $query->searchQuery(0, 0, $sortOrder);
       while ($result->fetch()) {
         $ids[] = $result->pledge_id;
       }
@@ -126,8 +131,15 @@ class CRM_Pledge_Form_Task extends CRM_Core_Form {
       $urlParams .= "&qfKey=$qfKey";
     }
 
-    $session = CRM_Core_Session::singleton();
-    $session->replaceUserContext(CRM_Utils_System::url('civicrm/pledge/search', $urlParams));
+    $searchFormName = strtolower($form->get('searchFormName'));
+    if ($searchFormName == 'search') {
+      $session->replaceUserContext(CRM_Utils_System::url('civicrm/pledge/search', $urlParams));
+    }
+    else {
+      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
+          $urlParams
+        ));
+    }
   }
 
   /**
