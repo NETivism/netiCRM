@@ -163,8 +163,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
       'first' => ts('Non-Cumulative Mode'),
       'cumulative' => ts('Cumulative Mode'),
     );
-    $this->addRadio('calculate_mode', '', $options, NULL, '<br>');
-    $this->addNumber('min_contribution_recur', '');
+    $this->addRadio('calculate_mode', ts('Threshold').' - '.ts('Recurring Contribution'), $options, NULL, '<br>', TRUE);
+    $this->addNumber('min_contribution_recur', ts('Threshold').' - '.ts('Recurring Contribution'), NULL, TRUE);
     $this->addNumber('installments', '');
 
     $this->add('textarea', 'options', ts('Options'), 'rows=3, cols=60');
