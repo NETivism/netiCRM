@@ -202,6 +202,8 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-setting-panels-content {
   padding-top: 20px;
   padding-bottom: 20px;
+  height: calc(100vh - 30px - 60px - 66px - 64px);
+  overflow-y: auto;
 }
 .nme-setting-panels-footer {
   position: absolute;
@@ -304,6 +306,9 @@ ul.nme-block-list > li {
   background-color: #ffffff;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.18);
   border-radius: 6px;
+}
+ul.nme-block-list > li:nth-child(even) {
+  margin-right: 0;
 }
 ul.nme-block-list > li:hover {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
