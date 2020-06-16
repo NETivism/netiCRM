@@ -601,7 +601,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       $session->set('transaction.userID', $this->get('userID'));
     }
     else {
-      $session->set('transaction.userID', NULL);
+      $session->set('transaction.userID', $contactID);
     }
 
     // store the fact that this is a membership and membership type is selected
