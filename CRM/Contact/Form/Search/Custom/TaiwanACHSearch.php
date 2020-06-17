@@ -408,7 +408,7 @@ $having
       'label' => ts('Search Results'),
       'value' => ts('There are %1 recurring contributions.', array(1 => $count)),
     );
-    $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount FROM {$this->_tableName} WHERE 1");
+    $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount FROM {$this->_tableName} WHERE ".$this->where());
     $query->fetch();
     
     if ($query->amount) {
