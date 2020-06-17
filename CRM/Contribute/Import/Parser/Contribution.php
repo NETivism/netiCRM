@@ -241,6 +241,18 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       );
     }
     $this->_dedupeRuleFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
+    $hasSortName = array_search('sort_name', $this->_dedupeRuleFields);
+    $hasDisplayName = array_search('display_name', $this->_dedupeRuleFields);
+    if ($hasSortName !== FALSE) {
+      unset($this->_dedupeRuleFields[$hasSortName]);
+    }
+    if ($hasDisplayName !== FALSE) {
+      unset($this->_dedupeRuleFields[$hasDisplayName]);
+    }
+    if ($hasSortName !== FALSE || $hasDisplayName !== FALSE) {
+      $this->_dedupeRuleFields[] = 'last_name';
+      $this->_dedupeRuleFields[] = 'first_name';
+    }
   }
 
   /**
@@ -285,8 +297,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $statusFieldName = $this->_statusFieldName;
 
     //for date-Formats
-    $session = CRM_Core_Session::singleton();
-    $dateType = $session->get("dateTypes");
+    $dateType = $this->_dateFormats;
     $addedError = NULL;
     foreach ($params as $key => $val) {
       $contactExists = NULL;
@@ -456,9 +467,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $formatted['skipRecentView'] = TRUE;
 
     //for date-Formats
-    $session = CRM_Core_Session::singleton();
-    $dateType = $session->get("dateTypes");
-
+    $dateType = $this->_dateFormats;
     $customFields = CRM_Core_BAO_CustomField::getFields(CRM_Utils_Array::value('contact_type', $params));
 
     foreach ($params as $key => $val) {
@@ -699,17 +708,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       }
       else {
         // Using new Dedupe rule for error message handling
-        if (!empty($this->_dedupeRuleGroupId)) {
-          $ruleParams = array(
-            'id' => $this->_dedupeRuleGroupId,
-          );
-        }
-        else {
-          $ruleParams = array(
-            'contact_type' => $this->_contactType,
-            'level' => 'Strict',
-          );
-        }
         $fieldsArray = $this->_dedupeRuleFields;
 
         $dispArray = array();
@@ -772,6 +770,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     // catach all for CRM_Contribute_Import_Parser::DUPLICATE_SKIP
     $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => $errDisp);
     $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
+    array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
     return CRM_Contribute_Import_Parser::ERROR;
   }
 

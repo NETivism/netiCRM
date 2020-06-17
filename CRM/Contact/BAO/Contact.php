@@ -731,6 +731,14 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
       $logDAO->entity_id = $id;
       $logDAO->delete();
 
+      // register log entry to indicate who delete this contact
+      $session = CRM_Core_Session::singleton();
+      $userID = $session->get('userID');
+      $ufID = CRM_Core_BAO_UFMatch::getUFId($userID);
+      $hiddenSortname = mb_substr($contact->sort_name, 0, 1).'***'.mb_substr($contact->sort_name, -1);
+      $data = ts('Permanently Delete Contact')." $hiddenSortname by UFID:$ufID, ContactID:$userID";
+      CRM_Core_BAO_Log::register($id, 'civicrm_contact', $id, NULL, $data);
+
       // do activity cleanup, CRM-5604
       require_once 'CRM/Activity/BAO/Activity.php';
       CRM_Activity_BAO_activity::cleanupActivity($id);

@@ -161,8 +161,7 @@
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
     <div class="crm-participant-form-block-delete messages status">
                 <div class="crm-content">
-                     &nbsp;
-                    {ts}WARNING: Deleting this registration will result in the loss of related payment records (if any).{/ts} {ts}Do you want to continue?{/ts}
+                    {ts}Are you sure you want to delete the selected participations?{/ts}
                 </div>
           {if $additionalParticipant}
                     <div class="crm-content">

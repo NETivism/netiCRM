@@ -94,7 +94,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     $this->addButtons(array(
         array(
           'type' => 'next',
-          'name' => '>> ' . ts('Change Payment Method'),
+          'name' => ts('Change Payment Method'),
           'isDefault' => TRUE,
         ),
       )

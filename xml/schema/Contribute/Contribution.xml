@@ -88,8 +88,10 @@
   </foreignKey>
   <field>   
       <name>payment_processor_id</name>
+      <title>Payment Processor</title>
       <type>int unsigned</type>
       <comment>FK to Payment Processor</comment>   
+      <export>true</export>
       <add>3.3</add>   
   </field>  
   <foreignKey> 
