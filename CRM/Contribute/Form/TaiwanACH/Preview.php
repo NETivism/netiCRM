@@ -16,6 +16,17 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   }
 
   function buildQuickForm() {
+
+    $result = $this->get('parseResult');
+    if ($result['import_type'] == 'transaction') {
+      $dateLabel = ts('Receive Date');
+    }
+    else {
+      $dateLabel = ts('Start Date');
+    }
+
+    $this->addDateTime('receive_date', $dateLabel, False, array('formatType' => 'activityDateTime'));
+
     if (!empty($this->_parseResult)) {
       $this->addButtons(array(
           array('type' => 'back',
@@ -54,7 +65,10 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = array(
+      'receive_date' => date('Y-m-d'),
+      'receive_date_time' => date('H:i:s'),
+    );
     return $defaults;
   }
 
@@ -62,13 +76,16 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   function postProcess() {
     // send parseResult into BAO
     // Considering type is Bank or Post in process function
+    $receiveDate = $this->exportValue('receive_date').' '.$this->exportValue('receive_date_time');
     if ($this->_parseResult['import_type'] == 'verification') {
       foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
+        $this->_parseResult['parsed_data'][$id]['process_date'] = $receiveDate;
         $this->_processResult[$id] = CRM_Contribute_BAO_TaiwanACH::doProcessVerification($id, $this->_parseResult['parsed_data'][$id], FALSE);
       }
     }
     elseif ($this->_parseResult['import_type'] == 'transaction') {
       foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
+        $this->_parseResult['parsed_data'][$id]['process_date'] = $receiveDate;
         $this->_processResult[$id] = CRM_Contribute_BAO_TaiwanACH::doProcessTransaction($id, $this->_parseResult['parsed_data'][$id], FALSE);
       }
     }

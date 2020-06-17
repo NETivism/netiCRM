@@ -46,5 +46,10 @@
  </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 
+  <div class="crm-block crm-form-block crm-form-block-taiwanach-import">
+    <span class="label">{$form.receive_date.label}</span>
+    <span>{include file="CRM/common/jcalendar.tpl" elementName="receive_date"}</span>
+  </div>
+
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

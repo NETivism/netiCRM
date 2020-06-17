@@ -1107,7 +1107,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessVerification($recurId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = count($parsedData);
+    $arrayLen = max(array_keys($parsedData))+1;
     if ($arrayLen == 18 ) {
       $processType = self::BANK;
     }
@@ -1121,7 +1121,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $result['id'] = $taiwanACHData['contribution_recur_id'];
     $result['total_amount'] = $result['amount'];
     $result['contribution_type_id'] = $contributionTypeId;
-    $result['start_date'] = ts('Process Date');
+    $result['start_date'] = '';
 
     // check invoice_id
     // check Amount
@@ -1142,7 +1142,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
             $allFailedReason = CRM_Contribute_PseudoConstant::taiwanACHFailedReason();
             $failedReason = $allFailedReason[$processType][self::VERIFICATION][12][$parsedData[12]];
             $result['verification_failed_reason'] = $failedReason;
-            $result['verification_failed_date'] = ts('Process Date');
+            $result['verification_failed_date'] = '';
           }
         }
         else {
@@ -1161,7 +1161,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $failedReason = $allFailedReason[$processType][self::VERIFICATION][11][$parsedData[11]]."\n";
           $failedReason .= $allFailedReason[$processType][self::VERIFICATION][12][$parsedData[12]];
           $result['verification_failed_reason'] = $failedReason;
-          $result['verification_failed_date'] = ts('Process Date');
+          $result['verification_failed_date'] = '';
         }
       }
     }
@@ -1179,12 +1179,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // if $isPreview is FALSE, Execute modify CRM data.
     $taiwanACHData['stamp_verification'] = $result['stamp_verification'];
     if ($result['stamp_verification'] == 1) {
-      $taiwanACHData['start_date'] = date('Y-m-d H:i:s');
+      $taiwanACHData['start_date'] = $parsedData['process_date'];
       $taiwanACHData['contribution_status_id'] = $result['contribution_status_id'];
     }
     else if ($result['stamp_verification'] == 2){
       $taiwanACHData['data']['verification_failed_reason'] = $result['verification_failed_reason'];
-      $taiwanACHData['data']['verification_failed_date'] = date('Y-m-d H:i:s');
+      $taiwanACHData['data']['verification_failed_date'] = $parsedData['process_date'];
     }
     self::add($taiwanACHData);
     return $result;
@@ -1225,11 +1225,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
     if ($isSuccess) {
       $result['contribution_status_id'] = 1;
-      $result['receive_date'] = ts('Process Date');
+      $result['receive_date'] = $parsedData['process_date'];
     }
     else {
       $result['contribution_status_id'] = 4;
-      $result['cancel_date'] = ts('Process Date');
+      $result['cancel_date'] = $parsedData['process_date'];
       $allFailedReason = CRM_Contribute_PseudoConstant::taiwanACHFailedReason();
       if ($processType == self::BANK) {
         $result['cancel_reason'] = $allFailedReason[$processType][self::TRANSACTION][9][$parsedData[9]];
@@ -1273,7 +1273,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
         $input['amount'] = $objects['contribution']->amount;
         $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
-        $objects['contribution']->receive_date = date('YmdHis', $receiveTime);
+        $objects['contribution']->receive_date = date('YmdHis', strtotime($parsedData['process_date']));
         $sendMail = TRUE;
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
         if (!empty($ids['contributionRecur'])) {
