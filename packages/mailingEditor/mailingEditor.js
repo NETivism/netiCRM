@@ -394,50 +394,29 @@
 		}
 	};
 
-	var _nmeElem = {
-		add: function(type, mode, source) {
-			let output = "",
-					elemType = typeof type !== undefined ? type : "",
-					elemMode = typeof mode !== undefined ? mode : "view",
-					targetID = typeof source !== undefined ? source : null;
+	var _nmeSetStyles = function($container, stylesData, target) {
+		let setTarget = typeof target !== "undefined" ? target : "children";
 
-			switch (elemType) {
-				case "image":
-					if (targetID) {
-						output =  "<img src='" + _data.blocks[targetID].data + "' alt=''>";
-					}
-					else {
-						output = "<img src='https://unsplash.it/1360/600?image=972' alt=''>";
-					}
-					break;
+		if (_domElemExist($container) && Object.getOwnPropertyNames(stylesData).length > 0) {
+			for (let styleTarget in stylesData) {
+				let $styleTarget = setTarget == "self" ? $container : $container.find("[data-settings-target='" + styleTarget + "']");
 
-				case "title":
-					if (elemMode == "edit") {
-						if (targetID) {
-							output =  "";
-						}
-						else {
-							output = "";
-						}
-					}
-					else {
-						if (targetID) {
-							output =  "";
-						}
-						else {
-							output = "";
-						}
-					}
-					break;
+				console.log($styleTarget);
+				for (let styleProperty in stylesData[styleTarget]) {
+					let styleValue = stylesData[styleTarget][styleProperty];
+					$styleTarget.css(styleProperty, styleValue);
 
-				case "paragraph":
-					break;
+					// If style property is 'background-color', also need to set value to 'bgcolor' dom attribute, because some versions of the email application do not support 'background-color'
+					if (styleProperty == "background-color") {
+						$styleTarget.attr("bgcolor", styleValue);
+					}
+				}
 
-				case "button":
+				// If target is 'self', only get one row data.
+				if (setTarget == "self") {
 					break;
+				}
 			}
-
-			return output;
 		}
 	};
 
@@ -453,24 +432,6 @@
 						blockSection = block.section,
 						blockID = block.id ? block.id : blockType + "-" + _renderID(),
 						disallowSortType = ["header", "footer"];
-
-				let setStyles = function($nmeb, blockStyles) {
-					if (_domElemExist($nmeb) && Object.getOwnPropertyNames(blockStyles).length > 0) {
-						for (let styleTarget in blockStyles) {
-							let $styleTarget = $nmeb.find("[data-settings-target='" + styleTarget + "']");
-
-							for (let styleProperty in blockStyles[styleTarget]) {
-								let styleValue = blockStyles[styleTarget][styleProperty];
-								$styleTarget.css(styleProperty, styleValue);
-
-								// If style property is 'background-color', also need to set value to 'bgcolor' dom attribute, because some versions of the email application do not support 'background-color'
-								if (styleProperty == "background-color") {
-									$styleTarget.attr("bgcolor", styleValue);
-								}
-							}
-						}
-					}
-				}
 
 				if (blockMode == "view") {
 					//_loadTemplate("block--edit", "block", "default", targetContainer);
@@ -492,7 +453,7 @@
 
 						if ($nmeb.length) {
 							// Set styles
-							setStyles($nmeb, block.styles);
+							_nmeSetStyles($nmeb, block.styles);
 
 							if ($nmebElem.length) {
 								let decodeContent = "";
@@ -604,7 +565,7 @@
 							$nmeb.attr("data-id", blockID);
 
 							// Set styles
-							setStyles($nmeb, block.styles);
+							_nmeSetStyles($nmeb, block.styles);
 
 							if ($nmebElem.length) {
 								let decodeContent = "";
@@ -738,6 +699,9 @@
 			$(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
 			$(_main).children(".inner").append(mailTpl);
 
+			// Added styles to body table
+			_nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
+
 			if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
 				for (let section in _data.sections) {
 					if (!_sectionIsEmpty(section)) {
@@ -830,6 +794,7 @@
 		let $mailFrameBody = $("#nme-mail-output-frame").contents().find("body");
 
 		$mailOutputContent.html(mailTpl);
+		_nmeSetStyles($mailOutputContent.find(".nme-body-table"), _data.settings.styles, "self");
 
 		if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
 			for (let section in _data.sections) {
@@ -935,7 +900,7 @@
 
 					if (group == "page") {
 						if (fieldType == "background-color") {
-							$target = $("#nme-body-table");
+							$target = $(_main).find(".nme-body-table");
 
 							// Update color to dom
 							$target.css(fieldType, colorVal);
