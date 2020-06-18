@@ -660,6 +660,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[0]']");
         this.evaluate(function () {
             document.querySelector("select[name='data_type[0]']").selectedIndex = 1;
+            document.querySelector("select[name='data_type[0]']").onchange();
         });
     }, function fail() {
         test.assertExists("select[name='data_type[0]']");
@@ -696,6 +697,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[0]']");
         this.evaluate(function () {
             document.querySelector("select[name='data_type[0]']").selectedIndex = 2;
+            document.querySelector("select[name='data_type[0]']").onchange();
         });
     }, function fail() {
         test.assertExists("select[name='data_type[0]']");
@@ -732,6 +734,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[0]']");
         this.evaluate(function () {
             document.querySelector("select[name='data_type[0]']").selectedIndex = 3;
+            document.querySelector("select[name='data_type[0]']").onchange();
         });
     }, function fail() {
         test.assertExists("select[name='data_type[0]']");
@@ -858,6 +861,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[0]']");
         this.evaluate(function () {
             document.querySelector("select[name='data_type[0]']").selectedIndex = 5;
+            document.querySelector("select[name='data_type[0]']").onchange();
         });
     }, function fail() {
         test.assertExists("select[name='data_type[0]']");
@@ -912,6 +916,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[0]']");
         this.evaluate(function () {
             document.querySelector("select[name='data_type[0]']").selectedIndex = 6;
+            document.querySelector("select[name='data_type[0]']").onchange();
         });
     }, function fail() {
         test.assertExists("select[name='data_type[0]']");
@@ -1543,6 +1548,91 @@ casper.test.begin('Resurrectio test', function(test) {
             return a - b;
         });
         test.assertEquals(ids, id_no_duplicate);
+    });
+
+    /*
+     * Input All Fields
+    */
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 6: Input All Fields. **');
+        casper.echo('=====================================');
+    });
+
+    /* get all text input id */
+    var text_id_for_input = [];
+    casper.then(function() {
+        casper.echo('** Step 6-1: Get all text id. **');
+        var text_ids = this.evaluate(function(custom_id) {
+            var all_text = document.getElementById('customData' + custom_id).querySelectorAll('input[type="text"]:not(.hiddenElement):not(.dateplugin):not(.ac_input)');
+            var text_ids = [];
+            for(var i = 0; i < all_text.length; i++){
+                var sp = all_text[i].id.split('_');
+                text_ids.push(sp[1]);
+            }
+            return text_ids;
+        }, custom_id);
+        text_ids.forEach(function(text_id) {
+            text_id_for_input.push(text_id);
+        });
+    });
+
+    /* input all text */
+    casper.then(function() {
+        casper.echo('** Step 6-2: Input all text. **');
+        text_id_for_input.forEach(function(text_id) {
+            casper.waitForSelector('input[name="custom_' + text_id + '_-1"]', function success() {
+                this.sendKeys('input[name="custom_' + text_id + '_-1"]', makeid(5));
+            }, function fail() {
+                test.assertExists('input[name="custom_' + text_id + '_-1"]');
+            });
+        });
+    });
+
+    casper.then(function() {
+        this.capture('Filled_up_text.png');
+    });
+
+
+    /* get all select id */
+    var select_id_for_input = [];
+    casper.then(function() {
+        casper.echo('** Step 6-3: Get all select id. **');
+        var select_ids = this.evaluate(function(custom_id) {
+            var all_select = document.getElementById('customData' + custom_id).querySelectorAll('select');
+            var select_ids = [];
+            for(var i = 0; i < all_select.length; i++){
+                var sp = all_select[i].id.split('_');
+                select_ids.push(sp[1]);
+            }
+            return select_ids;
+        }, custom_id);
+        select_ids.forEach(function(select_id) {
+            select_id_for_input.push(select_id);
+        });
+        this.echo(select_id_for_input);
+    });
+
+    /* input all select */
+    casper.then(function() {
+        casper.echo('** Step 6-4: Input all select. **');
+        select_id_for_input.forEach(function(select_id) {
+            casper.waitForSelector('#custom_' + select_id + '_-1', function success() {
+                this.evaluate(function (select_id) {
+                    if(document.getElementById('custom_' + select_id + '_-1').options.length >= 2){
+                        document.getElementById('custom_' + select_id + '_-1').selectedIndex = 1;
+                    } else {
+                        document.getElementById('custom_' + select_id + '_-1').selectedIndex = 0;
+                    }
+                }, select_id);
+            }, function fail() {
+                test.assertExists('custom_' + select_id + '_-1');
+            });
+        });
+    });
+
+    casper.then(function() {
+        this.capture('Filled_up_select.png');
     });
 
     casper.run(function() {
