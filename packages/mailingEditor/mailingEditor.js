@@ -160,6 +160,12 @@
 		}
 	}
 
+	var _objClone = function(obj) {
+		if (typeof obj === "object") {
+			return JSON.parse(JSON.stringify(obj));
+		}
+	}
+
 	var _objIsEmpty = function(obj) {
 		if (typeof obj === "object") {
 			for (var key in obj) {
@@ -401,7 +407,6 @@
 			for (let styleTarget in stylesData) {
 				let $styleTarget = setTarget == "self" ? $container : $container.find("[data-settings-target='" + styleTarget + "']");
 
-				console.log($styleTarget);
 				for (let styleProperty in stylesData[styleTarget]) {
 					let styleValue = stylesData[styleTarget][styleProperty];
 					$styleTarget.css(styleProperty, styleValue);
@@ -642,7 +647,6 @@
 
 								_nmeBlockControl.render(blockID, blockType);
 								_editable();
-								_colorable();
 							}
 
 							// Check control permission of each block
@@ -718,9 +722,7 @@
 							_nmeBlock.add(blockData, "edit", $(blocksContainer));
 						}
 
-						_editable();
 						_sortable();
-						_colorable();
 						_nmePanels();
 						_nmePreview.init();
 						_onScreenCenterElem(".nme-block");
@@ -1235,8 +1237,10 @@
 		});
 	};
 
-	var _colorable = function() {
-		var pickrInit = function(elemID) {
+	var _colorable = function(elemID) {
+		var elemID = typeof elemID !== "undefined" ? elemID : "";
+
+		var pickrInit = function(elemID, defaultColor) {
 			let targetSelector = "#" + elemID,
 					$target = $(targetSelector);
 
@@ -1284,7 +1288,9 @@
 				});
 
 				pickr.on("init", function(instance) {
+					let pickrID = "pickr-" + elemID;
 					$(pickr._root.button).addClass("pickr-initialized");
+					_pickrs[pickrID] = instance;
 				});
 
 				pickr.on("change", function(color, instance) {
@@ -1320,6 +1326,7 @@
 
 						// Update color to json
 						_data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
+						_data["sections"][section]["blocks"][blockID]["override"]["elem"] = true;
 						_nmeData.update();
 					}
 
@@ -1328,12 +1335,9 @@
 			}
 		};
 
-		$(".handle-style:not(.pickr-initialized)").each(function() {
-			let pickrID = this.id;
-			pickrInit(pickrID);
-			// _pickrs.push(pickrID);
-			// console.log(_pickrs); // has a issue
-		});
+		if (elemID) {
+			pickrInit(elemID);
+		}
 	};
 
 	var _submitConfirm = function($trigger) {
@@ -1412,15 +1416,19 @@
 				}
 
 				$block.find(".nme-block-actions").prepend(output);
-				_nmeBlockControl.init();
+				_nmeBlockControl.init(blockID);
 			}
 		},
-		init: function() {
-			$(".nme-block-control").off("click").on("click", ".handle-btn", function(event) {
+		init: function(id) {
+			let blockID = typeof id !== "undefined" ? id : "",
+					$block = $(".nme-block[data-id='" + blockID + "']");
+
+			$block.find(".nme-block-control").on("click", ".handle-btn", function(event) {
 				event.preventDefault();
 				event.stopPropagation();
 
 				let $handle = $(this),
+						handleID = $handle.attr("id"),
 						handleType = $handle.data("type"),
 						$block = $handle.closest(".nme-block"),
 						blockID = $block.data("id"),
@@ -1467,7 +1475,7 @@
 				// Block control: actions group
 				// clone
 				if (handleType == "clone") {
-					let cloneData = Object.assign({}, _data["sections"][section]["blocks"][blockID]),
+					let cloneData = _objClone(_data["sections"][section]["blocks"][blockID]),
 							cloneBlockID = blockType + "-" + _renderID();
 
 					cloneData.id = cloneBlockID;
@@ -1479,7 +1487,7 @@
 
 				// delete
 				if (handleType == "delete") {
-					let deleteData = Object.assign({}, _data["sections"][section]["blocks"][blockID]);
+					let deleteData = _objClone(_data["sections"][section]["blocks"][blockID]);
 					_nmeBlock.delete(deleteData);
 				}
 
@@ -1549,6 +1557,11 @@
 					}
 				}
 			});
+
+			// handle type: style
+			if ($block.find(".handle-style").length) {
+				_colorable($block.find(".handle-style").attr("id"));
+			}
 		}
 	};
 
