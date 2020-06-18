@@ -93,7 +93,7 @@
             <td>{$form.receiptTypeDefault.html}</td>
         </tr>
         <tr class="crm-form-block-uploadBigStamp">
-            <td class="label">{$form.uploadBigStamp.label}<div class="label-test">{ts}test{/ts}</div></td>
+            <td class="label">{$form.uploadBigStamp.label}</td>
             <td class="value">
                 {if $imageBigStampUrl}
                 <img style="max-height: 103px;" src="{$imageBigStampUrl}">
@@ -104,7 +104,7 @@
             <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
         </tr>
         <tr class="crm-form-block-uploadSmallStamp">
-            <td class="label">{$form.uploadSmallStamp.label}<div class="label-test">{ts}test{/ts}</div></td>
+            <td class="label">{$form.uploadSmallStamp.label}</td>
             <td class="value">
                 {if $imageSmallStampUrl}
                 <img style="max-height: 43px;" src="{$imageSmallStampUrl}">
@@ -114,6 +114,14 @@
                 {$form.uploadSmallStamp.html}<br />
             <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
         </tr>
+        {if $form.receiptEmailAuto}
+        <tr class="crm-form-block-receiptEmailAuto">
+            <td class="label">{$form.receiptEmailAuto.label}</td><td>{$form.receiptEmailAuto.html}<br />    
+            <span class="description">{ts}Check to attach formal receipt PDF on notification email after every complete transaction.{/ts}</span>
+            <span class="description font-red">{ts}This option only effect transaction from contribution page and belonged page enable notification confirmation and the contribution type is tax-deductible.{/ts}</span>
+            </td>
+        </tr>
+        {/if}
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>

@@ -975,6 +975,7 @@ class CRM_Core_Payment_BaseIPN {
         $template->assign('is_separate_payment', 0);
       }
       $values['contribution_id'] = $contribution->id;
+      $values['source'] = $contribution->source;
       if (CRM_Utils_Array::value('related_contact', $ids)) {
         $values['related_contact'] = $ids['related_contact'];
         if (isset($ids['onbehalf_dupe_alert'])) {

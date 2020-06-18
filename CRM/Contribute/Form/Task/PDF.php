@@ -228,7 +228,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $location = $domain->getLocationValues();
 
     $baseIPN = new CRM_Core_Payment_BaseIPN();
-    $config = &CRM_Core_Config::singleton();
+    $config = CRM_Core_Config::singleton();
     $count = 0;
 
     foreach ($details as $contribID => $detail) {
@@ -253,7 +253,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         continue;
       }
 
-      $template = &CRM_Core_Smarty::singleton();
+      $template = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);
       $template->assign('print_type', $print_type);
       $template->assign('print_type_count', count($print_type));
       $template->assign('single_page_letter', $window_envelope);
@@ -293,7 +293,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         }
         $receipt_id = CRM_Contribute_BAO_Contribution::genReceiptID($contribution);
       }
-      $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values);
+      $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values, $template);
 
       // do not use array to prevent memory exhusting
       self::pushFile($html);
@@ -303,6 +303,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $template->clearTemplateVars();
       $count++;
       unset($html);
+      unset($template);
     }
   }
 

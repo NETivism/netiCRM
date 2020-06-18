@@ -1934,7 +1934,7 @@ SELECT source_contact_id
     );
   }
 
-  static function getReceipt(&$input, &$ids, &$objects, &$values) {
+  static function getReceipt(&$input, &$ids, &$objects, &$values, &$template = NULL) {
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
@@ -1952,7 +1952,9 @@ SELECT source_contact_id
     $custom_serial = $config->receiptSerial;
     $receipt_logo = $config->receiptLogo;
 
-    $template = &CRM_Core_Smarty::singleton();
+    if (empty($template)) {
+      $template = CRM_Core_Smarty::singleton();
+    }
 
     // add the new contribution values
     $template->assign('amount', $input['amount']);
@@ -2069,12 +2071,12 @@ SELECT source_contact_id
       'isTest' => $isTest,
     );
 
-    list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+    list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, $template);
     $all_tpl_vars = $template->get_template_vars();
     return $html;
   }
 
-  static function getAnnualReceipt($contact_id, $option, &$template) {
+  static function getAnnualReceipt($contact_id, $option, &$template = NULL) {
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
     $location = $domain->getLocationValues();
@@ -2193,7 +2195,7 @@ SELECT source_contact_id
         'tplParams' => $tplParams,
       );
 
-      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, $template);
       return $html;
     }
   }
