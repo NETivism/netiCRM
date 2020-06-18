@@ -1298,5 +1298,31 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       self::addNote($note, $objects['contribution']);
     }
   }
+
+  static function doStatusCheck() {
+    // update recurring status when end date is due
+    $currentDay = date('Y-m-d 00:00:00');
+    $sql = "SELECT r.id, r.end_date, r.contribution_status_id, c.payment_processor_id, c.is_test FROM civicrm_contribution_recur r
+ INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id
+ WHERE r.end_date IS NOT NULL AND r.end_date < %1 AND r.contribution_status_id = 5 GROUP BY r.id";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(
+      1 => array($currentDay, 'String'),
+    ));
+    while ($dao->fetch()) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      if ($dao->id && strtolower($paymentProcessor['payment_processor_type']) == 'taiwanach') {
+        $params = array(
+          'id' => $dao->id,
+          'contribution_status_id' => 1,
+          'message' => ts("End date is due."),
+        );
+        CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
+        $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
+        $statusNote = $params['message'] . ts("Auto renews status");
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
+
+      }
+    }
+  }
 }
 
