@@ -1272,7 +1272,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       if($pass){
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
         $input['amount'] = $objects['contribution']->amount;
-        $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
         $objects['contribution']->receive_date = date('YmdHis', strtotime($parsedData['process_date']));
         $sendMail = TRUE;
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
@@ -1292,6 +1291,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
       else{
         // Failed
+        $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['cancel_date']));
         $ipn->failed($objects, $transaction, $result['cancel_reason']);
         $note = $result['cancel_reason'];
       }
