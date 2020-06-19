@@ -626,9 +626,19 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
-      $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, array('is_default' => 1));
-      $provider = reset($defaultProvider);
-      list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text']);
+      $sendSMS = TRUE;
+      if (!empty($contribution->contribution_recur_id)) {
+        $recurId = array($contribution->contribution_recur_id);
+        $count = CRM_Contribute_BAO_ContributionRecur::getCount($recurId);
+        if ($count[$recurId] > 1) {
+          $sendSMS = FALSE;
+        }
+      }
+      if ($sendSMS) {
+        $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, array('is_default' => 1));
+        $provider = reset($defaultProvider);
+        list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text'], $objects);
+      }
     }
   }
 

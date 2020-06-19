@@ -1386,13 +1386,15 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    *        Also cound be 1 integer of contact_id
    * @param integer $providerId
    * @param string $message
+   * @param array $values objects, contribution is $values['contribution']
    *
    * Copy from SMSCommon::postProcess
    */
   public static function prepareSMS(
     $contactIds,
     $providerId,
-    $message
+    $message,
+    $values = array()
   ) {
     $activityParams = array(
       'sms_provider_id' => $providerId,
@@ -1431,6 +1433,11 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
           $contact['is_deleted'] = $dao_contact->is_deleted;
           $contact['sort_name'] = $dao_contact->sort_name;
           $contact['display_name'] = $dao_contact->display_name;
+        }
+        if ($values['contribution']) {
+          foreach ($values['contribution'] as $key => $value) {
+            $contact["contribution.{$key}"] = $value;
+          }
         }
       }
       if(!empty($contact)){
@@ -1554,6 +1561,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       }
 
       $tokenText = CRM_Utils_Token::replaceContactTokens($text, $values, FALSE, $messageToken, FALSE, $escapeSmarty);
+      $tokenText = CRM_Utils_Token::replaceComponentTokens($tokenText, $values, $messageToken, TRUE);
       $tokenText = CRM_Utils_Token::replaceHookTokens($tokenText, $values, $categories, FALSE, $escapeSmarty);
 
       // Only send if the phone is of type mobile
