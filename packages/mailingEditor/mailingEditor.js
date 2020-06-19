@@ -275,7 +275,7 @@
 	}
 
 	var _objIsEmpty = function(obj) {
-		if (typeof obj === "object") {
+		if (typeof obj !== "undefined" && typeof obj === "object") {
 			for (var key in obj) {
 				if (obj.hasOwnProperty(key)) {
 					return false;
@@ -543,7 +543,7 @@
 						blockMode = typeof mode !== "undefined" ? mode : "view",
 						blockType = block.type,
 						blockSection = block.section,
-						blockID = block.id ? block.id : blockType + "-" + _renderID(),
+						blockID = block.id,
 						disallowSortType = ["header", "footer"];
 
 				if (blockMode == "view") {
@@ -636,8 +636,8 @@
 						let blockContent = _tpl.block[blockType],
 								blockEditContent = _tpl.block.edit,
 								blockSortable = "true",
-								blockOverride = typeof block.override.block !== "undefined" ? block.override.block : false,
-								elemOverride = typeof block.override.elem !== "undefined" ? block.override.elem : false;
+								blockOverride = typeof block.override !== "undefined" && typeof block.override.block !== "undefined" ? block.override.block : false,
+								elemOverride = typeof block.override !== "undefined" && typeof block.override.elem !== "undefined" ? block.override.elem : false;
 
 						if (disallowSortType.includes(blockType)) {
 							blockSortable = "false";
@@ -1703,6 +1703,33 @@
 		}
 	};
 
+	var _nmePanelsAddBlock = function() {
+		$(".nme-add-block-list").on("click", ".nme-add-block-btn", function() {
+			let $btn = $(this),
+					addSection = "body",
+					addBlockType = $btn.data("type"),
+					addBlockData = _tpl["data"][addBlockType]
+
+			if (!_objIsEmpty(addBlockData)) {
+				let addBlockID = addBlockType + "-" + _renderID(),
+						addMethod = $(".nme-blocks[data-section='" + addSection + "'] .nme-block.on-screen-center").length ? "after" : "append",
+						$addTarget = $(".nme-blocks[data-section='" + addSection + "'] .nme-block.on-screen-center").length ? $(".nme-blocks[data-section='" + addSection + "'] .nme-block.on-screen-center") : $(".nme-blocks[data-section='" + addSection + "']");
+
+				addBlockData.id = addBlockID;
+
+				// Added block dom
+				_nmeBlock.add(addBlockData, "edit", $addTarget, addMethod);
+
+				// Added block data
+				_data["sections"][addSection]["blocks"][addBlockID] = addBlockData;
+
+				// Reorder data
+				_sortables[addSection]["order"] = _sortables[addSection]["inst"].toArray();
+				_nmeData.sort(_sortables[addSection]["order"], addSection);
+			}
+		});
+	};
+
 	var _nmePanels = function() {
 		$(".nme-setting-panels").on("click", ".nme-setting-panels-trigger", function(event) {
 			event.preventDefault();
@@ -1735,6 +1762,7 @@
 			$targetTabContent.addClass(ACTIVE_CLASS);
 		});
 
+		_nmePanelsAddBlock();
 		_nmeGlobalSetting();
 	};
 
@@ -1903,7 +1931,7 @@
 						_tpl[tplLevel] = {};
 					}
 
-					_tpl[tplLevel][tplName] = tplOutput;
+					_tpl[tplLevel][tplName] = tplLevel == "data" ? JSON.parse(tplOutput) : tplOutput;
 
 					// After loading all the templates completely
 					if ((tplTotal - 1) == i) {

@@ -53,7 +53,7 @@
 						<div class="nme-setting-panel-inner">
 							<h3 class="nme-setting-panel-title">範本</h3>
 							<div class="nme-setting-panel-content">
-								<ul class="nme-tpl-list nme-block-list">
+								<ul class="nme-select-tpl-list nme-setting-item-list">
 									<li>單欄+三欄</li>
 									<li>單欄+三欄+左右左</li>
 									<li>全單欄</li>
@@ -67,14 +67,11 @@
 						<div class="nme-setting-panel-inner">
 							<h3 class="nme-setting-panel-title">區塊</h3>
 							<div class="nme-setting-panel-content">
-								<ul class="nme-block-list">
-									<li>標題</li>
-									<li>文字</li>
-									<li>圖片</li>
-									<li>按鈕</li>
-									<li>單欄圖文</li>
-									<li>兩欄圖文</li>
-									<li>三欄圖文</li>
+								<ul class="nme-add-block-list nme-setting-item-list">
+									<li><button class="nme-add-block-btn" type="button" data-type="title">標題</button></li>
+									<li><button class="nme-add-block-btn" type="button" data-type="paragraph">內文</button></li>
+									<li><button class="nme-add-block-btn" type="button" data-type="image">圖片</button></li>
+									<li><button class="nme-add-block-btn" type="button" data-type="button">按鈕</button></li>
 								</ul>
 							</div>
 						</div>

@@ -12,3 +12,9 @@
 {include file="../packages/mailingEditor/templates/block/blockHeader.tpl"}
 {include file="../packages/mailingEditor/templates/block/blockFooter.tpl"}
 {include file="../packages/mailingEditor/templates/block/blockEdit.tpl"}
+
+{* Data Level *}
+{include file="../packages/mailingEditor/templates/data/dataTitle.tpl"}
+{include file="../packages/mailingEditor/templates/data/dataImage.tpl"}
+{include file="../packages/mailingEditor/templates/data/dataParagraph.tpl"}
+{include file="../packages/mailingEditor/templates/data/dataButton.tpl"}
