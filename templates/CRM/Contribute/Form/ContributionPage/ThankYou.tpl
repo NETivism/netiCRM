@@ -131,7 +131,17 @@
         <table id="smsDetails" class="form-layout-compressed">
             <tr class="crm-contribution-contributionpage-thankyou-form-block-sms_text">
                 <td class="label">{$form.sms_text.label}</td>
-                <td class="html-adjust">{$form.sms_text.html}</td>
+                <td class="html-adjust">
+                    <span class="helpIcon" id="helphtml">
+                        <a class="token-trigger" href="#" onClick="return showToken('Text', 1);">{$form.token1.label}</a>
+                        <div id="tokenText" style="display:none;">
+                            <input style="border:1px solid #999999;" type="text" id="filter1" size="20" name="filter1" onkeyup="filter(this, 1)"/><br />
+                            <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
+                            {$form.token1.html}
+                        </div>
+                    </span>
+                {$form.sms_text.html}
+                </td>
             </tr>
         </table>
     {/if}
