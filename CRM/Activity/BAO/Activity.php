@@ -774,12 +774,25 @@ as tbl ";
             LEFT JOIN {$activityAssigneetContactTempTable} on {$activityTempTable}.activity_id = {$activityAssigneetContactTempTable}.activity_id                  
         ";
 
+    $where = array();
     //filter case activities - CRM-5761
     $components = self::activityComponents();
     if (!in_array('CiviCase', $components)) {
       $query .= "
-LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$activityTempTable}.activity_id )
-    WHERE  civicrm_case_activity.id IS NULL";
+LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$activityTempTable}.activity_id ) ";
+      $where[] = "civicrm_case_activity.id IS NULL";
+    }
+
+    // filter activity by data parameter(only allow activity table)
+    if ($data['source_record_id'] && CRM_Utils_Type::validate($data['source_record_id'], 'Positive', FALSE)) {
+      $where[] = "$activityTempTable.source_record_id = '{$data['source_record_id']}'";
+    }
+    if ($data['activity_type_id'] && CRM_Utils_Type::validate($data['activity_type_id'], 'Positive', FALSE)) {
+      $where[] = "$activityTempTable.activity_type_id = '{$data['activity_type_id']}'";
+    }
+
+    if (!empty($where) ) {
+      $query .= ' WHERE '.implode(' AND ', $where);
     }
 
     $dao = CRM_Core_DAO::executeQuery($query);

@@ -236,6 +236,26 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       NULL,
       $recentOther
     );
+
+    // recipt sending activity
+    $sortID = NULL;
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    $filter = array(
+      'activity_record_id' => $values['id'], // source_record_id
+      'activity_type_id' => $activityTypeId,
+      'activity_test' => $values['is_test'],
+    );
+    $queryParams = CRM_Contact_BAO_Query::convertFormValues($filter);
+    $selector = new CRM_Activity_Selector_Search($queryParams, $this->_action);
+    $controller2 = new CRM_Core_Selector_Controller($selector,
+      $this->get(CRM_Utils_Pager::PAGE_ID),
+      $sortID,
+      CRM_Core_Action::VIEW,
+      $this,
+      CRM_Core_Selector_Controller::TRANSFER
+    );
+    $controller2->setEmbedded(TRUE);
+    $controller2->run();
   }
 
   /**

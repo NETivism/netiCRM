@@ -333,7 +333,7 @@
                 </tr>{/if}
             </table>
          </div>
-    </div>
+    </div>  
 {/if}
 {if $payment_processor_billinginfo}
 <fieldset><legend>{ts}Billing{/ts}</legend></fieldset>
@@ -350,7 +350,7 @@
 </fieldset>
 {/if}
 
-<div class="crm-submit-buttons">
+  <div class="crm-submit-buttons">
     {if call_user_func(array('CRM_Core_Permission','check'), 'edit contributions')}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context"}
        {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
@@ -359,7 +359,17 @@
        <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><i class="zmdi zmdi-edit"></i>{ts}Edit{/ts}</span></a>
     {/if}
     {include file="CRM/common/formButtons.tpl" location="bottom"}
-</div>
+  </div>
+  {if $rows}
+  <div class="crm-accordion-wrapper crm-accordion-open" id="">
+    <div class="crm-accordion-header">
+      <div class="zmdi crm-accordion-pointer"></div>{ts}Email Receipt{/ts}
+    </div>
+    <div class="crm-accordion-body">
+    {include file="CRM/Activity/Form/Selector.tpl}
+    </div>{*accordion-body*}
+  </div>  
+  {/if}
 </div>
 {literal}
 <script>

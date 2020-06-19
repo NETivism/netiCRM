@@ -319,9 +319,10 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
           $activityParams = array(
             'activity_type_id' => $activityTypeId,
-            'activity_record_id' => $values['contribution_id'],
+            'source_record_id' => $values['contribution_id'],
             'activity_date_time' => date('Y-m-d H:i:s'),
             'status_id' => $statusId,
+            'is_test' => $isTest ? 1 : 0,
             'subject' => $values['source'] .' - '.ts('Email Receipt'),
             'assignee_contact_id' => $contactID,
             'source_contact_id' => $userID,

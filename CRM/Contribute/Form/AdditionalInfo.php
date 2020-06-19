@@ -518,8 +518,9 @@ class CRM_Contribute_Form_AdditionalInfo {
         $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
         $activityParams = array(
           'activity_type_id' => $activityTypeId,
-          'activity_record_id' => $params['contribution_id'],
+          'source_record_id' => $params['contribution_id'],
           'activity_date_time' => date('Y-m-d H:i:s'),
+          'is_test' => !empty($params['is_test']) ? 1 : 0,
           'status_id' => $statusId,
           'subject' => $params['source'] .' - '.ts('Email Receipt'),
           'assignee_contact_id' => $params['contact_id'],
