@@ -51,7 +51,7 @@
 			delete: "zmdi-delete",
 			link: "zmdi-link",
 			image: "zmdi-image",
-			style: "zmdi-format-color-fill"
+			style: "zmdi-invert-colors"
 		},
 		_editActions = {
 			default: ["clone", "delete"],
@@ -66,30 +66,165 @@
 		_pickrs = {},
 		_tpl = {},
 		_themes = {
-			"green": {
+			"profession": {
+				"name": "謹慎專業",
+				"styles": {
+					"page" : {
+						"background-color": "#16235a"
+					},
+					"block": {
+						"color": "#333333",
+						"background-color": "#f2eaed"
+					},
+					"title": {
+						"color": "#333333"
+					},
+					"subTitle": {
+						"color": "#333333"
+					},
+					"button": {
+						"color": "#ffffff",
+						"background-color": "#343434",
+						"background-color-hover": "#333333"
+					},
+					"link": {
+						"color": "#898c46",
+						"color-hover": "#a0a352"
+					}
+				}
+			},
+			"blackwhite": {
+				"name": "黑白極簡",
+				"styles": {
+					"page" : {
+						"background-color": "#000000"
+					},
+					"block": {
+						"color": "#333333",
+						"background-color": "#ffffff"
+					},
+					"title": {
+						"color": "#333333"
+					},
+					"subTitle": {
+						"color": "#333333"
+					},
+					"button": {
+						"color": "#ffffff",
+						"background-color": "#222222",
+						"background-color-hover": "#333333"
+					},
+					"link": {
+						"color": "#222222",
+						"color-hover": "#333333"
+					}
+				}
+			},
+			"berry": {
+				"name": "酸甜莓果",
+				"styles": {
+					"page" : {
+						"background-color": "#f091a6"
+					},
+					"block": {
+						"color": "#333333",
+						"background-color": "#afbadc"
+					},
+					"title": {
+						"color": "#333333"
+					},
+					"subTitle": {
+						"color": "#333333"
+					},
+					"button": {
+						"color": "#ffffff",
+						"background-color": "#222222",
+						"background-color-hover": "#333333"
+					},
+					"link": {
+						"color": "#bb1924",
+						"color-hover": "#d61c28"
+					}
+				}
+			},
+			"bay": {
+				"name": "寧靜海灣",
+				"styles": {
+					"page" : {
+						"background-color": "#81a3a7"
+					},
+					"block": {
+						"color": "#333333",
+						"background-color": "#f1f3f2"
+					},
+					"title": {
+						"color": "#333333"
+					},
+					"subTitle": {
+						"color": "#333333"
+					},
+					"button": {
+						"color": "#ffffff",
+						"background-color": "#222222",
+						"background-color-hover": "#333333"
+					},
+					"link": {
+						"color": "#272424",
+						"color-hover": "#333333"
+					}
+				}
+			},
+			"forest": {
 				"name": "綠色森林",
 				"styles": {
 					"page" : {
 						"background-color": "#4CAF50"
 					},
 					"block": {
-						"color": "#000",
-						"background-color": "#fff"
+						"color": "#333333",
+						"background-color": "#ffffff"
 					},
 					"title": {
-						"color": "#000"
+						"color": "#333333"
 					},
 					"subTitle": {
-						"color": "#000"
+						"color": "#333333"
 					},
 					"button": {
-						"color": "#fff",
+						"color": "#ffffff",
 						"background-color": "#1B5E20",
 						"background-color-hover": "#2E7D32"
 					},
 					"link": {
 						"color": "#2E7D32",
 						"color-hover": "#388E3C"
+					}
+				}
+			},
+			"coffee": {
+				"name": "咖啡牛奶",
+				"styles": {
+					"page" : {
+						"background-color": "#583e2e"
+					},
+					"block": {
+						"color": "#333333",
+						"background-color": "#ffffff"
+					},
+					"title": {
+						"color": "#333333"
+					},
+					"subTitle": {
+						"color": "#333333"
+					},
+					"button": {
+						"color": "#ffffff",
+						"background-color": "#222222",
+						"background-color-hover": "#333333"
+					},
+					"link": {
+						"color": "#583e2e",
+						"color-hover": "#704f3a"
 					}
 				}
 			}
@@ -873,6 +1008,9 @@
 					console.log(instance);
 					*/
 
+					// Update color to settings object
+					_data["settings"]["styles"][group][fieldType] = colorVal;
+
 					if (group == "page") {
 						if (fieldType == "background-color") {
 							$target = $(_main).find(".nme-body-table");
@@ -880,9 +1018,27 @@
 							// Update color to dom
 							$target.css(fieldType, colorVal);
 							$target.attr("bgcolor", colorVal);
+						}
+					}
 
-							// Update color to json
-							_data["settings"]["styles"]["page"][fieldType] = colorVal;
+					if (group == "block") {
+						$block = $("#nme-mail-body .nme-block");
+
+						if (fieldType == "background-color") {
+							$target = $block.find("[data-settings-target='block']");
+
+							// Update color to dom
+							$target.css(fieldType, colorVal);
+							$target.attr("bgcolor", colorVal);
+
+							$block.each(function() {
+								let $this = $(this),
+										section = $this.data("section"),
+										blockID = $this.data("id");
+
+								// Update color to json
+								_data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+							});
 						}
 					}
 

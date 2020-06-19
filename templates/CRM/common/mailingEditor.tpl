@@ -106,6 +106,15 @@
 										</div>
 									</div>
 								</div>
+								<div class="nme-block-setting nme-setting-section" data-setting-group="block">
+									<h3 class="nme-setting-section-title">區塊</h3>
+									<div class="nme-setting-section-content">
+										<div id="nme-block-setting-bgcolor" class="nme-setting-field" data-field-type="background-color">
+											<div class="nme-setting-field-label">背景色</div>
+											<div class="nme-setting-field-content"><div id="nme-block-setting-bgcolor-picker" class="nme-setting-picker"></div></div>
+										</div>
+									</div>
+								</div>
 								<div class="nme-title-setting nme-setting-section" data-setting-group="title">
 									<h3 class="nme-setting-section-title">標題</h3>
 									<div class="nme-setting-section-content">
