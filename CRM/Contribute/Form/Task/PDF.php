@@ -114,6 +114,12 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
     CRM_Utils_System::setTitle(ts('Print Contribution Receipts'));
+
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    if (!empty($activityTypeId)) {
+      $this->_enableEmailReceipt = TRUE;
+      CRM_Utils_System::setTitle(ts('Print or Email Contribution Receipts'));
+    }
   }
 
   /**
@@ -129,20 +135,35 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     $options = self::getPrintingTypes();
 
-    $this->addRadio( 'window_envelope',ts('Apply to window envelope'),$options,null,'<br/>',true );
+    $this->addRadio( 'window_envelope', ts('Apply to window envelope'), $options,null,'<br/>',true );
 
+    if ($this->_enableEmailReceipt) {
+      $this->addCheckBox('email_pdf_receipt', '', array(ts('Send an Email') => 1));
+      $this->addSelect('from_address', ts('From Email'), array(
+        '' => ts('- select -'),
+      ));
+    }
     $this->assign('elements', array('window_envelope'));
 
-    $this->addButtons(array(
-        array('type' => 'next',
-          'name' => ts('Download Receipt(s)'),
-          'isDefault' => TRUE,
-        ),
-        array('type' => 'back',
-          'name' => ts('Cancel'),
-        ),
-      )
+
+    $buttons = array();
+    if (count($this->_contributionIds) <= 100 && $this->_enableEmailReceipt) {
+      $buttons[] = array(
+        'type' => 'upload',
+        'name' => ts('Email Receipt'),
+      );
+    }
+    $buttons[] = array(
+      'type' => 'next',
+      'name' => ts('Download Receipt(s)'),
+      'isDefault' => TRUE,
     );
+    $buttons[] = array(
+      'type' => 'back',
+      'name' => ts('Cancel'),
+    );
+
+    $this->addButtons($buttons);
   }
 
   /**
@@ -156,12 +177,21 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     // get all the details needed to generate a receipt
     $contribIDs = implode(',', $this->_contributionIds);
 
-    $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
-    $details = array_replace(array_flip($this->_contributionIds), $details);
-    $params = $this->controller->exportValues($this->_name);
+    $actionName = $this->controller->getActionName($this->_name);
+    list($page, $action) = $actionName;
+    if ($action == 'next') {
+      $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
+      $details = array_replace(array_flip($this->_contributionIds), $details);
+      $params = $this->controller->exportValues($this->_name);
 
-    self::makeReceipt($details, $params['window_envelope']);
-    self::makePDF();
+      self::makeReceipt($details, $params['window_envelope']);
+      self::makePDF();
+      CRM_Utils_System::civiExit();
+    }
+    else if($action == 'upload') {
+      // #28472, batch sending email pdf receipt
+
+    }
     CRM_Utils_System::civiExit();
   }
 
