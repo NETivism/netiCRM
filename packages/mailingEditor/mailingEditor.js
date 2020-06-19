@@ -66,33 +66,6 @@
 		_pickrs = {},
 		_tpl = {},
 		_themes = {
-			"default": {
-				"name": "預設",
-				"styles": {
-					"page" : {
-						"background-color": "#222"
-					},
-					"block": {
-						"color": "#000",
-						"background-color": "#fff"
-					},
-					"title": {
-						"color": "#000"
-					},
-					"subTitle": {
-						"color": "#000"
-					},
-					"button": {
-						"color": "#fff",
-						"background-color": "#3F51B5",
-						"background-color-hover": "#ff0000"
-					},
-					"link": {
-						"color": "#000",
-						"color-hover": "#555"
-					}
-				}
-			},
 			"green": {
 				"name": "綠色森林",
 				"styles": {
@@ -721,13 +694,13 @@
 							let blockData = blocksData[blockID];
 							_nmeBlock.add(blockData, "edit", $(blocksContainer));
 						}
-
-						_sortable();
-						_nmePanels();
-						_nmePreview.init();
-						_onScreenCenterElem(".nme-block");
 					}
 				}
+
+				_sortable();
+				_nmePanels();
+				_nmePreview.init();
+				_onScreenCenterElem(".nme-block");
 			}
 
 			/*
@@ -979,13 +952,22 @@
 						fieldType = $field.data("field-type"),
 						$section = $this.closest(".nme-setting-section"),
 						group = $section.data("setting-group"),
-						defaultColor = _themes["default"]["styles"][group][fieldType];
+						defaultColor = _data["settings"]["styles"][group][fieldType];
 
 				pickrInit(thisID, defaultColor);
 			});
 		}
 
 		if ($(".nme-setting-select").length) {
+			if ($("#nme-theme-setting-select").length) {
+				if (!_objIsEmpty(_themes)) {
+					for (let themeKey in _themes) {
+						let option = "<option value='" + themeKey + "'>" + _themes[themeKey]["name"] + "</option>";
+						$("#nme-theme-setting-select").append(option);
+					}
+				}
+			}
+
 			$(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
 				let $select = $(this),
 						selectID = $select.attr("id"),

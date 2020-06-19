@@ -90,8 +90,7 @@
 											<div class="nme-setting-field-content">
 												<div class="crm-form-elem crm-form-select crm-form-select-single">
 													<select id="nme-theme-setting-select" class="nme-setting-select form-select">
-														<option value="default">預設</option>
-														<option value="green">綠色森林</option>
+														<option value="" selected>自訂樣式</option>
 													</select>
 												</div>
 											</div>
