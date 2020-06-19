@@ -170,6 +170,11 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
     $recData = $values = $this->controller->exportValues($this->_name);
     $recData['is_active'] = CRM_Utils_Array::value('is_active', $recData, 0);
     $recData['is_default'] = CRM_Utils_Array::value('is_default', $recData, 0);
+    $domainID = CRM_Core_Config::domainID();
+    if ($recData['is_default']) {
+      $query = "UPDATE civicrm_sms_provider SET is_default = 0 WHERE domain_id = $domainID";
+      CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
+    }
 
     if ($this->_action && (CRM_Core_Action::UPDATE || CRM_Core_Action::ADD)) {
       if ($this->_id) {
@@ -183,8 +188,9 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
       $dao->api_type = $recData['api_type'];
       $dao->api_url = $recData['api_url'];
       $dao->api_params = $recData['api_params'];
-      $dao->is_active = CRM_Utils_Array::value('is_active', $recData, 0);;
-      $dao->is_default = CRM_Utils_Array::value('is_default', $recData, 0);;
+      $dao->is_active = CRM_Utils_Array::value('is_active', $recData, 0);
+      $dao->is_default = CRM_Utils_Array::value('is_default', $recData, 0);
+      $dao->domain_id = $domainID;
       $dao->id = $this->_id;
       $dao->save();
       // civicrm_api3('SmsProvider', 'create', $recData);

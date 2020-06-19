@@ -10,6 +10,13 @@ class CRM_Contact_Form_Search_Custom_RecurDonor extends CRM_Contact_Form_Search_
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $this->_cpage = CRM_Contribute_PseudoConstant::contributionPage();
       $this->_ctype = CRM_Contribute_PseudoConstant::contributionType();
+      $this->_criteria = array(
+        'active' => ts('active donors (and no past recurring donation)'),
+        'inactive' => ts('inactive donors (past recurring donors)'),
+        'intersection' => ts('recurring donors (multiple times, active now and inactive past)'),
+        'all' => ts('recurring donors (no matter active or inactive)'),
+        'never' => ts('not recurring donors (no matter with/without one-time donation)'),
+      );
       $this->buildColumn();
     }
   }
@@ -177,14 +184,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   }
 
   function buildForm(&$form){
-    $options = array(
-      'active' => ts('active donors (and no past recurring donation)'),
-      'inactive' => ts('inactive donors (past recurring donors)'),
-      'intersection' => ts('recurring donors (multiple times, active now and inactive past)'),
-      'all' => ts('recurring donors (no matter active or inactive)'),
-      'never' => ts('not recurring donors (no matter with/without one-time donation)'),
-    );
-    $form->addSelect('search_criteria', ts('Search Criteria'), array('' => ts('-- select --')) + $options, NULL, TRUE);
+    $form->addSelect('search_criteria', ts('Recurring Donors Search'), array('' => ts('-- select --')) + $this->_criteria, NULL, TRUE);
 
     $form->addNumber('amount_low', ts('giving level filter'), array('size' => 8, 'maxlength' => 8));
     $form->addNumber('amount_high', ts('To'), array('size' => 8, 'maxlength' => 8));
@@ -359,7 +359,43 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   }
 
   function summary() {
-    return NULL;
+    $summary = array();
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+
+    $summary['search_criteria'] = array(
+      'label' => ts('Search Criteria'),
+    );
+    $formCriteria = array(
+      'search_criteria' => ts('Recurring Donors Search'),
+      'amount_low' => ts('Min Amount'),
+      'amount_high' => ts('Max Amount'),
+      'contribution_page_id' => ts('Contribution Page'),
+      'contribution_type_id' => ts('Contribution Type'),
+    );
+
+    $values = array();
+    foreach($formCriteria as $key => $label) {
+      if (!empty($this->_formValues[$key])) {
+        if ($key == 'search_criteria') {
+          $values[] = $label.": ". $this->_criteria[$this->_formValues[$key]];
+        }
+        if ($key == 'amount_low' || $key == 'amount_high') {
+          $values[] = $label.": ". $this->_formValues[$key];
+        }
+        if ($key == 'contribution_page_id') {
+          $values[] = $label.": ". $this->_cpage[$this->_formValues[$key]];
+        }
+        if ($key == 'contribution_type_id') {
+          $values[] = $label.": ". $this->_ctype[$this->_formValues[$key]];
+        }
+      }
+    }
+    $summary['search_criteria']['value'] = '<ul><li>'.implode('</li><li>', $values).'</li></ul>';
+
+    return $summary;
   }
   function alterRow(&$row) {
     if ($row['contribution_status_id1']) {

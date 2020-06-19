@@ -31,7 +31,7 @@
 <div class="messages status">
   
   <div> 
-  	<p>{ts}Are you sure you want to delete the selected participations? This delete operation cannot be undone and will delete all transactions and activity associated with these participations.{/ts}</p>
+  	<p>{ts}Are you sure you want to delete the selected participations?{/ts}</p>
         <p>{include file="CRM/Event/Form/Task.tpl"}</p>
   </div>
 </div>
