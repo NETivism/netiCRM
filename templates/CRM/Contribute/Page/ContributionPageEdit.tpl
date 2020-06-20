@@ -42,19 +42,33 @@
   cj(document).ready( function($) {
     $("#shorten-url").dialog({
       modal: true,
-      buttons: {
-        OK: function() {
-          $(this).dialog("close");
-        }
-      },
-      width: "600px",
+      width: "680px",
       autoOpen: false,
     });
 
     $(".url-shorten").click(function(){
         $("#shorten-url").dialog("open");
     });
-  } );
+
+    var previousSeting = JSON.parse(localStorage.getItem('netShortenTool'));
+    $('#utm-source').val(previousSeting.utmSource);
+    $('#utm-medium').val(previousSeting.utmMedium);
+    $('#utm-term').val(previousSeting.utmTerm);
+    $('#utm-content').val(previousSeting.utmCotent);
+    $('#utm-campaign').val(previousSeting.utmCampaign);
+
+    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
+      var utmParameters = {
+        utmSource : $('#utm-source').val(),
+        utmMedium : $('#utm-medium').val(),
+        utmTerm : $('#utm-term').val(),
+        utmCotent : $('#utm-content').val(),
+        utmCampaign : $('#utm-campaign').val()
+      }
+      localStorage.setItem('netShortenTool', JSON.stringify(utmParameters));
+    });
+
+  });
   {/literal}</script>
 {else}
 <div class="messages">
