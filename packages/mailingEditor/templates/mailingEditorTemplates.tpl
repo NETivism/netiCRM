@@ -14,6 +14,7 @@
 {include file="../packages/mailingEditor/templates/block/blockEdit.tpl"}
 
 {* Data Level *}
+{include file="../packages/mailingEditor/templates/data/dataMailCol1Fullwidth.tpl"}
 {include file="../packages/mailingEditor/templates/data/dataTitle.tpl"}
 {include file="../packages/mailingEditor/templates/data/dataImage.tpl"}
 {include file="../packages/mailingEditor/templates/data/dataParagraph.tpl"}

@@ -38,7 +38,8 @@
 		_data = {},
 		_dataLoadMode = "field",
 		_dataLoadSource = "",
-    _nme, // plugin object
+		_defaultData = {},
+    _nme = {}, // plugin object
 		_nmeOptions = {},
 		_nmeAPI = window.location.origin + "/api/",
 		_container,
@@ -837,50 +838,6 @@
 				_nmePreview.init();
 				_onScreenCenterElem(".nme-block");
 			}
-
-			/*
-			let specificEventButtons = ["_qf_Upload_back", "_qf_Upload_upload", "_qf_Upload_upload_save", "_qf_Upload_cancel"];
-			$(".form-submit[name='_qf_Upload_back'], .form-submit[name='_qf_Upload_cancel']").attr("data-sumbit-permission", 0);
-			$(".form-submit[name='_qf_Upload_upload'], .form-submit[name='_qf_Upload_upload_save']").attr("data-sumbit-permission", 0);
-
-			$("#Upload").on("click", ".form-submit", function(event) {
-				let buttonName = $(this).attr("name"),
-						submitPermission = $(this).attr("data-sumbit-permission"),
-						$form = $(this).closest("form");
-				console.log(submitPermission);
-				if (specificEventButtons.indexOf(buttonName) != -1) {
-					if (submitPermission == 0) {
-						console.log("no");
-						event.preventDefault();
-					}
-
-					if (buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
-						_nmeMailOutput();
-
-						var checkMailOutputTimer = setInterval(checkMailOutput, 500);
-
-						let previewContent = "";
-						function checkMailOutput() {
-							if ($("#nme-mail-output-frame").length) {
-								previewContent = $("#nme-mail-output-frame").contents().find("body").html();
-
-								if (previewContent) {
-									clearInterval(checkMailOutputTimer);
-									previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
-									console.log(previewContent);
-									CKEDITOR.instances['html_message'].setData(previewContent);
-									$form.submit();
-								}
-							}
-						}
-					}
-
-					if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_cancel") {
-						_submitConfirm($(this));
-					}
-				}
-			});
-			*/
 		}
 	};
 
@@ -1283,8 +1240,6 @@
 		if(!$.nmEditor.instance) {
 			_nme = new nmEditor();
 			_nme.init();
-			$.nmEditor.instance = _nme;
-			$.nmEditor.instance.data = _data;
 		}
 	};
 
@@ -1703,12 +1658,20 @@
 		}
 	};
 
+	var _nmePanelsSelectTpl = function() {
+		$(".nme-select-tpl-list").on("click", ".nme-select-tpl-btn", function() {
+			let $btn = $(this),
+					tplName = $btn.data("name"),
+					tplData = _tpl["data"][tplName];
+		});
+	};
+
 	var _nmePanelsAddBlock = function() {
 		$(".nme-add-block-list").on("click", ".nme-add-block-btn", function() {
 			let $btn = $(this),
 					addSection = "body",
 					addBlockType = $btn.data("type"),
-					addBlockData = _tpl["data"][addBlockType]
+					addBlockData = _tpl["data"][addBlockType];
 
 			if (!_objIsEmpty(addBlockData)) {
 				let addBlockID = addBlockType + "-" + _renderID(),
@@ -1768,6 +1731,7 @@
 
 	var _nmEditorInit = function() {
 		_debug("===== nmEditor Init =====");
+		$.nmEditor.instance = _nme;
 
 		if (!$(_container).hasClass(NME_CONTAINER)) {
 			$(_container).addClass(NME_CONTAINER);
@@ -1913,6 +1877,15 @@
 			if (_dataLoadMode == "field") {
 				_dataLoadSource = _nmeOptions.dataLoadSource;
 				_nmeData.get.field(_dataLoadSource);
+
+				if (_objIsEmpty(_data)) {
+					let defaultData = $(".nme-tpl[data-template-default='true']").val();
+					_defaultData = JSON.parse(defaultData);
+					_data = _objClone(_defaultData);
+				}
+
+				$.nmEditor.instance.data = _data;
+				_nmeData.update();
 			}
 
 			// Load templates

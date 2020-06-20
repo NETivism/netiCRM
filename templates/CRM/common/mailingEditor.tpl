@@ -49,16 +49,12 @@
 					</ul>
 				</div>
 				<div class="nme-setting-panels-content">
-					<div id="nme-tpl-select" class="nme-tpl-select nme-setting-panel is-active">
+					<div id="nme-select-tpl" class="nme-tpl-select nme-setting-panel is-active">
 						<div class="nme-setting-panel-inner">
 							<h3 class="nme-setting-panel-title">範本</h3>
 							<div class="nme-setting-panel-content">
 								<ul class="nme-select-tpl-list nme-setting-item-list">
-									<li>單欄+三欄</li>
-									<li>單欄+三欄+左右左</li>
-									<li>全單欄</li>
-									<li>單欄+4則左圖文</li>
-									<li>單欄+5則圖文</li>
+									<li><button class="nme-select-tpl-btn" type="button" data-name="col-1-full-width">全單欄</button></li>
 								</ul>
 							</div>
 						</div>
