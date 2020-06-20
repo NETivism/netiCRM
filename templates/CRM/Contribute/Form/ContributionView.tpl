@@ -44,12 +44,12 @@
        {/if}
        <li>
        <div class="action-wrapper action-link-button">
-         <div class="button" id="crm-receipt-link"><i class="zmdi zmdi-collection-text"></i>{ts}Receipt{/ts}<i class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></i></div>
+         <div class="button" id="crm-receipt-link"><i class="zmdi zmdi-collection-text"></i>{ts}Print Contribution Receipts{/ts}<i class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></i></div>
          <div class="action-link-result ac_results" id="crm-receipt-list">
            <div class="action-link-result-inner crm-receipt-list-inner">
              <ul>
                {foreach from=$pdfTypes key=pdfKey item=pdfType} 
-               <li><a href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}&type={$pdfKey}" target="_blank">{$pdfType}</a></li>
+               <li><a class="print-receipt" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}&type={$pdfKey}" target="_blank">{$pdfType}</a></li>
                {/foreach} 
              </ul>
            </div>
@@ -190,7 +190,7 @@
 	{if $receipt_id}
     	<tr>
     	    <td class="label">{ts}Receipt ID{/ts}</td>
-        	<td>{$receipt_id} (<a href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank">{ts}Print Contribution Receipts{/ts}</a>)</td>
+        	<td>{$receipt_id}</td>
          
     	</tr>
 	{/if}	

@@ -103,7 +103,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $this->assign('single', $this->_single);
 
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    require_once 'CRM/Utils/Rule.php';
     $urlParams = 'force=1';
     if (CRM_Utils_Rule::qfKey($qfKey)) {
       $urlParams .= "&qfKey=$qfKey";
@@ -134,17 +133,18 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $this->updateAttributes(array('target' => '_blank'));
 
     $options = self::getPrintingTypes();
-
     $this->addRadio( 'window_envelope', ts('Apply to window envelope'), $options,null,'<br/>',true );
 
-    if ($this->_enableEmailReceipt) {
+    if (count($this->_contributionIds) <= 100 && $this->_enableEmailReceipt) {
       $this->addCheckBox('email_pdf_receipt', '', array(ts('Send an Email') => 1));
-      $this->addSelect('from_address', ts('From Email'), array(
-        '' => ts('- select -'),
-      ));
+      $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
+      $emails = array(
+        ts('Default') => $fromEmails['default'],
+        ts('Your Email') => $fromEmails['contact'],
+      );
+      $this->addSelect('from_email', ts('From Email'), array('' => ts('- select -')) + $emails);
+      $this->add('textarea', 'receipt_text', ts('Text Message'), array('cols' => '70'));
     }
-    $this->assign('elements', array('window_envelope'));
-
 
     $buttons = array();
     if (count($this->_contributionIds) <= 100 && $this->_enableEmailReceipt) {
@@ -164,6 +164,17 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     );
 
     $this->addButtons($buttons);
+    $this->addFormRule(array('CRM_Contribute_Form_Task_PDF', 'formRule'), $this);
+  }
+
+  static public function formRule($fields, $files, $self) {
+    $errors = array();
+    if (!empty($fields['email_pdf_receipt'][1]) && empty($fields['from_email'])) {
+      $errors['from_email'] = ts('%1 is a required field.', array(1 => ts('From Email')));
+      // make receipt not popup when error detect
+      $self->updateAttributes(array('target' => ''));
+    }
+    return $errors;
   }
 
   /**
@@ -190,9 +201,11 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
     else if($action == 'upload') {
       // #28472, batch sending email pdf receipt
-
+      $params = $this->controller->exportValues($this->_name);
+      foreach($this->_contributionIds as $contributionId) {
+        CRM_Contribute_BAO_Contribution::sendPDFReceipt($contributionId, $params['from_email'], $params['window_envelope'], $params['receipt_text']);
+      }
     }
-    CRM_Utils_System::civiExit();
   }
 
   public function pushFile($html) {
@@ -216,7 +229,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
   }
 
-  public function makeReceipt($details, $window_envelope = NULL) {
+  public function makeReceipt($details, $window_envelope = NULL, $isAttachment = FALSE) {
     $config = CRM_Core_Config::singleton();
     $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
     $this->_tmpreceipt = tempnam($tmpDir, 'receipt');
@@ -346,4 +359,3 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     );
   }
 }
-

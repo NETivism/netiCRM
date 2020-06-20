@@ -41,10 +41,14 @@
   {$form.email_pdf_receipt.html}
   <span class="description">{ts}Add receipt as attachment in email.{/ts}</span>
 </div>
-<table class="form-layout-compressed">
-<tr class="form-item from-address" style="display:none;">
-  <td class="label"><label>{$form.from_address.label}</label></td>
-  <td>{$form.from_address.html}</td>
+<table class="form-layout-compressed pdf-receipt-table" style="display:none;">
+<tr class="form-item">
+  <td class="label"><label>{$form.from_email.label}</label></td>
+  <td>{$form.from_email.html}</td>
+</tr>
+<tr class="form-item">
+  <td class="label"><label>{$form.receipt_text.label}</label></td>
+  <td>{$form.receipt_text.html}</td>
 </tr>
 </table>
 
@@ -64,20 +68,25 @@
 {literal}
 <script type="text/javascript" >
 cj(document).ready(function($){
-  $("input[name=_qf_PDF_upload]").prop('disabled', true);
-  $("input[name=_qf_PDF_upload]").hide();
-  $("input[name^=email_pdf_receipt]").click(function(){
-    if($(this).is(':checked')) {
-      $("tr.from-address").show();
+  var emailPDFReceipt = function(obj){
+    if($(obj).is(':checked')) {
+      $("table.pdf-receipt-table").show();
       $("input[name=_qf_PDF_upload]").prop('disabled', false).show();
       $("input[name=_qf_PDF_next]").prop('disabled', true).hide();
     }
     else {
-      $("tr.from-address").hide();
+      $("table.pdf-receipt-table").hide();
       $("input[name=_qf_PDF_upload]").prop('disabled', true).hide();
       $("input[name=_qf_PDF_next]").prop('disabled', false).show();
     }
+  }
+  $("input[name=_qf_PDF_upload]").prop('disabled', true);
+  $("input[name=_qf_PDF_upload]").hide();
+  
+  $("input[name^=email_pdf_receipt]").click(function(){
+    emailPDFReceipt(this);
   });
+  emailPDFReceipt($("input[name^=email_pdf_receipt]"));
 
   var confirmDownload = false;
   var confirmEmail = false;

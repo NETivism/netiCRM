@@ -181,7 +181,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       // refs #28471, auto send receipt after contribution
       if ($config->receiptEmailAuto) {
         $receiptTask = new CRM_Contribute_Form_Task_PDF();
-        $receiptTask->makeReceipt($values['contribution_id'], 'copy_only');
+        $receiptTask->makeReceipt($values['contribution_id'], 'copy_only', TRUE);
         $pdfFilePath = $receiptTask->makePDF(False);
         $pdfFileName = strstr($pdfFilePath, 'Receipt');
         $pdfParams =  array(
@@ -323,7 +323,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
             'activity_date_time' => date('Y-m-d H:i:s'),
             'status_id' => $statusId,
             'is_test' => $isTest ? 1 : 0,
-            'subject' => $values['source'] .' - '.ts('Email Receipt'),
+            'subject' => ts('Email Receipt').' - '. $values['source'],
             'assignee_contact_id' => $contactID,
             'source_contact_id' => $userID,
           );
