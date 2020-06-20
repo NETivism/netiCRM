@@ -229,6 +229,7 @@ abstract class CRM_Core_Payment {
       'amount_level' => $values['amount_level'],
       'item_name' => $values['amount_level'] ? $values['amount_level'] : $values['total_amount'],
       'description' => $values['source'],
+      'currencyID' => $values['currency'],
     );
 
     if(!empty($details['participant'])){

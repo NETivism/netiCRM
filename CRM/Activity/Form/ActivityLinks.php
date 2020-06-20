@@ -57,7 +57,14 @@ class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
       require_once 'CRM/Contact/BAO/Contact.php';
       list($name, $email, $doNotEmail, $onHold, $isDeseased) = CRM_Contact_BAO_Contact::getContactDetails($contactId);
       if (!$doNotEmail && $email && !$isDeseased) {
-        $activityTypes = array('3' => ts('Send an Email'));
+        $activityTypes[3] = ts('Send an Email');
+      }
+    }
+    $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
+    if ($providersCount) {
+      $phones = CRM_Core_BAO_Phone::allPhones(143, FALSE, ts('Mobile'));
+      if (count($phones)) {
+        $activityTypes[4] = ts('Send SMS');
       }
     }
 

@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-15 09:02+0000\n"
+"PO-Revision-Date: 2020-06-19 13:48+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -34409,7 +34409,7 @@ msgid ""
 "Memberships</strong> below to save all your changes. To set a field to the "
 "same value for ALL rows, enter that value for the first member and then "
 "click the <strong>Copy icon</strong> (next to the column title)."
-msgstr ""
+msgstr "如需要，為每個會員更新欄位值。按下方<strong>更新會員</strong>儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行會員輸入值然後再按<strong>複製圖示</strong>（欄位名稱的旁邊）。"
 
 #: templates/CRM/Member/Form/Task/Delete.tpl
 msgid ""
@@ -47786,3 +47786,12 @@ msgid ""
 "include their name and / or other values from their contact record "
 "automatically within your message."
 msgstr "當您要將簡訊發送給大量的收件人，並且希望在信件內容中包含聯絡人的名字或其他資料，您可以使用替代符號。"
+
+msgid "Send SMS when success?"
+msgstr "付款成功發送簡訊？"
+
+msgid "Check this box if you want an SMS message to be sent automatically."
+msgstr "如果您需要付款成功時自動發送手機簡訊通知，請勾選此框。（注意：資料表單內需要有手機欄位）"
+
+msgid "SMS Text"
+msgstr "簡訊文字"

@@ -73,10 +73,20 @@
     
 
   <div id="newLocation">
-    <fieldset><legend>{ts}Address{/ts}</legend>
+    <fieldset><legend>{ts}Event Location{/ts}</legend>
+      <table class="form-layout-compressed">
+      <tr class="crm-event-is_show_location">
+        <td colspan="2">{$form.is_show_location.label}</td>
+        <td colspan="2">
+          {$form.is_show_location.html}<br />
+          <span class="description">{ts}Uncheck this box if you want to HIDE the event Address on Event Information and Registration pages as well as on email confirmations.{/ts}
+        </td>
+      </tr>
+      </table>
       {* Display the address block *}
       {include file="CRM/Contact/Form/Edit/Address.tpl"} 
     </fieldset>
+    <fieldset><legend>{ts}Event Contacts:{/ts}</legend>
     <table class="form-layout-compressed">
       {* Display the email block(s) *}  
       {include file="CRM/Contact/Form/Edit/Email.tpl"}
@@ -84,15 +94,7 @@
       {* Display the phone block(s) *}
       {include file="CRM/Contact/Form/Edit/Phone.tpl"} 
       </table>
-     <table class="form-layout-compressed">
-     <tr class="crm-event-is_show_location">
-      <td colspan="2">{$form.is_show_location.label}</td>
-      <td colspan="2">
-        {$form.is_show_location.html}<br />
-        <span class="description">{ts}Uncheck this box if you want to HIDE the event Address on Event Information and Registration pages as well as on email confirmations.{/ts}
-      </td>
-    </tr>
-    </table>
+    </fieldset>
     <div class="crm-submit-buttons">
        {include file="CRM/common/formButtons.tpl" location="bottom"}
     </div>

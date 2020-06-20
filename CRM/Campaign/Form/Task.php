@@ -88,7 +88,7 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
    * @access public
    */
   function preProcess() {
-    $values = $this->controller->exportValues('Search');
+    $values = $this->controller->exportValues($this->get('searchFormName'));
 
     $this->_task = $values['task'];
     $campaignTasks = CRM_Campaign_Task::tasks();
@@ -106,10 +106,15 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
     }
     else {
       $queryParams = $this->get('queryParams');
+      $sortOrder = NULL;
+      if ($this->get(CRM_Utils_Sort::SORT_ORDER)) {
+        $sortOrder = $this->get(CRM_Utils_Sort::SORT_ORDER);
+      }
+
       $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
         CRM_Contact_BAO_Query::MODE_CAMPAIGN
       );
-      $result = $query->searchQuery(0, 0, NULL);
+      $result = $query->searchQuery(0, 0, $sortOrder);
       while ($result->fetch()) {
         $ids[] = $result->contact_id;
       }
@@ -133,7 +138,16 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
     if (CRM_Utils_Rule::qfKey($qfKey)) {
       $urlParams .= '&qfKey=' . $qfKey;
     }
-    $session->replaceUserContext(CRM_Utils_System::url('civicrm/survey/search', $urlParams));
+
+    $searchFormName = strtolower($this->get('searchFormName'));
+    if ($searchFormName == 'search') {
+      $session->replaceUserContext(CRM_Utils_System::url('civicrm/survey/search', $urlParams));
+    }
+    else {
+      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
+          $urlParams
+        ));
+    }
   }
 
   /**
