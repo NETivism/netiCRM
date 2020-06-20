@@ -833,6 +833,33 @@
 					}
 				}
 
+				$("#Upload").on("click", ".form-submit", function(event) {
+					let buttonName = $(this).attr("name"),
+							submitPermission = $(this).attr("data-sumbit-permission"),
+							$form = $(this).closest("form");
+
+					// Save mail HTML to Editor
+					if (buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
+						event.preventDefault();
+						_nmeMailOutput();
+						var checkMailOutputTimer = setInterval(checkMailOutput, 500);
+						let previewContent = "";
+
+						function checkMailOutput() {
+							if ($("#nme-mail-output-frame").length) {
+								previewContent = $("#nme-mail-output-frame").contents().find("body").html();
+
+								if (previewContent) {
+									clearInterval(checkMailOutputTimer);
+									previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
+									CKEDITOR.instances['html_message'].setData(previewContent);
+									$form.submit();
+								}
+							}
+						}
+					}
+				});
+
 				_sortable();
 				_nmePanels();
 				_nmePreview.init();
