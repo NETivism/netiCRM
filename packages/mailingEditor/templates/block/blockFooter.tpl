@@ -26,7 +26,7 @@ elem (nme-elem): none
 <table data-id="[nmeBlockID]" data-type="[nmeBlockType]" border="0" cellpadding="0" cellspacing="0" width="100%" class="nmeb-footer nmeb" style="min-width: 100%;">
   <tbody class="nmeb-outer">
     <tr>
-      <td valign="top" class="nmeb-inner" data-settings-target="block">
+      <td valign="top" class="nmeb-inner" data-settings-target="block" style="padding: 40px 0;">
         <!--[if mso]>
             <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>

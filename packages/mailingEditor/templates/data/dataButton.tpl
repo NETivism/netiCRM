@@ -11,10 +11,10 @@
     "data" : "閱讀更多",
     "styles": {
       "block": {
-        "padding-top": "10px",
-        "padding-right": "10px",
-        "padding-bottom": "10px",
-        "padding-left": "10px",
+        "padding-top": "20px",
+        "padding-right": "40px",
+        "padding-bottom": "20px",
+        "padding-left": "40px",
         "text-align": "center",
         "background-color": "#ffffff"
       },
@@ -33,6 +33,10 @@
         "font-size": "18px"
       },
       "elem": {
+        "margin-top": "0",
+        "margin-right": "0",
+        "margin-bottom": "0",
+        "margin-left": "0",
         "text-align": "center",
         "letter-spacing": "0",
         "font-weight": "bold",

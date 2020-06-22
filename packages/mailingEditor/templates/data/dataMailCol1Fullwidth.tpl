@@ -66,10 +66,10 @@
             },
             "styles": {
               "block": {
-                "padding-top": "10px",
-                "padding-right": "10px",
-                "padding-bottom": "10px",
-                "padding-left": "10px",
+                "padding-top": "20px",
+                "padding-right": "0",
+                "padding-bottom": "20px",
+                "padding-left": "0",
                 "background-color": "transparent"
               },
               "elemContainerInner": {
@@ -106,12 +106,18 @@
               "block": {
                 "padding-top": "0",
                 "padding-right": "0",
-                "padding-bottom": "10px",
+                "padding-bottom": "0",
                 "padding-left": "0",
                 "background-color": "#ffffff"
               },
               "elemContainerInner": {
                 "text-align": "center"
+              },
+              "elem": {
+                "margin-top": "0",
+                "margin-right": "0",
+                "margin-bottom": "0",
+                "margin-left": "0"
               }
             },
             "link": "",
@@ -133,20 +139,24 @@
             "data" : "請輸入區塊標題",
             "styles": {
               "block": {
-                "padding-top": "10px",
-                "padding-right": "10px",
-                "padding-bottom": "10px",
-                "padding-left": "10px",
+                "padding-top": "20px",
+                "padding-right": "40px",
+                "padding-bottom": "20px",
+                "padding-left": "40px",
                 "background-color": "#ffffff"
               },
               "elem": {
+                "margin-top": "0",
+                "margin-right": "0",
+                "margin-bottom": "0",
+                "margin-left": "0",
                 "text-align": "center",
                 "text-decoration": "none",
                 "letter-spacing": "1px",
                 "line-height": "1.4",
                 "font-weight": "bold",
                 "font-size": "28px",
-                "color": "#333333"
+                "color": "#000000"
               }
             },
             "link": "",
@@ -171,11 +181,17 @@
             },
             "styles": {
               "block": {
-                "padding-top": "10px",
-                "padding-right": "10px",
-                "padding-bottom": "10px",
-                "padding-left": "10px",
+                "padding-top": "20px",
+                "padding-right": "40px",
+                "padding-bottom": "20px",
+                "padding-left": "40px",
                 "background-color": "#ffffff"
+              },
+              "elem": {
+                "margin-top": "0",
+                "margin-right": "0",
+                "margin-bottom": "0",
+                "margin-left": "0"
               }
             },
             "control": {
@@ -196,10 +212,10 @@
             "data" : "閱讀更多",
             "styles": {
               "block": {
-                "padding-top": "10px",
-                "padding-right": "10px",
-                "padding-bottom": "10px",
-                "padding-left": "10px",
+                "padding-top": "20px",
+                "padding-right": "40px",
+                "padding-bottom": "20px",
+                "padding-left": "40px",
                 "text-align": "center",
                 "background-color": "#ffffff"
               },
@@ -207,7 +223,7 @@
                 "margin-left": "auto",
                 "margin-right": "auto",
                 "border-radius": "3px",
-                "background-color": "#E91E63"
+                "background-color": "#222222"
               },
               "elemContainerInner": {
                 "padding-top": "10px",
@@ -218,6 +234,10 @@
                 "font-size": "18px"
               },
               "elem": {
+                "margin-top": "0",
+                "margin-right": "0",
+                "margin-bottom": "0",
+                "margin-left": "0",
                 "text-align": "center",
                 "letter-spacing": "0",
                 "font-weight": "bold",
@@ -250,10 +270,10 @@
             },
             "styles": {
               "block": {
-                "padding-top": "10px",
-                "padding-right": "10px",
-                "padding-bottom": "10px",
-                "padding-left": "10px",
+                "padding-top": "40px",
+                "padding-right": "0",
+                "padding-bottom": "40px",
+                "padding-left": "0",
                 "background-color": "transparent"
               }
             },
