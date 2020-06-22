@@ -50,51 +50,6 @@
     $(".url-shorten").click(function(){
       $("#shorten-url").dialog("open");
     });
-
-    //Website URL
-    var url_to_copy = document.querySelectorAll('.url_to_copy');
-    $('#put_url').val(url_to_copy[0].dataset.urlOriginal);
-
-    //utm input default value
-    var previousSeting = JSON.parse(localStorage.getItem('netShortenTool'));
-    $('#utm-source').val(previousSeting.utmSource);
-    $('#utm-medium').val(previousSeting.utmMedium);
-    $('#utm-term').val(previousSeting.utmTerm);
-    $('#utm-content').val(previousSeting.utmCotent);
-    $('#utm-campaign').val(previousSeting.utmCampaign);
-
-    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('keyup', function() {
-      var utmParameters = {
-        utmSource : $('#utm-source').val(),
-        utmMedium : $('#utm-medium').val(),
-        utmTerm : $('#utm-term').val(),
-        utmCotent : $('#utm-content').val(),
-        utmCampaign : $('#utm-campaign').val()
-      }
-      localStorage.setItem('netShortenTool', JSON.stringify(utmParameters));
-    });
-
-    //Final URL default
-    var utm = ["utm-source", "utm-medium", "utm-term", "utm-content", "utm-campaign"];
-    $('#result_url').val(url_to_copy[0].dataset.urlOriginal);
-    var utmResult = "";
-    $.each(utm , function(index, val) {
-      var utmInput = document.getElementById(val); 
-      if (utmInput && utmInput.value) {
-        utmResult = utmResult + '&' + val.replace('-', '_') + '=' + utmInput.value;
-      }
-    });
-    $('#result_url').val(url_to_copy[0].dataset.urlOriginal + utmResult);
-
-    //Final URL change
-    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('keyup', function() {
-      var changeutm = $(this).attr('id');
-      var href = new URL($('#result_url').val());
-      href.searchParams.set(changeutm.replace('-', '_'), $(this).val());
-      $('#result_url').val(href.href);
-    });
-
-    //Shorten URL
   });
 {/literal}</script>
 {else}
