@@ -6236,7 +6236,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_dupalert, 0,          1) ,      
       
       
-      ('Contributions - Receipt (off-line)', '{ts}Payment Notification{/ts}', '{if $formValues.receipt_text}
+      ('Contributions - Receipt (off-line)', '{if $pdf_receipt}{ts}Receipt{/ts}{else}{ts}Payment Notification{/ts}{/if}', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
 
@@ -6595,7 +6595,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_offline_receipt, 1,          0),
-      ('Contributions - Receipt (off-line)', '{ts}Payment Notification{/ts}', '{if $formValues.receipt_text}
+      ('Contributions - Receipt (off-line)', '{if $pdf_receipt}{ts}Receipt{/ts}{else}{ts}Payment Notification{/ts}{/if}', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
 
@@ -6956,7 +6956,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_offline_receipt, 0,          1) ,      
       
       
-      ('Contributions - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
+      ('Contributions - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts}{if $pdf_receipt}({ts}With Receipt{/ts}){/if} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -7521,7 +7521,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_online_receipt, 1,          0),
-      ('Contributions - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
+      ('Contributions - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts}{if $pdf_receipt}({ts}With Receipt{/ts}){/if} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
