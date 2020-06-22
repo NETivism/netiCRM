@@ -781,7 +781,6 @@
 			let cloneData = !_objIsEmpty(data) ? data : null;
 
 			if (_domElemExist($target)) {
-				console.log(cloneData);
 				_nmeBlock.add(cloneData, "edit", $target, "after");
 			}
 		},
@@ -900,7 +899,6 @@
 
 					for (let blockID in _data.sections[section].blocks) {
 						let blockData = blocksData[blockID];
-						console.log(blockData);
 						_nmeBlock.add(blockData, "view", $blocksContainer);
 					}
 				}
@@ -1238,7 +1236,6 @@
 									// preview mode switch
 									$(".nme-preview-mode-btn").on("click", function() {
 										let mode = $(this).data("mode");
-										console.log(mode);
 										$(".nme-preview-mode-btn").removeClass("is-active");
 										$(this).addClass("is-active");
 										$(".nme-preview-panel").removeClass("is-active");
@@ -1296,15 +1293,14 @@
 				*/
 
 				$editableElem.on("save", function(e, params) {
-					console.log("save");
-					console.log(params);
+					//console.log(params);
 					let $this = $(this),
 							blockID = $this.data("id"),
 							blockType = $this.data("type"),
 							section = $this.data("section");
 
 					if (_data["sections"][section]["blocks"][blockID]) {
-						console.log(params.newValue);
+						//console.log(params.newValue);
 						if (blockType == "text" || blockType == "button") {
 							_data["sections"][section]["blocks"][blockID]["data"] = params.newValue;
 						}
@@ -1340,7 +1336,6 @@
 				dragClass: "handle-drag",
 				ghostClass: 'nme-block-dragging',
 				onUpdate: function (evt) {
-					console.log("sortable onUpdate");
 					_sortables[nmeBlocksSection]["order"] = _sortables[nmeBlocksSection]["inst"].toArray();
 					_nmeData.sort(_sortables[nmeBlocksSection]["order"], nmeBlocksSection);
 					/*
@@ -1756,25 +1751,6 @@
 		_nmeGlobalSetting();
 	};
 
-	var _nmEditorInit = function() {
-		_debug("===== nmEditor Init =====");
-		$.nmEditor.instance = _nme;
-
-		if (!$(_container).hasClass(NME_CONTAINER)) {
-			$(_container).addClass(NME_CONTAINER);
-		}
-
-		_nme.render();
-
-		// Window resize
-		$(window).resize(function() {
-			clearTimeout(_resizeTimer);
-			_resizeTimer = setTimeout(_windowResize, 250);
-		});
-
-		$(_container).addClass(INIT_CLASS);
-	};
-
 	var _rwdEvents = function() {
 	};
 
@@ -1897,7 +1873,22 @@
 		constructor: nmEditor,
 		data: {},
 		init: function() {
-      _nmEditorInit();
+			_debug("===== nmEditor Init =====");
+			$.nmEditor.instance = _nme;
+
+			if (!$(_container).hasClass(NME_CONTAINER)) {
+				$(_container).addClass(NME_CONTAINER);
+			}
+
+			_nme.render();
+
+			// Window resize
+			$(window).resize(function() {
+				clearTimeout(_resizeTimer);
+				_resizeTimer = setTimeout(_windowResize, 250);
+			});
+
+			$(_container).addClass(INIT_CLASS);
 		},
 		render: function() {
 			// Load Data
@@ -1932,6 +1923,11 @@
 					}
 
 					_tpl[tplLevel][tplName] = tplLevel == "data" ? JSON.parse(tplOutput) : tplOutput;
+
+					// Remove script after get data
+					if ($this.next("script").length) {
+						$this.next("script").remove();
+					}
 
 					// After loading all the templates completely
 					if ((tplTotal - 1) == i) {
