@@ -1835,7 +1835,9 @@
 			let blockID = window.nmeImce.targetID,
 					section = window.nmeImce.targetSection,
 					fileURL = file.url,
-					fileName = file.name;
+					fileName = file.name,
+					fileWidth = file.width,
+					fileHeight = file.height;
 
 			if (blockID) {
 				let $target = $(".nme-block[data-id='" + blockID + "']");
@@ -1846,8 +1848,10 @@
 					if ($img.length) {
 						// Update dom properties of the target image
 						$img.attr({
-							"src": file.url,
-							"alt": file.name
+							"src": fileURL,
+							"width": fileWidth,
+							"height": fileHeight,
+							"alt": fileName
 						});
 
 						// Update json data of the target image
