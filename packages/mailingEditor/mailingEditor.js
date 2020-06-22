@@ -1532,7 +1532,11 @@
 
 				$block.find(".nme-block-actions").prepend(output);
 				_nmeBlockControl.init(blockID);
-			}
+      }
+      else {
+        // If the block has no any extended actions, initialize directly.
+        _nmeBlockControl.init(blockID);
+      }
 		},
 		init: function(id) {
 			let blockID = typeof id !== "undefined" ? id : "",

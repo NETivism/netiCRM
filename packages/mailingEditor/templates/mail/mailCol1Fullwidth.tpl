@@ -27,7 +27,7 @@
               </tr>
               <tr>
                 <!-- Mail Body: BEGIN -->
-                <td id="nme-mail-body" align="center" valign="top"">
+                <td id="nme-mail-body" align="center" valign="top">
                   <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="nme-mail-container" style="border-collapse: collapse; mso-table-lspace: 0;mso-table-rspace: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; max-width: 680px !important; background-color: #fff;">
                     <tbody>
                       <tr>
