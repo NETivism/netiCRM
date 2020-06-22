@@ -25,8 +25,10 @@ a.btn:hover {
 }
 
 /* x-editable: custom */
-.editable > :first-child:last-child {
-  margin: 0;
+.editable > *,
+.editable > :first-child,
+.editable > :last-child {
+  margin: revert;
 }
 .editable-click[data-type="xquill"] + .editable-container {
   display: block;
@@ -92,8 +94,11 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
   border: 2px solid #ccc;
   background: #fff;
 }
+.nme-container .nme-mail-inner {
+  padding: 0;
+}
 .nme-block {
-  border: 1px solid transparent;
+  /*! border: 1px solid transparent; */
 }
 .nme-block-dragging {
   border: 1px solid rgba(2, 136, 209, .3);
@@ -101,7 +106,6 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 }
 .nme-block-inner {
   position: relative;
-  padding: 10px;
 }
 .nme-block-control {
   display: none;
@@ -140,7 +144,7 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
   cursor: grab;
 }
 .nme-block:hover {
-  border-color: #333;
+  border: 1px solid #333;
 }
 .nme-block:hover .nme-block-control,
 .nme-block.is-active .nme-block-control,
@@ -349,6 +353,15 @@ ul.nme-setting-panels-tabs li a.is-active {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
 }
 
+/* nmeb */
+#nme-mail .nmeb td {
+  padding: 0;
+}
+.nmeb .nmeb-content .nme-elem {
+  margin: 0;
+  padding: 0;
+}
+
 /* nme item */
 .nme-item {
   position: relative;
@@ -507,6 +520,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   width: auto;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 0;
 }
 .nme-container table[width="100%"] {
   width: 100%;

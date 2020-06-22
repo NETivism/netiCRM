@@ -38,7 +38,7 @@ elem (nme-elem): none
           <tbody>
             <tr>
               <td valign="top" class="nmeb-content" data-settings-target="elemContainerInner">
-                <div class="nmee-footer nme-elem" data-settings-target="elem" style="text-align: center;">
+                <div class="nmee-footer nme-elem" data-settings-target="elem" style="margin: 0; text-align: center;">
                   <p>{domain.name}<br>{domain.address}</p><p><a href="%7Bmailing.viewUrl%7D" target="_blank">在瀏覽器中觀看</a></webversion> | <unsubscribe style="text-decoration:underline;"><a href="%7Baction.unsubscribeUrl%7D">退訂電子報</a></unsubscribe><br><a href="%7Baction.subscribeUrl%7D">訂閱電子報</a> | <a href="%7Baction.forward%7D">轉寄給朋友</a> | <a href="%7Baction.optOutUrl%7D">不再收到本站訊息</a></p>
                 </div>
               </td>

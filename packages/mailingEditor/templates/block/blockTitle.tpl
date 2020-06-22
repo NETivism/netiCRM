@@ -38,7 +38,7 @@ elem (nme-elem): title font, text, color
           <tbody>
             <tr>
               <td valign="top" class="nmeb-content" data-settings-target="elemContainerInner">
-                <h3 class="nmee-title nme-elem" data-settings-target="elem">[Title HERE]</h3>
+                <h3 class="nmee-title nme-elem" data-settings-target="elem" style="margin: 0;">[Title HERE]</h3>
               </td>
             </tr>
           </tbody>
