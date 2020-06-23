@@ -987,7 +987,7 @@ casper.test.begin('Resurrectio test', function(test) {
     /* 7-2. State/Province Multi-Select */
     /* sendKeys to Field Label */
     casper.waitForSelector("input[name='label']", function success() {
-        casper.echo('** Step 3-7-2: Add State/Province Select field. **');
+        casper.echo('** Step 3-7-2: Add State/Province Multi Select field. **');
         test.assertExists("input[name='label']");
         this.sendKeys("input[name='label']", 'State_Province_Multi_Select' + id);
     }, function fail() {
@@ -1559,10 +1559,10 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
     });
 
-    /* get all text input id */
+    /* get all pure text input id */
     var text_id_for_input = [];
     casper.then(function() {
-        casper.echo('** Step 6-1: Get all text id. **');
+        casper.echo('** Step 6-1: Get all pure text id. **');
         var text_ids = this.evaluate(function(custom_id) {
             var all_text = document.getElementById('customData' + custom_id).querySelectorAll('input[type="text"]:not(.hiddenElement):not(.dateplugin):not(.ac_input)');
             var text_ids = [];
@@ -1577,9 +1577,9 @@ casper.test.begin('Resurrectio test', function(test) {
         });
     });
 
-    /* input all text */
+    /* input all pure text */
     casper.then(function() {
-        casper.echo('** Step 6-2: Input all text. **');
+        casper.echo('** Step 6-2: Input all pure text. **');
         text_id_for_input.forEach(function(text_id) {
             casper.waitForSelector('input[name="custom_' + text_id + '_-1"]', function success() {
                 this.sendKeys('input[name="custom_' + text_id + '_-1"]', makeid(5));
@@ -1594,10 +1594,10 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
 
-    /* get all select id */
+    /* get all select(not multi) id */
     var select_id_for_input = [];
     casper.then(function() {
-        casper.echo('** Step 6-3: Get all select id. **');
+        casper.echo('** Step 6-3: Get all select(not multi) id. **');
         var select_ids = this.evaluate(function(custom_id) {
             var all_select = document.getElementById('customData' + custom_id).querySelectorAll('select');
             var select_ids = [];
@@ -1610,12 +1610,11 @@ casper.test.begin('Resurrectio test', function(test) {
         select_ids.forEach(function(select_id) {
             select_id_for_input.push(select_id);
         });
-        this.echo(select_id_for_input);
     });
 
-    /* input all select */
+    /* input all select(not multi) */
     casper.then(function() {
-        casper.echo('** Step 6-4: Input all select. **');
+        casper.echo('** Step 6-4: Input all select(not multi). **');
         select_id_for_input.forEach(function(select_id) {
             casper.waitForSelector('#custom_' + select_id + '_-1', function success() {
                 this.evaluate(function (select_id) {
@@ -1633,6 +1632,112 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.then(function() {
         this.capture('Filled_up_select.png');
+    });
+
+    /* get all radio input id */
+    var radio_id_for_input = [];
+    casper.then(function() {
+        casper.echo('** Step 6-5: Get all radio input id. **');
+        var radio_ids = this.evaluate(function(custom_id) {
+            var all_radio = document.getElementById('customData' + custom_id).querySelectorAll('input[type="radio"]');
+            var radio_ids = [];
+            for(var i = 0; i < all_radio.length; i++){
+                var sp = all_radio[i].name.split('_');
+                radio_ids.push(sp[1]);
+            }
+            return radio_ids;
+        }, custom_id);
+        radio_ids.forEach(function(radio_id) {
+            radio_id_for_input.push(radio_id);
+        });
+    });
+
+    /* input all radio */
+    casper.then(function() {
+        casper.echo('** Step 6-6: Input all radio. **');
+        radio_id_for_input.forEach(function(radio_id) {
+            casper.waitForSelector('input[name="custom_' + radio_id + '_-1"]', function success() {
+                this.evaluate(function (radio_id) {
+                    document.querySelector('input[name="custom_' + radio_id + '_-1"]').checked = true;
+                }, radio_id);
+            }, function fail() {
+                test.assertExists('input[name="custom_' + radio_id + '_-1"]');
+            });
+        });
+    });
+
+    /* input all checkbox */
+    casper.then(function() {
+        casper.echo('** Step 6-7: Input all checkbox. **');
+        var checkbox_id = this.evaluate(function (custom_id) {
+            return document.getElementById('customData' + custom_id).querySelectorAll('input[type="checkbox"]')[0].id;
+        }, custom_id);
+        casper.waitForSelector('input[name="' + checkbox_id + '"]', function success() {
+            this.evaluate(function (checkbox_id) {
+                document.getElementById(checkbox_id).checked = true;
+            }, checkbox_id);
+        }, function fail() {
+            test.assertExists('input[name="' + checkbox_id + '"]');
+        });
+    });
+
+    casper.then(function() {
+        this.capture('Filled_up_checkbox.png');
+    });
+
+    /* input advanced multi select */
+    casper.then(function () {
+        casper.echo('** Step 6-8: Input advanced multi select. **');
+        var adv_selector = '#customData' + custom_id + ' table.advmultiselect select';
+        casper.waitForSelector(adv_selector, function success() {
+            this.evaluate(function(adv_selector) {
+                document.querySelector(adv_selector).selectedIndex = 0;
+            }, adv_selector);
+        }, function fail() {
+            test.assertExists(adv_selector);
+        });
+        
+        var add_selector = '#customData' + custom_id + ' table.advmultiselect input[value="Add >>"]';
+        casper.waitForSelector(add_selector, function success() {
+            this.click(add_selector);
+        }, function fail() {
+            test.assertExists(add_selector);
+        });
+    });
+
+    casper.then(function() {
+        this.capture('Filled_up_adv_multi_select.png');
+    });
+
+    /* input textarea */
+    casper.then(function() {
+        casper.echo('** Step 6-9: Input textarea. **');
+        var textarea_selector = '#customData' + custom_id + ' textarea.form-textarea';
+        casper.waitForSelector(textarea_selector, function success() {
+            this.sendKeys(textarea_selector, makeid(5));
+        }, function fail() {
+            this.assertExists(textarea_selector);
+        });
+    });
+
+    casper.then(function() {
+        this.capture('Filled_up_textarea.png');
+    });
+
+    /* input ckeditor */
+    casper.then(function() {
+        var cke_selector = '#customData' + custom_id + ' iframe.cke_wysiwyg_frame';
+        casper.waitForSelector(cke_selector, function success() {
+            this.evaluate(function(cke_selector) {
+                document.querySelector(cke_selector).contentWindow.document.querySelector("p").textContent = 'abc';
+            }, cke_selector);
+        }, function fail() {
+            test.assertExists(cke_selector);
+        });
+    });
+
+    casper.then(function() {
+        this.capture('Filled_up_ckeditor.png');
     });
 
     casper.run(function() {
