@@ -445,7 +445,7 @@ $having
       if ($row['stamp_verification'] == 1) {
         $row['stamp_verification'] = ts('Completed');
       }
-      if ($row['stamp_verification'] == 2) {
+      if ($row['stamp_verification'] == 2 && empty($this->_isExport)) {
         $row['stamp_verification'] = '<strong class="disabled">'.ts('Failed').'</strong>';
       }
     }

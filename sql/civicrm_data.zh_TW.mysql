@@ -4607,6 +4607,7 @@ VALUES
    (@option_group_id_act, 'WalkList',                           30, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, 'Petition',                           31, 'Petition', NULL,0, 0, 31, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, '電子郵件收據',                      32, 'Email Receipt', NULL, 1, 0, 32, '', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, '列印收據',        33, 'Print Contribution Receipts', NULL, 1, 0, 33, '', 0, 1, 1, @contributeCompId, NULL),
 
    (@option_group_id_gender, '女',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, '男',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
@@ -6235,7 +6236,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_dupalert, 0,          1) ,      
       
       
-      ('捐款 - 收據（離線）', '{ts}Payment Notification{/ts}', '{if $formValues.receipt_text}
+      ('捐款 - 收據（離線）', '{if $pdf_receipt}{ts}Receipt{/ts}{else}{ts}Payment Notification{/ts}{/if}', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
 
@@ -6594,7 +6595,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_offline_receipt, 1,          0),
-      ('捐款 - 收據（離線）', '{ts}Payment Notification{/ts}', '{if $formValues.receipt_text}
+      ('捐款 - 收據（離線）', '{if $pdf_receipt}{ts}Receipt{/ts}{else}{ts}Payment Notification{/ts}{/if}', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
 
@@ -6955,7 +6956,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_offline_receipt, 0,          1) ,      
       
       
-      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
+      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts}{if $pdf_receipt}({ts}With Receipt{/ts}){/if} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -7520,7 +7521,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_online_receipt, 1,          0),
-      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
+      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts}{if $pdf_receipt}({ts}With Receipt{/ts}){/if} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}

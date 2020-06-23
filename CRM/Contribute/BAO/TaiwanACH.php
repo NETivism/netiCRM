@@ -1107,7 +1107,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessVerification($recurId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = count($parsedData);
+    $arrayLen = max(array_keys($parsedData))+1;
     if ($arrayLen == 18 ) {
       $processType = self::BANK;
     }
@@ -1121,7 +1121,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $result['id'] = $taiwanACHData['contribution_recur_id'];
     $result['total_amount'] = $result['amount'];
     $result['contribution_type_id'] = $contributionTypeId;
-    $result['start_date'] = ts('Process Date');
+    $result['start_date'] = '';
 
     // check invoice_id
     // check Amount
@@ -1142,7 +1142,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
             $allFailedReason = CRM_Contribute_PseudoConstant::taiwanACHFailedReason();
             $failedReason = $allFailedReason[$processType][self::VERIFICATION][12][$parsedData[12]];
             $result['verification_failed_reason'] = $failedReason;
-            $result['verification_failed_date'] = ts('Process Date');
+            $result['verification_failed_date'] = '';
           }
         }
         else {
@@ -1161,7 +1161,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $failedReason = $allFailedReason[$processType][self::VERIFICATION][11][$parsedData[11]]."\n";
           $failedReason .= $allFailedReason[$processType][self::VERIFICATION][12][$parsedData[12]];
           $result['verification_failed_reason'] = $failedReason;
-          $result['verification_failed_date'] = ts('Process Date');
+          $result['verification_failed_date'] = '';
         }
       }
     }
@@ -1179,12 +1179,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // if $isPreview is FALSE, Execute modify CRM data.
     $taiwanACHData['stamp_verification'] = $result['stamp_verification'];
     if ($result['stamp_verification'] == 1) {
-      $taiwanACHData['start_date'] = date('Y-m-d H:i:s');
+      $taiwanACHData['start_date'] = $parsedData['process_date'];
       $taiwanACHData['contribution_status_id'] = $result['contribution_status_id'];
     }
     else if ($result['stamp_verification'] == 2){
       $taiwanACHData['data']['verification_failed_reason'] = $result['verification_failed_reason'];
-      $taiwanACHData['data']['verification_failed_date'] = date('Y-m-d H:i:s');
+      $taiwanACHData['data']['verification_failed_date'] = $parsedData['process_date'];
     }
     self::add($taiwanACHData);
     return $result;
@@ -1225,11 +1225,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
     if ($isSuccess) {
       $result['contribution_status_id'] = 1;
-      $result['receive_date'] = ts('Process Date');
+      $result['receive_date'] = $parsedData['process_date'];
     }
     else {
       $result['contribution_status_id'] = 4;
-      $result['cancel_date'] = ts('Process Date');
+      $result['cancel_date'] = $parsedData['process_date'];
       $allFailedReason = CRM_Contribute_PseudoConstant::taiwanACHFailedReason();
       if ($processType == self::BANK) {
         $result['cancel_reason'] = $allFailedReason[$processType][self::TRANSACTION][9][$parsedData[9]];
@@ -1272,8 +1272,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       if($pass){
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
         $input['amount'] = $objects['contribution']->amount;
-        $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
-        $objects['contribution']->receive_date = date('YmdHis', $receiveTime);
+        $objects['contribution']->receive_date = date('YmdHis', strtotime($parsedData['process_date']));
         $sendMail = TRUE;
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
         if (!empty($ids['contributionRecur'])) {
@@ -1292,10 +1291,37 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
       else{
         // Failed
+        $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['cancel_date']));
         $ipn->failed($objects, $transaction, $result['cancel_reason']);
         $note = $result['cancel_reason'];
       }
       self::addNote($note, $objects['contribution']);
+    }
+  }
+
+  static function doStatusCheck() {
+    // update recurring status when end date is due
+    $currentDay = date('Y-m-d 00:00:00');
+    $sql = "SELECT r.id, r.end_date, r.contribution_status_id, c.payment_processor_id, c.is_test FROM civicrm_contribution_recur r
+ INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id
+ WHERE r.end_date IS NOT NULL AND r.end_date < %1 AND r.contribution_status_id = 5 GROUP BY r.id";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(
+      1 => array($currentDay, 'String'),
+    ));
+    while ($dao->fetch()) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      if ($dao->id && strtolower($paymentProcessor['payment_processor_type']) == 'taiwanach') {
+        $params = array(
+          'id' => $dao->id,
+          'contribution_status_id' => 1,
+          'message' => ts("End date is due."),
+        );
+        CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
+        $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
+        $statusNote = $params['message'] . ts("Auto renews status");
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
+
+      }
     }
   }
 }

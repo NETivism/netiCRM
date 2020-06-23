@@ -131,6 +131,7 @@ cj(document).ready( function() {
 var url         = "{/literal}{crmURL p='civicrm/contact/view/changeaction' q="reset=1&action=add&cid=changeid&context=changeaction" h=0}{literal}";
 var activityUrl = "{/literal}{crmURL p='civicrm/contact/view' q="action=browse&selectedChild=activity&reset=1&cid=changeid" h=0}{literal}";
 var emailUrl    = "{/literal}{crmURL p='civicrm/contact/view/activity' q="atype=3&action=add&reset=1&cid=changeid" h=0}{literal}";
+var smsUrl = "{/literal}{crmURL p='civicrm/contact/view/activity' q="atype=4&action=add&reset=1&cid=changeid" h=0}{literal}";
 var contactUrl  = "{/literal}{crmURL p='civicrm/contact/changeaction' q="reset=1&cid=changeid" h=0}{literal}";
 // Show menu when contact row is right clicked
 cj(".selector tr").contextMenu({
@@ -140,6 +141,9 @@ cj(".selector tr").contextMenu({
         switch (action) {
           case 'activity':
           case 'email':
+            eval( 'locationUrl = '+action+'Url;');
+            break;
+          case 'sms':
             eval( 'locationUrl = '+action+'Url;');
             break;
           case 'add':
