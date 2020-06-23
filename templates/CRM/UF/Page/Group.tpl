@@ -58,6 +58,7 @@
     <div class="action-link-button">
         <a href="{crmURL p='civicrm/admin/uf/group/field' q="reset=1&action=browse&gid=$gid"}"><i class="zmdi zmdi-arrow-left"></i>{ts}Back to Profile Listings{/ts}</a>
     </div>
+    {include file="CRM/common/ShortenURL.tpl"}
 
 {else}
     <div id="help">

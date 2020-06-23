@@ -53,3 +53,4 @@
     {ts}Traffic Source{/ts}
   </a>
 </div>
+{include file="CRM/common/ShortenURL.tpl"}
