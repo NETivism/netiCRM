@@ -60,6 +60,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
     );
     if ($this->_id) {
       $this->_memType = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership", $this->_id, "membership_type_id");
+      $this->_memTypeDetails = CRM_Member_BAO_MembershipType::getMembershipTypeDetails($this->_memType);
     }
 
     
@@ -250,6 +251,9 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
     $this->applyFilter('__ALL__', 'trim');
 
     $this->addDate('renewal_date', ts('Date Renewal Entered'), FALSE, array('formatType' => 'activityDate'));
+    if ($this->_memTypeDetails['period_type'] == 'fixed') {
+      $this->getElement('renewal_date')->freeze();
+    }
     if (!$this->_mode) {
       $this->addElement('checkbox', 'record_contribution', ts('Record Renewal Payment?'), NULL);
       require_once 'CRM/Contribute/PseudoConstant.php';
@@ -461,6 +465,10 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
     if ($formValues['renewal_date']) {
       $this->set('renewDate', CRM_Utils_Date::processDate($formValues['renewal_date']));
+    }
+    else {
+      $renewalDate = date('Y-m-d', strtotime($this->_endDate) + 86400);
+      $this->set('renewDate', CRM_Utils_Date::processDate($renewalDate));
     }
     $this->_membershipId = $this->_id;
 

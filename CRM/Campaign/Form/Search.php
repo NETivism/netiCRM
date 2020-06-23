@@ -140,6 +140,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
    * @access public
    */
   function preProcess() {
+    $this->set('searchFormName', 'Search');
+
     $this->_done = FALSE;
     $this->_defaults = array();
 

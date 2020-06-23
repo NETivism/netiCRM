@@ -141,6 +141,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
    * @access public
    */
   function preProcess() {
+    $this->set('searchFormName', 'Search');
 
     /**
      * set the button names

@@ -47538,3 +47538,24 @@ msgstr ""
 
 msgid "total support of recurring payment at least %1"
 msgstr ""
+
+msgid "You can insert up to %1 characters include token. You have entered %2 characters without token."
+msgstr ""
+
+msgid "Since you have used tokens. The word count may be wrong."
+msgstr ""
+
+msgid "Use tokens when you are sending sms to a number of recipients, and want to include their name and / or other values from their contact record automatically within your message."
+msgstr ""
+
+msgid "Send SMS when success?"
+msgstr ""
+
+msgid "Check this box if you want an SMS message to be sent automatically."
+msgstr ""
+
+msgid "SMS Text"
+msgstr ""
+
+msgid "With Receipt"
+msgstr ""

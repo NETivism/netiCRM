@@ -825,6 +825,9 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
           $pp = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'payment_processor');
           $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
           $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, $mode);
+          if ($form->_submitValues['payment_processor']) {
+            $form->set('paymentProcessor', $pps[$form->_submitValues['payment_processor']]);
+          }
           if($form){
             $form->set('paymentProcessors', $pps);
           }
@@ -1773,7 +1776,8 @@ SELECT    c.id                 as contribution_id,
           m.membership_type_id as membership_type_id,
           pp.participant_id    as participant_id,
           p.event_id           as event_id,
-          pgp.id               as pledge_payment_id
+          pgp.id               as pledge_payment_id,
+          c.is_test            as is_test
 FROM      civicrm_contribution c
 LEFT JOIN civicrm_membership_payment  mp   ON mp.contribution_id = c.id
 LEFT JOIN civicrm_participant_payment pp   ON pp.contribution_id = c.id
@@ -1792,6 +1796,7 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
         'membership' => $dao->membership_id,
         'membership_type' => $dao->membership_type_id,
         'page_id' => $dao->page_id,
+        'is_test' => $dao->is_test,
       );
       if(!empty($dao->pledge_payment_id)) {
         $pledgePayment[$dao->contribution_id][] = $dao->pledge_payment_id;
