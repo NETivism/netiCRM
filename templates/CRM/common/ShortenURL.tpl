@@ -144,11 +144,17 @@
       $.ajax({
           url: 'https://neti.cc/handle/create-entry',
           type: 'PUT',
-          data: {
-              contentType: 'application/json',
-              data: JSON.stringify({"redirect": sendUrl})
-          },
-          success: function () {
+          contentType: 'application/json',
+          dataType: 'json',
+          data: JSON.stringify({"redirect": sendUrl}),
+          success: function (data) {
+            $('#shorten_url').val('https://neti.cc/' + data.short);
+            $("#shorten_url").select();
+            document.execCommand("copy");
+            $(".shorten-url-copy").after("<span>已複製連結</span>");
+            $(".url_to_copy").val('https://neti.cc/' + data.short);
+            $('.url_to_copy').attr('data-url-shorten', 'https://neti.cc/' + data.short);
+            $('.url_to_copy').removeAttr("data-url-original");
           }
       });
     });
@@ -160,6 +166,13 @@
           "pointer-events":"initial",
           "background": "#333030"});
       }
+    });
+
+    //Full URL btn
+    $(".full-url-copy").click(function() {
+      $("#result_url").select();
+      document.execCommand("copy");
+      $(".full-url-copy").after("<span>已複製連結</span>");
     });
 
   });
