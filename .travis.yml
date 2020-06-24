@@ -35,7 +35,7 @@ script:
   - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contribution_page.test.js"
   - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/new_contribution.test.js"
   - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/custom_data.test.js"
-
+  - docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_group.test.js"
 notifications:
   email:
     recipients:
