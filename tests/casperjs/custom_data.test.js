@@ -667,7 +667,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Integer.png');
+        // this.capture('Integer.png');
     });
 
     /* click submit */
@@ -704,7 +704,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Number.png');
+        // this.capture('Number.png');
     });
 
     /* click submit */
@@ -741,7 +741,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Money.png');
+        // this.capture('Money.png');
     });
 
     /* click submit */
@@ -786,7 +786,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Note_TextArea.png');
+        // this.capture('Note_TextArea.png');
     });
 
     /* click submit */
@@ -831,7 +831,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Note_WYSIWYG_Editor.png');
+        // this.capture('Note_WYSIWYG_Editor.png');
     });
 
     /* click submit */
@@ -886,7 +886,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Date.png');
+        // this.capture('Date.png');
     });
 
     /* click submit */
@@ -923,7 +923,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Yes_or_No.png');
+        // this.capture('Yes_or_No.png');
     });
 
     /* click submit */
@@ -969,7 +969,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('State_Province_Select.png');
+        // this.capture('State_Province_Select.png');
     });
 
     /* click submit */
@@ -1014,7 +1014,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('State_Province_Multi_Select.png');
+        // this.capture('State_Province_Multi_Select.png');
     });
 
     /* click submit */
@@ -1059,7 +1059,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Country_Select.png');
+        // this.capture('Country_Select.png');
     });
 
     /* click submit */
@@ -1104,7 +1104,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Country_Multi_Select.png');
+        // this.capture('Country_Multi_Select.png');
     });
 
     /* click submit */
@@ -1141,7 +1141,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('File.png');
+        // this.capture('File.png');
     });
 
     /* click submit */
@@ -1178,7 +1178,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Link.png');
+        // this.capture('Link.png');
     });
 
     /* click submit */
@@ -1215,7 +1215,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Contact_Reference.png');
+        // this.capture('Contact_Reference.png');
     });
 
     /* click submit */
@@ -1242,7 +1242,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* open custom data page */
     casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
-        this.capture('back_to_custom_data_page.png');
+        // this.capture('back_to_custom_data_page.png');
     });
 
     casper.wait(2000);
@@ -1260,7 +1260,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
     casper.wait(2000);
     casper.then(function() {
-        this.capture('Custom_Fields.png');
+        // this.capture('Custom_Fields.png');
     });
 
     /* get all fields id */
@@ -1282,7 +1282,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* open custom data page */
     casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
-        this.capture('back_to_custom_data_page.png');
+        // this.capture('back_to_custom_data_page.png');
     });
 
     casper.wait(2000);
@@ -1298,7 +1298,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
     casper.wait(2000);
     casper.then(function() {
-        this.capture('Preview.png');
+        // this.capture('Preview.png');
     });
 
     /* get all text input id */
@@ -1420,7 +1420,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* open custom data page */
     casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
-        this.capture('back_to_custom_data_page.png');
+        // this.capture('back_to_custom_data_page.png');
     });
     casper.wait(2000);
 
@@ -1438,7 +1438,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* open new individual page */
     casper.thenOpen(baseURL + "civicrm/contact/add?reset=1&ct=Individual", function() {
-        this.capture('add_individual.png');
+        // this.capture('add_individual.png');
     });
     casper.wait(2000);
 
@@ -1604,7 +1604,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Filled_up_text.png');
+        // this.capture('Filled_up_text.png');
     });
 
 
@@ -1645,7 +1645,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Filled_up_select.png');
+        // this.capture('Filled_up_select.png');
     });
 
     /* get all radio input id */
@@ -1696,7 +1696,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Filled_up_checkbox.png');
+        // this.capture('Filled_up_checkbox.png');
     });
 
     /* input advanced multi select */
@@ -1720,7 +1720,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Filled_up_adv_multi_select.png');
+        // this.capture('Filled_up_adv_multi_select.png');
     });
 
     /* input textarea */
@@ -1735,7 +1735,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Filled_up_textarea.png');
+        // this.capture('Filled_up_textarea.png');
     });
 
     /* input ckeditor */
@@ -1751,7 +1751,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.capture('Filled_up_ckeditor.png');
+        // this.capture('Filled_up_ckeditor.png');
     });
 
     casper.waitForSelector("#_qf_Contact_upload_view", function success() {
@@ -1764,7 +1764,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
     casper.then(function() {
-        this.capture('save_data.png');
+        // this.capture('save_data.png');
     });
     casper.then(function() {
         test.assertDoesntExist('.crm-error');
