@@ -47556,3 +47556,6 @@ msgstr ""
 
 msgid "SMS Text"
 msgstr ""
+
+msgid "With Receipt"
+msgstr ""
