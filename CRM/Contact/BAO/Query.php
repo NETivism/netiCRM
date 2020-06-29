@@ -2221,7 +2221,7 @@ class CRM_Contact_BAO_Query {
           else {
             $from .= " $side JOIN civicrm_address ON ( contact_a.id = civicrm_address.contact_id ) ";
           }
-          continue;
+          break;
 
         case 'civicrm_phone':
           if ($primaryLocation) {
@@ -2230,7 +2230,7 @@ class CRM_Contact_BAO_Query {
           else {
             $from .= " $side JOIN civicrm_phone ON (contact_a.id = civicrm_phone.contact_id) ";
           }
-          continue;
+          break;
 
         case 'civicrm_email':
           if ($primaryLocation) {
@@ -2239,7 +2239,7 @@ class CRM_Contact_BAO_Query {
           else {
             $from .= " $side JOIN civicrm_email ON (contact_a.id = civicrm_email.contact_id) ";
           }
-          continue;
+          break;
 
         case 'civicrm_im':
           if ($primaryLocation) {
@@ -2248,45 +2248,45 @@ class CRM_Contact_BAO_Query {
           else {
             $from .= " $side JOIN civicrm_im ON (contact_a.id = civicrm_im.contact_id) ";
           }
-          continue;
+          break;
 
         case 'im_provider':
           $from .= " $side JOIN civicrm_im ON (contact_a.id = civicrm_im.contact_id) ";
           $from .= " $side JOIN civicrm_option_group option_group_imProvider ON option_group_imProvider.name = 'instant_messenger_service'";
           $from .= " $side JOIN civicrm_option_value im_provider ON (civicrm_im.provider_id = im_provider.value AND option_group_imProvider.id = im_provider.option_group_id)";
-          continue;
+          break;
 
         case 'civicrm_openid':
           $from .= " $side JOIN civicrm_openid ON ( civicrm_openid.contact_id = contact_a.id AND civicrm_openid.is_primary = 1 )";
-          continue;
+          break;
 
         case 'civicrm_state_province':
           $from .= " $side JOIN civicrm_state_province ON civicrm_address.state_province_id = civicrm_state_province.id ";
-          continue;
+          break;
 
         case 'civicrm_country':
           $from .= " $side JOIN civicrm_country ON civicrm_address.country_id = civicrm_country.id ";
-          continue;
+          break;
 
         case 'civicrm_worldregion':
           $from .= " $side JOIN civicrm_worldregion ON civicrm_country.region_id = civicrm_worldregion.id ";
-          continue;
+          break;
 
         case 'civicrm_county':
           $from .= " $side JOIN civicrm_county ON civicrm_address.county_id = civicrm_county.id ";
-          continue;
+          break;
 
         case 'civicrm_location_type':
           $from .= " $side JOIN civicrm_location_type ON civicrm_address.location_type_id = civicrm_location_type.id ";
-          continue;
+          break;
 
         case 'civicrm_group':
           $from .= " $side JOIN civicrm_group ON civicrm_group.id =  civicrm_group_contact.group_id ";
-          continue;
+          break;
 
         case 'civicrm_group_contact':
           $from .= " $side JOIN civicrm_group_contact ON contact_a.id = civicrm_group_contact.contact_id ";
-          continue;
+          break;
 
         case 'civicrm_activity':
         case 'civicrm_activity_tag':
@@ -2294,38 +2294,38 @@ class CRM_Contact_BAO_Query {
         case 'activity_status':
         case 'civicrm_activity_contact':
           $from .= CRM_Activity_BAO_Query::from($name, $mode, $side);
-          continue;
+          break;
 
         case 'civicrm_entity_tag':
           $from .= " $side JOIN civicrm_entity_tag ON ( civicrm_entity_tag.entity_table = 'civicrm_contact' AND
                                                               civicrm_entity_tag.entity_id = contact_a.id ) ";
-          continue;
+          break;
 
         case 'civicrm_note':
           $from .= " $side JOIN civicrm_note ON ( civicrm_note.entity_table = 'civicrm_contact' AND
                                                         contact_a.id = civicrm_note.entity_id ) ";
-          continue;
+          break;
 
         case 'civicrm_subscription_history':
           $from .= " $side JOIN civicrm_subscription_history
                                    ON civicrm_group_contact.contact_id = civicrm_subscription_history.contact_id
                                   AND civicrm_group_contact.group_id   =  civicrm_subscription_history.group_id";
-          continue;
+          break;
 
         case 'individual_prefix':
           $from .= " $side JOIN civicrm_option_group option_group_prefix ON (option_group_prefix.name = 'individual_prefix')";
           $from .= " $side JOIN civicrm_option_value individual_prefix ON (contact_a.prefix_id = individual_prefix.value AND option_group_prefix.id = individual_prefix.option_group_id ) ";
-          continue;
+          break;
 
         case 'individual_suffix':
           $from .= " $side JOIN civicrm_option_group option_group_suffix ON (option_group_suffix.name = 'individual_suffix')";
           $from .= " $side JOIN civicrm_option_value individual_suffix ON (contact_a.suffix_id = individual_suffix.value AND option_group_suffix.id = individual_suffix.option_group_id ) ";
-          continue;
+          break;
 
         case 'gender':
           $from .= " $side JOIN civicrm_option_group option_group_gender ON (option_group_gender.name = 'gender')";
           $from .= " $side JOIN civicrm_option_value gender ON (contact_a.gender_id = gender.value AND option_group_gender.id = gender.option_group_id) ";
-          continue;
+          break;
 
         case 'civicrm_relationship':
           if (self::$_relType == 'reciprocal') {
@@ -2340,50 +2340,50 @@ class CRM_Contact_BAO_Query {
             $from .= " $side JOIN civicrm_relationship ON (civicrm_relationship.contact_id_a = contact_a.id )";
             $from .= " $side JOIN civicrm_contact contact_b ON (civicrm_relationship.contact_id_b = contact_b.id )";
           }
-          continue;
+          break;
 
         case 'civicrm_log':
           $from .= " $side JOIN civicrm_log ON (civicrm_log.entity_id = contact_a.id AND civicrm_log.entity_table = 'civicrm_contact')";
           $from .= " $side JOIN civicrm_contact contact_b_log ON (civicrm_log.modified_id = contact_b_log.id)";
-          continue;
+          break;
 
         case 'civicrm_tag':
           $from .= " $side  JOIN civicrm_tag ON civicrm_entity_tag.tag_id = civicrm_tag.id ";
-          continue;
+          break;
 
         case 'civicrm_task_status':
           $from .= " $side JOIN civicrm_task_status ON ( civicrm_task_status.responsible_entity_table = 'civicrm_contact'
                                                           AND contact_a.id = civicrm_task_status.responsible_entity_id )";
-          continue;
+          break;
 
         case 'civicrm_grant':
           $from .= CRM_Grant_BAO_Query::from($name, $mode, $side);
-          continue;
+          break;
 
         //build fromClause for email greeting, postal greeting, addressee CRM-4575
 
         case 'email_greeting':
           $from .= " $side JOIN civicrm_option_group option_group_email_greeting ON (option_group_email_greeting.name = 'email_greeting')";
           $from .= " $side JOIN civicrm_option_value email_greeting ON (contact_a.email_greeting_id = email_greeting.value AND option_group_email_greeting.id = email_greeting.option_group_id ) ";
-          continue;
+          break;
 
         case 'postal_greeting':
           $from .= " $side JOIN civicrm_option_group option_group_postal_greeting ON (option_group_postal_greeting.name = 'postal_greeting')";
           $from .= " $side JOIN civicrm_option_value postal_greeting ON (contact_a.postal_greeting_id = postal_greeting.value AND option_group_postal_greeting.id = postal_greeting.option_group_id ) ";
-          continue;
+          break;
 
         case 'addressee':
           $from .= " $side JOIN civicrm_option_group option_group_addressee ON (option_group_addressee.name = 'addressee')";
           $from .= " $side JOIN civicrm_option_value addressee ON (contact_a.addressee_id = addressee.value AND option_group_addressee.id = addressee.option_group_id ) ";
-          continue;
+          break;
 
         case 'civicrm_website':
           $from .= " $side JOIN civicrm_website ON contact_a.id = civicrm_website.contact_id ";
-          continue;
+          break;
 
         default:
           $from .= CRM_Core_Component::from($name, $mode, $side);
-          continue;
+          break;
       }
     }
 

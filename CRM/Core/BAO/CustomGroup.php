@@ -1279,7 +1279,7 @@ SELECT $select
 
           case 'File':
             if ($skipFile) {
-              continue;
+              break;
             }
 
             //store the file in d/b
