@@ -236,7 +236,6 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @return array  rows in the given offset and rowCount
    */
   function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-
     $result = $this->_query->searchQuery($offset, $rowCount, $sort,
       FALSE, FALSE,
       FALSE, FALSE,

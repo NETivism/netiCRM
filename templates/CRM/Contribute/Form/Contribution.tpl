@@ -162,7 +162,7 @@
               <td>
                 <div class="have-receipt"><input value="1" class="form-checkbox" type="checkbox" name="have_receipt" id="have_receipt" /> <span class="description">{ts}Have receipt?{/ts}</span></div>
                 <div id="receipt-option">
-                  {if $email and $outBound_option != 2 and !$receipt_id}
+                  {if $email and $outBound_option != 2}
                     <div class="crm-receipt-option crm-contribution-form-block-is_email_receipt">
                       <div class="label">{$form.is_email_receipt.label}</div>
                       <div>{$form.is_email_receipt.html} <span class="description">{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}</span></div>

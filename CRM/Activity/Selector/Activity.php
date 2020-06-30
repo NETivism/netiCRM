@@ -136,6 +136,14 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $url = 'civicrm/contact/view/contribution';
       $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
+    elseif ($activityTypeId == $activityTypeIds['Email Receipt']) {
+      $url = 'civicrm/contact/view/contribution';
+      $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+
+      $showUpdate = TRUE;
+      $urlUpdate = 'civicrm/contact/view/activity';
+      $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+    }
     elseif (in_array($activityTypeId,
         array($activityTypeIds['Membership Signup'], $activityTypeIds['Membership Renewal'])
         // membership
@@ -204,7 +212,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       self::$_actionLinks = self::$_actionLinks + array(CRM_Core_Action::UPDATE =>
         array(
           'name' => ts('Edit'),
-          'url' => $url,
+          'url' => !empty($urlUpdate) ? $urlUpdate : $url,
           'qs' => $qsUpdate,
           'title' => ts('Update Activity'),
         ),
@@ -332,9 +340,8 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   function &getRows($action, $offset, $rowCount, $sort, $output = NULL, $case = NULL) {
     $params['contact_id'] = $this->_contactId;
     $config = CRM_Core_Config::singleton();
-    $rows = &CRM_Activity_BAO_Activity::getActivities($params, $offset, $rowCount, $sort,
-      $this->_admin, $case, $this->_context
-    );
+    $rows = CRM_Activity_BAO_Activity::getActivities($params, $offset, $rowCount, $sort, $this->_admin, $case, $this->_context);
+    
 
     if (empty($rows)) {
       return $rows;
@@ -349,32 +356,15 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     }
     $mask = CRM_Core_Action::mask($permissions);
 
+    // activity types which show details on row
+    $showDetails = array(
+      CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name'),
+    );
     foreach ($rows as $k => $row) {
       $row = &$rows[$k];
 
-      // DRAFTING: provide a facility for db-stored strings
-      // localize the built-in activity names for display
-      // (these are not enums, so we can't use any automagic here)
-      switch ($row['activity_type']) {
-        case 'Meeting':
-          $row['activity_type'] = ts('Meeting');
-          break;
-
-        case 'Phone Call':
-          $row['activity_type'] = ts('Phone Call');
-          break;
-
-        case 'Email':
-          $row['activity_type'] = ts('Email');
-          break;
-
-        case 'SMS':
-          $row['activity_type'] = ts('SMS');
-          break;
-
-        case 'Event':
-          $row['activity_type'] = ts('Event');
-          break;
+      if (in_array($row['activity_type_id'], $showDetails)) {
+        $row['details'] = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $row['activity_id'], 'details'); 
       }
 
       // add class to this row if overdue

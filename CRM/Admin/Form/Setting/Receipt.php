@@ -29,6 +29,12 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'receiptDonorCredit', ts('Field for the name used of donor acknowledgement'), $option);
     $this->add('checkbox', 'forbidCustomDonorCredit', ts('Forbid above name field from being customized'));
 
+    // refs #28471, switch to auto send receipt on email
+    $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    if (!empty($haveAttachReceiptOption)) {
+      $this->addCheckBox('receiptEmailAuto', ts('Email Receipt'), array('' => 1));
+    }
+
     $addressFields = array(
       'is_primary' => ts('Is Primary Address'),
       'is_billing' => ts('Is Billing Address'),

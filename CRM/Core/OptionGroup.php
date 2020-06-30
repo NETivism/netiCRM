@@ -293,6 +293,10 @@ WHERE  v.option_group_id = g.id
     if (empty($label)) {
       return NULL;
     }
+    $cacheKey = self::createCacheKey('getValue_', $groupName, $label, $labelField, $labelType, $valueField);
+    if (array_key_exists($cacheKey, self::$_cache)) {
+      return self::$_cache[$cacheKey];
+    }
 
     $query = "
 SELECT  v.label as label ,v.{$valueField} as value
@@ -310,6 +314,7 @@ WHERE  v.option_group_id = g.id
     );
     $dao = &CRM_Core_DAO::executeQuery($query, $p);
     if ($dao->fetch()) {
+      self::$_cache[$cacheKey] = $dao->value;
       return $dao->value;
     }
     return NULL;
