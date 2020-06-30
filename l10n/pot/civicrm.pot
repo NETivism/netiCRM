@@ -47559,3 +47559,9 @@ msgstr ""
 
 msgid "With Receipt"
 msgstr ""
+
+msgid "Receipt date not set?"
+msgstr ""
+
+msgid "Email receipt not sent?"
+msgstr ""

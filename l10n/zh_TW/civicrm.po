@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-22 05:41+0000\n"
+"PO-Revision-Date: 2020-06-30 09:44+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47798,3 +47798,9 @@ msgstr "簡訊文字"
 
 msgid "With Receipt"
 msgstr "內附收據"
+
+msgid "Receipt date not set?"
+msgstr "收據日期尚未設定？"
+
+msgid "Email receipt not sent?"
+msgstr "電子郵件收據未曾送出？"
