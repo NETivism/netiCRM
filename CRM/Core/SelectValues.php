@@ -587,6 +587,11 @@ class CRM_Core_SelectValues {
    */
   static function &participantTokens() {
     static $tokens = NULL;
+    $participant = new CRM_Event_DAO_Participant();
+    $fields = $participant->fields();
+    foreach ($fields as $key => $field) {
+      $tokens["{participant.{$field['name']}}"] = $field['title'];
+    }
 
     if (!$tokens) {
       $customFields = array();
@@ -594,6 +599,52 @@ class CRM_Core_SelectValues {
 
       foreach ($customFields as $key => $val) {
         $tokens["{participant.custom_$key}"] = $val['label'] . " :: " . $val['groupTitle'];
+      }
+
+      // might as well get all the hook tokens to
+      $hookTokens = array();
+      CRM_Utils_Hook::tokens($hookTokens);
+      foreach ($hookTokens as $category => $tokenValues) {
+        foreach ($tokenValues as $key => $value) {
+          if (is_numeric($key)) {
+            $key = $value;
+          }
+          if (!preg_match('/^\{[^\}]+\}$/', $key)) {
+            $key = '{' . $key . '}';
+          }
+          if (preg_match('/^\{([^\}]+)\}$/', $value, $matches)) {
+            $value = $matches[1];
+          }
+          $tokens[$key] = $value;
+        }
+      }
+    }
+
+    return $tokens;
+  }
+
+  /**
+   * different type of Contribution Tokens
+   *
+   * @static
+   * return array
+   */
+  static function &contributionTokens() {
+    static $tokens = NULL;
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $fields = $contribution->fields();
+    foreach ($fields as $key => $field) {
+      if (!in_array($key, array('contribution_type_id', 'payment_instrument_id', 'contribution_recur_id', 'honor_contact_id', 'address_id'))) {
+        $tokens["{contribution.{$field['name']}}"] = $field['title'];
+      }
+    }
+
+    if (!$tokens) {
+      $customFields = array();
+      $customFields = CRM_Core_BAO_CustomField::getFields('Contribution');
+
+      foreach ($customFields as $key => $val) {
+        $tokens["{contribution.custom_$key}"] = $val['label'] . " :: " . $val['groupTitle'];
       }
 
       // might as well get all the hook tokens to

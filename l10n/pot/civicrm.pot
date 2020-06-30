@@ -29254,18 +29254,6 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
-"The minimum contribution amount required to be eligible to select this "
-"premium. If you want to offer it to all contributors regardless of "
-"contribution amount, enter '0'. If display of minimum contribution amounts "
-"is enabled then this text is displayed:"
-msgstr ""
-
-#: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid "(Contribute at least X to be eligible for this gift.)"
-msgstr ""
-
-#: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid ""
 "The market value of this premium (e.g. retail price). For tax-deductible "
 "contributions, this amount will be used to set the non-deductible amount in "
 "the contribution record and receipt."
@@ -47522,4 +47510,52 @@ msgid "Change Payment Method"
 msgstr ""
 
 msgid "%1 reserved"
+msgstr ""
+
+msgid "Non-Cumulative Mode"
+msgstr ""
+
+msgid "Cumulative Mode"
+msgstr ""
+
+msgid "Min contribution of first time donation"
+msgstr ""
+
+msgid "Grand Total of recurring amount"
+msgstr ""
+
+msgid "Calculation when unlimit installments"
+msgstr ""
+
+msgid "This gift will be eligible when your %1."
+msgstr ""
+
+msgid "one-time support at least %1"
+msgstr ""
+
+msgid "first support of recurring payment at least %1"
+msgstr ""
+
+msgid "total support of recurring payment at least %1"
+msgstr ""
+
+msgid "You can insert up to %1 characters include token. You have entered %2 characters without token."
+msgstr ""
+
+msgid "Since you have used tokens. The word count may be wrong."
+msgstr ""
+
+msgid "Use tokens when you are sending sms to a number of recipients, and want to include their name and / or other values from their contact record automatically within your message."
+msgstr ""
+
+msgid "Send SMS when success?"
+msgstr ""
+
+msgid "Check this box if you want an SMS message to be sent automatically."
+msgstr ""
+
+msgid "SMS Text"
+msgstr ""
+
+msgid "With Receipt"
 msgstr ""

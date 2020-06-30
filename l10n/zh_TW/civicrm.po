@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-12 04:54+0000\n"
+"PO-Revision-Date: 2020-06-22 05:41+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -29252,18 +29252,6 @@ msgstr "您可以從您的電腦上傳一個圖片，或輸入圖片的網址（
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
-"The minimum contribution amount required to be eligible to select this "
-"premium. If you want to offer it to all contributors regardless of "
-"contribution amount, enter '0'. If display of minimum contribution amounts "
-"is enabled then this text is displayed:"
-msgstr "要獲得此感謝禮的金額條件。若您想將此感謝禮提供給所有捐款者（不論捐款金額），請輸入「0」。如果最少捐款金額為停用狀態，將顯示文字為："
-
-#: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid "(Contribute at least X to be eligible for this gift.)"
-msgstr "（至少要X的捐款才符合此贈品的資格。）"
-
-#: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid ""
 "The market value of this premium (e.g. retail price). For tax-deductible "
 "contributions, this amount will be used to set the non-deductible amount in "
 "the contribution record and receipt."
@@ -34421,7 +34409,7 @@ msgid ""
 "Memberships</strong> below to save all your changes. To set a field to the "
 "same value for ALL rows, enter that value for the first member and then "
 "click the <strong>Copy icon</strong> (next to the column title)."
-msgstr ""
+msgstr "如需要，為每個會員更新欄位值。按下方<strong>更新會員</strong>儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行會員輸入值然後再按<strong>複製圖示</strong>（欄位名稱的旁邊）。"
 
 #: templates/CRM/Member/Form/Task/Delete.tpl
 msgid ""
@@ -46128,7 +46116,7 @@ msgstr "簡訊供應商"
 
 #: templates/CRM/Contact/Form/Task/SMSCommon.tpl
 msgid "You can insert up to %1 characters. You have entered %2 characters."
-msgstr "一則簡訊最多 %1 個字符，超過將被多扣點數。目前已輸入 %2 個字符。"
+msgstr "一則簡訊最多 %1 個字，超過將被多扣點數。目前已輸入 %2 個字。"
 
 #: CRM/Contact/Form/Task/SMSCommon.php
 msgid "Name The SMS"
@@ -47757,3 +47745,56 @@ msgstr "選擇其他付款方式"
 
 msgid "%1 reserved"
 msgstr "%1 已保留"
+
+msgid "Non-Cumulative Mode"
+msgstr "非累計模式"
+
+msgid "Cumulative Mode"
+msgstr "累計模式"
+
+msgid "Min contribution of first time donation"
+msgstr "第一筆捐款的最小金額"
+
+msgid "Grand Total of recurring amount"
+msgstr "定期總金額預估"
+
+msgid "Calculation when unlimit installments"
+msgstr "選不限期數時，用來替代預估計算的期數"
+
+msgid "This gift will be eligible when your %1."
+msgstr "當%1時，可以選擇此項目。"
+
+msgid "one-time support at least %1"
+msgstr "單次金額達到%1"
+
+msgid "first support of recurring payment at least %1"
+msgstr "首次定期金額達到%1"
+
+msgid "total support of recurring payment at least %1"
+msgstr "預估定期總額達到%1"
+
+msgid ""
+"You can insert up to %1 characters include token. You have entered %2 "
+"characters without token."
+msgstr "一則簡訊包含替代符號文字，最多 %1 個字，超過將被多扣點數。目前輸入的字數不包含替代符號已經有 %2 個字。（發送前無法正確計算加入替代符號後的字數，請斟酌使用）"
+
+msgid "Since you have used tokens. The word count may be wrong."
+msgstr "由於您有插入替代符號，字數統計可能會不準確，超過字數限制將扣超過 1 點。"
+
+msgid ""
+"Use tokens when you are sending sms to a number of recipients, and want to "
+"include their name and / or other values from their contact record "
+"automatically within your message."
+msgstr "當您要將簡訊發送給大量的收件人，並且希望在信件內容中包含聯絡人的名字或其他資料，您可以使用替代符號。"
+
+msgid "Send SMS when success?"
+msgstr "付款成功發送簡訊？"
+
+msgid "Check this box if you want an SMS message to be sent automatically."
+msgstr "如果您需要付款成功時自動發送手機簡訊通知，請勾選此框。（注意：資料表單內需要有手機欄位）"
+
+msgid "SMS Text"
+msgstr "簡訊文字"
+
+msgid "With Receipt"
+msgstr "內附收據"

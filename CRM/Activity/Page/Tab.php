@@ -105,6 +105,10 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
       'name'
     );
 
+    $SMSTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
+      'SMS',
+      'name'
+    );
 
     switch ($activityTypeId) {
       case $emailTypeValue:
@@ -116,6 +120,11 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
         $wrapper = new CRM_Utils_Wrapper();
         $arguments = array('attachUpload' => 1);
         return $wrapper->run('CRM_Contact_Form_Task_PDF', ts('Create PDF Letter'), $arguments);
+      
+      case $SMSTypeValue:
+        $wrapper = new CRM_Utils_Wrapper();
+        $arguments = array();
+        return $wrapper->run('CRM_Contact_Form_Task_SMS', ts('Send SMS'), $arguments);
 
       default:
         $controller = new CRM_Core_Controller_Simple('CRM_Activity_Form_Activity',
@@ -230,7 +239,12 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
         'name'
       );
 
-      if (in_array($activityTypeId, array($emailTypeValue, $letterTypeValue))) {
+      $SMSTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
+        'SMS',
+        'name'
+      );
+
+      if (in_array($activityTypeId, array($emailTypeValue, $letterTypeValue, $SMSTypeValue))) {
         return;
       }
     }

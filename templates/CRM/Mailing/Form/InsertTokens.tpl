@@ -42,7 +42,6 @@ var isMailing    = false;
 {elseif $form.formName eq 'SMS'}
     prefix = "SMS";
     text_message = "sms_text_message";
-    html_message = "html_message";
     isMailing = true;
 {elseif $form.formName eq 'ThankYou'}
     html_message = "receipt_text"; // contribution thank you
@@ -276,17 +275,34 @@ if ( isMailing ) {
     function tokenReplText ( element )
     {
         var token     = cj("#"+element.id).val( )[0];
-        if ( element.id == 'token3' ) {
-           ( isMailing ) ? text_message = "subject" : text_message = "msg_subject"; 
-        }else {
-           ( isMailing ) ? text_message = "text_message" : text_message = "msg_text";
-        }          
-        
-        cj( "#"+ text_message ).replaceSelection( token ); 
 
-        if ( isMailing ) { 
-             verify();
-        }
+        {/literal}
+        {if $form.formName eq 'SMS'}
+        {literal}
+
+            cj( "#"+ text_message ).replaceSelection( token ); 
+
+            if ( isMailing ) { 
+                verify('', 'SMS');
+            }
+        {/literal}
+        {else}
+        {literal}
+
+            if ( element.id == 'token3' ) {
+            ( isMailing ) ? text_message = "subject" : text_message = "msg_subject"; 
+            }else {
+            ( isMailing ) ? text_message = "text_message" : text_message = "msg_text";
+            }
+            cj( "#"+ text_message ).replaceSelection( token ); 
+
+            if ( isMailing ) { 
+                verify();
+            }
+
+        {/literal}
+        {/if}
+        {literal}
     }
 
     function tokenReplHtml ( )

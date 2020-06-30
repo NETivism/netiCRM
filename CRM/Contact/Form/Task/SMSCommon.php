@@ -87,6 +87,7 @@ class CRM_Contact_Form_Task_SMSCommon {
    * @param CRM_Core_Form $form
    */
   public static function buildQuickForm(&$form) {
+    $form->assign('SMSTask', TRUE);
 
     $toArray = array();
 
@@ -94,7 +95,9 @@ class CRM_Contact_Form_Task_SMSCommon {
 
     $providerSelect = array();
     foreach ($providers as $provider) {
-      $providerSelect[$provider['id']] = $provider['title'];
+      if (!empty($provider['is_active'])) {
+        $providerSelect[$provider['id']] = $provider['title'];
+      }
     }
     $suppressedSms = 0;
     //here we are getting logged in user id as array but we need target contact id. CRM-5988
@@ -291,6 +294,8 @@ class CRM_Contact_Form_Task_SMSCommon {
     $form->add('select', 'sms_provider_id', ts('From'), $providerSelect, TRUE);
 
     CRM_Mailing_BAO_Mailing::commonCompose($form);
+    $token = &$form->getElement('token1');
+    $token->_attributes['onclick'] = "tokenReplText(this);maxLengthMessage();maxCharInfoDisplay();";
 
     if ($form->_single) {
       // also fix the user context stack
@@ -336,18 +341,25 @@ class CRM_Contact_Form_Task_SMSCommon {
     }
     else {
       if (!empty($fields['sms_text_message'])) {
-        $messageCheck = CRM_Utils_Array::value('sms_text_message', $fields);
-        $messageCheck = str_replace("\r\n", "\n", $messageCheck);
-        if(preg_match ("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)){
-          $forceSend = $self->get('force_send');
-          if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR) && !$forceSend) {
-            $errors['sms_text_message'] = ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_ZH_SMS_CHAR));
+        $forceSend = $self->get('force_send');
+        if (!$forceSend) {
+          $messageCheck = CRM_Utils_Array::value('sms_text_message', $fields);
+          $messageCheck = str_replace("\r\n", "\n", $messageCheck);
+          if (preg_match('/(\{[^\}]+\})/u', $messageCheck)) {
+            $errors['sms_text_message'] = ts("Since you have used tokens. The word count may be wrong.");
             $self->set('force_send', TRUE);
           }
-        }
-        else {
-          if ($messageCheck && (strlen($messageCheck) > CRM_SMS_Provider::MAX_SMS_CHAR)) {
-            $errors['sms_text_message'] = ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_SMS_CHAR));
+          if(preg_match ("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)){
+            if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR)) {
+              $errors['sms_text_message'] .= ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_ZH_SMS_CHAR));
+              $self->set('force_send', TRUE);
+            }
+          }
+          else {
+            if ($messageCheck && (strlen($messageCheck) > CRM_SMS_Provider::MAX_SMS_CHAR)) {
+              $errors['sms_text_message'] .= ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_SMS_CHAR));
+              $self->set('force_send', TRUE);
+            }
           }
         }
       }

@@ -207,9 +207,12 @@ if (!$crmChartistAdded) {
       for (var i = 0; i < data.series.length; i++) {
         for (var j = 0; j < data.series[i].length; j++) {
           label = typeof data.labels !== 'undefined' ? data.labels[j] : '';
-          series = typeof data.series[i][j]["y"] !== "undefined" ? data.series[i][j]["y"] : data.series[i][j];
+          series = data.series[i][j] !== null ? typeof data.series[i][j]["y"] !== "undefined" ? data.series[i][j]["y"] : data.series[i][j] : null;
           desc = getDesc(label, series, type, unit);
-          if (typeof data.series[i][j]["y"] !== "undefined") {
+
+          // Added desc to "meta" property if data.series[i][j] not null and have "y" property.
+          // refs #28542. Fixed issue of the chart cannot render. Have to check the value of the data is not null, because js have 'Uncaught TypeError: Cannot read property' error.
+          if (data.series[i][j] !== null && typeof data.series[i][j]["y"] !== "undefined") {
             data.series[i][j]["meta"] = desc;
           }
           else {
