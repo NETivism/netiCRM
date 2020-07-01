@@ -3,80 +3,67 @@
     <div id="crm-container" class="crm-container">
       <div class="shorten-url-form-block crm-section">
         <div class="label">
-          <label for="put_url">Website URL</label>
+          <label for="utm-source">{ts}UTM Source{/ts}</label>
         </div>
         <div class="edit-value content">
         <div class="crm-form-elem crm-form-textfield">
-          <input type="text" id="put_url" name="put_url" size="45">
-        </div>
-        </div>
-      </div>
-      <fieldset class="crm-group shorten-url-parameters">
-        <legend>Fill UTM Parameters</legend>
-        <div class="shorten-url-form-block crm-section">
-          <div class="label">
-            <label for="utm-source">UTM Source</label>
-          </div>
-          <div class="edit-value content">
-          <div class="crm-form-elem crm-form-textfield">
-            <input type="text" id="utm-source" name="utm-source" size="45" placeholder="e.g. google, newsletter, facebook, twitter">
-          </div>
-          </div>
-        </div>
-        <div class="shorten-url-form-block crm-section">
-          <div class="label">
-            <label for="utm-medium">UTM Medium</label>
-          </div>
-          <div class="edit-value content">
-          <div class="crm-form-elem crm-form-textfield">
-            <input type="text" id="utm-medium" name="utm-medium" size="45" placeholder="e.g. cpc, banner, email, QR">
-          </div>
-          </div>
-        </div>
-        <div class="shorten-url-form-block crm-section">
-          <div class="label">
-            <label for="utm-term">UTM Term</label>
-          </div>
-          <div class="edit-value content">
-          <div class="crm-form-elem crm-form-textfield">
-            <input type="text" id="utm-term" name="utm-term" size="45" placeholder="Identify the paid keywords or other value">
-          </div>
-          </div>
-        </div>
-        <div class="shorten-url-form-block crm-section">
-          <div class="label">
-            <label for="utm-content">UTM Content</label>
-          </div>
-          <div class="edit-value content">
-          <div class="crm-form-elem crm-form-textfield">
-            <input type="text" id="utm-content" name="utm-content" size="45">
-          </div>
-          </div>
-        </div>
-        <div class="shorten-url-form-block crm-section">
-          <div class="label">
-            <label for="utm-campaign">UTM Campaign</label>
-          </div>
-          <div class="edit-value content">
-          <div class="crm-form-elem crm-form-textfield">
-            <input type="text" id="utm-campaign" name="utm-campaign" size="45" placeholder="Promo Code">
-          </div>
-          </div>
-        </div>
-      </fieldset>
-      <div class="shorten-url-form-block crm-section">
-        <div class="label">
-          <label for="result_url">Final URL</label>
-        </div>
-        <div class="edit-value content">
-        <div class="crm-form-elem crm-form-textfield">
-          <input type="text" id="result_url" name="result_url" size="45">
+          <input type="text" id="utm-source" name="utm-source" size="45" placeholder="e.g. google, newsletter, facebook, twitter">
         </div>
         </div>
       </div>
       <div class="shorten-url-form-block crm-section">
         <div class="label">
-          <label for="shorten_url">Shorten URL</label>
+          <label for="utm-medium">{ts}UTM Medium{/ts}</label>
+        </div>
+        <div class="edit-value content">
+        <div class="crm-form-elem crm-form-textfield">
+          <input type="text" id="utm-medium" name="utm-medium" size="45" placeholder="e.g. cpc, banner, email, QR">
+        </div>
+        </div>
+      </div>
+      <div class="shorten-url-form-block crm-section">
+        <div class="label">
+          <label for="utm-term">{ts}UTM Term{/ts}</label>
+        </div>
+        <div class="edit-value content">
+        <div class="crm-form-elem crm-form-textfield">
+          <input type="text" id="utm-term" name="utm-term" size="45" placeholder="Identify the paid keywords or other value">
+        </div>
+        </div>
+      </div>
+      <div class="shorten-url-form-block crm-section">
+        <div class="label">
+          <label for="utm-content">{ts}UTM Content{/ts}</label>
+        </div>
+        <div class="edit-value content">
+        <div class="crm-form-elem crm-form-textfield">
+          <input type="text" id="utm-content" name="utm-content" size="45">
+        </div>
+        </div>
+      </div>
+      <div class="shorten-url-form-block crm-section">
+        <div class="label">
+          <label for="utm-campaign">{ts}UTM Campaign{/ts}</label>
+        </div>
+        <div class="edit-value content">
+        <div class="crm-form-elem crm-form-textfield">
+          <input type="text" id="utm-campaign" name="utm-campaign" size="45" placeholder="Promo Code">
+        </div>
+        </div>
+      </div>
+      <div class="shorten-url-form-block crm-section">
+        <div class="label">
+          <label for="result_url">{ts}Final URL{/ts}</label>
+        </div>
+        <div class="edit-value content">
+        <div class="crm-form-elem crm-form-textfield">
+          <textarea type="text" id="result_url" name="result_url" cols="50" rows="4"></textarea>
+        </div>
+        </div>
+      </div>
+      <div class="shorten-url-form-block crm-section">
+        <div class="label">
+          <label for="shorten_url">{ts}Shorten URL{/ts}</label>
         </div>
         <div class="edit-value content">
         <div class="crm-form-elem crm-form-textfield">
@@ -84,19 +71,31 @@
         </div>
         </div>
       </div>
-      <div class="crm-submit-buttons">
-        <a href="#" class="button full-url-copy">Copy Full URL</a>
-        <a href="#" class="button shorten-url-copy">Copy Short Link</a>
+      <div class="crm-submit-buttons" align="center">
+        <a href="#" class="button full-url-copy">{ts}Copy Full URL{/ts}</a>
+        <a href="#" class="button shorten-url-copy">{ts}Copy Short Link{/ts}</a>
       </div>
     </div>  
   </form> 
 </div>
 <script>{literal}
   cj(document).ready( function($) {
-    //Website URL
-    var url_to_copy = document.querySelectorAll('.url_to_copy');
-    $('#put_url').val(url_to_copy[0].dataset.urlOriginal);
+    //popup window
+    $("#shorten-url").dialog({
+      modal: true,
+      width: "680px",
+      autoOpen: false,
+    });
 
+    var name;
+    $(".url-shorten").click(function(){
+      $("#shorten-url").dialog("open");
+      name = $('.url-shorten').data("url-shorten");
+      addOriginurl();
+      return false;
+    });
+
+  function addOriginurl(){
     //utm input default value
     var previousSeting = JSON.parse(localStorage.getItem('netShortenTool'));
     $('#utm-source').val(previousSeting.utmSource);
@@ -118,7 +117,7 @@
 
     //Final URL default
     var utm = ["utm-source", "utm-medium", "utm-term", "utm-content", "utm-campaign"];
-    $('#result_url').val(url_to_copy[0].dataset.urlOriginal);
+    var urlOriginal = $('.url_to_copy[name ="'+ name +'"]').data("url-original");
     var utmResult = "";
     $.each(utm , function(index, val) {
       var utmInput = document.getElementById(val); 
@@ -126,13 +125,20 @@
         utmResult = utmResult + '&' + val.replace('-', '_') + '=' + utmInput.value;
       }
     });
-    $('#result_url').val(url_to_copy[0].dataset.urlOriginal + utmResult);
+    $('#result_url').val(urlOriginal + utmResult);
 
     //Final URL change
     $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('keyup', function() {
       var changeutm = $(this).attr('id');
       var href = new URL($('#result_url').val());
-      href.searchParams.set(changeutm.replace('-', '_'), $(this).val());
+      //href.searchParams.set(changeutm.replace('-', '_'), $(this).val());
+      var params = new URLSearchParams(href.search);
+      if($(this).val().length > 0 ){
+        params.set(changeutm.replace('-', '_'), $(this).val());
+      } else {
+        params.delete(changeutm.replace('-', '_'));
+      }
+      href.search = params.toString();
       $('#result_url').val(href.href);
     });
 
@@ -151,10 +157,9 @@
             $('#shorten_url').val('https://neti.cc/' + data.short);
             $("#shorten_url").select();
             document.execCommand("copy");
-            $(".shorten-url-copy").after("<span>已複製連結</span>");
+            $(".shorten-url-copy").after("<span>Copied</span>");
             $(".url_to_copy").val('https://neti.cc/' + data.short);
             $('.url_to_copy').attr('data-url-shorten', 'https://neti.cc/' + data.short);
-            $('.url_to_copy').removeAttr("data-url-original");
           }
       });
     });
@@ -172,8 +177,8 @@
     $(".full-url-copy").click(function() {
       $("#result_url").select();
       document.execCommand("copy");
-      $(".full-url-copy").after("<span>已複製連結</span>");
+      $(".full-url-copy").after("<span>Copied</span>");
     });
-
+  }
   });
 {/literal}</script>

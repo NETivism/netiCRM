@@ -3242,6 +3242,10 @@ div#civicrm-dashboard form {
 #Tag .tree .collapsable .hit,
 #Tag .tree .expandable .hit { padding-left:16px; }
 
+.ui-widget.ui-widget-content {
+  z-index: 9999 !important;
+}
+
 /*  DataTables fixes */
 .crm-container .dataTables_length { float:none; padding-bottom:5px; }
 .crm-container .crm-datatable-pager-top { padding-top:5px; padding-bottom:25px; }

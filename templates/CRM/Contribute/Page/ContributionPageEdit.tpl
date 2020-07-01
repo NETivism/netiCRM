@@ -38,20 +38,6 @@
   </span>
 </div>
 {include file="CRM/common/ShortenURL.tpl"}
-<script>{literal}
-  cj(document).ready( function($) {
-    //popup window
-    $("#shorten-url").dialog({
-      modal: true,
-      width: "680px",
-      autoOpen: false,
-    });
-
-    $(".url-shorten").click(function(){
-      $("#shorten-url").dialog("open");
-    });
-  });
-{/literal}</script>
 {else}
 <div class="messages">
   {ts}This page is currently <strong>inactive</strong> (not accessible to visitors).{/ts}
