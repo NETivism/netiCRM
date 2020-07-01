@@ -29,7 +29,7 @@
   <a href="{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$id`" fe='true'}" target="_blank">
     &raquo; {ts}Go to this LIVE Online Contribution page{/ts}
   </a>
-  <textarea name="url_to_copy" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$liveURL}">{$liveURL}</textarea>
+  <textarea name="url_to_copy" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$liveURL}">{if $shorten}{$shorten}{else}{$liveURL}{/if}</textarea>
   <span>
     <a href="#" class="button url-copy" onclick="document.querySelector('textarea[name=url_to_copy]').select(); document.execCommand('copy'); return false;"><i class="zmdi zmdi-link"></i> {ts}Copy{/ts}</a>
   </span>

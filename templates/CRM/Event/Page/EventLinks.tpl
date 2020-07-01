@@ -7,7 +7,7 @@
   <a href="{$eventInfoURL}" target="_blank">
     &raquo; {ts}Event Info{/ts}
   </a>
-  <textarea name="url_to_copy" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$eventInfoURL}">{$eventInfoURL}</textarea>
+  <textarea name="url_to_copy" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$eventInfoURL}">{if $shorten_info}{$shorten_info}{else}{$eventInfoURL}{/if}</textarea>
   <span>
     <a href="#" class="button url-copy" onclick="document.querySelector('textarea[name=url_to_copy]').select(); document.execCommand('copy'); return false;"><i class="zmdi zmdi-link"></i> {ts}Copy{/ts}</a>
   </span>
@@ -22,7 +22,7 @@
   <a href="{$liveURL}" target="_blank">
     &raquo; {ts}Online Registration{/ts}
   </a>
-  <textarea name="url_to_copy2" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$liveURL}">{$liveURL}</textarea>
+  <textarea name="url_to_copy2" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$liveURL}">{if $shorten_register}{$shorten_register}{else}{$liveURL}{/if}</textarea>
   <span>
     <a href="#" class="button url-copy" onclick="document.querySelector('textarea[name=url_to_copy2]').select(); document.execCommand('copy'); return false;" ><i class="zmdi zmdi-link"></i> {ts}Copy{/ts}</a>
   </span>

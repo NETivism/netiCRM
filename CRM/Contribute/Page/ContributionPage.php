@@ -329,6 +329,12 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
         ));
       $config = CRM_Core_Config::singleton();
 
+      // get shorten url
+      $shorten = CRM_Core_OptionGroup::getValue('shorten_url', 'civicrm_contribution_page.'.$id, 'name', 'String', 'value');
+      if ($shorten) {
+        $this->assign('shorten', $shorten);
+      }
+
       // statistics
       CRM_Utils_System::setTitle(ts('Dashlets')." - ".$page['title']);
       $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($id);
