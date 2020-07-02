@@ -34,7 +34,7 @@
     <a href="#" class="button url-copy" onclick="document.querySelector('textarea[name=url_to_copy]').select(); document.execCommand('copy'); return false;"><i class="zmdi zmdi-link"></i> {ts}Copy{/ts}</a>
   </span>
   <span>
-    <a href="#" class="button url-shorten" data-url-shorten="url_to_copy"><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
+    <a href="#" class="button url-shorten" data-url-shorten="url_to_copy" data-page-id="{$id}" data-page-type="civicrm_contribution_page"><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
   </span>
 </div>
 {include file="CRM/common/ShortenURL.tpl"}
