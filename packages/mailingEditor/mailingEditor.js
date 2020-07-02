@@ -614,6 +614,19 @@
 											$nmebElem.html(decodeContent);
 											break;
 
+									case "rc-col-1":
+										let $nestTarget = $nmebElem.find("td.col-1");
+										$nestTarget.html("");
+
+										for (let nestBlockID in block.data[0]["blocks"]) {
+											let nestBlockData = block.data[0]["blocks"][nestBlockID];
+
+											if (!_objIsEmpty(nestBlockData)) {
+												_nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+											}
+										}
+										break;
+
 									default:
 										$nmebElem.html(block.data);
 										break;
@@ -688,6 +701,16 @@
 									"data-section": blockSection
 								});
 
+								if (block.parentID) {
+									$block.attr("data-parent-id", block.parentID);
+									$nmebElem.attr("data-parent-id", block.parentID);
+								}
+
+								if (block.parentType) {
+									$block.attr("data-parent-type", block.parentType);
+									$nmebElem.attr("data-parent-type", block.parentType);
+								}
+
 								switch (blockType) {
 									case "title":
 										$nmebElem.addClass("nme-editable");
@@ -748,6 +771,33 @@
 											decodeContent = _htmlUnescape(block.data.html);
 											$nmebElem.html(decodeContent);
 											break;
+
+									case "rc-col-1":
+										let group = ["image", "title", "paragraph", "button"],
+												$nestTarget = $nmebElem.find("td.col-1");
+
+										$nestTarget.html("");
+
+										for (let i in group) {
+											let nestBlockType = group[i],
+													nestBlockData = _tpl["data"][nestBlockType];
+
+											if (!_objIsEmpty(nestBlockData)) {
+												let nestBlockID = nestBlockType + "-" + _renderID();
+												nestBlockData.id = nestBlockID;
+												nestBlockData.parentID = blockID;
+												nestBlockData.parentType = blockType;
+												nestBlockData.control.sortable = false;
+												nestBlockData.control.delete = false;
+												nestBlockData.control.clone = false;
+												nestBlockData.weight = i;
+												_data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
+												_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+											}
+
+											_nmeData.update();
+										}
+										break;
 
 									default:
 										$nmebElem.html(block.data);
@@ -1297,17 +1347,29 @@
 					let $this = $(this),
 							blockID = $this.data("id"),
 							blockType = $this.data("type"),
-							section = $this.data("section");
+							section = $this.data("section"),
+							parentID = $this.data("parent-id"),
+							parentType = $this.data("parent-type");
 
-					if (_data["sections"][section]["blocks"][blockID]) {
-						//console.log(params.newValue);
-						if (blockType == "text" || blockType == "button") {
-							_data["sections"][section]["blocks"][blockID]["data"] = params.newValue;
+					if (parentID && parentType) {
+						if (parentType == "rc-col-1") {
+							if (blockType == "text" || blockType == "button") {
+								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
+									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"] = params.newValue;
+									_nmeData.update();
+								}
+							}
 						}
-
-						_nmeData.update();
 					}
-
+					else {
+						if (_data["sections"][section]["blocks"][blockID]) {
+							//console.log(params.newValue);
+							if (blockType == "text" || blockType == "button") {
+								_data["sections"][section]["blocks"][blockID]["data"] = params.newValue;
+								_nmeData.update();
+							}
+						}
+					}
 					/*
 					if (params.newValue == "") {
 						var label = $(this).attr("data-field-label");
@@ -1425,7 +1487,9 @@
 							$block = $button.closest(".nme-block"),
 							blockID = $block.data("id"),
 							section = $block.data("section"),
-							blockType = $block.data("type");
+							blockType = $block.data("type"),
+							parentID = $block.data("parent-id"),
+							parentType = $block.data("parent-type");
 					/*
 					console.log('save');
 					console.log(color);
@@ -1440,9 +1504,20 @@
 						$block.find("[data-settings-target='elemContainer']").attr("bgcolor", bgColor);
 
 						// Update color to json
-						_data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
-						_data["sections"][section]["blocks"][blockID]["override"]["elem"] = true;
-						_nmeData.update();
+						if (parentID && parentType) {
+							if (parentType == "rc-col-1") {
+								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
+									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
+									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["override"]["elem"] = true;
+									_nmeData.update();
+								}
+							}
+						}
+						else {
+							_data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
+							_data["sections"][section]["blocks"][blockID]["override"]["elem"] = true;
+							_nmeData.update();
+						}
 					}
 
 					$block.attr("data-elem-override", true);
@@ -1553,6 +1628,8 @@
 						blockID = $block.data("id"),
 						blockDomID = $block.attr("id"),
 						blockType = $block.data("type"),
+						parentID = $block.data("parent-id"),
+						parentType = $block.data("parent-type"),
 						section = $block.data("section"),
 						sectionID = "nme-mail-" + section,
 						sectionInner = "#" + sectionID + " .nme-mail-inner",
@@ -1614,6 +1691,12 @@
 				if (handleType == "image") {
 					window.nmeImce.targetID = blockID;
 					window.nmeImce.targetSection = section;
+
+					if (parentID && parentType) {
+						window.nmeImce.targetParentID = parentID;
+						window.nmeImce.targetParentType = parentType;
+					}
+
 					var win = window.open('/imce&app=nme|sendto@nmeImce.afterInsert', 'nme_imce', 'width=640, height=480');
 				}
 
@@ -1661,9 +1744,19 @@
 								if ($.trim(editItemVal)) {
 									$elem.attr("data-link", editItemVal);
 
-									if (_data["sections"][section]["blocks"][blockID]) {
-										_data["sections"][section]["blocks"][blockID]["link"] = editItemVal;
-										_nmeData.update();
+									if (parentID && parentType) {
+										if (parentType == "rc-col-1") {
+											if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
+												_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["link"] = editItemVal;
+												_nmeData.update();
+											}
+										}
+									}
+									else {
+										if (_data["sections"][section]["blocks"][blockID]) {
+											_data["sections"][section]["blocks"][blockID]["link"] = editItemVal;
+											_nmeData.update();
+										}
 									}
 								}
 							}
@@ -1706,11 +1799,11 @@
 
 				addBlockData.id = addBlockID;
 
-				// Added block dom
-				_nmeBlock.add(addBlockData, "edit", $addTarget, addMethod);
-
 				// Added block data
 				_data["sections"][addSection]["blocks"][addBlockID] = addBlockData;
+
+				// Added block dom
+				_nmeBlock.add(addBlockData, "edit", $addTarget, addMethod);
 
 				// Reorder data
 				_sortables[addSection]["order"] = _sortables[addSection]["inst"].toArray();
@@ -1834,6 +1927,8 @@
 			// console.log(imceWindow);
 			let blockID = window.nmeImce.targetID,
 					section = window.nmeImce.targetSection,
+					parentID = window.nmeImce.targetParentID,
+					parentType = window.nmeImce.targetParentType,
 					fileURL = file.url,
 					fileName = file.name,
 					fileWidth = file.width,
@@ -1855,10 +1950,25 @@
 						});
 
 						// Update json data of the target image
-						if (_data["sections"][section]["blocks"][blockID]) {
-							_data["sections"][section]["blocks"][blockID]["data"]["url"] = fileURL;
-							_data["sections"][section]["blocks"][blockID]["data"]["fileName"] = fileName;
-							_nmeData.update();
+						if (parentID && parentType) {
+							if (parentType == "rc-col-1") {
+								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
+									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["url"] = fileURL;
+									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["width"] = fileWidth;
+									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["height"] = fileHeight;
+									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["fileName"] = fileName;
+									_nmeData.update();
+								}
+							}
+						}
+						else {
+							if (_data["sections"][section]["blocks"][blockID]) {
+								_data["sections"][section]["blocks"][blockID]["data"]["url"] = fileURL;
+								_data["sections"][section]["blocks"][blockID]["data"]["width"] = fileWidth;
+								_data["sections"][section]["blocks"][blockID]["data"]["height"] = fileHeight;
+								_data["sections"][section]["blocks"][blockID]["data"]["fileName"] = fileName;
+								_nmeData.update();
+							}
 						}
 					}
 				}

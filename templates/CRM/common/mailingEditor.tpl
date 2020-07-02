@@ -68,6 +68,7 @@
 									<li><button class="nme-add-block-btn" type="button" data-type="paragraph">內文</button></li>
 									<li><button class="nme-add-block-btn" type="button" data-type="image">圖片</button></li>
 									<li><button class="nme-add-block-btn" type="button" data-type="button">按鈕</button></li>
+									<li><button class="nme-add-block-btn" type="button" data-type="rc-col-1">單欄圖文</button></li>
 								</ul>
 							</div>
 						</div>

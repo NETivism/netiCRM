@@ -9,6 +9,7 @@
 {include file="../packages/mailingEditor/templates/block/blockImage.tpl"}
 {include file="../packages/mailingEditor/templates/block/blockParagraph.tpl"}
 {include file="../packages/mailingEditor/templates/block/blockButton.tpl"}
+{include file="../packages/mailingEditor/templates/block/blockRcCol1.tpl"}
 {include file="../packages/mailingEditor/templates/block/blockHeader.tpl"}
 {include file="../packages/mailingEditor/templates/block/blockFooter.tpl"}
 {include file="../packages/mailingEditor/templates/block/blockEdit.tpl"}
@@ -19,3 +20,4 @@
 {include file="../packages/mailingEditor/templates/data/dataImage.tpl"}
 {include file="../packages/mailingEditor/templates/data/dataParagraph.tpl"}
 {include file="../packages/mailingEditor/templates/data/dataButton.tpl"}
+{include file="../packages/mailingEditor/templates/data/dataRcCol1.tpl"}
