@@ -330,7 +330,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
 
         // check if rollover date is less than fixed start date,
         // if yes increment, another edge case handling
-        if ($fixedRolloverDate <= $fixedStartDate) {
+        if ($fixedRolloverDate <= $fixedStartDate && ($startMonth.$startDay == '101')) {
           $year = $year + 1;
           $actualRolloverDate = date('Y-m-d', mktime(0, 0, 0, $rolloverMonth, $rolloverDay, $year));
         }
@@ -347,10 +347,12 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         // calculate start date if join date is in rollover window
         // if join date is greater than the rollover date,
         // then consider the following year as the start date
+        /*
         if ($actualRolloverDate <= $joinDate) {
           $fixed_period_rollover = TRUE;
           $year = $year + 1;
         }
+        */
 
         $actualStartDate = date('Y-m-d', mktime(0, 0, 0, $startMonth, $startDay, $year));
         if (!$startDate) {
@@ -522,8 +524,8 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         $fixedStartDay = substr($membershipTypeDetails['fixed_period_start_day'], -2);
         $fixedStartMonth = substr($membershipTypeDetails['fixed_period_start_day'], 0, -2);
         $startDate = $logStartDate = date('Y-m-d', mktime(0, 0, 0,
-          (double) $fixedStartDay,
           (double) $fixedStartMonth,
+          (double) $fixedStartDay,
           $yearValue
         ));
 

@@ -522,7 +522,7 @@ class CRM_Contribute_Form_AdditionalInfo {
           'activity_date_time' => date('Y-m-d H:i:s'),
           'status_id' => $statusId,
           'subject' => $params['source'] .' - '.ts('Email Receipt'),
-          'target_contact_id' => $params['contact_id'],
+          'assignee_contact_id' => $params['contact_id'],
           'source_contact_id' => $userID,
         );
         CRM_Activity_BAO_Activity::create($activityParams);

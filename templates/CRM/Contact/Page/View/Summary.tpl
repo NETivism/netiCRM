@@ -132,7 +132,7 @@
                             <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$current_employer_id`"}" title="{ts}view current employer{/ts}">{$current_employer}</a></td>
                             {/if}
                             {if $job_title}
-                            <td class="label">{ts}Position{/ts}</td>
+                            <td class="label">{ts}Job Title{/ts}</td>
                             <td>{$job_title}</td>
                             {/if}
                             {if $legal_name}

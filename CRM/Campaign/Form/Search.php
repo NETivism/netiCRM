@@ -140,6 +140,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
    * @access public
    */
   function preProcess() {
+    $this->set('searchFormName', 'Search');
+
     $this->_done = FALSE;
     $this->_defaults = array();
 
@@ -273,12 +275,9 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     $rows = $this->get('rows');
     if (is_array($rows)) {
       if (!$this->_single) {
-        $this->addElement('checkbox', 'toggleSelect', NULL, NULL, array('onclick' => "toggleTaskAction( true ); return toggleCheckboxVals('mark_x_',this);"));
+        $this->addElement('checkbox', 'toggleSelect');
         foreach ($rows as $row) {
-          $this->addElement('checkbox', $row['checkbox'],
-            NULL, NULL,
-            array('onclick' => "toggleTaskAction( true ); return checkSelectedBox('" . $row['checkbox'] . "', '" . $this->getName() . "');")
-          );
+          $this->addElement('checkbox', $row['checkbox']);
         }
       }
 
@@ -331,7 +330,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
       $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);      
 
-      $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('onclick' => $this->getName() . ".toggleSelect.checked = false; toggleCheckboxVals('mark_x_',this); toggleTaskAction( true );"));
+      $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
       $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
     }
 

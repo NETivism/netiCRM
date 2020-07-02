@@ -94,7 +94,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     $this->addButtons(array(
         array(
           'type' => 'next',
-          'name' => '>> ' . ts('Change Payment Method'),
+          'name' => ts('Change Payment Method'),
           'isDefault' => TRUE,
         ),
       )
@@ -148,7 +148,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     $values = array();
     $contrib->storeValues($contrib, $values);
     $this->set('contrib', $values);
-    $payment = &CRM_Core_Payment::singleton($this->_mode, $processor, $this);
+    $payment = CRM_Core_Payment::singleton($this->_mode, $processor, $this);
     $vars = $payment->prepareTransferCheckoutParams($contrib, $params);
 
     // before leave to transfercheckout, call hook

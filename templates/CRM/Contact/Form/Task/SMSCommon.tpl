@@ -32,9 +32,14 @@
  <div class="crm-accordion-body">
  <div id='char-count-message'></div>
    <div class="helpIcon" id="helptext">
-     <input class="crm-token-selector big" data-field="sms_text_message" />
-     {help id="id-token-text" tplFile=$tplFile file="CRM/Contact/Form/Task/SMS.hlp"}
-   </div>
+      <a class="token-trigger" href="#" onClick="return showToken('Text', 1);">{$form.token1.label}</a>
+      {help id="id-token-text" file="CRM/Contact/Form/Task/SMS.hlp"}
+      <div id="tokenText" style="display:none;">
+          <input style="border:1px solid #999999;" type="text" id="filter1" size="20" name="filter1" onkeyup="filter(this, 1);"/><br />
+          <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
+          {$form.token1.html}
+      </div>
+    </div>
     <div class='text'>
   {$form.sms_text_message.html}<br />
     </div>
@@ -54,6 +59,7 @@
    <div class="content">{$form.SMSsaveTemplateName.html}</div>
 </div>
 
+{include file="CRM/Mailing/Form/InsertTokens.tpl" editor=""}
 {literal}
 <script type="text/javascript">
 
@@ -84,7 +90,10 @@ function maxCharInfoDisplay(){
    var maxLength = {/literal}{$max_sms_length}{literal};
    var textMsg = cj('#sms_text_message').val();
    var is_chinese = textMsg.match(/[^\x00-\xff]/g);
-   if(is_chinese){
+   var regToken = /(\{[^\}]+\})/g;
+   var have_token = textMsg.match(regToken);
+   var textMsg = textMsg.replace(regToken, '');
+   if(is_chinese || have_token){
      maxLength = {/literal}{$max_zh_sms_length}{literal};
    }
    var enteredCharLength = textMsg.length;
@@ -94,10 +103,23 @@ function maxCharInfoDisplay(){
       cj('#sms_text_message').val(cj('#sms_text_message').val().substring(0, maxLength));
       count = 0;
    }
-   var finalMsg =  "{/literal}{ts}You can insert up to %1 characters. You have entered %2 characters.{/ts}{literal}";
+   if (have_token) {
+     var finalMsg =  "{/literal}{ts}You can insert up to %1 characters include token. You have entered %2 characters without token.{/ts}{literal}";
+   }
+   else {
+     var finalMsg =  "{/literal}{ts}You can insert up to %1 characters. You have entered %2 characters.{/ts}{literal}";
+   }
    finalMsg = finalMsg.replace("%1", maxLength).replace("%2",count);
    cj('#char-count-message').text(finalMsg);
 }
+
+cj(document).ajaxComplete(function( event, xhr, settings ) {
+  if(settings.url.match('civicrm/ajax/template')) {
+    maxLengthMessage();
+    maxCharInfoDisplay();
+  }
+});
+
 {/literal}{/if}{literal}
 
 </script>
