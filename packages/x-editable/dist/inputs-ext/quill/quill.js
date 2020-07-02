@@ -36,8 +36,8 @@ $(function(){
         editor: null,
         delta: null,
         xeditable: {
-            html: '',
-            value: ''
+            html: {},
+            value: {}
         },
         render: function () {
             var deferred = $.Deferred(), msieOld, quillID;
@@ -52,7 +52,8 @@ $(function(){
             // 設定 class
             this.setClass();
 
-            var html = this.xeditable.html,
+            var blockID = this.options.scope.attributes['data-id']['nodeValue'],
+                html = blockID ? this.xeditable.html[blockID] : '',
                 text = stripHTML(html);
 
             //console.log(text);
@@ -113,7 +114,7 @@ $(function(){
             };
 
             this.editor = new Quill('#' + quillID, quillOptions);
-            this.editor.focus(); 
+            this.editor.focus();
         },
 
         // 編輯完成時呼叫（第三順位）
@@ -136,16 +137,20 @@ $(function(){
 
         // 初始化 x-editable 之後呼叫
         html2value: function(html) {
-            console.log('===== html2value =====');
+            //console.log('===== html2value =====');
             //console.log(html);
             //console.log(this);
-            this.xeditable.html = html;
-            return html;
+            var blockID = this.options.scope.attributes['data-id']['nodeValue'];
+
+            if (blockID) {
+                this.xeditable.html[blockID] = html;
+                return html;
+            }
         },
 
         // 按下 x-editable / 編輯完成時呼叫（第二順位）
         value2input: function(value) {
-            console.log('===== value2input =====');
+            //console.log('===== value2input =====');
             //console.log(value);
             //var delta = this.editor.getContents();
             //console.log(delta);
