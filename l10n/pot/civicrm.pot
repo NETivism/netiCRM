@@ -47565,3 +47565,12 @@ msgstr ""
 
 msgid "Email receipt not sent?"
 msgstr ""
+
+msgid "Copied"
+msgstr ""
+
+msgid "Final URL"
+msgstr ""
+
+msgid "Short URL"
+msgstr ""
