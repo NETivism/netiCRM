@@ -804,6 +804,13 @@
 										break;
 								}
 
+								// Added link data attribute to element, this data will be used in edit mode.
+								if (block.link) {
+									$nmebElem.attr({
+										"data-link": block.link
+									});
+								}
+
 								_nmeBlockControl.render(blockID, blockType);
 								_editable();
 							}
