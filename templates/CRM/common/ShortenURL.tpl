@@ -103,7 +103,7 @@
       pageType = $(this).data('page-type');
       $("#shorten-url").dialog("open");
       name = $(this).data("url-shorten");
-      $('#shorten_url').val("");
+      $('#shorten_url').val('');
       addOriginurl();
       return false;
     });
