@@ -10,8 +10,8 @@
     "section": "body",
     "data" :  {
       "url": "https://unsplash.it/1360/600?image=972",
-      "width" : "600",
-      "height" : "265",
+      "width" : "680",
+      "height" : "300",
       "fileName": "example_image"
     },
     "styles": {
