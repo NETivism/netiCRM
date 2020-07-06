@@ -237,7 +237,6 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       $sql .= " $groupBy ";
     }
     $this->addSortOffset($sql, $offset, $rowcount, $sort);
-    dpm($sql);
     return $sql;
   }
 
