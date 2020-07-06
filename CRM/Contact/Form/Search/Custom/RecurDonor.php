@@ -218,7 +218,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
 
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     if ($onlyIDs) {
-      $fields = "contact_a.id";
+      $fields = "DISTINCT contact_a.id as contact_id";
     }
     else {
       $fields = $this->select();
@@ -237,6 +237,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       $sql .= " $groupBy ";
     }
     $this->addSortOffset($sql, $offset, $rowcount, $sort);
+    dpm($sql);
     return $sql;
   }
 
