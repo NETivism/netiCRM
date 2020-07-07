@@ -104,6 +104,11 @@
       $("#shorten-url").dialog("open");
       name = $(this).data("url-shorten");
       $('#shorten_url').val('');
+      $(".shorten-url-copy").css({ 
+        "pointer-events":"initial",
+        "background": "#333030"
+      });
+      $("#shorten_url+span").remove();
       addOriginurl();
       return false;
     });
