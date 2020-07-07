@@ -43,13 +43,13 @@
 			<div class="nme-setting-panels-inner">
 				<div class="nme-setting-panels-header">
 					<ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
-						<li><a class="is-active" data-target-id="nme-tpl-select" href="#nme-tpl-select">選擇範本</a></li>
+						<li><a class="is-active" data-target-id="nme-select-tpl" href="#nme-select-tpl">選擇範本</a></li>
 						<li><a data-target-id="nme-add-block" href="#nme-add-block">新增區塊</a></li>
 						<li><a data-target-id="nme-global-setting" href="#nme-global-setting">整體設定</a></li>
 					</ul>
 				</div>
 				<div class="nme-setting-panels-content">
-					<div id="nme-select-tpl" class="nme-tpl-select nme-setting-panel is-active">
+					<div id="nme-select-tpl" class="nme-select-tpl nme-setting-panel is-active">
 						<div class="nme-setting-panel-inner">
 							<h3 class="nme-setting-panel-title">範本</h3>
 							<div class="nme-setting-panel-content">
