@@ -37,6 +37,7 @@
       "block": false,
       "elem": false
     },
+    "isRichContent": true,
     "weight" : 0
   };
 

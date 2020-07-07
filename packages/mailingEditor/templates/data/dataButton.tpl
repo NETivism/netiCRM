@@ -53,6 +53,7 @@
       "block": false,
       "elem": false
     },
+    "isRichContent": false,
     "weight" : 0
   };
 
