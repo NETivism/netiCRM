@@ -59,6 +59,9 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
       $displayName = CRM_Contact_BAO_Contact::displayName($this->_contactId);
       $this->assign('displayName', $displayName);
     }
+
+    $eventTypes = CRM_Event_PseudoConstant::eventType();
+    $this->assign('eventTypes', $eventTypes);
   }
 
   /**
