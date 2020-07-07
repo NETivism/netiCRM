@@ -780,7 +780,7 @@
 
 										for (let i in group) {
 											let nestBlockType = group[i],
-													nestBlockData = _tpl["data"][nestBlockType];
+													nestBlockData = _objClone(_tpl["data"][nestBlockType]);
 
 											if (!_objIsEmpty(nestBlockData)) {
 												let nestBlockID = nestBlockType + "-" + _renderID();
@@ -1797,7 +1797,7 @@
 			let $btn = $(this),
 					addSection = "body",
 					addBlockType = $btn.data("type"),
-					addBlockData = _tpl["data"][addBlockType];
+					addBlockData = _objClone(_tpl["data"][addBlockType]);
 
 			if (!_objIsEmpty(addBlockData)) {
 				let addBlockID = addBlockType + "-" + _renderID(),
