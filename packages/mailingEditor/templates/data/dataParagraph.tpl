@@ -9,7 +9,6 @@
     "type" : "paragraph",
     "section": "body",
     "data" : {
-      "ops": {},
       "html": "<p>請輸入內文...</p>"
     },
     "styles": {

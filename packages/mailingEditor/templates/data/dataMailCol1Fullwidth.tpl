@@ -176,7 +176,6 @@
             "type" : "paragraph",
             "section": "body",
             "data" : {
-              "ops": {},
               "html": "&lt;p&gt;請輸入內文...&lt;/p&gt;"
             },
             "styles": {

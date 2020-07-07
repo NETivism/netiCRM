@@ -34,10 +34,17 @@ $(function(){
     $.extend(XQuill.prototype, {
         status: 'view',
         editor: null,
-        delta: null,
         xeditable: {
-            html: {},
-            value: {}
+            delta: {},
+            html: {}
+        },
+        htmlEscape: function(input) {
+            return input
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         },
         render: function () {
             var deferred = $.Deferred(), msieOld, quillID;
@@ -55,7 +62,6 @@ $(function(){
             var blockID = this.options.scope.attributes['data-id']['nodeValue'],
                 html = blockID ? this.xeditable.html[blockID] : '',
                 text = stripHTML(html);
-
             //console.log(text);
             //console.log(html);
 
@@ -129,7 +135,10 @@ $(function(){
             var html = this.editor.root.innerHTML;
 
             // 將 HTML 儲存於 xeditable
-            this.xeditable.html = html;
+            var blockID = this.options.scope.attributes['data-id']['nodeValue'];
+            if (blockID) {
+                this.xeditable.html[blockID] = html;
+            }
 
             // 將 HTML 輸出到 x-editable 觸控器中
             $(element).html(html);
@@ -139,7 +148,6 @@ $(function(){
         html2value: function(html) {
             //console.log('===== html2value =====');
             //console.log(html);
-            //console.log(this);
             var blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
             if (blockID) {
@@ -167,11 +175,16 @@ $(function(){
             console.log('===== input2value =====');
             // 將狀態設為「瀏覽」模式
             this.status = 'view';
+            var blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
-            // 取得編輯器的內容並儲存於 delta
-            this.delta = this.editor.getContents();
-            console.log(this.delta);
-            //return this.$input.val();
+            if (blockID) {
+                // 取得編輯器的內容並儲存於 xeditable
+                this.xeditable.delta[blockID] = this.editor.getContents();
+                this.xeditable.html[blockID] = this.editor.root.innerHTML;
+
+                // HTML should be escape, otherwise the 'params' of the event of the x-editable will not be obtained
+                return this.htmlEscape(this.xeditable.html[blockID]);
+            }
         },
 
        //using `white-space: pre-wrap` solves \n  <--> BR conversion very elegant!

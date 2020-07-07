@@ -1352,17 +1352,24 @@
 				$editableElem.on("save", function(e, params) {
 					//console.log(params);
 					let $this = $(this),
+							editableType = $this.data("type"),
 							blockID = $this.data("id"),
-							blockType = $this.data("type"),
 							section = $this.data("section"),
 							parentID = $this.data("parent-id"),
 							parentType = $this.data("parent-type");
 
 					if (parentID && parentType) {
 						if (parentType == "rc-col-1") {
-							if (blockType == "text" || blockType == "button") {
+							if (editableType == "text") {
 								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
 									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"] = params.newValue;
+									_nmeData.update();
+								}
+							}
+
+							if (editableType == "xquill") {
+								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
+									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["html"] = params.newValue;
 									_nmeData.update();
 								}
 							}
@@ -1370,9 +1377,13 @@
 					}
 					else {
 						if (_data["sections"][section]["blocks"][blockID]) {
-							//console.log(params.newValue);
-							if (blockType == "text" || blockType == "button") {
+							if (editableType == "text") {
 								_data["sections"][section]["blocks"][blockID]["data"] = params.newValue;
+								_nmeData.update();
+							}
+
+							if (editableType == "xquill") {
+								_data["sections"][section]["blocks"][blockID]["data"]["html"] = params.newValue;
 								_nmeData.update();
 							}
 						}
