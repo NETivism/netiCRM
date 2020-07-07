@@ -372,6 +372,40 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nme-container ul.nme-setting-item-list button:hover {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
 }
+.nme-container .nme-setting-panel #nme-theme-setting {
+  align-items: flex-start;
+}
+.nme-container .nme-setting-panel #nme-theme-setting .nme-setting-field-label {
+  padding-top: 5px;
+}
+.nme-container .nme-theme-setting-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+.nme-container .nme-theme-setting-item {
+  margin: 0 10px 10px 0;
+  cursor: pointer;
+}
+.nme-container .nme-theme-setting-item .form-radio {
+  position: absolute;
+  opacity: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+.nme-container .nme-theme-thumb {
+  position: relative;
+  width: 0;
+  height: 0;
+  border-bottom: 30px solid transparent;
+  border-left: 30px solid transparent;
+  box-shadow: 0 0 5px rgba(0,0,0,.1);
+}
+.nme-container .nme-theme-thumb:hover {
+  box-shadow: 0 0 5px rgba(0,0,0,.3);
+}
+.nme-container .form-radio:checked + .elem-label .nme-theme-thumb {
+  box-shadow: 0 0 5px rgba(0,0,0,.5);
+}
 
 /* nmeb */
 #nme-mail .nmeb td {

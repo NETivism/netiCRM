@@ -82,11 +82,7 @@
 									<div id="nme-theme-setting" class="nme-setting-field">
 											<div class="nme-setting-field-label">主題配色</div>
 											<div class="nme-setting-field-content">
-												<div class="crm-form-elem crm-form-select crm-form-select-single">
-													<select id="nme-theme-setting-select" class="nme-setting-select form-select">
-														<option value="" selected>自訂樣式</option>
-													</select>
-												</div>
+												<div class="nme-theme-setting-items"></div>
 											</div>
 										</div>
 									</div>

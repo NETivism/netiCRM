@@ -66,9 +66,8 @@
 		_sortables = {},
 		_pickrs = {},
 		_tpl = {},
-		_themes = {
-			"profession": {
-				"name": "謹慎專業",
+		_themes = [
+			{
 				"styles": {
 					"page" : {
 						"background-color": "#16235a"
@@ -94,8 +93,7 @@
 					}
 				}
 			},
-			"blackwhite": {
-				"name": "黑白極簡",
+			{
 				"styles": {
 					"page" : {
 						"background-color": "#000000"
@@ -121,8 +119,7 @@
 					}
 				}
 			},
-			"berry": {
-				"name": "酸甜莓果",
+			{
 				"styles": {
 					"page" : {
 						"background-color": "#f091a6"
@@ -148,8 +145,7 @@
 					}
 				}
 			},
-			"bay": {
-				"name": "寧靜海灣",
+			{
 				"styles": {
 					"page" : {
 						"background-color": "#81a3a7"
@@ -175,8 +171,7 @@
 					}
 				}
 			},
-			"forest": {
-				"name": "綠色森林",
+			{
 				"styles": {
 					"page" : {
 						"background-color": "#4CAF50"
@@ -202,8 +197,7 @@
 					}
 				}
 			},
-			"coffee": {
-				"name": "咖啡牛奶",
+			{
 				"styles": {
 					"page" : {
 						"background-color": "#583e2e"
@@ -229,7 +223,7 @@
 					}
 				}
 			}
-		};
+		];
 
 	/**
 	 * ============================
@@ -1139,6 +1133,21 @@
 			}
 		};
 
+		if ($(".nme-theme-setting-items").length) {
+			if (!_objIsEmpty(_themes)) {
+				for (let i in _themes) {
+					let radio = "<label class='nme-theme-setting-item crm-form-elem crm-form-radio' for='nme-theme-setting-item-" + i + "'>" +
+					"<input value='" + i + "' type='radio' id='nme-theme-setting-item-" + i + "' class='nme-setting-radio form-radio' name='nme-theme-setting'>" +
+					"<span class='elem-label'>" +
+					"<div class='nme-theme-thumb' style='border-left-color: " + _themes[i]["styles"]["page"]["background-color"] + "; border-bottom-color: " + _themes[i]["styles"]["block"]["background-color"] + ";'>" +
+					"</div>" +
+					"</span>" +
+					"</label>";
+					$(".nme-theme-setting-items").append(radio);
+				}
+			}
+		}
+
 		if ($(".nme-setting-picker").length) {
 			$(".nme-setting-picker").each(function() {
 				let $this = $(this),
@@ -1154,15 +1163,6 @@
 		}
 
 		if ($(".nme-setting-select").length) {
-			if ($("#nme-theme-setting-select").length) {
-				if (!_objIsEmpty(_themes)) {
-					for (let themeKey in _themes) {
-						let option = "<option value='" + themeKey + "'>" + _themes[themeKey]["name"] + "</option>";
-						$("#nme-theme-setting-select").append(option);
-					}
-				}
-			}
-
 			$(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
 				let $select = $(this),
 						selectID = $select.attr("id"),
@@ -1173,24 +1173,6 @@
 						group = $section.data("setting-group"),
 						$block,
 						$target;
-
-				if (selectID == "nme-theme-setting-select") {
-					let themeSettings = _themes[val];
-
-					for (let group in _themes[val]["styles"]) {
-						for (let fieldType in _themes[val]["styles"][group]) {
-							let colorVal = _themes[val]["styles"][group][fieldType],
-									$pickr = $(".nme-setting-section[data-setting-group='" + group + "'] .nme-setting-field[data-field-type='" + fieldType + "'] .pcr-button");
-
-							if ($pickr.length) {
-								let pickrID = $pickr.attr("id"),
-										pickrIns = _pickrs[pickrID];
-
-								pickrIns.setColor(colorVal);
-							}
-						}
-					}
-				}
 
 				if (group == "title") {
 					$block = $(".nme-block[data-type='title']");
@@ -1211,6 +1193,35 @@
 				}
 			});
 		}
+
+		$(".nme-setting-radio").on("change", function() {
+			let $radio = $(this),
+					radioID = $radio.attr("id"),
+					radioName = $radio.attr("name"),
+					val = $radio.val(),
+					$field = $radio.closest(".nme-setting-field"),
+					fieldType = $field.data("field-type"),
+					$section = $radio.closest(".nme-setting-section"),
+					group = $section.data("setting-group"),
+					$block,
+					$target;
+
+			if (radioName == "nme-theme-setting") {
+				for (let group in _themes[val]["styles"]) {
+					for (let fieldType in _themes[val]["styles"][group]) {
+						let colorVal = _themes[val]["styles"][group][fieldType],
+								$pickr = $(".nme-setting-section[data-setting-group='" + group + "'] .nme-setting-field[data-field-type='" + fieldType + "'] .pcr-button");
+
+						if ($pickr.length) {
+							let pickrID = $pickr.attr("id"),
+									pickrIns = _pickrs[pickrID];
+
+							pickrIns.setColor(colorVal);
+						}
+					}
+				}
+			}
+		});
 	};
 
 	var _nmePreview = {
