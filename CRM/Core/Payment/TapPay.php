@@ -512,10 +512,15 @@ INNER JOIN
   civicrm_contribution c
 ON
   r.id = c.contribution_recur_id
+INNER JOIN
+  civicrm_payment_processor p
+ON
+  c.payment_processor_id = p.id
 WHERE
   r.cycle_day = %1 AND
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
 AND r.contribution_status_id = 5
+AND p.payment_processor_type = 'TapPay'
 GROUP BY r.id
 LIMIT 0, 100
 ";
