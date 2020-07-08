@@ -47577,3 +47577,6 @@ msgstr ""
 
 msgid "Copy Short URL"
 msgstr ""
+
+msgid "Procceed Receipt Sending?"
+msgstr ""
