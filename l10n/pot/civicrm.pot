@@ -47571,3 +47571,9 @@ msgstr ""
 
 msgid "Short URL"
 msgstr ""
+
+msgid "Copy Final URL"
+msgstr ""
+
+msgid "Copy Short URL"
+msgstr ""
