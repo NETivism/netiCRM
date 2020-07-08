@@ -246,15 +246,11 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    * @access public
    */
   function view() {
-    $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionView',
-      'View Contribution',
-      $this->_action
-    );
+    $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionView', 'View Contribution', $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->set('id', $this->_id);
     $controller->set('cid', $this->_contactId);
-
-    return $controller->run();
+    $controller->run();
   }
 
   /**

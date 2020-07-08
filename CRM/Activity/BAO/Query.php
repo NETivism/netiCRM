@@ -193,6 +193,16 @@ class CRM_Activity_BAO_Query {
         $query->_qill[$grouping][] = ts('Activity Type') . ' ' . implode(' ' . ts('or') . ' ', $clause);
         break;
 
+      case 'source_record_id':
+      case 'activity_record_id':
+        if (!$value) {
+          break;
+        }
+        $value = CRM_Utils_Type::escape($value, 'Integer');
+        $query->_where[$grouping][] = " civicrm_activity.source_record_id = $value";
+        $query->_qill[$grouping][] = ts('Source Record ID');
+        break;
+
       case 'activity_survey_id':
         if (!$value) {
           break;

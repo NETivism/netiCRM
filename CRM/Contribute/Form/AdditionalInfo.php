@@ -341,7 +341,7 @@ class CRM_Contribute_Form_AdditionalInfo {
   function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     if (!empty($params['is_attach_receipt'])) {
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
-      $receiptTask->makeReceipt($params['contribution_id'], 'copy_only');
+      $receiptTask->makeReceipt($params['contribution_id'], 'copy_only', TRUE);
       $pdfFilePath = $receiptTask->makePDF(False);
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
       $pdfParams =  array(
@@ -502,6 +502,7 @@ class CRM_Contribute_Form_AdditionalInfo {
     );
     if (!empty($params['is_attach_receipt'])) {
       $templateParams['attachments'][] = $pdfParams;
+      $templateParams['tplParams']['pdf_receipt'] = 1;
     }
     else {
       $templateParams['PDFFilename'] = 'receipt.pdf';
@@ -518,10 +519,11 @@ class CRM_Contribute_Form_AdditionalInfo {
         $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
         $activityParams = array(
           'activity_type_id' => $activityTypeId,
-          'activity_record_id' => $params['contribution_id'],
+          'source_record_id' => $params['contribution_id'],
           'activity_date_time' => date('Y-m-d H:i:s'),
+          'is_test' => !empty($params['is_test']) ? 1 : 0,
           'status_id' => $statusId,
-          'subject' => $params['source'] .' - '.ts('Email Receipt'),
+          'subject' => ts('Email Receipt').' - '.$params['source'],
           'assignee_contact_id' => $params['contact_id'],
           'source_contact_id' => $userID,
         );

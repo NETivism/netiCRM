@@ -48,9 +48,10 @@ function civicrm_smarty_resource_string_get_secure($tpl_name, &$smarty_obj) {
 
 function civicrm_smarty_resource_string_get_trusted($tpl_name, &$smarty_obj) {}
 
-function civicrm_smarty_register_string_resource() {
-  require_once 'CRM/Core/Smarty.php';
-  $template = &CRM_Core_Smarty::singleton();
+function civicrm_smarty_register_string_resource(&$template = NULL) {
+  if (empty($template)) {
+    $template = &CRM_Core_Smarty::singleton();
+  }
   $template->register_resource('string', array(
       'civicrm_smarty_resource_string_get_template',
       'civicrm_smarty_resource_string_get_timestamp',

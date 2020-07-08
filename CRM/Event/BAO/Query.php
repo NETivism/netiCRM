@@ -120,7 +120,7 @@ class CRM_Event_BAO_Query {
 
       if (CRM_Utils_Array::value('event_type_id', $query->_returnProperties)) {
         $query->_tables['civicrm_event'] = 1;
-        $query->_select['event_type_id'] = "event_type.id as event_type_id";
+        $query->_select['event_type_id'] = "civicrm_event.event_type_id as event_type_id";
         $query->_element['event_type_id'] = 1;
         $query->_tables['event_type'] = 1;
         $query->_whereTables['event_type'] = 1;
@@ -574,6 +574,7 @@ class CRM_Event_BAO_Query {
         'event_start_date' => 1,
         'event_end_date' => 1,
         'event_type' => 1,
+        'event_type_id' => 1,
         'participant_id' => 1,
         'participant_status' => 1,
         'participant_role_id' => 1,

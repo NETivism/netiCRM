@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-19 13:48+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2020-07-02 04:45+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47795,3 +47795,21 @@ msgstr "如果您需要付款成功時自動發送手機簡訊通知，請勾選
 
 msgid "SMS Text"
 msgstr "簡訊文字"
+
+msgid "With Receipt"
+msgstr "內附收據"
+
+msgid "Receipt date not set?"
+msgstr "收據日期尚未設定？"
+
+msgid "Email receipt not sent?"
+msgstr "電子郵件收據未曾送出？"
+
+msgid "Copied"
+msgstr "已複製"
+
+msgid "Final URL"
+msgstr "結果網址"
+
+msgid "Short URL"
+msgstr "短網址"

@@ -218,7 +218,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
 
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     if ($onlyIDs) {
-      $fields = "contact_a.id";
+      $fields = "DISTINCT contact_a.id as contact_id";
     }
     else {
       $fields = $this->select();
@@ -456,5 +456,9 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       );
       $row['contribution_id2'] = '<a href="'.CRM_Utils_System::crmURL($params).'" target="_blank">'.$row['contribution_id2'].'</a>';
     }
+  }
+
+  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 }

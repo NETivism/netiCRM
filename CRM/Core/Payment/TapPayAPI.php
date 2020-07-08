@@ -213,6 +213,13 @@ class CRM_Core_Payment_TapPayAPI {
     self::writeRecord($lodId, $recordData);
 
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $errno = curl_errno($ch);
+    if (!empty($errno)) {
+        $errno = curl_errno($ch);
+        $err = curl_error($ch);
+        CRM_Core_Error::debug_log_message("CURL: $err :: $errno");
+    }
+
     if ($result === FALSE) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);

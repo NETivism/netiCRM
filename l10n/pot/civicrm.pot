@@ -47556,3 +47556,21 @@ msgstr ""
 
 msgid "SMS Text"
 msgstr ""
+
+msgid "With Receipt"
+msgstr ""
+
+msgid "Receipt date not set?"
+msgstr ""
+
+msgid "Email receipt not sent?"
+msgstr ""
+
+msgid "Copied"
+msgstr ""
+
+msgid "Final URL"
+msgstr ""
+
+msgid "Short URL"
+msgstr ""

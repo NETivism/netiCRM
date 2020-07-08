@@ -119,7 +119,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @static
    */
   static function sendMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
-    require_once "CRM/Core/BAO/UFField.php";
+    $config = CRM_Core_Config::singleton();
     $gIds = array();
     $params = array();
     if (isset($values['custom_pre_id'])) {
@@ -177,6 +177,19 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $returnMessageText
     ) {
       $template = CRM_Core_Smarty::singleton();
+
+      // refs #28471, auto send receipt after contribution
+      if ($config->receiptEmailAuto) {
+        $receiptTask = new CRM_Contribute_Form_Task_PDF();
+        $receiptTask->makeReceipt($values['contribution_id'], 'copy_only', TRUE);
+        $pdfFilePath = $receiptTask->makePDF(False);
+        $pdfFileName = strstr($pdfFilePath, 'Receipt');
+        $pdfParams =  array(
+          'fullPath' => $pdfFilePath,
+          'mime_type' => 'application/pdf',
+          'cleanName' => $pdfFileName,
+        );
+      }
 
       // get the billing location type
       if (!array_key_exists('related_contact', $values)) {
@@ -295,6 +308,28 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         'PDFFilename' => 'receipt.pdf',
       );
 
+      if (!empty($pdfParams)) {
+        $sendTemplateParams['attachments'][] = $pdfParams;
+        $sendTemplateParams['tplParams']['pdf_receipt'] = 1;
+        unset($sendTemplateParams['PDFFilename']);
+
+        $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+        if (!empty($activityTypeId)) {
+          $userID = $contactID;
+          $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+          $activityParams = array(
+            'activity_type_id' => $activityTypeId,
+            'source_record_id' => $values['contribution_id'],
+            'activity_date_time' => date('Y-m-d H:i:s'),
+            'status_id' => $statusId,
+            'is_test' => $isTest ? 1 : 0,
+            'subject' => ts('Email Receipt').' - '. $values['source'],
+            'assignee_contact_id' => $contactID,
+            'source_contact_id' => $userID,
+          );
+          CRM_Activity_BAO_Activity::create($activityParams);
+        }
+      }
       
       if ($returnMessageText) {
         list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
