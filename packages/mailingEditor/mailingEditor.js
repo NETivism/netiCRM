@@ -63,6 +63,7 @@
 				header: ["link", "image"]
 			}
 		},
+		_ts = {},
 		_sortables = {},
 		_pickrs = {},
 		_tpl = {},
@@ -1230,12 +1231,12 @@
 				let previewPopup = "<div id='nme-preview-popup' class='nme-preview-popup mfp-hide'>" +
 					"<div class='inner'>" +
 					"<div class='nme-preview-toolbar'>" +
-					"<div class='nme-preview-title'>電子報預覽模式</div>" +
+					"<div class='nme-preview-title'>" + _ts["Preview mode"] + "</div>" +
 					"<div class='nme-preview-mode'>" +
-					"<button type='button' class='nme-preview-mode-btn is-active' data-mode='desktop'>電腦</button>" +
-					"<button type='button' class='nme-preview-mode-btn' data-mode='mobile'>手機</button>" +
+					"<button type='button' class='nme-preview-mode-btn is-active' data-mode='desktop'>" + _ts["Desktop"] + "</button>" +
+					"<button type='button' class='nme-preview-mode-btn' data-mode='mobile'>" + _ts["Mobile"] + "</button>" +
 					"</div>" +
-					"<button type='button' class='nme-preview-close'>結束預覽</button>" +
+					"<button type='button' class='nme-preview-close'>" + _ts["Turn off preview mode"] + "</button>" +
 					"</div>" +
 					"<div class='nme-preview-content'>" +
 					"<div class='nme-preview-panels'>" +
@@ -2021,21 +2022,23 @@
 		data: {},
 		init: function() {
 			_debug("===== nmEditor Init =====");
-			$.nmEditor.instance = _nme;
+			if (window.nmEditor && window.nmEditor.translation) {
+				_ts = window.nmEditor.translation;
+				$.nmEditor.instance = _nme;
 
-			if (!$(_container).hasClass(NME_CONTAINER)) {
-				$(_container).addClass(NME_CONTAINER);
+				if (!$(_container).hasClass(NME_CONTAINER)) {
+					$(_container).addClass(NME_CONTAINER);
+				}
+
+				_nme.render();
+				$(_container).addClass(INIT_CLASS);
 			}
-
-			_nme.render();
 
 			// Window resize
 			$(window).resize(function() {
 				clearTimeout(_resizeTimer);
 				_resizeTimer = setTimeout(_windowResize, 250);
 			});
-
-			$(_container).addClass(INIT_CLASS);
 		},
 		render: function() {
 			// Load Data
