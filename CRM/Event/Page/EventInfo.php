@@ -175,7 +175,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     require_once 'CRM/Event/BAO/Participant.php';
     $eventFullMessage = CRM_Event_BAO_Participant::eventFull($this->_id);
     $contactID = NULL;
-    $contactID = CRM_Event_Form_Registration::getContactID();
+    $contactID = $this->getContactID();
     CRM_Utils_Hook::checkRegistration($contactID, NULL, $this, FALSE, $eventFullMessage);
     $hasWaitingList = CRM_Utils_Array::value('has_waitlist', $values['event']);
 
@@ -318,6 +318,23 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       'visit_date' => date('Y-m-d H:i:s'),
     );
     CRM_Core_BAO_Track::add($params);
+  }
+
+  function getContactID() {
+    //check if this is a checksum authentication
+    $userChecksum = CRM_Utils_Request::retrieve('cs', 'String', $this);
+    if ($userChecksum) {
+      //check for anonymous user.
+      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+      $validUser = CRM_Contact_BAO_Contact_Utils::validChecksum($tempID, $userChecksum);
+      if ($validUser) {
+        return $tempID;
+      }
+    }
+
+    // check if the user is registered and we have a contact ID
+    $session = CRM_Core_Session::singleton();
+    return $session->get('userID');
   }
 }
 
