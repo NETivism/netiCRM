@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="crm-submit-buttons" align="center">
-        <a href="#" class="button full-url-copy">{ts}Copy Full URL{/ts}</a>
+        <a href="#" class="button full-url-copy">{ts}Copy Final URL{/ts}</a>
         <a href="#" class="button shorten-url-copy">{ts}Copy Short URL{/ts}</a>
       </div>
     </div>  
