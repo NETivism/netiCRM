@@ -145,11 +145,11 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     if ($this->_id) {
       if ($this->_isTemplate) {
         $title = CRM_Utils_Array::value('template_title', $eventInfo);
-        CRM_Utils_System::setTitle(ts('Edit Event Template') . " - $title");
+        CRM_Utils_System::setTitle($title.' - '.ts('Edit Event Template'));
       }
       else {
         $title = CRM_Utils_Array::value('title', $eventInfo);
-        CRM_Utils_System::setTitle(ts('Configure Event') . " - $title");
+        CRM_Utils_System::setTitle("$title - ".ts('Configure Event'));
       }
       $this->assign('title', $title);
     }

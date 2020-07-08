@@ -182,6 +182,13 @@
      <weight>940</weight>
   </item>
   <item>
+     <path>civicrm/event/links</path>
+     <title>Event Links</title>
+     <page_callback>CRM_Event_Page_EventLinks</page_callback>
+     <access_arguments>access CiviEvent</access_arguments>
+     <weight>830</weight>
+  </item>
+  <item>
      <path>civicrm/event/add</path>
      <path_arguments>action=add</path_arguments>
      <title>New Event</title>
