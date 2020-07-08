@@ -218,7 +218,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
 
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     if ($onlyIDs) {
-      $fields = "contact_a.id";
+      $fields = "DISTINCT contact_a.id as contact_id";
     }
     else {
       $fields = $this->select();

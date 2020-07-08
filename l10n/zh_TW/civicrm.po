@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-06-30 09:44+0000\n"
+"PO-Revision-Date: 2020-07-08 09:15+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -29252,10 +29252,10 @@ msgstr "您可以從您的電腦上傳一個圖片，或輸入圖片的網址（
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
-"The market value of this premium (e.g. retail price). For tax-deductible "
-"contributions, this amount will be used to set the non-deductible amount in "
-"the contribution record and receipt."
-msgstr "此感謝禮的市價（例如它的零售價格）。對於可以開收據的捐款，這裡設定的金額將會用在捐款記錄與收據中，做為不可以開收據的金額，也會影響捐款收據上面標註的金額。若您希望收據上的金額跟捐款金額一致，請在此填寫 0 元。"
+"To estimate the cost of fundraising, please fill in the market price of this"
+" premium. The market price you filled in will not affect the total amount "
+"displayed on the contribution record and receipt."
+msgstr "請在此填入本商品的市價，以利估計募款成本。市價不會影響到開立收據上的捐款金額。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
@@ -47804,3 +47804,21 @@ msgstr "收據日期尚未設定？"
 
 msgid "Email receipt not sent?"
 msgstr "電子郵件收據未曾送出？"
+
+msgid "Copied"
+msgstr "已複製"
+
+msgid "Final URL"
+msgstr "結果網址"
+
+msgid "Short URL"
+msgstr "短網址"
+
+msgid "Copy Final URL"
+msgstr "複製結果網址"
+
+msgid "Copy Short URL"
+msgstr "複製短網址"
+
+msgid "Procceed Receipt Sending?"
+msgstr "你確定要寄送電子郵件收據？"
