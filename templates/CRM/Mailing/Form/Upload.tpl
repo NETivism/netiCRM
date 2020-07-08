@@ -118,9 +118,8 @@
 {include file="CRM/common/showHide.tpl"}
 {literal}
 <script type="text/javascript">
-    showHideUpload();
     function showHideUpload() {
-	    if (document.getElementsByName("upload_type")[0].checked) {
+      if (cj(".form-radio[name='upload_type'][value='0']").is(":checked")) {
         hide('compose_id');
         hide('compose_old_id')
         cj('.crm-mailing-upload-form-block-template').hide();
@@ -129,13 +128,13 @@
       else {
         hide('upload_id');
         // for json data field (new compose mode)
-        if (document.getElementsByName("upload_type")[1].checked) {
+        if (cj(".form-radio[name='upload_type'][value='1']").is(":checked")) {
           hide('compose_old_id');
           show('compose_id');
         }
 
         // for ckeditor (old compose mode)
-        if (document.getElementsByName("upload_type")[2].checked) {
+        if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
           hide('compose_id');
           show('compose_old_id');
           cj('.crm-mailing-upload-form-block-template').show();
@@ -143,7 +142,10 @@
         }
       }
     }
+
     cj(document).ready(function(){
+      showHideUpload();
+
       // show dialog for online tempalte
       cj("#online-template-link").click(function(e){
         e.preventDefault();

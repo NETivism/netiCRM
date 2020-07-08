@@ -25,9 +25,23 @@
 <script type="text/javascript">
 (function ($) {
 	$(function() {
-		$(".nme-container").nmEditor({
-			debugMode: true
-		});
+		let $oldEditorData = $("#html_message"),
+				$newEditorData = $("#mailing_content_data"),
+				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
+				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
+
+		if (oldEditorData && !newEditorData) {
+			// If the content of the old newsletter was edited by old editor previously, switch from default option 'Traditional editor' to 'Compose On-screen'.
+			$(".form-radio[name='upload_type'][value='2']").click();
+
+			// Initialize the new editor after swtich option.
+			$(".nme-container").nmEditor();
+
+		}
+		else {
+			// If traditional editor has no content, initialize the new editor directly.
+			$(".nme-container").nmEditor();
+		}
 	});
 })(jQuery);
 </script>
