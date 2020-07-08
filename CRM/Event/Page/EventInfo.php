@@ -174,10 +174,9 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     }
     require_once 'CRM/Event/BAO/Participant.php';
     $eventFullMessage = CRM_Event_BAO_Participant::eventFull($this->_id);
+    $contactID = NULL;
     $contactID = CRM_Event_Form_Registration::getContactID();
-    if (!empty($contactID)) {
-      CRM_Utils_Hook::checkRegistration($contactID, NULL, $this, FALSE, $eventFullMessage);
-    }
+    CRM_Utils_Hook::checkRegistration($contactID, NULL, $this, FALSE, $eventFullMessage);
     $hasWaitingList = CRM_Utils_Array::value('has_waitlist', $values['event']);
 
     $allowRegistration = FALSE;
