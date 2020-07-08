@@ -49,7 +49,7 @@
 
   {counter start=0 skip=1 print=false}
   {foreach from=$rows key=k item=row}
-  <tr id='rowid{$row.participant_id}' class="{cycle values="odd-row,even-row"} crm-event crm-event_{$row.event_id}">
+  <tr id='rowid{$row.participant_id}' class="{cycle values="odd-row,even-row"} crm-event crm-event_{$row.event_id} crm-event_type_{$row.event_type_id}">
      {if ! $single }
         {if $context eq 'Search' }       
             {assign var=cbName value=$row.checkbox}
