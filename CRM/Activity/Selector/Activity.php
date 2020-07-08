@@ -144,6 +144,14 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $urlUpdate = 'civicrm/contact/view/activity';
       $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
+    elseif ($activityTypeId == $activityTypeIds['Print Contribution Receipts']) {
+      $url = 'civicrm/contact/view/contribution';
+      $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+
+      $showUpdate = TRUE;
+      $urlUpdate = 'civicrm/contact/view/activity';
+      $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+    }
     elseif (in_array($activityTypeId,
         array($activityTypeIds['Membership Signup'], $activityTypeIds['Membership Renewal'])
         // membership
