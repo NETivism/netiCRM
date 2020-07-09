@@ -219,8 +219,6 @@
                 "background-color": "#ffffff"
               },
               "elemContainer": {
-                "margin-left": "auto",
-                "margin-right": "auto",
                 "border-radius": "3px",
                 "background-color": "#222222"
               },
@@ -229,7 +227,6 @@
                 "padding-right": "10px",
                 "padding-bottom": "10px",
                 "padding-left": "10px",
-                "width": "auto",
                 "font-size": "18px"
               },
               "elem": {

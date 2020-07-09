@@ -27,6 +27,13 @@ elem (nme-elem): button font, text, color
   <tbody class="nmeb-outer">
     <tr>
       <td class="nmeb-inner" data-settings-target="block" style="padding-top: 0; padding-right: 18px; padding-bottom: 18px; padding-left:18px; text-align: center;" valign="top" align="center">
+        <!--[if mso]>
+          <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+          <tr>
+        <![endif]-->
+        <!--[if mso]>
+          <td align="center" valign="top" width="600" style="width:600px;">
+        <![endif]-->
         <table border="0" cellpadding="0" cellspacing="0" class="nmeb-content-container" data-settings-target="elemContainer"  style="border-collapse: separate !important; border-radius: 3px; background-color: rgb(0, 159, 199); margin-left: auto; margin-right: auto;">
           <tbody>
             <tr>
@@ -36,6 +43,13 @@ elem (nme-elem): button font, text, color
             </tr>
           </tbody>
         </table>
+        <!--[if mso]>
+          </td>
+        <![endif]-->
+        <!--[if mso]>
+          </tr>
+          </table>
+        <![endif]-->
       </td>
     </tr>
   </tbody>

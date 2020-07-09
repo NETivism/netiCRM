@@ -8,6 +8,11 @@
         <!-- Body Cell: BEGIN -->
         <td id="nme-body-cell" align="center" valign="top">
           <!-- ***** Mail: BEGIN ***** -->
+          <!--[if (gte mso 9)|(IE)]>
+          <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
+          <tr>
+          <td align="center" valign="top" width="600" style="width:600px;">
+          <![endif]-->
           <table id="nme-mail" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody>
               <tr>
@@ -57,6 +62,11 @@
               </tr>
             </tbody>
           </table>
+          <!--[if (gte mso 9)|(IE)]>
+          </td>
+          </tr>
+          </table>
+          <![endif]-->
           <!-- ***** Mail: END ***** -->
         </td>
         <!-- Body Cell: END -->

@@ -28,12 +28,12 @@ elem (nme-elem): none
     <tr>
       <td valign="top" class="nmeb-inner" data-settings-target="block">
         <!--[if mso]>
-            <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-            <tr>
-            <![endif]-->
+          <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+          <tr>
+        <![endif]-->
         <!--[if mso]>
-            <td valign="top" width="600" style="width:600px;">
-            <![endif]-->
+          <td valign="top" width="600" style="width:600px;">
+        <![endif]-->
         <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 100%; min-width: 100%;" width="100%" class="nmeb-content-container" data-settings-target="elemContainer">
           <tbody>
             <tr>
@@ -47,11 +47,11 @@ elem (nme-elem): none
         </table>
         <!--[if mso]>
           </td>
-          <![endif]-->
+        <![endif]-->
         <!--[if mso]>
           </tr>
           </table>
-          <![endif]-->
+        <![endif]-->
       </td>
     </tr>
   </tbody>
