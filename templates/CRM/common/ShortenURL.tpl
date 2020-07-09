@@ -142,7 +142,7 @@
     $.each(utm , function(index, val) {
       var utmInput = document.getElementById(val); 
       if (utmInput && utmInput.value) {
-        utmResult = utmResult + '&' + val.replace('-', '_') + '=' + utmInput.value;
+        utmResult = utmResult + '&' + val.replace('-', '_') + '=' + encodeURIComponent(utmInput.value);
       }
     });
     $('#result_url').val(urlOriginal + utmResult);
@@ -179,7 +179,7 @@
             $('#shorten_url').val(shortUrl);
             $("#shorten_url").select();
             document.execCommand("copy");
-            $("#shorten_url").after(" <span>{/literal}{ts}Copied{/ts}{literal}</span>");
+            $("#shorten_url").after(" <span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
             $('.url_to_copy[name="'+ name +'"]').val(shortUrl);
             $('.url_to_copy[name="'+ name +'"]').attr('data-url-shorten', shortUrl);
 
@@ -211,9 +211,19 @@
 
     //Full URL btn
     $(".full-url-copy").click(function() {
+      $("#shorten-url").dialog("widget").find('.copied').remove();
       $("#result_url").select();
       document.execCommand("copy");
-      $(".full-url-copy").after("<span>{/literal}{ts}Copied{/ts}{literal}</span>");
+      $(".full-url-copy").after("<span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
+    });
+
+    // select input when focus
+    $("#shorten_url, #result_url").click(function(){
+      $("#shorten-url").dialog("widget").find('.copied').remove();
+      if ($(this).val()) {
+        $(this).select();
+        document.execCommand("copy");
+      }
     });
 
     // clear input button
