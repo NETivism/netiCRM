@@ -130,8 +130,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public function buildQuickForm() {
     // make receipt target popup new tab
-    $this->updateAttributes(array('target' => '_blank'));
-
     $options = self::getPrintingTypes();
     $this->addRadio( 'window_envelope', ts('Apply to window envelope'), $options,null,'<br/>',true );
 
@@ -162,7 +160,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       'type' => 'back',
       'name' => ts('Cancel'),
     );
-
     $this->addButtons($buttons);
     $this->addFormRule(array('CRM_Contribute_Form_Task_PDF', 'formRule'), $this);
   }
@@ -172,7 +169,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     if (!empty($fields['email_pdf_receipt'][1]) && empty($fields['from_email'])) {
       $errors['from_email'] = ts('%1 is a required field.', array(1 => ts('From Email')));
       // make receipt not popup when error detect
-      $self->updateAttributes(array('target' => ''));
     }
     return $errors;
   }
