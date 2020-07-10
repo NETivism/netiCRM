@@ -4,7 +4,7 @@
     font-size:1.0em;
     font-family:inherit;
     padding:10px;
-    width:280px;
+    max-width:280px;
     background: #EEF2EA;
   }
   .crm-contribute-widget h3 {
