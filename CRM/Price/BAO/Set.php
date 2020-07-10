@@ -384,7 +384,7 @@ WHERE     ct.id = cp.contribution_type_id AND
    *
    * @return array $setTree - array consisting of field details
    */
-  public static function getSetDetail($setID, $required = TRUE) {
+  public static function getSetDetail($setID, $required = TRUE, $isActive = TRUE) {
     // create a new tree
     $setTree = array();
     $select = $from = $where = $orderBy = '';
@@ -417,8 +417,10 @@ WHERE     ct.id = cp.contribution_type_id AND
     $params[1] = array($setID, 'Integer');
     $where = '
 WHERE price_set_id = %1
-AND is_active = 1
 ';
+    if ($isActive) {
+      $where .= ' AND is_active = 1';
+    }
 
     $orderBy = ' ORDER BY weight';
 
