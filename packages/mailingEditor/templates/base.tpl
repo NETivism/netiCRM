@@ -86,6 +86,16 @@
         margin-left: auto !important;
         margin-right: auto !important;
       }
+      .col,
+      .col-1,
+      .col-2,
+      .img-col,
+      .text-col {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        direction: ltr !important;
+      }
     }
     {/literal}
 	</style>

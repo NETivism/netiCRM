@@ -125,6 +125,8 @@ window.nmEditor = {
 									<li><button class="nme-add-block-btn" type="button" data-type="image">{ts}Image{/ts}</button></li>
 									<li><button class="nme-add-block-btn" type="button" data-type="button">{ts}Button{/ts}</button></li>
 									<li><button class="nme-add-block-btn" type="button" data-type="rc-col-1">{ts}Rich Content: 1 Column{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" data-type="rc-col-2">{ts}Rich Content: 2 Column{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" data-type="rc-float">{ts}Rich Content: Float{/ts}</button></li>
 								</ul>
 							</div>
 						</div>
@@ -214,7 +216,7 @@ window.nmEditor = {
 							<input class="switch-toggle-input nme-preview-mode-switch" type="checkbox" value="1">
 							<span class="switch-toggle-slider"></span>
 						</label>
-						<div class="switch-toggle-label">{ts}Preview mode{/ts}</div>
+						<div class="switch-toggle-label">{ts}Preview{/ts}</div>
 					</div>
 
 				</div>

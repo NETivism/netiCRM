@@ -32,7 +32,7 @@ elem (nme-elem): none
           <tr>
         <![endif]-->
         <!--[if mso]>
-          <td valign="top" width="600" style="width:600px;">
+          <td valign="top" width="100%" style="width:100%;">
         <![endif]-->
         <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="nmeb-content-container" data-settings-target="elemContainer" style="min-width: 100%;">
           <tbody>

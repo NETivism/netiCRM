@@ -592,6 +592,10 @@
 											"height": block.data.height,
 											"alt": block.data.fileName
 										});
+
+										if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
+											$nmebElem.css("max-width", "100%");
+										}
 										break;
 
 										case "header":
@@ -610,11 +614,41 @@
 											break;
 
 									case "rc-col-1":
-										let $nestTarget = $nmebElem.find("td.col-1");
+										var $nestTarget = $nmebElem.find("td.col-1");
 										$nestTarget.html("");
 
-										for (let nestBlockID in block.data[0]["blocks"]) {
-											let nestBlockData = block.data[0]["blocks"][nestBlockID];
+										for (var nestBlockID in block.data[0]["blocks"]) {
+											var nestBlockData = block.data[0]["blocks"][nestBlockID];
+
+											if (!_objIsEmpty(nestBlockData)) {
+												_nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+											}
+										}
+										break;
+
+										case "rc-col-2":
+											for (var dataIndex = 0; dataIndex < 2; dataIndex++) {
+												var col = dataIndex + 1;
+												$nestTarget = $nmebElem.find("td.col-" + col);
+												$nestTarget.html("");
+
+												for (var nestBlockID in block.data[dataIndex]["blocks"]) {
+													var nestBlockData = block.data[dataIndex]["blocks"][nestBlockID];
+
+													if (!_objIsEmpty(nestBlockData)) {
+														_nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+													}
+												}
+											}
+											break;
+
+									case "rc-float":
+										for (var nestBlockID in block.data[0]["blocks"]) {
+											var nestBlockData = block.data[0]["blocks"][nestBlockID],
+													nestBlockType = nestBlockData.type,
+													$nestTarget = nestBlockType == "image" ? $nmebElem.find("td.img-col") : $nmebElem.find("td.text-col");
+
+											$nestTarget.html("");
 
 											if (!_objIsEmpty(nestBlockData)) {
 												_nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
@@ -705,6 +739,10 @@
 									$block.attr("data-parent-type", block.parentType);
 									$nmebElem.attr("data-parent-type", block.parentType);
 								}
+								if (block.index || block.index == 0) {
+									$block.attr("data-index", block.index);
+									$nmebElem.attr("data-index", block.index);
+								}
 
 								switch (blockType) {
 									case "title":
@@ -745,6 +783,10 @@
 											"height": block.data.height,
 											"alt": block.data.fileName
 										});
+
+										if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
+											$nmebElem.css("max-width", "100%");
+										}
 										break;
 
 										case "header":
@@ -768,20 +810,21 @@
 											break;
 
 									case "rc-col-1":
-										let group = ["image", "title", "paragraph", "button"],
+										var group = ["image", "title", "paragraph", "button"],
 												$nestTarget = $nmebElem.find("td.col-1");
 
 										$nestTarget.html("");
 
-										for (let i in group) {
-											let nestBlockType = group[i],
+										for (var i in group) {
+											var nestBlockType = group[i],
 													nestBlockData = _objClone(_tpl["data"][nestBlockType]);
 
 											if (!_objIsEmpty(nestBlockData)) {
-												let nestBlockID = nestBlockType + "-" + _renderID();
+												var nestBlockID = nestBlockType + "-" + _renderID();
 												nestBlockData.id = nestBlockID;
 												nestBlockData.parentID = blockID;
 												nestBlockData.parentType = blockType;
+												nestBlockData.index = 0;
 												nestBlockData.control.sortable = false;
 												nestBlockData.control.delete = false;
 												nestBlockData.control.clone = false;
@@ -793,6 +836,67 @@
 											_nmeData.update();
 										}
 										break;
+
+										case "rc-col-2":
+											var	group = ["image", "paragraph"],
+													$nestTarget;
+
+											for (var dataIndex = 0; dataIndex < 2; dataIndex++) {
+												var col = dataIndex + 1;
+												$nestTarget = $nmebElem.find("td.col-" + col);
+												$nestTarget.html("");
+
+												for (var i in group) {
+													var nestBlockType = group[i],
+															nestBlockData = _objClone(_tpl["data"][nestBlockType]);
+
+													if (!_objIsEmpty(nestBlockData)) {
+														var nestBlockID = nestBlockType + "-" + _renderID();
+														nestBlockData.id = nestBlockID;
+														nestBlockData.parentID = blockID;
+														nestBlockData.parentType = blockType;
+														nestBlockData.index = dataIndex;
+														nestBlockData.control.sortable = false;
+														nestBlockData.control.delete = false;
+														nestBlockData.control.clone = false;
+														nestBlockData.weight = i;
+														_data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][nestBlockID] = nestBlockData;
+														_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+													}
+
+													_nmeData.update();
+												}
+											}
+											break;
+
+											case "rc-float":
+												var group = ["image", "paragraph"],
+														$nestTarget;
+
+												for (var i in group) {
+													var nestBlockType = group[i],
+															nestBlockData = _objClone(_tpl["data"][nestBlockType]);
+
+													$nestTarget = nestBlockType == "image" ? $nmebElem.find("td.img-col") : $nmebElem.find("td.text-col");
+													$nestTarget.html("");
+
+													if (!_objIsEmpty(nestBlockData)) {
+														var nestBlockID = nestBlockType + "-" + _renderID();
+														nestBlockData.id = nestBlockID;
+														nestBlockData.parentID = blockID;
+														nestBlockData.parentType = blockType;
+														nestBlockData.index = 0;
+														nestBlockData.control.sortable = false;
+														nestBlockData.control.delete = false;
+														nestBlockData.control.clone = false;
+														nestBlockData.weight = i;
+														_data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
+														_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+													}
+
+													_nmeData.update();
+												}
+												break;
 
 									default:
 										$nmebElem.html(block.data);
@@ -1371,20 +1475,21 @@
 							blockID = $this.data("id"),
 							section = $this.data("section"),
 							parentID = $this.data("parent-id"),
-							parentType = $this.data("parent-type");
+							parentType = $this.data("parent-type"),
+							index = $this.data("index");
 
 					if (parentID && parentType) {
-						if (parentType == "rc-col-1") {
+						if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
 							if (editableType == "text") {
-								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
-									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"] = params.newValue;
+								if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+									_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"] = params.newValue;
 									_nmeData.update();
 								}
 							}
 
 							if (editableType == "xquill") {
-								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
-									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["html"] = params.newValue;
+								if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+									_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["html"] = params.newValue;
 									_nmeData.update();
 								}
 							}
@@ -1522,7 +1627,8 @@
 							section = $block.data("section"),
 							blockType = $block.data("type"),
 							parentID = $block.data("parent-id"),
-							parentType = $block.data("parent-type");
+							parentType = $block.data("parent-type"),
+							index = $block.data("index") == 0 || $block.data("index") > 0 ? $block.data("index") : 0;
 					/*
 					console.log('save');
 					console.log(color);
@@ -1538,10 +1644,10 @@
 
 						// Update color to json
 						if (parentID && parentType) {
-							if (parentType == "rc-col-1") {
-								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
-									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
-									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["override"]["elem"] = true;
+							if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
+								if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+									_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elemContainer"]["background-color"] = bgColor;
+									_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["override"]["elem"] = true;
 									_nmeData.update();
 								}
 							}
@@ -1663,6 +1769,7 @@
 						blockType = $block.data("type"),
 						parentID = $block.data("parent-id"),
 						parentType = $block.data("parent-type"),
+						index = $block.data("index") == 0 || $block.data("index") > 0 ? $block.data("index") : 0,
 						section = $block.data("section"),
 						sectionID = "nme-mail-" + section,
 						sectionInner = "#" + sectionID + " .nme-mail-inner",
@@ -1728,6 +1835,7 @@
 					if (parentID && parentType) {
 						window.nmeImce.targetParentID = parentID;
 						window.nmeImce.targetParentType = parentType;
+						window.nmeImce.targetIndex = index;
 					}
 
 					var win = window.open('/imce&app=nme|sendto@nmeImce.afterInsert', 'nme_imce', 'width=640, height=480');
@@ -1778,9 +1886,9 @@
 									$elem.attr("data-link", editItemVal);
 
 									if (parentID && parentType) {
-										if (parentType == "rc-col-1") {
-											if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
-												_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["link"] = editItemVal;
+										if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
+											if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+												_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["link"] = editItemVal;
 												_nmeData.update();
 											}
 										}
@@ -1962,6 +2070,7 @@
 					section = window.nmeImce.targetSection,
 					parentID = window.nmeImce.targetParentID,
 					parentType = window.nmeImce.targetParentType,
+					index = window.nmeImce.targetIndex,
 					fileURL = file.url,
 					fileName = file.name,
 					fileWidth = file.width,
@@ -1982,14 +2091,18 @@
 							"alt": fileName
 						});
 
+						if (parentType == "rc-col-2" || parentType == "rc-float") {
+							$img.css("max-width", "100%");
+						}
+
 						// Update json data of the target image
 						if (parentID && parentType) {
-							if (parentType == "rc-col-1") {
-								if (_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]) {
-									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["url"] = fileURL;
-									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["width"] = fileWidth;
-									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["height"] = fileHeight;
-									_data["sections"][section]["blocks"][parentID]["data"][0]["blocks"][blockID]["data"]["fileName"] = fileName;
+							if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
+								if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+									_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["url"] = fileURL;
+									_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["width"] = fileWidth;
+									_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["height"] = fileHeight;
+									_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["fileName"] = fileName;
 									_nmeData.update();
 								}
 							}
