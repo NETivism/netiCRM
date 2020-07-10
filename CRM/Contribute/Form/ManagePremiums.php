@@ -85,6 +85,11 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
         $this->assign("showSubscriptions", TRUE);
       }
     }
+    else {
+      if ($this->_action & CRM_Core_Action::ADD) {
+        $defaults['installments'] = 12;
+      }
+    }
 
     return $defaults;
   }
@@ -156,7 +161,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->addNumber('cost', ts('Actual Cost of Product'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'cost'));
     $this->addRule('price', ts('Please enter the Actual Cost of Product.'), 'money');
 
-    $this->addNumber('min_contribution', ts('Threshold').' - '.ts('Non-Recurring Contribution'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'min_contribution'), TRUE);
+    $this->addNumber('min_contribution', ts('Non-Recurring Contribution').' - '.ts('Threshold'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'min_contribution'), TRUE);
     $this->addRule('min_contribution', ts('Please enter a monetary value for the Minimum Contribution Amount.'), 'money');
 
     $options = array(
@@ -165,7 +170,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     );
     $this->addRadio('calculate_mode', ts('Threshold').' - '.ts('Recurring Contribution'), $options, NULL, '<br>', TRUE);
     $this->addNumber('min_contribution_recur', ts('Threshold').' - '.ts('Recurring Contribution'), NULL, TRUE);
-    $this->addNumber('installments', '');
+    $this->addNumber('installments', '', array('placeholder' => 99));
 
     $this->add('textarea', 'options', ts('Options'), 'rows=3, cols=60');
 
@@ -326,6 +331,10 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
       // fix the money fields
       foreach (array('cost', 'price', 'min_contribution', 'min_contribution_recur') as $f) {
         $params[$f] = CRM_Utils_Rule::cleanMoney($params[$f]);
+      }
+
+      if ($params['calculate_mode'] !== 'cumulative') {
+        $params['installments'] = 0;
       }
 
       $premium = CRM_Contribute_BAO_ManagePremiums::add($params, $ids);
