@@ -988,6 +988,16 @@
 					}
 				}
 
+				// Prevent users from pressing enter to send the #upload form.
+				$("#Upload").on("keypress", "input, textarea", function(event){
+					let code = event.keyCode || event.which;
+
+					if (code == 13) {
+						event.preventDefault();
+						return false;
+					}
+				});
+
 				$("#Upload").on("click", ".form-submit", function(event) {
 					let buttonName = $(this).attr("name"),
 							submitPermission = $(this).attr("data-sumbit-permission"),
