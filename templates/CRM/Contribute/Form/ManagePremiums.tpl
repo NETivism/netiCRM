@@ -100,7 +100,7 @@
         <td class="html-adjust">{ts}Min Contribution{/ts} {$form.min_contribution.html|crmMoney}</td>
       </tr>
       <tr class="crm-contribution-form-block-calculate_mode">
-        <td class="label"><label>{ts}Threshold{/ts} - {ts}Recurring Contribution{/ts} <span class="crm-marker">*</span></label></td>
+        <td class="label"><label>{ts}Recurring Contribution{/ts} - {ts}Threshold{/ts} <span class="crm-marker">*</span></label></td>
         <td class="html-adjust">
           <table class="form-layout-compressed">
             <tr>
@@ -112,7 +112,10 @@
                   {$form.min_contribution_recur.html|crmMoney}
                 </div>
                 <div class="installments hiddenElement">
-                  <label>{ts}Calculation when unlimit installments{/ts}</label> {$form.installments.html}
+                  <div>{ts}When donor do specify installment, calculate total amount by: amount per installment x donor choose installments{/ts}</div>
+                </div>
+                <div class="installments hiddenElement">
+                  <div>{ts}When donor doesn't specify installment, calculate total amount by: amount per installment x estimate installments{/ts} {$form.installments.html} {ts}installments{/ts} </div>
                 </div>
               </td>
             </tr>
