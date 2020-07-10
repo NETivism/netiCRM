@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-07-08 09:15+0000\n"
+"PO-Revision-Date: 2020-07-10 06:45+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -1241,7 +1241,7 @@ msgstr "缺少必要的聯絡人對應欄位（以避免產生重複的聯絡人
 #: CRM/Contribute/Import/Form/MapField.php CRM/Event/Import/Form/MapField.php
 #: CRM/Member/Import/Form/MapField.php
 msgid "(Sum of all weights should be greater than or equal to threshold: %1)."
-msgstr "（總權重必須大於或等於 %1 ）"
+msgstr "（總門檻必須大於或等於 %1 ）"
 
 #: CRM/Activity/Import/Form/MapField.php CRM/Event/Import/Form/MapField.php
 msgid "Missing required field: Provide %1 or %2"
@@ -8750,7 +8750,7 @@ msgstr "長度"
 
 #: CRM/Contact/Form/DedupeRules.php
 msgid "Weight Threshold to Consider Contacts 'Matching':"
-msgstr "判斷為重複聯絡人的總權重值："
+msgstr "判斷為重複聯絡人的總門檻值："
 
 #: CRM/Contact/Form/Domain.php templates/CRM/Admin/Page/ConfigTaskList.tpl
 #: msgctxt "menu"
@@ -14750,7 +14750,7 @@ msgstr "第二個重複聯絡人編號"
 
 #: CRM/Dedupe/DAO/RuleGroup.php templates/CRM/Contact/Page/DedupeFind.tpl
 msgid "Threshold"
-msgstr "臨界值"
+msgstr "門檻值"
 
 #: CRM/Dedupe/DAO/Rule.php
 msgid "Rule Table"
@@ -16680,7 +16680,7 @@ msgstr "模式"
 
 #: CRM/Mailing/DAO/BounceType.php
 msgid "Hold Threshold"
-msgstr "凍結臨界值"
+msgstr "凍結門檻值"
 
 #: CRM/Mailing/DAO/BounceType.php
 msgid "AOL"
