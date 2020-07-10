@@ -47521,9 +47521,6 @@ msgstr ""
 msgid "Grand Total of recurring amount"
 msgstr ""
 
-msgid "Calculation when unlimit installments"
-msgstr ""
-
 msgid "This gift will be eligible when your %1."
 msgstr ""
 
@@ -47579,4 +47576,10 @@ msgid "Copy Short URL"
 msgstr ""
 
 msgid "Procceed Receipt Sending?"
+msgstr ""
+
+msgid "When donor doesn't specify installment, calculate total amount by: amount per installment x estimate installments"
+msgstr ""
+
+msgid "When donor do specify installment, calculate total amount by: amount per installment x donor choose installments"
 msgstr ""
