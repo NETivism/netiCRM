@@ -235,13 +235,6 @@
 	/**
 	 * General
 	 */
-	var _getUrlContent = function(url) {
-    return $.get(url);
-	}
-
-  var _isNumeric = function(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-	}
 
 	var _swapArrayVal = function(arr, a, b) {
     if (typeof arr !== "undefined") {
@@ -282,15 +275,6 @@
 		else {
 			return false;
 		}
-	}
-
-	var _getLength = function(obj) {
-		let sum = 0;
-		for (let count = 0; count < obj.length; count ++) {
-			sum += obj[count].length ? obj[count].getLength() : 1;
-		}
-		return 6;
-		//return sum;
 	}
 
 	var _parseQueryString = function(query) {
@@ -400,30 +384,6 @@
       return output;
 		}
 	}
-
-	var _elemIsOnScreen = function(elem, mode, buffer) {
-		let $elem = $(elem),
-				screenMode = typeof mode !== "undefined" ? mode : "default",
-				scrollBuffer = typeof buffer !== "undefined" ? parseInt(buffer) : 0;
-
-		if ($elem.length) {
-			let docViewTop = $(window).scrollTop(),
-					docViewBottom = docViewTop + $(window).outerHeight(),
-					elemTop = typeof buffer !== "undefined" ? $elem.offset().top + scrollBuffer : $elem.offset().top,
-					elemBottom = elemTop + $elem.outerHeight();
-
-			/*
-			console.log("elemTop: " + elemTop);
-			console.log("elemBottom: " + elemBottom);
-			console.log("docViewTop: " + docViewTop);
-			console.log("docViewBottom: " + docViewBottom);
-			*/
-
-			if (mode == "default") {
-				return ((elemTop >= docViewTop && elemTop <= docViewBottom) || (elemBottom >= docViewTop && elemBottom <= docViewBottom) || (docViewTop >= elemTop && docViewTop <= elemBottom));
-			}
-		}
-	};
 
 	var _onScreenCenterElem = function(elem) {
 		let $elem = $(elem),
@@ -543,8 +503,6 @@
 						disallowSortType = ["header", "footer"];
 
 				if (blockMode == "view") {
-					//_loadTemplate("block--edit", "block", "default", targetContainer);
-					//_nmeBlockControl.render(blockType);
 					if (_domElemExist($target)) {
 						let	output = "",
 								blockContent = _tpl.block[blockType];
@@ -672,9 +630,6 @@
 
 				// If the mode is 'edit', render nmeBlock control buttons.
 				if (blockMode == "edit") {
-					//_loadTemplate("block--edit", "block", "default", targetContainer);
-					//_nmeBlockControl.render(blockType);
-
 					if (_domElemExist($target)) {
 						let blockContent = _tpl.block[blockType],
 								blockEditContent = _tpl.block.edit,
@@ -1153,11 +1108,6 @@
 							colorVal = color.toHEXA().toString(),
 							$block,
 							$target;
-					/*
-					console.log('save');
-					console.log(color);
-					console.log(instance);
-					*/
 
 					// Update color to settings object
 					_data["settings"]["styles"][group][fieldType] = colorVal;
@@ -1463,23 +1413,8 @@
 				let $editableElem = $(this);
 
 				$editableElem.editable();
-				/*
-				$editableElem.on("shown", function(e, editable) {
-					console.log("show");
-					console.log(e);
-					console.log(editable);
-					if (typeof editable != "undefined") {
-						// console.log(editable);
-						var label = $(this).attr("data-field-label");
-						if (editable.value == label && editableDefaultVal.indexOf(label) != -1) {
-							editable.input.$input.val("");
-						}
-					}
-				});
-				*/
 
 				$editableElem.on("save", function(e, params) {
-					//console.log(params);
 					let $this = $(this),
 							editableType = $this.data("type"),
 							blockID = $this.data("id"),
@@ -1518,14 +1453,6 @@
 							}
 						}
 					}
-					/*
-					if (params.newValue == "") {
-						var label = $(this).attr("data-field-label");
-						//console.log(label);
-						//editable.input.$input.val(label);
-						params.newValue = label;
-					}
-					*/
 				});
 
 				$editableElem.addClass("editable-initialized");
@@ -1548,13 +1475,6 @@
 				onUpdate: function (evt) {
 					_sortables[nmeBlocksSection]["order"] = _sortables[nmeBlocksSection]["inst"].toArray();
 					_nmeData.sort(_sortables[nmeBlocksSection]["order"], nmeBlocksSection);
-					/*
-					var $list = $(evt.to);
-					var order = sortable.toArray();
-					// sortable.sort(order.reverse());
-					console.log(order);
-					_nmeData.sort(order);
-					*/
 				}
 			});
 
@@ -1622,11 +1542,7 @@
 					let $button = $(pickr._root.button),
 							$block = $button.closest(".nme-block"),
 							blockType = $block.data("type");
-					/*
-					console.log('change');
-					console.log(color);
-					console.log(instance);
-					*/
+
 					pickr.applyColor();
 				});
 
@@ -1639,11 +1555,6 @@
 							parentID = $block.data("parent-id"),
 							parentType = $block.data("parent-type"),
 							index = $block.data("index") == 0 || $block.data("index") > 0 ? $block.data("index") : 0;
-					/*
-					console.log('save');
-					console.log(color);
-					console.log(instance);
-					*/
 
 					if (blockType == "button") {
 						let bgColor = color.toHEXA().toString();
@@ -1750,7 +1661,6 @@
 
 				for (let k in extendedActions) {
 					let action = extendedActions[k];
-					//output += "<span class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></span>";
 					output += "<button id='" + blockID + "-handle-" + action + "' type='button' class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></button>";
 				}
 
@@ -1790,7 +1700,6 @@
 						blockSortInst = _sortables[section]["inst"],
 						blocksSortOrder = _sortables[section]["order"];
 
-				// $block.addClass(ACTIVE_CLASS);
 				// Block control: move group
 				// prev
 				if (handleType == "prev") {
@@ -2072,10 +1981,6 @@
 		targetID: "",
 		targetSection: "",
 		afterInsert: function(file, imceWindow) {
-			// _debug(file);
-			// _debug(imceWindow); // TypeError: cyclic object value
-			// console.log(file);
-			// console.log(imceWindow);
 			let blockID = window.nmeImce.targetID,
 					section = window.nmeImce.targetSection,
 					parentID = window.nmeImce.targetParentID,
