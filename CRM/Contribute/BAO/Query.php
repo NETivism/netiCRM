@@ -723,6 +723,10 @@ class CRM_Contribute_BAO_Query {
         }
         break;
 
+      case 'civicrm_contribution_taiwanach':
+          $from = " $side JOIN civicrm_contribution_taiwanach ON civicrm_contribution_taiwanach.contribution_recur_id = civicrm_contribution.contribution_recur_id";
+          break;
+
       case 'civicrm_track':
         $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_contribution' AND civicrm_track.entity_id = civicrm_contribution.id";
         break;
