@@ -766,29 +766,51 @@
 
 									case "rc-col-1":
 										var group = ["image", "title", "paragraph", "button"],
+												nestBlocksData = block["data"][0]["blocks"],
 												$nestTarget = $nmebElem.find("td.col-1");
 
 										$nestTarget.html("");
 
-										for (var i in group) {
-											var nestBlockType = group[i],
-													nestBlockData = _objClone(_tpl["data"][nestBlockType]);
+										// If this is a new block, copy data from template
+										if (_objIsEmpty(nestBlocksData)) {
+											for (var i in group) {
+												var nestBlockType = group[i],
+														nestBlockData = _objClone(_tpl["data"][nestBlockType]);
 
-											if (!_objIsEmpty(nestBlockData)) {
-												var nestBlockID = nestBlockType + "-" + _renderID();
+												if (!_objIsEmpty(nestBlockData)) {
+													var nestBlockID = nestBlockType + "-" + _renderID();
+													nestBlockData.id = nestBlockID;
+													nestBlockData.parentID = blockID;
+													nestBlockData.parentType = blockType;
+													nestBlockData.index = 0;
+													nestBlockData.control.sortable = false;
+													nestBlockData.control.delete = false;
+													nestBlockData.control.clone = false;
+													nestBlockData.weight = i;
+													_data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
+													_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+												}
+
+												_nmeData.update();
+											}
+										}
+										else {
+											// If this block is to be clone, just need to regenerate the ID
+											for (var i in nestBlocksData) {
+												var nestBlockData = nestBlocksData[i],
+														nestBlockType = nestBlockData.type,
+														nestBlockID = nestBlockType + "-" + _renderID();
+
 												nestBlockData.id = nestBlockID;
-												nestBlockData.parentID = blockID;
-												nestBlockData.parentType = blockType;
-												nestBlockData.index = 0;
-												nestBlockData.control.sortable = false;
-												nestBlockData.control.delete = false;
-												nestBlockData.control.clone = false;
-												nestBlockData.weight = i;
+
+												// Delete the copied index
+												delete _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][i];
+
+												// Added data to new index
 												_data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
 												_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+												_nmeData.update();
 											}
-
-											_nmeData.update();
 										}
 										break;
 
