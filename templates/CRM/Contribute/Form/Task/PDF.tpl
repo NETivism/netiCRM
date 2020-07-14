@@ -145,7 +145,16 @@ cj(document).ready(function($){
     else if (button == '_qf_PDF_upload' && !confirmEmail) {
       $('#dialog-confirm-email').dialog('open');
     }
+    else if (button == '_qf_PDF_back') {
+      return true;
+    }
     if (confirmEmail || confirmDownload) {
+      if (confirmDownload) {
+        $(this).attr("target", "_blank");
+      }
+      else {
+        $(this).removeAttr("target");
+      }
       confirmEmail = confirmDownload = false;
       return true;
     }
