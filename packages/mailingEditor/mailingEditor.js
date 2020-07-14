@@ -848,30 +848,72 @@
 
 											case "rc-float":
 												var group = ["image", "paragraph"],
+														nestBlocksData = block["data"][0]["blocks"],
 														$nestTarget;
 
-												for (var i in group) {
-													var nestBlockType = group[i],
-															nestBlockData = _objClone(_tpl["data"][nestBlockType]);
+												// If this is a new block, copy data from template
+												if (_objIsEmpty(nestBlocksData)) {
+													for (var i in group) {
+														var nestBlockType = group[i],
+																nestBlockData = _objClone(_tpl["data"][nestBlockType]);
 
-													$nestTarget = nestBlockType == "image" ? $nmebElem.find("td.img-col") : $nmebElem.find("td.text-col");
-													$nestTarget.html("");
+														$nestTarget = nestBlockType == "image" ? $nmebElem.find("td.img-col") : $nmebElem.find("td.text-col");
 
-													if (!_objIsEmpty(nestBlockData)) {
-														var nestBlockID = nestBlockType + "-" + _renderID();
-														nestBlockData.id = nestBlockID;
-														nestBlockData.parentID = blockID;
-														nestBlockData.parentType = blockType;
-														nestBlockData.index = 0;
-														nestBlockData.control.sortable = false;
-														nestBlockData.control.delete = false;
-														nestBlockData.control.clone = false;
-														nestBlockData.weight = i;
-														_data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
-														_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+														// Remove token string from target element
+														$nestTarget.html("");
+
+														if (!_objIsEmpty(nestBlockData)) {
+															// Generate new ID to this block
+															var nestBlockID = nestBlockType + "-" + _renderID();
+
+															// Set deafult value
+															nestBlockData.id = nestBlockID;
+															nestBlockData.parentID = blockID;
+															nestBlockData.parentType = blockType;
+															nestBlockData.index = 0;
+															nestBlockData.control.sortable = false;
+															nestBlockData.control.delete = false;
+															nestBlockData.control.clone = false;
+															nestBlockData.weight = i;
+
+															// Added data to new index
+															_data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
+
+															// Added block to stage
+															_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+														}
+
+														// Update data
+														_nmeData.update();
 													}
+												}
+												// If this block is to be clone, just need to regenerate the ID
+												else {
+													for (var i in nestBlocksData) {
+														var nestBlockData = nestBlocksData[i],
+																nestBlockType = nestBlockData.type,
+																nestBlockID = nestBlockType + "-" + _renderID();
 
-													_nmeData.update();
+														$nestTarget = nestBlockType == "image" ? $nmebElem.find("td.img-col") : $nmebElem.find("td.text-col");
+
+														// Remove token string from target element
+														$nestTarget.html("");
+
+														// Set deafult value
+														nestBlockData.id = nestBlockID;
+
+														// Delete the copied index
+														delete _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][i];
+
+														// Added data to new index
+														_data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
+
+														// Added block to stage
+														_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+
+														// Update data
+														_nmeData.update();
+													}
 												}
 												break;
 
