@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-07-02 04:45+0000\n"
+"PO-Revision-Date: 2020-07-10 06:54+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -1241,7 +1241,7 @@ msgstr "缺少必要的聯絡人對應欄位（以避免產生重複的聯絡人
 #: CRM/Contribute/Import/Form/MapField.php CRM/Event/Import/Form/MapField.php
 #: CRM/Member/Import/Form/MapField.php
 msgid "(Sum of all weights should be greater than or equal to threshold: %1)."
-msgstr "（總權重必須大於或等於 %1 ）"
+msgstr "（總門檻必須大於或等於 %1 ）"
 
 #: CRM/Activity/Import/Form/MapField.php CRM/Event/Import/Form/MapField.php
 msgid "Missing required field: Provide %1 or %2"
@@ -8750,7 +8750,7 @@ msgstr "長度"
 
 #: CRM/Contact/Form/DedupeRules.php
 msgid "Weight Threshold to Consider Contacts 'Matching':"
-msgstr "判斷為重複聯絡人的總權重值："
+msgstr "判斷為重複聯絡人的總門檻值："
 
 #: CRM/Contact/Form/Domain.php templates/CRM/Admin/Page/ConfigTaskList.tpl
 #: msgctxt "menu"
@@ -14750,7 +14750,7 @@ msgstr "第二個重複聯絡人編號"
 
 #: CRM/Dedupe/DAO/RuleGroup.php templates/CRM/Contact/Page/DedupeFind.tpl
 msgid "Threshold"
-msgstr "臨界值"
+msgstr "門檻值"
 
 #: CRM/Dedupe/DAO/Rule.php
 msgid "Rule Table"
@@ -16680,7 +16680,7 @@ msgstr "模式"
 
 #: CRM/Mailing/DAO/BounceType.php
 msgid "Hold Threshold"
-msgstr "凍結臨界值"
+msgstr "凍結門檻值"
 
 #: CRM/Mailing/DAO/BounceType.php
 msgid "AOL"
@@ -29252,10 +29252,10 @@ msgstr "您可以從您的電腦上傳一個圖片，或輸入圖片的網址（
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
-"The market value of this premium (e.g. retail price). For tax-deductible "
-"contributions, this amount will be used to set the non-deductible amount in "
-"the contribution record and receipt."
-msgstr "此感謝禮的市價（例如它的零售價格）。對於可以開收據的捐款，這裡設定的金額將會用在捐款記錄與收據中，做為不可以開收據的金額，也會影響捐款收據上面標註的金額。若您希望收據上的金額跟捐款金額一致，請在此填寫 0 元。"
+"To estimate the cost of fundraising, please fill in the market price of this"
+" premium. The market price you filled in will not affect the total amount "
+"displayed on the contribution record and receipt."
+msgstr "請在此填入本商品的市價，以利估計募款成本。市價不會影響到開立收據上的捐款金額。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
@@ -47758,9 +47758,6 @@ msgstr "第一筆捐款的最小金額"
 msgid "Grand Total of recurring amount"
 msgstr "定期總金額預估"
 
-msgid "Calculation when unlimit installments"
-msgstr "選不限期數時，用來替代預估計算的期數"
-
 msgid "This gift will be eligible when your %1."
 msgstr "當%1時，可以選擇此項目。"
 
@@ -47813,3 +47810,22 @@ msgstr "結果網址"
 
 msgid "Short URL"
 msgstr "短網址"
+
+msgid "Copy Final URL"
+msgstr "複製結果網址"
+
+msgid "Copy Short URL"
+msgstr "複製短網址"
+
+msgid "Procceed Receipt Sending?"
+msgstr "你確定要寄送電子郵件收據？"
+
+msgid ""
+"When donor doesn't specify installment, calculate total amount by: amount "
+"per installment x estimate installments"
+msgstr "捐款人未指定期數時，累計金額算式為：每期捐款金額 x 您指定的期數"
+
+msgid ""
+"When donor do specify installment, calculate total amount by: amount per "
+"installment x donor choose installments"
+msgstr "若捐款人有指定期數時，累計金額為：每期捐款金額 x 捐款人指定的期數"

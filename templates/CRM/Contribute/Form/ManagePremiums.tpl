@@ -100,7 +100,7 @@
         <td class="html-adjust">{ts}Min Contribution{/ts} {$form.min_contribution.html|crmMoney}</td>
       </tr>
       <tr class="crm-contribution-form-block-calculate_mode">
-        <td class="label"><label>{ts}Threshold{/ts} - {ts}Recurring Contribution{/ts} <span class="crm-marker">*</span></label></td>
+        <td class="label"><label>{ts}Recurring Contribution{/ts} - {ts}Threshold{/ts} <span class="crm-marker">*</span></label></td>
         <td class="html-adjust">
           <table class="form-layout-compressed">
             <tr>
@@ -112,7 +112,10 @@
                   {$form.min_contribution_recur.html|crmMoney}
                 </div>
                 <div class="installments hiddenElement">
-                  <label>{ts}Calculation when unlimit installments{/ts}</label> {$form.installments.html}
+                  <div>{ts}When donor do specify installment, calculate total amount by: amount per installment x donor choose installments{/ts}</div>
+                </div>
+                <div class="installments hiddenElement">
+                  <div>{ts}When donor doesn't specify installment, calculate total amount by: amount per installment x estimate installments{/ts} {$form.installments.html} {ts}installments{/ts} </div>
                 </div>
               </td>
             </tr>
@@ -134,7 +137,7 @@
       <tr class="crm-contribution-form-block-price">
         <td class="label">{$form.price.label}</td>
         <td class="html-adjust">{$form.price.html|crmMoney}<br />
-      <span class="description">{ts}The market value of this premium (e.g. retail price). For tax-deductible contributions, this amount will be used to set the non-deductible amount in the contribution record and receipt.{/ts}</span>
+      <span class="description">{ts}To estimate the cost of fundraising, please fill in the market price of this premium. The market price you filled in will not affect the total amount displayed on the contribution record and receipt.{/ts}</span>
         </td> 
       </tr>
       <tr class="crm-contribution-form-block-cost">

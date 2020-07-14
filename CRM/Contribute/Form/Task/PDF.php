@@ -130,8 +130,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public function buildQuickForm() {
     // make receipt target popup new tab
-    $this->updateAttributes(array('target' => '_blank'));
-
     $options = self::getPrintingTypes();
     $this->addRadio( 'window_envelope', ts('Apply to window envelope'), $options,null,'<br/>',true );
 
@@ -162,7 +160,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       'type' => 'back',
       'name' => ts('Cancel'),
     );
-
     $this->addButtons($buttons);
     $this->addFormRule(array('CRM_Contribute_Form_Task_PDF', 'formRule'), $this);
   }
@@ -172,7 +169,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     if (!empty($fields['email_pdf_receipt'][1]) && empty($fields['from_email'])) {
       $errors['from_email'] = ts('%1 is a required field.', array(1 => ts('From Email')));
       // make receipt not popup when error detect
-      $self->updateAttributes(array('target' => ''));
     }
     return $errors;
   }
@@ -194,6 +190,30 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
       $details = array_replace(array_flip($this->_contributionIds), $details);
       $params = $this->controller->exportValues($this->_name);
+
+      $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
+      if (!empty($activityTypeId)) {
+        $contributeIds = array_keys($details);
+        foreach ($contributeIds as $contributeId) {
+          if (empty($userID)) {
+            $session = CRM_Core_Session::singleton();
+            $userID = $session->get('userID');
+          }
+          $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+          $activityParams = array(
+            'activity_type_id' => $activityTypeId,
+            'activity_date_time' => date('Y-m-d H:i:s'),
+            'source_record_id' => $contributeId,
+            'status_id' => $statusId,
+            'subject' => ts('Print Contribution Receipts'),
+            'assignee_contact_id' => $details[$contributeId]['contact'],
+            'source_contact_id' => $userID,
+          );
+          CRM_Activity_BAO_Activity::create($activityParams);
+        }
+      }
+
+
       self::makeReceipt($details, $params['window_envelope']);
       self::makePDF();
       CRM_Utils_System::civiExit();

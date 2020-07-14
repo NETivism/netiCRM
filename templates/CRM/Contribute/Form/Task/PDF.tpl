@@ -82,6 +82,9 @@ cj(document).ready(function($){
   }
   $("input[name=_qf_PDF_upload]").prop('disabled', true);
   $("input[name=_qf_PDF_upload]").hide();
+  $("input[name^=_qf_PDF_]").on("click", function(){
+    $(this).closest("form").data("action", $(this).prop('name'));
+  });
   
   $("input[name^=email_pdf_receipt]").click(function(){
     emailPDFReceipt(this);
@@ -129,15 +132,29 @@ cj(document).ready(function($){
     }
   });
 
-  $("#PDF").submit(function(){
-    var button = $(document.activeElement).attr('name');
+  $("#PDF").submit(function(e){
+    if ($(this).data('action')) {
+      var button = $(this).data('action');
+    }
+    else {
+      var button = $(document.activeElement).attr('name');
+    }
     if (button == '_qf_PDF_next' && !confirmDownload) {
       $('#dialog-confirm-download').dialog('open');
     }
     else if (button == '_qf_PDF_upload' && !confirmEmail) {
       $('#dialog-confirm-email').dialog('open');
     }
+    else if (button == '_qf_PDF_back') {
+      return true;
+    }
     if (confirmEmail || confirmDownload) {
+      if (confirmDownload) {
+        $(this).attr("target", "_blank");
+      }
+      else {
+        $(this).removeAttr("target");
+      }
       confirmEmail = confirmDownload = false;
       return true;
     }

@@ -33,6 +33,24 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
     $this->preProcess();
     // don't through template
     // send pdf directly
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
+    if (!empty($activityTypeId)) {
+      if (empty($userID)) {
+        $session = CRM_Core_Session::singleton();
+        $userID = $session->get('userID');
+      }
+      $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+      $activityParams = array(
+        'activity_type_id' => $activityTypeId,
+        'activity_date_time' => date('Y-m-d H:i:s'),
+        'source_record_id' => $this->_id,
+        'status_id' => $statusId,
+        'subject' => ts('Print Contribution Receipts'),
+        'assignee_contact_id' => $this->_contactId,
+        'source_contact_id' => $userID,
+      );
+      CRM_Activity_BAO_Activity::create($activityParams);
+    }
     $download = TRUE;
     $task = new CRM_Contribute_Form_Task_PDF();
     $task->makeReceipt($this->_id, $this->_type);

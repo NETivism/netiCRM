@@ -233,10 +233,16 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
     // recipt sending activity
     $sortID = NULL;
-    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    $activityTypes = array('Email Receipt', 'Print Contribution Receipts');
+    foreach ($activityTypes as $typeName) {
+      $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', $typeName, 'name');
+      if (!empty($activityTypeId)) {
+        $activityTypeIds[] = $activityTypeId;
+      }
+    }
     $filter = array(
       'activity_record_id' => $values['id'], // source_record_id
-      'activity_type_id' => $activityTypeId,
+      'activity_type_id' => $activityTypeIds,
       'activity_test' => $values['is_test'],
     );
     $queryParams = CRM_Contact_BAO_Query::convertFormValues($filter);

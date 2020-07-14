@@ -2739,10 +2739,10 @@ LEFT JOIN civicrm_address add2 ON ( add1.master_id = add2.id )
         $ufLocale = $config->userSystem->getUFLocale();
         if(!empty($contact->preferred_language) && $contact->preferred_language != $ufLocale){
           if(empty($url)){
-            $url = parse_url($_SERVER['REQUEST_URI']);
+            $uri = parse_url($_SERVER['REQUEST_URI']);
           }
           else{
-            $url = parse_url($url);
+            $uri = parse_url($url);
           }
 
           // switch language
@@ -2752,8 +2752,10 @@ LEFT JOIN civicrm_address add2 ON ( add1.master_id = add2.id )
           $base = CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/');
           $baseLang = $config->userSystem->languageNegotiationURL($base);
           if ($base != $baseLang) {
-            $redirect = $base.$_GET['q'].'?'.$url['query'];
-            CRM_Utils_System::redirect($redirect);
+            $redirect = $baseLang.$_GET['q'].'?'.$uri['query'];
+            if ($redirect !== $url) {
+              CRM_Utils_System::redirect($redirect);
+            }
           }
         }
       }
