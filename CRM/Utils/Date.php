@@ -1388,7 +1388,7 @@ class CRM_Utils_Date {
       // Modify when hour is over 12 and use 'pm' (Contains AM, in spite of rarely wrong using.)
       $pregTest = '/(?<pmam>(?:pm)|(?:am))? ?(?<hr>\d{1,2}):(?<min>\d{1,2})(?::(?<sec>\d{1,2}))? ?((?:pm)|(?:am))?$/i';
       if(preg_match($pregTest, $date, $matches)) {
-        if ($matches['hr'] > 12 && empty($time)) {
+        if (empty($time)) {
           $date = preg_replace($pregTest, '', $date);
           $time = $matches[0];
         }
