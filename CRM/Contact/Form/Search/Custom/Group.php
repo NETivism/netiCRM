@@ -288,9 +288,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         }
       }
 
-      // add deleted contact into exclude table
-      $excludeDeletedContact = "REPLACE INTO  Xg_{$this->_tableName} ( contact_id ) SELECT id FROM civicrm_contact WHERE is_deleted = 1";
-      CRM_Core_DAO::executeQuery($excludeDeletedContact);
 
       $sql = "CREATE TEMPORARY TABLE Ig_{$this->_tableName} ( id int PRIMARY KEY AUTO_INCREMENT,
                                                                    contact_id int,
@@ -410,10 +407,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         CRM_Core_DAO::executeQuery($excludeTag);
       }
 
-      // add deleted contact into exclude table
-      $excludeDeletedContactTag = "REPLACE INTO Xt_{$this->_tableName} ( contact_id ) SELECT id FROM civicrm_contact WHERE is_deleted = 1";
-      CRM_Core_DAO::executeQuery($excludeDeletedContactTag);
-
       $sql = "CREATE TEMPORARY TABLE It_{$this->_tableName} ( id int PRIMARY KEY AUTO_INCREMENT,
                                                                contact_id int,
                                                                tag_names varchar(64)) ENGINE=HEAP";
@@ -481,6 +474,13 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     if (!$this->_groups || !$this->_tags) {
       $this->_andOr = 1;
     }
+
+    // add deleted contact into exclude table
+    $sql = "CREATE TEMPORARY TABLE Xd_{$this->_tableName} ( contact_id int primary key) ENGINE=HEAP";
+    CRM_Core_DAO::executeQuery($sql);
+    $deletedContact = "REPLACE INTO  Xd_{$this->_tableName} ( contact_id ) SELECT id FROM civicrm_contact WHERE is_deleted = 1";
+    CRM_Core_DAO::executeQuery($deletedContact);
+
     /*
          * Set from statement depending on array sel
          */
@@ -677,6 +677,13 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     }
 
     $from .= " LEFT JOIN civicrm_email ON ( contact_a.id = civicrm_email.contact_id AND ( civicrm_email.is_primary = 1 OR civicrm_email.is_bulkmail = 1 ) )";
+    $from .= " LEFT JOIN Xd_{$this->_tableName} deleted ON (contact_a.id = deleted.contact_id)";
+    if ($this->_where) {
+      $this->_where .= " AND ( deleted.contact_id IS NULL) ";
+    }
+    else {
+      $this->_where = " ( deleted.contact_id IS NULL) ";
+    }
 
     return $from;
   }
