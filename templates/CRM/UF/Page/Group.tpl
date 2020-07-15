@@ -31,22 +31,28 @@
     {include file="CRM/UF/Form/Preview.tpl"}
 {elseif $action eq 8192}
     {* Display HTML Form Snippet Code *}
-    <form name="html_code" action="{crmURL p='civicrm/admin/uf/group' q="action=profile&gid=$gid"}">
-    <div>
-      <h2>{ts}Link{/ts}</h2>
-      <input name="link_url" value="{crmURL p='civicrm/profile/create' q="gid=$gid&reset=1" a=true}" class="huge"> 
-      <a href="#" onclick="html_code.link_url.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts} {ts}Link{/ts}</span></a> 
-      <a href="{crmURL p='civicrm/profile/create' q="gid=`$gid`&reset=1" a=true}" class="button" target="_blank"><i class="zmdi zmdi-link"></i><span>{ts}Use (create mode){/ts}</span></a> 
+    <h2>{ts}Link{/ts}</h2>
+    <div class="flex-general">
+      {capture assign=liveURL}{crmURL a=true p='civicrm/profile/create' q="gid=`$gid`&reset=1" a=true}{/capture}
+      <textarea name="url_to_copy" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$liveURL}">{if $shorten}{$shorten}{else}{$liveURL}{/if}</textarea>
+      <span>
+        <a href="#" class="button url-copy" onclick="document.querySelector('textarea[name=url_to_copy]').select(); document.execCommand('copy'); return false;"><i class="zmdi zmdi-link"></i> {ts}Copy{/ts}</a>
+      </span>
+      <span>
+        <a href="#" class="button url-shorten" data-url-shorten="url_to_copy" data-page-id="{$gid}" data-page-type="civicrm_uf_group">
+          <i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}
+        </a>
+      </span>
     </div>
 
     <div>
       <h2>{ts}HTML Form Snippet{/ts}</h2>
       <div>
         <table><tr>
-          <td><textarea rows="7" style="width:26em;" name="profile" id="profile" onfocus="this.select();">{$profile}</textarea></td>
+          <td><textarea rows="7" style="width:26em;" name="profile" id="profile" onclick="this.select(); document.execCommand('copy'); return false;">{$profile}</textarea></td>
           <td>
             {ts}The HTML code below will display a form consisting of the active fields in this Profile. You can copy this HTML code and paste it into any block or page on ANY website where you want to collect contact information.{/ts}<br>
-            <a href="#" onclick="html_code.profile.select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts}</span></a> 
+            <a href="#" onclick="document.querySelector('textarea[name=profile]').select(); document.execCommand('copy'); return false;" class="button"><i class="zmdi zmdi-copy"></i><span>{ts}Copy{/ts}</span></a> 
           </td>
         </tr></table>
       </div>
@@ -54,7 +60,7 @@
     <div class="action-link-button">
         <a href="{crmURL p='civicrm/admin/uf/group/field' q="reset=1&action=browse&gid=$gid"}"><i class="zmdi zmdi-arrow-left"></i>{ts}Back to Profile Listings{/ts}</a>
     </div>
-    </form>
+    {include file="CRM/common/ShortenURL.tpl"}
 
 {else}
     <div id="help">

@@ -130,6 +130,16 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         $productDAO->id = $dao->product_id;
         $productDAO->is_active = 1;
         if ($productDAO->find(TRUE)) {
+          // #26455, backward compatibility needed
+          if (is_null($productDAO->min_contribution_recur)) {
+            $productDAO->min_contribution_recur = $productDAO->min_contribution;
+          }
+          if (is_null($productDAO->calculate_mode)) {
+            $productDAO->calculate_mode = 'cumulative';
+          }
+          if (is_null($productDAO->installments)) {
+            $productDAO->installments = 0;
+          }
           if ($selectedProductID != NULL) {
             if ($selectedProductID == $productDAO->id) {
               if ($selectedOption) {
@@ -145,21 +155,27 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
           }
         }
-        $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $productDAO->id, NULL);
+        $productAttr = array();
+        $productAttr['data-min-contribution'] = $products[$productDAO->id]['min_contribution'];
+        $productAttr['data-min-contribution-recur'] = $products[$productDAO->id]['min_contribution_recur'];
+        $productAttr['data-calculate-mode'] = $products[$productDAO->id]['calculate_mode'];
+        $productAttr['data-installments'] = $products[$productDAO->id]['installments'];
+        
+        $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $productDAO->id, $productAttr);
         $options = $temp = array();
         $temp = explode(',', $productDAO->options);
         foreach ($temp as $value) {
           $options[trim($value)] = trim($value);
         }
         if ($temp[0] != '') {
-          $form->addElement('select', 'options_' . $productDAO->id, NULL, $options, array('onchange' => "return selectPremium(this);"));
+          $form->addElement('select', 'options_' . $productDAO->id, NULL, $options);
         }
       }
       if (count($products)) {
         $form->assign('showRadioPremium', $formItems);
         if ($formItems) {
           $radio[''] = $form->createElement('radio', NULL, NULL, ' ', 'no_thanks', NULL);
-          $form->assign('no_thanks_label',ts('No thank you'));
+          $form->assign('no_thanks_label', ts('No thank you'));
           $form->addGroup($radio, 'selectProduct', NULL);
           $form->addRule('selectProduct', ts('%1 is a required field.', array(1 => ts('Premium'))), 'required');
           $default = array('selectProduct' => 'no_thanks');

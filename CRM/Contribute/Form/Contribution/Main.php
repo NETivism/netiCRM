@@ -80,6 +80,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $defaultFromRequest['instrument'] = CRM_Utils_Request::retrieve('_instrument', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['ppid'] = CRM_Utils_Request::retrieve('_ppid', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $defaultFromRequest['membership'] = CRM_Utils_Request::retrieve('_membership', 'Positive', $this, FALSE, NULL, 'REQUEST');
+    $defaultFromRequest['gift'] = CRM_Utils_Request::retrieve('_gift', 'Positive', $this, FALSE, NULL, 'REQUEST');
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     if (isset($defaultFromRequest['instrument']) && empty($instruments[$defaultFromRequest['instrument']])) {
       unset($defaultFromRequest['instrument']);
@@ -449,6 +450,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       }
     }
 
+    if (!empty($this->_values['premiums_active']) && $this->_defaultFromRequest['gift']) {
+      $this->_defaults['selectProduct'] = $this->_defaultFromRequest['gift'];
+    }
+
     return $this->_defaults;
   }
 
@@ -715,6 +720,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
           'data-default' => (!empty($amount['filter']) && empty($this->_defaultFromRequest['amt'])) ? 1 : 0,
           'onclick' => 'clearAmountOther();',
+          'data-amount' => $amount['value'],
         );
         $elements[] = &$this->createElement('radio', NULL, '',
           CRM_Utils_Money::format($amount['value']) . ' ' . $amount['label'],
@@ -954,6 +960,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if ($this->_values['is_recur'] < 2) {
       $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0);
     }
+    else {
+      $this->assign('is_recur_only', TRUE);
+    }
     $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
     $this->addGroup($elements, 'is_recur', NULL, '<br />');
 
@@ -1025,25 +1034,42 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     ) {
       require_once 'CRM/Contribute/DAO/Product.php';
       require_once 'CRM/Utils/Money.php';
+      $premiumTitle = $self->_values['premiums_intro_title'];
       $productDAO = new CRM_Contribute_DAO_Product();
       $productDAO->id = $fields['selectProduct'];
       $productDAO->find(TRUE);
-      $min_amount = $productDAO->min_contribution;
+      // #26455, backward compatibility needed
+      if (is_null($productDAO->min_contribution_recur)) {
+        $productDAO->min_contribution_recur = $productDAO->min_contribution;
+      }
+      if (is_null($productDAO->calculate_mode)) {
+        $productDAO->calculate_mode = 'cumulative';
+      }
+      if (is_null($productDAO->installments)) {
+        $productDAO->installments = 0;
+      }
       if(!empty($fields['is_recur'])){
-        if(!empty($fields['installments'])){
-          $total = $amount * $fields['installments'];
-          if($total < $min_amount){
-            $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
+        if ($productDAO->calculate_mode == 'cumulative') {
+          $installments = !empty($fields['installments']) ? $fields['installments'] : $productDAO->installments;
+          if (empty($installments)) {
+            $installments = 99; // max installments #26445
+          }
+          $total = $amount * $installments;
+          if($total < $productDAO->min_contribution_recur){
+            $msg = ts('total support of recurring payment at least %1', array(1 => CRM_Utils_Money::format($productDAO->min_contribution_recur)));
+            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
           }
         }
-        else{
-          if(empty($amount)){
-            $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
+        elseif ($productDAO->calculate_mode == 'first') {
+          if($total < $productDAO->min_contribution_recur){
+            $msg = ts('first support of recurring payment at least %1', array(1 => CRM_Utils_Money::format($productDAO->min_contribution_recur)));
+            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
           }
         }
       }
-      elseif($amount < $min_amount) {
-        $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
+      elseif($amount < $productDAO->min_contribution) {
+        $msg = ts('one-time support at least %1', array(1 => CRM_Utils_Money::format($productDAO->min_contribution)));
+        $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
       }
     }
 
