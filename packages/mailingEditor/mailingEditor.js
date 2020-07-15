@@ -816,32 +816,55 @@
 
 										case "rc-col-2":
 											var	group = ["image", "paragraph"],
+													nestBlocksData,
 													$nestTarget;
 
 											for (var dataIndex = 0; dataIndex < 2; dataIndex++) {
 												var col = dataIndex + 1;
+												nestBlocksData = block["data"][dataIndex]["blocks"],
 												$nestTarget = $nmebElem.find("td.col-" + col);
 												$nestTarget.html("");
 
-												for (var i in group) {
-													var nestBlockType = group[i],
-															nestBlockData = _objClone(_tpl["data"][nestBlockType]);
+												// If this is a new block, copy data from template
+												if (_objIsEmpty(nestBlocksData)) {
+													for (var i in group) {
+														var nestBlockType = group[i],
+																nestBlockData = _objClone(_tpl["data"][nestBlockType]);
 
-													if (!_objIsEmpty(nestBlockData)) {
-														var nestBlockID = nestBlockType + "-" + _renderID();
+														if (!_objIsEmpty(nestBlockData)) {
+															var nestBlockID = nestBlockType + "-" + _renderID();
+															nestBlockData.id = nestBlockID;
+															nestBlockData.parentID = blockID;
+															nestBlockData.parentType = blockType;
+															nestBlockData.index = dataIndex;
+															nestBlockData.control.sortable = false;
+															nestBlockData.control.delete = false;
+															nestBlockData.control.clone = false;
+															nestBlockData.weight = i;
+															_data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][nestBlockID] = nestBlockData;
+															_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+														}
+
+														_nmeData.update();
+													}
+												}
+												// If this block is to be cloned, just need to regenerate the ID
+												else {
+													for (var i in nestBlocksData) {
+														var nestBlockData = nestBlocksData[i],
+																nestBlockType = nestBlockData.type,
+																nestBlockID = nestBlockType + "-" + _renderID();
+
 														nestBlockData.id = nestBlockID;
-														nestBlockData.parentID = blockID;
-														nestBlockData.parentType = blockType;
-														nestBlockData.index = dataIndex;
-														nestBlockData.control.sortable = false;
-														nestBlockData.control.delete = false;
-														nestBlockData.control.clone = false;
-														nestBlockData.weight = i;
+
+														// Delete the copied index
+														delete _data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][i];
+
+														// Added data to new index
 														_data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][nestBlockID] = nestBlockData;
 														_nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+														_nmeData.update();
 													}
-
-													_nmeData.update();
 												}
 											}
 											break;
