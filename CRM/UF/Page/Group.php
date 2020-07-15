@@ -218,6 +218,11 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       $this->assign('iframeWidth', '100%');
       $iframeCode = trim($template->fetch('CRM/common/iframe.tpl'));
       $this->assign('profile', htmlentities($iframeCode, ENT_NOQUOTES, 'UTF-8'));
+
+      $shorten = CRM_Core_OptionGroup::getValue('shorten_url', 'civicrm_uf_group.'.$gid, 'name', 'String', 'value');
+      if ($shorten) {
+        $this->assign('shorten', $shorten);
+      }
       
       //get the title of uf group
       $title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gid, 'title');
