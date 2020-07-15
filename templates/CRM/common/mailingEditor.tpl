@@ -19,6 +19,7 @@
 <script src="{$config->resourceBase}packages/Magnific-Popup/dist/jquery.magnific-popup.js"></script>
 
 <!-- mailingEditor -->
+{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
 <script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
 {literal}
@@ -88,7 +89,6 @@ window.nmEditor = {
 })(jQuery);
 </script>
 {/literal}
-{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 <!-- mailingEditor files end -->
 
 <!-- mailingEditor HTML start -->
