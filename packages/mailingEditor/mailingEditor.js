@@ -794,14 +794,15 @@
 												_nmeData.update();
 											}
 										}
+										// If this block is to be cloned, just need to assign new ID and parent ID
 										else {
-											// If this block is to be clone, just need to regenerate the ID
 											for (var i in nestBlocksData) {
 												var nestBlockData = nestBlocksData[i],
 														nestBlockType = nestBlockData.type,
 														nestBlockID = nestBlockType + "-" + _renderID();
 
 												nestBlockData.id = nestBlockID;
+												nestBlockData.parentID = blockID;
 
 												// Delete the copied index
 												delete _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][i];
@@ -848,7 +849,7 @@
 														_nmeData.update();
 													}
 												}
-												// If this block is to be cloned, just need to regenerate the ID
+												// If this block is to be cloned, just need to assign new ID and parent ID
 												else {
 													for (var i in nestBlocksData) {
 														var nestBlockData = nestBlocksData[i],
@@ -856,6 +857,7 @@
 																nestBlockID = nestBlockType + "-" + _renderID();
 
 														nestBlockData.id = nestBlockID;
+														nestBlockData.parentID = blockID;
 
 														// Delete the copied index
 														delete _data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][i];
@@ -910,7 +912,7 @@
 														_nmeData.update();
 													}
 												}
-												// If this block is to be clone, just need to regenerate the ID
+												// If this block is to be cloned, just need to assign new ID and parent ID
 												else {
 													for (var i in nestBlocksData) {
 														var nestBlockData = nestBlocksData[i],
@@ -924,6 +926,7 @@
 
 														// Set deafult value
 														nestBlockData.id = nestBlockID;
+														nestBlockData.parentID = blockID;
 
 														// Delete the copied index
 														delete _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][i];
