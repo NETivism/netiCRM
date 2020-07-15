@@ -1999,10 +1999,12 @@
   };
 
   var _rwdEvents = function() {
+    // Deal responsive event
   };
 
   var _windowResize = function() {
     _getViewport();
+    // _rwdEvents();
   };
 
   /**
@@ -2265,7 +2267,6 @@
 
   // Plugin defaults options
   $.fn.nmEditor.defaults = {
-    dataLoadMode: "dom",
     dataLoadSource: "#mailing_content_data",
     debugMode: false
   };
