@@ -221,7 +221,7 @@ window.nmEditor = {
 
 				</div>
 			</div> <!-- setting panels inner -->
-			<div class="nme-setting-panels-trigger"><i class="zmdi zmdi-email"></i><div class="trigger-label">{ts}Advanced settings{/ts}</div></div>
+			<div class="nme-setting-panels-trigger" title="{ts}Advanced settings{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-settings"></i></div>
 		</div> <!-- setting panels -->
 	</div>
 </div>

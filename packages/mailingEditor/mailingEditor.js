@@ -1077,6 +1077,7 @@
         _nmePanels();
         _nmePreview.init();
         _onScreenCenterElem(".nme-block");
+        _tooltip();
       }
     }
   };
@@ -1677,6 +1678,28 @@
 
     if (elemID) {
       pickrInit(elemID);
+    }
+  };
+
+  var _tooltip = function() {
+    if ($.fn.powerTip) {
+      let defaultOptions = {};
+
+      if ($("[data-tooltip]").length) {
+        $("[data-tooltip]").each(function() {
+          let options = {};
+
+          if ($(this).is("[data-tooltip-placement]")) {
+            options.placement = $(this).data("tooltip-placement");
+          }
+
+          if ($(this).is("[data-tooltip-fadeouttime]")) {
+            options.fadeOutTime = $(this).data("tooltip-fadeouttime");
+          }
+
+          $(this).powerTip(options);
+        });
+      }
     }
   };
 
