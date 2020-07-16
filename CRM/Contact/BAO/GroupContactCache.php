@@ -88,6 +88,21 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id = 1 AND
     }
   }
 
+  static function checkAll($intersectGroups = array()) {
+    $group = new CRM_Contact_DAO_Group();
+    $group->is_active = 1;
+    $group->find();
+    while ($group->fetch()) {
+      if ($group->saved_search_id) {
+        $smartGroups[] = $group->id;
+      }
+    }
+    if (!empty($intersectGroups)) {
+      $smartGroups = array_intersect($smartGroups, $intersectGroups);
+    }
+    CRM_Contact_BAO_GroupContactCache::check($smartGroups);
+  }
+
   static function add($groupID) {
     // first delete the current cache
     self::remove($groupID);
