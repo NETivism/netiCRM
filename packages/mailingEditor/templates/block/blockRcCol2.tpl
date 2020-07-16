@@ -39,8 +39,8 @@ elem (nme-elem): none
               <td valign="top" class="nmeb-content" data-settings-target="elemContainerInner">
                 <table class="nmee-rc-col-2 nme-elem" data-settings-target="elem" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 0;">
                   <tr>
-                    <td style="width: 50%;" class="col-1">[Rich Content HERE]</td>
-                    <td style="width: 50%;" class="col-2">[Rich Content HERE]</td>
+                    <td class="col-1" valign="top" style="width: 50%; padding: 10px; vertical-align: top;">[Rich Content HERE]</td>
+                    <td class="col-2" valign="top" style="width: 50%; padding: 10px; vertical-align: top;">[Rich Content HERE]</td>
                   </tr>
                 </table>
               </td>

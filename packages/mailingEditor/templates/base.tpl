@@ -92,9 +92,29 @@
       .img-col,
       .text-col {
         display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
         direction: ltr !important;
+      }
+      .nmeb-inner {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      .nmeb-title .nmeb-inner,
+      .nmeb-paragraph .nmeb-inner,
+      .nmeb-button .nmeb-inner {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+      }
+      .nmeb-rc-col-2 .nmeb-inner,
+      .nmeb-rc-float .nmeb-inner {
+        padding: 0 !important;
+      }
+      .nmeb-rc-col-2 .nmeb-paragraph .nmeb-inner,
+      .nmeb-rc-float .nmeb-paragraph .nmeb-inner {
+        padding: 20px !important;
       }
     }
     {/literal}

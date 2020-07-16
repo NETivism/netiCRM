@@ -842,6 +842,12 @@
                               nestBlockData.control.delete = false;
                               nestBlockData.control.clone = false;
                               nestBlockData.weight = i;
+
+                              if (nestBlockType == "paragraph") {
+                                nestBlockData["styles"]["block"]["padding-right"] = "0";
+                                nestBlockData["styles"]["block"]["padding-left"] = "0";
+                              }
+
                               _data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][nestBlockID] = nestBlockData;
                               _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
                             }
@@ -900,6 +906,13 @@
                               nestBlockData.control.delete = false;
                               nestBlockData.control.clone = false;
                               nestBlockData.weight = i;
+
+                              if (nestBlockType == "paragraph") {
+                                nestBlockData["styles"]["block"]["padding-top"] = "0";
+                                nestBlockData["styles"]["block"]["padding-right"] = "10px";
+                                nestBlockData["styles"]["block"]["padding-bottom"] = "0";
+                                nestBlockData["styles"]["block"]["padding-left"] = "10px";
+                              }
 
                               // Added data to new index
                               _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;

@@ -14,10 +14,10 @@
     ],
     "styles": {
       "block": {
-        "padding-top": "0",
-        "padding-right": "0",
-        "padding-bottom": "0",
-        "padding-left": "0",
+        "padding-top": "10px",
+        "padding-right": "10px",
+        "padding-bottom": "10px",
+        "padding-left": "10px",
         "text-align": "center",
         "background-color": "transparent"
       },
