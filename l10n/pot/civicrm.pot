@@ -47583,3 +47583,6 @@ msgstr ""
 
 msgid "When donor do specify installment, calculate total amount by: amount per installment x donor choose installments"
 msgstr ""
+
+msgid "Bank Code"
+msgstr ""
