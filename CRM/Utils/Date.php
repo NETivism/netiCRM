@@ -1385,6 +1385,27 @@ class CRM_Utils_Date {
       $date = str_replace('/', '-', $date);
     }
     if (trim($date)) {
+      // Modify when hour is over 12 and use 'pm' (Contains AM, in spite of rarely wrong using.)
+      $pregTest = '/(?<pmam>(?:pm)|(?:am))? ?(?<hr>\d{1,2}):(?<min>\d{1,2})(?::(?<sec>\d{1,2}))? ?((?:pm)|(?:am))?$/i';
+      if(preg_match($pregTest, $date, $matches)) {
+        if (empty($time)) {
+          $date = preg_replace($pregTest, '', $date);
+          $time = $matches[0];
+        }
+      }
+      if (!empty($time) && preg_match($pregTest, $time, $matches)) {
+        if ($matches['hr'] > 12 || !empty($matches['pmam'])) {
+          // Ignore PM, AM. Or switch PM, AM to string tail.
+          $time = "{$matches['hr']}:{$matches['min']}";
+          if ($matches['sec']) {
+            $time .= ":{$matches['sec']}";
+          }
+          if (!($matches['hr'] > 12) && $matches['pmam']) {
+            $time .= " {$matches['pmam']}";
+          }
+        }
+      }
+
       $mysqlDate = date($format, strtotime($date . ' ' . $time));
     }
 

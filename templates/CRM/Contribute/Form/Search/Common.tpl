@@ -75,6 +75,10 @@
 	    {$form.contribution_payment_instrument_id.html}
     </div>
     <div>
+      <label>{$form.contribution_payment_processor_id.label}</label> 
+	    {$form.contribution_payment_processor_id.html}
+    </div>
+    <div>
       {$form.contribution_check_number.label} {$form.contribution_check_number.html}
     </div>
     <div>{$form.contribution_receipt_date_isnull.html}{$form.contribution_receipt_date_isnull.label}</div>

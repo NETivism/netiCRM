@@ -194,15 +194,22 @@ class CRM_Contribute_BAO_Query {
   static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
+    // Check contribution_test first, used in contribution_payment_processor_id.
+    foreach (array_keys($query->_params) as $id) {
+      if ($query->_params[$id][0] == 'contribution_test') {
+        $isTest = TRUE;
+        break;
+      }
+    }
     foreach (array_keys($query->_params) as $id) {
       if (substr($query->_params[$id][0], 0, 13) == 'contribution_') {
         if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
           $query->_useDistinct = TRUE;
         }
-        if ($query->_params[$id][0] == 'contribution_test') {
-          $isTest = TRUE;
-        }
         $grouping = $query->_params[$id][3];
+        if ($query->_params[$id][0] == 'contribution_payment_processor_id' && $isTest) {
+          $query->_params[$id][2] += 1;
+        }
         self::whereClauseSingle($query->_params[$id], $query);
       }
     }
@@ -365,6 +372,19 @@ class CRM_Contribute_BAO_Query {
         );
 
         $query->_qill[$grouping][] = ts('Paid By - %1', array(1 => $pis[$pi]));
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        return;
+
+      case 'contribution_payment_processor_id':
+        $pps = CRM_Core_PseudoConstant::paymentProcessor();
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.payment_processor_id",
+          $op, $value, "Integer"
+        );
+        // Test ppid is even, use name of odd id.
+        if (!($value % 2)) {
+          $value -= 1;
+        }
+        $query->_qill[$grouping][] = ts('Payment Processor').' - '.$pps[$value];
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
@@ -723,6 +743,10 @@ class CRM_Contribute_BAO_Query {
         }
         break;
 
+      case 'civicrm_contribution_taiwanach':
+          $from = " $side JOIN civicrm_contribution_taiwanach ON civicrm_contribution_taiwanach.contribution_recur_id = civicrm_contribution.contribution_recur_id";
+          break;
+
       case 'civicrm_track':
         $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_contribution' AND civicrm_track.entity_id = civicrm_contribution.id";
         break;
@@ -854,6 +878,12 @@ class CRM_Contribute_BAO_Query {
       'contribution_pcp_made_through_id',
       ts('Personal Campaign Page'),
       array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::pcPage()
+    );
+
+    $form->addSelect(
+      'contribution_payment_processor_id',
+      ts('Payment Processor'),
+      array('' => ts('- select -')) + CRM_Core_PseudoConstant::paymentProcessor()
     );
 
     $status = array();

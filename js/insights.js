@@ -118,6 +118,14 @@ function trackVisit(visitInfo) {
       object['referrer_type'] = 'email';
       object['referrer_network'] = 'civimail';
       object['referrer_url'] = 'external/url.php?qid='+queue_id[1]+'&u='+url_id[1];
+      if (typeof URLSearchParams === 'function') {
+        var searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete("civimail_x_q");
+        searchParams.delete("civimail_x_u");
+        var newQuery = '?'+searchParams.toString();
+        var newUrl = window.location.origin+window.location.pathname+newQuery;
+        window.history.pushState({}, null, newUrl);
+      }
     }
     switch(object['referrer_type']){
       case 'ad':

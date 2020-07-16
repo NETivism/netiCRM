@@ -236,6 +236,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'title' => ts('Payment Type') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
+          'export' => true,
+          'where' => 'civicrm_contribution_taiwanach.payment_type',
         ) ,
         'bank_code' => array(
           'name' => 'bank_code',
@@ -243,6 +245,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'title' => ts('Bank Code') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
+          'export' => true,
+          'where' => 'civicrm_contribution_taiwanach.bank_code',
         ) ,
         'postoffice_acc_type' => array(
           'name' => 'postoffice_acc_type',
@@ -250,6 +254,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'title' => ts('Post Office Account Type') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
+          'export' => true,
+          'where' => 'civicrm_contribution_taiwanach.postoffice_acc_type',
         ) ,
         'bank_branch' => array(
           'name' => 'bank_branch',
@@ -257,6 +263,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'title' => ts('Bank Branch') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
+          'export' => true,
+          'where' => 'civicrm_contribution_taiwanach.bank_branch',
         ) ,
         'bank_account' => array(
           'name' => 'bank_account',
@@ -264,6 +272,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'title' => ts('Bank Account') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
+          'export' => true,
+          'where' => 'civicrm_contribution_taiwanach.bank_account',
         ) ,
         'identifier_number' => array(
           'name' => 'identifier_number',
@@ -271,11 +281,15 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'title' => ts('Identifier Number') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
+          'export' => true,
+          'where' => 'civicrm_contribution_taiwanach.identifier_number',
         ) ,
         'stamp_verification' => array(
           'name' => 'stamp_verification',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Stamp Verification') ,
+          'export' => true,
+          'where' => 'civicrm_contribution_taiwanach.stamp_verification',
         ) ,
         'data' => array(
           'name' => 'data',
