@@ -1,5 +1,6 @@
 # 
 # Translators:
+# CC Chu <poliphilonet@gmail.com>, 2020
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2020
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
@@ -14,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-07-16 06:47+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2020-07-16 10:40+0000\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1280,6 +1281,7 @@ msgstr "立即匯入 >>"
 #: CRM/Import/Form/Preview.php CRM/Member/Import/Form/Preview.php
 #: CRM/Price/Page/Set.php CRM/UF/Page/Field.php CRM/UF/Page/Group.php
 #: templates/CRM/Contribute/Form/ContributionPage/AddProduct.tpl
+#: templates/CRM/common/mailingEditor.tpl
 msgid "Preview"
 msgstr "預覽"
 
@@ -1610,6 +1612,7 @@ msgstr "HTML 訊息"
 #: templates/CRM/Admin/Page/PaymentProcessorType.tpl
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
+#: templates/CRM/common/mailingEditor.tpl
 msgid "Title"
 msgstr "標題"
 
@@ -4752,7 +4755,7 @@ msgid "Preview Custom Data"
 msgstr "預覽自訂欄位"
 
 #: CRM/Custom/Page/Group.php CRM/Group/Page/Group.php CRM/Price/Page/Set.php
-#: CRM/UF/Page/Group.php
+#: CRM/UF/Page/Group.php templates/CRM/common/mailingEditor.tpl
 msgid "Settings"
 msgstr "設定"
 
@@ -10391,6 +10394,7 @@ msgid "Product Name"
 msgstr "感謝禮品名"
 
 #: CRM/Contribute/DAO/Product.php templates/CRM/Contact/Page/View/Sunlight.tpl
+#: templates/CRM/common/mailingEditor.tpl
 msgid "Image"
 msgstr "圖像"
 
@@ -47832,3 +47836,71 @@ msgstr "若捐款人有指定期數時，累計金額為：每期捐款金額 x 
 
 msgid "Bank Code"
 msgstr "扣款銀行代碼"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Mailing Advanced Settings"
+msgstr "電子報進階設定"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Templates"
+msgstr "範本"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Blocks"
+msgstr "區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "1 Column"
+msgstr "全單欄"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "1:2 Column"
+msgstr "單欄+兩欄"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "1 Column + Float"
+msgstr "單欄+左圖文"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Paragraph"
+msgstr "段落"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Button"
+msgstr "按鈕"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Rich Content: 1 Column"
+msgstr "單欄圖文"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Rich Content: 2 Column"
+msgstr "兩欄圖文"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Rich Content: Float"
+msgstr "左圖文"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Theme"
+msgstr "主題"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Page"
+msgstr "頁面"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Block"
+msgstr "區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Size"
+msgstr "大小"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Color"
+msgstr "顏色"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Background"
+msgstr "背景"
