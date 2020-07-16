@@ -26,40 +26,35 @@
 <script type="text/javascript">
 window.nmEditor = {
 	translation: {
-		// "" : "{/literal}{ts}{/ts}{literal}",
 		// Panels
-		"Advanced settings" : "{/literal}{ts}Advanced settings{/ts}{literal}", // 電子報進階設定
-		"Templates" : "{/literal}{ts}Templates{/ts}{literal}", // 選擇範本
-		"Blocks" : "{/literal}{ts}Blocks{/ts}{literal}", // 新增區塊
-		"Setting" : "{/literal}{ts}Setting{/ts}{literal}", // 整體設定
-		"Preview mode" : "{/literal}{ts}Preview mode{/ts}{literal}", // 預覽模式
-		"Turn off preview mode" : "{/literal}{ts}Turn off preview mode{/ts}{literal}", // 關閉預覽模式
-		"Desktop" : "{/literal}{ts}Desktop{/ts}{literal}", // 電腦
-		"Mobile" : "{/literal}{ts}Mobile{/ts}{literal}", // 手機
+		"Mailing Advanced Settings" : "{/literal}{ts}Mailing Advanced Settings{/ts}{literal}",
+		"Templates" : "{/literal}{ts}Templates{/ts}{literal}",
+		"Blocks" : "{/literal}{ts}Blocks{/ts}{literal}",
+		"Setting" : "{/literal}{ts}Setting{/ts}{literal}",
+		"Normal" : "{/literal}{ts}Normal{/ts}{literal}",
+		"Mobile" : "{/literal}{ts}Mobile{/ts}{literal}",
 
 		// Panel: Templates
-		"1 Column" : "{/literal}{ts}1 Column{/ts}{literal}", // 單欄
-		"1:2 Column" : "{/literal}{ts}1:2 Column{/ts}{literal}", // 單欄 + 雙欄
-		"1 Column + Float" : "{/literal}{ts}1 Column + Float{/ts}{literal}", // 單欄 + 左右圖文
+		"1 Column" : "{/literal}{ts}1 Column{/ts}{literal}",
+		"1:2 Column" : "{/literal}{ts}1:2 Column{/ts}{literal}",
+		"1 Column + Float" : "{/literal}{ts}1 Column + Float{/ts}{literal}",
 
 		// Panel: Blocks
-		"Title" : "{/literal}{ts}Title{/ts}{literal}", // 標題
-		"Paragraph" : "{/literal}{ts}Paragraph{/ts}{literal}", // 內文
-		"Image" : "{/literal}{ts}Image{/ts}{literal}", // 圖像
-		"Button" : "{/literal}{ts}Button{/ts}{literal}", // 按鈕
-		"Rich Content: 1 Column" : "{/literal}{ts}Rich Content: 1 Column{/ts}{literal}", // 單欄
-		"Rich Content: 2 Column" : "{/literal}{ts}Rich Content: 2 Column{/ts}{literal}", // 雙欄
-		"Rich Content: Float" : "{/literal}{ts}Rich Content: Float{/ts}{literal}", // 左右圖文
+		"Title" : "{/literal}{ts}Title{/ts}{literal}",
+		"Paragraph" : "{/literal}{ts}Paragraph{/ts}{literal}",
+		"Image" : "{/literal}{ts}Image{/ts}{literal}",
+		"Button" : "{/literal}{ts}Button{/ts}{literal}",
+		"Rich Content: 1 Column" : "{/literal}{ts}Rich Content: 1 Column{/ts}{literal}",
+		"Rich Content: 2 Column" : "{/literal}{ts}Rich Content: 2 Column{/ts}{literal}",
+		"Rich Content: Float" : "{/literal}{ts}Rich Content: Float{/ts}{literal}",
 
 		// Panel: Setting
-		"Theme" : "{/literal}{ts}Theme{/ts}{literal}", // 主題配色
-		"Page" : "{/literal}{ts}Page{/ts}{literal}", // 頁面
-		"Block" : "{/literal}{ts}Block{/ts}{literal}", // 區塊
-		// "Title" : "{/literal}{ts}Title{/ts}{literal}", // 標題
-		// "Button" : "{/literal}{ts}Button{/ts}{literal}", // 按鈕
-		"Size" : "{/literal}{ts}Size{/ts}{literal}", // 文字大小
-		"Color" : "{/literal}{ts}Color{/ts}{literal}", // 文字顏色
-		"Background" : "{/literal}{ts}Background{/ts}{literal}" // 背景色
+		"Theme" : "{/literal}{ts}Theme{/ts}{literal}",
+		"Page" : "{/literal}{ts}Page{/ts}{literal}",
+		"Block" : "{/literal}{ts}Block{/ts}{literal}",
+		"Size" : "{/literal}{ts}Size{/ts}{literal}",
+		"Color" : "{/literal}{ts}Color{/ts}{literal}",
+		"Background" : "{/literal}{ts}Background{/ts}{literal}"
 	}
 };
 </script>
@@ -101,7 +96,7 @@ window.nmEditor = {
 					<ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
 						<li><a class="is-active" data-target-id="nme-select-tpl" href="#nme-select-tpl">{ts}Templates{/ts}</a></li>
 						<li><a data-target-id="nme-add-block" href="#nme-add-block">{ts}Blocks{/ts}</a></li>
-						<li><a data-target-id="nme-global-setting" href="#nme-global-setting">{ts}Setting{/ts}</a></li>
+						<li><a data-target-id="nme-global-setting" href="#nme-global-setting">{ts}Settings{/ts}</a></li>
 					</ul>
 				</div>
 				<div class="nme-setting-panels-content">
@@ -133,7 +128,7 @@ window.nmEditor = {
 					</div>
 					<div id="nme-global-setting" class="nme-global-setting nme-setting-panel">
 						<div class="nme-setting-panel-inner">
-							<h3 class="nme-setting-panel-title">{ts}Setting{/ts}</h3>
+							<h3 class="nme-setting-panel-title">{ts}Settings{/ts}</h3>
 							<div class="nme-setting-panel-content">
 							<div class="nme-page-setting nme-setting-section" data-setting-group="theme">
 									<div class="nme-setting-section-content">
@@ -221,7 +216,7 @@ window.nmEditor = {
 
 				</div>
 			</div> <!-- setting panels inner -->
-			<div class="nme-setting-panels-trigger" title="{ts}Advanced settings{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-settings"></i></div>
+			<div class="nme-setting-panels-trigger" title="{ts}Mailing Advanced Settings{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-settings"></i></div>
 		</div> <!-- setting panels -->
 	</div>
 </div>
