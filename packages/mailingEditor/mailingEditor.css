@@ -169,6 +169,7 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block:hover > .nme-block-inner > .nme-block-control,
 .nme-block.is-active > .nme-block-inner > .nme-block-control,
 .nme-block.is-edit > .nme-block-inner > .nme-block-control {
+  margin-top: -47px;
   display: flex;
   justify-content: space-between;
   min-height: 42px;
