@@ -1440,10 +1440,10 @@
           "<div class='nme-preview-toolbar'>" +
           "<div class='nme-preview-title'>" + _ts["Preview mode"] + "</div>" +
           "<div class='nme-preview-mode'>" +
-          "<button type='button' class='nme-preview-mode-btn is-active' data-mode='desktop'>" + _ts["Desktop"] + "</button>" +
+          "<button type='button' class='nme-preview-mode-btn is-active' data-mode='desktop'>" + _ts["Normal"] + "</button>" +
           "<button type='button' class='nme-preview-mode-btn' data-mode='mobile'>" + _ts["Mobile"] + "</button>" +
           "</div>" +
-          "<button type='button' class='nme-preview-close'>" + _ts["Turn off preview mode"] + "</button>" +
+          "<button type='button' class='nme-preview-close'><i class='zmdi zmdi-close'></i></button>" +
           "</div>" +
           "<div class='nme-preview-content'>" +
           "<div class='nme-preview-panels'>" +
