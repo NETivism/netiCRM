@@ -1075,28 +1075,36 @@
         });
 
         $("#Upload").on("click", ".form-submit", function(event) {
-          let buttonName = $(this).attr("name"),
-              submitPermission = $(this).attr("data-sumbit-permission"),
-              $form = $(this).closest("form");
+          $(this).closest("form").data("action", $(this).attr("name"));
+        });
+
+        $("#Upload").submit(function(event) {
+          let $form = $(this),
+              buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
+              allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
 
           // Check edit mode option, Only 'Compose On-screen' option is allowed
           if ($(".form-radio[name='upload_type'][value='1']").is(":checked")) {
             // Convert json data to HTML and save to CKEditor when click button is "Next" or "Save & Continue Later"
             if (buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
-              event.preventDefault();
-              _nmeMailOutput();
-              var checkMailOutputTimer = setInterval(checkMailOutput, 500);
-              let previewContent = "";
+              if (!allowSubmit) {
+                event.preventDefault();
 
-              function checkMailOutput() {
-                if ($("#nme-mail-output-frame").length) {
-                  previewContent = $("#nme-mail-output-frame").contents().find("body").html();
+                _nmeMailOutput();
+                var checkMailOutputTimer = setInterval(checkMailOutput, 500);
+                let previewContent = "";
 
-                  if (previewContent) {
-                    clearInterval(checkMailOutputTimer);
-                    previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
-                    CKEDITOR.instances['html_message'].setData(previewContent);
-                    $form.submit();
+                function checkMailOutput() {
+                  if ($("#nme-mail-output-frame").length) {
+                    previewContent = $("#nme-mail-output-frame").contents().find("body").html();
+
+                    if (previewContent) {
+                      clearInterval(checkMailOutputTimer);
+                      previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
+                      CKEDITOR.instances['html_message'].setData(previewContent);
+                      $form.data("allow-submit", true);
+                      $form.submit();
+                    }
                   }
                 }
               }
