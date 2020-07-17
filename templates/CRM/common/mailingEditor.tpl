@@ -54,7 +54,10 @@ window.nmEditor = {
 		"Block" : "{/literal}{ts}Block{/ts}{literal}",
 		"Size" : "{/literal}{ts}Size{/ts}{literal}",
 		"Color" : "{/literal}{ts}Color{/ts}{literal}",
-		"Background" : "{/literal}{ts}Background{/ts}{literal}"
+		"Background" : "{/literal}{ts}Background{/ts}{literal}",
+
+		// Confirm
+		"This saved action will overwrite your data, are you sure?" : "{/literal}{ts}This saved action will overwrite your data, are you sure?{/ts}{literal}"
 	}
 };
 </script>
