@@ -47,6 +47,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $csID = CRM_Utils_Request::retrieve('csid', 'Integer', $this);
     $ssID = CRM_Utils_Request::retrieve('ssID', 'Integer', $this);
     $gID = CRM_Utils_Request::retrieve('gid', 'Integer', $this);
+    $force = CRM_Utils_Request::retrieve('force', 'Boolean', CRM_Core_DAO::$_nullObject);
 
     list($this->_customSearchID, $this->_customSearchClass, $formValues) = CRM_Contact_BAO_SearchCustom::details($csID, $ssID, $gID);
 
@@ -65,7 +66,12 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $this->set('customSearchID', $this->_customSearchID);
     $this->set('customSearchClass', $this->_customSearchClass);
 
+    // purge group related contact cache
+    if ($gID && $ssID && $force) {
+      CRM_Contact_BAO_GroupContactCache::check($gID);
+    }
     parent::preProcess();
+
     if (!empty($this->selector->_search)) {
       $this->_customClass =& $this->selector->_search;
     }

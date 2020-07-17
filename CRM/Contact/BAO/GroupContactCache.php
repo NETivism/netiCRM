@@ -69,7 +69,7 @@ class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCach
     $query = "
 SELECT     g.id
 FROM       civicrm_group g
-WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id = 1 AND 
+WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND 
           (g.cache_date IS NULL OR (TIMESTAMPDIFF(MINUTE, g.cache_date, NOW()) >= $smartGroupCacheTimeout))
 ";
 
