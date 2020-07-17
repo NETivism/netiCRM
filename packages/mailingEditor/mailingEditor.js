@@ -510,6 +510,12 @@
             blockContent = blockContent.replace(/\[nmeBlockID\]/g, blockID);
             blockContent = blockContent.replace(/\[nmeBlockType\]/g, blockType);
 
+            if (block.parentID && block.parentType) {
+              if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
+                blockContent = blockContent.replace("<td valign=\"top\" width=\"600\" style=\"width:600px;\">", "<td valign=\"top\" width=\"100%\" style=\"width:100%;\">");
+              }
+            }
+
             $target.append(blockContent);
 
             let $nmeb = $target.find(".nmeb[data-id='" + blockID + "']"),
@@ -547,12 +553,15 @@
                     $nmebElem.attr({
                       "src": block.data.url,
                       "width": block.data.width,
-                      "height": block.data.height,
                       "alt": block.data.fileName
                     });
 
-                    if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
-                      $nmebElem.css("max-width", "100%");
+                    if (block.parentType == "rc-col-2") {
+                      $nmebElem.attr("width", "300");
+                    }
+
+                    if (block.parentType == "rc-float") {
+                      $nmebElem.attr("width", "210");
                     }
                     break;
 
@@ -639,6 +648,12 @@
 
             if (disallowSortType.includes(blockType)) {
               blockSortable = "false";
+            }
+
+            if (block.parentID && block.parentType) {
+              if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
+                blockContent = blockContent.replace("<td valign=\"top\" width=\"600\" style=\"width:600px;\">", "<td valign=\"top\" width=\"100%\" style=\"width:100%;\">");
+              }
             }
 
             blockEditContent = blockEditContent.replace(/\[nmeBlockContent\]/g, blockContent);
@@ -735,12 +750,15 @@
                     $nmebElem.attr({
                       "src": block.data.url,
                       "width": block.data.width,
-                      "height": block.data.height,
                       "alt": block.data.fileName
                     });
 
-                    if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
-                      $nmebElem.css("max-width", "100%");
+                    if (block.parentType == "rc-col-2") {
+                      $nmebElem.attr("width", "300");
+                    }
+
+                    if (block.parentType == "rc-float") {
+                      $nmebElem.attr("width", "210");
                     }
                     break;
 
@@ -2130,7 +2148,6 @@
             $img.attr({
               "src": fileURL,
               "width": fileWidth,
-              "height": fileHeight,
               "alt": fileName
             });
 

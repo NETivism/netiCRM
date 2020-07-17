@@ -29,7 +29,8 @@
         "margin-top": "0",
         "margin-right": "0",
         "margin-bottom": "0",
-        "margin-left": "0"
+        "margin-left": "0",
+        "max-width": "100%"
       }
     },
     "link": "",
