@@ -124,7 +124,7 @@ function trackVisit(visitInfo) {
         searchParams.delete("civimail_x_u");
         var newQuery = '?'+searchParams.toString();
         var newUrl = window.location.origin+window.location.pathname+newQuery;
-        window.history.pushState({}, null, newUrl);
+        window.history.replaceState({}, null, newUrl);
       }
     }
     switch(object['referrer_type']){
