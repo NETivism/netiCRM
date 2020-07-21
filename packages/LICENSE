@@ -1,0 +1,94 @@
+Licensing info in this file:
+  Apache 2  Apache License 2.0
+  BSD 2-cl. two-clause BSD license
+  BSD 3-cl. three-clause BSD license
+  GPL 2     GNU General Public License 2
+  GPL 2+    GNU General Public License 2 or later
+  GPL 3     GNU General Public License 3
+  LGPL 2.1  GNU Lesser General Public License 2.1
+  LGPL 2.1+ GNU Lesser General Public License 2.1 or later
+  LGPL 3    GNU Lesser General Public License 3
+  LGPL 3+   GNU Lesser General Public License 3 or later
+  PHP 2     PHP License 2.*
+  PHP 3     PHP License 3.*
+  X11       X11 (a.k.a. MIT) license
+  MIT       The MIT License (MIT)
+  SIL OFL 1.1 SIL Open Font License (OFL)
+
+PEAR
+====
+Archive_Tar                   BSD 2-cl.
+Auth_SASL                     BSD 3-cl.
+Console_Getopt                PHP 3.0
+Console_Table                 BSD 3-cl.
+Contact_Vcard_Build           PHP 3          local changes
+Contact_Vcard_Parse           PHP 3.0
+Date                          BSD 3-cl.
+DB                            PHP 3.0
+DB_DataObject                 PHP 3          local changes
+DB_Table                      BSD 3-cl.
+HTML_Common                   PHP 3
+HTML_QuickForm                PHP 3          local changes, hierselect.php from a very old version (PHP 2)
+HTML_QuickForm_advmultiselect BSD 3-cl.      local changes
+HTML_QuickForm_Controller     PHP 3          local changes
+HTML_Template_IT              BSD 3-cl.
+HTTP_Request                  BSD 3-cl.
+Log                           X11
+Mail                          PHP 2          local changes
+Mail_Mime                     BSD 3-cl.      local changes
+Mail_mimeDecode               BSD 3-cl.
+Net_Curl                      BSD 3-cl.
+Net_DIME                      BSD 3-cl.
+Net_SMTP                      PHP 2          local changes
+Net_Socket                    PHP 2
+Net_URL                       BSD 3-cl.
+Net_UserAgent_Detect          PHP 2
+Pager                         BSD 3-cl.
+PEAR                          PHP 3.0
+PHP_Beautifier                PHP 3.0
+Services_JSON                 BSD 2-cl.
+Structures_Graph              LGPL 2.1+
+System_Command                PHP 2
+Validate                      BSD 3-cl.
+Validate_Finance              BSD 3-cl.
+Validate_Finance_CreditCard   BSD 3-cl.      local changes
+XML_RPC                       PHP 3
+XML_Util                      BSD 3-cl.
+
+
+NON-PEAR
+========
+AMFPHP         GPL 2       http://amfphp.org/
+Auth_OpenID    Apache 2    http://openidenabled.com/php-openid/
+Auth_Yadis     Apache 2    http://openidenabled.com/php-openid/
+PHP gettext    GPL 2+      http://savannah.nongnu.org/projects/php-gettext/
+PHPIDS         LGPL 3+     http://php-ids.org/
+Smarty         LGPL 2.1+   http://smarty.php.net/                                        local changes
+Smarty Gettext LGPL 2.1+   http://smarty.incutio.com/?page=SmartyGettext
+TCPDF          LGPL 2.1+   http://tecnick.com/public/code/cp_dpage.php?aiocp_dp=tcpdf    local changes
+dompdf         LGPL 2.1+   http://digitaljunkies.ca/dompdf/                              local changes
+eZ Components  BSD 3-cl.   http://ezcomponents.org/                                      local changes
+html2text      GPL 2+      http://chuggnutt.com/html2text.php                            local changes
+reCAPTCHA      X11         http://recaptcha.net/
+spout          Apache 2    https://github.com/box/spout
+IATS           AGPL 3   in Services/IATS
+Moneris                   by adixon, in Services/mpgClasses.php
+PayJunction    AGPL 3   by Phase2 Technology
+PaymentExpress AGPL 3   by Lucas Baker
+eWAY           AGPL 3   by Dolphin Software
+CKEditor      GPL 3/LGPL 3/MPL 1.1
+Facebook      BSD 2-cl.
+Google        Apache 2/GPL 2+
+TinyMCE       LGPL 2.1
+jQuery        GPL 2/X11
+fontawesome   MIT  http://fortawesome.github.io/Font-Awesome/
+
+
+Limited Licesne
+===============
+istockphoto/* https://www.istockphoto.com/help/licenses
+
+
+Unlisted
+========
+Please check sub-directory for license
