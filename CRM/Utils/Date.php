@@ -1406,7 +1406,14 @@ class CRM_Utils_Date {
         }
       }
 
-      $mysqlDate = date($format, strtotime($date . ' ' . $time));
+      $timeStamp = strtotime($date . ' ' . $time);
+      if (empty($timeStamp)) {
+        CRM_Core_Session::setStatus(ts("%1 has error on format.", array(
+            1 => ts('Time')
+          )), TRUE, 'error'
+        );
+      }
+      $mysqlDate = date($format, $timeStamp);
     }
 
     return $mysqlDate;
