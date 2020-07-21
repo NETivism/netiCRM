@@ -31,8 +31,9 @@ window.nmEditor = {
 		"Templates" : "{/literal}{ts}Templates{/ts}{literal}",
 		"Blocks" : "{/literal}{ts}Blocks{/ts}{literal}",
 		"Setting" : "{/literal}{ts}Setting{/ts}{literal}",
+		"Preview" : "{/literal}{ts}Preview{/ts}{literal}",
 		"Normal" : "{/literal}{ts}Normal{/ts}{literal}",
-		"Mobile" : "{/literal}{ts}Mobile{/ts}{literal}",
+		"Mobile Device" : "{/literal}{ts}Mobile Device{/ts}{literal}",
 
 		// Panel: Templates
 		"1 Column" : "{/literal}{ts}1 Column{/ts}{literal}",
@@ -57,7 +58,7 @@ window.nmEditor = {
 		"Background" : "{/literal}{ts}Background{/ts}{literal}",
 
 		// Confirm
-		"This saved action will overwrite your data, are you sure?" : "{/literal}{ts}This saved action will overwrite your data, are you sure?{/ts}{literal}"
+		"Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?" : "{/literal}{ts}Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?{/ts}{literal}"
 	}
 };
 </script>

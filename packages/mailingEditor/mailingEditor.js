@@ -224,8 +224,7 @@
           }
         }
       }
-    ],
-    _comfirmFirst = true;
+    ];
 
   /**
    * ============================
@@ -1084,39 +1083,45 @@
               buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
               allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
 
+          if (allowSubmit) {
+            $form.data("allow-submit", false);
+            return;
+          }
+
           // Check edit mode option, Only 'Compose On-screen' option is allowed
           if ($(".form-radio[name='upload_type'][value='1']").is(":checked")) {
             // Convert json data to HTML and save to CKEditor when click button is "Next" or "Save & Continue Later"
             if (buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
-              if (!allowSubmit) {
-                event.preventDefault();
-                let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
-                    confirmMessage = _ts["This saved action will overwrite your data, are you sure?"];
+              event.preventDefault();
+              let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
+                  confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
 
-                if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1 && _comfirmFirst) {
-                  _comfirmFirst = false;
-                  window.confirm(confirmMessage);
-                }
+              let saveContentToOldEditor = function() {
+                _nmeMailOutput();
+                let previewContent = "";
+                let checkMailOutput = function() {
+                  if ($("#nme-mail-output-frame").length) {
+                    previewContent = $("#nme-mail-output-frame").contents().find("body").html();
 
-                if (window.confirm(confirmMessage)) {
-                  _nmeMailOutput();
-                  var checkMailOutputTimer = setInterval(checkMailOutput, 500);
-                  let previewContent = "";
-
-                  function checkMailOutput() {
-                    if ($("#nme-mail-output-frame").length) {
-                      previewContent = $("#nme-mail-output-frame").contents().find("body").html();
-
-                      if (previewContent) {
-                        clearInterval(checkMailOutputTimer);
-                        previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
-                        CKEDITOR.instances['html_message'].setData(previewContent);
-                        $form.data("allow-submit", true);
-                        $form.unbind("submit").submit();
-                      }
+                    if (previewContent) {
+                      clearInterval(checkMailOutputTimer);
+                      previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
+                      CKEDITOR.instances['html_message'].setData(previewContent);
+                      $form.data("allow-submit", true);
+                      $form.submit();
                     }
                   }
                 }
+                let checkMailOutputTimer = setInterval(checkMailOutput, 500);
+              }
+
+              if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
+                if (window.confirm(confirmMessage)) {
+                  saveContentToOldEditor();
+                }
+              }
+              else {
+                saveContentToOldEditor();
               }
             }
           }
@@ -1438,10 +1443,10 @@
         let previewPopup = "<div id='nme-preview-popup' class='nme-preview-popup mfp-hide'>" +
           "<div class='inner'>" +
           "<div class='nme-preview-toolbar'>" +
-          "<div class='nme-preview-title'>" + _ts["Preview mode"] + "</div>" +
+          "<div class='nme-preview-title'>" + _ts["Preview"] + "</div>" +
           "<div class='nme-preview-mode'>" +
           "<button type='button' class='nme-preview-mode-btn is-active' data-mode='desktop'>" + _ts["Normal"] + "</button>" +
-          "<button type='button' class='nme-preview-mode-btn' data-mode='mobile'>" + _ts["Mobile"] + "</button>" +
+          "<button type='button' class='nme-preview-mode-btn' data-mode='mobile'>" + _ts["Mobile Device"] + "</button>" +
           "</div>" +
           "<button type='button' class='nme-preview-close'><i class='zmdi zmdi-close'></i></button>" +
           "</div>" +
