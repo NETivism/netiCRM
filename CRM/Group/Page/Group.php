@@ -302,14 +302,10 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
         $values[$object->id]['mode'] = ts('Normal');
         if ($object->saved_search_id) {
           $values[$object->id]['mode'] = ts('Smart');
-          // check if custom search, if so fix view link
-          $customSearchID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch',
-            $object->saved_search_id,
-            'search_custom_id'
-          );
+          $customSearchID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch', $object->saved_search_id, 'search_custom_id');
           if ($customSearchID) {
             $newLinks[CRM_Core_Action::VIEW]['url'] = 'civicrm/contact/search/custom';
-            $newLinks[CRM_Core_Action::VIEW]['qs'] = "reset=1&force=1&ssID={$object->saved_search_id}";
+            $newLinks[CRM_Core_Action::VIEW]['qs'] = "reset=1&force=1&ssID={$object->saved_search_id}&gid={$object->id}";
           }
         }
         $action = array_sum(array_keys($newLinks));

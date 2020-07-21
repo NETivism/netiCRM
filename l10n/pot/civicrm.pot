@@ -47658,3 +47658,9 @@ msgstr ""
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Background"
 msgstr ""
+
+msgid "Check to attach formal receipt PDF on notification email after every complete transaction."
+msgstr ""
+
+msgid "This option only effect transaction from contribution page and belonged page enable notification confirmation and the contribution type is tax-deductible."
+msgstr ""
