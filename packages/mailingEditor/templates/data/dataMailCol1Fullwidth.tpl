@@ -59,10 +59,11 @@
             "type" : "header",
             "section": "header",
             "data" :  {
-              "url": "/sites/all/modules/civicrm/packages/mailingEditor/images/mail-default-logo@2x.png",
+              "url": "",
               "width" : "192",
               "height" : "84",
-              "fileName": "default_logo"
+              "fileName": "default_logo",
+              "isDefault": true
             },
             "styles": {
               "block": {
@@ -97,10 +98,11 @@
             "type" : "image",
             "section": "body",
             "data" :  {
-              "url": "https://unsplash.it/1360/600?image=972",
+              "url": "",
               "width" : "680",
-              "height" : "300",
-              "fileName": "example_image"
+              "height" : "383",
+              "fileName": "default_image",
+              "isDefault": true
             },
             "styles": {
               "block": {

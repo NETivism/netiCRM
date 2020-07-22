@@ -236,6 +236,16 @@
    * General
    */
 
+  var _getRandomInt = function (min, max) {
+    if (typeof min !== "undefined" && typeof max !== "undefined") {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+
+      // The maximum is exclusive and the minimum is inclusive
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+  }
+
   var _swapArrayVal = function(arr, a, b) {
     if (typeof arr !== "undefined") {
       var a_index = arr.indexOf(a);
@@ -352,6 +362,15 @@
     _debug(_viewport, "viewport");
   };
 
+  var _relativeToAbsoluteURL = function(url) {
+    var url = typeof url !== "undefined" ? url : "";
+
+    if (url) {
+      var absoluteURL = window.location.origin + url;
+      return absoluteURL;
+    }
+  };
+
   var _updateUrlHash = function(hash) {
     var hash = typeof hash !== "undefined" ? "#" + hash : "";
 
@@ -419,6 +438,37 @@
           }
         }
       });
+    }
+  }
+
+  var _getDefaultImage = function(type) {
+    var type = typeof type !== "undefined" ? type : "",
+        img = {};
+
+    if (type) {
+      switch(type) {
+        case "logo":
+          img.url = _relativeToAbsoluteURL("/sites/all/modules/civicrm/packages/mailingEditor/images/mail-default-logo@2x.png");
+          img.width = 192;
+          img.height = 84;
+          break;
+
+        case "thumb":
+          img.url = "/sites/all/modules/civicrm/packages/istockphoto/thumb_" + _getRandomInt(1,5) + ".jpg";
+          img.url = _relativeToAbsoluteURL(img.url);
+          img.width = 680;
+          img.height = 383;
+          break;
+
+          case "square":
+          img.url = "/sites/all/modules/civicrm/packages/istockphoto/square_" + _getRandomInt(1,5) + ".jpg";
+          img.url = _relativeToAbsoluteURL(img.url);
+          img.width = 210;
+          img.height = 210;
+          break;
+      }
+
+      return img;
     }
   }
 
@@ -553,7 +603,6 @@
                     $nmebElem.attr({
                       "src": block.data.url,
                       "width": block.data.width,
-                      "alt": block.data.fileName
                     });
 
                     if (block.parentType == "rc-col-2") {
@@ -569,10 +618,7 @@
                       $nmebElem.attr({
                         "src": block.data.url,
                         "width": block.data.width,
-                        //"height": block.data.height,
-                        "alt": block.data.fileName
                       });
-                      $nmebElem.removeAttr("height"); // temp
                       break;
 
                     case "footer":
@@ -747,10 +793,29 @@
                     break;
 
                   case "image":
+                    if (!block.data.url && block.data.isDefault) {
+                      var defaultImg = block.parentType && (block.parentType == "rc-col-2" || block.parentType == "rc-float") ? _getDefaultImage("square") : _getDefaultImage("thumb");
+                      block.data.url = defaultImg.url;
+                      block.data.width = defaultImg.width;
+                      block.data.height = defaultImg.height;
+
+                      if (block.parentID) {
+                        if (block.parentType == "rc-col-2") {
+                          _data["sections"][blockSection]["blocks"][block.parentID]["data"][block.index]["blocks"][blockID]["data"] = _objClone(block.data);
+                        }
+                        else {
+                          _data["sections"][blockSection]["blocks"][block.parentID]["data"][0]["blocks"][blockID]["data"] = _objClone(block.data);
+                        }
+                      }
+                      else {
+                        _data["sections"][blockSection]["blocks"][blockID]["data"] = _objClone(block.data);
+                        _nmeData.update();
+                      }
+                    }
+
                     $nmebElem.attr({
                       "src": block.data.url,
                       "width": block.data.width,
-                      "alt": block.data.fileName
                     });
 
                     if (block.parentType == "rc-col-2") {
@@ -763,11 +828,18 @@
                     break;
 
                     case "header":
+                      if (!block.data.url && block.data.isDefault) {
+                        var defaultImg = _getDefaultImage("logo");
+                        block.data.url = defaultImg.url;
+                        block.data.width = defaultImg.width;
+                        block.data.height = defaultImg.height;
+                        _data["sections"][blockSection]["blocks"][blockID]["data"] = _objClone(block.data);
+                        _nmeData.update();
+                      }
+
                       $nmebElem.attr({
                         "src": block.data.url,
                         "width": block.data.width,
-                        "height": block.data.height,
-                        "alt": block.data.fileName
                       });
                       break;
 

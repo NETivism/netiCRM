@@ -9,10 +9,11 @@
     "type" : "image",
     "section": "body",
     "data" :  {
-      "url": "https://unsplash.it/1360/600?image=972",
+      "url": "",
       "width" : "680",
-      "height" : "300",
-      "fileName": "example_image"
+      "height" : "383",
+      "fileName": "default_image",
+      "isDefault": true
     },
     "styles": {
       "block": {
