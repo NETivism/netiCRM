@@ -119,6 +119,7 @@
 {literal}
 <script type="text/javascript">
     function showHideUpload() {
+      // Upload
       if (cj(".form-radio[name='upload_type'][value='0']").is(":checked")) {
         hide('compose_id');
         hide('compose_old_id')
@@ -127,17 +128,28 @@
       }
       else {
         hide('upload_id');
-        // for json data field (new compose mode)
+        // Compose On-screen
         if (cj(".form-radio[name='upload_type'][value='1']").is(":checked")) {
           hide('compose_old_id');
           show('compose_id');
+
+          // refs #23719. Remove mailing header and footer when select 'Compose On-screen' mode
+          cj("#header_id option[value='']").prop("selected", true);
+          cj("#footer_id option[value='']").prop("selected", true);
         }
 
-        // for ckeditor (old compose mode)
+        // Traditional Editor (old compose mode)
         if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
           hide('compose_id');
           show('compose_old_id');
           cj('.crm-mailing-upload-form-block-template').show();
+
+          var oldEditorContent = CKEDITOR.instances['html_message'].getData();
+          // refs #23719. If the HTML of the CKEditor does not contain the 'neticrm-mailing-editor' string, it means that it is not a new version of template content, so we need to add the mailing header and footer.
+          if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
+            cj("#header_id option[value='1']").prop("selected", true);
+            cj("#footer_id option[value='2']").prop("selected", true);
+          }
           verify();
         }
       }
