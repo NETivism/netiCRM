@@ -69,7 +69,7 @@ class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCach
     $query = "
 SELECT     g.id
 FROM       civicrm_group g
-WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id = 1 AND 
+WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND 
           (g.cache_date IS NULL OR (TIMESTAMPDIFF(MINUTE, g.cache_date, NOW()) >= $smartGroupCacheTimeout))
 ";
 
@@ -86,6 +86,21 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id = 1 AND
       self::add($groupIDs);
       return FALSE;
     }
+  }
+
+  static function checkAll($intersectGroups = array()) {
+    $group = new CRM_Contact_DAO_Group();
+    $group->is_active = 1;
+    $group->find();
+    while ($group->fetch()) {
+      if ($group->saved_search_id) {
+        $smartGroups[] = $group->id;
+      }
+    }
+    if (!empty($intersectGroups)) {
+      $smartGroups = array_intersect($smartGroups, $intersectGroups);
+    }
+    CRM_Contact_BAO_GroupContactCache::check($smartGroups);
   }
 
   static function add($groupID) {
