@@ -94,6 +94,7 @@
     $("#shorten-url").dialog({
       modal: true,
       width: "780px",
+      dialogClass: "shorten-url-popup",
       position: { my: "center", at: "center", of: window },
       autoOpen: false
     });
