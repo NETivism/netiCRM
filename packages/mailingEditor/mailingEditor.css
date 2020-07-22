@@ -11,6 +11,8 @@ a.btn:hover {
   text-decoration: none;
 }
 
+.online-template-link { display: none; }
+
 /* x-editable */
 /* x-editable: override */
 .editable-unsaved {
@@ -84,7 +86,6 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nc-img-container .nc-img {
   vertical-align: middle;
 }
-
 
 /* nm container */
 .nme-container {
