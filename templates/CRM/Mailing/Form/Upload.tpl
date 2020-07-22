@@ -70,7 +70,7 @@
 {$form.mailing_content_data.html}
 </fieldset>
 
-<fieldset id="compose_old_id"><legend>{ts}Traditional editor{/ts}</legend>
+<fieldset id="compose_old_id"><legend>{ts}Traditional Editor{/ts}</legend>
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl" upload=1 noAttach=1}
 </fieldset>
 

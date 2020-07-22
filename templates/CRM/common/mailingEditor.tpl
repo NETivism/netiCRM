@@ -73,7 +73,7 @@ window.nmEditor = {
 				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
 
 		if (oldEditorData && !newEditorData) {
-			// If the content of the old newsletter was edited by old editor previously, switch from default option 'Traditional editor' to 'Compose On-screen'.
+			// If the content of the old newsletter was edited by old editor previously, switch from default option 'Traditional Editor' to 'Compose On-screen'.
 			$(".form-radio[name='upload_type'][value='2']").click();
 
 			// Initialize the new editor after swtich option.
