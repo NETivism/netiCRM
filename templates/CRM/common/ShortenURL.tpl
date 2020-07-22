@@ -114,125 +114,125 @@
       return false;
     });
 
-  function addOriginurl(){
-    //utm input default value
-    var previousSetting = JSON.parse(localStorage.getItem('netShortenTool'));
-    if (previousSetting) {
-      if ('utmSource' in previousSetting) $('#utm-source').val(previousSetting.utmSource);
-      if ('utmMedium' in previousSetting) $('#utm-medium').val(previousSetting.utmMedium);
-      if ('utmTerm' in previousSetting) $('#utm-term').val(previousSetting.utmTerm);
-      if ('utmContent' in previousSetting) $('#utm-content').val(previousSetting.utmCotent);
-      if ('utmCampaign' in previousSetting) $('#utm-campaign').val(previousSetting.utmCampaign);
-    }
-
-    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
-      var utmParameters = {
-        utmSource : $('#utm-source').val(),
-        utmMedium : $('#utm-medium').val(),
-        utmTerm : $('#utm-term').val(),
-        utmCotent : $('#utm-content').val(),
-        utmCampaign : $('#utm-campaign').val()
+    function addOriginurl(){
+      //utm input default value
+      var previousSetting = JSON.parse(localStorage.getItem('netShortenTool'));
+      if (previousSetting) {
+        if ('utmSource' in previousSetting) $('#utm-source').val(previousSetting.utmSource);
+        if ('utmMedium' in previousSetting) $('#utm-medium').val(previousSetting.utmMedium);
+        if ('utmTerm' in previousSetting) $('#utm-term').val(previousSetting.utmTerm);
+        if ('utmContent' in previousSetting) $('#utm-content').val(previousSetting.utmCotent);
+        if ('utmCampaign' in previousSetting) $('#utm-campaign').val(previousSetting.utmCampaign);
       }
-      localStorage.setItem('netShortenTool', JSON.stringify(utmParameters));
-    });
 
-    //Final URL default
-    var utm = ["utm-source", "utm-medium", "utm-term", "utm-content", "utm-campaign"];
-    var urlOriginal = $('.url_to_copy[name="'+ name +'"]').data("url-original");
-    var utmResult = "";
-    $.each(utm , function(index, val) {
-      var utmInput = document.getElementById(val); 
-      if (utmInput && utmInput.value) {
-        utmResult = utmResult + '&' + val.replace('-', '_') + '=' + encodeURIComponent(utmInput.value);
-      }
-    });
-    $('#result_url').val(urlOriginal + utmResult);
-
-    //Final URL change
-    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
-      var changeutm = $(this).attr('id');
-      var href = new URL($('#result_url').val());
-      //href.searchParams.set(changeutm.replace('-', '_'), $(this).val());
-      var params = new URLSearchParams(href.search);
-      if($(this).val().length > 0 ){
-        params.set(changeutm.replace('-', '_'), $(this).val());
-      } else {
-        params.delete(changeutm.replace('-', '_'));
-      }
-      href.search = params.toString();
-      $('#result_url').val(href.href);
-      $('#result_url').scrollTop($('#result_url')[0].scrollHeight);
-    });
-
-    //Shorten URL
-    $('.shorten-url-copy').click(function(){
-      var sendUrl = $('#result_url').val();
-      console.log(JSON.stringify({"redirect": sendUrl}));
-      $(".shorten-url-copy").css({"pointer-events":"none","background": "#808080"});
-      $.ajax({
-          url: 'https://neti.cc/handle/create-entry',
-          type: 'PUT',
-          contentType: 'application/json',
-          dataType: 'json',
-          data: JSON.stringify({"redirect": sendUrl}),
-          success: function (data) {
-            var shortUrl = 'https://neti.cc/' + data.short;
-            $('#shorten_url').val(shortUrl);
-            $("#shorten_url").select();
-            document.execCommand("copy");
-            $("#shorten_url").after(" <span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
-            $('.url_to_copy[name="'+ name +'"]').val(shortUrl);
-            $('.url_to_copy[name="'+ name +'"]').attr('data-url-shorten', shortUrl);
-
-            // save to database
-            if (pageId && pageType) {
-              $.ajax({
-                url: '/civicrm/ajax/saveshortenurl',
-                type: 'POST',
-                data: {
-                  'page_id': pageId,
-                  'page_type': pageType,
-                  'shorten': shortUrl,
-                }
-              });
-            }
-          }
+      $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
+        var utmParameters = {
+          utmSource : $('#utm-source').val(),
+          utmMedium : $('#utm-medium').val(),
+          utmTerm : $('#utm-term').val(),
+          utmCotent : $('#utm-content').val(),
+          utmCampaign : $('#utm-campaign').val()
+        }
+        localStorage.setItem('netShortenTool', JSON.stringify(utmParameters));
       });
-    });
 
-    //Shorten URL btn
-    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
-      if($('.shorten-url-copy').css("pointer-events") == "none") {
-        $(".shorten-url-copy").css({ 
-          "pointer-events":"initial",
-          "background": "#333030"
+      //Final URL default
+      var utm = ["utm-source", "utm-medium", "utm-term", "utm-content", "utm-campaign"];
+      var urlOriginal = $('.url_to_copy[name="'+ name +'"]').data("url-original");
+      var utmResult = "";
+      $.each(utm , function(index, val) {
+        var utmInput = document.getElementById(val); 
+        if (utmInput && utmInput.value) {
+          utmResult = utmResult + '&' + val.replace('-', '_') + '=' + encodeURIComponent(utmInput.value);
+        }
+      });
+      $('#result_url').val(urlOriginal + utmResult);
+
+      //Final URL change
+      $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
+        var changeutm = $(this).attr('id');
+        var href = new URL($('#result_url').val());
+        //href.searchParams.set(changeutm.replace('-', '_'), $(this).val());
+        var params = new URLSearchParams(href.search);
+        if($(this).val().length > 0 ){
+          params.set(changeutm.replace('-', '_'), $(this).val());
+        } else {
+          params.delete(changeutm.replace('-', '_'));
+        }
+        href.search = params.toString();
+        $('#result_url').val(href.href);
+        $('#result_url').scrollTop($('#result_url')[0].scrollHeight);
+      });
+
+      //Shorten URL
+      $('.shorten-url-copy').click(function(){
+        var sendUrl = $('#result_url').val();
+        console.log(JSON.stringify({"redirect": sendUrl}));
+        $(".shorten-url-copy").css({"pointer-events":"none","background": "#808080"});
+        $.ajax({
+            url: 'https://neti.cc/handle/create-entry',
+            type: 'PUT',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({"redirect": sendUrl}),
+            success: function (data) {
+              var shortUrl = 'https://neti.cc/' + data.short;
+              $('#shorten_url').val(shortUrl);
+              $("#shorten_url").select();
+              document.execCommand("copy");
+              $("#shorten_url").after(" <span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
+              $('.url_to_copy[name="'+ name +'"]').val(shortUrl);
+              $('.url_to_copy[name="'+ name +'"]').attr('data-url-shorten', shortUrl);
+
+              // save to database
+              if (pageId && pageType) {
+                $.ajax({
+                  url: '/civicrm/ajax/saveshortenurl',
+                  type: 'POST',
+                  data: {
+                    'page_id': pageId,
+                    'page_type': pageType,
+                    'shorten': shortUrl,
+                  }
+                });
+              }
+            }
         });
-      }
-    });
+      });
 
-    //Full URL btn
-    $(".full-url-copy").click(function() {
-      $("#shorten-url").dialog("widget").find('.copied').remove();
-      $("#result_url").select();
-      document.execCommand("copy");
-      $(".full-url-copy").after("<span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
-    });
+      //Shorten URL btn
+      $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
+        if($('.shorten-url-copy').css("pointer-events") == "none") {
+          $(".shorten-url-copy").css({ 
+            "pointer-events":"initial",
+            "background": "#333030"
+          });
+        }
+      });
 
-    // select input when focus
-    $("#shorten_url, #result_url").click(function(){
-      $("#shorten-url").dialog("widget").find('.copied').remove();
-      if ($(this).val()) {
-        $(this).select();
+      //Full URL btn
+      $(".full-url-copy").click(function() {
+        $("#shorten-url").dialog("widget").find('.copied').remove();
+        $("#result_url").select();
         document.execCommand("copy");
-      }
-    });
+        $(".full-url-copy").after("<span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
+      });
 
-    // clear input button
-    $(".zmdi.clear-input").css('cursor', 'pointer');
-    $(".zmdi.clear-input").click(function(){
-      $(this).prev('input').val('');
-      $(this).prev('input').trigger('change');
-    });
-  }
+      // select input when focus
+      $("#shorten_url, #result_url").click(function(){
+        $("#shorten-url").dialog("widget").find('.copied').remove();
+        if ($(this).val()) {
+          $(this).select();
+          document.execCommand("copy");
+        }
+      });
+
+      // clear input button
+      $(".zmdi.clear-input").css('cursor', 'pointer');
+      $(".zmdi.clear-input").click(function(){
+        $(this).prev('input').val('');
+        $(this).prev('input').trigger('change');
+      });
+    }
   });
 {/literal}</script>

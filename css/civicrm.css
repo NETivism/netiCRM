@@ -3243,7 +3243,7 @@ div#civicrm-dashboard form {
 #Tag .tree .expandable .hit { padding-left:16px; }
 
 .ui-widget.shorten-url-popup {
-  z-index: 9999;
+  z-index: 999;
 }
 
 /*  DataTables fixes */
