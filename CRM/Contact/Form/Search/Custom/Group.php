@@ -146,6 +146,11 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     $int->setButtonAttributes('remove', array('value' => ts('<< Remove')));;
     $outt->setButtonAttributes('remove', array('value' => ts('<< Remove')));;
 
+    $defaults = array(
+      'andOr' => empty($this->_andOr) ? 0 : 1,
+    );
+    $form->setDefaults($defaults);
+
     /**
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria

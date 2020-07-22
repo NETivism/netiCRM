@@ -48,6 +48,36 @@
             {/if}
             <br/ ><br/ >
        </div>
+            <label>{ts}Event Type{/ts}</label>
+            <select id="filter-event-type-id">
+                <option value="">{ts}-- Select --{/ts}</option>
+                {foreach from=$eventTypes item=typeName key=typeId}
+                    <option value="{$typeId}">{$typeName}</option>
+                {/foreach}
+            </select>
+            {literal}
+            <script>
+            (function($){
+                function doUpdateEventTypeFilter() {
+                    var eventTypeId = $('#filter-event-type-id').val();
+                    $('#Search .selector tbody tr').each(function(i, e) {
+                        if (!eventTypeId || e.classList.contains('crm-event_type_'+eventTypeId)) {
+                            $(e).show();
+                        }
+                        else {
+                            $(e).hide();
+                        }
+                    });
+                };
+                $('#filter-event-type-id').change(function(){
+                    doUpdateEventTypeFilter();
+                })
+                doUpdateEventTypeFilter();
+            })(cj);
+            </script>
+            {/literal}
+       <div>
+       </div>
    {/if}
 
     {if $rows}

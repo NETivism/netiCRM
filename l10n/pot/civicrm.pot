@@ -29253,10 +29253,7 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid ""
-"The market value of this premium (e.g. retail price). For tax-deductible "
-"contributions, this amount will be used to set the non-deductible amount in "
-"the contribution record and receipt."
+msgid "To estimate the cost of fundraising, please fill in the market price of this premium. The market price you filled in will not affect the total amount displayed on the contribution record and receipt."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
@@ -47524,9 +47521,6 @@ msgstr ""
 msgid "Grand Total of recurring amount"
 msgstr ""
 
-msgid "Calculation when unlimit installments"
-msgstr ""
-
 msgid "This gift will be eligible when your %1."
 msgstr ""
 
@@ -47573,4 +47567,19 @@ msgid "Final URL"
 msgstr ""
 
 msgid "Short URL"
+msgstr ""
+
+msgid "Copy Final URL"
+msgstr ""
+
+msgid "Copy Short URL"
+msgstr ""
+
+msgid "Procceed Receipt Sending?"
+msgstr ""
+
+msgid "When donor doesn't specify installment, calculate total amount by: amount per installment x estimate installments"
+msgstr ""
+
+msgid "When donor do specify installment, calculate total amount by: amount per installment x donor choose installments"
 msgstr ""

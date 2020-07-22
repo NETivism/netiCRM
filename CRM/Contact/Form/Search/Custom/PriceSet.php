@@ -238,7 +238,7 @@ AND    p.entity_id    = e.id
 
     // get all the fields and all the option values associated with it
     require_once 'CRM/Price/BAO/Set.php';
-    $priceSet = CRM_Price_BAO_Set::getSetDetail($dao->price_set_id);
+    $priceSet = CRM_Price_BAO_Set::getSetDetail($dao->price_set_id, TRUE, FALSE);
     if (is_array($priceSet[$dao->price_set_id])) {
       foreach ($priceSet[$dao->price_set_id]['fields'] as $key => $value) {
         if (is_array($value['options'])) {

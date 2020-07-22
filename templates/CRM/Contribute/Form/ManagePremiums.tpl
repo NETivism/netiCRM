@@ -84,9 +84,9 @@
        </td>
     </tr>
     <tr class="crm-contribution-form-block-price">
-       <td class="label">{$form.price.label}</td>
-       <td class="html-adjust">{$form.price.html|crmMoney}<br />
-	   <span class="description">{ts}The market value of this premium (e.g. retail price). For tax-deductible contributions, this amount will be used to set the non-deductible amount in the contribution record and receipt.{/ts}</span>
+      <td class="label">{$form.price.label}</td>
+      <td class="html-adjust">{$form.price.html|crmMoney}<br />
+      <span class="description">{ts}To estimate the cost of fundraising, please fill in the market price of this premium. The market price you filled in will not affect the total amount displayed on the contribution record and receipt.{/ts}</span>
        </td> 
     </tr>
     <tr class="crm-contribution-form-block-cost">
