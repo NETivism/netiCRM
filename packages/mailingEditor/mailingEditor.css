@@ -491,8 +491,12 @@ ul.nme-setting-panels-tabs li a.is-active {
   background: rgba(3, 169, 244, 0.1);
 }
 #mailing_content_data {
+  display: none;
   width: 100%;
   height: 400px;
+}
+.is-debug #mailing_content_data {
+  display: block;
 }
 /*
 #nme-mail-header {

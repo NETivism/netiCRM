@@ -2332,6 +2332,10 @@
 
     if (_nmeOptions.debugMode && _qs.debug) {
       _debugMode = _qs.debug;
+
+      if (_debugMode) {
+        $("html").addClass("is-debug");
+      }
     }
 
     _container = this.selector;
