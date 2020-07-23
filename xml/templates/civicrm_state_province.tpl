@@ -3798,4 +3798,13 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 
 (NULL, 1127, "01", "Macao"),
 (NULL, 1127, "02", "Taipa"),
-(NULL, 1127, "03", "Coloane");
+(NULL, 1127, "03", "Coloane"),
+
+-- Added region of Singapore, Refs #28567.
+
+(NULL, 1191, "C", "Central Region"),
+(NULL, 1191, "E", "East Region"),
+(NULL, 1191, "NE", "North-East Region"),
+(NULL, 1191, "N", "North Region"),
+(NULL, 1191, "W", "West Region");
+
