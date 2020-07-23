@@ -47664,3 +47664,19 @@ msgstr ""
 
 msgid "This option only effect transaction from contribution page and belonged page enable notification confirmation and the contribution type is tax-deductible."
 msgstr ""
+
+#: templates/civicrm_state_province.tpl
+msgid "Central Region"
+msgstr ""
+
+msgid "East Region"
+msgstr ""
+
+msgid "North-East Region"
+msgstr ""
+
+msgid "North Region"
+msgstr ""
+
+msgid "West Region"
+msgstr ""
