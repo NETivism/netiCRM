@@ -84,6 +84,7 @@
     <div>{$form.contribution_receipt_date_isnull.html}{$form.contribution_receipt_date_isnull.label}</div>
     <div>{$form.contribution_thankyou_date_isnull.html}{$form.contribution_thankyou_date_isnull.label}</div>
     <div>{$form.contribution_pdf_receipt_not_send.html}{$form.contribution_pdf_receipt_not_send.label}</div>
+    <div>{$form.contribution_pdf_receipt_not_print.html}{$form.contribution_pdf_receipt_not_print.label}</div>
 	</td>
 	<td>
     <div>

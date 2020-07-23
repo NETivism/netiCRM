@@ -314,11 +314,17 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_pdf_receipt_not_send':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_activity.id", "IS NULL");
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_activity_send.id", "IS NULL");
         $query->_qill[$grouping][] = ts('Email Receipt') .' '. ts('IS NULL');
-        $query->_tables['contribution_activity_pdf_receipt'] = $query->_whereTables['contribution_activity_pdf_receipt'] = 1;
+        $query->_tables['contribution_activity_email_pdf_receipt'] = $query->_whereTables['contribution_activity_email_pdf_receipt'] = 1;
         return;
 
+      case 'contribution_pdf_receipt_not_print':
+          $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_activity_print.id", "IS NULL");
+          $query->_qill[$grouping][] = ts('Print Contribution Receipts') .' '. ts('IS NULL');
+          $query->_tables['contribution_activity_print_pdf_receipt'] = $query->_whereTables['contribution_activity_print_pdf_receipt'] = 1;
+          return;
+  
       case 'contribution_type_id':
       case 'contribution_type':
         $types = CRM_Contribute_PseudoConstant::contributionType();
@@ -736,12 +742,19 @@ class CRM_Contribute_BAO_Query {
         $from = " $side JOIN civicrm_contribution_soft ON civicrm_contribution_soft.contribution_id = civicrm_contribution.id";
         break;
 
-      case 'contribution_activity_pdf_receipt':
+      case 'contribution_activity_email_pdf_receipt':
         $emailReceiptType = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
         if ($emailReceiptType && is_numeric($emailReceiptType)) {
-          $from = " $side JOIN civicrm_activity ON civicrm_contribution.id = civicrm_activity.source_record_id AND civicrm_activity.activity_type_id = ".$emailReceiptType;
+          $from = " $side JOIN civicrm_activity civicrm_activity_send ON civicrm_contribution.id = civicrm_activity_send.source_record_id AND civicrm_activity_send.activity_type_id = ".$emailReceiptType;
         }
         break;
+
+      case 'contribution_activity_print_pdf_receipt':
+          $emailReceiptType = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
+          if ($emailReceiptType && is_numeric($emailReceiptType)) {
+            $from = " $side JOIN civicrm_activity civicrm_activity_print ON civicrm_contribution.id = civicrm_activity_print.source_record_id AND civicrm_activity_print.activity_type_id = ".$emailReceiptType;
+          }
+          break;
 
       case 'civicrm_contribution_taiwanach':
           $from = " $side JOIN civicrm_contribution_taiwanach ON civicrm_contribution_taiwanach.contribution_recur_id = civicrm_contribution.contribution_recur_id";
@@ -905,6 +918,10 @@ class CRM_Contribute_BAO_Query {
     $emailReceiptType = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if ($emailReceiptType) {
       $form->addElement('checkbox', 'contribution_pdf_receipt_not_send', ts('Email receipt not sent?'));
+    }
+    $printReceiptType = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
+    if ($printReceiptType) {
+      $form->addElement('checkbox', 'contribution_pdf_receipt_not_print', ts('Receipt is not print?'));
     }
 
     //add fields for honor search
