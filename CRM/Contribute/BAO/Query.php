@@ -196,7 +196,7 @@ class CRM_Contribute_BAO_Query {
     $grouping = NULL;
     // Check contribution_test first, used in contribution_payment_processor_id.
     foreach (array_keys($query->_params) as $id) {
-      if ($query->_params[$id][0] == 'contribution_test') {
+      if ($query->_params[$id][0] == 'contribution_test' && $query->_params[$id][2] == 1) {
         $isTest = TRUE;
         break;
       }
