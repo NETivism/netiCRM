@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-07-23 03:54+0000\n"
+"PO-Revision-Date: 2020-07-23 07:52+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47931,3 +47931,6 @@ msgstr "北區"
 
 msgid "West Region"
 msgstr "西區"
+
+msgid "Receipt Log"
+msgstr "收據歷程紀錄"

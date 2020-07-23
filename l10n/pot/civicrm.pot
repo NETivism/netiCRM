@@ -47680,3 +47680,6 @@ msgstr ""
 
 msgid "West Region"
 msgstr ""
+
+msgid "Receipt Log"
+msgstr ""
