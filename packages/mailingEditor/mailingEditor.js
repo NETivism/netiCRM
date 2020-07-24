@@ -7,6 +7,7 @@
    */
   const NME_CONTAINER = "nme-container",
         NME_MAIN = "nme-main",
+        NME_PANELS = "nme-setting-panels",
         INNER_CLASS = "inner",
         INIT_CLASS = "is-initialized",
         EDIT_CLASS = "is-edit",
@@ -44,6 +45,7 @@
     _nmeAPI = window.location.origin + "/api/",
     _container,
     _main = "." + NME_MAIN,
+    _panels = "." + NME_PANELS,
     _controlIconClass = {
       drag: "zmdi-arrows",
       prev: "zmdi-long-arrow-up",
@@ -1172,6 +1174,20 @@
           }
         });
 
+        $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
+          let val = $(this).val();
+          if (val == "1") {
+            if (!$(_panels).hasClass("is-opened")) {
+              _nmePanels.open();
+            }
+          }
+          else {
+            if ($(_panels).hasClass("is-opened")) {
+              _nmePanels.close();
+            }
+          }
+        });
+
         $("#Upload").on("click", ".form-submit", function(event) {
           $(this).closest("form").data("action", $(this).attr("name"));
         });
@@ -1226,7 +1242,7 @@
         });
 
         _sortable();
-        _nmePanels();
+        _nmePanels.init();
         _nmePreview.init();
         _onScreenCenterElem(".nme-block");
         _tooltip();
@@ -2137,41 +2153,49 @@
     });
   };
 
-  var _nmePanels = function() {
-    $(".nme-setting-panels").on("click", ".nme-setting-panels-trigger", function(event) {
-      event.preventDefault();
-      var $panels = $(".nme-setting-panels");
-      if ($panels.hasClass("is-opened")) {
-        $panels.removeClass("is-opened");
-        $("body").removeClass("nme-panel-is-opened");
-      }
-      else {
-        $panels.addClass("is-opened");
-        $("body").addClass("nme-panel-is-opened");
-      }
-    });
+  var _nmePanels = {
+    init: function() {
+      $(".nme-setting-panels").on("click", ".nme-setting-panels-trigger", function(event) {
+        event.preventDefault();
+        var $panels = $(_panels);
+        if ($panels.hasClass("is-opened")) {
+          _nmePanels.close();
+        }
+        else {
+          _nmePanels.open();
+        }
+      });
 
-    $(".nme-setting-panels-tabs").on("click", "a", function(event) {
-      event.preventDefault();
-      let $thisTabLink = $(this),
-          $thisTab = $thisTabLink.parent("li"),
-          $tabContainer = $thisTab.parent("ul"),
-          $tabItems = $tabContainer.children("li"),
-          $tabLinks = $tabItems.children("a"),
-          tatgetContents = $tabContainer.data("target-contents"),
-          $targetContents = $("." + tatgetContents),
-          targetID = $thisTabLink.data("target-id"),
-          $targetTabContent = $("#" + targetID);
+      $(".nme-setting-panels-tabs").on("click", "a", function(event) {
+        event.preventDefault();
+        let $thisTabLink = $(this),
+            $thisTab = $thisTabLink.parent("li"),
+            $tabContainer = $thisTab.parent("ul"),
+            $tabItems = $tabContainer.children("li"),
+            $tabLinks = $tabItems.children("a"),
+            tatgetContents = $tabContainer.data("target-contents"),
+            $targetContents = $("." + tatgetContents),
+            targetID = $thisTabLink.data("target-id"),
+            $targetTabContent = $("#" + targetID);
 
-      $tabLinks.removeClass(ACTIVE_CLASS);
-      $targetContents.removeClass(ACTIVE_CLASS);
-      $thisTabLink.addClass(ACTIVE_CLASS);
-      $targetTabContent.addClass(ACTIVE_CLASS);
-    });
+        $tabLinks.removeClass(ACTIVE_CLASS);
+        $targetContents.removeClass(ACTIVE_CLASS);
+        $thisTabLink.addClass(ACTIVE_CLASS);
+        $targetTabContent.addClass(ACTIVE_CLASS);
+      });
 
-    _nmePanelsAddBlock();
-    _nmeGlobalSetting();
-  };
+      _nmePanelsAddBlock();
+      _nmeGlobalSetting();
+    },
+    open: function() {
+      $(_panels).addClass("is-opened");
+      $("body").addClass("nme-panel-is-opened");
+    },
+    close: function() {
+      $(_panels).removeClass("is-opened");
+      $("body").removeClass("nme-panel-is-opened");
+    }
+  }
 
   var _rwdEvents = function() {
     // Deal responsive event
@@ -2387,20 +2411,12 @@
         });
       }
     },
-    open: function(elem) {
-      var $elem = $(elem);
-      if ($elem.length) {
-      }
-      else {
-        _debug("\"" + elem + "\" can not open, because this element has not existed yet.");
-      }
-    },
-    close: function(elem) {
-      var $elem = $(elem);
-      if ($elem.length) {
-      }
-      else {
-        _debug("\"" + elem + "\" can not close, because this element has not existed yet.");
+    panels: {
+      open: function() {
+        _nmePanels.open();
+      },
+      close: function() {
+        _nmePanels.close();
       }
     }
   };
