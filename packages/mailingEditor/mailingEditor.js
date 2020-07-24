@@ -71,6 +71,32 @@
       {
         "styles": {
           "page" : {
+            "background-color": "#000000"
+          },
+          "block": {
+            "color": "#333333",
+            "background-color": "#ffcc00"
+          },
+          "title": {
+            "color": "#333333"
+          },
+          "subTitle": {
+            "color": "#333333"
+          },
+          "button": {
+            "color": "#ffffff",
+            "background-color": "#222222",
+            "background-color-hover": "#333333"
+          },
+          "link": {
+            "color": "#222222",
+            "color-hover": "#333333"
+          }
+        }
+      },
+      {
+        "styles": {
+          "page" : {
             "background-color": "#16235a"
           },
           "block": {

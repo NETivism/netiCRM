@@ -98,6 +98,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-container .nme-mail-inner {
   padding: 0;
 }
+.nme-container .nme-tpl {
+  display: none;
+}
 .nme-block {
   /*! border: 1px solid transparent; */
 }
