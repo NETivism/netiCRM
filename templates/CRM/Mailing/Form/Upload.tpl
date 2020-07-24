@@ -94,7 +94,7 @@
 
   {include file="CRM/Form/attachment.tpl"}
 
-  <fieldset><legend>{ts}Header / Footer{/ts}</legend>
+  <fieldset id="mailing_header_footer"><legend>{ts}Header / Footer{/ts}</legend>
     <table class="form-layout-compressed">
         <tr class="crm-mailing-upload-form-block-header_id">
             <td class="label">{$form.header_id.label}</td>
@@ -133,23 +133,18 @@
           hide('compose_old_id');
           show('compose_id');
 
-          // refs #23719. Remove mailing header and footer when select 'Compose On-screen' mode
+          // refs #23719. Remove mailing header and footer when select 'Compose On-screen' mode and hide this fieldset
           cj("#header_id option[value='']").prop("selected", true);
           cj("#footer_id option[value='']").prop("selected", true);
+          hide('mailing_header_footer');
         }
 
         // Traditional Editor (old compose mode)
         if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
           hide('compose_id');
           show('compose_old_id');
+          show('mailing_header_footer');
           cj('.crm-mailing-upload-form-block-template').show();
-
-          var oldEditorContent = CKEDITOR.instances['html_message'].getData();
-          // refs #23719. If the HTML of the CKEditor does not contain the 'neticrm-mailing-editor' string, it means that it is not a new version of template content, so we need to add the mailing header and footer.
-          if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
-            cj("#header_id option[value='1']").prop("selected", true);
-            cj("#footer_id option[value='2']").prop("selected", true);
-          }
           verify();
         }
       }
