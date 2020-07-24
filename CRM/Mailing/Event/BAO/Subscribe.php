@@ -392,7 +392,7 @@ SELECT     civicrm_email.id as email_id
     $success = NULL;
     foreach ($groups as $groupID) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $groupID, 'title');
-      if (array_key_exists($groupID, $contactGroups) && $contactGroups[$groupID]['status'] != 'Removed') {
+      if (array_key_exists($groupID, $contactGroups) && $contactGroups[$groupID]['status'] == 'Added') {
         $group[$groupID]['title'] = $contactGroups[$groupID]['title'];
 
         $group[$groupID]['status'] = $contactGroups[$groupID]['status'];
