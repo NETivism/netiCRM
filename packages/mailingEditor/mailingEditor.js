@@ -1188,8 +1188,8 @@
 
           // Check edit mode option, Only 'Compose On-screen' option is allowed
           if ($(".form-radio[name='upload_type'][value='1']").is(":checked")) {
-            // Convert json data to HTML and save to CKEditor when click button is "Next" or "Save & Continue Later"
-            if (buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
+            // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
+            if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
               event.preventDefault();
               let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
                   confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
@@ -1206,7 +1206,7 @@
                       previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
                       CKEDITOR.instances['html_message'].setData(previewContent);
                       $form.data("allow-submit", true);
-                      $form.submit();
+                      $form.find("[name='" + buttonName + "']").click();
                     }
                   }
                 }
