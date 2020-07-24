@@ -17,11 +17,11 @@
 {include file="../packages/mailingEditor/templates/block/blockEdit.tpl"}
 
 {* Data Level *}
-{include file="../packages/mailingEditor/templates/data/dataMailCol1Fullwidth.tpl"}
-{include file="../packages/mailingEditor/templates/data/dataTitle.tpl"}
-{include file="../packages/mailingEditor/templates/data/dataImage.tpl"}
-{include file="../packages/mailingEditor/templates/data/dataParagraph.tpl"}
-{include file="../packages/mailingEditor/templates/data/dataButton.tpl"}
-{include file="../packages/mailingEditor/templates/data/dataRcCol1.tpl"}
-{include file="../packages/mailingEditor/templates/data/dataRcCol2.tpl"}
-{include file="../packages/mailingEditor/templates/data/dataRcFloat.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataMailCol1Fullwidth.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataTitle.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataImage.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataParagraph.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataButton.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataRcCol1.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataRcCol2.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataRcFloat.tpl"}

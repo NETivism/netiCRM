@@ -1,16 +1,14 @@
-{* Template name: dataParagraph.tpl *}
+{* Template name: dataTitle.tpl *}
 
-<textarea class="nme-tpl" data-template-level="data" data-template-name="paragraph"></textarea>
+<textarea class="nme-tpl" data-template-level="data" data-template-name="title"></textarea>
 <script>
 {literal}
 (function($) {
   let tplData = {
     "id": "",
-    "type" : "paragraph",
+    "type" : "title",
     "section": "body",
-    "data" : {
-      "html": "<p>請輸入內文...</p>"
-    },
+    "data" : "這是標題區塊，點擊即可編輯",
     "styles": {
       "block": {
         "padding-top": "20px",
@@ -23,9 +21,17 @@
         "margin-top": "0",
         "margin-right": "0",
         "margin-bottom": "0",
-        "margin-left": "0"
+        "margin-left": "0",
+        "text-align": "center",
+        "text-decoration": "none",
+        "letter-spacing": "1px",
+        "line-height": "1.4",
+        "font-weight": "bold",
+        "font-size": "28px",
+        "color": "#000000"
       }
     },
+    "link": "",
     "control": {
       "sortable": true,
       "delete": true,
@@ -39,7 +45,7 @@
     "weight" : 0
   };
 
-  $(".nme-tpl[data-template-level='data'][data-template-name='paragraph']").val(JSON.stringify(tplData));
+  $(".nme-tpl[data-template-level='data'][data-template-name='title']").val(JSON.stringify(tplData));
 }(jQuery));
 {/literal}
 </script>
