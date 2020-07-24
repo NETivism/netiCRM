@@ -238,6 +238,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'size' => CRM_Utils_Type::MEDIUM,
           'export' => true,
           'where' => 'civicrm_contribution_taiwanach.payment_type',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
         'bank_code' => array(
           'name' => 'bank_code',
@@ -247,6 +249,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'size' => CRM_Utils_Type::MEDIUM,
           'export' => true,
           'where' => 'civicrm_contribution_taiwanach.bank_code',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
         'postoffice_acc_type' => array(
           'name' => 'postoffice_acc_type',
@@ -256,6 +260,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'size' => CRM_Utils_Type::MEDIUM,
           'export' => true,
           'where' => 'civicrm_contribution_taiwanach.postoffice_acc_type',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
         'bank_branch' => array(
           'name' => 'bank_branch',
@@ -265,6 +271,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'size' => CRM_Utils_Type::MEDIUM,
           'export' => true,
           'where' => 'civicrm_contribution_taiwanach.bank_branch',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
         'bank_account' => array(
           'name' => 'bank_account',
@@ -274,6 +282,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'size' => CRM_Utils_Type::MEDIUM,
           'export' => true,
           'where' => 'civicrm_contribution_taiwanach.bank_account',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
         'identifier_number' => array(
           'name' => 'identifier_number',
@@ -283,6 +293,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'size' => CRM_Utils_Type::HUGE,
           'export' => true,
           'where' => 'civicrm_contribution_taiwanach.identifier_number',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
         'stamp_verification' => array(
           'name' => 'stamp_verification',
@@ -290,6 +302,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'title' => ts('Stamp Verification') ,
           'export' => true,
           'where' => 'civicrm_contribution_taiwanach.stamp_verification',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
         'data' => array(
           'name' => 'data',

@@ -69,6 +69,7 @@
     <length>32</length>
     <comment>Payment Type of ACH.</comment>
     <add>4.0</add>
+    <export>true</export>
   </field>
   <field>
     <name>bank_code</name>
@@ -77,6 +78,7 @@
     <length>32</length>
     <comment>Bank Code of ACH Account.</comment>
     <add>4.0</add>
+    <export>true</export>
   </field>
   <field>
     <name>postoffice_acc_type</name>
@@ -85,6 +87,7 @@
     <length>32</length>
     <comment>Post Office Account Type of ACH Account.</comment>
     <add>4.0</add>
+    <export>true</export>
   </field>
   <field>
     <name>bank_branch</name>
@@ -93,6 +96,7 @@
     <length>32</length>
     <comment>Bank Branch of ACH Account.</comment>
     <add>4.0</add>
+    <export>true</export>
   </field>
   <field>
     <name>bank_account</name>
@@ -101,6 +105,7 @@
     <length>32</length>
     <comment>Bank Account of ACH Account.</comment>
     <add>4.0</add>
+    <export>true</export>
   </field>
   <field>
     <name>identifier_number</name>
@@ -109,6 +114,7 @@
     <length>128</length>
     <comment>Identifier Number of ACH Account.</comment>
     <add>4.0</add>
+    <export>true</export>
   </field>
   <field>
     <name>stamp_verification</name>
@@ -116,6 +122,7 @@
     <type>int unsigned</type>
     <comment>Stamp Verification Status</comment>
     <add>4.0</add>
+    <export>true</export>
   </field>
   <field>
     <name>data</name>
