@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-07-17 05:37+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-07-23 07:52+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47915,3 +47915,22 @@ msgid ""
 " enable notification confirmation and the contribution type is tax-"
 "deductible."
 msgstr "這個選項僅影響來自募款頁的線上交易，該募款頁需啟用付款成功確認信，以及費用類型必須是可開收據的類型，才會自動寄送電子郵件收據"
+
+#: templates/civicrm_state_province.tpl
+msgid "Central Region"
+msgstr "中區"
+
+msgid "East Region"
+msgstr "東區"
+
+msgid "North-East Region"
+msgstr "東北區"
+
+msgid "North Region"
+msgstr "北區"
+
+msgid "West Region"
+msgstr "西區"
+
+msgid "Receipt Log"
+msgstr "收據歷程紀錄"

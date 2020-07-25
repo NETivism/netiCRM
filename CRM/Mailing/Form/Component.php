@@ -78,12 +78,19 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'subject'),
       TRUE
     );
+
+    $isRequired = TRUE;
+    if (!empty($this->_id)) {
+      $componentType = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Component', $this->_id, 'component_type');
+      $isRequired = ($componentType != 'Header');
+    }
     $this->add('textarea', 'body_text', ts('Body - TEXT Format'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'body_text'),
-      TRUE
+      $isRequired
     );
     $this->add('textarea', 'body_html', ts('Body - HTML Format'),
-      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'body_html')
+      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'body_html'),
+      $isRequired
     );
 
     $this->add('checkbox', 'is_default', ts('Default?'));
