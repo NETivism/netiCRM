@@ -64,7 +64,21 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
     list($domainEmailName, $_) = CRM_Core_BAO_Domain::getNameAndEmail();
-    list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($se->contact_id);
+    $allEmail = CRM_Core_BAO_Email::allEmails($contact_id);
+    $defaultEmail = '';
+    foreach($allEmail as $m) {
+      if ($m['is_primary']) {
+        $defaultEmail = $m['is_primary'];
+      }
+      if ($m['is_bulkmail']) {
+        $email = $m['email'];
+        break;
+      }
+    }
+    if (empty($email)) {
+      $email = $defaultEmail;
+    }
+
     $group = new CRM_Contact_DAO_Group();
     $group->id = $se->group_id;
     $group->find(TRUE);
