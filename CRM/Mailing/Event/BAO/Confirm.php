@@ -54,12 +54,23 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
    * @static
    */
   public static function confirm($contact_id, $subscribe_id, $hash) {
-    $se = &CRM_Mailing_Event_BAO_Subscribe::verify($contact_id,
-      $subscribe_id, $hash
-    );
+    $se = CRM_Mailing_Event_BAO_Subscribe::verify($contact_id, $subscribe_id, $hash);
 
     if (!$se) {
       return FALSE;
+    }
+
+    // check if subscribtion exists (status is added)
+    $config = CRM_Core_Config::singleton();
+    $domain = CRM_Core_BAO_Domain::getDomain();
+    list($domainEmailName, $_) = CRM_Core_BAO_Domain::getNameAndEmail();
+    list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($se->contact_id);
+    $group = new CRM_Contact_DAO_Group();
+    $group->id = $se->group_id;
+    $group->find(TRUE);
+    $contactGroups = CRM_Mailing_Event_BAO_Subscribe::getContactGroups($email, $contact_id);
+    if ($contactGroups[$group->id]['status'] == 'Added') {
+      return $group->title;
     }
 
     $transaction = new CRM_Core_Transaction();
@@ -69,9 +80,9 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     $ce->time_stamp = date('YmdHis');
     $ce->save();
 
-    CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus($contact_id, $se->group_id,
-      'Email', $ce->id
-    );
+    CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus($contact_id, $se->group_id, 'Email', $ce->id);
+
+    $transaction->commit();
 
     // remove opt-out and freezed email 
     $params = array('id' => $contact_id);
@@ -79,24 +90,22 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     CRM_Contact_BAO_Contact::retrieve($params, $contact);
     if ($contact['is_opt_out']) {
       $params = array(
-        'id' => $contact_id,
+        'contact_id' => $contact_id,
+        'contact_type' => $contact['contact_type'],
+        'is_opt_out' => 0,
         'log_data' => ts('Opt-in').' ('.ts('Re-subscribe Confirmation').')',
       );
       CRM_Contact_BAO_Contact::create($params);
     }
+    $emailOnHold = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE contact_id = %1 AND is_bulkmail = 1 AND on_hold = 1", array(
+      1 => array($contact_id, 'Positive'),      
+    ));
+    if ($emailOnHold) {
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_email SET on_hold = 0 WHERE id = %1", array(
+        1 => array($emailOnHold, 'Positive'),      
+      ));
+    }
 
-    $transaction->commit();
-
-    $config = CRM_Core_Config::singleton();
-
-    $domain = CRM_Core_BAO_Domain::getDomain();
-    list($domainEmailName, $_) = CRM_Core_BAO_Domain::getNameAndEmail();
-
-    list($display_name, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($se->contact_id);
-
-    $group = new CRM_Contact_DAO_Group();
-    $group->id = $se->group_id;
-    $group->find(TRUE);
 
     $component = new CRM_Mailing_BAO_Component();
     $component->is_default = 1;

@@ -219,6 +219,7 @@ ORDER BY title";
       $value = array(
         'email' => $params['email'],
         'location_type_id' => $locationType->id,
+        'is_bulkmail' => 1,
       );
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
 
