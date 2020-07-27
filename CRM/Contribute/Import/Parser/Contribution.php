@@ -696,7 +696,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       if (civicrm_duplicate($found)) {
         $matchedIDs = explode(',', $found['error_message']['params'][0]);
         if (count($matchedIDs) > 1) {
-          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => "Matching Contribution record not found for " . $errorMsg . ". Row was skipped.");
+          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => ts('Record duplicates multiple contacts'));
           $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
           array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
           return CRM_Contribute_Import_Parser::ERROR;
@@ -753,7 +753,11 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         return $this->importContribution($formatted, $values);
       }
       else {
-        $errDisp = $contactValues[0];
+        $errDisp = "Contact Import Error: ".$contactValues[0];
+        $importRecordParams = array($statusFieldName => $contactImportResult, "${statusFieldName}Msg" => $errDisp);
+        $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
+        array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
+        return $contactImportResult;
       }
     }
     else {

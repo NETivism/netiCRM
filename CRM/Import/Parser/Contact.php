@@ -565,9 +565,11 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
               $params['id'] = array_pop($matchingContactIds);
             }
             else {
-              $message = "More than one matching contact found for given criteria.";
+              $errorMessage = ts('Record duplicates multiple contacts');
+              $importRecordParams = array($statusFieldName => CRM_Import_Parser::NO_MATCH, "${statusFieldName}Msg" => $errorMessage);
               array_unshift($values, $message);
-              $this->_retCode = CRM_Import_Parser::NO_MATCH;
+              $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
+              return CRM_Import_Parser::NO_MATCH;
             }
           }
           else {
@@ -1063,13 +1065,13 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         // If we duplicate more than one record, skip no matter what
         if (count($cids) > 1) {
           $errorMessage = ts('Record duplicates multiple contacts');
-          $importRecordParams = array($statusFieldName => CRM_Import_Parser::ERROR, "${statusFieldName}Msg" => $errorMessage);
+          $importRecordParams = array($statusFieldName => CRM_Import_Parser::NO_MATCH, "${statusFieldName}Msg" => $errorMessage);
 
           //combine error msg to avoid mismatch between error file columns.
           $errorMessage .= "\n" . $url_string;
           array_unshift($values, $errorMessage);
           $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
-          return CRM_Import_Parser::ERROR;
+          return CRM_Import_Parser::NO_MATCH;
         }
 
         // Params only had one id, so shift it out
