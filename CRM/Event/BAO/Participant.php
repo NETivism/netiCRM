@@ -562,6 +562,7 @@ INNER JOIN  civicrm_participant participant ON ( line.entity_table  = 'civicrm_p
                                                  AND participant.id = line.entity_id ) 
 INNER JOIN  civicrm_price_field_value value ON ( value.id = line.price_field_value_id )
 INNER JOIN  civicrm_price_field field       ON ( value.price_field_id = field.id )   
+INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is_deleted != 1 )
      WHERE  participant.event_id = %1
             {$statusIdClause}
             {$isTestClause}
