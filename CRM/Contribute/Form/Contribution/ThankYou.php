@@ -74,47 +74,50 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     }
 
     // add dataLayer for gtm
-    if(CRM_Utils_Array::value('trxn_id', $this->_params)) {
-      $transactionId = $this->_params['trxn_id'];
-    }
-    else {
-      $transactionId = ts('Contribution ID').'-'.$this->_contributionID;
-    }
-    if ($this->_action & CRM_Core_Action::PREVIEW) {
-      $transactionId = 'test-'.$transactionId;
-    }
-    $this->assign('transaction_id', $transactionId);
-    $this->assign('product_id', ts('Contribution Page').'-'.$this->_values['id']);
-    $this->assign('product_name', $this->_values['title']);
-    if ($this->_values['is_recur']) {
-      $this->assign('product_category', ts('Recurring Contribution'));
-    }
-    else {
-      $this->assign('product_category', ts('Non-recurring Contribution'));
-    }
-    $this->assign('product_quantity', 1);
-    $membershipAmount = $this->get('membership_amount');
-    if ($membershipAmount) {
-      $this->assign('product_amount', $this->_params['amount']+$membershipAmount);
-      $this->assign('total_amount', $this->_params['amount']+$membershipAmount);
-    }
-    else {
-      $this->assign('product_amount', $this->_params['amount']);
-      $this->assign('total_amount', $this->_params['amount']);
-    }
-    $this->assign('dataLayerType', 'purchase');
-    $smarty = CRM_Core_Smarty::singleton();
-    $dataLayer = $smarty->fetch('CRM/common/DataLayer.tpl');
-    if ($paymentResultStatus == 4) {
-      $this->assign('dataLayerType', 'refund');
-      $dataLayer .= $smarty->fetch('CRM/common/DataLayer.tpl');
-    }
-    if (!empty($dataLayer)) {
-      $obj = array(
-        'type' => 'markup',
-        'markup' => $dataLayer."\n",
-      );
-      CRM_Utils_System::addHTMLHead($obj);
+    if (!$this->get('dataLayerAdded')) {
+      if(CRM_Utils_Array::value('trxn_id', $this->_params)) {
+        $transactionId = $this->_params['trxn_id'];
+      }
+      else {
+        $transactionId = ts('Contribution ID').'-'.$this->_contributionID;
+      }
+      if ($this->_action & CRM_Core_Action::PREVIEW) {
+        $transactionId = 'test-'.$transactionId;
+      }
+      $this->assign('transaction_id', $transactionId);
+      $this->assign('product_id', ts('Contribution Page').'-'.$this->_values['id']);
+      $this->assign('product_name', $this->_values['title']);
+      if ($this->_values['is_recur']) {
+        $this->assign('product_category', ts('Recurring Contribution'));
+      }
+      else {
+        $this->assign('product_category', ts('Non-recurring Contribution'));
+      }
+      $this->assign('product_quantity', 1);
+      $membershipAmount = $this->get('membership_amount');
+      if ($membershipAmount) {
+        $this->assign('product_amount', $this->_params['amount']+$membershipAmount);
+        $this->assign('total_amount', $this->_params['amount']+$membershipAmount);
+      }
+      else {
+        $this->assign('product_amount', $this->_params['amount']);
+        $this->assign('total_amount', $this->_params['amount']);
+      }
+      $this->assign('dataLayerType', 'purchase');
+      $smarty = CRM_Core_Smarty::singleton();
+      $dataLayer = $smarty->fetch('CRM/common/DataLayer.tpl');
+      if ($paymentResultStatus == 4) {
+        $this->assign('dataLayerType', 'refund');
+        $dataLayer .= $smarty->fetch('CRM/common/DataLayer.tpl');
+      }
+      if (!empty($dataLayer)) {
+        $obj = array(
+          'type' => 'markup',
+          'markup' => $dataLayer."\n",
+        );
+        CRM_Utils_System::addHTMLHead($obj);
+        $this->set('dataLayerAdded', true);
+      }
     }
   }
 

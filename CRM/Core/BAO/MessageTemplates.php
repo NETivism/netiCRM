@@ -340,7 +340,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return array  of four parameters: a boolean whether the email was sent, and the subject, text and HTML templates
    */
-  static function sendTemplate($params) {
+  static function sendTemplate($params, &$smarty = NULL) {
     $defaults = array(
       // option group name of the template
       'groupName' => NULL,
@@ -475,8 +475,10 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
     // parse the three elements with Smarty
     require_once 'CRM/Core/Smarty/resources/String.php';
-    civicrm_smarty_register_string_resource();
-    $smarty = &CRM_Core_Smarty::singleton();
+    civicrm_smarty_register_string_resource($smarty);
+    if (empty($smarty)) {
+      $smarty = &CRM_Core_Smarty::singleton();
+    }
     foreach ($params['tplParams'] as $name => $value) {
       $smarty->assign($name, $value);
     }

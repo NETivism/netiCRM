@@ -1934,7 +1934,7 @@ SELECT source_contact_id
     );
   }
 
-  static function getReceipt(&$input, &$ids, &$objects, &$values) {
+  static function getReceipt(&$input, &$ids, &$objects, &$values, &$template = NULL) {
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
@@ -1952,7 +1952,9 @@ SELECT source_contact_id
     $custom_serial = $config->receiptSerial;
     $receipt_logo = $config->receiptLogo;
 
-    $template = &CRM_Core_Smarty::singleton();
+    if (empty($template)) {
+      $template = CRM_Core_Smarty::singleton();
+    }
 
     // add the new contribution values
     $template->assign('amount', $input['amount']);
@@ -2069,12 +2071,12 @@ SELECT source_contact_id
       'isTest' => $isTest,
     );
 
-    list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+    list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, $template);
     $all_tpl_vars = $template->get_template_vars();
     return $html;
   }
 
-  static function getAnnualReceipt($contact_id, $option, &$template) {
+  static function getAnnualReceipt($contact_id, $option, &$template = NULL) {
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
     $location = $domain->getLocationValues();
@@ -2193,7 +2195,7 @@ SELECT source_contact_id
         'tplParams' => $tplParams,
       );
 
-      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, $template);
       return $html;
     }
   }
@@ -2606,6 +2608,94 @@ WHERE c.id = $id";
     $payment = &CRM_Core_Payment::singleton($is_test, $paymentProcessor, $this);
     $paymentClass = get_class($payment);
     return $paymentClass;
+  }
+
+  static function sendPDFReceipt($contributionId, $fromEmail, $receiptType = NULL, $receiptText = NULL) {
+    $params = array();
+    $args = array('id' => $contributionId);
+    CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_Contribution', $args, $params);
+    if (empty($params['id'])) {
+      return;
+    }
+    if (empty($fromEmail)) {
+      // first, get page email
+      if (!empty($params['contribution_page_id'])) {
+        $pageParams = array('id' => $params['contribution_page_id']);
+        $page = array();
+        CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $pageParams, $page, array('receipt_from_email', 'receipt_from_name'));
+        if (!empty($page['receipt_from_email'])) {
+          if (!empty($page['receipt_from_name'])) {
+            $fromEmail = "{$page['receipt_from_name']} <{$page['receipt_from_email']}>";
+          }
+          else {
+            $fromEmail = "{$page['receipt_from_email']}";
+          }
+        }
+      }
+      // second, get site default email
+      if (empty($fromEmail)) {
+        $siteMail = CRM_Core_PseudoConstant::fromEmailAddress();
+        $fromEmail = $siteMail['default'];
+      }
+    }
+
+    $receiptTask = new CRM_Contribute_Form_Task_PDF();
+    $receiptType = !empty($receiptType) ? $receiptType : 'copy_only';
+    $receiptTask->makeReceipt($contributionId, $receiptType, TRUE);
+    $pdfFilePath = $receiptTask->makePDF(FALSE);
+    $pdfFileName = strstr($pdfFilePath, 'Receipt');
+    $pdfParams =  array(
+      'fullPath' => $pdfFilePath,
+      'mime_type' => 'application/pdf',
+      'cleanName' => $pdfFileName,
+    );
+
+    list($contributorDisplayName, $contributorEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
+    $templateParams = array(
+      'groupName' => 'msg_tpl_workflow_contribution',
+      'valueName' => 'contribution_offline_receipt',
+      'contactId' => $params['contact_id'],
+      'from' => $fromEmail,
+      'toName' => $contributorDisplayName,
+      'toEmail' => $contributorEmail,
+      'isTest' => $params['is_test'],
+    );
+    $contributionType = CRM_Contribute_PseudoConstant::contributionType($params['contribution_type_id']);
+    $params['contributionType_name'] = $contributionType;
+    $templateParams['tplParams']['formValues'] = $params;
+    if ($receiptText) {
+      $templateParams['tplParams']['formValues']['receipt_text'] = $receiptText;
+    }
+    $templateParams['attachments'][] = $pdfParams;
+    $templateParams['tplParams']['pdf_receipt'] = 1;
+
+    $config = CRM_Core_Config::singleton();
+    $smarty = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);
+    CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, $smarty);
+
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    if (!empty($activityTypeId)) {
+      if (!empty($params['userID'])) {
+        $userID = $params['userID'];
+      }
+      else {
+        $session = CRM_Core_Session::singleton();
+        $userID = $session->get('userID');
+      }
+      $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+      $subject = !empty($params['source']) ? ' - '.$params['source'] : ' - '.$params['contributionType_name'];
+      $activityParams = array(
+        'activity_type_id' => $activityTypeId,
+        'source_record_id' => $contributionId,
+        'activity_date_time' => date('Y-m-d H:i:s'),
+        'is_test' => !empty($params['is_test']) ? 1 : 0,
+        'status_id' => $statusId,
+        'subject' => ts('Email Receipt').$subject,
+        'assignee_contact_id' => $params['contact_id'],
+        'source_contact_id' => $userID,
+      );
+      CRM_Activity_BAO_Activity::create($activityParams);
+    }
   }
 }
 

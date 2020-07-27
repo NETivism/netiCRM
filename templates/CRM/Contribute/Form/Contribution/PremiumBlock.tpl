@@ -29,19 +29,81 @@
 
 {literal}
 <script type="text/javascript">
-<!--
-// Selects the product (radio button) if user selects an option for that product.
-// Putting this function directly in template so they are available for standalone forms.
-function selectPremium(optionField) {
-    premiumId = optionField.name.slice(8);
-    for( i=0; i < document.Main.elements.length; i++) {
-        if (document.Main.elements[i].type == 'radio' && document.Main.elements[i].name == 'selectProduct' && document.Main.elements[i].value == premiumId ) {
-            element = document.Main.elements[i];
-            element.checked = true;
-        }
+cj(document).ready(function($){
+  var detectAmount = function(obj) {
+    var amount = $(obj).prop('type') == 'text' ? parseInt($(obj).val()) : $(obj).data('amount');
+    var is_recur = parseInt($("input[name=is_recur]:checked").val());
+    console.log(is_recur);
+    console.log(amount);
+    if (amount) {
+      if (is_recur) {
+        return filterPremiumByAmount(0, amount);
+      }
+      else {
+        return filterPremiumByAmount(amount, 0);
+      }
     }
-}
-//-->
+  }
+  var filterPremiumByAmount = function(amt, amt_recur){
+    $('tr.product-row').addClass('not-available');
+    $('tr.product-row input[name=selectProduct], tr.product-row.not-available  .premium-options select').prop('disabled', false);
+    $('tr.product-row.not-available .premium-info .description').find('.zmdi-alert-triangle').remove();
+    var $available = $("input[name=selectProduct]").filter(function(idx){
+      if (amt < $(this).data('min-contribution') && amt > 0) {
+        return false;
+      }
+      if (amt_recur < $(this).data('min-contribution-recur') && amt_recur > 0) {
+        if ($(this).data('calculate-mode') == 'first') {
+          return false;
+        }
+        if ($(this).data('calculate-mode') == 'cumulative') {
+          var installments = $("input[name=installments]").val() ? $("input[name=installments]").val() : $(this).data('installments');
+          installments = parseInt(installments);
+          if (installments) {
+            if (amt_recur * installments < $(this).data('min-contribution-recur')) {
+              return false;
+            }
+          }
+          if (amt_recur * 99 < $(this).data('min-contribution-recur')) {
+            return false;
+          }
+        }
+      }
+      return true;
+    });
+    $available.closest('tr.product-row').removeClass('not-available');
+    if (!$available.filter(":checked").length) {
+      $('input[name=selectProduct]').prop('checked', false);
+    }
+    $('tr.product-row.not-available input[name=selectProduct], tr.product-row.not-available  .premium-options select').prop('disabled', true);
+    $('tr.product-row.not-available .premium-info .description').prepend('<i class="zmdi zmdi-alert-triangle"></i>');
+  }
+  var initialize = function (){
+    if ($("input[name=amount_other]").val()) {
+      detectAmount($("input[name=amount_other]")[0]);
+    }
+    else {
+      $("input[name=amount]:checked:eq(0)").each(function(){
+        detectAmount(this);
+      });
+    }
+  }
+  $("input[name=amount]").click(function(){
+    detectAmount(this);
+  });
+  $("input[name=amount_other]").change(function(){
+    detectAmount(this);
+  });
+  $("input[name=installments]").change(function(){
+    initialize();
+  });
+  $("input[name=is_recur]").change(function(){
+    initialize();
+  });
+
+  // after page load, use selected value to determin amount
+  initialize();
+});
 </script>
 {/literal}
 
@@ -78,7 +140,7 @@ function selectPremium(optionField) {
             </tr>
         {/if}
         {foreach from=$products item=row}
-        <tr {if $context EQ "makeContribution"} {/if}valign="top"> 
+        <tr {if $context EQ "makeContribution"} {/if}valign="top" class="product-row"> 
             {if $showRadioPremium }
                 {assign var="pid" value=$row.id}
                 <td class="premium-selected">{$form.selectProduct.$pid.html}</td>
@@ -89,8 +151,34 @@ function selectPremium(optionField) {
 	        <td class="premium-info"{if !$row.thumbnail} colspan="2"{/if}>
                 <label class="premium-name" for="{$form.selectProduct.$pid.id}">{$row.name}</label>
                 <div>{$row.description|nl2br}</div>
-                {if ( ($premiumBlock.premiums_display_min_contribution AND $context EQ "makeContribution") OR $preview EQ 1) AND $row.min_contribution GT 0 }
-                    {ts 1=$row.min_contribution|crmMoney}(Contribute at least %1 to be eligible for this gift.){/ts}
+                {if ($premiumBlock.premiums_display_min_contribution AND $context EQ "makeContribution") OR $preview EQ 1}
+                  {capture assign="limitation"}{/capture}
+                  {capture assign="one_time_limit"}{/capture}
+                  {capture assign="recur_limit"}{/capture}
+                  {if $row.min_contribution > 0 && (!$is_recur_only || $preview == 1)}
+                    {capture assign="one_time_limit"}{ts 1=$row.min_contribution|crmMoney}one-time support at least %1{/ts}{/capture}
+                  {/if}
+                  {if $row.min_contribution_recur > 0 && ($form.is_recur || $preview == 1)}
+                    {if $row.calculate_mode == 'first'}
+                      {capture assign="recur_limit"}{ts 1=$row.min_contribution_recur|crmMoney}first support of recurring payment at least %1{/ts}{/capture}
+                    {else if $row.calculate_mode == 'cumulative'}
+                      {capture assign="recur_limit"}{ts 1=$row.min_contribution_recur|crmMoney}total support of recurring payment at least %1{/ts}{/capture}
+                    {/if}
+                  {/if}
+
+                  {if $one_time_limit && $recur_limit}
+                    {capture assign="limitation"}{$one_time_limit} {ts}or{/ts} {$recur_limit}{/capture}
+                  {elseif $one_time_limit}
+                    {capture assign="limitation"}{$one_time_limit}{/capture}
+                  {elseif $recur_limit}
+                    {capture assign="limitation"}{$recur_limit}{/capture}
+                  {/if}
+
+                  {if $limitation}
+                    <div class="description">
+                    {ts 1=$limitation}This gift will be eligible when your %1.{/ts}
+                    </div>
+                  {/if}
                 {/if}
             {if $showSelectOptions }
                 {assign var="pid" value="options_"|cat:$row.id}

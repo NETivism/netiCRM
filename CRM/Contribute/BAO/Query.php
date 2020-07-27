@@ -194,15 +194,22 @@ class CRM_Contribute_BAO_Query {
   static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
+    // Check contribution_test first, used in contribution_payment_processor_id.
+    foreach (array_keys($query->_params) as $id) {
+      if ($query->_params[$id][0] == 'contribution_test' && $query->_params[$id][2] == 1) {
+        $isTest = TRUE;
+        break;
+      }
+    }
     foreach (array_keys($query->_params) as $id) {
       if (substr($query->_params[$id][0], 0, 13) == 'contribution_') {
         if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
           $query->_useDistinct = TRUE;
         }
-        if ($query->_params[$id][0] == 'contribution_test') {
-          $isTest = TRUE;
-        }
         $grouping = $query->_params[$id][3];
+        if ($query->_params[$id][0] == 'contribution_payment_processor_id' && $isTest) {
+          $query->_params[$id][2] += 1;
+        }
         self::whereClauseSingle($query->_params[$id], $query);
       }
     }
@@ -306,6 +313,12 @@ class CRM_Contribute_BAO_Query {
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
+      case 'contribution_pdf_receipt_not_send':
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_activity.id", "IS NULL");
+        $query->_qill[$grouping][] = ts('Email Receipt') .' '. ts('IS NULL');
+        $query->_tables['contribution_activity_pdf_receipt'] = $query->_whereTables['contribution_activity_pdf_receipt'] = 1;
+        return;
+
       case 'contribution_type_id':
       case 'contribution_type':
         $types = CRM_Contribute_PseudoConstant::contributionType();
@@ -359,6 +372,19 @@ class CRM_Contribute_BAO_Query {
         );
 
         $query->_qill[$grouping][] = ts('Paid By - %1', array(1 => $pis[$pi]));
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        return;
+
+      case 'contribution_payment_processor_id':
+        $pps = CRM_Core_PseudoConstant::paymentProcessor();
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.payment_processor_id",
+          $op, $value, "Integer"
+        );
+        // Test ppid is even, use name of odd id.
+        if (!($value % 2)) {
+          $value -= 1;
+        }
+        $query->_qill[$grouping][] = ts('Payment Processor').' - '.$pps[$value];
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
@@ -710,6 +736,13 @@ class CRM_Contribute_BAO_Query {
         $from = " $side JOIN civicrm_contribution_soft ON civicrm_contribution_soft.contribution_id = civicrm_contribution.id";
         break;
 
+      case 'contribution_activity_pdf_receipt':
+        $emailReceiptType = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+        if ($emailReceiptType && is_numeric($emailReceiptType)) {
+          $from = " $side JOIN civicrm_activity ON civicrm_contribution.id = civicrm_activity.source_record_id AND civicrm_activity.activity_type_id = ".$emailReceiptType;
+        }
+        break;
+
       case 'civicrm_track':
         $from = " $side JOIN civicrm_track ON civicrm_track.entity_table = 'civicrm_contribution' AND civicrm_track.entity_id = civicrm_contribution.id";
         break;
@@ -843,6 +876,12 @@ class CRM_Contribute_BAO_Query {
       array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::pcPage()
     );
 
+    $form->addSelect(
+      'contribution_payment_processor_id',
+      ts('Payment Processor'),
+      array('' => ts('- select -')) + CRM_Core_PseudoConstant::paymentProcessor()
+    );
+
     $status = array();
 
     $statusValues = CRM_Core_OptionGroup::values("contribution_status");
@@ -858,7 +897,11 @@ class CRM_Contribute_BAO_Query {
 
     // add null checkboxes for thank you and receipt
     $form->addElement('checkbox', 'contribution_thankyou_date_isnull', ts('Thank-you date not set?'));
-    $form->addElement('checkbox', 'contribution_receipt_date_isnull', ts('Receipt not sent?'));
+    $form->addElement('checkbox', 'contribution_receipt_date_isnull', ts('Receipt date not set?'));
+    $emailReceiptType = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    if ($emailReceiptType) {
+      $form->addElement('checkbox', 'contribution_pdf_receipt_not_send', ts('Email receipt not sent?'));
+    }
 
     //add fields for honor search
     $form->addElement('text', 'contribution_in_honor_of', ts("In Honor Of"));

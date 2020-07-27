@@ -296,6 +296,18 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       require_once 'CRM/Contribute/BAO/ContributionPage.php';
       CRM_Contribute_BAO_ContributionPage::setValues($this->_id, $this->_values);
 
+      $premiumParams = array(
+        'entity_table' => 'civicrm_contribution_page',
+        'entity_id' => $this->_id,
+      );
+      $premiumDefault = array();
+      CRM_Contribute_BAO_Premium::commonRetrieve('CRM_Contribute_DAO_Premium', $premiumParams, $premiumDefault);
+      if (!empty($premiumDefault['premiums_active'])) {
+        $this->_values['premiums_active'] = $premiumDefault['premiums_active'];
+        $this->_values['premiums_intro_title'] = $premiumDefault['premiums_intro_title'];
+        $this->_values['premiums_display_min_contribution'] = $premiumDefault['premiums_display_min_contribution'];
+      }
+
       // check if form is active
       if (!$this->_values['is_active']) {
         if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {

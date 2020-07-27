@@ -1266,6 +1266,7 @@ msgstr ""
 #: CRM/Import/Form/Preview.php CRM/Member/Import/Form/Preview.php
 #: CRM/Price/Page/Set.php CRM/UF/Page/Field.php CRM/UF/Page/Group.php
 #: templates/CRM/Contribute/Form/ContributionPage/AddProduct.tpl
+#: templates/CRM/common/mailingEditor.tpl
 msgid "Preview"
 msgstr ""
 
@@ -1596,6 +1597,7 @@ msgstr ""
 #: templates/CRM/Admin/Page/PaymentProcessorType.tpl
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
+#: templates/CRM/common/mailingEditor.tpl
 msgid "Title"
 msgstr ""
 
@@ -4740,6 +4742,7 @@ msgstr ""
 
 #: CRM/Custom/Page/Group.php CRM/Group/Page/Group.php CRM/Price/Page/Set.php
 #: CRM/UF/Page/Group.php
+#: templates/CRM/common/mailingEditor.tpl
 msgid "Settings"
 msgstr ""
 
@@ -10383,6 +10386,7 @@ msgid "Product Name"
 msgstr ""
 
 #: CRM/Contribute/DAO/Product.php templates/CRM/Contact/Page/View/Sunlight.tpl
+#: templates/CRM/common/mailingEditor.tpl
 msgid "Image"
 msgstr ""
 
@@ -29253,10 +29257,7 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
-msgid ""
-"The market value of this premium (e.g. retail price). For tax-deductible "
-"contributions, this amount will be used to set the non-deductible amount in "
-"the contribution record and receipt."
+msgid "To estimate the cost of fundraising, please fill in the market price of this premium. The market price you filled in will not affect the total amount displayed on the contribution record and receipt."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
@@ -47524,9 +47525,6 @@ msgstr ""
 msgid "Grand Total of recurring amount"
 msgstr ""
 
-msgid "Calculation when unlimit installments"
-msgstr ""
-
 msgid "This gift will be eligible when your %1."
 msgstr ""
 
@@ -47558,4 +47556,130 @@ msgid "SMS Text"
 msgstr ""
 
 msgid "With Receipt"
+msgstr ""
+
+msgid "Receipt date not set?"
+msgstr ""
+
+msgid "Email receipt not sent?"
+msgstr ""
+
+msgid "Copied"
+msgstr ""
+
+msgid "Final URL"
+msgstr ""
+
+msgid "Short URL"
+msgstr ""
+
+msgid "Copy Final URL"
+msgstr ""
+
+msgid "Copy Short URL"
+msgstr ""
+
+msgid "Procceed Receipt Sending?"
+msgstr ""
+
+msgid "When donor doesn't specify installment, calculate total amount by: amount per installment x estimate installments"
+msgstr ""
+
+msgid "When donor do specify installment, calculate total amount by: amount per installment x donor choose installments"
+msgstr ""
+
+msgid "Bank Code"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Mailing Advanced Settings"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Templates"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Blocks"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "1 Column"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "1:2 Column"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "1 Column + Float"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Paragraph"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Button"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Rich Content: 1 Column"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Rich Content: 2 Column"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Rich Content: Float"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Theme"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Page"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Size"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Color"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Background"
+msgstr ""
+
+msgid "Check to attach formal receipt PDF on notification email after every complete transaction."
+msgstr ""
+
+msgid "This option only effect transaction from contribution page and belonged page enable notification confirmation and the contribution type is tax-deductible."
+msgstr ""
+
+#: templates/civicrm_state_province.tpl
+msgid "Central Region"
+msgstr ""
+
+msgid "East Region"
+msgstr ""
+
+msgid "North-East Region"
+msgstr ""
+
+msgid "North Region"
+msgstr ""
+
+msgid "West Region"
+msgstr ""
+
+msgid "Receipt Log"
 msgstr ""

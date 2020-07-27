@@ -103,7 +103,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $this->assign('single', $this->_single);
 
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    require_once 'CRM/Utils/Rule.php';
     $urlParams = 'force=1';
     if (CRM_Utils_Rule::qfKey($qfKey)) {
       $urlParams .= "&qfKey=$qfKey";
@@ -114,6 +113,12 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
     CRM_Utils_System::setTitle(ts('Print Contribution Receipts'));
+
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    if (!empty($activityTypeId)) {
+      $this->_enableEmailReceipt = TRUE;
+      CRM_Utils_System::setTitle(ts('Print or Email Contribution Receipts'));
+    }
   }
 
   /**
@@ -125,24 +130,47 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public function buildQuickForm() {
     // make receipt target popup new tab
-    $this->updateAttributes(array('target' => '_blank'));
-
     $options = self::getPrintingTypes();
+    $this->addRadio( 'window_envelope', ts('Apply to window envelope'), $options,null,'<br/>',true );
 
-    $this->addRadio( 'window_envelope',ts('Apply to window envelope'),$options,null,'<br/>',true );
+    if (count($this->_contributionIds) <= 100 && $this->_enableEmailReceipt) {
+      $this->addCheckBox('email_pdf_receipt', '', array(ts('Send an Email') => 1));
+      $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
+      $emails = array(
+        ts('Default') => $fromEmails['default'],
+        ts('Your Email') => $fromEmails['contact'],
+      );
+      $this->addSelect('from_email', ts('From Email'), array('' => ts('- select -')) + $emails);
+      $this->add('textarea', 'receipt_text', ts('Text Message'), array('cols' => '70'));
+    }
 
-    $this->assign('elements', array('window_envelope'));
-
-    $this->addButtons(array(
-        array('type' => 'next',
-          'name' => ts('Download Receipt(s)'),
-          'isDefault' => TRUE,
-        ),
-        array('type' => 'back',
-          'name' => ts('Cancel'),
-        ),
-      )
+    $buttons = array();
+    if (count($this->_contributionIds) <= 100 && $this->_enableEmailReceipt) {
+      $buttons[] = array(
+        'type' => 'upload',
+        'name' => ts('Email Receipt'),
+      );
+    }
+    $buttons[] = array(
+      'type' => 'next',
+      'name' => ts('Download Receipt(s)'),
+      'isDefault' => TRUE,
     );
+    $buttons[] = array(
+      'type' => 'back',
+      'name' => ts('Cancel'),
+    );
+    $this->addButtons($buttons);
+    $this->addFormRule(array('CRM_Contribute_Form_Task_PDF', 'formRule'), $this);
+  }
+
+  static public function formRule($fields, $files, $self) {
+    $errors = array();
+    if (!empty($fields['email_pdf_receipt'][1]) && empty($fields['from_email'])) {
+      $errors['from_email'] = ts('%1 is a required field.', array(1 => ts('From Email')));
+      // make receipt not popup when error detect
+    }
+    return $errors;
   }
 
   /**
@@ -156,13 +184,24 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     // get all the details needed to generate a receipt
     $contribIDs = implode(',', $this->_contributionIds);
 
-    $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
-    $details = array_replace(array_flip($this->_contributionIds), $details);
-    $params = $this->controller->exportValues($this->_name);
+    $actionName = $this->controller->getActionName($this->_name);
+    list($page, $action) = $actionName;
+    if ($action == 'next') {
+      $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
+      $details = array_replace(array_flip($this->_contributionIds), $details);
+      $params = $this->controller->exportValues($this->_name);
 
-    self::makeReceipt($details, $params['window_envelope']);
-    self::makePDF();
-    CRM_Utils_System::civiExit();
+      self::makeReceipt($details, $params['window_envelope']);
+      self::makePDF();
+      CRM_Utils_System::civiExit();
+    }
+    else if($action == 'upload') {
+      // #28472, batch sending email pdf receipt
+      $params = $this->controller->exportValues($this->_name);
+      foreach($this->_contributionIds as $contributionId) {
+        CRM_Contribute_BAO_Contribution::sendPDFReceipt($contributionId, $params['from_email'], $params['window_envelope'], $params['receipt_text']);
+      }
+    }
   }
 
   public function pushFile($html) {
@@ -186,7 +225,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
   }
 
-  public function makeReceipt($details, $window_envelope = NULL) {
+  public function makeReceipt($details, $window_envelope = NULL, $isAttachment = FALSE) {
     $config = CRM_Core_Config::singleton();
     $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
     $this->_tmpreceipt = tempnam($tmpDir, 'receipt');
@@ -228,7 +267,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $location = $domain->getLocationValues();
 
     $baseIPN = new CRM_Core_Payment_BaseIPN();
-    $config = &CRM_Core_Config::singleton();
+    $config = CRM_Core_Config::singleton();
     $count = 0;
 
     foreach ($details as $contribID => $detail) {
@@ -253,7 +292,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         continue;
       }
 
-      $template = &CRM_Core_Smarty::singleton();
+      $template = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);
       $template->assign('print_type', $print_type);
       $template->assign('print_type_count', count($print_type));
       $template->assign('single_page_letter', $window_envelope);
@@ -293,7 +332,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         }
         $receipt_id = CRM_Contribute_BAO_Contribution::genReceiptID($contribution);
       }
-      $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values);
+      $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values, $template);
 
       // do not use array to prevent memory exhusting
       self::pushFile($html);
@@ -303,6 +342,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $template->clearTemplateVars();
       $count++;
       unset($html);
+      unset($template);
     }
   }
 
@@ -315,4 +355,3 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     );
   }
 }
-

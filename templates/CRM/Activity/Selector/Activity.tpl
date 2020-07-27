@@ -53,7 +53,10 @@
       {foreach from=$rows item=row}
       <tr class="{cycle values="odd-row,even-row"} {$row.class} crm-activity crm-activity_status-{$row.activity_status_id} crm-activity-type_{$row.activity_type_id}" id="crm-activity_{$row.activity_id}">
         <td class="crm-activity-type crm-activity-type_{$row.activity_type_id}">{$row.activity_type}</td>
-      	<td class="crm-activity-subject">{$row.subject}</td>
+      	<td class="crm-activity-subject">
+          {$row.subject}
+          {if $row.details}<div class="description">{$row.details|strip_tags}</div>{/if}
+        </td>
         <td class="crm-activity-source_contact_name">
         {if $contactId == $row.source_contact_id}
           {$row.source_contact_name}

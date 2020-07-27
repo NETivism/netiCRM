@@ -145,11 +145,12 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
   }
 
   public function makeReceipt($contactIds, $option) {
+    $config = CRM_Core_Config::singleton();
     $this->_tmpreceipt = tempnam('/tmp', 'receiptyear');
     $count = 0;
 
     foreach ($contactIds as $contact_id){
-      $template = &CRM_Core_Smarty::singleton();
+      $template = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);
       if ($count) {
         $html = '<div class="page-break" style="page-break-after: always;"></div>';
       }
@@ -167,6 +168,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       $template->clearTemplateVars();
       $count++;
       unset($html);
+      unset($template);
     }
   }
 }

@@ -83,7 +83,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
       $this->add('text', "label[$i]", ts('Label'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'label'));
 
       // value
-      $this->add('text', "value[$i]", ts('Value'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'value'));
+      $this->add('text', "value[$i]", ts('Value'));
       $this->add('select', "grouping[$i]", ts('show'), array('' => ts('no limit')) + $grouping);
       $this->addRule("value[$i]", ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
 

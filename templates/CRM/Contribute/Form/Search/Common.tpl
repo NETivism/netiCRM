@@ -75,12 +75,15 @@
 	    {$form.contribution_payment_instrument_id.html}
     </div>
     <div>
+      <label>{$form.contribution_payment_processor_id.label}</label> 
+	    {$form.contribution_payment_processor_id.html}
+    </div>
+    <div>
       {$form.contribution_check_number.label} {$form.contribution_check_number.html}
     </div>
     <div>{$form.contribution_receipt_date_isnull.html}{$form.contribution_receipt_date_isnull.label}</div>
     <div>{$form.contribution_thankyou_date_isnull.html}{$form.contribution_thankyou_date_isnull.label}</div>
-    <div>{$form.contribution_pay_later.html}{$form.contribution_pay_later.label}</div>
-    <div>{$form.contribution_test.html}{$form.contribution_test.label}</div>
+    <div>{$form.contribution_pdf_receipt_not_send.html}{$form.contribution_pdf_receipt_not_send.label}</div>
 	</td>
 	<td>
     <div>
@@ -100,16 +103,24 @@
     </div>
   </td>
 </tr>
-	<td>{$form.contribution_in_honor_of.label} <br />
-	{$form.contribution_in_honor_of.html}</td>
+<tr>
 	<td>
-  	{$form.contribution_currency_type.label} <br />
-  	{$form.contribution_currency_type.html}
+    <div>{$form.contribution_in_honor_of.label} {$form.contribution_in_honor_of.html}</div>
+  	<div>{$form.contribution_currency_type.label} {$form.contribution_currency_type.html}</div>
+  </td>
+	<td>
+    <div>{$form.contribution_pay_later.html}{$form.contribution_pay_later.label}</div>
+    <div>{$form.contribution_test.html}{$form.contribution_test.label}</div>
   </td>
 </tr>
 <tr>
-	<td>{$form.contribution_pcp_made_through_id.label} <br />
-	{$form.contribution_pcp_made_through_id.html}</td>
+  <td>
+  </td>
+  <td>
+</td>
+</tr>
+<tr>
+	<td>{$form.contribution_pcp_made_through_id.label} {$form.contribution_pcp_made_through_id.html}</td>
 	<td>{$form.contribution_pcp_display_in_roll.label}
 	{$form.contribution_pcp_display_in_roll.html}<span class="crm-clear-link">(<a href="javascript:unselectRadio('contribution_pcp_display_in_roll','{$form.formName}')">{ts}clear{/ts}</a>)</span></td>
 </tr>

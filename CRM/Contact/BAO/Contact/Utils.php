@@ -887,7 +887,7 @@ Group By  componentId";
     }
   }
 
-  static function fromEmailAddress($contactId){
+  static function fromEmailAddress($contactId = NULL){
     $session = CRM_Core_Session::singleton();
     if (!$contactId) {
       $contactId = $session->get('userID');

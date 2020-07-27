@@ -80,29 +80,28 @@ class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
 
     // process the query only if no contactId
     if ($contactId) {
-      $contact_id = $contactId;
+      $query = "
+   SELECT DISTINCT contact_a.id as contact_id, civicrm_email.id as email_id
+     FROM civicrm_contact contact_a 
+LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
+    WHERE civicrm_email.email = %1 AND contact_a.is_deleted = 0 AND contact_a.id = %2";
+      $params = array(1 => array($email, 'String'), 2 => array($contactId, 'Positive'));
+      $dao = CRM_Core_DAO::executeQuery($query, $params);
     }
     else {
-      /* First, find out if the contact already exists */
-
-
       $query = "
-   SELECT DISTINCT contact_a.id as contact_id 
+   SELECT DISTINCT contact_a.id as contact_id, civicrm_email.id as email_id
      FROM civicrm_contact contact_a 
-LEFT JOIN civicrm_email      ON contact_a.id = civicrm_email.contact_id
+LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
     WHERE civicrm_email.email = %1 AND contact_a.is_deleted = 0";
-
       $params = array(1 => array($email, 'String'));
       $dao = CRM_Core_DAO::executeQuery($query, $params);
-      $id = array();
-      // lets just use the first contact id we got
-      if ($dao->fetch()) {
-        $contact_id = $dao->contact_id;
-      }
-      $dao->free();
     }
+    $dao->fetch();
+    $contact_id = $dao->contact_id;
+    $email_id = $dao->email_id;
+    $dao->free();
 
-    require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
 
     if (!$contact_id) {
@@ -120,13 +119,13 @@ LEFT JOIN civicrm_email      ON contact_a.id = civicrm_email.contact_id
       $value = array(
         'email' => $email,
         'location_type_id' => $locationType->id,
+        'is_bulkmail' => 1,
       );
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
 
       require_once 'CRM/Import/Parser.php';
       $formatted['onDuplicate'] = CRM_Import_Parser::DUPLICATE_SKIP;
       $formatted['fixAddress'] = TRUE;
-      require_once 'api/api.php';
       $contact = civicrm_api('contact', 'create', $formatted);
       if (civicrm_error($contact)) {
         return $success;
@@ -140,13 +139,16 @@ LEFT JOIN civicrm_email      ON contact_a.id = civicrm_email.contact_id
       return $success;
     }
 
-    require_once 'CRM/Core/BAO/Email.php';
-    require_once 'CRM/Core/BAO/Location.php';
-    require_once 'CRM/Contact/BAO/Contact.php';
+    // purge contact bulk email assignment, set this email to bulkmail
+    $sql = " UPDATE civicrm_email SET is_bulkmail = 0 WHERE contact_id = %1";
+    CRM_Core_DAO::executeQuery($sql, array(1 => array($contact_id, 'Positive')));
+    $mailobj = new CRM_Core_BAO_Email();
+    $mailobj->id = $email_id;
+    $mailobj->find(TRUE);
+    $mailobj->is_bulkmail = 1;
+    $mailobj->save();
 
-    /* Get the primary email id from the contact to use as a hash input */
-
-
+    // Get the primary email id from the contact to use as a hash input
     $dao = new CRM_Core_DAO();
 
     $query = "
@@ -392,7 +394,7 @@ SELECT     civicrm_email.id as email_id
     $success = NULL;
     foreach ($groups as $groupID) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $groupID, 'title');
-      if (array_key_exists($groupID, $contactGroups) && $contactGroups[$groupID]['status'] != 'Removed') {
+      if (array_key_exists($groupID, $contactGroups) && $contactGroups[$groupID]['status'] == 'Added') {
         $group[$groupID]['title'] = $contactGroups[$groupID]['title'];
 
         $group[$groupID]['status'] = $contactGroups[$groupID]['status'];
@@ -401,9 +403,7 @@ SELECT     civicrm_email.id as email_id
         continue;
       }
 
-      $se = self::subscribe($groupID,
-        $params['email'], $contactId, $context
-      );
+      $se = self::subscribe($groupID, $params['email'], $contactId, $context);
       if ($se !== NULL) {
         $success = TRUE;
         $groupAdded[] = $title;
