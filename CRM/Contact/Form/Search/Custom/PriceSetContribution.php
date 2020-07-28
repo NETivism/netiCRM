@@ -98,12 +98,13 @@ SELECT l.price_field_value_id as price_field_value_id,
        l.qty,
        l.entity_table,
        l.entity_id
-FROM   civicrm_line_item l, civicrm_price_set_entity e
+FROM   civicrm_line_item l, civicrm_price_set_entity e INNER JOIN civicrm_price_field_value pfv ON e.entity_id = pfv.id AND pfv.is_active = 1
 WHERE e.price_set_id = $this->_price_set_id AND
       l.entity_table = e.entity_table AND
       l.entity_id = e.entity_id
 ORDER BY l.entity_table, l.entity_id ASC
 ";
+// Avoid price field or value is not active
 
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
@@ -111,7 +112,12 @@ ORDER BY l.entity_table, l.entity_id ASC
     $rows = array();
     while ($dao->fetch()) {
       $uniq = $dao->entity_table . "-" . $dao->entity_id;
-      $rows[$uniq][] = "price_field_{$dao->price_field_value_id} = {$dao->qty}";
+      $fieldName = "price_field_{$dao->price_field_value_id}";
+      // Avoid price field or value is not active
+      if (!in_array($fieldName, $this->_columns)) {
+        continue;
+      }
+      $rows[$uniq][] = "{$fieldName} = {$dao->qty}";
     }
 
     foreach (array_keys($rows) as $entity) {
