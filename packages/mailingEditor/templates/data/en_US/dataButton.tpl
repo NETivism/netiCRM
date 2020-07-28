@@ -27,6 +27,7 @@
         "padding-right": "10px",
         "padding-bottom": "10px",
         "padding-left": "10px",
+        "line-height": "100%",
         "font-size": "18px"
       },
       "elem": {
@@ -36,6 +37,7 @@
         "margin-left": "0",
         "text-align": "center",
         "letter-spacing": "0",
+        "line-height": "100%",
         "font-weight": "bold",
         "color": "#ffffff"
       }
