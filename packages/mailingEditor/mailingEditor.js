@@ -455,6 +455,7 @@
       $(window).scroll(function() {
         let scrollTop = $(window).scrollTop();
         $elem.removeClass("on-screen-center");
+        $elem.next(".add-block-here").remove();
 
         for (let blockID in elemsYaxisRange) {
           let yMin = elemsYaxisRange[blockID][0],
@@ -463,6 +464,7 @@
           if (scrollTop >= yMin && scrollTop <= yMax) {
             _debug(blockID);
             $("#" + blockID).addClass("on-screen-center");
+            $("#" + blockID).after("<div class='add-block-here'>" + _ts["Add block here."] + "</div>");
           }
         }
       });
@@ -767,6 +769,12 @@
                 $target.after(output);
                 break;
             }
+
+            // Remove 'Add block here' after append the block
+            $(".add-block-here").remove();
+
+            // After adding the block, re-detect which block is on the screen
+            _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
 
             let $block = $(".nme-block[data-id='" + blockID + "']"),
                 $nmeb = $block.find(".nmeb"),
@@ -1162,6 +1170,9 @@
       if ($block.length) {
         // Delete DOM
         $block.remove();
+
+        // After deleting the block, re-detect which block is on the screen
+        _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
 
         // Remove block data
         if (_data["sections"][section]["blocks"][blockID]) {

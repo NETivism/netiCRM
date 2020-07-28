@@ -26,6 +26,9 @@
 <script type="text/javascript">
 window.nmEditor = {
 	translation: {
+		// Editor
+		"Add block here.": "{/literal}{ts}Add block here.{/ts}{literal}",
+
 		// Panels
 		"Mailing Advanced Settings" : "{/literal}{ts}Mailing Advanced Settings{/ts}{literal}",
 		"Templates" : "{/literal}{ts}Templates{/ts}{literal}",
@@ -78,7 +81,6 @@ window.nmEditor = {
 
 			// Initialize the new editor after swtich option.
 			$(".nme-container").nmEditor();
-
 		}
 		else {
 			// If traditional editor has no content, initialize the new editor directly.

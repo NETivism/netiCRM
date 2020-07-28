@@ -523,6 +523,14 @@ ul.nme-setting-panels-tabs li a.is-active {
 .ql-align-justify { text-align: justify; }
 .ql-editor p { margin: 0 0 1.5rem 0; }
 .on-screen-center { border: 1px solid #81D4FA; }
+.add-block-here {
+  padding: 20px;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #03A9F4;
+  border: 1px solid #81D4FA;
+  background: #E1F5FE;
+}
 .switch-toggle-container {
   display: flex;
   align-items: center;
