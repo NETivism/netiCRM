@@ -50,7 +50,7 @@
       border-spacing: 0 !important;
       border-collapse: collapse !important;
       table-layout: fixed !important;
-      margin: 0 auto !important;
+      margin: 0 auto;
     }
     table table table {
       table-layout: auto;

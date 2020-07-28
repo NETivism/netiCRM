@@ -656,7 +656,12 @@
 
                   case "rc-col-1":
                     var $nestTarget = $nmebElem.find("td.col-1");
-                    $nestTarget.html("");
+
+                    // Remove token string from target element
+                    if (!$nestTarget.data("token-removed")) {
+                      $nestTarget.html("");
+                      $nestTarget.attr("data-token-removed", "1");
+                    }
 
                     for (var nestBlockID in block.data[0]["blocks"]) {
                       var nestBlockData = block.data[0]["blocks"][nestBlockID];
@@ -671,7 +676,12 @@
                       for (var dataIndex = 0; dataIndex < 2; dataIndex++) {
                         var col = dataIndex + 1;
                         $nestTarget = $nmebElem.find("td.col-" + col);
-                        $nestTarget.html("");
+
+                        // Remove token string from target element
+                        if (!$nestTarget.data("token-removed")) {
+                          $nestTarget.html("");
+                          $nestTarget.attr("data-token-removed", "1");
+                        }
 
                         for (var nestBlockID in block.data[dataIndex]["blocks"]) {
                           var nestBlockData = block.data[dataIndex]["blocks"][nestBlockID];
@@ -689,7 +699,11 @@
                           nestBlockType = nestBlockData.type,
                           $nestTarget = nestBlockType == "image" ? $nmebElem.find("td.img-col") : $nmebElem.find("td.text-col");
 
-                      $nestTarget.html("");
+                          // Remove token string from target element
+                          if (!$nestTarget.data("token-removed")) {
+                            $nestTarget.html("");
+                            $nestTarget.attr("data-token-removed", "1");
+                          }
 
                       if (!_objIsEmpty(nestBlockData)) {
                         _nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
@@ -887,7 +901,11 @@
                         nestBlocksData = block["data"][0]["blocks"],
                         $nestTarget = $nmebElem.find("td.col-1");
 
-                    $nestTarget.html("");
+                    // Remove token string from target element
+                    if (!$nestTarget.data("token-removed")) {
+                      $nestTarget.html("");
+                      $nestTarget.attr("data-token-removed", "1");
+                    }
 
                     // If this is a new block, copy data from template
                     if (_objIsEmpty(nestBlocksData)) {
@@ -934,7 +952,7 @@
                     break;
 
                     case "rc-col-2":
-                      var	group = ["image", "paragraph"],
+                      var	group = ["image", "paragraph", "button"],
                           nestBlocksData,
                           $nestTarget;
 
@@ -942,7 +960,12 @@
                         var col = dataIndex + 1;
                         nestBlocksData = block["data"][dataIndex]["blocks"],
                         $nestTarget = $nmebElem.find("td.col-" + col);
-                        $nestTarget.html("");
+
+                        // Remove token string from target element
+                        if (!$nestTarget.data("token-removed")) {
+                          $nestTarget.html("");
+                          $nestTarget.attr("data-token-removed", "1");
+                        }
 
                         // If this is a new block, copy data from template
                         if (_objIsEmpty(nestBlocksData)) {
@@ -996,7 +1019,7 @@
                       break;
 
                       case "rc-float":
-                        var group = ["image", "paragraph"],
+                        var group = ["image", "paragraph", "button"],
                             nestBlocksData = block["data"][0]["blocks"],
                             $nestTarget;
 
@@ -1009,7 +1032,10 @@
                             $nestTarget = nestBlockType == "image" ? $nmebElem.find("td.img-col") : $nmebElem.find("td.text-col");
 
                             // Remove token string from target element
-                            $nestTarget.html("");
+                            if (!$nestTarget.data("token-removed")) {
+                              $nestTarget.html("");
+                              $nestTarget.attr("data-token-removed", "1");
+                            }
 
                             if (!_objIsEmpty(nestBlockData)) {
                               // Generate new ID to this block
@@ -1030,6 +1056,14 @@
                                 nestBlockData["styles"]["block"]["padding-right"] = "10px";
                                 nestBlockData["styles"]["block"]["padding-bottom"] = "0";
                                 nestBlockData["styles"]["block"]["padding-left"] = "10px";
+                              }
+
+                              if (nestBlockType == "button") {
+                                nestBlockData["styles"]["block"]["padding-right"] = "10px";
+                                nestBlockData["styles"]["block"]["padding-bottom"] = "0";
+                                nestBlockData["styles"]["block"]["padding-left"] = "10px";
+                                nestBlockData["styles"]["block"]["text-align"] = "right";
+                                nestBlockData["styles"]["elemContainer"]["margin-right"] = "0";
                               }
 
                               // Added data to new index
@@ -1053,7 +1087,10 @@
                             $nestTarget = nestBlockType == "image" ? $nmebElem.find("td.img-col") : $nmebElem.find("td.text-col");
 
                             // Remove token string from target element
-                            $nestTarget.html("");
+                            if (!$nestTarget.data("token-removed")) {
+                              $nestTarget.html("");
+                              $nestTarget.attr("data-token-removed", "1");
+                            }
 
                             // Set deafult value
                             nestBlockData.id = nestBlockID;
