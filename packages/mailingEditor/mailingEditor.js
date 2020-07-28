@@ -1281,7 +1281,7 @@
         _sortable();
         _nmePanels.init();
         _nmePreview.init();
-        _onScreenCenterElem(".nme-block");
+        _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
         _tooltip();
       }
     }
