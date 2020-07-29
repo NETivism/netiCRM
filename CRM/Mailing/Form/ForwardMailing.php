@@ -55,6 +55,8 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
       CRM_Core_Error::fatal(ts('Invalid form parameters.'));
       CRM_Core_Error::statusBounce(ts('Invalid form parameters.'));
     }
+
+    CRM_Contact_BAO_Contact::redirectPreferredLanguage($q->contact_id);
     $mailing = &$q->getMailing();
 
     if ($hash) {
