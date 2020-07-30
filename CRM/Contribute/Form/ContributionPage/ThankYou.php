@@ -90,7 +90,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
 
     // tokens
     $tokens = array();
-    $tokens = CRM_Core_SelectValues::contactTokens();
+    $tokens = array_merge(CRM_Core_SelectValues::contactTokens(), CRM_Core_SelectValues::contributionTokens());
     $this->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
     $this->add('select', 'token2', ts('Insert Tokens'),

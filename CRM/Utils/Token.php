@@ -642,6 +642,90 @@ class CRM_Utils_Token {
     return $value;
   }
 
+  
+  /**
+   * Replace all the contact-level tokens in $str with information from
+   * $contact.
+   *
+   * @param string  $str               The string with tokens to be replaced
+   * @param array   $contact           Associative array of contribution properties
+   * @param boolean $html              Replace tokens with HTML or plain text
+   * @param array   $knownTokens       A list of tokens that are known to exist in the email body
+   * @param boolean $returnBlankToken  return unevaluated token if value is null
+   *
+   * @return string                    The processed string
+   * @access public
+   * @static
+   */
+  public static function &replaceContributionTokens( $str, &$contribution, $html = FALSE, $knownTokens = NULL,
+  $returnBlankToken = FALSE, $escapeSmarty = FALSE ) {
+    $key = 'contribution';
+    if (self::$_tokens[$key] == NULL) {
+      /* This should come from UF */
+
+      self::$_tokens[$key] = array_merge(array_keys(CRM_Contribute_BAO_Contribution::exportableFields('All')), $knownTokens['contribution']);
+    }
+
+    // here we intersect with the list of pre-configured valid tokens
+    // so that we remove anything we do not recognize
+    // I hope to move this step out of here soon and
+    // then we will just iterate on a list of tokens that are passed to us
+    if (!$knownTokens || !CRM_Utils_Array::value($key, $knownTokens)) {
+      return $str;
+    }
+
+    $str = preg_replace_callback(
+      self::tokenRegex($key),
+      function ($matches) use (&$contribution, $html, $returnBlankToken, $escapeSmarty) {
+        return CRM_Utils_Token::getContributionTokenReplacement($matches[1], $contribution, $html, $returnBlankToken, $escapeSmarty);
+      },
+      $str
+    );
+
+    $str = preg_replace('/\\\\|\{(\s*)?\}/', ' ', $str);
+    return $str;
+  }
+
+  public function getContributionTokenReplacement($token, &$contribution, $html = FALSE,
+    $returnBlankToken = FALSE, $escapeSmarty = FALSE
+  ) {
+    if (self::$_tokens['contribution'] == NULL) {
+      /* This should come from UF */
+
+      self::$_tokens['contribution'] = array_keys(CRM_Contribute_BAO_Contribution::exportableFields('All'));
+    }
+
+    /* Construct value from $token and $contact */
+
+    $value = NULL;
+
+    // check if the token we were passed is valid
+    // we have to do this because this function is
+    // called only when we find a token in the string
+
+    if (!in_array($token, self::$_tokens['contribution'])) {
+      $value = "{contribution.$token}";
+    }
+    else {
+      $value = CRM_Utils_Array::retrieveValueRecursive($contribution, $token);
+    }
+
+    if (!$html) {
+      $value = str_replace('&amp;', '&', $value);
+    }
+
+    // if null then return actual token
+    if ($returnBlankToken && !$value) {
+      $value = "{contribution.$token}";
+    }
+
+    if ($escapeSmarty) {
+      $value = self::tokenEscapeSmarty($value);
+    }
+
+    return $value;
+  }
+
   /**
    * Replace all the hook tokens in $str with information from
    * $contact.

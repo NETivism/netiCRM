@@ -262,7 +262,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       // #18853, tokenize thank you top text
       $receiptText = $template->get_template_vars('receipt_text');
       if($receiptText) {
-        $receiptText = self::tokenize($contactID, $receiptText); 
+        $receiptText = self::tokenize($contactID, $receiptText, $values['contribution_id']);
         $template->assign('receipt_text', $receiptText);
       }
 
@@ -831,20 +831,50 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     return array();
   }
 
-  function tokenize($contactId, $input) {
+  function tokenize($contactId, $input, $contributionId = NULL) {
     $output = $input;
     $tokens = CRM_Utils_Token::getTokens($input);
-    if (isset($tokens['contact'])) {
-      $returnProperties = array();
-      foreach ($tokens['contact'] as $name) {
-        $returnProperties[$name] = 1;
+    $contactParams = array('contact_id' => $contactId);
+    // Prepare $detail for contact, contribution properties array
+    foreach ($tokens as $component => $usedToken) {
+      if (isset($usedToken)) {
+        if ($component == 'contact') {
+          $returnProperties = array();
+          foreach ($tokens['contact'] as $name) {
+            $returnProperties[$name] = 1;
+          }
+          list($contact) = CRM_Mailing_BAO_Mailing::getDetails($contactParams, $returnProperties, FALSE);
+          $contact = $contact[$contactId];
+          $detail['contact'] = $contact;
+        }
+        if ($component == 'contribution' && !empty($contributionId)) {
+          $contactParams['contribution_id'] = $contributionId;
+          $returnProperties = array();
+          foreach ($tokens['contribution'] as $name) {
+            $returnProperties[$name] = 1;
+          }
+          $ids = $params = array('contribution_id' => $contributionId);
+          CRM_Contribute_BAO_Contribution::getValues($params, $contribution, $ids);
+          $detail['contribution'] = $contribution;
+        }
       }
-      $contactParams = array('contact_id' => $contactId);
-      list($contact) = CRM_Mailing_BAO_Mailing::getDetails($contactParams, $returnProperties, FALSE);
-      $contact = $contact[$contactId];
-
-      $output = CRM_Utils_Token::replaceContactTokens($input, $contact, FALSE, $tokens, FALSE, TRUE);
     }
+
+    // Hook for contact, contribution properties of 'tokenValues' function
+    CRM_Utils_Hook::tokenValues($detail, $contactParams, NULL, $tokens, 'CRM_Contribution_BAO_ContributionPage');
+
+    // Applied properties to tokens
+    foreach ($tokens as $component => $usedToken) {
+      if (isset($usedToken)) {
+        if ($component == 'contact') {
+          $output = CRM_Utils_Token::replaceContactTokens($output, $detail['contact'], FALSE, $tokens, FALSE, TRUE);
+        }
+        if ($component == 'contribution' && !empty($contributionId)) {
+          $output = CRM_Utils_Token::replaceContributionTokens($output, $detail['contribution'], FALSE, $tokens, FALSE, TRUE);
+        }
+      }
+    }
+
     return $output;
   }
 }
