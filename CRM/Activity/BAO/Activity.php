@@ -815,6 +815,7 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$acti
       $values[$activityID]['subject'] = $dao->subject;
       $values[$activityID]['source_contact_name'] = $dao->source_contact_name;
       $values[$activityID]['source_contact_id'] = $dao->source_contact_id;
+      $values[$activityID]['data_contact_id'] = $data['contact_id'];
 
       if ($bulkActivityTypeID != $dao->activity_type_id) {
         // build array of target / assignee names
