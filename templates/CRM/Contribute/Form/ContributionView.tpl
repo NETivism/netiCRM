@@ -363,7 +363,7 @@
   {if $rows}
   <div class="crm-accordion-wrapper crm-accordion-open" id="">
     <div class="crm-accordion-header">
-      <div class="zmdi crm-accordion-pointer"></div>{ts}Email Receipt{/ts}
+      <div class="zmdi crm-accordion-pointer"></div>{ts}Receipt Log{/ts}
     </div>
     <div class="crm-accordion-body">
     {include file="CRM/Activity/Form/Selector.tpl}
