@@ -88,10 +88,25 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
 
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_ThankYou', 'formRule'));
 
+    if (CRM_SMS_BAO_Provider::activeProviderCount()) {
+      $this->addElement('checkbox', 'is_send_sms', ts('Send SMS when success?'), NULL, array('onclick' => "showSMS()"));
+      $this->add('textarea', 'sms_text', ts('SMS Text'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'sms_text'));
+    }
+
     // tokens
     $tokens = array();
-    $tokens = array_merge(CRM_Core_SelectValues::contactTokens(), CRM_Core_SelectValues::contributionTokens());
+    $tokens = CRM_Core_SelectValues::contactTokens();
+    $tokens = array_merge(CRM_Core_SelectValues::contributionTokens(), $tokens);
     $this->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
+
+    $this->add('select', 'token1', ts('Insert Tokens'),
+      $tokens, FALSE,
+      array(
+        'size' => "5",
+        'multiple' => TRUE,
+        'onclick' => "return tokenReplText(this);",
+      )
+    );
 
     $this->add('select', 'token2', ts('Insert Tokens'),
       $tokens, FALSE,

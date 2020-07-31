@@ -119,11 +119,38 @@
   </td>
     </tr>
     </table>
+    {if $form.is_send_sms}
+        <table class="form-layout-compressed">
+            <tr class="crm-contribution-contributionpage-thankyou-form-block-is_send_sms">
+                <td class="label"></td>
+                <td class="html-adjust">{$form.is_send_sms.html}{$form.is_send_sms.label}<br />
+                    <span class="description">{ts}Check this box if you want an SMS message to be sent automatically.{/ts}</span>
+                </td>
+            </tr>
+        </table>
+        <table id="smsDetails" class="form-layout-compressed">
+            <tr class="crm-contribution-contributionpage-thankyou-form-block-sms_text">
+                <td class="label">{$form.sms_text.label}</td>
+                <td class="html-adjust">
+                    <span class="helpIcon" id="helphtml">
+                        <a class="token-trigger" href="#" onClick="return showToken('Text', 1);">{$form.token1.label}</a>
+                        <div id="tokenText" style="display:none;">
+                            <input style="border:1px solid #999999;" type="text" id="filter1" size="20" name="filter1" onkeyup="filter(this, 1)"/><br />
+                            <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
+                            {$form.token1.html}
+                        </div>
+                    </span>
+                {$form.sms_text.html}
+                </td>
+            </tr>
+        </table>
+    {/if}
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 	 
 <script type="text/javascript">
  showReceipt();
+ showSMS();
  {literal}
      function showReceipt() {
         var checkbox = document.getElementsByName("is_email_receipt");
@@ -133,6 +160,16 @@
             document.getElementById("receiptDetails").style.display = "none";
         }  
      } 
+     function showSMS() {
+        var checkbox = document.getElementsByName("is_send_sms");
+        if (checkbox.length) {
+            if (checkbox[0].checked) {
+                document.getElementById("smsDetails").style.display = "block";
+            } else {
+                document.getElementById("smsDetails").style.display = "none";
+            }
+        }
+     }
  {/literal} 
 </script>
 

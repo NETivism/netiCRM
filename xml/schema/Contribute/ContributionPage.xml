@@ -375,4 +375,21 @@
       <comment>Background image url on contribution page of special style in mobile.</comment>
       <add>1.3</add>
   </field> 
+  <field> 
+       <name>is_send_sms</name> 
+       <type>boolean</type> 
+       <comment>if true, it will automatically send mobile SMS message to successful donor.</comment> 
+       <default>0</default>
+       <add>1.3</add> 
+  </field> 
+  <field>
+       <name>sms_text</name>
+       <type>text</type>
+       <htmlType>textarea</htmlType>
+       <rows>6</rows>
+       <cols>50</cols>
+       <localizable>true</localizable>
+       <comment>SMS message content.</comment>
+       <add>1.3</add>
+  </field>
 </table>

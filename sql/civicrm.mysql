@@ -3679,7 +3679,9 @@ CREATE TABLE civicrm_contribution_page (
      currency varchar(3)   DEFAULT NULL COMMENT '3 character string, value from config setting or input via user.',
      installments_option text    COMMENT 'Use options for donor to select recurring installments.',
      background_URL varchar(255)   DEFAULT NULL COMMENT 'Background image url on contribution page of special style.',
-     mobile_background_URL varchar(255)   DEFAULT NULL COMMENT 'Background image url on contribution page of special style in mobile.' 
+     mobile_background_URL varchar(255)   DEFAULT NULL COMMENT 'Background image url on contribution page of special style in mobile.',
+     is_send_sms tinyint   DEFAULT 0 COMMENT 'if true, it will automatically send mobile SMS message to successful donor.',
+     sms_text text    COMMENT 'SMS message content.' 
 ,
     PRIMARY KEY ( id )
  

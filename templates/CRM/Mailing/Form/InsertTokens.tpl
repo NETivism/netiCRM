@@ -45,6 +45,7 @@ var isMailing    = false;
     isMailing = true;
 {elseif $form.formName eq 'ThankYou'}
     html_message = "receipt_text"; // contribution thank you
+    text_message = "sms_text"; // contribution thank you
     isMailing = false;
 {elseif $form.formName eq 'Registration'}
     html_message = "confirm_email_text"; // event registration notification
@@ -285,6 +286,10 @@ if ( isMailing ) {
             if ( isMailing ) { 
                 verify('', 'SMS');
             }
+        {/literal}
+        {elseif $form.formName eq 'ThankYou'}
+        {literal}
+            cj( "#"+ text_message ).replaceSelection( token ); 
         {/literal}
         {else}
         {literal}

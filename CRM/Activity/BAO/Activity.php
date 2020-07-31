@@ -1400,19 +1400,32 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    *        Also cound be 1 integer of contact_id
    * @param integer $providerId
    * @param string $message
+   * @param array $values objects, contribution is $values['contribution']
    *
    * Copy from SMSCommon::postProcess
    */
   public static function prepareSMS(
     $contactIds,
     $providerId,
-    $message
+    $message,
+    $values = array()
   ) {
     $activityParams = array(
       'sms_provider_id' => $providerId,
       'sms_text_message' => $message,
       'activity_subject' => substr($message, 0, 10),
     );
+    $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
+    if (!empty($values['participant'])) {
+      $activityParams['activity_type_id'] = CRM_Utils_Array::key('Event Registration SMS', $activityTypes);
+      $activityParams['source_record_id'] = $values['participant']->id;
+      $activityParams['subject'] = $values['participant']->source;
+    }
+    else if (!empty($values['contribution'])) {
+      $activityParams['activity_type_id'] = CRM_Utils_Array::key('Contribution SMS', $activityTypes);
+      $activityParams['source_record_id'] = $values['contribution']->id;
+      $activityParams['subject'] = $values['contribution']->source;
+    }
     $smsParams = array(
       'provider_id' => $providerId,
     );
@@ -1445,6 +1458,13 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
           $contact['is_deleted'] = $dao_contact->is_deleted;
           $contact['sort_name'] = $dao_contact->sort_name;
           $contact['display_name'] = $dao_contact->display_name;
+        }
+        if ($values['contribution']) {
+          foreach ($values['contribution'] as $key => $value) {
+            if (substr($key, 0, 1) != '_') {
+              $contact["contribution.{$key}"] = $value;
+            }
+          }
         }
       }
       if(!empty($contact)){
@@ -1495,7 +1515,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       $session = CRM_Core_Session::singleton();
       if (!is_numeric($session->get('userID'))) {
         $userID = CRM_Core_BAO_UFMatch::getContactId(1);
-      }else{
+      }
+      else{
         $userID = $session->get('userID');
       }
     }
@@ -1508,7 +1529,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $messageToken = CRM_Utils_Token::getTokens($text);
 
     // Create the meta level record first ( sms activity )
-    $activityTypeID = CRM_Utils_Array::key('SMS',CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE));
+    if (empty($activityParams['activity_type_id'])) {
+      $activityParams['activity_type_id'] = CRM_Utils_Array::key('SMS', CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE));
+    }
     // $activityTypeID = CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity',
     //   'activity_type_id',
     //   'SMS'
@@ -1516,15 +1539,14 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
 
     $details = $text;
 
-    $activitySubject = $activityParams['activity_subject'];
-    $activityParams = array(
+    if (!empty($activityParams['activity_subject']) && empty($activityParams['subject'])) {
+      $activityParams['subject'] = $activityParams['activity_subject'];
+    }
+    $activityParams += array(
       'source_contact_id' => $userID,
-      'activity_type_id' => $activityTypeID,
       'activity_date_time' => date('YmdHis'),
-      'subject' => $activitySubject,
       'details' => $details,
-      'status_id' => CRM_Utils_Array::key('Completed',CRM_Core_PseudoConstant::activityStatus()),
-      // 'status_id' => CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity', 'status_id', 'Completed'),
+      'status_id' => CRM_Utils_Array::key('Completed', CRM_Core_PseudoConstant::activityStatus()),
     );
 
     $activity = self::create($activityParams);
@@ -1558,7 +1580,13 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $escapeSmarty = FALSE;
     $errMsgs = array();
     foreach ($contactDetails as $values) {
-      $contactId = $values['contact_id'];
+      if (!empty($values['contact_id'])) {
+        $contactId = $values['contact_id'];
+      }
+      else {
+        // When contribution success SMS, the contact_id index of $values is ['id'].
+        $contactId = $values['id'];
+      }
 
       if (!empty($details) && is_array($details["{$contactId}"])) {
         // unset phone from details since it always returns primary number
@@ -1567,7 +1595,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $values = array_merge($values, $details["{$contactId}"]);
       }
 
+      CRM_Utils_Hook::tokenValues($values, $contactId, NULL, $messageToken, 'CRM_Activity_BAO_Activity::sendSMS');
+
       $tokenText = CRM_Utils_Token::replaceContactTokens($text, $values, FALSE, $messageToken, FALSE, $escapeSmarty);
+      $tokenText = CRM_Utils_Token::replaceComponentTokens($tokenText, $values, $messageToken, TRUE);
       $tokenText = CRM_Utils_Token::replaceHookTokens($tokenText, $values, $categories, FALSE, $escapeSmarty);
 
       // Only send if the phone is of type mobile
