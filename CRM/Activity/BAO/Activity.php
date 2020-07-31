@@ -1581,6 +1581,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $values = array_merge($values, $details["{$contactId}"]);
       }
 
+      CRM_Utils_Hook::tokenValues($values, $contactId, NULL, $messageToken, 'CRM_Activity_BAO_Activity::sendSMS');
+
       $tokenText = CRM_Utils_Token::replaceContactTokens($text, $values, FALSE, $messageToken, FALSE, $escapeSmarty);
       $tokenText = CRM_Utils_Token::replaceComponentTokens($tokenText, $values, $messageToken, TRUE);
       $tokenText = CRM_Utils_Token::replaceHookTokens($tokenText, $values, $categories, FALSE, $escapeSmarty);
