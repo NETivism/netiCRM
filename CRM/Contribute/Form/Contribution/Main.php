@@ -1061,7 +1061,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           }
         }
         elseif ($productDAO->calculate_mode == 'first') {
-          if($total < $productDAO->min_contribution_recur){
+          if($amount < $productDAO->min_contribution_recur){
             $msg = ts('first support of recurring payment at least %1', array(1 => CRM_Utils_Money::format($productDAO->min_contribution_recur)));
             $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
           }

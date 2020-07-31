@@ -104,7 +104,7 @@ contact_id = {$params['contact_id']}";
 
     $query = "
 SELECT email, civicrm_location_type.name as locationType, civicrm_email.is_primary as is_primary, civicrm_email.on_hold as on_hold,
-civicrm_email.id as email_id, civicrm_email.location_type_id as locationTypeId
+civicrm_email.id as email_id, civicrm_email.location_type_id as locationTypeId, civicrm_email.is_bulkmail
 FROM      civicrm_contact
 LEFT JOIN civicrm_email ON ( civicrm_email.contact_id = civicrm_contact.id )
 LEFT JOIN civicrm_location_type ON ( civicrm_email.location_type_id = civicrm_location_type.id )
@@ -124,6 +124,7 @@ ORDER BY
         'id' => $dao->email_id,
         'email' => $dao->email,
         'locationTypeId' => $dao->locationTypeId,
+        'is_bulkmail' => $dao->is_bulkmail,
       );
 
       if ($updateBlankLocInfo) {

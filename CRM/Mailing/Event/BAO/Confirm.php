@@ -33,10 +33,6 @@
  *
  */
 
-require_once 'Mail/mime.php';
-require_once 'CRM/Utils/Mail.php';
-
-require_once 'CRM/Mailing/Event/DAO/Confirm.php';
 class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
 
   /**
@@ -58,16 +54,39 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
    * @static
    */
   public static function confirm($contact_id, $subscribe_id, $hash) {
-    require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
-    $se = &CRM_Mailing_Event_BAO_Subscribe::verify($contact_id,
-      $subscribe_id, $hash
-    );
+    $se = CRM_Mailing_Event_BAO_Subscribe::verify($contact_id, $subscribe_id, $hash);
 
     if (!$se) {
       return FALSE;
     }
 
-    require_once 'CRM/Core/Transaction.php';
+    // check if subscribtion exists (status is added)
+    $config = CRM_Core_Config::singleton();
+    $domain = CRM_Core_BAO_Domain::getDomain();
+    list($domainEmailName, $_) = CRM_Core_BAO_Domain::getNameAndEmail();
+    $allEmail = CRM_Core_BAO_Email::allEmails($contact_id);
+    $defaultEmail = '';
+    foreach($allEmail as $m) {
+      if ($m['is_primary']) {
+        $defaultEmail = $m['is_primary'];
+      }
+      if ($m['is_bulkmail']) {
+        $email = $m['email'];
+        break;
+      }
+    }
+    if (empty($email)) {
+      $email = $defaultEmail;
+    }
+
+    $group = new CRM_Contact_DAO_Group();
+    $group->id = $se->group_id;
+    $group->find(TRUE);
+    $contactGroups = CRM_Mailing_Event_BAO_Subscribe::getContactGroups($email, $contact_id);
+    if ($contactGroups[$group->id]['status'] == 'Added') {
+      return $group->title;
+    }
+
     $transaction = new CRM_Core_Transaction();
 
     $ce = new CRM_Mailing_Event_BAO_Confirm();
@@ -75,28 +94,33 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     $ce->time_stamp = date('YmdHis');
     $ce->save();
 
-    require_once 'CRM/Contact/BAO/GroupContact.php';
-    CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus($contact_id, $se->group_id,
-      'Email', $ce->id
-    );
+    CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus($contact_id, $se->group_id, 'Email', $ce->id);
 
     $transaction->commit();
 
-    $config = CRM_Core_Config::singleton();
+    // remove opt-out and freezed email 
+    $params = array('id' => $contact_id);
+    $contact = array();
+    CRM_Contact_BAO_Contact::retrieve($params, $contact);
+    if ($contact['is_opt_out']) {
+      $params = array(
+        'contact_id' => $contact_id,
+        'contact_type' => $contact['contact_type'],
+        'is_opt_out' => 0,
+        'log_data' => ts('Opt-in').' ('.ts('Re-subscribe Confirmation').')',
+      );
+      CRM_Contact_BAO_Contact::create($params);
+    }
+    $emailOnHold = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE contact_id = %1 AND is_bulkmail = 1 AND on_hold = 1", array(
+      1 => array($contact_id, 'Positive'),      
+    ));
+    if ($emailOnHold) {
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_email SET on_hold = 0 WHERE id = %1", array(
+        1 => array($emailOnHold, 'Positive'),      
+      ));
+    }
 
-    require_once 'CRM/Core/BAO/Domain.php';
-    $domain = CRM_Core_BAO_Domain::getDomain();
-    list($domainEmailName, $_) = CRM_Core_BAO_Domain::getNameAndEmail();
 
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
-    list($display_name, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($se->contact_id);
-
-    require_once 'CRM/Contact/DAO/Group.php';
-    $group = new CRM_Contact_DAO_Group();
-    $group->id = $se->group_id;
-    $group->find(TRUE);
-
-    require_once 'CRM/Mailing/BAO/Component.php';
     $component = new CRM_Mailing_BAO_Component();
     $component->is_default = 1;
     $component->is_active = 1;
@@ -104,7 +128,6 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
 
     $component->find(TRUE);
 
-    require_once 'CRM/Core/BAO/MailSettings.php';
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
     $headers = array(
@@ -124,7 +147,6 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
       $text = CRM_Utils_String::htmlToText($component->body_html);
     }
 
-    require_once 'CRM/Mailing/BAO/Mailing.php';
     $bao = new CRM_Mailing_BAO_Mailing();
     $bao->body_text = $text;
     $bao->body_html = $html;

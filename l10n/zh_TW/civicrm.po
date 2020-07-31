@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-07-23 07:52+0000\n"
+"PO-Revision-Date: 2020-07-31 03:14+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -16821,7 +16821,7 @@ msgstr "未知的退信類型：退回電子郵件無法分析"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid "You are already subscribed in %1, your subscription is %2."
-msgstr "您已訂閱了「%1」，目前訂閱狀態為「%2」。請到您剛才填寫的信箱讀取確認信並按「確認」，即可完成訂閱！若您之前已訂閱，就不會再收到訂閱確認信。"
+msgstr "您已訂閱了「%1」，目前訂閱狀態為「%2」。"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid ""
@@ -47934,3 +47934,9 @@ msgstr "西區"
 
 msgid "Receipt Log"
 msgstr "收據歷程紀錄"
+
+msgid "Contribution SMS"
+msgstr "捐款通知簡訊"
+
+msgid "Event Registration SMS"
+msgstr "活動通知簡訊"

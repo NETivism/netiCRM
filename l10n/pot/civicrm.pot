@@ -47683,3 +47683,9 @@ msgstr ""
 
 msgid "Receipt Log"
 msgstr ""
+
+msgid "Contribution SMS"
+msgstr ""
+
+msgid "Event Registration SMS"
+msgstr ""

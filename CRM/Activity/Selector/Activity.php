@@ -393,6 +393,14 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $accessMailingReport = FALSE;
       if (CRM_Utils_Array::value('mailingId', $row)) {
         $accessMailingReport = TRUE;
+        // get stat of this contact
+        if (defined("CIVICRM_ACTIVITY_MAILINGDETAIL") && CIVICRM_ACTIVITY_MAILINGDETAIL) {
+          if (!empty($row['data_contact_id']) && !empty($row['source_record_id'])) {
+            $mailingResult = CRM_Mailing_BAO_Mailing::getContactReport($row['data_contact_id'], $row['source_record_id']);
+            unset($mailingResult['Delivered']);
+            $row['results'] = $mailingResult;
+          }
+        }
       }
 
       $actionLinks = $this->actionLinks(CRM_Utils_Array::value('activity_type_id', $row),
@@ -470,6 +478,9 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
           'name' => ts('Status'),
           'sort' => 'status_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
+        ),
+        array(
+          'name' => ts('Result'),
         ),
         array('desc' => ts('Actions')),
       );
