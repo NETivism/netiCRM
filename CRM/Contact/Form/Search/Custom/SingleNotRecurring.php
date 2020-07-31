@@ -117,7 +117,7 @@ $having
 
 
   function tempFrom() {
-    return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 AND c.contribution_status_id = 1 ";
+    return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 AND c.contribution_status_id = 1 LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
   }
 
   /**
@@ -140,6 +140,8 @@ $having
     if ($instrumentId && is_numeric($instrumentId)) {
       $clauses[] = "c.payment_instrument_id = $instrumentId";
     }
+
+    $clauses[] = "pp.id IS NULL";
 
     return implode(' AND ', $clauses);
   }
