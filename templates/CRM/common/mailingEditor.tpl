@@ -27,7 +27,7 @@
 window.nmEditor = {
 	translation: {
 		// Editor
-		"Add block here.": "{/literal}{ts}Add block here.{/ts}{literal}",
+		"Add Block Here": "{/literal}{ts}Add Block Here{/ts}{literal}",
 
 		// Panels
 		"Mailing Advanced Settings" : "{/literal}{ts}Mailing Advanced Settings{/ts}{literal}",
