@@ -48,7 +48,7 @@
 <p>{ts}For Compose On-screen, you can select templates, add content blocks, and change the global settings of the newsletter. The drag-and-drop editor can quickly and easily add, copy, and delete blocks such as titles, pictures, text, buttons, etc., and adjust the order of blocks by dragging. The templates provided by the drag-and-drop editor are all responsive, which allows users to have a better browsing experience on different devices.{/ts}</p>
 <h3>{ts}Traditional Editor{/ts}</h3>
 <p>{ts}This is a WYSIWYG editor (what you see is what you get), just like writing an article, where you can edit text, upload pictures and set hyperlinks to the content, you can also write source code in editor.{/ts}</p>
-<h3>{ts}Upload{/ts}</h3>
+<h3>{ts}Upload Content{/ts}</h3>
 <p>{ts}You can use your favorite editor to create content on your local computer or export HTML emails from other email marketing platforms, and then upload the files.{/ts}</p>
 {/htxt}
 
