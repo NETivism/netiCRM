@@ -464,7 +464,7 @@
           if (scrollTop >= yMin && scrollTop <= yMax) {
             _debug(blockID);
             $("#" + blockID).addClass("on-screen-center");
-            $("#" + blockID).after("<div class='add-block-here'>" + _ts["Add block here."] + "</div>");
+            $("#" + blockID).after("<div class='add-block-here'>" + _ts["Add Block Here"] + "</div>");
           }
         }
       });
