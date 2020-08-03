@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-07-31 03:14+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2020-08-03 05:53+0000\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47940,3 +47940,46 @@ msgstr "捐款通知簡訊"
 
 msgid "Event Registration SMS"
 msgstr "活動通知簡訊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Add Block Here"
+msgstr "新增區塊到此處"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Mobile Device"
+msgstr "手機"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid ""
+"Because you have switched to 'Compose On-screen' mode, the content of the "
+"traditional editor will be replaced. Are you sure you want to save it?"
+msgstr "因為您已切換成「線上編寫」模式，傳統編輯器的內容將被取代，您確定要儲存嗎？"
+
+#: CRM/Mailing/Form/Upload.php templates/CRM/Mailing/Form/Upload.hlp
+#: templates/CRM/Mailing/Form/Upload.tpl
+msgid "Traditional Editor"
+msgstr "傳統編輯器"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"For Compose On-screen, you can select templates, add content blocks, and "
+"change the global settings of the newsletter. The drag-and-drop editor can "
+"quickly and easily add, copy, and delete blocks such as titles, pictures, "
+"text, buttons, etc., and adjust the order of blocks by dragging. The "
+"templates provided by the drag-and-drop editor are all responsive, which "
+"allows users to have a better browsing experience on different devices."
+msgstr "線上編寫模式可以選擇範本、新增內容區塊與變更電子報全域設定。拖曳式編輯器可以快速且方便地新增、複製與刪除標題、圖片、內文、按鈕等區塊，並用拖曳的方式調整區塊的順序。拖曳式編輯器提供的範本都是響應式的，這能讓使用者在不同裝置上都有更好的瀏覽經驗。"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"This is a WYSIWYG editor (what you see is what you get), just like writing "
+"an article, where you can edit text, upload pictures and set hyperlinks to "
+"the content, you can also write source code in editor."
+msgstr "這是一個「所見即所得編輯器」，就像寫一篇文章一樣，在這裡可以編輯文字、上傳圖片並為內容設定超連結，您也可以撰寫原始碼。"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"You can use your favorite editor to create content on your local computer or"
+" export HTML emails from other email marketing platforms, and then upload "
+"the files."
+msgstr "您可以將在電腦建立好的 HTML 郵件或將其他電子報平台所匯出的 HTML 郵件儲存成 HTML 檔案上傳。"

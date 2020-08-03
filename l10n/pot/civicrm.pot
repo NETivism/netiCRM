@@ -47689,3 +47689,33 @@ msgstr ""
 
 msgid "Event Registration SMS"
 msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Add Block Here"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Mobile Device"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"
+msgstr ""
+
+#: CRM/Mailing/Form/Upload.php
+#: templates/CRM/Mailing/Form/Upload.hlp
+#: templates/CRM/Mailing/Form/Upload.tpl
+msgid "Traditional Editor"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid "For Compose On-screen, you can select templates, add content blocks, and change the global settings of the newsletter. The drag-and-drop editor can quickly and easily add, copy, and delete blocks such as titles, pictures, text, buttons, etc., and adjust the order of blocks by dragging. The templates provided by the drag-and-drop editor are all responsive, which allows users to have a better browsing experience on different devices."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid "This is a WYSIWYG editor (what you see is what you get), just like writing an article, where you can edit text, upload pictures and set hyperlinks to the content, you can also write source code in editor."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid "You can use your favorite editor to create content on your local computer or export HTML emails from other email marketing platforms, and then upload the files."
+msgstr ""
