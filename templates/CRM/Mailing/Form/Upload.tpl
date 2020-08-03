@@ -66,6 +66,11 @@
 </table>
 
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
+{include file="CRM/common/mailingEditor.tpl"}
+{$form.mailing_content_data.html}
+</fieldset>
+
+<fieldset id="compose_old_id"><legend>{ts}Traditional Editor{/ts}</legend>
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl" upload=1 noAttach=1}
 </fieldset>
 
@@ -89,7 +94,7 @@
 
   {include file="CRM/Form/attachment.tpl"}
 
-  <fieldset><legend>{ts}Header / Footer{/ts}</legend>
+  <fieldset id="mailing_header_footer"><legend>{ts}Header / Footer{/ts}</legend>
     <table class="form-layout-compressed">
         <tr class="crm-mailing-upload-form-block-header_id">
             <td class="label">{$form.header_id.label}</td>
@@ -113,21 +118,41 @@
 {include file="CRM/common/showHide.tpl"}
 {literal}
 <script type="text/javascript">
-    showHideUpload();
-    function showHideUpload()
-    { 
-	if (document.getElementsByName("upload_type")[0].checked) {
-            hide('compose_id');
-	    cj('.crm-mailing-upload-form-block-template').hide();
-	    show('upload_id');	
-        } else {
-            show('compose_id');
-	    cj('.crm-mailing-upload-form-block-template').show();
-	    hide('upload_id');
-            verify( );
+    function showHideUpload() {
+      // Upload
+      if (cj(".form-radio[name='upload_type'][value='0']").is(":checked")) {
+        hide('compose_id');
+        hide('compose_old_id')
+        cj('.crm-mailing-upload-form-block-template').hide();
+        show('upload_id');
+      }
+      else {
+        hide('upload_id');
+        // Compose On-screen
+        if (cj(".form-radio[name='upload_type'][value='1']").is(":checked")) {
+          hide('compose_old_id');
+          show('compose_id');
+
+          // refs #23719. Remove mailing header and footer when select 'Compose On-screen' mode and hide this fieldset
+          cj("#header_id option[value='']").prop("selected", true);
+          cj("#footer_id option[value='']").prop("selected", true);
+          hide('mailing_header_footer');
         }
+
+        // Traditional Editor (old compose mode)
+        if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
+          hide('compose_id');
+          show('compose_old_id');
+          show('mailing_header_footer');
+          cj('.crm-mailing-upload-form-block-template').show();
+          verify();
+        }
+      }
     }
+
     cj(document).ready(function(){
+      showHideUpload();
+
       // show dialog for online tempalte
       cj("#online-template-link").click(function(e){
         e.preventDefault();

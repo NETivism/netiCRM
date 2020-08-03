@@ -247,7 +247,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     );
 
     $attributes = array('onclick' => "showHideUpload();");
-    $options = array(ts('Upload Content'), ts('Compose On-screen'));
+    $options = array("1" => ts('Compose On-screen'), "2" => ts('Traditional Editor'), "0" => ts('Upload Content'));
 
     $this->addRadio('upload_type', ts('I want to'), $options, $attributes, "&nbsp;&nbsp;");
 
@@ -269,6 +269,9 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       1024 * 1024
     );
     $this->addRule('htmlFile', ts('File must be in UTF-8 encoding'), 'utf8File');
+
+    // refs #23719. Add a field to save json data of mailing content.
+    $this->addElement('textarea', 'mailing_content_data', ts('Mailing content data'));
 
     //fix upload files when context is search. CRM-3711
     $ssID = $this->get('ssID');
