@@ -114,16 +114,18 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $defaults['thankyou_title'] = CRM_Utils_Array::value('thankyou_title', $defaults, ts('Thank You for Registering'));
     $defaults['approval_req_text'] = CRM_Utils_Array::value('approval_req_text', $defaults, ts('Participation in this event requires approval. Submit your registration request here. Once approved, you will receive an email with a link to a web page where you can complete the registration process.'));
 
-    if (CRM_Utils_Array::value('registration_start_date', $defaults)) {
-      list($defaults['registration_start_date'],
-        $defaults['registration_start_date_time']
-      ) = CRM_Utils_Date::setDateDefaults($defaults['registration_start_date'], 'activityDateTime');
-    }
+    if (!$this->_isTemplate) {
+      if (CRM_Utils_Array::value('registration_start_date', $defaults)) {
+        list($defaults['registration_start_date'],
+          $defaults['registration_start_date_time']
+        ) = CRM_Utils_Date::setDateDefaults($defaults['registration_start_date'], 'activityDateTime');
+      }
 
-    if (CRM_Utils_Array::value('registration_end_date', $defaults)) {
-      list($defaults['registration_end_date'],
-        $defaults['registration_end_date_time']
-      ) = CRM_Utils_Date::setDateDefaults($defaults['registration_end_date'], 'activityDateTime');
+      if (CRM_Utils_Array::value('registration_end_date', $defaults)) {
+        list($defaults['registration_end_date'],
+          $defaults['registration_end_date_time']
+        ) = CRM_Utils_Date::setDateDefaults($defaults['registration_end_date'], 'activityDateTime');
+      }
     }
     return $defaults;
   }
