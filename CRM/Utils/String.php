@@ -555,7 +555,7 @@ class CRM_Utils_String {
     $alphabetSize = strlen($alphabet);
     $result = '';
     for ($i = 0; $i < $len; $i++) {
-      $result .= $alphabet{rand(1, $alphabetSize) - 1};
+      $result .= $alphabet{mt_rand(1, $alphabetSize) - 1};
     }
     return $result;
   }
@@ -648,6 +648,11 @@ class CRM_Utils_String {
       (isset($parts['path']) ? "{$parts['path']}" : '') . 
       (isset($parts['query']) ? "?{$parts['query']}" : '') . 
       (isset($parts['fragment']) ? "#{$parts['fragment']}" : '');
+  }
+
+  static function safeFilename($str) {
+    $str = preg_replace("/([^\w\s\d\.\-_~\[\]\(\)]|[\.]{2,})/u", '', $str);
+    return preg_replace("/\s+/u", '_', $str);
   }
 }
 
