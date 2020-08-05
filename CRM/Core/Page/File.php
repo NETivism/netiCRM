@@ -42,6 +42,7 @@ class CRM_Core_Page_File extends CRM_Core_Page {
     $entityId = CRM_Utils_Request::retrieve('eid', 'Positive', $this, TRUE);
     $fieldId = CRM_Utils_Request::retrieve('fid', 'Positive', $this, FALSE);
     $fileId = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
+    $downloadName = CRM_Utils_String::safeFilename(CRM_Utils_Request::retrieve('download', 'String', $this, FALSE));
     $hash = CRM_Utils_Request::retrieve('fcs', 'Alphanumeric', $this);
     if (!CRM_Core_BAO_File::validateFileHash($hash, $entityId, $fileId)) {
       /** because drupal 6 still have problem of this...
@@ -92,7 +93,15 @@ class CRM_Core_Page_File extends CRM_Core_Page {
       }
     }
     else {
-      CRM_Utils_System::download(CRM_Utils_File::cleanFileName(basename($path)), $mimeType, $buffer);
+      if ($downloadName) {
+        $fileName = $downloadName;
+        $fileExt = CRM_Utils_String::safeFilename(basename($path));
+        $fileExt = pathinfo($fileExt, PATHINFO_EXTENSION);
+        CRM_Utils_System::download($fileName, $mimeType, $buffer, $fileExt);
+      }
+      else {
+        CRM_Utils_System::download(CRM_Utils_File::cleanFileName(basename($path)), $mimeType, $buffer);
+      }
     }
   }
 }
