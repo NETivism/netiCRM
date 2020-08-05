@@ -165,6 +165,142 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists('table#option11 tbody tr:last-child td:first-child a');
     });
 
+    casper.then(function() {
+        casper.echo('=====================================');
+        casper.echo('** Step 4: Mailing Test. **');
+        casper.echo('=====================================');
+    });
+
+    casper.thenOpen(baseURL + "civicrm/mailing/send?reset=1", function() {
+        // this.capture("new_mailing.png");
+    });
+
+    casper.wait(2000);    
+
+    casper.then(function() {
+        this.echo('Step 4-1: Select Recipients.');
+    });
+    
+    var mail_name = makeid(5);
+    casper.waitForSelector("input[name='name']", function success() {
+        this.sendKeys("input[name='name']", mail_name);
+    }, function fail() {
+        test.assertExists("input[name='name']", "Assert 'Name Your Mailing' field exist.");
+    });
+
+    casper.waitForSelector("#includeGroups_chzn input", function success() {
+        this.click("#includeGroups_chzn input");
+    }, function fail() {
+        test.assertExists("#includeGroups_chzn input", "Assert 'Include Group(s)' exist.");
+    });
+
+    casper.waitForSelector("#includeGroups_chzn_o_0", function success() {
+        this.click("#includeGroups_chzn_o_0");
+    }, function fail() {
+        test.assertExists("#includeGroups_chzn_o_0", "Assert first option of contact group exist.");
+    });
+
+    casper.waitForSelector("input[value='Next >>']", function success() {
+        this.click("input[value='Next >>']");
+    }, function fail() {
+        test.assertExists("input[value='Next >>']", "Assert 'Next >>' button exist.");
+    });
+    casper.wait(2000);
+
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error', "Assert '.crm-error' doesn't exist.");
+    });
+
+    casper.then(function() {
+        this.echo('Step 4-2: Track and Respond.');
+    });
+
+    casper.waitForSelector(".messages strong", function success() {
+        var group_num = this.evaluate(function () {
+            return document.querySelector('.messages strong').textContent;
+        });
+        test.assertEquals(group_num, "1", 'Assert recipient number of group correct.')
+    }, function fail() {
+        test.assertExists(".messages strong", "Assert number of 'Total Recipients' exist.");
+    });
+
+    casper.waitForSelector("input[value='Next >>']", function success() {
+        this.click("input[value='Next >>']");
+    }, function fail() {
+        test.assertExists("input[value='Next >>']", "Assert 'Next >>' button exist.");
+    });
+    casper.wait(2000);
+
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error', "Assert '.crm-error' doesn't exist.");
+    });
+
+    casper.then(function() {
+        this.echo('Step 4-3: Mailing Content.');
+    });
+
+    casper.waitForSelector("input[name='subject']", function success() {
+        this.sendKeys("input[name='subject']", makeid(5));
+    }, function fail() {
+        test.assertExists("input[name='subject']", "Assert 'Mailing Subject' exist.");
+    });
+
+    casper.waitForSelector("input[value='Next >>']", function success() {
+        this.click("input[value='Next >>']");
+    }, function fail() {
+        test.assertExists("input[value='Next >>']", "Assert 'Next >>' button exist.");
+    });
+    casper.wait(2000);
+
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error', "Assert '.crm-error' doesn't exist.");
+    });
+
+    casper.then(function() {
+        this.echo("Step 4-4: Test.");
+    });
+
+    casper.waitForSelector("input[value='Next >>']", function success() {
+        this.click("input[value='Next >>']");
+    }, function fail() {
+        test.assertExists("input[value='Next >>']", "Assert 'Next >>' button exist.");
+    });
+    casper.wait(2000);
+
+    casper.then(function() {
+        this.echo('Step 4-5: Schedule or Send');
+    });
+
+    casper.waitForSelector("input[value='Submit Mailing']", function success() {
+        this.click("input[value='Submit Mailing']");
+    }, function fail() {
+        test.assertExists("input[value='Submit Mailing']", "Assert 'Submit Mailing' button exist.");
+    });
+    casper.wait(2000);
+    casper.then(function() {
+        // this.capture("click_send.png");
+    });
+    casper.then(function() {
+        test.assertDoesntExist('.crm-error', "Assert '.crm-error' doesn't exist.");
+    });
+    
+    casper.then(function() {
+        this.echo("Step 4-6: Check if mail in 'Scheduled and Sent Mailings'.");
+    });
+
+    casper.thenOpen(baseURL + "civicrm/mailing/browse/scheduled?reset=1&scheduled=true", function() {
+        // this.capture("scheduled_and_sent_mailings.png");
+    });
+
+    casper.waitForSelector(".selector tbody tr td:nth-child(2)", function success() {
+        var mail_name_from_page = this.evaluate(function () {
+            return document.querySelector('.selector tbody tr td:nth-child(2)').textContent;
+        });
+        test.assertEquals(mail_name_from_page, mail_name, "Assert mail name correct.");
+    }, function fail() {
+        test.assertExists(".selector tbody tr td:nth-child(2)", "Assert 'Mailing Name' exist.");
+    });
+
     casper.run(function() {
         test.done();
     });
