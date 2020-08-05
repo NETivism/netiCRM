@@ -194,11 +194,15 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#includeGroups_chzn input", "Assert 'Include Group(s)' exist.");
     });
 
+    casper.wait(2000);
+
     casper.waitForSelector("#includeGroups_chzn_o_0", function success() {
         this.click("#includeGroups_chzn_o_0");
     }, function fail() {
         test.assertExists("#includeGroups_chzn_o_0", "Assert first option of contact group exist.");
     });
+
+    casper.wait(2000);
 
     casper.waitForSelector("input[value='Next >>']", function success() {
         this.click("input[value='Next >>']");
