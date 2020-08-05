@@ -285,7 +285,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       }
     }
     else if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
-      !empty($_GET['retry']) &&
+      !empty($_GET['tryagian']) &&
       !empty($_GET['reset']) &&
       empty($_GET['snippet'])
     ) {

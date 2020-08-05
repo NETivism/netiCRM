@@ -87,9 +87,9 @@
         </ul>
 
         {if $action & 1024}
-            {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id&action=preview&retry=1" h=0 }{/capture}
+            {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id&action=preview&tryagian=1" h=0 }{/capture}
         {else}
-            {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id&retry=1" h=0 }{/capture}
+            {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id&tryagian=1" h=0 }{/capture}
         {/if}
         {ts 1=$contribution_page_url}We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry.{/ts}
       {elseif $is_pay_later && $is_monetary}
