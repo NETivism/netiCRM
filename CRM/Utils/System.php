@@ -645,11 +645,13 @@ class CRM_Utils_System {
 
     // lem9 & loic1: IE need specific headers
     if ($ext) {
-      $fileString = "filename=\"{$name}.{$ext}\"";
+      $fileName = $name.".".$ext;
     }
     else {
-      $fileString = "filename=\"{$name}\"";
+      $fileName = $name;
     }
+    $fileString = 'filename="'.rawurlencode($fileName).'";';
+    $fileString .= " filename*=utf-8''".rawurlencode($fileName);
 
     if (strstr($mimeType, 'image')) {
       header("Content-Disposition: inline");
