@@ -501,6 +501,7 @@ class CRM_Core_Payment_BaseIPN {
         'entity_table' => 'civicrm_event',
         'entity_id' => $ids['event'],
         'weight' => 1,
+        'module' => 'CiviEvent',
       );
       $values['custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
       $ufJoinParams['weight'] = 2;

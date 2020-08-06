@@ -611,7 +611,8 @@ SELECT $select
                           'fcs' => $fileHash
                         )
                       );
-                      $customValue['fileName'] = CRM_Utils_File::cleanFileName(basename($fileDAO->uri));
+                      $customValue['fileName'] = basename($fileDAO->uri);
+                      $customValue['fileNameClean'] = CRM_Utils_File::cleanFileName(basename($fileDAO->uri));
                       if ($fileDAO->mime_type == "image/jpeg" ||
                         $fileDAO->mime_type == "image/pjpeg" ||
                         $fileDAO->mime_type == "image/gif" ||
