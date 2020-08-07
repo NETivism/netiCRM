@@ -317,7 +317,7 @@
             "type": "paragraph",
             "section": "body",
             "data": {
-              "html": "&lt;p&gt;這是段落區塊，你可以在這裡輸入電子報的引言，建議文字量不要太多，簡而有力更吸睛！趕快來試試看吧！&lt;/p&gt;"
+              "html": "&lt;p&gt;這是段落區塊，你可以在這裡輸入電子報的引言，建議文字量不要太多，簡而有力更吸睛！趕快來試試看吧！&lt;/p&gt;"
             },
             "styles": {
               "block": {
@@ -325,14 +325,14 @@
                 "padding-right": "40px",
                 "padding-bottom": "20px",
                 "padding-left": "40px",
-                "background-color": "#333333"
+                "background-color": "#FFFAD5"
               },
               "elem": {
                 "margin-top": "0",
                 "margin-right": "0",
                 "margin-bottom": "0",
                 "margin-left": "0",
-                "color": "#ffffff"
+                "color": "#555555"
               }
             },
             "control": {
