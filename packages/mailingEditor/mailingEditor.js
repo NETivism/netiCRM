@@ -394,7 +394,7 @@
     var url = typeof url !== "undefined" ? url : "";
 
     if (url) {
-      var absoluteURL = window.location.origin + url;
+      var absoluteURL = window.location.origin.indexOf("local.dev") == -1 ? window.location.origin + url : "https://demo.neticrm.tw" + url;
       return absoluteURL;
     }
   };
