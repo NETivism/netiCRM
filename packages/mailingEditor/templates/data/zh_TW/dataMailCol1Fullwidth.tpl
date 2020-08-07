@@ -59,7 +59,7 @@
             "type": "header",
             "section": "header",
             "data": {
-              "url": "/sites/all/modules/civicrm/packages/mailingEditor/images/mail-default-logo@2x.png",
+              "url": "",
               "width": 192,
               "height": 84,
               "fileName": "default_logo",
@@ -105,7 +105,7 @@
                     "type": "image",
                     "section": "body",
                     "data": {
-                      "url": "/sites/all/modules/civicrm/packages/istockphoto/thumb_1.jpg",
+                      "url": "",
                       "width": 680,
                       "height": 383,
                       "fileName": "default_image",
@@ -359,7 +359,7 @@
                     "type": "image",
                     "section": "body",
                     "data": {
-                      "url": "/sites/all/modules/civicrm/packages/istockphoto/thumb_3.jpg",
+                      "url": "",
                       "width": 680,
                       "height": 383,
                       "fileName": "default_image",
@@ -578,7 +578,7 @@
                     "type": "image",
                     "section": "body",
                     "data": {
-                      "url": "/sites/all/modules/civicrm/packages/istockphoto/thumb_4.jpg",
+                      "url": "",
                       "width": 680,
                       "height": 383,
                       "fileName": "default_image",
