@@ -2086,7 +2086,7 @@
             window.nmeImce.targetIndex = index;
           }
 
-          var win = window.open('/imce&app=nme|sendto@nmeImce.afterInsert', 'nme_imce', 'width=640, height=480');
+          var win = window.open(window.nmeImce.path, "nme_imce", "width=640, height=480");
         }
 
         // link
@@ -2317,6 +2317,7 @@
 
   // IMCE客製公用函式，用來介接圖片上傳功能
   window.nmeImce = {
+    path: decodeURI("/imce?app=nme|sendto@nmeImce.afterInsert"),
     targetID: "",
     targetSection: "",
     afterInsert: function(file, imceWindow) {
