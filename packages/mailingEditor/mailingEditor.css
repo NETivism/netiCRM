@@ -178,6 +178,15 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
   justify-content: space-between;
   min-height: 42px;
 }
+.nme-block:hover .nme-block:first-child > .nme-block-inner > .nme-block-control,
+.nme-block.is-active .nme-block:first-child > .nme-block-inner > .nme-block-control,
+.nme-block.is-edit .nme-block:first-child > .nme-block-inner > .nme-block-control {
+  margin-top: 0;
+}
+.nme-block:hover .nme-block:first-child > .nme-block-inner:before {
+  margin-top: 0;
+  height: calc(100% + 12px);
+}
 .nme-container .nme-block .nme-title {
   font-size: 1.5rem;
 }
