@@ -17,15 +17,20 @@ cj(document).ready(function($){
           $img.css({"width":"auto", "max-width":"unset", "max-height":"80vh"});
         } 
         else {
-          $img.css({"width":"auto", "max-width":"unset", "max-height":height+"px"});
+          $img.css({"width":"auto", "max-width":"unset", "max-height":"90vh"});
         }
       }
       else {
         if (width > $(window).width()*0.7) {
-          $img.css({"width":"auto", "max-width":"70vw", "max-height":"unset"});
+          $img.css({"width":"auto", "max-width":"70vw", "max-height":"90vh"});
         }
         else {
-          $img.css({"width":"auto", "max-width":width + "px", "max-height":"unset"});
+          if (width) {
+            $img.css({"width":"auto", "max-width":width + "px", "max-height":"90vh"});
+          }
+          else {
+            $img.css({"width":"auto", "max-width":"70vw", "max-height":"90vh"});
+          }
         }
       }
     });

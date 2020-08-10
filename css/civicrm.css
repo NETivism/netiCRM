@@ -3246,6 +3246,11 @@ div#civicrm-dashboard form {
   z-index: 999;
 }
 
+/* jquery modal */
+.jquery-modal.blocker {
+  z-index:9500;
+}
+
 /*  DataTables fixes */
 .crm-container .dataTables_length { float:none; padding-bottom:5px; }
 .crm-container .crm-datatable-pager-top { padding-top:5px; padding-bottom:25px; }

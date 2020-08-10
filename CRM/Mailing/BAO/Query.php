@@ -506,8 +506,11 @@ class CRM_Mailing_BAO_Query {
     if (empty($fields['mailing_date_high']) || empty($fields['mailing_date_low'])) {
       return TRUE;
     }
-
-    CRM_Utils_Rule::validDateRange($fields, 'mailing_date', $errors, ts('Mailing Date'));
+    if (!empty($fields['mailing_date_high']) && !empty($fields['mailing_date_low'])) {
+      if(strtotime($fields['mailing_date_high']) - strtotime($fields['mailing_date_low']) < 0) {
+        $errors['mailing_date_high'] = ts('End date should be after Start date');
+      }
+    }
 
     return empty($errors) ? TRUE : $errors;
   }
