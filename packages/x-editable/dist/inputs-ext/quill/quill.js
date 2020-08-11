@@ -85,14 +85,13 @@ $(function(){
                 console.log($(this.$input).get(0));
             });
             */
-
             var toolbarOptions = [
               ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
               [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
               [{ 'size': ['small', false, 'large', 'huge'] }],
               [{ 'align': [] }],
               [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              ['link'],
+              ['link']
               //['image']
 
               //['blockquote', 'code-block'],
@@ -109,6 +108,19 @@ $(function(){
 
               //['clean']                                         // remove formatting button
             ];
+
+            var tokenToolbar = [];
+            var tokenQuillOption = [];
+            if (window.nmEditor.tokenTrigger) {
+              Quill.register('modules/placeholder', PlaceholderModule.default(Quill))
+              $(window.nmEditor.tokenTrigger).find("option").each(function(){
+                var tokenName = $(this).attr("value").replace(/(\{|\})/gi, "");
+                tokenToolbar.push(tokenName);
+                tokenQuillOption.push({id:tokenName, label:tokenName});
+              });
+              toolbarOptions.push([{"placeholder":tokenToolbar}]);
+            }
+
             var quillOptions = {
               //debug: 'info',
               modules: {
@@ -118,6 +130,10 @@ $(function(){
               //readOnly: true,
               theme: 'snow'
             };
+            if (window.nmEditor.tokenTrigger) {
+              quillOptions.modules.placeholder = {};
+              quillOptions.modules.placeholder.placeholders = tokenQuillOption;
+            }
 
             this.editor = new Quill('#' + quillID, quillOptions);
             this.editor.focus();

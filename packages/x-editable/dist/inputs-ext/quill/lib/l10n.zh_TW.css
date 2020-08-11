@@ -39,3 +39,8 @@
 .ql-bubble .ql-picker.ql-size .ql-picker-item[data-value=huge]::before {
   content: '大字';
 }
+
+/* placeholders */
+.ql-picker.ql-placeholder > span.ql-picker-label::before {
+  content: '替代符號';
+}

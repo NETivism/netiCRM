@@ -1,32 +1,4 @@
 <!-- mailingEditor files start -->
-<!-- poshytip -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css">
-<script type="text/javascript" src="{$config->resourceBase}packages/poshytip/src/jquery.poshytip.js"></script>
-
-<!-- x-editable -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css">
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js"></script>
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css">
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css">
-<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css">
-{if $tsLocale == 'zh_TW'}
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css">
-{/if}
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.js"></script>
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/quill.js"></script>
-
-<!-- pickr -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css"/>
-<script src="{$config->resourceBase}packages/pickr/dist/pickr.min.js"></script>
-
-<!-- Magnific Popup -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css">
-<script src="{$config->resourceBase}packages/Magnific-Popup/dist/jquery.magnific-popup.js"></script>
-
-<!-- mailingEditor -->
-{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
-<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
-<script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
 {literal}
 <script type="text/javascript">
 window.nmEditor = {
@@ -67,10 +39,41 @@ window.nmEditor = {
 
 		// Confirm
 		"Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?" : "{/literal}{ts}Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?{/ts}{literal}"
-	}
+  },
+  tokenTrigger: "#token2"
 };
 </script>
 {/literal}
+<!-- poshytip -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css">
+<script type="text/javascript" src="{$config->resourceBase}packages/poshytip/src/jquery.poshytip.js"></script>
+
+<!-- x-editable -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css">
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js"></script>
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css">
+<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css">
+{if $tsLocale == 'zh_TW'}
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css">
+{/if}
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/quill.js"></script>
+
+<!-- pickr -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css"/>
+<script src="{$config->resourceBase}packages/pickr/dist/pickr.min.js"></script>
+
+<!-- Magnific Popup -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css">
+<script src="{$config->resourceBase}packages/Magnific-Popup/dist/jquery.magnific-popup.js"></script>
+
+<!-- mailingEditor -->
+{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
+<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
+<script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
 {literal}
 <script type="text/javascript">
 (function ($) {
