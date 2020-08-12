@@ -203,10 +203,11 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.waitForSelector(".search-choice", function success() {
-        var num = this.evaluate(function () {
-            return document.querySelectorAll('.search-choice').length;
+        var selected_group_name = this.evaluate(function () {
+            return document.querySelector('.search-choice span').textContent;
         });
-        this.echo("selected group number:" + num);
+        this.echo("selected group name:" + selected_group_name);
+        this.echo("new group name:" + group_name);
     }, function fail() {
         test.assertExists(".search-choice", "Group not selected");
     });
