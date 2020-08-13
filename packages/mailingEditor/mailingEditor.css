@@ -475,6 +475,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   height: 100%;
 }
 .nme-edit-link-item {
@@ -486,11 +487,48 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nme-edit-link-item .nme-edit-item-label label {
   color: #fff;
 }
+.nme-edit .nme-edit-link-item .edit-link {
+  width: 300px;
+}
 .nme-edit-link-item + .nme-edit-actions {
   margin-left: 1em;
 }
 .nme-edit .nme-edit-action {
   background: #3F51B5;
+}
+.nmee-rc-col-2 .nme-edit,
+.nmee-rc-float .nme-edit {
+  min-height: 120px;
+}
+.nmee-rc-col-2 .nme-edit .inner,
+.nmee-rc-float .nme-edit .inner {
+  flex-direction: column;
+}
+.nmee-rc-col-2 .nme-edit-link-item,
+.nmee-rc-float .nme-edit-link-item {
+  align-items: center;
+  flex-direction: column;
+}
+.nmee-rc-col-2 .nme-edit-link-item .nme-edit-item-label,
+.nmee-rc-float .nme-edit-link-item .nme-edit-item-label {
+  margin-right: 0;
+  margin-bottom: 10px;
+}
+.nmee-rc-col-2 .nme-edit-link-item .nme-edit-item-content,
+.nmee-rc-float .nme-edit-link-item .nme-edit-item-content {
+  display: flex;
+  justify-content: center;
+}
+.nmee-rc-col-2 .nme-edit-actions,
+.nmee-rc-float .nme-edit-actions {
+  margin-top: 5px;
+}
+.nmee-rc-col-2 .nme-edit-link-item .edit-link,
+.nmee-rc-float .nme-edit-link-item .edit-link {
+  max-width: 90%;
+}
+.nmee-rc-float .nmeb-image .nme-edit-link-item .edit-link {
+  width: 220px;
 }
 
 /* temp */

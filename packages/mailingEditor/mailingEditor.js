@@ -720,7 +720,15 @@
 
                 // ＴODO: Link may need to be verified
                 if (block.link) {
-                  $nmebElem.wrap("<a href='" + block.link + "'></a>");
+                  if ($nmebElem.is("a")) {
+                    $nmebElem.attr({
+                      "href": block.link,
+                      "target": "_blank"
+                    });
+                  }
+                  else {
+                    $nmebElem.wrap("<a href='" + block.link + "' target='_blank' style='text-decoration: none;'></a>");
+                  }
                 }
               }
             }
@@ -2103,7 +2111,7 @@
               "<label for='" + editItemID + "'>請輸入網址</label>" +
               "</div>" + // .nme-edit-item-label
               "<div class='nme-edit-item-content'>" +
-              "<input id='" + editItemID + "' name='" + editItemID + "' type='text' placeholder='http://' value='" + editItemVal + "'>" +
+              "<input id='" + editItemID + "' name='" + editItemID + "' class='edit-link' type='text' placeholder='http://' value='" + editItemVal + "'>" +
               "</div>" + // .nme-edit-item-content
               "</div>" + // .nme-edit-item
               "<div class='nme-edit-actions'>" +
