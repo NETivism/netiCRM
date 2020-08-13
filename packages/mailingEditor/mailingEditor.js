@@ -726,8 +726,14 @@
                       "target": "_blank"
                     });
                   }
-                  else {
+
+                  if ($nmebElem.is("img")) {
                     $nmebElem.wrap("<a href='" + block.link + "' target='_blank' style='text-decoration: none;'></a>");
+                  }
+
+                  if ($nmebElem.is("h3")) {
+                    let elemStyle = $nmebElem.attr("style");
+                    $nmebElem.wrapInner("<a href='" + block.link + "' target='_blank' style='" + elemStyle + "'></a>");
                   }
                 }
               }
