@@ -173,7 +173,13 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     $htmlMessage = str_replace("'", "\'", $htmlMessage);
     $this->assign('message_html', $htmlMessage);
 
-    $defaults['upload_type'] = 1;
+    $defaults['upload_type'] = 2;
+    if (!empty($defaults['body_json']) && json_decode($defaults['body_json'])) {
+      $defaults['upload_type'] = 2;
+    }
+    elseif (empty($defaults['body_json']) && !empty($defaults['body_html'])) {
+      $defaults['upload_type'] = 1;
+    }
     if (isset($defaults['body_html'])) {
       $defaults['html_message'] = $defaults['body_html'];
     }
@@ -247,7 +253,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     );
 
     $attributes = array('onclick' => "showHideUpload();");
-    $options = array("1" => ts('Compose On-screen'), "2" => ts('Traditional Editor'), "0" => ts('Upload Content'));
+    $options = array("2" => ts('Compose On-screen'), "1" => ts('Traditional Editor'), "0" => ts('Upload Content'));
 
     $this->addRadio('upload_type', ts('I want to'), $options, $attributes, "&nbsp;&nbsp;");
 
@@ -271,7 +277,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     $this->addRule('htmlFile', ts('File must be in UTF-8 encoding'), 'utf8File');
 
     // refs #23719. Add a field to save json data of mailing content.
-    $this->addElement('textarea', 'mailing_content_data', ts('Mailing content data'));
+    $this->addElement('textarea', 'body_json', ts('Mailing content data'));
 
     //fix upload files when context is search. CRM-3711
     $ssID = $this->get('ssID');
@@ -372,6 +378,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
     }
     else {
+      if($formValues['upload_type'] == 2 && !empty($formValues['body_json'])){
+        $params['body_json'] = $formValues['body_json'];
+      }
+      else {
+        $params['body_json'] = 'null';
+      }
       $text_message = $formValues['text_message'];
       $params['body_text'] = $text_message;
       $this->set('textFile', $params['body_text']);

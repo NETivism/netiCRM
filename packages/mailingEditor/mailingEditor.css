@@ -541,12 +541,12 @@ ul.nme-setting-panels-tabs li a.is-active {
 .blue-background-class {
   background: rgba(3, 169, 244, 0.1);
 }
-#mailing_content_data {
+#body_json {
   display: none;
   width: 100%;
   height: 400px;
 }
-.is-debug #mailing_content_data {
+.is-debug #body_json {
   display: block;
 }
 /*

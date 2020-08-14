@@ -67,7 +67,7 @@
 
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
 {include file="CRM/common/mailingEditor.tpl"}
-{$form.mailing_content_data.html}
+{$form.body_json.html}
 </fieldset>
 
 <fieldset id="compose_old_id"><legend>{ts}Traditional Editor{/ts}</legend>
@@ -129,7 +129,7 @@
       else {
         hide('upload_id');
         // Compose On-screen
-        if (cj(".form-radio[name='upload_type'][value='1']").is(":checked")) {
+        if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
           hide('compose_old_id');
           show('compose_id');
 
@@ -140,7 +140,7 @@
         }
 
         // Traditional Editor (old compose mode)
-        if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
+        if (cj(".form-radio[name='upload_type'][value='1']").is(":checked")) {
           hide('compose_id');
           show('compose_old_id');
           show('mailing_header_footer');

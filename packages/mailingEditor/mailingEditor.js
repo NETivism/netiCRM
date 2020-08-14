@@ -1236,19 +1236,24 @@
           }
         });
 
-        $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
-          let val = $(this).val();
-          if (val == "1") {
-            if (!$(_panels).hasClass("is-opened")) {
-              _nmePanels.open();
-            }
+        var _checkPanelOpen = function() {
+          let uploadType = $(".form-radio[name='upload_type']:checked").val();
+          if (uploadType == "2" && !$(_nmeOptions.dataLoadSourc).val() && !$(_panels).hasClass("is-opened")) {
+            _nmePanels.open();
           }
           else {
             if ($(_panels).hasClass("is-opened")) {
               _nmePanels.close();
             }
           }
+        }
+
+        // trigger panel open
+        $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
+          _checkPanelOpen();
         });
+        // check default open
+        _checkPanelOpen();
 
         $("#Upload").on("click", ".form-submit", function(event) {
           $(this).closest("form").data("action", $(this).attr("name"));
@@ -1265,7 +1270,7 @@
           }
 
           // Check edit mode option, Only 'Compose On-screen' option is allowed
-          if ($(".form-radio[name='upload_type'][value='1']").is(":checked")) {
+          if ($(".form-radio[name='upload_type'][value='2']").is(":checked")) {
             // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
             if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
               event.preventDefault();
@@ -2524,7 +2529,7 @@
 
   // Plugin defaults options
   $.fn.nmEditor.defaults = {
-    dataLoadSource: "#mailing_content_data",
+    dataLoadSource: "#body_json",
     debugMode: false
   };
 }(jQuery));
