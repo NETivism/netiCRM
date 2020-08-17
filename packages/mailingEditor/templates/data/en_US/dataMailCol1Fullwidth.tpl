@@ -41,8 +41,8 @@
           "font-size": "16px",
           "color": "#ffffff",
           "border-radius": "3px",
-          "background-color": "#E91E63",
-          "background-color-hover": "#FF4081"
+          "background-color": "#222222",
+          "background-color-hover": "#333333"
         },
         "link": {
           "text-decoration": "underline",
