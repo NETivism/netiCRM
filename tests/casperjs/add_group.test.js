@@ -188,31 +188,33 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[name='name']", "Assert 'Name Your Mailing' field exist.");
     });
 
-    casper.waitForSelector("#includeGroups_chzn input", function success() {
-        this.click("#includeGroups_chzn input");
-    }, function fail() {
-        test.assertExists("#includeGroups_chzn input", "Assert 'Include Group(s)' exist.");
-    });
+    // casper.waitForSelector("#includeGroups_chzn input", function success() {
+    //     this.click("#includeGroups_chzn input");
+    // }, function fail() {
+    //     test.assertExists("#includeGroups_chzn input", "Assert 'Include Group(s)' exist.");
+    // });
 
-    casper.wait(2000);
+    // casper.waitForSelector("#includeGroups_chzn_o_0", function success() {
+    //     this.click("#includeGroups_chzn_o_0");
+    // }, function fail() {
+    //     test.assertExists("#includeGroups_chzn_o_0", "Assert first option of contact group exist.");
+    // });
 
-    casper.waitForSelector("#includeGroups_chzn_o_0", function success() {
-        this.click("#includeGroups_chzn_o_0");
-    }, function fail() {
-        test.assertExists("#includeGroups_chzn_o_0", "Assert first option of contact group exist.");
-    });
+    // casper.waitForSelector(".search-choice", function success() {
+    //     var selected_group_name = this.evaluate(function () {
+    //         return document.querySelector('.search-choice span').textContent;
+    //     });
+    // }, function fail() {
+    //     test.assertExists(".search-choice", "Group not selected");
+    // });
 
-    casper.waitForSelector(".search-choice", function success() {
-        var selected_group_name = this.evaluate(function () {
-            return document.querySelector('.search-choice span').textContent;
+    casper.waitForSelector("#includeGroups", function success() {
+        this.evaluate(function () {
+            document.getElementById("includeGroups").selectedIndex = 0;
         });
-        this.echo("selected group name:" + selected_group_name);
-        this.echo("new group name:" + group_name);
     }, function fail() {
-        test.assertExists(".search-choice", "Group not selected");
+        test.assertExists("#includeGroups", "Assert 'Include Group(s)' exist.");
     });
-
-    casper.wait(2000);
 
     casper.waitForSelector("input[value='Next >>']", function success() {
         this.click("input[value='Next >>']");
