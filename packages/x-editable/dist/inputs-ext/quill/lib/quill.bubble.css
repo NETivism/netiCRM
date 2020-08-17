@@ -950,3 +950,21 @@
 .ql-container.ql-bubble:not(.ql-disabled) a:hover::after {
   visibility: visible;
 }
+
+/* Custom */
+.ql-bubble .ql-picker.ql-size .ql-picker-label::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item::before {
+  content: "Normal";
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="13px"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="13px"]::before {
+  content: "Small";
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="20px"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before {
+  content: "Large";
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="28px"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="28px"]::before {
+  content: "Huge";
+}

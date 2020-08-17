@@ -86,10 +86,14 @@ $(function(){
             });
             */
 
+            var quillSize = Quill.import('attributors/style/size');
+            quillSize.whitelist = ['13px', '20px', '28px'];
+            Quill.register(quillSize, true);
+
             var toolbarOptions = [
               ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
               [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-              [{ 'size': ['small', false, 'large', 'huge'] }],
+              [{ 'size': ['13px', false, '20px', '28px'] }],
               [{ 'align': [] }],
               [{ 'list': 'ordered'}, { 'list': 'bullet' }],
               ['link'],
