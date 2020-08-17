@@ -1467,10 +1467,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }
@@ -1485,10 +1496,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }
@@ -1503,10 +1525,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
               });
             }
 
@@ -1520,10 +1553,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }

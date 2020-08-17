@@ -461,6 +461,12 @@ ul.nme-setting-panels-tabs li a.is-active {
   max-width: 100% !important;
 }
 
+/* nme item: paragraph */
+.nmeb-paragraph .nme-elem p,
+.nmee-paragraph .ql-editor p {
+  font-size: 16px;
+}
+
 /* nme edit */
 .nme-edit {
   position: absolute;
