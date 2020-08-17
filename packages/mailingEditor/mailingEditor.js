@@ -353,6 +353,12 @@
       .replace(/'/g, "&#039;");
   };
 
+  var _htmlDecode = function(input) {
+    input = _htmlUnescape(input);
+    input = decodeURI(input);
+    return input;
+  }
+
   var _domElemExist = function($elem) {
     var $elem = typeof $elem !== "undefined" ? $elem : "";
 
@@ -621,7 +627,7 @@
                     break;
 
                   case "paragraph":
-                    decodeContent = _htmlUnescape(block.data.html);
+                    decodeContent = _htmlDecode(block.data.html);
                     $nmebElem.html(decodeContent);
                     break;
 
@@ -652,7 +658,7 @@
                       break;
 
                     case "footer":
-                      decodeContent = _htmlUnescape(block.data.html);
+                      decodeContent = _htmlDecode(block.data.html);
                       $nmebElem.html(decodeContent);
                       break;
 
@@ -840,7 +846,7 @@
                       "data-placeholder": "請輸入段落文字...",
                       "data-title": "Enter comments"
                     });
-                    decodeContent = _htmlUnescape(block.data.html);
+                    decodeContent = _htmlDecode(block.data.html);
                     $nmebElem.html(decodeContent);
                     break;
 
@@ -914,7 +920,7 @@
                         "data-placeholder": "請輸入段落文字...",
                         "data-title": "Enter comments"
                       });
-                      decodeContent = _htmlUnescape(block.data.html);
+                      decodeContent = _htmlDecode(block.data.html);
                       $nmebElem.html(decodeContent);
                       break;
 
