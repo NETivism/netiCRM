@@ -55,7 +55,21 @@
 {if $emailTask}
     <tr class="crm-contactEmail-form-block-template">
         <td class="label">{$form.template.label}</td>
-        <td>{$form.template.html}</td>
+        <td>
+          {$form.template.html}
+          {if $templateDefault}
+          <script>{literal}
+            cj(document).ready(function($){
+              var templateId = "{/literal}{$templateDefault}{literal}";
+              console.log(templateId);
+              if ($("#template").find("option[value="+templateId+"]").length > 0){
+                $("#template").val(templateId);
+                $("#template").change();
+              }
+            });
+          {/literal}</script>
+          {/if}
+        </td>
     </tr>
 {/if}
     <tr class="crm-contactEmail-form-block-subject">

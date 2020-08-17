@@ -42,7 +42,7 @@ class CRM_Import_ImportJob {
   /**
    * default segementation of import job
    */
-  CONST BATCH_THRESHOLD = 10000, BATCH_LIMIT = 2000;
+  CONST BATCH_THRESHOLD = 2000, BATCH_LIMIT = 2000;
 
   protected $_tableName;
   protected $_primaryKeyName;

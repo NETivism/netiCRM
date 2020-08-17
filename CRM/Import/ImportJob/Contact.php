@@ -4,10 +4,12 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
   public $_newGroupName;
   public $_newGroupDesc;
+  public $_newGroupId;
   public $_groups;
   public $_allGroups;
   public $_newTagName;
   public $_newTagDesc;
+  public $_newTagId;
   public $_tag;
   public $_allTags;
 
@@ -396,6 +398,17 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
   public function addImportedContactsToNewGroup($contactIds, $newGroupName, $newGroupDesc) {
     static $newGroupId;
+    if ($this->_newGroupId) {
+      $newGroupId = $this->_newGroupId;
+    }
+    if (empty($newGroupId) && !empty($newGroupName)) {
+      $gParams['title'] = $newGroupName;
+      $exists = array();
+      CRM_Contact_BAO_Group::retrieve($gParams, $exists);
+      if (!empty($exists['id'])) {
+        $newGroupId = $exists['id'];
+      }
+    }
 
     if ($newGroupName && empty($newGroupId)) {
       /* Create a new group */
@@ -406,7 +419,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         'is_active' => TRUE,
       );
       $group = CRM_Contact_BAO_Group::create($gParams);
-      $newGroupId = $group->id;
+      $this->_newGroupId = $newGroupId = $group->id;
       $this->_groupAdditions[$newGroupId]['new'] = TRUE;
       $this->_groups[] = $newGroupId;
     }
@@ -439,6 +452,19 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
   public function tagImportedContactsWithNewTag($contactIds, $newTagName, $newTagDesc) {
     static $newTagId;
+    if ($this->_newTagId) {
+      $newTagId = $this->_newTagId;
+    }
+    if (empty($newTagId) && !empty($newTagName)) {
+      $exists = array();
+      $tagParams = array(
+        'name' => $newTagName,
+      );
+      CRM_Core_BAO_Tag::retrieve($tagParams, $exists);
+      if (!empty($exists['id'])) {
+        $newTagId = $exists['id'];
+      }
+    }
 
     if ($newTagName && empty($newTagId)) {
       /* Create a new Tag */
@@ -453,7 +479,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       require_once 'CRM/Core/BAO/Tag.php';
       $id = array();
       $addedTag = CRM_Core_BAO_Tag::add($tagParams, $id);
-      $newTagId = $addedTag->id;
+      $this->_newTagId = $newTagId = $addedTag->id;
       $this->_tagAdditions[$newTagId]['new'] = TRUE;
       $this->_tag[$newTagId] = 1;
     }
