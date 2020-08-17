@@ -189,6 +189,15 @@ window.nmEditor = {
 										</div>
 									</div>
 								</div>
+								<div class="nme-paragraph-setting nme-setting-section" data-setting-group="paragraph">
+									<h3 class="nme-setting-section-title">{ts}Paragraph{/ts}</h3>
+									<div class="nme-setting-section-content">
+										<div id="nme-paragraph-setting-color" class="nme-setting-field" data-field-type="color">
+											<div class="nme-setting-field-label">{ts}Color{/ts}</div>
+											<div class="nme-setting-field-content"><div id="nme-paragraph-setting-color-picker" class="nme-setting-picker"></div></div>
+										</div>
+									</div>
+								</div>
 								<div class="nme-button-setting nme-setting-section" data-setting-group="button">
 									<h3 class="nme-setting-section-title">{ts}Button{/ts}</h3>
 									<div class="nme-setting-section-content">

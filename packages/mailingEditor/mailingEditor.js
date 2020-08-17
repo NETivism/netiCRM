@@ -1515,6 +1515,50 @@
             }
           }
 
+          if (group == "paragraph") {
+            $block = $(".nme-block[data-type='paragraph']:not([data-elem-override='true'])");
+
+            if (fieldType == "color") {
+              $target = $block.find(".nme-elem");
+              $target.css(fieldType, colorVal);
+              $target.find("p").each(function() {
+                let $p = $(this);
+                if ($p.find("span").length) {
+                  $p.find("span").css(fieldType, colorVal);
+                }
+                else {
+                  $p.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
+                }
+              });
+
+              $block.each(function() {
+                let $this = $(this),
+                    section = $this.data("section"),
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index"),
+                    $field = $block.find(".nme-elem");
+
+                // Reinitialize x-editable
+                $field.removeClass("editable-initialized");
+                $field.editable("destroy");
+                $field.editable();
+
+                // Update color to json
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+              });
+            }
+          }
+
           if (group == "button") {
             $block = $(".nme-block[data-type='button']:not([data-elem-override='true'])");
 
