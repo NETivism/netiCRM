@@ -213,7 +213,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
 
     if ($buttonName1 == '_qf_Map_next') {
-      if ($this->get('mappingId')) {
+      if ($this->get('mappingId') && !empty($params['saveMappingName'])) {
         $params['mappingId'] = $this->get('mappingId');
         $params['updateMapping'] = 1;
         unset($params['saveMapping']);

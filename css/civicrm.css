@@ -3242,8 +3242,13 @@ div#civicrm-dashboard form {
 #Tag .tree .collapsable .hit,
 #Tag .tree .expandable .hit { padding-left:16px; }
 
-.ui-widget.ui-widget-content {
-  z-index: 9999 !important;
+.ui-widget.shorten-url-popup {
+  z-index: 999;
+}
+
+/* jquery modal */
+.jquery-modal.blocker {
+  z-index:9500;
 }
 
 /*  DataTables fixes */

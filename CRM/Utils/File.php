@@ -326,14 +326,14 @@ class CRM_Utils_File {
    */
   static function cleanFileName($name) {
     // replace the last 33 character before the '.' with null
-    $name = preg_replace('/(_[\w]{32})\./', '.', $name);
+    $name = preg_replace('/(_\w{8,32})\./', '.', $name);
     return $name;
   }
 
   static function makeFileName($name) {
     $uniqID = CRM_Utils_String::createRandom(8, CRM_Utils_String::ALPHANUMERIC);
     $info = pathinfo($name);
-    $basename = substr($info['basename'], 0, -(strlen(CRM_Utils_Array::value('extension', $info)) + (CRM_Utils_Array::value('extension', $info) == '' ? 0 : 1)));
+    $basename = mb_substr($info['basename'], 0, -(strlen(CRM_Utils_Array::value('extension', $info)) + (CRM_Utils_Array::value('extension', $info) == '' ? 0 : 1)));
     if (!self::isExtensionSafe(CRM_Utils_Array::value('extension', $info))) {
       // munge extension so it cannot have an embbeded dot in it
       // The maximum length of a filename for most filesystems is 255 chars.
@@ -341,7 +341,14 @@ class CRM_Utils_File {
       return CRM_Utils_String::munge("{$basename}_" . CRM_Utils_Array::value('extension', $info) . "_{$uniqID}", '_', 240) . ".unknown";
     }
     else {
-      return CRM_Utils_String::munge("{$basename}_{$uniqID}", '_', 240) . "." . CRM_Utils_Array::value('extension', $info);
+      $basename = CRM_Utils_String::safeFilename($basename);
+      if ($basename && mb_strlen($basename) <= 225) {
+      // do not use munge to preserve original filename
+        return "{$basename}_{$uniqID}".".".CRM_Utils_Array::value('extension', $info);
+      }
+      else {
+        return CRM_Utils_String::munge("{$basename}_{$uniqID}", '_', 240) . "." . CRM_Utils_Array::value('extension', $info);
+      }
     }
   }
 

@@ -2547,6 +2547,51 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
+   * gives required details of a contact
+   *
+   * @param  array   $contactId     
+   * @param  array   $mailingId
+   *
+   * @return array
+   * @access public
+   */
+  function getContactReport($contactId, $mailingId) {
+    $job = CRM_Mailing_BAO_Job::getTableName();
+    $eq = CRM_Mailing_Event_DAO_Queue::getTableName();
+    $ed = CRM_Mailing_Event_DAO_Delivered::getTableName();
+    $eb = CRM_Mailing_Event_DAO_Bounce::getTableName();
+    $eo = CRM_Mailing_Event_DAO_Opened::getTableName();
+    $ec = CRM_Mailing_Event_DAO_TrackableURLOpen::getTableName();
+    $eu = CRM_Mailing_Event_DAO_Unsubscribe::getTableName();
+
+    $from = array();
+    $from[] = "INNER JOIN $job ON $job.id = $eq.job_id";
+    $from[] = "LEFT JOIN $ed ON $ed.event_queue_id = $eq.id";
+    $from[] = "LEFT JOIN $eo ON $eo.event_queue_id = $eq.id";
+    $from[] = "LEFT JOIN $ec ON $ec.event_queue_id = $eq.id";
+    $from[] = "LEFT JOIN $eb ON $eb.event_queue_id = $eq.id";
+    $from[] = "LEFT JOIN $eu as unsubscribe ON unsubscribe.event_queue_id = $eq.id AND unsubscribe.org_unsubscribe = 0";
+    $from[] = "LEFT JOIN $eu as optout ON optout.event_queue_id = $eq.id AND optout.org_unsubscribe = 1";
+    $select = "SELECT $eq.contact_id, COUNT($ed.time_stamp) as delivered, COUNT($eo.time_stamp) as opened, COUNT($ec.time_stamp) as clicks, COUNT($eb.time_stamp) as bounce, COUNT(unsubscribe.time_stamp) as unsubscribe, COUNT(optout.time_stamp)  as optout";
+    $from  = "\n FROM $eq ".implode(" ", $from);
+    $where = "\n WHERE $eq.contact_id = %1 AND $job.mailing_id = %2 AND $job.is_test = 0";
+    $groupBy = "\n GROUP BY $eq.contact_id";
+    $dao = CRM_Core_DAO::executeQuery($select . $from . $where . $groupBy, array(
+      1 => array($contactId, 'Positive'),
+      2 => array($mailingId, 'Positive'),
+    ));
+    $dao->fetch();
+    return array(
+      'Delivered' => $dao->delivered,
+      'Opened' => $dao->opened,
+      'Clicks' => $dao->clicks,
+      'Bounce' => $dao->bounce,
+      'Unsubscribe' => $dao->unsubscribe,
+      'Opt-Out' => $dao->optout,
+    );
+  }
+
+  /**
    * Function to build the  compose mail form
    *
    * @param   $form
