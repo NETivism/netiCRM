@@ -31,6 +31,7 @@ var html_message = null;
 var prefix = '';
 var isPDF        = false;
 var isMailing    = false;
+var json_message = "body_json";
 
 {/literal}
 
@@ -109,6 +110,12 @@ function showSaveUpdateChkBox(prefix) {
 }
 
 function selectValue( val, prefix) {
+    cj("#loading").remove();
+    var yesno = confirm("{/literal}{ts}Are your sure to use template to replace your work? You will lose any customizations you have made{/ts}{literal}");
+    if(!yesno) {
+      document.getElementById('template').selectedIndex = '';  	
+      return;
+    }
     document.getElementsByName(prefix + "saveTemplate")[0].checked = false;
     document.getElementsByName(prefix + "updateTemplate")[0].checked = false;
     showSaveUpdateChkBox(prefix);
@@ -140,8 +147,13 @@ function selectValue( val, prefix) {
     }
 
     var dataUrl = {/literal}"{crmURL p='civicrm/ajax/template' h=0 }"{literal};
-
-    cj.post( dataUrl, {tid: val}, function( data ) {
+    cj("#template").after('<i class="zmdi zmdi-spinner zmdi-hc-spin" id="loading"></i>');
+    if (cj("#subject").length) {
+      cj("#subject").attr("readonly", "readonly");
+    }
+    window.setTimeout(function(){
+      cj.post( dataUrl, {tid: val}, function( data ) {
+        cj("#subject").removeAttr("readonly");
         if ( !isPDF ) {
             cj("#subject").val( data.subject );
 
@@ -149,8 +161,36 @@ function selectValue( val, prefix) {
                 cj("#"+text_message).val(data.msg_text);
                 return;
             }
-            // do not load text message from template
-            cj("#"+text_message).val("");
+            else {
+              // do not load text message from template
+              cj("#"+text_message).val("");
+
+              // check if json object
+              if (cj("#"+json_message).length > 0 && !data.msg_html && data.msg_text) {
+                try {
+                  data.msg_json = JSON.parse(data.msg_text);
+                }
+                catch (e) {
+                  console.log(e);
+                  data.msg_json = null;
+                  return false;
+                }
+                cj("#"+json_message).val(data.msg_json);
+                if (cj("input[name=upload_type][value=2]").length) {
+                  cj("input[name=upload_type][value=2]").click();
+                  cj("input[name=upload_type][value=2]").trigger('click');
+                  if (typeof window.nmEditorInstanse !== 'undefined') {
+                    //window.nmEditorInstanse.render();
+                  }
+                }
+              }
+              else {
+                if (cj("input[name=upload_type][value=1]").length) {
+                  cj("input[name=upload_type][value=1]").click();
+                  cj("input[name=upload_type][value=1]").trigger('click');
+                }
+              }
+            }
         }
         var html_body  = "";
         if (  data.msg_html ) {
@@ -177,7 +217,9 @@ function selectValue( val, prefix) {
                 document.getElementById("bindFormat").style.display = "none";
             }
         }
-    }, 'json');    
+        cj("#loading").remove();
+      }, 'json');
+    }, 1000);
 }
 
 if ( isMailing ) {

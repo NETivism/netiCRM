@@ -125,9 +125,13 @@
         hide('compose_old_id')
         cj('.crm-mailing-upload-form-block-template').hide();
         show('upload_id');
+        cj("#saveDetails").hide();
+        cj("#editMessageDetails").hide();
       }
       else {
         hide('upload_id');
+        cj("#saveDetails").insertAfter("#compose_old_id").show();
+        cj("#editMessageDetails").insertAfter("#compose_old_id").show();
         // Compose On-screen
         if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
           hide('compose_old_id');
@@ -137,6 +141,7 @@
           cj("#header_id option[value='']").prop("selected", true);
           cj("#footer_id option[value='']").prop("selected", true);
           hide('mailing_header_footer');
+          cj('.crm-mailing-upload-form-block-template').show();
         }
 
         // Traditional Editor (old compose mode)

@@ -2530,7 +2530,7 @@
     _debug(_container);
     _checkNmeInstance();
 
-    return this;
+    return _nme;
   };
 
   // Plugin defaults options

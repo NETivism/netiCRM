@@ -80,7 +80,7 @@ window.nmEditor = {
 				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
 				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
 
-    $(".nme-container").nmEditor();
+    window.nmEditorInstanse = $(".nme-container").nmEditor();
 	});
 })(jQuery);
 </script>
