@@ -32,6 +32,9 @@
           "font-size": "20px",
           "color": "#333333"
         },
+        "paragraph": {
+          "color": "#000000"
+        },
         "button": {
           "padding-top": "10px",
           "padding-right": "10px",
