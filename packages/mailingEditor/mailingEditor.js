@@ -469,8 +469,11 @@
 
           if (scrollTop >= yMin && scrollTop <= yMax) {
             _debug(blockID);
-            $("#" + blockID).addClass("on-screen-center");
-            $("#" + blockID).after("<div class='add-block-here'>" + _ts["Add Block Here"] + "</div>");
+            let $block = $("#" + blockID);
+            $block.addClass("on-screen-center");
+            if (!$block.next(".add-block-here").length) {
+              $("#" + blockID).after("<div class='add-block-here'>" + _ts["Add Block Here"] + "</div>");
+            }
           }
         }
       });
