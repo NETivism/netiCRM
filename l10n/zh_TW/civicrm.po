@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-08-03 05:53+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
+"PO-Revision-Date: 2020-08-18 07:24+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17131,7 +17131,7 @@ msgstr "關於必須替代符號的更多資料…"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "Duplicate Template Name."
-msgstr "複製範本名稱。"
+msgstr "範本名稱已重複。"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "Mailing Content"
@@ -47983,3 +47983,8 @@ msgid ""
 " export HTML emails from other email marketing platforms, and then upload "
 "the files."
 msgstr "您可以將在電腦建立好的 HTML 郵件或將其他電子報平台所匯出的 HTML 郵件儲存成 HTML 檔案上傳。"
+
+msgid ""
+"Are your sure to use template to replace your work? You will lose any "
+"customizations you have made."
+msgstr "確定使用範本來取代嗎？剛剛所做的一些更改，並不會儲存。"
