@@ -1204,123 +1204,128 @@
   };
 
   var _nmeMain = function() {
-    if (!$(_main).length) {
-      let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
-          mailTpl = _tpl["mail"][mailTplName];
+    if ($(_main).length) {
+      $(_main).remove();
+    }
 
-      $(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
-      $(_main).children(".inner").append(mailTpl);
+    let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
+        mailTpl = _tpl["mail"][mailTplName];
 
-      // Added styles to body table
-      _nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
+    $(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
+    $(_main).children(".inner").append(mailTpl);
 
-      if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
-        for (let section in _data.sections) {
-          if (!_sectionIsEmpty(section)) {
-            let blocksData = _data.sections[section].blocks,
-                sectionID = "nme-mail-" + section,
-                sectionInner = "#" + sectionID + " .nme-mail-inner",
-                blocksContainer = sectionInner + " .nme-blocks";
+    // Added styles to body table
+    _nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
 
-            $(sectionInner).append("<div id='" + sectionID + "-blocks' class='nme-blocks' data-section='" + section + "'></div>");
+    if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
+      for (let section in _data.sections) {
+        if (!_sectionIsEmpty(section)) {
+          let blocksData = _data.sections[section].blocks,
+              sectionID = "nme-mail-" + section,
+              sectionInner = "#" + sectionID + " .nme-mail-inner",
+              blocksContainer = sectionInner + " .nme-blocks";
 
-            // Render blocks from data
-            for (let blockID in _data.sections[section].blocks) {
-              let blockData = blocksData[blockID];
-              _nmeBlock.add(blockData, "edit", $(blocksContainer));
-            }
+          $(sectionInner).append("<div id='" + sectionID + "-blocks' class='nme-blocks' data-section='" + section + "'></div>");
+
+          // Render blocks from data
+          for (let blockID in _data.sections[section].blocks) {
+            let blockData = blocksData[blockID];
+            _nmeBlock.add(blockData, "edit", $(blocksContainer));
           }
         }
+      }
 
-        // Prevent users from pressing enter to send the #upload form.
-        $("#Upload").on("keypress", "input, textarea", function(event){
-          let code = event.keyCode || event.which;
+      // Prevent users from pressing enter to send the #upload form.
+      $("#Upload").on("keypress", "input, textarea", function(event){
+        let code = event.keyCode || event.which;
 
-          if (code == 13) {
-            event.preventDefault();
-            return false;
-          }
-        });
+        if (code == 13) {
+          event.preventDefault();
+          return false;
+        }
+      });
 
-        var _checkPanelOpen = function() {
-          let uploadType = $(".form-radio[name='upload_type']:checked").val();
-          if (uploadType == "2" && !$(_nmeOptions.dataLoadSourc).val() && !$(_panels).hasClass("is-opened")) {
+      var _checkPanelOpen = function() {
+        let uploadType = $(".form-radio[name='upload_type']:checked").val();
+        if (uploadType == "2" && $(_dataLoadSource).val()) {
+          if (!$(_panels).hasClass("is-opened")) {
             _nmePanels.open();
           }
-          else {
-            if ($(_panels).hasClass("is-opened")) {
-              _nmePanels.close();
-            }
+        }
+        else {
+          if ($(_panels).hasClass("is-opened")) {
+            _nmePanels.close();
           }
         }
+      }
 
-        // trigger panel open
-        $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
-          _checkPanelOpen();
-        });
-        // check default open
+      // trigger panel open
+      $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
         _checkPanelOpen();
+      });
+      // check default open
+      _checkPanelOpen();
 
-        $("#Upload").on("click", ".form-submit", function(event) {
-          $(this).closest("form").data("action", $(this).attr("name"));
-        });
+      $("#Upload").on("click", ".form-submit", function(event) {
+        $(this).closest("form").data("action", $(this).attr("name"));
+      });
 
-        $("#Upload").submit(function(event) {
-          let $form = $(this),
-              buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
-              allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
+      $("#Upload").submit(function(event) {
+        let $form = $(this),
+            buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
+            allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
 
-          if (allowSubmit) {
-            $form.data("allow-submit", false);
-            return;
-          }
+        if (allowSubmit) {
+          $form.data("allow-submit", false);
+          return;
+        }
 
-          // Check edit mode option, Only 'Compose On-screen' option is allowed
-          if ($(".form-radio[name='upload_type'][value='2']").is(":checked")) {
-            // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
-            if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
-              event.preventDefault();
-              let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
-                  confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
+        // Check edit mode option, Only 'Compose On-screen' option is allowed
+        if ($(".form-radio[name='upload_type'][value='2']").is(":checked")) {
+          // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
+          if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
+            event.preventDefault();
+            let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
+                confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
 
-              let saveContentToOldEditor = function() {
-                _nmeMailOutput();
-                let previewContent = "";
-                let checkMailOutput = function() {
-                  if ($("#nme-mail-output-frame").length) {
-                    previewContent = $("#nme-mail-output-frame").contents().find("body").html();
+            let saveContentToOldEditor = function() {
+              _nmeMailOutput();
+              let previewContent = "";
+              let checkMailOutput = function() {
+                if ($("#nme-mail-output-frame").length) {
+                  previewContent = $("#nme-mail-output-frame").contents().find("body").html();
 
-                    if (previewContent) {
-                      clearInterval(checkMailOutputTimer);
-                      previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
-                      CKEDITOR.instances['html_message'].setData(previewContent);
-                      $form.data("allow-submit", true);
-                      $form.find("[name='" + buttonName + "']").click();
-                    }
+                  if (previewContent) {
+                    clearInterval(checkMailOutputTimer);
+                    previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
+                    CKEDITOR.instances['html_message'].setData(previewContent);
+                    $form.data("allow-submit", true);
+                    $form.find("[name='" + buttonName + "']").click();
                   }
                 }
-                let checkMailOutputTimer = setInterval(checkMailOutput, 500);
               }
+              let checkMailOutputTimer = setInterval(checkMailOutput, 500);
+            }
 
-              if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
-                if (window.confirm(confirmMessage)) {
-                  saveContentToOldEditor();
-                }
-              }
-              else {
+            if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
+              if (window.confirm(confirmMessage)) {
                 saveContentToOldEditor();
               }
             }
+            else {
+              saveContentToOldEditor();
+            }
           }
-        });
+        }
+      });
 
-        _sortable();
-        _nmePanels.init();
-        _nmePreview.init();
-        _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
-        _tooltip();
-      }
+      _sortable();
+      _nmePanels.init();
+      _nmePreview.init();
+      _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
+      _tooltip();
     }
+
   };
 
   var _nmeMailOutput = function() {
@@ -2571,6 +2576,10 @@
             _nmeMain();
           }
         });
+      }
+      else {
+        // Execute the main function
+        _nmeMain();
       }
     },
     panels: {
