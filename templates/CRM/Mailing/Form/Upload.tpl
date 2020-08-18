@@ -73,6 +73,8 @@
 <fieldset id="compose_old_id"><legend>{ts}Traditional Editor{/ts}</legend>
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl" upload=1 noAttach=1}
 </fieldset>
+<div id="saveTemplateBlock">
+</div>
 
   {capture assign=docLink}{docURL page="Sample CiviMail Messages" text="More information and sample messages..."}{/capture}
   <fieldset id="upload_id"><legend>{ts}Upload Content{/ts}</legend>
@@ -125,13 +127,13 @@
         hide('compose_old_id')
         cj('.crm-mailing-upload-form-block-template').hide();
         show('upload_id');
-        cj("#saveDetails").hide();
-        cj("#editMessageDetails").hide();
+        cj("#saveTemplateBlock").hide();
       }
       else {
         hide('upload_id');
-        cj("#saveDetails").insertAfter("#compose_old_id").show();
-        cj("#editMessageDetails").insertAfter("#compose_old_id").show();
+        cj("#editMessageDetails").appendTo("#saveTemplateBlock");
+        cj("#saveDetails").appendTo("#saveTemplateBlock");
+        cj("#saveTemplateBlock").show();
         // Compose On-screen
         if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
           hide('compose_old_id');

@@ -110,8 +110,11 @@ function showSaveUpdateChkBox(prefix) {
 }
 
 function selectValue( val, prefix) {
+    if (!val) {
+      return;
+    }
     cj("#loading").remove();
-    var yesno = confirm("{/literal}{ts}Are your sure to use template to replace your work? You will lose any customizations you have made{/ts}{literal}");
+    var yesno = confirm("{/literal}{ts}Are your sure to use template to replace your work? You will lose any customizations you have made.{/ts}{literal}");
     if(!yesno) {
       document.getElementById('template').selectedIndex = '';  	
       return;
@@ -175,13 +178,11 @@ function selectValue( val, prefix) {
                   data.msg_json = null;
                   return false;
                 }
-                cj("#"+json_message).val(data.msg_json);
+                cj("#"+json_message).val(data.msg_text);
                 if (cj("input[name=upload_type][value=2]").length) {
                   cj("input[name=upload_type][value=2]").click();
                   cj("input[name=upload_type][value=2]").trigger('click');
-                  if (typeof window.nmEditorInstanse !== 'undefined') {
-                    //window.nmEditorInstanse.render();
-                  }
+                  window.nmEditorInstance.render();
                 }
               }
               else {

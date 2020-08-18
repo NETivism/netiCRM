@@ -79,8 +79,7 @@ window.nmEditor = {
 				$newEditorData = $("#body_json"),
 				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
 				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
-
-    window.nmEditorInstanse = $(".nme-container").nmEditor();
+    window.nmEditorInstance = $(".nme-container").nmEditor();
 	});
 })(jQuery);
 </script>

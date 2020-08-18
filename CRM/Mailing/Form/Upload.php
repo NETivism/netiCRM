@@ -89,10 +89,10 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
       //we don't want to retrieve template details once it is
       //set in session
-      $templateId = $this->get('template');
+      $justSavedTemplate = $this->get('justSavedTemplate');
       
-      $this->assign('templateSelected', $templateId ? $templateId : 0);
-      if (isset($defaults['msg_template_id']) && !$templateId) {
+      $this->assign('templateSelected', $justSavedTemplate ? $justSavedTemplate: 0);
+      if (isset($defaults['msg_template_id']) && !$justSavedTemplate) {
         $messageTemplate = new CRM_Core_DAO_MessageTemplates();
         $messageTemplate->id = $defaults['msg_template_id'];
         $messageTemplate->selectAdd();
@@ -119,6 +119,9 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         }
         // do not load tempalte txt
         $defaults['text_message'] = '';
+      }
+      elseif ($justSavedTemplate == $defaults['msg_template_id']) {
+        $defaults['template'] = $justSavedTemplate;
       }
 
       if (isset($defaults['body_text'])) {
@@ -228,9 +231,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     $tempVar = FALSE;
 
     // this seems so hacky, not sure what we are doing here and why. Need to investigate and fix
-    $session->getVars($options,
-      "CRM_Mailing_Controller_Send_{$this->controller->_key}"
-    );
+    $session->getVars($options, "CRM_Mailing_Controller_Send_{$this->controller->_key}");
 
     require_once 'CRM/Core/PseudoConstant.php';
     $fromEmailAddress = CRM_Core_PseudoConstant::fromEmailAddress();
@@ -368,10 +369,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $formValues = $this->controller->exportValues($this->_name);
 
+    $composeFields = array(
+      'template', 'saveTemplate',
+      'updateTemplate', 'saveTemplateName',
+    );
     foreach ($uploadParams as $key) {
-      if (CRM_Utils_Array::value($key, $formValues) ||
-        in_array($key, array('header_id', 'footer_id'))
-      ) {
+      if (CRM_Utils_Array::value($key, $formValues) || in_array($key, array('header_id', 'footer_id')) ) {
         $params[$key] = $formValues[$key];
         $this->set($key, $formValues[$key]);
       }
@@ -422,17 +425,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $session = CRM_Core_Session::singleton();
     $params['contact_id'] = $session->get('userID');
-    $composeFields = array(
-      'template', 'saveTemplate',
-      'updateTemplate', 'saveTemplateName',
-    );
     $msgTemplate = NULL;
     //mail template is composed
     if ($formValues['upload_type']) {
       foreach ($composeFields as $key) {
         if (CRM_Utils_Array::value($key, $formValues)) {
           $composeParams[$key] = $formValues[$key];
-          $this->set($key, $formValues[$key]);
         }
       }
 
@@ -487,7 +485,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       else {
         $params['msg_template_id'] = CRM_Utils_Array::value('template', $formValues);
       }
-      $this->set('template', $params['msg_template_id']);
+      $this->set('justSavedTemplate', $params['msg_template_id']);
     }
 
     CRM_Core_BAO_File::formatAttachment($formValues,
