@@ -98,7 +98,7 @@ SELECT l.price_field_value_id as price_field_value_id,
        l.qty,
        l.entity_table,
        l.entity_id
-FROM   civicrm_line_item l, civicrm_price_set_entity e INNER JOIN civicrm_price_field_value pfv ON e.entity_id = pfv.id AND pfv.is_active = 1
+FROM   civicrm_line_item l, civicrm_price_set_entity e
 WHERE e.price_set_id = $this->_price_set_id AND
       l.entity_table = e.entity_table AND
       l.entity_id = e.entity_id
