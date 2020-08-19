@@ -1630,7 +1630,7 @@
     };
 
     if ($(".nme-theme-setting-items").length) {
-      if (!_objIsEmpty(_themes)) {
+      if (!_objIsEmpty(_themes) && !$(".nme-theme-setting-item").length) {
         for (let i in _themes) {
           let radio = "<label class='nme-theme-setting-item crm-form-elem crm-form-radio' for='nme-theme-setting-item-" + i + "'>" +
           "<input value='" + i + "' type='radio' id='nme-theme-setting-item-" + i + "' class='nme-setting-radio form-radio' name='nme-theme-setting'>" +
