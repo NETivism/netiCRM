@@ -1323,8 +1323,15 @@
       });
 
       _sortable();
-      _nmePanels.init();
-      _nmePreview.init();
+
+      if (!_nmePanels.initialized) {
+        _nmePanels.init();
+      }
+
+      if (!_nmePreview.initialized) {
+        _nmePreview.init();
+      }
+
       _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
       _tooltip();
     }
@@ -1721,6 +1728,7 @@
   };
 
   var _nmePreview = {
+    initialized: false,
     init: function() {
       if (!$("#nme-preview-popup").length) {
         let previewPopup = "<div id='nme-preview-popup' class='nme-preview-popup mfp-hide'>" +
@@ -1762,6 +1770,8 @@
           _nmePreview.close();
         }
       });
+
+      _nmePreview.initialized = true;
     },
     open: function() {
       $.magnificPopup.open({
@@ -2323,6 +2333,7 @@
   };
 
   var _nmePanels = {
+    initialized: false,
     init: function() {
       $(".nme-setting-panels").on("click", ".nme-setting-panels-trigger", function(event) {
         event.preventDefault();
@@ -2355,6 +2366,7 @@
 
       _nmePanelsAddBlock();
       _nmeGlobalSetting();
+      this.initialized = true;
     },
     open: function() {
       $(_panels).addClass("is-opened");
