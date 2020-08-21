@@ -41,7 +41,9 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Fo
 
   protected $_tableName = NULL;
 
-  protected $_cstatus = NULL; function __construct(&$formValues) {
+  protected $_cstatus = NULL;
+
+  function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_price_set_id = CRM_Utils_Array::value('price_set_id', $this->_formValues);
     $this->setColumns();
@@ -53,15 +55,8 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Fo
     $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
   }
 
-  function __destruct() {
-    if ($this->_eventID) {
-      $sql = "DROP TEMPORARY TABLE {$this->_tableName}";
-      CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
-    }
-  }
-
   function buildTempTable() {
-    $randomNum = md5($_GET['qfKey'] . $this->_price_set_id);
+    $randomNum = md5($this->_formValues['price_set_id']);
     $this->_tableName = "civicrm_temp_custom_{$randomNum}";
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
@@ -76,7 +71,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
           ))) {
         continue;
       }
-      $sql .= "{$fieldName} varchar(32) default '',\n";
+      $sql .= "{$fieldName} varchar(64) default '',\n";
     }
 
     $sql .= "
@@ -89,43 +84,36 @@ UNIQUE INDEX unique_entity ( entity_table, entity_id )
   }
 
   function fillTable() {
-    static $filled;
-    if ($filled) {
-      return;
-    }
     $sql = "
-SELECT l.price_field_value_id as price_field_value_id, 
+SELECT c.id as contact_id,
+       l.price_field_value_id as price_field_value_id, 
        l.qty,
        l.entity_table,
        l.entity_id
-FROM   civicrm_line_item l, civicrm_price_set_entity e
-WHERE e.price_set_id = $this->_price_set_id AND
-      l.entity_table = e.entity_table AND
-      l.entity_id = e.entity_id
+FROM   civicrm_contact c
+       INNER JOIN civicrm_contribution cc ON c.id = cc.contact_id
+       INNER JOIN civicrm_line_item l ON cc.id = l.entity_id AND l.entity_table = 'civicrm_contribution'
+       INNER JOIN civicrm_price_field pf ON l.price_field_id = pf.id
+WHERE pf.price_set_id = $this->_price_set_id
 ORDER BY l.entity_table, l.entity_id ASC
 ";
-// Avoid price field or value is not active
 
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     // first store all the information by option value id
     $rows = array();
     while ($dao->fetch()) {
-      $uniq = $dao->entity_table . "-" . $dao->entity_id;
+      $uniq = $dao->entity_table . "-" . $dao->entity_id.'-'.$dao->contact_id;
       $fieldName = "price_field_{$dao->price_field_value_id}";
-      // Avoid price field or value is not active
-      if (!in_array($fieldName, $this->_columns)) {
-        continue;
-      }
       $rows[$uniq][] = "{$fieldName} = {$dao->qty}";
     }
 
     foreach (array_keys($rows) as $entity) {
       if (is_array($rows[$entity])) {
         $values = implode(',', $rows[$entity]);
-        list($entity_table, $entity_id) = explode('-', $entity);
+        list($entity_table, $entity_id, $contact_id) = explode('-', $entity);
       }
-      $values .= ", entity_table = '{$entity_table}', entity_id = $entity_id";
+      $values .= " ,contact_id = '{$contact_id}', entity_table = '{$entity_table}', entity_id = $entity_id";
       $sql = "REPLACE INTO {$this->_tableName} SET $values";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
@@ -163,11 +151,9 @@ ORDER BY l.entity_table, l.entity_id ASC
         CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
       }
     }
-    $filled = TRUE;
   }
 
   function priceSetDAO($price_set_id = NULL) {
-
     // get all the events that have a price set associated with it
     $sql = "
 SELECT e.id    as id,
@@ -226,9 +212,9 @@ WHERE  p.price_set_id = e.id
 
   function setColumns() {
     $this->_columns = array(
+      ts('Contact Id') => 'contact_id',
       ts('Contribution ID') => 'entity_id',
       ts('Contribution Status') => 'contribution_status_id',
-      ts('Contact Id') => 'contact_id',
       ts('Name') => 'display_name',
       ts('Postal Code') => 'zip',
       ts('State/Province') => 'county',
@@ -290,10 +276,11 @@ contact_a.display_name   as display_name";
       $selectClause .= ",\ntempTable.{$fieldName} as {$fieldName}";
     }
 
-    return $this->sql($selectClause,
+    $sql = $this->sql($selectClause,
       $offset, $rowcount, $sort,
       $includeContactIDs, NULL
     );
+    return $sql;
   }
 
   function from() {
