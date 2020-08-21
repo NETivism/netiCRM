@@ -4615,7 +4615,7 @@ VALUES
    (@option_group_id_act, 'PhoneBank',                          29, 'PhoneBank', NULL,0, 0, 29, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, 'WalkList',                           30, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, 'Petition',                           31, 'Petition', NULL,0, 0, 31, '', 0, 1, 1, @campaignCompId, NULL),
-   (@option_group_id_act, 'Email Receipt',                      32, 'Email Receipt', NULL, 1, 0, 32, '', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, 'Email Receipt',                      32, 'Email Receipt', NULL, 1, 0, 32, '', 0, 1, 0, @contributeCompId, NULL),
    (@option_group_id_act, 'Print Contribution Receipts',        33, 'Print Contribution Receipts', NULL, 1, 0, 33, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, 'Contribution SMS',                   34, 'Contribution SMS', NULL, 1, 0, 34, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, 'Event Registration SMS',             35, 'Event Registration SMS', NULL, 1, 0, 35, '', 0, 1, 1, @eventCompId, NULL),
