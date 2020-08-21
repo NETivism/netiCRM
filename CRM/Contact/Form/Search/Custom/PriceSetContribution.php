@@ -156,19 +156,18 @@ ORDER BY l.entity_table, l.entity_id ASC
   function priceSetDAO($price_set_id = NULL) {
     // get all the events that have a price set associated with it
     $sql = "
-SELECT e.id    as id,
-       e.title as title,
-       p.price_set_id as price_set_id
-FROM   civicrm_price_set      e,
-       civicrm_price_set_entity  p
-
-WHERE  p.price_set_id = e.id
+SELECT p.id as id,
+       p.title as title,
+       e.price_set_id as price_set_id
+FROM   civicrm_price_set p
+INNER JOIN civicrm_price_set_entity e ON e.price_set_id = p.id
+WHERE p.extends LIKE '%2%'
 ";
 
     $params = array();
     if ($price_set_id) {
       $params[1] = array($price_set_id, 'Integer');
-      $sql .= " AND e.id = $price_set_id";
+      $sql .= " AND p.id = $price_set_id";
     }
 
     $dao = CRM_Core_DAO::executeQuery($sql,
