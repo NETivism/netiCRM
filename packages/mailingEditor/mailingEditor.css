@@ -670,6 +670,8 @@ ul.nme-setting-panels-tabs li a.is-active {
 }
 .nme-preview-popup {
   position: relative;
+  margin: 40px auto;
+  max-width: 1000px;
   background: #fff;
 }
 .nme-preview-popup .inner {
@@ -681,9 +683,18 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nme-preview-toolbar {
   padding: 15px 20px;
 }
+.nme-preview-title {
+  font-size: 1.5rem;
+}
+.nme-preview-close {
+  padding: 0;
+  font-size: 30px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
 .nme-preview-content {
-  height: 85vh;
-  overflow-y: auto;
+  padding: 15px 20px;
 }
 .preview-content {
   height: 85vh;

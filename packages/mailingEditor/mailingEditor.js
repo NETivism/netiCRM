@@ -1781,7 +1781,6 @@
         type: "inline",
         mainClass: "mfp-preview-popup",
         preloader: true,
-        closeOnBgClick: false,
         showCloseBtn: false,
         callbacks: {
           open: function() {
@@ -1821,6 +1820,9 @@
           },
           close: function() {
             $("body").removeClass("mfp-is-active");
+            if ($(".nme-preview-mode-switch").is(":checked")) {
+              $(".nme-preview-mode-switch").prop("checked", false);
+            }
           },
         }
       });
