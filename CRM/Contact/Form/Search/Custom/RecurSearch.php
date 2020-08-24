@@ -348,11 +348,30 @@ $having
   }
 
 
+  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
+  }
+
+  /**
+   * This will call by search tasks
+   * Which not only provide contact id, but also provide additional id
+   * Mostly used by custom search support multiple record of one contact
+   */
+  function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+    $fields = "contact_a.contact_id, id" ;
+
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    return $this->sql($fields, $offset, $rowcount, $sort, FALSE);
+  }
+
   /**
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
-    $fields = !$onlyIDs ? "*" : "contact_a.contact_id, id" ;
+    $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
     if(!$this->_filled){
       $this->fillTable();
@@ -493,10 +512,6 @@ $having
    */
   function templateFile(){
     return 'CRM/Contact/Form/Search/Custom/RecurSearch.tpl';
-  }
-
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
-    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 }
 
