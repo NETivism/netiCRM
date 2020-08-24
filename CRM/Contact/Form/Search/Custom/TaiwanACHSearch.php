@@ -269,21 +269,6 @@ $having
     return 0;
   }
 
-  // inherite from RecurSearch
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
-    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
-  }
-
-  function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
-    $fields = "contact_a.contact_id, id" ;
-
-    if(!$this->_filled){
-      $this->fillTable();
-      $this->_filled = TRUE;
-    }
-    return $this->sql($fields, $offset, $rowcount, $sort, FALSE);
-  }
-
   /**
    * Construct the search query
    */
