@@ -461,7 +461,6 @@
       $(window).scroll(function() {
         let scrollTop = $(window).scrollTop();
         $elem.removeClass("on-screen-center");
-        $elem.next(".add-block-here").remove();
 
         for (let blockID in elemsYaxisRange) {
           let yMin = elemsYaxisRange[blockID][0],
@@ -471,9 +470,6 @@
             _debug(blockID);
             let $block = $("#" + blockID);
             $block.addClass("on-screen-center");
-            if (!$block.next(".add-block-here").length) {
-              $("#" + blockID).after("<div class='add-block-here'>" + _ts["Add Block Here"] + "</div>");
-            }
           }
         }
       });
@@ -792,9 +788,6 @@
                 $target.after(output);
                 break;
             }
-
-            // Remove 'Add block here' after append the block
-            $(".add-block-here").remove();
 
             // After adding the block, re-detect which block is on the screen
             _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
@@ -1154,8 +1147,10 @@
                   });
                 }
 
-                _nmeBlockControl.render(blockID, blockType);
-                _editable();
+                setTimeout(function() {
+                  _nmeBlockControl.render(blockID, blockType);
+                  _editable();
+                }, 500);
               }
 
               // Check control permission of each block
@@ -1781,7 +1776,6 @@
         type: "inline",
         mainClass: "mfp-preview-popup",
         preloader: true,
-        closeOnBgClick: false,
         showCloseBtn: false,
         callbacks: {
           open: function() {
@@ -1821,6 +1815,9 @@
           },
           close: function() {
             $("body").removeClass("mfp-is-active");
+            if ($(".nme-preview-mode-switch").is(":checked")) {
+              $(".nme-preview-mode-switch").prop("checked", false);
+            }
           },
         }
       });
@@ -2134,9 +2131,9 @@
     },
     init: function(id) {
       let blockID = typeof id !== "undefined" ? id : "",
-          $block = $(".nme-block[data-id='" + blockID + "']");
+          $blockControl = $(".nme-block[data-id='" + blockID + "'] > .nme-block-inner > .nme-block-control");
 
-      $block.find(".nme-block-control").on("click", ".handle-btn", function(event) {
+      $blockControl.on("click", ".handle-btn", function(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -2158,7 +2155,7 @@
             $elemContainer = $elem.closest(".nmeb-content-container"),
             $elemContainerInner = $elem.parent(".nmeb-content"),
             blockSortInst = _sortables[section]["inst"],
-            blocksSortOrder = _sortables[section]["order"];
+            blocksSortOrder = blockSortInst.toArray();
 
         // Block control: move group
         // prev
@@ -2291,8 +2288,8 @@
       });
 
       // handle type: style
-      if ($block.find(".handle-style").length) {
-        _colorable($block.find(".handle-style").attr("id"));
+      if ($blockControl.find(".handle-style").length) {
+        _colorable($blockControl.find(".handle-style").attr("id"));
       }
     }
   };
