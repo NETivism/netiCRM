@@ -26,6 +26,13 @@
 <!-- mailingEditor -->
 {include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
+{literal}
+<style>
+	.nme-block.on-screen-center:after {
+		content: "{/literal}{ts}Add Block Here{/ts}{literal}";
+	}
+</style>
+{/literal}
 <script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
 {literal}
 <script type="text/javascript">
