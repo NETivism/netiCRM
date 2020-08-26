@@ -89,19 +89,39 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
       //we don't want to retrieve template details once it is
       //set in session
-      $templateId = $this->get('template');
-      $this->assign('templateSelected', $templateId ? $templateId : 0);
-      if (isset($defaults['msg_template_id']) && !$templateId) {
-        $defaults['template'] = $defaults['msg_template_id'];
+      $justSavedTemplate = $this->get('justSavedTemplate');
+      
+      $this->assign('templateSelected', $justSavedTemplate ? $justSavedTemplate: 0);
+      if (isset($defaults['msg_template_id']) && !$justSavedTemplate) {
         $messageTemplate = new CRM_Core_DAO_MessageTemplates();
         $messageTemplate->id = $defaults['msg_template_id'];
         $messageTemplate->selectAdd();
         $messageTemplate->selectAdd('msg_text, msg_html');
         $messageTemplate->find(TRUE);
 
+        $jsonMessage = '';
+        if ($messageTemplate->msg_text && empty($messageTemplate->msg_html)) {
+          $json = json_decode($messageTemplate->msg_text);
+          if (!empty($json->sections)) {
+            // this is correct json object for nme
+            $jsonMessage = $messageTemplate->msg_text;
+          } 
+          else {
+            $jsonMessage = '';
+          }
+        }
+        if (!empty($jsonMessage)) {
+          $htmlMessage = '';
+          $defaults['body_json'] = $jsonMessage;
+        }
+        else {
+          $htmlMessage = $messageTemplate->msg_html;
+        }
         // do not load tempalte txt
         $defaults['text_message'] = '';
-        $htmlMessage = $messageTemplate->msg_html;
+      }
+      elseif ($justSavedTemplate == $defaults['msg_template_id']) {
+        $defaults['template'] = $justSavedTemplate;
       }
 
       if (isset($defaults['body_text'])) {
@@ -173,7 +193,13 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     $htmlMessage = str_replace("'", "\'", $htmlMessage);
     $this->assign('message_html', $htmlMessage);
 
-    $defaults['upload_type'] = 1;
+    $defaults['upload_type'] = 2;
+    if (!empty($defaults['body_json']) && json_decode($defaults['body_json'])) {
+      $defaults['upload_type'] = 2;
+    }
+    elseif (empty($defaults['body_json']) && !empty($defaults['body_html'])) {
+      $defaults['upload_type'] = 1;
+    }
     if (isset($defaults['body_html'])) {
       $defaults['html_message'] = $defaults['body_html'];
     }
@@ -205,9 +231,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     $tempVar = FALSE;
 
     // this seems so hacky, not sure what we are doing here and why. Need to investigate and fix
-    $session->getVars($options,
-      "CRM_Mailing_Controller_Send_{$this->controller->_key}"
-    );
+    $session->getVars($options, "CRM_Mailing_Controller_Send_{$this->controller->_key}");
 
     require_once 'CRM/Core/PseudoConstant.php';
     $fromEmailAddress = CRM_Core_PseudoConstant::fromEmailAddress();
@@ -247,7 +271,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     );
 
     $attributes = array('onclick' => "showHideUpload();");
-    $options = array("1" => ts('Compose On-screen'), "2" => ts('Traditional Editor'), "0" => ts('Upload Content'));
+    $options = array("2" => ts('Compose On-screen'), "1" => ts('Traditional Editor'), "0" => ts('Upload Content'));
 
     $this->addRadio('upload_type', ts('I want to'), $options, $attributes, "&nbsp;&nbsp;");
 
@@ -271,7 +295,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     $this->addRule('htmlFile', ts('File must be in UTF-8 encoding'), 'utf8File');
 
     // refs #23719. Add a field to save json data of mailing content.
-    $this->addElement('textarea', 'mailing_content_data', ts('Mailing content data'));
+    $this->addElement('textarea', 'body_json', ts('Mailing content data'));
 
     //fix upload files when context is search. CRM-3711
     $ssID = $this->get('ssID');
@@ -345,10 +369,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $formValues = $this->controller->exportValues($this->_name);
 
+    $composeFields = array(
+      'template', 'saveTemplate',
+      'updateTemplate', 'saveTemplateName',
+    );
     foreach ($uploadParams as $key) {
-      if (CRM_Utils_Array::value($key, $formValues) ||
-        in_array($key, array('header_id', 'footer_id'))
-      ) {
+      if (CRM_Utils_Array::value($key, $formValues) || in_array($key, array('header_id', 'footer_id')) ) {
         $params[$key] = $formValues[$key];
         $this->set($key, $formValues[$key]);
       }
@@ -372,6 +398,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
     }
     else {
+      if($formValues['upload_type'] == 2 && !empty($formValues['body_json'])){
+        $params['body_json'] = $formValues['body_json'];
+      }
+      else {
+        $params['body_json'] = 'null';
+      }
       $text_message = $formValues['text_message'];
       $params['body_text'] = $text_message;
       $this->set('textFile', $params['body_text']);
@@ -393,40 +425,54 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $session = CRM_Core_Session::singleton();
     $params['contact_id'] = $session->get('userID');
-    $composeFields = array(
-      'template', 'saveTemplate',
-      'updateTemplate', 'saveTemplateName',
-    );
     $msgTemplate = NULL;
     //mail template is composed
     if ($formValues['upload_type']) {
       foreach ($composeFields as $key) {
         if (CRM_Utils_Array::value($key, $formValues)) {
           $composeParams[$key] = $formValues[$key];
-          $this->set($key, $formValues[$key]);
         }
       }
 
       if (CRM_Utils_Array::value('updateTemplate', $composeParams)) {
-        $templateParams = array(
-          'msg_text' => '',
-          'msg_html' => $html_message,
-          'msg_subject' => $params['subject'],
-          'is_active' => TRUE,
-        );
+        if ($params['body_json'] != 'null') {
+          $templateParams = array(
+            'msg_text' => $params['body_json'],
+            'msg_html' => '',
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
+        else {
+          $templateParams = array(
+            'msg_text' => '',
+            'msg_html' => $html_message,
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
 
         $templateParams['id'] = $formValues['template'];
-
         $msgTemplate = CRM_Core_BAO_MessageTemplates::add($templateParams);
       }
 
       if (CRM_Utils_Array::value('saveTemplate', $composeParams)) {
-        $templateParams = array(
-          'msg_text' => '',
-          'msg_html' => $html_message,
-          'msg_subject' => $params['subject'],
-          'is_active' => TRUE,
-        );
+        if ($params['body_json'] != 'null') {
+          $templateParams = array(
+            'msg_text' => $params['body_json'],
+            'msg_html' => '',
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
+        else {
+          $templateParams = array(
+            'msg_text' => '',
+            'msg_html' => $html_message,
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
 
         $templateParams['msg_title'] = $composeParams['saveTemplateName'];
 
@@ -439,7 +485,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       else {
         $params['msg_template_id'] = CRM_Utils_Array::value('template', $formValues);
       }
-      $this->set('template', $params['msg_template_id']);
+      $this->set('justSavedTemplate', $params['msg_template_id']);
     }
 
     CRM_Core_BAO_File::formatAttachment($formValues,

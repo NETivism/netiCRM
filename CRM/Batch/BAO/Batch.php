@@ -309,6 +309,10 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     // start processing, insert record in db to prevent duplicate running
     $this->dupeInsert();
 
+    // set current logged user as batch creator
+    $session = CRM_Core_Session::singleton();
+    $session->set('userID', $this->_batch->created_id);
+
     global $civicrm_batch;
     $civicrm_batch = $this->_batch;
 

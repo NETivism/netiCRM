@@ -353,6 +353,12 @@
       .replace(/'/g, "&#039;");
   };
 
+  var _htmlDecode = function(input) {
+    input = _htmlUnescape(input);
+    input = decodeURI(input);
+    return input;
+  }
+
   var _domElemExist = function($elem) {
     var $elem = typeof $elem !== "undefined" ? $elem : "";
 
@@ -455,7 +461,6 @@
       $(window).scroll(function() {
         let scrollTop = $(window).scrollTop();
         $elem.removeClass("on-screen-center");
-        $elem.next(".add-block-here").remove();
 
         for (let blockID in elemsYaxisRange) {
           let yMin = elemsYaxisRange[blockID][0],
@@ -463,8 +468,8 @@
 
           if (scrollTop >= yMin && scrollTop <= yMax) {
             _debug(blockID);
-            $("#" + blockID).addClass("on-screen-center");
-            $("#" + blockID).after("<div class='add-block-here'>" + _ts["Add Block Here"] + "</div>");
+            let $block = $("#" + blockID);
+            $block.addClass("on-screen-center");
           }
         }
       });
@@ -621,7 +626,7 @@
                     break;
 
                   case "paragraph":
-                    decodeContent = _htmlUnescape(block.data.html);
+                    decodeContent = _htmlDecode(block.data.html);
                     $nmebElem.html(decodeContent);
                     break;
 
@@ -652,7 +657,7 @@
                       break;
 
                     case "footer":
-                      decodeContent = _htmlUnescape(block.data.html);
+                      decodeContent = _htmlDecode(block.data.html);
                       $nmebElem.html(decodeContent);
                       break;
 
@@ -720,7 +725,21 @@
 
                 // ＴODO: Link may need to be verified
                 if (block.link) {
-                  $nmebElem.wrap("<a href='" + block.link + "'></a>");
+                  if ($nmebElem.is("a")) {
+                    $nmebElem.attr({
+                      "href": block.link,
+                      "target": "_blank"
+                    });
+                  }
+
+                  if ($nmebElem.is("img")) {
+                    $nmebElem.wrap("<a href='" + block.link + "' target='_blank' style='text-decoration: none;'></a>");
+                  }
+
+                  if ($nmebElem.is("h3")) {
+                    let elemStyle = $nmebElem.attr("style");
+                    $nmebElem.wrapInner("<a href='" + block.link + "' target='_blank' style='" + elemStyle + "'></a>");
+                  }
                 }
               }
             }
@@ -769,9 +788,6 @@
                 $target.after(output);
                 break;
             }
-
-            // Remove 'Add block here' after append the block
-            $(".add-block-here").remove();
 
             // After adding the block, re-detect which block is on the screen
             _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
@@ -826,7 +842,7 @@
                       "data-placeholder": "請輸入段落文字...",
                       "data-title": "Enter comments"
                     });
-                    decodeContent = _htmlUnescape(block.data.html);
+                    decodeContent = _htmlDecode(block.data.html);
                     $nmebElem.html(decodeContent);
                     break;
 
@@ -900,7 +916,7 @@
                         "data-placeholder": "請輸入段落文字...",
                         "data-title": "Enter comments"
                       });
-                      decodeContent = _htmlUnescape(block.data.html);
+                      decodeContent = _htmlDecode(block.data.html);
                       $nmebElem.html(decodeContent);
                       break;
 
@@ -1131,8 +1147,10 @@
                   });
                 }
 
-                _nmeBlockControl.render(blockID, blockType);
-                _editable();
+                setTimeout(function() {
+                  _nmeBlockControl.render(blockID, blockType);
+                  _editable();
+                }, 500);
               }
 
               // Check control permission of each block
@@ -1184,118 +1202,135 @@
   };
 
   var _nmeMain = function() {
-    if (!$(_main).length) {
-      let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
-          mailTpl = _tpl["mail"][mailTplName];
+    if ($(_main).length) {
+      $(_main).remove();
+    }
 
-      $(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
-      $(_main).children(".inner").append(mailTpl);
+    let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
+        mailTpl = _tpl["mail"][mailTplName];
 
-      // Added styles to body table
-      _nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
+    $(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
+    $(_main).children(".inner").append(mailTpl);
 
-      if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
-        for (let section in _data.sections) {
-          if (!_sectionIsEmpty(section)) {
-            let blocksData = _data.sections[section].blocks,
-                sectionID = "nme-mail-" + section,
-                sectionInner = "#" + sectionID + " .nme-mail-inner",
-                blocksContainer = sectionInner + " .nme-blocks";
+    // Added styles to body table
+    _nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
 
-            $(sectionInner).append("<div id='" + sectionID + "-blocks' class='nme-blocks' data-section='" + section + "'></div>");
+    if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
+      for (let section in _data.sections) {
+        if (!_sectionIsEmpty(section)) {
+          let blocksData = _data.sections[section].blocks,
+              sectionID = "nme-mail-" + section,
+              sectionInner = "#" + sectionID + " .nme-mail-inner",
+              blocksContainer = sectionInner + " .nme-blocks";
 
-            // Render blocks from data
-            for (let blockID in _data.sections[section].blocks) {
-              let blockData = blocksData[blockID];
-              _nmeBlock.add(blockData, "edit", $(blocksContainer));
-            }
+          $(sectionInner).append("<div id='" + sectionID + "-blocks' class='nme-blocks' data-section='" + section + "'></div>");
+
+          // Render blocks from data
+          for (let blockID in _data.sections[section].blocks) {
+            let blockData = blocksData[blockID];
+            _nmeBlock.add(blockData, "edit", $(blocksContainer));
           }
         }
+      }
 
-        // Prevent users from pressing enter to send the #upload form.
-        $("#Upload").on("keypress", "input, textarea", function(event){
-          let code = event.keyCode || event.which;
+      // Prevent users from pressing enter to send the #upload form.
+      $("#Upload").on("keypress", "input, textarea", function(event){
+        let code = event.keyCode || event.which;
 
-          if (code == 13) {
+        if (code == 13) {
+          event.preventDefault();
+          return false;
+        }
+      });
+
+      var _checkPanelOpen = function() {
+        let uploadType = $(".form-radio[name='upload_type']:checked").val();
+        if (uploadType == "2" && $(_dataLoadSource).val()) {
+          if (!$(_panels).hasClass("is-opened")) {
+            _nmePanels.open();
+          }
+        }
+        else {
+          if ($(_panels).hasClass("is-opened")) {
+            _nmePanels.close();
+          }
+        }
+      }
+
+      // trigger panel open
+      $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
+        _checkPanelOpen();
+      });
+      // check default open
+      _checkPanelOpen();
+
+      $("#Upload").on("click", ".form-submit", function(event) {
+        $(this).closest("form").data("action", $(this).attr("name"));
+      });
+
+      $("#Upload").submit(function(event) {
+        let $form = $(this),
+            buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
+            allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
+
+        if (allowSubmit) {
+          $form.data("allow-submit", false);
+          return;
+        }
+
+        // Check edit mode option, Only 'Compose On-screen' option is allowed
+        if ($(".form-radio[name='upload_type'][value='2']").is(":checked")) {
+          // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
+          if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
             event.preventDefault();
-            return false;
-          }
-        });
+            let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
+                confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
 
-        $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
-          let val = $(this).val();
-          if (val == "1") {
-            if (!$(_panels).hasClass("is-opened")) {
-              _nmePanels.open();
-            }
-          }
-          else {
-            if ($(_panels).hasClass("is-opened")) {
-              _nmePanels.close();
-            }
-          }
-        });
+            let saveContentToOldEditor = function() {
+              _nmeMailOutput();
+              let previewContent = "";
+              let checkMailOutput = function() {
+                if ($("#nme-mail-output-frame").length) {
+                  previewContent = $("#nme-mail-output-frame").contents().find("body").html();
 
-        $("#Upload").on("click", ".form-submit", function(event) {
-          $(this).closest("form").data("action", $(this).attr("name"));
-        });
-
-        $("#Upload").submit(function(event) {
-          let $form = $(this),
-              buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
-              allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
-
-          if (allowSubmit) {
-            $form.data("allow-submit", false);
-            return;
-          }
-
-          // Check edit mode option, Only 'Compose On-screen' option is allowed
-          if ($(".form-radio[name='upload_type'][value='1']").is(":checked")) {
-            // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
-            if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
-              event.preventDefault();
-              let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
-                  confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
-
-              let saveContentToOldEditor = function() {
-                _nmeMailOutput();
-                let previewContent = "";
-                let checkMailOutput = function() {
-                  if ($("#nme-mail-output-frame").length) {
-                    previewContent = $("#nme-mail-output-frame").contents().find("body").html();
-
-                    if (previewContent) {
-                      clearInterval(checkMailOutputTimer);
-                      previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
-                      CKEDITOR.instances['html_message'].setData(previewContent);
-                      $form.data("allow-submit", true);
-                      $form.find("[name='" + buttonName + "']").click();
-                    }
+                  if (previewContent) {
+                    clearInterval(checkMailOutputTimer);
+                    previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
+                    CKEDITOR.instances['html_message'].setData(previewContent);
+                    $form.data("allow-submit", true);
+                    $form.find("[name='" + buttonName + "']").click();
                   }
                 }
-                let checkMailOutputTimer = setInterval(checkMailOutput, 500);
               }
+              let checkMailOutputTimer = setInterval(checkMailOutput, 500);
+            }
 
-              if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
-                if (window.confirm(confirmMessage)) {
-                  saveContentToOldEditor();
-                }
-              }
-              else {
+            if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
+              if (window.confirm(confirmMessage)) {
                 saveContentToOldEditor();
               }
             }
+            else {
+              saveContentToOldEditor();
+            }
           }
-        });
+        }
+      });
 
-        _sortable();
+      _sortable();
+
+      if (!_nmePanels.initialized) {
         _nmePanels.init();
-        _nmePreview.init();
-        _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
-        _tooltip();
       }
+
+      if (!_nmePreview.initialized) {
+        _nmePreview.init();
+      }
+
+      _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
+      _tooltip();
     }
+
   };
 
   var _nmeMailOutput = function() {
@@ -1442,10 +1477,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }
@@ -1460,10 +1506,65 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+              });
+            }
+          }
+
+          if (group == "paragraph") {
+            $block = $(".nme-block[data-type='paragraph']:not([data-elem-override='true'])");
+
+            if (fieldType == "color") {
+              $target = $block.find(".nme-elem");
+              $target.css(fieldType, colorVal);
+              $target.find("p").each(function() {
+                let $p = $(this);
+                if ($p.find("span").length) {
+                  $p.find("span").css(fieldType, colorVal);
+                }
+                else {
+                  $p.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
+                }
+              });
+
+              $block.each(function() {
+                let $this = $(this),
+                    section = $this.data("section"),
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index"),
+                    $field = $block.find(".nme-elem");
+
+                // Reinitialize x-editable
+                $field.removeClass("editable-initialized");
+                $field.editable("destroy");
+                $field.editable();
+
+                // Update color to json
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }
@@ -1478,10 +1579,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
               });
             }
 
@@ -1495,10 +1607,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }
@@ -1509,7 +1632,7 @@
     };
 
     if ($(".nme-theme-setting-items").length) {
-      if (!_objIsEmpty(_themes)) {
+      if (!_objIsEmpty(_themes) && !$(".nme-theme-setting-item").length) {
         for (let i in _themes) {
           let radio = "<label class='nme-theme-setting-item crm-form-elem crm-form-radio' for='nme-theme-setting-item-" + i + "'>" +
           "<input value='" + i + "' type='radio' id='nme-theme-setting-item-" + i + "' class='nme-setting-radio form-radio' name='nme-theme-setting'>" +
@@ -1600,6 +1723,7 @@
   };
 
   var _nmePreview = {
+    initialized: false,
     init: function() {
       if (!$("#nme-preview-popup").length) {
         let previewPopup = "<div id='nme-preview-popup' class='nme-preview-popup mfp-hide'>" +
@@ -1641,6 +1765,8 @@
           _nmePreview.close();
         }
       });
+
+      _nmePreview.initialized = true;
     },
     open: function() {
       $.magnificPopup.open({
@@ -1650,7 +1776,6 @@
         type: "inline",
         mainClass: "mfp-preview-popup",
         preloader: true,
-        closeOnBgClick: false,
         showCloseBtn: false,
         callbacks: {
           open: function() {
@@ -1690,6 +1815,9 @@
           },
           close: function() {
             $("body").removeClass("mfp-is-active");
+            if ($(".nme-preview-mode-switch").is(":checked")) {
+              $(".nme-preview-mode-switch").prop("checked", false);
+            }
           },
         }
       });
@@ -2003,9 +2131,9 @@
     },
     init: function(id) {
       let blockID = typeof id !== "undefined" ? id : "",
-          $block = $(".nme-block[data-id='" + blockID + "']");
+          $blockControl = $(".nme-block[data-id='" + blockID + "'] > .nme-block-inner > .nme-block-control");
 
-      $block.find(".nme-block-control").on("click", ".handle-btn", function(event) {
+      $blockControl.on("click", ".handle-btn", function(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -2027,7 +2155,7 @@
             $elemContainer = $elem.closest(".nmeb-content-container"),
             $elemContainerInner = $elem.parent(".nmeb-content"),
             blockSortInst = _sortables[section]["inst"],
-            blocksSortOrder = _sortables[section]["order"];
+            blocksSortOrder = blockSortInst.toArray();
 
         // Block control: move group
         // prev
@@ -2103,7 +2231,7 @@
               "<label for='" + editItemID + "'>請輸入網址</label>" +
               "</div>" + // .nme-edit-item-label
               "<div class='nme-edit-item-content'>" +
-              "<input id='" + editItemID + "' name='" + editItemID + "' type='text' placeholder='http://' value='" + editItemVal + "'>" +
+              "<input id='" + editItemID + "' name='" + editItemID + "' class='edit-link' type='text' placeholder='http://' value='" + editItemVal + "'>" +
               "</div>" + // .nme-edit-item-content
               "</div>" + // .nme-edit-item
               "<div class='nme-edit-actions'>" +
@@ -2160,8 +2288,8 @@
       });
 
       // handle type: style
-      if ($block.find(".handle-style").length) {
-        _colorable($block.find(".handle-style").attr("id"));
+      if ($blockControl.find(".handle-style").length) {
+        _colorable($blockControl.find(".handle-style").attr("id"));
       }
     }
   };
@@ -2202,6 +2330,7 @@
   };
 
   var _nmePanels = {
+    initialized: false,
     init: function() {
       $(".nme-setting-panels").on("click", ".nme-setting-panels-trigger", function(event) {
         event.preventDefault();
@@ -2234,6 +2363,7 @@
 
       _nmePanelsAddBlock();
       _nmeGlobalSetting();
+      this.initialized = true;
     },
     open: function() {
       $(_panels).addClass("is-opened");
@@ -2459,6 +2589,10 @@
           }
         });
       }
+      else {
+        // Execute the main function
+        _nmeMain();
+      }
     },
     panels: {
       open: function() {
@@ -2505,12 +2639,12 @@
     _debug(_container);
     _checkNmeInstance();
 
-    return this;
+    return _nme;
   };
 
   // Plugin defaults options
   $.fn.nmEditor.defaults = {
-    dataLoadSource: "#mailing_content_data",
+    dataLoadSource: "#body_json",
     debugMode: false
   };
 }(jQuery));

@@ -78,6 +78,7 @@ class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
     // store case id if present
     $this->_caseId = CRM_Utils_Request::retrieve('caseid', 'Positive', $this, FALSE);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
+    $this->_templateDefault = CRM_Utils_Request::retrieve('template', 'String', $this);
 
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
 
@@ -110,6 +111,7 @@ class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
     //enable form element
     $this->assign('suppressForm', FALSE);
     $this->assign('emailTask', TRUE);
+    $this->assign('templateDefault', $this->_templateDefault);
 
     CRM_Contact_Form_Task_EmailCommon::buildQuickForm($this);
   }

@@ -47719,3 +47719,6 @@ msgstr ""
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "You can use your favorite editor to create content on your local computer or export HTML emails from other email marketing platforms, and then upload the files."
 msgstr ""
+
+msgid "Are your sure to use template to replace your work? You will lose any customizations you have made."
+msgstr ""

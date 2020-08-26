@@ -67,12 +67,14 @@
 
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
 {include file="CRM/common/mailingEditor.tpl"}
-{$form.mailing_content_data.html}
+{$form.body_json.html}
 </fieldset>
 
 <fieldset id="compose_old_id"><legend>{ts}Traditional Editor{/ts}</legend>
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl" upload=1 noAttach=1}
 </fieldset>
+<div id="saveTemplateBlock">
+</div>
 
   {capture assign=docLink}{docURL page="Sample CiviMail Messages" text="More information and sample messages..."}{/capture}
   <fieldset id="upload_id"><legend>{ts}Upload Content{/ts}</legend>
@@ -125,11 +127,15 @@
         hide('compose_old_id')
         cj('.crm-mailing-upload-form-block-template').hide();
         show('upload_id');
+        cj("#saveTemplateBlock").hide();
       }
       else {
         hide('upload_id');
+        cj("#editMessageDetails").appendTo("#saveTemplateBlock");
+        cj("#saveDetails").appendTo("#saveTemplateBlock");
+        cj("#saveTemplateBlock").show();
         // Compose On-screen
-        if (cj(".form-radio[name='upload_type'][value='1']").is(":checked")) {
+        if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
           hide('compose_old_id');
           show('compose_id');
 
@@ -137,10 +143,11 @@
           cj("#header_id option[value='']").prop("selected", true);
           cj("#footer_id option[value='']").prop("selected", true);
           hide('mailing_header_footer');
+          cj('.crm-mailing-upload-form-block-template').show();
         }
 
         // Traditional Editor (old compose mode)
-        if (cj(".form-radio[name='upload_type'][value='2']").is(":checked")) {
+        if (cj(".form-radio[name='upload_type'][value='1']").is(":checked")) {
           hide('compose_id');
           show('compose_old_id');
           show('mailing_header_footer');

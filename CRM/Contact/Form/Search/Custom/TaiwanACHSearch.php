@@ -269,12 +269,11 @@ $having
     return 0;
   }
 
-
   /**
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
-    $fields = !$onlyIDs ? "*" : "contact_a.contact_id, id" ;
+    $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
     if(!$this->_filled){
       $this->fillTable();
@@ -480,10 +479,6 @@ $having
    */
   function templateFile(){
     return 'CRM/Contact/Form/Search/Custom/TaiwanACHSearch.tpl';
-  }
-
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
-    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
   function tasks() {

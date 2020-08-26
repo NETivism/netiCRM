@@ -32,7 +32,44 @@
  * $Id$
  *
  */
+
+/**
+ * Prevent PHP 5.5 broken
+ */
+if(!function_exists('hash_equals')) {
+  function hash_equals($str1, $str2) {
+    if(strlen($str1) != strlen($str2)) {
+      return false;
+    } else {
+      $res = $str1 ^ $str2;
+      $ret = 0;
+      for($i = strlen($res) - 1; $i >= 0; $i--) $ret |= ord($res[$i]);
+      return !$ret;
+    }
+  }
+}
 class CRM_Core_Key {
+  /**
+   * The length of the randomly-generated, per-session signing key.
+   *
+   * Expressed as number of bytes. (Ex: 128 bits = 16 bytes)
+   *
+   * @var int
+   */
+  const PRIVATE_KEY_LENGTH = 16;
+
+  /**
+   * @var string
+   * @see hash_hmac_algos()
+   */
+  const HASH_ALGO = 'sha256';
+
+  /**
+   * The length of a generated signature/digest (expressed in hex digits).
+   * @var int
+   */
+  const HASH_LENGTH = 64;
+  
   static $_key = NULL;
 
   static $_sessionID = NULL;
@@ -45,11 +82,12 @@ class CRM_Core_Key {
    * @access private
    */
   static function privateKey() {
+    require_once('random_compat/lib/random.php');
     if (!self::$_key) {
       $session = CRM_Core_Session::singleton();
       self::$_key = $session->get('qfPrivateKey');
       if (!self::$_key) {
-        self::$_key = md5(uniqid(mt_rand(), TRUE)) . md5(uniqid(mt_rand(), TRUE));
+        self::$_key = base64_encode(random_bytes(self::PRIVATE_KEY_LENGTH));
         $session->set('qfPrivateKey', self::$_key);
       }
     }
@@ -80,9 +118,7 @@ class CRM_Core_Key {
    * @acess public
    */
   static function get($name, $addSequence = FALSE) {
-    $privateKey = self::privateKey();
-    $sessionID = self::sessionID();
-    $key = md5($sessionID . $name . $privateKey);
+    $key = self::sign($name);
 
     if ($addSequence) {
       // now generate a random number between 1 and 100K and add it to the key
@@ -103,6 +139,10 @@ class CRM_Core_Key {
    * @acess public
    */
   static function validate($key, $name, $addSequence = FALSE) {
+    if (!is_string($key)) {
+      return NULL;
+    }
+
     if ($addSequence) {
       list($k, $t) = explode('_', $key);
       if ($t < 1 || $t > 10000) {
@@ -113,9 +153,7 @@ class CRM_Core_Key {
       $k = $key;
     }
 
-    $privateKey = self::privateKey();
-    $sessionID = self::sessionID();
-    if ($k != md5($sessionID . $name . $privateKey)) {
+    if (!hash_equals($k, self::sign($name))) {
       return NULL;
     }
     return $key;
@@ -140,7 +178,24 @@ class CRM_Core_Key {
     }
 
     // ensure that hash is a 32 digit hex number
-    return preg_match('#[0-9a-f]{32}#i', $hash) ? TRUE : FALSE;
+    return preg_match('#[0-9a-f]{' . self::HASH_LENGTH . '}#i', $hash) ? TRUE : FALSE;
+  }
+
+  /**
+  * @param string $name
+  *   The name of the form
+  * @return string
+  *   A signed digest of $name, computed with the per-session private key
+  */
+  private static function sign($name) {
+    $privateKey = self::privateKey();
+    $sessionID = self::sessionID();
+    $delim = chr(0);
+    if (strpos($sessionID, $delim) !== FALSE || strpos($name, $delim) !== FALSE) {
+      throw new \RuntimeException("Failed to generate signature. Malformed session-id or form-name.");
+    }
+
+    return hash_hmac(self::HASH_ALGO, $sessionID . $delim . $name, $privateKey);
   }
 }
 

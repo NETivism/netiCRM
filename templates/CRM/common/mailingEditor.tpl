@@ -42,8 +42,8 @@ window.nmEditor = {
   },
   tokenTrigger: "#token2"
 };
-</script>
 {/literal}
+</script>
 <!-- poshytip -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css">
 <script type="text/javascript" src="{$config->resourceBase}packages/poshytip/src/jquery.poshytip.js"></script>
@@ -53,12 +53,12 @@ window.nmEditor = {
 <script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js"></script>
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css">
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css">
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css">
 {if $tsLocale == 'zh_TW'}
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css">
 {/if}
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js"></script>
 <script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js"></script>
 <script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/quill.js"></script>
 
@@ -73,27 +73,23 @@ window.nmEditor = {
 <!-- mailingEditor -->
 {include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
+{literal}
+<style>
+	.nme-block.on-screen-center:after {
+		content: "{/literal}{ts}Add Block Here{/ts}{literal}";
+	}
+</style>
+{/literal}
 <script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
 {literal}
 <script type="text/javascript">
 (function ($) {
 	$(function() {
 		let $oldEditorData = $("#html_message"),
-				$newEditorData = $("#mailing_content_data"),
+				$newEditorData = $("#body_json"),
 				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
 				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
-
-		if (oldEditorData && !newEditorData) {
-			// If the content of the old newsletter was edited by old editor previously, switch from default option 'Traditional Editor' to 'Compose On-screen'.
-			$(".form-radio[name='upload_type'][value='2']").click();
-
-			// Initialize the new editor after swtich option.
-			$(".nme-container").nmEditor();
-		}
-		else {
-			// If traditional editor has no content, initialize the new editor directly.
-			$(".nme-container").nmEditor();
-		}
+    window.nmEditorInstance = $(".nme-container").nmEditor();
 	});
 })(jQuery);
 </script>
@@ -199,6 +195,15 @@ window.nmEditor = {
 										<div id="nme-title-setting-color" class="nme-setting-field" data-field-type="color">
 											<div class="nme-setting-field-label">{ts}Color{/ts}</div>
 											<div class="nme-setting-field-content"><div id="nme-title-setting-color-picker" class="nme-setting-picker"></div></div>
+										</div>
+									</div>
+								</div>
+								<div class="nme-paragraph-setting nme-setting-section" data-setting-group="paragraph">
+									<h3 class="nme-setting-section-title">{ts}Paragraph{/ts}</h3>
+									<div class="nme-setting-section-content">
+										<div id="nme-paragraph-setting-color" class="nme-setting-field" data-field-type="color">
+											<div class="nme-setting-field-label">{ts}Color{/ts}</div>
+											<div class="nme-setting-field-content"><div id="nme-paragraph-setting-color-picker" class="nme-setting-picker"></div></div>
 										</div>
 									</div>
 								</div>
