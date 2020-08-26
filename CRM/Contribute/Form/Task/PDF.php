@@ -191,30 +191,8 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $details = array_replace(array_flip($this->_contributionIds), $details);
       $params = $this->controller->exportValues($this->_name);
 
-      $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
-      if (!empty($activityTypeId)) {
-        $contributeIds = array_keys($details);
-        foreach ($contributeIds as $contributeId) {
-          if (empty($userID)) {
-            $session = CRM_Core_Session::singleton();
-            $userID = $session->get('userID');
-          }
-          $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
-          $activityParams = array(
-            'activity_type_id' => $activityTypeId,
-            'activity_date_time' => date('Y-m-d H:i:s'),
-            'source_record_id' => $contributeId,
-            'status_id' => $statusId,
-            'subject' => ts('Print Contribution Receipts'),
-            'assignee_contact_id' => $details[$contributeId]['contact'],
-            'source_contact_id' => $userID,
-          );
-          CRM_Activity_BAO_Activity::create($activityParams);
-        }
-      }
-
-
       self::makeReceipt($details, $params['window_envelope']);
+      self::createActivity($details);
       self::makePDF();
       CRM_Utils_System::civiExit();
     }
@@ -366,6 +344,32 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $count++;
       unset($html);
       unset($template);
+    }
+  }
+
+  static private function createActivity($details) {
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
+    if (!empty($activityTypeId)) {
+      $contributeIds = array_keys($details);
+      foreach ($contributeIds as $contributeId) {
+        if (empty($userID)) {
+          $session = CRM_Core_Session::singleton();
+          $userID = $session->get('userID');
+        }
+        $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+        $receiptId = CRM_Core_DAO::singleValueQuery("SELECT receipt_id FROM civicrm_contribution WHERE id = %1", array(1 => array($contributeId, 'Positive')));
+        $subject = $receiptId ? ts('Receipt ID') . " : ".$receiptId : ts('Print Contribution Receipts');
+        $activityParams = array(
+          'activity_type_id' => $activityTypeId,
+          'activity_date_time' => date('Y-m-d H:i:s'),
+          'source_record_id' => $contributeId,
+          'status_id' => $statusId,
+          'subject' => $subject,
+          'assignee_contact_id' => $details[$contributeId]['contact'],
+          'source_contact_id' => $userID,
+        );
+        CRM_Activity_BAO_Activity::create($activityParams);
+      }
     }
   }
 

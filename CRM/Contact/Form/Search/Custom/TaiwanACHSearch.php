@@ -74,7 +74,6 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       'ach.bank_account' => 'bank_account',
       'ach.bank_code' => 'bank_code',
       'ach.identifier_number' => 'identifier_number',
-      'ach.data' => 'ach_data',
     );
     $this->_columns = array(
       ts('ID') => 'id',
@@ -91,8 +90,8 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       ts('Last Failed Date') => 'last_failed_date',
       ts('Contribution Page ID') => 'contribution_page_id',
       ts('Completed Donation').'/<br>'.ts('Total Count') => 'completed_count',
-      0 => 'total_count',
       ts('Bank Account') => 'bank_account',
+      0 => 'ach_data',
       //ts('Stamp Verification'). ' - '.ts('Cancelled or Failed Date') => 'ach_data',
       //ts('Stamp Verification'). ' - '.ts('Cancelled or Failed Reason') => 'ach_data',
     );

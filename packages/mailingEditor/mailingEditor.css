@@ -674,10 +674,8 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nme-preview-popup {
   position: relative;
   margin: 40px auto;
-  max-width: 1000px;
+  max-width: 90%;
   background: #fff;
-}
-.nme-preview-popup .inner {
 }
 .nme-preview-toolbar {
   display: flex;
@@ -842,4 +840,11 @@ ul.nme-setting-panels-tabs li a.is-active {
   width: 360px;
   height: 640px;
   background: white;
+}
+
+/** Particular: 360 **/
+@media screen and (min-width: 1200px) {
+  .nme-preview-popup {
+    max-width: 1000px;
+  }
 }
