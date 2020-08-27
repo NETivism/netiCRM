@@ -2372,6 +2372,11 @@
         $targetTabContent.addClass(ACTIVE_CLASS);
       });
 
+      // Switch the default panel to block panel if mail data field has value
+      if ($(_dataLoadSource).val()) {
+        $(".nme-setting-panels-tabs a[data-target-id='nme-add-block']").click();
+      }
+
       _nmePanelsSelectTpl();
       _nmePanelsAddBlock();
       _nmeGlobalSetting();
