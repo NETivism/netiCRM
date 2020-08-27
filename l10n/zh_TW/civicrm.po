@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-08-18 07:24+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-08-27 10:34+0000\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47988,3 +47988,56 @@ msgid ""
 "Are your sure to use template to replace your work? You will lose any "
 "customizations you have made."
 msgstr "確定使用範本來取代嗎？剛剛所做的一些更改，並不會儲存。"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Drag to Reorder"
+msgstr "拖曳以改變排序"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Up"
+msgstr "往上移動"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Down"
+msgstr "往下移動"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Duplicate Block"
+msgstr "複製區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Delete Block"
+msgstr "刪除區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Link"
+msgstr "編輯連結"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Image"
+msgstr "編輯圖片"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background"
+msgstr "編輯背景"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Switch Templates"
+msgstr "變更範本"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Add Blocks"
+msgstr "新增區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Add Block"
+msgstr "點擊以新增區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Switch Template"
+msgstr "點擊以變更範本"
