@@ -77,6 +77,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     if (isset($eventId)) {
       $params = array('id' => $eventId);
       CRM_Event_BAO_Event::retrieve($params, $defaults);
+      if (!empty($defaults['is_multiple_registrations'])) {
+        $defaults['is_multiple_registrations_max'] = $defaults['is_multiple_registrations'];
+      }
 
       require_once 'CRM/Core/BAO/UFJoin.php';
       $ufJoinParams = array('entity_table' => 'civicrm_event',
@@ -204,12 +207,13 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       $this->addDateTime('registration_end_date', ts('Registration End Date'), FALSE, array('formatType' => 'activityDateTime'));
     }
 
-    $this->addElement('checkbox',
-      'is_multiple_registrations',
-      ts('Register multiple participants?'),
-      NULL,
-      array('onclick' => "return showHideByValue('is_multiple_registrations', '', 'allow_same_emails|additional_profile_pre|additional_profile_post', 'table-row', 'radio', false);")
-    );
+    $this->addElement('checkbox', 'is_multiple_registrations', ts('Register multiple participants?'), NULL, array('onclick' => "return showHideByValue('is_multiple_registrations', '', 'allow_same_emails|additional_profile_pre|additional_profile_post|is_multiple_registrations_limit', 'table-row', 'radio', false);"));
+
+    for($i = 2; $i <= 10; $i++) {
+      $maxLimit[$i]  = $i;
+    }
+    $this->addSelect('is_multiple_registrations_max', ts('Maximum per registration'), $maxLimit);
+
     $this->addElement('checkbox', 'allow_same_participant_emails', ts('Allow multiple registrations from the same email address?'));
 
     require_once 'CRM/Event/PseudoConstant.php';
@@ -412,6 +416,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     //format params
     $params['is_online_registration'] = CRM_Utils_Array::value('is_online_registration', $params, FALSE);
     $params['is_multiple_registrations'] = CRM_Utils_Array::value('is_multiple_registrations', $params, FALSE);
+    if ($params['is_multiple_registrations']) {
+      $params['is_multiple_registrations'] = CRM_Utils_Array::value('is_multiple_registrations_max', $params, FALSE);
+    }
     $params['allow_same_participant_emails'] = CRM_Utils_Array::value('allow_same_participant_emails', $params, FALSE);
     $params['requires_approval'] = CRM_Utils_Array::value('requires_approval', $params, FALSE);
     $params['allow_cancel_by_link'] = CRM_Utils_Array::value('allow_cancel_by_link', $params, FALSE);
