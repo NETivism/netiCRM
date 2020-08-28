@@ -5,16 +5,16 @@
     <div class="nme-block-content">
       <!-- Block Content HERE -->
       [nmeBlockContent]
-    </div>	
+    </div>
     <div class="nme-block-control">
       <div class="nme-block-move">
-        <button type="button" class="handle-drag handle-btn" data-type="drag"><i class="zmdi zmdi-arrows"></i></button>
-        <button type="button" class="handle-prev handle-btn" data-type="prev"><i class="zmdi zmdi-long-arrow-up"></i></button>
-        <button type="button" class="handle-next handle-btn" data-type="next"><i class="zmdi zmdi-long-arrow-down"></i></button>
+        <button type="button" title="{ts}Drag to Reorder{/ts}" class="handle-drag handle-btn" data-type="drag" data-tooltip><i class="zmdi zmdi-arrows"></i></button>
+        <button type="button" title="{ts}Move Up{/ts}" class="handle-prev handle-btn" data-type="prev" data-tooltip><i class="zmdi zmdi-long-arrow-up"></i></button>
+        <button type="button" title="{ts}Move Down{/ts}" class="handle-next handle-btn" data-type="next" data-tooltip><i class="zmdi zmdi-long-arrow-down"></i></button>
       </div>
       <div class="nme-block-actions">
-        <button type="button" class="handle-clone handle-btn" data-type="clone"><i class="zmdi zmdi-collection-plus"></i></button>
-        <button type="button" class="handle-delete handle-btn" data-type="delete"><i class="zmdi zmdi-delete"></i></button>
+        <button type="button" title="{ts}Duplicate Block{/ts}" class="handle-clone handle-btn" data-type="clone" data-tooltip><i class="zmdi zmdi-collection-plus"></i></button>
+        <button type="button" title="{ts}Delete Block{/ts}" class="handle-delete handle-btn" data-type="delete" data-tooltip><i class="zmdi zmdi-delete"></i></button>
       </div>
     </div>	
   </div>

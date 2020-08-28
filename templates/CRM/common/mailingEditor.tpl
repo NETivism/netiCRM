@@ -4,7 +4,6 @@
 window.nmEditor = {
 	translation: {
 		// Editor
-		"Add Block Here": "{/literal}{ts}Add Block Here{/ts}{literal}",
 
 		// Panels
 		"Mailing Advanced Settings" : "{/literal}{ts}Mailing Advanced Settings{/ts}{literal}",
@@ -36,6 +35,11 @@ window.nmEditor = {
 		"Size" : "{/literal}{ts}Size{/ts}{literal}",
 		"Color" : "{/literal}{ts}Color{/ts}{literal}",
 		"Background" : "{/literal}{ts}Background{/ts}{literal}",
+
+		// Block
+		"Edit Link": "{/literal}{ts}Edit Link{/ts}{literal}",
+		"Edit Image": "{/literal}{ts}Edit Image{/ts}{literal}",
+		"Edit Background": "{/literal}{ts}Edit Background{/ts}{literal}",
 
 		// Confirm
 		"Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?" : "{/literal}{ts}Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?{/ts}{literal}",
@@ -105,9 +109,9 @@ window.nmEditor = {
 			<div class="nme-setting-panels-inner">
 				<div class="nme-setting-panels-header">
 					<ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
-						<li><a class="is-active" data-target-id="nme-select-tpl" href="#nme-select-tpl">{ts}Templates{/ts}</a></li>
-						<li><a data-target-id="nme-add-block" href="#nme-add-block">{ts}Blocks{/ts}</a></li>
-						<li><a data-target-id="nme-global-setting" href="#nme-global-setting">{ts}Settings{/ts}</a></li>
+						<li><a title="{ts}Switch Templates{/ts}" href="#nme-select-tpl" class="is-active" data-target-id="nme-select-tpl" data-tooltip>{ts}Templates{/ts}</a></li>
+						<li><a title="{ts}Add Blocks{/ts}" href="#nme-add-block" data-target-id="nme-add-block" data-tooltip>{ts}Blocks{/ts}</a></li>
+						<li><a title="{ts}Global Settings{/ts}" href="#nme-global-setting" data-target-id="nme-global-setting" data-tooltip>{ts}Settings{/ts}</a></li>
 					</ul>
 				</div>
 				<div class="nme-setting-panels-content">
@@ -116,7 +120,7 @@ window.nmEditor = {
 							<h3 class="nme-setting-panel-title">{ts}Templates{/ts}</h3>
 							<div class="nme-setting-panel-content">
 								<ul class="nme-select-tpl-list nme-setting-item-list">
-									<li><button class="nme-select-tpl-btn" type="button" data-name="col-1-full-width">{ts}1 Column{/ts}</button></li>
+									<li><button class="nme-select-tpl-btn" type="button" title="{ts}Click to Switch Template{/ts}" data-name="col-1-full-width" data-tooltip>{ts}1 Column{/ts}</button></li>
 								</ul>
 							</div>
 						</div>
@@ -126,13 +130,13 @@ window.nmEditor = {
 							<h3 class="nme-setting-panel-title">{ts}Blocks{/ts}</h3>
 							<div class="nme-setting-panel-content">
 								<ul class="nme-add-block-list nme-setting-item-list">
-									<li><button class="nme-add-block-btn" type="button" data-type="title">{ts}Title{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="paragraph">{ts}Paragraph{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="image">{ts}Image{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="button">{ts}Button{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="rc-col-1">{ts}Rich Content: 1 Column{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="rc-col-2">{ts}Rich Content: 2 Column{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="rc-float">{ts}Rich Content: Float{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="title" data-tooltip>{ts}Title{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="paragraph" data-tooltip>{ts}Paragraph{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="image" data-tooltip>{ts}Image{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="button" data-tooltip>{ts}Button{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="rc-col-1" data-tooltip>{ts}Rich Content: 1 Column{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="rc-col-2" data-tooltip>{ts}Rich Content: 2 Column{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="rc-float" data-tooltip>{ts}Rich Content: Float{/ts}</button></li>
 								</ul>
 							</div>
 						</div>

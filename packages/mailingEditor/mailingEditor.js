@@ -2030,7 +2030,7 @@
       let defaultOptions = {};
 
       if ($("[data-tooltip]").length) {
-        $("[data-tooltip]").each(function() {
+        $("[data-tooltip]:not(.tooltip-initialized)").each(function() {
           let options = {};
 
           if ($(this).is("[data-tooltip-placement]")) {
@@ -2042,6 +2042,7 @@
           }
 
           $(this).powerTip(options);
+          $(this).addClass("tooltip-initialized");
         });
       }
     }
@@ -2117,12 +2118,35 @@
         let extendedActions = _editActions.extended[blockType];
 
         for (let k in extendedActions) {
-          let action = extendedActions[k];
-          output += "<button id='" + blockID + "-handle-" + action + "' type='button' class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></button>";
+          let action = extendedActions[k],
+              tooltip = "";
+
+          switch (action) {
+            case "link":
+              tooltip = _ts["Edit Link"];
+              break;
+
+            case "image":
+              tooltip = _ts["Edit Image"];
+              break;
+
+            case "style":
+              tooltip = _ts["Edit Background"];
+              break;
+          }
+
+          if (tooltip) {
+            output += "<button id='" + blockID + "-handle-" + action + "' type='button' class='handle-" + action + " handle-btn' title='" + tooltip + "' data-type='" + action + "' data-tooltip><i class='zmdi " + _controlIconClass[action] + "'></i></button>";
+          }
+          else {
+            output += "<button id='" + blockID + "-handle-" + action + "' type='button' class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></button>";
+
+          }
         }
 
         $block.find(".nme-block-actions").prepend(output);
         _nmeBlockControl.init(blockID);
+        _tooltip();
       }
       else {
         // If the block has no any extended actions, initialize directly.
