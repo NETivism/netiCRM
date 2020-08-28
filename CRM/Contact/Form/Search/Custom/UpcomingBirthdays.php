@@ -74,6 +74,10 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     $form->assign('elements', array('limit_groups', 'oc_month_start', 'oc_month_end', 'oc_day_start', 'oc_day_end'));
   }
 
+  function setBreadcrumb() {
+    CRM_Contribute_Page_Booster::setBreadcrumb();
+  }
+
   /**
    * Define the smarty template used to layout the search form and results listings.
    */

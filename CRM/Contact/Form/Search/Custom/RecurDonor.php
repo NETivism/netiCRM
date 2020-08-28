@@ -200,6 +200,11 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     $form->assign('elements', array('search_criteria', 'amount_low', 'contribution_page_id', 'contribution_type_id'));
   }
 
+  function setBreadcrumb() {
+    CRM_Contribute_Page_Booster::setBreadcrumb();
+  }
+
+
   function setDefaultValues() {
   }
 
