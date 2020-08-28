@@ -275,7 +275,7 @@ $having
   function buildForm(&$form){
     // Define the search form fields here
     if (!empty($this->_mode)) {
-      $form->set($this->_mode);
+      $form->set('mode', $this->_mode);
       $form->assign('mode', $this->_mode);
     }
     
