@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-08-18 07:24+0000\n"
+"PO-Revision-Date: 2020-08-28 03:31+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47988,3 +47988,9 @@ msgid ""
 "Are your sure to use template to replace your work? You will lose any "
 "customizations you have made."
 msgstr "確定使用範本來取代嗎？剛剛所做的一些更改，並不會儲存。"
+
+msgid "view public CiviMail content"
+msgstr "檢視公開的 CiviMail 電子報內容"
+
+msgid "delete contacts permanantly"
+msgstr "刪除聯絡人（永久刪除）"

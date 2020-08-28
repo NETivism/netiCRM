@@ -47722,3 +47722,9 @@ msgstr ""
 
 msgid "Are your sure to use template to replace your work? You will lose any customizations you have made."
 msgstr ""
+
+msgid "view public CiviMail content"
+msgstr ""
+
+msgid "delete contacts permanantly"
+msgstr ""
