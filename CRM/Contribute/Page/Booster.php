@@ -32,6 +32,13 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
           'description' => ts('Explore your past, present or future recurring donors to support your organization.'),
           'link' => CRM_Utils_System::url('civicrm/search/RecurDonor'),
         ),
+        array(
+          'id' => 'birthdate-search',
+          'class' => 'mdl-card-theme',
+          'title' => ts('Birth Date Search'),
+          'description' => 'UpcomingBirthdays',
+          'link' => CRM_Utils_System::url('civicrm/search/UpcomingBirthdays'),
+        ),
       ),
       ts('Potential Donors') => array(
         array(

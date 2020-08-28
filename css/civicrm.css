@@ -5257,6 +5257,9 @@ tbody.scrollContent tr.alternateRow {
 .crm-contribute-booster #recur-donor {
   background-image: url(images/card/card-recur-donor@2x.png);
 }
+.crm-contribute-booster #birthdate-search {
+  background-image: url(images/card/card-upcoming-birthdays@2x.png);
+}
 
 /* Contribute Page */
 .crm-container #SearchContribution .crm-submit-buttons,
