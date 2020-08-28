@@ -100,12 +100,12 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
 
-    /* click first user */
-    casper.waitForSelector('table.selector tbody tr:first-child input', function success() {
-        test.assertExists('table.selector tbody tr:first-child input');
-        this.click('table.selector tbody tr:first-child input');
+    /* click admin user */
+    casper.waitForSelector('#rowid21 input', function success() {
+        test.assertExists('#rowid21 input');
+        this.click('#rowid21 input');
     }, function fail() {
-        test.assertExists('table.selector tbody tr:first-child input');
+        test.assertExists('#rowid21 input');
     });
 
     /* click Add Contacts to */
@@ -219,26 +219,6 @@ casper.test.begin('Resurrectio test', function(test) {
     }, function fail() {
         test.assertExists("input[name='name']", "Assert 'Name Your Mailing' field exist.");
     });
-
-    // casper.waitForSelector("#includeGroups_chzn input", function success() {
-    //     this.click("#includeGroups_chzn input");
-    // }, function fail() {
-    //     test.assertExists("#includeGroups_chzn input", "Assert 'Include Group(s)' exist.");
-    // });
-
-    // casper.waitForSelector("#includeGroups_chzn_o_0", function success() {
-    //     this.click("#includeGroups_chzn_o_0");
-    // }, function fail() {
-    //     test.assertExists("#includeGroups_chzn_o_0", "Assert first option of contact group exist.");
-    // });
-
-    // casper.waitForSelector(".search-choice", function success() {
-    //     var selected_group_name = this.evaluate(function () {
-    //         return document.querySelector('.search-choice span').textContent;
-    //     });
-    // }, function fail() {
-    //     test.assertExists(".search-choice", "Group not selected");
-    // });
 
     casper.waitForSelector("#includeGroups", function success() {
         this.evaluate(function (group_id) {
