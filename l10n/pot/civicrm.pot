@@ -47781,3 +47781,6 @@ msgstr ""
 
 msgid "delete contacts permanantly"
 msgstr ""
+
+msgid "Maximum per registration"
+msgstr ""
