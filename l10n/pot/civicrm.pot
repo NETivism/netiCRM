@@ -47775,3 +47775,9 @@ msgstr ""
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Click to Switch Template"
 msgstr ""
+
+msgid "view public CiviMail content"
+msgstr ""
+
+msgid "delete contacts permanantly"
+msgstr ""

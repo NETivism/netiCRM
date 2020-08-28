@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-08-27 10:34+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
+"PO-Revision-Date: 2020-08-28 03:31+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48041,3 +48041,9 @@ msgstr "點擊以新增區塊"
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Click to Switch Template"
 msgstr "點擊以變更範本"
+
+msgid "view public CiviMail content"
+msgstr "檢視公開的 CiviMail 電子報內容"
+
+msgid "delete contacts permanantly"
+msgstr "刪除聯絡人（永久刪除）"
