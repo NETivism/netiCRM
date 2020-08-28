@@ -446,7 +446,14 @@ WHERE price_set_id = %1
         }
         $setTree[$setID]['fields'][$fieldID][$field] = $dao->$field;
       }
-      $setTree[$setID]['fields'][$fieldID]['options'] = CRM_Price_BAO_Field::getOptions($fieldID, FALSE);
+      
+
+      $inactiveNeeded = FALSE;
+      if(!$isActive) {
+        // also get in-active options
+        $inactiveNeeded = TRUE;
+      }
+      $setTree[$setID]['fields'][$fieldID]['options'] = CRM_Price_BAO_Field::getOptions($fieldID, $inactiveNeeded);
     }
 
     // also get the pre and post help from this price set

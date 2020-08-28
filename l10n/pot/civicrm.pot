@@ -47722,3 +47722,56 @@ msgstr ""
 
 msgid "Are your sure to use template to replace your work? You will lose any customizations you have made."
 msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Drag to Reorder"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Up"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Down"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Duplicate Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Delete Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Link"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Image"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Switch Templates"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Add Blocks"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Add Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Switch Template"
+msgstr ""

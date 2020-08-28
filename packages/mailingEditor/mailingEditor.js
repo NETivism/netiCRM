@@ -290,7 +290,7 @@
       var json = JSON.parse(str);
       return (typeof json === "object");
     } catch (e) {
-      _debug("===== Source data is not json. =====");
+      _debug("===== data is not json. =====");
       return false;
     }
   }
@@ -456,7 +456,7 @@
         elemsYaxisRange[elemID] = elemYaxisRange;
       });
 
-      _debug(elemsYaxisRange, "onScreenCenterElem");
+      //_debug(elemsYaxisRange, "onScreenCenterElem");
 
       $(window).scroll(function() {
         let scrollTop = $(window).scrollTop();
@@ -467,7 +467,7 @@
               yMax = elemsYaxisRange[blockID][1];
 
           if (scrollTop >= yMin && scrollTop <= yMax) {
-            _debug(blockID);
+            //_debug(blockID);
             let $block = $("#" + blockID);
             $block.addClass("on-screen-center");
           }
@@ -520,13 +520,13 @@
 
           if (_isJsonString(dataString)) {
             _data = JSON.parse(dataString);
-            _debug(_data, "Source data");
+            _debug(_data, "nmeData.get.field");
           }
         }
       }
     },
     update: function() {
-      _debug(_data);
+      //_debug(_data, "nmeData.update");
       let data = JSON.stringify(_data, undefined, 4);
       $(_dataLoadSource).val(data);
       $.nmEditor.instance.data = _data;
@@ -2298,7 +2298,18 @@
     $(".nme-select-tpl-list").on("click", ".nme-select-tpl-btn", function() {
       let $btn = $(this),
           tplName = $btn.data("name"),
-          tplData = _tpl["data"][tplName];
+          tplData = _tpl["data"][tplName],
+          confirmMessage = _ts["Are your sure to use template to replace your work? You will lose any customizations you have made."];
+
+      if (window.confirm(confirmMessage)) {
+        if (!_objIsEmpty(tplData)) {
+          let renderOptions = {
+            "loadDataMode": "object",
+            "loadDataObj": tplData
+          };
+          window.nmEditorInstance.render(renderOptions);
+        }
+      }
     });
   };
 
@@ -2361,6 +2372,12 @@
         $targetTabContent.addClass(ACTIVE_CLASS);
       });
 
+      // Switch the default panel to block panel if mail data field has value
+      if ($(_dataLoadSource).val()) {
+        $(".nme-setting-panels-tabs a[data-target-id='nme-add-block']").click();
+      }
+
+      _nmePanelsSelectTpl();
       _nmePanelsAddBlock();
       _nmeGlobalSetting();
       this.initialized = true;
@@ -2540,9 +2557,17 @@
         _resizeTimer = setTimeout(_windowResize, 250);
       });
     },
-    render: function() {
+    render: function(opts) {
       // Load Data
-      if (_dataLoadMode == "field") {
+      let defaultOptions = {
+        "loadDataMode": "field",
+        "loadDataObj": null
+        },
+        options = opts && typeof opts === "object" ? opts : {},
+        renderOptions = $.extend({}, defaultOptions, options),
+        dataLoadMode = renderOptions.loadDataMode ? renderOptions.loadDataMode : _dataLoadMode;
+
+      if (dataLoadMode == "field") {
         _dataLoadSource = _nmeOptions.dataLoadSource;
         _nmeData.get.field(_dataLoadSource);
 
@@ -2551,10 +2576,19 @@
           _defaultData = JSON.parse(defaultData);
           _data = _objClone(_defaultData);
         }
+      }
 
+      if (dataLoadMode == "object") {
+        let tplData = renderOptions.loadDataObj;
+        if (!_objIsEmpty(tplData)) {
+          _data = _objClone(tplData);
+        }
+      }
+
+      setTimeout(function() {
         $.nmEditor.instance.data = _data;
         _nmeData.update();
-      }
+      }, 500);
 
       // Load templates
       let $nmeTplItems = $(".nme-tpl");
@@ -2636,7 +2670,7 @@
     }
 
     _container = this.selector;
-    _debug(_container);
+    //_debug(_container);
     _checkNmeInstance();
 
     return _nme;
