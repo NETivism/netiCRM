@@ -284,6 +284,17 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertDoesntExist('.crm-error', "Assert '.crm-error' doesn't exist.");
     });
 
+    casper.waitForSelector("#errorList", function success() {
+        this.evaluate(function () {
+            li = document.querySelectorAll('#errorList li');
+            for(var i=0; i<li.length; i++) {
+                console.log(li[i].textContent);
+            }
+        });
+    }, function fail() {
+        test.assertExists("#errorList");
+    });
+
     casper.then(function() {
         this.echo("Step 4-5: Test.");
     });
