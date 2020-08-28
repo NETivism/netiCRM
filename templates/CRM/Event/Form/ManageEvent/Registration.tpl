@@ -107,6 +107,10 @@
             <td scope="row" class="label" width="20%">{$form.is_multiple_registrations.label}</td>
             <td>{$form.is_multiple_registrations.html} {help id="id-allow_multiple"}</td>
         </tr>
+        <tr id="is_multiple_registrations_limit" class="crm-event-manage-registration-form-block-is_multiple_registrations_max">
+            <td scope="row" class="label" width="20%">{$form.is_multiple_registrations_max.label}</td>
+            <td>{$form.is_multiple_registrations_max.html}</td>
+        </tr>
         <tr id="allow_same_emails" class="crm-event-manage-registration-form-block-allow_same_participant_emails">
             <td scope="row" class="label" width="20%">{$form.allow_same_participant_emails.label}</td>
             <td>{$form.allow_same_participant_emails.html} {help id="id-allow_same_email"}</td>
@@ -322,7 +326,7 @@ invert              = 0
 {include file="CRM/common/showHideByFieldValue.tpl"
 trigger_field_id    ="is_multiple_registrations"
 trigger_value       =""
-target_element_id   ="allow_same_emails|additional_profile_pre|additional_profile_post"
+target_element_id   ="allow_same_emails|additional_profile_pre|additional_profile_post|is_multiple_registrations_limit"
 target_element_type ="table-row"
 field_type          ="radio"
 invert              = 0
