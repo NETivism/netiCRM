@@ -3,7 +3,9 @@
 <script type="text/javascript">
 window.nmEditor = {
 	translation: {
-		// Editor
+		// Golbal
+		"OK" : "{/literal}{ts}OK{/ts}{literal}",
+		"Cancel" : "{/literal}{ts}Cancel{/ts}{literal}",
 
 		// Panels
 		"Mailing Advanced Settings" : "{/literal}{ts}Mailing Advanced Settings{/ts}{literal}",

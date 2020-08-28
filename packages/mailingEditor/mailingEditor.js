@@ -2565,6 +2565,15 @@
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
         _ts = window.nmEditor.translation;
+
+        // Translate UI of x-editble
+        if ($.fn.editableform && $.fn.editableform.buttons) {
+          let buttonsTpl = $.fn.editableform.buttons;
+          buttonsTpl = buttonsTpl.replace(">ok</button>", ">" + _ts["OK"] + "</button>");
+          buttonsTpl = buttonsTpl.replace(">cancel</button>", ">" + _ts["Cancel"] + "</button>");
+          $.fn.editableform.buttons = buttonsTpl;
+        }
+
         $.nmEditor.instance = _nme;
 
         if (!$(_container).hasClass(NME_CONTAINER)) {
