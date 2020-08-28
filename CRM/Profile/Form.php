@@ -195,6 +195,11 @@ class CRM_Profile_Form extends CRM_Core_Form {
         $this->_isUpdateDupe = $dao->is_update_dupe;
         $this->_isAddCaptcha = $dao->add_captcha;
         $this->_ufGroup = (array) $dao;
+
+        // restrict permission when profile is reserved
+        if ($dao->is_reserved && !CRM_Core_Permission::check('access CiviCRM')) {
+          CRM_Utils_System::permissionDenied();
+        }
       }
       $dao->free();
     }
