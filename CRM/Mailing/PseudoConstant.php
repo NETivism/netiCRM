@@ -236,8 +236,9 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   public static function bounceType($key = 'id', $label = 'name'){
-    $types = CRM_Core_DAO::commonRetrieveAll('CRM_Mailing_DAO_BounceType');
-    $bounceType =& self::$bounceType;
+    $types = array();
+    CRM_Core_DAO::commonRetrieveAll('CRM_Mailing_DAO_BounceType', 'id', NULL, $types);
+    $bounceType = self::$bounceType;
     if(!isset($bounceType[$key.$label])){
       foreach($types as $t){
         if(isset($t[$key]) && isset($t[$label])){
