@@ -135,6 +135,7 @@ SELECT id
       );
       $this->addElement('checkbox', 'is_recur_only', ts('Only allowed recurring contribution'), NULL);
       $recurFrequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units', TRUE, FALSE, FALSE, NULL, 'label');
+      self::doShowHideFrequencyUnits($recurFrequencyUnits, $recurringPaymentProcessor);
       $this->addCheckBox('recur_frequency_unit', ts('Supported recurring units'),
         $recurFrequencyUnits,
         NULL, NULL, NULL, NULL,
@@ -206,6 +207,32 @@ SELECT id
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_Amount', 'formRule'), $this);
 
     parent::buildQuickForm();
+  }
+
+  private static function doShowHideFrequencyUnits(&$recurFrequencyUnits, $recurringPaymentProcessor = array()) {
+    if (empty($recurringPaymentProcessor)) {
+      return ;
+    }
+    else {
+      // If all recur processors don't allow certain unit, remove it.
+      $paymentUnitsCount = array();
+      foreach ($recurFrequencyUnits as $index => $unit) {
+        $paymentUnitsCount[$unit] = 0;
+        foreach ($recurringPaymentProcessor as $ppid) {
+          $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, '');
+          $paymentClass = 'CRM_Core_'.$paymentProcessor['class_name'];
+          if (!empty($paymentClass::$_allowRecurUnit)) {
+            $paymentUnitsCount[$unit] += in_array($unit, $paymentClass::$_allowRecurUnit) ? 1 : 0;
+          }
+          else {
+            $paymentUnitsCount[$unit] += 1;
+          }
+        }
+        if ($paymentUnitsCount[$unit] == 0) {
+          unset($recurFrequencyUnits[$index]);
+        }
+      }
+    }
   }
 
   /**
