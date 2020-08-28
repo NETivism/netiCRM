@@ -15,16 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-<<<<<<< HEAD
 "PO-Revision-Date: 2020-08-28 03:31+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
-||||||| merged common ancestors
-"PO-Revision-Date: 2020-08-18 07:24+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
-=======
-"PO-Revision-Date: 2020-08-27 10:34+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
->>>>>>> a6686e78bf8a38bceb85402b6c475c73b35031c3
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
