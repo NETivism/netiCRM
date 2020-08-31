@@ -1234,7 +1234,7 @@
       }
 
       // Prevent users from pressing enter to send the #upload form.
-      $("#Upload").on("keypress", "input, textarea", function(event){
+      $("#Upload").off("keypress").on("keypress", "input, textarea", function(event){
         let code = event.keyCode || event.which;
 
         if (code == 13) {
@@ -1258,17 +1258,17 @@
       }
 
       // trigger panel open
-      $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
+      $("#Upload").off("change").on("change", ".form-radio[name='upload_type']", function() {
         _checkPanelOpen();
       });
       // check default open
       _checkPanelOpen();
 
-      $("#Upload").on("click", ".form-submit", function(event) {
+      $("#Upload").off("click").on("click", ".form-submit", function(event) {
         $(this).closest("form").data("action", $(this).attr("name"));
       });
 
-      $("#Upload").submit(function(event) {
+      $("#Upload").unbind("submit").submit(function(event) {
         let $form = $(this),
             buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
             allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
