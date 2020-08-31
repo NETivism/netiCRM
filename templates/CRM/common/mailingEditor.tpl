@@ -11,7 +11,7 @@ window.nmEditor = {
 		"Mailing Advanced Settings" : "{/literal}{ts}Mailing Advanced Settings{/ts}{literal}",
 		"Templates" : "{/literal}{ts}Templates{/ts}{literal}",
 		"Blocks" : "{/literal}{ts}Blocks{/ts}{literal}",
-		"Setting" : "{/literal}{ts}Setting{/ts}{literal}",
+		"Settings" : "{/literal}{ts}Settings{/ts}{literal}",
 		"Preview" : "{/literal}{ts}Preview{/ts}{literal}",
 		"Normal" : "{/literal}{ts}Normal{/ts}{literal}",
 		"Mobile Device" : "{/literal}{ts}Mobile Device{/ts}{literal}",
