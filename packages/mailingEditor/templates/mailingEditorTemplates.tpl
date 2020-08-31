@@ -3,6 +3,8 @@
 
 {* Mail Level *}
 {include file="../packages/mailingEditor/templates/mail/mailCol1Fullwidth.tpl"}
+{include file="../packages/mailingEditor/templates/mail/mailCol1Col2.tpl"}
+{include file="../packages/mailingEditor/templates/mail/mailCol1Float.tpl"}
 
 {* Block Level *}
 {include file="../packages/mailingEditor/templates/block/blockTitle.tpl"}
@@ -18,6 +20,8 @@
 
 {* Data Level *}
 {include file="../packages/mailingEditor/templates/data/$tsLocale/dataMailCol1Fullwidth.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataMailCol1Col2.tpl"}
+{include file="../packages/mailingEditor/templates/data/$tsLocale/dataMailCol1Float.tpl"}
 {include file="../packages/mailingEditor/templates/data/$tsLocale/dataTitle.tpl"}
 {include file="../packages/mailingEditor/templates/data/$tsLocale/dataImage.tpl"}
 {include file="../packages/mailingEditor/templates/data/$tsLocale/dataParagraph.tpl"}

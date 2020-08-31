@@ -123,6 +123,8 @@ window.nmEditor = {
 							<div class="nme-setting-panel-content">
 								<ul class="nme-select-tpl-list nme-setting-item-list">
 									<li><button class="nme-select-tpl-btn" type="button" title="{ts}Click to Switch Template{/ts}" data-name="col-1-full-width" data-tooltip>{ts}1 Column{/ts}</button></li>
+									<li><button class="nme-select-tpl-btn" type="button" title="{ts}Click to Switch Template{/ts}" data-name="col-1-col-2" data-tooltip>{ts}1:2 Column{/ts}</button></li>
+									<li><button class="nme-select-tpl-btn" type="button" title="{ts}Click to Switch Template{/ts}" data-name="col-1-float" data-tooltip>{ts}1 Column + Float{/ts}</button></li>
 								</ul>
 							</div>
 						</div>
