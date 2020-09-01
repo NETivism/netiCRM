@@ -47784,3 +47784,15 @@ msgstr ""
 
 msgid "Maximum per registration"
 msgstr ""
+
+msgid "Please enter %1"
+msgstr ""
+
+msgid "Earliest"
+msgstr ""
+
+msgid "Copy Contribution"
+msgstr ""
+
+msgid "When recurring contribution being triggered, witch contribution you want to copy?"
+msgstr ""
