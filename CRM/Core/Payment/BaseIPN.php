@@ -103,6 +103,7 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID) {
+    $config = CRM_Core_Config::singleton();
     $contribution = &$objects['contribution'];
 
     $objects['membership'] = NULL;
@@ -125,6 +126,26 @@ class CRM_Core_Payment_BaseIPN {
     if ($input['component'] == 'contribute') {
       if (!empty($contribution->contribution_recur_id) && empty($ids['contributionRecur'])) {
         $ids['contributionRecur'] = $contribution->contribution_recur_id;
+      }
+      // refs #26358, allow change contribution object to most recent one
+      if (!empty($ids['contributionRecur']) && !empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
+        $daoLastContribution = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date DESC", array(
+          1 => array($ids['contributionRecur'], 'Integer'),
+        ));
+        if ($daoLastContribution->N > 1) {
+          $daoLastContribution->fetch();
+          $ids['contribution'] = $daoLastContribution->id;
+          $lastContribution = new CRM_Contribute_DAO_Contribution();
+          $lastContribution->id = $ids['contribution'];
+          if ($lastContribution->find(TRUE)) {
+            // not sure why we need this anymore.
+            // $lastContribution->receive_date = CRM_Utils_Date::isoToMysql($lastContribution->receive_date);
+            // $lastContribution->created_date = CRM_Utils_Date::isoToMysql($lastContribution->created_date);
+            unset($contribution);
+            unset($objects['contribution']);
+            $objects['contribution'] = $lastContribution;
+          }
+        }
       }
 
       // retrieve the other optional objects first so
