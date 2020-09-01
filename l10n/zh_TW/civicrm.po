@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-08-28 08:00+0000\n"
+"PO-Revision-Date: 2020-09-01 04:07+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -47992,55 +47992,55 @@ msgstr "確定使用範本來取代嗎？剛剛所做的一些更改，並不會
 #: templates/CRM/common/mailingEditor.tpl
 #: packages/mailingEditor/templates/block/blockEdit.tpl
 msgid "Drag to Reorder"
-msgstr ""
+msgstr "拖曳以改變排序"
 
 #: templates/CRM/common/mailingEditor.tpl
 #: packages/mailingEditor/templates/block/blockEdit.tpl
 msgid "Move Up"
-msgstr ""
+msgstr "往上移動"
 
 #: templates/CRM/common/mailingEditor.tpl
 #: packages/mailingEditor/templates/block/blockEdit.tpl
 msgid "Move Down"
-msgstr ""
+msgstr "往下移動"
 
 #: templates/CRM/common/mailingEditor.tpl
 #: packages/mailingEditor/templates/block/blockEdit.tpl
 msgid "Duplicate Block"
-msgstr ""
+msgstr "複製區塊"
 
 #: templates/CRM/common/mailingEditor.tpl
 #: packages/mailingEditor/templates/block/blockEdit.tpl
 msgid "Delete Block"
-msgstr ""
+msgstr "刪除區塊"
 
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Edit Link"
-msgstr ""
+msgstr "編輯連結"
 
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Edit Image"
-msgstr ""
+msgstr "編輯圖片"
 
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Edit Background"
-msgstr ""
+msgstr "編輯背景"
 
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Switch Templates"
-msgstr ""
+msgstr "變更範本"
 
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Add Blocks"
-msgstr ""
+msgstr "新增區塊"
 
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Click to Add Block"
-msgstr ""
+msgstr "點擊以新增區塊"
 
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Click to Switch Template"
-msgstr ""
+msgstr "點擊以變更範本"
 
 msgid "view public CiviMail content"
 msgstr "檢視公開的 CiviMail 電子報內容"
@@ -48050,3 +48050,6 @@ msgstr "刪除聯絡人（永久刪除）"
 
 msgid "Maximum per registration"
 msgstr "每次報名最多幾位"
+
+msgid "Please enter %1"
+msgstr "請輸入%1"

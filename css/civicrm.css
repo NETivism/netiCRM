@@ -4411,6 +4411,17 @@ ul.ui-sortable {
  {
   max-width: 120px;
 }
+
+/* special case for im-provider*/
+@media screen and (min-width: 769px) {
+  .crm-container .crm-form-select select[name^="im-"] {
+    max-width: 120px;
+  }
+  .crm-container .crm-section[class*="im-"] .crm-form-select {
+    margin-right: 15px;
+  }
+}
+
 .crm-accordion-wrapper > .crm-submit-buttons {
   padding: 6px 18px;
 }
