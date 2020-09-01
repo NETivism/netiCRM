@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-09-01 04:07+0000\n"
+"PO-Revision-Date: 2020-09-01 10:31+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48053,3 +48053,14 @@ msgstr "每次報名最多幾位"
 
 msgid "Please enter %1"
 msgstr "請輸入%1"
+
+msgid "Earliest"
+msgstr "最早"
+
+msgid "Copy Contribution"
+msgstr "複製捐款"
+
+msgid ""
+"When recurring contribution being triggered, witch contribution you want to "
+"copy?"
+msgstr "定期捐款觸發時，哪一種捐款儲存的資訊應該被複製到新的一筆定期？"
