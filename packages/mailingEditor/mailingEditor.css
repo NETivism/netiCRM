@@ -31,6 +31,31 @@ a.btn:hover {
 .editable > :first-child,
 .editable > :last-child {
   margin: revert;
+  padding: revert;
+}
+.editable h1,
+.editable h2,
+.editable h3,
+.editable h4,
+.editable h5,
+.editable h6 {
+  font-weight: revert;
+  font-style: revert;
+}
+.editable ul,
+.editable ol {
+  list-style-type: revert;
+}
+.editable u,
+.editable s,
+.editable em,
+.editable strong {
+  font-weight: revert;
+  font-style: revert;
+}
+.editable a {
+  text-decoration: revert;
+  color: revert;
 }
 .editable-click[data-type="xquill"] + .editable-container {
   display: block;
@@ -43,6 +68,17 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
     display: block;
     margin: 12px 0 0 0;
 }
+.editable-container .ql-editor ul,
+.editable-container .ql-editor ol,
+.editable-container .ql-editor ul li,
+.editable-container .ql-editor ol li {
+  margin: revert;
+}
+.editable-container .ql-editor ul,
+.editable-container .ql-editor ol {
+  padding-left: 0;
+}
+
 
 /* x-editable: playground */
 .x-editable-playground {

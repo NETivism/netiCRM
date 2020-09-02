@@ -38,7 +38,7 @@ elem (nme-elem): none
           <tbody>
             <tr>
               <td valign="top" class="nmeb-content" data-settings-target="elemContainerInner">
-                <div class="nmee-paragraph nme-elem" data-settings-target="elem" style="margin: 0; font-size: 16px;">
+                <div class="nmee-paragraph nme-elem" data-settings-target="elem" style="margin: 0; text-align: left; font-size: 16px; color: #000000;">
                   [Paragraph Content HERE]
                 </div>
               </td>

@@ -23,7 +23,10 @@
         "margin-top": "0",
         "margin-right": "0",
         "margin-bottom": "0",
-        "margin-left": "0"
+        "margin-left": "0",
+        "text-align": "left",
+        "font-size": "16px",
+        "color": "#000000"
       }
     },
     "control": {

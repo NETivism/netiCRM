@@ -76,6 +76,31 @@
       line-height: inherit !important;
     }
 
+    /* Default Settings */
+    body {
+      font-family: sans-serif;
+    }
+		h1, h2, h3, h4, h5, h6 {
+			display: block;
+			margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+		table {
+      font-family: sans-serif;
+      border-collapse: collapse;
+		}
+    p {
+			margin: 1em 0;
+			padding: 0;
+    }
+		img, a img {
+			border: 0;
+			height: auto;
+			outline: none;
+			text-decoration: none;
+    }
+
     /* Media Queries */
     @media screen and (max-width: 480px) {
       /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images beyond their max-width. */
