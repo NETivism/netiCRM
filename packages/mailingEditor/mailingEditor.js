@@ -575,8 +575,9 @@
   };
 
   var _nmeBlock = {
-    add: function(data, mode, $target, method) {
+    add: function(data, state, mode, $target, method) {
       let block = !_objIsEmpty(data) ? data : null,
+          dataState = typeof state !== "undefined" ? state : "exist",
           addMethod = typeof method !== "undefined" ? method : "append";
 
       if (block && block.type) {
@@ -586,6 +587,29 @@
             blockSection = block.section,
             blockID = block.id,
             disallowSortType = ["header", "footer"];
+
+        // If this block is created after the data is loaded, apply styles from global settings
+        if (dataState == "new") {
+          if (!block.override.block) {
+            block["styles"]["block"]["background-color"] = _data["settings"]["styles"]["block"]["background-color"];
+          }
+
+          if (!block.override.elem) {
+            if (blockType == "title") {
+              block["styles"]["elem"]["font-size"] = _data["settings"]["styles"][blockType]["font-size"];
+              block["styles"]["elem"]["color"] = _data["settings"]["styles"][blockType]["color"];
+            }
+
+            if (blockType == "paragraph") {
+              block["styles"]["elem"]["color"] = _data["settings"]["styles"][blockType]["color"];
+            }
+
+            if (blockType == "button") {
+              block["styles"]["elem"]["color"] = _data["settings"]["styles"][blockType]["color"];
+              block["styles"]["elemContainer"]["background-color"] = _data["settings"]["styles"][blockType]["background-color"];
+            }
+          }
+        }
 
         if (blockMode == "view") {
           if (_domElemExist($target)) {
@@ -674,7 +698,7 @@
                       var nestBlockData = block.data[0]["blocks"][nestBlockID];
 
                       if (!_objIsEmpty(nestBlockData)) {
-                        _nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+                        _nmeBlock.add(nestBlockData, dataState, "view", $nestTarget, "append");
                       }
                     }
                     break;
@@ -694,7 +718,7 @@
                           var nestBlockData = block.data[dataIndex]["blocks"][nestBlockID];
 
                           if (!_objIsEmpty(nestBlockData)) {
-                            _nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+                            _nmeBlock.add(nestBlockData, dataState, "view", $nestTarget, "append");
                           }
                         }
                       }
@@ -713,7 +737,7 @@
                           }
 
                       if (!_objIsEmpty(nestBlockData)) {
-                        _nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+                        _nmeBlock.add(nestBlockData, dataState, "view", $nestTarget, "append");
                       }
                     }
                     break;
@@ -948,7 +972,7 @@
                           nestBlockData.control.clone = false;
                           nestBlockData.weight = i;
                           _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
-                          _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                          _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                         }
 
                         _nmeData.update();
@@ -969,7 +993,7 @@
 
                         // Added data to new index
                         _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
-                        _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                        _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                         _nmeData.update();
                       }
                     }
@@ -1014,7 +1038,7 @@
                               }
 
                               _data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][nestBlockID] = nestBlockData;
-                              _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                              _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                             }
 
                             _nmeData.update();
@@ -1035,7 +1059,7 @@
 
                             // Added data to new index
                             _data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][nestBlockID] = nestBlockData;
-                            _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                            _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                             _nmeData.update();
                           }
                         }
@@ -1094,7 +1118,7 @@
                               _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
 
                               // Added block to stage
-                              _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                              _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                             }
 
                             // Update data
@@ -1127,7 +1151,7 @@
                             _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
 
                             // Added block to stage
-                            _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                            _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
 
                             // Update data
                             _nmeData.update();
@@ -1176,7 +1200,7 @@
       let cloneData = !_objIsEmpty(data) ? data : null;
 
       if (_domElemExist($target)) {
-        _nmeBlock.add(cloneData, "edit", $target, "after");
+        _nmeBlock.add(cloneData, "new", "edit", $target, "after");
       }
     },
     delete: function(data) {
@@ -1228,7 +1252,7 @@
           // Render blocks from data
           for (let blockID in _data.sections[section].blocks) {
             let blockData = blocksData[blockID];
-            _nmeBlock.add(blockData, "edit", $(blocksContainer));
+            _nmeBlock.add(blockData, "exist", "edit", $(blocksContainer));
           }
         }
       }
@@ -1365,7 +1389,7 @@
 
           for (let blockID in _data.sections[section].blocks) {
             let blockData = blocksData[blockID];
-            _nmeBlock.add(blockData, "view", $blocksContainer);
+            _nmeBlock.add(blockData, "exist", "view", $blocksContainer);
           }
         }
       }
@@ -2355,7 +2379,7 @@
         _data["sections"][addSection]["blocks"][addBlockID] = addBlockData;
 
         // Added block dom
-        _nmeBlock.add(addBlockData, "edit", $addTarget, addMethod);
+        _nmeBlock.add(addBlockData, "new", "edit", $addTarget, addMethod);
 
         // Reorder data
         _sortables[addSection]["order"] = _sortables[addSection]["inst"].toArray();
