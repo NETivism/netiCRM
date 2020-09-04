@@ -407,6 +407,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   text-align: center;
   margin: 0;
   padding: 12px;
@@ -419,8 +420,18 @@ ul.nme-setting-panels-tabs li a.is-active {
   border-radius: 6px;
   cursor: pointer;
 }
+.nme-container ul.nme-setting-item-list button::before {
+ font-family: "Material-Design-Iconic-Font";
+ font-size: 24px;
+}
 .nme-container ul.nme-setting-item-list button:hover {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
+}
+.nme-container ul.nme-setting-item-list button:hover::before {
+  content: "\f275";
+}
+.nme-container ul.nme-select-tpl-list button:hover::before {
+  content: "\f30b";
 }
 .nme-container .nme-setting-panel #nme-theme-setting {
   align-items: flex-start;
