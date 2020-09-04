@@ -612,6 +612,10 @@ ul.nme-setting-panels-tabs li a.is-active {
 .ql-align-justify { text-align: justify; }
 .ql-editor p { margin: 0 0 1.5rem 0; }
 .on-screen-center { border: 1px solid #81D4FA; }
+.nme-block.on-screen-center::after {
+  display: none;
+}
+/*
 .nme-block.on-screen-center:after {
   content: "Add Block Here";
   display: block;
@@ -623,6 +627,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   border: 1px solid #81D4FA;
   background: #E1F5FE;
 }
+*/
 .switch-toggle-container {
   display: flex;
   align-items: center;
