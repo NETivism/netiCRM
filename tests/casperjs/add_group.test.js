@@ -119,10 +119,6 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists('.selector');
     });
 
-    casper.then(function() {
-        this.capture("user_list.png");
-    });
-
     /* click Add Contacts to */
     casper.waitForSelector('form#Basic input[name="_qf_Basic_next_action"]', function success() {
         test.assertExists('form#Basic input[name="_qf_Basic_next_action"]');
