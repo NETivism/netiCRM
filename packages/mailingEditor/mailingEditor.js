@@ -1722,6 +1722,21 @@
     }
 
     if ($(".nme-setting-select").length) {
+      $(".nme-setting-select").each(function() {
+        let $select = $(this),
+            selectID = $select.attr("id"),
+            $field = $select.closest(".nme-setting-field"),
+            fieldType = $field.data("field-type"),
+            $section = $select.closest(".nme-setting-section"),
+            group = $section.data("setting-group");
+
+
+        // Set default value to select
+        if (_data["settings"]["styles"][group][fieldType]) {
+          $select.val(_data["settings"]["styles"][group][fieldType]);
+        }
+      });
+
       $(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
         let $select = $(this),
             selectID = $select.attr("id"),
