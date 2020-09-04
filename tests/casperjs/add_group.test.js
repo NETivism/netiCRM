@@ -101,11 +101,21 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     /* click admin user */
-    casper.waitForSelector('#rowid21 input', function success() {
-        test.assertExists('#rowid21 input');
-        this.click('#rowid21 input');
+    casper.waitForSelector('.selector', function success() {
+        var id = this.evaluate(function (){
+            var tr = document.querySelectorAll(".selector tr");
+            for(var i=1; i<tr.length; i++) {
+                if(tr[i].querySelector("td:nth-child(4) a").text == "admin@example.com") {
+                    return tr[1].querySelector("td:nth-child(3)").textContent;
+                }
+            }
+            return -1;
+        });
+        test.assertNotEquals(id, -1, 'Got admin user id.');
+        var row_id = "#rowid" + id + " input";
+        this.click(row_id);
     }, function fail() {
-        test.assertExists('#rowid21 input');
+        test.assertExists('.selector');
     });
 
     /* click Add Contacts to */
@@ -273,6 +283,22 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[name='subject']", "Assert 'Mailing Subject' exist.");
     });
 
+    casper.waitForSelector("#footer_id", function success() {
+        this.evaluate(function () {
+            document.getElementById('footer_id').selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("#footer_id", "Assert 'Mailing footer' exist.");
+    });
+
+    casper.waitForSelector("#footer_id", function success() {
+        this.evaluate(function () {
+            document.getElementById('footer_id').selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("#footer_id", "Assert 'Mailing footer' exist.");
+    });
+
     casper.waitForSelector("input[value='Next >>']", function success() {
         this.click("input[value='Next >>']");
     }, function fail() {
@@ -282,17 +308,6 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.then(function() {
         test.assertDoesntExist('.crm-error', "Assert '.crm-error' doesn't exist.");
-    });
-
-    casper.waitForSelector("#errorList", function success() {
-        this.evaluate(function () {
-            li = document.querySelectorAll('#errorList li');
-            for(var i=0; i<li.length; i++) {
-                console.log(li[i].textContent);
-            }
-        });
-    }, function fail() {
-        test.assertExists("#errorList");
     });
 
     casper.then(function() {
