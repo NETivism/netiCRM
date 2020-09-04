@@ -470,6 +470,7 @@
             //_debug(blockID);
             let $block = $("#" + blockID);
             $block.addClass("on-screen-center");
+            break;
           }
         }
       });
