@@ -63,10 +63,15 @@ $(function(){
                 this.$input.html(html);
             }
 
+            // Change style class to inline style
+            // refs https://quilljs.com/guides/how-to-customize-quill/#class-vs-inline
             // Import and set font size of quill
             var quillSize = Quill.import('attributors/style/size');
             quillSize.whitelist = ['13px', '20px', '28px'];
             Quill.register(quillSize, true);
+
+            var quillAlign = Quill.import('attributors/style/align');
+            Quill.register(quillAlign, true);
 
             var toolbarOptions = [
               ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
