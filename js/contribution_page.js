@@ -476,7 +476,8 @@
       setPriceOption: function(val){
         this.currentPriceOption = val;
         if(this.currentPriceOption){
-          $('.amount-section [value="'+this.currentPriceOption+'"]').click();
+          // Use cj to trigger premium block. Refs #29369
+          cj('.amount-section [value="'+this.currentPriceOption+'"]').click();
           var amount = $('.price-set-btn div[data-amount='+this.currentPriceOption+'] .amount').text();
           this.setPriceAmount(amount);
         }
@@ -498,6 +499,8 @@
           this.currentPriceAmount = amount;
           if(!this.currentPriceOption){
             $('input#amount_other').val(this.currentPriceAmount);
+            // For trigger premium block, Refs #29369
+            cj('input[name=amount_other]').trigger('change');
           }
           this.updatePriceAmount();
         }
