@@ -100,22 +100,27 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
 
-    /* click admin user */
+    /* select user that have email */
     casper.waitForSelector('.selector', function success() {
+        this.echo('Select user that have email')
         var id = this.evaluate(function (){
             var tr = document.querySelectorAll(".selector tr");
             for(var i=1; i<tr.length; i++) {
-                if(tr[i].querySelector("td:nth-child(4) a").text == "admin@example.com") {
-                    return tr[1].querySelector("td:nth-child(3)").textContent;
+                if(tr[i].querySelector("td:nth-child(5)").textContent != "") {
+                    return tr[i].querySelector("td:nth-child(3)").textContent;
                 }
             }
             return -1;
         });
-        test.assertNotEquals(id, -1, 'Got admin user id.');
+        test.assertNotEquals(id, -1, 'Got user id.');
         var row_id = "#rowid" + id + " input";
         this.click(row_id);
     }, function fail() {
         test.assertExists('.selector');
+    });
+
+    casper.then(function() {
+        this.capture("user_list.png");
     });
 
     /* click Add Contacts to */
