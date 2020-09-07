@@ -47796,3 +47796,12 @@ msgstr ""
 
 msgid "When recurring contribution being triggered, witch contribution you want to copy?"
 msgstr ""
+
+msgid "Birth Date Search"
+msgstr ""
+
+msgid "Birthday is a big blessing day for supporters, don't forget to offer your blessings, or invite supporters to call friends to praise beloved organization!"
+msgstr ""
+
+msgid "Give your supporters a thoughtful birthday card, or a more meaningful model, invite supporters to launch a \"birthday donation\" on their birthdays, so that supporters and friends can give blessings to the birthday supporters and gather them into a more meaningful charity!"
+msgstr ""
