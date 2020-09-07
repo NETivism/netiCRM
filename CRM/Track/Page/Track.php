@@ -105,14 +105,13 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
         }
         $stat[$type]['total_amount'] = $total;
       }
-      else {
-        $stat[$type]['total_amount'] = 0.0;
+      if (empty($stat[$type]['total_amount'])) {
+        $stat[$type]['total_amount'] = (float) 0;
       }
     }
 
     if (!empty($params['civicrm_contribution_page'])) {
       $statistics = new CRM_Track_Selector_Track($params);
-
     }
 
     // sort by count
@@ -122,7 +121,8 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       $stat[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
     }
     foreach($stat as &$st) {
-      $st['display'] = '<div>'.ts("%1 achieved", array(1 => "{$st['percent_goal']}% ({$st['count_goal']}".ts('People').")"))."</div><div style='color:grey'>".ts("Total")." {$st['percent']}% ({$st['count']}".ts('People').")</div>";
+      $amount = '$'.CRM_Utils_Money::format($st['total_amount'], NULL, NULL, TRUE);
+      $st['display'] = '<div>'.ts("%1 achieved", array(1 => "{$st['percent_goal']}% ({$st['count_goal']}".ts('People')." ".ts('for')." {$amount})"))."</div><div style='color:grey'>".ts("Total")." {$st['percent']}% ({$st['count']}".ts('People').")</div>";
     }
     $this->assign('summary', $stat);
 
