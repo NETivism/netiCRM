@@ -107,7 +107,7 @@ $(function(){
             if (window.nmEditor.tokenTrigger) {
               Quill.register('modules/placeholder', PlaceholderModule.default(Quill))
               $(window.nmEditor.tokenTrigger).find("option").each(function(){
-                var tokenName = $(this).attr("value").replace(/(\{|\})/gi, "");
+                var tokenName = $(this).attr("value");
                 tokenToolbar.push(tokenName);
                 tokenQuillOption.push({id:tokenName, label:tokenName});
               });
@@ -125,6 +125,7 @@ $(function(){
             };
             if (window.nmEditor.tokenTrigger) {
               quillOptions.modules.placeholder = {};
+              quillOptions.modules.placeholder.delimiters = ['', ''];
               quillOptions.modules.placeholder.placeholders = tokenQuillOption;
             }
 
