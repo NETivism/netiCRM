@@ -20,7 +20,7 @@
           "padding-bottom":"10px",
           "padding-left":"10px",
           "color":"#333333",
-          "background-color":"#FFCC00"
+          "background-color":"#ffffff"
         },
         "title":{
           "text-align":"center",
@@ -87,8 +87,8 @@
               "clone":false
             },
             "override":{
-              "block":false,
-              "elem":false
+              "block":true,
+              "elem":true
             },
             "weight":0
           }
@@ -1085,8 +1085,8 @@
               "clone":false
             },
             "override":{
-              "block":false,
-              "elem":false
+              "block":true,
+              "elem":true
             },
             "weight":0
           }

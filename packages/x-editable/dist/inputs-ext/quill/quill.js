@@ -35,12 +35,17 @@ $(function(){
             html: {}
         },
         htmlEscape: function(input) {
-            return input
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&apos;"
+              };
+
+            return String(input).replace(/[&<>"']/g, function (s) {
+                return entityMap[s];
+            });
         },
         render: function () {
             var deferred = $.Deferred(), msieOld, quillID;
@@ -63,10 +68,15 @@ $(function(){
                 this.$input.html(html);
             }
 
+            // Change style class to inline style
+            // refs https://quilljs.com/guides/how-to-customize-quill/#class-vs-inline
             // Import and set font size of quill
             var quillSize = Quill.import('attributors/style/size');
             quillSize.whitelist = ['13px', '20px', '28px'];
             Quill.register(quillSize, true);
+
+            var quillAlign = Quill.import('attributors/style/align');
+            Quill.register(quillAlign, true);
 
             var toolbarOptions = [
               ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -119,6 +129,25 @@ $(function(){
             }
 
             this.editor = new Quill('#' + quillID, quillOptions);
+
+            // Added plain clipboard feature to quill
+            // refs https://quilljs.com/docs/modules/#extending
+            // refs https://quilljs.com/docs/modules/clipboard/#addmatcher
+            // refs https://github.com/quilljs/quill/issues/1184#issuecomment-384935594
+            // refs https://stackoverflow.com/a/55026088
+            this.editor.clipboard.addMatcher(Node.ELEMENT_NODE, function (node, delta) {
+                var ops = [];
+                delta.ops.forEach(function(op) {
+                  if (op.insert && typeof op.insert === 'string') {
+                    ops.push({
+                      insert: op.insert
+                    });
+                  }
+                });
+                delta.ops = ops;
+                return delta;
+            });
+
             this.editor.focus();
         },
 
