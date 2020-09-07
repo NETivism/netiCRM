@@ -27,6 +27,9 @@
    custom search .php file. If you want a different layout, clone and customize this file and point to new file using
    templateFile() function.*}
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
+<div class="crm-custom-search-description">
+  <p>{ts}Give your supporters a thoughtful birthday card, or a more meaningful model, invite supporters to launch a "birthday donation" on their birthdays, so that supporters and friends can give blessings to the birthday supporters and gather them into a more meaningful charity!{/ts}</p>
+</div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>
