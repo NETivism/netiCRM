@@ -43,7 +43,7 @@ $(function(){
                 "'": "&apos;"
               };
 
-            return String(input).replace(/[&<>"'\/]/g, function (s) {
+            return String(input).replace(/[&<>"']/g, function (s) {
                 return entityMap[s];
             });
         },
@@ -129,6 +129,25 @@ $(function(){
             }
 
             this.editor = new Quill('#' + quillID, quillOptions);
+
+            // Added plain clipboard feature to quill
+            // refs https://quilljs.com/docs/modules/#extending
+            // refs https://quilljs.com/docs/modules/clipboard/#addmatcher
+            // refs https://github.com/quilljs/quill/issues/1184#issuecomment-384935594
+            // refs https://stackoverflow.com/a/55026088
+            this.editor.clipboard.addMatcher(Node.ELEMENT_NODE, function (node, delta) {
+                var ops = [];
+                delta.ops.forEach(function(op) {
+                  if (op.insert && typeof op.insert === 'string') {
+                    ops.push({
+                      insert: op.insert
+                    });
+                  }
+                });
+                delta.ops = ops;
+                return delta;
+            });
+
             this.editor.focus();
         },
 
