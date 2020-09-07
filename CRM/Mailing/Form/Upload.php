@@ -306,9 +306,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         'isDefault' => TRUE,
       ),
       array(
-        'type' => 'upload',
+        'type' => 'submit',
         'name' => ts('Save & Continue Later'),
-        'subName' => 'save',
       ),
       array(
         'type' => 'cancel',
@@ -470,9 +469,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     require_once 'CRM/Mailing/BAO/Mailing.php';
     CRM_Mailing_BAO_Mailing::create($params, $ids);
 
-    if (isset($this->_submitValues['_qf_Upload_upload_save']) &&
-      $this->_submitValues['_qf_Upload_upload_save'] == 'Save & Continue Later'
-    ) {
+    if (CRM_Utils_Array::value('_qf_Upload_submit', $this->_submitValues)) {
       //when user perform mailing from search context
       //redirect it to search result CRM-3711.
       $ssID = $this->get('ssID');
@@ -507,13 +504,13 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
         //replace user context to search.
         $url = CRM_Utils_System::url('civicrm/contact/' . $fragment, $urlParams);
-        return $this->controller->setDestination($url);
+        CRM_Utils_System::redirect($url);
       }
       else {
         $status = ts("Your mailing has been saved. Click the 'Continue' action to resume working on it.");
         CRM_Core_Session::setStatus($status);
         $url = CRM_Utils_System::url('civicrm/mailing/browse/unscheduled', 'scheduled=false&reset=1');
-        return $this->controller->setDestination($url);
+        CRM_Utils_System::redirect($url);
       }
     }
   }

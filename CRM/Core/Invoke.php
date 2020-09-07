@@ -335,7 +335,21 @@ class CRM_Core_Invoke {
         $embed = CRM_Utils_Request::retrieve('embed', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE);
         if ($embed) {
           // #28162, check if Same Origin
-          setcookie('hasCookiePermission', 1, 0, '/');
+          $sparams = session_get_cookie_params();
+          $lifetime = CRM_REQUEST_TIME + 3600;
+          if (PHP_VERSION_ID < 70300) {
+            setcookie('hasCookiePermission', 1, $lifetime, '/; domain='.$sparams['domain'].'; Secure; SameSite=None');
+          }
+          else {
+            setcookie('hasCookiePermission', 1, array(
+              'expires' => $lifetime,
+              'path' => '/',
+              'domain' => $sparams['domain'],
+              'secure' => TRUE,
+              'httponly' => FALSE,
+              'samesite' => 'None',
+            ));
+          }
           $sameOrigin = FALSE;
           if (!empty($_SERVER['HTTP_REFERER'])) {
             $url = parse_url($_SERVER['HTTP_REFERER']);

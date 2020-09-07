@@ -23,6 +23,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     5 => 'AMEX',
   );
 
+  public static $_allowRecurUnit = array('month');
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable

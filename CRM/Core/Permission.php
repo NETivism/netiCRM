@@ -417,13 +417,22 @@ class CRM_Core_Permission {
       else {
         $components = CRM_Core_Component::getComponents();
       }
+      foreach($permissions as $p => &$title) {
+        if ($p != $title) {
+          $title .= ' ('.$p.')';
+        }
+      }
 
       foreach ($components as $comp) {
         $perm = $comp->getPermissions();
         if ($perm) {
           sort($perm);
           foreach ($perm as $p) {
-            $permissions[$p] = $p;
+            $title = ts($p);
+            if (ts($p) != $p) {
+              $title .= ' ('.$p.')';
+            }
+            $permissions[$p] = $title;
           }
         }
       }

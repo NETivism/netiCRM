@@ -47719,3 +47719,80 @@ msgstr ""
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "You can use your favorite editor to create content on your local computer or export HTML emails from other email marketing platforms, and then upload the files."
 msgstr ""
+
+msgid "Are your sure to use template to replace your work? You will lose any customizations you have made."
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Drag to Reorder"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Up"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Down"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Duplicate Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Delete Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Link"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Image"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Switch Templates"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Add Blocks"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Add Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Switch Template"
+msgstr ""
+
+msgid "view public CiviMail content"
+msgstr ""
+
+msgid "delete contacts permanantly"
+msgstr ""
+
+msgid "Maximum per registration"
+msgstr ""
+
+msgid "Please enter %1"
+msgstr ""
+
+msgid "Earliest"
+msgstr ""
+
+msgid "Copy Contribution"
+msgstr ""
+
+msgid "When recurring contribution being triggered, witch contribution you want to copy?"
+msgstr ""
