@@ -38,22 +38,35 @@ a.btn:hover {
 .editable h3,
 .editable h4,
 .editable h5,
-.editable h6 {
+.editable h6,
+.editable-container .ql-editor h1,
+.editable-container .ql-editor h2,
+.editable-container .ql-editor h3,
+.editable-container .ql-editor h4,
+.editable-container .ql-editor h5,
+.editable-container .ql-editor h6 {
   font-weight: revert;
   font-style: revert;
 }
 .editable ul,
-.editable ol {
+.editable ol,
+.editable-container .ql-editor ul,
+.editable-container .ql-editor ol {
   list-style-type: revert;
 }
 .editable u,
 .editable s,
 .editable em,
-.editable strong {
+.editable strong,
+.editable-container .ql-editor u,
+.editable-container .ql-editor s,
+.editable-container .ql-editor em,
+.editable-container .ql-editor strong {
   font-weight: revert;
   font-style: revert;
 }
-.editable a {
+.editable a,
+.editable-container .ql-editor a {
   text-decoration: revert;
   color: revert;
 }
