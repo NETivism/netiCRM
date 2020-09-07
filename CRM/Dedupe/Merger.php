@@ -707,7 +707,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     // merge happens with new values filled in here. For a particular field / row not to be merged
     // field should be unset from fields_in_conflict.
     $migrationData['fields_in_conflict'] = $conflicts;
-    CRM_Utils_Hook::merge('batch', $migrationData, $mainId, $otherId);
+    CRM_Utils_Hook::merge('conflict', $migrationData, $mainId, $otherId);
     $conflicts = $migrationData['fields_in_conflict'];
 
     if (!empty($conflicts)) {
