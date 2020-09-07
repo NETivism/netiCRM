@@ -35,12 +35,17 @@ $(function(){
             html: {}
         },
         htmlEscape: function(input) {
-            return input
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&apos;"
+              };
+
+            return String(input).replace(/[&<>"'\/]/g, function (s) {
+                return entityMap[s];
+            });
         },
         render: function () {
             var deferred = $.Deferred(), msieOld, quillID;
