@@ -31,12 +31,10 @@
 <script type="text/javascript">
 cj(document).ready(function($){
   var detectAmount = function(obj) {
-    var amount = $(obj).prop('type') == 'text' ? parseInt($(obj).val()) : $(obj).data('amount');
-    var is_recur = parseInt($("input[name=is_recur]:checked").val());
-    console.log(is_recur);
-    console.log(amount);
-    if (amount) {
-      if (is_recur) {
+    var amount = $(obj).prop('type') == 'text' ? parseFloat($(obj).val()) : parseFloat($(obj).data('amount'));
+    var is_recur = $("input[name=is_recur]:checked").val();
+    if (typeof amount === 'number' && amount) {
+      if (typeof is_recur !== 'undefined' && is_recur) {
         return filterPremiumByAmount(0, amount);
       }
       else {
