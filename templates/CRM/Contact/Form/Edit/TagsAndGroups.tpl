@@ -33,26 +33,36 @@
 {/if}
     <table class="form-layout-compressed">
 	<tr>
-	    {foreach key=key item=item from=$tagGroup}
+  {if $useSelectBox}
+	  {foreach key=key item=item from=$tagGroup}
+    <td width={cycle name=tdWidth values="50%","50%"}>
+      <div class="label">{$form.$key.label}</div>
+      <div>{$form.$key.html}</div>
+    </td>
+    {include file="CRM/common/chosen.tpl" selector="select#`$key`" select_width="300"}
+    {/foreach}
+  {else}
+	  {foreach key=key item=item from=$tagGroup}
 		{* $type assigned from dynamic.tpl *}
 		{if !$type || $type eq $key }
 		<td width={cycle name=tdWidth values="50%","50%"}><span class="label">{if $title}{$form.$key.label}{/if}</span>
 		    <div id="crm-tagListWrap">
 		    <table id="crm-tagGroupTable" style="border: 0;margin-bottom:0;">
-			{foreach key=k item=it from=$form.$key}
-			    {if $k|is_numeric}
-				<tr id="crm-tagRow{$k}">
-				    <td>
-					    {$it.html}{if $item.$k.description && !$anonUser}{help id="$type-desc-$k" text=$item.$k.description}{/if}
-				    </td>
-				</tr>
-			    {/if}
-			{/foreach}   
+          {foreach key=k item=it from=$form.$key}
+            {if $k|is_numeric}
+            <tr id="crm-tagRow{$k}">
+              <td>
+                {$it.html}{if $item.$k.description && !$anonUser}{help id="$type-desc-$k" text=$item.$k.description}{/if}
+              </td>
+            </tr>
+            {/if}
+          {/foreach}   
 		    </table>
 		    </div>
 		</td>
 		{/if}
-	    {/foreach}
+	  {/foreach}
+  {/if}
 	</tr>
   {if $tagset}
 	<tr><td>{include file="CRM/common/Tag.tpl"}</td></tr>
