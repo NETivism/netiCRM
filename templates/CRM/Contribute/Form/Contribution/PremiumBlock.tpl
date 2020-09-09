@@ -32,9 +32,9 @@
 cj(document).ready(function($){
   var detectAmount = function(obj) {
     var amount = $(obj).prop('type') == 'text' ? parseFloat($(obj).val()) : parseFloat($(obj).data('amount'));
-    var is_recur = $("input[name=is_recur]:checked").val();
+    var is_recur = parseInt($("input[name=is_recur]:checked").val());
     if (typeof amount === 'number' && amount) {
-      if (typeof is_recur !== 'undefined' && is_recur) {
+      if (typeof is_recur === 'number' && is_recur) {
         return filterPremiumByAmount(0, amount);
       }
       else {
@@ -47,10 +47,12 @@ cj(document).ready(function($){
     $('tr.product-row input[name=selectProduct], tr.product-row.not-available  .premium-options select').prop('disabled', false);
     $('tr.product-row.not-available .premium-info .description').find('.zmdi-alert-triangle').remove();
     var $available = $("input[name=selectProduct]").filter(function(idx){
-      if (amt < $(this).data('min-contribution') && amt > 0) {
+      var minContribution = parseFloat($(this).data('min-contribution'));
+      var minContributionRecur = parseFloat($(this).data('min-contribution-recur'));
+      if (amt < minContribution && amt > 0) {
         return false;
       }
-      if (amt_recur < $(this).data('min-contribution-recur') && amt_recur > 0) {
+      if (amt_recur < minContributionRecur && amt_recur > 0) {
         if ($(this).data('calculate-mode') == 'first') {
           return false;
         }
