@@ -179,6 +179,11 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     );
 
     $types = CRM_Core_PseudoConstant::paymentProcessorType();
+    // Refs #28304, Remove neweb selection on payment processor edit page.
+    $id = $this->get('id');
+    if (empty($id) || CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $id, 'payment_processor_type') != 'Neweb') {
+      unset($types['Neweb']);
+    }
     $this->add('select', 'payment_processor_type', ts('Payment Processor Type'), $types, TRUE,
       array('onchange' => "reload(true)")
     );
