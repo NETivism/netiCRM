@@ -2611,6 +2611,9 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     //sorted in ascending order tokens by ignoring word case
     $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
+    // refs #29057. Added tokens array to become a variable of the form
+    $form->assign('tokensArray', $tokens);
+
     //CRM-5058
     $form->add('select', 'token3', ts('Insert Token'),
       $tokens, FALSE,

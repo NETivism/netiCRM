@@ -1,5 +1,21 @@
 <!-- mailingEditor files start -->
+<!-- Added the translated string to the token list of quill -->
 {literal}
+<style>
+{/literal}
+{foreach from=$tokensArray key=k item=v}
+{literal}
+.ql-picker.ql-placeholder > span.ql-picker-options > span.ql-picker-item[data-value="{/literal}{$k}{literal}"]::before {
+	content: "{/literal}{$v}{literal}";
+}
+{/literal}
+{/foreach}
+{literal}
+</style>
+{/literal}
+{literal}
+
+<!-- Added global variable: nmEditor -->
 <script type="text/javascript">
 window.nmEditor = {
 	translation: {

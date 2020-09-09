@@ -470,6 +470,7 @@
             //_debug(blockID);
             let $block = $("#" + blockID);
             $block.addClass("on-screen-center");
+            break;
           }
         }
       });
@@ -504,6 +505,34 @@
       }
 
       return img;
+    }
+  }
+
+  var _scrollTo = function(elem, options) {
+    var $elem = typeof elem === "object" ? elem : typeof elem === "string" ? $("#" + elem) : null;
+
+    if ($elem.length) {
+      var defaultOptions = {
+        direction: "vertical",
+        speed: 500,
+        buffer: 0
+      };
+
+      options = $.extend({}, defaultOptions, options);
+      console.log("sssss");
+      console.log(options);
+
+      if (options.direction == "vertical") {
+        $("html, body").animate({
+          scrollTop: $elem.offset().top + options.buffer
+        }, options.speed);
+      }
+
+      if (options.direction == "horizontal") {
+        $("html, body").animate({
+          scrollLeft: $elem.offset().left + options.buffer
+        }, options.speed);
+      }
     }
   }
 
@@ -1174,6 +1203,14 @@
                 setTimeout(function() {
                   _nmeBlockControl.render(blockID, blockType);
                   _editable();
+
+                  if (dataState == "new") {
+                    if (!block.parentID && $block.length) {
+                      var scrollOpts = {};
+                      scrollOpts.buffer = $("#admin-header").length ? $("#admin-header").outerHeight() * -1 : -50;
+                      _scrollTo($block, scrollOpts);
+                    }
+                  }
                 }, 500);
               }
 
@@ -1685,6 +1722,21 @@
     }
 
     if ($(".nme-setting-select").length) {
+      $(".nme-setting-select").each(function() {
+        let $select = $(this),
+            selectID = $select.attr("id"),
+            $field = $select.closest(".nme-setting-field"),
+            fieldType = $field.data("field-type"),
+            $section = $select.closest(".nme-setting-section"),
+            group = $section.data("setting-group");
+
+
+        // Set default value to select
+        if (_data["settings"]["styles"][group][fieldType]) {
+          $select.val(_data["settings"]["styles"][group][fieldType]);
+        }
+      });
+
       $(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
         let $select = $(this),
             selectID = $select.attr("id"),
@@ -1727,6 +1779,8 @@
             });
           }
         }
+
+        _nmeData.update();
       });
     }
 

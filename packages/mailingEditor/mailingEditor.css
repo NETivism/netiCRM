@@ -38,22 +38,35 @@ a.btn:hover {
 .editable h3,
 .editable h4,
 .editable h5,
-.editable h6 {
+.editable h6,
+.editable-container .ql-editor h1,
+.editable-container .ql-editor h2,
+.editable-container .ql-editor h3,
+.editable-container .ql-editor h4,
+.editable-container .ql-editor h5,
+.editable-container .ql-editor h6 {
   font-weight: revert;
   font-style: revert;
 }
 .editable ul,
-.editable ol {
+.editable ol,
+.editable-container .ql-editor ul,
+.editable-container .ql-editor ol {
   list-style-type: revert;
 }
 .editable u,
 .editable s,
 .editable em,
-.editable strong {
+.editable strong,
+.editable-container .ql-editor u,
+.editable-container .ql-editor s,
+.editable-container .ql-editor em,
+.editable-container .ql-editor strong {
   font-weight: revert;
   font-style: revert;
 }
-.editable a {
+.editable a,
+.editable-container .ql-editor a {
   text-decoration: revert;
   color: revert;
 }
@@ -407,6 +420,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   text-align: center;
   margin: 0;
   padding: 12px;
@@ -419,8 +433,18 @@ ul.nme-setting-panels-tabs li a.is-active {
   border-radius: 6px;
   cursor: pointer;
 }
+.nme-container ul.nme-setting-item-list button::before {
+ font-family: "Material-Design-Iconic-Font";
+ font-size: 24px;
+}
 .nme-container ul.nme-setting-item-list button:hover {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
+}
+.nme-container ul.nme-setting-item-list button:hover::before {
+  content: "\f275";
+}
+.nme-container ul.nme-select-tpl-list button:hover::before {
+  content: "\f30b";
 }
 .nme-container .nme-setting-panel #nme-theme-setting {
   align-items: flex-start;
@@ -612,6 +636,10 @@ ul.nme-setting-panels-tabs li a.is-active {
 .ql-align-justify { text-align: justify; }
 .ql-editor p { margin: 0 0 1.5rem 0; }
 .on-screen-center { border: 1px solid #81D4FA; }
+.nme-block.on-screen-center::after {
+  display: none;
+}
+/*
 .nme-block.on-screen-center:after {
   content: "Add Block Here";
   display: block;
@@ -623,6 +651,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   border: 1px solid #81D4FA;
   background: #E1F5FE;
 }
+*/
 .switch-toggle-container {
   display: flex;
   align-items: center;
