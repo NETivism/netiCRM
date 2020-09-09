@@ -126,11 +126,13 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     //show  edit link only for meeting/phone and other activities
     $showUpdate = FALSE;
     $showDelete = FALSE;
+    $url = '';
     // event registration
     if ($activityTypeId == $activityTypeIds['Event Registration']) {
-      $url = 'civicrm/contact/view/participant';
-      $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
-      // contribution
+      if ($sourceRecordId) {
+        $url = 'civicrm/contact/view/participant';
+        $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+      }
     }
     elseif ($activityTypeId == $activityTypeIds['Contribution']) {
       $url = 'civicrm/contact/view/contribution';
@@ -206,15 +208,17 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       }
     }
 
-    self::$_actionLinks = array(
-      CRM_Core_Action::VIEW =>
-      array(
-        'name' => ts('View'),
-        'url' => $url,
-        'qs' => $qsView,
-        'title' => ts('View Activity'),
-      ),
-    );
+    if ($url) {
+      self::$_actionLinks = array(
+        CRM_Core_Action::VIEW =>
+        array(
+          'name' => ts('View'),
+          'url' => $url,
+          'qs' => $qsView,
+          'title' => ts('View Activity'),
+        ),
+      );
+    }
 
     if ($showUpdate) {
       self::$_actionLinks = self::$_actionLinks + array(CRM_Core_Action::UPDATE =>
