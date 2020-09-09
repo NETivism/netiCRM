@@ -1,3 +1,6 @@
 .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
-  margin-right: 3px;
+  margin-right: 0px;
+}
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: 5px;
 }
