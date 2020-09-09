@@ -476,11 +476,8 @@ class CRM_Core_SelectValues {
 
     if (!$tokens) {
       $tokens = array(
-        '{action.unsubscribe}' => ts('Unsubscribe via email'),
         '{action.unsubscribeUrl}' => ts('Unsubscribe via web page'),
-        '{action.resubscribe}' => ts('Resubscribe via email'),
         '{action.resubscribeUrl}' => ts('Resubscribe via web page'),
-        '{action.optOut}' => ts('Opt out via email'),
         '{action.optOutUrl}' => ts('Opt out via web page'),
         '{action.forward}' => ts('Forward this email (link)'),
         '{action.reply}' => ts('Reply to this email (link)'),
