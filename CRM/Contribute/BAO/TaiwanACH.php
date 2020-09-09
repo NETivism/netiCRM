@@ -268,8 +268,18 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     if (!empty($taiwanACH->contribution_recur_id)) {
       $recurParams['id'] = $taiwanACH->contribution_recur_id;
     }
-    else if (empty($recurParams['create_date'])) {
-      $recurParams['create_date'] = date('YmdHis');
+    else{
+      if (empty($recurParams['create_date'])) {
+        $recurParams['create_date'] = date('YmdHis');
+      }
+      // frequency_interval is required in civicrm_contribution_recur
+      if (empty($recurParams['frequency_interval'])) {
+        $recurParams['frequency_interval'] = 0;
+      }
+      // start_date is required in civicrm_contribution_recur
+      if (empty($recurParams['start_date'])) {
+        $recurParams['start_date'] = 0;
+      }
     }
     $recurring = CRM_Contribute_BAO_ContributionRecur::add($recurParams, $ids);
     if (empty($taiwanACH->contribution_recur_id)) {
@@ -392,7 +402,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
       // Add civicrm_log file
       $log = new CRM_Core_DAO_Log();
-      $log->entity_table = 'civicrm_contribution_taiwanach_verification';
+      if ($officeType == self::BANK) {
+        $log->entity_table = 'civicrm_contribution_taiwanach_verification_bank';
+      }
+      else {
+        $log->entity_table = 'civicrm_contribution_taiwanach_verification_post';
+      }
       $log->entity_id = $params['date'];
       $log->data = implode(',', $recurringIds);
       $log->modified_date = $params['date'].'120000';
@@ -1093,7 +1108,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $wordFormat = $match[1];
       $wordLength = (int)$match[2];
       if ($wordFormat == 'X') {
-        $regexp = "/^[\w-_ ]{{$wordLength}}$/";
+        $regexp = "/^[\w\-_ ]{{$wordLength}}$/";
       }
       elseif ($wordFormat == '9') {
         $regexp = "/^[\d ]{{$wordLength}}$/";

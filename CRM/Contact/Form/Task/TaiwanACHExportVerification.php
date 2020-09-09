@@ -66,7 +66,12 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     $values = $this->exportValues();
     if (!$values['is_overwrite'] && $values['export_format'] == 'txt') {
       $dates = date("Ymd", strtotime($values['datetime']));
-      $entity_table = 'civicrm_contribution_taiwanach_verification';
+      if ($values['payment_type'] == CRM_Contribute_BAO_TaiwanACH::BANK) {
+        $entity_table = 'civicrm_contribution_taiwanach_verification_bank';
+      }
+      else {
+        $entity_table = 'civicrm_contribution_taiwanach_verification_post';
+      }
       $lastInvoiceId = CRM_Core_DAO::singleValueQuery("SELECT entity_id FROM civicrm_log WHERE entity_table = '$entity_table' AND entity_id = %1", array(1 => array($dates, 'String')));
       if (!empty($lastInvoiceId)) {
         $session = CRM_Core_Session::singleton();

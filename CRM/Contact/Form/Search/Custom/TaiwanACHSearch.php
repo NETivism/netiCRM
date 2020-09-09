@@ -410,7 +410,7 @@ $having
     $query->fetch();
     
     if ($query->amount) {
-      $amount = CRM_Utils_Money::format($query->amount, '$');
+      $amount = CRM_Utils_Money::format($query->amount);
       $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', array(1 => $amount));
     }
 
