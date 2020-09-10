@@ -951,6 +951,9 @@ WHERE  contribution_id = {$this->_id}
     $this->assign('receipt_id_setting', CRM_Utils_System::url("civicrm/admin/receipt", 'reset=1'));
 
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
+    unset($status[5]); // In Progress; For recurring
+    unset($status[6]); // Expired; For recurring
+    unset($status[7]); // Paused; For recurring
     // supressing contribution statuses that are NOT relevant to pledges (CRM-5169)
     if ($this->_ppID) {
       $statusName = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
