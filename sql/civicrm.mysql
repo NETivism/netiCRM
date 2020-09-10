@@ -1381,7 +1381,8 @@ CREATE TABLE civicrm_contribution_recur (
      modified_date datetime    COMMENT 'Last updated date for this record. mostly the last time a payment was received',
      cancel_date datetime    COMMENT 'Date this recurring contribution was cancelled by contributor- if we can get access to it',
      end_date datetime    COMMENT 'Date this recurring contribution finished successfully',
-     processor_id varchar(255)    COMMENT 'Possibly needed to store a unique identifier for this recurring payment order - if this is available from the processor??',
+     processor_id int unsigned    COMMENT 'FK to payment processor',
+     external_id varchar(255)    COMMENT 'Possibly needed to store a unique identifier for this recurring payment order - if this is available from the processor??',
      trxn_id varchar(255)    COMMENT 'unique transaction id. may be processor id, bank id + trans id, or account number + check number... depending on payment_method',
      invoice_id varchar(255)    COMMENT 'unique invoice id, system generated or passed in',
      contribution_status_id int unsigned   DEFAULT 1 ,
@@ -1406,7 +1407,8 @@ CREATE TABLE civicrm_contribution_recur (
   )
   
 ,      
-     CONSTRAINT FK_civicrm_contribution_recur_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
+     CONSTRAINT FK_civicrm_contribution_recur_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_contribution_recur_processor_id FOREIGN KEY (processor_id) REFERENCES civicrm_payment_processor(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

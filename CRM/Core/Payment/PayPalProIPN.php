@@ -144,8 +144,8 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
       case 'recurring_payment_profile_created':
         $recur->create_date = $now;
         $recur->contribution_status_id = 2;
-        $recur->processor_id = $_POST['recurring_payment_id'];
-        $recur->trxn_id = $recur->processor_id;
+        $recur->external_id = $_POST['recurring_payment_id'];
+        $recur->trxn_id = $recur->external_id;
         $subscriptionPaymentStatus = CRM_Core_Payment::RECURRING_PAYMENT_START;
         $sendNotification = TRUE;
         break;

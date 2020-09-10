@@ -100,10 +100,22 @@
   </field>
   <field>   
       <name>processor_id</name>
+      <type>int unsigned</type>
+      <comment>FK to payment processor</comment>   
+      <add>1.6</add>   
+  </field>  
+  <foreignKey> 
+       <name>processor_id</name> 
+       <table>civicrm_payment_processor</table> 
+       <key>id</key> 
+       <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>   
+      <name>external_id</name>
       <type>varchar</type>   
       <length>255</length>
       <comment>Possibly needed to store a unique identifier for this recurring payment order - if this is available from the processor??</comment>   
-      <add>1.6</add>   
+      <add>4.0</add>   
   </field>  
   <field>        
       <name>trxn_id</name>     

@@ -70,7 +70,7 @@ class CiviContributeProcessor {
                                      'l_period2'        => 'lol',
                                      'invnum'           => 'invoice_id',
                                      'subscriptiondate' => 'start_date',
-                                     'subscriptionid'   => 'processor_id',
+                                     'subscriptionid'   => 'external_id',
                                      'timestamp'        => 'modified_date',
                                      ),
               );

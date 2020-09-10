@@ -644,7 +644,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
       // see if a recurring record already exists
       require_once 'CRM/Contribute/BAO/ContributionRecur.php';
       $recurring = new CRM_Contribute_BAO_ContributionRecur;
-      $recurring->processor_id = $params['processor_id'];
+      $recurring->external_id = $params['external_id'];
       if (!$recurring->find(TRUE)) {
         $recurring = new CRM_Contribute_BAO_ContributionRecur;
         $recurring->invoice_id = $params['invoice_id'];

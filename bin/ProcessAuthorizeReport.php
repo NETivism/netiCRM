@@ -538,7 +538,7 @@ class CRM_ProcessAuthorizeReport {
                 }
 
                 $recur->start_date = $mail_date;
-                $recur->processor_id = $subscriptionId;
+                $recur->external_id = $subscriptionId;
                 $recur->trxn_id = $subscriptionId;
                 $recur->contribution_status_id = _CRM_PROCESS_AUTHORIZE_REPORT_STATUS_CURRENT;
 
@@ -561,7 +561,7 @@ class CRM_ProcessAuthorizeReport {
                 }
             }
             else {
-                $recur->processor_id = $subscriptionId;
+                $recur->external_id = $subscriptionId;
                 if ( !$recur->find( true ) ) {
                     $this->_addToSummary("THE RECURRING TRANSACTION FOR SUBSCRIPTION $subscriptionId COULD NOT BE FOUND. A TRANSACTION HAS OCCURED THAT WAS NOT EXPECTED.  PLEASE REVIEW $csv_name." );
                     continue;
