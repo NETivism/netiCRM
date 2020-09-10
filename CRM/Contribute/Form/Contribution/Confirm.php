@@ -863,10 +863,9 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     }
 
     if ($params['payment_processor']) {
-      $contribParams += array(
-        'payment_processor_id' => $params['payment_processor'],
-      );
+      $contribParams['payment_processor_id'] = $params['payment_processor'];
     }
+
     if (!$pending && $result) {
       $contribParams += array(
         'fee_amount' => CRM_Utils_Array::value('fee_amount', $result),
@@ -1136,6 +1135,9 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $recurParams['frequency_interval'] = $params['frequency_interval'];
     $recurParams['installments'] = $params['installments'];
     $recurParams['contribution_type_id'] = $params['contribution_type_id'];
+    if (!empty($params['payment_processor'])) {
+      $recurParams['processor_id'] = $params['payment_processor'];
+    }
 
     if ($this->_action & CRM_Core_Action::PREVIEW) {
       $recurParams["is_test"] = 1;
