@@ -1514,22 +1514,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     //   'SMS'
     // );
 
-    $details = $text;
-
-    $activitySubject = $activityParams['activity_subject'];
-    $activityParams = array(
-      'source_contact_id' => $userID,
-      'activity_type_id' => $activityTypeID,
-      'activity_date_time' => date('YmdHis'),
-      'subject' => $activitySubject,
-      'details' => $details,
-      'status_id' => CRM_Utils_Array::key('Completed',CRM_Core_PseudoConstant::activityStatus()),
-      // 'status_id' => CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity', 'status_id', 'Completed'),
-    );
-
-    $activity = self::create($activityParams);
-    $activityID = $activity->id;
-
     $returnProperties = array();
 
     if (isset($messageToken['contact'])) {
@@ -1579,19 +1563,58 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $smsParams['To'] = '';
       }
 
+      $activitySubject = $activityParams['activity_subject'];
+      $activityParams = array(
+        'source_contact_id' => $userID,
+        'activity_type_id' => $activityTypeID,
+        'activity_date_time' => date('YmdHis'),
+        'subject' => $activitySubject,
+        'details' => $tokenText,
+        'status_id' => CRM_Utils_Array::key('Scheduled', CRM_Core_PseudoConstant::activityStatus('name')),
+      );
+
+      $activity = self::create($activityParams);
+
+      $message = '';
+      $isSuccess = FALSE;
       $sendResult = self::sendSMSMessage(
         $contactId,
         $tokenText,
         $smsParams,
-        $activityID,
+        $activity->id,
         $userID
       );
+
       $activity->details .= nl2br("\n\n".$sendResult);
+      if (preg_match('/^statuscode=(.+)\r?$/m', $sendResult, $findResult)) {
+        $resultKey = $findResult[1];
+        if ($resultKey == 1) {
+          // Send Success
+          $isSuccess = TRUE;
+          $activity->status_id = CRM_Utils_Array::key('Completed', CRM_Core_PseudoConstant::activityStatus('name'));
+        }
+        else{
+          // Send failed
+          $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
+          if (preg_match('/^Duplicate=Y\r?$/m', $sendResult)) {
+            $message = ts('Duplicated message');
+          }
+          elseif (preg_match('/^Error=(.+)\r?$/m', $sendResult, $findError)) {
+            $message = $findError[1];
+          }
+          else {
+            $message = ts('Unknown error');
+          }
+        }
+      }
+      else {
+        $message = ts('Unknown error');
+      }
       $activity->save();
 
-      if (PEAR::isError($sendResult)) {
+      if (!$isSuccess) {
         // Collect all of the PEAR_Error objects
-        $errMsgs[] = $sendResult;
+        $errMsgs[] = !empty($message) ? $message : $sendResult;
       }
       else {
         $success++;

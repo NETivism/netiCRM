@@ -181,6 +181,10 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
       $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
+    elseif ($activityTypeId == $activityTypeIds['SMS']) {
+      $url = 'civicrm/activity/view';
+      $qsView = "action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+    }
     else {
       $showUpdate = $showDelete = TRUE;
       $url = 'civicrm/contact/view/activity';

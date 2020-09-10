@@ -47805,3 +47805,6 @@ msgstr ""
 
 msgid "Give your supporters a thoughtful birthday card, or a more meaningful model, invite supporters to launch a \"birthday donation\" on their birthdays, so that supporters and friends can give blessings to the birthday supporters and gather them into a more meaningful charity!"
 msgstr ""
+
+msgid "Duplicated message"
+msgstr ""

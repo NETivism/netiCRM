@@ -457,10 +457,10 @@ class CRM_Contact_Form_Task_SMSCommon {
         $status .= '<li>' . $errMsg . '</li>';
       }
       $status .= '</ul>';
-      CRM_Core_Session::setStatus($status, ts('One Message Not Sent', array(
+      CRM_Core_Session::setStatus(ts('One Message Not Sent', array(
             'count' => count($sent),
             'plural' => '%count Messages Not Sent',
-          )), 'info');
+          )) . $status, 'info');
     }
     else {
       //Display the name and number of contacts for those sms is not sent.
