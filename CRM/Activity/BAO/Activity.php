@@ -1618,20 +1618,23 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       );
 
       $activity->details .= nl2br("\n\n".$sendResult);
-      if (preg_match('/^statuscode=(.+)\r?$/m', $sendResult, $findResult)) {
+      if (preg_match('/^statuscode=(\w+)\r?$/m', $sendResult, $findResult)) {
         $resultKey = $findResult[1];
-        if ($resultKey == 1) {
+        if (CRM_Utils_Array::crmInArray($resultKey, array(0,1,2,3,4))) {
           // Send Success
           $isSuccess = TRUE;
           $activity->status_id = CRM_Utils_Array::key('Completed', CRM_Core_PseudoConstant::activityStatus('name'));
-        }
-        else{
-          // Send failed
-          $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
           if (preg_match('/^Duplicate=Y\r?$/m', $sendResult)) {
+            // Send failed
+            $isSuccess = FALSE;
+            $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
             $message = ts('Duplicated message');
           }
-          elseif (preg_match('/^Error=(.+)\r?$/m', $sendResult, $findError)) {
+        }
+        else {
+          // Send failed
+          $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
+          if (preg_match('/^Error=(\w+)\r?$/m', $sendResult, $findError)) {
             $message = $findError[1];
           }
           else {
