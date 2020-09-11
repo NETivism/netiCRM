@@ -163,7 +163,7 @@
       },
 
       prepareRecurBtnMsg: function(){
-        var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg">'+this.singleContribMsgText+'</div></div>');
+        var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg"><div class="error-msg-inner">'+this.singleContribMsgText+'</div></div></div>');
         var $singleBtn = this.createGreyBtn(ts['One-time']);
         $singleBtn.find('a').click(function(event){
           $msgBox.animate({opacity: 0},500,function(){
