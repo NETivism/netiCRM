@@ -60,6 +60,7 @@ window.nmEditor = {
 		"Edit Background": "{/literal}{ts}Edit Background{/ts}{literal}",
 
 		// Confirm
+		"Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?" : "{/literal}{ts}Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?{/ts}{literal}",
 		"Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?" : "{/literal}{ts}Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?{/ts}{literal}",
 		"Are your sure to use template to replace your work? You will lose any customizations you have made." : "{/literal}{ts}Are your sure to use template to replace your work? You will lose any customizations you have made.{/ts}{literal}"
   },

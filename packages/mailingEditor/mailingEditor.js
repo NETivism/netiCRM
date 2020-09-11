@@ -1320,7 +1320,18 @@
 
       // trigger panel open
       $("#Upload").off("change").on("change", ".form-radio[name='upload_type']", function() {
-        _checkPanelOpen();
+        let val = this.value;
+        if (val == 2) {
+          let confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?"];
+
+          if (!window.confirm(confirmMessage)) {
+            $(".form-radio[name='upload_type'][value='1']")[0].click();
+          }
+          _checkPanelOpen();
+        }
+        else {
+          _checkPanelOpen();
+        }
       });
       // check default open
       _checkPanelOpen();
