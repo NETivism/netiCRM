@@ -198,7 +198,9 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
         // restrict permission when profile is reserved
         if ($dao->is_reserved && !CRM_Core_Permission::check('access CiviCRM')) {
-          CRM_Utils_System::permissionDenied();
+          CRM_Core_Error::fatal(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.', array(
+            1 => $this->_gid
+          )));
         }
       }
       $dao->free();
