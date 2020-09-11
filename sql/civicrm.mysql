@@ -3848,7 +3848,8 @@ CREATE TABLE civicrm_membership_block (
      renewal_title varchar(255)    COMMENT 'Title for renewal',
      renewal_text text    COMMENT 'Text to display for member renewal',
      is_required tinyint   DEFAULT 0 COMMENT 'Is membership sign up optional',
-     is_active tinyint   DEFAULT 1 COMMENT 'Is this membership_block enabled' 
+     is_active tinyint   DEFAULT 1 COMMENT 'Is this membership_block enabled',
+     is_renewal_only tinyint   DEFAULT 0 COMMENT 'Is this membership_block only used for renewal' 
 ,
     PRIMARY KEY ( id )
  
