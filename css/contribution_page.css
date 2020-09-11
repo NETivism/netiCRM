@@ -305,10 +305,16 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 .error-msg {
     position: absolute;
     background: white;
-    padding: 50px;
     border-radius: 10px;
     z-index: 100;
     cursor: default;
+}
+.error-msg-inner {
+  overflow-y: hidden;
+  margin-bottom: 20px;
+}
+.error-msg-inner:hover {
+  overflow-y: scroll;
 }
 
 .custom-step-info{
@@ -381,10 +387,16 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 
 
   .error-msg {
-    top: 30%;
-    left: 30%;
-    right: 30%;
+    padding: 50px;
+    top: 50%;
+    left: 50%;
+    max-width: 70vw;
+    max-height: 70vh;
+    transform: translate(-50%, -50%);
   }
+  .error-msg-inner {
+      max-height: calc(70vh - 130px);
+    }
 
   .menu{
     background: white;
@@ -442,6 +454,12 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     transform: translateY(-50%);
     left: 10px;
     right: 10px;
+    max-height: 100vh;
+    padding: 15px;
+  }
+  .error-msg-inner {
+    overflow-y: scroll;
+    max-height: calc(100vh - 130px);
   }
   .menu{
     display: none;
