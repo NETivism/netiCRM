@@ -47805,3 +47805,22 @@ msgstr ""
 
 msgid "Give your supporters a thoughtful birthday card, or a more meaningful model, invite supporters to launch a \"birthday donation\" on their birthdays, so that supporters and friends can give blessings to the birthday supporters and gather them into a more meaningful charity!"
 msgstr ""
+
+msgid "Duplicated message"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Text Color"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit background of the button"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit background of the block"
+msgstr ""

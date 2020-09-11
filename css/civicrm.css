@@ -5371,6 +5371,51 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
   margin: 15px 0;
 }
+
+/* Mailing */
+/* Mailing: Test */
+.crm-container .crm-test-mail-preview {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  list-style: none;
+}
+.crm-container .crm-test-mail-preview button {
+  margin: 0 10px;
+  font-size: 1.125rem;
+  color: #3F51B5;
+  cursor: pointer;
+  border: 1px solid #3F51B5;
+  background: #fff;
+}
+.crm-container .crm-test-mail-preview button.is-active {
+  color: #fff;
+  background: #3F51B5;
+}
+.crm-container .crm-test-mail-preview-frame-wrapper {
+  position: relative;
+}
+.crm-container .crm-test-mail-preview-frame-wrapper[data-mode="mobile"] {
+  width: 360px;
+  height: 640px;
+}
+.crm-container .crm-test-mail-preview-frame-wrapper[data-mode="normal"] {
+  width: 100%;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  width: auto !important;
+  height: 0;
+  overflow: hidden;
+}
+.crm-container .crm-test-mail-preview-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
 /* subscribe */
 .crm-container form[action*="/civicrm/mailing/subscribe"] .crm-submit-buttons {
   text-align: center;

@@ -52,6 +52,7 @@ window.nmEditor = {
 		"Block" : "{/literal}{ts}Block{/ts}{literal}",
 		"Size" : "{/literal}{ts}Size{/ts}{literal}",
 		"Color" : "{/literal}{ts}Color{/ts}{literal}",
+		"Text Color" : "{/literal}{ts}Text Color{/ts}{literal}",
 		"Background" : "{/literal}{ts}Background{/ts}{literal}",
 
 		// Block
@@ -60,6 +61,7 @@ window.nmEditor = {
 		"Edit Background": "{/literal}{ts}Edit Background{/ts}{literal}",
 
 		// Confirm
+		"You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?" : "{/literal}{ts}You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?{/ts}{literal}",
 		"Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?" : "{/literal}{ts}Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?{/ts}{literal}",
 		"Are your sure to use template to replace your work? You will lose any customizations you have made." : "{/literal}{ts}Are your sure to use template to replace your work? You will lose any customizations you have made.{/ts}{literal}"
   },
@@ -218,7 +220,7 @@ window.nmEditor = {
 											</div>
 										</div>
 										<div id="nme-title-setting-color" class="nme-setting-field" data-field-type="color">
-											<div class="nme-setting-field-label">{ts}Color{/ts}</div>
+											<div class="nme-setting-field-label">{ts}Text Color{/ts}</div>
 											<div class="nme-setting-field-content"><div id="nme-title-setting-color-picker" class="nme-setting-picker"></div></div>
 										</div>
 									</div>
@@ -227,7 +229,7 @@ window.nmEditor = {
 									<h3 class="nme-setting-section-title">{ts}Paragraph{/ts}</h3>
 									<div class="nme-setting-section-content">
 										<div id="nme-paragraph-setting-color" class="nme-setting-field" data-field-type="color">
-											<div class="nme-setting-field-label">{ts}Color{/ts}</div>
+											<div class="nme-setting-field-label">{ts}Text Color{/ts}</div>
 											<div class="nme-setting-field-content"><div id="nme-paragraph-setting-color-picker" class="nme-setting-picker"></div></div>
 										</div>
 									</div>
@@ -236,7 +238,7 @@ window.nmEditor = {
 									<h3 class="nme-setting-section-title">{ts}Button{/ts}</h3>
 									<div class="nme-setting-section-content">
 										<div id="nme-button-setting-color" class="nme-setting-field" data-field-type="color">
-											<div class="nme-setting-field-label">{ts}Color{/ts}</div>
+											<div class="nme-setting-field-label">{ts}Text Color{/ts}</div>
 											<div class="nme-setting-field-content"><div id="nme-button-setting-color-picker" class="nme-setting-picker"></div></div>
 										</div>
 										<div id="nme-button-setting-bgcolor" class="nme-setting-field" data-field-type="background-color">
