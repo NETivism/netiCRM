@@ -136,9 +136,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $this->_params['amount_level'] = $this->get('amount_level');
       }
       else if ($this->_params['amount']) {
-          $this->_params['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.{$this->_id}",
-          $this->_params['amount']
-        );
+        CRM_Contribute_Form_Contribution_Main::computeAmount($this->_params, $this);
       }
 
       $this->_params['currencyID'] = $config->defaultCurrency;

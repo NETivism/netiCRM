@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-09-10 10:41+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2020-09-11 08:40+0000\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48083,3 +48083,22 @@ msgstr "給您的支持者獻上貼心的生日賀卡，或更有意義的模式
 
 msgid "Duplicated message"
 msgstr "重覆的訊息"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid ""
+"You are switching to 'Compose On-screen' mode, the content of the "
+"traditional editor will be replaced. Are you sure you want to switch to "
+"'Compose On-screen' mode?"
+msgstr "您正要切換成「線上編寫」模式，因為「傳統編輯器」與「線上編寫」兩種模式並不會同步內容，所以「傳統編輯器」的內容會在切換成「線上編寫」模式後被取代，您確定要切換成「線上編寫」模式嗎？"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Text Color"
+msgstr "文字色彩"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit background of the button"
+msgstr "編輯按鈕的背景"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit background of the block"
+msgstr "編輯區塊的背景"
