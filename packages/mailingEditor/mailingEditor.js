@@ -1394,6 +1394,9 @@
       if (!_nmePanels.initialized) {
         _nmePanels.init();
       }
+      else {
+        _nmeGlobalSetting.setPickerColor(_data.settings.styles);
+      }
 
       if (!_nmePreview.initialized) {
         _nmePreview.init();
@@ -1452,128 +1455,322 @@
     }
   };
 
-  var _nmeGlobalSetting = function() {
-    var pickrInit = function(elemID, defaultColor) {
-      let targetSelector = "#" + elemID,
-          $target = $(targetSelector);
+  var _nmeGlobalSetting = {
+    init: function() {
+      var pickrInit = function(elemID, defaultColor) {
+        let targetSelector = "#" + elemID,
+            $target = $(targetSelector);
 
-      defaultColor = typeof defaultColor !== undefined ? defaultColor : "#42445a";
+        defaultColor = typeof defaultColor !== undefined ? defaultColor : "#42445a";
 
-      if (_domElemExist($target)) {
-        const pickr = new Pickr({
-          el: targetSelector,
-          theme: 'nano',
-          default: defaultColor,
-          lockOpacity: true,
-          swatches: [
-            '#F44336',
-            '#E91E63',
-            '#9C27B0',
-            '#673AB7',
-            '#3F51B5',
-            '#2196F3',
-            '#03A9F4',
-            '#00BCD4',
-            '#009688',
-            '#4CAF50',
-            '#8BC34A',
-            '#CDDC39',
-            '#FFEB3B',
-            '#FFC107',
-            '#FF9800',
-            '#FF5722',
-            '#795548',
-            '#9E9E9E',
-            '#607D8B',
-            '#000000',
-            '#FFFFFF'
-          ],
-          components: {
-            // Main components
-            preview: true,
-            opacity: true,
-            hue: true,
+        if (_domElemExist($target)) {
+          const pickr = new Pickr({
+            el: targetSelector,
+            theme: 'nano',
+            default: defaultColor,
+            lockOpacity: true,
+            swatches: [
+              '#F44336',
+              '#E91E63',
+              '#9C27B0',
+              '#673AB7',
+              '#3F51B5',
+              '#2196F3',
+              '#03A9F4',
+              '#00BCD4',
+              '#009688',
+              '#4CAF50',
+              '#8BC34A',
+              '#CDDC39',
+              '#FFEB3B',
+              '#FFC107',
+              '#FF9800',
+              '#FF5722',
+              '#795548',
+              '#9E9E9E',
+              '#607D8B',
+              '#000000',
+              '#FFFFFF'
+            ],
+            components: {
+              // Main components
+              preview: true,
+              opacity: true,
+              hue: true,
 
-            // Input / output Options
-            interaction: {
-              hex: true,
-              input: true
+              // Input / output Options
+              interaction: {
+                hex: true,
+                input: true
+              }
             }
+          });
+
+          pickr.on("init", function(instance) {
+            let pickrID = "pickr-" + elemID;
+            $(pickr._root.button).attr("id", pickrID);
+            $(pickr._root.button).addClass("pickr-initialized");
+            _pickrs[pickrID] = instance;
+          });
+
+          pickr.on("change", function(color, instance) {
+            pickr.applyColor();
+          });
+
+          pickr.on("save", function(color, instance) {
+            let $button = $(pickr._root.button),
+                $field = $button.closest(".nme-setting-field"),
+                fieldType = $field.data("field-type"),
+                $section = $button.closest(".nme-setting-section"),
+                group = $section.data("setting-group"),
+                colorVal = color.toHEXA().toString(),
+                $block,
+                $target;
+
+            // Update color to settings object
+            _data["settings"]["styles"][group][fieldType] = colorVal;
+
+            if (group == "page") {
+              if (fieldType == "background-color") {
+                $target = $(_main).find(".nme-body-table");
+
+                // Update color to dom
+                $target.css(fieldType, colorVal);
+                $target.attr("bgcolor", colorVal);
+              }
+            }
+
+            if (group == "block") {
+              $block = $("#nme-mail-body .nme-block");
+
+              if (fieldType == "background-color") {
+                $target = $block.find("[data-settings-target='block']");
+
+                // Update color to dom
+                $target.css(fieldType, colorVal);
+                $target.attr("bgcolor", colorVal);
+
+                $block.each(function() {
+                  let $this = $(this),
+                      section = $this.data("section"),
+                      blockID = $this.data("id"),
+                      parentID = $this.data("parent-id"),
+                      index = $this.data("index");
+
+                  // Update color to json
+                  if (parentID) {
+                    if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                    }
+                  }
+                  else {
+                    if (_data["sections"][section]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                    }
+                  }
+                });
+              }
+            }
+
+            if (group == "title") {
+              $block = $(".nme-block[data-type='title']");
+
+              if (fieldType == "color") {
+                $target = $block.find(".nme-elem");
+                $target.css(fieldType, colorVal);
+
+                $block.each(function() {
+                  let $this = $(this),
+                      section = $this.data("section"),
+                      blockID = $this.data("id"),
+                      parentID = $this.data("parent-id"),
+                      index = $this.data("index");
+
+                  // Update color to json
+                  if (parentID) {
+                    if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                    }
+                  }
+                  else {
+                    if (_data["sections"][section]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                    }
+                  }
+                });
+              }
+            }
+
+            if (group == "paragraph") {
+              $block = $(".nme-block[data-type='paragraph']:not([data-elem-override='true'])");
+
+              if (fieldType == "color") {
+                $target = $block.find(".nme-elem");
+                $target.css(fieldType, colorVal);
+                $target.find("p").each(function() {
+                  let $p = $(this);
+                  if ($p.find("span").length) {
+                    $p.find("span").css(fieldType, colorVal);
+                  }
+                  else {
+                    $p.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
+                  }
+                });
+
+                $block.each(function() {
+                  let $this = $(this),
+                      section = $this.data("section"),
+                      blockID = $this.data("id"),
+                      parentID = $this.data("parent-id"),
+                      index = $this.data("index"),
+                      $field = $block.find(".nme-elem");
+
+                  // Reinitialize x-editable
+                  $field.removeClass("editable-initialized");
+                  $field.editable("destroy");
+                  $field.editable();
+
+                  // Update color to json
+                  if (parentID) {
+                    if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                    }
+                  }
+                  else {
+                    if (_data["sections"][section]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                    }
+                  }
+                });
+              }
+            }
+
+            if (group == "button") {
+              $block = $(".nme-block[data-type='button']:not([data-elem-override='true'])");
+
+              if (fieldType == "color") {
+                $target = $block.find(".nme-elem");
+                $target.css(fieldType, colorVal);
+
+                $block.each(function() {
+                  let $this = $(this),
+                      section = $this.data("section"),
+                      blockID = $this.data("id"),
+                      parentID = $this.data("parent-id"),
+                      index = $this.data("index");
+
+                  // Update color to json
+                  if (parentID) {
+                    if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                    }
+                  }
+                  else {
+                    if (_data["sections"][section]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                    }
+                  }
+                });
+              }
+
+              if (fieldType == "background-color") {
+                $target = $block.find("[data-settings-target='elemContainer']");
+
+                // Update color to dom
+                $target.css(fieldType, colorVal);
+                $target.attr("bgcolor", colorVal);
+
+                $block.each(function() {
+                  let $this = $(this),
+                      section = $this.data("section"),
+                      blockID = $this.data("id"),
+                      parentID = $this.data("parent-id"),
+                      index = $this.data("index");
+
+                  // Update color to json
+                  if (parentID) {
+                    if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                    }
+                  }
+                  else {
+                    if (_data["sections"][section]["blocks"][blockID]) {
+                      _data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                    }
+                  }
+                });
+              }
+            }
+
+            _nmeData.update();
+          });
+        }
+      };
+
+      if ($(".nme-theme-setting-items").length) {
+        if (!_objIsEmpty(_themes) && !$(".nme-theme-setting-item").length) {
+          for (let i in _themes) {
+            let radio = "<label class='nme-theme-setting-item crm-form-elem crm-form-radio' for='nme-theme-setting-item-" + i + "'>" +
+            "<input value='" + i + "' type='radio' id='nme-theme-setting-item-" + i + "' class='nme-setting-radio form-radio' name='nme-theme-setting'>" +
+            "<span class='elem-label'>" +
+            "<div class='nme-theme-thumb' style='border-left-color: " + _themes[i]["styles"]["page"]["background-color"] + "; border-bottom-color: " + _themes[i]["styles"]["block"]["background-color"] + ";'>" +
+            "</div>" +
+            "</span>" +
+            "</label>";
+            $(".nme-theme-setting-items").append(radio);
+          }
+        }
+      }
+
+      if ($(".nme-setting-picker").length) {
+        $(".nme-setting-picker").each(function() {
+          let $this = $(this),
+              thisID = $this.attr("id"),
+              $field = $this.closest(".nme-setting-field"),
+              fieldType = $field.data("field-type"),
+              $section = $this.closest(".nme-setting-section"),
+              group = $section.data("setting-group"),
+              defaultColor = _data["settings"]["styles"][group][fieldType];
+
+          pickrInit(thisID, defaultColor);
+        });
+      }
+
+      if ($(".nme-setting-select").length) {
+        $(".nme-setting-select").each(function() {
+          let $select = $(this),
+              selectID = $select.attr("id"),
+              $field = $select.closest(".nme-setting-field"),
+              fieldType = $field.data("field-type"),
+              $section = $select.closest(".nme-setting-section"),
+              group = $section.data("setting-group");
+
+          // Set default value to select
+          if (_data["settings"]["styles"][group][fieldType]) {
+            $select.val(_data["settings"]["styles"][group][fieldType]);
           }
         });
 
-        pickr.on("init", function(instance) {
-          let pickrID = "pickr-" + elemID;
-          $(pickr._root.button).attr("id", pickrID);
-          $(pickr._root.button).addClass("pickr-initialized");
-          _pickrs[pickrID] = instance;
-        });
-
-        pickr.on("change", function(color, instance) {
-          pickr.applyColor();
-        });
-
-        pickr.on("save", function(color, instance) {
-          let $button = $(pickr._root.button),
-              $field = $button.closest(".nme-setting-field"),
+        $(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
+          let $select = $(this),
+              selectID = $select.attr("id"),
+              val = $select.val(),
+              $field = $select.closest(".nme-setting-field"),
               fieldType = $field.data("field-type"),
-              $section = $button.closest(".nme-setting-section"),
+              $section = $select.closest(".nme-setting-section"),
               group = $section.data("setting-group"),
-              colorVal = color.toHEXA().toString(),
               $block,
               $target;
 
-          // Update color to settings object
-          _data["settings"]["styles"][group][fieldType] = colorVal;
-
-          if (group == "page") {
-            if (fieldType == "background-color") {
-              $target = $(_main).find(".nme-body-table");
-
-              // Update color to dom
-              $target.css(fieldType, colorVal);
-              $target.attr("bgcolor", colorVal);
-            }
-          }
-
-          if (group == "block") {
-            $block = $("#nme-mail-body .nme-block");
-
-            if (fieldType == "background-color") {
-              $target = $block.find("[data-settings-target='block']");
-
-              // Update color to dom
-              $target.css(fieldType, colorVal);
-              $target.attr("bgcolor", colorVal);
-
-              $block.each(function() {
-                let $this = $(this),
-                    section = $this.data("section"),
-                    blockID = $this.data("id"),
-                    parentID = $this.data("parent-id"),
-                    index = $this.data("index");
-
-                // Update color to json
-                if (parentID) {
-                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
-                  }
-                }
-                else {
-                  if (_data["sections"][section]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
-                  }
-                }
-              });
-            }
-          }
+          // Update value to settings object
+          _data["settings"]["styles"][group][fieldType] = val;
 
           if (group == "title") {
             $block = $(".nme-block[data-type='title']");
 
-            if (fieldType == "color") {
+            if (fieldType == "font-size") {
               $target = $block.find(".nme-elem");
-              $target.css(fieldType, colorVal);
+              $target.css(fieldType, val);
 
               $block.each(function() {
                 let $this = $(this),
@@ -1585,113 +1782,12 @@
                 // Update color to json
                 if (parentID) {
                   if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = val;
                   }
                 }
                 else {
                   if (_data["sections"][section]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
-                  }
-                }
-              });
-            }
-          }
-
-          if (group == "paragraph") {
-            $block = $(".nme-block[data-type='paragraph']:not([data-elem-override='true'])");
-
-            if (fieldType == "color") {
-              $target = $block.find(".nme-elem");
-              $target.css(fieldType, colorVal);
-              $target.find("p").each(function() {
-                let $p = $(this);
-                if ($p.find("span").length) {
-                  $p.find("span").css(fieldType, colorVal);
-                }
-                else {
-                  $p.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
-                }
-              });
-
-              $block.each(function() {
-                let $this = $(this),
-                    section = $this.data("section"),
-                    blockID = $this.data("id"),
-                    parentID = $this.data("parent-id"),
-                    index = $this.data("index"),
-                    $field = $block.find(".nme-elem");
-
-                // Reinitialize x-editable
-                $field.removeClass("editable-initialized");
-                $field.editable("destroy");
-                $field.editable();
-
-                // Update color to json
-                if (parentID) {
-                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
-                  }
-                }
-                else {
-                  if (_data["sections"][section]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
-                  }
-                }
-              });
-            }
-          }
-
-          if (group == "button") {
-            $block = $(".nme-block[data-type='button']:not([data-elem-override='true'])");
-
-            if (fieldType == "color") {
-              $target = $block.find(".nme-elem");
-              $target.css(fieldType, colorVal);
-
-              $block.each(function() {
-                let $this = $(this),
-                    section = $this.data("section"),
-                    blockID = $this.data("id"),
-                    parentID = $this.data("parent-id"),
-                    index = $this.data("index");
-
-                // Update color to json
-                if (parentID) {
-                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
-                  }
-                }
-                else {
-                  if (_data["sections"][section]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
-                  }
-                }
-              });
-            }
-
-            if (fieldType == "background-color") {
-              $target = $block.find("[data-settings-target='elemContainer']");
-
-              // Update color to dom
-              $target.css(fieldType, colorVal);
-              $target.attr("bgcolor", colorVal);
-
-              $block.each(function() {
-                let $this = $(this),
-                    section = $this.data("section"),
-                    blockID = $this.data("id"),
-                    parentID = $this.data("parent-id"),
-                    index = $this.data("index");
-
-                // Update color to json
-                if (parentID) {
-                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
-                  }
-                }
-                else {
-                  if (_data["sections"][section]["blocks"][blockID]) {
-                    _data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = val;
                   }
                 }
               });
@@ -1701,116 +1797,29 @@
           _nmeData.update();
         });
       }
-    };
 
-    if ($(".nme-theme-setting-items").length) {
-      if (!_objIsEmpty(_themes) && !$(".nme-theme-setting-item").length) {
-        for (let i in _themes) {
-          let radio = "<label class='nme-theme-setting-item crm-form-elem crm-form-radio' for='nme-theme-setting-item-" + i + "'>" +
-          "<input value='" + i + "' type='radio' id='nme-theme-setting-item-" + i + "' class='nme-setting-radio form-radio' name='nme-theme-setting'>" +
-          "<span class='elem-label'>" +
-          "<div class='nme-theme-thumb' style='border-left-color: " + _themes[i]["styles"]["page"]["background-color"] + "; border-bottom-color: " + _themes[i]["styles"]["block"]["background-color"] + ";'>" +
-          "</div>" +
-          "</span>" +
-          "</label>";
-          $(".nme-theme-setting-items").append(radio);
-        }
-      }
-    }
-
-    if ($(".nme-setting-picker").length) {
-      $(".nme-setting-picker").each(function() {
-        let $this = $(this),
-            thisID = $this.attr("id"),
-            $field = $this.closest(".nme-setting-field"),
+      $(".nme-setting-radio").on("change", function() {
+        let $radio = $(this),
+            radioID = $radio.attr("id"),
+            radioName = $radio.attr("name"),
+            val = $radio.val(),
+            $field = $radio.closest(".nme-setting-field"),
             fieldType = $field.data("field-type"),
-            $section = $this.closest(".nme-setting-section"),
-            group = $section.data("setting-group"),
-            defaultColor = _data["settings"]["styles"][group][fieldType];
-
-        pickrInit(thisID, defaultColor);
-      });
-    }
-
-    if ($(".nme-setting-select").length) {
-      $(".nme-setting-select").each(function() {
-        let $select = $(this),
-            selectID = $select.attr("id"),
-            $field = $select.closest(".nme-setting-field"),
-            fieldType = $field.data("field-type"),
-            $section = $select.closest(".nme-setting-section"),
-            group = $section.data("setting-group");
-
-
-        // Set default value to select
-        if (_data["settings"]["styles"][group][fieldType]) {
-          $select.val(_data["settings"]["styles"][group][fieldType]);
-        }
-      });
-
-      $(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
-        let $select = $(this),
-            selectID = $select.attr("id"),
-            val = $select.val(),
-            $field = $select.closest(".nme-setting-field"),
-            fieldType = $field.data("field-type"),
-            $section = $select.closest(".nme-setting-section"),
+            $section = $radio.closest(".nme-setting-section"),
             group = $section.data("setting-group"),
             $block,
             $target;
 
-        // Update value to settings object
-        _data["settings"]["styles"][group][fieldType] = val;
-
-        if (group == "title") {
-          $block = $(".nme-block[data-type='title']");
-
-          if (fieldType == "font-size") {
-            $target = $block.find(".nme-elem");
-            $target.css(fieldType, val);
-
-            $block.each(function() {
-              let $this = $(this),
-                  section = $this.data("section"),
-                  blockID = $this.data("id"),
-                  parentID = $this.data("parent-id"),
-                  index = $this.data("index");
-
-              // Update color to json
-              if (parentID) {
-                if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = val;
-                }
-              }
-              else {
-                if (_data["sections"][section]["blocks"][blockID]) {
-                  _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = val;
-                }
-              }
-            });
-          }
+        if (radioName == "nme-theme-setting") {
+          _nmeGlobalSetting.setPickerColor(_themes[val]["styles"]);
         }
-
-        _nmeData.update();
       });
-    }
-
-    $(".nme-setting-radio").on("change", function() {
-      let $radio = $(this),
-          radioID = $radio.attr("id"),
-          radioName = $radio.attr("name"),
-          val = $radio.val(),
-          $field = $radio.closest(".nme-setting-field"),
-          fieldType = $field.data("field-type"),
-          $section = $radio.closest(".nme-setting-section"),
-          group = $section.data("setting-group"),
-          $block,
-          $target;
-
-      if (radioName == "nme-theme-setting") {
-        for (let group in _themes[val]["styles"]) {
-          for (let fieldType in _themes[val]["styles"][group]) {
-            let colorVal = _themes[val]["styles"][group][fieldType],
+    },
+    setPickerColor: function(styles) {
+      if (!_objIsEmpty(styles)) {
+        for (let group in styles) {
+          for (let fieldType in styles[group]) {
+            let colorVal = styles[group][fieldType],
                 $pickr = $(".nme-setting-section[data-setting-group='" + group + "'] .nme-setting-field[data-field-type='" + fieldType + "'] .pcr-button");
 
             if ($pickr.length) {
@@ -1822,8 +1831,8 @@
           }
         }
       }
-    });
-  };
+    }
+  }
 
   var _nmePreview = {
     initialized: false,
@@ -2506,7 +2515,7 @@
 
       _nmePanelsSelectTpl();
       _nmePanelsAddBlock();
-      _nmeGlobalSetting();
+      _nmeGlobalSetting.init();
       this.initialized = true;
     },
     open: function() {
