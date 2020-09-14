@@ -72,6 +72,12 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     else {
       $this->_recipientsCount = $this->get('count');
     }
+    $mailing = new CRM_Mailing_BAO_Mailing();
+    $mailing->id = $this->_mailingID;
+    $mailing->find(TRUE);
+    if ($mailing->name) {
+      CRM_Utils_System::setTitle($mailing->name);
+    }
   }
 
   /**

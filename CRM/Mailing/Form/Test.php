@@ -159,6 +159,9 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->id = $options['mailing_id'];
     $mailing->find(TRUE);
+    if ($mailing->name) {
+      CRM_Utils_System::setTitle($mailing->name);
+    }
     $fromEmail = $mailing->from_email;
     $replyToEmail = $mailing->replyto_email;
 

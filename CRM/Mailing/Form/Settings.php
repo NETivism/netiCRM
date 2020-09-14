@@ -86,6 +86,9 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
       $dao->override_verp = 1;
       $dao->forward_replies = 1;
       $dao->storeValues($dao, $defaults);
+      if ($dao->name) {
+        CRM_Utils_System::setTitle($dao->name);
+      }
       $defaults['visibility'] = $dao->visibility;
     }
     return $defaults;

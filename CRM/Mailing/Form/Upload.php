@@ -86,6 +86,9 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       $dao->id = $mailingID;
       $dao->find(TRUE);
       $dao->storeValues($dao, $defaults);
+      if ($dao->name) {
+        CRM_Utils_System::setTitle($dao->name);
+      }
 
       //we don't want to retrieve template details once it is
       //set in session
