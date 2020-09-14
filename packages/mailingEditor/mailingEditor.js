@@ -1395,7 +1395,7 @@
         _nmePanels.init();
       }
       else {
-        _nmeGlobalSetting.setPickerColor(_data.settings.styles);
+        _nmeGlobalSetting.updateSettings(_data.settings);
       }
 
       if (!_nmePreview.initialized) {
@@ -1814,6 +1814,39 @@
           _nmeGlobalSetting.setPickerColor(_themes[val]["styles"]);
         }
       });
+    },
+    updateSettings: function(settings) {
+      if (!_objIsEmpty(settings)) {
+        if (!_objIsEmpty(settings.styles)) {
+          if ($(".nme-setting-field").length) {
+            $(".nme-setting-field").each(function() {
+              let $field = $(this),
+                  fieldType = $field.data("field-type"),
+                  $section = $field.closest(".nme-setting-section"),
+                  group = $section.data("setting-group");
+
+              if (group != "theme") {
+                if (settings.styles[group][fieldType] !== "undefined") {
+                  let value = settings.styles[group][fieldType];
+
+                  if ($field.find(".nme-setting-select").length) {
+                    let $select = $field.find(".nme-setting-select");
+                    $select.val(value);
+                  }
+
+                  if ($field.find(".pcr-button").length) {
+                    let $pickr = $field.find(".pcr-button"),
+                        pickrID = $pickr.attr("id"),
+                        pickrIns = _pickrs[pickrID];
+
+                    pickrIns.setColor(value);
+                  }
+                }
+              }
+            });
+          }
+        }
+      }
     },
     setPickerColor: function(styles) {
       if (!_objIsEmpty(styles)) {
