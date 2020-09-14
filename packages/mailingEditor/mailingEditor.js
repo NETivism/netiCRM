@@ -806,7 +806,7 @@
           if (_domElemExist($target)) {
             let blockContent = _tpl.block[blockType],
                 blockEditContent = _tpl.block.edit,
-                blockControlTitle = _blockControlTitle[blockType],
+                blockControlTitle = _blockControlTitle[blockType][_language],
                 blockSortable = "true",
                 blockOverride = typeof block.override !== "undefined" && typeof block.override.block !== "undefined" ? block.override.block : false,
                 elemOverride = typeof block.override !== "undefined" && typeof block.override.elem !== "undefined" ? block.override.elem : false;
@@ -820,7 +820,15 @@
                 blockContent = blockContent.replace("<td valign=\"top\" width=\"600\" style=\"width:600px;\">", "<td valign=\"top\" width=\"100%\" style=\"width:100%;\">");
               }
 
-              blockControlTitle = _blockControlTitle[block.parentType] + "內的" + blockControlTitle;
+              switch (_language) {
+                case "zh_TW":
+                  blockControlTitle = _blockControlTitle[block.parentType][_language] + "內的" + blockControlTitle;
+                  break;
+
+                default:
+                  blockControlTitle = blockControlTitle + " of '" + _blockControlTitle[block.parentType][_language] + "'";
+              }
+
               blockEditContent = blockEditContent.replace(/\[nmeBlockControlTitle\]/g, blockControlTitle);
             }
             else {
@@ -2759,15 +2767,42 @@
 
         // Set mapping to control title of block
         _blockControlTitle = {
-          "header": _ts["Header"],
-          "footer": _ts["Footer"],
-          "title": _ts["Title"],
-          "paragraph": _ts["Paragraph"],
-          "image": _ts["Image"],
-          "button": _ts["Button"],
-          "rc-col-1": _ts["Rich Content: 1 Column"],
-          "rc-col-2": _ts["Rich Content: 2 Column"],
-          "rc-float": _ts["Rich Content: Float"]
+          "header": {
+            "en_US": "Header",
+            "zh_TW": _ts["Header"]
+          },
+          "footer":  {
+            "en_US": "Footer",
+            "zh_TW": _ts["Footer"]
+          },
+          "title": {
+            "en_US": "Title",
+            "zh_TW": _ts["Title"]
+          },
+          "paragraph": {
+            "en_US": "Paragraph",
+            "zh_TW": _ts["Paragraph"]
+          },
+          "image": {
+            "en_US": "Image",
+            "zh_TW": _ts["Image"]
+          },
+          "button": {
+            "en_US": "Button",
+            "zh_TW": _ts["Button"]
+          },
+          "rc-col-1": {
+            "en_US": "Rich Content: 1 Column",
+            "zh_TW": _ts["Rich Content: 1 Column"]
+          },
+          "rc-col-2": {
+            "en_US": "Rich Content: 2 Column",
+            "zh_TW": _ts["Rich Content: 2 Column"]
+          },
+          "rc-float": {
+            "en_US": "Rich Content: Float",
+            "zh_TW": _ts["Rich Content: Float"]
+          },
         };
 
         $.nmEditor.instance = _nme;
