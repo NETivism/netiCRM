@@ -236,13 +236,6 @@ if ( isMailing ) {
             templateExists = false;
         }
 
-        if (templateExists && document.getElementById(prefix + "template").value) {
-            document.getElementById(prefix + "updateDetails").style.display = '';
-        }
-        else {
-            document.getElementById(prefix + "updateDetails").style.display = 'none';
-        }
-
         document.getElementById(prefix + "saveTemplateName").disabled = false;
     }
 
