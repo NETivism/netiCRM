@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-09-11 11:55+0000\n"
+"PO-Revision-Date: 2020-09-14 06:36+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48102,3 +48102,7 @@ msgstr "編輯按鈕的背景"
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Edit background of the block"
 msgstr "編輯區塊的背景"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "You need to specify a template to update."
+msgstr "需要先選擇一個範本，才能勾選更新範本。"
