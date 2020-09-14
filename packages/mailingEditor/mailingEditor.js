@@ -46,6 +46,7 @@
     _container,
     _main = "." + NME_MAIN,
     _panels = "." + NME_PANELS,
+    _blockControlTitle = {},
     _controlIconClass = {
       drag: "zmdi-arrows",
       prev: "zmdi-long-arrow-up",
@@ -804,6 +805,7 @@
           if (_domElemExist($target)) {
             let blockContent = _tpl.block[blockType],
                 blockEditContent = _tpl.block.edit,
+                blockControlTitle = _blockControlTitle[blockType],
                 blockSortable = "true",
                 blockOverride = typeof block.override !== "undefined" && typeof block.override.block !== "undefined" ? block.override.block : false,
                 elemOverride = typeof block.override !== "undefined" && typeof block.override.elem !== "undefined" ? block.override.elem : false;
@@ -816,6 +818,12 @@
               if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
                 blockContent = blockContent.replace("<td valign=\"top\" width=\"600\" style=\"width:600px;\">", "<td valign=\"top\" width=\"100%\" style=\"width:100%;\">");
               }
+
+              blockControlTitle = _blockControlTitle[block.parentType] + "內的" + blockControlTitle;
+              blockEditContent = blockEditContent.replace(/\[nmeBlockControlTitle\]/g, blockControlTitle);
+            }
+            else {
+              blockEditContent = blockEditContent.replace(/\[nmeBlockControlTitle\]/g, blockControlTitle);
             }
 
             blockEditContent = blockEditContent.replace(/\[nmeBlockContent\]/g, blockContent);
@@ -2741,6 +2749,19 @@
           buttonsTpl = buttonsTpl.replace(">cancel</button>", ">" + _ts["Cancel"] + "</button>");
           $.fn.editableform.buttons = buttonsTpl;
         }
+
+        // Set mapping to control title of block
+        _blockControlTitle = {
+          "header": _ts["Header"],
+          "footer": _ts["Footer"],
+          "title": _ts["Title"],
+          "paragraph": _ts["Paragraph"],
+          "image": _ts["Image"],
+          "button": _ts["Button"],
+          "rc-col-1": _ts["Rich Content: 1 Column"],
+          "rc-col-2": _ts["Rich Content: 2 Column"],
+          "rc-float": _ts["Rich Content: Float"]
+        };
 
         $.nmEditor.instance = _nme;
 
