@@ -3192,6 +3192,11 @@ a.token-trigger, a.token-trigger label {
   font-size: 1.0em;
 }
 
+/* for update template */
+.crm-container #saveTemplateSection{
+  margin-right: 20px;
+}
+
 /* "don't do this" icons */
 .crm-container div.contact_panel span.email-hold,
 .crm-container div.contact_panel span.do-not-email,

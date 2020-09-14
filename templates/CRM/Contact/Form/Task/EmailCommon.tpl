@@ -78,16 +78,16 @@
   </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->    
 <div id="editMessageDetails" class="section">
-    <div id="updateDetails" class="section" >
-	{$form.updateTemplate.html}&nbsp;{$form.updateTemplate.label}
+    <div id="saveTemplateSection" class="section">
+      {$form.saveTemplate.html}&nbsp;{$form.saveTemplate.label}
     </div>
-    <div class="section">
-	{$form.saveTemplate.html}&nbsp;{$form.saveTemplate.label}
+    <div id="updateTemplateSection" class="section" >
+      {$form.updateTemplate.html}&nbsp;{$form.updateTemplate.label}
     </div>
 </div>
 
 <div id="saveDetails" class="section">
-   <div class="label">{$form.saveTemplateName.label}</div>
+   <div class="label">{$form.saveTemplateName.label}<span class="crm-marker">*</span></div>
    <div class="content">{$form.saveTemplateName.html|crmReplace:class:huge}</div>
 </div>
 

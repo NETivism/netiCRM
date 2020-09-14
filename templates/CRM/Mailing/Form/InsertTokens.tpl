@@ -75,41 +75,40 @@ var json_message = "body_json";
 {literal}
 
 var editor = {/literal}"{$editor}"{literal};
+
 function showSaveUpdateChkBox(prefix) {
   prefix = prefix || '';
-  if (document.getElementById(prefix + "template") == null) {
-    if (document.getElementsByName(prefix + "saveTemplate")[0].checked){
-      document.getElementById(prefix + "saveDetails").style.display = "block";
-      document.getElementById(prefix + "editMessageDetails").style.display = "block";
+  cj(document).ready(function($){
+    var $update = $('input[id='+prefix+'updateTemplate]');
+    var $save = $('input[id='+prefix+'saveTemplate]');
+    var $saveName = $('#saveDetails');
+    $saveName.hide();
+    if ($update.is(":checked")) {
+      $save.prop("checked", false);
     }
-    else {
-      document.getElementById(prefix + "saveDetails").style.display = "none";
-      document.getElementById(prefix + "updateDetails").style.display = "none";
+    if ($save.is(":checked")) {
+      $update.prop("checked", false);
+      $saveName.show();
     }
-    return;
-  }
 
-  if (document.getElementsByName(prefix + "saveTemplate")[0].checked &&
-    document.getElementsByName(prefix + "updateTemplate")[0].checked == false) {
-    document.getElementById(prefix + "updateDetails").style.display = "none";
-  }
-  else if ( document.getElementsByName(prefix + "saveTemplate")[0].checked &&
-    document.getElementsByName(prefix + "updateTemplate")[0].checked ){
-    document.getElementById(prefix + "editMessageDetails").style.display = "block";
-    document.getElementById(pefix + "saveDetails").style.display = "block";
-  }
-  else if ( document.getElementsByName(prefix + "saveTemplate")[0].checked == false &&
-      document.getElementsByName(prefix + "updateTemplate")[0].checked ) {
-    document.getElementById(prefix + "saveDetails").style.display = "none";
-    document.getElementById(prefix + "editMessageDetails").style.display = "block";
-  }
-  else {
-    document.getElementById(prefix + "saveDetails").style.display = "none";
-    document.getElementById(prefix + "updateDetails").style.display = "none";
-  }
+    // prevent check both checkboxes
+    $update.on("click", function(){
+      if ($(this).is(':checked')) {
+        $save.prop("checked", false);
+        $saveName.hide();
+      }
+    });
+    $save.on("click", function(){
+      if ($(this).is(':checked')) {
+        $update.prop("checked", false);
+        $saveName.show();
+      }
+    });
+  });
 }
 
 function selectValue( val, prefix) {
+    prefix = prefix || '';
     if (!val) {
       return;
     }
@@ -224,14 +223,13 @@ function selectValue( val, prefix) {
 }
 
 if ( isMailing ) {
-    document.getElementById(prefix + "editMessageDetails").style.display = "block";
+    document.getElementById(prefix + "editMessageDetails").style.display = "flex";
 
     function verify(select, prefix) {
         prefix = prefix || '';
         if (document.getElementsByName(prefix + "saveTemplate")[0].checked  == false) {
             document.getElementById(prefix + "saveDetails").style.display = "none";
         }
-        document.getElementById(prefix + "editMessageDetails").style.display = "block";
 
         var templateExists = true;
         if (document.getElementById(prefix + "template") == null) {
@@ -246,18 +244,6 @@ if ( isMailing ) {
         }
 
         document.getElementById(prefix + "saveTemplateName").disabled = false;
-    }
-
-    function showSaveDetails(chkbox, prefix) {
-        prefix = prefix || '';
-        if (chkbox.checked) {
-            document.getElementById(prefix + "saveDetails").style  .display = "block";
-            document.getElementById(prefix + "saveTemplateName").  disabled = false;
-        }
-        else {
-            document.getElementById(prefix + "saveDetails").style  .display = "none";
-            document.getElementById(prefix + "saveTemplateName").disabled = true;
-        }
     }
 
     if (cj("#sms_text_message").length) {

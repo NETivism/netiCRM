@@ -124,6 +124,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         $defaults['template'] = $justSavedTemplate;
       }
 
+      // handling saved template issue
       if (isset($defaults['body_text'])) {
         $defaults['text_message'] = $defaults['body_text'];
         $this->set('textFile', $defaults['body_text']);
@@ -213,6 +214,13 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       foreach ($componentFields as $componentVar => $componentType) {
         $defaults[$componentVar] = CRM_Mailing_PseudoConstant::defaultComponent($componentType, '');
       }
+    }
+
+    // when we just save template on last step
+    // do not check save new template as default option again
+    if (!empty($this->_submitValues['saveTemplate']) && !empty($this->_submitValues['saveTemplateName'])) {
+      $defaults['saveTemplate'] = 0;
+      $defaults['saveTemplateName'] = '';
     }
 
     return $defaults;
@@ -737,12 +745,14 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
     }
 
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
     $templateName = CRM_Core_BAO_MessageTemplates::getMessageTemplates();
     if (CRM_Utils_Array::value('saveTemplate', $params)
       && in_array(CRM_Utils_Array::value('saveTemplateName', $params), $templateName)
     ) {
       $errors['saveTemplate'] = ts('Duplicate Template Name.');
+    }
+    if (empty($params['template']) && !empty($params['updateTemplate'])) {
+      $errors['template'] = ts('You need to specify a template to update.');
     }
     return empty($errors) ? TRUE : $errors;
   }
