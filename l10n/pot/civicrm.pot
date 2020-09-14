@@ -47824,3 +47824,7 @@ msgstr ""
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Edit background of the block"
 msgstr ""
+
+#: CRM/Mailing/Form/Upload.php
+msgid "You need to specify a template to update."
+msgstr ""
