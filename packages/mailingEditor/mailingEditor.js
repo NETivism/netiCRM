@@ -35,6 +35,7 @@
       width: window.innerWidth,
       height: window.innerHeight
     },
+    _language = "en_US",
     _debugMode = false,
     _data = {},
     _dataLoadMode = "field",
@@ -2737,9 +2738,15 @@
   nmEditor.prototype = {
     constructor: nmEditor,
     data: {},
+    language: _language,
     init: function() {
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
+        if (window.nmEditor.language) {
+          _language = window.nmEditor.language;
+          this.language = _language;
+        }
+
         _ts = window.nmEditor.translation;
 
         // Translate UI of x-editble

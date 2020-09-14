@@ -18,6 +18,7 @@
 <!-- Added global variable: nmEditor -->
 <script type="text/javascript">
 window.nmEditor = {
+	language: "{/literal}{$tsLocale}{literal}",
 	translation: {
 		// Golbal
 		"OK" : "{/literal}{ts}OK{/ts}{literal}",
@@ -269,4 +270,3 @@ window.nmEditor = {
 	</div>
 </div>
 <!-- mailingEditor HTML end -->
-{debug}
