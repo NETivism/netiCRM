@@ -652,7 +652,7 @@ class CRM_Core_Payment_BaseIPN {
       if (!empty($contribution->contribution_recur_id)) {
         $recurId = array($contribution->contribution_recur_id);
         $count = CRM_Contribute_BAO_ContributionRecur::getCount($recurId);
-        if ($count[$recurId] > 1) {
+        if ($count[$contribution->contribution_recur_id] > 1) {
           $sendSMS = FALSE;
         }
       }
