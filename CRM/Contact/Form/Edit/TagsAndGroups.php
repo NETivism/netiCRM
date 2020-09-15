@@ -212,6 +212,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
   static function setDefaults($id, &$defaults, $type = CRM_Contact_Form_Edit_TagsandGroups::ALL, $fieldName = NULL) {
     $type = (int ) $type;
     if ($type & self::GROUP) {
+      unset($defaults['group']);
       $fName = 'group';
       if ($fieldName) {
         $fName = $fieldName;
