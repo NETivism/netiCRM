@@ -640,6 +640,22 @@ class CRM_Utils_String {
     return parse_url($url);
   }
 
+  static function parseUrlUtm($url) {
+    $utms = array();
+    $original = CRM_Utils_String::parseUrl($url);
+    if (stristr($original['query'], 'utm_')) {
+      $query = str_replace('&amp;', '&', $original['query']);
+      $get = array();
+      parse_str($query, $get);
+      foreach($get as $queryKey => $queryValue) {
+        if (stristr($queryKey, 'utm_')) {
+          $utms[$queryKey] = $queryValue;
+        }
+      }
+    }
+    return $utms;
+  }
+
   static function buildUrl($parts) {
     return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') . 
       ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') . 
