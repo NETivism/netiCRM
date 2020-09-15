@@ -337,7 +337,13 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
   static function syncContribute($id, $contributionId = NULL) {
     $config = CRM_Core_Config::singleton();
     if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
-      $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date DESC", array(1 => array($id, 'Integer')));
+      if (!empty($contributionId)) {
+        $queryContributionExcepFor = 'AND id != %2';
+      }
+      $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 {$queryContributionExcepFor} ORDER BY created_date DESC", array(
+        1 => array($id, 'Integer'),
+        2 => array($contributionId, 'Integer'),
+      ));
     }
     else {
       $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id ASC", array(1 => array($id, 'Integer')));
