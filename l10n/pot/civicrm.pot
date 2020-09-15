@@ -47828,3 +47828,7 @@ msgstr ""
 #: CRM/Mailing/Form/Upload.php
 msgid "You need to specify a template to update."
 msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid "Do not use same email address with from address."
+msgstr ""
