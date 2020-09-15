@@ -176,7 +176,13 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       ) {
         $params[] = array('sortByCharacter', '=', $sortByCharacter, 0, 0);
       }
-      $dao = &$selector->contactAdditionalIDQuery($params, $form->_action, $sortID);
+
+      if ($selectorName == 'CRM_Contact_Selector_Custom') {
+        $dao = &$selector->contactAdditionalIDQuery($params, $form->_action, $sortID);
+      }
+      else {
+        $dao = &$selector->contactIDQuery($params, $form->_action, $sortID);
+      }
 
       $form->_contactIds = array();
       if ($useTable) {
