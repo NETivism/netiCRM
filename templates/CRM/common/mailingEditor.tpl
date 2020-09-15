@@ -73,34 +73,34 @@ window.nmEditor = {
 {/literal}
 </script>
 <!-- poshytip -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css">
+<link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css?v{$config->ver}">
 <script type="text/javascript" src="{$config->resourceBase}packages/poshytip/src/jquery.poshytip.js"></script>
 
 <!-- x-editable -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css">
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js"></script>
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css">
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css">
-<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css?v{$config->ver}">
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js?v{$config->ver}"></script>
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css?v{$config->ver}">
 {if $tsLocale == 'zh_TW'}
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css">
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css?v{$config->ver}">
 {/if}
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js"></script>
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js"></script>
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/quill.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js?v{$config->ver}"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js?v{$config->ver}"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/quill.js?v{$config->ver}"></script>
 
 <!-- pickr -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css"/>
-<script src="{$config->resourceBase}packages/pickr/dist/pickr.min.js"></script>
+<link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css?v{$config->ver}"/>
+<script src="{$config->resourceBase}packages/pickr/dist/pickr.min.js?v{$config->ver}"></script>
 
 <!-- Magnific Popup -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css">
-<script src="{$config->resourceBase}packages/Magnific-Popup/dist/jquery.magnific-popup.js"></script>
+<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
+<script src="{$config->resourceBase}packages/Magnific-Popup/dist/jquery.magnific-popup.js?v{$config->ver}"></script>
 
 <!-- mailingEditor -->
 {include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
-<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
+<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css?v{$config->ver}">
 {literal}
 <style>
 	.nme-block.on-screen-center:after {
@@ -108,7 +108,7 @@ window.nmEditor = {
 	}
 </style>
 {/literal}
-<script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js?v{$config->ver}"></script>
 {literal}
 <script type="text/javascript">
 (function ($) {

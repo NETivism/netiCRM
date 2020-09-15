@@ -21,6 +21,15 @@
 .ql-snow .ql-tooltip.ql-editing a.ql-action::after {
   content: "套用";
 }
+.ql-snow .ql-tooltip::before {
+  content: "前往網址:";
+}
+.ql-snow .ql-tooltip a.ql-action::after {
+  content: '編輯'; 
+}
+.ql-snow .ql-tooltip a.ql-remove::before {
+  content: '去除連結';
+}
 
 /* bubble */
 .ql-bubble .ql-picker.ql-size .ql-picker-label::before,
