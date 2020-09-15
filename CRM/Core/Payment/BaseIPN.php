@@ -638,10 +638,8 @@ class CRM_Core_Payment_BaseIPN {
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
 
-    $contact = $objects['contact'];
-
     // #25671, add support for hook change mailing notification trigger
-    if (!$sendMail || !empty($contact->do_not_email)) {
+    if (!$sendMail || !empty($input['do_not_email'])) {
       CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and no mail sent.");
     }
     else {
@@ -649,7 +647,7 @@ class CRM_Core_Payment_BaseIPN {
       CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and mail sent");
     }
 
-    if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount() && empty($contact->do_not_sms)) {
+    if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
       $sendSMS = TRUE;
       if (!empty($contribution->contribution_recur_id)) {
         $recurId = array($contribution->contribution_recur_id);
