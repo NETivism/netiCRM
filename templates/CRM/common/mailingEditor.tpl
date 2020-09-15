@@ -17,6 +17,11 @@
 
 <!-- Added global variable: nmEditor -->
 <script type="text/javascript">
+window.jQueryOld = window.jQuery;
+if (window.jQuery) {
+	window.jQuery = cj;
+}
+
 window.nmEditor = {
 	language: "{/literal}{$tsLocale}{literal}",
 	translation: {
