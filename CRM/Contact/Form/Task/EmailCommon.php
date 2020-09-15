@@ -298,6 +298,9 @@ class CRM_Contact_Form_Task_EmailCommon {
     if (CRM_Utils_Array::value('saveTemplate', $fields) && empty($fields['saveTemplateName'])) {
       $errors['saveTemplateName'] = ts("Enter name to save message template");
     }
+    if (CRM_Utils_Array::value('updateTemplate', $fields) && empty($fields['template'])) {
+      $errors['template'] = ts("You need to specify a template to update.");
+    }
 
     return empty($errors) ? TRUE : $errors;
   }

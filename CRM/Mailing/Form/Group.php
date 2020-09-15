@@ -113,6 +113,9 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       }
 
       $defaults['name'] = $mailing->name;
+      if ($mailing->name) {
+        CRM_Utils_System::setTitle($mailing->name);
+      }
       if (!$continue) {
         $defaults['name'] = ts('Copy of %1', array(1 => $mailing->name));
       }

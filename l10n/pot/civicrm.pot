@@ -47709,7 +47709,7 @@ msgid "Traditional Editor"
 msgstr ""
 
 #: templates/CRM/Mailing/Form/Upload.hlp
-msgid "For Compose On-screen, you can select templates, add content blocks, and change the global settings of the newsletter. The drag-and-drop editor can quickly and easily add, copy, and delete blocks such as titles, pictures, text, buttons, etc., and adjust the order of blocks by dragging. The templates provided by the drag-and-drop editor are all responsive, which allows users to have a better browsing experience on different devices."
+msgid "In the 'Compose On-screen' mode, you can select templates, add content blocks and change the global settings of the e-newsletter. You can quickly and easily add, copy and delete blocks such as titles, images, text, buttons, etc., and adjust the order of the blocks. The templates provided by the 'Compose On-screen' are all responsive, which can give users a better browsing experience on different devices."
 msgstr ""
 
 #: templates/CRM/Mailing/Form/Upload.hlp
@@ -47823,4 +47823,8 @@ msgstr ""
 
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Edit background of the block"
+msgstr ""
+
+#: CRM/Mailing/Form/Upload.php
+msgid "You need to specify a template to update."
 msgstr ""
