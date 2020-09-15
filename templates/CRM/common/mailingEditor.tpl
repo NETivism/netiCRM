@@ -119,7 +119,7 @@ window.nmEditor = {
 				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
     window.nmEditorInstance = $(".nme-container").nmEditor();
 	});
-})(jQuery);
+})(cj);
 </script>
 {/literal}
 <!-- mailingEditor files end -->
