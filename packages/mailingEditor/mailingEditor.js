@@ -35,6 +35,7 @@
       width: window.innerWidth,
       height: window.innerHeight
     },
+    _language = "en_US",
     _debugMode = false,
     _data = {},
     _dataLoadMode = "field",
@@ -46,6 +47,7 @@
     _container,
     _main = "." + NME_MAIN,
     _panels = "." + NME_PANELS,
+    _blockControlTitle = {},
     _controlIconClass = {
       drag: "zmdi-arrows",
       prev: "zmdi-long-arrow-up",
@@ -804,6 +806,7 @@
           if (_domElemExist($target)) {
             let blockContent = _tpl.block[blockType],
                 blockEditContent = _tpl.block.edit,
+                blockControlTitle = _blockControlTitle[blockType][_language],
                 blockSortable = "true",
                 blockOverride = typeof block.override !== "undefined" && typeof block.override.block !== "undefined" ? block.override.block : false,
                 elemOverride = typeof block.override !== "undefined" && typeof block.override.elem !== "undefined" ? block.override.elem : false;
@@ -816,6 +819,20 @@
               if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
                 blockContent = blockContent.replace("<td valign=\"top\" width=\"600\" style=\"width:600px;\">", "<td valign=\"top\" width=\"100%\" style=\"width:100%;\">");
               }
+
+              switch (_language) {
+                case "zh_TW":
+                  blockControlTitle = _blockControlTitle[block.parentType][_language] + "內的" + blockControlTitle;
+                  break;
+
+                default:
+                  blockControlTitle = blockControlTitle + " of '" + _blockControlTitle[block.parentType][_language] + "'";
+              }
+
+              blockEditContent = blockEditContent.replace(/\[nmeBlockControlTitle\]/g, blockControlTitle);
+            }
+            else {
+              blockEditContent = blockEditContent.replace(/\[nmeBlockControlTitle\]/g, blockControlTitle);
             }
 
             blockEditContent = blockEditContent.replace(/\[nmeBlockContent\]/g, blockContent);
@@ -2729,9 +2746,15 @@
   nmEditor.prototype = {
     constructor: nmEditor,
     data: {},
+    language: _language,
     init: function() {
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
+        if (window.nmEditor.language) {
+          _language = window.nmEditor.language;
+          this.language = _language;
+        }
+
         _ts = window.nmEditor.translation;
 
         // Translate UI of x-editble
@@ -2741,6 +2764,46 @@
           buttonsTpl = buttonsTpl.replace(">cancel</button>", ">" + _ts["Cancel"] + "</button>");
           $.fn.editableform.buttons = buttonsTpl;
         }
+
+        // Set mapping to control title of block
+        _blockControlTitle = {
+          "header": {
+            "en_US": "Header",
+            "zh_TW": _ts["Header"]
+          },
+          "footer":  {
+            "en_US": "Footer",
+            "zh_TW": _ts["Footer"]
+          },
+          "title": {
+            "en_US": "Title",
+            "zh_TW": _ts["Title"]
+          },
+          "paragraph": {
+            "en_US": "Paragraph",
+            "zh_TW": _ts["Paragraph"]
+          },
+          "image": {
+            "en_US": "Image",
+            "zh_TW": _ts["Image"]
+          },
+          "button": {
+            "en_US": "Button",
+            "zh_TW": _ts["Button"]
+          },
+          "rc-col-1": {
+            "en_US": "Rich Content: 1 Column",
+            "zh_TW": _ts["Rich Content: 1 Column"]
+          },
+          "rc-col-2": {
+            "en_US": "Rich Content: 2 Column",
+            "zh_TW": _ts["Rich Content: 2 Column"]
+          },
+          "rc-float": {
+            "en_US": "Rich Content: Float",
+            "zh_TW": _ts["Rich Content: Float"]
+          },
+        };
 
         $.nmEditor.instance = _nme;
 

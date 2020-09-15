@@ -18,6 +18,7 @@
 <!-- Added global variable: nmEditor -->
 <script type="text/javascript">
 window.nmEditor = {
+	language: "{/literal}{$tsLocale}{literal}",
 	translation: {
 		// Golbal
 		"OK" : "{/literal}{ts}OK{/ts}{literal}",
@@ -38,6 +39,8 @@ window.nmEditor = {
 		"1 Column + Float" : "{/literal}{ts}1 Column + Float{/ts}{literal}",
 
 		// Panel: Blocks
+		"Header": "{/literal}{ts}Header{/ts}{literal}",
+		"Footer": "{/literal}{ts}Footer{/ts}{literal}",
 		"Title" : "{/literal}{ts}Title{/ts}{literal}",
 		"Paragraph" : "{/literal}{ts}Paragraph{/ts}{literal}",
 		"Image" : "{/literal}{ts}Image{/ts}{literal}",

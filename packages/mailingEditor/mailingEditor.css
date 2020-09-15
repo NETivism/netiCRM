@@ -176,10 +176,15 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block .nme-block:first-child .nme-block-control {
   margin-top: 0;
 }
-.nme-block-move,
-.nme-block-actions {
+.nme-block-control .nme-block-move,
+.nme-block-control .nme-block-actions {
   display: flex;
   flex-wrap: wrap;
+}
+.nme-block-control .nme-block-control-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .nme-block-control .handle-btn {
   display: flex;
