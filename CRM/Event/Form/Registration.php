@@ -880,6 +880,13 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     ) {
       $createPayment = TRUE;
     }
+    
+    $coupon = $this->get('coupon');
+    if (!$createPayment && $contribution->id
+    && ($this->_params['amount'] == 0)
+    && !empty($coupon)) {
+      $createPayment = TRUE;
+    }
 
     if ($createPayment && $this->_values['event']['is_monetary'] &&
       CRM_Utils_Array::value('contributionID', $this->_params)
