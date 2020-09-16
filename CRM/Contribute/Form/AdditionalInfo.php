@@ -99,7 +99,7 @@ class CRM_Contribute_Form_AdditionalInfo {
     $js .= "</script>\n";
     $form->assign('initHideBoxes', $js);
 
-    $this->addDate('fulfilled_date', ts('Fulfilled'), FALSE, array('formatType' => 'activityDate'));
+    $form->addDate('fulfilled_date', ts('Fulfilled'), FALSE, array('formatType' => 'activityDate'));
     $form->addElement('text', 'min_amount', ts('Minimum Contribution Amount'));
   }
 
