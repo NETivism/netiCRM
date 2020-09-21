@@ -589,7 +589,7 @@ class CRM_Core_Payment_BaseIPN {
         'contribution_id' => $contribution->id,
         'trxn_date' => isset($input['trxn_date']) ? $input['trxn_date'] : self::$_now,
         'trxn_type' => 'Debit',
-        'total_amount' => $input['amount'],
+        'total_amount' => $input['total_amount'] ? $input['total_amount'] : $input['amount'],
         'fee_amount' => $contribution->fee_amount,
         'net_amount' => $contribution->net_amount,
         'currency' => $contribution->currency,

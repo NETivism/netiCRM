@@ -28,7 +28,7 @@
         </tr>
       </thead>
       <tbody>
-      {foreach from=$parseResult.processed_data item=line}
+      {foreach from=$processResult item=line}
         <tr>
           {foreach from=$parseResult.columns item=columnHeader key=column}
             {if $column|strstr:"amount"}
