@@ -105,13 +105,16 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
       foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
         $this->_parseResult['parsed_data'][$id]['process_date'] = $receiveDate;
         $line = CRM_Contribute_BAO_TaiwanACH::doProcessTransaction($id, $this->_parseResult['parsed_data'][$id], FALSE);
+        if (!empty($line['payment_instrument_id'])) {
+          $line['payment_instrument'] = $paymentInstrument[$line['payment_instrument_id']];
+        }
         if (!empty($line['contribution_type_id'])) {
           $line['contribution_type'] = $contributionType[$line['contribution_type_id']];
         }
         if (!empty($line['contribution_status_id'])) {
           $line['contribution_status'] = $contributionStatus[$line['contribution_status_id']];
         }
-        if ($line['contribution_status_id'] == 1) {
+        if ($line['contribution_status_id'] == 1 && empty($line['cancel_reason'])) {
           $counter[ts('Completed Donation')]++;
         }
         $this->_processResult[$id] = $line;

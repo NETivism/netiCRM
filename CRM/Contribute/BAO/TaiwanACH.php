@@ -1241,8 +1241,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $isSuccess = TRUE;
     }
     if ($isSuccess) {
-      $result['contribution_status_id'] = 1;
-      $result['receive_date'] = date('YmdHis', strtotime($parsedData['process_date']));
+      if ($contribution->contribution_status_id == 1) {
+        $result['cancel_reason'] = ts('On duplicate entries');
+        $pass = false;
+      }
+      else {
+        $result['contribution_status_id'] = 1;
+        $result['receive_date'] = date('YmdHis', strtotime($parsedData['process_date']));
+      }
     }
     else {
       $result['contribution_status_id'] = 4;
@@ -1267,6 +1273,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     // prepare input
     $input = $result;
+    if ( $isSuccess && !$pass ) {
+      $result['cancel_reason'] = ts('On duplicate entries'); // Duplicated Contribution
+    }
+
     if(!empty($ids['event'])){
       $input['component'] = 'event';
     }
