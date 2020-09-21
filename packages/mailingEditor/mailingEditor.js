@@ -2032,6 +2032,22 @@
 
         $editableElem.editable();
 
+        $editableElem.on("shown", function(e, editable) {
+          let $block = $(this).closest(".nme-block");
+
+          if ($block.length && !$block.hasClass(EDIT_CLASS)) {
+            $block.addClass(EDIT_CLASS);
+          }
+        });
+
+        $editableElem.on("hidden", function(e, reason) {
+          let $block = $(this).closest(".nme-block");
+
+          if ($block.length && $block.hasClass(EDIT_CLASS)) {
+            $block.removeClass(EDIT_CLASS);
+          }
+        });
+
         $editableElem.on("save", function(e, params) {
           let $this = $(this),
               editableType = $this.data("type"),
