@@ -1026,6 +1026,15 @@ cj(function() {
       return;
     }
 
+    // Check register_date is exist, Preserve second if they are same.
+    if (!empty($this->_id) && !empty($params['register_date'])) {
+      $inputDate = CRM_Utils_Date::processDate($params['register_date'], $params['register_date_time'], FALSE, 'Y-m-d H:i');
+      $dbDate = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $this->_id, 'register_date');
+      if (strstr($dbDate, $inputDate)) {
+        list($params['register_date'], $params['register_date_time']) = explode(' ', $dbDate);
+      }
+    }
+
     // set the contact, when contact is selected
     if (CRM_Utils_Array::value('contact_select_id', $params)) {
       $this->_contactId = $params['contact_select_id'][1];

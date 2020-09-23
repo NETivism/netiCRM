@@ -76,19 +76,52 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   function postProcess() {
     // send parseResult into BAO
     // Considering type is Bank or Post in process function
+    $counter = array();
     $receiveDate = $this->exportValue('receive_date').' '.$this->exportValue('receive_date_time');
+    $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
+    $contributionType = CRM_Contribute_PseudoConstant::contributionType();
+    $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
+    $stampStatus = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
     if ($this->_parseResult['import_type'] == 'verification') {
       foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
         $this->_parseResult['parsed_data'][$id]['process_date'] = $receiveDate;
-        $this->_processResult[$id] = CRM_Contribute_BAO_TaiwanACH::doProcessVerification($id, $this->_parseResult['parsed_data'][$id], FALSE);
+        $line = CRM_Contribute_BAO_TaiwanACH::doProcessVerification($id, $this->_parseResult['parsed_data'][$id], FALSE);
+        if (!empty($line['payment_instrument_id'])) {
+          $line['payment_instrument'] = $paymentInstrument[$line['payment_instrument_id']];
+        }
+        if (isset($line['stamp_verification'])) {
+          $line['stamp_verification_status'] = $stampStatus[$line['stamp_verification']];
+        }
+        if (!empty($line['contribution_status_id'])) {
+          $line['contribution_status'] = $contributionStatus[$line['contribution_status_id']];
+        }
+        if ($line['contribution_status_id'] == 5) {
+          $counter[ts('Completed Donation')]++;
+        }
+        $this->_processResult[$id] = $line;
       }
     }
     elseif ($this->_parseResult['import_type'] == 'transaction') {
       foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
         $this->_parseResult['parsed_data'][$id]['process_date'] = $receiveDate;
-        $this->_processResult[$id] = CRM_Contribute_BAO_TaiwanACH::doProcessTransaction($id, $this->_parseResult['parsed_data'][$id], FALSE);
+        $line = CRM_Contribute_BAO_TaiwanACH::doProcessTransaction($id, $this->_parseResult['parsed_data'][$id], FALSE);
+        if (!empty($line['payment_instrument_id'])) {
+          $line['payment_instrument'] = $paymentInstrument[$line['payment_instrument_id']];
+        }
+        if (!empty($line['contribution_type_id'])) {
+          $line['contribution_type'] = $contributionType[$line['contribution_type_id']];
+        }
+        if (!empty($line['contribution_status_id'])) {
+          $line['contribution_status'] = $contributionStatus[$line['contribution_status_id']];
+        }
+        if ($line['contribution_status_id'] == 1 && empty($line['cancel_reason'])) {
+          $counter[ts('Completed Donation')]++;
+        }
+        $this->_processResult[$id] = $line;
       }
     }
+    $this->_parseResult['counter'] = $counter;
+    $this->set('parseResult', $this->_parseResult);
     $this->set('processResult', $this->_processResult);
   }
 

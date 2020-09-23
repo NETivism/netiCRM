@@ -589,7 +589,7 @@ class CRM_Core_Payment_BaseIPN {
         'contribution_id' => $contribution->id,
         'trxn_date' => isset($input['trxn_date']) ? $input['trxn_date'] : self::$_now,
         'trxn_type' => 'Debit',
-        'total_amount' => $input['amount'],
+        'total_amount' => $input['total_amount'] ? $input['total_amount'] : $input['amount'],
         'fee_amount' => $contribution->fee_amount,
         'net_amount' => $contribution->net_amount,
         'currency' => $contribution->currency,
@@ -660,7 +660,11 @@ class CRM_Core_Payment_BaseIPN {
         $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, array('is_default' => 1));
         $provider = reset($defaultProvider);
         list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text'], $objects);
+        CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS sent");
       }
+    }
+    if (!$sendSMS) {
+      CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS doesn't be sent");
     }
   }
 

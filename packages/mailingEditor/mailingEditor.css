@@ -204,7 +204,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block-control .handle-drag {
   cursor: grab;
 }
-.nme-block:hover > .nme-block-inner:before {
+.nme-block:hover > .nme-block-inner:before,
+.nme-block.is-active > .nme-block-inner:before,
+.nme-block.is-edit > .nme-block-inner:before {
   content: "";
   display: block;
   position: absolute;
@@ -240,6 +242,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block:hover .nme-block:first-child > .nme-block-inner:before {
   margin-top: 0;
   height: calc(100% + 12px);
+}
+.nme-block.is-edit:first-child .editable-container {
+  margin-top: 47px;
 }
 .nme-container .nme-block .nme-title {
   font-size: 1.5rem;

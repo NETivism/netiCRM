@@ -47832,3 +47832,30 @@ msgstr ""
 # templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid "Do not use same email address with from address."
 msgstr ""
+
+msgid "Unique Unsubscribe"
+msgstr ""
+
+msgid "Unique Click-throughs Rate"
+msgstr ""
+
+msgid "Total Clicks"
+msgstr ""
+
+msgid "Total Opens"
+msgstr ""
+
+msgid "Unique Open Rate"
+msgstr ""
+
+msgid "Accepted Rate"
+msgstr ""
+
+msgid "Bounce Rate"
+msgstr ""
+
+msgid "Click to Open Rate"
+msgstr ""
+
+msgid "Receipt is not print?"
+msgstr ""

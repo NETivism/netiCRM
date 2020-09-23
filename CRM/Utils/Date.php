@@ -731,8 +731,8 @@ class CRM_Utils_Date {
    * @return true              todays date is in the given date range
    * @static
    */
-  static function getRange($startDate, $endDate) {
-    $today = date("Y-m-d");
+  static function getRange($startDate, $endDate, $timestamp = CRM_REQUEST_TIME) {
+    $today = date("Y-m-d", $timestamp);
     $mysqlStartDate = self::isoToMysql($startDate);
     $mysqlEndDate = self::isoToMysql($endDate);
     $mysqlToday = self::isoToMysql($today);

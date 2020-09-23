@@ -783,7 +783,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $bankAccount,
         str_repeat(' ', 10),
         str_pad((INT) $achData['amount'], 9, '0', STR_PAD_LEFT).'00',
-        str_pad($contribution->id, 20, ' ', STR_PAD_LEFT),
+        str_pad($contribution->contribution_recur_id, 20, ' ', STR_PAD_LEFT),
         1,
         ' ',
         ' ',
@@ -976,6 +976,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     if ($instrumentType == self::BANK) {
       if ($processType == self::VERIFICATION) {
         $entityId = $header[2] + 19110000;
+        $tableSubName = '_bank';
       }
       if ($processType == self::TRANSACTION) {
         $entityId = $header[3];
@@ -985,6 +986,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $firstLine = reset($rearrangeData);
       if ($processType == self::VERIFICATION) {
         $entityId = $firstLine[3];
+        $tableSubName = '_post';
       }
       if ($processType == self::TRANSACTION) {
         $ids = explode('-', $firstLine[18]);
@@ -992,7 +994,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
     }
 
-    $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_$processType' AND entity_id = %1 ORDER BY id DESC LIMIT 1";
+    $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_{$processType}{$tableSubName}' AND entity_id = %1 ORDER BY id DESC LIMIT 1";
     $params = array( 1 => array($entityId, 'String'));
     $dataIds = CRM_Core_DAO::singleValueQuery($sql, $params);
     if (!empty($dataIds)) {
@@ -1239,8 +1241,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $isSuccess = TRUE;
     }
     if ($isSuccess) {
-      $result['contribution_status_id'] = 1;
-      $result['receive_date'] = date('YmdHis', strtotime($parsedData['process_date']));
+      if ($contribution->contribution_status_id == 1) {
+        $result['cancel_reason'] = ts('On duplicate entries');
+        $pass = false;
+      }
+      else {
+        $result['contribution_status_id'] = 1;
+        $result['receive_date'] = date('YmdHis', strtotime($parsedData['process_date']));
+      }
     }
     else {
       $result['contribution_status_id'] = 4;
@@ -1265,6 +1273,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     // prepare input
     $input = $result;
+    if ( $isSuccess && !$pass ) {
+      $result['cancel_reason'] = ts('On duplicate entries'); // Duplicated Contribution
+    }
+
     if(!empty($ids['event'])){
       $input['component'] = 'event';
     }
@@ -1290,6 +1302,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $objects['contribution']->receive_date = date('YmdHis', strtotime($parsedData['process_date']));
         $sendMail = TRUE;
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
+        $objects['contribution']->receipt_date = date('YmdHis', strtotime($parsedData['process_date']));
+        $objects['contribution']->save();
         if (!empty($ids['contributionRecur'])) {
           $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
           $params = array( 1 => array($ids['contributionRecur'], 'Positive'));
@@ -1312,6 +1326,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
       self::addNote($note, $objects['contribution']);
     }
+    return $result;
   }
 
   static function doStatusCheck() {

@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-09-15 06:28+0000\n"
+"PO-Revision-Date: 2020-09-23 03:52+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48110,3 +48110,30 @@ msgstr "需要先選擇一個範本，才能勾選更新範本。"
 # templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid "Do not use same email address with from address."
 msgstr "請使用與寄件人不同的信箱。"
+
+msgid "Unique Unsubscribe"
+msgstr "不重覆取消訂閱"
+
+msgid "Unique Click-throughs Rate"
+msgstr "不重覆點擊率"
+
+msgid "Total Clicks"
+msgstr "點擊次數總計"
+
+msgid "Total Opens"
+msgstr "開信次數總計"
+
+msgid "Unique Open Rate"
+msgstr "不重覆開信率"
+
+msgid "Accepted Rate"
+msgstr ""
+
+msgid "Bounce Rate"
+msgstr "退回率"
+
+msgid "Click to Open Rate"
+msgstr "點擊率"
+
+msgid "Receipt is not print?"
+msgstr "未列印PDF收據的捐款"
