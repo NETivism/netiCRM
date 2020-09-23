@@ -47856,3 +47856,6 @@ msgstr ""
 
 msgid "Click to Open Rate"
 msgstr ""
+
+msgid "Receipt is not print?"
+msgstr ""
