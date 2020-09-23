@@ -660,7 +660,11 @@ class CRM_Core_Payment_BaseIPN {
         $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, array('is_default' => 1));
         $provider = reset($defaultProvider);
         list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text'], $objects);
+        CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS sent");
       }
+    }
+    if (!$sendSMS) {
+      CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS doesn't be sent");
     }
   }
 
