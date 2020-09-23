@@ -1221,7 +1221,7 @@
                   _nmeBlockControl.render(blockID, blockType);
                   _editable();
 
-                  if (dataState == "new") {
+                  if (dataState == "new" || dataState == "clone") {
                     if (!block.parentID && $block.length) {
                       var scrollOpts = {};
                       scrollOpts.buffer = $("#admin-header").length ? $("#admin-header").outerHeight() * -1 : -50;
@@ -1252,9 +1252,8 @@
     },
     clone: function(data, $target) {
       let cloneData = !_objIsEmpty(data) ? data : null;
-
       if (_domElemExist($target)) {
-        _nmeBlock.add(cloneData, "new", "edit", $target, "after");
+        _nmeBlock.add(cloneData, "clone", "edit", $target, "after");
       }
     },
     delete: function(data) {
