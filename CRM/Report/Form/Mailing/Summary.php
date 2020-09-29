@@ -137,7 +137,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
           'title' => ts('Delivered'),
         ),
         'accepted_rate' => array(
-          'title' => ts('Accepted Rate'),
+          'title' => ts('Successful Deliveries').'%',
           'statistics' => array(
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_delivered.delivered_count',
@@ -155,7 +155,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
           'title' => ts('Bounce'),
         ),
         'bounce_rate' => array(
-          'title' => ts('Bounce Rate'),
+          'title' => ts('Bounce Rate').'%',
           'statistics' => array(
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_bounce.bounce_count',
@@ -175,7 +175,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
           'dbAlias' => 'mailing_event_opened_civireport.event_queue_id',
         ),
         'unique_open_rate' => array(
-          'title' => ts('Unique Open Rate'),
+          'title' => ts('Unique Open Rate').'%',
           'statistics' => array(
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_opened.unique_open_count',
@@ -203,7 +203,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
           'title' => ts('Total Clicks'),
         ),
         'CTR' => array(
-          'title' => ts('Unique Click-throughs Rate'),
+          'title' => ts('Unique Click-throughs Rate').'%',
           'statistics' => array(
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_trackable_url_open.unique_click_count',
@@ -211,7 +211,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
           ),
         ),
         'CTO' => array(
-          'title' => ts('Click to Open Rate'),
+          'title' => ts('Click to Open Rate').'%',
           'default' => 0,
           'statistics' => array(
             'calc' => 'PERCENTAGE',
