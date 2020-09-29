@@ -1369,7 +1369,8 @@
         // Check edit mode option, Only 'Compose On-screen' option is allowed
         if ($(".form-radio[name='upload_type'][value='2']").is(":checked")) {
           // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
-          if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
+          let allowSaveBtns = ["_qf_Upload_back", "_qf_Upload_upload", "_qf_Upload_upload_save" , "_qf_Upload_submit"];
+          if (allowSaveBtns.indexOf(buttonName) != -1) {
             event.preventDefault();
             let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
                 confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
