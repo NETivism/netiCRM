@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-09-24 06:53+0000\n"
+"PO-Revision-Date: 2020-09-29 05:42+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -11703,7 +11703,7 @@ msgstr "管理募款頁"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid "A copy of the contribution page has been created"
-msgstr "募款頁 '%1' 已建立。"
+msgstr "已複製募款頁。"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid ""
