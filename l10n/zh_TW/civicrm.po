@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-09-29 05:42+0000\n"
+"PO-Revision-Date: 2020-09-29 05:46+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -21860,7 +21860,7 @@ msgstr "警告：刪除此金流機制可能導致一些募款頁的交易工具
 
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "Processor Details for Live Payments"
-msgstr ""
+msgstr "正式金流機制詳情"
 
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "Processor Details for Test Payments"
