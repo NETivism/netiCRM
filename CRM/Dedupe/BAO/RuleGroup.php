@@ -139,12 +139,14 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     $bao->orderBy('rule_weight DESC');
     $bao->find();
     $queries = array();
+    $idx = 0;
     while ($bao->fetch()) {
       $bao->contactIds = $this->contactIds;
       $bao->params = $this->params;
       if ($query = $bao->sql()) {
         $queries["{$bao->rule_table}.{$bao->rule_field}.{$bao->rule_weight}"] = $query;
       }
+      $idx++;
     }
 
     // if there are no rules in this rule group, add an empty query fulfilling the pattern
