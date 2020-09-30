@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-09-23 03:52+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-09-29 05:46+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11703,7 +11703,7 @@ msgstr "管理募款頁"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid "A copy of the contribution page has been created"
-msgstr "募款頁 '%1' 已建立。"
+msgstr "已複製募款頁。"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid ""
@@ -21860,7 +21860,7 @@ msgstr "警告：刪除此金流機制可能導致一些募款頁的交易工具
 
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "Processor Details for Live Payments"
-msgstr ""
+msgstr "正式金流機制詳情"
 
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "Processor Details for Test Payments"
@@ -48137,3 +48137,8 @@ msgstr "點擊率"
 
 msgid "Receipt is not print?"
 msgstr "未列印PDF收據的捐款"
+
+msgid ""
+"Oops. The membership you're trying to renew appears to be invalid. Contact "
+"your site administrator if you need assistance."
+msgstr "喔喔...您想要更新的會員資格似乎是無效的。如果您需要協助，請聯絡網站管理者。"

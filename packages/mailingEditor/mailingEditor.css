@@ -285,8 +285,16 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 }
 .nme-setting-panels-inner {
   position: relative;
-  padding-top: 90px;
   height: 100%;
+}
+.civicrm-menu-enabled .nme-setting-panels-inner {
+  padding-top: 30px;
+}
+.is-civicrm-user .nme-setting-panels-inner {
+  padding-top: 60px;
+}
+.is-civicrm-user.civicrm-menu-enabled .nme-setting-panels-inner {
+  padding-top: 90px;
 }
 .nme-setting-panels-header,
 .nme-setting-panels-content,
@@ -299,8 +307,17 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-setting-panels-content {
   padding-top: 20px;
   padding-bottom: 20px;
-  height: calc(100vh - 30px - 60px - 66px - 64px);
+  height: calc(100vh - 66px - 64px);
   overflow-y: auto;
+}
+.civicrm-menu-enabled .nme-setting-panels-content {
+  height: calc(100vh - 30px - 66px - 64px);
+}
+.is-civicrm-user .nme-setting-panels-content {
+  height: calc(100vh - 60px - 66px - 64px);
+}
+.is-civicrm-user.civicrm-menu-enabled .nme-setting-panels-content {
+  height: calc(100vh - 30px - 60px - 66px - 64px);
 }
 .nme-setting-panels-footer {
   position: absolute;
