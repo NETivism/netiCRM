@@ -47859,3 +47859,6 @@ msgstr ""
 
 msgid "Receipt is not print?"
 msgstr ""
+
+msgid "Oops. The membership you're trying to renew appears to be invalid. Contact your site administrator if you need assistance."
+msgstr ""

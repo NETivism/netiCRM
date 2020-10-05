@@ -29,6 +29,7 @@
   <item>
      <path>civicrm/contribute/transact</path>
      <title>CiviContribute</title>
+     <access_callback>CRM_Contribute_BAO_Contribution_Utils::checkTransactionPermission</access_callback>
      <page_callback>CRM_Contribute_Controller_Contribution</page_callback>
      <access_arguments>make online contributions</access_arguments>
      <weight>0</weight> 
