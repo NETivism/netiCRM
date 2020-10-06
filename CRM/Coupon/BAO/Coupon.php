@@ -389,8 +389,15 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       else{
         // Not use price set.
         if(empty($fields['is_primary'])){
-          // formRule in register.php
-          $totalAmount = $form->_values['fee'][$fields['amount']]['value'];
+          // In condition, Use early bird discount.
+          if (!empty($form->_values['discount'])) {
+            $discountFee = reset($form->_values['discount']);
+            $totalAmount = $discountFee[$fields['amount']]['value'];
+          }
+          else {
+            // formRule in register.php
+            $totalAmount = $form->_values['fee'][$fields['amount']]['value'];
+          }
         }
         else{
           // postProcess
