@@ -335,11 +335,7 @@ class CRM_Utils_System_Drupal {
           $data = $params['src'];
 
           if (isset($params['d6_type'])) {
-            if ($params['d6_type'] == 'inline') {
-              $params['d6_type'] = 'module';
-            }
-
-            $type = $params['d6_type'];
+            $type = $params['d6_type'] == 'inline' ? 'module' : $params['d6_type'];
           }
 
           drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
@@ -348,7 +344,7 @@ class CRM_Utils_System_Drupal {
         else {
           if (isset($text) && $text !== '') {
             $data = $text;
-            $options['type'] = 'inline';
+            $type = 'inline';
 
             drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
             return;
@@ -358,7 +354,7 @@ class CRM_Utils_System_Drupal {
       else {
         if (isset($text) && $text !== '') {
           $data = $text;
-          $options['type'] = 'inline';
+          $type = 'inline';
 
           drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
           return;
@@ -405,11 +401,7 @@ class CRM_Utils_System_Drupal {
           $data = $params['src'];
 
           if (isset($params['d7_type'])) {
-            if ($params['d7_type'] == 'inline') {
-              $params['d7_type'] = 'file';
-            }
-
-            $options['type'] = $params['d7_type'];
+            $options['type'] = $params['d7_type'] == 'inline' ? 'file' : $params['d7_type'];
           }
 
           drupal_add_js($data, $options);
