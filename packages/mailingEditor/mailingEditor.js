@@ -2961,4 +2961,4 @@
     dataLoadSource: "#body_json",
     debugMode: false
   };
-}(cj));
+}(jQuery));
