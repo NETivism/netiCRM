@@ -333,6 +333,12 @@ class CRM_Utils_System_Drupal {
 
         if (isset($params['src']) && $params['src'] !== '') {
           $data = $params['src'];
+          $url = parse_url($data);
+          if (!isset($url['scheme'])) {
+            if (strpos($data, '/') === 0) {
+              $data = substr($data, 1);
+            }
+          }
 
           if (isset($params['d6_type'])) {
             $type = $params['d6_type'] == 'inline' ? 'module' : $params['d6_type'];
@@ -399,6 +405,12 @@ class CRM_Utils_System_Drupal {
 
         if (isset($params['src']) && $params['src'] !== '') {
           $data = $params['src'];
+          $url = parse_url($data);
+          if (!isset($url['scheme'])) {
+            if (strpos($data, '/') === 0) {
+              $data = substr($data, 1);
+            }
+          }
 
           if (isset($params['d7_type'])) {
             $options['type'] = $params['d7_type'] == 'inline' ? 'file' : $params['d7_type'];
