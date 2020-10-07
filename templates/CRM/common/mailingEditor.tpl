@@ -17,11 +17,6 @@
 
 <!-- Added global variable: nmEditor -->
 <script type="text/javascript">
-window.jQueryOld = window.jQuery;
-if (window.jQuery) {
-	window.jQuery = cj;
-}
-
 window.nmEditor = {
 	language: "{/literal}{$tsLocale}{literal}",
 	translation: {
@@ -79,11 +74,11 @@ window.nmEditor = {
 </script>
 <!-- poshytip -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css?v{$config->ver}">
-<script type="text/javascript" src="{$config->resourceBase}packages/poshytip/src/jquery.poshytip.js"></script>
+{js src=$config->resourceBase|substr:1|cat:'packages/poshytip/src/jquery.poshytip.js' d7_group=999 d7_weight=997}{/js}
 
 <!-- x-editable -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css?v{$config->ver}">
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js?v{$config->ver}"></script>
+{js src=$config->resourceBase|substr:1|cat:'packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js' d7_group=999 d7_weight=997}{/js}
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css?v{$config->ver}">
@@ -91,17 +86,18 @@ window.nmEditor = {
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css?v{$config->ver}">
 {/if}
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js?v{$config->ver}"></script>
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js?v{$config->ver}"></script>
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/quill.js?v{$config->ver}"></script>
+{js src=$config->resourceBase|substr:1|cat:'packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js' d7_group=999 d7_weight=997}{/js}
+{js src=$config->resourceBase|substr:1|cat:'packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js' d7_group=999 d7_weight=997}{/js}
+{js src=$config->resourceBase|substr:1|cat:'packages/x-editable/dist/inputs-ext/quill/quill.js' d7_group=999 d7_weight=997}{/js}
+
 
 <!-- pickr -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css?v{$config->ver}"/>
-<script src="{$config->resourceBase}packages/pickr/dist/pickr.min.js?v{$config->ver}"></script>
+{js src=$config->resourceBase|substr:1|cat:'packages/pickr/dist/pickr.min.js' d7_group=999 d7_weight=997}{/js}
 
 <!-- Magnific Popup -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
-<script src="{$config->resourceBase}packages/Magnific-Popup/dist/jquery.magnific-popup.js?v{$config->ver}"></script>
+{js src=$config->resourceBase|substr:1|cat:'packages/Magnific-Popup/dist/jquery.magnific-popup.js' d7_group=999 d7_weight=997}{/js}
 
 <!-- mailingEditor -->
 {include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
@@ -113,7 +109,7 @@ window.nmEditor = {
 	}
 </style>
 {/literal}
-<script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js?v{$config->ver}"></script>
+{js src=$config->resourceBase|substr:1|cat:'packages/mailingEditor/mailingEditor.js' d7_group=999 d7_weight=998}{/js}
 {literal}
 <script type="text/javascript">
 (function ($) {
@@ -127,6 +123,7 @@ window.nmEditor = {
 })(cj);
 </script>
 {/literal}
+
 <!-- mailingEditor files end -->
 
 <!-- mailingEditor HTML start -->

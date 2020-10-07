@@ -293,6 +293,149 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * Append a javascript file
+   *
+   * @param array $params   template call's parameters
+   * @param string $text    {js} block contents from the template
+   *
+   * @return void 
+   * @access public
+   * @static
+   */
+  static function addJs($params, $text) {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    $data = NULL;
+
+    if ($version >= 6 && $version < 7) {
+      $type = 'module';
+      $scope = 'header';
+      $defer = FALSE;
+      $cache = TRUE;
+      $preprocess = TRUE;
+
+      if (!empty($params)) {
+        if (isset($params['d6_scope'])) {
+          $scope = $params['d6_scope'];
+        }
+
+        if (isset($params['d6_defer'])) {
+          $defer = $params['d6_defer'];
+        }
+
+        if (isset($params['d6_cache'])) {
+          $cache = $params['d6_cache'];
+        }
+
+        if (isset($params['d6_preprocess'])) {
+          $preprocess = $params['d6_preprocess'];
+        }
+
+        if (isset($params['src']) && $params['src'] !== '') {
+          $data = $params['src'];
+
+          if (isset($params['d6_type'])) {
+            $type = $params['d6_type'] == 'inline' ? 'module' : $params['d6_type'];
+          }
+
+          drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
+          return;
+        }
+        else {
+          if (isset($text) && $text !== '') {
+            $data = $text;
+            $type = 'inline';
+
+            drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
+            return;
+          }
+        }
+      }
+      else {
+        if (isset($text) && $text !== '') {
+          $data = $text;
+          $type = 'inline';
+
+          drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
+          return;
+        }
+      }
+    }
+    elseif ($version >= 7 && $version < 8) {
+      $options = NULL;
+
+      if (!empty($params)) {
+        if (isset($params['d7_scope'])) {
+          $options['scope'] = $params['d7_scope'];
+        }
+
+        if (isset($params['d7_group'])) {
+          $options['group'] = $params['d7_group'];
+        }
+
+        if (isset($params['d7_every_page'])) {
+          $options['every_page'] = $params['d7_every_page'];
+        }
+
+        if (isset($params['d7_weight'])) {
+          $options['weight'] = $params['d7_weight'];
+        }
+
+        if (isset($params['d7_requires_jquery'])) {
+          $options['requires_jquery'] = $params['d7_requires_jquery'];
+        }
+
+        if (isset($params['d7_defer'])) {
+          $options['defer'] = $params['d7_defer'];
+        }
+
+        if (isset($params['d7_cache'])) {
+          $options['cache'] = $params['d7_cache'];
+        }
+
+        if (isset($params['d7_preprocess'])) {
+          $options['preprocess'] = $params['d7_preprocess'];
+        }
+
+        if (isset($params['src']) && $params['src'] !== '') {
+          $data = $params['src'];
+
+          if (isset($params['d7_type'])) {
+            $options['type'] = $params['d7_type'] == 'inline' ? 'file' : $params['d7_type'];
+          }
+
+          drupal_add_js($data, $options);
+          return;
+        }
+        else {
+          if (isset($text) && $text !== '') {
+            $data = $text;
+            $options['type'] = 'inline';
+
+            drupal_add_js($data, $options);
+            return;
+          }
+        }
+      }
+      else {
+        if (isset($text) && $text !== '') {
+          $data = $text;
+          $options['type'] = 'inline';
+
+          drupal_add_js($data, $options);
+          return;
+        }
+      }
+    }
+    elseif ($version >= 8) {
+      echo 'We have not yet supported versions above drupal 8';
+    }
+    else {
+      echo 'We have not yet supported this version of drupal ' . $version;
+    }
+  }
+
+  /**
    * Get variable from CMS system
    *
    * @param variable name
