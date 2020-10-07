@@ -26,57 +26,26 @@
 */
 
 /**
+ * CiviCRM's Smarty js-block plugin
+ *
+ * Template elements tagged {js}...{/js} are hidden unless action is create
+ * or update (this facilitates using form templates for read-only display).
  *
  * @package CRM
+ * @author Poliphilo <poliphilo@netivism.com.tw>
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id$
- *
  */
-
-require_once 'CRM/Core/Form.php';
 
 /**
- * This class generates form components for Activity Links
+ * Smarty block function providing js-only display support
  *
+ * @param array $params   template call's parameters
+ * @param string $text    {js} block contents from the template
+ * @param object $smarty  the Smarty object
+ *
+ * @return string  
  */
-class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
-  public function buildQuickForm() {
-    self::commonBuildQuickForm($this);
-  }
-  public static function commonBuildQuickForm($self) {
-    $contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $self);
-    $urlParams = "action=add&reset=1&cid={$contactId}&selectedChild=activity&atype=";
-
-    $url = CRM_Utils_System::url('civicrm/contact/view/activity',
-      $urlParams, FALSE, NULL, FALSE
-    );
-
-    $activityTypes = array();
-    require_once 'CRM/Utils/Mail.php';
-    if (CRM_Utils_Mail::validOutBoundMail() && $contactId) {
-      require_once 'CRM/Contact/BAO/Contact.php';
-      list($name, $email, $doNotEmail, $onHold, $isDeseased) = CRM_Contact_BAO_Contact::getContactDetails($contactId);
-      if (!$doNotEmail && $email && !$isDeseased) {
-        $activityTypes[3] = ts('Send an Email');
-      }
-    }
-    $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
-    if ($providersCount) {
-      $phones = CRM_Core_BAO_Phone::allPhones($contactId, FALSE, ts('Mobile'));
-      if (count($phones)) {
-        $activityTypes[4] = ts('Send SMS');
-      }
-    }
-
-    // this returns activity types sorted by weight
-    $otherTypes = CRM_Core_PseudoConstant::activityType(FALSE);
-
-    $activityTypes += $otherTypes;
-
-    $self->assign('activityTypes', $activityTypes);
-    $self->assign('url', $url);
-
-    $self->assign('suppressForm', TRUE);
-  }
+function smarty_block_js($params, $text, &$smarty) {
+  return CRM_Utils_System::addJs($params, $text);
 }
-
