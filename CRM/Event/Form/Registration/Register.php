@@ -269,13 +269,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if (!empty($this->_values['discount'])) {
       require_once 'CRM/Core/BAO/Discount.php';
       $participantId = $this->get('participantId');
-      if (!empty($participantId)) {
-        $registerDate = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $participantId, 'register_date');
-        $timestamp = strtotime($registerDate);
-      }
-      else {
-        $timestamp = CRM_REQUEST_TIME;
-      }
+      $timestamp = self::getRegistrationTimestamp($participantId);
       $discountId = CRM_Core_BAO_Discount::findSet($this->_eventId, 'civicrm_event', $timestamp);
       if ($discountId) {
         if (isset($this->_values['event']['default_discount_fee_id'])) {
@@ -657,13 +651,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if (is_array($discountedFee) && !empty($discountedFee)) {
       if (!$discountId) {
         $participantId = $form->get('participantId');
-        if (!empty($participantId)) {
-          $registerDate = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $participantId, 'register_date');
-          $timestamp = strtotime($registerDate);
-        }
-        else {
-          $timestamp = CRM_REQUEST_TIME;
-        }
+        $timestamp = self::getRegistrationTimestamp($participantId);
         $form->_discountId = $discountId = CRM_Core_BAO_Discount::findSet($form->_eventId, 'civicrm_event', $timestamp);
       }
       if ($discountId) {
@@ -1156,13 +1144,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       //added for discount
       require_once 'CRM/Core/BAO/Discount.php';
       $participantId = $this->get('participantId');
-      if (!empty($participantId)) {
-        $registerDate = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $participantId, 'register_date');
-        $timestamp = strtotime($registerDate);
-      }
-      else {
-        $timestamp = CRM_REQUEST_TIME;
-      }
+      $timestamp = self::getRegistrationTimestamp($participantId);
       $discountId = CRM_Core_BAO_Discount::findSet($this->_eventId, 'civicrm_event', $timestamp);
 
       if (!empty($this->_values['discount'][$discountId])) {
@@ -1413,6 +1395,22 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
   public function getTitle() {
     return ts('Register for Event');
+  }
+
+  static function getRegistrationTimestamp($participantId) {
+    if (!empty($participantId)) {
+      $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
+      $activityId = CRM_Utils_Array::key('Event Registration', $activityTypes);
+      $registerDate = CRM_Core_DAO::singleValueQuery('SELECT activity_date_time FROM civicrm_activity WHERE source_record_id = %1 AND activity_type_id = %2 ORDER BY activity_date_time ASC LIMIT 1', array(
+        1 => array($participantId, 'Positive'),
+        2 => array($activityId, 'Positive'),
+      ));
+      $timestamp = strtotime($registerDate);
+    }
+    else {
+      $timestamp = CRM_REQUEST_TIME;
+    }
+    return $timestamp;
   }
 }
 
