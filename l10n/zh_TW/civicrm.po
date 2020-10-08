@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-09-29 05:46+0000\n"
+"PO-Revision-Date: 2020-10-08 07:47+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48142,3 +48142,9 @@ msgid ""
 "Oops. The membership you're trying to renew appears to be invalid. Contact "
 "your site administrator if you need assistance."
 msgstr "喔喔...您想要更新的會員資格似乎是無效的。如果您需要協助，請聯絡網站管理者。"
+
+msgid "Only For Renew Membership?"
+msgstr "只用於更新會籍？"
+
+msgid "Is This Page Only for Membership Renewal?"
+msgstr "此頁面是否只限於讓登入會員更新會籍？"

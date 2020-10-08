@@ -1132,12 +1132,14 @@ WHERE civicrm_event.is_active = 1
             ),
           );
 
+          $checkinUrl = CRM_Event_BAO_Participant::checkinUrl($contactID, $participantId);
+          $onlineQrcodeUrl = $config->userFrameworkResourceURL.'extern/qrcode.html?qrcode='.rawurlencode($checkinUrl); 
+          $sendTemplateParams['tplParams']['checkinUrl'] = $onlineQrcodeUrl;
+          $sendTemplateParams['tplParams']['checkinUrlTag'] = '<a href="'.$onlineQrcodeUrl.'">'.ts('Check In Code').' '.ts('Link').'</a>';
           if (!empty($embedImages)) {
-            $sendTemplateParams['tplParams']['checkinCode'] = "<img src=\"cid:$qrcodeName\">";
+            $sendTemplateParams['tplParams']['checkinCode'] = "<img src=\"cid:$qrcodeName\"><br>".$sendTemplateParams['tplParams']['checkinUrlTag'];
             $sendTemplateParams['images'] = $embedImages;
           }
-          $checkinUrl = CRM_Event_BAO_Participant::checkinUrl($contactID, $participantId);
-          $sendTemplateParams['tplParams']['checkinUrl'] = $checkinUrl;
         }
 
         // address required during receipt processing (pdf and email receipt)

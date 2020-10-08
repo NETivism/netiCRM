@@ -40,6 +40,10 @@
     </table>
     <div id="memberFields">
       <table class="form-layout-compressed"> 
+          <tr class="crm-member-membershipblock-form-block-is_renewal_only">
+            <td class="label"></td><td class="html-adjust">{$form.is_renewal_only.html}&nbsp;{$form.is_renewal_only.label}<br />
+            <span class="description">{ts}Is This Page Only for Membership Renewal?{/ts}</span></td>
+          </tr>
           <tr class="crm-member-membershipblock-form-block-new_title">
               <td class="label">{$form.new_title.label}
               {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_membership_block' field='new_title' id=$membershipBlockId}{/if}</td><td>{$form.new_title.html}<br />
@@ -107,20 +111,58 @@
 </div>
 
 {literal}
+<style>
+.crm-member-membershipblock-form-block-new_text .crm-form-textarea {
+  position: relative;
+}
+.disabled-filter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(246,246,246, .5);
+  z-index: 100;
+}
+</style>
 <script type="text/javascript">
 	var is_act = document.getElementsByName('is_active');
   	if ( ! is_act[0].checked) {
-           hide('memberFields');
+      hide('memberFields');
 	}
-       function memberBlock(chkbox) {
-           if (chkbox.checked) {
-	      show('memberFields');
-	      return;
-           } else {
-	      hide('memberFields');
-    	      return;
-	   }
-       }
+  memberBlockLockFields(document.querySelector('#is_renewal_only'));
+
+    function memberBlock(chkbox) {
+      if (chkbox.checked) {
+          show('memberFields');
+          return;
+      } else {
+          hide('memberFields');
+          return;
+      }
+    }
+
+    function memberBlockLockFields(chkbox) {
+      var disabledFilter = document.querySelector('.crm-member-membershipblock-form-block-new_text .crm-form-textarea .disabled-filter');
+      if (!disabledFilter) {
+        var disabledFilter = document.createElement('div');
+        disabledFilter.classList.add('disabled-filter');
+        document.querySelector('.crm-member-membershipblock-form-block-new_text .crm-form-textarea').append(disabledFilter);
+      }
+
+      if (chkbox.checked) {
+          document.querySelector('#new_title').classList.add('ui-state-disabled');
+          document.querySelector('#is_required').checked = false;
+          document.querySelector('#is_required').classList.add('ui-state-disabled');
+          disabledFilter.style.display = 'block';
+          return;
+      } else {
+          document.querySelector('#new_title').classList.remove('ui-state-disabled');
+          document.querySelector('#is_required').classList.remove('ui-state-disabled');
+          disabledFilter.style.display = 'none';
+          return;
+      }
+    }
 </script>
 {/literal}
 

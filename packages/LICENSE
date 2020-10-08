@@ -83,6 +83,7 @@ TinyMCE       LGPL 2.1
 jQuery        GPL 2/X11
 fontawesome   MIT  http://fortawesome.github.io/Font-Awesome/
 random_compat MIT https://github.com/paragonie/random_compat/
+qrcodejs      MIT https://raw.githubusercontent.com/davidshimjs/qrcodejs/
 
 
 Limited Licesne
