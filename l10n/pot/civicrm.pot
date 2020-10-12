@@ -47862,3 +47862,9 @@ msgstr ""
 
 msgid "Oops. The membership you're trying to renew appears to be invalid. Contact your site administrator if you need assistance."
 msgstr ""
+
+msgid "Only For Renew Membership?"
+msgstr ""
+
+msgid "Is This Page Only for Membership Renewal?"
+msgstr ""

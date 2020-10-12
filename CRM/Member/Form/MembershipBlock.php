@@ -95,6 +95,8 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
     if (!empty($membershipTypes)) {
       $this->addElement('checkbox', 'is_active', ts('Membership Section Enabled?'), NULL, array('onclick' => "memberBlock(this);"));
 
+      $this->addElement('checkbox', 'is_renewal_only', ts('Only For Renew Membership?'), NULL, array('onclick' => "memberBlockLockFields(this);"));
+
       $this->addElement('text', 'new_title', ts('Title - New Membership'), CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipBlock', 'new_title'));
 
       $this->addWysiwyg('new_text', ts('Introductory Message - New Memberships'), CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipBlock', 'new_text'));
@@ -234,6 +236,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
       $params['membership_types'] = implode(',', $membershipTypes);
       $params['is_required'] = CRM_Utils_Array::value('is_required', $params, FALSE);
       $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
+      $params['is_renewal_only'] = CRM_Utils_Array::value('is_renewal_only', $params, FALSE);
       $params['display_min_fee'] = CRM_Utils_Array::value('display_min_fee', $params, FALSE);
       $params['is_separate_payment'] = CRM_Utils_Array::value('is_separate_payment', $params, FALSE);
       $params['entity_table'] = 'civicrm_contribution_page';

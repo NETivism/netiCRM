@@ -35,6 +35,8 @@
               <td>{$line.$column|crmMoney}</td>
             {elseif $column|strstr:"created_date"}
               <td>{$line.$column|crmDate}</td>
+            {elseif $column == 'id'}
+              <td><a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$line.id`&cid=`$line.contact_id`&action=view&context=recur&selectedChild=contribute" h=0 a=1 fe=1}" target="_blank">{$line.id}</a></td>
             {else}
               <td>{$line.$column}</td>
             {/if}

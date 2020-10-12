@@ -5,7 +5,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
   protected $_mode = NULL;
 
   // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
-  public static $_editableFields = array('amount', 'installments', 'end_date', 'contribution_status_id', 'note_title', 'note_body');
+  public static $_editableFields = array('amount', 'installments', 'end_date', 'contribution_status_id', 'note_title', 'note_body', 'start_date');
 
   public static $_hideFields = array('invoice_id');
 

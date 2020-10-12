@@ -571,10 +571,21 @@ class CRM_Core_Payment_BaseIPN {
       $contribution->payment_instrument_id = $input['payment_instrument_id'];
     }
 
+    if (isset($objects['paymentProcessor'])) {
+      $paymentProcessorType = $objects['paymentProcessor']['payment_processor_type'];
+      if ($paymentProcessorType == 'TaiwanACH') {
+        $contribution->receipt_date = $contribution->receive_date;
+      }
+    }
+
     $contribution->save();
 
     // check and generate receipt id here for every online contribution
-    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online = TRUE);
+    $is_online = TRUE;
+    if ($paymentProcessorType == 'TaiwanACH') {
+      $is_online = FALSE;
+    }
+    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
 
     // next create the transaction record
     if (isset($objects['paymentProcessor'])) {
@@ -650,9 +661,13 @@ class CRM_Core_Payment_BaseIPN {
     if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
       $sendSMS = TRUE;
       if (!empty($contribution->contribution_recur_id)) {
-        $recurId = array($contribution->contribution_recur_id);
-        $count = CRM_Contribute_BAO_ContributionRecur::getCount($recurId);
-        if ($count[$contribution->contribution_recur_id] > 1) {
+        $contribution_recur_id = 1879;
+        $sql = "SELECT count( contribution_recur_id ) FROM civicrm_contribution WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id";
+        $params = array(
+          1 => array($contribution_recur_id, 'Positive'),
+        );
+        $count = CRM_Core_DAO::singleValueQuery($sql, $params);
+        if ($count > 1) {
           $sendSMS = FALSE;
         }
       }
@@ -662,9 +677,9 @@ class CRM_Core_Payment_BaseIPN {
         list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text'], $objects);
         CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS sent");
       }
-    }
-    if (!$sendSMS) {
-      CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS doesn't be sent");
+      else {
+        CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS doesn't be sent");
+      }
     }
   }
 
