@@ -321,6 +321,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     //set default membership for membershipship block
     require_once 'CRM/Member/BAO/Membership.php';
     if ($this->_membershipBlock) {
+      // CRM_Member_BAO_Membership::checkRenewalPagePermission($this);
       $this->_defaults['selectMembership'] = $this->_defaultMemTypeId ? $this->_defaultMemTypeId : CRM_Utils_Array::value('membership_type_default', $this->_membershipBlock);
       if (!empty($this->_defaultFromRequest['grouping']) && strstr($this->_defaultFromRequest['grouping'], 'membership-')) {
         list($dontcare, $defaultFromRequestMembership) = explode('-', $this->_defaultFromRequest['grouping']);
