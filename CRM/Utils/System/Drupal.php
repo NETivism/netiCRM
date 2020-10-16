@@ -422,7 +422,11 @@ class CRM_Utils_System_Drupal {
           // Check file path
           if (!preg_match('/^https?:/i', $data)) {
             // If the path is relative
-            if (substr($data, 0, 1) !== '/') {
+            if (substr($data, 0, 1) === '/') {
+              $data = ltrim($data, '/');
+            }
+            else {
+              $crm_relative_path = ltrim($crm_relative_path, '/');
               $data = $crm_relative_path . $data;
             }
           }
