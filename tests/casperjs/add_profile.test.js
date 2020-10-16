@@ -712,7 +712,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });    
 
     casper.then(function() {
-        test.assertDoesntExist('.error-ci', 'page have no error');
+        test.assertDoesntExist('.error-ci', 'page has no error');
     });
 
     casper.then(function() {
@@ -730,6 +730,7 @@ casper.test.begin('Resurrectio test', function(test) {
     var postal_code = makeid(5);
     var street_address = makeid(5);
     var email = makeid(5) + '@test.com';
+    email = email.toLowerCase();
     var note = makeid(5);
     casper.waitForSelector("input[name='first_name']", function success() {
         this.echo('Step 6-1: Input first name.')
@@ -826,7 +827,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     casper.then(function() {
-        test.assertDoesntExist('.error-ci', 'page have no error');
+        test.assertDoesntExist('.error-ci', 'page has no error');
     });
 
     casper.then(function() {
@@ -857,7 +858,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     casper.then(function() {
-        casper.echo("Step 7-2: Go to new contact page.");
+        casper.echo("Step 7-2: Go to new contact page, check all data correct.");
     });
 
     casper.waitForSelector("table.selector tbody tr td.crm-search-display_name a", function success() {
@@ -887,6 +888,85 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertEquals(legal_identifier_from_page, legal_identifier, 'Legal Identifier correct.')
     }, function fail() {
         test.assertExists("#record-log div", "Legal Identifier exist.");
+    });
+
+    casper.waitForSelector("a[title='view current employer']", function success() {
+        var current_employer_from_page = this.evaluate(function () {
+            return document.querySelector("a[title='view current employer']").textContent;
+        });
+        test.assertEquals(current_employer_from_page, current_employer, 'Current Employer correct.');
+    }, function fail() {
+        test.assertExists("a[title='view current employer']", "Employer exist.");
+    });
+
+    casper.waitForSelector("td.primary span", function success() {
+        var phone_from_page = this.evaluate(function () {
+            return document.querySelector('td.primary span').textContent;
+        });
+        test.assertEquals(phone_from_page, phone, 'Phone correct.')
+    }, function fail() {
+        test.assertExists("td.primary span", "Phone exist.");
+    });
+
+    casper.waitForSelector("span.region", function success() {
+        var state_from_page = this.evaluate(function () {
+            return document.querySelector("span.region").textContent;
+        });
+        test.assertEquals(state_from_page, 'AL', 'State correct.')
+    }, function fail() {
+        test.assertExists("span.region", "State exist.");
+    });
+
+    casper.waitForSelector("span.locality", function success() {
+        var city_from_page = this.evaluate(function () {
+            return document.querySelector("span.locality").textContent;
+        });
+        test.assertEquals(city_from_page, city, 'City correct.')
+    }, function fail() {
+        test.assertExists("span.locality", "City exist.");
+    });
+
+    casper.waitForSelector("span.postal-code", function success() {
+        var postal_code_from_page = this.evaluate(function () {
+            return document.querySelector("span.postal-code").textContent;
+        });
+        test.assertEquals(postal_code_from_page, postal_code, 'Postal Code correct.')
+    }, function fail() {
+        test.assertExists("span.postal-code", "Postal Code exist.");
+    });
+
+    casper.waitForSelector("span.street-address", function success() {
+        var street_address_from_page = this.evaluate(function () {
+            return document.querySelector("span.street-address").textContent;
+        });
+        test.assertEquals(street_address_from_page, street_address, 'Street Address correct.')
+    }, function fail() {
+        test.assertExists("span.street-address", "Street Address exist.");
+    });
+    
+    casper.waitForSelector("span.do-not-email", function success() {
+        var email_from_page = this.evaluate(function () {
+            return document.querySelector('span.do-not-email a').textContent;
+        });
+        test.assertEquals(email_from_page, email, 'Email correct.');
+        test.pass('Do Not Email correct.');
+    }, function fail() {
+        test.assertExists("span.do-not-email", "Email exist.");
+    });
+
+    casper.waitForSelector("a[title='Notes']", function success() {
+        this.click("a[title='Notes']");
+    }, function fail() {
+        test.assertExists("a[title='Notes']", "Notes link exist.");
+    });
+
+    casper.waitForSelector("#notes tr td:nth-child(2)", function success() {
+        var note_from_page = this.evaluate(function () {
+            return document.querySelector('#notes tr td:nth-child(2)').textContent;
+        });
+        test.assertEquals(note_from_page, note, 'Note(s) correct.')
+    }, function fail() {
+        test.assertExists("#notes tr td:nth-child(2)", "Note(s) exist.");
     });
 
     casper.run(function() {
