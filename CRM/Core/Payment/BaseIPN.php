@@ -571,10 +571,21 @@ class CRM_Core_Payment_BaseIPN {
       $contribution->payment_instrument_id = $input['payment_instrument_id'];
     }
 
+    if (isset($objects['paymentProcessor'])) {
+      $paymentProcessorType = $objects['paymentProcessor']['payment_processor_type'];
+      if ($paymentProcessorType == 'TaiwanACH') {
+        $contribution->receipt_date = $contribution->receive_date;
+      }
+    }
+
     $contribution->save();
 
     // check and generate receipt id here for every online contribution
-    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online = TRUE);
+    $is_online = TRUE;
+    if ($paymentProcessorType == 'TaiwanACH') {
+      $is_online = FALSE;
+    }
+    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
 
     // next create the transaction record
     if (isset($objects['paymentProcessor'])) {

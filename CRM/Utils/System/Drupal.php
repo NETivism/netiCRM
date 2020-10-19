@@ -303,6 +303,9 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function addJs($params, $text) {
+    global $civicrm_root;
+    $crm_root_path = $civicrm_root;
+    $crm_relative_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', $crm_root_path);
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
     $data = NULL;
@@ -333,10 +336,20 @@ class CRM_Utils_System_Drupal {
 
         if (isset($params['src']) && $params['src'] !== '') {
           $data = $params['src'];
-          $url = parse_url($data);
-          if (!isset($url['scheme'])) {
-            if (strpos($data, '/') === 0) {
-              $data = substr($data, 1);
+
+          // Check file path
+          if (preg_match('/^https?:/i', $data)) {
+            // If the path is absolute
+            $data = preg_replace('/^https?:\/\/[^\/]*\//', '', $data);
+          }
+          else {
+            // If the path is relative
+            if (substr($data, 0, 1) === '/') {
+              $data = ltrim($data, '/');
+            }
+            else {
+              $crm_relative_path = ltrim($crm_relative_path, '/');
+              $data = $crm_relative_path . $data;
             }
           }
 
@@ -405,10 +418,16 @@ class CRM_Utils_System_Drupal {
 
         if (isset($params['src']) && $params['src'] !== '') {
           $data = $params['src'];
-          $url = parse_url($data);
-          if (!isset($url['scheme'])) {
-            if (strpos($data, '/') === 0) {
-              $data = substr($data, 1);
+
+          // Check file path
+          if (!preg_match('/^https?:/i', $data)) {
+            // If the path is relative
+            if (substr($data, 0, 1) === '/') {
+              $data = ltrim($data, '/');
+            }
+            else {
+              $crm_relative_path = ltrim($crm_relative_path, '/');
+              $data = $crm_relative_path . $data;
             }
           }
 

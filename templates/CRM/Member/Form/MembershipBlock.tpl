@@ -40,10 +40,6 @@
     </table>
     <div id="memberFields">
       <table class="form-layout-compressed"> 
-          <tr class="crm-member-membershipblock-form-block-is_renewal_only">
-            <td class="label"></td><td class="html-adjust">{$form.is_renewal_only.html}&nbsp;{$form.is_renewal_only.label}<br />
-            <span class="description">{ts}Is This Page Only for Membership Renewal?{/ts}</span></td>
-          </tr>
           <tr class="crm-member-membershipblock-form-block-new_title">
               <td class="label">{$form.new_title.label}
               {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_membership_block' field='new_title' id=$membershipBlockId}{/if}</td><td>{$form.new_title.html}<br />
@@ -150,7 +146,7 @@
         document.querySelector('.crm-member-membershipblock-form-block-new_text .crm-form-textarea').append(disabledFilter);
       }
 
-      if (chkbox.checked) {
+      if (chkbox && chkbox.checked) {
           document.querySelector('#new_title').classList.add('ui-state-disabled');
           document.querySelector('#is_required').checked = false;
           document.querySelector('#is_required').classList.add('ui-state-disabled');
