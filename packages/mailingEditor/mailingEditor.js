@@ -1914,15 +1914,15 @@
           "<div class='nme-preview-toolbar'>" +
           "<div class='nme-preview-title'>" + _ts["Preview"] + "</div>" +
           "<div class='nme-preview-mode'>" +
-          "<button type='button' class='nme-preview-mode-btn is-active' data-mode='desktop'>" + _ts["Normal"] + "</button>" +
-          "<button type='button' class='nme-preview-mode-btn' data-mode='mobile'>" + _ts["Mobile Device"] + "</button>" +
+          "<button type='button' class='nme-preview-mode-btn' data-mode='desktop'>" + _ts["Normal"] + "</button>" +
+          "<button type='button' class='nme-preview-mode-btn is-active' data-mode='mobile'>" + _ts["Mobile Device"] + "</button>" +
           "</div>" +
           "<button type='button' class='nme-preview-close'><i class='zmdi zmdi-close'></i></button>" +
           "</div>" +
           "<div class='nme-preview-content'>" +
           "<div class='nme-preview-panels'>" +
-          "<div class='nme-preview-panel nme-preview-desktop-panel is-active' data-mode='desktop'><div class='desktop-preview-container preview-container'><div class='preview-content'></div></div></div>" +
-          "<div class='nme-preview-panel nme-preview-mobile-panel' data-mode='mobile'><div class='mobile-preview-container preview-container'><div class='preview-content'></div></div></div>" +
+          "<div class='nme-preview-panel nme-preview-desktop-panel' data-mode='desktop'><div class='desktop-preview-container preview-container'><div class='preview-content'></div></div></div>" +
+          "<div class='nme-preview-panel nme-preview-mobile-panel is-active' data-mode='mobile'><div class='mobile-preview-container preview-container'><div class='preview-content'></div></div></div>" +
           "</div>" +
           "</div>" +
           "</div>" +
