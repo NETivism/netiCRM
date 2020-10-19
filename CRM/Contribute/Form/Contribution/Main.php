@@ -747,7 +747,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->assign('is_separate_payment', TRUE);
     }
 
-    $title = ts('Contribution Amount');
+    $title = ts('Amount');
     if ($this->_values['is_allow_other_amount']) {
       if (!empty($this->_values['amount'])) {
         if (!empty($this->_defaultFromRequest['amt'])) {
