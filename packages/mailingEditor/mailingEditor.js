@@ -2025,7 +2025,8 @@
     let $editableElems = $(".nme-editable:not(.editable-initialized)");
 
     if (typeof $.fn.editable !== "undefined" && $editableElems.length) {
-      $.fn.editable.defaults.mode = 'inline';
+      $.fn.editable.defaults.mode = "inline";
+      $.fn.editable.defaults.onblur = "submit";
 
       $editableElems.each(function() {
         let $editableElem = $(this);
