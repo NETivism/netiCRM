@@ -49,9 +49,9 @@
                 <div>
                 <div class="description">{ts 1=7}This URL will be expired on %1 days later.{/ts}</div>
                 <div>
-                  <span><i class="zmdi zmdi-email"></i><a href="{crmURL p='civicrm/contact/view/activity' q="action=add&reset=1&cid=`$contactId`&selectedChild=activity&atype=3"}">{ts}Send an Email{/ts}</a></span>
+                  <span><i class="zmdi zmdi-email"></i><a href="{crmURL p='civicrm/contact/view/activity' q="action=add&reset=1&cid=`$contactId`&selectedChild=activity&atype=3"}" target="_blank">{ts}Send an Email{/ts}</a></span>
                   {if $sendSMS}
-                  <span><i class="zmdi zmdi-smartphone-android"></i><a href="{crmURL p='civicrm/contact/view/activity' q="action=add&reset=1&cid=`$contactId`&selectedChild=activity&atype=4"}">{ts}Send SMS{/ts}</a></span>
+                  <span><i class="zmdi zmdi-smartphone-android"></i><a href="{crmURL p='civicrm/contact/view/activity' q="action=add&reset=1&cid=`$contactId`&selectedChild=activity&atype=4"}" target="_blank">{ts}Send SMS{/ts}</a></span>
                   {/if}
                 </div>
                 {include file="CRM/common/ShortenURL.tpl"}

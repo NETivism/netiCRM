@@ -105,6 +105,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         $this->set('csContactID', $csContactID);
         $this->set('userID', $csContactID);     // used by contributionBase
         $this->_userID = $csContactID;          // used by current follow up
+        
+        // refs #29618, load contribution id and add defaultFromRequest again
+        $this->loadDefaultFromOriginalId();
       }
     }
 
