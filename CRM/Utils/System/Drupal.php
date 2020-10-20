@@ -298,14 +298,13 @@ class CRM_Utils_System_Drupal {
    * @param array $params   template call's parameters
    * @param string $text    {js} block contents from the template
    *
-   * @return void 
+   * @return void
    * @access public
    * @static
    */
   static function addJs($params, $text) {
     global $civicrm_root;
-    $crm_root_path = $civicrm_root;
-    $crm_relative_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', $crm_root_path);
+    $crmRelativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $civicrm_root);
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
     $data = NULL;
@@ -318,24 +317,10 @@ class CRM_Utils_System_Drupal {
       $preprocess = TRUE;
 
       if (!empty($params)) {
-        if (isset($params['d6_scope'])) {
-          $scope = $params['d6_scope'];
-        }
+        extract($params);
 
-        if (isset($params['d6_defer'])) {
-          $defer = $params['d6_defer'];
-        }
-
-        if (isset($params['d6_cache'])) {
-          $cache = $params['d6_cache'];
-        }
-
-        if (isset($params['d6_preprocess'])) {
-          $preprocess = $params['d6_preprocess'];
-        }
-
-        if (isset($params['src']) && $params['src'] !== '') {
-          $data = $params['src'];
+        if (isset($src) && $src !== '') {
+          $data = $src;
 
           // Check file path
           if (preg_match('/^https?:/i', $data)) {
@@ -348,17 +333,17 @@ class CRM_Utils_System_Drupal {
               $data = ltrim($data, '/');
             }
             else {
-              $crm_relative_path = ltrim($crm_relative_path, '/');
-              $data = $crm_relative_path . $data;
+              $crmRelativePath = ltrim($crmRelativePath, '/');
+              $data = $crmRelativePath . $data;
             }
           }
 
-          if (isset($params['d6_type'])) {
-            $type = $params['d6_type'] == 'inline' ? 'module' : $params['d6_type'];
+          if (isset($type)) {
+            // Change the value to 'module' if 'src' is assigned and the 'type' is set to 'inline'.
+            $type = $type == 'inline' ? 'module' : $type;
           }
 
           drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
-          return;
         }
         else {
           if (isset($text) && $text !== '') {
@@ -366,7 +351,6 @@ class CRM_Utils_System_Drupal {
             $type = 'inline';
 
             drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
-            return;
           }
         }
       }
@@ -376,7 +360,6 @@ class CRM_Utils_System_Drupal {
           $type = 'inline';
 
           drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
-          return;
         }
       }
     }
@@ -384,40 +367,43 @@ class CRM_Utils_System_Drupal {
       $options = NULL;
 
       if (!empty($params)) {
-        if (isset($params['d7_scope'])) {
-          $options['scope'] = $params['d7_scope'];
+        $options = array();
+        extract($params);
+
+        if (isset($scope)) {
+          $options['scope'] = $scope;
         }
 
-        if (isset($params['d7_group'])) {
-          $options['group'] = $params['d7_group'];
+        if (isset($group)) {
+          $options['group'] = $group;
         }
 
-        if (isset($params['d7_every_page'])) {
-          $options['every_page'] = $params['d7_every_page'];
+        if (isset($every_page)) {
+          $options['every_page'] = $every_page;
         }
 
-        if (isset($params['d7_weight'])) {
-          $options['weight'] = $params['d7_weight'];
+        if (isset($weight)) {
+          $options['weight'] = $weight;
         }
 
-        if (isset($params['d7_requires_jquery'])) {
-          $options['requires_jquery'] = $params['d7_requires_jquery'];
+        if (isset($requires_jquery)) {
+          $options['requires_jquery'] = $requires_jquery;
         }
 
-        if (isset($params['d7_defer'])) {
-          $options['defer'] = $params['d7_defer'];
+        if (isset($defer)) {
+          $options['defer'] = $defer;
         }
 
-        if (isset($params['d7_cache'])) {
-          $options['cache'] = $params['d7_cache'];
+        if (isset($cache)) {
+          $options['cache'] = $cache;
         }
 
-        if (isset($params['d7_preprocess'])) {
-          $options['preprocess'] = $params['d7_preprocess'];
+        if (isset($preprocess)) {
+          $options['preprocess'] = $preprocess;
         }
 
-        if (isset($params['src']) && $params['src'] !== '') {
-          $data = $params['src'];
+        if (isset($src) && $src !== '') {
+          $data = $src;
 
           // Check file path
           if (!preg_match('/^https?:/i', $data)) {
@@ -426,17 +412,17 @@ class CRM_Utils_System_Drupal {
               $data = ltrim($data, '/');
             }
             else {
-              $crm_relative_path = ltrim($crm_relative_path, '/');
-              $data = $crm_relative_path . $data;
+              $crmRelativePath = ltrim($crmRelativePath, '/');
+              $data = $crmRelativePath . $data;
             }
           }
 
-          if (isset($params['d7_type'])) {
-            $options['type'] = $params['d7_type'] == 'inline' ? 'file' : $params['d7_type'];
+          if (isset($type)) {
+            // Change the value to 'file' if 'src' is assigned and the 'type' is set to 'inline'.
+            $options['type'] = $type == 'inline' ? 'file' : $type;
           }
 
           drupal_add_js($data, $options);
-          return;
         }
         else {
           if (isset($text) && $text !== '') {
@@ -444,7 +430,6 @@ class CRM_Utils_System_Drupal {
             $options['type'] = 'inline';
 
             drupal_add_js($data, $options);
-            return;
           }
         }
       }
@@ -454,16 +439,14 @@ class CRM_Utils_System_Drupal {
           $options['type'] = 'inline';
 
           drupal_add_js($data, $options);
-          return;
         }
       }
     }
-    elseif ($version >= 8) {
-      echo 'We have not yet supported versions above drupal 8';
-    }
     else {
-      echo 'We have not yet supported this version of drupal ' . $version;
+      CRM_Core_Error::debug_log_message("addJs function have not yet supported this version of drupal $version");
     }
+
+    return $result;
   }
 
   /**
