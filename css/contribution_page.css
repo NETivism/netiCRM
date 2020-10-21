@@ -736,7 +736,10 @@ body .crm-container fieldset{
        -o-transition: all ease-in-out .2s;
           transition: all ease-in-out .2s;
 }
-.crm-button-type-upload a.button, 
+.crm-button-type-upload a.button {
+  background-color: var(--active-color);
+  float: right;
+}
 #checkavailability {
   background-color: var(--active-color);
   float: right;
@@ -927,13 +930,11 @@ body .crm-container-md div[class*="crm-section state_province-"] .content{
 body .crm-container-md div[class*="crm-section state_province-"] .crm-form-elem{
   margin-right: 7px;
 }
-body .crm-container-md div[class*="crm-section state_province-"] .crm-form-select-single .form-select {
+body .crm-container-md div[class*="crm-section state_province-"] .crm-form-select-single .form-select,
+body .crm-container-md div[class*="crm-section state_province-"] [name*="city-"] {
   width: 9rem; 
 }
-body .crm-container-md div[class*="crm-section state_province-"] input[name^="city-"] {
-  width: 9rem;
-}
-body .crm-container-md div[class*="crm-section state_province-"] input[name^="postal_code-"] {
+body .crm-container-md div[class*="crm-section state_province-"] input[name*="postal_code-"] {
   width: 7rem;
   /* overwrite civicrm.css */
   max-width: 7rem;
