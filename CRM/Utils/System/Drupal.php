@@ -368,42 +368,16 @@ class CRM_Utils_System_Drupal {
 
       if (!empty($params)) {
         $options = array();
-        extract($params);
+        $possibleVars = array('scope', 'group', 'every_page', 'weight', 'requires_jquery', 'defer', 'cache', 'preprocess');
 
-        if (isset($scope)) {
-          $options['scope'] = $scope;
+        foreach($possibleVars as $varName) {
+          if (isset($params[$varName])) {
+            $options[$varName] = $params[$varName];
+          }
         }
 
-        if (isset($group)) {
-          $options['group'] = $group;
-        }
-
-        if (isset($every_page)) {
-          $options['every_page'] = $every_page;
-        }
-
-        if (isset($weight)) {
-          $options['weight'] = $weight;
-        }
-
-        if (isset($requires_jquery)) {
-          $options['requires_jquery'] = $requires_jquery;
-        }
-
-        if (isset($defer)) {
-          $options['defer'] = $defer;
-        }
-
-        if (isset($cache)) {
-          $options['cache'] = $cache;
-        }
-
-        if (isset($preprocess)) {
-          $options['preprocess'] = $preprocess;
-        }
-
-        if (isset($src) && $src !== '') {
-          $data = $src;
+        if (isset($params['src']) && $params['src'] !== '') {
+          $data = $params['src'];
 
           // Check file path
           if (!preg_match('/^https?:/i', $data)) {
@@ -417,16 +391,16 @@ class CRM_Utils_System_Drupal {
             }
           }
 
-          if (isset($type)) {
+          if (isset($params['type'])) {
             // Change the value to 'file' if 'src' is assigned and the 'type' is set to 'inline'.
-            $options['type'] = $type == 'inline' ? 'file' : $type;
+            $options['type'] = $params['type'] == 'inline' ? 'file' : $params['type'];
           }
 
           drupal_add_js($data, $options);
         }
         else {
-          if (isset($text) && $text !== '') {
-            $data = $text;
+          if (isset($params['text']) && $params['text'] !== '') {
+            $data = $params['text'];
             $options['type'] = 'inline';
 
             drupal_add_js($data, $options);
