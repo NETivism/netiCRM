@@ -738,7 +738,6 @@ body .crm-container fieldset{
 }
 .crm-button-type-upload a.button {
   background-color: var(--active-color);
-  float: right;
 }
 #checkavailability {
   background-color: var(--active-color);
