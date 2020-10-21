@@ -90,6 +90,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       // #29618, donate url, for security reason, only available for 7 days
       $contribution = new CRM_Contribute_DAO_Contribution();
       $contribution->contribution_recur_id = $recur->id;
+      $contribution->contact_id = $recur->contact_id;
       if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
         $contribution->orderBy("created_date DESC");
         $contribution->find(TRUE);

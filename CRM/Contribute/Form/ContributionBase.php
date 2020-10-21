@@ -1032,6 +1032,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   }
 
   public function loadDefaultFromOriginalId($id = NULL) {
+    $this->_originalId = NULL;
     if (empty($id)) {
       // original id, it's previous contribution
       $id = CRM_Utils_Request::retrieve('oid', 'Positive', $this, FALSE, NULL, 'REQUEST');
