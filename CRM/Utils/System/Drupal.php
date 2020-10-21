@@ -420,7 +420,7 @@ class CRM_Utils_System_Drupal {
       CRM_Core_Error::debug_log_message("addJs function have not yet supported this version of drupal $version");
     }
 
-    return $result;
+    return;
   }
 
   /**
