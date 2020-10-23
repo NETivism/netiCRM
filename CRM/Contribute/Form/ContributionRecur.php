@@ -343,9 +343,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         /*
          * Compare doUpdateRecur result and edit params. 
          */
-        if (!empty($result['next_sche_contribution'])) {
-          $params['next_sche_contribution'] = $result['next_sche_contribution'];
-          unset($result['next_sche_contribution']);
+        if (!empty($result['next_sched_contribution'])) {
+          $params['next_sched_contribution'] = $result['next_sched_contribution'];
+          unset($result['next_sched_contribution']);
         }
         foreach ($result as $field => $value) {
           if (!empty($value) && !is_object($value) && !is_array($value) && $params[$field] != $value) {
