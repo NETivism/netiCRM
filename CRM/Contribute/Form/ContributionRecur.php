@@ -316,6 +316,48 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       }
     }
 
+    $recur = array();
+    $ids = array('id' => $this->_id);
+    CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionRecur', $ids, $recur);
+    if (!empty($recur) && !empty($recur['processor_id'])) {
+
+      /**
+       * Prepare payment object.
+       */
+      $mode = $recur['is_test'] ? 'test' : 'live';
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur['processor_id'], $mode);
+      $processorClass = &CRM_Core_Payment::singleton($mode, $paymentProcessor, $this);
+      if (method_exists($processorClass, 'doUpdateRecur') && !empty($processorClass::$_editableFields)) {
+        $editableFields = $processorClass::$_editableFields;
+        foreach ($editableFields as $field) {
+          if ($recur[$field] != $params[$field]) {
+            $requestParams[$field] = $params[$field];
+          }
+        }
+        if (!empty($requestParams)) {
+          $requestParams['contribution_recur_id'] = $this->_id;
+          // if need debug, can add second params "1" the follow function.
+          $result = $processorClass->doUpdateRecur($requestParams);
+        }
+
+        /*
+         * Compare doUpdateRecur result and edit params. 
+         */
+        if (!empty($result['next_sche_contribution'])) {
+          $params['next_sche_contribution'] = $result['next_sche_contribution'];
+          unset($result['next_sche_contribution']);
+        }
+        foreach ($result as $field => $value) {
+          if (!empty($value) && !is_object($value) && !is_array($value) && $params[$field] != $value) {
+            $failedFields[] = $field;
+          }
+        }
+        if (!empty($failedFields)) {
+          CRM_Core_Error::fatal(implode(',', $failedFields) . " don't change success");
+        }
+      }
+    }
+    
     CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
 
     // save the changes

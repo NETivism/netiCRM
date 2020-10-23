@@ -13,6 +13,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
   public static $_hideFields = array('invoice_id');
 
+  // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
+  public static $_editableFields = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit');
+
   public static $_statusMap = array(
     // 3 => 'terminate',   // Can't undod. Don't Use
     5 => 'restart',
@@ -206,7 +209,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
             $statusReverseMap = array_flip(self::$_statusMap);
             $result['contribution_status_id'] = $statusReverseMap[$resultType];
           }
-          $result['next_sched_contribution'] = $result['NewNextTime'];
+          if (!empty($result['NewNextTime'])) {
+            $result['next_sched_contribution'] = $result['NewNextTime'];
+          }
         }
       }
 
@@ -262,8 +267,12 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
             $result['frequency_unit'] = $unitReverseMap[$apiResult->PeriodType];
           }
           $result['cycle_day'] = $apiResult->PeriodPoint;
-          $result['amount'] = $apiResult->NewNextAmt;
-          $result['next_sched_contribution'] = $apiResult->NewNextTime;
+          if (!empty($apiResult->NewNextAmt) && $apiResult->NewNextAmt != '-') {
+            $result['amount'] = $apiResult->NewNextAmt;
+          }
+          if (!empty($apiResult->NewNextTime)) {
+            $result['next_sched_contribution'] = $apiResult->NewNextTime;
+          }
         }
       }
     }
