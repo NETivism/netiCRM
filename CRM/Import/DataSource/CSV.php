@@ -165,6 +165,9 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
       if (count($row) != $numColumns) {
         continue;
       }
+      if (count(array_filter($row)) === 0) {
+        continue;
+      }
 
       if (!$first) {
         $sql .= ', ';
