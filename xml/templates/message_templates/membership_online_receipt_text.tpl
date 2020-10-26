@@ -179,7 +179,7 @@
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
+{/if}
 {/if}
 
 {if $customPre}
