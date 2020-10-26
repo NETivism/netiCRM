@@ -25,19 +25,12 @@
 *}
 {if $confirm}
 <div class="messages status">
-      &nbsp;
-      <label>{$display_name} ({$email})</label> {ts}has been successfully resubscribed.{/ts}
+  <label>{$display_name} ({$email})</label> {ts}has been successfully resubscribed.{/ts}
 </div>
 {else}
-<div>
-<form action="{$confirmURL}" method="post">
-{ts 1=$display_name 2=$email}Are you sure you want to resubscribe: %1 (%2){/ts}
-<br/>
-<center>
-<input type="submit" name="_qf_resubscribe_next" value="{ts}Resubscribe{/ts}" class="form-submit" />
-&nbsp;&nbsp;&nbsp;
-<input type="submit" name="_qf_resubscribe_cancel" value="{ts}Cancel{/ts}" class="form-submit" />
-</center>
-</form>
+<div align="center">
+  {ts 1=$display_name 2=$email}Are you sure you want to resubscribe: %1 (%2){/ts}
+  {include file='CRM/common/ReCAPTCHA.tpl'}
+  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 {/if}

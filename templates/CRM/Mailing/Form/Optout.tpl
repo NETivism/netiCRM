@@ -25,19 +25,12 @@
 *}
 {if $confirm}
 <div class="messages status">
-      &nbsp;
-      <label>{$display_name} ({$email})</label> {ts}has been successfully opted out.{/ts}
+  <label>{$display_name} ({$email})</label> {ts}has been successfully opted out.{/ts}
 </div>
 {else}
-<div>
-<form action="{$confirmURL}" method="post">
-{ts 1=$display_name 2=$email}Are you sure you want to optout: %1 (%2){/ts}
-<br/>
-<center>
-<input type="submit" name="_qf_optout_next" value="{ts}Optout{/ts}" class="form-submit" />
-&nbsp;&nbsp;&nbsp;
-<input type="submit" name="_qf_optout_cancel" value="{ts}Cancel{/ts}" class="form-submit" />
-</center>
-</form>
+<div align="center">
+  <div>{ts 1=$display_name 2=$email}Are you sure you want to optout: %1 (%2){/ts}</div>
+  {include file='CRM/common/ReCAPTCHA.tpl'}
+  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 {/if}
