@@ -7117,7 +7117,6 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {/if}
 {if $is_deductible AND $price}
 
-{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
 {/if}
 
 {if $customPre}
@@ -7472,13 +7471,6 @@ rule for Organizations to find the potential duplicates and merge them if approp
          {/if}
         </td>
        </tr>
-      {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
       {/if}
      {/if}
 
@@ -7682,7 +7674,6 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {/if}
 {if $is_deductible AND $price}
 
-{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
 {/if}
 
 {if $customPre}
@@ -8037,13 +8028,6 @@ rule for Organizations to find the potential duplicates and merge them if approp
          {/if}
         </td>
        </tr>
-      {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
       {/if}
      {/if}
 
@@ -14489,7 +14473,6 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 {/if}
 {if $is_deductible AND $price}
 
-{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
 {/if}
 
 {if $customPre}
@@ -14947,13 +14930,6 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
          {/if}
         </td>
        </tr>
-      {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
       {/if}
      {/if}
 
@@ -15189,7 +15165,6 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 {/if}
 {if $is_deductible AND $price}
 
-{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
 {/if}
 
 {if $customPre}
@@ -15647,13 +15622,6 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
          {/if}
         </td>
        </tr>
-      {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
       {/if}
      {/if}
 

@@ -60,9 +60,7 @@ class CRM_SMS_Form_Task_SMS extends CRM_Contact_Form_Task {
    * @access public
    */
   function preProcess() {
-    $cid = CRM_Utils_Request::retrieve('cid', 'Positive',
-      $this, FALSE
-    );
+    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
 
     if ($cid) {
       // not sure why this is needed :(
@@ -107,9 +105,7 @@ class CRM_SMS_Form_Task_SMS extends CRM_Contact_Form_Task {
     if (!$this->_single) {
       $toArray = array();
       foreach ($this->_contactIds as $contactId) {
-        list($toDisplayName,
-          $toSMS
-        ) = CRM_Contact_BAO_Contact_Location::getPhoneDetails($contactId, 'Mobile');
+        list($toDisplayName, $toSMS) = CRM_Contact_BAO_Contact_Location::getPhoneDetails($contactId, 'Mobile');
         if (!empty($toSMS)) {
           $toArray[] = "\"$toDisplayName\" <$toSMS>";
         }
@@ -142,9 +138,8 @@ class CRM_SMS_Form_Task_SMS extends CRM_Contact_Form_Task {
 
     if ($this->_single) {
       // also fix the user context stack
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/activity',
-          '&show=1&action=browse&cid=' . $this->_contactIds[0]
-        ));
+      $contactId = reset($form->_contactIds);
+      $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view', 'cid='.$contactId.'&selectedChild=activity'));
       $this->addDefaultButtons(ts('Send SMS'), 'next', 'cancel');
     }
     else {

@@ -300,12 +300,11 @@ class CRM_Contact_Form_Task_SMSCommon {
     if ($form->_single) {
       // also fix the user context stack
       if ($form->_context) {
-        $url = CRM_Utils_System::url('civicrm/dashboard', 'reset=1');
+        $url = CRM_Utils_System::url('civicrm/contact/search', 'reset=1');
       }
       else {
-        $url = CRM_Utils_System::url('civicrm/contact/view',
-          "&show=1&action=browse&cid={$form->_contactIds[0]}&selectedChild=activity"
-        );
+        $contactId = reset($form->_contactIds);
+        $url = CRM_Utils_System::url('civicrm/contact/view', 'cid='.$contactId.'&selectedChild=activity');
       }
 
       $session = CRM_Core_Session::singleton();

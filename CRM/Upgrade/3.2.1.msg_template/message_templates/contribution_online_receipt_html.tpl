@@ -324,13 +324,6 @@
         </td>
        </tr>
       {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
-      {/if}
      {/if}
 
      {if $customPre}

@@ -141,6 +141,14 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @static
    */
   static function &add(&$params, $ids) {
+    // pre-processing hooks_
+    if (CRM_Utils_Array::value('id', $params)) {
+      CRM_Utils_Hook::pre('edit', 'Note', $params['id'], $params);
+    }
+    else {
+      CRM_Utils_Hook::pre('create', 'Note', NULL, $params);
+    }
+
     $dataExists = self::dataExists($params);
     if (!$dataExists) {
       return CRM_Core_DAO::$_nullObject;
@@ -216,6 +224,14 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
         $displayName,
         $recentOther
       );
+    }
+
+    // create post-processing hooks
+    if (CRM_Utils_Array::value('id', $params)) {
+      CRM_Utils_Hook::post('edit', 'Note', $note->id, $note);
+    }
+    else {
+      CRM_Utils_Hook::post('create', 'Note', $note->id, $note);
     }
 
     return $note;
