@@ -661,7 +661,7 @@ class CRM_Core_Payment_BaseIPN {
     if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
       $sendSMS = TRUE;
       if (!empty($contribution->contribution_recur_id)) {
-        $contribution_recur_id = 1879;
+        $contribution_recur_id = $contribution->contribution_recur_id;
         $sql = "SELECT count( contribution_recur_id ) FROM civicrm_contribution WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id";
         $params = array(
           1 => array($contribution_recur_id, 'Positive'),
