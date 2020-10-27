@@ -179,8 +179,7 @@
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
-{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
+{/if}
 {/if}
 
 {if $customPre}

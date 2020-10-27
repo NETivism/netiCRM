@@ -36,7 +36,8 @@
 require_once 'CRM/Core/Form.php';
 require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
 class CRM_Mailing_Form_Subscribe extends CRM_Core_Form {
-  protected $_groupID = NULL; function preProcess() {
+  protected $_groupID = NULL;
+  function preProcess() {
     parent::preProcess();
     $this->_groupID = CRM_Utils_Request::retrieve('gid', 'Integer', $this,
       FALSE, NULL, 'REQUEST'
@@ -141,9 +142,7 @@ ORDER BY title";
       // if this is POST request and came from a block,
       // lets add recaptcha only if already present
       // gross hack for now
-      if (!empty($_POST) &&
-        !array_key_exists('recaptcha_challenge_field', $_POST)
-      ) {
+      if (!empty($_POST) && !array_key_exists('g-recaptcha-response', $_POST)) {
         $addCaptcha = FALSE;
       }
     }
