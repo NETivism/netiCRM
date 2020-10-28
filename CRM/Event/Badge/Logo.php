@@ -28,7 +28,7 @@ class CRM_Event_Badge_Logo extends CRM_Event_Badge {
     $this->pdf->Cell($this->format['width'], $this->format['height'], '', 1);
 
     $this->pdf->SetFontSize(8);
-    $this->pdf->MultiCell($this->pdf->width - $this->lMarginLogo, 0, $participant['event_title'], $this->border, "L", 0, 1, $x + $this->lMarginLogo, $y);
+    $this->pdf->MultiCell($this->pdf->width - $this->lMarginLogo - 5, 0, $participant['event_title'], $this->border, "R", 0, 1, $x + $this->lMarginLogo + 5, $y); // Add 0.5 cm padding between event title and logo.
 
     $this->pdf->SetXY($x, $y + $this->pdf->height - 5);
 
