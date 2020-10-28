@@ -90,7 +90,12 @@ function loadReferrer() {
       var searchParams = new URLSearchParams(window.location.search);
       searchParams.delete("civimail_x_q");
       searchParams.delete("civimail_x_u");
-      var newQuery = '?'+searchParams.toString();
+      if (searchParams.toString() === '') {}
+        var newQuery = '';
+      }
+      else {
+        var newQuery = '?'+searchParams.toString();
+      }
       var newUrl = window.location.origin+window.location.pathname+newQuery;
       window.history.replaceState({}, null, newUrl);
     }
