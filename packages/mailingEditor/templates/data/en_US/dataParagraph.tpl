@@ -9,7 +9,7 @@
     "type" : "paragraph",
     "section": "body",
     "data" : {
-      "html": "<p>This is a paragraph block, please write a summary of the article here, which can also be used as an introduction or headline.</p>"
+      "html": "<div>This is a paragraph block, please write a summary of the article here, which can also be used as an introduction or headline.</div>"
     },
     "styles": {
       "block": {
