@@ -7116,7 +7116,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
+{/if}
 {/if}
 
 {if $customPre}
@@ -7673,7 +7673,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
+{/if}
 {/if}
 
 {if $customPre}
@@ -14472,7 +14472,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
+{/if}
 {/if}
 
 {if $customPre}
@@ -15164,7 +15164,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
+{/if}
 {/if}
 
 {if $customPre}
