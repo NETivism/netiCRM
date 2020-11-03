@@ -264,7 +264,9 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.waitForSelector("select#visibility", function success() {
-        this.sendKeys("select#visibility", "User and User Admin Only");
+        this.evaluate(function() {
+            document.querySelector('select#visibility').selectedIndex = 1;
+        });
     }, function fail() {
         test.assertExists("select#visibility", "Visibility select field exist");
     });
