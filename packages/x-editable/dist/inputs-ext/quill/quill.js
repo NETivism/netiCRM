@@ -68,6 +68,12 @@ $(function(){
                 this.$input.html(html);
             }
 
+            // refs #29481. Replace <p> with <div>
+            var quillBlock = Quill.import('blots/block');
+            class DivBlock extends quillBlock {}
+            DivBlock.tagName = 'DIV';
+            Quill.register('blots/block', DivBlock, true);
+
             // Change style class to inline style
             // refs https://quilljs.com/guides/how-to-customize-quill/#class-vs-inline
             // Import and set font size of quill
