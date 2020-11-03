@@ -1617,33 +1617,37 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $userID
       );
 
-      $activity->details .= nl2br("\n\n".$sendResult);
-      if (preg_match('/^statuscode=(\w+)\r?$/m', $sendResult, $findResult)) {
-        $resultKey = $findResult[1];
-        if (CRM_Utils_Array::crmInArray($resultKey, array(0,1,2,3,4))) {
-          // Send Success
-          $isSuccess = TRUE;
-          $activity->status_id = CRM_Utils_Array::key('Completed', CRM_Core_PseudoConstant::activityStatus('name'));
-          if (preg_match('/^Duplicate=Y\r?$/m', $sendResult)) {
-            // Send failed
-            $isSuccess = FALSE;
-            $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
-            $message = ts('Duplicated message');
+      $isSuccess = FALSE;
+      if (empty($sendResult->_error)) {
+        $activity->details .= nl2br("\n\n".$sendResult);
+        if (preg_match('/^statuscode=(\w+)\r?$/m', $sendResult, $findResult)) {
+          $resultKey = $findResult[1];
+          if (CRM_Utils_Array::crmInArray($resultKey, array(0,1,2,3,4))) {
+            // Send Success
+            $isSuccess = TRUE;
+            $activity->status_id = CRM_Utils_Array::key('Completed', CRM_Core_PseudoConstant::activityStatus('name'));
+            if (preg_match('/^Duplicate=Y\r?$/m', $sendResult)) {
+              // Send failed
+              $isSuccess = FALSE;
+              $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
+              $message = ts('Duplicated message');
+            }
           }
         }
-        else {
-          // Send failed
-          $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
-          if (preg_match('/^Error=(\w+)\r?$/m', $sendResult, $findError)) {
-            $message = $findError[1];
-          }
-          else {
-            $message = ts('Unknown error');
-          }
+        if (preg_match('/^Error=(\w+)\r?$/m', $sendResult, $findError)) {
+          $message = $findError[1];
         }
       }
       else {
-        $message = ts('Unknown error');
+        $message = $sendResult->_error['error'];
+      }
+
+      if (!$isSuccess) {
+        if (empty($message)) {
+          $message = ts('Unknown error');
+        }
+        // Send failed
+        $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
       }
       $activity->save();
 
@@ -1724,12 +1728,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $recipient = $smsParams['To'];
     $smsParams['contact_id'] = $toID;
     $smsParams['parent_activity_id'] = $activityID;
+    $sourceContactId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activityID, 'source_contact_id');
 
     $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
     $sendResult = $providerObj->send($recipient, $smsParams, $tokenText, NULL, $userID);
-    if (PEAR::isError($sendResult)) {
-      return $sendResult;
-    }
+
+    CRM_Core_Error::debug('mitake_is_a', );
 
     // add activity target record for every sms that is send
     $activityTargetParams = array(
@@ -1737,6 +1741,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       'target_contact_id' => $toID,
     );
     self::createActivityTarget($activityTargetParams);
+
+    if (is_a($providerObj->_error, 'CRM_Core_Error')) {
+      return $providerObj->_error;
+    }
 
     return $sendResult;
   }
