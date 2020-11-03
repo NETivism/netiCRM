@@ -197,7 +197,7 @@
                     "type":"paragraph",
                     "section":"body",
                     "data":{
-                      "html":"&lt;p&gt;這是段落區塊，你可以在這裡輸入頭條的描述文字，請給頭條一些簡要的說明文字，讓大家能一目了然！&lt;/p&gt;"
+                      "html":"&lt;div&gt;這是段落區塊，你可以在這裡輸入頭條的描述文字，請給頭條一些簡要的說明文字，讓大家能一目了然！&lt;/div&gt;"
                     },
                     "styles":{
                       "block":{
@@ -320,7 +320,7 @@
             "type":"paragraph",
             "section":"body",
             "data":{
-              "html":"&lt;p&gt;這是段落區塊，你可以在這裡輸入電子報的引言，建議文字量不要太多，簡而有力更吸睛！趕快來試試看吧！&lt;/p&gt;"
+              "html":"&lt;div&gt;這是段落區塊，你可以在這裡輸入電子報的引言，建議文字量不要太多，簡而有力更吸睛！趕快來試試看吧！&lt;/div&gt;"
             },
             "styles":{
               "block":{
@@ -995,7 +995,7 @@
             "data":{
               "ops":{
               },
-              "html":"&lt;p&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.name}&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.address}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Bmailing.viewUrl%7D&quot; target=&quot;_blank&quot;&gt;在瀏覽器中觀看&lt;/a&gt;&lt;/webversion&gt; | &lt;unsubscribe style=&quot;text-decoration:underline;&quot;&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.unsubscribeUrl%7D&quot;&gt;退訂電子報&lt;/a&gt;&lt;/unsubscribe&gt;&lt;br&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.subscribeUrl%7D&quot;&gt;訂閱電子報&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.forward%7D&quot;&gt;轉寄給朋友&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.optOutUrl%7D&quot;&gt;不再收到本站訊息&lt;/a&gt;&lt;/p&gt;"
+              "html":"&lt;div&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.name}&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.address}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Bmailing.viewUrl%7D&quot; target=&quot;_blank&quot;&gt;在瀏覽器中觀看&lt;/a&gt;&lt;/webversion&gt; | &lt;unsubscribe style=&quot;text-decoration:underline;&quot;&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.unsubscribeUrl%7D&quot;&gt;退訂電子報&lt;/a&gt;&lt;/unsubscribe&gt;&lt;br&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.subscribeUrl%7D&quot;&gt;訂閱電子報&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.forward%7D&quot;&gt;轉寄給朋友&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.optOutUrl%7D&quot;&gt;不再收到本站訊息&lt;/a&gt;&lt;/div&gt;"
             },
             "styles":{
               "block":{
