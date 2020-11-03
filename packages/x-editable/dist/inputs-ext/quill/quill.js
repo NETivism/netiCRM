@@ -156,6 +156,18 @@ $(function(){
             });
 
             this.editor.focus();
+            var d = this.editor.getContents();
+            if (Array.isArray(d.ops) && d.ops.length) {
+                var lastIndex = d.ops.length - 1,
+                lastOp = d.ops[lastIndex];
+
+                if (lastOp.insert && typeof lastOp.insert === 'string') {
+                    // refs https://github.com/quilljs/quill/issues/1235#issuecomment-273044116
+                    // Because quill will generate two line breaks at the end of the content, we need to remove one line break so that the edited content is consistent with the content when browsing.
+                    d.ops[lastIndex].insert = lastOp.insert.replace(/\n$/, "");
+                    this.editor.setContents(d);
+                }
+            }
         },
 
         // Call when editing is complete (3）
