@@ -110,8 +110,9 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     $this->add('checkbox', 'open_tracking', ts('Track Opens?'));
     $defaults['open_tracking'] = TRUE;
 
+    $options = array('' => ts("-- select --")) + CRM_Core_SelectValues::ufVisibility(TRUE);
     $this->add('select', 'visibility', ts('Mailing Visibility'),
-      CRM_Core_SelectValues::ufVisibility(TRUE), TRUE
+    $options, TRUE
     );
 
     $this->add('select', 'unsubscribe_id', ts('Unsubscribe Message'),
