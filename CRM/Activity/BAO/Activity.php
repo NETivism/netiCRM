@@ -1634,28 +1634,29 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
             }
           }
         }
-        if (preg_match('/^Error=(\w+)\r?$/m', $sendResult, $findError)) {
+        if (preg_match('/^Error=([^\r]+)\r?$/m', $sendResult, $findError)) {
           $message = $findError[1];
         }
       }
       else {
         $message = $sendResult->_error['error'];
+        $sendResult = $sendResult->_error['error'];
       }
 
       if (!$isSuccess) {
         if (empty($message)) {
           $message = ts('Unknown error');
         }
+
         // Send failed
         $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
+        $activity->details .= "<br />" .ts("Additional Details:"). $message;
+
       }
       $activity->save();
 
-      if (!$isSuccess) {
-        // Collect all of the PEAR_Error objects
-        $errMsgs[] = !empty($message) ? $message : $sendResult;
-      }
-      else {
+      $errMsgs[] = !empty($message) ? $message : $sendResult;
+      if ($isSuccess) {
         $success++;
       }
     }
