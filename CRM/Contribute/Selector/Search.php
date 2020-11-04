@@ -522,7 +522,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
           array(
             'name' => '#',
             'title' => ts('Contribution ID'),
-            'sort' => CRM_Contribute_DAO_Contribution::$_tableName.'.id',
+            'sort' => 'contribution_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
           ),
           array(
@@ -538,7 +538,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
           array(
             'name' => '#',
             'title' => ts('Contribution ID'),
-            'sort' => CRM_Contribute_DAO_Contribution::$_tableName.'.id',
+            'sort' => 'contribution_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
           ),
         );
