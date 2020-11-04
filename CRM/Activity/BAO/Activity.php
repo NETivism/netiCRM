@@ -1652,10 +1652,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
         $activity->details .= "<br />" .ts("Additional Details:"). $message;
 
+        $errMsgs[] = $message;
       }
       $activity->save();
 
-      $errMsgs[] = !empty($message) ? $message : $sendResult;
       if ($isSuccess) {
         $success++;
       }
