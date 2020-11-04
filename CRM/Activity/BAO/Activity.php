@@ -1734,8 +1734,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
     $sendResult = $providerObj->send($recipient, $smsParams, $tokenText, NULL, $userID);
 
-    CRM_Core_Error::debug('mitake_is_a', );
-
     // add activity target record for every sms that is send
     $activityTargetParams = array(
       'activity_id' => $activityID,
