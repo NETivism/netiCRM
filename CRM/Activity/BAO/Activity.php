@@ -1601,7 +1601,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       $activityParams += array(
         'source_contact_id' => $userID,
         'activity_date_time' => date('YmdHis'),
-        'details' => $tokenText,
+        'details' => ts("Body") . ": " . $tokenText,
         'status_id' => CRM_Utils_Array::key('Scheduled', CRM_Core_PseudoConstant::activityStatus('name')),
       );
 
@@ -1618,6 +1618,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       );
 
       $isSuccess = FALSE;
+      $activity->details .= nl2br("\n" . ts("To") .": ". $smsParams['To']);
       if (empty($sendResult->_error)) {
         $activity->details .= nl2br("\n\n".$sendResult);
         if (preg_match('/^statuscode=(\w+)\r?$/m', $sendResult, $findResult)) {
@@ -1650,12 +1651,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
 
         // Send failed
         $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
-        $activity->details .= "<br />" .ts("Additional Details:"). $message;
+        $activity->details .= nl2br("\n" .ts("Additional Details:"). $message);
 
+        $errMsgs[] = $message;
       }
       $activity->save();
 
-      $errMsgs[] = !empty($message) ? $message : $sendResult;
       if ($isSuccess) {
         $success++;
       }
@@ -1741,10 +1742,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     );
     self::createActivityTarget($activityTargetParams);
 
-    if (is_a($providerObj->_error, 'CRM_Core_Error')) {
-      return $providerObj->_error;
-    }
-
+    // If curl error: $sendResult will be a CRM_SMS_Provider object, which have _error property;
+    // Otherwise, it well return curl receive string.
     return $sendResult;
   }
 
