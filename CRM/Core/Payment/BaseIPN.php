@@ -48,8 +48,8 @@ class CRM_Core_Payment_BaseIPN {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $ids['contribution'];
     if (!$contribution->find(TRUE)) {
-      CRM_Core_Error::debug_log_message("Could not find contribution record: $contributionID");
-      echo "Failure: Could not find contribution record for $contributionID<p>";
+      CRM_Core_Error::debug_log_message("Could not find contribution record: {$ids['contribution']}");
+      echo "Failure: Could not find contribution record for {$ids['contribution']}<p>";
       return FALSE;
     }
     if (!empty($contribution->receive_date)) {
@@ -144,6 +144,7 @@ class CRM_Core_Payment_BaseIPN {
             unset($contribution);
             unset($objects['contribution']);
             $objects['contribution'] = $lastContribution;
+            $contribution = &$objects['contribution'];
           }
         }
       }
@@ -198,15 +199,15 @@ class CRM_Core_Payment_BaseIPN {
 
       // get the contribution page id from the contribution
       // and then initialize the payment processor from it
-      if (!$contribution->contribution_page_id) {
+      if (!$objects['contribution']->contribution_page_id) {
         if (!CRM_Utils_Array::value('pledge_payment', $ids)) {
           // return if we are just doing an optional validation
           if (!$required) {
             return TRUE;
           }
 
-          CRM_Core_Error::debug_log_message("Could not find contribution page for contribution record: $contributionID");
-          echo "Failure: Could not find contribution page for contribution record: $contributionID<p>";
+          CRM_Core_Error::debug_log_message("Could not find contribution page for contribution record: {$objects['contribution']->id}");
+          echo "Failure: Could not find contribution page for contribution record: {$objects['contribution']->id}<p>";
           return FALSE;
         }
       }
@@ -244,8 +245,8 @@ class CRM_Core_Payment_BaseIPN {
 
     if (!$paymentProcessorID) {
       if ($required) {
-        CRM_Core_Error::debug_log_message("Could not find payment processor for contribution record: $contributionID");
-        echo "Failure: Could not find payment processor for contribution record: $contributionID<p>";
+        CRM_Core_Error::debug_log_message("Could not find payment processor for contribution record: {$objects['contribution']->id}");
+        echo "Failure: Could not find payment processor for contribution record: {$objects['contribution']->id}<p>";
         return FALSE;
       }
     }
@@ -661,7 +662,7 @@ class CRM_Core_Payment_BaseIPN {
     if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
       $sendSMS = TRUE;
       if (!empty($contribution->contribution_recur_id)) {
-        $contribution_recur_id = 1879;
+        $contribution_recur_id = $contribution->contribution_recur_id;
         $sql = "SELECT count( contribution_recur_id ) FROM civicrm_contribution WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id";
         $params = array(
           1 => array($contribution_recur_id, 'Positive'),

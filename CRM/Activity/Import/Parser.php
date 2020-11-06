@@ -248,6 +248,9 @@ abstract class CRM_Activity_Import_Parser {
       if (!$values) {
         continue;
       }
+      if (count(array_filter($values)) === 0) {
+        continue;
+      }
 
       self::encloseScrub($values);
 

@@ -68,6 +68,12 @@ $(function(){
                 this.$input.html(html);
             }
 
+            // refs #29481. Replace <p> with <div>
+            var quillBlock = Quill.import('blots/block');
+            class DivBlock extends quillBlock {}
+            DivBlock.tagName = 'DIV';
+            Quill.register('blots/block', DivBlock, true);
+
             // Change style class to inline style
             // refs https://quilljs.com/guides/how-to-customize-quill/#class-vs-inline
             // Import and set font size of quill
@@ -80,7 +86,7 @@ $(function(){
 
             var toolbarOptions = [
               ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-              [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+              [{ 'color': ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00', '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', '#3d1466'] }, { 'background': [] }],          // dropdown with defaults from theme
               [{ 'size': ['13px', false, '20px', '28px'] }],
               [{ 'align': [] }],
               [{ 'list': 'ordered'}, { 'list': 'bullet' }],
@@ -150,6 +156,18 @@ $(function(){
             });
 
             this.editor.focus();
+            var d = this.editor.getContents();
+            if (Array.isArray(d.ops) && d.ops.length) {
+                var lastIndex = d.ops.length - 1,
+                lastOp = d.ops[lastIndex];
+
+                if (lastOp.insert && typeof lastOp.insert === 'string') {
+                    // refs https://github.com/quilljs/quill/issues/1235#issuecomment-273044116
+                    // Because quill will generate two line breaks at the end of the content, we need to remove one line break so that the edited content is consistent with the content when browsing.
+                    d.ops[lastIndex].insert = lastOp.insert.replace(/\n$/, "");
+                    this.editor.setContents(d);
+                }
+            }
         },
 
         // Call when editing is complete (3）
