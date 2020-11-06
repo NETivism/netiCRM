@@ -659,16 +659,16 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     var profile_url = "";
-    casper.waitForSelector("input[name='link_url']", function success() {
+    casper.waitForSelector("textarea[name='url_to_copy']", function success() {
         var publish_url = this.evaluate(function () {
-            return document.querySelector('input[name="link_url"]').value;
+            return document.querySelector('textarea[name="url_to_copy"]').value;
         });
         var split_publish_url = publish_url.split('/');
         publish_url = split_publish_url.slice(3).join('/');
         test.assertEquals(publish_url, 'civicrm/profile/create?gid='+ profile_id + '&reset=1', "Assert 'Publish Online Profile' URL correct.");
         profile_url = 'civicrm/profile/create?gid='+ profile_id + '&reset=1';
     }, function fail() {
-        test.assertExists("input[name='link_url']", "Assert 'Link' field exist.");
+        test.assertExists("textarea[name='url_to_copy']", "Assert 'Link' field exist.");
     });
 
     casper.then(function() {
