@@ -673,5 +673,50 @@ class CRM_Utils_String {
     $str = preg_replace("/([^\w\s\d\.\-_~\[\]\(\)]|[\.]{2,})/u", '', $str);
     return preg_replace("/\s+/u", '_', $str);
   }
+
+  /**
+   * Mask string with spcific char
+   *
+   * @param  string $str string need to modify
+   * @param  string $mode auto or custom, if use custom, need further parameter
+   * @param  int    $start when mode = custom, specify mask start position
+   * @param  int    $end   when mode = custom, specify mask end position calculate from end of string
+   *
+   * @return string A masked string
+   *
+   * @access public
+   * @static
+   */
+  static function mask($str, $mode = 'auto', $start = NULL, $end = NULL) {
+    if (empty($str)) {
+      return;
+    }
+    $length = mb_strlen($str);
+    if ($length <= 1) {
+      return $str;
+    }
+
+    if ($mode == 'custom' && is_int($start) && is_int($end)) {
+      $str = mb_substr($str, 0, $start) . str_repeat('*', $length - $end - 1) . mb_substr($str, -1 * $end, $end);
+      if ($start == 0) {
+        $str = '*'.$str;
+      }
+    }
+    else {
+      switch($length) {
+        case 2:
+          $str = mb_substr($str, 0, 1) . '*';
+        case 3:
+        case 4:
+          $str = mb_substr($str, 0, 1) . str_repeat('*', $length - 2) . mb_substr($str, -1, 1);
+          break;
+        default:
+          $str = mb_substr($str, 0, 1) . str_repeat('*', $length - 3) . mb_substr($str, -2, 2);
+          break;
+      }
+
+    }
+    return $str;
+  }
 }
 
