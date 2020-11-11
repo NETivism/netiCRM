@@ -71,6 +71,23 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       $this->assign('contribution_id', $this->_contributionID);
       $params['id'] = $this->_contributionID;
       $paymentResultStatus = CRM_Contribute_BAO_Contribution_Utils::paymentResultType($this, $params);
+
+      // refs #29618, record one-time donate again link used
+      if ($paymentResultStatus == 1 && $this->get('originalId')){
+        $cs = $this->get('cs');
+        $dao = new CRM_Core_DAO_Sequence();
+        $dao->name = 'DA_'.$cs;
+        if ($dao->find(TRUE)) {
+          $dao->timestamp = microtime(true);
+          $dao->value = $this->_contributionID;
+          $dao->update();
+        }
+        else {
+          $dao->timestamp = microtime(true);
+          $dao->value = $this->_contributionID;
+          $dao->insert();
+        }
+      }
     }
 
     // add dataLayer for gtm
@@ -226,7 +243,12 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
 
     foreach ($fields as $name => $dontCare) {
       if (isset($contact[$name])) {
-        $defaults[$name] = $contact[$name];
+        if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && !is_numeric($contact[$name]) && $this->get('csContactID')) {
+          $defaults[$name] = CRM_Utils_String::mask($contact[$name]);
+        }
+        else {
+          $defaults[$name] = $contact[$name];
+        }
         if (substr($name, 0, 7) == 'custom_') {
           $timeField = "{$name}_time";
           if (isset($contact[$timeField])) {

@@ -336,7 +336,12 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $contact = $this->_params;
     foreach ($fields as $name => $dontCare) {
       if (isset($contact[$name])) {
-        $defaults[$name] = $contact[$name];
+        if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && !is_numeric($contact[$name]) && $this->get('csContactID')) {
+          $defaults[$name] = CRM_Utils_String::mask($contact[$name]);
+        }
+        else {
+          $defaults[$name] = $contact[$name];
+        }
         if (substr($name, 0, 7) == 'custom_') {
           $timeField = "{$name}_time";
           if (isset($contact[$timeField])) {

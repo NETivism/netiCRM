@@ -102,12 +102,18 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     if (!empty($csContactID) && !empty($csString) && $currentUserID != $csContactID) {
       if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactID, $this)) {
-        $this->set('csContactID', $csContactID);
-        $this->set('userID', $csContactID);     // used by contributionBase
-        $this->_userID = $csContactID;          // used by current follow up
-        
-        // refs #29618, load contribution id and add defaultFromRequest again
-        $this->loadDefaultFromOriginalId();
+        // refs #29618, validate this cs haven't used before
+        $dao = new CRM_Core_DAO_Sequence();
+        $dao->name = 'DA_'.$csString;
+        if (!$dao->find()) {
+          $this->set('csContactID', $csContactID);
+          $this->set('userID', $csContactID);     // used by contributionBase
+          $this->_userID = $csContactID;          // used by current follow up
+          $this->assign('contact_id', $this->_userID);
+          
+          // refs #29618, load contribution id and add defaultFromRequest again
+          $this->loadDefaultFromOriginalId();
+        }
       }
     }
 
