@@ -251,17 +251,22 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       }
     }
 
-    // fallback
-    CRM_Core_Error::debug_var('Fatal Error Details', $vars);
-    CRM_Core_Error::backtrace('backTrace', TRUE);
-    if ($suppress) {
-      $vars['suppress'] = $suppress;
+    try {
+      throw new CRM_Core_Exception($message);
     }
-    else {
-      http_response_code(500);
-      $vars['suppress'] = FALSE;
+    catch(Exception $e){
+      // fallback
+      CRM_Core_Error::debug_var('Fatal Error Details', $vars);
+      CRM_Core_Error::backtrace('backTrace', TRUE);
+      if ($suppress) {
+        $vars['suppress'] = $suppress;
+      }
+      else {
+        http_response_code(500);
+        $vars['suppress'] = FALSE;
+      }
+      self::output($config->fatalErrorTemplate, $vars);
     }
-    self::output($config->fatalErrorTemplate, $vars);
     self::abend(CRM_Core_Error::FATAL_ERROR);
   }
 
