@@ -2125,6 +2125,11 @@ SELECT source_contact_id
     if(!empty($records)){
       $config = CRM_Core_Config::singleton();
       $annualRecords = $contactInfo = array();
+      // prepare activity needed variables
+      $session = CRM_Core_Session::singleton();
+      $userID = $session->get('userID');
+      $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+      $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
       if (!empty($config->receiptTitle)) {
         foreach($records as $key => $record) {
           $record['total_amount'] = (int) $record['total_amount'];
@@ -2156,6 +2161,27 @@ SELECT source_contact_id
           }
           $annualRecords[$name][$key] = $record;
           $contactInfo[$name]['total'] = $record['total_amount'] + $contactInfo[$name]['total'];
+
+          // pdf printing activity
+          if (!empty($activityTypeId)) {
+            $subject = ts('Print Annual Receipt') . ' - '.$annualYear;
+            if (!empty($record['receipt_id'])) {
+              $subject .= " (".ts("Receipt ID").":{$record['receipt_id']})"; 
+            }
+            else {
+              $subject .= " (".ts("Contribution ID").":{$key})"; 
+            }
+            $activityParams = array(
+              'activity_type_id' => $activityTypeId,
+              'activity_date_time' => date('Y-m-d H:i:s'),
+              'source_record_id' => $key,
+              'status_id' => $statusId,
+              'subject' => $subject,
+              'assignee_contact_id' => $contact_id,
+              'source_contact_id' => $userID,
+            );
+            CRM_Activity_BAO_Activity::create($activityParams);
+          }
         }
       }
       else {
