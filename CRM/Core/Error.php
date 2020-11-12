@@ -225,13 +225,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    *
    * @param string message  the error message
    * @param string code     the error code if any
-   * @param string email    the email address to notify of this situation
+   * @param string suppress suppress error message with given string
    *
    * @return void
    * @static
    * @acess public
    */
-  static function fatal($message = NULL, $code = NULL, $email = NULL) {
+  static function fatal($message = NULL, $code = NULL, $suppress = NULL) {
     $vars = array(
       'message' => $message,
       'code' => $code,
@@ -254,7 +254,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     // fallback
     CRM_Core_Error::debug_var('Fatal Error Details', $vars);
     CRM_Core_Error::backtrace('backTrace', TRUE);
-    http_response_code(500);
+    if ($suppress) {
+      $vars['suppress'] = $suppress;
+    }
+    else {
+      http_response_code(500);
+      $vars['suppress'] = FALSE;
+    }
     self::output($config->fatalErrorTemplate, $vars);
     self::abend(CRM_Core_Error::FATAL_ERROR);
   }
