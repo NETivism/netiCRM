@@ -151,9 +151,9 @@ class CRM_Event_Badge {
         $f = $this->imgRes / 25.4;
         $w = $imgsize[0] / $f;
         $h = $imgsize[1] / $f;
-        $newH = 7; // Use 0.7 cm height for the card.
+        $newH = 10; // Use 1 cm height for the card.
         $newW = $w * $newH / $h;
-        $this->lMarginLogo = $newW+4;
+        $this->lMarginLogo = $newW + 4;
         $this->pdf->Image($img, $this->pdf->GetAbsX()+2, $this->pdf->GetY()+2, $newW, $newH, strtoupper($this->imgExtension), '', '', FALSE, 75, '', FALSE, FALSE, $this->debug, TRUE, FALSE, FALSE);
       }
       else {
