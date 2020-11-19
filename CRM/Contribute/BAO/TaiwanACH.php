@@ -850,7 +850,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'currency' => $achData['currency'],
       'payment_instrument_id' => $instrumentId,
       'custom' => $customData,
-      'source' => ts('Import ACH'),
+      'source' => ts('Export ACH Transaction File'),
     );
     $ids = array();
     $contribution = CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);
