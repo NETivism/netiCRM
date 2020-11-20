@@ -29,6 +29,7 @@ pipeline:
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/new_contribution.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/custom_data.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_group.test.js
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js
   build:
     image: netivism/neticrm-ci:drone
     environment:
@@ -59,6 +60,7 @@ pipeline:
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/new_contribution.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/custom_data.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_group.test.js
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js
   notify:
     image: drillster/drone-email
     skip_verify: true

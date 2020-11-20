@@ -316,7 +316,8 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
 
       // drop Create, Edit and View mode links if profile group_type is Contribution, Membership, Activities or Participant
       $profileTypes = explode(',', $value['group_type']);
-      if (array_intersect($restrictType, $profileTypes)) {
+
+      if (array_intersect($restrictType, $profileTypes) || $value['is_reserved']) {
         $action -= CRM_Core_Action::ADD;
       }
       $groupTypesString = '';

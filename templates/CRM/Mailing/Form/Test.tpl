@@ -43,22 +43,26 @@
   </table>
 </fieldset>
 
-<div class="crm-accordion-wrapper crm-plain_text_email-accordion crm-accordion-closed">
+<div class="crm-accordion-wrapper crm-plain_text_email-accordion crm-accordion-open">
     <div class="crm-accordion-header">
         <div class="zmdi crm-accordion-pointer"></div> 
         {ts}Preview Mailing{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
+        <ul class="crm-test-mail-preview">
+          <li><button type="button" data-type="normal">{ts}Normal{/ts}</button></li>
+          <li><button class="is-active" type="button" data-type="mobile">{ts}Mobile Device{/ts}</button></li>
+        </ul>
         <table class="form-layout">
           <tr class="crm-mailing-test-form-block-subject"><td class="label">{ts}Subject:{/ts}</td><td>{$subject}</td></tr>
     {if $preview.attachment}
           <tr class="crm-mailing-test-form-block-attachment"><td class="label">{ts}Attachment(s):{/ts}</td><td>{$preview.attachment}</td></tr>
     {/if}
           {if $preview.text_link}
-          <tr><td class="label">{ts}Text Version:{/ts}</td><td><iframe height="300" src="{$preview.text_link}" width="80%"><a href="{$preview.text_link}" onclick="window.open(this.href); return false;">{ts}Text Version{/ts}</a></iframe></td></tr>
+          <tr><td class="label">{ts}Text Version:{/ts}</td><td><div class="crm-test-mail-preview-frame-wrapper" data-mode="mobile"><iframe class="crm-test-mail-preview-frame" height="300" src="{$preview.text_link}" width="80%"><a href="{$preview.text_link}" onclick="window.open(this.href); return false;">{ts}Text Version{/ts}</a></iframe></div></td></tr>
           {/if}
           {if $preview.html_link}
-          <tr><td class="label">{ts}HTML Version:{/ts}</td><td><iframe height="300" src="{$preview.html_link}" width="80%"><a href="{$preview.html_link}" onclick="window.open(this.href); return false;">{ts}HTML Version{/ts}</a></iframe></td></tr>
+          <tr><td class="label">{ts}HTML Version:{/ts}</td><td><div class="crm-test-mail-preview-frame-wrapper" data-mode="mobile"><iframe class="crm-test-mail-preview-frame" height="300" src="{$preview.html_link}" width="80%"><a href="{$preview.html_link}" onclick="window.open(this.href); return false;">{ts}HTML Version{/ts}</a></iframe></div></td></tr>
           {/if}
         </table>
     </div><!-- /.crm-accordion-body -->
@@ -73,7 +77,29 @@
 {literal}
 <script type="text/javascript">
 cj(function() {
-   cj().crmaccordions(); 
+   cj().crmaccordions();
+
+  cj(".crm-test-mail-preview").on("click", "button", function(e) {
+    var $btn = cj(this),
+        type = $btn.data("type"),
+        $container = $btn.closest(".crm-test-mail-preview"),
+        $btns = $container.find("button"),
+        $previewFrameWrapper = cj(".crm-test-mail-preview-frame-wrapper"),
+        activeClass = "is-active";
+
+    $btns.removeClass(activeClass);
+
+    if ($btn.hasClass(activeClass)) {
+      $btn.removeClass(activeClass);
+    }
+    else {
+      $btn.addClass(activeClass);
+    }
+
+    if ($previewFrameWrapper.length) {
+      $previewFrameWrapper.attr("data-mode", type);
+    }
+  });
 });
 </script>
 {/literal}

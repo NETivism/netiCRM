@@ -121,7 +121,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
   function setFields() {
     $this->_fields = array(
       'subject' => array('type' => 'text',
-        'label' => ts('Activity Subject'),
+        'label' => ts('Subject'),
         'attributes' => CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity',
           'subject'
         ),
@@ -178,7 +178,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       ),
       // Add optional 'Subject' field for the Follow-up Activiity, CRM-4491
       'followup_activity_subject' => array('type' => 'text',
-        'label' => ts('Activity Subject'),
+        'label' => ts('Subject'),
         'attributes' => CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity',
           'subject'
         ),
@@ -303,6 +303,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       $this->_currentlyViewedContactId
     ) {
       $this->_single = TRUE;
+      $this->_urlPath = "civicrm/activity";
       $this->assign('urlPath', 'civicrm/activity');
     }
     else {
@@ -336,6 +337,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       parent::preProcess();
       $this->_single = FALSE;
 
+      $this->_urlPath = "civicrm/contact/search/$searchType";
       $this->assign('urlPath', "civicrm/contact/search/$searchType");
       $this->assign('urlPathVar', "_qf_Activity_display=true&qfKey={$this->controller->_key}");
     }
@@ -470,6 +472,20 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     if (isset($this->_activityId)) {
       $params = array('id' => $this->_activityId);
       CRM_Activity_BAO_Activity::retrieve($params, $defaults);
+      if ($this->_action & CRM_Core_Action::VIEW) {
+        $defaults['details'] = CRM_Utils_String::htmlPurifier($defaults['details'], CRM_Utils_String::ALLOWED_TAGS);
+        
+        $url = CRM_Utils_System::url(implode("/", $this->_urlPath), "reset=1&id={$this->_activityId}&action=view&cid={$this->_values['source_contact_id']}");
+        $activityTName = CRM_Core_OptionGroup::values('activity_type', FALSE, FALSE, FALSE, 'AND v.value = ' . $this->_activityTypeId, 'name');
+        $recentTitle = CRM_Utils_Array::value('subject', $defaults, ts('(no subject)')) . ' - '.$defaults['source_contact']. ' (' . ts($activityTName[$this->_activityTypeId]) . ')';
+        CRM_Utils_Recent::add($recentTitle,
+          $url,
+          $defaults['id'],
+          'Activity',
+          $defaults['source_contact_id'],
+          $defaults['source_contact']
+        );
+      }
       $defaults['source_contact_qid'] = $defaults['source_contact_id'];
       $defaults['source_contact_id'] = $defaults['source_contact'];
 

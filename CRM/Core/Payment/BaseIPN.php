@@ -48,8 +48,8 @@ class CRM_Core_Payment_BaseIPN {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $ids['contribution'];
     if (!$contribution->find(TRUE)) {
-      CRM_Core_Error::debug_log_message("Could not find contribution record: $contributionID");
-      echo "Failure: Could not find contribution record for $contributionID<p>";
+      CRM_Core_Error::debug_log_message("Could not find contribution record: {$ids['contribution']}");
+      echo "Failure: Could not find contribution record for {$ids['contribution']}<p>";
       return FALSE;
     }
     if (!empty($contribution->receive_date)) {
@@ -103,6 +103,7 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID) {
+    $config = CRM_Core_Config::singleton();
     $contribution = &$objects['contribution'];
 
     $objects['membership'] = NULL;
@@ -125,6 +126,27 @@ class CRM_Core_Payment_BaseIPN {
     if ($input['component'] == 'contribute') {
       if (!empty($contribution->contribution_recur_id) && empty($ids['contributionRecur'])) {
         $ids['contributionRecur'] = $contribution->contribution_recur_id;
+      }
+      // refs #26358, allow change contribution object to most recent one
+      if (!empty($ids['contributionRecur']) && !empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
+        $daoLastContribution = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date DESC", array(
+          1 => array($ids['contributionRecur'], 'Integer'),
+        ));
+        if ($daoLastContribution->N > 1) {
+          $daoLastContribution->fetch();
+          $ids['contribution'] = $daoLastContribution->id;
+          $lastContribution = new CRM_Contribute_DAO_Contribution();
+          $lastContribution->id = $ids['contribution'];
+          if ($lastContribution->find(TRUE)) {
+            // not sure why we need this anymore.
+            // $lastContribution->receive_date = CRM_Utils_Date::isoToMysql($lastContribution->receive_date);
+            // $lastContribution->created_date = CRM_Utils_Date::isoToMysql($lastContribution->created_date);
+            unset($contribution);
+            unset($objects['contribution']);
+            $objects['contribution'] = $lastContribution;
+            $contribution = &$objects['contribution'];
+          }
+        }
       }
 
       // retrieve the other optional objects first so
@@ -177,15 +199,15 @@ class CRM_Core_Payment_BaseIPN {
 
       // get the contribution page id from the contribution
       // and then initialize the payment processor from it
-      if (!$contribution->contribution_page_id) {
+      if (!$objects['contribution']->contribution_page_id) {
         if (!CRM_Utils_Array::value('pledge_payment', $ids)) {
           // return if we are just doing an optional validation
           if (!$required) {
             return TRUE;
           }
 
-          CRM_Core_Error::debug_log_message("Could not find contribution page for contribution record: $contributionID");
-          echo "Failure: Could not find contribution page for contribution record: $contributionID<p>";
+          CRM_Core_Error::debug_log_message("Could not find contribution page for contribution record: {$objects['contribution']->id}");
+          echo "Failure: Could not find contribution page for contribution record: {$objects['contribution']->id}<p>";
           return FALSE;
         }
       }
@@ -223,8 +245,8 @@ class CRM_Core_Payment_BaseIPN {
 
     if (!$paymentProcessorID) {
       if ($required) {
-        CRM_Core_Error::debug_log_message("Could not find payment processor for contribution record: $contributionID");
-        echo "Failure: Could not find payment processor for contribution record: $contributionID<p>";
+        CRM_Core_Error::debug_log_message("Could not find payment processor for contribution record: {$objects['contribution']->id}");
+        echo "Failure: Could not find payment processor for contribution record: {$objects['contribution']->id}<p>";
         return FALSE;
       }
     }
@@ -550,10 +572,21 @@ class CRM_Core_Payment_BaseIPN {
       $contribution->payment_instrument_id = $input['payment_instrument_id'];
     }
 
+    if (isset($objects['paymentProcessor'])) {
+      $paymentProcessorType = $objects['paymentProcessor']['payment_processor_type'];
+      if ($paymentProcessorType == 'TaiwanACH') {
+        $contribution->receipt_date = $contribution->receive_date;
+      }
+    }
+
     $contribution->save();
 
     // check and generate receipt id here for every online contribution
-    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online = TRUE);
+    $is_online = TRUE;
+    if ($paymentProcessorType == 'TaiwanACH') {
+      $is_online = FALSE;
+    }
+    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
 
     // next create the transaction record
     if (isset($objects['paymentProcessor'])) {
@@ -568,7 +601,7 @@ class CRM_Core_Payment_BaseIPN {
         'contribution_id' => $contribution->id,
         'trxn_date' => isset($input['trxn_date']) ? $input['trxn_date'] : self::$_now,
         'trxn_type' => 'Debit',
-        'total_amount' => $input['amount'],
+        'total_amount' => $input['total_amount'] ? $input['total_amount'] : $input['amount'],
         'fee_amount' => $contribution->fee_amount,
         'net_amount' => $contribution->net_amount,
         'currency' => $contribution->currency,
@@ -629,9 +662,13 @@ class CRM_Core_Payment_BaseIPN {
     if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
       $sendSMS = TRUE;
       if (!empty($contribution->contribution_recur_id)) {
-        $recurId = array($contribution->contribution_recur_id);
-        $count = CRM_Contribute_BAO_ContributionRecur::getCount($recurId);
-        if ($count[$recurId] > 1) {
+        $contribution_recur_id = $contribution->contribution_recur_id;
+        $sql = "SELECT count( contribution_recur_id ) FROM civicrm_contribution WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id";
+        $params = array(
+          1 => array($contribution_recur_id, 'Positive'),
+        );
+        $count = CRM_Core_DAO::singleValueQuery($sql, $params);
+        if ($count > 1) {
           $sendSMS = FALSE;
         }
       }
@@ -639,6 +676,10 @@ class CRM_Core_Payment_BaseIPN {
         $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, array('is_default' => 1));
         $provider = reset($defaultProvider);
         list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text'], $objects);
+        CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS sent");
+      }
+      else {
+        CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS doesn't be sent");
       }
     }
   }

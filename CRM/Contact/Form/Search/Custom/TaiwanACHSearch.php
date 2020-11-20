@@ -74,7 +74,6 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       'ach.bank_account' => 'bank_account',
       'ach.bank_code' => 'bank_code',
       'ach.identifier_number' => 'identifier_number',
-      'ach.data' => 'ach_data',
     );
     $this->_columns = array(
       ts('ID') => 'id',
@@ -91,8 +90,8 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       ts('Last Failed Date') => 'last_failed_date',
       ts('Contribution Page ID') => 'contribution_page_id',
       ts('Completed Donation').'/<br>'.ts('Total Count') => 'completed_count',
-      0 => 'total_count',
       ts('Bank Account') => 'bank_account',
+      0 => 'ach_data',
       //ts('Stamp Verification'). ' - '.ts('Cancelled or Failed Date') => 'ach_data',
       //ts('Stamp Verification'). ' - '.ts('Cancelled or Failed Reason') => 'ach_data',
     );
@@ -269,12 +268,11 @@ $having
     return 0;
   }
 
-
   /**
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
-    $fields = !$onlyIDs ? "*" : "contact_a.contact_id, id" ;
+    $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
     if(!$this->_filled){
       $this->fillTable();
@@ -412,7 +410,7 @@ $having
     $query->fetch();
     
     if ($query->amount) {
-      $amount = CRM_Utils_Money::format($query->amount, '$');
+      $amount = CRM_Utils_Money::format($query->amount);
       $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', array(1 => $amount));
     }
 
@@ -480,10 +478,6 @@ $having
    */
   function templateFile(){
     return 'CRM/Contact/Form/Search/Custom/TaiwanACHSearch.tpl';
-  }
-
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
-    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
   function tasks() {

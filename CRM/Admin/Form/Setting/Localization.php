@@ -69,11 +69,11 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
           $lcMessages[$loc] = $lang;
         }
       }
-      $this->addElement('select', 'lcMessages', ts('Default Language'), $lcMessages);
+      $this->addSelect('lcMessages', ts('Default Language'), $lcMessages);
 
       // add language limiter and language adder
       $this->addCheckBox('languageLimit', ts('Available Languages'), array_flip($lcMessages), NULL, NULL, NULL, NULL, ' &nbsp; ');
-      $this->addElement('select', 'addLanguage', ts('Add Language'), array_merge(array('' => ts('- select -')), array_diff($locales, $lcMessages)));
+      $this->addSelect('addLanguage', ts('Add Language'), array_merge(array('' => ts('- select -')), array_diff($locales, $lcMessages)));
 
       // add the ability to return to single language
       $warning = ts('WARNING: This will make your CiviCRM installation a single-language one again. THIS WILL DELETE ALL DATA RELATED TO LANGUAGES OTHER THAN THE DEFAULT ONE SELECTED ABOVE (and only that language will be preserved).');
@@ -84,7 +84,7 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     }
     else {
       // for single-lingual sites, populate default language drop-down with all languages
-      $this->addElement('select', 'lcMessages', ts('Default Language'), $locales);
+      $this->addSelect('lcMessages', ts('Default Language'), $locales);
 
       $warning = ts('WARNING: Enabling multiple languages changes the schema of your database, so make sure you know what you are doing when enabling this function; making a database backup is strongly recommended.');
       $this->assign('warning', $warning);
@@ -116,29 +116,16 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     $i18n->localizeArray($country, array('context' => 'country'));
     asort($country);
 
-    $includeCountry = &$this->addElement('advmultiselect', 'countryLimit',
-      ts('Available Countries') . ' ', $country,
-      array('size' => 5,
-        'style' => 'width:150px',
-        'class' => 'advmultiselect',
-      )
-    );
+    $this->addSelect('countryLimit', ts('Available Countries'), $country, array(
+        'multiple' => 'multipl',
+    ));
 
-    $includeCountry->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $includeCountry->setButtonAttributes('remove', array('value' => ts('<< Remove')));
 
-    $includeState = &$this->addElement('advmultiselect', 'provinceLimit',
-      ts('Available States and Provinces') . ' ', $country,
-      array('size' => 5,
-        'style' => 'width:150px',
-        'class' => 'advmultiselect',
-      )
-    );
+    $this->addSelect('provinceLimit', ts('Available States and Provinces'), $country, array(
+        'multiple' => 'multiple',
+    ));
 
-    $includeState->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $includeState->setButtonAttributes('remove', array('value' => ts('<< Remove')));
-
-    $this->addElement('select', 'defaultContactCountry', ts('Default Country'), array('' => ts('- select -')) + $country);
+    $this->addSelect('defaultContactCountry', ts('Default Country'), array('' => ts('- select -')) + $country);
 
     // we do this only to initialize currencySymbols, kinda hackish but works!
     $config->defaultCurrencySymbol();
@@ -150,18 +137,10 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
         $this->_currencySymbols[$key] .= " ($value)";
       }
     }
-    $this->addElement('select', 'defaultCurrency', ts('Default Currency'), $this->_currencySymbols);
-
-    $includeCurrency = &$this->addElement('advmultiselect', 'currencyLimit',
-      ts('Available Currencies') . ' ', $this->_currencySymbols,
-      array('size' => 5,
-        'style' => 'width:150px',
-        'class' => 'advmultiselect',
-      )
-    );
-
-    $includeCurrency->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $includeCurrency->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $this->addSelect('defaultCurrency', ts('Default Currency'), $this->_currencySymbols);
+    $this->addSelect('currencyLimit', ts('Available Currencies'), $this->_currencySymbols, array(
+      'multiple' => 'multiple',
+    ));
 
     $this->addElement('text', 'legacyEncoding', ts('Legacy Encoding'));
     $this->addElement('text', 'customTranslateFunction', ts('Custom Translate Function'));

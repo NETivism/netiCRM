@@ -117,4 +117,12 @@
       <comment>Is this membership_block enabled</comment>                
       <add>1.5</add>  
   </field> 
+  <field>  
+      <name>is_renewal_only</name>     
+      <title>Is Renewal Only</title>
+      <type>boolean</type>
+      <default>0</default>
+      <comment>Is this membership_block only used for renewal</comment>                
+      <add>1.5</add>  
+  </field> 
 </table>

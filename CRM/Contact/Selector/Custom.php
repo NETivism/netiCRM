@@ -407,6 +407,18 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
 
     return CRM_Core_DAO::executeQuery($sql, $params);
   }
+
+  function contactAdditionalIDQuery() {
+    $params = array();
+    if (method_exists('contactAdditionalIDs', $this->_search)) {
+      $sql = $this->_search->contactAdditionalIDs($params);
+    }
+    else {
+      $sql = $this->_search->contactIDs($params);
+    }
+
+    return CRM_Core_DAO::executeQuery($sql, $params);
+  }
 }
 //end of class
 

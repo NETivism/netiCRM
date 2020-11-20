@@ -1537,21 +1537,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     //   'SMS'
     // );
 
-    $details = $text;
-
-    if (!empty($activityParams['activity_subject']) && empty($activityParams['subject'])) {
-      $activityParams['subject'] = $activityParams['activity_subject'];
-    }
-    $activityParams += array(
-      'source_contact_id' => $userID,
-      'activity_date_time' => date('YmdHis'),
-      'details' => $details,
-      'status_id' => CRM_Utils_Array::key('Completed', CRM_Core_PseudoConstant::activityStatus()),
-    );
-
-    $activity = self::create($activityParams);
-    $activityID = $activity->id;
-
     $returnProperties = array();
 
     if (isset($messageToken['contact'])) {
@@ -1610,21 +1595,69 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $smsParams['To'] = '';
       }
 
+      if (!empty($activityParams['activity_subject']) && empty($activityParams['subject'])) {
+        $activityParams['subject'] = $activityParams['activity_subject'];
+      }
+      $activityParams += array(
+        'source_contact_id' => $userID,
+        'activity_date_time' => date('YmdHis'),
+        'details' => ts("Body") . ": " . $tokenText,
+        'status_id' => CRM_Utils_Array::key('Scheduled', CRM_Core_PseudoConstant::activityStatus('name')),
+      );
+
+      $activity = self::create($activityParams);
+
+      $message = '';
+      $isSuccess = FALSE;
       $sendResult = self::sendSMSMessage(
         $contactId,
         $tokenText,
         $smsParams,
-        $activityID,
+        $activity->id,
         $userID
       );
-      $activity->details .= nl2br("\n\n".$sendResult);
-      $activity->save();
 
-      if (PEAR::isError($sendResult)) {
-        // Collect all of the PEAR_Error objects
-        $errMsgs[] = $sendResult;
+      $isSuccess = FALSE;
+      $activity->details .= nl2br("\n" . ts("To") .": ". $smsParams['To']);
+      if (empty($sendResult->_error)) {
+        $activity->details .= nl2br("\n\n".$sendResult);
+        if (preg_match('/^statuscode=(\w+)\r?$/m', $sendResult, $findResult)) {
+          $resultKey = $findResult[1];
+          if (CRM_Utils_Array::crmInArray($resultKey, array(0,1,2,3,4))) {
+            // Send Success
+            $isSuccess = TRUE;
+            $activity->status_id = CRM_Utils_Array::key('Completed', CRM_Core_PseudoConstant::activityStatus('name'));
+            if (preg_match('/^Duplicate=Y\r?$/m', $sendResult)) {
+              // Send failed
+              $isSuccess = FALSE;
+              $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
+              $message = ts('Duplicated message');
+            }
+          }
+        }
+        if (preg_match('/^Error=([^\r]+)\r?$/m', $sendResult, $findError)) {
+          $message = $findError[1];
+        }
       }
       else {
+        $message = $sendResult->_error['error'];
+        $sendResult = $sendResult->_error['error'];
+      }
+
+      if (!$isSuccess) {
+        if (empty($message)) {
+          $message = ts('Unknown error');
+        }
+
+        // Send failed
+        $activity->status_id = CRM_Utils_Array::key('Cancelled', CRM_Core_PseudoConstant::activityStatus('name'));
+        $activity->details .= nl2br("\n" .ts("Additional Details:"). $message);
+
+        $errMsgs[] = $message;
+      }
+      $activity->save();
+
+      if ($isSuccess) {
         $success++;
       }
     }
@@ -1697,12 +1730,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $recipient = $smsParams['To'];
     $smsParams['contact_id'] = $toID;
     $smsParams['parent_activity_id'] = $activityID;
+    $sourceContactId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activityID, 'source_contact_id');
 
     $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
     $sendResult = $providerObj->send($recipient, $smsParams, $tokenText, NULL, $userID);
-    if (PEAR::isError($sendResult)) {
-      return $sendResult;
-    }
 
     // add activity target record for every sms that is send
     $activityTargetParams = array(
@@ -1711,6 +1742,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     );
     self::createActivityTarget($activityTargetParams);
 
+    // If curl error: $sendResult will be a CRM_SMS_Provider object, which have _error property;
+    // Otherwise, it well return curl receive string.
     return $sendResult;
   }
 

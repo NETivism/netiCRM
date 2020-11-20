@@ -539,28 +539,17 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       CRM_Core_DAO::$_nullObject
     );
 
-    $this->_groupID = CRM_Utils_Request::retrieve('gid', 'Positive',
-      $this
-    );
-    $this->_amtgID = CRM_Utils_Request::retrieve('amtgID', 'Positive',
-      $this
-    );
-    $this->_ssID = CRM_Utils_Request::retrieve('ssID', 'Positive',
-      $this
-    );
-    $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter', 'String',
-      $this
-    );
-    $this->_ufGroupID = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this
-    );
-    $this->_componentMode = CRM_Utils_Request::retrieve('component_mode', 'Positive',
-      $this,
-      FALSE, 1, $_REQUEST
-    );
-    $this->_tagID = CRM_Utils_Request::retrieve( 'tid' , 'Positive',
-      $this 
-    );
+    $this->_groupID = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
+    $this->_amtgID = CRM_Utils_Request::retrieve('amtgID', 'Positive', $this);
+    $this->_ssID = CRM_Utils_Request::retrieve('ssID', 'Positive', $this);
+    $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter', 'String', $this);
+    $this->_ufGroupID = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    $this->_componentMode = CRM_Utils_Request::retrieve('component_mode', 'Positive', $this, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, $_REQUEST);
+    $this->_tagID = CRM_Utils_Request::retrieve( 'tid' , 'Positive', $this);
+    
+    if (!empty($this->_ssID) && !CRM_Core_Permission::check('edit groups')) {
+      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
+    }
 
     /**
      * set the button names

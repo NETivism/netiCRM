@@ -107,6 +107,10 @@
             <td scope="row" class="label" width="20%">{$form.is_multiple_registrations.label}</td>
             <td>{$form.is_multiple_registrations.html} {help id="id-allow_multiple"}</td>
         </tr>
+        <tr id="is_multiple_registrations_limit" class="crm-event-manage-registration-form-block-is_multiple_registrations_max">
+            <td scope="row" class="label" width="20%">{$form.is_multiple_registrations_max.label}</td>
+            <td>{$form.is_multiple_registrations_max.html}</td>
+        </tr>
         <tr id="allow_same_emails" class="crm-event-manage-registration-form-block-allow_same_participant_emails">
             <td scope="row" class="label" width="20%">{$form.allow_same_participant_emails.label}</td>
             <td>{$form.allow_same_participant_emails.html} {help id="id-allow_same_email"}</td>
@@ -261,13 +265,13 @@
              <tr class="crm-event-manage-registration-form-block-cc_confirm">
                <td scope="row" class="label" width="20%">{$form.cc_confirm.label}</td>
                <td>{$form.cc_confirm.html}<br />
-                    <span class="description">{ts}You can notify event organizers of each online registration by specifying one or more email addresses to receive a carbon copy (cc). Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
+                    <span class="description">{ts}You can notify event organizers of each online registration by specifying one or more email addresses to receive a carbon copy (cc). Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts} <span class="font-red">{ts}Do not use same email address with from address.{/ts}</span></span>
                </td>
              </tr>
              <tr class="crm-event-manage-registration-form-block-bcc_confirm">
                <td scope="row" class="label" width="20%">{$form.bcc_confirm.label}</td>
                <td>{$form.bcc_confirm.html}<br />
-                  <span class="description">{ts}You may specify one or more email addresses to receive a blind carbon copy (bcc) of the confirmation email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
+                  <span class="description">{ts}You may specify one or more email addresses to receive a blind carbon copy (bcc) of the confirmation email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts} <span class="font-red">{ts}Do not use same email address with from address.{/ts}</span></span>
                </td>
              </tr>
              <tr class="crm-event-manage-registration-form-block-allow_cancel_by_link">
@@ -322,7 +326,7 @@ invert              = 0
 {include file="CRM/common/showHideByFieldValue.tpl"
 trigger_field_id    ="is_multiple_registrations"
 trigger_value       =""
-target_element_id   ="allow_same_emails|additional_profile_pre|additional_profile_post"
+target_element_id   ="allow_same_emails|additional_profile_pre|additional_profile_post|is_multiple_registrations_limit"
 target_element_type ="table-row"
 field_type          ="radio"
 invert              = 0

@@ -81,6 +81,25 @@ function loadReferrer() {
       trackVisit(visitInfo);
     });
   }
+
+  // remove unused params
+  var queue_id = location.search.match(/civimail_x_q=(\d+)/);
+  var url_id = location.search.match(/civimail_x_u=(\d+)/);
+  if (queue_id && url_id) {
+    if (typeof URLSearchParams === 'function') {
+      var searchParams = new URLSearchParams(window.location.search);
+      searchParams.delete("civimail_x_q");
+      searchParams.delete("civimail_x_u");
+      if (searchParams.toString() === '') {
+        var newQuery = '';
+      }
+      else {
+        var newQuery = '?'+searchParams.toString();
+      }
+      var newUrl = window.location.origin+window.location.pathname+newQuery;
+      window.history.replaceState({}, null, newUrl);
+    }
+  }
 }
 
 function trackVisit(visitInfo) {
@@ -167,7 +186,7 @@ function trackVisit(visitInfo) {
         object[utmKey] = visitInfo.campaign[utmKey];
       }
     }
-    if (typeof navigator.doNotTrack === 'string' && navigator.doNotTrack) {
+    if (typeof navigator.doNotTrack === 'string' && navigator.doNotTrack == '1') {
       object['referrer_type'] = 'unknown';
       object['referrer_network'] = '';
       object['referrer_url'] = '';

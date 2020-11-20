@@ -107,8 +107,8 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
         if ($statusID != 5) {
           $recurParams['contribution_status_id'] = 2;
         }
-        $recurParams['processor_id'] = $_POST['subscr_id'];
-        $recurParams['trxn_id'] = $recur->processor_id;
+        $recurParams['external_id'] = $_POST['subscr_id'];
+        $recurParams['trxn_id'] = $recur->external_id;
         $sendNotification = TRUE;
         $subscriptionPaymentStatus = CRM_Core_Payment::RECURRING_PAYMENT_START;
         break;

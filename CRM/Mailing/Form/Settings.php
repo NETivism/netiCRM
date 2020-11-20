@@ -86,6 +86,9 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
       $dao->override_verp = 1;
       $dao->forward_replies = 1;
       $dao->storeValues($dao, $defaults);
+      if ($dao->name) {
+        CRM_Utils_System::setTitle($dao->name);
+      }
       $defaults['visibility'] = $dao->visibility;
     }
     return $defaults;
@@ -107,8 +110,9 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     $this->add('checkbox', 'open_tracking', ts('Track Opens?'));
     $defaults['open_tracking'] = TRUE;
 
+    $options = array('' => ts("-- select --")) + CRM_Core_SelectValues::ufVisibility(TRUE);
     $this->add('select', 'visibility', ts('Mailing Visibility'),
-      CRM_Core_SelectValues::ufVisibility(TRUE), TRUE
+    $options, TRUE
     );
 
     $this->add('select', 'unsubscribe_id', ts('Unsubscribe Message'),

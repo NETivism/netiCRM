@@ -31,12 +31,10 @@
 <script type="text/javascript">
 cj(document).ready(function($){
   var detectAmount = function(obj) {
-    var amount = $(obj).prop('type') == 'text' ? parseInt($(obj).val()) : $(obj).data('amount');
+    var amount = $(obj).prop('type') == 'text' ? parseFloat($(obj).val()) : parseFloat($(obj).data('amount'));
     var is_recur = parseInt($("input[name=is_recur]:checked").val());
-    console.log(is_recur);
-    console.log(amount);
-    if (amount) {
-      if (is_recur) {
+    if (typeof amount === 'number' && amount) {
+      if (typeof is_recur === 'number' && is_recur) {
         return filterPremiumByAmount(0, amount);
       }
       else {
@@ -49,10 +47,12 @@ cj(document).ready(function($){
     $('tr.product-row input[name=selectProduct], tr.product-row.not-available  .premium-options select').prop('disabled', false);
     $('tr.product-row.not-available .premium-info .description').find('.zmdi-alert-triangle').remove();
     var $available = $("input[name=selectProduct]").filter(function(idx){
-      if (amt < $(this).data('min-contribution') && amt > 0) {
+      var minContribution = parseFloat($(this).data('min-contribution'));
+      var minContributionRecur = parseFloat($(this).data('min-contribution-recur'));
+      if (amt < minContribution && amt > 0) {
         return false;
       }
-      if (amt_recur < $(this).data('min-contribution-recur') && amt_recur > 0) {
+      if (amt_recur < minContributionRecur && amt_recur > 0) {
         if ($(this).data('calculate-mode') == 'first') {
           return false;
         }
@@ -190,13 +190,6 @@ cj(document).ready(function($){
             {else}
                 <div class="premium-options">
                     <div><strong>{$row.options}</strong></div>
-                </div>
-            {/if}
-            {if $context EQ "thankContribution" AND $is_deductible AND $row.price}
-                <div class="premium-tax-disclaimer">
-                <p>
-                {ts 1=$row.price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}
-                </p>
                 </div>
             {/if}
             </td>

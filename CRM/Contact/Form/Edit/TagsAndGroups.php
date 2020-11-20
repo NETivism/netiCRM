@@ -72,6 +72,10 @@ class CRM_Contact_Form_Edit_TagsandGroups {
     $tagName = 'Tag(s)',
     $fieldName = NULL
   ) {
+    $classContext = get_class($form);
+    if ($classContext == 'CRM_Contact_Form_Contact') {
+      $form->assign('useSelectBox', TRUE);
+    }
 
     $type = (int ) $type;
     if ($type & CRM_Contact_Form_Edit_TagsandGroups::GROUP) {
@@ -112,12 +116,32 @@ class CRM_Contact_Form_Edit_TagsandGroups {
             continue;
           }
           $form->_tagGroup[$fName][$dao->id]['description'] = $dao->description;
-          $elements[] = &$form->addElement('advcheckbox', $dao->id, NULL, $dao->title, $attributes);
+          if ($classContext == 'CRM_Contact_Form_Contact') {
+            $elements[$dao->id] = $dao->title.'(id:'.$dao->id.')';
+          }
+          else {
+            $elements[] = &$form->addElement('advcheckbox', $dao->id, NULL, $dao->title, $attributes);
+          }
         }
 
         if (!empty($elements)) {
-          $form->addGroup($elements, $fName, ts($groupName));
-          $form->assign('groupCount', count($elements));
+          if ($classContext == 'CRM_Contact_Form_Contact') {
+            $form->addSelect($fName, ts($groupName), $elements, array('multiple'=>'multiple'));
+            if (!empty($form->_entityId)) {
+              $contactGroup = CRM_Contact_BAO_GroupContact::getContactGroup($form->_entityId, 'Added', NULL, FALSE, TRUE);
+              if (!empty($contactGroup)) {
+                $defaultGroups = array();
+                foreach($contactGroup as $gp) {
+                  $defaultGroups[] = $gp['group_id'];
+                }
+                $form->setDefaults(array($fName => $defaultGroups));
+              }
+            }
+          }
+          else {
+            $form->addGroup($elements, $fName, ts($groupName));
+            $form->assign('groupCount', count($elements));
+          }
           if ($isRequired) {
             $form->addRule($fName, ts('%1 is a required field.', array(1 => $groupName)), 'required');
           }
@@ -136,11 +160,27 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       $tag = CRM_Core_BAO_Tag::getTags();
 
       foreach ($tag as $id => $name) {
-        $elements[] = &HTML_QuickForm::createElement('checkbox', $id, NULL, $name);
+        if ($classContext == 'CRM_Contact_Form_Contact') {
+          $elements[$id] = $name;
+        }
+        else {
+          $elements[] = &HTML_QuickForm::createElement('checkbox', $id, NULL, $name);
+        }
       }
       if (!empty($elements)) {
-        $form->addGroup($elements, $fName, ts($tagName), '<br />');
-        $form->assign('tagCount', count($elements));
+        if ($classContext == 'CRM_Contact_Form_Contact') {
+          $form->addSelect($fName, ts($tagName), $elements, array('multiple'=>'multiple'));
+          if (!empty($form->_entityId)) {
+            $contactTag = CRM_Core_BAO_EntityTag::getTag($form->_entityId);
+            if (!empty($contactTag)) {
+              $form->setDefaults(array($fName => $contactTag));
+            }
+          }
+        }
+        else {
+          $form->addGroup($elements, $fName, ts($tagName), '<br />');
+          $form->assign('tagCount', count($elements));
+        }
       }
 
       if ($isRequired) {
@@ -172,6 +212,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
   static function setDefaults($id, &$defaults, $type = CRM_Contact_Form_Edit_TagsandGroups::ALL, $fieldName = NULL) {
     $type = (int ) $type;
     if ($type & self::GROUP) {
+      unset($defaults['group']);
       $fName = 'group';
       if ($fieldName) {
         $fName = $fieldName;

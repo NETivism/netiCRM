@@ -1,41 +1,55 @@
 /* snow */
 .ql-snow .ql-picker.ql-size .ql-picker-label::before,
 .ql-snow .ql-picker.ql-size .ql-picker-item::before {
-  content: '正常大小';
+  content: "正常大小";
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=small]::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value=small]::before {
-  content: '小字';
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="13px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="13px"]::before {
+  content: "小字";
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=large]::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value=large]::before {
-  content: '中等字';
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="20px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before {
+  content: "中等字";
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=huge]::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value=huge]::before {
-  content: '大字';
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="28px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="28px"]::before {
+  content: "大字";
 }
 .ql-snow .ql-tooltip[data-mode=link]::before {
   content: "輸入網址:";
 }
 .ql-snow .ql-tooltip.ql-editing a.ql-action::after {
-  content: '套用';
+  content: "套用";
+}
+.ql-snow .ql-tooltip::before {
+  content: "前往網址:";
+}
+.ql-snow .ql-tooltip a.ql-action::after {
+  content: '編輯'; 
+}
+.ql-snow .ql-tooltip a.ql-remove::before {
+  content: '去除連結';
 }
 
 /* bubble */
 .ql-bubble .ql-picker.ql-size .ql-picker-label::before,
 .ql-bubble .ql-picker.ql-size .ql-picker-item::before {
-  content: '正常大小';
+  content: "正常大小";
 }
-.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value=small]::before,
-.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value=small]::before {
-  content: '小字';
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="13px"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="13px"]::before {
+  content: "小字";
 }
-.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value=large]::before,
-.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value=large]::before {
-  content: '中等字';
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="20px"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before {
+  content: "中等字";
 }
-.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value=huge]::before,
-.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value=huge]::before {
-  content: '大字';
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="28px"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="28px"]::before {
+  content: "大字";
+}
+
+/* placeholders */
+.ql-picker.ql-placeholder > span.ql-picker-label::before {
+  content: '替代符號';
 }

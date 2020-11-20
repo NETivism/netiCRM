@@ -300,12 +300,11 @@ class CRM_Contact_Form_Task_SMSCommon {
     if ($form->_single) {
       // also fix the user context stack
       if ($form->_context) {
-        $url = CRM_Utils_System::url('civicrm/dashboard', 'reset=1');
+        $url = CRM_Utils_System::url('civicrm/contact/search', 'reset=1');
       }
       else {
-        $url = CRM_Utils_System::url('civicrm/contact/view',
-          "&show=1&action=browse&cid={$form->_contactIds[0]}&selectedChild=activity"
-        );
+        $contactId = reset($form->_contactIds);
+        $url = CRM_Utils_System::url('civicrm/contact/view', 'cid='.$contactId.'&selectedChild=activity');
       }
 
       $session = CRM_Core_Session::singleton();
@@ -457,10 +456,10 @@ class CRM_Contact_Form_Task_SMSCommon {
         $status .= '<li>' . $errMsg . '</li>';
       }
       $status .= '</ul>';
-      CRM_Core_Session::setStatus($status, ts('One Message Not Sent', array(
+      CRM_Core_Session::setStatus(ts('One Message Not Sent', array(
             'count' => count($sent),
             'plural' => '%count Messages Not Sent',
-          )), 'info');
+          )) . $status, 'info');
     }
     else {
       //Display the name and number of contacts for those sms is not sent.

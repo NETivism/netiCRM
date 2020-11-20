@@ -47709,7 +47709,7 @@ msgid "Traditional Editor"
 msgstr ""
 
 #: templates/CRM/Mailing/Form/Upload.hlp
-msgid "For Compose On-screen, you can select templates, add content blocks, and change the global settings of the newsletter. The drag-and-drop editor can quickly and easily add, copy, and delete blocks such as titles, pictures, text, buttons, etc., and adjust the order of blocks by dragging. The templates provided by the drag-and-drop editor are all responsive, which allows users to have a better browsing experience on different devices."
+msgid "In the 'Compose On-screen' mode, you can select templates, add content blocks and change the global settings of the e-newsletter. You can quickly and easily add, copy and delete blocks such as titles, images, text, buttons, etc., and adjust the order of the blocks. The templates provided by the 'Compose On-screen' are all responsive, which can give users a better browsing experience on different devices."
 msgstr ""
 
 #: templates/CRM/Mailing/Form/Upload.hlp
@@ -47718,4 +47718,153 @@ msgstr ""
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "You can use your favorite editor to create content on your local computer or export HTML emails from other email marketing platforms, and then upload the files."
+msgstr ""
+
+msgid "Are your sure to use template to replace your work? You will lose any customizations you have made."
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Drag to Reorder"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Up"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Down"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Duplicate Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Delete Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Link"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Image"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Switch Templates"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Add Blocks"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Add Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Switch Template"
+msgstr ""
+
+msgid "view public CiviMail content"
+msgstr ""
+
+msgid "delete contacts permanantly"
+msgstr ""
+
+msgid "Maximum per registration"
+msgstr ""
+
+msgid "Please enter %1"
+msgstr ""
+
+msgid "Earliest"
+msgstr ""
+
+msgid "Copy Contribution"
+msgstr ""
+
+msgid "When recurring contribution being triggered, witch contribution you want to copy?"
+msgstr ""
+
+msgid "Birth Date Search"
+msgstr ""
+
+msgid "Birthday is a big blessing day for supporters, don't forget to offer your blessings, or invite supporters to call friends to praise beloved organization!"
+msgstr ""
+
+msgid "Give your supporters a thoughtful birthday card, or a more meaningful model, invite supporters to launch a \"birthday donation\" on their birthdays, so that supporters and friends can give blessings to the birthday supporters and gather them into a more meaningful charity!"
+msgstr ""
+
+msgid "Duplicated message"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Text Color"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit background of the button"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit background of the block"
+msgstr ""
+
+#: CRM/Mailing/Form/Upload.php
+msgid "You need to specify a template to update."
+msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid "Do not use same email address with from address."
+msgstr ""
+
+msgid "Unique Unsubscribe"
+msgstr ""
+
+msgid "Unique Click-throughs Rate"
+msgstr ""
+
+msgid "Total Clicks"
+msgstr ""
+
+msgid "Total Opens"
+msgstr ""
+
+msgid "Unique Open Rate"
+msgstr ""
+
+msgid "Accepted Rate"
+msgstr ""
+
+msgid "Bounce Rate"
+msgstr ""
+
+msgid "Click to Open Rate"
+msgstr ""
+
+msgid "Receipt is not print?"
+msgstr ""
+
+msgid "Oops. The membership you're trying to renew appears to be invalid. Contact your site administrator if you need assistance."
+msgstr ""
+
+msgid "Only For Renew Membership?"
+msgstr ""
+
+msgid "Is This Page Only for Membership Renewal?"
 msgstr ""

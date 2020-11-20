@@ -159,6 +159,12 @@ class CRM_Member_DAO_MembershipBlock extends CRM_Core_DAO
    */
   public $is_active;
   /**
+   * Is this membership_block only used for renewal
+   *
+   * @var boolean
+   */
+  public $is_renewal_only;
+  /**
    * class constructor
    *
    * @access public
@@ -285,6 +291,11 @@ class CRM_Member_DAO_MembershipBlock extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Active') ,
           'default' => '',
+        ) ,
+        'is_renewal_only' => array(
+          'name' => 'is_renewal_only',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Is Renewal Only') ,
         ) ,
       );
     }

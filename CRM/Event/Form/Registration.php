@@ -880,6 +880,13 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     ) {
       $createPayment = TRUE;
     }
+    
+    $coupon = $this->get('coupon');
+    if (!$createPayment && $contribution->id
+    && ($this->_params['amount'] == 0)
+    && !empty($coupon)) {
+      $createPayment = TRUE;
+    }
 
     if ($createPayment && $this->_values['event']['is_monetary'] &&
       CRM_Utils_Array::value('contributionID', $this->_params)
@@ -1469,10 +1476,13 @@ WHERE  v.option_group_id = g.id
 
     $optionMaxValues = $fieldSelected = array();
     foreach ($params as $pNum => $values) {
+      // participant_number => AllFields
+      // price field is an array, skip when field is not array.
       if (!is_array($values) || $values == 'skip') {
         continue;
       }
       foreach ($values as $valKey => $value) {
+        // AllFields as field_key => EachField
         if (strpos($valKey, 'price_') === FALSE) {
           continue;
         }
@@ -1487,6 +1497,7 @@ WHERE  v.option_group_id = g.id
           continue;
         }
         $options = $optionsCountDetails[$priceFieldId]['options'];
+        // calculate Each field total, to compare each field limit.
         foreach ($options as $optId => $optCount) {
           if (!empty($value[$optId]) && $value[$optId] == TRUE) {
             $optVal = $value[$optId];
@@ -1502,19 +1513,19 @@ WHERE  v.option_group_id = g.id
       }
     }
 
-    //validate for option max value.
+    //validate for each option max value.
     foreach ($optionMaxValues as $fieldId => $values) {
+      $fieldMax = $optionsMaxValueDetails[$fieldId]['max_value'];
       $options = CRM_Utils_Array::value('options', $feeBlock[$fieldId], array());
       $fieldTotal = 0;
-      foreach ($values as $optId => $total) {
+      foreach ($values as $optId => $isSelected) {
         $optMax = $optionsMaxValueDetails[$fieldId]['options'][$optId];
-        $total += CRM_Utils_Array::value('db_total_count', $options[$optId], 0);
-        if (empty($fieldMax) && $optMax && $total > $optMax) {
+        $total = $isSelected + CRM_Utils_Array::value('db_total_count', $options[$optId], 0);
+        if (empty($fieldMax) && $isSelected && $optMax && $total > $optMax) {
           $errors[$currentParticipantNum]["price_{$fieldId}"] = ts('It looks like this field participant count extending its maximum limit.');
         }
         $fieldTotal += $total;
       }
-      $fieldMax = $optionsMaxValueDetails[$fieldId]['max_value'];
       if(!empty($fieldMax) && $fieldTotal > $fieldMax){
         $errors[$currentParticipantNum]["price_{$fieldId}"] = ts('It looks like this field participant count extending its maximum limit.');
       }

@@ -153,11 +153,17 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
    */
   public $end_date;
   /**
+   * FK to payment processor
+   *
+   * @var int unsigned
+   */
+  public $processor_id;
+  /**
    * Possibly needed to store a unique identifier for this recurring payment order - if this is available from the processor??
    *
    * @var string
    */
-  public $processor_id;
+  public $external_id;
   /**
    * unique transaction id. may be processor id, bank id + trans id, or account number + check number... depending on payment_method
    *
@@ -237,6 +243,7 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
     if (!(self::$_links)) {
       self::$_links = array(
         'contact_id' => 'civicrm_contact:id',
+        'processor_id' => 'civicrm_payment_processor:id',
       );
     }
     return self::$_links;
@@ -252,6 +259,7 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
       Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'processor_id', 'civicrm_payment_processor', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
@@ -337,6 +345,11 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
         ) ,
         'processor_id' => array(
           'name' => 'processor_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
+        ) ,
+        'external_id' => array(
+          'name' => 'external_id',
           'type' => CRM_Utils_Type::T_STRING,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,

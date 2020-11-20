@@ -35,6 +35,7 @@
       width: window.innerWidth,
       height: window.innerHeight
     },
+    _language = "en_US",
     _debugMode = false,
     _data = {},
     _dataLoadMode = "field",
@@ -46,6 +47,7 @@
     _container,
     _main = "." + NME_MAIN,
     _panels = "." + NME_PANELS,
+    _blockControlTitle = {},
     _controlIconClass = {
       drag: "zmdi-arrows",
       prev: "zmdi-long-arrow-up",
@@ -290,7 +292,7 @@
       var json = JSON.parse(str);
       return (typeof json === "object");
     } catch (e) {
-      _debug("===== Source data is not json. =====");
+      _debug("===== data is not json. =====");
       return false;
     }
   }
@@ -352,6 +354,12 @@
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
   };
+
+  var _htmlDecode = function(input) {
+    input = _htmlUnescape(input);
+    input = decodeURI(input);
+    return input;
+  }
 
   var _domElemExist = function($elem) {
     var $elem = typeof $elem !== "undefined" ? $elem : "";
@@ -450,21 +458,21 @@
         elemsYaxisRange[elemID] = elemYaxisRange;
       });
 
-      _debug(elemsYaxisRange, "onScreenCenterElem");
+      //_debug(elemsYaxisRange, "onScreenCenterElem");
 
       $(window).scroll(function() {
         let scrollTop = $(window).scrollTop();
         $elem.removeClass("on-screen-center");
-        $elem.next(".add-block-here").remove();
 
         for (let blockID in elemsYaxisRange) {
           let yMin = elemsYaxisRange[blockID][0],
               yMax = elemsYaxisRange[blockID][1];
 
           if (scrollTop >= yMin && scrollTop <= yMax) {
-            _debug(blockID);
-            $("#" + blockID).addClass("on-screen-center");
-            $("#" + blockID).after("<div class='add-block-here'>" + _ts["Add Block Here"] + "</div>");
+            //_debug(blockID);
+            let $block = $("#" + blockID);
+            $block.addClass("on-screen-center");
+            break;
           }
         }
       });
@@ -502,6 +510,34 @@
     }
   }
 
+  var _scrollTo = function(elem, options) {
+    var $elem = typeof elem === "object" ? elem : typeof elem === "string" ? $("#" + elem) : null;
+
+    if ($elem.length) {
+      var defaultOptions = {
+        direction: "vertical",
+        speed: 500,
+        buffer: 0
+      };
+
+      options = $.extend({}, defaultOptions, options);
+      console.log("sssss");
+      console.log(options);
+
+      if (options.direction == "vertical") {
+        $("html, body").animate({
+          scrollTop: $elem.offset().top + options.buffer
+        }, options.speed);
+      }
+
+      if (options.direction == "horizontal") {
+        $("html, body").animate({
+          scrollLeft: $elem.offset().left + options.buffer
+        }, options.speed);
+      }
+    }
+  }
+
   /**
    * Main
    */
@@ -515,13 +551,13 @@
 
           if (_isJsonString(dataString)) {
             _data = JSON.parse(dataString);
-            _debug(_data, "Source data");
+            _debug(_data, "nmeData.get.field");
           }
         }
       }
     },
     update: function() {
-      _debug(_data);
+      //_debug(_data, "nmeData.update");
       let data = JSON.stringify(_data, undefined, 4);
       $(_dataLoadSource).val(data);
       $.nmEditor.instance.data = _data;
@@ -570,8 +606,9 @@
   };
 
   var _nmeBlock = {
-    add: function(data, mode, $target, method) {
+    add: function(data, state, mode, $target, method) {
       let block = !_objIsEmpty(data) ? data : null,
+          dataState = typeof state !== "undefined" ? state : "exist",
           addMethod = typeof method !== "undefined" ? method : "append";
 
       if (block && block.type) {
@@ -581,6 +618,29 @@
             blockSection = block.section,
             blockID = block.id,
             disallowSortType = ["header", "footer"];
+
+        // If this block is created after the data is loaded, apply styles from global settings
+        if (dataState == "new") {
+          if (!block.override.block) {
+            block["styles"]["block"]["background-color"] = _data["settings"]["styles"]["block"]["background-color"];
+          }
+
+          if (!block.override.elem) {
+            if (blockType == "title") {
+              block["styles"]["elem"]["font-size"] = _data["settings"]["styles"][blockType]["font-size"];
+              block["styles"]["elem"]["color"] = _data["settings"]["styles"][blockType]["color"];
+            }
+
+            if (blockType == "paragraph") {
+              block["styles"]["elem"]["color"] = _data["settings"]["styles"][blockType]["color"];
+            }
+
+            if (blockType == "button") {
+              block["styles"]["elem"]["color"] = _data["settings"]["styles"][blockType]["color"];
+              block["styles"]["elemContainer"]["background-color"] = _data["settings"]["styles"][blockType]["background-color"];
+            }
+          }
+        }
 
         if (blockMode == "view") {
           if (_domElemExist($target)) {
@@ -621,7 +681,7 @@
                     break;
 
                   case "paragraph":
-                    decodeContent = _htmlUnescape(block.data.html);
+                    decodeContent = _htmlDecode(block.data.html);
                     $nmebElem.html(decodeContent);
                     break;
 
@@ -652,7 +712,7 @@
                       break;
 
                     case "footer":
-                      decodeContent = _htmlUnescape(block.data.html);
+                      decodeContent = _htmlDecode(block.data.html);
                       $nmebElem.html(decodeContent);
                       break;
 
@@ -669,7 +729,7 @@
                       var nestBlockData = block.data[0]["blocks"][nestBlockID];
 
                       if (!_objIsEmpty(nestBlockData)) {
-                        _nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+                        _nmeBlock.add(nestBlockData, dataState, "view", $nestTarget, "append");
                       }
                     }
                     break;
@@ -689,7 +749,7 @@
                           var nestBlockData = block.data[dataIndex]["blocks"][nestBlockID];
 
                           if (!_objIsEmpty(nestBlockData)) {
-                            _nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+                            _nmeBlock.add(nestBlockData, dataState, "view", $nestTarget, "append");
                           }
                         }
                       }
@@ -708,7 +768,7 @@
                           }
 
                       if (!_objIsEmpty(nestBlockData)) {
-                        _nmeBlock.add(nestBlockData, "view", $nestTarget, "append");
+                        _nmeBlock.add(nestBlockData, dataState, "view", $nestTarget, "append");
                       }
                     }
                     break;
@@ -746,6 +806,7 @@
           if (_domElemExist($target)) {
             let blockContent = _tpl.block[blockType],
                 blockEditContent = _tpl.block.edit,
+                blockControlTitle = _blockControlTitle[blockType][_language],
                 blockSortable = "true",
                 blockOverride = typeof block.override !== "undefined" && typeof block.override.block !== "undefined" ? block.override.block : false,
                 elemOverride = typeof block.override !== "undefined" && typeof block.override.elem !== "undefined" ? block.override.elem : false;
@@ -758,6 +819,20 @@
               if (block.parentType == "rc-col-2" || block.parentType == "rc-float") {
                 blockContent = blockContent.replace("<td valign=\"top\" width=\"600\" style=\"width:600px;\">", "<td valign=\"top\" width=\"100%\" style=\"width:100%;\">");
               }
+
+              switch (_language) {
+                case "zh_TW":
+                  blockControlTitle = _blockControlTitle[block.parentType][_language] + "內的" + blockControlTitle;
+                  break;
+
+                default:
+                  blockControlTitle = blockControlTitle + " of '" + _blockControlTitle[block.parentType][_language] + "'";
+              }
+
+              blockEditContent = blockEditContent.replace(/\[nmeBlockControlTitle\]/g, blockControlTitle);
+            }
+            else {
+              blockEditContent = blockEditContent.replace(/\[nmeBlockControlTitle\]/g, blockControlTitle);
             }
 
             blockEditContent = blockEditContent.replace(/\[nmeBlockContent\]/g, blockContent);
@@ -783,9 +858,6 @@
                 $target.after(output);
                 break;
             }
-
-            // Remove 'Add block here' after append the block
-            $(".add-block-here").remove();
 
             // After adding the block, re-detect which block is on the screen
             _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
@@ -840,7 +912,7 @@
                       "data-placeholder": "請輸入段落文字...",
                       "data-title": "Enter comments"
                     });
-                    decodeContent = _htmlUnescape(block.data.html);
+                    decodeContent = _htmlDecode(block.data.html);
                     $nmebElem.html(decodeContent);
                     break;
 
@@ -914,7 +986,7 @@
                         "data-placeholder": "請輸入段落文字...",
                         "data-title": "Enter comments"
                       });
-                      decodeContent = _htmlUnescape(block.data.html);
+                      decodeContent = _htmlDecode(block.data.html);
                       $nmebElem.html(decodeContent);
                       break;
 
@@ -946,7 +1018,7 @@
                           nestBlockData.control.clone = false;
                           nestBlockData.weight = i;
                           _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
-                          _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                          _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                         }
 
                         _nmeData.update();
@@ -967,7 +1039,7 @@
 
                         // Added data to new index
                         _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
-                        _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                        _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                         _nmeData.update();
                       }
                     }
@@ -1012,7 +1084,7 @@
                               }
 
                               _data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][nestBlockID] = nestBlockData;
-                              _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                              _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                             }
 
                             _nmeData.update();
@@ -1033,7 +1105,7 @@
 
                             // Added data to new index
                             _data["sections"][blockSection]["blocks"][blockID]["data"][dataIndex]["blocks"][nestBlockID] = nestBlockData;
-                            _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                            _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                             _nmeData.update();
                           }
                         }
@@ -1092,7 +1164,7 @@
                               _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
 
                               // Added block to stage
-                              _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                              _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
                             }
 
                             // Update data
@@ -1125,7 +1197,7 @@
                             _data["sections"][blockSection]["blocks"][blockID]["data"][0]["blocks"][nestBlockID] = nestBlockData;
 
                             // Added block to stage
-                            _nmeBlock.add(nestBlockData, "edit", $nestTarget, "append");
+                            _nmeBlock.add(nestBlockData, dataState, "edit", $nestTarget, "append");
 
                             // Update data
                             _nmeData.update();
@@ -1145,8 +1217,18 @@
                   });
                 }
 
-                _nmeBlockControl.render(blockID, blockType);
-                _editable();
+                setTimeout(function() {
+                  _nmeBlockControl.render(blockID, blockType);
+                  _editable();
+
+                  if (dataState == "new" || dataState == "clone") {
+                    if (!block.parentID && $block.length) {
+                      var scrollOpts = {};
+                      scrollOpts.buffer = $("#admin-header").length ? $("#admin-header").outerHeight() * -1 : -50;
+                      _scrollTo($block, scrollOpts);
+                    }
+                  }
+                }, 500);
               }
 
               // Check control permission of each block
@@ -1170,9 +1252,8 @@
     },
     clone: function(data, $target) {
       let cloneData = !_objIsEmpty(data) ? data : null;
-
       if (_domElemExist($target)) {
-        _nmeBlock.add(cloneData, "edit", $target, "after");
+        _nmeBlock.add(cloneData, "clone", "edit", $target, "after");
       }
     },
     delete: function(data) {
@@ -1198,123 +1279,150 @@
   };
 
   var _nmeMain = function() {
-    if (!$(_main).length) {
-      let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
-          mailTpl = _tpl["mail"][mailTplName];
+    if ($(_main).length) {
+      $(_main).remove();
+    }
 
-      $(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
-      $(_main).children(".inner").append(mailTpl);
+    let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
+        mailTpl = _tpl["mail"][mailTplName];
 
-      // Added styles to body table
-      _nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
+    $(_container).append("<div class='" + NME_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
+    $(_main).children(".inner").append(mailTpl);
 
-      if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
-        for (let section in _data.sections) {
-          if (!_sectionIsEmpty(section)) {
-            let blocksData = _data.sections[section].blocks,
-                sectionID = "nme-mail-" + section,
-                sectionInner = "#" + sectionID + " .nme-mail-inner",
-                blocksContainer = sectionInner + " .nme-blocks";
+    // Added styles to body table
+    _nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
 
-            $(sectionInner).append("<div id='" + sectionID + "-blocks' class='nme-blocks' data-section='" + section + "'></div>");
+    if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
+      for (let section in _data.sections) {
+        if (!_sectionIsEmpty(section)) {
+          let blocksData = _data.sections[section].blocks,
+              sectionID = "nme-mail-" + section,
+              sectionInner = "#" + sectionID + " .nme-mail-inner",
+              blocksContainer = sectionInner + " .nme-blocks";
 
-            // Render blocks from data
-            for (let blockID in _data.sections[section].blocks) {
-              let blockData = blocksData[blockID];
-              _nmeBlock.add(blockData, "edit", $(blocksContainer));
-            }
+          $(sectionInner).append("<div id='" + sectionID + "-blocks' class='nme-blocks' data-section='" + section + "'></div>");
+
+          // Render blocks from data
+          for (let blockID in _data.sections[section].blocks) {
+            let blockData = blocksData[blockID];
+            _nmeBlock.add(blockData, "exist", "edit", $(blocksContainer));
           }
         }
+      }
 
-        // Prevent users from pressing enter to send the #upload form.
-        $("#Upload").on("keypress", "input, textarea", function(event){
-          let code = event.keyCode || event.which;
+      // Prevent users from pressing enter to send the #upload form.
+      $("#Upload").off("keypress").on("keypress", "input, textarea", function(event){
+        let code = event.keyCode || event.which;
 
-          if (code == 13) {
-            event.preventDefault();
-            return false;
-          }
-        });
+        if (code == 13) {
+          event.preventDefault();
+          return false;
+        }
+      });
 
-        var _checkPanelOpen = function() {
-          let uploadType = $(".form-radio[name='upload_type']:checked").val();
-          if (uploadType == "2" && !$(_nmeOptions.dataLoadSourc).val() && !$(_panels).hasClass("is-opened")) {
+      var _checkPanelOpen = function() {
+        let uploadType = $(".form-radio[name='upload_type']:checked").val();
+        if (uploadType == "2" && $(_dataLoadSource).val()) {
+          if (!$(_panels).hasClass("is-opened")) {
             _nmePanels.open();
           }
-          else {
-            if ($(_panels).hasClass("is-opened")) {
-              _nmePanels.close();
-            }
+        }
+        else {
+          if ($(_panels).hasClass("is-opened")) {
+            _nmePanels.close();
           }
         }
+      }
 
-        // trigger panel open
-        $("#Upload").on("change", ".form-radio[name='upload_type']", function() {
-          _checkPanelOpen();
-        });
-        // check default open
-        _checkPanelOpen();
+      // trigger panel open
+      $("#Upload").off("change").on("change", ".form-radio[name='upload_type']", function() {
+        let val = this.value;
+        if (val == 2) {
+          let confirmMessage = _ts["You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?"];
 
-        $("#Upload").on("click", ".form-submit", function(event) {
-          $(this).closest("form").data("action", $(this).attr("name"));
-        });
-
-        $("#Upload").submit(function(event) {
-          let $form = $(this),
-              buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
-              allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
-
-          if (allowSubmit) {
-            $form.data("allow-submit", false);
-            return;
+          if (!window.confirm(confirmMessage)) {
+            $(".form-radio[name='upload_type'][value='1']")[0].click();
           }
+          _checkPanelOpen();
+        }
+        else {
+          _checkPanelOpen();
+        }
+      });
+      // check default open
+      _checkPanelOpen();
 
-          // Check edit mode option, Only 'Compose On-screen' option is allowed
-          if ($(".form-radio[name='upload_type'][value='2']").is(":checked")) {
-            // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
-            if (buttonName == "_qf_Upload_back" || buttonName == "_qf_Upload_upload" || buttonName == "_qf_Upload_upload_save") {
-              event.preventDefault();
-              let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
-                  confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
+      $("#Upload").off("click").on("click", ".form-submit", function(event) {
+        $(this).closest("form").data("action", $(this).attr("name"));
+      });
 
-              let saveContentToOldEditor = function() {
-                _nmeMailOutput();
-                let previewContent = "";
-                let checkMailOutput = function() {
-                  if ($("#nme-mail-output-frame").length) {
-                    previewContent = $("#nme-mail-output-frame").contents().find("body").html();
+      $("#Upload").unbind("submit").submit(function(event) {
+        let $form = $(this),
+            buttonName = $form.data("action") ? $form.data("action") : $(document.activeElement).attr("name"),
+            allowSubmit = $form.data("allow-submit") ? $form.data("allow-submit") : false;
 
-                    if (previewContent) {
-                      clearInterval(checkMailOutputTimer);
-                      previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
-                      CKEDITOR.instances['html_message'].setData(previewContent);
-                      $form.data("allow-submit", true);
-                      $form.find("[name='" + buttonName + "']").click();
-                    }
+        if (allowSubmit) {
+          $form.data("allow-submit", false);
+          return;
+        }
+
+        // Check edit mode option, Only 'Compose On-screen' option is allowed
+        if ($(".form-radio[name='upload_type'][value='2']").is(":checked")) {
+          // Convert json data to HTML and save to CKEditor when click button is "Previous", "Next" or "Save & Continue Later"
+          let allowSaveBtns = ["_qf_Upload_back", "_qf_Upload_upload", "_qf_Upload_upload_save" , "_qf_Upload_submit"];
+          if (allowSaveBtns.indexOf(buttonName) != -1) {
+            event.preventDefault();
+            let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
+                confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
+
+            let saveContentToOldEditor = function() {
+              _nmeMailOutput();
+              let previewContent = "";
+              let checkMailOutput = function() {
+                if ($("#nme-mail-output-frame").length) {
+                  previewContent = $("#nme-mail-output-frame").contents().find("body").html();
+
+                  if (previewContent) {
+                    clearInterval(checkMailOutputTimer);
+                    previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
+                    CKEDITOR.instances['html_message'].setData(previewContent);
+                    $form.data("allow-submit", true);
+                    $form.find("[name='" + buttonName + "']").click();
                   }
                 }
-                let checkMailOutputTimer = setInterval(checkMailOutput, 500);
               }
+              let checkMailOutputTimer = setInterval(checkMailOutput, 500);
+            }
 
-              if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
-                if (window.confirm(confirmMessage)) {
-                  saveContentToOldEditor();
-                }
-              }
-              else {
+            if (oldEditorContent.indexOf("neticrm-mailing-editor") == -1) {
+              if (window.confirm(confirmMessage)) {
                 saveContentToOldEditor();
               }
             }
+            else {
+              saveContentToOldEditor();
+            }
           }
-        });
+        }
+      });
 
-        _sortable();
+      _sortable();
+
+      if (!_nmePanels.initialized) {
         _nmePanels.init();
-        _nmePreview.init();
-        _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
-        _tooltip();
       }
+      else {
+        _nmeGlobalSetting.updateSettings(_data.settings);
+      }
+
+      if (!_nmePreview.initialized) {
+        _nmePreview.init();
+      }
+
+      _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
+      _tooltip();
     }
+
   };
 
   var _nmeMailOutput = function() {
@@ -1349,7 +1457,7 @@
 
           for (let blockID in _data.sections[section].blocks) {
             let blockData = blocksData[blockID];
-            _nmeBlock.add(blockData, "view", $blocksContainer);
+            _nmeBlock.add(blockData, "exist", "view", $blocksContainer);
           }
         }
       }
@@ -1364,16 +1472,19 @@
     }
   };
 
-  var _nmeGlobalSetting = function() {
-    var pickrInit = function(elemID, defaultColor) {
-      let targetSelector = "#" + elemID,
-          $target = $(targetSelector);
+  var _nmeGlobalSetting = {
+    initialized: false,
+    pickrInit: function(containerID, defaultColor) {
+      let pickrContainer = "#" + containerID,
+          $pickrContainer = $(pickrContainer),
+          pickrElem = pickrContainer + " > .pickr",
+          $pickrElem = $(pickrElem);
 
       defaultColor = typeof defaultColor !== undefined ? defaultColor : "#42445a";
 
-      if (_domElemExist($target)) {
+      if (_domElemExist($pickrElem)) {
         const pickr = new Pickr({
-          el: targetSelector,
+          el: pickrElem,
           theme: 'nano',
           default: defaultColor,
           lockOpacity: true,
@@ -1415,7 +1526,7 @@
         });
 
         pickr.on("init", function(instance) {
-          let pickrID = "pickr-" + elemID;
+          let pickrID = "pickr-" + containerID;
           $(pickr._root.button).attr("id", pickrID);
           $(pickr._root.button).addClass("pickr-initialized");
           _pickrs[pickrID] = instance;
@@ -1461,10 +1572,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["block"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }
@@ -1479,10 +1601,65 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+              });
+            }
+          }
+
+          if (group == "paragraph") {
+            $block = $(".nme-block[data-type='paragraph']:not([data-elem-override='true'])");
+
+            if (fieldType == "color") {
+              $target = $block.find(".nme-elem");
+              $target.css(fieldType, colorVal);
+              $target.find("p").each(function() {
+                let $p = $(this);
+                if ($p.find("span").length) {
+                  $p.find("span").css(fieldType, colorVal);
+                }
+                else {
+                  $p.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
+                }
+              });
+
+              $block.each(function() {
+                let $this = $(this),
+                    section = $this.data("section"),
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index"),
+                    $field = $block.find(".nme-elem");
+
+                // Reinitialize x-editable
+                $field.removeClass("editable-initialized");
+                $field.editable("destroy");
+                $field.editable();
+
+                // Update color to json
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }
@@ -1497,10 +1674,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  }
+                }
               });
             }
 
@@ -1514,10 +1702,21 @@
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
-                    blockID = $this.data("id");
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
 
                 // Update color to json
-                _data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elemContainer"][fieldType] = colorVal;
+                  }
+                }
               });
             }
           }
@@ -1525,85 +1724,173 @@
           _nmeData.update();
         });
       }
-    };
-
-    if ($(".nme-theme-setting-items").length) {
-      if (!_objIsEmpty(_themes)) {
-        for (let i in _themes) {
-          let radio = "<label class='nme-theme-setting-item crm-form-elem crm-form-radio' for='nme-theme-setting-item-" + i + "'>" +
-          "<input value='" + i + "' type='radio' id='nme-theme-setting-item-" + i + "' class='nme-setting-radio form-radio' name='nme-theme-setting'>" +
-          "<span class='elem-label'>" +
-          "<div class='nme-theme-thumb' style='border-left-color: " + _themes[i]["styles"]["page"]["background-color"] + "; border-bottom-color: " + _themes[i]["styles"]["block"]["background-color"] + ";'>" +
-          "</div>" +
-          "</span>" +
-          "</label>";
-          $(".nme-theme-setting-items").append(radio);
+    },
+    init: function() {
+      if ($(".nme-theme-setting-items").length) {
+        if (!_objIsEmpty(_themes) && !$(".nme-theme-setting-item").length) {
+          for (let i in _themes) {
+            let radio = "<label class='nme-theme-setting-item crm-form-elem crm-form-radio' for='nme-theme-setting-item-" + i + "'>" +
+            "<input value='" + i + "' type='radio' id='nme-theme-setting-item-" + i + "' class='nme-setting-radio form-radio' name='nme-theme-setting'>" +
+            "<span class='elem-label'>" +
+            "<div class='nme-theme-thumb' style='border-left-color: " + _themes[i]["styles"]["page"]["background-color"] + "; border-bottom-color: " + _themes[i]["styles"]["block"]["background-color"] + ";'>" +
+            "</div>" +
+            "</span>" +
+            "</label>";
+            $(".nme-theme-setting-items").append(radio);
+          }
         }
       }
-    }
 
-    if ($(".nme-setting-picker").length) {
-      $(".nme-setting-picker").each(function() {
-        let $this = $(this),
-            thisID = $this.attr("id"),
-            $field = $this.closest(".nme-setting-field"),
+      if ($(".nme-setting-picker").length) {
+        $(".nme-setting-picker").each(function() {
+          let $this = $(this),
+              thisID = $this.attr("id"),
+              $field = $this.closest(".nme-setting-field"),
+              fieldType = $field.data("field-type"),
+              $section = $this.closest(".nme-setting-section"),
+              group = $section.data("setting-group"),
+              defaultColor = _data["settings"]["styles"][group][fieldType];
+
+          if ($this.children(".pickr").length) {
+            if (!_objIsEmpty(_pickrs[elemID])) {
+              pickrIns = _pickrs[elemID];
+              pickrIns.destroyAndRemove();
+              delete _pickrs[elemID];
+            }
+          }
+          else {
+            $this.append("<div class='pickr'></div>");
+          }
+
+          _nmeGlobalSetting.pickrInit(thisID, defaultColor);
+        });
+      }
+
+      if ($(".nme-setting-select").length) {
+        $(".nme-setting-select").each(function() {
+          let $select = $(this),
+              selectID = $select.attr("id"),
+              $field = $select.closest(".nme-setting-field"),
+              fieldType = $field.data("field-type"),
+              $section = $select.closest(".nme-setting-section"),
+              group = $section.data("setting-group");
+
+          // Set default value to select
+          if (_data["settings"]["styles"][group][fieldType]) {
+            $select.val(_data["settings"]["styles"][group][fieldType]);
+          }
+        });
+
+        $(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
+          let $select = $(this),
+              selectID = $select.attr("id"),
+              val = $select.val(),
+              $field = $select.closest(".nme-setting-field"),
+              fieldType = $field.data("field-type"),
+              $section = $select.closest(".nme-setting-section"),
+              group = $section.data("setting-group"),
+              $block,
+              $target;
+
+          // Update value to settings object
+          _data["settings"]["styles"][group][fieldType] = val;
+
+          if (group == "title") {
+            $block = $(".nme-block[data-type='title']");
+
+            if (fieldType == "font-size") {
+              $target = $block.find(".nme-elem");
+              $target.css(fieldType, val);
+
+              $block.each(function() {
+                let $this = $(this),
+                    section = $this.data("section"),
+                    blockID = $this.data("id"),
+                    parentID = $this.data("parent-id"),
+                    index = $this.data("index");
+
+                // Update color to json
+                if (parentID) {
+                  if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["elem"][fieldType] = val;
+                  }
+                }
+                else {
+                  if (_data["sections"][section]["blocks"][blockID]) {
+                    _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = val;
+                  }
+                }
+              });
+            }
+          }
+
+          _nmeData.update();
+        });
+      }
+
+      $(".nme-setting-radio").on("change", function() {
+        let $radio = $(this),
+            radioID = $radio.attr("id"),
+            radioName = $radio.attr("name"),
+            val = $radio.val(),
+            $field = $radio.closest(".nme-setting-field"),
             fieldType = $field.data("field-type"),
-            $section = $this.closest(".nme-setting-section"),
-            group = $section.data("setting-group"),
-            defaultColor = _data["settings"]["styles"][group][fieldType];
-
-        pickrInit(thisID, defaultColor);
-      });
-    }
-
-    if ($(".nme-setting-select").length) {
-      $(".nme-setting-field").off("change").on("change", ".nme-setting-select", function() {
-        let $select = $(this),
-            selectID = $select.attr("id"),
-            val = $select.val(),
-            $field = $select.closest(".nme-setting-field"),
-            fieldType = $field.data("field-type"),
-            $section = $select.closest(".nme-setting-section"),
+            $section = $radio.closest(".nme-setting-section"),
             group = $section.data("setting-group"),
             $block,
             $target;
 
-        if (group == "title") {
-          $block = $(".nme-block[data-type='title']");
+        if (radioName == "nme-theme-setting") {
+          _nmeGlobalSetting.setPickerColor(_themes[val]["styles"]);
+        }
+      });
 
-          if (fieldType == "font-size") {
-            $target = $block.find(".nme-elem");
-            $target.css(fieldType, val);
+      this.initialized = true;
+    },
+    updateSettings: function(settings) {
+      if (!_objIsEmpty(settings)) {
+        if (!_objIsEmpty(settings.styles)) {
+          if ($(".nme-setting-field").length) {
+            $(".nme-setting-field").each(function() {
+              let $field = $(this),
+                  fieldType = $field.data("field-type"),
+                  $section = $field.closest(".nme-setting-section"),
+                  group = $section.data("setting-group");
 
-            $block.each(function() {
-              let $this = $(this),
-                  section = $this.data("section"),
-                  blockID = $this.data("id");
+              if (group != "theme") {
+                if (settings.styles[group][fieldType] !== "undefined") {
+                  let value = settings.styles[group][fieldType];
 
-              // Update color to json
-              _data["sections"][section]["blocks"][blockID]["styles"]["elem"][fieldType] = colorVal;
+                  if ($field.find(".nme-setting-select").length) {
+                    let $select = $field.find(".nme-setting-select");
+                    $select.val(value);
+                  }
+
+                  if ($field.find(".pcr-button").length) {
+                    let $pickrBtn = $field.find(".pcr-button"),
+                        $pickrContainer = $pickrBtn.closest(".nme-setting-picker"),
+                        pickrContainerID = $pickrContainer.attr("id"),
+                        pickrID = $pickrBtn.attr("id"),
+                        pickrIns = _pickrs[pickrID];
+
+
+                    pickrIns.destroyAndRemove();
+                    delete _pickrs[pickrID];
+                    $pickrContainer.append("<div class='pickr'></div>");
+                    _nmeGlobalSetting.pickrInit(pickrContainerID, value);
+                  }
+                }
+              }
             });
           }
         }
-      });
-    }
-
-    $(".nme-setting-radio").on("change", function() {
-      let $radio = $(this),
-          radioID = $radio.attr("id"),
-          radioName = $radio.attr("name"),
-          val = $radio.val(),
-          $field = $radio.closest(".nme-setting-field"),
-          fieldType = $field.data("field-type"),
-          $section = $radio.closest(".nme-setting-section"),
-          group = $section.data("setting-group"),
-          $block,
-          $target;
-
-      if (radioName == "nme-theme-setting") {
-        for (let group in _themes[val]["styles"]) {
-          for (let fieldType in _themes[val]["styles"][group]) {
-            let colorVal = _themes[val]["styles"][group][fieldType],
+      }
+    },
+    setPickerColor: function(styles) {
+      if (!_objIsEmpty(styles)) {
+        for (let group in styles) {
+          for (let fieldType in styles[group]) {
+            let colorVal = styles[group][fieldType],
                 $pickr = $(".nme-setting-section[data-setting-group='" + group + "'] .nme-setting-field[data-field-type='" + fieldType + "'] .pcr-button");
 
             if ($pickr.length) {
@@ -1615,10 +1902,11 @@
           }
         }
       }
-    });
-  };
+    }
+  }
 
   var _nmePreview = {
+    initialized: false,
     init: function() {
       if (!$("#nme-preview-popup").length) {
         let previewPopup = "<div id='nme-preview-popup' class='nme-preview-popup mfp-hide'>" +
@@ -1626,15 +1914,15 @@
           "<div class='nme-preview-toolbar'>" +
           "<div class='nme-preview-title'>" + _ts["Preview"] + "</div>" +
           "<div class='nme-preview-mode'>" +
-          "<button type='button' class='nme-preview-mode-btn is-active' data-mode='desktop'>" + _ts["Normal"] + "</button>" +
-          "<button type='button' class='nme-preview-mode-btn' data-mode='mobile'>" + _ts["Mobile Device"] + "</button>" +
+          "<button type='button' class='nme-preview-mode-btn' data-mode='desktop'>" + _ts["Normal"] + "</button>" +
+          "<button type='button' class='nme-preview-mode-btn is-active' data-mode='mobile'>" + _ts["Mobile Device"] + "</button>" +
           "</div>" +
           "<button type='button' class='nme-preview-close'><i class='zmdi zmdi-close'></i></button>" +
           "</div>" +
           "<div class='nme-preview-content'>" +
           "<div class='nme-preview-panels'>" +
-          "<div class='nme-preview-panel nme-preview-desktop-panel is-active' data-mode='desktop'><div class='desktop-preview-container preview-container'><div class='preview-content'></div></div></div>" +
-          "<div class='nme-preview-panel nme-preview-mobile-panel' data-mode='mobile'><div class='mobile-preview-container preview-container'><div class='preview-content'></div></div></div>" +
+          "<div class='nme-preview-panel nme-preview-desktop-panel' data-mode='desktop'><div class='desktop-preview-container preview-container'><div class='preview-content'></div></div></div>" +
+          "<div class='nme-preview-panel nme-preview-mobile-panel is-active' data-mode='mobile'><div class='mobile-preview-container preview-container'><div class='preview-content'></div></div></div>" +
           "</div>" +
           "</div>" +
           "</div>" +
@@ -1660,6 +1948,8 @@
           _nmePreview.close();
         }
       });
+
+      _nmePreview.initialized = true;
     },
     open: function() {
       $.magnificPopup.open({
@@ -1669,7 +1959,6 @@
         type: "inline",
         mainClass: "mfp-preview-popup",
         preloader: true,
-        closeOnBgClick: false,
         showCloseBtn: false,
         callbacks: {
           open: function() {
@@ -1709,6 +1998,9 @@
           },
           close: function() {
             $("body").removeClass("mfp-is-active");
+            if ($(".nme-preview-mode-switch").is(":checked")) {
+              $(".nme-preview-mode-switch").prop("checked", false);
+            }
           },
         }
       });
@@ -1733,12 +2025,29 @@
     let $editableElems = $(".nme-editable:not(.editable-initialized)");
 
     if (typeof $.fn.editable !== "undefined" && $editableElems.length) {
-      $.fn.editable.defaults.mode = 'inline';
+      $.fn.editable.defaults.mode = "inline";
+      $.fn.editable.defaults.onblur = "submit";
 
       $editableElems.each(function() {
         let $editableElem = $(this);
 
         $editableElem.editable();
+
+        $editableElem.on("shown", function(e, editable) {
+          let $block = $(this).closest(".nme-block");
+
+          if ($block.length && !$block.hasClass(EDIT_CLASS)) {
+            $block.addClass(EDIT_CLASS);
+          }
+        });
+
+        $editableElem.on("hidden", function(e, reason) {
+          let $block = $(this).closest(".nme-block");
+
+          if ($block.length && $block.hasClass(EDIT_CLASS)) {
+            $block.removeClass(EDIT_CLASS);
+          }
+        });
 
         $editableElem.on("save", function(e, params) {
           let $this = $(this),
@@ -1921,7 +2230,7 @@
       let defaultOptions = {};
 
       if ($("[data-tooltip]").length) {
-        $("[data-tooltip]").each(function() {
+        $("[data-tooltip]:not(.tooltip-initialized)").each(function() {
           let options = {};
 
           if ($(this).is("[data-tooltip-placement]")) {
@@ -1933,6 +2242,7 @@
           }
 
           $(this).powerTip(options);
+          $(this).addClass("tooltip-initialized");
         });
       }
     }
@@ -2008,12 +2318,35 @@
         let extendedActions = _editActions.extended[blockType];
 
         for (let k in extendedActions) {
-          let action = extendedActions[k];
-          output += "<button id='" + blockID + "-handle-" + action + "' type='button' class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></button>";
+          let action = extendedActions[k],
+              tooltip = "";
+
+          switch (action) {
+            case "link":
+              tooltip = _ts["Edit Link"];
+              break;
+
+            case "image":
+              tooltip = _ts["Edit Image"];
+              break;
+
+            case "style":
+              tooltip = _ts["Edit Background"];
+              break;
+          }
+
+          if (tooltip) {
+            output += "<button id='" + blockID + "-handle-" + action + "' type='button' class='handle-" + action + " handle-btn' title='" + tooltip + "' data-type='" + action + "' data-tooltip><i class='zmdi " + _controlIconClass[action] + "'></i></button>";
+          }
+          else {
+            output += "<button id='" + blockID + "-handle-" + action + "' type='button' class='handle-" + action + " handle-btn' data-type='" + action + "'><i class='zmdi " + _controlIconClass[action] + "'></i></button>";
+
+          }
         }
 
         $block.find(".nme-block-actions").prepend(output);
         _nmeBlockControl.init(blockID);
+        _tooltip();
       }
       else {
         // If the block has no any extended actions, initialize directly.
@@ -2022,9 +2355,9 @@
     },
     init: function(id) {
       let blockID = typeof id !== "undefined" ? id : "",
-          $block = $(".nme-block[data-id='" + blockID + "']");
+          $blockControl = $(".nme-block[data-id='" + blockID + "'] > .nme-block-inner > .nme-block-control");
 
-      $block.find(".nme-block-control").on("click", ".handle-btn", function(event) {
+      $blockControl.on("click", ".handle-btn", function(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -2046,7 +2379,7 @@
             $elemContainer = $elem.closest(".nmeb-content-container"),
             $elemContainerInner = $elem.parent(".nmeb-content"),
             blockSortInst = _sortables[section]["inst"],
-            blocksSortOrder = _sortables[section]["order"];
+            blocksSortOrder = blockSortInst.toArray();
 
         // Block control: move group
         // prev
@@ -2179,8 +2512,8 @@
       });
 
       // handle type: style
-      if ($block.find(".handle-style").length) {
-        _colorable($block.find(".handle-style").attr("id"));
+      if ($blockControl.find(".handle-style").length) {
+        _colorable($blockControl.find(".handle-style").attr("id"));
       }
     }
   };
@@ -2189,7 +2522,18 @@
     $(".nme-select-tpl-list").on("click", ".nme-select-tpl-btn", function() {
       let $btn = $(this),
           tplName = $btn.data("name"),
-          tplData = _tpl["data"][tplName];
+          tplData = _tpl["data"][tplName],
+          confirmMessage = _ts["Are your sure to use template to replace your work? You will lose any customizations you have made."];
+
+      if (window.confirm(confirmMessage)) {
+        if (!_objIsEmpty(tplData)) {
+          let renderOptions = {
+            "loadDataMode": "object",
+            "loadDataObj": tplData
+          };
+          window.nmEditorInstance.render(renderOptions);
+        }
+      }
     });
   };
 
@@ -2211,7 +2555,7 @@
         _data["sections"][addSection]["blocks"][addBlockID] = addBlockData;
 
         // Added block dom
-        _nmeBlock.add(addBlockData, "edit", $addTarget, addMethod);
+        _nmeBlock.add(addBlockData, "new", "edit", $addTarget, addMethod);
 
         // Reorder data
         _sortables[addSection]["order"] = _sortables[addSection]["inst"].toArray();
@@ -2221,6 +2565,7 @@
   };
 
   var _nmePanels = {
+    initialized: false,
     init: function() {
       $(".nme-setting-panels").on("click", ".nme-setting-panels-trigger", function(event) {
         event.preventDefault();
@@ -2251,8 +2596,17 @@
         $targetTabContent.addClass(ACTIVE_CLASS);
       });
 
+      // Switch the default panel to block panel if mail data field has value
+      if ($(_dataLoadSource).val()) {
+        $(".nme-setting-panels-tabs a[data-target-id='nme-add-block']").click();
+      }
+
+      _nmePanelsSelectTpl();
       _nmePanelsAddBlock();
-      _nmeGlobalSetting();
+      if (!_nmeGlobalSetting.initialized) {
+        _nmeGlobalSetting.init();
+      }
+      this.initialized = true;
     },
     open: function() {
       $(_panels).addClass("is-opened");
@@ -2409,10 +2763,65 @@
   nmEditor.prototype = {
     constructor: nmEditor,
     data: {},
+    language: _language,
     init: function() {
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
+        if (window.nmEditor.language) {
+          _language = window.nmEditor.language;
+          this.language = _language;
+        }
+
         _ts = window.nmEditor.translation;
+
+        // Translate UI of x-editble
+        if ($.fn.editableform && $.fn.editableform.buttons) {
+          let buttonsTpl = $.fn.editableform.buttons;
+          buttonsTpl = buttonsTpl.replace(">ok</button>", ">" + _ts["OK"] + "</button>");
+          buttonsTpl = buttonsTpl.replace(">cancel</button>", ">" + _ts["Cancel"] + "</button>");
+          $.fn.editableform.buttons = buttonsTpl;
+        }
+
+        // Set mapping to control title of block
+        _blockControlTitle = {
+          "header": {
+            "en_US": "Header",
+            "zh_TW": _ts["Header"]
+          },
+          "footer":  {
+            "en_US": "Footer",
+            "zh_TW": _ts["Footer"]
+          },
+          "title": {
+            "en_US": "Title",
+            "zh_TW": _ts["Title"]
+          },
+          "paragraph": {
+            "en_US": "Paragraph",
+            "zh_TW": _ts["Paragraph"]
+          },
+          "image": {
+            "en_US": "Image",
+            "zh_TW": _ts["Image"]
+          },
+          "button": {
+            "en_US": "Button",
+            "zh_TW": _ts["Button"]
+          },
+          "rc-col-1": {
+            "en_US": "Rich Content: 1 Column",
+            "zh_TW": _ts["Rich Content: 1 Column"]
+          },
+          "rc-col-2": {
+            "en_US": "Rich Content: 2 Column",
+            "zh_TW": _ts["Rich Content: 2 Column"]
+          },
+          "rc-float": {
+            "en_US": "Rich Content: Float",
+            "zh_TW": _ts["Rich Content: Float"]
+          },
+        };
+
         $.nmEditor.instance = _nme;
 
         if (!$(_container).hasClass(NME_CONTAINER)) {
@@ -2429,9 +2838,17 @@
         _resizeTimer = setTimeout(_windowResize, 250);
       });
     },
-    render: function() {
+    render: function(opts) {
       // Load Data
-      if (_dataLoadMode == "field") {
+      let defaultOptions = {
+        "loadDataMode": "field",
+        "loadDataObj": null
+        },
+        options = opts && typeof opts === "object" ? opts : {},
+        renderOptions = $.extend({}, defaultOptions, options),
+        dataLoadMode = renderOptions.loadDataMode ? renderOptions.loadDataMode : _dataLoadMode;
+
+      if (dataLoadMode == "field") {
         _dataLoadSource = _nmeOptions.dataLoadSource;
         _nmeData.get.field(_dataLoadSource);
 
@@ -2440,10 +2857,19 @@
           _defaultData = JSON.parse(defaultData);
           _data = _objClone(_defaultData);
         }
+      }
 
+      if (dataLoadMode == "object") {
+        let tplData = renderOptions.loadDataObj;
+        if (!_objIsEmpty(tplData)) {
+          _data = _objClone(tplData);
+        }
+      }
+
+      setTimeout(function() {
         $.nmEditor.instance.data = _data;
         _nmeData.update();
-      }
+      }, 500);
 
       // Load templates
       let $nmeTplItems = $(".nme-tpl");
@@ -2477,6 +2903,10 @@
             _nmeMain();
           }
         });
+      }
+      else {
+        // Execute the main function
+        _nmeMain();
       }
     },
     panels: {
@@ -2521,10 +2951,10 @@
     }
 
     _container = this.selector;
-    _debug(_container);
+    //_debug(_container);
     _checkNmeInstance();
 
-    return this;
+    return _nme;
   };
 
   // Plugin defaults options

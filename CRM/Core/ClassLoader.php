@@ -73,9 +73,7 @@ class CRM_Core_ClassLoader {
   }
 
   function loadClass($class) {
-    if (empty(self::$_include_paths)){
-      self::$_include_paths = explode(PATH_SEPARATOR, get_include_path());
-    }
+    self::$_include_paths = explode(PATH_SEPARATOR, get_include_path());
     if ( FALSE === strpos($class, '\\') ) {
       if(isset($this->_composer_classmap[$class])){
         require $this->_composer_classmap[$class];

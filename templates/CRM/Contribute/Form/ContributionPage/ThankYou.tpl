@@ -100,22 +100,21 @@
 	<td class="label">{$form.cc_receipt.label}
     	</td>
 	<td class="html-adjust">{$form.cc_receipt.html}<br />
-	    <span  class="description">{ts}If you want member(s) of your organization to receive a carbon copy of each emailed payment notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}
-	    </span>
+	    <span  class="description">{ts}If you want member(s) of your organization to receive a carbon copy of each emailed payment notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts} <span class="font-red">{ts}Do not use same email address with from address.{/ts}</span></span>
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-bcc_receipt">
 	<td class="label">{$form.bcc_receipt.label}
 	</td>
 	<td class="html-adjust">{$form.bcc_receipt.html}<br />
-	    <span class="description">{ts}If you want member(s) of your organization to receive a BLIND carbon copy of each emailed payment notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
+	    <span class="description">{ts}If you want member(s) of your organization to receive a BLIND carbon copy of each emailed payment notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts} <span class="font-red">{ts}Do not use same email address with from address.{/ts}</span></span>
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-recur_fail_notify">
   <td class="label">{$form.recur_fail_notify.label}
   </td>
   <td class="html-adjust">{$form.recur_fail_notify.html}<br />
-      <span class="description">{ts}If you want member(s) of your organization to receive a message of each recurring failed notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
+      <span class="description">{ts}If you want member(s) of your organization to receive a message of each recurring failed notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts} <span class="font-red">{ts}Do not use same email address with from address.{/ts}</span></span>
   </td>
     </tr>
     </table>

@@ -125,6 +125,11 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
     $profileType = CRM_Core_BAO_UFField::getProfileType($this->_gid);
     if ($profileType == 'Contribution' || $profileType == 'Membership' || $profileType == 'Activity' || $profileType == 'Participant') {
       $this->assign('skipCreate', TRUE);
+      $this->assign('skipBrowse', TRUE);
+    }
+    if ($this->_ufGroup['is_reserved']) {
+      $this->assign('skipCreate', TRUE);
+      $this->assign('skipBrowse', TRUE);
     }
 
     $locationType = array();
@@ -254,6 +259,9 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
       $this->assign('gid', $this->_gid);
       $this->assign('groupTitle', $groupTitle);
       CRM_Utils_System::setTitle(ts('%1 - CiviCRM Profile Fields', array(1 => $groupTitle)));
+      $this->_ufGroup = array();
+      $ufGRoupParams = array('id' => $this->_gid);
+      CRM_Core_BAO_UFGroup::retrieve($ufGRoupParams, $this->_ufGroup);
     }
 
     // get the requested action

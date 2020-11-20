@@ -163,7 +163,7 @@
       },
 
       prepareRecurBtnMsg: function(){
-        var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg">'+this.singleContribMsgText+'</div></div>');
+        var $msgBox = ContribPage.$msgBox = $('<div class="error-msg-bg"><div class="error-msg"><div class="error-msg-inner">'+this.singleContribMsgText+'</div></div></div>');
         var $singleBtn = this.createGreyBtn(ts['One-time']);
         $singleBtn.find('a').click(function(event){
           $msgBox.animate({opacity: 0},500,function(){
@@ -236,13 +236,22 @@
           .append(this.createStepBtnBlock(['next-step']));
         $('.contrib-step-1 .step-action-wrapper').addClass('hide-as-show-all');
         var exec_step = 2;
-        if($('.custom_pre_profile-group fieldset').length >= 1){
-          $('.contrib-step-'+exec_step)
-            .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section'))
-            .append($('.custom_pre_profile-group'))
-            .append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
-          exec_step += 1;
+        var $contribStep2 = $('.contrib-step-'+exec_step)
+        $contribStep2.append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section'));
+        if($('fieldset#for_organization').length >= 1 && $('.is_for_organization-section').length == 0){
+          $contribStep2.append($('fieldset#for_organization'));
         }
+        else if ($(".is_for_organization-section").length > 0) {
+          $contribStep2.append($(".is_for_organization-section, #for_organization"));
+        }
+        if($('.custom_pre_profile-group fieldset').length >= 1){
+          $contribStep2.append($('.custom_pre_profile-group'));
+        }
+        else {
+          $contribStep2.append($('div.email-5-section'));
+        }
+        $contribStep2.append(this.createStepBtnBlock(['last-step', 'next-step']).addClass('hide-as-show-all'));
+        exec_step += 1;
         if($('.custom_post_profile-group fieldset').length >= 1){
           $('.contrib-step-'+exec_step)
             .append(this.createStepBtnBlock(['last-step', 'priceInfo']).addClass('crm-section').addClass('hide-as-show-all'))
@@ -266,10 +275,6 @@
 
         if($("#billing-payment-block").length == 0){
           $('.crm-section payment_processor-section').insertBefore($('.custom_pre_profile-group'));
-        }
-
-        if ($(".is_for_organization-section").length > 0) {
-          $(".is_for_organization-section, #for_organization").insertBefore('.custom_pre_profile-group');
         }
 
         /** Afraid it ban the contributor
@@ -476,7 +481,8 @@
       setPriceOption: function(val){
         this.currentPriceOption = val;
         if(this.currentPriceOption){
-          $('.amount-section [value="'+this.currentPriceOption+'"]').click();
+          // Use cj to trigger premium block. Refs #29369
+          cj('.amount-section [value="'+this.currentPriceOption+'"]').click();
           var amount = $('.price-set-btn div[data-amount='+this.currentPriceOption+'] .amount').text();
           this.setPriceAmount(amount);
         }
@@ -498,6 +504,8 @@
           this.currentPriceAmount = amount;
           if(!this.currentPriceOption){
             $('input#amount_other').val(this.currentPriceAmount);
+            // For trigger premium block, Refs #29369
+            cj('input[name=amount_other]').trigger('change');
           }
           this.updatePriceAmount();
         }

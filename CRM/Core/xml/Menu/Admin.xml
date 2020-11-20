@@ -628,7 +628,7 @@
      <title>Batch Job List</title>
      <adminGroup>Manage</adminGroup>
      <page_callback>CRM_Batch_Page_Batch</page_callback>
-     <access_arguments>administer CiviCRM</access_arguments>
+     <access_arguments>access CiviCRM</access_arguments>
      <weight>400</weight>
   </item>
 </menu>

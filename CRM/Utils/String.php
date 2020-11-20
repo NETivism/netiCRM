@@ -45,6 +45,12 @@ class CRM_Utils_String {
    */
   const ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
+
+  /**
+   * Allowed HTML Tags
+   */
+  const ALLOWED_TAGS = 'div,b,strong,i,em,a[href|title],ul,ol,li,p[style],blockquote,br,span[style],img[width|height|alt|src],table,thead,tbody,tr,td,th';
+
   /**
    * Convert a display name into a potential variable
    * name that we could use in forms/code
@@ -430,7 +436,7 @@ class CRM_Utils_String {
   static function htmlPurifier($html, $allowed_tags = array()) {
     require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.safe-includes.php';
     $purifierConfig = HTMLPurifier_Config::createDefault();
-    $purifierConfig->set('HTML.AllowedElements', $allowed_tags);
+    $purifierConfig->set('HTML.Allowed', $allowed_tags);
     $purifierConfig->set('Output.Newline', "\n");
     $purifier = new HTMLPurifier($purifierConfig);
     return $purifier->purify($html);
@@ -632,6 +638,22 @@ class CRM_Utils_String {
 
   static function parseUrl($url) {
     return parse_url($url);
+  }
+
+  static function parseUrlUtm($url) {
+    $utms = array();
+    $original = CRM_Utils_String::parseUrl($url);
+    if (stristr($original['query'], 'utm_')) {
+      $query = str_replace('&amp;', '&', $original['query']);
+      $get = array();
+      parse_str($query, $get);
+      foreach($get as $queryKey => $queryValue) {
+        if (stristr($queryKey, 'utm_')) {
+          $utms[$queryKey] = $queryValue;
+        }
+      }
+    }
+    return $utms;
   }
 
   static function buildUrl($parts) {

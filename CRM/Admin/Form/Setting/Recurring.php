@@ -21,6 +21,13 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
     $attrs = array('multiple' => 'multiple');
     $this->addElement('select', 'recurringSyncExclude', ts('Exclude to sync'), $option, $attrs);
 
+
+    $option = array(
+      'earliest' => ts('Earliest').' ('.ts('Default').')',
+      'latest' => ts('Most Recent'),
+    );
+    $this->addElement('select', 'recurringCopySetting', ts('Copy Contribution'), $option);
+
     // redirect to Administer Section After hitting either Save or Cancel button.
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));

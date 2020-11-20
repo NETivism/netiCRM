@@ -117,6 +117,16 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $batchTypeLabel = CRM_Core_OptionGroup::values('batch_type');
 
     $dao = new CRM_Batch_DAO_Batch();
+    if (!CRM_Core_Permission::check("administer CiviCRM")) {
+      $userID = CRM_Core_Session::singleton()->get("userID");
+      if ($userID) {
+        $dao->whereAdd("created_id = '".CRM_Utils_Type::escape($userID, 'Positive')."'");
+      }
+      else {
+        CRM_Utils_System::permissionDenied();
+        return;
+      }
+    }
     if ($id) {
       $dao->whereAdd("id = '".CRM_Utils_Type::escape($id, 'Positive')."'");
     }

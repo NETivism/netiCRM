@@ -1,24 +1,20 @@
 /**
 Quill input
 
-@class textarea
+@class div
 @extends abstractinput
 @final
 @example
-<a href="#" id="comments" data-type="textarea" data-pk="1">awesome comment!</a>
+<div class="paragraph" data-type="xquill" data-pk="1"><p>This is a paragraph block, please write a summary of the article here, which can also be used as an introduction or headline.</p></div>
 <script>
 $(function(){
-    $('#comments').editable({
-        url: '/post',
-        title: 'Enter comments',
-        rows: 10
-    });
+    $(".paragraph").editable();
 });
 </script>
 **/
 (function ($) {
     "use strict";
- 
+
     var stripHTML = function (html) {
        var tmp = document.createElement("DIV");
        tmp.innerHTML = html;
@@ -39,60 +35,62 @@ $(function(){
             html: {}
         },
         htmlEscape: function(input) {
-            return input
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&apos;"
+              };
+
+            return String(input).replace(/[&<>"']/g, function (s) {
+                return entityMap[s];
+            });
         },
         render: function () {
             var deferred = $.Deferred(), msieOld, quillID;
-            console.log('===== render =====');
-            // 將狀態設為「編輯」模式
+            // Set status to "Edit" mode
             this.status = 'edit';
 
-            // 為 quill 產生一個獨一無二的 ID
+            // Generate a unique ID for quill
             quillID = 'quill-' + (new Date()).getTime();
             this.$input.attr('id', quillID);
 
-            // 設定 class
+            // Set class
             this.setClass();
 
             var blockID = this.options.scope.attributes['data-id']['nodeValue'],
                 html = blockID ? this.xeditable.html[blockID] : '',
                 text = stripHTML(html);
-            //console.log(text);
-            //console.log(html);
 
-            // 如果預設內容跟 placeholder 不一樣，則將預設內容複製一份到編輯器內
+            // If value is different from placeholder, copy the value to the editor
             if (text !== this.options.placeholder) {
                 this.$input.html(html);
             }
-            //this.setAttr('placeholder');
-            //this.setAttr('rows');
-                           
-            //ctrl + enter
-            /*
-            this.$input.keydown(function (e) {
-                if (e.ctrlKey && e.which === 13) {
-                    $(this).closest('form').submit();
-                }
-            });
-            this.$input.on("click", function() {
-                console.log($(this));
-                console.log($(this)[0]);
-                console.log($(this.$input).get(0));
-            });
-            */
+
+            // refs #29481. Replace <p> with <div>
+            var quillBlock = Quill.import('blots/block');
+            class DivBlock extends quillBlock {}
+            DivBlock.tagName = 'DIV';
+            Quill.register('blots/block', DivBlock, true);
+
+            // Change style class to inline style
+            // refs https://quilljs.com/guides/how-to-customize-quill/#class-vs-inline
+            // Import and set font size of quill
+            var quillSize = Quill.import('attributors/style/size');
+            quillSize.whitelist = ['13px', '20px', '28px'];
+            Quill.register(quillSize, true);
+
+            var quillAlign = Quill.import('attributors/style/align');
+            Quill.register(quillAlign, true);
 
             var toolbarOptions = [
               ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-              [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-              [{ 'size': ['small', false, 'large', 'huge'] }],
+              [{ 'color': ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00', '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', '#3d1466'] }, { 'background': [] }],          // dropdown with defaults from theme
+              [{ 'size': ['13px', false, '20px', '28px'] }],
               [{ 'align': [] }],
               [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              ['link'],
+              ['link']
               //['image']
 
               //['blockquote', 'code-block'],
@@ -109,45 +107,86 @@ $(function(){
 
               //['clean']                                         // remove formatting button
             ];
+
+            var tokenToolbar = [];
+            var tokenQuillOption = [];
+            if (window.nmEditor.tokenTrigger) {
+              Quill.register('modules/placeholder', PlaceholderModule.default(Quill))
+              $(window.nmEditor.tokenTrigger).find("option").each(function(){
+                var tokenName = $(this).attr("value");
+                tokenToolbar.push(tokenName);
+                tokenQuillOption.push({id:tokenName, label:tokenName});
+              });
+              toolbarOptions.push([{"placeholder":tokenToolbar}]);
+            }
+
             var quillOptions = {
               //debug: 'info',
               modules: {
                 toolbar: toolbarOptions
               },
-              placeholder: this.options.placeholder ? this.options.placeholder : '請輸入內容...',
+              placeholder: this.options.placeholder ? this.options.placeholder : 'Please enter content...',
               //readOnly: true,
               theme: 'snow'
             };
+            if (window.nmEditor.tokenTrigger) {
+              quillOptions.modules.placeholder = {};
+              quillOptions.modules.placeholder.delimiters = ['', ''];
+              quillOptions.modules.placeholder.placeholders = tokenQuillOption;
+            }
 
             this.editor = new Quill('#' + quillID, quillOptions);
+
+            // Added plain clipboard feature to quill
+            // refs https://quilljs.com/docs/modules/#extending
+            // refs https://quilljs.com/docs/modules/clipboard/#addmatcher
+            // refs https://github.com/quilljs/quill/issues/1184#issuecomment-384935594
+            // refs https://stackoverflow.com/a/55026088
+            this.editor.clipboard.addMatcher(Node.ELEMENT_NODE, function (node, delta) {
+                var ops = [];
+                delta.ops.forEach(function(op) {
+                  if (op.insert && typeof op.insert === 'string') {
+                    ops.push({
+                      insert: op.insert
+                    });
+                  }
+                });
+                delta.ops = ops;
+                return delta;
+            });
+
             this.editor.focus();
+            var d = this.editor.getContents();
+            if (Array.isArray(d.ops) && d.ops.length) {
+                var lastIndex = d.ops.length - 1,
+                lastOp = d.ops[lastIndex];
+
+                if (lastOp.insert && typeof lastOp.insert === 'string') {
+                    // refs https://github.com/quilljs/quill/issues/1235#issuecomment-273044116
+                    // Because quill will generate two line breaks at the end of the content, we need to remove one line break so that the edited content is consistent with the content when browsing.
+                    d.ops[lastIndex].insert = lastOp.insert.replace(/\n$/, "");
+                    this.editor.setContents(d);
+                }
+            }
         },
 
-        // 編輯完成時呼叫（第三順位）
+        // Call when editing is complete (3）
         value2html: function(value, element) {
-            console.log('===== value2html =====');
-            //console.log(element);
-            //console.log(value);
-            //$(element).html(value);
-            //console.log(this.editor);
-
-            // 取得編輯器內容的 HTML
+            // Get the HTML from the editor content
             var html = this.editor.root.innerHTML;
 
-            // 將 HTML 儲存於 xeditable
+            // Store HTML in xeditable
             var blockID = this.options.scope.attributes['data-id']['nodeValue'];
             if (blockID) {
                 this.xeditable.html[blockID] = html;
             }
 
-            // 將 HTML 輸出到 x-editable 觸控器中
+            // Output HTML to x-editable
             $(element).html(html);
         },
 
-        // 初始化 x-editable 之後呼叫
+        // Call after initializing x-editable
         html2value: function(html) {
-            //console.log('===== html2value =====');
-            //console.log(html);
             var blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
             if (blockID) {
@@ -156,29 +195,23 @@ $(function(){
             }
         },
 
-        // 按下 x-editable / 編輯完成時呼叫（第二順位）
+        // Press x-editable / Call when editing is complete (2)
         value2input: function(value) {
-            //console.log('===== value2input =====');
-            //console.log(value);
-            //var delta = this.editor.getContents();
-            //console.log(delta);
-            //this.$input.data("wysihtml5").editor.setValue(value, true);
         },
 
         /**
         Returns value of input. Value can be object (e.g. datepicker)
 
-        @method input2value() 
+        @method input2value()
         **/
-        // 編輯完成時呼叫（第一順位）
-        input2value: function() { 
-            console.log('===== input2value =====');
-            // 將狀態設為「瀏覽」模式
+        // Called when editing is complete (1)
+        input2value: function() {
+            // Set status to "View" mode
             this.status = 'view';
             var blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
             if (blockID) {
-                // 取得編輯器的內容並儲存於 xeditable
+                // Get the content of the editor and store it in xeditable
                 this.xeditable.delta[blockID] = this.editor.getContents();
                 this.xeditable.html[blockID] = this.editor.root.innerHTML;
 
@@ -188,7 +221,7 @@ $(function(){
         },
 
        //using `white-space: pre-wrap` solves \n  <--> BR conversion very elegant!
-       /* 
+       /*
        value2html: function(value, element) {
             var html = '', lines;
             if(value) {
@@ -200,7 +233,7 @@ $(function(){
             }
             $(element).html(html);
         },
-       
+
         html2value: function(html) {
             if(!html) {
                 return '';
@@ -250,8 +283,8 @@ $(function(){
         @property rows
         @type integer
         @default 7
-        **/        
-        rows: 7        
+        **/
+        rows: 7
     });
 
     $.fn.editabletypes.xquill = XQuill;

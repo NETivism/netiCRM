@@ -47,7 +47,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     /**
      * You can define a custom title for the search form
      */
-    $form->setTitle(ts('Upcoming Birthdays Search'));
+    $form->setTitle(ts('Birth Date Search'));
 
     /**
      * Define the search form fields here
@@ -72,6 +72,10 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
      * for the search form.
      */
     $form->assign('elements', array('limit_groups', 'oc_month_start', 'oc_month_end', 'oc_day_start', 'oc_day_end'));
+  }
+
+  function setBreadcrumb() {
+    CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
   /**

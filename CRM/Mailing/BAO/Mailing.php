@@ -2611,6 +2611,9 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     //sorted in ascending order tokens by ignoring word case
     $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
+    // refs #29057. Added tokens array to become a variable of the form
+    $form->assign('tokensArray', $tokens);
+
     //CRM-5058
     $form->add('select', 'token3', ts('Insert Token'),
       $tokens, FALSE,
@@ -2638,26 +2641,6 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         'onclick' => "return tokenReplHtml(this);",
       )
     );
-
-
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
-    $form->_templates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
-    if (!empty($form->_templates)) {
-      $form->assign('templates', TRUE);
-      $form->add('select', 'template', ts('Use Template'),
-        array(
-          '' => ts('- select -'),
-        ) + $form->_templates, FALSE,
-        array('onChange' => "selectValue( this.value );")
-      );
-      $form->add('checkbox', 'updateTemplate', ts('Update Template'), NULL);
-    }
-
-    $form->add('checkbox', 'saveTemplate', ts('Save As New Template'), NULL, FALSE,
-      array('onclick' => "showSaveDetails(this);")
-    );
-    $form->add('text', 'saveTemplateName', ts('Template Title'));
-
 
     //insert message Text by selecting "Select Template option"
     $form->add('textarea',
@@ -2730,25 +2713,42 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
 
     foreach ($modePrefixes as $prefix) {
       if ($prefix == 'SMS') {
-        $templates[$prefix] = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE, TRUE);
+        $availableTemplates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE, TRUE);
       }
       else {
-        $templates[$prefix] = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
+        $availableTemplates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
       }
-      if (!empty($templates[$prefix])) {
+      if (!empty($availableTemplates)) {
         $form->assign('templates', TRUE);
+        if (!empty($form->_submitValues["{$prefix}saveTemplate"]) && !empty($form->_submitValues["{$prefix}saveTemplateName"])) {
+          $justSaved = array_search($form->_submitValues["{$prefix}saveTemplateName"], $availableTemplates);
+          $availableTemplates = array(
+            $justSaved => $availableTemplates[$justSaved],
+          );
+          $attr = array();
+        }
+        else {
+          $availableTemplates = array('' => ts('- select -')) + $availableTemplates;
+          $attr = array('onChange' => "selectValue( this.value, '{$prefix}');");
+        }
+        $form->add('select', "{$prefix}template", ts('Use Template'), $availableTemplates, FALSE, $attr);
+        $form->add('checkbox', "{$prefix}updateTemplate", ts('Update Template'), NULL);
+      }
 
-        $form->add('select', "{$prefix}template", ts('Use Template'),
-          array('' => ts('- select -')) + $templates[$prefix], FALSE,
-          array('onChange' => "selectValue( this.value, '{$prefix}');")
+      $form->add('checkbox', "{$prefix}saveTemplate", ts('Save As New Template'), NULL, FALSE);
+      $form->add('text', "{$prefix}saveTemplateName", ts('Template Title'));
+
+      // always reset this parameter to 0 to prevent duplicate save template
+      $form->setConstants(array(
+        "{$prefix}saveTemplate" => 0,
+        "{$prefix}saveTemplateName" => '',
+      ));
+      // use this to detect if we need update template checked by default
+      if (!empty($form->_submitValues["{$prefix}saveTemplate"]) && !empty($form->_submitValues["{$prefix}saveTemplateName"])) {
+        $form->setConstants(
+          array("{$prefix}updateTemplate" => 1)
         );
       }
-      $form->add('checkbox', "{$prefix}updateTemplate", ts('Update Template'), NULL);
-
-      $form->add('checkbox', "{$prefix}saveTemplate", ts('Save As New Template'), NULL, FALSE,
-        array('onclick' => "showSaveDetails(this, '{$prefix}');")
-      );
-      $form->add('text', "{$prefix}saveTemplateName", ts('Template Title'));
     }
 
     // I'm not sure this is ever called.
@@ -2768,7 +2768,6 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
    * @return None
    * @access public
    */
-
   public function commonLetterCompose(&$form) {
     //get the tokens.
     $tokens = CRM_Core_SelectValues::contactTokens();
@@ -2803,9 +2802,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
       $form->add('checkbox', 'updateTemplate', ts('Update Template'), NULL);
     }
 
-    $form->add('checkbox', 'saveTemplate', ts('Save As New Template'), NULL, FALSE,
-      array('onclick' => "showSaveDetails(this);")
-    );
+    $form->add('checkbox', 'saveTemplate', ts('Save As New Template'), NULL, FALSE);
     $form->add('text', 'saveTemplateName', ts('Template Title'));
 
 

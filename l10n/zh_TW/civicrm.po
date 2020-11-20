@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-08-03 05:53+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
+"PO-Revision-Date: 2020-10-27 08:29+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11703,7 +11703,7 @@ msgstr "管理募款頁"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid "A copy of the contribution page has been created"
-msgstr "募款頁 '%1' 已建立。"
+msgstr "已複製募款頁。"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid ""
@@ -12205,7 +12205,7 @@ msgid ""
 "used for 'Profile' listings in its Settings OR there is no Profile with that"
 " ID OR you do not have permission to access this profile. Please contact the"
 " site administrator if you need assistance."
-msgstr "您所存取的資料表單（表單編號 %1）已停用，或是未在設定頁勾選「公開頁面」、或是無此資料表單。如您需要協助，請聯繫網站管理員。"
+msgstr "您所存取的資料表單（表單編號 %1）已停用，或為系統保留表單無法存取，或是無此資料表單。如您需要協助，請聯繫網站管理員。"
 
 #: CRM/Core/BAO/UFGroup.php
 msgid "Dynamic Form Creator"
@@ -17131,7 +17131,7 @@ msgstr "關於必須替代符號的更多資料…"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "Duplicate Template Name."
-msgstr "複製範本名稱。"
+msgstr "範本名稱已重複。"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "Mailing Content"
@@ -21860,7 +21860,7 @@ msgstr "警告：刪除此金流機制可能導致一些募款頁的交易工具
 
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "Processor Details for Live Payments"
-msgstr ""
+msgstr "正式金流機制詳情"
 
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "Processor Details for Test Payments"
@@ -47078,7 +47078,7 @@ msgid "End date is due."
 msgstr "結束日期已過期。"
 
 msgid "Installments is full."
-msgstr "期數已滿。"
+msgstr "期數已滿"
 
 msgid "Card expiry date is due."
 msgstr "卡片到期日已過。"
@@ -47962,13 +47962,13 @@ msgstr "傳統編輯器"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid ""
-"For Compose On-screen, you can select templates, add content blocks, and "
-"change the global settings of the newsletter. The drag-and-drop editor can "
-"quickly and easily add, copy, and delete blocks such as titles, pictures, "
-"text, buttons, etc., and adjust the order of blocks by dragging. The "
-"templates provided by the drag-and-drop editor are all responsive, which "
-"allows users to have a better browsing experience on different devices."
-msgstr "線上編寫模式可以選擇範本、新增內容區塊與變更電子報全域設定。拖曳式編輯器可以快速且方便地新增、複製與刪除標題、圖片、內文、按鈕等區塊，並用拖曳的方式調整區塊的順序。拖曳式編輯器提供的範本都是響應式的，這能讓使用者在不同裝置上都有更好的瀏覽經驗。"
+"In the 'Compose On-screen' mode, you can select templates, add content "
+"blocks and change the global settings of the e-newsletter. You can quickly "
+"and easily add, copy and delete blocks such as titles, images, text, "
+"buttons, etc., and adjust the order of the blocks. The templates provided by"
+" the 'Compose On-screen' are all responsive, which can give users a better "
+"browsing experience on different devices."
+msgstr "線上編寫模式可以選擇範本、新增內容區塊與變更電子報全域設定，您可以快速且方便地新增、複製與刪除標題、圖片、內文、按鈕等區塊，並調整區塊的順序。線上編寫模式提供的範本都是響應式的，這能讓使用者在不同裝置上都有更好的瀏覽經驗。"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid ""
@@ -47983,3 +47983,168 @@ msgid ""
 " export HTML emails from other email marketing platforms, and then upload "
 "the files."
 msgstr "您可以將在電腦建立好的 HTML 郵件或將其他電子報平台所匯出的 HTML 郵件儲存成 HTML 檔案上傳。"
+
+msgid ""
+"Are your sure to use template to replace your work? You will lose any "
+"customizations you have made."
+msgstr "確定使用範本來取代嗎？剛剛所做的一些更改，並不會儲存。"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Drag to Reorder"
+msgstr "拖曳以改變排序"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Up"
+msgstr "往上移動"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Move Down"
+msgstr "往下移動"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Duplicate Block"
+msgstr "複製區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+#: packages/mailingEditor/templates/block/blockEdit.tpl
+msgid "Delete Block"
+msgstr "刪除區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Link"
+msgstr "編輯連結"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Image"
+msgstr "編輯圖片"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background"
+msgstr "編輯背景"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Switch Templates"
+msgstr "變更範本"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Add Blocks"
+msgstr "新增區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Add Block"
+msgstr "點擊以新增區塊"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Click to Switch Template"
+msgstr "點擊以變更範本"
+
+msgid "view public CiviMail content"
+msgstr "檢視公開的 CiviMail 電子報內容"
+
+msgid "delete contacts permanantly"
+msgstr "刪除聯絡人（永久刪除）"
+
+msgid "Maximum per registration"
+msgstr "每次報名最多幾位"
+
+msgid "Please enter %1"
+msgstr "請輸入%1"
+
+msgid "Earliest"
+msgstr "最早"
+
+msgid "Copy Contribution"
+msgstr "複製捐款"
+
+msgid ""
+"When recurring contribution being triggered, witch contribution you want to "
+"copy?"
+msgstr "定期捐款觸發時，哪一種捐款儲存的資訊應該被複製到新的一筆定期？"
+
+msgid "Birth Date Search"
+msgstr "生日壽星搜尋"
+
+msgid ""
+"Birthday is a big blessing day for supporters, don't forget to offer your "
+"blessings, or invite supporters to call friends to praise beloved "
+"organization!"
+msgstr "生日對支持者是個充滿祝福的大日子，您別忘了獻上祝福，或邀請支持者號召朋友襄贊心愛的組織！"
+
+msgid ""
+"Give your supporters a thoughtful birthday card, or a more meaningful model,"
+" invite supporters to launch a \"birthday donation\" on their birthdays, so "
+"that supporters and friends can give blessings to the birthday supporters "
+"and gather them into a more meaningful charity!"
+msgstr "給您的支持者獻上貼心的生日賀卡，或更有意義的模式，邀請支持者在生日時推出「生日捐」，讓支持者友人給壽星的祝福，匯集成更有意義的善舉！"
+
+msgid "Duplicated message"
+msgstr "重覆的訊息"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid ""
+"You are switching to 'Compose On-screen' mode, the content of the "
+"traditional editor will be replaced. Are you sure you want to switch to "
+"'Compose On-screen' mode?"
+msgstr "您正要切換成「線上編寫」模式，因為「傳統編輯器」與「線上編寫」兩種模式並不會同步內容，所以「傳統編輯器」的內容會在切換成「線上編寫」模式後被取代，您確定要切換成「線上編寫」模式嗎？"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Text Color"
+msgstr "文字色彩"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit background of the button"
+msgstr "編輯按鈕的背景"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit background of the block"
+msgstr "編輯區塊的背景"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "You need to specify a template to update."
+msgstr "需要先選擇一個範本，才能勾選更新範本。"
+
+# templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid "Do not use same email address with from address."
+msgstr "請使用與寄件人不同的信箱。"
+
+msgid "Unique Unsubscribe"
+msgstr "不重覆取消訂閱"
+
+msgid "Unique Click-throughs Rate"
+msgstr "不重覆點擊率"
+
+msgid "Total Clicks"
+msgstr "點擊次數總計"
+
+msgid "Total Opens"
+msgstr "開信次數總計"
+
+msgid "Unique Open Rate"
+msgstr "不重覆開信率"
+
+msgid "Accepted Rate"
+msgstr ""
+
+msgid "Bounce Rate"
+msgstr "退回率"
+
+msgid "Click to Open Rate"
+msgstr "點擊率"
+
+msgid "Receipt is not print?"
+msgstr "未列印PDF收據的捐款"
+
+msgid ""
+"Oops. The membership you're trying to renew appears to be invalid. Contact "
+"your site administrator if you need assistance."
+msgstr "喔喔...您想要更新的會員資格似乎是無效的。如果您需要協助，請聯絡網站管理者。"
+
+msgid "Only For Renew Membership?"
+msgstr "只用於更新會籍？"
+
+msgid "Is This Page Only for Membership Renewal?"
+msgstr "此頁面是否只限讓會員登入後更新會籍？"

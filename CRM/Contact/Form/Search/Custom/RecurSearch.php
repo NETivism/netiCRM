@@ -208,7 +208,7 @@ $having
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
-    INNER JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
+    LEFT JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
     LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(receive_date) AS last_receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lrd ON lrd.rid = r.id
     LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(cancel_date) AS last_failed_date FROM civicrm_contribution WHERE contribution_status_id = 4 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lfd ON lfd.rid = r.id";
   }
@@ -244,7 +244,7 @@ $having
       $clauses[] = "(`email` LIKE '%$email%')";
     }
     $installments = $this->_formValues['installments'];
-    if ($installments === '0') {
+    if ($installments === 'none') {
       $clauses[] = "(r.installments IS NULL OR r.installments = 0)";
     }
 
@@ -259,8 +259,15 @@ $having
   function tempHaving(){
     $clauses = array();
     $installments = $this->_formValues['installments'];
-    if (is_numeric($installments) && $installments != '0') {
-      $clauses[] = "(remain_installments = $installments)";
+    if (is_numeric($installments) && $installments != 'none') {
+      $installments = (int) $installments;
+      if ($installments == 0) {
+        $clauses[] = "(remain_installments <= 0)";
+      }
+      else {
+        $clauses[] = "(remain_installments = $installments)";
+      }
+
     }
     if(count($clauses)){
       return implode(' AND ', $clauses);
@@ -275,7 +282,7 @@ $having
   function buildForm(&$form){
     // Define the search form fields here
     if (!empty($this->_mode)) {
-      $form->set($this->_mode);
+      $form->set('mode', $this->_mode);
       $form->assign('mode', $this->_mode);
     }
     
@@ -297,7 +304,8 @@ $having
 
     $installments = array(
       '' => ts('- select -'),
-      '0' => ts('no installments specified'),
+      'none' => ts('no installments specified'),
+      '0' => ts('Installments is full.'),
     );
     for ($i = 1; $i <= 6; $i++) {
       $installments[$i] = ts('%1 installments left', array(1 => $i));
@@ -348,11 +356,30 @@ $having
   }
 
 
+  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
+  }
+
+  /**
+   * This will call by search tasks
+   * Which not only provide contact id, but also provide additional id
+   * Mostly used by custom search support multiple record of one contact
+   */
+  function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+    $fields = "contact_a.contact_id, id" ;
+
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    return $this->sql($fields, $offset, $rowcount, $sort, FALSE);
+  }
+
   /**
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
-    $fields = !$onlyIDs ? "*" : "contact_a.contact_id, id" ;
+    $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
     if(!$this->_filled){
       $this->fillTable();
@@ -435,7 +462,7 @@ $having
     $query->fetch();
     
     if ($query->amount) {
-      $amount = CRM_Utils_Money::format($query->amount, '$');
+      $amount = CRM_Utils_Money::format($query->amount);
       $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', array(1 => $amount));
     }
 
@@ -493,10 +520,6 @@ $having
    */
   function templateFile(){
     return 'CRM/Contact/Form/Search/Custom/RecurSearch.tpl';
-  }
-
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
-    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 }
 

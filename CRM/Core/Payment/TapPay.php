@@ -23,6 +23,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     5 => 'AMEX',
   );
 
+  public static $_allowRecurUnit = array('month');
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
@@ -215,13 +217,17 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $contributionRecur->find(TRUE);
 
     if (empty($contributionId)) {
-      // Find the first contribution
-      $contributionId = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, $contributionId, 'REQUEST');
-      if(empty($contributionId)){
-        $sql = "SELECT MIN(c.id) FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.id = %1";
-        $params = array(1 => array($recurringId, 'Positive'));
-        $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
+      // Find the contribution
+      $config = CRM_Core_Config::singleton();
+      if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
+        $order = 'DESC';
       }
+      else {
+        $order = 'ASC';
+      }
+      $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date $order";
+      $params = array(1 => array($recurringId, 'Positive'));
+      $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
     }
 
     // Clone Contribution
@@ -268,7 +274,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // Prepare tappay api post data
       $details = !empty($contribution['amount_level']) ? $contribution['source'].'-'.$contribution['amount_level'] : $contribution['source'];
       $tappayData = new CRM_Contribute_DAO_TapPay();
-      $tappayData->contribution_id = $contributionId;
+      $tappayData->contribution_recur_id = $recurringId;
       $tappayData->find(TRUE);
       if (!empty($tappayData->card_key) && !empty($tappayData->card_token)) {
         if ($contributionRecur->currency == 'TWD') {
@@ -443,7 +449,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
       if ($pass && in_array($status, array("0", "1"))) {
         $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
-        $input['amount'] = $objects['contribution']->amount;
+        $input['amount'] = $objects['contribution']->total_amount;
         $receiveTime = empty($result->transaction_time_millis) ? time() : ($result->transaction_time_millis / 1000);
         $objects['contribution']->receive_date = date('YmdHis', $receiveTime);
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
@@ -618,7 +624,7 @@ LIMIT 0, 100
       if ($time <= strtotime($tappay->expiry_date)) {
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
-        self::payByToken($dao->recur_id, $dao->contribution_id);
+        self::payByToken($dao->recur_id);
         $donePayment = TRUE;
         // Count again for new contribution.
         $successCount = CRM_Core_DAO::singleValueQuery($sqlContribution, $paramsContribution);
@@ -1007,9 +1013,11 @@ LIMIT 0, 100
     return 1;
   }
 
+  /**
+   * Trigger when click transaction button.
+   */
   public static function doRecurTransact ($recurId = NULL, $sendMail = FALSE) {
-    $contributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $recurId, 'id', 'contribution_recur_id');
-    $resultNote = self::payByToken($recurId, $contributionId, $sendMail);
+    $resultNote = self::payByToken($recurId, NULL, $sendMail);
 
     return $resultNote;
   }

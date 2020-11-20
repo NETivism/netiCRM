@@ -3192,6 +3192,11 @@ a.token-trigger, a.token-trigger label {
   font-size: 1.0em;
 }
 
+/* for update template */
+.crm-container #saveTemplateSection{
+  margin-right: 20px;
+}
+
 /* "don't do this" icons */
 .crm-container div.contact_panel span.email-hold,
 .crm-container div.contact_panel span.do-not-email,
@@ -4411,6 +4416,17 @@ ul.ui-sortable {
  {
   max-width: 120px;
 }
+
+/* special case for im-provider*/
+@media screen and (min-width: 769px) {
+  .crm-container .crm-form-select select[name^="im-"] {
+    max-width: 120px;
+  }
+  .crm-container .crm-section[class*="im-"] .crm-form-select {
+    margin-right: 15px;
+  }
+}
+
 .crm-accordion-wrapper > .crm-submit-buttons {
   padding: 6px 18px;
 }
@@ -5257,6 +5273,9 @@ tbody.scrollContent tr.alternateRow {
 .crm-contribute-booster #recur-donor {
   background-image: url(images/card/card-recur-donor@2x.png);
 }
+.crm-contribute-booster #birthdate-search {
+  background-image: url(images/card/card-upcoming-birthdays@2x.png);
+}
 
 /* Contribute Page */
 .crm-container #SearchContribution .crm-submit-buttons,
@@ -5357,6 +5376,51 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
   margin: 15px 0;
 }
+
+/* Mailing */
+/* Mailing: Test */
+.crm-container .crm-test-mail-preview {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  list-style: none;
+}
+.crm-container .crm-test-mail-preview button {
+  margin: 0 10px;
+  font-size: 1.125rem;
+  color: #3F51B5;
+  cursor: pointer;
+  border: 1px solid #3F51B5;
+  background: #fff;
+}
+.crm-container .crm-test-mail-preview button.is-active {
+  color: #fff;
+  background: #3F51B5;
+}
+.crm-container .crm-test-mail-preview-frame-wrapper {
+  position: relative;
+}
+.crm-container .crm-test-mail-preview-frame-wrapper[data-mode="mobile"] {
+  width: 360px;
+  height: 640px;
+}
+.crm-container .crm-test-mail-preview-frame-wrapper[data-mode="normal"] {
+  width: 100%;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  width: auto !important;
+  height: 0;
+  overflow: hidden;
+}
+.crm-container .crm-test-mail-preview-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
 /* subscribe */
 .crm-container form[action*="/civicrm/mailing/subscribe"] .crm-submit-buttons {
   text-align: center;

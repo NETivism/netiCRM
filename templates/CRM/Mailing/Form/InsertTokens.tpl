@@ -31,6 +31,7 @@ var html_message = null;
 var prefix = '';
 var isPDF        = false;
 var isMailing    = false;
+var json_message = "body_json";
 
 {/literal}
 
@@ -74,41 +75,49 @@ var isMailing    = false;
 {literal}
 
 var editor = {/literal}"{$editor}"{literal};
+
 function showSaveUpdateChkBox(prefix) {
   prefix = prefix || '';
-  if (document.getElementById(prefix + "template") == null) {
-    if (document.getElementsByName(prefix + "saveTemplate")[0].checked){
-      document.getElementById(prefix + "saveDetails").style.display = "block";
-      document.getElementById(prefix + "editMessageDetails").style.display = "block";
+  cj(document).ready(function($){
+    var $update = $('input[id='+prefix+'updateTemplate]');
+    var $save = $('input[id='+prefix+'saveTemplate]');
+    var $saveName = $('#saveDetails');
+    $saveName.hide();
+    if ($update.is(":checked")) {
+      $save.prop("checked", false);
     }
-    else {
-      document.getElementById(prefix + "saveDetails").style.display = "none";
-      document.getElementById(prefix + "updateDetails").style.display = "none";
+    if ($save.is(":checked")) {
+      $update.prop("checked", false);
+      $saveName.show();
     }
-    return;
-  }
 
-  if (document.getElementsByName(prefix + "saveTemplate")[0].checked &&
-    document.getElementsByName(prefix + "updateTemplate")[0].checked == false) {
-    document.getElementById(prefix + "updateDetails").style.display = "none";
-  }
-  else if ( document.getElementsByName(prefix + "saveTemplate")[0].checked &&
-    document.getElementsByName(prefix + "updateTemplate")[0].checked ){
-    document.getElementById(prefix + "editMessageDetails").style.display = "block";
-    document.getElementById(pefix + "saveDetails").style.display = "block";
-  }
-  else if ( document.getElementsByName(prefix + "saveTemplate")[0].checked == false &&
-      document.getElementsByName(prefix + "updateTemplate")[0].checked ) {
-    document.getElementById(prefix + "saveDetails").style.display = "none";
-    document.getElementById(prefix + "editMessageDetails").style.display = "block";
-  }
-  else {
-    document.getElementById(prefix + "saveDetails").style.display = "none";
-    document.getElementById(prefix + "updateDetails").style.display = "none";
-  }
+    // prevent check both checkboxes
+    $update.on("click", function(){
+      if ($(this).is(':checked')) {
+        $save.prop("checked", false);
+        $saveName.hide();
+      }
+    });
+    $save.on("click", function(){
+      if ($(this).is(':checked')) {
+        $update.prop("checked", false);
+        $saveName.show();
+      }
+    });
+  });
 }
 
 function selectValue( val, prefix) {
+    prefix = prefix || '';
+    if (!val) {
+      return;
+    }
+    cj("#loading").remove();
+    var yesno = confirm("{/literal}{ts}Are your sure to use template to replace your work? You will lose any customizations you have made.{/ts}{literal}");
+    if(!yesno) {
+      document.getElementById('template').selectedIndex = '';  	
+      return;
+    }
     document.getElementsByName(prefix + "saveTemplate")[0].checked = false;
     document.getElementsByName(prefix + "updateTemplate")[0].checked = false;
     showSaveUpdateChkBox(prefix);
@@ -140,8 +149,13 @@ function selectValue( val, prefix) {
     }
 
     var dataUrl = {/literal}"{crmURL p='civicrm/ajax/template' h=0 }"{literal};
-
-    cj.post( dataUrl, {tid: val}, function( data ) {
+    cj("#template").after('<i class="zmdi zmdi-spinner zmdi-hc-spin" id="loading"></i>');
+    if (cj("#subject").length) {
+      cj("#subject").attr("readonly", "readonly");
+    }
+    window.setTimeout(function(){
+      cj.post( dataUrl, {tid: val}, function( data ) {
+        cj("#subject").removeAttr("readonly");
         if ( !isPDF ) {
             cj("#subject").val( data.subject );
 
@@ -149,8 +163,34 @@ function selectValue( val, prefix) {
                 cj("#"+text_message).val(data.msg_text);
                 return;
             }
-            // do not load text message from template
-            cj("#"+text_message).val("");
+            else {
+              // do not load text message from template
+              cj("#"+text_message).val("");
+
+              // check if json object
+              if (cj("#"+json_message).length > 0 && !data.msg_html && data.msg_text) {
+                try {
+                  data.msg_json = JSON.parse(data.msg_text);
+                }
+                catch (e) {
+                  console.log(e);
+                  data.msg_json = null;
+                  return false;
+                }
+                cj("#"+json_message).val(data.msg_text);
+                if (cj("input[name=upload_type][value=2]").length) {
+                  cj("input[name=upload_type][value=2]").click();
+                  cj("input[name=upload_type][value=2]").trigger('click');
+                  window.nmEditorInstance.render();
+                }
+              }
+              else {
+                if (cj("input[name=upload_type][value=1]").length) {
+                  cj("input[name=upload_type][value=1]").click();
+                  cj("input[name=upload_type][value=1]").trigger('click');
+                }
+              }
+            }
         }
         var html_body  = "";
         if (  data.msg_html ) {
@@ -177,44 +217,26 @@ function selectValue( val, prefix) {
                 document.getElementById("bindFormat").style.display = "none";
             }
         }
-    }, 'json');    
+        cj("#loading").remove();
+      }, 'json');
+    }, 1000);
 }
 
 if ( isMailing ) {
-    document.getElementById(prefix + "editMessageDetails").style.display = "block";
+    document.getElementById(prefix + "editMessageDetails").style.display = "flex";
 
     function verify(select, prefix) {
         prefix = prefix || '';
         if (document.getElementsByName(prefix + "saveTemplate")[0].checked  == false) {
             document.getElementById(prefix + "saveDetails").style.display = "none";
         }
-        document.getElementById(prefix + "editMessageDetails").style.display = "block";
 
         var templateExists = true;
         if (document.getElementById(prefix + "template") == null) {
             templateExists = false;
         }
 
-        if (templateExists && document.getElementById(prefix + "template").value) {
-            document.getElementById(prefix + "updateDetails").style.display = '';
-        }
-        else {
-            document.getElementById(prefix + "updateDetails").style.display = 'none';
-        }
-
         document.getElementById(prefix + "saveTemplateName").disabled = false;
-    }
-
-    function showSaveDetails(chkbox, prefix) {
-        prefix = prefix || '';
-        if (chkbox.checked) {
-            document.getElementById(prefix + "saveDetails").style  .display = "block";
-            document.getElementById(prefix + "saveTemplateName").  disabled = false;
-        }
-        else {
-            document.getElementById(prefix + "saveDetails").style  .display = "none";
-            document.getElementById(prefix + "saveTemplateName").disabled = true;
-        }
     }
 
     if (cj("#sms_text_message").length) {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="../packages/qrcodejs/qrcode.min.js"></script>
+<style>
+body {
+  text-align:middle;
+  margin-top: 60px;
+}
+#qrcode {
+  display: flex;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+<div id="qrcode"></div>
+
+<script>
+var text = '';
+if (location.search.length > 0) {
+  const url = new URL(
+    location.href
+  );
+  text = url.searchParams.get('qrcode');
+}
+if (text.length > 0) {
+  var qrcode = new QRCode(document.getElementById("qrcode"), {
+      text: text,
+      width: 256,
+      height: 256,
+      colorDark : "#000000",
+      colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.H
+  });
+}
+</script>
+</body>
+</html>

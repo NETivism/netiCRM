@@ -31,6 +31,44 @@ a.btn:hover {
 .editable > :first-child,
 .editable > :last-child {
   margin: revert;
+  padding: revert;
+}
+.editable h1,
+.editable h2,
+.editable h3,
+.editable h4,
+.editable h5,
+.editable h6,
+.editable-container .ql-editor h1,
+.editable-container .ql-editor h2,
+.editable-container .ql-editor h3,
+.editable-container .ql-editor h4,
+.editable-container .ql-editor h5,
+.editable-container .ql-editor h6 {
+  font-weight: revert;
+  font-style: revert;
+}
+.editable ul,
+.editable ol,
+.editable-container .ql-editor ul,
+.editable-container .ql-editor ol {
+  list-style-type: revert;
+}
+.editable u,
+.editable s,
+.editable em,
+.editable strong,
+.editable-container .ql-editor u,
+.editable-container .ql-editor s,
+.editable-container .ql-editor em,
+.editable-container .ql-editor strong {
+  font-weight: revert;
+  font-style: revert;
+}
+.editable a,
+.editable-container .ql-editor a {
+  text-decoration: revert;
+  color: revert;
 }
 .editable-click[data-type="xquill"] + .editable-container {
   display: block;
@@ -43,6 +81,17 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
     display: block;
     margin: 12px 0 0 0;
 }
+.editable-container .ql-editor ul,
+.editable-container .ql-editor ol,
+.editable-container .ql-editor ul li,
+.editable-container .ql-editor ol li {
+  margin: revert;
+}
+.editable-container .ql-editor ul,
+.editable-container .ql-editor ol {
+  padding-left: 0;
+}
+
 
 /* x-editable: playground */
 .x-editable-playground {
@@ -127,10 +176,15 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block .nme-block:first-child .nme-block-control {
   margin-top: 0;
 }
-.nme-block-move,
-.nme-block-actions {
+.nme-block-control .nme-block-move,
+.nme-block-control .nme-block-actions {
   display: flex;
   flex-wrap: wrap;
+}
+.nme-block-control .nme-block-control-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .nme-block-control .handle-btn {
   display: flex;
@@ -150,7 +204,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block-control .handle-drag {
   cursor: grab;
 }
-.nme-block:hover > .nme-block-inner:before {
+.nme-block:hover > .nme-block-inner:before,
+.nme-block.is-active > .nme-block-inner:before,
+.nme-block.is-edit > .nme-block-inner:before {
   content: "";
   display: block;
   position: absolute;
@@ -186,6 +242,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block:hover .nme-block:first-child > .nme-block-inner:before {
   margin-top: 0;
   height: calc(100% + 12px);
+}
+.nme-block.is-edit:first-child .editable-container {
+  margin-top: 47px;
 }
 .nme-container .nme-block .nme-title {
   font-size: 1.5rem;
@@ -226,8 +285,16 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 }
 .nme-setting-panels-inner {
   position: relative;
-  padding-top: 90px;
   height: 100%;
+}
+.civicrm-menu-enabled .nme-setting-panels-inner {
+  padding-top: 30px;
+}
+.is-civicrm-user .nme-setting-panels-inner {
+  padding-top: 60px;
+}
+.is-civicrm-user.civicrm-menu-enabled .nme-setting-panels-inner {
+  padding-top: 90px;
 }
 .nme-setting-panels-header,
 .nme-setting-panels-content,
@@ -240,8 +307,17 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-setting-panels-content {
   padding-top: 20px;
   padding-bottom: 20px;
-  height: calc(100vh - 30px - 60px - 66px - 64px);
+  height: calc(100vh - 66px - 64px);
   overflow-y: auto;
+}
+.civicrm-menu-enabled .nme-setting-panels-content {
+  height: calc(100vh - 30px - 66px - 64px);
+}
+.is-civicrm-user .nme-setting-panels-content {
+  height: calc(100vh - 60px - 66px - 64px);
+}
+.is-civicrm-user.civicrm-menu-enabled .nme-setting-panels-content {
+  height: calc(100vh - 30px - 60px - 66px - 64px);
 }
 .nme-setting-panels-footer {
   position: absolute;
@@ -371,6 +447,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   text-align: center;
   margin: 0;
   padding: 12px;
@@ -383,8 +460,18 @@ ul.nme-setting-panels-tabs li a.is-active {
   border-radius: 6px;
   cursor: pointer;
 }
+.nme-container ul.nme-setting-item-list button::before {
+ font-family: "Material-Design-Iconic-Font";
+ font-size: 24px;
+}
 .nme-container ul.nme-setting-item-list button:hover {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
+}
+.nme-container ul.nme-setting-item-list button:hover::before {
+  content: "\f275";
+}
+.nme-container ul.nme-select-tpl-list button:hover::before {
+  content: "\f30b";
 }
 .nme-container .nme-setting-panel #nme-theme-setting {
   align-items: flex-start;
@@ -459,6 +546,12 @@ ul.nme-setting-panels-tabs li a.is-active {
 /* nme item: image */
 .nmee-image {
   max-width: 100% !important;
+}
+
+/* nme item: paragraph */
+.nmeb-paragraph .nme-elem p,
+.nmee-paragraph .ql-editor p {
+  font-size: 16px;
 }
 
 /* nme edit */
@@ -570,14 +663,22 @@ ul.nme-setting-panels-tabs li a.is-active {
 .ql-align-justify { text-align: justify; }
 .ql-editor p { margin: 0 0 1.5rem 0; }
 .on-screen-center { border: 1px solid #81D4FA; }
-.add-block-here {
+.nme-block.on-screen-center::after {
+  display: none;
+}
+/*
+.nme-block.on-screen-center:after {
+  content: "Add Block Here";
+  display: block;
   padding: 20px;
+  max-width: 100%;
   text-align: center;
   font-size: 1.25rem;
   color: #03A9F4;
   border: 1px solid #81D4FA;
   background: #E1F5FE;
 }
+*/
 .switch-toggle-container {
   display: flex;
   align-items: center;
@@ -664,9 +765,9 @@ ul.nme-setting-panels-tabs li a.is-active {
 }
 .nme-preview-popup {
   position: relative;
+  margin: 40px auto;
+  max-width: 90%;
   background: #fff;
-}
-.nme-preview-popup .inner {
 }
 .nme-preview-toolbar {
   display: flex;
@@ -675,9 +776,18 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nme-preview-toolbar {
   padding: 15px 20px;
 }
+.nme-preview-title {
+  font-size: 1.5rem;
+}
+.nme-preview-close {
+  padding: 0;
+  font-size: 30px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
 .nme-preview-content {
-  height: 85vh;
-  overflow-y: auto;
+  padding: 15px 20px;
 }
 .preview-content {
   height: 85vh;
@@ -822,4 +932,11 @@ ul.nme-setting-panels-tabs li a.is-active {
   width: 360px;
   height: 640px;
   background: white;
+}
+
+/** Particular: 360 **/
+@media screen and (min-width: 1200px) {
+  .nme-preview-popup {
+    max-width: 1000px;
+  }
 }

@@ -155,6 +155,32 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     else {
       $gids = $this->_profileIds;
     }
+    $gidsCheck = array();
+    if ($gids) {
+      if (is_numeric($gids)) {
+        $gidsCheck[] = $gids;
+      }
+      else {
+        $gidsCheck = $gids;
+      }
+      foreach($gidsCheck as $gid) {
+        $ufGroup = array();
+        $ufGRoupParams = array('id' => $gid);
+        CRM_Core_BAO_UFGroup::retrieve($ufGRoupParams, $ufGroup);
+        if ($ufGroup['is_reserved'] && !CRM_Core_Permission::check('access CiviCRM')) {
+          $idx = array_search($ufGroupd['id'], $gidsCheck);
+          unset($gidsCheck[$idx]);
+        }
+      }
+    }
+
+    if (empty($gidsCheck)) {
+      CRM_Utils_System::permissionDenied();
+      return;
+    }
+    else {
+      $gids = $gidsCheck;
+    }
 
     $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(CRM_Core_Action::UPDATE,
       CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY | CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY,

@@ -4615,7 +4615,7 @@ VALUES
    (@option_group_id_act, 'PhoneBank',                          29, 'PhoneBank', NULL,0, 0, 29, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, 'WalkList',                           30, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL),
    (@option_group_id_act, 'Petition',                           31, 'Petition', NULL,0, 0, 31, '', 0, 1, 1, @campaignCompId, NULL),
-   (@option_group_id_act, 'Email Receipt',                      32, 'Email Receipt', NULL, 1, 0, 32, '', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, 'Email Receipt',                      32, 'Email Receipt', NULL, 1, 0, 32, '', 0, 1, 0, @contributeCompId, NULL),
    (@option_group_id_act, 'Print Contribution Receipts',        33, 'Print Contribution Receipts', NULL, 1, 0, 33, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, 'Contribution SMS',                   34, 'Contribution SMS', NULL, 1, 0, 34, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, 'Event Registration SMS',             35, 'Event Registration SMS', NULL, 1, 0, 35, '', 0, 1, 1, @eventCompId, NULL),
@@ -4624,11 +4624,11 @@ VALUES
    (@option_group_id_gender, 'Male',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, 'Transgender', 3, 'Transgender', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
 
-   (@option_group_id_IMProvider, 'Yahoo', 1, 'Yahoo', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'MSN',   2, 'Msn',   NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'AIM',   3, 'Aim',   NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'GTalk', 4, 'Gtalk', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'Jabber',5, 'Jabber',NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_IMProvider, 'Yahoo', 1, 'Yahoo', NULL, 0, NULL, 1, NULL, 0, 0, 0, NULL, NULL),
+   (@option_group_id_IMProvider, 'MSN',   2, 'Msn',   NULL, 0, NULL, 2, NULL, 0, 0, 0, NULL, NULL),
+   (@option_group_id_IMProvider, 'AIM',   3, 'Aim',   NULL, 0, NULL, 3, NULL, 0, 0, 0, NULL, NULL),
+   (@option_group_id_IMProvider, 'GTalk', 4, 'Gtalk', NULL, 0, NULL, 4, NULL, 0, 0, 0, NULL, NULL),
+   (@option_group_id_IMProvider, 'Jabber',5, 'Jabber',NULL, 0, NULL, 5, NULL, 0, 0, 0, NULL, NULL),
    (@option_group_id_IMProvider, 'Skype', 6, 'Skype', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_IMProvider, 'LINE',  7, 'LINE',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_IMProvider, 'Facebook',  8, 'Facebook',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
@@ -7116,8 +7116,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
-{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
+{/if}
 {/if}
 
 {if $customPre}
@@ -7472,13 +7471,6 @@ rule for Organizations to find the potential duplicates and merge them if approp
          {/if}
         </td>
        </tr>
-      {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
       {/if}
      {/if}
 
@@ -7681,8 +7673,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
-{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
+{/if}
 {/if}
 
 {if $customPre}
@@ -8037,13 +8028,6 @@ rule for Organizations to find the potential duplicates and merge them if approp
          {/if}
         </td>
        </tr>
-      {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney:$currency}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
       {/if}
      {/if}
 
@@ -14488,8 +14472,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
-{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
+{/if}
 {/if}
 
 {if $customPre}
@@ -14947,13 +14930,6 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
          {/if}
         </td>
        </tr>
-      {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
       {/if}
      {/if}
 
@@ -15188,8 +15164,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 {/if}
 {/if}
 {if $is_deductible AND $price}
-
-{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}{/if}
+{/if}
 {/if}
 
 {if $customPre}
@@ -15647,13 +15622,6 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
          {/if}
         </td>
        </tr>
-      {/if}
-      {if $is_deductible AND $price}
-        <tr>
-         <td colspan="2" {$valueStyle}>
-          <p>{ts 1=$price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}</p>
-         </td>
-        </tr>
       {/if}
      {/if}
 

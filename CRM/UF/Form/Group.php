@@ -248,6 +248,9 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
 
       $params = array('id' => $this->_id);
       CRM_Core_BAO_UFGroup::retrieve($params, $defaults);
+      if ($defaults['is_reserved']) {
+        $this->getElement('is_active')->freeze();
+      }
       $defaults['group'] = CRM_Utils_Array::value('limit_listings_group_id', $defaults);
       $defaults['add_contact_to_group'] = CRM_Utils_Array::value('add_to_group_id', $defaults);
       //get the uf join records for current uf group

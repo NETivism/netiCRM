@@ -173,6 +173,11 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       $params['bcc_receipt'] = NULL;
     }
 
+    $params['is_send_sms'] = CRM_Utils_Array::value('is_send_sms', $params, FALSE);
+    if (!$params['is_send_sms']) {
+      $params['sms_text'] = NULL;
+    }
+
     require_once 'CRM/Contribute/BAO/ContributionPage.php';
     $dao = CRM_Contribute_BAO_ContributionPage::create($params);
   }

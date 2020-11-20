@@ -327,8 +327,8 @@ GROUP BY contact.id
         'label' => ts('Search Results'),
         'value' => '',
       );
-      $amount_sum = CRM_Utils_Money::format($query->amount_sum, '$');
-      $amount_avg = CRM_Utils_Money::format($query->amount_sum / $count, '$');
+      $amount_sum = '$'.CRM_Utils_Money::format($query->amount_sum, ' ');
+      $amount_avg = '$'.CRM_Utils_Money::format($query->amount_sum / $count, ' ');
       $summary['search_results']['value'] = ts('Total amount of completed contributions is %1.', array(1 => $amount_sum)).' / '.ts('for')." ".$count." ".ts('People').' / '.ts('Average').": ".$amount_avg;
     }
 

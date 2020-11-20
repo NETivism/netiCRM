@@ -383,6 +383,21 @@ class CRM_Utils_System {
     return $config->userSystem->addHTMLHead($bc);
   }
 
+
+  /**
+   * Append a javascript file
+   *
+   * @param array $params   template call's parameters
+   * @param string $text    {js} block contents from the template
+   *
+   * @return void
+   * @access public
+   * @static  */
+  static function addJs($params, $text) {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->addJs($params, $text);
+  }
+
   /**
    * figure out the post url for the form
    *
@@ -857,9 +872,11 @@ class CRM_Utils_System {
       }
 
       // pattern check
+      /* remove version check of crm
       if (!CRM_Utils_System::isVersionFormatValid($version)) {
         CRM_Core_Error::fatal('Unknown codebase version.');
       }
+      */
     }
 
     return $version;

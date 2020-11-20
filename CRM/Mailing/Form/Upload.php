@@ -86,24 +86,48 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       $dao->id = $mailingID;
       $dao->find(TRUE);
       $dao->storeValues($dao, $defaults);
+      if ($dao->name) {
+        CRM_Utils_System::setTitle($dao->name);
+      }
 
       //we don't want to retrieve template details once it is
       //set in session
-      $templateId = $this->get('template');
-      $this->assign('templateSelected', $templateId ? $templateId : 0);
-      if (isset($defaults['msg_template_id']) && !$templateId) {
-        $defaults['template'] = $defaults['msg_template_id'];
+      $justSavedTemplate = $this->get('justSavedTemplate');
+      
+      $this->assign('templateSelected', $justSavedTemplate ? $justSavedTemplate: 0);
+      if (isset($defaults['msg_template_id']) && !$justSavedTemplate) {
         $messageTemplate = new CRM_Core_DAO_MessageTemplates();
         $messageTemplate->id = $defaults['msg_template_id'];
         $messageTemplate->selectAdd();
         $messageTemplate->selectAdd('msg_text, msg_html');
         $messageTemplate->find(TRUE);
 
+        $jsonMessage = '';
+        if ($messageTemplate->msg_text && empty($messageTemplate->msg_html)) {
+          $json = json_decode($messageTemplate->msg_text);
+          if (!empty($json->sections)) {
+            // this is correct json object for nme
+            $jsonMessage = $messageTemplate->msg_text;
+          } 
+          else {
+            $jsonMessage = '';
+          }
+        }
+        if (!empty($jsonMessage)) {
+          $htmlMessage = '';
+          $defaults['body_json'] = $jsonMessage;
+        }
+        else {
+          $htmlMessage = $messageTemplate->msg_html;
+        }
         // do not load tempalte txt
         $defaults['text_message'] = '';
-        $htmlMessage = $messageTemplate->msg_html;
+      }
+      elseif ($justSavedTemplate == $defaults['msg_template_id']) {
+        $defaults['template'] = $justSavedTemplate;
       }
 
+      // handling saved template issue
       if (isset($defaults['body_text'])) {
         $defaults['text_message'] = $defaults['body_text'];
         $this->set('textFile', $defaults['body_text']);
@@ -195,6 +219,13 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
     }
 
+    // when we just save template on last step
+    // do not check save new template as default option again
+    if (!empty($this->_submitValues['saveTemplate']) && !empty($this->_submitValues['saveTemplateName'])) {
+      $defaults['saveTemplate'] = 0;
+      $defaults['saveTemplateName'] = '';
+    }
+
     return $defaults;
   }
 
@@ -211,9 +242,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     $tempVar = FALSE;
 
     // this seems so hacky, not sure what we are doing here and why. Need to investigate and fix
-    $session->getVars($options,
-      "CRM_Mailing_Controller_Send_{$this->controller->_key}"
-    );
+    $session->getVars($options, "CRM_Mailing_Controller_Send_{$this->controller->_key}");
 
     require_once 'CRM/Core/PseudoConstant.php';
     $fromEmailAddress = CRM_Core_PseudoConstant::fromEmailAddress();
@@ -315,9 +344,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         'isDefault' => TRUE,
       ),
       array(
-        'type' => 'upload',
+        'type' => 'submit',
         'name' => ts('Save & Continue Later'),
-        'subName' => 'save',
       ),
       array(
         'type' => 'cancel',
@@ -351,10 +379,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $formValues = $this->controller->exportValues($this->_name);
 
+    $composeFields = array(
+      'template', 'saveTemplate',
+      'updateTemplate', 'saveTemplateName',
+    );
     foreach ($uploadParams as $key) {
-      if (CRM_Utils_Array::value($key, $formValues) ||
-        in_array($key, array('header_id', 'footer_id'))
-      ) {
+      if (CRM_Utils_Array::value($key, $formValues) || in_array($key, array('header_id', 'footer_id')) ) {
         $params[$key] = $formValues[$key];
         $this->set($key, $formValues[$key]);
       }
@@ -405,40 +435,54 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $session = CRM_Core_Session::singleton();
     $params['contact_id'] = $session->get('userID');
-    $composeFields = array(
-      'template', 'saveTemplate',
-      'updateTemplate', 'saveTemplateName',
-    );
     $msgTemplate = NULL;
     //mail template is composed
     if ($formValues['upload_type']) {
       foreach ($composeFields as $key) {
         if (CRM_Utils_Array::value($key, $formValues)) {
           $composeParams[$key] = $formValues[$key];
-          $this->set($key, $formValues[$key]);
         }
       }
 
       if (CRM_Utils_Array::value('updateTemplate', $composeParams)) {
-        $templateParams = array(
-          'msg_text' => '',
-          'msg_html' => $html_message,
-          'msg_subject' => $params['subject'],
-          'is_active' => TRUE,
-        );
+        if ($params['body_json'] != 'null') {
+          $templateParams = array(
+            'msg_text' => $params['body_json'],
+            'msg_html' => '',
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
+        else {
+          $templateParams = array(
+            'msg_text' => '',
+            'msg_html' => $html_message,
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
 
         $templateParams['id'] = $formValues['template'];
-
         $msgTemplate = CRM_Core_BAO_MessageTemplates::add($templateParams);
       }
 
       if (CRM_Utils_Array::value('saveTemplate', $composeParams)) {
-        $templateParams = array(
-          'msg_text' => '',
-          'msg_html' => $html_message,
-          'msg_subject' => $params['subject'],
-          'is_active' => TRUE,
-        );
+        if ($params['body_json'] != 'null') {
+          $templateParams = array(
+            'msg_text' => $params['body_json'],
+            'msg_html' => '',
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
+        else {
+          $templateParams = array(
+            'msg_text' => '',
+            'msg_html' => $html_message,
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
 
         $templateParams['msg_title'] = $composeParams['saveTemplateName'];
 
@@ -451,7 +495,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       else {
         $params['msg_template_id'] = CRM_Utils_Array::value('template', $formValues);
       }
-      $this->set('template', $params['msg_template_id']);
+      $this->set('justSavedTemplate', $params['msg_template_id']);
     }
 
     CRM_Core_BAO_File::formatAttachment($formValues,
@@ -485,9 +529,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     require_once 'CRM/Mailing/BAO/Mailing.php';
     CRM_Mailing_BAO_Mailing::create($params, $ids);
 
-    if (isset($this->_submitValues['_qf_Upload_upload_save']) &&
-      $this->_submitValues['_qf_Upload_upload_save'] == 'Save & Continue Later'
-    ) {
+    if (CRM_Utils_Array::value('_qf_Upload_submit', $this->_submitValues)) {
       //when user perform mailing from search context
       //redirect it to search result CRM-3711.
       $ssID = $this->get('ssID');
@@ -522,13 +564,13 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
         //replace user context to search.
         $url = CRM_Utils_System::url('civicrm/contact/' . $fragment, $urlParams);
-        return $this->controller->setDestination($url);
+        CRM_Utils_System::redirect($url);
       }
       else {
         $status = ts("Your mailing has been saved. Click the 'Continue' action to resume working on it.");
         CRM_Core_Session::setStatus($status);
         $url = CRM_Utils_System::url('civicrm/mailing/browse/unscheduled', 'scheduled=false&reset=1');
-        return $this->controller->setDestination($url);
+        CRM_Utils_System::redirect($url);
       }
     }
   }
@@ -706,12 +748,14 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
     }
 
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
     $templateName = CRM_Core_BAO_MessageTemplates::getMessageTemplates();
     if (CRM_Utils_Array::value('saveTemplate', $params)
       && in_array(CRM_Utils_Array::value('saveTemplateName', $params), $templateName)
     ) {
       $errors['saveTemplate'] = ts('Duplicate Template Name.');
+    }
+    if (empty($params['template']) && !empty($params['updateTemplate'])) {
+      $errors['template'] = ts('You need to specify a template to update.');
     }
     return empty($errors) ? TRUE : $errors;
   }

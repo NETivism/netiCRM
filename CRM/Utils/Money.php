@@ -90,6 +90,12 @@ class CRM_Utils_Money {
       $currency = $config->defaultCurrency;
     }
 
+    // ensure $currency is a valid currency code
+    // for backwards-compatibility, also accept one space instead of a currency
+    if ($currency != ' ' && !array_key_exists($currency, self::$_currencySymbols)) {
+      throw new CRM_Core_Exception("Invalid currency \"{$currency}\"");
+    }
+
     // money_format() exists only in certain PHP install (CRM-650)
     $amount = self::formatNumericByFormat($amount, $config->moneyvalueformat);
 

@@ -173,6 +173,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       'modified_date' => ts('Modified Date'),
       'cancel_date' => ts('Cancel Date'),
       'processor_id' => ts('Payment Processor'),
+      'external_id' => ts('External Payment ID'),
       'is_test' => ts('Is Test'),
       'cycle_day' => ts('Cycle Day'),
       'next_sched_contribution' => ts('Next Sched Contribution'),

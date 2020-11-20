@@ -12,6 +12,10 @@ function makeid(length) {
     return result;
 }
 
+casper.on('remote.message', function(msg) {
+    this.echo('remote message caught: ' + msg);
+});
+
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(baseURL, function() {
         casper.echo('=====================================');
@@ -96,12 +100,23 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
 
-    /* click first user */
-    casper.waitForSelector('table.selector tbody tr:first-child input', function success() {
-        test.assertExists('table.selector tbody tr:first-child input');
-        this.click('table.selector tbody tr:first-child input');
+    /* select user that have email */
+    casper.waitForSelector('.selector', function success() {
+        this.echo('Select user that have email')
+        var id = this.evaluate(function (){
+            var tr = document.querySelectorAll(".selector tr");
+            for(var i=1; i<tr.length; i++) {
+                if(tr[i].querySelector("td:nth-child(5)").textContent != "") {
+                    return tr[i].querySelector("td:nth-child(3)").textContent;
+                }
+            }
+            return -1;
+        });
+        test.assertNotEquals(id, -1, 'Got user id.');
+        var row_id = "#rowid" + id + " input";
+        this.click(row_id);
     }, function fail() {
-        test.assertExists('table.selector tbody tr:first-child input');
+        test.assertExists('.selector');
     });
 
     /* click Add Contacts to */
@@ -155,14 +170,21 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
     /* check group has been add */
-    casper.waitForSelector('table#option11 tbody tr:last-child td:first-child a', function success() {
-        test.assertExists('table#option11 tbody tr:last-child td:first-child a');
-        var group_name_from_page = this.evaluate(function() {
-            return document.querySelector('table#option11 tbody tr:last-child td:first-child a').text;
-        });
-        test.assertEquals(group_name_from_page, group_name)
+    casper.waitForSelector('#option11', function success() {
+        test.assertExists('#option11');
+        var group_in_list = this.evaluate(function(group_name) {
+            tr = document.querySelectorAll('#option11 tr');
+            for(var i=1; i<tr.length; i++) {
+                if(tr[i].querySelector('td:first-child a').text == group_name) {
+                    return true;
+                }
+            }
+
+            return false;
+        }, group_name);
+        test.assertEquals(group_in_list, true);
     }, function fail() {
-        test.assertExists('table#option11 tbody tr:last-child td:first-child a');
+        test.assertExists('option11', "Assert 'Current Groups' table exist.");
     });
 
     casper.then(function() {
@@ -171,14 +193,35 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
     });
 
-    casper.thenOpen(baseURL + "civicrm/mailing/send?reset=1", function() {
-        // this.capture("new_mailing.png");
+    casper.then(function() {
+        casper.echo("Step 4-1: Get Group id.");
     });
 
-    casper.wait(2000);    
+    casper.thenOpen(baseURL + "civicrm/group?reset=1", function() {
+    });
+
+    var group_id = "";
+    casper.waitForSelector("#option11", function success() {
+        group_id = this.evaluate(function (group_name) {
+            tr = document.querySelectorAll('#option11 tr');
+            for(var i=1; i<tr.length; i++) {
+                if(tr[i].querySelector('td:first-child').textContent == group_name) {
+                    return tr[i].querySelector('td:nth-child(2)').textContent;
+                }
+            }
+        }, group_name);
+
+        test.assertNotEquals(group_id, null, "Assert get group id successfully.");
+    }, function fail() {
+        test.assertExists("#option11", "Assert group list table exist.");
+    });
+
+    casper.thenOpen(baseURL + "civicrm/mailing/send?reset=1", function() {
+        // this.capture("new_mailing.png");
+    });  
 
     casper.then(function() {
-        this.echo('Step 4-1: Select Recipients.');
+        this.echo('Step 4-2: Select Recipients.');
     });
     
     var mail_name = makeid(5);
@@ -188,31 +231,13 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[name='name']", "Assert 'Name Your Mailing' field exist.");
     });
 
-    casper.waitForSelector("#includeGroups_chzn input", function success() {
-        this.click("#includeGroups_chzn input");
+    casper.waitForSelector("#includeGroups", function success() {
+        this.evaluate(function (group_id) {
+            document.getElementById("includeGroups").value = group_id;
+        }, group_id);
     }, function fail() {
-        test.assertExists("#includeGroups_chzn input", "Assert 'Include Group(s)' exist.");
+        test.assertExists("#includeGroups", "Assert 'Include Group(s)' exist.");
     });
-
-    casper.wait(2000);
-
-    casper.waitForSelector("#includeGroups_chzn_o_0", function success() {
-        this.click("#includeGroups_chzn_o_0");
-    }, function fail() {
-        test.assertExists("#includeGroups_chzn_o_0", "Assert first option of contact group exist.");
-    });
-
-    casper.waitForSelector(".search-choice", function success() {
-        var selected_group_name = this.evaluate(function () {
-            return document.querySelector('.search-choice span').textContent;
-        });
-        this.echo("selected group name:" + selected_group_name);
-        this.echo("new group name:" + group_name);
-    }, function fail() {
-        test.assertExists(".search-choice", "Group not selected");
-    });
-
-    casper.wait(2000);
 
     casper.waitForSelector("input[value='Next >>']", function success() {
         this.click("input[value='Next >>']");
@@ -226,7 +251,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.echo('Step 4-2: Track and Respond.');
+        this.echo('Step 4-3: Track and Respond.');
     });
 
     casper.waitForSelector(".messages strong", function success() {
@@ -238,6 +263,14 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists(".messages strong", "Assert number of 'Total Recipients' exist.");
     });
 
+    casper.waitForSelector("select#visibility", function success() {
+        this.evaluate(function() {
+            document.querySelector('select#visibility').selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("select#visibility", "Visibility select field exist");
+    });
+
     casper.waitForSelector("input[value='Next >>']", function success() {
         this.click("input[value='Next >>']");
     }, function fail() {
@@ -250,7 +283,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.echo('Step 4-3: Mailing Content.');
+        this.echo('Step 4-4: Mailing Content.');
     });
 
     casper.waitForSelector("input[name='subject']", function success() {
@@ -259,6 +292,22 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[name='subject']", "Assert 'Mailing Subject' exist.");
     });
 
+    casper.waitForSelector("#footer_id", function success() {
+        this.evaluate(function () {
+            document.getElementById('footer_id').selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("#footer_id", "Assert 'Mailing footer' exist.");
+    });
+
+    casper.waitForSelector("#footer_id", function success() {
+        this.evaluate(function () {
+            document.getElementById('footer_id').selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("#footer_id", "Assert 'Mailing footer' exist.");
+    });
+
     casper.waitForSelector("input[value='Next >>']", function success() {
         this.click("input[value='Next >>']");
     }, function fail() {
@@ -271,7 +320,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.then(function() {
-        this.echo("Step 4-4: Test.");
+        this.echo("Step 4-5: Test.");
     });
 
     casper.waitForSelector("input[value='Next >>']", function success() {
@@ -282,7 +331,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     casper.then(function() {
-        this.echo('Step 4-5: Schedule or Send');
+        this.echo('Step 4-6: Schedule or Send');
     });
 
     casper.waitForSelector("input[value='Submit Mailing']", function success() {
@@ -299,7 +348,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
     
     casper.then(function() {
-        this.echo("Step 4-6: Check if mail in 'Scheduled and Sent Mailings'.");
+        this.echo("Step 4-7: Check if mail in 'Scheduled and Sent Mailings'.");
     });
 
     casper.thenOpen(baseURL + "civicrm/mailing/browse/scheduled?reset=1&scheduled=true", function() {

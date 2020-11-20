@@ -1,44 +1,34 @@
 <!-- mailingEditor files start -->
-<!-- poshytip -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css">
-<script type="text/javascript" src="{$config->resourceBase}packages/poshytip/src/jquery.poshytip.js"></script>
-
-<!-- x-editable -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css">
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js"></script>
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css">
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css">
-<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css">
-{if $tsLocale == 'zh_TW'}
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css">
-{/if}
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.js"></script>
-<script type="text/javascript" src="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/quill.js"></script>
-
-<!-- pickr -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css"/>
-<script src="{$config->resourceBase}packages/pickr/dist/pickr.min.js"></script>
-
-<!-- Magnific Popup -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css">
-<script src="{$config->resourceBase}packages/Magnific-Popup/dist/jquery.magnific-popup.js"></script>
-
-<!-- mailingEditor -->
-{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
-<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css">
-<script type="text/javascript" src="{$config->resourceBase}packages/mailingEditor/mailingEditor.js"></script>
+<!-- Added the translated string to the token list of quill -->
 {literal}
+<style>
+{/literal}
+{foreach from=$tokensArray key=k item=v}
+{literal}
+.ql-picker.ql-placeholder > span.ql-picker-options > span.ql-picker-item[data-value="{/literal}{$k}{literal}"]::before {
+	content: "{/literal}{$v}{literal}";
+}
+{/literal}
+{/foreach}
+{literal}
+</style>
+{/literal}
+{literal}
+
+<!-- Added global variable: nmEditor -->
 <script type="text/javascript">
 window.nmEditor = {
+	language: "{/literal}{$tsLocale}{literal}",
 	translation: {
-		// Editor
-		"Add Block Here": "{/literal}{ts}Add Block Here{/ts}{literal}",
+		// Golbal
+		"OK" : "{/literal}{ts}OK{/ts}{literal}",
+		"Cancel" : "{/literal}{ts}Cancel{/ts}{literal}",
 
 		// Panels
 		"Mailing Advanced Settings" : "{/literal}{ts}Mailing Advanced Settings{/ts}{literal}",
 		"Templates" : "{/literal}{ts}Templates{/ts}{literal}",
 		"Blocks" : "{/literal}{ts}Blocks{/ts}{literal}",
-		"Setting" : "{/literal}{ts}Setting{/ts}{literal}",
+		"Settings" : "{/literal}{ts}Settings{/ts}{literal}",
 		"Preview" : "{/literal}{ts}Preview{/ts}{literal}",
 		"Normal" : "{/literal}{ts}Normal{/ts}{literal}",
 		"Mobile Device" : "{/literal}{ts}Mobile Device{/ts}{literal}",
@@ -49,6 +39,8 @@ window.nmEditor = {
 		"1 Column + Float" : "{/literal}{ts}1 Column + Float{/ts}{literal}",
 
 		// Panel: Blocks
+		"Header": "{/literal}{ts}Header{/ts}{literal}",
+		"Footer": "{/literal}{ts}Footer{/ts}{literal}",
 		"Title" : "{/literal}{ts}Title{/ts}{literal}",
 		"Paragraph" : "{/literal}{ts}Paragraph{/ts}{literal}",
 		"Image" : "{/literal}{ts}Image{/ts}{literal}",
@@ -63,14 +55,61 @@ window.nmEditor = {
 		"Block" : "{/literal}{ts}Block{/ts}{literal}",
 		"Size" : "{/literal}{ts}Size{/ts}{literal}",
 		"Color" : "{/literal}{ts}Color{/ts}{literal}",
+		"Text Color" : "{/literal}{ts}Text Color{/ts}{literal}",
 		"Background" : "{/literal}{ts}Background{/ts}{literal}",
 
+		// Block
+		"Edit Link": "{/literal}{ts}Edit Link{/ts}{literal}",
+		"Edit Image": "{/literal}{ts}Edit Image{/ts}{literal}",
+		"Edit Background": "{/literal}{ts}Edit Background{/ts}{literal}",
+
 		// Confirm
-		"Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?" : "{/literal}{ts}Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?{/ts}{literal}"
-	}
+		"You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?" : "{/literal}{ts}You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?{/ts}{literal}",
+		"Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?" : "{/literal}{ts}Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?{/ts}{literal}",
+		"Are your sure to use template to replace your work? You will lose any customizations you have made." : "{/literal}{ts}Are your sure to use template to replace your work? You will lose any customizations you have made.{/ts}{literal}"
+  },
+  tokenTrigger: "#token2"
 };
-</script>
 {/literal}
+</script>
+<!-- poshytip -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css?v{$config->ver}">
+{js src=packages/poshytip/src/jquery.poshytip.js group=999 weight=997}{/js}
+
+<!-- x-editable -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css?v{$config->ver}">
+{js src=packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js group=999 weight=997}{/js}
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css?v{$config->ver}">
+{if $tsLocale == 'zh_TW'}
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css?v{$config->ver}">
+{/if}
+{js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js group=999 weight=997}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js group=999 weight=997}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/quill.js group=999 weight=997}{/js}
+
+
+<!-- pickr -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css?v{$config->ver}"/>
+{js src=packages/pickr/dist/pickr.min.js group=999 weight=997}{/js}
+
+<!-- Magnific Popup -->
+<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.js group=999 weight=997}{/js}
+
+<!-- mailingEditor -->
+{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
+<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css?v{$config->ver}">
+{literal}
+<style>
+	.nme-block.on-screen-center:after {
+		content: "{/literal}{ts}Add Block Here{/ts}{literal}";
+	}
+</style>
+{/literal}
+{js src=packages/mailingEditor/mailingEditor.js group=999 weight=998}{/js}
 {literal}
 <script type="text/javascript">
 (function ($) {
@@ -79,12 +118,12 @@ window.nmEditor = {
 				$newEditorData = $("#body_json"),
 				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
 				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
-
-    $(".nme-container").nmEditor();
+    window.nmEditorInstance = $(".nme-container").nmEditor();
 	});
-})(jQuery);
+})(cj);
 </script>
 {/literal}
+
 <!-- mailingEditor files end -->
 
 <!-- mailingEditor HTML start -->
@@ -95,9 +134,9 @@ window.nmEditor = {
 			<div class="nme-setting-panels-inner">
 				<div class="nme-setting-panels-header">
 					<ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
-						<li><a class="is-active" data-target-id="nme-select-tpl" href="#nme-select-tpl">{ts}Templates{/ts}</a></li>
-						<li><a data-target-id="nme-add-block" href="#nme-add-block">{ts}Blocks{/ts}</a></li>
-						<li><a data-target-id="nme-global-setting" href="#nme-global-setting">{ts}Settings{/ts}</a></li>
+						<li><a title="{ts}Switch Templates{/ts}" href="#nme-select-tpl" class="is-active" data-target-id="nme-select-tpl" data-tooltip>{ts}Templates{/ts}</a></li>
+						<li><a title="{ts}Add Blocks{/ts}" href="#nme-add-block" data-target-id="nme-add-block" data-tooltip>{ts}Blocks{/ts}</a></li>
+						<li><a title="{ts}Global Settings{/ts}" href="#nme-global-setting" data-target-id="nme-global-setting" data-tooltip>{ts}Settings{/ts}</a></li>
 					</ul>
 				</div>
 				<div class="nme-setting-panels-content">
@@ -106,7 +145,9 @@ window.nmEditor = {
 							<h3 class="nme-setting-panel-title">{ts}Templates{/ts}</h3>
 							<div class="nme-setting-panel-content">
 								<ul class="nme-select-tpl-list nme-setting-item-list">
-									<li><button class="nme-select-tpl-btn" type="button" data-name="col-1-full-width">{ts}1 Column{/ts}</button></li>
+									<li><button class="nme-select-tpl-btn" type="button" title="{ts}Click to Switch Template{/ts}" data-name="col-1-full-width" data-tooltip>{ts}1 Column{/ts}</button></li>
+									<li><button class="nme-select-tpl-btn" type="button" title="{ts}Click to Switch Template{/ts}" data-name="col-1-col-2" data-tooltip>{ts}1:2 Column{/ts}</button></li>
+									<li><button class="nme-select-tpl-btn" type="button" title="{ts}Click to Switch Template{/ts}" data-name="col-1-float" data-tooltip>{ts}1 Column + Float{/ts}</button></li>
 								</ul>
 							</div>
 						</div>
@@ -116,13 +157,13 @@ window.nmEditor = {
 							<h3 class="nme-setting-panel-title">{ts}Blocks{/ts}</h3>
 							<div class="nme-setting-panel-content">
 								<ul class="nme-add-block-list nme-setting-item-list">
-									<li><button class="nme-add-block-btn" type="button" data-type="title">{ts}Title{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="paragraph">{ts}Paragraph{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="image">{ts}Image{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="button">{ts}Button{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="rc-col-1">{ts}Rich Content: 1 Column{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="rc-col-2">{ts}Rich Content: 2 Column{/ts}</button></li>
-									<li><button class="nme-add-block-btn" type="button" data-type="rc-float">{ts}Rich Content: Float{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="title" data-tooltip>{ts}Title{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="paragraph" data-tooltip>{ts}Paragraph{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="image" data-tooltip>{ts}Image{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="button" data-tooltip>{ts}Button{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="rc-col-1" data-tooltip>{ts}Rich Content: 1 Column{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="rc-col-2" data-tooltip>{ts}Rich Content: 2 Column{/ts}</button></li>
+									<li><button class="nme-add-block-btn" type="button" title="{ts}Click to Add Block{/ts}" data-type="rc-float" data-tooltip>{ts}Rich Content: Float{/ts}</button></li>
 								</ul>
 							</div>
 						</div>
@@ -184,8 +225,17 @@ window.nmEditor = {
 											</div>
 										</div>
 										<div id="nme-title-setting-color" class="nme-setting-field" data-field-type="color">
-											<div class="nme-setting-field-label">{ts}Color{/ts}</div>
+											<div class="nme-setting-field-label">{ts}Text Color{/ts}</div>
 											<div class="nme-setting-field-content"><div id="nme-title-setting-color-picker" class="nme-setting-picker"></div></div>
+										</div>
+									</div>
+								</div>
+								<div class="nme-paragraph-setting nme-setting-section" data-setting-group="paragraph">
+									<h3 class="nme-setting-section-title">{ts}Paragraph{/ts}</h3>
+									<div class="nme-setting-section-content">
+										<div id="nme-paragraph-setting-color" class="nme-setting-field" data-field-type="color">
+											<div class="nme-setting-field-label">{ts}Text Color{/ts}</div>
+											<div class="nme-setting-field-content"><div id="nme-paragraph-setting-color-picker" class="nme-setting-picker"></div></div>
 										</div>
 									</div>
 								</div>
@@ -193,7 +243,7 @@ window.nmEditor = {
 									<h3 class="nme-setting-section-title">{ts}Button{/ts}</h3>
 									<div class="nme-setting-section-content">
 										<div id="nme-button-setting-color" class="nme-setting-field" data-field-type="color">
-											<div class="nme-setting-field-label">{ts}Color{/ts}</div>
+											<div class="nme-setting-field-label">{ts}Text Color{/ts}</div>
 											<div class="nme-setting-field-content"><div id="nme-button-setting-color-picker" class="nme-setting-picker"></div></div>
 										</div>
 										<div id="nme-button-setting-bgcolor" class="nme-setting-field" data-field-type="background-color">

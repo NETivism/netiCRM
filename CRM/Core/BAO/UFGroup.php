@@ -1583,16 +1583,14 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       $form->addUploadElement($name);
     }
     elseif (substr($fieldName, 0, 2) === 'im') {
-      if (!$contactId) {
-        $form->add('select', $name . '-provider_id', $title,
-          array('' => ts('- select -')) + CRM_Core_PseudoConstant::IMProvider(), $required
-        );
-
-        if ($view && $mode != CRM_Profile_Form::MODE_SEARCH) {
-          $form->freeze($name . "-provider_id");
-        }
+      $form->add('select', $name . '-provider_id', $title,
+        array('' => ts('- select -')) + CRM_Core_PseudoConstant::IMProvider(), $required
+      );
+      if ($view && $mode != CRM_Profile_Form::MODE_SEARCH) {
+        $form->freeze($name . "-provider_id");
       }
-      $form->add('text', $name, $title, $attributes, $required);
+      $imAttr = $attributes + array('placeholder' => ts('Please enter %1', array(1 => ts('Instant Messenger').' '.ts('Username'))));
+      $form->add('text', $name, $title, $imAttr, $required);
     }
     elseif (($fieldName === 'birth_date') || ($fieldName === 'deceased_date')) {
       $form->addDate($name, $title, $required, array('formatType' => 'birth'));

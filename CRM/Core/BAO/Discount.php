@@ -114,7 +114,7 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
    * @return integer  $dao->id       discount id of the set which matches
    *                                 the date criteria
    */
-  static function findSet($entityID, $entityTable) {
+  static function findSet($entityID, $entityTable, $timestamp = CRM_REQUEST_TIME) {
     if (empty($entityID) ||
       empty($entityTable)
     ) {
@@ -136,7 +136,7 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
       if (!$endDate) {
         $endDate = date('Ymd');
       }
-      $falls = CRM_Utils_Date::getRange($dao->start_date, $endDate);
+      $falls = CRM_Utils_Date::getRange($dao->start_date, $endDate, $timestamp);
       if ($falls == TRUE) {
         return $dao->id;
       }

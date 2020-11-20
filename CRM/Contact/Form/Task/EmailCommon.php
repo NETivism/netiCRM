@@ -257,9 +257,7 @@ class CRM_Contact_Form_Task_EmailCommon {
       }
       else {
         $contactId = reset($form->_contactIds);
-        $url = CRM_Utils_System::url('civicrm/contact/view',
-          "&show=1&action=browse&cid={$contactId}&selectedChild=activity"
-        );
+        $url = CRM_Utils_System::url('civicrm/contact/view', "cid={$contactId}&selectedChild=activity");
       }
 
       $session = CRM_Core_Session::singleton();
@@ -297,6 +295,9 @@ class CRM_Contact_Form_Task_EmailCommon {
     //Added for CRM-1393
     if (CRM_Utils_Array::value('saveTemplate', $fields) && empty($fields['saveTemplateName'])) {
       $errors['saveTemplateName'] = ts("Enter name to save message template");
+    }
+    if (CRM_Utils_Array::value('updateTemplate', $fields) && empty($fields['template'])) {
+      $errors['template'] = ts("You need to specify a template to update.");
     }
 
     return empty($errors) ? TRUE : $errors;

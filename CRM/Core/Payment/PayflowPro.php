@@ -85,7 +85,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     // ideally this id would be passed through into this class as
     // part of the paymentProcessor
     //object with the other variables. It seems inefficient to re-query to get it.
-    //$params['processor_id'] = CRM_Core_DAO::getFieldValue(
+    //$params['external_id'] = CRM_Core_DAO::getFieldValue(
     // 'CRM_Contribute_DAO_ContributionP
     //age',$params['contributionPageID'],  'payment_processor_id' );
 

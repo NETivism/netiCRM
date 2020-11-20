@@ -19,6 +19,8 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
 
   private $sms = null;
 
+  public $_error = null;
+
   public static function &singleton($providerParams = array(), $force = FALSE) {
     $providerID = CRM_Utils_Array::value('provider_id', $providerParams);
     $providerInfo = CRM_SMS_BAO_Provider::getProviderInfo($providerID);
@@ -59,7 +61,22 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       }
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
       $receive = curl_exec($ch);
+      $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      if ($receive === FALSE) {
+        $errno = curl_errno($ch);
+        $err = curl_error($ch);
+        $error = array(
+          'errorno' => $errno,
+          'error' => $err,
+          'status' => $status,
+        );
+        CRM_Core_Error::debug('mitake_error', $error);
+        $this->_error = $error;
+      }
       curl_close($ch);
+    }
+    if (!empty($this->_error)) {
+      return $this;
     }
 
     return $receive;

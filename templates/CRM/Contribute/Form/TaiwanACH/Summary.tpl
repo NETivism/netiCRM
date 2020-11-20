@@ -28,13 +28,15 @@
         </tr>
       </thead>
       <tbody>
-      {foreach from=$parseResult.processed_data item=line}
+      {foreach from=$processResult item=line}
         <tr>
           {foreach from=$parseResult.columns item=columnHeader key=column}
             {if $column|strstr:"amount"}
               <td>{$line.$column|crmMoney}</td>
             {elseif $column|strstr:"date"}
               <td>{$line.$column|crmDate}</td>
+            {elseif $column == 'id'}
+              <td><a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$line.id`&cid=`$line.contact_id`&action=view&context=recur&selectedChild=contribute" h=0 a=1 fe=1}" target="_blank">{$line.id}</a></td>
             {else}
               <td>{$line.$column}</td>
             {/if}

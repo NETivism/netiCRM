@@ -76,6 +76,31 @@
       line-height: inherit !important;
     }
 
+    /* Default Settings */
+    body {
+      font-family: sans-serif;
+    }
+		h1, h2, h3, h4, h5, h6 {
+			display: block;
+			margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+		table {
+      font-family: sans-serif;
+      border-collapse: collapse;
+		}
+    p {
+			margin: 1em 0;
+			padding: 0;
+    }
+		img, a img {
+			border: 0;
+			height: auto;
+			outline: none;
+			text-decoration: none;
+    }
+
     /* Media Queries */
     @media screen and (max-width: 480px) {
       /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images beyond their max-width. */
@@ -94,7 +119,8 @@
       .text-col {
         display: block !important;
         margin: 0 !important;
-        padding: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
         direction: ltr !important;
@@ -109,13 +135,12 @@
         padding-left: 20px !important;
         padding-right: 20px !important;
       }
-      .nmeb-rc-col-2 .nmeb-inner,
-      .nmeb-rc-float .nmeb-inner {
-        padding: 0 !important;
-      }
       .nmeb-rc-col-2 .nmeb-paragraph .nmeb-inner,
       .nmeb-rc-float .nmeb-paragraph .nmeb-inner {
         padding: 20px !important;
+      }
+      .nmeb-rc-float .nmeb-button .nmeb-content-container {
+        margin-right: auto !important;
       }
     }
     {/literal}

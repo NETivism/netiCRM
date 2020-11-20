@@ -26,11 +26,18 @@
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>                         
   <h3>{ts}Settings{/ts} - {ts}Fields{/ts}</h3>
   <div class="crm-section">
-            <div class="label">{$form.recurringSyncExclude.label}</div>
-            <div class="content">
-              {$form.recurringSyncExclude.html} 
-              <div class="description">{ts}When recurring contribution being triggered, new contribution will copy custom fields value from first one. Fields you selected in this option will exclude to synchronize value from old contribution.{/ts}</div>
-            </div>
-  {include file="CRM/common/chosen.tpl" selector='select[name^=recurringSyncExclude]'}
+    <div class="label">{$form.recurringSyncExclude.label}</div>
+    <div class="content">
+      {$form.recurringSyncExclude.html} 
+      <div class="description">{ts}When recurring contribution being triggered, new contribution will copy custom fields value from first one. Fields you selected in this option will exclude to synchronize value from old contribution.{/ts}</div>
+    </div>
+    {include file="CRM/common/chosen.tpl" selector='select[name^=recurringSyncExclude]'}
+  </div>
+  <div class="crm-section">
+    <div class="label">{$form.recurringCopySetting.label}</div>
+    <div class="content">
+      {$form.recurringCopySetting.html} 
+      <div class="description">{ts}When recurring contribution being triggered, witch contribution you want to copy?{/ts}</div>
+    </div>
   </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     

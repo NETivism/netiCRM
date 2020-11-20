@@ -268,7 +268,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $discountId = NULL;
     if (!empty($this->_values['discount'])) {
       require_once 'CRM/Core/BAO/Discount.php';
-      $discountId = CRM_Core_BAO_Discount::findSet($this->_eventId, 'civicrm_event');
+      $participantId = $this->get('participantId');
+      $timestamp = self::getRegistrationTimestamp($participantId);
+      $discountId = CRM_Core_BAO_Discount::findSet($this->_eventId, 'civicrm_event', $timestamp);
       if ($discountId) {
         if (isset($this->_values['event']['default_discount_fee_id'])) {
           $discountKey = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_OptionValue",
@@ -397,11 +399,16 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if ($this->_values['event']['is_multiple_registrations']) {
       // don't allow to add additional during confirmation if not preregistered.
       if (!$this->_allowConfirmation || $this->_additionalParticipantIds) {
-        // Hardcode maximum number of additional participants here for now. May need to make this configurable per event.
-        // Label is value + 1, since the code sees this is ADDITIONAL participants (in addition to "self")
-        $additionalOptions = array('' => ts('1'), 1 => ts('2'), 2 => ts('3'), 3 => ts('4'), 4 => ts('5'),
-          5 => ts('6'), 6 => ts('7'), 7 => ts('8'), 8 => ts('9'), 9 => ts('10'),
-        );
+        $additionalOptions = array('' => ts('1'));
+        if ($this->_values['event']['is_multiple_registrations'] > 1) {
+          $maxAdditionalParticipant = $this->_values['event']['is_multiple_registrations'];
+        }
+        else {
+          $maxAdditionalParticipant = 10;
+        }
+        for($i = 2; $i <= $maxAdditionalParticipant; $i++) {
+          $additionalOptions[$i-1] = $i;
+        }
         $element = $this->add('select', 'additional_participants',
           ts('How many people are you registering?'),
           $additionalOptions,
@@ -643,7 +650,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $discountedFee = CRM_Utils_Array::value('discount', $form->_values);
     if (is_array($discountedFee) && !empty($discountedFee)) {
       if (!$discountId) {
-        $form->_discountId = $discountId = CRM_Core_BAO_Discount::findSet($form->_eventId, 'civicrm_event');
+        $participantId = $form->get('participantId');
+        $timestamp = self::getRegistrationTimestamp($participantId);
+        $form->_discountId = $discountId = CRM_Core_BAO_Discount::findSet($form->_eventId, 'civicrm_event', $timestamp);
       }
       if ($discountId) {
         $form->_feeBlock = &$form->_values['discount'][$discountId];
@@ -996,7 +1005,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
 
       if (is_array($self->_paymentProcessor)) {
-        $payment = &CRM_Core_Payment::singleton($self->_mode, $self->_paymentProcessor, $this);
+        $payment = &CRM_Core_Payment::singleton($self->_mode, $self->_paymentProcessor, $self);
         $error = $payment->checkConfig($self->_mode);
         if ($error) {
           $errors['_qf_default'] = $error;
@@ -1134,7 +1143,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
       //added for discount
       require_once 'CRM/Core/BAO/Discount.php';
-      $discountId = CRM_Core_BAO_Discount::findSet($this->_eventId, 'civicrm_event');
+      $participantId = $this->get('participantId');
+      $timestamp = self::getRegistrationTimestamp($participantId);
+      $discountId = CRM_Core_BAO_Discount::findSet($this->_eventId, 'civicrm_event', $timestamp);
 
       if (!empty($this->_values['discount'][$discountId])) {
         $params['discount_id'] = $discountId;
@@ -1384,6 +1395,22 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
   public function getTitle() {
     return ts('Register for Event');
+  }
+
+  static function getRegistrationTimestamp($participantId) {
+    if (!empty($participantId)) {
+      $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
+      $activityId = CRM_Utils_Array::key('Event Registration', $activityTypes);
+      $registerDate = CRM_Core_DAO::singleValueQuery('SELECT activity_date_time FROM civicrm_activity WHERE source_record_id = %1 AND activity_type_id = %2 ORDER BY activity_date_time ASC LIMIT 1', array(
+        1 => array($participantId, 'Positive'),
+        2 => array($activityId, 'Positive'),
+      ));
+      $timestamp = strtotime($registerDate);
+    }
+    else {
+      $timestamp = CRM_REQUEST_TIME;
+    }
+    return $timestamp;
   }
 }
 

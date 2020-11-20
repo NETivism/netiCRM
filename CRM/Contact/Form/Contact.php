@@ -932,15 +932,28 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       unset($params['group']);
     }
 
+    if (!empty($params['group'])) {
+      $groups = array();
+      foreach($params['group'] as $idx => $groupId) {
+        $groups[$groupId] = 1;
+      }
+      $params['group'] = $groups;
+    }
+    if (!empty($params['tag'])) {
+      $tags = array();
+      foreach($params['tag'] as $idx => $tagId) {
+        $tags[$tagId] = 1;
+      }
+      $params['tag'] = $tags;
+    }
+
     if (CRM_Utils_Array::value('contact_id', $params) && ($this->_action & CRM_Core_Action::UPDATE)) {
       // figure out which all groups are intended to be removed
-      if (!empty($params['group'])) {
-        $contactGroupList = &CRM_Contact_BAO_GroupContact::getContactGroup($params['contact_id'], 'Added');
-        if (is_array($contactGroupList)) {
-          foreach ($contactGroupList as $key) {
-            if ($params['group'][$key['group_id']] != 1) {
-              $params['group'][$key['group_id']] = -1;
-            }
+      $contactGroupList = &CRM_Contact_BAO_GroupContact::getContactGroup($params['contact_id'], 'Added');
+      if (is_array($contactGroupList)) {
+        foreach ($contactGroupList as $key) {
+          if ($params['group'][$key['group_id']] != 1) {
+            $params['group'][$key['group_id']] = -1;
           }
         }
       }

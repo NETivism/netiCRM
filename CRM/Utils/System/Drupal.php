@@ -293,6 +293,137 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * Append a javascript file
+   *
+   * @param array $params   template call's parameters
+   * @param string $text    {js} block contents from the template
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  static function addJs($params, $text) {
+    global $civicrm_root;
+    $crmRelativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $civicrm_root);
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    $data = NULL;
+
+    if ($version >= 6 && $version < 7) {
+      $type = 'module';
+      $scope = 'header';
+      $defer = FALSE;
+      $cache = TRUE;
+      $preprocess = TRUE;
+
+      if (!empty($params)) {
+        extract($params);
+
+        if (isset($src) && $src !== '') {
+          $data = $src;
+
+          // Check file path
+          if (preg_match('/^https?:/i', $data)) {
+            // If the path is absolute
+            $data = preg_replace('/^https?:\/\/[^\/]*\//', '', $data);
+          }
+          else {
+            // If the path is relative
+            if (substr($data, 0, 1) === '/') {
+              $data = ltrim($data, '/');
+            }
+            else {
+              $crmRelativePath = ltrim($crmRelativePath, '/');
+              $data = $crmRelativePath . $data;
+            }
+          }
+
+          if (isset($type)) {
+            // Change the value to 'module' if 'src' is assigned and the 'type' is set to 'inline'.
+            $type = $type == 'inline' ? 'module' : $type;
+          }
+
+          drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
+        }
+        else {
+          if (isset($text) && $text !== '') {
+            $data = $text;
+            $type = 'inline';
+
+            drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
+          }
+        }
+      }
+      else {
+        if (isset($text) && $text !== '') {
+          $data = $text;
+          $type = 'inline';
+
+          drupal_add_js($data, $type, $scope, $defer, $cache, $preprocess);
+        }
+      }
+    }
+    elseif ($version >= 7 && $version < 8) {
+      $options = NULL;
+
+      if (!empty($params)) {
+        $options = array();
+        $possibleVars = array('scope', 'group', 'every_page', 'weight', 'requires_jquery', 'defer', 'cache', 'preprocess');
+
+        foreach($possibleVars as $varName) {
+          if (isset($params[$varName])) {
+            $options[$varName] = $params[$varName];
+          }
+        }
+
+        if (isset($params['src']) && $params['src'] !== '') {
+          $data = $params['src'];
+
+          // Check file path
+          if (!preg_match('/^https?:/i', $data)) {
+            // If the path is relative
+            if (substr($data, 0, 1) === '/') {
+              $data = ltrim($data, '/');
+            }
+            else {
+              $crmRelativePath = ltrim($crmRelativePath, '/');
+              $data = $crmRelativePath . $data;
+            }
+          }
+
+          if (isset($params['type'])) {
+            // Change the value to 'file' if 'src' is assigned and the 'type' is set to 'inline'.
+            $options['type'] = $params['type'] == 'inline' ? 'file' : $params['type'];
+          }
+
+          drupal_add_js($data, $options);
+        }
+        else {
+          if (isset($params['text']) && $params['text'] !== '') {
+            $data = $params['text'];
+            $options['type'] = 'inline';
+
+            drupal_add_js($data, $options);
+          }
+        }
+      }
+      else {
+        if (isset($text) && $text !== '') {
+          $data = $text;
+          $options['type'] = 'inline';
+
+          drupal_add_js($data, $options);
+        }
+      }
+    }
+    else {
+      CRM_Core_Error::debug_log_message("addJs function have not yet supported this version of drupal $version");
+    }
+
+    return;
+  }
+
+  /**
    * Get variable from CMS system
    *
    * @param variable name

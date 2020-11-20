@@ -3,7 +3,7 @@ ini_set('include_path', '.' . PATH_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'pac
 ini_set('memory_limit', '512M');
 
 define('CIVICRM_UF', 'Drupal');
-define('VERSION', '7.64'); // specified Drupal Version
+define('VERSION', '7.72'); // specified Drupal Version
 
 require_once '../civicrm.config.php';
 $config   = CRM_Core_Config::singleton();

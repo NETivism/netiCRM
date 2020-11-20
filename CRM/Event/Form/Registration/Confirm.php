@@ -751,6 +751,12 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
           $createContrib = TRUE;
         }
 
+        // If use coupon make this registration free, also need create contribution.
+        $coupon = $this->get('coupon');
+        if ($value['amount'] == 0 && !empty($coupon)) {
+          $createContrib = TRUE;
+        }
+
         if ($createContrib && CRM_Utils_Array::value('is_primary', $value) &&
           !$this->_isOnWaitlist && !$this->_requireApproval
         ) {
