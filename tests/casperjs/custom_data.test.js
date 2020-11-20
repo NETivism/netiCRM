@@ -26,6 +26,34 @@ casper.on('remote.message', function (msg) {
     this.echo('remote message caught: ' + msg);
 });
 
+function fill_options(test) {
+    /* sendKeys to Multiple Choice Options*/
+    casper.waitForSelector("input[name='option_label[1]']", function success() {
+        test.assertExists("input[name='option_label[1]']");
+        this.sendKeys("input[name='option_label[1]']", "op1");
+    }, function fail() {
+        test.assertExists("input[name='option_label[1]']");
+    });
+    casper.waitForSelector("input[name='option_value[1]']", function success() {
+        test.assertExists("input[name='option_value[1]']");
+        this.sendKeys("input[name='option_value[1]']", "op1");
+    }, function fail() {
+        test.assertExists("input[name='option_value[1]']");
+    });
+    casper.waitForSelector("input[name='option_label[2]']", function success() {
+        test.assertExists("input[name='option_label[2]']");
+        this.sendKeys("input[name='option_label[2]']", "op2");
+    }, function fail() {
+        test.assertExists("input[name='option_label[2]']");
+    });
+    casper.waitForSelector("input[name='option_value[2]']", function success() {
+        test.assertExists("input[name='option_value[2]']");
+        this.sendKeys("input[name='option_value[2]']", "op2");
+    }, function fail() {
+        test.assertExists("input[name='option_value[2]']");
+    });
+}
+
 casper.test.begin('Resurrectio test', function(test) {
     casper.start(vars.baseURL, function() {
         casper.echo('=====================================');
@@ -43,30 +71,18 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#user-login-form", 'Login form exist.');
     });
 
-    /* open custom data page */
-    casper.thenOpen(vars.baseURL + "civicrm/admin/custom/group?reset=1", function() {
-        // this.capture('custom_data.png');
-    });
-
-    
     /*
      * Add Set of Custom Fields
     */
-
-    /* click something */
-    casper.waitForSelector('#newCustomDataGroup', function success() {
-        test.assertExists('#newCustomDataGroup');
-        this.click('#newCustomDataGroup');
-    }, function fail() {
-        test.assertExists('#newCustomDataGroup');
-    });
-
-    casper.wait(2000);
     casper.then(function() {
         casper.echo('=====================================');
         casper.echo('** Step 1: Add Set of Custom Fields. **');
         casper.echo('=====================================');
     });
+
+    // open New Custom Field Set page
+    casper.thenOpen(baseURL + "civicrm/admin/custom/group?action=add&reset=1");
+    casper.wait(2000);
 
     /* sendKeys to Set Name */
     casper.waitForSelector("#title", function success() {
@@ -168,7 +184,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("input[name='label']");
     });
 
-    /* select Data and Input Field Type*/
+    /* select Data and Input Field Type */
     casper.waitForSelector("select[name='data_type[0]']", function success() {
         test.assertExists("select[name='data_type[0]']");
         this.evaluate(function () {
@@ -194,31 +210,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[1]']");
     });    
 
-    /* sendKeys to Multiple Choice Options*/
-    casper.waitForSelector("input[name='option_label[1]']", function success() {
-        test.assertExists("input[name='option_label[1]']");
-        this.sendKeys("input[name='option_label[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_label[1]']");
-    });
-    casper.waitForSelector("input[name='option_value[1]']", function success() {
-        test.assertExists("input[name='option_value[1]']");
-        this.sendKeys("input[name='option_value[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_value[1]']");
-    });
-    casper.waitForSelector("input[name='option_label[2]']", function success() {
-        test.assertExists("input[name='option_label[2]']");
-        this.sendKeys("input[name='option_label[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_label[2]']");
-    });
-    casper.waitForSelector("input[name='option_value[2]']", function success() {
-        test.assertExists("input[name='option_value[2]']");
-        this.sendKeys("input[name='option_value[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_value[2]']");
-    });
+    fill_options(test);
 
     casper.then(function() {
         // this.capture('Select.png');
@@ -273,31 +265,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[1]']");
     });    
 
-    /* sendKeys to Multiple Choice Options*/
-    casper.waitForSelector("input[name='option_label[1]']", function success() {
-        test.assertExists("input[name='option_label[1]']");
-        this.sendKeys("input[name='option_label[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_label[1]']");
-    });
-    casper.waitForSelector("input[name='option_value[1]']", function success() {
-        test.assertExists("input[name='option_value[1]']");
-        this.sendKeys("input[name='option_value[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_value[1]']");
-    });
-    casper.waitForSelector("input[name='option_label[2]']", function success() {
-        test.assertExists("input[name='option_label[2]']");
-        this.sendKeys("input[name='option_label[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_label[2]']");
-    });
-    casper.waitForSelector("input[name='option_value[2]']", function success() {
-        test.assertExists("input[name='option_value[2]']");
-        this.sendKeys("input[name='option_value[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_value[2]']");
-    });
+    fill_options(test);
 
     casper.then(function() {
         // this.capture('Radio.png');
@@ -352,31 +320,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[1]']");
     });    
 
-    /* sendKeys to Multiple Choice Options*/
-    casper.waitForSelector("input[name='option_label[1]']", function success() {
-        test.assertExists("input[name='option_label[1]']");
-        this.sendKeys("input[name='option_label[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_label[1]']");
-    });
-    casper.waitForSelector("input[name='option_value[1]']", function success() {
-        test.assertExists("input[name='option_value[1]']");
-        this.sendKeys("input[name='option_value[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_value[1]']");
-    });
-    casper.waitForSelector("input[name='option_label[2]']", function success() {
-        test.assertExists("input[name='option_label[2]']");
-        this.sendKeys("input[name='option_label[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_label[2]']");
-    });
-    casper.waitForSelector("input[name='option_value[2]']", function success() {
-        test.assertExists("input[name='option_value[2]']");
-        this.sendKeys("input[name='option_value[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_value[2]']");
-    });
+    fill_options(test);
 
     casper.then(function() {
         // this.capture('Checkbox.png');
@@ -431,31 +375,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[1]']");
     });    
 
-    /* sendKeys to Multiple Choice Options*/
-    casper.waitForSelector("input[name='option_label[1]']", function success() {
-        test.assertExists("input[name='option_label[1]']");
-        this.sendKeys("input[name='option_label[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_label[1]']");
-    });
-    casper.waitForSelector("input[name='option_value[1]']", function success() {
-        test.assertExists("input[name='option_value[1]']");
-        this.sendKeys("input[name='option_value[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_value[1]']");
-    });
-    casper.waitForSelector("input[name='option_label[2]']", function success() {
-        test.assertExists("input[name='option_label[2]']");
-        this.sendKeys("input[name='option_label[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_label[2]']");
-    });
-    casper.waitForSelector("input[name='option_value[2]']", function success() {
-        test.assertExists("input[name='option_value[2]']");
-        this.sendKeys("input[name='option_value[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_value[2]']");
-    });
+    fill_options(test);
 
     casper.then(function() {
         // this.capture('Multi-Select.png');
@@ -509,31 +429,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[1]']");
     });    
 
-    /* sendKeys to Multiple Choice Options*/
-    casper.waitForSelector("input[name='option_label[1]']", function success() {
-        test.assertExists("input[name='option_label[1]']");
-        this.sendKeys("input[name='option_label[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_label[1]']");
-    });
-    casper.waitForSelector("input[name='option_value[1]']", function success() {
-        test.assertExists("input[name='option_value[1]']");
-        this.sendKeys("input[name='option_value[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_value[1]']");
-    });
-    casper.waitForSelector("input[name='option_label[2]']", function success() {
-        test.assertExists("input[name='option_label[2]']");
-        this.sendKeys("input[name='option_label[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_label[2]']");
-    });
-    casper.waitForSelector("input[name='option_value[2]']", function success() {
-        test.assertExists("input[name='option_value[2]']");
-        this.sendKeys("input[name='option_value[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_value[2]']");
-    });
+    fill_options(test);
 
     casper.then(function() {
         // this.capture('Advanced_Multi-Select.png');
@@ -588,31 +484,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("select[name='data_type[1]']");
     });    
 
-    /* sendKeys to Multiple Choice Options*/
-    casper.waitForSelector("input[name='option_label[1]']", function success() {
-        test.assertExists("input[name='option_label[1]']");
-        this.sendKeys("input[name='option_label[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_label[1]']");
-    });
-    casper.waitForSelector("input[name='option_value[1]']", function success() {
-        test.assertExists("input[name='option_value[1]']");
-        this.sendKeys("input[name='option_value[1]']", "op1");
-    }, function fail() {
-        test.assertExists("input[name='option_value[1]']");
-    });
-    casper.waitForSelector("input[name='option_label[2]']", function success() {
-        test.assertExists("input[name='option_label[2]']");
-        this.sendKeys("input[name='option_label[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_label[2]']");
-    });
-    casper.waitForSelector("input[name='option_value[2]']", function success() {
-        test.assertExists("input[name='option_value[2]']");
-        this.sendKeys("input[name='option_value[2]']", "op2");
-    }, function fail() {
-        test.assertExists("input[name='option_value[2]']");
-    });
+    fill_options(test);
 
     casper.then(function() {
         // this.capture('Autocomplete_Select.png');
