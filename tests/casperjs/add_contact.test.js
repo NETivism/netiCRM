@@ -50,64 +50,32 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.thenOpen(vars.baseURL + 'civicrm/contact/add?reset=1&ct=Individual', function() {
         this.capture('add_individual.png');
     });
-    casper.waitForSelector("input[name='last_name']", function success() {
+    casper.waitForSelector("form[name=Contact]", function success() {
         casper.echo('=====================================');
         casper.echo('** Step 1: Add Individual. **');
         casper.echo('=====================================');
-        this.sendKeys("input[name='last_name']", last_name);
-    }, function fail() {
-        test.assertExists("input[name='last_name']");
-    });
-    casper.waitForSelector("form[name=Contact] input[name='first_name']", function success() {
-        test.assertExists("form[name=Contact] input[name='first_name']");
-        this.click("form[name=Contact] input[name='first_name']");
-    }, function fail() {
-        test.assertExists("form[name=Contact] input[name='first_name']");
-    });
-    casper.waitForSelector("input[name='first_name']", function success() {
+
+        this.sendKeys("input[name='last_name']", vars.last_name);
+        casper.echo('Add lastname.')
+
         this.sendKeys("input[name='first_name']", vars.first_name);
-    }, function fail() {
-        test.assertExists("input[name='first_name']");
-    });
-    casper.waitForSelector("form[name=Contact] input[name='email[1][email]']", function success() {
-        test.assertExists("form[name=Contact] input[name='email[1][email]']");
-        this.click("form[name=Contact] input[name='email[1][email]']");
-    }, function fail() {
-        test.assertExists("form[name=Contact] input[name='email[1][email]']");
-    });
-    casper.waitForSelector("input[name='email[1][email]']", function success() {
+        casper.echo('Add firstname.')
+
         this.sendKeys("input[name='email[1][email]']", vars.user_email);
-    }, function fail() {
-        test.assertExists("input[name='email[1][email]']");
-    });
-    casper.waitForSelector("form[name=Contact] input[name='phone[1][phone]']", function success() {
-        test.assertExists("form[name=Contact] input[name='phone[1][phone]']");
-        this.click("form[name=Contact] input[name='phone[1][phone]']");
-    }, function fail() {
-        test.assertExists("form[name=Contact] input[name='phone[1][phone]']");
-    });
-    casper.waitForSelector("input[name='phone[1][phone]']", function success() {
+        casper.echo('Add email.')
+
         this.sendKeys("input[name='phone[1][phone]']", vars.user_phone);
-    }, function fail() {
-        test.assertExists("input[name='phone[1][phone]']");
-    });
-    casper.waitForSelector("#phone_1_phone_type_id", function success() {
-        test.assertExists("#phone_1_phone_type_id");
+        casper.echo('Add phone.')
+
         this.evaluate(function () {
             document.querySelector("#phone_1_phone_type_id").selectedIndex = 1;
         })
-    }, function fail() {
-        test.assertExists("#phone_1_phone_type_id");
-    });
-    casper.then(function() {
-        //this.capture('form_write_done.png');
-    });
-    casper.waitForSelector("form[name=Contact] input[type=submit][value='Save']", function success() {
-        test.assertExists("form[name=Contact] input[type=submit][value='Save']");
+        casper.echo('Change phone type.')
+
         this.click("form[name=Contact] input[type=submit][value='Save']");
     }, function fail() {
-        test.assertExists("form[name=Contact] input[type=submit][value='Save']");
-    }); /* submit form */
+        test.assertExists("form[name=Contact]", "Contact form exist.");
+    });
 
     casper.wait(2000);
     casper.then(function() {
@@ -117,26 +85,25 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
         casper.echo('** Step 2: Check If Personal Information Correct. **');
         casper.echo('=====================================');
-        test.assertTitle(vars.first_name + ' ' + last_name + ' | netiCRM');
+        test.assertTitle(vars.first_name + ' ' + vars.last_name + ' | netiCRM');
     });
-    casper.waitForSelector("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardLeft > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > a", function success() {
-        test.assertExists("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardLeft > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > a");
+    casper.waitForSelector("#contact-summary .contactCardLeft a", function success() {
         var email = this.evaluate(function () {
-            return document.querySelector("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardLeft > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > a").text;
+            return document.querySelector("#contact-summary .contactCardLeft a").text;
         });
         test.assertEquals(email, vars.user_email);
     }, function fail() {
-        test.assertExists("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardLeft > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > a");
+        test.assertExists("#contact-summary .contactCardLeft a", 'email exist.');
     });
-    casper.waitForSelector("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardRight > table > tbody > tr > td.primary > span", function success() {
-        test.assertExists("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardRight > table > tbody > tr > td.primary > span");
+    casper.waitForSelector("#contact-summary .contactCardRight .primary span", function success() {
         var phone = this.evaluate(function() {
-            return document.querySelector("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardRight > table > tbody > tr > td.primary > span").textContent;
+            return document.querySelector("#contact-summary .contactCardRight .primary span").textContent;
         });
         test.assertEquals(phone, vars.user_phone);
     }, function fail() {
-        test.assertExists("#contact-summary > div.contact_details > div:nth-child(1) > div.contactCardRight > table > tbody > tr > td.primary > span");
+        test.assertExists("#contact-summary .contactCardRight .primary span");
     });
+
     casper.run(function() {
         test.done();
     });
