@@ -40,6 +40,7 @@
     _data = {},
     _dataLoadMode = "field",
     _dataLoadSource = "",
+    _dataVersion = {},
     _defaultData = {},
     _nme = {}, // plugin object
     _nmeOptions = {},
@@ -576,7 +577,125 @@
       }
 
       _nmeData.update();
+    },
+    version: {
+      get: function() {
+        var v = {
+          current: "",
+          lastest: ""
+        };
 
+        if (_data.version) {
+          v.current = _data.version;
+        }
+
+        if (_nmeData.version.list.length) {
+          var lastVersion = _nmeData.version.list.slice(-1);
+          v.lastest = lastVersion[0].version;
+        }
+
+        return v;
+      },
+      update: function(version) {
+        var dataVersion = typeof version !== "undefined" ? version : "";
+
+        if (dataVersion) {
+          var updateVersion = _nmeData.version.list.filter(function(e) {
+            return e.version == dataVersion;
+          });
+
+          if (updateVersion.length) {
+            for (var i in updateVersion) {
+              updateVersion[i].task();
+            }
+
+            _nmeData.update();
+          }
+        }
+        else {
+          if (_dataVersion.current) {
+            var versionPos = _nmeData.version.list.map(function(e) { return e.version; }).indexOf(_dataVersion.current);
+
+            if (versionPos != -1) {
+              var updateVersionPos = versionPos + 1;
+
+              for (var i = updateVersionPos; i < _nmeData.version.list.length; i++) {
+                _nmeData.version.list[i].task();
+              }
+
+              _nmeData.update();
+            }
+          }
+          else {
+            for (var i in _nmeData.version.list) {
+              if (_nmeData.version.list[i].task) {
+                _nmeData.version.list[i].task();
+              }
+            }
+
+            _nmeData.update();
+          }
+        }
+      },
+      list: [
+        {
+          version: "1.0.0",
+          desc: "Added version to data object.",
+          task: function() {
+            if (!_data.version) {
+              _data.version = "1.0.0";
+              _dataVersion.current = _data.version;
+            }
+          }
+        },
+        {
+          version: "1.0.1",
+          desc: "Change data structure of title block.",
+          task: function() {
+            _data.version = "1.0.1";
+            _dataVersion.current = _data.version;
+
+            for (var sectionKey in _data.sections) {
+              if (!_sectionIsEmpty(sectionKey)) {
+                var blocks = _data.sections[sectionKey].blocks;
+
+                for (var blockKey in blocks) {
+                  var block = blocks[blockKey];
+
+                  if (block.isRichContent) {
+                    for (var nestBlocksIndex in block.data) {
+                      var nestBlocks = block.data[nestBlocksIndex].blocks;
+
+                      for (var nestBlockKey in nestBlocks) {
+                        var nestBlock = nestBlocks[nestBlockKey];
+
+                        if (nestBlock.type == "title") {
+                          if (typeof nestBlock.data !== "object" && !nestBlock.data.html) {
+                            var title = nestBlock.data;
+                            _data.sections[sectionKey].blocks[blockKey].data[nestBlocksIndex].blocks[nestBlockKey].data = {
+                              html: title
+                            };
+                          }
+                        }
+                      }
+                    }
+                  }
+                  else {
+                    if (block.type == "title") {
+                      if (typeof block.data !== "object" && !block.data.html) {
+                        var title = block.data;
+                        _data.sections[sectionKey].blocks[blockKey].data = {
+                          html: title
+                        };
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   };
 
@@ -677,7 +796,8 @@
 
                 switch (blockType) {
                   case "title":
-                    $nmebElem.html(block.data);
+                    decodeContent = _htmlDecode(block.data.html);
+                    $nmebElem.html(decodeContent);
                     break;
 
                   case "paragraph":
@@ -900,9 +1020,12 @@
                   case "title":
                     $nmebElem.addClass("nme-editable");
                     $nmebElem.attr({
-                      "data-type": "text"
+                      "data-type": "xquill",
+                      "data-placeholder": "請輸入標題文字...",
+                      "data-title": "Enter title"
                     });
-                    $nmebElem.html(block.data);
+                    decodeContent = _htmlDecode(block.data.html);
+                    $nmebElem.html(decodeContent);
                     break;
 
                   case "paragraph":
@@ -2867,6 +2990,10 @@
       }
 
       setTimeout(function() {
+        _dataVersion = _nmeData.version.get();
+        _debug(_dataVersion, "Before data version update");
+        _nmeData.version.update();
+        _debug(_dataVersion, "After data version update");
         $.nmEditor.instance.data = _data;
         _nmeData.update();
       }, 500);
