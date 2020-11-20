@@ -81,7 +81,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     // open New Custom Field Set page
-    casper.thenOpen(baseURL + "civicrm/admin/custom/group?action=add&reset=1");
+    casper.thenOpen(vars.baseURL + "civicrm/admin/custom/group?action=add&reset=1");
     casper.wait(2000);
 
     /* sendKeys to Set Name */
@@ -1114,15 +1114,15 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     /* go to Custom Fields page */
-    casper.waitForSelector("#option11", function success() {
+    casper.waitForSelector("#custom_group table", function success() {
         casper.echo('** Step 4-1: Get all expacted id. **');
-        test.assertExists("#option11");
+        test.assertExists("#custom_group table");
         var id = this.evaluate(function () {
-            return document.getElementById('option11').rows.length - 1;
+            return document.querySelector('#custom_group table').rows.length - 1;
         });
         this.open(vars.baseURL + "civicrm/admin/custom/group/field?reset=1&action=browse&gid=" + id);
     }, function fail() {
-        test.assertExists("#option11");
+        test.assertExists("#custom_group table", "Custom data list exist.");
     });
     casper.wait(2000);
     casper.then(function() {
@@ -1152,14 +1152,14 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
     /* go to Custom Fields page */
-    casper.waitForSelector("#option11", function success() {
-        test.assertExists("#option11");
+    casper.waitForSelector("#custom_group table", function success() {
+        test.assertExists("#custom_group table");
         var id = this.evaluate(function () {
-            return document.getElementById('option11').rows.length - 1;
+            return document.querySelector('#custom_group table').rows.length - 1;
         });
         this.open(vars.baseURL + "civicrm/admin/custom/group?action=preview&reset=1&id=" + id);
     }, function fail() {
-        test.assertExists("#option11");
+        test.assertExists("#custom_group table", "Custom data list exist.");
     });
     casper.wait(2000);
     casper.then(function() {
@@ -1289,14 +1289,14 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     /* get custom data id */
-    casper.waitForSelector("#option11", function success() {
+    casper.waitForSelector("#custom_group table", function success() {
         casper.echo('** Step 5-1: Get custom data id. **');
-        test.assertExists("#option11");
+        test.assertExists("#custom_group table");
         vars.custom_id = this.evaluate(function () {
-            return document.getElementById('option11').rows.length - 1;
+            return document.querySelector('#custom_group table').rows.length - 1;
         });
     }, function fail() {
-        test.assertExists("#option11");
+        test.assertExists("#custom_group table", "Custom data list exist.");
     });
 
     /* open new individual page */
