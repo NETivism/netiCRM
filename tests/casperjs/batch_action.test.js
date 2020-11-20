@@ -1,6 +1,5 @@
 var system = require('system'); 
 var port = system.env.RUNPORT; 
-var baseURL = port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 
 function makeid(length) {
     var result           = '';
@@ -12,11 +11,14 @@ function makeid(length) {
     return result;
 }
 
-var organization_name = makeid(5);
+var vars = {
+    baseURL : port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',
+    organization_name: makeid(5)
+};
 
 function list_contacts_and_select_three(test) {
     /* find contacts */
-    casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/contact/search?reset=1", function() {
         // his.capture('find_contacts.png');
     });
     casper.waitForSelector('#contact_type_chzn_o_1', function success() {
@@ -66,41 +68,28 @@ function list_contacts_and_select_three(test) {
 }
 
 casper.test.begin('Resurrectio test', function(test) {
-    casper.start(baseURL, function() {
+    casper.start(vars.baseURL, function() {
         casper.echo('=====================================');
         casper.echo('** Step 0: Login. **');
         casper.echo('=====================================');
         // this.capture('login.png');
     });
-    casper.waitForSelector("form#user-login-form input[name='name']", function success() {
-        test.assertExists("form#user-login-form input[name='name']");
-        this.click("form#user-login-form input[name='name']");
+
+    casper.waitForSelector("#user-login-form", function success() {
+        this.fill('#user-login-form', {
+          'name':'admin',
+          'pass':'123456'
+        }, true);
     }, function fail() {
-        test.assertExists("form#user-login-form input[name='name']");
+        test.assertExists("#user-login-form", 'Login form exist.');
     });
-    casper.waitForSelector("input[name='name']", function success() {
-        this.sendKeys("input[name='name']", "admin");
-    }, function fail() {
-        test.assertExists("input[name='name']");
-    });
-    casper.waitForSelector("input[name='pass']", function success() {
-        this.sendKeys("input[name='pass']", "123456");
-    }, function fail() {
-        test.assertExists("input[name='pass']");
-    });
-    casper.waitForSelector("form#user-login-form input[type=submit][value='Log in']", function success() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-        this.click("form#user-login-form input[type=submit][value='Log in']");
-    }, function fail() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-    }); /* submit form */
     
     /* 
      * Add to organization
      */
 
     /* add organization */
-    casper.thenOpen(baseURL + "civicrm/contact/add?reset=1&ct=Organization", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/contact/add?reset=1&ct=Organization", function() {
         casper.echo('=====================================');
         casper.echo('** Step 1: Add to Organization. **');
         casper.echo('=====================================');
@@ -113,7 +102,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("form[name=Contact] input[name='organization_name']");
     });
     casper.waitForSelector("input[name='organization_name']", function success() {
-        this.sendKeys("input[name='organization_name']", organization_name);
+        this.sendKeys("input[name='organization_name']", vars.organization_name);
     }, function fail() {
         test.assertExists("input[name='organization_name']");
     });
@@ -133,7 +122,7 @@ casper.test.begin('Resurrectio test', function(test) {
         // this.capture('organization_info.png');
     })
     casper.then(function() {
-        test.assertTitle(organization_name + ' | netiCRM');
+        test.assertTitle(vars.organization_name + ' | netiCRM');
     });
 
     list_contacts_and_select_three(test);
@@ -172,7 +161,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
     casper.waitForSelector("#name", function() {
         test.assertExists("#name");
-        this.sendKeys("#name", organization_name);
+        this.sendKeys("#name", vars.organization_name);
     }, function fail() {
         test.assertExists("#name");
     });
@@ -428,7 +417,7 @@ casper.test.begin('Resurrectio test', function(test) {
      */
     
     /* find contacts */
-    casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/contact/search?reset=1", function() {
         casper.echo('=====================================');
         casper.echo('** Step 5-1: Merge Contacts - Merge. **');
         casper.echo('=====================================');
@@ -508,7 +497,7 @@ casper.test.begin('Resurrectio test', function(test) {
      */
 
     /* find contacts */
-    casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/contact/search?reset=1", function() {
         casper.echo('=====================================');
         casper.echo('** Step 5-2: Merge Contacts - Mark this pair as not a duplicate. **');
         casper.echo('=====================================');

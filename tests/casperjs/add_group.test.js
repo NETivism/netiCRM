@@ -1,6 +1,5 @@
 var system = require('system'); 
 var port = system.env.RUNPORT; 
-var baseURL = port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 
 function makeid(length) {
     var result           = '';
@@ -12,42 +11,36 @@ function makeid(length) {
     return result;
 }
 
+var vars = {
+    baseURL : port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',
+    group_name: makeid(5),
+    group_id: "",
+    mail_name: makeid(5)
+};
+
 casper.on('remote.message', function(msg) {
     this.echo('remote message caught: ' + msg);
 });
 
 casper.test.begin('Resurrectio test', function(test) {
-    casper.start(baseURL, function() {
+    casper.start(vars.baseURL, function() {
         casper.echo('=====================================');
         casper.echo('** Step 0: Login. **');
         casper.echo('=====================================');
         // this.capture('login.png');
     });
-    casper.waitForSelector("form#user-login-form input[name='name']", function success() {
-        test.assertExists("form#user-login-form input[name='name']");
-        this.click("form#user-login-form input[name='name']");
+
+    casper.waitForSelector("#user-login-form", function success() {
+        this.fill('#user-login-form', {
+          'name':'admin',
+          'pass':'123456'
+        }, true);
     }, function fail() {
-        test.assertExists("form#user-login-form input[name='name']");
+        test.assertExists("#user-login-form", 'Login form exist.');
     });
-    casper.waitForSelector("input[name='name']", function success() {
-        this.sendKeys("input[name='name']", "admin");
-    }, function fail() {
-        test.assertExists("input[name='name']");
-    });
-    casper.waitForSelector("input[name='pass']", function success() {
-        this.sendKeys("input[name='pass']", "123456");
-    }, function fail() {
-        test.assertExists("input[name='pass']");
-    });
-    casper.waitForSelector("form#user-login-form input[type=submit][value='Log in']", function success() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-        this.click("form#user-login-form input[type=submit][value='Log in']");
-    }, function fail() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-    }); /* submit form */
 
     /* open new group */
-    casper.thenOpen(baseURL + "civicrm/group/add?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/group/add?reset=1", function() {
         // this.capture('new_group.png');
     });
 
@@ -59,10 +52,9 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* sendKeys to Name */
-    var group_name = makeid(5);
     casper.waitForSelector("#title", function success() {
         test.assertExists("#title");
-        this.sendKeys("#title", group_name);
+        this.sendKeys("#title", vars.group_name);
     }, function fail() {
         test.assertExists("#title");
     });
@@ -181,7 +173,7 @@ casper.test.begin('Resurrectio test', function(test) {
             }
 
             return false;
-        }, group_name);
+        }, vars.group_name);
         test.assertEquals(group_in_list, true);
     }, function fail() {
         test.assertExists('option11', "Assert 'Current Groups' table exist.");
@@ -197,26 +189,25 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo("Step 4-1: Get Group id.");
     });
 
-    casper.thenOpen(baseURL + "civicrm/group?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/group?reset=1", function() {
     });
 
-    var group_id = "";
     casper.waitForSelector("#option11", function success() {
-        group_id = this.evaluate(function (group_name) {
+        vars.group_id = this.evaluate(function (group_name) {
             tr = document.querySelectorAll('#option11 tr');
             for(var i=1; i<tr.length; i++) {
                 if(tr[i].querySelector('td:first-child').textContent == group_name) {
                     return tr[i].querySelector('td:nth-child(2)').textContent;
                 }
             }
-        }, group_name);
+        }, vars.group_name);
 
-        test.assertNotEquals(group_id, null, "Assert get group id successfully.");
+        test.assertNotEquals(vars.group_id, null, "Assert get group id successfully.");
     }, function fail() {
         test.assertExists("#option11", "Assert group list table exist.");
     });
 
-    casper.thenOpen(baseURL + "civicrm/mailing/send?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/mailing/send?reset=1", function() {
         // this.capture("new_mailing.png");
     });  
 
@@ -224,9 +215,8 @@ casper.test.begin('Resurrectio test', function(test) {
         this.echo('Step 4-2: Select Recipients.');
     });
     
-    var mail_name = makeid(5);
     casper.waitForSelector("input[name='name']", function success() {
-        this.sendKeys("input[name='name']", mail_name);
+        this.sendKeys("input[name='name']", vars.mail_name);
     }, function fail() {
         test.assertExists("input[name='name']", "Assert 'Name Your Mailing' field exist.");
     });
@@ -234,7 +224,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("#includeGroups", function success() {
         this.evaluate(function (group_id) {
             document.getElementById("includeGroups").value = group_id;
-        }, group_id);
+        }, vars.group_id);
     }, function fail() {
         test.assertExists("#includeGroups", "Assert 'Include Group(s)' exist.");
     });
@@ -351,7 +341,7 @@ casper.test.begin('Resurrectio test', function(test) {
         this.echo("Step 4-7: Check if mail in 'Scheduled and Sent Mailings'.");
     });
 
-    casper.thenOpen(baseURL + "civicrm/mailing/browse/scheduled?reset=1&scheduled=true", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/mailing/browse/scheduled?reset=1&scheduled=true", function() {
         // this.capture("scheduled_and_sent_mailings.png");
     });
 
@@ -359,7 +349,7 @@ casper.test.begin('Resurrectio test', function(test) {
         var mail_name_from_page = this.evaluate(function () {
             return document.querySelector('.selector tbody tr td:nth-child(2)').textContent;
         });
-        test.assertEquals(mail_name_from_page, mail_name, "Assert mail name correct.");
+        test.assertEquals(mail_name_from_page, vars.mail_name, "Assert mail name correct.");
     }, function fail() {
         test.assertExists(".selector tbody tr td:nth-child(2)", "Assert 'Mailing Name' exist.");
     });

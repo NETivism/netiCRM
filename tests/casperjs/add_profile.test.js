@@ -1,6 +1,5 @@
 var system = require('system'); 
 var port = system.env.RUNPORT; 
-var baseURL = port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 
 function makeid(length) {
     var result           = '';
@@ -12,41 +11,45 @@ function makeid(length) {
     return result;
 }
 
+var vars = {
+    baseURL : port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',
+    profile_id: '-1',
+    profile_url: '',
+    first_name: makeid(5),
+    last_name: makeid(5),
+    legal_identifier: makeid(5),
+    current_employer: makeid(5),
+    phone: makeid(5),
+    city: makeid(5),
+    postal_code: makeid(5),
+    street_address: makeid(5),
+    email: makeid(5) + '@test.com',
+    note: makeid(5)
+};
+vars.email = vars.email.toLowerCase();
+
 casper.on('remote.message', function(msg) {
     this.echo('remote message caught: ' + msg);
 });
 
 casper.test.begin('Resurrectio test', function(test) {
-    casper.start(baseURL, function() {
+    casper.start(vars.baseURL, function() {
         casper.echo('=====================================');
         casper.echo('** Step 0: Login. **');
         casper.echo('=====================================');
         // this.capture('login.png');
     });
-    casper.waitForSelector("form#user-login-form input[name='name']", function success() {
-        test.assertExists("form#user-login-form input[name='name']");
-        this.click("form#user-login-form input[name='name']");
-    }, function fail() {
-        test.assertExists("form#user-login-form input[name='name']");
-    });
-    casper.waitForSelector("input[name='name']", function success() {
-        this.sendKeys("input[name='name']", "admin");
-    }, function fail() {
-        test.assertExists("input[name='name']");
-    });
-    casper.waitForSelector("input[name='pass']", function success() {
-        this.sendKeys("input[name='pass']", "123456");
-    }, function fail() {
-        test.assertExists("input[name='pass']");
-    });
-    casper.waitForSelector("form#user-login-form input[type=submit][value='Log in']", function success() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-        this.click("form#user-login-form input[type=submit][value='Log in']");
-    }, function fail() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-    }); /* submit form */
 
-    casper.thenOpen(baseURL + "civicrm/admin/uf/group?reset=1", function() {
+    casper.waitForSelector("#user-login-form", function success() {
+        this.fill('#user-login-form', {
+          'name':'admin',
+          'pass':'123456'
+        }, true);
+    }, function fail() {
+        test.assertExists("#user-login-form", 'Login form exist.');
+    });
+
+    casper.thenOpen(vars.baseURL + "civicrm/admin/uf/group?reset=1", function() {
     });
 
     casper.waitForSelector("#newCiviCRMProfile-top", function success() {
@@ -574,12 +577,11 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
     });
 
-    casper.thenOpen(baseURL + "civicrm/admin/uf/group?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/admin/uf/group?reset=1", function() {
     });
 
-    var profile_id = '-1';
     casper.waitForSelector("#option11", function success() {
-        profile_id = this.evaluate(function (profile_name) {
+        vars.profile_id = this.evaluate(function (profile_name) {
             var tr_list = document.querySelectorAll("#option11 tr");
             for(var i=1; i<tr_list.length; i++) {
                 if(tr_list[i].querySelector('td:first-child span').textContent == profile_name) {
@@ -587,13 +589,13 @@ casper.test.begin('Resurrectio test', function(test) {
                 }
             }
         }, profile_name);
-        test.assertNotEquals(profile_id, '-1', 'Got profile id.');
+        test.assertNotEquals(vars.profile_id, '-1', 'Got profile id.');
     }, function fail() {
         test.assertExists("#option11", "Assert profile list exist.");
     });
 
     casper.then(function() {
-        var preview_selector = "#UFGroup-" + profile_id + " a:nth-child(3)";
+        var preview_selector = "#UFGroup-" + vars.profile_id + " a:nth-child(3)";
         casper.waitForSelector(preview_selector, function success() {
             this.click(preview_selector);
         }, function fail() {
@@ -637,18 +639,18 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
     });
 
-    casper.thenOpen(baseURL + "civicrm/admin/uf/group?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/admin/uf/group?reset=1", function() {
     });
 
     casper.then(function() {
-        var more = '#more_' + profile_id;
+        var more = '#more_' + vars.profile_id;
         casper.waitForSelector(more, function success() {
             this.click(more);
         }, function fail() {
             test.assertExists(more, "Assert 'more' exist.");
         });
 
-        var publish = '#panel_more_' + profile_id + ' a';
+        var publish = '#panel_more_' + vars.profile_id + ' a';
         casper.waitForSelector(publish, function success() {
             this.click(publish);
         }, function fail() {
@@ -658,17 +660,16 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
 
-    var profile_url = "";
-    casper.waitForSelector("input[name='link_url']", function success() {
+    casper.waitForSelector("textarea[name='url_to_copy']", function success() {
         var publish_url = this.evaluate(function () {
-            return document.querySelector('input[name="link_url"]').value;
+            return document.querySelector('textarea[name="url_to_copy"]').value;
         });
         var split_publish_url = publish_url.split('/');
         publish_url = split_publish_url.slice(3).join('/');
-        test.assertEquals(publish_url, 'civicrm/profile/create?gid='+ profile_id + '&reset=1', "Assert 'Publish Online Profile' URL correct.");
-        profile_url = 'civicrm/profile/create?gid='+ profile_id + '&reset=1';
+        test.assertEquals(publish_url, 'civicrm/profile/create?gid='+ vars.profile_id + '&reset=1', "Assert 'Publish Online Profile' URL correct.");
+        vars.profile_url = 'civicrm/profile/create?gid='+ vars.profile_id + '&reset=1';
     }, function fail() {
-        test.assertExists("input[name='link_url']", "Assert 'Link' field exist.");
+        test.assertExists("textarea[name='url_to_copy']", "Assert 'Link' field exist.");
     });
 
     casper.then(function() {
@@ -679,7 +680,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     // Notation: if not write in then function, profile_url will be empty.
     casper.then(function() {
-        casper.thenOpen(baseURL + profile_url, function() {
+        casper.thenOpen(vars.baseURL + vars.profile_url, function() {
         });
     });
 
@@ -712,7 +713,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });    
 
     casper.then(function() {
-        test.assertDoesntExist('.error-ci', 'page have no error');
+        test.assertDoesntExist('.error-ci', 'page has no error');
     });
 
     casper.then(function() {
@@ -721,47 +722,37 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
     });
 
-    var first_name = makeid(5);
-    var last_name = makeid(5);
-    var legal_identifier = makeid(5);
-    var current_employer = makeid(5);
-    var phone = makeid(5);
-    var city = makeid(5);
-    var postal_code = makeid(5);
-    var street_address = makeid(5);
-    var email = makeid(5) + '@test.com';
-    var note = makeid(5);
     casper.waitForSelector("input[name='first_name']", function success() {
         this.echo('Step 6-1: Input first name.')
-        this.sendKeys("input[name='first_name']", first_name);
+        this.sendKeys("input[name='first_name']", vars.first_name);
     }, function fail() {
         test.assertExists("input[name='first_name']", "'First Name' field exist.");
     });
     
     casper.waitForSelector("input[name='last_name']", function success() {
         this.echo('Step 6-2: Input last name.')
-        this.sendKeys("input[name='last_name']", last_name);
+        this.sendKeys("input[name='last_name']", vars.last_name);
     }, function fail() {
         test.assertExists("input[name='last_name']", "'Last Name' field exist.");
     });
 
     casper.waitForSelector("input[name='legal_identifier']", function success() {
         this.echo('Step 6-3: Input legal identifier.')
-        this.sendKeys("input[name='legal_identifier']", legal_identifier);
+        this.sendKeys("input[name='legal_identifier']", vars.legal_identifier);
     }, function fail() {
         test.assertExists("input[name='legal_identifier']", "'Legal Identifier' field exist.");
     });
 
     casper.waitForSelector("input[name='current_employer']", function success() {
         this.echo('Step 6-4: Input current employer.')
-        this.sendKeys("input[name='current_employer']", current_employer);
+        this.sendKeys("input[name='current_employer']", vars.current_employer);
     }, function fail() {
         test.assertExists("input[name='current_employer']", "'Current Employer' field exist.");
     });
 
     casper.waitForSelector("input[name='phone-Primary']", function success() {
         this.echo('Step 6-5: Input phone.')
-        this.sendKeys("input[name='phone-Primary']", phone);
+        this.sendKeys("input[name='phone-Primary']", vars.phone);
     }, function fail() {
         test.assertExists("input[name='phone-Primary']", "'Phone' field exist.");
     });
@@ -777,28 +768,28 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("input[name='city-Primary']", function success() {
         this.echo('Step 6-7: Input city.')
-        this.sendKeys("input[name='city-Primary']", city);
+        this.sendKeys("input[name='city-Primary']", vars.city);
     }, function fail() {
         test.assertExists("input[name='city-Primary']", "'City' field exist.");
     });
 
     casper.waitForSelector("input[name='postal_code-Primary']", function success() {
         this.echo('Step 6-8: Input postal code.')
-        this.sendKeys("input[name='postal_code-Primary']", postal_code);
+        this.sendKeys("input[name='postal_code-Primary']", vars.postal_code);
     }, function fail() {
         test.assertExists("input[name='postal_code-Primary']", "'Postal Code' field exist.");
     });
 
     casper.waitForSelector("input[name='street_address-Primary']", function success() {
         this.echo('Step 6-9: Input street address.')
-        this.sendKeys("input[name='street_address-Primary']", street_address);
+        this.sendKeys("input[name='street_address-Primary']", vars.street_address);
     }, function fail() {
         test.assertExists("input[name='street_address-Primary']", "'Street Address' field exist.");
     });
 
     casper.waitForSelector("input[name='email-Primary']", function success() {
         this.echo('Step 6-10: Input email.')
-        this.sendKeys("input[name='email-Primary']", email);
+        this.sendKeys("input[name='email-Primary']", vars.email);
     }, function fail() {
         test.assertExists("input[name='email-Primary']", "'Email' field exist.");
     });
@@ -812,7 +803,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("textarea[name='note']", function success() {
         this.echo('Step 6-12: Input note(s).')
-        this.sendKeys("textarea[name='note']", note);
+        this.sendKeys("textarea[name='note']", vars.note);
     }, function fail() {
         test.assertExists("textarea[name='note']", "'Note(s)' field exist.");
     });
@@ -826,7 +817,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     casper.then(function() {
-        test.assertDoesntExist('.error-ci', 'page have no error');
+        test.assertDoesntExist('.error-ci', 'page has no error');
     });
 
     casper.then(function() {
@@ -839,11 +830,11 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo("Step 7-1: Search for new contact.");
     });
 
-    casper.thenOpen(baseURL + "civicrm/contact/search?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/contact/search?reset=1", function() {
     });
 
     casper.waitForSelector("#sort_name", function success() {
-        this.sendKeys("#sort_name", first_name + " " + last_name);
+        this.sendKeys("#sort_name", vars.first_name + " " + vars.last_name);
     }, function fail() {
         test.assertExists("#sort_name", "'Name, Phone or Email' field exist.");
     });
@@ -857,7 +848,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     casper.then(function() {
-        casper.echo("Step 7-2: Go to new contact page.");
+        casper.echo("Step 7-2: Go to new contact page, check all data correct.");
     });
 
     casper.waitForSelector("table.selector tbody tr td.crm-search-display_name a", function success() {
@@ -868,13 +859,11 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
 
-    // var assert_exist_field_names = ['First Name', 'Last Name', 'Legal Identifier', 'Current Employer', 'Phone', 'State', 'City', 'Postal Code', 'Street Address', 'Email', 'Do Not Email', "Image Url", 'Note(s)'];
-
     casper.waitForSelector("#page-title", function success() {
         var name = this.evaluate(function () {
             return document.getElementById('page-title').textContent.trim();
         });
-        test.assertEquals(name, first_name + ' ' + last_name, 'First Name and Last Name correct.');
+        test.assertEquals(name, vars.first_name + ' ' + vars.last_name, 'First Name and Last Name correct.');
     }, function fail() {
         test.assertExists("#page-title", "Contact name exist.");
     });
@@ -884,9 +873,88 @@ casper.test.begin('Resurrectio test', function(test) {
             var s = document.querySelector('#record-log div').textContent.trim();
             return s.slice(21 + 'Legal Identifier:'.length + 1);
         });
-        test.assertEquals(legal_identifier_from_page, legal_identifier, 'Legal Identifier correct.')
+        test.assertEquals(legal_identifier_from_page, vars.legal_identifier, 'Legal Identifier correct.')
     }, function fail() {
         test.assertExists("#record-log div", "Legal Identifier exist.");
+    });
+
+    casper.waitForSelector("a[title='view current employer']", function success() {
+        var current_employer_from_page = this.evaluate(function () {
+            return document.querySelector("a[title='view current employer']").textContent;
+        });
+        test.assertEquals(current_employer_from_page, vars.current_employer, 'Current Employer correct.');
+    }, function fail() {
+        test.assertExists("a[title='view current employer']", "Employer exist.");
+    });
+
+    casper.waitForSelector("td.primary span", function success() {
+        var phone_from_page = this.evaluate(function () {
+            return document.querySelector('td.primary span').textContent;
+        });
+        test.assertEquals(phone_from_page, vars.phone, 'Phone correct.')
+    }, function fail() {
+        test.assertExists("td.primary span", "Phone exist.");
+    });
+
+    casper.waitForSelector("span.region", function success() {
+        var state_from_page = this.evaluate(function () {
+            return document.querySelector("span.region").textContent;
+        });
+        test.assertEquals(state_from_page, 'AL', 'State correct.')
+    }, function fail() {
+        test.assertExists("span.region", "State exist.");
+    });
+
+    casper.waitForSelector("span.locality", function success() {
+        var city_from_page = this.evaluate(function () {
+            return document.querySelector("span.locality").textContent;
+        });
+        test.assertEquals(city_from_page, vars.city, 'City correct.')
+    }, function fail() {
+        test.assertExists("span.locality", "City exist.");
+    });
+
+    casper.waitForSelector("span.postal-code", function success() {
+        var postal_code_from_page = this.evaluate(function () {
+            return document.querySelector("span.postal-code").textContent;
+        });
+        test.assertEquals(postal_code_from_page, vars.postal_code, 'Postal Code correct.')
+    }, function fail() {
+        test.assertExists("span.postal-code", "Postal Code exist.");
+    });
+
+    casper.waitForSelector("span.street-address", function success() {
+        var street_address_from_page = this.evaluate(function () {
+            return document.querySelector("span.street-address").textContent;
+        });
+        test.assertEquals(street_address_from_page, vars.street_address, 'Street Address correct.')
+    }, function fail() {
+        test.assertExists("span.street-address", "Street Address exist.");
+    });
+    
+    casper.waitForSelector("span.do-not-email", function success() {
+        var email_from_page = this.evaluate(function () {
+            return document.querySelector('span.do-not-email a').textContent;
+        });
+        test.assertEquals(email_from_page, vars.email, 'Email correct.');
+        test.pass('Do Not Email correct.');
+    }, function fail() {
+        test.assertExists("span.do-not-email", "Email exist.");
+    });
+
+    casper.waitForSelector("a[title='Notes']", function success() {
+        this.click("a[title='Notes']");
+    }, function fail() {
+        test.assertExists("a[title='Notes']", "Notes link exist.");
+    });
+
+    casper.waitForSelector("#notes tr td:nth-child(2)", function success() {
+        var note_from_page = this.evaluate(function () {
+            return document.querySelector('#notes tr td:nth-child(2)').textContent;
+        });
+        test.assertEquals(note_from_page, vars.note, 'Note(s) correct.')
+    }, function fail() {
+        test.assertExists("#notes tr td:nth-child(2)", "Note(s) exist.");
     });
 
     casper.run(function() {

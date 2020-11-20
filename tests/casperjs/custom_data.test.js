@@ -1,7 +1,6 @@
 /* basic setting */
 var system = require('system'); 
 var port = system.env.RUNPORT; 
-var baseURL = port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 
 function makeid(length) {
     var result           = '';
@@ -13,42 +12,39 @@ function makeid(length) {
     return result;
 }
 
+var vars = {
+    baseURL : port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',
+    id: makeid(5),
+    ids: [],
+    ids_for_check: [],
+    custom_id: 0,
+    text_id_for_input: [],
+    radio_id_for_input: []
+};
+
 casper.on('remote.message', function (msg) {
     this.echo('remote message caught: ' + msg);
 });
 
 casper.test.begin('Resurrectio test', function(test) {
-    casper.start(baseURL, function() {
+    casper.start(vars.baseURL, function() {
         casper.echo('=====================================');
         casper.echo('** Step 0: Login. **');
         casper.echo('=====================================');
         // this.capture('login.png');
     });
-    casper.waitForSelector("form#user-login-form input[name='name']", function success() {
-        test.assertExists("form#user-login-form input[name='name']");
-        this.click("form#user-login-form input[name='name']");
+    
+    casper.waitForSelector("#user-login-form", function success() {
+        this.fill('#user-login-form', {
+          'name':'admin',
+          'pass':'123456'
+        }, true);
     }, function fail() {
-        test.assertExists("form#user-login-form input[name='name']");
+        test.assertExists("#user-login-form", 'Login form exist.');
     });
-    casper.waitForSelector("input[name='name']", function success() {
-        this.sendKeys("input[name='name']", "admin");
-    }, function fail() {
-        test.assertExists("input[name='name']");
-    });
-    casper.waitForSelector("input[name='pass']", function success() {
-        this.sendKeys("input[name='pass']", "123456");
-    }, function fail() {
-        test.assertExists("input[name='pass']");
-    });
-    casper.waitForSelector("form#user-login-form input[type=submit][value='Log in']", function success() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-        this.click("form#user-login-form input[type=submit][value='Log in']");
-    }, function fail() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-    }); /* submit form */
 
     /* open custom data page */
-    casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/admin/custom/group?reset=1", function() {
         // this.capture('custom_data.png');
     });
 
@@ -72,12 +68,10 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
     });
 
-    var id = makeid(5);
-
     /* sendKeys to Set Name */
     casper.waitForSelector("#title", function success() {
         test.assertExists("#title");
-        this.sendKeys("#title", 'testset' + id);
+        this.sendKeys("#title", 'testset' + vars.id);
     }, function fail() {
         test.assertExists("#title");
     });
@@ -124,7 +118,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 2-1: Add Text field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'text' + id);
+        this.sendKeys("input[name='label']", 'text' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -169,7 +163,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 2-2: Add Select field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'select' + id);
+        this.sendKeys("input[name='label']", 'select' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -248,7 +242,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 2-3: Add Radio field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'radio' + id);
+        this.sendKeys("input[name='label']", 'radio' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -327,7 +321,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 2-4: Add Checkbox field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'checkbox' + id);
+        this.sendKeys("input[name='label']", 'checkbox' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -406,7 +400,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 2-5: Add Multi-Select field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'multi_select' + id);
+        this.sendKeys("input[name='label']", 'multi_select' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -484,7 +478,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 2-6: Add Advanced Multi-Select field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'advanced_multi_select' + id);
+        this.sendKeys("input[name='label']", 'advanced_multi_select' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -563,7 +557,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 2-7: Add Autocomplete Select field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'autocomplete_select' + id);
+        this.sendKeys("input[name='label']", 'autocomplete_select' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -650,7 +644,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-1: Add Integer field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Integer' + id);
+        this.sendKeys("input[name='label']", 'Integer' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -687,7 +681,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-2: Add Number field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Number' + id);
+        this.sendKeys("input[name='label']", 'Number' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -724,7 +718,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-3: Add Money field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Money' + id);
+        this.sendKeys("input[name='label']", 'Money' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -761,7 +755,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-4-1: Add Note TextArea field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Note_TextArea' + id);
+        this.sendKeys("input[name='label']", 'Note_TextArea' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -806,7 +800,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-4-2: Add Note WYSIWYG Editor field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Note_WYSIWYG_Editor' + id);
+        this.sendKeys("input[name='label']", 'Note_WYSIWYG_Editor' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -851,7 +845,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-5: Add Date field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Date' + id);
+        this.sendKeys("input[name='label']", 'Date' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -906,7 +900,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-6: Add Yes or No field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Yes_or_No' + id);
+        this.sendKeys("input[name='label']", 'Yes_or_No' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -944,7 +938,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-7-1: Add State/Province Select field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'State_Province_Select' + id);
+        this.sendKeys("input[name='label']", 'State_Province_Select' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -989,7 +983,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-7-2: Add State/Province Multi Select field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'State_Province_Multi_Select' + id);
+        this.sendKeys("input[name='label']", 'State_Province_Multi_Select' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -1034,7 +1028,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-8-1: Add Country Select field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Country_Select' + id);
+        this.sendKeys("input[name='label']", 'Country_Select' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -1079,7 +1073,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-8-2: Add Country Multi Select field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Country_Multi_Select' + id);
+        this.sendKeys("input[name='label']", 'Country_Multi_Select' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -1124,7 +1118,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-9: Add File field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'File' + id);
+        this.sendKeys("input[name='label']", 'File' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -1161,7 +1155,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-10: Add Link field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Link' + id);
+        this.sendKeys("input[name='label']", 'Link' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -1198,7 +1192,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("input[name='label']", function success() {
         casper.echo('** Step 3-11: Add Contact Reference field. **');
         test.assertExists("input[name='label']");
-        this.sendKeys("input[name='label']", 'Contact_Reference' + id);
+        this.sendKeys("input[name='label']", 'Contact_Reference' + vars.id);
     }, function fail() {
         test.assertExists("input[name='label']");
     });
@@ -1241,7 +1235,7 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* open custom data page */
-    casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/admin/custom/group?reset=1", function() {
         // this.capture('back_to_custom_data_page.png');
     });
 
@@ -1254,7 +1248,7 @@ casper.test.begin('Resurrectio test', function(test) {
         var id = this.evaluate(function () {
             return document.getElementById('option11').rows.length - 1;
         });
-        this.open(baseURL + "civicrm/admin/custom/group/field?reset=1&action=browse&gid=" + id);
+        this.open(vars.baseURL + "civicrm/admin/custom/group/field?reset=1&action=browse&gid=" + id);
     }, function fail() {
         test.assertExists("#option11");
     });
@@ -1264,7 +1258,6 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* get all fields id */
-    var ids = [];
     casper.then(function() {
         var urls = this.evaluate(function() {
             var all_links = document.querySelectorAll("a[title='Preview Custom Field']");
@@ -1274,14 +1267,14 @@ casper.test.begin('Resurrectio test', function(test) {
             }
             return all_urls;
         });
-        ids = urls.map(function(url) {
+        vars.ids = urls.map(function(url) {
             var splits = url.split('=');
             return splits[splits.length - 1];
         });
     });
 
     /* open custom data page */
-    casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/admin/custom/group?reset=1", function() {
         // this.capture('back_to_custom_data_page.png');
     });
 
@@ -1292,7 +1285,7 @@ casper.test.begin('Resurrectio test', function(test) {
         var id = this.evaluate(function () {
             return document.getElementById('option11').rows.length - 1;
         });
-        this.open(baseURL + "civicrm/admin/custom/group?action=preview&reset=1&id=" + id);
+        this.open(vars.baseURL + "civicrm/admin/custom/group?action=preview&reset=1&id=" + id);
     }, function fail() {
         test.assertExists("#option11");
     });
@@ -1302,7 +1295,6 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* get all text input id */
-    var ids_for_check = [];
     casper.then(function() {
         casper.echo('** Step 4-2: Get all text input id. **');
         var text_ids = this.evaluate(function() {
@@ -1315,7 +1307,7 @@ casper.test.begin('Resurrectio test', function(test) {
             return text_ids;
         });
         text_ids.forEach(function(text_id) {
-            ids_for_check.push(text_id);
+            vars.ids_for_check.push(text_id);
         });
     });
 
@@ -1332,7 +1324,7 @@ casper.test.begin('Resurrectio test', function(test) {
             return select_ids;
         });
         select_ids.forEach(function(select_id) {
-            ids_for_check.push(select_id);
+            vars.ids_for_check.push(select_id);
         });
     });
 
@@ -1349,7 +1341,7 @@ casper.test.begin('Resurrectio test', function(test) {
             return radio_ids;
         });
         radio_ids.forEach(function(radio_id) {
-            ids_for_check.push(radio_id);
+            vars.ids_for_check.push(radio_id);
         });
     });
 
@@ -1366,7 +1358,7 @@ casper.test.begin('Resurrectio test', function(test) {
             return checkbox_ids;
         });
         checkbox_ids.forEach(function(checkbox_id) {
-            ids_for_check.push(checkbox_id);
+            vars.ids_for_check.push(checkbox_id);
         });
     });
 
@@ -1383,7 +1375,7 @@ casper.test.begin('Resurrectio test', function(test) {
             return textarea_ids;
         });
         textarea_ids.forEach(function(textarea_id) {
-            ids_for_check.push(textarea_id);
+            vars.ids_for_check.push(textarea_id);
         });
     });
 
@@ -1391,22 +1383,22 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.then(function() {
         casper.echo('** Step 4-7: Check all id exist. **');
         var id_no_duplicate = [];
-        for(var i = 0; i < ids_for_check.length; i++) {
+        for(var i = 0; i < vars.ids_for_check.length; i++) {
             var exist_flag = false;
             for(var j = 0; j < id_no_duplicate.length; j++) {
-                if(ids_for_check[i] == id_no_duplicate[j]) {
+                if(vars.ids_for_check[i] == id_no_duplicate[j]) {
                     exist_flag = true;
                     break
                 }
             }
             if(!exist_flag) {
-                id_no_duplicate.push(ids_for_check[i]);
+                id_no_duplicate.push(vars.ids_for_check[i]);
             }
         }
         id_no_duplicate.sort(function(a, b) {
             return a - b;
         });
-        test.assertEquals(ids, id_no_duplicate);
+        test.assertEquals(vars.ids, id_no_duplicate);
     });
 
     /*
@@ -1419,17 +1411,16 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* open custom data page */
-    casper.thenOpen(baseURL + "civicrm/admin/custom/group?reset=1", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/admin/custom/group?reset=1", function() {
         // this.capture('back_to_custom_data_page.png');
     });
     casper.wait(2000);
 
     /* get custom data id */
-    var custom_id = 0;
     casper.waitForSelector("#option11", function success() {
         casper.echo('** Step 5-1: Get custom data id. **');
         test.assertExists("#option11");
-        custom_id = this.evaluate(function () {
+        vars.custom_id = this.evaluate(function () {
             return document.getElementById('option11').rows.length - 1;
         });
     }, function fail() {
@@ -1437,13 +1428,12 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* open new individual page */
-    casper.thenOpen(baseURL + "civicrm/contact/add?reset=1&ct=Individual", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/contact/add?reset=1&ct=Individual", function() {
         // this.capture('add_individual.png');
     });
     casper.wait(2000);
 
     /* get all text input id */
-    var ids_for_check = [];
     casper.then(function() {
         casper.echo('** Step 5-2: Get all text input id. **');
         var text_ids = this.evaluate(function(custom_id) {
@@ -1454,9 +1444,10 @@ casper.test.begin('Resurrectio test', function(test) {
                 text_ids.push(sp[1]);
             }
             return text_ids;
-        }, custom_id);
+        }, vars.custom_id);
+        vars.ids_for_check = [];
         text_ids.forEach(function(text_id) {
-            ids_for_check.push(text_id);
+            vars.ids_for_check.push(text_id);
         });
     });
 
@@ -1471,9 +1462,9 @@ casper.test.begin('Resurrectio test', function(test) {
                 select_ids.push(sp[1]);
             }
             return select_ids;
-        }, custom_id);
+        }, vars.custom_id);
         select_ids.forEach(function(select_id) {
-            ids_for_check.push(select_id);
+            vars.ids_for_check.push(select_id);
         });
     });
 
@@ -1488,9 +1479,9 @@ casper.test.begin('Resurrectio test', function(test) {
                 radio_ids.push(sp[1]);
             }
             return radio_ids;
-        }, custom_id);
+        }, vars.custom_id);
         radio_ids.forEach(function(radio_id) {
-            ids_for_check.push(radio_id);
+            vars.ids_for_check.push(radio_id);
         });
     });
 
@@ -1505,9 +1496,9 @@ casper.test.begin('Resurrectio test', function(test) {
                 checkbox_ids.push(sp[1]);
             }
             return checkbox_ids;
-        }, custom_id);
+        }, vars.custom_id);
         checkbox_ids.forEach(function(checkbox_id) {
-            ids_for_check.push(checkbox_id);
+            vars.ids_for_check.push(checkbox_id);
         });
     });
 
@@ -1522,9 +1513,9 @@ casper.test.begin('Resurrectio test', function(test) {
                 textarea_ids.push(sp[1]);
             }
             return textarea_ids;
-        }, custom_id);
+        }, vars.custom_id);
         textarea_ids.forEach(function(textarea_id) {
-            ids_for_check.push(textarea_id);
+            vars.ids_for_check.push(textarea_id);
         });
     });
 
@@ -1532,22 +1523,22 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.then(function() {
         casper.echo('** Step 5-7: Check all id exist. **');
         var id_no_duplicate = [];
-        for(var i = 0; i < ids_for_check.length; i++) {
+        for(var i = 0; i < vars.ids_for_check.length; i++) {
             var exist_flag = false;
             for(var j = 0; j < id_no_duplicate.length; j++) {
-                if(ids_for_check[i] == id_no_duplicate[j]) {
+                if(vars.ids_for_check[i] == id_no_duplicate[j]) {
                     exist_flag = true;
                     break
                 }
             }
             if(!exist_flag) {
-                id_no_duplicate.push(ids_for_check[i]);
+                id_no_duplicate.push(vars.ids_for_check[i]);
             }
         }
         id_no_duplicate.sort(function(a, b) {
             return a - b;
         });
-        test.assertEquals(ids, id_no_duplicate);
+        test.assertEquals(vars.ids, id_no_duplicate);
     });
 
     /*
@@ -1573,7 +1564,6 @@ casper.test.begin('Resurrectio test', function(test) {
     });
     
     /* get all pure text input id */
-    var text_id_for_input = [];
     casper.then(function() {
         casper.echo('** Step 6-2: Get all pure text id. **');
         var text_ids = this.evaluate(function(custom_id) {
@@ -1584,16 +1574,16 @@ casper.test.begin('Resurrectio test', function(test) {
                 text_ids.push(sp[1]);
             }
             return text_ids;
-        }, custom_id);
+        }, vars.custom_id);
         text_ids.forEach(function(text_id) {
-            text_id_for_input.push(text_id);
+            vars.text_id_for_input.push(text_id);
         });
     });
 
     /* input all pure text */
     casper.then(function() {
         casper.echo('** Step 6-3: Input all pure text. **');
-        text_id_for_input.forEach(function(text_id) {
+        vars.text_id_for_input.forEach(function(text_id) {
             casper.waitForSelector('input[name="custom_' + text_id + '_-1"]', function success() {
                 var rand_int = Math.floor(Math.random() * 10000);
                 this.sendKeys('input[name="custom_' + text_id + '_-1"]', rand_int.toString());
@@ -1620,7 +1610,7 @@ casper.test.begin('Resurrectio test', function(test) {
                 select_ids.push(sp[1]);
             }
             return select_ids;
-        }, custom_id);
+        }, vars.custom_id);
         select_ids.forEach(function(select_id) {
             select_id_for_input.push(select_id);
         });
@@ -1649,7 +1639,6 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* get all radio input id */
-    var radio_id_for_input = [];
     casper.then(function() {
         casper.echo('** Step 6-6: Get all radio input id. **');
         var radio_ids = this.evaluate(function(custom_id) {
@@ -1660,16 +1649,16 @@ casper.test.begin('Resurrectio test', function(test) {
                 radio_ids.push(sp[1]);
             }
             return radio_ids;
-        }, custom_id);
+        }, vars.custom_id);
         radio_ids.forEach(function(radio_id) {
-            radio_id_for_input.push(radio_id);
+            vars.radio_id_for_input.push(radio_id);
         });
     });
 
     /* input all radio */
     casper.then(function() {
         casper.echo('** Step 6-7: Input all radio. **');
-        radio_id_for_input.forEach(function(radio_id) {
+        vars.radio_id_for_input.forEach(function(radio_id) {
             casper.waitForSelector('input[name="custom_' + radio_id + '_-1"]', function success() {
                 this.evaluate(function (radio_id) {
                     document.querySelector('input[name="custom_' + radio_id + '_-1"]').checked = true;
@@ -1685,7 +1674,7 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('** Step 6-8: Input all checkbox. **');
         var checkbox_id = this.evaluate(function (custom_id) {
             return document.getElementById('customData' + custom_id).querySelectorAll('input[type="checkbox"]')[0].id;
-        }, custom_id);
+        }, vars.custom_id);
         casper.waitForSelector('input[name="' + checkbox_id + '"]', function success() {
             this.evaluate(function (checkbox_id) {
                 document.getElementById(checkbox_id).checked = true;
@@ -1702,7 +1691,7 @@ casper.test.begin('Resurrectio test', function(test) {
     /* input advanced multi select */
     casper.then(function () {
         casper.echo('** Step 6-9: Input advanced multi select. **');
-        var adv_selector = '#customData' + custom_id + ' table.advmultiselect select';
+        var adv_selector = '#customData' + vars.custom_id + ' table.advmultiselect select';
         casper.waitForSelector(adv_selector, function success() {
             this.evaluate(function(adv_selector) {
                 document.querySelector(adv_selector).selectedIndex = 0;
@@ -1711,7 +1700,7 @@ casper.test.begin('Resurrectio test', function(test) {
             test.assertExists(adv_selector);
         });
         
-        var add_selector = '#customData' + custom_id + ' table.advmultiselect input[value="Add >>"]';
+        var add_selector = '#customData' + vars.custom_id + ' table.advmultiselect input[value="Add >>"]';
         casper.waitForSelector(add_selector, function success() {
             this.click(add_selector);
         }, function fail() {
@@ -1726,7 +1715,7 @@ casper.test.begin('Resurrectio test', function(test) {
     /* input textarea */
     casper.then(function() {
         casper.echo('** Step 6-10: Input textarea. **');
-        var textarea_selector = '#customData' + custom_id + ' textarea.form-textarea';
+        var textarea_selector = '#customData' + vars.custom_id + ' textarea.form-textarea';
         casper.waitForSelector(textarea_selector, function success() {
             this.sendKeys(textarea_selector, makeid(5));
         }, function fail() {
@@ -1740,7 +1729,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     /* input ckeditor */
     casper.then(function() {
-        var cke_selector = '#customData' + custom_id + ' iframe.cke_wysiwyg_frame';
+        var cke_selector = '#customData' + vars.custom_id + ' iframe.cke_wysiwyg_frame';
         casper.waitForSelector(cke_selector, function success() {
             this.evaluate(function(cke_selector) {
                 document.querySelector(cke_selector).contentWindow.document.querySelector("p").textContent = 'abc';
@@ -1790,7 +1779,6 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     /* get all text input id */
-    var ids_for_check = [];
     casper.then(function() {
         casper.echo('** Step 7-2: Get all text input id. **');
         var text_ids = this.evaluate(function(custom_id) {
@@ -1801,9 +1789,10 @@ casper.test.begin('Resurrectio test', function(test) {
                 text_ids.push(sp[1]);
             }
             return text_ids;
-        }, custom_id);
+        }, vars.custom_id);
+        vars.ids_for_check = [];
         text_ids.forEach(function(text_id) {
-            ids_for_check.push(text_id);
+            vars.ids_for_check.push(text_id);
         });
     });
 
@@ -1818,9 +1807,9 @@ casper.test.begin('Resurrectio test', function(test) {
                 select_ids.push(sp[1]);
             }
             return select_ids;
-        }, custom_id);
+        }, vars.custom_id);
         select_ids.forEach(function(select_id) {
-            ids_for_check.push(select_id);
+            vars.ids_for_check.push(select_id);
         });
     });
 
@@ -1835,9 +1824,9 @@ casper.test.begin('Resurrectio test', function(test) {
                 radio_ids.push(sp[1]);
             }
             return radio_ids;
-        }, custom_id);
+        }, vars.custom_id);
         radio_ids.forEach(function(radio_id) {
-            ids_for_check.push(radio_id);
+            vars.ids_for_check.push(radio_id);
         });
     });
 
@@ -1852,9 +1841,9 @@ casper.test.begin('Resurrectio test', function(test) {
                 checkbox_ids.push(sp[1]);
             }
             return checkbox_ids;
-        }, custom_id);
+        }, vars.custom_id);
         checkbox_ids.forEach(function(checkbox_id) {
-            ids_for_check.push(checkbox_id);
+            vars.ids_for_check.push(checkbox_id);
         });
     });
 
@@ -1869,9 +1858,9 @@ casper.test.begin('Resurrectio test', function(test) {
                 textarea_ids.push(sp[1]);
             }
             return textarea_ids;
-        }, custom_id);
+        }, vars.custom_id);
         textarea_ids.forEach(function(textarea_id) {
-            ids_for_check.push(textarea_id);
+            vars.ids_for_check.push(textarea_id);
         });
     });
 
@@ -1879,22 +1868,22 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.then(function() {
         casper.echo('** Step 7-7: Check all id exist. **');
         var id_no_duplicate = [];
-        for(var i = 0; i < ids_for_check.length; i++) {
+        for(var i = 0; i < vars.ids_for_check.length; i++) {
             var exist_flag = false;
             for(var j = 0; j < id_no_duplicate.length; j++) {
-                if(ids_for_check[i] == id_no_duplicate[j]) {
+                if(vars.ids_for_check[i] == id_no_duplicate[j]) {
                     exist_flag = true;
                     break
                 }
             }
             if(!exist_flag) {
-                id_no_duplicate.push(ids_for_check[i]);
+                id_no_duplicate.push(vars.ids_for_check[i]);
             }
         }
         id_no_duplicate.sort(function(a, b) {
             return a - b;
         });
-        test.assertEquals(ids, id_no_duplicate);
+        test.assertEquals(vars.ids, id_no_duplicate);
     });
 
     casper.waitForSelector("#_qf_Contact_upload_view", function success() {
