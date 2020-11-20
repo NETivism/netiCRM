@@ -6,7 +6,7 @@ pipeline:
       - RUNPORT=8080
       - DRUPAL_ROOT=/var/www/html
       - CIVICRM_TEST_DSN=mysqli://root@localhost/neticrmci
-      - DRUPAL=7.72
+      - DRUPAL=7.73
       - NETICRM=develop
     commands:
       - /usr/bin/supervisord &
@@ -30,6 +30,7 @@ pipeline:
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/custom_data.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_group.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_profile.test.js
   build:
     image: netivism/neticrm-ci:drone
     environment:
@@ -61,6 +62,7 @@ pipeline:
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/custom_data.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_group.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_profile.test.js
   notify:
     image: drillster/drone-email
     skip_verify: true

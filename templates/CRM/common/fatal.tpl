@@ -23,10 +23,14 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="messages crm-error error-ci">
-<strong>{ts}We are very sorry that there an error occurred. Please contact system administrator for further support. Thanks for your help in improving this open source project.{/ts}</strong><br>{ts}Error Code:{/ts}
-{if $message}{$message}{/if}
-{if $error.message && $message != $error.message}
-  {$error.message}
+<div class="messages {if !$suppress}crm-error error-ci{/if}">
+{if $suppress}
+  {$suppress}
+{else}
+  <strong>{ts}We are very sorry that there an error occurred. Please contact system administrator for further support. Thanks for your help in improving this open source project.{/ts}</strong><br>{ts}Error Code:{/ts}
+  {if $message}{$message}{/if}
+  {if $error.message && $message != $error.message}
+    {$error.message}
+  {/if}
 {/if}
 </div>
