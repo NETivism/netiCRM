@@ -60,6 +60,7 @@ $(function(){
             this.setClass();
 
             var blockID = this.options.scope.attributes['data-id']['nodeValue'],
+                blockClass = this.options.scope.attributes['class']['nodeValue'],
                 html = blockID ? this.xeditable.html[blockID] : '',
                 text = stripHTML(html);
 
@@ -107,6 +108,13 @@ $(function(){
 
               //['clean']                                         // remove formatting button
             ];
+
+            if (blockClass.indexOf("nmee-title") != -1) {
+                toolbarOptions = [
+                    [{ 'background': [] }],
+                    ['link']
+                ];
+            }
 
             var tokenToolbar = [];
             var tokenQuillOption = [];

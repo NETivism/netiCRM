@@ -63,7 +63,6 @@
       default: ["clone", "delete"],
       extended: {
         image: ["link", "image"],
-        title: ["link"],
         button: ["link", "style"],
         header: ["link", "image"]
       }
@@ -650,7 +649,7 @@
         },
         {
           version: "1.0.1",
-          desc: "Change data structure of title block.",
+          desc: "Change data structure of title block (title.data -> title.data.html).",
           task: function() {
             _data.version = "1.0.1";
             _dataVersion.current = _data.version;
@@ -687,6 +686,51 @@
                         _data.sections[sectionKey].blocks[blockKey].data = {
                           html: title
                         };
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          version: "1.0.2",
+          desc: "Merge link data of title block (title.link -> title.data.html).",
+          task: function() {
+            _data.version = "1.0.2";
+            _dataVersion.current = _data.version;
+
+            for (var sectionKey in _data.sections) {
+              if (!_sectionIsEmpty(sectionKey)) {
+                var blocks = _data.sections[sectionKey].blocks;
+
+                for (var blockKey in blocks) {
+                  var block = blocks[blockKey];
+
+                  if (block.isRichContent) {
+                    for (var nestBlocksIndex in block.data) {
+                      var nestBlocks = block.data[nestBlocksIndex].blocks;
+
+                      for (var nestBlockKey in nestBlocks) {
+                        var nestBlock = nestBlocks[nestBlockKey];
+
+                        if (nestBlock.type == "title") {
+                          if (nestBlock.link && nestBlock.data.hasOwnProperty("html")) {
+                            var title = _htmlDecode(nestBlock.data.html);
+                            title = "<a href=\"" + nestBlock.link + "\">" + title + "</a>";
+                            _data.sections[sectionKey].blocks[blockKey].data[nestBlocksIndex].blocks[nestBlockKey].data.html = _htmlEscape(title);
+                          }
+                        }
+                      }
+                    }
+                  }
+                  else {
+                    if (block.type == "title") {
+                      if (block.link && block.data.hasOwnProperty("html")) {
+                        var title = _htmlDecode(block.data.html);
+                        title = "<a href=\"" + block.link + "\">" + title + "</a>";
+                        _data.sections[sectionKey].blocks[blockKey].data.html = _htmlEscape(title);
                       }
                     }
                   }
@@ -2991,11 +3035,20 @@
 
       setTimeout(function() {
         _dataVersion = _nmeData.version.get();
-        _debug(_dataVersion, "Before data version update");
-        _nmeData.version.update();
-        _debug(_dataVersion, "After data version update");
-        $.nmEditor.instance.data = _data;
-        _nmeData.update();
+
+        if (_dataVersion.current != _dataVersion.lastest) {
+          _debug(_dataVersion, "Before data version update");
+          _nmeData.version.update();
+          _debug(_dataVersion, "After data version update");
+          $.nmEditor.instance.data = _data;
+          _nmeData.update();
+
+          let renderOptions = {
+            "loadDataMode": "object",
+            "loadDataObj": _data
+          };
+          window.nmEditorInstance.render(renderOptions);
+        }
       }, 500);
 
       // Load templates
