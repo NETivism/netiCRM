@@ -202,6 +202,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       if (!empty($paymentClass::$_editableFields)) {
         $activeFields = $paymentClass::$_editableFields;
       }
+      else if(method_exists($paymentClass, 'getEditableFields')) {
+        $activeFields = $paymentClass::getEditableFields($paymentProcessor);
+      }
     }
 
     foreach ($field as $name => $label) {

@@ -14,7 +14,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   public static $_hideFields = array('invoice_id');
 
   // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
-  public static $_editableFields = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit');
+  public static $_editableFields = NULL;
 
   public static $_statusMap = array(
     // 3 => 'terminate',   // Can't undod. Don't Use
@@ -49,6 +49,18 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_processorName = ts('Spgateway');
     $config = &CRM_Core_Config::singleton();
     $this->_config = $config;
+  }
+
+  static function getEditableFields($paymentProcessor = NULL) {
+    if (empty($paymentProcessor)) {
+      $returnArray = array();
+    }
+    else {
+      if ($paymentProcessor['url_recur'] == 1) {
+        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit');
+      }
+    }
+    return $returnArray;
   }
 
   /**
