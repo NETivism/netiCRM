@@ -52,7 +52,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
     parent::postProcess();
     $values = $this->exportValues();
     $date = date('Ymd', strtotime($values['transact_date']));
-    $this->_exportParams['file_name'] = 'ACH_Transaction_'.$date;
+    $this->_exportParams['file_name'] = str_replace(" ", "_", $values['payment_type']).'_Transaction_'.$date;
     $this->_exportParams['transact_date'] = $date;
     CRM_Contribute_BAO_TaiwanACH::doExportTransaction($this->_additionalIds, $this->_exportParams, $values['payment_type'], $values['export_format']);
   }
