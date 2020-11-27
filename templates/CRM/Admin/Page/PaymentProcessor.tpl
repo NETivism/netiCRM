@@ -28,6 +28,10 @@
     {ts}You can configure one or more Payment Processors for your CiviCRM installation. You must then assign an active Payment Processor to each <strong>Online Contribution Page</strong> and each paid <strong>Event</strong>.{/ts} {$docLink}
 </div>
 
+<div id="help">
+    {ts 1=$hostIP}If the provider needs server IP address, the IP address of this website is %1{/ts}
+</div>
+
 {if $action eq 1 or $action eq 2 or $action eq 8}
    {include file="CRM/Admin/Form/PaymentProcessor.tpl"}
 {else}
