@@ -402,12 +402,10 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       if (CRM_Utils_Array::value('mailingId', $row)) {
         $accessMailingReport = TRUE;
         // get stat of this contact
-        if (defined("CIVICRM_ACTIVITY_MAILINGDETAIL") && CIVICRM_ACTIVITY_MAILINGDETAIL) {
-          if (!empty($row['data_contact_id']) && !empty($row['source_record_id'])) {
-            $mailingResult = CRM_Mailing_BAO_Mailing::getContactReport($row['data_contact_id'], $row['source_record_id']);
-            unset($mailingResult['Delivered']);
-            $row['results'] = $mailingResult;
-          }
+        if (!empty($row['data_contact_id']) && !empty($row['source_record_id'])) {
+          $mailingResult = CRM_Mailing_BAO_Mailing::getContactReport($row['data_contact_id'], $row['source_record_id']);
+          unset($mailingResult['Delivered']);
+          $row['results'] = $mailingResult;
         }
       }
 
