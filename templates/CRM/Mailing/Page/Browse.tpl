@@ -69,7 +69,7 @@
         <td class="crm-mailing-name">{$row.name}</td>
         <td class="crm-mailing-subject">{$row.subject}</td>
         <td class="crm-mailing-visibility">{ts}{$row.visibility}{/ts}(<a href="{crmURL p='civicrm/mailing/view' q="reset=1&id=`$row.id`"}" target="_blank">{ts}view{/ts}</a>)</td>
-        <td class="crm-mailing-status crm-mailing_status-{$row.status|lower}">{$row.status_label}</td>
+        <td class="crm-mailing-status crm-mailing_status-{$row.status|lower} {if $row.status == 'Canceled'}font-red{/if}">{$row.status_label}</td>
         <td class="crm-mailing-created_by"><a href ={crmURL p='civicrm/contact/view' q="reset=1&cid="}{$row.created_id}>{$row.created_by}</a></td>
         {if $unscheduled}
             <td class="crm-mailing-created_date">{$row.created_date}</td>
@@ -77,7 +77,7 @@
             <td class="crm-mailing-scheduled_by"><a href ={crmURL p='civicrm/contact/view' q="reset=1&cid="}{$row.scheduled_id}>{$row.scheduled_by}</a></td>	
             <td class="crm-mailing-scheduled">{$row.scheduled}</td>
             <td class="crm-mailing-start">{$row.start}</td>
-            <td class="crm-mailing-end">{$row.end}</td>
+            <td class="crm-mailing-end">{if $row.status == 'Canceled'}{ts}Cancelled Date{/ts}:<br>{/if}{$row.end}</td>
         {/if}
 	    {if call_user_func(array('CRM_Campaign_BAO_Campaign','isCampaignEnable'))}
 	        <td class="crm-mailing-campaign">{$row.campaign}</td>
