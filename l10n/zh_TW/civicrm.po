@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-11-10 03:51+0000\n"
+"PO-Revision-Date: 2020-12-01 18:30+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48155,3 +48155,14 @@ msgid ""
 "submission, there should be an email notification in your inbox. Please use "
 "that for your final payment result."
 msgstr "您的裝置阻擋了網站Cookie，目前無法取得表單填寫的結果。如果您在網站有進行付款動作，您的Email信箱應會收到付款相關的通知信件，請使用該Email通知的內容來確認最終付款結果。 "
+
+msgid "days before end date"
+msgstr "天前（以結束日期為準）"
+
+msgid ""
+"Caution!! You already have %1 member(s) in this membership type. Change this"
+" setting will re-calculate reminder date on these members."
+msgstr "注意！此會籍已有 %1 個會員，改變這個設定，將會清除所有會員的提醒日期並重新計算。"
+
+msgid "Members in this type alreay have new reminder date."
+msgstr "在此會籍中的所有會員，已經更新了提醒日期。"
