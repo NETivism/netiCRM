@@ -717,9 +717,10 @@
 
                         if (nestBlock.type == "title") {
                           if (nestBlock.link && nestBlock.data.hasOwnProperty("html")) {
-                            var title = _htmlDecode(nestBlock.data.html);
+                            var title = _htmlDecode(nestBlock.data.html),
+                                titleStyles = _nmeStyle.get(nestBlock.styles.elem, "include", ["text-decoration", "font-size", "color"]);
 
-                            title = "<a href=\"" + nestBlock.link + "\">" + title + "</a>";
+                            title = "<a href=\"" + nestBlock.link + "\" style=\"" + titleStyles + "\">" + title + "</a>";
                             _data.sections[sectionKey].blocks[blockKey].data[nestBlocksIndex].blocks[nestBlockKey].data.html = _htmlEscape(title);
                           }
                         }
@@ -729,8 +730,10 @@
                   else {
                     if (block.type == "title") {
                       if (block.link && block.data.hasOwnProperty("html")) {
-                        var title = _htmlDecode(block.data.html);
-                        title = "<a href=\"" + block.link + "\">" + title + "</a>";
+                        var title = _htmlDecode(block.data.html),
+                            titleStyles = _nmeStyle.get(block.styles.elem, "include", ["text-decoration", "font-size", "color"]);
+
+                        title = "<a href=\"" + block.link + "\" style=\"" + titleStyles + "\">" + title + "</a>";
                         _data.sections[sectionKey].blocks[blockKey].data.html = _htmlEscape(title);
                       }
                     }
@@ -767,6 +770,42 @@
           }
         }
       }
+    },
+    get: function(stylesData, listMode, listArgs) {
+      let output = "";
+
+      if (typeof stylesData === "object" && Object.getOwnPropertyNames(stylesData).length) {
+        let stylesArray = [];
+
+        if (listMode && Array.isArray(listArgs) && listArgs.length > 0) {
+          if (listMode == "include") {
+            stylesData = Object.keys(stylesData).reduce(function(r, e) {
+              if (listArgs.includes(e))  {
+                r[e] = stylesData[e];
+              }
+              return r;
+            }, {});
+          }
+
+          if (listMode == "exclude") {
+            stylesData = Object.keys(stylesData).reduce(function(r, e) {
+              if (!listArgs.includes(e))  {
+                r[e] = stylesData[e];
+              }
+              return r;
+            }, {});
+          }
+        }
+
+        for (let styleProperty in stylesData) {
+          let styleValue = stylesData[styleProperty];
+          stylesArray.push(styleProperty + ": " + styleValue + ";");
+        }
+
+        output = stylesArray.join(" ");
+      }
+
+      return output;
     }
   };
 
@@ -955,11 +994,6 @@
 
                   if ($nmebElem.is("img")) {
                     $nmebElem.wrap("<a href='" + block.link + "' target='_blank' style='text-decoration: none;'></a>");
-                  }
-
-                  if ($nmebElem.is("h3")) {
-                    let elemStyle = $nmebElem.attr("style");
-                    $nmebElem.wrapInner("<a href='" + block.link + "' target='_blank' style='" + elemStyle + "'></a>");
                   }
                 }
               }
