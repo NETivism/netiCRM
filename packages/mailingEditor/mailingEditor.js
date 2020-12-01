@@ -2968,6 +2968,7 @@
     data: {},
     language: _language,
     init: function() {
+      _debug("/***** nmEditor Debug Mode *****/");
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
         if (window.nmEditor.language) {
@@ -3157,13 +3158,10 @@
 
     // Plugin implementation
     _qs = _parseQueryString(_query);
+    _debugMode = _nmeOptions.debugMode === "1" ? true : false;
 
-    if (_nmeOptions.debugMode && _qs.debug) {
-      _debugMode = _qs.debug;
-
-      if (_debugMode) {
-        $("html").addClass("is-debug");
-      }
+    if (_debugMode) {
+      $("html").addClass("is-debug");
     }
 
     _container = this.selector;

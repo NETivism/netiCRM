@@ -117,8 +117,11 @@ window.nmEditor = {
 		let $oldEditorData = $("#html_message"),
 				$newEditorData = $("#body_json"),
 				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
-				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
-    window.nmEditorInstance = $(".nme-container").nmEditor();
+				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "",
+				nmEditorOpts = {};
+
+		nmEditorOpts.debugMode = "{/literal}{$config->debug}{literal}";
+		window.nmEditorInstance = $(".nme-container").nmEditor(nmEditorOpts);
 	});
 })(cj);
 </script>
