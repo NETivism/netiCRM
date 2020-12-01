@@ -718,6 +718,7 @@
                         if (nestBlock.type == "title") {
                           if (nestBlock.link && nestBlock.data.hasOwnProperty("html")) {
                             var title = _htmlDecode(nestBlock.data.html);
+
                             title = "<a href=\"" + nestBlock.link + "\">" + title + "</a>";
                             _data.sections[sectionKey].blocks[blockKey].data[nestBlocksIndex].blocks[nestBlockKey].data.html = _htmlEscape(title);
                           }
@@ -743,26 +744,27 @@
     }
   };
 
-  var _nmeSetStyles = function($container, stylesData, target) {
-    let setTarget = typeof target !== "undefined" ? target : "children";
+  var _nmeStyle = {
+    set: function($container, stylesData, target) {
+      let setTarget = typeof target !== "undefined" ? target : "children";
+      if (_domElemExist($container) && Object.getOwnPropertyNames(stylesData).length > 0) {
+        for (let styleTarget in stylesData) {
+          let $styleTarget = setTarget == "self" ? $container : $container.find("[data-settings-target='" + styleTarget + "']");
 
-    if (_domElemExist($container) && Object.getOwnPropertyNames(stylesData).length > 0) {
-      for (let styleTarget in stylesData) {
-        let $styleTarget = setTarget == "self" ? $container : $container.find("[data-settings-target='" + styleTarget + "']");
+          for (let styleProperty in stylesData[styleTarget]) {
+            let styleValue = stylesData[styleTarget][styleProperty];
+            $styleTarget.css(styleProperty, styleValue);
 
-        for (let styleProperty in stylesData[styleTarget]) {
-          let styleValue = stylesData[styleTarget][styleProperty];
-          $styleTarget.css(styleProperty, styleValue);
-
-          // If style property is 'background-color', also need to set value to 'bgcolor' dom attribute, because some versions of the email application do not support 'background-color'
-          if (styleProperty == "background-color") {
-            $styleTarget.attr("bgcolor", styleValue);
+            // If style property is 'background-color', also need to set value to 'bgcolor' dom attribute, because some versions of the email application do not support 'background-color'
+            if (styleProperty == "background-color") {
+              $styleTarget.attr("bgcolor", styleValue);
+            }
           }
-        }
 
-        // If target is 'self', only get one row data.
-        if (setTarget == "self") {
-          break;
+          // If target is 'self', only get one row data.
+          if (setTarget == "self") {
+            break;
+          }
         }
       }
     }
@@ -829,7 +831,7 @@
 
             if ($nmeb.length) {
               // Set styles
-              _nmeSetStyles($nmeb, block.styles);
+              _nmeStyle.set($nmeb, block.styles);
 
               if ($nmebElem.length) {
                 let decodeContent = "";
@@ -1037,7 +1039,7 @@
               $nmeb.attr("data-id", blockID);
 
               // Set styles
-              _nmeSetStyles($nmeb, block.styles);
+              _nmeStyle.set($nmeb, block.styles);
 
               if ($nmebElem.length) {
                 let decodeContent = "";
@@ -1457,7 +1459,7 @@
     $(_main).children(".inner").append(mailTpl);
 
     // Added styles to body table
-    _nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
+    _nmeStyle.set($(_main).find(".nme-body-table"), _data.settings.styles, "self");
 
     if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
       for (let section in _data.sections) {
@@ -1612,7 +1614,7 @@
     let $mailFrameBody = $("#nme-mail-output-frame").contents().find("body");
 
     $mailOutputContent.html(mailTpl);
-    _nmeSetStyles($mailOutputContent.find(".nme-body-table"), _data.settings.styles, "self");
+    _nmeStyle.set($mailOutputContent.find(".nme-body-table"), _data.settings.styles, "self");
 
     if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
       for (let section in _data.sections) {
