@@ -716,26 +716,44 @@
                         var nestBlock = nestBlocks[nestBlockKey];
 
                         if (nestBlock.type == "title") {
-                          if (nestBlock.link && nestBlock.data.hasOwnProperty("html")) {
-                            var title = _htmlDecode(nestBlock.data.html),
-                                titleStyles = _nmeStyle.get(nestBlock.styles.elem, "include", ["text-decoration", "font-size", "color"]);
+                          var title = _htmlDecode(nestBlock.data.html),
+                              titleStyles = _nmeStyle.get(nestBlock.styles.elem, "include", ["text-decoration", "font-size", "color"]);
 
-                            title = "<a href=\"" + nestBlock.link + "\" style=\"" + titleStyles + "\">" + title + "</a>";
-                            _data.sections[sectionKey].blocks[blockKey].data[nestBlocksIndex].blocks[nestBlockKey].data.html = _htmlEscape(title);
+                          if (title.length) {
+                            if (nestBlock.link && nestBlock.data.hasOwnProperty("html")) {
+                              title = "<div><a style=\"" + titleStyles + "\" href=\"" + nestBlock.link + "\">" + title + "</a></div>";
+                            }
+                            else {
+                              title = "<div><span style=\"" + titleStyles + "\">" + title + "</span></div>";
+                            }
                           }
+                          else {
+                            title = "<div><span style=\"" + titleStyles + "\"> </span><br></div>";
+                          }
+
+                          _data.sections[sectionKey].blocks[blockKey].data[nestBlocksIndex].blocks[nestBlockKey].data.html = _htmlEscape(title);
                         }
                       }
                     }
                   }
                   else {
                     if (block.type == "title") {
-                      if (block.link && block.data.hasOwnProperty("html")) {
-                        var title = _htmlDecode(block.data.html),
-                            titleStyles = _nmeStyle.get(block.styles.elem, "include", ["text-decoration", "font-size", "color"]);
+                      var title = _htmlDecode(block.data.html),
+                          titleStyles = _nmeStyle.get(block.styles.elem, "include", ["text-decoration", "font-size", "color"]);
 
-                        title = "<a href=\"" + block.link + "\" style=\"" + titleStyles + "\">" + title + "</a>";
-                        _data.sections[sectionKey].blocks[blockKey].data.html = _htmlEscape(title);
+                      if (title.length) {
+                        if (block.link && block.data.hasOwnProperty("html")) {
+                          title = "<div><a style=\"" + titleStyles + "\" href=\"" + block.link + "\">" + title + "</a></div>";
+                        }
+                        else {
+                          title = "<div><span style=\"" + titleStyles + "\">" + title + "</span></div>";
+                        }
                       }
+                      else {
+                        title = "<div><span style=\"" + titleStyles + "\"> </span><br></div>";
+                      }
+
+                      _data.sections[sectionKey].blocks[blockKey].data.html = _htmlEscape(title);
                     }
                   }
                 }
