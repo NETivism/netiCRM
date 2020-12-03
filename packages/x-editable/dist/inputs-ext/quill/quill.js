@@ -110,7 +110,8 @@ $(function(){
               [{ 'size': ['13px', false, '20px', '28px'] }],
               [{ 'align': [] }],
               [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              ['link']
+              ['link'],
+              ['emoji']
               //['image']
 
               //['blockquote', 'code-block'],
@@ -150,7 +151,8 @@ $(function(){
             var quillOptions = {
               //debug: 'info',
               modules: {
-                toolbar: toolbarOptions
+                toolbar: toolbarOptions,
+                'emoji-toolbar': true
               },
               placeholder: this.options.placeholder ? this.options.placeholder : 'Please enter content...',
               //readOnly: true,
