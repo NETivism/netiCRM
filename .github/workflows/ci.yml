@@ -1,10 +1,15 @@
-name: CI
+name: CI Testing
 on: [push, pull_request]
 jobs:
-  ci:
+  testing:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Initialize submodules
+        run: |
+          git submodule init
+          git submodule update
+
       - name: Prepare container
         run: |
           docker pull netivism/neticrm-ci:drone-php7
