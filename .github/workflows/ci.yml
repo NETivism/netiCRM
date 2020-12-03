@@ -1,7 +1,7 @@
 name: CI
 on: [push, pull_request]
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -9,7 +9,7 @@ jobs:
         run: |
           docker pull netivism/neticrm-ci:drone-php7
           git clone -b drone-php7 https://github.com/NETivism/docker-neticrm-ci.git
-          docker run -d --name neticrm-ci-php7 -p 8080:8080 -v $TRAVIS_BUILD_DIR:/mnt/neticrm-7/civicrm -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" netivism/neticrm-ci:drone-php7
+          docker run -d --name neticrm-ci-php7 -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" netivism/neticrm-ci:drone-php7
 
       - name: Install netiCRM 
         run: docker exec neticrm-ci-php7 /mnt/neticrm-7/civicrm/docker-neticrm-ci/container/init.sh
