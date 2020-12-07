@@ -329,10 +329,15 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
        */
       $mode = $recur['is_test'] ? 'test' : 'live';
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur['processor_id'], $mode);
-      $processorClass = &CRM_Core_Payment::singleton($mode, $paymentProcessor, $this);
-      if (method_exists($processorClass, 'doUpdateRecur') && !empty($processorClass::$_editableFields)) {
-        $editableFields = $processorClass::$_editableFields;
-        foreach ($editableFields as $field) {
+      $paymentClass = &CRM_Core_Payment::singleton($mode, $paymentProcessor, $this);
+      if (!empty($paymentClass::$_editableFields)) {
+        $activeFields = $paymentClass::$_editableFields;
+      }
+      else if(method_exists($paymentClass, 'getEditableFields')) {
+        $activeFields = $paymentClass::getEditableFields($paymentProcessor);
+      }
+      if (method_exists($paymentClass, 'doUpdateRecur') && !empty($activeFields)) {
+        foreach ($activeFields as $field) {
           if ($recur[$field] != $params[$field]) {
             $requestParams[$field] = $params[$field];
           }
@@ -340,7 +345,11 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         if (!empty($requestParams)) {
           $requestParams['contribution_recur_id'] = $this->_id;
           // if need debug, can add second params "1" the follow function.
-          $result = $processorClass->doUpdateRecur($requestParams);
+          $config = CRM_Core_Config::singleton();
+          if (isset($config->debug)) {
+            $debug = $config->debug;
+          }
+          $result = $paymentClass->doUpdateRecur($requestParams, $debug);
         }
 
         /*
@@ -364,10 +373,15 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
 
     // save the changes
-    $ids = array();
-    require_once 'CRM/Contribute/BAO/ContributionRecur.php';
-    CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
-    CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
+    if (!empty($result)) {
+      $ids = array();
+      require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+      CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
+      CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
+    }
+    else {
+      CRM_Core_Session::setStatus(ts('There are no any change.'));
+    }
     $urlParams = http_build_query(array(
       'reset' => 1,
       'id' => $this->_id,

@@ -288,6 +288,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         }
       }
     }
+    if ($debug) {
+      CRM_Core_Error::debug('Payment Spgateway doUpdateRecur $result', $result);
+    }
     return $result;
   }
 
