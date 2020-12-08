@@ -8,7 +8,9 @@
     "id": "",
     "type" : "title",
     "section": "body",
-    "data" : "這是標題區塊，點擊即可編輯",
+    "data": {
+      "html": "這是標題區塊，點擊即可編輯"
+    },
     "styles": {
       "block": {
         "padding-top": "20px",

@@ -84,10 +84,12 @@ window.nmEditor = {
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css?v{$config->ver}">
 {if $tsLocale == 'zh_TW'}
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css?v{$config->ver}">
 {/if}
 {js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js group=999 weight=997}{/js}
 {js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js group=999 weight=997}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.js group=999 weight=997}{/js}
 {js src=packages/x-editable/dist/inputs-ext/quill/quill.js group=999 weight=997}{/js}
 
 
@@ -117,8 +119,11 @@ window.nmEditor = {
 		let $oldEditorData = $("#html_message"),
 				$newEditorData = $("#body_json"),
 				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
-				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "";
-    window.nmEditorInstance = $(".nme-container").nmEditor();
+				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "",
+				nmEditorOpts = {};
+
+		nmEditorOpts.debugMode = "{/literal}{$config->debug}{literal}";
+		window.nmEditorInstance = $(".nme-container").nmEditor(nmEditorOpts);
 	});
 })(cj);
 </script>
