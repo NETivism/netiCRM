@@ -132,7 +132,8 @@ $(function(){
             if (blockClass.indexOf("nmee-title") != -1) {
                 toolbarOptions = [
                     [{ 'background': [] }],
-                    ['link']
+                    ['link'],
+                    ['emoji']
                 ];
             }
 
