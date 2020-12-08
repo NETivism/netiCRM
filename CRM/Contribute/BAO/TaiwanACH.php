@@ -827,7 +827,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $page = new CRM_Contribute_DAO_ContributionPage();
     $page->id = $achData['contribution_page_id'];
     $page->find(TRUE);
-    $instrumentIds = CRM_Core_OptionGroup::values('payment_instrument', FALSE, FALSE, FALSE, "AND v.name = 'ACH Bank'", 'value');
+    $instrumentIds = CRM_Core_OptionGroup::values('payment_instrument', FALSE, FALSE, FALSE, "AND v.name = '{$achData['payment_type']}'", 'value');
     $instrumentId = reset($instrumentIds);
     foreach ($achData['data'] as $key => $value) {
       if (strstr($key, 'custom_')) {
@@ -850,7 +850,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'currency' => $achData['currency'],
       'payment_instrument_id' => $instrumentId,
       'custom' => $customData,
-      'source' => 'ACH Bank',
+      'source' => ts('Export ACH Transaction File'),
     );
     $ids = array();
     $contribution = CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);

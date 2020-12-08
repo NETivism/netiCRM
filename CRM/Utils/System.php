@@ -872,9 +872,11 @@ class CRM_Utils_System {
       }
 
       // pattern check
+      /* remove version check of crm
       if (!CRM_Utils_System::isVersionFormatValid($version)) {
         CRM_Core_Error::fatal('Unknown codebase version.');
       }
+      */
     }
 
     return $version;

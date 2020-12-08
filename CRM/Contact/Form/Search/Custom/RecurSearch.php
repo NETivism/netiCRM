@@ -244,7 +244,7 @@ $having
       $clauses[] = "(`email` LIKE '%$email%')";
     }
     $installments = $this->_formValues['installments'];
-    if ($installments === '0') {
+    if ($installments === 'none') {
       $clauses[] = "(r.installments IS NULL OR r.installments = 0)";
     }
 
@@ -259,8 +259,15 @@ $having
   function tempHaving(){
     $clauses = array();
     $installments = $this->_formValues['installments'];
-    if (is_numeric($installments) && $installments != '0') {
-      $clauses[] = "(remain_installments = $installments)";
+    if (is_numeric($installments) && $installments != 'none') {
+      $installments = (int) $installments;
+      if ($installments == 0) {
+        $clauses[] = "(remain_installments <= 0)";
+      }
+      else {
+        $clauses[] = "(remain_installments = $installments)";
+      }
+
     }
     if(count($clauses)){
       return implode(' AND ', $clauses);
@@ -289,15 +296,16 @@ $having
       $form->setDefaults($defaults);
     }
     
-    $statuses = $this->_cstatus;
-    unset($statuses[6]);
-    unset($statuses[4]);
-    krsort($statuses);
+    $status = $this->_cstatus;
+    foreach(array(5,2,3,6,7,1) as $key) {
+      $statuses[$key] = $status[$key];
+    }
     $form->addRadio('status', ts('Recurring Status'), $statuses, array('allowClear' => TRUE));
 
     $installments = array(
       '' => ts('- select -'),
-      '0' => ts('no installments specified'),
+      'none' => ts('no installments specified'),
+      '0' => ts('Installments is full.'),
     );
     for ($i = 1; $i <= 6; $i++) {
       $installments[$i] = ts('%1 installments left', array(1 => $i));

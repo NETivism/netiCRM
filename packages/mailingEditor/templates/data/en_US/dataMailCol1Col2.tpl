@@ -197,7 +197,7 @@
                     "type":"paragraph",
                     "section":"body",
                     "data":{
-                      "html": "&lt;p&gt;This is a paragraph block, you can enter the description text of the headline here.&lt;/p&gt;"
+                      "html": "&lt;div&gt;This is a paragraph block, you can enter the description text of the headline here.&lt;/div&gt;"
                     },
                     "styles":{
                       "block":{
@@ -320,7 +320,7 @@
             "type":"paragraph",
             "section":"body",
             "data":{
-              "html": "&lt;p&gt;This is a paragraph block, you can enter the introduction of the newsletter here.&lt;/p&gt;"
+              "html": "&lt;div&gt;This is a paragraph block, you can enter the introduction of the newsletter here.&lt;/div&gt;"
             },
             "styles":{
               "block":{
@@ -408,7 +408,7 @@
                     "type":"paragraph",
                     "section":"body",
                     "data":{
-                      "html": "&lt;p&gt;This is a paragraph block, you can enter a summary of the article, a brief description or introduction. Let's edit it!&lt;/p&gt;"
+                      "html": "&lt;div&gt;This is a paragraph block, you can enter a summary of the article, a brief description or introduction. Let's edit it!&lt;/div&gt;"
                     },
                     "styles":{
                       "block":{
@@ -549,7 +549,7 @@
                     "type":"paragraph",
                     "section":"body",
                     "data":{
-                      "html": "&lt;p&gt;This is a paragraph block, you can enter a summary of the article, a brief description or introduction. Let's edit it!&lt;/p&gt;"
+                      "html": "&lt;div&gt;This is a paragraph block, you can enter a summary of the article, a brief description or introduction. Let's edit it!&lt;/div&gt;"
                     },
                     "styles":{
                       "block":{
@@ -725,7 +725,7 @@
                     "type":"paragraph",
                     "section":"body",
                     "data":{
-                      "html": "&lt;p&gt;This is a paragraph block, you can enter a summary of the article, a brief description or introduction. Let's edit it!&lt;/p&gt;"
+                      "html": "&lt;div&gt;This is a paragraph block, you can enter a summary of the article, a brief description or introduction. Let's edit it!&lt;/div&gt;"
                     },
                     "styles":{
                       "block":{
@@ -866,7 +866,7 @@
                     "type":"paragraph",
                     "section":"body",
                     "data":{
-                      "html": "&lt;p&gt;This is a paragraph block, you can enter a summary of the article, a brief description or introduction. Let's edit it!&lt;/p&gt;"
+                      "html": "&lt;div&gt;This is a paragraph block, you can enter a summary of the article, a brief description or introduction. Let's edit it!&lt;/div&gt;"
                     },
                     "styles":{
                       "block":{
@@ -995,7 +995,7 @@
             "data":{
               "ops":{
               },
-              "html": "&lt;p&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.name}&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.address}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Bmailing.viewUrl%7D&quot; target=&quot;_blank&quot;&gt;View in browser&lt;/a&gt;&lt;/webversion&gt; | &lt;unsubscribe style=&quot;text-decoration:underline;&quot;&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.unsubscribeUrl%7D&quot;&gt;Unsubscribe&lt;/a&gt;&lt;/unsubscribe&gt;&lt;br&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.subscribeUrl%7D&quot;&gt;Subscribe&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.forward%7D&quot;&gt;Forward&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.optOutUrl%7D&quot;&gt;Do not receive any more messages from this site&lt;/a&gt;&lt;/p&gt;"
+              "html": "&lt;div&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.name}&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.address}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Bmailing.viewUrl%7D&quot; target=&quot;_blank&quot;&gt;View in browser&lt;/a&gt;&lt;/webversion&gt; | &lt;unsubscribe style=&quot;text-decoration:underline;&quot;&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.unsubscribeUrl%7D&quot;&gt;Unsubscribe&lt;/a&gt;&lt;/unsubscribe&gt;&lt;br&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.subscribeUrl%7D&quot;&gt;Subscribe&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.forward%7D&quot;&gt;Forward&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.optOutUrl%7D&quot;&gt;Do not receive any more messages from this site&lt;/a&gt;&lt;/div&gt;"
             },
             "styles":{
               "block":{

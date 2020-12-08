@@ -266,7 +266,7 @@ class CRM_Utils_Image {
    * @return Array thumb dimension of image
    */
   public static function getImageVars($file) {
-    list($imageWidth, $imageHeight) = getimagesize($file);
+    list($imageWidth, $imageHeight) = @getimagesize($file);
     $thumbWidth = 125;
     if ($imageWidth && $imageHeight) {
       $imageRatio = $imageWidth / $imageHeight;

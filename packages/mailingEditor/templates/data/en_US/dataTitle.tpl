@@ -8,7 +8,9 @@
     "id": "",
     "type" : "title",
     "section": "body",
-    "data" : "You can write a title here",
+    "data": {
+      "html": "You can write a title here"
+    },
     "styles": {
       "block": {
         "padding-top": "20px",

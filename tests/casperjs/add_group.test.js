@@ -263,6 +263,14 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists(".messages strong", "Assert number of 'Total Recipients' exist.");
     });
 
+    casper.waitForSelector("select#visibility", function success() {
+        this.evaluate(function() {
+            document.querySelector('select#visibility').selectedIndex = 1;
+        });
+    }, function fail() {
+        test.assertExists("select#visibility", "Visibility select field exist");
+    });
+
     casper.waitForSelector("input[value='Next >>']", function success() {
         this.click("input[value='Next >>']");
     }, function fail() {

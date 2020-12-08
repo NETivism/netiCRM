@@ -263,25 +263,19 @@ WHERE  id = %1
       }
 
       $groupID = CRM_Utils_Type::escape($groupID, 'Integer');
-      $additionalWhereClause = " contact_a.id NOT IN ( SELECT contact_id FROM civicrm_group_contact WHERE civicrm_group_contact.status = 'Removed' AND civicrm_group_contact.group_id = $groupID )";
       if (isset($ssParams['customSearchID'])) {
-        // if custom search
-
-        // we split it up and store custom class
-        // so temp tables are not destroyed if they are used
-        // hence customClass is defined above at top of function
-        $customClass =
-          CRM_Contact_BAO_SearchCustom::customClass($ssParams['customSearchID'], $savedSearchID);
+        $customClass = CRM_Contact_BAO_SearchCustom::customClass($ssParams['customSearchID'], $savedSearchID);
         $searchSQL = $customClass->contactIDs();
-        if (preg_match('/\s+group\s+by\s+/i', $searchSQL)) {
-          $searchSQL = preg_replace('/\s+group\s+by\s+/i', ' AND '.$additionalWhereClause.' GROUP BY ', $searchSQL);
-        }
-        else {
-          $searchSQL .= " AND " .$additionalWhereClause;
-        }
+        // refs #30100, create temp table to prevent sql error
+        $tempTable = CRM_Core_DAO::createTempTableName('civicrm_group_contact', TRUE);
+        CRM_Core_DAO::executeQuery("CREATE TEMPORARY TABLE $tempTable ( contact_id int primary key) ENGINE=HEAP");
+        CRM_Core_DAO::executeQuery("REPLACE INTO $tempTable (contact_id)($searchSQL)");
+        CRM_Core_DAO::executeQuery("DELETE FROM $tempTable WHERE contact_id IN (SELECT contact_id FROM civicrm_group_contact WHERE civicrm_group_contact.status = 'Removed' AND civicrm_group_contact.group_id = $groupID)");
+        $searchSQL = "SELECT contact_id FROM $tempTable";
         $idName = 'contact_id';
       }
       else {
+        $additionalWhereClause = " contact_a.id NOT IN ( SELECT contact_id FROM civicrm_group_contact WHERE civicrm_group_contact.status = 'Removed' AND civicrm_group_contact.group_id = $groupID )";
         $formValues = CRM_Contact_BAO_SavedSearch::getFormValues($savedSearchID);
 
         $query = new CRM_Contact_BAO_Query(

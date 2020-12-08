@@ -192,13 +192,6 @@ cj(document).ready(function($){
                     <div><strong>{$row.options}</strong></div>
                 </div>
             {/if}
-            {if $context EQ "thankContribution" AND $is_deductible AND $row.price}
-                <div class="premium-tax-disclaimer">
-                <p>
-                {ts 1=$row.price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}
-                </p>
-                </div>
-            {/if}
             </td>
         </tr>
         {/foreach}

@@ -148,10 +148,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $template = CRM_Core_Smarty::singleton();
     $config = CRM_Core_Config::singleton();
 
-    if ($config->backtrace) {
-      self::backtrace();
-    }
-
     // create the error array
     $error = self::getErrorDetails($pearError);
 
@@ -187,13 +183,30 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $errorDetails = CRM_Core_Error::debug('', $error, FALSE);
     $template->assign_by_ref('errorDetails', $errorDetails);
 
+    if (ini_get('xdebug.default_enable') && !empty(CRM_Utils_System::isUserLoggedIn()) && $config->debug) {
+      ob_start();
+      CRM_Core_Error::debug_var('Fatal Error Details', $error, TRUE, FALSE);
+      $debugMsg = ob_get_contents();
+      ob_end_clean();
+      ob_start();
+      CRM_Core_Error::backtrace('backTrace', FALSE);
+      $backtrace = ob_get_contents();
+      ob_end_clean();
+    }
+    ini_set('xdebug.overload_var_dump', 0);
     CRM_Core_Error::debug_var('Fatal Error Details', $error);
     CRM_Core_Error::backtrace('backTrace', TRUE);
 
     if ($config->initialized) {
       http_response_code(500);
-      $content = $template->fetch('CRM/common/fatal.tpl');
-      echo CRM_Utils_System::theme('page', $content, TRUE);
+      $vars = array();
+      if ($debugMsg) {
+        $vars = array(
+          'debug' => $debugMsg,
+          'backtrace' => $backtrace,
+        );
+      }
+      self::output($config->fatalErrorTemplate, $vars);
     }
     else {
       echo "Sorry. A non-recoverable error has occurred. The error trace below might help to resolve the issue<br>";
@@ -225,13 +238,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    *
    * @param string message  the error message
    * @param string code     the error code if any
-   * @param string email    the email address to notify of this situation
+   * @param string suppress suppress error message with given string
    *
    * @return void
    * @static
    * @acess public
    */
-  static function fatal($message = NULL, $code = NULL, $email = NULL) {
+  static function fatal($message = NULL, $code = NULL, $suppress = NULL) {
     $vars = array(
       'message' => $message,
       'code' => $code,
@@ -252,9 +265,25 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
 
     // fallback
+    if (ini_get('xdebug.default_enable') && !empty(CRM_Utils_System::isUserLoggedIn()) && $config->debug) {
+      ob_start();
+      CRM_Core_Error::debug_var('Fatal Error Details', $vars, TRUE, FALSE);
+      $vars['debug'] = ob_get_contents();
+      ob_end_clean();
+      ob_start();
+      CRM_Core_Error::backtrace('backTrace', FALSE);
+      $vars['backtrace'] = ob_get_contents();
+      ob_end_clean();
+    }
     CRM_Core_Error::debug_var('Fatal Error Details', $vars);
     CRM_Core_Error::backtrace('backTrace', TRUE);
-    http_response_code(500);
+    if ($suppress) {
+      $vars['suppress'] = $suppress;
+    }
+    else {
+      http_response_code(500);
+      $vars['suppress'] = FALSE;
+    }
     self::output($config->fatalErrorTemplate, $vars);
     self::abend(CRM_Core_Error::FATAL_ERROR);
   }
@@ -349,8 +378,14 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
     else {
       if ($print) {
-        $out = print_r($variable, TRUE);
-        $out = "\$$variable_name = $out";
+        if (ini_get('xdebug.default_enable')) {
+          echo $variable_name.":\n";
+          var_dump($variable);
+        }
+        else {
+          $out = print_r($variable, TRUE);
+          $out = "\$$variable_name = $out";
+        }
       }
       else {
         // use var_dump
@@ -365,7 +400,10 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         reset($variable);
       }
     }
-    return self::debug_log_message($out, FALSE, $comp);
+    if ($log) {
+      self::debug_log_message($out, FALSE, $comp);
+    }
+    return;
   }
 
   /**
@@ -420,7 +458,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return $str;
   }
 
-  static function backtrace($msg = 'backTrace', $log = FALSE) {
+  static function backtrace($msg = 'backTrace', $log = TRUE) {
     $backTrace = debug_backtrace();
 
     $msgs = array();
@@ -433,12 +471,12 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       );
     }
 
-    $message = implode("\n", $msgs);
-    if (!$log) {
-      CRM_Core_Error::debug($msg, $message);
+    $message = "\n".implode("\n", $msgs);
+    if ($log) {
+      CRM_Core_Error::debug_var($msg, $message, FALSE, TRUE);
     }
     else {
-      CRM_Core_Error::debug_var($msg, $message);
+      CRM_Core_Error::debug_var($msg, $message, TRUE, FALSE);
     }
   }
 
