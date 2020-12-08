@@ -102,8 +102,8 @@ window.nmEditor = {
 {js src=packages/Magnific-Popup/dist/jquery.magnific-popup.js group=999 weight=997}{/js}
 
 <!-- mailingEditor -->
-{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css?v{$config->ver}">
+{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 {literal}
 <style>
 	.nme-block.on-screen-center:after {
