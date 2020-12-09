@@ -331,25 +331,25 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     $taiwanACH = new CRM_Contribute_DAO_TaiwanACH();
     $taiwanACH->contribution_recur_id = $recurringId;
-    $taiwanACH->find(TRUE);
-    $taiwanACH->data = unserialize($taiwanACH->data);
-    $taiwanACHFields = $taiwanACH->fields();
-    foreach ($taiwanACHFields as $field) {
-      $fieldName = $field['name'];
-      $output[$fieldName] = $taiwanACH->$fieldName;
-    }
+    if ($taiwanACH->find(TRUE)) {
+      $taiwanACH->data = unserialize($taiwanACH->data);
+      $taiwanACHFields = $taiwanACH->fields();
+      foreach ($taiwanACHFields as $field) {
+        $fieldName = $field['name'];
+        $output[$fieldName] = $taiwanACH->$fieldName;
+      }
 
-    $recurring = new CRM_Contribute_DAO_ContributionRecur();
-    $recurring->id = $recurringId;
-    $recurring->find(TRUE);
-    $recurringFields = $recurring->fields();
-    foreach ($recurringFields as $field) {
-      $fieldName = $field['name'];
-      if ($fieldName != 'id') {
-        $output[$fieldName] = $recurring->$fieldName;
+      $recurring = new CRM_Contribute_DAO_ContributionRecur();
+      $recurring->id = $recurringId;
+      $recurring->find(TRUE);
+      $recurringFields = $recurring->fields();
+      foreach ($recurringFields as $field) {
+        $fieldName = $field['name'];
+        if ($fieldName != 'id') {
+          $output[$fieldName] = $recurring->$fieldName;
+        }
       }
     }
-
     return $output;
   }
 
@@ -827,7 +827,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $page = new CRM_Contribute_DAO_ContributionPage();
     $page->id = $achData['contribution_page_id'];
     $page->find(TRUE);
-    $instrumentIds = CRM_Core_OptionGroup::values('payment_instrument', FALSE, FALSE, FALSE, "AND v.name = 'ACH Bank'", 'value');
+    $instrumentIds = CRM_Core_OptionGroup::values('payment_instrument', FALSE, FALSE, FALSE, "AND v.name = '{$achData['payment_type']}'", 'value');
     $instrumentId = reset($instrumentIds);
     foreach ($achData['data'] as $key => $value) {
       if (strstr($key, 'custom_')) {
@@ -850,7 +850,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'currency' => $achData['currency'],
       'payment_instrument_id' => $instrumentId,
       'custom' => $customData,
-      'source' => 'ACH Bank',
+      'source' => ts('Export ACH Transaction File'),
     );
     $ids = array();
     $contribution = CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);

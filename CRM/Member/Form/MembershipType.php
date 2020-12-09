@@ -87,6 +87,10 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       }
     }
 
+    if (isset($defaults['renewal_reminder_day'])) {
+      $this->assign("origin_reminder_day", $defaults['renewal_reminder_day']);
+      $this->set('origin_reminder_day', $defaults['renewal_reminder_day']);
+    }
     return $defaults;
   }
 
@@ -170,7 +174,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     else {
       $this->assign('noMsgTemplates', TRUE);
     }
-    $reminderDay = &$this->add('text',
+    $reminderDay = &$this->addNumber(
       'renewal_reminder_day',
       ts('Renewal Reminder Day'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType',
@@ -237,7 +241,6 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
         $reminderMsg = $this->add('select', 'renewal_msg_id', ts('Renewal Reminder Message'),
           array('' => ts('- select -')) + $msgTemplates
         );
-        $reminderDay->freeze();
       }
     }
 
@@ -246,6 +249,15 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     $this->addFormRule(array('CRM_Member_Form_MembershipType', 'formRule'));
 
     $this->assign('membershipTypeId', $this->_id);
+
+    // add current member count data
+    if ($this->_id) {
+      $memberCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_membership WHERE membership_type_id = %1 AND is_test = 0", array(
+        1 => array($this->_id, 'Integer')
+      ));
+      $this->assign('memberCount', $memberCount);
+      $this->set('memberCount', $memberCount);
+    }
   }
 
   /**
@@ -334,8 +346,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
 
     $renewalReminderDay = CRM_Utils_Array::value('renewal_reminder_day', $params);
     $renewalMsgId = CRM_Utils_Array::value('renewal_msg_id', $params);
-    if (!((($renewalReminderDay && $renewalMsgId)) || (!$renewalReminderDay && !$renewalMsgId))) {
-
+    if (!((strlen($renewalReminderDay) && $renewalMsgId) || (!strlen($renewalReminderDay) && !$renewalMsgId))) {
       if (!$renewalReminderDay) {
         $errors['renewal_reminder_day'] = ts('Please enter renewal reminder days.');
       }
@@ -464,12 +475,27 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       }
 
       $membershipType = CRM_Member_BAO_MembershipType::add($params, $ids);
-      CRM_Core_Session::setStatus(ts('The membership type \'%1\' has been saved.',
-          array(1 => $membershipType->name)
+      CRM_Core_Session::setStatus(ts('The membership type \'%1\' has been saved.', array(1 => $membershipType->name)));
+      
+      $originReminder = $this->get('origin_reminder_day');
+      $memberCount = $this->get('memberCount');
+      if ( (!empty($originReminder) || $originReminder == 0) && $originReminder != $params['renewal_reminder_day'] && $memberCount > 0 && $this->_id) {
+        $dao = CRM_Core_DAO::executeQuery("SELECT id, end_date FROM civicrm_membership WHERE membership_type_id = %1 AND end_date IS NOT NULL", array(
+          1 => array($this->_id, 'Integer')
         ));
+        while($dao->fetch()) {
+          if ($params['renewal_reminder_day'] != '') {
+            $reminderDate = CRM_Member_BAO_MembershipType::calcReminderDate($dao->end_date, $params['renewal_reminder_day']);
+            CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
+          }
+          else {
+            CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', 'null');
+          }
+        }
+        CRM_Core_Session::setStatus(ts('Members in this type alreay have new reminder date.'));
+      }
       $session = CRM_Core_Session::singleton();
       if ($buttonName == $this->getButtonName('upload', 'new')) {
-        CRM_Core_Session::setStatus(ts(' You can add another membership type.'));
         $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/member/membershipType',
             'action=add&reset=1'
           ));

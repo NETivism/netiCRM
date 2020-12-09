@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-10-08 07:47+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2020-12-01 18:35+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47078,7 +47078,7 @@ msgid "End date is due."
 msgstr "結束日期已過期。"
 
 msgid "Installments is full."
-msgstr "期數已滿。"
+msgstr "期數已滿"
 
 msgid "Card expiry date is due."
 msgstr "卡片到期日已過。"
@@ -48147,4 +48147,22 @@ msgid "Only For Renew Membership?"
 msgstr "只用於更新會籍？"
 
 msgid "Is This Page Only for Membership Renewal?"
-msgstr "此頁面是否只限於讓登入會員更新會籍？"
+msgstr "此頁面是否只限讓會員登入後更新會籍？"
+
+msgid ""
+"Because of the missing cookie from your browser, we don't know the result of"
+" your form submission. If you enter payment information about this form "
+"submission, there should be an email notification in your inbox. Please use "
+"that for your final payment result."
+msgstr "您的裝置阻擋了網站Cookie，目前無法取得表單填寫的結果。如果您在網站有進行付款動作，您的Email信箱應會收到付款相關的通知信件，請使用該Email通知的內容來確認最終付款結果。 "
+
+msgid "days before end date"
+msgstr "天前（以結束日期為準）"
+
+msgid ""
+"Caution!! You already have %1 member(s) in this membership type. Change this"
+" setting will re-calculate reminder date on these members."
+msgstr "注意！此會員類型已有 %1 個會員，改變這個設定，將會清除所有會員的提醒日期並重新計算。"
+
+msgid "Members in this type alreay have new reminder date."
+msgstr "在此會員類型中的所有會員，已經更新了提醒日期。"

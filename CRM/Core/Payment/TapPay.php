@@ -504,7 +504,19 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if (empty($time)) {
       $time = time();
     }
-    $executeDay = date('j', $time);
+    $thisMonth = date('m', $time);
+    $theMonthNextDay = date('m', $time + 86400);
+    $today = date('j', $time);
+    if ($thisMonth == $theMonthNextDay) {
+      $cycleDayFilter = 'r.cycle_day = '.$today.' ';
+    }
+    else {
+      for($i = $today; $i <= 31 ; $i++) {
+        $days[] = $i;
+      }
+      $cycleDayFilter = 'r.cycle_day IN ('.implode(',', $days).')';
+    }
+
     $currentDate = date('Y-m-01 00:00:00', $time);
 
     // #25443, only trigger when current month doesn't have any contribution yet
@@ -527,7 +539,7 @@ INNER JOIN
 ON
   c.payment_processor_id = p.id
 WHERE
-  r.cycle_day = %1 AND
+  $cycleDayFilter AND
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
 AND r.contribution_status_id = 5
 AND p.payment_processor_type = 'TapPay'
@@ -535,10 +547,7 @@ GROUP BY r.id
 ORDER BY r.id
 LIMIT 0, 100
 ";
-    $params = array(
-      1 => array($executeDay, 'Positive'),
-    );
-    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');

@@ -6447,3 +6447,10 @@ input.crm-form-textfield,
     padding: 2vw;
   }
 }
+
+/* debug */
+.xdebug-var-dump {
+  overflow-x: scroll;
+  background: #EEEEEE;
+  padding: 0px 5px;
+}

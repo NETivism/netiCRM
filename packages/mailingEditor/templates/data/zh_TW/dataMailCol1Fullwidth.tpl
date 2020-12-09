@@ -153,7 +153,9 @@
                     "id": "title-uy941b0wc6",
                     "type": "title",
                     "section": "body",
-                    "data": "本期電子報的頭條",
+                    "data": {
+                      "html": "本期電子報的頭條"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",
@@ -197,7 +199,7 @@
                     "type": "paragraph",
                     "section": "body",
                     "data": {
-                      "html": "&lt;p&gt;這是段落區塊，你可以在這裡輸入頭條的描述文字，請給頭條一些簡要的說明文字，讓大家能一目了然！&lt;/p&gt;"
+                      "html": "&lt;div&gt;這是段落區塊，你可以在這裡輸入頭條的描述文字，請給頭條一些簡要的說明文字，讓大家能一目了然！&lt;/div&gt;"
                     },
                     "styles": {
                       "block": {
@@ -320,7 +322,7 @@
             "type": "paragraph",
             "section": "body",
             "data": {
-              "html": "&lt;p&gt;這是段落區塊，你可以在這裡輸入電子報的引言，建議文字量不要太多，簡而有力更吸睛！趕快來試試看吧！&lt;/p&gt;"
+              "html": "&lt;div&gt;這是段落區塊，你可以在這裡輸入電子報的引言，建議文字量不要太多，簡而有力更吸睛！趕快來試試看吧！&lt;/div&gt;"
             },
             "styles": {
               "block": {
@@ -407,7 +409,9 @@
                     "id": "title-cx3rn0vdv3",
                     "type": "title",
                     "section": "body",
-                    "data": "這是標題區塊，點擊即可編輯",
+                    "data": {
+                      "html": "這是標題區塊，點擊即可編輯"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",
@@ -451,7 +455,7 @@
                     "type": "paragraph",
                     "section": "body",
                     "data": {
-                      "html": "&lt;p&gt;這是段落區塊，你可以在這裡輸入文章的摘要，簡短的敘述或是相關簡介，建議文字量不要太多。直接在文字上點擊即可進入編輯模式，你可以使用編輯器為文字加上超連結，或是快速讓文字變成粗體以及改變顏色，當然也可以加入項目清單，立刻來編輯看看吧！&lt;/p&gt;"
+                      "html": "&lt;div&gt;這是段落區塊，你可以在這裡輸入文章的摘要，簡短的敘述或是相關簡介，建議文字量不要太多。直接在文字上點擊即可進入編輯模式，你可以使用編輯器為文字加上超連結，或是快速讓文字變成粗體以及改變顏色，當然也可以加入項目清單，立刻來編輯看看吧！&lt;/div&gt;"
                     },
                     "styles": {
                       "block": {
@@ -626,7 +630,9 @@
                     "id": "title-o6kvbnqoe9",
                     "type": "title",
                     "section": "body",
-                    "data": "標題區塊通常用來填寫文章標題",
+                    "data": {
+                      "html": "標題區塊通常用來填寫文章標題"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",
@@ -670,7 +676,7 @@
                     "type": "paragraph",
                     "section": "body",
                     "data": {
-                      "html": "&lt;p&gt;這是段落區塊，你可以在這裡輸入文章的摘要，簡短的敘述或是相關簡介，建議文字量不要太多。直接在文字上點擊即可進入編輯模式，你可以使用編輯器為文字加上超連結，或是快速讓文字變成粗體以及改變顏色，當然也可以加入項目清單，立刻來編輯看看吧！&lt;/p&gt;"
+                      "html": "&lt;div&gt;這是段落區塊，你可以在這裡輸入文章的摘要，簡短的敘述或是相關簡介，建議文字量不要太多。直接在文字上點擊即可進入編輯模式，你可以使用編輯器為文字加上超連結，或是快速讓文字變成粗體以及改變顏色，當然也可以加入項目清單，立刻來編輯看看吧！&lt;/div&gt;"
                     },
                     "styles": {
                       "block": {
@@ -798,7 +804,7 @@
             "section": "footer",
             "data": {
               "ops": {},
-              "html": "&lt;p&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.name}&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.address}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Bmailing.viewUrl%7D&quot; target=&quot;_blank&quot;&gt;在瀏覽器中觀看&lt;/a&gt;&lt;/webversion&gt; | &lt;unsubscribe style=&quot;text-decoration:underline;&quot;&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.unsubscribeUrl%7D&quot;&gt;退訂電子報&lt;/a&gt;&lt;/unsubscribe&gt;&lt;br&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.subscribeUrl%7D&quot;&gt;訂閱電子報&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.forward%7D&quot;&gt;轉寄給朋友&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.optOutUrl%7D&quot;&gt;不再收到本站訊息&lt;/a&gt;&lt;/p&gt;"
+              "html": "&lt;div&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.name}&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#fff;&quot;&gt;{domain.address}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Bmailing.viewUrl%7D&quot; target=&quot;_blank&quot;&gt;在瀏覽器中觀看&lt;/a&gt;&lt;/webversion&gt; | &lt;unsubscribe style=&quot;text-decoration:underline;&quot;&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.unsubscribeUrl%7D&quot;&gt;退訂電子報&lt;/a&gt;&lt;/unsubscribe&gt;&lt;br&gt;&lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.subscribeUrl%7D&quot;&gt;訂閱電子報&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.forward%7D&quot;&gt;轉寄給朋友&lt;/a&gt; | &lt;a style=&quot;color:#fff;&quot; href=&quot;%7Baction.optOutUrl%7D&quot;&gt;不再收到本站訊息&lt;/a&gt;&lt;/div&gt;"
             },
             "styles": {
               "block": {
