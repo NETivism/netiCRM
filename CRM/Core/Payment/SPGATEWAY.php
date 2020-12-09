@@ -51,14 +51,17 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_config = $config;
   }
 
-  static function getEditableFields($paymentProcessor = NULL) {
+  static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
     if (empty($paymentProcessor)) {
       $returnArray = array();
     }
     else {
       if ($paymentProcessor['url_recur'] == 1) {
-        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit');
+        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments');
       }
+    }
+    if (!empty($form)) {
+      $form->addDate('cycle_day_date', FALSE, FALSE, array('formatType' => 'custom', 'format' => 'mm-dd'));
     }
     return $returnArray;
   }

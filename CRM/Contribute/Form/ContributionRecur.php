@@ -78,6 +78,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
 
     $hideFields = NULL;
     $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'processor_id');
+    $processorName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $processorId, 'payment_processor_type');
+    $this->assign('payment_type', $processorName);
+    $this->set('payment_type', $processorName);
     $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
     if (!empty($processorId)) {
       $test = $isTest ? 'test':'live';
@@ -203,7 +206,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $activeFields = $paymentClass::$_editableFields;
       }
       else if(method_exists($paymentClass, 'getEditableFields')) {
-        $activeFields = $paymentClass::getEditableFields($paymentProcessor);
+        $activeFields = $paymentClass::getEditableFields($paymentProcessor, $this);
       }
     }
 
