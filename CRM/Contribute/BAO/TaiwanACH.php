@@ -331,25 +331,25 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     $taiwanACH = new CRM_Contribute_DAO_TaiwanACH();
     $taiwanACH->contribution_recur_id = $recurringId;
-    $taiwanACH->find(TRUE);
-    $taiwanACH->data = unserialize($taiwanACH->data);
-    $taiwanACHFields = $taiwanACH->fields();
-    foreach ($taiwanACHFields as $field) {
-      $fieldName = $field['name'];
-      $output[$fieldName] = $taiwanACH->$fieldName;
-    }
+    if ($taiwanACH->find(TRUE)) {
+      $taiwanACH->data = unserialize($taiwanACH->data);
+      $taiwanACHFields = $taiwanACH->fields();
+      foreach ($taiwanACHFields as $field) {
+        $fieldName = $field['name'];
+        $output[$fieldName] = $taiwanACH->$fieldName;
+      }
 
-    $recurring = new CRM_Contribute_DAO_ContributionRecur();
-    $recurring->id = $recurringId;
-    $recurring->find(TRUE);
-    $recurringFields = $recurring->fields();
-    foreach ($recurringFields as $field) {
-      $fieldName = $field['name'];
-      if ($fieldName != 'id') {
-        $output[$fieldName] = $recurring->$fieldName;
+      $recurring = new CRM_Contribute_DAO_ContributionRecur();
+      $recurring->id = $recurringId;
+      $recurring->find(TRUE);
+      $recurringFields = $recurring->fields();
+      foreach ($recurringFields as $field) {
+        $fieldName = $field['name'];
+        if ($fieldName != 'id') {
+          $output[$fieldName] = $recurring->$fieldName;
+        }
       }
     }
-
     return $output;
   }
 
