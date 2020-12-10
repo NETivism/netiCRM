@@ -1438,18 +1438,16 @@
                   });
                 }
 
-                setTimeout(function() {
-                  _nmeBlockControl.render(blockID, blockType);
-                  _editable();
+                _nmeBlockControl.render(blockID, blockType);
+                _editable();
 
-                  if (dataState == "new" || dataState == "clone") {
-                    if (!block.parentID && $block.length) {
-                      var scrollOpts = {};
-                      scrollOpts.buffer = $("#admin-header").length ? $("#admin-header").outerHeight() * -1 : -50;
-                      _scrollTo($block, scrollOpts);
-                    }
+                if (dataState == "new" || dataState == "clone") {
+                  if (!block.parentID && $block.length) {
+                    var scrollOpts = {};
+                    scrollOpts.buffer = $("#admin-header").length ? $("#admin-header").outerHeight() * -1 : -50;
+                    _scrollTo($block, scrollOpts);
                   }
-                }, 500);
+                }
               }
 
               // Check control permission of each block
