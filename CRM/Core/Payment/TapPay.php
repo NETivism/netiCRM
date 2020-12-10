@@ -207,7 +207,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return FALSE;
   }
 
-  public static function payByToken($recurringId = NULL, $contributionId = NULL, $sendMail = TRUE) {
+  public static function payByToken($recurringId = NULL, $referContributionId = NULL, $sendMail = TRUE) {
     if(empty($recurringId)){
       $recurringId = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $recurringId, 'REQUEST');
     }
@@ -216,46 +216,61 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $contributionRecur->id = $recurringId;
     $contributionRecur->find(TRUE);
 
-    if (empty($contributionId)) {
-      // Find the contribution
-      $config = CRM_Core_Config::singleton();
-      if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
-        $order = 'DESC';
+    // $contribution -> first contribution
+    // $c -> current editable contribution
+    // Find the contribution
+    $config = CRM_Core_Config::singleton();
+    if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
+      $order = 'DESC';
+    }
+    else {
+      $order = 'ASC';
+    }
+    $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date $order";
+    $params = array(1 => array($recurringId, 'Positive'));
+    $firstContributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
+
+    // Find FirstContribution
+    $firstContribution = new CRM_Contribute_DAO_Contribution();
+    $firstContribution->id = $firstContributionId;
+    $firstContribution->find(TRUE);
+
+    if (empty($referContributionId)) {
+      // Clone Contribution
+      $c = clone $firstContribution;
+      unset($c->id);
+      unset($c->receive_date);
+      unset($c->cancel_date);
+      unset($c->cancel_reason);
+      unset($c->invoice_id);
+      unset($c->receipt_date);
+      unset($c->receipt_id);
+      unset($c->trxn_id);
+      $c->contribution_status_id = 2;
+      $c->created_date = date('YmdHis');
+      $c->total_amount = $contributionRecur->amount;
+      $c->save();
+    }
+    else {
+      $c = new CRM_Contribute_DAO_Contribution();
+      $c->id = $referContributionId;
+      if (!$c->find(TRUE)) {
+        CRM_Core_Error::fatal(ts('Could not find the contribution.'));
       }
-      else {
-        $order = 'ASC';
-      }
-      $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date $order";
-      $params = array(1 => array($recurringId, 'Positive'));
-      $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
     }
 
-    // Clone Contribution
-    $contribution = new CRM_Contribute_DAO_Contribution();
-    $contribution->id = $contributionId;
-    $contribution->find(TRUE);
-
-    $c = clone $contribution;
-    unset($c->id);
-    unset($c->receive_date);
-    unset($c->cancel_date);
-    unset($c->cancel_reason);
-    unset($c->invoice_id);
-    unset($c->receipt_date);
-    unset($c->receipt_id);
-    unset($c->trxn_id);
-    $c->contribution_status_id = 2;
-    $c->created_date = date('YmdHis');
-    $c->total_amount = $contributionRecur->amount;
-    $c->save();
-    CRM_Contribute_BAO_ContributionRecur::syncContribute($recurringId, $c->id);
+    // Sync Recurring Custom fields.
+    if ($c->contribution_recur_id == $recurringId) {
+      CRM_Contribute_BAO_ContributionRecur::syncContribute($recurringId, $c->id);
+    }
 
     // Update new trxn_id
     $c->trxn_id = self::getContributionTrxnID($c->id);
     $c->save();
 
-    $ppid = $contribution->payment_processor_id;
-    $mode = $contribution->is_test ? 'test' : 'live';
+
+    $ppid = $firstContribution->payment_processor_id;
+    $mode = $firstContribution->is_test ? 'test' : 'live';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
     if ($paymentProcessor) {
@@ -267,7 +282,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $tappayParams = array(
         'apiType' => 'pay_by_token',
         'partnerKey' => $paymentProcessor['password'],
-        'isTest' => $c->is_test,
+        'isTest' => $firstContribution->is_test,
       );
       $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
 
