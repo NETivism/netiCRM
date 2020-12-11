@@ -371,8 +371,8 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
             $params['next_sched_contribution'] = $result['next_sched_contribution'];
             unset($result['next_sched_contribution']);
           }
-          foreach ($params as $field => $value) {
-            if (!empty($value) && !is_object($value) && !is_array($value) && $result[$field] != $value) {
+          foreach ($result as $field => $value) {
+            if (!empty($value) && !is_object($value) && !is_array($value) && $params[$field] != $value) {
               $failedFields[] = $field;
             }
           }
