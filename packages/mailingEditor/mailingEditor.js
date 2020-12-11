@@ -1816,13 +1816,22 @@
             if (fieldType == "color") {
               $target = $block.find(".nme-elem");
               $target.css(fieldType, colorVal);
+              $target.find("span").css(fieldType, colorVal);
 
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
                     blockID = $this.data("id"),
                     parentID = $this.data("parent-id"),
-                    index = $this.data("index");
+                    index = $this.data("index"),
+                    $field = $block.find(".nme-elem[data-id='" + blockID + "']");
+
+                // Reinitialize x-editable to update new value
+                if ($field.length) {
+                  $field.removeClass("editable-initialized");
+                  $field.editable("destroy");
+                  _editable($field, true);
+                }
 
                 // Update color to json
                 if (parentID) {
@@ -2240,8 +2249,54 @@
     }
   };
 
-  var _editable = function() {
-    let $editableElems = $(".nme-editable:not(.editable-initialized)");
+  var _editable = function($editableElems, initSave) {
+    $editableElems = typeof $editableElems !== "undefined" ? $editableElems : $(".nme-editable:not(.editable-initialized)");
+    initSave = typeof initSave !== "undefined" ? initSave : false;
+
+    var saveToData = function($item, value) {
+      $item = typeof $item !== "undefined" ? $item : null;
+      value = typeof value !== "undefined" ? value : "";
+
+      if ($item.length) {
+        let editableType = $item.data("type"),
+            blockID = $item.data("id"),
+            section = $item.data("section"),
+            parentID = $item.data("parent-id"),
+            parentType = $item.data("parent-type"),
+            index = $item.data("index");
+
+        if (parentID && parentType) {
+          if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
+            if (editableType == "text") {
+              if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"] = value;
+                _nmeData.update();
+              }
+            }
+
+            if (editableType == "xquill") {
+              if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["html"] = value;
+                _nmeData.update();
+              }
+            }
+          }
+        }
+        else {
+          if (_data["sections"][section]["blocks"][blockID]) {
+            if (editableType == "text") {
+              _data["sections"][section]["blocks"][blockID]["data"] = value;
+              _nmeData.update();
+            }
+
+            if (editableType == "xquill") {
+              _data["sections"][section]["blocks"][blockID]["data"]["html"] = value;
+              _nmeData.update();
+            }
+          }
+        }
+      }
+    }
 
     if (typeof $.fn.editable !== "undefined" && $editableElems.length) {
       $.fn.editable.defaults.mode = "inline";
@@ -2249,6 +2304,12 @@
 
       $editableElems.each(function() {
         let $editableElem = $(this);
+
+        if (initSave) {
+          $editableElem.on("init", function(e, editable) {
+            saveToData($(this), editable.value);
+          });
+        }
 
         $editableElem.editable();
 
@@ -2269,44 +2330,7 @@
         });
 
         $editableElem.on("save", function(e, params) {
-          let $this = $(this),
-              editableType = $this.data("type"),
-              blockID = $this.data("id"),
-              section = $this.data("section"),
-              parentID = $this.data("parent-id"),
-              parentType = $this.data("parent-type"),
-              index = $this.data("index");
-
-          if (parentID && parentType) {
-            if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
-              if (editableType == "text") {
-                if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"] = params.newValue;
-                  _nmeData.update();
-                }
-              }
-
-              if (editableType == "xquill") {
-                if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["html"] = params.newValue;
-                  _nmeData.update();
-                }
-              }
-            }
-          }
-          else {
-            if (_data["sections"][section]["blocks"][blockID]) {
-              if (editableType == "text") {
-                _data["sections"][section]["blocks"][blockID]["data"] = params.newValue;
-                _nmeData.update();
-              }
-
-              if (editableType == "xquill") {
-                _data["sections"][section]["blocks"][blockID]["data"]["html"] = params.newValue;
-                _nmeData.update();
-              }
-            }
-          }
+          saveToData($(this), params.newValue);
         });
 
         $editableElem.addClass("editable-initialized");
