@@ -206,7 +206,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $activeFields = $paymentClass::$_editableFields;
       }
       else if(method_exists($paymentClass, 'getEditableFields')) {
-        $activeFields = $paymentClass::getEditableFields($paymentProcessor, $this);
+        $activeFields = $paymentClass::getEditableFields($paymentProcessor);
       }
     }
 
@@ -276,6 +276,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         ),
       )
     );
+
+    if (!empty($paymentClass) && method_exists($paymentClass, 'postBuildForm')) {
+      $paymentClass::postBuildForm($this);
+    }
   }
 
   /**
@@ -358,32 +362,35 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         /*
          * Compare doUpdateRecur result and edit params. 
          */
-        if (!empty($result['next_sched_contribution'])) {
-          $params['next_sched_contribution'] = $result['next_sched_contribution'];
-          unset($result['next_sched_contribution']);
+        if ($result['is_error']) {
+          CRM_Core_Session::setStatus($result['msg']);
+          CRM_Core_Session::setStatus(ts('There are no any change.'));
         }
-        foreach ($result as $field => $value) {
-          if (!empty($value) && !is_object($value) && !is_array($value) && $params[$field] != $value) {
-            $failedFields[] = $field;
+        else {
+          if (!empty($result['next_sched_contribution'])) {
+            $params['next_sched_contribution'] = $result['next_sched_contribution'];
+            unset($result['next_sched_contribution']);
           }
-        }
-        if (!empty($failedFields)) {
-          CRM_Core_Error::fatal(implode(',', $failedFields) . " don't change success");
-        }
-      }
-    }
-    
-    CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
+          foreach ($params as $field => $value) {
+            if (!empty($value) && !is_object($value) && !is_array($value) && $result[$field] != $value) {
+              $failedFields[] = $field;
+            }
+          }
+          if (!empty($failedFields)) {
+            CRM_Core_Error::fatal(implode(',', $failedFields) . " don't change success");
+          }
+          else {
+            $ids = array();
+            require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+            CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
+            CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
+          }
 
-    // save the changes
-    if (!empty($result)) {
-      $ids = array();
-      require_once 'CRM/Contribute/BAO/ContributionRecur.php';
-      CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
-      CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
-    }
-    else {
-      CRM_Core_Session::setStatus(ts('There are no any change.'));
+          CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
+      
+        }
+        //end of function
+      }
     }
     $urlParams = http_build_query(array(
       'reset' => 1,
@@ -393,6 +400,5 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/contributionrecur', $urlParams));
   }
-  //end of function
 }
 

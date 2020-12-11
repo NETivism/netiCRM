@@ -318,23 +318,40 @@
             $('input#frequency_unit').val($('#fake_frequency_unit').val());
 
             if ($('input#frequency_unit').val() == 'month') {
-              $('#cycle_day').show();
+              console.log($('input#cycle_day').val());
+              $('input#cycle_day').show();
               $('#cycle_day_date_block').hide();
+              if (window.origin_type == 'year') {
+                var cycle_day_e = document.getElementById('cycle_day');
+                cycle_day_e.value = cycle_day_e.defaultValue;
+              }
+              if ($('input#cycle_day').val() > 28) {
+                $('input#cycle_day').val(28);
+              }
+              if ($('input#cycle_day').val() < 1) {
+                $('input#cycle_day').val(1);
+              }
             }
             else {
-              $('#cycle_day').hide();
+              $('input#cycle_day').hide();
               $('#cycle_day_date_block').show();
+              var monthDate = $('#cycle_day_date').val().replace("-", "");
+              $('#cycle_day').val(monthDate);
             }
             window.origin_status_id = $('select#contribution_status_id').val();
+            window.origin_type = $('input#frequency_unit').val();
 
           }
 
           updateFormStatusEnable();
           $('select#contribution_status_id').focus(function(e) {
             window.origin_status_id = e.target.value;
-            console.log(e.target.value);
-          })
-          $('select#fake_frequency_unit').change(updateFormStatusEnable);
+          });
+          $('#fake_frequency_unit').focus(function(e) {
+            window.origin_type = e.target.value;
+          });
+          $('#cycle_day_date').on('change', updateFormStatusEnable);
+          $('input#cycle_day, select#fake_frequency_unit').change(updateFormStatusEnable);
           $('select#contribution_status_id').change(function(e){
             if (window.confirm("{/literal}{ts}If you set recurring status to 'Pause' or 'Finished'. It will send API request to payment processor provider. And all other change in this page will be recover. Are you sure to change this? {/ts}{literal}")) {
               updateFormStatusEnable();
