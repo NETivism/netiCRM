@@ -240,8 +240,12 @@
       <tr><td class="label">{$form.id.label}</td><td>{$form.id.html}</td></tr>
       <tr><td class="label">{$form.amount.label}</td><td>{$form.amount.html}</td></tr>
       <tr><td class="label">{$form.currency.label}</td><td>{$form.currency.html}</td></tr>
-      <tr><td class="label">{$form.frequency_unit.label}</td><td>{ts}every{/ts} {$form.frequency_interval.html} {ts}{$form.frequency_unit.html}{/ts}</td></tr>
-      <tr><td class="label">{$form.cycle_day.label}</td><td>{$form.cycle_day.html} {if $form.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}</td></tr>
+      <tr><td class="label">{$form.frequency_unit.label}</td><td><span id="frequency_interval_block">{ts}every{/ts} {$form.frequency_interval.html} {ts}{$form.frequency_unit.html}{/ts}</span></td></tr>
+      <tr><td class="label">{$form.cycle_day.label}</td><td>
+        {$form.cycle_day.html}
+        {if $payment_type == 'SPGATEWAY'}<span id="cycle_day_date_block">{include file="CRM/common/jcalendar.tpl" elementName=cycle_day_date}</span>{/if}
+        {if $form.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}
+      </td></tr>
       <tr><td class="label">{$form.installments.label}</td><td>{$form.installments.html}</td></tr>
       <tr><td></td><td></td></tr>
       <tr><td class="label">{$form.create_date.label}</td><td>{include file="CRM/common/jcalendar.tpl" elementName=create_date}</td></tr>
@@ -272,6 +276,98 @@
       <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
       <div class="clear"></div> 
     </div>
+    {if $payment_type == 'SPGATEWAY'}
+    {literal}
+    <script>
+      (function($){
+        $(function(){
+          var allowStatusId = ["1", "5", "7"];
+          if ($('select#contribution_status_id').length) {
+            if ($('select#contribution_status_id').val() == 2) {
+              $('select#contribution_status_id').attr('disabled','disabled');
+              $('form#ContributionRecur input').attr('disabled','disabled');
+            }
+            else if (allowStatusId.includes($('select#contribution_status_id').val())){
+              $('select#contribution_status_id option').each(function(i, e){
+                if (!allowStatusId.includes(e.value)) {
+                  e.remove();
+                }
+              });
+            }
+          }
+
+          var freq = $('input#frequency_unit').attr('value');
+          $('input#frequency_unit').closest('td').append($('<select id="fake_frequency_unit"><option value="month">{/literal}{ts}monthly{/ts}{literal}</option><option value="year">{/literal}{ts}yearly{/ts}{literal}</option></select>'));
+          $('select#fake_frequency_unit [value='+freq+']').attr('selected', 'selected');
+          $('#frequency_interval_block').hide();
+
+          function updateFormStatusEnable() {
+            var $inputs = $('input#amount, input#frequency_unit, input#cycle_day, input#installments');
+            if ($('select#contribution_status_id').val() == 5) {
+              $inputs.removeAttr('disabled');
+              $('#fake_frequency_unit').removeAttr('disabled');
+            }
+            else {
+              $inputs.each(function(i, e) {
+                e.value = e.defaultValue;
+                e.disabled = true;
+              });
+              $('#fake_frequency_unit').val($('input#frequency_unit').attr('value')).attr('disabled','disabled');
+            }
+
+            $('input#frequency_unit').val($('#fake_frequency_unit').val());
+
+            if ($('input#frequency_unit').val() == 'month') {
+              console.log($('input#cycle_day').val());
+              $('input#cycle_day').show();
+              $('#cycle_day_date_block').hide();
+              if (window.origin_type == 'year') {
+                var cycle_day_e = document.getElementById('cycle_day');
+                cycle_day_e.value = cycle_day_e.defaultValue;
+              }
+              if ($('input#cycle_day').val() > 28) {
+                $('input#cycle_day').val(28);
+              }
+              if ($('input#cycle_day').val() < 1) {
+                $('input#cycle_day').val(1);
+              }
+            }
+            else {
+              $('input#cycle_day').hide();
+              $('#cycle_day_date_block').show();
+              var monthDate = $('#cycle_day_date').val().replace("-", "");
+              $('#cycle_day').val(monthDate);
+            }
+            window.origin_status_id = $('select#contribution_status_id').val();
+            window.origin_type = $('input#frequency_unit').val();
+
+          }
+
+          updateFormStatusEnable();
+          $('select#contribution_status_id').focus(function(e) {
+            window.origin_status_id = e.target.value;
+          });
+          $('#fake_frequency_unit').focus(function(e) {
+            window.origin_type = e.target.value;
+          });
+          $('#cycle_day_date').on('change', updateFormStatusEnable);
+          $('input#cycle_day, select#fake_frequency_unit').change(updateFormStatusEnable);
+          $('select#contribution_status_id').change(function(e){
+            if (window.confirm("{/literal}{ts}If you set recurring status to 'Pause' or 'Finished'. It will send API request to payment processor provider. And all other change in this page will be recover. Are you sure to change this? {/ts}{literal}")) {
+              updateFormStatusEnable();
+            }
+            else {
+              e.target.value = window.origin_status_id;
+            }
+          })
+
+        });
+      })(cj);
+    </script>
+    {/literal}
+    {/if}
+
+
     {if $form.note_title.html}
     {literal}
     <script>
@@ -285,7 +381,6 @@
             else {
               $('#note_title').data('status', '');
             }
-            console.log($('#note_title').data('status'));
             updateNoteTitle()
           });
 

@@ -417,12 +417,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
       $membershipTypeDetails["renewal_reminder_day"] &&
       $endDate
     ) {
-      $date = explode('-', $endDate);
-      $year = $date[0];
-      $month = $date[1];
-      $day = $date[2];
-      $day = $day - $membershipTypeDetails["renewal_reminder_day"];
-      $reminderDate = date('Y-m-d', mktime(0, 0, 0, $month, $day - 1, $year));
+      $reminderDate = self::calcReminderDate($endDate, $membershipTypeDetails['renewal_reminder_day']);
     }
 
     $dates = array('start_date' => 'startDate',
@@ -611,16 +606,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     $membershipDates['end_date'] = CRM_Utils_Date::customFormat($endDate, '%Y%m%d');
 
     if (CRM_Utils_Array::value("renewal_reminder_day", $membershipTypeDetails)) {
-      $date = explode('-', $endDate);
-      $year = $date[0];
-      $month = $date[1];
-      $day = $date[2];
-      $day = $day - $membershipTypeDetails["renewal_reminder_day"];
-      $reminderDate = date('Y-m-d', mktime(0, 0, 0,
-          $month,
-          $day - 1,
-          $year
-        ));
+      $reminderDate = self::calcReminderDate($endDate, $membershipTypeDetails['renewal_reminder_day']);
       $membershipDates['reminder_date'] = CRM_Utils_Date::customFormat($reminderDate, '%Y%m%d');
     }
 
@@ -648,6 +634,17 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
       CRM_Core_DAO::storeValues($dao, $membershipTypes[$dao->id]);
     }
     return $membershipTypes;
+  }
+
+  static function calcReminderDate($endDate, $renewalReminderDay) {
+    $endTimestamp = strtotime($endDate);
+    if ($renewalReminderDay != 0) {
+      $reminderDate = date('Y-m-d', $endTimestamp - 86400*($renewalReminderDay));
+    }
+    else {
+      $reminderDate = date('Y-m-d', $endTimestamp);
+    }
+    return $reminderDate;
   }
 }
 

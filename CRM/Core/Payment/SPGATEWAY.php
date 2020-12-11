@@ -57,10 +57,17 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     else {
       if ($paymentProcessor['url_recur'] == 1) {
-        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit');
+        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments');
       }
     }
     return $returnArray;
+  }
+
+  static function postBuildForm($form) {
+    $form->addDate('cycle_day_date', FALSE, FALSE, array('formatType' => 'custom', 'format' => 'mm-dd'));
+    $cycleDay = &$form->getElement('cycle_day');
+    unset($cycleDay->_attributes['max']);
+    unset($cycleDay->_attributes['min']);
   }
 
   /**
@@ -158,6 +165,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       * )
       */
   function doUpdateRecur($params, $debug = FALSE) {
+    if ($debug) {
+      CRM_Core_error::debug('SPGATEWAY doUpdateRecur $params', $params);
+    }
     if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.api') === FALSE) {
       CRM_Core_Error::fatal('Module civicrm_spgateway doesn\'t exists.');
     }
@@ -247,20 +257,29 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       */
 
       if (!empty($params['frequency_unit'])) {
-        $requestParams['PeriodType'] = $recurParamsMap['frequency_unit'][$requestParams['PeriodType']];
+        $requestParams['PeriodType'] = $recurParamsMap['frequency_unit'][$params['frequency_unit']];
         $isChangeRecur = TRUE;
       }
       if (!empty($params['cycle_day'])) {
-        $requestParams['PeriodPoint'] = sprintf('%02d', $params['cycle_day']);
         if (empty($requestParams['PeriodType'])) {
           $unit = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $params['contribution_recur_id'], 'frequency_unit');
           $requestParams['PeriodType'] = self::$_unitMap[$unit];
         }
         $isChangeRecur = TRUE;
       }
+      if ($requestParams['PeriodType'] == 'M') {
+        $requestParams['PeriodPoint'] = sprintf('%02d', $params['cycle_day']);
+      }
+      else {
+        $requestParams['PeriodPoint'] = sprintf('%04d', $params['cycle_day']);
+      }
       if (!empty($params['amount'])) {
         $requestParams['AlterAmt'] = $params['amount'];
         $isChangeRecur = TRUE;
+      }
+
+      if ($debug) {
+        CRM_Core_error::debug('SPGATEWAY doUpdateRecur $requestParams', $requestParams);
       }
 
       /**
@@ -271,6 +290,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $apiOthers->request($requestParams);
         if ($debug) {
           $result['API']['AlterMnt'] = $apiOthers;
+          CRM_Core_error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
         }
         if ($apiOthers->_response->Status == 'SUCCESS') {
           $apiResult = $apiOthers->_response->Result;
@@ -285,6 +305,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           if (!empty($apiResult->NewNextTime)) {
             $result['next_sched_contribution'] = $apiResult->NewNextTime;
           }
+        }
+        else {
+          $result['is_error'] = 1;
+          $result['msg'] = $apiOthers->_response->Status.': '.$apiOthers->_response->Message;
         }
       }
     }

@@ -198,9 +198,16 @@
                     </td>
                 </tr>
                 <tr class="crm-membership-type-form-block-renewal_reminder_day">              
-                    <td class="label">{$form.renewal_reminder_day.label}</td>
-                    <td>{$form.renewal_reminder_day.html}<br />
-                        <span class="description">{ts}Send Reminder these many days prior to membership expiration.{/ts}</span>
+                    <td class="label">
+                      {$form.renewal_reminder_day.label}
+                    </td>
+                    <td>{$form.renewal_reminder_day.html} {ts}days before end date{/ts}
+                      {if $memberCount}
+                        <div class="description font-red">
+                        {ts 1=$memberCount}Caution!! You already have %1 member(s) in this membership type. Change this setting will re-calculate reminder date on these members.{/ts}
+                        </div>
+                      {/if}
+                      <div class="description">{ts}Send Reminder these many days prior to membership expiration.{/ts}</div>
                     </td>
                 </tr>
             </table>
@@ -212,8 +219,28 @@
     <div class="spacer"></div>
 </div>
 </div>
-{literal}
     <script type="text/javascript">
+{literal}
+    {/literal}{if $memberCount}{literal}
+      var originReminder = "{/literal}{$origin_reminder_day}{literal}";
+      cj(document).ready(function($){
+        if (originReminder.length > 0) {
+          var hint = "{/literal}{ts 1=$memberCount}Caution!! You already have %1 member(s) in this membership type. Change this setting will re-calculate reminder date on these members.{/ts} {ts}Do you want to continue?{/ts}{literal}";
+          $("#MembershipType").submit(function(e){
+            if (originReminder != $("#renewal_reminder_day").val()) {
+              var yesno = window.confirm(hint);
+              if (!yesno) {
+                $(".crm-submit-buttons input[type=submit]").removeAttr("readonly");
+                console.log($(this).data("submitted"));
+                $(this).data("submitted", false);
+              }
+              return yesno;
+            }
+          });
+        }
+      });
+    {/literal}{/if}{literal}
+
     if ( ( document.getElementsByName("period_type")[0].value   == "fixed" ) && 
          ( document.getElementsByName("duration_unit")[0].value == "year"  ) ) {
  	        show('fixed_start_day_row', 'table-row');
@@ -240,5 +267,5 @@
 		    document.getElementsByName("fixed_period_rollover_day[d]")[0].value = "";
 	    }
     }
-    </script>
 {/literal}
+    </script>

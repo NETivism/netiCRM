@@ -153,7 +153,9 @@
                     "id": "title-uy941b0wc6",
                     "type": "title",
                     "section": "body",
-                    "data": "本期電子報的頭條",
+                    "data": {
+                      "html": "本期電子報的頭條"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",
@@ -407,7 +409,9 @@
                     "id": "title-cx3rn0vdv3",
                     "type": "title",
                     "section": "body",
-                    "data": "這是標題區塊，點擊即可編輯",
+                    "data": {
+                      "html": "這是標題區塊，點擊即可編輯"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",
@@ -626,7 +630,9 @@
                     "id": "title-o6kvbnqoe9",
                     "type": "title",
                     "section": "body",
-                    "data": "標題區塊通常用來填寫文章標題",
+                    "data": {
+                      "html": "標題區塊通常用來填寫文章標題"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",

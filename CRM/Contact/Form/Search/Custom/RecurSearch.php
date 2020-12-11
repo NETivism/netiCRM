@@ -296,10 +296,10 @@ $having
       $form->setDefaults($defaults);
     }
     
-    $statuses = $this->_cstatus;
-    unset($statuses[6]);
-    unset($statuses[4]);
-    krsort($statuses);
+    $status = $this->_cstatus;
+    foreach(array(5,2,3,6,7,1) as $key) {
+      $statuses[$key] = $status[$key];
+    }
     $form->addRadio('status', ts('Recurring Status'), $statuses, array('allowClear' => TRUE));
 
     $installments = array(

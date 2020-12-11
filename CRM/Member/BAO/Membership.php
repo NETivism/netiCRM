@@ -1892,6 +1892,27 @@ FROM   civicrm_membership_type
     }
     return $access;
   }
+
+  function updateReminderDate($membershipId) {
+    $memberships = array();
+    $params = array('id' => $membershipId); 
+    self::getValues($params, $memberships);
+    $member = reset($memberships);
+    if (!empty($member) && $member['id']) {
+      $reminderDate = 'null';
+      $membershipTypeDetails = CRM_Member_BAO_MembershipType::getMembershipTypeDetails($member['membership_type_id']);
+      if (!empty($membershipTypeDetails['renewal_msg_id']) && !empty($member['end_date'])) {
+        if($membershipTypeDetails['renewal_reminder_day'] === '0' || !empty($membershipTypeDetails['renewal_reminder_day'])) {
+          $reminderDate = CRM_Member_BAO_MembershipType::calcReminderDate($member['end_date'], $membershipTypeDetails['renewal_reminder_day']);
+          if (empty($reminderDate)) {
+            $reminderDate = 'null';
+          }
+        }
+      } 
+      CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $member['id'], 'reminder_date', $reminderDate);
+    }
+    else {
+      return FALSE;
+    }
+  }
 }
-
-
