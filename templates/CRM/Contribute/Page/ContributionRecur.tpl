@@ -301,6 +301,14 @@
           $('select#fake_frequency_unit [value='+freq+']').attr('selected', 'selected');
           $('#frequency_interval_block').hide();
 
+          // Set default value when type is year.
+          if ($('input#frequency_unit').val() == 'year') {
+            var monthDayValue = $('input#cycle_day').val();
+            var month = ('0' + monthDayValue.replace(/^(\d{1,2})(\d{2})$/, "$1")).slice(-2);
+            var day = monthDayValue.replace(/^(\d{1,2})(\d{2})$/, "$2");
+            $('input#cycle_day_date').val(month+"-"+day);;
+          }
+
           function updateFormStatusEnable() {
             var $inputs = $('input#amount, input#frequency_unit, input#cycle_day, input#installments');
             if ($('select#contribution_status_id').val() == 5) {
