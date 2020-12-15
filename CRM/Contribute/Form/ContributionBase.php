@@ -166,6 +166,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
   protected $_originalId;
 
+  public $_originalValues;
+
   /**
    * the Membership ID for membership renewal
    *
@@ -236,7 +238,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         $this->assign('is_contact_admin', 0);
       }
       if ($this->get('originalId')) {
-        $this->assign('originalId', $this->get('originalId'));
+        $this->_originalId = $this->get('originalId');
+        $this->assign('originalId', $this->_originalId);
       }
       $this->_mid = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
       if ($this->_mid) {
@@ -1031,6 +1034,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $track = CRM_Core_BAO_Track::add($params);
   }
 
+  /**
+   * Load custom field default value from original contribution id
+   * 
+   * @id  int
+   *   original contribution id 
+   */
   public function loadDefaultFromOriginalId($id = NULL) {
     $this->_originalId = NULL;
     if (empty($id)) {
@@ -1044,6 +1053,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         // double check oid is from same contact
         if($original->contact_id == $this->_userID) {
           $this->set('originalId', $id);
+          $this->assign('originalId', $id);
           $this->_originalId = $id;
           $defaultFromRequest = $this->get('defaultFromRequest');
           if (!isset($defaultFromRequest['amt'])) $defaultFromRequest['amt'] = (int) $original->total_amount;

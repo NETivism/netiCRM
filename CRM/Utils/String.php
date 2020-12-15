@@ -38,7 +38,7 @@
  *
  */
 class CRM_Utils_String {
-  CONST COMMA = ",", SEMICOLON = ";", SPACE = " ", TAB = "\t", LINEFEED = "\n", CARRIAGELINE = "\r\n", LINECARRIAGE = "\n\r", CARRIAGERETURN = "\r";
+  CONST COMMA = ",", SEMICOLON = ";", SPACE = " ", TAB = "\t", LINEFEED = "\n", CARRIAGELINE = "\r\n", LINECARRIAGE = "\n\r", CARRIAGERETURN = "\r", MASK = '*';
 
   /**
    * List of all letters and numbers
@@ -697,21 +697,21 @@ class CRM_Utils_String {
     }
 
     if ($mode == 'custom' && is_int($start) && is_int($end)) {
-      $str = mb_substr($str, 0, $start) . str_repeat('*', $length - $end - 1) . mb_substr($str, -1 * $end, $end);
+      $str = mb_substr($str, 0, $start) . str_repeat(self::MASK, $length - $end - 1) . mb_substr($str, -1 * $end, $end);
       if ($start == 0) {
-        $str = '*'.$str;
+        $str = self::MASK.$str;
       }
     }
     else {
       switch($length) {
         case 2:
-          $str = mb_substr($str, 0, 1) . '*';
+          $str = mb_substr($str, 0, 1) . self::MASK;
         case 3:
         case 4:
-          $str = mb_substr($str, 0, 1) . str_repeat('*', $length - 2) . mb_substr($str, -1, 1);
+          $str = mb_substr($str, 0, 1) . str_repeat(self::MASK, $length - 2) . mb_substr($str, -1, 1);
           break;
         default:
-          $str = mb_substr($str, 0, 1) . str_repeat('*', $length - 3) . mb_substr($str, -2, 2);
+          $str = mb_substr($str, 0, 1) . str_repeat(self::MASK, $length - 3) . mb_substr($str, -2, 2);
           break;
       }
 
