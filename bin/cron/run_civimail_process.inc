@@ -63,12 +63,9 @@ class CiviMailProcessor {
      */
     static function process($name = null) {
 
-        require_once 'CRM/Core/DAO/MailSettings.php';
-        $dao = new CRM_Core_DAO_MailSettings;
-        $dao->domain_id = CRM_Core_Config::domainID( );
-        
+        $dao = CRM_Core_BAO_MailSettings::defaultDAO();
         $name ? $dao->name = $name : $dao->is_default = 1;
-        if ( ! $dao->find(true) ) {
+        if (empty($dao->domain)) {
             throw new Exception("Could not find entry named $name in civicrm_mail_settings");
         }
 

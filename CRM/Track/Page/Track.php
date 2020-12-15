@@ -80,6 +80,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $statistics = new CRM_Track_Selector_Track($params);
     $dao = $statistics->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN state >= 4 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start, GROUP_CONCAT(entity_id) as entity_ids", 'GROUP BY referrer_type');
 
+    $total = 0;
     while($dao->fetch()){
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
       $total = $total+$dao->count;
@@ -93,17 +94,17 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
         switch($params['pageType']) {
           case 'civicrm_contribution_page':
             $sql = "SELECT SUM(total_amount) FROM civicrm_contribution WHERE id IN($dao->entity_ids) AND contribution_status_id = 1 AND is_test = 0 GROUP BY is_test";
-            $total = CRM_Core_DAO::singleValueQuery($sql);
+            $totalAmount = CRM_Core_DAO::singleValueQuery($sql);
           break;
           case 'civicrm_event':
             $statusPending = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Pending'" );
             $statusPositive = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Positive'" );
             $statues = $statusPending+$statusPositive;
             $sql = "SELECT SUM(fee_amount) FROM civicrm_participant WHERE id IN($dao->entity_ids) AND is_test = 0 AND status_id IN (".implode("," , array_keys($statues)).") GROUP BY is_test";
-            $total = CRM_Core_DAO::singleValueQuery($sql);
+            $totalAmount = CRM_Core_DAO::singleValueQuery($sql);
           break;
         }
-        $stat[$type]['total_amount'] = $total;
+        $stat[$type]['total_amount'] = $totalAmount;
       }
       if (empty($stat[$type]['total_amount'])) {
         $stat[$type]['total_amount'] = (float) 0;

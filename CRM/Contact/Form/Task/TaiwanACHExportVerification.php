@@ -95,7 +95,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
       $params = array( 1 => array("{$date}_%", 'String'));
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
     }
-    $this->_exportParams['file_name'] = 'ACH_Verification_'.$date;
+    $this->_exportParams['file_name'] = str_replace(" ", "_", $values['payment_type']).'_Verification_'.$date;
     $this->_exportParams['date'] = $date;
     CRM_Contribute_BAO_TaiwanACH::doExportVerification($this->_additionalIds, $this->_exportParams, $values['payment_type'], $values['export_format']);
   }

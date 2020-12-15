@@ -60,6 +60,7 @@ $(function(){
             this.setClass();
 
             var blockID = this.options.scope.attributes['data-id']['nodeValue'],
+                blockClass = this.options.scope.attributes['class']['nodeValue'],
                 html = blockID ? this.xeditable.html[blockID] : '',
                 text = stripHTML(html);
 
@@ -84,13 +85,33 @@ $(function(){
             var quillAlign = Quill.import('attributors/style/align');
             Quill.register(quillAlign, true);
 
+            // Added inline style whitelist to Quill
+            var quillParchment = Quill.import('parchment');
+            var quillParchmentAttrs = {};
+
+            // Inline Style Whitelist: text-decoration
+            quillParchmentAttrs.textDecoration = {};
+            quillParchmentAttrs.textDecoration.attrConfig = {
+                scope: quillParchment.Scope.INLINE,
+                whitelist: ['none', 'underline', 'overline', 'line-through']
+            };
+            quillParchmentAttrs.textDecoration.attrStyle = new quillParchment.Attributor.Style('text-decoration', 'text-decoration', quillParchmentAttrs.textDecoration.attrConfig);
+
+            // Register attributor
+            for (var attr in quillParchmentAttrs) {
+                if (quillParchmentAttrs[attr].attrStyle) {
+                    quillParchment.register(quillParchmentAttrs[attr].attrStyle);
+                }
+            }
+
             var toolbarOptions = [
               ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
               [{ 'color': ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00', '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', '#3d1466'] }, { 'background': [] }],          // dropdown with defaults from theme
               [{ 'size': ['13px', false, '20px', '28px'] }],
               [{ 'align': [] }],
               [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              ['link']
+              ['link'],
+              ['emoji']
               //['image']
 
               //['blockquote', 'code-block'],
@@ -108,6 +129,14 @@ $(function(){
               //['clean']                                         // remove formatting button
             ];
 
+            if (blockClass.indexOf("nmee-title") != -1) {
+                toolbarOptions = [
+                    [{ 'background': [] }],
+                    ['link'],
+                    ['emoji']
+                ];
+            }
+
             var tokenToolbar = [];
             var tokenQuillOption = [];
             if (window.nmEditor.tokenTrigger) {
@@ -123,7 +152,8 @@ $(function(){
             var quillOptions = {
               //debug: 'info',
               modules: {
-                toolbar: toolbarOptions
+                toolbar: toolbarOptions,
+                'emoji-toolbar': true
               },
               placeholder: this.options.placeholder ? this.options.placeholder : 'Please enter content...',
               //readOnly: true,

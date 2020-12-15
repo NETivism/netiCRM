@@ -547,8 +547,8 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
     // CRM-4290, do not show archived or unscheduled mails
     // on 'Scheduled and Sent Mailing' page selector
     if ($this->_parent->get('scheduled')) {
-      $clauses[] = "civicrm_mailing.scheduled_id IS NOT NULL";
-      $clauses[] = "( civicrm_mailing.is_archived IS NULL OR civicrm_mailing.is_archived = 0 )";
+      $clauses[] = "civicrm_mailing.scheduled_date IS NOT NULL";
+      $clauses[] = "( civicrm_mailing.is_archived IS NULL OR civicrm_mailing.is_archived = 0)";
       $status = $this->_parent->get('mailing_status');
       if (!empty($status)) {
         $status = array_keys($status);
@@ -556,7 +556,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
         $clauses[] = "civicrm_mailing_job.status IN ('$status')";
       }
       else {
-        $clauses[] = "civicrm_mailing_job.status IN ('Scheduled', 'Complete', 'Running')";
+        $clauses[] = "civicrm_mailing_job.status IN ('Scheduled', 'Complete', 'Running', 'Canceled')";
       }
     }
 
