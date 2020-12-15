@@ -328,6 +328,102 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $response;
   }
 
+  /**
+   * @param $paymentProcessorId Payment Processor ID
+   * @param $contribId Which contribution be updated
+   * @param $tokenParams Array, must contain 'card_toke', 'card_key'
+   * @param $sendMail Boolean, Send mail after finished transaction or not.
+   * return array('status' => $result->status, 'msg' => $result->msg);
+   */
+  public static function payByTokenForNonRecur($paymentProcessorId, $contribId, $tokenParams, $sendMail = FALSE) {
+    // Check required parameters
+    // Check token.
+    $requiredTokenParams = array('card_key', 'card_token');
+    foreach($requiredTokenParams as $paramsKey) {
+      if (empty($tokenParams[$paramsKey])) {
+        CRM_Core_Error::fatal(ts('Missing required field: %1', array(1 => $paramsKey)));
+      }
+    }
+
+    if (empty($contribId)) {
+      CRM_Core_Error::fatal(ts('Missing required field: %1', array(1 => 'contribution ID')));
+    }
+    if (empty($paymentProcessorId)) {
+      CRM_Core_Error::fatal(ts('Missing required field: %1', array(1 => '$paymentProcessorId')));
+    }
+
+    $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribId, 'is_test');
+    $mode = $isTest?'test':'live';
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $mode);
+    if (empty($paymentProcessor)) {
+      CRM_Core_Error::fatal(ts('Missing input parameters').':getPayment');
+    }
+
+    $config = CRM_Core_Config::singleton();
+    $debug = $config->debug;
+
+    $contribution = $ids = array();
+    $params = array('id' => $contribId);
+    CRM_Contribute_BAO_Contribution::getValues($params, $contribution, $ids);
+    $tappayParams = array(
+      'apiType' => 'pay_by_token',
+      'partnerKey' => $paymentProcessor['password'],
+      'isTest' => $isTest,
+    );
+    $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
+
+    // Prepare tappay api post data
+    $details = !empty($contribution['amount_level']) ? $contribution['source'].'-'.$contribution['amount_level'] : $contribution['source'];
+    $tappayData = new CRM_Contribute_DAO_TapPay();
+    $tappayData->contribution_id =$contribId;
+    $tappayData->card_key = $tokenParams['card_key'];
+    $tappayData->card_token = $tokenParams['card_token'];
+    $tappayData->save();
+    if ($contribution['currency'] == 'TWD') {
+      $amount = (int)$contribution['total_amount'];
+    }
+    else {
+      $amount = (float)$contribution['total_amount'];
+    }
+    $data = array(
+      'card_key' => $tokenParams['card_key'],
+      'card_token' => $tokenParams['card_token'],
+      'partner_key' => $paymentProcessor['password'],
+      'merchant_id' => $paymentProcessor['user_name'],
+      'amount' => $amount,
+      'currency' => $contribution['currency'],
+      'order_number' => $contribution['trxn_id'],
+      'details' => mb_substr($details, 0, 98), // item name
+    );
+
+    // Allow further manipulation of the arguments via custom hooks ..
+    $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+    CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
+    if ($debug) {
+      CRM_Core_Error::debug('TapPay::payByTokenForNonRecur $data', $data);
+    }
+
+    // Send tappay pay_by_token post
+    $result = $api->request($data);
+
+    if ($debug) {
+      CRM_Core_Error::debug('TapPay::payByTokenForNonRecur $result', $result);
+    }
+
+    // Validate the result.
+    self::doTransaction($result, $contribId, $sendMail);
+
+    $response = array('status' => $result->status, 'msg' => $result->msg);
+    if ($debug) {
+      CRM_Contribute_BAO_Contribution::getValues($params, $resultContribution, $ids);
+      $response['result'] = $result;
+      $response['data'] = $data;
+      $response['originContribution'] = $contribution;
+      $response['resultContribution'] = $resultContribution;
+    }
+    return $response;
+  }
+
   public static function cardMetadata($contributionId, $data = NULL) {
     if (empty($contributionId))  {
       return FALSE;
@@ -383,7 +479,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         }
       } 
     }
-    return FALSE;  
+    return FALSE;
   }
 
   public static function doTransaction($result, $contributionId = NULL, $sendMail = TRUE) {
