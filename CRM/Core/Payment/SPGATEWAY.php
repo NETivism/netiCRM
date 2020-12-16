@@ -273,10 +273,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
        */
       if ($isChangeRecur) {
         $apiOthers = clone $spgatewayAPI;
-        $recurResult += $apiOthers->request($requestParams);
+        $recurResult2 = $apiOthers->request($requestParams);
         if ($debug) {
           $recurResult['API']['AlterMnt'] = $apiOthers;
           CRM_Core_error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
+        }
+        if (is_array($recurResult2)) {
+          $recurResult += $recurResult2;
         }
       }
 
