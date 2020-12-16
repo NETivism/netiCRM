@@ -369,7 +369,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
             /*
              * Compare doUpdateRecur result and edit params. 
              */
-            if (!empty($result['next_sched_contribution'])) {
+            if (!empty($resultParams['next_sched_contribution'])) {
               $params['next_sched_contribution'] = $resultParams['next_sched_contribution'];
               unset($resultParams['next_sched_contribution']);
             }
