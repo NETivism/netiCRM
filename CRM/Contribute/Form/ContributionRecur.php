@@ -329,6 +329,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $recur = array();
     $ids = array('id' => $this->_id);
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionRecur', $ids, $recur);
+    $isUpdate = FALSE;
     if (!empty($recur) && !empty($recur['processor_id'])) {
 
       /**
@@ -344,6 +345,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $activeFields = $paymentClass::getEditableFields($paymentProcessor);
       }
       if (method_exists($paymentClass, 'doUpdateRecur') && !empty($activeFields)) {
+        // For Payment which has doUpdateRecur and _editableFields, Like Spgateway.
         foreach ($activeFields as $field) {
           if ($recur[$field] != $params[$field]) {
             $requestParams[$field] = $params[$field];
@@ -356,41 +358,51 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
           if (isset($config->debug)) {
             $debug = $config->debug;
           }
-          $result = $paymentClass->doUpdateRecur($requestParams, $debug);
-        }
-
-        /*
-         * Compare doUpdateRecur result and edit params. 
-         */
-        if ($result['is_error']) {
-          CRM_Core_Session::setStatus($result['msg']);
-          CRM_Core_Session::setStatus(ts('There are no any change.'));
-        }
-        else {
-          if (!empty($result['next_sched_contribution'])) {
-            $params['next_sched_contribution'] = $result['next_sched_contribution'];
-            unset($result['next_sched_contribution']);
-          }
-          foreach ($result as $field => $value) {
-            if (!empty($value) && !is_object($value) && !is_array($value) && $params[$field] != $value) {
-              $failedFields[] = $field;
-            }
-          }
-          if (!empty($failedFields)) {
-            CRM_Core_Error::fatal(implode(',', $failedFields) . " don't change success");
+          $resultParams = $paymentClass->doUpdateRecur($requestParams, $debug);
+          if ($resultParams['is_error']) {
+            CRM_Core_Session::setStatus($resultParams['msg']);
+            CRM_Core_Session::setStatus(ts('There are no any change.'));
           }
           else {
-            $ids = array();
-            require_once 'CRM/Contribute/BAO/ContributionRecur.php';
-            CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
-            CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
-          }
+            $isUpdate = TRUE;
 
-          CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
-      
+            /*
+             * Compare doUpdateRecur result and edit params. 
+             */
+            if (!empty($result['next_sched_contribution'])) {
+              $params['next_sched_contribution'] = $resultParams['next_sched_contribution'];
+              unset($resultParams['next_sched_contribution']);
+            }
+            foreach ($resultParams as $field => $value) {
+              if (!empty($value) && !is_object($value) && !is_array($value) && $params[$field] != $value) {
+                $params[$field] = $value;
+                $failedFields[] = $field;
+              }
+            }
+            if (!empty($failedFields)) {
+              CRM_Core_Session::setStatus(implode(',', $failedFields) . " don't change success");
+            }
+          }
         }
+
         //end of function
-      }
+      } // Payment has doUpdateRecur function
+      else {
+        // For payment which has no doUpdateRecur function, Like TapPay.
+        $isUpdate = TRUE;
+      } // Payment has no doUpdateRecur function
+    } // $recur has 'process_id'
+
+    if ($isUpdate) {
+      // If there has update.
+      // Update contribution recur
+      
+      $ids = array();
+      require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+      CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
+      CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
+    
+      CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
     }
     $urlParams = http_build_query(array(
       'reset' => 1,
