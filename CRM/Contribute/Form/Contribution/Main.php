@@ -217,7 +217,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
   }
 
   function setDefaultValues() {
-    $this->_originalValues = array();
     // process defaults only once
     if (!empty($this->_defaults)) {
       // return $this->_defaults;
@@ -345,7 +344,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
               NULL, CRM_Profile_Form::MODE_REGISTER
             );
           }
-          if (!empty($this->_originalId)) {
+          if (!empty($this->_originalId) && empty($this->_ppType)) {
             if ($field['html_type'] == 'Text') {
               $this->_originalValues[$name] = $this->_defaults[$name];
               $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
@@ -492,7 +491,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->_defaults['selectProduct'] = $this->_defaultFromRequest['gift'];
     }
 
-    if (!empty($this->_originalValues)) {
+    if (!empty($this->_originalValues) && empty($this->get('originalValues'))) {
       $this->set('originalValues', $this->_originalValues);
     }
     return $this->_defaults;
