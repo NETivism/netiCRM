@@ -220,7 +220,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           return $errResult;
         }
       }
-      return $recurResult;
 
       // Send alter other property API.
 
