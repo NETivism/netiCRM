@@ -18,6 +18,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
   public static $_statusMap = array(
     // 3 => 'terminate',   // Can't undod. Don't Use
+    1 => 'suspend',
     5 => 'restart',
     7 => 'suspend',
   );
@@ -190,18 +191,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $periodNo = $dao->period_no;
       }
 
-      $recurParamsMap = array(
-        'contribution_status_id' => array(
-          // 3 => 'terminate',   // Can't undod. Don't Use
-          5 => 'restart',
-          7 => 'suspend',
-        ),
-        'frequency_unit' => array(
-          'year' => 'Y',
-          'month' => 'M',
-        ),
-      );
-
       // If status is changed, Send request to alter status API.
 
       if (!empty($params['contribution_status_id'])) {
@@ -220,22 +209,18 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           'AlterType' => self::$_statusMap[$newStatusId],
         );
         $apiAlterStatus = clone $spgatewayAPI;
-        $apiAlterStatus->request($requestParams);
+        $recurResult = $apiAlterStatus->request($requestParams);
         if ($debug) {
-          $result['API']['AlterType'] = $apiAlterStatus;
+          $recurResult['API']['AlterType'] = $apiAlterStatus;
         }
 
-        if ($apiAlterStatus->_response->Status == 'SUCCESS') {
-          $resultType = $apiAlterStatus->_response->Result->AlterType;
-          if (!empty($resultType)) {
-            $statusReverseMap = array_flip(self::$_statusMap);
-            $result['contribution_status_id'] = $statusReverseMap[$resultType];
-          }
-          if (!empty($result['NewNextTime'])) {
-            $result['next_sched_contribution'] = $result['NewNextTime'];
-          }
+        if (!empty($recurResult['is_error'])) {
+          // There are error msg in $recurResult['msg']
+          $errResult = $recurResult;
+          return $errResult;
         }
       }
+      return $recurResult;
 
       // Send alter other property API.
 
@@ -257,9 +242,11 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       */
 
       if (!empty($params['frequency_unit'])) {
-        $requestParams['PeriodType'] = $recurParamsMap['frequency_unit'][$params['frequency_unit']];
+
+        $requestParams['PeriodType'] = self::$_unitMap[$params['frequency_unit']];
         $isChangeRecur = TRUE;
       }
+
       if (!empty($params['cycle_day'])) {
         if (empty($requestParams['PeriodType'])) {
           $unit = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $params['contribution_recur_id'], 'frequency_unit');
@@ -287,35 +274,24 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
        */
       if ($isChangeRecur) {
         $apiOthers = clone $spgatewayAPI;
-        $apiOthers->request($requestParams);
+        $recurResult += $apiOthers->request($requestParams);
         if ($debug) {
-          $result['API']['AlterMnt'] = $apiOthers;
+          $recurResult['API']['AlterMnt'] = $apiOthers;
           CRM_Core_error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
         }
-        if ($apiOthers->_response->Status == 'SUCCESS') {
-          $apiResult = $apiOthers->_response->Result;
-          if (!empty($apiResult->PeriodType)) {
-            $unitReverseMap = array_flip(self::$_unitMap);
-            $result['frequency_unit'] = $unitReverseMap[$apiResult->PeriodType];
-          }
-          $result['cycle_day'] = $apiResult->PeriodPoint;
-          if (!empty($apiResult->NewNextAmt) && $apiResult->NewNextAmt != '-') {
-            $result['amount'] = $apiResult->NewNextAmt;
-          }
-          if (!empty($apiResult->NewNextTime)) {
-            $result['next_sched_contribution'] = $apiResult->NewNextTime;
-          }
-        }
-        else {
-          $result['is_error'] = 1;
-          $result['msg'] = $apiOthers->_response->Status.': '.$apiOthers->_response->Message;
-        }
+      }
+
+      if (!empty($recurResult['is_error'])) {
+        // There are error msg in $recurResult['msg']
+        $errResult = $recurResult;
+        return $errResult;
       }
     }
+
     if ($debug) {
-      CRM_Core_Error::debug('Payment Spgateway doUpdateRecur $result', $result);
+      CRM_Core_Error::debug('Payment Spgateway doUpdateRecur $recurResult', $recurResult);
     }
-    return $result;
+    return $recurResult;
   }
 
   function cancelRecuringMessage($recurID){
