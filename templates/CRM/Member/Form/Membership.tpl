@@ -51,9 +51,7 @@
    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
     {if $action eq 8}
       <div class="messages status">
-                 
-          {ts}WARNING: Deleting this membership will also delete related membership log and payment records.{/ts} {ts}This action cannot be undone.{/ts} {ts}Consider modifying the membership status instead if you want to maintain a record of this membership.{/ts}
-          {ts}Do you want to continue?{/ts}    
+          {ts}Are you sure you want to delete the selected memberships?{/ts}
       </div>
     {else}
     <table class="form-layout-compressed">

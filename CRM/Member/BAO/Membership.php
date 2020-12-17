@@ -538,28 +538,65 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
    */
   static function deleteMembership($membershipId) {
     require_once 'CRM/Core/Transaction.php';
-    $transaction = new CRM_Core_Transaction();
+    
+    // find related contribution
+    $relatedContributions = array();
+    $membershipPayment = new CRM_Member_DAO_MembershipPayment();
+    $membershipPayment ->membership_id = $membershipId;
+    $membershipPayment->find();
+    while ($membershipPayment->fetch()) {
+      $relatedContributions[] = $membershipPayment->contribution_id;
+    }
 
+    $transaction = new CRM_Core_Transaction();
     $results = NULL;
     //delete activity record
     $activityTypes = CRM_Core_Pseudoconstant::activityType(TRUE, FALSE, FALSE, 'name');
+    $membershipActivityTypeId = array_search('Membership Renewal', $activityTypes);
 
     require_once "CRM/Activity/BAO/Activity.php";
-    $params = array('source_record_id' => $membershipId,
-      'activity_type_id' => array(array_search('Membership Signup', $activityTypes),
+    $params = array(
+      'source_record_id' => $membershipId,
+      'activity_type_id' => array(
+        array_search('Membership Signup', $activityTypes),
         array_search('Membership Renewal', $activityTypes),
       ),
     );
 
     CRM_Activity_BAO_Activity::deleteActivity($params);
 
-    self::deleteMembershipPayment($membershipId);
+    
+    // #28574, do not delete membersihp payment
+    // we need to do this since the cascaded constraints
+    // we need to keep payment record on database in case accounting issue
+    #self::deleteMembershipPayment($membershipId);
 
     require_once 'CRM/Member/DAO/Membership.php';
     $membership = new CRM_Member_DAO_Membership();
     $membership->id = $membershipId;
+    $membership->find(TRUE);
+    $assigneeId = $membership->contact_id;
     $results = $membership->delete();
     $transaction->commit();
+
+    // add activity to "Membership Renewal"
+    $userID = CRM_Core_Session::singleton()->get('userID');
+    $subject = ts('Deleted Member(s): %1', array(1 => $id));
+    if (!empty($relatedContributions)) {
+      $membership->contributions = $relatedContributions;
+      $line = ts('Contribution ID').' '.implode(',', $relatedContributions);
+      $subject .= ts('%1 reserved', array(1 => $line));
+    }
+    $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
+    $activityParams = array(
+      'activity_type_id' => $membershipActivityTypeId,
+      'activity_date_time' => date('Y-m-d H:i:s'),
+      'status_id' => $statusId,
+      'subject' => $subject,
+      'assignee_contact_id' => $assigneeId,
+      'source_contact_id' => $userID,
+    );
+    CRM_Activity_BAO_Activity::create($activityParams);
 
     // delete the recently created Membership
     require_once 'CRM/Utils/Recent.php';
@@ -1773,8 +1810,6 @@ WHERE  civicrm_membership.contact_id = civicrm_contact.id
     $membesrshipPayment->find();
 
     while ($membesrshipPayment->fetch()) {
-      require_once 'CRM/Contribute/BAO/Contribution.php';
-      CRM_Contribute_BAO_Contribution::deleteContribution($membesrshipPayment->contribution_id);
       CRM_Utils_Hook::pre('delete', 'MembershipPayment', $membesrshipPayment->id, $membesrshipPayment);
       $membesrshipPayment->delete();
       CRM_Utils_Hook::post('delete', 'MembershipPayment', $membesrshipPayment->id, $membesrshipPayment);
