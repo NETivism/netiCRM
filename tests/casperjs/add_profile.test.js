@@ -580,9 +580,9 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.thenOpen(vars.baseURL + "civicrm/admin/uf/group?reset=1", function() {
     });
 
-    casper.waitForSelector("#option11", function success() {
+    casper.waitForSelector("#user-profiles table", function success() {
         vars.profile_id = this.evaluate(function (profile_name) {
-            var tr_list = document.querySelectorAll("#option11 tr");
+            var tr_list = document.querySelectorAll("#user-profiles table tr");
             for(var i=1; i<tr_list.length; i++) {
                 if(tr_list[i].querySelector('td:first-child span').textContent == profile_name) {
                     return tr_list[i].querySelector('td:nth-child(3)').textContent;
@@ -591,7 +591,7 @@ casper.test.begin('Resurrectio test', function(test) {
         }, profile_name);
         test.assertNotEquals(vars.profile_id, '-1', 'Got profile id.');
     }, function fail() {
-        test.assertExists("#option11", "Assert profile list exist.");
+        test.assertExists("#user-profiles table", "Assert profile list exist.");
     });
 
     casper.then(function() {
