@@ -1443,10 +1443,12 @@ cj(function() {
         if (!$ids['contribution']) {
           require_once 'CRM/Event/DAO/ParticipantPayment.php';
           foreach ($participants as $num => $part) {
-            $ppDAO = new CRM_Event_DAO_ParticipantPayment();
-            $ppDAO->participant_id = $part->id;
-            $ppDAO->contribution_id = $contributions[$num]->id;
-            $ppDAO->save();
+            $paymentParams = array(
+              'participant_id' => $part->id,
+              'contribution_id' => $contributions[$num]->id,
+            );
+            $ids = array();
+            CRM_Event_BAO_ParticipantPayment::create($paymentParams, $ids);
           }
         }
       }

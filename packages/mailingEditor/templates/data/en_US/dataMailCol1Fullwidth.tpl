@@ -153,7 +153,9 @@
                     "id": "title-uy941b0wc6",
                     "type": "title",
                     "section": "body",
-                    "data": "Headlines",
+                    "data": {
+                      "html": "Headlines"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",
@@ -407,7 +409,9 @@
                     "id": "title-cx3rn0vdv3",
                     "type": "title",
                     "section": "body",
-                    "data": "Article Title",
+                    "data": {
+                      "html": "Article Title"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",
@@ -626,7 +630,9 @@
                     "id": "title-o6kvbnqoe9",
                     "type": "title",
                     "section": "body",
-                    "data": "Article Title",
+                    "data": {
+                      "html": "Article Title"
+                    },
                     "styles": {
                       "block": {
                         "padding-top": "20px",

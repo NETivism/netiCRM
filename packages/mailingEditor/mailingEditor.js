@@ -40,6 +40,7 @@
     _data = {},
     _dataLoadMode = "field",
     _dataLoadSource = "",
+    _dataVersion = {},
     _defaultData = {},
     _nme = {}, // plugin object
     _nmeOptions = {},
@@ -62,7 +63,6 @@
       default: ["clone", "delete"],
       extended: {
         image: ["link", "image"],
-        title: ["link"],
         button: ["link", "style"],
         header: ["link", "image"]
       }
@@ -576,32 +576,254 @@
       }
 
       _nmeData.update();
+    },
+    version: {
+      get: function() {
+        var v = {
+          current: "",
+          lastest: ""
+        };
 
+        if (_data.version) {
+          v.current = _data.version;
+        }
+
+        if (_nmeData.version.list.length) {
+          var lastVersion = _nmeData.version.list.slice(-1);
+          v.lastest = lastVersion[0].version;
+        }
+
+        return v;
+      },
+      update: function(version) {
+        var dataVersion = typeof version !== "undefined" ? version : "";
+
+        if (dataVersion) {
+          var updateVersion = _nmeData.version.list.filter(function(e) {
+            return e.version == dataVersion;
+          });
+
+          if (updateVersion.length) {
+            for (var i in updateVersion) {
+              updateVersion[i].task();
+            }
+
+            _nmeData.update();
+          }
+        }
+        else {
+          if (_dataVersion.current) {
+            var versionPos = _nmeData.version.list.map(function(e) { return e.version; }).indexOf(_dataVersion.current);
+
+            if (versionPos != -1) {
+              var updateVersionPos = versionPos + 1;
+
+              for (var i = updateVersionPos; i < _nmeData.version.list.length; i++) {
+                _nmeData.version.list[i].task();
+              }
+
+              _nmeData.update();
+            }
+          }
+          else {
+            for (var i in _nmeData.version.list) {
+              if (_nmeData.version.list[i].task) {
+                _nmeData.version.list[i].task();
+              }
+            }
+
+            _nmeData.update();
+          }
+        }
+      },
+      list: [
+        {
+          version: "1.0.0",
+          desc: "Added version to data object.",
+          task: function() {
+            if (!_data.version) {
+              _data.version = "1.0.0";
+              _dataVersion.current = _data.version;
+            }
+          }
+        },
+        {
+          version: "1.0.1",
+          desc: "Change data structure of title block (title.data -> title.data.html).",
+          task: function() {
+            _data.version = "1.0.1";
+            _dataVersion.current = _data.version;
+
+            for (var sectionKey in _data.sections) {
+              if (!_sectionIsEmpty(sectionKey)) {
+                var blocks = _data.sections[sectionKey].blocks;
+
+                for (var blockKey in blocks) {
+                  var block = blocks[blockKey];
+
+                  if (block.isRichContent) {
+                    for (var nestBlocksIndex in block.data) {
+                      var nestBlocks = block.data[nestBlocksIndex].blocks;
+
+                      for (var nestBlockKey in nestBlocks) {
+                        var nestBlock = nestBlocks[nestBlockKey];
+
+                        if (nestBlock.type == "title") {
+                          if (typeof nestBlock.data !== "object" && !nestBlock.data.html) {
+                            var title = nestBlock.data;
+                            _data.sections[sectionKey].blocks[blockKey].data[nestBlocksIndex].blocks[nestBlockKey].data = {
+                              html: title
+                            };
+                          }
+                        }
+                      }
+                    }
+                  }
+                  else {
+                    if (block.type == "title") {
+                      if (typeof block.data !== "object" && !block.data.html) {
+                        var title = block.data;
+                        _data.sections[sectionKey].blocks[blockKey].data = {
+                          html: title
+                        };
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          version: "1.0.2",
+          desc: "Merge link data of title block (title.link -> title.data.html).",
+          task: function() {
+            _data.version = "1.0.2";
+            _dataVersion.current = _data.version;
+
+            for (var sectionKey in _data.sections) {
+              if (!_sectionIsEmpty(sectionKey)) {
+                var blocks = _data.sections[sectionKey].blocks;
+
+                for (var blockKey in blocks) {
+                  var block = blocks[blockKey];
+
+                  if (block.isRichContent) {
+                    for (var nestBlocksIndex in block.data) {
+                      var nestBlocks = block.data[nestBlocksIndex].blocks;
+
+                      for (var nestBlockKey in nestBlocks) {
+                        var nestBlock = nestBlocks[nestBlockKey];
+
+                        if (nestBlock.type == "title") {
+                          var title = _htmlDecode(nestBlock.data.html),
+                              titleStyles = _nmeStyle.get(nestBlock.styles.elem, "include", ["text-decoration", "font-size", "color"]);
+
+                          if (title.length) {
+                            if (nestBlock.link && nestBlock.data.hasOwnProperty("html")) {
+                              title = "<div><a style=\"" + titleStyles + "\" href=\"" + nestBlock.link + "\">" + title + "</a></div>";
+                            }
+                            else {
+                              title = "<div><span style=\"" + titleStyles + "\">" + title + "</span></div>";
+                            }
+                          }
+                          else {
+                            title = "<div><span style=\"" + titleStyles + "\"> </span><br></div>";
+                          }
+
+                          _data.sections[sectionKey].blocks[blockKey].data[nestBlocksIndex].blocks[nestBlockKey].data.html = _htmlEscape(title);
+                        }
+                      }
+                    }
+                  }
+                  else {
+                    if (block.type == "title") {
+                      var title = _htmlDecode(block.data.html),
+                          titleStyles = _nmeStyle.get(block.styles.elem, "include", ["text-decoration", "font-size", "color"]);
+
+                      if (title.length) {
+                        if (block.link && block.data.hasOwnProperty("html")) {
+                          title = "<div><a style=\"" + titleStyles + "\" href=\"" + block.link + "\">" + title + "</a></div>";
+                        }
+                        else {
+                          title = "<div><span style=\"" + titleStyles + "\">" + title + "</span></div>";
+                        }
+                      }
+                      else {
+                        title = "<div><span style=\"" + titleStyles + "\"> </span><br></div>";
+                      }
+
+                      _data.sections[sectionKey].blocks[blockKey].data.html = _htmlEscape(title);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   };
 
-  var _nmeSetStyles = function($container, stylesData, target) {
-    let setTarget = typeof target !== "undefined" ? target : "children";
+  var _nmeStyle = {
+    set: function($container, stylesData, target) {
+      let setTarget = typeof target !== "undefined" ? target : "children";
+      if (_domElemExist($container) && Object.getOwnPropertyNames(stylesData).length > 0) {
+        for (let styleTarget in stylesData) {
+          let $styleTarget = setTarget == "self" ? $container : $container.find("[data-settings-target='" + styleTarget + "']");
 
-    if (_domElemExist($container) && Object.getOwnPropertyNames(stylesData).length > 0) {
-      for (let styleTarget in stylesData) {
-        let $styleTarget = setTarget == "self" ? $container : $container.find("[data-settings-target='" + styleTarget + "']");
+          for (let styleProperty in stylesData[styleTarget]) {
+            let styleValue = stylesData[styleTarget][styleProperty];
+            $styleTarget.css(styleProperty, styleValue);
 
-        for (let styleProperty in stylesData[styleTarget]) {
-          let styleValue = stylesData[styleTarget][styleProperty];
-          $styleTarget.css(styleProperty, styleValue);
+            // If style property is 'background-color', also need to set value to 'bgcolor' dom attribute, because some versions of the email application do not support 'background-color'
+            if (styleProperty == "background-color") {
+              $styleTarget.attr("bgcolor", styleValue);
+            }
+          }
 
-          // If style property is 'background-color', also need to set value to 'bgcolor' dom attribute, because some versions of the email application do not support 'background-color'
-          if (styleProperty == "background-color") {
-            $styleTarget.attr("bgcolor", styleValue);
+          // If target is 'self', only get one row data.
+          if (setTarget == "self") {
+            break;
+          }
+        }
+      }
+    },
+    get: function(stylesData, listMode, listArgs) {
+      let output = "";
+
+      if (typeof stylesData === "object" && Object.getOwnPropertyNames(stylesData).length) {
+        let stylesArray = [];
+
+        if (listMode && Array.isArray(listArgs) && listArgs.length > 0) {
+          if (listMode == "include") {
+            stylesData = Object.keys(stylesData).reduce(function(r, e) {
+              if (listArgs.includes(e))  {
+                r[e] = stylesData[e];
+              }
+              return r;
+            }, {});
+          }
+
+          if (listMode == "exclude") {
+            stylesData = Object.keys(stylesData).reduce(function(r, e) {
+              if (!listArgs.includes(e))  {
+                r[e] = stylesData[e];
+              }
+              return r;
+            }, {});
           }
         }
 
-        // If target is 'self', only get one row data.
-        if (setTarget == "self") {
-          break;
+        for (let styleProperty in stylesData) {
+          let styleValue = stylesData[styleProperty];
+          stylesArray.push(styleProperty + ": " + styleValue + ";");
         }
+
+        output = stylesArray.join(" ");
       }
+
+      return output;
     }
   };
 
@@ -666,7 +888,7 @@
 
             if ($nmeb.length) {
               // Set styles
-              _nmeSetStyles($nmeb, block.styles);
+              _nmeStyle.set($nmeb, block.styles);
 
               if ($nmebElem.length) {
                 let decodeContent = "";
@@ -677,7 +899,8 @@
 
                 switch (blockType) {
                   case "title":
-                    $nmebElem.html(block.data);
+                    decodeContent = _htmlDecode(block.data.html);
+                    $nmebElem.html(decodeContent);
                     break;
 
                   case "paragraph":
@@ -790,11 +1013,6 @@
                   if ($nmebElem.is("img")) {
                     $nmebElem.wrap("<a href='" + block.link + "' target='_blank' style='text-decoration: none;'></a>");
                   }
-
-                  if ($nmebElem.is("h3")) {
-                    let elemStyle = $nmebElem.attr("style");
-                    $nmebElem.wrapInner("<a href='" + block.link + "' target='_blank' style='" + elemStyle + "'></a>");
-                  }
                 }
               }
             }
@@ -873,7 +1091,7 @@
               $nmeb.attr("data-id", blockID);
 
               // Set styles
-              _nmeSetStyles($nmeb, block.styles);
+              _nmeStyle.set($nmeb, block.styles);
 
               if ($nmebElem.length) {
                 let decodeContent = "";
@@ -900,9 +1118,12 @@
                   case "title":
                     $nmebElem.addClass("nme-editable");
                     $nmebElem.attr({
-                      "data-type": "text"
+                      "data-type": "xquill",
+                      "data-placeholder": "請輸入標題文字...",
+                      "data-title": "Enter title"
                     });
-                    $nmebElem.html(block.data);
+                    decodeContent = _htmlDecode(block.data.html);
+                    $nmebElem.html(decodeContent);
                     break;
 
                   case "paragraph":
@@ -1217,18 +1438,16 @@
                   });
                 }
 
-                setTimeout(function() {
-                  _nmeBlockControl.render(blockID, blockType);
-                  _editable();
+                _nmeBlockControl.render(blockID, blockType);
+                _editable();
 
-                  if (dataState == "new" || dataState == "clone") {
-                    if (!block.parentID && $block.length) {
-                      var scrollOpts = {};
-                      scrollOpts.buffer = $("#admin-header").length ? $("#admin-header").outerHeight() * -1 : -50;
-                      _scrollTo($block, scrollOpts);
-                    }
+                if (dataState == "new" || dataState == "clone") {
+                  if (!block.parentID && $block.length) {
+                    var scrollOpts = {};
+                    scrollOpts.buffer = $("#admin-header").length ? $("#admin-header").outerHeight() * -1 : -50;
+                    _scrollTo($block, scrollOpts);
                   }
-                }, 500);
+                }
               }
 
               // Check control permission of each block
@@ -1290,7 +1509,7 @@
     $(_main).children(".inner").append(mailTpl);
 
     // Added styles to body table
-    _nmeSetStyles($(_main).find(".nme-body-table"), _data.settings.styles, "self");
+    _nmeStyle.set($(_main).find(".nme-body-table"), _data.settings.styles, "self");
 
     if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
       for (let section in _data.sections) {
@@ -1445,7 +1664,7 @@
     let $mailFrameBody = $("#nme-mail-output-frame").contents().find("body");
 
     $mailOutputContent.html(mailTpl);
-    _nmeSetStyles($mailOutputContent.find(".nme-body-table"), _data.settings.styles, "self");
+    _nmeStyle.set($mailOutputContent.find(".nme-body-table"), _data.settings.styles, "self");
 
     if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
       for (let section in _data.sections) {
@@ -1597,13 +1816,22 @@
             if (fieldType == "color") {
               $target = $block.find(".nme-elem");
               $target.css(fieldType, colorVal);
+              $target.find("span").css(fieldType, colorVal);
 
               $block.each(function() {
                 let $this = $(this),
                     section = $this.data("section"),
                     blockID = $this.data("id"),
                     parentID = $this.data("parent-id"),
-                    index = $this.data("index");
+                    index = $this.data("index"),
+                    $field = $block.find(".nme-elem[data-id='" + blockID + "']");
+
+                // Reinitialize x-editable to update new value
+                if ($field.length) {
+                  $field.removeClass("editable-initialized");
+                  $field.editable("destroy");
+                  _editable($field, true);
+                }
 
                 // Update color to json
                 if (parentID) {
@@ -2021,8 +2249,54 @@
     }
   };
 
-  var _editable = function() {
-    let $editableElems = $(".nme-editable:not(.editable-initialized)");
+  var _editable = function($editableElems, initSave) {
+    $editableElems = typeof $editableElems !== "undefined" ? $editableElems : $(".nme-editable:not(.editable-initialized)");
+    initSave = typeof initSave !== "undefined" ? initSave : false;
+
+    var saveToData = function($item, value) {
+      $item = typeof $item !== "undefined" ? $item : null;
+      value = typeof value !== "undefined" ? value : "";
+
+      if ($item.length) {
+        let editableType = $item.data("type"),
+            blockID = $item.data("id"),
+            section = $item.data("section"),
+            parentID = $item.data("parent-id"),
+            parentType = $item.data("parent-type"),
+            index = $item.data("index");
+
+        if (parentID && parentType) {
+          if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
+            if (editableType == "text") {
+              if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"] = value;
+                _nmeData.update();
+              }
+            }
+
+            if (editableType == "xquill") {
+              if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["html"] = value;
+                _nmeData.update();
+              }
+            }
+          }
+        }
+        else {
+          if (_data["sections"][section]["blocks"][blockID]) {
+            if (editableType == "text") {
+              _data["sections"][section]["blocks"][blockID]["data"] = value;
+              _nmeData.update();
+            }
+
+            if (editableType == "xquill") {
+              _data["sections"][section]["blocks"][blockID]["data"]["html"] = value;
+              _nmeData.update();
+            }
+          }
+        }
+      }
+    }
 
     if (typeof $.fn.editable !== "undefined" && $editableElems.length) {
       $.fn.editable.defaults.mode = "inline";
@@ -2030,6 +2304,12 @@
 
       $editableElems.each(function() {
         let $editableElem = $(this);
+
+        if (initSave) {
+          $editableElem.on("init", function(e, editable) {
+            saveToData($(this), editable.value);
+          });
+        }
 
         $editableElem.editable();
 
@@ -2050,44 +2330,7 @@
         });
 
         $editableElem.on("save", function(e, params) {
-          let $this = $(this),
-              editableType = $this.data("type"),
-              blockID = $this.data("id"),
-              section = $this.data("section"),
-              parentID = $this.data("parent-id"),
-              parentType = $this.data("parent-type"),
-              index = $this.data("index");
-
-          if (parentID && parentType) {
-            if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
-              if (editableType == "text") {
-                if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"] = params.newValue;
-                  _nmeData.update();
-                }
-              }
-
-              if (editableType == "xquill") {
-                if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
-                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["html"] = params.newValue;
-                  _nmeData.update();
-                }
-              }
-            }
-          }
-          else {
-            if (_data["sections"][section]["blocks"][blockID]) {
-              if (editableType == "text") {
-                _data["sections"][section]["blocks"][blockID]["data"] = params.newValue;
-                _nmeData.update();
-              }
-
-              if (editableType == "xquill") {
-                _data["sections"][section]["blocks"][blockID]["data"]["html"] = params.newValue;
-                _nmeData.update();
-              }
-            }
-          }
+          saveToData($(this), params.newValue);
         });
 
         $editableElem.addClass("editable-initialized");
@@ -2226,23 +2469,24 @@
   };
 
   var _tooltip = function() {
-    if ($.fn.powerTip) {
+    // TODO: This is a temporary workaround, because powerTip comes from the neticrm theme, so cj does not have powerTip
+    if (jQuery.fn.powerTip) {
       let defaultOptions = {};
 
-      if ($("[data-tooltip]").length) {
-        $("[data-tooltip]:not(.tooltip-initialized)").each(function() {
+      if (jQuery("[data-tooltip]").length) {
+        jQuery("[data-tooltip]:not(.tooltip-initialized)").each(function() {
           let options = {};
 
-          if ($(this).is("[data-tooltip-placement]")) {
+          if (jQuery(this).is("[data-tooltip-placement]")) {
             options.placement = $(this).data("tooltip-placement");
           }
 
-          if ($(this).is("[data-tooltip-fadeouttime]")) {
+          if (jQuery(this).is("[data-tooltip-fadeouttime]")) {
             options.fadeOutTime = $(this).data("tooltip-fadeouttime");
           }
 
-          $(this).powerTip(options);
-          $(this).addClass("tooltip-initialized");
+          jQuery(this).powerTip(options);
+          jQuery(this).addClass("tooltip-initialized");
         });
       }
     }
@@ -2765,6 +3009,7 @@
     data: {},
     language: _language,
     init: function() {
+      _debug("/***** nmEditor Debug Mode *****/");
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
         if (window.nmEditor.language) {
@@ -2867,8 +3112,21 @@
       }
 
       setTimeout(function() {
-        $.nmEditor.instance.data = _data;
-        _nmeData.update();
+        _dataVersion = _nmeData.version.get();
+
+        if (_dataVersion.current != _dataVersion.lastest) {
+          _debug(_dataVersion, "Before data version update");
+          _nmeData.version.update();
+          _debug(_dataVersion, "After data version update");
+          $.nmEditor.instance.data = _data;
+          _nmeData.update();
+
+          let renderOptions = {
+            "loadDataMode": "object",
+            "loadDataObj": _data
+          };
+          window.nmEditorInstance.render(renderOptions);
+        }
       }, 500);
 
       // Load templates
@@ -2941,13 +3199,10 @@
 
     // Plugin implementation
     _qs = _parseQueryString(_query);
+    _debugMode = _nmeOptions.debugMode === "1" ? true : false;
 
-    if (_nmeOptions.debugMode && _qs.debug) {
-      _debugMode = _qs.debug;
-
-      if (_debugMode) {
-        $("html").addClass("is-debug");
-      }
+    if (_debugMode) {
+      $("html").addClass("is-debug");
     }
 
     _container = this.selector;

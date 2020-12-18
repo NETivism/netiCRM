@@ -78,6 +78,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
 
     $hideFields = NULL;
     $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'processor_id');
+    $processorName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $processorId, 'payment_processor_type');
+    $this->assign('payment_type', $processorName);
+    $this->set('payment_type', $processorName);
     $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
     if (!empty($processorId)) {
       $test = $isTest ? 'test':'live';
@@ -202,6 +205,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       if (!empty($paymentClass::$_editableFields)) {
         $activeFields = $paymentClass::$_editableFields;
       }
+      else if(method_exists($paymentClass, 'getEditableFields')) {
+        $activeFields = $paymentClass::getEditableFields($paymentProcessor);
+      }
     }
 
     foreach ($field as $name => $label) {
@@ -270,6 +276,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         ),
       )
     );
+
+    if (!empty($paymentClass) && method_exists($paymentClass, 'postBuildForm')) {
+      $paymentClass::postBuildForm($this);
+    }
   }
 
   /**
@@ -316,13 +326,84 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       }
     }
 
-    CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
+    $recur = array();
+    $ids = array('id' => $this->_id);
+    CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionRecur', $ids, $recur);
+    $isUpdate = FALSE;
+    if (!empty($recur) && !empty($recur['processor_id'])) {
 
-    // save the changes
-    $ids = array();
-    require_once 'CRM/Contribute/BAO/ContributionRecur.php';
-    CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
-    CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
+      /**
+       * Prepare payment object.
+       */
+      $mode = $recur['is_test'] ? 'test' : 'live';
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur['processor_id'], $mode);
+      $paymentClass = &CRM_Core_Payment::singleton($mode, $paymentProcessor, $this);
+      if (!empty($paymentClass::$_editableFields)) {
+        $activeFields = $paymentClass::$_editableFields;
+      }
+      else if(method_exists($paymentClass, 'getEditableFields')) {
+        $activeFields = $paymentClass::getEditableFields($paymentProcessor);
+      }
+      if (method_exists($paymentClass, 'doUpdateRecur') && !empty($activeFields)) {
+        // For Payment which has doUpdateRecur and _editableFields, Like Spgateway.
+        foreach ($activeFields as $field) {
+          if ($recur[$field] != $params[$field]) {
+            $requestParams[$field] = $params[$field];
+          }
+        }
+        if (!empty($requestParams)) {
+          $requestParams['contribution_recur_id'] = $this->_id;
+          // if need debug, can add second params "1" the follow function.
+          $config = CRM_Core_Config::singleton();
+          if (isset($config->debug)) {
+            $debug = $config->debug;
+          }
+          $resultParams = $paymentClass->doUpdateRecur($requestParams, $debug);
+          if ($resultParams['is_error']) {
+            CRM_Core_Session::setStatus($resultParams['msg']);
+            CRM_Core_Session::setStatus(ts('There are no any change.'));
+          }
+          else {
+            $isUpdate = TRUE;
+
+            /*
+             * Compare doUpdateRecur result and edit params. 
+             */
+            if (!empty($resultParams['next_sched_contribution'])) {
+              $params['next_sched_contribution'] = $resultParams['next_sched_contribution'];
+              unset($resultParams['next_sched_contribution']);
+            }
+            foreach ($resultParams as $field => $value) {
+              if (!empty($value) && !is_object($value) && !is_array($value) && $params[$field] != $value) {
+                $params[$field] = $value;
+                $failedFields[] = $field;
+              }
+            }
+            if (!empty($failedFields)) {
+              CRM_Core_Session::setStatus(implode(',', $failedFields) . " don't change success");
+            }
+          }
+        }
+
+        //end of function
+      } // Payment has doUpdateRecur function
+      else {
+        // For payment which has no doUpdateRecur function, Like TapPay.
+        $isUpdate = TRUE;
+      } // Payment has no doUpdateRecur function
+    } // $recur has 'process_id'
+
+    if ($isUpdate) {
+      // If there has update.
+      // Update contribution recur
+      
+      $ids = array();
+      require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+      CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
+      CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
+    
+      CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
+    }
     $urlParams = http_build_query(array(
       'reset' => 1,
       'id' => $this->_id,
@@ -331,6 +412,5 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/contributionrecur', $urlParams));
   }
-  //end of function
 }
 

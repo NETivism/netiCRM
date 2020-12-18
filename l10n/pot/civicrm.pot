@@ -47871,3 +47871,12 @@ msgstr ""
 
 msgid "Because of the missing cookie from your browser, we don't know the result of your form submission. If you enter payment information about this form submission, there should be an email notification in your inbox. Please use that for your final payment result."
 msgstr ""
+
+msgid "days before end date"
+msgstr ""
+
+msgid "Caution!! You already have %1 member(s) in this membership type. Change this setting will re-calculate reminder date on these members."
+msgstr ""
+
+msgid "Members in this type alreay have new reminder date."
+msgstr ""

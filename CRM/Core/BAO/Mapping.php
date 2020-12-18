@@ -535,8 +535,13 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     $sel3[''] = NULL;
     $sel5[''] = NULL;
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
+    foreach($phoneTypes as $idx => $val) {
+      unset($phoneTypes[$idx]);
+      // refs #30044, preserv order by weight of phone type
+      // this is dirty because javascript object will order by number default
+      $phoneTypes[' '.$idx] = $val;
+    }
     $imProviders = CRM_Core_PseudoConstant::IMProvider();
-    asort($phoneTypes);
 
     foreach ($sel1 as $k => $sel) {
       if ($k) {

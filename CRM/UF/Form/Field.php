@@ -510,7 +510,12 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     }
     $sel3[''] = NULL;
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
-    ksort($phoneTypes);
+    foreach($phoneTypes as $idx => $val) {
+      unset($phoneTypes[$idx]);
+      // refs #30044, preserv order by weight of phone type
+      // this is dirty because javascript object will order by number default
+      $phoneTypes[' '.$idx] = $val;
+    }
 
     foreach ($sel1 as $k => $sel) {
       if ($k) {
