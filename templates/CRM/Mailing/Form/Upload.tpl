@@ -65,6 +65,47 @@
     <tr class="crm-mailing-upload-form-block-upload_type"><td></td><td colspan="2">{$form.upload_type.label} {$form.upload_type.html} {help id="upload-compose"}</td></tr>
 </table>
 
+<!-- TODO: Change to English and make it translatable. -->
+<fieldset class="subject-preview">
+  <legend>電子報主旨預覽</legend>
+  <div class="subject-preview-container">
+    <h3 class="subject-preview-title">手機版</h3>
+    <div class="subject-preview-content">
+      <div class="mobile-subject-preview">
+        <div class="col-avatar"><i class="zmdi zmdi-account-circle"></i></div>
+        <div class="col-info">
+          <div class="col-info-row-1">
+            <span class="mail-sender"></span>
+            <div class="mail-time"></div>
+          </div>
+          <div class="col-info-row-2">
+            <div class="mail-subject"></div>
+          </div>
+          <div class="col-info-row-3">
+            <span class="mail-teaser"></span>
+            <i class="zmdi zmdi-star-outline"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="subject-preview-container">
+    <h3 class="subject-preview-title">電腦版</h3>
+    <div class="subject-preview-content">
+      <div class="desktop-subject-preview">
+        <div class="col-select col"><i class="zmdi zmdi-square-o"></i></div>
+        <div class="col-star col"><i class="zmdi zmdi-star-outline"></i></div>
+        <div class="col-sender col"><div class="mail-sender"></div></div>
+        <div class="col-mail-text col">
+          <div class="mail-subject"></div>
+          <span class="mail-teaser"></span>
+        </div>
+        <div class="col-time col"><div class="mail-time"></div></div>
+      </div>
+    </div>
+  </div>
+</fieldset>
+
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
 {include file="CRM/common/mailingEditor.tpl"}
 {$form.body_json.html}
@@ -203,6 +244,44 @@
 
       addAnEventListener(window, 'message', iFrameListener);
 
+
+      // refs #26473.
+      if (cj(".subject-preview").length) {
+        var mailPreview = {};
+        mailPreview.sender = {};
+
+        // TODO: Change to English and make it translatable.
+        mailPreview.teaser = "這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。";
+
+        var getMailSender = function() {
+          var mailSenderText = cj("#from_email_address option:selected").text(),
+              mailSenderArr = mailSenderText.split("\" <");
+
+          mailPreview.sender.name = mailSenderArr[0].substring(1);
+          mailPreview.sender.email = mailSenderArr[1].slice(0, -1);
+          cj(".subject-preview .mail-sender").text(mailPreview.sender.name);
+        }
+
+        var getMailTime = function() {
+          var currentDate = new Date();
+          mailPreview.time = currentDate.getHours() + ":" + currentDate.getMinutes();
+          cj(".subject-preview .mail-time").text(mailPreview.time);
+        }
+
+        getMailTime();
+        getMailSender();
+
+        cj("#from_email_address").change(function() {
+          getMailSender();
+        });
+
+        cj("#subject").change(function() {
+          mailPreview.subject = cj(this).val();
+          cj(".subject-preview .mail-subject").text(mailPreview.subject);
+        });
+
+        cj(".subject-preview .mail-teaser").text(mailPreview.teaser);
+      }
     });
 </script>
 {/literal}

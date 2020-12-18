@@ -5378,6 +5378,113 @@ tbody.scrollContent tr.alternateRow {
 }
 
 /* Mailing */
+/* mail subject preview */
+.crm-container .subject-preview-container {
+  font-size: .875rem;
+}
+.crm-container .subject-preview-container .zmdi {
+  font-size: 20px;
+}
+.crm-container .subject-preview-container .mail-sender {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .9375rem;
+}
+.crm-container .subject-preview-container .mail-subject {
+  font-weight: bold;
+  font-size: .875rem;
+  color: #000;
+}
+.crm-container .subject-preview-container .mail-teaser {
+  font-size: .875rem;
+  color: #555;
+}
+
+.crm-container .mobile-subject-preview {
+  display: flex;
+  max-width: 360px;
+  margin-bottom: 30px;
+}
+.crm-container .mobile-subject-preview .col-avatar {
+  flex: 0 0 54px;
+  max-width: 54px;
+}
+.crm-container .mobile-subject-preview .zmdi-account-circle {
+  font-size: 40px;
+}
+.crm-container .mobile-subject-preview .col-info-row-1,
+.crm-container .mobile-subject-preview .col-info-row-3 {
+  display: flex;
+  justify-content: space-between;
+}
+.crm-container .mobile-subject-preview .mail-subject,
+.crm-container .mobile-subject-preview .mail-teaser {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.crm-container .mobile-subject-preview .mail-sender,
+.crm-container .mobile-subject-preview .mail-subject,
+.crm-container .mobile-subject-preview .mail-teaser {
+  max-width: 280px;
+}
+.crm-container .mobile-subject-preview .mail-subject {
+
+}
+.crm-container .desktop-subject-preview {
+  display: flex;
+  padding: 10px 0;
+  border-top: 1px solid #555;
+  border-bottom: 1px solid #555;
+  background: #fff;
+}
+.crm-container .desktop-subject-preview .col {
+  padding: 0 10px 0 0;
+}
+.crm-container .desktop-subject-preview .col:first-child {
+  padding-left: 20px;
+}
+.crm-container .desktop-subject-preview .col:last-child {
+  padding-right: 10px;
+}
+.crm-container .desktop-subject-preview .col-select {
+  flex: 0 0 50px;
+  max-width: 50px;
+}
+.crm-container .desktop-subject-preview .col-star {
+  flex: 0 0 40px;
+  max-width: 40px;
+}
+.crm-container .desktop-subject-preview .col-sender {
+  flex: 0 0 200px;
+  max-width: 200px;
+  padding-right: 32px;
+}
+.crm-container .desktop-subject-preview .col-mail-text {
+  display: flex;
+  flex: 1 1 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100px;
+}
+.crm-container .desktop-subject-preview .mail-subject {
+  max-width: 100%;
+}
+.crm-container .desktop-subject-preview .mail-teaser {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.crm-container .desktop-subject-preview .mail-teaser::before {
+  content: "-";
+  padding: 0 5px;
+}
+.crm-container .desktop-subject-preview .col-time {
+  flex: 0 0 55px;
+  max-width: 55px;
+}
+
 /* Mailing: Test */
 .crm-container .crm-test-mail-preview {
   display: flex;
