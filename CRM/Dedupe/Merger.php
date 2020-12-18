@@ -343,32 +343,8 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
       return $sqls;
     }
 
-
     switch ($tableName) {
-      case 'civicrm_membership':
-        if (array_key_exists($tableName, $tableOperations) && $tableOperations[$tableName]['add'])
-        break;
-      if ($mode == 'add') {
-        $sqls[] = "
-DELETE membership1.* FROM civicrm_membership membership1
- INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = membership2.membership_type_id 
-             AND membership1.contact_id = {$mainId} 
-             AND membership2.contact_id = {$otherId} ";
-      }
-      if ($mode == 'payment') {
-        $sqls[] = "
-DELETE contribution.* FROM civicrm_contribution contribution 
-INNER JOIN  civicrm_membership_payment payment ON payment.contribution_id = contribution.id
-INNER JOIN  civicrm_membership membership1 ON membership1.id = payment.membership_id
-            AND membership1.contact_id = {$mainId}
-INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = membership2.membership_type_id
-            AND membership2.contact_id = {$otherId}";
-      }
-      break;
-
       case 'civicrm_uf_match':
-        // normal queries won't work for uf_match since that will lead to violation of unique constraint,
-        // failing to meet intended result. Therefore we introduce this additonal query:
         $sqls[] = "DELETE FROM civicrm_uf_match WHERE contact_id = {$mainId}";
         break;
     }
@@ -421,9 +397,6 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
         foreach ($cidRefs[$table] as $field) {
           // carry related contributions CRM-5359
           if (in_array($table, $paymentTables)) {
-            $payOprSqls = self::operationSql($mainId, $otherId, $table, $tableOperations, 'payment');
-            $sqls = array_merge($sqls, $payOprSqls);
-
             $paymentSqls = self::paymentSql($table, $mainId, $otherId);
             $sqls = array_merge($sqls, $paymentSqls);
           }
@@ -1020,9 +993,7 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     $activeRelTables = CRM_Dedupe_Merger::getActiveRelTables($otherId);
     $activeMainRelTables = CRM_Dedupe_Merger::getActiveRelTables($mainId);
     foreach ($relTables as $name => $null) {
-      if (!in_array($name, $activeRelTables) &&
-        !(($name == 'rel_table_users') && in_array($name, $activeMainRelTables))
-      ) {
+      if (!in_array($name, $activeRelTables) && !(($name == 'rel_table_users') && in_array($name, $activeMainRelTables))) {
         unset($relTables[$name]);
         continue;
       }
@@ -1044,10 +1015,6 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
           $replace = array($otherUfId, $otherUser->name);
           $relTables[$name]['other_title'] = str_replace($find, $replace, $relTables[$name]['title']);
         }
-      }
-      if ($name == 'rel_table_memberships') {
-        $elements[] = array('checkbox', "operation[move_{$name}][add]", NULL, ts('add new'));
-        $migrationInfo["operation"]["move_{$name}"]['add'] = 1;
       }
     }
     foreach ($relTables as $name => $null) {
