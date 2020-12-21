@@ -208,7 +208,7 @@ class CRM_Contact_BAO_Query {
    */
   public $_operator = 'AND';
 
-  public $_mode = 1;
+  public $_mode = self::MODE_CONTACTS;
 
   /**
    * Should we only search on primary location
@@ -372,7 +372,7 @@ class CRM_Contact_BAO_Query {
    * @access public
    */
   function __construct($params = NULL, $returnProperties = NULL, $fields = NULL,
-    $includeContactIds = FALSE, $strict = FALSE, $mode = 1,
+    $includeContactIds = FALSE, $strict = FALSE, $mode = self::MODE_CONTACTS,
     $skipPermission = FALSE, $searchDescendentGroups = TRUE,
     $smartGroupCache = TRUE, $displayRelationshipType = NULL,
     $operator = 'AND'
@@ -2113,7 +2113,7 @@ class CRM_Contact_BAO_Query {
    * @access public
    * @static
    */
-  static function fromClause(&$tables, $inner = NULL, $right = NULL, $primaryLocation = TRUE, $mode = 1) {
+  static function fromClause(&$tables, $inner = NULL, $right = NULL, $primaryLocation = TRUE, $mode = self::MODE_CONTACTS) {
     require_once ("CRM/Core/TableHierarchy.php");
 
     $from = ' FROM civicrm_contact contact_a';
@@ -3727,7 +3727,7 @@ civicrm_relationship.start_date > {$today}
    * @return void
    * @access public
    */
-  static function &defaultReturnProperties($mode = 1) {
+  static function &defaultReturnProperties($mode = self::MODE_CONTACTS) {
     if (!isset(self::$_defaultReturnProperties)) {
       self::$_defaultReturnProperties = array();
     }
