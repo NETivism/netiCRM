@@ -5485,6 +5485,14 @@ tbody.scrollContent tr.alternateRow {
   max-width: 55px;
 }
 
+/* Mailing: Upload */
+.crm-container #subject {
+  display: none;
+}
+.is-debug .crm-container #subject {
+  display: block;
+}
+
 /* Mailing: Test */
 .crm-container .crm-test-mail-preview {
   display: flex;

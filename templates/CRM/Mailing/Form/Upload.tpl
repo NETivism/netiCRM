@@ -53,13 +53,12 @@
     </tr>
     <tr class="crm-mailing-upload-form-block-subject"><td class="label">{$form.subject.label}</td>
         <td colspan="2">{$form.subject.html|crmReplace:class:huge}
-                        <a class="token-trigger" href="#" onClick="return showToken('Subject', 3);">{$form.token3.label|strip_tags}</a>
-                        {help id="id-token-subject" file="CRM/Contact/Form/Task/Email.hlp"}
                         <div id='tokenSubject' style="display:none">
                            <input style="border:1px solid #999999;" type="text" id="filter3" size="20" name="filter3" onkeyup="filter(this, 3)"/><br />
                            <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
                            {$form.token3.html}
                         </div>
+                        <div id="subject-editor">{$form.subject.value}</div>
         </td>
     </tr>
     <tr class="crm-mailing-upload-form-block-upload_type"><td></td><td colspan="2">{$form.upload_type.label} {$form.upload_type.html} {help id="upload-compose"}</td></tr>
@@ -275,12 +274,75 @@
           getMailSender();
         });
 
-        cj("#subject").change(function() {
-          mailPreview.subject = cj(this).val();
-          cj(".subject-preview .mail-subject").text(mailPreview.subject);
-        });
+        if (cj("#subject").length) {
+          cj(".subject-preview .mail-subject").text(cj("#subject").val());
+
+          cj("#subject").change(function() {
+            mailPreview.subject = cj(this).val();
+            cj(".subject-preview .mail-subject").text(mailPreview.subject);
+          });
+        }
 
         cj(".subject-preview .mail-teaser").text(mailPreview.teaser);
+      }
+
+      // refs #26473. Added quill editor (quill) to replace subject field of mailing upload form.
+      if (cj("#subject").length && cj("#subject-editor").length) {
+        if (typeof Quill === "function") {
+          // Because both Quill and CKEditor have "contenteditable"
+          // disableAutoInline of CKEditor must be enabled to avoid conflicts
+          // https://ckeditor.com/docs/ckeditor4/latest/guide/dev_inline.html#enabling-inline-editing
+          CKEDITOR.disableAutoInline = true;
+
+          // Replace <p> with <div>
+          var quillBlock = Quill.import("blots/block");
+          class DivBlock extends quillBlock {}
+          DivBlock.tagName = "DIV";
+          Quill.register("blots/block", DivBlock, true);
+
+          var toolbarOptions = [
+            ['emoji']
+          ];
+
+          var tokenToolbar = [];
+          var tokenQuillOption = [];
+          if (window.nmEditor.tokenTrigger) {
+            Quill.register("modules/placeholder", PlaceholderModule.default(Quill));
+            cj(window.nmEditor.tokenTrigger).find("option").each(function() {
+              var tokenName = cj(this).attr("value");
+              tokenToolbar.push(tokenName);
+              tokenQuillOption.push({id:tokenName, label:tokenName});
+            });
+            toolbarOptions.push([{"placeholder":tokenToolbar}]);
+          }
+
+          var quillOptions = {
+            modules: {
+              toolbar: toolbarOptions,
+              "emoji-toolbar": true
+            },
+            theme: "snow"
+          };
+
+          if (window.nmEditor.tokenTrigger) {
+            quillOptions.modules.placeholder = {};
+            quillOptions.modules.placeholder.delimiters = ["", ""];
+            quillOptions.modules.placeholder.placeholders = tokenQuillOption;
+          }
+
+          var subjectQuill = new Quill("#subject-editor", quillOptions);
+          subjectQuill.on("text-change", function(delta, oldDelta, source) {
+            // Get text by quill.root.innerText
+            // Because innerText contains '\ufeff', it needs to be removed by jQuert.trim()
+            var subject = cj.trim(subjectQuill.root.innerText);
+
+            // Update value of subject field
+            cj("#subject").val(subject);
+
+            // Because val() will not trigger the 'change' event, so it must be triggered manually.
+            cj("#subject").trigger("change");
+          });
+        }
       }
     });
 </script>
