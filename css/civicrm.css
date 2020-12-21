@@ -5403,8 +5403,12 @@ tbody.scrollContent tr.alternateRow {
 
 .crm-container .mobile-subject-preview {
   display: flex;
-  max-width: 360px;
   margin-bottom: 30px;
+  padding: 10px 0;
+  max-width: 360px;
+  border-top: 1px solid #555;
+  border-bottom: 1px solid #555;
+  background: #fff;
 }
 .crm-container .mobile-subject-preview .col-avatar {
   flex: 0 0 54px;
@@ -5427,7 +5431,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .mobile-subject-preview .mail-sender,
 .crm-container .mobile-subject-preview .mail-subject,
 .crm-container .mobile-subject-preview .mail-teaser {
-  max-width: 280px;
+  max-width: 270px;
 }
 .crm-container .mobile-subject-preview .mail-subject {
 
@@ -5435,6 +5439,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .desktop-subject-preview {
   display: flex;
   padding: 10px 0;
+  max-width: 1200px;
   border-top: 1px solid #555;
   border-bottom: 1px solid #555;
   background: #fff;
