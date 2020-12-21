@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-12-01 18:35+0000\n"
+"PO-Revision-Date: 2020-12-17 07:38+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -34416,11 +34416,8 @@ msgid ""
 msgstr "如需要，為每個會員更新欄位值。按下方<strong>更新會員</strong>儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行會員輸入值然後再按<strong>複製圖示</strong>（欄位名稱的旁邊）。"
 
 #: templates/CRM/Member/Form/Task/Delete.tpl
-msgid ""
-"Are you sure you want to delete the selected memberships? This delete "
-"operation cannot be undone and will delete all transactions and activity "
-"associated with these members."
-msgstr "您確定要刪除選取的會籍？此動作不能復原，會導致與這些會籍相關的全部交易與任務被刪除。"
+msgid "Are you sure you want to delete the selected memberships?"
+msgstr "您確定要刪除所選取的會員嗎？"
 
 #: templates/CRM/Member/Form/Task.tpl
 msgid "Number of selected members: %1"
