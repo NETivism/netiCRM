@@ -245,8 +245,22 @@
 
 
       // refs #26473.
+      var subjectQuill;
+      var mailPreview = {};
+      function subjectUpdateHelper(value, syncQuill) {
+        if (value) {
+          mailPreview.subject = value;
+          cj(".subject-preview .mail-subject").text(mailPreview.subject);
+
+          if (syncQuill) {
+            if (subjectQuill && typeof Quill === "function") {
+              subjectQuill.setText(value);
+            }
+          }
+        }
+      }
+
       if (cj(".subject-preview").length) {
-        var mailPreview = {};
         mailPreview.sender = {};
 
         // TODO: Change to English and make it translatable.
@@ -276,11 +290,6 @@
 
         if (cj("#subject").length) {
           cj(".subject-preview .mail-subject").text(cj("#subject").val());
-
-          cj("#subject").change(function() {
-            mailPreview.subject = cj(this).val();
-            cj(".subject-preview .mail-subject").text(mailPreview.subject);
-          });
         }
 
         cj(".subject-preview .mail-teaser").text(mailPreview.teaser);
@@ -338,11 +347,23 @@
 
             // Update value of subject field
             cj("#subject").val(subject);
-
-            // Because val() will not trigger the 'change' event, so it must be triggered manually.
-            cj("#subject").trigger("change");
+            subjectUpdateHelper(subject);
           });
         }
+
+        cj("#subject").on("change keyup input paste", function() {
+          var subjectVal = cj(this).val(),
+              syncQuill = true;
+          subjectUpdateHelper(subjectVal, syncQuill);
+        });
+
+        var subjectObserver = new MutationObserver(list => {
+          cj("#subject").trigger("change");
+        })
+
+        subjectObserver.observe(cj("#subject")[0], {
+          attributes: true
+        });
       }
     });
 </script>
