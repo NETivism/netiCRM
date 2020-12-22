@@ -5497,6 +5497,19 @@ tbody.scrollContent tr.alternateRow {
 .is-debug .crm-container #subject {
   display: block;
 }
+.crm-mailing-upload-form-block-subject .ql-toolbar button.ql-emoji > svg {
+  width: 20px;
+  height: 20px;
+}
+.crm-mailing-upload-form-block-subject .ql-toolbar button.ql-emoji .ql-fill {
+  fill: #b99300;
+}
+.crm-mailing-upload-form-block-subject .ql-toolbar button.ql-emoji .ql-stroke {
+  stroke: #b99300;
+}
+.crm-mailing-upload-form-block-subject .ql-editor {
+  background: #fff;
+}
 
 /* Mailing: Test */
 .crm-container .crm-test-mail-preview {
