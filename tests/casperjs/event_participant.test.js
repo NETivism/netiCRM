@@ -40,19 +40,19 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* click sort by id */
-    casper.waitForSelector('table#option11 thead th:first-child', function success() {
-        test.assertExists('table#option11 thead th:first-child');
-        this.click('table#option11 thead th:first-child');
+    casper.waitForSelector('#event_status_id table thead th:first-child', function success() {
+        test.assertExists('#event_status_id table thead th:first-child');
+        this.click('#event_status_id table thead th:first-child');
     }, function fail() {
-        test.assertExists('table#option11 thead th:first-child');
+        test.assertExists('#event_status_id table thead th:first-child');
     });
 
     /* click latest event */
-    casper.waitForSelector('table#option11 tbody tr:last-child td.crm-event-title a', function success() {
-        test.assertExists('table#option11 tbody tr:last-child td.crm-event-title a');
-        this.click('table#option11 tbody tr:last-child td.crm-event-title a');
+    casper.waitForSelector('#event_status_id table tbody tr:last-child td.crm-event-title a', function success() {
+        test.assertExists('#event_status_id table tbody tr:last-child td.crm-event-title a');
+        this.click('#event_status_id table tbody tr:last-child td.crm-event-title a');
     }, function fail() {
-        test.assertExists('table#option11 tbody tr:last-child td.crm-event-title a');
+        test.assertExists('#event_status_id table tbody tr:last-child td.crm-event-title a');
     });
     
     casper.wait(2000);
