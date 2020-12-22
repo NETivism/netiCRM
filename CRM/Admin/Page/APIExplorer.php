@@ -36,7 +36,7 @@
  * Page for displaying list of contact Subtypes
  */
 class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
-  const PUBLIC_API = 'Activity,Contact,Contribution,Event,Participant,Membership,Address,Email,Phone,CustomValue,Group,GroupContact,Tag,EntityTag';
+  const PUBLIC_API = 'Activity,Contact,Contribution,ContributionPage,Event,Participant,Membership,Address,Email,Phone,CustomValue,Group,GroupContact,Tag,EntityTag';
 
   function run() {
     if($this->allowVisit()){
