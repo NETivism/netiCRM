@@ -602,6 +602,10 @@
         if(this.currentFormStep == 1 && step == 2){
           // Check instrument is credit card
           var error_msg = [];
+          console.log(this.currentPriceAmount);
+          if(!this.currentPriceAmount || this.currentPriceAmount == 0){
+            error_msg.push('Please enter a valid amount.');
+          }
           if(this.currentContribType == 'recurring' && $('#civicrm-instrument-dummy-1:checked').length == 0){
             error_msg.push('You cannot set up a recurring contribution if you are not paying online by credit card.');
           }

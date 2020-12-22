@@ -358,7 +358,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     }else{
       $contribution_field = $contribution_query = '';
     }
-    $where = 'WHERE c.is_deleted IS NULL OR c.is_deleted = 0';
+    $where = 'WHERE c.is_deleted != 1';
 
 
     $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field label FROM $table $contribution_query $where GROUP BY label $order_by";
