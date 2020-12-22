@@ -375,13 +375,15 @@
         cj("#subject").on("change keyup input paste", function() {
           var subjectVal = cj(this).val(),
               syncQuill = true;
+
+          // Sync the subject value to the subject editor (Quill).
           subjectUpdateHelper(subjectVal, syncQuill);
         });
 
-        var subjectObserver = new MutationObserver(list => {
+        // Added a MutationObserver to watch for changes being made to the subject DOM tree
+        var subjectObserver = new MutationObserver(function(list) {
           cj("#subject").trigger("change");
-        })
-
+        });
         subjectObserver.observe(cj("#subject")[0], {
           attributes: true
         });
