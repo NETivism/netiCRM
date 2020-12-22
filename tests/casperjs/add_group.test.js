@@ -162,10 +162,10 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.wait(2000);
     /* check group has been add */
-    casper.waitForSelector('#option11', function success() {
-        test.assertExists('#option11');
+    casper.waitForSelector('#GroupContact table', function success() {
+        test.assertExists('#GroupContact table');
         var group_in_list = this.evaluate(function(group_name) {
-            tr = document.querySelectorAll('#option11 tr');
+            tr = document.querySelectorAll('#GroupContact table tr');
             for(var i=1; i<tr.length; i++) {
                 if(tr[i].querySelector('td:first-child a').text == group_name) {
                     return true;
@@ -174,9 +174,9 @@ casper.test.begin('Resurrectio test', function(test) {
 
             return false;
         }, vars.group_name);
-        test.assertEquals(group_in_list, true);
+        test.assertEquals(group_in_list, true, 'Group has been add.');
     }, function fail() {
-        test.assertExists('option11', "Assert 'Current Groups' table exist.");
+        test.assertExists('#GroupContact table', "Assert 'Current Groups' table exist.");
     });
 
     casper.then(function() {
@@ -192,9 +192,9 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.thenOpen(vars.baseURL + "civicrm/group?reset=1", function() {
     });
 
-    casper.waitForSelector("#option11", function success() {
+    casper.waitForSelector("#group table", function success() {
         vars.group_id = this.evaluate(function (group_name) {
-            tr = document.querySelectorAll('#option11 tr');
+            tr = document.querySelectorAll('#group table tr');
             for(var i=1; i<tr.length; i++) {
                 if(tr[i].querySelector('td:first-child').textContent == group_name) {
                     return tr[i].querySelector('td:nth-child(2)').textContent;
@@ -204,7 +204,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
         test.assertNotEquals(vars.group_id, null, "Assert get group id successfully.");
     }, function fail() {
-        test.assertExists("#option11", "Assert group list table exist.");
+        test.assertExists("#group table", "Assert group list table exist.");
     });
 
     casper.thenOpen(vars.baseURL + "civicrm/mailing/send?reset=1", function() {
