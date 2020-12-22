@@ -12,7 +12,10 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @var boolean
    */
 
-  protected $_tmpreceipt = NULL;
+  CONST GENERATE_COUNT_EACH_TIME = 50;
+  CONST BATCH_THRESHOLD = 50;
+
+  static protected $_tmpreceipt = NULL;
 
   protected $_year = NULL;
 
@@ -122,13 +125,13 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     CRM_Utils_System::civiExit();
   }
 
-  public function pushFile($html) {
+  public static function pushFile($html) {
     // tmp directory
-    file_put_contents($this->_tmpreceipt, $html, FILE_APPEND);
+    file_put_contents(self::$_tmpreceipt, $html, FILE_APPEND);
   }
   public function popFile() {
-    $return = file_get_contents($this->_tmpreceipt);
-    unlink($this->_tmpreceipt);
+    $return = file_get_contents(self::$_tmpreceipt);
+    unlink(self::$_tmpreceipt);
     return $return;
   }
 
@@ -144,17 +147,68 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
   }
 
-  public function makeReceipt($contactIds, $option) {
-    $config = CRM_Core_Config::singleton();
-    $this->_tmpreceipt = tempnam('/tmp', 'receiptyear');
-    $count = 0;
+  static function getExportFileName() {
 
-    foreach ($contactIds as $contact_id){
+  }
+
+  public function makeReceipt($contactIds, $option) {
+    global $civicrm_batch;
+    $allArgs = func_get_args();
+    $totalNumRows = count($contactIds);
+    $eachCount = self::GENERATE_COUNT_EACH_TIME;
+    $batchThreshold = self::BATCH_THRESHOLD;
+    $offset = 0;
+    if (empty($civicrm_batch)) {
+      if ($totalNumRows > $batchThreshold) {
+        $config = CRM_Core_Config::singleton();
+        $fileName = self::getExportFileName();
+        $file = $config->uploadDir.$fileName;
+        $batch = new CRM_Batch_BAO_Batch();
+        $batchParams = array(
+          'label' => ts('Export').': '.$fileName,
+          'startCallback' => NULL,
+          'startCallback_args' => NULL,
+          'processCallback' => array(__CLASS__, __FUNCTION__),
+          'processCallbackArgs' => $allArgs,
+          'finishCallback' => array(__CLASS__, 'batchFinish'),
+          'finishCallbackArgs' => NULL,
+          'exportFile' => $file,
+          'download' => array(
+            'header' => array(
+              'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              'Content-Disposition: attachment;filename="'.$fileName.'"',
+            ),
+            'file' => $file,
+          ),
+          'actionPermission' => '',
+          'total' => $totalNumRows,
+          'processed' => 0,
+        );
+        $batch->start($batchParams);
+  
+        // redirect to notice page
+        CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
+      }
+    }
+    else {
+      if (isset($civicrm_batch->data['processed']) && !empty($civicrm_batch->data['processed'])) {
+        $offset = $civicrm_batch->data['processed'] ;
+      }
+    }
+
+    $config = CRM_Core_Config::singleton();
+    self::$_tmpreceipt = tempnam('/tmp', 'receiptyear');
+
+    for ($i=$offset; $i < $offset + $eachCount; $i++) {
+      if (!isset($contactIds[$i])) {
+        break;
+      }
+      $contact_id = $contactIds[$i];
       $template = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);
-      if ($count) {
+      if ($i) {
         $html = '<div class="page-break" style="page-break-after: always;"></div>';
       }
-      $config = &CRM_Core_Config::singleton();
       if (!empty($config->imageBigStampName)){
         $template->assign('imageBigStampUrl', $config->imageUploadDir . $config->imageBigStampName);
       }
@@ -162,14 +216,25 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         $template->assign('imageSmallStampUrl', $config->imageUploadDir . $config->imageSmallStampName);
       }
       $html .= CRM_Contribute_BAO_Contribution::getAnnualReceipt($contact_id, $option, $template);
-      $this->pushFile($html);
+      self::pushFile($html);
 
       // reset template values before processing next transactions
       $template->clearTemplateVars();
-      $count++;
       unset($html);
       unset($template);
     }
+
+    if ($civicrm_batch) {
+      CRM_Core_Error::debug_log_message("expect $i contacts");
+      $civicrm_batch->data['processed'] = $i;
+      return;
+    }
   }
+
+  public static function batchFinish() {
+
+  }
+
+
 }
 
