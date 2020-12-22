@@ -287,7 +287,9 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     casper.waitForSelector("input[name='subject']", function success() {
-        this.sendKeys("input[name='subject']", makeid(5));
+        this.evaluate(function(subject) {
+            document.querySelector("input[name='subject']").value = subject;
+        }, makeid(5));
     }, function fail() {
         test.assertExists("input[name='subject']", "Assert 'Mailing Subject' exist.");
     });
@@ -299,14 +301,7 @@ casper.test.begin('Resurrectio test', function(test) {
     }, function fail() {
         test.assertExists("#footer_id", "Assert 'Mailing footer' exist.");
     });
-
-    casper.waitForSelector("#footer_id", function success() {
-        this.evaluate(function () {
-            document.getElementById('footer_id').selectedIndex = 1;
-        });
-    }, function fail() {
-        test.assertExists("#footer_id", "Assert 'Mailing footer' exist.");
-    });
+    
 
     casper.waitForSelector("input[value='Next >>']", function success() {
         this.click("input[value='Next >>']");
