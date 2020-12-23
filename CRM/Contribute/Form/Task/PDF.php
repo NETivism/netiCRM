@@ -39,6 +39,7 @@ require_once 'CRM/Contribute/Form/Task.php';
  * contacts.
  */
 class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
+  CONST PDF_BATCH_THRESHOLD = 100;
 
   /**
    * Are we operating in "single mode", i.e. updating the task of only
@@ -118,6 +119,12 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     if (!empty($activityTypeId)) {
       $this->_enableEmailReceipt = TRUE;
       CRM_Utils_System::setTitle(ts('Print or Email Contribution Receipts'));
+      if (count($this->_contributionIds) > self::PDF_BATCH_THRESHOLD) {
+        $msg = ts('You have selected more than %1 contributions.', array(1 => self::PDF_BATCH_THRESHOLD)).' ';
+        $msg .= ts('To prevent large volumn email being sent and blocked by recipients, we got to turn off receipt function.').' ';
+        $msg .= ts('To enable this, please search again and select under %1 contributions.', array(1 => self::PDF_BATCH_THRESHOLD));
+        CRM_Core_Session::setStatus($msg);
+      }
     }
   }
 
@@ -133,7 +140,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $options = self::getPrintingTypes();
     $this->addRadio( 'window_envelope', ts('Apply to window envelope'), $options,null,'<br/>',true );
 
-    if (count($this->_contributionIds) <= 100 && $this->_enableEmailReceipt) {
+    if (count($this->_contributionIds) <= self::PDF_BATCH_THRESHOLD && $this->_enableEmailReceipt) {
       $this->addCheckBox('email_pdf_receipt', '', array(ts('Send an Email') => 1));
       $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
       $emails = array(
@@ -145,7 +152,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
 
     $buttons = array();
-    if (count($this->_contributionIds) <= 100 && $this->_enableEmailReceipt) {
+    if (count($this->_contributionIds) <= self::PDF_BATCH_THRESHOLD && $this->_enableEmailReceipt) {
       $buttons[] = array(
         'type' => 'upload',
         'name' => ts('Email Receipt'),
