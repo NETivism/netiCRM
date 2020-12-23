@@ -5390,6 +5390,7 @@ tbody.scrollContent tr.alternateRow {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: .9375rem;
+  font-weight: bold;
 }
 .crm-container .subject-preview .mail-subject {
   font-weight: bold;
