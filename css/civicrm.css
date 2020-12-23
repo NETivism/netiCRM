@@ -5380,7 +5380,6 @@ tbody.scrollContent tr.alternateRow {
 /* Mailing */
 /* mail subject preview */
 .crm-container .subject-preview {
-  margin-bottom: 30px;
   font-size: .875rem;
 }
 .crm-container .subject-preview .zmdi {
@@ -5401,32 +5400,8 @@ tbody.scrollContent tr.alternateRow {
   font-size: .875rem;
   color: #555;
 }
-.crm-container .subject-preview-tabs {
-  display: flex;
-  margin: 20px 0;
-  list-style: none;
-}
-.crm-container .subject-preview-tabs button {
-  margin: 0 10px;
-  font-size: .9375rem;
-  color: #3F51B5;
-  cursor: pointer;
-  border: 1px solid #3F51B5;
-  background: #fff;
-}
-.crm-container .subject-preview-tabs button.is-active {
-  color: #fff;
-  background: #3F51B5;
-}
-.crm-container .subject-preview-item {
-  display: none;
-}
-.crm-container .subject-preview-item.is-active {
-  display: block;
-}
 .crm-container .mobile-subject-preview {
   display: flex;
-  margin-bottom: 30px;
   padding: 10px 0;
   max-width: 360px;
   border-top: 1px solid #555;
