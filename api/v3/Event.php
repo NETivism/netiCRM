@@ -148,9 +148,7 @@ function civicrm_api3_event_get($params) {
   while ($eventDAO->fetch()) {
     $event[$eventDAO->id] = array();
     CRM_Core_DAO::storeValues($eventDAO, $event[$eventDAO->id]);
-    if (CRM_Utils_Array::value('return.is_full', $params)) {
-      _civicrm_api3_event_getisfull($event, $eventDAO->id);
-    }
+    _civicrm_api3_event_getisfull($event, $eventDAO->id);
     _civicrm_api3_event_get_legacy_support_42($event, $eventDAO->id);
     _civicrm_api3_custom_data_get($event[$eventDAO->id], 'Event', $eventDAO->id, NULL, $eventDAO->event_type_id);
   }
@@ -210,13 +208,18 @@ function civicrm_api3_event_delete($params) {
  */
 function _civicrm_api3_event_getisfull(&$event, $event_id) {
   require_once 'CRM/Event/BAO/Participant.php';
-  $eventFullResult = CRM_Event_BAO_Participant::eventFull($event_id, 1);
-  if (!empty($eventFullResult) && is_int($eventFullResult)) {
+  $eventFullResult = CRM_Event_BAO_Participant::eventFull($event_id, TRUE);
+  if ($eventFullResult === NULL) {
+    $event[$event_id]['available_places'] = NULL;
+    $event[$event_id]['is_full'] = 0;
+  }
+  elseif (!empty($eventFullResult) && is_numeric($eventFullResult)) {
     $event[$event_id]['available_places'] = $eventFullResult;
+    $event[$event_id]['is_full'] = 0;
   }
-  else {
+  elseif (empty($eventFullResult) && is_numeric($eventFullResult)) {
     $event[$event_id]['available_places'] = 0;
+    $event[$event_id]['is_full'] = 0;
   }
-  $event[$event_id]['is_full'] = $event[$event_id]['available_places'] == 0 ? 1 : 0;
 }
 
