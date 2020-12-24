@@ -68,6 +68,7 @@
 {literal}
 <script type="text/javascript" >
 cj(document).ready(function($){
+  var isBatch = "{/literal}{$isBatch}{literal}";
   var emailPDFReceipt = function(obj){
     if($(obj).is(':checked')) {
       $("table.pdf-receipt-table").show();
@@ -150,7 +151,9 @@ cj(document).ready(function($){
     }
     if (confirmEmail || confirmDownload) {
       if (confirmDownload) {
-        $(this).attr("target", "_blank");
+        if (!isBatch) {
+          $(this).attr("target", "_blank");
+        }
       }
       else {
         $(this).removeAttr("target");

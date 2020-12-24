@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-12-17 07:38+0000\n"
+"PO-Revision-Date: 2020-12-24 04:58+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48163,3 +48163,14 @@ msgstr "注意！此會員類型已有 %1 個會員，改變這個設定，將�
 
 msgid "Members in this type alreay have new reminder date."
 msgstr "在此會員類型中的所有會員，已經更新了提醒日期。"
+
+msgid "You have selected more than %1 contributions."
+msgstr "你選擇超過%1筆捐款。"
+
+msgid ""
+"To prevent large volumn email being sent and blocked by recipients, we got "
+"to turn off receipt function."
+msgstr "為了避免大量信件被收件方阻擋，您無法使用「電子郵件收據」的功能。"
+
+msgid "To enable this, please search again and select under %1 contributions."
+msgstr "要啟用此功能，請回到上一部重新選則少於%1筆捐款。"

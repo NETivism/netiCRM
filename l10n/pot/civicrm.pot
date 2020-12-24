@@ -47877,3 +47877,12 @@ msgstr ""
 
 msgid "Members in this type alreay have new reminder date."
 msgstr ""
+
+msgid "You have selected more than %1 contributions."
+msgstr ""
+
+msgid "To prevent large volumn email being sent and blocked by recipients, we got to turn off receipt function."
+msgstr ""
+
+msgid "To enable this, please search again and select under %1 contributions."
+msgstr ""
