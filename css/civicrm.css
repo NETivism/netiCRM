@@ -5487,11 +5487,11 @@ tbody.scrollContent tr.alternateRow {
 }
 
 /* Mailing: Upload */
-.crm-container #subject,
+.crm-container .crm-mailing-upload-form-block #subject,
 .crm-container .crm-mailing-upload-form-block-subject .crm-form-textfield {
   display: none;
 }
-.is-debug .crm-container #subject,
+.is-debug .crm-container .crm-mailing-upload-form-block #subject,
 .is-debug .crm-container .crm-mailing-upload-form-block-subject .crm-form-textfield {
   display: block;
 }
