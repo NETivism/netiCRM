@@ -106,6 +106,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if (!empty($this->_paymentProcessor)) {
       $this->_paymentForm->add('hidden', 'prime', '');
       $this->_paymentForm->assign('button_name', $this->_paymentForm->getButtonName('next'));
+      $this->_paymentForm->assign('back_button_name', $this->_paymentForm->getButtonName('back'));
       $this->_paymentForm->assign('payment_processor', $this->_paymentProcessor);
       $className = get_class($this->_paymentForm);
       $qfKey = $this->_paymentForm->get('qfKey');
