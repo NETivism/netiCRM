@@ -1779,21 +1779,22 @@
           }
 
           if (group == "block") {
-            $block = $("#nme-mail-body .nme-block");
+            $block = $("#nme-mail-body .nme-block:not([data-block-override='true'])");
 
             if (fieldType == "background-color") {
               $target = $block.find("[data-settings-target='block']");
 
-              // Update color to dom
-              $target.css(fieldType, colorVal);
-              $target.attr("bgcolor", colorVal);
-
               $block.each(function() {
                 let $this = $(this),
+                    $target = $this.find("[data-settings-target='block']"),
                     section = $this.data("section"),
                     blockID = $this.data("id"),
                     parentID = $this.data("parent-id"),
                     index = $this.data("index");
+
+                // Update color to dom
+                $target.eq(0).css(fieldType, colorVal);
+                $target.eq(0).attr("bgcolor", colorVal);
 
                 // Update color to json
                 if (parentID) {
@@ -2365,7 +2366,8 @@
 
     var pickrInit = function(elemID, defaultColor) {
       let targetSelector = "#" + elemID,
-          $target = $(targetSelector);
+          $target = $(targetSelector),
+          handleType = $target.data("type");
 
       if (_domElemExist($target)) {
         const pickr = new Pickr({
@@ -2433,6 +2435,32 @@
               parentID = $block.data("parent-id"),
               parentType = $block.data("parent-type"),
               index = $block.data("index") == 0 || $block.data("index") > 0 ? $block.data("index") : 0;
+
+          if (handleType == "block-bg") {
+            let bgColor = color.toHEXA().toString();
+
+            // Update color to dom
+            $block.find("[data-settings-target='block']").css("background-color", bgColor);
+            $block.find("[data-settings-target='block']").attr("bgcolor", bgColor);
+
+            // Update color to json
+            if (parentID && parentType) {
+              if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
+                if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["block"]["background-color"] = bgColor;
+                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["override"]["block"] = true;
+                  _nmeData.update();
+                }
+              }
+            }
+            else {
+              _data["sections"][section]["blocks"][blockID]["styles"]["block"]["background-color"] = bgColor;
+              _data["sections"][section]["blocks"][blockID]["override"]["block"] = true;
+              _nmeData.update();
+            }
+
+            $block.attr("data-block-override", true);
+          }
 
           if (blockType == "button") {
             let bgColor = color.toHEXA().toString();
@@ -2754,6 +2782,11 @@
           }
         }
       });
+
+      // handle type: block-bg
+      if ($blockControl.find(".handle-block-bg").length) {
+        _colorable($blockControl.find(".handle-block-bg").attr("id"));
+      }
 
       // handle type: style
       if ($blockControl.find(".handle-style").length) {
