@@ -12,10 +12,11 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @var boolean
    */
 
-  CONST GENERATE_COUNT_EACH_TIME = 50;
-  CONST BATCH_THRESHOLD = 50;
+  CONST GENERATE_COUNT_EACH_TIME = 100;
+  CONST BATCH_THRESHOLD = 100;
 
   static protected $_tmpreceipt = NULL;
+  static protected $_exportFileName = NULL;
 
   protected $_year = NULL;
 
@@ -129,18 +130,18 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     // tmp directory
     file_put_contents(self::$_tmpreceipt, $html, FILE_APPEND);
   }
-  public function popFile() {
+  public static function popFile() {
     $return = file_get_contents(self::$_tmpreceipt);
     unlink(self::$_tmpreceipt);
     return $return;
   }
 
-  public function makePDF($download = TRUE) {
+  public static function makePDF($download = TRUE) {
     $template = &CRM_Core_Smarty::singleton();
-    $pages = $this->popFile();
+    $pages = self::popFile();
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/AnnualReceipt.tpl');
-    $filename = 'AnnualReceipt'.$this->_year.'.pdf';
+    $filename = self::$_exportFileName;
     $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, $filename, 'portrait', 'a4', $download);
     if(!$download){
       return $pdf_real_filename;
@@ -148,35 +149,43 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
   }
 
   static function getExportFileName() {
-
+    $rand = substr(md5(microtime(TRUE)), 0, 4);
+    return 'Annual-Receipt-Batch-'.$rand.'-'.date('YmdHi');
   }
 
-  public function makeReceipt($contactIds, $option) {
+  public function makeReceipt($contactIds, &$option) {
     global $civicrm_batch;
-    $allArgs = func_get_args();
     $totalNumRows = count($contactIds);
-    $eachCount = self::GENERATE_COUNT_EACH_TIME;
     $batchThreshold = self::BATCH_THRESHOLD;
+    if (empty($option['tempFileName'])) {
+      $tempFileName = self::getExportFileName();
+      self::$_tmpreceipt = $option['tempFileName'] = $tempFileName;
+    }
+    else {
+      self::$_tmpreceipt = '/tmp/'.$option['tempFileName'];
+    }
     $offset = 0;
+    $config = CRM_Core_Config::singleton();
     if (empty($civicrm_batch)) {
+      // First execute, not batch session.
       if ($totalNumRows > $batchThreshold) {
-        $config = CRM_Core_Config::singleton();
-        $fileName = self::getExportFileName();
-        $file = $config->uploadDir.$fileName;
+        $option['tempFileName'] = $tempFileName;
+        $exportFileName = self::getExportFileName().'.pdf';
+        $file = $config->uploadDir.$exportFileName;
         $batch = new CRM_Batch_BAO_Batch();
         $batchParams = array(
-          'label' => ts('Export').': '.$fileName,
+          'label' => ts('Export').': '.$exportFileName,
           'startCallback' => NULL,
           'startCallback_args' => NULL,
           'processCallback' => array(__CLASS__, __FUNCTION__),
-          'processCallbackArgs' => $allArgs,
+          'processCallbackArgs' => array($contactIds, $option),
           'finishCallback' => array(__CLASS__, 'batchFinish'),
-          'finishCallbackArgs' => NULL,
+          'finishCallbackArgs' => array($tempFileName, $exportFileName),
           'exportFile' => $file,
           'download' => array(
             'header' => array(
-              'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-              'Content-Disposition: attachment;filename="'.$fileName.'"',
+              'Content-Type: application/pdf',
+              'Content-Disposition: attachment;filename="'.$exportFileName.'"',
             ),
             'file' => $file,
           ),
@@ -185,21 +194,23 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
           'processed' => 0,
         );
         $batch->start($batchParams);
-  
         // redirect to notice page
         CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
       }
+      else {
+        $eachCount = count($contactIds);
+      }
     }
     else {
+      $eachCount = self::GENERATE_COUNT_EACH_TIME;
       if (isset($civicrm_batch->data['processed']) && !empty($civicrm_batch->data['processed'])) {
         $offset = $civicrm_batch->data['processed'] ;
       }
     }
 
-    $config = CRM_Core_Config::singleton();
-    self::$_tmpreceipt = tempnam('/tmp', 'receiptyear');
-
+    // If on batch, eachCount use const GENERATE_COUNT_EACH_TIME,
+    // If not batch, eachCount use length of $contactIds.
     for ($i=$offset; $i < $offset + $eachCount; $i++) {
       if (!isset($contactIds[$i])) {
         break;
@@ -227,11 +238,25 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     if ($civicrm_batch) {
       CRM_Core_Error::debug_log_message("expect $i contacts");
       $civicrm_batch->data['processed'] = $i;
+      if ($civicrm_batch->data['processed'] >= $civicrm_batch->data['total']) {
+        $civicrm_batch->data['isCompleted'] = TRUE;
+      }
       return;
     }
   }
 
-  public static function batchFinish() {
+  public static function batchFinish($tempFileName, $exportFileName) {
+    global $civicrm_batch;
+    self::$_tmpreceipt = '/tmp/'.$tempFileName;
+    self::$_exportFileName = $exportFileName;
+    $filePath = self::makePDF(FALSE);
+    if (!empty($civicrm_batch)) {
+      // Update correct file path to Batch data.
+      $civicrm_batch->data['exportFile'] = $filePath;
+      $civicrm_batch->data['download']['file'] = $filePath;
+      $params = (array) $civicrm_batch;
+      CRM_Batch_BAO_Batch::create($params);
+    }
 
   }
 
