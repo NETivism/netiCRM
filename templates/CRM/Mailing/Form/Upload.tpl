@@ -304,7 +304,7 @@
 
         var getMailTime = function() {
           var currentDate = new Date();
-          mailPreview.time = currentDate.getHours() + ":" + currentDate.getMinutes();
+          mailPreview.time = ("0" + currentDate.getHours()).slice(-2) + ":" + ("0" + currentDate.getMinutes()).slice(-2);
           cj(".subject-preview .mail-time").text(mailPreview.time);
         }
 
