@@ -79,7 +79,15 @@ function _civicrm_api3_contribution_page_create_spec(&$params) {
  * @access public
  */
 function civicrm_api3_contribution_page_get($params) {
-  return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
+  $result = _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
+  if (!empty($result['values'])) {
+    foreach($result['values'] as $idx => &$contributionPage) {
+      _civicrm_api3_contribution_page_getachieved($contributionPage, $contributionPage['id']);
+      _civicrm_api3_contribution_page_getamount($contributionPage, $contributionPage['id']);
+    }
+  }
+
+  return $result;
 }
 
 /**
@@ -98,4 +106,40 @@ function civicrm_api3_contribution_page_get($params) {
  */
 function civicrm_api3_contribution_page_delete($params) {
   return _civicrm_api3_basic_delete(_civicrm_api3_get_BAO(__FUNCTION__), $params);
+}
+
+
+function _civicrm_api3_contribution_page_getamount(&$page, $pageId) {
+  if ($pageId) {
+    $fee = CRM_Contribute_BAO_ContributionPage::feeBlock($pageId);
+    $feeBlock = array();
+    foreach($fee['label'] as $idx => $label) {
+      if (isset($fee['value'][$idx]) && $fee['value'][$idx] !== '') {
+        $grouping = !empty($fee['grouping'][$idx]) ? $fee['grouping'][$idx] : "all";
+        $feeBlock[$grouping][] = array(
+          'label' => $label,
+          'value' => $fee['value'][$idx],
+        );
+      }
+    }
+    $page['price_set_id'] = !empty($fee['price_set_id']) ? $fee['price_set_id'] : 0;
+    $page['fee_block'] = $feeBlock;
+  }
+}
+
+function _civicrm_api3_contribution_page_getachieved(&$page, $pageId) {
+  $achieved = CRM_Contribute_BAO_ContributionPage::goalAchieved($pageId);
+  if (!empty($achieved)) {
+    $page['goal_type'] = $achieved['type'];
+    $page['goal_label'] = $achieved['label'];
+    $page['goal'] = $achieved['goal'];
+    $page['goal_achieved'] = $achieved['achieved'] ? 1 : 0;
+    $page['goal_achieved_current'] = $achieved['current'];
+    $page['goal_achieved_percent'] = $achieved['percent'];
+    unset($page['goal_recurring']);
+    unset($page['goal_amount']);
+  }
+  else {
+    $page['goal_type'] = '';
+  }
 }

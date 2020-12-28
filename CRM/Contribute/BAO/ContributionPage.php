@@ -877,5 +877,43 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
 
     return $output;
   }
+
+  public static function feeBlock($pageId) {
+    $feeBlock = array();
+    if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_contribution_page', $pageId)) {
+      $feeBlock['price_set_id'] = $priceSetId;
+      $setDetails = CRM_Price_BAO_Set::getSetDetail($priceSetId);
+      $priceSetFields = $setDetails[$priceSetId]['fields'];
+      if (is_array($priceSetFields)) {
+        $fieldCnt = 1;
+        $visibility = CRM_Core_PseudoConstant::visibility('name');
+
+        foreach ($priceSetFields as $fid => $fieldValues) {
+          if (!is_array($fieldValues['options']) ||
+            empty($fieldValues['options']) ||
+            CRM_Utils_Array::value('visibility_id', $fieldValues) != array_search('public', $visibility)
+          ) {
+            continue;
+          }
+
+          if (count($fieldValues['options']) > 1) {
+            $feeBlock['value'][$fieldCnt] = '';
+            $feeBlock['label'][$fieldCnt] = $fieldValues['label'];
+            $fieldCnt++;
+          }
+
+          foreach ($fieldValues['options'] as $optionId => $optionVal) {
+            $feeBlock['value'][$fieldCnt] = $optionVal['amount'];
+            $feeBlock['label'][$fieldCnt] = $optionVal['label'];
+            $fieldCnt++;
+          }
+        }
+      }
+    }
+    else {
+      CRM_Core_OptionGroup::getAssoc("civicrm_contribution_page.amount.{$pageId}", $feeBlock);
+    }
+    return $feeBlock;
+  }
 }
 
