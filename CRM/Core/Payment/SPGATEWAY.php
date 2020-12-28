@@ -253,14 +253,20 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         }
         $isChangeRecur = TRUE;
       }
-      if ($requestParams['PeriodType'] == 'M') {
-        $requestParams['PeriodPoint'] = sprintf('%02d', $params['cycle_day']);
-      }
-      else {
-        $requestParams['PeriodPoint'] = sprintf('%04d', $params['cycle_day']);
+      if (!empty($requestParams['PeriodType'])) {
+        if ($requestParams['PeriodType'] == 'M') {
+          $requestParams['PeriodPoint'] = sprintf('%02d', $params['cycle_day']);
+        }
+        elseif ($requestParams['PeriodType'] == 'Y') {
+          $requestParams['PeriodPoint'] = sprintf('%04d', $params['cycle_day']);
+        }
       }
       if (!empty($params['amount'])) {
         $requestParams['AlterAmt'] = $params['amount'];
+        $isChangeRecur = TRUE;
+      }
+      if (!empty($params['installments'])) {
+        $requestParams['PeriodTimes'] = $params['installments'];
         $isChangeRecur = TRUE;
       }
 
