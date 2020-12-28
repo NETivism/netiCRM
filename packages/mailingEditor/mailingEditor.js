@@ -356,9 +356,27 @@
   };
 
   var _htmlDecode = function(input) {
-    input = _htmlUnescape(input);
-    input = decodeURI(input);
-    return input;
+    if (typeof input !== "undefined") {
+      _debug(input, "_htmlDecode function: Original input HTML");
+
+      // Input is escape HTML, we need to unescape HTML first.
+      input = _htmlUnescape(input);
+      _debug(input, "_htmlDecode function: HTML unescape");
+
+      // Unescape HTML contains the encoded URL, we need to decode.
+      // But before decodeURI, in order to avoid URIError caused by
+      // the HTML containing the '%' during the decodeURI ('%' is an
+      // escape character), we have to convert the content from '%'
+      // to '%25' by encodeURI.
+      input = encodeURI(input);
+      _debug(input, "_htmlDecode function: Encode URI");
+
+      // Finally, we can decodeURI.
+      input = decodeURI(input);
+      _debug(input, "_htmlDecode function: Decode URI");
+
+      return input;
+    }
   }
 
   var _domElemExist = function($elem) {
