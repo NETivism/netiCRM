@@ -2283,6 +2283,8 @@
 
     // Replace quill emoji blot to simple emoji entity
     var replaceEmojiBlot = function($item) {
+      var result = "";
+
       if ($item.length) {
         $item.find(".ql-emojiblot").each(function() {
           var $emojiBlot = $(this),
@@ -2292,7 +2294,8 @@
           $emojiBlot.remove();
         });
 
-        return $item.html();
+        result = _htmlEscape($item.html());
+        return result;
       }
     }
 
