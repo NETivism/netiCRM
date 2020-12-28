@@ -2271,6 +2271,31 @@
     $editableElems = typeof $editableElems !== "undefined" ? $editableElems : $(".nme-editable:not(.editable-initialized)");
     initSave = typeof initSave !== "undefined" ? initSave : false;
 
+    var emojiBlotExist = function(html) {
+      var result = false;
+
+      if (typeof html !== "undefined" && html.indexOf("ql-emojiblot") != -1) {
+        result = true;
+      }
+
+      return result;
+    }
+
+    // Replace quill emoji blot to simple emoji entity
+    var replaceEmojiBlot = function($item) {
+      if ($item.length) {
+        $item.find(".ql-emojiblot").each(function() {
+          var $emojiBlot = $(this),
+              emoji = $.trim($emojiBlot.context.innerText);
+
+          $emojiBlot.after(emoji);
+          $emojiBlot.remove();
+        });
+
+        return $item.html();
+      }
+    }
+
     var saveToData = function($item, value) {
       $item = typeof $item !== "undefined" ? $item : null;
       value = typeof value !== "undefined" ? value : "";
@@ -2281,7 +2306,8 @@
             section = $item.data("section"),
             parentID = $item.data("parent-id"),
             parentType = $item.data("parent-type"),
-            index = $item.data("index");
+            index = $item.data("index"),
+            tempContent = "";
 
         if (parentID && parentType) {
           if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
@@ -2294,6 +2320,12 @@
 
             if (editableType == "xquill") {
               if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                if (emojiBlotExist(value)) {
+                  tempContent = _htmlDecode(value);
+                  $item.html(tempContent);
+                  value = replaceEmojiBlot($item);
+                }
+
                 _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["html"] = value;
                 _nmeData.update();
               }
@@ -2308,6 +2340,12 @@
             }
 
             if (editableType == "xquill") {
+              if (emojiBlotExist(value)) {
+                tempContent = _htmlDecode(value);
+                $item.html(tempContent);
+                value = replaceEmojiBlot($item);
+              }
+
               _data["sections"][section]["blocks"][blockID]["data"]["html"] = value;
               _nmeData.update();
             }
