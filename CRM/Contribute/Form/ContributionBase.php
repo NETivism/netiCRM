@@ -1055,11 +1055,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           $this->set('originalId', $id);
           $this->assign('originalId', $id);
           $this->_originalId = $id;
+          $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $id, 'product_id', 'contribution_id' );
           $defaultFromRequest = $this->get('defaultFromRequest');
           if (!isset($defaultFromRequest['amt'])) $defaultFromRequest['amt'] = (int) $original->total_amount;
           if (!isset($defaultFromRequest['grouping'])) $defaultFromRequest['grouping'] = $original->contribution_recur_id ? 'recurring' : 'non-recurring';
           if (!isset($defaultFromRequest['instrument'])) $defaultFromRequest['instrument'] = $original->payment_instrument_id;
           if (!isset($defaultFromRequest['ppid'])) $defaultFromRequest['ppid'] = $original->payment_processor_id;
+          if (!isset($defaultFromRequest['gift']) && !empty($selectedProductId)) $defaultFromRequest['gift'] = $selectedProductId;
           if (!isset($defaultFromRequest['membership'])) {
             $memberId = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipPayment', $id, 'membership_id', 'contribution_id');
             if ($memberId) {
