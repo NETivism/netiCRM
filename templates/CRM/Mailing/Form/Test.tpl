@@ -55,6 +55,42 @@
         </ul>
         <table class="form-layout">
           <tr class="crm-mailing-test-form-block-subject"><td class="label">{ts}Subject:{/ts}</td><td>{$subject}</td></tr>
+          <!-- TODO: Change to English and make it translatable. -->
+          <tr class="crm-mailing-test-form-block-subject-preview">
+            <td class="label">主旨預覽：</td>
+            <td>
+              <div class="mobile-subject-preview subject-preview is-active" data-type="mobile" data-mode="tabs">
+                <div class="subject-preview-content">
+                  <div class="col-avatar"><i class="zmdi zmdi-account-circle"></i></div>
+                  <div class="col-info">
+                    <div class="col-info-row-1">
+                      <span class="mail-sender"></span>
+                      <div class="mail-time"></div>
+                    </div>
+                    <div class="col-info-row-2">
+                      <div class="mail-subject"></div>
+                    </div>
+                    <div class="col-info-row-3">
+                      <span class="mail-teaser"></span>
+                      <i class="zmdi zmdi-star-outline"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="normal-subject-preview subject-preview" data-type="normal" data-mode="tabs">
+                <div class="subject-preview-content">
+                  <div class="col-select col"><i class="zmdi zmdi-square-o"></i></div>
+                  <div class="col-star col"><i class="zmdi zmdi-star-outline"></i></div>
+                  <div class="col-sender col"><div class="mail-sender"></div></div>
+                  <div class="col-mail-text col">
+                    <div class="mail-subject"></div>
+                    <span class="mail-teaser"></span>
+                  </div>
+                  <div class="col-time col"><div class="mail-time"></div></div>
+                </div>
+              </div>
+            </td>
+          </tr>
     {if $preview.attachment}
           <tr class="crm-mailing-test-form-block-attachment"><td class="label">{ts}Attachment(s):{/ts}</td><td>{$preview.attachment}</td></tr>
     {/if}
@@ -79,21 +115,44 @@
 cj(function() {
    cj().crmaccordions();
 
+  if (cj(".subject-preview").length) {
+    var currentDate = new Date(),
+        mailSenderText = '{/literal}{$mailFrom}{literal}',
+        mailSenderArr = mailSenderText.split("\" <"),
+        mailPreview = {};
+
+    mailPreview.sender = {};
+    mailPreview.sender.name = mailSenderArr[0].substring(1);
+    mailPreview.sender.email = mailSenderArr[1].slice(0, -1);
+    mailPreview.subject = '{/literal}{$subject}{literal}';
+    // TODO: Change to English and make it translatable.
+    mailPreview.teaser = "這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。";
+    mailPreview.time = ("0" + currentDate.getHours()).slice(-2) + ":" + ("0" + currentDate.getMinutes()).slice(-2);
+
+    cj(".subject-preview .mail-subject").text(mailPreview.subject);
+    cj(".subject-preview .mail-sender").text(mailPreview.sender.name);
+    cj(".subject-preview .mail-teaser").text(mailPreview.teaser);
+    cj(".subject-preview .mail-time").text(mailPreview.time);
+  }
+
   cj(".crm-test-mail-preview").on("click", "button", function(e) {
     var $btn = cj(this),
         type = $btn.data("type"),
         $container = $btn.closest(".crm-test-mail-preview"),
         $btns = $container.find("button"),
         $previewFrameWrapper = cj(".crm-test-mail-preview-frame-wrapper"),
+        $subjectPreview = cj(".subject-preview"),
         activeClass = "is-active";
 
     $btns.removeClass(activeClass);
 
-    if ($btn.hasClass(activeClass)) {
-      $btn.removeClass(activeClass);
-    }
-    else {
+    if (!$btn.hasClass(activeClass)) {
       $btn.addClass(activeClass);
+    }
+
+    if ($subjectPreview.length) {
+      $subjectPreview.removeClass(activeClass);
+      cj(".subject-preview[data-type='" + type + "']").addClass(activeClass);
     }
 
     if ($previewFrameWrapper.length) {

@@ -65,20 +65,16 @@
       <!-- TODO: Change to English and make it translatable. -->
       <td class="label"><label>電子報主旨預覽 - 電腦版</label></td>
       <td>
-        <div class="subject-preview">
+        <div class="normal-subject-preview subject-preview" data-type="normal">
           <div class="subject-preview-content">
-            <div class="subject-preview-item" data-type="normal">
-              <div class="normal-subject-preview">
-                <div class="col-select col"><i class="zmdi zmdi-square-o"></i></div>
-                <div class="col-star col"><i class="zmdi zmdi-star-outline"></i></div>
-                <div class="col-sender col"><div class="mail-sender"></div></div>
-                <div class="col-mail-text col">
-                  <div class="mail-subject"></div>
-                  <span class="mail-teaser"></span>
-                </div>
-                <div class="col-time col"><div class="mail-time"></div></div>
-              </div>
+            <div class="col-select col"><i class="zmdi zmdi-square-o"></i></div>
+            <div class="col-star col"><i class="zmdi zmdi-star-outline"></i></div>
+            <div class="col-sender col"><div class="mail-sender"></div></div>
+            <div class="col-mail-text col">
+              <div class="mail-subject"></div>
+              <span class="mail-teaser"></span>
             </div>
+            <div class="col-time col"><div class="mail-time"></div></div>
           </div>
         </div>
       </td>
@@ -87,24 +83,20 @@
       <!-- TODO: Change to English and make it translatable. -->
       <td class="label"><label>電子報主旨預覽 - 手機版</label></td>
       <td>
-        <div class="subject-preview">
+        <div class="mobile-subject-preview subject-preview is-active" data-type="mobile" data-mode="tabs">
           <div class="subject-preview-content">
-            <div class="subject-preview-item" data-type="mobile">
-              <div class="mobile-subject-preview">
-                <div class="col-avatar"><i class="zmdi zmdi-account-circle"></i></div>
-                <div class="col-info">
-                  <div class="col-info-row-1">
-                    <span class="mail-sender"></span>
-                    <div class="mail-time"></div>
-                  </div>
-                  <div class="col-info-row-2">
-                    <div class="mail-subject"></div>
-                  </div>
-                  <div class="col-info-row-3">
-                    <span class="mail-teaser"></span>
-                    <i class="zmdi zmdi-star-outline"></i>
-                  </div>
-                </div>
+            <div class="col-avatar"><i class="zmdi zmdi-account-circle"></i></div>
+            <div class="col-info">
+              <div class="col-info-row-1">
+                <span class="mail-sender"></span>
+                <div class="mail-time"></div>
+              </div>
+              <div class="col-info-row-2">
+                <div class="mail-subject"></div>
+              </div>
+              <div class="col-info-row-3">
+                <span class="mail-teaser"></span>
+                <i class="zmdi zmdi-star-outline"></i>
               </div>
             </div>
           </div>

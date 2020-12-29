@@ -5401,7 +5401,7 @@ tbody.scrollContent tr.alternateRow {
   font-size: .875rem;
   color: #555;
 }
-.crm-container .mobile-subject-preview {
+.crm-container .mobile-subject-preview .subject-preview-content {
   display: flex;
   padding: 10px 0;
   max-width: 360px;
@@ -5432,7 +5432,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .mobile-subject-preview .mail-teaser {
   max-width: 270px;
 }
-.crm-container .normal-subject-preview {
+.crm-container .normal-subject-preview .subject-preview-content {
   display: flex;
   padding: 10px 0;
   max-width: 1200px;
@@ -5484,6 +5484,12 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .normal-subject-preview .col-time {
   flex: 0 0 55px;
   max-width: 55px;
+}
+.crm-container .subject-preview[data-mode="tabs"] {
+  display: none;
+}
+.crm-container .subject-preview[data-mode="tabs"].is-active {
+  display: block;
 }
 
 /* Mailing: Upload */
