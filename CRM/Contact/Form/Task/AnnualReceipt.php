@@ -120,9 +120,41 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         }
       }
       CRM_Utils_Hook::postProcess(get_class($this), $this);
-      $this->makeReceipt($this->_contactIds, $this->option);
-      $this->makePDF();
+      
+      $totalNumRows = count($this->_contactIds);
+      $batchThreshold = self::BATCH_THRESHOLD;
+      if ($totalNumRows > $batchThreshold) {
+        $exportFileName = self::getExportFileName().'.zip';
+        $config = CRM_Core_Config::singleton();
+        $file = $config->uploadDir.$exportFileName;
+        $batch = new CRM_Batch_BAO_Batch();
+        $batchParams = array(
+          'label' => ts('Export').': '.$exportFileName,
+          'startCallback' => NULL,
+          'startCallback_args' => NULL,
+          'processCallback' => array($this, 'makeReceipt'),
+          'processCallbackArgs' => array($this->_contactIds, $this->option),
+          'finishCallback' => array(__CLASS__, 'batchFinish'),
+          'finishCallbackArgs' => NULL,
+          'exportFile' => $file,
+          'download' => array(
+            'header' => array(
+              'Content-Type: application/pdf',
+              'Content-Disposition: attachment;filename="'.$exportFileName.'"',
+            ),
+            'file' => $file,
+          ),
+          'actionPermission' => '',
+          'total' => $totalNumRows,
+          'processed' => 0,
+        );
+        $batch->start($batchParams);
+        // redirect to notice page
+        CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
+      }
     }
+    $this->makeReceipt($this->_contactIds, $this->option);
     CRM_Utils_System::civiExit();
   }
 
@@ -155,58 +187,23 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
 
   public function makeReceipt($contactIds, &$option) {
     global $civicrm_batch;
-    $totalNumRows = count($contactIds);
-    $batchThreshold = self::BATCH_THRESHOLD;
-    if (empty($option['tempFileName'])) {
-      $tempFileName = self::getExportFileName();
-      self::$_tmpreceipt = $option['tempFileName'] = $tempFileName;
-    }
-    else {
-      self::$_tmpreceipt = '/tmp/'.$option['tempFileName'];
-    }
-    $offset = 0;
+
     $config = CRM_Core_Config::singleton();
-    if (empty($civicrm_batch)) {
-      // First execute, not batch session.
-      if ($totalNumRows > $batchThreshold) {
-        $option['tempFileName'] = $tempFileName;
-        $exportFileName = self::getExportFileName().'.pdf';
-        $file = $config->uploadDir.$exportFileName;
-        $batch = new CRM_Batch_BAO_Batch();
-        $batchParams = array(
-          'label' => ts('Export').': '.$exportFileName,
-          'startCallback' => NULL,
-          'startCallback_args' => NULL,
-          'processCallback' => array(__CLASS__, __FUNCTION__),
-          'processCallbackArgs' => array($contactIds, $option),
-          'finishCallback' => array(__CLASS__, 'batchFinish'),
-          'finishCallbackArgs' => array($tempFileName, $exportFileName),
-          'exportFile' => $file,
-          'download' => array(
-            'header' => array(
-              'Content-Type: application/pdf',
-              'Content-Disposition: attachment;filename="'.$exportFileName.'"',
-            ),
-            'file' => $file,
-          ),
-          'actionPermission' => '',
-          'total' => $totalNumRows,
-          'processed' => 0,
-        );
-        $batch->start($batchParams);
-        // redirect to notice page
-        CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
-        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
-      }
-      else {
-        $eachCount = count($contactIds);
-      }
-    }
-    else {
+    $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+    self::$_tmpreceipt = tempnam($tmpDir, 'receipt');
+    $offset = 0;
+    $download = TRUE;
+
+    if ($civicrm_batch) {
+      $download = FALSE;
       $eachCount = self::GENERATE_COUNT_EACH_TIME;
       if (isset($civicrm_batch->data['processed']) && !empty($civicrm_batch->data['processed'])) {
         $offset = $civicrm_batch->data['processed'] ;
       }
+
+    }
+    else {
+      $eachCount = count($contactIds);
     }
 
     // If on batch, eachCount use const GENERATE_COUNT_EACH_TIME,
@@ -234,8 +231,12 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       unset($html);
       unset($template);
     }
-
+    $filePath = self::makePDF($download);
     if ($civicrm_batch) {
+      $dest = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
+      $dest .= '_'.$civicrm_batch->data['processed'].'.pdf';
+      rename($filePath, $dest);
+
       CRM_Core_Error::debug_log_message("expect $i contacts");
       $civicrm_batch->data['processed'] = $i;
       if ($civicrm_batch->data['processed'] >= $civicrm_batch->data['total']) {
@@ -245,17 +246,26 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
   }
 
-  public static function batchFinish($tempFileName, $exportFileName) {
+  public static function batchFinish() {
     global $civicrm_batch;
-    self::$_tmpreceipt = '/tmp/'.$tempFileName;
-    self::$_exportFileName = $exportFileName;
-    $filePath = self::makePDF(FALSE);
     if (!empty($civicrm_batch)) {
-      // Update correct file path to Batch data.
-      $civicrm_batch->data['exportFile'] = $filePath;
-      $civicrm_batch->data['download']['file'] = $filePath;
-      $params = (array) $civicrm_batch;
-      CRM_Batch_BAO_Batch::create($params);
+      $prefix = str_replace('.zip', '_', $civicrm_batch->data['download']['file']);
+      $zipFile = $civicrm_batch->data['download']['file'];
+      $zip = new ZipArchive();
+      $files = array();
+      if ($zip->open($zipFile, ZipArchive::CREATE) == TRUE) {
+        foreach(glob($prefix."*.pdf") as $fileName) {
+          if (is_file($fileName)) {
+            $files[] = $fileName;
+            $fname = reset(array_reverse(explode('/', $fileName)));
+            $zip->addFile($fileName, $fname);
+          }
+        }
+        $zip->close();
+        foreach($files as $fileName) {
+          unlink($fileName);
+        }
+      }
     }
 
   }
