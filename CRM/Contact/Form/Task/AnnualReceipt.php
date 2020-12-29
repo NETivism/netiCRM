@@ -53,8 +53,16 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @return void
    */
   public function buildQuickForm() {
-    // make receipt target popup new tab
-    $this->updateAttributes(array('target' => '_blank'));
+    if (count($this->_contactIds) > self::BATCH_THRESHOLD) {
+      $msg = ts('You have selected more than %1 contacts.', array(1 => self::BATCH_THRESHOLD)).' ';
+      $msg .= ts('To prevent large volumn email being sent and blocked by recipients, we got to turn off receipt function.').' ';
+      $msg .= ts('To enable this, please search again and select under %1 contacts.', array(1 => self::BATCH_THRESHOLD));
+      CRM_Core_Session::setStatus($msg);
+    }
+    else {
+      // make receipt target popup new tab
+      $this->updateAttributes(array('target' => '_blank'));
+    }
 
     $years = array();
     if(!empty($this->_year)){
@@ -129,7 +137,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         $file = $config->uploadDir.$exportFileName;
         $batch = new CRM_Batch_BAO_Batch();
         $batchParams = array(
-          'label' => ts('Export').': '.$exportFileName,
+          'label' => ts('Print Annual Receipt').': '.$exportFileName,
           'startCallback' => NULL,
           'startCallback_args' => NULL,
           'processCallback' => array($this, 'makeReceipt'),
@@ -233,8 +241,9 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
     $filePath = self::makePDF($download);
     if ($civicrm_batch) {
+      $filenameNum = sprintf("%'.04d", $civicrm_batch->data['processed']+1); 
       $dest = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
-      $dest .= '_'.$civicrm_batch->data['processed'].'.pdf';
+      $dest .= '_'.$filenameNum.'.pdf';
       rename($filePath, $dest);
 
       CRM_Core_Error::debug_log_message("expect $i contacts");
@@ -249,7 +258,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
   public static function batchFinish() {
     global $civicrm_batch;
     if (!empty($civicrm_batch)) {
-      $prefix = str_replace('.zip', '_', $civicrm_batch->data['download']['file']);
+      $prefix = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
       $zipFile = $civicrm_batch->data['download']['file'];
       $zip = new ZipArchive();
       $files = array();
@@ -257,7 +266,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         foreach(glob($prefix."*.pdf") as $fileName) {
           if (is_file($fileName)) {
             $files[] = $fileName;
-            $fname = reset(array_reverse(explode('/', $fileName)));
+            $fname = end(explode('-', basename($fileName)));
             $zip->addFile($fileName, $fname);
           }
         }
