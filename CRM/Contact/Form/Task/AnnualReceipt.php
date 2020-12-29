@@ -55,8 +55,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
   public function buildQuickForm() {
     if (count($this->_contactIds) > self::BATCH_THRESHOLD) {
       $msg = ts('You have selected more than %1 contacts.', array(1 => self::BATCH_THRESHOLD)).' ';
-      $msg .= ts('To prevent large volumn email being sent and blocked by recipients, we got to turn off receipt function.').' ';
-      $msg .= ts('To enable this, please search again and select under %1 contacts.', array(1 => self::BATCH_THRESHOLD));
+      $msg .= ts('Because of the large amount of data you are about to perform, we will schedule this job for the batch process after you submit. You will receive an email notification when the work is completed.');
       CRM_Core_Session::setStatus($msg);
     }
     else {
