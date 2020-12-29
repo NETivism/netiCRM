@@ -276,8 +276,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             if ($ele->_type == 'text') {
               $this->_originalValues[$name] = $this->_defaults[$name];
               $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
+              $ele->updateAttributes(array('data-mask' => $this->_defaults[$name]));
               if (isset($this->_rules[$name])) {
-
                 foreach($this->_rules[$name] as $idx => &$rule) {
                   if ($rule['type'] != 'xssString') {
                     unset($this->_rules[$name][$idx]);
@@ -348,6 +348,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             if ($field['html_type'] == 'Text') {
               $this->_originalValues[$name] = $this->_defaults[$name];
               $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
+              if (isset($this->_elementIndex[$name])) {
+                $ele = $this->getElement($name);
+                $ele->updateAttributes(array('data-mask' => $this->_defaults[$name]));
+              }
             }
           }
         }
