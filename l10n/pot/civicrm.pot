@@ -47892,3 +47892,11 @@ msgstr ""
 
 msgid "Because of the large amount of data you are about to perform, we will schedule this job for the batch process after you submit. You will receive an email notification when the work is completed."
 msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background of Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background of Button"
+msgstr ""
