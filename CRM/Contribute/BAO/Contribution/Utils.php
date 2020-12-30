@@ -753,4 +753,14 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
     return FALSE;
   }
+
+  /**
+   * Purge one time link record in database
+   */
+  public static function clearDonateAgainLink() {
+    $aweekbefore = CRM_REQUEST_TIME - 86400*7;
+    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_sequence WHERE `name` LIKE 'DA_%' AND `timestamp` < %1", array(
+      1 => array($aweekbefore, 'Integer')
+    ));
+  }  
 }

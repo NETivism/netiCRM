@@ -32,6 +32,32 @@
         <div class="crm-block crm-content-block crm-recurcontrib-view-block">
           <table class="crm-info-panel">
             <tr><td class="label">{ts}From{/ts}</td><td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$contactId`" h=0 a=1 fe=1}">{$displayName}</a></td></tr>
+            {if $donateAgain}
+            <tr>
+              <td class="label">{ts}Donate Again URL{/ts}</td>
+              <td>
+                <div class="flex-general">
+                  <textarea name="url_to_copy" class="url_to_copy" cols="50" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$donateAgain}">{$donateAgain}</textarea>
+                  <span>
+                    <a href="#" class="button url-copy" onclick="document.querySelector('textarea[name=url_to_copy]').select(); document.execCommand('copy'); return false;"><i class="zmdi zmdi-link"></i>{ts}Copy{/ts}</a>
+                  </span>
+                  <span>
+                    <a href="#" class="button url-shorten" data-url-shorten="url_to_copy" data-page-id="" data-page-type=""><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
+                  </span>
+                </div>
+                <div class="description font-red"><i class="zmdi zmdi-alert-triangle font-red"></i>{ts}URL will extract personal data from this contact to URL visitor. Make sure send this link to their personal device / email address.{/ts}</div>
+                <div>
+                <div class="description">{ts 1=7}This URL will be expired on %1 days later.{/ts}</div>
+                <div>
+                  <span><i class="zmdi zmdi-email"></i><a href="{crmURL p='civicrm/contact/view/activity' q="action=add&reset=1&cid=`$contactId`&selectedChild=activity&atype=3"}" target="_blank">{ts}Send an Email{/ts}</a></span>
+                  {if $sendSMS}
+                  <span><i class="zmdi zmdi-smartphone-android"></i><a href="{crmURL p='civicrm/contact/view/activity' q="action=add&reset=1&cid=`$contactId`&selectedChild=activity&atype=4"}" target="_blank">{ts}Send SMS{/ts}</a></span>
+                  {/if}
+                </div>
+                {include file="CRM/common/ShortenURL.tpl"}
+              </td>
+            </tr>
+            {/if}
             <tr><td class="label">{ts}Recurring Contribution ID{/ts}</td><td>
               {$recur.id}
               {if $recur.is_test}

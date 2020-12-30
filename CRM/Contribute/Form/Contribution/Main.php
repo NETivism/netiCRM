@@ -102,9 +102,18 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     if (!empty($csContactID) && !empty($csString) && $currentUserID != $csContactID) {
       if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactID, $this)) {
-        $this->set('csContactID', $csContactID);
-        $this->set('userID', $csContactID);     // used by contributionBase
-        $this->_userID = $csContactID;          // used by current follow up
+        // refs #29618, validate this cs haven't used before
+        $dao = new CRM_Core_DAO_Sequence();
+        $dao->name = 'DA_'.$csString;
+        if (!$dao->find()) {
+          $this->set('csContactID', $csContactID);
+          $this->set('userID', $csContactID);     // used by contributionBase
+          $this->_userID = $csContactID;          // used by current follow up
+          $this->assign('contact_id', $this->_userID);
+          
+          // refs #29618, load contribution id and add defaultFromRequest again
+          $this->loadDefaultFromOriginalId();
+        }
       }
     }
 
@@ -257,7 +266,28 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $fields["email-Primary"] = 1;
 
       require_once "CRM/Core/BAO/UFGroup.php";
+      
       CRM_Core_BAO_UFGroup::setProfileDefaults($contactID, $fields, $this->_defaults);
+      // refs #29618, add mask on default personal data
+      if (!empty($this->_originalId) && empty($this->_ppType)) {
+        foreach($fields as $name => $dontcare) {
+          if (isset($this->_elementIndex[$name]) && !in_array($name, array('last_name', 'first_name', 'middle_name')) && !preg_match('/amount|city|postal_code|email/', $name)) {
+            $ele = $this->getElement($name);
+            if ($ele->_type == 'text') {
+              $this->_originalValues[$name] = $this->_defaults[$name];
+              $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
+              $ele->updateAttributes(array('data-mask' => $this->_defaults[$name]));
+              if (isset($this->_rules[$name])) {
+                foreach($this->_rules[$name] as $idx => &$rule) {
+                  if ($rule['type'] != 'xssString') {
+                    unset($this->_rules[$name][$idx]);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
 
       // use primary email address if billing email address is empty
       if (empty($this->_defaults["email-{$this->_bltID}"]) &&
@@ -313,6 +343,16 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID, $name, $this->_defaults,
               NULL, CRM_Profile_Form::MODE_REGISTER
             );
+          }
+          if (!empty($this->_originalId) && empty($this->_ppType)) {
+            if ($field['html_type'] == 'Text') {
+              $this->_originalValues[$name] = $this->_defaults[$name];
+              $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
+              if (isset($this->_elementIndex[$name])) {
+                $ele = $this->getElement($name);
+                $ele->updateAttributes(array('data-mask' => $this->_defaults[$name]));
+              }
+            }
           }
         }
       }
@@ -455,6 +495,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->_defaults['selectProduct'] = $this->_defaultFromRequest['gift'];
     }
 
+    if (!empty($this->_originalValues) && empty($this->get('originalValues'))) {
+      $this->set('originalValues', $this->_originalValues);
+    }
     return $this->_defaults;
   }
 

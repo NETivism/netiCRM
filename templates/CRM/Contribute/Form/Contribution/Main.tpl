@@ -453,6 +453,7 @@ function enableHonorType( ) {
   });
 
   cj(document).ready(function($){
+    var originalId = "{/literal}{$originalId}{literal}";
     var amountGrouping = function(init){
       var amountFilter = function() {
         var isRecur = $("input[name=is_recur]:checked").val() == '1' ? 1 : 0;
@@ -582,6 +583,22 @@ function enableHonorType( ) {
     {/if}
     {literal}
     amountGrouping(true);
+    cj("input[data-mask]").each(function(){
+      $(this).on('focus', function() {
+        if (!$(this).attr("readonly")) {
+          if ($(this).val() == $(this).data("mask")) {
+            $(this).val('');
+          }
+        }
+      });
+      $(this).on('blur', function() {
+        if (!$(this).attr("readonly")) {
+          if ($(this).val() == '') {
+            $(this).val($(this).data("mask"));
+          }
+        }
+      });
+    });
   });
 {/literal}
 </script>

@@ -59,6 +59,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $this->_id;
     if ($recur->find(TRUE)) {
+      $config = CRM_Core_Config::singleton();
       $values = array();
       CRM_Core_DAO::storeValues($recur, $values);
       // if there is a payment processor ID, get the name of the payment processor
@@ -86,6 +87,36 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
         $this->assign('ach', $ach);
       }
 
+      // #29618, donate url, for security reason, only available for 7 days
+      $contribution = new CRM_Contribute_DAO_Contribution();
+      $contribution->contribution_recur_id = $recur->id;
+      $contribution->contact_id = $recur->contact_id;
+      if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
+        $contribution->orderBy("created_date DESC");
+        $contribution->find(TRUE);
+      }
+      else {
+        $contribution->orderBy("id ASC");
+        $contribution->find(TRUE);
+      }
+      if ($contribution->id && $contribution->contribution_page_id) {
+        $pageIsActive = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $contribution->contribution_page_id, 'is_active');
+        if ($pageIsActive) {
+          $cid = $recur->contact_id;
+          $oid = $contribution->id;
+          $pageId = $contribution->contribution_page_id;
+          $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($recur->contact_id);
+          $donateAgain = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$cid&oid=$oid&cs=$cs", TRUE);
+          $this->assign('donateAgain', $donateAgain);
+          $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
+          if ($providersCount) {
+            $phones = CRM_Core_BAO_Phone::allPhones($cid, FALSE, ts('Mobile'));
+            if (count($phones)) {
+              $this->assign("sendSMS", TRUE);
+            }
+          }
+        }
+      }
 
       // log
       $noteDetail = CRM_Core_BAO_Note::getNoteDetail($this->_id, 'civicrm_contribution_recur');

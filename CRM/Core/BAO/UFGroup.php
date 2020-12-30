@@ -785,7 +785,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         'addressee_custom' => 'addressee',
       );
       $config = CRM_Core_Config::singleton();
-      $custom_serial = $config->receiptSerial;
+      $customSerial = $config->receiptSerial;
+      $customTitle = $config->receiptTitle;
       // hack for CRM-665
       if (isset($details->$name) || $name == 'group' || $name == 'tag') {
         // to handle gender / suffix / prefix
@@ -872,9 +873,17 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           $values[$index] = $paramsNew[$index];
           $params[$index] = $paramsNew[$name];
         }
-        elseif ($name == 'legal_identifier' || $name == 'custom_'.$custom_serial) {
+        elseif ($name == 'first_name') {
           $params[$index] = $details->$name;
-          $values[$index] = substr($details->$name, 0, 1) . str_repeat('*', strlen($details->$name) - 5) . substr($details->$name, -4, 4);
+          $values[$index] = CRM_Utils_String::mask($details->$name, 'custom', 0, 1);
+        }
+        elseif ($name == 'custom_'.$customTitle) {
+          $params[$index] = $details->$name;
+          $values[$index] = CRM_Utils_String::mask($details->$name);
+        }
+        elseif ($name == 'legal_identifier' || $name == 'custom_'.$customSerial) {
+          $params[$index] = $details->$name;
+          $values[$index] = CRM_Utils_String::mask($details->$name);
         }
         else {
           $processed = FALSE;
@@ -997,19 +1006,24 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
               $params[$index] = $details->$idx;
             }
           }
+          elseif (in_array($fieldName, array('city', 'postal_code'))) {
+            $params[$index] = $details->$detailName;
+            $values[$index] = $details->$detailName;
+          }
           elseif ($fieldName == 'im') {
             $providerId = $detailName . '-provider_id';
             $providerName = $imProviders[$details->$providerId];
             if ($providerName) {
-              $values[$index] = $details->$detailName . " (" . $providerName . ")";
+              $values[$index] = CRM_Utils_String::mask($details->$detailName) . " (" . $providerName . ")";
             }
             else {
-              $values[$index] = $details->$detailName;
+              $values[$index] = CRM_Utils_String::mask($details->$detailName);
             }
             $params[$index] = $details->$detailName;
           }
           else {
-            $values[$index] = $params[$index] = $details->$detailName;
+            $params[$index] = $details->$detailName;
+            $values[$index] = CRM_Utils_String::mask($details->$detailName);
           }
         }
         else {
