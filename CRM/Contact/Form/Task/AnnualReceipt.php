@@ -240,7 +240,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
     $filePath = self::makePDF($download);
     if ($civicrm_batch) {
-      $filenameNum = sprintf("%'.04d", $civicrm_batch->data['processed']+1); 
+      $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed']+1); 
       $dest = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
       $dest .= '_'.$filenameNum.'.pdf';
       rename($filePath, $dest);
