@@ -57,13 +57,14 @@
       delete: "zmdi-delete",
       link: "zmdi-link",
       image: "zmdi-image",
-      style: "zmdi-invert-colors"
+      "block-bg": "zmdi-format-color-fill",
+      "button-bg": "zmdi-invert-colors"
     },
     _editActions = {
       default: ["clone", "delete"],
       extended: {
         image: ["link", "image"],
-        button: ["link", "style"],
+        button: ["link", "button-bg"],
         header: ["link", "image"]
       }
     },
@@ -2661,8 +2662,8 @@
               tooltip = _ts["Edit Image"];
               break;
 
-            case "style":
-              tooltip = _ts["Edit Background"];
+            case "button-bg":
+              tooltip = _ts["Edit Background of Button"];
               break;
           }
 
@@ -2847,9 +2848,9 @@
         _colorable($blockControl.find(".handle-block-bg").attr("id"));
       }
 
-      // handle type: style
-      if ($blockControl.find(".handle-style").length) {
-        _colorable($blockControl.find(".handle-style").attr("id"));
+      // handle type: button-bg
+      if ($blockControl.find(".handle-button-bg").length) {
+        _colorable($blockControl.find(".handle-button-bg").attr("id"));
       }
     }
   };
