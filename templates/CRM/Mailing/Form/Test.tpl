@@ -54,10 +54,10 @@
           <li><button class="is-active" type="button" data-type="mobile">{ts}Mobile Device{/ts}</button></li>
         </ul>
         <table class="form-layout">
-          <tr class="crm-mailing-test-form-block-subject"><td class="label">{ts}Subject:{/ts}</td><td>{$subject}</td></tr>
+          <tr class="crm-mailing-test-form-block-subject"><td class="label">{ts}Subject{/ts}:</td><td>{$subject}</td></tr>
           <!-- TODO: Change to English and make it translatable. -->
           <tr class="crm-mailing-test-form-block-subject-preview">
-            <td class="label">主旨預覽：</td>
+            <td class="label">{ts}Preview{/ts}:</td>
             <td>
               <div class="mobile-subject-preview subject-preview is-active" data-type="mobile" data-mode="tabs">
                 <div class="subject-preview-content">

@@ -63,7 +63,7 @@
     </tr>
     <tr class="crm-mailing-upload-form-block-subject-normal-preview">
       <!-- TODO: Change to English and make it translatable. -->
-      <td class="label"><label>電子報主旨預覽 - 電腦版</label></td>
+      <td class="label"><label>{ts}Preview{/ts} - {ts}Normal{/ts}</label></td>
       <td>
         <div class="normal-subject-preview subject-preview" data-type="normal">
           <div class="subject-preview-content">
@@ -81,7 +81,7 @@
     </tr>
     <tr class="crm-mailing-upload-form-block-subject-mobile-preview">
       <!-- TODO: Change to English and make it translatable. -->
-      <td class="label"><label>電子報主旨預覽 - 手機版</label></td>
+      <td class="label"><label>{ts}Preview{/ts} - {ts}Mobile Device{/ts}</label></td>
       <td>
         <div class="mobile-subject-preview subject-preview is-active" data-type="mobile" data-mode="tabs">
           <div class="subject-preview-content">
