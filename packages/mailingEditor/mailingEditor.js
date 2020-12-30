@@ -2522,7 +2522,7 @@
             $block.attr("data-block-override", true);
           }
 
-          if (blockType == "button") {
+          if (handleType == "button-bg") {
             let bgColor = color.toHEXA().toString();
 
             // Update color to dom
