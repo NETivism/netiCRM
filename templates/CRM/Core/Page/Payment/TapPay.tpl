@@ -99,6 +99,7 @@ cj(document).ready(function($){
   var qfKey = '{/literal}{$qfKey}{literal}';
   var className = '{/literal}{$class_name}{literal}';
   var $button = $("input[name={/literal}{$button_name}{literal}]");
+  var $backButton = $("input[name={/literal}{$back_button_name}{literal}]");
   $button.prop("disabled", 1);
   //var redirect = '{/literal}{$redirect}{literal}';
   //var failRedirect = '{/literal}{$fail_redirect}{literal}';
@@ -189,9 +190,11 @@ cj(document).ready(function($){
   TPDirect.card.onUpdate(function (update) {
     if (update.canGetPrime && !lock) {
       $button.removeProp("disabled");
+      $backButton.prop("disabled", 1);
     }
     else {
       $button.prop("disabled", 1);
+      $backButton.removeProp("disabled");
     }
 
     // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']

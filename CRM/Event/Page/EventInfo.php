@@ -97,61 +97,9 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     // show event fees.
     require_once 'CRM/Price/BAO/Set.php';
     if ($this->_id && CRM_Utils_Array::value('is_monetary', $values['event'])) {
-      // get price set options, - CRM-5209
-      if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $this->_id)) {
-        $setDetails = CRM_Price_BAO_Set::getSetDetail($priceSetId);
-        $priceSetFields = $setDetails[$priceSetId]['fields'];
-        if (is_array($priceSetFields)) {
-          $fieldCnt = 1;
-          require_once 'CRM/Core/PseudoConstant.php';
-          $visibility = CRM_Core_PseudoConstant::visibility('name');
-
-          foreach ($priceSetFields as $fid => $fieldValues) {
-            if (!is_array($fieldValues['options']) ||
-              empty($fieldValues['options']) ||
-              CRM_Utils_Array::value('visibility_id', $fieldValues) != array_search('public', $visibility)
-            ) {
-              continue;
-            }
-
-            if (count($fieldValues['options']) > 1) {
-              $values['feeBlock']['value'][$fieldCnt] = '';
-              $values['feeBlock']['label'][$fieldCnt] = $fieldValues['label'];
-              $values['feeBlock']['lClass'][$fieldCnt] = 'price_set_option_group-label';
-              $fieldCnt++;
-              $labelClass = 'price_set_option-label';
-            }
-            else {
-              $labelClass = 'price_set_field-label';
-            }
-
-            foreach ($fieldValues['options'] as $optionId => $optionVal) {
-              $values['feeBlock']['value'][$fieldCnt] = $optionVal['amount'];
-              $values['feeBlock']['label'][$fieldCnt] = $optionVal['label'];
-              $values['feeBlock']['lClass'][$fieldCnt] = $labelClass;
-              $fieldCnt++;
-            }
-          }
-        }
-        // Tell tpl we have price set fee data
+      $values['feeBlock'] = self::feeBlock($this->_id);
+      if (!empty($values['feeBlock']['price_set_id'])) {
         $this->assign('isPriceSet', 1);
-      }
-      else {
-        //retrieve event fee block.
-        require_once 'CRM/Core/OptionGroup.php';
-        require_once 'CRM/Core/BAO/Discount.php';
-        $discountId = CRM_Core_BAO_Discount::findSet($this->_id, 'civicrm_event');
-        if ($discountId) {
-          CRM_Core_OptionGroup::getAssoc(CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Discount',
-              $discountId,
-              'option_group_id'
-            ),
-            $values['feeBlock'], FALSE, 'id'
-          );
-        }
-        else {
-          CRM_Core_OptionGroup::getAssoc("civicrm_event.amount.{$this->_id}", $values['feeBlock']);
-        }
       }
     }
 
@@ -335,6 +283,59 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     // check if the user is registered and we have a contact ID
     $session = CRM_Core_Session::singleton();
     return $session->get('userID');
+  }
+
+  static function feeBlock($eventId) {
+    $feeBlock = array();
+    if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $eventId)) {
+      $feeBlock['price_set_id'] = $priceSetId;
+      $setDetails = CRM_Price_BAO_Set::getSetDetail($priceSetId);
+      $priceSetFields = $setDetails[$priceSetId]['fields'];
+      if (is_array($priceSetFields)) {
+        $fieldCnt = 1;
+        $visibility = CRM_Core_PseudoConstant::visibility('name');
+
+        foreach ($priceSetFields as $fid => $fieldValues) {
+          if (!is_array($fieldValues['options']) ||
+            empty($fieldValues['options']) ||
+            CRM_Utils_Array::value('visibility_id', $fieldValues) != array_search('public', $visibility)
+          ) {
+            continue;
+          }
+
+          if (count($fieldValues['options']) > 1) {
+            $feeBlock['value'][$fieldCnt] = '';
+            $feeBlock['label'][$fieldCnt] = $fieldValues['label'];
+            $feeBlock['lClass'][$fieldCnt] = 'price_set_option_group-label';
+            $fieldCnt++;
+            $labelClass = 'price_set_option-label';
+          }
+          else {
+            $labelClass = 'price_set_field-label';
+          }
+
+          foreach ($fieldValues['options'] as $optionId => $optionVal) {
+            $feeBlock['value'][$fieldCnt] = $optionVal['amount'];
+            $feeBlock['label'][$fieldCnt] = $optionVal['label'];
+            $feeBlock['lClass'][$fieldCnt] = $labelClass;
+            $fieldCnt++;
+          }
+        }
+      }
+    }
+    else {
+      //retrieve event fee block.
+      $discountId = CRM_Core_BAO_Discount::findSet($eventId, 'civicrm_event');
+      if ($discountId) {
+        $optionGroupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Discount', $discountId, 'option_group_id');
+        CRM_Core_OptionGroup::getAssoc($optionGroupId, $feeBlock, FALSE, 'id');
+        $feeBlock['is_discount'] = 1;
+      }
+      else {
+        CRM_Core_OptionGroup::getAssoc("civicrm_event.amount.{$eventId}", $feeBlock);
+      }
+    }
+    return $feeBlock;
   }
 }
 

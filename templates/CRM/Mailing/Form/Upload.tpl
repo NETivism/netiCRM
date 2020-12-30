@@ -61,49 +61,50 @@
                         <div id="subject-editor">{$form.subject.value}</div>
         </td>
     </tr>
+    <tr class="crm-mailing-upload-form-block-subject-normal-preview">
+      <!-- TODO: Change to English and make it translatable. -->
+      <td class="label"><label>{ts}Preview{/ts} - {ts}Normal{/ts}</label></td>
+      <td>
+        <div class="normal-subject-preview subject-preview" data-type="normal">
+          <div class="subject-preview-content">
+            <div class="col-select col"><i class="zmdi zmdi-square-o"></i></div>
+            <div class="col-star col"><i class="zmdi zmdi-star-outline"></i></div>
+            <div class="col-sender col"><div class="mail-sender"></div></div>
+            <div class="col-mail-text col">
+              <div class="mail-subject"></div>
+              <span class="mail-teaser"></span>
+            </div>
+            <div class="col-time col"><div class="mail-time"></div></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="crm-mailing-upload-form-block-subject-mobile-preview">
+      <!-- TODO: Change to English and make it translatable. -->
+      <td class="label"><label>{ts}Preview{/ts} - {ts}Mobile Device{/ts}</label></td>
+      <td>
+        <div class="mobile-subject-preview subject-preview is-active" data-type="mobile" data-mode="tabs">
+          <div class="subject-preview-content">
+            <div class="col-avatar"><i class="zmdi zmdi-account-circle"></i></div>
+            <div class="col-info">
+              <div class="col-info-row-1">
+                <span class="mail-sender"></span>
+                <div class="mail-time"></div>
+              </div>
+              <div class="col-info-row-2">
+                <div class="mail-subject"></div>
+              </div>
+              <div class="col-info-row-3">
+                <span class="mail-teaser"></span>
+                <i class="zmdi zmdi-star-outline"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
     <tr class="crm-mailing-upload-form-block-upload_type"><td></td><td colspan="2">{$form.upload_type.label} {$form.upload_type.html} {help id="upload-compose"}</td></tr>
 </table>
-
-<!-- TODO: Change to English and make it translatable. -->
-<fieldset class="subject-preview">
-  <legend>電子報主旨預覽</legend>
-  <div class="subject-preview-container">
-    <h3 class="subject-preview-title">手機版</h3>
-    <div class="subject-preview-content">
-      <div class="mobile-subject-preview">
-        <div class="col-avatar"><i class="zmdi zmdi-account-circle"></i></div>
-        <div class="col-info">
-          <div class="col-info-row-1">
-            <span class="mail-sender"></span>
-            <div class="mail-time"></div>
-          </div>
-          <div class="col-info-row-2">
-            <div class="mail-subject"></div>
-          </div>
-          <div class="col-info-row-3">
-            <span class="mail-teaser"></span>
-            <i class="zmdi zmdi-star-outline"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="subject-preview-container">
-    <h3 class="subject-preview-title">電腦版</h3>
-    <div class="subject-preview-content">
-      <div class="desktop-subject-preview">
-        <div class="col-select col"><i class="zmdi zmdi-square-o"></i></div>
-        <div class="col-star col"><i class="zmdi zmdi-star-outline"></i></div>
-        <div class="col-sender col"><div class="mail-sender"></div></div>
-        <div class="col-mail-text col">
-          <div class="mail-subject"></div>
-          <span class="mail-teaser"></span>
-        </div>
-        <div class="col-time col"><div class="mail-time"></div></div>
-      </div>
-    </div>
-  </div>
-</fieldset>
 
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
 {include file="CRM/common/mailingEditor.tpl"}
@@ -295,7 +296,7 @@
 
         var getMailTime = function() {
           var currentDate = new Date();
-          mailPreview.time = currentDate.getHours() + ":" + currentDate.getMinutes();
+          mailPreview.time = ("0" + currentDate.getHours()).slice(-2) + ":" + ("0" + currentDate.getMinutes()).slice(-2);
           cj(".subject-preview .mail-time").text(mailPreview.time);
         }
 

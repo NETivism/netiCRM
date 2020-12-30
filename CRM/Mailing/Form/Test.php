@@ -190,6 +190,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       $attachments
     );
 
+    $this->assign('mailFrom', $allDetails->_headers['From']);
     $this->assign('subject', $allDetails->_headers['Subject']);
   }
 

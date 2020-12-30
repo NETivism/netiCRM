@@ -5379,31 +5379,30 @@ tbody.scrollContent tr.alternateRow {
 
 /* Mailing */
 /* mail subject preview */
-.crm-container .subject-preview-container {
+.crm-container .subject-preview {
   font-size: .875rem;
 }
-.crm-container .subject-preview-container .zmdi {
+.crm-container .subject-preview .zmdi {
   font-size: 20px;
 }
-.crm-container .subject-preview-container .mail-sender {
+.crm-container .subject-preview .mail-sender {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: .9375rem;
+  font-weight: bold;
 }
-.crm-container .subject-preview-container .mail-subject {
+.crm-container .subject-preview .mail-subject {
   font-weight: bold;
   font-size: .875rem;
   color: #000;
 }
-.crm-container .subject-preview-container .mail-teaser {
+.crm-container .subject-preview .mail-teaser {
   font-size: .875rem;
   color: #555;
 }
-
-.crm-container .mobile-subject-preview {
+.crm-container .mobile-subject-preview .subject-preview-content {
   display: flex;
-  margin-bottom: 30px;
   padding: 10px 0;
   max-width: 360px;
   border-top: 1px solid #555;
@@ -5433,10 +5432,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .mobile-subject-preview .mail-teaser {
   max-width: 270px;
 }
-.crm-container .mobile-subject-preview .mail-subject {
-
-}
-.crm-container .desktop-subject-preview {
+.crm-container .normal-subject-preview .subject-preview-content {
   display: flex;
   padding: 10px 0;
   max-width: 1200px;
@@ -5444,58 +5440,90 @@ tbody.scrollContent tr.alternateRow {
   border-bottom: 1px solid #555;
   background: #fff;
 }
-.crm-container .desktop-subject-preview .col {
+.crm-container .normal-subject-preview .col {
   padding: 0 10px 0 0;
 }
-.crm-container .desktop-subject-preview .col:first-child {
+.crm-container .normal-subject-preview .col:first-child {
   padding-left: 20px;
 }
-.crm-container .desktop-subject-preview .col:last-child {
+.crm-container .normal-subject-preview .col:last-child {
   padding-right: 10px;
 }
-.crm-container .desktop-subject-preview .col-select {
+.crm-container .normal-subject-preview .col-select {
   flex: 0 0 50px;
   max-width: 50px;
 }
-.crm-container .desktop-subject-preview .col-star {
+.crm-container .normal-subject-preview .col-star {
   flex: 0 0 40px;
   max-width: 40px;
 }
-.crm-container .desktop-subject-preview .col-sender {
+.crm-container .normal-subject-preview .col-sender {
   flex: 0 0 200px;
   max-width: 200px;
   padding-right: 32px;
 }
-.crm-container .desktop-subject-preview .col-mail-text {
+.crm-container .normal-subject-preview .col-mail-text {
   display: flex;
   flex: 1 1 auto;
   overflow: hidden;
   white-space: nowrap;
   width: 100px;
 }
-.crm-container .desktop-subject-preview .mail-subject {
+.crm-container .normal-subject-preview .mail-subject {
   max-width: 100%;
 }
-.crm-container .desktop-subject-preview .mail-teaser {
+.crm-container .normal-subject-preview .mail-teaser {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.crm-container .desktop-subject-preview .mail-teaser::before {
+.crm-container .normal-subject-preview .mail-teaser::before {
   content: "-";
   padding: 0 5px;
 }
-.crm-container .desktop-subject-preview .col-time {
+.crm-container .normal-subject-preview .col-time {
   flex: 0 0 55px;
   max-width: 55px;
 }
-
-/* Mailing: Upload */
-.crm-container #subject {
+.crm-container .subject-preview[data-mode="tabs"] {
   display: none;
 }
-.is-debug .crm-container #subject {
+.crm-container .subject-preview[data-mode="tabs"].is-active {
   display: block;
+}
+
+/* Mailing: Upload */
+.crm-container .crm-mailing-upload-form-block #subject,
+.crm-container .crm-mailing-upload-form-block-subject .crm-form-textfield {
+  display: none;
+}
+.is-debug .crm-container .crm-mailing-upload-form-block #subject,
+.is-debug .crm-container .crm-mailing-upload-form-block-subject .crm-form-textfield {
+  display: block;
+}
+.crm-mailing-upload-form-block-subject .ql-toolbar,
+.crm-mailing-upload-form-block-subject .ql-container {
+  max-width: 500px;
+}
+.crm-mailing-upload-form-block-subject .ql-toolbar,
+.crm-mailing-upload-form-block-subject .ql-toolbar.ql-snow {
+  background: #eee;
+}
+.crm-mailing-upload-form-block-subject .ql-toolbar button {
+  margin: 0;
+}
+.crm-mailing-upload-form-block-subject .ql-toolbar button.ql-emoji > svg {
+  width: 20px;
+  height: 20px;
+}
+.crm-mailing-upload-form-block-subject .ql-toolbar button.ql-emoji .ql-fill {
+  fill: #b99300;
+}
+.crm-mailing-upload-form-block-subject .ql-toolbar button.ql-emoji .ql-stroke {
+  stroke: #b99300;
+}
+.crm-mailing-upload-form-block-subject .ql-editor {
+  background: #fff;
 }
 
 /* Mailing: Test */

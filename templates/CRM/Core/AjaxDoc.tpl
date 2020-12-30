@@ -17,6 +17,7 @@ code {line-height:1em;}
 {literal}
 
 cj(function($) {
+  var admin = "{/literal}{$admin}{literal}";
   var restURL = CRMurl("civicrm/ajax/rest");
 
   function toggleField (name, label, type) {
@@ -201,6 +202,11 @@ cj(function($) {
     window.location.hash = query;
     $('#result').html('<i>Loading...</i>');
     $.post(query,function(data) {
+      if (admin) {
+        window.apibrowser = JSON.parse(data);
+        console.log("Debug enabled from civicrm settings: console.log(window.apibrowser)");
+        console.log(window.apibrowser);
+      }
       $('#result').text(data);
     },'text');
     link="<a href='"+query+"' title='open in a new tab' target='_blank'>ajax query</a>&nbsp;";
