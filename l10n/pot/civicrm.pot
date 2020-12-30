@@ -47886,3 +47886,9 @@ msgstr ""
 
 msgid "To enable this, please search again and select under %1 contributions."
 msgstr ""
+
+msgid "You have selected more than %1 contacts."
+msgstr ""
+
+msgid "Because of the large amount of data you are about to perform, we will schedule this job for the batch process after you submit. You will receive an email notification when the work is completed."
+msgstr ""

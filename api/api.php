@@ -104,14 +104,12 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
     if (CRM_Utils_Array::value('is_error', $result, 0) == 0) {
       _civicrm_api_call_nested_api($apiRequest['params'], $result, $apiRequest['action'], $apiRequest['entity'], $apiRequest['version']);
     }
-    if (function_exists('xdebug_time_index')
-      && CRM_Utils_Array::value('debug', $apiRequest['params'])
-      // result would not be an array for getvalue
-      && is_array($result)
-    ) {
-      $result['xdebug']['peakMemory'] = xdebug_peak_memory_usage();
-      $result['xdebug']['memory'] = xdebug_memory_usage();
-      $result['xdebug']['timeIndex'] = xdebug_time_index();
+    if (CRM_Utils_Array::value('debug', $apiRequest['params']) && is_array($result)) {
+      if (ini_get('xdebug.default_enable')) {
+        $result['xdebug']['peakMemory'] = xdebug_peak_memory_usage();
+        $result['xdebug']['memory'] = xdebug_memory_usage();
+        $result['xdebug']['timeIndex'] = xdebug_time_index();
+      }
     }
 
     return $result;

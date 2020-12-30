@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-12-24 04:58+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-12-29 10:10+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48174,3 +48174,12 @@ msgstr "為了避免大量信件被收件方阻擋，您無法使用「電子郵
 
 msgid "To enable this, please search again and select under %1 contributions."
 msgstr "要啟用此功能，請回到上一部重新選則少於%1筆捐款。"
+
+msgid "You have selected more than %1 contacts."
+msgstr "你選擇超過%1筆聯絡人。"
+
+msgid ""
+"Because of the large amount of data you are about to perform, we will "
+"schedule this job for the batch process after you submit. You will receive "
+"an email notification when the work is completed."
+msgstr "因為您欲處理的資料超過限額，在您送出次表單後，我們將排程為批次作業。批次作業將會在背景進行，您則會於作業完成時收到 Email 通知。"

@@ -267,8 +267,9 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $this->createActivity($details);
 
     if ($civicrm_batch) {
+      $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed']+1); 
       $dest = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
-      $dest .= '_'.$civicrm_batch->data['processed'].'.pdf';
+      $dest .= '_'.$filenameNum.'.pdf';
       $pdf = $this->makePDF(FALSE);
       rename($pdf, $dest);
       $civicrm_batch->data['processed'] += self::PDF_BATCH_THRESHOLD;
@@ -286,7 +287,10 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
   public function batchFinishCallback() {
     global $civicrm_batch;
     if (!empty($civicrm_batch)) {
-      $prefix = str_replace('.zip', '_', $civicrm_batch->data['download']['file']);
+      $prefix = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
+      $names = explode('-', basename($prefix));
+      $prefixFile = end($names).'_';
+      $prefix .= '_';
       $zipFile = $civicrm_batch->data['download']['file'];
       $zip = new ZipArchive();
       $files = array();
@@ -294,7 +298,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         foreach(glob($prefix."*.pdf") as $fileName) {
           if (is_file($fileName)) {
             $files[] = $fileName;
-            $fname = str_replace($prefix, '', $fileName);
+            $fname = str_replace($prefix, $prefixFile, $fileName);
             $zip->addFile($fileName, $fname);
           }
         }
