@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-12-01 18:35+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-12-29 10:10+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34416,11 +34416,8 @@ msgid ""
 msgstr "如需要，為每個會員更新欄位值。按下方<strong>更新會員</strong>儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行會員輸入值然後再按<strong>複製圖示</strong>（欄位名稱的旁邊）。"
 
 #: templates/CRM/Member/Form/Task/Delete.tpl
-msgid ""
-"Are you sure you want to delete the selected memberships? This delete "
-"operation cannot be undone and will delete all transactions and activity "
-"associated with these members."
-msgstr "您確定要刪除選取的會籍？此動作不能復原，會導致與這些會籍相關的全部交易與任務被刪除。"
+msgid "Are you sure you want to delete the selected memberships?"
+msgstr "您確定要刪除所選取的會員嗎？"
 
 #: templates/CRM/Member/Form/Task.tpl
 msgid "Number of selected members: %1"
@@ -48166,3 +48163,23 @@ msgstr "注意！此會員類型已有 %1 個會員，改變這個設定，將�
 
 msgid "Members in this type alreay have new reminder date."
 msgstr "在此會員類型中的所有會員，已經更新了提醒日期。"
+
+msgid "You have selected more than %1 contributions."
+msgstr "你選擇超過%1筆捐款。"
+
+msgid ""
+"To prevent large volumn email being sent and blocked by recipients, we got "
+"to turn off receipt function."
+msgstr "為了避免大量信件被收件方阻擋，您無法使用「電子郵件收據」的功能。"
+
+msgid "To enable this, please search again and select under %1 contributions."
+msgstr "要啟用此功能，請回到上一部重新選則少於%1筆捐款。"
+
+msgid "You have selected more than %1 contacts."
+msgstr "你選擇超過%1筆聯絡人。"
+
+msgid ""
+"Because of the large amount of data you are about to perform, we will "
+"schedule this job for the batch process after you submit. You will receive "
+"an email notification when the work is completed."
+msgstr "因為您欲處理的資料超過限額，在您送出次表單後，我們將排程為批次作業。批次作業將會在背景進行，您則會於作業完成時收到 Email 通知。"

@@ -34434,10 +34434,7 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Member/Form/Task/Delete.tpl
-msgid ""
-"Are you sure you want to delete the selected memberships? This delete "
-"operation cannot be undone and will delete all transactions and activity "
-"associated with these members."
+msgid "Are you sure you want to delete the selected memberships?"
 msgstr ""
 
 #: templates/CRM/Member/Form/Task.tpl
@@ -47879,4 +47876,19 @@ msgid "Caution!! You already have %1 member(s) in this membership type. Change t
 msgstr ""
 
 msgid "Members in this type alreay have new reminder date."
+msgstr ""
+
+msgid "You have selected more than %1 contributions."
+msgstr ""
+
+msgid "To prevent large volumn email being sent and blocked by recipients, we got to turn off receipt function."
+msgstr ""
+
+msgid "To enable this, please search again and select under %1 contributions."
+msgstr ""
+
+msgid "You have selected more than %1 contacts."
+msgstr ""
+
+msgid "Because of the large amount of data you are about to perform, we will schedule this job for the batch process after you submit. You will receive an email notification when the work is completed."
 msgstr ""

@@ -139,7 +139,16 @@ function civicrm_api3_custom_value_get($params) {
     'entityType' => $params['entity_table'],
   );
   if (strstr($getParams['entityType'], 'civicrm_')) {
-    $getParams['entityType'] = ucfirst(substr($getParams['entityType'], 8));
+    $entityType = substr($getParams['entityType'], 8);
+    if (strstr($entityType, '_')) {
+      $getParams['entityType'] = '';
+      foreach(explode('_', $entityType) as $word) {
+        $getParams['entityType'] .= ucfirst($word);
+      }
+    }
+    else {
+      $getParams['entityType'] = ucfirst($entityType);
+    }
   }
   unset($params['entity_id'], $params['entity_table']);
   foreach ($params as $id => $param) {
@@ -163,6 +172,7 @@ function civicrm_api3_custom_value_get($params) {
     }
   }
 
+  $fields = CRM_Core_BAO_CustomField::getFields($getParams['entityType']);
   $result = CRM_Core_BAO_CustomValueTable::getValues($getParams);
 
   if ($result['is_error']) {
@@ -214,6 +224,29 @@ function civicrm_api3_custom_value_get($params) {
       $values[$id]['latest'] = $value;
       $values[$id]['id'] = $id;
       $values[$id][$n] = $value;
+
+      // convert file field to url
+      if (isset($fields[$fieldNumber]) && $fields[$fieldNumber]['data_type'] == 'File' && !empty($value)) {
+        $fileDAO = new CRM_Core_DAO_File();
+        $fileDAO->id = $value;
+
+        if ($fileDAO->find(TRUE)) {
+          $config = CRM_Core_Config::singleton();
+          // only image can get public path
+          if ($fileDAO->mime_type == "image/jpeg" ||
+            $fileDAO->mime_type == "image/pjpeg" ||
+            $fileDAO->mime_type == "image/gif" ||
+            $fileDAO->mime_type == "image/x-png" ||
+            $fileDAO->mime_type == "image/png"
+          ) {
+            $values[$id]['uri'] = str_replace('persist/contribute', 'custom', $config->imageUploadURL) . $fileDAO->uri;
+          }
+          else {
+            $fileHash = CRM_Core_BAO_File::generateFileHash($getParams['entityID'], $fileDAO->id);
+            $values[$id]['uri'] = CRM_Utils_System::url('civicrm/file', "reset=1&id={$fileDAO->id}&eid={$getParams['entityID']}&fcs=$fileHash", TRUE, NULL, FALSE, TRUE);
+          }
+        }
+      }
     }
     return civicrm_api3_create_success($values, $params);
   }
