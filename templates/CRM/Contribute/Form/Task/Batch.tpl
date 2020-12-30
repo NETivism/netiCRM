@@ -30,18 +30,18 @@
 </div>
     <legend>{$profileTitle}</legend>
          <table>
-	  <thead class="sticky">
+          <thead class="sticky">
             <tr class="columnheader">
-             {foreach from=$readOnlyFields item=fTitle key=fName}
-	        <th>{$fTitle}</th>
-	     {/foreach}
+            {foreach from=$readOnlyFields item=fTitle key=fName}
+              <th>{$fTitle}</th>
+            {/foreach}
 
              {foreach from=$fields item=field key=fieldName}
                 {if strpos( $field.name, '_date' ) !== false ||
                     (substr( $field.name, 0, 7 ) == 'custom_' && $field.data_type == 'Date')}
-                  <th><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValuesDate('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</th>
+                  <th><span class="zmdi zmdi-copy action-icon" title="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValuesDate('{$field.name}')"></span>{$field.title}</th>
                 {else}
-                  <th><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValues('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</th>
+                  <th><span class="zmdi zmdi-copy action-icon" title="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValues('{$field.name}')"></span>{$field.title}</th>
                  {/if}
              {/foreach}
             </tr>
