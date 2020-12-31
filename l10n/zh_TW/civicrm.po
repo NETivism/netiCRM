@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-12-31 07:03+0000\n"
+"PO-Revision-Date: 2020-12-31 07:56+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -20884,7 +20884,7 @@ msgid ""
 "Activities</strong> below to save all your changes. To set a field to the "
 "same value for ALL rows, enter that value for the first Activity and then "
 "click the <strong>Copy icon</strong> (next to the column title)."
-msgstr "更新欄位值給每一個聯絡人為需要。按以下<strong>更新聯絡人</strong>去儲存所有您的更變。設定一個欄位到相同值給所有行，為第一個聯絡人輸入值及然後按<strong>複製圖標</strong>(下一個欄標題)。"
+msgstr "如需要為每個任務更新欄位值。按以下<strong>更新任務</strong>去儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行任務輸入值然後再按<strong>複製圖示</strong>(欄位標題的旁邊)。"
 
 #: templates/CRM/Activity/Form/Task/Batch.tpl
 #: templates/CRM/Campaign/Form/Task/Interview.tpl
@@ -27021,7 +27021,7 @@ msgid ""
 "Contacts</strong> below to save all your changes. To set a field to the same"
 " value for ALL rows, enter that value for the first contact and then click "
 "the <strong>Copy icon</strong> (next to the column title)."
-msgstr "更新欄位值給每一個聯絡人為需要。按以下<strong>更新聯絡人</strong>去儲存所有您的更變。設定一個欄位到相同值給所有行，為第一個聯絡人輸入值及然後按<strong>複製圖標</strong>(下一個欄標題)。"
+msgstr "如需要為每個聯絡人更新欄位值。按下方<strong>更新聯絡人</strong>去儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行聯絡人輸入值然後再按<strong>複製圖示</strong>(欄位標題的旁邊)。"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid ""
@@ -29421,7 +29421,7 @@ msgid ""
 "Contributions</strong> below to save all your changes. To set a field to the"
 " same value for ALL rows, enter that value for the first contribution and "
 "then click the <strong>Copy icon</strong> (next to the column title)."
-msgstr "如需要，為每個捐款更新欄位值。按下方<strong>更新捐款</strong>去儲存所有您做的變更。要為所有行設定一個欄位為相同值，為第一個捐款輸入那個值及再按<strong>Copy icon</strong>(欄標題的旁邊)。"
+msgstr "如需要為每個捐款更新欄位值。按下方<strong>更新捐款</strong>去儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行捐款輸入值然後再按<strong>複製圖示</strong>(欄位標題的旁邊)。"
 
 #: templates/CRM/Contribute/Form/Task/Delete.tpl
 msgid ""
@@ -31869,7 +31869,7 @@ msgid ""
 "Update field values for each participant as needed. To set a field to the "
 "same value for ALL rows, enter that value for the first participation and "
 "then click the <strong>Copy icon</strong> (next to the column title)."
-msgstr "每個參加者所需更新的欄位值。若要將欄位設置為相同的值的所有行，請輸入首次報名參加的值，然後按一下 <strong>複製圖示</strong> （在列標題旁邊） 。"
+msgstr "為每個參加者更新欄位值。若要為每一行的一個欄位設為相同值，在第一行參加者輸入值然後再按<strong>複製圖示</strong> （欄位標題旁邊） 。"
 
 #: templates/CRM/Event/Form/Task/Batch.tpl
 msgid ""
@@ -34413,7 +34413,7 @@ msgid ""
 "Memberships</strong> below to save all your changes. To set a field to the "
 "same value for ALL rows, enter that value for the first member and then "
 "click the <strong>Copy icon</strong> (next to the column title)."
-msgstr "如需要，為每個會員更新欄位值。按下方<strong>更新會員</strong>儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行會員輸入值然後再按<strong>複製圖示</strong>（欄位名稱的旁邊）。"
+msgstr "若需要為每個會員更新欄位值。按下方<strong>更新會員</strong>儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行會員輸入值然後再按<strong>複製圖示</strong>（欄位名稱的旁邊）。"
 
 #: templates/CRM/Member/Form/Task/Delete.tpl
 msgid "Are you sure you want to delete the selected memberships?"
