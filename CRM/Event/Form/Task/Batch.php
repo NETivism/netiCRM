@@ -81,17 +81,22 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
     //get the contact read only fields to display.
     require_once 'CRM/Core/BAO/Preferences.php';
-    $readOnlyFields = array_merge(array('sort_name' => ts('Name')),
-      CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
-        TRUE, NULL, FALSE, 'name', TRUE
-      )
+    $readOnlyFields = array(
+      'contact_id' => ts('Contact ID'),
+      'sort_name' => ts('Name'),
+      'participant_id' => ts('Participant ID'),
     );
-    //get the read only field data.
-    $returnProperties = array_fill_keys(array_keys($readOnlyFields), 1);
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
-    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_participantIds,
-      'CiviEvent', $returnProperties
-    );
+    // get the read only field data.
+    $returnProperties = array('sort_name' => 1);
+    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_participantIds, 'CiviEvent', $returnProperties);
+    $contributionDAO = new CRM_Contribute_DAO_Contribution();
+    $contributionDAO->whereAdd("id IN (".implode(',', $this->_participantIds).")");
+    $contributionDAO->selectAdd(); // clear *
+    $contributionDAO->selectAdd('id as participant_id');
+    $contributionDAO->find();
+    while($contributionDAO->fetch()) {
+      $contactDetails[$contributionDAO->participant_id]['participant_id'] = $contributionDAO->participant_id;
+    }
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
   }
