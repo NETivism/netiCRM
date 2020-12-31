@@ -89,13 +89,13 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     // get the read only field data.
     $returnProperties = array('sort_name' => 1);
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_participantIds, 'CiviEvent', $returnProperties);
-    $contributionDAO = new CRM_Contribute_DAO_Contribution();
-    $contributionDAO->whereAdd("id IN (".implode(',', $this->_participantIds).")");
-    $contributionDAO->selectAdd(); // clear *
-    $contributionDAO->selectAdd('id as participant_id');
-    $contributionDAO->find();
-    while($contributionDAO->fetch()) {
-      $contactDetails[$contributionDAO->participant_id]['participant_id'] = $contributionDAO->participant_id;
+    $participantDAO = new CRM_Event_DAO_Participant();
+    $participantDAO->whereAdd("id IN (".implode(',', $this->_participantIds).")");
+    $participantDAO->selectAdd(); // clear *
+    $participantDAO->selectAdd('id as participant_id');
+    $participantDAO->find();
+    while($participantDAO->fetch()) {
+      $contactDetails[$participantDAO->participant_id]['participant_id'] = $participantDAO->participant_id;
     }
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
