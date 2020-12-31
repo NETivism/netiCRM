@@ -268,10 +268,10 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
           CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_contribution', $contribution->id);
         }
       }
-      CRM_Core_Session::setStatus("Your updates have been saved.");
+      CRM_Core_Session::setStatus(ts("Your updates have been saved."));
     }
     else {
-      CRM_Core_Session::setStatus("No updates have been saved.");
+      CRM_Core_Session::setStatus(ts("No updates have been saved."));
     }
   }
   //end of function

@@ -279,10 +279,10 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
           CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_membership', $membership->id);
         }
       }
-      CRM_Core_Session::setStatus("Your updates have been saved.");
+      CRM_Core_Session::setStatus(ts("Your updates have been saved."));
     }
     else {
-      CRM_Core_Session::setStatus("No updates have been saved.");
+      CRM_Core_Session::setStatus(ts("No updates have been saved."));
     }
   }
   //end of function
