@@ -151,6 +151,9 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $this->_parserContact->_onDuplicate = CRM_Import_Parser::DUPLICATE_SKIP;
     $this->_parserContact->_contactType = $this->_contactType;
     $this->_parserContact->_dedupeRuleGroupId = $this->_dedupeRuleGroupId;
+    $session = CRM_Core_Session::singleton();
+    // Used in function summary() 'for date-Formats' in this file
+    $this->_parserContact->_dateFormats = $session->get("dateTypes");
     $this->_parserContact->_contactLog = ts('Import Contact').' '.ts('From').' '.ts('Import Membership');
     $this->_parserContact->init();
     
