@@ -83,9 +83,11 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     $config = CRM_Core_Config::singleton();
 
     // For external membership ID custom value field condition.
-    $label = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_CustomField", $config->externalMembershipIdFieldId, 'label');
     if (!empty($config->externalMembershipIdFieldId)) {
-      $readOnlyFields['external_membership_id'] = $label;
+      $label = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_CustomField", $config->externalMembershipIdFieldId, 'label');
+      if (!empty($config->externalMembershipIdFieldId)) {
+        $readOnlyFields['external_membership_id'] = $label;
+      }
     }
     //get the read only field data.$returnProperties = array('sort_name' => 1);
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_memberIds, 'CiviMember', $returnProperties);
