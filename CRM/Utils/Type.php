@@ -268,7 +268,7 @@ class CRM_Utils_Type {
           return trim($data);
         }
 
-        if (strtotime($data)) {
+        if (strtotime($data) || (strtotime($data) === 0)) {
           $timestamp = strtotime($data);
           $yyyymmdd = date('Ymd', $timestamp);
           return $yyyymmdd;
