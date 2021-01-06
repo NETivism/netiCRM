@@ -102,7 +102,8 @@
         "Installments Contributions" : "{/literal}{ts}Installments Contributions{/ts}{literal}",
         "One-time" : "{/literal}{ts}One-time{/ts}{literal}",
         "Recurring" : "{/literal}{ts}Recurring{/ts}{literal}",
-        "One-time or Recurring Contributions" : "{/literal}{ts}One-time or Recurring Contributions{/ts}{literal}"
+        "One-time or Recurring Contributions" : "{/literal}{ts}One-time or Recurring Contributions{/ts}{literal}",
+        "Please enter a valid amount." : "{/literal}{ts}Please enter a valid amount.{/ts}{literal}"
       }
     };
   })(jQuery);

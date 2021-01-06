@@ -892,13 +892,13 @@ WHERE  civicrm_participant.id = {$participantId}
 
     $transaction->commit();
 
-    // add note into contribution source
+    // add activity to Event Registration
     $userID = CRM_Core_Session::singleton()->get('userID');
     $subject = ts('Deleted Participation(s): %1', array(1 => $id));
     if (!empty($relatedContributions)) {
       $participant->contributions = $relatedContributions;
       $line = ts('Contribution ID').' '.implode(',', $relatedContributions);
-      $subject .= ', '.ts('%1 reserved', array(1 => $line));
+      $subject .= ts('%1 reserved', array(1 => $line));
     }
     $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
     $activityParams = array(

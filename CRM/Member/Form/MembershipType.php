@@ -480,11 +480,11 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       $originReminder = $this->get('origin_reminder_day');
       $memberCount = $this->get('memberCount');
       if ( (!empty($originReminder) || $originReminder == 0) && $originReminder != $params['renewal_reminder_day'] && $memberCount > 0 && $this->_id) {
-        $dao = CRM_Core_DAO::executeQuery("SELECT id, end_date FROM civicrm_membership WHERE membership_type_id = %1 AND end_date IS NOT NULL", array(
+        $dao = CRM_Core_DAO::executeQuery("SELECT id, end_date, reminder_date FROM civicrm_membership WHERE membership_type_id = %1 AND end_date IS NOT NULL AND reminder_date IS NOT NULL", array(
           1 => array($this->_id, 'Integer')
         ));
         while($dao->fetch()) {
-          if ($params['renewal_reminder_day'] != '') {
+          if ($params['renewal_reminder_day'] != '' && !empty($dao->reminder_date)) {
             $reminderDate = CRM_Member_BAO_MembershipType::calcReminderDate($dao->end_date, $params['renewal_reminder_day']);
             CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
           }

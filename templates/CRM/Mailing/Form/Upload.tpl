@@ -53,14 +53,55 @@
     </tr>
     <tr class="crm-mailing-upload-form-block-subject"><td class="label">{$form.subject.label}</td>
         <td colspan="2">{$form.subject.html|crmReplace:class:huge}
-                        <a class="token-trigger" href="#" onClick="return showToken('Subject', 3);">{$form.token3.label|strip_tags}</a>
-                        {help id="id-token-subject" file="CRM/Contact/Form/Task/Email.hlp"}
                         <div id='tokenSubject' style="display:none">
                            <input style="border:1px solid #999999;" type="text" id="filter3" size="20" name="filter3" onkeyup="filter(this, 3)"/><br />
                            <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
                            {$form.token3.html}
                         </div>
+                        <div id="subject-editor">{$form.subject.value}</div>
         </td>
+    </tr>
+    <tr class="crm-mailing-upload-form-block-subject-normal-preview">
+      <!-- TODO: Change to English and make it translatable. -->
+      <td class="label"><label>{ts}Preview{/ts} - {ts}Normal{/ts}</label></td>
+      <td>
+        <div class="normal-subject-preview subject-preview" data-type="normal">
+          <div class="subject-preview-content">
+            <div class="col-select col"><i class="zmdi zmdi-square-o"></i></div>
+            <div class="col-star col"><i class="zmdi zmdi-star-outline"></i></div>
+            <div class="col-sender col"><div class="mail-sender"></div></div>
+            <div class="col-mail-text col">
+              <div class="mail-subject"></div>
+              <span class="mail-teaser"></span>
+            </div>
+            <div class="col-time col"><div class="mail-time"></div></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="crm-mailing-upload-form-block-subject-mobile-preview">
+      <!-- TODO: Change to English and make it translatable. -->
+      <td class="label"><label>{ts}Preview{/ts} - {ts}Mobile Device{/ts}</label></td>
+      <td>
+        <div class="mobile-subject-preview subject-preview is-active" data-type="mobile" data-mode="tabs">
+          <div class="subject-preview-content">
+            <div class="col-avatar"><i class="zmdi zmdi-account-circle"></i></div>
+            <div class="col-info">
+              <div class="col-info-row-1">
+                <span class="mail-sender"></span>
+                <div class="mail-time"></div>
+              </div>
+              <div class="col-info-row-2">
+                <div class="mail-subject"></div>
+              </div>
+              <div class="col-info-row-3">
+                <span class="mail-teaser"></span>
+                <i class="zmdi zmdi-star-outline"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
     </tr>
     <tr class="crm-mailing-upload-form-block-upload_type"><td></td><td colspan="2">{$form.upload_type.label} {$form.upload_type.html} {help id="upload-compose"}</td></tr>
 </table>
@@ -203,6 +244,151 @@
 
       addAnEventListener(window, 'message', iFrameListener);
 
+
+      // refs #26473.
+      var subjectQuill;
+      var mailPreview = {};
+      function subjectUpdateHelper(value, syncQuill) {
+        if (value) {
+          mailPreview.subject = value;
+          cj(".subject-preview .mail-subject").text(mailPreview.subject);
+
+          if (syncQuill) {
+            if (subjectQuill && typeof Quill === "function") {
+              subjectQuill.setText(value);
+            }
+          }
+        }
+      }
+
+      function removeQuillLastBlankLine(quill) {
+        if (typeof quill === "object" && typeof Quill === "function") {
+          var delta = quill.getContents();
+
+          if (Array.isArray(delta.ops) && delta.ops.length) {
+            var lastIndex = delta.ops.length - 1,
+            lastOp = delta.ops[lastIndex];
+
+            if (lastOp.insert && typeof lastOp.insert === "string") {
+              // refs https://github.com/quilljs/quill/issues/1235#issuecomment-273044116
+              // Because quill will generate two line breaks at the end of the content, we need to remove one line break so that the edited content is consistent with the content when browsing.
+              delta.ops[lastIndex].insert = lastOp.insert.replace(/\n$/, "");
+              quill.setContents(delta);
+            }
+          }
+        }
+      }
+
+      if (cj(".subject-preview").length) {
+        mailPreview.sender = {};
+
+        // TODO: Change to English and make it translatable.
+        mailPreview.teaser = "這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。這是假文，供排版或預覽示意時填充版面用，中文與English都在這個假文之中，有時會有一些數字例如123、456以及7890。";
+
+        var getMailSender = function() {
+          var mailSenderText = cj("#from_email_address option:selected").text(),
+              mailSenderArr = mailSenderText.split("\" <");
+
+          mailPreview.sender.name = mailSenderArr[0].substring(1);
+          mailPreview.sender.email = mailSenderArr[1].slice(0, -1);
+          cj(".subject-preview .mail-sender").text(mailPreview.sender.name);
+        }
+
+        var getMailTime = function() {
+          var currentDate = new Date();
+          mailPreview.time = ("0" + currentDate.getHours()).slice(-2) + ":" + ("0" + currentDate.getMinutes()).slice(-2);
+          cj(".subject-preview .mail-time").text(mailPreview.time);
+        }
+
+        getMailTime();
+        getMailSender();
+
+        cj("#from_email_address").change(function() {
+          getMailSender();
+        });
+
+        if (cj("#subject").length) {
+          cj(".subject-preview .mail-subject").text(cj("#subject").val());
+        }
+
+        cj(".subject-preview .mail-teaser").text(mailPreview.teaser);
+      }
+
+      // refs #26473. Added quill editor (quill) to replace subject field of mailing upload form.
+      if (cj("#subject").length && cj("#subject-editor").length) {
+        if (typeof Quill === "function") {
+          // Because both Quill and CKEditor have "contenteditable"
+          // disableAutoInline of CKEditor must be enabled to avoid conflicts
+          // https://ckeditor.com/docs/ckeditor4/latest/guide/dev_inline.html#enabling-inline-editing
+          CKEDITOR.disableAutoInline = true;
+
+          // Replace <p> with <div>
+          var quillBlock = Quill.import("blots/block");
+          class DivBlock extends quillBlock {}
+          DivBlock.tagName = "DIV";
+          Quill.register("blots/block", DivBlock, true);
+
+          var toolbarOptions = [
+            ['emoji']
+          ];
+
+          var tokenToolbar = [];
+          var tokenQuillOption = [];
+          if (window.nmEditor.tokenTrigger) {
+            Quill.register("modules/placeholder", PlaceholderModule.default(Quill));
+            cj(window.nmEditor.tokenTrigger).find("option").each(function() {
+              var tokenName = cj(this).attr("value");
+              tokenToolbar.push(tokenName);
+              tokenQuillOption.push({id:tokenName, label:tokenName});
+            });
+            toolbarOptions.push([{"placeholder":tokenToolbar}]);
+          }
+
+          var quillOptions = {
+            modules: {
+              toolbar: toolbarOptions,
+              "emoji-toolbar": true
+            },
+            theme: "snow"
+          };
+
+          if (window.nmEditor.tokenTrigger) {
+            quillOptions.modules.placeholder = {};
+            quillOptions.modules.placeholder.delimiters = ["", ""];
+            quillOptions.modules.placeholder.placeholders = tokenQuillOption;
+          }
+
+          var subjectQuill = new Quill("#subject-editor", quillOptions);
+          subjectQuill.on("text-change", function(delta, oldDelta, source) {
+            // Get text by quill.root.innerText
+            // Because innerText contains '\ufeff', it needs to be removed by jQuert.trim()
+            var subject = cj.trim(subjectQuill.root.innerText);
+
+            // Update value of subject field
+            cj("#subject").val(subject);
+            subjectUpdateHelper(subject);
+          });
+
+          // Remove the last blank line generated by quill
+          removeQuillLastBlankLine(subjectQuill);
+        }
+
+        cj("#subject").on("change keyup input paste", function() {
+          var subjectVal = cj(this).val(),
+              syncQuill = true;
+
+          // Sync the subject value to the subject editor (Quill).
+          subjectUpdateHelper(subjectVal, syncQuill);
+        });
+
+        // Added a MutationObserver to watch for changes being made to the subject DOM tree
+        var subjectObserver = new MutationObserver(function(list) {
+          cj("#subject").trigger("change");
+        });
+        subjectObserver.observe(cj("#subject")[0], {
+          attributes: true
+        });
+      }
     });
 </script>
 {/literal}

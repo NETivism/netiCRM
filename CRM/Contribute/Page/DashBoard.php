@@ -481,6 +481,8 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         if ($i > 3 && $referType != 'other') {
           $other['count'] += $t['count'];
           $other['percent'] += $t['percent'];
+          $other['count_goal'] += $t['count_goal'];
+          $other['percent_goal'] += $t['percent_goal'];
           unset($track[$referType]);
         }
         $i++;

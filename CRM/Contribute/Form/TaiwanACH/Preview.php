@@ -13,6 +13,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     if (!empty($this->_parseResult) && !empty($this->_parseResult['process_id'])) {
       $this->assign('parseResult', $this->_parseResult);
     }
+    $this->assign('importType', $this->_parseResult['import_type']);
   }
 
   function buildQuickForm() {
