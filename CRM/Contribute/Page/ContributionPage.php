@@ -337,7 +337,6 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
 
       // statistics
       CRM_Utils_System::setTitle(ts('Dashlets')." - ".$page['title']);
-      $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($id);
       $last3month = date('Y-m-01', strtotime('-3 months'));
       $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id, $last3month);
       foreach($pageStatistics['track'] as &$track) {
