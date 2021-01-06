@@ -74,18 +74,27 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
     parent::preProcess();
 
     //get the contact read only fields to display.
-    require_once 'CRM/Core/BAO/Preferences.php';
-    $readOnlyFields = array_merge(array('sort_name' => ts('Name')),
-      CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
-        TRUE, NULL, FALSE, 'name', TRUE
-      )
+    $readOnlyFields = array(
+      'contact_id' => ts('Contact ID'),
+      'sort_name' => ts('Name'),
+      'contribution_id' => ts('Contribution ID'),
+      'trxn_id' => ts('Transaction ID'),
+      'receipt_id' => ts('Receipt ID'),
     );
     //get the read only field data.
-    $returnProperties = array_fill_keys(array_keys($readOnlyFields), 1);
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
-    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_contributionIds,
-      'CiviContribute', $returnProperties
-    );
+    $returnProperties = array('sort_name' => 1);
+    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_contributionIds, 'CiviContribute', $returnProperties);
+    $contributionDAO = new CRM_Contribute_DAO_Contribution();
+    $contributionDAO->whereAdd("id IN (".implode(',', $this->_contributionIds).")");
+    $contributionDAO->selectAdd(); // clear *
+    $contributionDAO->selectAdd('id as contribution_id, trxn_id, receipt_id');
+    $contributionDAO->find();
+    while($contributionDAO->fetch()) {
+      $contactDetails[$contributionDAO->contribution_id]['contribution_id'] = $contributionDAO->contribution_id;
+      $contactDetails[$contributionDAO->contribution_id]['trxn_id'] = $contributionDAO->trxn_id;
+      $contactDetails[$contributionDAO->contribution_id]['receipt_id'] = $contributionDAO->receipt_id;
+    }
+    
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
   }
@@ -259,10 +268,10 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
           CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_contribution', $contribution->id);
         }
       }
-      CRM_Core_Session::setStatus("Your updates have been saved.");
+      CRM_Core_Session::setStatus(ts("Your updates have been saved."));
     }
     else {
-      CRM_Core_Session::setStatus("No updates have been saved.");
+      CRM_Core_Session::setStatus(ts("No updates have been saved."));
     }
   }
   //end of function

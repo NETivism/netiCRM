@@ -1674,7 +1674,12 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
     padding: 2px 2px 2px 3px;
     margin: 2px 2px 3px 2px;
     cursor: pointer;
-    cursor: hand;
+}
+.crm-container .batch-update span.action-icon {
+    color: #304ffe;
+}
+.crm-container .batch-update span.action-icon:hover {
+    color: #536DFE;
 }
 
 /*
