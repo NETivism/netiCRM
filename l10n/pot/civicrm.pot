@@ -47904,3 +47904,6 @@ msgstr ""
 
 msgid "This URL will be expired on %1 days later."
 msgstr ""
+
+msgid "The response from payment provider is empty."
+msgstr ""
