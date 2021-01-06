@@ -336,14 +336,14 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 }
 
 @media screen and (min-width: 1024px) {
+  body {
+    overflow-x: hidden;
+  }
   body:not(.special-page-finish) #content-main{
     height: 550px;
   }
   #content-main {
     min-height: calc(100vh - 360px);
-  }
-  #page {
-    overflow: hidden;
   }
   .frontend #content{
     background-color: transparent;
@@ -354,7 +354,12 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     background: #fff;
     border-radius: 5px;
   }
+  #main {
+    position: relative;
+  }
   #main-inner {
+    position: sticky;
+    top: 30px;
     z-index: 3;
     margin-right: 0;
     margin-top: 70px;
@@ -371,6 +376,8 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     position: fixed;
   }
   #intro_text {
+    position: sticky;
+    top: 0;
     width: 480px;
     height: auto;
     margin-top: 70px;
