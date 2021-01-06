@@ -90,7 +90,6 @@ class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment 
     $participantPayment->find();
 
     while ($participantPayment->fetch()) {
-      CRM_Contribute_BAO_Contribution::deleteContribution($participantPayment->contribution_id);
       $participantPayment->delete();
     }
     if($participantPayment){

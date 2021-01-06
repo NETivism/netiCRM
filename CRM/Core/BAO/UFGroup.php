@@ -741,6 +741,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     }
 
     $query = new CRM_Contact_BAO_Query($params, $returnProperties, $fields);
+    $query->_useGroupBy = TRUE;
     $options = &$query->_options;
 
     $details = $query->searchQuery();

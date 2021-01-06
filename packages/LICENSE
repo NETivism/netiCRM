@@ -84,6 +84,13 @@ jQuery        GPL 2/X11
 fontawesome   MIT  http://fortawesome.github.io/Font-Awesome/
 random_compat MIT https://github.com/paragonie/random_compat/
 qrcodejs      MIT https://raw.githubusercontent.com/davidshimjs/qrcodejs/
+Poshy Tip             MIT & GPL      https://github.com/vadikom/poshytip
+X-editable            MIT            https://vitalets.github.io/x-editable/
+Quill                 BSD 3-cl.      https://github.com/quilljs/quill
+Quill Placeholder     MIT            https://github.com/jspaine/quill-placeholder-module
+Quill Emoji           MIT            https://github.com/contentco/quill-emoji
+Pickr                 MIT            https://github.com/Simonwep/pickr
+Magnific Popup        MIT            https://dimsemenov.com/plugins/magnific-popup/
 
 
 Limited Licesne

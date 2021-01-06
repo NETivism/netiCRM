@@ -74,22 +74,22 @@ window.nmEditor = {
 </script>
 <!-- poshytip -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css?v{$config->ver}">
-{js src=packages/poshytip/src/jquery.poshytip.js group=999 weight=997}{/js}
+{js src=packages/poshytip/src/jquery.poshytip.min.js group=999 weight=997}{/js}
 
 <!-- x-editable -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css?v{$config->ver}">
-{js src=packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js group=999 weight=997}{/js}
+{js src=packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.min.js group=999 weight=997}{/js}
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css?v{$config->ver}">
 {if $tsLocale == 'zh_TW'}
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.css?v{$config->ver}">
-<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/placeholder/quill.placeholder.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.min.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css?v{$config->ver}">
 {/if}
 {js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js group=999 weight=997}{/js}
-{js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.placeholder.js group=999 weight=997}{/js}
-{js src=packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.js group=999 weight=997}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/lib/placeholder/quill.placeholder.min.js group=999 weight=997}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.min.js group=999 weight=997}{/js}
 {js src=packages/x-editable/dist/inputs-ext/quill/quill.js group=999 weight=997}{/js}
 
 
@@ -99,11 +99,11 @@ window.nmEditor = {
 
 <!-- Magnific Popup -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
-{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.js group=999 weight=997}{/js}
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997}{/js}
 
 <!-- mailingEditor -->
-{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css?v{$config->ver}">
+{include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 {literal}
 <style>
 	.nme-block.on-screen-center:after {

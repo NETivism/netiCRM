@@ -289,7 +289,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
         $group_by_field = "CONCAT($interval * ROUND(year / $interval), '-', ($interval * ROUND(year / $interval) + $interval_1))";
         // $group_by_condition = 'ranges ORDER BY year';
         $order_by = 'ORDER BY year';
-        $table = '(SELECT c.id, (YEAR(current_timestamp) - YEAR(c.birth_date)) year FROM civicrm_contact c) c';
+        $table = '(SELECT (YEAR(current_timestamp) - YEAR(c.birth_date)) year, c.* FROM civicrm_contact c) c';
         break;
       case self::PROVINCE:
         // $group_by_condition = $group_by_field = 'p.name';
@@ -358,10 +358,15 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     }else{
       $contribution_field = $contribution_query = '';
     }
+    $where = 'WHERE c.is_deleted != 1';
 
 
-    $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field label FROM $table $contribution_query GROUP BY label $order_by";
+    $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field label FROM $table $contribution_query $where GROUP BY label $order_by";
 
+    $config = CRM_Core_Config::singleton();
+    if ($config->debug) {
+      CRM_Core_Error::debug('getStaWithCondition_$sql', $sql);
+    }
     $dao = CRM_Core_DAO::executeQuery($sql);
     $returnArray = array();
     $count = 0;

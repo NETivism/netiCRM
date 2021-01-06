@@ -11,6 +11,7 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
     $this->_processResult = $this->get('processResult');
     $this->assign('processResult', $this->_processResult);
     $this->assign('parseResult', $this->_parseResult);
+    $this->assign('importType', $this->_parseResult['import_type']);
   }
 
   function buildQuickForm() {

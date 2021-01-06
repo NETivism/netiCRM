@@ -148,9 +148,11 @@ function civicrm_api3_event_get($params) {
   while ($eventDAO->fetch()) {
     $event[$eventDAO->id] = array();
     CRM_Core_DAO::storeValues($eventDAO, $event[$eventDAO->id]);
-    if (CRM_Utils_Array::value('return.is_full', $params)) {
-      _civicrm_api3_event_getisfull($event, $eventDAO->id);
+    _civicrm_api3_event_getisfull($event, $eventDAO->id);
+    if ($eventDAO->is_show_location) {
+      _civicrm_api3_event_getlocblock($event, $eventDAO->id);
     }
+    _civicrm_api3_event_getfee($event, $eventDAO->id);
     _civicrm_api3_event_get_legacy_support_42($event, $eventDAO->id);
     _civicrm_api3_custom_data_get($event[$eventDAO->id], 'Event', $eventDAO->id, NULL, $eventDAO->event_type_id);
   }
@@ -201,7 +203,7 @@ function civicrm_api3_event_delete($params) {
 /*
 
 /*
- * Function to add 'is_full' & 'available_seats' to the return array. (this might be better in the BAO)
+ * Function to add 'is_full' & 'available_places' to the return array. (this might be better in the BAO)
  * Default BAO function returns a string if full rather than a Bool - which is more appropriate to a form
  *
  * @param array $event return array of the event
@@ -210,13 +212,66 @@ function civicrm_api3_event_delete($params) {
  */
 function _civicrm_api3_event_getisfull(&$event, $event_id) {
   require_once 'CRM/Event/BAO/Participant.php';
-  $eventFullResult = CRM_Event_BAO_Participant::eventFull($event_id, 1);
-  if (!empty($eventFullResult) && is_int($eventFullResult)) {
+  $eventFullResult = CRM_Event_BAO_Participant::eventFull($event_id, TRUE);
+  if ($eventFullResult === NULL) {
+    $event[$event_id]['available_places'] = NULL;
+    $event[$event_id]['is_full'] = 0;
+  }
+  elseif (!empty($eventFullResult) && is_numeric($eventFullResult)) {
     $event[$event_id]['available_places'] = $eventFullResult;
+    $event[$event_id]['is_full'] = 0;
   }
-  else {
+  elseif (empty($eventFullResult) && is_numeric($eventFullResult)) {
     $event[$event_id]['available_places'] = 0;
+    $event[$event_id]['is_full'] = 0;
   }
-  $event[$event_id]['is_full'] = $event[$event_id]['available_places'] == 0 ? 1 : 0;
 }
 
+/*
+ * Get event location block info 
+ *
+ * @param array $event return array of the event
+ * @param int $event_id Id of the event to be updated
+ *
+ */
+function _civicrm_api3_event_getlocblock(&$event, $event_id){
+  $params = array('entity_id' => $event_id, 'entity_table' => 'civicrm_event');
+  $location = CRM_Core_BAO_Location::getValues($params);
+  foreach(array('address', 'phone', 'email') as $loc) {
+    $value = reset($location[$loc]);
+    switch($loc) {
+      case 'address':
+        $event[$event_id]['location_'.$loc] = trim($value['display']);
+        break;
+      default:
+        // email, phone
+        $event[$event_id]['location_'.$loc] = $value[$loc];
+        break;
+    }
+  } 
+}
+
+/*
+ * Get event fee blocks
+ *
+ * @param array $event return array of the event
+ * @param int $event_id Id of the event to be updated
+ *
+ */
+function _civicrm_api3_event_getfee(&$event, $event_id) {
+  if (!empty($event[$event_id]['is_monetary'])) {
+    $fee = CRM_Event_Page_EventInfo::feeBlock($event_id);
+    $feeBlock = array();
+    foreach($fee['label'] as $idx => $label) {
+      if (isset($fee['value'][$idx]) && $fee['value'][$idx] !== '') {
+        $feeBlock[] = array(
+          'label' => $label,
+          'value' => $fee['value'][$idx],
+        );
+      }
+    }
+    $event[$event_id]['is_discount'] = !empty($fee['is_discount']) ? 1 : 0;
+    $event[$event_id]['price_set_id'] = !empty($fee['price_set_id']) ? $fee['price_set_id'] : 0;
+    $event[$event_id]['fee_block'] = $feeBlock;
+  }
+}

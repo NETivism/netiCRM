@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-12-01 18:35+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2020-12-31 07:56+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20884,7 +20884,7 @@ msgid ""
 "Activities</strong> below to save all your changes. To set a field to the "
 "same value for ALL rows, enter that value for the first Activity and then "
 "click the <strong>Copy icon</strong> (next to the column title)."
-msgstr "更新欄位值給每一個聯絡人為需要。按以下<strong>更新聯絡人</strong>去儲存所有您的更變。設定一個欄位到相同值給所有行，為第一個聯絡人輸入值及然後按<strong>複製圖標</strong>(下一個欄標題)。"
+msgstr "如需要為每個任務更新欄位值。按以下<strong>更新任務</strong>去儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行任務輸入值然後再按<strong>複製圖示</strong>(欄位標題的旁邊)。"
 
 #: templates/CRM/Activity/Form/Task/Batch.tpl
 #: templates/CRM/Campaign/Form/Task/Interview.tpl
@@ -27021,7 +27021,7 @@ msgid ""
 "Contacts</strong> below to save all your changes. To set a field to the same"
 " value for ALL rows, enter that value for the first contact and then click "
 "the <strong>Copy icon</strong> (next to the column title)."
-msgstr "更新欄位值給每一個聯絡人為需要。按以下<strong>更新聯絡人</strong>去儲存所有您的更變。設定一個欄位到相同值給所有行，為第一個聯絡人輸入值及然後按<strong>複製圖標</strong>(下一個欄標題)。"
+msgstr "如需要為每個聯絡人更新欄位值。按下方<strong>更新聯絡人</strong>去儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行聯絡人輸入值然後再按<strong>複製圖示</strong>(欄位標題的旁邊)。"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid ""
@@ -29421,7 +29421,7 @@ msgid ""
 "Contributions</strong> below to save all your changes. To set a field to the"
 " same value for ALL rows, enter that value for the first contribution and "
 "then click the <strong>Copy icon</strong> (next to the column title)."
-msgstr "如需要，為每個捐款更新欄位值。按下方<strong>更新捐款</strong>去儲存所有您做的變更。要為所有行設定一個欄位為相同值，為第一個捐款輸入那個值及再按<strong>Copy icon</strong>(欄標題的旁邊)。"
+msgstr "如需要為每個捐款更新欄位值。按下方<strong>更新捐款</strong>去儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行捐款輸入值然後再按<strong>複製圖示</strong>(欄位標題的旁邊)。"
 
 #: templates/CRM/Contribute/Form/Task/Delete.tpl
 msgid ""
@@ -31869,7 +31869,7 @@ msgid ""
 "Update field values for each participant as needed. To set a field to the "
 "same value for ALL rows, enter that value for the first participation and "
 "then click the <strong>Copy icon</strong> (next to the column title)."
-msgstr "每個參加者所需更新的欄位值。若要將欄位設置為相同的值的所有行，請輸入首次報名參加的值，然後按一下 <strong>複製圖示</strong> （在列標題旁邊） 。"
+msgstr "為每個參加者更新欄位值。若要為每一行的一個欄位設為相同值，在第一行參加者輸入值然後再按<strong>複製圖示</strong> （欄位標題旁邊） 。"
 
 #: templates/CRM/Event/Form/Task/Batch.tpl
 msgid ""
@@ -34413,14 +34413,11 @@ msgid ""
 "Memberships</strong> below to save all your changes. To set a field to the "
 "same value for ALL rows, enter that value for the first member and then "
 "click the <strong>Copy icon</strong> (next to the column title)."
-msgstr "如需要，為每個會員更新欄位值。按下方<strong>更新會員</strong>儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行會員輸入值然後再按<strong>複製圖示</strong>（欄位名稱的旁邊）。"
+msgstr "若需要為每個會員更新欄位值。按下方<strong>更新會員</strong>儲存所有您做的變更。若要為每一行的一個欄位設為相同值，在第一行會員輸入值然後再按<strong>複製圖示</strong>（欄位名稱的旁邊）。"
 
 #: templates/CRM/Member/Form/Task/Delete.tpl
-msgid ""
-"Are you sure you want to delete the selected memberships? This delete "
-"operation cannot be undone and will delete all transactions and activity "
-"associated with these members."
-msgstr "您確定要刪除選取的會籍？此動作不能復原，會導致與這些會籍相關的全部交易與任務被刪除。"
+msgid "Are you sure you want to delete the selected memberships?"
+msgstr "您確定要刪除所選取的會員嗎？"
 
 #: templates/CRM/Member/Form/Task.tpl
 msgid "Number of selected members: %1"
@@ -48166,3 +48163,33 @@ msgstr "注意！此會員類型已有 %1 個會員，改變這個設定，將�
 
 msgid "Members in this type alreay have new reminder date."
 msgstr "在此會員類型中的所有會員，已經更新了提醒日期。"
+
+msgid "You have selected more than %1 contributions."
+msgstr "你選擇超過%1筆捐款。"
+
+msgid ""
+"To prevent large volumn email being sent and blocked by recipients, we got "
+"to turn off receipt function."
+msgstr "為了避免大量信件被收件方阻擋，您無法使用「電子郵件收據」的功能。"
+
+msgid "To enable this, please search again and select under %1 contributions."
+msgstr "要啟用此功能，請回到上一部重新選則少於%1筆捐款。"
+
+msgid "You have selected more than %1 contacts."
+msgstr "你選擇超過%1筆聯絡人。"
+
+msgid ""
+"Because of the large amount of data you are about to perform, we will "
+"schedule this job for the batch process after you submit. You will receive "
+"an email notification when the work is completed."
+msgstr "因為您欲處理的資料超過限額，在您送出次表單後，我們將排程為批次作業。批次作業將會在背景進行，您則會於作業完成時收到 Email 通知。"
+
+msgid ""
+"You will need to create a Profile containing the %1 fields you want to edit "
+"before you can use Batch Update via Profile. Navigate to Administer Civicrm "
+">> CiviCRM Profile to configure a Profile. Consult the online Administrator "
+"documentation for more information."
+msgstr "您需要先建立一個包含%1類型欄位的資料表單再進行批次更新。請至「聯絡人 >> 管理 >> 資料表單」進行。需要更多資訊請參考線上手冊。"
+
+msgid "External Membership ID"
+msgstr "外部會員編號"

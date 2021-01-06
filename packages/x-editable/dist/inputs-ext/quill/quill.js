@@ -213,6 +213,15 @@ $(function(){
 
             // Output HTML to x-editable
             $(element).html(html);
+
+            // Replace quill emoji blot to simple emoji entity
+            $(element).find(".ql-emojiblot").each(function() {
+                var $emojiBlot = $(this),
+                    emoji = $.trim($emojiBlot.context.innerText);
+
+                $emojiBlot.after(emoji);
+                $emojiBlot.remove();
+            });
         },
 
         // Call after initializing x-editable
