@@ -47898,3 +47898,7 @@ msgstr ""
 
 msgid "External Membership ID"
 msgstr ""
+
+#: templates/CRM/common/contributionPageSpecial.tpl
+msgid "Read more"
+msgstr ""

@@ -31,6 +31,36 @@
         $content.prepend($('#intro_text').prepend($('h1.page-title')));
         $('.sharethis').appendTo('body');
 
+        // refs #28603. Added read more feature to intro text.
+        var introMaxHeight = 450;
+        if ($('#intro_text').height() > introMaxHeight) {
+          var readmoreText = {
+            open: window.ContribPageParams.ts['Read more'],
+            close: window.ContribPageParams.ts['Close']
+          };
+
+          $('#intro_text').wrapInner('<div class="intro_text-inner"><div class="intro_text-content is-collapsed"></div></div>');
+          $(".intro_text-content").after('<button class="intro_text-readmore-btn" type="button">' + readmoreText.open + '</button>');
+
+          $('#intro_text').on('click', '.intro_text-readmore-btn', function(e) {
+            e.preventDefault();
+
+            var $trigger = $(this),
+                $target = $('.intro_text-content');
+
+            if ($target.length) {
+              if ($target.hasClass('is-collapsed')) {
+                $target.removeClass('is-collapsed').addClass('is-expanded');
+                $trigger.addClass('is-active').text(readmoreText.close);
+              }
+              else {
+                $target.removeClass('is-expanded').addClass('is-collapsed');
+                $trigger.removeClass('is-active').text(readmoreText.open);
+              }
+            }
+          });
+        }
+
         if(this.currentPage == 'Main'){
 
           this.setDefaultValues();
@@ -746,15 +776,6 @@
 
       prepareAfterAll: function(){
         $('body').addClass('special-page-finish');
-        if (window.innerWidth < 1024) {
-          setTimeout(function(){
-            $('#intro_text').css({
-              'max-height': 'unset',
-              'padding-top': '',
-              'padding-bottom': '',
-            });
-          }, 1000);
-        }
         setTimeout(function(){
           $('.loading-placeholder-wrapper').remove();
         }, 1000);

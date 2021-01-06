@@ -221,18 +221,9 @@ body .crm-container>form>div.loading-placeholder-wrapper {
   }
 }
 @media screen and (max-width: 1023.9px) {
-  #intro_text {
-    transition: max-height .3s linear ,padding .1s linear;
-    -webkit-transition: max-height .3s linear ,padding .1s linear;
-    -moz-transition: max-height .3s linear ,padding .1s linear;
-    -ms-transition: max-height .3s linear ,padding .1s linear;
-    -o-transition: max-height .3s linear ,padding .1s linear;
-    max-height: 100vh;
-  }
   body:not(.special-page-finish) #intro_text {
     padding-top: 0;
     padding-bottom: 0;
-    max-height: 0;
   }
   .placeholder-intro-text {
     display: none;
@@ -521,7 +512,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     display: flex;
     flex-direction: column;
     margin-bottom: 0;
-    padding: 30px 20px 120px;
+    padding: 30px 20px;
     margin: 0;
     min-height: 0;
   }
@@ -802,7 +793,44 @@ body .crm-container fieldset{
   border: 1px solid var(--active-color);
 }
 
-/** intro text */ 
+/** intro text */
+.intro_text-content {
+  position: relative;
+}
+.intro_text-content.is-collapsed {
+  max-height: 450px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%);
+}
+.intro_text-content.is-expanded {
+  max-height: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+button.intro_text-readmore-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px auto 0;
+  padding: 10px 20px;
+  line-height: 1;
+  letter-spacing: 2px;
+  font-size: 1rem;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background: rgba(255,255,255,.8);
+  box-shadow: none;
+}
+button.intro_text-readmore-btn:after {
+  content: '\f276';
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: 20px;
+  margin-left: 10px;
+}
+button.intro_text-readmore-btn.is-active:after {
+  content: '\f271';
+}
 #main h1{
   color: #FFFFFF;
   font-size: 44px;
@@ -816,6 +844,18 @@ body .crm-container fieldset{
   width: 362px;
   max-height: unset;
   max-width: unset;
+}
+@media screen and (min-width: 1024px) {
+  .intro_text-content.is-collapsed,
+  .intro_text-content.is-expanded {
+    max-height: none;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  button.intro_text-readmore-btn {
+    display: none;
+  }
 }
 
 /*price info*/
