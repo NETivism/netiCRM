@@ -75,17 +75,36 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
 
     //get the contact read only fields to display.
     require_once 'CRM/Core/BAO/Preferences.php';
-    $readOnlyFields = array_merge(array('sort_name' => ts('Name')),
-      CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
-        TRUE, NULL, FALSE, 'name', TRUE
-      )
+    $readOnlyFields = array(
+      'contact_id' => ts('Contact ID'),
+      'sort_name' => ts('Name'),
+      'membership_id' => ts('Membership ID'),
     );
-    //get the read only field data.
-    $returnProperties = array_fill_keys(array_keys($readOnlyFields), 1);
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
-    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_memberIds,
-      'CiviMember', $returnProperties
-    );
+    $config = CRM_Core_Config::singleton();
+
+    // For external membership ID custom value field condition.
+    if (!empty($config->externalMembershipIdFieldId)) {
+      $label = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_CustomField", $config->externalMembershipIdFieldId, 'label');
+      if (!empty($config->externalMembershipIdFieldId)) {
+        $readOnlyFields['external_membership_id'] = $label;
+      }
+    }
+    //get the read only field data.$returnProperties = array('sort_name' => 1);
+    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_memberIds, 'CiviMember', $returnProperties);
+    $membershipDAO = new CRM_Member_DAO_Membership();
+    $membershipDAO->whereAdd("id IN (".implode(',', $this->_memberIds).")");
+    $membershipDAO->selectAdd(); // clear *
+    $membershipDAO->selectAdd('id as membership_id');
+    $membershipDAO->find();
+    if (!empty($config->externalMembershipIdFieldId)) {
+      $externalMembershipIds = CRM_Core_BAO_CustomValueTable::getEntitiesValues($this->_memberIds, 'Membership', array($config->externalMembershipIdFieldId));
+    }
+    while($membershipDAO->fetch()) {
+      $contactDetails[$membershipDAO->membership_id]['membership_id'] = $membershipDAO->membership_id;
+      if (!empty($externalMembershipIds)) {
+        $contactDetails[$membershipDAO->membership_id]['external_membership_id'] = $externalMembershipIds[$membershipDAO->membership_id]['custom_'.$config->externalMembershipIdFieldId];
+      }
+    }
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
   }
@@ -262,10 +281,10 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
           CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_membership', $membership->id);
         }
       }
-      CRM_Core_Session::setStatus("Your updates have been saved.");
+      CRM_Core_Session::setStatus(ts("Your updates have been saved."));
     }
     else {
-      CRM_Core_Session::setStatus("No updates have been saved.");
+      CRM_Core_Session::setStatus(ts("No updates have been saved."));
     }
   }
   //end of function

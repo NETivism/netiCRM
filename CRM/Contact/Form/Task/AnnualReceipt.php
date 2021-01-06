@@ -165,22 +165,22 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     CRM_Utils_System::civiExit();
   }
 
-  public static function pushFile($html) {
+  public function pushFile($html) {
     // tmp directory
     file_put_contents(self::$_tmpreceipt, $html, FILE_APPEND);
   }
-  public static function popFile() {
+  public function popFile() {
     $return = file_get_contents(self::$_tmpreceipt);
     unlink(self::$_tmpreceipt);
     return $return;
   }
 
-  public static function makePDF($download = TRUE) {
+  public function makePDF($download = TRUE) {
     $template = &CRM_Core_Smarty::singleton();
-    $pages = self::popFile();
+    $pages = $this->popFile();
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/AnnualReceipt.tpl');
-    $filename = self::$_exportFileName;
+    $filename = 'AnnualReceipt'.$this->_year.'.pdf';
     $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, $filename, 'portrait', 'a4', $download);
     if(!$download){
       return $pdf_real_filename;
@@ -231,14 +231,14 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         $template->assign('imageSmallStampUrl', $config->imageUploadDir . $config->imageSmallStampName);
       }
       $html .= CRM_Contribute_BAO_Contribution::getAnnualReceipt($contact_id, $option, $template);
-      self::pushFile($html);
+      $this->pushFile($html);
 
       // reset template values before processing next transactions
       $template->clearTemplateVars();
       unset($html);
       unset($template);
     }
-    $filePath = self::makePDF($download);
+    $filePath = $this->makePDF($download);
     if ($civicrm_batch) {
       $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed']+1); 
       $dest = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
