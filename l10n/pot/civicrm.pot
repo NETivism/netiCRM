@@ -47907,3 +47907,6 @@ msgstr ""
 
 msgid "The response from payment provider is empty."
 msgstr ""
+
+msgid "Your recurring contribution has been saved."
+msgstr ""

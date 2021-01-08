@@ -1,6 +1,6 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020
+# CC Chu <poliphilonet@gmail.com>, 2020-2021
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2021
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-01-06 09:54+0000\n"
+"PO-Revision-Date: 2021-01-08 05:47+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48197,10 +48197,13 @@ msgstr "外部會員編號"
 msgid ""
 "URL will extract personal data from this contact to URL visitor. Make sure "
 "send this link to their personal device / email address."
-msgstr "注意，這個URL將會帶出本聯絡人的個人資訊，使用時，請確認寄信給此位捐款人持有的裝置、個人信箱"
+msgstr ""
 
 msgid "This URL will be expired on %1 days later."
-msgstr "此連結將於%1天後失效。"
+msgstr ""
 
 msgid "The response from payment provider is empty."
-msgstr "金流商回傳的資訊是空的。"
+msgstr ""
+
+msgid "Your recurring contribution has been saved."
+msgstr "您的定期定額捐款已儲存。"
