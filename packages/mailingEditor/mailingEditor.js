@@ -1893,7 +1893,7 @@
                 // Reinitialize x-editable
                 $field.removeClass("editable-initialized");
                 $field.editable("destroy");
-                $field.editable();
+                _editable($field, true);
 
                 // Update color to json
                 if (parentID) {
