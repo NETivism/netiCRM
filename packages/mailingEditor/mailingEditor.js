@@ -1872,13 +1872,13 @@
             if (fieldType == "color") {
               $target = $block.find(".nme-elem");
               $target.css(fieldType, colorVal);
-              $target.find("p").each(function() {
-                let $p = $(this);
-                if ($p.find("span").length) {
-                  $p.find("span").css(fieldType, colorVal);
+              $target.find("div, p").each(function() {
+                let $node = $(this);
+                if ($node.find("span").length) {
+                  $node.find("span").css(fieldType, colorVal);
                 }
                 else {
-                  $p.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
+                  $node.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
                 }
               });
 
