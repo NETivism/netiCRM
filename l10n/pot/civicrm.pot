@@ -47900,3 +47900,101 @@ msgstr ""
 #: templates/CRM/common/mailingEditor.tpl
 msgid "Edit Background of Button"
 msgstr ""
+
+msgid "You will need to create a Profile containing the %1 fields you want to edit before you can use Batch Update via Profile. Navigate to Administer Civicrm >> CiviCRM Profile to configure a Profile. Consult the online Administrator documentation for more information."
+msgstr ""
+
+msgid "External Membership ID"
+msgstr ""
+
+msgid "URL will extract personal data from this contact to URL visitor. Make sure send this link to their personal device / email address."
+msgstr ""
+
+msgid "This URL will be expired on %1 days later."
+msgstr ""
+
+msgid "The response from payment provider is empty."
+msgstr ""
+
+msgid "Your recurring contribution has been saved."
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Material Design Iconic Font"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Material Design Iconic Font is a full suite of material design icons (created and maintained by Google) with additional community-designed and brands icons for easy scalable vector graphics on websites, desktop, mobile or other devices."
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "New Icons"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Web Application"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Notifications"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Person"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Editor"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Form"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Hardware"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Directional"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Date / Time"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Social"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Audio / Video"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Numbers"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Back to top"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Unicode:"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Category:"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "You can place Material Design icons in <strong>CRM pages</strong> with the <code>&lt;i&gt;</code> tag:"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Direction"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Adblock Plus can remove social icons with their \"Remove Social Media Buttons\" setting."
+msgstr ""
