@@ -47908,6 +47908,9 @@ msgstr ""
 msgid "The response from payment provider is empty."
 msgstr ""
 
+msgid "Your recurring contribution has been saved."
+msgstr ""
+
 #: templates/CRM/Admin/Page/ZmdiDocs.tpl
 msgid "Material Design Iconic Font"
 msgstr ""
