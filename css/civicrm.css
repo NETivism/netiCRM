@@ -3897,14 +3897,16 @@ div#crm-toolTip
  * Material Design Iconic Font Page
  */
 
-.crm-container .mdif-docs {}
 .crm-container .mdif-docs-inner {
   position: relative;
 }
 .crm-container .mdif-docs-main {
   position: relative;
 }
-.crm-container .mdif-docs-content {}
+.crm-container .mdif-docs-content,
+.crm-container .mdif-docs-content p {
+  font-size: 1rem;
+}
 .crm-container .mdif-docs-sidebar {
   position: sticky;
   top: 70px;
@@ -3926,6 +3928,9 @@ div#crm-toolTip
 }
 .crm-container .mdif-docs-content > section > :last-child {
   margin-bottom: 0;
+}
+.crm-container .mdif-section-title {
+  font-size: 1.75rem;
 }
 .crm-container .mdif-icon-set::before {
   content: "";
@@ -4067,6 +4072,7 @@ button.mdif-modal-close,
   padding: 0;
   font-size: 30px;
   cursor: pointer;
+  color: inherit;
   border: 0;
   background: none;
 }
