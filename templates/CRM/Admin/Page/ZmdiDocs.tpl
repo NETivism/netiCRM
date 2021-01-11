@@ -13,7 +13,7 @@
                     </section>
 
                     <!-- Icon sets -->
-                    <section class="mdif-icon-set" id="mdif-new" data-category="{ts}New icons{/ts}">
+                    <section class="mdif-icon-set" id="mdif-new" data-category="{ts}New Icons{/ts}">
                         <h2 class="mdif-section-title">{ts}New Icons{/ts}</h2>
                         <div class="mdif-icon-items row">
 
@@ -1866,8 +1866,8 @@
                 </div>
                 <div class="mdif-docs-sidebar col-md-3">
                     <ul class="mdif-docs-sidenav">
-                        <li><a href="#mdif-new"><i class="zmdi zmdi-shape zmdi-hc-fw"></i>New icons</a></li>
-                        <li><a href="#mdif-application"><i class="zmdi zmdi-home zmdi-hc-fw"></i>Web Application</a></li>
+                        <li><a href="#mdif-new"><i class="zmdi zmdi-shape zmdi-hc-fw"></i>{ts}New Icons{/ts}</a></li>
+                        <li><a href="#mdif-application"><i class="zmdi zmdi-home zmdi-hc-fw"></i>{ts}Web Application{/ts}</a></li>
                         <li><a href="#mdif-alert"><i class="zmdi zmdi-alert-octagon zmdi-hc-fw"></i>{ts}Notifications{/ts}</a></li>
                         <li><a href="#mdif-person"><i class="zmdi zmdi-account-o zmdi-hc-fw"></i>{ts}Person{/ts}</a></li>
                         <li><a href="#mdif-file"><i class="zmdi zmdi-file-text zmdi-hc-fw"></i>{ts}File{/ts}</a></li>
@@ -1885,7 +1885,7 @@
                         <li><a href="#mdif-numbers"><i class="zmdi zmdi-plus-1 zmdi-hc-fw"></i>{ts}Numbers{/ts}</a></li>
                         <li><a href="#mdif-other"><i class="zmdi zmdi-memory zmdi-hc-fw"></i>{ts}Other{/ts}</a></li>
                     </ul>
-                    <a class="back-to-top" href="#top">{ts}Back to top{/ts}</a>
+                    <a class="back-to-top" href="#top">{ts}Back to top{/ts} <i class="zmdi zmdi-long-arrow-up"></i></a>
                 </div>
             </div>
         </div>
@@ -1918,7 +1918,7 @@
             <div class="mdif-modal-icon-category">{ts}Category:{/ts} [zmdi_category]</div>
             <hr />
             <div class="mdif-modal-icon-source">
-                <p>{ts}You can place Material Design icons in CRM pages with the <code>&lt;i&gt;</code> tag:{/ts}</p>
+                <p>{ts}You can place Material Design icons in <strong>CRM pages</strong> with the <code>&lt;i&gt;</code> tag:{/ts}</p>
                 <pre>&lt;i class="zmdi zmdi-[zmdi_name]"&gt;&lt;/i&gt;</pre>
             </div>
         </div>

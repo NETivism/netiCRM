@@ -47907,3 +47907,75 @@ msgstr ""
 
 msgid "The response from payment provider is empty."
 msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Material Design Iconic Font"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Material Design Iconic Font is a full suite of material design icons (created and maintained by Google) with additional community-designed and brands icons for easy scalable vector graphics on websites, desktop, mobile or other devices."
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "New Icons"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Web Application"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Notifications"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Person"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Editor"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Form"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Hardware"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Directional"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Date / Time"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Social"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Audio / Video"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Numbers"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Back to top"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Unicode:"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Category:"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "You can place Material Design icons in <strong>CRM pages</strong> with the <code>&lt;i&gt;</code> tag:"
+msgstr ""
