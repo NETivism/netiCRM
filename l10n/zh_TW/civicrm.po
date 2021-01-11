@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-01-11 08:54+0000\n"
+"PO-Revision-Date: 2021-01-11 13:42+0000\n"
 "Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48183,6 +48183,14 @@ msgid ""
 "schedule this job for the batch process after you submit. You will receive "
 "an email notification when the work is completed."
 msgstr "因為您欲處理的資料超過限額，在您送出次表單後，我們將排程為批次作業。批次作業將會在背景進行，您則會於作業完成時收到 Email 通知。"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background of Block"
+msgstr "編輯區塊背景"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background of Button"
+msgstr "編輯按鈕背景"
 
 msgid ""
 "You will need to create a Profile containing the %1 fields you want to edit "

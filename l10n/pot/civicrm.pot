@@ -47893,6 +47893,14 @@ msgstr ""
 msgid "Because of the large amount of data you are about to perform, we will schedule this job for the batch process after you submit. You will receive an email notification when the work is completed."
 msgstr ""
 
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background of Block"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background of Button"
+msgstr ""
+
 msgid "You will need to create a Profile containing the %1 fields you want to edit before you can use Batch Update via Profile. Navigate to Administer Civicrm >> CiviCRM Profile to configure a Profile. Consult the online Administrator documentation for more information."
 msgstr ""
 
