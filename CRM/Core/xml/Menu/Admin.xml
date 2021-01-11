@@ -632,10 +632,10 @@
      <weight>400</weight>
   </item>
   <item>
-     <path>civicrm/admin/material-design-iconic-font</path>
+     <path>civicrm/admin/zmdi-docs</path>
      <title>Material Design Iconic Font</title>
      <desc>Material Design Iconic Font is a full suite of material design icons (created and maintained by Google) with additional community-designed and brands icons for easy scalable vector graphics on websites, desktop, mobile or other devices.</desc>
-     <page_callback>CRM_Admin_Page_materialDesignIconicFont</page_callback>
+     <page_callback>CRM_Admin_Page_ZmdiDocs</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
      <adminGroup>Customize</adminGroup>
      <icon>admin/small/price_sets.png</icon>

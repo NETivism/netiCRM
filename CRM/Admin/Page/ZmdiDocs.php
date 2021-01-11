@@ -35,7 +35,7 @@
 /**
  * Page for displaying list of contact Subtypes
  */
-class CRM_Admin_Page_materialDesignIconicFont extends CRM_Core_Page {
+class CRM_Admin_Page_ZmdiDocs extends CRM_Core_Page {
 
   function run() {
     return parent::run();
@@ -47,6 +47,6 @@ class CRM_Admin_Page_materialDesignIconicFont extends CRM_Core_Page {
    * @return string user context.
    */
   function userContext($mode = NULL) {
-    return 'civicrm/admin/material-design-iconic-font';
+    return 'civicrm/admin/zmdi-docs';
   }
 }
