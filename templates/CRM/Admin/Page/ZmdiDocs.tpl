@@ -1119,8 +1119,8 @@
                         </div>
                     </section>
 
-                    <section class="mdif-icon-set" id="mdif-directional" data-category="{ts}Directional{/ts}">
-                        <h2 class="mdif-section-title">{ts}Directional{/ts}</h2>
+                    <section class="mdif-icon-set" id="mdif-directional" data-category="{ts}Direction{/ts}">
+                        <h2 class="mdif-section-title">{ts}Direction{/ts}</h2>
                         <div class="mdif-icon-items row">
 
 
@@ -1565,8 +1565,7 @@
 
                         </div>
                         <div class="messages warning">
-                            {ts}Apparently, Adblock Plus can remove social icons with their "Remove Social
-                            Media Buttons" setting. We will not use hacks to force them to display.{/ts}
+                            {ts}Adblock Plus can remove social icons with their "Remove Social Media Buttons" setting.{/ts}
                         </div>
                     </section>
 
@@ -1875,7 +1874,7 @@
                         <li><a href="#mdif-comment"><i class="zmdi zmdi-comment-outline zmdi-hc-fw"></i>{ts}Comment{/ts}</a></li>
                         <li><a href="#mdif-form"><i class="zmdi zmdi-check-square zmdi-hc-fw"></i>{ts}Form{/ts}</a></li>
                         <li><a href="#mdif-hardware"><i class="zmdi zmdi-smartphone-android zmdi-hc-fw"></i>{ts}Hardware{/ts}</a></li>
-                        <li><a href="#mdif-directional"><i class="zmdi zmdi-arrow-merge zmdi-hc-fw"></i>{ts}Directional{/ts}</a></li>
+                        <li><a href="#mdif-directional"><i class="zmdi zmdi-arrow-merge zmdi-hc-fw"></i>{ts}Direction{/ts}</a></li>
                         <li><a href="#mdif-map"><i class="zmdi zmdi-pin zmdi-hc-fw"></i>{ts}Map{/ts}</a></li>
                         <li><a href="#mdif-view"><i class="zmdi zmdi-view-dashboard zmdi-hc-fw"></i>{ts}View{/ts}</a></li>
                         <li><a href="#mdif-time"><i class="zmdi zmdi-time zmdi-hc-fw"></i>{ts}Date / Time{/ts}</a></li>

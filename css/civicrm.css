@@ -3915,6 +3915,12 @@ div#crm-toolTip
   margin-bottom: 0;
   border-bottom: 0;
 }
+.crm-container .mdif-docs-content > section .messages {
+  margin: 10px;
+}
+.crm-container .mdif-docs-content > section > :last-child {
+  margin-bottom: 0;
+}
 .crm-container .mdif-icon-set::before {
   content: "";
   display: block;

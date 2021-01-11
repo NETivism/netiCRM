@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-01-11 04:12+0000\n"
+"PO-Revision-Date: 2021-01-11 04:58+0000\n"
 "Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48282,3 +48282,13 @@ msgid ""
 "You can place Material Design icons in <strong>CRM pages</strong> with the "
 "<code>&lt;i&gt;</code> tag:"
 msgstr "您可以在 <strong>CRM 的頁面</strong> 加入 Material Design 圖示，只要使用以下 <code>&lt;i&gt;</code> 標籤的程式碼："
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Direction"
+msgstr "方向"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid ""
+"Adblock Plus can remove social icons with their \"Remove Social Media "
+"Buttons\" setting."
+msgstr "「Adblock Plus」這種阻擋廣告的瀏覽器附加元件可以使用「刪除社交媒體按鈕」的設定來刪除社交圖示。"

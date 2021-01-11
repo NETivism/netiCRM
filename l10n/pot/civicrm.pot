@@ -47979,3 +47979,11 @@ msgstr ""
 #: templates/CRM/Admin/Page/ZmdiDocs.tpl
 msgid "You can place Material Design icons in <strong>CRM pages</strong> with the <code>&lt;i&gt;</code> tag:"
 msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Direction"
+msgstr ""
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Adblock Plus can remove social icons with their \"Remove Social Media Buttons\" setting."
+msgstr ""
