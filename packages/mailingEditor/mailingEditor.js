@@ -2544,9 +2544,9 @@
               _data["sections"][section]["blocks"][blockID]["override"]["elem"] = true;
               _nmeData.update();
             }
-          }
 
-          $block.attr("data-elem-override", true);
+            $block.attr("data-elem-override", true);
+          }
         });
       }
     };
