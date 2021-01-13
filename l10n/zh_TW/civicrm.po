@@ -1,12 +1,12 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2020
+# CC Chu <poliphilonet@gmail.com>, 2020-2021
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2021
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2020
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2021
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020
@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2020-12-31 07:56+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2021-01-11 13:42+0000\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48184,6 +48184,14 @@ msgid ""
 "an email notification when the work is completed."
 msgstr "因為您欲處理的資料超過限額，在您送出次表單後，我們將排程為批次作業。批次作業將會在背景進行，您則會於作業完成時收到 Email 通知。"
 
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background of Block"
+msgstr "編輯區塊背景"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "Edit Background of Button"
+msgstr "編輯按鈕背景"
+
 msgid ""
 "You will need to create a Profile containing the %1 fields you want to edit "
 "before you can use Batch Update via Profile. Navigate to Administer Civicrm "
@@ -48193,3 +48201,105 @@ msgstr "您需要先建立一個包含%1類型欄位的資料表單再進行批�
 
 msgid "External Membership ID"
 msgstr "外部會員編號"
+
+msgid ""
+"URL will extract personal data from this contact to URL visitor. Make sure "
+"send this link to their personal device / email address."
+msgstr "注意，這個URL將會帶出本聯絡人的個人資訊，使用時，請確認寄信給此位捐款人持有的裝置、個人信箱。"
+
+msgid "This URL will be expired on %1 days later."
+msgstr "此連結將於%1天後失效。"
+
+msgid "The response from payment provider is empty."
+msgstr "金流商回傳的資訊是空的。"
+
+msgid "Your recurring contribution has been saved."
+msgstr "您的定期定額捐款已儲存。"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Material Design Iconic Font"
+msgstr "小圖示使用範例"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid ""
+"Material Design Iconic Font is a full suite of material design icons "
+"(created and maintained by Google) with additional community-designed and "
+"brands icons for easy scalable vector graphics on websites, desktop, mobile "
+"or other devices."
+msgstr "Material Design Iconic Font 是一整套設計圖示（由 Google 創建和維護），其中包含其他社交和品牌的圖示，可在網站、電腦、手機或其他裝置上顯示自由縮放的向量圖示。"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "New Icons"
+msgstr "新圖示"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Web Application"
+msgstr "網路應用程式"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Notifications"
+msgstr "通知"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Person"
+msgstr "個人"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Editor"
+msgstr "編輯"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Form"
+msgstr "表單"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Hardware"
+msgstr "硬體"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Directional"
+msgstr "定向"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Date / Time"
+msgstr "日期 / 時間"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Social"
+msgstr "社交"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Audio / Video"
+msgstr "聲音 / 影片"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Numbers"
+msgstr "數字"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Back to top"
+msgstr "回到最上方"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Unicode:"
+msgstr "萬國碼："
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Category:"
+msgstr "類別："
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid ""
+"You can place Material Design icons in <strong>CRM pages</strong> with the "
+"<code>&lt;i&gt;</code> tag:"
+msgstr "您可以在 <strong>CRM 的頁面</strong> 加入 Material Design 圖示，只要使用以下 <code>&lt;i&gt;</code> 標籤的程式碼："
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid "Direction"
+msgstr "方向"
+
+#: templates/CRM/Admin/Page/ZmdiDocs.tpl
+msgid ""
+"Adblock Plus can remove social icons with their \"Remove Social Media "
+"Buttons\" setting."
+msgstr "「Adblock Plus」這種阻擋廣告的瀏覽器附加元件可以使用「刪除社交媒體按鈕」的設定來刪除社交圖示。"
