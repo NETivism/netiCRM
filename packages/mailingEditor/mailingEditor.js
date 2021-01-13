@@ -57,13 +57,14 @@
       delete: "zmdi-delete",
       link: "zmdi-link",
       image: "zmdi-image",
-      style: "zmdi-invert-colors"
+      "block-bg": "zmdi-format-color-fill",
+      "button-bg": "zmdi-invert-colors"
     },
     _editActions = {
       default: ["clone", "delete"],
       extended: {
         image: ["link", "image"],
-        button: ["link", "style"],
+        button: ["link", "button-bg"],
         header: ["link", "image"]
       }
     },
@@ -1797,21 +1798,22 @@
           }
 
           if (group == "block") {
-            $block = $("#nme-mail-body .nme-block");
+            $block = $("#nme-mail-body .nme-block:not([data-block-override='true'])");
 
             if (fieldType == "background-color") {
               $target = $block.find("[data-settings-target='block']");
 
-              // Update color to dom
-              $target.css(fieldType, colorVal);
-              $target.attr("bgcolor", colorVal);
-
               $block.each(function() {
                 let $this = $(this),
+                    $target = $this.find("[data-settings-target='block']"),
                     section = $this.data("section"),
                     blockID = $this.data("id"),
                     parentID = $this.data("parent-id"),
                     index = $this.data("index");
+
+                // Update color to dom
+                $target.eq(0).css(fieldType, colorVal);
+                $target.eq(0).attr("bgcolor", colorVal);
 
                 // Update color to json
                 if (parentID) {
@@ -1872,13 +1874,13 @@
             if (fieldType == "color") {
               $target = $block.find(".nme-elem");
               $target.css(fieldType, colorVal);
-              $target.find("p").each(function() {
-                let $p = $(this);
-                if ($p.find("span").length) {
-                  $p.find("span").css(fieldType, colorVal);
+              $target.find("div, p").each(function() {
+                let $node = $(this);
+                if ($node.find("span").length) {
+                  $node.find("span").css(fieldType, colorVal);
                 }
                 else {
-                  $p.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
+                  $node.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
                 }
               });
 
@@ -1893,7 +1895,7 @@
                 // Reinitialize x-editable
                 $field.removeClass("editable-initialized");
                 $field.editable("destroy");
-                $field.editable();
+                _editable($field, true);
 
                 // Update color to json
                 if (parentID) {
@@ -2424,7 +2426,8 @@
 
     var pickrInit = function(elemID, defaultColor) {
       let targetSelector = "#" + elemID,
-          $target = $(targetSelector);
+          $target = $(targetSelector),
+          handleType = $target.data("type");
 
       if (_domElemExist($target)) {
         const pickr = new Pickr({
@@ -2493,7 +2496,33 @@
               parentType = $block.data("parent-type"),
               index = $block.data("index") == 0 || $block.data("index") > 0 ? $block.data("index") : 0;
 
-          if (blockType == "button") {
+          if (handleType == "block-bg") {
+            let bgColor = color.toHEXA().toString();
+
+            // Update color to dom
+            $block.find("[data-settings-target='block']").css("background-color", bgColor);
+            $block.find("[data-settings-target='block']").attr("bgcolor", bgColor);
+
+            // Update color to json
+            if (parentID && parentType) {
+              if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
+                if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["block"]["background-color"] = bgColor;
+                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["override"]["block"] = true;
+                  _nmeData.update();
+                }
+              }
+            }
+            else {
+              _data["sections"][section]["blocks"][blockID]["styles"]["block"]["background-color"] = bgColor;
+              _data["sections"][section]["blocks"][blockID]["override"]["block"] = true;
+              _nmeData.update();
+            }
+
+            $block.attr("data-block-override", true);
+          }
+
+          if (handleType == "button-bg") {
             let bgColor = color.toHEXA().toString();
 
             // Update color to dom
@@ -2515,9 +2544,9 @@
               _data["sections"][section]["blocks"][blockID]["override"]["elem"] = true;
               _nmeData.update();
             }
-          }
 
-          $block.attr("data-elem-override", true);
+            $block.attr("data-elem-override", true);
+          }
         });
       }
     };
@@ -2633,8 +2662,8 @@
               tooltip = _ts["Edit Image"];
               break;
 
-            case "style":
-              tooltip = _ts["Edit Background"];
+            case "button-bg":
+              tooltip = _ts["Edit Background of Button"];
               break;
           }
 
@@ -2814,9 +2843,14 @@
         }
       });
 
-      // handle type: style
-      if ($blockControl.find(".handle-style").length) {
-        _colorable($blockControl.find(".handle-style").attr("id"));
+      // handle type: block-bg
+      if ($blockControl.find(".handle-block-bg").length) {
+        _colorable($blockControl.find(".handle-block-bg").attr("id"));
+      }
+
+      // handle type: button-bg
+      if ($blockControl.find(".handle-button-bg").length) {
+        _colorable($blockControl.find(".handle-button-bg").attr("id"));
       }
     }
   };
