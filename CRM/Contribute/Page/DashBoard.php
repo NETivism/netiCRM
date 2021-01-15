@@ -85,7 +85,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $this->is_custom_date = TRUE;
     }
     $end_date = $this->end_date = $end_date ? $end_date : ($_GET['end_date'] ? $_GET['end_date'] : date('Y-m-d'));
-    $start_date = $this->start_date = $start_date ? $start_date : ($_GET['start_date'] ? $_GET['start_date'] : date('Y-m-d', strtotime('-30day')));
+    $start_date = $this->start_date = $start_date ? $start_date : ($_GET['start_date'] ? $_GET['start_date'] : date('Y-m-d', strtotime('-29day')));
 
     $end_timestamp = strtotime($end_date);
     $start_timestamp = strtotime($start_date);
@@ -111,7 +111,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     }
     $this->duration_array = $duration_array;
 
-    $this->days = ceil(($end_timestamp - $start_timestamp) / 86400);
+    $this->days = ceil(($end_timestamp - $start_timestamp) / 86400) + 1;
 
     $this->params_duration = array(
       1 => array($start_date . ' 00:00:00', 'String'),
@@ -285,7 +285,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     // First contribtion contact in last 30 days
     $sql = "  SELECT COUNT(c.id) ct, ccd.id, SUM(ccd.total_amount) sum FROM civicrm_contact c
       INNER JOIN ( SELECT id, contact_id, total_amount FROM civicrm_contribution WHERE receive_date >= %1 AND receive_date <= %2 AND is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) ccd ON c.id = ccd.contact_id
-      INNER JOIN ( SELECT id, contact_id FROM civicrm_contribution WHERE is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc_all ON c.id = cc_all.contact_id WHERE ccd.id = cc_all.id;";
+      INNER JOIN ( SELECT id, contact_id FROM civicrm_contribution WHERE is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc_all ON c.id = cc_all.contact_id WHERE ccd.id = cc_all.id AND c.is_deleted = 0;";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     if($dao->fetch()){
       $duration_count = $dao->ct;
@@ -313,7 +313,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       // $this->assign('duration_max_receive_date', $dao->receive_date);
     }
 
-    $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 AND receive_date <= %2 ;";
+    $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON cc.contact_id = c.id  WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 AND receive_date <= %2 AND c.is_deleted = 0;";
     $duration_sum = CRM_Core_DAO::singleValueQuery($sql, $this->params_duration);
 
     $last_duration_sum = CRM_Core_DAO::singleValueQuery($sql, $this->params_last_duration);
