@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-01-11 13:42+0000\n"
+"PO-Revision-Date: 2021-01-15 06:02+0000\n"
 "Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48303,3 +48303,7 @@ msgid ""
 "Adblock Plus can remove social icons with their \"Remove Social Media "
 "Buttons\" setting."
 msgstr "「Adblock Plus」這種阻擋廣告的瀏覽器附加元件可以使用「刪除社交媒體按鈕」的設定來刪除社交圖示。"
+
+#: templates/CRM/common/contributionPageSpecial.tpl
+msgid "Read more"
+msgstr "閱讀更多"

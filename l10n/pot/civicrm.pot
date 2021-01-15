@@ -47998,3 +47998,7 @@ msgstr ""
 #: templates/CRM/Admin/Page/ZmdiDocs.tpl
 msgid "Adblock Plus can remove social icons with their \"Remove Social Media Buttons\" setting."
 msgstr ""
+
+#: templates/CRM/common/contributionPageSpecial.tpl
+msgid "Read more"
+msgstr ""
