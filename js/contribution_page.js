@@ -32,74 +32,11 @@
         $('.sharethis').appendTo('body');
 
         // refs #28603. Added read more feature to intro text.
-        var introMaxHeight = 450;
-        if ($('#intro_text').height() > introMaxHeight) {
-          var readmoreText = {
-            open: window.ContribPageParams.ts['Read more'],
-            close: window.ContribPageParams.ts['Close']
-          };
-
-          $('#intro_text').wrapInner('<div class="intro_text-inner"><div class="intro_text-content is-collapsed"></div></div>');
-          $(".intro_text-content").after('<button class="intro_text-readmore-btn" type="button">' + readmoreText.open + '</button>');
-
-          $('#intro_text').on('click', '.intro_text-readmore-btn', function(e) {
-            e.preventDefault();
-
-            var $trigger = $(this),
-                $target = $('.intro_text-content');
-
-            if ($target.length) {
-              if ($target.hasClass('is-collapsed')) {
-                $target.removeClass('is-collapsed').addClass('is-expanded');
-                $trigger.addClass('is-active').text(readmoreText.close);
-              }
-              else {
-                $target.removeClass('is-expanded').addClass('is-collapsed');
-                $trigger.removeClass('is-active').text(readmoreText.open);
-              }
-            }
-          });
-        }
+        this.introReadmore();
 
         // refs #28603. Improve the interface on the right column when device is desktop.
-        // Detecting device is through the CSS media query.
-        var leftCol = document.querySelector('#intro_text'),
-            rightCol = document.querySelector('#main-inner');
-
-        if (leftCol && rightCol) {
-          var leftColOuterHeight = leftCol.offsetHeight,
-              rightColOuterHeight = rightCol.offsetHeight,
-              rightColStyle = getComputedStyle(rightCol);
-
-          // If the height of the left column is greater than the right column,
-          // add state class to right column when sticky is triggered,
-          // so that we can limit the height of the right column
-          // and enable the scrollbar by CSS.
-          if (leftColOuterHeight > rightColOuterHeight && rightColStyle["position"] == "sticky") {
-            var rightColTop = rightColStyle["top"],
-                rightColTopNum = parseFloat(rightColTop),
-                buffer = 5,
-                minTop = 0,
-                maxTop = rightColTopNum + buffer;
-
-            var ioCallback = function(entries) {
-              entries.forEach(function(entry) {
-                entry.target.classList.toggle('is-sticky', entry.intersectionRect.top >= minTop && entry.intersectionRect.top <= maxTop);
-              });
-            }
-
-            var ioOptions = {
-              threshold: []
-            };
-
-            for (var i = 0; i <= 1.0; i += 0.01) {
-              ioOptions.threshold.push(i);
-            }
-
-            var observer = new IntersectionObserver(ioCallback, ioOptions);
-            observer.observe(rightCol);
-          }
-        }
+        // Detecting device is through the CSS media query (contribution_page.css).
+        this.rightColBetterSticky();
 
         if(this.currentPage == 'Main'){
 
@@ -812,6 +749,77 @@
           if (a[i] !== b[i]) return false;
         }
         return true;
+      },
+
+      introReadmore: function() {
+        var introMaxHeight = 450;
+        if ($('#intro_text').height() > introMaxHeight) {
+          var readmoreText = {
+            open: window.ContribPageParams.ts['Read more'],
+            close: window.ContribPageParams.ts['Close']
+          };
+
+          $('#intro_text').wrapInner('<div class="intro_text-inner"><div class="intro_text-content is-collapsed"></div></div>');
+          $(".intro_text-content").after('<button class="intro_text-readmore-btn" type="button">' + readmoreText.open + '</button>');
+
+          $('#intro_text').on('click', '.intro_text-readmore-btn', function(e) {
+            e.preventDefault();
+
+            var $trigger = $(this),
+                $target = $('.intro_text-content');
+
+            if ($target.length) {
+              if ($target.hasClass('is-collapsed')) {
+                $target.removeClass('is-collapsed').addClass('is-expanded');
+                $trigger.addClass('is-active').text(readmoreText.close);
+              }
+              else {
+                $target.removeClass('is-expanded').addClass('is-collapsed');
+                $trigger.removeClass('is-active').text(readmoreText.open);
+              }
+            }
+          });
+        }
+      },
+
+      rightColBetterSticky: function() {
+        var leftCol = document.querySelector('#intro_text'),
+            rightCol = document.querySelector('#main-inner');
+
+        if (leftCol && rightCol) {
+          var leftColOuterHeight = leftCol.offsetHeight,
+              rightColOuterHeight = rightCol.offsetHeight,
+              rightColStyle = getComputedStyle(rightCol);
+
+          // If the height of the left column is greater than the right column,
+          // add state class to right column when sticky is triggered,
+          // so that we can limit the height of the right column
+          // and enable the scrollbar by CSS (contribution_page.css).
+          if (leftColOuterHeight > rightColOuterHeight && rightColStyle['position'] == 'sticky') {
+            var rightColTop = rightColStyle['top'],
+                rightColTopNum = parseFloat(rightColTop),
+                buffer = 5,
+                minTop = 0,
+                maxTop = rightColTopNum + buffer;
+
+            var ioCallback = function(entries) {
+              entries.forEach(function(entry) {
+                entry.target.classList.toggle('is-sticky', entry.intersectionRect.top >= minTop && entry.intersectionRect.top <= maxTop);
+              });
+            }
+
+            var ioOptions = {
+              threshold: []
+            };
+
+            for (var i = 0; i <= 1.0; i += 0.01) {
+              ioOptions.threshold.push(i);
+            }
+
+            var observer = new IntersectionObserver(ioCallback, ioOptions);
+            observer.observe(rightCol);
+          }
+        }
       },
 
       prepareAfterAll: function(){
