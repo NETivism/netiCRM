@@ -31,9 +31,6 @@
         $content.prepend($('#intro_text').prepend($('h1.page-title')));
         $('.sharethis').appendTo('body');
 
-        // refs #28603. Added read more feature to intro text.
-        this.introReadmore();
-
         // refs #28603. Improve the interface on the right column when device is desktop.
         // Detecting device is through the CSS media query (contribution_page.css).
         this.rightColBetterSticky();
@@ -54,6 +51,8 @@
 
           this.prepareContribTypeForm();
 
+          // refs #28603. Added read more feature to intro text.
+          this.introReadmore();
         }
         if(this.currentPage == 'Confirm'){
           this.prepareStepInfo();
