@@ -31,9 +31,9 @@
         $content.prepend($('#intro_text').prepend($('h1.page-title')));
         $('.sharethis').appendTo('body');
 
-        // refs #28603. Improve the interface on the right column when device is desktop.
-        // Detecting device is through the CSS media query (contribution_page.css).
-        this.rightColBetterSticky();
+        if (this.currentPage != 'ThankYou') {
+          document.querySelector('body').classList.add('special-page-col-sticky');
+        }
 
         if(this.currentPage == 'Main'){
 
@@ -51,12 +51,12 @@
 
           this.prepareContribTypeForm();
 
-          // refs #28603. Added read more feature to intro text.
           this.introReadmore();
         }
         if(this.currentPage == 'Confirm'){
           this.prepareStepInfo();
           this.updateFormStep(1);
+          this.introReadmore();
         }
 
         if(this.currentPage == 'ThankYou'){
@@ -77,6 +77,8 @@
             }
           }
         }
+
+        this.rightColBetterSticky();
       },
 
       updateExpenditureSection: function(){
@@ -750,6 +752,9 @@
         return true;
       },
 
+      /**
+       * refs #28603. Added read more feature to intro text.
+       */
       introReadmore: function() {
         var introMaxHeight = 450;
         if ($('#intro_text').height() > introMaxHeight) {
@@ -781,6 +786,10 @@
         }
       },
 
+      /**
+       * refs #28603. Improve the interface on the right column when device is desktop.
+       * Detecting device is through the CSS media query (contribution_page.css).
+       */
       rightColBetterSticky: function() {
         var leftCol = document.querySelector('#intro_text'),
             rightCol = document.querySelector('#main-inner');

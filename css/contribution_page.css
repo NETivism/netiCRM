@@ -351,15 +351,9 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     position: relative;
   }
   #main-inner {
-    position: sticky;
-    top: 40px;
     z-index: 3;
     margin-right: 0;
     margin-top: 70px;
-  }
-  #main-inner.is-sticky #content {
-    max-height: calc(100vh - 60px);
-    overflow-y: auto;
   }
   .frontend .main#main {
     width: 1024px;
@@ -373,8 +367,6 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     position: fixed;
   }
   #intro_text {
-    position: sticky;
-    top: 0;
     width: 480px;
     height: auto;
     margin-top: 70px;
@@ -382,6 +374,20 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     padding: 40px 20px;
     background-color: rgba(0,0,0,0.5);
   }
+
+  .special-page-col-sticky #intro_text {
+    position: sticky;
+    top: 0;
+  }
+  .special-page-col-sticky #main-inner {
+    position: sticky;
+    top: 40px;
+  }
+  .special-page-col-sticky #main-inner.is-sticky #content {
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+
   body.frontend fieldset legend {
     background: none;
   }
