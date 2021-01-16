@@ -352,10 +352,14 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   }
   #main-inner {
     position: sticky;
-    top: 30px;
+    top: 40px;
     z-index: 3;
     margin-right: 0;
     margin-top: 70px;
+  }
+  #main-inner.is-sticky #content {
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
   }
   .frontend .main#main {
     width: 1024px;

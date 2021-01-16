@@ -61,6 +61,46 @@
           });
         }
 
+        // refs #28603. Improve the interface on the right column when device is desktop.
+        // Detecting device is through the CSS media query.
+        var leftCol = document.querySelector('#intro_text'),
+            rightCol = document.querySelector('#main-inner');
+
+        if (leftCol && rightCol) {
+          var leftColOuterHeight = leftCol.offsetHeight,
+              rightColOuterHeight = rightCol.offsetHeight,
+              rightColStyle = getComputedStyle(rightCol);
+
+          // If the height of the left column is greater than the right column,
+          // add state class to right column when sticky is triggered,
+          // so that we can limit the height of the right column
+          // and enable the scrollbar by CSS.
+          if (leftColOuterHeight > rightColOuterHeight && rightColStyle["position"] == "sticky") {
+            var rightColTop = rightColStyle["top"],
+                rightColTopNum = parseFloat(rightColTop),
+                buffer = 5,
+                minTop = 0,
+                maxTop = rightColTopNum + buffer;
+
+            var ioCallback = function(entries) {
+              entries.forEach(function(entry) {
+                entry.target.classList.toggle('is-sticky', entry.intersectionRect.top >= minTop && entry.intersectionRect.top <= maxTop);
+              });
+            }
+
+            var ioOptions = {
+              threshold: []
+            };
+
+            for (var i = 0; i <= 1.0; i += 0.01) {
+              ioOptions.threshold.push(i);
+            }
+
+            var observer = new IntersectionObserver(ioCallback, ioOptions);
+            observer.observe(rightCol);
+          }
+        }
+
         if(this.currentPage == 'Main'){
 
           this.setDefaultValues();
