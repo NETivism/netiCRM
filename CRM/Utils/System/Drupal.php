@@ -39,11 +39,14 @@
 class CRM_Utils_System_Drupal {
   public $is_drupal;
   public $version;
-  private $_pseudoClass;
+  public $versionalClass;
 
   function __construct() {
     $this->is_drupal = TRUE;
-    if(defined('VERSION')){  // drupal 7 or 8
+    if(class_exists('DRUPAL')) { // drupal 8 or 9
+      $this->version = substr(DRUPAL::VERSION, strpos(DRUPAL::VERSION, '-'));
+    }
+    elseif(defined('VERSION')){  // drupal 7
       $this->version = (float) VERSION;
     }
     else{ // drupal 6 only
@@ -62,11 +65,12 @@ class CRM_Utils_System_Drupal {
     $v = floor($this->version);
     $v = empty($v) ? '' : $v;
     $class = 'CRM_Utils_System_Drupal'.$v;
-    $this->_pseudoClass = new $class();
+    $this->versionalClass = new $class();
+
     // bootstrap drupal when needed
     global $user;
     if (empty($user)) {
-      self::loadBootStrap();
+      $this->versionalClass->loadBootStrap();
     }
 
     // #27780, correct SameSite for chrome 80
@@ -97,10 +101,12 @@ class CRM_Utils_System_Drupal {
 
   /**
    * Magic method handling
+   * 
+   * Usage: CRM_Core_Config::singleton()->userSystem->$function
    */
   function __call($method, $args) {
-    if(method_exists($this->_pseudoClass, $method)) {
-      return call_user_func_array(array($this->_pseudoClass, $method), $args);
+    if(method_exists($this->versionalClass, $method)) {
+      return call_user_func_array(array($this->versionalClass, $method), $args);
     }
     else{
       return FALSE;
@@ -120,15 +126,25 @@ class CRM_Utils_System_Drupal {
     if (!$pageTitle) {
       $pageTitle = $title;
     }
-    if (arg(0) == 'civicrm') {
-      //set drupal title
-      $config = CRM_Core_Config::singleton();
-      $version = $config->userSystem->version;
-      if($version >= 6 && $version < 7){
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if($version >= 6 && $version < 7){
+      if (arg(0) == 'civicrm') {
         drupal_set_title($pageTitle);
       }
-      else{
+    }
+    elseif($version >= 7 && $version < 8) {
+      if (arg(0) == 'civicrm') {
         drupal_set_title($pageTitle, PASS_THROUGH);
+      }
+    }
+    elseif($version >= 8) {
+      $request = \Drupal::request();
+      $currentPath = $request->getRequestUri();
+      if (strpos($currentPath, '/civicrm') === 0) {
+        if ($route = $request->attributes->get(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT)) {
+          $route->setDefault('_title', $pageTitle);
+        }
       }
     }
   }
@@ -202,25 +218,29 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function appendBreadCrumb($breadCrumbs) {
-    $breadCrumb = drupal_get_breadcrumb();
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if ($version <= 7) {
+      $breadCrumb = drupal_get_breadcrumb();
 
-    if (is_array($breadCrumbs)) {
-      foreach ($breadCrumbs as $crumbs) {
-        if (stripos($crumbs['url'], 'id%%')) {
-          $args = array('cid', 'mid');
-          foreach ($args as $a) {
-            $val = CRM_Utils_Request::retrieve($a, 'Positive', CRM_Core_DAO::$_nullObject,
-              FALSE, NULL, $_GET
-            );
-            if ($val) {
-              $crumbs['url'] = str_ireplace("%%{$a}%%", $val, $crumbs['url']);
+      if (is_array($breadCrumbs)) {
+        foreach ($breadCrumbs as $crumbs) {
+          if (stripos($crumbs['url'], 'id%%')) {
+            $args = array('cid', 'mid');
+            foreach ($args as $a) {
+              $val = CRM_Utils_Request::retrieve($a, 'Positive', CRM_Core_DAO::$_nullObject,
+                FALSE, NULL, $_GET
+              );
+              if ($val) {
+                $crumbs['url'] = str_ireplace("%%{$a}%%", $val, $crumbs['url']);
+              }
             }
           }
+          $breadCrumb[] = "<a href=\"{$crumbs['url']}\">{$crumbs['title']}</a>";
         }
-        $breadCrumb[] = "<a href=\"{$crumbs['url']}\">{$crumbs['title']}</a>";
       }
+      drupal_set_breadcrumb($breadCrumb);
     }
-    drupal_set_breadcrumb($breadCrumb);
   }
 
   /**
@@ -433,7 +453,13 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static  */
   static function variable_get($name, $default) {
-    return variable_get($name, $default);
+    // drupal 6 and 7
+    if (CRM_Core_Config::singleton()->userSystem->version <= 7 ) {
+      return variable_get($name, $default);
+    }
+    else {
+      // now we fucked up with drupal 8
+    }
   }
 
   /**
@@ -502,7 +528,7 @@ class CRM_Utils_System_Drupal {
 
     $separator = $htmlize ? '&amp;' : '&';
 
-    if (!variable_get('clean_url', 0)) {
+    if (!CIVICRM_CLEANURL) {
       if (isset($path)) {
         if (isset($query)) {
           return $base . $script . '?q=' . $path . $separator . $query . $fragment;
@@ -674,92 +700,18 @@ class CRM_Utils_System_Drupal {
   static function loadBootStrap($params = array(), $throwError = TRUE) {
     //take the cms root path.
     $cmsPath = self::cmsRootPath();
-
-    if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
-      if ($throwError) {
-        throw new Exception('Sorry, could not locate bootstrap.inc');
-      }
-      return FALSE;
-    }
-
     chdir($cmsPath);
-    require_once 'includes/bootstrap.inc';
-    @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-    // explicitly setting error reporting, since we cannot handle drupal related notices
-    // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code
-    // causes grief with debugging scripts
-		global $user;
-    if (empty($user)) {
-      if ($throwError) {
-        throw new Exception('Sorry, could not load drupal bootstrap.');
-      }
-      return FALSE;
-    }
 
-    // we have user to load
-		if (!empty($params)) {
-      $config = CRM_Core_Config::singleton();
-      $version = $config->userSystem->version;
-      $uid = CRM_Utils_Array::value('uid', $params);
-
-      if (!$uid) {
-        //load user, we need to check drupal permissions.
-        $name = CRM_Utils_Array::value('name', $params, FALSE) ? $params['name'] : trim(CRM_Utils_Array::value('name', $_REQUEST));
-        $pass = CRM_Utils_Array::value('pass', $params, FALSE) ? $params['pass'] : trim(CRM_Utils_Array::value('pass', $_REQUEST));
-
-        if ($name) {
-          if($version >= 6 && $version < 7){
-            $user = user_authenticate(array('name' => $name, 'pass' => $pass));
-            if (empty($user->uid)) {
-              if ($throwError) {
-                throw new Exception('Sorry, unrecognized username or password.');
-              }
-              return FALSE;
-            }
-            else {
-              $uid = $user->uid;
-            }
-          }
-          elseif ($version >= 7 && $version < 8){
-            $uid = user_authenticate($name, $pass);
-            if (empty($uid)) {
-              if ($throwError) {
-                throw new Exception('Sorry, unrecognized username or password.');
-              }
-              return FALSE;
-            }
-          }
-        }
-      }
-      if ($uid) {
-        if ($version >= 6 && $version < 7) {
-          $account = user_load(array('uid' => $uid));
-          if ($account && $account->uid) {
-            global $user;
-            $user = $account;
-            return TRUE;
-          }
-        }
-        if ($version >= 7 && $version < 8) {
-          $account = user_load($uid);
-          if ($account && $account->uid) {
-            global $user;
-            $user = $account;
-            return TRUE;
-          }
-        }
-      }
-
-      if ($throwError) {
-        throw new Exception('Sorry, can not load CMS user account.');
-      }
-    }
+    // call method in Drupalx.php
+    $config = CRM_Core_Config::singleton();
+    $config->userSystem->versionalClass->loadBootStrap($params);
   }
 
   static function cmsRootPath() {
     if (defined('DRUPAL_ROOT')) {
       return DRUPAL_ROOT;
     }
+
     $cmsRoot = $valid = NULL;
     if (!empty($_SERVER['PWD'])) {
       $scriptPath = $_SERVER['PWD'];
@@ -778,11 +730,15 @@ class CRM_Utils_System_Drupal {
     //start w/ csm dir search.
     foreach ($pathVars as $var) {
       $cmsRoot .= "/$var";
-      $cmsIncludePath = "$cmsRoot/includes";
-      //stop as we found bootstrap.
-      if (file_exists("$cmsIncludePath/bootstrap.inc")) {
-        $valid = TRUE;
-        break;
+      $cmsIncludePath = array();
+      $cmsIncludePath[] = "$cmsRoot/includes";
+      $cmsIncludePath[] = "$cmsRoot/core/includes";
+      foreach($cmsIncludePath as $path) {
+        //stop as we found bootstrap.
+        if (file_exists("$path/bootstrap.inc")) {
+          $valid = TRUE;
+          break 2;
+        }
       }
     }
 
@@ -817,75 +773,20 @@ class CRM_Utils_System_Drupal {
   }
 
   function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
-    static $exists;
-    if (empty($url)) {
-      return $url;
-    }
-
-    //CRM-7803 -from d7 onward.
+    // call method in Drupalx.php
     $config = CRM_Core_Config::singleton();
-    $version = substr($config->userSystem->version, 0, strpos($config->userSystem->version, '.'));
-    if ($version == '7') {
-      if($exists || function_exists('language_negotiation_get')){
-        $exists = TRUE;
-        global $language;
-
-        //does user configuration allow language
-        //support from the URL (Path prefix or domain)
-        if (language_negotiation_get('language') == 'locale-url') {
-          $urlType = variable_get('locale_language_negotiation_url_part');
-
-          //url prefix
-          if ($urlType == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
-            if (isset($language->prefix) && $language->prefix) {
-              if ($addLanguagePart) {
-                $url .= $language->prefix . '/';
-              }
-              if ($removeLanguagePart) {
-                $url = str_replace("/{$language->prefix}/", '/', $url);
-              }
-            }
-          }
-          //domain
-          if ($urlType == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
-            if (isset($language->domain) && $language->domain) {
-              if ($addLanguagePart) {
-                $cleanedUrl = preg_replace('#^https?://#', '', $language->domain);
-                // drupal function base_path() adds a "/" to the beginning and end of the returned path
-                if (substr($cleanedUrl, -1) == '/') {
-                  $cleanedUrl = substr($cleanedUrl, 0, -1);
-                }
-                $url = (CRM_Utils_System::isSSL() ? 'https' : 'http') . '://' . $cleanedUrl . base_path();
-              }
-              if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
-                $url = str_replace('\\', '/', $url);
-                $parseUrl = parse_url($url);
-
-                //kinda hackish but not sure how to do it right
-                //hope http_build_url() will help at some point.
-                if (is_array($parseUrl) && !empty($parseUrl)) {
-                  $urlParts           = explode('/', $url);
-                  $hostKey            = array_search($parseUrl['host'], $urlParts);
-                  $ufUrlParts         = parse_url(CIVICRM_UF_BASEURL);
-                  $urlParts[$hostKey] = $ufUrlParts['host'];
-                  $url                = implode('/', $urlParts);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    elseif($version == '6'){
-      //upto d6 only, already we have code in place for d7
-      $config = CRM_Core_Config::singleton();
-      $url = CRM_Utils_System_Drupal6::languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
-    }
-    return $url;
+    return $config->userSystem->versionalClass->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
   }
 
   function notFound(){
-    drupal_not_found();
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if ($version >= 8) {
+      throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
+    }
+    else {
+      drupal_not_found();
+    }
     return;
   }
 
@@ -895,13 +796,21 @@ class CRM_Utils_System_Drupal {
     switch($type) {
       case 'temp':
       case 'tmp':
-        return file_directory_temp();
+        if ($version >= 8 ) {
+          return \Drupal::service('file_system')->getTempDirectory();
+        }
+        else {
+          return file_directory_temp();
+        }
       case 'public':
         if ($version >= 6 && $version < 7){
           return file_directory_path();
         }
         if ($version >= 7 && $version < 8) {
           return variable_get('file_public_path', 'sites/default/files');
+        }
+        if ($version >= 8 ) {
+          return \Drupal\Core\StreamWrapper\PublicStream::basePath();
         }
       case 'private':
         if ($version >= 6 && $version < 7){
@@ -910,6 +819,9 @@ class CRM_Utils_System_Drupal {
         if ($version >= 7 && $version < 8) {
           return variable_get('file_private_path', '');
         }
+        if ($version >= 8 ) {
+          return \Drupal\Core\StreamWrapper\PrivateStream::basePath();
+        }
     }
     return FALSE;
   }
@@ -917,7 +829,14 @@ class CRM_Utils_System_Drupal {
   function confPath() {
     global $civicrm_conf_path;
     if (empty($civicrm_conf_path)) {
-      $civicrm_conf_path = conf_path(FALSE);
+      $config = CRM_Core_Config::singleton();
+      $version = $config->userSystem->version;
+      if ($version >= 8) {
+        $civicrm_conf_path = \Drupal::service('kernel')->getSitePath();
+      }
+      else {
+        $civicrm_conf_path = conf_path(FALSE);
+      }
     }
     return $civicrm_conf_path;
   }

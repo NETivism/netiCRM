@@ -1,6 +1,73 @@
 <?php
 
 class CRM_Utils_System_Drupal7 {
+
+  /**
+   * Load drupal bootstrap.
+   *
+   * @param array $params
+   *   Either uid, or name & pass.
+   *
+   * @return bool
+   * @Todo Handle setting cleanurls configuration for CiviCRM?
+   */
+  function loadBootStrap($params = array()) {
+    $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
+    if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
+      if ($throwError) {
+        throw new Exception('Sorry, could not locate bootstrap.inc');
+      }
+      return FALSE;
+    }
+    require_once 'includes/bootstrap.inc';
+    @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+    // explicitly setting error reporting, since we cannot handle drupal related notices
+    // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code
+    // causes grief with debugging scripts
+		global $user;
+    if (empty($user)) {
+      if ($throwError) {
+        throw new Exception('Sorry, could not load drupal bootstrap.');
+      }
+      return FALSE;
+    }
+
+    // we have user to load
+		if (!empty($params)) {
+      $config = CRM_Core_Config::singleton();
+      $version = $config->userSystem->version;
+      $uid = CRM_Utils_Array::value('uid', $params);
+
+      if (!$uid) {
+        //load user, we need to check drupal permissions.
+        $name = CRM_Utils_Array::value('name', $params, FALSE) ? $params['name'] : trim(CRM_Utils_Array::value('name', $_REQUEST));
+        $pass = CRM_Utils_Array::value('pass', $params, FALSE) ? $params['pass'] : trim(CRM_Utils_Array::value('pass', $_REQUEST));
+
+        if ($name) {
+          $uid = user_authenticate($name, $pass);
+          if (empty($uid)) {
+            if ($throwError) {
+              throw new Exception('Sorry, unrecognized username or password.');
+            }
+            return FALSE;
+          }
+        }
+      }
+      if ($uid) {
+        $account = user_load($uid);
+        if ($account && $account->uid) {
+          global $user;
+          $user = $account;
+          return TRUE;
+        }
+      }
+
+      if ($throwError) {
+        throw new Exception('Sorry, can not load CMS user account.');
+      }
+    }
+  }
+
   /**
    * Check if username and email exists in the drupal db
    *
@@ -129,4 +196,61 @@ class CRM_Utils_System_Drupal7 {
     }
   }
 
+  function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+    static $exists;
+    if (empty($url)) {
+      return $url;
+    }
+
+    if($exists || function_exists('language_negotiation_get')){
+      $exists = TRUE;
+      global $language;
+
+      //does user configuration allow language
+      //support from the URL (Path prefix or domain)
+      if (language_negotiation_get('language') == 'locale-url') {
+        $urlType = variable_get('locale_language_negotiation_url_part');
+
+        //url prefix
+        if ($urlType == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
+          if (isset($language->prefix) && $language->prefix) {
+            if ($addLanguagePart) {
+              $url .= $language->prefix . '/';
+            }
+            if ($removeLanguagePart) {
+              $url = str_replace("/{$language->prefix}/", '/', $url);
+            }
+          }
+        }
+        //domain
+        if ($urlType == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
+          if (isset($language->domain) && $language->domain) {
+            if ($addLanguagePart) {
+              $cleanedUrl = preg_replace('#^https?://#', '', $language->domain);
+              // drupal function base_path() adds a "/" to the beginning and end of the returned path
+              if (substr($cleanedUrl, -1) == '/') {
+                $cleanedUrl = substr($cleanedUrl, 0, -1);
+              }
+              $url = (CRM_Utils_System::isSSL() ? 'https' : 'http') . '://' . $cleanedUrl . base_path();
+            }
+            if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
+              $url = str_replace('\\', '/', $url);
+              $parseUrl = parse_url($url);
+
+              //kinda hackish but not sure how to do it right
+              //hope http_build_url() will help at some point.
+              if (is_array($parseUrl) && !empty($parseUrl)) {
+                $urlParts           = explode('/', $url);
+                $hostKey            = array_search($parseUrl['host'], $urlParts);
+                $ufUrlParts         = parse_url(CIVICRM_UF_BASEURL);
+                $urlParts[$hostKey] = $ufUrlParts['host'];
+                $url                = implode('/', $urlParts);
+              }
+            }
+          }
+        }
+      }
+    }
+    return $url;
+  }
 }

@@ -171,7 +171,7 @@ class CRM_Utils_System {
       }
     }
     elseif($version >= 8){
-      drupal_set_message('We havnt support d8 yet');
+      echo $content;
       return;
     }
     if($ret){
