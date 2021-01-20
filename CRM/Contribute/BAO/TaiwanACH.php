@@ -420,7 +420,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
     else {
       $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
-      $bankCode = call_user_func_array('array_merge', $bankCode);
+      $bankCode = call_user_func_array('array_replace', $bankCode);
       foreach ($achDatas as $key => $achData) {
         $bankName = preg_replace('/^\d{7} (.+)$/', '$1', $bankCode[$achData['bank_code']]);
         $row = array(
@@ -509,7 +509,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
     else {
       $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
-      $bankCode = call_user_func_array('array_merge', $bankCode);
+      $bankCode = call_user_func_array('array_replace', $bankCode);
       foreach ($achDatas as $key => $achData) {
         $bankName = preg_replace('/^\d{7} (.+)$/', '$1', $bankCode[$achData['bank_code']]);
         $row = array(
