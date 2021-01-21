@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-01-15 06:02+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>\n"
+"PO-Revision-Date: 2021-01-21 07:50+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48307,3 +48307,6 @@ msgstr "「Adblock Plus」這種阻擋廣告的瀏覽器附加元件可以使用
 #: templates/CRM/common/contributionPageSpecial.tpl
 msgid "Read more"
 msgstr "閱讀更多"
+
+msgid "Duplicate legal identifier with %1"
+msgstr "聯絡人和 %1 的身份證字號重覆"
