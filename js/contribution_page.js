@@ -820,7 +820,7 @@
               threshold: []
             };
 
-            for (var i = 0; i <= 1.0; i += 0.01) {
+            for (var i = 0; i <= 1; i += 0.005) {
               ioOptions.threshold.push(i);
             }
 
