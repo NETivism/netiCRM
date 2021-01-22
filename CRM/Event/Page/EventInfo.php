@@ -207,7 +207,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
 
     // Prepare params used for meta.
     $params = array();
-    $siteName = CRM_Utils_System::variable_get('site_name', 'Drupal');
+    $siteName = CRM_Utils_System::siteName();
     $params['site'] = $siteName;
     $params['title'] = $values['event']['title'] . ' - ' . $siteName;
 

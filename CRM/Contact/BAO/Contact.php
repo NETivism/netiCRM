@@ -805,14 +805,7 @@ WHERE id={$id}; ";
     elseif ($config->userFramework == 'Drupal') {
       require_once 'CRM/Utils/System/Drupal.php';
       $rootPath = CRM_Utils_System_Drupal::cmsRootPath();
-      $baseUrl = $config->userFrameworkBaseURL;
-      if (module_exists('locale') && $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
-        global $language;
-        if (isset($language->prefix)) {
-          $baseUrl = str_replace($language->prefix . '/', '', $config->userFrameworkBaseURL);
-        }
-      }
-
+      $baseUrl = CIVICRM_UF_BASEURL;
       $relativePath = str_replace("$rootPath/", $baseUrl, str_replace('\\', '/', $absolutePath));
     }
     elseif ($config->userFramework == 'Standalone') {

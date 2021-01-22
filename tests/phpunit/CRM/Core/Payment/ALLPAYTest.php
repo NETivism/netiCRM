@@ -19,7 +19,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     if(!defined('DRUPAL_ROOT')){
       die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
     }
-    if(!module_exists('civicrm_allpay')){
+    if(!CRM_Utils_System::moduleExists('civicrm_allpay')){
       die("You must enable civicrm_allpay module first before test.");
     }
     $payment_page = variable_get('civicrm_demo_payment_page', array());

@@ -208,12 +208,18 @@ class CRM_Utils_System_UnitTests {
           if ($version >= 7 && $version < 8) {
             return variable_get('file_public_path', 'sites/default/files');
           }
+          if ($version >= 8 ) {
+            return \Drupal\Core\StreamWrapper\PublicStream::basePath();
+          }
         case 'private':
           if ($version >= 6 && $version < 7){
             return FALSE;
           }
           if ($version >= 7 && $version < 8) {
             return variable_get('file_private_path', '');
+          }
+          if ($version >= 8 ) {
+            return \Drupal\Core\StreamWrapper\PrivateStream::basePath();
           }
       }
     }

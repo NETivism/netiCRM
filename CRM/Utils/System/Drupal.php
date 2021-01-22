@@ -458,7 +458,85 @@ class CRM_Utils_System_Drupal {
       return variable_get($name, $default);
     }
     else {
-      // now we fucked up with drupal 8
+      // exception
+    }
+  }
+
+  /**
+   * Get sitename from cms system
+   *
+   * @return string
+   * @access public
+   * @static
+   */
+  static function siteName() {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if ($version >= 8) {
+      return \Drupal::config('system.site')->get('name');
+    }
+    else {
+      return self::variable_get('site_name', 'Drupal');
+    }
+  }
+
+  /**
+   * Get user registration setting from cms system
+   *
+   * @return string
+   * @access public
+   * @static
+   */
+  static function allowedUserRegisteration() {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if ($version >= 8) {
+      $allowedRegister = \Drupal::config('user.settings')->get('register');
+      if ($allowedRegister == 'admin_only') {
+        return FALSE;
+      }
+      else {
+        return TRUE;
+      }
+    }
+    else {
+      return self::variable_get('user_register', TRUE);
+    }
+  }
+
+  /**
+   * User email verification setting
+   *
+   * @return string
+   * @access public
+   * @static
+   */
+  static function userEmailVerification() {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if ($version >= 8) {
+      return \Drupal::config('user.settings')->get('verify_email');
+    }
+    else {
+      return self::variable_get('user_email_verification', TRUE);
+    }
+  }
+
+  /**
+   * check module exists
+   *
+   * @return string
+   * @access public
+   * @static
+   */
+  static function moduleExists($module) {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if ($version >= 8) {
+      return \Drupal::moduleHandler()->moduleExists($module);
+    }
+    else {
+      return module_exists($module);
     }
   }
 
@@ -807,7 +885,7 @@ class CRM_Utils_System_Drupal {
           return file_directory_path();
         }
         if ($version >= 7 && $version < 8) {
-          return variable_get('file_public_path', 'sites/default/files');
+          return self::variable_get('file_public_path', 'sites/default/files');
         }
         if ($version >= 8 ) {
           return \Drupal\Core\StreamWrapper\PublicStream::basePath();
@@ -817,7 +895,7 @@ class CRM_Utils_System_Drupal {
           return FALSE;
         }
         if ($version >= 7 && $version < 8) {
-          return variable_get('file_private_path', '');
+          return self::variable_get('file_private_path', '');
         }
         if ($version >= 8 ) {
           return \Drupal\Core\StreamWrapper\PrivateStream::basePath();
@@ -858,7 +936,7 @@ class CRM_Utils_System_Drupal {
   function transliteration($string) {
     require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
     $purgedName = '';
-    if (module_exists('transliteration')) {
+    if (self::moduleExists('transliteration')) {
       $purgedName = strtolower(transliteration_clean_filename($string));
       $purgedName = trim($purgedName, '_');
     }

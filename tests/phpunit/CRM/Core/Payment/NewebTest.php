@@ -21,7 +21,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     if(!defined('DRUPAL_ROOT')){
       die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
     }
-    if(!module_exists('civicrm_neweb')){
+    if(!CRM_Utils_System::moduleExists('civicrm_neweb')){
       die("You must enable civicrm_neweb module first before test.");
     }
     $payment_page = variable_get('civicrm_demo_payment_page', array('Payment_Neweb' => 1));

@@ -58,10 +58,7 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
     $ele = $this->addElement('text', 'userSystemVersion', ts('%1 Version', array(1 => $uf)));
     $ele->freeze();
     $this->addElement('text', 'userFrameworkUsersTableName', ts('%1 Users Table Name', array(1 => $uf)));
-    if (function_exists('module_exists') &&
-      module_exists('views') &&
-      $config->dsn != $config->userFrameworkDSN
-    ) {
+    if (CRM_Utils_System::moduleExists('views') && $config->dsn != $config->userFrameworkDSN) {
       $dsnArray = DB::parseDSN($config->dsn);
       $tableNames = CRM_Core_DAO::GetStorageValues(NULL, 0, 'Name');
       $tablePrefixes = '$db_prefix = array(';

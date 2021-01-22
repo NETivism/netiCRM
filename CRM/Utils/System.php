@@ -412,17 +412,53 @@ class CRM_Utils_System {
   }
 
   /**
-   * Get variable from CMS system
+   * Get sitename from CMS system
    *
-   * @param variable name
-   * @param Default value when variable is null.
-   * 
-   * @return void
+   * @return string
    * @access public
-   * @static  */
-  static function variable_get($name, $default) {
+   * @static  
+   */
+  static function siteName() {
     $config = CRM_Core_Config::singleton();
-    return $config->userSystem->variable_get($name, $default);
+    return $config->userSystem->siteName($name, $default);
+  }
+
+  /**
+   * Get user registration setting from CMS system
+   *
+   * @return boolean
+   * @access public
+   * @static  
+   */
+  static function allowedUserRegisteration() {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->allowedUserRegisteration();
+  }
+
+  /**
+   * Get user registration setting from CMS system
+   *
+   * @return boolean
+   * @access public
+   * @static  
+   */
+  static function userEmailVerification() {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->userEmailVerification();
+  }
+
+  /**
+   * Check module exists on system
+   * @return string
+   * @access public
+   * @static  
+   */
+  static function moduleExists($module) {
+    $config = CRM_Core_Config::singleton();
+    if ($config->userFramework == 'Drupal') {
+      return $config->userSystem->moduleExists($module);
+    }
+    return FALSE;
   }
 
   /**

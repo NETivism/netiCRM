@@ -522,7 +522,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
 
     // prompt Drupal Views users to update $db_prefix in settings.php, if necessary
     global $db_prefix;
-    if (is_array($db_prefix) && CIVICRM_UF == 'Drupal' && module_exists('views')) {
+    if (is_array($db_prefix) && CIVICRM_UF == 'Drupal' && CRM_Utils_System::moduleExists('views')) {
       // get table_name for each custom group
       $tables = array();
       $sql = "SELECT table_name FROM civicrm_custom_group WHERE is_active = 1";

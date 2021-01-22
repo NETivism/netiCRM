@@ -290,7 +290,7 @@ if ( set_include_path( $include_path ) === false ) {
 }
 
 if (!defined('CIVICRM_CLEANURL')) {
-  if ( class_exists('Drupal') && method_exists('Drupal', 'config') && \Drupal::config('system.core')->get('clean_url') != 0) {
+  if (class_exists('Drupal') && method_exists('Drupal', 'config')) {
     define('CIVICRM_CLEANURL', 1 );
   }
   elseif ( function_exists('variable_get') && variable_get('clean_url', '0') != '0') {
