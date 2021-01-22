@@ -386,19 +386,24 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   .special-page-col-sticky #main-inner.is-sticky #content {
     max-height: calc(100vh - 60px);
     overflow-y: auto;
-  }
-  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar {
-    width: 4px;
-  }
-  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar-track {
-    border-radius: 2px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-  }
-  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar-thumb {
-    border-radius: 2px;
-    background: rgba(94, 94, 94, 0.8);
+
+    /* custom scrollbar (firefox) */
+    scrollbar-width: thin;
+    scrollbar-color: #7b7b7b #eee;
   }
 
+  /* custom scrollbar (webkit: chrome, edge, safari) */
+  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar {
+    width: 12px;
+  }
+  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar-track {
+    background: #eee;
+  }
+  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar-thumb {
+    border: 3px solid #eee;
+    border-radius: 6px;
+    background: #7b7b7b;
+  }
 
   body.frontend fieldset legend {
     background: none;
