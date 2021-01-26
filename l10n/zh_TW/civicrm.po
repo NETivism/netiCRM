@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-01-21 07:50+0000\n"
+"PO-Revision-Date: 2021-01-26 14:25+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48310,3 +48310,6 @@ msgstr "閱讀更多"
 
 msgid "Duplicate legal identifier with %1"
 msgstr "聯絡人和 %1 的身份證字號重覆"
+
+msgid "Modify installments by Newebpay data."
+msgstr "透過藍新回傳資料自動更新期數"

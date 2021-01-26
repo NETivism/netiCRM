@@ -48005,3 +48005,6 @@ msgstr ""
 
 msgid "Duplicate legal identifier with %1"
 msgstr ""
+
+msgid "Modify installments by Newebpay data."
+msgstr ""
