@@ -83,6 +83,8 @@
         "Contribution amount cannot be more than %1." : "{/literal}{ts 1=$max_amount}Contribution amount cannot be more than %1.{/ts}{literal}",
         "Payment failed." : "{/literal}{ts}Payment failed.{/ts}{literal}",
         "No Limit" : "{/literal}{ts}No Limit{/ts}{literal}",
+        "Read more" : "{/literal}{ts}Read more{/ts}{literal}",
+        "Close" : "{/literal}{ts}Close{/ts}{literal}",
         // Original wordings
         "monthly" : "{/literal}{ts}monthly{/ts}{literal}",
         "yearly" : "{/literal}{ts}yearly{/ts}{literal}",

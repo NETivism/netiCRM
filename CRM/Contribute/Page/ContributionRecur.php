@@ -164,6 +164,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
             $log['before_contribution_status'] = $statuses[$before['contribution_status_id']];
             $log['after_contribution_status'] = $statuses[$after['contribution_status_id']];
           }
+          $diff = self::_diff_contribute_recur_log($data);
+          $log['other_diff'] = implode('<br/>', $diff);
         }
 
         if ($notes[$log['modified_date']]) {
@@ -296,6 +298,50 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     }
 
     return parent::run();
+  }
+
+  static function _diff_contribute_recur_log($data) {
+    $allFields = CRM_Contribute_DAO_ContributionRecur::$_fields;
+    if (is_string($data)) {
+      $log = unserialize($data);
+    }
+    else {
+      $log = $data;
+    }
+    $before = $log['before'];
+    $after = $log['after'];
+    foreach ($after as &$value) {
+      if ($value == 'null') {
+        $value = NULL;
+      }
+    }
+    if (!empty($before) && !empty($after)) {
+      $diff = array_diff_assoc($after, $before);
+      unset($diff['contribution_status_id']);
+      unset($diff['amount']);
+      unset($diff['create_date']);
+      unset($diff['start_date']);
+      unset($diff['modified_date']);
+      foreach ($diff as $field => $value) {
+        if ($before[$field]) {
+          // is hash:
+          if (preg_match('/^[a-f0-9]{32}$/', $before[$field])) {
+            $before[$field] = null;
+          }
+          if (empty($value)) {
+            $arrayReturnHtml[] = ts('Delete'). $allFields[$field]['title'] . ': <span class="disabled">'.$before[$field].'</span>';
+          }
+          else {
+            $arrayReturnHtml[] = $allFields[$field]['title'] . ': <span class="disabled">'.$before[$field].'</span>→'.$value;
+          }
+        }
+
+        else {
+          $arrayReturnHtml[] = ts('Add'). $allFields[$field]['title'] . ': '.$value;
+        }
+      }
+    }
+    return $arrayReturnHtml;
   }
 }
 

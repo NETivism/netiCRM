@@ -57,13 +57,14 @@
       delete: "zmdi-delete",
       link: "zmdi-link",
       image: "zmdi-image",
-      style: "zmdi-invert-colors"
+      "block-bg": "zmdi-format-color-fill",
+      "button-bg": "zmdi-invert-colors"
     },
     _editActions = {
       default: ["clone", "delete"],
       extended: {
         image: ["link", "image"],
-        button: ["link", "style"],
+        button: ["link", "button-bg"],
         header: ["link", "image"]
       }
     },
@@ -539,7 +540,6 @@
       };
 
       options = $.extend({}, defaultOptions, options);
-      console.log("sssss");
       console.log(options);
 
       if (options.direction == "vertical") {
@@ -1613,7 +1613,7 @@
                 confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
 
             let saveContentToOldEditor = function() {
-              _nmeMailOutput();
+              _nmeMailOutput.render();
               let previewContent = "";
               let checkMailOutput = function() {
                 if ($("#nme-mail-output-frame").length) {
@@ -1662,50 +1662,57 @@
 
   };
 
-  var _nmeMailOutput = function() {
-    let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
-        mailTpl = _tpl["mail"][mailTplName],
-        baseTpl = _tpl["base"]["base"],
-        output = "";
+  var _nmeMailOutput = {
+    render: function() {
+      let mailTplName =  _data.settings.template ? _data.settings.template : "col-1-full-width",
+      mailTpl = _tpl["mail"][mailTplName],
+      baseTpl = _tpl["base"]["base"],
+      output = "";
 
-    if (!$(".nme-mail-output").length) {
-      $(_container).append("<div class='nme-mail-output'><div class='nme-mail-output-content'></div><iframe id='nme-mail-output-frame'></iframe></div>");
-    }
+      if (!$(".nme-mail-output").length) {
+        $(_container).append("<div class='nme-mail-output'><div class='nme-mail-output-content'></div><iframe id='nme-mail-output-frame'></iframe></div>");
+      }
 
-    let mailFrame = document.getElementById("nme-mail-output-frame").contentWindow.document,
-        $mailOutputContent = $(".nme-mail-output-content");
+      let mailFrame = document.getElementById("nme-mail-output-frame").contentWindow.document,
+          $mailOutputContent = $(".nme-mail-output-content");
 
-    mailFrame.open();
-    mailFrame.write(baseTpl);
-    mailFrame.close();
+      mailFrame.open();
+      mailFrame.write(baseTpl);
+      mailFrame.close();
 
-    let $mailFrameBody = $("#nme-mail-output-frame").contents().find("body");
+      let $mailFrameBody = $("#nme-mail-output-frame").contents().find("body");
 
-    $mailOutputContent.html(mailTpl);
-    _nmeStyle.set($mailOutputContent.find(".nme-body-table"), _data.settings.styles, "self");
+      $mailOutputContent.html(mailTpl);
+      _nmeStyle.set($mailOutputContent.find(".nme-body-table"), _data.settings.styles, "self");
 
-    if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
-      for (let section in _data.sections) {
-        if (!_sectionIsEmpty(section)) {
-          let blocksData = _data.sections[section].blocks,
-              sectionID = "nme-mail-" + section,
-              sectionInner = "#" + sectionID + " .nme-mail-inner",
-              $blocksContainer = $mailOutputContent.find(sectionInner);
+      if (!_objIsEmpty(_data) && _data.sections && _data.settings) {
+        for (let section in _data.sections) {
+          if (!_sectionIsEmpty(section)) {
+            let blocksData = _data.sections[section].blocks,
+                sectionID = "nme-mail-" + section,
+                sectionInner = "#" + sectionID + " .nme-mail-inner",
+                $blocksContainer = $mailOutputContent.find(sectionInner);
 
-          for (let blockID in _data.sections[section].blocks) {
-            let blockData = blocksData[blockID];
-            _nmeBlock.add(blockData, "exist", "view", $blocksContainer);
+            for (let blockID in _data.sections[section].blocks) {
+              let blockData = blocksData[blockID];
+              _nmeBlock.add(blockData, "exist", "view", $blocksContainer);
+            }
           }
         }
-      }
 
-      if ($mailOutputContent.find(".nme-body-table").length) {
-        $mailOutputContent.find(".nme-body-table").css("background-color", _data.settings.styles.page["backgroun-color"]);
-        $mailOutputContent.find(".nme-body-table").attr("bgcolor", _data.settings.styles.page["backgroun-color"]);
-      }
+        if ($mailOutputContent.find(".nme-body-table").length) {
+          $mailOutputContent.find(".nme-body-table").css("background-color", _data.settings.styles.page["backgroun-color"]);
+          $mailOutputContent.find(".nme-body-table").attr("bgcolor", _data.settings.styles.page["backgroun-color"]);
+        }
 
-      let mailOutputContent = $mailOutputContent.html();
-      $mailFrameBody.html(mailOutputContent);
+        let mailOutputContent = $mailOutputContent.html();
+        $mailFrameBody.html(mailOutputContent);
+      }
+    },
+    delete: function() {
+      if ($(".nme-mail-output").length) {
+        $(".nme-mail-output").remove();
+      }
     }
   };
 
@@ -1797,21 +1804,22 @@
           }
 
           if (group == "block") {
-            $block = $("#nme-mail-body .nme-block");
+            $block = $("#nme-mail-body .nme-block:not([data-block-override='true'])");
 
             if (fieldType == "background-color") {
               $target = $block.find("[data-settings-target='block']");
 
-              // Update color to dom
-              $target.css(fieldType, colorVal);
-              $target.attr("bgcolor", colorVal);
-
               $block.each(function() {
                 let $this = $(this),
+                    $target = $this.find("[data-settings-target='block']"),
                     section = $this.data("section"),
                     blockID = $this.data("id"),
                     parentID = $this.data("parent-id"),
                     index = $this.data("index");
+
+                // Update color to dom
+                $target.eq(0).css(fieldType, colorVal);
+                $target.eq(0).attr("bgcolor", colorVal);
 
                 // Update color to json
                 if (parentID) {
@@ -1872,13 +1880,13 @@
             if (fieldType == "color") {
               $target = $block.find(".nme-elem");
               $target.css(fieldType, colorVal);
-              $target.find("p").each(function() {
-                let $p = $(this);
-                if ($p.find("span").length) {
-                  $p.find("span").css(fieldType, colorVal);
+              $target.find("div, p").each(function() {
+                let $node = $(this);
+                if ($node.find("span").length) {
+                  $node.find("span").css(fieldType, colorVal);
                 }
                 else {
-                  $p.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
+                  $node.wrapInner("<span style='" + fieldType + ": " + colorVal + "'></span>");
                 }
               });
 
@@ -1893,7 +1901,7 @@
                 // Reinitialize x-editable
                 $field.removeClass("editable-initialized");
                 $field.editable("destroy");
-                $field.editable();
+                _editable($field, true);
 
                 // Update color to json
                 if (parentID) {
@@ -2149,7 +2157,7 @@
         }
       }
     }
-  }
+  };
 
   var _nmePreview = {
     initialized: false,
@@ -2209,7 +2217,7 @@
         callbacks: {
           open: function() {
             $("body").addClass("mfp-is-active");
-            _nmeMailOutput();
+            _nmeMailOutput.render();
 
             var checkMailOutputTimer = setInterval(checkMailOutput, 500);
 
@@ -2247,6 +2255,7 @@
             if ($(".nme-preview-mode-switch").is(":checked")) {
               $(".nme-preview-mode-switch").prop("checked", false);
             }
+            _nmeMailOutput.delete();
           },
         }
       });
@@ -2424,7 +2433,8 @@
 
     var pickrInit = function(elemID, defaultColor) {
       let targetSelector = "#" + elemID,
-          $target = $(targetSelector);
+          $target = $(targetSelector),
+          handleType = $target.data("type");
 
       if (_domElemExist($target)) {
         const pickr = new Pickr({
@@ -2493,7 +2503,47 @@
               parentType = $block.data("parent-type"),
               index = $block.data("index") == 0 || $block.data("index") > 0 ? $block.data("index") : 0;
 
-          if (blockType == "button") {
+          if (handleType == "block-bg") {
+            let bgColor = color.toHEXA().toString();
+
+            // Update color to dom
+            $block.find("[data-settings-target='block']").css("background-color", bgColor);
+            $block.find("[data-settings-target='block']").attr("bgcolor", bgColor);
+
+            // Update color to json
+            if (parentID && parentType) {
+              if (parentType == "rc-col-1" || parentType == "rc-col-2" || parentType == "rc-float") {
+                if (_data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]) {
+                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["styles"]["block"]["background-color"] = bgColor;
+                  _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["override"]["block"] = true;
+                  _nmeData.update();
+                }
+              }
+
+              $block.attr("data-block-override", true);
+            }
+            else {
+              _data["sections"][section]["blocks"][blockID]["styles"]["block"]["background-color"] = bgColor;
+              _data["sections"][section]["blocks"][blockID]["override"]["block"] = true;
+
+              let blockData = _objClone(_data["sections"][section]["blocks"][blockID]["data"]);
+
+              for (let i in blockData) {
+                for (let j in blockData[i]["blocks"]) {
+                  blockData[i]["blocks"][j]["styles"]["block"]["background-color"] = bgColor;
+                  blockData[i]["blocks"][j]["override"]["block"] = true;
+                }
+              }
+
+              _data["sections"][section]["blocks"][blockID]["data"] = blockData;
+              _nmeData.update();
+
+              $block.attr("data-block-override", true);
+              $block.find(".nme-block").attr("data-block-override", true);
+            }
+          }
+
+          if (handleType == "button-bg") {
             let bgColor = color.toHEXA().toString();
 
             // Update color to dom
@@ -2515,9 +2565,9 @@
               _data["sections"][section]["blocks"][blockID]["override"]["elem"] = true;
               _nmeData.update();
             }
-          }
 
-          $block.attr("data-elem-override", true);
+            $block.attr("data-elem-override", true);
+          }
         });
       }
     };
@@ -2633,8 +2683,8 @@
               tooltip = _ts["Edit Image"];
               break;
 
-            case "style":
-              tooltip = _ts["Edit Background"];
+            case "button-bg":
+              tooltip = _ts["Edit Background of Button"];
               break;
           }
 
@@ -2814,9 +2864,14 @@
         }
       });
 
-      // handle type: style
-      if ($blockControl.find(".handle-style").length) {
-        _colorable($blockControl.find(".handle-style").attr("id"));
+      // handle type: block-bg
+      if ($blockControl.find(".handle-block-bg").length) {
+        _colorable($blockControl.find(".handle-block-bg").attr("id"));
+      }
+
+      // handle type: button-bg
+      if ($blockControl.find(".handle-button-bg").length) {
+        _colorable($blockControl.find(".handle-button-bg").attr("id"));
       }
     }
   };

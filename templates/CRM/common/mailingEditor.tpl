@@ -62,6 +62,8 @@ window.nmEditor = {
 		"Edit Link": "{/literal}{ts}Edit Link{/ts}{literal}",
 		"Edit Image": "{/literal}{ts}Edit Image{/ts}{literal}",
 		"Edit Background": "{/literal}{ts}Edit Background{/ts}{literal}",
+		"Edit Background of Block": "{/literal}{ts}Edit Background of Block{/ts}{literal}",
+		"Edit Background of Button": "{/literal}{ts}Edit Background of Button{/ts}{literal}",
 
 		// Confirm
 		"You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?" : "{/literal}{ts}You are switching to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to switch to 'Compose On-screen' mode?{/ts}{literal}",

@@ -355,10 +355,8 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
           $requestParams['contribution_recur_id'] = $this->_id;
           // if need debug, can add second params "1" the follow function.
           $config = CRM_Core_Config::singleton();
-          if (isset($config->debug)) {
-            $debug = $config->debug;
-          }
-          $resultParams = $paymentClass->doUpdateRecur($requestParams, $debug);
+          $resultParams = $paymentClass->doUpdateRecur($requestParams, $config->debug);
+          CRM_Core_Error::debug('ContributionRecur_PostProcess_resultParams', $resultParams);
           if ($resultParams['is_error']) {
             CRM_Core_Session::setStatus($resultParams['msg']);
             CRM_Core_Session::setStatus(ts('There are no any change.'));
