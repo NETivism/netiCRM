@@ -78,7 +78,7 @@
           }
         }
 
-        this.rightColBetterSticky();
+        this.rightColBetter();
       },
 
       updateExpenditureSection: function(){
@@ -790,7 +790,7 @@
        * refs #28603. Improve the interface on the right column when device is desktop.
        * Detecting device is through the CSS media query (contribution_page.css).
        */
-      rightColBetterSticky: function() {
+      rightColBetter: function() {
         var leftCol = document.querySelector('#intro_text'),
             rightCol = document.querySelector('#main-inner');
 
@@ -798,6 +798,19 @@
           var leftColOuterHeight = leftCol.offsetHeight,
               rightColOuterHeight = rightCol.offsetHeight,
               rightColStyle = getComputedStyle(rightCol);
+
+          // refs #28603 28f.
+          // Added state class to body by column height,
+          // and we can use CSS to add scrollbar to the specified column.
+          if (leftColOuterHeight > rightColOuterHeight) {
+            document.querySelector('body').classList.add('special-page-left-col-higher');
+          }
+          else if (leftColOuterHeight == rightColOuterHeight) {
+            document.querySelector('body').classList.add('special-page-col-equal');
+          }
+          else {
+            document.querySelector('body').classList.add('special-page-right-col-higher');
+          }
 
           // If the height of the left column is greater than the right column,
           // add state class to right column when sticky is triggered,

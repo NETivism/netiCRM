@@ -383,7 +383,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     position: sticky;
     top: 40px;
   }
-  .special-page-col-sticky #main-inner.is-sticky #content {
+  .special-page-col-sticky.special-page-left-col-higher #main-inner #content {
     max-height: calc(100vh - 60px);
     overflow-y: auto;
 
@@ -393,13 +393,13 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   }
 
   /* custom scrollbar (webkit: chrome, edge, safari) */
-  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar {
+  .special-page-col-sticky.special-page-left-col-higher #main-inner #content::-webkit-scrollbar {
     width: 12px;
   }
-  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar-track {
+  .special-page-col-sticky.special-page-left-col-higher #main-inner #content::-webkit-scrollbar-track {
     background: #eee;
   }
-  .special-page-col-sticky #main-inner.is-sticky #content::-webkit-scrollbar-thumb {
+  .special-page-col-sticky.special-page-left-col-higher #main-inner #content::-webkit-scrollbar-thumb {
     border: 3px solid #eee;
     border-radius: 6px;
     background: #7b7b7b;
