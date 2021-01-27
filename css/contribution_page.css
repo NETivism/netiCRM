@@ -717,8 +717,7 @@ body .crm-container fieldset{
   line-height: 1.2em;
 } 
 .crm-container .custom-input-block{
-  height: 76px;
-  line-height: 76px;
+  margin: 18px 0;
 }
 .crm-container .custom-input-block label{
   font-size: 1rem;

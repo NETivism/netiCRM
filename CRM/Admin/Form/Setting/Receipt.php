@@ -116,6 +116,12 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       $params['forbidCustomDonorCredit'] = FALSE;
     }
 
+    // refs #28471, switch to auto send receipt on email
+    $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+    if (!empty($haveAttachReceiptOption) && empty($params['receiptEmailAuto'])) {
+      $params['receiptEmailAuto'] = FALSE;
+    }
+
     parent::commonProcess($params);
   }
 

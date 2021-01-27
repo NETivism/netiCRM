@@ -583,10 +583,11 @@ WHERE  mailing_id = %1
       CRM_Core_DAO::executeQuery($sql, $params);
 
       // CRM-3975
-      $groupBy = $groupJoin = '';
+      $groupJoin = '';
+      $groupBy = "GROUP BY i.email_id";
       if ($dedupeEmail) {
         $groupJoin = " INNER JOIN civicrm_email e ON e.id = i.email_id";
-        $groupBy = " GROUP BY e.email ";
+        $groupBy .= " ,e.email ";
       }
 
       $sql = "
@@ -601,6 +602,18 @@ INNER JOIN I_$job_id i ON contact_a.id = i.contact_id AND contact_a.is_opt_out =
 ORDER BY   i.contact_id, i.email_id
 ";
       CRM_Core_DAO::executeQuery($sql, $params);
+      
+      // refs #30407, prevent duplicate entry for mailing recipients
+      $sql = "SELECT id FROM civicrm_mailing_recipients WHERE mailing_id = %1 GROUP BY email_id HAVING count(id) > 1";
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
+      if ($dao->N) {
+        $ids = array();
+        while($dao->fetch()) {
+          $ids[] = $dao->id;
+        }
+        $sql = "DELETE FROM civicrm_mailing_recipients WHERE mailing_id = %1 AND id IN(".implode(',', $ids).")";
+        CRM_Core_DAO::executeQuery($sql, $params);
+      }
     }
 
     /* Delete the temp table */
