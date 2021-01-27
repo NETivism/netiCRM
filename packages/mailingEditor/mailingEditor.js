@@ -2519,14 +2519,28 @@
                   _nmeData.update();
                 }
               }
+
+              $block.attr("data-block-override", true);
             }
             else {
               _data["sections"][section]["blocks"][blockID]["styles"]["block"]["background-color"] = bgColor;
               _data["sections"][section]["blocks"][blockID]["override"]["block"] = true;
-              _nmeData.update();
-            }
 
-            $block.attr("data-block-override", true);
+              let blockData = _objClone(_data["sections"][section]["blocks"][blockID]["data"]);
+
+              for (let i in blockData) {
+                for (let j in blockData[i]["blocks"]) {
+                  blockData[i]["blocks"][j]["styles"]["block"]["background-color"] = bgColor;
+                  blockData[i]["blocks"][j]["override"]["block"] = true;
+                }
+              }
+
+              _data["sections"][section]["blocks"][blockID]["data"] = blockData;
+              _nmeData.update();
+
+              $block.attr("data-block-override", true);
+              $block.find(".nme-block").attr("data-block-override", true);
+            }
           }
 
           if (handleType == "button-bg") {
