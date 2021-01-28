@@ -50,7 +50,7 @@
         {foreach from=$rows item=row}
           <tr id='rowid{$row.id}' class="crm-mailSettings {cycle values="odd-row,even-row"}">
               <td class="crm-mailSettings-name">{$row.name}</td>	
-              <td class="crm-mailSettings-server">{$row.server}</td>	
+              <td class="crm-mailSettings-server">{$row.server}{if $row.port}:{$row.port}{/if}</td>	
               <td class="crm-mailSettings-username">{$row.username}</td>	
               <td class="crm-mailSettings-localpart">{$row.localpart}</td>	
               <td class="crm-mailSettings-domain">{$row.domain}</td>
@@ -59,7 +59,7 @@
               <td class="crm-mailSettings-source">{$row.source}</td>
               <!--<td>{$row.port}</td>-->
               <td class="crm-mailSettings-is_ssl">{if $row.is_ssl eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
-              <td class="crm-mailSettings-is_default">{if $row.is_default eq 1}{ts}Bounce Processing <strong>(Default)</strong>{/ts}{else}{ts}Email-to-Activity{/ts}{/if}&nbsp;</td>
+              <td class="crm-mailSettings-is_default">{$row.used_for}</td>
               <td>{$row.action|replace:'xx':$row.id}</td>
           </tr>
         {/foreach}

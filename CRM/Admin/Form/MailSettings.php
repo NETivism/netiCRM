@@ -80,6 +80,8 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
     $this->add('text', 'server', ts('Server'), $attributes['server']);
 
+    $this->add('text', 'port', ts('Port'), $attributes['port']);
+
     $this->add('text', 'username', ts('Username'), array('autocomplete' => 'off'));
 
     $this->add('password', 'password', ts('Password'), array('autocomplete' => 'off'));
@@ -87,11 +89,11 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->add('text', 'source', ts('Source'), $attributes['source']);
 
     $this->add('checkbox', 'is_ssl', ts('Use SSL?'));
-
-    $usedfor = array(1 => ts('Bounce Processing'),
-      0 => ts('Email-to-Activity Processing'),
-    );
-    $this->add('select', 'is_default', ts('Used For?'), $usedfor);
+    $usedFor = CRM_Core_BAO_MailSettings::$_mailerTypes;
+    foreach($usedFor as $k => $v) {
+      $usedFor[$k] = ts($v);
+    }
+    $this->add('select', 'is_default', ts('Used For?'), $usedFor);
   }
 
   /**

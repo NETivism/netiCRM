@@ -42,6 +42,9 @@
 	<tr class="crm-mail-settings-form-block-server"><td class="label">{$form.server.label}</td><td>{$form.server.html}</td></tr>
 	<tr><td class="label">&nbsp;</td><td class="description">{ts}Name or IP address of mail server machine.{/ts}</td></tr>
 
+	<tr class="crm-mail-settings-form-block-port"><td class="label">{$form.port.label}</td><td>{$form.port.html}</td></tr>
+	<tr><td class="label">&nbsp;</td><td class="description">{ts}Port.{/ts}</td></tr>
+
 	<tr class="crm-mail-settings-form-block-username"><td class="label">{$form.username.label}</td><td>{$form.username.html}</td></tr>
 	<tr><td class="label">&nbsp;</td><td class="description">{ts}Username to use when polling (for IMAP and POP3).{/ts}</td></tr>
 
