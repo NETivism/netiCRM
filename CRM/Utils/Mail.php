@@ -170,7 +170,12 @@ class CRM_Utils_Mail {
     }
 
     $result = NULL;
-    $mailer = &CRM_Core_Config::getMailer();
+    if (isset($params['mailerType'])) {
+      $mailer = &CRM_Core_Config::getMailer($params['mailerType']);
+    }
+    else {
+      $mailer = &CRM_Core_Config::getMailer();
+    }
     CRM_Core_Error::ignoreException();
     if (is_object($mailer)) {
       $result = $mailer->send($to, $headers, $message);

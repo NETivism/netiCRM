@@ -525,6 +525,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
         );
       }
     
+      $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_mailerTypes);
       $sent = CRM_Utils_Mail::send($params);
 
       if ($pdf_filename) {
