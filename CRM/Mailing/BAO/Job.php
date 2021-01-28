@@ -155,7 +155,8 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
 
       // Get the mailer
       // make it a persistent connection, CRM-9349
-      $mailer = $config->getMailer(TRUE);
+      $mailerType = array_search('Mass Mailing', CRM_Core_BAO_MailSettings::$_mailerTypes);
+      $mailer = $config->getMailer($mailerType);
 
       // Compose and deliver each child job
       $isComplete = $job->deliver($mailer, $testParams);
