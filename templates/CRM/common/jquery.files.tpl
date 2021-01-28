@@ -33,9 +33,6 @@ packages/jquery/jquery-ui/js/jquery-ui-1.12.1.min.js
 packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.12.1.min.css
 packages/jquery/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$config->lcMessages|replace:'_':'-'}.js
 
-packages/jquery/plugins/flexigrid.js
-packages/jquery/css/flexigrid.css
-
 packages/jquery/plugins/jquery.autocomplete.js
 packages/jquery/css/jquery.autocomplete.css
 
@@ -59,7 +56,6 @@ packages/jquery/plugins/jquery.tokeninput.js
 packages/jquery/css/token-input-facebook.css
 
 packages/jquery/plugins/jquery.timeentry.pack.js
-packages/jquery/plugins/jquery.mousewheel.pack.js
 
 packages/jquery/plugins/jquery.toolTip.js
 
@@ -76,14 +72,12 @@ packages/jquery/css/jquery.chosen.css
 
 packages/jquery/plugins/jquery.modal.min.js
 packages/jquery/css/jquery.modal.min.css
-packages/jquery/plugins/jquery.blockUI.js
 
 js/rest.js
 
 js/jquery/jquery.crmaccordions.js
 js/jquery/jquery.crmdependentselect.js
 js/jquery/jquery.crmasmselect.js
-js/jquery/jquery.crmtooltip.js
 js/jquery/jquery.disablesubmit.js
 
 packages/mdl/material.indigo-pink.min.css
