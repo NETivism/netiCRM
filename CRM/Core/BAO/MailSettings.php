@@ -122,7 +122,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
     $result = NULL;
     if ($mailSettings->find(TRUE)) {
       global $civicrm_conf;
-      if(isset($civicrm_conf['mailing_mailstore'])) {
+      if(isset($civicrm_conf['mailing_mailstore']) && $mailSettings->is_default == 1) {
         foreach($civicrm_conf['mailing_mailstore'] as $k => $v){
           if(isset($mailSettings->$k) && !empty($v)){
             $mailSettings->$k = $v;

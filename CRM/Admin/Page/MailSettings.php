@@ -100,6 +100,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
 
     require_once 'CRM/Core/PseudoConstant.php';
     $allProtocols = CRM_Core_PseudoConstant::mailProtocol();
+    $allProtocols += array( 'smtp' => ts('SMTP'));
 
     //multi-domain support for mail settings. CRM-5244
     $mailSetting->domain_id = CRM_Core_Config::domainID();

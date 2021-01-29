@@ -71,14 +71,13 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->add('text', 'return_path', ts('Return-Path'), $attributes['return_path']);
     $this->addRule('return_path', ts('Return-Path must use a valid email address format.'), 'email');
 
-    require_once 'CRM/Core/PseudoConstant.php';
     $this->add('select', 'protocol',
       ts('Protocol'),
-      array('' => ts('- select -')) + CRM_Core_PseudoConstant::mailProtocol(),
+      array('' => ts('- select -')) + CRM_Core_PseudoConstant::mailProtocol() + array('smtp' => 'SMTP'),
       TRUE
     );
 
-    $this->add('text', 'server', ts('Server'), $attributes['server']);
+    $this->add('text', 'server', ts('Server'), $attributes['server'], TRUE);
 
     $this->add('text', 'port', ts('Port'), $attributes['port']);
 
@@ -93,8 +92,39 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     foreach($usedFor as $k => $v) {
       $usedFor[$k] = ts($v);
     }
+    // remove bounce process when exists
+    $bounceExists = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_mail_settings WHERE is_default = 1");
+    if ($bounceExists) {
+      if ($this->_action & CRM_Core_Action::UPDATE && $this->_id != $bounceExists) {
+        unset($usedFor[1]);
+      }
+      elseif($this->_action & CRM_Core_Action::ADD ) {
+        unset($usedFor[1]);
+      }
+    }
     $this->add('select', 'is_default', ts('Used For?'), $usedFor);
   }
+
+  function setDefaultValues() {
+    $defaults = parent::setDefaultValues();
+    // prevent modify global $civicrm_conf['mailing_mailstore'] variable
+    if ($this->_action & CRM_Core_Action::UPDATE && $defaults['is_default'] == 1) {
+      $mailSettings = new CRM_Core_DAO_MailSettings();
+      $mailSettings->id = $this->_id;
+      $mailSettings->find(TRUE);
+      if ($mailSettings->domain) {
+        foreach($defaults as $eleName => $val) {
+          if ($mailSettings->$eleName == $val && $this->_elementIndex[$eleName]) {
+            $this->getElement($eleName)->freeze();
+          }
+        }
+
+      }
+    }
+
+    return $defaults;
+  }
+  
 
   /**
    * Function to process the form
