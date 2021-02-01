@@ -28,7 +28,7 @@
  * We will unify the two files in a future release
  *}
 packages/jquery/jquery-1.12.4.js
-packages/jquery/neticrm-jquery-migrate.js
+packages/jquery/jquery-migrate-neticrm.js
 packages/jquery/jquery-ui/js/jquery-ui-1.12.1.min.js
 packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.12.1.min.css
 packages/jquery/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$config->lcMessages|replace:'_':'-'}.js

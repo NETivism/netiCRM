@@ -24,7 +24,8 @@
 } )( function( jQuery, window ) {
 "use strict";
 
-jQuery.neticrmMigrateVersion = "3.3.2";
+jQuery.neticrmMigrateVersion = "3";
+var debug = true;
 
 // Returns 0 if v1 == v2, -1 if v1 < v2, 1 if v1 > v2
 function compareVersions( v1, v2 ) {
@@ -58,10 +59,12 @@ function jQueryVersionSince( version ) {
 	}
 
 	// Need jQuery 3.0.0+ and no older Migrate loaded
+	/*
 	if ( !jQuery || !jQueryVersionSince( "3.0.0" ) ) {
 		window.console.log( "netiCRM JQMIGRATE: jQuery 3.0.0+ REQUIRED" );
 	}
-	if ( jQuery.neticrmMigrateWarnings ) {
+	*/
+	if ( jQuery.neticrmMigrateWarnings) {
 		window.console.log( "netiCRM JQMIGRATE: Migrate plugin loaded multiple times" );
 	}
 
@@ -95,7 +98,7 @@ function migrateWarn( msg ) {
 	if ( !jQuery.neticrmMigrateDeduplicateWarnings || !warnedAbout[ msg ] ) {
 		warnedAbout[ msg ] = true;
 		jQuery.neticrmMigrateWarnings.push( msg );
-		if ( console && console.warn && !jQuery.neticrmMigrateMute ) {
+		if ( console && console.warn && !jQuery.neticrmMigrateMute && debug) {
 			console.warn( "netiCRM JQMIGRATE: " + msg );
 			if ( jQuery.neticrmMigrateTrace && console.trace ) {
 				console.trace();
@@ -128,7 +131,7 @@ function migrateWarnFunc( obj, prop, newFunc, msg ) {
 
 if ( window.document.compatMode === "BackCompat" ) {
 	// JQuery has never supported or tested Quirks Mode
-	migrateWarn( "jQuery is not compatible with Quirks Mode" );
+	migrateWarn( "netiCRM JQMIGRATE: jQuery is not compatible with Quirks Mode" );
 }
 
 
