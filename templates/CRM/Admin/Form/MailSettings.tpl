@@ -77,3 +77,20 @@
 <div class="spacer"></div>
 </fieldset>
 </div>
+
+<script>{literal}
+cj(document).ready(function($){
+  function changeLabel() {
+    if($("#is_default").val() == 1) {
+      $(".crm-mail-settings-form-block-return_path td.label").html('Retuen-Path');
+    }
+    else {
+      $(".crm-mail-settings-form-block-return_path td.label").html('Sender');
+    }
+  }
+  $("#is_default").change(function() {
+    changeLabel();
+  });
+  changeLabel();
+});
+{/literal}</script>
