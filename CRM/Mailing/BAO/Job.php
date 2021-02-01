@@ -595,6 +595,10 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
         CRM_Core_Error::ignoreException();
       }
 
+      // refs #30289, for valid DKIM
+      if (!strstr($headers['Sender'], $mailer->host) && $mailer->_mailSetting['return_path']) {
+        $headers['Sender'] = $mailer->_mailSetting['return_path'];
+      }
       $result = $mailer->send($recipient, $headers, $body, $this->id);
 
       if ($job_date) {
