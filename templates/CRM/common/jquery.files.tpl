@@ -27,7 +27,8 @@
  * If you MODIFY this file, please make sure you also modify jquery.tpl.
  * We will unify the two files in a future release
  *}
-packages/jquery/jquery-1.12.4.js
+packages/jquery/jquery-3.5.1.min.js
+packages/jquery/jquery-migrate-3.3.2.js
 packages/jquery/jquery-migrate-neticrm.js
 packages/jquery/jquery-ui/js/jquery-ui-1.12.1.min.js
 packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.12.1.min.css
