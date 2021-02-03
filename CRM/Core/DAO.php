@@ -926,6 +926,11 @@ FROM   civicrm_domain
       if (is_numeric($key)) {
         if (CRM_Utils_Type::validate($item[0], $item[1]) !== NULL) {
           $item[0] = self::escapeString($item[0]);
+          if (strtolower($item[0]) === '[null]') {
+            $item[0] = "null";
+            $item[1] = "NULL";
+          }
+
           if ($item[1] == 'String' ||
             $item[1] == 'Memo' ||
             $item[1] == 'Link'
