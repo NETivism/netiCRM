@@ -31,6 +31,10 @@
         $content.prepend($('#intro_text').prepend($('h1.page-title')));
         $('.sharethis').appendTo('body');
 
+        if (this.currentPage != 'ThankYou') {
+          document.querySelector('body').classList.add('special-page-col-sticky');
+        }
+
         if(this.currentPage == 'Main'){
 
           this.setDefaultValues();
@@ -47,9 +51,11 @@
 
           this.prepareContribTypeForm();
 
+          this.introReadmore();
         }
         if(this.currentPage == 'Confirm'){
           this.prepareStepInfo();
+          this.introReadmore();
           this.updateFormStep(1);
         }
 
@@ -71,6 +77,8 @@
             }
           }
         }
+
+        this.rightColBetter();
       },
 
       updateExpenditureSection: function(){
@@ -744,17 +752,99 @@
         return true;
       },
 
+      /**
+       * refs #28603. Added read more feature to intro text.
+       */
+      introReadmore: function() {
+        var introMaxHeight = 450;
+        if ($('#intro_text').height() > introMaxHeight) {
+          var readmoreText = {
+            open: window.ContribPageParams.ts['Read more'],
+            close: window.ContribPageParams.ts['Close']
+          };
+
+          $('#intro_text').wrapInner('<div class="intro_text-inner"><div class="intro_text-content is-collapsed"></div></div>');
+          $(".intro_text-content").after('<button class="intro_text-readmore-btn" type="button">' + readmoreText.open + '</button>');
+
+          $('#intro_text').on('click', '.intro_text-readmore-btn', function(e) {
+            e.preventDefault();
+
+            var $trigger = $(this),
+                $target = $('.intro_text-content');
+
+            if ($target.length) {
+              if ($target.hasClass('is-collapsed')) {
+                $target.removeClass('is-collapsed').addClass('is-expanded');
+                $trigger.addClass('is-active').text(readmoreText.close);
+              }
+              else {
+                $target.removeClass('is-expanded').addClass('is-collapsed');
+                $trigger.removeClass('is-active').text(readmoreText.open);
+              }
+            }
+          });
+        }
+      },
+
+      /**
+       * refs #28603. Improve the interface on the right column when device is desktop.
+       * Detecting device is through the CSS media query (contribution_page.css).
+       */
+      rightColBetter: function() {
+        var leftCol = document.querySelector('#intro_text'),
+            rightCol = document.querySelector('#main-inner');
+
+        if (leftCol && rightCol) {
+          var leftColOuterHeight = leftCol.offsetHeight,
+              rightColOuterHeight = rightCol.offsetHeight,
+              rightColStyle = getComputedStyle(rightCol);
+
+          // refs #28603 28f.
+          // Added state class to body by column height,
+          // and we can use CSS to add scrollbar to the specified column.
+          if (leftColOuterHeight > rightColOuterHeight) {
+            document.querySelector('body').classList.add('special-page-left-col-higher');
+          }
+          else if (leftColOuterHeight == rightColOuterHeight) {
+            document.querySelector('body').classList.add('special-page-col-equal');
+          }
+          else {
+            document.querySelector('body').classList.add('special-page-right-col-higher');
+          }
+
+          // If the height of the left column is greater than the right column,
+          // add state class to right column when sticky is triggered,
+          // so that we can limit the height of the right column
+          // and enable the scrollbar by CSS (contribution_page.css).
+          if (leftColOuterHeight > rightColOuterHeight && rightColStyle['position'] == 'sticky') {
+            var rightColTop = rightColStyle['top'],
+                rightColTopNum = parseFloat(rightColTop),
+                buffer = 5,
+                minTop = 0,
+                maxTop = rightColTopNum + buffer;
+
+            var ioCallback = function(entries) {
+              entries.forEach(function(entry) {
+                entry.target.classList.toggle('is-sticky', entry.intersectionRect.top >= minTop && entry.intersectionRect.top <= maxTop);
+              });
+            }
+
+            var ioOptions = {
+              threshold: []
+            };
+
+            for (var i = 0; i <= 1; i += 0.005) {
+              ioOptions.threshold.push(i);
+            }
+
+            var observer = new IntersectionObserver(ioCallback, ioOptions);
+            observer.observe(rightCol);
+          }
+        }
+      },
+
       prepareAfterAll: function(){
         $('body').addClass('special-page-finish');
-        if (window.innerWidth < 1024) {
-          setTimeout(function(){
-            $('#intro_text').css({
-              'max-height': 'unset',
-              'padding-top': '',
-              'padding-bottom': '',
-            });
-          }, 1000);
-        }
         setTimeout(function(){
           $('.loading-placeholder-wrapper').remove();
         }, 1000);

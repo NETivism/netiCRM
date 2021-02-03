@@ -85,7 +85,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $this->is_custom_date = TRUE;
     }
     $end_date = $this->end_date = $end_date ? $end_date : ($_GET['end_date'] ? $_GET['end_date'] : date('Y-m-d'));
-    $start_date = $this->start_date = $start_date ? $start_date : ($_GET['start_date'] ? $_GET['start_date'] : date('Y-m-d', strtotime('-30day')));
+    $start_date = $this->start_date = $start_date ? $start_date : ($_GET['start_date'] ? $_GET['start_date'] : date('Y-m-d', strtotime('-29day')));
 
     $end_timestamp = strtotime($end_date);
     $start_timestamp = strtotime($start_date);
@@ -111,7 +111,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     }
     $this->duration_array = $duration_array;
 
-    $this->days = ceil(($end_timestamp - $start_timestamp) / 86400);
+    $this->days = ceil(($end_timestamp - $start_timestamp) / 86400) + 1;
 
     $this->params_duration = array(
       1 => array($start_date . ' 00:00:00', 'String'),
@@ -282,10 +282,25 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     );
     $this->assign('chart_duration_province_sum', $chart);
 
-    // First contribtion contact in last 30 days
-    $sql = "  SELECT COUNT(c.id) ct, ccd.id, SUM(ccd.total_amount) sum FROM civicrm_contact c
-      INNER JOIN ( SELECT id, contact_id, total_amount FROM civicrm_contribution WHERE receive_date >= %1 AND receive_date <= %2 AND is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) ccd ON c.id = ccd.contact_id
-      INNER JOIN ( SELECT id, contact_id FROM civicrm_contribution WHERE is_test = 0 AND contribution_status_id = 1 GROUP BY contact_id ) cc_all ON c.id = cc_all.contact_id WHERE ccd.id = cc_all.id;";
+    // First contribtion contact in last 30 days, Used sql by firstTimeDonor.php
+    $sql = "  SELECT COUNT(id) as ct, SUM(amount) as sum FROM
+    (SELECT contact.id as id, 
+    c.contact_id as contact_id, 
+    contact.sort_name as sort_name, 
+    c2.min_receive_date as receive_date, 
+    ROUND(c.total_amount,0) as amount, 
+    c.contribution_recur_id as contribution_recur_id, 
+    c.contribution_page_id as contribution_page_id, 
+    c.payment_instrument_id as instrument_id, 
+    c.contribution_type_id as contribution_type_id
+    FROM    civicrm_contact AS contact
+          INNER JOIN civicrm_contribution c ON c.contact_id = contact.id
+          INNER JOIN (SELECT MIN(IFNULL(receive_date, created_date)) AS min_receive_date, contact_id FROM civicrm_contribution c
+          LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
+          LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
+          WHERE c.is_test = 0 AND pp.id IS NULL AND mp.id IS NULL AND c.contribution_status_id = 1 GROUP BY contact_id) c2 ON c.contact_id = c2.contact_id AND (c.receive_date = c2.min_receive_date OR c.created_date = c2.min_receive_date)
+    WHERE  contact.is_deleted = 0
+    GROUP BY contact.id) all_fst_donor WHERE receive_date >= %1 AND receive_date <= %2";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
     if($dao->fetch()){
       $duration_count = $dao->ct;
@@ -313,7 +328,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       // $this->assign('duration_max_receive_date', $dao->receive_date);
     }
 
-    $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 AND receive_date <= %2 ;";
+    $sql = "SELECT SUM(total_amount) FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON cc.contact_id = c.id  WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND receive_date >= %1 AND receive_date <= %2 AND c.is_deleted = 0;";
     $duration_sum = CRM_Core_DAO::singleValueQuery($sql, $this->params_duration);
 
     $last_duration_sum = CRM_Core_DAO::singleValueQuery($sql, $this->params_last_duration);

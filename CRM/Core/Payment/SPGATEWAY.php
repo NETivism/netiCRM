@@ -13,6 +13,21 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
   public static $_hideFields = array('invoice_id');
 
+  // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
+  public static $_editableFields = NULL;
+
+  public static $_statusMap = array(
+    // 3 => 'terminate',   // Can't undod. Don't Use
+    1 => 'suspend',
+    5 => 'restart',
+    7 => 'suspend',
+  );
+
+  public static $_unitMap = array(
+    'year' => 'Y',
+    'month' => 'M',
+  );
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
@@ -35,6 +50,27 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_processorName = ts('Spgateway');
     $config = &CRM_Core_Config::singleton();
     $this->_config = $config;
+  }
+
+  static function getEditableFields($paymentProcessor = NULL) {
+    if (empty($paymentProcessor)) {
+      $returnArray = array();
+    }
+    else {
+      if ($paymentProcessor['url_recur'] == 1) {
+        // $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
+        // Enable Installments field after spgateway update.
+        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'note_title', 'note_body');
+      }
+    }
+    return $returnArray;
+  }
+
+  static function postBuildForm($form) {
+    $form->addDate('cycle_day_date', FALSE, FALSE, array('formatType' => 'custom', 'format' => 'mm-dd'));
+    $cycleDay = &$form->getElement('cycle_day');
+    unset($cycleDay->_attributes['max']);
+    unset($cycleDay->_attributes['min']);
   }
 
   /**
@@ -118,6 +154,155 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $is_test = $this->_mode == 'test' ? 1 : 0;
       civicrm_spgateway_do_transfer_checkout($params, $component, $this->_paymentProcessor, $is_test);
     }
+  }
+
+
+  /*
+      * $params = array(
+      *    'contribution_recur_id   => Positive,
+      *    'contribution_status_id' => Positive(7 => suspend, 3 => terminate, 5 => restart),
+      *    'amount'                 => Positive,
+      *    'frequency_unit'         => String('year', 'month')
+      *    'cycle_day'              => Positive(1 - 31, 101 - 1231)
+      *    'end_date'               => Date
+      * )
+      */
+  function doUpdateRecur($params, $debug = FALSE) {
+    if ($debug) {
+      CRM_Core_error::debug('SPGATEWAY doUpdateRecur $params', $params);
+    }
+    if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.api') === FALSE) {
+      CRM_Core_Error::fatal('Module civicrm_spgateway doesn\'t exists.');
+    }
+    else if (empty($params['contribution_recur_id'])) {
+      CRM_Core_Error::fatal('Missing contribution recur ID in params');
+    }
+    else {
+      // Prepare params
+      $recurResult = array();
+
+      $apiConstructParams = array(
+        'paymentProcessor' => $this->_paymentProcessor,
+        'isTest' => $this->_mode == 'test' ? 1 : 0,
+      );
+
+      $sql = "SELECT r.trxn_id AS period_no, c.trxn_id AS merchant_id FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.id = %1";
+      $sqlParams = array( 1 => array($params['contribution_recur_id'], 'Positive'));
+      $dao = CRM_Core_DAO::executeQuery($sql, $sqlParams);
+      while ($dao->fetch()) {
+        list($merchantId, $ignore) = explode('_', $dao->merchant_id);
+        $periodNo = $dao->period_no;
+      }
+
+      // If status is changed, Send request to alter status API.
+
+      if (!empty($params['contribution_status_id'])) {
+        $apiConstructParams['apiType'] = 'alter-status';
+        $spgatewayAPI = new spgateway_spgateway_api($apiConstructParams);
+        $newStatusId = $params['contribution_status_id'];
+        
+        /*
+        * $requestParams = array(
+        *    'AlterStatus'          => Positive(7 => suspend, 3 => terminate, 5 => restart),
+        * )
+        */
+        $requestParams = array(
+          'MerOrderNo' => $merchantId,
+          'PeriodNo' => $dao->period_no,
+          'AlterType' => self::$_statusMap[$newStatusId],
+        );
+        $apiAlterStatus = clone $spgatewayAPI;
+        $recurResult = $apiAlterStatus->request($requestParams);
+        if ($debug) {
+          $recurResult['API']['AlterType'] = $apiAlterStatus;
+        }
+
+        if (!empty($recurResult['is_error'])) {
+          // There are error msg in $recurResult['msg']
+          $errResult = $recurResult;
+          return $errResult;
+        }
+      }
+
+      // Send alter other property API.
+
+      $apiConstructParams['apiType'] = 'alter-amt';
+      $spgatewayAPI = new spgateway_spgateway_api($apiConstructParams);
+      $isChangeRecur = FALSE;
+      $requestParams = array(
+        'MerOrderNo' => $merchantId,
+        'PeriodNo' => $dao->period_no,
+      );
+
+      /*
+      * $requestParams = array(
+      *    'AlterAmt'             => Positive,
+      *    'PeriodType'           => String(D,W,M,Y)
+      *    'PeriodPoint'          => Positive(1 - 31, 0101 - 1231)
+      *    'PeriodTimes'          => Positive
+      * )
+      */
+
+      if (!empty($params['frequency_unit'])) {
+
+        $requestParams['PeriodType'] = self::$_unitMap[$params['frequency_unit']];
+        $isChangeRecur = TRUE;
+      }
+
+      if (!empty($params['cycle_day'])) {
+        if (empty($requestParams['PeriodType'])) {
+          $unit = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $params['contribution_recur_id'], 'frequency_unit');
+          $requestParams['PeriodType'] = self::$_unitMap[$unit];
+        }
+        $isChangeRecur = TRUE;
+      }
+      if (!empty($requestParams['PeriodType'])) {
+        if ($requestParams['PeriodType'] == 'M') {
+          $requestParams['PeriodPoint'] = sprintf('%02d', $params['cycle_day']);
+        }
+        elseif ($requestParams['PeriodType'] == 'Y') {
+          $requestParams['PeriodPoint'] = sprintf('%04d', $params['cycle_day']);
+        }
+      }
+      if (!empty($params['amount'])) {
+        $requestParams['AlterAmt'] = $params['amount'];
+        $isChangeRecur = TRUE;
+      }
+      if (!empty($params['installments'])) {
+        $requestParams['PeriodTimes'] = $params['installments'];
+        $isChangeRecur = TRUE;
+      }
+
+      if ($debug) {
+        CRM_Core_error::debug('SPGATEWAY doUpdateRecur $requestParams', $requestParams);
+      }
+
+      /**
+       * Send Request.
+       */
+      if ($isChangeRecur) {
+        $apiOthers = clone $spgatewayAPI;
+        $recurResult2 = $apiOthers->request($requestParams);
+        if ($debug) {
+          $recurResult['API']['AlterMnt'] = $apiOthers;
+          CRM_Core_error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
+        }
+        if (is_array($recurResult2)) {
+          $recurResult += $recurResult2;
+        }
+      }
+
+      if (!empty($recurResult['is_error'])) {
+        // There are error msg in $recurResult['msg']
+        $errResult = $recurResult;
+        return $errResult;
+      }
+    }
+
+    if ($debug) {
+      CRM_Core_Error::debug('Payment Spgateway doUpdateRecur $recurResult', $recurResult);
+    }
+    return $recurResult;
   }
 
   function cancelRecuringMessage($recurID){

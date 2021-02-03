@@ -52,7 +52,8 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
   protected $_revertible = array();
 
   // set to the id that we’re reverting at the given moment (if we are)
-  protected $_revertedId; function __construct($title = NULL, $mode = NULL) {
+  protected $_revertedId;
+  function __construct($title = NULL, $mode = NULL) {
     parent::__construct($title, $mode);
 
     // fetch the ids of templates which diverted from defaults and can be reverted –
@@ -67,6 +68,7 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
                     diverted.msg_html    != orig.msg_html
                 )
             )
+            WHERE diverted.workflow_id IS NOT NULL AND orig.workflow_id IS NOT NULL
         ';
     $dao = &CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
@@ -238,6 +240,7 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
     }
 
     $messageTemplate = new CRM_Core_BAO_MessageTemplates();
+    $messageTemplate->select('id, msg_title, msg_subject, workflow_id, is_reserved, is_active');
     $messageTemplate->orderBy('msg_title' . ' asc');
 
     $userTemplates = array();
