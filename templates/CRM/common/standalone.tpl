@@ -40,7 +40,6 @@
 <link rel="stylesheet" href="{$config->resourceBase}css/extras.css" type="text/css" />
 
 {$pageHTMLHead}
-{include file="CRM/common/jquery.tpl"}
 {include file="CRM/common/action.tpl"}
 {if $buildNavigation and !$urlIsPublic }
     {include file="CRM/common/Navigation.tpl" }

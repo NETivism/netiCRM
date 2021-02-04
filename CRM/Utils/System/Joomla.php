@@ -155,7 +155,6 @@ class CRM_Utils_System_Joomla {
         $template->assign('l10nURL', $l10nURL);
       }
 
-      $document->addCustomTag($template->fetch('CRM/common/jquery.tpl'));
       $document->addCustomTag($template->fetch('CRM/common/action.tpl'));
     }
   }
