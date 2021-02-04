@@ -3192,6 +3192,9 @@ div#crm-toolTip #hide-tooltip {
     margin-right : 45px;
 }
 
+.crm-container ul.token-input-list-facebook {
+  border: 1px solid #999999;
+}
 .crm-container ul.token-input-list-facebook, ul.token-input-list-facebook li.leaf {
   list-style-image:none;
 }
