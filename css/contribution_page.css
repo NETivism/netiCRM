@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /**
  Structure
  */
@@ -219,18 +221,9 @@ body .crm-container>form>div.loading-placeholder-wrapper {
   }
 }
 @media screen and (max-width: 1023.9px) {
-  #intro_text {
-    transition: max-height .3s linear ,padding .1s linear;
-    -webkit-transition: max-height .3s linear ,padding .1s linear;
-    -moz-transition: max-height .3s linear ,padding .1s linear;
-    -ms-transition: max-height .3s linear ,padding .1s linear;
-    -o-transition: max-height .3s linear ,padding .1s linear;
-    max-height: 100vh;
-  }
   body:not(.special-page-finish) #intro_text {
     padding-top: 0;
     padding-bottom: 0;
-    max-height: 0;
   }
   .placeholder-intro-text {
     display: none;
@@ -336,14 +329,14 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 }
 
 @media screen and (min-width: 1024px) {
+  body {
+    overflow-x: hidden;
+  }
   body:not(.special-page-finish) #content-main{
     height: 550px;
   }
   #content-main {
     min-height: calc(100vh - 360px);
-  }
-  #page {
-    overflow: hidden;
   }
   .frontend #content{
     background-color: transparent;
@@ -353,6 +346,9 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     padding: 20px 35px;
     background: #fff;
     border-radius: 5px;
+  }
+  #main {
+    position: relative;
   }
   #main-inner {
     z-index: 3;
@@ -378,6 +374,37 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     padding: 40px 20px;
     background-color: rgba(0,0,0,0.5);
   }
+
+  .special-page-col-sticky #intro_text {
+    position: sticky;
+    top: 0;
+  }
+  .special-page-col-sticky #main-inner {
+    position: sticky;
+    top: 40px;
+  }
+  .special-page-col-sticky.special-page-left-col-higher #main-inner #content {
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+
+    /* custom scrollbar (firefox) */
+    scrollbar-width: thin;
+    scrollbar-color: #7b7b7b #eee;
+  }
+
+  /* custom scrollbar (webkit: chrome, edge, safari) */
+  .special-page-col-sticky.special-page-left-col-higher #main-inner #content::-webkit-scrollbar {
+    width: 12px;
+  }
+  .special-page-col-sticky.special-page-left-col-higher #main-inner #content::-webkit-scrollbar-track {
+    background: #eee;
+  }
+  .special-page-col-sticky.special-page-left-col-higher #main-inner #content::-webkit-scrollbar-thumb {
+    border: 3px solid #eee;
+    border-radius: 6px;
+    background: #7b7b7b;
+  }
+
   body.frontend fieldset legend {
     background: none;
   }
@@ -512,7 +539,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     display: flex;
     flex-direction: column;
     margin-bottom: 0;
-    padding: 30px 20px 120px;
+    padding: 30px 20px;
     margin: 0;
     min-height: 0;
   }
@@ -690,8 +717,7 @@ body .crm-container fieldset{
   line-height: 1.2em;
 } 
 .crm-container .custom-input-block{
-  height: 76px;
-  line-height: 76px;
+  margin: 18px 0;
 }
 .crm-container .custom-input-block label{
   font-size: 1rem;
@@ -793,7 +819,44 @@ body .crm-container fieldset{
   border: 1px solid var(--active-color);
 }
 
-/** intro text */ 
+/** intro text */
+.intro_text-content {
+  position: relative;
+}
+.intro_text-content.is-collapsed {
+  max-height: 450px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%);
+}
+.intro_text-content.is-expanded {
+  max-height: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+button.intro_text-readmore-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px auto 0;
+  padding: 10px 20px;
+  line-height: 1;
+  letter-spacing: 2px;
+  font-size: 1rem;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background: rgba(255,255,255,.8);
+  box-shadow: none;
+}
+button.intro_text-readmore-btn:after {
+  content: '\f276';
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: 20px;
+  margin-left: 10px;
+}
+button.intro_text-readmore-btn.is-active:after {
+  content: '\f271';
+}
 #main h1{
   color: #FFFFFF;
   font-size: 44px;
@@ -807,6 +870,18 @@ body .crm-container fieldset{
   width: 362px;
   max-height: unset;
   max-width: unset;
+}
+@media screen and (min-width: 1024px) {
+  .intro_text-content.is-collapsed,
+  .intro_text-content.is-expanded {
+    max-height: none;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  button.intro_text-readmore-btn {
+    display: none;
+  }
 }
 
 /*price info*/

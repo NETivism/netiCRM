@@ -58,7 +58,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     else {
       if ($paymentProcessor['url_recur'] == 1) {
-        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments');
+        // $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
+        // Enable Installments field after spgateway update.
+        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'note_title', 'note_body');
       }
     }
     return $returnArray;
@@ -177,6 +179,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     else {
       // Prepare params
+      $recurResult = array();
 
       $apiConstructParams = array(
         'paymentProcessor' => $this->_paymentProcessor,

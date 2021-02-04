@@ -13,6 +13,7 @@
       </div>
       <div class="nme-block-control-title">[nmeBlockControlTitle]</div>
       <div class="nme-block-actions">
+        <button id="[nmeBlockID]-handle-block-bg" type="button" title="{ts}Edit Background of Block{/ts}" class="handle-block-bg handle-btn" data-type="block-bg" data-tooltip><i class="zmdi zmdi-format-color-fill"></i></button>
         <button type="button" title="{ts}Duplicate Block{/ts}" class="handle-clone handle-btn" data-type="clone" data-tooltip><i class="zmdi zmdi-collection-plus"></i></button>
         <button type="button" title="{ts}Delete Block{/ts}" class="handle-delete handle-btn" data-type="delete" data-tooltip><i class="zmdi zmdi-delete"></i></button>
       </div>

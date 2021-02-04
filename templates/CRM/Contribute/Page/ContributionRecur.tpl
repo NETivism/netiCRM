@@ -149,6 +149,7 @@
                     <th>{ts}Note Text{/ts}</th>
                     <th>{ts}Status{/ts}</th>
                     <th>{ts}Amount{/ts}</th>
+                    <th>{ts}Other{/ts}</th>
                     <th>{ts}Modified By{/ts}</th>
                   </tr>
                 </thead>
@@ -177,6 +178,11 @@
                         {$log.amount}
                       {elseif $log.before_amount AND $log.after_amount}
                         <span class="disabled">{$log.before_amount}</span> → {$log.after_amount}
+                      {/if}
+                    </td>
+                    <td>
+                      {if $log.other_diff}
+                        {$log.other_diff}
                       {/if}
                     </td>
                     <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$log.modified_id`" h=0 a=1 fe=1}">{$log.modified_name}</a></td>
