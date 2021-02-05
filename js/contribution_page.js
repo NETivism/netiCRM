@@ -55,8 +55,8 @@
         }
         if(this.currentPage == 'Confirm'){
           this.prepareStepInfo();
-          this.updateFormStep(1);
           this.introReadmore();
+          this.updateFormStep(1);
         }
 
         if(this.currentPage == 'ThankYou'){

@@ -74,7 +74,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
       // ach
       $ach = CRM_Contribute_BAO_TaiwanACH::getValue($recur->id);
-      if ($ach) {
+      if (!empty($ach)) {
         $stampStatus = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
         $ach['stamp_verification_label'] = $stampStatus[$ach['stamp_verification']];
         if ($ach['bank_code']) {
