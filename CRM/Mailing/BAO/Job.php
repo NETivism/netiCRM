@@ -166,8 +166,6 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
       // Mark the child complete
       if ($isComplete) {
         /* Finish the job */
-
-
         require_once 'CRM/Core/Transaction.php';
         $transaction = new CRM_Core_Transaction();
 
@@ -579,8 +577,6 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       );
 
       /* Send the mailing */
-
-
       $body = &$message->get();
       $headers = &$message->headers();
       // make $recipient actually be the *encoded* header, so as not to baffle Mail_RFC822, CRM-5743
@@ -605,7 +601,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       if (is_a($result, 'PEAR_Error')) {
         // CRM-9191
         $message = $result->getMessage();
-        if (strpos($message, 'Failed to write to socket') !== FALSE) {
+        if (strpos($message, 'to write to socket') !== FALSE) {
           // lets log this message and code
           $code = $result->getCode();
           CRM_Core_Error::debug_log_message("SMTP Socket Error. Message: $message, Code: $code");
@@ -613,16 +609,18 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
           // these are socket write errors which most likely means smtp connection errors
           // lets skip them
           $smtpConnectionErrors++;
-          if ($smtpConnectionErrors <= 2) {
-            continue;
+          if ($smtpConnectionErrors > 2) {
+            // seems like we have too many of them in a row, we should
+            // write stuff to disk and abort the cron job
+            $this->writeToDB($deliveredParams, $targetParams, $mailing, $job_date);
+
+            CRM_Core_Error::debug_log_message("Too many SMTP Socket Errors. Exiting");
+            CRM_Utils_System::civiExit();
+            return FALSE;
           }
-
-          // seems like we have too many of them in a row, we should
-          // write stuff to disk and abort the cron job
-          $this->writeToDB($deliveredParams, $targetParams, $mailing, $job_date);
-
-          CRM_Core_Error::debug_log_message("Too many SMTP Socket Errors. Exiting");
-          CRM_Utils_System::civiExit();
+        }
+        else {
+          CRM_Core_Error::debug_log_message("SMTP Error. Message: $message, Code: $code");
         }
 
         /* Register the bounce event */
