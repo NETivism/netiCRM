@@ -631,6 +631,9 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
         );
         $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match($result->getMessage()));
         CRM_Mailing_Event_BAO_Bounce::create($params);
+
+        // sleep 0.3 sec each error, to prevent continue smtp connection error
+        usleep(300000);
       }
       else {
         /* Register the delivery event */
