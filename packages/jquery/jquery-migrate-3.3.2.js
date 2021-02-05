@@ -26,6 +26,9 @@
 
 jQuery.migrateVersion = "3.3.2";
 
+// Set to true to prevent console output; migrateWarnings still maintained
+jQuery.migrateMute = true;
+
 // Returns 0 if v1 == v2, -1 if v1 < v2, 1 if v1 > v2
 function compareVersions( v1, v2 ) {
 	var i,
@@ -66,10 +69,11 @@ function jQueryVersionSince( version ) {
 	}
 
 	// Show a message on the console so devs know we're active
-	window.console.log( "JQMIGRATE: Migrate is installed" +
-		( jQuery.migrateMute ? "" : " with logging active" ) +
-		", version " + jQuery.migrateVersion );
-
+	if ( !jQuery.migrateMute ) {
+		window.console.log( "JQMIGRATE: Migrate is installed" +
+			( jQuery.migrateMute ? "" : " with logging active" ) +
+			", version " + jQuery.migrateVersion );
+	}
 } )();
 
 var warnedAbout = {};
@@ -82,7 +86,7 @@ jQuery.migrateWarnings = [];
 
 // Set to false to disable traces that appear with warnings
 if ( jQuery.migrateTrace === undefined ) {
-	jQuery.migrateTrace = true;
+	jQuery.migrateTrace = false;
 }
 
 // Forget any warnings we've already given; public

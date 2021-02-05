@@ -25,7 +25,9 @@
 "use strict";
 
 jQuery.neticrmMigrateVersion = "3";
-var debug = true;
+
+// Set to true to prevent console output;
+jQuery.neticrmMigrateMute = true;
 
 // Returns 0 if v1 == v2, -1 if v1 < v2, 1 if v1 > v2
 function compareVersions( v1, v2 ) {
@@ -59,19 +61,20 @@ function jQueryVersionSince( version ) {
 	}
 
 	// Need jQuery 3.0.0+ and no older Migrate loaded
-	/*
 	if ( !jQuery || !jQueryVersionSince( "3.0.0" ) ) {
 		window.console.log( "netiCRM JQMIGRATE: jQuery 3.0.0+ REQUIRED" );
 	}
-	*/
-	if ( jQuery.neticrmMigrateWarnings) {
+
+	if ( jQuery.neticrmMigrateWarnings ) {
 		window.console.log( "netiCRM JQMIGRATE: Migrate plugin loaded multiple times" );
 	}
 
 	// Show a message on the console so devs know we're active
-	window.console.log( "netiCRM JQMIGRATE: Migrate is installed" +
-		( jQuery.neticrmMigrateMute ? "" : " with logging active" ) +
-		", version " + jQuery.neticrmMigrateVersion );
+	if ( !jQuery.neticrmMigrateMute ) {
+		window.console.log( "netiCRM JQMIGRATE: Migrate is installed" +
+			( jQuery.neticrmMigrateMute ? "" : " with logging active" ) +
+			", version " + jQuery.neticrmMigrateVersion );
+	}
 } )();
 
 var warnedAbout = {};
@@ -84,7 +87,7 @@ jQuery.neticrmMigrateWarnings = [];
 
 // Set to false to disable traces that appear with warnings
 if ( jQuery.neticrmMigrateTrace === undefined ) {
-	jQuery.neticrmMigrateTrace = true;
+	jQuery.neticrmMigrateTrace = false;
 }
 
 // Forget any warnings we've already given; public
@@ -98,7 +101,7 @@ function migrateWarn( msg ) {
 	if ( !jQuery.neticrmMigrateDeduplicateWarnings || !warnedAbout[ msg ] ) {
 		warnedAbout[ msg ] = true;
 		jQuery.neticrmMigrateWarnings.push( msg );
-		if ( console && console.warn && !jQuery.neticrmMigrateMute && debug) {
+		if ( console && console.warn && !jQuery.neticrmMigrateMute ) {
 			console.warn( "netiCRM JQMIGRATE: " + msg );
 			if ( jQuery.neticrmMigrateTrace && console.trace ) {
 				console.trace();
@@ -129,7 +132,7 @@ function migrateWarnFunc( obj, prop, newFunc, msg ) {
 	};
 }
 
-if ( window.document.compatMode === "BackCompat" ) {
+if ( window.document.compatMode === "BackCompat" && !jQuery.neticrmMigrateMute ) {
 	// JQuery has never supported or tested Quirks Mode
 	migrateWarn( "netiCRM JQMIGRATE: jQuery is not compatible with Quirks Mode" );
 }
