@@ -133,7 +133,11 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
       }
 
       /* Queue up recipients for the child job being launched */
-
+      // Get the mailer
+      // make it a persistent connection, CRM-9349
+      $mailerType = array_search('Mass Mailing', CRM_Core_BAO_MailSettings::$_mailerTypes);
+      $mailer = $config->getMailer($mailerType);
+      // refs #30585, test mailer first before start
 
       if ($job->status != 'Running') {
         require_once 'CRM/Core/Transaction.php';
@@ -152,11 +156,6 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
 
         $transaction->commit();
       }
-
-      // Get the mailer
-      // make it a persistent connection, CRM-9349
-      $mailerType = array_search('Mass Mailing', CRM_Core_BAO_MailSettings::$_mailerTypes);
-      $mailer = $config->getMailer($mailerType);
 
       // Compose and deliver each child job
       $isComplete = $job->deliver($mailer, $testParams);
@@ -542,9 +541,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
   public function deliverGroup(&$fields, &$mailing, &$mailer, &$job_date, &$attachments) {
     static $smtpConnectionErrors = 0;
 
-    if (!is_object($mailer) ||
-      empty($fields)
-    ) {
+    if (!is_object($mailer) || empty($fields)) {
       CRM_Core_Error::fatal();
     }
 
@@ -608,9 +605,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       if (is_a($result, 'PEAR_Error')) {
         // CRM-9191
         $message = $result->getMessage();
-        if (strpos($message,
-            'Failed to write to socket'
-          ) !== FALSE) {
+        if (strpos($message, 'Failed to write to socket') !== FALSE) {
           // lets log this message and code
           $code = $result->getCode();
           CRM_Core_Error::debug_log_message("SMTP Socket Error. Message: $message, Code: $code");
@@ -618,61 +613,41 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
           // these are socket write errors which most likely means smtp connection errors
           // lets skip them
           $smtpConnectionErrors++;
-          if ($smtpConnectionErrors <= 5) {
+          if ($smtpConnectionErrors <= 2) {
             continue;
           }
 
-
           // seems like we have too many of them in a row, we should
           // write stuff to disk and abort the cron job
-          $this->writeToDB($deliveredParams,
-            $targetParams,
-            $mailing,
-            $job_date
-          );
+          $this->writeToDB($deliveredParams, $targetParams, $mailing, $job_date);
 
           CRM_Core_Error::debug_log_message("Too many SMTP Socket Errors. Exiting");
           CRM_Utils_System::civiExit();
         }
 
         /* Register the bounce event */
-
-
-        require_once 'CRM/Mailing/BAO/BouncePattern.php';
-        require_once 'CRM/Mailing/Event/BAO/Bounce.php';
         $params = array(
           'event_queue_id' => $field['id'],
           'job_id' => $this->id,
           'hash' => $field['hash'],
         );
-        $params = array_merge($params,
-          CRM_Mailing_BAO_BouncePattern::match($result->getMessage())
-        );
+        $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match($result->getMessage()));
         CRM_Mailing_Event_BAO_Bounce::create($params);
       }
       else {
         /* Register the delivery event */
-
-
         $deliveredParams[] = $field['id'];
         $targetParams[] = $field['contact_id'];
 
         $count++;
         if ($count % CRM_Core_DAO::BULK_MAIL_INSERT_COUNT == 0) {
-          $this->writeToDB($deliveredParams,
-            $targetParams,
-            $mailing,
-            $job_date
-          );
+          $this->writeToDB($deliveredParams, $targetParams, $mailing, $job_date);
           $count = 0;
 
           // hack to stop mailing job at run time, CRM-4246.
           // to avoid making too many DB calls for this rare case
           // lets do it when we snapshot
-          $status = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Job',
-            $this->id,
-            'status'
-          );
+          $status = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Job', $this->id, 'status');
           if ($status != 'Running') {
             return FALSE;
           }
@@ -688,12 +663,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       }
     }
 
-    $result = $this->writeToDB($deliveredParams,
-      $targetParams,
-      $mailing,
-      $job_date
-    );
-
+    $result = $this->writeToDB($deliveredParams, $targetParams, $mailing, $job_date);
     return $result;
   }
 
