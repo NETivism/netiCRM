@@ -587,7 +587,7 @@ WHERE  mailing_id = %1
       $groupBy = "GROUP BY i.email_id";
       if ($dedupeEmail) {
         $groupJoin = " INNER JOIN civicrm_email e ON e.id = i.email_id";
-        $groupBy .= " ,e.email ";
+        $groupBy = "GROUP BY e.email";
       }
 
       $sql = "
@@ -598,7 +598,7 @@ INNER JOIN I_$job_id i ON contact_a.id = i.contact_id AND contact_a.is_opt_out =
            $groupJoin
            {$aclFrom}
            {$aclWhere}
-           $groupBy
+           {$groupBy}
 ORDER BY   i.contact_id, i.email_id
 ";
       CRM_Core_DAO::executeQuery($sql, $params);
@@ -1438,6 +1438,13 @@ AND civicrm_contact.is_opt_out =0";
     // Will test in the mail processor if the X-VERP is set in the bounced email.
     // (As an option to replace real VERP for those that can't set it up)
     $headers['X-CiviMail-Bounce'] = $verp['bounce'];
+
+    // refs #30565, add google feedback loop header
+    $campaignID = $this->id;
+    $customerID = "j={$job_id}-q=$event_queue_id-c=$contactId";
+    $mailTypeID = "newsletter";
+    $senderID = substr(str_replace('.', '-', $_SERVER['HTTP_HOST']), 0, 15);
+    $headers['Feedback-ID'] = "$campaignID:$customerID:$mailTypeID:$senderID";
 
     //CRM-5058
     //token replacement of subject
