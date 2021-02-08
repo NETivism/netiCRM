@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-01-27 06:45+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2021-02-08 05:54+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48320,3 +48320,12 @@ msgid ""
 "request to payment processor provider. And all other change in this page "
 "will be recover. Are you sure to change this? "
 msgstr "如果您將定期捐款設成「暫停中」或「已完成」，若此表單有其他未儲存的欄位更動，將還原成更改前的選項並禁止更改，您確定要改變定期定額狀態嗎？"
+
+msgid "Mass Mailing"
+msgstr "大量寄信"
+
+msgid "Site-wide Mailing"
+msgstr "網站一般信件"
+
+msgid "Transaction Notification"
+msgstr "交易通知信件"

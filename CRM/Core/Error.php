@@ -264,27 +264,32 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       }
     }
 
-    // fallback
-    if (ini_get('xdebug.default_enable') && !empty(CRM_Utils_System::isUserLoggedIn()) && $config->debug) {
-      ob_start();
-      CRM_Core_Error::debug_var('Fatal Error Details', $vars, TRUE, FALSE);
-      $vars['debug'] = ob_get_contents();
-      ob_end_clean();
-      ob_start();
-      CRM_Core_Error::backtrace('backTrace', FALSE);
-      $vars['backtrace'] = ob_get_contents();
-      ob_end_clean();
+    try {
+      throw new CRM_Core_Exception($message);
     }
-    CRM_Core_Error::debug_var('Fatal Error Details', $vars);
-    CRM_Core_Error::backtrace('backTrace', TRUE);
-    if ($suppress) {
-      $vars['suppress'] = $suppress;
+    catch(Exception $e){
+      // fallback
+      if (ini_get('xdebug.default_enable') && !empty(CRM_Utils_System::isUserLoggedIn()) && $config->debug) {
+        ob_start();
+        CRM_Core_Error::debug_var('Fatal Error Details', $vars, TRUE, FALSE);
+        $vars['debug'] = ob_get_contents();
+        ob_end_clean();
+        ob_start();
+        CRM_Core_Error::backtrace('backTrace', FALSE);
+        $vars['backtrace'] = ob_get_contents();
+        ob_end_clean();
+      }
+      CRM_Core_Error::debug_var('Fatal Error Details', $vars);
+      CRM_Core_Error::backtrace('backTrace', TRUE);
+      if ($suppress) {
+        $vars['suppress'] = $suppress;
+      }
+      else {
+        http_response_code(500);
+        $vars['suppress'] = FALSE;
+      }
+      self::output($config->fatalErrorTemplate, $vars);
     }
-    else {
-      http_response_code(500);
-      $vars['suppress'] = FALSE;
-    }
-    self::output($config->fatalErrorTemplate, $vars);
     self::abend(CRM_Core_Error::FATAL_ERROR);
   }
 
