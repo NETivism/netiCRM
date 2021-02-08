@@ -587,7 +587,7 @@ WHERE  mailing_id = %1
       $groupBy = "GROUP BY i.email_id";
       if ($dedupeEmail) {
         $groupJoin = " INNER JOIN civicrm_email e ON e.id = i.email_id";
-        $groupBy .= " ,e.email ";
+        $groupBy = "GROUP BY e.email";
       }
 
       $sql = "
@@ -598,7 +598,7 @@ INNER JOIN I_$job_id i ON contact_a.id = i.contact_id AND contact_a.is_opt_out =
            $groupJoin
            {$aclFrom}
            {$aclWhere}
-           $groupBy
+           {$groupBy}
 ORDER BY   i.contact_id, i.email_id
 ";
       CRM_Core_DAO::executeQuery($sql, $params);
