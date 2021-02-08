@@ -167,6 +167,7 @@ WHERE  inst.report_id = %1";
     $params['html'] = $fileContent;
 
     require_once "CRM/Utils/Mail.php";
+    $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_usedFor);
     return CRM_Utils_Mail::send($params);
   }
 
