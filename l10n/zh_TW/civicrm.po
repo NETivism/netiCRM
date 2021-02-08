@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-02-08 05:54+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2021-02-08 13:11+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48329,3 +48329,6 @@ msgstr "網站一般信件"
 
 msgid "Transaction Notification"
 msgstr "交易通知信件"
+
+msgid "Modify parameters of original Newebpay by Newebpay data."
+msgstr "依照回傳資訊更新舊藍新定期定額資料。"

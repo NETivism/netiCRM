@@ -48021,3 +48021,6 @@ msgstr ""
 
 msgid "Transaction Notification"
 msgstr ""
+
+msgid "Modify parameters of original Newebpay by Newebpay data."
+msgstr ""
