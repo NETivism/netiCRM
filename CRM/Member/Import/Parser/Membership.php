@@ -622,6 +622,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     if ($doCreateContact && empty($checkContactId)) {
       // trying to create new contact base on exists contact related params
       $doGeocodeAddress = FALSE;
+      $this->_parserContact->_dateFormats = $this->_dateFormats;
       $contactImportResult = $this->_parserContact->import(CRM_Import_Parser::DUPLICATE_FILL, $contactValues, $doGeocodeAddress);
       $contactID = $this->_parserContact->getLastImportContactId();
       if (!empty($contactID) && $contactImportResult == CRM_Import_Parser::VALID) {
