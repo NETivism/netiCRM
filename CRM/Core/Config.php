@@ -496,7 +496,13 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         CRM_Core_BAO_MailSettings::commonRetrieveAll('CRM_Core_BAO_MailSettings', 'is_default', $mailerType, $mailSettings);
         if (count($mailSettings)) {
           self::$_mail[$mailerType] = array();
+          $filters = array();
           foreach($mailSettings as $setting) {
+            // when we have more than 1 mass mailing settings, and the settings have localpart field
+            // this will be treat as filter rule of recipients email domain
+            if ($mailerType == 2 && !empty($setting['localpart']) && count($mailSettings) > 1) {
+              $filters[] = $setting['id'];
+            }
             $params['host'] = $setting['server'];
             $params['port'] = !empty($setting['port']) ? $setting['port'] : 25;
             $params['username'] = $setting['username'];
@@ -507,6 +513,16 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
               self::$_mail[$mailerType][$setting['id']] = &Mail::factory('smtp', $params);
               self::$_mail[$mailerType][$setting['id']]->_mailSetting = $setting;
             }
+          }
+          foreach($filters as $settingId) {
+            foreach(self::$_mail[$mailerType] as $sid => &$mailSetting) {
+              if ($sid != $settingId) {
+                $mailSetting['_filter'][] = self::$_mail[$mailerType][$settingId];
+              }
+            }
+          }
+          foreach($filters as $settingId) {
+            unset(self::$_mail[$mailerType][$settingId]);
           }
         }
       }
