@@ -728,7 +728,8 @@
         }
         if(this.installments != installments){
           this.installments = installments;
-          $('#installments').val(installments)
+          $('#installments').val(installments);
+          cj('#installments').trigger('change'); // for trigger PremiumBlock functions.
           this.updateInstallments();
         }
       },
