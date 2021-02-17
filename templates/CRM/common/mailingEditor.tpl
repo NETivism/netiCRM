@@ -125,7 +125,7 @@ window.nmEditor = {
 				nmEditorOpts = {};
 
 		nmEditorOpts.debugMode = "{/literal}{$config->debug}{literal}";
-		window.nmEditorInstance = $(".nme-container").nmEditor(nmEditorOpts);
+		window.nmEditorInstance = $(".nme-container").nmEditor(".nme-container", nmEditorOpts);
 	});
 })(cj);
 </script>

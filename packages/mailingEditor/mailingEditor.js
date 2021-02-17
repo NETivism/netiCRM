@@ -3307,23 +3307,29 @@
    };
 
   // Plugin definition
-  $.fn.nmEditor = function(options) {
-    // Extend our default options with those provided
-    _nmeOptions = $.extend({}, $.fn.nmEditor.defaults, options);
+  $.fn.nmEditor = function(selector, options) {
+    if (typeof selector === "string" && $(selector).length) {
+      // Extend our default options with those provided
+      _nmeOptions = $.extend({}, $.fn.nmEditor.defaults, options);
 
-    // Plugin implementation
-    _qs = _parseQueryString(_query);
-    _debugMode = _nmeOptions.debugMode === "1" ? true : false;
+      // Plugin implementation
+      _qs = _parseQueryString(_query);
+      _debugMode = _nmeOptions.debugMode === "1" ? true : false;
 
-    if (_debugMode) {
-      $("html").addClass("is-debug");
+      if (_debugMode) {
+        $("html").addClass("is-debug");
+      }
+
+      _container = selector;
+      _checkNmeInstance();
+
+      return _nme;
     }
-
-    _container = this.selector;
-    //_debug(_container);
-    _checkNmeInstance();
-
-    return _nme;
+    else {
+      if (window.console || window.console.error) {
+        console.error(".selector API has been removed in jQuery 3.0. jQuery Plugin that need to use a selector string within their plugin can require it as a parameter of the method.");
+      }
+    }
   };
 
   // Plugin defaults options
