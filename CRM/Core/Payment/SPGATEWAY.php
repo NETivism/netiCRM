@@ -190,8 +190,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $sqlParams = array( 1 => array($params['contribution_recur_id'], 'Positive'));
       $dao = CRM_Core_DAO::executeQuery($sql, $sqlParams);
       while ($dao->fetch()) {
-        list($merchantId, $ignore) = explode('_', $dao->merchant_id);
-        $periodNo = $dao->period_no;
+        if (substr($dao->merchant_id, 0, 2) == 'r_') {
+          // Condition for old neweb transfer to current.
+          list($ignore1, $merchantId, $ignore2) = explode('_', $dao->merchant_id);
+        }
+        else {
+          list($merchantId, $ignore) = explode('_', $dao->merchant_id);
+        }
       }
 
       // If status is changed, Send request to alter status API.
