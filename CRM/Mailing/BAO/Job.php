@@ -592,7 +592,23 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       if (!strstr($headers['Sender'], $mailer->host) && $mailer->_mailSetting['return_path']) {
         $headers['Sender'] = $mailer->_mailSetting['return_path'];
       }
-      $result = $mailer->send($recipient, $headers, $body, $this->id);
+
+      // use localpart as regular expression to check if recipient needs another mailer
+      $sent = FALSE;
+      if (!empty($mailer->_filters)) {
+        foreach($mailer->_filters as &$filter) {
+          if ($filter->_mailSetting['localpart']) {
+            if(preg_match('/'.$filter->_mailSetting['localpart'].'/i', $recipient)) {
+              $result = $filter->send($recipient, $headers, $body, $this->id);
+              $sent = TRUE;
+              break;
+            }
+          }
+        }
+      }
+      if (!$sent) {
+        $result = $mailer->send($recipient, $headers, $body, $this->id);
+      }
 
       if ($job_date) {
         CRM_Core_Error::setCallback();

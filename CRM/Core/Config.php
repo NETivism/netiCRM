@@ -498,11 +498,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
           self::$_mail[$mailerType] = array();
           $filters = array();
           foreach($mailSettings as $setting) {
-            // when we have more than 1 mass mailing settings, and the settings have localpart field
-            // this will be treat as filter rule of recipients email domain
-            if ($mailerType == 2 && !empty($setting['localpart']) && count($mailSettings) > 1) {
-              $filters[] = $setting['id'];
-            }
             $params['host'] = $setting['server'];
             $params['port'] = !empty($setting['port']) ? $setting['port'] : 25;
             $params['username'] = $setting['username'];
@@ -510,19 +505,22 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
             $params['auth'] = TRUE;
             $params['localhost'] = $_SERVER['SERVER_NAME'];
             if ($params['host']) {
-              self::$_mail[$mailerType][$setting['id']] = &Mail::factory('smtp', $params);
-              self::$_mail[$mailerType][$setting['id']]->_mailSetting = $setting;
-            }
-          }
-          foreach($filters as $settingId) {
-            foreach(self::$_mail[$mailerType] as $sid => &$mailSetting) {
-              if ($sid != $settingId) {
-                $mailSetting['_filter'][] = self::$_mail[$mailerType][$settingId];
+              // when we have more than 1 mass mailing settings, and the settings have localpart field
+              // this will be treat as filter rule of recipients email domain
+              if ($mailerType == 2 && !empty($setting['localpart'])) {
+                $filters[$setting['id']] = &Mail::factory('smtp', $params);
+                $filters[$setting['id']]->_mailSetting = $setting;
+              }
+              else {
+                self::$_mail[$mailerType][$setting['id']] = &Mail::factory('smtp', $params);
+                self::$_mail[$mailerType][$setting['id']]->_mailSetting = $setting;
               }
             }
           }
-          foreach($filters as $settingId) {
-            unset(self::$_mail[$mailerType][$settingId]);
+          foreach($filters as &$setting) {
+            foreach(self::$_mail[$mailerType] as $sid => &$mailSetting) {
+              $mailSetting->_filters[] = &$setting;
+            }
           }
         }
       }
@@ -538,7 +536,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
 
     // always fallback to default mailer
-    if (!isset(self::$_mail[$mailerType])) {
+    if (!isset(self::$_mail[$mailerType]) || empty(self::$_mail[$mailerType])) {
       $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();;
 
       if (defined('CIVICRM_MAILER_SPOOL') &&
