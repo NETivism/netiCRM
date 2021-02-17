@@ -510,7 +510,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
           }
         }
       }
-      if (!empty(self::$_mail[$mailerType])) {
+      if (!empty(self::$_mail[$mailerType]) && is_array(self::$_mail[$mailerType])) {
         if (count(self::$_mail[$mailerType]) > 1) {
           $key = array_rand(self::$_mail[$mailerType]);
           return self::$_mail[$mailerType][$key];
