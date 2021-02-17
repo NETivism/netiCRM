@@ -21,11 +21,13 @@ function list_contacts_and_select_three(test) {
     casper.thenOpen(vars.baseURL + "civicrm/contact/search?reset=1", function() {
         // his.capture('find_contacts.png');
     });
-    casper.waitForSelector('#contact_type_chzn_o_1', function success() {
-        test.assertExists('#contact_type_chzn_o_1');
-        this.click('#contact_type_chzn_o_1');
+    casper.waitForSelector('#contact_type', function success() {
+        test.assertExists('#contact_type');
+        this.evaluate(function () {
+            document.querySelector("#contact_type").selectedIndex = 1;
+        });
     }, function fail() {
-        test.assertExists('#contact_type_chzn_o_1');
+        test.assertExists('#contact_type');
     });
     casper.then(function() {
         // this.capture('click_individual.png');
@@ -423,11 +425,13 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
         // this.capture('find_contacts.png');
     });
-    casper.waitForSelector('#contact_type_chzn_o_1', function success() {
-        test.assertExists('#contact_type_chzn_o_1');
-        this.click('#contact_type_chzn_o_1');
+    casper.waitForSelector('#contact_type', function success() {
+        test.assertExists('#contact_type');
+        this.evaluate(function () {
+            document.querySelector("#contact_type").selectedIndex = 1;
+        });
     }, function fail() {
-        test.assertExists('#contact_type_chzn_o_1');
+        test.assertExists('#contact_type');
     });
     casper.then(function() {
         // this.capture('click_individual.png');
@@ -503,11 +507,13 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('=====================================');
         // this.capture('find_contacts.png');
     });
-    casper.waitForSelector('#contact_type_chzn_o_1', function success() {
-        test.assertExists('#contact_type_chzn_o_1');
-        this.click('#contact_type_chzn_o_1');
+    casper.waitForSelector('#contact_type', function success() {
+        test.assertExists('#contact_type');
+        this.evaluate(function () {
+            document.querySelector("#contact_type").selectedIndex = 1;
+        });
     }, function fail() {
-        test.assertExists('#contact_type_chzn_o_1');
+        test.assertExists('#contact_type');
     });
     casper.then(function() {
         // this.capture('click_individual.png');

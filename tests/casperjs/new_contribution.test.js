@@ -107,11 +107,13 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* select Paid By */
-    casper.waitForSelector('#payment_instrument_id_chzn_o_1', function success() {
-        test.assertExists('#payment_instrument_id_chzn_o_1');
-        this.click('#payment_instrument_id_chzn_o_1');
+    casper.waitForSelector('#payment_instrument_id', function success() {
+        test.assertExists('#payment_instrument_id');
+        this.evaluate(function () {
+            document.querySelector("#payment_instrument_id").selectedIndex = 1;
+        });
     }, function fail() {
-        test.assertExists('#payment_instrument_id_chzn_o_1');
+        test.assertExists('#payment_instrument_id');
     });
 
     /* sendKeys to Transaction ID */

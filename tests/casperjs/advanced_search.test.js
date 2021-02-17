@@ -45,20 +45,20 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo("Step 1-1: Fill up 'Contact Information'.");
     });
 
-    casper.waitForSelector("#crmasmSelect1", function success() {
+    casper.waitForSelector("#group", function success() {
         this.evaluate(function () {
-            document.getElementById("crmasmSelect1").selectedIndex = 2;
+            document.getElementById("group").selectedIndex = 2;
         });
     }, function fail() {
-        test.assertExists("#crmasmSelect1", "Assert 'Group(s)' field exist.");
+        test.assertExists("#group", "Assert 'Group(s)' field does not exist.");
     });
 
-    casper.waitForSelector("#crmasmSelect2", function success() {
+    casper.waitForSelector("#contact_tags", function success() {
         this.evaluate(function () {
-            document.getElementById("crmasmSelect2").selectedIndex = 1;
+            document.getElementById("contact_tags").selectedIndex = 1;
         });
     }, function fail() {
-        test.assertExists("#crmasmSelect2", "Assert 'Select Tag(s)' field exist.");
+        test.assertExists("#contact_tags", "Assert 'Select Tag(s)' field does not exist.");
     });
 
     casper.then(function() {
@@ -73,16 +73,13 @@ casper.test.begin('Resurrectio test', function(test) {
     
     casper.wait(2000);
 
-    casper.waitForSelector("#state_province_chzn input[value='-- Select --']", function success() {
-        this.click("#state_province_chzn input[value='-- Select --']");
+    casper.waitForSelector("#state_province", function success() {
+        test.assertExists('#state_province');
+        this.evaluate(function () {
+            document.querySelector("#state_province").selectedIndex = 1;
+        });
     }, function fail() {
-        test.assertExists("#state_province_chzn input[value='-- Select --']", "Assert 'State / Province' field exist.");
-    });
-
-    casper.waitForSelector("#state_province_chzn_o_1", function success() {
-        this.click("#state_province_chzn_o_1");
-    }, function fail() {
-        test.assertExists("#state_province_chzn_o_1", "Assert first option of 'State / Province dropdown list' exist.");
+        test.assertExists('#state_province', "Assert first option of 'State / Province dropdown list' does not exist.");
     });
 
     casper.then(function() {
