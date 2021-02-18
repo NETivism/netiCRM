@@ -173,7 +173,18 @@ class CRM_Utils_PDF_Utils {
     $config = CRM_Core_Config::singleton();
     $wkhtmltopdf = $config->wkhtmltopdfPath;
 
-    if (exec("test -x $wkhtmltopdf && echo 1")) {
+    if (!empty(exec("test -x $wkhtmltopdf && echo 1"))) {
+      // version compare
+      $version = exec("$wkhtmltopdf -V");
+      preg_match('/[a-z]+\s([0-9]+\.[0-9]+\.[0-9]+)/i', $version, $matches);
+      $additionalOption = '';
+      if (!empty($matches[1])) {
+        if (version_compare($matches[1], '0.12.3') > 0) {
+          $additionalOption = ' --disable-smart-shrinking --dpi 300 --enable-local-file-access ';
+        }
+      }
+      $option .= $additionalOption;
+
       $temp_prefix = 'pdf_';
       $temp_dir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
       $dest = $dest ? $dest : tempnam($temp_dir, $temp_prefix).".pdf";
