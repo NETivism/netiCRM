@@ -3040,7 +3040,7 @@ WHERE  id IN ( $groupIDs )
             // only add wild card if not there
           }
           else {
-            $value = "'%$value%'";
+            $value = "'$value%'";
           }
           $op = 'LIKE';
         }
