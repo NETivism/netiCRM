@@ -12,7 +12,7 @@
                 {$form.sort_name.html|crmReplace:class:big}
             </td>
             <td>
-                <label>{ts}Complete OR Partial Email{/ts}</label><br />
+                <label>{ts}Complete OR Partial Email{/ts}</label>&nbsp;{help id='id-advanced-wildcard'}<br />
                 {$form.email.html|crmReplace:class:medium}
             </td>
             <td>
