@@ -591,7 +591,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
       CRM_Core_BAO_UFGroup::getValues($this->_contactID, $customFields, $customValues, FALSE,
         array(array('member_id', '=', $renewMembership->id, 0, 0))
-      );
+      , CRM_Core_BAO_UFGroup::MASK_ALL);
 
       $this->assign_by_ref('formValues', $formValues);
       $this->assign('receive_date', $formValues['receive_date']);

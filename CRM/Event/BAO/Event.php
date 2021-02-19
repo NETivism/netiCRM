@@ -1024,20 +1024,13 @@ WHERE civicrm_event.is_active = 1
           $email = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gId, 'notify');
           if ($email) {
             //get values of corresponding profile fields for notification
-            list($profileValues) = self::buildCustomDisplay($gId,
-              NULL,
-              $contactID,
-              $template,
-              $participantId,
-              $isTest,
-              TRUE,
-              $participantParams
-            );
-            $val = array(
-              'id' => $gId,
-              'values' => $profileValues,
-              'email' => $email,
-            );
+            $val = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($gId, $contactID, $participantParams[$key]);
+            $fields = CRM_Core_BAO_UFGroup::getFields($gId, FALSE, CRM_Core_Action::VIEW);
+            foreach ($fields as $k => $v) {
+              if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($val['values'][$v['title']] )){
+                $val['values'][$v['title']] = ts("Uploaded files received");
+              }
+            }
             CRM_Core_BAO_UFGroup::commonSendMail($contactID, $val);
           }
         }
@@ -1248,7 +1241,7 @@ WHERE civicrm_event.is_active = 1
           }
         }
 
-        CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params);
+        CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params, CRM_Core_BAO_UFGroup::MASK_ALL);
 
         foreach ($fields as $k => $v) {
           // suppress all file fields from display
