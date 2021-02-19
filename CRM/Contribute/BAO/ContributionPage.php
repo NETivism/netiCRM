@@ -525,7 +525,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           $template->assign($name . "_grouptitle", $groupTitle);
         }
 
-        CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params);
+        CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params, CRM_Core_BAO_UFGroup::MASK_ALL);
 
         foreach ($fields as $k => $v) {
           // suppress all file fields from display

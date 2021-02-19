@@ -180,7 +180,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
           }
         }
       }
-      CRM_Core_BAO_UFGroup::getValues($this->_id, $fields, $values);
+      CRM_Core_BAO_UFGroup::getValues($this->_id, $fields, $values, TRUE, NULL, CRM_Core_BAO_UFGroup::MASK_NONE);
 
       // $profileFields array can be used for customized display of field labels and values in Profile/View.tpl
       $profileFields = array();
