@@ -1024,10 +1024,10 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
             $params[$index] = $details->$detailName;
           }
           elseif ($fieldName == 'email') {
-            $values[$index] = $maskType ? CRM_Utils_String::mask($details->$detailName) : $detailName; 
+            $values[$index] = $maskType ? CRM_Utils_String::mask($details->$detailName) : $details->$detailName; 
           }
           elseif ($fieldName == 'phone') {
-            $values[$index] = $maskType ? CRM_Utils_String::mask($details->$detailName) : $detailName; 
+            $values[$index] = $maskType ? CRM_Utils_String::mask($details->$detailName) : $details->$detailName; 
           }
           else {
             $params[$index] = $details->$detailName;
