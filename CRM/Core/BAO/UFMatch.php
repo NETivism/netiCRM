@@ -42,6 +42,23 @@ require_once 'CRM/Core/DAO/UFMatch.php';
 class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
 
   /**
+   * Save UFMatch data
+   */
+  static function create(&$params) {
+    if ($params['contact_id'] && $params['uf_id'] && $params['uf_name']) {
+      $ufmatch = new CRM_Core_DAO_UFMatch();
+      $ufmatch->copyValues($params);
+      if (empty($ufmatch->domain_id)) {
+        $ufmatch->domain_id = CRM_Core_Config::domainID();
+      }
+      $ufmatch->find(TRUE);
+      $ufmatch->save();
+      return $ufmatch;
+    }
+    return NULL;
+  }
+
+  /**
    * Given a UF user object, make sure there is a contact
    * object for this user. If the user has new values, we need
    * to update the CRM DB with the new values

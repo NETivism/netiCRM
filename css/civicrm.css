@@ -1019,7 +1019,6 @@ div.spacer,
     padding         : 3px 0px 5px 0px;
     clear           : none;
     /* overflow        : auto; This causes horiz scrollbars, not sure if needed. dgg*/
-    height          : 100%;
 }
 
 .crm-container div.form-item dl, .crm-container .section-hidden dl, .crm-container .crm-form-block dl{

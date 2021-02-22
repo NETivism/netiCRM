@@ -904,6 +904,13 @@ class CRM_Profile_Form extends CRM_Core_Form {
       TRUE
     );
 
+    // this dirty hack will set newly added contact
+    // and let drupal UserProfile Form to access them
+    if ($this->_id) {
+      global $civicrm_profile_contact_id;
+      $civicrm_profile_contact_id = $this->_id;
+    }
+
     // second, trying to send mail to subscrber.
     $mailingType = array();
     $config = CRM_Core_Config::singleton();

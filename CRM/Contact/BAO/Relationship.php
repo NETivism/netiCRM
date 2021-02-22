@@ -1255,7 +1255,9 @@ cc.sort_name LIKE '%$name%'";
   }
 
   static function currentPermittedOrganization($contactId){
-    $permitted = self::getPermissionedEmployer($contactId);
+    if (!empty($contactId)){
+      $permitted = self::getPermissionedEmployer($contactId);
+    }
 
     if(!empty($permitted)){
       if(count($permitted) ==  1){
