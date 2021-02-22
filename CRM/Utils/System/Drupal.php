@@ -114,6 +114,62 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * Get best UF IF from drupal system
+   * 
+   * @return int
+   */
+  public static function getBestUFID($user = NULL) {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if($version <= 7){
+      if (is_object($user)) {
+        return is_numeric($user->uid) ? $user->uid : 0;
+      }
+      else {
+        global $user;
+        return !empty($user->uid) ? $user->uid : 0;
+      }
+    }
+    else {
+      // it's loaded user object
+      if (is_object($user)) {
+        $uid = $user->get('uid')->value;
+        return $uid;
+      }
+      else {
+        $uid = \Drupal::currentUser()->id();
+        return !empty($uid) ? $uid : 0;
+      }
+    }
+    return 0;
+  }
+
+  public static function getBestUFUniqueIdentifier($user) {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if($version <= 7){
+      if (is_object($user)) {
+        return is_numeric($user->mail) ? $user->mail: 0;
+      }
+      else {
+        global $user;
+        return !empty($user->mail) ? $user->mail: 0;
+      }
+    }
+    else {
+      // it's loaded user object
+      if (is_object($user)) {
+        return $user->get('mail')->value;
+      }
+      else {
+        $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+        return $user->get('mail')->value;
+      }
+    }
+    return 0;
+  }
+
+  /**
    * sets the title of the page
    *
    * @param string $title
@@ -832,12 +888,15 @@ class CRM_Utils_System_Drupal {
    * @return boolean true/false.
    */
   public static function isUserLoggedIn() {
-    $isloggedIn = FALSE;
-    if (function_exists('user_is_logged_in')) {
-      $isloggedIn = user_is_logged_in();
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if ($version >= 8) {
+      return \Drupal::currentUser()->isAuthenticated();
     }
-
-    return $isloggedIn;
+    else {
+      return user_is_logged_in();
+    }
+    return FALSE;
   }
 
   /**
@@ -846,8 +905,7 @@ class CRM_Utils_System_Drupal {
    * @return int $userID logged in user uf id.
    */
   public static function getLoggedInUfID() {
-    global $user;
-    return isset($user) && $user->uid ? $user->uid : 0;
+    return self::getBestUFID();
   }
 
   function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {

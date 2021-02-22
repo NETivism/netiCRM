@@ -72,54 +72,15 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
    * @static
    */
   static function synchronize(&$user, $update, $uf, $ctype, $isLogin = FALSE) {
+    $userSystem = CRM_Core_Config::singleton()->userSystem;
     $session = CRM_Core_Session::singleton();
     if (!is_object($session)) {
       CRM_Core_Error::fatal('wow, session is not an object?');
       return;
     }
 
-    //print "synchronize called with uniq_id " . $user->identity_url . "<br/>";
-
-    if ($uf == 'Drupal') {
-      $key = 'uid';
-      $login = 'name';
-      $mail = 'mail';
-    }
-    elseif ($uf == 'Joomla') {
-      $key = 'id';
-      $login = 'username';
-      $mail = 'email';
-    }
-    elseif ($uf == 'Standalone') {
-      $key = 'id';
-      $mail = 'email';
-      $uniqId = $user->identity_url;
-      $query = "
-SELECT    uf_id
-FROM      civicrm_uf_match 
-LEFT JOIN civicrm_openid ON ( civicrm_uf_match.contact_id = civicrm_openid.contact_id ) 
-WHERE     openid = %1";
-      $p = array(1 => array($uniqId, 'String'));
-      $dao = CRM_Core_DAO::executeQuery($query, $p);
-      if ($dao->fetch()) {
-        $user->$key = $dao->uf_id;
-      }
-
-      if (!$user->$key) {
-        // Let's get the next uf_id since we don't actually have one
-        $user->$key = self::getNextUfIdValue();
-      }
-    }
-    else {
-      CRM_Core_Error::statusBounce(ts('Please set the user framework variable'));
-    }
-
-    // make sure we load the joomla object to get valid information
-    if ($uf == 'Joomla') {
-      if (!isset($user->id) || !isset($user->email)) {
-        $user = &JFactory::getUser();
-      }
-    }
+    $userSystemID = $userSystem->getBestUFID($user);
+    $uniqId = $userSystem->getBestUFUniqueIdentifier($user);
 
     // if the id of the object is zero (true for anon users in drupal)
     // have we already processed this user, if so early
@@ -127,17 +88,15 @@ WHERE     openid = %1";
     $userID = $session->get('userID');
     $ufID = $session->get('ufID');
 
-    if (!$update && $ufID == $user->$key) {
-      //print "Already processed this user<br/>";
+    if (!$update && $ufID == $userSystemID) {
       return;
     }
 
     //check do we have logged in user.
-    require_once 'CRM/Utils/System.php';
     $isUserLoggedIn = CRM_Utils_System::isUserLoggedIn();
 
     // reset the session if we are a different user
-    if ($ufID && $ufID != $user->$key) {
+    if ($ufID != $userSystemID) {
       $session->reset();
 
       //get logged in user ids, and set to session.
@@ -145,23 +104,15 @@ WHERE     openid = %1";
         $userIds = self::getUFValues();
         $session->set('ufID', CRM_Utils_Array::value('uf_id', $userIds, ''));
         $session->set('userID', CRM_Utils_Array::value('contact_id', $userIds, ''));
-        $session->set('ufUniqID', CRM_Utils_Array::value('uf_name', $userIds, ''));
       }
     }
 
     // return early
-    if ($user->$key == 0) {
+    if ($userSystemID == 0) {
       return;
     }
 
-    if (!isset($uniqId) ||
-      !$uniqId
-    ) {
-      $uniqId = $user->$mail;
-    }
-
-    //print "Calling synchronizeUFMatch...<br/>";
-    $ufmatch = &self::synchronizeUFMatch($user, $user->$key, $uniqId, $uf, NULL, $ctype, $isLogin);
+    $ufmatch = self::synchronizeUFMatch($user, $userSystemID, $uniqId, $uf, NULL, $ctype, $isLogin);
     if (!$ufmatch) {
       return;
     }
@@ -169,7 +120,6 @@ WHERE     openid = %1";
     //make sure we have session w/ consistent ids.
     $ufID = $ufmatch->uf_id;
     $userID = $ufmatch->contact_id;
-    $ufUniqID = isset($ufmatch->user_unique_id) ? $ufmatch->user_unique_id : '';
     if ($isUserLoggedIn) {
       $loggedInUserUfID = CRM_Utils_System::getLoggedInUfID();
       //are we processing logged in user.
@@ -177,14 +127,12 @@ WHERE     openid = %1";
         $userIds = self::getUFValues($loggedInUserUfID);
         $ufID = CRM_Utils_Array::value('uf_id', $userIds, '');
         $userID = CRM_Utils_Array::value('contact_id', $userIds, '');
-        $ufUniqID = CRM_Utils_Array::value('uf_name', $userIds, '');
       }
     }
 
     //set user ids to session.
     $session->set('ufID', $ufID);
     $session->set('userID', $userID);
-    $session->set('ufUniqID', $ufUniqID);
 
     // add current contact to recentlty viewed
     if ($ufmatch->contact_id) {
@@ -204,17 +152,6 @@ WHERE     openid = %1";
         $displayName,
         $otherRecent
       );
-    }
-
-    if ($update) {
-      // the only information we care about is uniqId, so lets check that
-      if (!isset($ufmatch->user_unique_id) ||
-        $uniqId != $ufmatch->user_unique_id
-      ) {
-        // uniqId has changed, so we need to update that everywhere
-        $ufmatch->user_unique_id = $uniqId;
-        $ufmatch->save();
-      }
     }
   }
 
@@ -680,8 +617,6 @@ AND    domain_id    = %4
    **/
   static function getUFValues($ufID = NULL) {
     if (!$ufID) {
-      //get logged in user uf id.
-      require_once 'CRM/Utils/System.php';
       $ufID = CRM_Utils_System::getLoggedInUfID();
     }
     if (!$ufID) {
