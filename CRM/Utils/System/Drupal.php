@@ -121,7 +121,7 @@ class CRM_Utils_System_Drupal {
   public static function getBestUFID($user = NULL) {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
-    if($version <= 7){
+    if($version < 8){
       if (is_object($user)) {
         return is_numeric($user->uid) ? $user->uid : 0;
       }
@@ -147,7 +147,7 @@ class CRM_Utils_System_Drupal {
   public static function getBestUFUniqueIdentifier($user) {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
-    if($version <= 7){
+    if($version < 8){
       if (is_object($user)) {
         return is_numeric($user->mail) ? $user->mail: 0;
       }
@@ -276,7 +276,7 @@ class CRM_Utils_System_Drupal {
   static function appendBreadCrumb($breadCrumbs) {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
-    if ($version <= 7) {
+    if ($version < 8) {
       $breadCrumb = drupal_get_breadcrumb();
 
       if (is_array($breadCrumbs)) {
@@ -510,7 +510,7 @@ class CRM_Utils_System_Drupal {
    * @static  */
   static function variable_get($name, $default) {
     // drupal 6 and 7
-    if (CRM_Core_Config::singleton()->userSystem->version <= 7 ) {
+    if (CRM_Core_Config::singleton()->userSystem->version < 8 ) {
       return variable_get($name, $default);
     }
     else {
