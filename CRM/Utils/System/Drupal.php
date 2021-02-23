@@ -40,11 +40,12 @@ class CRM_Utils_System_Drupal {
   public $is_drupal;
   public $version;
   public $versionalClass;
+  public static $jsLibraries;
 
   function __construct() {
     $this->is_drupal = TRUE;
     if(class_exists('DRUPAL')) { // drupal 8 or 9
-      $this->version = substr(DRUPAL::VERSION, strpos(DRUPAL::VERSION, '-'));
+      $this->version = (float )substr(DRUPAL::VERSION, 0, strrpos(DRUPAL::VERSION, '.'));
     }
     elseif(defined('VERSION')){  // drupal 7
       $this->version = (float) VERSION;
@@ -492,8 +493,11 @@ class CRM_Utils_System_Drupal {
         }
       }
     }
-    else {
-      CRM_Core_Error::debug_log_message("addJs function have not yet supported this version of drupal $version");
+    elseif($version >= 8) {
+      // refs civicrm.module civicrm_library_info_build
+      if (strstr($params['src'], 'mailingEditor')) {
+        self::$jsLibraries['civicrm/civicrm-js-mailingeditor'] = 1;
+      }
     }
 
     return;
@@ -763,10 +767,15 @@ class CRM_Utils_System_Drupal {
   }
 
   static function updateCategories() {
-    // copied this from profile.module. Seems a bit inefficient, but i dont know a better way
+    $version = CRM_Core_Config::singleton()->userSystem->version;
     // CRM-3600
-    cache_clear_all();
-    menu_rebuild();
+    if ($version < 8) {
+      cache_clear_all();
+      menu_rebuild();
+    }
+    else {
+      \Drupal::service('router.builder')->rebuild();
+    }
   }
 
   /**
