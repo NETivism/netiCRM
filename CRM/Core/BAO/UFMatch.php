@@ -233,30 +233,15 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
         }
       }
       else {
-        if ($uf == 'Standalone') {
-          $dao = CRM_Contact_BAO_Contact::matchContactOnOpenId($uniqId, $ctype);
-        }
-        else {
-          $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($uniqId, $ctype);
-        }
+        $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($uniqId, $ctype);
       }
 
       if (!empty($dao)) {
-        //print "Found contact with uniqId $uniqId<br/>";
         $ufmatch->contact_id = $dao->contact_id;
         $ufmatch->uf_name = $uniqId;
       }
       else {
-        if ($uf == 'Drupal') {
-          $mail = 'mail';
-        }
-        else {
-          $mail = 'email';
-        }
-
-        if (is_Object($user)) {
-          $params = array('email-Primary' => $user->$mail);
-        }
+        $params = array('email-Primary' => $uniqId);
 
         if ($ctype == 'Organization') {
           $params['organization_name'] = $uniqId;
@@ -274,21 +259,6 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
         if ($uf == 'Joomla' && $user->name) {
           require_once 'CRM/Utils/String.php';
           CRM_Utils_String::extractName($user->name, $params);
-        }
-
-        if ($uf == 'Standalone') {
-          $params['openid-Primary'] = $uniqId;
-
-          //need to delete below code once profile is
-          //exposed on signup page
-          if ((!empty($user->first_name)) || (!empty($user->last_name))) {
-            $params['first_name'] = $user->first_name;
-            $params['last_name'] = $user->last_name;
-          }
-          elseif (!empty($user->name)) {
-            require_once 'CRM/Utils/String.php';
-            CRM_Utils_String::extractName($user->name, $params);
-          }
         }
 
         $contactId = CRM_Contact_BAO_Contact::createProfileContact($params, CRM_Core_DAO::$_nullArray);
