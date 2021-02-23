@@ -2914,6 +2914,10 @@ span.icon {
 body.civicrm-menu-enabled {
   padding-top: 25px;
 }
+/* drupal 9 */
+body.civicrm-menu-enabled .toolbar-oriented .toolbar-bar {
+  top: 25px;
+}
 #civicrm-menu {
     height:25px;
 }
