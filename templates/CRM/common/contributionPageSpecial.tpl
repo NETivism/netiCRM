@@ -111,7 +111,11 @@
   })(jQuery);
   {/literal}
 </script>
-<script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js?v{$config->ver}"></script>
+{if $config->userFrameworkVersion > 7}
+  <script type="text/javascript" src="{$config->resourceBase}js/contribution_page.d9.js?v{$config->ver}"></script>
+{else}
+  <script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js?v{$config->ver}"></script>
+{/if}
 <img class="pre-load-background-images" src="{$backgroundImageUrl}" alt="" style="display: none;">
 <img class="pre-load-background-images" src="{$mobileBackgroundImageUrl}" alt="" style="display: none;">
 <style>
