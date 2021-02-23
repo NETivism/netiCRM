@@ -48,7 +48,8 @@ class CRM_Core_Session {
    */
   protected $_key = 'CiviCRM';
   CONST USER_CONTEXT = 'userContext';
-  CONST EXPIRED_TIME = 21600; // second
+  CONST EXPIRED_TIME = 1800; // second
+  CONST EXPIRED_TIME_LONG = 10800; // second
 
   /**
    * This is just a reference to the real session. Allows us to
@@ -472,8 +473,8 @@ class CRM_Core_Session {
       return;
     }
 
-    // trigger purge every one hour
-    if (CRM_REQUEST_TIME - $this->_session[$this->_key]['lastExpired'] > 3600 || $force) {
+    // trigger purge every one half hour
+    if (CRM_REQUEST_TIME - $this->_session[$this->_key]['lastExpired'] > 600 || $force) {
       // CiviCRM/*Controller
       $crmEleCount = $rootEleCount = 0;
       foreach ($this->_session[$this->_key] as $prefix => $object) {
