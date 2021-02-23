@@ -170,17 +170,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
    * @static
    */
   static function &synchronizeUFMatch(&$user, $userKey, $uniqId, $uf, $status = NULL, $ctype = NULL, $isLogin = FALSE) {
-    // validate that uniqId is a valid url. it will either be
-    // an OpenID (which should always be a valid url) or a
-    // http://uf_username/ construction (so that it can
-    // be used as an OpenID in the future)
-    require_once 'CRM/Utils/Rule.php';
-    if ($uf == 'Standalone') {
-      if (!CRM_Utils_Rule::url($uniqId)) {
-        return $status ? NULL : FALSE;
-      }
-    }
-    elseif (!CRM_Utils_Rule::email($uniqId)) {
+    if (!CRM_Utils_Rule::email($uniqId)) {
       return $status ? NULL : FALSE;
     }
 
@@ -189,13 +179,10 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
     // make sure that a contact id exists for this user id
     $ufmatch = new CRM_Core_DAO_UFMatch();
     if (CRM_Core_DAO::checkFieldExists('civicrm_uf_match', 'domain_id')) {
-      // FIXME: if() condition check was required especially for upgrade cases (2.2.x -> 3.0.x),
-      // where folks if happen to logout, would encounter a column not found fatal error
       $ufmatch->domain_id = CRM_Core_Config::domainID();
     }
     $ufmatch->uf_id = $userKey;
     if (!$ufmatch->find(TRUE)) {
-      require_once 'CRM/Core/Transaction.php';
       $transaction = new CRM_Core_Transaction();
 
       // very dirty way use POST as verify parameter
@@ -203,14 +190,12 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
         $params = $_POST;
         $params['email'] = $uniqId;
 
-        require_once 'CRM/Dedupe/Finder.php';
         $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
         $dedupeParams['check_permission'] = FALSE;
         $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
 
         if (!empty($ids) && defined('CIVICRM_UNIQ_EMAIL_PER_SITE') && CIVICRM_UNIQ_EMAIL_PER_SITE) {
           // restrict dupeIds to ones that belong to current domain/site.
-          require_once 'CRM/Core/BAO/Domain.php';
           $siteContacts = CRM_Core_BAO_Domain::getContactList();
           foreach ($ids as $index => $dupeId) {
             if (!in_array($dupeId, $siteContacts)) {
@@ -247,16 +232,10 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
         $ufmatch->uf_name = $uniqId;
       }
       else {
-        if ($uf == 'Drupal') {
-          $mail = 'mail';
-        }
-        else {
-          $mail = 'email';
-        }
-
-        if (is_Object($user)) {
-          $params = array('email-Primary' => $user->$mail);
-        }
+        $userSystem = CRM_Core_Config::singleton()->userSystem;
+        $params = array(
+          'email-Primary' => $uniqId,
+        );
 
         if ($ctype == 'Organization') {
           $params['organization_name'] = $uniqId;
@@ -272,23 +251,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
         // extract first / middle / last name
         // for joomla
         if ($uf == 'Joomla' && $user->name) {
-          require_once 'CRM/Utils/String.php';
           CRM_Utils_String::extractName($user->name, $params);
-        }
-
-        if ($uf == 'Standalone') {
-          $params['openid-Primary'] = $uniqId;
-
-          //need to delete below code once profile is
-          //exposed on signup page
-          if ((!empty($user->first_name)) || (!empty($user->last_name))) {
-            $params['first_name'] = $user->first_name;
-            $params['last_name'] = $user->last_name;
-          }
-          elseif (!empty($user->name)) {
-            require_once 'CRM/Utils/String.php';
-            CRM_Utils_String::extractName($user->name, $params);
-          }
         }
 
         $contactId = CRM_Contact_BAO_Contact::createProfileContact($params, CRM_Core_DAO::$_nullArray);

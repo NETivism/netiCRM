@@ -149,7 +149,7 @@ class CRM_Utils_System_Drupal {
     $version = $config->userSystem->version;
     if($version < 8){
       if (is_object($user)) {
-        return is_numeric($user->mail) ? $user->mail: 0;
+        return !empty($user->mail) ? $user->mail: 0;
       }
       else {
         global $user;
