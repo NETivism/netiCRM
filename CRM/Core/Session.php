@@ -478,7 +478,7 @@ class CRM_Core_Session {
       // CiviCRM/*Controller
       $crmEleCount = $rootEleCount = 0;
       foreach ($this->_session[$this->_key] as $prefix => $object) {
-        if (is_array($object)) {
+        if (is_array($object) && strstr($prefix, 'CRM')) {
           if(!empty($object['expired']) && $object['expired'] < CRM_REQUEST_TIME) {
             unset($this->_session[$this->_key][$prefix]);
             $crmEleCount++;
