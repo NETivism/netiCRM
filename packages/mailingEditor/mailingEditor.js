@@ -2578,24 +2578,23 @@
   };
 
   var _tooltip = function() {
-    // TODO: This is a temporary workaround, because powerTip comes from the neticrm theme, so cj does not have powerTip
-    if (jQuery.fn.powerTip) {
-      let defaultOptions = {};
+    var jq = $.fn.powerTip ? $ : jQuery.fn.powerTip ? jQuery : null;
 
-      if (jQuery("[data-tooltip]").length) {
-        jQuery("[data-tooltip]:not(.tooltip-initialized)").each(function() {
+    if (jq) {
+      if ($("[data-tooltip]").length) {
+        $("[data-tooltip]:not(.tooltip-initialized)").each(function() {
           let options = {};
 
-          if (jQuery(this).is("[data-tooltip-placement]")) {
+          if ($(this).is("[data-tooltip-placement]")) {
             options.placement = $(this).data("tooltip-placement");
           }
 
-          if (jQuery(this).is("[data-tooltip-fadeouttime]")) {
+          if ($(this).is("[data-tooltip-fadeouttime]")) {
             options.fadeOutTime = $(this).data("tooltip-fadeouttime");
           }
 
-          jQuery(this).powerTip(options);
-          jQuery(this).addClass("tooltip-initialized");
+          jq(this).powerTip(options);
+          $(this).addClass("tooltip-initialized");
         });
       }
     }
