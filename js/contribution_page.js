@@ -869,4 +869,4 @@
     }
     window.ContribPage.prepareAfterAll();
   });
-})(jQuery);
+})(cj);
