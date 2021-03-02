@@ -1006,7 +1006,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       if ($this->_mode) {
         $members[] = array('member_test', '=', 1, 0, 0);
       }
-      CRM_Core_BAO_UFGroup::getValues($this->_contactID, $customFields, $customValues, FALSE, $members);
+      CRM_Core_BAO_UFGroup::getValues($this->_contactID, $customFields, $customValues, FALSE, $members, CRM_Core_BAO_UFGroup::MASK_ALL);
       if ($this->_mode) {
         if (CRM_Utils_Array::value('billing_first_name', $this->_params)) {
           $name = $this->_params['billing_first_name'];

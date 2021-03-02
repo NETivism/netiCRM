@@ -4930,6 +4930,7 @@ ul.ui-sortable {
   margin: 0em 0em 1em;
   border-collapse: collapse;
   width: 100%;
+  word-break: break-word;
 }
 .crm-container table.criteria-group {
   margin-bottom: .1em;

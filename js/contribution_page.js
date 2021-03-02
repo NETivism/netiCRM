@@ -432,24 +432,26 @@
           params['_amt'] && params['_amt'] == amount &&
           params['_instrument'] ) {
           window.ContribPage.currentFormStep = 2;
-          cj(document).ajaxComplete(function( event, xhr, settings ) {
-            if(settings.url.substring(0,38) == '/civicrm/contribute/transact?snippet=4' && 
-              cj(xhr.responseText).find('input[id^=civicrm-instrument-dummy]:checked').length) {
-              // setTimeout(function(){
-              // }, 1000);
-              xhr.complete(function(){
-                var interval = setInterval(function(){
-                  if(cj('input[id^=civicrm-instrument-dummy]:checked').length && window.ContribPage.complete){
-                    if(cj('input[id^=civicrm-instrument-dummy]:checked').val() != params['_instrument']){
-                      window.ContribPage.setFormStep(1);
-                      clearInterval(interval);
+          if (cj && (typeof cj == 'function')) {
+            cj(document).ajaxComplete(function( event, xhr, settings ) {
+              if(settings.url.substring(0,38) == '/civicrm/contribute/transact?snippet=4' && 
+                cj(xhr.responseText).find('input[id^=civicrm-instrument-dummy]:checked').length) {
+                // setTimeout(function(){
+                // }, 1000);
+                xhr.complete(function(){
+                  var interval = setInterval(function(){
+                    if(cj('input[id^=civicrm-instrument-dummy]:checked').length && window.ContribPage.complete){
+                      if(cj('input[id^=civicrm-instrument-dummy]:checked').val() != params['_instrument']){
+                        window.ContribPage.setFormStep(1);
+                        clearInterval(interval);
+                      }
                     }
-                  }
-                }, 100);
-              })
-              cj(event.currentTarget).unbind('ajaxComplete');
-            }
-          });
+                  }, 100);
+                })
+                cj(event.currentTarget).unbind('ajaxComplete');
+              }
+            });
+          }
         }
 
       },
@@ -490,7 +492,9 @@
         this.currentPriceOption = val;
         if(this.currentPriceOption){
           // Use cj to trigger premium block. Refs #29369
-          cj('.amount-section [value="'+this.currentPriceOption+'"]').click();
+          if (cj && (typeof cj == 'function')) {
+            cj('.amount-section [value="'+this.currentPriceOption+'"]').click();
+          }
           var amount = $('.price-set-btn div[data-amount='+this.currentPriceOption+'] .amount').text();
           this.setPriceAmount(amount);
         }
@@ -513,7 +517,14 @@
           if(!this.currentPriceOption){
             $('input#amount_other').val(this.currentPriceAmount);
             // For trigger premium block, Refs #29369
-            cj('input[name=amount_other]').trigger('change');
+            if (cj && (typeof cj == 'function')) {
+              cj('input[name=amount_other]').trigger('change');
+            }
+          }
+          else {
+            if (cj && (typeof cj == 'function')) {
+              cj("input[name=amount][value="+this.currentPriceOption+"]").trigger('click');
+            }
           }
           this.updatePriceAmount();
         }
@@ -610,7 +621,6 @@
         if(this.currentFormStep == 1 && step == 2){
           // Check instrument is credit card
           var error_msg = [];
-          console.log(this.currentPriceAmount);
           if(!this.currentPriceAmount || this.currentPriceAmount == 0){
             error_msg.push('Please enter a valid amount.');
           }
@@ -728,7 +738,10 @@
         }
         if(this.installments != installments){
           this.installments = installments;
-          $('#installments').val(installments)
+          $('#installments').val(installments);
+          if (cj && (typeof cj == 'function')) {
+            cj('#installments').trigger('change'); // for trigger PremiumBlock functions. Refs #30391
+          }
           this.updateInstallments();
         }
       },

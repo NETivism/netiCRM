@@ -1442,9 +1442,9 @@ AND civicrm_contact.is_opt_out =0";
     // refs #30565, add google feedback loop header
     $campaignID = $this->id;
     $customerID = "j={$job_id}-q=$event_queue_id-c=$contactId";
-    $mailTypeID = "newsletter";
     $senderID = substr(str_replace('.', '-', $_SERVER['HTTP_HOST']), 0, 15);
-    $headers['Feedback-ID'] = "$campaignID:$customerID:$mailTypeID:$senderID";
+    $identifier = "$campaignID.$customerID.$senderID";
+    $headers['Feedback-ID'] = "$campaignID:$customerID:$identifier:$senderID";
 
     //CRM-5058
     //token replacement of subject

@@ -40,6 +40,7 @@ require_once 'CRM/Core/DAO/UFGroup.php';
  */
 class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   CONST PUBLIC_VISIBILITY = 1, ADMIN_VISIBILITY = 2, LISTINGS_VISIBILITY = 4;
+  CONST MASK_NONE = 0, MASK_PRIVATE = 1, MASK_ALL = 2;
 
   /**
    * cache the match clause used in this transaction
@@ -719,7 +720,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
    * @access public
    * @static
    */
-  public static function getValues($cid, &$fields, &$values, $searchable = TRUE, $componentWhere = NULL) {
+  public static function getValues($cid, &$fields, &$values, $searchable = TRUE, $componentWhere = NULL, $maskType = CRM_Core_BAO_UFGroup::MASK_PRIVATE) {
     if (empty($cid)) {
       return NULL;
     }
@@ -875,15 +876,15 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         }
         elseif ($name == 'first_name') {
           $params[$index] = $details->$name;
-          $values[$index] = CRM_Utils_String::mask($details->$name, 'custom', 0, 1);
+          $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name, 'custom', 0, 1) : $details->$name;
         }
         elseif ($name == 'custom_'.$customTitle) {
           $params[$index] = $details->$name;
-          $values[$index] = CRM_Utils_String::mask($details->$name);
+          $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name) : $details->$name;
         }
         elseif ($name == 'legal_identifier' || $name == 'custom_'.$customSerial) {
           $params[$index] = $details->$name;
-          $values[$index] = CRM_Utils_String::mask($details->$name);
+          $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name) : $details->$name;
         }
         else {
           $processed = FALSE;
@@ -1014,16 +1015,32 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
             $providerId = $detailName . '-provider_id';
             $providerName = $imProviders[$details->$providerId];
             if ($providerName) {
-              $values[$index] = CRM_Utils_String::mask($details->$detailName) . " (" . $providerName . ")";
+              $values[$index] = $maskType ? CRM_Utils_String::mask($details->$detailName) : $details->$detailName;
+              $values[$index] .= " (" . $providerName . ")";
             }
             else {
-              $values[$index] = CRM_Utils_String::mask($details->$detailName);
+              $values[$index] = $maskType ? CRM_Utils_String::mask($details->$detailName) : $details->$detailName;
             }
             $params[$index] = $details->$detailName;
           }
+          elseif ($fieldName == 'email') {
+            $values[$index] = $maskType ? CRM_Utils_String::mask($details->$detailName) : $details->$detailName; 
+          }
+          elseif ($fieldName == 'phone') {
+            $values[$index] = $maskType ? CRM_Utils_String::mask($details->$detailName) : $details->$detailName; 
+          }
           else {
             $params[$index] = $details->$detailName;
-            $values[$index] = CRM_Utils_String::mask($details->$detailName);
+            switch($maskType) {
+              case self::MASK_ALL:
+                $values[$index] = CRM_Utils_String::mask($details->$detailName); 
+                break;
+              case self::MASK_PRIVATE:
+              case self::MASK_NONE:
+              default:
+                $values[$index] = $details->$detailName;
+                break;
+            }
           }
         }
         else {
@@ -2379,7 +2396,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       if (CRM_Core_BAO_UFGroup::filterUFGroups($gid, $cid)) {
         $values = array();
         $fields = CRM_Core_BAO_UFGroup::getFields($gid, FALSE, CRM_Core_Action::VIEW);
-        CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params);
+        CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params, CRM_Core_BAO_UFGroup::MASK_NONE);
 
         // checks for array with only keys and not values
         $count = 0;

@@ -64,7 +64,8 @@
         <tr><td class="label">&nbsp;</td><td class="description">{ts}Contents of the Return-Path header.{/ts}</td></tr>	
 
 	<tr class="crm-mail-settings-form-block-localpart"><td class="label">{$form.localpart.label}</td><td>{$form.localpart.html}</td></tr>
-	<tr><td class="label">&nbsp;</td><td class="description">{ts}Optional local part (e.g., 'civimail+' for addresses like civimail+s.1.2@example.com).{/ts}</td></tr>
+	<tr><td class="label">&nbsp;</td><td class="description">{ts}Optional local part (e.g., 'civimail+' for addresses like civimail+s.1.2@example.com).{/ts}<br>
+  {ts}When using on SMTP, use this field to set regular expression compatible string.{/ts}</td></tr>
 	
 	<tr class="crm-mail-settings-form-block-source"><td class="label">{$form.source.label}</td><td>{$form.source.html}</td></tr>
 	<tr><td class="label">&nbsp;</td><td class="description">{ts}Folder to poll from when using IMAP (will default to INBOX when empty), path to poll from when using Maildir, etc..{/ts}</td></tr>

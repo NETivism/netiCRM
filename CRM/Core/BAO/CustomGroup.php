@@ -390,6 +390,7 @@ WHERE civicrm_custom_group.is_active = 1
   AND civicrm_custom_field.is_active = 1
   AND civicrm_custom_group.extends IN ($in)
   AND civicrm_custom_group.extends_entity_column_value IS NULL
+  AND civicrm_custom_group.extends_entity_column_id IS NULL
 ";
     }
 
