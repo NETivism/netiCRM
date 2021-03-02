@@ -311,11 +311,72 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   }
 
   function cancelRecuringMessage($recurID){
+    $sql = "SELECT p.payment_processor_type, p.url_recur FROM civicrm_payment_processor p INNER JOIN civicrm_contribution_recur r ON p.id = r.processor_id WHERE r.id = %1";
+    $params = array( 1 => array($recurID, 'Positive'));
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    while ($dao->fetch()) {
+      if ($dao->payment_processor_type == 'SPGATEWAY' && $dao->url_recur == 1 ) {
+        $msg = '<p>'.ts("You have enable NewebPay recurring API. Please use edit page to cancel recurring contribution.").'</p><script>cj(".ui-dialog-buttonset button").hide();</script>';
+        return $msg;
+      }
+    }
     if (function_exists("_civicrm_spgateway_cancel_recuring_message")) {
       return _civicrm_spgateway_cancel_recuring_message(); 
     }else{
       CRM_Core_Error::fatal('Module civicrm_spgateway doesn\'t exists.');
     }
+  }
+
+  /**
+   * return array(
+   *   // All instrument:
+   *   'status' => contribuion_status
+   *   'msg' => return message
+   * 
+   *   // Not Credit Card:
+   *   'payment_instrument' => civicrm_spgateway_notify_display() return value
+   * )
+   */
+  function doGetResultFromIPNNotify($contributionId, $submitValues = array()) {
+    // First, check if it is redirect payment.
+    $instruments = CRM_Contribute_PseudoConstant::paymentInstrument('Name');
+    $cDao = new CRM_Contribute_DAO_Contribution();
+    $cDao->id = $contributionId;
+    $cDao->fetch(TRUE);
+    if (strstr($instruments[$cDao->payment_instrument_id], 'Credit')) {
+      // If contribution status id == 2, wait 3 second for IPN trigger
+      if ($cDao->contribution_status_id == 2) {
+        sleep(3);
+        $contribution_status_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_status_id');
+        if ($contribution_status_id == 2) {
+          $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId);
+          $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
+          parse_str($query, $get);
+          $result = civicrm_spgateway_ipn('Credit', $submitValues, $get, FALSE);
+          if(strstr($result, 'OK')){
+            $status = 1;
+          }
+          else{
+            $status = 2;
+          }
+        }
+      }
+      else {
+        $status = $cDao->contribution_status_id;
+        if (!empty($submitValues['JSONData'])) {
+          $return_params = _civicrm_spgateway_post_decode($submitValues['JSONData']);
+        }
+        if(!empty($submitValues['Period']) && empty($return_params)){
+          $payment_processors = CRM_Core_BAO_PaymentProcessor::getPayment($cDao->payment_processor_id, $cDao->is_test?'test':'live');
+          $return_params = _civicrm_spgateway_post_decode(_civicrm_spgateway_recur_decrypt($submitValues['Period'], $payment_processors));
+        }
+        $msg = _civicrm_spgateway_error_msg($return_params['RtnCode']);
+      }
+    }
+    else {
+
+    }
+
   }
 }
 
