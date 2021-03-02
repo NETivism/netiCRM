@@ -305,7 +305,6 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       $params[$recurDAO->id]['contribution_status_id'] = $recurDAO->contribution_status_id;
       $params[$recurDAO->id]['contribution_status'] = CRM_Utils_Array::value($recurDAO->contribution_status_id, $contributionStatus);
       $params[$recurDAO->id]['is_test'] = $recurDAO->is_test;
-      $params[$recurDAO->id]['payment_processor_id'] = $recurDAO->payment_processor_id;
       $params[$recurDAO->id]['cycle_day'] = $recurDAO->cycle_day;
     }
 
