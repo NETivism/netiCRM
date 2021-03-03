@@ -205,21 +205,37 @@ class CRM_Admin_Page_AJAX {
         case 'CRM_Contribute_BAO_ContributionRecur':
           $status = ts('Are you sure you want to mark this recurring contribution as cancelled?');
           // Judge $recurID is belong to neweb or not.
-          $ccid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution cc WHERE cc.contribution_recur_id = {$recordID}");          
-          $contrib = new CRM_Contribute_DAO_Contribution( );
-          $contrib->id = $ccid;
-          
-          if($contrib->find(true)){
-            if(!empty($contrib->payment_processor_id)){
-              $pp = CRM_Core_BAO_PaymentProcessor::getPayment($contrib->payment_processor_id, $contrib->is_test);
-              if($pp['class_name']){
-                $classname = 'CRM_Core_'.$pp['class_name']; 
-                $payment = new $classname($contrib->is_test, $contrib->payment_processor_id);
-                if(method_exists($payment, 'cancelRecuringMessage')){
-                  $status = $payment->cancelRecuringMessage($recordID);  
-                }
+          $processor_id = NULL;
+          $is_test = 0;
+          $sql = "SELECT processor_id, $is_test FROM civicrm_contribution_recur WHERE id = %1";
+          $params = array( 1 => array($recordID, 'Positive'));
+          $dao = CRM_Core_DAO::executeQuery($sql, $params);
+          while ($dao->fetch()) {
+            if ($dao->processor_id) {
+              $processor_id = $dao->processor_id;
+              $is_test = $dao->is_test;
+            }
+          }
+          if (empty($processor_id)) {
+            $ccid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution cc WHERE cc.contribution_recur_id = %1", $params);
+            $contrib = new CRM_Contribute_DAO_Contribution( );
+            $contrib->id = $ccid;
+
+            if($contrib->find(true)){
+              $processor_id = $contrib->payment_processor_id;
+              $is_test = $contrib->is_test;
+            }
+          }
+
+          if (!empty($processor_id)) {
+            $pp = CRM_Core_BAO_PaymentProcessor::getPayment($processor_id, $is_test);
+            if($pp['class_name']){
+              $classname = 'CRM_Core_'.$pp['class_name']; 
+              $payment = new $classname($is_test, $processor_id);
+              if(method_exists($payment, 'cancelRecuringMessage')){
+                $status = $payment->cancelRecuringMessage($recordID);  
               }
-            }  
+            }
           }
           break;
 

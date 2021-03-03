@@ -57,6 +57,6 @@
   };
 
   $(".nme-tpl[data-template-level='data'][data-template-name='button']").val(JSON.stringify(tplData));
-}(jQuery));
+}(cj));
 {/literal}
 </script>

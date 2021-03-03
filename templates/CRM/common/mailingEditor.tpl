@@ -84,9 +84,9 @@ window.nmEditor = {
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css?v{$config->ver}">
-{if $tsLocale == 'zh_TW'}
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/placeholder/quill.placeholder.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.min.css?v{$config->ver}">
+{if $tsLocale == 'zh_TW'}
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css?v{$config->ver}">
 {/if}
 {js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js group=999 weight=997}{/js}

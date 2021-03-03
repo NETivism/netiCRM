@@ -277,7 +277,7 @@ SELECT j.*, m.dedupe_email
 WHERE j.is_test = 0
   AND ( j.start_date IS null AND j.scheduled_date <= $currentTime AND j.status = 'Scheduled' AND j.end_date IS null )
   AND ( j.job_type is NULL OR j.job_type <> 'child' )
-ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 3";
+ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 1";
     $job->query($query);
 
     require_once 'CRM/Core/Lock.php';
@@ -287,9 +287,17 @@ ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 3";
     $processedMailing = array();
     while ($job->fetch()) {
       // refs #22088 calculate recipients before job start
-      if (!isset($processedMailing[$job->mailing_id])) {
+      $hasChild = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM $jobTable WHERE is_test = 0 AND job_type = 'child'");
+      if (!isset($processedMailing[$job->mailing_id]) && !$hasChild) {
+        $rlockName = "civimail.mailing_recipients.{$job->id}";
+        $rlock = new CRM_Core_Lock($rlockName);
+        if (!$rlock->isAcquired()) {
+          continue;
+        }
         CRM_Mailing_BAO_Mailing::getRecipients($job->mailing_id, $job->mailing_id, NULL, NULL, TRUE, $job->dedupe_email);
+        $rlock->release();
         $processedMailing[$job->mailing_id] = TRUE;
+        sleep(mt_rand(10, 40));
       }
       // still use job level lock for each child job
       $lockName = "civimail.job.{$job->id}";

@@ -43,6 +43,6 @@
   };
 
   $(".nme-tpl[data-template-level='data'][data-template-name='paragraph']").val(JSON.stringify(tplData));
-}(jQuery));
+}(cj));
 {/literal}
 </script>

@@ -48024,3 +48024,6 @@ msgstr ""
 
 msgid "Modify parameters of original Newebpay by Newebpay data."
 msgstr ""
+
+msgid "You have enable NewebPay recurring API. Please use edit page to cancel recurring contribution."
+msgstr ""

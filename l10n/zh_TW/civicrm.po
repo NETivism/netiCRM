@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-02-08 13:11+0000\n"
+"PO-Revision-Date: 2021-03-02 07:57+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -39289,7 +39289,7 @@ msgstr "無法到達收件者的 Email 伺服器"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Message caught by a content filter"
-msgstr "被內容過濾器擷取的訊息"
+msgstr "收件人回報或被機器過濾為垃圾郵件"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Error in SMTP transaction"
@@ -48332,3 +48332,8 @@ msgstr "交易通知信件"
 
 msgid "Modify parameters of original Newebpay by Newebpay data."
 msgstr "依照回傳資訊更新舊藍新定期定額資料。"
+
+msgid ""
+"You have enable NewebPay recurring API. Please use edit page to cancel "
+"recurring contribution."
+msgstr "您已啟用藍新定期定額 API ，請於定期定額「編輯」頁取消捐款。"

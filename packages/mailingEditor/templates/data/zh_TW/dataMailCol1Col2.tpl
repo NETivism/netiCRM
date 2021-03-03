@@ -1023,6 +1023,6 @@
   };
 
   $(".nme-tpl[data-template-level='data'][data-template-name='col-1-col-2']").val(JSON.stringify(tplData));
-}(jQuery));
+}(cj));
 {/literal}
 </script>
