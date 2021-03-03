@@ -766,7 +766,7 @@
           $('#intro_text').wrapInner('<div class="intro_text-inner"><div class="intro_text-content is-collapsed"></div></div>');
           $(".intro_text-content").after('<button class="intro_text-readmore-btn" type="button">' + readmoreText.open + '</button>');
 
-          $('#intro_text').on('click', '.intro_text-readmore-btn', function(e) {
+          $('.intro_text-readmore-btn').click(function(e) {
             e.preventDefault();
 
             var $trigger = $(this),
@@ -869,4 +869,4 @@
     }
     window.ContribPage.prepareAfterAll();
   });
-})(cj);
+})(jQuery);
