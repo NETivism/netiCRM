@@ -97,7 +97,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
 
     // reset the session if we are a different user
     if ($ufID != $userSystemID) {
-      $session->reset();
+      $session->reset(0);
 
       //get logged in user ids, and set to session.
       if ($isUserLoggedIn) {
