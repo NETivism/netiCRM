@@ -61,51 +61,61 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
     {
         if ($this->_flagFrozen) {
             return $this->getFrozenHtml();
-        } else {
-            $perm = CRM_Core_Permission::check('access CiviCRM');
-            $name = $this->getAttribute('name');
-            $fullPage = $this->getAttribute('fullpage');
-            if($perm) {
+        }
+        else {
+          $config = CRM_Core_Config::singleton();
+          if (CRM_Utils_System::isUserLoggedIn()) {
+            $plugins = array('widget', 'lineutils',  'mediaembed', 'tableresize', 'image2');
+            foreach($plugins as $name){
+              $extraPlugins[] = 'CKEDITOR.plugins.addExternal("'.$name.'", "'.$config->resourceBase.'/packages/ckeditor/extraplugins/'.$name.'/", "plugin.js");';
+            }
+            if (CRM_Core_Permission::check('access CiviCRM')) {
+              $toolbar = 'CiviCRM';
               $allowedContent = "editor.config.allowedContent = true;";
-              $allowedCkeditor = TRUE;
             }
-            else{
+            else {
               $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height];';";
-              $allowedCkeditor = FALSE;
+              $toolbar =  'CiviCRMBasic';
             }
+            $fullPage = $this->getAttribute('fullpage');
             if ($fullPage) {
               $fullPage = "editor.config.fullPage = true;";
             }
             else {
               $fullPage = "editor.config.fullPage = false;";
             }
-            if ($allowedCkeditor) {
-              $html = parent::toHtml() . "<script type='text/javascript'>
-                cj( function( ) {
-                    if (cj('#{$name}').hasClass('ckeditor-processed')) {
-                      return;
-                    }
-                    else {
-                      cj('#{$name}').addClass('ckeditor-processed');
-                    }
-                    CKEDITOR.replace('{$name}');
-                    var editor = CKEDITOR.instances['{$name}'];
-                    if ( editor ) {
-                        editor.on( 'key', function( evt ){
-                            global_formNavigate = false;
-                        } );
-                        editor.config.width  = '".$this->width."';
-                        editor.config.height = '".$this->height."';
-                        ".$allowedContent."
-                        ".$fullPage."
-                    }
-                }); 
-            </script>";
-            }
-            else {
-              $html = parent::toHtml();
-            }
-            return $html;
+            $name = $this->getAttribute('name');
+            $html = parent::toHtml() . "<script type='text/javascript'>
+".implode("\n", $extraPlugins)."
+cj( function( ) {
+  if (cj('#{$name}').hasClass('ckeditor-processed')) {
+    return;
+  }
+  else {
+    cj('#{$name}').addClass('ckeditor-processed');
+  }
+  CKEDITOR.replace('{$name}');
+  var editor = CKEDITOR.instances['{$name}'];
+  if ( editor ) {
+    editor.on( 'key', function( evt ){
+      global_formNavigate = false;
+    });
+    editor.config.extraPlugins = '".implode(',', $plugins)."';
+    editor.config.customConfig = '".$config->resourceBase."js/ckeditor.config.js';
+    editor.config.width  = '".$this->width."';
+    editor.config.height = '".$this->height."';
+    ".$allowedContent."
+    ".$fullPage."
+    editor.config.toolbar = '".$toolbar."';
+  }
+}); 
+</script>";
+          }
+          else {
+            $toolbar = NULL;
+            $html = parent::toHtml();
+          }
+          return $html;
         }
     }
     
