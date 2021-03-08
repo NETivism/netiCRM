@@ -832,6 +832,6 @@
   };
 
   $(".nme-tpl[data-template-level='data'][data-template-name='col-1-full-width']").val(JSON.stringify(tplData));
-}(jQuery));
+}(cj));
 {/literal}
 </script>
