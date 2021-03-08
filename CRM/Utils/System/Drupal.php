@@ -184,26 +184,7 @@ class CRM_Utils_System_Drupal {
       $pageTitle = $title;
     }
     $config = CRM_Core_Config::singleton();
-    $version = $config->userSystem->version;
-    if($version >= 6 && $version < 7){
-      if (arg(0) == 'civicrm') {
-        drupal_set_title($pageTitle);
-      }
-    }
-    elseif($version >= 7 && $version < 8) {
-      if (arg(0) == 'civicrm') {
-        drupal_set_title($pageTitle, PASS_THROUGH);
-      }
-    }
-    elseif($version >= 8) {
-      $request = \Drupal::request();
-      $currentPath = $request->getRequestUri();
-      if (strpos($currentPath, '/civicrm') === 0) {
-        if ($route = $request->attributes->get(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT)) {
-          $route->setDefault('_title', $pageTitle);
-        }
-      }
-    }
+    $config->userSystem->versionalClass->setTitle($pageTitle);
   }
 
   /**
@@ -274,14 +255,14 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function appendBreadCrumb($breadCrumbs) {
+  static function appendBreadCrumb($breadcrumbs) {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
     if ($version < 8) {
-      $breadCrumb = drupal_get_breadcrumb();
+      $bc = drupal_get_breadcrumb();
 
-      if (is_array($breadCrumbs)) {
-        foreach ($breadCrumbs as $crumbs) {
+      if (is_array($breadcrumbs)) {
+        foreach ($breadcrumbs as $crumbs) {
           if (stripos($crumbs['url'], 'id%%')) {
             $args = array('cid', 'mid');
             foreach ($args as $a) {
@@ -293,10 +274,13 @@ class CRM_Utils_System_Drupal {
               }
             }
           }
-          $breadCrumb[] = "<a href=\"{$crumbs['url']}\">{$crumbs['title']}</a>";
+          $bc[] = "<a href=\"{$crumbs['url']}\">{$crumbs['title']}</a>";
         }
       }
-      drupal_set_breadcrumb($breadCrumb);
+      drupal_set_breadcrumb($bc);
+    }
+    else {
+      $config->userSystem->versionalClass->appendBreadCrumb($breadcrumbs);
     }
   }
 
@@ -308,8 +292,14 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function resetBreadCrumb() {
-    $bc = array();
-    drupal_set_breadcrumb($bc);
+    $config = CRM_Core_Config::singleton();
+    if ($config->userSystem->version < 8) {
+      $bc = array();
+      drupal_set_breadcrumb($bc);
+    }
+    else {
+      $config->userSystem->versionalClass->resetBreadCrumb();
+    }
   }
 
   /**
@@ -784,22 +774,28 @@ class CRM_Utils_System_Drupal {
    * @return string  with the locale or null for none
    */
   static function getUFLocale() {
-    // return CiviCRM’s xx_YY locale that either matches Drupal’s Chinese locale
-    // (for CRM-6281), Drupal’s xx_YY or is retrieved based on Drupal’s xx
-    global $language;
-    switch (TRUE) {
-      case $language->language == 'zh-hans':
-        return 'zh_CN';
+    $version = CRM_Core_Config::singleton()->userSystem->version;
+    if ($version >= 8) {
+      $languageCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    }
+    else {
+      global $language;
+      $languageCode = $language->language;
+    }
 
-      case $language->language == 'zh-hant':
-        return 'zh_TW';
-
-      case preg_match('/^.._..$/', $language->language):
-        return $language->language;
-
-      default:
-        require_once 'CRM/Core/I18n/PseudoConstant.php';
-        return CRM_Core_I18n_PseudoConstant::longForShort(substr($language->language, 0, 2));
+    if ($languageCode == 'zh-hans') {
+      return 'zh_CN';
+    }
+    elseif ($languageCode == 'zh-hant') {
+      return 'zh_TW';
+    }
+    else {
+      if (preg_match('/^.._..$/', $languageCode)) {
+        return $languageCode;
+      }
+      else {
+        return CRM_Core_I18n_PseudoConstant::longForShort(substr($languageCode, 0, 2));
+      }
     }
   }
 

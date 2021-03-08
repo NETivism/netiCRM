@@ -253,4 +253,8 @@ class CRM_Utils_System_Drupal7 {
     }
     return $url;
   }
+
+  function setTitle($pageTitle) {
+    drupal_set_title($pageTitle, PASS_THROUGH);
+  }
 }

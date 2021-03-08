@@ -464,9 +464,7 @@ class CRM_Core_Menu {
       }
 
       // add to crumb, if current-path exists in params.
-      if (array_key_exists($currentPath, $menu) &&
-        isset($menu[$currentPath]['title'])
-      ) {
+      if (array_key_exists($currentPath, $menu) && isset($menu[$currentPath]['title']) && $currentPath != 'civicrm') {
         $urlVar = CRM_Utils_Array::value('path_arguments', $menu[$currentPath]) ? '&' . $menu[$currentPath]['path_arguments'] : '';
         $crumbs[] = array(
           'title' => $menu[$currentPath]['title'],

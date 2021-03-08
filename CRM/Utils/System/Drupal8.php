@@ -178,11 +178,8 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function setTitle($title, $pageTitle = NULL) {
-    if (!$pageTitle) {
-      $pageTitle = $title;
-    }
-    \Drupal::service('civicrm.page_state')->setTitle($pageTitle);
+  public function setTitle($title) {
+    \Drupal::service('civicrm.page_state')->setTitle($title);
   }
 
   /**
