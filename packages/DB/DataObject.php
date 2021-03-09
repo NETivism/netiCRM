@@ -2439,6 +2439,7 @@ class DB_DataObject extends DB_DataObject_Overload
                   throw new CRM_Core_Exception($message, 0, array('sql' => $string, 'trace' => $e->getTrace()));
                 }
                 CRM_Core_Error::debug_log_message("Retrying after $message hit on attempt " . ($tries + 1) . ' at query : ' . $string);
+                usleep(500000); // 0.5s
                 continue;
               }
             }

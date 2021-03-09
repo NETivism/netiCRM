@@ -143,7 +143,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @access public
    */
   public static function handle($pearError) {
-
     // setup smarty with config, session and template location.
     $template = CRM_Core_Smarty::singleton();
     $config = CRM_Core_Config::singleton();
@@ -212,6 +211,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       echo "Sorry. A non-recoverable error has occurred. The error trace below might help to resolve the issue<br>";
       CRM_Core_Error::debug(NULL, $error);
     }
+    throw new PEAR_Exception($error['message'].'|'.$error['user_info'], $pearError);
 
     self::abend(1);
   }
