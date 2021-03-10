@@ -421,7 +421,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
 
     // reset the group contact cache for this group
     require_once 'CRM/Contact/BAO/GroupContactCache.php';
-    if (!$config->doNotResetCache) {
+    if (!$config->doNotResetGroupContactCache) {
       CRM_Contact_BAO_GroupContactCache::remove();
     }
 
@@ -1640,7 +1640,7 @@ ORDER BY civicrm_email.is_primary DESC";
 
     // reset the group contact cache for this group
     require_once 'CRM/Contact/BAO/GroupContactCache.php';
-    if (!$config->doNotResetCache) {
+    if (!$config->doNotResetGroupContactCache) {
       CRM_Contact_BAO_GroupContactCache::remove();
     }
 
