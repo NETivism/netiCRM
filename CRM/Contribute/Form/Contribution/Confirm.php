@@ -336,7 +336,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $contact = $this->_params;
     foreach ($fields as $name => $dontCare) {
       if (isset($contact[$name])) {
-        if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && !is_numeric($contact[$name]) && $this->get('csContactID')) {
+        if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && $this->_fields[$name]['html_type'] === 'Text' && $this->get('csContactID')) {
           $defaults[$name] = CRM_Utils_String::mask($contact[$name]);
         }
         else {
