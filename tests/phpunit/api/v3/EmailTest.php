@@ -35,6 +35,22 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->locationTypeDelete($this->_locationType->id);
     $this->locationTypeDelete($this->_locationType2->id);
   }
+
+  /**
+   * @start_document
+   * 
+   * ### {ts}Create{/ts} {ts}Email{/ts}
+   * 
+   * {ts}This is tests for creating Email{/ts}
+   * 
+   * ```
+   * Sample Source Code
+   * ```
+   * 
+   * {{RESULT}}
+   * 
+   * @end_document
+   */
   public function testCreateEmail() {
     $params = $this->_params;
     //check there are no emails to start with
@@ -95,6 +111,22 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertContains('email', $result['error_message'], 'In line ' . __LINE__);
   }
 
+  
+  /**
+   * @start_document
+   * 
+   * ### {ts}Get{/ts} {ts}Email{/ts}
+   * 
+   * {ts}This is tests for get Email{/ts}
+   * 
+   * ```
+   * Sample Source Code
+   * ```
+   * 
+   * {{RESULT}}
+   * 
+   * @end_document
+   */
   public function testGetEmail() {
     $result = civicrm_api('email', 'create', $this->_params);
     $this->assertAPISuccess($result, 'create email in line ' . __LINE__);
@@ -110,6 +142,23 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $delresult = civicrm_api('email', 'delete', array('id' => $result['id'], 'version' => 3));
     $this->assertAPISuccess($delresult, 'In line ' . __LINE__);
   }
+
+  
+  /**
+   * @start_document
+   * 
+   * ### {ts}Delete{/ts} {ts}Email{/ts}
+   * 
+   * {ts}This is tests for deleting Email{/ts}
+   * 
+   * ```
+   * Sample Source Code
+   * ```
+   * 
+   * {{RESULT}}
+   * 
+   * @end_document
+   */
   public function testDeleteEmail() {
     $params = array(
       'contact_id' => $this->_contactID,
@@ -144,6 +193,22 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
   }
 
+  
+  /**
+   * @start_document
+   * 
+   * ### {ts}Update{/ts} {ts}Email{/ts}
+   * 
+   * {ts}This is tests for updating Email{/ts}
+   * 
+   * ```
+   * Sample Source Code
+   * ```
+   * 
+   * {{RESULT}}
+   * 
+   * @end_document
+   */
   public function testReplaceEmail() {
     // check there are no emails to start with
     $get = civicrm_api('email', 'get', array(
