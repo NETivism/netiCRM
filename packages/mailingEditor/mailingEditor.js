@@ -418,15 +418,6 @@
     _debug(_viewport, "viewport");
   };
 
-  var _relativeToAbsoluteURL = function(url) {
-    var url = typeof url !== "undefined" ? url : "";
-
-    if (url) {
-      var absoluteURL = window.location.origin.indexOf("local.dev") == -1 ? window.location.origin + url : "https://dev7.neticrm.tw" + url;
-      return absoluteURL;
-    }
-  };
-
   var _updateUrlHash = function(hash) {
     var hash = typeof hash !== "undefined" ? "#" + hash : "";
 
