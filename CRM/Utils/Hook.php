@@ -409,10 +409,7 @@ class CRM_Utils_Hook {
     return $className::invoke(  2, $objectName, $object, $null, $null, $null, 'civicrm_copy' );
   }
 
-  static function invoke($numParams,
-    &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
-    $fnSuffix, $fnPrefix
-  ) {
+  static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
     static $included = FALSE;
 
     $result = array();

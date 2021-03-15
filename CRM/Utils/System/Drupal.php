@@ -1005,5 +1005,27 @@ class CRM_Utils_System_Drupal {
     }
     return $purgedName;
   }
+
+  function moduleImplements($hook) {
+    $config = CRM_Core_Config::singleton();
+    if ($config->userSystem->version < 8) {
+      return module_implements($hook);
+    }
+    elseif($config->userSystem->version >= 8) {
+      return \Drupal::moduleHandler()->getImplementations($hook);
+    }
+    elseif (function_exists('module_list')) {
+      $implements = array();
+      foreach (module_list() as $module) {
+        $fnName = "{$module}_{$hook}";
+        if (function_exists($fnName)) {
+          $implements[] = $module;
+        }
+      }
+      return $implements;
+    }
+    return array();
+  }
+  
 }
 

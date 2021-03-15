@@ -462,6 +462,20 @@ class CRM_Utils_System {
   }
 
   /**
+   * Check hook exists in module list
+   * @return string
+   * @access public
+   * @static  
+   */
+  static function moduleImplements($hook) {
+    $config = CRM_Core_Config::singleton();
+    if ($config->userFramework == 'Drupal') {
+      return $config->userSystem->moduleImplements($hook);
+    }
+    return array();
+  }
+
+  /**
    * rewrite various system urls to https
    *
    * @return void
