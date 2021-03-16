@@ -18,6 +18,7 @@
 <!-- Added global variable: nmEditor -->
 <script type="text/javascript">
 window.nmEditor = {
+	crmPath: "{/literal}{$config->resourceBase}{literal}",
 	language: "{/literal}{$tsLocale}{literal}",
 	translation: {
 		// Golbal

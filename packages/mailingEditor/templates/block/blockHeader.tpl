@@ -38,7 +38,7 @@ elem (nme-elem): none
           <tbody>
             <tr>
               <td class="nmeb-content" valign="top" data-settings-target="elemContainerInner" style="text-align: center;">
-                <img align="center" alt="" src="/sites/all/modules/civicrm/packages/mailingEditor/images/mail-default-logo@2x.png" width="192" style="max-width: 680px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="nmee-image nme-elem" data-settings-target="elem">
+                <img align="center" alt="" src="{$config->resourceBase}packages/mailingEditor/images/mail-default-logo@2x.png" width="192" style="max-width: 680px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="nmee-image nme-elem" data-settings-target="elem">
               </td>
             </tr>
           </tbody>
