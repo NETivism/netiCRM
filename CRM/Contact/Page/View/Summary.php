@@ -139,6 +139,20 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     $params['id'] = $params['contact_id'] = $this->_contactId;
     $params['noRelationships'] = $params['noNotes'] = $params['noGroups'] = TRUE;
     $contact = CRM_Contact_BAO_Contact::retrieve($params, $defaults, TRUE);
+    if (!empty($defaults['email'])) {
+      $bounceTypes = CRM_Mailing_PseudoConstant::bounceType('name', 'description');
+      foreach($defaults['email'] as $blid => &$em) {
+        if ($em['on_hold']) {
+          $bounceRecord = CRM_Mailing_Event_BAO_Bounce::getEmailBounceType(NULL, $em['id']);
+          if (!empty($bounceRecord)) {
+            $em['is_spam'] = $bounceRecord['bounce_type_name'] == 'Spam' ? TRUE : FALSE;
+            $em['bounce_type_name'] = $bounceRecord['bounce_type_name'];
+            $em['bounce_type_desc'] = $bounceTypes[$bounceRecord['bounce_type_name']];
+            $em['bounce_mailing_id'] = $bounceRecord['mailing_id'];
+          }
+        }
+      }
+    }
 
     $communicationType = array(
       'phone' => array(
