@@ -493,7 +493,7 @@
   var _getDefaultImage = function(type) {
     var type = typeof type !== "undefined" ? type : "",
         img = {},
-        crmPath = window.location.origin + _crmPath;
+        crmPath = _crmPath.indexOf(window.location.origin) != -1 ? _crmPath : window.location.origin + _crmPath;
 
     if (type) {
       switch(type) {
