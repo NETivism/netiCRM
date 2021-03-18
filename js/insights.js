@@ -35,9 +35,11 @@ function loadReferrer() {
   var dateTime = Date.now();
   var timestamp = Math.floor(dateTime / 1000);
   var referrerInfo = localStorage.getItem('referrerInfo');
+  console.log(123);
   if (referrerInfo) {
     referrerInfo = JSON.parse(referrerInfo);
   }
+  console.log(referrerInfo);
 
   // if someone visit this site over 30mins, we need to get referrer again
   if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && timestamp - referrerInfo.timestamp < 1800) {
@@ -200,8 +202,11 @@ function trackVisit(visitInfo) {
   });
 }
 
-var inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
-loadScript(inboundSrc, function(){
-  loadReferrer();
-});
-
+if (typeof Drupal !== 'undefined') {
+  var inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
+  loadScript(inboundSrc, function(){ loadReferrer(); });
+}
+else if (typeof drupalSettings !== 'undefined') {
+  var inboundSrc = drupalSettings.civicrm.resourceBase+'js/inbound.js';
+  loadScript(inboundSrc, function(){ loadReferrer(); });
+}
