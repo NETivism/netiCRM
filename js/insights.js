@@ -202,7 +202,7 @@ function trackVisit(visitInfo) {
   });
 }
 
-if (typeof Drupal !== 'undefined') {
+if (typeof Drupal !== 'undefined' && typeof Drupal.settings !== 'undefined') {
   var inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
   loadScript(inboundSrc, function(){ loadReferrer(); });
 }
