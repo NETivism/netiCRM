@@ -48,7 +48,7 @@ class CRM_Core_Block {
    *
    * @var int
    */
-  CONST CREATE_NEW = 1, RECENTLY_VIEWED = 2, DASHBOARD = 3, ADD = 4, LANGSWITCH = 5, EVENT = 6, FULLTEXT_SEARCH = 7;
+  CONST CREATE_NEW = 1, RECENTLY_VIEWED = 2, DASHBOARD = 3, ADD = 4, LANGSWITCH = 5, EVENT = 6, FULLTEXT_SEARCH = 7, AUTOCOMPLETE_SEARCH = 8;
 
   /**
    * template file names for the above blocks
@@ -151,6 +151,17 @@ class CRM_Core_Block {
           'cache' => BLOCK_CACHE_GLOBAL,
           'visibility' => 1,
           'weight' => -94,
+          'status' => 0,
+          'pages' => 'civicrm*',
+        ),
+        self::AUTOCOMPLETE_SEARCH => array(
+          'template' => 'AutocompleteSearch.tpl',
+          'info' => ts('Autocomplete Contact Search'),
+          'subject' => '',
+          'active' => TRUE,
+          'cache' => BLOCK_NO_CACHE,
+          'visibility' => 1,
+          'weight' => -93,
           'status' => 0,
           'pages' => 'civicrm*',
         ),
