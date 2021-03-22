@@ -2,6 +2,7 @@
   <input type="text" class="form-text md-textfield" id="neticrm_sort_name_navigation" name="sort_name" value="" placeholder="{ts}Name, Phone or Email{/ts}" />
   <input type="hidden" id="sort_contact_id" value="" />
   <i class="zmdi zmdi-search zmdi-hc-flip-horizontal"></i>
+  <button type="submit" name="_qf_Basic_refresh" class="form-submit default" style="display:none"></button>
 </form>
 {literal}
 <script type="text/javascript">
