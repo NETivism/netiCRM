@@ -1003,16 +1003,6 @@ class CRM_Utils_System_Drupal {
     return $logoURL;
   }
 
-  function transliteration($string) {
-    require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
-    $purgedName = '';
-    if (self::moduleExists('transliteration')) {
-      $purgedName = strtolower(transliteration_clean_filename($string));
-      $purgedName = trim($purgedName, '_');
-    }
-    return $purgedName;
-  }
-
   function moduleImplements($hook) {
     $config = CRM_Core_Config::singleton();
     if ($config->userSystem->version < 8) {
