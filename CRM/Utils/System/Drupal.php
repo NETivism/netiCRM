@@ -488,6 +488,13 @@ class CRM_Utils_System_Drupal {
       if (strstr($params['src'], 'mailingEditor')) {
         self::$jsLibraries['civicrm/civicrm-js-mailingeditor'] = 1;
       }
+      elseif(isset($params['type'])) {
+        switch($params['type']) {
+          case 'inline':
+            \Drupal::service('civicrm.page_state')->addJs($text, $params['type']);
+            break;
+        }
+      }
     }
 
     return;
