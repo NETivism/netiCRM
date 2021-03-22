@@ -188,6 +188,7 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
     $parser = new CRM_Member_Import_Parser_Membership($mapperKeys, $mapperLocType, $mapperPhoneType);
 
     $mapFields = $this->get('fields');
+    $parser->_dateFormats = $this->get('dateFormats');
 
     foreach ($mapper as $key => $value) {
       $header = array();
