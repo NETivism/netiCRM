@@ -1732,7 +1732,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $sourceContactId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activityID, 'source_contact_id');
 
     $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
-    // $sendResult = $providerObj->send($recipient, $smsParams, $tokenText, NULL, $userID);
+    $sendResult = $providerObj->send($recipient, $smsParams, $tokenText, NULL, $userID);
 
     // add activity target record for every sms that is send
     $activityTargetParams = array(
