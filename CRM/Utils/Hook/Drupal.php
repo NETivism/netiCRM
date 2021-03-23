@@ -44,7 +44,7 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
   static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
     static $functions = array();
     $config = CRM_Core_Config::singleton();
-    $result = NULL;
+    $result = array();
     if ($config->userSystem->version < 8 ){
       // copied from user_module_invoke
       if (function_exists('module_list')) {
