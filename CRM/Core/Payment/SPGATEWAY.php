@@ -227,6 +227,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $errResult = $recurResult;
           return $errResult;
         }
+        else {
+          // for status 'suspend', result status id could be 1 or 7, depends on input status id.
+          $recurResult['contribution_status_id'] = $params['contribution_status_id'];
+        }
       }
 
       // Send alter other property API.
