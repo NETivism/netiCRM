@@ -5564,7 +5564,7 @@ INSERT INTO civicrm_mailing_bounce_pattern
 
 INSERT INTO civicrm_mailing_bounce_type 
         (name, description, hold_threshold) 
-        VALUES ('Spam', '被內容過濾器擷取的訊息', 1);
+        VALUES ('Spam', '收件人回報或被機器過濾為垃圾郵件', 1);
 
 SELECT @bounceTypeID := max(id) FROM civicrm_mailing_bounce_type WHERE name = 'Spam';
 INSERT INTO civicrm_mailing_bounce_pattern 

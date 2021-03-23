@@ -864,9 +864,9 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
       unset($tmpFields['option_value']);
       $optionFields = CRM_Core_OptionValue::getFields($mode = 'member');
 
-      // $contactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
       $contactFields = array();
       $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+      $tmpContactFields = CRM_Core_BAO_Address::validateAddressOptions($tmpContactFields);
       $contactFieldsIgnore = array('id', 'note', 'do_not_import', 'contact_sub_type', 'group_name', 'tag_name');
 
 

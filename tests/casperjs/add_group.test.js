@@ -196,8 +196,8 @@ casper.test.begin('Resurrectio test', function(test) {
         vars.group_id = this.evaluate(function (group_name) {
             tr = document.querySelectorAll('#group table tr');
             for(var i=1; i<tr.length; i++) {
-                if(tr[i].querySelector('td:first-child').textContent == group_name) {
-                    return tr[i].querySelector('td:nth-child(2)').textContent;
+                if(tr[i].querySelector('td:nth-child(2)').textContent == group_name) {
+                    return tr[i].querySelector('td:nth-child(1)').textContent;
                 }
             }
         }, vars.group_name);

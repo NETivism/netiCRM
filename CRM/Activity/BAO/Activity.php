@@ -1565,6 +1565,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $escapeSmarty = FALSE;
     $errMsgs = array();
     foreach ($contactDetails as $values) {
+      $eachActivityParams = $activityParams;
       if (!empty($values['contact_id'])) {
         $contactId = $values['contact_id'];
       }
@@ -1595,17 +1596,15 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $smsParams['To'] = '';
       }
 
-      if (!empty($activityParams['activity_subject']) && empty($activityParams['subject'])) {
-        $activityParams['subject'] = $activityParams['activity_subject'];
+      if (!empty($eachActivityParams['activity_subject']) && empty($eachActivityParams['subject'])) {
+        $eachActivityParams['subject'] = $eachActivityParams['activity_subject'];
       }
-      $activityParams += array(
-        'source_contact_id' => $userID,
-        'activity_date_time' => date('YmdHis'),
-        'details' => ts("Body") . ": " . $tokenText,
-        'status_id' => CRM_Utils_Array::key('Scheduled', CRM_Core_PseudoConstant::activityStatus('name')),
-      );
+      $eachActivityParams['source_contact_id'] = $userID;
+      $eachActivityParams['activity_date_time'] = date('YmdHis');
+      $eachActivityParams['details'] = ts("Body") . ": " . $tokenText;
+      $eachActivityParams['status_id'] = CRM_Utils_Array::key('Scheduled', CRM_Core_PseudoConstant::activityStatus('name'));
 
-      $activity = self::create($activityParams);
+      $activity = self::create($eachActivityParams);
 
       $message = '';
       $isSuccess = FALSE;

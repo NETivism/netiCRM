@@ -61,8 +61,8 @@
        <table id="options" class="display">
         <thead>
           <tr>
-          <th id="sortable">{ts}Name{/ts}</th>
           <th>{ts}ID{/ts}</th>
+          <th>{ts}Name{/ts}</th>
           <th id="nosort">{ts}Description{/ts}</th>
           <th>{ts}Mode{/ts}</th>
           <th>{ts}Group Type{/ts}</th>
@@ -75,9 +75,27 @@
         </thead>
        {foreach from=$rows item=row}
        <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-            <td>{$row.title}</td>	
             <td>{$row.id}</td>
-            <td>{$row.description|mb_truncate:80:"...":true}</td>
+            <td>
+              {$row.title}
+            </td>	
+            <td>
+              {$row.description|mb_truncate:80:"...":true}
+              {if $row.is_children}
+              <div class="description">{ts}Parent Groups{/ts}:
+              {foreach from=$row.parents item=parent key=i name=nest}
+                <a href="{crmURL p="civicrm/group/search" q="reset=1&force=1&context=smog&gid=`$parent`"}">{$parent}</a>{if !$smarty.foreach.nest.last},{/if}
+              {/foreach}
+              </div>
+              {/if}
+              {if $row.is_parent}
+              <div class="description">{ts}Children{/ts}:
+              {foreach from=$row.children item=child key=i name=nest}
+                <a href="{crmURL p="civicrm/group/search" q="reset=1&force=1&context=smog&gid=`$child`"}">{$child}</a>{if !$smarty.foreach.nest.last},{/if}
+              {/foreach}
+              </div>
+              {/if}
+            </td>
             <td>{$row.mode}</td>	
             <td>{$row.group_type}</td>	
             <td>{$row.visibility}</td>

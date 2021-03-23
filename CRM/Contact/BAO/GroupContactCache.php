@@ -133,7 +133,6 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
       $sql = "INSERT IGNORE INTO civicrm_group_contact_cache (group_id,contact_id) VALUES $str;";
       CRM_Core_DAO::executeQuery($sql);
     }
-    self::updateCacheTime($groupID, $processed);
   }
 
   static function remove($groupID = NULL, $onceOnly = TRUE) {
@@ -144,19 +143,19 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
     // to do this all the time
     // this optimization is done only when no groupID is passed
     // i.e. cache is reset for all groups
-    if ($onceOnly &&
-      $invoked &&
-      $groupID == NULL
-    ) {
+    if ($onceOnly && $invoked && $groupID == NULL) {
       return;
     }
 
     if ($groupID == NULL) {
       $invoked = TRUE;
-    } else if (is_array($groupID)) {
-      foreach ($groupID as $gid)
+    }
+    else if (is_array($groupID)) {
+      foreach ($groupID as $gid) {
         unset(self::$_alreadyLoaded[$gid]);
-    } else if ($groupID && array_key_exists($groupID, self::$_alreadyLoaded)) {
+      }
+    }
+    else if ($groupID && array_key_exists($groupID, self::$_alreadyLoaded)) {
       unset(self::$_alreadyLoaded[$groupID]);
     }
 
@@ -181,21 +180,30 @@ TRUNCATE civicrm_group_contact_cache
 UPDATE civicrm_group g
 SET    cache_date = null
 ";
+        $params = array();
       }
       else {
+        // #30818, we have serious deadlock issue
+        // purge cache is not a big deal 
+        // so we get ids first then purge in next execution
+        $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_group WHERE TIMESTAMPDIFF(MINUTE, cache_date, $now) >= $smartGroupCacheTimeout");
+        $ids = array();
+        while($dao->fetch()) {
+          $ids[] = $dao->id;
+        }
         $query = "
-DELETE     gc
-FROM       civicrm_group_contact_cache gc
-INNER JOIN civicrm_group g ON g.id = gc.group_id
-WHERE      TIMESTAMPDIFF(MINUTE, g.cache_date, $now) >= $smartGroupCacheTimeout
-";
+  DELETE     g
+  FROM       civicrm_group_contact_cache g
+  WHERE      g.group_id IN ( %1 )
+  ";
         $update = "
-UPDATE civicrm_group g
-SET    cache_date = null
-WHERE  TIMESTAMPDIFF(MINUTE, cache_date, $now) >= $smartGroupCacheTimeout
-";
+  UPDATE civicrm_group g
+  SET    cache_date = null
+  WHERE  id IN ( %1 )
+  ";
+        $groupIDs = implode(', ', $ids);
+        $params = array(1 => array($groupIDs, 'String'));
       }
-      $params = array();
     }
     elseif (is_array($groupID)) {
       $query = "
@@ -325,7 +333,6 @@ WHERE  id = %1
       $processed = TRUE;
       $result = CRM_Core_DAO::executeQuery($insertSql);
     }
-    self::updateCacheTime($groupIDs, $processed);
 
     if ($group->children) {
 
@@ -354,17 +361,22 @@ WHERE  id = %1
         }
 
         self::store($groupIDs, $values);
+        self::$_alreadyLoaded[$childID] = 1;
+        $processed = TRUE;
       }
+    }
+    if ($processed) {
+      self::updateCacheTime($groupIDs, $processed);
     }
   }
 
   /**
    * Change the cache_date
    *
-   * @param $groupID array(int)
+   * @param $groupIDs array(int)
    * @param $processed bool, whether the cache data was recently modified
    */
-  static function updateCacheTime($groupID, $processed) {
+  static function updateCacheTime($groupIDs, $processed) {
     // only update cache entry if we had any values
     if ($processed) {
       // also update the group with cache date information
@@ -378,7 +390,7 @@ WHERE  id = %1
       $now = 'null';
     }
 
-    $groupIDs = implode(',', $groupID);
+    $groupIDs = implode(',', $groupIDs);
     $sql = "
   UPDATE civicrm_group
   SET    cache_date = $now

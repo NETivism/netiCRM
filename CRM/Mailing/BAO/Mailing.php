@@ -1204,8 +1204,9 @@ AND civicrm_contact.is_opt_out =0";
       ),
     );
 
+    $unsubscribeUrl = str_replace(array('&amp;', 'http://'), array('&', 'https://'), $urls['unsubscribeUrl']);
     $headers = array(
-      'List-Unsubscribe' => "<mailto:{$verp['unsubscribe']}>".', <'.str_replace('&amp;', '&', $urls['unsubscribeUrl']).'>',
+      'List-Unsubscribe' => '<'.$unsubscribeUrl.'>'.' ,'."<mailto:{$verp['unsubscribe']}>",
       'From' => "\"{$this->from_name}\" <{$this->from_email}>",
       'Sender' => $verp['reply'],
       'Return-Path' => $verp['bounce'],

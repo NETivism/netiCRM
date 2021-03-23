@@ -520,6 +520,8 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
 
       $contactFields = array();
       $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+      $tmpContactFields = CRM_Core_BAO_Address::validateAddressOptions($tmpContactFields);
+
       $contactFieldsIgnore = array('id', 'note', 'do_not_import', 'contact_sub_type', 'group_name', 'tag_name');
 
       // Using new Dedupe rule.

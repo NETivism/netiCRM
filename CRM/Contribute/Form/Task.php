@@ -121,9 +121,27 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
       }
 
       $result = $query->searchQuery(0, 0, $form->_sort);
-      while ($result->fetch()) {
-        $ids[] = $result->contribution_id;
+
+      // separate query to prevent memory peak
+      $jobSize = 100000;
+      if ($result->N && $result->N / $jobSize > 1) {
+        $jobs = $result->N / $jobSize;
+        $result->free();
+        for($i = 0; $i < $jobs; $i++) {
+          $offset = $i*$jobSize;
+          $result = $query->searchQuery($offset, $jobSize, $form->_sort);
+          while ($result->fetch()) {
+            $ids[] = $result->contribution_id;
+          }
+          $result->free();
+        }
       }
+      else {
+        while ($result->fetch()) {
+          $ids[] = $result->contribution_id;
+        }
+      }
+      $result->free();
       $form->assign('totalSelectedContributions', $form->get('rowCount'));
     }
 

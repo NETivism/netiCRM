@@ -561,7 +561,7 @@
       },
 
 
-      updateContributeType: function(isSelectDefaultOption) {
+      updateContributeType: function(isSelectOption) {
         if(this.currentContribType == 'non-recurring'){
           $('.contrib-type-btn div').removeClass('selected');
           $('.custom-single-btn').addClass('selected');
@@ -581,8 +581,11 @@
         this.updateContribInfoLabel();
         this.updatePriceSetOption();
 
-        if (isSelectDefaultOption) {
+        if (isSelectOption) {
           var newPriceOption = this.defaultPriceOption[this.currentContribType] ? this.defaultPriceOption[this.currentContribType] : '';
+          if (!newPriceOption) {
+            this.setPriceAmount();
+          }
           this.setPriceOption(newPriceOption);
         }
         else {

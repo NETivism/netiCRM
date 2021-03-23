@@ -272,7 +272,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
         FROM  civicrm_group groups 
               {$from}
         WHERE $whereClause {$where}
-        ORDER BY groups.title asc
+        ORDER BY groups.id DESC 
         LIMIT $offset, $rowCount";
 
     $object = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Contact_DAO_Group');
@@ -346,6 +346,16 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
             $values[$object->id]['org_name'] = $object->orgName;
             $values[$object->id]['org_id'] = $object->orgID;
           }
+        }
+        if (!empty($object->children)) {
+          $values[$object->id]['is_parent'] = 1;
+          $children = explode(',', $object->children);
+          $values[$object->id]['children'] = $children;
+        }
+        if (!empty($object->parents)) {
+          $values[$object->id]['is_children'] = 1;
+          $parents = explode(',', $object->parents);
+          $values[$object->id]['parents'] = $parents;
         }
       }
     }

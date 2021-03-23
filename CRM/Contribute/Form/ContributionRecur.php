@@ -372,13 +372,17 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
               unset($resultParams['next_sched_contribution']);
             }
             foreach ($resultParams as $field => $value) {
-              if (!empty($value) && !is_object($value) && !is_array($value) && $params[$field] != $value) {
-                $params[$field] = $value;
-                $failedFields[] = $field;
+              if (!empty($value) && in_array($field, $activeFields) && $params[$field] != $value) {
+                if ($field == 'note_title' && !empty($params[$field])) {
+                  $params[$field] .= $value;
+                }
+                else if ($field == 'note_body' && !empty($params[$field])) {
+                  $params[$field] .= "\n" . $value;
+                }
+                else {
+                  $params[$field] = $value;
+                }
               }
-            }
-            if (!empty($failedFields)) {
-              CRM_Core_Session::setStatus(implode(',', $failedFields) . " don't change success");
             }
           }
         }
