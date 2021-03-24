@@ -48030,3 +48030,6 @@ msgstr ""
 
 msgid "Locked because user report SPAM abuse."
 msgstr ""
+
+msgid "NewebPay response:"
+msgstr ""
