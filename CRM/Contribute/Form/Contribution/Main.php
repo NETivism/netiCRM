@@ -193,9 +193,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
                 if ($uffield['field_type'] == 'File') {
                   if (!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['field_value']['data'])) {
                     $image = $config->customFileUploadURL . $uffield['field_value']['data'];
-                    break;
-                    break;
-                    break;
+                    break 3;
                   }
                 }
               }
@@ -273,7 +271,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         foreach($fields as $name => $dontcare) {
           if (isset($this->_elementIndex[$name]) && !in_array($name, array('last_name', 'first_name', 'middle_name')) && !preg_match('/amount|city|postal_code|email/', $name)) {
             $ele = $this->getElement($name);
-            if ($ele->_type == 'text') {
+            $eleClass = get_class($ele);
+            if ($ele->_type == 'text' && strstr($eleClass, 'HTML_QuickForm_text')) {
               $this->_originalValues[$name] = $this->_defaults[$name];
               $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
               $ele->updateAttributes(array('data-mask' => $this->_defaults[$name]));

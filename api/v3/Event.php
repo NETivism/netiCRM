@@ -223,7 +223,11 @@ function _civicrm_api3_event_getisfull(&$event, $event_id) {
   }
   elseif (empty($eventFullResult) && is_numeric($eventFullResult)) {
     $event[$event_id]['available_places'] = 0;
-    $event[$event_id]['is_full'] = 0;
+    $event[$event_id]['is_full'] = 1;
+  }
+  elseif (!is_numeric($eventFullResult)) {
+    $event[$event_id]['available_places'] = 0;
+    $event[$event_id]['is_full'] = 1;
   }
 }
 

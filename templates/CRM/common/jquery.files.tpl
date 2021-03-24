@@ -27,14 +27,12 @@
  * If you MODIFY this file, please make sure you also modify jquery.tpl.
  * We will unify the two files in a future release
  *}
-packages/jquery/jquery-1.12.4.js
-packages/jquery/jquery-migrate-1.4.1.js
+packages/jquery/jquery-3.6.0.min.js
+packages/jquery/jquery-migrate-3.3.2.js
+packages/jquery/jquery-migrate-neticrm.js
 packages/jquery/jquery-ui/js/jquery-ui-1.12.1.min.js
 packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.12.1.min.css
 packages/jquery/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$config->lcMessages|replace:'_':'-'}.js
-
-packages/jquery/plugins/flexigrid.js
-packages/jquery/css/flexigrid.css
 
 packages/jquery/plugins/jquery.autocomplete.js
 packages/jquery/css/jquery.autocomplete.css
@@ -59,7 +57,6 @@ packages/jquery/plugins/jquery.tokeninput.js
 packages/jquery/css/token-input-facebook.css
 
 packages/jquery/plugins/jquery.timeentry.pack.js
-packages/jquery/plugins/jquery.mousewheel.pack.js
 
 packages/jquery/plugins/jquery.toolTip.js
 
@@ -76,7 +73,6 @@ packages/jquery/css/jquery.chosen.css
 
 packages/jquery/plugins/jquery.modal.min.js
 packages/jquery/css/jquery.modal.min.css
-packages/jquery/plugins/jquery.blockUI.js
 
 js/rest.js
 

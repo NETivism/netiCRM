@@ -482,21 +482,68 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * retrieve a mailer to send any mail from the applciation
    *
-   * @param
+   * @param int $mailerType 
    * @access private
    *
    * @return object
    */
-  static function &getMailer() {
-    if (!isset(self::$_mail)) {
-      require_once "CRM/Core/BAO/Preferences.php";
+  static function &getMailer($mailerType = '') {
+    $mailerTypes = CRM_Core_BAO_MailSettings::$_mailerTypes;
+    // refs #30289, special case for retrieve mailer type from mail settings
+    if (is_numeric($mailerType) && !empty($mailerTypes[$mailerType])) {
+      if (!isset(self::$_mail[$mailerType])) {
+        $mailSettings = array();
+        CRM_Core_BAO_MailSettings::commonRetrieveAll('CRM_Core_BAO_MailSettings', 'is_default', $mailerType, $mailSettings);
+        if (count($mailSettings)) {
+          self::$_mail[$mailerType] = array();
+          $filters = array();
+          foreach($mailSettings as $setting) {
+            $params['host'] = $setting['server'];
+            $params['port'] = !empty($setting['port']) ? $setting['port'] : 25;
+            $params['username'] = $setting['username'];
+            $params['password'] = $setting['password'];
+            $params['auth'] = TRUE;
+            $params['localhost'] = $_SERVER['SERVER_NAME'];
+            if ($params['host']) {
+              // when we have more than 1 mass mailing settings, and the settings have localpart field
+              // this will be treat as filter rule of recipients email domain
+              if ($mailerType == 2 && !empty($setting['localpart'])) {
+                $filters[$setting['id']] = &Mail::factory('smtp', $params);
+                $filters[$setting['id']]->_mailSetting = $setting;
+              }
+              else {
+                self::$_mail[$mailerType][$setting['id']] = &Mail::factory('smtp', $params);
+                self::$_mail[$mailerType][$setting['id']]->_mailSetting = $setting;
+              }
+            }
+          }
+          foreach($filters as &$setting) {
+            foreach(self::$_mail[$mailerType] as $sid => &$mailSetting) {
+              $mailSetting->_filters[] = &$setting;
+            }
+          }
+        }
+      }
+      if (!empty(self::$_mail[$mailerType]) && is_array(self::$_mail[$mailerType])) {
+        if (count(self::$_mail[$mailerType]) > 1) {
+          $key = array_rand(self::$_mail[$mailerType]);
+          return self::$_mail[$mailerType][$key];
+        }
+        else {
+          return reset(self::$_mail[$mailerType]);
+        }
+      }
+    }
+
+    // always fallback to default mailer
+    if (!isset(self::$_mail[$mailerType]) || empty(self::$_mail[$mailerType])) {
       $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();;
 
       if (defined('CIVICRM_MAILER_SPOOL') &&
         CIVICRM_MAILER_SPOOL
       ) {
         require_once 'CRM/Mailing/BAO/Spool.php';
-        self::$_mail = new CRM_Mailing_BAO_Spool();
+        self::$_mail[$mailerType] = new CRM_Mailing_BAO_Spool();
       }
       elseif ($mailingInfo['outBound_option'] == 0) {
         if ($mailingInfo['smtpServer'] == '' ||
@@ -521,7 +568,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         // set the localhost value, CRM-3153
         $params['localhost'] = $_SERVER['SERVER_NAME'];
 
-        self::$_mail = &Mail::factory('smtp', $params);
+        self::$_mail[$mailerType] = &Mail::factory('smtp', $params);
       }
       elseif ($mailingInfo['outBound_option'] == 1) {
         if ($mailingInfo['sendmail_path'] == '' ||
@@ -532,17 +579,17 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         $params['sendmail_path'] = $mailingInfo['sendmail_path'];
         $params['sendmail_args'] = $mailingInfo['sendmail_args'];
 
-        self::$_mail = &Mail::factory('sendmail', $params);
+        self::$_mail[$mailerType] = &Mail::factory('sendmail', $params);
       }
       elseif ($mailingInfo['outBound_option'] == 3) {
         $params = array();
-        self::$_mail = &Mail::factory('mail', $params);
+        self::$_mail[$mailerType] = &Mail::factory('mail', $params);
       }
       else {
         CRM_Core_Session::setStatus(ts('There is no valid SMTP server Setting Or SendMail path setting. Click <a href=\'%1\'>Administer CiviCRM >> Global Settings</a> to set the OutBound Email.', array(1 => CRM_Utils_System::url('civicrm/admin/setting', 'reset=1'))));
       }
     }
-    return self::$_mail;
+    return self::$_mail[$mailerType];
   }
 
   /**

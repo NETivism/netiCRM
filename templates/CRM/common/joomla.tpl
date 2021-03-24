@@ -98,7 +98,7 @@
 {literal}
 <script type="text/javascript">
 cj(function() {
-   cj().crmtooltip(); 
+   cj().crmtooltip();
 });
 </script>
 {/literal}

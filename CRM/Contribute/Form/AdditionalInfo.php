@@ -459,7 +459,7 @@ class CRM_Contribute_Form_AdditionalInfo {
         }
 
         //build the array of customgroup contain customfields.
-        CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams);
+        CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
         $customGroup[$group['title']] = $customValues;
       }
       //assign all custom group and corresponding fields to template.

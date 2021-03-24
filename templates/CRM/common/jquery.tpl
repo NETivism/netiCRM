@@ -33,9 +33,6 @@
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$config->lcMessages|replace:'_':'-'}.js"></script>
 <style type="text/css">@import url("{$config->resourceBase}packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.9.1.custom.css");</style>
 
-<script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/flexigrid.js"></script>
-<style type="text/css">@import url("{$config->resourceBase}packages/jquery/css/flexigrid.css");</style>
-
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.autocomplete.js"></script>
 <style type="text/css">@import url("{$config->resourceBase}packages/jquery/css/jquery.autocomplete.css");</style>
 
@@ -59,7 +56,6 @@
 {elseif $defaultWysiwygEditor eq 2}
     <script type="text/javascript" src="{$config->resourceBase}packages/ckeditor/ckeditor.js"></script>
 {/if}
-<script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.textarearesizer.js"></script>
 
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.form.js"></script>
 
@@ -67,7 +63,6 @@
 <style type="text/css">@import url("{$config->resourceBase}packages/jquery/css/token-input-facebook.css");</style>
 
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.timeentry.pack.js"></script>
-<script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.mousewheel.pack.js"></script>
 
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.toolTip.js"></script>
 
@@ -85,7 +80,6 @@
 
 <script type="text/javascript" src="{$config->resourceBase}js/jquery/jquery.crmaccordions.js"></script>
 <script type="text/javascript" src="{$config->resourceBase}js/jquery/jquery.crmasmselect.js"></script>
-<script type="text/javascript" src="{$config->resourceBase}js/jquery/jquery.crmtooltip.js"></script>
 <script type="text/javascript" src="{$config->resourceBase}js/jquery/jquery.disablesubmit.js"></script>
 
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.dashboard.js"></script>

@@ -103,7 +103,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       CRM_Core_BAO_CustomGroup::retrieve($params, $this->_defaults);
 
       $subExtends = CRM_Utils_Array::value('extends_entity_column_value', $this->_defaults);
-      if (!empty($subExtends)) {
+      if (!empty($this->_defaults['extends_entity_column_id'])) {
         $this->_subtypes = explode(CRM_Core_DAO::VALUE_SEPARATOR, substr($subExtends, 1, -1));
       }
     }

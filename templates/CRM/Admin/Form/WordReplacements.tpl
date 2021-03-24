@@ -95,8 +95,6 @@ function buildStringOverrideRow( curInstance )
              async   : false,
              success : function( html ) { 
 	     cj( prevInstRowId ).after( html ); 
-	     cj('#old_'+currentInstance).TextAreaResizer();
-	     cj('#new_'+currentInstance).TextAreaResizer();
 	     }	     
    });
 }

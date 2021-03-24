@@ -16,7 +16,8 @@ var warnedAbout = {};
 jQuery.migrateWarnings = [];
 
 // Set to true to prevent console output; migrateWarnings still maintained
-jQuery.migrateMute = true;
+// DEVEL: refs #29328. Set jQuery.migrateMute to false to display warning messages.
+jQuery.migrateMute = false;
 
 // Show a message on the console so devs know we're active
  

@@ -100,22 +100,28 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
 
     require_once 'CRM/Core/PseudoConstant.php';
     $allProtocols = CRM_Core_PseudoConstant::mailProtocol();
+    $allProtocols += array( 'smtp' => ts('SMTP'));
 
     //multi-domain support for mail settings. CRM-5244
     $mailSetting->domain_id = CRM_Core_Config::domainID();
 
     //find all mail settings.
     $mailSetting->find();
+    $usedFor = CRM_Core_BAO_MailSettings::$_mailerTypes;
+    foreach($usedFor as $k => $v) {
+      $usedFor[$k] = ts($v);
+    }
     while ($mailSetting->fetch()) {
       //replace protocol value with name
       $mailSetting->protocol = CRM_Utils_Array::value($mailSetting->protocol, $allProtocols);
       CRM_Core_DAO::storeValues($mailSetting, $allMailSettings[$mailSetting->id]);
+      $allMailSettings[$mailSetting->id]['used_for'] = $usedFor[$mailSetting->is_default];
 
       //form all action links
       $action = array_sum(array_keys($this->links()));
 
       // disallow the DELETE action for the default set of settings
-      if ($mailSetting->is_default) {
+      if ($mailSetting->is_default == 1) {
         $action &= ~CRM_Core_Action::DELETE;
       }
 

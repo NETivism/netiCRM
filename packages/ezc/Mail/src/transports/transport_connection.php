@@ -79,8 +79,13 @@ class ezcMailTransportConnection
             {
                 throw new ezcBaseExtensionNotFoundException( 'openssl', null, "PHP not configured --with-openssl." );
             }
+            $socket_opts = array(
+              'verify_peer' => 0,
+              'verify_peer_name' => 0,
+            );
+            $context = stream_context_create ( array ('ssl' => $socket_opts));
             $this->connection = @stream_socket_client( "ssl://{$server}:{$port}",
-                                                       $errno, $errstr, $this->options->timeout );
+                                                       $errno, $errstr, $this->options->timeout, STREAM_CLIENT_CONNECT, $context);
         }
         else
         {

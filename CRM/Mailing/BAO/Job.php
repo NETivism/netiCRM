@@ -133,7 +133,11 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
       }
 
       /* Queue up recipients for the child job being launched */
-
+      // Get the mailer
+      // make it a persistent connection, CRM-9349
+      $mailerType = array_search('Mass Mailing', CRM_Core_BAO_MailSettings::$_mailerTypes);
+      $mailer = $config->getMailer($mailerType);
+      // refs #30585, test mailer first before start
 
       if ($job->status != 'Running') {
         require_once 'CRM/Core/Transaction.php';
@@ -153,10 +157,6 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
         $transaction->commit();
       }
 
-      // Get the mailer
-      // make it a persistent connection, CRM-9349
-      $mailer = $config->getMailer(TRUE);
-
       // Compose and deliver each child job
       $isComplete = $job->deliver($mailer, $testParams);
 
@@ -166,8 +166,6 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
       // Mark the child complete
       if ($isComplete) {
         /* Finish the job */
-
-
         require_once 'CRM/Core/Transaction.php';
         $transaction = new CRM_Core_Transaction();
 
@@ -279,7 +277,7 @@ SELECT j.*, m.dedupe_email
 WHERE j.is_test = 0
   AND ( j.start_date IS null AND j.scheduled_date <= $currentTime AND j.status = 'Scheduled' AND j.end_date IS null )
   AND ( j.job_type is NULL OR j.job_type <> 'child' )
-ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 3";
+ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 1";
     $job->query($query);
 
     require_once 'CRM/Core/Lock.php';
@@ -289,9 +287,17 @@ ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 3";
     $processedMailing = array();
     while ($job->fetch()) {
       // refs #22088 calculate recipients before job start
-      if (!isset($processedMailing[$job->mailing_id])) {
+      $hasChild = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM $jobTable WHERE is_test = 0 AND job_type = 'child'");
+      if (!isset($processedMailing[$job->mailing_id]) && !$hasChild) {
+        $rlockName = "civimail.mailing_recipients.{$job->id}";
+        $rlock = new CRM_Core_Lock($rlockName);
+        if (!$rlock->isAcquired()) {
+          continue;
+        }
         CRM_Mailing_BAO_Mailing::getRecipients($job->mailing_id, $job->mailing_id, NULL, NULL, TRUE, $job->dedupe_email);
+        $rlock->release();
         $processedMailing[$job->mailing_id] = TRUE;
+        sleep(mt_rand(10, 40));
       }
       // still use job level lock for each child job
       $lockName = "civimail.job.{$job->id}";
@@ -541,9 +547,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
   public function deliverGroup(&$fields, &$mailing, &$mailer, &$job_date, &$attachments) {
     static $smtpConnectionErrors = 0;
 
-    if (!is_object($mailer) ||
-      empty($fields)
-    ) {
+    if (!is_object($mailer) || empty($fields)) {
       CRM_Core_Error::fatal();
     }
 
@@ -581,8 +585,6 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       );
 
       /* Send the mailing */
-
-
       $body = &$message->get();
       $headers = &$message->headers();
       // make $recipient actually be the *encoded* header, so as not to baffle Mail_RFC822, CRM-5743
@@ -594,7 +596,27 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
         CRM_Core_Error::ignoreException();
       }
 
-      $result = $mailer->send($recipient, $headers, $body, $this->id);
+      // refs #30289, for valid DKIM
+      if (!strstr($headers['Sender'], $mailer->host) && $mailer->_mailSetting['return_path']) {
+        $headers['Sender'] = $mailer->_mailSetting['return_path'];
+      }
+
+      // use localpart as regular expression to check if recipient needs another mailer
+      $sent = FALSE;
+      if (!empty($mailer->_filters)) {
+        foreach($mailer->_filters as &$filter) {
+          if ($filter->_mailSetting['localpart']) {
+            if(preg_match('/'.$filter->_mailSetting['localpart'].'/i', $recipient)) {
+              $result = $filter->send($recipient, $headers, $body, $this->id);
+              $sent = TRUE;
+              break;
+            }
+          }
+        }
+      }
+      if (!$sent) {
+        $result = $mailer->send($recipient, $headers, $body, $this->id);
+      }
 
       if ($job_date) {
         CRM_Core_Error::setCallback();
@@ -603,9 +625,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       if (is_a($result, 'PEAR_Error')) {
         // CRM-9191
         $message = $result->getMessage();
-        if (strpos($message,
-            'Failed to write to socket'
-          ) !== FALSE) {
+        if (strpos($message, 'to write to socket') !== FALSE) {
           // lets log this message and code
           $code = $result->getCode();
           CRM_Core_Error::debug_log_message("SMTP Socket Error. Message: $message, Code: $code");
@@ -613,61 +633,46 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
           // these are socket write errors which most likely means smtp connection errors
           // lets skip them
           $smtpConnectionErrors++;
-          if ($smtpConnectionErrors <= 5) {
-            continue;
+          if ($smtpConnectionErrors > 2) {
+            // seems like we have too many of them in a row, we should
+            // write stuff to disk and abort the cron job
+            $this->writeToDB($deliveredParams, $targetParams, $mailing, $job_date);
+
+            CRM_Core_Error::debug_log_message("Too many SMTP Socket Errors. Exiting");
+            CRM_Utils_System::civiExit();
+            return FALSE;
           }
-
-
-          // seems like we have too many of them in a row, we should
-          // write stuff to disk and abort the cron job
-          $this->writeToDB($deliveredParams,
-            $targetParams,
-            $mailing,
-            $job_date
-          );
-
-          CRM_Core_Error::debug_log_message("Too many SMTP Socket Errors. Exiting");
-          CRM_Utils_System::civiExit();
+        }
+        else {
+          CRM_Core_Error::debug_log_message("SMTP Error. Message: $message, Code: $code");
         }
 
         /* Register the bounce event */
-
-
-        require_once 'CRM/Mailing/BAO/BouncePattern.php';
-        require_once 'CRM/Mailing/Event/BAO/Bounce.php';
         $params = array(
           'event_queue_id' => $field['id'],
           'job_id' => $this->id,
           'hash' => $field['hash'],
         );
-        $params = array_merge($params,
-          CRM_Mailing_BAO_BouncePattern::match($result->getMessage())
-        );
+        $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match($result->getMessage()));
         CRM_Mailing_Event_BAO_Bounce::create($params);
+
+        // sleep 0.3 sec each error, to prevent continue smtp connection error
+        usleep(300000);
       }
       else {
         /* Register the delivery event */
-
-
         $deliveredParams[] = $field['id'];
         $targetParams[] = $field['contact_id'];
 
         $count++;
         if ($count % CRM_Core_DAO::BULK_MAIL_INSERT_COUNT == 0) {
-          $this->writeToDB($deliveredParams,
-            $targetParams,
-            $mailing,
-            $job_date
-          );
+          $this->writeToDB($deliveredParams, $targetParams, $mailing, $job_date);
           $count = 0;
 
           // hack to stop mailing job at run time, CRM-4246.
           // to avoid making too many DB calls for this rare case
           // lets do it when we snapshot
-          $status = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Job',
-            $this->id,
-            'status'
-          );
+          $status = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Job', $this->id, 'status');
           if ($status != 'Running') {
             return FALSE;
           }
@@ -683,12 +688,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       }
     }
 
-    $result = $this->writeToDB($deliveredParams,
-      $targetParams,
-      $mailing,
-      $job_date
-    );
-
+    $result = $this->writeToDB($deliveredParams, $targetParams, $mailing, $job_date);
     return $result;
   }
 

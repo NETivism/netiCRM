@@ -35,6 +35,7 @@
       width: window.innerWidth,
       height: window.innerHeight
     },
+    _crmPath = "",
     _language = "en_US",
     _debugMode = false,
     _data = {},
@@ -417,15 +418,6 @@
     _debug(_viewport, "viewport");
   };
 
-  var _relativeToAbsoluteURL = function(url) {
-    var url = typeof url !== "undefined" ? url : "";
-
-    if (url) {
-      var absoluteURL = window.location.origin.indexOf("local.dev") == -1 ? window.location.origin + url : "https://dev7.neticrm.tw" + url;
-      return absoluteURL;
-    }
-  };
-
   var _updateUrlHash = function(hash) {
     var hash = typeof hash !== "undefined" ? "#" + hash : "";
 
@@ -500,26 +492,25 @@
 
   var _getDefaultImage = function(type) {
     var type = typeof type !== "undefined" ? type : "",
-        img = {};
+        img = {},
+        crmPath = _crmPath.indexOf(window.location.origin) != -1 ? _crmPath : window.location.origin + _crmPath;
 
     if (type) {
       switch(type) {
         case "logo":
-          img.url = _relativeToAbsoluteURL("/sites/all/modules/civicrm/packages/mailingEditor/images/mail-default-logo@2x.png");
+          img.url = crmPath + "packages/mailingEditor/images/mail-default-logo@2x.png";
           img.width = 192;
           img.height = 84;
           break;
 
         case "thumb":
-          img.url = "/sites/all/modules/civicrm/packages/istockphoto/thumb_" + _getRandomInt(1,5) + ".jpg";
-          img.url = _relativeToAbsoluteURL(img.url);
+          img.url = crmPath + "packages/istockphoto/thumb_" + _getRandomInt(1,5) + ".jpg";
           img.width = 680;
           img.height = 383;
           break;
 
           case "square":
-          img.url = "/sites/all/modules/civicrm/packages/istockphoto/square_" + _getRandomInt(1,5) + ".jpg";
-          img.url = _relativeToAbsoluteURL(img.url);
+          img.url = crmPath + "packages/istockphoto/square_" + _getRandomInt(1,5) + ".jpg";
           img.width = 210;
           img.height = 210;
           break;
@@ -3121,10 +3112,16 @@
     constructor: nmEditor,
     data: {},
     language: _language,
+    crmPath: _crmPath,
     init: function() {
       _debug("/***** nmEditor Debug Mode *****/");
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
+        if (window.nmEditor.crmPath) {
+          _crmPath = window.nmEditor.crmPath;
+          this.crmPath = _crmPath;
+        }
+
         if (window.nmEditor.language) {
           _language = window.nmEditor.language;
           this.language = _language;
@@ -3306,23 +3303,29 @@
    };
 
   // Plugin definition
-  $.fn.nmEditor = function(options) {
-    // Extend our default options with those provided
-    _nmeOptions = $.extend({}, $.fn.nmEditor.defaults, options);
+  $.fn.nmEditor = function(selector, options) {
+    if (typeof selector === "string" && $(selector).length) {
+      // Extend our default options with those provided
+      _nmeOptions = $.extend({}, $.fn.nmEditor.defaults, options);
 
-    // Plugin implementation
-    _qs = _parseQueryString(_query);
-    _debugMode = _nmeOptions.debugMode === "1" ? true : false;
+      // Plugin implementation
+      _qs = _parseQueryString(_query);
+      _debugMode = _nmeOptions.debugMode === "1" ? true : false;
 
-    if (_debugMode) {
-      $("html").addClass("is-debug");
+      if (_debugMode) {
+        $("html").addClass("is-debug");
+      }
+
+      _container = selector;
+      _checkNmeInstance();
+
+      return _nme;
     }
-
-    _container = this.selector;
-    //_debug(_container);
-    _checkNmeInstance();
-
-    return _nme;
+    else {
+      if (window.console || window.console.error) {
+        console.error(".selector API has been removed in jQuery 3.0. jQuery Plugin that need to use a selector string within their plugin can require it as a parameter of the method.");
+      }
+    }
   };
 
   // Plugin defaults options

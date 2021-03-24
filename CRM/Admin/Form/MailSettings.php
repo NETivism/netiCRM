@@ -66,19 +66,20 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->add('text', 'domain', ts('Email Domain'), $attributes['domain'], TRUE);
     $this->addRule('domain', ts('Email domain must use a valid internet domain format (e.g. \'example.org\').'), 'domain');
 
-    $this->add('text', 'localpart', ts('Localpart'), $attributes['localpart']);
+    $this->add('text', 'localpart', ts('Localpart').'/'.ts('Set Filters'), $attributes['localpart']);
 
     $this->add('text', 'return_path', ts('Return-Path'), $attributes['return_path']);
     $this->addRule('return_path', ts('Return-Path must use a valid email address format.'), 'email');
 
-    require_once 'CRM/Core/PseudoConstant.php';
     $this->add('select', 'protocol',
       ts('Protocol'),
-      array('' => ts('- select -')) + CRM_Core_PseudoConstant::mailProtocol(),
+      array('' => ts('- select -')) + CRM_Core_PseudoConstant::mailProtocol() + array('smtp' => 'SMTP'),
       TRUE
     );
 
-    $this->add('text', 'server', ts('Server'), $attributes['server']);
+    $this->add('text', 'server', ts('Server'), $attributes['server'], TRUE);
+
+    $this->add('text', 'port', ts('Port'), $attributes['port']);
 
     $this->add('text', 'username', ts('Username'), array('autocomplete' => 'off'));
 
@@ -87,12 +88,55 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->add('text', 'source', ts('Source'), $attributes['source']);
 
     $this->add('checkbox', 'is_ssl', ts('Use SSL?'));
-
-    $usedfor = array(1 => ts('Bounce Processing'),
-      0 => ts('Email-to-Activity Processing'),
-    );
-    $this->add('select', 'is_default', ts('Used For?'), $usedfor);
+    $usedFor = CRM_Core_BAO_MailSettings::$_mailerTypes;
+    foreach($usedFor as $k => $v) {
+      $usedFor[$k] = ts($v);
+    }
+    // remove bounce process when exists
+    $bounceExists = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_mail_settings WHERE is_default = 1");
+    if ($bounceExists) {
+      if ($this->_action & CRM_Core_Action::UPDATE && $this->_id != $bounceExists) {
+        unset($usedFor[1]);
+      }
+      elseif($this->_action & CRM_Core_Action::ADD ) {
+        unset($usedFor[1]);
+      }
+    }
+    $this->add('select', 'is_default', ts('Used For?'), $usedFor);
+    $this->addFormRule(array('CRM_Admin_Form_MailSettings', 'formRule'), $this);
   }
+  
+  static function formRule($fields, $files, $self) {
+    $errors = array();
+    if ($fields['is_default'] != 1 && !empty($fields['localpart'])) {
+      $test = preg_match('/'.$fields['localpart'].'/i', 'test');
+      if ($test === FALSE) {
+        $errors['localpart'] = ts('Please enter correct regular expression.');
+      }
+    }
+    return $errors;
+  }
+
+  function setDefaultValues() {
+    $defaults = parent::setDefaultValues();
+    // prevent modify global $civicrm_conf['mailing_mailstore'] variable
+    if ($this->_action & CRM_Core_Action::UPDATE && $defaults['is_default'] == 1) {
+      $mailSettings = new CRM_Core_DAO_MailSettings();
+      $mailSettings->id = $this->_id;
+      $mailSettings->find(TRUE);
+      if ($mailSettings->domain) {
+        foreach($defaults as $eleName => $val) {
+          if ($mailSettings->$eleName == $val && $this->_elementIndex[$eleName]) {
+            $this->getElement($eleName)->freeze();
+          }
+        }
+
+      }
+    }
+
+    return $defaults;
+  }
+  
 
   /**
    * Function to process the form

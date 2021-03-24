@@ -247,6 +247,10 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
     $contactIds = $this->_parser->getImportedContacts();
 
+    // #30818, because doNotResetCache being pass by import
+    // Group Contact Cache will not be clear. Clear cache here when finish job
+    CRM_Contact_BAO_GroupContactCache::remove();
+
     //get the related contactIds. CRM-2926
     $relatedContactIds = $this->_parser->getRelatedImportedContacts();
     if ($relatedContactIds) {

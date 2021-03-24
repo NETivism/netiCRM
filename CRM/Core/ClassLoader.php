@@ -81,9 +81,9 @@ class CRM_Core_ClassLoader {
       }
       $file = strtr($class, '_', '/') . '.php';
       foreach (self::$_include_paths as $base_dir) {
-        $file = $base_dir.DIRECTORY_SEPARATOR.$file;
-        if (file_exists($file) ){
-          require $file;
+        $filename = rtrim($base_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.ltrim($file, DIRECTORY_SEPARATOR);
+        if (file_exists($filename) ){
+          require $filename;
           return;
         }
       }

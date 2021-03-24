@@ -528,11 +528,18 @@
     buildCustomData( '{$customDataType}', 'null', 'null' );
     {literal}
         for ( var i in roleGroupMapper ) {
+          if (roleGroupMapper[i].length > 0) {
             if ( ( i != 0 ) && document.getElementById( "role_id["+i+"]" ).checked == true ) {
                {/literal}
                showCustomData( '{$customDataType}', i, {$roleCustomDataTypeID} );
                {literal}  
             }
+            else if(i == 0) {
+              {/literal}
+              buildCustomData( '{$customDataType}', {$eventID}, {$roleCustomDataTypeID} );
+              {literal}
+            }
+          }
         }
         {/literal}
     {if $eventID}

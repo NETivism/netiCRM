@@ -10,12 +10,12 @@
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020
-# 淑涵 詹 <amy0222@netivism.com.tw>, 2020
+# 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-01-27 06:45+0000\n"
+"PO-Revision-Date: 2021-03-23 09:55+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -27731,7 +27731,7 @@ msgstr "隱私標示：不要寄 Email"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Email on hold - generally due to bouncing."
-msgstr "擱置的信件 - 通常是因為被收信方退信。"
+msgstr "信箱標示為凍結 - 通常是因為被收信方退信。"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Bulk"
@@ -39289,7 +39289,7 @@ msgstr "無法到達收件者的 Email 伺服器"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Message caught by a content filter"
-msgstr "被內容過濾器擷取的訊息"
+msgstr "收件人回報或被機器過濾為垃圾郵件"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Error in SMTP transaction"
@@ -44639,11 +44639,11 @@ msgstr "收據編號預設以年月數字為流水序號，您可以在此設定
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Description will appear at the end of receipt."
-msgstr "這裡的描述將會顯示在收據底部。"
+msgstr "此為收據底部的「備註說明」欄位。如果想要斷行效果，請在斷行處加上 <br/>，列印時就會呈現斷行。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Organization info will appear at the end of receipt."
-msgstr "團體資訊將會出現在收據的底部。"
+msgstr "此為收據底部的「組織資訊」欄位。捐贈收據應載明：組織全銜、地址、統一編號及經主管機關核准日期及文號。如果想要斷行效果，請在斷行處加上<br/>，列印時就會呈現斷行。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid ""
@@ -48320,3 +48320,26 @@ msgid ""
 "request to payment processor provider. And all other change in this page "
 "will be recover. Are you sure to change this? "
 msgstr "如果您將定期捐款設成「暫停中」或「已完成」，若此表單有其他未儲存的欄位更動，將還原成更改前的選項並禁止更改，您確定要改變定期定額狀態嗎？"
+
+msgid "Mass Mailing"
+msgstr "大量寄信"
+
+msgid "Site-wide Mailing"
+msgstr "網站一般信件"
+
+msgid "Transaction Notification"
+msgstr "交易通知信件"
+
+msgid "Modify parameters of original Newebpay by Newebpay data."
+msgstr "依照回傳資訊更新舊藍新定期定額資料。"
+
+msgid ""
+"You have enable NewebPay recurring API. Please use edit page to cancel "
+"recurring contribution."
+msgstr "您已啟用藍新定期定額 API ，請於定期定額「編輯」頁取消捐款。"
+
+msgid "Locked because user report SPAM abuse."
+msgstr "因使用者回報垃圾郵件而凍結鎖定。"
+
+msgid "NewebPay response:"
+msgstr "藍新回覆："

@@ -133,7 +133,6 @@ function loadVoterList( )
 	   	"bServerSide": true,
 	   	"sAjaxSource": sourceUrl,
 		"fnDrawCallback": function() { cj().crmtooltip(); },
-	
 		"fnServerData": function ( sSource, aoData, fnCallback ) {
 			var dataLength = aoData.length;
 		       		

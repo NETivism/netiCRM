@@ -170,9 +170,18 @@ class CRM_Utils_Mail {
     }
 
     $result = NULL;
-    $mailer = &CRM_Core_Config::getMailer();
+    if (isset($params['mailerType'])) {
+      $mailer = &CRM_Core_Config::getMailer($params['mailerType']);
+    }
+    else {
+      $mailer = &CRM_Core_Config::getMailer();
+    }
     CRM_Core_Error::ignoreException();
     if (is_object($mailer)) {
+      // refs #30289, for valid DKIM
+      if (!strstr($headers['Sender'], $mailer->host) && $mailer->_mailSetting['return_path']) {
+        $headers['Sender'] = $mailer->_mailSetting['return_path'];
+      }
       $result = $mailer->send($to, $headers, $message);
       CRM_Core_Error::setCallback();
       if (is_a($result, 'PEAR_Error')) {
