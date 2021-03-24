@@ -42,6 +42,7 @@
  
 <tr id="Email_Block_{$blockId}">
     <td style="width: 50%;">{$form.email.$blockId.email.html|crmReplace:class:twenty}&nbsp;{$form.email.$blockId.location_type_id.html}
+    {if $isSpamReport.$blockId}<div class="font-red">{ts}Locked because user report SPAM abuse.{/ts}</div>{/if}
     <div class="clear"></div>
 {if $className eq 'CRM_Contact_Form_Contact'}
 <div class="crm-accordion-wrapper crm-accordion-email-signature crm-accordion_title-accordion crm-accordion-closed">
@@ -57,7 +58,9 @@
 
 {/if}
     </td>
-    <td align="center">{$form.email.$blockId.on_hold.html}</td>
+    <td align="center">{$form.email.$blockId.on_hold.html}
+    {if $isSpamReport.$blockId}<i class="zmdi zmdi-lock font-red" title="{ts}Locked because user report SPAM abuse.{/ts}"></i>{/if}
+    </td>
     <td align="center" id="Email-Bulkmail-html">{$form.email.$blockId.is_bulkmail.html}</td>
     <td align="center" id="Email-Primary-html" {if $blockId eq 1}class="hiddenElement"{/if}>{$form.email.$blockId.is_primary.1.html}</td>
     {if $blockId gt 1}

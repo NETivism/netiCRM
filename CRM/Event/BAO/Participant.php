@@ -688,15 +688,24 @@ GROUP BY  participant.event_id
 
         if (is_array($fieldsArray)) {
           foreach ($fieldsArray as $value) {
-            $tmpContactField[trim($value)] = CRM_Utils_Array::value(trim($value), $contactFields);
-            if (!$status) {
-              $title = $tmpContactField[trim($value)]['title'] . " (match to contact)";
+            $value = trim($value);
+            if (!empty($contactFields[$value])) {
+              $tmpContactField[$value] = $contactFields[$value];
+              if (!$status) {
+                $tmpContactField[$value]['title'] .= " (match to contact)";
+              }
             }
             else {
-              $title = $tmpContactField[trim($value)]['title'];
-            }
+              if ($value == 'sort_name' || $value == 'display_name') {
+                $tmpContactField['last_name'] = $contactFields['last_name'];
+                $tmpContactField['first_name'] = $contactFields['first_name'];
+                if (!$status) {
+                  $tmpContactField['last_name']['title'] .= " (match to contact)";
+                  $tmpContactField['first_name']['title'] .= " (match to contact)";
+                }
 
-            $tmpContactField[trim($value)]['title'] = $title;
+              }
+            }
           }
         }
       }

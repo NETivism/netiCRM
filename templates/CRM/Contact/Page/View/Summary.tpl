@@ -175,7 +175,22 @@
                                     {if $item.email}
                                     <tr>
                                         <td class="label">{$item.location_type}&nbsp;{ts}Email{/ts}</td>
-                                        <td {if !$item.signature_text AND !$item.signature_html}colspan=2{/if}><span class={if $privacy.do_not_email}"do-not-email" title="{ts}Privacy flag: Do Not Email{/ts}" {elseif $item.on_hold}"email-hold" title="{ts}Email on hold - generally due to bouncing.{/ts}" {elseif $item.is_primary eq 1}"primary"{/if}><a href="mailto:{$item.email}">{$item.email}</a>{if $item.on_hold}&nbsp;({ts}On Hold{/ts}){/if}{if $item.is_bulkmail}&nbsp;({ts}Bulk Email{/ts}){/if}</span></td>
+                                        <td {if !$item.signature_text AND !$item.signature_html}colspan=2{/if}><span class={if $privacy.do_not_email}"do-not-email" title="{ts}Privacy flag: Do Not Email{/ts}" {elseif $item.on_hold}"email-hold" title="{ts}Email on hold - generally due to bouncing.{/ts}" {elseif $item.is_primary eq 1}"primary"{/if}><a href="mailto:{$item.email}">{$item.email}</a>{if $item.on_hold}&nbsp;({ts}On Hold{/ts}){/if}{if $item.is_bulkmail}&nbsp;({ts}Bulk Email{/ts}){/if}</span>
+                                        {if $item.bounce_type_name}
+                                          {if $item.is_spam}
+                                            <div class="description">
+                                              {ts}Locked because user report SPAM abuse.{/ts}
+                                              {ts}Mailing{/ts}:<a href="{crmURL p="civicrm/mailing/report/event" q="reset=1&event=bounce&mid=`$item.bounce_mailing_id`"}" target="_blank">{$item.bounce_mailing_id}</a>
+                                            </div>
+                                          {else}
+                                            {capture assign=bounce_tooltip}
+                                            {ts}Email on hold - generally due to bouncing.{/ts} <br>{ts}Bounce Type{/ts}: {$item.bounce_type_desc}
+                                            {ts}Mailing{/ts}:<a href="{crmURL p="civicrm/mailing/report/event" q="reset=1&event=bounce&mid=`$item.bounce_mailing_id`"}" target="_blank">{$item.bounce_mailing_id}</a>
+                                            {/capture}
+                                            {help id="bounce-type-`$item.id`" text="`$bounce_tooltip`"}
+                                          {/if}
+                                        {/if}
+                                        </td>
                                         {if $item.signature_text OR $item.signature_html}<td><a href="#" title="{ts}Signature{/ts}" onClick="showHideSignature( '{$blockId}' ); return false;">{ts}(signature){/ts}</a></td>{/if}
                                     </tr>
                                     <tr id="Email_Block_{$blockId}_signature" class="hiddenElement">

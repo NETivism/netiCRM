@@ -62,14 +62,30 @@ class CRM_Contact_Form_Edit_Email {
     $form->applyFilter('__ALL__', 'trim');
 
     //Email box
-    $form->addElement('text', "email[$blockId][email]", ts('Email'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'));
+    $contactDefaults = $form->get('values');
+    if (isset($contactDefaults['email'][$blockId]) && !empty($contactDefaults['email'][$blockId]['on_hold'])) {
+      // check on_hold reason bounce type
+      $bounceRecord = CRM_Mailing_Event_BAO_Bounce::getEmailBounceType(NULL, $contactDefaults['email'][$blockId]['id'], 'Spam');
+      $isSpamReport = !empty($bounceRecord) ? TRUE : FALSE;
+    }
+    $ele = $form->addElement('text', "email[$blockId][email]", ts('Email'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'));
+    if ($isSpamReport) {
+      $ele->freeze();
+    }
     $form->addRule("email[$blockId][email]", ts('Email is not valid.'), 'email');
     if (isset($form->_contactType)) {
       //Block type
       $form->addElement('select', "email[$blockId][location_type_id]", '', CRM_Core_PseudoConstant::locationType());
 
       //On-hold checkbox
-      $form->addElement('advcheckbox', "email[$blockId][on_hold]", NULL);
+      $onHoldEle = $form->addElement('advcheckbox', "email[$blockId][on_hold]", NULL);
+      if ($isSpamReport) {
+        $spamReportEmail = array(
+          $blockId => '1'
+        );
+        $form->assign('isSpamReport', $spamReportEmail);
+        $onHoldEle->freeze();
+      }
 
       //Bulkmail checkbox
       $js = array('id' => "Email_" . $blockId . "_IsBulkmail", 'onClick' => 'singleSelect( this.id );');

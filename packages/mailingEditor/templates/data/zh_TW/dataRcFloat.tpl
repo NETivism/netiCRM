@@ -42,6 +42,6 @@
   };
 
   $(".nme-tpl[data-template-level='data'][data-template-name='rc-float']").val(JSON.stringify(tplData));
-}(jQuery));
+}(cj));
 {/literal}
 </script>

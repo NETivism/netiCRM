@@ -62,7 +62,7 @@
             "type":"header",
             "section":"header",
             "data":{
-              "url":"https://dev7.neticrm.tw/sites/all/modules/civicrm/packages/mailingEditor/images/mail-default-logo@2x.png",
+              "url":"",
               "width":192,
               "height":84,
               "fileName":"default_logo",
@@ -108,7 +108,7 @@
                     "type":"image",
                     "section":"body",
                     "data":{
-                      "url":"https://dev7.neticrm.tw/sites/all/modules/civicrm/packages/istockphoto/thumb_3.jpg",
+                      "url":"",
                       "width":680,
                       "height":383,
                       "fileName":"default_image",
@@ -362,7 +362,7 @@
                     "type":"image",
                     "section":"body",
                     "data":{
-                      "url":"https://dev7.neticrm.tw/sites/all/modules/civicrm/packages/istockphoto/square_1.jpg",
+                      "url":"",
                       "width":210,
                       "height":210,
                       "fileName":"default_image",
@@ -539,7 +539,7 @@
                     "type":"image",
                     "section":"body",
                     "data":{
-                      "url":"https://dev7.neticrm.tw/sites/all/modules/civicrm/packages/istockphoto/square_4.jpg",
+                      "url":"",
                       "width":210,
                       "height":210,
                       "fileName":"default_image",
@@ -716,7 +716,7 @@
                     "type":"image",
                     "section":"body",
                     "data":{
-                      "url":"https://dev7.neticrm.tw/sites/all/modules/civicrm/packages/istockphoto/square_3.jpg",
+                      "url":"",
                       "width":210,
                       "height":210,
                       "fileName":"default_image",
@@ -893,7 +893,7 @@
                     "type":"image",
                     "section":"body",
                     "data":{
-                      "url":"https://dev7.neticrm.tw/sites/all/modules/civicrm/packages/istockphoto/square_2.jpg",
+                      "url":"",
                       "width":210,
                       "height":210,
                       "fileName":"default_image",
@@ -1098,6 +1098,6 @@
   };
 
   $(".nme-tpl[data-template-level='data'][data-template-name='col-1-float']").val(JSON.stringify(tplData));
-}(jQuery));
+}(cj));
 {/literal}
 </script>

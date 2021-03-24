@@ -1204,8 +1204,9 @@ AND civicrm_contact.is_opt_out =0";
       ),
     );
 
+    $unsubscribeUrl = str_replace(array('&amp;', 'http://'), array('&', 'https://'), $urls['unsubscribeUrl']);
     $headers = array(
-      'List-Unsubscribe' => "<mailto:{$verp['unsubscribe']}>".', <'.str_replace('&amp;', '&', $urls['unsubscribeUrl']).'>',
+      'List-Unsubscribe' => '<'.$unsubscribeUrl.'>'.' ,'."<mailto:{$verp['unsubscribe']}>",
       'From' => "\"{$this->from_name}\" <{$this->from_email}>",
       'Sender' => $verp['reply'],
       'Return-Path' => $verp['bounce'],
@@ -1442,9 +1443,9 @@ AND civicrm_contact.is_opt_out =0";
     // refs #30565, add google feedback loop header
     $campaignID = $this->id;
     $customerID = "j={$job_id}-q=$event_queue_id-c=$contactId";
-    $mailTypeID = "newsletter";
     $senderID = substr(str_replace('.', '-', $_SERVER['HTTP_HOST']), 0, 15);
-    $headers['Feedback-ID'] = "$campaignID:$customerID:$mailTypeID:$senderID";
+    $identifier = "$campaignID.$customerID.$senderID";
+    $headers['Feedback-ID'] = "$campaignID:$customerID:$identifier:$senderID";
 
     //CRM-5058
     //token replacement of subject

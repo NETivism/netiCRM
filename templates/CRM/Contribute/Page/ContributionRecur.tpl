@@ -163,7 +163,7 @@
                     </td>
                     <td>
                       {if $log.note}
-                        {$log.note}
+                        {$log.note|nl2br}
                       {/if}
                     </td>
                     <td>

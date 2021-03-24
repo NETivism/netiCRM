@@ -177,10 +177,11 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $returnMessageText
     ) {
       $template = CRM_Core_Smarty::singleton();
+      $is_pay_later = $template->get_template_vars('is_pay_later');
 
       // refs #28471, auto send receipt after contribution
       $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
-      if ($config->receiptEmailAuto && $haveAttachReceiptOption) {
+      if ($config->receiptEmailAuto && $haveAttachReceiptOption && !$is_pay_later) {
         $receiptTask = new CRM_Contribute_Form_Task_PDF();
         $receiptTask->makeReceipt($values['contribution_id'], 'copy_only', TRUE);
         $pdfFilePath = $receiptTask->makePDF(False);
@@ -525,7 +526,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           $template->assign($name . "_grouptitle", $groupTitle);
         }
 
-        CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params);
+        CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params, CRM_Core_BAO_UFGroup::MASK_ALL);
 
         foreach ($fields as $k => $v) {
           // suppress all file fields from display

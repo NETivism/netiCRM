@@ -3212,15 +3212,21 @@ a.token-trigger, a.token-trigger label {
 }
 
 /* "don't do this" icons */
+.crm-container div.contact_panel span.email-hold:before,
+.crm-container div.contact_panel span.do-not-email:before,
+.crm-container div.contact_panel span.do-not-phone:before,
+.crm-container div.crm-search-results span.do-not-phone:before,
+.crm-container div.crm-search-results span.do-not-email:before {
+    font-family: 'Material-Design-Iconic-Font';
+    content: '\f119';
+    color: #ff6655;
+    padding-right:5px;
+}
 .crm-container div.contact_panel span.email-hold,
 .crm-container div.contact_panel span.do-not-email,
 .crm-container div.contact_panel span.do-not-phone,
 .crm-container div.crm-search-results span.do-not-phone,
 .crm-container div.crm-search-results span.do-not-email {
-    background-position:3px;
-    background-repeat:no-repeat;
-    background-image:url("../i/stop-icon.png");
-    padding-left: 24px;
     color: #ff6655 !important;
 }
 
@@ -4930,6 +4936,7 @@ ul.ui-sortable {
   margin: 0em 0em 1em;
   border-collapse: collapse;
   width: 100%;
+  word-break: break-word;
 }
 .crm-container table.criteria-group {
   margin-bottom: .1em;

@@ -35,6 +35,7 @@
       width: window.innerWidth,
       height: window.innerHeight
     },
+    _crmPath = "",
     _language = "en_US",
     _debugMode = false,
     _data = {},
@@ -417,15 +418,6 @@
     _debug(_viewport, "viewport");
   };
 
-  var _relativeToAbsoluteURL = function(url) {
-    var url = typeof url !== "undefined" ? url : "";
-
-    if (url) {
-      var absoluteURL = window.location.origin.indexOf("local.dev") == -1 ? window.location.origin + url : "https://dev7.neticrm.tw" + url;
-      return absoluteURL;
-    }
-  };
-
   var _updateUrlHash = function(hash) {
     var hash = typeof hash !== "undefined" ? "#" + hash : "";
 
@@ -500,26 +492,25 @@
 
   var _getDefaultImage = function(type) {
     var type = typeof type !== "undefined" ? type : "",
-        img = {};
+        img = {},
+        crmPath = _crmPath.indexOf(window.location.origin) != -1 ? _crmPath : window.location.origin + _crmPath;
 
     if (type) {
       switch(type) {
         case "logo":
-          img.url = _relativeToAbsoluteURL("/sites/all/modules/civicrm/packages/mailingEditor/images/mail-default-logo@2x.png");
+          img.url = crmPath + "packages/mailingEditor/images/mail-default-logo@2x.png";
           img.width = 192;
           img.height = 84;
           break;
 
         case "thumb":
-          img.url = "/sites/all/modules/civicrm/packages/istockphoto/thumb_" + _getRandomInt(1,5) + ".jpg";
-          img.url = _relativeToAbsoluteURL(img.url);
+          img.url = crmPath + "packages/istockphoto/thumb_" + _getRandomInt(1,5) + ".jpg";
           img.width = 680;
           img.height = 383;
           break;
 
           case "square":
-          img.url = "/sites/all/modules/civicrm/packages/istockphoto/square_" + _getRandomInt(1,5) + ".jpg";
-          img.url = _relativeToAbsoluteURL(img.url);
+          img.url = crmPath + "packages/istockphoto/square_" + _getRandomInt(1,5) + ".jpg";
           img.width = 210;
           img.height = 210;
           break;
@@ -2578,24 +2569,23 @@
   };
 
   var _tooltip = function() {
-    // TODO: This is a temporary workaround, because powerTip comes from the neticrm theme, so cj does not have powerTip
-    if (jQuery.fn.powerTip) {
-      let defaultOptions = {};
+    var jq = $.fn.powerTip ? $ : jQuery.fn.powerTip ? jQuery : null;
 
-      if (jQuery("[data-tooltip]").length) {
-        jQuery("[data-tooltip]:not(.tooltip-initialized)").each(function() {
+    if (jq) {
+      if ($("[data-tooltip]").length) {
+        $("[data-tooltip]:not(.tooltip-initialized)").each(function() {
           let options = {};
 
-          if (jQuery(this).is("[data-tooltip-placement]")) {
+          if ($(this).is("[data-tooltip-placement]")) {
             options.placement = $(this).data("tooltip-placement");
           }
 
-          if (jQuery(this).is("[data-tooltip-fadeouttime]")) {
+          if ($(this).is("[data-tooltip-fadeouttime]")) {
             options.fadeOutTime = $(this).data("tooltip-fadeouttime");
           }
 
-          jQuery(this).powerTip(options);
-          jQuery(this).addClass("tooltip-initialized");
+          jq(this).powerTip(options);
+          $(this).addClass("tooltip-initialized");
         });
       }
     }
@@ -3122,10 +3112,16 @@
     constructor: nmEditor,
     data: {},
     language: _language,
+    crmPath: _crmPath,
     init: function() {
       _debug("/***** nmEditor Debug Mode *****/");
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
+        if (window.nmEditor.crmPath) {
+          _crmPath = window.nmEditor.crmPath;
+          this.crmPath = _crmPath;
+        }
+
         if (window.nmEditor.language) {
           _language = window.nmEditor.language;
           this.language = _language;
