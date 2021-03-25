@@ -598,13 +598,15 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if ($seq->find(TRUE)) {
       if ( $seq->value && (CRM_REQUEST_TIME - $seq->timestamp) < 1800) {
         // last process is executing.
-        CRM_Core_Error::debug_log_message("Last process is still executing. Interupt now.", TRUE);
-        return ;
+        $error = "Last process is still executing. Interupt now.";
+        CRM_Core_Error::debug_log_message($error, TRUE);
+        return $error;
       }
       else {
         // no last process or last process is overdue.
         // delete last sequence if it exist
-        CRM_Core_Error::debug_log_message("There are a overdue process in DB, delete it.", TRUE);
+        $error = "There are a overdue process in DB, delete it.";
+        CRM_Core_Error::debug_log_message($error, TRUE);
         $seq->delete();
       }
     }
@@ -664,7 +666,7 @@ LIMIT 0, 100
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
-        CRM_Core_Error::debug_log_message($resultNote.ts("Payment processor of recur is not %1.", array(1 => 'TapPay')));
+        CRM_Core_Error::debug_log_message(ts("Payment processor of recur is not %1.", array(1 => 'TapPay')));
         continue;
       }
 
@@ -672,7 +674,7 @@ LIMIT 0, 100
       $currentDayTime = strtotime(date('Y-m-d', $time));
       $lastExecuteDayTime = strtotime(date('Y-m-d', strtotime($dao->last_execute_date)));
       if (!empty($dao->last_execute_date) && $currentDayTime <= $lastExecuteDayTime) {
-        CRM_Core_Error::debug_log_message($resultNote.ts("Last execute date of recur is over the date."));
+        CRM_Core_Error::debug_log_message(ts("Last execute date of recur is over the date."));
         continue;
       }
 
