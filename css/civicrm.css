@@ -4990,6 +4990,7 @@ ul.ui-sortable {
 .crm-container tr {
   font-size: 1em;
   background: none;
+  border-bottom: 0px;
 }
 
 .crm-container td,
@@ -5148,11 +5149,15 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
 }
 
+.crm-container td.label {
+  display: table-cell;
+}
 .crm-container .form-layout td.label,
 .ui-dialog-content .form-layout td.label,
 .crm-container .form-layout-compressed td.label,
 .crm-container .selector td.label,
 .crm-container .form-layout-compressed th.label {
+  display: table-cell;
   text-align: right;
   padding: 5px 12px 5px 5px;
   border: 0px none;
