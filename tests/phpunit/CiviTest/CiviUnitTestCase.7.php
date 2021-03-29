@@ -2062,6 +2062,13 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
       }
     }
   }
+
+  function doWriteResult($result, $functionName) {
+    global $civicrm_root;
+    $file = fopen($civicrm_root . "docMaker/unit_test_results/{$functionName}Result.json", "w");
+    fwrite($file, json_encode($result, JSON_PRETTY_PRINT));
+    fclose($file);
+  }
 }
 
 function CiviUnitTestCase_fatalErrorHandler($message) {
