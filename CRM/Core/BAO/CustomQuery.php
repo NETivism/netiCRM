@@ -458,13 +458,13 @@ SELECT label, value
                 $this->_qill[$grouping][] = "$field[label] $op $qillValue";
               }
             }
-            continue;
+            continue 2;
 
           case 'ContactReference':
             $label = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $value, 'sort_name');
             $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($fieldName, $op, $value, 'String');
             $this->_qill[$grouping][] = $field['label'] . " $op $label";
-            continue;
+            continue 2;
 
           case 'Int':
             if ($field['is_search_range'] && is_array($value)) {
@@ -474,7 +474,7 @@ SELECT label, value
               $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($fieldName, $op, $value, 'Integer');
               $this->_qill[$grouping][] = $field['label'] . " $op $value";
             }
-            continue;
+            continue 2;
 
           case 'Boolean':
             $value = (int ) $value;
@@ -563,7 +563,7 @@ SELECT label, value
                 $this->_qill[$grouping][] = $field['label'] . ' <= ' . CRM_Utils_Date::customFormat($toDate);
               }
             }
-            continue;
+            continue 2;
 
           case 'StateProvince':
           case 'Country':
@@ -590,7 +590,7 @@ SELECT label, value
                 $this->_qill[$grouping][] = "$field[label] $op $qillValue ( $sqlOPlabel )";
               }
             }
-            continue;
+            continue 2;
         }
       }
     }
