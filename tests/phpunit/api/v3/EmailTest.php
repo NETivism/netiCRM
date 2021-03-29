@@ -44,7 +44,9 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * {ts}This is tests for creating Email{/ts}
    * 
    * ```
-   * Sample Source Code
+   * curl -g --request POST '<entrypoint>?entity=Contact&action=delete&pretty=1&json=' \
+   * {{API_KEY_HEADER}}\
+   * {{SITE_KEY_HEADER}}'
    * ```
    * 
    * {{RESULT}}
@@ -61,6 +63,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
     $result = civicrm_api('email', 'create', $params);
+    $this->doWriteResult($result, __FUNCTION__);
 
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertApiSuccess($result, 'In line ' . __LINE__);
@@ -129,6 +132,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    */
   public function testGetEmail() {
     $result = civicrm_api('email', 'create', $this->_params);
+    $this->doWriteResult($result, __FUNCTION__);
     $this->assertAPISuccess($result, 'create email in line ' . __LINE__);
     $get = civicrm_api('email', 'create', $this->_params);
     $this->assertAPISuccess($get, 'In line ' . __LINE__);
@@ -182,6 +186,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $create['is_error'], 'In line ' . __LINE__);
 
     $result = civicrm_api('email', 'delete', array('id' => $create['id'], 'version' => 3));
+    $this->doWriteResult($result, __FUNCTION__);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
@@ -251,6 +256,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
       ),
     );
     $replace1 = civicrm_api('email', 'replace', $replace1Params);
+    $this->doWriteResult($result, __FUNCTION__);
     $this->documentMe($replace1Params, $replace1, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($replace1, 'In line ' . __LINE__);
     $this->assertEquals(5, $replace1['count'], 'In line ' . __LINE__);
