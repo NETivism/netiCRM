@@ -350,6 +350,9 @@ abstract class CRM_Member_Import_Parser {
       }
       elseif ($mode == self::MODE_IMPORT) {
         $returnCode = $this->import($onDuplicate, $values);
+        if ($this->_lineCount % 100 == 0) {
+          CRM_Core_DAO::freeResult();
+        }
       }
       else {
         $returnCode = self::ERROR;
