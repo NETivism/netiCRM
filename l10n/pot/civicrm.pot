@@ -48033,3 +48033,9 @@ msgstr ""
 
 msgid "NewebPay response:"
 msgstr ""
+
+msgid "Parameter Name"
+msgstr ""
+
+msgid "Create Rule"
+msgstr ""
