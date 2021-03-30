@@ -486,7 +486,7 @@ class Requirements {
     $min_thread_stack = self::MIN_MYSQL_THREAD_STACK;
 
     $results = [
-      'title' => 'CiviCRM Mysql thread stack',
+      'title' => 'CiviCRM MySQL thread stack',
       'severity' => $this::REQUIREMENT_OK,
       'details' => 'MySQL thread_stack is OK',
     ];
