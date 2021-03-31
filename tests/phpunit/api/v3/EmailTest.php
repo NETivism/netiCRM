@@ -39,12 +39,28 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   /**
    * @start_document
    * 
-   * ### {ts}Create{/ts} {ts}Email{/ts}
+   * ## {ts}Create{/ts} {ts}Email{/ts} 
    * 
-   * {ts}This is tests for creating Email{/ts}
+   * {ts}This is tests for creating Email{/ts} 
+   * 
+   * **HTTP {ts}methods{/ts}: POST**
+   * 
+   * **{ts}Path{/ts}**
    * 
    * ```
-   * curl -g --request POST '<entrypoint>?entity=Contact&action=delete&pretty=1&json=' \
+   * <entrypoint>?entity=Contact&action=get&pretty=1&json={"email":"api@a-team.com"}
+   * ```
+   * 
+   * **API Explor**
+   * 
+   * ```
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=get&pretty=1&json={"email":"api@a-team.com"}
+   * ```
+   * 
+   * **{ts}Request Samples{/ts}**
+   * 
+   * ```
+   * curl -g --request POST '<entrypoint>?entity=Email&action=create&pretty=1&json={"email":"api@a-team.com"}' \
    * {{API_KEY_HEADER}}\
    * {{SITE_KEY_HEADER}}'
    * ```
@@ -118,9 +134,25 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   /**
    * @start_document
    * 
-   * ### {ts}Get{/ts} {ts}Email{/ts}
+   * ## {ts}Get{/ts} {ts}Email{/ts} 
    * 
-   * {ts}This is tests for get Email{/ts}
+   * {ts}This is tests for get Email{/ts} 
+   * 
+   * **HTTP {ts}methods{/ts}: POST**
+   * 
+   * **{ts}Path{/ts}**
+   * 
+   * ```
+   * <entrypoint>?entity=Contact&action=get&pretty=1
+   * ```
+   * 
+   * **API Explor**
+   * 
+   * ```
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=get&pretty=1
+   * ```
+   * 
+   * **{ts}Request Samples{/ts}**
    * 
    * ```
    * Sample Source Code
@@ -151,9 +183,24 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   /**
    * @start_document
    * 
-   * ### {ts}Delete{/ts} {ts}Email{/ts}
+   * ## {ts}Delete{/ts} {ts}Email{/ts} 
    * 
-   * {ts}This is tests for deleting Email{/ts}
+   * {ts}This is tests for deleting Email{/ts} 
+   * 
+   * **HTTP {ts}methods{/ts}: POST**
+   * 
+   * **{ts}Path{/ts}**
+   * 
+   * ```
+   * <entrypoint>?entity=Contact&action=get&pretty=1&json={"email":"api@a-team.com"}
+   * ```
+   * 
+   * **API Explor**
+   * 
+   * ```
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=get&pretty=1&json={"email":"api@a-team.com"}
+   * ```
+   * **{ts}Request Samples{/ts}**
    * 
    * ```
    * Sample Source Code
@@ -202,9 +249,25 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   /**
    * @start_document
    * 
-   * ### {ts}Update{/ts} {ts}Email{/ts}
+   * ## {ts}Update{/ts} {ts}Email{/ts} 
    * 
-   * {ts}This is tests for updating Email{/ts}
+   * {ts}This is tests for updating Email{/ts} 
+   * 
+   * **HTTP {ts}methods{/ts}: POST**
+   * 
+   * **{ts}Path{/ts}**
+   * 
+   * ```
+   * <entrypoint>?entity=Contact&action=get&pretty=1
+   * ```
+   * 
+   * **API Explor**
+   * 
+   * ```
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=get&pretty=1
+   * ```
+   * 
+   * **{ts}Request Samples{/ts}**
    * 
    * ```
    * Sample Source Code
