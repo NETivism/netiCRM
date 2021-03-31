@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-03-23 09:55+0000\n"
+"PO-Revision-Date: 2021-03-26 06:24+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48343,3 +48343,9 @@ msgstr "因使用者回報垃圾郵件而凍結鎖定。"
 
 msgid "NewebPay response:"
 msgstr "藍新回覆："
+
+msgid "Parameter Name"
+msgstr "變數名稱"
+
+msgid "Create Rule"
+msgstr "建立規則"

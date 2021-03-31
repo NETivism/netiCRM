@@ -153,7 +153,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     if(!empty($config->externalMembershipIdFieldId)){
       $sql = "SELECT f.label AS field_label, g.title AS group_title FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
-      $param = array(1 => array($config->externalMembershipIdFieldId, Integer));
+      $param = array(1 => array($config->externalMembershipIdFieldId, 'Integer'));
       $dao = CRM_Core_DAO::executeQuery($sql, $param);
       if($dao->fetch()){
         $referenceFieldOptions['custom_'.$config->externalMembershipIdFieldId] = ts('Custom Field')." - ".$dao->group_title.": ".$dao->field_label;
