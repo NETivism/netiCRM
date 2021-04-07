@@ -270,6 +270,7 @@ abstract class CRM_Member_Import_Parser {
     $dedupeRuleGroupId = 0,
     $dataReferenceField = ''
   ) {
+    set_time_limit(600);
     if (!is_array($fileName)) {
       CRM_Core_Error::fatal();
     }
@@ -349,6 +350,9 @@ abstract class CRM_Member_Import_Parser {
       }
       elseif ($mode == self::MODE_IMPORT) {
         $returnCode = $this->import($onDuplicate, $values);
+        if ($this->_lineCount % 100 == 0) {
+          CRM_Core_DAO::freeResult();
+        }
       }
       else {
         $returnCode = self::ERROR;
@@ -482,14 +486,16 @@ abstract class CRM_Member_Import_Parser {
    * @access public
    */
   function setActiveFields($fieldKeys) {
-    $this->_activeFieldCount = count($fieldKeys);
-    require_once 'CRM/Member/Import/Field.php';
-    foreach ($fieldKeys as $key) {
-      if (empty($this->_fields[$key])) {
-        $this->_activeFields[] = new CRM_Member_Import_Field('', ts('- do not import -'));
-      }
-      else {
-        $this->_activeFields[] = clone($this->_fields[$key]);
+    if (!empty($fieldKeys)) {
+      $this->_activeFieldCount = count($fieldKeys);
+      require_once 'CRM/Member/Import/Field.php';
+      foreach ($fieldKeys as $key) {
+        if (empty($this->_fields[$key])) {
+          $this->_activeFields[] = new CRM_Member_Import_Field('', ts('- do not import -'));
+        }
+        else {
+          $this->_activeFields[] = clone($this->_fields[$key]);
+        }
       }
     }
   }
@@ -519,20 +525,26 @@ abstract class CRM_Member_Import_Parser {
   }
 
   function setActiveFieldLocationTypes( $elements ) {
+    if (!empty($elements)) {
       for ($i = 0; $i < count( $elements ); $i++) {
           $this->_activeFields[$i]->_hasLocationType = $elements[$i];
       }
+    }
   }
   
   function setActiveFieldPhoneTypes( $elements ) {
+    if (!empty($elements)) {
       for ($i = 0; $i < count( $elements ); $i++) {
           $this->_activeFields[$i]->_phoneType = $elements[$i];
       }
+    }
   }
 
   function setActiveFieldWebsiteTypes($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_websiteType = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_websiteType = $elements[$i];
+      }
     }
   }
 
@@ -545,8 +557,10 @@ abstract class CRM_Member_Import_Parser {
    * @access public
    */
   function setActiveFieldImProviders($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_imProvider = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_imProvider = $elements[$i];
+      }
     }
   }
 

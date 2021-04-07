@@ -261,14 +261,14 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       }
     }
 
-    if ($this->_newGroupName || count($this->_groups)) {
+    if ($this->_newGroupName || !empty($this->_groups)) {
       if ($form) {
         $form->_groupAdditions = $this->_groupAdditions;
         $form->set('groupAdditions', $this->_groupAdditions);
       }
     }
 
-    if ($this->_newTagName || count($this->_tag)) {
+    if ($this->_newTagName || !empty($this->_tag)) {
       if ($form) {
         $form->_newTagName = $this->_tagAdditions;
         $form->set('tagAdditions', $this->_tagAdditions);
