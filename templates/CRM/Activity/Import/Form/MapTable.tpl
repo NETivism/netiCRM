@@ -32,20 +32,20 @@
     {if $loadedMapping} 
         <tr class="columnheader-dark"><th colspan="4">{ts 1=$savedName}Saved Field Mapping: %1{/ts}</td></tr>
     {/if}
-        <tr class="columnheader">
+        <tr class="columnheader-dark">
             {section name=rows loop=$rowDisplayCount}
 		   {if $skipColumnHeader }
                    { if $smarty.section.rows.iteration == 1 }
-                     <th>{ts}Column Headers{/ts}</th>
+                     <th class="map-field-column">{ts}Column Headers{/ts}</th>
                    {else}
-                     <th>{ts 1=$smarty.section.rows.iteration}Import Data (row %1){/ts}</th>
+                     <th class="map-field-data">{ts 1=$smarty.section.rows.iteration}Import Data (row %1){/ts}</th>
                    {/if}
 	        {else}
-                  <th>{ts 1=$smarty.section.rows.iteration}Import Data (row %1){/ts}</th>
+                  <th class="map-field-data">{ts 1=$smarty.section.rows.iteration}Import Data (row %1){/ts}</th>
                 {/if}
             {/section}
             
-            <th>
+            <th class="map-field-select">
                 {ts}Matching CiviCRM Field{/ts}
                 {if $wizard.currentStepName == 'MapField'}<div class="draggable-tip">{ts}Draggable{/ts}</div>{/if}
             </th>

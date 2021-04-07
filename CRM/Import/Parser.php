@@ -587,20 +587,26 @@ abstract class CRM_Import_Parser {
   }
 
   function setActiveFieldLocationTypes($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_hasLocationType = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_hasLocationType = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldPhoneTypes($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_phoneType = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_phoneType = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldWebsiteTypes($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_websiteType = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_websiteType = $elements[$i];
+      }
     }
   }
 
@@ -613,44 +619,58 @@ abstract class CRM_Import_Parser {
    * @access public
    */
   function setActiveFieldImProviders($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_imProvider = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_imProvider = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldRelated($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_related = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_related = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldRelatedContactType($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_relatedContactType = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_relatedContactType = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldRelatedContactDetails($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_relatedContactDetails = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_relatedContactDetails = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldRelatedContactLocType($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_relatedContactLocType = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_relatedContactLocType = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldRelatedContactPhoneType($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_relatedContactPhoneType = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_relatedContactPhoneType = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldRelatedContactWebsiteType($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_relatedContactWebsiteType = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_relatedContactWebsiteType = $elements[$i];
+      }
     }
   }
 
@@ -663,8 +683,10 @@ abstract class CRM_Import_Parser {
    * @access public
    */
   function setActiveFieldRelatedContactImProvider($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_relatedContactImProvider = $elements[$i];
+    if (!empty($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_relatedContactImProvider = $elements[$i];
+      }
     }
   }
 

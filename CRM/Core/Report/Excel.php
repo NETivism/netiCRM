@@ -242,6 +242,7 @@ class CRM_Core_Report_Excel {
     if (file_exists($fileName)) {
       $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
       $reader = self::reader(Type::XLSX);
+      $reader->setShouldFormatDates(TRUE);
       $reader->setTempFolder($tmpDir);
       $reader->open($fileName);
       $iterator = $reader->getSheetIterator();
