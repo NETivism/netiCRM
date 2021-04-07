@@ -164,4 +164,16 @@
      <access_callback>1</access_callback>
      <is_public>true</is_public>
   </item>
+   <item>
+     <path>civicrm/allpay/ipn</path>
+     <page_callback>civicrm_allpay_ipn</page_callback>
+     <access_callback>1</access_callback>
+     <is_public>true</is_public>
+  </item>
+  <item>
+     <path>civicrm/allpay/record</path>
+     <page_callback>civicrm_allpay_record</page_callback>
+     <access_callback>1</access_callback>
+     <is_public>true</is_public>
+  </item>
 </menu>

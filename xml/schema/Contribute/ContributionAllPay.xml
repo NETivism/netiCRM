@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>AllPay</class>
+  <name>civicrm_contribution_allpay</name>
+  <add>4.0</add>
+  <field>
+      <name>cid</name>
+      <uniqueName>allpay_id</uniqueName>
+      <type>int unsigned</type>
+      <required>true</required>
+      <title>AllPay ID</title>
+      <comment>AllPay ID</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>cid</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+    <name>data</name>
+    <comment>Newest return data.</comment>
+    <type>text</type>
+    <add>4.0</add>
+  </field>
+</table>
