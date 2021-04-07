@@ -129,7 +129,8 @@ function civicrm_membership_type_get(&$params) {
   if ($membershipTypeBAO->find()) {
     $membershipType = array();
     while ($membershipTypeBAO->fetch()) {
-      _civicrm_object_to_array(clone($membershipTypeBAO), $membershipType);
+      $obj = clone $membershipTypeBAO;
+      _civicrm_object_to_array($obj, $membershipType);
       $membershipTypes[$membershipTypeBAO->id] = $membershipType;
     }
   }

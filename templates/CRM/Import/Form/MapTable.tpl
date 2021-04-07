@@ -30,9 +30,9 @@
     {strip}
     <table class="selector">
     {if $loadedMapping}
-        <tr class="columnheader-dark"><th colspan="4">{ts 1=$savedName}Saved Field Mapping: %1{/ts}</td></tr>
+        <tr class="columnheader-dark"><th colspan="4">{ts 1=$savedName}Saved Field Mapping: %1{/ts}</th></tr>
     {/if}
-        <tr class="columnheader">
+        <tr class="columnheader-dark">
 	    {if $showColNames}	
 	        {assign var="totalRowsDisplay" value=$rowDisplayCount+1}
 	    {else}	
@@ -40,18 +40,18 @@
 	    {/if}	
             {section name=rows loop=$totalRowsDisplay}
                 { if $smarty.section.rows.iteration == 1 and $showColNames}
-                  <td>{ts}Column Names{/ts}</td>
+                  <th class="map-field-column">{ts}Column Names{/ts}</th>
                 {elseif $showColNames}
-                  <td>{ts 1=$smarty.section.rows.iteration-1}Import Data (row %1){/ts}</td>
+                  <th class="map-field-data">{ts 1=$smarty.section.rows.iteration-1}Import Data (row %1){/ts}</th>
 		{else}
-		  <td>{ts 1=$smarty.section.rows.iteration}Import Data (row %1){/ts}</td>
+		  <th class="map-field-data">{ts 1=$smarty.section.rows.iteration}Import Data (row %1){/ts}</th>
                 {/if}
             {/section}
             
-            <td>
+            <th class="map-field-select">
                 {ts}Matching CiviCRM Field{/ts}
                  {if $wizard.currentStepName == 'MapField'}<div class="draggable-tip">{ts}Draggable{/ts}</div>{/if}
-            </td>
+            </th>
         </tr>
         
         {*Loop on columns parsed from the import data rows*}

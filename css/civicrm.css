@@ -1955,6 +1955,19 @@ table.campaign td,
 .crm-container .columnheader td .draggable-tip{
   color: #777;
 }
+.crm-container #map-field table {
+  width: 100%;
+}
+.crm-container #map-field .map-field-column {
+  width: 20%;
+}
+.crm-container #map-field .map-field-data {
+  width: 22%;
+}
+.crm-container #map-field .map-field-select{
+  width: 35%;
+  min-width: 400px;
+}
 .crm-container #map-field .draggable .form-item{
   padding-right: 50px;
   position: relative;
@@ -5234,7 +5247,6 @@ tbody.scrollContent tr.alternateRow {
 ** Styles for record browser and report tables, and pager bar
 */
 
-.crm-container #map-field table,
 .crm-container table.report,
 .crm-container table.chart  {
   width: auto;
@@ -5265,11 +5277,8 @@ tbody.scrollContent tr.alternateRow {
 }
 
 .crm-container tr.columnheader-dark th {
-  /*background-color: #B0B0B0;*/
-  background-color: #999999;
-  /*color: #FFFFFF;*/
+  background-color: #666;
   color: #FAFAFA;
-  /*border: 1px solid #000000;*/
   border: 1px solid #696969;
 }
 
@@ -5289,10 +5298,6 @@ tbody.scrollContent tr.alternateRow {
 .crm-container tr.columnfooter {
   border-top: 2px solid #999999;
   font-size: 1.1em;
-}
-
-.crm-container #map-field th {
-  border-right: 1px solid #999999;
 }
 
 .crm-container #map-field td,
