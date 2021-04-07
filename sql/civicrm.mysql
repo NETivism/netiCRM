@@ -159,6 +159,7 @@ DROP TABLE IF EXISTS civicrm_coupon;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;
+DROP TABLE IF EXISTS civicrm_contribution_allpay;
 DROP TABLE IF EXISTS civicrm_contribution_linepay;
 DROP TABLE IF EXISTS civicrm_contribution_type;
 DROP TABLE IF EXISTS civicrm_contribution_recur;
@@ -1469,6 +1470,23 @@ CREATE TABLE civicrm_contribution_linepay (
         transaction_id
   )
   
+ 
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_allpay
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_allpay (
+
+
+     cid int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'AllPay ID',
+     data text    COMMENT 'Newest return data.' 
+,
+    PRIMARY KEY ( cid )
+ 
+ 
  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 

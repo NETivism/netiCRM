@@ -134,6 +134,7 @@ DROP TABLE IF EXISTS civicrm_coupon;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;
+DROP TABLE IF EXISTS civicrm_contribution_allpay;
 DROP TABLE IF EXISTS civicrm_contribution_linepay;
 DROP TABLE IF EXISTS civicrm_contribution_type;
 DROP TABLE IF EXISTS civicrm_contribution_recur;

@@ -81,6 +81,8 @@
 
   <civicrm_contribution_linepay />
 
+  <civicrm_contribution_allpay />
+
   <civicrm_premiums />
 
   <civicrm_product />
