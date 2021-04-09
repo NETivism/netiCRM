@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-03-26 06:24+0000\n"
+"PO-Revision-Date: 2021-04-09 04:30+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48349,3 +48349,43 @@ msgstr "變數名稱"
 
 msgid "Create Rule"
 msgstr "建立規則"
+
+#: Dmenu
+msgid "Groups and Mailing Groups"
+msgstr "群組與電子報群組"
+
+msgid "Merge Duplicate Contacts"
+msgstr "合併重複聯絡人"
+
+msgid "Contribution Aggregate Search"
+msgstr "捐款整合搜尋"
+
+msgid "Pledge Dashboard"
+msgstr "認捐總覽"
+
+msgid "Configure Premium"
+msgstr "管理感謝禮品"
+
+msgid "Configure Coupon"
+msgstr "管理優惠碼"
+
+msgid "Records"
+msgstr "記錄"
+
+msgid "All Reports"
+msgstr "所有報表"
+
+msgid "Contact Reports"
+msgstr "聯絡人報表"
+
+msgid "Event Reports"
+msgstr "活動報表"
+
+msgid "Mailing Reports"
+msgstr "電子報報表"
+
+msgid "Membership Reports"
+msgstr "會員報表"
+
+msgid "Configuration"
+msgstr "設置"

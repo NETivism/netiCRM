@@ -48039,3 +48039,43 @@ msgstr ""
 
 msgid "Create Rule"
 msgstr ""
+
+#: Dmenu
+msgid "Groups and Mailing Groups"
+msgstr ""
+
+msgid "Merge Duplicate Contacts"
+msgstr ""
+
+msgid "Contribution Aggregate Search"
+msgstr ""
+
+msgid "Pledge Dashboard"
+msgstr ""
+
+msgid "Configure Premium"
+msgstr ""
+
+msgid "Configure Coupon"
+msgstr ""
+
+msgid "Records"
+msgstr ""
+
+msgid "All Reports"
+msgstr ""
+
+msgid "Contact Reports"
+msgstr ""
+
+msgid "Event Reports"
+msgstr ""
+
+msgid "Mailing Reports"
+msgstr ""
+
+msgid "Membership Reports"
+msgstr ""
+
+msgid "Configuration"
+msgstr ""
