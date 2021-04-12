@@ -48080,6 +48080,7 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
+# Payment Processor Types and Instruments
 msgid "AllPay"
 msgstr ""
 

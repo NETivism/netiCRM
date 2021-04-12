@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-04-12 09:21+0000\n"
+"PO-Revision-Date: 2021-04-12 09:23+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48390,6 +48390,7 @@ msgstr "會員報表"
 msgid "Configuration"
 msgstr "設置"
 
+# Payment Processor Types and Instruments
 msgid "AllPay"
 msgstr "歐付寶"
 
@@ -48424,7 +48425,7 @@ msgid "Post Office Transfer"
 msgstr "郵政劃撥"
 
 msgid "Post Office Recurring (Offline)"
-msgstr ""
+msgstr "郵局自動轉帳授權"
 
 msgid "Convenient Store Barcode"
 msgstr "超商條碼繳費"
