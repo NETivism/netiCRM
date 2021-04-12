@@ -178,6 +178,7 @@ DROP TABLE IF EXISTS civicrm_acl_contact_cache;
 DROP TABLE IF EXISTS civicrm_contact;
 DROP TABLE IF EXISTS civicrm_acl_entity_role;
 DROP TABLE IF EXISTS civicrm_acl;
+DROP TABLE IF EXISTS civicrm_instrument;
 DROP TABLE IF EXISTS civicrm_sequence;
 DROP TABLE IF EXISTS civicrm_persistent;
 DROP TABLE IF EXISTS civicrm_discount;
@@ -838,6 +839,25 @@ CREATE TABLE civicrm_sequence (
  
  
 )  ENGINE=MEMORY  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_instrument
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_instrument (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'ID',
+     entity_id int unsigned NOT NULL   COMMENT 'Foregin-key to the referenced item.',
+     entity_table varchar(255)    COMMENT 'Name of table where item being referenced is stored.',
+     payment_instruments blob    COMMENT 'Allowed instruments from contribution page or event page.' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+ 
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
 -- *

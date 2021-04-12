@@ -111,6 +111,11 @@ return array(
     'class' => 'CRM_Core_DAO_Sequence',
     'table' => 'civicrm_sequence',
   ) ,
+  'CRM_Core_DAO_Instrument' => array(
+    'name' => 'Instrument',
+    'class' => 'CRM_Core_DAO_Instrument',
+    'table' => 'civicrm_instrument',
+  ) ,
   'CRM_ACL_DAO_ACL' => array(
     'name' => 'ACL',
     'class' => 'CRM_ACL_DAO_ACL',

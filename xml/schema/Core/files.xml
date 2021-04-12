@@ -51,4 +51,5 @@
 <xi:include href="Website.xml"              parse="xml" />
 <xi:include href="Persistent.xml"           parse="xml" />
 <xi:include href="Sequence.xml"             parse="xml" />
+<xi:include href="Instrument.xml"           parse="xml" />
 </tables>
