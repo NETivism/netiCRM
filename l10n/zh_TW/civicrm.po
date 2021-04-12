@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-04-09 04:30+0000\n"
+"PO-Revision-Date: 2021-04-12 09:15+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48389,3 +48389,72 @@ msgstr "會員報表"
 
 msgid "Configuration"
 msgstr "設置"
+
+msgid "AllPay"
+msgstr "歐付寶"
+
+msgid "AllPay Credit Card"
+msgstr "歐付寶信用卡"
+
+msgid "AllPay Non-Credit Card"
+msgstr "歐付寶非信用卡"
+
+msgid "NewebPay"
+msgstr "藍新"
+
+msgid "NewebPay Credit Card"
+msgstr "藍新信用卡"
+
+msgid "NewebPay Non-Credit Card"
+msgstr "藍新非信用卡"
+
+msgid "Non-Credit Card"
+msgstr "非信用卡"
+
+msgid "Credit Card (Offline)"
+msgstr "信用卡（非線上）"
+
+msgid "Credit Card Recurring"
+msgstr "信用卡定期定額"
+
+msgid "Credit Card Recurring (Offline)"
+msgstr "信用卡定期定額（非線上）"
+
+msgid "Post Office Transfer"
+msgstr "郵政劃撥"
+
+msgid "Post Office Recurring (Offline)"
+msgstr ""
+
+msgid "Convenient Store Barcode"
+msgstr "超商條碼繳費"
+
+msgid "Convenient Store (Code)"
+msgstr "超商代碼繳費"
+
+msgid "Web ATM Transfer"
+msgstr "ATM 轉帳"
+
+msgid "ATM Transfer"
+msgstr ""
+
+msgid "Yahoo Charity"
+msgstr "Yahoo公益"
+
+msgid "UnionPay"
+msgstr "銀聯卡"
+
+msgid "ApplePay"
+msgstr "Apple Pay"
+
+msgid "GooglePay"
+msgstr "Google Pay"
+
+msgid "LinePay"
+msgstr "Line Pay"
+
+msgid "ACH Bank"
+msgstr "ACH 銀行"
+
+msgid "ACH Post"
+msgstr "ACH 郵局"
