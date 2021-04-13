@@ -15,6 +15,7 @@
  * @copyright CiviCRM LLC https://civicrm.org/licensing
  */
 
+
 /**
  * Drupal specific stuff goes here.
  */
@@ -387,7 +388,6 @@ class CRM_Utils_System_Drupal8 {
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
   public function loadBootStrap($params = [], $loadUser = TRUE, $throwError = TRUE, $realPath = NULL) {
-    return;
     static $run_once = FALSE;
     if ($run_once) {
       return TRUE;
@@ -409,19 +409,21 @@ class CRM_Utils_System_Drupal8 {
     $kernel = \Drupal\Core\DrupalKernel::createFromRequest($request, $autoloader, 'prod');
     $kernel->boot();
     $kernel->preHandle($request);
+
+    /* 
+    // this has performance issue. Not sure why we need to do rebuildContainer here
+    echo microtime(TRUE)."<br>";
     $container = $kernel->rebuildContainer();
+    echo microtime(TRUE)."<br>";
     // Add our request to the stack and route context.
     $request->attributes->set(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT, new \Symfony\Component\Routing\Route('<none>'));
     $request->attributes->set(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_NAME, '<none>');
     $container->get('request_stack')->push($request);
     $container->get('router.request_context')->fromRequest($request);
+    */
 
     // Initialize Civicrm
     \Drupal::service('civicrm')->initialize();
-
-    // We need to call the config hook again, since we now know
-    // all the modules that are listening on it (CRM-8655).
-    CRM_Utils_Hook::config($config);
 
     if ($loadUser) {
       if (!empty($params['uid']) && $username = \Drupal\user\Entity\User::load($params['uid'])->getUsername()) {

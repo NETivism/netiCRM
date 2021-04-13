@@ -144,8 +144,7 @@ class CRM_Utils_System {
     if(empty($content)){
       return self::notFound();
     }
-    $config = CRM_Core_Config::singleton();
-    $version = $config->userSystem->version;
+    $version = CRM_Core_Config::$_userSystem->version;
     if($version >= 6 && $version < 7){
       if(function_exists('theme') && !$print){
         if ($maintenance) {
@@ -204,8 +203,7 @@ class CRM_Utils_System {
       $query = htmlentities( $query );
     }
 
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->url($path, $query, $absolute, $fragment, $htmlize, $frontend);
+    return CRM_Core_Config::$_userSystem->url($path, $query, $absolute, $fragment, $htmlize, $frontend);
   }
 
   function href($text, $path = NULL, $query = NULL, $absolute = TRUE,
@@ -216,13 +214,11 @@ class CRM_Utils_System {
   }
 
   function permissionDenied() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->permissionDenied();
+    return CRM_Core_Config::$_userSystem->permissionDenied();
   }
 
   static function logout() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->logout();
+    return CRM_Core_Config::$_userSystem->logout();
   }
 
   // this is a very drupal specific function for now
@@ -278,8 +274,7 @@ class CRM_Utils_System {
    * @access public
    */
   function setTitle($title, $pageTitle = NULL) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->setTitle($title, $pageTitle);
+    return CRM_Core_Config::$_userSystem->setTitle($title, $pageTitle);
   }
 
   /**
@@ -355,8 +350,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function appendBreadCrumb($breadCrumbs) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->appendBreadCrumb($breadCrumbs);
+    return CRM_Core_Config::$_userSystem->appendBreadCrumb($breadCrumbs);
   }
 
   /**
@@ -366,8 +360,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function resetBreadCrumb() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->resetBreadCrumb();
+    return CRM_Core_Config::$_userSystem->resetBreadCrumb();
   }
 
   /**
@@ -379,8 +372,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function addHTMLHead($bc) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->addHTMLHead($bc);
+    return CRM_Core_Config::$_userSystem->addHTMLHead($bc);
   }
 
 
@@ -394,8 +386,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function addJs($params, $text) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->addJs($params, $text);
+    return CRM_Core_Config::$_userSystem->addJs($params, $text);
   }
 
   /**
@@ -407,8 +398,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function postURL($action) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->postURL($action);
+    return CRM_Core_Config::$_userSystem->postURL($action);
   }
 
   /**
@@ -419,8 +409,7 @@ class CRM_Utils_System {
    * @static  
    */
   static function siteName() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->siteName($name, $default);
+    return CRM_Core_Config::$_userSystem->siteName($name, $default);
   }
 
   /**
@@ -431,8 +420,7 @@ class CRM_Utils_System {
    * @static  
    */
   static function allowedUserRegisteration() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->allowedUserRegisteration();
+    return CRM_Core_Config::$_userSystem->allowedUserRegisteration();
   }
 
   /**
@@ -443,8 +431,7 @@ class CRM_Utils_System {
    * @static  
    */
   static function userEmailVerification() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->userEmailVerification();
+    return CRM_Core_Config::$_userSystem->userEmailVerification();
   }
 
   /**
@@ -456,7 +443,7 @@ class CRM_Utils_System {
   static function moduleExists($module) {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework == 'Drupal') {
-      return $config->userSystem->moduleExists($module);
+      return CRM_Core_Config::$_userSystem->moduleExists($module);
     }
     return FALSE;
   }
@@ -470,7 +457,7 @@ class CRM_Utils_System {
   static function moduleImplements($hook) {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework == 'Drupal') {
-      return $config->userSystem->moduleImplements($hook);
+      return CRM_Core_Config::$_userSystem->moduleImplements($hook);
     }
     return array();
   }
@@ -490,7 +477,7 @@ class CRM_Utils_System {
     if (!empty($config->extensionsURL)) {
       $config->extensionsURL = str_replace('http://', 'https://', $config->extensionsURL);
     }
-    $config->userSystem->mapConfigToSSL();
+    CRM_Core_Config::$_userSystem->mapConfigToSSL();
   }
 
   /**
@@ -612,8 +599,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function authenticate($name, $password) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->authenticate($name, $password);
+    return CRM_Core_Config::$_userSystem->authenticate($name, $password);
   }
 
   /**
@@ -624,8 +610,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function setUFMessage($message) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->setMessage($message);
+    return CRM_Core_Config::$_userSystem->setMessage($message);
   }
 
 
@@ -1103,8 +1088,7 @@ class CRM_Utils_System {
    * @return string  the used locale or null for none
    */
   static function getUFLocale() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->getUFLocale();
+    return CRM_Core_Config::$_userSystem->getUFLocale();
   }
 
   /**
@@ -1243,8 +1227,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function isUserLoggedIn() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->isUserLoggedIn();
+    return CRM_Core_Config::$_userSystem->isUserLoggedIn();
   }
 
   /**
@@ -1253,14 +1236,13 @@ class CRM_Utils_System {
    * @return int ufId, currently logged in user uf id.
    */
   public static function getLoggedInUfID() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->getLoggedInUfID();
+    return CRM_Core_Config::$_userSystem->getLoggedInUfID();
   }
 
   static function baseCMSURL() {
     static $_baseURL = NULL;
     if (!$_baseURL) {
-      $config = &CRM_Core_Config::singleton();
+      $config = CRM_Core_Config::singleton();
       $_baseURL = $userFrameworkBaseURL = $config->userFrameworkBaseURL;
 
       if ($config->userFramework == 'Joomla') {
@@ -1326,7 +1308,6 @@ class CRM_Utils_System {
     $baseURL = self::baseCMSURL();
 
     //CRM-7622: drop the language from the URL if requested (and it’s there)
-    $config = CRM_Core_Config::singleton();
     if ($removeLanguagePart) {
       $baseURL = self::languageNegotiationURL($baseURL, FALSE, TRUE);
     }
@@ -1342,8 +1323,7 @@ class CRM_Utils_System {
    * @return string $url, formatted url.
    * @static  */
   static function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
+    return CRM_Core_Config::$_userSystem->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
   }
 
   /**
@@ -1352,8 +1332,7 @@ class CRM_Utils_System {
    * @return string  the used locale or null for none
    */
   static function notFound() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->notFound();
+    return CRM_Core_Config::$_userSystem->notFound();
   }
 
   /**
@@ -1405,8 +1384,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function cmsDir($type) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->cmsDir($type);
+    return CRM_Core_Config::$_userSystem->cmsDir($type);
   }
 
   /**
@@ -1415,8 +1393,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function cmsRootPath() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->cmsRootPath();
+    return CRM_Core_Config::$_userSystem->cmsRootPath();
   }
 
   /**
@@ -1425,8 +1402,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function confPath($type) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->confPath();
+    return CRM_Core_Config::$_userSystem->confPath();
   }
 
   /**
@@ -1435,8 +1411,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function getLogoURL() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->getLogoURL();
+    return CRM_Core_Config::$_userSystem->getLogoURL();
   }
 
   /**

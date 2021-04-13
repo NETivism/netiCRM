@@ -34,7 +34,7 @@
  */
 
 function civicrm_conf_init() {
-    global $skipConfigError, $civicrm_root, $civicrm_conf_path;
+    global $skipConfigError, $civicrm_root, $civicrm_conf_path, $civicrm_drupal_root;
 
     static $conf = '';
 
@@ -48,15 +48,30 @@ function civicrm_conf_init() {
      */
     if(php_sapi_name() == 'cli' && !empty($_SERVER['PWD'])){
       $sfile = $_SERVER['PWD'].'/'.$_SERVER['SCRIPT_FILENAME'];
-      $scriptFile = preg_replace('/sites\/([^\/]+)\/modules\/civicrm\/.*$/', 'sites/whatever', $sfile);
-      preg_match('/(.*)(sites\/[^\/]+\/modules\/civicrm)\/.*$/', $sfile, $matches);
     }
     else{
-      $scriptFile = preg_replace('/sites\/([^\/]+)\/modules\/civicrm\/.*$/', 'sites/whatever', $_SERVER['SCRIPT_FILENAME']);
-      preg_match('/(.*)(sites\/[^\/]+\/modules\/civicrm)\/.*$/', $_SERVER['SCRIPT_FILENAME'], $matches);
+      $sfile = $_SERVER['SCRIPT_FILENAME'];
+    }
+    // drupal 6-7
+    if (preg_match('/sites\/([^\/]+)\/modules\/civicrm\/.*$/', $sfile)) {
+      $scriptFile = preg_replace('/sites\/([^\/]+)\/modules\/civicrm\/.*$/', 'sites/whatever', $sfile);
+      preg_match('/(.*)(sites\/([^\/]+)\/modules\/civicrm)\/.*$/', $sfile, $matches);
+    }
+    // drupal 9
+    elseif (preg_match('/\/modules\/civicrm\/.*$/', $sfile)) {
+      $scriptFile = $sfile;
+      preg_match('/(.*)(\/modules\/civicrm)\/.*$/', $sfile, $matches);
+    }
+
+    $site_dir = $drupal_root = $matches[3];
+    if(!empty($matches[1])) {
+      $drupal_root = $matches[1];
     }
     if(!empty($matches[1]) && !empty($matches[2])){
-      $civicrm_root = $matches[1].$matches[2];
+      $civicrm_root = rtrim($matches[1].$matches[2], '/');
+    }
+    if(!empty($matches[3])) {
+      $site_dir = $matches[3];
     }
 
     $currentDir = dirname( $scriptFile );
@@ -64,19 +79,31 @@ function civicrm_conf_init() {
       include $currentDir . 'settings_location.php';
     }
 
+    $possibleConf = array();
     if ( defined( 'CIVICRM_CONFDIR' ) && ! isset( $confdir ) ) {
       $confdir = CIVICRM_CONFDIR;
+      $possibleConf[] = $confdir; 
     }
     else {
-      $confdir= $currentDir;
+      unset($confdir);
+      $possibleConf[] = $currentDir; 
+      if ($site_dir) {
+        $possibleConf[] = $drupal_root.'/sites/'.$site_dir;
+      }
+      $possibleConf[] = $drupal_root.'/sites/default';
     }
 
-    if ( file_exists( $confdir . DIRECTORY_SEPARATOR . 'civicrm.settings.php' ) ) {
-      return $confdir;
+    foreach($possibleConf as $pdir) {
+      if (file_exists($pdir. DIRECTORY_SEPARATOR . 'civicrm.settings.php')) {
+        $confdir = $conf = $pdir;
+        $civicrm_drupal_root = $drupal_root;
+        $civicrm_conf_path = $conf;
+        return $conf;
+      }
     }
 
     if ( ! file_exists( $confdir ) && ! $skipConfigError ) {
-      echo "Could not find valid configuration dir, best guess: $confdir<br/><br/>\n";
+      echo "Could not find valid configuration dir, best guess: $confdir\n";
       exit( );
     }
 

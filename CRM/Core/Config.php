@@ -92,6 +92,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @var CRM_Utils_System_Base
    */
   public $userSystem = NULL;
+  public static $_userSystem = NULL;
 
   /**
    * The root directory where Smarty should store
@@ -264,8 +265,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
 
     $class = $this->userFrameworkClass;
-    // redundant with _initVariables
     $this->userSystem = new $class();
+    self::$_userSystem = $this->userSystem;
     if(isset($this->userSystem->version)){
       $this->userFrameworkVersion = $this->userSystem->version;
     }
