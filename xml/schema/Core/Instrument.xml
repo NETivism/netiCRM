@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Core</base>
+  <class>Instrument</class>
+  <name>civicrm_instrument</name>
+  <add>4.0</add>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>ID</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>entity_id</name>
+      <type>int unsigned</type>
+      <comment>Foregin-key to the referenced item.</comment>
+      <required>true</required>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>entity_table</name>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Name of table where item being referenced is stored.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>payment_instruments</name>
+      <type>blob</type>
+      <comment>Allowed instruments from contribution page or event page.</comment>
+      <add>4.0</add>
+  </field>
+</table>

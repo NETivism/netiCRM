@@ -111,6 +111,11 @@ return array(
     'class' => 'CRM_Core_DAO_Sequence',
     'table' => 'civicrm_sequence',
   ) ,
+  'CRM_Core_DAO_Instrument' => array(
+    'name' => 'Instrument',
+    'class' => 'CRM_Core_DAO_Instrument',
+    'table' => 'civicrm_instrument',
+  ) ,
   'CRM_ACL_DAO_ACL' => array(
     'name' => 'ACL',
     'class' => 'CRM_ACL_DAO_ACL',
@@ -200,6 +205,11 @@ return array(
     'name' => 'LinePay',
     'class' => 'CRM_Contribute_DAO_LinePay',
     'table' => 'civicrm_contribution_linepay',
+  ) ,
+  'CRM_Contribute_DAO_AllPay' => array(
+    'name' => 'AllPay',
+    'class' => 'CRM_Contribute_DAO_AllPay',
+    'table' => 'civicrm_contribution_allpay',
   ) ,
   'CRM_Contribute_DAO_Premium' => array(
     'name' => 'Premium',

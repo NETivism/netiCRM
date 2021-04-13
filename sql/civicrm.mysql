@@ -159,6 +159,7 @@ DROP TABLE IF EXISTS civicrm_coupon;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;
+DROP TABLE IF EXISTS civicrm_contribution_allpay;
 DROP TABLE IF EXISTS civicrm_contribution_linepay;
 DROP TABLE IF EXISTS civicrm_contribution_type;
 DROP TABLE IF EXISTS civicrm_contribution_recur;
@@ -177,6 +178,7 @@ DROP TABLE IF EXISTS civicrm_acl_contact_cache;
 DROP TABLE IF EXISTS civicrm_contact;
 DROP TABLE IF EXISTS civicrm_acl_entity_role;
 DROP TABLE IF EXISTS civicrm_acl;
+DROP TABLE IF EXISTS civicrm_instrument;
 DROP TABLE IF EXISTS civicrm_sequence;
 DROP TABLE IF EXISTS civicrm_persistent;
 DROP TABLE IF EXISTS civicrm_discount;
@@ -840,6 +842,25 @@ CREATE TABLE civicrm_sequence (
 
 -- /*******************************************************
 -- *
+-- * civicrm_instrument
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_instrument (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'ID',
+     entity_id int unsigned NOT NULL   COMMENT 'Foregin-key to the referenced item.',
+     entity_table varchar(255)    COMMENT 'Name of table where item being referenced is stored.',
+     payment_instruments blob    COMMENT 'Allowed instruments from contribution page or event page.' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+ 
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
 -- * civicrm_acl
 -- *
 -- * Access Control List
@@ -1469,6 +1490,23 @@ CREATE TABLE civicrm_contribution_linepay (
         transaction_id
   )
   
+ 
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_allpay
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_allpay (
+
+
+     cid int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'AllPay ID',
+     data text    COMMENT 'Newest return data.' 
+,
+    PRIMARY KEY ( cid )
+ 
+ 
  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 

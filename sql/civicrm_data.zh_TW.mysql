@@ -4664,6 +4664,22 @@ VALUES
   (@option_group_id_pi, '現金',  3, 'Cash', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, '支票',  4, 'Check', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, '電子轉帳（EFT）',  5, 'EFT', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '信用卡（非線上）',  6, 'Credit Card (Offline)', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '信用卡定期定額',  7, 'Credit Card Recurring', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '信用卡定期定額（非線上）',  8, 'Credit Card Recurring (Offline)', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '郵政劃撥',  9, 'Post Office Transfer', NULL, 0, NULL, 9, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '郵局自動轉帳授權',  10, 'Post Office Recurring (Offline)', NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '超商條碼繳費',  11, 'Convenient Store', NULL, 0, NULL, 11, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '超商代碼繳費',  12, 'Convenient Store (Code)', NULL, 0, NULL, 12, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Web ATM',  13, 'Web ATM', NULL, 0, NULL, 13, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'ATM 轉帳',  14, 'ATM', NULL, 0, NULL, 14, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Yahoo公益',  15, 'Yahoo', NULL, 0, NULL, 15, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '銀聯卡',  16, 'UnionPay', NULL, 0, NULL, 16, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Apple Pay',  17, 'ApplePay', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Google Pay',  18, 'GooglePay', NULL, 0, NULL, 18, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Line Pay',  19, 'LinePay', NULL, 0, NULL, 19, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'ACH 銀行',  20, 'ACH Bank', NULL, 0, NULL, 20, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'ACH 郵局',  21, 'ACH Post', NULL, 0, NULL, 21, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_cs, '已完成'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, '待處理'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -5034,7 +5050,6 @@ VALUES
    (@option_group_id_batch_status, '進行中', 3, 'Running', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL),
    (@option_group_id_batch_status, '已取消', 4, 'Canceled', NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, @domainID, NULL);
 
-
 -- URL preferences
 
 
@@ -5295,24 +5310,28 @@ VALUES
 INSERT INTO `civicrm_payment_processor_type` 
  (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur )
 VALUES 
- ('PayPal_Standard',    'PayPal - 網站付款標準版', NULL,1,0,'商業帳戶 Email',NULL,NULL,NULL,'Payment_PayPalImpl','https://www.paypal.com/',NULL,'https://www.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,4,1),
- ('PayPal',             'PayPal - 網站付款進階版',      NULL,1,0,'使用者名稱','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/','https://www.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/','https://www.sandbox.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',3, 1 ),
- ('PayPal_Express',     'PayPal - 快速結帳',       NULL,1,0,'使用者名稱','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',2,NULL),
- ('Google_Checkout',    'Google Checkout',        NULL,1,0,'商家編號','Key',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
- ('Moneris',            'Moneris',                NULL,1,0,'使用者名稱','密碼','Store ID',NULL,'Payment_Moneris','https://www3.moneris.com/',NULL,NULL,NULL,'https://esqa.moneris.com/',NULL,NULL,NULL,1,1),
- ('AuthNet_AIM',        'Authorize.Net - AIM',    NULL,1,0,'API Login','Payment Key','MD5 Hash',NULL,'Payment_AuthorizeNet','https://secure.authorize.net/gateway/transact.dll',NULL,'https://api.authorize.net/xml/v1/request.api',NULL,'https://test.authorize.net/gateway/transact.dll',NULL,'https://apitest.authorize.net/xml/v1/request.api',NULL,1,NULL),
- ('PayJunction',        'PayJunction',            NULL,1,0,'User Name','Password',NULL,NULL,'Payment_PayJunction','https://payjunction.com/quick_link',NULL,NULL,NULL,'https://www.payjunctionlabs.com/quick_link',NULL,NULL,NULL,1,1),
- ('eWAY',               'eWAY（單一貨幣）', NULL,1,0,'Customer ID',NULL,NULL,NULL,'Payment_eWAY','https://www.eway.com.au/gateway_cvn/xmlpayment.asp',NULL,NULL,NULL,'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp',NULL,NULL,NULL,1,0),
- ('Payment_Express',    'DPS Payment Express',    NULL,1,0,'User ID','Key','Mac Key - pxaccess only',NULL,'Payment_PaymentExpress','https://www.paymentexpress.com/pleaseenteraurl',NULL,NULL,NULL,'https://www.paymentexpress.com/pleaseenteratesturl',NULL,NULL,NULL,4,0),
- ('ClickAndPledge',     '點按並認捐',       NULL,1,0,'Customer ID',NULL,NULL,NULL,'Payment_ClickAndPledge','http://www.clickandpledge.com/',NULL,NULL,NULL,'http://www.clickandpledge.com/',NULL,NULL,NULL,4,0),
- ('Dummy',              'Dummy 金流機制',NULL,1,1,'使用者名稱',NULL,NULL,NULL,'Payment_Dummy',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL),
- ('Elavon',             'Elavon 金流機制','Elavon / Nova Virtual Merchant',1,0,'SSL Merchant ID ','SSL User ID','SSL PIN',NULL,'Payment_Elavon','https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,'https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,1,0),
- ('Realex',             'Realex Payment',         NULL,1,0,'Merchant ID', 'Password', NULL, 'Account', 'Payment_Realex', 'https://epage.payandshop.com/epage.cgi', NULL, NULL, NULL, 'https://epage.payandshop.com/epage-remote.cgi', NULL, NULL, NULL, 1, 0 ),
- ('PayflowPro',         'PayflowPro',             NULL,1,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
- ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
+ ('PayPal_Standard',    'PayPal - 網站付款標準版', NULL,0,0,'商業帳戶 Email',NULL,NULL,NULL,'Payment_PayPalImpl','https://www.paypal.com/',NULL,'https://www.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,4,1),
+ ('PayPal',             'PayPal - 網站付款進階版',      NULL,0,0,'使用者名稱','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/','https://www.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/','https://www.sandbox.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',3, 1 ),
+ ('PayPal_Express',     'PayPal - 快速結帳',       NULL,0,0,'使用者名稱','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',2,NULL),
+ ('Google_Checkout',    'Google Checkout',        NULL,0,0,'商家編號','Key',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
+ ('Moneris',            'Moneris',                NULL,0,0,'使用者名稱','密碼','Store ID',NULL,'Payment_Moneris','https://www3.moneris.com/',NULL,NULL,NULL,'https://esqa.moneris.com/',NULL,NULL,NULL,1,1),
+ ('AuthNet_AIM',        'Authorize.Net - AIM',    NULL,0,0,'API Login','Payment Key','MD5 Hash',NULL,'Payment_AuthorizeNet','https://secure.authorize.net/gateway/transact.dll',NULL,'https://api.authorize.net/xml/v1/request.api',NULL,'https://test.authorize.net/gateway/transact.dll',NULL,'https://apitest.authorize.net/xml/v1/request.api',NULL,1,NULL),
+ ('PayJunction',        'PayJunction',            NULL,0,0,'User Name','Password',NULL,NULL,'Payment_PayJunction','https://payjunction.com/quick_link',NULL,NULL,NULL,'https://www.payjunctionlabs.com/quick_link',NULL,NULL,NULL,1,1),
+ ('eWAY',               'eWAY（單一貨幣）', NULL,0,0,'Customer ID',NULL,NULL,NULL,'Payment_eWAY','https://www.eway.com.au/gateway_cvn/xmlpayment.asp',NULL,NULL,NULL,'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp',NULL,NULL,NULL,1,0),
+ ('Payment_Express',    'DPS Payment Express',    NULL,0,0,'User ID','Key','Mac Key - pxaccess only',NULL,'Payment_PaymentExpress','https://www.paymentexpress.com/pleaseenteraurl',NULL,NULL,NULL,'https://www.paymentexpress.com/pleaseenteratesturl',NULL,NULL,NULL,4,0),
+ ('ClickAndPledge',     '點按並認捐',       NULL,0,0,'Customer ID',NULL,NULL,NULL,'Payment_ClickAndPledge','http://www.clickandpledge.com/',NULL,NULL,NULL,'http://www.clickandpledge.com/',NULL,NULL,NULL,4,0),
+ ('Dummy',              'Dummy 金流機制',NULL,0,1,'使用者名稱',NULL,NULL,NULL,'Payment_Dummy',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL),
+ ('Elavon',             'Elavon 金流機制','Elavon / Nova Virtual Merchant',0,0,'SSL Merchant ID ','SSL User ID','SSL PIN',NULL,'Payment_Elavon','https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,'https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,1,0),
+ ('Realex',             'Realex Payment',         NULL,0,0,'Merchant ID', 'Password', NULL, 'Account', 'Payment_Realex', 'https://epage.payandshop.com/epage.cgi', NULL, NULL, NULL, 'https://epage.payandshop.com/epage-remote.cgi', NULL, NULL, NULL, 1, 0 ),
+ ('PayflowPro',         'PayflowPro',             NULL,0,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
+ ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 0, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', '行動支付', NULL, 1, 0, '商家編號', '金流商', '帳號', '密碼',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
  ('TapPay', 'TapPay 支付', NULL, 1, 0, 'Merchant ID', '帳號金鑰（Partner Key）', '應用程式 App ID', '應用程式 App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
- ('TaiwanACH', 'ACH 代收代付', NULL, 1, 0, '銀行帳戶號碼', '統一編號', '銀行代碼', '郵局委託機構代號',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0);
+ ('TaiwanACH', 'ACH 代收代付', NULL, 1, 0, '銀行帳戶號碼', '統一編號', '銀行代碼', '郵局委託機構代號',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0),
+ ('ALLPAY', '歐付寶信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', '', '', '', NULL, '', '', '', NULL, 4, 1),
+ ('ALLPAYX', '歐付寶非信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', '', '', NULL, NULL, '', '', NULL, NULL, 4, 0),
+('SPGATEWAY', '藍新信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1),
+('SPGATEWAYX', '藍新非信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 0);
 
 
 -- the fuzzy default dedupe rules
