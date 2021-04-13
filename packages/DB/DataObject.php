@@ -2306,7 +2306,6 @@ class DB_DataObject extends DB_DataObject_Overload
         }
         
         // change the connection and results charsets to UTF-8 if we're using MySQL 4.1+
-        $civicrmConfig =& CRM_Core_Config::singleton();
         $this->query("/*!40101 SET NAMES utf8mb4 */");
         $this->query("/*!40101 SET SESSION group_concat_max_len = 65535*/");
         
