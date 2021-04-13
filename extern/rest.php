@@ -1,6 +1,6 @@
 <?php
 require_once '../civicrm.config.php';
-$config = CRM_Core_Config::singleton();
+CRM_Core_Config::singleton();
 $rest = new CRM_Utils_REST();
 
 // Json-appropriate header will be set by CRM_Utils_Rest

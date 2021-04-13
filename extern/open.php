@@ -1,7 +1,7 @@
 <?php
 require_once '../civicrm.config.php';
 
-$config   = CRM_Core_Config::singleton();
+CRM_Core_Config::singleton();
 $queue_id =  CRM_Utils_Array::value( 'q', $_GET );
 if (!$queue_id) {
   //echo "Missing input parameters\n";

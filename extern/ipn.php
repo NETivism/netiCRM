@@ -38,7 +38,7 @@ session_start( );
 require_once '../civicrm.config.php';
 
 /* Cache the real UF, override it with the SOAP environment */
-$config = CRM_Core_Config::singleton();
+CRM_Core_Config::singleton();
 
 if ( empty( $_GET ) ) {
     $rpInvoiceArray = array();
