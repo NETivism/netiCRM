@@ -1,12 +1,16 @@
 <?php
+if (PHP_SAPI !== 'cli') {
+  die("GenCode can only be run from command line.");
+}
+
 ini_set('include_path', '.' . PATH_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR . '..');
 ini_set('memory_limit', '512M');
 
 define('CIVICRM_UF', 'Drupal');
-define('VERSION', '7.72'); // specified Drupal Version
+define('VERSION', '9.1.3'); // specified Drupal Version
 
 require_once '../civicrm.config.php';
-$config   = CRM_Core_Config::singleton();
+CRM_Core_Config::singleton();
 chdir(__DIR__);
 
 $genCode = new CRM_GenCode_Main('../CRM/Core/DAO/', '../sql/', '../', '../templates/');
