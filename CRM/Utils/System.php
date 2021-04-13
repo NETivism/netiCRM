@@ -474,7 +474,7 @@ class CRM_Utils_System {
       $key = trim(CRM_Utils_Array::value('key', $_REQUEST));
     }
 
-    $docAdd = "More info at:" . CRM_Utils_System::docURL2("Command-line Script Configuration", TRUE);
+    $docAdd = "More info at:" . CRM_Utils_System::docURL2("Command-line Script Conf iguration", TRUE);
 
     if (!$key) {
       return self::authenticateAbort("ERROR: You need to send a valid key to execute this file. " . $docAdd . "\n",
@@ -498,7 +498,7 @@ class CRM_Utils_System {
       );
     }
 
-    if ($key !== $siteKey) {
+    if (!hash_equals($key, $siteKey)) {
       return self::authenticateAbort("ERROR: Invalid key value sent. " . $docAdd . "\n",
         $abort
       );
