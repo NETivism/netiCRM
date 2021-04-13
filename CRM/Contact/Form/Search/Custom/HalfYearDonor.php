@@ -126,6 +126,7 @@ $having
     $clauses = array();
     $clauses[] = "contact.is_deleted = 0 AND pp.id IS NULL AND mp.id IS NULL";
     $clauses[] = "c.receive_date > '$halfyear'";
+    $clauses[] = "c.contribution_status_id = 1";
 
     return implode(' AND ', $clauses);
   }
