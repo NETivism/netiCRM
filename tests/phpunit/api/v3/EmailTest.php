@@ -62,7 +62,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * ```shell
    * curl -g --request POST '<entrypoint>?entity=Email&action=create&pretty=1&json=\{"email":"{$value.email}"\}' \
    * {$API_KEY_HEADER}\
-   * {$SITE_KEY_HEADER}'
+   * {$SITE_KEY_HEADER}
    * ```
    * 
    * {$result}
@@ -158,7 +158,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * Sample Source Code
    * ```
    * 
-   * {{RESULT}}
+   * {$result}
    * 
    * @end_document
    */
@@ -192,13 +192,13 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * **{ts}Path{/ts}**
    * 
    * ```
-   * <entrypoint>?entity=Contact&action=get&pretty=1&json={"email":"api@a-team.com"}
+   * <entrypoint>?entity=Contact&action=get&pretty=1&json=\{"email":"{$value.email}"\}
    * ```
    * 
    * **API Explor**
    * 
    * ```
-   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=get&pretty=1&json={"email":"api@a-team.com"}
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=get&pretty=1&json=\{"email":"{$value.email}"\}
    * ```
    * **{ts}Request Samples{/ts}**
    * 
@@ -206,7 +206,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * Sample Source Code
    * ```
    * 
-   * {{RESULT}}
+   * {$result}
    * 
    * @end_document
    */
@@ -273,7 +273,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * Sample Source Code
    * ```
    * 
-   * {{RESULT}}
+   * {$result}
    * 
    * @end_document
    */
