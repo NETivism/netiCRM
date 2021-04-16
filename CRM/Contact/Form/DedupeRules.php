@@ -122,6 +122,13 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
       $ruleLevel->freeze();
     }
 
+    // #31293, it's will be disaster when user config this to wrong value
+    // lock for uf id 1 for data preserve reason
+    $ufID = CRM_Utils_System::getLoggedInUfID();
+    if ($ufID != 1) {
+      $default->freeze();
+    }
+
     for ($count = 0; $count < self::RULES_COUNT; $count++) {
       $this->add('select', "where_$count", ts('Field'), array(NULL => ts('- none -')) + $this->_fields);
       $this->add('text', "length_$count", ts('Length'), array('class' => 'two', 'style' => 'text-align: right'));
