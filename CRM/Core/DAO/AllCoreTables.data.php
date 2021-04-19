@@ -206,11 +206,6 @@ return array(
     'class' => 'CRM_Contribute_DAO_LinePay',
     'table' => 'civicrm_contribution_linepay',
   ) ,
-  'CRM_Contribute_DAO_AllPay' => array(
-    'name' => 'AllPay',
-    'class' => 'CRM_Contribute_DAO_AllPay',
-    'table' => 'civicrm_contribution_allpay',
-  ) ,
   'CRM_Contribute_DAO_Premium' => array(
     'name' => 'Premium',
     'class' => 'CRM_Contribute_DAO_Premium',
@@ -705,6 +700,11 @@ return array(
     'name' => 'TapPayLog',
     'class' => 'CRM_Contribute_DAO_TapPayLog',
     'table' => 'civicrm_contribution_tappay_log',
+  ) ,
+  'CRM_Contribute_DAO_AllPay' => array(
+    'name' => 'AllPay',
+    'class' => 'CRM_Contribute_DAO_AllPay',
+    'table' => 'civicrm_contribution_allpay',
   ) ,
   'CRM_Coupon_DAO_CouponTrack' => array(
     'name' => 'CouponTrack',

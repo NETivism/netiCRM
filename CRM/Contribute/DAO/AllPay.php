@@ -81,19 +81,18 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO
    */
   static $_log = false;
   /**
-   * table primary key
    *
-   * @var string
+   * @var int unsigned
    */
-  public $_primaryKey = 'cid';
+  public $id;
   /**
-   * AllPay ID
+   * AllPay ID, FK to contribution table.
    *
    * @var int unsigned
    */
   public $cid;
   /**
-   * Newest return data.
+   * Allpay return data log
    *
    * @var text
    */
@@ -109,6 +108,35 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO
     parent::__construct();
   }
   /**
+   * return foreign links
+   *
+   * @access public
+   * @return array
+   */
+  function &links()
+  {
+    if (!(self::$_links)) {
+      self::$_links = array(
+        'cid' => 'civicrm_contribution:id',
+      );
+    }
+    return self::$_links;
+  }
+  /**
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
+  public static function getReferenceColumns()
+  {
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'cid', 'civicrm_contribution', 'id');
+    }
+    return Civi::$statics[__CLASS__]['links'];
+  }
+  /**
    * returns all the column names of this table
    *
    * @access public
@@ -118,11 +146,16 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO
   {
     if (!(self::$_fields)) {
       self::$_fields = array(
+        'id' => array(
+          'name' => 'id',
+          'type' => CRM_Utils_Type::T_INT,
+          'required' => true,
+        ) ,
         'allpay_id' => array(
           'name' => 'cid',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('AllPay ID') ,
-          'required' => true,
+          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
         ) ,
         'data' => array(
           'name' => 'data',
