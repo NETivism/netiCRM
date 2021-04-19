@@ -191,6 +191,15 @@ class CRM_Utils_System_UnitTests {
     }
   }
 
+  /**
+   * Get logged user id, unit test always anonymous user
+   *
+   * @return int 0
+   */
+  public static function getLoggedInUfID() {
+    return 0;
+  }
+
   function cmsDir($type) {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
