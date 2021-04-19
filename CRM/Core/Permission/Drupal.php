@@ -247,22 +247,12 @@ class CRM_Core_Permission_Drupal {
    * @static
    * @access public
    */
-  static function check($str, $contactID = NULL) {
-    if (function_exists('user_access')) {
-      return user_access($str) ? TRUE : FALSE;
+  static function check($permission, $contactID = NULL) {
+    $ufID = NULL;
+    if ($contactID) {
+      $ufID = CRM_Core_BAO_UFMatch::getUFId($contactID);
     }
-    return TRUE;
-
-    /**
-     * lets introduce acl in 2.1
-     static $isAdmin = null;
-     if ( $isAdmin === null ) {
-     $session = CRM_Core_Session::singleton( );
-     $isAdmin = $session->get( 'ufID' ) == 1 ? true : false;
-     }
-     require_once 'CRM/ACL/API.php';
-     return ( $isAdmin) ? true : CRM_ACL_API::check( $str, $contactID );
-     */
+    return CRM_Core_Config::$_userSystem->permissionCheck($permission, $ufID);
   }
 }
 

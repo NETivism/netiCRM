@@ -521,7 +521,8 @@ class CRM_Utils_System_Drupal {
    * @static  */
   static function variable_get($name, $default) {
     // drupal 6 and 7
-    if (CRM_Core_Config::singleton()->userSystem->version < 8 ) {
+    $version = CRM_Core_Config::$_userSystem->version;
+    if ($version < 8 ) {
       return variable_get($name, $default);
     }
     else {
@@ -760,6 +761,34 @@ class CRM_Utils_System_Drupal {
     drupal_set_message($message);
   }
 
+  static function permissionCheck($permission, $uid = NULL) {
+    $version = CRM_Core_Config::$_userSystem->version;
+    if ($version < 8) {
+      if ($uid) {
+        if ($version < 7) {
+          $account = user_load(array('uid' => $uid));
+        }
+        else {
+          $account = user_load($uid);
+        }
+        return user_access($permission, $account) ? TRUE : FALSE;
+      }
+      else {
+        return user_access($permission) ? TRUE : FALSE;
+      }
+    }
+    else {
+      if ($uid) {
+        $account = user_load($uid);
+        return $account->hasPermission($permission) ? TRUE : FALSE;
+      }
+      else {
+        return \Drupal::currentUser()->hasPermission($permission) ? TRUE : FALSE;
+      }
+    }
+    return FALSE;
+  }
+
   static function permissionDenied() {
     drupal_access_denied();
   }
@@ -770,7 +799,8 @@ class CRM_Utils_System_Drupal {
   }
 
   static function updateCategories() {
-    $version = CRM_Core_Config::singleton()->userSystem->version;
+    $version = CRM_Core_Config::$_userSystem->version;
+
     // CRM-3600
     if ($version < 8) {
       cache_clear_all();
@@ -787,7 +817,7 @@ class CRM_Utils_System_Drupal {
    * @return string  with the locale or null for none
    */
   static function getUFLocale() {
-    $version = CRM_Core_Config::singleton()->userSystem->version;
+    $version = CRM_Core_Config::$_userSystem->version;
     if ($version >= 8) {
       $languageCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     }
