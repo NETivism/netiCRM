@@ -292,17 +292,18 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     if(empty($code)){
       return NULL;
     }
+    $valid = TRUE;
     $coupon = self::getCoupon(NULL, $code);
     $currentTime = CRM_REQUEST_TIME;
     if(!empty($coupon) && $coupon['code'] == $code){
       if(!empty($coupon['start_date']) && $currentTime < strtotime($coupon['start_date'])){
-        return FALSE;
+        $valid = FALSE;
       }
       if(!empty($coupon['end_date']) && $currentTime > strtotime($coupon['end_date'])){
-        return FALSE;
+        $valid = FALSE;
       }
       if(!$coupon['is_active']){
-        return FALSE;
+        $valid = FALSE;
       }
 
       // whatever status , used is used.
@@ -310,17 +311,22 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       $coupon['used'] = $couponCount[$coupon['id']];
       if (!empty($coupon['count_max'])) {
         if($coupon['count_max'] <= $coupon['used'] && $coupon['used'] != 0){
-          return FALSE;
+          $valid = FALSE;
         }
       }
 
-      // success
-      return $coupon;
+      CRM_Utils_Hook::validateCoupon($coupon, $valid, 'code');
+      if ($valid) {
+        // success
+        return $coupon;
+      }
     }
-    return FALSE;
+    $valid = FALSE;
+    return $valid;
   }
 
   function validEventFromCode($code, $eventId, $additionalVerify = array()) {
+    $valid = TRUE;
     $coupon = self::validFromCode($code);
     if (empty($coupon)) {
       return FALSE;
@@ -330,7 +336,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     if (!empty($eventId)) {
       // we limited used for specific event, but this event id not listed
       if (!empty($coupon['used_for']['civicrm_event']) && empty($coupon['used_for']['civicrm_event'][$eventId])) {
-        return FALSE;
+        $valid = FALSE;
       }
     }
 
@@ -346,12 +352,18 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         if (!empty($coupon['used_for'][$entityTable])) {
           $matches = array_intersect($coupon['used_for'][$entityTable], $entityIds);
           if (empty($matches)) {
-            return FALSE;
+            $valid = FALSE;
           }
         }
       }
     }
-    return $coupon;
+    CRM_Utils_Hook::validateCoupon($coupon, $valid, 'event');
+    if ($valid) {
+      return $coupon;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   static function getCouponFromFormSubmit($form, $fields){
