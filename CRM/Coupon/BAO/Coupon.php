@@ -416,20 +416,25 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       }
       else{
         // Not use price set.
-        if(empty($fields['is_primary'])){
-          // In condition, Use early bird discount.
-          if (!empty($form->_values['discount'])) {
-            $discountFee = reset($form->_values['discount']);
-            $totalAmount = $discountFee[$fields['amount']]['value'];
-          }
-          else {
-            // formRule in register.php
-            $totalAmount = $form->_values['fee'][$fields['amount']]['value'];
-          }
-        }
-        else{
+        if ($fields['is_primary']) {
           // postProcess
           $totalAmount = $fields['amount'];
+        }
+        else {
+          // form rule validation (no is_primary tag)
+          $availableAmount = array();
+          foreach($form->_values['fee'] as $option) {
+            $availableAmount[$option['amount_id']] = $option['value'];
+          }
+          // refs #29642, collect all options of discount
+          if (!empty($form->_values['discount'])) {
+            foreach($form->_values['discount'] as $discount) {
+              foreach($discount as $option) {
+                $availableAmount[$option['amount_id']] = $option['value'];
+              }
+            }
+          }
+          $totalAmount = $availableAmount[$fields['amount']];
         }
       }
       if(empty($coupon)){
