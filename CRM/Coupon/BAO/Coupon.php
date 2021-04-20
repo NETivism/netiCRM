@@ -261,7 +261,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       $contactIdsWhere = ' AND ct.contact_id IN('.implode(',', $contactIds).')';
     }
 
-    $sql = "SELECT c.*, ct.id as coupon_track_id, ct.*, contrib.total_amount, ct.used_date FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND ct.coupon_id IN({$couponIds}) {$contactIdsWhere} ORDER BY ct.used_date DESC";
+    $sql = "SELECT c.*, ct.id as coupon_track_id, ct.*, contrib.total_amount, ct.used_date, contrib.contribution_status_id FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND ct.coupon_id IN({$couponIds}) {$contactIdsWhere} ORDER BY ct.used_date DESC";
     return CRM_Core_DAO::executeQuery($sql);
   }
 
