@@ -498,7 +498,8 @@ class CRM_Utils_System {
       );
     }
 
-    if ($key !== $siteKey) {
+    require_once 'CRM/Core/Key.php'; // php 5.5 hash_equals here
+    if (!hash_equals($key, $siteKey)) {
       return self::authenticateAbort("ERROR: Invalid key value sent. " . $docAdd . "\n",
         $abort
       );

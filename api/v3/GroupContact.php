@@ -51,8 +51,12 @@
  * @return  array  list of groups, given contact subsribed to
  */
 function civicrm_api3_group_contact_get($params) {
-
-  if (empty($params['contact_id'])) {
+  if (empty($params['group_id']) && !empty($params['contact_id'])) {
+    $status = CRM_Utils_Array::value('status', $params, 'Added');
+    $values = &CRM_Contact_BAO_GroupContact::getContactGroup($params['contact_id'], $status, NULL, FALSE, TRUE);
+    return civicrm_api3_create_success($values, $params);
+  }
+  else {
     if (empty($params['status'])) {
       //default to 'Added'
       $params['status'] = 'Added';
@@ -60,10 +64,6 @@ function civicrm_api3_group_contact_get($params) {
     //ie. id passed in so we have to return something
     return _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
   }
-  $status = CRM_Utils_Array::value('status', $params, 'Added');
-
-  $values = &CRM_Contact_BAO_GroupContact::getContactGroup($params['contact_id'], $status, NULL, FALSE, TRUE);
-  return civicrm_api3_create_success($values, $params);
 }
 
 /**

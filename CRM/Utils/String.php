@@ -49,7 +49,7 @@ class CRM_Utils_String {
   /**
    * Allowed HTML Tags
    */
-  const ALLOWED_TAGS = 'div,b,strong,i,em,a[href|title],ul,ol,li,p[style],blockquote,br,span[style],img[width|height|alt|src],table,thead,tbody,tr,td,th';
+  const ALLOWED_TAGS = 'div[style],b,strong,i,em,s,a[href|title],ul,ol,li,p[style],blockquote,br,span[style],img[width|height|alt|src|style],figure[class|style],figcaption,table[border|cellpadding|cellspacing|style],thead,tbody,tr,td[style],th[style],hr,iframe[allow|allowfullscreen|frameborder|src|height|title|width]';
 
   /**
    * Convert a display name into a potential variable
@@ -434,12 +434,37 @@ class CRM_Utils_String {
   }
 
   static function htmlPurifier($html, $allowed_tags = array()) {
-    require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.safe-includes.php';
-    $purifierConfig = HTMLPurifier_Config::createDefault();
-    $purifierConfig->set('HTML.Allowed', $allowed_tags);
-    $purifierConfig->set('Output.Newline', "\n");
-    $purifier = new HTMLPurifier($purifierConfig);
-    return $purifier->purify($html);
+    require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.auto.php';
+    static $_purifier;
+    $hash = md5(implode('', $allowed_tags));
+    if (!$_purifier[$hash]) {
+      // general setting
+      $purifierConfig = HTMLPurifier_Config::createDefault();
+      $purifierConfig->set('HTML.DefinitionID', 'civicrm-htmlpurifier-figure');
+      $purifierConfig->set('HTML.DefinitionRev', 2);
+      $purifierConfig->set('Output.Newline', "\n");
+      $purifierConfig->set('Core.Encoding', 'UTF-8');
+
+      // iframe
+      $purifierConfig->set('HTML.SafeIframe', TRUE);
+      $purifierConfig->set('URI.SafeIframeRegexp', '%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/)%'); //allow YouTube and Vimeo
+
+      // allowed tags put at the end
+      $purifierConfig->set('HTML.Allowed', $allowed_tags);
+
+      // def needs after configure
+      // fullscreen
+      $def = $purifierConfig->maybeGetRawHTMLDefinition();
+      $def->addAttribute('iframe', 'allowfullscreen', 'Bool');
+
+      // figure / figcaption
+      $def->addElement('figcaption', 'Block', 'Flow', 'Common');
+      $def->addElement('figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common');
+      $def->addAttribute('figure', 'style', 'Text');
+
+      $_purifier[$hash] = new HTMLPurifier($purifierConfig);
+    }
+    return $_purifier[$hash]->purify($html);
   }
 
   static function extractName($string, &$params) {

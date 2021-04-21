@@ -80,10 +80,10 @@
 {/if}{* end is_thermometer *}
 <div class="pcp-campaign">
   <div class="pcp-intro-text">
-    <i class="zmdi zmdi-quote"></i> {$pcp.intro_text}
+    <i class="zmdi zmdi-quote"></i> {$pcp.intro_text|purify}
   </div>
   <div class="pcp-page-text">
-    {$pcp.page_text}
+    {$pcp.page_text|purify}
   </div>
   {if $validDate && $contributeURL}
   <div class="pcp-donate"> 
