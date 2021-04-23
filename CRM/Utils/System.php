@@ -1173,7 +1173,7 @@ class CRM_Utils_System {
 
   static function civiExit($status = 0) {
     $config = CRM_Core_Config::singleton();
-    CRM_Core_Session::storeSessionObjects();
+    self::civiBeforeShutdown();
     if ($config->userFramework == 'Drupal') {
       // drupal needs handling exit for it self
       if(function_exists('drupal_exit')){
@@ -1184,6 +1184,23 @@ class CRM_Utils_System {
       }
     }
     exit($status);
+  }
+
+  static function civiBeforeInvoke() {
+    if (!self::isUserLoggedIn()) {
+      $qfPrivateKey = CRM_Core_Config::$_userSystem->tempstoreGet('qfPrivateKey');
+      if (!empty($qfPrivateKey)) {
+        $session = CRM_Core_Session::singleton();
+        $session->set('qfPrivateKey', $qfPrivateKey);
+      }
+    }
+  }
+
+  static function civiBeforeShutdown() {
+    CRM_Core_Session::storeSessionObjects();
+    if (!self::isUserLoggedIn() && isset($_SESSION[CRM_Core_Session::KEY]['qfPrivateKey'])) {
+      CRM_Core_Config::$_userSystem->tempstoreSet('qfPrivateKey', $_SESSION[CRM_Core_Session::KEY]['qfPrivateKey']);
+    }
   }
 
   /**

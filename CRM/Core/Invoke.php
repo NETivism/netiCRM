@@ -47,6 +47,7 @@ class CRM_Core_Invoke {
    * @access public
    */
   static function invoke($args) {
+    CRM_Utils_System::civiBeforeInvoke();
     if ($args[0] !== 'civicrm') {
       return;
     }
@@ -214,7 +215,7 @@ class CRM_Core_Invoke {
         $result = $object->run($newArgs, $pageArgs);
       }
 
-      CRM_Core_Session::storeSessionObjects();
+      CRM_Utils_System::civiBeforeShutdown();
       return $result;
     }
 

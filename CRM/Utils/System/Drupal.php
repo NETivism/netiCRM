@@ -1052,7 +1052,7 @@ class CRM_Utils_System_Drupal {
     }
     return array();
   }
-  
+
   function sessionStart(){
     $version = CRM_Core_Config::$_userSystem->version;
     $ufId = self::getBestUFID();
@@ -1078,6 +1078,26 @@ class CRM_Utils_System_Drupal {
         }
       }
     }
+  }
+
+  function tempstoreSet($name, $value) {
+    $version = CRM_Core_Config::$_userSystem->version;
+    // refs #31356, this is drupal 8 / 9 specific code for set tempstore
+    if ($version >= 8) {
+      $tempstore = \Drupal::service('tempstore.private')->get('civicrm');
+      $tempstore->set($name, $value);
+    }
+    return FALSE;
+  }
+  
+  function tempstoreGet($name) {
+    $version = CRM_Core_Config::$_userSystem->version;
+    // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore
+    if ($version >= 8) {
+      $tempstore = \Drupal::service('tempstore.private')->get('civicrm');
+      return $tempstore->get($name);
+    }
+    return FALSE;
   }
 }
 
