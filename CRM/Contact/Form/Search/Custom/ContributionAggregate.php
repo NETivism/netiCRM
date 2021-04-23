@@ -184,7 +184,7 @@ civicrm_contact AS contact_a
       $clauses[] = "contrib.receive_date >= $startDate";
     }
 
-    $endDate = CRM_Utils_Date::processDate($this->_formValues['end_date']);
+    $endDate = CRM_Utils_Date::processDate($this->_formValues['end_date'], '23:59:59');
     if ($endDate) {
       $clauses[] = "contrib.receive_date <= $endDate";
     }
