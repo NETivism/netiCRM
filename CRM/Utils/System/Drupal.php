@@ -1053,5 +1053,31 @@ class CRM_Utils_System_Drupal {
     return array();
   }
   
+  function sessionStart(){
+    $version = CRM_Core_Config::$_userSystem->version;
+    $ufId = self::getBestUFID();
+    if ($version < 7) {
+      if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+      }
+    }
+    elseif ($version < 8 && $version >= 7) {
+      if (session_status() === PHP_SESSION_NONE || !isset($_SESSION)) {
+        if ($ufId === 0) {
+          $_SESSION["CiviCRM_Anonymous"] = TRUE;
+        }
+        drupal_session_start();
+      }
+    }
+    else {
+      if (\Drupal::hasContainer()) {
+        // refs #31356, force session start for anonymous user
+        $session = \Drupal::service('session_manager');
+        if (!$session->isStarted()) {
+          $session->start();
+        }
+      }
+    }
+  }
 }
 

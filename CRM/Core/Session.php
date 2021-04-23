@@ -115,21 +115,11 @@ class CRM_Core_Session {
     // hopefully any bootstrapping code will actually load the session from the CMS
     if (!isset($this->_session)) {
       // CRM-9483
-      if (!isset($_SESSION) && PHP_SAPI !== 'cli') {
+      if (PHP_SAPI !== 'cli') {
         if ($isRead) {
           return;
         }
-        if (function_exists('drupal_session_start')) {
-          // https://issues.civicrm.org/jira/browse/CRM-14356
-          if (! (isset($GLOBALS['lazy_session']) && $GLOBALS['lazy_session'] == true)) {
-            drupal_session_start();
-          }
-          $_SESSION = array();
-        }
-        else {
-          ini_set('session.save_handler', 'files');
-          session_start();
-        }
+        CRM_Core_Config::singleton()->userSystem->sessionStart();
       }
       $this->_session =& $_SESSION;
     }
