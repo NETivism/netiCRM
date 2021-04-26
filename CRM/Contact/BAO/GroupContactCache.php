@@ -517,7 +517,8 @@ AND     ( g.cache_date IS NULL OR
       $contactIDs = array($contactID);
     }
 
-    self::loadAll();
+    // refs #31384, disable this resource hug function
+    //self::loadAll();
 
     $hiddenClause = '';
     if (!$showHidden) {
