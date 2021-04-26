@@ -295,7 +295,7 @@ WHERE  id = %1
           CRM_Utils_Array::value('operator', $formValues, 'AND')
         );
         $query->_useDistinct = FALSE;
-        $query->_useGroupBy = FALSE;
+        $query->_useGroupBy = TRUE;
         $searchSQL = $query->searchQuery(
           0, 0, NULL,
           FALSE, FALSE,
