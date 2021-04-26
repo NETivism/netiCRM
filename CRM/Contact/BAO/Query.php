@@ -2661,7 +2661,17 @@ WHERE  id IN ( $groupIDs )
       $this->_useDistinct = TRUE;
 
       if (!$this->_smartGroupCache || $group->cache_date == NULL) {
-        CRM_Contact_BAO_GroupContactCache::load($group);
+        if (!empty($group->cache_date)) {
+          // refs #31308, do not refresh smart group too often
+          $config = CRM_Core_Config::singleton();
+          $minimalCacheTime = CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL;
+          if (CRM_REQUEST_TIME - $minimalCacheTime*60 > strtotime($group->cache_date)) {
+            CRM_Contact_BAO_GroupContactCache::load($group);
+          }
+        }
+        else {
+          CRM_Contact_BAO_GroupContactCache::load($group);
+        }
       }
 
       $this->_tables[$alias] = $this->_whereTables[$alias] = " LEFT JOIN civicrm_group_contact_cache {$alias} ON {$joinTable}.id = {$alias}.contact_id ";
