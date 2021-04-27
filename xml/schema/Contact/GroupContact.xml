@@ -85,4 +85,11 @@
     <unique>true</unique>
     <add>1.6</add>
   </index>
+  <index>
+    <name>UI_contact_group_status</name>
+    <fieldName>contact_id</fieldName>
+    <fieldName>group_id</fieldName>
+    <fieldName>status</fieldName>
+    <add>4.0</add>
+  </index>
 </table>

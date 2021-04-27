@@ -35,6 +35,8 @@
 
 class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCache {
 
+  const SMARTGROUP_CACHE_TIMEOUT_MINIMAL = 3;
+
   static $_alreadyLoaded = array();
 
   /**
@@ -59,7 +61,7 @@ class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCach
     $groupID = CRM_Core_DAO::escapeString(implode(', ', $groupID));
 
     $config = CRM_Core_Config::singleton();
-    $smartGroupCacheTimeout = isset($config->smartGroupCacheTimeout) && is_numeric($config->smartGroupCacheTimeout) ? $config->smartGroupCacheTimeout : 0;
+    $smartGroupCacheTimeout = self::smartGroupCacheTimeout();
 
     //make sure to give original timezone settings again.
     $originalTimezone = date_default_timezone_get();
@@ -169,8 +171,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
     date_default_timezone_set($originalTimezone);
 
     if (!isset($groupID)) {
-      $config = CRM_Core_Config::singleton();
-      $smartGroupCacheTimeout = isset($config->smartGroupCacheTimeout) && is_numeric($config->smartGroupCacheTimeout) ? $config->smartGroupCacheTimeout : 0;
+      $smartGroupCacheTimeout = self::smartGroupCacheTimeout();
 
       if ($smartGroupCacheTimeout == 0) {
         $query = "
@@ -295,7 +296,7 @@ WHERE  id = %1
           CRM_Utils_Array::value('operator', $formValues, 'AND')
         );
         $query->_useDistinct = FALSE;
-        $query->_useGroupBy = FALSE;
+        $query->_useGroupBy = TRUE;
         $searchSQL = $query->searchQuery(
           0, 0, NULL,
           FALSE, FALSE,
@@ -492,7 +493,7 @@ AND     ( g.cache_date IS NULL OR
     }
 
     // lets have a min cache time of 5 mins if not set
-    return 5;
+    return 15;
   }
 
   /**
@@ -517,7 +518,8 @@ AND     ( g.cache_date IS NULL OR
       $contactIDs = array($contactID);
     }
 
-    self::loadAll();
+    // refs #31384, disable this resource hug function
+    //self::loadAll();
 
     $hiddenClause = '';
     if (!$showHidden) {
