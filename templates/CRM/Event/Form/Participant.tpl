@@ -535,9 +535,7 @@
                {literal}  
             }
             else if(i == 0) {
-              {/literal}
-              buildCustomData( '{$customDataType}', 'null', {$roleCustomDataTypeID} );
-              {literal}
+              // do nothing here
             }
           }
         }
