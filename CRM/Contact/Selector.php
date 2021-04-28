@@ -162,6 +162,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     //don't build query constructor, if form is not submitted
     $force = CRM_Utils_Request::retrieve('force', 'Boolean', CRM_Core_DAO::$_nullObject);
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive', CRM_Core_DAO::$_nullObject);
+    $this->_refresh = CRM_Utils_Request::retrieve('refresh', 'Boolean', CRM_Core_DAO::$_nullObject);
 
     if (empty($formValues) && !$force) {
       return;
@@ -230,7 +231,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     }
 
     $smartGroupCache = TRUE;
-    if ($force && $this->_context == 'smog' && $gid) {
+    // refs #28769, #31308, use another button to refresh group contact cache
+    if ($force && $this->_context == 'smog' && $gid && $this->_refresh) {
       $smartGroupCache = FALSE;
     }
     $this->_query = new CRM_Contact_BAO_Query($this->_params,
@@ -542,6 +544,15 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     $result = $this->_query->searchQuery($offset, $rowCount, $sort,
       FALSE, $includeContactIds
     );
+    if ($this->_refresh) {
+      $url = CRM_Utils_String::parseUrl($_SERVER['REQUEST_URI']);
+      $query = $_GET;
+      unset($query['q']);
+      unset($query['refresh']);
+      $url['query'] = http_build_query($query);
+      $url = CRM_Utils_String::buildUrl($url);
+      CRM_Utils_System::redirect($url);
+    }
 
     // process the result of the query
     $rows = array();

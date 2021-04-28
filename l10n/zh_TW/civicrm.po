@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-04-19 06:00+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2021-04-21 08:26+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44639,11 +44639,11 @@ msgstr "收據編號預設以年月數字為流水序號，您可以在此設定
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Description will appear at the end of receipt."
-msgstr "此為收據底部的「備註說明」欄位。如果想要斷行效果，請在斷行處加上 <br/>，列印時就會呈現斷行。"
+msgstr "此為收據底部的「備註說明」欄位。如果想要斷行效果，請在斷行處加上 &lt;br&gt; 或 &amp;lt;br&amp;gt;，列印時就會呈現斷行。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Organization info will appear at the end of receipt."
-msgstr "此為收據底部的「組織資訊」欄位。捐贈收據應載明：組織全銜、地址、統一編號及經主管機關核准日期及文號。如果想要斷行效果，請在斷行處加上<br/>，列印時就會呈現斷行。"
+msgstr "此為收據底部的「組織資訊」欄位。捐贈收據應載明：組織全銜、地址、統一編號及經主管機關核准日期及文號。如果想要斷行效果，請在斷行處加上 &lt;br&gt; 或 &amp;lt;br&amp;gt;，列印時就會呈現斷行。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid ""

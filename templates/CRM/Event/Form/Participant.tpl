@@ -448,7 +448,7 @@
             }
 
             for ( var i in roleGroupMapper ) {
-                if ( ( i != 0 ) && document.getElementById( "role_id["+i+"]" ).checked == true ) {
+                if ( ( i != 0 ) && document.getElementById( "role_id["+i+"]" ) && document.getElementById( "role_id["+i+"]" ).checked == true ) {
                     var splitGroup = roleGroupMapper[i].split(",");
                     for ( j = 0; j < splitGroup.length; j++ ) {
                         groupUnload[x+j+1] = splitGroup[j];
@@ -529,14 +529,14 @@
     {literal}
         for ( var i in roleGroupMapper ) {
           if (roleGroupMapper[i].length > 0) {
-            if ( ( i != 0 ) && document.getElementById( "role_id["+i+"]" ).checked == true ) {
+            if ( ( i != 0 ) && document.getElementById( "role_id["+i+"]" ) && document.getElementById( "role_id["+i+"]" ).checked == true ) {
                {/literal}
                showCustomData( '{$customDataType}', i, {$roleCustomDataTypeID} );
                {literal}  
             }
             else if(i == 0) {
               {/literal}
-              buildCustomData( '{$customDataType}', {$eventID}, {$roleCustomDataTypeID} );
+              buildCustomData( '{$customDataType}', 'null', {$roleCustomDataTypeID} );
               {literal}
             }
           }
