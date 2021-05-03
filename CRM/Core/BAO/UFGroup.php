@@ -559,9 +559,13 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     $session = CRM_Core_Session::singleton();
 
     if ($register) {
-      $controller = new CRM_Core_Controller_Simple('CRM_Profile_Form_Dynamic',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Profile_Form_Dynamic',
         ts('Dynamic Form Creator'),
-        $action
+        $action,
+        FALSE,
+        FALSE,
+        TRUE
       );
       if ($reset || $doNotProcess) {
         // hack to make sure we do not process this form
@@ -633,9 +637,13 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           }
         }
 
-        $controller = new CRM_Core_Controller_Simple('CRM_Profile_Form_Dynamic',
+        $controller = new CRM_Core_Controller_Simple(
+          'CRM_Profile_Form_Dynamic',
           ts('Dynamic Form Creator'),
-          $action
+          $action,
+          FALSE,
+          FALSE,
+          TRUE
         );
         if ($reset) {
           $controller->reset();
