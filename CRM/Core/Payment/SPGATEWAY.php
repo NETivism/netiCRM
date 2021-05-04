@@ -315,15 +315,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   }
 
   function cancelRecuringMessage($recurID){
-    $sql = "SELECT p.payment_processor_type, p.url_recur FROM civicrm_payment_processor p INNER JOIN civicrm_contribution_recur r ON p.id = r.processor_id WHERE r.id = %1";
-    $params = array( 1 => array($recurID, 'Positive'));
-    $dao = CRM_Core_DAO::executeQuery($sql, $params);
-    while ($dao->fetch()) {
-      if ($dao->payment_processor_type == 'SPGATEWAY' && $dao->url_recur == 1 ) {
-        $msg = '<p>'.ts("You have enable NewebPay recurring API. Please use edit page to cancel recurring contribution.").'</p><script>cj(".ui-dialog-buttonset button").hide();</script>';
-        return $msg;
-      }
-    }
     if (function_exists("_civicrm_spgateway_cancel_recuring_message")) {
       return _civicrm_spgateway_cancel_recuring_message(); 
     }else{
