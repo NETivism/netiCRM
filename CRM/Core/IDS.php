@@ -34,6 +34,8 @@
  */
 class CRM_Core_IDS {
 
+  CONST CONFIG_FILE = 'Config.IDS.ini';
+
   /**
    * define the threshold for the ids reactions
    */
@@ -75,10 +77,41 @@ class CRM_Core_IDS {
 
     // init the PHPIDS and pass the REQUEST array
     $config = CRM_Core_Config::singleton();
+    $configFile = $config->configAndLogDir . self::CONFIG_FILE;
+    self::initConfig($configFile);
 
-    $configFile = $config->configAndLogDir . 'Config.IDS.ini';
-    if (!file_exists($configFile)) {
-      $tmpDir = $config->configAndLogDir;
+    $init = IDS_Init::init($configFile);
+    $ids = new IDS_Monitor($_REQUEST, $init);
+    $result = $ids->run();
+
+    if (!$result->isEmpty()) {
+      $this->react($result);
+    }
+
+    return TRUE;
+  }
+
+  public static function initConfig($configFile = NULL, $forceCreate = FALSE) {
+    global $tsLocale;
+    $config = CRM_Core_Config::singleton();
+
+    // loop all sapi names
+    if (empty($configFile)) {
+      $temp = CRM_Utils_System::cmsDir('temp');
+      if ($temp) {
+        $dirs = glob($temp.DIRECTORY_SEPARATOR.'smarty*');
+        if (!empty($dirs)) {
+          foreach($dirs as $dir) {
+            $configFile = $dir . DIRECTORY_SEPARATOR . $_SERVER['HTTP_HOST'] . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR . 'ConfigAndLog' . DIRECTORY_SEPARATOR . self::CONFIG_FILE;
+            self::initConfig($configFile, $forceCreate);
+          }
+        }
+      }
+      return;
+    }
+
+    if (!empty($configFile) && (!file_exists($configFile) || $forceCreate)) {
+      $tmpDir = dirname($configFile).DIRECTORY_SEPARATOR;
       // also clear the stat cache in case we are upgrading
       clearstatcache();
 
@@ -97,6 +130,7 @@ class CRM_Core_IDS {
     exceptions[]        = widget_code
     exceptions[]        = html_message
     exceptions[]        = body_html
+    exceptions[]        = body_json
     exceptions[]        = msg_html
     exceptions[]        = msg_text
     exceptions[]        = msg_subject
@@ -122,29 +156,16 @@ class CRM_Core_IDS {
     exceptions[]        = report_footer
     exceptions[]        = data
     exceptions[]        = instructions
-    exceptions[]        = body_json
 ";
       if (file_put_contents($configFile, $contents) === FALSE) {
-        require_once 'CRM/Core/Error.php';
         CRM_Core_Error::movedSiteError($configFile);
       }
-
 
       // also create the .htaccess file so we prevent the reading of the log and ini files
       // via a browser, CRM-3875
       require_once 'CRM/Utils/File.php';
       CRM_Utils_File::restrictAccess($config->configAndLogDir);
     }
-
-    $init = IDS_Init::init($configFile);
-    $ids = new IDS_Monitor($_REQUEST, $init);
-    $result = $ids->run();
-
-    if (!$result->isEmpty()) {
-      $this->react($result);
-    }
-
-    return TRUE;
   }
 
   /**
