@@ -48,20 +48,20 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * **{ts}Path{/ts}**
    * 
    * ```
-   * <entrypoint>?entity=Contact&action=create&pretty=1&json=\{"email":"{$value.email}"\}
+   * <entrypoint>?entity=Email&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}
    * ```
    * 
    * **API Explorer**
    * 
    * ```
-   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=create&pretty=1&json=\{"email":"{$value.email}"\}
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Email&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}
    * ```
    * 
    * **{ts}Request Samples{/ts}**
    * 
    * ```shell
-   * curl -g --request POST '<entrypoint>?entity=Email&action=create&pretty=1&json=\{"email":"{$value.email}"\}' \
-   * {$API_KEY_HEADER}\
+   * curl -g --request POST '<entrypoint>?entity=Email&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}' \
+   * {$API_KEY_HEADER} \
    * {$SITE_KEY_HEADER}
    * ```
    * 
@@ -138,24 +138,26 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * 
    * {ts}This is tests for get Email{/ts} 
    * 
-   * **HTTP {ts}methods{/ts}: POST**
+   * **HTTP {ts}methods{/ts}: GET**
    * 
    * **{ts}Path{/ts}**
    * 
    * ```
-   * <entrypoint>?entity=Contact&action=get&pretty=1
+   * <entrypoint>?entity=Email&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}"\}
    * ```
    * 
-   * **API Explor**
+   * **API Explorer**
    * 
    * ```
-   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=get&pretty=1
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Email&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}"\}
    * ```
    * 
    * **{ts}Request Samples{/ts}**
    * 
-   * ```
-   * Sample Source Code
+   * ```shell
+   * curl -g --request GET '<entrypoint>?entity=Email&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}"\}' \
+   * {$API_KEY_HEADER} \
+   * {$SITE_KEY_HEADER}
    * ```
    * 
    * {$result}
@@ -195,18 +197,20 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * **{ts}Path{/ts}**
    * 
    * ```
-   * <entrypoint>?entity=Contact&action=get&pretty=1&json=\{"email":"{$value.email}"\}
+   * <entrypoint>?entity=Email&action=delete&pretty=1&json=\{"id":"1"\}
    * ```
    * 
-   * **API Explor**
+   * **API Explorer**
    * 
    * ```
-   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Contact&action=get&pretty=1&json=\{"email":"{$value.email}"\}
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Email&action=delete&pretty=1&json=\{"id":"1"\}
    * ```
    * **{ts}Request Samples{/ts}**
    * 
-   * ```
-   * Sample Source Code
+   * ```bash
+   * curl -g --request POST '<entrypoint>?entity=Email&action=delete&pretty=1&json=\{"id":"1"\}' \
+   * {$API_KEY_HEADER} \
+   * {$SITE_KEY_HEADER}
    * ```
    * 
    * {$result}
@@ -322,7 +326,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
       ),
     );
     $replace1 = civicrm_api('email', 'replace', $replace1Params);
-    $this->doWriteResult($result, __FUNCTION__);
+    $this->doWriteResult($replace1, __FUNCTION__);
     $this->documentMe($replace1Params, $replace1, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($replace1, 'In line ' . __LINE__);
     $this->assertEquals(5, $replace1['count'], 'In line ' . __LINE__);
