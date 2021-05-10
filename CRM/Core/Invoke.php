@@ -48,7 +48,7 @@ class CRM_Core_Invoke {
    */
   static function invoke($args) {
     CRM_Utils_System::civiBeforeInvoke();
-    if ($args[0] !== 'civicrm') {
+    if ($args[0] !== 'civicrm' && $args[1] !== 'ipn') {
       return;
     }
 
