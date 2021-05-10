@@ -234,7 +234,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     // url 
     $notify_url = self::_civicrm_allpay_notify_url($vars, 'allpay/ipn/'.$instrument_code, $component);
     $civi_base_url = CRM_Utils_System::currentPath();
-    $thankyou_url = CRM_Utils_System::url($civi_base_url, array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey'], ), true);
+    $query = http_build_query(array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey']));
+    $thankyou_url = CRM_Utils_System::url($civi_base_url, $query, true);
   
     // parameter
     if($component == 'event' && !empty($_SESSION['CiviCRM'][$form_key])){
@@ -298,7 +299,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         $args['Desc_4'] = '';
   
         #ATM / CVS / BARCODE
-        $args['PaymentInfoURL'] = CRM_Utils_System::url('allpay/record/'.$vars['contributionID'], array(), true);
+        $args['PaymentInfoURL'] = CRM_Utils_System::url('allpay/record/'.$vars['contributionID'], "", true);
         break;
       case 'Alipay':
         $params = array(
@@ -425,7 +426,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
          $query["cpid"] = $vars['contributionPageID'];
        }
     }
-  
+
+    $query = http_build_query($query);
     $url = CRM_Utils_System::url(
       $path,
       $query,
@@ -490,6 +492,41 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       return _civicrm_allpay_cancel_recuring_message(); 
     }else{
       CRM_Core_Error::fatal('Module civicrm_allpay doesn\'t exists.');
+    }
+  }
+
+  static function civicrm_allpay_ipn($instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
+    // detect variables
+    $post = !empty($post) ? $post : $_POST;
+    $get = !empty($get) ? $get : $_GET;
+    if (empty($instrument)) {
+      $qArray = explode('/', $get['q']);
+      $instrument = end($qArray);
+    }
+
+    // detect variables
+    if(empty($post)){
+      watchdog("civicrm_allpay", "Could not find POST data from payment server");
+      drupal_not_found();
+    }
+    else{
+      $component = $get['module'];
+      if(!empty($component)){
+        // include_once(__DIR__.'/ALLPAYIPN.php');
+
+        $ipn = new CRM_Core_Payment_ALLPAYIPN($post, $get);
+        $result = $ipn->main($component, $instrument);
+        if(!empty($result) && $print){
+          echo $result;
+        }
+        else{
+          return $result;
+        }
+      }
+      else{
+        watchdog('civicrm_allpay', "Could not get module name from request url");
+        drupal_not_found();
+      }
     }
   }
 }

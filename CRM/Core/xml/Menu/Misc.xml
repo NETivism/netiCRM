@@ -165,14 +165,17 @@
      <is_public>true</is_public>
   </item>
    <item>
-     <path>civicrm/allpay/ipn</path>
-     <page_callback>civicrm_allpay_ipn</page_callback>
+     <path>allpay/ipn</path>
+     <page_callback>CRM_Core_Payment_ALLPAY::civicrm_allpay_ipn</page_callback>>
+     <page_arguments>NULL</page_arguments>
      <access_callback>1</access_callback>
+     <access_arguments>NULL</access_arguments>
+     <is_ssl>true</is_ssl>
      <is_public>true</is_public>
   </item>
   <item>
      <path>civicrm/allpay/record</path>
-     <page_callback>civicrm_allpay_record</page_callback>
+     <page_callback>CRM_Core_Payment_ALLPAY::civicrm_allpay_record</page_callback>
      <access_callback>1</access_callback>
      <is_public>true</is_public>
   </item>
