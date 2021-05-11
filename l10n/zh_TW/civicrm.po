@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-05-10 11:36+0000\n"
+"PO-Revision-Date: 2021-05-11 04:33+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48459,3 +48459,9 @@ msgstr "ACH 銀行"
 
 msgid "ACH Post"
 msgstr "ACH 郵局"
+
+msgid "Total of rule weight should greater then equal threshold."
+msgstr "權重的總和需要大於門檻值。"
+
+msgid "Total Weight"
+msgstr "權重總和"

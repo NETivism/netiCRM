@@ -133,13 +133,46 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
       $this->add('select', "where_$count", ts('Field'), array(NULL => ts('- none -')) + $this->_fields);
       $this->add('text', "length_$count", ts('Length'), array('class' => 'two', 'style' => 'text-align: right'));
       $this->add('text', "weight_$count", ts('Weight'), array('class' => 'two', 'style' => 'text-align: right'));
+      $this->addRule("weight_$count", ts('%1 should be a postive number', array(1 => ts('Weight'))), 'positiveInteger');
+      $this->addRule("weight_$count", ts('%1 should be a postive number', array(1 => ts('Weight'))), 'nonzero');
     }
     $this->add('text', 'threshold', ts("Weight Threshold to Consider Contacts 'Matching':"), array('class' => 'two', 'style' => 'text-align: right'));
+    $this->addRule('threshold', ts('%1 should be a postive number', array(1 => ts('Threshold'))), 'positiveInteger');
+    $this->addRule('threshold', ts('%1 should be a postive number', array(1 => ts('Threshold'))), 'nonzero');
     $this->addButtons(array(
         array('type' => 'next', 'name' => ts('Save'), 'isDefault' => TRUE),
         array('type' => 'cancel', 'name' => ts('Cancel')),
       ));
     $this->assign('contact_type', $this->_contactTypeDisplay);
+    $this->addFormRule(array('CRM_Contact_Form_DedupeRules', 'formRule'));
+  }
+
+  /**
+   * global validation rules for the form
+   *
+   * @param array $fields posted values of the form
+   *
+   * @return array list of errors to be posted back to the form
+   * @static
+   * @access public
+   */
+  static function formRule($fields) {
+    $errors = array();
+    $total = 0;
+    for ($count = 0; $count < self::RULES_COUNT; $count++) {
+      if (!empty($fields['weight_'.$count])) {
+        $total += $fields['weight_'.$count]; 
+      }
+    }
+    if ($total < $fields['threshold']) {
+      for ($count = 0; $count < self::RULES_COUNT; $count++) {
+        if (!empty($fields['weight_'.$count])) {
+          $errors['weight_'.$count] = ts('Total of rule weight should greater then equal threshold.');
+        }
+      }
+      $errors['threshold'] = ts('Total Weight')."($total)  < ".ts('Threshold')."({$fields['threshold']})";
+    }
+    return $errors;
   }
 
   function setDefaultValues() {
