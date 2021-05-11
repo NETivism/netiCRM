@@ -135,7 +135,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
       $tFormat = $this->averyLabels[$format];
     }
 
-    $oriantation = $format['oriantation'] ? $format['oriantation'] : 'P';
+    $oriantation = $tFormat['oriantation'] ? $tFormat['oriantation'] : 'P';
     parent::__construct($oriantation, $tFormat['metric'], $tFormat['paper-size']);
     // uncomment this to use non-default font
     $this->SetFont('droidsansfallback', '', 10);
