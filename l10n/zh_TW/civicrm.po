@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-05-04 10:21+0000\n"
+"PO-Revision-Date: 2021-05-12 04:06+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -21833,7 +21833,7 @@ msgid ""
 " the CiviEvent Dashboard. Participants with a 'Pending' class status will be"
 " moved to 'Expired' status if Pending Participant Hours has elapsed (when "
 "the ParticipantProcessor.php background processing script is run)."
-msgstr "這個狀態的一般層級。參加者數量由狀態分組呈現在活動總覽中。若參加者等候時數已過狀態為，「等待中」的參加者將被移到「過期」狀態。（需要 ParticipantProcessor.php 系統程式在背景運作）。"
+msgstr "這個狀態的類別。類別為「正」，表示參加者的報名是有效的，也會納入計算候補與審核通過的計數，建議類別正的狀態也都要將「佔據參加者名額」勾選起來。反之，類別為「負」，則表示報名是無效的。類別為「待處理」，表示還未確定該報名是否有效，可能暫時佔據名額中，或暫時不計入名額中。類別為「等候中」，則將會由背景程式執行，超過一定時間會移到「已過期」的狀態。"
 
 #: templates/CRM/Admin/Form/ParticipantStatus.tpl
 msgid ""
@@ -38679,7 +38679,7 @@ msgstr "籌款者"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Performance"
-msgstr "效能"
+msgstr "表演"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Workshop"
@@ -48459,3 +48459,12 @@ msgstr "ACH 銀行"
 
 msgid "ACH Post"
 msgstr "ACH 郵局"
+
+msgid "Total of rule weight should greater then equal threshold."
+msgstr "權重的總和需要大於門檻值。"
+
+msgid "Total Weight"
+msgstr "權重總和"
+
+msgid "Selected installments is %1."
+msgstr "所選的新期數為 %1"
