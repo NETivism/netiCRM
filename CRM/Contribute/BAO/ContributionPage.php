@@ -181,7 +181,9 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
 
       // refs #28471, auto send receipt after contribution
       $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
-      if ($config->receiptEmailAuto && $haveAttachReceiptOption && !$is_pay_later) {
+      $contributionTypeId = CRM_Utils_Array::value('contribution_type_id', $values);
+      $deductible = CRM_Contribute_BAO_ContributionType::deductible($contributionTypeId);
+      if ($config->receiptEmailAuto && $haveAttachReceiptOption && !$is_pay_later && $deductible) {
         $receiptTask = new CRM_Contribute_Form_Task_PDF();
         $receiptTask->makeReceipt($values['contribution_id'], 'copy_only', TRUE);
         $pdfFilePath = $receiptTask->makePDF(False);

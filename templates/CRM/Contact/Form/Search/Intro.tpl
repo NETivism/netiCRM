@@ -28,6 +28,11 @@
 {if $context EQ 'smog'}
     {* Provide link to modify smart group search criteria if we are viewing a smart group (ssID = saved search ID) *}
     <div class="crm-submit-buttons">
+      {if $permissionedForGroup}
+        {capture assign=addMembersURL}{crmURL q="context=amtg&amtgID=`$group.id`&reset=1"}{/capture}
+        <a href="{$addMembersURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i> {ts 1=$group.title}Add Contacts to %1{/ts}</span>{if $ssID}{help id="id-add-to-smartGroup"}{/if}</a>
+      {/if}
+
       {if $ssID}
         {if $ssMappingID}
           {capture assign=editSmartGroupURL}{crmURL p="civicrm/contact/search/builder" q="reset=1&force=1&ssID=`$ssID`"}{/capture}
@@ -35,12 +40,15 @@
           {capture assign=editSmartGroupURL}{crmURL p="civicrm/contact/search/advanced" q="reset=1&force=1&ssID=`$ssID`"}{/capture}
         {/if} 
         <a href="{$editSmartGroupURL}" class="button"><span><div class="zmdi zmdi-edit"></div> {ts 1=$group.title}Edit Smart Group Search Criteria for %1{/ts}</span></a>
+
+        {if $group.cache_date && $group.refresh_button}
+          {capture assign=groupCacheDate}{ts}Cache Date{/ts}: {$group.cache_date|crmDate}{/capture}
+          <a href="{crmURL p="civicrm/group/search" q="reset=1&force=1&context=smog&gid=`$group.id`&refresh=1"}" class="button"><span><div class="zmdi zmdi-refresh"></div> {ts}Refresh{/ts}</span> {help id="id-cache-date" text="`$groupCacheDate`"}</a>
+        {elseif $group.cache_date}
+          {capture assign=groupCacheDate}{ts}Cache Date{/ts}: {$group.cache_date|crmDate}{/capture}
+          {help id="id-cache-date" text="`$groupCacheDate`"}
+        {/if}
       {/if}
 
-      {if $permissionedForGroup}
-        {capture assign=addMembersURL}{crmURL q="context=amtg&amtgID=`$group.id`&reset=1"}{/capture}
-        <a href="{$addMembersURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i> {ts 1=$group.title}Add Contacts to %1{/ts}</span></a>
-        {if $ssID}{help id="id-add-to-smartGroup"}{/if}
-      {/if}
     </div>
 {/if}

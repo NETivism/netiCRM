@@ -28,6 +28,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     'month' => 'M',
   );
 
+  private static $_recurEditAPIVersion = '1.1';
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
@@ -60,7 +62,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       if ($paymentProcessor['url_recur'] == 1) {
         // $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
         // Enable Installments field after spgateway update.
-        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'note_title', 'note_body');
+        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
       }
     }
     return $returnArray;
@@ -212,6 +214,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         * )
         */
         $requestParams = array(
+          'Version' => self::$_recurEditAPIVersion,
           'MerOrderNo' => $merchantId,
           'PeriodNo' => $dao->period_no,
           'AlterType' => self::$_statusMap[$newStatusId],
@@ -239,6 +242,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $spgatewayAPI = new spgateway_spgateway_api($apiConstructParams);
       $isChangeRecur = FALSE;
       $requestParams = array(
+        'Version' => self::$_recurEditAPIVersion,
         'MerOrderNo' => $merchantId,
         'PeriodNo' => $dao->period_no,
       );
@@ -305,6 +309,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         // There are error msg in $recurResult['msg']
         $errResult = $recurResult;
         return $errResult;
+      }
+      CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $recurResult', $recurResult);
+      if (!empty($recurResult['installments'] && $recurResult['installments'] != $requestParams['PeriodTimes'])) {
+        $recurResult['note_body'] = ts('Selected installments is %1.', array(1 => $requestParams['PeriodTimes'])).ts('Modify installments by Newebpay data.');
       }
     }
 

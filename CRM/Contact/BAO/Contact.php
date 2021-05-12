@@ -419,10 +419,16 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     // CRM-6367: fetch the right label for contact type’s display
     $contact->contact_type_display = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_ContactType', $contact->contact_type, 'label', 'name');
 
-    // reset the group contact cache for this group
-    require_once 'CRM/Contact/BAO/GroupContactCache.php';
-    if (!$config->doNotResetGroupContactCache) {
-      CRM_Contact_BAO_GroupContactCache::remove();
+    // #30818, we have serious deadlock issue, should never doing cache reset every contact create
+    if (empty($config->doNotResetGroupContactCache)) {
+      // check previous purge date from this source, trigger cache remove at least over 3 minutes
+      $createdTime = CRM_REQUEST_TIME - 60*CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL;
+      $alreadyPurged = CRM_Core_BAO_Cache::getItem('GroupContactCache', 'CreateContactPurgeFlag', $createdTime);
+      if (empty($alreadyPurged)) {
+        CRM_Contact_BAO_GroupContactCache::remove();
+        $alreadyPurged = 1;
+        CRM_Core_BAO_Cache::setItem($alreadyPurged, 'GroupContactCache', 'CreateContactPurgeFlag');
+      }
     }
 
     if ($invokeHooks) {

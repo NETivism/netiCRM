@@ -48039,3 +48039,122 @@ msgstr ""
 
 msgid "Create Rule"
 msgstr ""
+
+#: Dmenu
+msgid "Groups and Mailing Groups"
+msgstr ""
+
+msgid "Merge Duplicate Contacts"
+msgstr ""
+
+msgid "Contribution Aggregate Search"
+msgstr ""
+
+msgid "Pledge Dashboard"
+msgstr ""
+
+msgid "Configure Premium"
+msgstr ""
+
+msgid "Configure Coupon"
+msgstr ""
+
+msgid "Records"
+msgstr ""
+
+msgid "All Reports"
+msgstr ""
+
+msgid "Contact Reports"
+msgstr ""
+
+msgid "Event Reports"
+msgstr ""
+
+msgid "Mailing Reports"
+msgstr ""
+
+msgid "Membership Reports"
+msgstr ""
+
+msgid "Configuration"
+msgstr ""
+
+# Payment Processor Types and Instruments
+msgid "AllPay"
+msgstr ""
+
+msgid "AllPay Credit Card"
+msgstr ""
+
+msgid "AllPay Non-Credit Card"
+msgstr ""
+
+msgid "NewebPay"
+msgstr ""
+
+msgid "NewebPay Credit Card"
+msgstr ""
+
+msgid "NewebPay Non-Credit Card"
+msgstr ""
+
+msgid "Non-Credit Card"
+msgstr ""
+
+msgid "Credit Card (Offline)"
+msgstr ""
+
+msgid "Credit Card Recurring"
+msgstr ""
+
+msgid "Credit Card Recurring (Offline)"
+msgstr ""
+
+msgid "Post Office Transfer"
+msgstr ""
+
+msgid "Post Office Recurring (Offline)"
+msgstr ""
+
+msgid "Convenient Store Barcode"
+msgstr ""
+
+msgid "Convenient Store (Code)"
+msgstr ""
+
+msgid "Web ATM Transfer"
+msgstr ""
+
+msgid "ATM Transfer"
+msgstr ""
+
+msgid "Yahoo Charity"
+msgstr ""
+
+msgid "UnionPay"
+msgstr ""
+
+msgid "ApplePay"
+msgstr ""
+
+msgid "GooglePay"
+msgstr ""
+
+msgid "LinePay"
+msgstr ""
+
+msgid "ACH Bank"
+msgstr ""
+
+msgid "ACH Post"
+msgstr ""
+
+msgid "Total of rule weight should greater then equal threshold."
+msgstr ""
+
+msgid "Total Weight"
+msgstr ""
+
+msgid "Selected installments is %1."
+msgstr ""
