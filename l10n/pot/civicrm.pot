@@ -48155,3 +48155,6 @@ msgstr ""
 
 msgid "Total Weight"
 msgstr ""
+
+msgid "Selected installments is %1."
+msgstr ""
