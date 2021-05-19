@@ -535,7 +535,8 @@ class CRM_Utils_System {
       );
     }
 
-    if ($key !== $siteKey) {
+    require_once 'CRM/Core/Key.php'; // php 5.5 hash_equals here
+    if (!hash_equals($key, $siteKey)) {
       return self::authenticateAbort("ERROR: Invalid key value sent. " . $docAdd . "\n",
         $abort
       );
@@ -1004,7 +1005,7 @@ class CRM_Utils_System {
    */
   static function getDocBaseURL() {
     // FIXME: move this to configuration at some stage
-    return 'http://wiki.civicrm.org/confluence/display/CRMDOC/';
+    return 'https://neticrm.tw/CRMDOC/';
   }
 
   /**

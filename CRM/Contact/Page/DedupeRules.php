@@ -84,13 +84,6 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
           'qs' => 'action=update&id=%%id%%',
           'title' => ts('Edit DedupeRule'),
         );
-        $links[CRM_Core_Action::MAP] = array(
-          'name' => ts('Make Default'),
-          'url' => 'civicrm/contact/deduperules',
-          'qs' => 'action=map&id=%%id%%',
-          'extra' => 'onclick = "return confirm(\'' . $defaultExtra . '\');"',
-          'title' => ts('Default DedupeRule'),
-        );
         $links[CRM_Core_Action::DELETE] = array(
           'name' => ts('Delete'),
           'url' => 'civicrm/contact/deduperules',
@@ -134,16 +127,16 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
       $this->edit($action, $id);
     }
     if ($action & CRM_Core_Action::DELETE) {
-      $this->delete($id);
-    }
-    if ($action & CRM_Core_Action::MAP) {
       $rgDao = new CRM_Dedupe_DAO_RuleGroup();
       $rgDao->id = $id;
       $rgDao->find(TRUE);
-      $rgDao->is_default = 1;
-      $query = "UPDATE civicrm_dedupe_rule_group SET is_default = 0 WHERE contact_type = '{$rgDao->contact_type}' AND LEVEL = '{$rgDao->level}'";
-      CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
-      $rgDao->save();
+      if ($rgDao->is_default) {
+        CRM_Core_Session::setStatus(ts("You cannot delete default rule group."), FALSE, 'error');
+      }
+      else {
+        $this->delete($id);
+      }
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contact/deduperules', 'reset=1'));
     }
 
     // browse the rules
@@ -174,7 +167,6 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
       $action = array_sum(array_keys($this->links()));
       $links = self::links();
       if ($dao->is_default) {
-        unset($links[CRM_Core_Action::MAP]);
         unset($links[CRM_Core_Action::DELETE]);
       }
       $ruleGroups[$dao->id]['action'] = CRM_Core_Action::formLink($links, $action, array('id' => $dao->id));

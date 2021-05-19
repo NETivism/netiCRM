@@ -50,8 +50,9 @@ function loadReferrer() {
     inbound.referrer.parse(url, referrer, function(err, visitInfo){
       if (typeof visitInfo.campaign !== 'undefined' && typeof referrerInfo.campaign === 'undefined') {
         referrerInfo.campaign = visitInfo.campaign;
-        localStorage.setItem('referrerInfo', JSON.stringify(referrerInfo));
       }
+      referrerInfo.timestamp = timestamp;
+      localStorage.setItem('referrerInfo', JSON.stringify(referrerInfo));
       trackVisit(referrerInfo);
     });
   }

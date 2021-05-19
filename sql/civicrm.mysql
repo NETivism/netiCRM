@@ -4479,6 +4479,11 @@ CREATE TABLE civicrm_group_contact (
         contact_id
       , group_id
   )
+  ,     INDEX UI_contact_group_status(
+        contact_id
+      , group_id
+      , status
+  )
   
 ,      
      CONSTRAINT FK_civicrm_group_contact_group_id FOREIGN KEY (group_id) REFERENCES civicrm_group(id) ON DELETE CASCADE,      

@@ -131,7 +131,7 @@ WHERE contact_id = %1
 
     // reset any db caching
     $config = &CRM_Core_Config::singleton();
-    $smartGroupCacheTimeout = isset($config->smartGroupCacheTimeout) && is_numeric($config->smartGroupCacheTimeout) ? $config->smartGroupCacheTimeout : 0;
+    $smartGroupCacheTimeout = CRM_Contact_BAO_GroupContactCache::smartGroupCacheTimeout();
     $query = "
 DELETE FROM civicrm_acl_cache 
 WHERE  modified_date IS NULL OR (TIMESTAMPDIFF(MINUTE, modified_date, NOW()) >= $smartGroupCacheTimeout)

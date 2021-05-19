@@ -1114,7 +1114,11 @@ WHERE civicrm_event.is_active = 1
           ),
           'PDFFilename' => 'eventReceipt.pdf',
         );
-        if ($values['event']['is_qrcode']) {
+
+        // Don't send qrcode to participant on waiting list or waiting for approval.
+        $statusId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $participantId, 'status_id');
+        $waitingStatusIds = array_keys(CRM_Event_PseudoConstant::participantStatus( null, "class = 'Waiting'"  ));
+        if ($values['event']['is_qrcode'] && !in_array($statusId, $waitingStatusIds)) {
           $checkinCodeFile = CRM_Event_BAO_Participant::checkinCode($contactID, $participantId);
           $qrcodeName = 'qrcode-'.$participantId;
           $embedImages = array(

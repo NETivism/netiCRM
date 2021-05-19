@@ -908,5 +908,19 @@ class CRM_Utils_Hook {
       4, &$response, &$object, &$provider, &$apiType, &$null, 'civicrm_alterAPIResponse'
     ));
   }
+
+  /**
+   * Change validation result of coupon
+   *
+   * @param array   $coupon coupon array from CRM_Coupon_BAO::getCoupon
+   * @param boolean $valid  will pass previous validation result. Can be modify by hook.
+   * @param string  $phase  validation phase. For example, event have 2 phase. first is code, second is available events
+   */
+  static function validateCoupon(&$coupon, &$valid, $phase){
+    $config = CRM_Core_Config::singleton();
+    $null = &CRM_Core_DAO::$_nullObject;
+    $className = $config->userHookClass;
+    return $className::invoke( 3, $coupon, $valid, $phase, $null, $null, 'civicrm_validateCoupon' );
+  }
 }
 

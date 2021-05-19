@@ -48149,3 +48149,12 @@ msgstr ""
 
 msgid "ACH Post"
 msgstr ""
+
+msgid "Total of rule weight should greater then equal threshold."
+msgstr ""
+
+msgid "Total Weight"
+msgstr ""
+
+msgid "Selected installments is %1."
+msgstr ""

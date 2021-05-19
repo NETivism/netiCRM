@@ -156,10 +156,6 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
     // rebuild menu items
     require_once 'CRM/Core/Menu.php';
     CRM_Core_Menu::store();
-
-    // also delete the IDS file so we can write a new correct one on next load
-    $configFile = $config->uploadDir . 'Config.IDS.ini';
-    @unlink($configFile);
   }
 }
 

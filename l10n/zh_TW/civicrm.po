@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-04-12 09:23+0000\n"
+"PO-Revision-Date: 2021-05-13 09:55+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -21833,7 +21833,7 @@ msgid ""
 " the CiviEvent Dashboard. Participants with a 'Pending' class status will be"
 " moved to 'Expired' status if Pending Participant Hours has elapsed (when "
 "the ParticipantProcessor.php background processing script is run)."
-msgstr "這個狀態的一般層級。參加者數量由狀態分組呈現在活動總覽中。若參加者等候時數已過狀態為，「等待中」的參加者將被移到「過期」狀態。（需要 ParticipantProcessor.php 系統程式在背景運作）。"
+msgstr "這個狀態的類別。類別為「正」，表示參加者的報名是有效的，也會納入計算候補與審核通過的計數，建議類別正的狀態也都要將「佔據參加者名額」勾選起來。反之，類別為「負」，則表示報名是無效的。類別為「待處理」，表示還未確定該報名是否有效，可能暫時佔據名額中，或暫時不計入名額中。類別為「等候中」，則將會由背景程式執行，超過一定時間會移到「已過期」的狀態。"
 
 #: templates/CRM/Admin/Form/ParticipantStatus.tpl
 msgid ""
@@ -38679,7 +38679,7 @@ msgstr "籌款者"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Performance"
-msgstr "效能"
+msgstr "表演"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Workshop"
@@ -44639,11 +44639,11 @@ msgstr "收據編號預設以年月數字為流水序號，您可以在此設定
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Description will appear at the end of receipt."
-msgstr "此為收據底部的「備註說明」欄位。如果想要斷行效果，請在斷行處加上 <br/>，列印時就會呈現斷行。"
+msgstr "此為收據底部的「備註說明」欄位。如果想要斷行效果，請在斷行處加上 &lt;br&gt; 或 &amp;lt;br&amp;gt;，列印時就會呈現斷行。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Organization info will appear at the end of receipt."
-msgstr "此為收據底部的「組織資訊」欄位。捐贈收據應載明：組織全銜、地址、統一編號及經主管機關核准日期及文號。如果想要斷行效果，請在斷行處加上<br/>，列印時就會呈現斷行。"
+msgstr "此為收據底部的「組織資訊」欄位。捐贈收據應載明：組織全銜、地址、統一編號及經主管機關核准日期及文號。如果想要斷行效果，請在斷行處加上 &lt;br&gt; 或 &amp;lt;br&amp;gt;，列印時就會呈現斷行。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid ""
@@ -47531,7 +47531,7 @@ msgid ""
 "Important!! Your contacts quota is over %1. Some of functions is disabled "
 "(Import Contact, Add new contact ... etc.). Please contact %2 to upgrade "
 "your plan."
-msgstr "【重要通知】目前聯絡人的容量已達 %1 ，我們即將停用前台頁面，例如募款頁、活動報名頁等。邀請您透過<a href='%2' target='_blank'>客服系統</a>，辦理方案升級，讓線上收捐、報名不中斷！"
+msgstr "【重要通知】目前聯絡人的容量已達 %1 ，我們即將停用前台頁面，例如募款頁、活動報名頁等。邀請您透過<a href='%2' target='_blank'>客服系統</a>，辦理方案升級，讓線上收捐、報名不中斷！"
 
 msgid "Goal Recurring Amount"
 msgstr "定期目標金額"
@@ -48336,7 +48336,7 @@ msgstr "依照回傳資訊更新舊藍新定期定額資料。"
 msgid ""
 "You have enable NewebPay recurring API. Please use edit page to cancel "
 "recurring contribution."
-msgstr "您已啟用藍新定期定額 API ，請於定期定額「編輯」頁取消捐款。"
+msgstr "您已啟用藍新定期定額 API ，請於定期定額「編輯」頁「暫停」本筆定捐。為避免定捐訂單不可回復的損失，netiCRM不提供「取消」訂單功能，僅能暫停訂單。"
 
 msgid "Locked because user report SPAM abuse."
 msgstr "因使用者回報垃圾郵件而凍結鎖定。"
@@ -48392,13 +48392,13 @@ msgstr "設置"
 
 # Payment Processor Types and Instruments
 msgid "AllPay"
-msgstr "歐付寶"
+msgstr "綠界<br>"
 
 msgid "AllPay Credit Card"
-msgstr "歐付寶信用卡"
+msgstr "綠界信用卡"
 
 msgid "AllPay Non-Credit Card"
-msgstr "歐付寶非信用卡"
+msgstr "綠界非信用卡"
 
 msgid "NewebPay"
 msgstr "藍新"
@@ -48437,7 +48437,7 @@ msgid "Web ATM Transfer"
 msgstr "Web ATM"
 
 msgid "ATM Transfer"
-msgstr "ATM 轉帳"
+msgstr "ATM 轉帳"
 
 msgid "Yahoo Charity"
 msgstr "Yahoo公益"
@@ -48455,7 +48455,16 @@ msgid "LinePay"
 msgstr "Line Pay"
 
 msgid "ACH Bank"
-msgstr "ACH 銀行"
+msgstr "ACH 銀行"
 
 msgid "ACH Post"
-msgstr "ACH 郵局"
+msgstr "ACH 郵局"
+
+msgid "Total of rule weight should greater then equal threshold."
+msgstr "權重的總和需要大於門檻值。"
+
+msgid "Total Weight"
+msgstr "權重總和"
+
+msgid "Selected installments is %1."
+msgstr "所選的新期數為 %1"
