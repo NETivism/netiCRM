@@ -235,7 +235,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $notify_url = self::_civicrm_allpay_notify_url($vars, 'allpay/ipn/'.$instrument_code, $component);
     $civi_base_url = CRM_Utils_System::currentPath();
     $query = http_build_query(array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey']));
-    $thankyou_url = CRM_Utils_System::url($civi_base_url, $query, true);
+    $thankyou_url = CRM_Utils_System::url($civi_base_url, $query, TRUE, NULL, FALSE);
   
     // parameter
     if($component == 'event' && !empty($_SESSION['CiviCRM'][$form_key])){
@@ -299,7 +299,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         $args['Desc_4'] = '';
   
         #ATM / CVS / BARCODE
-        $args['PaymentInfoURL'] = CRM_Utils_System::url('allpay/record/'.$vars['contributionID'], "", true);
+        $args['PaymentInfoURL'] = CRM_Utils_System::url('allpay/record/'.$vars['contributionID'], "", TRUE, NULL, FALSE);
         break;
       case 'Alipay':
         $params = array(
@@ -431,7 +431,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $url = CRM_Utils_System::url(
       $path,
       $query,
-      true,
+      TRUE,
+      NULL,
+      FALSE
     );
     if( ( !empty($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on' ) || ( !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ){
       return str_replace('http://', 'https://', $url);
@@ -481,7 +483,6 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       '%20' => '+',
     );
     $keystr = str_replace(array_keys($special_char_allpay), $special_char_allpay, $keystr);
-  
     $checkmacvalue = md5($keystr);
     $args['CheckMacValue'] = $checkmacvalue;
     return $checkmacvalue;
