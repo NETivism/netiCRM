@@ -74,8 +74,8 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     }
     else {
       CRM_Contact_Form_NewContact::buildQuickForm($this);
+      $this->addSelect('original_id', ts('Based Contribution Record'), array());
     }
-    $this->addSelect('original_id', ts('Based Contribution Record'), array());
     $this->addSelect('contribution_page_id', ts('Contribution Page'), $pages, '', TRUE);
     $this->addButtons(array(
         array(

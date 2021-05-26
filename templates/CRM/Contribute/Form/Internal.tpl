@@ -19,6 +19,13 @@
         <td>{$form.contribution_page_id.html}</td>
       </tr>
       <tr id="original_id_row">
+      {if $contact_id}
+        <td class="label">{$form.original_id.label}</td>
+        <td>
+          {$form.original_id.html}
+          <div class="description">{ts}When select, new contribution will have default value from this record.{/ts}</div>
+        </td>
+      {/if}
       </tr>
     </table>
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
