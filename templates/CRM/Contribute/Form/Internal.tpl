@@ -7,6 +7,13 @@
       <tr>
         <td>{$form.contribution_page_id.label}</td><td>{$form.contribution_page_id.html}</td>
       </tr>
+      <tr>
+        <td>{$form.original_id.label}</td>
+        <td>
+          {$form.original_id.html}
+          <div class="description">{ts}When select, new contribution will have default value from this record.{/ts}</div>
+        </td>
+      </tr>
         <td><div class="crm-submit-buttons">{$form.buttons.html}</div></td>
     </table>
   </div>

@@ -48,14 +48,19 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
       $page .= " ($id)";
     }
     $ele = $this->add('text', 'contact_id', ts('Contact').' - '.ts('Contact ID'), '', TRUE);
+    $records = array(
+      ts('-- select --')
+    );
     if ($this->_contactId) {
       $ele->freeze();
       list($displayName) = CRM_Contact_BAO_Contact::getContactDetails($this->_contactId);
       if ($displayName) {
         $this->assign('display_name', $displayName);
       }
+      $records = $this->getContributionDetails();
     }
     $this->addSelect('contribution_page_id', ts('Contribution Page'), $pages, '', TRUE);
+    $this->addSelect('original_id', ts('Based Contribution Record'), $records);
     $this->addButtons(array(
         array(
           'type' => 'refresh',
@@ -112,6 +117,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     $cid = $params['contact_id'];
     $pageId = $params['contribution_page_id'];
     if ($params['original_id']) {
+      $oid = $params['original_id'];
       $url = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$cid&oid=$oid&cs=$cs");
     }
     else {
@@ -119,5 +125,37 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     }
 
     CRM_Utils_System::redirect($url);
+  }
+
+  public function getContributionDetails() {
+    $records = array(ts('-- select --'));
+    // get exists contribution
+    $dao = CRM_Core_DAO::executeQuery("SELECT id, total_amount, contribution_recur_id, MAX(receive_date) FROM civicrm_contribution WHERE contribution_recur_id > 0 AND contact_id = %1 AND is_test = 0 GROUP BY contribution_recur_id ORDER BY contribution_recur_id  DESC LIMIT 3", array(
+      1 => array($this->_contactId, 'Positive'),
+    ));
+
+    while($dao->fetch()) {
+      if ($dao->receive_date) {
+        $date = CRM_Utils_Date::customFormat($dao->receive_date);
+      }
+      else {
+        $date = ts('None');
+      }
+      $records[ts('Recurring Contribution')][$dao->id] = ts('Recurring Contribution ID').":".$dao->contribution_recur_id." / ".ts('Total Amount').':'.$dao->total_amount." / ".ts('Receive Date').':'.$date;
+    }
+
+    $dao = CRM_Core_DAO::executeQuery("SELECT id, total_amount, receive_date FROM civicrm_contribution WHERE contribution_recur_id IS NULL AND contact_id = %1 AND is_test = 0 AND contribution_status_id = 1 ORDER BY receive_date DESC LIMIT 10", array(
+      1 => array($this->_contactId, 'Positive'),
+    ));
+    while($dao->fetch()) {
+      if ($dao->receive_date) {
+        $date = CRM_Utils_Date::customFormat($dao->receive_date);
+      }
+      else {
+        $date = ts('None');
+      }
+      $records[ts('Non-Recurring Contribution')][$dao->id] = ts('Contribution ID').":".$dao->id." / ".ts('Total Amount').':'.$dao->total_amount. ' / '.ts('Receive Date').':'.$date;
+    }
+    return $records;
   }
 }

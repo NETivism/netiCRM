@@ -37,7 +37,7 @@
   </item>
   <item>
      <path>civicrm/contribute/internal</path>
-     <title>Internal Contribution</title>
+     <title>Internal Contribution Page</title>
      <page_callback>CRM_Contribute_Form_Internal</page_callback>
      <access_arguments>access CiviContribute,edit contributions</access_arguments>
   </item>
