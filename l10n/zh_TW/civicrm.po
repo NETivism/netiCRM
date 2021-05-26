@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-05-13 09:55+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2021-05-26 06:52+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48468,3 +48468,16 @@ msgstr "權重總和"
 
 msgid "Selected installments is %1."
 msgstr "所選的新期數為 %1"
+
+msgid "Donate Again URL"
+msgstr "再次捐款連結"
+
+msgid "Internal Contribution Page"
+msgstr "內部募款頁"
+
+msgid "Based Contribution Record"
+msgstr "基於現有捐款"
+
+msgid ""
+"When select, new contribution will have default value from this record."
+msgstr "當選擇時，新增的捐款將會填入所選擇的捐款當作預設值。"

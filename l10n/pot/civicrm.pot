@@ -48158,3 +48158,15 @@ msgstr ""
 
 msgid "Selected installments is %1."
 msgstr ""
+
+msgid "Donate Again URL"
+msgstr ""
+
+msgid "Internal Contribution Page"
+msgstr ""
+
+msgid "Based Contribution Record"
+msgstr ""
+
+msgid "When select, new contribution will have default value from this record."
+msgstr ""
