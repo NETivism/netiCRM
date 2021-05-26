@@ -8,6 +8,12 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    */
   public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $snippet = CRM_Utils_Request::retrieve('snippet', 'Positive', $this);
+    if ($snippet == 4) {
+      $this->_ajax = TRUE;
+      $this->assign('ajax', TRUE);
+    }
+
     // check if table field exists
     $checkQuery = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'civicrm_contribution_page' AND column_name = 'is_internal'";
     $exists = CRM_Core_DAO::singleValueQuery($checkQuery);
@@ -42,25 +48,35 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    if ($this->_ajax) {
+      $records = $this->getContributionDetails();
+      $this->addSelect('original_id', ts('Based Contribution Record'), $records);
+      return;
+    }
     $pages = array();
     CRM_Core_PseudoConstant::populate($pages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active', ' is_internal = 1');
     foreach($pages as $id => &$page) {
       $page .= " ($id)";
     }
-    $ele = $this->add('text', 'contact_id', ts('Contact').' - '.ts('Contact ID'), '', TRUE);
     $records = array(
       ts('-- select --')
     );
     if ($this->_contactId) {
+      $ele = $this->add('text', 'contact_id', ts('Contact').' - '.ts('Contact ID'), '', TRUE);
       $ele->freeze();
+      $this->assign('contact_id', $this->_contactId);
       list($displayName) = CRM_Contact_BAO_Contact::getContactDetails($this->_contactId);
       if ($displayName) {
         $this->assign('display_name', $displayName);
       }
       $records = $this->getContributionDetails();
+      $this->addSelect('original_id', ts('Based Contribution Record'), $records);
     }
+    else {
+      CRM_Contact_Form_NewContact::buildQuickForm($this);
+    }
+    $this->addSelect('original_id', ts('Based Contribution Record'), array());
     $this->addSelect('contribution_page_id', ts('Contribution Page'), $pages, '', TRUE);
-    $this->addSelect('original_id', ts('Based Contribution Record'), $records);
     $this->addButtons(array(
         array(
           'type' => 'refresh',
@@ -85,15 +101,17 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    */
   static function formRule($fields, $files, $form) {
     $errors = array();
-    if (!ctype_digit($fields['contact_id']) || empty($fields['contact_id'])) {
-      $errors['contact_id'] = ts('Please enter a valid number for %1', array(1 => ts('Contact ID')));
-    }
-    else {
-      $found = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE id = %1 AND is_deleted = 0", array(
-        1 => array($fields['contact_id'], 'Positive')
-      ));
-      if (!$found) {
-        $errors['contact_id'] = ts('contact does not exist: %1', array(1 => $fields['contact_id']));
+    if (empty($fields['contact_select_id'][1])) {
+      if (!ctype_digit($fields['contact_id']) || empty($fields['contact_id'])) {
+        $errors['contact_id'] = ts('Please enter a valid number for %1', array(1 => ts('Contact ID')));
+      }
+      else {
+        $found = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE id = %1 AND is_deleted = 0", array(
+          1 => array($fields['contact_id'], 'Positive')
+        ));
+        if (!$found) {
+          $errors['contact_id'] = ts('contact does not exist: %1', array(1 => $fields['contact_id']));
+        }
       }
     }
     $pages = CRM_Contribute_PseudoConstant::contributionPage(NULL, TRUE);
@@ -113,6 +131,9 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
+    if (!empty($params['contact_select_id'][1])) {
+      $params['contact_id'] = $params['contact_select_id'][1];
+    }
     $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($params['contact_id'], CRM_REQUEST_TIME, 1);
     $cid = $params['contact_id'];
     $pageId = $params['contribution_page_id'];
