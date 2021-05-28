@@ -56,9 +56,45 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->contactDelete($this->_contactID);
   }
 
+
+  /**
+   * @start_document
+   * 
+   * ## {ts}Create{/ts} {ts}Phone{/ts} 
+   * 
+   * {ts}This is tests for creating Phone{/ts} 
+   * 
+   * **HTTP {ts}methods{/ts}: POST**
+   * 
+   * **{ts}Path{/ts}**
+   * 
+   * ```
+   * <entrypoint>?entity=Phone&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","phone":"{$value.phone}"\}
+   * ```
+   * 
+   * **API Explorer**
+   * 
+   * ```
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","phone":"{$value.phone}"\}
+   * ```
+   * 
+   * **{ts}Request Samples{/ts}**
+   * 
+   * ```shell
+   * curl -g --request POST '<entrypoint>?entity=Phone&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","phone":"{$value.phone}"\}' \
+   * {$API_KEY_HEADER} \
+   * {$SITE_KEY_HEADER}
+   * ```
+   * 
+   * {$result}
+   * 
+   * @end_document
+   */
   public function testCreatePhone() {
 
     $result = civicrm_api('phone', 'create', $this->_params);
+
+    $this->doWriteResult($result, __FILE__, __FUNCTION__);
 
     $this->documentMe($this->_params, $result, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
@@ -71,6 +107,39 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->assertEquals(0, $delresult['is_error'], 'In line ' . __LINE__);
   }
 
+  /**
+   * @start_document
+   * 
+   * ## {ts}Delete{/ts} {ts}Phone{/ts} 
+   * 
+   * {ts}This is tests for delete Phone{/ts} 
+   * 
+   * **HTTP {ts}methods{/ts}: POST**
+   * 
+   * **{ts}Path{/ts}**
+   * 
+   * ```
+   * <entrypoint>?entity=Phone&action=delete&pretty=1&json=\{"id":"1"\}
+   * ```
+   * 
+   * **API Explorer**
+   * 
+   * ```
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=delete&pretty=1&json=\{"id":"1"\}
+   * ```
+   * 
+   * **{ts}Request Samples{/ts}**
+   * 
+   * ```shell
+   * curl -g --request POST '<entrypoint>?entity=Phone&action=delete&pretty=1&json=\{"id":"1"\}' \
+   * {$API_KEY_HEADER} \
+   * {$SITE_KEY_HEADER}
+   * ```
+   * 
+   * {$result}
+   * 
+   * @end_document
+   */
   public function testDeletePhone() {
     //create one
     $create = civicrm_api('phone', 'create', $this->_params);
@@ -78,6 +147,8 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->assertAPISuccess($create, 'In line ' . __LINE__);
 
     $result = civicrm_api('phone', 'delete', array('id' => $create['id'], 'version' => 3));
+    $this->doWriteResult($result, __FILE__, __FUNCTION__);
+
     $this->documentMe($this->_params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
@@ -130,6 +201,39 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   /**
    * Test civicrm_address_get - success expected.
    */
+  /**
+   * @start_document
+   * 
+   * ## {ts}Get{/ts} {ts}Phone{/ts} 
+   * 
+   * {ts}This is tests for creating Phone{/ts} 
+   * 
+   * **HTTP {ts}methods{/ts}: POST**
+   * 
+   * **{ts}Path{/ts}**
+   * 
+   * ```
+   * <entrypoint>?entity=Phone&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}","phone":"{$value.phone}"\}
+   * ```
+   * 
+   * **API Explorer**
+   * 
+   * ```
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}","phone":"{$value.phone}"\}
+   * ```
+   * 
+   * **{ts}Request Samples{/ts}**
+   * 
+   * ```shell
+   * curl -g --request POST '<entrypoint>?entity=Phone&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}","phone":"{$value.phone}"\}' \
+   * {$API_KEY_HEADER} \
+   * {$SITE_KEY_HEADER}
+   * ```
+   * 
+   * {$result}
+   * 
+   * @end_document
+   */
   public function testGet() {
     $phone = civicrm_api('phone', 'create', $this->_params);
     $this->assertAPISuccess($phone, 'In line ' . __LINE__);
@@ -140,6 +244,9 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
     $result = civicrm_api('Phone', 'Get', ($params));
+    print_r($result);
+    $this->doWriteResult($result, __FILE__, __FUNCTION__);
+
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals($phone['values'][$phone['id']]['location_type_id'], $result['values'][$phone['id']]['location_type_id'], 'In line ' . __LINE__);
