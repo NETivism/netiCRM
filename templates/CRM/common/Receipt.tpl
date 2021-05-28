@@ -7,6 +7,10 @@
 table { width: 100%; border-collapse:collapse; }
 table, td { border:1px solid black; }
 table td { padding: 2px 4px; }
+{/literal}{* prevent wkhtmltopdf bug https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3405 *}{literal}
+table tr, tr { 
+	page-break-inside: avoid !important;
+}
 
 .row { display:table-row;}
 .line { border-top: 1px dashed #aaa; padding-top: 20px;}

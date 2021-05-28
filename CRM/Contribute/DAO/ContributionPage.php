@@ -273,6 +273,12 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    */
   public $is_active;
   /**
+   * Is this page only for internal usage?
+   *
+   * @var boolean
+   */
+  public $is_internal;
+  /**
    * Text and html allowed. Displayed at the bottom of the first page of the contribution wizard.
    *
    * @var text
@@ -592,6 +598,10 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
         ) ,
         'is_active' => array(
           'name' => 'is_active',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+        ) ,
+        'is_internal' => array(
+          'name' => 'is_internal',
           'type' => CRM_Utils_Type::T_BOOLEAN,
         ) ,
         'footer_text' => array(
