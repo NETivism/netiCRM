@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  PHP 7 version Base class for CiviCRM unit tests
  *
@@ -2063,9 +2064,11 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
     }
   }
 
-  function doWriteResult($result, $functionName) {
+  function doWriteResult($result, $filepath, $functionName) {
     global $civicrm_root;
-    $file = fopen($civicrm_root . "docMaker/unit_test_results/{$functionName}Result.json", "w");
+    print_r($result);
+    $filename = basename($filepath, ".php");
+    $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}Result.json", "w");
     fwrite($file, json_encode($result, JSON_PRETTY_PRINT));
     fclose($file);
   }
