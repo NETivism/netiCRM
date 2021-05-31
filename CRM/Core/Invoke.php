@@ -111,8 +111,7 @@ class CRM_Core_Invoke {
 
       $result = NULL;
       if (is_array($item['page_callback'])) {
-        $newArgs = explode('/', $_GET[$config->userFrameworkURLVar]);
-        $result = call_user_func($item['page_callback'], $newArgs);
+        $result = call_user_func($item['page_callback'], $args);
       }
       elseif (strstr($item['page_callback'], '_Form')) {
         $wrapper = new CRM_Utils_Wrapper();
@@ -268,7 +267,8 @@ class CRM_Core_Invoke {
         );
         $controller->set('edit', 1);
         $controller->process();
-        return $controller->run();
+        $result = $controller->run();
+        return $result;
       }
       else {
         $embed = CRM_Utils_Request::retrieve('embed', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE);
@@ -302,16 +302,17 @@ class CRM_Core_Invoke {
           $template->assign('embedBody', $profile);
           $content = $template->fetch('CRM/common/Embed.tpl');
           echo $content; 
-          return;
+          CRM_Utils_System::civiExit();
         }
         else {
           $wrapper = new CRM_Utils_Wrapper();
-          return $wrapper->run('CRM_Profile_Form_Edit',
+          $result = $wrapper->run('CRM_Profile_Form_Edit',
             ts('Create Profile'),
             array('mode' => CRM_Core_Action::ADD,
               'ignoreKey' => TRUE,
             )
           );
+          return $result;
         }
       }
     }
