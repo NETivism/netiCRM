@@ -319,8 +319,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       // check if form is active
       if (!$this->_values['is_active']) {
         if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {
-
           // form is inactive, die a fatal death
+          CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
+        }
+      }
+      else {
+        if ($this->_values['is_internal'] > 0 && !CRM_Core_Permission::check('access CiviContribute')) {
           CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
         }
       }

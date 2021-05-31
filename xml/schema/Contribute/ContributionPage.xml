@@ -263,6 +263,12 @@
        <add>1.3</add>
   </field>
   <field>
+       <name>is_internal</name>
+       <type>boolean</type>
+       <comment>Is this page only for internal usage?</comment>
+       <add>4.0</add>
+  </field>
+  <field>
        <name>footer_text</name>
        <type>text</type>
        <htmlType>textarea</htmlType>

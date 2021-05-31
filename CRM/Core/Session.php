@@ -494,7 +494,7 @@ class CRM_Core_Session {
       }
 
       $this->_session[$this->_key]['lastExpired'] = CRM_REQUEST_TIME;
-      CRM_Core_Error::debug('Completed purge expired session form: '."$crmEleCount $this->_key forms / $rootEleCount quickform container");
+      #CRM_Core_Error::debug('Completed purge expired session form: '."$crmEleCount $this->_key forms / $rootEleCount quickform container");
     }
   }
 

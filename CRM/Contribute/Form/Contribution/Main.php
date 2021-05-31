@@ -115,6 +115,18 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           $this->loadDefaultFromOriginalId();
         }
       }
+      else {
+        // refs #31611, internal contribution page restriction
+        if ($this->_values['is_internal'] > 0) {
+          CRM_Core_Error::fatal('You need to specify contact checksum and contact id on url when using internal page.');
+        }
+      }
+    }
+    else {
+      // refs #31611, internal contribution page restriction
+      if ($this->_values['is_internal'] > 0) {
+        CRM_Core_Error::fatal('You need to specify contact checksum and contact id on url when using internal page.');
+      }
     }
 
     if (CRM_Utils_Array::value('id', $this->_pcpInfo) &&

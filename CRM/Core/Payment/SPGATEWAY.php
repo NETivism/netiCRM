@@ -86,6 +86,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $cycleDay = &$form->getElement('cycle_day');
     unset($cycleDay->_attributes['max']);
     unset($cycleDay->_attributes['min']);
+    if (!empty($form->get('id'))) {
+      $installment = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $form->get('id'), 'installments');
+      if (!empty($installment)) {
+        $form->addRule('installments', ts('Installments should be greater than zero.'), 'nonzero');
+        $form->addRule('installments', ts('Installments should be greater than zero.'), 'required');
+      }
+    }
   }
 
   /**

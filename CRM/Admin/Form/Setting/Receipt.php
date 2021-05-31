@@ -58,6 +58,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       $this->assign('imageSmallStampUrl', $config->imageUploadURL . $config->imageSmallStampName);
     }
 
+    $this->assign('stampDocUrl', CRM_Utils_System::docURL2('Receipt Stamp', TRUE));
     $this->add('hidden', 'deleteBigStamp');
     $this->add('hidden', 'deleteSmallStamp');
 
