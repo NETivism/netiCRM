@@ -22,7 +22,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
 
     if(empty($this->_get['is_recur'])){
-      // civicrm_allpay_record($ids['contribution'], $this->_post); // Todo
+      self::civicrm_allpay_record($ids['contribution'], $this->_post); // Todo
     }
     if(empty($ids['contributionRecur'])){
       // we will save record later if this is recurring
@@ -161,9 +161,28 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         }
         if(!empty($c)){
           unset($objects['contribution']);
-          // civicrm_allpay_record($c->id, $this->_post); // Todo
+          self::civicrm_allpay_record($c->id, $this->_post); // Todo
+          // Set expire time
+          $data = $this->_post;
+          if(!empty($data['#info']['ExpireDate'])){
+            $expire_date = $data['#info']['ExpireDate'];
+          }
+          if(!empty($data['ExpireDate'])){
+            $expire_date = $data['ExpireDate'];
+          }
+          if(!empty($expire_date)){
+            if (strlen($expire_date) < 11) {
+              $expire_date = str_replace('/', '-', $expire_date).' 23:59:59';
+            }
+            $sql = "UPDATE civicrm_contribution SET expire_date = %1 WHERE id = %2";
+            $params = array(
+              1 => array( $expire_date, 'String'),
+              2 => array( $c->id, 'Integer'),
+            );
+            CRM_Core_DAO::executeQuery($sql, $params);
+          }
           $objects['contribution'] = $c;
-          
+
           // update recurring object
           // never end if TotalSuccessTimes not excceed the ExecTimes
           if($input['TotalSuccessTimes'] == $recur->installments){
@@ -250,4 +269,45 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 
+  static function civicrm_allpay_record($cid, $data = null){
+    if(is_numeric($cid)){
+      $billing_notify = FALSE;
+      if(empty($data) && !empty($_POST)){
+        if(arg(1) == 'record'){
+          $billing_notify = TRUE;
+          $data['#info'] = $_POST;
+        }
+        else{
+          $data = $_POST;
+        }
+      }
+      if(!empty($data['MerchantID']) || !empty($data['#info']['MerchantID'])){
+        $sql = "SELECT id FROM civicrm_contribution_allpay WHERE cid = %1";
+        $recordId = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($cid, 'Positive')));
+        if (empty($recordId)) {
+          // insert
+          $query = "INSERT INTO civicrm_contribution_allpay (cid, data) VALUES (%1, %2);";
+          CRM_Core_DAO::executeQuery($query, array(
+            1 => array($cid, 'Positive'),
+            2 => array(json_encode($data), 'String'),
+          ));
+        }
+        else {
+          // there is value, Update
+          $query = "UPDATE civicrm_contribution_allpay SET data = %2 WHERE id = %1;";
+          CRM_Core_DAO::executeQuery($query, array(
+            1 => array($recordId, 'Positive'),
+            2 => array(json_encode($data), 'String'),
+          ));
+        }
+        if($billing_notify){
+          module_load_include("inc", 'civicrm_allpay', 'civicrm_allpay.notify');
+          civicrm_allpay_notify_generate($cid, TRUE); // send mail
+  
+          // return allpay successful received notify
+          echo "1|OK";
+        }
+      }
+    }
+  }
 }
