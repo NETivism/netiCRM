@@ -1187,7 +1187,10 @@ class CRM_Utils_System {
     exit($status);
   }
 
-  static function civiBeforeInvoke() {
+  static function civiBeforeInvoke(&$args = NULL) {
+    $config = CRM_Core_Config::singleton();
+
+    // qfPrivateKey for drupal 9
     if (!self::isUserLoggedIn()) {
       $qfPrivateKey = CRM_Core_Config::$_userSystem->tempstoreGet('qfPrivateKey');
       if (!empty($qfPrivateKey)) {
@@ -1195,6 +1198,29 @@ class CRM_Utils_System {
         $session->set('qfPrivateKey', $qfPrivateKey);
       }
     }
+
+    // IDS and check for bad stuff
+    if ($config->useIDS) {
+      $ids = new CRM_Core_IDS();
+      $ids->check($args);
+    }
+
+    // also initialize the i18n framework
+    CRM_Core_I18n::singleton();
+
+    // reset session when needed
+    if ($config->debug) {
+      $sessionReset = CRM_Utils_Request::retrieve('sessionReset', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
+      if ($sessionReset) {
+        $config->sessionReset();
+      }
+    }
+
+    // initialize smarty
+    // set active Component
+    $template = CRM_Core_Smarty::singleton();
+    $template->assign('activeComponent', 'CiviCRM');
+    $template->assign('formTpl', 'default');
   }
 
   static function civiBeforeShutdown() {
