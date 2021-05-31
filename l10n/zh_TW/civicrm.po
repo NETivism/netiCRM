@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-05-13 09:55+0000\n"
+"PO-Revision-Date: 2021-05-31 06:57+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48468,3 +48468,113 @@ msgstr "權重總和"
 
 msgid "Selected installments is %1."
 msgstr "所選的新期數為 %1"
+
+msgid "Donate Again URL"
+msgstr "再次捐款連結"
+
+msgid "Internal Contribution Page"
+msgstr "內部募款頁"
+
+msgid "Based Contribution Record"
+msgstr "基於現有捐款"
+
+msgid ""
+"When select, new contribution will have default value from this record."
+msgstr "當選擇時，新增的捐款將會填入所選擇的捐款當作預設值。"
+
+#: From civicrm_allpay
+msgid ""
+"This message indicate your last payment may not success because you didn't "
+"submit credit card information. If you are sure you have completed the "
+"transaction, please contact us. Otherwise, you can retry again."
+msgstr "這個訊息表示您最近一次的交易沒有成功送出，可能是您在付款頁面按下重新整理，或在付款頁面回到前一頁，或因為網路斷線問題，導致信用卡付款沒有完成。<br />若您確認信用卡已被授權、扣款成功（例如收到銀行簡訊告知扣款成功），請儘速與我們聯繫，無須重新填寫表格。<br />若您的信用卡沒有任何扣款，建議您重新填寫下方表格，並在信用卡填寫頁面維持網路連線，謝謝您的耐心。"
+
+#: From civicrm_allpay
+msgid ""
+"You just submit a payment. You may want to check your email to follow "
+"payment instruction, or try submit this form again."
+msgstr "這個訊息表示您剛剛已經填寫過此表單，並且成功送出，畫面上提示您的付款方式請您列印下來，或可以先查看電子信箱，來確認是否收到付款的方式，並依照信中所述來進行繳款。或您可以再填寫一次這張表單。"
+
+#: From civicrm_allpay
+msgid "Installments of recurring must lower than 99."
+msgstr "定期定額期數需要小於或等於 99 期。"
+
+#: From civicrm_allpay
+msgid "The years of recurring installments must lower than 9."
+msgstr "年份的定期定額期數需要小於或等於 9 期。"
+
+#: From civicrm_allpay
+msgid "IP Access Denied."
+msgstr "IP 拒絕存取"
+
+#: From civicrm_allpay
+msgid "Parameter Error."
+msgstr "傳入參數有誤"
+
+#: From civicrm_allpay
+msgid "Trading Number Repeated."
+msgstr "交易編號重覆"
+
+#: From civicrm_allpay
+msgid "Create Trade Fail."
+msgstr "建立訂單失敗"
+
+#: From civicrm_allpay
+msgid "Pay Fail."
+msgstr "付款失敗"
+
+#: From civicrm_allpay
+msgid "Trading Number cannot Be Found."
+msgstr "找不到訂單編號"
+
+#: From civicrm_allpay
+msgid "Can not use trade service."
+msgstr "無法使用此服務"
+
+#: From civicrm_allpay
+msgid "Trade has been updated before."
+msgstr "交易已處理"
+
+#: From civicrm_allpay
+msgid "Trade Status Error."
+msgstr "交易狀態錯誤"
+
+#: From civicrm_allpay
+msgid "Price Format Error."
+msgstr "金額格式錯誤"
+
+#: From civicrm_allpay
+msgid "ItemURL Format Error."
+msgstr "URL 格式錯誤"
+
+#: From civicrm_allpay
+msgid "Cant not find the trade data."
+msgstr "找不到符合的訂單資訊"
+
+#: From civicrm_allpay
+msgid "AllPayTradeID Error."
+msgstr "allpay 交易編號錯誤"
+
+#: From civicrm_allpay
+msgid "MerchantID Error."
+msgstr "廠商編號錯誤"
+
+#: From civicrm_allpay
+msgid "MerchantTradeNo Error."
+msgstr "廠商交易編號錯誤"
+
+#: From civicrm_allpay
+msgid "CheckMacValue Error"
+msgstr "檢查碼錯誤"
+
+#: From civicrm_allpay
+msgid "TopUpUsedESUN Trade Error"
+msgstr "玉山儲值消費交易失敗"
+
+#: From civicrm_allpay
+msgid "Error when processing your payment."
+msgstr "您的付款發生錯誤"
+
+#: From civicrm_allpay
+msgid "Please login your payment processor system to check problem."
+msgstr "因金流單位並未回傳失敗原因，請去綠界/歐付寶金流後台確認。"
