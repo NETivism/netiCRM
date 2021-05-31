@@ -122,7 +122,6 @@ class CRM_Core_Invoke {
         );
       }
       else {
-        $newArgs = explode('/', $_GET[$config->userFrameworkURLVar]);
         $mode = 'null';
         if (isset($pageArgs['mode'])) {
           $mode = $pageArgs['mode'];
@@ -145,12 +144,12 @@ class CRM_Core_Invoke {
         else {
           CRM_Core_Error::fatal();
         }
-        if ($config->debug) {
+        if (CRM_Core_Config::singleton()->debug) {
           if (method_exists($object, 'editForm')) {
             $template->assign('callbackArgs', $object->editForm());
           }
         }
-        $result = $object->run($newArgs, $pageArgs);
+        $result = $object->run($args, $pageArgs);
       }
 
       CRM_Utils_System::civiBeforeShutdown();
