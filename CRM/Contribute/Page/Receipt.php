@@ -31,21 +31,18 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
 
   function run() {
     $this->preProcess();
-    // don't through template
-    // send pdf directly
-    $this->createActivity();
-
-    $download = TRUE;
-    $task = new CRM_Contribute_Form_Task_PDF();
-    $task->makeReceipt($this->_id, $this->_type);
-    $task->makePDF($download);
 
     // refs #31631, needs hook here
     // but we can't use parent::run because will infinite loop
     // instead, trigger hook manually
     CRM_Utils_Hook::pageRun($this);
-    $pageTemplateFile = $this->getHookedTemplateFileName();
-    CRM_Utils_Hook::alterContent($content, 'page', $pageTemplateFile, $this);
+
+    $task = new CRM_Contribute_Form_Task_PDF();
+    $task->makeReceipt($this->_id, $this->_type);
+    $this->createActivity();
+
+    $download = TRUE;
+    $task->makePDF($download);
     return;
   }
 
