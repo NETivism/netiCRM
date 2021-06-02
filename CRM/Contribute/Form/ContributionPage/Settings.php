@@ -247,7 +247,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     if($params['is_active'] && $params['is_special']){
       $params['is_active'] = 3;
     }
-    if ($this->get('internalexists')) {
+    if ($this->get('internalExists')) {
       $params['is_internal'] = CRM_Utils_Array::value('is_internal', $params, FALSE) ? 1 : 'null';
     }
     $params['is_credit_card_only'] = CRM_Utils_Array::value('is_credit_card_only', $params, FALSE);
