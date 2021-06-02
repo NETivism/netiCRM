@@ -164,6 +164,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $checkQuery = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'civicrm_contribution_page' AND column_name = 'is_internal'";
     $exists = CRM_Core_DAO::singleValueQuery($checkQuery);
     if ($exists) {
+      $this->set('internalExists', 1);
       $this->addElement('checkbox', 'is_internal', ts('Is this Online Contribution Page are internal use only?'));
     }
 
@@ -246,7 +247,9 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     if($params['is_active'] && $params['is_special']){
       $params['is_active'] = 3;
     }
-    $params['is_internal'] = CRM_Utils_Array::value('is_internal', $params, FALSE) ? 1 : 'null';
+    if ($this->get('internalexists')) {
+      $params['is_internal'] = CRM_Utils_Array::value('is_internal', $params, FALSE) ? 1 : 'null';
+    }
     $params['is_credit_card_only'] = CRM_Utils_Array::value('is_credit_card_only', $params, FALSE);
     $params['honor_block_is_active'] = CRM_Utils_Array::value('honor_block_is_active', $params, FALSE);
     $params['is_for_organization'] = CRM_Utils_Array::value('is_organization', $params) ? CRM_Utils_Array::value('is_for_organization', $params, FALSE) : 0;
