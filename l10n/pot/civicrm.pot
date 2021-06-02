@@ -48262,3 +48262,9 @@ msgstr ""
 #: From civicrm_allpay
 msgid "Please login your payment processor system to check problem."
 msgstr ""
+
+msgid "You need to specify contact checksum and contact id on url when using internal page."
+msgstr ""
+
+msgid "Is this Online Contribution Page are internal use only?"
+msgstr ""
