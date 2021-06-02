@@ -76,10 +76,25 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     if (!empty($form->get('id'))) {
       $installment = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $form->get('id'), 'installments');
       if (!empty($installment)) {
-        $form->addRule('installments', ts('Installments should be greater than zero.'), 'nonzero');
-        $form->addRule('installments', ts('Installments should be greater than zero.'), 'required');
+        $form->set('original_installments', $installment);
+        $form->addFormRule(array('CRM_Core_Payment_SPGATEWAY', 'validateInstallments'), $form);
       }
     }
+  }
+
+  static function validateInstallments($fields, $ignore, $form) {
+    $errors = array();
+    $pass = TRUE;
+    $contribution_status_id = $fields['contribution_status_id'];
+    $installments = $fields['installments'];
+    $original_installments = $form->get('original_installments');
+    if ($contribution_status_id == 5 && !empty($original_installments) && $installments <= 0) {
+      $pass = FALSE;
+    }
+    if (!$pass) {
+      $errors['installments'] = ts('Installments should be greater than zero.');
+    }
+    return $errors;
   }
 
   /**

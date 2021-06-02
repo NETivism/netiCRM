@@ -63,8 +63,15 @@ class CRM_Utils_Money {
       return '';
     }
 
-    if ($currency == 'TWD' && $format == 'chinese') {
-      return self::toTaiwanDollar($amount);
+    // toTaiwanDollar() is executed only when $format is 'chinese' and $currency is 'TWD'
+    // otherwise unset $format value from 'chinese' to NULL to output the original amount
+    if ($format == 'chinese') {
+      if ($currency == 'TWD') {
+        return self::toTaiwanDollar($amount);
+      }
+      else {
+        $format = NULL;
+      }
     }
 
     $config = CRM_Core_Config::singleton();
@@ -120,6 +127,7 @@ class CRM_Utils_Money {
       '%C' => $currency,
       '%c' => CRM_Utils_Array::value($currency, self::$_currencySymbols, $currency),
     );
+
     return strtr($format, $replacements);
   }
 

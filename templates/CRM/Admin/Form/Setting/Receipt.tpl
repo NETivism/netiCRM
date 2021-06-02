@@ -101,7 +101,7 @@
                 <br/>
                 {/if}
                 {$form.uploadBigStamp.html}<br />
-            <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
+            <span class="description">{ts 1=$stampDocUrl}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
         </tr>
         <tr class="crm-form-block-uploadSmallStamp">
             <td class="label">{$form.uploadSmallStamp.label}</td>
@@ -112,7 +112,7 @@
                 <br/>
                 {/if}
                 {$form.uploadSmallStamp.html}<br />
-            <span class="description">{ts 1="https://neticrm.tw/resource/admin/receipt"}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
+            <span class="description">{ts 1=$stampDocUrl}This image will show on receipt.The position please click <a href='%1' target='_blank'>here</a> to get more information.{/ts}</span></td>
         </tr>
         {if $form.receiptEmailAuto}
         <tr class="crm-form-block-receiptEmailAuto">
