@@ -7,6 +7,9 @@
 {else}{*normal*}
   <div class="crm-block crm-form-block crm-contribution-internal-form-block">
     <table class="form-layout-compressed" clas>
+      <tr>
+        <td>{$form.is_test.label}</td><td>{$form.is_test.html}</td>
+      </tr>
       {if $contact_id}
       <tr>
         <td>{$form.contact_id.label}</td><td>{$form.contact_id.html} {if $display_name}({$display_name}){/if}</td>

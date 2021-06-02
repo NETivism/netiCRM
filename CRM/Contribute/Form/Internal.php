@@ -81,6 +81,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
       $this->addSelect('original_id', ts('Based Contribution Record'), array());
     }
     $this->addSelect('contribution_page_id', ts('Contribution Page'), $pages, '', TRUE);
+    $this->addCheckBox('is_test', '', array( ts('Test-drive') => 1));
     $this->addButtons(array(
         array(
           'type' => 'refresh',
@@ -141,12 +142,15 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($params['contact_id'], CRM_REQUEST_TIME, 1);
     $cid = $params['contact_id'];
     $pageId = $params['contribution_page_id'];
+    if ($params['is_test']) {
+      $action = '&action=preview';
+    }
     if ($params['original_id']) {
       $oid = $params['original_id'];
-      $url = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$cid&oid=$oid&cs=$cs");
+      $url = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id={$pageId}&cid={$cid}&oid={$oid}&cs={$cs}{$action}");
     }
     else {
-      $url = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$cid&cs=$cs");
+      $url = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id={$pageId}&cid={$cid}&cs={$cs}{$action}");
     }
 
     CRM_Utils_System::redirect($url);
