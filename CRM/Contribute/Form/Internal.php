@@ -8,6 +8,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    */
   public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $this->_pageId = CRM_Utils_Request::retrieve('page_id', 'Positive', $this);
     $snippet = CRM_Utils_Request::retrieve('snippet', 'Positive', $this);
     if ($snippet == 4) {
       $this->_ajax = TRUE;
@@ -35,6 +36,9 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     $defaults = array();
     if (!empty($this->_contactId)) {
       $defaults['contact_id'] = $this->_contactId;
+    }
+    if (!empty($this->_pageId)) {
+      $defaults['contribution_page_id'] = $this->_pageId;
     }
     return $defaults;
   }
