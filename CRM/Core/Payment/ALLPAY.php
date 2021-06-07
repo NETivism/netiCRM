@@ -507,8 +507,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
 
     // detect variables
     if(empty($post)){
-      watchdog("civicrm_allpay", "Could not find POST data from payment server");
-      drupal_not_found();
+      CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not find POST data from payment server", TRUE);
+      exit;
     }
     else{
       $component = $get['module'];
@@ -525,8 +525,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         }
       }
       else{
-        watchdog('civicrm_allpay', "Could not get module name from request url");
-        drupal_not_found();
+        CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not get module name from request url", TRUE);
       }
     }
   }
