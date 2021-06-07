@@ -120,7 +120,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     // allpay validation
     // only validate this when not test.
     if(!empty($input['CheckMacValue'])){
-      $mac = _civicrm_allpay_checkmacvalue($this->_post, self::$_payment_processor);
+      $mac = CRM_Core_Payment_ALLPAY::_civicrm_allpay_checkmacvalue($this->_post, self::$_payment_processor);
       if(strtolower($input['CheckMacValue']) != strtolower($mac)) {
         $note .= ts("Failuare: CheckMacValue not match. Contact system admin.")."\n";
         \Drupal::logger("civicrm_allpay")->notice("Failuare: CheckMacValue not match. Should be '{$mac}', but '{$input['CheckMacValue']}' displayed.");
