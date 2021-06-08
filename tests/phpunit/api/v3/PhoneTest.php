@@ -239,12 +239,11 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->assertAPISuccess($phone, 'In line ' . __LINE__);
 
     $params = array(
-      'contact_id' => $phone['id'],
+      'contact_id' => $phone['values'][$phone['id']]['contact_id'],
       'phone' => $phone['values'][$phone['id']]['phone'],
       'version' => $this->_apiversion,
     );
     $result = civicrm_api('Phone', 'Get', ($params));
-    print_r($result);
     $this->doWriteResult($result, __FILE__, __FUNCTION__);
 
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
