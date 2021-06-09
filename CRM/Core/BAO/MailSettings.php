@@ -39,7 +39,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
     3 => 'Transaction Notification',
     2 => 'Mass Mailing',
     1 => 'Bounce Processing',
-    0 => 'Site-wide Mailing',
+    0 => 'Disabled',
   );
 
   /**
