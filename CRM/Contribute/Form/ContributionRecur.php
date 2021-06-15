@@ -78,7 +78,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
 
     $hideFields = NULL;
     $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'processor_id');
-    $processorName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $processorId, 'payment_processor_type');
+    if (!empty($processorId)) {
+      $processorName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $processorId, 'payment_processor_type');
+    }
     $this->assign('payment_type', $processorName);
     $this->set('payment_type', $processorName);
     $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
@@ -357,8 +359,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
           $config = CRM_Core_Config::singleton();
           $resultParams = $paymentClass->doUpdateRecur($requestParams, $config->debug);
           CRM_Core_Error::debug('ContributionRecur_PostProcess_resultParams', $resultParams);
-          if ($resultParams['is_error']) {
+          if ($resultParams['msg']) {
             CRM_Core_Session::setStatus($resultParams['msg']);
+          }
+          if ($resultParams['is_error']) {
             CRM_Core_Session::setStatus(ts('There are no any change.'));
           }
           else {
