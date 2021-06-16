@@ -619,6 +619,10 @@ jQuery.fn.live = function( types, data, fn ) {
 	return this;
 };
 
+jQuery.curCSS = function(element, prop, val) {
+  return jQuery(element).css(prop, val);
+};
+
 jQuery.fn.die = function( types, fn ) {
 	migrateWarn("jQuery.fn.die() is deprecated");
 	if ( oldDie ) {

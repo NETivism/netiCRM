@@ -32,7 +32,7 @@
     <tr class="crm-new-contact-form-block-contact crm-new-contact-form-block-contact-{$blockNo}">
     	<td class="label">{$form.contact.$blockNo.label}</td>
     	<td>{$form.contact.$blockNo.html}
-    	    {if $form.profiles}
+    	    {if $form.profiles && !$readonly}
     		&nbsp;&nbsp;{ts}OR{/ts}&nbsp;&nbsp;{$form.profiles.$blockNo.html}<div id="contact-dialog-{$blockNo}" class="hiddenElement"></div>
     	    {/if}
     	</td>

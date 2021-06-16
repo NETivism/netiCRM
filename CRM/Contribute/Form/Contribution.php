@@ -197,6 +197,16 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     //get the contact id
     $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
+    // refs #31746, #30215, #30417 ... etc.
+    // somehow we can't trust contact id from saved session
+    // uid from url will be modify by saved session object
+    // we use submitted value instead when really submit
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($this->_submitValues) && $this->_submitValues['contact_preset_id']) {
+      if (CRM_Utils_Type::validate($this->_submitValues['contact_preset_id'], 'Positive', FALSE, 'contact_preset_id')) {
+        $this->_contactID = $this->_submitValues['contact_preset_id'];
+      }
+    }
+
     //get the action.
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
     $this->assign('action', $this->_action);
@@ -226,7 +236,13 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
       }
     }
 
-    $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
+    if ($this->_contactID) {
+      $this->_context = 'contribution';
+      $this->set('context', 'contribution');
+    }
+    else {
+      $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
+    }
     $this->assign('context', $this->_context);
 
     // set the contribution mode.
@@ -874,6 +890,9 @@ WHERE  contribution_id = {$this->_id}
       require_once 'CRM/Contact/Form/NewContact.php';
       CRM_Contact_Form_NewContact::buildQuickForm($this);
     }
+    elseif($this->_contactID) {
+      $this->addElement('hidden', 'contact_preset_id', $this->_contactID);
+    }
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution');
 
@@ -1241,6 +1260,9 @@ WHERE  contribution_id = {$this->_id}
     // set the contact, when contact is selected
     if (CRM_Utils_Array::value('contact_select_id', $submittedValues)) {
       $this->_contactID = $submittedValues['contact_select_id'][1];
+    }
+    elseif (CRM_Utils_Array::value('contact_preset_id', $submittedValues)) {
+      $this->_contactID = $submittedValues['contact_preset_id'];
     }
 
     $config = CRM_Core_Config::singleton();

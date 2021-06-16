@@ -39,8 +39,9 @@ class CRM_Utils_Array {
    *
    * @access public
    *
-   * @param array  $list  the array to be searched
    * @param string $key   the key value
+   * @param array  $list  the array to be searched
+   * @param mix    $default the default value when no value found, default NULL
    *
    * @return value if exists else null
    * @static

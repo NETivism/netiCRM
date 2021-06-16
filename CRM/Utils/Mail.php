@@ -170,7 +170,7 @@ class CRM_Utils_Mail {
     }
 
     $result = NULL;
-    if (isset($params['mailerType'])) {
+    if (!empty($params['mailerType'])) {
       $mailer = &CRM_Core_Config::getMailer($params['mailerType']);
     }
     else {
