@@ -252,7 +252,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $errResult = $recurResult;
           return $errResult;
         }
-        else {
+        elseif (empty($recurResult['contribution_status_id'])) {
           // for status 'suspend', result status id could be 1 or 7, depends on input status id.
           $recurResult['contribution_status_id'] = $params['contribution_status_id'];
         }
@@ -334,7 +334,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
       CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $recurResult', $recurResult);
       if (!empty($recurResult['installments'] && $recurResult['installments'] != $requestParams['PeriodTimes'])) {
-        $recurResult['note_body'] = ts('Selected installments is %1.', array(1 => $requestParams['PeriodTimes'])).ts('Modify installments by Newebpay data.');
+        $recurResult['note_body'] .= ts('Selected installments is %1.', array(1 => $requestParams['PeriodTimes'])).ts('Modify installments by Newebpay data.');
       }
     }
 

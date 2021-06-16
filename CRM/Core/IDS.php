@@ -188,12 +188,12 @@ class CRM_Core_IDS {
       return TRUE;
     }
     elseif ($impact >= $this->threshold['warn']) {
-      $this->log($result, 2, $impact);
+      // $this->log($result, 2, $impact);
       $this->warn($result);
       return TRUE;
     }
     elseif ($impact >= $this->threshold['log']) {
-      $this->log($result, 0, $impact);
+      // $this->log($result, 0, $impact);
       return TRUE;
     }
     else {
@@ -226,6 +226,7 @@ class CRM_Core_IDS {
       }
 
       $log = array(
+        'impact' => $impact,
         'name' => $event->getName(),
         'tag' => implode("|", $event->getTags()),
         'problem' => "\n".implode("\n", $description),
@@ -234,7 +235,6 @@ class CRM_Core_IDS {
         'userid' => $session->get('userID'),
         'ip' => $ip,
         'reaction' => $reaction,
-        'impact' => $impact,
       );
       $data[] = $log;
     }
