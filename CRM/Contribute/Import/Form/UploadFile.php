@@ -90,7 +90,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
       CRM_Contribute_Import_Parser::DUPLICATE_SKIP => ts('Insert new contributions'),
       CRM_Contribute_Import_Parser::DUPLICATE_UPDATE => ts('Update existing contributions'),
     );
-    $this->addRadio('onDuplicate', ts('Import mode'), $duplicateOptions);
+    $this->addRadio('onDuplicate', ts('Import mode'), $duplicateOptions, NULL, NULL, TRUE);
 
     $duplicateContactOptions = array(
       CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE => ts('Create contact only on identifier not import'),
@@ -147,9 +147,6 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
 
   public function setDefaultValues(){
     $defaults = $this->_submitValues;
-    if (!$defaults['onDuplicate']) {
-      $defaults['onDuplicate'] = CRM_Contribute_Import_Parser::DUPLICATE_SKIP;
-    }
     if (!$defaults['createContactOption']) {
       $defaults['createContactOption'] = CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE;
     }
