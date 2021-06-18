@@ -254,6 +254,15 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->assertEquals($phone['values'][$phone['id']]['phone'], $result['values'][$phone['id']]['phone'], 'In line ' . __LINE__);
   }
 
+  public function testGetByLocationType() {
+  }
+
+  public function testGetByPhoneType() {
+  }
+
+  public function testReplacePhoneByData() {
+  }
+
   ///////////////// civicrm_phone_create methods
 
   /**
