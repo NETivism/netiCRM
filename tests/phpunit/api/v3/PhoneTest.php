@@ -255,15 +255,108 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   }
 
   public function testGetPhoneIsPrimary() {
+    $phone = civicrm_api('phone', 'create', $this->_params);
+    $this->assertAPISuccess($phone, 'In line ' . __LINE__);
+
+    $params = array(
+      'contact_id' => $phone['values'][$phone['id']]['contact_id'],
+      'phone' => $phone['values'][$phone['id']]['phone'],
+      'is_primary' => '1',
+      'version' => $this->_apiversion,
+    );
+    $result = civicrm_api('Phone', 'Get', ($params));
+    $this->doWriteResult($result, __FILE__, __FUNCTION__);
+
+    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
+    $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
+    $this->assertEquals($phone['values'][$phone['id']]['location_type_id'], $result['values'][$phone['id']]['location_type_id'], 'In line ' . __LINE__);
+    $this->assertEquals($phone['values'][$phone['id']]['phone_type_id'], $result['values'][$phone['id']]['phone_type_id'], 'In line ' . __LINE__);
+    $this->assertEquals('1', $result['values'][$phone['id']]['is_primary'], 'In line ' . __LINE__);
+    $this->assertEquals($phone['values'][$phone['id']]['phone'], $result['values'][$phone['id']]['phone'], 'In line ' . __LINE__);
   }
 
   public function testGetPhoneByLocationType() {
+    $phone = civicrm_api('phone', 'create', $this->_params);
+    $this->assertAPISuccess($phone, 'In line ' . __LINE__);
+
+    $params = array(
+      'contact_id' => $phone['values'][$phone['id']]['contact_id'],
+      'phone' => $phone['values'][$phone['id']]['phone'],
+      'location_type_id' => $phone['values'][$phone['id']]['location_type_id'],
+      'version' => $this->_apiversion,
+    );
+    $result = civicrm_api('Phone', 'Get', ($params));
+    $this->doWriteResult($result, __FILE__, __FUNCTION__);
+
+    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
+    $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
+    $this->assertEquals($phone['values'][$phone['id']]['location_type_id'], $result['values'][$phone['id']]['location_type_id'], 'In line ' . __LINE__);
+    $this->assertEquals($phone['values'][$phone['id']]['phone_type_id'], $result['values'][$phone['id']]['phone_type_id'], 'In line ' . __LINE__);
+    $this->assertEquals('1', $result['values'][$phone['id']]['is_primary'], 'In line ' . __LINE__);
+    $this->assertEquals($phone['values'][$phone['id']]['phone'], $result['values'][$phone['id']]['phone'], 'In line ' . __LINE__);
   }
 
   public function testGetPhoneByPhoneType() {
+    $paramsWithPhoneType = array(
+      'contact_id' => $this->_contactID,
+      'location_type_id' => $this->_locationType,
+      'phone' => '021 512 755',
+      'is_primary' => 1,
+      'version' => $this->_apiversion,
+      'phone_type_id' => 1
+    );
+
+    $phone = civicrm_api('phone', 'create', $paramsWithPhoneType);
+    $this->assertAPISuccess($phone, 'In line ' . __LINE__);
+
+    $params = array(
+      'contact_id' => $phone['values'][$phone['id']]['contact_id'],
+      'phone' => $phone['values'][$phone['id']]['phone'],
+      'phone_type_id' => '1',
+      'version' => $this->_apiversion,
+    );
+    $result = civicrm_api('Phone', 'Get', ($params));
+    $this->doWriteResult($result, __FILE__, __FUNCTION__);
+
+    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
+    $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
+    $this->assertEquals($paramsWithPhoneType['location_type_id'], $result['values'][$phone['id']]['location_type_id'], 'In line ' . __LINE__);
+    $this->assertEquals($paramsWithPhoneType['phone_type_id'], $result['values'][$phone['id']]['phone_type_id'], 'In line ' . __LINE__);
+    $this->assertEquals('1', $result['values'][$phone['id']]['is_primary'], 'In line ' . __LINE__);
+    $this->assertEquals($paramsWithPhoneType['phone'], $result['values'][$phone['id']]['phone'], 'In line ' . __LINE__);
   }
 
   public function testReplacePhoneByData() {
+    $phone = civicrm_api('phone', 'create', $this->_params);
+    $this->assertAPISuccess($phone, 'In line ' . __LINE__);
+
+    $params = array(
+      'contact_id' => $phone['values'][$phone['id']]['contact_id'],
+      'phone' => $phone['values'][$phone['id']]['phone'],
+      'version' => $this->_apiversion,
+    );
+    $result = civicrm_api('Phone', 'Get', ($params));
+
+    $replaceParams = array(
+      'contact_id' => $this->_contactID,
+      'location_type_id' => $this->_locationType,
+      'phone' => '021 512 755',
+      'is_primary' => 1,
+      'phone_type_id' => 1,
+      'version' => $this->_apiversion,
+    );
+
+    $replace = civicrm_api('phone', 'create', $replaceParams);
+    $this->assertAPISuccess($replace, 'In line ' . __LINE__);
+
+    $this->doWriteResult($replace, __FILE__, __FUNCTION__);
+
+    $this->documentMe($replaceParams, $replace, __FUNCTION__, __FILE__);
+    $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
+    $this->assertEquals($replaceParams['location_type_id'], $replace['values'][$phone['id']]['location_type_id'], 'In line ' . __LINE__);
+    $this->assertEquals($replaceParams['phone_type_id'], $replace['values'][$phone['id']]['phone_type_id'], 'In line ' . __LINE__);
+    $this->assertEquals($replaceParams['is_primary'], $replace['values'][$phone['id']]['is_primary'], 'In line ' . __LINE__);
+    $this->assertEquals($replaceParams['phone'], $replace['values'][$phone['id']]['phone'], 'In line ' . __LINE__);
   }
 
   ///////////////// civicrm_phone_create methods
