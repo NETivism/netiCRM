@@ -392,7 +392,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       }
       $contribution = &$objects['contribution'];
 
-      $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id);
+      $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id, TRUE);
       if(!$deductible) {
         continue;
       }
