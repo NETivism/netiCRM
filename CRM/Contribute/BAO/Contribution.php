@@ -2347,7 +2347,9 @@ SELECT source_contact_id
     // have receipt date? completed? already have receipt id?
     if (!empty($contribution->receipt_date) && $contribution->contribution_status_id == 1 && empty($contribution->receipt_id)) {
       // contribution type is dedutible?
-      $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id);
+      // refs #31214#note-11, when contribution has receipt date, but contribution type is disabled
+      // we should still respect receipt_date and get receipt id to prevent serial issue
+      $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id, TRUE);
       if ($deductible) {
         $config = CRM_Core_Config::singleton();
         if ($contribution->id) {
