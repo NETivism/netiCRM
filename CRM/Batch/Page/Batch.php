@@ -252,11 +252,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
               header($batch->data['download']['header']);
             }
           }
-          $fp = fopen($batch->data['download']['file'], "r");
-          while(!feof($fp)) {
-            echo fread($fp, 4096);
-            flush();
-          }
+          readfile($batch->data['download']['file']);
           CRM_Utils_System::civiExit();
         }
       }
