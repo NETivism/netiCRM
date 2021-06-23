@@ -84,7 +84,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * @param array $defaults
    *   (reference ) an assoc array to hold the flattened values.
    *
-   * @return array
+   * @return object
    *   CRM_Batch_BAO_Batch object on success, null otherwise
    */
   public static function retrieve(&$params, &$defaults) {

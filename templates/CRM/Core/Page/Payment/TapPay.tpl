@@ -189,12 +189,12 @@ cj(document).ready(function($){
 
   TPDirect.card.onUpdate(function (update) {
     if (update.canGetPrime && !lock) {
-      $button.removeProp("disabled");
+      $button.prop("disabled", false);
       $backButton.prop("disabled", 1);
     }
     else {
       $button.prop("disabled", 1);
-      $backButton.removeProp("disabled");
+      $backButton.prop("disabled", false);
     }
 
     // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']
@@ -232,7 +232,7 @@ cj(document).ready(function($){
       TPDirect.card.getPrime(function(result)  {
         window.onbeforeunload = function(){ return true; };
         if (result.status !== 0) {
-          $button.removeProp("disabled");
+          $button.prop("disabled", false);
           $button.data('clicked', null);
         }
         else {

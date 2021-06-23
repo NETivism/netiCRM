@@ -161,14 +161,14 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
   /**
    * Function to see if contritbution type is deductible
    *
-   * @param int $contributionTypeId
-   * @static
-   *
+   * @param int $contributionTypeId contribution type id to retrieve
+   * @param boolean $all default FALSE. TRUE will return type even type is not active. 
+   * 
    * @return numeric when contribution type found. FALSE when not found.
    */
-  static function deductible($contributionTypeId) {
+  static function deductible($contributionTypeId, $all = FALSE) {
     $types = array();
-    CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible');
+    CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', $all, 'is_deductible');
     if (isset($types[$contributionTypeId])) {
       return $types[$contributionTypeId];
     }
