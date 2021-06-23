@@ -40,10 +40,10 @@ class CRM_Utils_Array {
    * @access public
    *
    * @param string $key   the key value
-   * @param array  $list  the array to be searched
-   * @param mix    $default the default value when no value found, default NULL
+   * @param array $list  the array to be searched
+   * @param mixed $default the default value when no value found, default NULL
    *
-   * @return value if exists else null
+   * @return mixed if exists return array value, else null
    * @static
    * @access public
    *
@@ -93,10 +93,10 @@ class CRM_Utils_Array {
    *
    * @access public
    *
-   * @param list  the array to be searched
-   * @param value the search value
+   * @param string $value the key of array
+   * @param array $list pass by referenced, the array to be searched
    *
-   * @return key if exists else null
+   * @return string|null if exists else null
    * @static
    * @access public
    *
@@ -212,9 +212,9 @@ class CRM_Utils_Array {
   /**
    * Array deep copy
    *
-   * @params  array  $array
-   * @params  int    $maxdepth
-   * @params  int    $depth
+   * @param  array  $array
+   * @param  int    $maxdepth
+   * @param  int    $depth
    *
    * @return  array  copy of the array
    *
@@ -228,7 +228,7 @@ class CRM_Utils_Array {
     $copy = array();
     foreach ($array as $key => $value) {
       if (is_array($value)) {
-        array_deep_copy($value, $copy[$key], $maxdepth, ++$depth);
+        self::array_deep_copy($value, $copy[$key], $maxdepth, ++$depth);
       }
       else {
         $copy[$key] = $value;
@@ -242,9 +242,9 @@ class CRM_Utils_Array {
    * defauly php array_splice function doesnot preserve keys
    * So specify start and end of the array that you want to remove
    *
-   * @param  array    $params  array to slice
-   * @param  Integer  $start
-   * @param  Integer  $end
+   * @param  array $params  array to slice
+   * @param  int $start
+   * @param  int $end
    *
    * @return  void
    * @static
@@ -272,16 +272,16 @@ class CRM_Utils_Array {
   /**
    * Function for case insensitive in_array search
    *
-   * @param $value             value or search string
-   * @param $params            array that need to be searched
-   * @param $caseInsensitive   boolean true or false
+   * @param string $value value or search string
+   * @param array $params array that need to be searched
+   * @param boolean $caseInsensitive   boolean true or false
    *
    * @static
    */
   static function crmInArray($value, $params, $caseInsensitive = TRUE) {
     foreach ($params as $item) {
       if (is_array($item)) {
-        $ret = crmInArray($value, $item, $caseInsensitive);
+        $ret = self::crmInArray($value, $item, $caseInsensitive);
       }
       else {
         $ret = ($caseInsensitive) ? strtolower($item) == strtolower($value) : $item == $value;
@@ -294,12 +294,15 @@ class CRM_Utils_Array {
   }
 
   /**
-   * This function is used to convert associative array names to values
-   * and vice-versa.
+   * look up property from given lookup, and padding to defaults
    *
-   * This function is used by both the web form layer and the api. Note that
-   * the api needs the name => value conversion, also the view layer typically
-   * requires value => name conversion
+   * Use one array value to search another array's value. Then padding retrieved value back to original array
+   *
+   * @param array $defaults the referenced array that retrive needle value from property
+   * @param string $property array key name of defaults array. Will using retrieved value to 
+   * @param array $lookup haystack. Value found here will padding back to defaults
+   * @param boolean $reverse will flip lookup before search
+   * @return void 
    */
   static function lookupValue(&$defaults, $property, $lookup, $reverse) {
     $id = $property . '_id';
@@ -365,11 +368,9 @@ class CRM_Utils_Array {
    *
    * On Debian/Ubuntu: apt-get install php5-intl
    *
-   * @param array $array
-   *   (optional) Array to be sorted.
+   * @param array $array array to be sorted.
    *
-   * @return array
-   *   Sorted array.
+   * @return array Sorted array.
    */
   public static function asort($array = array()) {
     $lcMessages = CRM_Utils_System::getUFLocale();
