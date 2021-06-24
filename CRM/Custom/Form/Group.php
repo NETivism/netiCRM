@@ -222,8 +222,24 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     require_once 'CRM/Contact/BAO/ContactType.php';
     $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
     $this->assign('contactTypes', json_encode($contactTypes));
-
-    $sel1 = array("" => ts("- select -")) + CRM_Core_SelectValues::customGroupExtends();
+    $extends = CRM_Core_SelectValues::customGroupExtends();
+    if ($this->_action & CRM_Core_Action::UPDATE) {
+      if (strstr($this->_defaults['extends'], 'Participant')) {
+        foreach($extends as $ext => $dontcare) {
+          if (strpos($ext, $this->_defaults['extends']) === FALSE) {
+            unset($extends[$ext]);
+          }
+        }
+      }
+      else {
+        foreach($extends as $ext => $dontcare) {
+          if ($this->_defaults['extends'] != $ext) {
+            unset($extends[$ext]);
+          }
+        }
+      }
+    }
+    $sel1 = array("" => ts("- select -")) + $extends;
     $sel2 = array();
     $activityType = CRM_Core_PseudoConstant::activityType(FALSE, TRUE, FALSE, 'label', TRUE);
 
