@@ -535,27 +535,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       $session = CRM_Core_Session::singleton();
       $session->replaceUserContext($url);
     }
-
-    // prompt Drupal Views users to update $db_prefix in settings.php, if necessary
-    global $db_prefix;
-    if (is_array($db_prefix) && CIVICRM_UF == 'Drupal' && module_exists('views')) {
-      // get table_name for each custom group
-      $tables = array();
-      $sql = "SELECT table_name FROM civicrm_custom_group WHERE is_active = 1";
-      $result = CRM_Core_DAO::executeQuery($sql);
-      while ($result->fetch()) {
-        $tables[$result->table_name] = $result->table_name;
-      }
-
-      // find out which tables are missing from the $db_prefix array
-      $missingTableNames = array_diff_key($tables, $db_prefix);
-
-      if (!empty($missingTableNames)) {
-        CRM_Core_Session::setStatus('<br />' . ts('Note:To ensure that all of your custom data groups are available to Views, you may need to add the following key(s) to the $db_prefix array in your settings.php file: \'%1\'.',
-            array(1 => implode(', ', $missingTableNames))
-          ));
-      }
-    }
   }
 
   /*
