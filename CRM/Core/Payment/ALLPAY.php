@@ -167,8 +167,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $instrument_code = $allpay_instruments[$instrument_name];
     $form_key = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$params['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$params['qfKey'];
 
+    // Todo: remove this.
     // The first, we insert every contribution into record. After this, we'll use update for the record.
-    $record = array('cid' => $params['contributionID']);
+    // $record = array('cid' => $params['contributionID']);
     // drupal_write_record("civicrm_contribution_allpay", $record);
 
     $_SESSION['allpay']['submitted'] = TRUE;

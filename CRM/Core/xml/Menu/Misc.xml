@@ -173,7 +173,7 @@
   </item>
   <item>
      <path>allpay/record</path>
-     <page_callback>CRM_Core_Payment_ALLPAY::civicrm_allpay_record</page_callback>
+     <page_callback>CRM_Core_Payment_ALLPAYIPN::civicrm_allpay_record</page_callback>
      <access_callback>1</access_callback>
      <is_ssl>true</is_ssl>
      <is_public>true</is_public>
