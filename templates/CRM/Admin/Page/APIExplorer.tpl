@@ -1,7 +1,7 @@
 
 <style>
 {literal}
-#preview {background: #EEE; margin: 10px 0;}
+#preview {background: #EEE; margin: 10px 0; white-space: pre-wrap;}
 #result {background:lightgrey; max-height: 70vh; overflow-y: scroll;}
 #selector a {margin-right:10px;}
 .required {font-weight:bold;}
@@ -26,7 +26,7 @@ cj(function($) {
   function toggleField (name, label, type) {
     label = label.replace('zmdi-plus', 'zmdi-caret-right');
     var h = '<div>\
-      <label for="' + name + '">'+label+'</label>: <input name="' + name + '" data-id="'+name+ '" />\
+      <label for="' + name + '">'+label+' ('+name+')</label>: <input name="' + name + '" data-id="'+name+ '" />\
       <span class="add-extra" title={/literal}"{ts escape="js"}Add Field{/ts}"{literal}><i class="zmdi zmdi-plus-square"></i></span>\
       <span class="remove-extra" title={/literal}"{ts escape="js"}Remove{/ts}"{literal}><i class="zmdi zmdi-close-circle"></i></span>\
     </div>';
@@ -59,7 +59,7 @@ cj(function($) {
             value['title'] = value.label;
           }
           if (typeof value.title !== 'undefined') {
-            h += "<a data-id='" + key + "' class='type_" + value.type + required + "'><i class='zmdi zmdi-plus'></i>" + value.title + "</a> ";
+            h += "<a data-id='" + key + "' class='type_" + value.type + required + "' title='"+key+"'><i class='zmdi zmdi-plus'></i>" + value.title + "</a> ";
           }
         });
         $('#selector').html(h);
