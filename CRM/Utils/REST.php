@@ -452,16 +452,6 @@ class CRM_Utils_REST {
     );
   }
 
-  static function ajaxDoc() {
-
-    CRM_Utils_System::setTitle("API explorer and generator");
-    $template = CRM_Core_Smarty::singleton();
-    return CRM_Utils_System::theme('page',
-      $template->fetch('CRM/Core/AjaxDoc.tpl'),
-      TRUE
-    );
-  }
-
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
   static function loadTemplate() {
     $request = CRM_Utils_Request::retrieve('q', 'String');
