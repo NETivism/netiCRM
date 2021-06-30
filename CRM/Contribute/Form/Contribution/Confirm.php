@@ -401,7 +401,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             $params[$key] = $v;
           }
         }
-        $params['expires'] = REQUEST_TIME + 1800;
+        $params['expires'] = CRM_REQUEST_TIME + 1800;
         $session->set('user_contribution_prepopulate', $params);
       }
     }
@@ -783,7 +783,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   /**
    * Process the contribution
    *
-   * @return void
+   * @return object
    * @access public
    */
   static function processContribution(&$form, $params, $result, $contactID, $contributionType, $deductibleMode = TRUE, $pending = FALSE, $online = TRUE) {
