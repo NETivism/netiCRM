@@ -49,7 +49,7 @@ cj(function($) {
       return;
     }
   
-    CRMapi(params.entity, 'getFields', {}, {
+    CRMapi(params.entity, 'getFields', {'action':'create'}, {
       success:function (data) {
         h = {/literal}'<strong>{ts escape="js"}Fields{/ts}:</strong>'{literal};
         $.each(data.values, function(item, value) {
@@ -314,6 +314,9 @@ cj(function($) {
           // CRM.alert('', ts('Removed'), 'success');
           return true;
         };
+      case 'getfields':
+        json = true;
+        break;
     }
     for (var i in params) {
       if (i.slice(0, 4) == 'api.' || typeof(params[i]) == 'Object') {
