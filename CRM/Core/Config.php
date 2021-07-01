@@ -92,6 +92,12 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @var CRM_Utils_System_Base
    */
   public $userSystem = NULL;
+
+  /**
+   * User system. We use drupal as default
+   * @var      CRM_Utils_System_Drupal
+   * @access   public
+   */
   public static $_userSystem = NULL;
 
   /**

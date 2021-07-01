@@ -1445,7 +1445,7 @@ class CRM_Utils_System {
    *
    * @return boolean.
    */
-  public static function confPath($type) {
+  public static function confPath() {
     return CRM_Core_Config::$_userSystem->confPath();
   }
 
