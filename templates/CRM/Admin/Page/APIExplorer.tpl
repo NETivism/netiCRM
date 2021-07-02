@@ -360,12 +360,15 @@ cj(function($) {
       $('#entity').val(urlParams.get("entity"));
       $('#action').val(urlParams.get("action"));
     }
-    generateQuery();
     $('#query').val(queryString).focus();
+    generateQuery();
   }
   else {
     window.location.hash="explorer"; //to be sure to display the result under the generated code in the viewport
   }
+  $('#query').on("keyup", function(){
+    generateQuery();
+  });
   $('#entity, #action').change (function() {
     $("#selector, #extra").empty();
     generateQuery();
@@ -379,6 +382,7 @@ cj(function($) {
   });
   $('#explorer').submit(function(e) {
     e.preventDefault();
+    generateQuery();
     runQuery();
     return false;
   });
