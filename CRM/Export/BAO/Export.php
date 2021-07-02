@@ -192,7 +192,6 @@ class CRM_Export_BAO_Export {
 
         $contactType = CRM_Utils_Array::value(0, $value);
         $locTypeId = CRM_Utils_Array::value(2, $value);
-        $phoneTypeId = CRM_Utils_Array::value(3, $value);
 
         if ($relationField) {
           if (in_array($relationField, $locationTypeFields) && is_numeric($relLocTypeId)) {
