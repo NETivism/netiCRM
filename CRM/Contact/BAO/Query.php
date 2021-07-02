@@ -3852,9 +3852,14 @@ civicrm_relationship.start_date > {$today}
    *
    * @param array  $params
    * @param array  $returnProperties
+   * @param array  $fields
    * @param string $sort
    * @param int    $offset
    * @param int    $row_count
+   * @param bool   $smartGroupCache
+   * @param bool   $groupBy
+   * @param bool   $skipPermissions
+   * @param int    $mode accept CRM_Contact_BAO_Query::MODE_CONTACTS or CRM_Contact_BAO_Query::MODE_CONTRIBUTE
    *
    * @return void
    * @access public
@@ -3866,12 +3871,11 @@ civicrm_relationship.start_date > {$today}
     $offset = 0,
     $row_count = 25,
     $smartGroupCache = TRUE,
-    $groupBy = NULL
+    $groupBy = NULL,
+    $skipPermissions = TRUE,
+    $mode = self::MODE_CONTACTS
   ) {
-    $query = new CRM_Contact_BAO_Query($params, $returnProperties,
-      NULL, TRUE, FALSE, 1,
-      FALSE, TRUE, $smartGroupCache
-    );
+    $query = new CRM_Contact_BAO_Query($params, $returnProperties, NULL, TRUE, FALSE, $mode, $skipPermissions, TRUE, $smartGroupCache);
 
     list($select, $from, $where, $having) = $query->query();
     $options = $query->_options;
@@ -3889,9 +3893,12 @@ civicrm_relationship.start_date > {$today}
 
     $dao = CRM_Core_DAO::executeQuery($sql);
 
+    $entityIDField = ($mode == CRM_Contact_BAO_Query::MODE_CONTRIBUTE) ? 'contribution_id' : 'contact_id';
+
     $values = array();
     while ($dao->fetch()) {
-      $values[$dao->contact_id] = $query->store($dao);
+      $val = $query->store($dao);
+      $values[$dao->$entityIDField] = $val;
     }
     $dao->free();
     return array($values, $options);
