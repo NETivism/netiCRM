@@ -942,8 +942,8 @@ class CRM_Contact_BAO_Query {
                 case 'civicrm_im':
                 case 'civicrm_openid':
                   // special case for fix CRM-14470
-                  if (empty($locationPrimary[$tableName][$lCond])) {
-                    $locationPrimary[$tableName][$lCond] = 1;
+                  if (empty($locationPrimary[$tableName][$tName][$lCond])) {
+                    $locationPrimary[$tableName][$tName][$lCond] = 1;
                     $this->_tables[$tName] = "\nLEFT JOIN $tableName `$tName` ON contact_a.id = `$tName`.contact_id AND `$tName`.$lCond";
                   }
                   else {
