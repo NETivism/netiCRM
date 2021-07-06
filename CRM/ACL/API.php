@@ -112,7 +112,18 @@ class CRM_ACL_API {
     }
 
     require_once 'CRM/ACL/BAO/ACL.php';
-    return CRM_ACL_BAO_ACL::whereClause($type, $tables, $whereTables, $contactID);
+    $whereACL = CRM_ACL_BAO_ACL::whereClause($type, $tables, $whereTables, $contactID);
+    if (!$skipDeleteClause) {
+      if (CRM_Core_Permission::check('access deleted contacts') and $onlyDeleted) {
+        $whereACL = "({$whereACL} AND (contact_a.is_deleted))";
+      }
+      else {
+        // CRM-6181
+        $whereACL = "({$whereACL} AND (contact_a.is_deleted = 0))";
+      }
+    }
+
+    return $whereACL;
   }
 
   /**
