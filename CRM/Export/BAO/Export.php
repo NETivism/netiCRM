@@ -985,6 +985,10 @@ class CRM_Export_BAO_Export {
                 case 'preferred_mail_format':
                   $row[$field] = $i18n->crm_translate($fieldValue);
                   break;
+                case 'age':
+                  $age = CRM_Utils_Date::calculateAge($fieldValue);
+                  $row[$field] = CRM_Utils_Array::value('years', $age);
+                  break;
 
                 default:
                   $row[$field] = $fieldValue;
