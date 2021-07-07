@@ -91,7 +91,7 @@ class CRM_ACL_API {
 
       if (!$skipDeleteClause) {
         if (CRM_Core_Permission::check('access deleted contacts') and $onlyDeleted) {
-          $deleteClause = '(contact_a.is_deleted)';
+          $deleteClause = '(contact_a.is_deleted > 0)';
         }
         else {
           // CRM-6181
@@ -115,7 +115,7 @@ class CRM_ACL_API {
     $whereACL = CRM_ACL_BAO_ACL::whereClause($type, $tables, $whereTables, $contactID);
     if (!$skipDeleteClause) {
       if (CRM_Core_Permission::check('access deleted contacts') and $onlyDeleted) {
-        $whereACL = "({$whereACL} AND (contact_a.is_deleted))";
+        $whereACL = "({$whereACL} AND (contact_a.is_deleted > 0))";
       }
       else {
         // CRM-6181
