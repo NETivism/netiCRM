@@ -147,6 +147,7 @@ class CRM_Export_BAO_Export {
 
       $index = 2;
 
+      $needsProviderId = FALSE;
       foreach ($fields as $key => $value) {
         $phoneTypeId = $imProviderId = $relationField = NULL;
         $relationshipTypes = $fieldName = CRM_Utils_Array::value(1, $value);
@@ -159,6 +160,9 @@ class CRM_Export_BAO_Export {
         }
         elseif ($fieldName == 'im') {
           $imProviderId = CRM_Utils_Array::value(3, $value);
+          if (empty($imProviderId)) {
+            $needsProviderId = TRUE;
+          }
         }
 
         if (array_key_exists($relationshipTypes, $contactRelationshipTypes)) {
@@ -229,6 +233,9 @@ class CRM_Export_BAO_Export {
           }
           else {
             $returnProperties[$fieldName] = $index++;
+            if ($fieldName == 'im' && $needsProviderId) {
+              $returnProperties['provider_id'] = $index++;
+            }
           }
         }
       }
@@ -661,7 +668,7 @@ class CRM_Export_BAO_Export {
               $fieldOrder[] = $value;
             }
             elseif ($field == 'provider_id') {
-              $headerRows[$value] = 'Im Service Provider';
+              $headerRows[$value] = ts('Instant Messenger Services');
               $fieldOrder[] = $value;
             }
             elseif (is_array($value) && $field == 'location') {
