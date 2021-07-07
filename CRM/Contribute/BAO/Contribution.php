@@ -1248,7 +1248,7 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
    *  Function to retrieve soft contributon for contribution record.
    *  @param array $params an associated array
    *
-   *  @return soft contribution id
+   *  @return array soft contribution id
    *  @static
    */
   static function getSoftContribution($params, $all = FALSE) {

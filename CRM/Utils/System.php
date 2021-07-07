@@ -165,6 +165,7 @@ class CRM_Utils_System {
           $content = drupal_render_page($content);
         }
         else{
+          CRM_Core_Session::storeSessionObjects();
           drupal_deliver_page($content);
           return;
         }
@@ -1375,7 +1376,7 @@ class CRM_Utils_System {
    *
    * @return boolean.
    */
-  public static function confPath($type) {
+  public static function confPath() {
     $config = CRM_Core_Config::singleton();
     return $config->userSystem->confPath();
   }

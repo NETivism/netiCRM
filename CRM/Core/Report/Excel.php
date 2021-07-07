@@ -58,6 +58,7 @@ class CRM_Core_Report_Excel {
         $reader = ReaderFactory::create(Type::CSV);
         break;
       case 'excel':
+      case 'xlsx':
       default:
         $reader = ReaderFactory::create(Type::XLSX);
         break;
@@ -241,7 +242,7 @@ class CRM_Core_Report_Excel {
   static function readExcelFile($fileName) {
     if (file_exists($fileName)) {
       $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
-      $reader = self::reader(Type::XLSX);
+      $reader = self::reader('excel');
       $reader->setShouldFormatDates(TRUE);
       $reader->setTempFolder($tmpDir);
       $reader->open($fileName);
