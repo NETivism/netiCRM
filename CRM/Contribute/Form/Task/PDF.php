@@ -212,7 +212,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         $batchParams = array(
           'label' => ts('Receipt').': '.$fileName,
           'startCallback' => NULL,
-          'startCallback_args' => NULL,
+          'startCallbackArgs' => NULL,
           'processCallback' => array($this, 'batchPDF'),
           'processCallbackArgs' => $args,
           'finishCallback' => array($this, 'batchFinishCallback'),
