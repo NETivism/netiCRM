@@ -48268,3 +48268,10 @@ msgstr ""
 
 msgid "Is this Online Contribution Page are internal use only?"
 msgstr ""
+
+#: For Dmenu
+msgid "Price Set of Event"
+msgstr ""
+
+msgid "Price Set of Contribution"
+msgstr ""
