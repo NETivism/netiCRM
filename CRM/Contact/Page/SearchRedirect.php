@@ -50,18 +50,20 @@ class CRM_Contact_Page_SearchRedirect extends CRM_Core_Page {
   function __construct() {
     $currentPath = CRM_Utils_System::currentPath();
     $split = explode('/', $currentPath);
-    $custom = end($split);
-    $find = array(
-      1 => array('CRM_Contact_Form_Search_Custom_'.$custom, 'String')
-    );
-    $exists = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE name LIKE %1", $find);
-    if(!empty($exists)){
-      $args = $_GET;
-      unset($args['q']);
-      $args['reset'] = 1;
-      $args['csid'] = $exists;
-      $url = CRM_Utils_System::url('civicrm/contact/search/custom', http_build_query($args));
-      CRM_Utils_System::redirect($url);
+    if ($split[0] == 'civicrm' && $split[1] == 'search' && !empty($split[2])) {
+      $custom = $split[2];
+      $find = array(
+        1 => array('CRM_Contact_Form_Search_Custom_'.$custom, 'String')
+      );
+      $exists = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE name LIKE %1", $find);
+      if(!empty($exists)){
+        $args = $_GET;
+        unset($args['q']);
+        $args['reset'] = 1;
+        $args['csid'] = $exists;
+        $url = CRM_Utils_System::url('civicrm/contact/search/custom', http_build_query($args));
+        CRM_Utils_System::redirect($url);
+      }
     }
   }
 }
