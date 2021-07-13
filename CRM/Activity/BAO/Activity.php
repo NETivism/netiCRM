@@ -1431,6 +1431,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     );
     // format contact details array to handle multiple sms from same contact
     $contactDetails = array();
+    $phoneTypeId = array_search(ts('Mobile'), CRM_Core_PseudoConstant::phoneType());
 
     if(!is_array($contactIds)){
       $contactIds = array($contactIds);
@@ -1441,12 +1442,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
 
       $dao_phone = new CRM_Core_DAO_Phone();
       $dao_phone->contact_id = $cid;
-      $dao_phone->phone_type_id = 2;
+      $dao_phone->phone_type_id = $phoneTypeId;
       $dao_phone->is_primary = true;
       if($dao_phone->find(TRUE)){
         // print_r($dao_phone);
         $contact['phone'] = $dao_phone->phone;
-        $contact['phone_type_id'] = 2;
+        $contact['phone_type_id'] = $phoneTypeId;
 
         $dao_contact = new CRM_Contact_DAO_Contact();
         $dao_contact->id = $cid;
@@ -1698,31 +1699,37 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $activityID,
     $userID = NULL
   ) {
-    $toDoNotSms = "";
     $toPhoneNumber = "";
 
     if ($smsParams['To']) {
       $toPhoneNumber = trim($smsParams['To']);
     }
     elseif ($toID) {
-      $toPhoneNumbers = CRM_Core_BAO_Phone::allPhones($toID, FALSE, 'Mobile');
+      $toPhoneNumbers = CRM_Core_BAO_Phone::allPhones($toID, FALSE, ts('Mobile'));
       // To get primary mobile phonenumber,if not get the first mobile phonenumber
       if (!empty($toPhoneNumbers)) {
         if (count($toPhoneNumbers) >= 2) {
-          $toPhoneNumbers = array_filter($toPhoneNumbers, function($phone){return $phone['is_primary'];});
+          // If there are multiple phone numbers, and one of them is primary.
+          $filterToPhoneNumbers = array_filter($toPhoneNumbers, 
+            function($phone){
+              return $phone['is_primary'];
+            }
+          );
+          if (!empty($filterToPhoneNumbers)) {
+            $toPhoneNumbers = $filterToPhoneNumbers;
+          }
+          // If all of phone numbers are not Primary, retain all phone.
         }
+        // Just select first one.
         $toPhoneNumerDetails = reset($toPhoneNumbers);
         $toPhoneNumber = CRM_Utils_Array::value('phone', $toPhoneNumerDetails);
-        // Contact allows to send sms
-        $toDoNotSms = 0;
       }
     }
 
-    // make sure both phone are valid
-    // and that the recipient wants to receive sms
-    if (empty($toPhoneNumber) or $toDoNotSms) {
+    // make sure phone are valid
+    if (empty($toPhoneNumber)) {
       return PEAR::raiseError(
-        'Recipient phone number is invalid or recipient does not want to receive SMS',
+        'Recipient phone number is invalid',
         NULL,
         PEAR_ERROR_RETURN
       );
