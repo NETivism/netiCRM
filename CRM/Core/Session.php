@@ -48,7 +48,7 @@ class CRM_Core_Session {
    */
   protected $_key = 'CiviCRM';
   CONST USER_CONTEXT = 'userContext';
-  CONST EXPIRED_TIME = 1800; // second
+  CONST EXPIRED_TIME = 3600; // second
   CONST EXPIRED_TIME_LONG = 10800; // second
 
   /**
@@ -465,46 +465,6 @@ class CRM_Core_Session {
     $config = CRM_Core_Config::singleton();
     $lastElement = count($this->_session[$this->_key][self::USER_CONTEXT]) - 1;
     return $lastElement >= 0 ? $this->_session[$this->_key][self::USER_CONTEXT][$lastElement] : $config->userFrameworkBaseURL;
-  }
-
-  function purgeExpired($force = FALSE) {
-    if (empty($this->_session[$this->_key]['lastExpired'])) {
-      $this->_session[$this->_key]['lastExpired'] = CRM_REQUEST_TIME;
-      return;
-    }
-
-    // trigger purge every one half hour
-    if (CRM_REQUEST_TIME - $this->_session[$this->_key]['lastExpired'] > 600 || $force) {
-      // CiviCRM/*Controller
-      $crmEleCount = $rootEleCount = 0;
-      foreach ($this->_session[$this->_key] as $prefix => $object) {
-        if (is_array($object) && strstr($prefix, 'CRM')) {
-          if(!empty($object['expired']) && $object['expired'] < CRM_REQUEST_TIME) {
-            unset($this->_session[$this->_key][$prefix]);
-            $crmEleCount++;
-          }
-          elseif(empty($object['expired'])) {
-            $this->_session[$this->_key][$prefix]['expired'] = CRM_REQUEST_TIME + self::EXPIRED_TIME;
-          }
-        }
-      }
-
-      // _CRM__*__container
-      foreach ($this->_session as $prefix => $object) {
-        if (preg_match('/^_CRM.*_container$/', $prefix)) {
-          if(!empty($object['expired']) && $object['expired'] < CRM_REQUEST_TIME) {
-            unset($this->_session[$prefix]);
-            $rootEleCount++;
-          }
-          elseif(empty($object['expired'])) {
-            $this->_session[$prefix]['expired'] = CRM_REQUEST_TIME + self::EXPIRED_TIME;
-          }
-        }
-      }
-
-      $this->_session[$this->_key]['lastExpired'] = CRM_REQUEST_TIME;
-      #CRM_Core_Error::debug('Completed purge expired session form: '."$crmEleCount $this->_key forms / $rootEleCount quickform container");
-    }
   }
 
   /**
