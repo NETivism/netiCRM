@@ -170,7 +170,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     $lockName = "civicrm.cache.{$group}_{$path}._{$componentID}";
     $lock = new CRM_Core_Lock($lockName);
     if (!$lock->isAcquired()) {
-      CRM_Core_Error::fatal();
+      CRM_Core_Error::fatal("Trying acquire lock failed: $lockName");
     }
 
     $dao->find(TRUE);
@@ -210,7 +210,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     $lockName = "civicrm.cache.{$group}_{$path}._{$componentID}";
     $lock = new CRM_Core_Lock($lockName);
     if (!$lock->isAcquired()) {
-      CRM_Core_Error::fatal();
+      CRM_Core_Error::fatal("Trying acquire lock failed: $lockName");
     }
 
     $success = FALSE;
