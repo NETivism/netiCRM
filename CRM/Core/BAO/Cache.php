@@ -143,7 +143,17 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     return self::$_cache[$argString];
   }
 
-  static function setItem(&$data, $group, $path, $componentID = NULL) {
+  /**
+   * Set Cache Item
+   *
+   * @param mixed $data referenced data to be save into cache, will be serialized
+   * @param string $group cache group name
+   * @param string $path unique cache id based on group name
+   * @param int $componentID component of this cache belong to
+   * @param int $expired unix timestamp indicate this cache to be expire after this date
+   * @return void
+   */
+  static function setItem(&$data, $group, $path, $componentID = NULL, $expired = NULL) {
     if (self::$_cache === NULL) {
       self::$_cache = array();
     }
@@ -166,6 +176,9 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     $dao->find(TRUE);
     $dao->data = serialize($data);
     $dao->created_date = date('YmdHis');
+    if (!empty($expired) && is_numeric($expired)) {
+      $dao->expired_date = date('YmdHis', $expired);
+    }
     $dao->save();
 
     $lock->release();
@@ -224,17 +237,13 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     CRM_ACL_BAO_Cache::resetCache();
   }
 
-  static function storeSessionToCache($names,
-    $resetSession = TRUE
-  ) {
+  static function storeSessionToCache($names, $resetSession = TRUE) {
     // CRM_Core_Error::debug_var( 'names in store', $names );
     foreach ($names as $key => $sessionName) {
       if (is_array($sessionName)) {
         if (!empty($_SESSION[$sessionName[0]][$sessionName[1]])) {
-          self::setItem($_SESSION[$sessionName[0]][$sessionName[1]],
-            'CiviCRM Session',
-            "{$sessionName[0]}_{$sessionName[1]}"
-          );
+          $expired = isset($_SESSION[$sessionName[0]][$sessionName[1]]['expired']) ? $_SESSION[$sessionName[0]][$sessionName[1]]['expired'] : NULL;
+          self::setItem($_SESSION[$sessionName[0]][$sessionName[1]], 'CiviCRM Session', "{$sessionName[0]}_{$sessionName[1]}", NULL, $expired);
           // CRM_Core_Error::debug_var( "session value for: {$sessionName[0]}_{$sessionName[1]}",
           // $_SESSION[$sessionName[0]][$sessionName[1]] );
           if ($resetSession) {
@@ -245,10 +254,8 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
       }
       else {
         if (!empty($_SESSION[$sessionName])) {
-          self::setItem($_SESSION[$sessionName],
-            'CiviCRM Session',
-            $sessionName
-          );
+          $expired = isset($_SESSION[$sessionName]) ? $_SESSION[$sessionName]['expired'] : NULL;
+          self::setItem($_SESSION[$sessionName], 'CiviCRM Session', $sessionName, NULL, $expired);
           // CRM_Core_Error::debug_var( "session value for: {$sessionName}",
           // $_SESSION[$sessionName] );
           if ($resetSession) {
@@ -260,7 +267,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     }
 
     // CRM_Core_Error::debug_var( 'SESSION STATE STORE', $_SESSION );
-    self::cleanupCache();
+    self::cleanupSessionCache();
   }
 
   static function restoreSessionFromCache($names) {
@@ -296,20 +303,34 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     // CRM_Core_Error::debug_var( 'REQUEST', $_REQUEST );
   }
 
-  static function cleanupCache() {
+  /**
+   * Clean up session in cache
+   *
+   * @param boolean $force force to execute cleanup, not base on probability
+   * @param boolean $all clean up all session cache in one run, but calc expired / created date
+   * @return void
+   */
+  static function cleanupSessionCache($force = FALSE, $all = FALSE) {
     // clean up the session cache every $cacheCleanUpNumber probabilistically
-    $cacheCleanUpNumber = 1396;
+    $cacheCleanUpNumber = 757;
 
     // clean up all sessions older than $cacheTimeIntervalDays days
     $cacheTimeIntervalDays = 2;
 
-    if (mt_rand(1, 100000) % $cacheCleanUpNumber == 0) {
-      $sql = "
-DELETE FROM civicrm_cache
-WHERE       group_name = 'CiviCRM Session'
-AND         created_date < date_sub( NOW( ), INTERVAL $cacheTimeIntervalDays day )
-";
-      CRM_Core_DAO::executeQuery($sql);
+    if (mt_rand(1, 100000) % $cacheCleanUpNumber == 0 || $force) {
+      if ($all) {
+        $sql = "DELETE FROM civicrm_cache WHERE group_name = 'CiviCRM Session'";
+        CRM_Core_DAO::executeQuery($sql);
+      }
+      else {
+        // clean up based on expired date
+        $sql = "DELETE FROM civicrm_cache WHERE group_name = 'CiviCRM Session' AND expired_date IS NOT NULL AND expired_date < NOW()";
+        CRM_Core_DAO::executeQuery($sql);
+
+        // clean up based on created date
+        $sql = "DELETE FROM civicrm_cache WHERE group_name = 'CiviCRM Session' AND created_date < date_sub( NOW( ), INTERVAL $cacheTimeIntervalDays day )";
+        CRM_Core_DAO::executeQuery($sql);
+      }
     }
   }
 
