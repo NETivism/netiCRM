@@ -609,7 +609,7 @@ class CRM_Export_BAO_Export {
         $batchParams = array(
           'label' => ts('Export').': '.$fileName,
           'startCallback' => NULL,
-          'startCallback_args' => NULL,
+          'startCallbackArgs' => NULL,
           'processCallback' => array(__CLASS__, __FUNCTION__),
           'processCallbackArgs' => $allArgs,
           'finishCallback' => array(__CLASS__, 'batchFinish'),

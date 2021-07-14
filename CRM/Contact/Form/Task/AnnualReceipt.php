@@ -138,7 +138,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         $batchParams = array(
           'label' => ts('Print Annual Receipt').': '.$exportFileName,
           'startCallback' => NULL,
-          'startCallback_args' => NULL,
+          'startCallbackArgs' => NULL,
           'processCallback' => array($this, 'makeReceipt'),
           'processCallbackArgs' => array($this->_contactIds, $this->option),
           'finishCallback' => array(__CLASS__, 'batchFinish'),

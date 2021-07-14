@@ -217,13 +217,12 @@ class CRM_Contact_Form_Task_SMSCommon {
           }
         }
 
-        if ((isset($value['phone_type_id']) && $value['phone_type_id'] != CRM_Utils_Array::value('Mobile', $phoneTypes)) || $value['do_not_sms'] || empty($value['phone']) || !empty($value['is_deceased'])) {
+        if ($value['phone_type_id'] != CRM_Utils_Array::value('Mobile', $phoneTypes) || $value['do_not_sms'] || empty($value['phone']) || !empty($value['is_deceased'])) {
 
           //if phone is not primary check if non-primary phone is "Mobile"
           if (!empty($value['phone'])
-            && $value['phone_type_id'] != CRM_Utils_Array::value('Mobile', $phoneTypes) && empty($value['is_deceased'])
+            && $value['phone_type_id'] != CRM_Utils_Array::value('Mobile', $phoneTypes) && empty($value['is_deceased']) && empty($value['do_not_sms'])
           ) {
-            $filter = array('do_not_sms' => 0);
             $contactPhones = CRM_Core_BAO_Phone::allPhones($contactId, FALSE, ts('Mobile'));
             if (count($contactPhones) > 0) {
               $mobilePhone = CRM_Utils_Array::retrieveValueRecursive($contactPhones, 'phone');

@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-06-02 04:02+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2021-07-12 08:43+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48586,3 +48586,10 @@ msgstr "你需要有聯絡人的ID和checksum以進行替代他人捐款的作�
 
 msgid "Is this Online Contribution Page are internal use only?"
 msgstr "此線上頁面，僅允許管理員使用嗎？"
+
+#: For Dmenu
+msgid "Price Set of Event"
+msgstr "報名頁用到的價格表"
+
+msgid "Price Set of Contribution"
+msgstr "募款頁用到的價格表"
