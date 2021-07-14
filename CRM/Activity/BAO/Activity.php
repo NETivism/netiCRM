@@ -1431,7 +1431,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     );
     // format contact details array to handle multiple sms from same contact
     $contactDetails = array();
-    $phoneTypeId = array_search(ts('Mobile'), CRM_Core_PseudoConstant::phoneType());
 
     if(!is_array($contactIds)){
       $contactIds = array($contactIds);
@@ -1442,12 +1441,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
 
       $dao_phone = new CRM_Core_DAO_Phone();
       $dao_phone->contact_id = $cid;
-      $dao_phone->phone_type_id = $phoneTypeId;
+      $dao_phone->phone_type_id = 2;
       $dao_phone->is_primary = true;
       if($dao_phone->find(TRUE)){
         // print_r($dao_phone);
         $contact['phone'] = $dao_phone->phone;
-        $contact['phone_type_id'] = $phoneTypeId;
+        $contact['phone_type_id'] = 2;
 
         $dao_contact = new CRM_Contact_DAO_Contact();
         $dao_contact->id = $cid;
