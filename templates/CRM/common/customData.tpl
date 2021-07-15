@@ -54,6 +54,9 @@ function buildCustomData( type, subType, subName, cgCount, groupID, isMultiple )
 		{if $entityID}
 			dataUrl = dataUrl + '&entityID=' + '{$entityID}'
 		{/if}
+    {if $pageKey}
+      dataUrl = dataUrl + '&pageKey=' + '{$pageKey}';
+    {/if}
 	{literal}
 
 	if ( !cgCount ) {
@@ -80,8 +83,6 @@ function buildCustomData( type, subType, subName, cgCount, groupID, isMultiple )
 	
   window.setTimeout(function(){
     var response = cj.ajax({
-      method: "POST",
-      data: {"pageKey":"{/literal}{$pageKey}{literal}"},
       url: dataUrl
     })
     .done(function(data){
