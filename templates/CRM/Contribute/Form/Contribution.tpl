@@ -291,7 +291,7 @@ cj(document).ready( function() {
 });
 // load panes function calls for snippet based on id of crm-accordion-header
 function loadPanes( id ) {
-  var url = "{/literal}{crmURL p='civicrm/contact/view/contribution' q="qfKey=`$qfKey`&snippet=4&formType=" h=0}{literal}" + id;
+  var url = "{/literal}{crmURL p='civicrm/contact/view/contribution' q="qfKey=`$qfKey`&pageKey=`$pageKey`&snippet=4&formType=" h=0}{literal}" + id;
   {/literal}{if $contributionMode}
   url = url + "&mode={$contributionMode}";
   {/if}{literal}
@@ -299,8 +299,6 @@ function loadPanes( id ) {
     var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts}loading{/ts}{literal}" />&nbsp;{/literal}{ts}Loading{/ts}{literal}...';
     cj('div.'+id).html(loading);
     cj.ajax({
-      method: "POST",
-      data: {"pageKey":"{/literal}{$pageKey}{literal}"},
       url : url
     })
     .done(function(data){
