@@ -76,6 +76,8 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
    * Get all the phone numbers for a specified contact_id, with the primary being first
    *
    * @param int $id the contact id
+   * @param boolean $updateBlankLocInfo
+   * @param string $type Phone type name
    *
    * @return array  the array of phone ids which are potential numbers
    * @access public

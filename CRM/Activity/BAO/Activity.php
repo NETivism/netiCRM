@@ -1394,7 +1394,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   }
 
   /**
-   * Prepare SMS
+   * Prepare SMS, Copy from SMSCommon::postProcess()
    *
    * @param array $contactIds
    *        Also cound be 1 integer of contact_id
@@ -1402,7 +1402,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param string $message
    * @param array $values objects, contribution is $values['contribution']
    *
-   * Copy from SMSCommon::postProcess
+   * @return null
    */
   public static function prepareSMS(
     $contactIds,
@@ -1496,9 +1496,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    *        An Array of all contacts need to send,
    *        each contact is an array must contain 'phone', 'phone_type_id', 'contact_id'
    *        These field also could be included : 'do_not_sms', 'is_deceased', 'is_deleted'
-   * @param array $activityParams
-   * @param array $smsParams
-   * @param $contactIds
+   * @param array $activityParams An array of activity parameters.
+   * @param array $smsParams An array of parameters of sending SMS, must include 'provider_id'.
+   * @param array $contactIds An array of contact_id as values.
    * @param int $userID
    *
    * @return array
@@ -1681,7 +1681,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    *
    * @param int $toID
    *   The contact id of the recipient.
-   * @param $tokenText
+   * @param string $tokenText
    * @param array $smsParams
    *   The params used for sending sms.
    * @param int $activityID
@@ -1698,35 +1698,43 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $activityID,
     $userID = NULL
   ) {
-    $toDoNotSms = "";
     $toPhoneNumber = "";
 
     if ($smsParams['To']) {
       $toPhoneNumber = trim($smsParams['To']);
     }
     elseif ($toID) {
-      $filters = array('is_deceased' => 0, 'is_deleted' => 0, 'do_not_sms' => 0);
-      $toPhoneNumbers = CRM_Core_BAO_Phone::allPhones($toID, FALSE, 'Mobile', $filters);
+      $toPhoneNumbers = CRM_Core_BAO_Phone::allPhones($toID, FALSE, ts('Mobile'));
       // To get primary mobile phonenumber,if not get the first mobile phonenumber
       if (!empty($toPhoneNumbers)) {
+        if (count($toPhoneNumbers) >= 2) {
+          // If there are multiple phone numbers, and one of them is primary.
+          $filterToPhoneNumbers = array_filter($toPhoneNumbers, 
+            function($phone){
+              return $phone['is_primary'];
+            }
+          );
+          if (!empty($filterToPhoneNumbers)) {
+            $toPhoneNumbers = $filterToPhoneNumbers;
+          }
+          // If all of phone numbers are not Primary, retain all phone.
+        }
+        // Just select first one.
         $toPhoneNumerDetails = reset($toPhoneNumbers);
         $toPhoneNumber = CRM_Utils_Array::value('phone', $toPhoneNumerDetails);
-        // Contact allows to send sms
-        $toDoNotSms = 0;
       }
     }
 
-    // make sure both phone are valid
-    // and that the recipient wants to receive sms
-    if (empty($toPhoneNumber) or $toDoNotSms) {
+    // make sure phone are valid
+    if (empty($toPhoneNumber)) {
       return PEAR::raiseError(
-        'Recipient phone number is invalid or recipient does not want to receive SMS',
+        'Recipient phone number is invalid',
         NULL,
         PEAR_ERROR_RETURN
       );
     }
 
-    $recipient = $smsParams['To'];
+    $recipient = $toPhoneNumber;
     $smsParams['contact_id'] = $toID;
     $smsParams['parent_activity_id'] = $activityID;
     $sourceContactId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activityID, 'source_contact_id');

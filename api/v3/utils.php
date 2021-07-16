@@ -391,11 +391,15 @@ function _civicrm_api3_store_values(&$fields, &$params, &$values) {
  *  others that use the query object. Note that this function passes permission information in.
  *  The others don't
  *
+ * @param string $entity is request entity name
  * @param array $params as passed into api get or getcount function
- * @param array $options array of options (so we can modify the filter)
- * @param bool $getCount are we just after the count
+ * @param array $additional_options array of options (so we can modify the filter)
+ * @param boolean $getCount get total count or not
+ * @param int $mode query mode of this search
+ * @param array $returnProperties the element want to return
+ * 
  */
-function _civicrm_api3_get_using_query_object($entity, $params, $additional_options = array(), $getCount = null){
+function _civicrm_api3_get_using_query_object($entity, $params, $additional_options = array(), $getCount = NULL, $mode = CRM_Contact_BAO_Query::MODE_CONTACTS, $returnProperties = array()){
 
   // Convert id to e.g. contact_id
   if (empty($params[$entity . '_id']) && isset($params['id'])) {
@@ -454,8 +458,9 @@ function _civicrm_api3_get_using_query_object($entity, $params, $additional_opti
     $offset ,
     $limit,
     $smartGroupCache,
-    $getCount,
-    $skipPermissions
+    FALSE,
+    $skipPermissions,
+    $mode
   );
   if ($getCount) { // only return the count of contacts
     return $entities;

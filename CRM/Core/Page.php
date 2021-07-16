@@ -158,6 +158,11 @@ class CRM_Core_Page {
     }
     $this->_scope = $pageKey;
 
+    // only use the civicrm cache if we have a valid key
+    if (!empty($this->_scope) && strstr($this->_scope, 'CRM_Contribute_Page_Tab')) {
+      CRM_Core_Session::registerAndRetrieveSessionObjects(array(array('CiviCRM', $this->_scope)));
+    }
+
     // let the constructor initialize this, should happen only once
     if (!isset(self::$_template)) {
       self::$_template = CRM_Core_Smarty::singleton();
@@ -292,7 +297,6 @@ class CRM_Core_Page {
    */
   function reset() {
     self::$_session->resetScope($this->_scope);
-    self::$_session->purgeExpired();
   }
 
   /**

@@ -54,13 +54,6 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
     return parent::run();
   }
 
-  function getTemplateFileName() {
-    if($this->allowVisit()){
-      return 'CRM/Core/AjaxDoc.tpl';
-    }
-  }
-
-
   /**
    * Get user context.
    *
