@@ -79,7 +79,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
     $result = civicrm_api('email', 'create', $params);
-    $this->doWriteResult($result, __FUNCTION__);
+    $this->doWriteResult($result, __FILE__, __FUNCTION__);
 
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertApiSuccess($result, 'In line ' . __LINE__);
@@ -170,7 +170,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $get = civicrm_api('email', 'get', $this->_params);
     $this->assertAPISuccess($get, 'In line ' . __LINE__);
     $this->assertEquals($get['count'], 1);
-    $this->doWriteResult($get, __FUNCTION__);
+    $this->doWriteResult($get, __FILE__, __FUNCTION__);
     /*
     // Todo: Create API should skip when same contact and is_primary data is duplicated.
     $get = civicrm_api('email', 'create', $this->_params + array('debug' => 1));
@@ -240,7 +240,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $create['is_error'], 'In line ' . __LINE__);
 
     $result = civicrm_api('email', 'delete', array('id' => $create['id'], 'version' => 3));
-    $this->doWriteResult($result, __FUNCTION__);
+    $this->doWriteResult($result, __FILE__, __FUNCTION__);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
@@ -358,7 +358,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
       ),
     );
     $replace2 = civicrm_api('email', 'replace', $replace2Params);
-    $this->doWriteResult($replace2, __FUNCTION__);
+    $this->doWriteResult($replace2, __FILE__, __FUNCTION__);
     // $this->documentMe($replace2Params, $replace2, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($replace2, 'In line ' . __LINE__);
     $this->assertEquals(1, $replace2['count'], 'In line ' . __LINE__);

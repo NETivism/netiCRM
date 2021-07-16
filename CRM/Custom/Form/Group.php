@@ -222,8 +222,24 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     require_once 'CRM/Contact/BAO/ContactType.php';
     $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
     $this->assign('contactTypes', json_encode($contactTypes));
-
-    $sel1 = array("" => ts("- select -")) + CRM_Core_SelectValues::customGroupExtends();
+    $extends = CRM_Core_SelectValues::customGroupExtends();
+    if ($this->_action & CRM_Core_Action::UPDATE) {
+      if (strstr($this->_defaults['extends'], 'Participant')) {
+        foreach($extends as $ext => $dontcare) {
+          if (strpos($ext, $this->_defaults['extends']) === FALSE) {
+            unset($extends[$ext]);
+          }
+        }
+      }
+      else {
+        foreach($extends as $ext => $dontcare) {
+          if ($this->_defaults['extends'] != $ext) {
+            unset($extends[$ext]);
+          }
+        }
+      }
+    }
+    $sel1 = array("" => ts("- select -")) + $extends;
     $sel2 = array();
     $activityType = CRM_Core_PseudoConstant::activityType(FALSE, TRUE, FALSE, 'label', TRUE);
 
@@ -518,27 +534,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
         ));
       $session = CRM_Core_Session::singleton();
       $session->replaceUserContext($url);
-    }
-
-    // prompt Drupal Views users to update $db_prefix in settings.php, if necessary
-    global $db_prefix;
-    if (is_array($db_prefix) && CIVICRM_UF == 'Drupal' && CRM_Utils_System::moduleExists('views')) {
-      // get table_name for each custom group
-      $tables = array();
-      $sql = "SELECT table_name FROM civicrm_custom_group WHERE is_active = 1";
-      $result = CRM_Core_DAO::executeQuery($sql);
-      while ($result->fetch()) {
-        $tables[$result->table_name] = $result->table_name;
-      }
-
-      // find out which tables are missing from the $db_prefix array
-      $missingTableNames = array_diff_key($tables, $db_prefix);
-
-      if (!empty($missingTableNames)) {
-        CRM_Core_Session::setStatus('<br />' . ts('Note:To ensure that all of your custom data groups are available to Views, you may need to add the following key(s) to the $db_prefix array in your settings.php file: \'%1\'.',
-            array(1 => implode(', ', $missingTableNames))
-          ));
-      }
     }
   }
 

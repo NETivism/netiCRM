@@ -60,7 +60,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         $batchParams = array(
           'label' => ts('Import Contacts'),
           'startCallback' => array($this, 'batchStartCallback'),
-          'startCallback_args' => NULL,
+          'startCallbackArgs' => NULL,
           'processCallback' => array($this, __FUNCTION__),
           'processCallbackArgs' => $allArgs,
           'finishCallback' => array($this, 'batchFinishCallback'), // should zip all errors

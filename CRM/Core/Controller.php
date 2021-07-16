@@ -493,7 +493,6 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       $data['expired'] = CRM_REQUEST_TIME + CRM_Core_Session::EXPIRED_TIME;
     }
     self::$_session->resetScope($this->_scope);
-    self::$_session->purgeExpired();
   }
 
   /**

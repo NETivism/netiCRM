@@ -55,6 +55,13 @@
     {/if}
 	  </td>
 	</tr>
+  {if $form.is_internal}
+	<tr class="crm-contribution-contributionpage-settings-form-block-is_internal">
+    <td></td>
+    <td>{$form.is_internal.html} {$form.is_internal.label}<br />
+	  </td>
+	</tr>
+  {/if}
     <tr class="crm-contribution-contributionpage-settings-form-block-is_special">
         <td>&nbsp;</td><td>{$form.is_special.html}{$form.is_special.label}</td>
     </tr>

@@ -1204,7 +1204,7 @@ AND civicrm_membership.is_test = %2";
 
     $form->_params['membershipID'] = $membership->id;
 
-    if ($form->_contributeMode == 'notify') {
+    if ($form->_contributeMode == 'notify' || $form->_contributeMode == 'iframe') {
       if ($form->_values['is_monetary'] && $form->_amount > 0.0 && !$form->_params['is_pay_later']) {
         // before leave for transfer, trigger hook
         CRM_Utils_Hook::postProcess(get_class($form), $form);
@@ -1257,7 +1257,7 @@ AND civicrm_membership.is_test = %2";
 
     // check is it pending. - CRM-4555
     $pending = FALSE;
-    if (($form->_contributeMode == 'notify' || $form->_params['is_pay_later']) &&
+    if (($form->_contributeMode == 'notify' || $form->_contributeMode == 'iframe' || $form->_params['is_pay_later']) &&
       ($form->_values['is_monetary'] && $form->_amount > 0.0)
     ) {
       $pending = TRUE;

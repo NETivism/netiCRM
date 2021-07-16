@@ -79,6 +79,7 @@ class CRM_Utils_Type {
         $string = 'Blob';
         break;
 
+      case 12:
       case 256:
         $string = 'Timestamp';
         break;
@@ -166,14 +167,10 @@ class CRM_Utils_Type {
 
         if (strtotime($data)) {
           $timestamp = strtotime($data);
-          $yyyymmdd = date('Ymd', $timestamp);
-          return $yyyymmdd;
+          $yyyymmddhhiiss = date('YmdHis', $timestamp);
+          return $yyyymmddhhiiss;
         }
-        if ((preg_match('/^\d{8}$/', $data) ||
-            preg_match('/^\d{14}$/', $data)
-          ) &&
-          CRM_Utils_Rule::mysqlDate($data)
-        ) {
+        if ((preg_match('/^\d{8}$/', $data) || preg_match('/^\d{14}$/', $data)) && CRM_Utils_Rule::mysqlDate($data)) {
           return $data;
         }
         break;

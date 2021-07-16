@@ -861,7 +861,7 @@ LIMIT 0, 100
         'contribution_id' => $contributionId,
         'partner_key' => $paymentProcessor['password'],
         'filters' => array(
-          'order_number' => $contribution->trxn_id,
+          'rec_trade_id' => $tappay->rec_trade_id,
         ),
       );
 

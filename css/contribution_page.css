@@ -1,10 +1,27 @@
 @charset "UTF-8";
 
+/** Modify problem of space in bolder Microsoft Jhenhei **/
+@font-face {
+  font-family: "Microsoft JhengHei Fixed";
+  unicode-range: U+7db0, U+78A7, U+7B75; /* ASCII (碧筵綰) */
+  font-style: normal;
+  font-weight: normal;
+  src: local(Yu Gothic), local(MS Gothic);
+}
+/* Use original Microsoft Jhenhei when font-weight is normal */
+@font-face {
+  font-family: "Microsoft JhengHei Fixed";
+  unicode-range: U+7db0, U+78A7, U+7B75; /* ASCII (碧筵綰) */
+  font-style: normal;
+  font-weight: normal;
+  src: local(Microsoft JhengHei), local(微軟正黑體);
+}
+
 /**
  Structure
  */
-body *,div, span, a, p, h1, h2, h3, h4, h5,body input{
-  font-family: 'SourceHanSans','PingFang TC','Heiti TC','Microsoft JhengHei',San-serif;
+body, p, input, #main h1, #main h2, #main h3, #main h4, #main h5, #main h6{
+  font-family: "PingFang TC", "Heiti TC", "Noto Sans TC", "Noto Sans CJK TC", NotoSansCJKtc-Regular, source-han-sans-traditional, "Microsoft JhengHei Fixed", "Microsoft JhengHei", "微軟正黑體", sans-serif;
 }
 body.logged-in .admin-header, 
 body.logged-in #admin-sidebar{
@@ -864,7 +881,6 @@ button.intro_text-readmore-btn.is-active:after {
 #main h1{
   color: #FFFFFF;
   font-size: 44px;
-  font-family:  "Open Sans","Helvetica Neue",Helvetica,Arial,"微軟正黑體","Microsoft JhengHei",sans-serif;
   font-weight: bold;
 }
 #intro_text p{

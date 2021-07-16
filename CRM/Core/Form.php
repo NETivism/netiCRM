@@ -49,6 +49,14 @@ require_once 'CRM/Utils/String.php';
 class CRM_Core_Form extends HTML_QuickForm_Page {
 
   /**
+   * Override public variable for HTML_QuickForm_Page
+   * 
+   * @var      CRM_Core_Controller 
+   * @access   public
+   */
+  public $controller = null;
+
+  /**
    * The state object that this form belongs to
    * @var object
    */

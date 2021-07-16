@@ -89,10 +89,25 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     if (!empty($form->get('id'))) {
       $installment = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $form->get('id'), 'installments');
       if (!empty($installment)) {
-        $form->addRule('installments', ts('Installments should be greater than zero.'), 'nonzero');
-        $form->addRule('installments', ts('Installments should be greater than zero.'), 'required');
+        $form->set('original_installments', $installment);
+        $form->addFormRule(array('CRM_Core_Payment_SPGATEWAY', 'validateInstallments'), $form);
       }
     }
+  }
+
+  static function validateInstallments($fields, $ignore, $form) {
+    $errors = array();
+    $pass = TRUE;
+    $contribution_status_id = $fields['contribution_status_id'];
+    $installments = $fields['installments'];
+    $original_installments = $form->get('original_installments');
+    if ($contribution_status_id == 5 && !empty($original_installments) && $installments <= 0) {
+      $pass = FALSE;
+    }
+    if (!$pass) {
+      $errors['installments'] = ts('Installments should be greater than zero.');
+    }
+    return $errors;
   }
 
   /**
@@ -772,14 +787,27 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $recurResult['API']['AlterType'] = $apiAlterStatus;
         }
 
+        if (!empty($recurResult['response_status'])) {
+          if (in_array($recurResult['response_status'], array('PER10062', 'PER10064'))) {
+            // Neweb is canceled. Set finished if status is setting to finished.
+            if ($newStatusId == 1) {
+              $recurResult['contribution_status_id'] = $newStatusId;
+            }
+            else {
+              $recurResult['msg'] .=  "\n". ts('The contribution has been canceled.');
+              $recurResult['note_body'] = $recurResult['msg'];
+              $recurResult['contribution_status_id'] = 3;
+            }
+          }
+          else {
+            // Status is 'PER10061', 'PER10063'. Set to which admin is selected.
+            $recurResult['contribution_status_id'] = $newStatusId;
+          }
+        }
         if (!empty($recurResult['is_error'])) {
           // There are error msg in $recurResult['msg']
           $errResult = $recurResult;
           return $errResult;
-        }
-        else {
-          // for status 'suspend', result status id could be 1 or 7, depends on input status id.
-          $recurResult['contribution_status_id'] = $params['contribution_status_id'];
         }
       }
 
@@ -859,7 +887,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
       CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $recurResult', $recurResult);
       if (!empty($recurResult['installments'] && $recurResult['installments'] != $requestParams['PeriodTimes'])) {
-        $recurResult['note_body'] = ts('Selected installments is %1.', array(1 => $requestParams['PeriodTimes'])).ts('Modify installments by Newebpay data.');
+        $recurResult['note_body'] .= ts('Selected installments is %1.', array(1 => $requestParams['PeriodTimes'])).ts('Modify installments by Newebpay data.');
       }
     }
 

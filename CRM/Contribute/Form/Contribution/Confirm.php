@@ -55,6 +55,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     if (!($this->_paymentProcessor = $this->get('paymentProcessor')) && !empty($this->_params['payment_processor'])) {
       $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_params['payment_processor'], $this->_mode);
     }
+    if (!empty($this->_values['is_internal']) && !empty($this->_paymentProcessor)) {
+      if ($this->_paymentProcessor['class_name'] == 'Payment_TapPay') {
+        $this->assign('hideccv', 1);
+      }
+    }
 
     if ($this->_contributeMode == 'express') {
       // rfp == redirect from paypal
@@ -396,7 +401,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             $params[$key] = $v;
           }
         }
-        $params['expires'] = REQUEST_TIME + 1800;
+        $params['expires'] = CRM_REQUEST_TIME + 1800;
         $session->set('user_contribution_prepopulate', $params);
       }
     }
@@ -778,7 +783,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   /**
    * Process the contribution
    *
-   * @return void
+   * @return object
    * @access public
    */
   static function processContribution(&$form, $params, $result, $contactID, $contributionType, $deductibleMode = TRUE, $pending = FALSE, $online = TRUE) {

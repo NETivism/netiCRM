@@ -147,6 +147,7 @@ class CRM_Export_BAO_Export {
 
       $index = 2;
 
+      $needsProviderId = FALSE;
       foreach ($fields as $key => $value) {
         $phoneTypeId = $imProviderId = $relationField = NULL;
         $relationshipTypes = $fieldName = CRM_Utils_Array::value(1, $value);
@@ -159,6 +160,9 @@ class CRM_Export_BAO_Export {
         }
         elseif ($fieldName == 'im') {
           $imProviderId = CRM_Utils_Array::value(3, $value);
+          if (empty($imProviderId)) {
+            $needsProviderId = TRUE;
+          }
         }
 
         if (array_key_exists($relationshipTypes, $contactRelationshipTypes)) {
@@ -192,7 +196,6 @@ class CRM_Export_BAO_Export {
 
         $contactType = CRM_Utils_Array::value(0, $value);
         $locTypeId = CRM_Utils_Array::value(2, $value);
-        $phoneTypeId = CRM_Utils_Array::value(3, $value);
 
         if ($relationField) {
           if (in_array($relationField, $locationTypeFields) && is_numeric($relLocTypeId)) {
@@ -230,6 +233,9 @@ class CRM_Export_BAO_Export {
           }
           else {
             $returnProperties[$fieldName] = $index++;
+            if ($fieldName == 'im' && $needsProviderId) {
+              $returnProperties['provider_id'] = $index++;
+            }
           }
         }
       }
@@ -603,7 +609,7 @@ class CRM_Export_BAO_Export {
         $batchParams = array(
           'label' => ts('Export').': '.$fileName,
           'startCallback' => NULL,
-          'startCallback_args' => NULL,
+          'startCallbackArgs' => NULL,
           'processCallback' => array(__CLASS__, __FUNCTION__),
           'processCallbackArgs' => $allArgs,
           'finishCallback' => array(__CLASS__, 'batchFinish'),
@@ -662,7 +668,7 @@ class CRM_Export_BAO_Export {
               $fieldOrder[] = $value;
             }
             elseif ($field == 'provider_id') {
-              $headerRows[$value] = 'Im Service Provider';
+              $headerRows[$value] = ts('Instant Messenger Services');
               $fieldOrder[] = $value;
             }
             elseif (is_array($value) && $field == 'location') {
@@ -985,6 +991,10 @@ class CRM_Export_BAO_Export {
                 case 'preferred_communication_method':
                 case 'preferred_mail_format':
                   $row[$field] = $i18n->crm_translate($fieldValue);
+                  break;
+                case 'age':
+                  $age = CRM_Utils_Date::calculateAge($fieldValue);
+                  $row[$field] = CRM_Utils_Array::value('years', $age);
                   break;
 
                 default:

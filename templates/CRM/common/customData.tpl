@@ -54,6 +54,9 @@ function buildCustomData( type, subType, subName, cgCount, groupID, isMultiple )
 		{if $entityID}
 			dataUrl = dataUrl + '&entityID=' + '{$entityID}'
 		{/if}
+    {if $pageKey}
+      dataUrl = dataUrl + '&pageKey=' + '{$pageKey}';
+    {/if}
 	{literal}
 
 	if ( !cgCount ) {
@@ -85,7 +88,7 @@ function buildCustomData( type, subType, subName, cgCount, groupID, isMultiple )
     .done(function(data){
       cj(fname).html(data);
     });
-  }, 1000);
+  }, 350);
 }
 
 </script>

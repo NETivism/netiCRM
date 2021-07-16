@@ -1017,6 +1017,13 @@ WHERE civicrm_event.is_active = 1
     //get the params submitted by participant.
     $participantParams = CRM_Utils_Array::value($participantId, $values['params'], array());
 
+    if (isset($values['custom_pre_id'])) {
+      $participantParams['custom_pre_id'] = array(array('participant_id', '=', $participantId, 0, 0));
+    }
+    if (isset($values['custom_post_id'])) {
+      $participantParams['custom_post_id'] = array(array('participant_id', '=', $participantId, 0, 0));
+    }
+
     if (!$returnMessageText) {
       //send notification email if field values are set (CRM-1941)
       foreach ($gIds as $key => $gId) {

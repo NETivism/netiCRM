@@ -281,6 +281,10 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
         if ($criteria == 'inactive') {
           $clauses[] = "contact_a.amount2 >= ".$amountLow;
         }
+        if ($criteria == 'intersection') {
+          $clauses[] = "(contact_a.amount1 >= $amountLow)";
+          $clauses[] = "(contact_a.amount2 >= $amountLow)";
+        }
         if ($criteria == 'all') {
           $clauses[] = "(contact_a.amount1 >= $amountLow OR contact_a.rid1 IS NULL)";
           $clauses[] = "(contact_a.amount2 >= $amountLow OR contact_a.rid2 IS NULL)";
@@ -293,6 +297,10 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
         }
         if ($criteria == 'inactive') {
           $clauses[] = "contact_a.amount2 <= '$amountHigh'";
+        }
+        if ($criteria == 'intersection') {
+          $clauses[] = "(contact_a.amount1 <= $amountHigh)";
+          $clauses[] = "(contact_a.amount2 <= $amountHigh)";
         }
         if ($criteria == 'all') {
           $clauses[] = "(contact_a.amount1 <= $amountHigh OR contact_a.rid1 IS NULL)";
@@ -308,6 +316,10 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
         if ($criteria == 'inactive') {
           $clauses[] = "c2.contribution_page_id = '$pageId'";
         }
+        if ($criteria == 'intersection') {
+          $clauses[] = "(c1.contribution_page_id = '$pageId')";
+          $clauses[] = "(c2.contribution_page_id = '$pageId')";
+        }
         if ($criteria == 'all') {
           $clauses[] = "(c1.contribution_page_id = '$pageId' OR contact_a.rid1 IS NULL)";
           $clauses[] = "(c2.contribution_page_id = '$pageId' OR contact_a.rid2 IS NULL)";
@@ -321,6 +333,10 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
         }
         if ($criteria == 'inactive') {
           $clauses[] = "c2.contribution_type_id = '$typeId'";
+        }
+        if ($criteria == 'intersection') {
+          $clauses[] = "(c1.contribution_type_id = '$typeId')";
+          $clauses[] = "(c2.contribution_type_id = '$typeId')";
         }
         if ($criteria == 'all') {
           $clauses[] = "(c1.contribution_type_id = '$typeId' OR contact_a.rid1 IS NULL)";
