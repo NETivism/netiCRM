@@ -1071,6 +1071,9 @@ class CRM_Export_BAO_Export {
         $componentDetails[] = $row;
         $count++;
       }
+      if ($civicrm_batch && count(reset($componentDetails)) <= 3) {
+        $recordlog = TRUE;
+      }
       self::writeDetailsToTable($exportTempTable, $componentDetails, $sqlColumns);
       $componentDetails = array();
       $dao->free();
@@ -1084,6 +1087,9 @@ class CRM_Export_BAO_Export {
           break;
         }
       }
+    }
+    if (!empty($recordlog)) {
+      CRM_Core_Error::debug_log_message("debug #31515 - start from ".$civicrm_batch->data['processed']." - query - ".$limitQuery);
     }
 
     // do merge same address and merge same household processing
