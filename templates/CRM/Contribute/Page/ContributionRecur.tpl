@@ -135,6 +135,7 @@
           </div>
           {/if}
 
+          {if $logs}
           <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
             <div class="crm-accordion-header">
               <div class="zmdi crm-accordion-pointer"></div> 
@@ -190,8 +191,8 @@
                 {/foreach}
               </table>
             </div>
-            
           </div>
+          {/if}
 
           {literal}
           <script type="text/javascript">
