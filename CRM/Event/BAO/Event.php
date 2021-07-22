@@ -1723,10 +1723,11 @@ ORDER BY sp.name, ca.city, ca.street_address ASC
 
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
+      $state_province = !empty($dao->sp_id) ? CRM_Core_PseudoConstant::stateProvince($dao->sp_id) : "";
       $fields = array(
         'street_address' => $dao->street_address,
         'city' => $dao->city,
-        'state_province_name' => CRM_Core_PseudoConstant::stateProvince($dao->sp_id),
+        'state_province_name' => $state_province,
       );
       $title = CRM_Utils_Address::format($fields);
       if ($dao->email || $dao->phone) {

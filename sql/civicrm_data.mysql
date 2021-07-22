@@ -5713,7 +5713,15 @@ INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `save
 
 INSERT INTO civicrm_option_group
   (name,                         label,            description,      is_reserved, is_active) VALUES
-    ('msg_tpl_workflow_case', 'Message Template Workflow for Cases',               'Message Template Workflow for Cases',                     0,           1) ,    ('msg_tpl_workflow_contribution', 'Message Template Workflow for Contributions',               'Message Template Workflow for Contributions',                     0,           1) ,    ('msg_tpl_workflow_event', 'Message Template Workflow for Events',               'Message Template Workflow for Events',                     0,           1) ,    ('msg_tpl_workflow_friend', 'Message Template Workflow for Tell-a-Friend',               'Message Template Workflow for Tell-a-Friend',                     0,           1) ,    ('msg_tpl_workflow_membership', 'Message Template Workflow for Memberships',               'Message Template Workflow for Memberships',                     0,           1) ,    ('msg_tpl_workflow_meta', 'Message Template Workflow for Meta Templates',               'Message Template Workflow for Meta Templates',                     0,           1) ,    ('msg_tpl_workflow_pledge', 'Message Template Workflow for Pledges',               'Message Template Workflow for Pledges',                     0,           1) ,    ('msg_tpl_workflow_uf', 'Message Template Workflow for Profiles',               'Message Template Workflow for Profiles',                     0,           1) ,    ('msg_tpl_workflow_petition', 'Message Template Workflow for Petition',               'Message Template Workflow for Petition',                     0,           1) ;
+    ('msg_tpl_workflow_case', 'Message Template Workflow for Cases',               'Message Template Workflow for Cases',                     0,           1) ,
+    ('msg_tpl_workflow_contribution', 'Message Template Workflow for Contributions',               'Message Template Workflow for Contributions',                     0,           1) ,
+    ('msg_tpl_workflow_event', 'Message Template Workflow for Events',               'Message Template Workflow for Events',                     0,           1) ,
+    ('msg_tpl_workflow_friend', 'Message Template Workflow for Tell-a-Friend',               'Message Template Workflow for Tell-a-Friend',                     0,           1) ,
+    ('msg_tpl_workflow_membership', 'Message Template Workflow for Memberships',               'Message Template Workflow for Memberships',                     0,           1) ,
+    ('msg_tpl_workflow_meta', 'Message Template Workflow for Meta Templates',               'Message Template Workflow for Meta Templates',                     0,           1) ,
+    ('msg_tpl_workflow_pledge', 'Message Template Workflow for Pledges',               'Message Template Workflow for Pledges',                     0,           1) ,
+    ('msg_tpl_workflow_uf', 'Message Template Workflow for Profiles',               'Message Template Workflow for Profiles',                     0,           1) ,
+    ('msg_tpl_workflow_petition', 'Message Template Workflow for Petition',               'Message Template Workflow for Petition',                     0,           1) ;
   SELECT @tpl_ogid_case := MAX(id) FROM civicrm_option_group WHERE name = 'msg_tpl_workflow_case';
   SELECT @tpl_ogid_contribution := MAX(id) FROM civicrm_option_group WHERE name = 'msg_tpl_workflow_contribution';
   SELECT @tpl_ogid_event := MAX(id) FROM civicrm_option_group WHERE name = 'msg_tpl_workflow_event';
@@ -5726,7 +5734,31 @@ INSERT INTO civicrm_option_group
 
 INSERT INTO civicrm_option_value
   (option_group_id,        name,       label,   value,                                  weight) VALUES
-      (@tpl_ogid_case, 'case_activity', 'Cases - Send Copy of an Activity',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', 'Contributions - Duplicate Organization Alert',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', 'Contributions - Receipt (off-line)',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', 'Contributions - Receipt (on-line)',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', 'Contributions - Recurring Start and End Notification',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_invoice_notify', 'Contributions - Invoice Notification',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_notify', 'Personal Campaign Pages - Admin Notification',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_status_change', 'Personal Campaign Pages - Supporter Status Change Notification',            7, 7) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', 'Personal Campaign Pages - Supporter Welcome',            8, 8) ,      (@tpl_ogid_contribution, 'contribution_recur_fail_notify', 'Contributions - Recurring Failed Notification',            9, 9) ,      (@tpl_ogid_event, 'event_offline_receipt', 'Events - Registration Confirmation and Receipt (off-line)',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', 'Events - Registration Confirmation and Receipt (on-line)',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', 'Events - Registration Cancellation Notice',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', 'Events - Registration Confirmation Invite',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', 'Events - Pending Registration Expiration Notice',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Tell-a-Friend Email',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', 'Memberships - Signup and Renewal Receipts (off-line)',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', 'Memberships - Receipt (on-line)',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', 'Test-drive - Receipt Header',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', 'Pledges - Acknowledgement',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', 'Pledges - Payment Reminder',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', 'Profiles - Admin Notification',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
+      (@tpl_ogid_case, 'case_activity', 'Cases - Send Copy of an Activity',            1, 1) ,
+      (@tpl_ogid_contribution, 'contribution_dupalert', 'Contributions - Duplicate Organization Alert',            1, 1) ,
+      (@tpl_ogid_contribution, 'contribution_offline_receipt', 'Contributions - Receipt (off-line)',            2, 2) ,
+      (@tpl_ogid_contribution, 'contribution_online_receipt', 'Contributions - Receipt (on-line)',            3, 3) ,
+      (@tpl_ogid_contribution, 'contribution_recurring_notify', 'Contributions - Recurring Start and End Notification',            4, 4) ,
+      (@tpl_ogid_contribution, 'contribution_invoice_notify', 'Contributions - Invoice Notification',            5, 5) ,
+      (@tpl_ogid_contribution, 'pcp_notify', 'Personal Campaign Pages - Admin Notification',            6, 6) ,
+      (@tpl_ogid_contribution, 'pcp_status_change', 'Personal Campaign Pages - Supporter Status Change Notification',            7, 7) ,
+      (@tpl_ogid_contribution, 'pcp_supporter_notify', 'Personal Campaign Pages - Supporter Welcome',            8, 8) ,
+      (@tpl_ogid_contribution, 'contribution_recur_fail_notify', 'Contributions - Recurring Failed Notification',            9, 9) ,
+      (@tpl_ogid_event, 'event_offline_receipt', 'Events - Registration Confirmation and Receipt (off-line)',            1, 1) ,
+      (@tpl_ogid_event, 'event_online_receipt', 'Events - Registration Confirmation and Receipt (on-line)',            2, 2) ,
+      (@tpl_ogid_event, 'participant_cancelled', 'Events - Registration Cancellation Notice',            3, 3) ,
+      (@tpl_ogid_event, 'participant_confirm', 'Events - Registration Confirmation Invite',            4, 4) ,
+      (@tpl_ogid_event, 'participant_expired', 'Events - Pending Registration Expiration Notice',            5, 5) ,
+      (@tpl_ogid_friend, 'friend', 'Tell-a-Friend Email',            1, 1) ,
+      (@tpl_ogid_membership, 'membership_offline_receipt', 'Memberships - Signup and Renewal Receipts (off-line)',            1, 1) ,
+      (@tpl_ogid_membership, 'membership_online_receipt', 'Memberships - Receipt (on-line)',            2, 2) ,
+      (@tpl_ogid_meta, 'test_preview', 'Test-drive - Receipt Header',            1, 1) ,
+      (@tpl_ogid_meta, 'batch_complete_notification', 'Batch Complete Notification',            2, 2) ,
+      (@tpl_ogid_pledge, 'pledge_acknowledge', 'Pledges - Acknowledgement',            1, 1) ,
+      (@tpl_ogid_pledge, 'pledge_reminder', 'Pledges - Payment Reminder',            2, 2) ,
+      (@tpl_ogid_uf, 'uf_notify', 'Profiles - Admin Notification',            1, 1) ,
+      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,
+      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
     SELECT @tpl_ovid_case_activity := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_case AND name = 'case_activity';
     SELECT @tpl_ovid_contribution_dupalert := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_dupalert';
     SELECT @tpl_ovid_contribution_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_offline_receipt';
@@ -5746,6 +5778,7 @@ INSERT INTO civicrm_option_value
     SELECT @tpl_ovid_membership_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_membership AND name = 'membership_offline_receipt';
     SELECT @tpl_ovid_membership_online_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_membership AND name = 'membership_online_receipt';
     SELECT @tpl_ovid_test_preview := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_meta AND name = 'test_preview';
+    SELECT @tpl_ovid_batch_complete_notification := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_meta AND name = 'batch_complete_notification';
     SELECT @tpl_ovid_pledge_acknowledge := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_pledge AND name = 'pledge_acknowledge';
     SELECT @tpl_ovid_pledge_reminder := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_pledge AND name = 'pledge_reminder';
     SELECT @tpl_ovid_uf_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_uf AND name = 'uf_notify';
@@ -15713,6 +15746,180 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
  </table>
 </center>
 ', @tpl_ovid_test_preview, 0,          1) ,      
+      
+      
+      ('Batch Complete Notification', '{ts}Batch Notification{/ts} - {$label} {ts}Completed{/ts}', '{ts}Summary{/ts}
+===========================================================
+
+{ts}Create Date{/ts}: {$created_date|crmDate}
+{ts}End Date{/ts}: {$modified_date|crmDate}
+{ts}Expired Date{/ts}: {$expire_date|crmDate}
+{if $total}{ts}Total{/ts}: {$total} {ts}rows{/ts}{/if}
+
+===========================================================
+{ts}You can check result by login to the website.{/ts}
+{crmURL p=\'civicrm/admin/batch\' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}', '<!DOCTYPE html PUBLIC "-//W4C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
+</head>
+<body>
+{capture assign=headerStyle}colspan="2" style="text-align: left; padding: 4px; border-bottom: 1px solid #999; background-color: #eee;"{/capture}
+{capture assign=labelStyle }style="padding: 4px; border-bottom: 1px solid #999; background-color: #f7f7f7;"{/capture}
+{capture assign=valueStyle }style="padding: 4px; border-bottom: 1px solid #999;"{/capture}
+
+<center>
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-batch_complete" style="font-family: Arial, Verdana, sans-serif; text-align: left;"> 
+
+  <tr>
+    <th {$headerStyle} colspan="2">
+      {ts}Summary{/ts}
+    </th>
+  </tr>
+
+  <tr>
+    <td {$labelStyle}>
+      {ts}Create Date{/ts}
+    </td>
+    <td {$valueStyle}>
+      {$created_date|crmDate}
+    </td>
+  </tr>
+
+  <tr>
+    <td {$labelStyle}>
+      {ts}End Date{/ts}
+    </td>
+    <td {$valueStyle}>
+      {$modified_date|crmDate}
+    </td>
+  </tr>
+
+  <tr>
+    <td {$labelStyle}>
+      {ts}Expired Date{/ts}
+    </td>
+    <td {$valueStyle}>
+      {$expire_date|crmDate}
+    </td>
+  </tr>
+
+
+  {if $total}
+  <tr>
+    <td {$labelStyle}>
+      {ts}Total{/ts}
+    </td>
+    <td {$valueStyle}>
+      {$total} {ts}rows{/ts}
+    </td>
+  </tr>
+  {/if}
+
+  <tr>
+    <th {$headerStyle} colspan="2">
+      {ts}You can check result by login to the website.{/ts}
+    </th>
+  </tr>
+  <tr>
+    <td {$labelStyle}>
+      {ts}Link{/ts}
+    </td>
+    <td {$valueStyle}>
+      <a href="{crmURL p=\'civicrm/admin/batch\' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}">{crmURL p=\'civicrm/admin/batch\' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}</a><br>
+    </td>
+  </tr>
+</table>
+</center>
+</body>
+</html>', @tpl_ovid_batch_complete_notification, 1,          0),
+      ('Batch Complete Notification', '{ts}Batch Notification{/ts} - {$label} {ts}Completed{/ts}', '{ts}Summary{/ts}
+===========================================================
+
+{ts}Create Date{/ts}: {$created_date|crmDate}
+{ts}End Date{/ts}: {$modified_date|crmDate}
+{ts}Expired Date{/ts}: {$expire_date|crmDate}
+{if $total}{ts}Total{/ts}: {$total} {ts}rows{/ts}{/if}
+
+===========================================================
+{ts}You can check result by login to the website.{/ts}
+{crmURL p=\'civicrm/admin/batch\' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}', '<!DOCTYPE html PUBLIC "-//W4C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
+</head>
+<body>
+{capture assign=headerStyle}colspan="2" style="text-align: left; padding: 4px; border-bottom: 1px solid #999; background-color: #eee;"{/capture}
+{capture assign=labelStyle }style="padding: 4px; border-bottom: 1px solid #999; background-color: #f7f7f7;"{/capture}
+{capture assign=valueStyle }style="padding: 4px; border-bottom: 1px solid #999;"{/capture}
+
+<center>
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-batch_complete" style="font-family: Arial, Verdana, sans-serif; text-align: left;"> 
+
+  <tr>
+    <th {$headerStyle} colspan="2">
+      {ts}Summary{/ts}
+    </th>
+  </tr>
+
+  <tr>
+    <td {$labelStyle}>
+      {ts}Create Date{/ts}
+    </td>
+    <td {$valueStyle}>
+      {$created_date|crmDate}
+    </td>
+  </tr>
+
+  <tr>
+    <td {$labelStyle}>
+      {ts}End Date{/ts}
+    </td>
+    <td {$valueStyle}>
+      {$modified_date|crmDate}
+    </td>
+  </tr>
+
+  <tr>
+    <td {$labelStyle}>
+      {ts}Expired Date{/ts}
+    </td>
+    <td {$valueStyle}>
+      {$expire_date|crmDate}
+    </td>
+  </tr>
+
+
+  {if $total}
+  <tr>
+    <td {$labelStyle}>
+      {ts}Total{/ts}
+    </td>
+    <td {$valueStyle}>
+      {$total} {ts}rows{/ts}
+    </td>
+  </tr>
+  {/if}
+
+  <tr>
+    <th {$headerStyle} colspan="2">
+      {ts}You can check result by login to the website.{/ts}
+    </th>
+  </tr>
+  <tr>
+    <td {$labelStyle}>
+      {ts}Link{/ts}
+    </td>
+    <td {$valueStyle}>
+      <a href="{crmURL p=\'civicrm/admin/batch\' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}">{crmURL p=\'civicrm/admin/batch\' q="reset=1&id=`$batch_id`" a=true h=0 fe=1}</a><br>
+    </td>
+  </tr>
+</table>
+</center>
+</body>
+</html>', @tpl_ovid_batch_complete_notification, 0,          1) ,      
       
       
       ('Pledges - Acknowledgement', '{ts}Thank you for your Pledge{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
