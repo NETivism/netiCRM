@@ -1711,7 +1711,7 @@ WHERE  id = $cfID
     $events = array();
 
     $query = "
-SELECT ca.street_address AS street_address, ca.city AS city, sp.name AS state_province, sp.id AS sp_id, cm.email AS email, cp.phone AS phone, ce.loc_block_id
+SELECT ca.*, sp.name AS state_province, sp.id AS sp_id, cm.email AS email, cp.phone AS phone, ce.loc_block_id
 FROM   civicrm_event ce
 INNER JOIN civicrm_loc_block lb ON ce.loc_block_id = lb.id
 INNER JOIN civicrm_address ca   ON lb.address_id = ca.id
@@ -1724,10 +1724,23 @@ ORDER BY sp.name, ca.city, ca.street_address ASC
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
       $state_province = !empty($dao->sp_id) ? CRM_Core_PseudoConstant::stateProvince($dao->sp_id) : "";
+      $country = !empty($dao->country_id) ? CRM_Core_PseudoConstant::country($dao->country_id) : "";
+      $county = !empty($dao->county_id) ? CRM_Core_PseudoConstant::county($dao->county_id) : "";
+      $fullPostalCode = $dao->postal_code;
+      if (!empty($dao->postal_code_suffix)) {
+        $fullPostalCode .= "-{$dao->postal_code_suffix}";
+      }
       $fields = array(
         'street_address' => $dao->street_address,
         'city' => $dao->city,
         'state_province_name' => $state_province,
+        'supplemental_address_1' => $dao->supplemental_address_1,
+        'supplemental_address_2' => $dao->supplemental_address_2,
+        'county' => $county,
+        'state_province' => $dao->state_province,
+        'postal_code' => $fullPostalCode,
+        'country' => $country,
+        'address_name' => $dao->name,
       );
       $title = CRM_Utils_Address::format($fields);
       if ($dao->email || $dao->phone) {
