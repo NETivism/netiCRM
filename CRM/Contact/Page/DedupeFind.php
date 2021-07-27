@@ -84,6 +84,16 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     }
     else {
       if (!empty($this->_rgid)) {
+        $dedupeGroupParams = array('id' => $this->_rgid);
+        $ruleGroup = CRM_Dedupe_BAO_RuleGroup::getDetailsByParams($dedupeGroupParams);
+        $ruleGroup = $ruleGroup[$this->_rgid];
+        if (!$ruleGroup['threshold']) {
+          $editUrl = CRM_Utils_System::url('civicrm/contact/deduperules', 'action=update&id='.$ruleGroup['id']);
+          $message = ts('Dedupe Rule Group')." - {$ruleGroup['name']} ".ts("Weight Threshold to Consider Contacts 'Matching':").' '.$ruleGroup['threshold'];
+          $session->setStatus($message, TRUE, 'error');
+          CRM_Utils_System::redirect($editUrl);
+        }
+
         if (!empty($this->_gid)) {
           $this->_cachePath = 'rgid:'.$this->_rgid."-gid:".$this->_gid;
           $backURL = CRM_Utils_System::url('civicrm/contact/dedupefind', "reset=1&rgid={$this->_rgid}&gid={$this->_gid}&action=preview");

@@ -48275,3 +48275,9 @@ msgstr ""
 
 msgid "Price Set of Contribution"
 msgstr ""
+
+msgid "Dedupe Rule Group"
+msgstr ""
+
+msgid "Dedupe Rule"
+msgstr ""
