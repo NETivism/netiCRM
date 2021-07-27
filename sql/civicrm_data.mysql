@@ -5312,7 +5312,12 @@ VALUES
  ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', 'Mobile Payment', NULL, 1, 0, 'Merchant ID', 'Payment Processor Provider', 'Account', 'Password',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
  ('TapPay', 'TapPay Payment', NULL, 1, 0, 'Merchant ID', 'Partner Key', 'App ID', 'App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
- ('TaiwanACH', 'Taiwan ACH Payment', NULL, 1, 0, 'Bank Account Number', 'Sic Code', 'Bank Identification Number', 'Post Delegate Institution Code',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0);
+ ('TaiwanACH', 'Taiwan ACH Payment', NULL, 1, 0, 'Bank Account Number', 'Sic Code', 'Bank Identification Number', 'Post Delegate Institution Code',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0),
+ ('ALLPAY', 'AllPay Credit Card', NULL, 1, 0, 'Merchant ID', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', '', '', '', NULL, '', '', '', NULL, 4, 1),
+ ('ALLPAYX', 'AllPay Non-Credit Card', NULL, 1, 0, 'Merchant ID', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', '', '', NULL, NULL, '', '', NULL, NULL, 4, 0),
+('SPGATEWAY', 'NewebPay Credit Card', NULL, 1, 0, 'Merchant ID', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1),
+('SPGATEWAYX', 'NewebPay Non-Credit Card', NULL, 1, 0, 'Merchant ID', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 0),
+('BACKER', 'Backer Founder', NULL, 1, 0, NULL, 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0);
 
 
 -- the fuzzy default dedupe rules
