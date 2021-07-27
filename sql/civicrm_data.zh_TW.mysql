@@ -5313,8 +5313,8 @@ VALUES
  ('Mobile', '行動支付', NULL, 1, 0, '商家編號', '金流商', '帳號', '密碼',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
  ('TapPay', 'TapPay 支付', NULL, 1, 0, 'Merchant ID', '帳號金鑰（Partner Key）', '應用程式 App ID', '應用程式 App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
  ('TaiwanACH', 'ACH 代收代付', NULL, 1, 0, '銀行帳戶號碼', '統一編號', '銀行代碼', '郵局委託機構代號',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0),
- ('ALLPAY', '綠界信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', '', '', '', NULL, '', '', '', NULL, 4, 1),
- ('ALLPAYX', '綠界非信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', '', '', NULL, NULL, '', '', NULL, NULL, 4, 0),
+ ('ALLPAY', '綠界信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo', 'https://payment.ecpay.com.tw/Cashier/QueryCreditCardPeriodInfo', NULL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo', 'https://payment-stage.ecpay.com.tw/Cashier/QueryCreditCardPeriodInfo', NULL, 4, 1),
+ ('ALLPAYX', '綠界非信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 4, 0),
 ('SPGATEWAY', '藍新信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1),
 ('SPGATEWAYX', '藍新非信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 0),
 ('BACKER', 'Backer Founder', NULL, 1, 0, NULL, 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0);
