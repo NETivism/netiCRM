@@ -48281,3 +48281,6 @@ msgstr ""
 
 msgid "Dedupe Rule"
 msgstr ""
+
+msgid "The Civi configuration setting can be overridden if the string starts with the case insenstive strings 'AND:' or 'OR:'"
+msgstr ""
