@@ -184,6 +184,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       'next_sched_contribution' => ts('Next Sched Contribution'),
       'auto_renew' => ts('Auto Renew'),
       'contribution_status_id' => ts('Contribution Status Id'),
+      'trxn_id' => ts('Transaction ID'),
     );
 
     // Get payment processor or Payment Processor DAO to get $activeFields
@@ -208,7 +209,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $activeFields = $paymentClass::$_editableFields;
       }
       else if(method_exists($paymentClass, 'getEditableFields')) {
-        $activeFields = $paymentClass::getEditableFields($paymentProcessor);
+        $activeFields = $paymentClass::getEditableFields($paymentProcessor, $this);
       }
     }
 
@@ -344,7 +345,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $activeFields = $paymentClass::$_editableFields;
       }
       else if(method_exists($paymentClass, 'getEditableFields')) {
-        $activeFields = $paymentClass::getEditableFields($paymentProcessor);
+        $activeFields = $paymentClass::getEditableFields($paymentProcessor, $this);
       }
       if (method_exists($paymentClass, 'doUpdateRecur') && !empty($activeFields)) {
         // For Payment which has doUpdateRecur and _editableFields, Like Spgateway.

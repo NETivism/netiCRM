@@ -54,7 +54,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_config = $config;
   }
 
-  static function getEditableFields($paymentProcessor = NULL) {
+  static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
     if (empty($paymentProcessor)) {
       $returnArray = array();
     }
@@ -65,6 +65,18 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
       }
     }
+    if (!empty($form)) {
+      $recur_id = $form->get('id');
+      if ($recur_id) {
+        $sql = "SELECT LENGTH(trxn_id) FROM civicrm_contribution_recur WHERE id = %1";
+        $params = array( 1 => array($recur_id, 'Positive'));
+        $length = CRM_Core_DAO::singleValueQuery($sql, $params);
+        if ($length >= 30) {
+          $returnArray[] = 'trxn_id';
+        }
+      }
+    }
+
     return $returnArray;
   }
 
