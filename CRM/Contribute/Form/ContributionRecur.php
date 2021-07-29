@@ -356,6 +356,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         }
         if (!empty($requestParams)) {
           $requestParams['contribution_recur_id'] = $this->_id;
+          $requestParams['trxn_id'] = $params['trxn_id'];
           // if need debug, can add second params "1" the follow function.
           $config = CRM_Core_Config::singleton();
           $resultParams = $paymentClass->doUpdateRecur($requestParams, $config->debug);

@@ -250,7 +250,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $requestParams = array(
           'Version' => self::$_recurEditAPIVersion,
           'MerOrderNo' => $merchantId,
-          'PeriodNo' => $dao->period_no,
+          'PeriodNo' => $params['trxn_id'],
           'AlterType' => self::$_statusMap[$newStatusId],
         );
         $apiAlterStatus = clone $spgatewayAPI;
@@ -291,7 +291,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $requestParams = array(
         'Version' => self::$_recurEditAPIVersion,
         'MerOrderNo' => $merchantId,
-        'PeriodNo' => $dao->period_no,
+        'PeriodNo' => $params['trxn_id'],
       );
 
       /*
