@@ -340,6 +340,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   font-size: 14px;
   height: 30px;
   overflow: hidden;
+  text-shadow: 1px 0px #000000, -1px 0px #000000, 0px -1px #000000, 0px 1px #000000;
 }
 .step-triangle {
   margin: 0 10px;
@@ -555,6 +556,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     top: 0;
     background-color: var(--active-color);
     left: 0;
+    text-shadow: none;
   }
   #intro_text {
     display: flex;
