@@ -90,6 +90,12 @@
         </td>
     </tr>
     {/if}
+    {if $amount_level}
+    <tr>
+        <td class="label">{ts}Amount Label{/ts}</td>
+        <td>{$amount_level}</td>
+    </tr>
+    {/if}
     {if $non_deductible_amount}
         <tr>
 	        <td class="label">{ts}Non-deductible Amount{/ts}</td>
