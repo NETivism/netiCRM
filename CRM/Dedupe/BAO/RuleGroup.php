@@ -52,6 +52,16 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
   var $params = array();
 
   /**
+   * custom rules when using rules made by program
+   * ```php
+   *   array(
+   *     array('table'=>'civicrm_contact', 'field'=>'external_identifier', 'weight'=>10),
+   *   )
+   * ``` 
+   */
+  var $rules = array();
+
+  /**
    * if there are no rules in rule group
    */
   var $noRules = FALSE;
@@ -133,22 +143,37 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    * Return the SQL query for creating the temporary table.
    */
   function tableQuery() {
-    require_once 'CRM/Dedupe/BAO/Rule.php';
-    $bao = new CRM_Dedupe_BAO_Rule();
-    $bao->dedupe_rule_group_id = $this->id;
-    $bao->orderBy('rule_weight DESC');
-    $bao->find();
     $queries = array();
-    while ($bao->fetch()) {
-      $bao->contactIds = $this->contactIds;
-      $bao->params = $this->params;
-      if ($query = $bao->sql()) {
-        $queries["{$bao->rule_table}.{$bao->rule_field}.{$bao->rule_weight}"] = $query;
+    if ($this->rules) {
+      foreach($this->rules as $rule) {
+        $bao = new CRM_Dedupe_BAO_Rule();
+        $bao->contactIds = $this->contactIds;
+        $bao->params = $this->params;
+        $bao->rule_table = $rule['table'];
+        $bao->rule_field = $rule['field'];
+        $bao->rule_weight = $rule['weight'];
+        $bao->rule_length = NULL;
+        if ($query = $bao->sql()) {
+          $queries["{$rule['table']}.{$rule['field']}.{$rule['weight']}"] = $query;
+        }
+      }
+    }
+    else {
+      $bao = new CRM_Dedupe_BAO_Rule();
+      $bao->dedupe_rule_group_id = $this->id;
+      $bao->orderBy('rule_weight DESC');
+      $bao->find();
+      while ($bao->fetch()) {
+        $bao->contactIds = $this->contactIds;
+        $bao->params = $this->params;
+        if ($query = $bao->sql()) {
+          $queries["{$bao->rule_table}.{$bao->rule_field}.{$bao->rule_weight}"] = $query;
+        }
       }
     }
 
     // if there are no rules in this rule group, add an empty query fulfilling the pattern
-    if (!$queries) {
+    if (empty($queries)) {
       $queries = array('SELECT 0 id1, 0 id2, 0 weight LIMIT 0');
       $this->noRules = TRUE;
     }
