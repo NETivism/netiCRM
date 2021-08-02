@@ -2,6 +2,11 @@
 date_default_timezone_set('Asia/Taipei');
 require_once 'CRM/Core/Payment.php';
 class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
+  const ALLPAY_REAL_DOMAIN = 'https://payment.ecpay.com.tw';
+  const ALLPAY_TEST_DOMAIN = 'https://payment-stage.ecpay.com.tw';
+  const ALLPAY_URL_SITE = '/Cashier/AioCheckOut';
+  const ALLPAY_URL_API = '/Cashier/QueryTradeInfo';
+  const ALLPAY_URL_RECUR = '/Cashier/QueryCreditCardPeriodInfo';
 
   /**
    * mode of operation: live or test
@@ -46,12 +51,32 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  static function &singleton($mode = 'live', &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_ALLPAY($mode, $paymentProcessor);
     }
     return self::$_singleton[$processorName];
+  }
+
+  /**
+   * Provide default payment
+   *
+   * @param array $defaults   array to be change
+   * @param object $paymen dao that will be added to payment when default is empty
+   * @return void
+   */
+  static function buildPaymentDefault(&$default, $payment) {
+    if ($payment->is_test > 0) {
+      $default['url_site'] = CRM_Core_Payment_ALLPAY::ALLPAY_TEST_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_SITE;
+      $default['url_api'] = CRM_Core_Payment_ALLPAY::ALLPAY_TEST_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_API;
+      $default['url_recur'] = CRM_Core_Payment_ALLPAY::ALLPAY_TEST_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_RECUR;
+    }
+    else {
+      $default['url_site'] = CRM_Core_Payment_ALLPAY::ALLPAY_REAL_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_SITE;
+      $default['url_api'] = CRM_Core_Payment_ALLPAY::ALLPAY_REAL_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_API;
+      $default['url_recur'] = CRM_Core_Payment_ALLPAY::ALLPAY_REAL_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_RECUR;
+    }
   }
 
   /**
