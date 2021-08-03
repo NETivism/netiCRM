@@ -299,6 +299,10 @@
           });
         }
 
+        if ($('fieldset.pcp-group').length) {
+          $('fieldset.pcp-group').insertAfter('.custom_pre_profile-group');
+        }
+
         $('#crm-container>form').submit(function(){
           if($('label.error').length){
             ContribPage.updateShowAllStep();

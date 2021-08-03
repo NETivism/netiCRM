@@ -1115,6 +1115,10 @@ body .crm-container div.display-block {
   margin: 0;
 }
 
+#pcp_personal_note {
+  width: 100% !important;
+}
+
 
 /** taiwan province */ 
 @media screen and (max-width: 768px) {
