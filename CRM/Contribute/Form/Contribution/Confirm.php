@@ -373,6 +373,9 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         ) {
           $defaults[$name . '_custom'] = $contact[$name . '_custom'];
         }
+        elseif (substr($name, 0, 3) == 'im-') {
+          $defaults[$name . '-provider_id'] = $contact[$name . '-provider_id'];
+        }
       }
     }
 
@@ -383,6 +386,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->setDefaults($defaults);
 
     $this->freeze();
+    dpm($this);
 
     // #28196 Save submitted values for retry
     $session = CRM_Core_Session::singleton();

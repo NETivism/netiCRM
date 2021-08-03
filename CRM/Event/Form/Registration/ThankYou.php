@@ -209,6 +209,9 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
         ) {
           $defaults[$name . '_custom'] = $this->_params[0][$name . '_custom'];
         }
+        elseif (substr($name, 0, 3) == 'im-') {
+          $defaults[$name . '-provider_id'] = $this->_params[0][$name . '-provider_id'];
+        }
       }
     }
 
