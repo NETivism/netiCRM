@@ -1,13 +1,15 @@
 
 <style>
 {literal}
-#result {background:lightgrey;}
+#preview {background: #EEE; margin: 10px 0; white-space: pre-wrap;}
+#result {background:lightgrey; max-height: 70vh; overflow-y: scroll;}
 #selector a {margin-right:10px;}
 .required {font-weight:bold;}
 .helpmsg {background:yellow;}
 #explorer label {display:inline;}
 code {line-height:1em;}
 .add-extra,.remove-extra {cursor:pointer;}
+#selector { background: #EFEFEF;}
 #selector a {cursor:pointer;}
 #selector a:hover { background: #EFEFEF; }
 {/literal}
@@ -18,11 +20,13 @@ code {line-height:1em;}
 
 cj(function($) {
   var admin = "{/literal}{$admin}{literal}";
+  var resourceBase = "{/literal}{$config->resourceBase}{literal}";
   var restURL = CRMurl("civicrm/ajax/rest");
 
   function toggleField (name, label, type) {
+    label = label.replace('zmdi-plus', 'zmdi-caret-right');
     var h = '<div>\
-      <label for="' + name + '">'+label+'</label>: <input name="' + name + '" data-id="'+name+ '" />\
+      <label for="' + name + '">'+label+' ('+name+')</label>: <input name="' + name + '" data-id="'+name+ '" />\
       <span class="add-extra" title={/literal}"{ts escape="js"}Add Field{/ts}"{literal}><i class="zmdi zmdi-plus-square"></i></span>\
       <span class="remove-extra" title={/literal}"{ts escape="js"}Remove{/ts}"{literal}><i class="zmdi zmdi-close-circle"></i></span>\
     </div>';
@@ -45,7 +49,7 @@ cj(function($) {
       return;
     }
   
-    CRMapi(params.entity, 'getFields', {}, {
+    CRMapi(params.entity, 'getFields', {'action':'create'}, {
       success:function (data) {
         h = {/literal}'<strong>{ts escape="js"}Fields{/ts}:</strong>'{literal};
         $.each(data.values, function(item, value) {
@@ -55,7 +59,7 @@ cj(function($) {
             value['title'] = value.label;
           }
           if (typeof value.title !== 'undefined') {
-            h += "<a data-id='" + key + "' class='type_" + value.type + required + "'><i class='zmdi zmdi-plus'></i>" + value.title + "</a> ";
+            h += "<a data-id='" + key + "' class='type_" + value.type + required + "' title='"+key+"'><i class='zmdi zmdi-plus'></i>" + value.title + "</a> ";
           }
         });
         $('#selector').html(h);
@@ -108,6 +112,10 @@ cj(function($) {
               params[dataId] = val;
             }
           }
+          else {
+            $(this).css("border", '1px solid red');
+            $(this).attr("placeholder", 'Required value');
+          }
         });
       }
       else {
@@ -123,6 +131,18 @@ cj(function($) {
 
     var query = CRMurl("civicrm/ajax/rest", params);
     $("#query").val(query);
+
+    // generate preview
+    var RESTquery = resourceBase + "extern/rest.php"+ query.substring(restURL.length,query.length);
+    var previewHtml = 'Rest URL Preview: \n'+ encodeURI(location.origin+RESTquery) + '\n';
+    var json = fetchJson();
+    if (json) {
+      json = JSON.parse(json);
+      json = JSON.stringify(json, null, 2); 
+      previewHtml += '\nJSON preview:\n'+json;
+    }
+    $("#preview").html(previewHtml);
+    $('#result').html('Press "GO" to run query');
 
     if (params.action == 'delete' && $('#selector a').length == 0) {
       buildForm (params);
@@ -200,6 +220,7 @@ cj(function($) {
     }
 
     window.location.hash = query;
+    var RESTquery = resourceBase + "extern/rest.php"+ query.substring(restURL.length,query.length);
     $('#result').html('<i>Loading...</i>');
     $.post(query,function(data) {
       if (admin) {
@@ -210,50 +231,13 @@ cj(function($) {
       $('#result').text(data);
     },'text');
     link="<a href='"+query+"' title='open in a new tab' target='_blank'>ajax query</a>&nbsp;";
-    var RESTquery = Drupal.settings.resourceBase + "../extern/rest.php"+ query.substring(restURL.length,query.length);
     $("#link").html(link+" <a href='"+RESTquery+"' title='open in a new tab' target='_blank'>REST query</a>");
-
     
     json = (json.length > 1 ? json.slice (0,-2) : '{') + '}';
     php += "<br />);<br />";
-    // $('#php').html(php + "$result = civicrm_api('" + entity + "', '" + action + "', $params);");
-    // $('#jQuery').html ("CRMapi('"+entity+"', '"+action+"', "+json+",<br />&nbsp;&nbsp;{success: function(data) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cj.each(data, function(key, value) {// do something  });<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;}<br />);");
 
     $('#generated').show();
   }
-
-  var query = window.location.hash;
-  var t = "#/civicrm/ajax/rest";
-  if (query.substring(0, t.length) === t) {
-    $('#query').val (query.substring(1)).focus();
-  } else {
-    window.location.hash="explorer"; //to be sure to display the result under the generated code in the viewport
-  }
-  $('#entity, #action').change (function() {
-    $("#selector, #extra").empty();
-    generateQuery();
-    runQuery();
-  });
-  $('#explorer input:checkbox').change(function() {
-    generateQuery();
-    runQuery(); 
-  });
-  $('#explorer').submit(function(e) {
-    e.preventDefault();
-    runQuery();
-    return false;
-  });
-  //$('#extra').on('keyup', 'input', generateQuery);
-  $('#extra').on('click', '.add-extra', function() {
-    generateQuery();
-  });
-  $('#extra').on('click', '.remove-extra', function() {
-    $(this).parent().remove();
-    generateQuery();
-  });
-  $('#selector').on('click', 'a', function() {
-    toggleField($(this).data('id'), this.innerHTML, this.class);
-  });
 
   function CRMurl(p, params) {
     var tplURL = '/civicrm/example?placeholder';
@@ -330,6 +314,9 @@ cj(function($) {
           // CRM.alert('', ts('Removed'), 'success');
           return true;
         };
+      case 'getfields':
+        json = true;
+        break;
     }
     for (var i in params) {
       if (i.slice(0, 4) == 'api.' || typeof(params[i]) == 'Object') {
@@ -363,6 +350,52 @@ cj(function($) {
     })($.extend({}, settings, options));
   };
   
+  var query = window.location.hash;
+  var t = "#/civicrm/ajax/rest";
+  if (query.substring(0, t.length) === t) {
+    var queryString = decodeURIComponent(query.substring(1));
+    var q = queryString.split("?");
+    if (q[1]) {
+      var urlParams = new URLSearchParams(q[1]);
+      $('#entity').val(urlParams.get("entity"));
+      $('#action').val(urlParams.get("action"));
+    }
+    $('#query').val(queryString).focus();
+    generateQuery();
+  }
+  else {
+    window.location.hash="explorer"; //to be sure to display the result under the generated code in the viewport
+  }
+  $('#query').on("keyup", function(){
+    generateQuery();
+  });
+  $('#entity, #action').change (function() {
+    $("#selector, #extra").empty();
+    generateQuery();
+    if ($('#action').val() == 'get') {
+      runQuery();
+    }
+  });
+  $('#explorer input:checkbox').change(function() {
+    generateQuery();
+    runQuery(); 
+  });
+  $('#explorer').submit(function(e) {
+    e.preventDefault();
+    generateQuery();
+    runQuery();
+    return false;
+  });
+  $('#extra').on('click', '.add-extra', function() {
+    generateQuery();
+  });
+  $('#extra').on('click', '.remove-extra', function() {
+    $(this).parent().remove();
+    generateQuery();
+  });
+  $('#selector').on('click', 'a', function() {
+    toggleField($(this).data('id'), this.innerHTML, this.class);
+  });
 
 });
 {/literal}
@@ -440,6 +473,11 @@ cj(function($) {
   <label>javascript</label><div><code id="jQuery" title='javascript syntax'></code></div>
 </div>
 -->
+<h3>Query Preview</h3>
+<pre id="preview">
+</pre>
+
+<h3>Result</h3>
 <pre id="result">
 You can choose an entity and an action (eg Tag Get to retrieve a list of the tags)
 Or your can directly modify the url in the field above and press enter.

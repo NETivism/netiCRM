@@ -282,29 +282,28 @@ cj(document).ready( function() {
     cj('.crm-ajax-accordion .crm-accordion-header').one('click', function() { 
     	loadPanes(cj(this).attr('id')); 
     });
-    window.setTimeout(function(){
-      cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function(index) {
-        loadPanes(cj(this).attr('id'));
-      });
-    }, 2500);
+    cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function() {
+      var paneID = cj(this).attr('id');
+      window.setTimeout(function(){
+        loadPanes(paneID);
+      }, 400);
+    });
 });
 // load panes function calls for snippet based on id of crm-accordion-header
 function loadPanes( id ) {
-  var url = "{/literal}{crmURL p='civicrm/contact/view/contribution' q="qfKey=`$qfKey`&snippet=4&formType=" h=0}{literal}" + id;
+  var url = "{/literal}{crmURL p='civicrm/contact/view/contribution' q="qfKey=`$qfKey`&pageKey=`$pageKey`&snippet=4&formType=" h=0}{literal}" + id;
   {/literal}{if $contributionMode}
   url = url + "&mode={$contributionMode}";
   {/if}{literal}
   if ( ! cj('div.'+id).html() ) {
     var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts}loading{/ts}{literal}" />&nbsp;{/literal}{ts}Loading{/ts}{literal}...';
     cj('div.'+id).html(loading);
-    window.setTimeout(function(){
-      cj.ajax({
-        url : url
-      })
-      .done(function(data){
-        cj('div.'+id).html(data);
-      });
-    }, 1000);
+    cj.ajax({
+      url : url
+    })
+    .done(function(data){
+      cj('div.'+id).html(data);
+    });
   }
 }
 

@@ -144,55 +144,30 @@ function _civicrm_api3_contribution_delete_spec(&$params) {
 /**
  * Retrieve a set of contributions, given a set of input params
  *
- * @param  array   $params           (reference ) input parameters
- * @param array    $returnProperties Which properties should be included in the
- * returned Contribution object. If NULL, the default
- * set of properties will be included.
+ * @param  array $params           input parameters
  *
- * @return array (reference )        array of contributions, if error an array with an error id and error message
- * @static void
+ * @return array  array of contributions, if error an array with an error id and error message
  * @access public
  * {@getfields Contribution_get}
  * @example ContributionGet.php
  */
 function civicrm_api3_contribution_get($params) {
+  $mode = CRM_Contact_BAO_Query::MODE_CONTRIBUTE;
+  $additionalOptions = _civicrm_api3_get_options_from_params($params, TRUE);
+  $returnProperties = CRM_Contribute_BAO_Query::defaultReturnProperties($mode);
 
-  $options          = _civicrm_api3_get_options_from_params($params, TRUE,'contribution','get');
-  $sort             = CRM_Utils_Array::value('sort', $options, NULL);
-  $offset           = CRM_Utils_Array::value('offset', $options);
-  $rowCount         = CRM_Utils_Array::value('limit', $options);
-  $smartGroupCache  = CRM_Utils_Array::value('smartGroupCache', $params);
-  $inputParams      = CRM_Utils_Array::value('input_params', $options, array());
-  $returnProperties = CRM_Utils_Array::value('return', $options, NULL);
-  require_once 'CRM/Contribute/BAO/Query.php';
-  require_once 'CRM/Contact/BAO/Query.php';
-  if (empty($returnProperties)) {
-    $returnProperties = CRM_Contribute_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CONTRIBUTE);
+  // Get the contributions based on parameters passed in
+  $contributions = _civicrm_api3_get_using_query_object('Contribution', $params, $additionalOptions, NULL, $mode, $returnProperties);
+  if (!empty($contributions)) {
+    foreach ($contributions as $id => $contribution) {
+      $soft_params = array('contribution_id' => $id);
+      $soft_contribution = CRM_Contribute_BAO_Contribution::getSoftContribution ( $soft_params , true);
+      if (!empty($soft_contribution)) {
+        $contributions[$id] = array_merge($contributions[$id], $soft_contribution);
+      }
+    }
   }
-
-  $newParams = CRM_Contact_BAO_Query::convertFormValues($inputParams);
-  $query = new CRM_Contact_BAO_Query($newParams, $returnProperties, NULL,
-    FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTRIBUTE
-  );
-  list($select, $from, $where, $having) = $query->query();
-
-  $sql = "$select $from $where $having";
-
-  if (!empty($sort)) {
-    $sql .= " ORDER BY $sort ";
-  }
-  $sql .= " LIMIT $offset, $rowCount ";
-  $dao = CRM_Core_DAO::executeQuery($sql);
-
-  $contribution = array();
-  while ($dao->fetch()) {
-    //CRM-8662
-    $contribution_details = $query->store ( $dao );
-    $soft_params = array('contribution_id' => $dao->contribution_id);
-    $soft_contribution = CRM_Contribute_BAO_Contribution::getSoftContribution ( $soft_params , true);
-    $contribution [$dao->contribution_id] = array_merge($contribution_details, $soft_contribution);
-  }
-  return civicrm_api3_create_success($contribution, $params, 'contribution', 'get', $dao);
+  return civicrm_api3_create_success($contributions, $params, 'Contribution', 'get');
 }
 /*
  * Adjust Metadata for Get action

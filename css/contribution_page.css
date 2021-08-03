@@ -1,10 +1,27 @@
 @charset "UTF-8";
 
+/** Modify problem of space in bolder Microsoft Jhenhei **/
+@font-face {
+  font-family: "Microsoft JhengHei Fixed";
+  unicode-range: U+7db0, U+78A7, U+7B75; /* ASCII (碧筵綰) */
+  font-style: normal;
+  font-weight: normal;
+  src: local(Yu Gothic), local(MS Gothic);
+}
+/* Use original Microsoft Jhenhei when font-weight is normal */
+@font-face {
+  font-family: "Microsoft JhengHei Fixed";
+  unicode-range: U+7db0, U+78A7, U+7B75; /* ASCII (碧筵綰) */
+  font-style: normal;
+  font-weight: normal;
+  src: local(Microsoft JhengHei), local(微軟正黑體);
+}
+
 /**
  Structure
  */
-body, p, input, #main h2, #main h3, #main h4, #main h5, #main h6{
- font-family: 'SourceHanSans','PingFang TC','Heiti TC','Microsoft JhengHei',sans-serif;
+body, p, input, #main h1, #main h2, #main h3, #main h4, #main h5, #main h6{
+  font-family: "PingFang TC", "Heiti TC", "Noto Sans TC", "Noto Sans CJK TC", NotoSansCJKtc-Regular, source-han-sans-traditional, "Microsoft JhengHei Fixed", "Microsoft JhengHei", "微軟正黑體", sans-serif;
 }
 body.logged-in .admin-header, 
 body.logged-in #admin-sidebar{
@@ -323,6 +340,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   font-size: 14px;
   height: 30px;
   overflow: hidden;
+  text-shadow: 0 0 6px #000000;
 }
 .step-triangle {
   margin: 0 10px;
@@ -538,6 +556,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     top: 0;
     background-color: var(--active-color);
     left: 0;
+    text-shadow: none;
   }
   #intro_text {
     display: flex;
@@ -864,7 +883,6 @@ button.intro_text-readmore-btn.is-active:after {
 #main h1{
   color: #FFFFFF;
   font-size: 44px;
-  font-family:  "Open Sans","Helvetica Neue",Helvetica,Arial,"微軟正黑體","Microsoft JhengHei",sans-serif;
   font-weight: bold;
 }
 #intro_text p{
@@ -1095,6 +1113,10 @@ form#ThankYou #help{
 
 body .crm-container div.display-block {
   margin: 0;
+}
+
+#pcp_personal_note {
+  width: 100% !important;
 }
 
 

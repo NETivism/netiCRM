@@ -343,7 +343,7 @@ class CRM_Contribute_BAO_Query {
         }
         else {
           $op = '=';
-          $status = $value;
+          $contribution_type_id = $value;
         }
         $query->_qill[$grouping][] = ts('Contribution Type - %1', array(1 => $op)) . ' ' . implode(' ' . ts('or') . ' ', $names);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_type_id", $op, $contribution_type_id, "Integer");

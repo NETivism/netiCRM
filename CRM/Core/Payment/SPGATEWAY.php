@@ -54,7 +54,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_config = $config;
   }
 
-  static function getEditableFields($paymentProcessor = NULL) {
+  static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
     if (empty($paymentProcessor)) {
       $returnArray = array();
     }
@@ -65,6 +65,18 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
       }
     }
+    if (!empty($form)) {
+      $recur_id = $form->get('id');
+      if ($recur_id) {
+        $sql = "SELECT LENGTH(trxn_id) FROM civicrm_contribution_recur WHERE id = %1";
+        $params = array( 1 => array($recur_id, 'Positive'));
+        $length = CRM_Core_DAO::singleValueQuery($sql, $params);
+        if ($length >= 30) {
+          $returnArray[] = 'trxn_id';
+        }
+      }
+    }
+
     return $returnArray;
   }
 
@@ -238,7 +250,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $requestParams = array(
           'Version' => self::$_recurEditAPIVersion,
           'MerOrderNo' => $merchantId,
-          'PeriodNo' => $dao->period_no,
+          'PeriodNo' => $params['trxn_id'],
           'AlterType' => self::$_statusMap[$newStatusId],
         );
         $apiAlterStatus = clone $spgatewayAPI;
@@ -247,14 +259,27 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $recurResult['API']['AlterType'] = $apiAlterStatus;
         }
 
+        if (!empty($recurResult['response_status'])) {
+          if (in_array($recurResult['response_status'], array('PER10062', 'PER10064'))) {
+            // Neweb is canceled. Set finished if status is setting to finished.
+            if ($newStatusId == 1) {
+              $recurResult['contribution_status_id'] = $newStatusId;
+            }
+            else {
+              $recurResult['msg'] .=  "\n". ts('The contribution has been canceled.');
+              $recurResult['note_body'] = $recurResult['msg'];
+              $recurResult['contribution_status_id'] = 3;
+            }
+          }
+          else {
+            // Status is 'PER10061', 'PER10063'. Set to which admin is selected.
+            $recurResult['contribution_status_id'] = $newStatusId;
+          }
+        }
         if (!empty($recurResult['is_error'])) {
           // There are error msg in $recurResult['msg']
           $errResult = $recurResult;
           return $errResult;
-        }
-        elseif (empty($recurResult['contribution_status_id'])) {
-          // for status 'suspend', result status id could be 1 or 7, depends on input status id.
-          $recurResult['contribution_status_id'] = $params['contribution_status_id'];
         }
       }
 
@@ -266,7 +291,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $requestParams = array(
         'Version' => self::$_recurEditAPIVersion,
         'MerOrderNo' => $merchantId,
-        'PeriodNo' => $dao->period_no,
+        'PeriodNo' => $params['trxn_id'],
       );
 
       /*

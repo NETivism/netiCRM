@@ -212,7 +212,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         $batchParams = array(
           'label' => ts('Receipt').': '.$fileName,
           'startCallback' => NULL,
-          'startCallback_args' => NULL,
+          'startCallbackArgs' => NULL,
           'processCallback' => array($this, 'batchPDF'),
           'processCallbackArgs' => $args,
           'finishCallback' => array($this, 'batchFinishCallback'),
@@ -392,7 +392,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       }
       $contribution = &$objects['contribution'];
 
-      $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id);
+      $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id, TRUE);
       if(!$deductible) {
         continue;
       }

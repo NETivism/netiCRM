@@ -33,14 +33,6 @@ class CRM_Mailing_Form_Optout extends CRM_Core_Form {
     if (empty($config->recaptchaPublicKey) || empty($config->recaptchaPrivateKey)) {
       $addCaptcha = FALSE;
     }
-    else {
-      // if this is POST request and came from a block,
-      // lets add recaptcha only if already present
-      // gross hack for now
-      if (!empty($_POST) && !array_key_exists('g-recaptcha-response', $_POST)) {
-        $addCaptcha = FALSE;
-      }
-    }
 
     if ($addCaptcha) {
       $captcha = CRM_Utils_ReCAPTCHA::singleton();

@@ -688,15 +688,20 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
                 }
 
                 $relPhoneType = isset($mappingPhoneType[$x][$i]) ? $mappingPhoneType[$x][$i] : NULL;
-
+                $relImProvider = isset($mappingImProvider[$x][$i]) ? $mappingImProvider[$x][$i] : NULL;
                 $defaults["mapper[$x][$i]"] = array($mappingContactType[$x][$i],
                   $mappingRelation[$x][$i],
                   $locationId,
                   $phoneType,
                   $mappingName[$x][$i],
                   $relLocationId,
-                  $relPhoneType,
                 );
+                if ($relPhoneType) {
+                  $defaults["mapper[$x][$i]"][] = $relPhoneType;
+                }
+                else if ($relImProvider) {
+                  $defaults["mapper[$x][$i]"][] = $relImProvider;
+                }
 
                 if (!$locationId) {
                   $noneArray[] = array($x, $i, 2);
@@ -710,13 +715,14 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
                 if (!$relLocationId) {
                   $noneArray[] = array($x, $i, 5);
                 }
-                if (!$relPhoneType) {
+                if (!$relPhoneType && !$relImProvider) {
                   $noneArray[] = array($x, $i, 6);
                 }
                 $noneArray[] = array($x, $i, 2);
               }
               else {
                 $phoneType = isset($mappingPhoneType[$x][$i]) ? $mappingPhoneType[$x][$i] : NULL;
+                $imProvider = isset($mappingImProvider[$x][$i]) ? $mappingImProvider[$x][$i] : NULL;
 
                 if (!$locationId && in_array($mappingName[$x][$i], $specialFields)) {
                   $locationId = " ";
@@ -725,8 +731,13 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
                 $defaults["mapper[$x][$i]"] = array($mappingContactType[$x][$i],
                   $mappingName[$x][$i],
                   $locationId,
-                  $phoneType,
                 );
+                if ($phoneType) {
+                  $defaults["mapper[$x][$i]"][] = $phoneType;
+                }
+                else if ($imProvider) {
+                  $defaults["mapper[$x][$i]"][] = $imProvider;
+                }
                 if (!$mappingName[$x][$i]) {
                   $noneArray[] = array($x, $i, 1);
                 }

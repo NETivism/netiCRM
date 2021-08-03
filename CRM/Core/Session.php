@@ -48,7 +48,7 @@ class CRM_Core_Session {
    */
   protected $_key = 'CiviCRM';
   CONST USER_CONTEXT = 'userContext';
-  CONST EXPIRED_TIME = 1800; // second
+  CONST EXPIRED_TIME = 3600; // second
   CONST EXPIRED_TIME_LONG = 10800; // second
 
   /**
@@ -467,46 +467,6 @@ class CRM_Core_Session {
     return $lastElement >= 0 ? $this->_session[$this->_key][self::USER_CONTEXT][$lastElement] : $config->userFrameworkBaseURL;
   }
 
-  function purgeExpired($force = FALSE) {
-    if (empty($this->_session[$this->_key]['lastExpired'])) {
-      $this->_session[$this->_key]['lastExpired'] = CRM_REQUEST_TIME;
-      return;
-    }
-
-    // trigger purge every one half hour
-    if (CRM_REQUEST_TIME - $this->_session[$this->_key]['lastExpired'] > 600 || $force) {
-      // CiviCRM/*Controller
-      $crmEleCount = $rootEleCount = 0;
-      foreach ($this->_session[$this->_key] as $prefix => $object) {
-        if (is_array($object) && strstr($prefix, 'CRM')) {
-          if(!empty($object['expired']) && $object['expired'] < CRM_REQUEST_TIME) {
-            unset($this->_session[$this->_key][$prefix]);
-            $crmEleCount++;
-          }
-          elseif(empty($object['expired'])) {
-            $this->_session[$this->_key][$prefix]['expired'] = CRM_REQUEST_TIME + self::EXPIRED_TIME;
-          }
-        }
-      }
-
-      // _CRM__*__container
-      foreach ($this->_session as $prefix => $object) {
-        if (preg_match('/^_CRM.*_container$/', $prefix)) {
-          if(!empty($object['expired']) && $object['expired'] < CRM_REQUEST_TIME) {
-            unset($this->_session[$prefix]);
-            $rootEleCount++;
-          }
-          elseif(empty($object['expired'])) {
-            $this->_session[$prefix]['expired'] = CRM_REQUEST_TIME + self::EXPIRED_TIME;
-          }
-        }
-      }
-
-      $this->_session[$this->_key]['lastExpired'] = CRM_REQUEST_TIME;
-      #CRM_Core_Error::debug('Completed purge expired session form: '."$crmEleCount $this->_key forms / $rootEleCount quickform container");
-    }
-  }
-
   /**
    * dumps the session to the log
    */
@@ -598,9 +558,15 @@ class CRM_Core_Session {
   }
 
   static function storeSessionObjects($reset = TRUE) {
+    // refs #32045, should run only once when fatal error appear
+    static $ran;
+    if ($ran) {
+      return;
+    }
     if (empty(self::$_managedNames)) {
       return;
     }
+    $ran++;
 
     require_once 'CRM/Core/BAO/Cache.php';
     CRM_Core_BAO_Cache::storeSessionToCache(self::$_managedNames, $reset);

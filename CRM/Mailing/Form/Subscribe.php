@@ -138,14 +138,6 @@ ORDER BY title";
     ) {
       $addCaptcha = FALSE;
     }
-    else {
-      // if this is POST request and came from a block,
-      // lets add recaptcha only if already present
-      // gross hack for now
-      if (!empty($_POST) && !array_key_exists('g-recaptcha-response', $_POST)) {
-        $addCaptcha = FALSE;
-      }
-    }
 
     if ($addCaptcha) {
       // add captcha

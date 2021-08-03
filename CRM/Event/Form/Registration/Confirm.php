@@ -1038,10 +1038,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       );
     }
 
-    if (!CRM_Utils_Array::value('is_pay_later', $params)) {
-      $contribParams['payment_instrument_id'] = 1;
-    }
-
     if (!$pending && $result) {
       $contribParams += array(
         'fee_amount' => CRM_Utils_Array::value('fee_amount', $result),

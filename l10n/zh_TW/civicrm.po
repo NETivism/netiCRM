@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-06-02 04:02+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2021-07-27 09:18+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10315,7 +10315,7 @@ msgstr "失敗重試日期"
 
 #: CRM/Contribute/DAO/ContributionRecur.php
 msgid "Auto Renew"
-msgstr "自動更新會員資格"
+msgstr "自動更新"
 
 #: CRM/Contribute/DAO/ContributionSoft.php
 msgid "Soft Contribution ID"
@@ -48586,3 +48586,21 @@ msgstr "你需要有聯絡人的ID和checksum以進行替代他人捐款的作�
 
 msgid "Is this Online Contribution Page are internal use only?"
 msgstr "此線上頁面，僅允許管理員使用嗎？"
+
+#: For Dmenu
+msgid "Price Set of Event"
+msgstr "報名頁用到的價格表"
+
+msgid "Price Set of Contribution"
+msgstr "募款頁用到的價格表"
+
+msgid "Dedupe Rule Group"
+msgstr "去重複規則群組"
+
+msgid "Dedupe Rule"
+msgstr "去重複規則"
+
+msgid ""
+"The Civi configuration setting can be overridden if the string starts with "
+"the case insenstive strings 'AND:' or 'OR:'"
+msgstr "可用 <strong>and:</strong> 和 <strong>or: </strong>前綴字做不同邏輯搜尋，例如 <strong>and:Alexander Smith</strong> 表示 Alexander 和 Smith 兩個字詞都須包含在內，<strong>or:Alexander Smith</strong> 表示 Alexander 和 Smith 任一字詞符合即可（預設不輸入邏輯前綴字功能等同於 or:）。另外也可用雙括號標出須完全相等的字詞，例如 <strong>\"Alexander Smith\"</strong> 即表示排序名稱或電話或Email須完全跟「Alexander Smith」相同。"

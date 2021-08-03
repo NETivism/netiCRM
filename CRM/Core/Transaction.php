@@ -68,7 +68,9 @@ class CRM_Core_Transaction {
    * Whether commit() has been called on this instance
    * of CRM_Core_Transaction
    */
-  private $_pseudoCommitted = FALSE; function __construct() {
+  private $_pseudoCommitted = FALSE;
+
+  function __construct() {
     if (!self::$_dao) {
       self::$_dao = new CRM_Core_DAO();
     }

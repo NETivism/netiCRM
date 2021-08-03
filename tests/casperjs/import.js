@@ -116,7 +116,15 @@ item.task.forEach(function(task, i){
       casper.page.uploadFile('#uploadFile', currentTestFolder+'files/import.csv');
       casper.capture(currentTestFolder+"picture/import_task_"+i+"_2.png");
     });
-
+    
+    if (task.type == 'contribute') {
+      casper.then(function(){
+        casper.echo('  - Select import mode.');
+        var form_name = (task.form_name ? task.form_name : 'UploadFile');
+        casper.click('input[name="onDuplicate"][value="1"]');
+      });
+    }
+    
     casper.then(function(){
       casper.echo('  - Click next button.');
       var form_name = (task.form_name ? task.form_name : 'UploadFile');
