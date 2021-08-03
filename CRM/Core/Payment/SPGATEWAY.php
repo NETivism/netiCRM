@@ -71,7 +71,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $sql = "SELECT LENGTH(trxn_id) FROM civicrm_contribution_recur WHERE id = %1";
         $params = array( 1 => array($recur_id, 'Positive'));
         $length = CRM_Core_DAO::singleValueQuery($sql, $params);
-        if ($length >= 30) {
+        if ($length >= 30 || empty($length)) {
           $returnArray[] = 'trxn_id';
         }
       }
@@ -216,6 +216,14 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     else {
       // Prepare params
       $recurResult = array();
+
+      if (preg_match('/^[a-f0-9]{32}$/', $params['trxn_id']) || empty($params['trxn_id'])) {
+        // trxn_id is hash, equal to the situation without trxn_id
+        $recurResult['is_error'] = 1;
+        $recurResult['msg'] = ts('Transaction ID must equal to the Order serial of NewebPay.');
+        $recurResult['msg'] .= ts('There are no any change.');
+        return $recurResult;
+      }
 
       $apiConstructParams = array(
         'paymentProcessor' => $this->_paymentProcessor,
