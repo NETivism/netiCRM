@@ -48284,3 +48284,6 @@ msgstr ""
 
 msgid "The Civi configuration setting can be overridden if the string starts with the case insenstive strings 'AND:' or 'OR:'"
 msgstr ""
+
+msgid "Transaction ID must equal to the Order serial of NewebPay."
+msgstr ""
