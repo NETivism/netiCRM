@@ -386,7 +386,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->setDefaults($defaults);
 
     $this->freeze();
-    dpm($this);
 
     // #28196 Save submitted values for retry
     $session = CRM_Core_Session::singleton();
