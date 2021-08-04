@@ -1070,11 +1070,9 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
         $dao = new CRM_Core_BAO_Address;
         $dao->copyValues($values);
         if ($dao->find(TRUE)) {
-          dpm($dao);
           $params['id'] = $dao->id;
         }
       }
     }
   }
 }
-
