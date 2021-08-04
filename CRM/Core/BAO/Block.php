@@ -325,18 +325,37 @@ class CRM_Core_BAO_Block {
             }
           }
           else if($blockName == 'phone') {
-            if ($blockValue['locationTypeId'] == $value['location_type_id'] && $blockValue['phone_type_id'] == $value['phone_type_id']) {
+            if ($blockValue['locationTypeId'] == $value['location_type_id'] && $blockValue['phone_type_id'] == $value['phone_type_id'] && empty($value['append'])) {
               $value['id'] = $blockValue['id'];
               unset($blockIds[$blockId]);
               break;
             }
+            elseif(!empty($value['append'])) {
+              $value['contact_id'] = $contactId;
+              self::blockValueExists($blockName, $value);
+            }
+          }
+          else if($blockName == 'im') {
+            if ($blockValue['locationTypeId'] == $value['location_type_id'] && $blockValue['provider_id'] == $value['provider_id'] && empty($value['append'])) {
+              $value['id'] = $blockValue['id'];
+              unset($blockIds[$blockId]);
+              break;
+            }
+            elseif(!empty($value['append'])) {
+              $value['contact_id'] = $contactId;
+              self::blockValueExists($blockName, $value);
+            }
           }
           else {
-            if ($blockValue['locationTypeId'] == $value['location_type_id']) {
+            if ($blockValue['locationTypeId'] == $value['location_type_id'] && empty($value['append'])) {
               //assigned id as first come first serve basis
               $value['id'] = $blockValue['id'];
               unset($blockIds[$blockId]);
               break;
+            }
+            elseif(!empty($value['append'])) {
+              $value['contact_id'] = $contactId;
+              self::blockValueExists($blockName, $value);
             }
           }
         }
