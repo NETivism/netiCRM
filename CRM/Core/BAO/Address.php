@@ -1041,5 +1041,40 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     }
     return array();
   }
+
+  /**
+   * Get current exists id from value
+   *
+   * Only effect when id not provided. Id will be added into params.
+   * 
+   * @param array $params referenced array to be add exists id
+   * @return void
+   */
+  static function valueExists(&$params) {
+    if (empty($params['id']) && !empty($params['contact_id'])) {
+      $values = array();
+      $checkFields = array(
+        'postal_code',
+        'state_province_id',
+        'city',
+        'street_address',
+        'name',
+        'contact_id',
+      );
+      foreach($checkFields as $key) {
+        if(!empty($params[$key])) {
+          $values[$key] = $params[$key];
+        }
+      }
+      if (count($values) > 2 || !empty($values['street_address'])) {
+        $dao = new CRM_Core_BAO_Address;
+        $dao->copyValues($values);
+        if ($dao->find(TRUE)) {
+          dpm($dao);
+          $params['id'] = $dao->id;
+        }
+      }
+    }
+  }
 }
 

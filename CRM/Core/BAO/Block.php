@@ -40,7 +40,8 @@ class CRM_Core_BAO_Block {
   /**
    * Fields that are required for a valid block
    */
-  static $requiredBlockFields = array('email' => array('email'),
+  static $requiredBlockFields = array(
+    'email' => array('email'),
     'phone' => array('phone'),
     'im' => array('name'),
     'openid' => array('openid'),
@@ -161,6 +162,44 @@ class CRM_Core_BAO_Block {
     }
 
     return TRUE;
+  }
+
+  /**
+   * check if block value exists
+   *
+   * @param string  $blockName   bloack name that in self::requiredBlockFields key
+   * @param array   $blockValue associated array of data without id
+   *   ```
+   *     array('phone_type_id' => 2, 'contact_id' => 1234, 'phone' => '123123123')
+   *   ```
+   *
+   * @return boolean             true if the block exits, otherwise false
+   * @access public
+   * @static
+   */
+  static function blockValueExists($blockName, &$blockValue) {
+    $require = self::$requiredBlockFields[$blockName];
+    if (empty($require)) {
+      return FALSE;
+    }
+    if (empty($blockValue[$require[0]])) {
+      return FALSE;
+    }
+    // we won't check exists when id provided
+    if (!empty($blockValue['id'])) {
+      return FALSE;
+    }
+    // we won't check exists when contact_id not provided
+    if (empty($blockValue['contact_id'])) {
+      return FALSE;
+    }
+    $name = ucfirst($blockName);
+    $baoString = 'CRM_Core_BAO_' . $name;
+    $baoString::valueExists($blockValue);
+    if (!empty($blockValue['id'])) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**

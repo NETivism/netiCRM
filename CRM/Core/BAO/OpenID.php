@@ -141,5 +141,9 @@ ORDER BY
     }
     return $openids;
   }
+
+  static function valueExists(&$params) {
+    // do nothing
+  }
 }
 

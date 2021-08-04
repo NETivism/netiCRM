@@ -166,9 +166,33 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
     if (empty($contactId)) {
       // create contact
+      $contact = $params['contact'];
+      $contact['email'][] = $params['email'];
+      $contact['phone'][] = $params['phone'];
+      if (!empty($contact['address'])) {
+        $contact['address'][] = $params['address'];
+      }
+      $contact['version'] = 3;
+      civicrm_api('contact', 'create', $contact);
     }
     else {
       // add email, phone, address into contact
+      $contact = $params['contact'];
+      $contact['id'] = $contactId;
+      foreach(array('email', 'phone', 'address') as $blockName) {
+        $blockValue = $params[$blockName];
+        $blockValue['contact_id'] = $contactId;
+        if ($blockName == 'address') {
+          CRM_Core_BAO_Address::valueExists($blockValue);
+        }
+        else {
+          CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
+        }
+        // do not touch contat exists value, only add new value
+        if (empty($blockValue['id'])) {
+          $contact[$blockName][] = $params[$blockName];
+        }
+      }
     }
   }
 
@@ -236,11 +260,17 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'first_name' => $name[1],
       'email' => $json['user']['email'],
     );
+    $params['email'] = array(
+      'email' => $json['user']['email'],
+      'location_type_id' => array_search('Billing', $locationType),
+      'is_primary' => 1,
+    );
     $phone = self::validatePhone($json['user']['cellphone']);
     $params['phone'] = array(
       'phone' => $phone ? $phone : $json['user']['cellphone'],
       'phone_type_id' => $phone ? 2 : 5, // mobile
       'location_type_id' => array_search('Billing', $locationType),
+      'is_primary' => 1,
     );
 
     // address
