@@ -106,10 +106,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
           $oid = $contribution->id;
           $pageId = $contribution->contribution_page_id;
           $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($recur->contact_id);
-          if (defined('NETICRM_SPGATEWAY_RECURRING_API_ENABLE') && NETICRM_SPGATEWAY_RECURRING_API_ENABLE == 1) {
-            $donateAgain = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$cid&oid=$oid&cs=$cs", TRUE);
-            $this->assign('donateAgain', $donateAgain);
-          }
+          $donateAgain = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$cid&oid=$oid&cs=$cs", TRUE);
+          $this->assign('donateAgain', $donateAgain);
           $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
           if ($providersCount) {
             $phones = CRM_Core_BAO_Phone::allPhones($cid, FALSE, ts('Mobile'));

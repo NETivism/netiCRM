@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-07-15 06:40+0000\n"
+"PO-Revision-Date: 2021-08-03 07:21+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48593,3 +48593,17 @@ msgstr "報名頁用到的價格表"
 
 msgid "Price Set of Contribution"
 msgstr "募款頁用到的價格表"
+
+msgid "Dedupe Rule Group"
+msgstr "去重複規則群組"
+
+msgid "Dedupe Rule"
+msgstr "去重複規則"
+
+msgid ""
+"The Civi configuration setting can be overridden if the string starts with "
+"the case insenstive strings 'AND:' or 'OR:'"
+msgstr ""
+
+msgid "Transaction ID must equal to the Order serial of NewebPay."
+msgstr "定期捐款交易編號必須對應到藍新委託單號，目前交易編號格式不正確，無法比對藍新委託單號。請至藍新後台確認此定捐的藍新委託單號，並填入至交易編號欄位中。"
