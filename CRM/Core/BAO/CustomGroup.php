@@ -1829,179 +1829,180 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
               $coDAO = CRM_Core_DAO::executeQuery($query);
               break;
 
-            case 'Select State/Province':
-            case 'Multi-Select State/Province':
-              $customData = $value;
-              if (!is_array($value)) {
-                  $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
-                }
-                $query = "
-                    SELECT id as value, name as label  
-                    FROM civicrm_state_province";
-                $coDAO = CRM_Core_DAO::executeQuery($query);
-                break;
-
-              case 'Select':
-                $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
-                if ($option_group_id) {
-                    $query = "
-                        SELECT label, value
-                        FROM civicrm_option_value
-                        WHERE option_group_id = %1
-                        ORDER BY weight ASC, label ASC";
-                    $params = array(1 => array($option_group_id, 'Integer'));
-                    $coDAO = CRM_Core_DAO::executeQuery($query, $params);
-                  }
-                  break;
-
-                case 'CheckBox':
-                case 'AdvMulti-Select':
-                case 'Multi-Select':
-                  $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
-                default:
-                  if ($option_group_id) {
-                      $query = "
-                        SELECT label, value
-                        FROM civicrm_option_value
-                        WHERE option_group_id = %1
-                        ORDER BY weight ASC, label ASC";
-                      $params = array(1 => array($option_group_id, 'Integer'));
-                      $coDAO = CRM_Core_DAO::executeQuery($query, $params);
-                    }
-                }
-
-                $options = array();
-
-                if (is_object($coDAO)) {
-                  while ($coDAO->fetch()) {
-                    $options[$coDAO->value] = $coDAO->label;
-                  }
-                }
-                else {
-                  CRM_Core_Error::fatal(ts('You have hit issue CRM-4716. Please post a report with as much detail as possible on the CiviCRM forums. You can truncate civicr_cache to get around this problem'));
-                }
-
-                require_once 'CRM/Utils/Hook.php';
-                CRM_Utils_Hook::customFieldOptions($field['id'], $options, FALSE);
-
-                $retValue = NULL;
-                foreach ($options as $optionValue => $optionLabel) {
-                  //to show only values that are checked
-                  if (in_array((string) $optionValue, $customData)) {
-                    $checked = in_array($optionValue, $customData) ? $freezeStringChecked : $freezeString;
-                    if (!$optionPerLine || $dncOptionPerLine) {
-                      if ($retValue) {
-                        $retValue .= ",&nbsp;";
-                      }
-                      $retValue .= $checked . $optionLabel;
-                    }
-                    else {
-                      $retValue[] = $checked . $optionLabel;
-                    }
-                  }
-                }
-                break;
+          case 'Select State/Province':
+          case 'Multi-Select State/Province':
+            $customData = $value;
+            if (!is_array($value)) {
+              $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
             }
-
-            //special case for option per line formatting
-            if ($optionPerLine > 1 && is_array($retValue)) {
-              $rowCounter = 0;
-              $fieldCounter = 0;
-              $displayValues = array();
-              $displayString = NULL;
-              foreach ($retValue as $val) {
-                if ($displayString) {
-                  $displayString .= ",&nbsp;";
-                }
-
-                $displayString .= $val;
-                $rowCounter++;
-                $fieldCounter++;
-
-                if (($rowCounter == $optionPerLine) || ($fieldCounter == count($retValue))) {
-                  $displayValues[] = $displayString;
-                  $displayString = NULL;
-                  $rowCounter = 0;
-                }
-              }
-              $retValue = $displayValues;
-            }
-
-            $retValue = isset($retValue) ? $retValue : NULL;
-            return $retValue;
-          }
-
-          /**
-           * Get the custom group titles by custom field ids.
-           *
-           * @param  array $fieldIds    - array of custom field ids.
-           *
-           * @return array $groupLabels - array consisting of groups and fields labels with ids.
-           * @access public
-           */
-          function getGroupTitles($fieldIds) {
-            if (!is_array($fieldIds) && empty($fieldIds)) {
-              return;
-            }
-
-            $groupLabels = array();
-            $fIds = "(" . implode(',', $fieldIds) . ")";
-
             $query = "
-SELECT  civicrm_custom_group.id as groupID, civicrm_custom_group.title as groupTitle,
-        civicrm_custom_field.label as fieldLabel, civicrm_custom_field.id as fieldID
-  FROM  civicrm_custom_group, civicrm_custom_field
- WHERE  civicrm_custom_group.id = civicrm_custom_field.custom_group_id
-   AND  civicrm_custom_field.id IN {$fIds}";
+                SELECT id as value, name as label  
+                FROM civicrm_state_province";
+            $coDAO = CRM_Core_DAO::executeQuery($query);
+            break;
 
-            $dao = CRM_Core_DAO::executeQuery($query);
-            while ($dao->fetch()) {
-              $groupLabels[$dao->fieldID] = array('fieldID' => $dao->fieldID,
-                'fieldLabel' => $dao->fieldLabel,
-                'groupID' => $dao->groupID,
-                'groupTitle' => $dao->groupTitle,
-              );
+          case 'Select':
+            $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
+            if ($option_group_id) {
+              $query = "
+                  SELECT label, value
+                  FROM civicrm_option_value
+                  WHERE option_group_id = %1
+                  ORDER BY weight ASC, label ASC";
+              $params = array(1 => array($option_group_id, 'Integer'));
+              $coDAO = CRM_Core_DAO::executeQuery($query, $params);
             }
+            break;
 
-            return $groupLabels;
-          }
-
-          static         function dropAllTables() {
-            $query = "SELECT table_name FROM civicrm_custom_group";
-            $dao = CRM_Core_DAO::executeQuery($query);
-
-            while ($dao->fetch()) {
-              $query = "DROP TABLE IF EXISTS {$dao->table_name}";
-              CRM_Core_DAO::executeQuery($query);
+          case 'CheckBox':
+          case 'AdvMulti-Select':
+          case 'Multi-Select':
+            $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
+          default:
+            if ($option_group_id) {
+              $query = "
+                SELECT label, value
+                FROM civicrm_option_value
+                WHERE option_group_id = %1
+                ORDER BY weight ASC, label ASC";
+              $params = array(1 => array($option_group_id, 'Integer'));
+              $coDAO = CRM_Core_DAO::executeQuery($query, $params);
             }
-          }
+            break;
+        }
 
-          /**
-           * Check whether custom group is empty or not.
-           *
-           * @param   int $gID    - custom group id.
-           *
-           * @return boolean true if empty otherwise false.
-           * @access public
-           */
-          function isGroupEmpty($gID) {
-            if (!$gID) {
-              return;
-            }
+        $options = array();
 
-            $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup',
-              $gID,
-              'table_name'
-            );
-
-            $query = "SELECT count(id) FROM {$tableName} WHERE id IS NOT NULL LIMIT 1";
-            $value = CRM_Core_DAO::singleValueQuery($query);
-
-            if (empty($value)) {
-              return TRUE;
-            }
-
-            return FALSE;
+        if (is_object($coDAO)) {
+          while ($coDAO->fetch()) {
+            $options[$coDAO->value] = $coDAO->label;
           }
         }
+        else {
+          CRM_Core_Error::fatal(ts('You have hit issue CRM-4716. Please post a report with as much detail as possible on the CiviCRM forums. You can truncate civicr_cache to get around this problem'));
+        }
+
+        require_once 'CRM/Utils/Hook.php';
+        CRM_Utils_Hook::customFieldOptions($field['id'], $options, FALSE);
+
+        $retValue = NULL;
+        foreach ($options as $optionValue => $optionLabel) {
+          //to show only values that are checked
+          if (in_array((string) $optionValue, $customData)) {
+            $checked = in_array($optionValue, $customData) ? $freezeStringChecked : $freezeString;
+            if (!$optionPerLine || $dncOptionPerLine) {
+              if ($retValue) {
+                $retValue .= ",&nbsp;";
+              }
+              $retValue .= $checked . $optionLabel;
+            }
+            else {
+              $retValue[] = $checked . $optionLabel;
+            }
+          }
+        }
+        break;
+    }
+
+    //special case for option per line formatting
+    if ($optionPerLine > 1 && is_array($retValue)) {
+      $rowCounter = 0;
+      $fieldCounter = 0;
+      $displayValues = array();
+      $displayString = NULL;
+      foreach ($retValue as $val) {
+        if ($displayString) {
+          $displayString .= ",&nbsp;";
+        }
+
+        $displayString .= $val;
+        $rowCounter++;
+        $fieldCounter++;
+
+        if (($rowCounter == $optionPerLine) || ($fieldCounter == count($retValue))) {
+          $displayValues[] = $displayString;
+          $displayString = NULL;
+          $rowCounter = 0;
+        }
+      }
+      $retValue = $displayValues;
+    }
+
+    $retValue = isset($retValue) ? $retValue : NULL;
+    return $retValue;
+  }
+
+  /**
+   * Get the custom group titles by custom field ids.
+   *
+   * @param  array $fieldIds    - array of custom field ids.
+   *
+   * @return array $groupLabels - array consisting of groups and fields labels with ids.
+   * @access public
+   */
+  function getGroupTitles($fieldIds) {
+    if (!is_array($fieldIds) && empty($fieldIds)) {
+      return;
+    }
+
+    $groupLabels = array();
+    $fIds = "(" . implode(',', $fieldIds) . ")";
+
+    $query = "
+SELECT  civicrm_custom_group.id as groupID, civicrm_custom_group.title as groupTitle,
+civicrm_custom_field.label as fieldLabel, civicrm_custom_field.id as fieldID
+FROM  civicrm_custom_group, civicrm_custom_field
+WHERE  civicrm_custom_group.id = civicrm_custom_field.custom_group_id
+AND  civicrm_custom_field.id IN {$fIds}";
+
+    $dao = CRM_Core_DAO::executeQuery($query);
+    while ($dao->fetch()) {
+      $groupLabels[$dao->fieldID] = array('fieldID' => $dao->fieldID,
+        'fieldLabel' => $dao->fieldLabel,
+        'groupID' => $dao->groupID,
+        'groupTitle' => $dao->groupTitle,
+      );
+    }
+
+    return $groupLabels;
+  }
+
+  static function dropAllTables() {
+    $query = "SELECT table_name FROM civicrm_custom_group";
+    $dao = CRM_Core_DAO::executeQuery($query);
+
+    while ($dao->fetch()) {
+      $query = "DROP TABLE IF EXISTS {$dao->table_name}";
+      CRM_Core_DAO::executeQuery($query);
+    }
+  }
+
+  /**
+    * Check whether custom group is empty or not.
+    *
+    * @param   int $gID    - custom group id.
+    *
+    * @return boolean true if empty otherwise false.
+    * @access public
+    */
+  function isGroupEmpty($gID) {
+    if (!$gID) {
+      return;
+    }
+
+    $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup',
+      $gID,
+      'table_name'
+    );
+
+    $query = "SELECT count(id) FROM {$tableName} WHERE id IS NOT NULL LIMIT 1";
+    $value = CRM_Core_DAO::singleValueQuery($query);
+
+    if (empty($value)) {
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+}
 
