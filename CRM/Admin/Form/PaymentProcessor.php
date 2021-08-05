@@ -46,7 +46,8 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
   protected $_fields = NULL;
 
-  protected $_ppDAO; function preProcess() {
+  protected $_ppDAO;
+  function preProcess() {
     parent::preProcess();
 
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
@@ -103,9 +104,13 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
     $this->assign('is_recur', $this->_ppDAO->is_recur);
 
-    if($this->_ppType == 'Mobile'){
-      $this->_fields = CRM_Core_Payment_Mobile::getAdminFields($this->_ppDAO);
-    }else{
+
+    $class = $this->_ppDAO->class_name;
+    $class = 'CRM_Core_'.$class;
+    if (method_exists($class, 'getAdminFields')) {
+      $this->_fields = $class::getAdminFields($this->_ppDAO);
+    }
+    else{
       $this->_fields = array(
         array('name' => 'user_name',
           'label' => $this->_ppDAO->user_name_label,
@@ -198,13 +203,23 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       if (empty($field['label'])) {
         continue;
       }
+      if (!empty($field['type'])) {
 
-      $this->add('text', $field['name'],
-        $field['label'], $attributes[$field['name']]
-      );
-      $this->add('text', "test_{$field['name']}",
-        $field['label'], $attributes[$field['name']]
-      );
+        switch($field['type']) {
+          case 'select':
+            $this->addSelect($field['name'], $field['label'], $field['options']);
+            $this->addSelect('test_'.$field['name'], $field['label'], $field['options']);
+            break;
+          case 'text':
+            $this->add('text', $field['name'], $field['label'], $attributes[$field['name']]);
+            $this->add('text', "test_{$field['name']}", $field['label'], $attributes[$field['name']]);
+            break;
+        }
+      }
+      else {
+        $this->add('text', $field['name'], $field['label'], $attributes[$field['name']]);
+        $this->add('text', "test_{$field['name']}", $field['label'], $attributes[$field['name']]);
+      }
       if (CRM_Utils_Array::value('rule', $field)) {
         $this->addRule($field['name'], $field['msg'], $field['rule']);
         $this->addRule("test_{$field['name']}", $field['msg'], $field['rule']);
