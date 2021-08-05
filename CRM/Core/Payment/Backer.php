@@ -3,6 +3,8 @@
 class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
   protected $_mode = NULL;
+  protected $_signature = NULL;
+  protected $_delivery = NULL;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -57,6 +59,24 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
   }
 
+  static function getAdminFields($ppDAO){
+    $pages = CRM_Contribute_PseudoConstant::contributionPage();
+    foreach($pages as $id => $page) {
+      $pages[$id] .= " ($id)";
+    }
+    return array(
+      array(
+        'name' => 'user_name',
+        'label' => $ppDAO->user_name_label,
+        'type' => 'select',
+        'options' => array('' => ts('-- select --')) + $pages,
+      ),
+      array('name' => 'password',
+        'label' => $ppDAO->password_label,
+      ),
+    );
+  }
+
   function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
@@ -95,6 +115,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
     $hash = hash_hmac('sha1', $string, $secret);
     if ($hash === $signature) {
+      $this->_signature = $signature;
+      if (!empty($_SERVER['HTTP_X_BACKME_DELIVERY'])) {
+        $this->_delivery = $_SERVER['HTTP_X_BACKME_DELIVERY'];
+      }
       return TRUE;
     }
     return FALSE;
@@ -108,18 +132,27 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     if (empty($params['contribution']['trxn_id'])) {
       return;
     }
+    if (empty($params['contribution']['contribution_status_id'])) {
+      return;
+    }
+
+    $contributionPageId = $this->_paymentProcessor['user_name'];
+    if (empty($contributionPageId)) {
+      return;
+    }
 
     // first, check if contribution exists
     $currentContributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['contribution']['trxn_id'], 'id', 'trxn_id');
     if ($currentContributionId) {
       // update status and payment only
-      $ids = CRM_Contribute_BAO_Contribution::buildIds($ids);
+      $ids = CRM_Contribute_BAO_Contribution::buildIds($currentContributionId, 'ipn');
       $this->processIPN($ids, $params['contribution']);
-      return;
+      return $currentContributionId;
     }
 
     // not exists contribution, check contact first
     $contactId = 0;
+    // get contact by external identifier
     $dedupeParams = array(
       'external_identifier' => $params['contact']['external_identifier'],
     );
@@ -134,16 +167,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       )
     );
     if (count($foundDupes)) {
-      // first match contact
       sort($foundDupes);
       $contactId = reset($foundDupes);
     }
     else {
+      // get contact by email and sort name
       $dedupeParams = array(
         'email' => $params['contact']['email'],
         'last_name' => $params['contact']['last_name'],
         'first_name' => $params['contact']['first_name'],
-        'phone' => $params['phone']['phone'],
       );
       $dedupeParams = CRM_Dedupe_Finder::formatParams($dedupeParams, 'Individual');
       $foundDupes = CRM_Dedupe_Finder::dupesByRules(
@@ -154,33 +186,56 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         array(
           array('table' => 'civicrm_contact', 'field' => 'sort_name', 'weight' => 10),
           array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 10),
-          array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 10),
         ),
         20
       );
       if (count($foundDupes)) {
-        // first match contact
         sort($foundDupes);
         $contactId = reset($foundDupes);
+      }
+      else {
+        // get contact by email, last name, and phone
+        $dedupeParams = array(
+          'email' => $params['contact']['email'],
+          'last_name' => $params['contact']['last_name'],
+          'first_name' => $params['contact']['first_name'],
+          'phone' => $params['phone']['phone'],
+        );
+        $dedupeParams = CRM_Dedupe_Finder::formatParams($dedupeParams, 'Individual');
+        $foundDupes = CRM_Dedupe_Finder::dupesByRules(
+          $dedupeParams,
+          'Individual',
+          'Strict',
+          array(),
+          array(
+            array('table' => 'civicrm_contact', 'field' => 'last_name', 'weight' => 2),
+            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 8),
+            array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 10),
+            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 7),
+          ),
+          20
+        );
+        if (count($foundDupes)) {
+          sort($foundDupes);
+          $contactId = reset($foundDupes);
+        }
       }
     }
     if (empty($contactId)) {
       // create contact
       $contact = $params['contact'];
-      $contact['email'][] = $params['email'];
-      $contact['phone'][] = $params['phone'];
-      if (!empty($contact['address'])) {
-        $contact['address'][] = $params['address'];
-      }
+      $contact['log_data'] = ts('Updated contact').'-Backer Auto Import';
       $contact['version'] = 3;
-      civicrm_api('contact', 'create', $contact);
+      $result = civicrm_api('contact', 'create', $contact);
+      $contactId = $result['id'];
     }
     else {
       // add email, phone, address into contact
       $contact = $params['contact'];
       $contact['id'] = $contactId;
-      foreach(array('email', 'phone', 'address') as $blockName) {
-        $blockValue = $params[$blockName];
+      $blocks = array('email', 'phone', 'address'); 
+      foreach($blocks as $blockName) {
+        $blockValue = reset($params[$blockName]);
         $blockValue['contact_id'] = $contactId;
         if ($blockName == 'address') {
           CRM_Core_BAO_Address::valueExists($blockValue);
@@ -188,9 +243,58 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         else {
           CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
         }
-        // do not touch contat exists value, only add new value
+
+        // do not touch contact exists value, only add new value
         if (empty($blockValue['id'])) {
-          $contact[$blockName][] = $params[$blockName];
+          $contact[$blockName] = $params[$blockName];
+        }
+      }
+
+      // move exists billing address to other
+      $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
+      $otherLocationTypeId = array_search('Other', $locationType);
+      $billingLocationTypeId = array_search('Billing', $locationType);
+      if (count($contact['address']) > 1 && $otherLocationTypeId && $billingLocationTypeId) {
+        $existsBillingAddress = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_address WHERE location_type_id = '$billingLocationTypeId' AND contact_id = %1", array(
+          1 => array($contact['id'], 'Integer')
+        ));
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_address SET location_type_id = '$otherLocationTypeId' WHERE id = %1", array(
+          1 => array($existsBillingAddress, 'Integer')
+        ));
+      }
+
+      // do not change crm contact name
+      unset($contact['first_name']);
+      unset($contact['last_name']);
+
+      // log exists
+      $contact['log_data'] = ts('Updated contact').'-Backer Auto Import';
+      civicrm_api('contact', 'create', $contact);
+    }
+
+    // process contribution
+    if ($contactId) {
+      // create a pending contribution      
+      $params['contribution']['contact_id'] = $contactId;
+      $contrib = $params['contribution'];
+      $page = array();
+      CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+      if ($page['id']) {
+        $contrib['contribution_status_id'] = 2; // pending
+        $contrib['contribution_page_id'] = $page['id'];
+        $contrib['contribution_type_id'] = $page['contribution_type_id'];
+        $contrib['payment_processor_id'] = $this->_paymentProcessor['id'];
+        $contrib['is_test'] = $this->_paymentProcessor['is_test'];
+        $contrib['invoice_id'] = !empty($this->_delivery) ? $this->_delivery : md5(uniqid(rand(), TRUE));
+        $contrib['version'] = 3;
+        $result = civicrm_api('contribution', 'create', $contrib);
+        if ($result['id']) {
+          $currentContributionId = $result['id'];
+          $params['contribution']['id'] = $result['id'];
+          $contrib['id'] = $result['id'];
+          $ids = CRM_Contribute_BAO_Contribution::buildIds($contrib['id'], 'ipn');
+          $this->processIPN($ids, $params['contribution']);
+          return $currentContributionId;
         }
       }
     }
@@ -200,11 +304,12 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
     $input = $objects = array();
-    $input['component'] = 'contribute';
-    $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
-    if ($validate_result){
+    $validateResult = $ipn->validateData($input, $ids, $objects, FALSE);
+    if ($validateResult){
       $transaction = new CRM_Core_Transaction();
       $exists = $objects['contribution'];
+      $input['component'] = 'contribute';
+      $input['amount'] = $contrib['total_amount'];
 
       // success: 2->1
       if ($contrib['contribution_status_id'] == 1 && $exists->contribution_status_id == 2){
@@ -260,29 +365,37 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'first_name' => $name[1],
       'email' => $json['user']['email'],
     );
-    $params['email'] = array(
+    $params['email'][0] = array(
       'email' => $json['user']['email'],
       'location_type_id' => array_search('Billing', $locationType),
       'is_primary' => 1,
+      'append' => TRUE,
     );
     $phone = self::validatePhone($json['user']['cellphone']);
-    $params['phone'] = array(
+    $params['phone'][0] = array(
       'phone' => $phone ? $phone : $json['user']['cellphone'],
       'phone_type_id' => $phone ? 2 : 5, // mobile
       'location_type_id' => array_search('Billing', $locationType),
       'is_primary' => 1,
+      'append' => TRUE,
     );
 
     // address
     if ($json['recipient']['recipient_name'] == $json['user']['name']) {
       $stateAbbr = CRM_Core_PseudoConstant::stateProvinceAbbreviation();
+      // backer special abbr convert to CRM
+      if ($json['recipient']['recipient_subdivision'] == 'KIN') $json['recipient']['recipient_subdivision'] = 'KMN';
+      elseif ($json['recipient']['recipient_subdivision'] == 'LIE') $json['recipient']['recipient_subdivision'] = 'LCI';
+      elseif ($json['recipient']['recipient_subdivision'] == 'NWT') $json['recipient']['recipient_subdivision'] = 'TPO';
 
-      $params['address']['country'] = $json['recipient']['recipient_country'] == 'TW' ? 'Taiwan' : '';
-      $params['address']['postal_code'] = $json['recipient']['recipient_postal_code'] ? $json['recipient']['recipient_postal_code'] : '';
-      $params['address']['state_province_id'] = $json['recipient']['recipient_subdivision'] ? array_search($json['recipient']['recipient_subdivision'], $stateAbbr) : '';
-      $params['address']['city'] = $json['recipient']['recipient_cityarea'] ? $json['recipient']['recipient_cityarea'] : '';
-      $params['address']['street_address'] = $json['recipient']['recipient_address'] ? $json['recipient']['recipient_address'] : '';
-      $params['address']['location_type_id'] = array_search('Billing', $locationType);
+      $params['address'][0] = array(
+        'country' => ($json['recipient']['recipient_country'] == 'TW') ? 'Taiwan' : '',
+        'postal_code' => $json['recipient']['recipient_postal_code'] ? $json['recipient']['recipient_postal_code'] : '',
+        'state_province_id' => $json['recipient']['recipient_subdivision'] ? array_search($json['recipient']['recipient_subdivision'], $stateAbbr) : '',
+        'city' => $json['recipient']['recipient_cityarea'] ? $json['recipient']['recipient_cityarea'] : '',
+        'street_address' => $json['recipient']['recipient_address'] ? $json['recipient']['recipient_address'] : '',
+        'location_type_id' => array_search('Billing', $locationType),
+      );
     }
 
     // contribution
@@ -293,26 +406,26 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'cvs' => 'Convenient Store (Code)',
     );
     $statusMap = array(
+      'refund_applying' => 0,
+      'partial_refund' => 0,
       'success' => 1,
-      'wait' => 2,
-      'failed' => 4,
-      'refund' => 3,
-      'suspend' => 7,  // recurring
-      'recurring' => 5,// recurring
-      'cancel' => 3,   // both
       'wait_code' => 2,
-      'refund_applying' => 2,
+      'wait' => 2,
+      'refund' => 3,
+      'cancel' => 3,
+      'failed' => 4,
       'failed_code' => 4,
+      // recurring contribution status
+      'suspend' => 7,
+      'recurring' => 5,
       'failed_cancel' => 3,
-      'all_wait' => 2,
-      'all_failed' => 4,
     );
 
     $params['contribution'] = array(
       'trxn_id' => $json['transaction']['trade_no'],
       'currency' => 'TWD',
-      'amount' => (int) $json['transaction']['money'],
-      'paymnet_instrument_id' => $instrumentMap[$json['payment']['type']] ? array_search($instrumentMap[$json['payment']['type']], $instruments) : '',
+      'total_amount' => (int) $json['transaction']['money'],
+      'payment_instrument_id' => $instrumentMap[$json['payment']['type']] ? array_search($instrumentMap[$json['payment']['type']], $instruments) : '',
       'contribution_status_id' => $statusMap[$json['transaction']['render_status']],
       'updated_at' => date('YmdHis', strtotime($json['transaction']['updated_at'])),
     );
@@ -322,6 +435,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         break;
       case 2: // pending
         $params['contribution']['receive_date'] = NULL;
+        if ($json['payment'] == 'atm' || $json['payment'] == 'cvs') {
+          $params['is_pay_later'] = 1;
+        }
         break;
       case 3: // cancel
         $params['contribution']['cancel_date'] = date('YmdHis', strtotime($json['payment']['paid_at']));
@@ -351,7 +467,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $amountLevel[] = $item['name'].'=>'.$item['value'];
       }
     }
-    $params['contribution']['amount_level'] = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel);
+    $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
     return $params;
   }
 
