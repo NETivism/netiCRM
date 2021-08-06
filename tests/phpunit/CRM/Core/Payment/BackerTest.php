@@ -153,7 +153,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
           "field_type": "select_box",
           "name": "是否需要收據",
           "is_required": true,
-          "value": "需要（不用寄給我/請幫我在隔年五月上傳至國稅局）" 
+          "value": "需要（請寄給我紙本收據）" 
         },
         {
           "id": 42083,
@@ -227,13 +227,34 @@ EOT;
     $now = time();
     $hash = hash_hmac('sha1', $this->_json, $this->_payment['password']);
     $this->assertEquals($hash, $this->_signature);
+
+    $formatted = CRM_Core_Payment_Backer::formatParams($this->_json);
     $createdContributionId = $this->_processor->processContribution($this->_json);
     $this->assertNotEmpty($createdContributionId, "In line " . __LINE__);
 
-    // verify new contribution has correct trxn_id
+    // verify all contribution saved data
     $params = array(
       'trxn_id' => $this->_trxnId,
+      'payment_instrument_id' => $formatted['contribution']['payment_instrument_id'],
+      'total_amount' => $formatted['contribution']['total_amount'],
+      'contribution_status_id' => $formatted['contribution']['contribution_status_id'],
+      'currency' => $formatted['contribution']['currency'],
+      'payment_processor_id' => $this->_payment['id'],
     );
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $createdContributionId, $params);
+
+    // verify all custom fields saved correctly
+    $params = array(
+      'version' => 3,
+      'entity_table' => 'civicrm_contribution',
+      'entity_id' => $createdContributionId,
+    );
+    $result = civicrm_api('CustomValue', 'get', $params);
+    $this->assertAPISuccess($result);
+    foreach($formatted['contribution'] as $key => $value) {
+      if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
+        $this->assertEquals($value, $result['values'][$customFieldID][0]);
+      }
+    }
   }
 }

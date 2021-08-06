@@ -251,10 +251,14 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * An array containing all custom groups and their custom fields is returned.
    *
    * @param string $entityType - of the contact whose contact type is needed
+   * @param null $deprecated   - deprecated
    * @param int    $entityId   - optional - id of entity if we need to populate the tree with custom values.
    * @param int    $groupId    - optional group id (if we need it for a single group only)
    *                           - if groupId is 0 it gets for inline groups only
    *                           - if groupId is -1 we get for all groups
+   * @param array $subTypes    - array that subtypes
+   * @param string $subName    - subname that use for this group
+   * @param bool $fromCache    - use cache or not
    *
    * @return array $groupTree  - array consisting of all groups and fields and optionally populated with custom data values.
    *
@@ -2003,6 +2007,151 @@ AND  civicrm_custom_field.id IN {$fIds}";
     }
 
     return FALSE;
+  }
+
+  
+  /**
+   * Get custom groups/fields for type of entity.
+   *
+   * An array containing all custom groups and their custom fields is returned.
+   *
+   * @param string $entityType - of the contact whose contact type is needed
+   * @param null $deprecated   - deprecated
+   * @param int    $entityId   - optional - id of entity if we need to populate the tree with custom values.
+   * @param int    $groupId    - optional group id (if we need it for a single group only)
+   *                           - if groupId is 0 it gets for inline groups only
+   *                           - if groupId is -1 we get for all groups
+   * @param array $subTypes    - array that subtypes
+   * @param string $subName    - subname that use for this group
+   * @param bool $fromCache    - use cache or not
+   *
+   * @return array $groupTree  - array consisting of all groups and fields and optionally populated with custom data values.
+   *
+   * @access public
+   *
+   * @static
+   *
+   */
+  public static function getTreeWithOptions($entityType, $entityID = NULL, $groupID = NULL, $subTypes = array(), $subName = NULL, $fromCache = TRUE) {
+    $tree =  self::getTree($entityType, NULL, $entityID, $groupID, $subTypes, $subName, $fromCache);
+    foreach($tree as $groupId => &$group) {
+      if (is_numeric($groupId) && !empty($group['fields'])) {
+        foreach($group['fields'] as $fieldId => &$field) {
+          if (!empty($field['option_group_id'])) {
+            $field['options'] = CRM_Core_BAO_CustomOption::valuesByID($fieldId, $field['option_group_id']);
+          }
+          elseif($field['data_type'] == 'Boolean') {
+            $field['options'] = array(
+              0 => ts('No'),
+              1 => ts('Yes'),
+            );
+          }
+          elseif($field['data_type'] == 'Country') {
+            $field['options'] = CRM_Core_PseudoConstant::country();
+          }
+          elseif($field['data_type'] == 'StateProvince') {
+            $field['options'] = CRM_Core_PseudoConstant::stateProvince();
+          }
+        }
+      }
+    }
+    return $tree;
+  }
+
+  /**
+   * Match label-value of all custom fields in specific type
+   * 
+   * Limited in select entity type. This will loop all custom fields and trying
+   * to match options by custom field data type and html type
+   *
+   * @param string $entityType entity type that want to filter fields
+   * @param array $items item with key=field name, value=option value pair
+   * @param array $matches match will result here
+   * @return void
+   */
+  public static function matchFieldValues($entityType, $items, &$matches) {
+    $tree = self::getTreeWithOptions($entityType);
+    foreach($items as $label => $value) {
+      $label = (string) $label;
+      foreach($tree as $groupId => $group) {
+        if (!is_numeric($groupId)) {
+          continue;
+        }
+        foreach($group['fields'] as $field) {
+          if ($label === $field['label']) {
+            if ($field['data_type'] == 'Boolean') {
+              $val = CRM_Utils_String::strtoboolstr($value);
+              if ($val !== FALSE) {
+                $matches[0][$label] = 1;
+                $matches[1]['custom_'.$field['id']] = $val;
+              }
+            }
+            elseif (!empty($field['options'])) {
+              $val = array_search($value, $field['options']);
+              if ($val !== FALSE) {
+                $matches[0][$label] = 1;
+                $matches[1]['custom_'.$field['id']] = $val;
+              }
+              elseif(array_key_exists($value, $field['options'])) {
+                $matches[0][$label] = 1;
+                $matches[1]['custom_'.$field['id']] = $value;
+              }
+            }
+            elseif ($field['data_type'] == 'Memo') {
+              $matches[0][$label] = 1;
+              $matches[1]['custom_'.$field['id']] = "$value";
+            }
+            elseif ($field['data_type'] == 'Date') {
+              $val = CRM_Utils_Type::validate($value, 'Timestamp');
+              if ($val) {
+                $matches[0][$label] = 1;
+                $matches[1]['custom_'.$field['id']] = $val;
+              }
+            }
+            elseif ($field['data_type'] == 'Link') {
+              if(CRM_Utils_Rule::url($value)) {
+                $matches[0][$label] = 1;
+                $matches[1]['custom_'.$field['id']] = $value;
+              }
+            }
+            elseif ($field['data_type'] == 'ContactReference') {
+              if (CRM_Utils_Rule::positiveInteger($value)) {
+                $val = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $value, 'id', 'id');
+                if ($val) {
+                  $matches[0][$label] = 1;
+                  $matches[1]['custom_'.$field['id']] = $val;
+                }
+              }
+            }
+            elseif ($field['html_type'] == 'Text') {
+              switch($field['data_type']) {
+                case 'String':
+                  $matches[0][$label] = 1;
+                  $matches[1]['custom_'.$field['id']] = "$value";
+                  break;
+                case 'Int':
+                  if (CRM_Utils_Rule::integer($value)) {
+                    $matches[1]['custom_'.$field['id']] = (int) $value;
+                  }
+                  break;  
+                case 'Float':
+                  if (CRM_Utils_Rule::numeric($value)) {
+                    $matches[0][$label] = 1;
+                    $matches[1]['custom_'.$field['id']] = $value;
+                  }
+                  break;  
+                case 'Money':
+                  if (CRM_Utils_Rule::money($value)) {
+                    $matches[0][$label] = 1;
+                    $matches[1]['custom_'.$field['id']] = $value ? $value : 0;
+                  }
+                  break;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

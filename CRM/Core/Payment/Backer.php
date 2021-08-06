@@ -332,9 +332,6 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         }
       }
     }
-    else{
-      // error log here
-    }
   }
 
   /**
@@ -456,18 +453,32 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         break;
     }
 
-    $amountLevel = array();
+    $amountLevel = $customFields = array();
     $itemMoney = (int) $json['transaction']['items']['money'];
     $amountLevel[] = "{$json['transaction']['items']['reward_name']}({$json['transaction']['items']['reward_id']})x1:{$itemMoney}";
     if (!empty(trim($json['transaction']['items']['note']))) {
       $amountLevel[] = ts('Note').'=>'.$json['transaction']['items']['note'];
     }
-    foreach($json['transaction']['items']['custom_fields'] as $key => $item) {
-      if ($item['value'] !== '') {
-        $amountLevel[] = $item['name'].'=>'.$item['value'];
+
+    // process custom options
+    // complex logic to values of custom
+    if (!empty($json['transaction']['items']['custom_fields'])) {
+      $items = $matches = array();
+      foreach($json['transaction']['items']['custom_fields'] as $key => $item) {
+        $items[$item['name']] = $item['value'];
+      }
+      CRM_Core_BAO_CustomGroup::matchFieldValues('Contribution', $items, $matches);
+      if (!empty($matches[1])) {
+        $params['contribution'] += $matches[1];
+        $leftItems = array_diff_key($items, $matches[0]);
+        foreach($leftItems as $label => $value) {
+          $amountLevel[] = $label.'=>'.$value;
+        }
+      }
+      if (!empty($amountLevel)) {
+        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
-    $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
     return $params;
   }
 
