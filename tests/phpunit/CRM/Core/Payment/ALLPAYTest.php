@@ -120,7 +120,6 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     }
 
     // load drupal module file
-    $loaded = module_load_include('inc', 'civicrm_allpay', 'civicrm_allpay.ipn');
   }
 
   function tearDown() {
@@ -179,7 +178,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
     );
-    civicrm_allpay_ipn('Credit', $post, $get);
+    CRM_Core_Payment_ALLPAY::ipn('Credit', $post, $get);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -275,7 +274,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
     );
-    civicrm_allpay_ipn('Credit', $post, $get);
+    CRM_Core_Payment_ALLPAY::ipn('Credit', $post, $get);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -322,8 +321,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TotalSuccessTimes' => 2,
       'SimulatePaid' => '1',
     );
-    civicrm_allpay_ipn('Credit', $post, $get);
-    $trxn_id2 = _civicrm_allpay_recur_trxn($trxn_id, $gwsr1);
+    CRM_Core_Payment_ALLPAY::ipn('Credit', $post, $get);
+    $trxn_id2 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $gwsr1);
 
     // check second payment contribution exists
     $params = array(
@@ -422,7 +421,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
         )),
       ),
     ));
-    $trxn_id3 = _civicrm_allpay_recur_trxn($trxn_id, $gwsr2);
+    $trxn_id3 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $gwsr2);
     $order_json = json_encode($order_base);
     $order_sample = json_decode($order_json);
 
@@ -446,7 +445,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     // fail contribution from recurring
     $hash = substr(md5(implode('', (array)$order_base->ExecLog[3])), 0, 8);
-    $trxn_id4 = _civicrm_allpay_recur_trxn($trxn_id, $hash);
+    $trxn_id4 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $hash);
     $params = array(
       1 => array($trxn_id4, 'String'),
     );
@@ -458,7 +457,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     // fail contribution from recurring (new version)
     $hash = substr(md5(implode('', (array)$order_base->ExecLog[4])), 0, 8);
-    $trxn_id5 = _civicrm_allpay_recur_trxn($trxn_id, $hash);
+    $trxn_id5 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $hash);
     $params = array(
       1 => array($trxn_id5, 'String'),
     );
@@ -467,7 +466,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $cid5 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid5");
 
-    $trxn_id6 = _civicrm_allpay_recur_trxn($trxn_id, '11223344');
+    $trxn_id6 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, '11223344');
     $params = array(
       1 => array($trxn_id6, 'String'),
     );
@@ -517,7 +516,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TEST2' => 'BBB',
     );
     $_GET['q'] = 'allpay/record';
-    civicrm_allpay_record($cid);
+    CRM_Core_Payment_ALLPAYIPN::doRecordData($cid);
     $this->assertDBQuery($cid, "SELECT cid FROM civicrm_contribution_allpay WHERE data LIKE '%#info%TEST1%' AND cid = $cid");
   }
 }
