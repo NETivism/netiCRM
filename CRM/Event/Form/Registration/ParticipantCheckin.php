@@ -22,7 +22,7 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
     $this->_contactId = $values['contact_id'];
     $this->_statusId = $values['status_id'];
     if (empty($this->_eventId) || empty($this->_contactId)) {
-      CRM_Core_Error::fatal(ts('You do not have access to this page'));
+      CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
       return;
     }
     $params = array('id' => $this->_eventId);

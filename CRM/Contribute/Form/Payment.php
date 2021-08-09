@@ -76,13 +76,13 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       if(!empty($this->_ids) && $state != 'ThankYou'){
         $available = CRM_Contribute_BAO_Contribution::checkPaymentAvailable($this->_id, $this->_ids, $this);
         if($available === FALSE){
-          CRM_Core_Error::fatal(ts('Payment expired.'));
+          CRM_Core_Error::statusBounce(ts('Payment expired.'));
         }
         else{
           $this->_paymentProcessors = $this->get('paymentProcessors');
           $this->_paymentProcessor = $this->get('paymentProcessor');
           if(!count($this->_paymentProcessors)){
-            CRM_Core_Error::fatal(ts("We don't have available method for this payment."));
+            CRM_Core_Error::statusBounce(ts("We don't have available method for this payment."));
           }
         }
       }

@@ -207,7 +207,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     ) {
       require_once 'CRM/Activity/BAO/Activity.php';
       if (!CRM_Activity_BAO_Activity::checkPermission($this->_id, $action)) {
-        CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+        CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
     }
 

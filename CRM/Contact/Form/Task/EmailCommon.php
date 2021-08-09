@@ -312,7 +312,7 @@ class CRM_Contact_Form_Task_EmailCommon {
    */
   static function postProcess(&$form) {
     if (count($form->_contactIds) > self::MAX_EMAILS_KILL_SWITCH) {
-      CRM_Core_Error::fatal(ts('Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead.',
+      CRM_Core_Error::statusBounce(ts('Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead.',
           array(1 => self::MAX_EMAILS_KILL_SWITCH)
         ));
     }

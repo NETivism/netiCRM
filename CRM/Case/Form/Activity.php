@@ -116,7 +116,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
     //check for case activity access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-      CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+      CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
     //validate case id.
     if ($this->_caseId &&
@@ -125,7 +125,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       $session = CRM_Core_Session::singleton();
       $allCases = CRM_Case_BAO_Case::getCases(TRUE, $session->get('userID'));
       if (!array_key_exists($this->_caseId, $allCases)) {
-        CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+        CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
     }
 
@@ -137,7 +137,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
         $this->_activityTypeId
       );
       if (!$valid) {
-        CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+        CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
     }
 

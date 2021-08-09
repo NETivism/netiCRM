@@ -92,7 +92,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
       );
 
       if (!CRM_Utils_Array::value('is_tellfriend_enabled', $pcpBlock[$this->_pcpBlockId])) {
-        CRM_Core_Error::fatal(ts('Tell Friend is disable for this Personal Campaign Page'));
+        CRM_Core_Error::statusBounce(ts('Tell Friend is disable for this Personal Campaign Page'));
       }
 
       $this->_mailLimit = $pcpBlock[$this->_pcpBlockId]['tellfriend_limit'];
@@ -112,7 +112,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
     }
 
     if (!$this->_contactID) {
-      CRM_Core_Error::fatal(ts('Could not get the contact ID'));
+      CRM_Core_Error::statusBounce(ts('Could not get the contact ID'));
     }
 
     // we do not want to display recently viewed items, so turn off

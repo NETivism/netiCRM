@@ -52,7 +52,7 @@ class CRM_Case_Page_DashBoard extends CRM_Core_Page {
   function preProcess() {
     //check for civicase access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-      CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+      CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
 
     //validate case configuration.

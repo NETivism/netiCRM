@@ -245,7 +245,7 @@ class CRM_Contact_Form_Edit_Address {
     $profileId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', 'shared_address', 'id', 'name');
 
     if (!$profileId) {
-      CRM_Core_Error::fatal(ts('Your install is missing required "Shared Address" profile.'));
+      CRM_Core_Error::statusBounce(ts('Your install is missing required "Shared Address" profile.'));
     }
 
     require_once 'CRM/Contact/Form/NewContact.php';

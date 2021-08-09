@@ -45,7 +45,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   public function preProcess() {
     // check for edit permission
     if (!CRM_Core_Permission::check('edit memberships')) {
-      CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
+      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     // action
@@ -117,7 +117,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         }
       }
       if (empty($validProcessors)) {
-        CRM_Core_Error::fatal(ts('Could not find valid payment processor for this page'));
+        CRM_Core_Error::statusBounce(ts('Could not find valid payment processor for this page'));
       }
       else {
         $this->_processors = $validProcessors;
@@ -127,7 +127,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
-        CRM_Core_Error::fatal(ts('Please set a location type of %1', array(1 => 'Billing')));
+        CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
       }
       $this->set('bltID', $this->_bltID);
       $this->assign('bltID', $this->_bltID);

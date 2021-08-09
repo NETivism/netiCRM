@@ -36,7 +36,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     if($contribution->find(TRUE)) {
       $this->_contribution = $contribution;
       if ($contribution->total_amount <= 0) {
-        CRM_Core_Error::fatal(ts('Contribution amount must be greater than %1', array(1 => 0)));
+        CRM_Core_Error::statusBounce(ts('Contribution amount must be greater than %1', array(1 => 0)));
       }
       $this->assign('trxn_id', $contribution->trxn_id);
       CRM_Utils_Hook::prepareTaxReceipt($this->_id, $this->_tplParams, $this->_taxReceipt, $contribution);

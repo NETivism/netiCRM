@@ -145,7 +145,7 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
   static function del($relationshipTypeId) {
     // make sure relationshipTypeId is an integer
     if (!CRM_Utils_Rule::positiveInteger($relationshipTypeId)) {
-      CRM_Core_Error::fatal(ts('Invalid relationship type'));
+      CRM_Core_Error::statusBounce(ts('Invalid relationship type'));
     }
 
     require_once 'CRM/Contact/DAO/Relationship.php';

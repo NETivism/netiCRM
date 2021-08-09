@@ -90,13 +90,13 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $end_timestamp = strtotime($end_date);
     $start_timestamp = strtotime($start_date);
     if(empty($end_timestamp)){
-      CRM_Core_Error::fatal(ts('End date is not valid date format.'));
+      CRM_Core_Error::statusBounce(ts('End date is not valid date format.'));
     }
     if(empty($start_timestamp)){
-      CRM_Core_Error::fatal(ts('Start date is not valid date format.'));
+      CRM_Core_Error::statusBounce(ts('Start date is not valid date format.'));
     }
     if($start_timestamp > $end_timestamp){
-      CRM_Core_Error::fatal(ts('Start date should not be after End date.'));
+      CRM_Core_Error::statusBounce(ts('Start date should not be after End date.'));
     }
 
     list($last_start_date, $last_end_date) = self::getLastDurationTime($start_date, $end_date);

@@ -91,7 +91,7 @@ class CRM_Core_Payment_ProcessorForm {
       )
     ) {
 
-      CRM_Core_Error::fatal(ts('This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments, or the option to "Execute real-time monetary transactions" is disabled. Please contact the site administrator and notify them of this error',
+      CRM_Core_Error::statusBounce(ts('This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments, or the option to "Execute real-time monetary transactions" is disabled. Please contact the site administrator and notify them of this error',
           array(1 => $form->_paymentProcessor['payment_processor_type'])
         ));
     }

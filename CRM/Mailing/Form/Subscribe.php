@@ -118,7 +118,7 @@ ORDER BY title";
         $rows[] = $row;
       }
       if (empty($rows)) {
-        CRM_Core_Error::fatal(ts('There are no public mailing list groups to display.'));
+        CRM_Core_Error::statusBounce(ts('There are no public mailing list groups to display.'));
       }
       if (count($rows) == 1) {
         $row = reset($rows);

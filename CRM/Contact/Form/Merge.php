@@ -55,7 +55,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   function preProcess() {
     $this->_hasError = FALSE;
     if (!CRM_Core_Permission::check('merge duplicate contacts')) {
-      CRM_Core_Error::fatal(ts('You do not have access to this page'));
+      CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
     }
 
     $rows = array();

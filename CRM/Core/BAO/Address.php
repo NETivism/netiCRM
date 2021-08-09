@@ -937,7 +937,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     $relTypeId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', $relationshipType, 'id', 'name_a_b');
 
     if (!$relTypeId) {
-      CRM_Core_Error::fatal(ts("You seem to have deleted the relationship type '%1'", array(1 => $relationshipType)));
+      CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type '%1'", array(1 => $relationshipType)));
     }
 
     // create relationship

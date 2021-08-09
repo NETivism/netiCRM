@@ -99,7 +99,7 @@ class CRM_Contact_Page_View_UserDashBoard_GroupContact extends CRM_Contact_Page_
       $key = CRM_Utils_Request::retrieve('key', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
       $name = get_class($this);
       if( !CRM_Core_Key::validate($key, $name) ) {
-        CRM_Core_Error::fatal(ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.'));
+        CRM_Core_Error::statusBounce(ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.'));
       }
 
       $groupContactId = CRM_Utils_Request::retrieve('gcid', 'Positive',

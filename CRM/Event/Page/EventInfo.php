@@ -61,7 +61,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     if (!CRM_Core_Permission::event(CRM_Core_Permission::VIEW,
         $this->_id
       )) {
-      CRM_Core_Error::fatal(ts('You do not have permission to view this event'));
+      CRM_Core_Error::statusBounce(ts('You do not have permission to view this event'));
     }
 
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
@@ -84,12 +84,12 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     }
     elseif (!$values['event']['is_active']) {
       // form is inactive, die a fatal death
-      CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
+      CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
     }
 
     if (!empty($values['event']['is_template'])) {
       // form is an Event Template
-      CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
+      CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
     }
 
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));

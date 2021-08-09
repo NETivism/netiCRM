@@ -110,7 +110,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     // disable anon user for access profile
     $ufid = $session->get("ufID");
     if(empty($ufid)){
-      CRM_Core_Error::fatal(ts("You must be logged in to view this page."));
+      CRM_Core_Error::statusBounce(ts("You must be logged in to view this page."));
       return;
     }
 
@@ -136,7 +136,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       // check if we are rendering mixed profiles
       require_once 'CRM/Core/BAO/UFGroup.php';
       if (CRM_Core_BAO_UFGroup::checkForMixProfiles($this->_profileIds)) {
-        CRM_Core_Error::fatal(ts('You cannot combine profiles of multiple types.'));
+        CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
       }
 
       $this->_gid = $this->_profileIds[0];
