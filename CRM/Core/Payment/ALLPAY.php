@@ -122,8 +122,14 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  // Get all used instrument
-  static function _civicrm_allpay_instrument($type = 'normal'){
+  /**
+   * Original _civicrm_allpay_instrument, Get all used instrument.
+   *
+   * @param string $type The String of return type, as 'normal'(default), 'form_name' and 'code'.
+   *
+   * @return array The instruments used by AllPay.
+   */
+  static function getInstruments($type = 'normal'){
     $i = array(
       'Credit Card' => array('label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'),
       'ATM' => array('label' => ts('ATM Transfer'), 'desc' => '', 'code' => 'ATM'),
@@ -151,13 +157,29 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
-  static function _civicrm_allpay_trxn_id($is_test, $id){
+  /**
+   * Generate trxn_id of allPay, Original _civicrm_allpay_trxn_id
+   *
+   * @param boolean $is_test Is this id a test contribution or not.
+   * @param string $id The contribution Id.
+   *
+   * @return string If test, return expand string of id.
+   */
+  static function generateTrxnId($is_test, $id){
     if($is_test){
       $id = 'test' . substr(str_replace(array('.','-'), '', $_SERVER['HTTP_HOST']), 0, 3) . $id. 'T'. mt_rand(100, 999);
     }
     return $id;
   }
-  static function _civicrm_allpay_recur_trxn($parent, $gwsr){
+  /**
+   * Generate a trxn_id for recurring. Original _civicrm_allpay_recur_trxn
+   *
+   * @param string $parent Input 'MerchantTradeNo' from allpay return values/
+   * @param string $gwsr Input 'gwsr' from allpay return values.
+   *
+   * @return string implode by $parent and $gwsr.
+   */
+  static function generateRecurTrxn($parent, $gwsr){
     if(empty($gwsr)){
       return $parent;
     }
@@ -170,7 +192,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   /**
    * Sets appropriate parameters for checking out to google
    *
-   * @param array $params  name value pair of contribution datat
+   * @param array $params  name value pair of contribution data.
+   * @param string component String of payment type as 'contribute' or 'event'.
    *
    * @return void
    * @access public
@@ -188,7 +211,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     // to see what instrument for newweb
     $instrument_id = $params['civicrm_instrument_id'];
     $instrument_name = civicrm_instrument_by_id($instrument_id, 'name'); // TODO
-    $allpay_instruments = self::_civicrm_allpay_instrument('code');
+    $allpay_instruments = self::getInstruments('code');
     $instrument_code = $allpay_instruments[$instrument_name];
     $form_key = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$params['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$params['qfKey'];
 
@@ -231,7 +254,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       $contrib_values['payment_instrument_id'] = $params['civicrm_instrument_id'];
     }
     $contrib_values['is_pay_later'] = $is_pay_later;
-    $contrib_values['trxn_id'] = self::_civicrm_allpay_trxn_id($is_test, $params['contributionID']);
+    $contrib_values['trxn_id'] = self::generateTrxnId($is_test, $params['contributionID']);
     $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
     // Inject in quickform sessions
@@ -240,8 +263,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $_SESSION['CiviCRM'][$form_key]['params']['is_pay_later'] = $is_pay_later;
     $params['trxn_id'] = $contribution->trxn_id;
 
-    $arguments = self::_civicrm_allpay_order($params, $component, $payment_processor, $instrument_code, $form_key);
-    self::_civicrm_allpay_checkmacvalue($arguments, $payment_processor);
+    $arguments = self::getOrderArgs($params, $component, $payment_processor, $instrument_code, $form_key);
+    self::generateMacValue($arguments, $payment_processor);
     /*
     $alter = array(
       'module' => 'civicrm_allpay',
@@ -250,15 +273,28 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     );
     drupal_alter('civicrm_checkout_params', $alter);
     */
-    print self::_civicrm_allpay_form_redirect($arguments, $payment_processor);
+    print self::outputRedirectForm($arguments, $payment_processor);
     // move things to CiviCRM cache as needed
     CRM_Utils_System::civiExit();
   }
 
-  static function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrument_code, $form_key){
+
+  /**
+   * Retrieve arguments of order. Original _civicrm_allpay_order.
+   *
+   * @param array $vars Parameters of the contribution page or session.
+   * @param string $component String of payment type as 'contribute' or 'event'.
+   * @param array $payment_processor The payment processor parameters.
+   * @param string $instrument_code The code of used instrument like 'Credit' or 'ATM'.
+   * @param string $form_key The unique from key from the session.
+   *
+   * @return array Rearrange nessesary arguments for checkout.
+   *
+   */
+  static function getOrderArgs(&$vars, $component, &$payment_processor, $instrument_code, $form_key){
 
     // url 
-    $notify_url = self::_civicrm_allpay_notify_url($vars, 'allpay/ipn/'.$instrument_code, $component);
+    $notify_url = self::generateNotifyUrl($vars, 'allpay/ipn/'.$instrument_code, $component);
     $civi_base_url = CRM_Utils_System::currentPath();
     $query = http_build_query(array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey']));
     $thankyou_url = CRM_Utils_System::url($civi_base_url, $query, TRUE, NULL, FALSE);
@@ -391,7 +427,15 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     return $args ;
   }
   
-  static function _civicrm_allpay_form_redirect($redirect_vars, $payment_processor){
+  /**
+   * Print redirect form HTML. Original _civicrm_allpay_form_redirect.
+   *
+   * @param array $redirect_vars Variables of form elements which is name to value.
+   * @param array $payment_processor The payment processor parameters.
+   *
+   * @return void
+   */
+  static function outputRedirectForm($redirect_vars, $payment_processor){
     header('Pragma: no-cache');
     header('Cache-Control: no-store, no-cache, must-revalidate');
     header('Expires: 0');
@@ -423,7 +467,16 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   ';
   }
   
-  static function _civicrm_allpay_notify_url(&$vars, $path, $component){
+  /**
+   * Generate notify URL added to checkout request. Original _civicrm_allpay_notify_url
+   *
+   * @param array $vars Variables used in compose query.
+   * @param string $path Notify URL path.
+   * @param string $component String of payment type as 'contribute' or 'event'.
+   *
+   * @return string The full path or notify URL.
+   */
+  static function generateNotifyUrl(&$vars, $path, $component){
     $query = array();
     $query["contact_id"] = $vars['contactID'];
     $query["cid"] = $vars['contributionID'];
@@ -469,7 +522,15 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
-  static function _civicrm_allpay_checkmacvalue(&$args, $payment_processor){
+  /**
+   * Generate mac value used to for validation. Original _civicrm_allpay_checkmacvalue
+   *
+   * @param mixed $args Arguments of the order. Default is Array. Will rearrange to Array if type is String.
+   * @param array $payment_processor The payment processor parameters.
+   *
+   * @return string md5 hash of mac values.
+   */
+  static function generateMacValue(&$args, $payment_processor){
     // remove empty arg
     if(is_array($args)){
       foreach($args as $k => $v){
@@ -517,12 +578,23 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   function cancelRecuringMessage($recurID){
     if (function_exists("_civicrm_allpay_cancel_recuring_message")) {
       return _civicrm_allpay_cancel_recuring_message(); 
-    }else{
+    }
+    else {
       CRM_Core_Error::fatal('Module civicrm_allpay doesn\'t exists.');
     }
   }
 
-  static function civicrm_allpay_ipn($instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
+  /**
+   * Execute ipn as called from allpay transaction. Original civicrm_allpay_ipn
+   *
+   * @param string $instrument The code of used instrument like 'Credit' or 'ATM'.
+   * @param array $post Bring post variables if you need test.
+   * @param array $get Bring get variables if you need test.
+   * @param boolean $print Does server echo the result, or just return that. Default is TRUE.
+   *
+   * @return array|void If $print is FALSE, function will return the result as Array.
+   */
+  static function doIPN($instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;

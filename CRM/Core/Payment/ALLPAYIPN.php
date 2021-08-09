@@ -22,7 +22,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
 
     if(empty($this->_get['is_recur'])){
-      self::civicrm_allpay_record($ids['contribution'], $this->_post);
+      self::doRecordData($ids['contribution'], $this->_post);
     }
     if(empty($ids['contributionRecur'])){
       // we will save record later if this is recurring
@@ -104,26 +104,29 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     
     // check contribution id matches
     if (!strstr($contribution->trxn_id, $input['MerchantTradeNo'])) {
-      \Drupal::logger('civicrm_allpay')->notice("OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$input['MerchantTradeNo']} ");
-      $note .= ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$input['MerchantTradeNo']}")."\n";
+      $msg = "AllPay: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$input['MerchantTradeNo']} ";
+      CRM_Core_Error::debug_log_message($msg);
+      $note .= ts("Failuare: $msg")."\n";
       $pass = FALSE;
     } 
 
     // check amount
     $amount = $input['TradeAmt'] ? $input['TradeAmt'] : $input['Amount'];
     if ( round($contribution->total_amount) != $amount && $input['RtnCode'] == 1 ) {
-      \Drupal::logger('civicrm_allpay')->notice("Amount values dont match between database and IPN request. {$contribution->trxn_id}-{$input['Gwsr']} : {$input['amount']}");
-      $note .= ts("Failuare: Amount values dont match between database and IPN request. {$contribution->trxn_id}-{$input['Gwsr']} : {$input['amount']}")."\n";
+      $msg = "AllPay: Amount values dont match between database and IPN request. {$contribution->trxn_id}-{$input['Gwsr']} : {$input['amount']}";
+      CRM_Core_Error::debug_log_message($msg);
+      $note .= ts("Failuare: $msg")."\n";
       $pass = FALSE;
     }
 
     // allpay validation
     // only validate this when not test.
     if(!empty($input['CheckMacValue'])){
-      $mac = CRM_Core_Payment_ALLPAY::_civicrm_allpay_checkmacvalue($this->_post, self::$_payment_processor);
+      $mac = CRM_Core_Payment_ALLPAY::generateMacValue($this->_post, self::$_payment_processor);
       if(strtolower($input['CheckMacValue']) != strtolower($mac)) {
         $note .= ts("Failuare: CheckMacValue not match. Contact system admin.")."\n";
-        \Drupal::logger("civicrm_allpay")->notice("Failuare: CheckMacValue not match. Should be '{$mac}', but '{$input['CheckMacValue']}' displayed.");
+        $msg = "AllPay: Failuare: CheckMacValue not match. Should be '{$mac}', but '{$input['CheckMacValue']}' displayed.";
+        CRM_Core_Error::debug_log_message($msg);
         $pass = FALSE;
       }
     }
@@ -143,7 +146,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
 
       // not the first time (PeriodReturnURL)
       if($this->_get['is_recur']){
-        $trxn_id = _civicrm_allpay_recur_trxn($input['MerchantTradeNo'], $input['Gwsr']);
+        $trxn_id = CRM_Core_Payment_ALLPAY::generateRecurTrxn($input['MerchantTradeNo'], $input['Gwsr']);
         $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", array(1 => array($recur->id, 'Integer')));
         if($input['RtnCode'] != 1){
           $contribution->contribution_status_id = 4; // Failed
@@ -153,7 +156,8 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
           if ($local_succ_times >= $input['TotalSuccessTimes']) {
             // Possible over charged. Record on the contribtion
             $local_succ_times++;
-            \Drupal::logger('civicrm_allpay')->notice('Possible over charge, detect from TotalSuccessTimes: '.$input['TotalSuccessTimes']);
+            $msg = 'AllPay: Possible over charge, detect from TotalSuccessTimes: '.$input['TotalSuccessTimes'];
+            CRM_Core_Error::debug_log_message($msg);
             $note .= "Possible over charge. Will be $local_succ_times successful contributions in CRM, but greenworld only have {$input['TotalSuccessTimes']} success execution.";
           }
           $contribution->contribution_status_id = 1; // Completed
@@ -161,7 +165,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         }
         if(!empty($c)){
           unset($objects['contribution']);
-          self::civicrm_allpay_record($c->id, $this->_post);
+          self::doRecordData($c->id, $this->_post);
           // Set expire time
           $data = $this->_post;
           if(!empty($data['#info']['ExpireDate'])){
@@ -217,7 +221,12 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       }
       $response_code = $input['RtnCode'];
       $response_msg = $input['RtnMsg'];
-      $response_msg .= "\n"._civicrm_allpay_error_msg($response_code);
+      if (function_exists('_civicrm_allpay_error_msg')) {
+        $response_msg .= "\n"._civicrm_allpay_error_msg($response_code);
+      }
+      else {
+        $response_msg .= "\nResponse Code: {$response_code}";
+      }
       $failed_reason = $response_msg.' ('.ts('Error Code:').$response_code.')';
       $note .= $failed_reason;
       $this->failed($objects, $transaction, $failed_reason);
@@ -269,7 +278,15 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 
-  static function civicrm_allpay_record($cid, $data = null){
+  /**
+   * Save data to database. Original civicrm_allpay_record.
+   * 
+   * @param integer|array $cid Contribution ID or Array of Contribution IDs.
+   * @param array $data The data need to write in database.
+   * 
+   * @return void
+   */
+  static function doRecordData($cid, $data = null){
     if (is_array($cid)) {
       // from civicrm route, first parameter is array.
       // for example: as allpay/record/1, $var1 = ['allpay', 'record', '1']
@@ -294,8 +311,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
           2 => array(json_encode($data), 'String'),
         ));
 
-        if($billing_notify){
-          module_load_include("inc", 'civicrm_allpay', 'civicrm_allpay.notify');
+        if($billing_notify && function_exists('civicrm_allpay_notify_generate')){
           civicrm_allpay_notify_generate($cid, TRUE); // send mail
 
           // return allpay successful received notify
