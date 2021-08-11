@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-08-03 07:21+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2021-08-11 05:31+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48603,7 +48603,16 @@ msgstr "去重複規則"
 msgid ""
 "The Civi configuration setting can be overridden if the string starts with "
 "the case insenstive strings 'AND:' or 'OR:'"
-msgstr ""
+msgstr "可用 <strong>and:</strong> 和 <strong>or: </strong>前綴字做不同邏輯搜尋，例如 <strong>and:Alexander Smith</strong> 表示 Alexander 和 Smith 兩個字詞都須包含在內，<strong>or:Alexander Smith</strong> 表示 Alexander 和 Smith 任一字詞符合即可（預設不輸入邏輯前綴字功能等同於 or:）。另外也可用雙括號標出須完全相等的字詞，例如 <strong>\"Alexander Smith\"</strong> 即表示排序名稱或電話或Email須完全跟「Alexander Smith」相同。"
 
 msgid "Transaction ID must equal to the Order serial of NewebPay."
 msgstr "定期捐款交易編號必須對應到藍新委託單號，目前交易編號格式不正確，無法比對藍新委託單號。請至藍新後台確認此定捐的藍新委託單號，並填入至交易編號欄位中。"
+
+msgid "Backer Founder"
+msgstr "貝殼放大"
+
+msgid "Sender"
+msgstr "寄件者"
+
+msgid "Backer Auto Import"
+msgstr "貝殼自動匯入"
