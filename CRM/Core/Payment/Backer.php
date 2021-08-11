@@ -224,7 +224,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     if (empty($contactId)) {
       // create contact
       $contact = $params['contact'];
-      $contact['log_data'] = ts('Updated contact').'-Backer Auto Import';
+      $contact['log_data'] = ts('Updated contact').'-'.ts('Backer Auto Import');
       $contact['version'] = 3;
       $result = civicrm_api('contact', 'create', $contact);
       $contactId = $result['id'];
@@ -268,7 +268,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       unset($contact['last_name']);
 
       // log exists
-      $contact['log_data'] = ts('Updated contact').'-Backer Auto Import';
+      $contact['log_data'] = ts('Updated contact').'-'.ts('Backer Auto Import');
       civicrm_api('contact', 'create', $contact);
     }
 
