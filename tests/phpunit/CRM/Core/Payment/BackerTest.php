@@ -218,6 +218,42 @@ EOT;
     $this->_trxnId = $jsonArray['transaction']['trade_no'];
     $this->_json = json_encode($jsonArray);
     $this->_signature = hash_hmac('sha1', $this->_json, '1234');
+
+    // relationship type
+    $types = CRM_Core_PseudoConstant::relationshipType();
+    foreach($types as $tid => $type) {
+      if ($type['label_a_b'] == ts('Orderer') && $type['label_b_a'] == ts('Recipient') && $type['contact_type_a'] == '' && $type['contact_type_b'] == '') {
+        $rtypeId = $tid;
+        break;
+      }
+      if ($type['label_a_b'] == 'Orderer' && $type['label_b_a'] == 'Recipient' && $type['contact_type_a'] == '' && $type['contact_type_b'] == '') {
+        $rtypeId = $tid;
+        break;
+      }
+    }
+    if (!$rtypeId) {
+      $params = array(
+        'label_a_b' => ts('Orderer'),
+        'label_b_a' => ts('Recipient'),
+        'description' => ts("Used for").': '.ts('Backer Auto Import'),
+        'is_active' => 1,
+        'is_reserved' => 1,
+        'contact_type_a' => '',
+        'contact_type_b' => '',
+        'contact_types_a' => '',
+        'contact_types_b' => '',
+        'contact_sub_type_a' => '',
+        'contact_sub_type_b' => '',
+      );
+      $ids = array();
+      $saved = CRM_Contact_BAO_RelationshipType::add($params, $ids);
+      $rtypeId = $saved->id;
+    }
+    $params = array(
+      'backerFounderRelationship' => $rtypeId,
+    );
+    CRM_Core_BAO_ConfigSetting::add($params);
+    $this->_rtypeId = $rtypeId;
   }
 
   function tearDown() {
@@ -256,5 +292,59 @@ EOT;
         $this->assertEquals($value, $result['values'][$customFieldID][0]);
       }
     }
+
+    // verify contact data
+    $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
+    $params = array(
+      'id' => $contactId,
+      'last_name' => $formatted['contact']['last_name'],
+      'first_name' => $formatted['contact']['first_name'],
+      'external_identifier' => $formatted['contact']['external_identifier'],
+    );
+    $this->assertDBState('CRM_Contact_DAO_Contact', $contactId, $params);
+    // address, email, phone
+    $this->assertDBQuery($formatted['email'][0]['email'], "SELECT email FROM civicrm_email WHERE contact_id = %1 AND is_primary = 1", array(
+      1 => array($contactId, 'Integer')
+    ));
+    $this->assertDBQuery($formatted['phone'][0]['phone'], "SELECT phone FROM civicrm_phone WHERE contact_id = %1 AND is_primary = 1", array(
+      1 => array($contactId, 'Integer')
+    ));
+    $this->assertDBQuery($formatted['address'][0]['street_address'], "SELECT street_address FROM civicrm_address WHERE contact_id = %1 AND is_primary = 1", array(
+      1 => array($contactId, 'Integer')
+    ));
+  }
+
+  function testBackerAdditionAddress(){
+    $now = time();
+
+    // prepare data
+    $json = json_decode($this->_json, TRUE);
+    $json['recipient']['recipient_name'] = '王小明';
+    $json = json_encode($json);
+    $formatted = CRM_Core_Payment_Backer::formatParams($json);
+
+    // run
+    $createdContributionId = $this->_processor->processContribution($json);
+    $this->assertNotEmpty($createdContributionId, "In line " . __LINE__);
+    $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
+
+    $params = array(
+      'version' => 3,
+      'last_name' => $formatted['additional']['last_name'],
+      'first_name' => $formatted['additional']['first_name'],
+    );
+    $result = civicrm_api('contact', 'get', $params);
+    $this->assertAPISuccess($result);
+    $this->assertEquals($formatted['additional']['address'][0]['street_address'], $result['values'][$result['id']]['street_address']);
+
+    $params = array(
+      'version' => 3,
+      'contact_id_a' => $contactId,
+      'contact_id_b' => $result['id'],
+      'relationship_type_id' => $this->_rtypeId,
+    );
+    $result = civicrm_api('contact', 'get', $params);
+    $this->assertAPISuccess($result);
+    $this->assertGreaterThan(0 , $result['count'], 'Relationship result should greater than zero. In line '.__LINE__);
   }
 }
