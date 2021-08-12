@@ -302,16 +302,16 @@ EOT;
     );
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
+
     // address, email, phone
-    //$this->assertEquals($formatted['address'][0]['street_address'], $result['values'][$result['id']]['street_address']);
-    //$this->assertEquals($formatted['email'][0]['email'], $result['values'][$result['id']]['email']);
-    //$this->assertEquals($formatted['phone'][0]['phone'], $result['values'][$result['id']]['phone']);
+    $this->assertEquals($formatted['address'][0]['street_address'], $result['values'][$result['id']]['street_address']);
+    $this->assertEquals($formatted['email'][0]['email'], $result['values'][$result['id']]['email']);
+    $this->assertEquals($formatted['phone'][0]['phone'], $result['values'][$result['id']]['phone']);
   }
 
   function testBackerAdditionAddress(){
     $now = time();
 
-    /*
     // prepare data
     $json = json_decode($this->_json, TRUE);
     $json['recipient']['recipient_name'] = '王小明';
@@ -341,6 +341,5 @@ EOT;
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
     $this->assertGreaterThan(0 , $result['count'], 'Relationship result should greater than zero. In line '.__LINE__);
-    */
   }
 }
