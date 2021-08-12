@@ -245,6 +245,9 @@ EOT;
         'backerFounderRelationship' => $rtypeId,
       );
       CRM_Core_BAO_ConfigSetting::add($params);
+
+      // needs refresh config here
+      CRM_Core_Config::singleton(TRUE, TRUE);
     }
     $this->_rtypeId = $rtypeId;
   }
@@ -330,16 +333,19 @@ EOT;
     );
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
-    $this->assertEquals($formatted['additional']['address'][0]['street_address'], $result['values'][$result['id']]['street_address']);
+    $this->assertGreaterThan(0 , $result['count'], 'Additional contact count should greater than zero. In line '.__LINE__);
+    $additionalContact = reset($result['values']);
+    $additionalContactId = $additionalContact['contact_id'];
+    $this->assertEquals($formatted['additional']['address'][0]['street_address'], $additionalContact['street_address']);
 
     $params = array(
       'version' => 3,
       'contact_id_a' => $contactId,
-      'contact_id_b' => $result['id'],
+      'contact_id_b' => $additionalContactId,
       'relationship_type_id' => $this->_rtypeId,
     );
-    $result = civicrm_api('contact', 'get', $params);
-    $this->assertAPISuccess($result);
-    $this->assertGreaterThan(0 , $result['count'], 'Relationship result should greater than zero. In line '.__LINE__);
+    $relation = civicrm_api('contact', 'get', $params);
+    $this->assertAPISuccess($relation);
+    $this->assertGreaterThan(0 , $relation['count'], 'Relationship result should greater than zero. In line '.__LINE__);
   }
 }

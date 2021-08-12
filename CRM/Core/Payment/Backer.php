@@ -128,6 +128,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $params = self::formatParams($jsonString);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $config = CRM_Core_Config::singleton();
+
     if (empty($params)) {
       return;
     }
