@@ -885,3 +885,36 @@ WHERE     $whereClause
   return civicrm_api3_create_success($contacts, $params, 'contact', 'get_by_location', $dao);
 }
 
+
+function _civicrm_api3_contact_checksum_spec(&$params) {
+  $params['contact_id']['api.required'] = 1;
+  $params['live']['api.required'] = 1;
+}
+/**
+ * Get contact checksum
+ *
+ * @param [type] $params
+ * @return void
+ */
+function civicrm_api3_contact_checksum($params) {
+  if (!CRM_Utils_Rule::positiveInteger($params['live']) || $params['live'] > 360) {
+    return civicrm_api3_create_error('Parameter live should be integer indicate hours the checksum live time. Cannot over 360 hours.');
+  }
+  if (!empty($params['ts'])) {
+    if (!CRM_Utils_Rule::positiveInteger($params['ts']) || strlen($params['ts']) > 10) {
+      return civicrm_api3_create_error('Parameter ts should be 10 digit integer represent timestamp.');
+    }
+  }
+  if (!CRM_Utils_Rule::positiveInteger($params['contact_id'])) {
+    return civicrm_api3_create_error('Parameter contact_id should be integer and exists on current database.');
+  }
+  $contactId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $params['contact_id'], 'id');
+  if (empty($contactId)) {
+    return civicrm_api3_create_error('Parameter contact_id should be integer and exists on current database.');
+  }
+  $checksum = CRM_Contact_BAO_Contact_Utils::generateChecksum($params['contact_id'], $params['ts'], $params['live']);
+  $values = array(
+    array($params['contact_id'] => $checksum),
+  );
+  return civicrm_api3_create_success($values, $params, 'contact', 'checksum');
+}
