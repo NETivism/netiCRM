@@ -375,10 +375,8 @@ cj(function($) {
   else {
     window.location.hash="explorer"; //to be sure to display the result under the generated code in the viewport
   }
-  $('#query').on("keyup change paste input", function(){
-    setTimeout(function(){
-      generateQuery();
-    }, 400);
+  $('#query').on("keyup paste", function(){
+    generateQuery();
   });
   $('#entity, #action').change (function() {
     $("#selector, #extra").empty();
