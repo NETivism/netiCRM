@@ -74,6 +74,15 @@ cj(function($) {
       if (val) {
         params[$(this).data('id')] = val;
       }
+
+      var q = $("#query").val().split("?");
+      var urlParams = new URLSearchParams(q[1]);
+      var entity = urlParams.get("entity");
+      var action = urlParams.get("action");
+      if (entity && action) {
+        params['entity'] = entity;
+        params['action'] = action;
+      }
     });
 
     if($('#explorer input#json-checkbox:checked').length) {
@@ -366,8 +375,10 @@ cj(function($) {
   else {
     window.location.hash="explorer"; //to be sure to display the result under the generated code in the viewport
   }
-  $('#query').on("keyup", function(){
-    generateQuery();
+  $('#query').on("keyup change paste input", function(){
+    setTimeout(function(){
+      generateQuery();
+    }, 400);
   });
   $('#entity, #action').change (function() {
     $("#selector, #extra").empty();
