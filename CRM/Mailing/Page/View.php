@@ -161,7 +161,9 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     if ($print) {
       header($header);
       if (!strstr($html, '</body>')) {
-        echo '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body style="margin:0;">'."\n";
+        list($siteName, $emailNoUsed) = CRM_Core_BAO_Domain::getNameAndEmail();
+        $title = "{$this->_mailing->subject} | {$siteName}";
+        echo '<!DOCTYPE html><html><head><title>'.$title.'</title></title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body style="margin:0;">'."\n";
         echo $content."\n";
         echo '</body></html>';
       }

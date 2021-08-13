@@ -397,11 +397,15 @@ function pcpAnonymous( ) {
     hide('nickID', 'block');
     hide('nameID', 'block');
     hide('personalNoteID', 'block');
+    cj('#nickID .label .crm-marker').remove();
   }
   else {
     if ( document.getElementsByName("pcp_is_anonymous")[0].checked ) {
       show('nameID', 'block');
       show('nickID', 'block');
+      if (cj('#nickID .label .crm-marker').length < 1) {
+        cj('#nickID .label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>')
+      }
       show('personalNoteID', 'block');
     }
   }
