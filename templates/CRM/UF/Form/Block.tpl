@@ -99,7 +99,7 @@
            <div class="content">
              {if $n|substr:0:3 eq 'im-'}
                {assign var="provider" value=$n|cat:"-provider_id"}
-               {$form.$provider.html}
+               {$form.$provider.html}&nbsp;&nbsp;
              {else if $n|substr:0:4 eq 'url-'}
                {assign var="websiteType" value=$n|cat:"-website_type_id"}
                {$form.$websiteType.html}
