@@ -67,10 +67,11 @@
     mappers.each(function(){
       var n = $(this).attr('name');
       var name = n.replace(/\[0\]$/, '[1]').replace(/\[/g, '\\[').replace(/\]/g,'\\]');
-      $("select[name="+name+"]:visible").chosen({
-        "search_contains": true,
-        "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-        "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+      $("select[name="+name+"]:visible").select2({
+        "allowClear": true,
+        "dropdownAutoWidth": true,
+        "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
+        "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
       }).hide();
     });
     mappers.bind('change', function( ) {
@@ -80,13 +81,14 @@
       if(m[0]){
         eval(m[0]);
       }
-      // now start chosen
+      // now start select2
       var n = $(this).attr('name');
       var name = n.replace(/\[0\]$/, '[1]').replace(/\[/g, '\\[').replace(/\]/g,'\\]');
-      $("select[name="+name+"]").chosen({
-        "search_contains": true,
-        "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-        "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+      $("select[name="+name+"]").select2({
+        "allowClear": true,
+        "dropdownAutoWidth": true,
+        "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
+        "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
       }).hide();
       $("select[name="+name+"]").trigger("liszt:updated");
     });

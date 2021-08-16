@@ -2,6 +2,7 @@
 {literal}
 cj(document).ready(function(){
   cj('{/literal}{$selector}{literal}').select2({
+    "allowClear": true,
     "dropdownAutoWidth": true,
     {/literal}{if $select_width}"width": "{$select_width}",{/if}{literal}
     "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",

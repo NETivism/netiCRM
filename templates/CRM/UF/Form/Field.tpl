@@ -152,10 +152,11 @@
 <script type="text/javascript">
 cj().crmaccordions(); 
 cj("#field_name\\[0\\]").bind( 'change', function( ) {
-  cj("#field_name\\[1\\]").chosen({
-    "search_contains": true,
-    "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-    "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+  cj("#field_name\\[1\\]").select2({
+    "allowClear": true,
+    "dropdownAutoWidth": true,
+    "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
+    "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
   }).change(function(){
     showLabel();mixProfile();
   }).hide();
