@@ -71,6 +71,10 @@ packages/jquery/plugins/jquery.FormNavigate.js
 packages/jquery/plugins/jquery.chosen.js
 packages/jquery/css/jquery.chosen.css
 
+packages/jquery/plugins/jquery.select2.js
+packages/jquery/plugins/jquery.select2.zh-TW.js
+packages/jquery/css/jquery.select2.css
+
 packages/jquery/plugins/jquery.modal.min.js
 packages/jquery/css/jquery.modal.min.css
 
@@ -88,4 +92,5 @@ packages/mdl/material.min.js
 
 packages/material-design-iconic-font/css/material-design-iconic-font.min.css
 packages/Sortable/Sortable.min.js
+
 
