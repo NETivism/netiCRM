@@ -234,12 +234,17 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     // make sure that at least one of live or test is present
     // and we have at least name and url_site
     // would be good to make this processor specific
-    $errors = array();
-
-    if (!(self::checkSection($fields, $errors) ||
-        self::checkSection($fields, $errors, 'test')
-      )) {
+    $errors = $liveErrors = $testErrors = array();
+    self::checkSection($fields, $liveErrors);
+    self::checkSection($fields, $testErrors, 'test');
+    if (!empty($liveErrors) && !empty($testErrors)) {
       $errors['_qf_default'] = ts('You must have at least the test or live section filled');
+      if (!empty($liveErrors)) {
+        $errors = array_merge($errors, $liveErrors);
+      }
+      if (!empty($testErrors)) {
+        $errors = array_merge($errors, $testErrors);
+      }
     }
 
     if (!empty($errors)) {
@@ -259,6 +264,9 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       $allPresent = TRUE;
       foreach(array('user_name', 'password', 'signature', 'subject') as $name) {
         $label = $name.'_label';
+        if ($section) {
+          $name = "{$section}_$name";
+        }
         if (!empty($processorType->$label)) {
           if (!empty($fields[$name]) || $fields[$name] == '0') {
             $present = TRUE;
