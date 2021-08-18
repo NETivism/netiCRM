@@ -67,23 +67,29 @@ cj(function($) {
     });
   }
 
-  function generateQuery () {
+  function generateQuery (entity, action) {
     var params = {};
-    $('#explorer input:checkbox:checked:not(#json-checkbox), #explorer select').each(function() {
-      var val = $(this).val();
-      if (val) {
-        params[$(this).data('id')] = val;
-      }
+    if (entity && action) {
+      params['entity'] = entity;
+      params['action'] = action;
+    }
+    else {
+      $('#explorer input:checkbox:checked:not(#json-checkbox), #explorer select').each(function() {
+        var val = $(this).val();
+        if (val) {
+          params[$(this).data('id')] = val;
+        }
 
-      var q = $("#query").val().split("?");
-      var urlParams = new URLSearchParams(q[1]);
-      var entity = urlParams.get("entity");
-      var action = urlParams.get("action");
-      if (entity && action) {
-        params['entity'] = entity;
-        params['action'] = action;
-      }
-    });
+        var q = $("#query").val().split("?");
+        var urlParams = new URLSearchParams(q[1]);
+        var entity = urlParams.get("entity");
+        var action = urlParams.get("action");
+        if (entity && action) {
+          params['entity'] = entity;
+          params['action'] = action;
+        }
+      });
+    }
 
     if($('#explorer input#json-checkbox:checked').length) {
       params.json = fetchJson();
@@ -380,7 +386,7 @@ cj(function($) {
   });
   $('#entity, #action').change (function() {
     $("#selector, #extra").empty();
-    generateQuery();
+    generateQuery($('#entity').val(), $('#action').val());
     if ($('#action').val() == 'get') {
       runQuery();
     }
