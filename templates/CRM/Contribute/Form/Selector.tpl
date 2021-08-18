@@ -64,9 +64,12 @@
     <td class="crm-contribution-trxn-id">{$row.trxn_id}</td>
     <td class="crm-contribution-receipt-id">{$row.receipt_id}</td>
     <td class="crm-contribution-instrument">{$row.payment_instrument}</td>
-    <td class="right bold crm-contribution-amount"><span class="nowrap">{$row.total_amount|crmMoney:$row.currency}</span> {if $row.amount_level }<br /> ({$row.amount_level}){/if}
+    <td class="right bold crm-contribution-amount"><span class="nowrap">{$row.total_amount|crmMoney:$row.currency}</span>
     {if $row.contribution_recur_id}
-     <br /><a href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$row.contribution_recur_id`&cid=`$row.contact_id`"}">{ts}(Recurring Contribution){/ts}</a>
+     <br /><i class="zmdi zmdi-refresh-alt"></i><a href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$row.contribution_recur_id`&cid=`$row.contact_id`"}">{ts}Recurring Contribution{/ts}</a>
+    {/if}
+    {if $row.amount_level }
+      <br /><div class="amount-level" title="{ts}Amount Label{/ts}: {$row.amount_level|escape:'html'}"><i class="zmdi zmdi-labels"></i>{$row.amount_level|truncate:50}</div>
     {/if}
     </td>
     <td class="crm-contribution-type crm-contribution-type_{$row.contribution_type_id}">{$row.contribution_type}</td>

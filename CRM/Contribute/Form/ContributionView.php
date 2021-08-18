@@ -124,6 +124,10 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
         $values["recur_info_url"] = CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$values['contribution_recur_id']}&cid={$values['contact_id']}");
       }
     }
+    if (CRM_Utils_Array::value('amount_level', $values)) {
+      CRM_Event_BAO_Participant::fixEventLevel($values['amount_level']);
+      $values['amount_level'] = str_replace(', ', '<br>', $values['amount_level']);
+    }
     $track = CRM_Core_BAO_Track::getTrack('civicrm_contribution', $id);
     if (!empty($track)) {
       $this->assign('track', $track);
