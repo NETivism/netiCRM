@@ -482,12 +482,12 @@ SELECT label, value
             $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($fieldName, $op, $value, 'Integer');
             $value = $value ? ts('Yes') : ts('No');
             $this->_qill[$grouping][] = $field['label'] . " {$op} {$value}";
-            continue;
+            continue 2;
 
           case 'Link':
             $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($fieldName, $op, $value, 'String');
             $this->_qill[$grouping][] = $field['label'] . " $op $value";
-            continue;
+            continue 2;
 
           case 'Float':
             if ($field['is_search_range'] && is_array($value)) {
@@ -497,7 +497,7 @@ SELECT label, value
               $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($fieldName, $op, $value, 'Float');
               $this->_qill[$grouping][] = $field['label'] . " {$op} {$value}";
             }
-            continue;
+            continue 2;
 
           case 'Money':
             if ($field['is_search_range'] && is_array($value)) {
@@ -514,12 +514,12 @@ SELECT label, value
               $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($fieldName, $op, $value, 'Float');
               $this->_qill[$grouping][] = $field['label'] . " {$op} {$value}";
             }
-            continue;
+            continue 2;
 
           case 'Memo':
             $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($fieldName, $op, $value, 'String');
             $this->_qill[$grouping][] = "$field[label] $op $value";
-            continue;
+            continue 2;
 
           case 'Date':
             $fromValue = CRM_Utils_Array::value('from', $value);
@@ -527,7 +527,7 @@ SELECT label, value
 
             if (!$fromValue && !$toValue) {
               if (!CRM_Utils_Date::processDate($value) && $op != 'IS NULL' && $op != 'IS NOT NULL') {
-                continue;
+                continue 2;
               }
 
               // hack to handle yy format during search
@@ -552,7 +552,7 @@ SELECT label, value
               $fromDate = CRM_Utils_Date::processDate($fromValue);
               $toDate = CRM_Utils_Date::processDate($toValue);
               if (!$fromDate && !$toDate) {
-                continue;
+                continue 2;
               }
               if ($fromDate) {
                 $this->_where[$grouping][] = "$fieldName >= $fromDate";
