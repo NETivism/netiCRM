@@ -240,7 +240,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    */
   static function fatal($message = NULL, $code = NULL, $suppress = NULL) {
     $config = CRM_Core_Config::singleton();
-
+    $vars = array();
     if ($config->fatalErrorHandler && function_exists($config->fatalErrorHandler)) {
       $name = $config->fatalErrorHandler;
       $ret = $name($vars);
@@ -258,6 +258,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       // fallback
       CRM_Core_Error::debug_var('fatal_error', $message);
       CRM_Core_Error::backtrace('backtrace', TRUE);
+      $vars['message'] = $message;
       if ($suppress) {
         $vars['suppress'] = $suppress;
       }
