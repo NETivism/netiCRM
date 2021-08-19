@@ -211,10 +211,7 @@ class CRM_Core_IDS {
    */
   private function log($result, $reaction = 0, $impact = NULL) {
     $config = CRM_Core_Config::singleton();
-    $ip = $_SERVER['REMOTE_ADDR'];
-    if ($_SERVER['HTTP_X_FORWARDED_FOR']) {
-      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    }
+    $ip = CRM_Utils_System::ipAddress();
 
     $data = array();
     $session = CRM_Core_Session::singleton();
