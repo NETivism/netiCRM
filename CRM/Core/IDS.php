@@ -32,6 +32,12 @@
  * $Id$
  *
  */
+require_once 'IDS/autoload.php';
+
+use IDS\Init;
+use IDS\Monitor;
+use IDS\Report;
+
 class CRM_Core_IDS {
 
   CONST CONFIG_FILE = 'Config.IDS.ini';
@@ -73,19 +79,17 @@ class CRM_Core_IDS {
       $_REQUEST['IDS_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
     }
 
-    require_once 'IDS/Init.php';
-
     // init the PHPIDS and pass the REQUEST array
     $config = CRM_Core_Config::singleton();
     $configFile = $config->configAndLogDir . self::CONFIG_FILE;
     self::initConfig($configFile);
 
-    $init = IDS_Init::init($configFile);
-    $ids = new IDS_Monitor($_REQUEST, $init);
-    $result = $ids->run();
-
+    $init = Init::init($configFile);
+    $ids = new Monitor($init);
+    $result = $ids->run($_REQUEST);
+    $impact = $result->getImpact();
     if (!$result->isEmpty()) {
-      $this->react($result);
+      $this->react($result, $impact);
     }
 
     return TRUE;
@@ -119,8 +123,8 @@ class CRM_Core_IDS {
       $civicrm_path = rtrim($civicrm_root, '/');
       $contents = "
 [General]
-    filter_type         = xml
-    filter_path         = {$civicrm_path}/packages/IDS/default_filter.xml
+    filter_type         = json
+    filter_path         = {$civicrm_path}/packages/IDS/default_filter.json
     tmp_path            = $tmpDir
     HTML_Purifier_Path  = IDS/vendors/htmlpurifier/HTMLPurifier.auto.php
     HTML_Purifier_Cache = $tmpDir
@@ -129,8 +133,6 @@ class CRM_Core_IDS {
     exceptions[]        = __utmc
     exceptions[]        = widget_code
     exceptions[]        = html_message
-    exceptions[]        = body_html
-    exceptions[]        = body_json
     exceptions[]        = msg_html
     exceptions[]        = msg_text
     exceptions[]        = msg_subject
@@ -154,8 +156,13 @@ class CRM_Core_IDS {
     exceptions[]        = confirm_email_text
     exceptions[]        = report_header
     exceptions[]        = report_footer
-    exceptions[]        = data
-    exceptions[]        = instructions
+    exceptions[]        = body_html
+    json[]              = body_json
+
+[Caching]
+    caching         = file
+    expiration_time = 600
+    path            = {$tmpDir}default_filter.cache
 ";
       if (file_put_contents($configFile, $contents) === FALSE) {
         CRM_Core_Error::movedSiteError($configFile);
@@ -175,29 +182,22 @@ class CRM_Core_IDS {
    * Depending on the impact value certain actions are
    * performed.
    *
-   * @param IDS_Report $result
+   * @param Report $result
+   * @param int $impact
    *
    * @return boolean
    */
-  private function react(IDS_Report $result) {
-
-    $impact = $result->getImpact();
+  private function react(Report $result, $impact) {
     if ($impact >= $this->threshold['kick']) {
-      $this->log($result, 3, $impact);
+      $this->log($result, 'kick', $impact);
       $this->kick($result);
-      return TRUE;
     }
     elseif ($impact >= $this->threshold['warn']) {
-      // $this->log($result, 2, $impact);
+      $this->log($result, 'warn', $impact);
       $this->warn($result);
-      return TRUE;
     }
     elseif ($impact >= $this->threshold['log']) {
-      // $this->log($result, 0, $impact);
-      return TRUE;
-    }
-    else {
-      return TRUE;
+      $this->log($result, 'log', $impact);
     }
   }
 
@@ -210,11 +210,15 @@ class CRM_Core_IDS {
    * @return boolean
    */
   private function log($result, $reaction = 0, $impact = NULL) {
-    $config = CRM_Core_Config::singleton();
     $ip = CRM_Utils_System::ipAddress();
-
-    $data = array();
     $session = CRM_Core_Session::singleton();
+    $data = array(
+      'time' => date('c'),
+      'ip' => $ip,
+      'domain' => $_SERVER['HTTP_HOST'],
+      'account' => CRM_Utils_System::getLoggedInUfID(),
+      'contact' => $session->get('userID'),
+    );
     foreach ($result as $event) {
       $filters = $event->getFilters();
       $description = array();
@@ -224,20 +228,17 @@ class CRM_Core_IDS {
 
       $log = array(
         'impact' => $impact,
+        'reaction' => $reaction,
         'name' => $event->getName(),
         'tag' => implode("|", $event->getTags()),
         'problem' => "\n".implode("\n", $description),
         'value' => $event->getValue(),
-        'page' => $_SERVER['REQUEST_URI'],
-        'userid' => $session->get('userID'),
-        'ip' => $ip,
-        'reaction' => $reaction,
       );
-      $data[] = $log;
+      $data['events'][] = $log;
     }
+    $data['url'] = $_SERVER['REQUEST_URI'];
     if (!empty($data)) {
-      $data['post'] = $_POST;
-      CRM_Core_Error::debug_var('IDS Detector Details', $data);
+      CRM_Core_Error::debug_var('PHPIDS', json_encode($data));
     }
     return TRUE;
   }
