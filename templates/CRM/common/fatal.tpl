@@ -36,5 +36,4 @@
   {/if}
 </div>
 {if $debug}<div><hr>{$debug}</div>{/if}
-{if $backtrace}<div><hr>{$backtrace}</div>{/if}
 {/if}
