@@ -28,13 +28,17 @@
   {$suppress}
 </div>
 {else}
+{if $message || $error.message}
 <div class="messages crm-error error-ci">
-  <strong>{ts}We are very sorry that there an error occurred. Please contact system administrator for further support. Thanks for your help in improving this open source project.{/ts}</strong><br>{ts}Error Code:{/ts}
-  {if $message}{$message}{/if}
+  {if $message}{ts}Error{/ts}: {$message}{/if}
   {if $error.message && $message != $error.message}
+    {ts}Error Details{/ts}:<br>
     {$error.message}
   {/if}
 </div>
+{/if}
+<div class="{if !$message && !$error.message}messagers crm-error{else}description{/if}  error-ci">
+  {ts}We are very sorry that there an error occurred. Please contact system administrator for further support. Thanks for your help in improving this open source project.{/ts}
+</div>
 {if $debug}<div><hr>{$debug}</div>{/if}
-{if $backtrace}<div><hr>{$backtrace}</div>{/if}
 {/if}
