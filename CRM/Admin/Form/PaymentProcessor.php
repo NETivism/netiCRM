@@ -46,7 +46,8 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
   protected $_fields = NULL;
 
-  protected $_ppDAO; function preProcess() {
+  protected $_ppDAO;
+  function preProcess() {
     parent::preProcess();
 
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
@@ -103,9 +104,13 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
     $this->assign('is_recur', $this->_ppDAO->is_recur);
 
-    if($this->_ppType == 'Mobile'){
-      $this->_fields = CRM_Core_Payment_Mobile::getAdminFields($this->_ppDAO);
-    }else{
+
+    $class = $this->_ppDAO->class_name;
+    $class = 'CRM_Core_'.$class;
+    if (method_exists($class, 'getAdminFields')) {
+      $this->_fields = $class::getAdminFields($this->_ppDAO);
+    }
+    else{
       $this->_fields = array(
         array('name' => 'user_name',
           'label' => $this->_ppDAO->user_name_label,
@@ -198,13 +203,23 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       if (empty($field['label'])) {
         continue;
       }
+      if (!empty($field['type'])) {
 
-      $this->add('text', $field['name'],
-        $field['label'], $attributes[$field['name']]
-      );
-      $this->add('text', "test_{$field['name']}",
-        $field['label'], $attributes[$field['name']]
-      );
+        switch($field['type']) {
+          case 'select':
+            $this->addSelect($field['name'], $field['label'], $field['options']);
+            $this->addSelect('test_'.$field['name'], $field['label'], $field['options']);
+            break;
+          case 'text':
+            $this->add('text', $field['name'], $field['label'], $attributes[$field['name']]);
+            $this->add('text', "test_{$field['name']}", $field['label'], $attributes[$field['name']]);
+            break;
+        }
+      }
+      else {
+        $this->add('text', $field['name'], $field['label'], $attributes[$field['name']]);
+        $this->add('text', "test_{$field['name']}", $field['label'], $attributes[$field['name']]);
+      }
       if (CRM_Utils_Array::value('rule', $field)) {
         $this->addRule($field['name'], $field['msg'], $field['rule']);
         $this->addRule("test_{$field['name']}", $field['msg'], $field['rule']);
@@ -219,12 +234,17 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     // make sure that at least one of live or test is present
     // and we have at least name and url_site
     // would be good to make this processor specific
-    $errors = array();
-
-    if (!(self::checkSection($fields, $errors) ||
-        self::checkSection($fields, $errors, 'test')
-      )) {
+    $errors = $liveErrors = $testErrors = array();
+    self::checkSection($fields, $liveErrors);
+    self::checkSection($fields, $testErrors, 'test');
+    if (!empty($liveErrors) && !empty($testErrors)) {
       $errors['_qf_default'] = ts('You must have at least the test or live section filled');
+      if (!empty($liveErrors)) {
+        $errors = array_merge($errors, $liveErrors);
+      }
+      if (!empty($testErrors)) {
+        $errors = array_merge($errors, $testErrors);
+      }
     }
 
     if (!empty($errors)) {
@@ -235,28 +255,53 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
   }
 
   static function checkSection(&$fields, &$errors, $section = NULL) {
-    $names = array('user_name');
-
-    $present = FALSE;
-    $allPresent = TRUE;
-    foreach ($names as $name) {
-      if ($section) {
-        $name = "{$section}_$name";
-      }
-      if (!empty($fields[$name]) || $fields[$name] == '0') {
-        $present = TRUE;
-      }
-      else {
-        $allPresent = FALSE;
-      }
+    if (!empty($fields['payment_processor_type'])) {
+      $processorType = CRM_Core_DAO::executeQuery("SELECT user_name_label, password_label, signature_label, subject_label FROM civicrm_payment_processor_type WHERE name LIKE %1", array(1 => array($fields['payment_processor_type'], 'String')));
+      $processorType->fetch();
     }
-
-    if ($present) {
-      if (!$allPresent) {
-        $errors['_qf_default'] = ts('You must have at least the user_name specified');
+    if (!empty($processorType) && $fields['payment_processor_type'] !== 'Mobile') {
+      $present = FALSE;
+      $allPresent = TRUE;
+      foreach(array('user_name', 'password', 'signature', 'subject') as $name) {
+        $label = $name.'_label';
+        if ($section) {
+          $name = "{$section}_$name";
+        }
+        if (!empty($processorType->$label)) {
+          if (!empty($fields[$name]) || $fields[$name] == '0') {
+            $present = TRUE;
+          }
+          else {
+            $errors[$name] = ts('%1 is a required field.', array(1 => $processorType->$label));
+          }
+        }
       }
+      return $present;
     }
-    return $present;
+    else {
+      $names = array('user_name');
+
+      $present = FALSE;
+      $allPresent = TRUE;
+      foreach ($names as $name) {
+        if ($section) {
+          $name = "{$section}_$name";
+        }
+        if (!empty($fields[$name]) || $fields[$name] == '0') {
+          $present = TRUE;
+        }
+        else {
+          $allPresent = FALSE;
+        }
+      }
+
+      if ($present) {
+        if (!$allPresent) {
+          $errors['_qf_default'] = ts('You must have at least the user_name specified');
+        }
+      }
+      return $present;
+    }
   }
 
   function setDefaultValues() {
@@ -265,7 +310,8 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $defaults['payment_processor_type'] = $this->_ppType;
 
     if (!$this->_id) {
-      $defaults['is_active'] = $defaults['is_default'] = 1;
+      $defaults['is_active'] = 1;
+      $defaults['is_default'] = 0;
       $defaults['url_site'] = $this->_ppDAO->url_site_default;
       $defaults['url_api'] = $this->_ppDAO->url_api_default;
       $defaults['url_recur'] = $this->_ppDAO->url_recur_default;

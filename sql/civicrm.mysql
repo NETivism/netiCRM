@@ -578,7 +578,7 @@ CREATE TABLE civicrm_payment_processor_type (
      url_api_test_default varchar(255)    ,
      url_recur_test_default varchar(255)    ,
      url_button_test_default varchar(255)    ,
-     billing_mode int unsigned NOT NULL   COMMENT 'Billing Mode',
+     billing_mode int unsigned NOT NULL   COMMENT 'Billing Mode, check CRM_Core_Payment for details',
      is_recur tinyint    COMMENT 'Can process recurring contributions',
      payment_type int unsigned   DEFAULT 1 COMMENT 'Payment Type: Credit or Debit' 
 ,

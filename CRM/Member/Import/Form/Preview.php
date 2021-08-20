@@ -161,31 +161,20 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
 
     $mapper = $this->get('mapperKeys');
     $mapperKeys = array();
-    $mapperLocType = array();
-    $mapperPhoneType = array();
-    // Note: we keep the multi-dimension array (even thought it's not
-    // needed in the case of memberships import) so that we can merge
-    // the common code with contacts import later and subclass contact
-    // and membership imports from there
     foreach ($mapper as $key => $value) {
       $mapperKeys[$key] = $mapper[$key][0];
-
-      if (is_numeric($mapper[$key][1])) {
-        $mapperLocType[$key] = $mapper[$key][1];
-      }
-      else {
-        $mapperLocType[$key] = NULL;
-      }
-
-      if (!is_numeric($mapper[$key][2])) {
-        $mapperPhoneType[$key] = $mapper[$key][2];
-      }
-      else {
-        $mapperPhoneType[$key] = NULL;
-      }
     }
-
-    $parser = new CRM_Member_Import_Parser_Membership($mapperKeys, $mapperLocType, $mapperPhoneType);
+    $properties = array(
+      'ims' => 'mapperImProvider',
+      'phones' => 'mapperPhoneType',
+      'websites' => 'mapperWebsiteType',
+      'locationTypes' => 'mapperLocType',
+      'locations' => 'locations',
+    );
+    foreach ($properties as $propertyName => $propertyVal) {
+      $$propertyVal = $this->get($propertyName);
+    }
+    $parser = new CRM_Member_Import_Parser_Membership($mapperKeys, $mapperLocType, $mapperPhoneType, $mapperWebsiteType,$mapperImProvider);
 
     $mapFields = $this->get('fields');
     $parser->_dateFormats = $this->get('dateFormats');

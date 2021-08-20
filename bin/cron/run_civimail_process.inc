@@ -91,8 +91,6 @@ class CiviMailProcessor {
         require_once 'CRM/Mailing/MailStore.php';
         $store = CRM_Mailing_MailStore::getStore($name);
 
-        require_once 'api/v2/Mailer.php';
-
         // process 200 mail per times
         while ($mails = $store->fetchNext(10)) {
             $times++;
@@ -163,66 +161,84 @@ class CiviMailProcessor {
                            }
                         }
                     }
-                    $params = array ( 'job_id'         => $job,
-                                      'event_queue_id' => $queue,
-                                      'hash'           => $hash,
-                                      'body'           => $text
-                                      );
-                    civicrm_mailer_event_bounce( $params );
+                    $params = array (
+                      'version' => 3,
+                      'job_id' => $job,
+                      'event_queue_id' => $queue,
+                      'hash' => $hash,
+                      'body' => $text,
+                    );
+                    $result = civicrm_api('Mailing', 'event_bounce', $params);
                     break;
                 case 'c':
                 case 'confirm':
-                    $params = array ( 'job_id'         => $job,
-                                      'event_queue_id' => $queue,
-                                      'hash'           => $hash
-                                      );
-                    civicrm_mailer_event_confirm( $params );
+                    $params = array (
+                      'version' => 3,
+                      'job_id' => $job,
+                      'subscribe_id' => $queue,
+                      'hash' => $hash,
+                    );
+                    $result = civicrm_api('Mailing', 'event_confirm', $params);
                     break;
                 case 'o':
                 case 'optOut':
-                    $params = array ( 'job_id'         => $job,
-                                      'event_queue_id' => $queue,
-                                      'hash'           => $hash
-                                      );
-                    civicrm_mailer_event_domain_unsubscribe( $params );
+                    $params = array (
+                      'version' => 3,
+                      'job_id' => $job,
+                      'event_queue_id' => $queue,
+                      'hash' => $hash,
+                    );
+                    $result = civicrm_api('MailingGroup', 'event_domain_unsubscribe', $params);
                     break;
                 case 'r':
                 case 'reply':
                     // instead of text and HTML parts (4th and 6th params) send the whole email as the last param
-                    $params = array ( 'job_id'         => $job,
-                                      'event_queue_id' => $queue,
-                                      'hash'           => $hash,
-                                      'bodyTxt'        => null,
-                                      'replyTo'        => $replyTo,
-                                      'bodyHTML'       => null,
-                                      'fullEmail'      => $mail->generate()
-                                      );
-                    civicrm_mailer_event_reply( $params );
+                    $params = array (
+                      'version' => 3,
+                      'job_id' => $job,
+                      'event_queue_id' => $queue,
+                      'hash' => $hash,
+                      'bodyTxt' => null,
+                      'replyTo' => $replyTo,
+                      'bodyHTML' => null,
+                      'fullEmail' => $mail->generate()
+                    );
+                    $result = civicrm_api('Mailing', 'event_reply', $params);
                     break;
                 case 'e':
                 case 're':
                 case 'resubscribe':
-                    $params = array ( 'job_id'         => $job,
-                                      'event_queue_id' => $queue,
-                                      'hash'           => $hash
-                                      );
-                    civicrm_mailer_event_resubscribe( $params );
+                    $params = array (
+                      'version' => 3,
+                      'job_id' => $job,
+                      'event_queue_id' => $queue,
+                      'hash' => $hash
+                    );
+                    $result = civicrm_api('MailingGroup', 'event_resubscribe', $params);
                     break;
                 case 's':
                 case 'subscribe':
-                    $params = array ( 'email'          => $mail->from->email,
-                                      'group_id'       => $job
-                                      );
-                    civicrm_mailer_event_subscribe( $params );
+                    $params = array (
+                      'version' => 3,
+                      'email' => $mail->from->email,
+                      'group_id' => $job
+                    );
+                    $result = civicrm_api('MailingGroup', 'event_subscribe', $params);
                     break;
                 case 'u':
                 case 'unsubscribe':
-                    $params = array ( 'job_id'         => $job,
-                                      'event_queue_id' => $queue,
-                                      'hash'           => $hash
-                                      );
-                    civicrm_mailer_event_unsubscribe( $params );
+                    $params = array (
+                      'version' => 3,
+                      'job_id' => $job,
+                      'event_queue_id' => $queue,
+                      'hash' => $hash
+                    );
+                    $result = civicrm_api('MailingGroup', 'event_unsubscribe', $params);
                     break;
+                }
+                if ($result['is_error']) {
+                  $log = "Failed Processing: {$mail->subject}, Action: $action, Job ID: $job, Queue ID: $queue, Hash: $hash. Failed Reason: {$result['error_message']}";
+                  CRM_Core_Error::debug_log_message($log);
                 }
                 
                 $store->markProcessed($key);

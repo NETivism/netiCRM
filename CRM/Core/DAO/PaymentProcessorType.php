@@ -182,7 +182,7 @@ class CRM_Core_DAO_PaymentProcessorType extends CRM_Core_DAO
    */
   public $url_button_test_default;
   /**
-   * Billing Mode
+   * Billing Mode, check CRM_Core_Payment for details
    *
    * @var int unsigned
    */

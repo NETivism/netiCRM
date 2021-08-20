@@ -67,7 +67,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_config = $config;
   }
 
-  static function getEditableFields($paymentProcessor = NULL) {
+  static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
     if (empty($paymentProcessor)) {
       $returnArray = array();
     }
@@ -78,6 +78,18 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
       }
     }
+    if (!empty($form)) {
+      $recur_id = $form->get('id');
+      if ($recur_id) {
+        $sql = "SELECT LENGTH(trxn_id) FROM civicrm_contribution_recur WHERE id = %1";
+        $params = array( 1 => array($recur_id, 'Positive'));
+        $length = CRM_Core_DAO::singleValueQuery($sql, $params);
+        if ($length >= 30 || empty($length)) {
+          $returnArray[] = 'trxn_id';
+        }
+      }
+    }
+
     return $returnArray;
   }
 
@@ -745,6 +757,14 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       // Prepare params
       $recurResult = array();
 
+      if (preg_match('/^[a-f0-9]{32}$/', $params['trxn_id']) || empty($params['trxn_id'])) {
+        // trxn_id is hash, equal to the situation without trxn_id
+        $recurResult['is_error'] = 1;
+        $recurResult['msg'] = ts('Transaction ID must equal to the Order serial of NewebPay.');
+        $recurResult['msg'] .= ts('There are no any change.');
+        return $recurResult;
+      }
+
       $apiConstructParams = array(
         'paymentProcessor' => $this->_paymentProcessor,
         'isTest' => $this->_mode == 'test' ? 1 : 0,
@@ -778,7 +798,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $requestParams = array(
           'Version' => self::$_recurEditAPIVersion,
           'MerOrderNo' => $merchantId,
-          'PeriodNo' => $dao->period_no,
+          'PeriodNo' => $params['trxn_id'],
           'AlterType' => self::$_statusMap[$newStatusId],
         );
         $apiAlterStatus = clone $spgatewayAPI;
@@ -819,7 +839,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $requestParams = array(
         'Version' => self::$_recurEditAPIVersion,
         'MerOrderNo' => $merchantId,
-        'PeriodNo' => $dao->period_no,
+        'PeriodNo' => $params['trxn_id'],
       );
 
       /*

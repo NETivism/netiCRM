@@ -82,6 +82,23 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
         ),
       )
     );
+    $this->addFormRule(array('CRM_Contact_Form_DedupeFind', 'formRule'), $this);
+  }
+
+  static function formRule($fields, $files, $form) {
+    $errors = array();
+    if ($form->rgid) {
+      $dedupeGroupParams = array('id' => $form->rgid);
+      $ruleGroup = CRM_Dedupe_BAO_RuleGroup::getDetailsByParams($dedupeGroupParams);
+      $ruleGroup = $ruleGroup[$form->rgid];
+      if (!$ruleGroup['threshold']) {
+        $editUrl = CRM_Utils_System::url('civicrm/contact/deduperules', 'action=update&id='.$ruleGroup['id']);
+        $message = ts('Dedupe Rule Group')." - {$ruleGroup['name']} ".ts("Weight Threshold to Consider Contacts 'Matching':").' '.$ruleGroup['threshold'];
+        $message .= '<br> &raquo; <a href="'.$editUrl.'">'.ts('Edit Rule').'</a>';
+        $errors['qfKey'] = $message;
+      }
+    }
+    return $errors;
   }
 
   function setDefaultValues() {

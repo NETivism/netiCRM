@@ -101,6 +101,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $currentUserID = $this->_userID;
 
     if (!empty($csContactID) && !empty($csString) && $currentUserID != $csContactID) {
+      $this->_invalidChecksumMessage = ts('The specific URL you visited is expired. Use this page to process your payment.');
+      $this->_invalidChecksumRedirect = CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$this->_id);
       if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactID, $this)) {
         // refs #29618, validate this cs haven't used before
         $dao = new CRM_Core_DAO_Sequence();
@@ -118,7 +120,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       else {
         // refs #31611, internal contribution page restriction
         if ($this->_values['is_internal'] > 0) {
-        CRM_Core_Error::statusBounce(ts('You need to specify contact checksum and contact id on url when using internal page.'), CRM_Utils_System::url('civicrm/contribute/internal', 'reset=1&page_id='.$this->_id));
+          CRM_Core_Error::statusBounce(ts('You need to specify contact checksum and contact id on url when using internal page.'), CRM_Utils_System::url('civicrm/contribute/internal', 'reset=1&page_id='.$this->_id));
         }
       }
     }
