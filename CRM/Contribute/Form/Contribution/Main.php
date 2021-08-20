@@ -326,6 +326,21 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
         }
       }
+
+      if (!empty($this->_values['is_for_organization'])) {
+        $employerId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'employer_id');
+        if (!empty($employerId)) {
+          $org = new CRM_Contact_DAO_Contact();
+          $org->id = $employerId;
+          $org->selectAdd('organization_name');
+          $org->selectAdd('sic_code');
+          $org->whereAdd('is_deleted = 0');
+          if($org->find(TRUE)) {
+            $this->_defaults['organization_name'] = $org->organization_name;
+            $this->_defaults['sic_code'] = $org->sic_code;
+          }
+        }
+      }
     }
     else if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
       !empty($_GET['tryagian']) &&
@@ -334,7 +349,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     ) {
       // use session info prepopulate civicrm form value, #20784
       $userContributionPrepopulate = $session->get('user_contribution_prepopulate');
-      if (!empty($userContributionPrepopulate) && REQUEST_TIME <= $userContributionPrepopulate['expires']) {
+      if (!empty($userContributionPrepopulate) && CRM_REQUEST_TIME <= $userContributionPrepopulate['expires']) {
         unset($userContributionPrepopulate['expires']);
         $this->_defaults = $userContributionPrepopulate;
         return $this->_defaults;

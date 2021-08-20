@@ -889,7 +889,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
    * For now we only allow custom contribution fields to be in
    * profile
    *
-   * @return return the list of contribution fields
+   * @return array the list of contribution fields
    * @static
    * @access public
    */
