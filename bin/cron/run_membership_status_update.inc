@@ -25,7 +25,6 @@ class CRM_UpdateMembershipRecord {
         require_once 'CRM/Member/BAO/MembershipType.php';
         require_once 'CRM/Utils/Date.php';
         require_once 'CRM/Utils/System.php';
-        require_once 'api/v2/Membership.php';
         require_once 'CRM/Member/PseudoConstant.php';
         require_once 'CRM/Contact/BAO/Contact.php';
         require_once 'CRM/Activity/BAO/Activity.php';
@@ -108,18 +107,19 @@ AND    civicrm_membership.is_test = 0
                 
                 //process only when status change.
                 if ( $dao->status_id != $deceaseStatusId ) {
-                    //take all params that need to save.
-                    $deceasedMembership =  $memberParams;
-                    $deceasedMembership['status_id'] = $deceaseStatusId; 
-                    $deceasedMembership['createActivity'] = true;
-                    
                     //since there is change in status.
                     $statusChange = array( 'status_id' => $deceaseStatusId );
                     $smarty->append_by_ref('memberParams', $statusChange, true );
                     
                     //process membership record.
+                    //take all params that need to save.
+                    $deceasedMembership =  $memberParams;
                     unset($deceasedMembership['membership_type']);
-                    civicrm_contact_membership_create( $deceasedMembership );
+                    $deceasedMembership['version'] = 3;
+                    $deceasedMembership['status_id'] = $deceaseStatusId; 
+                    $deceasedMembership['createActivity'] = TRUE;
+
+                    civicrm_api('membership', 'create', $deceasedMembership);
                 }
                 continue;
             }
@@ -137,24 +137,30 @@ AND    civicrm_membership.is_test = 0
                                                     array_search( 'Expired', $allStatus ) ) ) ) {
                 
                 //get the membership status as per id.
-                $newStatus = civicrm_membership_status_calc( array( 'membership_id' => $dao->membership_id ) );
-                $statusId  = CRM_Utils_Array::value( 'id', $newStatus );
+                $newStatus = civicrm_api('membership_status', 'calc',
+                  array(
+                    'version' => 3,
+                    'membership_id' => $dao->membership_id,
+                    'ignore_admin_only' => FALSE,
+                  )
+                );
+                $statusId = $newStatus['id'] ? $newStatus['id'] : NULL;
                 
                 //process only when status change.
                 if ( $statusId && 
                      $statusId != $dao->status_id ) {
-                    //take all params that need to save.
-                    $memParams = $memberParams;
-                    $memParams['status_id']      = $statusId;
-                    $memParams['createActivity'] = true; 
-                    
                     //since there is change in status.
                     $statusChange = array( 'status_id' => $statusId );
                     $smarty->append_by_ref('memberParams', $statusChange, true );
                     
                     //process member record.
+                    //take all params that need to save.
+                    $memParams = $memberParams;
                     unset($memParams['membership_type']);
-                    civicrm_contact_membership_create( $memParams );
+                    $memParams['version'] = 3;
+                    $memParams['status_id'] = $statusId;
+                    $memParams['createActivity'] = TRUE; 
+                    civicrm_api('membership', 'create', $memParams);
                 }
             }
             

@@ -160,5 +160,23 @@ ORDER BY cim.is_primary DESC, im_id ASC ";
     }
     return $ims;
   }
+
+  /**
+   * Get current exists id from value(IM)
+   *
+   * Only effect when phone id not provided. Id will be added into params before add.
+   * 
+   * @param array $params referenced array to be add exists phone id
+   * @return void
+   */
+  static function valueExists(&$params) {
+    if (empty($params['id']) && !empty($params['name']) && is_string($params['name']) && !empty($params['contact_id']) && !empty($params['provider_id'])) {
+      $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_im WHERE name LIKE %1 AND provider_id = %3 AND contact_id = %2", array(
+        1 => array($params['name'], 'String'),
+        2 => array($params['contact_id'], 'Integer'),
+        3 => array($params['provider_id'], 'Integer')
+      ));
+    }
+  }
 }
 

@@ -99,7 +99,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
 
     $this->addElement('checkbox', 'is_monetary', ts('Execute real-time monetary transactions'),NULL,array('onclick' => "showHideAmountBlock( this, 'is_monetary' );"));
 
-    $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "payment_processor_type != 'TaiwanACH'");
+    $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "payment_processor_type != 'TaiwanACH' AND billing_mode != 7");
     $recurringPaymentProcessor = array();
 
     if (!empty($paymentProcessor)) {
@@ -119,6 +119,9 @@ SELECT id
       $this->assign('paymentProcessor', $paymentProcessor);
     }
 
+    foreach($paymentProcessor as $pid => &$pvalue) {
+      $pvalue .= "-".ts("ID")."$pid";
+    }
     $this->addCheckBox('payment_processor', ts('Payment Processor'),
       array_flip($paymentProcessor),
       NULL, NULL, NULL, NULL,

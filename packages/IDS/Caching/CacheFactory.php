@@ -29,10 +29,13 @@
  * @license  http://www.gnu.org/licenses/lgpl.html LGPL
  * @link     http://php-ids.org/
  */
-namespace IDS;
+namespace IDS\Caching;
 
 /**
- * PHPIDS version class
+ * Caching factory
+ *
+ * This class is used as a factory to load the correct concrete caching
+ * implementation.
  *
  * @category  Security
  * @package   PHPIDS
@@ -42,8 +45,41 @@ namespace IDS;
  * @copyright 2007-2009 The PHPIDS Group
  * @license   http://www.gnu.org/licenses/lgpl.html LGPL
  * @link      http://php-ids.org/
+ * @since     Version 0.4
  */
-abstract class Version
+class CacheFactory
 {
-    const VERSION = 'master';
+    /**
+     * Factory method
+     *
+     * @param object $init the IDS_Init object
+     * @param string $type the caching type
+     *
+     * @return object the caching facility
+     */
+    public static function factory($init, $type)
+    {
+        $object  = false;
+        $wrapper = preg_replace(
+            '/\W+/m',
+            null,
+            ucfirst($init->config['Caching']['caching'])
+        );
+        $class   = '\\IDS\\Caching\\' . $wrapper . 'Cache';
+        $path    = dirname(__FILE__) . DIRECTORY_SEPARATOR . $wrapper . 'Cache.php';
+
+        if (file_exists($path)) {
+            include_once $path;
+
+            if (class_exists($class)) {
+                $object = call_user_func(
+                    array('' . $class, 'getInstance'),
+                    $type,
+                    $init
+                );
+            }
+        }
+
+        return $object;
+    }
 }

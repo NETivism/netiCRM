@@ -154,6 +154,14 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     require_once 'CRM/Contact/BAO/GroupContactCache.php';
     CRM_Contact_BAO_GroupContactCache::remove();
 
+    // calculate receipt id
+    if ((empty($result->receipt_id) || $result->receipt_id === 'null') && (!empty($result->receipt_date) && $result->receipt_date !== 'null')) {
+      $params['receipt_id'] = CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE);
+      if (!empty($params['receipt_id'])) {
+        $result->receipt_id = $params['receipt_id'];
+      }
+    }
+
     if (CRM_Utils_Array::value('contribution', $ids)) {
       CRM_Utils_Hook::post('edit', 'Contribution', $contribution->id, $contribution);
     }
@@ -301,12 +309,6 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
 
     $transaction->commit();
     
-    // calculate receipt id
-    if (!$params['receipt_id'] && empty($params['skipRecentView']) && !empty($params['receipt_date'])) {
-      $params['receipt_id'] = CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE);
-    }
-
-
     // do not add to recent items for import, CRM-4399
     if (!CRM_Utils_Array::value('skipRecentView', $params)) {
       require_once 'CRM/Utils/Recent.php';
@@ -2386,11 +2388,7 @@ SELECT source_contact_id
         }
         elseif ($receipt_id && $save && $contribution->id) {
           $contribution->receipt_id = $receipt_id;
-          $result = $contribution->save();
-          if (is_a($result, 'CRM_Core_Error')) {
-            $contribution->receipt_id = $receipt_id;
-            $transaction->rollback();
-          }
+          $contribution->save();
         }
         $transaction->commit();
         return $receipt_id;

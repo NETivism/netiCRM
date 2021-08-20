@@ -55,6 +55,12 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   protected $_newMemberships;
 
   protected $_importableContactFields;
+
+  /**
+   * Contact importer parser
+   *
+   * @var CRM_Import_Parser_Contact
+   */
   protected $_parserContact;
 
   /**

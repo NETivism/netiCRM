@@ -137,8 +137,7 @@ class CRM_Utils_ReCAPTCHA {
   }
 
   static function getIp(){
-    return ($_SERVER['REMOTE_ADDR'] != '127.0.0.1') ? $_SERVER['REMOTE_ADDR'] :
-      (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '127.0.0.1');
+    return CRM_Utils_System::ipAddress();
   }
 }
 

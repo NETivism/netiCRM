@@ -153,7 +153,15 @@ class CRM_Utils_Rule {
     return TRUE;
   }
 
-  static function url($url, $checkDomain = FALSE) {
+  /**
+   * Undocumented function
+   *
+   * @param string $url
+   * @param string $checkDomain check url has matching domain name
+   * @param bool $checkHTTPS to check if has https
+   * @return bool 
+   */
+  static function url($url, $checkDomain = '', $checkHTTPS = NULL) {
     if (!$url) {
       // If this is required then that should be checked elsewhere - here we are not assuming it is required.
       return TRUE;
@@ -162,7 +170,15 @@ class CRM_Utils_Rule {
       // allow relative URL's (CRM-15598)
       $url = 'http://' . $_SERVER['HTTP_HOST'] . $url;
     }
-    return (bool) filter_var($url, FILTER_VALIDATE_URL);
+    $valid = (bool) filter_var($url, FILTER_VALIDATE_URL);
+    if ($valid && !empty($checkDomain)) {
+      $checkDomain = str_replace('/', '', $checkDomain);
+      $valid = preg_match('@^https?://'.preg_quote($checkDomain).'/@i', $url);
+    }
+    if ($valid && !empty($checkHTTPS)) {
+      $valid = preg_match('@^https://@i', $url);
+    }
+    return (bool) $valid;
   }
 
   static function wikiURL($string) {

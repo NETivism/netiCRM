@@ -48275,3 +48275,30 @@ msgstr ""
 
 msgid "Price Set of Contribution"
 msgstr ""
+
+msgid "Dedupe Rule Group"
+msgstr ""
+
+msgid "Dedupe Rule"
+msgstr ""
+
+msgid "The Civi configuration setting can be overridden if the string starts with the case insenstive strings 'AND:' or 'OR:'"
+msgstr ""
+
+msgid "Transaction ID must equal to the Order serial of NewebPay."
+msgstr ""
+
+msgid "Backer Founder"
+msgstr ""
+
+msgid "Sender"
+msgstr ""
+
+msgid "Backer Auto Import"
+msgstr ""
+
+msgid "Orderer"
+msgstr ""
+
+msgid "The specific URL you visited is expired. Use this page to process your payment."
+msgstr ""

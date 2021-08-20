@@ -152,7 +152,7 @@
       <name>billing_mode</name>
       <type>int unsigned</type>
       <required>true</required>
-      <comment>Billing Mode</comment>
+      <comment>Billing Mode, check CRM_Core_Payment for details</comment>
       <add>1.8</add>
   </field>
   <field>

@@ -230,11 +230,13 @@
         $(dom_step).css('opacity', 0).insertBefore('.crm-contribution-main-form-block');
 
         if ($('[name=cms_create_account]').length >= 1) {
+          var $cms_user_help = $('.cms_user_help-section').removeClass('help');
           var $cms_create_account = $('[name=cms_create_account]').parent();
           var $crm_user_signup = $('.crm_user_signup-section');
         }
         $('.contrib-step-1')
           .append($('.progress-block'))
+          .append($cms_user_help)
           .append($cms_create_account)
           .append($crm_user_signup)
           .append($('.payment_options-group'))
@@ -297,6 +299,10 @@
           $("body.is-civicrm-user .first_name-section").bind("DOMSubtreeModified", function() {
             $('body.is-civicrm-user .first_name-section .description').insertAfter('body.is-civicrm-user .first_name-section');
           });
+        }
+
+        if ($('fieldset.pcp-group').length) {
+          $('fieldset.pcp-group').insertAfter('.custom_pre_profile-group');
         }
 
         $('#crm-container>form').submit(function(){

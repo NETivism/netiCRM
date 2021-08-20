@@ -1,27 +1,26 @@
 <?php
-
 /**
  * PHPIDS
- * 
+ *
  * Requirements: PHP5, SimpleXML
  *
  * Copyright (c) 2008 PHPIDS group (https://phpids.org)
  *
  * PHPIDS is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, version 3 of the License, or 
+ * the Free Software Foundation, version 3 of the License, or
  * (at your option) any later version.
  *
  * PHPIDS is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
- * along with PHPIDS. If not, see <http://www.gnu.org/licenses/>. 
+ * along with PHPIDS. If not, see <http://www.gnu.org/licenses/>.
  *
  * PHP version 5.1.6+
- * 
+ *
  * @category Security
  * @package  PHPIDS
  * @author   Mario Heiderich <mario.heiderich@gmail.com>
@@ -30,12 +29,13 @@
  * @license  http://www.gnu.org/licenses/lgpl.html LGPL
  * @link     http://php-ids.org/
  */
+namespace IDS;
 
 /**
  * PHPIDS event object
  *
- * This class represents a certain event that occured while applying the filters 
- * to the supplied data. It aggregates a bunch of IDS_Filter implementations and 
+ * This class represents a certain event that occured while applying the filters
+ * to the supplied data. It aggregates a bunch of IDS_Filter implementations and
  * is a assembled in IDS_Report.
  *
  * Note that this class implements both Countable and IteratorAggregate
@@ -47,23 +47,21 @@
  * @author    Lars Strojny <lars@strojny.net>
  * @copyright 2007-2009 The PHPIDS Group
  * @license   http://www.gnu.org/licenses/lgpl.html LGPL
- * @version   Release: $Id:Event.php 517 2007-09-15 15:04:13Z mario $
  * @link      http://php-ids.org/
  */
-class IDS_Event implements Countable, IteratorAggregate
+class Event implements \Countable, \IteratorAggregate
 {
-
     /**
      * Event name
      *
-     * @var scalar
+     * @var string
      */
     protected $name = null;
 
     /**
      * Value of the event
      *
-     * @var scalar
+     * @var mixed
      */
     protected $value = null;
 
@@ -72,7 +70,7 @@ class IDS_Event implements Countable, IteratorAggregate
      *
      * Filter objects in this array are those that matched the events value
      *
-     * @var array
+     * @var Filter[]|array
      */
     protected $filters = array();
 
@@ -88,7 +86,7 @@ class IDS_Event implements Countable, IteratorAggregate
     /**
      * Affecte tags
      *
-     * @var array
+     * @var string[]|array
      */
     protected $tags = array();
 
@@ -97,23 +95,24 @@ class IDS_Event implements Countable, IteratorAggregate
      *
      * Fills event properties
      *
-     * @param scalar $name    the event name
-     * @param scalar $value   the event value
-     * @param array  $filters the corresponding filters
-     * 
-     * @return void
+     * @param string            $name    the event name
+     * @param mixed             $value   the event value
+     * @param Filter[]|array    $filters the corresponding filters
+     *
+     * @throws \InvalidArgumentException
+     * @return \IDS\Event
      */
-    public function __construct($name, $value, Array $filters) 
+    public function __construct($name, $value, array $filters)
     {
         if (!is_scalar($name)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Expected $name to be a scalar,' . gettype($name) . ' given'
             );
         }
 
         if (!is_scalar($value)) {
-            throw new InvalidArgumentException('
-                Expected $value to be a scalar,' . gettype($value) . ' given'
+            throw new \InvalidArgumentException(
+                'Expected $value to be a scalar,' . gettype($value) . ' given'
             );
         }
 
@@ -121,8 +120,8 @@ class IDS_Event implements Countable, IteratorAggregate
         $this->value = $value;
 
         foreach ($filters as $filter) {
-            if (!$filter instanceof IDS_Filter) {
-                throw new InvalidArgumentException(
+            if (!$filter instanceof Filter) {
+                throw new \InvalidArgumentException(
                     'Filter must be derived from IDS_Filter'
                 );
             }
@@ -134,12 +133,12 @@ class IDS_Event implements Countable, IteratorAggregate
     /**
      * Returns event name
      *
-     * The name of the event usually is the key of the variable that was 
+     * The name of the event usually is the key of the variable that was
      * considered to be malicious
      *
-     * @return scalar
+     * @return string
      */
-    public function getName() 
+    public function getName()
     {
         return $this->name;
     }
@@ -147,9 +146,9 @@ class IDS_Event implements Countable, IteratorAggregate
     /**
      * Returns event value
      *
-     * @return scalar
+     * @return mixed
      */
-    public function getValue() 
+    public function getValue()
     {
         return $this->value;
     }
@@ -159,7 +158,7 @@ class IDS_Event implements Countable, IteratorAggregate
      *
      * @return integer
      */
-    public function getImpact() 
+    public function getImpact()
     {
         if (!$this->impact) {
             $this->impact = 0;
@@ -174,28 +173,23 @@ class IDS_Event implements Countable, IteratorAggregate
     /**
      * Returns affected tags
      *
-     * @return array
+     * @return string[]|array
      */
-    public function getTags() 
+    public function getTags()
     {
-        $filters = $this->getFilters();
-
-        foreach ($filters as $filter) {
-            $this->tags = array_merge($this->tags,
-                                      $filter->getTags());
+        foreach ($this->getFilters() as $filter) {
+            $this->tags = array_merge($this->tags, $filter->getTags());
         }
 
-        $this->tags = array_values(array_unique($this->tags));
-
-        return $this->tags;
+        return $this->tags = array_values(array_unique($this->tags));
     }
 
     /**
      * Returns list of filter objects
      *
-     * @return array
+     * @return Filter[]|array
      */
-    public function getFilters() 
+    public function getFilters()
     {
         return $this->filters;
     }
@@ -208,7 +202,7 @@ class IDS_Event implements Countable, IteratorAggregate
      *
      * @return integer
      */
-    public function count() 
+    public function count()
     {
         return count($this->getFilters());
     }
@@ -218,18 +212,10 @@ class IDS_Event implements Countable, IteratorAggregate
      *
      * Returns an iterator to iterate over the appended filters.
      *
-     * @return ArrayObject the filter collection
+     * @return \Iterator the filter collection
      */
-    public function getIterator() 
+    public function getIterator()
     {
-        return new ArrayObject($this->getFilters());
+        return new \ArrayIterator($this->getFilters());
     }
 }
-
-/**
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: sw=4 ts=4 expandtab
- */

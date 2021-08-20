@@ -63,6 +63,12 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   protected $_newContributions;
 
   protected $_importableContactFields;
+
+  /**
+   * Contact importer parser
+   *
+   * @var CRM_Import_Parser_Contact
+   */
   protected $_parserContact;
 
   /**

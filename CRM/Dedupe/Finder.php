@@ -138,6 +138,56 @@ class CRM_Dedupe_Finder {
   }
 
   /**
+   * Return an array of possible dupes, based on the provided array of
+   * params and rules.
+   *
+   * This function should be used on internal only, check_permission default is FALSE
+   *
+   * @param array  $params  array of params of the form $params[$table][$field] == $value
+   * @param string $ctype   contact type to match against
+   * @param string $level   dedupe rule group level ('Fuzzy' or 'Strict')
+   * @param array  $except  array of contacts that shouldn't be considered dupes
+   * @param array  $rules   rules which contain table,field,weight per array element, example:
+   *   ```php
+   *     [
+   *       ['table'=>'civicrm_contact', 'field'=>'external_identifier', 'weight'=>10],
+   *       ['table'=>'civicrm_email', 'field'=>'email', 'weight'=>10],
+   *     ]
+   *   ```
+   * @param int    $threshold threshold that meet above rules
+   * @return array  matching contact ids
+   */
+  function dupesByRules($params, $ctype, $level = 'Strict', $except = array(), $rules = array(),     $threshold = 10) {
+    // If $params is empty there is zero reason to proceed.
+    if (!$params) {
+      return array();
+    }
+    if (empty($rules)) {
+      return array();
+    }
+
+    $rgBao = new CRM_Dedupe_BAO_RuleGroup();
+    $rgBao->contact_type = $ctype;
+    $rgBao->level = $level;
+    $rgBao->threshold = $threshold;
+    $rgBao->rules = $rules;
+    $params['check_permission'] = CRM_Utils_Array::value('check_permission', $params, FALSE);
+    $rgBao->params = $params;
+    $rgBao->fillTable();
+    $dao = new CRM_Core_DAO();
+    $dao->query($rgBao->thresholdQuery($params['check_permission']));
+    $dupes = array();
+    while ($dao->fetch()) {
+      if (isset($dao->id) && $dao->id) {
+        $dupes[] = $dao->id;
+      }
+    }
+    $dao->query($rgBao->tableDropQuery());
+
+    return array_diff($dupes, $except);
+  }
+
+  /**
    * Return a contact_id-keyed array of arrays of possible dupes in the given group.
    *
    * @param int $rgid  rule group id
