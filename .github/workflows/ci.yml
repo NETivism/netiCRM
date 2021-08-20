@@ -33,6 +33,8 @@ jobs:
         run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php"
       - name: Payment Test - TapPay
         run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php"
+      - name: Payment Test - Backer 
+        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php"
       - name: Frontend - All Pages
         run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js"
       - name: Frontend - Event Registeration

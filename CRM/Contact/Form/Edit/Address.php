@@ -62,6 +62,9 @@ class CRM_Contact_Form_Edit_Address {
 
     $config = CRM_Core_Config::singleton();
     $countryDefault = $config->defaultContactCountry;
+    $locationTypes = CRM_Core_PseudoConstant::locationType(TRUE, 'name');
+    $otherTypeId = array_search('Other', $locationTypes);
+    $form->assign('locationTypeOtherId', $otherTypeId);
 
     $form->applyFilter('__ALL__', 'trim');
 

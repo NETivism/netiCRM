@@ -438,8 +438,11 @@ class CRM_Utils_String {
     static $_purifier;
     $hash = md5(implode('', $allowed_tags));
     if (!$_purifier[$hash]) {
+      $config = CRM_Core_Config::singleton();
+
       // general setting
       $purifierConfig = HTMLPurifier_Config::createDefault();
+      $purifierConfig->set('Cache.SerializerPath', $config->templateCompileDir);
       $purifierConfig->set('HTML.DefinitionID', 'civicrm-htmlpurifier-figure');
       $purifierConfig->set('HTML.DefinitionRev', 2);
       $purifierConfig->set('Output.Newline', "\n");
@@ -454,7 +457,7 @@ class CRM_Utils_String {
 
       // def needs after configure
       // fullscreen
-      $def = $purifierConfig->maybeGetRawHTMLDefinition();
+      $def = $purifierConfig->getHTMLDefinition();
       $def->addAttribute('iframe', 'allowfullscreen', 'Bool');
 
       // figure / figcaption

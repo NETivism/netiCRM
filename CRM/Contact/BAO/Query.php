@@ -612,8 +612,14 @@ class CRM_Contact_BAO_Query {
               $tName = substr($tableName, 8);
 
               if ($tName != 'contact') {
-                $this->_select["{$tName}_id"] = "{$tableName}.id as {$tName}_id";
-                $this->_element["{$tName}_id"] = 1;
+                if ($tName == 'instrument') {
+                  $this->_select["payment_instrument_id"] = "{$tableName}.value as payment_instrument_id";
+                  $this->_element["payment_instrument_id"] = 1;
+                }
+                else {
+                  $this->_select["{$tName}_id"] = "{$tableName}.id as {$tName}_id";
+                  $this->_element["{$tName}_id"] = 1;
+                }
               }
 
               //special case for phone

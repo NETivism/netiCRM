@@ -40,6 +40,7 @@
 class CRM_Export_BAO_Export {
   CONST EXPORT_ROW_COUNT = 2000;
   CONST EXPORT_BATCH_THRESHOLD = 10000;
+  CONST EXPORT_BATCH_CSV_THRESHOLD = 100000;
   CONST VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
   CONST DISPLAY_SEPARATOR = '|';
 
@@ -626,6 +627,19 @@ class CRM_Export_BAO_Export {
           'total' => $totalNumRows,
           'processed' => 0,
         );
+        if ($totalNumRows > self::EXPORT_BATCH_CSV_THRESHOLD) {
+          $fileName = str_replace('.xlsx', '.csv', $fileName);
+          $file = $config->uploadDir.$fileName;
+          $batchParams['label'] = ts('Export').': '.$fileName;
+          $batchParams['exportFile'] = $file;
+          $batchParams['download'] = array(
+            'header' => array(
+              'Content-Type: text/csv',
+              'Content-Disposition: attachment;filename="'.$fileName.'"',
+            ),
+            'file' => $batchParams['exportFile'],
+          );
+        }
         $batch->start($batchParams);
 
         // redirect to notice page
@@ -1057,6 +1071,9 @@ class CRM_Export_BAO_Export {
         $componentDetails[] = $row;
         $count++;
       }
+      if ($civicrm_batch && count(reset($componentDetails)) <= 3) {
+        $recordlog = TRUE;
+      }
       self::writeDetailsToTable($exportTempTable, $componentDetails, $sqlColumns);
       $componentDetails = array();
       $dao->free();
@@ -1070,6 +1087,9 @@ class CRM_Export_BAO_Export {
           break;
         }
       }
+    }
+    if (!empty($recordlog)) {
+      CRM_Core_Error::debug_log_message("debug #31515 - start from ".$civicrm_batch->data['processed']." - query - ".$limitQuery);
     }
 
     // do merge same address and merge same household processing
@@ -1689,74 +1709,113 @@ GROUP BY civicrm_primary_id ";
   }
 
   static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
-    $new = $fileName.'.new';
-    $sleepCounter = 0;
-    while(file_exists($new)) {
-      $sleepCounter++;
-      sleep(2);
-      // timeout
-      if ($sleepCounter > 90) {
-        $query = "SELECT * FROM $exportTempTable";
-        $dao = CRM_Core_DAO::executeQuery($query);
-        $dao->fetch();
+    if (strstr($fileName, '.csv')) {
+      // export csv. use Spout to add header row and BOM
+      if (!is_file($fileName)){
+        $writer = CRM_Core_Report_Excel::singleton('csv');
+        $writer->openToFile($fileName);
+        $writer->addRow($headerRows);
+        $writer->close();
+      }
+
+      // Spout can't append line at the end of csv
+      // use native instead
+      $handle = fopen($fileName, 'a');
+      $query = "SELECT * FROM $exportTempTable";
+      $dao = CRM_Core_DAO::executeQuery($query);
+      while ($dao->fetch()) {
+        $row = array();
         foreach ($sqlColumns as $column => $sqlColumn) {
-          $error .= $column." => ".$dao->$column."\n";
+          $arr = explode(' ', $sqlColumn);
+          $column = $arr[0];
+          $fieldValue = $dao->$column;
+          if (strstr($fieldValue, self::VALUE_SEPARATOR)){
+            $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
+            $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
+            $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
+          }
+          if(strlen($fieldValue) < 15){
+            $row[$column] = CRM_Utils_String::toNumber($fieldValue);
+          }
+          else{
+            $row[$column] = $fieldValue;
+          }
         }
-        CRM_Core_Error::fatal("Batch exporting error on previous exporting still writing to file (wait over 180 seconds). Rows from $error doesn't write correctly.");
-        break;
+        fputcsv($handle, $row);
       }
+      fclose($handle);
     }
-    $writer = CRM_Core_Report_Excel::singleton('excel');
-    $writer->openToFile($fileName.'.new');
-
-    if (!is_file($fileName)){
-      $writer->addRow($headerRows);
-    }
-    else{
-      $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
-      $reader = CRM_Core_Report_Excel::reader('excel');
-      $reader->setTempFolder($tmpDir);
-      $reader->open($fileName);
-      foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
-        // Add sheets in the new file, as we read new sheets in the existing one
-        if ($sheetIndex !== 1) {
-          $writer->addNewSheetAndMakeItCurrent();
-        }
-
-        foreach ($sheet->getRowIterator() as $row) {
-          // ... and copy each row into the new spreadsheet
-          $writer->addRow($row);
-        }
-      }
-    }
-
-    $query = "SELECT * FROM $exportTempTable";
-    $dao = CRM_Core_DAO::executeQuery($query);
-    while ($dao->fetch()) {
-      $row = array();
-      foreach ($sqlColumns as $column => $sqlColumn) {
-        $arr = explode(' ', $sqlColumn);
-        $column = $arr[0];
-        $fieldValue = $dao->$column;
-        if (strstr($fieldValue, self::VALUE_SEPARATOR)){
-          $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
-          $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
-          $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
-        }
-        if(strlen($fieldValue) < 15){
-          $row[$column] = CRM_Utils_String::toNumber($fieldValue);
-        }
-        else{
-          $row[$column] = $fieldValue;
+    else {
+      $new = $fileName.'.new';
+      $sleepCounter = 0;
+      while(file_exists($new)) {
+        $sleepCounter++;
+        sleep(2);
+        // timeout
+        if ($sleepCounter > 90) {
+          $query = "SELECT * FROM $exportTempTable";
+          $dao = CRM_Core_DAO::executeQuery($query);
+          $dao->fetch();
+          $error = '';
+          foreach ($sqlColumns as $column => $sqlColumn) {
+            $error .= $column." => ".$dao->$column."\n";
+          }
+          CRM_Core_Error::fatal("Batch exporting error on previous exporting still writing to file (wait over 180 seconds). Rows from $error doesn't write correctly.");
+          break;
         }
       }
-      $writer->addRow($row);
+      $writer = CRM_Core_Report_Excel::singleton('excel');
+      $writer->openToFile($fileName.'.new');
+
+      if (!is_file($fileName)){
+        $writer->addRow($headerRows);
+      }
+      else{
+        $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
+        $reader = CRM_Core_Report_Excel::reader('excel');
+        $reader->setTempFolder($tmpDir);
+        $reader->open($fileName);
+        foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
+          // Add sheets in the new file, as we read new sheets in the existing one
+          if ($sheetIndex !== 1) {
+            $writer->addNewSheetAndMakeItCurrent();
+          }
+
+          foreach ($sheet->getRowIterator() as $row) {
+            // ... and copy each row into the new spreadsheet
+            $writer->addRow($row);
+          }
+        }
+      }
+
+      $query = "SELECT * FROM $exportTempTable";
+      $dao = CRM_Core_DAO::executeQuery($query);
+      while ($dao->fetch()) {
+        $row = array();
+        foreach ($sqlColumns as $column => $sqlColumn) {
+          $arr = explode(' ', $sqlColumn);
+          $column = $arr[0];
+          $fieldValue = $dao->$column;
+          if (strstr($fieldValue, self::VALUE_SEPARATOR)){
+            $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
+            $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
+            $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
+          }
+          if(strlen($fieldValue) < 15){
+            $row[$column] = CRM_Utils_String::toNumber($fieldValue);
+          }
+          else{
+            $row[$column] = $fieldValue;
+          }
+        }
+        $writer->addRow($row);
+      }
+      $writer->close();
+      if (is_file($fileName)){
+        unlink($fileName);
+      }
+      rename($fileName.'.new', $fileName);
     }
-    $writer->close();
-    if (is_file($fileName)){
-      unlink($fileName);
-    }
-    rename($fileName.'.new', $fileName);
   }
 
   /**

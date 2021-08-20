@@ -272,6 +272,9 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
         ) {
           $defaults[$name . '_custom'] = $contact[$name . '_custom'];
         }
+        elseif (substr($name, 0, 3) == 'im-') {
+          $defaults[$name . '-provider_id'] = $contact[$name . '-provider_id'];
+        }
       }
     }
 
