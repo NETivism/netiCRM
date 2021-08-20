@@ -210,7 +210,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     // once they enter here, we will check SESSION
     // to see what instrument for newweb
     $instrument_id = $params['civicrm_instrument_id'];
-    $instrument_name = civicrm_instrument_by_id($instrument_id, 'name'); // TODO
+    $instruments = CRM_Contribute_PseudoConstant::paymentInstrument('name');
+    $instrument_name = $instruments[$instrument_id];
     $allpay_instruments = self::getInstruments('code');
     $instrument_code = $allpay_instruments[$instrument_name];
     $form_key = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$params['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$params['qfKey'];
