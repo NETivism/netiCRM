@@ -81,7 +81,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
 
     //check for civicase access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-      CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
     $this->_hasAccessToAllCases = CRM_Core_Permission::check('access all cases and activities');
     $this->assign('hasAccessToAllCases', $this->_hasAccessToAllCases);
@@ -104,7 +104,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     if (!$this->_hasAccessToAllCases) {
       $this->_userCases = CRM_Case_BAO_Case::getCases(FALSE, $userID);
       if (!array_key_exists($this->_caseID, $this->_userCases)) {
-        CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
+        return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
     }
     $this->assign('userID', $userID);

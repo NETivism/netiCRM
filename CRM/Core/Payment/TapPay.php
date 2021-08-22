@@ -828,7 +828,7 @@ LIMIT 0, 100
     // redirect to contribution view page
     $query = http_build_query($get);
     $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
-    CRM_Core_Error::statusBounce($resultNote, $redirect);
+     return CRM_Core_Error::statusBounce($resultNote, $redirect);
   }
 
   public static function doSyncRecord($contributionId, $data = NULL) {

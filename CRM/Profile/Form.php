@@ -172,7 +172,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
       // check if we are rendering mixed profiles
       if (CRM_Core_BAO_UFGroup::checkForMixProfiles($this->_profileIds)) {
-        CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
+         return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
       }
 
       // for now consider 1'st profile as primary profile and validate it
@@ -198,7 +198,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
         // restrict permission when profile is reserved
         if ($dao->is_reserved && !CRM_Core_Permission::check('access CiviCRM')) {
-          CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.', array(
+           return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.', array(
             1 => $this->_gid
           )));
         }

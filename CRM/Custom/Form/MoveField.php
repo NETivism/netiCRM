@@ -113,7 +113,7 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
     $customGroup = CRM_Core_PseudoConstant::customGroup();
     unset($customGroup[$this->_srcGID]);
     if (empty($customGroup)) {
-      CRM_Core_Error::statusBounce(ts('You need more than one custom group to move fields'));
+       return CRM_Core_Error::statusBounce(ts('You need more than one custom group to move fields'));
     }
 
     $customGroup = array('' => ts('- select -')) + $customGroup;

@@ -55,7 +55,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   function preProcess() {
     $this->_hasError = FALSE;
     if (!CRM_Core_Permission::check('merge duplicate contacts')) {
-      CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
     }
 
     $rows = array();
@@ -68,7 +68,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     $this->_mergeId = CRM_Utils_Request::retrieve('mergeId', 'Positive', $this, FALSE);
 
     if (!self::validateContacts($cid, $oid)) {
-      CRM_Core_Error::statusBounce(ts('The selected pair of contacts are marked as non duplicates. If these records should be merged, you can remove this exception on the <a href="%1">Dedupe Exceptions</a> page.', array(1 => CRM_Utils_System::url('civicrm/dedupe/exception', 'reset=1'))));
+      return CRM_Core_Error::statusBounce(ts('The selected pair of contacts are marked as non duplicates. If these records should be merged, you can remove this exception on the <a href="%1">Dedupe Exceptions</a> page.', array(1 => CRM_Utils_System::url('civicrm/dedupe/exception', 'reset=1'))));
       $this->_hasError = TRUE;
     }
 
@@ -138,7 +138,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
       $message = ts('The contact record which is linked to the currently logged in user account - \'%1\' - cannot be deleted.',
         array(1 => $display_name)
       );
-      CRM_Core_Error::statusBounce($message);
+      return CRM_Core_Error::statusBounce($message);
       $this->_hasError = TRUE;
     }
 
@@ -147,12 +147,12 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     $other               = &$rowsElementsAndInfo['other_details'];
 
     if ($main['contact_id'] != $cid) {
-      CRM_Core_Error::statusBounce(ts('The main contact record does not exist')." (".ts("Contact ID").":{$cid}) ");
+      return CRM_Core_Error::statusBounce(ts('The main contact record does not exist')." (".ts("Contact ID").":{$cid}) ");
       $this->_hasError = TRUE;
     }
 
     if ($other['contact_id'] != $oid) {
-      CRM_Core_Error::statusBounce(ts('The other contact record does not exist')." (".ts("Contact ID").":{$oid}) ");
+      return CRM_Core_Error::statusBounce(ts('The other contact record does not exist')." (".ts("Contact ID").":{$oid}) ");
       $this->_hasError = TRUE;
     }
 

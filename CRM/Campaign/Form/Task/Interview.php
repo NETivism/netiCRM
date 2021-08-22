@@ -221,7 +221,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     foreach ($required as $fld => $msg) {
       if (empty($this->{"_$fld"})) {
         if (!$this->_votingTab) {
-          CRM_Core_Error::statusBounce($msg);
+          return CRM_Core_Error::statusBounce($msg);
           break;
         }
         $errorMessages[] = $msg;

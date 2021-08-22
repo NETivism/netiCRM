@@ -242,7 +242,7 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
       )) {
       $message = !empty($form->_invalidChecksumMessage) ? $form->_invalidChecksumMessage : ts('You do not have permission to edit this contact record. Contact the site administrator if you need assistance.');
       $redirect = !empty($form->_invalidChecksumRedirect) ? $form->_invalidChecksumRedirect : NULL;
-      CRM_Core_Error::statusBounce($message, $redirect);
+      return CRM_Core_Error::statusBounce($message, $redirect);
       // does not come here, we redirect in the above statement
     }
     return TRUE;

@@ -70,7 +70,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCP', $prms, $pcpInfo);
     if (empty($pcpInfo)) {
       $statusMessage = ts('The personal campaign page you requested is currently unavailable.');
-      CRM_Core_Error::statusBounce($statusMessage,
+       return CRM_Core_Error::statusBounce($statusMessage,
         $config->userFrameworkBaseURL
       );
     }
@@ -108,7 +108,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
 
     if ($pcpInfo['status_id'] != $approvedId || !$pcpInfo['is_active']) {
       if ($pcpInfo['contact_id'] != $session->get('userID') && !$permissionCheck) {
-        CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
             "reset=1&id={$pcpInfo['contribution_page_id']}",
             FALSE, NULL, FALSE, TRUE
           ));
@@ -118,7 +118,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       $getStatus = CRM_Contribute_BAO_PCP::getStatus($this->_id);
       if (!$getStatus) {
         // PCP not enabled for this contribution page. Forward everyone to main contribution page
-        CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
             "reset=1&id={$pcpInfo['contribution_page_id']}",
             FALSE, NULL, FALSE, TRUE
           ));

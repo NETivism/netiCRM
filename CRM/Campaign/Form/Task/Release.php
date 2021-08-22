@@ -95,13 +95,13 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
     $surveyActType = CRM_Campaign_BAO_Survey::getSurveyActivityType();
 
     if (!$this->_surveyId) {
-      CRM_Core_Error::statusBounce(ts("Please search with 'Survey', to apply this action."));
+      return CRM_Core_Error::statusBounce(ts("Please search with 'Survey', to apply this action."));
     }
     if (!$this->_interviewerId) {
-      CRM_Core_Error::statusBounce(ts('Missing Interviewer contact.'));
+      return CRM_Core_Error::statusBounce(ts('Missing Interviewer contact.'));
     }
     if (!is_array($this->_contactIds) || empty($this->_contactIds)) {
-      CRM_Core_Error::statusBounce(ts('Could not find respondents to release.'));
+      return CRM_Core_Error::statusBounce(ts('Could not find respondents to release.'));
     }
 
     $surveyDetails = array();
@@ -123,7 +123,7 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
       $statusIds
     );
     if (count($this->_surveyActivities) < 1) {
-      CRM_Core_Error::statusBounce(ts('We could not found respondent for this survey to release.'));
+      return CRM_Core_Error::statusBounce(ts('We could not found respondent for this survey to release.'));
     }
 
     $this->assign('surveyTitle', $surveyDetails['title']);

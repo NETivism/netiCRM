@@ -292,7 +292,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     }
     elseif ($this->_action & CRM_Core_Action::UPDATE) {
       if (!CRM_Core_Permission::check('edit contributions')) {
-        CRM_Core_Error::statusBounce(ts("You do not have permission to access this page."));
+         return CRM_Core_Error::statusBounce(ts("You do not have permission to access this page."));
       }
       $this->edit();
     }

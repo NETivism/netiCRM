@@ -66,7 +66,7 @@ class CRM_Event_Form_ManageEvent_Delete extends CRM_Event_Form_ManageEvent {
 
     require_once 'CRM/Event/BAO/Event.php';
     if (!CRM_Event_BAO_Event::checkPermission($this->_id, CRM_Core_Permission::DELETE)) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
   }
 

@@ -101,11 +101,11 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
         if (!$domainEmailAddress || $domainEmailAddress == 'info@FIXME.ORG') {
           require_once 'CRM/Utils/System.php';
           $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
-          CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
+          return CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
         }
 
         if (!$toEmail) {
-          CRM_Core_Error::statusBounce(ts('Cannot send a test email because your user record does not have a valid email address.'));
+          return CRM_Core_Error::statusBounce(ts('Cannot send a test email because your user record does not have a valid email address.'));
         }
 
         if (!trim($toDisplayName)) {

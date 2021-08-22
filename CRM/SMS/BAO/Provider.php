@@ -143,7 +143,7 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
    */
   public static function del($providerID) {
     if (!$providerID) {
-      CRM_Core_Error::statusBounce(ts('Invalid value passed to delete function.'));
+       return CRM_Core_Error::statusBounce(ts('Invalid value passed to delete function.'));
     }
 
     $dao = new CRM_SMS_DAO_Provider();

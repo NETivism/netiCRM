@@ -105,7 +105,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   static function del($messageTemplatesID) {
     // make sure messageTemplatesID is an integer
     if (!CRM_Utils_Rule::positiveInteger($messageTemplatesID)) {
-      CRM_Core_Error::statusBounce(ts('Invalid Message template'));
+       return CRM_Core_Error::statusBounce(ts('Invalid Message template'));
     }
 
     // set membership_type to null
@@ -254,7 +254,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     $diverted->find(1);
 
     if ($diverted->N != 1) {
-      CRM_Core_Error::statusBounce(ts('Did not find a message template with id of %1.', array(1 => $id)));
+       return CRM_Core_Error::statusBounce(ts('Did not find a message template with id of %1.', array(1 => $id)));
     }
 
     $orig = new self;

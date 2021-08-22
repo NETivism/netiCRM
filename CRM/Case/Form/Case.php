@@ -102,7 +102,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     //CRM-4418
     if (!CRM_Core_Permission::checkActionPermission('CiviCase', $this->_action)) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     if ($this->_action & CRM_Core_Action::DELETE || $this->_action & CRM_Core_Action::RENEW) {
@@ -118,7 +118,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
       foreach ($caseAttributes as $key => $values) {
         if (empty($values)) {
-          CRM_Core_Error::statusBounce(ts('You do not have any active %1',
+          return CRM_Core_Error::statusBounce(ts('You do not have any active %1',
               array(1 => str_replace('_', ' ', $key))
             ));
           break;
@@ -136,12 +136,12 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     //check for case permissions.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-      CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
     if (($this->_action & CRM_Core_Action::ADD) &&
       !CRM_Core_Permission::check('access all cases and activities')
     ) {
-      CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
 
     if ($this->_activityTypeFile =
@@ -164,7 +164,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       $contact = new CRM_Contact_DAO_Contact();
       $contact->id = $this->_currentlyViewedContactId;
       if (!$contact->find(TRUE)) {
-        CRM_Core_Error::statusBounce(ts('Client contact does not exist: %1', array(1 => $this->_currentlyViewedContactId)));
+        return CRM_Core_Error::statusBounce(ts('Client contact does not exist: %1', array(1 => $this->_currentlyViewedContactId)));
       }
       $this->assign('clientName', $contact->display_name);
     }

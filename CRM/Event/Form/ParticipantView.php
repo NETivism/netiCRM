@@ -65,7 +65,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
 
     if (empty($values)) {
       require_once 'CRM/Core/Error.php';
-      CRM_Core_Error::statusBounce(ts('The requested participant record does not exist (possibly the record was deleted).'));
+       return CRM_Core_Error::statusBounce(ts('The requested participant record does not exist (possibly the record was deleted).'));
     }
     $contactID = $values[$participantID]['contact_id'];
 

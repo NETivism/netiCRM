@@ -269,7 +269,7 @@ class CRM_Core_Payment_LinePay {
 
       $query = http_build_query($get);
       $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
-      CRM_Core_Error::statusBounce($result_note, $redirect);
+       return CRM_Core_Error::statusBounce($result_note, $redirect);
     }else{
       CRM_Core_Error::fatal(ts('Wrong contribution ID in url query'));
     }

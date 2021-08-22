@@ -104,7 +104,7 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     $form->addElement('select', 'tag', ts('Tagged'), $tag);
 
     if (empty($this->_groupTree)) {
-      CRM_Core_Error::statusBounce(ts("Atleast one Custom Group must be present, for Custom Group search."),
+      return CRM_Core_Error::statusBounce(ts("Atleast one Custom Group must be present, for Custom Group search."),
         CRM_Utils_System::url('civicrm/contact/search/custom/list',
           'reset=1'
         )
@@ -128,7 +128,7 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
   ) {
     //redirect if custom group not select in search criteria
     if (!CRM_Utils_Array::value('custom_group', $this->_formValues)) {
-      CRM_Core_Error::statusBounce(ts("You must select at least one Custom Group as a search criteria."),
+      return CRM_Core_Error::statusBounce(ts("You must select at least one Custom Group as a search criteria."),
         CRM_Utils_System::url('civicrm/contact/search/custom',
           "reset=1&csid={$this->_formValues['customSearchID']}",
           FALSE, NULL, FALSE, TRUE

@@ -114,7 +114,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
       // its an update mode, do a permission check
       require_once 'CRM/Event/BAO/Event.php';
       if (!CRM_Event_BAO_Event::checkPermission($this->_id, CRM_Core_Permission::EDIT)) {
-        CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+         return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
 
       $participantListingID = CRM_Utils_Array::value('participant_listing_id', $eventInfo);

@@ -973,7 +973,7 @@ AND is_test = %2";
    */
   function getMembershipCount($membershipTypeId, $date = NULL, $isTest = 0) {
     if (!is_null($date) && !preg_match('/^\d{8}$/', $date)) {
-      CRM_Core_Error::statusBounce(ts('Invalid date "%1" (must have form yyyymmdd).', array(1 => $date)));
+       return CRM_Core_Error::statusBounce(ts('Invalid date "%1" (must have form yyyymmdd).', array(1 => $date)));
     }
 
     $params = array(1 => array($membershipTypeId, 'Integer'),
@@ -1495,7 +1495,7 @@ AND civicrm_membership.is_test = %2";
     if (empty($status) ||
       empty($status['id'])
     ) {
-      CRM_Core_Error::statusBounce(ts('Oops, it looks like there is no valid membership status corresponding to the membership start and end dates for this membership. Contact the site administrator for assistance.'));
+       return CRM_Core_Error::statusBounce(ts('Oops, it looks like there is no valid membership status corresponding to the membership start and end dates for this membership. Contact the site administrator for assistance.'));
     }
 
     $currentMembership['today_date'] = $today;
@@ -1915,7 +1915,7 @@ FROM   civicrm_membership_type
               }
             }
             if ($membershipTypeError) {
-              CRM_Core_Error::statusBounce(ts("Oops. The membership you're trying to renew appears to be invalid. Contact your site administrator if you need assistance."));
+               return CRM_Core_Error::statusBounce(ts("Oops. The membership you're trying to renew appears to be invalid. Contact your site administrator if you need assistance."));
             }
           }
           // not login user.

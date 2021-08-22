@@ -77,7 +77,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       $this->_ppDAO->is_active = 1;
     }
     if (!$this->_ppDAO->find(TRUE)) {
-      CRM_Core_Error::statusBounce(ts('Could not find payment processor meta information'));
+      return CRM_Core_Error::statusBounce(ts('Could not find payment processor meta information'));
     }
 
     if ($this->_id) {

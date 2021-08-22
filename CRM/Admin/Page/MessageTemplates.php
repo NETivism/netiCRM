@@ -171,7 +171,7 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
 
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
       if (!$this->checkPermission($id, NULL)) {
-        CRM_Core_Error::statusBounce(ts('You do not have permission to revert this template.'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to revert this template.'));
       }
 
       $this->_revertedId = $id;

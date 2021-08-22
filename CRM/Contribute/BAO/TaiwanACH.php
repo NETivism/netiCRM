@@ -396,7 +396,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         }
       }
       if ($isError) {
-        CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+         return CRM_Core_Error::statusBounce(implode('<br/>', $messages));
       }
       unset($table['check_results']);
 
@@ -491,7 +491,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         }
       }
       if ($isError) {
-        CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+         return CRM_Core_Error::statusBounce(implode('<br/>', $messages));
       }
       unset($table['check_results']);
 
@@ -909,7 +909,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
             break;
         }
         if (empty($instrumentType) || empty($processType)) {
-          CRM_Core_Error::statusBounce(ts("Word count of txt is wrong: %1", array(1 => $wordCount)));
+           return CRM_Core_Error::statusBounce(ts("Word count of txt is wrong: %1", array(1 => $wordCount)));
         }
         if ($instrumentType == self::BANK) {
           $header = self::doCheckParseRow($row, $instrumentType, $processType, 'header');
@@ -1033,7 +1033,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     }
     if ($isError) {
-      CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+       return CRM_Core_Error::statusBounce(implode('<br/>', $messages));
     }
 
     $result = array(
@@ -1122,7 +1122,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
     }
     else {
-      CRM_Core_Error::statusBounce(ts("Format is not correct. Input format is '%1'", array(1 => $formatString)));
+       return CRM_Core_Error::statusBounce(ts("Format is not correct. Input format is '%1'", array(1 => $formatString)));
     }
     return $regexp;
   }
@@ -1192,7 +1192,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $messages[] = ts("Status of recurring: %1 should be 'pending'.", array(1 => $recurId));
     }
     if ($isError) {
-      CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+       return CRM_Core_Error::statusBounce(implode('<br/>', $messages));
     }
     if ($isPreview) {
       return $result;

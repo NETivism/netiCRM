@@ -293,7 +293,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     $transaction = new CRM_Core_Transaction();
     $contact = self::add($params);
     if (!$contact) {
-      // CRM_Core_Error::statusBounce( ts( 'THe contact was not created, not set up to handle error' ) );
+      // return CRM_Core_Error::statusBounce( ts( 'THe contact was not created, not set up to handle error' ) );
     }
 
     $params['contact_id'] = $contact->id;

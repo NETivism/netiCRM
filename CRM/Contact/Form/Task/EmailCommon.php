@@ -101,7 +101,7 @@ class CRM_Contact_Form_Task_EmailCommon {
     $form->assign('noEmails', $form->_noEmails);
 
     if ($form->_noEmails) {
-      CRM_Core_Error::statusBounce(ts('Your user record does not have a valid email address'));
+       return CRM_Core_Error::statusBounce(ts('Your user record does not have a valid email address'));
     }
 
     // now add domain from addresses
@@ -222,7 +222,7 @@ class CRM_Contact_Form_Task_EmailCommon {
       }
 
       if (empty($toArray)) {
-        CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold.'));
+         return CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold.'));
       }
     }
 
@@ -312,7 +312,7 @@ class CRM_Contact_Form_Task_EmailCommon {
    */
   static function postProcess(&$form) {
     if (count($form->_contactIds) > self::MAX_EMAILS_KILL_SWITCH) {
-      CRM_Core_Error::statusBounce(ts('Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead.',
+       return CRM_Core_Error::statusBounce(ts('Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead.',
           array(1 => self::MAX_EMAILS_KILL_SWITCH)
         ));
     }

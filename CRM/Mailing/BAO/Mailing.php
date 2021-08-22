@@ -2220,7 +2220,7 @@ AND civicrm_contact.is_opt_out =0";
     if (!in_array($id,
         $mailingIDs
       )) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this mailing report'));
+       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this mailing report'));
     }
     return;
   }

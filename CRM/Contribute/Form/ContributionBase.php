@@ -214,10 +214,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     if (!$this->_id) {
       $pastContributionID = $session->get('pastContributionID');
       if (!$pastContributionID) {
-        CRM_Core_Error::statusBounce(ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.'));
+         return CRM_Core_Error::statusBounce(ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.'));
       }
       else {
-        CRM_Core_Error::statusBounce(ts('This contribution has already been submitted. Click <a href=\'%1\'>here</a> if you want to make another contribution.', array(1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id=' . $pastContributionID))));
+         return CRM_Core_Error::statusBounce(ts('This contribution has already been submitted. Click <a href=\'%1\'>here</a> if you want to make another contribution.', array(1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id=' . $pastContributionID))));
       }
     }
     else {
@@ -320,17 +320,17 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if (!$this->_values['is_active']) {
         if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {
           // form is inactive, die a fatal death
-          CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+           return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
         }
       }
       else {
         if ($this->_values['is_internal'] > 0 && !CRM_Core_Permission::check('access CiviContribute')) {
-          CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+           return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
         }
       }
 
       if (($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL ) && empty($this->_values['custom_post_id']) && empty($this->_values['custom_pre_id'])) {
-        CRM_Core_Error::statusBounce(ts("You may want to collect information from contributors beyond what is required to make a contribution. For example, you may want to inquire about volunteer availability and skills. Add any number of fields to your contribution form by selecting CiviCRM Profiles (collections of fields) to include at the beginning of the page, and/or at the bottom."));
+         return CRM_Core_Error::statusBounce(ts("You may want to collect information from contributors beyond what is required to make a contribution. For example, you may want to inquire about volunteer availability and skills. Add any number of fields to your contribution form by selecting CiviCRM Profiles (collections of fields) to include at the beginning of the page, and/or at the bottom."));
       }
 
       // also check for billing informatin
@@ -338,7 +338,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
-        CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
+         return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
       }
       $this->set('bltID', $this->_bltID);
 
@@ -349,7 +349,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if ($isMonetary && (!$isPayLater || CRM_Utils_Array::value('payment_processor', $this->_values))) {
         $ppID = CRM_Utils_Array::value('payment_processor', $this->_values);
         if (!$ppID) {
-          CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this contribution page or must be configured to give users the option to pay later.'));
+           return CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this contribution page or must be configured to give users the option to pay later.'));
         }
 
         $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
@@ -376,14 +376,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           foreach ($this->_paymentProcessors as $eachPaymentProcessor) {
             // check selected payment processor is active
             if (empty($eachPaymentProcessor)) {
-              CRM_Core_Error::statusBounce(ts('A payment processor configured for this page might be disabled (contact the site administrator for assistance).'));
+               return CRM_Core_Error::statusBounce(ts('A payment processor configured for this page might be disabled (contact the site administrator for assistance).'));
             }
 
             // ensure that processor has a valid config
             $this->_paymentObject = &CRM_Core_Payment::singleton($this->_mode, $eachPaymentProcessor, $this);
             $error = $this->_paymentObject->checkConfig();
             if (!empty($error)) {
-              CRM_Core_Error::statusBounce($error);
+               return CRM_Core_Error::statusBounce($error);
             }
           }
         }
@@ -432,7 +432,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         ) &&
         !$this->_membershipBlock['is_active']
       ) {
-        CRM_Core_Error::statusBounce(ts('This page includes a Profile with Membership fields - but the Membership Block is NOT enabled. Please notify the site administrator.'));
+         return CRM_Core_Error::statusBounce(ts('This page includes a Profile with Membership fields - but the Membership Block is NOT enabled. Please notify the site administrator.'));
       }
 
       require_once 'CRM/Pledge/BAO/PledgeBlock.php';
@@ -496,28 +496,28 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       if ($pcpInfo['contribution_page_id'] != $this->_values['id']) {
         $statusMessage = ts('This contribution page is not related to the Personal Campaign Page you have just visited. However you can still make a contribution here.');
-        CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
             "reset=1&id={$this->_values['id']}",
             FALSE, NULL, FALSE, TRUE
           ));
       }
       elseif ($pcpInfo['status_id'] != $approvedId) {
         $statusMessage = ts('The Personal Campaign Page you have just visited is currently %1. However you can still support the campaign by making a contribution here.', array(1 => $pcpStatus[$pcpInfo['status_id']]));
-        CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
             "reset=1&id={$pcpInfo['contribution_page_id']}",
             FALSE, NULL, FALSE, TRUE
           ));
       }
       elseif (!CRM_Utils_Array::value('is_active', $pcpBlock)) {
         $statusMessage = ts('Personal Campaign Pages are currently not enabled for this contribution page. However you can still support the campaign by making a contribution here.');
-        CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
             "reset=1&id={$pcpInfo['contribution_page_id']}",
             FALSE, NULL, FALSE, TRUE
           ));
       }
       elseif (!CRM_Utils_Array::value('is_active', $pcpInfo)) {
         $statusMessage = ts('The Personal Campaign Page you have just visited is current inactive. However you can still make a contribution here.');
-        CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
             "reset=1&id={$pcpInfo['contribution_page_id']}",
             FALSE, NULL, FALSE, TRUE
           ));
@@ -529,21 +529,21 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           $statusMessage = ts('The Personal Campaign Page you have just visited is only active between %1 to %2. However you can still support the campaign by making a contribution here.',
             array(1 => $customStartDate, 2 => $customEndDate)
           );
-          CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+           return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
               "reset=1&id={$pcpInfo['contribution_page_id']}",
               FALSE, NULL, FALSE, TRUE
             ));
         }
         elseif ($startDate) {
           $statusMessage = ts('The Personal Campaign Page you have just visited will be active beginning on %1. However you can still support the campaign by making a contribution here.', array(1 => $customStartDate));
-          CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+           return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
               "reset=1&id={$pcpInfo['contribution_page_id']}",
               FALSE, NULL, FALSE, TRUE
             ));
         }
         elseif ($endDate) {
           $statusMessage = ts('The Personal Campaign Page you have just visited is not longer active (as of %1). However you can still support the campaign by making a contribution here.', array(1 => $customEndDate));
-          CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+           return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
               "reset=1&id={$pcpInfo['contribution_page_id']}",
               FALSE, NULL, FALSE, TRUE
             ));
@@ -580,7 +580,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       !$this->_membershipBlock['is_active'] &&
       !$this->_priceSetId
     ) {
-      CRM_Core_Error::statusBounce(ts('The requested online contribution page is missing a required Contribution Amount section or Membership section or Price Set. Please check with the site administrator for assistance.'));
+       return CRM_Core_Error::statusBounce(ts('The requested online contribution page is missing a required Contribution Amount section or Membership section or Price Set. Please check with the site administrator for assistance.'));
     }
 
     if ($this->_values['amount_block_is_active']) {
@@ -591,7 +591,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       CRM_Utils_Array::value('is_separate_payment', $this->_membershipBlock) &&
       (!($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM))
     ) {
-      CRM_Core_Error::statusBounce(ts('This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments. Please contact the site administrator and notify them of this error',
+       return CRM_Core_Error::statusBounce(ts('This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments. Please contact the site administrator and notify them of this error',
           array(1 => $this->_paymentProcessor['payment_processor_type'])
         ));
     }

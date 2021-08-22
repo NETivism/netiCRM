@@ -96,7 +96,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     <li>$cond1</li>
     <li>$cond2</li>
   </ul>";
-      CRM_Core_Error::statusBounce($str);
+       return CRM_Core_Error::statusBounce($str);
     }
 
     // we have all the contribution ids, so now we get the contact ids

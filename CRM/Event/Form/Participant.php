@@ -284,7 +284,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
         }
       }
       if (empty($validProcessors)) {
-        CRM_Core_Error::statusBounce(ts('Could not find valid payment processor for this page'));
+         return CRM_Core_Error::statusBounce(ts('Could not find valid payment processor for this page'));
       }
       else {
         $this->_processors = $validProcessors;
@@ -294,7 +294,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
-        CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
+         return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
       }
       $this->set('bltID', $this->_bltID);
       $this->assign('bltID', $this->_bltID);
@@ -386,7 +386,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
 
     // check for edit permission
     if (!CRM_Core_Permission::checkActionPermission('CiviEvent', $this->_action)) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -1161,7 +1161,7 @@ cj(function() {
 
     if ($this->_mode) {
       if (!$this->_isPaidEvent) {
-        CRM_Core_Error::statusBounce(ts('Selected Event is not Paid Event '));
+         return CRM_Core_Error::statusBounce(ts('Selected Event is not Paid Event '));
       }
       //modify params according to parameter used in create
       //participant method (addParticipant)

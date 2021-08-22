@@ -131,7 +131,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
       'reset=1&id='.$recurId.'&cid=' . $contactId
     );
     $message = ts("The contribution record has been processed.").$resultMessage;
-    CRM_Core_Error::statusBounce($message, $url);
+     return CRM_Core_Error::statusBounce($message, $url);
   }
   //end of function
 }

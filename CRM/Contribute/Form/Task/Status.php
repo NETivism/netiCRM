@@ -81,7 +81,7 @@ AND    {$this->_componentClause}";
       CRM_Core_DAO::$_nullArray
     );
     if ($count != 0) {
-      CRM_Core_Error::statusBounce(ts('Please select only online contributions with Pending status.'));
+       return CRM_Core_Error::statusBounce(ts('Please select only online contributions with Pending status.'));
     }
 
     // ensure that all contributions are generated online by pay later
@@ -96,7 +96,7 @@ WHERE  {$this->_componentClause}";
       if (strpos($dao->source, ts('Online Contribution')) === FALSE &&
         strpos($dao->source, ts('Online Event Registration')) === FALSE
       ) {
-        CRM_Core_Error::statusBounce("<strong>Update Pending Contribution Status</strong> can only be used for pending online contributions (made using the 'Pay Later' option). The Source for these contributions starts with 'Online ...'. Please de-select any offline contributions and try again.");
+         return CRM_Core_Error::statusBounce("<strong>Update Pending Contribution Status</strong> can only be used for pending online contributions (made using the 'Pay Later' option). The Source for these contributions starts with 'Online ...'. Please de-select any offline contributions and try again.");
       }
     }
 

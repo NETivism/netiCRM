@@ -51,7 +51,7 @@ class CRM_Event_Page_ParticipantListing extends CRM_Core_Page {
       'participant_listing_id'
     );
     if (!$this->_participantListingID) {
-      CRM_Core_Error::statusBounce(ts("The Participant Listing feature is not currently enabled for this event."));
+       return CRM_Core_Error::statusBounce(ts("The Participant Listing feature is not currently enabled for this event."));
     }
 
     // retrieve Event Title and include it in page title
@@ -78,7 +78,7 @@ class CRM_Event_Page_ParticipantListing extends CRM_Core_Page {
     );
 
     if ($className == 'CRM_Event_Page_ParticipantListing') {
-      CRM_Core_Error::statusBounce(ts("Participant listing code file cannot be '%1'",
+       return CRM_Core_Error::statusBounce(ts("Participant listing code file cannot be '%1'",
           array(1 => $className)
         ));
     }

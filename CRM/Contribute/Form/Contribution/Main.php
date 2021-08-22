@@ -120,7 +120,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       else {
         // refs #31611, internal contribution page restriction
         if ($this->_values['is_internal'] > 0) {
-          CRM_Core_Error::statusBounce(ts('You need to specify contact checksum and contact id on url when using internal page.'), CRM_Utils_System::url('civicrm/contribute/internal', 'reset=1&page_id='.$this->_id));
+           return CRM_Core_Error::statusBounce(ts('You need to specify contact checksum and contact id on url when using internal page.'), CRM_Utils_System::url('civicrm/contribute/internal', 'reset=1&page_id='.$this->_id));
         }
       }
     }

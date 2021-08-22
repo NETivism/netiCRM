@@ -52,7 +52,7 @@ class CRM_Dashlet_Page_AllCases extends CRM_Core_Page {
     require_once 'CRM/Case/BAO/Case.php';
     //check for civicase access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-      CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
+       return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
 
     require_once 'CRM/Core/OptionGroup.php';

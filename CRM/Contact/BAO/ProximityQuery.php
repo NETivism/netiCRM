@@ -294,7 +294,7 @@ $earthDistanceSQL  <= $distance
 
     $config = &CRM_Core_Config::singleton();
     if (empty($config->geocodeMethod)) {
-      CRM_Core_Error::statusBounce(ts('Proximity searching requires you to set a valid geocoding provider'));
+      return CRM_Core_Error::statusBounce(ts('Proximity searching requires you to set a valid geocoding provider'));
     }
 
     $className = $config->geocodeMethod;

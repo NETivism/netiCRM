@@ -22,7 +22,7 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
     $this->_contactId = $values['contact_id'];
     $this->_statusId = $values['status_id'];
     if (empty($this->_eventId) || empty($this->_contactId)) {
-      CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
+       return CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
       return;
     }
     $params = array('id' => $this->_eventId);
@@ -34,13 +34,13 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
     // check permissions
     $eventInfoUrl = CRM_Utils_System::url('civicrm/event/info', "reset=1&id=".$this->_eventId);
     if (!CRM_Contact_BAO_Contact_Permission::validateChecksumContact($this->_contactId, $this)) {
-      CRM_Core_Error::statusBounce(ts("Something wrong with your check-in url. Contact event manager for further assistant."), $eventInfoUrl);
+       return CRM_Core_Error::statusBounce(ts("Something wrong with your check-in url. Contact event manager for further assistant."), $eventInfoUrl);
       return;
     }
 
     $this->_perm = CRM_Core_Permission::check("edit event participants");
     if (!$this->_perm) {
-      CRM_Core_Error::statusBounce(ts("You can only check in event with event manager."), $eventInfoUrl);
+       return CRM_Core_Error::statusBounce(ts("You can only check in event with event manager."), $eventInfoUrl);
       return;
     }
   }

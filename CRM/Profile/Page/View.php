@@ -68,7 +68,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
     // disable anon user for access some profile
     $ufid = $session->get("ufID");
     if(empty($ufid)){
-      CRM_Core_Error::statusBounce(ts("You must be logged in to view this page."));
+       return CRM_Core_Error::statusBounce(ts("You must be logged in to view this page."));
       return;
     }
 
@@ -78,7 +78,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
     if (!$this->_id) {
       $this->_id = $session->get('userID');
       if (!$this->_id) {
-        CRM_Core_Error::statusBounce(ts('Could not find the required contact id parameter (id=) for viewing a contact record with a Profile.'));
+         return CRM_Core_Error::statusBounce(ts('Could not find the required contact id parameter (id=) for viewing a contact record with a Profile.'));
       }
     }
     $this->assign('cid', $this->_id);
@@ -96,7 +96,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
       // check if we are rendering mixed profiles
       require_once 'CRM/Core/BAO/UFGroup.php';
       if (CRM_Core_BAO_UFGroup::checkForMixProfiles($profileIds)) {
-        CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
+         return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
       }
 
       $this->_gid = $profileIds[0];

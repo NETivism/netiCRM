@@ -143,7 +143,7 @@ class CRM_Utils_System_UnitTests {
   }
 
   static function permissionDenied() {
-    CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+     return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
   }
 
   static function logout() {

@@ -147,13 +147,13 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       if (!in_array($this->_contactType,
           array('Individual', 'Household', 'Organization')
         )) {
-        CRM_Core_Error::statusBounce(ts('Could not get a contact id and/or contact type'));
+        return CRM_Core_Error::statusBounce(ts('Could not get a contact id and/or contact type'));
       }
 
       $this->_contactSubType = CRM_Utils_Request::retrieve('cst', 'String', $this);
 
       if ($this->_contactSubType && !(CRM_Contact_BAO_ContactType::isExtendsContactType($this->_contactSubType, $this->_contactType, TRUE))) {
-        CRM_Core_Error::statusBounce(ts("Could not get a valid contact subtype for contact type '%1'", array(1 => $this->_contactType)));
+        return CRM_Core_Error::statusBounce(ts("Could not get a valid contact subtype for contact type '%1'", array(1 => $this->_contactType)));
       }
 
       $this->_gid = CRM_Utils_Request::retrieve('gid', 'Integer',
@@ -186,7 +186,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         $contact = new CRM_Contact_DAO_Contact();
         $contact->id = $this->_contactId;
         if (!$contact->find(TRUE)) {
-          CRM_Core_Error::statusBounce(ts('contact does not exist: %1', array(1 => $this->_contactId)));
+          return CRM_Core_Error::statusBounce(ts('contact does not exist: %1', array(1 => $this->_contactId)));
         }
         $this->_contactType = $contact->contact_type;
         $this->_contactSubType = $contact->contact_sub_type;
@@ -197,7 +197,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         if ($session->get('userID') != $this->_contactId &&
           !CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::EDIT)
         ) {
-          CRM_Core_Error::statusBounce(ts('You do not have the necessary permission to edit this contact.'));
+          return CRM_Core_Error::statusBounce(ts('You do not have the necessary permission to edit this contact.'));
         }
 
         list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($this->_contactId);
@@ -229,7 +229,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         }
       }
       else {
-        CRM_Core_Error::statusBounce(ts('Could not get a contact_id and/or contact_type'));
+        return CRM_Core_Error::statusBounce(ts('Could not get a contact_id and/or contact_type'));
       }
     }
 

@@ -77,7 +77,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
           $session = CRM_Core_Session::singleton();
           $userCases = CRM_Case_BAO_Case::getCases(FALSE, $session->get('userID'));
           if (!array_key_exists($this->_id, $userCases)) {
-            CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
+            return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
           }
         }
       }

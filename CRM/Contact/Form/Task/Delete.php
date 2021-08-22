@@ -68,7 +68,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
 
     //check for delete
     if (!CRM_Core_Permission::check('delete contacts')) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive',
@@ -84,7 +84,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     $this->_skipUndelete = (CRM_Core_Permission::check('access deleted contacts') and (CRM_Utils_Request::retrieve('skip_undelete', 'Boolean', $this) or CRM_Utils_Array::value('task', $values) == CRM_Contact_Task::DELETE_PERMANENTLY));
 
     if ($this->_skipUndelete && !CRM_Core_Permission::check('delete contacts permanantly')) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
     $this->_restore = (CRM_Utils_Request::retrieve('restore', 'Boolean', $this) or CRM_Utils_Array::value('task', $values) == CRM_Contact_Task::RESTORE);
     $this->assign('trash', !$this->_skipUndelete);
@@ -99,7 +99,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     if ($cid) {
       require_once 'CRM/Contact/BAO/Contact/Permission.php';
       if (!CRM_Contact_BAO_Contact_Permission::allow($cid, CRM_Core_Permission::EDIT)) {
-        CRM_Core_Error::statusBounce(ts('You do not have permission to delete this contact. Note: you can delete contacts if you can edit them.'));
+         return CRM_Core_Error::statusBounce(ts('You do not have permission to delete this contact. Note: you can delete contacts if you can edit them.'));
       }
 
       $this->_contactIds = array($cid);

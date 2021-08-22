@@ -242,7 +242,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       if (!CRM_Core_Permission::check('delete activities')) {
-        CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
     }
 
@@ -272,7 +272,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       in_array($this->_action, array(CRM_Core_Action::UPDATE, CRM_Core_Action::VIEW)) &&
       !CRM_Activity_BAO_Activity::checkPermission($this->_activityId, $this->_action)
     ) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
     }
 
     if (!$this->_activityTypeId && $this->_activityId) {

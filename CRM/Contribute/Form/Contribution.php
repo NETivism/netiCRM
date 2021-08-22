@@ -173,7 +173,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
   public function preProcess() {
     //check permission for action.
     if (!CRM_Core_Permission::checkActionPermission('CiviContribute', $this->_action)) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
@@ -283,7 +283,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
         }
       }
       if (empty($validProcessors)) {
-        CRM_Core_Error::statusBounce(ts('You will need to configure the %1 settings for your Payment Processor before you can submit credit card transactions.', array(1 => $this->_mode)));
+         return CRM_Core_Error::statusBounce(ts('You will need to configure the %1 settings for your Payment Processor before you can submit credit card transactions.', array(1 => $this->_mode)));
       }
       else {
         $this->_processors = $validProcessors;
@@ -313,7 +313,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $this->_bltID = array_search('Billing', $locationTypes);
     if (!$this->_bltID) {
-      CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
+       return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
     }
     $this->set('bltID', $this->_bltID);
     $this->assign('bltID', $this->_bltID);

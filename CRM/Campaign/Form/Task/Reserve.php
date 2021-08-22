@@ -85,13 +85,13 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
     $this->_surveyId = $this->get('surveyId');
     $this->_interviewerId = $this->get('interviewerId');
     if (!$this->_surveyId) {
-      CRM_Core_Error::statusBounce(ts("Could not find Survey Id."));
+      return CRM_Core_Error::statusBounce(ts("Could not find Survey Id."));
     }
     if (!$this->_interviewerId) {
-      CRM_Core_Error::statusBounce(ts("Missing Interviewer contact."));
+      return CRM_Core_Error::statusBounce(ts("Missing Interviewer contact."));
     }
     if (!is_array($this->_contactIds) || empty($this->_contactIds)) {
-      CRM_Core_Error::statusBounce(ts("Could not find contacts for reservation."));
+      return CRM_Core_Error::statusBounce(ts("Could not find contacts for reservation."));
     }
 
     $params = array('id' => $this->_surveyId);
@@ -147,7 +147,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
       );
     }
     if ($errorMsg) {
-      CRM_Core_Error::statusBounce($errorMsg);
+      return CRM_Core_Error::statusBounce($errorMsg);
     }
   }
 
