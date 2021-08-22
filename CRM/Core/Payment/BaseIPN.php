@@ -581,6 +581,14 @@ class CRM_Core_Payment_BaseIPN {
 
     $contribution->save();
 
+    // check and generate receipt id here for every online contribution
+    // we have another transaction inside, call this after transaction commit
+    $is_online = TRUE;
+    if ($paymentProcessorType == 'TaiwanACH') {
+      $is_online = FALSE;
+    }
+    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
+
     // next create the transaction record
     if (isset($objects['paymentProcessor'])) {
       $paymentProcessor = $objects['paymentProcessor']['payment_processor_type'];
@@ -640,14 +648,6 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     $transaction->commit();
-
-    // check and generate receipt id here for every online contribution
-    // we have another transaction inside, call this after transaction commit
-    $is_online = TRUE;
-    if ($paymentProcessorType == 'TaiwanACH') {
-      $is_online = FALSE;
-    }
-    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
 
     CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated");
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
