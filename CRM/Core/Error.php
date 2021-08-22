@@ -55,7 +55,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * status code of various types of errors
    * @var const
    */
-  CONST FATAL_ERROR = 2, DUPLICATE_CONTACT = 8001, DUPLICATE_CONTRIBUTION = 8002, DUPLICATE_PARTICIPANT = 8003;
+  CONST NO_ERROR = 200, FATAL_ERROR = 1000, STATUS_BOUNCE = 1004, DUPLICATE_CONTACT = 8001, DUPLICATE_CONTRIBUTION = 8002, DUPLICATE_PARTICIPANT = 8003;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -456,25 +456,27 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   /**
    * Set a status message in the session, then bounce back to the referrer.
    *
-   * @param string $status        The status message to set
+   * @param string $message The status message to set
    *
    * @return void
    * @access public
    * @static
    */
-  public static function statusBounce($status, $redirect = NULL) {
+  public static function statusBounce($message, $redirect = NULL) {
     $session = CRM_Core_Session::singleton();
-    $session->setStatus($status, $append = TRUE, 'warning');
-    if ($redirect === FALSE) {
-      return; 
-    }
-    elseif (!$redirect) {
-      $redirect = $session->readUserContext();
+    $session->setStatus($message, $append = TRUE, 'warning');
+    if ($redirect !== FALSE) {
       if (!$redirect) {
-        $redirect = '/';
+        $redirect = $session->readUserContext();
+        if (!$redirect) {
+          $redirect = CRM_Utils_System::url(); // front page
+        }
       }
     }
-    CRM_Utils_System::redirect($redirect);
+    throw new CRM_Core_Exception($message, self::STATUS_BOUNCE, array(
+      'redirect' => $redirect
+    ));
+    // shouldn't goes here
   }
 
   /**

@@ -131,6 +131,37 @@ class CRM_Utils_System_Drupal {
       return FALSE;
     }
   }
+  
+  /**
+   * Redirect to url
+   * 
+   * Do not use drupal_goto in civicrm. That won't save civicrm related correctly
+   * Redirection in drupal 8/9 is trigger by symfony, handle it differently.
+   *
+   * @param string $url
+   * @return void
+   */
+  public static function redirect($url = NULL) {
+    $version = CRM_Core_Config::$_userSystem->version;
+    if (!$url) {
+      $url = self::url('');
+    }
+    $url = str_replace('&amp;', '&', $url); // legacy url/crmURL behaviour should remove
+    if($version >= 8){
+      $headers = array('Cache-Control' => 'no-cache');
+      $response = \Symfony\Component\HttpFoundation\RedirectResponse::create($url, 302, $headers);
+      $response->send();
+    }
+    else {
+      // this hack borrow from symfony
+      // do not use drupal_goto
+      header('Location: ' . $url);
+      if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+      }
+    }
+    CRM_Utils_System::civiExit();
+  }
 
   /**
    * Get best UF IF from drupal system

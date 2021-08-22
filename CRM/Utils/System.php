@@ -330,15 +330,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function redirect($url = NULL) {
-    if (!$url) {
-      $url = self::url('');
-    }
-
-    // replace the &amp; characters with &
-    // this is kinda hackish but not sure how to do it right
-    $url = str_replace('&amp;', '&', $url);
-    header('Location: ' . $url);
-    self::civiExit();
+    return CRM_Core_Config::$_userSystem->redirect($url);
   }
 
   /**
@@ -1193,18 +1185,41 @@ class CRM_Utils_System {
     return TRUE;
   }
 
+  /**
+   * Exit the program
+   *
+   * No user output since here, no additional header here.
+   * We should also commit session before here to prevent session miss.
+   * The civiBeforeShutdown will doing session commit well.
+   * Only functions in register_shutdown_function will be call after this.
+   * When using fpm, we may have fastcgi_finish_request and location of header here.
+   * 
+   * @param integer $status
+   * @return void
+   */
   static function civiExit($status = 0) {
+    $version = CRM_Core_Config::$_userSystem->version;
     $config = CRM_Core_Config::singleton();
     self::civiBeforeShutdown();
     if ($config->userFramework == 'Drupal') {
-      // drupal needs handling exit for it self
-      if(function_exists('drupal_exit')){
-        drupal_exit();
-      }
-      else{
+      if ($version < 7) {
+        // drupal 6 need to trigger hook exit manually
+        module_invoke_all('exit');
         exit($status);
       }
+      elseif ($version < 8){
+        // drupal 7 call this will trigger hook_exit
+        drupal_exit();
+      }
+      else {
+        // drupal 8/9, the correct way to exit
+        // let symfony router handling this
+        // will trigger event(KernelEvents::TERMINATE at controller
+        throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
+      }
     }
+
+    // we shuould being here when using drupal
     exit($status);
   }
 
