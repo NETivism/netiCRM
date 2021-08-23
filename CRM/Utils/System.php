@@ -197,7 +197,7 @@ class CRM_Utils_System {
    *
    */
   static function url($path = NULL, $query = NULL, $absolute = FALSE,
-    $fragment = NULL, $htmlize = TRUE, $frontend = FALSE
+    $fragment = NULL, $htmlize = FALSE, $frontend = FALSE
   ) {
     // we have a valid query and it has not yet been transformed
     if ( $htmlize && ! empty( $query ) && strpos( $query, '&amp;' ) === false ) {
@@ -260,7 +260,7 @@ class CRM_Utils_System {
       CRM_Utils_Array::value('q', $params),
       CRM_Utils_Array::value('a', $params, FALSE),
       CRM_Utils_Array::value('f', $params),
-      CRM_Utils_Array::value('h', $params, TRUE),
+      CRM_Utils_Array::value('h', $params, FALSE),
       CRM_Utils_Array::value('fe', $params, FALSE)
     );
   }
@@ -1225,6 +1225,13 @@ class CRM_Utils_System {
 
   static function civiBeforeInvoke(&$args = NULL) {
     $config = CRM_Core_Config::singleton();
+    if ($config->debug) {
+      error_reporting(E_ALL & ~E_NOTICE);
+    }
+    else {
+      error_reporting(0);
+    }
+
 
     // qfPrivateKey for drupal 9
     if (!self::isUserLoggedIn()) {
