@@ -35,13 +35,6 @@
  *
  */
 
-require_once 'PEAR/ErrorStack.php';
-require_once 'PEAR/Exception.php';
-
-require_once 'CRM/Core/Config.php';
-require_once 'CRM/Core/Smarty.php';
-
-require_once 'Log.php';
 class CRM_Exception extends PEAR_Exception {
   // Redefine the exception so message isn't optional
   public function __construct($message = NULL, $code = 0, Exception$previous = NULL) {
@@ -52,10 +45,11 @@ class CRM_Exception extends PEAR_Exception {
 class CRM_Core_Error extends PEAR_ErrorStack {
 
   /**
-   * status code of various types of errors
+   * status code of various types of errors, use http status code(200~5xx) to indicate http status code response
+   * use others to indicate other error
    * @var const
    */
-  CONST NO_ERROR = 200, FATAL_ERROR = 1000, STATUS_BOUNCE = 1004, DUPLICATE_CONTACT = 8001, DUPLICATE_CONTRIBUTION = 8002, DUPLICATE_PARTICIPANT = 8003;
+  CONST NO_ERROR = 200, FATAL_ERROR = 500, DATABASE_ERROR = 500, STATUS_BOUNCE = 303, DUPLICATE_CONTACT = 8001, DUPLICATE_CONTRIBUTION = 8002, DUPLICATE_PARTICIPANT = 8003;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -64,13 +58,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @static
    */
   private static $_singleton = NULL;
-
-  /**
-   * The logger object for this application
-   * @var object
-   * @static
-   */
-  private static $_log = NULL;
 
   /**
    * If modeException == true, errors are raised as exception instead of returning civicrm_errors
@@ -84,7 +71,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    *
    * @return object
    */
-  function &singleton($package = NULL, $msgCallback = false, $contextCallback = false, $throwPEAR_Error = false, $stackClass = 'PEAR_ErrorStack') {
+  public static function &singleton($package = NULL, $msgCallback = false, $contextCallback = false, $throwPEAR_Error = false, $stackClass = 'PEAR_ErrorStack') {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_Error('CiviCRM');
     }
@@ -178,8 +165,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       mysql_query('select 1');
     }
 
-    $template->assign_by_ref('error', $error);
-    $template->assign_by_ref('errorDetails', $errorDetails);
 
     $backtrace = CRM_Core_Error::backtrace('backtrace', FALSE);
     if (ini_get('xdebug.default_enable') && !empty(CRM_Utils_System::isUserLoggedIn()) && $config->debug) {
@@ -195,19 +180,26 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     CRM_Core_Error::debug_var('backtrace', $backtrace);
 
     if ($config->initialized) {
-      http_response_code(500);
       $vars = array();
       if ($debugMsg) {
         $vars['debug'] = $debugMsg;
       }
-      self::output($config->fatalErrorTemplate, $vars);
+      $vars['message'] = ts('We experienced an unexpected error. Please file an issue with the backtrace');
+      $content = self::output($config->fatalErrorTemplate, $vars);
     }
     else {
+      // this will show blank page
       echo "Sorry. A non-recoverable error has occurred.";
+      CRM_Utils_System::civiExit(1);
     }
-    throw new PEAR_Exception($error['message'].'|'.$error['user_info'], $pearError);
 
-    self::abend(1);
+    self::abend();
+
+    $errorData = array(
+      'object' => $pearError,
+      'content' => $content,
+    );    
+    throw new CRM_Core_Exception($error['message'].'|'.$error['user_info'], CRM_Core_Error::DATABASE_ERROR, $errorData);
   }
 
   /**
@@ -241,34 +233,27 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   static function fatal($message = NULL, $code = NULL, $suppress = NULL) {
     $config = CRM_Core_Config::singleton();
     $vars = array();
-    if ($config->fatalErrorHandler && function_exists($config->fatalErrorHandler)) {
-      $name = $config->fatalErrorHandler;
-      $ret = $name($vars);
-      if ($ret) {
-        // the call has been successfully handled
-        // so we just exit
-        self::abend(CRM_Core_Error::FATAL_ERROR);
-      }
+    if ($config->fatalErrorHandler && class_exists($config->fatalErrorHandler)) {
+      $class = $config->fatalErrorHandler;
+      // the call has been successfully handled
+      self::abend();
+      throw new $class($message, CRM_Core_Error::FATAL_ERROR);
+      return;
     }
 
-    try {
-      throw new CRM_Core_Exception($message);
+    CRM_Core_Error::debug_var('fatal_error', $message);
+    CRM_Core_Error::backtrace('backtrace', TRUE);
+    $vars['message'] = $message;
+    if ($suppress) {
+      $vars['suppress'] = $suppress;
     }
-    catch(Exception $e){
-      // fallback
-      CRM_Core_Error::debug_var('fatal_error', $message);
-      CRM_Core_Error::backtrace('backtrace', TRUE);
-      $vars['message'] = $message;
-      if ($suppress) {
-        $vars['suppress'] = $suppress;
-      }
-      else {
-        http_response_code(500);
-        $vars['suppress'] = FALSE;
-      }
-      self::output($config->fatalErrorTemplate, $vars);
+    else {
+      $vars['suppress'] = FALSE;
     }
-    self::abend(CRM_Core_Error::FATAL_ERROR);
+
+    $content = self::output($config->fatalErrorTemplate, $vars);
+    self::abend();
+    throw new CRM_Core_Exception($message, CRM_Core_Error::FATAL_ERROR, array('content' => $content));
   }
 
   /**
@@ -599,16 +584,17 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   /**
    * Terminate execution abnormally
    */
-  protected static function abend($code) {
-    // do a hard rollback of any pending transactions
-    // if we've come here, its because of some unexpected PEAR errors
-    require_once 'CRM/Core/Transaction.php';
+  protected static function abend() {
     CRM_Core_Transaction::forceRollbackIfEnabled();
-    CRM_Utils_System::civiExit($code);
   }
 
+
   /**
-   * Error template
+   * Generate output of fatal tpl
+   *
+   * @param string $tplFile
+   * @param array $vars
+   * @return string
    */
   protected static function output($tplFile, $vars){
     $template = CRM_Core_Smarty::singleton();
@@ -622,21 +608,18 @@ class CRM_Core_Error extends PEAR_ErrorStack {
           'status' => '-1',
           'error' => "$content",
         );
-        echo json_encode($json);
+        return json_encode($json);
       }
       else {
-        $content = $template->fetch('CRM/common/print.tpl');
-        echo $content;
+        return $template->fetch('CRM/common/print.tpl');
       }
     }
     else{
       $config = CRM_Core_Config::singleton();
       $tplCommon = 'CRM/common/' . strtolower($config->userFramework) . '.tpl';
-      $content = $template->fetch($tplCommon);
-      $null = &CRM_Core_DAO::$_nullObject;
-      CRM_Utils_Hook::alterContent($content, 'page', $tplCommon, $null);
-      CRM_Utils_System::theme('page', $content);
+      return $template->fetch($tplCommon);
     }
+    return '';
   }
 
   /**
