@@ -446,10 +446,7 @@ class CRM_Utils_REST {
 
     CRM_Utils_System::setTitle("API Parameters");
     $template = CRM_Core_Smarty::singleton();
-    return CRM_Utils_System::theme('page',
-      $template->fetch('CRM/Core/APIDoc.tpl'),
-      TRUE
-    );
+    return CRM_Utils_System::theme($template->fetch('CRM/Core/APIDoc.tpl'));
   }
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */

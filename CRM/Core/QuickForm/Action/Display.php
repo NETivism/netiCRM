@@ -137,7 +137,7 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
       $html = &$content;
     }
     else {
-      $html = CRM_Utils_System::theme('page', $content, TRUE, $print, $ret);
+      $return = CRM_Utils_System::theme($content);
     }
 
     if ($ret) {

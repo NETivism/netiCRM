@@ -127,59 +127,22 @@ class CRM_Utils_System {
   }
 
   /**
-   * if we are using a theming system, invoke theme, else just print the
-   * content
+   * Wrapping function to themeing
+   * 
+   * For drupal 9 and new exception handling, we use exception to handle what kind of theme we should output
+   * Do not use this control themeing anymore. Use drupal invoke function to display output
+   * All content will use stdout and capture by drupal
    *
-   * @param string  $type    name of theme object/file
    * @param string  $content the content that will be themed
-   * @param array   $args    the args for the themeing function if any
-   * @param boolean $print   are we displaying to the screen or bypassing theming?
-   * @param boolean $ret     should we echo or return output
-   * @param boolean $maintenance  for maintenance mode
    *
    * @return void           prints content on stdout
    * @access public
    */
-  function theme($type, &$content, $args = NULL, $print = FALSE, $ret = FALSE, $maintenance = FALSE) {
+  function theme(&$content) {
     if(empty($content)){
       return self::notFound();
     }
-    $version = CRM_Core_Config::$_userSystem->version;
-    if($version >= 6 && $version < 7){
-      if(function_exists('theme') && !$print){
-        if ($maintenance) {
-          drupal_set_breadcrumb('');
-          drupal_maintenance_theme();
-        }
-        $content = theme($type, $content, $args);
-      }
-    }
-    elseif($version >= 7 && $version < 8){
-      if(function_exists('drupal_deliver_page') && !$print){
-        if ($maintenance) {
-          drupal_set_breadcrumb('');
-          drupal_maintenance_theme();
-        }
-        if($ret){
-          $content = drupal_render_page($content);
-        }
-        else{
-          CRM_Core_Session::storeSessionObjects();
-          drupal_deliver_page($content);
-          return;
-        }
-      }
-    }
-    elseif($version >= 8){
-      echo $content;
-      return;
-    }
-    if($ret){
-      return $content; 
-    }
-    else{
-      print $content;
-    }
+    echo $content;
   }
 
   /**
@@ -1207,12 +1170,9 @@ class CRM_Utils_System {
         module_invoke_all('exit');
         exit($status);
       }
-      elseif ($version < 8){
-        // drupal 7 call this will trigger hook_exit
-        drupal_exit();
-      }
       else {
-        // drupal 8/9, the correct way to exit
+        // drupal 7, change old exit method. Use exception to handling route
+        // drupal 8,9, the correct way to exit
         // let symfony router handling this
         // will trigger event(KernelEvents::TERMINATE at controller
         throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
