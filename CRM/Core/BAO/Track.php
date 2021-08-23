@@ -143,7 +143,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       );
     }
     // sort by count
-    uasort($return, array(self, 'cmp'));
+    uasort($return, array(__CLASS__, 'cmp'));
     foreach($return as $type => $data) {
       $return[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
       $return[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
