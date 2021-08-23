@@ -73,10 +73,16 @@ class CRM_Core_IDS {
       return;
     }
 
-    #add request url and user agent
-    $_REQUEST['IDS_request_uri'] = $_SERVER['REQUEST_URI'];
+    // add request url and user agent
+    $request = $_REQUEST;
+    $request['IDS_request_uri'] = $_SERVER['REQUEST_URI'];
     if (isset($_SERVER['HTTP_USER_AGENT'])) {
-      $_REQUEST['IDS_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+      $request['IDS_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+    }
+
+    // add json as whole body when request content-type is application/json
+    if ($_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $request['IDS_php_input'] = file_get_contents('php://input');
     }
 
     // init the PHPIDS and pass the REQUEST array
@@ -85,8 +91,18 @@ class CRM_Core_IDS {
     self::initConfig($configFile);
 
     $init = Init::init($configFile);
+
+    // dynamic definition of ids config
+    if ($path == 'civicrm/ajax/track') {
+      $init->config['General']['json'][] = 'data';
+    }
+    if (isset($request['IDS_php_input'])) {
+      $init->config['General']['json'][] = 'IDS_php_input';
+    }
     $ids = new Monitor($init);
-    $result = $ids->run($_REQUEST);
+    $result = $ids->run($request);
+    unset($request); // release memory
+
     $impact = $result->getImpact();
     if (!$result->isEmpty()) {
       $this->react($result, $impact);
@@ -189,27 +205,46 @@ class CRM_Core_IDS {
    */
   private function react(Report $result, $impact) {
     if ($impact >= $this->threshold['kick']) {
-      $this->log($result, 'kick', $impact);
-      $this->kick($result);
+      $this->record($result, 'kick', $impact);
+      $this->kick();
     }
     elseif ($impact >= $this->threshold['warn']) {
-      $this->log($result, 'warn', $impact);
-      $this->warn($result);
+      $this->record($result, 'warn', $impact);
+      $this->warn();
     }
     elseif ($impact >= $this->threshold['log']) {
-      $this->log($result, 'log', $impact);
+      $this->record($result, 'log', $impact);
+      $this->log();
     }
   }
 
   /**
-   * This function writes an entry about the intrusion
-   * to the intrusion database
-   *
-   * @param array $results
-   *
-   * @return boolean
+   * These function 
    */
-  private function log($result, $reaction = 0, $impact = NULL) {
+  private function log() {
+    return TRUE;
+  }
+
+  private function warn() {
+    return TRUE; 
+  }
+
+  private function kick() {
+    $session = CRM_Core_Session::singleton();
+    $session->reset(2);
+
+    CRM_Core_Error::fatal(ts('There is a validation error with your HTML input. Your activity is a bit suspicious, hence aborting'));
+  }
+
+  /**
+   * Record suspicious action to log
+   *
+   * @param Report $result Object of \IDS\Report
+   * @param string $reaction action that civicrm take
+   * @param int $impact calculation from IDS
+   * @return void
+   */
+  private function record($result, $reaction, $impact) {
     $ip = CRM_Utils_System::ipAddress();
     $session = CRM_Core_Session::singleton();
     $data = array(
@@ -218,50 +253,37 @@ class CRM_Core_IDS {
       'domain' => $_SERVER['HTTP_HOST'],
       'account' => CRM_Utils_System::getLoggedInUfID(),
       'contact' => $session->get('userID'),
+      'url' => $_SERVER['REQUEST_URI'],
+      'method' => $_SERVER['REQUEST_METHOD'],
+      'content_type' => $_SERVER["CONTENT_TYPE"],
     );
     foreach ($result as $event) {
       $filters = $event->getFilters();
       $description = array();
       foreach($filters as $filter) {
-        $description[] = $filter->getId().":".$filter->getDescription();
+        $description[] = array(
+          'id' => $filter->getId(),
+          'desc' => $filter->getDescription(),
+        );
       }
-
       $log = array(
         'impact' => $impact,
         'reaction' => $reaction,
-        'name' => $event->getName(),
-        'tag' => implode("|", $event->getTags()),
-        'problem' => "\n".implode("\n", $description),
+        'field' => $event->getName(),
         'value' => $event->getValue(),
+        'tags' => $event->getTags(),
+        'filters' => $description,
       );
       $data['events'][] = $log;
     }
-    $data['url'] = $_SERVER['REQUEST_URI'];
-    if (!empty($data)) {
-      CRM_Core_Error::debug_var('PHPIDS', json_encode($data));
+    // civicrm logger
+    $dataJSON = json_encode($data);
+    CRM_Core_Error::debug_var('PHPIDS', $dataJSON);
+
+    // special logger for centralize json parser
+    if ($logPath = CRM_Core_Config::singleton()->IDSLogPath) {
+      @file_put_contents($logPath, $dataJSON."\n", FILE_APPEND);
     }
-    return TRUE;
-  }
-
-  /**
-   * //todo
-   *
-   *
-   */
-  private function warn($result) {
-    return $result;
-  }
-
-  /**
-   *  //todo
-   *
-   *
-   */
-  private function kick($result) {
-    $session = CRM_Core_Session::singleton();
-    $session->reset(2);
-
-    CRM_Core_Error::fatal(ts('There is a validation error with your HTML input. Your activity is a bit suspicious, hence aborting'));
   }
 }
 
