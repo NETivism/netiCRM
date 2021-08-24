@@ -554,7 +554,7 @@ AND       CEF.entity_id    = %2";
         if ($fileInfo->isDot()) {
           continue;
         }
-        if ($fileInfo->isFile() && time() - $fileInfo->getCTime() >= $afterDays*24*60*60) {
+        if ($fileInfo->isFile() && time() - $fileInfo->getMTime() >= $afterDays*24*60*60) {
           unlink($fileInfo->getRealPath());
         }
       }
