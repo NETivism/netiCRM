@@ -39,22 +39,108 @@ use IDS\Monitor;
 use IDS\Report;
 
 class CRM_Core_IDS {
-
   CONST CONFIG_FILE = 'Config.IDS.ini';
 
   /**
-   * define the threshold for the ids reactions
+   * @var array
+   * @access public
    */
-  private $threshold = array(
+  public static $exceptions;
+
+  /**
+   * define general exceptions and field types
+   * 
+   * @var array
+   * @access public 
+   */
+  public static $definition = [
+    'administer CiviCRM' => [
+      'civicrm/admin/messageTemplates/add' => [
+        'msg_html',
+        'msg_text',
+      ],
+      'civicrm/admin/custom/group' => [
+        'help_pre',
+        'help_post',
+      ],
+      'civicrm/admin/custom/group/field/update' => [
+        'help_pre',
+        'help_post',
+      ],
+      'civicrm/admin/custom/group/field/add' => [
+        'help_pre',
+        'help_post',
+      ],
+      'civicrm/admin/uf/group' => [
+        'help_pre',
+        'help_post',
+      ],
+    ],
+    'access CiviContribute' => [
+      'civicrm/admin/contribute/settings' => [ 
+        'intro_text',
+        'footer_text',
+      ],
+      'civicrm/admin/contribute/thankYou' => [
+        'thankyou_text',
+        'thankyou_footer',
+        'receipt_text',
+      ],
+      'civicrm/admin/contribute/membership' => [
+        'new_text',
+        'renewal_text',
+      ],
+      'civicrm/admin/contribute/widget' => [
+        'widget_code',
+        'about',
+      ],
+      'civicrm/admin/contribute/friend' => ['thankyou_text'],
+    ],
+    'access CiviEvent' => [
+      'civicrm/event/manage/eventInfo' => ['description'],
+      'civicrm/event/manage/registration' => [
+        'intro_text',
+        'footer_text',
+        'confirm_text',
+        'confirm_footer_text',
+        'thankyou_text',
+        'confirm_email_text',
+      ],
+      'civicrm/event/manage/friend' => ['thankyou_text'],
+    ],
+    'access CiviMail' => [
+      'civicrm/admin/component' => [
+        'body_text',
+        'body_html',
+      ],
+      'civicrm/mailing/send' => [
+        'text_message',
+        'html_message',
+        'body_json', 
+      ],
+    ],
+    'access CiviCRM' => [
+      'civicrm/activity' => ['details'],
+      'civicrm/activity/add' => ['details'],
+      'civicrm/contact/view/activity' => ['html_message'],
+      'civicrm/contact/search' => ['html_message'],
+    ],
+    '*' => [
+      'civicrm/ajax/track' => ['data:json'],
+    ],
+  ];
+
+  /**
+   * define the threshold for the ids reactions
+   * 
+   * @var array
+   * @access private 
+   */
+  private $_threshold = array(
     'log' => 25,
     'warn' => 50,
     'kick' => 75,
   );
-
-  /**
-   * the init object
-   */
-  private $init = NULL;
 
   /**
    * This function includes the IDS vendor parts and runs the
@@ -80,12 +166,7 @@ class CRM_Core_IDS {
       $request['IDS_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
     }
 
-    // add json as whole body when request content-type is application/json
-    if ($_SERVER['CONTENT_TYPE'] == 'application/json') {
-      $request['IDS_php_input'] = file_get_contents('php://input');
-    }
-
-    // init the PHPIDS and pass the REQUEST array
+    // init the PHPIDS
     $config = CRM_Core_Config::singleton();
     $configFile = $config->configAndLogDir . self::CONFIG_FILE;
     self::initConfig($configFile);
@@ -93,12 +174,32 @@ class CRM_Core_IDS {
     $init = Init::init($configFile);
 
     // dynamic definition of ids config
-    if ($path == 'civicrm/ajax/track') {
-      $init->config['General']['json'][] = 'data';
+    // only apply exception when has certain permission
+    foreach($this->definition as $perm => $permPath) {
+      if (CRM_Core_Permission::check($perm) || $perm === '*') {
+        foreach($permPath as $p => $epts) {
+          if ($path == $p) {
+            self::parseDefinitions($epts);
+          }
+        }
+      }
     }
-    if (isset($request['IDS_php_input'])) {
+    if (!empty(self::$exceptions)) {
+      foreach(self::$exceptions as $type => $epts) {
+        $init->config['General'][$type] = $epts;
+      }
+    }
+
+    // add json as whole body when request content-type is application/json
+    if ($_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $request['IDS_php_input'] = file_get_contents('php://input');
       $init->config['General']['json'][] = 'IDS_php_input';
     }
+
+    // remove unecessery cookie detection
+    if (isset($request['__utmz'])) unset($request['__utmz']);
+    if (isset($request['__utmc'])) unset($request['__utmc']);
+
     $ids = new Monitor($init);
     $result = $ids->run($request);
     unset($request); // release memory
@@ -145,35 +246,6 @@ class CRM_Core_IDS {
     HTML_Purifier_Path  = IDS/vendors/htmlpurifier/HTMLPurifier.auto.php
     HTML_Purifier_Cache = $tmpDir
     scan_keys           = false
-    exceptions[]        = __utmz
-    exceptions[]        = __utmc
-    exceptions[]        = widget_code
-    exceptions[]        = html_message
-    exceptions[]        = msg_html
-    exceptions[]        = msg_text
-    exceptions[]        = msg_subject
-    exceptions[]        = description
-    exceptions[]        = intro
-    exceptions[]        = thankyou_text
-    exceptions[]        = intro_text
-    exceptions[]        = body_text
-    exceptions[]        = footer_text
-    exceptions[]        = thankyou_text
-    exceptions[]        = thankyou_footer
-    exceptions[]        = thankyou_footer_text
-    exceptions[]        = receipt_text
-    exceptions[]        = new_text
-    exceptions[]        = renewal_text
-    exceptions[]        = help_pre
-    exceptions[]        = help_post
-    exceptions[]        = confirm_title
-    exceptions[]        = confirm_text
-    exceptions[]        = confirm_footer_text
-    exceptions[]        = confirm_email_text
-    exceptions[]        = report_header
-    exceptions[]        = report_footer
-    exceptions[]        = body_html
-    json[]              = body_json
 
 [Caching]
     caching         = file
@@ -204,15 +276,15 @@ class CRM_Core_IDS {
    * @return boolean
    */
   private function react(Report $result, $impact) {
-    if ($impact >= $this->threshold['kick']) {
+    if ($impact >= $this->_threshold['kick']) {
       $this->record($result, 'kick', $impact);
       $this->kick();
     }
-    elseif ($impact >= $this->threshold['warn']) {
+    elseif ($impact >= $this->_threshold['warn']) {
       $this->record($result, 'warn', $impact);
       $this->warn();
     }
-    elseif ($impact >= $this->threshold['log']) {
+    elseif ($impact >= $this->_threshold['log']) {
       $this->record($result, 'log', $impact);
       $this->log();
     }
@@ -284,6 +356,18 @@ class CRM_Core_IDS {
     // special logger for centralize json parser
     if ($logPath = CRM_Core_Config::singleton()->IDSLogPath) {
       @file_put_contents($logPath, $dataJSON."\n", FILE_APPEND);
+    }
+  }
+
+  public function parseDefinitions($definition) {
+    if (is_array($definition)) {
+      foreach($definition as $def) {
+        list($field, $type) = explode(':', $def, 2);
+        if (empty($type)) {
+          $type = 'exceptions';
+        }
+        self::$exceptions[$type][] = $field;
+      }
     }
   }
 }
