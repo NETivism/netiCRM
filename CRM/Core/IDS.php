@@ -247,12 +247,13 @@ class CRM_Core_IDS {
   private function record($result, $reaction, $impact) {
     $ip = CRM_Utils_System::ipAddress();
     $session = CRM_Core_Session::singleton();
+    $contact = $session->get('userID');
     $data = array(
       'time' => date('c'),
       'ip' => $ip,
       'domain' => $_SERVER['HTTP_HOST'],
       'account' => CRM_Utils_System::getLoggedInUfID(),
-      'contact' => $session->get('userID'),
+      'contact' => $contact ? $contact : 0,
       'url' => $_SERVER['REQUEST_URI'],
       'method' => $_SERVER['REQUEST_METHOD'],
       'content_type' => $_SERVER["CONTENT_TYPE"],
