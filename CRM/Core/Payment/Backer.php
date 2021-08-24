@@ -405,11 +405,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
     $input = $objects = array();
+    $input['component'] = 'contribute';
     $validateResult = $ipn->validateData($input, $ids, $objects, FALSE);
     if ($validateResult){
       $transaction = new CRM_Core_Transaction();
       $exists = $objects['contribution'];
-      $input['component'] = 'contribute';
       $input['amount'] = $contrib['total_amount'];
 
       // success: 2->1
