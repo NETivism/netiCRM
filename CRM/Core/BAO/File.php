@@ -539,5 +539,26 @@ AND       CEF.entity_id    = %2";
     }
     return FALSE;
   }
+
+  /**
+   * Clear temporary upload dir
+   * 
+   * @param int $afterDays clear files that exists after n days.
+   *
+   * @return void
+   */
+  public static function clearUploadDir($afterDays = 7) {
+    $config = CRM_Core_Config::singleton();
+    if (is_dir($config->uploadDir) && trim($config->uploadDir) !== trim($config->customFileUploadDir) && trim($config->uploadDir) != trim($config->imageUploadDir)) {
+      foreach (new DirectoryIterator($config->uploadDir) as $fileInfo) {
+        if ($fileInfo->isDot()) {
+          continue;
+        }
+        if ($fileInfo->isFile() && time() - $fileInfo->getCTime() >= $afterDays*24*60*60) {
+          unlink($fileInfo->getRealPath());
+        }
+      }
+    }
+  }
 }
 
