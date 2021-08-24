@@ -287,9 +287,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       $backerRelationTypeId = $config->backerFounderRelationship;
       if (!empty($params['additional']['first_name']) && !empty($params['additional']['address']) && !empty($backerRelationTypeId)) {
         $dedupeParams = array(
-          'email' => $params['additional']['email'][0],
+          'email' => $params['additional']['email'][0]['email'],
           'last_name' => $params['additional']['last_name'],
           'first_name' => $params['additional']['first_name'],
+          'phone' => $params['additional']['phone'][0]['phone']
         );
         $dedupeParams = CRM_Dedupe_Finder::formatParams($dedupeParams, 'Individual');
         $foundDupes = CRM_Dedupe_Finder::dupesByRules(
@@ -298,9 +299,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           'Strict',
           array(),
           array(
-            array('table' => 'civicrm_contact', 'field' => 'last_name', 'weight' => 8),
-            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 3),
+            array('table' => 'civicrm_contact', 'field' => 'last_name', 'weight' => 2),
+            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 8),
             array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 10),
+            array('table' => 'civicrm_email', 'field' => 'phone', 'weight' => 7),
           ),
           20
         );
@@ -363,14 +365,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         }
 
         if ($additionalContactId) {
-          $params = array(
+          $addContactParams = array(
             'version' => 3,
             'contact_id_a' => $contactId,
             'contact_id_b' => $additionalContactId,
             'relationship_type_id' => $backerRelationTypeId,
             'is_active' => 1,
           );
-          civicrm_api('Relationship', 'create', $params);
+          civicrm_api('Relationship', 'create', $addContactParams);
         }
       }
       // create a pending contribution      
@@ -498,12 +500,12 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'street_address' => $json['recipient']['recipient_address'] ? $json['recipient']['recipient_address'] : '',
       'location_type_id' => array_search('Billing', $locationType),
     );
-    if ($json['recipient']['recipient_name'] == $json['user']['name']) {
+    if (trim($json['recipient']['recipient_name']) == trim($json['user']['name'])) {
       $params['address'][0] = $address;
     }
     else {
       $params['additional'] = array();
-      $addName = self::explodeName($json['recipient']['recipient_name']);
+      $addName = self::explodeName(trim($json['recipient']['recipient_name']));
       if ($addName === FALSE) {
         $addName= array(
           '',    // sure name
@@ -515,9 +517,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         'last_name' => $addName[0],
         'first_name' => $addName[1],
       );
-      if ($json['recipient']['recipient_contact_email'] && CRM_Utils_Rule::email($json['recipient']['recipient_contact_email'])) {
+      if ($json['recipient']['recipient_contact_email'] && CRM_Utils_Rule::email(trim($json['recipient']['recipient_contact_email']))) {
         $params['additional']['email'][0] = array(
-          'email' => $json['recipient']['recipient_contact_email'],
+          'email' => trim($json['recipient']['recipient_contact_email']),
           'location_type_id' => array_search('Billing', $locationType),
           'is_primary' => 1,
           'append' => TRUE,
@@ -525,13 +527,13 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       }
       if (!empty($json['recipient']['recipient_cellphone'])) {
         $params['additional']['phone'][0] = array(
-          'phone' => $json['recipient']['recipient_cellphone'],
+          'phone' => trim($json['recipient']['recipient_cellphone']),
           'phone_type_id' => 5, // other 
           'location_type_id' => array_search('Billing', $locationType),
           'is_primary' => 1,
           'append' => TRUE,
         );
-        $addPhone = self::validateMobilePhone($json['recipient']['recipient_cellphone']);
+        $addPhone = self::validateMobilePhone(trim($json['recipient']['recipient_cellphone']));
         if ($addPhone) {
           $params['additional']['phone'][0]['phone_type_id'] = 2;
           $params['additional']['phone'][0]['phone'] = $addPhone;
