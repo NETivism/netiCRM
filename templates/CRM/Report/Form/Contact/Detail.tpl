@@ -39,8 +39,9 @@
         <div class="report-pager">
             {include file="CRM/common/pager.tpl" location="top" noForm=0}
         </div>
-        {foreach from=$rows item=row}
+        {foreach from=$rows item=row key=number}
                 	<table class="report-layout crm-report_contact_civireport">
+                            {if !$number}
                             <tr>
                                 {foreach from=$columnHeaders item=header key=field}
                                     {if !$skip}
@@ -59,6 +60,7 @@
                                     {/if}
                                 {/foreach}
                             </tr>               
+                            {/if}
                             <tr class="group-row crm-report">
                                 {foreach from=$columnHeaders item=header key=field}
                                     {assign var=fieldLink value=$field|cat:"_link"}
