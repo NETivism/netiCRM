@@ -945,10 +945,30 @@ class CRM_Utils_System {
   }
 
   static function ipAddress() {
-    $address = CRM_Utils_Array::value('REMOTE_ADDR', $_SERVER);
-    // hack for safari
-    if ($address == '::1') {
-      $address = '127.0.0.1';
+    static $address;
+    if (!isset($address)) {
+      $address = CRM_Utils_Array::value('REMOTE_ADDR', $_SERVER);
+      global $civicrm_conf;
+      if(isset($civicrm_conf['reverse_proxy_addrs'])) {
+        $proxy = $civicrm_conf['reverse_proxy_addrs'];
+      }
+      else {
+        $proxy = CRM_Core_Config::singleton()->reverseProxyAddrs;
+      }
+
+      if ($proxy && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $forwarded = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $forwarded = array_map('trim', $forwarded);
+        $forwarded[] = $address;
+        $trusted = explode(',', $proxy);
+        $untrusted = array_diff($forwarded, $trusted);
+        if (!empty($untrusted)) {
+          $address = array_pop($untrusted);
+        }
+        else {
+          $address = array_shift($forwarded);
+        }
+      }
     }
     return $address;
   }

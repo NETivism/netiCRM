@@ -508,6 +508,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
           }
           $tempArray[$dao->$CC] = $dao->$CC;
         }
+        $dao->freeResult();
       }
     }
 
@@ -548,6 +549,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
         }
         $rows[$dao->civicrm_relationship_contact_id_b][$val][] = $row;
       }
+      $dao->freeResult();
     }
 
     if (CRM_Utils_Array::value('activity_civireport', $this->_selectComponent)) {
@@ -580,9 +582,9 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
                  GROUP BY {$this->_aliases['civicrm_activity']}.id 
 
-                 ORDER BY {$this->_aliases['civicrm_activity']}.activity_date_time desc  ";
+                 ORDER BY {$this->_aliases['civicrm_activity']}.activity_date_time desc ";
 
-      $dao = CRM_Core_DAO::executeQuery($sql);
+      $dao = CRM_Core_DAO::executeQuery($sql." LIMIT 10");
       while ($dao->fetch()) {
         foreach ($this->_columnHeadersComponent[$val] as $key => $value) {
           if ($key == 'civicrm_activity_source_contact_id') {
@@ -602,6 +604,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
           $rows[$dao->assignee_contact_id][$val][] = $row;
         }
       }
+      $dao->freeResult();
 
       //unset the component header if data is not present
       foreach ($this->_component as $val) {
@@ -658,8 +661,10 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->formatDisplay($rows);
 
     if (!empty($this->_contactSelected)) {
-      $componentRows = $this->clauseComponent();
-      $this->alterComponentDisplay($componentRows);
+      if (count($this->_contactSelected) == 1) {
+        $componentRows = $this->clauseComponent();
+        $this->alterComponentDisplay($componentRows);
+      }
 
       //unset Conmponent id and contact id from display
       foreach ($this->_columnHeadersComponent as $componentTitle => $headers) {
@@ -685,6 +690,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     // custom code to alter rows
 
     $entryFound = FALSE;
+    $rowCount = count($rows);
 
     foreach ($rows as $rowNum => $row) {
       // make count columns point to detail report
@@ -693,11 +699,12 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
       if (array_key_exists('civicrm_contact_display_name', $row) &&
         array_key_exists('civicrm_contact_id', $row)
       ) {
-
-        $url = CRM_Utils_System::url("civicrm/contact/view",
-          'reset=1&cid=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl
-        );
+        if ($rowCount > 1) {
+          $url = CRM_Utils_System::url("civicrm/report/instance/".$this->_id, "reset=1&force=1&id_op=eq&id_value=".$row['civicrm_contact_id'], $this->_absoluteUrl);
+        }
+        else {
+          $url = CRM_Utils_System::url("civicrm/contact/view", 'reset=1&cid=' . $row['civicrm_contact_id'], $this->_absoluteUr);
+        }
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("View Contact Summary for this Contact");
         $entryFound = TRUE;

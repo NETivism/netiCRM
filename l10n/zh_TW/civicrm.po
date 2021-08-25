@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-08-11 05:40+0000\n"
+"PO-Revision-Date: 2021-08-24 02:26+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -13201,7 +13201,7 @@ msgstr "請選擇時間"
 msgid ""
 "There is a validation error with your HTML input. Your activity is a bit "
 "suspicious, hence aborting"
-msgstr "您的 HTML 有些錯誤。您的動作因此沒有完成。"
+msgstr "系統偵測到你的輸入有異常程式碼，我們已紀錄此行為，並且取消了此動作。"
 
 #: CRM/Core/Invoke.php
 msgid "Menu has been rebuilt"
@@ -25858,7 +25858,7 @@ msgstr "非常抱歉，有一個錯誤發生了，請您與系統管理員聯繫
 
 #: templates/CRM/common/fatal.tpl
 msgid "Error Details"
-msgstr "詳情"
+msgstr "錯誤詳情"
 
 #: templates/CRM/common/fatal.tpl
 msgid "Error Code:"
@@ -48619,3 +48619,11 @@ msgstr "貝殼自動匯入"
 
 msgid "Orderer"
 msgstr "訂購者"
+
+msgid ""
+"The specific URL you visited is expired. Use this page to process your "
+"payment."
+msgstr "一次性連結已失效，請用此頁面來接續付款"
+
+msgid "This directory will delete files periodly."
+msgstr "此資料夾定期清除過期檔案。"
