@@ -175,7 +175,7 @@ class CRM_Core_IDS {
 
     // dynamic definition of ids config
     // only apply exception when has certain permission
-    foreach($this->definition as $perm => $permPath) {
+    foreach(self::$definition as $perm => $permPath) {
       if (CRM_Core_Permission::check($perm) || $perm === '*') {
         foreach($permPath as $p => $epts) {
           if ($path == $p) {
