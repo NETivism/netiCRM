@@ -363,10 +363,6 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
 
     $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field label FROM $table $contribution_query $where GROUP BY label $order_by";
 
-    $config = CRM_Core_Config::singleton();
-    if ($config->debug) {
-      CRM_Core_Error::debug('getStaWithCondition_$sql', $sql);
-    }
     $dao = CRM_Core_DAO::executeQuery($sql);
     $returnArray = array();
     $count = 0;

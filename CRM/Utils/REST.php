@@ -350,7 +350,7 @@ class CRM_Utils_REST {
       require_once 'api/v3/utils.php';
       return civicrm_api3_create_error("SECURITY: All requests that modify the database must be http POST, not GET.",
         array(
-          'IP' => $_SERVER['REMOTE_ADDR'],
+          'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
           'referer' => $_SERVER['HTTP_REFERER'],
           'reason' => 'Destructive HTTP GET',
@@ -518,7 +518,7 @@ class CRM_Utils_REST {
       )) {
       $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
         array(
-          'IP' => $_SERVER['REMOTE_ADDR'],
+          'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
           'referer' => $_SERVER['HTTP_REFERER'],
           'reason' => 'CSRF suspected',
@@ -575,7 +575,7 @@ class CRM_Utils_REST {
       require_once 'api/v3/utils.php';
       $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
         array(
-          'IP' => $_SERVER['REMOTE_ADDR'],
+          'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
           'referer' => $_SERVER['HTTP_REFERER'],
           'reason' => 'CSRF suspected',

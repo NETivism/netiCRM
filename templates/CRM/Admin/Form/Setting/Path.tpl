@@ -32,7 +32,7 @@
             <tr class="crm-path-form-block-uploadDir">
                 <td class="label">{$form.uploadDir.label}</td>
                 <td>{$form.uploadDir.html|crmReplace:class:'huge40'}<br />
-                    <span class="description">{ts}File system path where temporary CiviCRM files - such as import data files - are uploaded.{/ts}</span>
+                    <span class="description">{ts}File system path where temporary CiviCRM files - such as import data files - are uploaded.{/ts}<span class="font-red">{ts}This directory will delete files periodly.{/ts}</span></span>
                 </td>
             </tr>
             <tr class="crm-path-form-block-imageUploadDir">
