@@ -115,22 +115,17 @@ class CRM_Core_IDS {
         'body_text',
         'body_html',
       ],
-      'civicrm/mailing/send' => [
-        'text_message',
-        'html_message',
-        'body_json', 
-      ],
     ],
     'access CiviMember' => [
       'civicrm/member/search' => ['html_message'],
     ],
     'access CiviCRM' => [
+      '*' => [
+        'html_message', // too many urls have this
+        'body_json', // contact search can submit newsletter / email, too
+      ],
       'civicrm/activity' => ['details'],
       'civicrm/activity/add' => ['details'],
-      'civicrm/contact/search/*' => ['html_message'],
-      'civicrm/contact/view/activity' => ['html_message'],
-      'civicrm/activity/search' => ['html_message'],
-      'civicrm/group/search' => ['html_message'],
     ],
     '*' => [
       'civicrm/ajax/track' => ['data:json'],
@@ -188,10 +183,8 @@ class CRM_Core_IDS {
           if ($path == $p) {
             self::parseDefinitions($epts);
           }
-          elseif(strstr($p, '*')) {
-            if (strstr($path, rtrim($p, '*'))) {
-              self::parseDefinitions($epts);
-            }
+          elseif ($p === '*') {
+            self::parseDefinitions($epts);
           }
         }
       }
@@ -199,6 +192,7 @@ class CRM_Core_IDS {
 
     if (!empty(self::$exceptions)) {
       foreach(self::$exceptions as $type => $epts) {
+        $epts = array_unique($epts);
         $init->config['General'][$type] = $epts;
       }
     }
