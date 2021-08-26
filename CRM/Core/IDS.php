@@ -127,9 +127,10 @@ class CRM_Core_IDS {
     'access CiviCRM' => [
       'civicrm/activity' => ['details'],
       'civicrm/activity/add' => ['details'],
+      'civicrm/contact/search/*' => ['html_message'],
       'civicrm/contact/view/activity' => ['html_message'],
-      'civicrm/contact/search' => ['html_message'],
       'civicrm/activity/search' => ['html_message'],
+      'civicrm/group/search' => ['html_message'],
     ],
     '*' => [
       'civicrm/ajax/track' => ['data:json'],
@@ -187,9 +188,15 @@ class CRM_Core_IDS {
           if ($path == $p) {
             self::parseDefinitions($epts);
           }
+          elseif(strstr($p, '*')) {
+            if (strstr($path, rtrim($p, '*'))) {
+              self::parseDefinitions($epts);
+            }
+          }
         }
       }
     }
+
     if (!empty(self::$exceptions)) {
       foreach(self::$exceptions as $type => $epts) {
         $init->config['General'][$type] = $epts;
