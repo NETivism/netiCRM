@@ -106,6 +106,7 @@ class CRM_Core_IDS {
         'thankyou_text',
         'confirm_email_text',
       ],
+      'civicrm/event/search' => ['html_message'],
       'civicrm/event/manage/friend' => ['thankyou_text'],
     ],
     'access CiviMail' => [
@@ -118,6 +119,9 @@ class CRM_Core_IDS {
         'html_message',
         'body_json', 
       ],
+    ],
+    'access CiviMember' => [
+      'civicrm/member/search' => ['html_message'],
     ],
     'access CiviCRM' => [
       'civicrm/activity' => ['details'],
