@@ -95,6 +95,7 @@ class CRM_Core_IDS {
         'about',
       ],
       'civicrm/admin/contribute/friend' => ['thankyou_text'],
+      'civicrm/contribute/search' => ['html_message']
     ],
     'access CiviEvent' => [
       'civicrm/event/manage/eventInfo' => ['description'],
@@ -106,6 +107,7 @@ class CRM_Core_IDS {
         'thankyou_text',
         'confirm_email_text',
       ],
+      'civicrm/event/search' => ['html_message'],
       'civicrm/event/manage/friend' => ['thankyou_text'],
     ],
     'access CiviMail' => [
@@ -119,11 +121,16 @@ class CRM_Core_IDS {
         'body_json', 
       ],
     ],
+    'access CiviMember' => [
+      'civicrm/member/search' => ['html_message'],
+    ],
     'access CiviCRM' => [
       'civicrm/activity' => ['details'],
       'civicrm/activity/add' => ['details'],
+      'civicrm/contact/search/*' => ['html_message'],
       'civicrm/contact/view/activity' => ['html_message'],
-      'civicrm/contact/search' => ['html_message'],
+      'civicrm/activity/search' => ['html_message'],
+      'civicrm/group/search' => ['html_message'],
     ],
     '*' => [
       'civicrm/ajax/track' => ['data:json'],
@@ -181,9 +188,15 @@ class CRM_Core_IDS {
           if ($path == $p) {
             self::parseDefinitions($epts);
           }
+          elseif(strstr($p, '*')) {
+            if (strstr($path, rtrim($p, '*'))) {
+              self::parseDefinitions($epts);
+            }
+          }
         }
       }
     }
+
     if (!empty(self::$exceptions)) {
       foreach(self::$exceptions as $type => $epts) {
         $init->config['General'][$type] = $epts;
