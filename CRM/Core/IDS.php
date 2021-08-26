@@ -125,8 +125,8 @@ class CRM_Core_IDS {
       'civicrm/member/search' => ['html_message'],
     ],
     'access CiviCRM' => [
-      'civicrm/activity' => ['details'],
-      'civicrm/activity/add' => ['details'],
+      'civicrm/activity' => ['details', 'html_message'],
+      'civicrm/activity/add' => ['details', 'html_message'],
       'civicrm/contact/search/*' => ['html_message'],
       'civicrm/contact/view/activity' => ['html_message'],
       'civicrm/activity/search' => ['html_message'],
