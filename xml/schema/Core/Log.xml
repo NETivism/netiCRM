@@ -61,7 +61,7 @@
        <table>civicrm_contact</table>
        <key>id</key>
        <add>1.5</add>
-       <onDelete>CASCADE</onDelete>
+       <onDelete>SET NULL</onDelete>
   </foreignKey>
   <field>
        <name>modified_date</name>
