@@ -332,7 +332,7 @@ class CRM_Report_Form extends CRM_Core_Form {
       }
       else {
         $daoName = $table['dao'];
-        $expFields = $daoName::export( );
+        $expFields = $daoName::fields( );
       }
 
       $doNotCopy = array('required');

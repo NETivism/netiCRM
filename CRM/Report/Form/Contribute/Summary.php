@@ -552,7 +552,6 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       // make count columns point to detail report
       if (CRM_Utils_Array::value('receive_date', $this->_params['group_bys']) &&
         CRM_Utils_Array::value('civicrm_contribution_receive_date_start', $row) &&
-        CRM_Utils_Array::value('civicrm_contribution_receive_date_start', $row) &&
         CRM_Utils_Array::value('civicrm_contribution_receive_date_subtotal', $row)
       ) {
 
@@ -587,8 +586,18 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
               ));
             break;
         }
+        $query = "reset=1&force=1&receive_date_from={$dateStart}&receive_date_to={$dateEnd}";
+        if (!empty($this->_params['contribution_status_id_op']) && !empty($this->_params['contribution_status_id_value'])) {
+          if (is_array($this->_params['contribution_status_id_value'])) {
+            $status_id_value = implode(',', $this->_params['contribution_status_id_value']);
+          }
+          else {
+            $status_id_value = $this->_params['contribution_status_id_value'];
+          }
+          $query .= "&contribution_status_id_op={$this->_params['contribution_status_id_op']}&contribution_status_id_value={$status_id_value}";
+        }
         $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
-          "reset=1&force=1&receive_date_from={$dateStart}&receive_date_to={$dateEnd}",
+          $query,
           $this->_absoluteUrl,
           $this->_id
         );
