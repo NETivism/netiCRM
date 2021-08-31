@@ -42,6 +42,41 @@ require_once 'CRM/Admin/Form.php';
 class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
 
   /**
+   * This function sets the default values for the form. MobileProvider that in edit/view mode
+   * the default values are retrieved from the database
+   *
+   * @access public
+   *
+   * @return None
+   */
+  function setDefaultValues() {
+    if (isset($this->_id) && empty($this->_values)) {
+      $this->_values = array();
+      $params = array('id' => $this->_id);
+      $baoName = $this->_BAOName;
+      $baoName::retrieve( $params, $this->_values );
+    }
+    $defaults = $this->_values;
+
+    if ($this->_action == CRM_Core_Action::DELETE &&
+      isset($defaults['name'])
+    ) {
+      $this->assign('delName', $defaults['name']);
+    }
+
+    // its ok if there is no element called is_active
+    $defaults['is_active'] = ($this->_id) ? $defaults['is_active'] : 1;
+    if (CRM_Utils_Array::value('parent_id', $defaults)) {
+      $this->assign('is_parent', TRUE);
+    }
+    if (!empty($defaults['name'])) {
+      $ele = $this->getElement('name');
+      $ele->freeze();
+    }
+    return $defaults;
+  }
+
+  /**
    * Function to build the form
    *
    * @return None
@@ -60,6 +95,7 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
     $this->addRule('label', ts('Lable already exists in Database.'), 'objectExists',  array('CRM_Core_DAO_LocationType', $this->_id));
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'name'), TRUE);
     $this->addRule('name', ts('Name already exists in Database.'), 'objectExists',  array('CRM_Core_DAO_LocationType', $this->_id));
+    $this->addRule('name', ts('Name should only have alpha numeric characters.'), 'alphanumeric',  array('CRM_Core_DAO_LocationType', $this->_id));
 
 
     $this->add('text', 'vcard_name', ts('vCard Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'vcard_name'));
