@@ -242,18 +242,20 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       $contact['id'] = $contactId;
       $blocks = array('email', 'phone', 'address'); 
       foreach($blocks as $blockName) {
-        $blockValue = reset($params[$blockName]);
-        $blockValue['contact_id'] = $contactId;
-        if ($blockName == 'address') {
-          CRM_Core_BAO_Address::valueExists($blockValue);
-        }
-        else {
-          CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
-        }
+        if (isset($params[$blockName]) && is_array($params[$blockName])) {
+          $blockValue = reset($params[$blockName]);
+          $blockValue['contact_id'] = $contactId;
+          if ($blockName == 'address') {
+            CRM_Core_BAO_Address::valueExists($blockValue);
+          }
+          else {
+            CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
+          }
 
-        // do not touch contact exists value, only add new value
-        if (empty($blockValue['id'])) {
-          $contact[$blockName] = $params[$blockName];
+          // do not touch contact exists value, only add new value
+          if (empty($blockValue['id'])) {
+            $contact[$blockName] = $params[$blockName];
+          }
         }
       }
 
