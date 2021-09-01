@@ -216,5 +216,23 @@ ORDER BY e.is_primary DESC, email_id ASC ";
       }
     }
   }
+
+  /**
+   * Get current exists id from value(email)
+   *
+   * Only effect when phone id not provided. Id will be added into params before add.
+   * 
+   * @param array $params referenced array to be add exists phone id
+   * @return void
+   */
+  static function valueExists(&$params) {
+    if (empty($params['id']) && !empty($params['email']) && is_string($params['email']) && !empty($params['contact_id'])) {
+      $check = preg_replace('/[^a-zA-Z0-9.@-]/', '', $params['email']);
+      $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE REGEXP_REPLACE(email, '[^a-zA-Z0-9.@-]', '') LIKE %1 AND contact_id = %2", array(
+        1 => array($check, 'String'),
+        2 => array($params['contact_id'], 'Integer')
+      ));
+    }
+  }
 }
 

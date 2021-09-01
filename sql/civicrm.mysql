@@ -576,7 +576,7 @@ CREATE TABLE civicrm_payment_processor_type (
      url_api_test_default varchar(255)    ,
      url_recur_test_default varchar(255)    ,
      url_button_test_default varchar(255)    ,
-     billing_mode int unsigned NOT NULL   COMMENT 'Billing Mode',
+     billing_mode int unsigned NOT NULL   COMMENT 'Billing Mode, check CRM_Core_Payment for details',
      is_recur tinyint    COMMENT 'Can process recurring contributions',
      payment_type int unsigned   DEFAULT 1 COMMENT 'Payment Type: Credit or Debit' 
 ,
@@ -2767,7 +2767,7 @@ CREATE TABLE civicrm_log (
   )
   
 ,      
-     CONSTRAINT FK_civicrm_log_modified_id FOREIGN KEY (modified_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
+     CONSTRAINT FK_civicrm_log_modified_id FOREIGN KEY (modified_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
@@ -3669,6 +3669,7 @@ CREATE TABLE civicrm_contribution_page (
      receipt_text text    COMMENT 'text to include above standard receipt info on receipt email. emails are text-only, so do not allow html for now',
      recur_fail_notify varchar(255)    COMMENT 'comma-separated list of email addresses to each time a recurring is failed',
      is_active tinyint    COMMENT 'Is this property active?',
+     is_internal tinyint    COMMENT 'Is this page only for internal usage?',
      footer_text text    COMMENT 'Text and html allowed. Displayed at the bottom of the first page of the contribution wizard.',
      amount_block_is_active tinyint   DEFAULT 1 COMMENT 'Is this property active?',
      honor_block_is_active tinyint    COMMENT 'Should this contribution have the honor  block enabled?',

@@ -182,7 +182,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       'date', 'currentDate',
       'asciiFile', 'htmlFile', 'utf8File', 'imageFile',
       'objectExists', 'optionExists', 'postalCode', 'money', 'positiveInteger',
-      'xssString', 'fileExists', 'autocomplete', 'validContact',
+      'xssString', 'fileExists', 'autocomplete', 'validContact', 'alphanumeric'
     );
 
     foreach ($rules as $rule) {

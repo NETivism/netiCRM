@@ -332,7 +332,7 @@ class CRM_Report_Form extends CRM_Core_Form {
       }
       else {
         $daoName = $table['dao'];
-        $expFields = $daoName::export( );
+        $expFields = $daoName::fields( );
       }
 
       $doNotCopy = array('required');
@@ -947,7 +947,7 @@ class CRM_Report_Form extends CRM_Core_Form {
             $value = "'{$value}'";
           }
           $sqlOP = self::getSQLOperator($op);
-          $clause = "( {$field['dbAlias']} $sqlOP $value )";
+          $clause = "(IFNULL({$field['dbAlias']}, '') $sqlOP $value )";
         }
         break;
 
