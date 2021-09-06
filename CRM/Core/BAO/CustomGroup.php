@@ -85,7 +85,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
       $group->extends = $params['extends'][0];
     }
 
-    $group->extends_entity_column_id = NULL;
+    $group->extends_entity_column_id = $params['extends_entity_column_id'] === 'null' ? $params['extends_entity_column_id'] : NULL;
     if ($params['extends'][0] == 'ParticipantRole' ||
       $params['extends'][0] == 'ParticipantEventName' ||
       $params['extends'][0] == 'ParticipantEventType'
@@ -99,7 +99,11 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     if (CRM_Utils_Array::value('extends_entity_column_value', $params)) {
       $extendsChildType = $params['extends_entity_column_value'];
     }
-    if (!CRM_Utils_System::isNull($extendsChildType)) {
+
+    if ($extendsChildType === 'null') {
+      $extendsChildType = 'null';
+    }
+    elseif (!CRM_Utils_System::isNull($extendsChildType)) {
       $extendsChildType = implode(CRM_Core_DAO::VALUE_SEPARATOR, $extendsChildType);
       if (CRM_Utils_Array::value(0, $params['extends']) == 'Relationship') {
         $extendsChildType = str_replace(array('_a_b', '_b_a'), array('', ''), $extendsChildType);
