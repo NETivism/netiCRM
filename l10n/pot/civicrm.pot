@@ -48305,3 +48305,6 @@ msgstr ""
 
 msgid "This directory will delete files periodly."
 msgstr ""
+
+msgid "%1 doesn't have email. Skipped receipt generation."
+msgstr ""
