@@ -889,7 +889,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
    * For now we only allow custom contribution fields to be in
    * profile
    *
-   * @return return the list of contribution fields
+   * @return array the list of contribution fields
    * @static
    * @access public
    */
@@ -2686,6 +2686,11 @@ WHERE c.id = $id";
       }
     }
 
+    list($contributorDisplayName, $contributorEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
+    if (empty($contributorEmail)) {
+      CRM_Core_Session::setStatus(ts("%1 doesn't have email. Skipped receipt generation.", array(1 => $contributorDisplayName)));
+      return;
+    }
     $receiptTask = new CRM_Contribute_Form_Task_PDF();
     $receiptType = !empty($receiptType) ? $receiptType : 'copy_only';
     $receiptTask->makeReceipt($contributionId, $receiptType, TRUE);
@@ -2697,7 +2702,6 @@ WHERE c.id = $id";
       'cleanName' => $pdfFileName,
     );
 
-    list($contributorDisplayName, $contributorEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
     $templateParams = array(
       'groupName' => 'msg_tpl_workflow_contribution',
       'valueName' => 'contribution_offline_receipt',

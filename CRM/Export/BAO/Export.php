@@ -601,10 +601,10 @@ class CRM_Export_BAO_Export {
     if (empty($civicrm_batch)) {
       $countDAO = CRM_Core_DAO::executeQuery($countQuery);
       $totalNumRows = $countDAO->N;
+      $fileName = self::getExportFileName($exportMode);
       if ($totalNumRows > self::EXPORT_BATCH_THRESHOLD) {
         // start batch
         $config = CRM_Core_Config::singleton();
-        $fileName = self::getExportFileName($exportMode);
         $file = $config->uploadDir.$fileName;
         $batch = new CRM_Batch_BAO_Batch();
         $batchParams = array(
@@ -642,9 +642,15 @@ class CRM_Export_BAO_Export {
         }
         $batch->start($batchParams);
 
+        // refs #32446, 
+        self::audit($exportMode, $fileName, $totalNumRows, $returnProperties);
+
         // redirect to notice page
         CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
+      }
+      else {
+        self::audit($exportMode, $fileName, $totalNumRows, $returnProperties);
       }
     }
     else {
@@ -1124,7 +1130,7 @@ class CRM_Export_BAO_Export {
       return;
     }
     else {
-      self::writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode);
+      self::writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName);
       CRM_Utils_System::civiExit();
     }
   }
@@ -1139,6 +1145,18 @@ class CRM_Export_BAO_Export {
    */
   function getExportFileName($mode = NULL) {
     $rand = substr(md5(microtime(TRUE)), 0, 4);
+    $name = self::getExportName($mode);
+    return date('Ymd_').str_replace(array(' ', '.', '/', '-') , '_', $name) . "_" . $rand . '.xlsx';
+  }
+
+  /**
+   * Name of the export mode
+   *
+   * @param int     $mode export mode
+   *
+   * @return string name of export mode
+   */
+  public static function getExportName($mode = NULL) {
     switch ($mode) {
       case CRM_Export_Form_Select::CONTACT_EXPORT:
         $name = ts('CiviCRM Contact Search');
@@ -1168,7 +1186,7 @@ class CRM_Export_BAO_Export {
         $name = 'civicrm_export';
         break;
     }
-    return date('Ymd_').str_replace(array(' ', '.', '/', '-') , '_', $name) . "_" . $rand . '.xlsx';
+    return $name;
   }
 
   /**
@@ -1675,8 +1693,7 @@ GROUP BY civicrm_primary_id ";
     $dao = CRM_Core_DAO::executeQuery($query);
   }
 
-  static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode) {
-    $fileName = self::getExportFileName($exportMode);
+  static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
 
     $query = "SELECT * FROM $exportTempTable";
     $componentDetails = array();
@@ -1834,6 +1851,19 @@ GROUP BY civicrm_primary_id ";
 
   function batchFinish() {
 
+  }
+
+  public static function audit($exportMode, $fileName, $totalNumRow, $fields) {
+    $serial = CRM_REQUEST_TIME;
+    $flatten = array();
+    CRM_Utils_Array::flatten($fields, $flatten);
+    $data = array(
+      'Type' => $exportMode,
+      'File' => $fileName,
+      'Data' => $totalNumRow,
+      'Fields' => array_keys($flatten),
+    );
+    CRM_Core_BAO_Log::audit($serial, 'civicrm.export', json_encode($data));
   }
 }
 
