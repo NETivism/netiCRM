@@ -48302,3 +48302,9 @@ msgstr ""
 
 msgid "The specific URL you visited is expired. Use this page to process your payment."
 msgstr ""
+
+msgid "This directory will delete files periodly."
+msgstr ""
+
+msgid "%1 doesn't have email. Skipped receipt generation."
+msgstr ""
