@@ -1145,6 +1145,18 @@ class CRM_Export_BAO_Export {
    */
   function getExportFileName($mode = NULL) {
     $rand = substr(md5(microtime(TRUE)), 0, 4);
+    $name = self::getExportName($mode);
+    return date('Ymd_').str_replace(array(' ', '.', '/', '-') , '_', $name) . "_" . $rand . '.xlsx';
+  }
+
+  /**
+   * Name of the export mode
+   *
+   * @param int     $mode export mode
+   *
+   * @return string name of export mode
+   */
+  public static function getExportName($mode = NULL) {
     switch ($mode) {
       case CRM_Export_Form_Select::CONTACT_EXPORT:
         $name = ts('CiviCRM Contact Search');
@@ -1174,7 +1186,7 @@ class CRM_Export_BAO_Export {
         $name = 'civicrm_export';
         break;
     }
-    return date('Ymd_').str_replace(array(' ', '.', '/', '-') , '_', $name) . "_" . $rand . '.xlsx';
+    return $name;
   }
 
   /**
