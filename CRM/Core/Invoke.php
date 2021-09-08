@@ -357,10 +357,12 @@ class CRM_Core_Invoke {
               $sameOrigin = TRUE;
             }
           }
-          $profile = CRM_UF_Page_Group::profile();
+          $gid = CRM_Utils_Request::retrieve('gid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
+          $profile = CRM_UF_Page_Group::profile($gid);
           $template = CRM_Core_Smarty::singleton();
           $template->assign('sameOrigin', $sameOrigin);
           $template->assign('embedBody', $profile);
+          $template->assign('embedId', 'profile-'.$gid);
           $content = $template->fetch('CRM/common/Embed.tpl');
           echo $content; 
           return;
