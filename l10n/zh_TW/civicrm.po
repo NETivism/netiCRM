@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-08-24 02:26+0000\n"
+"PO-Revision-Date: 2021-09-06 04:04+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48627,3 +48627,6 @@ msgstr "一次性連結已失效，請用此頁面來接續付款"
 
 msgid "This directory will delete files periodly."
 msgstr "此資料夾定期清除過期檔案。"
+
+msgid "%1 doesn't have email. Skipped receipt generation."
+msgstr "因 %1 沒有電子郵件，已略過收據產生動作。"

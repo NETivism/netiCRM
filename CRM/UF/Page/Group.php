@@ -486,7 +486,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     $controller->run();
     $template = CRM_Core_Smarty::singleton();
     $template->assign('gid', $gid);
-    $template->assign('tplFile', 'CRM/Profile/Form/Edit.tpl');
+    $template->assign('tplFile', $controller->getTemplateFileName());
     $profile = trim($template->fetch('CRM/Form/default.tpl'));
     // not sure how to circumvent our own navigation system to generate the right form url
     $form_url = CRM_Utils_System::url('civicrm/profile/create', 'gid=' . $gid . '&reset=1', FALSE);
