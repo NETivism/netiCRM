@@ -74,7 +74,6 @@ packages/jquery/css/jquery.chosen.css
 packages/jquery/plugins/jquery.select2.js
 packages/jquery/plugins/jquery.select2.zh-TW.js
 packages/jquery/css/jquery.select2.css
-packages/jquery/css/jquery.select2.civicrm.css
 
 packages/jquery/plugins/jquery.modal.min.js
 packages/jquery/css/jquery.modal.min.css

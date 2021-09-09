@@ -6816,6 +6816,20 @@ input.crm-form-textfield,
   margin: 0 0 0 -21px !important;
 }
 
+/** Select2 style */
+.crm-container button.select2-selection__clear,
+.crm-container button.select2-selection__clear:hover {
+  color: #333030;
+}
+.crm-container .select2-selection--single button.select2-selection__clear,
+.crm-container .select2-selection--single button.select2-selection__clear:hover {
+  margin-top: 0;
+}
+.crm-container .select2-selection--multiple .select2-selection__clear,
+.crm-container .select2-selection--multiple button.select2-selection__clear:hover {
+  margin-right: 5px;
+}
+
 /* RWD block */
 @media screen and (max-width: 768px) {
   .crm-container .crm-block-rwd {
