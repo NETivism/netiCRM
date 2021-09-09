@@ -48308,3 +48308,27 @@ msgstr ""
 
 msgid "%1 doesn't have email. Skipped receipt generation."
 msgstr ""
+
+msgid "Website User Name Changed"
+msgstr ""
+
+msgid "Website User Password Changed"
+msgstr ""
+
+msgid "Website User Roles Changed"
+msgstr ""
+
+msgid "New CiviCRM Access User"
+msgstr ""
+
+msgid "Export Records"
+msgstr ""
+
+msgid "Modified User"
+msgstr ""
+
+msgid "This page displays the user data has been changed in last %1 days."
+msgstr ""
+
+msgid "Audit Records"
+msgstr ""

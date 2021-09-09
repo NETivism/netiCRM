@@ -646,7 +646,7 @@
      <title>Audit Records</title>
      <desc>List current audit records.</desc>
      <page_callback>CRM_Admin_Page_AuditRecords</page_callback>
-     <access_arguments>administer CiviCRM,administer Report</access_arguments>
+     <access_arguments>administer CiviCRM,administer Reports</access_arguments>
      <adminGroup>Manage</adminGroup>
      <icon>admin/small/03.png</icon>
      <weight>420</weight>
