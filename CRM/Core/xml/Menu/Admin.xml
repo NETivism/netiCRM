@@ -641,4 +641,14 @@
      <icon>admin/small/price_sets.png</icon>
      <weight>400</weight>
   </item>
+  <item>
+     <path>civicrm/admin/audit-records</path>
+     <title>Audit Records</title>
+     <desc>List current audit records.</desc>
+     <page_callback>CRM_Admin_Page_AuditRecords</page_callback>
+     <access_arguments>administer CiviCRM,administer Report</access_arguments>
+     <adminGroup>Manage</adminGroup>
+     <icon>admin/small/03.png</icon>
+     <weight>420</weight>
+  </item>
 </menu>
