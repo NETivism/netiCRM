@@ -47,5 +47,6 @@
  * @return string  
  */
 function smarty_block_js($params, $text, &$smarty) {
+  $params['smarty_block_js'] = TRUE;
   return CRM_Utils_System::addJs($params, $text);
 }

@@ -468,10 +468,29 @@ class CRM_Utils_System_Drupal {
       }
     }
     elseif($version >= 8) {
-      // refs civicrm.module civicrm_library_info_build
-      if (strstr($params['src'], 'mailingEditor')) {
-        self::$jsLibraries['civicrm/civicrm-js-mailingeditor'] = 1;
+      // special case for durpal 8-9
+      // we got to define library first, and lib info will cached
+      // the dynamic attachment only can specify by library name
+      // we use some dirty definition for supporting Smarty block.js.php
+      if (!empty($params['smarty_block_js'])) {
+        if (strstr($params['src'], 'mailingEditor')) {
+          self::$jsLibraries['civicrm/civicrm-js-mailingeditor'] = 1;
+        }
+        if (strstr($params['src'], 'others... eg. select2')) {
+          self::$jsLibraries['civicrm/civicrm-js-mailingeditor'] = 1;
+        }
       }
+
+      // these condition is for drupal module hook
+      // hook module can use hook_library_info_alter to add library
+      // then civicrm hook can be triggered here
+      // check civicrm_jvalidate.module for details
+      elseif(!empty($params['library'])) {
+        self::$jsLibraries[$params['library']] = 1;
+      }
+
+      // for now, we won't additional js library in page
+      // all js blocks is inline
       elseif(isset($params['type'])) {
         switch($params['type']) {
           case 'inline':
