@@ -476,8 +476,8 @@ class CRM_Utils_System_Drupal {
         if (strstr($params['src'], 'mailingEditor')) {
           self::$jsLibraries['civicrm/civicrm-js-mailingeditor'] = 1;
         }
-        if (strstr($params['src'], 'others... eg. select2')) {
-          self::$jsLibraries['civicrm/civicrm-js-mailingeditor'] = 1;
+        if (!empty($params['library'])) {
+          self::$jsLibraries[$params['library']] = 1;
         }
       }
 

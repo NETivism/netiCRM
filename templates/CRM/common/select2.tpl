@@ -11,4 +11,8 @@ cj(document).ready(function(){
 });
 {/literal}
 {if !$nowrapper}</script>{/if}
-{if $config->lcMessages eq 'zh_TW'}{js src=packages/jquery/plugins/jquery.select2.zh-TW.js}{/js}{/if}
+{if $config->lcMessages eq 'zh_TW'}
+  {* this will compitable with drupal 6-7-9 *}
+  {* parameter library will use library name pree-defined in civicrm.module *}
+  {js src=packages/jquery/plugins/jquery.select2.zh-TW.js library=civicrm/civicrm-js-zh-tw}{/js}
+{/if}
