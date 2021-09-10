@@ -48332,3 +48332,18 @@ msgstr ""
 
 msgid "Audit Records"
 msgstr ""
+
+msgid "The way displays legal ID in receipt."
+msgstr ""
+
+msgid "Complete display"
+msgstr ""
+
+msgid "Partial hide"
+msgstr ""
+
+msgid "Complete hide"
+msgstr ""
+
+msgid "How to display the legal ID in receipt file. (The sic code of an organization will always completely display.)"
+msgstr ""

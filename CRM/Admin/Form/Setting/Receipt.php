@@ -62,6 +62,9 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->add('hidden', 'deleteBigStamp');
     $this->add('hidden', 'deleteSmallStamp');
 
+    $displayLegalIDOptions = array('complete' => ts('Complete display'), 'partial' => ts('Partial hide'), 'hide' => ts('Complete hide'));
+    $this->addRadio('receiptDisplayLegalID', ts('The way displays legal ID in receipt.'), $displayLegalIDOptions);
+
     // redirect to Administer Section After hitting either Save or Cancel button.
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/receipt', 'reset=1'));
@@ -74,6 +77,9 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $defaults = parent::setDefaultValues();
     $defaults['deleteBigStamp'] = '';
     $defaults['deleteSmallStamp'] = '';
+    if (empty($defaults['receiptDisplayLegalID'])) {
+      $defaults['receiptDisplayLegalID'] = 'complete';
+    }
     return $defaults;
   }
 
