@@ -473,9 +473,6 @@ class CRM_Utils_System_Drupal {
       // the dynamic attachment only can specify by library name
       // we use some dirty definition for supporting Smarty block.js.php
       if (!empty($params['smarty_block_js'])) {
-        if (strstr($params['src'], 'mailingEditor')) {
-          self::$jsLibraries['civicrm/civicrm-js-mailingeditor'] = 1;
-        }
         if (!empty($params['library'])) {
           self::$jsLibraries[$params['library']] = 1;
         }
