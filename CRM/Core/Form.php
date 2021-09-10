@@ -337,6 +337,9 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
     $this->preProcess();
 
+    // call the preprocess hook
+    CRM_Utils_Hook::preProcess(get_class($this), $this);
+
     $this->assign('translatePermission', CRM_Core_Permission::check('translate CiviCRM'));
 
     if ($this->controller->_key &&
