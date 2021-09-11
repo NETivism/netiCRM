@@ -113,12 +113,8 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
 
     CRM_Mailing_BAO_Mailing::tokenReplace($this->_mailing);
 
-    if (defined('CIVICRM_MAIL_SMARTY') &&
-      CIVICRM_MAIL_SMARTY
-    ) {
-      require_once 'CRM/Core/Smarty/resources/String.php';
-      civicrm_smarty_register_string_resource();
-    }
+
+    // refs #32614, disable smarty evaluation functions
 
     // get and format attachments
     require_once 'CRM/Core/BAO/File.php';

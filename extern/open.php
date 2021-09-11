@@ -3,11 +3,9 @@ require_once '../civicrm.config.php';
 
 $config   = CRM_Core_Config::singleton();
 $queue_id =  CRM_Utils_Array::value( 'q', $_GET );
-if (!$queue_id) {
-  //echo "Missing input parameters\n";
-  exit();
+if (CRM_Utils_Rule::positiveInteger($queue_id) && $queue_id) {
+  CRM_Mailing_Event_BAO_Opened::open($queue_id);
 }
-CRM_Mailing_Event_BAO_Opened::open($queue_id);
 
 $filename = __DIR__."/../i/tracker.gif";
 

@@ -1257,13 +1257,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $categories = array_keys($tokens);
 
     $escapeSmarty = FALSE;
-    if (defined('CIVICRM_MAIL_SMARTY')) {
-      $smarty = CRM_Core_Smarty::singleton();
-      require_once('CRM/Core/Smarty/resources/String.php');
-      civicrm_smarty_register_string_resource();
-
-      $escapeSmarty = TRUE;
-    }
+    // refs #32614, disable smarty evaluation functions
 
     $sent = $notSent = array();
     $domain = CRM_Core_BAO_Domain::getDomain();
@@ -1302,13 +1296,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $tokenHtml = NULL;
       }
 
-      if (defined('CIVICRM_MAIL_SMARTY')) {
-        // also add the contact tokens to the template
-        $smarty->assign_by_ref('contact', $values);
-
-        $tokenText = $smarty->fetch("string:$tokenText");
-        $tokenHtml = $smarty->fetch("string:$tokenHtml");
-      }
+      // refs #32614, disable smarty evaluation functions
 
       $sent = FALSE;
       if (self::sendMessage($from,

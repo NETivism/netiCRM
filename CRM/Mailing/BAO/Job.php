@@ -488,14 +488,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       $mailing->id
     );
 
-
-    if (defined('CIVICRM_MAIL_SMARTY') &&
-      CIVICRM_MAIL_SMARTY
-    ) {
-      require_once 'CRM/Core/Smarty/resources/String.php';
-      civicrm_smarty_register_string_resource();
-    }
-
+    // refs #32614, disable smarty evaluation functions
     $isDelivered = FALSE;
 
     // make sure that there's no more than $config->mailerBatchLimit mails processed in a run
