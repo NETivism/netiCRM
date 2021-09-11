@@ -2,42 +2,6 @@
   "filters":{
     "filter":[
       {
-        "id":"1",
-        "rule":"(?:\"[^\"]*[^-]?>)|(?:[^\\w\\s]\\s*\\\/>)|(?:>\")",
-        "description":"Finds html breaking injections including whitespace attacks",
-        "tags":{
-          "tag":[
-            "xss",
-            "csrf"
-          ]
-        },
-        "impact":"4"
-      },
-      {
-        "id":"2",
-        "rule":"(?:\"+.*[<=]\\s*\"[^\"]+\")|(?:\"\\s*\\w+\\s*=)|(?:>\\w=\\\/)|(?:#.+\\)[\"\\s]*>)|(?:\"\\s*(?:src|style|on\\w+)\\s*=\\s*\")|(?:[^\"]?\"[,;\\s]+\\w*[\\[\\(])",
-        "description":"Finds attribute breaking injections including whitespace attacks",
-        "tags":{
-          "tag":[
-            "xss",
-            "csrf"
-          ]
-        },
-        "impact":"4"
-      },
-      {
-        "id":"3",
-        "rule":"(?:^>[\\w\\s]*<\\\/?\\w{2,}>)",
-        "description":"Finds unquoted attribute breaking injections",
-        "tags":{
-          "tag":[
-            "xss",
-            "csrf"
-          ]
-        },
-        "impact":"2"
-      },
-      {
         "id":"4",
         "rule":"(?:[+\\\/]\\s*name[\\W\\d]*[)+])|(?:;\\W*url\\s*=)|(?:[^\\w\\s\\\/?:>]\\s*(?:location|referrer|name)\\s*[^\\\/\\w\\s-])",
         "description":"Detects url-, name-, JSON, and referrer-contained payload attacks",
@@ -727,7 +691,7 @@
       },
       {
         "id":"59",
-        "rule":"(?:(?:[;]+|(<[?%](?:php)?)).*(?:define|eval|file_get_contents|include|require|require_once|set|shell_exec|phpinfo|system|passthru|preg_\\w+|execute)\\s*[\"(@])",
+        "rule":"(?:(?:[;]+|(<[?%](?:php)?))?.*(?:define|eval|file_get_contents|include|require|require_once|set|shell_exec|phpinfo|system|passthru|preg_\\w+|execute)\\s*[\"(@])",
         "description":"Detects code injection attempts 2\/3",
         "tags":{
           "tag":[
@@ -740,7 +704,7 @@
       },
       {
         "id":"60",
-        "rule":"(?:(?:[;]+|(<[?%](?:php)?)).*[^\\w](?:echo|print|print_r|var_dump|[fp]open))|(?:;\\s*rm\\s+-\\w+\\s+)|(?:;.*{.*\\$\\w+\\s*=)|(?:\\$\\w+\\s*\\[\\]\\s*=\\s*)",
+        "rule":"(?:(?:[;]+|(<[?%](?:php)?))?.*[^\\w](?:echo|print|print_r|var_dump|[fp]open))|(?:;\\s*rm\\s+-\\w+\\s+)|(?:;.*{.*\\$\\w+\\s*=)|(?:\\$\\w+\\s*\\[\\]\\s*=\\s*)",
         "description":"Detects code injection attempts 3\/3",
         "tags":{
           "tag":[
