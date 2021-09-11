@@ -44,11 +44,12 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
     while ($dao->fetch()) {
       $auditStatusName = '';
       $userId = '';
-      $timemstamp = '';
+      $data = '';
       switch ($dao->entity_table) {
         case 'audit.users.name':
           $auditStatusName = ts('Website User Name Changed');
           $userId = $dao->entity_id;
+          $data = ts("User name before changed").': '.$dao->data;
           break;
         case 'audit.users.pass':
           $auditStatusName = ts('Website User Password Changed');
@@ -57,25 +58,30 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
         case 'audit.users.roles':
           $auditStatusName = ts('Website User Roles Changed');
           $userId = $dao->entity_id;
+          $data = ts("Role IDs before changed").': '.$dao->data;
           break;
         case 'audit.users.civicrm':
           $auditStatusName = ts('New CiviCRM Access User');
           $userId = $dao->entity_id;
           break;
         case 'audit.civicrm.export':
-          $auditStatusName = ts('Export Records');
+          $data = json_decode($dao->data, TRUE);
+          $auditStatusName = ts('Export Records').": ".CRM_Export_BAO_Export::getExportName($data['Type']);
           break;
         default:
           $auditStatusName = ts('Other');
           break;
       }
       $rows[] = array(
+        'audit_type' => $dao->entity_table,
         'state' => $auditStatusName,
         'user_contact_name' => $dao->user_contact_name,
         'user_id' => $userId,
         'time' => $dao->modified_date,
         'modified_id' => $dao->modified_id,
         'modified_name' => $dao->modified_name,
+        'data' => $data,
+        'entity_id' => $dao->entity_id,
       );
     }
     $smarty = CRM_Core_Smarty::singleton();

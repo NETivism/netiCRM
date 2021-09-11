@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-09-10 09:51+0000\n"
+"PO-Revision-Date: 2021-09-11 08:01+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48653,7 +48653,7 @@ msgid "This page displays the user data has been changed in last %1 days."
 msgstr "此頁面會列出過去 %1 天內修改網站使用者資料等安全性相關操作的紀錄。"
 
 msgid "Audit Records"
-msgstr "安全性紀錄"
+msgstr "安全稽核紀錄"
 
 msgid "The way displays legal ID in receipt."
 msgstr "身份證字號呈現方式"
@@ -48671,3 +48671,18 @@ msgid ""
 "How to display the legal ID in receipt file. (The sic code of an "
 "organization will always completely display.)"
 msgstr "設定身份證字號在收據上的呈現方式。（此設定只影響個人的身份證字號呈現方式，組織的統一編號不受影響、一律完全顯示。）"
+
+msgid "User name before changed"
+msgstr "修改前使用者名稱"
+
+msgid "Role IDs before changed"
+msgstr "修改前角色編號"
+
+msgid "File name"
+msgstr "檔名"
+
+msgid "Rows count"
+msgstr "筆數"
+
+msgid "Relative Data"
+msgstr "相關資料"

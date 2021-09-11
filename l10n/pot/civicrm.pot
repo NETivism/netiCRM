@@ -48347,3 +48347,18 @@ msgstr ""
 
 msgid "How to display the legal ID in receipt file. (The sic code of an organization will always completely display.)"
 msgstr ""
+
+msgid "User name before changed"
+msgstr ""
+
+msgid "Role IDs before changed"
+msgstr ""
+
+msgid "File name"
+msgstr ""
+
+msgid "Rows count"
+msgstr ""
+
+msgid "Relative Data"
+msgstr ""
