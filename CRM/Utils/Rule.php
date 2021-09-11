@@ -173,10 +173,10 @@ class CRM_Utils_Rule {
     }
     $valid = (bool) filter_var($url, FILTER_VALIDATE_URL);
 
-    if (in_array(substr($url, 0, 5), array('http:', 'https'))) {
+    if (!in_array(substr($url, 0, 5), array('http:', 'https'))) {
       $valid = FALSE;
     }
-    if ($valid) {
+    elseif ($valid) {
       if (!empty($checkDomain)) {
         $checkDomain = str_replace('/', '', $checkDomain);
         $valid = preg_match('@^https?://'.preg_quote($checkDomain).'/@i', $url);
