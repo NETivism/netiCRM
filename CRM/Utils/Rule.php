@@ -154,7 +154,7 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * Undocumented function
+   * Only allow http / https scheme
    *
    * @param string $url
    * @param string $checkDomain check url has matching domain name
@@ -168,15 +168,22 @@ class CRM_Utils_Rule {
     }
     if (preg_match('/^\//', $url)) {
       // allow relative URL's (CRM-15598)
-      $url = 'http://' . $_SERVER['HTTP_HOST'] . $url;
+      $scheme = CRM_Utils_System::isSSL() ? 'https' : 'http';
+      $url = $scheme.'://' . $_SERVER['HTTP_HOST'] . $url;
     }
     $valid = (bool) filter_var($url, FILTER_VALIDATE_URL);
-    if ($valid && !empty($checkDomain)) {
-      $checkDomain = str_replace('/', '', $checkDomain);
-      $valid = preg_match('@^https?://'.preg_quote($checkDomain).'/@i', $url);
+
+    if (in_array(substr($url, 0, 5), array('http:', 'https'))) {
+      $valid = FALSE;
     }
-    if ($valid && !empty($checkHTTPS)) {
-      $valid = preg_match('@^https://@i', $url);
+    if ($valid) {
+      if (!empty($checkDomain)) {
+        $checkDomain = str_replace('/', '', $checkDomain);
+        $valid = preg_match('@^https?://'.preg_quote($checkDomain).'/@i', $url);
+      }
+      if (!empty($checkHTTPS)) {
+        $valid = preg_match('@^https://@i', $url);
+      }
     }
     return (bool) $valid;
   }
