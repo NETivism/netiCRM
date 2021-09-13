@@ -304,13 +304,13 @@ function participantCount(ele, type) {
       ele.attr("min", 1);
       ele.closest('div').find('.x').remove();
       ele.css({"display":"inline", "maxWidth":"50px", "textAlign":"right"});
-      ele.before('<span class="x"> x <span>');
-      ele.show();
+      ele.before('<span class="x">: </span>');
+      ele.parent('.crm-form-number').show();
     }
     else {
       ele.attr("min", 0);
       ele.closest('div').find('.x').remove();
-      ele.hide();
+      ele.parent('.crm-form-number').hide();
     }
   }
 }
