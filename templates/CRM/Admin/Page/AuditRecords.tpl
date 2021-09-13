@@ -33,12 +33,12 @@
           {ts}File name{/ts}: {$row.data.File}<br>
           {ts}Rows count{/ts}: {$row.data.Data}<br>
           <input type="checkbox" class="export-fields" id="export-fields-{$row.entity_id}">
-          <label for="export-fields-{$row.entity_id}">{ts}Fields{/ts}</label>
-            <ul>
+          <label for="export-fields-{$row.entity_id}">{ts}Fields{/ts}（{$row.data.Fields|@count}）</label>
+            <ol>
               {foreach from=$row.data.Fields item=field}
                 <li>{$field}</li>
               {/foreach}
-            </ul>
+            </ol>
         {else}
           {$row.data}
         {/if}
@@ -63,10 +63,10 @@
     input.export-fields:checked+label:after {
       content: "\f2f2";
     }
-    input.export-fields+label+ul {
+    input.export-fields+label+ol {
       display: none;
     }
-    input.export-fields:checked+label+ul {
+    input.export-fields:checked+label+ol {
       display: block;
     }
   </style>

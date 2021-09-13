@@ -1987,6 +1987,7 @@ SELECT source_contact_id
       else {
         $sic_code = $custom_values[$custom_serial];
       }
+      $sic_code = self::getFormatLegalID($sic_code);
       $template->assign('serial_id', $sic_code);
     }
 
@@ -2163,12 +2164,7 @@ SELECT source_contact_id
             $contactInfo[$name]['addressee'] = $name != $sort_name ? $name . " ($sort_name)" : $addressee;
           }
           if (empty($contactInfo[$name]['serial_id'])) {
-            if ($contact['contact_type'] == 'Organization') {
-              $contactInfo[$name]['serial_id'] = $serial;
-            }
-            else {
-              $contactInfo[$name]['serial_id'] = self::getFormatLegalID($serial);
-            }
+            $contactInfo[$name]['serial_id'] = self::getFormatLegalID($serial);
           }
           $annualRecords[$name][$key] = $record;
           $contactInfo[$name]['total'] = $record['total_amount'] + $contactInfo[$name]['total'];
@@ -2758,19 +2754,24 @@ WHERE c.id = $id";
   static function getFormatLegalID($legalID) {
     $config = CRM_Core_Config::singleton();
     $legalIDformat = $config->receiptDisplayLegalID;
-    if ($legalIDformat == 'hide') {
-      $resultLegalID = str_repeat('*', strlen($legalID));
-    }
-    elseif ($legalIDformat == 'partial') {
-      if (strlen($legalID) >= 3) {
-        $resultLegalID = substr($legalID, 0, 1).str_repeat('*', (strlen($legalID) - 2)).substr($legalID, -1, 1);
-      }
-      else {
-        $resultLegalID = str_repeat('*', strlen($legalID));
-      }
+    if (preg_match('/^\d{8}$/', $legalID)) {
+      $resultLegalID = $legalID;
     }
     else {
-      $resultLegalID = $legalID;
+      if ($legalIDformat == 'hide') {
+        $resultLegalID = str_repeat('*', strlen($legalID));
+      }
+      elseif ($legalIDformat == 'partial') {
+        if (strlen($legalID) >= 3) {
+          $resultLegalID = substr($legalID, 0, 1).str_repeat('*', (strlen($legalID) - 2)).substr($legalID, -1, 1);
+        }
+        else {
+          $resultLegalID = str_repeat('*', strlen($legalID));
+        }
+      }
+      else {
+        $resultLegalID = $legalID;
+      }
     }
     return $resultLegalID;
   }
