@@ -2754,22 +2754,24 @@ WHERE c.id = $id";
   static function getFormatLegalID($legalID) {
     $config = CRM_Core_Config::singleton();
     $legalIDformat = $config->receiptDisplayLegalID;
-    if ($legalIDformat == 'hide') {
-      $resultLegalID = str_repeat('*', strlen($legalID));
-    }
-    elseif ($legalIDformat == 'partial') {
-      if (preg_match('/^\d{8}$/', $legalID)) {
-        $resultLegalID = $legalID;
-      }
-      elseif (strlen($legalID) >= 3) {
-        $resultLegalID = substr($legalID, 0, 1).str_repeat('*', (strlen($legalID) - 2)).substr($legalID, -1, 1);
-      }
-      else {
-        $resultLegalID = str_repeat('*', strlen($legalID));
-      }
+    if (preg_match('/^\d{8}$/', $legalID)) {
+      $resultLegalID = $legalID;
     }
     else {
-      $resultLegalID = $legalID;
+      if ($legalIDformat == 'hide') {
+        $resultLegalID = str_repeat('*', strlen($legalID));
+      }
+      elseif ($legalIDformat == 'partial') {
+        if (strlen($legalID) >= 3) {
+          $resultLegalID = substr($legalID, 0, 1).str_repeat('*', (strlen($legalID) - 2)).substr($legalID, -1, 1);
+        }
+        else {
+          $resultLegalID = str_repeat('*', strlen($legalID));
+        }
+      }
+      else {
+        $resultLegalID = $legalID;
+      }
     }
     return $resultLegalID;
   }
