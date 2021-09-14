@@ -298,7 +298,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
           INNER JOIN (SELECT MIN(IFNULL(receive_date, created_date)) AS min_receive_date, contact_id FROM civicrm_contribution c
           LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
           LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
-          WHERE c.is_test = 0 AND pp.id IS NULL AND mp.id IS NULL AND c.contribution_status_id = 1 GROUP BY contact_id) c2 ON c.contact_id = c2.contact_id AND (c.receive_date = c2.min_receive_date OR c.created_date = c2.min_receive_date)
+          WHERE c.is_test = 0 AND pp.id IS NULL AND mp.id IS NULL AND c.contribution_status_id = 1 AND contact_id IN (SELECT contact_id  FROM civicrm_contribution WHERE receive_date >= %1 AND receive_date <= %2) GROUP BY contact_id) c2 ON c.contact_id = c2.contact_id AND (c.receive_date = c2.min_receive_date OR c.created_date = c2.min_receive_date)
     WHERE  contact.is_deleted = 0
     GROUP BY contact.id) all_fst_donor WHERE receive_date >= %1 AND receive_date <= %2";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
