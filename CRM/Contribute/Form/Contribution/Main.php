@@ -839,7 +839,14 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         if ($separateMembershipPayment) {
           $title = ts('Additional Contribution');
         }
-        $this->add('text', 'amount_other', $title, array('size' => 10, 'maxlength' => 10, 'onfocus' => 'useAmountOther();'));
+        $attr = array(
+          'inputmode' => 'numeric',
+          'size' => 10,
+          'maxlength' => 10,
+          'min' => 0,
+          'onfocus' => 'useAmountOther();',
+        );
+        $this->addNumber('amount_other', $title, $attr);
         if (!$separateMembershipPayment) {
           $this->addRule('amount_other', ts('%1 is a required field.', array(1 => $title)), 'required');
         }
@@ -1040,11 +1047,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     if ($this->_values['installments_option']) {
       $attributes['installments'] = array(
-        'placeholder' => ts('No Limit'),
         'min' => 2,
+        'placeholder' => ts('No Limit'),
+        'inputmode' => 'numeric',
         'style' => 'max-width:100px',
       );
-      $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
+      $this->addNumber('installments', ts('Installments'), $attributes['installments']);
       if (isset($this->_defaultFromRequest['installments'])) { 
         $this->_defaults['installments'] = $this->_defaultFromRequest['installments'];
       }
