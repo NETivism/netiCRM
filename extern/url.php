@@ -13,8 +13,13 @@ else {
 $url_id = CRM_Utils_Array::value( 'u', $_GET );
 
 if ( ! $queue_id || ! $url_id ) {
-  echo "Missing input parameters\n";
-  exit( );
+  exit;
+}
+if (!CRM_Utils_Rule::positiveInteger($queue_id)) {
+  exit;
+}
+if (!CRM_Utils_Rule::positiveInteger($url_id)) {
+  exit;
 }
 
 $url = CRM_Mailing_Event_BAO_TrackableURLOpen::track($queue_id, $url_id);
@@ -52,4 +57,4 @@ if (!empty($query_param)) {
 }
 
 CRM_Utils_System::redirect($url);
-
+exit;

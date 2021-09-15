@@ -48308,3 +48308,57 @@ msgstr ""
 
 msgid "%1 doesn't have email. Skipped receipt generation."
 msgstr ""
+
+msgid "Website User Name Changed"
+msgstr ""
+
+msgid "Website User Password Changed"
+msgstr ""
+
+msgid "Website User Roles Changed"
+msgstr ""
+
+msgid "New CiviCRM Access User"
+msgstr ""
+
+msgid "Export Records"
+msgstr ""
+
+msgid "Modified User"
+msgstr ""
+
+msgid "This page displays the user data has been changed in last %1 days."
+msgstr ""
+
+msgid "Audit Records"
+msgstr ""
+
+msgid "The way displays legal ID in receipt."
+msgstr ""
+
+msgid "Complete display"
+msgstr ""
+
+msgid "Partial hide"
+msgstr ""
+
+msgid "Complete hide"
+msgstr ""
+
+msgid "How to display the legal ID in receipt file. (The sic code of an organization will always completely display.)"
+msgstr ""
+
+msgid "User name before changed"
+msgstr ""
+
+msgid "Role IDs before changed"
+msgstr ""
+
+msgid "File name"
+msgstr ""
+
+msgid "Rows count"
+msgstr ""
+
+msgid "Relative Data"
+msgstr ""

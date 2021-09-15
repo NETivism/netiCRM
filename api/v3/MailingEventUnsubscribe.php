@@ -59,7 +59,6 @@ function civicrm_api3_mailing_event_unsubscribe_create($params) {
       CRM_Mailing_Event_BAO_Unsubscribe::send_unsub_response($queue, $groups, FALSE, $job);
       return civicrm_api3_create_success($params);
     }
-    if (!groups) {}
   }
   else {
     $unsubs = CRM_Mailing_Event_BAO_Unsubscribe::unsub_from_domain($job, $queue, $hash);

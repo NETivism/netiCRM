@@ -66,7 +66,6 @@ PHPIDS         LGPL 3+     http://php-ids.org/
 Smarty         LGPL 2.1+   http://smarty.php.net/                                        local changes
 Smarty Gettext LGPL 2.1+   http://smarty.incutio.com/?page=SmartyGettext
 TCPDF          LGPL 2.1+   http://tecnick.com/public/code/cp_dpage.php?aiocp_dp=tcpdf    local changes
-dompdf         LGPL 2.1+   http://digitaljunkies.ca/dompdf/                              local changes
 eZ Components  BSD 3-cl.   http://ezcomponents.org/                                      local changes
 html2text      GPL 2+      http://chuggnutt.com/html2text.php                            local changes
 reCAPTCHA      X11         http://recaptcha.net/
