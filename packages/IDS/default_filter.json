@@ -293,7 +293,8 @@
         "tags":{
           "tag":[
             "xss",
-            "csrf"
+            "csrf",
+            "rfe"
           ]
         },
         "impact":"4"
@@ -887,7 +888,7 @@
         "description":"Detects SQL comment filter evasion",
         "tags":{
           "tag":[
-            "format string"
+            "sqli"
           ]
         },
         "impact":"4"
