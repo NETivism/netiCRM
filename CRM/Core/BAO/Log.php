@@ -132,6 +132,30 @@ UPDATE civicrm_log
   }
 
   /**
+   * Write audit log on specific entity
+   *
+   * @param int $entityId       entity id that associate the table
+   * @param string $auditType the given string will be auto prepend 'audit.' 
+   * @param string $data
+   * @return void
+   */
+  static function audit($entityId, $auditType, $data) {
+    if (!$entityId || !$auditType|| empty($data)) {
+      return;
+    }
+    $userID = CRM_Core_Session::singleton()->get('userID');
+    $userID = $userID ? $userID : 'null';
+    $log = new CRM_Core_DAO_Log();
+    $log->id = NULL;
+    $log->entity_table = 'audit.'.$auditType;
+    $log->entity_id = $entityId;
+    $log->modified_id = $userID;
+    $log->modified_date = date("YmdHis");
+    $log->data = $data;
+    $log->save();
+  }
+
+  /**
    * Function to get log record count for a Contact
    *
    * @param int $contactId Contact ID

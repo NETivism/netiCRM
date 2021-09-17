@@ -165,9 +165,10 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       mysql_query('select 1');
     }
 
-
     $backtrace = CRM_Core_Error::backtrace('backtrace', FALSE);
     if (ini_get('xdebug.default_enable') && !empty(CRM_Utils_System::isUserLoggedIn()) && $config->debug) {
+      $template->assign_by_ref('error', $error);
+      $template->assign_by_ref('errorDetails', $errorDetails);
       if (function_exists('xdebug_var_dump')) {
         ob_start();
         xdebug_var_dump($error);

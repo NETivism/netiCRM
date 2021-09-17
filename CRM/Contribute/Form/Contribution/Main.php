@@ -326,6 +326,21 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
         }
       }
+
+      if (!empty($this->_values['is_for_organization'])) {
+        $employerId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'employer_id');
+        if (!empty($employerId)) {
+          $org = new CRM_Contact_DAO_Contact();
+          $org->id = $employerId;
+          $org->selectAdd('organization_name');
+          $org->selectAdd('sic_code');
+          $org->whereAdd('is_deleted = 0');
+          if($org->find(TRUE)) {
+            $this->_defaults['organization_name'] = $org->organization_name;
+            $this->_defaults['sic_code'] = $org->sic_code;
+          }
+        }
+      }
     }
     else if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
       !empty($_GET['tryagian']) &&
@@ -334,7 +349,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     ) {
       // use session info prepopulate civicrm form value, #20784
       $userContributionPrepopulate = $session->get('user_contribution_prepopulate');
-      if (!empty($userContributionPrepopulate) && REQUEST_TIME <= $userContributionPrepopulate['expires']) {
+      if (!empty($userContributionPrepopulate) && CRM_REQUEST_TIME <= $userContributionPrepopulate['expires']) {
         unset($userContributionPrepopulate['expires']);
         $this->_defaults = $userContributionPrepopulate;
         return $this->_defaults;
@@ -824,7 +839,14 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         if ($separateMembershipPayment) {
           $title = ts('Additional Contribution');
         }
-        $this->add('text', 'amount_other', $title, array('size' => 10, 'maxlength' => 10, 'onfocus' => 'useAmountOther();'));
+        $attr = array(
+          'inputmode' => 'numeric',
+          'size' => 10,
+          'maxlength' => 10,
+          'min' => 0,
+          'onfocus' => 'useAmountOther();',
+        );
+        $this->addNumber('amount_other', $title, $attr);
         if (!$separateMembershipPayment) {
           $this->addRule('amount_other', ts('%1 is a required field.', array(1 => $title)), 'required');
         }
@@ -1025,11 +1047,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     if ($this->_values['installments_option']) {
       $attributes['installments'] = array(
-        'placeholder' => ts('No Limit'),
         'min' => 2,
+        'placeholder' => ts('No Limit'),
+        'inputmode' => 'numeric',
         'style' => 'max-width:100px',
       );
-      $this->add('number', 'installments', ts('Installments'), $attributes['installments']);
+      $this->addNumber('installments', ts('Installments'), $attributes['installments']);
       if (isset($this->_defaultFromRequest['installments'])) { 
         $this->_defaults['installments'] = $this->_defaultFromRequest['installments'];
       }

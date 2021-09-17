@@ -124,13 +124,14 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     $eventFullMessage = CRM_Event_BAO_Participant::eventFull($this->_id);
     $contactID = NULL;
     $contactID = $this->getContactID();
-    CRM_Utils_Hook::checkRegistration($contactID, NULL, $this, FALSE, $eventFullMessage);
+    $forceAllowedRegister = NULL;
+    CRM_Utils_Hook::checkRegistration($contactID, NULL, $this, FALSE, $forceAllowedRegister);
     $hasWaitingList = CRM_Utils_Array::value('has_waitlist', $values['event']);
 
     $allowRegistration = FALSE;
     if (CRM_Utils_Array::value('is_online_registration', $values['event'])) {
       if (CRM_Event_BAO_Event::validRegistrationDate($values['event'], $this->_id)) {
-        if (!$eventFullMessage || $hasWaitingList) {
+        if ($forceAllowedRegister || !$eventFullMessage || $hasWaitingList) {
           $registerText = ts('Register Now');
           if (CRM_Utils_Array::value('registration_link_text', $values['event'])) {
             $registerText = $values['event']['registration_link_text'];

@@ -76,6 +76,9 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    * @return void
    */
   static function buildQuickForm(&$form) {
+    if (count($form->_contactIds) > 100) {
+      CRM_Core_Error::statusBounce(ts('PDF generation only allow 100 contacts per run.'));
+    }
     $form->assign('totalSelectedContacts', count($form->_contactIds));
 
     require_once "CRM/Mailing/BAO/Mailing.php";
@@ -170,23 +173,16 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
 
 
 
-    require_once 'dompdf/dompdf_config.inc.php';
     $html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>body { margin: 56px; }</style></head><body>';
-    require_once 'api/v2/Contact.php';
 
     $tokens = array();
     CRM_Utils_Hook::tokens($tokens);
     $categories = array_keys($tokens);
 
     $html_message = $formValues['html_message'];
-
-    //time being hack to strip '&nbsp;'
-    //from particular letter line, CRM-6798
     self::formatMessage($html_message);
 
-    require_once 'CRM/Activity/BAO/Activity.php';
     $messageToken = CRM_Utils_Token::getTokens($html_message);
-
     $returnProperties = array();
     if (isset($messageToken['contact'])) {
       foreach ($messageToken['contact'] as $key => $value) {
@@ -194,15 +190,10 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
       }
     }
 
-    require_once 'CRM/Mailing/BAO/Mailing.php';
+    // refs #32614, disable smarty evaluation functions
     $mailing = new CRM_Mailing_BAO_Mailing();
-    if (defined('CIVICRM_MAIL_SMARTY')) {
-      require_once 'CRM/Core/Smarty/resources/String.php';
-      civicrm_smarty_register_string_resource();
-    }
 
     $first = TRUE;
-
     $domain = CRM_Core_BAO_Domain::getDomain();
     foreach ($form->_contactIds as $contactId) {
       $params = array('contact_id' => $contactId);
@@ -218,13 +209,6 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
       $tokenHtml = CRM_Utils_Token::replaceDomainTokens($tokenHtml, $domain, TRUE, $messageToken);
       $tokenHtml = CRM_Utils_Token::replaceHookTokens($tokenHtml, $contact[$contactId], $categories, TRUE);
 
-      if (defined('CIVICRM_MAIL_SMARTY')) {
-        $smarty = CRM_Core_Smarty::singleton();
-        // also add the contact tokens to the template
-        $smarty->assign_by_ref('contact', $contact);
-        $tokenHtml = $smarty->fetch("string:$tokenHtml");
-      }
-
       if ($first == TRUE) {
         $first = FALSE;
         $html .= $tokenHtml;
@@ -233,16 +217,11 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
         $html .= '<div style="page-break-after: always;"></div>'.$tokenHtml;
       }
     }
-
     $html .= '</body></html>';
-    require_once 'CRM/Activity/BAO/Activity.php';
 
     $session = CRM_Core_Session::singleton();
     $userID = $session->get('userID');
-    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type',
-      'Print PDF Letter',
-      'name'
-    );
+    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'Print PDF Letter', 'name');
     $activityParams = array('source_contact_id' => $userID,
       'activity_type_id' => $activityTypeID,
       'activity_date_time' => date('YmdHis'),
@@ -270,13 +249,10 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
       CRM_Activity_BAO_Activity::createActivityTarget($activityTargetParams);
     }
 
-
-    require_once 'CRM/Utils/PDF/Utils.php';
     CRM_Utils_PDF_Utils::html2pdf($html, 'CiviLetter.pdf', 'portrait', 'a4', TRUE);
-
     CRM_Utils_System::civiExit(1);
   }
-  //end of function
+
   function formatMessage(&$message) {
     $newLineOperators = array('p' => array('oper' => '<p>',
         'pattern' => '/<(\s+)?p(\s+)?>/m',
@@ -312,6 +288,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
       $m = implode($newLineOperators['br']['oper'], $messages);
     }
     $message = implode($newLineOperators['p']['oper'], $htmlMsg);
+    $message = CRM_Utils_String::htmlPurifier($message);
   }
 }
 

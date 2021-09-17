@@ -2788,7 +2788,7 @@ CREATE TABLE civicrm_log (
   )
   
 ,      
-     CONSTRAINT FK_civicrm_log_modified_id FOREIGN KEY (modified_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
+     CONSTRAINT FK_civicrm_log_modified_id FOREIGN KEY (modified_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

@@ -710,7 +710,7 @@ FROM   civicrm_domain
     if (empty($searchValue)) {
       // adding this year since developers forget to check for an id
       // and hence we get the first value in the db
-      CRM_Core_Error::fatal();
+      CRM_Core_Error::fatal("Search Value cannot be empty when using getFieldValue of $daoName");
       return NULL;
     }
 

@@ -13,7 +13,7 @@
     body { margin:0; padding: 0; }
   </style>{/literal}
 </head>
-<body class="crm-embed">
+<body class="crm-embed{if $embedId} crm-embed-{$embedId}{/if}">
 <script type="text/javascript" src="{$config->userFrameworkResourceURL}js/iframeresizer.contentwindow.js"></script>
 <div class="crm-container">
 {$embedBody}

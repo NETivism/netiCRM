@@ -25,6 +25,7 @@ class CRM_Contribute_Page_Widget extends CRM_Core_Page {
       $widgetCode = $template->fetch('CRM/Contribute/Page/Widget.tpl');
 
       $this->assign('embedBody', $widgetCode);
+      $this->assign('embedId', 'widget-'.$widget->id);
       $widgetCode = $template->fetch('CRM/common/Embed.tpl');
       echo $widgetCode;
       // do not output drupal theme

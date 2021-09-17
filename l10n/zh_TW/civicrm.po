@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-08-19 07:39+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2021-09-11 08:01+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48624,3 +48624,65 @@ msgid ""
 "The specific URL you visited is expired. Use this page to process your "
 "payment."
 msgstr "一次性連結已失效，請用此頁面來接續付款"
+
+msgid "This directory will delete files periodly."
+msgstr "此資料夾定期清除過期檔案。"
+
+msgid "%1 doesn't have email. Skipped receipt generation."
+msgstr "因 %1 沒有電子郵件，已略過收據產生動作。"
+
+msgid "Website User Name Changed"
+msgstr "網站使用者名稱修改"
+
+msgid "Website User Password Changed"
+msgstr "網站使用者密碼修改"
+
+msgid "Website User Roles Changed"
+msgstr "網站使用者角色修改"
+
+msgid "New CiviCRM Access User"
+msgstr "新增可管理CRM權限的網站使用者"
+
+msgid "Export Records"
+msgstr "匯出資料"
+
+msgid "Modified User"
+msgstr "修改的網站使用者"
+
+msgid "This page displays the user data has been changed in last %1 days."
+msgstr "此頁面會列出過去 %1 天內修改網站使用者資料等安全性相關操作的紀錄。"
+
+msgid "Audit Records"
+msgstr "安全稽核紀錄"
+
+msgid "The way displays legal ID in receipt."
+msgstr "身份證字號呈現方式"
+
+msgid "Complete display"
+msgstr "完全顯示"
+
+msgid "Partial hide"
+msgstr "部份隱碼"
+
+msgid "Complete hide"
+msgstr "全部隱碼"
+
+msgid ""
+"How to display the legal ID in receipt file. (The sic code of an "
+"organization will always completely display.)"
+msgstr "設定身份證字號在收據上的呈現方式。（此設定只影響個人的身份證字號呈現方式，組織的統一編號不受影響、一律完全顯示。）"
+
+msgid "User name before changed"
+msgstr "修改前使用者名稱"
+
+msgid "Role IDs before changed"
+msgstr "修改前角色編號"
+
+msgid "File name"
+msgstr "檔名"
+
+msgid "Rows count"
+msgstr "筆數"
+
+msgid "Relative Data"
+msgstr "相關資料"

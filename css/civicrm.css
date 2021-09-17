@@ -6517,6 +6517,31 @@ input.crm-form-textfield,
   .crm-container .premiums-listings .premium-img + .premium-info {
     padding-left: 8px;
   }
+
+  .crm-container .crm-form-number:after {
+    content: "\f312";
+    font-family: 'Material-Design-Iconic-Font';
+    color: #AAAAAA;
+    position: absolute;
+    top: 5px;
+    right: 0;
+    font-size: 1.0em;
+  }
+  .crm-container .crm-form-number input[type=number] {
+    padding-right: 7px;
+  }
+  @supports (-moz-appearance:none)  {
+    .crm-container .crm-form-number input[type=number] {
+      padding-right: 0px;
+    }
+    .crm-container .crm-form-number:after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      right: 0;
+      font-size: 1.0em;
+    }
+  }
 }
 
 @media screen and (max-width: 425px) {
