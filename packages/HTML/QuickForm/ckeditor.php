@@ -85,7 +85,13 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
               $fullPage = "editor.config.fullPage = false;";
             }
             $name = $this->getAttribute('name');
-            $html = parent::toHtml() . "<script type='text/javascript'>
+            $html = '';
+            $html .= parent::toHtml();
+            if (empty($GLOBALS['civcirm_ckeditor_script'])) {
+              $html .= "\n".'<script type="text/javascript" src="'.$config->resourceBase.'packages/ckeditor/ckeditor.js?4.11.3"></script>'."\n";
+              $GLOBALS['civicrm_ckeditor_script'] = TRUE;
+            }
+            $html .= "<script type='text/javascript'>
 ".implode("\n", $extraPlugins)."
 cj( function( ) {
   if (cj('#{$name}').hasClass('ckeditor-processed')) {
