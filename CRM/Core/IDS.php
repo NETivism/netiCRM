@@ -109,6 +109,7 @@ class CRM_Core_IDS {
       ],
       'civicrm/event/search' => ['html_message'],
       'civicrm/event/manage/friend' => ['thankyou_text'],
+      'civicrm/contact/view/participant' => ['receipt_text'],
     ],
     'access CiviMail' => [
       'civicrm/admin/component' => [
@@ -118,6 +119,10 @@ class CRM_Core_IDS {
     ],
     'access CiviMember' => [
       'civicrm/member/search' => ['html_message'],
+    ],
+    'access CiviReport' => [
+      'civicrm/report/*/detail' => ['report_header', 'report_footer'],
+      'civicrm/report/instance/*' => ['report_header', 'report_footer'],
     ],
     'access CiviCRM' => [
       '*' => [
@@ -129,6 +134,7 @@ class CRM_Core_IDS {
     ],
     '*' => [
       'civicrm/ajax/track' => ['data:json'],
+      'civicrm/contribute/transact' => ['JSONData:json:_qf_ThankYou_display=1'],
     ],
   ];
 
@@ -139,7 +145,7 @@ class CRM_Core_IDS {
    * @access private 
    */
   private $_threshold = array(
-    'log' => 25,
+    'log' => 7,
     'warn' => 50,
     'kick' => 75,
   );
@@ -163,10 +169,7 @@ class CRM_Core_IDS {
 
     // add request url and user agent
     $request = $_REQUEST;
-    $request['IDS_request_uri'] = $_SERVER['REQUEST_URI'];
-    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-      $request['IDS_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-    }
+    $request['IDS_request_uri'] = urldecode($_SERVER['REQUEST_URI']);
 
     // init the PHPIDS
     $config = CRM_Core_Config::singleton();
@@ -185,6 +188,13 @@ class CRM_Core_IDS {
           }
           elseif ($p === '*') {
             self::parseDefinitions($epts);
+          }
+          elseif (strstr($p, '*')) {
+            $regex = preg_quote($p);
+            $regex = str_replace('\*', '.*', $regex);
+            if (preg_match('@'.$regex.'@', $path)) {
+              self::parseDefinitions($epts);
+            }
           }
         }
       }
@@ -207,7 +217,7 @@ class CRM_Core_IDS {
     if (isset($request['__utmz'])) unset($request['__utmz']);
     if (isset($request['__utmc'])) unset($request['__utmc']);
 
-    $ids = new Monitor($init);
+    $ids = new Monitor($init, array('sqli', 'dt', 'id', 'lfi', 'rfe', 'spam', 'dos'));
     $result = $ids->run($request);
     unset($request); // release memory
 
@@ -330,6 +340,8 @@ class CRM_Core_IDS {
     $data = array(
       'time' => date('c'),
       'ip' => $ip,
+      'impact' => $impact,
+      'reaction' => $reaction,
       'domain' => $_SERVER['HTTP_HOST'],
       'account' => CRM_Utils_System::getLoggedInUfID(),
       'contact' => $contact ? $contact : 0,
@@ -347,8 +359,6 @@ class CRM_Core_IDS {
         );
       }
       $log = array(
-        'impact' => $impact,
-        'reaction' => $reaction,
         'field' => $event->getName(),
         'value' => $event->getValue(),
         'tags' => $event->getTags(),
@@ -369,11 +379,19 @@ class CRM_Core_IDS {
   public function parseDefinitions($definition) {
     if (is_array($definition)) {
       foreach($definition as $def) {
-        list($field, $type) = explode(':', $def, 2);
+        list($field, $type, $condition) = explode(':', $def, 3);
         if (empty($type)) {
           $type = 'exceptions';
         }
-        self::$exceptions[$type][] = $field;
+        if ($condition) {
+          list($cond, $value) = explode('=', $condition, 2);
+          if ($_REQUEST[$cond] == $value) {
+            self::$exceptions[$type][] = $field;
+          }
+        }
+        else {
+          self::$exceptions[$type][] = $field;
+        }
       }
     }
   }

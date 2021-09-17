@@ -107,9 +107,6 @@ cj("#priceset select, #priceset input").each(function () {
           totalfee   += subtractPrice;
           price[el] += subtractPrice;
           display( totalfee );
-          $countEl.focus(function(){
-            cj(this).select();
-          });
         });
         display( totalfee );
         break;
@@ -168,9 +165,6 @@ cj("#priceset select, #priceset input").each(function () {
           price[ele]   = parseFloat(price[ele]) + addprice - parseFloat(price[ele]);
           
           display( totalfee );
-          $countEle.focus(function(){
-            cj(this).select();
-          });
         });
         display( totalfee );
         break;
@@ -304,13 +298,16 @@ function participantCount(ele, type) {
       ele.attr("min", 1);
       ele.closest('div').find('.x').remove();
       ele.css({"display":"inline", "maxWidth":"50px", "textAlign":"right"});
-      ele.before('<span class="x"> x <span>');
-      ele.show();
+      ele.before('<span class="x">: </span>');
+      ele.parent('.crm-form-number').show();
+      ele.focus(function(){
+        cj(this).select();
+      });
     }
     else {
       ele.attr("min", 0);
       ele.closest('div').find('.x').remove();
-      ele.hide();
+      ele.parent('.crm-form-number').hide();
     }
   }
 }

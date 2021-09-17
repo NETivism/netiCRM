@@ -1977,6 +1977,7 @@ SELECT source_contact_id
       else {
         $legal_identifier = $custom_values[$custom_serial];
       }
+      $legal_identifier = self::getFormatLegalID($legal_identifier);
       $template->assign('serial_id', $legal_identifier);
     }
     elseif ($contact->contact_type == 'Organization') {
@@ -1986,6 +1987,7 @@ SELECT source_contact_id
       else {
         $sic_code = $custom_values[$custom_serial];
       }
+      $sic_code = self::getFormatLegalID($sic_code);
       $template->assign('serial_id', $sic_code);
     }
 
@@ -2162,7 +2164,7 @@ SELECT source_contact_id
             $contactInfo[$name]['addressee'] = $name != $sort_name ? $name . " ($sort_name)" : $addressee;
           }
           if (empty($contactInfo[$name]['serial_id'])) {
-            $contactInfo[$name]['serial_id'] = $serial;
+            $contactInfo[$name]['serial_id'] = self::getFormatLegalID($serial);
           }
           $annualRecords[$name][$key] = $record;
           $contactInfo[$name]['total'] = $record['total_amount'] + $contactInfo[$name]['total'];
@@ -2747,6 +2749,31 @@ WHERE c.id = $id";
       );
       CRM_Activity_BAO_Activity::create($activityParams);
     }
+  }
+
+  static function getFormatLegalID($legalID) {
+    $config = CRM_Core_Config::singleton();
+    $legalIDformat = $config->receiptDisplayLegalID;
+    if (preg_match('/^\d{8}$/', $legalID)) {
+      $resultLegalID = $legalID;
+    }
+    else {
+      if ($legalIDformat == 'hide') {
+        $resultLegalID = str_repeat('*', strlen($legalID));
+      }
+      elseif ($legalIDformat == 'partial') {
+        if (strlen($legalID) >= 3) {
+          $resultLegalID = substr($legalID, 0, 1).str_repeat('*', (strlen($legalID) - 2)).substr($legalID, -1, 1);
+        }
+        else {
+          $resultLegalID = str_repeat('*', strlen($legalID));
+        }
+      }
+      else {
+        $resultLegalID = $legalID;
+      }
+    }
+    return $resultLegalID;
   }
 }
 

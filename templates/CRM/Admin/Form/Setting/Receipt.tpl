@@ -122,6 +122,13 @@
             </td>
         </tr>
         {/if}
+        {if $form.receiptDisplayLegalID}
+        <tr class="crm-form-block-receiptDisplayLegalID">
+            <td class="label">{$form.receiptDisplayLegalID.label}</td><td>{$form.receiptDisplayLegalID.html}<br />    
+            <span class="description">{ts}How to display the legal ID in receipt file. (The sic code of an organization will always completely display.){/ts}</span>
+            </td>
+        </tr>
+        {/if}
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>

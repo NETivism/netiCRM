@@ -338,7 +338,15 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           $label .= CRM_Utils_Money::format(CRM_Utils_Array::value($valueFieldName, $customOption[$optionKey]));
         }
 
-        $qf->addNumber($elementName, $label, array_merge(array('size' => "4", 'min' => 0, 'step' => 1), array('price' => json_encode(array($optionKey, $priceVal)))),
+        $attributes = array(
+          'size' => "4",
+          'min' => 0,
+          'step' => 1,
+          'price' => json_encode(array($optionKey, $priceVal)),
+          'inputmode' => 'numeric',
+          'placeholder' => ts('Please enter %1', array(1 => ts('Quantity'))),
+        );
+        $qf->addNumber($elementName, $label, $attributes,
           $useRequired && $field->is_required
         );
         $element = $qf->getElement($elementName);
@@ -370,7 +378,15 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
 
           // only enable qty / participant selection when specify max value
           if (!empty($field->max_value) || $field->max_value == '0') {
-            $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), array('size' => "1", 'min' => 1, 'step' => 1, 'price' => json_encode(array($elementName, $opId))));
+            $attr = array(
+              'size' => "1",
+              'min' => 1,
+              'step' => 1,
+              'price' => json_encode(array($elementName, $opId)),
+              'inputmode' => 'numeric',
+              'placeholder' => ts('Quantity'),
+            );
+            $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), $attr);
             $participantCount[$opId] = $qf->getElement($elementName.'_'.$opId.'_count');
           }
           else {
@@ -449,7 +465,15 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           );
 
           if (!empty($field->max_value) || $field->max_value == '0') {
-            $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), array('size' => "1", 'min' => 1, 'step' => 1, 'price' => json_encode(array($elementName, $opId))));
+            $attr = array(
+              'size' => "1",
+              'min' => 1,
+              'step' => 1,
+              'price' => json_encode(array($elementName, $opId)),
+              'inputmode' => 'numeric',
+              'placeholder' => ts('Quantity'),
+            );
+            $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), $attr);
             $participantCount[$opId] = $qf->getElement($elementName.'_'.$opId.'_count');
           }
           else {
