@@ -157,18 +157,10 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         }
       }
     }
-    elseif (function_exists('mysql_error') && mysql_error()) {
-      $mysql_error = mysql_error() . ', ' . mysql_errno();
-      $template->assign_by_ref('mysql_code', $mysql_error);
-
-      // execute a dummy query to clear error stack
-      mysql_query('select 1');
-    }
 
     $backtrace = CRM_Core_Error::backtrace('backtrace', FALSE);
     if (ini_get('xdebug.default_enable') && !empty(CRM_Utils_System::isUserLoggedIn()) && $config->debug) {
       $template->assign_by_ref('error', $error);
-      $template->assign_by_ref('errorDetails', $errorDetails);
       if (function_exists('xdebug_var_dump')) {
         ob_start();
         xdebug_var_dump($error);
@@ -375,7 +367,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @param  string message to be output
    * @param  bool   should we log or return the output
    *
-   * @return string format of the backtrace
+   * @return void
    *
    * @access public
    *
@@ -410,7 +402,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       echo $message;
     }
     $file_log->close();
-    return $str;
   }
 
   static function backtrace($msg = 'backtrace', $log = TRUE) {
