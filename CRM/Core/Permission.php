@@ -417,9 +417,9 @@ class CRM_Core_Permission {
       else {
         $components = CRM_Core_Component::getComponents();
       }
-      foreach($permissions as $p => &$title) {
+      foreach($permissions as $p => $title) {
         if ($p != $title) {
-          $title .= ' ('.$p.')';
+          $permissions[$p] .= ' ('.$p.')';
         }
       }
 
