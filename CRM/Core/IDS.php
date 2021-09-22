@@ -169,10 +169,7 @@ class CRM_Core_IDS {
 
     // add request url and user agent
     $request = $_REQUEST;
-    $request['IDS_request_uri'] = $_SERVER['REQUEST_URI'];
-    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-      $request['IDS_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-    }
+    $request['IDS_request_uri'] = urldecode($_SERVER['REQUEST_URI']);
 
     // init the PHPIDS
     $config = CRM_Core_Config::singleton();
@@ -220,7 +217,7 @@ class CRM_Core_IDS {
     if (isset($request['__utmz'])) unset($request['__utmz']);
     if (isset($request['__utmc'])) unset($request['__utmc']);
 
-    $ids = new Monitor($init);
+    $ids = new Monitor($init, array('sqli', 'dt', 'id', 'lfi', 'rfe', 'spam', 'dos'));
     $result = $ids->run($request);
     unset($request); // release memory
 

@@ -6522,6 +6522,18 @@ input.crm-form-textfield,
   .crm-container .crm-form-number input[type=number] {
     padding-right: 7px;
   }
+  @supports (-moz-appearance:none)  {
+    .crm-container .crm-form-number input[type=number] {
+      padding-right: 0px;
+    }
+    .crm-container .crm-form-number:after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      right: 0;
+      font-size: 1.0em;
+    }
+  }
 }
 
 @media screen and (max-width: 425px) {
