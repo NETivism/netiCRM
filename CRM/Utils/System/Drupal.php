@@ -42,24 +42,38 @@ class CRM_Utils_System_Drupal {
   public $is_drupal;
   public $version;
   public $versionalClass;
+  private static $loaded = FALSE;
   public static $jsLibraries;
 
+  /**
+   * Construct will make sure durpal fully bootstrap
+   */
   function __construct() {
     global $civicrm_drupal_root;
     $this->is_drupal = TRUE;
-    if(class_exists('DRUPAL') || is_file($civicrm_drupal_root.'/core/CHANGELOG.txt')) { // drupal 8 or 9
+
+    // loading civicrm before drupal
+    // this hack will determin verison number of drupal
+    // work for drupal 8, 9
+    if(class_exists('DRUPAL') || is_file($civicrm_drupal_root.'/core/CHANGELOG.txt')) {
+      // bootstrap drupal when drupal not ready
+      $class = 'CRM_Utils_System_Drupal8';
+      $this->versionalClass = new $class();
       if (!class_exists('DRUPAL')) {
-        // bootstrap first for extern/*.php
-        $class = 'CRM_Utils_System_Drupal8';
-        $this->versionalClass = new $class();
         $this->versionalClass->loadBootStrap();
       }
+      $this->loaded = TRUE;
       $this->version = (float )substr(DRUPAL::VERSION, 0, strrpos(DRUPAL::VERSION, '.'));
     }
-    elseif(defined('VERSION')){  // drupal 7
+    // loading civicrm *after* drupal
+    // this will quick when drupal 7
+    elseif(defined('VERSION')){
       $this->version = (float) VERSION;
     }
-    else{ // drupal 6 only
+
+    // whatever
+    // drupal 6, 7 will save version into module info
+    if (empty($this->version)){ 
       $config = CRM_Core_Config::singleton();
       $db_cms = DB::connect($config->userFrameworkDSN);
       if (DB::isError($db_cms)) {
@@ -71,25 +85,24 @@ class CRM_Utils_System_Drupal {
       $this->version = (float) $info['version'];
     }
 
-    // pseudoMethods make life easier
-    if (!isset($this->versionalClass)) {
+    // bootstrap drupal when drupal not ready
+    if (!$this->loaded) {
       $v = floor($this->version);
       $v = empty($v) ? '' : $v;
       $class = 'CRM_Utils_System_Drupal'.$v;
       $this->versionalClass = new $class();
-    }
-
-    // bootstrap drupal when needed
-    if ($this->version > 7) {
-      if (!class_exists('DRUPAL')) {
-        $this->versionalClass->loadBootStrap();
+      if ($this->version >= 7 && $this->version < 8) {
+        if (!class_exists('DRUPAL')) {
+          $this->versionalClass->loadBootStrap();
+        }
       }
-    }
-    else {
-      global $user;
-      if (empty($user)) {
-        $this->versionalClass->loadBootStrap();
+      elseif($this->version >= 6 && $this->version < 7) {
+        global $user;
+        if (empty($user)) {
+          $this->versionalClass->loadBootStrap();
+        }
       }
+      $this->loaded = TRUE;
     }
 
     // #27780, correct SameSite for chrome 80

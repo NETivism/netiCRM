@@ -81,19 +81,17 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
    *  @param  string $dataName
    */
   function __construct($name = NULL, array $data = array(), $dataName = '') {
+    // we need warning and error reporting
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_PARSE & ~E_NOTICE);
     parent::__construct($name, $data, $dataName);
 
-    // we need warning and error reporting
-    if (!empty($GLOBALS['mysql_db'])) {
-      self::$_dbName = $GLOBALS['mysql_db'];
-    }
-    else {
-      self::$_dbName = 'civicrm_tests_dev';
-    }
+    // the UserFramework should already boot when landing here
+    // we can't rely testing without UF
+    $dbConfig = self::getDBConfig();
+    self::$_dbName = $dbConfig['database'];
 
     // Setup test database
-    self::$utils = new Utils($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass']);
+    self::$utils = new Utils($dbConfig['hostspec'], $dbConfig['username'], $dbConfig['password']);
     $queries = array(
       "USE ".self::$_dbName.';',
     );
@@ -113,8 +111,8 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
   }
 
   static function getDBName() {
-    $dbName = !empty($GLOBALS['mysql_db']) ? $GLOBALS['mysql_db'] : 'civicrm_tests_dev';
-    return $dbName;
+    $dbConfig = self::getDBConfig();
+    return $dbConfig['database'];
   }
 
   /**
@@ -299,12 +297,9 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
    *  FIXME: Maybe a better way to do it
    */
   function foreignKeyChecksOff() {
-
-    self::$utils = new Utils($GLOBALS['mysql_host'],
-      $GLOBALS['mysql_user'],
-      $GLOBALS['mysql_pass']
-    );
-    $dbName = self::getDBName();
+    $dbConfig = self::getDBConfig();
+    self::$utils = new Utils($dbConfig['hostspec'], $dbConfig['username'], $dbConfig['password']);
+    $dbName = $dbConfig['database'];
     $query = "USE {$dbName};" . "SET foreign_key_checks = 1";
     if (self::$utils->do_query($query) === FALSE) {
       // fail happens
@@ -2070,6 +2065,15 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
     $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}Result.json", "w");
     fwrite($file, json_encode($result, JSON_PRETTY_PRINT));
     fclose($file);
+  }
+
+  public static function getDBConfig() {
+    $options = PEAR::getStaticProperty('DB_DataObject', 'options');
+    $dbConfig = DB::parseDSN($options['database']);
+    if (empty($dbConfig['database'])) {
+      throw new Exception("No database config found.");
+    }
+    return $dbConfig;
   }
 }
 
