@@ -15,26 +15,20 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
    *  Initialize configuration
    */
   function __construct() {
-    // test if drupal bootstraped
-    if(!defined('DRUPAL_ROOT')){
-      die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
-    }
-    if(!CRM_Utils_System::moduleExists('civicrm_allpay')){
-      die("You must enable civicrm_allpay module first before test.");
-    }
-    $payment_page = variable_get('civicrm_demo_payment_page', array());
-    $class_name = 'Payment_ALLPAY';
-    if(isset($payment_page[$class_name])){
-      $this->_page_id = $payment_page[$class_name];
-    }
+//    $this->assertTrue(CRM_Utils_System::moduleExists('civicrm_allpay'), "You must enable civicrm_allpay module first before test.");
+
+    $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
+    $this->assertNotEmpty($pageId, 'You need to have contribution page to procceed.');
+    $this->_page_id = $pageId;
+
     parent::__construct();
   }
 
   function get_info() {
     return array(
-     'name' => 'ALLPAY payment processor',
-     'description' => 'Test ALLPAY payment processor.',
-     'group' => 'Payment Processor Tests',
+      'name' => 'ALLPAY payment processor',
+      'description' => 'Test ALLPAY payment processor.',
+      'group' => 'Payment Processor Tests',
     );
   }
 
@@ -178,7 +172,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
     );
-    CRM_Core_Payment_ALLPAY::ipn('Credit', $post, $get);
+    CRM_Core_Payment_ALLPAY::doIPN('Credit', $post, $get);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -214,7 +208,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'modified_date' => $date,
       'invoice_id' => md5($now),
       'contribution_status_id' => 2,
-      'trxn_id' => CRM_Utils_Array::value('trxn_id', $params),
+      'trxn_id' => $trxn_id,
     );
     $ids = array();
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
@@ -274,7 +268,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
     );
-    CRM_Core_Payment_ALLPAY::ipn('Credit', $post, $get);
+    CRM_Core_Payment_ALLPAY::doIPN('Credit', $post, $get);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -321,7 +315,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TotalSuccessTimes' => 2,
       'SimulatePaid' => '1',
     );
-    CRM_Core_Payment_ALLPAY::ipn('Credit', $post, $get);
+    CRM_Core_Payment_ALLPAY::doIPN('Credit', $post, $get);
     $trxn_id2 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $gwsr1);
 
     // check second payment contribution exists
@@ -368,56 +362,56 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TotalSuccessAmount' => $amount*3,
       'ExecLog' => array (
         0 => (object)(array(
-           'RtnCode' => 1,
-           'amount' => $amount,
-           'gwsr' => '000000',
-           'process_date' => date('Y-m-d H:i:s', $now),
-           'auth_code' => '777777',
+          'RtnCode' => 1,
+          'amount' => $amount,
+          'gwsr' => '000000',
+          'process_date' => date('Y-m-d H:i:s', $now),
+          'auth_code' => '777777',
         )),
         1 => (object)(array(
-           'RtnCode' => 1,
-           'amount' => $amount,
-           'gwsr' => $gwsr1,
-           'process_date' => date('Y-m-d H:i:s', $now+3600),
-           'auth_code' => '777777',
+          'RtnCode' => 1,
+          'amount' => $amount,
+          'gwsr' => $gwsr1,
+          'process_date' => date('Y-m-d H:i:s', $now+3600),
+          'auth_code' => '777777',
         )),
         2 => (object)(array(
-           'RtnCode' => 1,
-           'amount' => $amount,
-           'gwsr' => $gwsr2,
-           'process_date' => date('Y-m-d H:i:s', $now+86400*2),
-           'auth_code' => '777777',
+          'RtnCode' => 1,
+          'amount' => $amount,
+          'gwsr' => $gwsr2,
+          'process_date' => date('Y-m-d H:i:s', $now+86400*2),
+          'auth_code' => '777777',
         )),
         // fail contribution from recurring
         3 => (object)(array(
-           'RtnCode' => '',
-           'amount' => '',
-           'gwsr' => '',
-           'process_date' => date('Y-m-d H:i:s', $now+86400*3),
-           'auth_code' => '',
+          'RtnCode' => '',
+          'amount' => '',
+          'gwsr' => '',
+          'process_date' => date('Y-m-d H:i:s', $now+86400*3),
+          'auth_code' => '',
         )),
         4 => (object)(array(
-           'RtnCode' => '0',
-           'amount' => $amount,
-           'gwsr' => '',
-           'process_date' => date('Y-m-d H:i:s', $now+86400*4),
-           'auth_code' => '',
+          'RtnCode' => '0',
+          'amount' => $amount,
+          'gwsr' => '',
+          'process_date' => date('Y-m-d H:i:s', $now+86400*4),
+          'auth_code' => '',
         )),
         // normal contribution but empty gwsr
         5 => (object)(array(
-           'RtnCode' => '1',
-           'amount' => $amount,
-           'gwsr' => 0,
-           'process_date' => date('Y-m-d H:i:s', $now+86400*5),
-           'auth_code' => '',
+          'RtnCode' => '1',
+          'amount' => $amount,
+          'gwsr' => 0,
+          'process_date' => date('Y-m-d H:i:s', $now+86400*5),
+          'auth_code' => '',
         )),
         // failed contribution and have gwsr
         6 => (object)(array(
-           'RtnCode' => '0',
-           'amount' => $amount,
-           'gwsr' => '11223344',
-           'process_date' => date('Y-m-d H:i:s', $now+86400*6),
-           'auth_code' => '',
+          'RtnCode' => '0',
+          'amount' => $amount,
+          'gwsr' => '11223344',
+          'process_date' => date('Y-m-d H:i:s', $now+86400*6),
+          'auth_code' => '',
         )),
       ),
     ));
