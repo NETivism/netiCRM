@@ -581,14 +581,6 @@ class CRM_Core_Payment_BaseIPN {
 
     $contribution->save();
 
-    // check and generate receipt id here for every online contribution
-    // we have another transaction inside, call this after transaction commit
-    $is_online = TRUE;
-    if ($paymentProcessorType == 'TaiwanACH') {
-      $is_online = FALSE;
-    }
-    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
-
     // next create the transaction record
     if (isset($objects['paymentProcessor'])) {
       $paymentProcessor = $objects['paymentProcessor']['payment_processor_type'];
@@ -634,20 +626,30 @@ class CRM_Core_Payment_BaseIPN {
     // create an activity record
     require_once "CRM/Activity/BAO/Activity.php";
     if ($input['component'] == 'contribute') {
-      //CRM-4027
       $targetContactID = NULL;
+      // refs #32303 we shouldn't touch original contribution object
+      $contrib = clone $contribution;
       if (CRM_Utils_Array::value('related_contact', $ids)) {
-        $targetContactID = $contribution->contact_id;
-        $contribution->contact_id = $ids['related_contact'];
+        $targetContactID = $contrib->contact_id;
+        $contrib->contact_id = $ids['related_contact'];
       }
-      CRM_Activity_BAO_Activity::addActivity($contribution, NULL, $targetContactID);
-      // event
+      CRM_Activity_BAO_Activity::addActivity($contrib, NULL, $targetContactID);
     }
+    // event
     else {
       CRM_Activity_BAO_Activity::addActivity($participant);
     }
 
     $transaction->commit();
+
+    // check and generate receipt id here for every online contribution
+    // we have another transaction inside, call this after transaction commit
+    $is_online = TRUE;
+    if ($paymentProcessorType == 'TaiwanACH') {
+      $is_online = FALSE;
+    }
+    // refs #31643, genReceiptID should move after transaction to prevent deadlock
+    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
 
     CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated");
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
