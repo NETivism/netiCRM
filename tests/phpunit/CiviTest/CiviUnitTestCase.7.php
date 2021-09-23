@@ -313,6 +313,18 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
     // FIXME: might not be needed if previous fixme implemented
   }
 
+  // override some phpunit function to help debug tool
+  // see https://github.com/sebastianbergmann/phpunit/blob/d2f47aed354b93e38ad70ab14ab81bc548cb32f1/src/Framework/Assert.php
+  public static function assertEmpty($actual, string $message = '') : void {
+    parent::assertEmpty($actual, $message);
+  }
+  public static function assertNotEmpty($actual, string $message = '') : void {
+    parent::assertNotEmpty($actual, $message);
+  }
+  public static function assertTrue($condition, string $message = ''): void {
+    parent::assertTrue($condition, $message);
+  }
+
   /**
    * Generic function to compare expected values after an api call to retrieved
    * DB values.
