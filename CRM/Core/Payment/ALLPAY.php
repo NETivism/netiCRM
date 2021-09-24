@@ -576,6 +576,299 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     return $checkmacvalue;
   }
 
+  /**
+   * Synchronize all recurring of specific day of month.
+   * Original civicrm_allpay_recur_sync
+   * 
+   * @param array $days The array of days need to synchronize recurrings.
+   * @return null
+   */
+  function recurSync($days = array()) {
+    civicrm_initialize();
+    if(empty($days)){
+      $days = array(
+        date('j'),
+        date('j', strtotime('-1 day')),
+      );
+
+      // when end of month
+      $end_this_month = date('j', strtotime('last day of this month'));
+      if (date('j') == $end_this_month) {
+        for($i = $end_this_month; $i <= 31; $i++) {
+          $days[] = $i;
+        }
+      }
+      $days = array_unique($days);
+    }
+
+    $query = "SELECT (SELECT count(c.id) FROM civicrm_contribution c WHERE c.contribution_recur_id = r.id AND c.receive_date >= %2 AND c.receive_date <= %3 ) AS contribution_count, r.* FROM civicrm_contribution_recur r
+    WHERE r.contribution_status_id = 5 AND r.frequency_unit = 'month' AND DAY(r.start_date) = %1
+    ORDER BY r.create_date ASC";
+    foreach($days as $d){
+      $d = (string) $d;
+      CRM_Core_Error::debug_log_message('CiviCRM AllPay: Start to sync recurring for day '.$d);
+      $query_params = array(
+        1 => array($d, 'String'),
+        2 => array(date('Y-m-').sprintf('%02s', $d).' 00:00:00', 'String'),
+        3 => array(date('Y-m-').sprintf('%02s', $d).' 23:59:59', 'String'),
+      );
+      $result = CRM_Core_DAO::executeQuery($query, $query_params);
+      while($result->fetch()){
+        if(empty($result->contribution_count)){
+          // check if is next day of expect recurring
+          self::recurCheck($result->id);
+          usleep(300000); // sleep 0.3 second
+        }
+      }
+      $result->free();
+      $result = NULL;
+    }
+  }
+
+   /**
+   * Chcek recurring of specific id from AllPay API.
+   * Original civicrm_allpay_recur_check
+   * 
+   * @param integer $rid The recurring id.
+   * @param object $order If you want to include object already wrote.
+   * @return null
+   */
+  static function recurCheck($rid, $order = NULL) {
+    civicrm_initialize();
+    $now = time();
+    $query = "SELECT c.id as cid, c.contact_id, c.is_test, c.trxn_id, c.payment_processor_id as pid, c.contribution_status_id, r.id as rid, r.contribution_status_id as recurring_status FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.id = %1 ORDER BY c.id ASC";
+    $result = CRM_Core_DAO::executeQuery($query, array(1 => array($rid, 'Integer')));
+
+    // fetch first contribution
+    $result->fetch();
+    if(!empty($result->N)){
+      $first_contrib_id = $result->cid;
+      $is_test = $result->is_test;
+      $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($result->pid, $is_test ? 'test' : 'live');
+      if($payment_processor['payment_processor_type'] != 'ALLPAY'){
+        return;
+      }
+
+      if(!empty($payment_processor['url_recur']) && !empty($payment_processor['user_name'])){
+        $processor = array(
+          'password' => $payment_processor['password'],
+          'signature' => $payment_processor['signature'],
+        );
+        $post_data = array(
+          'MerchantID' => $payment_processor['user_name'],
+          'MerchantTradeNo' => $result->trxn_id,
+          'TimeStamp' => $now,
+        );
+        self::generateMacValue($post_data, $processor);
+        if(empty($order)){
+          $order = self::postdata($payment_processor['url_recur'], $post_data);
+        }
+        if(!empty($order) && $order->MerchantTradeNo == $result->trxn_id && count($order->ExecLog) > 1){
+          // update recur status
+          $recur = $order->ExecStatus;
+          if(isset($order->ExecStatus)){
+            $update_status = NULL;
+            $recur_param = $null = array();
+            if($order->ExecStatus == 0 && $result->recurring_status != 3){
+              // cancelled
+              $update_status = 3;
+              $recur_param = array(
+                'id' => $rid,
+                'modified_date' => date('YmdHis'),
+                'cancel_date' => date('YmdHis'),
+                'contribution_status_id' => 3, // cancelled
+              );
+              CRM_Contribute_BAO_ContributionRecur::add($recur_param, $null);
+            }
+            elseif($order->ExecStatus == 2 && $result->recurring_status != 1){
+              // completed
+              $recur_param = array(
+                'id' => $rid,
+                'modified_date' => date('YmdHis'),
+                'end_date' => date('YmdHis'),
+                'contribution_status_id' => 1, // completed
+              );
+              CRM_Contribute_BAO_ContributionRecur::add($recur_param, $null);
+            }
+            elseif($order->ExecStatus == 1){
+              // current running, should be 5, do nothing
+            }
+          }
+
+          $orders = array();
+          foreach($order->ExecLog as $o){
+            // skip first recorded contribution
+            if($order->gwsr == $o->gwsr){
+              continue;
+            }
+            $noid = self::getNoidHash($o, $order->MerchantTradeNo);
+            if (!empty($noid)) {
+              if($o->RtnCode == 1 && empty($o->gwsr)){
+                continue; // skip, not normal
+              }
+              $trxn_id = self::generateRecurTrxn($order->MerchantTradeNo, $noid);
+              $orders[$trxn_id] = $o;
+            }
+          }
+          // remove exists records
+          while($result->fetch()){
+            unset($orders[$result->trxn_id]);
+          }
+          // real record to add
+          if(!empty($orders)){
+            foreach($orders as $trxn_id => $o){
+              $get = $post = $ids = array();
+              list($main_trxn, $noid) = explode('-', $trxn_id);
+              $ids = CRM_Contribute_BAO_Contribution::buildIds($first_contrib_id);
+              $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+              parse_str($query, $get);
+              $get['is_recur'] = 1;
+              $post = array(
+                'MerchantID' => $order->MerchantID,
+                'MerchantTradeNo' => $order->MerchantTradeNo,
+                'RtnCode' => $o->RtnCode,
+                'RtnMsg' => !empty($o->RtnMsg) ? ts($o->RtnMsg) : self::getErrorMsg($o->RtnCode),
+                'PeriodType' => $order->PeriodType,
+                'Frequency' => $order->Frequency,
+                'ExecTimes' => $order->ExecTimes,
+                'Amount' => !empty($o->amount) ? $o->amount : $order->amount,
+                'Gwsr' => $noid,
+                'ProcessDate' => $o->process_date,
+                'AuthCode' => !empty($o->auth_code) ? $o->auth_code : '',
+                'FirstAuthAmount' => $order->PeriodAmount,
+                'TotalSuccessTimes' => $order->TotalSuccessTimes,
+                //'SimulatePaid' => $order->SimulatePaid,
+              );
+
+              // manually trigger ipn
+              self::doIPN('Credit', $post, $get, FALSE);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Help function for such function as recurCheck.
+   * Posting Data to AllPay server and retrieve data.
+   * Original _civicrm_allpay_postdata
+   * 
+   * @param string $url Post url
+   * @param array $post_data Post Data
+   * @param boolean $json Is return json format.
+   * @return string|array|null
+   */
+  static function postdata($url, $post_data, $json = TRUE){
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    $field_string = http_build_query($post_data, '', '&');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $field_string);
+    curl_setopt($ch, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
+    $receive = curl_exec($ch);
+    if(curl_errno($ch)){
+      CRM_Core_Error::debug_log_message('AllPay: Fetch recuring error: curl_errno: '.curl_errno($ch).' / '. curl_error($ch));
+    }
+    else{
+      CRM_Core_Error::debug_log_message('AllPay: Request:'.$url."?".$field_string.'; Receive: '.$receive);
+    }
+    curl_close($ch);
+    if(!empty($receive)){
+      if($json){
+        return json_decode($receive);
+      }
+      else{
+        $return = array();
+        parse_str($receive, $return);
+        return $return;
+      }
+    }
+    else{
+      return FALSE;
+    }
+  }
+  
+  /**
+   * Get AllPay error msg.
+   * Original _civicrm_allpay_error_msg
+   *
+   * @param string $code Error code from allpay.
+   *
+   * @return string Translated error message response to the code.
+   */
+  static function getErrorMsg($code){
+    $code = (string) $code;
+    // success
+    if($code == '1' || $code == '2'){
+      return;
+    }
+
+    // error
+    $msg = array(
+      '10100001' => 'IP Access Denied.',
+      '10100050' => 'Parameter Error.',
+      '10100054' => 'Trading Number Repeated.',
+      '10100055' => 'Create Trade Fail.',
+      '10100058' => 'Pay Fail.',
+      '10100059' => 'Trading Number cannot Be Found.',
+      '10200001' => 'Can not use trade service.',
+      '10200002' => 'Trade has been updated before.',
+      '10200003' => 'Trade Status Error.',
+      '10200005' => 'Price Format Error.',
+      '10200007' => 'ItemURL Format Error.',
+      '10200047' => 'Cant not find the trade data.',
+      '10200050' => 'AllPayTradeID Error.',
+      '10200051' => 'MerchantID Error.',
+      '10200052' => 'MerchantTradeNo Error.',
+      '10200073' => 'CheckMacValue Error',
+      '10200124' => 'TopUpUsedESUN Trade Error',
+      'uncertain' => 'Please login your payment processor system to check problem.',
+      '0' => 'Please login your payment processor system to check problem.',
+    );
+    if(!empty($msg[$code])){
+      return ts($msg[$code]);
+    }
+    else{
+      return ts('Error when processing your payment.');
+    }
+  }
+
+  /**
+   * Original _civicrm_allpay_noid_hash
+   * 
+   * @param object $o Return log object from AllPay.
+   * @param string $main_trxn The TradeNo of AllPay transaction.
+   * @return string|null get the hash
+   */
+  static function getNoidHash($o, $main_trxn) {
+    // check database for this
+    $lookup = array(
+      1 => array('%TradeNo":"'.$main_trxn.'"%ProcessDate":"'.str_replace('/', '\\\\\\\\', $o->process_date).'"%', 'String'),
+    );
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay WHERE data LIKE %1", $lookup);
+    if ($cid) {
+      $trxn_id = CRM_Core_DAO::singleValueQuery("SELECT trxn_id FROM civicrm_contribution WHERE id = %1", array(1 => array($cid, 'Integer')));
+      list($main_trxn, $noid) = explode('-', $trxn_id);
+      if ($noid) {
+        return $noid;
+      }
+      else {
+        return;
+      }
+    }
+    elseif (!empty($o->process_date)) {
+      if (!empty($o->gwsr)) {
+        return $o->gwsr;
+      }
+      else {
+        return substr(md5(implode('', (array)$o)), 0, 8);
+      }
+    }
+  }
+
   function cancelRecuringMessage($recurID){
     if (function_exists("_civicrm_allpay_cancel_recuring_message")) {
       return _civicrm_allpay_cancel_recuring_message(); 
@@ -593,7 +886,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @param array $get Bring get variables if you need test.
    * @param boolean $print Does server echo the result, or just return that. Default is TRUE.
    *
-   * @return array|void If $print is FALSE, function will return the result as Array.
+   * @return string|void If $print is FALSE, function will return the result as Array.
    */
   static function doIPN($instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
