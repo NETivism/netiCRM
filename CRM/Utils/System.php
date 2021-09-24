@@ -1234,6 +1234,16 @@ class CRM_Utils_System {
   }
 
   /**
+   * session_id() is not reliable after drupal 9.2
+   * use this instead
+   *
+   * @return void
+   */
+  static function getSessionID() {
+    return CRM_Core_Config::$_userSystem->sessionID();
+  }
+
+  /**
    * Reset the memory cache, typically memcached
    */
   static function flushCache($daoName = NULL) {

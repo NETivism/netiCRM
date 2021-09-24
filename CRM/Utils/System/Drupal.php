@@ -57,7 +57,7 @@ class CRM_Utils_System_Drupal {
     // work for drupal 8, 9
     if(class_exists('DRUPAL') || is_file($civicrm_drupal_root.'/core/CHANGELOG.txt')) {
       // bootstrap drupal when drupal not ready
-      $class = 'CRM_Utils_System_Drupal8';
+      $class = 'CRM_Utils_System_Drupal9';
       $this->versionalClass = new $class();
       if (!class_exists('DRUPAL')) {
         $this->versionalClass->loadBootStrap();
@@ -116,10 +116,10 @@ class CRM_Utils_System_Drupal {
       }
 
       if (PHP_VERSION_ID < 70300) {
-        setcookie(session_name(), session_id(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
+        setcookie(session_name(), CRM_Utils_System::getSessionID(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
       }
       else {
-        setcookie(session_name(), session_id(), array(
+        setcookie(session_name(), CRM_Utils_System::getSessionID(), array(
           'expires' => $lifetime,
           'path' => '/',
           'domain' => $sparams['domain'],
@@ -1081,6 +1081,42 @@ class CRM_Utils_System_Drupal {
         }
       }
     }
+  }
+
+  function sessionID() {
+    // when session success started, this should have id
+    $sessionID = session_id();
+    if ($sessionID) {
+      return $sessionID;
+    }
+
+    // try start session here
+    self::sessionStart();
+    $sessionID = session_id();
+    if ($sessionID) {
+      return $sessionID;
+    }
+
+    // refs #31356, because self::sessionStart() force initialize session for drupal
+    // we should get session id by session manager service here
+    // not sure why session_id() doesn't return correct id
+    $version = CRM_Core_Config::$_userSystem->version;
+    if ($version >= 8) {
+      $session = \Drupal::service('session_manager');
+      $sessionID = $session->getId();
+      return $sessionID;
+
+      // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore
+      /*
+      $sessionID = self::tempstoreGet('sessionID');
+      if ($sessionID) {
+        return $sessionID;
+      }
+      $sessionID = str_replace(array('+','/','='), array('-','_','',), base64_encode(random_bytes(32)));
+      self::tempstoreSet('sessionID', $sessionID);
+      */
+    }
+    return '';
   }
 
   function tempstoreSet($name, $value) {

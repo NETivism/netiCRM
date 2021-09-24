@@ -107,10 +107,10 @@ class CRM_Utils_REST {
     $session->set('api_key', $api_key);
     $session->set('key', $result[2]);
     $session->set('rest_time', time());
-    $session->set('PHPSESSID', session_id());
+    $session->set('PHPSESSID', CRM_Utils_System::getSessionID());
     $session->set('cms_user_id', $result[1]);
 
-    return self::simple(array('api_key' => $api_key, 'PHPSESSID' => session_id(), 'key' => sha1($result[2])));
+    return self::simple(array('api_key' => $api_key, 'PHPSESSID' => CRM_Utils_System::getSessionID(), 'key' => sha1($result[2])));
   }
 
   // Generates values needed for error messages

@@ -30,7 +30,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     if (empty($params['visit_date'])) {
       $params['visit_date'] = date('Y-m-d H:i:s');
     }
-    $params['session_key'] = session_id();
+    $params['session_key'] = CRM_Utils_System::getSessionID();
     $track = new CRM_Core_DAO_Track();
     if (!empty($params['id']) && is_numeric($params['id'])) {
       CRM_Utils_Hook::pre('edit', 'Track', $params['id'], $params);
