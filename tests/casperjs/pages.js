@@ -4,12 +4,9 @@ var system = require('system');
 var port = system.env.RUNPORT; 
 
 var vars = {
-  testNum: 0,
-  baseURL: system.env.CASPERTEST_BASEURL+'/',
-  startURL: system.env.CASPERTEST_STARTURL,
-  siteName: system.env.CASPERTEST_SITENAME,
-  username: system.env.DRUPAL_USERNAME,
-  password: system.env.DRUPAL_PASSWORD,
+  testNum: 0, // later calc
+  baseURL : port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',
+  siteName: 'netiCRM',
 
 // you should add your own testing variables below
   url: [
@@ -20,7 +17,7 @@ var vars = {
     {title:'CiviCRM Home', url:'civicrm/dashboard'},
     {title:'Custom Data', url:'civicrm/admin/custom/group?reset=1'},
     {title:'CiviCRM Profile', url:'civicrm/admin/uf/group?reset=1'},
-    {title:'Configuration Checklist', url:'civicrm/civicrm/admin/configtask?reset=1'},
+    {title:'CiviCRM Home', url:'civicrm/civicrm/admin/configtask?reset=1'},
     {title:'Synchronize Users to Contacts', url:'civicrm/admin/synchUser?reset=1'},
     {title:'Find Contacts', url:'civicrm/contact/search?reset=1'},
     {title:'New Individual', url:'civicrm/contact/add?reset=1&ct=Individual'},
@@ -99,16 +96,15 @@ var lookup_title = function(u){
 };
 
 casper.test.begin('Page output correct test', vars.testNum, function suite(test) {
-  casper.start(vars.startURL, function() {
+  casper.start(vars.baseURL, function() {
     test.assertExists('#user-login-form', "Found login form");
     this.fill('#user-login-form', {
-      'name': vars.username,
-      'pass': vars.password
+      'name':'admin',
+      'pass':'123456'
     }, true);
   });
 
-  casper.wait(2000);
-  casper.waitForSelector('body', function(){
+  casper.waitForSelector('body.logged-in', function(){
     for(var i in vars.url){
       casper.thenOpen(vars.baseURL + vars.url[i].url, function(obj){
         if(obj.url){
