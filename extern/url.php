@@ -1,5 +1,5 @@
 <?php
-require_once '../civicrm.config.php';
+require_once __DIR__.'/extern.inc';
 $config = CRM_Core_Config::singleton();
 
 // to keep backward compatibility for URLs generated
