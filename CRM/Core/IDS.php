@@ -75,6 +75,9 @@ class CRM_Core_IDS {
         'help_pre',
         'help_post',
       ],
+      'civicrm/ajax/rest' => [
+        'json:json'
+      ],
     ],
     'access CiviContribute' => [
       'civicrm/admin/contribute/settings' => [ 
@@ -135,6 +138,7 @@ class CRM_Core_IDS {
     '*' => [
       'civicrm/ajax/track' => ['data:json'],
       'civicrm/contribute/transact' => ['JSONData:json:_qf_ThankYou_display=1'],
+      '*/civicrm/extern/rest.php' => ['json:json']
     ],
   ];
 
@@ -159,13 +163,7 @@ class CRM_Core_IDS {
    * @return boolean
    */
   public function check(&$args) {
-
-    // lets bypass a few civicrm urls from this check
-    static $skip = array('civicrm/ajax', 'civicrm/admin/setting/updateConfigBackend', 'civicrm/admin/messageTemplates');
     $path = implode('/', $args);
-    if (in_array($path, $skip)) {
-      return;
-    }
 
     // remove tracking parameters to prevent false positive
     $trackingG = array('fbclid', 'gclid');
@@ -190,7 +188,10 @@ class CRM_Core_IDS {
 
     // add request url and user agent
     $request = $_REQUEST;
-    $request['IDS_request_uri'] = urldecode($_SERVER['REQUEST_URI']);
+
+    // lets request parameter handling by others
+    // check document uri only
+    $request['IDS_document_uri'] = urldecode($_SERVER['DOCUMENT_URI']);
 
     // init the PHPIDS
     $config = CRM_Core_Config::singleton();
