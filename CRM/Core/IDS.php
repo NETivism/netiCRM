@@ -167,6 +167,27 @@ class CRM_Core_IDS {
       return;
     }
 
+    // remove tracking parameters to prevent false positive
+    $trackingG = array('fbclid', 'gclid');
+    $trackingC = array( '__utma', '__utmb', '__utmc', '__utmv', '__utmz', '_gid', '_ga', '_gcl_au', '_fbp');
+    foreach($trackingG as $g) {
+      if (isset($_GET[$g])) {
+        unset($_GET[$g]);
+      }
+      if (isset($_REQUEST[$g])) {
+        unset($_REQUEST[$g]);
+      }
+    }
+    foreach($trackingC as $c) {
+      if (isset($_COOKIE[$c])) {
+        unset($_COOKIE[$c]);
+      }
+      // php 7 will not have these
+      if (isset($_REQUEST[$c])) {
+        unset($_REQUEST[$c]);
+      }
+    }
+
     // add request url and user agent
     $request = $_REQUEST;
     $request['IDS_request_uri'] = urldecode($_SERVER['REQUEST_URI']);
@@ -212,10 +233,6 @@ class CRM_Core_IDS {
       $request['IDS_php_input'] = file_get_contents('php://input');
       $init->config['General']['json'][] = 'IDS_php_input';
     }
-
-    // remove unecessery cookie detection
-    if (isset($request['__utmz'])) unset($request['__utmz']);
-    if (isset($request['__utmc'])) unset($request['__utmc']);
 
     $ids = new Monitor($init, array('sqli', 'dt', 'id', 'lfi', 'rfe', 'spam', 'dos'));
     $result = $ids->run($request);
