@@ -237,14 +237,23 @@ cj(function($) {
     window.location.hash = query;
     var RESTquery = resourceBase + "extern/rest.php"+ query.substring(restURL.length,query.length);
     $('#result').html('<i>Loading...</i>');
-    $.post(query,function(data) {
-      if (admin) {
-        window.apibrowser = JSON.parse(data);
-        console.log("Debug enabled from civicrm settings: console.log(window.apibrowser)");
-        console.log(window.apibrowser);
+    // convert query url to POST parameter
+    var queryURL = new URL(query, location.origin);
+    var queryData = queryURL.search.replace(/^\?/, '');
+    console.log(queryURL);
+    $.post({
+      url: queryURL.pathname,
+      data: queryData,
+      dataType: 'text',
+      success: function(data){
+        if (admin) {
+          window.apibrowser = JSON.parse(data);
+          console.log("Debug enabled from civicrm settings: console.log(window.apibrowser)");
+          console.log(window.apibrowser);
+        }
+        $('#result').text(data);
       }
-      $('#result').text(data);
-    },'text');
+    });
     link="<a href='"+query+"' title='open in a new tab' target='_blank'>ajax query</a>&nbsp;";
     $("#link").html(link+" <a href='"+RESTquery+"' title='open in a new tab' target='_blank'>REST query</a>");
     
