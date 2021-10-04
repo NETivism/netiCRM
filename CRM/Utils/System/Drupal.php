@@ -116,10 +116,10 @@ class CRM_Utils_System_Drupal {
       }
 
       if (PHP_VERSION_ID < 70300) {
-        setcookie(session_name(), CRM_Utils_System::getSessionID(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
+        setcookie(session_name(), $this->sessionID(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
       }
       else {
-        setcookie(session_name(), CRM_Utils_System::getSessionID(), array(
+        setcookie(session_name(), $this->sessionID(), array(
           'expires' => $lifetime,
           'path' => '/',
           'domain' => $sparams['domain'],
