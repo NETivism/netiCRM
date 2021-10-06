@@ -7,11 +7,11 @@ require_once __DIR__.'/extern.inc';
 // prevent API access by pass
 if (!defined('CIVICRM_APIEXPLORER_ENABLED')) {
   http_response_code(404);
-  die();
+  exit;
 }
 if (!CIVICRM_APIEXPLORER_ENABLED) {
   http_response_code(404);
-  die();
+  exit;
 }
 
 $config = CRM_Core_Config::singleton();
