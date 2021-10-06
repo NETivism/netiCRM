@@ -36,16 +36,20 @@
 require_once __DIR__.'/extern.inc';
 
 $config   = CRM_Core_Config::singleton( );
+$cpageId  = CRM_Utils_Request::retrieve( 'cpageId', 'Positive', CRM_Core_DAO::$_nullObject);
+$widgetId = CRM_Utils_Request::retrieve( 'widgetId', 'Positive', CRM_Core_DAO::$_nullObject);
+if (empty($cpageId) || empty($widgetId)) {
+  http_response_code(400);
+  exit;
+}
 
-$language = CRM_Utils_Request::retrieve( 'language', 'String', CRM_Core_DAO::$_nullObject );
+$language = CRM_Utils_Request::retrieve( 'language', 'String', CRM_Core_DAO::$_nullObject);
 if (!empty($language)) {
   global $tsLocale;
   $tsLocale = $language;
 }
 $template = CRM_Core_Smarty::singleton( );
 
-$cpageId  = CRM_Utils_Request::retrieve( 'cpageId', 'Positive', CRM_Core_DAO::$_nullObject );
-$widgetId = CRM_Utils_Request::retrieve( 'widgetId', 'Positive', CRM_Core_DAO::$_nullObject );
 
 if (!CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Widget', $cpageId, 'is_active', 'contribution_page_id')) {
   CRM_Utils_System::civiExit();

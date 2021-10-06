@@ -705,7 +705,7 @@
       },
       {
         "id":"60",
-        "rule":"(?:(?:[;]+|(<[?%](?:php)?))?.*[^\\w](?:echo|print|print_r|var_dump|[fp]open))|(?:;\\s*rm\\s+-\\w+\\s+)|(?:;.*{.*\\$\\w+\\s*=)|(?:\\$\\w+\\s*\\[\\]\\s*=\\s*)",
+        "rule":"(?:(?:[;]+|(<[?%](?:php)?))?.*[^\\w](?:echo|print|print_r|var_dump|[fp]open)\\s*(['\"(@]))|(?:;\\s*rm\\s+-\\w+\\s+)|(?:;.*{.*\\$\\w+\\s*=)|(?:\\$\\w+\\s*\\[\\]\\s*=\\s*)",
         "description":"Detects code injection attempts 3\/3",
         "tags":{
           "tag":[
