@@ -218,6 +218,9 @@ WHERE  inst.report_id = %1";
           $displayRows[$i][] = $value;
         }
         else {
+          if (CRM_Utils_Array::value('type', $form->_columnHeaders[$v]) == 1024) {
+            $displayRows[$i][] = '';
+          }
           $displayRows[$i][] = '';
         }
       }
