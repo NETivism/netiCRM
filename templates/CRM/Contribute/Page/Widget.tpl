@@ -185,6 +185,6 @@
      var jsondata = {$jsonData};
   </script>
 {else}
-  <script type="text/javascript" src="{$config->userFrameworkResourceURL}extern/widget.php?cpageId={$cpageId}&widgetId={$widgetId}&language={$tsLocale}"></script>
+  <script type="text/javascript" src="{$config->userFrameworkResourceURL}extern/widget.php?cpageId={$cpageId}&language={$tsLocale}"></script>
 {/if}
 
