@@ -37,8 +37,7 @@ require_once __DIR__.'/extern.inc';
 
 $config   = CRM_Core_Config::singleton( );
 $cpageId  = CRM_Utils_Request::retrieve( 'cpageId', 'Positive', CRM_Core_DAO::$_nullObject);
-$widgetId = CRM_Utils_Request::retrieve( 'widgetId', 'Positive', CRM_Core_DAO::$_nullObject);
-if (empty($cpageId) || empty($widgetId)) {
+if (empty($cpageId)) {
   http_response_code(400);
   exit;
 }
@@ -55,7 +54,7 @@ if (!CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Widget', $cpageId, 'is_acti
   CRM_Utils_System::civiExit();
 }
 
-$data = CRM_Contribute_BAO_Widget::getContributionPageData( $cpageId, $widgetId );
+$data = CRM_Contribute_BAO_Widget::getContributionPageData($cpageId);
 
 $output = '
   var jsondata = '.json_encode( $data ) .';
