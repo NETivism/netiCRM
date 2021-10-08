@@ -4541,6 +4541,20 @@ CREATE TABLE civicrm_contribution (
   ,     INDEX receipt_id(
         receipt_id
   )
+  ,     INDEX ML_contribution(
+        contact_id
+      , contribution_type_id
+      , contribution_page_id
+      , payment_processor_id
+      , payment_instrument_id
+      , created_date
+      , receive_date
+      , total_amount
+      , receipt_date
+      , contribution_recur_id
+      , is_test
+      , contribution_status_id
+  )
   
 ,      
      CONSTRAINT FK_civicrm_contribution_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
