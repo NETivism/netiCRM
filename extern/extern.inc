@@ -1,2 +1,13 @@
 <?php
 require_once '../civicrm.config.php';
+
+// wrap function to prevent variale become global
+function _forcePHPIDS() {
+  $ids = new CRM_Core_IDS();
+  $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+  $args = array(ltrim($path, '/'));
+  $ids->check($args);
+}
+
+
+_forcePHPIDS();

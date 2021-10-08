@@ -176,14 +176,12 @@ class CRM_Utils_Rule {
     if (!in_array(substr($url, 0, 5), array('http:', 'https'))) {
       $valid = FALSE;
     }
-    elseif ($valid) {
-      if (!empty($checkDomain)) {
-        $checkDomain = str_replace('/', '', $checkDomain);
-        $valid = preg_match('@^https?://'.preg_quote($checkDomain).'/@i', $url);
-      }
-      if (!empty($checkHTTPS)) {
-        $valid = preg_match('@^https://@i', $url);
-      }
+    $pureDomain = str_replace('/', '', $checkDomain);
+    if (!empty($pureDomain) && !preg_match('@^https?://'.preg_quote($pureDomain).'/@i', $url)) {
+      $valid = FALSE;
+    }
+    if (!empty($checkHTTPS) && !preg_match('@^https://@i', $url)) {
+      $valid = FALSE;
     }
     return (bool) $valid;
   }

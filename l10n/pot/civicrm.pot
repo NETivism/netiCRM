@@ -48362,3 +48362,6 @@ msgstr ""
 
 msgid "Relative Data"
 msgstr ""
+
+msgid "PDF generation only allow 100 contacts per run."
+msgstr ""

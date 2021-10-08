@@ -447,9 +447,12 @@ class Monitor
      *
      * @return void
      */
-    private function jsonConcatContents($key, $value)
+    private function jsonConcatContents($value, $key)
     {
-        if (is_string($key) && is_string($value)) {
+        if (json_decode($value)) {
+            $this->jsonDecodeValues($key, $value);
+        }
+        elseif (is_string($key) && is_string($value)) {
             $this->tmpJsonString .=  $key . " " . $value . "\n";
         } else {
             $this->jsonDecodeValues(json_encode($key), json_encode($value));

@@ -34,8 +34,10 @@
  *
  */
 
-session_start( );
-require_once '../civicrm.config.php';
+require_once __DIR__.'/extern.inc';
+echo "This function is disabled for now";
+http_response_code(404);
+exit;
 
 /* Cache the real UF, override it with the SOAP environment */
 $config = CRM_Core_Config::singleton();
