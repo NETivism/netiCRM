@@ -517,8 +517,17 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @static
    */
   public static function nullHandler($obj) {
-    CRM_Core_Error::debug_var('Ignoring exception thrown here', $obj);
-    CRM_Core_Error::backtrace('backtrace', TRUE);
+    if (is_a($obj, 'PEAR_Error')) {
+      $message = $obj->getMessage();
+      self::debug_var('null_error', $message);
+    }
+    elseif (is_string($obj)){
+      self::debug_var('null_error', $obj);
+    }
+    else {
+      self::debug_var('null_error', 'Triggered nullHandler here, unknown error');
+    }
+    self::backtrace('backtrace', TRUE);
     return $obj;
   }
 
