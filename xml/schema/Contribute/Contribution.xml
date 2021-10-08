@@ -409,4 +409,19 @@
       <comment>when is payment expiration</comment> 
       <add>3.3</add> 
   </field> 
+  <index>
+    <name>ML_contribution</name>
+    <fieldName>contact_id</fieldName> <fieldName>contribution_type_id</fieldName> 
+    <fieldName>contribution_page_id</fieldName> 
+    <fieldName>payment_processor_id</fieldName> 
+    <fieldName>payment_instrument_id</fieldName> 
+    <fieldName>created_date</fieldName> 
+    <fieldName>receive_date</fieldName> 
+    <fieldName>total_amount</fieldName> 
+    <fieldName>receipt_date</fieldName> 
+    <fieldName>contribution_recur_id</fieldName> 
+    <fieldName>is_test</fieldName> 
+    <fieldName>contribution_status_id</fieldName> 
+    <add>4.0</add>
+  </index>
 </table>
