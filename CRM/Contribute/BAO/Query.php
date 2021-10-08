@@ -682,7 +682,7 @@ class CRM_Contribute_BAO_Query {
     $from = NULL;
     switch ($name) {
       case 'civicrm_contribution':
-        $from = " $side JOIN civicrm_contribution ON civicrm_contribution.contact_id = contact_a.id ";
+        $from = " $side JOIN civicrm_contribution USE INDEX (ML_contribution) ON civicrm_contribution.contact_id = contact_a.id ";
         break;
 
       case 'civicrm_contribution_recur':
