@@ -101,13 +101,13 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
   /**
    * Text formatted message
    *
-   * @var text
+   * @var longtext
    */
   public $msg_text;
   /**
    * HTML formatted message
    *
-   * @var text
+   * @var longtext
    */
   public $msg_html;
   /**
@@ -178,17 +178,13 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
         ) ,
         'msg_text' => array(
           'name' => 'msg_text',
-          'type' => CRM_Utils_Type::T_TEXT,
+          'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Msg Text') ,
-          'rows' => 10,
-          'cols' => 75,
         ) ,
         'msg_html' => array(
           'name' => 'msg_html',
-          'type' => CRM_Utils_Type::T_TEXT,
+          'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Msg Html') ,
-          'rows' => 10,
-          'cols' => 75,
         ) ,
         'is_active' => array(
           'name' => 'is_active',
