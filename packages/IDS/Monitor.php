@@ -224,11 +224,6 @@ class Monitor
             }
         }
 
-        // check for magic quotes and remove them if necessary
-        if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
-            $value = preg_replace('(\\\(["\'/]))im', '$1', $value);
-        }
-
         // if html monitoring is enabled for this field - then do it!
         if (is_array($this->html) && in_array($key, $this->html, true)) {
             list($key, $value) = $this->purifyValues($key, $value);
