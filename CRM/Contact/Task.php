@@ -267,9 +267,7 @@ class CRM_Contact_Task {
     }
 
     // CRM-6806
-    if (!CRM_Core_Permission::check('access deleted contacts') || !CRM_Core_Permission::check('delete contacts permanantly')) {
-      unset($titles[self::DELETE_PERMANENTLY]);
-    }
+    unset($titles[self::DELETE_PERMANENTLY]);
     $finalTitles = array();
     $others = array();
     foreach ($titles as $id => $value) {
