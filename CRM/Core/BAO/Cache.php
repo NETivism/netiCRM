@@ -58,7 +58,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
    * @param int    $componentID The optional component ID (so componenets can share the same name space)
    * @param date   $createdTime minimal create date time in int or mysql datetime format
    *
-   * @return object The data if present in cache, else null
+   * @return mixed The data if present in cache, else null
    * @static
    * @access public
    */
