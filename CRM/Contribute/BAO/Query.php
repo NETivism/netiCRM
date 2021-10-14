@@ -682,7 +682,7 @@ class CRM_Contribute_BAO_Query {
     $from = NULL;
     switch ($name) {
       case 'civicrm_contribution':
-        $from = " $side JOIN civicrm_contribution USE INDEX (ML_contribution) ON civicrm_contribution.contact_id = contact_a.id ";
+        $from = " $side JOIN civicrm_contribution ON civicrm_contribution.contact_id = contact_a.id ";
         break;
 
       case 'civicrm_contribution_recur':
@@ -690,12 +690,7 @@ class CRM_Contribute_BAO_Query {
         break;
 
       case 'civicrm_contribution_type':
-        if ($mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) {
-          $from = " INNER JOIN civicrm_contribution_type ON civicrm_contribution.contribution_type_id = civicrm_contribution_type.id ";
-        }
-        else {
-          $from = " $side JOIN civicrm_contribution_type ON civicrm_contribution.contribution_type_id = civicrm_contribution_type.id ";
-        }
+        $from = " $side JOIN civicrm_contribution_type ON civicrm_contribution.contribution_type_id = civicrm_contribution_type.id ";
         break;
 
       case 'civicrm_contribution_page':
