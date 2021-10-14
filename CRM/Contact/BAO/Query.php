@@ -1162,7 +1162,11 @@ class CRM_Contact_BAO_Query {
       }
 
       $select = "SELECT ";
-      if (isset($this->_distinctComponentClause)) {
+      if (isset($this->_groupByComponentClause)) {
+        // remove DISTINCT
+        $select .= preg_replace('/DISTINCT.*\(([^)]+)\)/i', '\1', $this->_distinctComponentClause).', ';
+      }
+      elseif (isset($this->_distinctComponentClause)) {
         $select .= "{$this->_distinctComponentClause}, ";
       }
       $select .= implode(', ', $this->_select);
@@ -4057,8 +4061,10 @@ civicrm_relationship.start_date > {$today}
 
             // always add contact_a.id to the ORDER clause
             // so the order is deterministic
-            if (strpos('contact_a.id', $order) === FALSE) {
-              $order .= ", contact_a.id";
+            if (!isset($this->_distinctComponentClause)) {
+              if (strpos('contact_a.id', $order) === FALSE) {
+                $order .= ", contact_a.id";
+              }
             }
           }
         }
