@@ -86,7 +86,6 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['civicrm_contribution_type'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
-      $query->_whereTables['civicrm_contribution_type'] = 1;
     }
 
     if (CRM_Utils_Array::value('contribution_note', $query->_returnProperties)) {
@@ -102,7 +101,6 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['contribution_status'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
-      $query->_whereTables['contribution_status'] = 1;
     }
 
     // get contribution_status label
@@ -112,7 +110,6 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['contribution_status'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
-      $query->_whereTables['contribution_status'] = 1;
     }
 
     // get payment instruments
@@ -122,7 +119,6 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['contribution_payment_instrument'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
-      $query->_whereTables['contribution_payment_instrument'] = 1;
     }
 
     if (CRM_Utils_Array::value('check_number', $query->_returnProperties)) {
@@ -137,25 +133,21 @@ class CRM_Contribute_BAO_Query {
       $query->_select['contribution_referrer_type'] = "civicrm_track.referrer_type as contribution_referrer_type";
       $query->_element['contribution_referrer_type'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_referrer_network', $query->_returnProperties)) {
       $query->_select['contribution_referrer_network'] = "civicrm_track.referrer_network as contribution_referrer_network";
       $query->_element['contribution_referrer_network'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_referrer_url', $query->_returnProperties)) {
       $query->_select['contribution_referrer_url'] = "civicrm_track.referrer_url as contribution_referrer_url";
       $query->_element['contribution_referrer_url'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_landing', $query->_returnProperties)) {
       $query->_select['contribution_landing'] = "civicrm_track.landing as contribution_landing";
       $query->_element['contribution_landing'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     
     /* utm fields */
@@ -163,31 +155,26 @@ class CRM_Contribute_BAO_Query {
       $query->_select['contribution_utm_source'] = "civicrm_track.referrer_type as contribution_utm_source";
       $query->_element['contribution_utm_source'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_utm_medium', $query->_returnProperties)) {
       $query->_select['contribution_utm_medium'] = "civicrm_track.referrer_type as contribution_utm_medium";
       $query->_element['contribution_utm_medium'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_utm_campaign', $query->_returnProperties)) {
       $query->_select['contribution_utm_campaign'] = "civicrm_track.referrer_type as contribution_utm_campaign";
       $query->_element['contribution_utm_campaign'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_utm_term', $query->_returnProperties)) {
       $query->_select['contribution_utm_term'] = "civicrm_track.referrer_type as contribution_utm_term";
       $query->_element['contribution_utm_term'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_utm_content', $query->_returnProperties)) {
       $query->_select['contribution_utm_content'] = "civicrm_track.referrer_type as contribution_utm_content";
       $query->_element['contribution_utm_content'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
   }
 
@@ -536,12 +523,12 @@ class CRM_Contribute_BAO_Query {
         if ($value == 1) {
           $query->_where[$grouping][] = "civicrm_contribution.contribution_recur_id IS NOT NULL";
           $query->_qill[$grouping][] = ts("Displaying Recurring Contributions");
-          $query->_tables['civicrm_contribution_recur'] = $query->_whereTables['civicrm_contribution_recur'] = 1;
         }
         elseif($value == 2){
           $query->_where[$grouping][] = "civicrm_contribution.contribution_recur_id IS NULL";
           $query->_qill[$grouping][] = ts("Displaying Non-Recurring Contributions");
         }
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
       case 'contribution_recur_id':
