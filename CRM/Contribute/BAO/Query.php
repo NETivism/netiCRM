@@ -669,7 +669,12 @@ class CRM_Contribute_BAO_Query {
     $from = NULL;
     switch ($name) {
       case 'civicrm_contribution':
-        $from = " $side JOIN civicrm_contribution ON civicrm_contribution.contact_id = contact_a.id ";
+        if ($mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) {
+          $from = " INNER JOIN civicrm_contribution ON civicrm_contribution.contact_id = contact_a.id ";
+        }
+        else {
+          $from = " $side JOIN civicrm_contribution ON civicrm_contribution.contact_id = contact_a.id ";
+        }
         break;
 
       case 'civicrm_contribution_recur':

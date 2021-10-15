@@ -158,7 +158,12 @@ class CRM_Mailing_BAO_Query {
 
     switch ($name) {
       case 'civicrm_mailing_recipients':
-        $from = " $side JOIN civicrm_mailing_recipients ON civicrm_mailing_recipients.contact_id = contact_a.id";
+        if ($mode & CRM_Contact_BAO_Query::MODE_MAILING) {
+          $from = " INNER JOIN civicrm_mailing_recipients ON civicrm_mailing_recipients.contact_id = contact_a.id";
+        }
+        else {
+          $from = " $side JOIN civicrm_mailing_recipients ON civicrm_mailing_recipients.contact_id = contact_a.id";
+        }
         break;
 
       case 'civicrm_mailing_event_queue':

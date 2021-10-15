@@ -506,7 +506,12 @@ class CRM_Event_BAO_Query {
     $from = NULL;
     switch ($name) {
       case 'civicrm_participant':
-        $from = " LEFT JOIN civicrm_participant ON civicrm_participant.contact_id = contact_a.id ";
+        if ($mode & CRM_Contact_BAO_Query::MODE_EVENT) {
+          $from = " INNER JOIN civicrm_participant ON civicrm_participant.contact_id = contact_a.id ";
+        }
+        else {
+          $from = " $side JOIN civicrm_participant ON civicrm_participant.contact_id = contact_a.id ";
+        }
         break;
 
       case 'civicrm_event':
