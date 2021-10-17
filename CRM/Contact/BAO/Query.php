@@ -1162,7 +1162,7 @@ class CRM_Contact_BAO_Query {
       }
 
       $select = "SELECT ";
-      if (isset($this->_groupByComponentClause)) {
+      if (isset($this->_groupByComponentClause) && !empty($this->_distinctComponentClause)) {
         // remove DISTINCT
         $select .= preg_replace('/DISTINCT.*\(([^)]+)\)/i', '\1', $this->_distinctComponentClause).', ';
       }
