@@ -207,6 +207,7 @@ class CRM_Contact_Form_Task_EmailCommon {
           // unset contact details for contacts that we won't be sending email. This is prevent extra computation
           // during token evaluation etc.
           unset($form->_contactDetails[$contactId]);
+          unset($form->_toContactEmails[$contactId]);
         }
         else {
           if (empty($form->_toContactEmails)) {
@@ -364,8 +365,8 @@ class CRM_Contact_Form_Task_EmailCommon {
     $tempEmails = array();
 
     foreach ($form->_contactIds as $contactId) {
-      if (is_numeric($contactId) && !empty($contactId)) {
-        $email = $form->_toContactEmails[$contactId];
+      $email = $form->_toContactEmails[$contactId];
+      if (is_numeric($contactId) && !empty($contactId) && !empty($email)) {
         // prevent duplicate emails if same email address is selected CRM-4067
         // we should allow same emails for different contacts
         $emailKey = "{$contactId}::{$email}";
