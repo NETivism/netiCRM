@@ -255,6 +255,17 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     }
   }
 
+  public function getEntity($fileID) {
+    $entityFileDAO = new CRM_Core_DAO_EntityFile();
+    $entityFileDAO->file_id = $fileID;
+
+    if ($entityFileDAO->find(TRUE)) {
+      $return = array();
+      CRM_Core_DAO::storeValues($entityFileDAO, $return);
+      return $return;
+    }
+  }
+
   /**
    * get all the files and associated object associated with this
    * combination
@@ -278,11 +289,16 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
       $result['mime_type'] = $dao->mime_type;
       $result['fileName'] = $dao->uri;
       $result['cleanName'] = CRM_Utils_File::cleanFileName($dao->uri);
-      $result['fullPath'] = $config->customFileUploadDir . DIRECTORY_SEPARATOR . $dao->uri;
+      $result['fullPath'] = rtrim($config->customFileUploadDir, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . $dao->uri;
       $result['url'] = CRM_Utils_System::url('civicrm/file', "reset=1&id={$dao->cfID}&eid={$entityID}&fcs=$fileHash");
+      $result['url_real'] = rtrim($config->customFileUploadURL, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . urlencode($dao->uri);
       $result['href'] = "<a href=\"{$result['url']}\" target=\"_blank\">{$result['cleanName']}</a>";
       if (strstr($dao->mime_type, 'image')) {
-        $result['img'] = '<a href="'.$result['url'].'" target="_blank"><img src="'.$result['url'].'" width="150"></a>';
+        $imginfo = getimagesize($result['fullPath']);
+        if (!empty($imginfo[0])) {
+          $result['img'] = '<img src="'.$result['url'].'" '.$imginfo[3].' >';
+          $result['img_real'] = '<img src="'.$result['url_real'].'" '.$imginfo[3].' >';
+        }
       }
       $entityFiles[$entityTable][$entityID][$dao->cfID] = $result;
     }
