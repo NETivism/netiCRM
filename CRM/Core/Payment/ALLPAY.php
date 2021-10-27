@@ -501,10 +501,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   
     // if recurring donations, add a few more items
     if ( !empty( $vars['is_recur']) ) {
-       if ($vars['contributionRecurID']) {
-         $query["crid"] = $vars['contributionRecurID'];
-         $query["cpid"] = $vars['contributionPageID'];
-       }
+      if ($vars['contributionRecurID']) {
+        $query["crid"] = $vars['contributionRecurID'];
+        $query["cpid"] = $vars['contributionPageID'];
+      }
     }
 
     $query = http_build_query($query);
@@ -583,8 +583,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @param array $days The array of days need to synchronize recurrings.
    * @return null
    */
-  function recurSync($days = array()) {
-    civicrm_initialize();
+  public static function recurSync($days = array()) {
     if(empty($days)){
       $days = array(
         date('j'),
@@ -625,7 +624,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
-   /**
+  /**
    * Chcek recurring of specific id from AllPay API.
    * Original civicrm_allpay_recur_check
    * 
@@ -633,8 +632,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @param object $order If you want to include object already wrote.
    * @return null
    */
-  static function recurCheck($rid, $order = NULL) {
-    civicrm_initialize();
+  public static function recurCheck($rid, $order = NULL) {
     $now = time();
     $query = "SELECT c.id as cid, c.contact_id, c.is_test, c.trxn_id, c.payment_processor_id as pid, c.contribution_status_id, r.id as rid, r.contribution_status_id as recurring_status FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.id = %1 ORDER BY c.id ASC";
     $result = CRM_Core_DAO::executeQuery($query, array(1 => array($rid, 'Integer')));
@@ -759,7 +757,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @param boolean $json Is return json format.
    * @return string|array|null
    */
-  static function postdata($url, $post_data, $json = TRUE){
+  public static function postdata($url, $post_data, $json = TRUE){
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
