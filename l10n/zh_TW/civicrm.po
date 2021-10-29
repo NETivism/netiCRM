@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-09-22 02:47+0000\n"
+"PO-Revision-Date: 2021-10-29 10:09+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48689,3 +48689,9 @@ msgstr "相關資料"
 
 msgid "PDF generation only allow 100 contacts per run."
 msgstr "產生 PDF 限制最多 100 位聯絡人。"
+
+msgid "Please enter the valid URL to display this image."
+msgstr "請輸入正確可呈現圖片的網址 URL"
+
+msgid "Please enter the valid URL to display a thumbnail of this image."
+msgstr "請輸入正確可呈現縮圖圖片的網址 URL"
