@@ -49,7 +49,6 @@
 {/if}
 <script type="text/javascript">
   {literal}
-  (function($){
     window.ContribPageParams = {
       backgroundImageUrl : "{/literal}{$backgroundImageUrl}{literal}",
       mobileBackgroundImageUrl : "{/literal}{$mobileBackgroundImageUrl}{literal}",
@@ -108,7 +107,6 @@
         "Please enter a valid amount." : "{/literal}{ts}Please enter a valid amount.{/ts}{literal}"
       }
     };
-  })(jQuery);
   {/literal}
 </script>
 {if $config->userFrameworkVersion > 7}
