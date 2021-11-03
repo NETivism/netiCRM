@@ -794,6 +794,9 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$acti
     if (!empty($where) ) {
       $query .= ' WHERE '.implode(' AND ', $where);
     }
+    if (!empty($order)) {
+      $query .= $order;
+    }
 
     $dao = CRM_Core_DAO::executeQuery($query);
 
