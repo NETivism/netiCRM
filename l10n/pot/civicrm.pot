@@ -48365,3 +48365,9 @@ msgstr ""
 
 msgid "PDF generation only allow 100 contacts per run."
 msgstr ""
+
+msgid "Please enter the valid URL to display this image."
+msgstr ""
+
+msgid "Please enter the valid URL to display a thumbnail of this image."
+msgstr ""

@@ -88,6 +88,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     }
     $this->_restore = (CRM_Utils_Request::retrieve('restore', 'Boolean', $this) or CRM_Utils_Array::value('task', $values) == CRM_Contact_Task::RESTORE);
     $this->assign('trash', !$this->_skipUndelete);
+    $this->assign('delete_permanatly', $this->_skipUndelete);
     $this->assign('restore', $this->_restore);
 
     if ($this->_restore) {
@@ -156,7 +157,15 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
    * @return void
    */
   function buildQuickForm() {
-    $label = $this->_restore ? ts('Restore Contact(s)') : ts('Delete Contact(s)');
+    if ($this->_restore) {
+      $label = ts('Restore Contact(s)');
+    }
+    elseif($this->_skipUndelete) {
+      $label = ts('Permanently Delete Contact');
+    }
+    else {
+      $label = ts('Delete Contact(s)');
+    }
 
     if ($this->_single) {
       // also fix the user context stack in case the user hits cancel

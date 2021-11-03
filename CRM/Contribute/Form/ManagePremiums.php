@@ -147,9 +147,9 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->addRule('imageOption', ts('Please select an option for the premium image.'), 'required');
 
     $this->addElement('text', 'imageUrl', ts('Image URL'));
-    $this->addRule('imageUrl', 'Please enter the valid URL to display this image.', 'url');
+    $this->addRule('imageUrl', ts('Please enter the valid URL to display this image.'), 'url');
     $this->addElement('text', 'thumbnailUrl', ts('Thumbnail URL'));
-    $this->addRule('thumbnailUrl', 'Please enter the valid URL to display a thumbnail of this image.', 'url');
+    $this->addRule('thumbnailUrl', ts('Please enter the valid URL to display a thumbnail of this image.'), 'url');
 
     $this->add('file', 'uploadFile', ts('Image File Name'), 'onChange="select_option();"');
     $this->addRule('uploadFile', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '1000x1000');
