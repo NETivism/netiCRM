@@ -148,7 +148,12 @@ class CRM_Core_Smarty extends Smarty {
 
     $this->register_function('crmURL', array('CRM_Utils_System', 'crmURL'));
 
-    $printerFriendly = CRM_Utils_System::makeURL('snippet', FALSE, FALSE) . '2';
+    if(CRM_Utils_System::isUserLoggedIn() || $this->isAssigned('browserPrint')) {
+      $printerFriendly = CRM_Utils_System::makeURL('snippet', FALSE, FALSE) . '2';
+    }
+    else {
+      $printerFriendly = 'javascript:window.print()';
+    }
     $this->assign('printerFriendly', $printerFriendly);
 
     // Add class to crm container
