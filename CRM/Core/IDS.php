@@ -138,6 +138,7 @@ class CRM_Core_IDS {
     '*' => [
       'civicrm/ajax/track' => ['data:json'],
       'civicrm/contribute/transact' => ['JSONData:json:_qf_ThankYou_display=1'],
+      'civicrm/event/register' => ['JSONData:json:_qf_ThankYou_display=1'],
       '*/civicrm/extern/rest.php' => ['json:json']
     ],
   ];
@@ -166,7 +167,7 @@ class CRM_Core_IDS {
     $path = implode('/', $args);
 
     // remove tracking parameters to prevent false positive
-    $trackingG = array('fbclid', 'gclid');
+    $trackingG = array('fbclid', 'gclid', 'wbraid');
     $trackingC = array( '__utma', '__utmb', '__utmc', '__utmv', '__utmz', '_gid', '_ga', '_gcl_au', '_fbp');
     foreach($trackingG as $g) {
       if (isset($_GET[$g])) {
