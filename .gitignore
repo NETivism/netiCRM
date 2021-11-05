@@ -7,3 +7,4 @@ vendor
 *.DS_Store
 .vscode
 tests/casperjs/picture
+**/node_modules
