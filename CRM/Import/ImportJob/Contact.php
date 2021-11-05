@@ -115,12 +115,12 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       //set respective mapper value to null.
       foreach (array_values($mapperPeroperties) as $perpertyVal)$$perpertyVal = NULL;
 
-      $header = array($this->_mapFields[$fldName]);
       $fldName = CRM_Utils_Array::value(0, $mapper[$key]);
       $selOne = CRM_Utils_Array::value(1, $mapper[$key]);
       $selTwo = CRM_Utils_Array::value(2, $mapper[$key]);
       $selThree = CRM_Utils_Array::value(3, $mapper[$key]);
       $this->_mapperKeys[$key] = $fldName;
+      $header = array($this->_mapFields[$fldName]);
 
       //need to differentiate non location elements.
       if ($selOne && is_numeric($selOne)) {

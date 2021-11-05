@@ -33,12 +33,12 @@ pipeline:
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js
       - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_profile.test.js
   build:
-    image: netivism/neticrm-ci:drone
+    image: netivism/neticrm-ci:drone-php5
     environment:
       - TZ=Asia/Taipei
       - RUNPORT=8080
       - DRUPAL_ROOT=/var/www/html
-      - CIVICRM_TEST_DSN=mysqli://root@127.0.0.1/neticrmci
+      - CIVICRM_TEST_DSN=mysqli://root@localhost/neticrmci
       - DRUPAL=7.80
       - NETICRM=develop
     commands:

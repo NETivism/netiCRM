@@ -612,7 +612,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     ) {
       $this->buildAmount($this->_separateMembershipPayment);
       if ($this->_values['is_monetary'] &&
-        $this->_values['is_recur']
+        $this->_values['is_recur']&&
+        !empty($this->_paymentProcessors) &&
+        is_array($this->_paymentProcessors)
       ) {
         foreach ($this->_paymentProcessors as $value) {
           if($value['is_recur']){

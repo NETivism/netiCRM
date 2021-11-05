@@ -1,6 +1,6 @@
 <?php
-require_once '../civicrm.config.php';
-CRM_Core_Config::singleton();
+require_once __DIR__.'/extern.inc';
+$config = CRM_Core_Config::singleton();
 
 // to keep backward compatibility for URLs generated
 // by CiviCRM < 1.7, we check for the q variable as well
@@ -13,12 +13,15 @@ else {
 $url_id = CRM_Utils_Array::value( 'u', $_GET );
 
 if ( ! $queue_id || ! $url_id ) {
+  http_response_code(400);
   exit;
 }
 if (!CRM_Utils_Rule::positiveInteger($queue_id)) {
+  http_response_code(400);
   exit;
 }
 if (!CRM_Utils_Rule::positiveInteger($url_id)) {
+  http_response_code(400);
   exit;
 }
 

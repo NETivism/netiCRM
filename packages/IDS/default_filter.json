@@ -224,7 +224,7 @@
       },
       {
         "id":"21",
-        "rule":"(?:,\\s*(?:alert|showmodaldialog|eval)\\s*,)|(?::\\s*eval\\s*[^\\s])|([^:\\s\\w,.\\\/?+-]\\s*)?(?<![a-z\\\/_@])(\\s*return\\s*)?(?:(?:document\\s*\\.)?(?:.+\\\/)?(?:alert|eval|msgbox|showmod(?:al|eless)dialog|showhelp|prompt|write(?:ln)?|confirm|dialog|open))\\s*(?:[^.a-z\\s\\-]|(?:\\s*[^\\s\\w,.@\\\/+-]))|(?:java[\\s\\\/]*\\.[\\s\\\/]*lang)|(?:\\w\\s*=\\s*new\\s+\\w+)|(?:&\\s*\\w+\\s*\\)[^,])|(?:\\+[\\W\\d]*new\\s+\\w+[\\W\\d]*\\+)|(?:document\\.\\w)",
+        "rule":"(?:,\\s*(?:alert|showmodaldialog|eval)\\s*,)|(?::\\s*eval\\s*[^\\s])|([^:\\s\\w,.\\\/?+-]\\s*)?(?<![a-z\\\/_@])(\\s*return\\s*)?(?:(?:document\\s*\\.)?(?:.+\\\/)?(?:alert|eval|msgbox|showmod(?:al|eless)dialog|showhelp|prompt|write(?:ln)?|dialog|open))\\s*(?:[^.a-z\\s\\-]|(?:\\s*[^\\s\\w,.@\\\/+-]))|(?:java[\\s\\\/]*\\.[\\s\\\/]*lang)|(?:\\w\\s*=\\s*new\\s+\\w+)|(?:&\\s*\\w+\\s*\\)[^,])|(?:\\+[\\W\\d]*new\\s+\\w+[\\W\\d]*\\+)|(?:document\\.\\w)",
         "description":"Detects very basic XSS probings",
         "tags":{
           "tag":[
@@ -529,7 +529,7 @@
             "lfi"
           ]
         },
-        "impact":"7"
+        "impact":"6"
       },
       {
         "id":"46",
@@ -705,7 +705,7 @@
       },
       {
         "id":"60",
-        "rule":"(?:(?:[;]+|(<[?%](?:php)?))?.*[^\\w](?:echo|print|print_r|var_dump|[fp]open))|(?:;\\s*rm\\s+-\\w+\\s+)|(?:;.*{.*\\$\\w+\\s*=)|(?:\\$\\w+\\s*\\[\\]\\s*=\\s*)",
+        "rule":"(?:(?:[;]+|(<[?%](?:php)?))?.*[^\\w](?:echo|print|print_r|var_dump|[fp]open)\\s*(['\"(@]))|(?:;\\s*rm\\s+-\\w+\\s+)|(?:;.*{.*\\$\\w+\\s*=)|(?:\\$\\w+\\s*\\[\\]\\s*=\\s*)",
         "description":"Detects code injection attempts 3\/3",
         "tags":{
           "tag":[

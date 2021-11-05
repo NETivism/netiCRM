@@ -464,38 +464,26 @@ class CRM_Utils_System {
       $key = $_SERVER['HTTP_X_CIVICRM_SITE_KEY'];
     }
     else {
-      $key = trim(CRM_Utils_Array::value('key', $_REQUEST));
+      $key = CRM_Utils_Request::retrieve('site_key', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
     }
 
-    $docAdd = "More info at:" . CRM_Utils_System::docURL2("Command-line Script Configuration", TRUE);
 
     if (!$key) {
-      return self::authenticateAbort("ERROR: You need to send a valid key to execute this file. " . $docAdd . "\n",
-        $abort
-      );
+      return self::authenticateAbort("ERROR: You need to send a valid key to execute this file.", $abort);
     }
 
     $siteKey = defined('CIVICRM_SITE_KEY') ? CIVICRM_SITE_KEY : NULL;
 
-    if (!$siteKey ||
-      empty($siteKey)
-    ) {
-      return self::authenticateAbort("ERROR: You need to set a valid site key in civicrm.settings.php. " . $docAdd . "\n",
-        $abort
-      );
+    if (!$siteKey || empty($siteKey)) {
+      return self::authenticateAbort("ERROR: You need to set a valid site key in civicrm.settings.php.", $abort);
     }
 
     if (strlen($siteKey) < 8) {
-      return self::authenticateAbort("ERROR: Site key needs to be greater than 7 characters in civicrm.settings.php. " . $docAdd . "\n",
-        $abort
-      );
+      return self::authenticateAbort("ERROR: Site key needs to be greater than 7 characters in civicrm.settings.php.", $abort);
     }
 
-    require_once 'CRM/Core/Key.php'; // php 5.5 hash_equals here
     if (!hash_equals($key, $siteKey)) {
-      return self::authenticateAbort("ERROR: Invalid key value sent. " . $docAdd . "\n",
-        $abort
-      );
+      return self::authenticateAbort("ERROR: Invalid key value sent.", $abort);
     }
 
     return TRUE;

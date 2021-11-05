@@ -115,7 +115,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         }
         if (!empty($jsonMessage)) {
           $htmlMessage = '';
-          $defaults['body_json'] = $jsonMessage;
         }
         else {
           $htmlMessage = $messageTemplate->msg_html;
@@ -136,6 +135,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
       if (isset($defaults['body_html'])) {
         $htmlMessage = $defaults['body_html'];
+        $this->set('htmlFile', $defaults['body_html']);
+        $this->set('skipHtmlFile', TRUE);
+      }
+
+      if (isset($defaults['body_json'])) {
+        $jsonMessage = $defaults['body_json'];
         $this->set('htmlFile', $defaults['body_html']);
         $this->set('skipHtmlFile', TRUE);
       }
@@ -168,9 +173,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     //fix for CRM-2873
     if (!$reuseMailing) {
       $textFilePath = $this->get('textFilePath');
-      if ($textFilePath &&
-        file_exists($textFilePath)
-      ) {
+      if ($textFilePath && file_exists($textFilePath)) {
         $defaults['text_message'] = file_get_contents($textFilePath);
         if (strlen($defaults['text_message']) > 0) {
           $this->set('skipTextFile', TRUE);
@@ -178,9 +181,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
 
       $htmlFilePath = $this->get('htmlFilePath');
-      if ($htmlFilePath &&
-        file_exists($htmlFilePath)
-      ) {
+      if ($htmlFilePath && file_exists($htmlFilePath)) {
         $defaults['html_message'] = file_get_contents($htmlFilePath);
         if (strlen($defaults['html_message']) > 0) {
           $htmlMessage = $defaults['html_message'];
