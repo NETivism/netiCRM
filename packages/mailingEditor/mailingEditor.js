@@ -3037,8 +3037,10 @@
    */
 
   // IMCE客製公用函式，用來介接圖片上傳功能
+  let imcePath = "/imce?app=nme|sendto@nmeImce.afterInsert"; // drupal 7 imce
+  imcePath += "&sendto=nmeImce.afterInsert"; // drupal 9 imce
   window.nmeImce = {
-    path: decodeURI("/imce?app=nme|sendto@nmeImce.afterInsert"),
+    path: decodeURI(imcePath),
     targetID: "",
     targetSection: "",
     afterInsert: function(file, imceWindow) {
@@ -3047,7 +3049,7 @@
           parentID = window.nmeImce.targetParentID,
           parentType = window.nmeImce.targetParentType,
           index = window.nmeImce.targetIndex,
-          fileURL = file.url,
+          fileURL = typeof file.url === 'undefined' ? file.getUrl() : file.url,
           fileName = file.name,
           fileWidth = file.width,
           fileHeight = file.height;
