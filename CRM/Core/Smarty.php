@@ -150,6 +150,7 @@ class CRM_Core_Smarty extends Smarty {
 
     if(CRM_Utils_System::isUserLoggedIn() || $this->isAssigned('browserPrint')) {
       $printerFriendly = CRM_Utils_System::makeURL('snippet', FALSE, FALSE) . '2';
+      $printerFriendly = str_replace(array('#60;', '#62;', '#gt;', '&lt;', '<', '>'), '', $printerFriendly);
     }
     else {
       $printerFriendly = 'javascript:window.print()';
