@@ -355,6 +355,14 @@ class CRM_Utils_System_Drupal {
       drupal_add_html_head($element, $head_key);
       return;
     }
+    elseif ($version >= 8) {
+      global $civicrm_head;
+      $civicrm_head[] = [
+        '#tag' => 'meta',
+        '#attributes' => $head['attributes'],
+        'name' => $head['attributes']['property'] ? $head['attributes']['property'] : $head['attributes']['name'],
+      ];
+    }
   }
 
   /**
