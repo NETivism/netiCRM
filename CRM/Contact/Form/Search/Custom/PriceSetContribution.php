@@ -249,7 +249,9 @@ WHERE p.extends LIKE '%2%'
             if (CRM_Utils_Array::value('html_type', $value) != 'Text') {
               $columnHeader .= ' - ' . $oValue['label'];
             }
-
+            if (isset($this->_columns[$columnHeader])) {
+              $columnHeader .= ' - '.$oValue['id'];
+            }
             $this->_columns[$columnHeader] = "price_field_{$oValue['id']}";
           }
         }

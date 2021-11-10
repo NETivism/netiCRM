@@ -485,27 +485,24 @@ abstract class CRM_Import_Parser {
       $fileName = str_replace('civicrm_import_job_', 'import_', $this->_tableName);
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Reason'),
-          ),
+        $headers = array_merge(
+          array(ts('Line Number'), ts('Reason')),
           $customHeaders
         );
         $this->_errorFileName = self::saveFileName(self::ERROR, $fileName);
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Reason'),
-          ),
+        $headers = array_merge(
+          array(ts('Line Number'), ts('Reason')),
           $customHeaders
         );
         $this->_conflictFileName = self::saveFileName(self::CONFLICT, $fileName);
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
-        $headers = array_merge(array(ts('Line Number'),
-            ts('View Contact URL'),
-          ),
+        $headers = array_merge(
+          array(ts('Line Number'), ts('View Contact URL')),
           $customHeaders
         );
 
@@ -513,9 +510,8 @@ abstract class CRM_Import_Parser {
         self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
       if ($this->_unMatchCount) {
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Reason'),
-          ),
+        $headers = array_merge(
+          array(ts('Line Number'), ts('Reason')),
           $customHeaders
         );
 
@@ -523,9 +519,8 @@ abstract class CRM_Import_Parser {
         self::exportCSV($this->_misMatchFileName, $headers, $this->_unMatch);
       }
       if ($this->_unparsedAddressCount) {
-        $headers = array_merge(array(ts('Line Number'),
-            ts('Contact Edit URL'),
-          ),
+        $headers = array_merge(
+          array(ts('Line Number'), ts('Contact Edit URL')),
           $customHeaders
         );
         $this->_unparsedAddressFileName = self::saveFileName(self::UNPARSED_ADDRESS_WARNING, $fileName);
