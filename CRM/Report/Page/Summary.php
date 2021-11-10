@@ -74,8 +74,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
         'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE,$params, $filter),
         'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,$params, $filter),
         );
-      $allData['participant_after_mailing'] = CRM_Report_BAO_Summary::getPartAfterMailData();
-      $allData['contribute_after_mailing'] = CRM_Report_BAO_Summary::getConAfterMailData();
+      // refs #33046, performance issue
+      // $allData['participant_after_mailing'] = CRM_Report_BAO_Summary::getPartAfterMailData();
+      // $allData['contribute_after_mailing'] = CRM_Report_BAO_Summary::getConAfterMailData();
       $allData['time'] = time();
       CRM_Core_BAO_Cache::setItem($allData, 'Report Page Summary', $path.'_reportPageSummary', $components['CiviReport']->componentID);
       if ($_GET['update']) {
@@ -88,8 +89,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $participant = &$allData['participant'];
     $mailing = &$allData['mailing'];
     $statistic_by_condition = &$allData['statistic_by_condition'];
-    $participant_after_mailing = $allData['participant_after_mailing'];
-    $contribute_after_mailing = $allData['contribute_after_mailing'];
+    // refs #33046, performance issue
+    // $participant_after_mailing = $allData['participant_after_mailing'];
+    // $contribute_after_mailing = $allData['contribute_after_mailing'];
     $time = $allData['time'];
 
     $template = CRM_Core_Smarty::singleton();
@@ -355,8 +357,11 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
     $participant_to_contributor = CRM_Report_BAO_Summary::getPartToConData();
     $contributor_to_participant = CRM_Report_BAO_Summary::getConToPartData();
+    // refs #33126, performance issue
+    /*
     $participant_after_mailing = CRM_Report_BAO_Summary::getPartAfterMailData();
     $contribute_after_mailing = CRM_Report_BAO_Summary::getConAfterMailData();
+    */
 
     $return_array['Count and people by participants online-offline'] = $this->showhidden(
       'part_online_offline',
@@ -403,17 +408,21 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $contribute['times']['label']
     );
 
+    /*
     $return_array['Count and people from participant to contributor.'] = $this->showhidden(
       'participant_to_contributor',
       self::dataTransferShowHidden($participant_to_contributor),
       array_keys($participant_to_contributor)
     );
+    */
 
+    /*
     $return_array['Count and people from contributor to participant.'] = $this->showhidden(
       'contributor_to_participant',
       self::dataTransferShowHidden($contributor_to_participant),
       array_keys($contributor_to_participant)
     );
+    */
 
     $this->assign('showhiddenChart', $return_array);
   }
