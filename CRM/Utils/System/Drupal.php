@@ -230,6 +230,23 @@ class CRM_Utils_System_Drupal {
     return 0;
   }
 
+  public static function getBestUFName($ufId) {
+    $version = CRM_Core_Config::$_userSystem->version;
+    if (!is_numeric($ufId)) {
+      return;
+    }
+    if($version < 8){
+      $user = user_load($ufId);
+      return $user->name;
+    }
+    else {
+      $user = \Drupal\user\Entity\User::load($ufId);
+      if ($user) {
+        return $user->get('name')->value;
+      }
+    }
+  }
+
   /**
    * sets the title of the page
    *
@@ -818,7 +835,14 @@ class CRM_Utils_System_Drupal {
   }
 
   static function permissionDenied() {
-    drupal_access_denied();
+    $version = CRM_Core_Config::$_userSystem->version;
+    if ($version >= 8) {
+      throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+    }
+    else {
+      drupal_not_found();
+    }
+    return;
   }
 
   static function logout() {
