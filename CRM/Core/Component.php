@@ -135,7 +135,7 @@ class CRM_Core_Component {
             $template->assign('formTpl', $comp->info[$name]['formTpl']);
           }
           if (CRM_Utils_Array::value('css', $comp->info[$name])) {
-            $styleSheets = array(
+            $styleSheet = array(
               'tag' => 'style',
               'attributes' => array(
                 'type' => 'text/css',

@@ -203,8 +203,18 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function addHTMLHead($header) {
-    \Drupal::service('civicrm.page_state')->addHtmlHeader($header);
+  public function addHTMLHead($head) {
+    if ($head['type'] == 'markup') {
+      $civicrm_head = $head['markup'];
+      \Drupal::service('civicrm.page_state')->addHtmlHeaderMarkup($civicrm_head);
+    }
+    else {
+      // All key prepend '#'
+      foreach ($head as $key => $value) {
+        $civicrm_head['#'.$key] = $value;
+      }
+      \Drupal::service('civicrm.page_state')->addHtmlHeaderMeta($civicrm_head);
+    }
   }
 
   /**

@@ -304,7 +304,19 @@ class CRM_Utils_System_Drupal {
   /**
    * Append a string to the head of the html file
    *
-   * @param string $head the new string to be appended
+   * @param array $head The head format array likes:
+   * [
+   *   'type' => 'markup',
+   *   'markup' => '<meta name="robots" content="noindex" />',
+   * ]
+   * or
+   * [
+   *   'tag' => 'style',
+   *   'attribute' => [
+   *     'type' => 'text/css',
+   *   ],
+   *   'value => '@import url(xxx.css)',
+   * ]
    *
    * @return void
    * @access public
@@ -356,12 +368,17 @@ class CRM_Utils_System_Drupal {
       return;
     }
     elseif ($version >= 8) {
-      global $civicrm_head;
-      $civicrm_head[] = [
-        '#tag' => 'meta',
-        '#attributes' => $head['attributes'],
-        'name' => $head['attributes']['property'] ? $head['attributes']['property'] : $head['attributes']['name'],
-      ];
+      if ($head['type'] == 'markup') {
+        $civicrm_head = $head['markup'];
+        \Drupal::service('civicrm.page_state')->addHtmlHeaderMarkup($civicrm_head);
+      }
+      else {
+        // All key prepend '#'
+        foreach ($head as $key => $value) {
+          $civicrm_head['#'.$key] = $value;
+        }
+        \Drupal::service('civicrm.page_state')->addHtmlHeaderMeta($civicrm_head);
+      }
     }
   }
 
