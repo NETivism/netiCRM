@@ -116,13 +116,16 @@ class CRM_Core_Session {
     // hopefully any bootstrapping code will actually load the session from the CMS
     if (!isset($this->_session)) {
       // CRM-9483
-      if (PHP_SAPI !== 'cli') {
+      if (php_sapi_name() !== 'cli') {
+        CRM_Core_Config::singleton()->userSystem->sessionStart();
+        $this->_session =& $_SESSION;
         if ($isRead) {
           return;
         }
-        CRM_Core_Config::singleton()->userSystem->sessionStart();
       }
-      $this->_session =& $_SESSION;
+      else {
+        $this->_session =& $_SESSION;
+      }
     }
 
     if ($isRead) {
