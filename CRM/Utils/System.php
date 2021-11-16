@@ -1173,13 +1173,6 @@ class CRM_Utils_System {
 
   static function civiBeforeInvoke(&$args = NULL) {
     $config = CRM_Core_Config::singleton();
-    if ($config->debug) {
-      error_reporting(E_ALL & ~E_NOTICE);
-    }
-    else {
-      error_reporting(0);
-    }
-
 
     // qfPrivateKey for drupal 9
     if (!self::isUserLoggedIn()) {
@@ -1568,6 +1561,17 @@ class CRM_Utils_System {
       }
     }
     return TRUE;
+  }
+
+  public static function errorReporting($debug = 0) {
+    if ($debug) {
+      // all except notice
+      error_reporting(E_ALL & ~E_NOTICE);
+    }
+    else {
+      // all except deprecated, strict, warning
+      error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING & ~E_NOTICE);
+    }
   }
 }
 

@@ -247,6 +247,13 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       // set the error callback
       CRM_Core_Error::setCallback();
 
+      if (self::$_singleton->debug) {
+        CRM_Utils_System::errorReporting(1);
+      }
+      else {
+        CRM_Utils_System::errorReporting(0);
+      }
+
       // call the hook so other modules can add to the config
       // again doing this at the very very end
       require_once 'CRM/Utils/Hook.php';
