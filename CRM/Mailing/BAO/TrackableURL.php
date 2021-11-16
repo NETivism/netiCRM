@@ -64,7 +64,7 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
 
     // hack for basic CRM-1014 and CRM-1151 and CRM-3492 compliance:
     // let's not replace possible image URLs and CiviMail ones
-    if (preg_match('/\.(png|jpg|jpeg|gif|css)[\'"]?$/i', $url)
+    if (preg_match('/\.(png|jpg|jpeg|gif|css|woff|woff2|eot|ttf)[\'"]?$/i', $url)
       or substr_count($url, 'civicrm/extern/')
       or substr_count($url, 'civicrm/mailing/')
     ) {
@@ -77,8 +77,9 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
       $config = CRM_Core_Config::singleton();
 
       $tracker = new CRM_Mailing_BAO_TrackableURL();
-      if (preg_match('/^href/i', $url)) {
-        $url = preg_replace('/^href[ ]*=[ ]*[\'"](.*?)[\'"]$/i', '$1', $url);
+      $atag = array();
+      if (preg_match('/^(<a\s+[^>]*)href/i', $url, $atag)) {
+        $url = preg_replace('/<a\s+[^>]*href[ ]*=[ ]*[\'"](.*?)[\'"]$/i', '$1', $url);
         $hrefExists = TRUE;
       }
 
@@ -98,7 +99,7 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
     $returnUrl = "{$urlCache[$url]}&qid={$queue_id}";
 
     if ($hrefExists) {
-      $returnUrl = "href='{$returnUrl}'";
+      $returnUrl = $atag[1]."href='{$returnUrl}'";
     }
 
     return $returnUrl;
