@@ -62,7 +62,7 @@ class CRM_Utils_System_Drupal {
       if (!class_exists('DRUPAL')) {
         $this->versionalClass->loadBootStrap();
       }
-      $this->loaded = TRUE;
+      self::$loaded = TRUE;
       $this->version = (float )substr(DRUPAL::VERSION, 0, strrpos(DRUPAL::VERSION, '.'));
     }
     // loading civicrm *after* drupal
@@ -86,7 +86,7 @@ class CRM_Utils_System_Drupal {
     }
 
     // bootstrap drupal when drupal not ready
-    if (!$this->loaded) {
+    if (!self::$loaded) {
       $v = floor($this->version);
       $v = empty($v) ? '' : $v;
       $class = 'CRM_Utils_System_Drupal'.$v;
@@ -102,7 +102,7 @@ class CRM_Utils_System_Drupal {
           $this->versionalClass->loadBootStrap();
         }
       }
-      $this->loaded = TRUE;
+      self::$loaded = TRUE;
     }
 
     // #27780, correct SameSite for chrome 80
@@ -116,10 +116,10 @@ class CRM_Utils_System_Drupal {
       }
 
       if (PHP_VERSION_ID < 70300) {
-        setcookie(session_name(), $this->sessionID(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
+        setcookie(session_name(), self::sessionID(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
       }
       else {
-        setcookie(session_name(), $this->sessionID(), array(
+        setcookie(session_name(), self::sessionID(), array(
           'expires' => $lifetime,
           'path' => '/',
           'domain' => $sparams['domain'],
