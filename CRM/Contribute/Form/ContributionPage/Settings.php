@@ -163,7 +163,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     // check if table field exists
     $checkQuery = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'civicrm_contribution_page' AND column_name = 'is_internal'";
     $exists = CRM_Core_DAO::singleValueQuery($checkQuery);
-    if ($exists) {
+    if ($exists && defined('CIVCIRM_CONTRIBUTION_PAGE_INTERNAL') && CIVCIRM_CONTRIBUTION_PAGE_INTERNAL > 0) {
       $this->set('internalExists', 1);
       $this->addElement('checkbox', 'is_internal', ts('Is this Online Contribution Page are internal use only?'));
     }
