@@ -177,6 +177,23 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * Current Path without language prefix
+   *
+   * @return string
+   */
+  public static function currentPath() {
+    $version = CRM_Core_Config::$_userSystem->version;
+    if ($version >= 8) {
+      $path = \Drupal::service('path.current')->getPath();
+      return ltrim($path, '/');
+    }
+    else {
+      $config = CRM_Core_Config::singleton();
+      return trim(CRM_Utils_Array::value($config->userFrameworkURLVar, $_GET), '/');
+    }
+  }
+
+  /**
    * Get best UF IF from drupal system
    * 
    * @return int

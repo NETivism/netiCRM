@@ -195,14 +195,12 @@ class CRM_Utils_System {
   }
 
   /**
-   * What menu path are we currently on. Called for the primary tpl
+   * Current Path without language prefix and leading slash
    *
-   * @return string the current menu path
-   * @access public
+   * @return string
    */
   static function currentPath() {
-    $config = CRM_Core_Config::singleton();
-    return trim(CRM_Utils_Array::value($config->userFrameworkURLVar, $_GET), '/');
+    return CRM_Core_Config::$_userSystem->currentPath();
   }
 
   /**
