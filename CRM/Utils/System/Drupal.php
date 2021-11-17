@@ -42,7 +42,8 @@ class CRM_Utils_System_Drupal {
   public $is_drupal;
   public $version;
   public $versionalClass;
-  private static $loaded = FALSE;
+  private static $_version;
+  private static $_loaded = FALSE;
   public static $jsLibraries;
 
   /**
@@ -62,8 +63,9 @@ class CRM_Utils_System_Drupal {
       if (!class_exists('DRUPAL')) {
         $this->versionalClass->loadBootStrap();
       }
-      self::$loaded = TRUE;
       $this->version = (float )substr(DRUPAL::VERSION, 0, strrpos(DRUPAL::VERSION, '.'));
+      self::$_loaded = TRUE;
+      self::$_version = $this->version;
     }
     // loading civicrm *after* drupal
     // this will quick when drupal 7
@@ -86,7 +88,7 @@ class CRM_Utils_System_Drupal {
     }
 
     // bootstrap drupal when drupal not ready
-    if (!self::$loaded) {
+    if (!self::$_loaded) {
       $v = floor($this->version);
       $v = empty($v) ? '' : $v;
       $class = 'CRM_Utils_System_Drupal'.$v;
@@ -102,7 +104,8 @@ class CRM_Utils_System_Drupal {
           $this->versionalClass->loadBootStrap();
         }
       }
-      self::$loaded = TRUE;
+      self::$_loaded = TRUE;
+      self::$_version = $this->version;
     }
 
     // #27780, correct SameSite for chrome 80
@@ -155,7 +158,7 @@ class CRM_Utils_System_Drupal {
    * @return void
    */
   public static function redirect($url = NULL) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if (!$url) {
       $url = self::url('');
     }
@@ -199,7 +202,7 @@ class CRM_Utils_System_Drupal {
    * @return int
    */
   public static function getBestUFID($user = NULL) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if($version < 8){
       if (is_object($user)) {
         return is_numeric($user->uid) ? $user->uid : 0;
@@ -224,7 +227,7 @@ class CRM_Utils_System_Drupal {
   }
 
   public static function getBestUFUniqueIdentifier($user) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if($version < 8){
       if (is_object($user)) {
         return !empty($user->mail) ? $user->mail: 0;
@@ -248,7 +251,7 @@ class CRM_Utils_System_Drupal {
   }
 
   public static function getBestUFName($ufId) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if (!is_numeric($ufId)) {
       return;
     }
@@ -291,7 +294,7 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function appendBreadCrumb($breadcrumbs) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version < 8) {
       $bc = drupal_get_breadcrumb();
 
@@ -326,7 +329,7 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function resetBreadCrumb() {
-    if (CRM_Core_Config::$_userSystem->version < 8) {
+    if (self::$_version < 8) {
       $bc = array();
       drupal_set_breadcrumb($bc);
     }
@@ -363,7 +366,7 @@ class CRM_Utils_System_Drupal {
       CRM_Core_Error::debug($message);
       return;
     }
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if($version >= 6 && $version < 7){
       if ($head['type'] == 'markup' && $head['markup']) {
         drupal_set_html_head($head['markup']);
@@ -429,7 +432,7 @@ class CRM_Utils_System_Drupal {
   static function addJs($params, $text) {
     global $civicrm_root;
     $crmRelativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $civicrm_root);
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     $data = NULL;
 
     if ($version >= 6 && $version < 7) {
@@ -583,7 +586,7 @@ class CRM_Utils_System_Drupal {
    * @static  */
   static function variable_get($name, $default) {
     // drupal 6 and 7
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version < 8 ) {
       return variable_get($name, $default);
     }
@@ -600,7 +603,7 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function siteName() {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       return \Drupal::config('system.site')->get('name');
     }
@@ -617,7 +620,7 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function allowedUserRegisteration() {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       $allowedRegister = \Drupal::config('user.settings')->get('register');
       if ($allowedRegister == 'admin_only') {
@@ -640,7 +643,7 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function userEmailVerification() {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       return \Drupal::config('user.settings')->get('verify_email');
     }
@@ -657,7 +660,7 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function moduleExists($module) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       return \Drupal::moduleHandler()->moduleExists($module);
     }
@@ -824,7 +827,7 @@ class CRM_Utils_System_Drupal {
   }
 
   static function permissionCheck($permission, $uid = NULL) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version < 8) {
       if ($uid) {
         if ($version < 7) {
@@ -852,7 +855,7 @@ class CRM_Utils_System_Drupal {
   }
 
   static function permissionDenied() {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
     }
@@ -868,7 +871,7 @@ class CRM_Utils_System_Drupal {
   }
 
   static function updateCategories() {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
 
     // CRM-3600
     if ($version < 8) {
@@ -886,7 +889,7 @@ class CRM_Utils_System_Drupal {
    * @return string  with the locale or null for none
    */
   static function getUFLocale() {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       $languageCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     }
@@ -1004,7 +1007,7 @@ class CRM_Utils_System_Drupal {
    * @return boolean true/false.
    */
   public static function isUserLoggedIn() {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       return \Drupal::currentUser()->isAuthenticated();
     }
@@ -1029,7 +1032,7 @@ class CRM_Utils_System_Drupal {
   }
 
   function notFound(){
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
     }
@@ -1040,7 +1043,7 @@ class CRM_Utils_System_Drupal {
   }
 
   function cmsDir($type) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     switch($type) {
       case 'temp':
       case 'tmp':
@@ -1077,7 +1080,7 @@ class CRM_Utils_System_Drupal {
   function confPath() {
     global $civicrm_conf_path;
     if (empty($civicrm_conf_path)) {
-      $version = CRM_Core_Config::$_userSystem->version;
+      $version = self::$_version;
       if ($version >= 8) {
         $civicrm_conf_path = \Drupal::service('kernel')->getSitePath();
       }
@@ -1103,10 +1106,10 @@ class CRM_Utils_System_Drupal {
   }
 
   function moduleImplements($hook) {
-    if (CRM_Core_Config::$_userSystem->version < 8) {
+    if (self::$_version < 8) {
       return module_implements($hook);
     }
-    elseif(CRM_Core_Config::$_userSystem->version >= 8) {
+    elseif(self::$_version >= 8) {
       return \Drupal::moduleHandler()->getImplementations($hook);
     }
     elseif (function_exists('module_list')) {
@@ -1123,7 +1126,7 @@ class CRM_Utils_System_Drupal {
   }
 
   function sessionStart(){
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     $ufId = self::getBestUFID();
     if ($version < 7) {
       if (session_status() === PHP_SESSION_NONE) {
@@ -1166,7 +1169,7 @@ class CRM_Utils_System_Drupal {
     // refs #31356, because self::sessionStart() force initialize session for drupal
     // we should get session id by session manager service here
     // not sure why session_id() doesn't return correct id
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     if ($version >= 8) {
       $session = \Drupal::service('session_manager');
       $sessionID = $session->getId();
@@ -1186,7 +1189,7 @@ class CRM_Utils_System_Drupal {
   }
 
   function tempstoreSet($name, $value) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     // refs #31356, this is drupal 8 / 9 specific code for set tempstore
     if ($version >= 8) {
       $tempstore = \Drupal::service('tempstore.private')->get('civicrm');
@@ -1196,7 +1199,7 @@ class CRM_Utils_System_Drupal {
   }
   
   function tempstoreGet($name) {
-    $version = CRM_Core_Config::$_userSystem->version;
+    $version = self::$_version;
     // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore
     if ($version >= 8) {
       $tempstore = \Drupal::service('tempstore.private')->get('civicrm');
