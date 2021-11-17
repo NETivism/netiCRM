@@ -664,13 +664,13 @@ ORDER BY   i.contact_id, i.email_id
 
     $patterns = array();
 
-    $protos = '(https?|ftp)';
+    $protos = '(https?)';
     $letters = '\w';
     $gunk = '\{\}/#~:.?+=&;%@!\,\-';
     $punc = '.:?\-';
     $any = "{$letters}{$gunk}{$punc}";
     if ($onlyHrefs) {
-      $pattern = "\\bhref[ ]*=[ ]*([\"'])?(($protos:[$any]+(?=[$punc]*[^$any]|$)))([\"'])?";
+      $pattern = "<a\s+[^>]*\\bhref[ ]*=[ ]*([\"'])?(($protos:[$any]+(?=[$punc]*[^$any]|$)))([\"'])?";
     }
     else {
       $pattern = "\\b($protos:[$any]+(?=[$punc]*[^$any]|$))";
@@ -713,7 +713,7 @@ ORDER BY   i.contact_id, i.email_id
 
     $funcStruct = array('type' => NULL, 'token' => $token);
     $matches = array();
-    if ((preg_match('/^href/i', $token) || preg_match('/^http/i', $token))) {
+    if ((preg_match('/^href/i', $token) || preg_match('/^http/i', $token) || preg_match('/^<a[^>]+\bhref/i', $token))) {
       // it is a url so we need to check to see if there are any tokens embedded
       // if so then call this function again to get the token dataFunc
       // and assign the type 'embedded'  so that the data retrieving function
@@ -1498,10 +1498,10 @@ AND civicrm_contact.is_opt_out =0";
       }
       // add trailing quote since we've gobbled it up in a previous regex
       // function getPatterns, line 431
-      if (preg_match('/^href[ ]*=[ ]*\'/', $url)) {
+      if (preg_match('/href[ ]*=[ ]*\'/', $url)) {
         $url .= "'";
       }
-      elseif (preg_match('/^href[ ]*=[ ]*\"/', $url)) {
+      elseif (preg_match('/href[ ]*=[ ]*\"/', $url)) {
         $url .= '"';
       }
       $data = $url;

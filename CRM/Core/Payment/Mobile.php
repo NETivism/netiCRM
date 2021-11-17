@@ -204,6 +204,9 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       if(!empty($params['eventID'])){
         $payment_params['eid'] = $params['eventID'];
       }
+      if (!empty($params['membershipID'])) {
+        $payment_params['mid'] = $params['membershipID'];
+      }
       $smarty->assign('params', $payment_params );
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       print($page);
@@ -311,6 +314,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $ppProvider = CRM_Utils_Request::retrieve('provider', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $participant_id = CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
     $event_id = CRM_Utils_Request::retrieve('eid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $membership_id = CRM_Utils_Request::retrieve('mid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
     $post = $_POST;
 
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -351,7 +355,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         $input['component'] = 'event';
         $ids['participant'] = $participant_id;
         $ids['event'] = $event_id;
-      }else{
+      }
+      else {
+        if (!empty($membership_id)) {
+          $ids['membership'] = $membership_id;
+        }
         $input['component'] = 'contribute';
       }
       $ids['contribution'] = $contribution->id;

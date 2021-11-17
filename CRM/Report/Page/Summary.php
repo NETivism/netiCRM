@@ -74,7 +74,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
         'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE,$params, $filter),
         'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,$params, $filter),
         );
-      // refs #33046, performance issue
+      // refs #32830, performance issue
       // $allData['participant_after_mailing'] = CRM_Report_BAO_Summary::getPartAfterMailData();
       // $allData['contribute_after_mailing'] = CRM_Report_BAO_Summary::getConAfterMailData();
       $allData['time'] = time();
@@ -89,7 +89,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $participant = &$allData['participant'];
     $mailing = &$allData['mailing'];
     $statistic_by_condition = &$allData['statistic_by_condition'];
-    // refs #33046, performance issue
+    // refs #32830, performance issue
     // $participant_after_mailing = $allData['participant_after_mailing'];
     // $contribute_after_mailing = $allData['contribute_after_mailing'];
     $time = $allData['time'];
@@ -357,7 +357,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
     $participant_to_contributor = CRM_Report_BAO_Summary::getPartToConData();
     $contributor_to_participant = CRM_Report_BAO_Summary::getConToPartData();
-    // refs #33126, performance issue
+    // refs #32830, performance issue
     /*
     $participant_after_mailing = CRM_Report_BAO_Summary::getPartAfterMailData();
     $contribute_after_mailing = CRM_Report_BAO_Summary::getConAfterMailData();
