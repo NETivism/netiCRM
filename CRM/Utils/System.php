@@ -1522,7 +1522,7 @@ class CRM_Utils_System {
    * 
    * from https://www.chromium.org/updates/same-site/incompatible-clients
    */
-  function sameSiteCheck() {
+  public static function sameSiteCheck() {
     $useragent = $_SERVER['HTTP_USER_AGENT'];
     $isIOS = preg_match('/(iP.+; CPU .*OS (\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $ios);
     if ($isIOS && $ios[2] == '12') {
