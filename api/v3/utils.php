@@ -317,14 +317,21 @@ function _civicrm_api3_get_DAO($name) {
  * eg. "civicrm_contact_create" or "Contact" will return "CRM_Contact_BAO_Contact"
  */
 function _civicrm_api3_get_BAO($name) {
+  global $civicrm_root;
   $dao = _civicrm_api3_get_DAO($name);
   if (!$dao) {
     return NULL;
   }
   $bao = str_replace("DAO", "BAO", $dao);
   $file = strtr($bao, '_', '/') . '.php';
+  $civicrm_path = rtrim($civicrm_root, '/') .  DIRECTORY_SEPARATOR;
   // Check if this entity actually has a BAO. Fall back on the DAO if not.
-  return file_exists($file) ? $bao : $dao;
+  if (file_exists($civicrm_path.$file)) {
+    return $bao;
+  }
+  else {
+    return $dao;
+  }
 }
 
 /**
