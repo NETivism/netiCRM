@@ -43,9 +43,9 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   /**
    * @start_document
    * 
-   * ## {ts}Create{/ts} / {ts}Update{/ts} {ts}Email{/ts} 
+   * ## {ts}Create{/ts} {ts}Email{/ts} 
    * 
-   * {ts}This is API for create or update Email{/ts} 
+   * {ts}This is API for create Email{/ts} 
    * 
    * **HTTP {ts}methods{/ts}: POST**
    * 
@@ -83,15 +83,14 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
 
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('email', 'create', $params);
-    $this->docMakerTemplate($result, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
 
     $this->assertApiSuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['id'], 'In line ' . __LINE__);
     $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
-    $delresult = civicrm_api('email', 'delete', array('id' => $result['id'], 'version' => 3));
-    $this->assertEquals(0, $delresult['is_error'], 'In line ' . __LINE__);
   }
 
   /*
@@ -132,6 +131,72 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertContains('email', $result['error_message'], 'In line ' . __LINE__);
   }
 
+
+  /**
+   * @start_document
+   * 
+   * ## {ts}Update{/ts} {ts}Email{/ts} 
+   * 
+   * {ts}This is tests for updating Email{/ts} 
+   * 
+   * **HTTP {ts}methods{/ts}: POST**
+   * 
+   * **{ts}Path{/ts}**
+   * 
+   * ```
+   * <entrypoint>?entity=Email&action=create&pretty=1&json=\{"id":"{$value.id}","contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}
+   * ```
+   * 
+   * **API Explorer**
+   * 
+   * ```
+   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Email&action=create&pretty=1&json=\{"id":"{$value.id}","contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}
+   * ```
+   * 
+   * **{ts}Request Samples{/ts}**
+   * 
+   * ```
+   * curl -g --request POST '<entrypoint>?entity=Email&action=create&pretty=1&json=\{"id":"{$value.id}","contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}' \
+   * {$API_KEY_HEADER} \
+   * {$SITE_KEY_HEADER}
+   * ```
+   * 
+   * {$result}
+   * 
+   * @end_document
+   */
+  public function testUpdateEmail() {
+    $params = $this->_params;
+    //check there are no emails to start with
+    $get = civicrm_api('email', 'get', array(
+      'version' => 3,
+      'location_type_id' => $this->_locationType->id,
+    ));
+    $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
+    $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
+
+    // create first email
+    $created = civicrm_api('email', 'create', $params);
+
+    $this->assertApiSuccess($created, 'In line ' . __LINE__);
+    $this->assertEquals(1, $created['count'], 'In line ' . __LINE__);
+    $this->assertNotNull($created['id'], 'In line ' . __LINE__);
+    $this->assertNotNull($created['values'][$created['id']]['id'], 'In line ' . __LINE__);
+
+    // update email
+    $params = $this->_params;
+    $params['email'] = 'test.update@civicrm.test.org';
+    $params['id'] = $created['id'];
+
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $result = civicrm_api('email', 'create', $params);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+
+    $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
+    $this->assertNotNull($result['id'], 'In line ' . __LINE__);
+    $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
+  }
+
   
   /**
    * @start_document
@@ -169,10 +234,15 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   public function testGetEmail() {
     $result = civicrm_api('email', 'create', $this->_params);
     $this->assertAPISuccess($result, 'create email in line ' . __LINE__);
-    $get = civicrm_api('email', 'get', $this->_params);
+
+    $params = $this->_params;
+    unset($params['is_primary']);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $get = civicrm_api('email', 'get', $params);
+    $this->docMakerResponse($get, __FILE__, __FUNCTION__);
+
     $this->assertAPISuccess($get, 'In line ' . __LINE__);
     $this->assertEquals($get['count'], 1);
-    $this->docMakerTemplate($get, __FILE__, __FUNCTION__);
     /*
     // Todo: Create API should skip when same contact and is_primary data is duplicated.
     $get = civicrm_api('email', 'create', $this->_params + array('debug' => 1));
@@ -242,8 +312,11 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $create['is_error'], 'In line ' . __LINE__);
 
     // delete one
-    $result = civicrm_api('email', 'delete', array('id' => $create['id'], 'version' => 3));
-    $this->docMakerTemplate($result, __FILE__, __FUNCTION__);
+    $params = array('id' => $create['id'], 'version' => 3);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $result = civicrm_api('email', 'delete', $params);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $get = civicrm_api('email', 'get', array(
@@ -254,40 +327,5 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
   }
-
-  
-  /**
-   * @start_document
-   * 
-   * ## {ts}Update{/ts} {ts}Email{/ts} 
-   * 
-   * {ts}This is tests for updating Email{/ts} 
-   * 
-   * **HTTP {ts}methods{/ts}: POST**
-   * 
-   * **{ts}Path{/ts}**
-   * 
-   * ```
-   * <entrypoint>?entity=Email&action=create&pretty=1&json=\{"id":"{$value.id}","contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}
-   * ```
-   * 
-   * **API Explorer**
-   * 
-   * ```
-   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Email&action=create&pretty=1&json=\{"id":"{$value.id}","contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}
-   * ```
-   * 
-   * **{ts}Request Samples{/ts}**
-   * 
-   * ```
-   * curl -g --request POST '<entrypoint>?entity=Email&action=create&pretty=1&json=\{"id":"{$value.id}","contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","email":"{$value.email}"\}' \
-   * {$API_KEY_HEADER} \
-   * {$SITE_KEY_HEADER}
-   * ```
-   * 
-   * {$result}
-   * 
-   * @end_document
-   */
 }
 
