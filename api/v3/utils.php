@@ -1029,10 +1029,10 @@ function _civicrm_api3_basic_create_fallback($bao_name, &$params) {
   if (!$dao) {
     require ('CRM/Core/DAO/.listAll.php');
   }
-  $entityName = array_search($bao_name, $dao);
+  $entityName = array_search($dao_name, $dao);
 
   if (empty($entityName)) {
-    throw new API_Exception("Class \"$bao_name\" does not map to an entity name", "unmapped_class_to_entity", array(
+    throw new API_Exception("Class \"$dao_name\" does not map to an entity name", "unmapped_class_to_entity", array(
       'class_name' => $bao_name,
     ));
   }
