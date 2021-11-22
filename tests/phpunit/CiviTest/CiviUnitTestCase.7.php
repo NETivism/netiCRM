@@ -501,12 +501,12 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
   function individualCreate($params = NULL) {
     if ($params === NULL) {
       $params = array(
-        'first_name' => 'Anthony',
-        'middle_name' => 'J.',
-        'last_name' => 'Anderson',
+        'first_name' => 'Unit',
+        'middle_name' => '',
+        'last_name' => 'Test',
         'prefix_id' => 3,
         'suffix_id' => 3,
-        'email' => 'anthony_anderson@civicrm.org',
+        'email' => 'api.test@civicrm.test.org',
         'contact_type' => 'Individual',
       );
     }
@@ -2064,11 +2064,20 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
     }
   }
 
-  function doWriteResult($result, $filepath, $functionName) {
+  function docMakerRequest($request, $filepath, $functionName) {
+    global $civicrm_root;
+    unset($request['version']);
+    $filename = basename($filepath, ".php");
+    $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-request.json", "w");
+    fwrite($file, json_encode($request, JSON_PRETTY_PRINT));
+    fclose($file);
+  }
+
+  function docMakerResponse($response, $filepath, $functionName) {
     global $civicrm_root;
     $filename = basename($filepath, ".php");
-    $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}Result.json", "w");
-    fwrite($file, json_encode($result, JSON_PRETTY_PRINT));
+    $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-response.json", "w");
+    fwrite($file, json_encode($response, JSON_PRETTY_PRINT));
     fclose($file);
   }
 }
