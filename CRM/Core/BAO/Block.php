@@ -431,5 +431,93 @@ class CRM_Core_BAO_Block {
 
     $block->delete();
   }
+
+  /**
+   * Handling for is_primary.
+   * 
+   * $params is_primary could be
+   *  #  1 - find other entries with is_primary = 1 &  reset them to 0
+   *  #  0 - make sure at least one entry is set to 1
+   *            - if no other entry is 1 change to 1
+   *            - if one other entry exists change that to 1
+   *            - if more than one other entry exists change first one to 1
+   *  #  empty - same as 0 as once we have checked first step
+   *             we know if it should be 1 or 0
+   *
+   *  if $params['id'] is set $params['contact_id'] may need to be retrieved
+   *
+   * @param array $params
+   * @param $class
+   *
+   * @throws API_Exception
+   */
+  public static function handlePrimary(&$params, $class) {
+    if (isset($params['id']) && CRM_Utils_System::isNull($params['is_primary'] ?? NULL)) {
+      // if id is set & is_primary isn't we can assume no change)
+      return;
+    }
+    $table = CRM_Core_DAO_AllCoreTables::getTableForClass($class);
+    if (!$table) {
+      throw new API_Exception("Failed to locate table for class [$class]");
+    }
+
+    // contact_id in params might be empty or the string 'null' so cast to integer
+    $contactId = (int) (isset($params['contact_id']) ? $params['contact_id'] : 0);
+    // If id is set & we haven't been passed a contact_id, retrieve it
+    if (!empty($params['id']) && !isset($params['contact_id'])) {
+      $entity = new $class();
+      $entity->id = $params['id'];
+      $entity->find(TRUE);
+      $contactId = $entity->contact_id;
+    }
+    // If entity is not associated with contact, concept of is_primary not relevant
+    if (!$contactId) {
+      return;
+    }
+
+    // if params is_primary then set all others to not be primary & exit out
+    // if is_primary = 1
+    if (!empty($params['is_primary'])) {
+      $sql = "UPDATE $table SET is_primary = 0 WHERE contact_id = %1";
+      $sqlParams = array(1 => array($contactId, 'Integer'));
+      // we don't want to create unnecessary entries in the log_ tables so exclude the one we are working on
+      if (!empty($params['id'])) {
+        $sql .= " AND id <> %2";
+        $sqlParams[2] = array($params['id'], 'Integer');
+      }
+      CRM_Core_DAO::executeQuery($sql, $sqlParams);
+      return;
+    }
+
+    //Check what other emails exist for the contact
+    $existingEntities = new $class();
+    $existingEntities->contact_id = $contactId;
+    $existingEntities->orderBy('is_primary DESC');
+    if (!$existingEntities->find(TRUE) || (!empty($params['id']) && $existingEntities->id == $params['id'])) {
+      // ie. if  no others is set to be primary then this has to be primary set to 1 so change
+      $params['is_primary'] = 1;
+      return;
+    }
+    else {
+      /*
+       * If the only existing email is the one we are editing then we must set
+       * is_primary to 1
+       * @see https://issues.civicrm.org/jira/browse/CRM-10451
+       */
+      if ($existingEntities->N == 1 && $existingEntities->id == CRM_Utils_Array::value('id', $params)) {
+        $params['is_primary'] = 1;
+        return;
+      }
+
+      if ($existingEntities->is_primary == 1) {
+        return;
+      }
+      // so at this point we are only dealing with ones explicity setting is_primary to 0
+      // since we have reverse sorted by email we can either set the first one to
+      // primary or return if is already is
+      $existingEntities->is_primary = 1;
+      $existingEntities->save();
+    }
+  }
 }
 
