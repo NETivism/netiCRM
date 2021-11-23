@@ -38,24 +38,29 @@ function civicrm_api3_generic_getfields($apiRequest) {
   }
   // determines whether to use unique field names - seem comment block above
   $unique = TRUE;
-  if (isset($results[$entity . $subentity]) && CRM_Utils_Array::value($action, $results[$entity])
+  $cache_key = $apiRequest['action'].':'.$action;
+  if (isset($results[$entity . $subentity]) && CRM_Utils_Array::value($cache_key, $results[$entity])
     && empty($apiOptions)) {
-    return $results[$entity . $subentity][$action];
+    return $results[$entity . $subentity][$cache_key];
   }
   // defaults based on data model and API policy
   switch ($action) {
     case 'getfields':
       $values = _civicrm_api_get_fields($entity, false, $apiRequest['params']);
-      $results[$entity][$action] = civicrm_api3_create_success($values,
+      $results[$entity][$cache_key] = civicrm_api3_create_success($values,
         $apiRequest['params'], $entity, 'getfields'
       );
-      return $results[$entity][$action];
+      return $results[$entity][$cache_key];
     case 'create':
     case 'update':
     case 'replace':
       $unique = FALSE;
     case 'get':
-      $metadata = _civicrm_api_get_fields($apiRequest['entity'], $unique, $apiRequest['params']);
+      $fields = _civicrm_api_get_fields($apiRequest['entity'], $unique, $apiRequest['params']);
+      $metadata = array();
+      foreach($fields as $fldname => $fldvalue) {
+        $metadata[$fldname] = $fldvalue;
+      }
       if (empty($metadata['id']) && !empty($metadata[$apiRequest['entity'] . '_id'])) {
         $metadata['id'] = $metadata[$lcase_entity . '_id'];
         $metadata['id']['api.aliases'] = array($lcase_entity . '_id');
@@ -97,8 +102,8 @@ function civicrm_api3_generic_getfields($apiRequest) {
     _civicrm_api3_generic_get_metadata_options($metadata, $fieldname, $fieldSpec, $fieldsToResolve);
   }
 
-  $results[$entity][$action] = civicrm_api3_create_success($metadata, $apiRequest['params'], NULL, 'getfields');
-  return $results[$entity][$action];
+  $results[$entity][$cache_key] = civicrm_api3_create_success($metadata, $apiRequest['params'], NULL, 'getfields');
+  return $results[$entity][$cache_key];
 }
 
 /**
