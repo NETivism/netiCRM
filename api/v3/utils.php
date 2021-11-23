@@ -402,8 +402,9 @@ function _civicrm_api3_store_values(&$fields, &$params, &$values) {
 function _civicrm_api3_get_using_query_object($entity, $params, $additional_options = array(), $getCount = NULL, $mode = CRM_Contact_BAO_Query::MODE_CONTACTS, $returnProperties = array()){
 
   // Convert id to e.g. contact_id
-  if (empty($params[$entity . '_id']) && isset($params['id'])) {
-    $params[$entity . '_id'] = $params['id'];
+  $entityLower = strtolower($entity);
+  if (empty($params[$entityLower . '_id']) && isset($params['id'])) {
+    $params[$entityLower . '_id'] = $params['id'];
   }
   unset($params['id']);
 
