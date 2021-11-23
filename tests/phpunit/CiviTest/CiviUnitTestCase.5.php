@@ -500,12 +500,12 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
   function individualCreate($params = NULL) {
     if ($params === NULL) {
       $params = array(
-        'first_name' => 'Unit',
+        'first_name' => 'Test '.CRM_UTils_String::createRandom(5),
         'middle_name' => '',
-        'last_name' => 'Test',
+        'last_name' => 'Unit',
         'prefix_id' => 3,
         'suffix_id' => 3,
-        'email' => 'api.test@civicrm.test.org',
+        'email' => 'api.test+'.CRM_UTils_String::createRandom(3).'@civicrm.test.org',
         'contact_type' => 'Individual',
       );
     }
