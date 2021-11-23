@@ -116,6 +116,10 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
     }
     else {
       if (!array_key_exists($key, $params) || empty($params[$key])) {
+        // get allow zeor field list
+        if ($params[$key] === 0 && in_array($key, _civicrm_api3_allowed_zero_list())) {
+          continue;
+        }
         $unmatched[] = $key;
       }
     }
@@ -1592,4 +1596,31 @@ function _civicrm_api3_validate_string(&$params, &$fieldname, &$fieldInfo) {
       );
     }
   }
+}
+
+/**
+ * amount related field allowed zero
+ *
+ * Mandatory keys validation should allow zero on some fields
+ *
+ * @return array
+ */
+function _civicrm_api3_allowed_zero_list() {
+  return array(
+    // contribution
+    'total_amount',
+    'net_amount',
+    'fee_amount',
+    'non_deductible_amount',
+
+    // contribution_recur
+    // contribution_soft
+    // price_field_value
+    'amount',
+
+    // line_item
+    'line_total',
+    'unit_price',
+
+  );
 }
