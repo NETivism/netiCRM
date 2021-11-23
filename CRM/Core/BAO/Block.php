@@ -452,7 +452,8 @@ class CRM_Core_BAO_Block {
    * @throws API_Exception
    */
   public static function handlePrimary(&$params, $class) {
-    if (isset($params['id']) && CRM_Utils_System::isNull($params['is_primary'] ?? NULL)) {
+    $is_primary = isset($params['is_primary']) ? $params['is_primary'] : NULL;
+    if (isset($params['id']) && CRM_Utils_System::isNull($is_primary)) {
       // if id is set & is_primary isn't we can assume no change)
       return;
     }
