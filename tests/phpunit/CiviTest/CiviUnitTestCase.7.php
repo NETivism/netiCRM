@@ -788,24 +788,6 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
   }
 
   /**
-   * Function to create Contribution Type
-   *
-   * @return int $id of contribution type created
-   */
-  function contributionTypeCreate($apiversion = 3) {
-    // $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $path = dirname(__FILE__) . '/../api/v' . $apiversion . '/dataset/contribution_types.xml';
-    $dataset = $this->createXMLDataSet($path);
-
-    // $op->execute($this->_dbconn, $dataset);
-
-    require_once 'CRM/Contribute/PseudoConstant.php';
-    CRM_Contribute_PseudoConstant::flush('contributionType');
-    // FIXME: CHEATING LIKE HELL HERE, TO BE FIXED
-    return 11;
-  }
-
-  /**
    * Function to delete contribution Types
    *      * @param int $contributionTypeId
    */

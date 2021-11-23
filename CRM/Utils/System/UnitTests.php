@@ -195,6 +195,10 @@ class CRM_Utils_System_UnitTests {
     }
   }
 
+  function notFound(){
+    return;
+  }
+
   function cmsDir($type) {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
