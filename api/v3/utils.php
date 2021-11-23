@@ -116,6 +116,10 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
     }
     else {
       if (!array_key_exists($key, $params) || empty($params[$key])) {
+        // get allow zeor field list
+        if ($params[$key] === 0 && in_array($key, _civicrm_api3_allowed_zero_list())) {
+          continue;
+        }
         $unmatched[] = $key;
       }
     }
@@ -409,8 +413,9 @@ function _civicrm_api3_store_values(&$fields, &$params, &$values) {
 function _civicrm_api3_get_using_query_object($entity, $params, $additional_options = array(), $getCount = NULL, $mode = CRM_Contact_BAO_Query::MODE_CONTACTS, $returnProperties = array()){
 
   // Convert id to e.g. contact_id
-  if (empty($params[$entity . '_id']) && isset($params['id'])) {
-    $params[$entity . '_id'] = $params['id'];
+  $entityLower = strtolower($entity);
+  if (empty($params[$entityLower . '_id']) && isset($params['id'])) {
+    $params[$entityLower . '_id'] = $params['id'];
   }
   unset($params['id']);
 
@@ -1598,4 +1603,31 @@ function _civicrm_api3_validate_string(&$params, &$fieldname, &$fieldInfo) {
       );
     }
   }
+}
+
+/**
+ * amount related field allowed zero
+ *
+ * Mandatory keys validation should allow zero on some fields
+ *
+ * @return array
+ */
+function _civicrm_api3_allowed_zero_list() {
+  return array(
+    // contribution
+    'total_amount',
+    'net_amount',
+    'fee_amount',
+    'non_deductible_amount',
+
+    // contribution_recur
+    // contribution_soft
+    // price_field_value
+    'amount',
+
+    // line_item
+    'line_total',
+    'unit_price',
+
+  );
 }

@@ -243,7 +243,9 @@ class CRM_Utils_System {
    */
   static function currentPath() {
     $config = CRM_Core_Config::singleton();
-    return trim(CRM_Utils_Array::value($config->userFrameworkURLVar, $_GET), '/');
+    $path = trim(CRM_Utils_Array::value($config->userFrameworkURLVar, $_GET), '/'); 
+    $path = filter_var($path, FILTER_SANITIZE_SPECIAL_CHARS);
+    return $path;
   }
 
   /**

@@ -61,6 +61,9 @@ class CRM_Core_Payment_LinePay {
     if(!empty($params['eventID'])){
       $confirmQuery.="&eid={$params['eventID']}";
     }
+    if(!empty($params['membershipID'])){
+      $confirmQuery.="&mid={$params['membershipID']}";
+    }
 
     $confirmUrl = CRM_Utils_System::url('civicrm/linepay/confirm', $confirmQuery, True, NULL, False);
 
@@ -168,6 +171,9 @@ class CRM_Core_Payment_LinePay {
       $thankYouPath = 'civicrm/event/register';
     }
     else{
+      if (!empty($params['mid'])) {
+        $ids['membership'] = $params['mid'];
+      }
       $input['component'] = 'contribute';
     }
     $ids['contribution'] = $contribution->id;

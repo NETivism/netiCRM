@@ -41,17 +41,10 @@
     <script type="text/javascript" src="{$config->resourceBase}packages/ckeditor/ckeditor.js?4.11.3"></script>
 {/if}
 
-{if isset($browserPrint) and $browserPrint}
-{* Javascript window.print link. Used for public pages where we can't do printer-friendly view. *}
+{* Make sure we've tidy url from backend. *}
 <div id="printer-friendly">
-  <a href="javascript:window.print()" title="{ts}Print this page.{/ts}" class="print-icon">{ts}Print{/ts}</a>
+  <a href="{$printerFriendly}" title="{ts}Print this page.{/ts}" class="print-icon">{ts}Print{/ts}</a>
 </div>
-{else}
-{* Printer friendly link/icon. *}
-<div id="printer-friendly">
-  <a href="{$printerFriendly}" title="{ts}Printer-friendly view of this page.{/ts}" class="print-icon" target="_blank">{ts}Print{/ts}</a>
-</div>
-{/if}
 
 {if isset($localTasks) and $localTasks}
    {include file="CRM/common/localNav.tpl"}

@@ -87,7 +87,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
 
     $query = "
 SELECT civicrm_im.name as im, civicrm_location_type.name as locationType, civicrm_im.is_primary as is_primary,
-civicrm_im.id as im_id, civicrm_im.location_type_id as locationTypeId
+civicrm_im.id as im_id, civicrm_im.location_type_id as locationTypeId, civicrm_im.provider_id as providerId
 FROM      civicrm_contact
 LEFT JOIN civicrm_im ON ( civicrm_im.contact_id = civicrm_contact.id )
 LEFT JOIN civicrm_location_type ON ( civicrm_im.location_type_id = civicrm_location_type.id )
@@ -106,6 +106,7 @@ ORDER BY
         'id' => $dao->im_id,
         'name' => $dao->im,
         'locationTypeId' => $dao->locationTypeId,
+        'provider_id' => $dao->providerId,
       );
 
       if ($updateBlankLocInfo) {

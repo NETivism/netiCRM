@@ -253,23 +253,33 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
 
     // add state_id if state is set
     if ((!isset($params['state_province_id']) || !is_numeric($params['state_province_id']))
-      && isset($params['state_province'])
+      && (isset($params['state_province']) || isset($params['state_province_name']))
     ) {
-      if (!empty($params['state_province'])) {
-        $state_province = new CRM_Core_DAO_StateProvince();
-        $state_province->name = $params['state_province'];
+      $stateProvince = !empty($params['state_province_name']) ? trim($params['state_province_name']) : trim($params['state_province']);
+      $availableStateProvince = CRM_Core_PseudoConstant::stateProvince();
+      if ($stateProvinceId = array_search($stateProvince, $availableStateProvince)) {
+        $params['state_province_id'] = $stateProvinceId;
+      }
+      elseif (!empty($stateProvince)) {
+        $stateProvinceDao = new CRM_Core_DAO_StateProvince();
+        $stateProvinceDao->name = $stateProvince;
 
         // add country id if present
         if (isset($params['country_id'])) {
-          $state_province->country_id = $params['country_id'];
+          $stateProvinceDao->country_id = $params['country_id'];
         }
 
-        if (!$state_province->find(TRUE)) {
-          $state_province->name = NULL;
-          $state_province->abbreviation = $params['state_province'];
-          $state_province->find(TRUE);
+        if (!$stateProvinceDao->find(TRUE)) {
+          $stateProvinceDao->name = NULL;
+          $stateProvinceDao->abbreviation = $stateProvince;
+          $stateProvinceDao->find(TRUE);
         }
-        $params['state_province_id'] = $state_province->id;
+        if ($stateProvinceDao->id) {
+          $params['state_province_id'] = $stateProvinceDao->id;
+        }
+        else {
+          $params['state_province_id'] = 'null';
+        }
       }
       else {
         $params['state_province_id'] = 'null';
