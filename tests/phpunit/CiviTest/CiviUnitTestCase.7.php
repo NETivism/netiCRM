@@ -923,7 +923,7 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
     $params = array(
       'domain_id' => 1,
       'contact_id' => $cID,
-      'receive_date' => date('Ymd'),
+      'receive_date' => date('YmdHis'),
       'total_amount' => 100.00,
       'contribution_type_id' => $cTypeID,
       'payment_instrument_id' => 1,
@@ -932,7 +932,7 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
       'net_amount' => 90.00,
       'trxn_id' => $trxnID,
       'invoice_id' => $invoiceID,
-      'source' => 'SSF',
+      'source' => 'Contribution Unit Test',
       'version' => API_LATEST_VERSION,
       'contribution_status_id' => 1,
       // 'note'                   => 'Donating for Nobel Cause', *Fixme
