@@ -72,6 +72,20 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     
   }
 
+  /**
+   * Contribution Get Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Contribution
+   * @api_action Get
+   * @http_method GET
+   * @request_url <entrypoint>?entity=Contribution&action=get&json={$request_body_inline}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Contribution&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
   function testGetContribution() {
     $p = $this->_params;
     $p['trxn_id'] = CRM_Utils_String::createRandom(10);
@@ -83,7 +97,11 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
       'contribution_id' => $this->_contribution['id'],
       'version' => $this->_apiversion,
     );
+
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $contribution = civicrm_api('contribution', 'get', $params);
+    $this->docMakerResponse($contribution, __FILE__, __FUNCTION__);
+
     $this->assertAPISuccess($contribution, 'In line ' . __LINE__);
     $this->assertEquals(1,$contribution['count']);
     $this->assertEquals($contribution['values'][$contribution['id']]['contact_id'], $this->_individualId, 'In line ' . __LINE__);
@@ -151,13 +169,32 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
       ));
   }
 
+  /**
+   * Contribution Create Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Contribution
+   * @api_action Create
+   * @http_method POST
+   * @request_content_type application/x-www-form-urlencoded
+   * @request_url <entrypoint>?entity=Contribution&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Contribution&action=create&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
   function testCreateContribution() {
     $params = $this->_params;
     $params['trxn_id'] = CRM_Utils_String::createRandom(10);
     $params['invoice_id'] = CRM_Utils_String::createRandom(10);
     $params['payment_instrument_id'] = 1;
 
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $contribution = civicrm_api('contribution', 'create', $params);
+    $this->docMakerResponse($contribution, __FILE__, __FUNCTION__);
+
     $this->assertEquals($contribution['values'][$contribution['id']]['contact_id'], $this->_individualId, 'In line ' . __LINE__);
     $this->assertEquals($contribution['values'][$contribution['id']]['total_amount'], 100.00, 'In line ' . __LINE__);
     $this->assertEquals($contribution['values'][$contribution['id']]['contribution_type_id'], $this->_contributionTypeId, 'In line ' . __LINE__);
@@ -316,6 +353,22 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals(1, $count);
   }
 
+  /**
+   * Contribution Update Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Contribution
+   * @api_action Update
+   * @http_method POST
+   * @request_content_type application/x-www-form-urlencoded
+   * @request_url <entrypoint>?entity=Contribution&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Contribution&action=create&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
   function testUpdateContribution() {
     $contributionID = $this->contributionCreate($this->_individualId, $this->_contributionTypeId, CRM_Utils_String::createRandom(32), CRM_Utils_String::createRandom(10));
     $old_params = array(
@@ -354,7 +407,9 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
 
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $contribution = civicrm_api('contribution', 'create', $params);
+    $this->docMakerResponse($contribution, __FILE__, __FUNCTION__);
 
     $new_params = array(
       'contribution_id' => $contribution['id'],
@@ -380,13 +435,33 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
 
   }
 
+  /**
+   * Contribution Delete Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Contribution
+   * @api_action Delete
+   * @http_method POST
+   * @request_content_type application/x-www-form-urlencoded
+   * @request_url <entrypoint>?entity=Contribution&action=delete
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Contribution&action=delete&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
   function testDeleteContribution() {
     $contributionID = $this->contributionCreate($this->_individualId, $this->_contributionTypeId, CRM_Utils_String::createRandom(32), CRM_Utils_String::createRandom(10));
     $params = array(
       'id' => $contributionID,
       'version' => $this->_apiversion,
     );
+
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('contribution', 'delete', $params);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+
     $this->assertEquals($result['is_error'], 0, 'In line ' . __LINE__);
   }
 
