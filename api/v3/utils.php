@@ -321,14 +321,21 @@ function _civicrm_api3_get_DAO($name) {
  * eg. "civicrm_contact_create" or "Contact" will return "CRM_Contact_BAO_Contact"
  */
 function _civicrm_api3_get_BAO($name) {
+  global $civicrm_root;
   $dao = _civicrm_api3_get_DAO($name);
   if (!$dao) {
     return NULL;
   }
   $bao = str_replace("DAO", "BAO", $dao);
   $file = strtr($bao, '_', '/') . '.php';
+  $civicrm_path = rtrim($civicrm_root, '/') .  DIRECTORY_SEPARATOR;
   // Check if this entity actually has a BAO. Fall back on the DAO if not.
-  return file_exists($file) ? $bao : $dao;
+  if (file_exists($civicrm_path.$file)) {
+    return $bao;
+  }
+  else {
+    return $dao;
+  }
 }
 
 /**
@@ -1027,10 +1034,10 @@ function _civicrm_api3_basic_create_fallback($bao_name, &$params) {
   if (!$dao) {
     require ('CRM/Core/DAO/.listAll.php');
   }
-  $entityName = array_search($bao_name, $dao);
+  $entityName = array_search($dao_name, $dao);
 
   if (empty($entityName)) {
-    throw new API_Exception("Class \"$bao_name\" does not map to an entity name", "unmapped_class_to_entity", array(
+    throw new API_Exception("Class \"$dao_name\" does not map to an entity name", "unmapped_class_to_entity", array(
       'class_name' => $bao_name,
     ));
   }
