@@ -69,7 +69,11 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
       'id' => $result['id'],
     );
+
+    $this->docMakerRequest($getParams, __FILE__, __FUNCTION__);
     $result = civicrm_api($this->_entity, 'get', $getParams);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
   }
 
@@ -81,7 +85,7 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
    * @api_entity Recurring Contribution
    * @api_action Create
    * @http_method POST
-   * @request_content_type application/x-www-form-urlencoded
+   * @request_content_type application/json
    * @request_url <entrypoint>?entity=contribution_recur&action=create
    * @request_body {$request_body}
    * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=contribution_recur&action=create&pretty=1&json={$request_body_inline}
@@ -90,7 +94,10 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testCreateContributionRecur() {
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
     $result = civicrm_api($this->_entity, 'create', $this->_params);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
@@ -109,7 +116,7 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
    * @api_entity Recurring Contribution
    * @api_action Update
    * @http_method POST
-   * @request_content_type application/x-www-form-urlencoded
+   * @request_content_type application/json
    * @request_url <entrypoint>?entity=contribution_recur&action=create
    * @request_body {$request_body}
    * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=contribution_recur&action=create&pretty=1&json={$request_body_inline}
@@ -130,7 +137,11 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
       'next_sched_contribution' => '',
       'end_date' => date('Y-m-d H:i:s'),
     );
+
+    $this->docMakerRequest($updateParams, __FILE__, __FUNCTION__);
     $updated = civicrm_api($this->_entity, 'update', $updateParams);
+    $this->docMakerResponse($updated, __FILE__, __FUNCTION__);
+
     $this->assertAPISuccess($updated, 'In line ' . __LINE__);
     $this->assertNotNull($updated['values'][$updated['id']]['id'], 'In line ' . __LINE__);
     $verifyParams = array_merge($this->_params, $updateParams);
@@ -156,13 +167,33 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $updated['id'], $verifyParams);
   }
 
+  /**
+   * Recurring Contribution Delete Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Recurring Contribution
+   * @api_action Delete
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=contribution_recur&action=delete
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=contribution_recur&action=delete&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
   public function testDeleteContributionRecur() {
     $result = civicrm_api($this->_entity, 'create', $this->_params);
     $deleteParams = array(
       'version' => $this->_apiversion,
       'id' => $result['id'],
     );
+
+    $this->docMakerRequest($deleteParams, __FILE__, __FUNCTION__);
     $deleted = civicrm_api($this->_entity, 'delete', $deleteParams);
+    $this->docMakerResponse($deleted, __FILE__, __FUNCTION__);
+
     $this->assertAPISuccess($deleted, 'In line ' . __LINE__);
     $checkDeleted = civicrm_api($this->_entity, 'get', array(
       'version' => $this->_apiversion,
