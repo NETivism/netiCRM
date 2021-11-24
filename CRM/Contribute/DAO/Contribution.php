@@ -81,7 +81,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
    */
   static $_log = true;
   /**
-   * Contribution ID
+   * Unique Contribution ID
    *
    * @var int unsigned
    */
@@ -123,37 +123,37 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
    */
   public $created_date;
   /**
-   * when was gift received
+   * when was gift received(or got authorized by credit card)
    *
    * @var datetime
    */
   public $receive_date;
   /**
-   * Portion of total amount which is NOT tax deductible. Equal to total_amount for non-deductible contribution types.
+   * Portion of total amount which is NOT tax deductible.
    *
    * @var float
    */
   public $non_deductible_amount;
   /**
-   * Total amount of this contribution. Use market value for non-monetary gifts.
+   * Total amount of this contribution.
    *
    * @var float
    */
   public $total_amount;
   /**
-   * actual processor fee if known - may be 0.
+   * Payment processor fee when available.
    *
    * @var float
    */
   public $fee_amount;
   /**
-   * actual funds transfer amount. total less fees. if processor does not report actual fee during transaction, this is set to total_amount.
+   * net amount + fee amount = total amount
    *
    * @var float
    */
   public $net_amount;
   /**
-   * unique transaction id. may be processor id, bank id + trans id, or account number + check number... depending on payment_method
+   * unique transaction id by this application
    *
    * @var string
    */
@@ -165,7 +165,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
    */
   public $invoice_id;
   /**
-   * 3 character string, value from config setting or input via user.
+   * 3 character string, value from config setting.
    *
    * @var string
    */
@@ -177,12 +177,13 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
    */
   public $cancel_date;
   /**
+   * Reason that gift was cancelled
    *
    * @var text
    */
   public $cancel_reason;
   /**
-   * when (if) receipt was sent. populated automatically for online donations w/ automatic receipting
+   * Record date after (email)receipt sent.
    *
    * @var datetime
    */
@@ -200,33 +201,37 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
    */
   public $source;
   /**
+   * Amount level / label that donor choose in contribution page.
    *
    * @var text
    */
   public $amount_level;
   /**
-   * Conditional foreign key to civicrm_contribution_recur id. Each contribution made in connection with a recurring contribution carries a foreign key to the recurring contribution record. This assumes we can track these processor initiated events.
+   * FK to Contribution Recurring. If this set, this contribution is belong to a recurring order.
    *
    * @var int unsigned
    */
   public $contribution_recur_id;
   /**
-   * FK to contact ID
+   * FK to contact ID. If this set, contribution is honor of other contact.
    *
    * @var int unsigned
    */
   public $honor_contact_id;
   /**
+   * Mark 1 when this order is a testing contribution.
    *
    * @var boolean
    */
   public $is_test;
   /**
+   * Mark 1 when this order is not paid by real-time payment instrument. eg. ATM is not real-time.
    *
    * @var boolean
    */
   public $is_pay_later;
   /**
+   * 1=completed, 2=pending, 3=cancel, 4=failed
    *
    * @var int unsigned
    */

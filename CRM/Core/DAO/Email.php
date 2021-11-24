@@ -105,7 +105,7 @@ class CRM_Core_DAO_Email extends CRM_Core_DAO
    */
   public $email;
   /**
-   * Is this the primary?
+   * Is this the primary email for this contact and location.
    *
    * @var boolean
    */

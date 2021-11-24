@@ -932,9 +932,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     require_once 'CRM/Contribute/BAO/Contribution.php';
 
     //create an contribution address
+    /* shouldn't create empty address which tappay will be empty
     if ($form->_contributeMode != 'notify' && !CRM_Utils_Array::value('is_pay_later', $params)) {
       $contribParams['address_id'] = CRM_Contribute_BAO_Contribution::createAddress($params, $form->_bltID);
     }
+    */
 
     // CRM-4038: for non-en_US locales, CRM_Contribute_BAO_Contribution::add() expects localised amounts
     require_once 'CRM/Utils/Money.php';

@@ -13,7 +13,7 @@
       <required>true</required>
       <import>true</import> 
       <title>Contribution ID</title>
-      <comment>Contribution ID</comment> 
+      <comment>Unique Contribution ID</comment> 
       <add>1.3</add> 
   </field> 
   <primaryKey> 
@@ -138,7 +138,7 @@
       <import>true</import>
       <headerPattern>/receive(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
-      <comment>when was gift received</comment> 
+      <comment>when was gift received(or got authorized by credit card)</comment> 
       <add>1.3</add> 
   </field> 
   <field>     
@@ -149,7 +149,7 @@
       <import>true</import>
       <headerPattern>/non?.?deduct/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
-      <comment>Portion of total amount which is NOT tax deductible. Equal to total_amount for non-deductible contribution types.</comment>  
+      <comment>Portion of total amount which is NOT tax deductible.</comment>  
       <add>1.3</add>  
   </field>
   <field>     
@@ -159,7 +159,7 @@
       <import>true</import>
       <headerPattern>/^total|(.?^am(ou)?nt)/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
-      <comment>Total amount of this contribution. Use market value for non-monetary gifts.</comment>  
+      <comment>Total amount of this contribution.</comment>  
       <add>1.3</add>  
   </field>
   <field>    
@@ -169,7 +169,7 @@
       <title>Transaction Fee Amount</title>
       <headerPattern>/fee(.?am(ou)?nt)?/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
-      <comment>actual processor fee if known - may be 0.</comment>
+      <comment>Payment processor fee when available.</comment>
       <add>1.3</add>    
   </field> 
   <field>    
@@ -178,7 +178,7 @@
       <import>true</import>
       <headerPattern>/net(.?am(ou)?nt)?/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
-      <comment>actual funds transfer amount. total less fees. if processor does not report actual fee during transaction, this is set to total_amount.</comment>
+      <comment>net amount + fee amount = total amount</comment>
       <add>1.3</add>    
   </field>
   <field>        
@@ -188,7 +188,7 @@
       <length>255</length>  
       <import>true</import>
       <headerPattern>/tr(ansactio|x)n(.?id)?/i</headerPattern>
-      <comment>unique transaction id. may be processor id, bank id + trans id, or account number + check number... depending on payment_method</comment>
+      <comment>unique transaction id by this application</comment>
       <add>1.3</add>     
   </field>   
   <field>        
@@ -209,7 +209,7 @@
       <import>true</import>
       <headerPattern>/cur(rency)?/i</headerPattern>
       <dataPattern>/^[A-Z]{3}$/i</dataPattern>
-      <comment>3 character string, value from config setting or input via user.</comment>
+      <comment>3 character string, value from config setting.</comment>
       <add>1.3</add>   
   </field> 
   <field>  
@@ -225,6 +225,7 @@
       <name>cancel_reason</name>   
       <type>text</type>   
       <import>true</import>
+      <comment>Reason that gift was cancelled</comment>  
       <headerPattern>/(cancel.?)?reason/i</headerPattern>
       <add>1.3</add>   
   </field>  
@@ -234,7 +235,7 @@
       <import>true</import>
       <headerPattern>/receipt(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
-      <comment>when (if) receipt was sent. populated automatically for online donations w/ automatic receipting</comment>
+      <comment>Record date after (email)receipt sent.</comment>
       <add>1.3</add>   
   </field>  
   <field>    
@@ -261,6 +262,7 @@
   <field>      
       <name>amount_level</name>
       <title>Amount Label</title>
+      <comment>Amount level / label that donor choose in contribution page.</comment>   
       <type>text</type>   
       <import>true</import>
       <add>1.7</add>   
@@ -293,7 +295,7 @@
   <field> 
     <name>contribution_recur_id</name> 
     <type>int unsigned</type> 
-    <comment>Conditional foreign key to civicrm_contribution_recur id. Each contribution made in connection with a recurring contribution carries a foreign key to the recurring contribution record. This assumes we can track these processor initiated events.</comment> 
+    <comment>FK to Contribution Recurring. If this set, this contribution is belong to a recurring order.</comment> 
     <add>1.4</add> 
   </field> 
   <foreignKey> 
@@ -306,7 +308,7 @@
   <field>   
       <name>honor_contact_id</name>   
       <type>int unsigned</type>   
-      <comment>FK to contact ID</comment>   
+      <comment>FK to contact ID. If this set, contribution is honor of other contact.</comment>   
       <add>1.3</add>   
   </field>   
   <foreignKey> 
@@ -319,6 +321,7 @@
   <field>     
       <name>is_test</name>  
       <title>Test</title>
+      <comment>Mark 1 when this order is a testing contribution.</comment>
       <type>boolean</type>
       <default>0</default>
       <import>true</import>
@@ -326,6 +329,7 @@
   <field>     
       <name>is_pay_later</name>  
       <title>Is Pay Later</title>
+      <comment>Mark 1 when this order is not paid by real-time payment instrument. eg. ATM is not real-time.</comment>
       <type>boolean</type>
       <default>0</default>
       <import>true</import>
@@ -334,6 +338,7 @@
   <field>
       <name>contribution_status_id</name>
       <title>Contribution Status Id</title>
+      <comment>1=completed, 2=pending, 3=cancel, 4=failed</comment>
       <type>int unsigned</type>
       <default>1</default>
       <import>true</import>
