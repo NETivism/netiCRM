@@ -1879,7 +1879,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
    * @param string $errorText text to print on error
    *
    */
-  function getAndCheck($params, $id, $entity, $delete = 1, $errorText = '') {
+  function getAndCheck($params, $id, $entity, $delete = 0, $errorText = '') {
 
     $result = civicrm_api($entity, 'GetSingle', array(
       'id' => $id,
