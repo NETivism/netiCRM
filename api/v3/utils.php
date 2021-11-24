@@ -116,6 +116,10 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
     }
     else {
       if (!array_key_exists($key, $params) || empty($params[$key])) {
+        // get allow zeor field list
+        if ($params[$key] === 0 && in_array($key, _civicrm_api3_allowed_zero_list())) {
+          continue;
+        }
         $unmatched[] = $key;
       }
     }
@@ -317,14 +321,21 @@ function _civicrm_api3_get_DAO($name) {
  * eg. "civicrm_contact_create" or "Contact" will return "CRM_Contact_BAO_Contact"
  */
 function _civicrm_api3_get_BAO($name) {
+  global $civicrm_root;
   $dao = _civicrm_api3_get_DAO($name);
   if (!$dao) {
     return NULL;
   }
   $bao = str_replace("DAO", "BAO", $dao);
   $file = strtr($bao, '_', '/') . '.php';
+  $civicrm_path = rtrim($civicrm_root, '/') .  DIRECTORY_SEPARATOR;
   // Check if this entity actually has a BAO. Fall back on the DAO if not.
-  return file_exists($file) ? $bao : $dao;
+  if (file_exists($civicrm_path.$file)) {
+    return $bao;
+  }
+  else {
+    return $dao;
+  }
 }
 
 /**
@@ -402,8 +413,9 @@ function _civicrm_api3_store_values(&$fields, &$params, &$values) {
 function _civicrm_api3_get_using_query_object($entity, $params, $additional_options = array(), $getCount = NULL, $mode = CRM_Contact_BAO_Query::MODE_CONTACTS, $returnProperties = array()){
 
   // Convert id to e.g. contact_id
-  if (empty($params[$entity . '_id']) && isset($params['id'])) {
-    $params[$entity . '_id'] = $params['id'];
+  $entityLower = strtolower($entity);
+  if (empty($params[$entityLower . '_id']) && isset($params['id'])) {
+    $params[$entityLower . '_id'] = $params['id'];
   }
   unset($params['id']);
 
@@ -1022,10 +1034,10 @@ function _civicrm_api3_basic_create_fallback($bao_name, &$params) {
   if (!$dao) {
     require ('CRM/Core/DAO/.listAll.php');
   }
-  $entityName = array_search($bao_name, $dao);
+  $entityName = array_search($dao_name, $dao);
 
   if (empty($entityName)) {
-    throw new API_Exception("Class \"$bao_name\" does not map to an entity name", "unmapped_class_to_entity", array(
+    throw new API_Exception("Class \"$dao_name\" does not map to an entity name", "unmapped_class_to_entity", array(
       'class_name' => $bao_name,
     ));
   }
@@ -1591,4 +1603,31 @@ function _civicrm_api3_validate_string(&$params, &$fieldname, &$fieldInfo) {
       );
     }
   }
+}
+
+/**
+ * amount related field allowed zero
+ *
+ * Mandatory keys validation should allow zero on some fields
+ *
+ * @return array
+ */
+function _civicrm_api3_allowed_zero_list() {
+  return array(
+    // contribution
+    'total_amount',
+    'net_amount',
+    'fee_amount',
+    'non_deductible_amount',
+
+    // contribution_recur
+    // contribution_soft
+    // price_field_value
+    'amount',
+
+    // line_item
+    'line_total',
+    'unit_price',
+
+  );
 }
