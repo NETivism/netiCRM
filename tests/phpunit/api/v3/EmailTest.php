@@ -93,7 +93,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * @api_entity Email
    * @api_action Create
    * @http_method POST
-   * @request_content_type application/x-www-form-urlencoded
+   * @request_content_type application/json
    * @request_url <entrypoint>?entity=Email&action=create
    * @request_body {$request_body}
    * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Email&action=create&pretty=1&json={$request_body_inline}
@@ -168,7 +168,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * @api_entity Email
    * @api_action Update
    * @http_method POST
-   * @request_content_type application/x-www-form-urlencoded
+   * @request_content_type application/json
    * @request_url <entrypoint>?entity=Email&action=create
    * @request_body {$request_body}
    * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Email&action=create&pretty=1&json={$request_body_inline}
@@ -216,7 +216,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * @api_entity Email
    * @api_action Delete
    * @http_method POST
-   * @request_content_type application/x-www-form-urlencoded
+   * @request_content_type application/json
    * @request_url <entrypoint>?entity=Email&action=delete
    * @request_body {$request_body}
    * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Email&action=delete&pretty=1&json={$request_body_inline}

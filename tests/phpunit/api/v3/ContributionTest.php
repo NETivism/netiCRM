@@ -177,7 +177,7 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
    * @api_entity Contribution
    * @api_action Create
    * @http_method POST
-   * @request_content_type application/x-www-form-urlencoded
+   * @request_content_type application/json
    * @request_url <entrypoint>?entity=Contribution&action=create
    * @request_body {$request_body}
    * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Contribution&action=create&pretty=1&json={$request_body_inline}
@@ -361,7 +361,7 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
    * @api_entity Contribution
    * @api_action Update
    * @http_method POST
-   * @request_content_type application/x-www-form-urlencoded
+   * @request_content_type application/json
    * @request_url <entrypoint>?entity=Contribution&action=create
    * @request_body {$request_body}
    * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Contribution&action=create&pretty=1&json={$request_body_inline}
@@ -443,7 +443,7 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
    * @api_entity Contribution
    * @api_action Delete
    * @http_method POST
-   * @request_content_type application/x-www-form-urlencoded
+   * @request_content_type application/json
    * @request_url <entrypoint>?entity=Contribution&action=delete
    * @request_body {$request_body}
    * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Contribution&action=delete&pretty=1&json={$request_body_inline}
