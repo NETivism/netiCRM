@@ -50,7 +50,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static function add(&$params, &$ids) {
+  static function add(&$params, &$ids = NULL) {
 
     // pre-processing hooks
     require_once 'CRM/Utils/Hook.php';
