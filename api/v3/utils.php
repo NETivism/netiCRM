@@ -974,6 +974,17 @@ function _civicrm_api3_basic_get($bao_name, &$params, $returnAsSuccess = TRUE, $
  * Function to do a 'standard' api create - when the api is only doing a $bao::create then use this
  */
 function _civicrm_api3_basic_create($bao_name, &$params) {
+  // prevent update error values into db
+  // prepare params that retrieve exists value from db
+  if (!empty($params['id']) && intval($params['id'])) {
+    $dao = new $bao_name;
+    $dao->id = $params['id'];
+    if ($dao->find(TRUE)) {
+      $exists = array();
+      CRM_Core_DAO::storeValues($dao, $exists);
+      $params = array_merge($exists, $params);
+    }
+  }
 
   $args = array(&$params);
   if (method_exists($bao_name, 'create')) {
