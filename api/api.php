@@ -386,6 +386,23 @@ function _civicrm_api_get_camel_name($entity, $version = NULL) {
   return implode('', $fragments);
 }
 
+function _civicrm_api_get_constant_camel_name($name) {
+  static $_map = NULL;
+  $name = strtolower($name);
+  if (isset($_map[$name])) {
+    return $_map[$name];
+  }
+  $fragments = explode('_', $name);
+  foreach ($fragments as $key => &$fragment) {
+    if ($key > 0) {
+      $fragment = ucfirst($fragment);
+    }
+  }
+
+  $_map[$name] = implode('', $fragments);
+  return $_map[$name];
+}
+
 /*
  * Call any nested api calls
  */

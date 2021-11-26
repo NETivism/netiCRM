@@ -228,7 +228,7 @@ function civicrm_api3_create_success($values = 1, $params = array(
     // Convert value-separated strings to array
     _civicrm_api3_separate_values($values);
 
-    if ($result['count'] == 1) {
+    if ($result['count'] == 1 && $action !== 'getoptions') {
       list($result['id']) = array_keys($values);
     }
     elseif (!empty($values['id']) && is_int($values['id'])) {
@@ -1640,5 +1640,14 @@ function _civicrm_api3_allowed_zero_list() {
     'line_total',
     'unit_price',
 
+  );
+}
+
+function _civicrm_api3_pseudoconstant_entity() {
+  return array(
+    'contact' => 'Core',
+    'contribution' => 'Contribute',
+    'event' => 'Event',
+    'member' => 'Member',
   );
 }
