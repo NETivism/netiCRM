@@ -190,13 +190,113 @@ function civicrm_api3_generic_replace($apiRequest) {
  * @return integer count of results
  */
 function civicrm_api3_generic_getoptions($apiRequest) {
+  static $optionGroups;
+  $camelName = _civicrm_api_get_camel_name($apiRequest['entity'], $apiRequest['version']);
+  $entity = strtolower($camelName);
+
   $getFieldsArray = array(
     'version' => 3,
     'action' => 'create',
-    'options' => array('get_options' => $apiRequest['params']['field'], )
+    'options' => array('get_options' => $apiRequest['params']['field'])
   );
+  
   $result = civicrm_api($apiRequest['entity'], 'getfields', $getFieldsArray);
-  return $result['values'][$apiRequest['params']['field']]['options'];
+
+  // add some exceptions for location related when entity is contact
+  if ($entity == 'contact') {
+    $result['values'] = array_merge($result['values'], array(
+      'location_type_id' => array(1),
+      'state_province_id' => array(1),
+      'phone_type_id' => array(1),
+      'provider_id' => array(1),
+      'world_region' => array(1),
+    ));
+  }
+
+  // field_name is correct
+  if (!empty($result['values'][$apiRequest['params']['field']])) {
+    $values = array();
+
+    // field has related options id (eg. custom_field)
+    if (!empty($result['values'][$apiRequest['params']['field']]['options'])) {
+      foreach($result['values'][$apiRequest['params']['field']]['options'] as $key => $label) {
+        $values[$key] = array(
+          'value' => $key,
+          'label' => $label,
+        );
+      }
+    }
+    // check constant or option group name
+    else {
+      $constantEntities = _civicrm_api3_pseudoconstant_entity();
+      $fieldNameWithoutId = strtolower(preg_replace('/_id$/i', '', $apiRequest['params']['field']));
+
+      // constant api
+      if (!empty($constantEntities[$entity])) {
+        $constantName = _civicrm_api_get_constant_camel_name($fieldNameWithoutId);
+        if (!empty($constantName)) {
+          $constantParams = array(
+            'version' => 3,
+            'class' => 'CRM_'.$constantEntities[$entity].'_PseudoConstant',
+            'name' => $constantName,
+          );
+          $result = civicrm_api('constant', 'get', $constantParams);
+          if (!$result['is_error'] && !empty($result['values'])) {
+            foreach($result['values'] as $key => $val) {
+              if (is_array($val)) {
+                $values[$key] = array(
+                  'value' => $key,
+                  'label' => $val['label'] ? $val['label'] : ($val['name'] ? $val['name'] : ''),
+                  'result' => $val,
+                );
+              }
+              elseif (is_string($val)) {
+                $values[$key] = array(
+                  'value' => $key,
+                  'label' => $val,
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (!empty($values)) {
+      return civicrm_api3_create_success($values, $apiRequest['params'], $apiRequest['entity'], 'getoptions');
+    }
+    else{ 
+      return civicrm_api3_create_error("Found field '{$apiRequest['params']['field']}' in entity '{$apiRequest['entity']}', but doesn't have option.");
+    }
+  }
+  elseif($entity == 'optiongroup') {
+    $values = array();
+    // option group name
+    // whatever entity is, get option group values by name
+    $fieldNameWithoutId = strtolower(preg_replace('/_id$/i', '', $apiRequest['params']['field']));
+    $optionGroupName = strtolower($fieldNameWithoutId);
+    $result = civicrm_api('option_value', 'get', array(
+      'version' => 3,
+      'option_group_name' => $optionGroupName,
+    ));
+    if (!empty($result['values'])) {
+      foreach($result['values'] as $val) {
+        $values[$val['value']] = array(
+          'label' => $val['label'],
+          'name' => $val['name'],
+          'value' => $val['value'],
+        );
+      }
+      return civicrm_api3_create_success($values, $apiRequest['params'], $apiRequest['entity'], 'getoptions');
+    }
+    else {
+      return civicrm_api3_create_error("Option group '{$apiRequest['params']['field']}' doesn't exists.");
+    }
+  }
+  else {
+    return civicrm_api3_create_error("Field '{$apiRequest['params']['field']}' doesn't exists in entity '{$apiRequest['entity']}'.");
+  }
+  return '';
 }
 
 /*
