@@ -206,6 +206,8 @@ function civicrm_api3_generic_getoptions($apiRequest) {
   if ($entity == 'contact') {
     $result['values'] = array_merge($result['values'], array(
       'location_type_id' => array(1),
+      'worldregion_id' => array(1),
+      'country_id' => array(1),
       'state_province_id' => array(1),
       'phone_type_id' => array(1),
       'provider_id' => array(1),
@@ -244,11 +246,13 @@ function civicrm_api3_generic_getoptions($apiRequest) {
           if (!$result['is_error'] && !empty($result['values'])) {
             foreach($result['values'] as $key => $val) {
               if (is_array($val)) {
-                $values[$key] = array(
-                  'value' => $key,
-                  'label' => $val['label'] ? $val['label'] : ($val['name'] ? $val['name'] : ''),
-                  'result' => $val,
-                );
+                if (!isset($val['value'])) {
+                  $val['value'] = "$key";
+                }
+                if (!isset($val['label'])) {
+                  $val['label'] = $val['label'] ? $val['label'] : ($val['name'] ? $val['name'] : '');
+                }
+                $values[$key] = $val;
               }
               elseif (is_string($val)) {
                 $values[$key] = array(

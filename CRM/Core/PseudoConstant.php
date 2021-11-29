@@ -457,7 +457,8 @@ class CRM_Core_PseudoConstant {
     if (!self::$contactSubType) {
       $types = CRM_Contact_BAO_ContactType::subTypeInfo();
       foreach($types as $type => $info) {
-        self::$contactSubType[$type] = array(
+        self::$contactSubType[$info['id']] = array(
+          'id' => $info['id'],
           'name' => $info['name'],
           'label' => $info['label'],
           'parent' => $info['parent'],
@@ -467,7 +468,7 @@ class CRM_Core_PseudoConstant {
     if ($parentType) {
       $return = array();
       foreach(self::$contactSubType as $type => $info) {
-        $return[$type] = array(
+        $return[$info['id']] = array(
           'name' => $info['name'],
           'label' => $info['label'],
           'parent' => $info['parent'],
