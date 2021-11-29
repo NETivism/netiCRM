@@ -20,6 +20,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
     global $tsLocale;
     $tsLocale = 'zh_TW';
     $config =& CRM_Core_Config::singleton();
+    $config->countryLimit = array(1208, 1228);
     $config->provinceLimit = array(1208); // Taiwan
     $config->defaultContactCountry = 1208; // Taiwan
     $config->defaultCurrency = 'TWD';
