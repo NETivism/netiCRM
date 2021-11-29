@@ -1,8 +1,9 @@
 <?php
 /**
- * ContributionRecur Unit Test
+ * Contribution Recurring Unit Test
  *
  * @docmaker_intro_start
+ * @api_title Contribution Recurring
  * This is a API document about recurring contribution.
  * @docmaker_intro_end
  */
@@ -21,6 +22,7 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
     $this->_individualId = $this->individualCreate();
     $this->_params = array(
       'version' => $this->_apiversion,
+      'sequential' => 1,
       'contact_id' => $this->_individualId,
       'amount' => '500.00',
       'currency' => 'TWD',
@@ -100,11 +102,13 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
 
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
-    $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
+    $value = reset($result['values']);
+    $this->assertNotNull($value['id'], 'In line ' . __LINE__);
     $this->getAndCheck($this->_params, $result['id'], $this->_entity);
 
     $verifyParams = $this->_params;
     unset($verifyParams['version']);
+    unset($verifyParams['sequential']);
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $result['id'], $verifyParams);
   }
 
@@ -128,7 +132,8 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
     $result = civicrm_api($this->_entity, 'create', $this->_params);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
-    $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
+    $value = reset($result['values']);
+    $this->assertNotNull($value['id'], 'In line ' . __LINE__);
 
     $updateParams = array(
       'version' => $this->_apiversion,
@@ -209,4 +214,3 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
     $this->assertEquals(12, $result['values']['start_date']['type']);
   }
 }
-

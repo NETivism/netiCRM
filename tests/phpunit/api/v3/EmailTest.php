@@ -3,6 +3,7 @@
  * Email Unit Test
  *
  * @docmaker_intro_start
+ * @api_title Email
  * This is a API Document about Email.
  * @docmaker_intro_end
  */
@@ -34,6 +35,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
       'location_type_id' => $this->_locationType->id,
       'email' => 'api.test@civicrm.test.org',
       'is_primary' => 1,
+      'sequential' => 1,
       'version' => $this->_apiversion,
       //TODO email_type_id
     );
@@ -71,15 +73,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
 
     $this->assertAPISuccess($get, 'In line ' . __LINE__);
     $this->assertEquals($get['count'], 1);
-    /*
-    // Todo: Create API should skip when same contact and is_primary data is duplicated.
-    $get = civicrm_api('email', 'create', $this->_params + array('debug' => 1));
-    $this->assertAPISuccess($get, 'In line ' . __LINE__);
-    $this->assertEquals($get['count'], 1);
-    $get = civicrm_api('email', 'create', $this->_params + array('debug' => 1, 'action' => 'get'));
-    $this->assertAPISuccess($get, 'In line ' . __LINE__);
-    $this->assertEquals($get['count'], 1);
-    */
+
     $delresult = civicrm_api('email', 'delete', array('id' => $result['id'], 'version' => 3));
     $this->assertAPISuccess($delresult, 'In line ' . __LINE__);
   }
@@ -118,7 +112,9 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertApiSuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['id'], 'In line ' . __LINE__);
-    $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
+    foreach($reuslt['values'] as $value) {
+      $this->assertNotNull($value, 'In line ' . __LINE__);
+    }
   }
 
   /*
@@ -192,7 +188,9 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertApiSuccess($created, 'In line ' . __LINE__);
     $this->assertEquals(1, $created['count'], 'In line ' . __LINE__);
     $this->assertNotNull($created['id'], 'In line ' . __LINE__);
-    $this->assertNotNull($created['values'][$created['id']]['id'], 'In line ' . __LINE__);
+    foreach($created['values'] as $value) {
+      $this->assertNotNull($value, 'In line ' . __LINE__);
+    }
 
     // update email
     $params = $this->_params;
@@ -205,7 +203,9 @@ class api_v3_EmailTest extends CiviUnitTestCase {
 
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['id'], 'In line ' . __LINE__);
-    $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
+    foreach($result['values'] as $value) {
+      $this->assertNotNull($value, 'In line ' . __LINE__);
+    }
   }
 
   /**

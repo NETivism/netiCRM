@@ -29,6 +29,7 @@
  * Contribution Unit Test
  *
  * @docmaker_intro_start
+ * @api_title Contribution
  * This is a API Document about contribution.
  * @docmaker_intro_end
  */
@@ -64,6 +65,7 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
       'net_amount' => 90.00,
       'source' => 'Contribution Unit Test',
       'contribution_status_id' => 1,
+      'sequential' => 1,
       'version' => $this->_apiversion,
     );
   }
@@ -194,18 +196,19 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $contribution = civicrm_api('contribution', 'create', $params);
     $this->docMakerResponse($contribution, __FILE__, __FUNCTION__);
+    $value = reset($contribution['values']);
 
-    $this->assertEquals($contribution['values'][$contribution['id']]['contact_id'], $this->_individualId, 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['total_amount'], 100.00, 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['contribution_type_id'], $this->_contributionTypeId, 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['payment_instrument_id'], 1, 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['non_deductible_amount'], 10.00, 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['fee_amount'], 50.00, 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['net_amount'], 90.00, 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['trxn_id'], $params['trxn_id'], 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['invoice_id'], $params['invoice_id'], 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['source'], 'Contribution Unit Test', 'In line ' . __LINE__);
-    $this->assertEquals($contribution['values'][$contribution['id']]['contribution_status_id'], 1, 'In line ' . __LINE__);
+    $this->assertEquals($value['contact_id'], $this->_individualId, 'In line ' . __LINE__);
+    $this->assertEquals($value['total_amount'], 100.00, 'In line ' . __LINE__);
+    $this->assertEquals($value['contribution_type_id'], $this->_contributionTypeId, 'In line ' . __LINE__);
+    $this->assertEquals($value['payment_instrument_id'], 1, 'In line ' . __LINE__);
+    $this->assertEquals($value['non_deductible_amount'], 10.00, 'In line ' . __LINE__);
+    $this->assertEquals($value['fee_amount'], 50.00, 'In line ' . __LINE__);
+    $this->assertEquals($value['net_amount'], 90.00, 'In line ' . __LINE__);
+    $this->assertEquals($value['trxn_id'], $params['trxn_id'], 'In line ' . __LINE__);
+    $this->assertEquals($value['invoice_id'], $params['invoice_id'], 'In line ' . __LINE__);
+    $this->assertEquals($value['source'], 'Contribution Unit Test', 'In line ' . __LINE__);
+    $this->assertEquals($value['contribution_status_id'], 1, 'In line ' . __LINE__);
 
     $contrib = civicrm_api('Contribution', 'Get', array(
       'id' => $contribution['id'],
@@ -213,18 +216,18 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     ));
 
     $this->assertEquals($contrib['is_error'], 0, 'In line ' . __LINE__);
-    $values = $contrib['values'][$contribution['id']];
+    $value = reset($contrib['values']);
     $params['receive_date'] = date('Y-m-d H:i:s', strtotime($params['receive_date']));
 
     // this is not returned in id format
     unset($params['payment_instrument_id']);
     $params['contribution_source'] = $params['source'];
     unset($params['source']);
-    foreach ($params as $key => $value) {
-      if ($key == 'version') {
+    foreach ($params as $key => $val) {
+      if ($key == 'version' || $key === 'sequential') {
         continue;
       }
-      $this->assertEquals($value, $values[$key], $key . " value: $value doesn't match " . print_r($values, TRUE) . 'in line' . __LINE__);
+      $this->assertEquals($val, $value[$key], $key . " value: $val doesn't match " . print_r($value, TRUE) . 'in line' . __LINE__);
     }
   }
 
@@ -277,7 +280,8 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     $params['custom_' . $ids['custom_field_id']] = "custom string";
 
     $result = civicrm_api($this->_entity, 'create', $params);
-    $this->assertEquals($result['id'], $result['values'][$result['id']]['id']);
+    $value = reset($result['values']);
+    $this->assertEquals($result['id'], $value['id']);
     $this->assertAPISuccess($result, ' in line ' . __LINE__);
     $check = civicrm_api($this->_entity, 'get', array(
         'return.custom_' . $ids['custom_field_id'] => 1,

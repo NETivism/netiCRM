@@ -1881,6 +1881,9 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
    */
   function getAndCheck($params, $id, $entity, $delete = 0, $errorText = '') {
 
+    if (isset($params['sequential'])) {
+      unset($params['sequential']);
+    }
     $result = civicrm_api($entity, 'GetSingle', array(
       'id' => $id,
         'version' => $this->_apiversion,
@@ -1916,7 +1919,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
         $value = date('Y-m-d', strtotime($value));
         $result[$key] = date('Y-m-d', strtotime($result[$key]));
       }
-      $this->assertEquals($value, $result[$keys[$key]], $key . " GetandCheck function determines that value: $value doesn't match " . print_r($result, TRUE) . $errorText);
+      $this->assertEquals($value, $result[$keys[$key]], $key . " getAndCheck function determines that value: $value doesn't match " . print_r($result, TRUE) . $errorText);
     }
   }
   /*
@@ -2048,6 +2051,9 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
   function docMakerRequest($request, $filepath, $functionName) {
     global $civicrm_root;
     unset($request['version']);
+    if (isset($request['sequential'])) {
+      unset($request['sequential']);
+    }
     $filename = basename($filepath, ".php");
     $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-request.json", "w");
     fwrite($file, json_encode($request, JSON_PRETTY_PRINT));
