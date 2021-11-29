@@ -89,6 +89,14 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   private static $contributionStatus;
 
   /**
+   * currency
+   *
+   * @var array
+   * @static
+   */
+  private static $currency;
+
+  /**
    * pcp status
    *
    * @var array
@@ -287,6 +295,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     }
 
     return $products;
+  }
+
+  public static function &currency() {
+    if (!isset(self::$currency)) {
+      self::$currency = CRM_Core_OptionGroup::values('currencies_enabled', FALSE, FALSE, FALSE, NULL);
+    }
+    return self::$currency;
   }
 
   /**
