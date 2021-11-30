@@ -33,6 +33,8 @@
  *
  */
 class CRM_Utils_REST {
+  const LAST_HIT = 'rest_lasthit';
+  const RATE_LIMIT = 0.3;
 
   /**
    * Number of seconds we should let a REST process idle
@@ -137,6 +139,28 @@ class CRM_Utils_REST {
 
   function bootAndRun() {
     return $this->run();
+  }
+
+  function requestRateLimit($args) {
+    $dao = new CRM_Core_DAO_Sequence();
+    $dao->name = self::LAST_HIT;
+    if ($dao->find(TRUE)) {
+      $interval = microtime(true) - $dao->timestamp;
+      $config = CRM_Core_Config::singleton();
+      $rateLimit = $config->restAPIRateLimit ? $config->restAPIRateLimit : self::RATE_LIMIT;
+      if ($interval < $rateLimit) {
+        return 'Request rate limit reached. Last hit: '.round($interval, 2).' seconds ago. Usage: '.$dao->value;
+      }
+      $dao->timestamp = microtime(true);
+      $dao->value = implode('-', $args);
+      $dao->update();
+    }
+    else {
+      $dao->timestamp = microtime(true);
+      $dao->value = implode('-', $args);
+      $dao->insert();
+    }
+    return array();
   }
 
   function output(&$result) {
@@ -272,6 +296,12 @@ class CRM_Utils_REST {
     // If we didn't find a valid user either way, then die.
     if (empty($validUser)) {
       return self::error("FATAL: site key or api key is incorrect.");
+    }
+
+    // check request limit
+    $error = $this->requestRateLimit($args);
+    if (!empty($error)) {
+      return self::error("FATAL: ".$error);
     }
 
     return self::process($args);
