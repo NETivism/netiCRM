@@ -54,6 +54,22 @@ class CRM_Core_PseudoConstant {
   private static $cache;
 
   /**
+   * contact type
+   *
+   * @var array
+   * @static
+   */
+  private static $contactType;
+
+  /**
+   * contact sub type
+   *
+   * @var array
+   * @static
+   */
+  private static $contactSubType;
+
+  /**
    * location type
    * @var array
    * @static
@@ -418,6 +434,52 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
+   * Contact Type wrapper
+   *
+   * @return array()
+   */
+  public static function &contactType() {
+    if (!self::$contactType) {
+      $types = CRM_Contact_BAO_ContactType::basicTypeInfo();
+      foreach($types as $type => $info) {
+        self::$contactType[$type] = $info['label'];
+      }
+    }
+    return self::$contactType;
+  }
+
+  /**
+   * Contact Type wrapper
+   *
+   * @return array()
+   */
+  public static function &contactSubType($parentType = NULL) {
+    if (!self::$contactSubType) {
+      $types = CRM_Contact_BAO_ContactType::subTypeInfo();
+      foreach($types as $type => $info) {
+        self::$contactSubType[$info['id']] = array(
+          'id' => $info['id'],
+          'name' => $info['name'],
+          'label' => $info['label'],
+          'parent' => $info['parent'],
+        );
+      }
+    }
+    if ($parentType) {
+      $return = array();
+      foreach(self::$contactSubType as $type => $info) {
+        $return[$info['id']] = array(
+          'name' => $info['name'],
+          'label' => $info['label'],
+          'parent' => $info['parent'],
+        );
+      }
+      return $return;
+    }
+    return self::$contactSubType;
+  }
+
+  /**
    * Get all location types.
    *
    * The static array locationType is returned
@@ -541,6 +603,15 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
+   * alias of individualPrefix, call by api
+   *
+   * @return array
+   */
+  public static function &prefix() {
+    return self::individualPrefix();
+  }
+
+  /**
    * Get all phone type
    * The static array phoneType is returned
    *
@@ -580,6 +651,14 @@ class CRM_Core_PseudoConstant {
       self::$individualSuffix = CRM_Core_OptionGroup::values('individual_suffix');
     }
     return self::$individualSuffix;
+  }
+  /**
+   * Alias for individualSuffix, call by api
+   *
+   * @return array
+   */
+  public static function suffix() {
+    return self::individualSuffix();
   }
 
   /**
@@ -624,6 +703,14 @@ class CRM_Core_PseudoConstant {
       self::$imProvider = CRM_Core_OptionGroup::values('instant_messenger_service');
     }
     return self::$imProvider;
+  }
+  /**
+   * alias of IMProvider, for api
+   *
+   * @return array
+   */
+  public static function &provider() {
+    return self::IMProvider();
   }
 
   /**
