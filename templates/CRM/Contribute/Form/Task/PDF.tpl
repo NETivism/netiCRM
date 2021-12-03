@@ -30,6 +30,11 @@
 <div id="help">
   <div>{ts}Please notice that, because the serial number must continuous, once you generate receipt, it will also generte receipt ID and you can't modify receipt ID after generation. Make sure your search result have correct receive date search to prevent generate wrong number.{/ts}</div>
 </div>
+{if $config->debug}
+  <div class="form-item">
+    {$form.nopdf.html}
+  </div>
+{/if}
 
 <div class="form-item">
   <label>{$form.window_envelope.label}</label><br/>
