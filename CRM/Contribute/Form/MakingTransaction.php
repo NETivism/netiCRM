@@ -88,11 +88,11 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $id = $this->get('recurId');
 
     $name = $this->getButtonName('submit');
-    $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", $id)."')"));
+    $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", array(1 => $id))."')"));
     $this->assign('submit_name', $name);
 
     $name = $this->getButtonName('upload');
-    $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".ts("Are you sure you want to sync all expiry dates of this token?", $id)."')"));
+    $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".ts("Are you sure you want to sync all expiry dates of this token?")."')"));
     $this->assign('update_notify', $name);
   }
 
