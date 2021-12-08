@@ -58,6 +58,10 @@ class CRM_Utils_PDF_Utils {
 
     // use system wkhtmltopdf to solve everything
     $html = self::makeHTML($values, FALSE);
+    if ($config->debug && !empty($_REQUEST['nopdf']) && $download) {
+      echo $html;
+      return;
+    }
 
     if ($config->wkhtmltopdfPath) {
       if ($config->wkhtmltopdfOption) {

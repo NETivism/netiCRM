@@ -72,9 +72,6 @@ function loadReferrer() {
         if (visitInfo.referrer.type !== 'direct' && visitInfo.referrer.type !== 'internal') {
           localStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
         }
-        else {
-          visitInfo = referrerInfo;
-        }
       }
       else {
         localStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
