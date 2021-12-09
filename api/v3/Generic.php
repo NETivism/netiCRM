@@ -228,6 +228,38 @@ function civicrm_api3_generic_getoptions($apiRequest) {
         );
       }
     }
+    elseif (strstr($result['values'][$apiRequest['params']['field']]['name'], 'custom_') && empty($result['values'][$apiRequest['params']['field']]['option_group_id'])) {
+      switch($result['values'][$apiRequest['params']['field']]['data_type']) {
+        case 'Boolean':
+          $values = array(
+            0 => array(
+              'value' => 0,
+              'label' => ts('No'),
+            ),
+            1 => array(
+              'value' => 1,
+              'label' => ts('Yes'),
+            ),
+          );
+          break;
+        case 'StateProvince':
+          $constantParams = array(
+            'version' => 3,
+            'class' => 'CRM_Core_PseudoConstant',
+            'name' => 'stateProvince',
+          );
+          $result = civicrm_api('constant', 'get', $constantParams);
+          if (!$result['is_error'] && !empty($result['values'])) {
+            foreach($result['values'] as $key => $val) {
+              $values[$key] = array(
+                'value' => $key,
+                'label' => $val,
+              );
+            }
+          }
+          break;
+      }
+    }
     // check constant or option group name
     else {
       $constantEntities = _civicrm_api3_pseudoconstant_entity();
