@@ -34,7 +34,7 @@
  */
 class CRM_Utils_REST {
   const LAST_HIT = 'rest_lasthit';
-  const RATE_LIMIT = 0.3;
+  const RATE_LIMIT = 0.2;
 
   /**
    * Number of seconds we should let a REST process idle
