@@ -269,6 +269,7 @@ SET    {$dao->columnName} = REPLACE( {$dao->columnName}, %1, %2 )";
   }
 
   static function &valuesByID($customFieldID, $optionGroupID = NULL) {
+    $options = array();
     if (!$optionGroupID) {
       $optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
         $customFieldID,
@@ -277,7 +278,9 @@ SET    {$dao->columnName} = REPLACE( {$dao->columnName}, %1, %2 )";
     }
 
     require_once 'CRM/Core/OptionGroup.php';
-    $options = &CRM_Core_OptionGroup::valuesByID($optionGroupID);
+    if (!empty($optionGroupID) && is_numeric($optionGroupID)) {
+      $options = &CRM_Core_OptionGroup::valuesByID($optionGroupID);
+    }
 
     require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::customFieldOptions($customFieldID, $options, FALSE);
