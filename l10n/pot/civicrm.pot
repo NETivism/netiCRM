@@ -48371,3 +48371,15 @@ msgstr ""
 
 msgid "Please enter the valid URL to display a thumbnail of this image."
 msgstr ""
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid "User Number"
+msgstr ""
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid "Migrate from other ACH system?"
+msgstr ""
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid "You should only fill this when your ACH order doesn't generated from this system."
+msgstr ""

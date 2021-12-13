@@ -66,13 +66,15 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
     $stampVerification = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
     if ($this->_action & CRM_Core_Action::ADD) {
-      unset($stampVerification[1], $stampVerification[2]);
+      unset($stampVerification[2]);
     }
     $this->addSelect('ach_stamp_verification', ts('Stamp Verification Status'), $stampVerification);
 
     $this->add('text', 'ach_bank_branch', ts('Bank Branch'));
     $this->add('text', 'ach_bank_account', ts('ACH').' - '.ts('Account Number'), NULL, TRUE);
     $this->add('text', 'ach_identifier_number', ts('ACH').' - '.ts('Legal Identifier').'/'.ts('SIC Code'), NULL, TRUE);
+    $this->addCheckbox('is_custom_order_number', '', array(ts('Migrate from other ACH system?') => 1));
+    $this->add('text', 'ach_order_number', ts('ACH').' - '.ts('User Number'));
 
     CRM_Custom_Form_CustomData::buildQuickForm($this);
 
@@ -114,6 +116,10 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       if ($err) {
         $errors['ach_identifier_number'] = ts('%1 has error on format.', array(1 => ts('ACH').' - '.ts('Legal Identifier')));
       }
+    }
+
+    if(!empty($fields['is_custom_order_number']) && empty($fields['ach_order_number'])) {
+      $errors['ach_order_number'] = ts('%1 is a required field.', array(1 => ts('User Number')));
     }
 
     return $errors;
@@ -171,7 +177,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
         $params['data'][$key] = $value;
         continue;
       }
-      if (strstr($key, 'ach')) {
+      if (strstr($key, 'ach_')) {
         $key = preg_replace('/^ach_/', '', $key);
       }
       $params[$key] = $value;

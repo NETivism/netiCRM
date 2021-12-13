@@ -46,6 +46,22 @@
     <td>{$form.ach_identifier_number.html}</td>
   </tr>
   <tr>
+    <td class="label">{$form.is_custom_order_number.label}</td>
+    <td>
+      {$form.is_custom_order_number.html}
+
+      <table class="form-layout"><tbody>
+        <tr>
+          <td class="label">{$form.ach_order_number.label}</td>
+          <td>
+            {$form.ach_order_number.html}
+            <div class="description font-red">{ts}You should only fill this when your ACH order doesn't generated from this system.{/ts}</div>
+          </td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+  <tr{if $action eq 1} class="action-add"{/if}>
     <td class="label">{$form.ach_stamp_verification.label}</td>
     <td>{$form.ach_stamp_verification.html}</td>
   </tr>
@@ -62,6 +78,38 @@ cj(document).ready( function($) {
   doCheckACHPaymentType();
   $("select#ach_payment_type").change(doCheckACHPaymentType);
   $("#ach_identifier_number").keyup(doCheckTWorOrgID).blur(doCheckTWorOrgID);
+
+  if ($("tr.action-add").length) {
+    $("#ach_stamp_verification").find('option[value=1]').hide();
+  }
+  var exists = $("#ach_order_number").val();
+  if (exists) {
+    $("#is_custom_order_number\\[1\\]").prop('checked', true);
+  }
+  else {
+    if($("#is_custom_order_number\\[1\\]").is(':checked')) {
+      $("#ach_order_number").closest('table').show();
+    }
+    else {
+      $("#ach_order_number").closest('table').hide();
+    }
+  }
+  $("#is_custom_order_number\\[1\\]").on('click', function(){
+    if($("#is_custom_order_number\\[1\\]").is(':checked')) {
+      $("#ach_order_number").closest('table').show();
+      if ($("tr.action-add").length) {
+        $("#ach_stamp_verification").find('option[value=1]').show();
+      }
+    }
+    else {
+      $("#ach_order_number").val('');
+      $("#ach_order_number").closest('table').hide();
+      if ($("tr.action-add").length) {
+        $("#ach_stamp_verification").find('option[value=1]').hide();
+        $("#ach_stamp_verification").val('0');
+      }
+    }
+  });
 
   function doCheckACHPaymentType() {
     $("tr.ach-bank-code, tr.ach-postoffice-acc-type, tr.ach-bank-branch").hide();
