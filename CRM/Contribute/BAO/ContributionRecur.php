@@ -361,6 +361,11 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
         $parent_soft->contribution_id = $query->id;
         $parent_soft->find(TRUE);
 
+        // Load membership payment. From #33382.
+        $membership_payment = new CRM_Member_DAO_MembershipPayment();
+        $membership_payment->contribution_id = $query->id;
+        $membership_payment->find(TRUE);
+
         if ($contributionId) {
           $children = array(0 => $contributionId);
           break;
@@ -408,6 +413,21 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
           $cs->contribution_id = $cid;
           $cs->save();
           unset($cs);
+        }
+      }
+    }
+
+    // Duplicate membership payment. From #33382
+    if (!empty($membership_payment->id) && !empty($children)) {
+      foreach ($children as $cid) {
+        $mp = new CRM_Member_DAO_MembershipPayment();
+        $mp->contribution_id = $cid;
+        if(!$mp->find(TRUE)){
+          $mp = clone $membership_payment;
+          unset($mp->id);
+          $mp->contribution_id = $cid;
+          $mp->save();
+          unset($mp);
         }
       }
     }
