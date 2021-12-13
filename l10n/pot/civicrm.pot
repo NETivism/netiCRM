@@ -48383,3 +48383,7 @@ msgstr ""
 # CRM/Contribute/Form/TaiwanACH.php
 msgid "You should only fill this when your ACH order doesn't generated from this system."
 msgstr ""
+
+# templates/CRM/Event/Form/Search/Common.tpl branch:develop-9
+msgid "Type in a partial or complete name of an existing event type."
+msgstr ""
