@@ -25,7 +25,7 @@
 *}
 <tr>
     <td class="crm-event-form-block-event_type"> {$form.event_id.label}  <br />{$form.event_id.html|crmReplace:class:huge} </td>
-    <td class="crm-event-form-block-event_type"> {$form.event_type.label}<br />{$form.event_type.html} </td>
+    <td class="crm-event-form-block-event_type_id"> {$form.event_type_id.label}<br />{$form.event_type_id.html} </td>
 </tr>     
  
 <tr> 
@@ -92,11 +92,17 @@ var eventUrl = "{/literal}{$dataURLEvent}{literal}";
 cj("#event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
 
 var typeUrl  = "{/literal}{$dataURLEventType}{literal}";
+{/literal}
+{if $eventTypePrepopulate}
+  var eventTypePrepopulate = {$eventTypePrepopulate};
+{else}
+  var eventTypePrepopulate = '';
+{/if}
+{literal}
+var hintTypeText = "{/literal}{ts}Type in a partial or complete name of an existing event type.{/ts}{literal}";
 var feeUrl   = "{/literal}{$dataURLEventFee}{literal}";
 
-cj('#event_type').autocomplete( typeUrl, { width : 180, selectFirst : false, matchContains: true
-                               }).result(function(event, data, formatted) { cj( "input#event_type_id" ).val( data[1] );
-                               }).bind( 'click', function( ) { cj( "input#event_type_id" ).val(''); });
+cj("#event_type_id").tokenInput( typeUrl, { prePopulate: eventTypePrepopulate, classes: tokenClass, hintText: hintTypeText });
 
 cj('#participant_fee_level').autocomplete( feeUrl, { width : 180, selectFirst : false, matchContains: true
                                          }).result(function(event, data, formatted) { cj( "input#participant_fee_id" ).val( data[1] );

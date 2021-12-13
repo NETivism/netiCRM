@@ -534,8 +534,19 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
     }
 
-    if ($fields['event_type'] && !is_numeric($fields['event_type_id'])) {
-      $errors['event_type'] = ts('Please select valid event type.');
+    if (!empty($fields['event_type_id']) && !is_numeric($fields['event_type_id'])) {
+      if (strstr($fields['event_type_id'], ',')) {
+        $ids = explode(',', $fields['event_type_id']);
+        foreach($ids as $id) {
+          if (!is_numeric($id)) {
+            $errors['event_id'] = ts('Please select valid event type.');
+            break;
+          }
+        }
+      }
+      else {
+        $errors['event_type_id'] = ts('Please select valid event type.');
+      }
     }
     if (!empty($errors)) {
       return $errors;
@@ -555,6 +566,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     $defaults = array();
     $defaults = $this->_formValues;
     self::fixEventIdDefaultValues($defaults);
+    self::fixEventTypeIdDefaultValues($defaults);
 
     return $defaults;
   }
@@ -638,7 +650,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       CRM_Core_DAO::$_nullObject
     );
     if ($type) {
-      $this->_formValues['event_type'] = $type;
+      $this->_formValues['event_type_id'] = $type;
     }
 
     $feeLevel = CRM_Utils_Request::retrieve('fee_level', 'String', CRM_Core_DAO::$_nullObject);
@@ -707,6 +719,24 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
       $template = CRM_Core_Smarty::singleton();
       $template->assign('eventPrepopulate', json_encode($prePopulate));
+    }
+  }
+
+  public static function fixEventTypeIdDefaultValues($defaults) {
+    if (!empty($defaults['event_type_id'])) {
+      $prePopulate = array();
+      $types = CRM_Event_PseudoConstant::eventType();
+      if (is_numeric($defaults['event_type_id'])) {
+        $prePopulate[] = array('id' => trim($defaults['event_type_id']), 'name' => $types[$defaults['event_type_id']]);
+      }
+      else {
+        $ids = explode(',', $defaults['event_type_id']);
+        foreach($ids as $id) {
+          $prePopulate[] = array('id' => trim($id), 'name' => $types[$id]);
+        }
+      }
+      $template = CRM_Core_Smarty::singleton();
+      $template->assign('eventTypePrepopulate', json_encode($prePopulate));
     }
   }
 }
