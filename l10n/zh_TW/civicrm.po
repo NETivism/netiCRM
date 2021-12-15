@@ -15,8 +15,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-11-08 05:55+0000\n"
-"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>\n"
+"PO-Revision-Date: 2021-12-13 10:45+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48695,3 +48695,21 @@ msgstr "請輸入正確可呈現圖片的網址 URL"
 
 msgid "Please enter the valid URL to display a thumbnail of this image."
 msgstr "請輸入正確可呈現縮圖圖片的網址 URL"
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid "User Number"
+msgstr "用戶號碼"
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid "Migrate from other ACH system?"
+msgstr "從其他系統移轉過來的已核印ACH訂單?"
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid ""
+"You should only fill this when your ACH order doesn't generated from this "
+"system."
+msgstr "若ACH核印檔不是在本系統產生，才需要填寫此欄位，若不確定請勿填寫。"
+
+# templates/CRM/Event/Form/Search/Common.tpl branch:develop-9
+msgid "Type in a partial or complete name of an existing event type."
+msgstr "輸入部分或完整的活動類型名稱"

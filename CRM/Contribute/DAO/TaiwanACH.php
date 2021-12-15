@@ -141,6 +141,12 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
    */
   public $identifier_number;
   /**
+   * Order number of ACH Account.
+   *
+   * @var string
+   */
+  public $order_number;
+  /**
    * Stamp Verification Status
    *
    * @var int unsigned
@@ -293,6 +299,17 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'size' => CRM_Utils_Type::HUGE,
           'export' => true,
           'where' => 'civicrm_contribution_taiwanach.identifier_number',
+          'headerPattern' => '',
+          'dataPattern' => '',
+        ) ,
+        'order_number' => array(
+          'name' => 'order_number',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Order Number') ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => true,
+          'where' => 'civicrm_contribution_taiwanach.order_number',
           'headerPattern' => '',
           'dataPattern' => '',
         ) ,

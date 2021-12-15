@@ -3712,6 +3712,7 @@ CREATE TABLE civicrm_contribution_taiwanach (
      bank_branch varchar(32)    COMMENT 'Bank Branch of ACH Account.',
      bank_account varchar(32)    COMMENT 'Bank Account of ACH Account.',
      identifier_number varchar(128)    COMMENT 'Identifier Number of ACH Account.',
+     order_number varchar(128)    COMMENT 'Order number of ACH Account.',
      stamp_verification int unsigned    COMMENT 'Stamp Verification Status',
      data text    COMMENT 'Some Custom Record Data' 
 ,
