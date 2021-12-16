@@ -486,6 +486,9 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
         while($dao->fetch()) {
           if ($params['renewal_reminder_day'] != '' && !empty($dao->reminder_date)) {
             $reminderDate = CRM_Member_BAO_MembershipType::calcReminderDate($dao->end_date, $params['renewal_reminder_day']);
+            if (empty($reminderDate)) {
+              $reminderDate = 'null';
+            }
             CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
           }
           else {
