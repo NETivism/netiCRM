@@ -334,7 +334,14 @@ class CRM_Core_IDS {
   }
 
   private function warn() {
-    return TRUE; 
+    if(CRM_Utils_System::isUserLoggedIn()) {
+      return TRUE; 
+    }
+    else {
+      $session = CRM_Core_Session::singleton();
+      $session->reset(2);
+      CRM_Core_Error::fatal(ts('There is a validation error with your HTML input. Your activity is a bit suspicious, hence aborting'));
+    }
   }
 
   private function kick() {

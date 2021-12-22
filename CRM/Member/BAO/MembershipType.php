@@ -638,11 +638,22 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
 
   static function calcReminderDate($endDate, $renewalReminderDay) {
     $endTimestamp = strtotime($endDate);
-    if ($renewalReminderDay != 0) {
-      $reminderDate = date('Y-m-d', $endTimestamp - 86400*($renewalReminderDay));
-    }
-    else {
-      $reminderDate = date('Y-m-d', $endTimestamp);
+    $reminderDate = '';
+
+    // only set reminder date when end date is not passed
+    // or reminder later will be sent after end date (originally, we expect sent before end date)
+    if (CRM_REQUEST_TIME <= $endTimestamp) {
+      if ($renewalReminderDay != 0) {
+        $reminderDate = date('Y-m-d', $endTimestamp - 86400*($renewalReminderDay));
+      }
+      else {
+        $reminderDate = date('Y-m-d', $endTimestamp);
+      }
+      // do not set reminder date when it's passed
+      // or reminder letter will be sent to user
+      if (CRM_REQUEST_TIME > strtotime($reminderDate)) {
+        $reminderDate = '';
+      }
     }
     return $reminderDate;
   }
