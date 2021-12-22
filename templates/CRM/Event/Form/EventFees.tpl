@@ -159,7 +159,7 @@
       </table>
     </fieldset>
 {elseif $context eq 'standalone' and $outBound_option != 2 }
-    <fieldset id="email-receipt"><legend>{if $paid}{ts}Registration Confirmation and Receipt{/ts}{else}{ts}Registration Confirmation{/ts}{/if}</legend>  
+    <fieldset id="email-receipt" style="display:none;"><legend>{if $paid}{ts}Registration Confirmation and Receipt{/ts}{else}{ts}Registration Confirmation{/ts}{/if}</legend>  
       <table class="form-layout" style="width:auto;">
     	 <tr class="crm-event-eventfees-form-block-send_receipt"> 
             <td class="label">{if $paid}{ts}Send Confirmation and Receipt{/ts}{else}{ts}Send Confirmation{/ts}{/if}</td>
