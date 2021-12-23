@@ -1883,7 +1883,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
 
         if (is_object($coDAO)) {
           while ($coDAO->fetch()) {
-            $options[$coDAO->value] = $coDAO->label;
+            $options[$coDAO->value] = ($dataType == 'Country' || $dataType == 'StateProvince') ? ts($coDAO->label) : $coDAO->label;
           }
         }
         else {
