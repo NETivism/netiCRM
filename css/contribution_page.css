@@ -597,7 +597,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 
 
 body {
-  --active-color: #3f51b5;
+  --active-color: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
   --marked-color: #9f0909;
 }
 
