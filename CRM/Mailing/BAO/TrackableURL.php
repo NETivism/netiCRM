@@ -79,7 +79,7 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
       $tracker = new CRM_Mailing_BAO_TrackableURL();
       $atag = array();
       if (preg_match('/^(<a\s+[^>]*)href/i', $url, $atag)) {
-        $url = preg_replace('/<a\s+[^>]*href[ ]*=[ ]*[\'"](.*?)[\'"]$/i', '$1', $url);
+        $url = preg_replace('/<a\s+[^>]*href[ ]*=[ ]*[\'"](.*?)[\'"]?$/i', '$1', $url);
         $hrefExists = TRUE;
       }
 
@@ -99,7 +99,7 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
     $returnUrl = "{$urlCache[$url]}&qid={$queue_id}";
 
     if ($hrefExists) {
-      $returnUrl = $atag[1]."href='{$returnUrl}'";
+      $returnUrl = $atag[1].'href="'.$returnUrl.'"';
     }
 
     return $returnUrl;
