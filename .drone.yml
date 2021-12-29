@@ -6,7 +6,7 @@ pipeline:
       - RUNPORT=8080
       - DRUPAL_ROOT=/var/www/html
       - CIVICRM_TEST_DSN=mysqli://root@localhost/neticrmci
-      - DRUPAL=7.80
+      - DRUPAL=7.84
       - NETICRM=develop
     commands:
       - /usr/bin/supervisord &
@@ -38,7 +38,7 @@ pipeline:
       - RUNPORT=8080
       - DRUPAL_ROOT=/var/www/html
       - CIVICRM_TEST_DSN=mysqli://root@localhost/neticrmci
-      - DRUPAL=7.80
+      - DRUPAL=7.84
       - NETICRM=develop
     commands:
       - /usr/bin/supervisord &
