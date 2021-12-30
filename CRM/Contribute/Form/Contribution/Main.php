@@ -806,6 +806,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         if (!empty($amount['filter']) && !empty($this->_defaultAmountGrouping) && $amount['grouping'] == $this->_defaultAmountGrouping) {
           $this->_defaults['amount'] = $amount['amount_id'];
         }
+        // Refs #32508, Select default price option if this page has no default_amount_id
+        if (empty($this->_defaultAmountGrouping) && !empty($amount['filter']) && empty($defaultFromRequestAmountId)) {
+          $this->_defaultAmountGrouping = $amount['grouping'];
+          $defaultFromRequestAmountId = $amount['amount_id'];
+        }
       }
       if (empty($this->_defaults['amount']) && !empty($this->_values['default_amount_id'])) {
         $this->_defaults['amount'] = $this->_values['default_amount_id'];
