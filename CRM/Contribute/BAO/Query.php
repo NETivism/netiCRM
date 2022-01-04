@@ -235,7 +235,12 @@ class CRM_Contribute_BAO_Query {
     }
     elseif ($op == 'LIKE' && !$wildcard) {
       // Refs #33503, '_' is used for match any single character.
-      $value = '%' . trim(str_replace('_', '\_', $value), '%') . '%';
+      if (strstr($value, '\_')) {
+        $value = '%' . trim($value, '%') . '%';
+      }
+      else {
+        $value = '%' . trim(str_replace('_', '\_', $value), '%') . '%';
+      }
     }
 
     $fields = array();
