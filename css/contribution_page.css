@@ -19,6 +19,9 @@
 
 /** Variables **/
 :root {
+  --color-error: #f44336;
+  --color-error-dark: #b71c1c;
+  --color-form-input-border: #999;
   --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
   --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
 }
@@ -962,7 +965,7 @@ body .crm-container-md .crm-form-elem select,
 body .crm-container-md .crm-form-elem select.form-select, 
 body .crm-container-md .crm-form-elem.dateplugin input.dateplugin, 
 body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]{
-    border: 1px solid var(--color-crm-special-contribute-primary) !important;
+    border: 1px solid var(--color-form-input-border) !important;
     border-radius: 5px !important;
     height: 40px;
     padding: 0 10px;
@@ -986,8 +989,49 @@ body .crm-container-md .crm-form-elem textarea:focus,
 body .crm-container-md .crm-form-elem textarea.form-textarea:focus, 
 body .crm-container-md .crm-form-elem.dateplugin input.dateplugin:focus, 
 body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focus{
-  border: 1px solid #d8d8d8 !important;
+  border: 1px solid var(--color-crm-special-contribute-primary) !important;
   border-radius: 5px !important;
+}
+
+body .crm-container-md .crm-form-elem input[disabled],
+body .crm-container-md .crm-form-elem select[disabled],
+body .crm-container-md .crm-form-elem textarea[disabled],
+body .crm-container-md .crm-form-elem input[readonly],
+body .crm-container-md .crm-form-elem select[readonly],
+body .crm-container-md .crm-form-elem textarea[readonly],
+body .crm-container-md .crm-form-elem input.readonly,
+body .crm-container-md .crm-form-elem select.readonly,
+body .crm-container-md .crm-form-elem textarea.readonly,
+body .crm-container-md .crm-form-elem input[disabled],
+body .crm-container-md .crm-form-elem select[disabled],
+body .crm-container-md .crm-form-elem textarea[disabled],
+body .crm-container-md .crm-form-elem input[readonly],
+body .crm-container-md .crm-form-elem select[readonly],
+body .crm-container-md .crm-form-elem textarea[readonly],
+body .crm-container-md .crm-form-elem input[disabled]:focus,
+body .crm-container-md .crm-form-elem select[disabled]:focus,
+body .crm-container-md .crm-form-elem textarea[disabled]:focus,
+body .crm-container-md .crm-form-elem input[readonly]:focus,
+body .crm-container-md .crm-form-elem select[readonly]:focus,
+body .crm-container-md .crm-form-elem textarea[readonly]:focus,
+body .crm-container-md .crm-form-elem .readonly,
+body .crm-container-md .crm-form-elem input[type="text"].readonly,
+body .crm-container-md .crm-form-elem input[type="text"].readonly:hover,
+body .crm-container-md .crm-form-elem input[type="number"].readonly,
+body .crm-container-md .crm-form-elem input[type="number"].readonly:hover,
+body .crm-container-md .crm-form-elem input[type="file"].readonly {
+  border: 1px dashed var(--color-form-input-border) !important;
+}
+
+body .crm-container-md .crm-form-elem input[type="text"].error,
+body .crm-container-md .crm-form-elem input[type="number"].error,
+body .crm-container-md .crm-form-elem input.form-text.error,
+body .crm-container-md .crm-form-elem input.form-number.error,
+body .crm-container-md .crm-form-elem select.error,
+body .crm-container-md .crm-form-elem select.form-select.error,
+body .crm-container-md .crm-form-elem textarea.error,
+body .crm-container-md .crm-form-elem textarea.form-textarea.error {
+  border: 1px solid var(--color-error) !important;
 }
 
 
@@ -1270,8 +1314,9 @@ body .crm-container-md .first_name-section .crm-form-readonly {
   display: block;
 }
 body #crm-container.crm-container-md .crm-form-elem::after {
-  top: 7px;
-  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 8px 0 0;
 }
 
 /* for login user */
