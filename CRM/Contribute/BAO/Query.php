@@ -234,13 +234,16 @@ class CRM_Contribute_BAO_Query {
       $value = '';
     }
     elseif ($op == 'LIKE' && !$wildcard) {
-      $value = '%' . trim($value, '%') . '%';
+      // Refs #33503, '_' is used for match any single character.
+      $value = '%' . trim(str_replace('_', '\_', $value), '%') . '%';
     }
 
     $fields = array();
     $fields = self::getFields();
     if (!empty($value)) {
+      // $quoteValue only used in qill.
       $quoteValue = "\"$value\"";
+      $quoteValue = str_replace('\_', '_', $quoteValue);
     }
 
     $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
