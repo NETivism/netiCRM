@@ -280,6 +280,20 @@ class CRM_Core_DAO extends DB_DataObject {
     return $table;
   }
 
+  /**
+   * find result from dao
+   * 
+   * We need this because we need trigger hook to alter data when we found something
+   * 
+   * @param   boolean $n Whether to fetch first result
+   */
+  function find($n = false)
+  {
+    $ret = parent::find($n);
+    CRM_Utils_Hook::get($n, $this, $ret);
+    return $ret;
+  }
+
   function save() {
     if (!empty($this->_primaryKey)) {
       $key = $this->_primaryKey;

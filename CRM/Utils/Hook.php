@@ -63,6 +63,20 @@ class CRM_Utils_Hook {
   }
 
   /**
+   * This hook is called when dao->find triggered
+   *
+   * @param bool $fetch Wheather the dao->find want to fetch first result
+   * @param object $dao The fetched object which can be alter
+   * @param int $num Number of rows after dao->find
+   * @return void
+   */
+  static function get($fetch, &$dao, $numRows) {
+    $className = CRM_Core_Config::singleton()->userHookClass;
+    $null = &CRM_Core_DAO::$_nullObject;
+    return $className::invoke( 3, $fetch, $dao, $numRows, $null, $null, 'civicrm_get' );
+  }
+
+  /**
    * This hook is called before a db write on some core objects.
    * This hook does not allow the abort of the operation
    *
