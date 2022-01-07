@@ -633,7 +633,8 @@ class CRM_Event_BAO_Query {
     $form->assign('dataURLEventFee', $dataURLEventFee);
 
     $form->add('text', 'event_id', ts('Event Name'), array('id' => 'event_id'));
-    $form->add('text', 'event_type_id', ts('Event Type'));
+    $eventType = CRM_Event_PseudoConstant::eventType();
+    $form->addSelect('event_type', ts('Event Type'), $eventType, array('multiple' => 'multiple', 'style' => 'width: 100%;'));
     $levels = array();
     $where = array();
     $where[] = "ce.entity_table = 'civicrm_event'";
@@ -655,8 +656,7 @@ class CRM_Event_BAO_Query {
     }
 
     //elements for assigning value operation
-    // $form->add('hidden', 'event_type_id', '', array('id' => 'event_type_id'));
-
+    $form->add('hidden', 'event_type_id', '', array('id' => 'event_type_id'));
     $form->addDate('event_start_date_low', ts('Event Dates - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('event_end_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
 

@@ -24,8 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 <tr>
-    <td class="crm-event-form-block-event_type"> {$form.event_id.label}  <br />{$form.event_id.html|crmReplace:class:huge} </td>
-    <td class="crm-event-form-block-event_type_id"> {$form.event_type_id.label}<br />{$form.event_type_id.html} </td>
+    <td class="crm-event-form-block-event_id"> {$form.event_id.label}  <br />{$form.event_id.html|crmReplace:class:huge} </td>
+    <td class="crm-event-form-block-event_type"> {$form.event_type.label}<br />{$form.event_type.html} </td>
 </tr>     
  
 <tr> 
@@ -102,7 +102,15 @@ var typeUrl  = "{/literal}{$dataURLEventType}{literal}";
 var hintTypeText = "{/literal}{ts}Type in a partial or complete name of an existing event type.{/ts}{literal}";
 var feeUrl   = "{/literal}{$dataURLEventFee}{literal}";
 
-cj("#event_type_id").tokenInput( typeUrl, { prePopulate: eventTypePrepopulate, classes: tokenClass, hintText: hintTypeText });
+cj("#event_type").select2({
+  "allowClear": true,
+  "dropdownAutoWidth": true,
+  "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
+  "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
+}).hide();
+cj("#event_type").on('change', function() {
+  cj("#event_type_id").val(() => {return cj(this).find("option:selected").map((i, e) => e.value).toArray().join(",")})
+});
 
 cj('#participant_fee_level').autocomplete( feeUrl, { width : 180, selectFirst : false, matchContains: true
                                          }).result(function(event, data, formatted) { cj( "input#participant_fee_id" ).val( data[1] );
