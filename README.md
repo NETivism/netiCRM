@@ -1,5 +1,10 @@
-netiCRM [![Build Status](https://travis-ci.org/NETivism/netiCRM.svg?branch=develop)](https://travis-ci.org/NETivism/netiCRM)
+netiCRM 
 ==============
+- Branch master [![Build Status](https://github.com/NETivism/netiCRM/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/NETivism/netiCRM/actions?query=branch%3Amaster+)
+
+- Branch develop [![Build Status](https://github.com/NETivism/netiCRM/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/NETivism/netiCRM/actions?query=branch%3Adevelop++)
+
+- Branch hotfix [![Build Status](https://github.com/NETivism/netiCRM/actions/workflows/ci.yml/badge.svg?branch=hotfix)](https://github.com/NETivism/netiCRM/actions?query=branch%3Ahotfix)
 
 1. Why netiCRM
 --------------
