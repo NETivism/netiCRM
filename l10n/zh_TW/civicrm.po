@@ -1,7 +1,7 @@
 # 
 # Translators:
 # CC Chu <poliphilonet@gmail.com>, 2020-2021
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2021
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2021-12-13 10:45+0000\n"
+"PO-Revision-Date: 2022-01-14 04:22+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -4960,7 +4960,7 @@ msgstr "報名日期"
 
 #: CRM/Event/Form/Participant.php CRM/Member/Form/Membership.php
 msgid "Please select a valid payment status before updating."
-msgstr "請選擇有效的付款狀態，然後再更新。"
+msgstr "更新前請選擇有效的付款狀態。"
 
 #: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
 msgid ""
@@ -5151,7 +5151,7 @@ msgstr "訂閱"
 #: CRM/Mailing/Event/DAO/Bounce.php CRM/Mailing/Selector/Event.php
 #: CRM/Report/Form/Mailing/Bounce.php
 msgid "Bounce Reason"
-msgstr "拒絕/退回原因"
+msgstr "拒絕/退信原因"
 
 #: CRM/Mailing/Event/DAO/Bounce.php CRM/Mailing/Event/DAO/Confirm.php
 #: CRM/Mailing/Event/DAO/Delivered.php CRM/Mailing/Event/DAO/Forward.php
@@ -5633,7 +5633,7 @@ msgstr "電子報"
 
 #: CRM/Report/Form/Mailing/Bounce.php CRM/Report/Form/Mailing/Summary.php
 msgid "Bounce"
-msgstr "退回"
+msgstr "退信"
 
 #: CRM/Report/Form/Mailing/Clicks.php CRM/Report/Form/Mailing/Summary.php
 #: templates/CRM/Mailing/Page/Report.tpl
@@ -40436,7 +40436,7 @@ msgid ""
 "Reply-To will be overriden by the From email address specified above. "
 "Consult with your site administrator before using this feature as it may "
 "affect handling of bounced emails and replies."
-msgstr "若勾選此核取方塊，在此「回覆到」欄位自動產生的 VERP 地址將會被寄件者的郵件地址所覆寫。在使用此功能前，請詢問您的網站管理者，因為這可能會影響到退回與回覆郵件的處理。"
+msgstr "若勾選此核取方塊，在此「回覆到」欄位自動產生的 VERP 地址將會被寄件者的郵件地址所覆寫。在使用此功能前，請詢問您的網站管理者，因為這可能會影響到退信與回覆郵件的處理。"
 
 #: templates/CRM/Member/Form/MembershipBlock.hlp
 msgid ""
@@ -42949,7 +42949,7 @@ msgstr "退信日期"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Date user e-mail bounced"
-msgstr "郵件被退回的日期"
+msgstr "郵件被退信的日期"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Mailing bounced ID"
@@ -48127,7 +48127,7 @@ msgid "Accepted Rate"
 msgstr ""
 
 msgid "Bounce Rate"
-msgstr "退回率"
+msgstr "退信率"
 
 msgid "Click to Open Rate"
 msgstr "點擊率"
