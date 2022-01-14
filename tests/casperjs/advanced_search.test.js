@@ -149,7 +149,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     casper.waitForSelector("#event_id", function success() {
-        this.sendKeys("#event_id", makeid(5));
+        this.sendKeys("#event_id", 1);
     }, function fail() {
         test.assertExists("#event_id", "Assert 'Event Name' field exist.");
     });

@@ -271,9 +271,9 @@ class CRM_Event_BAO_Query {
         require_once 'CRM/Utils/Array.php';
 
         $eventTypes = CRM_Core_OptionGroup::values("event_type");
-        $query->_where[$grouping][] = "civicrm_participant.event_id = civicrm_event.id and civicrm_event.event_type_id $op '{$value}'";
+        $query->_where[$grouping][] = "civicrm_participant.event_id = civicrm_event.id and civicrm_event.event_type_id $op {$value}";
         if ($op == 'IN') {
-          $string = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(label) FROM civicrm_option_value WHERE value $op '{$value}' AND option_group_id = (SELECT id FROM civicrm_option_group WHERE name = 'event_type')");
+          $string = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(label) FROM civicrm_option_value WHERE value $op {$value} AND option_group_id = (SELECT id FROM civicrm_option_group WHERE name = 'event_type')");
         }
         else {
           $string = $eventTypes[$value];
