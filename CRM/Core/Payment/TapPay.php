@@ -159,7 +159,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $contribution = $ids = array();
       $params = array('id' => $payment['contributionID']);
       CRM_Contribute_BAO_Contribution::getValues($params, $contribution, $ids);
-      list($sortName, $email) = CRM_Contact_BAO_Contact::getContactDetails($contribution['contact_id']);
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($payment['payment_processor_id'], $payment['mode']);
       $prime = $payment['prime'];
       $tappayParams = array(
@@ -179,8 +178,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'details' => mb_substr($details, 0, 98), // item name
         'cardholder'=> array(
           'phone_number'=> '', #required #TODO
-          'name' => $sortName, # required
-          'email' => $email, #required
+          'name' => '', #required but use empty
+          'email' => '', #required but use empty
           'zip_code' => '',    //optional
           'address' => '',     //optional
           'national_id' => '', //optional
