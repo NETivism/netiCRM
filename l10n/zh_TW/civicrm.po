@@ -6,7 +6,7 @@
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2021
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2022
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020
@@ -16,8 +16,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2022-01-20 04:38+0000\n"
-"Last-Translator: 馮 佳今\n"
+"PO-Revision-Date: 2022-01-21 06:56+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48714,3 +48714,8 @@ msgstr "若ACH核印檔不是在本系統產生，才需要填寫此欄位，若
 # templates/CRM/Event/Form/Search/Common.tpl branch:develop-9
 msgid "Type in a partial or complete name of an existing event type."
 msgstr "輸入部分或完整的活動類型名稱"
+
+# templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid ""
+"Email is required. You can enter other email when donor doesn't have one."
+msgstr "電子郵件為必填欄位，若捐款人沒有Email，請輸入替代用的信箱。"
