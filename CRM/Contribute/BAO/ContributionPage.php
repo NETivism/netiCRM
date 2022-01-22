@@ -873,6 +873,10 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
         if ($component == 'contact') {
           $output = CRM_Utils_Token::replaceContactTokens($output, $detail['contact'], FALSE, $tokens, FALSE, TRUE);
         }
+        if ($component == 'domain') {
+          $domain = CRM_Core_BAO_Domain::getDomain();
+          $output = CRM_Utils_Token::replaceDomainTokens($output, $domain, TRUE, $tokens, FALSE);
+        }
         if ($component == 'contribution' && !empty($contributionId)) {
           $output = CRM_Utils_Token::replaceContributionTokens($output, $detail['contribution'], FALSE, $tokens, FALSE, TRUE);
         }
