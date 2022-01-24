@@ -48387,3 +48387,7 @@ msgstr ""
 # templates/CRM/Event/Form/Search/Common.tpl branch:develop-9
 msgid "Type in a partial or complete name of an existing event type."
 msgstr ""
+
+# templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid "Email is required. You can enter other email when donor doesn't have one."
+msgstr ""

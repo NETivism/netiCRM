@@ -371,7 +371,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
           $input['payment_instrument_id'] = $contribution->payment_instrument_id;
           $input['amount'] = $contribution->amount;
           $objects['contribution']->receive_date = date('YmdHis');
-          $objects['contribution']->trxn_id = 'ap_'.$ids['contribution'];
+          $objects['contribution']->trxn_id = $ids['contribution']; // Workaround, should use MerchantOrderNo from transact result
           $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
 
           $result = array('is_success' => 1);
