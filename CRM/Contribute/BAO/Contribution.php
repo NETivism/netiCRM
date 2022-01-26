@@ -2263,7 +2263,7 @@ SELECT source_contact_id
     }
     else{
       $types = array();
-      CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', TRUE, 'name', 'is_active', 'is_deductible = 1');
+      CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', TRUE);
       $where[] = "c.contribution_type_id IN (".implode(',', array_keys($types)).")";
     }
 
