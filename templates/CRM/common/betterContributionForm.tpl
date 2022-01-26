@@ -413,6 +413,10 @@ cj(function($){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
       }
+      else if ($is_for_organization) {
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
+      }
     }
     else {
       $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
