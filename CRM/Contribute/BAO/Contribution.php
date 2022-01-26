@@ -2281,7 +2281,7 @@ SELECT source_contact_id
     $args = array(
       1 => array($contact_id, 'Integer'),
     );
-    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.$date_field_name) as receipt_date, c.receive_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY NULLIF(c.receipt_id, ''), c.$date_field_name ASC";
+    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.$date_field_name) as receipt_date, c.receive_date, c.total_amount, c.currency FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY NULLIF(c.receipt_id, ''), c.$date_field_name ASC";
     $result = CRM_Core_DAO::executeQuery($query, $args);
    
     $contribution_type = array();
@@ -2294,6 +2294,7 @@ SELECT source_contact_id
         'receipt_date' => $result->receipt_date,
         'total_amount' => $result->total_amount,
         'receive_date' => $result->receive_date,
+        'currency' => $result->currency,
       );
       $records[$result->id]['contribution_type'] = $contribution_type[$result->contribution_type_id];
       $records[$result->id]['instrument'] = $instruments[$result->payment_instrument_id];
