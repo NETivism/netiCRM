@@ -16,8 +16,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2022-01-21 06:56+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2022-01-26 03:52+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24728,7 +24728,7 @@ msgstr "尚未建立任何關係類型。您可以<a href='%1'>新增一個</a>�
 msgid ""
 "Use the links below to configure or modify the global settings for CiviCRM "
 "for this site. Refer to the %1 for details on settings and options."
-msgstr "使用以下連結去設或修改 CiviCRM 的全域設定。關於各選項和設定說明請參閱 %1。"
+msgstr "使用以下連結去設或修改 CiviCRM 的全域設定。"
 
 #: templates/CRM/Admin/Page/Setting.tpl
 msgid "Enable Components"

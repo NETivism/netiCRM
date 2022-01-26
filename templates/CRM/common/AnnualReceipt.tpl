@@ -64,6 +64,7 @@ table td { padding: 2px 4px; }
 .stamp-img[src$="/"]{display: none;}
 .big-stamp{max-height: 103px;left: 10px;}
 .small-stamp{max-height: 43px;left: 10px;}
+.receipt-record tr {page-break-inside: avoid;}
 
 {/literal}
 </style>
