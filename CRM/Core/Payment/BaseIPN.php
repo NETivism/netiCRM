@@ -316,6 +316,9 @@ class CRM_Core_Payment_BaseIPN {
       $sql_recur_fail_notify = "SELECT cp.recur_fail_notify FROM civicrm_contribution c INNER JOIN civicrm_contribution_page cp ON c.contribution_page_id = cp.id WHERE c.id = {$contribution->id}";
       $recur_fail_notify = CRM_Core_DAO::singleValueQuery($sql_recur_fail_notify);
 
+      if (!empty($recur_fail_notify)) {
+        CRM_Core_Error::debug_log_message("Prepare to send failed notify. CR_count: {$crcount}, Id: {$contribution->id}, Status: {$contribution->contribution_status_id} Mail to: {$recur_fail_notify}");
+      }
       if($crcount >= 2 && $contribution->contribution_status_id == 4 && !empty($recur_fail_notify)){
         $values = array(
           'contribution_id' => $contribution->id,
@@ -328,11 +331,8 @@ class CRM_Core_Payment_BaseIPN {
           'recur_fail_notify' => $recur_fail_notify,
           'message' => $message,
           );
-        $isTest = FALSE;
-        if($contribution->is_test){
-          $isTest = TRUE;
-        }
         $returnArray = CRM_Contribute_BAO_ContributionPage::sendFailedNotifyMail($contribution->contact_id, $values, $contribution->is_test, TRUE);
+        CRM_Core_Error::debug_log_message("Failed notify email sended.");
       }
     }
 
