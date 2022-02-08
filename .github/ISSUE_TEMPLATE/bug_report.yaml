@@ -78,5 +78,3 @@ body:
       label: "🚩 Redmine Issue Number"
       description: "The internal use issue tracking number, only allowed number. Do not enter if you don't know what it is."
       placeholder: "12345"
-    validations:
-      required: true
