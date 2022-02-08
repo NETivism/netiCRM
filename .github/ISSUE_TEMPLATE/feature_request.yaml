@@ -1,0 +1,60 @@
+name: 🌱 Feature Request
+description: "Submit a proposal for a new feature"
+labels: [feature-request]
+body:
+  - type: checkboxes
+    id: no-duplicate-issues
+    attributes:
+      label: "⚠️ Please verify that this feature request has NOT been suggested before."
+      description: "Search in the issues sections by clicking [HERE](https://github.com/NETivism/netiCRM/issues?q=)"
+      options:
+        - label: "I checked and didn't find similar feature request"
+          required: true
+  - type: dropdown
+    id: feature-area
+    attributes:
+      label: "🏷️ Feature Request Type"
+      description: "What kind of feature request is this?"
+      multiple: true
+      options:
+        - Contact
+        - Contribution
+        - Membership
+        - Newsletter
+        - Search 
+        - Report
+        - Payment Method
+    validations:
+      required: true
+  - type: textarea
+    id: feature-description
+    validations:
+      required: true
+    attributes:
+      label: "💬 Feature description"
+      description: "A clear and concise description of what the feature request is."
+      placeholder: "You should add ..."
+  - type: textarea
+    id: solution
+    validations:
+      required: true
+    attributes:
+      label: "✨  Solution"
+      description: "A clear and concise description of what you want to happen."
+      placeholder: "In my use-case, ..."
+  - type: textarea
+    id: screeshot-or-wireframe
+    validations:
+      required: true
+    attributes:
+      label: "🖼️ Screenshot or Simple Wireframe"
+      description: "A picture is worth a thousand words."
+      placeholder: "..."
+  - type: input
+    id: redmine-issue-number
+    attributes:
+      label: "🚩 Redmine Issue Number"
+      description: "The internal use issue tracking number, only allowed number. Do not enter if you don't know what it is."
+      placeholder: "12345"
+    validations:
+      required: true
