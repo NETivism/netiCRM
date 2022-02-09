@@ -1,0 +1,80 @@
+name: "🐞 Bug Report"
+description: "Submit a bug report to help us improve"
+labels: [bug]
+body:
+  - type: checkboxes
+    id: no-duplicate-issues
+    attributes:
+      label: "⚠️ Please verify that this bug has NOT been raised before."
+      description: "Search in the issues sections by clicking [HERE](https://github.com/NETivism/netiCRM/issues?q=)"
+      options:
+        - label: "I checked and didn't find similar issue"
+          required: true
+  - type: checkboxes
+    attributes:
+      label: "🛡️ Security Policy"
+      description: Please review the security policy before reporting security related issues/bugs.
+      options:
+        - label: I agree to have read this project [Security Policy](https://github.com/NETivism/netiCRM/security/policy)
+          required: true
+  - type: textarea
+    id: description
+    validations:
+      required: false
+    attributes:
+      label: "💬 Description"
+      description: "You could also upload screenshots"
+  - type: textarea
+    id: steps-to-reproduce
+    validations:
+      required: true
+    attributes:
+      label: "📝 Reproduction steps"
+      description: "How do you trigger this bug? Please walk us through it step by step."
+      placeholder: "Step 1. ..."
+  - type: textarea
+    id: expected-behavior
+    validations:
+      required: true
+    attributes:
+      label: "✨ Expected behavior"
+      description: "What did you think would happen?"
+      placeholder: "..."
+  - type: textarea
+    id: actual-behavior
+    validations:
+      required: true
+    attributes:
+      label: "🔧 Actual Behavior"
+      description: "What actually happen?"
+      placeholder: "..."
+  - type: input
+    id: operating-system
+    attributes:
+      label: "💻 Operating System and Arch"
+      description: "Which OS is your server/device running on?"
+      placeholder: "egg Windows 10"
+    validations:
+      required: true
+  - type: input
+    id: browser-vendor
+    attributes:
+      label: "🌐 Browser"
+      description: "Which browser are you running on?"
+      placeholder: "Ex. Google Chrome 95.0.4638.69"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: "🎞️ Relevant log output"
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+    validations:
+      required: false
+  - type: input
+    id: redmine-issue-number
+    attributes:
+      label: "🚩 Redmine Issue Number"
+      description: "The internal use issue tracking number, only allowed number. Do not enter if you don't know what it is."
+      placeholder: "12345"
