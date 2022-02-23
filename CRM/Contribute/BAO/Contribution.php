@@ -2425,6 +2425,7 @@ SELECT source_contact_id
     }
     else {
       $latest = (int) $latest;
+      $next = $latest+1;
     }
     $exists = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_sequence WHERE name = %1", array(
       1 => array($prefix, 'String'),
@@ -2432,6 +2433,11 @@ SELECT source_contact_id
 
     // make sure sequence table have latest value
     if (!$exists || $exists < $latest) {
+      // refs #33483, special case for civicrm_sequence being purge
+      // we should trust latest value in db and increase it before going further
+      if ($next) {
+        $latest = $next;
+      }
       $done = CRM_Core_DAO::executeQuery("INSERT INTO civicrm_sequence (name, value, timestamp) VALUES (%1, (@NEWID := CAST(%2 as INT)), %3) ON DUPLICATE KEY UPDATE value = (@NEWID := CAST(value as INT)+1), timestamp = %3", array(
         1 => array($prefix, 'String'),
         2 => array($latest, 'String'),
