@@ -2421,10 +2421,11 @@ SELECT source_contact_id
       2 => array("{$prefix}-%", 'String'),
     ));
     if (empty($latest)) {
-      $latest = 0;
+      $latest = 1;
     }
     else {
       $latest = (int) $latest;
+      $next = $latest+1;
     }
     $exists = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_sequence WHERE name = %1", array(
       1 => array($prefix, 'String'),
@@ -2432,19 +2433,26 @@ SELECT source_contact_id
 
     // make sure sequence table have latest value
     if (!$exists || $exists < $latest) {
-      CRM_Core_DAO::executeQuery("INSERT INTO civicrm_sequence (name, value, timestamp) VALUES (%1, %2, %3) ON DUPLICATE KEY UPDATE value = %2, timestamp = %3", array(
+      // refs #33483, special case for civicrm_sequence being purge
+      // we should trust latest value in db and increase it before going further
+      if ($next) {
+        $latest = $next;
+      }
+      $done = CRM_Core_DAO::executeQuery("INSERT INTO civicrm_sequence (name, value, timestamp) VALUES (%1, (@NEWID := CAST(%2 as INT)), %3) ON DUPLICATE KEY UPDATE value = (@NEWID := CAST(value as INT)+1), timestamp = %3", array(
         1 => array($prefix, 'String'),
         2 => array($latest, 'String'),
         3 => array(microtime(TRUE), 'Float'),
       ));
     }
+    else {
+      // refs #21105, get new id immediatly when db update
+      // @NEWID only survive in current session
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_sequence SET value = (@NEWID:= CAST(value as INT)+1), timestamp = %3 WHERE name = %1", array(
+        1 => array($prefix, 'String'),
+        3 => array(microtime(TRUE), 'Float'),
+      ));
+    }
 
-    // refs #21105, get new id immediatly when db update
-    // @NEWID only survive in current session
-    CRM_Core_DAO::executeQuery("UPDATE civicrm_sequence SET value = (@NEWID:= CAST(value as INT)+1), timestamp = %3 WHERE name = %1", array(
-      1 => array($prefix, 'String'),
-      3 => array(microtime(TRUE), 'Float'),
-    ));
     $new = CRM_Core_DAO::singleValueQuery("SELECT @NEWID");
 
     // genrate receipt id when new id exists
