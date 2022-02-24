@@ -2421,7 +2421,7 @@ SELECT source_contact_id
       2 => array("{$prefix}-%", 'String'),
     ));
     if (empty($latest)) {
-      $latest = 1;
+      $latest = $next = 1;
     }
     else {
       $latest = (int) $latest;
@@ -2435,12 +2435,9 @@ SELECT source_contact_id
     if (!$exists || $exists < $latest) {
       // refs #33483, special case for civicrm_sequence being purge
       // we should trust latest value in db and increase it before going further
-      if ($next) {
-        $latest = $next;
-      }
-      $done = CRM_Core_DAO::executeQuery("INSERT INTO civicrm_sequence (name, value, timestamp) VALUES (%1, (@NEWID := CAST(%2 as INT)), %3) ON DUPLICATE KEY UPDATE value = (@NEWID := CAST(value as INT)+1), timestamp = %3", array(
+      CRM_Core_DAO::executeQuery("INSERT INTO civicrm_sequence (name, value, timestamp) VALUES (%1, (@NEWID := CAST(%2 as INT)), %3) ON DUPLICATE KEY UPDATE value = (@NEWID := IF(CAST(value as INT)+1 < %2, CAST(%2 as INT), CAST(value as INT)+1)), timestamp = %3", array(
         1 => array($prefix, 'String'),
-        2 => array($latest, 'String'),
+        2 => array($next, 'String'),
         3 => array(microtime(TRUE), 'Float'),
       ));
     }
