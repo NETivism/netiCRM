@@ -2431,6 +2431,10 @@ SELECT source_contact_id
       1 => array($prefix, 'String'),
     ));
 
+    if (getenv('CIVICRM_TEST_DSN')) {
+      sleep (5);
+    }
+
     // make sure sequence table have latest value
     if (!$exists || $exists < $latest) {
       // refs #33483, special case for civicrm_sequence being purge
