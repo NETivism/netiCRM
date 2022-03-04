@@ -2,7 +2,11 @@
 
 <div class="crm-block crm-form-block crm-form-block-taiwanach-import">
   <h3>{ts}Procecss Info{/ts}</h3>
-  <div>{ts}Process ID{/ts}: {$parseResult.process_id}</div>
+  <div>
+    {if $parseResult.process_id}
+      {ts}ACH Transaction File ID{/ts}: {$parseResult.process_id}
+    {/if}
+  </div>
   <div>{ts}Payment Instrument{/ts}: {ts}{$parseResult.payment_type}{/ts}</div>
   <div>{ts}Import Type{/ts}: {ts}{$parseResult.import_type}{/ts}</div>
 </div>
@@ -52,10 +56,24 @@
  </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 
-  <div class="crm-block crm-form-block crm-form-block-taiwanach-import">
-    <span class="label">{$form.receive_date.label}</span>
-    <span>{include file="CRM/common/jcalendar.tpl" elementName="receive_date"}</span>
-  </div>
+  <table class="form-layout-compressed">
+  {if $form.custom_process_id}
+    <tr class="crm-block crm-form-block crm-form-block-taiwanach-custom_process_id">
+      <td class="label">{$form.custom_process_id.label}</td>
+      <td class="content">
+        {$form.custom_process_id.html}
+        <div class="description">
+          {ts}Missing transaction file ID.{/ts}
+          {ts}Please copy and paste first line of ACH transaction file or enter the 6 digit number.{/ts}
+        </div>
+      </td>
+    </tr>
+  {/if}
+    <tr class="crm-block crm-form-block crm-form-block-taiwanach-receive_date">
+      <td class="label">{$form.receive_date.label}</td>
+      <td class="content">{include file="CRM/common/jcalendar.tpl" elementName="receive_date"}</td>
+    </tr>
+  </table>
 
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

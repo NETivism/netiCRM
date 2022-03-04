@@ -40,6 +40,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   CONST BANK = 'ACH Bank';
   CONST POST = 'ACH Post';
+  CONST BANK_ENTITY = 'civicrm_contribution_taiwanach_verification_bank';
+  CONST POST_ENTITY = 'civicrm_contribution_taiwanach_verification_post';
 
   CONST VERIFICATION = 'verification';
   CONST TRANSACTION = 'transaction';
@@ -403,10 +405,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       // Add civicrm_log file
       $log = new CRM_Core_DAO_Log();
       if ($officeType == self::BANK) {
-        $log->entity_table = 'civicrm_contribution_taiwanach_verification_bank';
+        $log->entity_table = self::BANK_ENTITY;
       }
       else {
-        $log->entity_table = 'civicrm_contribution_taiwanach_verification_post';
+        $log->entity_table = self::POST_ENTITY;
       }
       $log->entity_id = $params['date'];
       $log->data = implode(',', $recurringIds);
