@@ -16,7 +16,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2022-03-07 08:13+0000\n"
+"PO-Revision-Date: 2022-03-07 08:32+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48719,3 +48719,20 @@ msgstr "輸入部分或完整的活動類型名稱"
 msgid ""
 "Email is required. You can enter other email when donor doesn't have one."
 msgstr "電子郵件為必填欄位，若捐款人沒有Email，請輸入替代用的信箱。"
+
+msgid "Format that submit to bank."
+msgstr "送出給銀行的格式"
+
+msgid "Format that human can read."
+msgstr "提供給您檢閱的格式"
+
+msgid "transaction"
+msgstr "交易"
+
+msgid "ACH Transaction File ID"
+msgstr "ACH交易檔案編號"
+
+msgid ""
+"Missing transaction file ID. Please copy and paste first line of ACH "
+"transaction file or enter the 6 digit number."
+msgstr "無法辨識交易檔案編號，請您複製貼上您送至銀行的「ACH交易檔案」的第一行於此；或您知道交易檔案編號，亦可輸入6碼檔案編號。"

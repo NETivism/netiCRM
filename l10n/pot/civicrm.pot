@@ -48391,3 +48391,18 @@ msgstr ""
 # templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "Email is required. You can enter other email when donor doesn't have one."
 msgstr ""
+
+msgid "Format that submit to bank."
+msgstr ""
+
+msgid "Format that human can read."
+msgstr ""
+
+msgid "transaction"
+msgstr ""
+
+msgid "ACH Transaction File ID"
+msgstr ""
+
+msgid  "Missing transaction file ID. Please copy and paste first line of ACH transaction file or enter the 6 digit number."
+msgstr ""
