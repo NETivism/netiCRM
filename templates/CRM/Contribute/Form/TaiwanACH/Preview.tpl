@@ -2,13 +2,13 @@
 
 <div class="crm-block crm-form-block crm-form-block-taiwanach-import">
   <h3>{ts}Procecss Info{/ts}</h3>
+  <div><label>{ts}Payment Instrument{/ts}</label>: {ts}{$parseResult.payment_type}{/ts}</div>
+  <div><label>{ts}Import Type{/ts}</label>: {ts}{if $parseResult.import_type == 'verification'}Stamp Verification{else}{$parseResult.import_type}{/if}{/ts}</div>
   <div>
     {if $parseResult.process_id}
-      {ts}ACH Transaction File ID{/ts}: {$parseResult.process_id}
+      <label>{ts}Process ID{/ts}</label>: {$parseResult.process_id}
     {/if}
   </div>
-  <div>{ts}Payment Instrument{/ts}: {ts}{$parseResult.payment_type}{/ts}</div>
-  <div>{ts}Import Type{/ts}: {ts}{$parseResult.import_type}{/ts}</div>
 </div>
 
 <div class="crm-block crm-form-block crm-form-block-taiwanach-import">
