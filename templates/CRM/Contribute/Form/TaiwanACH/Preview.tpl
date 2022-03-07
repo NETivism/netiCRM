@@ -62,10 +62,11 @@
       <td class="label">{$form.custom_process_id.label}</td>
       <td class="content">
         {$form.custom_process_id.html}
+        {if !$parseResult.process_id}
         <div class="description">
-          {ts}Missing transaction file ID.{/ts}
-          {ts}Please copy and paste first line of ACH transaction file or enter the 6 digit number.{/ts}
+          {ts}Missing transaction file ID. Please copy and paste first line of ACH transaction file or enter the 6 digit number.{/ts}
         </div>
+        {/if}
       </td>
     </tr>
   {/if}

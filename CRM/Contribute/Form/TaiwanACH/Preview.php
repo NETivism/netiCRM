@@ -15,18 +15,20 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     // we need process_id to know which batch we want to process
     if ($this->_parseResult['payment_type'] === CRM_Contribute_BAO_TaiwanACH::BANK) {
       $log = new CRM_Core_DAO_Log();
-      $log->entity_id = !empty($this->get('customProcessId')) ? $this->get('customProcessId') : $this->_parseResult['process_id'];
-      $log->entity_table = CRM_Contribute_BAO_TaiwanACH::BANK_ENTITY;
+      $log->entity_id = !empty($this->get('customProcessId')) ? (int) $this->get('customProcessId') : (int) $this->_parseResult['process_id'];
+      $log->entity_table = CRM_Contribute_BAO_TaiwanACH::TRANS_ENTITY;
       if ($log->find()) {
         $this->_parseResult['process_id'] = $log->entity_id;
+        $result = CRM_Contribute_Form_TaiwanACH_Upload::parseUpload($this->_parseResult['original_file'], $log->entity_id);
+        $result['original_file'] = $this->_parseResult['original_file'];
+        $this->_parseResult = $result;
+        $this->set('parseResult', $result);
       }
       else {
         $this->_parseResult['process_id'] = NULL;
       }
     }
-    if (!empty($this->_parseResult)) {
-      $this->assign('parseResult', $this->_parseResult);
-    }
+    $this->assign('parseResult', $this->_parseResult);
     $this->assign('importType', $this->_parseResult['import_type']);
   }
 
@@ -35,7 +37,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     if (is_null($result['process_id']) || !empty($this->get('customProcessId'))) {
       $tYear = date('Y') - 1911;
       $tYear = sprintf('%04d', $tYear);
-      $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), array('class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'******'), TRUE);
+      $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), array('class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'******...'), TRUE);
     }
     if ($result['import_type'] == 'transaction') {
       $dateLabel = ts('Receive Date');
@@ -49,9 +51,6 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     if (!empty($this->_parseResult)) {
       if (is_null($result['process_id'])) {
         $this->addButtons(array(
-            array('type' => 'back',
-              'name' => ts('<< Previous'),
-            ),
             array('type' => 'refresh',
               'name' => ts('Refresh'),
               'isDefault' => TRUE,
@@ -110,7 +109,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
       if ($processId) {
         $log = new CRM_Core_DAO_Log();
         $log->entity_id = $processId;
-        $log->entity_table = CRM_Contribute_BAO_TaiwanACH::BANK_ENTITY;
+        $log->entity_table = CRM_Contribute_BAO_TaiwanACH::TRANS_ENTITY;
         if (!$log->find()) {
           $errors['custom_process_id'] = ts('Could not found your ACH transaction file ID.');
         }

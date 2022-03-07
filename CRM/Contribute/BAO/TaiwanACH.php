@@ -40,8 +40,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   CONST BANK = 'ACH Bank';
   CONST POST = 'ACH Post';
-  CONST BANK_ENTITY = 'civicrm_contribution_taiwanach_verification_bank';
-  CONST POST_ENTITY = 'civicrm_contribution_taiwanach_verification_post';
+  CONST BANK_VERIFY_ENTITY = 'civicrm_contribution_taiwanach_verification_bank';
+  CONST POST_VERIFY_ENTITY = 'civicrm_contribution_taiwanach_verification_post';
+  CONST TRANS_ENTITY = 'civicrm_contribution_taiwanach_transaction';
 
   CONST VERIFICATION = 'verification';
   CONST TRANSACTION = 'transaction';
@@ -405,10 +406,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       // Add civicrm_log file
       $log = new CRM_Core_DAO_Log();
       if ($officeType == self::BANK) {
-        $log->entity_table = self::BANK_ENTITY;
+        $log->entity_table = self::BANK_VERIFY_ENTITY;
       }
       else {
-        $log->entity_table = self::POST_ENTITY;
+        $log->entity_table = self::POST_VERIFY_ENTITY;
       }
       $log->entity_id = $params['date'];
       $log->data = implode(',', $recurringIds);
@@ -456,7 +457,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $params['paymentProcessor'] = $paymentProcessor;
 
     // Add civicrm_log data
-    $lastTransactLogTime = CRM_Core_DAO::singleValueQuery("SELECT MAX(entity_id) FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_transaction'");
+    $lastTransactLogTime = CRM_Core_DAO::singleValueQuery("SELECT MAX(entity_id) FROM civicrm_log WHERE entity_table = '".self::TRANS_ENTITY."'");
     if (empty($lastTransactLogTime)){
       $lastTransactLogTime = '000000';
     }
@@ -498,7 +499,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       unset($table['check_results']);
 
       $log = new CRM_Core_DAO_Log();
-      $log->entity_table = 'civicrm_contribution_taiwanach_transaction';
+      $log->entity_table = self::TRANS_ENTITY;
       $log->entity_id = $params['transact_id'];
       $log->data = implode(',', $params['contribution_ids']);
       $log->modified_date = date('Ymd', strtotime($params['transact_date'])).str_pad($params['transact_id'], 6, '0', STR_PAD_LEFT);
@@ -873,7 +874,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     return "{$contribution->contribution_recur_id}_{$contribution->id}_{$rand}";
   }
 
-  static function parseUpload($content) {
+  static function parseUpload($content, $userInputEntityId = NULL) {
     if (strstr($content, "\r\n")) {
       $rows = explode("\r\n", $content);
     }
@@ -997,6 +998,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $ids = explode('-', $firstLine[18]);
         $entityId = $ids[0];
       }
+    }
+    if (!empty($userInputEntityId) && is_numeric($userInputEntityId)) {
+      $entityId = $userInputEntityId;
     }
 
     $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_{$processType}{$tableSubName}' AND entity_id = %1 ORDER BY id DESC LIMIT 1";
