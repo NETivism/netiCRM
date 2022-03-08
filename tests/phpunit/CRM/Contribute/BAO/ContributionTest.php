@@ -475,9 +475,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     function testCreateContribution( )
     {
         $GLOBALS['CiviTest_ContributionTest_sleep'] = 5;
-        $env = 'mysql://develop:123456@localhost/develop';
-        putenv("CIVICRM_TEST_DSN=$env"); //git上去要註解掉
-
+        
         //get contact_id
         $query = "SELECT min(id) as minID FROM civicrm_contact";
         $dao = CRM_Core_DAO::executeQuery($query);
