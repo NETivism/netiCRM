@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -361,9 +360,26 @@ class CRM_Contribute_BAO_Query {
       case 'contribution_page_id':
         require_once 'CRM/Contribute/PseudoConstant.php';
         $cPage = $value;
-        $pages = CRM_Contribute_PseudoConstant::contributionPage();
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_page_id", $op, $cPage, "Integer");;
-        $query->_qill[$grouping][] = ts('Contribution Page - %1', array(1 => $pages[$cPage]));
+        $pages = CRM_Contribute_PseudoConstant::contributionPage();    
+        if (is_array($cPage)) {
+          foreach ($cPage as $k => $v) {
+            if ($v) {
+              $val[$v] = $v;
+            }
+          }
+          $contribution_page_id = implode(',', $val);
+          if (count($val) > 1) {
+            $op = 'IN';
+            $contribution_page_id = "({$contribution_page_id})";
+          }
+          $names = array_intersect_key($pages, $val);
+        }
+        else {
+          $op = '=';
+          $contribution_page_id = $cPage;
+        }
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_page_id", $op, $contribution_page_id, "Integer");;
+        $query->_qill[$grouping][] = ts('Contribution Page - %1', array(1 => $op)) . ' ' . implode(' ' . ts('or') . ' ', $names);
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
@@ -885,9 +901,9 @@ class CRM_Contribute_BAO_Query {
     $form->addSelect(
       'contribution_page_id',
       ts('Contribution Page'),
-      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionPage()
+      CRM_Contribute_PseudoConstant::contributionPage(),
+      $attrs
     );
-
 
     $form->addSelect(
       'contribution_payment_instrument_id',

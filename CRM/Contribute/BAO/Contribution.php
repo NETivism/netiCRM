@@ -2431,8 +2431,8 @@ SELECT source_contact_id
       1 => array($prefix, 'String'),
     ));
 
-    if (getenv('CIVICRM_TEST_DSN')) {
-      sleep (5);
+    if (!empty(getenv('CIVICRM_TEST_DSN')) && $GLOBALS['CiviTest_ContributionTest_sleep'] > 0) {
+      sleep($GLOBALS['CiviTest_ContributionTest_sleep']);
     }
 
     // make sure sequence table have latest value
