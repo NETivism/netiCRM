@@ -37,7 +37,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     if (is_null($result['process_id']) || !empty($this->get('customProcessId'))) {
       $tYear = date('Y') - 1911;
       $tYear = sprintf('%04d', $tYear);
-      $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), array('class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'******...'), TRUE);
+      $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), array('class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'xxxxxx'), TRUE);
     }
     if ($result['import_type'] == 'transaction') {
       $dateLabel = ts('Receive Date');
@@ -106,19 +106,19 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
       elseif (preg_match('/^BOF.{6}\d{8}(\d{6})/', $fields['custom_process_id'], $matches)) {
         $processId = (int) $matches[1];
       }
-      if ($processId) {
+      if ($processId || $processId === 0) {
         $log = new CRM_Core_DAO_Log();
         $log->entity_id = $processId;
         $log->entity_table = CRM_Contribute_BAO_TaiwanACH::TRANS_ENTITY;
         if (!$log->find()) {
-          $errors['custom_process_id'] = ts('Could not found your ACH transaction file ID.');
+          $errors['custom_process_id'] = ts('Could not find your ACH transaction file ID.');
         }
         else {
           $self->set('customProcessId', $processId);
         }
       }
       else {
-        $errors['custom_process_id'] = ts("Format is not correct. Input format is '%1'", array(1 => 'BOF00000011111111999999'));
+        $errors['custom_process_id'] = ts("Format is not correct. Input format is '%1'", array(1 => 'BOFACHP01'.$tYear.date('md').'xxxxxx123123'));
       }
     }
     return $errors;

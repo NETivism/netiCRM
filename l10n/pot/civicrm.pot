@@ -48406,3 +48406,6 @@ msgstr ""
 
 msgid  "Missing transaction file ID. Please copy and paste first line of ACH transaction file or enter the 6 digit number."
 msgstr ""
+
+msgid "Could not find your ACH transaction file ID."
+msgstr ""
