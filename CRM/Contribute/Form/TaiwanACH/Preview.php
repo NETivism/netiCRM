@@ -13,7 +13,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
 
     // refs #33861, check parse result process_id
     // we need process_id to know which batch we want to process
-    if ($this->_parseResult['payment_type'] === CRM_Contribute_BAO_TaiwanACH::BANK) {
+    if ($this->_parseResult['payment_type'] === CRM_Contribute_BAO_TaiwanACH::BANK && $this->_parseResult['import_type'] === 'transaction') {
       $log = new CRM_Core_DAO_Log();
       $log->entity_id = !empty($this->get('customProcessId')) ? (int) $this->get('customProcessId') : (int) $this->_parseResult['process_id'];
       $log->entity_table = CRM_Contribute_BAO_TaiwanACH::TRANS_ENTITY;
@@ -34,12 +34,12 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
 
   function buildQuickForm() {
     $result = $this->_parseResult;
-    if (is_null($result['process_id']) || !empty($this->get('customProcessId'))) {
-      $tYear = date('Y') - 1911;
-      $tYear = sprintf('%04d', $tYear);
-      $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), array('class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'xxxxxx'), TRUE);
-    }
     if ($result['import_type'] == 'transaction') {
+      if (is_null($result['process_id']) || !empty($this->get('customProcessId'))) {
+        $tYear = date('Y') - 1911;
+        $tYear = sprintf('%04d', $tYear);
+        $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), array('class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'xxxxxx'), TRUE);
+      }
       $dateLabel = ts('Receive Date');
     }
     else {
