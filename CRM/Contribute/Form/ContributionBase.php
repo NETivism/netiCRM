@@ -214,10 +214,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     if (!$this->_id) {
       $pastContributionID = $session->get('pastContributionID');
       if (!$pastContributionID) {
-        CRM_Core_Error::fatal(ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.'));
+        CRM_Core_Error::fatal(ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.'), 403);
       }
       else {
-        CRM_Core_Error::fatal(ts('This contribution has already been submitted. Click <a href=\'%1\'>here</a> if you want to make another contribution.', array(1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id=' . $pastContributionID))));
+        CRM_Core_Error::fatal(ts('This contribution has already been submitted. Click <a href=\'%1\'>here</a> if you want to make another contribution.', array(1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id=' . $pastContributionID))), 200);
       }
     }
     else {
@@ -320,17 +320,17 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if (!$this->_values['is_active']) {
         if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {
           // form is inactive, die a fatal death
-          CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
+          CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'), 403);
         }
       }
       else {
         if ($this->_values['is_internal'] > 0 && !CRM_Core_Permission::check('access CiviContribute')) {
-          CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'));
+          CRM_Core_Error::fatal(ts('The page you requested is currently unavailable.'), 403);
         }
       }
 
       if (($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL ) && empty($this->_values['custom_post_id']) && empty($this->_values['custom_pre_id'])) {
-        CRM_Core_Error::fatal(ts("You may want to collect information from contributors beyond what is required to make a contribution. For example, you may want to inquire about volunteer availability and skills. Add any number of fields to your contribution form by selecting CiviCRM Profiles (collections of fields) to include at the beginning of the page, and/or at the bottom."));
+        CRM_Core_Error::fatal(ts("You may want to collect information from contributors beyond what is required to make a contribution. For example, you may want to inquire about volunteer availability and skills. Add any number of fields to your contribution form by selecting CiviCRM Profiles (collections of fields) to include at the beginning of the page, and/or at the bottom."), 403);
       }
 
       // also check for billing informatin
