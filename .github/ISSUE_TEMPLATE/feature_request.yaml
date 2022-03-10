@@ -37,7 +37,7 @@ body:
   - type: textarea
     id: solution
     validations:
-      required: true
+      required: false
     attributes:
       label: "✨  Solution"
       description: "A clear and concise description of what you want to happen."
@@ -45,7 +45,7 @@ body:
   - type: textarea
     id: screeshot-or-wireframe
     validations:
-      required: true
+      required: false
     attributes:
       label: "🖼️ Screenshot or Simple Wireframe"
       description: "A picture is worth a thousand words."
@@ -55,4 +55,4 @@ body:
     attributes:
       label: "🚩 Redmine Issue Number"
       description: "The internal use issue tracking number, only allowed number. Do not enter if you don't know what it is."
-      placeholder: "12345"
+      placeholder: "12345,34567"
