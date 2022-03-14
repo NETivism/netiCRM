@@ -264,7 +264,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         $vars['suppress'] = $suppress;
       }
       else {
-        $statusCode = $status ? $status : 500;
+        $statusCode = $status ? $status : 400;
         http_response_code($statusCode);
         $vars['suppress'] = FALSE;
       }
