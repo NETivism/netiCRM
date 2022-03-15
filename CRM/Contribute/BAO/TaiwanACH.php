@@ -1302,9 +1302,33 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
 
-    // First use ipn validate
-    $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
-    if(!$validate_result){
+    // Get objects without ipn validate
+    if ($ids['contribution']) {
+      $contribution = new CRM_Contribute_DAO_Contribution();
+      $contribution->id = $ids['contribution'];
+      if (!$contribution->find(TRUE)) {
+        CRM_Core_Error::debug_log_message("Could not find contribution record: {$ids['contribution']}");
+      }
+      else {
+        $objects['contribution'] = &$contribution;
+      }
+    }
+    if ($ids['contact'] && !empty($contribution->contact_id)) {
+      $contactID = $ids['contact'] = $contribution->contact_id;
+      $contact = new CRM_Contact_DAO_Contact();
+      $contact->id = $ids['contact'];
+      if (!$contact->find(TRUE)) {
+        CRM_Core_Error::debug_log_message("Could not find contact record: $contactID");
+      }
+      else {
+        $objects['contact'] = &$contact;
+      }
+    }
+    if (!$ipn->loadObjects($input, $ids, $objects, FALSE, NULL, TRUE)) {
+      CRM_Core_Error::debug_log_message("ACH IPN loadObjects Error. Contribution ID: {$ids['contribution']}");
+      CRM_Core_Error::debug_var("ACH_ipn_input", $input);
+      CRM_Core_Error::debug_var("ACH_ipn_ids", $ids);
+      CRM_Core_Error::debug_var("ACH_ipn_objects", $objects);
       return FALSE;
     }
     else {
