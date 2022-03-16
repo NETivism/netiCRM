@@ -484,8 +484,8 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         }
         $prefix = 'testRecipt';
         $receiptID = CRM_Contribute_BAO_Contribution::lastReceiptID($prefix);
-        $now = time();
-        $trxn_id = 'ut'.substr($now, -5);
+        $val = rand(10000, 100000);
+        $trxn_id = 'ut'.$val;
         $ids = array ('contribution' => null );
         $params = array (
             'contact_id'             => $contactId,
@@ -516,7 +516,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      */
     function testLastReceiptId( )
     {
-        exec('cd sites/all/modules/civicrm/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php');
+        exec('cd sites/all/modules/civicrm/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php && echo 0 > /dev/null 2>&1 & cd sites/all/modules/civicrm/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php');
 
         $query = "SELECT receipt_id FROM civicrm_contribution WHERE receipt_id LIKE 'testRecipt%' ORDER BY id DESC LIMIT 2";
         $dao = CRM_Core_DAO::executeQuery($query);
