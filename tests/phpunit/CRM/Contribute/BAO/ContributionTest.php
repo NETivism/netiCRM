@@ -44,6 +44,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     function setUp( ) 
     {
         parent::setUp();
+        // $this->emptyContributionData();
         // $this->contributionTypeCreate();
     }
     
@@ -467,44 +468,17 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         // Delete Contact
         Contact::delete( $contactId );
     }
-     /**
-     * Check LastReceiptId
-     * Create single contribution
-     * CreateSingleContribution()
+    /**
+     * emptyContributionData
+     * update civicrm_contribution set testing receipt_id to null for testLastReceiptId
+     * detele civicrm_sequence testing data for testLastReceiptId
      */
-    function CreateSingleContribution( )
-    {        
-        //get contact_id
-        $query = "SELECT min(id) as minID FROM civicrm_contact";
-        $dao = CRM_Core_DAO::executeQuery($query);
-        if ($dao->fetch()) {
-            $contactId = $dao->minID;
-        }
-        $prefix = 'testRecipt';
-        $receiptID = CRM_Contribute_BAO_Contribution::lastReceiptID($prefix);
-        $val = rand(10000, 100000);
-        $trxn_id = 'ut'.$val;
-        $ids = array ('contribution' => null );
-        $params = array (
-            'contact_id'             => $contactId,
-            'currency'               => 'USD',
-            'contribution_type_id'   => 1,
-            'contribution_status_id' => 1,
-            'payment_instrument_id'  => 1,
-            'source'                 => 'STUDENT',
-            'receive_date'           => '20080522000000',
-            'receipt_date'           => '20080522000000',
-            'id'                     => null,
-            'non_deductible_amount'  => 0.00,
-            'total_amount'           => 200.00,
-            'fee_amount'             => 5,
-            'net_amount'             => 195,
-            'trxn_id'                => $trxn_id,
-            'thankyou_date'          => '20080522',
-            'receipt_id'             => $receiptID
-            );
-        require_once 'CRM/Contribute/BAO/Contribution.php';
-        $contribution = CRM_Contribute_BAO_Contribution::create( $params ,$ids );
+    function emptyContributionData( )
+    {
+        $query_update = "UPDATE civicrm_contribution SET receipt_id ='' WHERE receipt_id LIKE 'testRecipt%' AND receipt_id IS NOT NULL";
+        $dao_update = CRM_Core_DAO::executeQuery($query_update);
+        $query_delete = "DELETE FROM civicrm_sequence WHERE name = 'testRecipt'";
+        $dao_delete = CRM_Core_DAO::executeQuery($query_delete);
 
     }
     /**
@@ -512,10 +486,11 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * Create contribution at same time
      * CreateContribution()
      */
-    function testCreateContribution( )
+    function testCreateContribution($sleep=5)
     {
-        $GLOBALS['CiviTest_ContributionTest_sleep'] = 5;
-        
+        if ($sleep == 5) {
+            $GLOBALS['CiviTest_ContributionTest_sleep'] = $sleep;
+        }      
         //get contact_id
         $query = "SELECT min(id) as minID FROM civicrm_contact";
         $dao = CRM_Core_DAO::executeQuery($query);
@@ -555,30 +530,36 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      */
     function testLastReceiptId( )
     {
+        $this->emptyContributionData();
         // case1:exec twice testCreateContribution function and verifty ReceiptId 
         exec('cd sites/all/modules/civicrm/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php && echo 0 > /dev/null 2>&1 & cd sites/all/modules/civicrm/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php');
 
         $query = "SELECT receipt_id FROM civicrm_contribution WHERE receipt_id LIKE 'testRecipt%' ORDER BY id DESC LIMIT 2";
         $dao = CRM_Core_DAO::executeQuery($query);
-        $ReciptID = array();
+        $receiptId = array();
         while ($dao->fetch()) {
-            $ReciptID[] = $dao->receipt_id;
+            $receiptId[] = $dao->receipt_id;
         }
-        $this->assertNotEquals( $ReciptID[0], $ReciptID[1], 'Check for recipt id .' );
-        $lastId = substr($ReciptID[0], 11);
-
+        $this->assertNotEquals( $receiptId[0], $receiptId[1], 'Check for recipt id .' );
+        $this->assertCount( 2 , $receiptId , 'Check for recipt id .' );
+        $receiptId1 = explode('-', $receiptId[0]);
+        $receiptId2 = explode('-', $receiptId[1]);
+        if ($receiptId1[1] > $receiptId2[1]) {
+            $lastId = $receiptId1[1];
+        } else {
+            $lastId = $receiptId2[1];
+        }
+        
         //case2 :create contribution after delete sequence data
         $query_sequece = "DELETE FROM civicrm_sequence WHERE name = 'testRecipt'";
         $dao_sequece = CRM_Core_DAO::executeQuery($query_sequece);
-        $this->CreateSingleContribution();
-        $query = "";
-        $dao = "";
+        $this->testCreateContribution(0);
         $query = "SELECT receipt_id FROM civicrm_contribution WHERE receipt_id LIKE 'testRecipt%' ORDER BY id DESC LIMIT 1";
         $dao = CRM_Core_DAO::executeQuery($query);
         while ($dao->fetch()) {
-            $ReciptID = $dao->receipt_id;
+            $receiptId = $dao->receipt_id;
         }
-        $checkId = substr($ReciptID, 11);
+        $checkId = substr($receiptId, 11);
         $veriftyId = $lastId +1;
         $this->assertEquals( $checkId, $veriftyId, 'Check for recipt id .' );
     }
