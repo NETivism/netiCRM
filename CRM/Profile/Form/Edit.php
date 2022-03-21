@@ -227,6 +227,7 @@ SELECT module
       // assign back url
       $this->assign('backWebsiteUrl', $this->_cancelURL);
     }
+    $this->assign('browserPrint', TRUE);
 
     $this->addButtons($buttons);
 

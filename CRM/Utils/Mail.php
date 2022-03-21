@@ -86,7 +86,7 @@ class CRM_Utils_Mail {
     $embedImages = CRM_Utils_Array::value('images', $params);
 
     // CRM-6224
-    if (trim(CRM_Utils_String::htmlToText($htmlMessage)) == '') {
+    if (trim(CRM_Utils_String::htmlPurifier($htmlMessage, array('img'))) == '') {
       $htmlMessage = FALSE;
     }
 

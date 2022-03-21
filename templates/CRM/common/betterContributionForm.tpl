@@ -19,6 +19,9 @@ cj(function($){
         $is_for_organization.change(function(){
           doChangeSameAsTarget();
         });
+        if ($is_for_organization.is(':checked')) {
+          doChangeSameAsTarget();
+        }
       }
       else if($is_for_organization.attr('type') == 'hidden'){
         doChangeSameAsTarget();
@@ -348,6 +351,12 @@ cj(function($){
         }
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
+      else {
+        if (is_for_organization) {
+          $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
+        }
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+      }
     }
 
     // Part of Name
@@ -402,6 +411,10 @@ cj(function($){
     else if($('#r_name_custom:checked').val()){
       if($('#last_name,#first_name').length>1){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
+      }
+      else if ($is_for_organization) {
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
       }
     }
@@ -460,6 +473,7 @@ cj(function($){
       $('#r_company').prop('checked', true);
       {/literal}{if $receiptYesNo}{literal}
       $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').prop('checked', false).closest('tr').hide();
+      $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').prop('checked', false).closest('label').hide();
       {/literal}{/if}{literal}
     }
     else {

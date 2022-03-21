@@ -220,13 +220,18 @@
 <script type="text/javascript">
 {literal}
 cj( function( ) {
-    cj("#contact_1").blur( function( ) {
-        checkEmail( );
-    } );
+    setInterval(function(){
+      if (window.contact_select_id != cj("input[name='contact_select_id[1]']").val()) {
+        window.contact_select_id = cj("input[name='contact_select_id[1]']").val();
+        if (window.contact_select_id) {
+          checkEmail( );
+        }
+      }
+    }, 1000);
     checkEmail( );
 });
 function checkEmail( ) {
-    var contactID = cj("input[name='contact_select_id[1]']").val();
+    var contactID = window.contact_select_id;
     if ( contactID ) {
         var postUrl = "{/literal}{crmURL p='civicrm/ajax/getemail' h=0}{literal}";
         cj.post( postUrl, {contact_id: contactID},

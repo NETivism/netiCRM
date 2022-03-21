@@ -664,13 +664,13 @@ ORDER BY   i.contact_id, i.email_id
 
     $patterns = array();
 
-    $protos = '(https?|ftp)';
+    $protos = '(https?)';
     $letters = '\w';
     $gunk = '\{\}/#~:.?+=&;%@!\,\-';
     $punc = '.:?\-';
     $any = "{$letters}{$gunk}{$punc}";
     if ($onlyHrefs) {
-      $pattern = "\\bhref[ ]*=[ ]*([\"'])?(($protos:[$any]+(?=[$punc]*[^$any]|$)))([\"'])?";
+      $pattern = "<a\s+[^>]*\\bhref[ ]*=[ ]*([\"'])?(($protos:[$any]+(?=[$punc]*[^$any]|$)))([\"'])?";
     }
     else {
       $pattern = "\\b($protos:[$any]+(?=[$punc]*[^$any]|$))";
@@ -713,7 +713,7 @@ ORDER BY   i.contact_id, i.email_id
 
     $funcStruct = array('type' => NULL, 'token' => $token);
     $matches = array();
-    if ((preg_match('/^href/i', $token) || preg_match('/^http/i', $token))) {
+    if ((preg_match('/^href/i', $token) || preg_match('/^http/i', $token) || preg_match('/^<a[^>]+\bhref/i', $token))) {
       // it is a url so we need to check to see if there are any tokens embedded
       // if so then call this function again to get the token dataFunc
       // and assign the type 'embedded'  so that the data retrieving function
@@ -841,13 +841,6 @@ ORDER BY   i.contact_id, i.email_id
         }
 
         $this->templates['html'] = join("\n", $template);
-
-        // this is where we create a text template from the html template if the text template did not exist
-        // this way we ensure that every recipient will receive an email even if the pref is set to text and the
-        // user uploads an html email only
-        if (!$this->body_text) {
-          $this->templates['text'] = CRM_Utils_String::htmlToText($this->templates['html']);
-        }
       }
 
       if ($this->subject) {
@@ -1328,6 +1321,12 @@ AND civicrm_contact.is_opt_out =0";
     if (isset($pEmails['text']) && is_array($pEmails['text']) && count($pEmails['text'])) {
       $text = &$pEmails['text'];
     }
+    else {
+      // this is where we create a text template from the html template if the text template did not exist
+      // this way we ensure that every recipient will receive an email even if the pref is set to text and the
+      // user uploads an html email only
+      $text = CRM_Utils_String::htmlToText(join('', $html));
+    }
 
     // push the tracking url on to the html email if necessary
     if ($this->open_tracking && $html) {
@@ -1345,7 +1344,12 @@ AND civicrm_contact.is_opt_out =0";
         $contact['preferred_mail_format'] == 'Both' ||
         ($contact['preferred_mail_format'] == 'HTML' && !array_key_exists('html', $pEmails))
       )) {
-      $textBody = join('', $text);
+      if (is_array($text)) {
+        $textBody = join('', $text);
+      }
+      else {
+        $textBody = $text;
+      }
       $mailParams['text'] = $textBody;
     }
 
@@ -1498,10 +1502,10 @@ AND civicrm_contact.is_opt_out =0";
       }
       // add trailing quote since we've gobbled it up in a previous regex
       // function getPatterns, line 431
-      if (preg_match('/^href[ ]*=[ ]*\'/', $url)) {
+      if (preg_match('/href[ ]*=[ ]*\'/', $url)) {
         $url .= "'";
       }
-      elseif (preg_match('/^href[ ]*=[ ]*\"/', $url)) {
+      elseif (preg_match('/href[ ]*=[ ]*\"/', $url)) {
         $url .= '"';
       }
       $data = $url;

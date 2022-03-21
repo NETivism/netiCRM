@@ -81,13 +81,13 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
    */
   static $_log = true;
   /**
-   * Contribution Recur ID
+   * Unique Contribution Recur ID
    *
    * @var int unsigned
    */
   public $id;
   /**
-   * Foreign key to civicrm_contact.id .
+   * Foreign key to civicrm_contact.id
    *
    * @var int unsigned
    */
@@ -99,7 +99,7 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
    */
   public $amount;
   /**
-   * 3 character string, value from config setting or input via user.
+   * 3 character string, value from config setting.
    *
    * @var string
    */
@@ -117,7 +117,7 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
    */
   public $frequency_interval;
   /**
-   * Total number of payments to be made. Set this to 0 if this is an open-ended commitment i.e. no set end date.
+   * Total number of payments to be made. Set this to 0 if this is an open-ended commitment.
    *
    * @var int unsigned
    */
@@ -153,19 +153,19 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
    */
   public $end_date;
   /**
-   * FK to payment processor
+   * FK to Payment Processor
    *
    * @var int unsigned
    */
   public $processor_id;
   /**
-   * Possibly needed to store a unique identifier for this recurring payment order - if this is available from the processor??
+   * an external unique identifier for this recurring payment order provide by payment method
    *
    * @var string
    */
   public $external_id;
   /**
-   * unique transaction id. may be processor id, bank id + trans id, or account number + check number... depending on payment_method
+   * unique transaction id or this recurring defined by this application
    *
    * @var string
    */
@@ -177,11 +177,13 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
    */
   public $invoice_id;
   /**
+   * 1=completed, 2=pending, 3=cancel, 4=failed, 5=in progress, 6=overdue, 7=suspend
    *
    * @var int unsigned
    */
   public $contribution_status_id;
   /**
+   * Mark 1 when this order is an testing order.
    *
    * @var boolean
    */
@@ -193,31 +195,31 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
    */
   public $cycle_day;
   /**
-   * At Groundspring this was used by the cron job which triggered payments. If we\'re not doing that but we know about payments, it might still be useful to store for display to org andor contributors.
+   * Next payment day for display or execution(if needed).
    *
    * @var datetime
    */
   public $next_sched_contribution;
   /**
-   * Number of failed charge attempts since last success. Business rule could be set to deactivate on more than x failures.
+   * Number of failed charge attempts since last success.
    *
    * @var int unsigned
    */
   public $failure_count;
   /**
-   * At Groundspring we set a business rule to retry failed payments every 7 days - and stored the next scheduled attempt date there.
+   * Record retried date after payment fail retry.
    *
    * @var datetime
    */
   public $failure_retry_date;
   /**
-   * Some systems allow contributor to set a number of installments - but then auto-renew the subscription or commitment if they do not cancel.
+   * Auto renew card expiration date when available.
    *
    * @var boolean
    */
   public $auto_renew;
   /**
-   * Last expected execute transaction date.
+   * Last payment execution transaction date to prevent duplicate execution at the same frequency_unit.
    *
    * @var datetime
    */

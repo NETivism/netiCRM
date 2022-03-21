@@ -581,7 +581,7 @@ class CRM_Utils_String {
    * @param $alphabet
    * @return string
    */
-  public static function createRandom($len, $alphabet) {
+  public static function createRandom($len, $alphabet = self::ALPHANUMERIC) {
     $alphabetSize = strlen($alphabet);
     $result = '';
     for ($i = 0; $i < $len; $i++) {

@@ -1160,11 +1160,12 @@ WHERE  v.option_group_id = g.id
       $participantParams['is_test'] = 0;
     }
 
-    if (CRM_Utils_Array::value('note', $this->_params)) {
-      $participantParams['note'] = $this->_params['note'];
-    }
-    elseif (CRM_Utils_Array::value('participant_note', $this->_params)) {
+    // refs #34079, participant_note has greater priority than note
+    if (CRM_Utils_Array::value('participant_note', $this->_params)) {
       $participantParams['note'] = $this->_params['participant_note'];
+    }
+    elseif (CRM_Utils_Array::value('note', $this->_params)) {
+      $participantParams['note'] = $this->_params['note'];
     }
 
     // reuse id if one already exists for this one (can happen

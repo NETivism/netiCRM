@@ -141,6 +141,10 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     // make receipt target popup new tab
     $options = self::getPrintingTypes();
+    $config = CRM_Core_Config::singleton();
+    if ($config->debug) {
+      $this->addCheckBox('nopdf', '', array('Debug: print html' => 1));
+    }
     $this->addRadio( 'window_envelope', ts('Apply to window envelope'), $options,null,'<br/>',true );
 
     if (count($this->_contributionIds) <= self::PDF_BATCH_THRESHOLD && $this->_enableEmailReceipt) {

@@ -117,6 +117,15 @@
     <export>true</export>
   </field>
   <field>
+    <name>order_number</name>
+    <title>Order Number</title>
+    <type>varchar</type>
+    <length>128</length>
+    <comment>Order number of ACH Account.</comment>
+    <add>4.0</add>
+    <export>true</export>
+  </field>
+  <field>
     <name>stamp_verification</name>
     <title>Stamp Verification</title>
     <type>int unsigned</type>

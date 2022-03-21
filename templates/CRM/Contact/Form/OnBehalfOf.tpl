@@ -70,7 +70,7 @@
  {/if}
     <div class="crm-section organizationName-section">
     {if $relatedOrganizationFound}
-      <div class="section crm-section">
+      <div class="section crm-section org_option-section">
         <div class="content">{$form.org_option.html}</div>
       </div>
       <div id="select_org" class="crm-section select_org-section">

@@ -146,6 +146,7 @@ ORDER BY title";
       $captcha->add($this);
     }
 
+    $this->assign('browserPrint', TRUE);
     $this->addButtons(array(
         array(
           'type' => 'next',

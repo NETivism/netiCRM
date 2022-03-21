@@ -10,16 +10,36 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   function preProcess() {
     $this->addFormRule(array('CRM_Contribute_Form_TaiwanACH_Preview', 'formRule'), $this);
     $this->_parseResult = $this->get('parseResult');
-    if (!empty($this->_parseResult) && !empty($this->_parseResult['process_id'])) {
-      $this->assign('parseResult', $this->_parseResult);
+
+    // refs #33861, check parse result process_id
+    // we need process_id to know which batch we want to process
+    if ($this->_parseResult['payment_type'] === CRM_Contribute_BAO_TaiwanACH::BANK && $this->_parseResult['import_type'] === 'transaction') {
+      $log = new CRM_Core_DAO_Log();
+      $log->entity_id = !empty($this->get('customProcessId')) ? (int) $this->get('customProcessId') : (int) $this->_parseResult['process_id'];
+      $log->entity_table = CRM_Contribute_BAO_TaiwanACH::TRANS_ENTITY;
+      if ($log->find()) {
+        $this->_parseResult['process_id'] = $log->entity_id;
+        $result = CRM_Contribute_Form_TaiwanACH_Upload::parseUpload($this->_parseResult['original_file'], $log->entity_id);
+        $result['original_file'] = $this->_parseResult['original_file'];
+        $this->_parseResult = $result;
+        $this->set('parseResult', $result);
+      }
+      else {
+        $this->_parseResult['process_id'] = NULL;
+      }
     }
+    $this->assign('parseResult', $this->_parseResult);
     $this->assign('importType', $this->_parseResult['import_type']);
   }
 
   function buildQuickForm() {
-
-    $result = $this->get('parseResult');
+    $result = $this->_parseResult;
     if ($result['import_type'] == 'transaction') {
+      if (is_null($result['process_id']) || !empty($this->get('customProcessId'))) {
+        $tYear = date('Y') - 1911;
+        $tYear = sprintf('%04d', $tYear);
+        $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), array('class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'xxxxxx'), TRUE);
+      }
       $dateLabel = ts('Receive Date');
     }
     else {
@@ -29,19 +49,33 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     $this->addDateTime('receive_date', $dateLabel, False, array('formatType' => 'activityDateTime'));
 
     if (!empty($this->_parseResult)) {
-      $this->addButtons(array(
-          array('type' => 'back',
-            'name' => ts('<< Previous'),
-          ),
-          array('type' => 'upload',
-            'name' => ts('Import Now >>'),
-            'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
-            'name' => ts('Cancel'),
-          ),
-        )
-      );
+      if (is_null($result['process_id'])) {
+        $this->addButtons(array(
+            array('type' => 'refresh',
+              'name' => ts('Refresh'),
+              'isDefault' => TRUE,
+            ),
+            array('type' => 'cancel',
+              'name' => ts('Cancel'),
+            ),
+          )
+        );
+      }
+      else {
+        $this->addButtons(array(
+            array('type' => 'back',
+              'name' => ts('<< Previous'),
+            ),
+            array('type' => 'upload',
+              'name' => ts('Import Now >>'),
+              'isDefault' => TRUE,
+            ),
+            array('type' => 'cancel',
+              'name' => ts('Cancel'),
+            ),
+          )
+        );
+      }
     }
     else {
       CRM_Core_Session::setStatus(ts('Invalid file being import, abort.'), FALSE, 'error');
@@ -62,6 +96,31 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     if (empty($self->_parseResult)) {
       $errors['qfKey'] = ts('Invalid file being import, abort.');
     }
+
+    // refs #33861, parse custom_process_id
+    if (empty($self->_parseResult['process_id']) && !empty($fields['custom_process_id'])) {
+      $processId = NULL;
+      if (preg_match('/^[0-9]{6}$/', $fields['custom_process_id'])) {
+        $processId = (int) $fields['custom_process_id'];
+      }
+      elseif (preg_match('/^BOF.{6}\d{8}(\d{6})/', $fields['custom_process_id'], $matches)) {
+        $processId = (int) $matches[1];
+      }
+      if ($processId || $processId === 0) {
+        $log = new CRM_Core_DAO_Log();
+        $log->entity_id = $processId;
+        $log->entity_table = CRM_Contribute_BAO_TaiwanACH::TRANS_ENTITY;
+        if (!$log->find()) {
+          $errors['custom_process_id'] = ts('Could not find your ACH transaction file ID.');
+        }
+        else {
+          $self->set('customProcessId', $processId);
+        }
+      }
+      else {
+        $errors['custom_process_id'] = ts("Format is not correct. Input format is '%1'", array(1 => 'BOFACHP01'.$tYear.date('md').'xxxxxx123123'));
+      }
+    }
     return $errors;
   }
 
@@ -75,6 +134,12 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
 
 
   function postProcess() {
+    // do not submit when button state is refresh
+    $buttonPressed = $this->controller->getButtonName();
+    if ($buttonPressed == '_qf_Preview_refresh') {
+      return;
+    }
+
     // send parseResult into BAO
     // Considering type is Bank or Post in process function
     $counter = array();

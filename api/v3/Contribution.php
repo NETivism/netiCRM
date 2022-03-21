@@ -88,7 +88,7 @@ function civicrm_api3_contribution_create($params) {
  */
 function _civicrm_api3_contribution_create_spec(&$params) {
   $params['contact_id']['api.required'] = 1;
-  #$params['total_amount']['api.required'] = 1;
+  $params['total_amount']['api.required'] = 1;
   $params['note'] = array(
     'name' => 'note',
     'uniqueName' => 'contribution_note',
@@ -128,7 +128,7 @@ function civicrm_api3_contribution_delete($params) {
 
   $contributionID = CRM_Utils_Array::value('contribution_id', $params) ? $params['contribution_id'] : $params['id'];
   if (CRM_Contribute_BAO_Contribution::deleteContribution($contributionID)) {
-    return civicrm_api3_create_success(array($contributionID => 1));
+    return civicrm_api3_create_success();
   }
   else {
     return civicrm_api3_create_error('Could not delete contribution');

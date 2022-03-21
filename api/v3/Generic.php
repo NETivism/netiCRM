@@ -38,24 +38,29 @@ function civicrm_api3_generic_getfields($apiRequest) {
   }
   // determines whether to use unique field names - seem comment block above
   $unique = TRUE;
-  if (isset($results[$entity . $subentity]) && CRM_Utils_Array::value($action, $results[$entity])
+  $cache_key = $apiRequest['action'].':'.$action;
+  if (isset($results[$entity . $subentity]) && CRM_Utils_Array::value($cache_key, $results[$entity])
     && empty($apiOptions)) {
-    return $results[$entity . $subentity][$action];
+    return $results[$entity . $subentity][$cache_key];
   }
   // defaults based on data model and API policy
   switch ($action) {
     case 'getfields':
       $values = _civicrm_api_get_fields($entity, false, $apiRequest['params']);
-      $results[$entity][$action] = civicrm_api3_create_success($values,
+      $results[$entity][$cache_key] = civicrm_api3_create_success($values,
         $apiRequest['params'], $entity, 'getfields'
       );
-      return $results[$entity][$action];
+      return $results[$entity][$cache_key];
     case 'create':
     case 'update':
     case 'replace':
       $unique = FALSE;
     case 'get':
-      $metadata = _civicrm_api_get_fields($apiRequest['entity'], $unique, $apiRequest['params']);
+      $fields = _civicrm_api_get_fields($apiRequest['entity'], $unique, $apiRequest['params']);
+      $metadata = array();
+      foreach($fields as $fldname => $fldvalue) {
+        $metadata[$fldname] = $fldvalue;
+      }
       if (empty($metadata['id']) && !empty($metadata[$apiRequest['entity'] . '_id'])) {
         $metadata['id'] = $metadata[$lcase_entity . '_id'];
         $metadata['id']['api.aliases'] = array($lcase_entity . '_id');
@@ -97,8 +102,8 @@ function civicrm_api3_generic_getfields($apiRequest) {
     _civicrm_api3_generic_get_metadata_options($metadata, $fieldname, $fieldSpec, $fieldsToResolve);
   }
 
-  $results[$entity][$action] = civicrm_api3_create_success($metadata, $apiRequest['params'], NULL, 'getfields');
-  return $results[$entity][$action];
+  $results[$entity][$cache_key] = civicrm_api3_create_success($metadata, $apiRequest['params'], NULL, 'getfields');
+  return $results[$entity][$cache_key];
 }
 
 /**
@@ -185,13 +190,149 @@ function civicrm_api3_generic_replace($apiRequest) {
  * @return integer count of results
  */
 function civicrm_api3_generic_getoptions($apiRequest) {
+  static $optionGroups;
+  $camelName = _civicrm_api_get_camel_name($apiRequest['entity'], $apiRequest['version']);
+  $entity = strtolower($camelName);
+
   $getFieldsArray = array(
     'version' => 3,
     'action' => 'create',
-    'options' => array('get_options' => $apiRequest['params']['field'], )
+    'options' => array('get_options' => $apiRequest['params']['field'])
   );
+  
   $result = civicrm_api($apiRequest['entity'], 'getfields', $getFieldsArray);
-  return $result['values'][$apiRequest['params']['field']]['options'];
+
+  // add some exceptions for location related when entity is contact
+  if ($entity == 'contact') {
+    $result['values'] = array_merge($result['values'], array(
+      'location_type_id' => array(1),
+      'worldregion_id' => array(1),
+      'country_id' => array(1),
+      'state_province_id' => array(1),
+      'phone_type_id' => array(1),
+      'provider_id' => array(1),
+      'world_region' => array(1),
+    ));
+  }
+
+  // field_name is correct
+  if (!empty($result['values'][$apiRequest['params']['field']])) {
+    $values = array();
+
+    // field has related options id (eg. custom_field)
+    if (!empty($result['values'][$apiRequest['params']['field']]['options'])) {
+      foreach($result['values'][$apiRequest['params']['field']]['options'] as $key => $label) {
+        $values[$key] = array(
+          'value' => $key,
+          'label' => $label,
+        );
+      }
+    }
+    elseif (strstr($result['values'][$apiRequest['params']['field']]['name'], 'custom_') && empty($result['values'][$apiRequest['params']['field']]['option_group_id'])) {
+      switch($result['values'][$apiRequest['params']['field']]['data_type']) {
+        case 'Boolean':
+          $values = array(
+            0 => array(
+              'value' => 0,
+              'label' => ts('No'),
+            ),
+            1 => array(
+              'value' => 1,
+              'label' => ts('Yes'),
+            ),
+          );
+          break;
+        case 'StateProvince':
+          $constantParams = array(
+            'version' => 3,
+            'class' => 'CRM_Core_PseudoConstant',
+            'name' => 'stateProvince',
+          );
+          $result = civicrm_api('constant', 'get', $constantParams);
+          if (!$result['is_error'] && !empty($result['values'])) {
+            foreach($result['values'] as $key => $val) {
+              $values[$key] = array(
+                'value' => $key,
+                'label' => $val,
+              );
+            }
+          }
+          break;
+      }
+    }
+    // check constant or option group name
+    else {
+      $constantEntities = _civicrm_api3_pseudoconstant_entity();
+      $fieldNameWithoutId = strtolower(preg_replace('/_id$/i', '', $apiRequest['params']['field']));
+
+      // constant api
+      if (!empty($constantEntities[$entity])) {
+        $constantName = _civicrm_api_get_constant_camel_name($fieldNameWithoutId);
+        if (!empty($constantName)) {
+          $constantParams = array(
+            'version' => 3,
+            'class' => 'CRM_'.$constantEntities[$entity].'_PseudoConstant',
+            'name' => $constantName,
+          );
+          $result = civicrm_api('constant', 'get', $constantParams);
+          if (!$result['is_error'] && !empty($result['values'])) {
+            foreach($result['values'] as $key => $val) {
+              if (is_array($val)) {
+                if (!isset($val['value'])) {
+                  $val['value'] = "$key";
+                }
+                if (!isset($val['label'])) {
+                  $val['label'] = $val['label'] ? $val['label'] : ($val['name'] ? $val['name'] : '');
+                }
+                $values[$key] = $val;
+              }
+              elseif (is_string($val)) {
+                $values[$key] = array(
+                  'value' => $key,
+                  'label' => $val,
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (!empty($values)) {
+      return civicrm_api3_create_success($values, $apiRequest['params'], $apiRequest['entity'], 'getoptions');
+    }
+    else{ 
+      return civicrm_api3_create_error("Found field '{$apiRequest['params']['field']}' in entity '{$apiRequest['entity']}', but doesn't have option.");
+    }
+  }
+  elseif($entity == 'optiongroup') {
+    $values = array();
+    // option group name
+    // whatever entity is, get option group values by name
+    $fieldNameWithoutId = strtolower(preg_replace('/_id$/i', '', $apiRequest['params']['field']));
+    $optionGroupName = strtolower($fieldNameWithoutId);
+    $result = civicrm_api('option_value', 'get', array(
+      'version' => 3,
+      'option_group_name' => $optionGroupName,
+    ));
+    if (!empty($result['values'])) {
+      foreach($result['values'] as $val) {
+        $values[$val['value']] = array(
+          'label' => $val['label'],
+          'name' => $val['name'],
+          'value' => $val['value'],
+        );
+      }
+      return civicrm_api3_create_success($values, $apiRequest['params'], $apiRequest['entity'], 'getoptions');
+    }
+    else {
+      return civicrm_api3_create_error("Option group '{$apiRequest['params']['field']}' doesn't exists.");
+    }
+  }
+  else {
+    return civicrm_api3_create_error("Field '{$apiRequest['params']['field']}' doesn't exists in entity '{$apiRequest['entity']}'.");
+  }
+  return '';
 }
 
 /*

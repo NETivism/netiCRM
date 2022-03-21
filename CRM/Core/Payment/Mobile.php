@@ -204,6 +204,9 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       if(!empty($params['eventID'])){
         $payment_params['eid'] = $params['eventID'];
       }
+      if (!empty($params['membershipID'])) {
+        $payment_params['mid'] = $params['membershipID'];
+      }
       $smarty->assign('params', $payment_params );
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       print($page);
@@ -311,11 +314,20 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $ppProvider = CRM_Utils_Request::retrieve('provider', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $participant_id = CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
     $event_id = CRM_Utils_Request::retrieve('eid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $membership_id = CRM_Utils_Request::retrieve('mid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
     $post = $_POST;
 
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
+
+    if ($contribution->contribution_status_id == 1) {
+      // The contribution is solved, avoid solve twice.
+      CRM_Core_Error::debug('applepay_transact_post_duplicated_condition', $_POST);
+      CRM_Core_Error::debug('applepay_transact_get_duplicated_condition', $_GET);
+      CRM_Core_Error::debug_log_message('This contribution has already been processed.');
+      CRM_Utils_System::civiExit();
+    }
 
     // Prepare objects to put in checkout function.
     $originPaymentProcessorId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $contribution->payment_processor_id, 'user_name');
@@ -351,7 +363,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         $input['component'] = 'event';
         $ids['participant'] = $participant_id;
         $ids['event'] = $event_id;
-      }else{
+      }
+      else {
+        if (!empty($membership_id)) {
+          $ids['membership'] = $membership_id;
+        }
         $input['component'] = 'contribute';
       }
       $ids['contribution'] = $contribution->id;
@@ -363,7 +379,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
           $input['payment_instrument_id'] = $contribution->payment_instrument_id;
           $input['amount'] = $contribution->amount;
           $objects['contribution']->receive_date = date('YmdHis');
-          $objects['contribution']->trxn_id = 'ap_'.$ids['contribution'];
+          $objects['contribution']->trxn_id = $ids['contribution']; // Workaround, should use MerchantOrderNo from transact result
           $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
 
           $result = array('is_success' => 1);

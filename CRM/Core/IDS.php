@@ -78,6 +78,7 @@ class CRM_Core_IDS {
       'civicrm/ajax/rest' => [
         'json:json'
       ],
+      'civicrm/admin/options/from_email_address' => ['label']
     ],
     'access CiviContribute' => [
       'civicrm/admin/contribute/settings' => [ 
@@ -98,7 +99,8 @@ class CRM_Core_IDS {
         'about',
       ],
       'civicrm/admin/contribute/friend' => ['thankyou_text'],
-      'civicrm/contribute/search' => ['html_message']
+      'civicrm/contribute/search' => ['html_message'],
+      'civicrm/contact/view/contribution' => ['from_email_address'],
     ],
     'access CiviEvent' => [
       'civicrm/event/manage/eventInfo' => ['description'],
@@ -113,6 +115,7 @@ class CRM_Core_IDS {
       'civicrm/event/search' => ['html_message'],
       'civicrm/event/manage/friend' => ['thankyou_text'],
       'civicrm/contact/view/participant' => ['receipt_text'],
+      'civicrm/contact/view/participant' => ['from_email_address'],
     ],
     'access CiviMail' => [
       'civicrm/admin/component' => [
@@ -126,6 +129,7 @@ class CRM_Core_IDS {
     'access CiviReport' => [
       'civicrm/report/*/detail' => ['report_header', 'report_footer'],
       'civicrm/report/instance/*' => ['report_header', 'report_footer'],
+      'civicrm/report/*/*' => ['report_header', 'report_footer'],
     ],
     'access CiviCRM' => [
       '*' => [
@@ -134,10 +138,13 @@ class CRM_Core_IDS {
       ],
       'civicrm/activity' => ['details'],
       'civicrm/activity/add' => ['details'],
+      'civicrm/contact/view/activity' => ['fromEmailAddress'],
+      'civicrm/*/search' => ['fromEmailAddress'],
     ],
     '*' => [
       'civicrm/ajax/track' => ['data:json'],
       'civicrm/contribute/transact' => ['JSONData:json:_qf_ThankYou_display=1'],
+      'civicrm/event/register' => ['JSONData:json:_qf_ThankYou_display=1'],
       '*/civicrm/extern/rest.php' => ['json:json']
     ],
   ];
@@ -166,7 +173,7 @@ class CRM_Core_IDS {
     $path = implode('/', $args);
 
     // remove tracking parameters to prevent false positive
-    $trackingG = array('fbclid', 'gclid');
+    $trackingG = array('fbclid', 'gclid', 'wbraid');
     $trackingC = array( '__utma', '__utmb', '__utmc', '__utmv', '__utmz', '_gid', '_ga', '_gcl_au', '_fbp');
     foreach($trackingG as $g) {
       if (isset($_GET[$g])) {
@@ -333,7 +340,14 @@ class CRM_Core_IDS {
   }
 
   private function warn() {
-    return TRUE; 
+    if(CRM_Utils_System::isUserLoggedIn()) {
+      return TRUE; 
+    }
+    else {
+      $session = CRM_Core_Session::singleton();
+      $session->reset(2);
+      CRM_Core_Error::fatal(ts('There is a validation error with your HTML input. Your activity is a bit suspicious, hence aborting'));
+    }
   }
 
   private function kick() {

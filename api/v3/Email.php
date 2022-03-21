@@ -40,16 +40,6 @@
 require_once 'CRM/Core/BAO/Email.php';
 
 /**
- * @start_document
- * 
- * # {ts}Email{/ts} API {ts}Help{/ts}
- * 
- * {ts}This is a API Document about Email{/ts}
- * 
- * @end_document
- */
-
-/**
  * Add an Email for a contact
  *
  * Allowed @params array keys are:

@@ -40,6 +40,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   CONST BANK = 'ACH Bank';
   CONST POST = 'ACH Post';
+  CONST BANK_VERIFY_ENTITY = 'civicrm_contribution_taiwanach_verification_bank';
+  CONST POST_VERIFY_ENTITY = 'civicrm_contribution_taiwanach_verification_post';
+  CONST TRANS_ENTITY = 'civicrm_contribution_taiwanach_transaction';
 
   CONST VERIFICATION = 'verification';
   CONST TRANSACTION = 'transaction';
@@ -403,10 +406,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       // Add civicrm_log file
       $log = new CRM_Core_DAO_Log();
       if ($officeType == self::BANK) {
-        $log->entity_table = 'civicrm_contribution_taiwanach_verification_bank';
+        $log->entity_table = self::BANK_VERIFY_ENTITY;
       }
       else {
-        $log->entity_table = 'civicrm_contribution_taiwanach_verification_post';
+        $log->entity_table = self::POST_VERIFY_ENTITY;
       }
       $log->entity_id = $params['date'];
       $log->data = implode(',', $recurringIds);
@@ -454,7 +457,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $params['paymentProcessor'] = $paymentProcessor;
 
     // Add civicrm_log data
-    $lastTransactLogTime = CRM_Core_DAO::singleValueQuery("SELECT MAX(entity_id) FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_transaction'");
+    $lastTransactLogTime = CRM_Core_DAO::singleValueQuery("SELECT MAX(entity_id) FROM civicrm_log WHERE entity_table = '".self::TRANS_ENTITY."'");
     if (empty($lastTransactLogTime)){
       $lastTransactLogTime = '000000';
     }
@@ -496,7 +499,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       unset($table['check_results']);
 
       $log = new CRM_Core_DAO_Log();
-      $log->entity_table = 'civicrm_contribution_taiwanach_transaction';
+      $log->entity_table = self::TRANS_ENTITY;
       $log->entity_id = $params['transact_id'];
       $log->data = implode(',', $params['contribution_ids']);
       $log->modified_date = date('Ymd', strtotime($params['transact_date'])).str_pad($params['transact_id'], 6, '0', STR_PAD_LEFT);
@@ -586,6 +589,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $rand = base_convert(rand(16, 255), 10, 16);
       $achData['invoice_id'] = "{$params['date']}_{$i}_{$rand}";
       CRM_Contribute_BAO_TaiwanACH::add($achData);
+      $orderNumber = !empty(trim($achData['order_number'])) ? $achData['order_number'] : $achData['identifier_number'];
       $row = array(
         str_pad($i, 6, '0', STR_PAD_LEFT),
         '530',
@@ -593,7 +597,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $achData['bank_code'],
         str_pad($achData['bank_account'], 16, '0', STR_PAD_LEFT),
         str_pad($achData['identifier_number'], 10, ' ', STR_PAD_RIGHT),
-        str_pad($achData['identifier_number'], 20, ' ', STR_PAD_RIGHT),
+        str_pad($orderNumber, 20, ' ', STR_PAD_RIGHT),
         'A',
         $date,
         $orgBankCode,
@@ -632,7 +636,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $i = 1;
     foreach ($achDatas as $achData) {
       $bankAccount = str_pad($achData['bank_account'], 14, '0', STR_PAD_RIGHT);
-      $identifier_number = str_pad($achData['identifier_number'], 10, ' ', STR_PAD_LEFT);
+      $orderNumber = $achData['contribution_recur_id']; // #32543, force use recur id or can't verify order
       $row = array(
         1,
         $paymentProcessor['subject'],
@@ -643,8 +647,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         '1',
         ($achData['postoffice_acc_type'] == 1)? 'P' : 'G',
         $bankAccount,
-        str_pad($achData['contribution_recur_id'], 20, ' ', STR_PAD_LEFT),
-        $identifier_number,
+        str_pad($orderNumber, 20, ' ', STR_PAD_LEFT),
+        str_pad($achData['identifier_number'], 10, ' ', STR_PAD_LEFT),
         str_repeat(' ', 2),
         ' ',
         str_repeat(' ', 26),
@@ -704,6 +708,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'invoice_id', $invoice_id);
       $params['contribution_ids'][] = $contribution->id;
       $identifier_number = str_pad($achData['identifier_number'], 10, ' ', STR_PAD_RIGHT);
+      $orderNumber = !empty(trim($achData['order_number'])) ? $achData['order_number'] : $achData['identifier_number'];
       $row = array(
         'N',
         'SD',
@@ -722,7 +727,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 8),
         str_repeat(' ', 8),
         ' ',
-        str_pad($identifier_number, 20, ' ', STR_PAD_RIGHT),
+        str_pad($orderNumber, 20, ' ', STR_PAD_RIGHT),
         str_pad($contribution->trxn_id, 40, ' ', STR_PAD_RIGHT),
         str_repeat(' ', 10),
         str_repeat('0', 5),
@@ -772,6 +777,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $params['contribution_ids'][] = $contribution->id;
       $bankAccount = str_pad($achData['bank_account'], 14, '0', STR_PAD_RIGHT);
       $totalAmount += (INT) $achData['amount'];
+      $orderNumber = !empty($achData['order_number']) ? $achData['order_number'] : $contribution->contribution_recur_id;
       $row = array(
         1,
         ($achData['postoffice_acc_type'] == 1)? 'P' : 'G',
@@ -783,7 +789,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $bankAccount,
         str_repeat(' ', 10),
         str_pad((INT) $achData['amount'], 9, '0', STR_PAD_LEFT).'00',
-        str_pad($contribution->contribution_recur_id, 20, ' ', STR_PAD_LEFT),
+        str_pad($orderNumber, 20, ' ', STR_PAD_LEFT),
         1,
         ' ',
         ' ',
@@ -868,7 +874,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     return "{$contribution->contribution_recur_id}_{$contribution->id}_{$rand}";
   }
 
-  static function parseUpload($content) {
+  static function parseUpload($content, $userInputEntityId = NULL) {
     if (strstr($content, "\r\n")) {
       $rows = explode("\r\n", $content);
     }
@@ -992,6 +998,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $ids = explode('-', $firstLine[18]);
         $entityId = $ids[0];
       }
+    }
+    if (!empty($userInputEntityId) && is_numeric($userInputEntityId)) {
+      $entityId = $userInputEntityId;
     }
 
     $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_{$processType}{$tableSubName}' AND entity_id = %1 ORDER BY id DESC LIMIT 1";
@@ -1293,9 +1302,33 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
 
-    // First use ipn validate
-    $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
-    if(!$validate_result){
+    // Get objects without ipn validate
+    if ($ids['contribution']) {
+      $contribution = new CRM_Contribute_DAO_Contribution();
+      $contribution->id = $ids['contribution'];
+      if (!$contribution->find(TRUE)) {
+        CRM_Core_Error::debug_log_message("Could not find contribution record: {$ids['contribution']}");
+      }
+      else {
+        $objects['contribution'] = &$contribution;
+      }
+    }
+    if ($ids['contact'] && !empty($contribution->contact_id)) {
+      $contactID = $ids['contact'] = $contribution->contact_id;
+      $contact = new CRM_Contact_DAO_Contact();
+      $contact->id = $ids['contact'];
+      if (!$contact->find(TRUE)) {
+        CRM_Core_Error::debug_log_message("Could not find contact record: $contactID");
+      }
+      else {
+        $objects['contact'] = &$contact;
+      }
+    }
+    if (!$ipn->loadObjects($input, $ids, $objects, FALSE, NULL, TRUE)) {
+      CRM_Core_Error::debug_log_message("ACH IPN loadObjects Error. Contribution ID: {$ids['contribution']}");
+      CRM_Core_Error::debug_var("ACH_ipn_input", $input);
+      CRM_Core_Error::debug_var("ACH_ipn_ids", $ids);
+      CRM_Core_Error::debug_var("ACH_ipn_objects", $objects);
       return FALSE;
     }
     else {
