@@ -102,7 +102,7 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID) {
+  function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID, $isReserveObjectsContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
     $contribution = &$objects['contribution'];
 
@@ -128,26 +128,29 @@ class CRM_Core_Payment_BaseIPN {
         $ids['contributionRecur'] = $contribution->contribution_recur_id;
       }
       // refs #26358, allow change contribution object to most recent one
-      if (!empty($ids['contributionRecur']) && !empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
-        $daoLastContribution = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date DESC", array(
-          1 => array($ids['contributionRecur'], 'Integer'),
-        ));
-        if ($daoLastContribution->N > 1) {
-          $daoLastContribution->fetch();
-          $ids['contribution'] = $daoLastContribution->id;
-          $lastContribution = new CRM_Contribute_DAO_Contribution();
-          $lastContribution->id = $ids['contribution'];
-          if ($lastContribution->find(TRUE)) {
-            // not sure why we need this anymore.
-            // $lastContribution->receive_date = CRM_Utils_Date::isoToMysql($lastContribution->receive_date);
-            // $lastContribution->created_date = CRM_Utils_Date::isoToMysql($lastContribution->created_date);
-            unset($contribution);
-            unset($objects['contribution']);
-            $objects['contribution'] = $lastContribution;
-            $contribution = &$objects['contribution'];
+      // resf #34141, Reserved contribution as TaiwanACH.
+      if (!empty($ids['contributionRecur']) && $objects['contribution'] && !$isReserveObjectsContribution) {
+        if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
+          $daoLastContribution = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date DESC", array(
+              1 => array($ids['contributionRecur'], 'Integer'),
+            ));
+            if ($daoLastContribution->N > 1) {
+              $daoLastContribution->fetch();
+              $ids['contribution'] = $daoLastContribution->id;
+              $lastContribution = new CRM_Contribute_DAO_Contribution();
+              $lastContribution->id = $ids['contribution'];
+              if ($lastContribution->find(TRUE)) {
+                // not sure why we need this anymore.
+                // $lastContribution->receive_date = CRM_Utils_Date::isoToMysql($lastContribution->receive_date);
+                // $lastContribution->created_date = CRM_Utils_Date::isoToMysql($lastContribution->created_date);
+                unset($contribution);
+                unset($objects['contribution']);
+                $objects['contribution'] = $lastContribution;
+                $contribution = &$objects['contribution'];
+              }
+            }
           }
         }
-      }
 
       // retrieve the other optional objects first so
       // stuff down the line can use this info and do things
@@ -316,6 +319,9 @@ class CRM_Core_Payment_BaseIPN {
       $sql_recur_fail_notify = "SELECT cp.recur_fail_notify FROM civicrm_contribution c INNER JOIN civicrm_contribution_page cp ON c.contribution_page_id = cp.id WHERE c.id = {$contribution->id}";
       $recur_fail_notify = CRM_Core_DAO::singleValueQuery($sql_recur_fail_notify);
 
+      if (!empty($recur_fail_notify)) {
+        CRM_Core_Error::debug_log_message("Prepare to send failed notify. CR_count: {$crcount}, Id: {$contribution->id}, Status: {$contribution->contribution_status_id} Mail to: {$recur_fail_notify}");
+      }
       if($crcount >= 2 && $contribution->contribution_status_id == 4 && !empty($recur_fail_notify)){
         $values = array(
           'contribution_id' => $contribution->id,
@@ -328,11 +334,8 @@ class CRM_Core_Payment_BaseIPN {
           'recur_fail_notify' => $recur_fail_notify,
           'message' => $message,
           );
-        $isTest = FALSE;
-        if($contribution->is_test){
-          $isTest = TRUE;
-        }
         $returnArray = CRM_Contribute_BAO_ContributionPage::sendFailedNotifyMail($contribution->contact_id, $values, $contribution->is_test, TRUE);
+        CRM_Core_Error::debug_log_message("Failed notify email sended.");
       }
     }
 

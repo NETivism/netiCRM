@@ -573,7 +573,22 @@ function enableHonorType( ) {
     // prevent overwrite others contact info
     var lockfield = function($obj){
       $obj.attr('title', '{/literal}{ts}To change your personal info, go My Account page for further setting.{/ts}{literal}');
+{/literal}
+  {if $isInternal}
+{literal}
+      if ($obj.val()) {
+        $obj.attr("readonly", "readonly").addClass("readonly");
+      }
+      else {
+        $obj.after('<div class="description">{/literal}{ts}Email is required. You can enter other email when donor doesn't have one.{/ts}{literal}</div>');
+      }
+{/literal}
+  {else}
+{literal}
       $obj.attr("readonly", "readonly").addClass("readonly");
+{/literal}
+  {/if}
+{literal}
       if($obj.parent('.crm-form-elem').length){
         $obj.parent('.crm-form-elem').addClass('crm-form-readonly');
       }
@@ -583,7 +598,11 @@ function enableHonorType( ) {
       lockfield(cj("input#last_name"));
       lockfield(cj("input#first_name"));
       lockfield(cj("input#email-5"));
-      cj(".first_name-section .content").append('<div class="description">{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}{ts 1="/user"}To change your personal info, go <a href="%1">My Account page</a> for further setting.{/ts}</div>');
+      {if !$isInternal}
+        cj(".first_name-section .content").append('<div class="description">{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}{ts 1="/user"}To change your personal info, go <a href="%1">My Account page</a> for further setting.{/ts}</div>');
+      {else}
+        cj(".org_option-section").hide();
+      {/if}
     {/if}
     {literal}
     amountGrouping(true);

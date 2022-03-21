@@ -245,7 +245,8 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     }
     $noteValue = NULL;
     $hasNoteField = FALSE;
-    foreach (array('note', 'participant_note') as $noteFld) {
+    // refs #34079, participant_note has greater priority then note
+    foreach (array('participant_note', 'note') as $noteFld) {
       if (array_key_exists($noteFld, $params)) {
         $noteValue = $params[$noteFld];
         $hasNoteField = TRUE;

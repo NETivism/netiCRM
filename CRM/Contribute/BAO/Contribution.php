@@ -2281,7 +2281,7 @@ SELECT source_contact_id
     $args = array(
       1 => array($contact_id, 'Integer'),
     );
-    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.$date_field_name) as receipt_date, c.receive_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY NULLIF(c.receipt_id, ''), c.$date_field_name ASC";
+    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.$date_field_name) as receipt_date, c.receive_date, c.total_amount, c.currency FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY NULLIF(c.receipt_id, ''), c.$date_field_name ASC";
     $result = CRM_Core_DAO::executeQuery($query, $args);
    
     $contribution_type = array();
@@ -2294,6 +2294,7 @@ SELECT source_contact_id
         'receipt_date' => $result->receipt_date,
         'total_amount' => $result->total_amount,
         'receive_date' => $result->receive_date,
+        'currency' => $result->currency,
       );
       $records[$result->id]['contribution_type'] = $contribution_type[$result->contribution_type_id];
       $records[$result->id]['instrument'] = $instruments[$result->payment_instrument_id];
@@ -2420,30 +2421,39 @@ SELECT source_contact_id
       2 => array("{$prefix}-%", 'String'),
     ));
     if (empty($latest)) {
-      $latest = 0;
+      $latest = $next = 1;
     }
     else {
       $latest = (int) $latest;
+      $next = $latest+1;
     }
     $exists = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_sequence WHERE name = %1", array(
       1 => array($prefix, 'String'),
     ));
 
+    if (!empty(getenv('CIVICRM_TEST_DSN')) && $GLOBALS['CiviTest_ContributionTest_sleep'] > 0) {
+      sleep($GLOBALS['CiviTest_ContributionTest_sleep']);
+    }
+
     // make sure sequence table have latest value
     if (!$exists || $exists < $latest) {
-      CRM_Core_DAO::executeQuery("INSERT INTO civicrm_sequence (name, value, timestamp) VALUES (%1, %2, %3) ON DUPLICATE KEY UPDATE value = %2, timestamp = %3", array(
+      // refs #33483, special case for civicrm_sequence being purge
+      // we should trust latest value in db and increase it before going further
+      CRM_Core_DAO::executeQuery("INSERT INTO civicrm_sequence (name, value, timestamp) VALUES (%1, (@NEWID := CAST(%2 as INT)), %3) ON DUPLICATE KEY UPDATE value = (@NEWID := IF(CAST(value as INT)+1 < %2, CAST(%2 as INT), CAST(value as INT)+1)), timestamp = %3", array(
         1 => array($prefix, 'String'),
-        2 => array($latest, 'String'),
+        2 => array($next, 'String'),
+        3 => array(microtime(TRUE), 'Float'),
+      ));
+    }
+    else {
+      // refs #21105, get new id immediatly when db update
+      // @NEWID only survive in current session
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_sequence SET value = (@NEWID:= CAST(value as INT)+1), timestamp = %3 WHERE name = %1", array(
+        1 => array($prefix, 'String'),
         3 => array(microtime(TRUE), 'Float'),
       ));
     }
 
-    // refs #21105, get new id immediatly when db update
-    // @NEWID only survive in current session
-    CRM_Core_DAO::executeQuery("UPDATE civicrm_sequence SET value = (@NEWID:= CAST(value as INT)+1), timestamp = %3 WHERE name = %1", array(
-      1 => array($prefix, 'String'),
-      3 => array(microtime(TRUE), 'Float'),
-    ));
     $new = CRM_Core_DAO::singleValueQuery("SELECT @NEWID");
 
     // genrate receipt id when new id exists

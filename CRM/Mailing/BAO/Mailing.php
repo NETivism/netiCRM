@@ -841,13 +841,6 @@ ORDER BY   i.contact_id, i.email_id
         }
 
         $this->templates['html'] = join("\n", $template);
-
-        // this is where we create a text template from the html template if the text template did not exist
-        // this way we ensure that every recipient will receive an email even if the pref is set to text and the
-        // user uploads an html email only
-        if (!$this->body_text) {
-          $this->templates['text'] = CRM_Utils_String::htmlToText($this->templates['html']);
-        }
       }
 
       if ($this->subject) {
@@ -1328,6 +1321,12 @@ AND civicrm_contact.is_opt_out =0";
     if (isset($pEmails['text']) && is_array($pEmails['text']) && count($pEmails['text'])) {
       $text = &$pEmails['text'];
     }
+    else {
+      // this is where we create a text template from the html template if the text template did not exist
+      // this way we ensure that every recipient will receive an email even if the pref is set to text and the
+      // user uploads an html email only
+      $text = CRM_Utils_String::htmlToText(join('', $html));
+    }
 
     // push the tracking url on to the html email if necessary
     if ($this->open_tracking && $html) {
@@ -1345,7 +1344,12 @@ AND civicrm_contact.is_opt_out =0";
         $contact['preferred_mail_format'] == 'Both' ||
         ($contact['preferred_mail_format'] == 'HTML' && !array_key_exists('html', $pEmails))
       )) {
-      $textBody = join('', $text);
+      if (is_array($text)) {
+        $textBody = join('', $text);
+      }
+      else {
+        $textBody = $text;
+      }
       $mailParams['text'] = $textBody;
     }
 

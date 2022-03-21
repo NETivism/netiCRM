@@ -48,8 +48,17 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     $this->set('parseResult', NULL);
     $submittedValues = $this->controller->exportValues($this->_name);
     if ($submittedValues['uploadFile']['name']) {
-      $content = file_get_contents($submittedValues['uploadFile']['name']);
-      $result = CRM_Contribute_BAO_TaiwanACH::parseUpload($content);
+      $result = self::parseUpload($submittedValues['uploadFile']['name']);
+      $result['original_file'] = $submittedValues['uploadFile']['name'];
+      $this->set('parseResult', $result);
+    }
+  }
+
+  public static function parseUpload($file, $processId = NULL) {
+    $result = array();
+    if (file_exists($file)) {
+      $content = file_get_contents($file);
+      $result = CRM_Contribute_BAO_TaiwanACH::parseUpload($content, $processId);
       $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $contributionType = CRM_Contribute_PseudoConstant::contributionType();
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
@@ -91,7 +100,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
           'created_date' => ts('Created Date'),
           'receive_date' => ts('Received'),
           'contribution_status' => ts('Status'),
-          'cancel_reason' => ts('Failed Reason'),
+          'cancel_reason' => ts('Cancelled or Failed Reason'),
         );
       }
       else {
@@ -104,11 +113,14 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
           'contribution_status' => ts('Recurring Status'),
           'amount' => ts('Amount'),
           'stamp_verification_status' => ts('Stamp Verification Status'),
-          'verification_failed_date' => ts('Stamp Verification').' - '.ts('Failed Date'),
-          'verification_failed_reason' => ts('Stamp Verification').' - '.ts('Failed Reason'),
+          'verification_failed_date' => ts('Stamp Verification').' - '.ts('Cancelled or Failed Date'),
+          'verification_failed_reason' => ts('Stamp Verification').' - '.ts('Cancelled or Failed Reason'),
         );
       }
-      $this->set('parseResult', $result);
+      return $result;
+    }
+    else {
+      return array();
     }
   }
 

@@ -112,6 +112,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           $this->set('userID', $csContactID);     // used by contributionBase
           $this->_userID = $csContactID;          // used by current follow up
           $this->assign('contact_id', $this->_userID);
+          if ($this->_values['is_internal'] > 0) {
+            $this->assign('isInternal', TRUE);
+          }
           
           // refs #29618, load contribution id and add defaultFromRequest again
           $this->loadDefaultFromOriginalId();
@@ -243,6 +246,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $contactID = $this->_userID;
 
     if ($contactID) {
+      $contactType = CRM_Contact_BAO_Contact::getContactType($contactID);
       $options = array();
       $fields = array();
       require_once "CRM/Core/BAO/CustomGroup.php";
@@ -338,6 +342,31 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           if($org->find(TRUE)) {
             $this->_defaults['organization_name'] = $org->organization_name;
             $this->_defaults['sic_code'] = $org->sic_code;
+          }
+        }
+        elseif($contactID && $contactType === 'Organization') {
+          $this->_defaults['is_for_organization'] = 1;
+          $hierFields = array(
+            'phone' => 1,
+            'email' => 1,
+            'state_province' => 1,
+            'city' => 1,
+            'postal_code' => 1,
+            'street_address' => 1,
+            'sic_code' => 1,
+          );
+          list($contactDetails, $options) = CRM_Contact_BAO_Contact::getHierContactDetails($contactID, $hierFields);
+          if (!empty($contactDetails[$contactID])) {
+            $organization = $contactDetails[$contactID];
+            $this->set('existsOrganization', $organization);
+            if (!empty($organization['organization_name'])) $this->_defaults['organization_name'] = $organization['organization_name'];
+            if (!empty($organization['sic_code'])) $this->_defaults['sic_code'] = $organization['sic_code'];
+            if (!empty($organization['phone'])) $this->_defaults['phone'][1]['phone'] = $organization['phone'];
+            if (!empty($organization['email'])) $this->_defaults['email'][1]['email'] = $organization['email'];
+            if (!empty($organization['state_province_id'])) $this->_defaults['address'][1]['state_province_id'] = $organization['state_province_id'];
+            if (!empty($organization['city'])) $this->_defaults['address'][1]['city'] = $organization['city'];
+            if (!empty($organization['postal_code'])) $this->_defaults['address'][1]['postal_code'] = $organization['postal_code'];
+            if (!empty($organization['street_address'])) $this->_defaults['address'][1]['street_address'] = $organization['street_address'];
           }
         }
       }
@@ -805,6 +834,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         // add default amount option
         if (!empty($amount['filter']) && !empty($this->_defaultAmountGrouping) && $amount['grouping'] == $this->_defaultAmountGrouping) {
           $this->_defaults['amount'] = $amount['amount_id'];
+        }
+        // Refs #32508, Select default price option if this page has no default_amount_id
+        if (empty($this->_defaultAmountGrouping) && !empty($amount['filter']) && empty($defaultFromRequestAmountId)) {
+          $this->_defaultAmountGrouping = $amount['grouping'];
+          $defaultFromRequestAmountId = $amount['amount_id'];
         }
       }
       if (empty($this->_defaults['amount']) && !empty($this->_values['default_amount_id'])) {

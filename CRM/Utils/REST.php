@@ -33,6 +33,8 @@
  *
  */
 class CRM_Utils_REST {
+  const LAST_HIT = 'rest_lasthit';
+  const RATE_LIMIT = 0.2;
 
   /**
    * Number of seconds we should let a REST process idle
@@ -139,6 +141,28 @@ class CRM_Utils_REST {
     return $this->run();
   }
 
+  function requestRateLimit($args) {
+    $dao = new CRM_Core_DAO_Sequence();
+    $dao->name = self::LAST_HIT;
+    if ($dao->find(TRUE)) {
+      $interval = microtime(true) - $dao->timestamp;
+      $config = CRM_Core_Config::singleton();
+      $rateLimit = $config->restAPIRateLimit ? $config->restAPIRateLimit : self::RATE_LIMIT;
+      if ($interval < $rateLimit) {
+        return 'Request rate limit reached. Last hit: '.round($interval, 2).' seconds ago. Usage: '.$dao->value;
+      }
+      $dao->timestamp = microtime(true);
+      $dao->value = implode('-', $args);
+      $dao->update();
+    }
+    else {
+      $dao->timestamp = microtime(true);
+      $dao->value = implode('-', $args);
+      $dao->insert();
+    }
+    return array();
+  }
+
   function output(&$result) {
     $hier = FALSE;
     if (is_scalar($result)) {
@@ -235,9 +259,6 @@ class CRM_Utils_REST {
     // run the rest_api login function.  That might be a problem for the
     // AJAX methods.
     $session = CRM_Core_Session::singleton();
-    if ($session->get('PHPSESSID')) {
-      $validUser = TRUE;
-    }
 
     // If the user does not have a valid session (most likely to be used by people using
     // an ajax interface), we need to check to see if they are carring a valid user's
@@ -261,6 +282,8 @@ class CRM_Utils_REST {
           $ufId = CRM_Utils_System::getLoggedInUfID();
           if (CRM_Utils_System::isUserLoggedIn() && $ufId == $uid) {
             $validUser = $contactId;
+            $session->set('ufID', $uid);
+            $session->set('userID', $contactId);
           }
         }
         if (!$validUser) {
@@ -272,6 +295,12 @@ class CRM_Utils_REST {
     // If we didn't find a valid user either way, then die.
     if (empty($validUser)) {
       return self::error("FATAL: site key or api key is incorrect.");
+    }
+
+    // check request limit
+    $error = $this->requestRateLimit($args);
+    if (!empty($error)) {
+      return self::error("FATAL: ".$error);
     }
 
     return self::process($args);

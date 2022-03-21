@@ -230,14 +230,14 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * display an error page with an error message describing what happened
    *
    * @param string message  the error message
-   * @param string code     the error code if any
+   * @param string status the http status error code if any, default is 500
    * @param string suppress suppress error message with given string
    *
    * @return void
    * @static
    * @acess public
    */
-  static function fatal($message = NULL, $code = NULL, $suppress = NULL) {
+  static function fatal($message = NULL, $status = NULL, $suppress = NULL) {
     $config = CRM_Core_Config::singleton();
     $vars = array();
     if ($config->fatalErrorHandler && function_exists($config->fatalErrorHandler)) {
@@ -259,10 +259,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       CRM_Core_Error::backtrace('backtrace', TRUE);
       $vars['message'] = $message;
       if ($suppress) {
+        $statusCode = $status ? $status : 200;
+        http_response_code($statusCode);
         $vars['suppress'] = $suppress;
       }
       else {
-        http_response_code(500);
+        $statusCode = $status ? $status : 400;
+        http_response_code($statusCode);
         $vars['suppress'] = FALSE;
       }
       self::output($config->fatalErrorTemplate, $vars);

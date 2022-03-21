@@ -321,6 +321,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
 
+    if ($contribution->contribution_status_id == 1) {
+      // The contribution is solved, avoid solve twice.
+      CRM_Core_Error::debug('applepay_transact_post_duplicated_condition', $_POST);
+      CRM_Core_Error::debug('applepay_transact_get_duplicated_condition', $_GET);
+      CRM_Core_Error::debug_log_message('This contribution has already been processed.');
+      CRM_Utils_System::civiExit();
+    }
+
     // Prepare objects to put in checkout function.
     $originPaymentProcessorId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $contribution->payment_processor_id, 'user_name');
     $merchantPaymentProcessor = new CRM_Core_DAO_PaymentProcessor();
@@ -371,7 +379,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
           $input['payment_instrument_id'] = $contribution->payment_instrument_id;
           $input['amount'] = $contribution->amount;
           $objects['contribution']->receive_date = date('YmdHis');
-          $objects['contribution']->trxn_id = 'ap_'.$ids['contribution'];
+          $objects['contribution']->trxn_id = $ids['contribution']; // Workaround, should use MerchantOrderNo from transact result
           $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
 
           $result = array('is_success' => 1);

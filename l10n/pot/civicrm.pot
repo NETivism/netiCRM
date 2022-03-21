@@ -48371,3 +48371,41 @@ msgstr ""
 
 msgid "Please enter the valid URL to display a thumbnail of this image."
 msgstr ""
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid "User Number"
+msgstr ""
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid "Migrate from other ACH system?"
+msgstr ""
+
+# CRM/Contribute/Form/TaiwanACH.php
+msgid "You should only fill this when your ACH order doesn't generated from this system."
+msgstr ""
+
+# templates/CRM/Event/Form/Search/Common.tpl branch:develop-9
+msgid "Type in a partial or complete name of an existing event type."
+msgstr ""
+
+# templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid "Email is required. You can enter other email when donor doesn't have one."
+msgstr ""
+
+msgid "Format that submit to bank."
+msgstr ""
+
+msgid "Format that human can read."
+msgstr ""
+
+msgid "transaction"
+msgstr ""
+
+msgid "ACH Transaction File ID"
+msgstr ""
+
+msgid  "Missing transaction file ID. Please copy and paste first line of ACH transaction file or enter the 6 digit number."
+msgstr ""
+
+msgid "Could not find your ACH transaction file ID."
+msgstr ""

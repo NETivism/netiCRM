@@ -17,6 +17,15 @@
   src: local(Microsoft JhengHei), local(微軟正黑體);
 }
 
+/** Variables **/
+:root {
+  --color-error: #f44336;
+  --color-error-dark: #b71c1c;
+  --color-form-input-border: #999;
+  --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
+  --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
+}
+
 /**
  Structure
  */
@@ -554,7 +563,7 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-    background-color: var(--active-color);
+    background-color: var(--color-crm-special-contribute-primary);
     left: 0;
     text-shadow: none;
   }
@@ -595,20 +604,12 @@ body .crm-container-md table.crm-custom-data-view.no-border{
  elements
  */
 
-
-body {
-  --active-color: #3f51b5;
-  --marked-color: #9f0909;
-}
-
-
-
 #printer-friendly {
   display: none;
 }
 
 .custom-block>label{
-  color: var(--active-color);
+  color: var(--color-crm-special-contribute-primary);
   margin: 15px 0 5px;
 }
 
@@ -684,7 +685,7 @@ body .crm-container fieldset{
   background: #666;
 }
 .contrib-type-btn div.selected {
-  background-color: var(--active-color);
+  background-color: var(--color-crm-special-contribute-primary);
 }
 
 .price-set-btn div {
@@ -707,7 +708,7 @@ body .crm-container fieldset{
 .price-set-btn div:hover,
 .price-set-btn div.active span.description,
 .price-set-btn div:hover span.description {
-  color: var(--active-color);
+  color: var(--color-crm-special-contribute-primary);
 }
 .price-set-btn div.active, 
 .price-set-btn div.active span.description{
@@ -762,7 +763,7 @@ body .crm-container fieldset{
 }
 .crm-container .custom-input-block input.active,
 .crm-container .custom-input-block input.active:hover{
-  background: var(--active-color);
+  background: var(--color-crm-special-contribute-primary);
 }
 .crm-container .custom-input-block input:hover {
   background: grey;
@@ -795,10 +796,10 @@ body .crm-container fieldset{
   justify-content: space-between;
 }
 .crm-button-type-upload a.button {
-  background-color: var(--active-color);
+  background-color: var(--color-crm-special-contribute-primary);
 }
 #checkavailability {
-  background-color: var(--active-color);
+  background-color: var(--color-crm-special-contribute-primary);
   float: right;
 }
 .region-content .last-step-btn:hover, 
@@ -816,7 +817,7 @@ body .crm-container fieldset{
 .crm-container input.form-submit, 
 .contrib-step-1 .crm-button-type-upload a
  {
-  background-color: var(--active-color);
+  background-color: var(--color-crm-special-contribute-primary);
   color: white;
   display: block;
   width: 100%;
@@ -837,9 +838,9 @@ body .crm-container fieldset{
 .crm-container input.form-submit:hover, 
 .crm-container input.form-submit:active {
   background-color: white;
-  color: var(--active-color);
+  color: var(--color-crm-special-contribute-primary);
   text-decoration: none;
-  border: 1px solid var(--active-color);
+  border: 1px solid var(--color-crm-special-contribute-primary);
 }
 
 /** intro text */
@@ -888,6 +889,13 @@ button.intro_text-readmore-btn.is-active:after {
 #intro_text p{
   font-size: 16px;
 }
+#intro_text a {
+  text-decoration: underline;
+  color: var(--color-crm-special-contribute-info-link);
+}
+#intro_text a:hover {
+  text-decoration: underline;
+}
 #intro_text #logo img{
   width: 362px;
   max-height: unset;
@@ -909,7 +917,7 @@ button.intro_text-readmore-btn.is-active:after {
 /*price info*/
 
 .price-selected-info{
-  border: 3px solid var(--active-color);
+  border: 3px solid var(--color-crm-special-contribute-primary);
   float: right;
   border-radius: 10px;
   overflow: hidden;
@@ -918,7 +926,7 @@ button.intro_text-readmore-btn.is-active:after {
 .info-is-recur {
   padding-left: 5px;
   padding-right: 5px;
-  background: var(--active-color);
+  background: var(--color-crm-special-contribute-primary);
   color: white;
   text-align: center;
   height: 30px;
@@ -940,7 +948,7 @@ body .crm-container .crm-section>.label {
   float: none;
   text-align: left;
   width: unset;
-  color: var(--active-color);
+  color: var(--color-crm-special-contribute-primary);
   font-size: 12px;
 }
 body .crm-container .crm-section>.content {
@@ -957,7 +965,7 @@ body .crm-container-md .crm-form-elem select,
 body .crm-container-md .crm-form-elem select.form-select, 
 body .crm-container-md .crm-form-elem.dateplugin input.dateplugin, 
 body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]{
-    border: 1px solid var(--active-color) !important;
+    border: 1px solid var(--color-form-input-border) !important;
     border-radius: 5px !important;
     height: 40px;
     padding: 0 10px;
@@ -981,8 +989,49 @@ body .crm-container-md .crm-form-elem textarea:focus,
 body .crm-container-md .crm-form-elem textarea.form-textarea:focus, 
 body .crm-container-md .crm-form-elem.dateplugin input.dateplugin:focus, 
 body .crm-container-md .crm-form-elem.dateplugin input.dateplugin[readonly]:focus{
-  border: 1px solid #d8d8d8 !important;
+  border: 1px solid var(--color-crm-special-contribute-primary) !important;
   border-radius: 5px !important;
+}
+
+body .crm-container-md .crm-form-elem input[disabled],
+body .crm-container-md .crm-form-elem select[disabled],
+body .crm-container-md .crm-form-elem textarea[disabled],
+body .crm-container-md .crm-form-elem input[readonly],
+body .crm-container-md .crm-form-elem select[readonly],
+body .crm-container-md .crm-form-elem textarea[readonly],
+body .crm-container-md .crm-form-elem input.readonly,
+body .crm-container-md .crm-form-elem select.readonly,
+body .crm-container-md .crm-form-elem textarea.readonly,
+body .crm-container-md .crm-form-elem input[disabled],
+body .crm-container-md .crm-form-elem select[disabled],
+body .crm-container-md .crm-form-elem textarea[disabled],
+body .crm-container-md .crm-form-elem input[readonly],
+body .crm-container-md .crm-form-elem select[readonly],
+body .crm-container-md .crm-form-elem textarea[readonly],
+body .crm-container-md .crm-form-elem input[disabled]:focus,
+body .crm-container-md .crm-form-elem select[disabled]:focus,
+body .crm-container-md .crm-form-elem textarea[disabled]:focus,
+body .crm-container-md .crm-form-elem input[readonly]:focus,
+body .crm-container-md .crm-form-elem select[readonly]:focus,
+body .crm-container-md .crm-form-elem textarea[readonly]:focus,
+body .crm-container-md .crm-form-elem .readonly,
+body .crm-container-md .crm-form-elem input[type="text"].readonly,
+body .crm-container-md .crm-form-elem input[type="text"].readonly:hover,
+body .crm-container-md .crm-form-elem input[type="number"].readonly,
+body .crm-container-md .crm-form-elem input[type="number"].readonly:hover,
+body .crm-container-md .crm-form-elem input[type="file"].readonly {
+  border: 1px dashed var(--color-form-input-border) !important;
+}
+
+body .crm-container-md .crm-form-elem input[type="text"].error,
+body .crm-container-md .crm-form-elem input[type="number"].error,
+body .crm-container-md .crm-form-elem input.form-text.error,
+body .crm-container-md .crm-form-elem input.form-number.error,
+body .crm-container-md .crm-form-elem select.error,
+body .crm-container-md .crm-form-elem select.form-select.error,
+body .crm-container-md .crm-form-elem textarea.error,
+body .crm-container-md .crm-form-elem textarea.form-textarea.error {
+  border: 1px solid var(--color-error) !important;
 }
 
 
@@ -1008,9 +1057,9 @@ body .crm-container-md .crm-form-elem textarea.form-textarea{
 .custom-receipt-row-label {
   text-align: center;
   line-height: 20px;
-  border-right: 1px solid var(--active-color);
+  border-right: 1px solid var(--color-crm-special-contribute-primary);
   margin: 10px;
-  color: var(--active-color);
+  color: var(--color-crm-special-contribute-primary);
 }
 
 .crm-container.crm-container-md .custom_80-section tr:empty{
@@ -1118,7 +1167,31 @@ body .crm-container div.display-block {
 #pcp_personal_note {
   width: 100% !important;
 }
-
+.page-civicrm-contribute .description a,
+.page-civicrm-contribute .description a:hover {
+  color: var(--color-crm-special-contribute-primary);
+}
+.page-civicrm-contribute .crm-container .progress-bar {
+  background: var(--color-crm-special-contribute-primary);
+}
+.page-civicrm-contribute .crm-container .progress-amount-raised span,
+.page-civicrm-contribute .crm-container .progress-amount-goal span {
+  color: var(--color-crm-special-contribute-primary);
+}
+.page-civicrm-contribute .crm-container-md .crm-form-radio .form-radio:checked + .elem-label,
+.page-civicrm-contribute .crm-container-md .crm-form-checkbox .form-checkbox:checked + .elem-label {
+  color: var(--color-crm-special-contribute-primary);
+}
+.page-civicrm-contribute .crm-container-md .crm-form-radio .form-radio:checked + .elem-label::after,
+.page-civicrm-contribute .crm-container-md .crm-form-checkbox .form-checkbox:checked + .elem-label::after {
+  border-color: var(--color-crm-special-contribute-primary);
+}
+.page-civicrm-contribute .crm-container-md .crm-form-checkbox .elem-label::before {
+  border-color: var(--color-crm-special-contribute-primary);
+}
+.page-civicrm-contribute .crm-container-md .crm-form-radio .elem-label::before {
+  background-color: var(--color-crm-special-contribute-primary);
+}
 
 /** taiwan province */ 
 @media screen and (max-width: 768px) {
@@ -1158,7 +1231,7 @@ body .crm-container div.display-block {
 }
 .instrument-info-panel h3:hover, 
 .instrument-info-panel h3.open{
-  background: var(--active-color);
+  background: var(--color-crm-special-contribute-primary);
   color: white;
 }
 .instrument-info-panel h3+p {
@@ -1174,7 +1247,7 @@ body .crm-container div.display-block {
 }
 .instrument-info-panel h3+p a,
 .instrument-info-panel h3+p a.hover{
-  color: var(--active-color);;
+  color: var(--color-crm-special-contribute-primary);
 }
 .instrument-info-panel h3.open+p{
   max-height: 200px;
@@ -1241,8 +1314,9 @@ body .crm-container-md .first_name-section .crm-form-readonly {
   display: block;
 }
 body #crm-container.crm-container-md .crm-form-elem::after {
-  top: 7px;
-  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 8px 0 0;
 }
 
 /* for login user */

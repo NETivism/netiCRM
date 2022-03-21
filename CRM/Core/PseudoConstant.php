@@ -468,11 +468,14 @@ class CRM_Core_PseudoConstant {
     if ($parentType) {
       $return = array();
       foreach(self::$contactSubType as $type => $info) {
-        $return[$info['id']] = array(
-          'name' => $info['name'],
-          'label' => $info['label'],
-          'parent' => $info['parent'],
-        );
+        if ($info['parent'] == $parentType) {
+          $return[$info['id']] = array(
+            'id' => $info['id'],
+            'name' => $info['name'],
+            'label' => $info['label'],
+            'parent' => $info['parent'],
+          );
+        }
       }
       return $return;
     }

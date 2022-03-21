@@ -498,13 +498,20 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function associatedContribution($contactId = NULL, $membershipId = NULL, $is_test = 0) {
+  function associatedContribution($contactId = NULL, $membershipId = NULL, $is_test = NULL) {
     if (!$contactId) {
       $contactId = $this->_contactId;
     }
 
     if (!$membershipId) {
       $membershipId = $this->_id;
+    }
+
+    if (is_null($is_test)) {
+      $params = array(
+        1 => array($this->_id, 'Positive'),
+      );
+      $is_test = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_membership WHERE id = %1", $params);
     }
 
     // retrieive membership contributions if the $membershipId is set

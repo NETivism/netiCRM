@@ -606,6 +606,21 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     if (isset($params['is_for_organization']) && isset($behalfOrganization['organization_name'])) {
       $this->set('behalfContactID', $contactID);
       $behalfOrganization['log_data'] = $params['log_data'];
+      $organization = $this->get('existsOrganization');
+      if (!empty($organization['contact_id'])) {
+        $behalfOrganization['contact_id'] = $organization['contact_id'];
+        if (!empty($organization['phone_id']) && !empty($behalfOrganization['phone'][1]['phone'])) {
+          $behalfOrganization['phone'][1]['id'] = $organization['phone_id'];
+          $behalfOrganization['phone'][1]['phone_type_id'] = $organization['phone_type_id'];
+        }
+        if (!empty($organization['email_id']) && !empty($behalfOrganization['email'][1]['email'])) {
+          $behalfOrganization['email'][1]['id'] = $organization['email_id'];
+        }
+        if (!empty($organization['address_id']) && !empty($behalfOrganization['address'][1]['street_address'])) {
+          $behalfOrganization['address'][1]['id'] = $organization['address_id'];
+        }
+        unset($behalfOrganization['organization_id']);
+      }
       self::processOnBehalfOrganization($behalfOrganization, $contactID, $this->_values, $this->_params);
       $this->set('contactID', $contactID);
       $this->set('behalfOrganizationID', $contactID);
@@ -1246,8 +1261,21 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $locType = CRM_Core_BAO_LocationType::getDefault();
     $behalfOrganization['contact_type'] = 'Organization';
     foreach (array('phone', 'email', 'address') as $locFld) {
-      $behalfOrganization[$locFld][1]['is_primary'] = 1;
-      $behalfOrganization[$locFld][1]['location_type_id'] = $locType->id;
+      $locTypeId = $locType->id;
+      if (!empty($behalfOrganization[$locFld][1]['id']) && !empty($behalfOrganization['contact_id'])) {
+        $BAOString = 'CRM_Core_BAO_' . ucfirst($locFld);
+        $block = new $BAOString( );
+        $block->id = $behalfOrganization[$locFld][1]['id'];
+        $block->contact_id = $behalfOrganization['contact_id'];
+        $blockValues = CRM_Core_BAO_Block::retrieveBlock($block, $locFld);
+        $blockValue = reset($blockValues);
+        if ($blockValue['id'] == $behalfOrganization[$locFld][1]['id']) {
+          $behalfOrganization[$locFld][1] = array_merge($blockValue, $behalfOrganization[$locFld][1]);
+        }
+      }
+      else {
+        $behalfOrganization[$locFld][1]['location_type_id'] = $locTypeId;
+      }
     }
 
     // get the relationship type id

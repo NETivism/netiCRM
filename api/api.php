@@ -506,12 +506,22 @@ function _civicrm_api_replace_variables($entity, $action, &$params, &$parentResu
 
 
   foreach ($params as $field => $value) {
-
-    if (is_string($value) && substr($value, 0, 6) == '$value') {
-      $valuesubstitute = substr($value, 7);
+    $hasReplacement = strpos($value, '$value.');
+    if (is_string($value) && $hasReplacement !== FALSE) {
+      if ($hasReplacement > 0) {
+        $valuesubstitute = substr($value, $hasReplacement+7);
+      }
+      else {
+        $valuesubstitute = substr($value, 7);
+      }
 
       if (!empty($parentResult[$valuesubstitute])) {
-        $params[$field] = $parentResult[$valuesubstitute];
+        if ($hasReplacement > 0) {
+          $params[$field] = str_replace('$value.'.$valuesubstitute, $parentResult[$valuesubstitute], $value);
+        }
+        else {
+          $params[$field] = $parentResult[$valuesubstitute];
+        }
       }
       else {
 

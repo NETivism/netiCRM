@@ -807,7 +807,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     elseif (!empty($page['goal_recurring']) && $page['goal_recurring'] > 0) {
       $type = 'recurring';
       $label = ts('Goal Subscription');
-      $whereClause[] = "r.contribution_status_id != 3";
+      $whereClause[] = "r.contribution_status_id not in (3,7)";
       $where = implode(" AND ", $whereClause);
       $sql = "SELECT SUM(subscription.total_amount) as `sum`, COUNT(subscription.id) as `count` FROM (SELECT c.total_amount, c.id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE $where GROUP BY r.id) as subscription";
       $goal = $page['goal_recurring'];
@@ -872,6 +872,10 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       if (isset($usedToken)) {
         if ($component == 'contact') {
           $output = CRM_Utils_Token::replaceContactTokens($output, $detail['contact'], FALSE, $tokens, FALSE, TRUE);
+        }
+        if ($component == 'domain') {
+          $domain = CRM_Core_BAO_Domain::getDomain();
+          $output = CRM_Utils_Token::replaceDomainTokens($output, $domain, TRUE, $tokens, FALSE);
         }
         if ($component == 'contribution' && !empty($contributionId)) {
           $output = CRM_Utils_Token::replaceContributionTokens($output, $detail['contribution'], FALSE, $tokens, FALSE, TRUE);
