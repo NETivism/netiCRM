@@ -560,8 +560,35 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
             $receiptId = $dao->receipt_id;
         }
         $checkId = substr($receiptId, 11);
-        $veriftyId = $lastId +1;
-        $this->assertEquals( $checkId, $veriftyId, 'Check for recipt id .' );
+        $lastId = $lastId +1;
+        $this->assertEquals( $checkId, $lastId, 'Check for recipt id .' );
+
+        //case3 :reduce sequence before create contribution
+        $query_update = "UPDATE civicrm_sequence SET value = value - 1 WHERE name = 'testRecipt'";
+        $dao_update = CRM_Core_DAO::executeQuery($query_update);
+        while ($dao_update->fetch()) {
+            $receiptId = $dao->value;
+        }
+        $this->testCreateContribution(0);
+        $query = "SELECT receipt_id FROM civicrm_contribution WHERE receipt_id LIKE 'testRecipt%' ORDER BY id DESC LIMIT 1";
+        $dao = CRM_Core_DAO::executeQuery($query);
+        while ($dao->fetch()) {
+            $receiptId = $dao->receipt_id;
+        }
+        $checkId = substr($receiptId, 11);
+        $lastId = $lastId +1;
+        $this->assertEquals( $checkId, $lastId, 'Check for recipt id .' );
+
+        //case4 :create contribution normally
+        $this->testCreateContribution(0);
+        $query = "SELECT receipt_id FROM civicrm_contribution WHERE receipt_id LIKE 'testRecipt%' ORDER BY id DESC LIMIT 1";
+        $dao = CRM_Core_DAO::executeQuery($query);
+        while ($dao->fetch()) {
+            $receiptId = $dao->receipt_id;
+        }
+        $checkId = substr($receiptId, 11);
+        $lastId = $lastId +1;
+        $this->assertEquals( $checkId, $lastId, 'Check for recipt id .' );
     }
 }
 ?>
