@@ -161,7 +161,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
       $this->assign('availablePaymentProcessor', $dao->name);
     }
 
-    $hostIP = gethostbyname($_SERVER['HTTP_HOST']);
+    $hostIP = CRM_Utils_System::getHostIPAddress();
     if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $hostIP)) {
       $hostIP = $_SERVER['SERVER_ADDR'];
     }

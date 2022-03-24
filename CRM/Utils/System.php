@@ -1571,5 +1571,16 @@ class CRM_Utils_System {
       error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING & ~E_NOTICE);
     }
   }
+
+  public static function getHostIPAddress($host = NULL) {
+    if (empty($host)) {
+      $host = $_SERVER['HTTP_HOST'];
+    }
+    $ip = gethostbyname($host);
+    if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ip)) {
+      $ip = $_SERVER['SERVER_ADDR'];
+    }
+    return $ip;
+  }
 }
 
