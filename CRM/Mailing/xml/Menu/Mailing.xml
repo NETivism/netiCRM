@@ -36,6 +36,13 @@
      <desc>List of Email Addresses which can be used when sending emails to contacts.</desc>
      <path_arguments>group=from_email_address</path_arguments>
      <page_callback>CRM_Admin_Page_Options</page_callback>
+  </item>
+  <item>
+     <path>civicrm/admin/from_email</path>
+     <title>FROM Email Addresses</title>
+     <desc>List of Email Addresses which can be used when sending emails to contacts.</desc>
+     <access_arguments>administer CiviCRM</access_arguments>
+     <page_callback>CRM_Admin_Page_FromEmailAddress</page_callback>
      <adminGroup>CiviMail</adminGroup>
      <icon>admin/small/title.png</icon>
      <weight>415</weight>
