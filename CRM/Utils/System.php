@@ -966,8 +966,7 @@ class CRM_Utils_System {
    * @access public
    */
   static function getDocBaseURL() {
-    // FIXME: move this to configuration at some stage
-    return 'https://neticrm.tw/CRMDOC/';
+    return CRM_Core_Config::singleton()->docURLBase;
   }
 
   /**
@@ -989,7 +988,12 @@ class CRM_Utils_System {
     // return just the URL, no matter what other parameters are defined
     if (!function_exists('ts')) {
       $docBaseURL = self::getDocBaseURL();
-      return $docBaseURL . str_replace(' ', '+', $page);
+      if (!empty($docBaseURL)) {
+        return $docBaseURL . str_replace(' ', '+', $page);
+      }
+      else {
+        return '';
+      }
     }
     else {
       $params = array(
@@ -1013,36 +1017,37 @@ class CRM_Utils_System {
    * @access public
    */
   static function docURL($params) {
-
     if (!isset($params['page'])) {
       return;
     }
 
     $docBaseURL = self::getDocBaseURL();
+    if (!empty($docBaseURL)) {
+      if (!isset($params['title']) or $params['title'] === NULL) {
+        $params['title'] = ts('Opens documentation in a new window.');
+      }
 
-    if (!isset($params['title']) or $params['title'] === NULL) {
-      $params['title'] = ts('Opens documentation in a new window.');
-    }
+      if (!isset($params['text']) or $params['text'] === NULL) {
+        $params['text'] = ts('(learn more...)');
+      }
 
-    if (!isset($params['text']) or $params['text'] === NULL) {
-      $params['text'] = ts('(learn more...)');
-    }
+      if (!isset($params['style']) || $params['style'] === NULL) {
+        $style = '';
+      }
+      else {
+        $style = "style=\"{$params['style']}\"";
+      }
 
-    if (!isset($params['style']) || $params['style'] === NULL) {
-      $style = '';
-    }
-    else {
-      $style = "style=\"{$params['style']}\"";
-    }
+      $link = $docBaseURL . str_replace(' ', '+', $params['page']);
 
-    $link = $docBaseURL . str_replace(' ', '+', $params['page']);
-
-    if (isset($params['URLonly']) && $params['URLonly'] == TRUE) {
-      return $link;
+      if (isset($params['URLonly']) && $params['URLonly'] == TRUE) {
+        return $link;
+      }
+      else {
+        return "<a href=\"{$link}\" $style target=\"_blank\" title=\"{$params['title']}\">".ts($params['text'])."</a>";
+      }
     }
-    else {
-      return "<a href=\"{$link}\" $style target=\"_blank\" title=\"{$params['title']}\">{$params['text']}</a>";
-    }
+    return '';
   }
 
   /**
