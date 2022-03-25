@@ -25,6 +25,11 @@
  +--------------------------------------------------------------------+
 */
 
+
+require_once 'SPFLib/autoload.php';
+use SPFLib\Checker;
+use SPFLib\Check\Environment;
+
 /**
  *
  * @package CRM
@@ -253,6 +258,20 @@ class CRM_Utils_Mail {
   }
 
   /**
+   * Get the from name from a formatted full name + address string
+   *
+   * @param  string $header  the full name + email address string
+   *
+   * @return string          the plucked email address
+   */
+  static function pluckNameFromHeader($header) {
+    $email = self::pluckEmailFromHeader($header);
+    $name = str_replace("<{$email}>", '', $header);
+    $name = trim($name, '" ');
+    return trim($name); 
+  }
+
+  /**
    * Get the Active outBound email
    *
    * @return boolean true if valid outBound email configuration found, false otherwise
@@ -339,6 +358,55 @@ class CRM_Utils_Mail {
       return FALSE;
     }
     return TRUE;
+  }
+
+  static function checkSPF($email, $mailer = NULL) {
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', $email);
+    }
+    else {
+      $domain = $email;
+    }
+
+    if (empty($mailer)) {
+      $config = CRM_Core_Config::singleton();
+      $mailer = $config->getMailer();
+      $host = $mailer->host;
+    }
+    if (!empty($host)) {
+      $ip = CRM_Utils_System::getHostIPAddress($host);
+      $checker = new Checker();
+      $checkResult = $checker->check(new Environment($ip, $domain));
+      $result = $checkResult->getCode();
+      return $result === 'pass';
+    }
+    return FALSE;
+  }
+
+  static function checkDKIM($email, $mailer = NULL) {
+    global $civicrm_conf;
+
+    // skip check when there were no selector
+    if (empty($civicrm_conf['mailing_dkim_domain']) || empty($civicrm_conf['mailing_dkim_selector'])) {
+      return NULL;
+    }
+
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', $email);
+    }
+    else {
+      $domain = $email;
+    }
+    $dkimCheck = $civicrm_conf['mailing_dkim_selector'].'._domainkey'.$domain;
+    $records = dns_get_record($dkimCheck, DNS_CNAME);
+    if (!empty($records)) {
+      foreach($records as $r) {
+        if (!empty($r['target']) && $r['target'] === $civicrm_conf['mailing_dkim_domain']) {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 }
 
