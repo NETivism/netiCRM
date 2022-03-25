@@ -1044,7 +1044,7 @@ class CRM_Utils_System {
         return $link;
       }
       else {
-        return "<a href=\"{$link}\" $style target=\"_blank\" title=\"{$params['title']}\">".ts($params['text'])."</a>";
+        return "<a class=\"crm-docurl\" href=\"{$link}\" $style target=\"_blank\" title=\"{$params['title']}\">".ts($params['text'])."</a>";
       }
     }
     return '';

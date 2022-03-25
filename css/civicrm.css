@@ -3181,6 +3181,27 @@ div#crm-toolTip #hide-tooltip {
   margin-bottom: 0px;
 }
 
+/* docurl */
+.crm-container a.crm-docurl{
+  text-decoration: none !important;
+  position: relative;
+}
+.crm-container a.crm-docurl::before {
+  content: '\f2f5';
+  font-family: 'Material-Design-Iconic-Font';
+  margin-right: 5px;
+}
+.crm-container a.crm-docurl:hover::after {
+  content: '\f1a3';
+  font-family: 'Material-Design-Iconic-Font';
+  opacity: .5;
+  font-size: .85em;
+  margin-left: 5px;
+  position: absolute;
+  right: -15px;
+  top: -3px;
+}
+
 /* crm-summary-group appears outside crm-container for contact summary icon overlay */
 .crm-container .crm-summary-group .crm-section .label,
 .crm-summary-group .crm-section .label {
