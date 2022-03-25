@@ -453,6 +453,20 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     }
   }
 
+  /**
+   * Get current page
+   * 
+   * Get current form object for further usage.
+   * In most case, pages defined in statemachine and it's form object.
+   *
+   * @return CRM_Core_Form
+   */
+  public function getCurrentPage() {
+    $this->_actionName = $this->getActionName();
+    list($pageName, $action) = $this->_actionName;
+    return $this->getPage($pageName);
+  }
+
   public function nextPage(){
     $this->_actionName = $this->getActionName();
     list($pageName, $action) = $this->_actionName;
