@@ -1156,21 +1156,14 @@ class CRM_Utils_System {
     $config = CRM_Core_Config::singleton();
     self::civiBeforeShutdown();
     if ($config->userFramework == 'Drupal') {
-      if ($version < 7) {
-        // drupal 6 need to trigger hook exit manually
-        module_invoke_all('exit');
-        exit($status);
-      }
-      else {
-        // drupal 7, change old exit method. Use exception to handling route
-        // drupal 8,9, the correct way to exit
-        // let symfony router handling this
-        // will trigger event(KernelEvents::TERMINATE at controller
-        throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
-      }
+      // drupal 6,7, change old exit method. Use exception to handling route
+      // drupal 8,9, the correct way to exit
+      // let symfony router handling this
+      // will trigger event(KernelEvents::TERMINATE at controller
+      throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
     }
 
-    // we shuould being here when using drupal
+    // we should never hit here when using drupal
     exit($status);
   }
 
