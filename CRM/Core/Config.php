@@ -122,6 +122,25 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   public $initialized = 0;
 
   /**
+   * Shut down callbacks
+   * 
+   * The elements of this array will be called before / after civicrm shutdown
+   * The format will be array(
+   *   'before' => array(
+   *      0 => array(callable $callback => $args),
+   *    )
+   *   'after' => array(
+   *      0 => array(callable $callback => $args),
+   *    )
+   * ))
+   * The $callback must be static method or function. The session may not exists.
+   * In after shutdown, callback will be called after fastcgi_finish_request
+   * 
+   * @var array
+   */
+  public static $_shutdownCallbacks = array();
+
+  /**
    * the factory class used to instantiate our DB objects
    * @var string
    */
@@ -759,6 +778,32 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   public function setUserFramework($userFramework = NULL) {
     $this->userFramework = $userFramework;
     $this->_setUserFrameworkConfig($userFramework);
+  }
+
+  /**
+   * add shutdown callback to static array
+   *
+   * @param string $type allow value is before | after
+   * @param string $callback
+   * @param array $args
+   * @return bool
+   */
+  public static function addShutdownCallback($type, $callback, $args = NULL) {
+    if (is_array($callback) && count($callback) == 2) {
+      $callback = $callback[0].'::'.$callback[1];
+    }
+    if (!is_string($callback) || !is_callable($callback)) {
+      return FALSE;
+    }
+    if (!in_array($type, array('before', 'after'))) {
+      return FALSE;
+    }
+    $args = !empty($args) ? $args : array();
+    if (!is_array($args)) {
+      return FALSE;
+    }
+    self::$_shutdownCallbacks[$type][] = array($callback => $args);
+    return TRUE;
   }
 }
 // end CRM_Core_Config

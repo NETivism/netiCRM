@@ -1146,6 +1146,7 @@ class CRM_Utils_System {
    * We should also commit session before here to prevent session miss.
    * The civiBeforeShutdown will doing session commit well.
    * Only functions in register_shutdown_function will be call after this.
+   * You should add callbacks into CRM_Core_Config::shutdownCallbacks
    * When using fpm, we may have fastcgi_finish_request and location of header here.
    * 
    * @param integer $status
@@ -1204,9 +1205,81 @@ class CRM_Utils_System {
   }
 
   static function civiBeforeShutdown() {
+    // now we register shutdown functions here
+    if (!empty(CRM_Core_Config::$_shutdownCallbacks)) {
+      $registerFastcgiFinishRequest = FALSE;
+      if (!empty(CRM_Core_Config::$_shutdownCallbacks['before'])) {
+        foreach(CRM_Core_Config::$_shutdownCallbacks['before'] as $call) {
+          $callback = key($call);
+          $args = reset($call);
+          if (is_callable($callback)) {
+            if (!empty($ele['args']) && is_array($ele['args'])) {
+              $args = $ele['args'];
+            }
+            else {
+              $args = array();
+            }
+            call_user_func_array($callback, $args);
+          }
+          else {
+            // do not silent fail here
+            // make sure all callbacks can be call
+            CRM_Core_Error::fatal('shutdown callback '.$callback. ' is not callable');
+          }
+        }
+      }
+      if (!empty(CRM_Core_Config::$_shutdownCallbacks['after'])) {
+        register_shutdown_function('CRM_Utils_System::civiAfterShutdown');
+        foreach(CRM_Core_Config::$_shutdownCallbacks['after'] as $call) {
+          $callback = key($call);
+          $args = reset($call);
+          if (is_callable($callback)) {
+            if (!empty($args) && is_array($args)) {
+              switch(count($args)) {
+                case 0:
+                  register_shutdown_function($callback);
+                  break;
+                case 1:
+                  register_shutdown_function($callback, $args[0]);
+                  break;
+                case 2:
+                  register_shutdown_function($callback, $args[0], $args[1]);
+                  break;
+                case 3:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2]);
+                  break;
+                case 4:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2], $args[3]);
+                  break;
+                case 5:
+                default:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2], $args[3], $args[4]);
+                  break;
+              }
+            }
+            else {
+              register_shutdown_function($callback);
+            }
+          }
+          else {
+            // do not silent fail here
+            // make sure all callbacks can be call
+            CRM_Core_Error::fatal('shutdown callback '.$callback. ' is not callable');
+          }
+        }
+      }
+    }
+
+    // save session before shutdown
     CRM_Core_Session::storeSessionObjects();
     if (!self::isUserLoggedIn() && isset($_SESSION[CRM_Core_Session::KEY]['qfPrivateKey'])) {
       CRM_Core_Config::$_userSystem->tempstoreSet('qfPrivateKey', $_SESSION[CRM_Core_Session::KEY]['qfPrivateKey']);
+    }
+  }
+
+  static function civiAfterShutdown() {
+    if (function_exists('fastcgi_finish_request')) {
+      fastcgi_finish_request();
     }
   }
 
