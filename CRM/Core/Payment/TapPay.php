@@ -1142,7 +1142,15 @@ LIMIT 0, 100
     return $resultNote;
   }
 
-  public static function doRecurUpdate ($id, $idType = 'contribution') {
+  /**
+   * Behavior after pressed "Sync now" button.
+   * 
+   * @param int $id The contribution recurring ID
+   * @param string $idType Means the type of the ID, value as "Contribution" or "recur"
+   * @param object $form The MakingTransaction form object
+   * @return void
+   */
+  public static function doRecurUpdate ($id, $idType = 'contribution', $form = NULL) {
     if (strstr('recur', $idType)) {
       $contribution_recur_id = $id;
     }
@@ -1224,6 +1232,13 @@ LIMIT 0, 100
     return $returnMessage;
   }
 
+  /**
+   * Function called from contributionRecur page to show tappay detail information
+   * 
+   * @param int @contributionId the contribution id
+   * 
+   * @return array The label as the key to value.
+   */
   public static function getRecordDetail ($contributionId) {
     $tappayDAO = new CRM_Contribute_DAO_TapPay();
     $tappayDAO->contribution_id = $contributionId;

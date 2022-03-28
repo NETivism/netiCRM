@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48739,3 +48739,9 @@ msgstr "無法辨識交易檔案編號，請您複製貼上您送至銀行的「
 
 msgid "Could not find your ACH transaction file ID."
 msgstr "您輸入的編號找不到對應的ACH交易檔案"
+
+msgid "The contribution with transaction ID: %1 has been created and updated."
+msgstr "捐款編號： %1 的捐款已經新增並更新。"
+
+msgid "The contribution with transaction ID: %1 can't find from Newebpay API."
+msgstr "捐款編號： %1 的捐款無法從藍新 API 取得資料。"
