@@ -26,10 +26,6 @@
 */
 
 
-require_once 'SPFLib/autoload.php';
-use SPFLib\Checker;
-use SPFLib\Check\Environment;
-
 /**
  *
  * @package CRM
@@ -375,9 +371,11 @@ class CRM_Utils_Mail {
     }
     if (!empty($host)) {
       $ip = CRM_Utils_System::getHostIPAddress($host);
-      $checker = new Checker();
-      $checkResult = $checker->check(new Environment($ip, $domain));
-      $result = $checkResult->getCode();
+      if (CRM_Utils_System::checkPHPVersion(7.1)) {
+        require_once 'SPFLib/autoload.php';
+        $checker = new SPFLib\Checker();
+        $checkResult = $checker->check(new SPFLib\Check\Environment($ip, $domain));
+        $result = $checkResult->getCode();
       return $result === 'pass';
     }
     return FALSE;

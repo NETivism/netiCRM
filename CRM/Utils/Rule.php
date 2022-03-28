@@ -865,5 +865,40 @@ class CRM_Utils_Rule {
     }
     return TRUE;
   }
+
+  /**
+   * Compares two IPv4 addresses
+   * 
+   * This is from symfony HttpFoundation/IpUtils::checkIp4
+   * In case a subnet is given, it checks if it contains the request IP.
+   *
+   * @param string $requestIp the ip got to verify
+   * @param string $allowIp IPv4 address or subnet in CIDR notation 
+   *
+   * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
+   */
+  public static function subnetIp4($requestIp, $allowIp) {
+    if (strstr($allowIp, '/')) {
+      list($address, $netmask) = explode('/', $allowIp, 2);
+
+      if ('0' === $netmask) {
+        return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+      }
+
+      if ($netmask < 0 || $netmask > 32) {
+        return FALSE;
+      }
+    }
+    else {
+      $address = $allowIp;
+      $netmask = 32;
+    }
+
+    if (false === ip2long($address)) {
+      return FALSE;
+    }
+
+    return 0 === substr_compare(sprintf('%032b', ip2long($requestIp)), sprintf('%032b', ip2long($address)), 0, $netmask);
+  }
 }
 
