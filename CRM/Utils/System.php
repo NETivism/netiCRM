@@ -761,16 +761,21 @@ class CRM_Utils_System {
     return $result;
   }
 
-  static function checkPHPVersion($ver = 5, $abort = TRUE) {
-    $phpVersion = substr(PHP_VERSION, 0, 1);
+  static function checkPHPVersion($ver = 5, $abort = FALSE) {
+    if (is_int($ver)) {
+      $phpVersion = PHP_MAJOR_VERSION;
+      $phpVersion = (int) $phpVersion;
+    }
+    if (is_float($ver)) {
+      $phpVersion = PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;
+      $phpVersion = (float) $phpVersion;
+    }
     if ($phpVersion >= $ver) {
       return TRUE;
     }
 
     if ($abort) {
-      CRM_Core_Error::fatal(ts('This feature requires PHP Version %1 or greater',
-          array(1 => $ver)
-        ));
+      CRM_Core_Error::fatal(ts('This feature requires PHP Version %1 or greater', array(1 => $ver)));
     }
     return FALSE;
   }
