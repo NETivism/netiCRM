@@ -376,7 +376,14 @@ class CRM_Utils_Mail {
         $checker = new SPFLib\Checker();
         $checkResult = $checker->check(new SPFLib\Check\Environment($ip, $domain));
         $result = $checkResult->getCode();
-      return $result === 'pass';
+        return $result === 'pass';
+      }
+      else {
+        require_once 'SPFCheck/autoload.php';
+        $checker = new Mika56\SPFCheck\SPFCheck(new Mika56\SPFCheck\DNSRecordGetter());
+        $result = $checker->isIPAllowed($ip, $domain);
+        return $result === Mika56\SPFCheck\SPFCheck::RESULT_PASS;
+      }
     }
     return FALSE;
   }
