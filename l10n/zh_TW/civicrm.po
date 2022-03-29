@@ -48745,3 +48745,8 @@ msgstr "捐款編號： %1 的捐款已經新增並更新。"
 
 msgid "The contribution with transaction ID: %1 can't find from Newebpay API."
 msgstr "捐款編號： %1 的捐款無法從藍新 API 取得資料。"
+
+msgid ""
+"Are you sure you want to sync the recurring status and check the "
+"contributions?"
+msgstr "你確定要與金流商同步此筆定捐狀態並檢查是否有新捐款嗎？"

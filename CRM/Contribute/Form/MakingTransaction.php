@@ -91,7 +91,11 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
     if (method_exists($paymentClass, 'doRecurUpdate')) {
       $name = $this->getButtonName('upload');
-      $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".ts("Are you sure you want to sync all expiry dates of this token?", $id)."')"));
+      $message = ts("Are you sure you want to sync the recurring status and check the contributions?");
+      if (method_exists($paymentClass, 'getSyncNowMessage')) {
+        $message = $paymentClass::getSyncNowMessage($contributionId, $id);
+      }
+      $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".$message."')"));
       $this->assign('update_notify', $name);
     }
     if (method_exists($paymentClass, 'doRecurTransact')) {

@@ -1143,6 +1143,18 @@ LIMIT 0, 100
   }
 
   /**
+   * Get the message as pressing "Sync Now" button.
+   * Called by MakingTransaction form.
+   * 
+   * @param int $contributionId The contribution id of the page.
+   * @param int $recurId The recurring id of the page.
+   * @return string The message
+   */
+  public static function getSyncNowMessage ($contributionId, $recurId = NULL) {
+    return ts("Are you sure you want to sync all expiry dates of this token?", $recurId);
+  }
+
+  /**
    * Behavior after pressed "Sync now" button.
    * 
    * @param int $id The contribution recurring ID

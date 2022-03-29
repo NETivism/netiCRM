@@ -48415,3 +48415,6 @@ msgstr ""
 
 msgid "The contribution with transaction ID: %1 can't find from Newebpay API."
 msgstr ""
+
+msgid "Are you sure you want to sync the recurring status and check the contributions?"
+msgstr ""
