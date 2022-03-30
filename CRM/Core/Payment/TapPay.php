@@ -589,7 +589,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
 
-  public static function doExecuteAllRecur ($time = NULL) {
+  public static function doExecuteAllRecur($time = NULL) {
     // Check sequence;
     $seq = new CRM_Core_DAO_Sequence();
     $seq->name = self::QUEUE_NAME;
@@ -688,7 +688,7 @@ LIMIT 0, 100
     }
   }
 
-  public static function doCheckRecur ($recurId, $time = NULL) {
+  public static function doCheckRecur($recurId, $time = NULL) {
     if (empty($time)) {
       $time = time();
     }
@@ -806,7 +806,7 @@ LIMIT 0, 100
     return $resultNote;
   }
 
-  public static function queryRecord ($url_params, $get = array()) {
+  public static function queryRecord($url_params, $get = array()) {
     // apply $_GET to $get , and filted params 'q'
     if(empty($get)){
       foreach ($_GET as $key => $value) {
@@ -1136,7 +1136,7 @@ LIMIT 0, 100
   /**
    * Trigger when click transaction button.
    */
-  public static function doRecurTransact ($recurId = NULL, $sendMail = FALSE) {
+  public static function doRecurTransact($recurId = NULL, $sendMail = FALSE) {
     $resultNote = self::payByToken($recurId, NULL, $sendMail);
 
     return $resultNote;
@@ -1150,7 +1150,7 @@ LIMIT 0, 100
    * @param int $recurId The recurring id of the page.
    * @return string The message
    */
-  public static function getSyncNowMessage ($contributionId, $recurId = NULL) {
+  public static function getSyncNowMessage($contributionId, $recurId = NULL) {
     return ts("Are you sure you want to sync all expiry dates of this token?", $recurId);
   }
 
@@ -1162,7 +1162,7 @@ LIMIT 0, 100
    * @param object $form The MakingTransaction form object
    * @return void
    */
-  public static function doRecurUpdate ($id, $idType = 'contribution', $form = NULL) {
+  public static function doRecurUpdate($id, $idType = 'contribution', $form = NULL) {
     if (strstr('recur', $idType)) {
       $contribution_recur_id = $id;
     }
@@ -1251,7 +1251,7 @@ LIMIT 0, 100
    * 
    * @return array The label as the key to value.
    */
-  public static function getRecordDetail ($contributionId) {
+  public static function getRecordDetail($contributionId) {
     $tappayDAO = new CRM_Contribute_DAO_TapPay();
     $tappayDAO->contribution_id = $contributionId;
     $tappayDAO->find(TRUE);
@@ -1290,7 +1290,7 @@ LIMIT 0, 100
     return $returnData;
   }
 
-  public static function getContributionAllRecordData ($contributionId) {
+  public static function getContributionAllRecordData($contributionId) {
     $logs = array();
     $tappayLog = new CRM_Contribute_DAO_TapPayLog();
     $tappayLog->contribution_id = $contributionId;
@@ -1315,7 +1315,7 @@ LIMIT 0, 100
     return $trxnId;
   }
 
-  static function getSyncDataUrl ($contributionId) {
+  static function getSyncDataUrl($contributionId) {
     $get = $_GET;
     unset($get['q']);
     $query = http_build_query($get);
