@@ -454,7 +454,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * 
    * @return array The label as the key to value.
    */
-  public static function getRecordDetail ($contributionId) {
+  public static function getRecordDetail($contributionId) {
     require_once 'CRM/Core/Smarty/resources/String.php';
     $smarty = CRM_Core_Smarty::singleton();
     civicrm_smarty_register_string_resource();
@@ -470,7 +470,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @param object $form The MakingTransaction form object
    * @return void
    */
-  public static function doRecurUpdate ($id, $idType = 'contribution', $form = NULL) {
+  public static function doRecurUpdate($id, $idType = 'contribution', $form = NULL) {
     if (!empty($form)) {
       $contributionId = $form->get('contributionId');
       $contribution = new CRM_Contribute_DAO_Contribution();
