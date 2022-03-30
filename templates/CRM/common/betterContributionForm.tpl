@@ -480,6 +480,7 @@ cj(function($){
       $('#r_person').prop('checked', true);
       {/literal}{if $receiptYesNo}{literal}
       $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').closest('tr').show();
+      $('.custom_{/literal}{$receiptYesNo}{literal}-section input[value=2]').closest('label').show();
       {/literal}{/if}{literal}
     }
     $('#same_as').prop('checked',false);
