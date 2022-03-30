@@ -310,7 +310,7 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#receive_date_time");
     });
 
-    /* clear recipt date */
+    /* clear receipt date */
     casper.waitForSelector('.crm-clear-link a', function success() {
         test.assertExists('.crm-clear-link a');
         this.click('.crm-clear-link a');
