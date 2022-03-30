@@ -27,6 +27,15 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     if (empty($params['page_type']) || empty($params['page_id'])) {
       return FALSE;
     }
+
+    // refs #31611, #34038, skip internal page
+    if ($params['page_type'] == 'civicrm_contribution_page') {
+      $isInternalPage = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $params['page_id'], 'is_internal');
+      if ($isInternalPage > 0) {
+        return;
+      }
+    }
+
     if (empty($params['visit_date'])) {
       $params['visit_date'] = date('Y-m-d H:i:s');
     }

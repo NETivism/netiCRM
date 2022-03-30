@@ -670,7 +670,9 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     // tracking click
     $this->_ppType = CRM_Utils_Array::value('type', $_GET);
     if (!$this->_ppType) {
-      $this->track();
+      if (empty($this->_values['is_internal'])) {
+        $this->track();
+      }
     }
   }
 
