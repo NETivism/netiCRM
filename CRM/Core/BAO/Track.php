@@ -30,9 +30,13 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
 
     // refs #31611, #34038, skip internal page
     if ($params['page_type'] == 'civicrm_contribution_page') {
-      $isInternalPage = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $params['page_id'], 'is_internal');
-      if ($isInternalPage > 0) {
-        return;
+      $checkQuery = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'civicrm_contribution_page' AND column_name = 'is_internal'";
+      $exists = CRM_Core_DAO::singleValueQuery($checkQuery);
+      if ($exists) {
+        $isInternalPage = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $params['page_id'], 'is_internal');
+        if ($isInternalPage > 0) {
+          return;
+        }
       }
     }
 
