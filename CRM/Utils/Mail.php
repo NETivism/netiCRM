@@ -181,6 +181,7 @@ class CRM_Utils_Mail {
       // refs #30289, for valid DKIM
       if (!strstr($headers['Sender'], $mailer->host) && $mailer->_mailSetting['return_path']) {
         $headers['Sender'] = $mailer->_mailSetting['return_path'];
+        $headers['Return-Path'] = $mailer->_mailSetting['return_path'];
       }
       $result = $mailer->send($to, $headers, $message);
       CRM_Core_Error::setCallback();
