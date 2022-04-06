@@ -183,6 +183,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     $snippet = CRM_Utils_Array::value('snippet', $_REQUEST);
     //$snippet = CRM_Utils_Request::retrieve( 'snippet', 'Integer', $this, false, null, $_REQUEST );
     if ($snippet) {
+      header('X-Robots-Tag: noindex', TRUE);
       if ($snippet == 3) {
         $this->_print = CRM_Core_Smarty::PRINT_PDF;
       }
