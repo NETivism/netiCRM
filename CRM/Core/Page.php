@@ -170,6 +170,7 @@ class CRM_Core_Page {
     }
 
     if (isset($_GET['snippet']) && $_GET['snippet']) {
+      header('X-Robots-Tag: noindex', TRUE);
       if ($_GET['snippet'] == 3) {
         $this->_print = CRM_Core_Smarty::PRINT_PDF;
       }
