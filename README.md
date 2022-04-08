@@ -33,25 +33,39 @@ For last decade, we were focus on development. Sometimes we forgot share our kno
 - **Community** - community is the key to survive in Open Source area, and CiviCRM is good example. We could do better to cooperate with community.
 - **Scalability** - more and more large NPOs using netiCRM. We will try to improve performance and scalability in core.
 
+You can also check [milestones](https://github.com/NETivism/netiCRM/milestones) which will address our main focus by quarter.
+
+## Release cycle
+
+The version style is [semantic versioning](https://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning) without leading v.
+```
+x.y.z
+```
+
+We have automatic script release weekly base on "hotfix" branch which will change last digit "z".
+We also have highly active development "develop" branch for monthly or quarterly release. It may change second digit "y".
+When major change. Such as support new php / drupal version or backward in-compatibility release. We will change version number first digit "x".
+
+## Security policy
+
+We take security of this project very seriously. If you believe you have found a security vulnerability, contact us through [Security Policy](https://github.com/netivism/netiCRM/security/policy) page.
+
+## Supported Versions
+
+| Version | Supported          |
+| ------- | ------------------ |
+| 3.3.x   | :white_check_mark: |
+| < 3.3   | :x:                |
+
 ### License
+
 License is under AGPL-3.0. See agpl-3.0.txt.
 Third-party packages licenses, please check packages/LICENSE
 
 ### How to Install
+
 Follow steps in [INSTALL.md](./INSTALL.md).
 
 ### How to Contribute
-#### 1\. Translate
-We only maintain Traditional Chinese translations. Follow the CiviCRM community experience, we also build a [Transifex Project here](https://www.transifex.com/projects/p/neticrm/).
 
-Welcome to join us by "request button" right top of Transifex project page. Please address who you are and NPO belongs to. We will review your request.
-Keep in mind, the modification will effect a lots of users in daily uses. We may reject your contribution if not appropriate.
-
-We also merge string into CiviCRM regularly. Your contribution may also benefit to original CiviCRM project.
-
-#### 2\. Development
-Check [CONTRIBUTE.md](./CONTRIBUTE.md) first.
-
-#### 3\. Bug Report
-Please file an issue on github in English.
-https://github.com/NETivism/netiCRM/issues
+Check [CONTRIBUTE.md](./CONTRIBUTE.md) for more information.
