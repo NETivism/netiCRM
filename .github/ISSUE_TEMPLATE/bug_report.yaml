@@ -47,7 +47,7 @@ body:
       description: "Which OS is your server/device running on?"
       placeholder: "eg. Windows 10"
     validations:
-      required: false
+      required: true
   - type: input
     id: browser-vendor
     attributes:
@@ -55,7 +55,7 @@ body:
       description: "Which browser are you running on?"
       placeholder: "Ex. Google Chrome 95.0.4638.69"
     validations:
-      required: false
+      required: true
   - type: textarea
     id: logs
     attributes:
