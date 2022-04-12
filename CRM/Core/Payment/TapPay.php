@@ -679,7 +679,8 @@ LIMIT 0, 100
         continue;
       }
 
-      self::doCheckRecur($dao->recur_id, $time);
+      $command = 'drush neticrm-process-recurring --payment-processor=tappay --contribution-recur-id='.$dao->recur_id;
+      popen($command,'w');
     }
 
     // Delete the sequence data of this process.
