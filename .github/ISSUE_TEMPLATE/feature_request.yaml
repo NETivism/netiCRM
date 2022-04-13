@@ -37,7 +37,7 @@ body:
   - type: textarea
     id: solution
     validations:
-      required: false
+      required: true
     attributes:
       label: "✨  Solution"
       description: "A clear and concise description of what you want to happen."
@@ -45,7 +45,7 @@ body:
   - type: textarea
     id: screeshot-or-wireframe
     validations:
-      required: false
+      required: true
     attributes:
       label: "🖼️ Screenshot or Simple Wireframe"
       description: "A picture is worth a thousand words."

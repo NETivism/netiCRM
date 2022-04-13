@@ -1,5 +1,16 @@
 # Installation
 
+## System requirement
+
+Tested and supported environment:
+- PHP 5.6, PHP 7.3
+- Mariadb 10.3+
+
+Workable in theory but not tested:
+- PHP 5.5, PHP 7.3+
+- MySQL 5.6+
+
+## Installation with Drupal 7.x
 
 1\. First, install Drupal 7.
 (Please refer install guide of Drupal 7)
