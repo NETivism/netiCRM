@@ -1077,7 +1077,8 @@ INSERT INTO civicrm_mailing_bounce_pattern
     (@bounceTypeID, 'sender ip must resolve'),
     (@bounceTypeID, 'unable to relay'),
     (@bounceTypeID, '550 relaying.+denied'),
-    (@bounceTypeID, '550 relaying.+not allowed');
+    (@bounceTypeID, '550 relaying.+not allowed'),
+    (@bounceTypeID, '550.+blacklisted');
 
 INSERT INTO civicrm_mailing_bounce_type 
         (name, description, hold_threshold) 
