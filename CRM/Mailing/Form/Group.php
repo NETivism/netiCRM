@@ -142,15 +142,22 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
 
       $defaults['includeMailings'] = CRM_Utils_Array::value('Include', $mailingGroups['civicrm_mailing']);
       $defaults['excludeMailings'] = $mailingGroups['civicrm_mailing']['Exclude'];
+
+      $defaults['includeOpened'] = $mailingGroups['civicrm_mailing_event_opened']['Include'];
+      $defaults['excludeOpened'] = CRM_Utils_Array::value('Exclude', $mailingGroups['civicrm_mailing_event_opened']);
+
+      $defaults['includeClicked'] = $mailingGroups['civicrm_mailing_event_trackable_url_open']['Include'];
+      $defaults['excludeClicked'] = CRM_Utils_Array::value('Exclude', $mailingGroups['civicrm_mailing_event_trackable_url_open']);
     }
 
     //when the context is search hide the mailing recipients.
     require_once 'CRM/Core/ShowHideBlocks.php';
     $showHide = new CRM_Core_ShowHideBlocks();
     $showGroupSelector = TRUE;
+
     if (!empty($this->_searchBasedMailing)) {
       $showGroupSelector = FALSE;
-      $formElements = array('includeGroups', 'excludeGroups', 'includeMailings', 'excludeMailings');
+      $formElements = array('includeGroups', 'excludeGroups', 'includeMailings', 'excludeMailings', 'includeOpened', 'excludeOpened', 'includeClicked', 'excludeClicked');
       $formValues = $this->controller->exportValues($this->_name);
       foreach ($formElements as $element) {
         if (!empty($formValues[$element])) {
@@ -287,7 +294,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       );
     }
     $this->addButtons($buttons);
-
     $this->assign('groupCount', count($groups));
     $this->assign('mailingCount', count($mailings));
   }
