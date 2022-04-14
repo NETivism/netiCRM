@@ -61,7 +61,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-
     if ($id) {
       $this->_contributionIds = array($id);
       $this->_componentClause = " civicrm_contribution.id IN ( $id ) ";
@@ -117,8 +116,23 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if (!empty($activityTypeId)) {
+
       $this->_enableEmailReceipt = TRUE;
       CRM_Utils_System::setTitle(ts('Print or Email Contribution Receipts'));
+    }
+    // Check contact email
+    $emailIsEmpty = FALSE;
+    $contactId = $this->_contactIds;
+    foreach ($this->_contactIds as $contactId) {
+      $result = CRM_Core_BAO_Email::allEmails(intval($contactId));
+      $array = array_values($result);
+      $email = $array[0]['email'];
+      if (empty($email)) {
+        $emailIsEmpty = TRUE;
+      }
+    }
+    if ($emailIsEmpty) {
+      CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold.'));
     }
   }
 
