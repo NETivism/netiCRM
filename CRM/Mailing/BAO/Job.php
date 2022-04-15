@@ -90,7 +90,7 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
       $query = "
 SELECT j.*
   FROM $jobTable j
-  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
+  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID} AND m.is_hidden <= 0
 WHERE j.is_test = 0
   AND (
     ( j.start_date IS null AND j.scheduled_date <= $currentTime AND  j.status = 'Scheduled' )
@@ -207,7 +207,7 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
     $query = "
 SELECT j.*
   FROM $jobTable j
-  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
+  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID} AND m.is_hidden <= 0
 WHERE j.is_test = 0
   AND j.scheduled_date <= $currentTime
   AND j.status = 'Running'
@@ -435,6 +435,9 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     $mailing->id = $this->mailing_id;
     $mailing->find(TRUE);
     $mailing->free();
+    if ($mailing->is_hidden) {
+      return FALSE;
+    }
 
     $eq = new CRM_Mailing_Event_BAO_Queue();
     $eqTable = CRM_Mailing_Event_BAO_Queue::getTableName();
@@ -539,6 +542,10 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
   public function deliverGroup(&$fields, &$mailing, &$mailer, &$job_date, &$attachments) {
     static $smtpConnectionErrors = 0;
+    if (!empty($mailing->is_hidden)) {
+      CRM_Core_Error::fatal('Mailing is hidden. We can not deliver hidden mailing by mailing job.');
+      return;
+    }
 
     if (!is_object($mailer) || empty($fields)) {
       CRM_Core_Error::fatal();

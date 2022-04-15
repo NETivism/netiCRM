@@ -1235,6 +1235,10 @@ AND civicrm_contact.is_opt_out =0";
     $contactDetails, &$attachments, $isForward = FALSE,
     $fromEmail = NULL, $replyToEmail = NULL
   ) {
+    if ($this->checkIsHidden()) {
+      CRM_Core_Error::fatal('Mailing is hidden. We can not compose hidden mailing by job.');
+      return;
+    }
     require_once 'CRM/Activity/BAO/Activity.php';
     $config = CRM_Core_Config::singleton();
     $knownTokens = $this->getTokens();
@@ -3041,6 +3045,13 @@ ORDER BY civicrm_mailing.name";
       }
     }
     return FALSE;
+  }
+
+  function checkIsHidden() {
+    if (!empty($this->id)) {
+      return CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $this->id, 'is_hidden');
+    }
+    return 0;
   }
 }
 
