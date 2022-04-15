@@ -276,10 +276,24 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * Send an email from the specified template based on an array of params
    *
    * @param array $params  a string-keyed array of function params, see function body for details
+   * @param object &$smarty passed by reference smarty object. Will be used when multiple call of sendTemplate in a loop
+   * @param array $callback array first element is for success callback, second is for error callback
+   *   ```
+   *   $callback = [
+   *     0 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' => [ // this is for success
+   *       $activityId,
+   *       TRUE,
+   *     ]],
+   *     1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' => [ // this is for error
+   *       $activityId,
+   *       FALSE,
+   *     ]],
+   *   ];
+   *   ```
    *
    * @return array  of four parameters: a boolean whether the email was sent, and the subject, text and HTML templates
    */
-  static function sendTemplate($params, &$smarty = NULL) {
+  static function sendTemplate($params, &$smarty = NULL, $callback = NULL) {
     $defaults = array(
       // option group name of the template
       'groupName' => NULL,
@@ -465,7 +479,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       }
     
       $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_mailerTypes);
-      $sent = CRM_Utils_Mail::send($params);
+      $sent = CRM_Utils_Mail::send($params, $callback);
 
       if ($pdf_filename) {
         unlink($pdf_filename);
