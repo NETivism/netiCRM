@@ -1222,7 +1222,8 @@ CREATE TABLE civicrm_mailing (
      is_archived tinyint   DEFAULT 0 COMMENT 'Is this mailing archived?',
      visibility enum('User and User Admin Only', 'Public Pages')   DEFAULT 'User and User Admin Only' COMMENT 'In what context(s) is the mailing contents visible (online viewing)',
      dedupe_email tinyint   DEFAULT 0 COMMENT 'Remove duplicate emails?',
-     sms_provider_id int unsigned     
+     sms_provider_id int unsigned    ,
+     is_hidden tinyint   DEFAULT 0 COMMENT 'Is this mailing hidden?' 
 ,
     PRIMARY KEY ( id )
  

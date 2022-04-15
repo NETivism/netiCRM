@@ -270,6 +270,12 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
    */
   public $sms_provider_id;
   /**
+   * Is this mailing hidden?
+   *
+   * @var boolean
+   */
+  public $is_hidden;
+  /**
    * class constructor
    *
    * @access public
@@ -504,6 +510,10 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
           'name' => 'sms_provider_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Mailing SMS Provider') ,
+        ) ,
+        'is_hidden' => array(
+          'name' => 'is_hidden',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
         ) ,
       );
     }
