@@ -1742,11 +1742,13 @@ cj(function() {
           $skipMSG = TRUE;
         }
         else {
-          require_once 'CRM/Core/BAO/MessageTemplates.php';
-          list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+          $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participants[$num], 'Event Notification Email');
+          list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, array(
+            0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+            1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+          ));
           if ($mailSent) {
             $sent[] = $contactID;
-            CRM_Activity_BAO_Activity::addActivity($participants[$num], 'Email');
           }
           else {
             $notSent[] = $contactID;
@@ -1761,7 +1763,7 @@ cj(function() {
     elseif (($this->_action & CRM_Core_Action::UPDATE)) {
       $statusMsg = ts('Event registration information for %1 has been updated.', array(1 => $this->_contributorDisplayName));
       if (CRM_Utils_Array::value('send_receipt', $params) && count($sent)) {
-        $statusMsg .= ' ' . ts('A confirmation email has been sent to %1', array(1 => $this->_contributorEmail));
+        $statusMsg .= ' ' . ts('A confirmation email has been scheduled to sent to %1.', array(1 => $this->_contributorEmail));
       }
 
       if ($updateStatusMsg) {
@@ -1772,7 +1774,7 @@ cj(function() {
       if ($this->_single) {
         $statusMsg = ts('Event registration for %1 has been added.', array(1 => $this->_contributorDisplayName));
         if (CRM_Utils_Array::value('send_receipt', $params) && count($sent)) {
-          $statusMsg .= ' ' . ts('A confirmation email has been sent to %1.', array(1 => $this->_contributorEmail));
+          $statusMsg .= ' ' . ts('A confirmation email has been scheduled to sent to %1.', array(1 => $this->_contributorEmail));
         }
       }
       else {
@@ -1781,7 +1783,7 @@ cj(function() {
           $statusMsg .= ' ' . ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT EMAIL OR valid Email is NOT present. ', array(1 => count($notSent)));
         }
         elseif (isset($params['send_receipt'])) {
-          $statusMsg .= ' ' . ts('A confirmation email has been sent to ALL participants');
+          $statusMsg .= ' ' . ts('A confirmation email has been scheduled to sent to ALL participants');
         }
       }
     }
