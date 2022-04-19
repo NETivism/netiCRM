@@ -122,17 +122,22 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
     // Check contact email
     $emailIsEmpty = FALSE;
-    $contactId = $this->_contactIds;
+    $contactId = intval($this->_contactIds);
+    $emptyEmailList = array();
     foreach ($this->_contactIds as $contactId) {
-      $result = CRM_Core_BAO_Email::allEmails(intval($contactId));
+      $contributorDisplayName = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactId);
+      $result = CRM_Core_BAO_Email::allEmails($contactId);
       $array = array_values($result);
       $email = $array[0]['email'];
       if (empty($email)) {
         $emailIsEmpty = TRUE;
+        array_push($emptyEmailList,$contributorDisplayName[0]);
       }
     }
     if ($emailIsEmpty) {
-      CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold.'));
+      foreach ($emptyEmailList as $emptyEmailUser) {
+        CRM_Core_Session::setStatus(ts("%1 doesn't have email. Skipped receipt generation.", array(1 => $emptyEmailUser)));
+      }
     }
   }
 
