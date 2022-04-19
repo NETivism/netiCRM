@@ -79,7 +79,7 @@
             $form.data('submitted', true);
             // Don't use disabled cause profile edit will have problem. refs #20289 - 9F
             $obj.attr("readonly", true);
-            $obj.before('<i class="zmdi zmdi-rotate-right zmdi-hc-spin"></i>');
+            $obj.first().before('<i class="zmdi zmdi-rotate-right zmdi-hc-spin"></i>');
             if ($obj.data('once-msg')) {
               let msg = $obj.data('once-msg');
               $obj.first().parent().prepend('<div class="once-message"><i class="zmdi zmdi-rotate-right zmdi-hc-spin"></i>'+msg+'<div>');
@@ -103,7 +103,7 @@
           $form.data('submitted', true);
           // Don't use disabled cause profile edit will have problem. refs #20289 - 9F
           $obj_click_once.attr("readonly", true);
-          $obj_click_once.before('<i class="zmdi zmdi-rotate-right zmdi-hc-spin"></i>');
+          $obj_click_once.first().before('<i class="zmdi zmdi-rotate-right zmdi-hc-spin"></i>');
           if ($obj_click_once.data('once-msg')) {
             let msg = $obj_click_once.data('once-msg');
             $obj_click_once.first().parent().prepend('<div class="once-message">'+msg+'<div>');
