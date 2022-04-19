@@ -75,6 +75,10 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
         array('type' => 'next',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
+          'js' => array(
+            'data' => 'click-once',
+            'data-once-msg' => ts('Form processing. Do not reload page or you will loss your progress.'),
+          ),
         ),
         //hack to support cancel button functionality
         array('type' => 'submit',

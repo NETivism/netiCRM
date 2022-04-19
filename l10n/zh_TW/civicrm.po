@@ -48756,3 +48756,6 @@ msgid ""
 "You have another running dedupe job. For system performance concern, we can "
 "only allow one dedupe job concurrently. Please try again later."
 msgstr "您還有另一個合併聯絡人作業正在運行中， 基於系統效能的考量，我們同時間只能允許一個合併作業執行， 請稍後再試。"
+
+msgid "Form processing. Do not reload page or you will loss your progress."
+msgstr "表單處理中，請不要重新整理頁面，以免遺失處理進度。"
