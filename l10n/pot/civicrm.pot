@@ -48421,3 +48421,6 @@ msgstr ""
 
 msgid "You have another running dedupe job. For system performance concern, we can only allow one dedupe job concurrently. Please try again later."
 msgstr ""
+
+msgid "Form processing. Do not reload page or you will loss your progress."
+msgstr ""

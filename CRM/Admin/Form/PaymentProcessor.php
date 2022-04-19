@@ -235,14 +235,24 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     // and we have at least name and url_site
     // would be good to make this processor specific
     $errors = $liveErrors = $testErrors = array();
-    self::checkSection($fields, $liveErrors);
-    self::checkSection($fields, $testErrors, 'test');
-    if (!empty($liveErrors) && !empty($testErrors)) {
-      $errors['_qf_default'] = ts('You must have at least the test or live section filled');
-      if (!empty($liveErrors)) {
+    $ppType = $fields['payment_processor_type'];
+    $class = 'CRM_Core_Payment_'.$ppType;
+    if (method_exists($class, 'checkSection')) {
+      $isLiveEmpty = $class::checkSection($fields, $liveErrors);
+      $isTestEmpty = $class::checkSection($fields, $testErrors, 'test');
+    }
+    else {
+      $isLiveEmpty = self::checkSection($fields, $liveErrors);
+      $isTestEmpty = self::checkSection($fields, $testErrors, 'test');
+    }
+    if (!empty($liveErrors) || !empty($testErrors)) {
+      if ($isLiveEmpty && $isTestEmpty) {
+        $errors['_qf_default'] = ts('You must have at least the test or live section filled');
+      }
+      if (!empty($liveErrors) && !$isLiveEmpty) {
         $errors = array_merge($errors, $liveErrors);
       }
-      if (!empty($testErrors)) {
+      if (!empty($testErrors) && !$isTestEmpty) {
         $errors = array_merge($errors, $testErrors);
       }
     }
@@ -262,6 +272,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     if (!empty($processorType) && $fields['payment_processor_type'] !== 'Mobile') {
       $present = FALSE;
       $allPresent = TRUE;
+      $isAllEmpty = FALSE;
       foreach(array('user_name', 'password', 'signature', 'subject') as $name) {
         $label = $name.'_label';
         if ($section) {
@@ -276,7 +287,9 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
           }
         }
       }
-      return $present;
+      if (count($errors) == 4) {
+        $isAllEmpty = TRUE;
+      }
     }
     else {
       $names = array('user_name');
@@ -298,10 +311,11 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       if ($present) {
         if (!$allPresent) {
           $errors['_qf_default'] = ts('You must have at least the user_name specified');
+          $isAllEmpty = TRUE;
         }
       }
-      return $present;
     }
+    return $isAllEmpty;
   }
 
   function setDefaultValues() {
