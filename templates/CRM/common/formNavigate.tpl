@@ -27,7 +27,7 @@
 {literal}
 <script type="text/javascript">
   cj(document).ready(function(){
-    cj("#{/literal}{$form.formName}{literal}").FormNavigate("{/literal}{ts}You have unsaved changes.{/ts}{literal}"); 
+    cj("#{/literal}{$form.formName}{literal}").FormNavigate("{/literal}{ts}You have unsaved changes.{/ts}{literal}"{/literal}{if $force}, true{/if}{literal});
   });
 </script>
 {/literal}
