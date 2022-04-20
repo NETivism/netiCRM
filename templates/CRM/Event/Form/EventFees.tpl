@@ -133,16 +133,12 @@
   {include file='CRM/Core/BillingBlock.tpl'}
 {/if}
 {if ($email OR $batchEmail) and $outBound_option != 2}
-    <fieldset id="send_confirmation_receipt"><legend>{if $paid}{ts}Registration Confirmation and Receipt{/ts}{else}{ts}Registration Confirmation{/ts}{/if}</legend>
+    <fieldset id="send_confirmation_receipt"><legend>{ts}Registration Confirmation{/ts}</legend>
       <table class="form-layout" style="width:auto;">
 		 <tr class="crm-event-eventfees-form-block-send_receipt"> 
             <td class="label">{ts}Send Confirmation{/ts}</td>
             <td>{$form.send_receipt.html}<br>
-              {if $paid}
-                <span class="description">{ts 1=$email}Automatically email a confirmation and receipt to %1?{/ts}</span></td>
-              {else}
                 <span class="description">{ts 1=$email}Automatically email a confirmation to %1?{/ts}</span></td>
-              {/if}
         </tr>
 	<tr id="from-email" class="crm-event-eventfees-form-block-from_email_address">
             <td class="label">{$form.from_email_address.label}</td>
@@ -159,16 +155,12 @@
       </table>
     </fieldset>
 {elseif $context eq 'standalone' and $outBound_option != 2 }
-    <fieldset id="email-receipt" style="display:none;"><legend>{if $paid}{ts}Registration Confirmation and Receipt{/ts}{else}{ts}Registration Confirmation{/ts}{/if}</legend>  
+    <fieldset id="email-receipt" style="display:none;"><legend>{ts}Registration Confirmation{/ts}</legend>
       <table class="form-layout" style="width:auto;">
     	 <tr class="crm-event-eventfees-form-block-send_receipt"> 
-            <td class="label">{if $paid}{ts}Send Confirmation and Receipt{/ts}{else}{ts}Send Confirmation{/ts}{/if}</td>
+            <td class="label">{ts}Send Confirmation{/ts}</td>
             <td>{$form.send_receipt.html}<br>
-              {if $paid}
-                <span class="description">{ts 1='<span id="email-address"></span>'}Automatically email a confirmation and receipt to %1?{/ts}</span>
-              {else}
                 <span class="description">{ts 1='<span id="email-address"></span>'}Automatically email a confirmation to %1?{/ts}</span>
-              {/if}
             </td>
         </tr>
 	<tr id="from-email" class="crm-event-eventfees-form-block-from_email_address">
