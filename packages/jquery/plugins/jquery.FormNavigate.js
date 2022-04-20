@@ -25,18 +25,24 @@
   */
 var global_formNavigate = true;		// Js Global Variable for onChange Flag
 (function($){
-    $.fn.FormNavigate = function(message) {
-        window.onbeforeunload = confirmExit;  
-        function confirmExit( event ) {  
-            if (global_formNavigate == true) {  event.cancelBubble = true;  }  else  { return message;  }
+    $.fn.FormNavigate = function(message, force) {
+        window.onbeforeunload = function confirmExit( event ) {  
+            if (global_formNavigate == true) {
+                event.cancelBubble = true;
+            }  else  {
+                return message;
+            }
+        }
+        if (force) {
+            global_formNavigate = false;
         }
         $("input[type=text], input[type='textarea'], input[type='password'], input[type='radio'], input[type='checkbox'], input[type='file'], select").change(function(){
             global_formNavigate = false;
         });
-		//to handle back button
-		$("input[type='textarea']").keyup(function(){ 
-			global_formNavigate = false; 
-		}); 
+        //to handle back button
+        $("input[type='textarea']").keyup(function(){
+            global_formNavigate = false;
+        });
         $("input[type='submit']").click(function(){
             global_formNavigate = true;
         });

@@ -136,7 +136,7 @@
     <fieldset id="send_confirmation_receipt"><legend>{if $paid}{ts}Registration Confirmation and Receipt{/ts}{else}{ts}Registration Confirmation{/ts}{/if}</legend>
       <table class="form-layout" style="width:auto;">
 		 <tr class="crm-event-eventfees-form-block-send_receipt"> 
-            <td class="label">{if $paid}{ts}Send Confirmation and Receipt{/ts}{else}{ts}Send Confirmation{/ts}{/if}</td>
+            <td class="label">{ts}Send Confirmation{/ts}</td>
             <td>{$form.send_receipt.html}<br>
               {if $paid}
                 <span class="description">{ts 1=$email}Automatically email a confirmation and receipt to %1?{/ts}</span></td>
