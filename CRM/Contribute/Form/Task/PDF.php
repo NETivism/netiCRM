@@ -134,11 +134,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         array_push($emptyEmailList,$contributorDisplayName[0]);
       }
     }
-    if ($emailIsEmpty) {
-      foreach ($emptyEmailList as $emptyEmailUser) {
-        CRM_Core_Session::setStatus(ts("%1 doesn't have email. Skipped receipt generation.", array(1 => $emptyEmailUser)));
-      }
-    }
   }
 
   /**
