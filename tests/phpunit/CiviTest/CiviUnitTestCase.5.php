@@ -239,9 +239,6 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
     require_once 'CRM/Core/Config.php';
     $config = CRM_Core_Config::singleton();
 
-    // when running unit tests, use mockup user framework
-    $config->setUserFramework('UnitTests');
-
     // also fix the fatal error handler to throw exceptions,
     // rather than exit
     $config->fatalErrorHandler = 'CiviUnitTestCase_fatalErrorHandler';

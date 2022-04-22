@@ -76,8 +76,7 @@ $GLOBALS['mysql_db'] = $dsninfo['database'];
  *
  * CiviCRM can be hosted in either Drupal, Joomla or WordPress.
 */
-define('CIVICRM_UF', 'UnitTests');
-
+define('CIVICRM_UF', 'Drupal');
 
 
 // set this to a temporary directory. it defaults to /tmp/civi on linux
