@@ -247,7 +247,7 @@ EOT;
       CRM_Core_BAO_ConfigSetting::add($params);
 
       // needs refresh config here
-      CRM_Core_Config::singleton(TRUE, TRUE);
+      CRM_Core_Config::singleton(TRUE);
     }
     $this->_rtypeId = $rtypeId;
   }
