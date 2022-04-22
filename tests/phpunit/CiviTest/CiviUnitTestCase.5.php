@@ -2063,6 +2063,15 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
     fwrite($file, json_encode($response, JSON_PRETTY_PRINT));
     fclose($file);
   }
+
+  public static function getDBConfig() {
+    $options = PEAR::getStaticProperty('DB_DataObject', 'options');
+    $dbConfig = DB::parseDSN($options['database']);
+    if (empty($dbConfig['database'])) {
+      throw new Exception("No database config found.");
+    }
+    return $dbConfig;
+  }
 }
 
 function CiviUnitTestCase_fatalErrorHandler($message) {
