@@ -136,9 +136,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
     $emptyEmailList = implode(",", $emptyEmail);
     $isPrint = $this->get('isPrint');
+    $alreadyPrint = FALSE;
     if ($emailIsEmpty && empty($isPrint)) {
       CRM_Core_Session::setStatus(ts("%1 doesn't have email. Skipped receipt generation.", $emptyEmailList));
       $this->set('isPrint','print');
+      $alreadyPrint = TRUE;
+    }
+    if ($alreadyPrint) {
+      $this->set('isPrint','');
     }
   }
 
