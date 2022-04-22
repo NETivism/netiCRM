@@ -300,11 +300,24 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         }
       }
       if(!empty($data['MerchantID']) || !empty($data['#info']['MerchantID'])){
-        $query = "INSERT INTO civicrm_contribution_allpay (cid, data) VALUES (%1, %2) ON DUPLICATE KEY UPDATE data = %2;";
-        CRM_Core_DAO::executeQuery($query, array(
-          1 => array($cid, 'Positive'),
-          2 => array(json_encode($data), 'String'),
-        ));
+        $allpayDAO = new CRM_Contribute_DAO_AllPay();
+        $allpayDAO->cid = $cid;
+        if ($allpayDAO->find(TRUE)) {
+          $query = "UPDATE civicrm_contribution_allpay SET data = %2 WHERE cid = %1";
+          $existsData = json_decode($allpayDAO->data, TRUE);
+          $data = array_merge($existsData, $data);
+          CRM_Core_DAO::executeQuery($query, array(
+            1 => array($cid, 'Positive'),
+            2 => array(json_encode($data), 'String'),
+          ));
+        }
+        else {
+          $query = "INSERT INTO civicrm_contribution_allpay (cid, data) VALUES (%1, %2)";
+          CRM_Core_DAO::executeQuery($query, array(
+            1 => array($cid, 'Positive'),
+            2 => array(json_encode($data), 'String'),
+          ));
+        }
 
         if($billing_notify && function_exists('civicrm_allpay_notify_generate')){
           civicrm_allpay_notify_generate($cid, TRUE); // send mail
