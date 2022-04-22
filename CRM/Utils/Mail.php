@@ -84,7 +84,9 @@ class CRM_Utils_Mail {
 
     // first call the mail alter hook
     require_once 'CRM/Utils/Hook.php';
+    $params['alterTag'] = 'mail';
     CRM_Utils_Hook::alterMailParams($params);
+    unset($params['alterTag']);
 
     // check if any module has aborted mail sending
     if (CRM_Utils_Array::value('abortMailSend', $params) ||

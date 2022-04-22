@@ -39,49 +39,49 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
    * including any headers or footers that need to be prepended
    * or appended to the body
    */
-  private $preparedTemplates = NULL;
+  protected $preparedTemplates = NULL;
 
   /**
    * An array that holds the complete templates
    * including any headers or footers that need to be prepended
    * or appended to the body
    */
-  private $templates = NULL;
+  protected $templates = NULL;
 
   /**
    * An array that holds the tokens that are specifically found in our text and html bodies
    */
-  private $tokens = NULL;
+  protected $tokens = NULL;
 
   /**
    * An array that holds the tokens that are specifically found in our text and html bodies
    */
-  private $flattenedTokens = NULL;
+  protected $flattenedTokens = NULL;
 
   /**
    * The header associated with this mailing
    */
-  private $header = NULL;
+  protected $header = NULL;
 
   /**
    * The footer associated with this mailing
    */
-  private $footer = NULL;
+  protected $footer = NULL;
 
   /**
    * The HTML content of the message
    */
-  private $html = NULL;
+  protected $html = NULL;
 
   /**
    * The text content of the message
    */
-  private $text = NULL;
+  protected $text = NULL;
 
   /**
    * Cached BAO for the domain
    */
-  private $_domain = NULL;
+  protected $_domain = NULL;
 
   /**
    * class constructor
@@ -660,7 +660,7 @@ ORDER BY   i.contact_id, i.email_id
    * @access private
    *
    **/
-  private function &getPatterns($onlyHrefs = FALSE) {
+  protected function &getPatterns($onlyHrefs = FALSE) {
 
     $patterns = array();
 
@@ -759,7 +759,7 @@ ORDER BY   i.contact_id, i.email_id
    * @access private
    *
    **/
-  private function getPreparedTemplates() {
+  protected function getPreparedTemplates() {
     if (!$this->preparedTemplates) {
       $patterns['html'] = $this->getPatterns(TRUE);
       $patterns['subject'] = $patterns['text'] = $this->getPatterns();
@@ -806,7 +806,7 @@ ORDER BY   i.contact_id, i.email_id
    * @access private
    *
    **/
-  private function &getTemplates() {
+  protected function &getTemplates() {
     require_once ('CRM/Utils/String.php');
     if (!$this->templates) {
       $this->getHeaderFooter();
@@ -923,7 +923,7 @@ ORDER BY   i.contact_id, i.email_id
    *
    * @return void
    */
-  private function _getTokens($prop) {
+  protected function _getTokens($prop) {
     $templates = $this->getTemplates();
 
     $newTokens = CRM_Utils_Token::getTokens($templates[$prop]);
@@ -1017,7 +1017,7 @@ AND civicrm_contact.is_opt_out =0";
    * @return void
    * @access private
    */
-  private function getHeaderFooter() {
+  protected function getHeaderFooter() {
     if (!$this->header and $this->header_id) {
       $this->header = new CRM_Mailing_BAO_Component();
       $this->header->id = $this->header_id;
@@ -1130,7 +1130,7 @@ AND civicrm_contact.is_opt_out =0";
    * @return (reference) array    array ref that hold array refs to the verp info, urls, and headers
    * @access private
    */
-  private function getVerpAndUrlsAndHeaders($job_id, $event_queue_id, $hash, $email, $isForward = FALSE) {
+  protected function getVerpAndUrlsAndHeaders($job_id, $event_queue_id, $hash, $email, $isForward = FALSE) {
     $config = CRM_Core_Config::singleton();
 
     /**
@@ -1391,7 +1391,9 @@ AND civicrm_contact.is_opt_out =0";
     );
     $mailParams['toEmail'] = $email;
 
-    CRM_Utils_Hook::alterMailParams($mailParams, 'civimail');
+    $mailParams['alterTag'] = 'civimail';
+    CRM_Utils_Hook::alterMailParams($mailParams);
+    unset($mailParams['alterTag']);
 
     //cycle through mailParams and set headers array
     foreach ($mailParams as $paramKey => $paramValue) {
@@ -1484,7 +1486,7 @@ AND civicrm_contact.is_opt_out =0";
    *  and returns the appropriate data for the token
    *
    */
-  private function getTokenData(&$token_a, $html = FALSE, &$contact, &$verp, &$urls, $event_queue_id) {
+  protected function getTokenData(&$token_a, $html = FALSE, &$contact, &$verp, &$urls, $event_queue_id) {
     $type = $token_a['type'];
     $token = $token_a['token'];
     $data = $token;

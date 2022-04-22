@@ -136,7 +136,7 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
       // Get the mailer
       // make it a persistent connection, CRM-9349
       $mailerType = array_search('Mass Mailing', CRM_Core_BAO_MailSettings::$_mailerTypes);
-      $mailer = $config->getMailer($mailerType);
+      $mailer = CRM_Core_Config::getMailer($mailerType);
       // refs #30585, test mailer first before start
 
       if ($job->status != 'Running') {
@@ -424,7 +424,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
   /**
    * Send the mailing
    *
-   * @param object $mailer        A Mail object to send the messages
+   * @param object $mailer  A Mail settings object retrieve from CRM_Core_Config::getMailer
    *
    * @return void
    * @access public
@@ -540,6 +540,17 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     return $isDelivered;
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param array $fields
+   * @param CRM_Mailing_BAO_Mailing $mailing
+   * @param object $mailer get from CRM_Core_Config::getMailer
+   * @param string $job_date mysql date string from job->scheduled_date
+   * @param array $attachments
+   *
+   * @return bool
+   */
   public function deliverGroup(&$fields, &$mailing, &$mailer, &$job_date, &$attachments) {
     static $smtpConnectionErrors = 0;
     if (!empty($mailing->is_hidden)) {
