@@ -131,6 +131,7 @@ $dao['County'] = 'CRM_Core_DAO_County';
 $dao['UFGroup'] = 'CRM_Core_DAO_UFGroup';
 $dao['UFField'] = 'CRM_Core_DAO_UFField';
 $dao['UFJoin'] = 'CRM_Core_DAO_UFJoin';
+$dao['Transactional'] = 'CRM_Mailing_Event_DAO_Transactional';
 $dao['PCPBlock'] = 'CRM_Contribute_DAO_PCPBlock';
 $dao['Address'] = 'CRM_Core_DAO_Address';
 $dao['LocBlock'] = 'CRM_Core_DAO_LocBlock';

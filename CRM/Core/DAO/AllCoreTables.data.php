@@ -656,6 +656,11 @@ return array(
     'class' => 'CRM_Core_DAO_UFJoin',
     'table' => 'civicrm_uf_join',
   ) ,
+  'CRM_Mailing_Event_DAO_Transactional' => array(
+    'name' => 'Transactional',
+    'class' => 'CRM_Mailing_Event_DAO_Transactional',
+    'table' => 'civicrm_mailing_event_transactional',
+  ) ,
   'CRM_Contribute_DAO_PCPBlock' => array(
     'name' => 'PCPBlock',
     'class' => 'CRM_Contribute_DAO_PCPBlock',
