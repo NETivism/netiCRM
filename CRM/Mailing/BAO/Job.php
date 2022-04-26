@@ -635,11 +635,11 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
       if (is_a($result, 'PEAR_Error')) {
         // CRM-9191
-        $message = $result->getMessage();
-        if (strpos($message, 'to write to socket') !== FALSE) {
+        $msg = $result->getMessage();
+        $code = $result->getCode();
+        if (strpos($msg, 'to write to socket') !== FALSE) {
           // lets log this message and code
-          $code = $result->getCode();
-          CRM_Core_Error::debug_log_message("SMTP Socket Error. Message: $message, Code: $code");
+          CRM_Core_Error::debug_log_message("SMTP Socket Error. Message: $msg, Code: $code");
 
           // these are socket write errors which most likely means smtp connection errors
           // lets skip them
@@ -655,7 +655,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
           }
         }
         else {
-          CRM_Core_Error::debug_log_message("SMTP Error. Message: $message, Code: $code");
+          CRM_Core_Error::debug_log_message("SMTP Error. Message: $msg, Code: $code");
         }
 
         /* Register the bounce event */

@@ -235,7 +235,6 @@ class CRM_Utils_Mail {
     $error = 0;
     if (is_a($result, 'PEAR_Error')) {
       $error = 1;
-      $message = self::errorMessage($mailer, $result);
     }
 
     if (!empty($callback[$error])) {

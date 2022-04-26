@@ -2557,13 +2557,13 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   /**
    * gives required details of a contact
    *
-   * @param  array   $contactId     
-   * @param  array   $mailingId
+   * @param  int $contactId     
+   * @param  int $mailingId
    *
    * @return array
    * @access public
    */
-  function getContactReport($contactId, $mailingId) {
+  public static function getContactReport($contactId, $mailingId) {
     $job = CRM_Mailing_BAO_Job::getTableName();
     $eq = CRM_Mailing_Event_DAO_Queue::getTableName();
     $ed = CRM_Mailing_Event_DAO_Delivered::getTableName();
