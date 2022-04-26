@@ -1743,10 +1743,12 @@ cj(function() {
         }
         else {
           $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participants[$num], 'Event Notification Email');
-          list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, array(
+          $callback = array(
             0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
             1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
-          ));
+          );
+          $sendTemplateParams['activityId'] = $activityId;
+          list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, $callback);
           if ($mailSent) {
             $sent[] = $contactID;
           }
