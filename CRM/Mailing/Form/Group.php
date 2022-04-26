@@ -107,9 +107,21 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
         $returnProperties = array('id', 'status', 'start_date');
         $params = array('mailing_id' => $mailing->id);
         CRM_Core_DAO::commonRetrieve('CRM_Mailing_DAO_Job', $params, $existsJob, $returnProperties);
+
         if (!empty($existsJob) && empty($existsJob['start_date']) && $existsJob['status'] === 'Scheduled') {
           CRM_Mailing_BAO_Mailing::delJob($existsJob['id']);
         }
+
+        // refs #34112, gh-37, reset mailing's data and move to draft page when rescheduling.
+        if (!is_null($mailing->scheduled_id)) {
+          $mailing->scheduled_id = 'null';
+        }
+
+        if (!is_null($mailing->scheduled_date)) {
+          $mailing->scheduled_date = 'null';
+        }
+
+        $mailing->save();
       }
 
       $defaults['name'] = $mailing->name;
