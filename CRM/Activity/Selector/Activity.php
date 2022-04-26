@@ -409,6 +409,17 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
         }
       }
 
+      // #33948, activity types that will get transaction mail report
+      if (in_array(CRM_Core_OptionGroup::getName('activity_type', $row['activity_type_id']), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
+        $accessMailingReport = TRUE;
+        // get stat of this contact
+        if (!empty($row['data_contact_id']) && !empty($row['activity_id'])) {
+          $mailingResult = CRM_Mailing_BAO_Transactional::getActivityReport($row['data_contact_id'], $row['activity_id']);
+          unset($mailingResult['Delivered']);
+          $row['results'] = $mailingResult;
+        }
+      }
+
       $actionLinks = $this->actionLinks(CRM_Utils_Array::value('activity_type_id', $row),
         CRM_Utils_Array::value('source_record_id', $row),
         $accessMailingReport,

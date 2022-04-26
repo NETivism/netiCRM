@@ -255,6 +255,33 @@ WHERE  v.option_group_id = g.id
     }
   }
 
+  static function getName($groupName, $value, $onlyActiveValue = TRUE) {
+    if (empty($groupName) || empty($value)) {
+      return NULL;
+    }
+
+    $query = "
+SELECT  v.name as name, v.value as value
+FROM   civicrm_option_value v, 
+       civicrm_option_group g 
+WHERE  v.option_group_id = g.id 
+  AND  g.name            = %1 
+  AND  g.is_active       = 1  
+  AND  v.value           = %2
+";
+    if ($onlyActiveValue) {
+      $query .= " AND  v.is_active = 1 ";
+    }
+    $p = array(1 => array($groupName, 'String'),
+      2 => array($value, 'Integer'),
+    );
+    $dao = &CRM_Core_DAO::executeQuery($query, $p);
+    if ($dao->fetch()) {
+      return $dao->name;
+    }
+    return NULL;
+  }
+
   static function getLabel($groupName, $value, $onlyActiveValue = TRUE) {
     if (empty($groupName) ||
       empty($value)
