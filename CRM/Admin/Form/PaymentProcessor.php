@@ -273,12 +273,14 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       $present = FALSE;
       $allPresent = TRUE;
       $isAllEmpty = FALSE;
+      $requiredFieldsCount = 0;
       foreach(array('user_name', 'password', 'signature', 'subject') as $name) {
         $label = $name.'_label';
         if ($section) {
           $name = "{$section}_$name";
         }
         if (!empty($processorType->$label)) {
+          $requiredFieldsCount++;
           if (!empty($fields[$name]) || $fields[$name] == '0') {
             $present = TRUE;
           }
@@ -287,7 +289,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
           }
         }
       }
-      if (count($errors) == 4) {
+      if (count($errors) == $requiredFieldsCount) {
         $isAllEmpty = TRUE;
       }
     }
