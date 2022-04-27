@@ -135,14 +135,9 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       }
     }
     $emptyEmailList = implode(",", $emptyEmail);
-    $isPrint = $this->get('isPrint');
-    if ($emailIsEmpty && empty($isPrint)) {
-      CRM_Core_Session::setStatus(ts("%1 doesn't have email. Skipped receipt generation.", $emptyEmailList));
-      $this->set('isPrint','print');
-    }
     $actionName = $this->controller->getActionName($this->_name);
-    if ($actionName[1] == 'back') {
-      $this->set('isPrint','');
+    if ($emailIsEmpty && $actionName[1] == 'display') {
+      CRM_Core_Session::setStatus(ts("%1 doesn't have email. Skipped receipt generation.", $emptyEmailList));
     }
   }
 
