@@ -475,7 +475,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     $civicrm_path = rtrim($civicrm_root, '/').DIRECTORY_SEPARATOR;
     if (file_exists($civicrm_path.'civicrm-version.txt')) {
       $this->version = trim(file_get_contents($civicrm_path.'civicrm-version.txt'));
-      $this->ver = substr($this->version, -9, 8);
+      $this->ver = substr($this->version, -8, -1);
     }
   }
 

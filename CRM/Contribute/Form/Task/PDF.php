@@ -123,7 +123,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     // Check contact email
     $emailIsEmpty = FALSE;
     $contactId = intval($this->_contactIds);
-    $emptyEmailList = array();
+    $emptyEmail = array();
     foreach ($this->_contactIds as $contactId) {
       $contributorDisplayName = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactId);
       $result = CRM_Core_BAO_Email::allEmails($contactId);
@@ -131,8 +131,18 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $email = $array[0]['email'];
       if (empty($email)) {
         $emailIsEmpty = TRUE;
-        array_push($emptyEmailList,$contributorDisplayName[0]);
+        array_push($emptyEmail,$contributorDisplayName[0]);
       }
+    }
+    $emptyEmailList = implode(",", $emptyEmail);
+    $isPrint = $this->get('isPrint');
+    if ($emailIsEmpty && empty($isPrint)) {
+      CRM_Core_Session::setStatus(ts("%1 doesn't have email. Skipped receipt generation.", $emptyEmailList));
+      $this->set('isPrint','print');
+    }
+    $actionName = $this->controller->getActionName($this->_name);
+    if ($actionName[1] == 'back') {
+      $this->set('isPrint','');
     }
   }
 
