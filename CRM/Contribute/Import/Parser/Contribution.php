@@ -302,9 +302,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $errorMessage = NULL;
     $statusFieldName = $this->_statusFieldName;
 
-    //checking error in custom data
-    $this->_parserContact->isErrorInCustomData($params, $errorMessage);
-
     //for date-Formats
     $dateType = $this->_dateFormats;
     $addedError = NULL;
