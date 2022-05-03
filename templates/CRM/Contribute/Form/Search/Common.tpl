@@ -221,7 +221,7 @@
                   }
                 }
                 else {
-                  cj("#product_option").html("<option value=''>" + productTs["- select product name first -"] + "</option>");
+                  cj("#product_option").html("<option value=''>" + productTs["- select product -"] + "</option>");
                 }
               }
 
