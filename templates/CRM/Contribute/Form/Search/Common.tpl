@@ -179,6 +179,64 @@
     </div>
   </td>
 </tr>
+<tr>
+	<td colspan="2">
+    <div class="crm-accordion-wrapper crm-accordion-open">
+      <div class="crm-accordion-header">
+        <div class="zmdi crm-accordion-pointer"></div>
+        {ts}Premium Information{/ts}
+      </div>
+      <div class="crm-accordion-body">
+        <table class="form-layout-compressed">
+          <tbody>
+            <tr>
+              <td class="label">{$form.product_name.label}</td>
+              <td>{$form.product_name.html}</td>
+            </tr>
+            <tr>
+              <td class="label">{$form.product_option.label}</td>
+              <td>{$form.product_option.html}</td>
+            </tr>
+          </tbody>
+        </table>
+        {literal}
+        <script type="text/javascript">
+          cj(document).ready(function() {
+            if (cj("#product_name").length && cj("#product_option").length) {
+              var productOptionData = {/literal}{$product_option_json}{literal},
+                  productTs = {
+                    "- select -": "{/literal}{ts}- select -{/ts}{literal}",
+                    "- select product name first -": "{/literal}{ts}- select product name first -{/ts}{literal}",
+                  };
+
+              var productOptionSwitchByName = function(productName) {
+                if (typeof productName !== "undefined" && productName.trim() !== "") {
+                  if (productOptionData.hasOwnProperty(productName) && Array.isArray(productOptionData[productName])) {
+                    cj("#product_option").html("<option value=''>" + productTs["- select -"] + "</option>");
+
+                    for (var i in productOptionData[productName]) {
+                      var opt = productOptionData[productName][i];
+                      cj("#product_option").append("<option value='" + opt + "'>" + opt + "</option>");
+                    }
+                  }
+                }
+                else {
+                  cj("#product_option").html("<option value=''>" + productTs["- select product name first -"] + "</option>");
+                }
+              }
+
+              cj("#product_name").change(function() {
+                var productName = cj(this).val();
+                productOptionSwitchByName(productName);
+              });
+            }
+          });
+        </script>
+        {/literal}
+      </div>
+    </div>
+  </td>
+</tr>
 {if $contributeGroupTree}
 <tr>
 	<td colspan="2">

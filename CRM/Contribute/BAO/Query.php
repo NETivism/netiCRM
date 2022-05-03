@@ -653,6 +653,22 @@ class CRM_Contribute_BAO_Query {
         $query->_tables['civicrm_track'] = $query->_whereTables['civicrm_track'] = 1;
         return;
 
+      case 'product_name':
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_product.name', $op, $value, "String");
+        $query->_qill[$grouping][] = ts('Product Name') . ' - ' . $value;
+        $query->_tables['civicrm_product'] = $query->_whereTables['civicrm_product'] = 1;
+        //$query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        //$query->_tables['civicrm_contribution_product'] = $query->_whereTables['civicrm_contribution_product'] = 1;
+        return;
+
+      case 'product_option':
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_contribution_product.product_option', $op, $value, "String");
+        $query->_qill[$grouping][] = ts('Product Option') . ' - ' . $value;
+        //$query->_tables['civicrm_product'] = $query->_whereTables['civicrm_product'] = 1;
+        //$query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        $query->_tables['civicrm_contribution_product'] = $query->_whereTables['civicrm_contribution_product'] = 1;
+        return;
+
       default:
         //all other elements are handle in this case
         $fldName = substr($name, 13);
@@ -998,6 +1014,47 @@ class CRM_Contribute_BAO_Query {
     $form->addElement('text', 'contribution_utm_campaign', 'UTM Campaign');
     $form->addElement('text', 'contribution_utm_term', 'UTM Term');
     $form->addElement('text', 'contribution_utm_content', 'UTM Content');
+
+    // premium filters
+    require_once 'CRM/Contribute/DAO/Product.php';
+    $product_dao = new CRM_Contribute_DAO_Product();
+    $product_dao->is_active = 1;
+    $product_dao->find();
+    $submit_product_name = $form->_submitValues['product_name'];
+    $product_name_select = $product_option_select = array();
+    $product_name_select[""] = ts('- select -');
+    $product_option_select[""] = $submit_product_name ? ts('- select -') : ts('- select product name first -');
+    $product_option_data = array();
+
+    while ($product_dao->fetch()) {
+      $product_name_select[$product_dao->name] = $product_dao->sku ? $product_dao->name . " ( " . $product_dao->sku . " )" : $product_dao->name;
+      $options = explode(',', $product_dao->options);
+      $product_option_data[$product_dao->name] = array();
+
+      foreach ($options as $v) {
+        $trim_v = trim($v);
+        $product_option_data[$product_dao->name][] = $trim_v;
+      }
+    }
+
+    if ($submit_product_name && isset($product_option_data[$submit_product_name])) {
+      foreach ($product_option_data[$submit_product_name] as $opt) {
+        $product_option_select[$opt] = $opt;
+      }
+    }
+
+    $product_option_json = json_encode($product_option_data, JSON_UNESCAPED_UNICODE);
+    $form->assign('product_option_json', $product_option_json);
+    $form->addSelect(
+      'product_name',
+      ts('Product Name'),
+      $product_name_select
+    );
+    $form->addSelect(
+      'product_option',
+      ts('Product Option'),
+      $product_option_select
+    );
 
     $form->assign('validCiviContribute', TRUE);
   }

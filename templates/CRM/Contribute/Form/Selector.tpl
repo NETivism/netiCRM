@@ -71,6 +71,20 @@
     {if $row.amount_level }
       <br /><div class="amount-level" title="{ts}Amount Label{/ts}: {$row.amount_level|escape:'html'}"><i class="zmdi zmdi-labels"></i>{$row.amount_level|truncate:50}</div>
     {/if}
+    {if $row.product_name}
+      <div class="premium-info">
+        <div class="product-name">
+          <i class="zmdi zmdi-card-giftcard"></i>
+          <span class="product-name-value">{$row.product_name}</span>
+        </div>
+        {if $row.product_option}
+          <div class="product-option">
+            <span class="product-option-label">{ts}Product Option{/ts}</span>
+            <span class="product-option-value">{$row.product_option}</span>
+        </div>
+        {/if}
+      </div>
+    {/if}
     </td>
     <td class="crm-contribution-type crm-contribution-type_{$row.contribution_type_id}">{$row.contribution_type}</td>
     <td class="crm-contribution-source">{$row.contribution_source}{if $row.contribution_referrer_type}<br>({ts}Traffic Source{/ts}: {ts}{$row.contribution_referrer_type}{/ts}){/if}</td>
