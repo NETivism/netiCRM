@@ -5280,7 +5280,28 @@ tbody.scrollContent tr.alternateRow {
   color: #777;
   font-weight: normal;
 }
-
+.crm-container td.crm-contribution-amount .premium-info {
+  font-weight: normal;
+}
+.crm-container td.crm-contribution-amount .product-name {
+  line-height: 1.4;
+  font-size: 15px;
+}
+.crm-container td.crm-contribution-amount .product-name > i {
+  font-size: 20px;
+  color: #8e0101;
+}
+.crm-container td.crm-contribution-amount .product-option {
+  font-size: 13px;
+  color: #555;
+}
+.crm-container td.crm-contribution-amount .product-option-label::after {
+  content: "：";
+}
+.i18n-en .crm-container td.crm-contribution-amount .product-option-label::after {
+  content: ":";
+  margin-right: 5px;
+}
 
 /*
 ** Styles for record browser and report tables, and pager bar
