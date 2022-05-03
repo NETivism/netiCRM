@@ -258,6 +258,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-container .nme-block .nme-text {
   font-size: 1rem;
 }
+.nme-block[data-type="paragraph"][data-parent-type="rc-float"]:not(.is-edit):hover > .nme-block-inner > .nme-block-content {
+  padding-top: 47px;
+}
 .nme-setting-panels {
   position: fixed;
   z-index: 99;

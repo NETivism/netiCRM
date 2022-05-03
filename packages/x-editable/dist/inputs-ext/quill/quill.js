@@ -203,13 +203,12 @@ $(function(){
 
         // Call when editing is complete (3）
         value2html: function(value, element) {
-            // Get the HTML from the editor content
-            var html = this.editor.root.innerHTML;
+            var html = "",
+                blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
-            // Store HTML in xeditable
-            var blockID = this.options.scope.attributes['data-id']['nodeValue'];
+            // Get the HTML of this block from xeditable
             if (blockID) {
-                this.xeditable.html[blockID] = html;
+                html = this.xeditable.html[blockID];
             }
 
             // Output HTML to x-editable
@@ -251,9 +250,16 @@ $(function(){
             var blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
             if (blockID) {
-                // Get the content of the editor and store it in xeditable
+                var text = this.editor.root.innerText,
+                    html = this.editor.root.innerHTML;
+
+                if (text.trim() === '') {
+                    html = this.options.placeholder ? this.options.placeholder : 'Please enter content...';
+                }
+
+                // Save data to xeditable
                 this.xeditable.delta[blockID] = this.editor.getContents();
-                this.xeditable.html[blockID] = this.editor.root.innerHTML;
+                this.xeditable.html[blockID] = html;
 
                 // HTML should be escape, otherwise the 'params' of the event of the x-editable will not be obtained
                 return this.htmlEscape(this.xeditable.html[blockID]);
