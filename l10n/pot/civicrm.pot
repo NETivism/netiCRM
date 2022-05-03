@@ -48424,3 +48424,8 @@ msgstr ""
 
 msgid "Form processing. Do not reload page or you will loss your progress."
 msgstr ""
+
+# CRM/Contribute/BAO/Query.php
+# templates/CRM/Contribute/Form/Search/Common.tpl
+msgid "- select product -"
+msgstr ""
