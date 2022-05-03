@@ -1023,7 +1023,7 @@ class CRM_Contribute_BAO_Query {
     $submit_product_name = $form->_submitValues['product_name'];
     $product_name_select = $product_option_select = array();
     $product_name_select[""] = ts('- select -');
-    $product_option_select[""] = $submit_product_name ? ts('- select -') : ts('- select product name first -');
+    $product_option_select[""] = $submit_product_name ? ts('- select -') : ts('- select product -');
     $product_option_data = array();
 
     while ($product_dao->fetch()) {

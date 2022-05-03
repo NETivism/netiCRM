@@ -206,7 +206,7 @@
               var productOptionData = {/literal}{$product_option_json}{literal},
                   productTs = {
                     "- select -": "{/literal}{ts}- select -{/ts}{literal}",
-                    "- select product name first -": "{/literal}{ts}- select product name first -{/ts}{literal}",
+                    "- select product -": "{/literal}{ts}- select product -{/ts}{literal}",
                   };
 
               var productOptionSwitchByName = function(productName) {
