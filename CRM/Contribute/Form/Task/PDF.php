@@ -137,6 +137,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $emptyEmailList = implode(",", $emptyEmail);
     $actionName = $this->controller->getActionName($this->_name);
     if ($emailIsEmpty && $actionName[1] == 'display') {
+      $this->assign('emptyEmailList', $emptyEmailList);
       CRM_Core_Session::setStatus(ts("%1 doesn't have email. Skipped receipt generation.", array(1 => $emptyEmailList)));
     }
   }
