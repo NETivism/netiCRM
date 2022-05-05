@@ -679,8 +679,8 @@ LIMIT 0, 100
         continue;
       }
 
-      $command = 'drush neticrm-process-recurring --payment-processor=tappay --contribution-recur-id='.$dao->recur_id;
-      popen($command,'w');
+      $command = 'drush neticrm-process-recurring --payment-processor=tappay --contribution-recur-id='.$dao->recur_id.'&';
+      popen($command, 'w');
     }
 
     // Delete the sequence data of this process.
