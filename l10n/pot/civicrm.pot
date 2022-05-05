@@ -48430,6 +48430,6 @@ msgstr ""
 msgid "- select product -"
 msgstr ""
 
-#: templates/CRM/Contribute/Form/Task/PDF.tpl
+# templates/CRM/Contact/Form/Task/PDF.tpl
 msgid "Doesn't have email. Would not generate receipt and send email."
-msgstr "沒有電子郵件，將不會開立收據和寄送電子郵件。"
+msgstr ""
