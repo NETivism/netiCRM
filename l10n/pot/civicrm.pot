@@ -48429,3 +48429,7 @@ msgstr ""
 # templates/CRM/Contribute/Form/Search/Common.tpl
 msgid "- select product -"
 msgstr ""
+
+# templates/CRM/Contact/Form/Task/PDF.tpl
+msgid "Doesn't have email. Would not generate receipt and send email."
+msgstr ""
