@@ -19,7 +19,7 @@ $.fn.extend({
 		options = $.extend({}, $.Autocompleter.defaults, {
 			url: isUrl ? urlOrData : null,
 			data: isUrl ? null : urlOrData,
-			delay: isUrl ? $.Autocompleter.defaults.delay : 30,
+			delay: isUrl ? $.Autocompleter.defaults.delay : 400,
 			max: options && !options.scroll ? 30 : 150
 		}, options);
 		
@@ -188,8 +188,12 @@ $.Autocompleter = function(input, options) {
 		$input.unbind();
 		$(input.form).unbind(".autocomplete");
 	}).bind("input", function() {
-		if (timeout) clearTimeout(timeout);
-		timeout = setTimeout(function(){onChange(0, true);}, options.delay);
+		if (timeout) {
+      clearTimeout(timeout);
+    }
+		timeout = setTimeout(function(){
+      onChange(0, true);
+    }, options.delay);
   });
 	
 	function selectCurrent() {
@@ -222,8 +226,9 @@ $.Autocompleter = function(input, options) {
 		
 		var currentValue = $input.val();
 		
-		if ( !skipPrevCheck && currentValue == previousValue )
+		if ( !skipPrevCheck && currentValue == previousValue ) {
 			return;
+    }
 		
 		previousValue = currentValue;
 		
@@ -275,7 +280,7 @@ $.Autocompleter = function(input, options) {
 
 	function hideResults() {
 		clearTimeout(timeout);
-		timeout = setTimeout(hideResultsNow, 200);
+		timeout = setTimeout(hideResultsNow, 500);
 	};
 
 	function hideResultsNow() {
@@ -384,7 +389,7 @@ $.Autocompleter.defaults = {
 	resultsClass: "ac_results",
 	loadingClass: "ac_loading",
 	minChars: 0,
-	delay: 400,
+	delay: 800,
 	matchCase: false,
 	matchSubset: true,
 	matchContains: false,

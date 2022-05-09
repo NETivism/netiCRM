@@ -32,19 +32,21 @@ cj( function( ) {
 
     var customObj   = cj(custom);
     var customIdObj = cj(custom_id);
-    
+
     if ( !customObj.hasClass('ac_input') ) {
-        customObj.autocomplete( url, 
-            { width : 250, selectFirst : false, matchContains: true
-            }).result( 
+        customObj.autocomplete( url, {
+                width : 250,
+                selectFirst : false,
+                matchContains: true,
+            }).result(
                 function(event, data ) {
                     customIdObj.val( data[1] );
                 }
         );
         customObj.click( function( ) {
             customIdObj.val('');
-	    }); 
-     }
+        });
+    }
 });
 </script>
 {/literal}
