@@ -521,5 +521,46 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
     }
   }
+
+  static function doSingleQueryRecord($contributionId = NULL) {
+    $get = $_GET;
+    unset($get['q']);
+    if (!is_numeric($contributionId) || empty($contributionId)) {
+      $cid = $get['id'];
+    }
+    else {
+      $cid = $contributionId;
+    }
+    $trxnId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $cid, 'trxn_id');
+    if (empty($trxnId)) {
+      $resultMessage = ts("The contribution with transaction ID: %1 can't find from Newebpay API.", array(1 => $cid));
+    }
+    else {
+      if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.checkout') === FALSE) {
+        $resultMessage = ts('Module %1 doesn\'t exists.', array(1 => 'civicrm_spgateway'));
+      }
+      else {
+        if (!function_exists('civicrm_spgateway_single_contribution_sync')) {
+          $resultMessage = ts("Sync single contribution function doesn't exist.");
+        }
+        else {
+          civicrm_spgateway_single_contribution_sync($trxnId);
+          $resultMessage = ts("Synchronizing to %1 server success.", array(1 => ts("NewebPay")));
+        }
+      }
+    }
+    // Redirect to contribution view page.
+    $query = http_build_query($get);
+    $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
+    CRM_Core_Error::statusBounce($resultMessage, $redirect);
+  }
+
+  static function getSyncDataUrl($contributionId) {
+    $get = $_GET;
+    unset($get['q']);
+    $query = http_build_query($get);
+    $sync_url = CRM_Utils_System::url("civicrm/spgateway/query", $query);
+    return $sync_url;
+  }
 }
 
