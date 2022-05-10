@@ -199,42 +199,20 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   }
 
   /**
-   * Test civicrm_address_get - success expected.
+   * Phone Get Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Phone
+   * @api_action Get
+   * @http_method GET
+   * @request_url <entrypoint>?entity=Phone&action=get&json={$request_body_inline}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
    */
-  /**
-   * @start_document
-   * 
-   * ## {ts}Get{/ts} {ts}Phone{/ts} 
-   * 
-   * {ts}This is tests for creating Phone{/ts} 
-   * 
-   * **HTTP {ts}methods{/ts}: POST**
-   * 
-   * **{ts}Path{/ts}**
-   * 
-   * ```
-   * <entrypoint>?entity=Phone&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}","phone":"{$value.phone}"\}
-   * ```
-   * 
-   * **API Explorer**
-   * 
-   * ```
-   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}","phone":"{$value.phone}"\}
-   * ```
-   * 
-   * **{ts}Request Samples{/ts}**
-   * 
-   * ```shell
-   * curl -g --request POST '<entrypoint>?entity=Phone&action=get&pretty=1&json=\{"contact_id":"{$value.contact_id}","phone":"{$value.phone}"\}' \
-   * {$API_KEY_HEADER} \
-   * {$SITE_KEY_HEADER}
-   * ```
-   * 
-   * {$result}
-   * 
-   * @end_document
-   */
-  public function testGet() {
+  public function testGetPhone() {
     $phone = civicrm_api('phone', 'create', $this->_params);
     $this->assertAPISuccess($phone, 'In line ' . __LINE__);
 
@@ -243,10 +221,9 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
       'phone' => $phone['values'][$phone['id']]['phone'],
       'version' => $this->_apiversion,
     );
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Phone', 'Get', ($params));
-    $this->doWriteResult($result, __FILE__, __FUNCTION__);
-
-    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals($phone['values'][$phone['id']]['location_type_id'], $result['values'][$phone['id']]['location_type_id'], 'In line ' . __LINE__);
     $this->assertEquals($phone['values'][$phone['id']]['phone_type_id'], $result['values'][$phone['id']]['phone_type_id'], 'In line ' . __LINE__);
