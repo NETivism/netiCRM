@@ -48433,3 +48433,13 @@ msgstr ""
 # templates/CRM/Contact/Form/Task/PDF.tpl
 msgid "Doesn't have email. Would not generate receipt and send email."
 msgstr ""
+
+# CRM/Core/Payment/SPGATEWAY.php
+msgid "Module %1 doesn't exists."
+msgstr ""
+
+msgid "Sync single contribution function doesn't exist."
+msgstr ""
+
+msgid "Synchronizing to %1 server success."
+msgstr ""
