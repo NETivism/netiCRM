@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2022\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48764,3 +48764,17 @@ msgstr "表單處理中，請不要重新整理頁面，以免遺失處理進度
 # templates/CRM/Contribute/Form/Search/Common.tpl
 msgid "- select product -"
 msgstr "- 請先選擇感謝禮品名 -"
+
+# templates/CRM/Contact/Form/Task/PDF.tpl
+msgid "Doesn't have email. Would not generate receipt and send email."
+msgstr "沒有電子郵件，將不會開立收據和寄送電子郵件。"
+
+# CRM/Core/Payment/SPGATEWAY.php
+msgid "Module %1 doesn't exists."
+msgstr "找不到 %1 模組。"
+
+msgid "Sync single contribution function doesn't exist."
+msgstr "找不到單筆同步的程式指令。"
+
+msgid "Synchronizing to %1 server success."
+msgstr "與 %1 伺服器同步成功。"
