@@ -48443,3 +48443,7 @@ msgstr ""
 
 msgid "Synchronizing to %1 server success."
 msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty."
+msgstr ""
