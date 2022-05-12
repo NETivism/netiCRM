@@ -1,30 +1,11 @@
 <?php
-// $Id$
-
-/*
- +--------------------------------------------------------------------+
- | CiviCRM version 4.2                                                |
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2012                                |
- +--------------------------------------------------------------------+
- | This file is a part of CiviCRM.                                    |
- |                                                                    |
- | CiviCRM is free software; you can copy, modify, and distribute it  |
- | under the terms of the GNU Affero General Public License           |
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
- |                                                                    |
- | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
- | See the GNU Affero General Public License for more details.        |
- |                                                                    |
- | You should have received a copy of the GNU Affero General Public   |
- | License and the CiviCRM Licensing Exception along                  |
- | with this program; if not, contact CiviCRM LLC                     |
- | at info[AT]civicrm[DOT]org. If you have questions about the        |
- | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+
+/**
+ * Phone Unit Test
+ *
+ * @docmaker_intro_start
+ * @api_title Phone
+ * This is a API Document about Phone.
+ * @docmaker_intro_end
  */
 
 
@@ -56,47 +37,30 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->contactDelete($this->_contactID);
   }
 
-
   /**
-   * @start_document
-   * 
-   * ## {ts}Create{/ts} {ts}Phone{/ts} 
-   * 
-   * {ts}This is tests for creating Phone{/ts} 
-   * 
-   * **HTTP {ts}methods{/ts}: POST**
-   * 
-   * **{ts}Path{/ts}**
-   * 
-   * ```
-   * <entrypoint>?entity=Phone&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","phone":"{$value.phone}"\}
-   * ```
-   * 
-   * **API Explorer**
-   * 
-   * ```
-   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","phone":"{$value.phone}"\}
-   * ```
-   * 
-   * **{ts}Request Samples{/ts}**
-   * 
-   * ```shell
-   * curl -g --request POST '<entrypoint>?entity=Phone&action=create&pretty=1&json=\{"contact_id":"{$value.contact_id}","location_type_id":"{$value.location_type_id}","is_primary":"{$value.is_primary}","phone":"{$value.phone}"\}' \
-   * {$API_KEY_HEADER} \
-   * {$SITE_KEY_HEADER}
-   * ```
-   * 
-   * {$result}
-   * 
-   * @end_document
+   * Phone Create Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Phone
+   * @api_action Create
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Phone&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
    */
   public function testCreatePhone() {
 
     $result = civicrm_api('phone', 'create', $this->_params);
 
-    $this->doWriteResult($result, __FILE__, __FUNCTION__);
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
 
     $this->documentMe($this->_params, $result, __FUNCTION__, __FILE__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
@@ -108,37 +72,20 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   }
 
   /**
-   * @start_document
-   * 
-   * ## {ts}Delete{/ts} {ts}Phone{/ts} 
-   * 
-   * {ts}This is tests for delete Phone{/ts} 
-   * 
-   * **HTTP {ts}methods{/ts}: POST**
-   * 
-   * **{ts}Path{/ts}**
-   * 
-   * ```
-   * <entrypoint>?entity=Phone&action=delete&pretty=1&json=\{"id":"1"\}
-   * ```
-   * 
-   * **API Explorer**
-   * 
-   * ```
-   * https://<site-domain>/civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=delete&pretty=1&json=\{"id":"1"\}
-   * ```
-   * 
-   * **{ts}Request Samples{/ts}**
-   * 
-   * ```shell
-   * curl -g --request POST '<entrypoint>?entity=Phone&action=delete&pretty=1&json=\{"id":"1"\}' \
-   * {$API_KEY_HEADER} \
-   * {$SITE_KEY_HEADER}
-   * ```
-   * 
-   * {$result}
-   * 
-   * @end_document
+   * Phone Delete Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Phone
+   * @api_action Delete
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Phone&action=delete
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=delete&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
    */
   public function testDeletePhone() {
     //create one
@@ -147,9 +94,10 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->assertAPISuccess($create, 'In line ' . __LINE__);
 
     $result = civicrm_api('phone', 'delete', array('id' => $create['id'], 'version' => 3));
-    $this->doWriteResult($result, __FILE__, __FUNCTION__);
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
 
     $this->documentMe($this->_params, $result, __FUNCTION__, __FILE__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $get = civicrm_api('phone', 'get', array(
@@ -223,6 +171,8 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     );
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Phone', 'Get', ($params));
+
+    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals($phone['values'][$phone['id']]['location_type_id'], $result['values'][$phone['id']]['location_type_id'], 'In line ' . __LINE__);
@@ -242,9 +192,8 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
     $result = civicrm_api('Phone', 'Get', ($params));
-    $this->doWriteResult($result, __FILE__, __FUNCTION__);
 
-    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
+    $this->documentMe($params, $result, __FUNCT1ION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals($phone['values'][$phone['id']]['location_type_id'], $result['values'][$phone['id']]['location_type_id'], 'In line ' . __LINE__);
     $this->assertEquals($phone['values'][$phone['id']]['phone_type_id'], $result['values'][$phone['id']]['phone_type_id'], 'In line ' . __LINE__);
@@ -263,7 +212,6 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
     $result = civicrm_api('Phone', 'Get', ($params));
-    $this->doWriteResult($result, __FILE__, __FUNCTION__);
 
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
@@ -293,7 +241,6 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
     $result = civicrm_api('Phone', 'Get', ($params));
-    $this->doWriteResult($result, __FILE__, __FUNCTION__);
 
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
