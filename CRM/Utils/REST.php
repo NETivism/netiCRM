@@ -502,7 +502,7 @@ class CRM_Utils_REST {
       }
       CRM_Utils_System::appendTPLFile($tpl, $content);
 
-      return CRM_Utils_System::theme('page', $content, TRUE);
+      return CRM_Utils_System::theme($content);
     }
     else {
       $content = "<!-- .tpl file embeded: $tpl -->\n";
