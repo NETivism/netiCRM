@@ -1218,6 +1218,17 @@ WHERE  contribution_id = {$this->_id}
       }
     }
 
+    // check receiptId.
+    $contributionId = $self->_id;
+    if (!empty($contributionId)) {
+      $receiptId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',$contributionId, 'receipt_id');
+      if (!empty($receiptId) && empty($fields['receipt_id'])) {
+        if (!empty($fields['receipt_date']) || !empty($fields['receipt_date_time'])) {
+          $errors['receipt_id'] = ts('Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.');
+        }
+      }
+    }
+
     return $errors;
   }
 
