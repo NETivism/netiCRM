@@ -235,7 +235,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $recentOther
     );
 
-    // recipt sending activity
+    // receipt sending activity
     $sortID = NULL;
     $activityTypes = array('Email Receipt', 'Print Contribution Receipts');
     foreach ($activityTypes as $typeName) {

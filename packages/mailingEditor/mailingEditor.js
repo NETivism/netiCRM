@@ -2790,7 +2790,7 @@
           editItemID = "nme-edit-" + handleType + "-item-" + blockDomID;
 
           if ($elemContainer.length && !$elemContainer.find(".nme-edit").length) {
-            let editItemVal = $elem.data("link") ? $elem.data("link") : "";
+            let editItemVal = typeof $elem.attr("data-link") !== "undefined" ? $elem.attr("data-link") : "";
             let nmeEdit = "<div id='" + editBlockID + "' class='nme-edit' data-target='" + blockDomID + "'>" +
               "<div class='" + INNER_CLASS + "'>" +
               "<div class='nme-edit-link-item nme-edit-item'>" +

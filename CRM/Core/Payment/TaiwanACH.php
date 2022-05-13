@@ -94,4 +94,43 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
     CRM_Core_Error::debug_log_message( $note );
   }
+
+  static function checkSection(&$fields, &$errors, $section = NULL) {
+    $emptyField = 0;
+    $isAllEmpty = FALSE;
+    $isTestPrefix = ($section == 'test') ? 'test_': '';
+    $ppDAO = new CRM_Core_DAO_PaymentProcessorType();
+    $ppDAO->name = 'TaiwanACH';
+    $ppDAO->find(TRUE);
+    if (empty($fields["{$isTestPrefix}user_name"]) || empty($fields["{$isTestPrefix}password"]) || empty($fields["{$isTestPrefix}signature"])) {
+      if (empty($fields["{$isTestPrefix}user_name"])) {
+        $emptyField++;
+        $errors["{$isTestPrefix}user_name"] = ts('Missing required field: %1', array(1 => $ppDAO->user_name_label));
+      }
+      if (empty($fields["{$isTestPrefix}password"])) {
+        $emptyField++;
+        $errors["{$isTestPrefix}password"] = ts('Missing required field: %1', array(1 => $ppDAO->password_label));
+      }
+      if (empty($fields["{$isTestPrefix}signature"])) {
+        $emptyField++;
+        $errors["{$isTestPrefix}signature"] = ts('Missing required field: %1', array(1 => $ppDAO->signature_label));
+      }
+    }
+    if (count($errors) == 3) {
+      if(empty($fields["{$isTestPrefix}subject"])) {
+        $errors["{$isTestPrefix}subject"] = ts('Missing required field: Provide %1 or %2', array(
+          1 => $ppDAO->subject_label,
+          2 => $ppDAO->user_name_label,
+        ));
+        $emptyField++;
+      }
+      else {
+        $errors = array();
+      }
+    }
+    if ($emptyField == 4) {
+      $isAllEmpty = TRUE;
+    }
+    return $isAllEmpty;
+  }
 }

@@ -48409,3 +48409,41 @@ msgstr ""
 
 msgid "Could not find your ACH transaction file ID."
 msgstr ""
+
+msgid "The contribution with transaction ID: %1 has been created and updated."
+msgstr ""
+
+msgid "The contribution with transaction ID: %1 can't find from Newebpay API."
+msgstr ""
+
+msgid "Are you sure you want to sync the recurring status and check the contributions?"
+msgstr ""
+
+msgid "You have another running dedupe job. For system performance concern, we can only allow one dedupe job concurrently. Please try again later."
+msgstr ""
+
+msgid "Form processing. Do not reload page or you will loss your progress."
+msgstr ""
+
+# CRM/Contribute/BAO/Query.php
+# templates/CRM/Contribute/Form/Search/Common.tpl
+msgid "- select product -"
+msgstr ""
+
+# templates/CRM/Contact/Form/Task/PDF.tpl
+msgid "Doesn't have email. Would not generate receipt and send email."
+msgstr ""
+
+# CRM/Core/Payment/SPGATEWAY.php
+msgid "Module %1 doesn't exists."
+msgstr ""
+
+msgid "Sync single contribution function doesn't exist."
+msgstr ""
+
+msgid "Synchronizing to %1 server success."
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty."
+msgstr ""

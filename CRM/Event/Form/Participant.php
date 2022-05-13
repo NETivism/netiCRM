@@ -311,7 +311,6 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
 
     if ($this->_showFeeBlock) {
       $this->assign('showFeeBlock', TRUE);
-      $this->assign('paid', TRUE);
       return CRM_Event_Form_EventFees::preProcess($this);
     }
 

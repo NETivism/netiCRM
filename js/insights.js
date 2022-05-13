@@ -39,7 +39,7 @@ function loadReferrer() {
     referrerInfo = JSON.parse(referrerInfo);
   }
 
-  // if someone visit this site over 30mins, we need to get referrer again
+  // use 30mins time to check if this is same session.
   if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && timestamp - referrerInfo.timestamp < 1800) {
     // check if campaign exists
     var url = window.location.href;
@@ -56,6 +56,7 @@ function loadReferrer() {
       trackVisit(referrerInfo);
     });
   }
+  // someone visit this site over 30mins, it's a new visit anyway
   else {
     localStorage.removeItem('referrerInfo');
     var url = window.location.href;
@@ -64,18 +65,10 @@ function loadReferrer() {
       referrer = document.referrer;
     }
     inbound.referrer.parse(url, referrer, function (err, visitInfo) {
-      // set to localStorage because we need to make sure same browser with different tab has same referrer result.
-      // use 30mins time to check if this is same session.
       visitInfo.landing = location.href.replace(location.origin, '');
       visitInfo.timestamp = timestamp;
-      if (referrerInfo && typeof referrerInfo.referrer !== 'undefined') {
-        if (visitInfo.referrer.type !== 'direct' && visitInfo.referrer.type !== 'internal') {
-          localStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
-        }
-      }
-      else {
-        localStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
-      }
+      // set to localStorage because we need to make sure same browser with different tab has same referrer result.
+      localStorage.setItem('referrerInfo', JSON.stringify(visitInfo));
       trackVisit(visitInfo);
     });
   }
