@@ -1452,7 +1452,8 @@ UPDATE  civicrm_participant
 
     //return result for cron.
     if ($returnResult) {
-      $results = array('mailedParticipants' => $mailedParticipants,
+      $results = array(
+        'mailedParticipants' => $mailedParticipants,
         'updatedParticipantIds' => $processedParticipantIds,
       );
 
@@ -1469,7 +1470,7 @@ UPDATE  civicrm_participant
    * @param  array   $eventDetails       required event details
    * @param  array   $contactDetails     required contact details
    * @param  array   $domainValues       required domain values.
-   * @param  string  $mailType           (eg 'approval', 'confirm', 'expired' )
+   * @param  string  $mailType           (eg 'cancelled', 'confirm', 'expired' )
    *
    * return  void
    * @access public
@@ -1518,11 +1519,20 @@ UPDATE  civicrm_participant
         $receiptFrom = $eventDetails['confirm_from_name'] . ' <' . $eventDetails['confirm_from_email'] . '>';
       }
 
-      require_once 'CRM/Core/BAO/MessageTemplates.php';
+      // refs #33948, simulate correct class for transactional activity
+      $participant = new stdClass();
+      $participant->__table = 'civicrm_participant';
+      $participant->id = $participantId;
+      $participant->contact_id = $contactId;
+      $participant->event_id = $eventDetails['id'];
+
+      $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow('msg_tpl_workflow_event', 'participant_' . strtolower($mailType));
+      $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participant, 'Event Notification Email', $workflow['msg_title']);
       list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         array(
           'groupName' => 'msg_tpl_workflow_event',
           'valueName' => 'participant_' . strtolower($mailType),
+          'activityId' => $activityId,
           'contactId' => $contactId,
           'participantId' => $participantId,
           'eventId' => $eventDetails['id'],
@@ -1545,34 +1555,16 @@ UPDATE  civicrm_participant
           'cc' => CRM_Utils_Array::value('cc_confirm', $eventDetails),
           'bcc' => CRM_Utils_Array::value('bcc_confirm', $eventDetails),
           'PDFFilename' => 'Attendee_confirm_copy.pdf',
+        ),
+        CRM_Core_DAO::$_nullObject,
+        array(
+          0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+          1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
         )
       );
-
-      // 3. create activity record.
-      if ($mailSent) {
-        $now = date('YmdHis');
-        $activityType = 'Event Registration';
-        $activityParams = array('subject' => $subject,
-          'source_contact_id' => $contactId,
-          'source_record_id' => $participantId,
-          'activity_type_id' => CRM_Core_OptionGroup::getValue('activity_type',
-            $activityType,
-            'name'
-          ),
-          'activity_date_time' => CRM_Utils_Date::isoToMysql($now),
-          'due_date_time' => CRM_Utils_Date::isoToMysql($participantValues['register_date']),
-          'is_test' => $participantValues['is_test'],
-          'status_id' => 2,
-        );
-
-        require_once 'api/v2/Activity.php';
-        if (is_a(civicrm_activity_create($activityParams), 'CRM_Core_Error')) {
-          CRM_Core_Error::fatal("Failed creating Activity for expiration mail");
-        }
-      }
     }
-
-    return $mailSent;
+    // mail sent
+    return TRUE;
   }
 
   /**
