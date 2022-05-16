@@ -90,8 +90,8 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $this->assign('id', $this->_id);
 
     // #30318, use new form for DKIM / SPF verification
-    CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/from_email', 'reset=1'));
     if ($this->_gName == 'from_email_address') {
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/from_email', 'reset=1'));
       $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
 			$defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
 			$this->assign('default_from_target', 'label');
