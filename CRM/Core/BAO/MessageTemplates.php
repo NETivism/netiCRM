@@ -156,6 +156,33 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     return $msgTpls;
   }
 
+  static function getMessageTemplateByWorkflow($groupName, $valueName) {
+    static $cache;
+    if (!empty($cache[$groupName.'__'.$valueName])) {
+      return $cache[$groupName.'__'.$valueName];
+    }
+    $return = array();
+    $query = 'SELECT mt.msg_title, mt.msg_subject, mt.msg_text, mt.msg_html
+                  FROM civicrm_msg_template mt
+                  JOIN civicrm_option_value ov ON workflow_id = ov.id
+                  JOIN civicrm_option_group og ON ov.option_group_id = og.id
+                  WHERE og.name = %1 AND ov.name = %2 AND mt.is_default = 1';
+    $sqlParams = array(1 => array($groupName, 'String'), 2 => array($valueName, 'String'));
+    $dao = CRM_Core_DAO::executeQuery($query, $sqlParams);
+    $dao->fetch();
+    if ($dao->N) {
+      $return = array(
+        'msg_title' => $dao->msg_title,
+        'msg_subject' => $dao->msg_subject,
+        'msg_text' => $dao->msg_text,
+        'msg_html' => $dao->msg_html,
+      );
+    }
+    $dao->free();
+    $cache[$groupName.'__'.$valueName] = $return;
+    return $cache[$groupName.'__'.$valueName];
+  }
+
   static function sendReminder($contactId, $email, $messageTemplateID, $from) {
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->id = $messageTemplateID;
@@ -295,6 +322,8 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    */
   static function sendTemplate($params, &$smarty = NULL, $callback = NULL) {
     $defaults = array(
+      // activity id for use transactional email
+      'activityId' => NULL,
       // option group name of the template
       'groupName' => NULL,
       // option value name of the template
@@ -328,39 +357,17 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       CRM_Core_Error::fatal(ts("Message template's option group and/or option value missing."));
     }
 
-    // fetch the three elements from the db based on option_group and option_value names
-    $query = 'SELECT msg_subject subject, msg_text text, msg_html html
-                  FROM civicrm_msg_template mt
-                  JOIN civicrm_option_value ov ON workflow_id = ov.id
-                  JOIN civicrm_option_group og ON ov.option_group_id = og.id
-                  WHERE og.name = %1 AND ov.name = %2 AND mt.is_default = 1';
-    $sqlParams = array(1 => array($params['groupName'], 'String'), 2 => array($params['valueName'], 'String'));
-    $dao = CRM_Core_DAO::executeQuery($query, $sqlParams);
-    $dao->fetch();
-
-    if (!$dao->N) {
-      CRM_Core_Error::fatal(ts('No such message template: option group %1, option value %2.', array(1 => $params['groupName'], 2 => $params['valueName'])));
-    }
-
-    $subject = $dao->subject;
-    $text = $dao->text;
-    $html = $dao->html;
-    $dao->free();
+    $msg = self::getMessageTemplateByWorkflow($params['groupName'], $params['valueName']);
+    $subject = $msg['msg_subject'];
+    $text = $msg['msg_text'];
+    $html = $msg['msg_html'];
 
     // add the test banner (if requested)
     if ($params['isTest']) {
-      $query = "SELECT msg_subject subject, msg_text text, msg_html html
-                      FROM civicrm_msg_template mt
-                      JOIN civicrm_option_value ov ON workflow_id = ov.id
-                      JOIN civicrm_option_group og ON ov.option_group_id = og.id
-                      WHERE og.name = 'msg_tpl_workflow_meta' AND ov.name = 'test_preview' AND mt.is_default = 1";
-      $testDao = CRM_Core_DAO::executeQuery($query);
-      $testDao->fetch();
-
-      $subject = $testDao->subject . $subject;
-      $text = $testDao->text . $text;
-      $html = preg_replace('/<body(.*)$/im', "<body\\1\n{$testDao->html}", $html);
-      $testDao->free();
+      $meta = self::getMessageTemplateByWorkflow('msg_tpl_workflow_meta', 'test_preview');
+      $subject = $meta['msg_subject'] . $subject;
+      $text = $meta['msg_text'] . $text;
+      $html = preg_replace('/<body(.*)$/im', "<body\\1\n{$meta['msg_html']}", $html);
     }
 
     // replace tokens in the three elements (in subject as if it was the text body)
@@ -432,8 +439,10 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     if (empty($smarty)) {
       $smarty = &CRM_Core_Smarty::singleton();
     }
-    foreach ($params['tplParams'] as $name => $value) {
-      $smarty->assign($name, $value);
+    if (is_array($params['tplParams'])) {
+      foreach ($params['tplParams'] as $name => $value) {
+        $smarty->assign($name, $value);
+      }
     }
     foreach (array('subject', 'text', 'html') as $elem) {
       $$elem = $smarty->fetch("string:{*".$params['groupName']."-".$params['valueName'].'-'.$elem."*}{$$elem}");

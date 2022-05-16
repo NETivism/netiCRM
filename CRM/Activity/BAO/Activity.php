@@ -2063,16 +2063,73 @@ SELECT  display_name
    * Function to add activity for transactional email
    *
    * @param object &$object particular component object
-   * @param string $activityType 
-   * @param int $targetContactID
+   * @param string $activityType activity type internal name, use this to get activity id
+   * @param string $subjectSuffix subject suffix prepend to activity
    *
    * @static
    * @access public
-   * 
+   *
    * @return int
    */
-  public static function addTransactionalActivity(&$object, $activityType, $targetContactID = NULL) {
-    return self::addActivity($object, $activityType, $targetContactID, 'Scheduled');
+  public static function addTransactionalActivity(&$object, $activityType, $subjectSuffix = NULL) {
+    if ($object->__table == 'civicrm_membership') {
+    }
+    elseif ($object->__table == 'civicrm_participant') {
+      $event = CRM_Event_BAO_Event::getEvents(TRUE, $object->event_id);
+      $subject = $event[$object->event_id];
+    }
+    elseif ($object->__table == 'civicrm_contribution') {
+      if (empty($activityType)) {
+        $activityType = 'Contribution';
+      }
+      //create activity record only for Completed Contribution
+      if ($object->contribution_status_id != 1 && $activityType === 'Contribution') {
+        return FALSE;
+      }
+
+      $subject = CRM_Utils_Money::format($object->total_amount, $object->currency);
+      if ($object->source != 'null') {
+        $subject .= " - {$object->source}";
+      }
+    }
+    if ($subjectSuffix) {
+      $subject .= ' - '.$subjectSuffix;
+    }
+
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', $activityType, 'name');
+    if (empty($activityType) || empty($activityTypeId)) {
+      return FALSE;
+    }
+    $activityStatus = !empty($activityStatus) ? $activityStatus : 'Completed';
+    $activityStatusId = CRM_Core_OptionGroup::getValue('activity_status', $activityStatus, 'name');
+    if (empty($activityStatusId)) {
+      return FALSE;
+    }
+
+    $activityParams = array(
+      'source_contact_id' => $object->contact_id,
+      'source_record_id' => $object->id,
+      'activity_type_id' => $activityTypeId,
+      'subject' => $subject,
+      'activity_date_time' => date('YmdHis'),
+      'is_test' => $object->is_test,
+      'status_id' => $activityStatusId,
+      'skipRecentView' => TRUE,
+    );
+
+    // create assignment activity if created by logged in user
+    $session = CRM_Core_Session::singleton();
+    $id = $session->get('userID');
+    if ($id) {
+      $activityParams['source_contact_id'] = $id;
+      $activityParams['assignee_contact_id'] = $object->contact_id;
+    }
+
+    $activity = CRM_Activity_BAO_Activity::create($activityParams);
+    if (!is_a($activity, 'CRM_Core_Error') && isset($activity->id)) {
+      return $activity->id;
+    }
+    return FALSE;
   }
 
   /**
