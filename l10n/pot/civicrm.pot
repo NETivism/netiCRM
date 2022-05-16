@@ -15369,15 +15369,11 @@ msgid "Event registration information for %1 has been updated."
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
-msgid "A confirmation email has been sent to %1"
-msgstr ""
-
-#: CRM/Event/Form/Participant.php
 msgid "Event registration for %1 has been added."
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
-msgid "A confirmation email has been sent to %1."
+msgid "A confirmation email has been scheduled to sent to %1."
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
@@ -15391,7 +15387,7 @@ msgid ""
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
-msgid "A confirmation email has been sent to ALL participants"
+msgid "A confirmation email has been scheduled to sent to ALL participants"
 msgstr ""
 
 #: CRM/Event/Form/ParticipantView.php
@@ -48446,4 +48442,24 @@ msgstr ""
 
 #: CRM/Contribute/Form/Contribution.php
 msgid "Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty."
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Contribution Notification Email"
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Event Notification Email"
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Membership Notification Email"
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "PCP Notification Email"
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Mailing Notification Email"
 msgstr ""
