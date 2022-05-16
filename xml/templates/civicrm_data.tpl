@@ -320,6 +320,7 @@ VALUES
    (@option_group_id_act, '{ts escape="sql"}Event Notification Email{/ts}',           37, 'Event Notification Email', NULL, 1, 0, 37, '', 0, 1, 1, @eventCompId, NULL),
    (@option_group_id_act, '{ts escape="sql"}Membership Notification Email{/ts}',      38, 'Membership Notification Email', NULL, 1, 0, 38, '', 0, 1, 1, @memberCompId, NULL),
    (@option_group_id_act, '{ts escape="sql"}PCP Notification Email{/ts}',             39, 'PCP Notification Email', NULL, 1, 0, 39, '', 0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '{ts escape="sql"}Mailing Notification Email{/ts}',         40, 'Mailing Notification Email', NULL, 1, 0, 40, '', 0, 1, 1, NULL, NULL),
 
    (@option_group_id_gender, '{ts escape="sql"}Female{/ts}',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, '{ts escape="sql"}Male{/ts}',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
