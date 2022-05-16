@@ -156,6 +156,13 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     return $msgTpls;
   }
 
+  /**
+   * Get message template by specify workflow
+   *
+   * @param string $groupName workflow group name from option group
+   * @param string $valueName workflow value name option value
+   * @return array
+   */
   static function getMessageTemplateByWorkflow($groupName, $valueName) {
     static $cache;
     if (!empty($cache[$groupName.'__'.$valueName])) {

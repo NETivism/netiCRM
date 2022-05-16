@@ -1987,12 +1987,11 @@ SELECT  display_name
       if (empty($activityType) && $activityType != 'Email') {
         $activityType = 'Event Registration';
       }
-      $event = CRM_Event_BAO_Event::getEvents(TRUE, $object->event_id);
 
       $roles = CRM_Event_PseudoConstant::participantRole();
       $status = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
 
-      $subject = $event[$object->event_id];
+      $subject = CRM_Event_BAO_Event::getEventTitle($object->event_id).'('.$object->event_id.')';
       if (CRM_Utils_Array::value($object->role_id, $roles)) {
         $subject .= ' - ' . $roles[$object->role_id];
       }
@@ -2075,8 +2074,7 @@ SELECT  display_name
     if ($object->__table == 'civicrm_membership') {
     }
     elseif ($object->__table == 'civicrm_participant') {
-      $event = CRM_Event_BAO_Event::getEvents(TRUE, $object->event_id);
-      $subject = $event[$object->event_id];
+      $subject = CRM_Event_BAO_Event::getEventTitle($object->event_id).'('.$object->event_id.')';
     }
     elseif ($object->__table == 'civicrm_contribution') {
       if (empty($activityType)) {
