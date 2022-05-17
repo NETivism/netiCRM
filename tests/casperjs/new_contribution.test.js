@@ -310,16 +310,6 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists('.crm-clear-link a');
     });
 
-    /* clear receipt id */
-    casper.waitForSelector("#receipt_id", function success() {
-        test.assertExists("#receipt_id");
-        this.evaluate(function () {
-            document.querySelector("#receipt_id").value = '';
-        });
-    }, function fail() {
-        test.assertExists("#receipt_id");
-    });
-
     casper.then(function() {
         // this.capture('3_edit_form_done.png');
     });
