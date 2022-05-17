@@ -20,9 +20,12 @@
       <th id="order" class="sortable">{ts}Order{/ts}</th>
       <th>{ts}Default?{/ts}</th>
       <th>{ts}Enabled?{/ts}</th>
-      <th>{ts}Sender Verified{/ts}?</th>
-      <th>{ts}SPF Verified{/ts}?</th>
-      <th>{ts}DKIM Verified{/ts}?</th>
+      <th>
+        {capture assign=sender}{ts}Sender{/ts}{/capture}
+        {ts 1=$sender}%1 Verified{/ts}?
+      </th>
+      <th>{ts 1=SPF}%1 Verified{/ts}?</th>
+      <th>{ts 1=DKIM}%1 Verified{/ts}?</th>
       <th class="hiddenElement"></th>
       <th></th>
       </tr>

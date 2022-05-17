@@ -8,7 +8,7 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
    * @return string
    */
   public function getTitle() {
-    return ts('Verify Email');
+    return ts('Verify %1', array(1 => ts('Email')));
   }
 
   /**

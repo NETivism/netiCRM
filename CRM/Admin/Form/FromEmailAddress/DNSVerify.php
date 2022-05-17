@@ -22,7 +22,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * @return string
    */
   public function getTitle() {
-    return ts('Verify DNS');
+    return ts('Verify %1', array(1 => ts('Domain')));
   }
 
   /**
@@ -66,7 +66,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       $result = CRM_Utils_Mail::checkSPF($self->_values['email']);
       $filter = $self->_values['filter'];
       if (!$result) {
-        $errors['qfKey'] = ts('Your SPF validation failed.');
+        $errors['qfKey'] = ts('Your %1 validation failed.', array(1 => 'SPF'));
         $filter = $filter & ~(self::VALID_SPF);
       }
       else {
@@ -76,7 +76,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       /*
       $result = CRM_Utils_Mail::checkDKIM($self->_values['email']);
       if ($result === FALSE) {
-        $errors['qfKey'] .= ts('Your DKIM validation failed.');
+        $errors['qfKey'] .= ts('Your %1 validation failed.', array(1 => 'DKIM'));
         $filter = $filter & ~(self::VALID_DKIM);
       }
       else {
