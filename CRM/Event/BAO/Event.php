@@ -332,7 +332,7 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event {
    */
   static function getEventTitle($id) {
     if  (!empty($id)) {
-      return CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $id, $title);
+      return CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $id, 'title');
     }
     return '';
   }
