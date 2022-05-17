@@ -48499,3 +48499,12 @@ msgstr ""
 
 msgid "To finish email validation, please click the confirmation link below:"
 msgstr ""
+
+msgid "Your domain name records may need up to 48 hours to update base on what DNS provider you use."
+msgstr ""
+
+msgid "After update your records on your DNS provider, you are safe to leave this page and procceed this verify later."
+msgstr ""
+
+msgid "Re-send Validation Email"
+msgstr ""

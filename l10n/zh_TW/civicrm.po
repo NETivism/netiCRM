@@ -48842,3 +48842,16 @@ msgstr "收到這封信件，是因為您從 %1 增加了一個新的寄件人 E
 
 msgid "To finish email validation, please click the confirmation link below:"
 msgstr "請點擊下面的連結或剪下貼上至瀏覽器，以完成信箱驗證："
+
+msgid ""
+"Your domain name records may need up to 48 hours to update base on what DNS "
+"provider you use."
+msgstr "不同的 DNS 域名紀錄服務商有不同的更新時間，您更新的紀錄可能需要最多需要 48 小時才能更新正確。"
+
+msgid ""
+"After update your records on your DNS provider, you are safe to leave this "
+"page and procceed this verify later."
+msgstr "您於 DNS 服務商更新了紀錄後，您可以隨時離開這個頁面，等待生效後再回來驗證。"
+
+msgid "Re-send Validation Email"
+msgstr "重新寄送驗證信"
