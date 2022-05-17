@@ -486,7 +486,7 @@ cj(function() {
 {/literal}
 
  {if $pcp}{literal}pcpAnonymous();{/literal}{/if}
-
+ {if $checkReceipt}{literal}checkReceipt();{/literal}{/if}
  // load form during form rule.
  {if $buildPriceSet}{literal}buildAmount( );{/literal}
  {/if}
@@ -550,26 +550,13 @@ cj('#adjust-option-type').show();
 cj("#total_amount").removeAttr("READONLY");
 cj("#total_amount").css('background-color', '#ffffff');
 }
-</script>
-{/literal}
-
-{literal}
-<script type="text/javascript">
-(function ($) {
-  "use strict";
-  $(function() {
-    cj("#receipt_id")
+function checkReceipt( ) {
+  cj("#receipt_id")
     .change(function() {
       var receiptId = cj("#receipt_id").val();
-      while (receiptId == '') {
-        cj("#receipt_id").after( "<font color='red'>收據編號是空白時，收據開立日期與時間也必須是空值</font>" );
-        exit();
-        }
+      cj("#receipt_id").after( "<font color='red'>{/literal}{ts}Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.{/ts}{literal}</font>" );
       }
     )
-    
-  });
-})(cj);
-
+}
 </script>
 {/literal}

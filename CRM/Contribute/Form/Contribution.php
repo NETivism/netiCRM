@@ -1168,7 +1168,7 @@ WHERE  contribution_id = {$this->_id}
     );
 
     $this->addFormRule(array('CRM_Contribute_Form_Contribution', 'formRule'), $this);
-
+    $this->assign('checkReceipt', TRUE);
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
     }
