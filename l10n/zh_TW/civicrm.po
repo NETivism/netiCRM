@@ -48800,3 +48800,45 @@ msgstr "個人募款頁通知信"
 #: CRM/Activity/BAO/Activity.php
 msgid "Mailing Notification Email"
 msgstr "電子報通知信"
+
+msgid "Yes, but not verified."
+msgstr "是，但尚未通過驗證"
+
+msgid "%1 Verified"
+msgstr "%1 已通過驗證"
+
+msgid "Verify %1"
+msgstr "驗證 %1"
+
+msgid "Your email address '%1' is not verified."
+msgstr "您的 Email 地址 %1 未通過驗證。"
+
+msgid ""
+"In order to verify you are the owner of this email address. Please click "
+"confirmation link we sent of your email."
+msgstr "為了驗證您擁有輸入的 Email 地址，請您至您填寫的 Email 收取信件，點擊信件中的驗證確認連結。"
+
+msgid ""
+"You can't change your email address after verified the ownership. However, "
+"you can create another from email address anytime."
+msgstr "在通過驗證後，您無法再修改信箱位址，但您隨時可以新增其他的寄件者。"
+
+msgid "%1 for your email %2 is not verified."
+msgstr "信箱 %2 的 %1 尚未通過驗證。"
+
+msgid "Learn how to config settings"
+msgstr "學習如何設定"
+
+msgid "Your %1 validation failed."
+msgstr "%1 未通過驗證。"
+
+msgid "Email Validation - Confirm you are the email owner by click link"
+msgstr "Email信箱驗證 - 點擊信件中的連結，以確認您是信箱的擁有人"
+
+msgid ""
+"You receive this email because you were trying to add new from email address"
+" in %1."
+msgstr "收到這封信件，是因為您從 %1 增加了一個新的寄件人 Email 位址。"
+
+msgid "To finish email validation, please click the confirmation link below:"
+msgstr "請點擊下面的連結或剪下貼上至瀏覽器，以完成信箱驗證："

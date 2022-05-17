@@ -48463,3 +48463,39 @@ msgstr ""
 #: CRM/Activity/BAO/Activity.php
 msgid "Mailing Notification Email"
 msgstr ""
+
+msgid "Yes, but not verified."
+msgstr ""
+
+msgid "%1 Verified"
+msgstr ""
+
+msgid "Verify %1"
+msgstr ""
+
+msgid "Your email address '%1' is not verified."
+msgstr ""
+
+msgid "In order to verify you are the owner of this email address. Please click confirmation link we sent of your email."
+msgstr ""
+
+msgid "You can't change your email address after verified the ownership. However, you can create another from email address anytime."
+msgstr ""
+
+msgid "%1 for your email %2 is not verified."
+msgstr ""
+
+msgid "Learn how to config settings"
+msgstr ""
+
+msgid "Your %1 validation failed."
+msgstr ""
+
+msgid "Email Validation - Confirm you are the email owner by click link"
+msgstr ""
+
+msgid "You receive this email because you were trying to add new from email address in %1."
+msgstr ""
+
+msgid "To finish email validation, please click the confirmation link below:"
+msgstr ""
