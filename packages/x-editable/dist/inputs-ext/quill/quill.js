@@ -15,6 +15,8 @@ $(function(){
 (function ($) {
     "use strict";
 
+    const TEXT_EMPTY_CLASS = 'is-text-empty';
+
     var stripHTML = function (html) {
        var tmp = document.createElement("DIV");
        tmp.innerHTML = html;
@@ -203,12 +205,21 @@ $(function(){
 
         // Call when editing is complete (3）
         value2html: function(value, element) {
-            var html = "",
+            var html = '',
+                text = '',
                 blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
             // Get the HTML of this block from xeditable
             if (blockID) {
                 html = this.xeditable.html[blockID];
+                text = stripHTML(html);
+            }
+
+            if (text.trim() === '' && !$(element).hasClass(TEXT_EMPTY_CLASS)) {
+                $(element).addClass(TEXT_EMPTY_CLASS);
+            }
+            else {
+                $(element).removeClass(TEXT_EMPTY_CLASS);
             }
 
             // Output HTML to x-editable
@@ -250,12 +261,7 @@ $(function(){
             var blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
             if (blockID) {
-                var text = this.editor.root.innerText,
-                    html = this.editor.root.innerHTML;
-
-                if (text.trim() === '') {
-                    html = this.options.placeholder ? this.options.placeholder : 'Please enter content...';
-                }
+                var html = this.editor.root.innerHTML;
 
                 // Save data to xeditable
                 this.xeditable.delta[blockID] = this.editor.getContents();

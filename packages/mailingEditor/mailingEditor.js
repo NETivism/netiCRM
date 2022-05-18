@@ -12,7 +12,8 @@
         INIT_CLASS = "is-initialized",
         EDIT_CLASS = "is-edit",
         ACTIVE_CLASS = "is-active",
-        OVERLAY_CLASS = "is-overlay";
+        OVERLAY_CLASS = "is-overlay",
+        TEXT_EMPTY_CLASS = "is-text-empty";
 
   /**
    * ============================
@@ -379,6 +380,12 @@
 
       return input;
     }
+  }
+
+  var _stripHTML = function(html) {
+    var tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
   }
 
   var _domElemExist = function($elem) {
@@ -1103,7 +1110,9 @@
               _nmeStyle.set($nmeb, block.styles);
 
               if ($nmebElem.length) {
-                let decodeContent = "";
+                let decodeContent = "",
+                    decodeContentText = "";
+
                 $nmebElem.attr({
                   "data-id": blockID,
                   "data-section": blockSection
@@ -1131,7 +1140,14 @@
                       "data-placeholder": "請輸入標題文字...",
                       "data-title": "Enter title"
                     });
+
                     decodeContent = _htmlDecode(block.data.html);
+                    decodeContentText = _stripHTML(decodeContent);
+
+                    if (decodeContentText.trim() === "" && !$nmebElem.hasClass(TEXT_EMPTY_CLASS)) {
+                      $nmebElem.addClass(TEXT_EMPTY_CLASS);
+                    }
+
                     $nmebElem.html(decodeContent);
                     break;
 
@@ -1142,7 +1158,14 @@
                       "data-placeholder": "請輸入段落文字...",
                       "data-title": "Enter comments"
                     });
+
                     decodeContent = _htmlDecode(block.data.html);
+                    decodeContentText = _stripHTML(decodeContent);
+
+                    if (decodeContentText.trim() === "" && !$nmebElem.hasClass(TEXT_EMPTY_CLASS)) {
+                      $nmebElem.addClass(TEXT_EMPTY_CLASS);
+                    }
+
                     $nmebElem.html(decodeContent);
                     break;
 
@@ -1217,6 +1240,12 @@
                         "data-title": "Enter comments"
                       });
                       decodeContent = _htmlDecode(block.data.html);
+                      decodeContentText = _stripHTML(decodeContent);
+
+                      if (decodeContentText.trim() === "" && !$nmebElem.hasClass(TEXT_EMPTY_CLASS)) {
+                        $nmebElem.addClass(TEXT_EMPTY_CLASS);
+                      }
+
                       $nmebElem.html(decodeContent);
                       break;
 
