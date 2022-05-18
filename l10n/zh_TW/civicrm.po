@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15378,16 +15378,16 @@ msgid "Event registration information for %1 has been updated."
 msgstr "活動報名資料 %1 已更新。"
 
 #: CRM/Event/Form/Participant.php
-msgid "A confirmation email has been sent to %1"
-msgstr "活動確認信已寄送給%1"
-
-#: CRM/Event/Form/Participant.php
 msgid "Event registration for %1 has been added."
 msgstr "已加入%1 的活動報名資料。"
 
 #: CRM/Event/Form/Participant.php
+msgid "A confirmation email has been scheduled to sent to %1."
+msgstr "一封報名登記確認信已排程寄送至 %1 。"
+
+#: CRM/Event/Form/Participant.php
 msgid "A confirmation email has been sent to %1."
-msgstr "活動確認信已寄送給%1。"
+msgstr "一封報名登記確認信已寄送至 %1 。"
 
 #: CRM/Event/Form/Participant.php
 msgid "Total Participant(s) added to event: %1."
@@ -15400,8 +15400,8 @@ msgid ""
 msgstr "Email 無法寄送給 %1 聯絡人，因為聯絡人的偏好選項設定為「不要寄 Email」、或是未設定有效的 Email。"
 
 #: CRM/Event/Form/Participant.php
-msgid "A confirmation email has been sent to ALL participants"
-msgstr "活動確認信已寄送給所有參加者"
+msgid "A confirmation email has been scheduled to sent to ALL participants"
+msgstr "一封報名登記確認信已排程寄送至所有的參加者。"
 
 #: CRM/Event/Form/ParticipantView.php
 msgid ""
@@ -48778,3 +48778,84 @@ msgstr "找不到單筆同步的程式指令。"
 
 msgid "Synchronizing to %1 server success."
 msgstr "與 %1 伺服器同步成功。"
+
+#: CRM/Contribute/Form/Contribution.php
+msgid ""
+"Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not "
+"empty."
+msgstr "收據編號不能為空白，因為收據開立日期與時間不是空值。"
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Contribution Notification Email"
+msgstr "捐款通知信"
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Event Notification Email"
+msgstr "活動通知信"
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Membership Notification Email"
+msgstr "會員通知信"
+
+#: CRM/Activity/BAO/Activity.php
+msgid "PCP Notification Email"
+msgstr "個人募款頁通知信"
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Mailing Notification Email"
+msgstr "電子報通知信"
+
+msgid "Yes, but not verified."
+msgstr "是，但尚未通過驗證"
+
+msgid "%1 Verified"
+msgstr "%1 已通過驗證"
+
+msgid "Verify %1"
+msgstr "驗證 %1"
+
+msgid "Your email address '%1' is not verified."
+msgstr "您的 Email 地址 %1 未通過驗證。"
+
+msgid ""
+"In order to verify you are the owner of this email address. Please click "
+"confirmation link we sent of your email."
+msgstr "為了驗證您擁有輸入的 Email 地址，請您至您填寫的 Email 收取信件，點擊信件中的驗證確認連結。"
+
+msgid ""
+"You can't change your email address after verified the ownership. However, "
+"you can create another from email address anytime."
+msgstr "在通過驗證後，您無法再修改信箱位址，但您隨時可以新增其他的寄件者。"
+
+msgid "%1 for your email %2 is not verified."
+msgstr "信箱 %2 的 %1 尚未通過驗證。"
+
+msgid "Learn how to config settings"
+msgstr "學習如何設定"
+
+msgid "Your %1 validation failed."
+msgstr "%1 未通過驗證。"
+
+msgid "Email Validation - Confirm you are the email owner by click link"
+msgstr "Email信箱驗證 - 點擊信件中的連結，以確認您是信箱的擁有人"
+
+msgid ""
+"You receive this email because you were trying to add new from email address"
+" in %1."
+msgstr "收到這封信件，是因為您從 %1 增加了一個新的寄件人 Email 位址。"
+
+msgid "To finish email validation, please click the confirmation link below:"
+msgstr "請點擊下面的連結或剪下貼上至瀏覽器，以完成信箱驗證："
+
+msgid ""
+"Your domain name records may need up to 48 hours to update base on what DNS "
+"provider you use."
+msgstr "不同的 DNS 域名紀錄服務商有不同的更新時間，您更新的紀錄可能需要最多需要 48 小時才能更新正確。"
+
+msgid ""
+"After update your records on your DNS provider, you are safe to leave this "
+"page and procceed this verify later."
+msgstr "您於 DNS 服務商更新了紀錄後，您可以隨時離開這個頁面，等待生效後再回來驗證。"
+
+msgid "Re-send Validation Email"
+msgstr "重新寄送驗證信"
