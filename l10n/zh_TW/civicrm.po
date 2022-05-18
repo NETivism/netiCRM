@@ -15386,6 +15386,10 @@ msgid "A confirmation email has been scheduled to sent to %1."
 msgstr "一封報名登記確認信已排程寄送至 %1 。"
 
 #: CRM/Event/Form/Participant.php
+msgid "A confirmation email has been sent to %1."
+msgstr "一封報名登記確認信已寄送至 %1 。"
+
+#: CRM/Event/Form/Participant.php
 msgid "Total Participant(s) added to event: %1."
 msgstr "加入到活動的參加者總數： %1"
 
