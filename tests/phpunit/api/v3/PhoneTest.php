@@ -327,5 +327,50 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
       ));
     $this->assertEquals(1, $check);
   }
+
+  /**
+   * Phone Update Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Phone
+   * @api_action Update
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Phone&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Phone&action=create&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  public function testUpdatePhone() {
+    $params = $this->_params;
+
+    // create first email
+    $created = civicrm_api('phone', 'create', $params);
+
+    $this->assertApiSuccess($created, 'In line ' . __LINE__);
+    $this->assertEquals(1, $created['count'], 'In line ' . __LINE__);
+    $this->assertNotNull($created['id'], 'In line ' . __LINE__);
+    foreach($created['values'] as $value) {
+      $this->assertNotNull($value, 'In line ' . __LINE__);
+    }
+
+    // update email
+    $params = $this->_params;
+    $params['phone'] = '000 512 755';
+    $params['id'] = $created['id'];
+
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $result = civicrm_api('phone', 'create', $params);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+
+    $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
+    $this->assertNotNull($result['id'], 'In line ' . __LINE__);
+    foreach($result['values'] as $value) {
+      $this->assertNotNull($value, 'In line ' . __LINE__);
+    }
+  }
 }
 
