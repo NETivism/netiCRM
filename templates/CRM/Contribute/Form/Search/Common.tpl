@@ -199,40 +199,6 @@
             </tr>
           </tbody>
         </table>
-        {literal}
-        <script type="text/javascript">
-          cj(document).ready(function() {
-            if (cj("#product_name").length && cj("#product_option").length) {
-              var productOptionData = {/literal}{$product_option_json}{literal},
-                  productTs = {
-                    "- select -": "{/literal}{ts}- select -{/ts}{literal}",
-                    "- select product -": "{/literal}{ts}- select product -{/ts}{literal}",
-                  };
-
-              var productOptionSwitchByName = function(productName) {
-                if (typeof productName !== "undefined" && productName.trim() !== "") {
-                  if (productOptionData.hasOwnProperty(productName) && Array.isArray(productOptionData[productName])) {
-                    cj("#product_option").html("<option value=''>" + productTs["- select -"] + "</option>");
-
-                    for (var i in productOptionData[productName]) {
-                      var opt = productOptionData[productName][i];
-                      cj("#product_option").append("<option value='" + opt + "'>" + opt + "</option>");
-                    }
-                  }
-                }
-                else {
-                  cj("#product_option").html("<option value=''>" + productTs["- select product -"] + "</option>");
-                }
-              }
-
-              cj("#product_name").change(function() {
-                var productName = cj(this).val();
-                productOptionSwitchByName(productName);
-              });
-            }
-          });
-        </script>
-        {/literal}
       </div>
     </div>
   </td>

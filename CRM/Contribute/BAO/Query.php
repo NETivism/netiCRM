@@ -657,15 +657,11 @@ class CRM_Contribute_BAO_Query {
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_product.name', $op, $value, "String");
         $query->_qill[$grouping][] = ts('Product Name') . ' - ' . $value;
         $query->_tables['civicrm_product'] = $query->_whereTables['civicrm_product'] = 1;
-        //$query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
-        //$query->_tables['civicrm_contribution_product'] = $query->_whereTables['civicrm_contribution_product'] = 1;
         return;
 
       case 'product_option':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_contribution_product.product_option', $op, $value, "String");
         $query->_qill[$grouping][] = ts('Product Option') . ' - ' . $value;
-        //$query->_tables['civicrm_product'] = $query->_whereTables['civicrm_product'] = 1;
-        //$query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         $query->_tables['civicrm_contribution_product'] = $query->_whereTables['civicrm_contribution_product'] = 1;
         return;
 
@@ -1020,10 +1016,9 @@ class CRM_Contribute_BAO_Query {
     $product_dao = new CRM_Contribute_DAO_Product();
     $product_dao->is_active = 1;
     $product_dao->find();
-    $submit_product_name = $form->_submitValues['product_name'];
     $product_name_select = $product_option_select = array();
     $product_name_select[""] = ts('- select -');
-    $product_option_select[""] = $submit_product_name ? ts('- select -') : ts('- select product -');
+    $product_option_select[""] = ts('- select -');
     $product_option_data = array();
 
     while ($product_dao->fetch()) {
@@ -1037,24 +1032,28 @@ class CRM_Contribute_BAO_Query {
       }
     }
 
-    if ($submit_product_name && isset($product_option_data[$submit_product_name])) {
-      foreach ($product_option_data[$submit_product_name] as $opt) {
-        $product_option_select[$opt] = $opt;
-      }
-    }
-
-    $product_option_json = json_encode($product_option_data, JSON_UNESCAPED_UNICODE);
-    $form->assign('product_option_json', $product_option_json);
     $form->addSelect(
       'product_name',
       ts('Product Name'),
       $product_name_select
     );
+
+    // Use data-parent and data-parent-filter setting to associate the product_name with the product_option
     $form->addSelect(
       'product_option',
       ts('Product Option'),
-      $product_option_select
+      $product_option_select,
+      array('data-parent' => 'product_name', 'data-parent-custom' => 0)
     );
+    $product_option_select_elem = $form->getElement('product_option');
+
+    foreach ($product_option_data as $product_name => $product_options) {
+      $product_option_select_attr = array('data-parent-filter' => $product_name);
+
+      foreach ($product_options as $product_option) {
+        $product_option_select_elem->addOption($product_option, $product_option, $product_option_select_attr);
+      }
+    }
 
     $form->assign('validCiviContribute', TRUE);
   }
