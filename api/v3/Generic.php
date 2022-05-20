@@ -258,6 +258,22 @@ function civicrm_api3_generic_getoptions($apiRequest) {
             }
           }
           break;
+        case 'Country':
+          $constantParams = array(
+            'version' => 3,
+            'class' => 'CRM_Core_PseudoConstant',
+            'name' => 'Country',
+          );
+          $result = civicrm_api('constant', 'get', $constantParams);
+          if (!$result['is_error'] && !empty($result['values'])) {
+            foreach($result['values'] as $key => $val) {
+              $values[$key] = array(
+                'value' => $key,
+                'label' => $val,
+              );
+            }
+          }
+          break;
       }
     }
     // check constant or option group name
