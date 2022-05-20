@@ -15377,6 +15377,10 @@ msgid "A confirmation email has been scheduled to sent to %1."
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
+msgid "A confirmation email has been sent to %1."
+msgstr ""
+
+#: CRM/Event/Form/Participant.php
 msgid "Total Participant(s) added to event: %1."
 msgstr ""
 
