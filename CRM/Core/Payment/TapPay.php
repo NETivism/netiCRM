@@ -679,7 +679,7 @@ LIMIT 0, 100
         continue;
       }
 
-      $command = 'drush neticrm-process-recurring --payment-processor=tappay --contribution-recur-id='.$dao->recur_id.'&';
+      $command = 'drush neticrm-process-recurring --payment-processor=tappay --time='.$time.' --contribution-recur-id='.$dao->recur_id.'&';
       popen($command, 'w');
       // wait for 0.5 second.
       usleep(500000);
