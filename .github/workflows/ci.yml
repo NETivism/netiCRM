@@ -82,7 +82,7 @@ jobs:
           secure: false
           ignore_cert: true
           convert_markdown: true
-          subject: [${{ github.repository }}] Run ${{ job.status }}: CI Testing - (${{github.ref_name}})
+          subject: "[${{ github.repository }}] Run ${{ job.status }}: CI Testing - (${{github.ref_name}})"
           body: |
             Executed by: ${{github.actor}}
             Job name: ${{github.job}}
