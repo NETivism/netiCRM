@@ -681,6 +681,8 @@ LIMIT 0, 100
 
       $command = 'drush neticrm-process-recurring --payment-processor=tappay --contribution-recur-id='.$dao->recur_id.'&';
       popen($command, 'w');
+      // wait for 0.5 second.
+      usleep(500000);
     }
 
     // Delete the sequence data of this process.
@@ -694,6 +696,7 @@ LIMIT 0, 100
   }
 
   public static function doCheckRecur($recurId, $time = NULL) {
+    CRM_Core_Error::debug_log_message("TapPay synchronize execute: ".$recurId);
     if (empty($time)) {
       $time = time();
     }
@@ -808,6 +811,7 @@ LIMIT 0, 100
     }
 
     CRM_Core_Error::debug_log_message($resultNote);
+    CRM_Core_Error::debug_log_message("TapPay synchronize finished: ".$recurId);
     return $resultNote;
   }
 
