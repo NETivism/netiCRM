@@ -73,11 +73,11 @@ jobs:
       - name: Notification
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: ${{secrets.NETIVISM_EMAIL_HOST}}
-          server_port: ${{secrets.NETIVISM_EMAIL_PORT}}
-          username: ${{secrets.NETIVISM_EMAIL_LOGIN}}
-          password: ${{secrets.NETIVISM_EMAIL_PASSWD}}
-          to: ${{secrets.NETIVISM_NOTIFICATION_TARGET}}
+          server_address: ${{env.NETIVISM_EMAIL_HOST}}
+          server_port: ${{env.NETIVISM_EMAIL_PORT}}
+          username: ${{env.NETIVISM_EMAIL_LOGIN}}
+          password: ${{env.NETIVISM_EMAIL_PASSWD}}
+          to: ${{env.NETIVISM_NOTIFICATION_TARGET}}
           from: Github Notification
           secure: false
           ignore_cert: true
