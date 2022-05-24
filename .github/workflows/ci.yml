@@ -70,8 +70,8 @@ jobs:
     needs: testing
     runs-on: ubuntu-latest
     steps:
-      - uses: dawidd6/action-send-mail@v3
       - name: Notification
+        uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{secrets.NETIVISM_EMAIL_HOST}}
           server_port: ${{secrets.NETIVISM_EMAIL_PORT}}
