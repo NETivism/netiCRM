@@ -48512,3 +48512,10 @@ msgstr ""
 
 msgid "Re-send Validation Email"
 msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid "If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution."
+msgstr ""
+
+msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution."
+msgstr ""

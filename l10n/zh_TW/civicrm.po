@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2022\n"
+"Last-Translator: 馮 佳今, 2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48859,3 +48859,14 @@ msgstr "您於 DNS 服務商更新了紀錄後，您可以隨時離開這個頁�
 
 msgid "Re-send Validation Email"
 msgstr "重新寄送驗證信"
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid ""
+"If you uncheck Email Payment Notification To User, System will not "
+"automatically generate receipt for contribution."
+msgstr "若取消勾選寄送付款成功通知，系統將不會為捐款自動產生收據。"
+
+msgid ""
+"If you check Email Payment Notification To User, System will automatically "
+"generate receipt for contribution."
+msgstr "若勾選寄送付款成功通知，系統將為捐款自動產生收據。"
