@@ -335,11 +335,10 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
       }
       else {
         $eventTitle = $params['event_title'];
-        $qParams = array();
         $dao = new CRM_Core_DAO();
-        $params['participant_role_id'] = $dao->singleValueQuery("SELECT default_role_id FROM civicrm_event WHERE title = '$eventTitle' ",
-          $qParams
-        );
+        $params['participant_role_id'] = $dao->singleValueQuery("SELECT default_role_id FROM civicrm_event WHERE title = %1 ", array(
+          1 => array($eventTitle, 'String'),
+        ));
       }
     }
     //date-Format part ends
