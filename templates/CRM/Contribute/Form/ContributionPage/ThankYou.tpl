@@ -154,9 +154,13 @@
      function showReceipt() {
         var checkbox = document.getElementsByName("is_email_receipt");
         if (checkbox[0].checked) {
+            cj(".notice").remove();
             document.getElementById("receiptDetails").style.display = "block";
+            showMessage();
         } else {
+            cj(".alter").remove();
             document.getElementById("receiptDetails").style.display = "none";
+            showMessage();
         }  
      } 
      function showSMS() {
@@ -169,7 +173,32 @@
             }
         }
      }
- {/literal} 
+    function showMessage() {
+        var isChecked = cj('#is_email_receipt:checked').length;
+        var noticeShow = cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt span.notice").length;
+        var altershow = cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt span.alter").length;
+        if (isChecked == 1) {
+            if (altershow != 0) {
+                cj(".alter").remove();
+            }
+            if (noticeShow == 0) {
+                cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt .description").after( "<span font class='notice'>{/literal}{ts}If you check Email Payment Notification To User, System will automatically generate receipt for contribution.{/ts}{literal}</span>" );
+            } else {
+                cj(".notice").remove();
+            }
+
+        } else {
+            if (noticeShow != 0) {
+                cj(".notice").remove();
+            }
+            if (altershow == 0) {
+                cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt .description").after( "<span class='alter' style='color:red'>{/literal}{ts}If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution.{/ts}{literal}</span>");
+            } else {
+                cj(".alter").remove();
+            }
+        }
+    }
+ {/literal}
 </script>
 
 {* This for token popup *}

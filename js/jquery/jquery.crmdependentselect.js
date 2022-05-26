@@ -4,10 +4,12 @@ $.fn.crmDependentSelect = function() {
     $(this).addClass("depended");
     $(".crm-container select[data-parent]").each(function(){
       $(this).addClass("depended");
-      var parentId = $(this).data('parent');
-      var $child = $(this);
+      var $child = $(this),
+          parentId = $(this).attr('data-parent'),
+          isParentCustom = $(this).attr('data-parent-custom');
+
       if (parentId) {
-        var parentId = 'custom_'+parentId;
+        parentId = isParentCustom != 0 ? 'custom_' + parentId : parentId;
         var $parent = $(".crm-container select[name^="+parentId+"]");
         $child.find('option:not(:checked)').hide();
         $child.find('option[value=""]').show();
@@ -21,4 +23,4 @@ $.fn.crmDependentSelect = function() {
     });
   });
 }
-})(jQuery); 
+})(jQuery);

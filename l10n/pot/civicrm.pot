@@ -15377,6 +15377,10 @@ msgid "A confirmation email has been scheduled to sent to %1."
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
+msgid "A confirmation email has been sent to %1."
+msgstr ""
+
+#: CRM/Event/Form/Participant.php
 msgid "Total Participant(s) added to event: %1."
 msgstr ""
 
@@ -48507,4 +48511,11 @@ msgid "After update your records on your DNS provider, you are safe to leave thi
 msgstr ""
 
 msgid "Re-send Validation Email"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid "If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution."
+msgstr ""
+
+msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution."
 msgstr ""

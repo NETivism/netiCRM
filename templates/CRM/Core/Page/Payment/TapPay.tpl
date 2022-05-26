@@ -90,7 +90,6 @@
   </div>
   {/if}
 </div>
-</div>
 <script src="https://js.tappaysdk.com/tpdirect/v5.1.0"></script>
 <script>{literal}
 cj(document).ready(function($){
