@@ -140,13 +140,51 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * Returns an array of the contacts in the given group.
    *
+   * @param int id group id
+   *
+   * @param string status One of Added, Removed, Pending. Empty for get all status. default 'Added'.
+   *
+   * @return array
    */
-  static function getGroupContacts($id) {
-    require_once 'api/v2/Contact.php';
-    $params = array('group' => array($id => 1),
-      'return.contactId' => 1,
+  static function getGroupContacts($id, $status = 'Added') {
+    $search = array(
+      'contact_is_deleted' => 0,
+      'group' => array($id => 1),
     );
-    return civicrm_contact_search($params);
+    if ($status !== 'Added') {
+      $search['group_contact_status'] = array($status => 1);
+    }
+    if (empty($status)) {
+      $groupContact = new CRM_Contact_DAO_GroupContact();
+      $fields = $groupContact->fields();
+      $statuses = explode(',', $fields['status']['enumValues']);
+      foreach($statuses as $status) {
+        $status = trim($status);
+        $search['group_contact_status'][$status] = 1;
+      }
+    }
+    $params = CRM_Contact_BAO_Query::convertFormValues($search);
+    $smartGroupCache = TRUE;
+    $returnProperties = array('contact_id' => 1);
+    list($contacts, $options) = CRM_Contact_BAO_Query::apiQuery(
+      $params,
+      $returnProperties,
+      NULL,
+      NULL,
+      0,
+      0,
+      $smartGroupCache
+    );
+    return $contacts;
+  }
+
+  /**
+   * Returns count of contacts in the given group.
+   *
+   * @return int
+   */
+  static function getGroupContactsCount($id, $status = 'Added') {
+    return count(self::getGroupContacts($id, $status));
   }
 
   /**
@@ -159,41 +197,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    * @access public
    */
   static function memberCount($id, $status = 'Added', $countChildGroups = FALSE) {
-    require_once 'CRM/Contact/DAO/GroupContact.php';
-    $groupContact = new CRM_Contact_DAO_GroupContact();
-    $groupIds = array($id);
-    if ($countChildGroups) {
-      require_once 'CRM/Contact/BAO/GroupNesting.php';
-      $groupIds = CRM_Contact_BAO_GroupNesting::getDescendentGroupIds($groupIds);
-    }
-    $count = 0;
-
-    $contacts = self::getGroupContacts($id);
-
-    foreach ($groupIds as $groupId) {
-
-      $groupContacts = self::getGroupContacts($groupId);
-      foreach ($groupContacts as $gcontact) {
-        if ($groupId != $id) {
-          // Loop through main group's contacts
-          // and subtract from the count for each contact which
-          // matches one in the present group, if it is not the
-          // main group
-          foreach ($contacts as $contact) {
-            if ($contact['contact_id'] == $gcontact['contact_id']) {
-              $count--;
-            }
-          }
-        }
-      }
-      $groupContact->group_id = $groupId;
-      if (isset($status)) {
-        $groupContact->status = $status;
-      }
-      $groupContact->_query['condition'] = 'WHERE contact_id NOT IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1)';
-      $count += $groupContact->count();
-    }
-    return $count;
+    return self::getGroupContactsCount($id, $status);
   }
 
   /**
