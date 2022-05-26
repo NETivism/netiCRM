@@ -197,7 +197,22 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    * @access public
    */
   static function memberCount($id, $status = 'Added', $countChildGroups = FALSE) {
-    return self::getGroupContactsCount($id, $status);
+    if (!$countChildGroups) {
+      if (empty($status)) {
+        return CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_group_contact gc INNER JOIN civicrm_contact c on gc.contact_id = c.id WHERE c.is_deleted = 0 AND gc.group_id = %1", array(
+          1 => array($id, 'Integer')
+        ));
+      }
+      else {
+        return CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_group_contact gc INNER JOIN civicrm_contact c on gc.contact_id = c.id WHERE c.is_deleted = 0 AND gc.status = %1 AND gc.group_id = %2", array(
+          1 => array($status, 'String'),
+          2 => array($id, 'Integer')
+        ));
+      }
+    }
+    else {
+      return self::getGroupContactsCount($id, $status);
+    }
   }
 
   /**
