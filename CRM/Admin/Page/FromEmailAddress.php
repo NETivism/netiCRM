@@ -89,14 +89,16 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
     self::$_template->assign('mode', $this->_mode);
 
     // handling edit form here
-    if ($this->_action & (CRM_Core_Action::VIEW | CRM_Core_Action::ADD | CRM_Core_Action::UPDATE | CRM_Core_Action::DELETE)) {
+    if ($this->_action & (CRM_Core_Action::VIEW | CRM_Core_Action::ADD | CRM_Core_Action::UPDATE)) {
       $this->edit($this->_action, $id);
       $form = $this->_controller->getCurrentPage();
       self::$_template->assign('tplFile', $form->getHookedTemplateFileName());
     }
     // handling delete form here
     elseif ($this->_action & CRM_Core_Action::DELETE) {
-      $this->delete($this->_action, $id);
+      $this->delete($id);
+      $form = $this->_controller->getCurrentPage();
+      self::$_template->assign('tplFile', $form->getHookedTemplateFileName());
     }
     // handling email confirmation link
     elseif ($this->_action & CRM_Core_Action::RENEW) {
@@ -165,7 +167,17 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
   }
 
   function delete($id) {
-
+    $this->_controller = new CRM_Core_Controller_Simple('CRM_Admin_Form_FromEmailAddress', $this->editName(), $this->_action, FALSE);
+    // set the userContext stack
+    $session = CRM_Core_Session::singleton();
+    $session->pushUserContext(CRM_Utils_System::url($this->userContext($this->_action), $this->userContextParams($this->_action)));
+    if ($id !== NULL) {
+      $this->_controller->set('id', $id);
+    }
+    $this->_controller->set('BAOName', $this->getBAOName());
+    $this->_controller->setEmbedded(TRUE);
+    $this->_controller->process();
+    $this->_controller->run();
   }
 
   /**

@@ -2,7 +2,7 @@
 class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   /**
    * Validation bit indicator
-   * 
+   *
    * This will save to OptionValue.filter
    *
    * @var const
@@ -41,9 +41,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    */
   function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
-    if ($this->_action & CRM_Core_Action::UPDATE) {
-      $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
-    }
+    $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
     if ($this->_id) {
       $this->_values = self::loadEmailAddress($this->_id);
     }
@@ -52,11 +50,39 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
         'is_active' => 0,
       );
     }
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      return;
+    }
 		$this->_defaultFrom = trim(CRM_Mailing_BAO_Mailing::defaultFromMail());
   }
 
+  function buildQuickForm() {
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      $this->assign('email', $this->_values['email']);
+      $this->addButtons(array(
+          array(
+            'type' => 'next',
+            'name' => ts('Delete Mail Settings'),
+            'isDefault' => TRUE,
+          ),
+          array(
+            'type' => 'cancel',
+            'name' => ts('Cancel'),
+          ),
+        )
+      );
+    }
+  }
+
+  function postProcess() {
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      CRM_Core_BAO_OptionValue::del($this->_id);
+      CRM_Core_Session::setStatus(ts('Selected option value has been deleted.'));
+    }
+  }
+
   public function saveValues() {
-    $saved = self::saveEmailAddress($this->_action, $this->_id, $this->_values);    
+    $saved = self::saveEmailAddress($this->_action, $this->_id, $this->_values);
     if ($this->_action & CRM_Core_Action::ADD && !empty($saved->id)) {
       $this->_id = $saved->id;
       $this->set('id', $this->_id);
@@ -81,8 +107,8 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   }
 
   /**
-   * Save email address to option value 
-   * 
+   * Save email address to option value
+   *
    * Called by children form pages.
    *
    * @return void
@@ -98,7 +124,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
 
   /**
    * Send Validation Email
-   * 
+   *
    * Include one-time validation link to verify owner of email address.
    *
    * @return void

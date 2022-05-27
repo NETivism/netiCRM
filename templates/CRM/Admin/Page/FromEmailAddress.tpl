@@ -1,16 +1,17 @@
+{if $action ne 1 and $action ne 2 and $action ne 8}
 <div id="help">
   {ts}By default, CiviCRM uses the primary email address of the logged in user as the FROM address when sending emails to contacts. However, you can use this page to define one or more general Email Addresses that can be selected as an alternative. EXAMPLE: <em>"Client Services" &lt;clientservices@example.org&gt;</em>{/ts}
 </div>
+{/if}
 
 <div class="crm-content-block crm-block">
-  {if $action ne 1 and $action ne 2}
+  {if $action ne 1 and $action ne 2 and $action ne 8}
   <div class="action-link-button">
     <a href="{crmURL q='action=add&reset=1'}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add{/ts}</span></a>
   </div>
   {/if}
-  {if $rows}
+  {if $rows and $action ne 1 and $action ne 2 and $action ne 8}
   {strip}
-  {* handle enable/disable actions*} 
   {include file="CRM/common/jsortable.tpl"}
   <table id="options" class="display">
     <thead>
@@ -60,7 +61,7 @@
   {/strip}
   {/if}
 
-  {if $action ne 1 and $action ne 2}
+  {if $action ne 1 and $action ne 2 and $action ne 8}
   <div class="action-link-button">
     <a href="{crmURL q='action=add&reset=1'}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add{/ts}</span></a>
   </div>
