@@ -41,7 +41,9 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    */
   function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
-    $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
+    if ($this->_action & CRM_Core_Action::DELETE || $this->_action & CRM_Core_Action::UPDATE) {
+      $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
+    }
     if ($this->_id) {
       $this->_values = self::loadEmailAddress($this->_id);
     }
@@ -111,7 +113,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    *
    * Called by children form pages.
    *
-   * @return void
+   * @return object
    */
   public static function saveEmailAddress($action, $id, $params) {
     $groupParams = array('name' => ('from_email_address'));
@@ -205,6 +207,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
             1 => ts('Validation Success'),
             2 => $email,
           )));
+          CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/from_email_address', 'reset=1&action=update&id='.$id));
           return;
         }
         else {
