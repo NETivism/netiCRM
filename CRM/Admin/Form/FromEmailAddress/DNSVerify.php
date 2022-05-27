@@ -131,12 +131,8 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       );
     }
     else {
+      $this->addButton('refresh', ts('Refresh'));
       $this->addButtons(array(
-          array(
-            'type' => 'refresh',
-            'name' => ts('Refresh'),
-            'isDefault' => TRUE,
-          ),
           array(
             'type' => 'cancel',
             'name' => ts('Cancel'),
