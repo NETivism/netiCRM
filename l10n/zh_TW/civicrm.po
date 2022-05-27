@@ -48876,3 +48876,6 @@ msgstr "驗證成功"
 
 msgid "Invalid email address when sending validation email."
 msgstr "因為Email位址錯誤，無法寄送驗證信。"
+
+msgid "Are you sure you want to delete the selected from email address %1 ?"
+msgstr "確認要刪除選擇的Email寄件者 %1 嗎？"
