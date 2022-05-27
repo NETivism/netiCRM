@@ -48519,3 +48519,9 @@ msgstr ""
 
 msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution."
 msgstr ""
+
+msgid "Validation Success"
+msgstr ""
+
+msgid "Invalid email address when sending validation email."
+msgstr ""

@@ -205,7 +205,12 @@ class CRM_Utils_File {
       return FALSE;
     }
 
-    $contents = iconv($legacyEncoding, 'UTF-8', $contents);
+    if (function_exists('mb_convert_encoding')) {
+      $contents = mb_convert_encoding($contents, 'UTF-8', $legacyEncoding);
+    }
+    else {
+      $contents = iconv($legacyEncoding, 'UTF-8', $contents);
+    }
     if ($contents === FALSE) {
       return FALSE;
     }

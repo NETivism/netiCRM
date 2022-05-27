@@ -258,6 +258,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-container .nme-block .nme-text {
   font-size: 1rem;
 }
+.nme-block[data-type="paragraph"][data-parent-type="rc-float"]:not(.is-edit):hover > .nme-block-inner > .nme-block-content {
+  padding-top: 47px;
+}
 .nme-setting-panels {
   position: fixed;
   z-index: 99;
@@ -526,10 +529,6 @@ ul.nme-setting-panels-tabs li a.is-active {
 #nme-mail .nmeb td {
   padding: 0;
 }
-.nmeb .nmeb-content .nme-elem {
-  margin: 0;
-  padding: 0;
-}
 
 /* nme item */
 .nme-item {
@@ -566,6 +565,20 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nmeb-paragraph .nme-elem p,
 .nmee-paragraph .ql-editor p {
   font-size: 16px;
+}
+
+/* nme element */
+.nmeb .nmeb-content .nme-elem {
+  --nmee-placeholder: attr(data-placeholder);
+  margin: 0;
+  padding: 0;
+}
+.nme-elem.is-text-empty::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  content: var(--nmee-placeholder);
 }
 
 /* nme edit */
@@ -949,7 +962,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   background: white;
 }
 
-/** Particular: 360 **/
+/** Particular: 1200 **/
 @media screen and (min-width: 1200px) {
   .nme-preview-popup {
     max-width: 1000px;
