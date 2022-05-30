@@ -484,7 +484,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $contribution['contribution_status_id'] = 3;
         $contribution['cancel_date'] = date('Y-m-d H:i:s');
         $contribution['total_amount'] = 0;
-        $contribution['cancel_reason'] = ts('This records is only used to make authorization.');
+        $contribution['cancel_reason'] = ts('This record is only used to make authorization.');
         $contributionDAO = new CRM_Contribute_DAO_Contribution();
         $contributionDAO->copyValues($contribution);
         $contributionDAO->save();
