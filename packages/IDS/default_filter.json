@@ -735,7 +735,6 @@
         "description":"Detects common mail header injections",
         "tags":{
           "tag":[
-            "id",
             "spam"
           ]
         },

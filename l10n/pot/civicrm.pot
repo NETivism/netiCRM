@@ -48519,3 +48519,16 @@ msgstr ""
 
 msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution."
 msgstr ""
+
+msgid "Validation Success"
+msgstr ""
+
+msgid "Invalid email address when sending validation email."
+msgstr ""
+
+msgid "Are you sure you want to delete the selected from email address %1 ?"
+msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "This record is only used to make authorization."
+msgstr ""

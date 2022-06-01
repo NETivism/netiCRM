@@ -1109,12 +1109,6 @@ body .crm-container-md div[class*="crm-section state_province-"] input[name*="po
     display: block;
 }
 
-form#Confirm #help, 
-form#ThankYou #help{
-  display: none;
-}
-
-
 .crm-submit-buttons .crm-button {
   width: 100%;
   margin: 0 5px;
