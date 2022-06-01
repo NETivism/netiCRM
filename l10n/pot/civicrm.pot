@@ -48514,10 +48514,10 @@ msgid "Re-send Validation Email"
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
-msgid "If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution."
+msgid "If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution and would not have Receipt Date and Receipt ID, administrator needs generate the receipt by himself."
 msgstr ""
 
-msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution."
+msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution and mark Receipt Date as Payments Date after the payment is completed."
 msgstr ""
 
 msgid "Validation Success"
