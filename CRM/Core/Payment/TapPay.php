@@ -1162,7 +1162,7 @@ LIMIT 0, 100
    * @return string The message
    */
   public static function getSyncNowMessage($contributionId, $recurId = NULL) {
-    return ts("Are you sure you want to sync all expiry dates of this token?", $recurId);
+    return ts("Are you sure you want to sync all expiry dates of this token?", array(1 => $recurId));
   }
 
   /**

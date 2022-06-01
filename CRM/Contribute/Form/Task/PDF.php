@@ -61,7 +61,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-
     if ($id) {
       $this->_contributionIds = array($id);
       $this->_componentClause = " civicrm_contribution.id IN ( $id ) ";
@@ -117,8 +116,28 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if (!empty($activityTypeId)) {
+
       $this->_enableEmailReceipt = TRUE;
       CRM_Utils_System::setTitle(ts('Print or Email Contribution Receipts'));
+    }
+    // Check contact email
+    $emailIsEmpty = FALSE;
+    $contactId = intval($this->_contactIds);
+    $emptyEmail = array();
+    foreach ($this->_contactIds as $contactId) {
+      $contributorDisplayName = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactId);
+      $result = CRM_Core_BAO_Email::allEmails($contactId);
+      $array = array_values($result);
+      $email = $array[0]['email'];
+      if (empty($email)) {
+        $emailIsEmpty = TRUE;
+        array_push($emptyEmail,$contributorDisplayName[0]);
+      }
+    }
+    $emptyEmailList = implode(",", $emptyEmail);
+    $actionName = $this->controller->getActionName($this->_name);
+    if ($emailIsEmpty && $actionName[1] == 'display') {
+      $this->assign('emptyEmailList', $emptyEmailList);
     }
   }
 

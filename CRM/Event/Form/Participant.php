@@ -311,7 +311,6 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
 
     if ($this->_showFeeBlock) {
       $this->assign('showFeeBlock', TRUE);
-      $this->assign('paid', TRUE);
       return CRM_Event_Form_EventFees::preProcess($this);
     }
 
@@ -1761,7 +1760,7 @@ cj(function() {
     elseif (($this->_action & CRM_Core_Action::UPDATE)) {
       $statusMsg = ts('Event registration information for %1 has been updated.', array(1 => $this->_contributorDisplayName));
       if (CRM_Utils_Array::value('send_receipt', $params) && count($sent)) {
-        $statusMsg .= ' ' . ts('A confirmation email has been sent to %1', array(1 => $this->_contributorEmail));
+        $statusMsg .= ' ' . ts('A confirmation email has been sent to %1.', array(1 => $this->_contributorEmail));
       }
 
       if ($updateStatusMsg) {

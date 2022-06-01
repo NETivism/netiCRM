@@ -15,6 +15,8 @@ $(function(){
 (function ($) {
     "use strict";
 
+    const TEXT_EMPTY_CLASS = 'is-text-empty';
+
     var stripHTML = function (html) {
        var tmp = document.createElement("DIV");
        tmp.innerHTML = html;
@@ -203,13 +205,21 @@ $(function(){
 
         // Call when editing is complete (3）
         value2html: function(value, element) {
-            // Get the HTML from the editor content
-            var html = this.editor.root.innerHTML;
+            var html = '',
+                text = '',
+                blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
-            // Store HTML in xeditable
-            var blockID = this.options.scope.attributes['data-id']['nodeValue'];
+            // Get the HTML of this block from xeditable
             if (blockID) {
-                this.xeditable.html[blockID] = html;
+                html = this.xeditable.html[blockID];
+                text = stripHTML(html);
+            }
+
+            if (text.trim() === '' && !$(element).hasClass(TEXT_EMPTY_CLASS)) {
+                $(element).addClass(TEXT_EMPTY_CLASS);
+            }
+            else {
+                $(element).removeClass(TEXT_EMPTY_CLASS);
             }
 
             // Output HTML to x-editable
@@ -251,9 +261,11 @@ $(function(){
             var blockID = this.options.scope.attributes['data-id']['nodeValue'];
 
             if (blockID) {
-                // Get the content of the editor and store it in xeditable
+                var html = this.editor.root.innerHTML;
+
+                // Save data to xeditable
                 this.xeditable.delta[blockID] = this.editor.getContents();
-                this.xeditable.html[blockID] = this.editor.root.innerHTML;
+                this.xeditable.html[blockID] = html;
 
                 // HTML should be escape, otherwise the 'params' of the event of the x-editable will not be obtained
                 return this.htmlEscape(this.xeditable.html[blockID]);

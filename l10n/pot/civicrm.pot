@@ -15369,11 +15369,11 @@ msgid "Event registration information for %1 has been updated."
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
-msgid "A confirmation email has been sent to %1"
+msgid "Event registration for %1 has been added."
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
-msgid "Event registration for %1 has been added."
+msgid "A confirmation email has been scheduled to sent to %1."
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
@@ -15391,7 +15391,7 @@ msgid ""
 msgstr ""
 
 #: CRM/Event/Form/Participant.php
-msgid "A confirmation email has been sent to ALL participants"
+msgid "A confirmation email has been scheduled to sent to ALL participants"
 msgstr ""
 
 #: CRM/Event/Form/ParticipantView.php
@@ -48417,4 +48417,118 @@ msgid "The contribution with transaction ID: %1 can't find from Newebpay API."
 msgstr ""
 
 msgid "Are you sure you want to sync the recurring status and check the contributions?"
+msgstr ""
+
+msgid "You have another running dedupe job. For system performance concern, we can only allow one dedupe job concurrently. Please try again later."
+msgstr ""
+
+msgid "Form processing. Do not reload page or you will loss your progress."
+msgstr ""
+
+# CRM/Contribute/BAO/Query.php
+# templates/CRM/Contribute/Form/Search/Common.tpl
+msgid "- select product -"
+msgstr ""
+
+# templates/CRM/Contact/Form/Task/PDF.tpl
+msgid "Doesn't have email. Would not generate receipt and send email."
+msgstr ""
+
+# CRM/Core/Payment/SPGATEWAY.php
+msgid "Module %1 doesn't exists."
+msgstr ""
+
+msgid "Sync single contribution function doesn't exist."
+msgstr ""
+
+msgid "Synchronizing to %1 server success."
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty."
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Contribution Notification Email"
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Event Notification Email"
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Membership Notification Email"
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "PCP Notification Email"
+msgstr ""
+
+#: CRM/Activity/BAO/Activity.php
+msgid "Mailing Notification Email"
+msgstr ""
+
+msgid "Yes, but not verified."
+msgstr ""
+
+msgid "%1 Verified"
+msgstr ""
+
+msgid "Verify %1"
+msgstr ""
+
+msgid "Your email address '%1' is not verified."
+msgstr ""
+
+msgid "In order to verify you are the owner of this email address. Please click confirmation link we sent of your email."
+msgstr ""
+
+msgid "You can't change your email address after verified the ownership. However, you can create another from email address anytime."
+msgstr ""
+
+msgid "%1 for your email %2 is not verified."
+msgstr ""
+
+msgid "Learn how to config settings"
+msgstr ""
+
+msgid "Your %1 validation failed."
+msgstr ""
+
+msgid "Email Validation - Confirm you are the email owner by click link"
+msgstr ""
+
+msgid "You receive this email because you were trying to add new from email address in %1."
+msgstr ""
+
+msgid "To finish email validation, please click the confirmation link below:"
+msgstr ""
+
+msgid "Your domain name records may need up to 48 hours to update base on what DNS provider you use."
+msgstr ""
+
+msgid "After update your records on your DNS provider, you are safe to leave this page and procceed this verify later."
+msgstr ""
+
+msgid "Re-send Validation Email"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid "If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution."
+msgstr ""
+
+msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution."
+msgstr ""
+
+msgid "Validation Success"
+msgstr ""
+
+msgid "Invalid email address when sending validation email."
+msgstr ""
+
+msgid "Are you sure you want to delete the selected from email address %1 ?"
+msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "This record is only used to make authorization."
 msgstr ""
