@@ -417,6 +417,7 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
   }
   foreach ($params as $field => $newparams) {
     if ((is_array($newparams) || $newparams === 1) && $field <> 'api.has_parent' && substr($field, 0, 3) == 'api') {
+      // This param is a chain call, e.g. api.<entity>.<action>
 
       // 'api.participant.delete' => 1 is a valid options - handle 1 instead of an array
       if ($newparams === 1) {
@@ -430,48 +431,61 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
       $subAPI = explode($separator, $field);
 
       $subaction = empty($subAPI[2]) ? $action : $subAPI[2];
-      $subParams = array();
-      $subEntity = $subAPI[1];
+
+      /**
+       * @var array of parameters that will be applied to every chained request.
+       */
+      $enforcedSubParams = array();
+      /**
+       * @var array of parameters that provide defaults to every chained request, but which may be overridden by parameters in the chained request.
+       */
+      $defaultSubParams = array();
+
+      $subEntity = _civicrm_api_get_entity_name_from_camel($subAPI[1]);
 
       foreach ($result['values'] as $idIndex => $parentAPIValues) {
 
-        if (strtolower($subEntity) != 'contact') {
+        if ($subEntity != 'contact') {
           //contact spits the dummy at activity_id so what else won't it like?
           //set entity_id & entity table based on the parent's id & entity. e.g for something like
           //note if the parent call is contact 'entity_table' will be set to 'contact' & 'id' to the contact id from
           //the parent call.
           //in this case 'contact_id' will also be set to the parent's id
-          $subParams["entity_id"] = $parentAPIValues['id'];
-          $subParams['entity_table'] = 'civicrm_' . _civicrm_api_get_entity_name_from_camel($entity);
-          $subParams[strtolower($entity) . "_id"] = $parentAPIValues['id'];
+          $defaultSubParams["entity_id"] = $parentAPIValues['id'];
+          $defaultSubParams['entity_table'] = 'civicrm_'.$entity;
+          $defaultSubParams[$entity."_id"] = $parentAPIValues['id'];
         }
-        if (strtolower($entity) != 'contact' && CRM_Utils_Array::value(strtolower($subEntity . "_id"), $parentAPIValues)) {
+        if ($entity != 'contact' && CRM_Utils_Array::value($subEntity . "_id", $parentAPIValues)) {
           //e.g. if event_id is in the values returned & subentity is event then pass in event_id as 'id'
           //don't do this for contact as it does some wierd things like returning primary email &
           //thus limiting the ability to chain email
           //TODO - this might need the camel treatment
-          $subParams['id'] = $parentAPIValues[$subEntity . "_id"];
+          $defaultSubParams['id'] = $parentAPIValues[$subEntity . "_id"];
         }
 
         if (CRM_Utils_Array::value('entity_table', $result['values'][$idIndex]) == $subEntity) {
-          $subParams['id'] = $result['values'][$idIndex]['entity_id'];
+          $defaultSubParams['id'] = $result['values'][$idIndex]['entity_id'];
         }
         // if we are dealing with the same entity pass 'id' through (useful for get + delete for example)
         if (strtolower($entity) == strtolower($subEntity)) {
-          $subParams['id'] = $result['values'][$idIndex]['id'];
+          $defaultSubParams['id'] = $result['values'][$idIndex]['id'];
         }
 
 
-        $subParams['version'] = $version;
+        $enforcedSubParams['version'] = $version;
         if(!empty($params['check_permissions'])){
-          $subParams['check_permissions'] = $params['check_permissions'];
+          $enforcedSubParams['check_permissions'] = $params['check_permissions'];
         }
-        $subParams['sequential'] = 1;
-        $subParams['api.has_parent'] = 1;
+        else {
+          $enforcedSubParams['check_permissions'] = NULL;
+        }
+        $enforcedSubParams['sequential'] = 1;
+        $enforcedSubParams['api.has_parent'] = 1;
         if (array_key_exists(0, $newparams)) {
           // it is a numerically indexed array - ie. multiple creates
           foreach ($newparams as $entity => $entityparams) {
-            $subParams = array_merge($subParams, $entityparams);
+            // Defaults, overridden by request params, overridden by enforced params.
+            $subParams = array_merge($defaultSubParams, $entityparams, $enforcedSubParams);
             _civicrm_api_replace_variables($subAPI[1], $subaction, $subParams, $result['values'][$idIndex], $separator);
             $result['values'][$result['id']][$field][] = civicrm_api($subEntity, $subaction, $subParams);
             if ($result['is_error'] === 1) {
@@ -480,8 +494,8 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
           }
         }
         else {
-
-          $subParams = array_merge($subParams, $newparams);
+          // Defaults, overridden by request params, overridden by enforced params.
+          $subParams = array_merge($defaultSubParams, $newparams, $enforcedSubParams);
           _civicrm_api_replace_variables($subAPI[1], $subaction, $subParams, $result['values'][$idIndex], $separator);
           $result['values'][$idIndex][$field] = civicrm_api($subEntity, $subaction, $subParams);
           if (!empty($result['is_error'])) {
