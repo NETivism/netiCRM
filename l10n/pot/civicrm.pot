@@ -48532,3 +48532,7 @@ msgstr ""
 #: CRM/Core/Payment/TapPay.php
 msgid "This record is only used to make authorization."
 msgstr ""
+
+#: CRM/Admin/Form/PaymentProcessor.php
+msgid "Some recurring contributions that belong to this Payment Processor are in progress, so the fields are freeze."
+msgstr ""
