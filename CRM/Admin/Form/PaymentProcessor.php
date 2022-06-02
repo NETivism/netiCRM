@@ -46,6 +46,10 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
   protected $_fields = NULL;
 
+  protected $_isFreezed = NULL;
+
+  protected $_isTestFreezed = NULL;
+  
   protected $_ppDAO;
   function preProcess() {
     parent::preProcess();
@@ -156,6 +160,20 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       }
     }
 
+    if ($this->_id) {
+      $haveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND is_test = 0 AND contribution_status_id = 5", array( 1 => array( $this->_id, 'Positive')));
+      if ($haveActiveRecur) {
+        $this->_isFreezed = TRUE;
+      }
+      $haveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND is_test = 1 AND contribution_status_id = 5", array( 1 => array( $this->_id+1 , 'Positive')));
+      if ($haveActiveRecur) {
+        $this->_isTestFreezed = TRUE;
+      }
+    }
+    if ($this->_isFreezed || $this->_isTestFreezed) {
+      CRM_Core_Session::setStatus(ts('Some recurring contributions that belong to this Payment Processor are in progress, so the fields are freeze.'), TRUE, 'warning');
+    }
+
   }
 
   /**
@@ -203,6 +221,18 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       if (empty($field['label'])) {
         continue;
       }
+      if ($this->_isFreezed) {
+        $fieldAttributes = $attributes[$field['name']] + array('readonly' => 'readonly');
+      }
+      else {
+        $fieldAttributes = $attributes[$field['name']];
+      }
+      if ($this->_isTestFreezed) {
+        $testFieldAttributes = $attributes[$field['name']] + array('readonly' => 'readonly');
+      }
+      else {
+        $testFieldAttributes = $attributes[$field['name']];
+      }
       if (!empty($field['type'])) {
 
         switch($field['type']) {
@@ -211,14 +241,14 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
             $this->addSelect('test_'.$field['name'], $field['label'], $field['options']);
             break;
           case 'text':
-            $this->add('text', $field['name'], $field['label'], $attributes[$field['name']]);
-            $this->add('text', "test_{$field['name']}", $field['label'], $attributes[$field['name']]);
+            $this->add('text', $field['name'], $field['label'], $fieldAttributes);
+            $this->add('text', "test_{$field['name']}", $field['label'], $testFieldAttributes);
             break;
         }
       }
       else {
-        $this->add('text', $field['name'], $field['label'], $attributes[$field['name']]);
-        $this->add('text', "test_{$field['name']}", $field['label'], $attributes[$field['name']]);
+        $this->add('text', $field['name'], $field['label'], $fieldAttributes);
+        $this->add('text', "test_{$field['name']}", $field['label'], $testFieldAttributes);
       }
       if (CRM_Utils_Array::value('rule', $field)) {
         $this->addRule($field['name'], $field['msg'], $field['rule']);
