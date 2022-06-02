@@ -48863,13 +48863,15 @@ msgstr "重新寄送驗證信"
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
 "If you uncheck Email Payment Notification To User, System will not "
-"automatically generate receipt for contribution."
-msgstr "若取消勾選寄送付款成功通知，系統將不會為捐款自動產生收據。"
+"automatically generate receipt for contribution and would not have Receipt "
+"Date and Receipt ID, administrator needs generate the receipt by himself."
+msgstr "若取消勾選寄送付款成功通知，系統將不會為捐款自動產生收據也不會有收據日期、收據編號，管理員需要後續自行開立收據。"
 
 msgid ""
 "If you check Email Payment Notification To User, System will automatically "
-"generate receipt for contribution."
-msgstr "若勾選寄送付款成功通知，系統將為捐款自動產生收據。"
+"generate receipt for contribution and mark Receipt Date as Payments Date "
+"after the payment is completed."
+msgstr "若勾選寄送付款成功通知，系統將為捐款自動產生收據，並在付款完成後把收據日期標示為付款日期。"
 
 msgid "Validation Success"
 msgstr "驗證成功"
@@ -48883,3 +48885,9 @@ msgstr "確認要刪除選擇的Email寄件者 %1 嗎？"
 #: CRM/Core/Payment/TapPay.php
 msgid "This record is only used to make authorization."
 msgstr "本捐款紀錄僅用於完成授權動作，未扣任何款項。"
+
+#: CRM/Admin/Form/PaymentProcessor.php
+msgid ""
+"Some recurring contributions that belong to this Payment Processor are in "
+"progress, so the fields are freeze."
+msgstr "此金流有正在進行中的定期捐款，因此欄位將鎖上，不可進行修改，以免影響進行中的定期捐款。"
