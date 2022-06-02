@@ -4,6 +4,10 @@ type: docker
 name: default
 
 steps:
+- name: submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive
 - name: neticrm ci php 7
   image: netivism/neticrm-ci:drone-php7
   environment:
