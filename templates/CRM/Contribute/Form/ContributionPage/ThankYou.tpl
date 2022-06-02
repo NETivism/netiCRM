@@ -179,7 +179,7 @@
         var isAlterShow = cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt span.alter").length;
         if (isChecked == 1) {
             if (isNoticeShow == 0) {
-                cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt .description").after( "<span class='notice'>{/literal}{ts}If you check Email Payment Notification To User, System will automatically generate receipt for contribution.{/ts}{literal}</span>" );
+                cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt .description").after( "<span class='notice'>{/literal}{ts}If you check Email Payment Notification To User, System will automatically generate receipt for contribution and mark Receipt Date as Payments Date after the payment is completed.{/ts}{literal}</span>" );
             } else {
                 cj(".notice").remove();
             }
@@ -188,7 +188,7 @@
             }
         } else {
             if (isAlterShow == 0) {
-                cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt .description").after( "<span class='alter' style='color:red'>{/literal}{ts}If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution.{/ts}{literal}</span>");
+                cj(".crm-contribution-contributionpage-thankyou-form-block-is_email_receipt .description").after( "<span class='alter' style='color:red'>{/literal}{ts}If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution and would not have Receipt Date and Receipt ID, administrator needs generate the receipt by himself.{/ts}{literal}</span>");
             } else {
                 cj(".alter").remove();
             }
