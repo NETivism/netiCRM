@@ -1,4 +1,3 @@
-pipeline:
 ---
 kind: pipeline
 type: docker
@@ -78,6 +77,8 @@ steps:
       from_secret: email_from_name
     host:
       from_secret: email_host
+    port:
+      from_secret: email_port
     username:
       from_secret: email_username
     password:
