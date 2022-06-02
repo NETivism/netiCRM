@@ -177,6 +177,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
     $button = substr($this->controller->getButtonName(), -4);
+    $additionalParticipantNum = property_exists($this, '_attributes') && isset($this->_attributes['name']) ? (int) str_replace('Participant_', '', $this->_attributes['name']) : 0;
+    $currentParticipantNum = $additionalParticipantNum + 1;
 
     $this->add('hidden', 'scriptFee', NULL);
     $this->add('hidden', 'scriptArray', NULL);
@@ -359,7 +361,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
         );
         if ($includeSkipButton) {
           $buttons = array_merge($buttons, array(array('type' => 'next',
-                'name' => ts('Skip Participant >>|'),
+                'name' => ts('Skip participant %1 and continue to register >>|', array(1 => $currentParticipantNum)),
                 'subName' => 'skip',
                 'js' => $js,
               ),
@@ -661,6 +663,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
         'title' => "Register Additional Participant {$i}",
       );
     }
+
     return $details;
   }
 
