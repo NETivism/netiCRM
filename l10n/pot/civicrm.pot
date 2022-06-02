@@ -48536,3 +48536,7 @@ msgstr ""
 #: CRM/Admin/Form/PaymentProcessor.php
 msgid "Some recurring contributions that belong to this Payment Processor are in progress, so the fields are freeze."
 msgstr ""
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Skip participant %1 and continue to register >>|"
+msgstr ""
