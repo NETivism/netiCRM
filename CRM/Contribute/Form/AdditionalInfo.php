@@ -340,8 +340,10 @@ class CRM_Contribute_Form_AdditionalInfo {
    */
   function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     if (!empty($params['is_attach_receipt'])) {
+      $config = CRM_Core_Config::singleton();
+      $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
-      $receiptTask->makeReceipt($params['contribution_id'], 'copy_only', TRUE);
+      $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
       $pdfFilePath = $receiptTask->makePDF(False);
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
       $pdfParams =  array(
