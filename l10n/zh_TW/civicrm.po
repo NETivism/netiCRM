@@ -48895,3 +48895,7 @@ msgstr "此金流有正在進行中的定期捐款，因此欄位將鎖上，不
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "Skip participant %1 and continue to register >>|"
 msgstr "捨棄第 %1 位參加者，並繼續完成報名 >>|"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Skipped Participant(s): %1"
+msgstr "已捨棄的報名人數 - %1位"

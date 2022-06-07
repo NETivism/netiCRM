@@ -48540,3 +48540,7 @@ msgstr ""
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "Skip participant %1 and continue to register >>|"
 msgstr ""
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Skipped Participant(s): %1"
+msgstr ""

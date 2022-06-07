@@ -79,7 +79,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     $participantTot = $this->_params[0]['additional_participants'] + 1;
     $skipCount = count(array_keys($this->_params, "skip"));
     if ($skipCount) {
-      $this->assign('skipCount', $skipCount);
+      $skipCountMessage = ts('Skipped Participant(s): %1', array(1 => $skipCount));
+      $this->assign('skipCountMessage', $skipCountMessage);
     }
     CRM_Utils_System::setTitle(ts('Register Participant %1 of %2', array(1 => $participantCnt, 2 => $participantTot)));
 
