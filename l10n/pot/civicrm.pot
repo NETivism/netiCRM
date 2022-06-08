@@ -48514,10 +48514,10 @@ msgid "Re-send Validation Email"
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
-msgid "If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution."
+msgid "If you uncheck Email Payment Notification To User, System will not automatically generate receipt for contribution and would not have Receipt Date and Receipt ID, administrator needs generate the receipt by himself."
 msgstr ""
 
-msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution."
+msgid "If you check Email Payment Notification To User, System will automatically generate receipt for contribution and mark Receipt Date as Payments Date after the payment is completed."
 msgstr ""
 
 msgid "Validation Success"
@@ -48531,4 +48531,16 @@ msgstr ""
 
 #: CRM/Core/Payment/TapPay.php
 msgid "This record is only used to make authorization."
+msgstr ""
+
+#: CRM/Admin/Form/PaymentProcessor.php
+msgid "Some recurring contributions that belong to this Payment Processor are in progress, so the fields are freeze."
+msgstr ""
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Skip participant %1 and continue to register >>|"
+msgstr ""
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Skipped Participant(s): %1"
 msgstr ""
