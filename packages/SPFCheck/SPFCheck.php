@@ -193,7 +193,7 @@ class SPFCheck
                 if (isset($cidr) && $cidr == 0) {
                     return $qualifier;
                 }
-                if (\CRM_Utils_Rule::subnetIp4($ipAddress, $operand)) {
+                if (\CRM_Utils_Rule::checkIp($ipAddress, $operand)) {
                     return $qualifier;
                 }
                 break;
@@ -232,7 +232,7 @@ class SPFCheck
                     return $qualifier;
                 }
 
-                if (\CRM_Utils_Rule::subnetIp4($ipAddress, $validIpAddresses)) {
+                if (\CRM_Utils_Rule::checkIp($ipAddress, $validIpAddresses)) {
                     return $qualifier;
                 }
                 break;
@@ -276,7 +276,7 @@ class SPFCheck
                     return $qualifier;
                 }
 
-                if (\CRM_Utils_Rule::subnetIp4($ipAddress, $validIpAddresses)) {
+                if (\CRM_Utils_Rule::checkIp($ipAddress, $validIpAddresses)) {
                     return $qualifier;
                 }
                 break;
