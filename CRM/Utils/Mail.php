@@ -454,7 +454,7 @@ class CRM_Utils_Mail {
     else {
       $domain = $email;
     }
-    $dkimCheck = $civicrm_conf['mailing_dkim_selector'].'._domainkey'.$domain;
+    $dkimCheck = $civicrm_conf['mailing_dkim_selector'].'._domainkey.'.$domain;
     $records = dns_get_record($dkimCheck, DNS_CNAME);
     if (!empty($records)) {
       foreach($records as $r) {

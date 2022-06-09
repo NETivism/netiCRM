@@ -18,7 +18,6 @@
     {/if}
   </div>
 
-  <!--
   <div class="dkim">
     <h2>{ts 1=DKIM}Verify %1{/ts}</h2>
     {if $dkim_status}
@@ -35,7 +34,7 @@
     </div>
     {/if}
   </div>
-  -->
+
   {if !$spf_status or !$dkim_status}
   <div class="messages warning">
     {ts}Your domain name records may need up to 48 hours to update base on what DNS provider you use.{/ts}<br>

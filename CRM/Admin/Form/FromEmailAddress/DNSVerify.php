@@ -73,7 +73,6 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
         $filter = $filter | self::VALID_SPF;
       }
 
-      /*
       $result = CRM_Utils_Mail::checkDKIM($self->_values['email']);
       if ($result === FALSE) {
         $errors['qfKey'] .= ts('Your %1 validation failed.', array(1 => 'DKIM'));
@@ -82,7 +81,6 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       else {
         $filter = $filter | self::VALID_DKIM;
       }
-      */
 
       // save validation result
       if ($filter !== $self->_values['filter']) {
