@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48891,3 +48891,11 @@ msgid ""
 "Some recurring contributions that belong to this Payment Processor are in "
 "progress, so the fields are freeze."
 msgstr "此金流有正在進行中的定期捐款，因此欄位將鎖上，不可進行修改，以免影響進行中的定期捐款。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Skip participant %1 and continue to register >>|"
+msgstr "捨棄第 %1 位參加者，並繼續完成報名 >>|"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Skipped Participant(s): %1"
+msgstr "已捨棄的報名人數 - %1位"

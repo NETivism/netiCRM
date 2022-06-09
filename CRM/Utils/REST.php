@@ -306,8 +306,10 @@ class CRM_Utils_REST {
     return self::process($args);
   }
 
-  static function process(&$args, $restInterface = TRUE) {
-    $params = &self::buildParamList();
+  static function process(&$args, $params = array()) {
+    if (empty($params)) {
+      $params = &self::buildParamList();
+    }
 
     $params['check_permissions'] = TRUE;
     $fnName = $apiFile = NULL;

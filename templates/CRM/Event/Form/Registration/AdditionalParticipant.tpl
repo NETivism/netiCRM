@@ -24,8 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 {include file="CRM/Event/Form/Registration/Progress.tpl"}
-{if $skipCount}
-    <h3>{ts}Skipped Participant(s){/ts}: {$skipCount}</h3>
+{if $skipCountMessage}
+    <h3>{$skipCountMessage}</h3>
 {/if}
 {if $action & 1024}
     {include file="CRM/Event/Form/Registration/PreviewHeader.tpl"}
