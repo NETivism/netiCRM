@@ -41,7 +41,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    */
   function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
-    if ($this->_action & CRM_Core_Action::DELETE || $this->_action & CRM_Core_Action::UPDATE) {
+    if ($this->_action & CRM_Core_Action::DELETE || $this->_action & CRM_Core_Action::UPDATE || $this->get('id')) {
       $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
     }
     if ($this->_id) {
