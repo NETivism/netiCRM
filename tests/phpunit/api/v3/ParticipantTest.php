@@ -73,7 +73,7 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
    * and / or moved to the automated test suite
    */
   /**
-   * Phone Create Unit Test
+   * Participant Create Unit Test
    *
    * @docmaker_start
    *
@@ -109,6 +109,36 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     $this->customGroupDelete($ids['custom_group_id']);
   }
 
+  /**
+   * Test civicrm_participant_get with custom params
+   */
+  /**
+   * Participant Get Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Participant
+   * @api_action Get
+   * @http_method GET
+   * @request_url <entrypoint>?entity=Participant&action=get&json={$request_body_inline}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Participant&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testGetWithCustom() {
+    $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
+
+    $params = $this->_params;
+    $params['custom_' . $ids['custom_field_id']] = "custom string";
+    $result = civicrm_api($this->_entity, 'create', $params);
+
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $get = civicrm_api('participant', 'get', $params);
+    $this->docMakerResponse($get, __FILE__, __FUNCTION__);
+
+    $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
+  }
 
   ///////////////// civicrm_participant_get methods
 
@@ -650,12 +680,35 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
   /**
    * check with participant_id
    */
-  function testParticipantDelete() {
+  /**
+   * Participant Delete Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Participant
+   * @api_action Delete
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Participant&action=delete
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Participant&action=delete&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testDeleteParticipant() {
     $params = array(
       'id' => $this->_participantID,
       'version' => $this->_apiversion,
     );
+    //create one
+    $create = civicrm_api('phone', 'create', $params);
+    $this->assertAPISuccess($create, 'In line ' . __LINE__);
+
     $participant = civicrm_api('participant', 'delete', $params);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($participant, __FILE__, __FUNCTION__);
+
     $this->assertNotEquals($participant['is_error'], 1);
     $this->assertDBState('CRM_Event_DAO_Participant', $this->_participantID, NULL, TRUE);
   }
