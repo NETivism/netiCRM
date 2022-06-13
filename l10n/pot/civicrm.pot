@@ -48544,3 +48544,7 @@ msgstr ""
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "Skipped Participant(s): %1"
 msgstr ""
+
+#: CRM/Admin/Page/PaymentProcessor.php
+msgid "Some recurring contributions are in progress, so some payment processors can't be disabled or deleted."
+msgstr ""
