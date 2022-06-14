@@ -2,7 +2,7 @@
 
 /**
  * A transactional email helper function
- * 
+ *
  * Have interface to be a alternative of CRM_Utils_Mail::send for common mail send.
  * Will inherited from CRM_Mailing_BAO_Mailing for mass malling usage.
  */
@@ -22,16 +22,16 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
   /**
    * Additional Header to override compose header
-   * 
+   *
    * @var array
    */
   private $_additionalHeaders = array();
 
   /**
    * Send transactional mail
-   * 
+   *
    * Alternative of CRM_Utils_Mail::send
-   * 
+   *
    * @param array &$params Is an associative array which holds the values of field needed to send an email. These are:
    *   contactId : contact id is required
    *   from    : complete from envelope
@@ -157,24 +157,19 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
         // only send non-blocking when there is a callback
         if (isset($callback) && is_array($callback)) {
+          $mailer->queue = $queue;
           CRM_Core_Config::addShutdownCallback('after', 'CRM_Mailing_BAO_Transactional::sendNonBlocking', array($mailer, $recipient, $headers, $body, $callback));
           return TRUE;
         }
         else {
           $result = $mailer->send($recipient, $headers, $body);
           CRM_Core_Error::setCallback();
-          $deliveredParams = array(
-            'event_queue_id' => $queue->id,
-            'job_id' => $tmail->_job->id,
-            'hash' => $queue->hash,
-          );
           if (is_a($result, 'PEAR_Error')) {
-            $deliveredParams = array_merge($deliveredParams, CRM_Mailing_BAO_BouncePattern::match($result->getMessage()));
-            CRM_Mailing_Event_BAO_Bounce::create($deliveredParams);
+            self::bounced($queue->id, $tmail->_job->id, $queue->hash, $result->getMessage());
             return FALSE;
           }
           else {
-            CRM_Mailing_Event_BAO_Delivered::create($deliveredParams);
+            self::delivered($queue->id, $tmail->_job->id, $queue->hash);
             return TRUE;
           }
         }
@@ -187,8 +182,17 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $result = $mailer->send($to, $headers, $body);
     CRM_Core_Error::setCallback();
     $error = 0;
+    if (isset($mailer->queue) && !empty($mailer->queue) && is_a($mailer->queue, 'CRM_Mailing_Event_BAO_Queue')) {
+      $queue = $mailer->queue;
+    }
     if (is_a($result, 'PEAR_Error')) {
+      if ($queue) {
+        self::bounced($queue->id, $queue->job_id, $queue->hash, $result->getMessage());
+      }
       $error = 1;
+    }
+    else {
+      self::delivered($queue->id, $queue->job_id, $queue->hash);
     }
 
     if (!empty($callback[$error])) {
@@ -201,11 +205,49 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   }
 
   /**
+   * Mark this transactional email delivered
+   *
+   * @param int $event_queue_id
+   * @param int $job_id
+   * @param string $hash hash
+   * @return void
+   */
+  public static function delivered($event_queue_id, $job_id, $hash) {
+    $params = array(
+      'event_queue_id' => $event_queue_id,
+      'job_id' => $job_id,
+      'hash' => $hash,
+    );
+    CRM_Mailing_Event_BAO_Delivered::create($params);
+  }
+
+  /**
+   * Mark this transactional email bounced
+   *
+   * Email bounced immediately when deliver failed.
+   *
+   * @param int $event_queue_id
+   * @param int $job_id
+   * @param string $hash hash
+   * @param string $resultMessage text message after mailer object return result
+   * @return void
+   */
+  public static function bounced($event_queue_id, $job_id, $hash, $resultMessage) {
+    $params = array(
+      'event_queue_id' => $event_queue_id,
+      'job_id' => $job_id,
+      'hash' => $hash,
+    );
+    $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match($resultMessage));
+    CRM_Mailing_Event_BAO_Bounce::create($params);
+  }
+
+  /**
    * Transactional Object
-   * 
+   *
    * For transactional object, we got to create new body, sender address for each email.
    * We summarize here
-   * 
+   *
    */
   function __construct($params = NULL) {
     parent::__construct();
@@ -266,7 +308,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * @param bool $isForward
    * @param string $fromEmail
    * @param string $replyToEmail
-   * 
+   *
    * @return Mail_Mime
    * @access public
    */
@@ -501,6 +543,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $from[] = "LEFT JOIN $eb ON $eb.event_queue_id = $eq.id";
     $from[] = "LEFT JOIN $eu as unsubscribe ON unsubscribe.event_queue_id = $eq.id AND unsubscribe.org_unsubscribe = 0";
     $from[] = "LEFT JOIN $eu as optout ON optout.event_queue_id = $eq.id AND optout.org_unsubscribe = 1";
+
     $select = "SELECT $eq.contact_id, COUNT($ed.time_stamp) as delivered, COUNT($eo.time_stamp) as opened, COUNT($ec.time_stamp) as clicks, COUNT($eb.time_stamp) as bounce, COUNT(unsubscribe.time_stamp) as unsubscribe, COUNT(optout.time_stamp)  as optout";
     $from  = "\n FROM $eq ".implode("\n ", $from);
     $where = "\n WHERE $eq.contact_id = %1 AND $ea.activity_id = %2";
