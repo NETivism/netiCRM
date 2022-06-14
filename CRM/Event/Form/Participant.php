@@ -1741,7 +1741,8 @@ cj(function() {
           $skipMSG = TRUE;
         }
         else {
-          $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participants[$num], 'Event Notification Email');
+          $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($sendTemplateParams['groupName'], $sendTemplateParams['valueName']);
+          $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participants[$num], 'Event Notification Email', $workflow['msg_title']);
           $callback = array(
             0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
             1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),

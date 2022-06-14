@@ -1172,7 +1172,7 @@ WHERE civicrm_event.is_active = 1
         $participant = new CRM_Event_DAO_Participant();
         $participant->id = $participantId;
         $participant->find(TRUE);
-        $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow('msg_tpl_workflow_event', 'event_online_receipt');
+        $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($sendTemplateParams['groupName'], $sendTemplateParams['valueName']);
         $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participant, 'Event Notification Email', $workflow['msg_title']);
         $sendTemplateParams['activityId'] = $activityId;
         if ($returnMessageText) {
