@@ -117,6 +117,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   ) {
     $activityTypes = CRM_Core_PseudoConstant::activityType(FALSE);
     $activityTypeIds = array_flip(CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name'));
+    $activityTypeName = array_search($activityTypeId, $activityTypeIds);
 
     $extraParams = ($key) ? "&key={$key}" : NULL;
     if ($compContext) {
@@ -137,14 +138,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     elseif ($activityTypeId == $activityTypeIds['Contribution']) {
       $url = 'civicrm/contact/view/contribution';
       $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
-    }
-    elseif ($activityTypeId == $activityTypeIds['Email Receipt']) {
-      $url = 'civicrm/contact/view/contribution';
-      $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
-
-      $showUpdate = TRUE;
-      $urlUpdate = 'civicrm/contact/view/activity';
-      $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
     elseif ($activityTypeId == $activityTypeIds['Print Contribution Receipts']) {
       $url = 'civicrm/contact/view/contribution';
@@ -194,6 +187,21 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     elseif ($activityTypeId == $activityTypeIds['SMS']) {
       $url = 'civicrm/activity/view';
       $qsView = "action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+    }
+    elseif ($activityTypeId == $activityTypeIds['Email Receipt']) {
+      $url = 'civicrm/contact/view/contribution';
+      $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+
+      $showUpdate = TRUE;
+      $urlUpdate = 'civicrm/contact/view/activity';
+      $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+    }
+    // transactional email activity types
+    elseif (in_array($activityTypeName, explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
+      $showUpdate = $showDelete = FALSE;
+      $url = 'civicrm/contact/view/activity';
+      $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+      $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
     else {
       $showUpdate = $showDelete = TRUE;
@@ -357,7 +365,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     $params['contact_id'] = $this->_contactId;
     $config = CRM_Core_Config::singleton();
     $rows = CRM_Activity_BAO_Activity::getActivities($params, $offset, $rowCount, $sort, $this->_admin, $case, $this->_context);
-    
 
     if (empty($rows)) {
       return $rows;
@@ -404,18 +411,15 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
         // get stat of this contact
         if (!empty($row['data_contact_id']) && !empty($row['source_record_id'])) {
           $mailingResult = CRM_Mailing_BAO_Mailing::getContactReport($row['data_contact_id'], $row['source_record_id']);
-          unset($mailingResult['Delivered']);
           $row['results'] = $mailingResult;
         }
       }
 
       // #33948, activity types that will get transaction mail report
       if (in_array(CRM_Core_OptionGroup::getName('activity_type', $row['activity_type_id']), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
-        $accessMailingReport = TRUE;
         // get stat of this contact
         if (!empty($row['data_contact_id']) && !empty($row['activity_id'])) {
           $mailingResult = CRM_Mailing_BAO_Transactional::getActivityReport($row['data_contact_id'], $row['activity_id']);
-          unset($mailingResult['Delivered']);
           $row['results'] = $mailingResult;
         }
       }
