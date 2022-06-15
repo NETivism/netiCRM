@@ -115,7 +115,7 @@ cj(document).ready(function($){
         $("input[name=_qf_PDF_next]").trigger('click');
         return true;
       },
-      Cancel: function() {
+      "{/literal}{ts}Cancel{/ts}{literal}": function() {
         $( this ).dialog( "close" );
         return false;
       }
