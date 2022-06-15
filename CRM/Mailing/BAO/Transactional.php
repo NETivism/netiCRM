@@ -274,15 +274,15 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $this->dedupe_email = 0;
     $this->override_verp = 0;
     $this->msg_template_id = NULL;
-    $this->url_tracking = 1;
     $this->open_tracking = 1;
-    $this->url_tracking = 1;
     $this->forward_replies = 0;
     $this->auto_responder = 0;
     $this->_domain = CRM_Core_BAO_Domain::getDomain();
     // disable all the mass mailing component template
     $this->header_id = $this->footer_id = $this->reply_id = $this->unsubscribe_id = $this->resubscribe_id = $this->optout_id = 0;
 
+    // disable url tracking by default
+    $this->url_tracking = 0;
 
     // mailing job here
     $this->_job = new CRM_Mailing_DAO_Job();
