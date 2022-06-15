@@ -411,7 +411,6 @@ abstract class CRM_Contribute_Import_Parser {
         $returnCode = $this->summary($values);
       }
       elseif ($mode == self::MODE_IMPORT) {
-        sleep(3);
         $returnCode = $this->import($onDuplicate, $values);
 
         // this is for import progress indicator
