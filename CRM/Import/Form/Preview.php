@@ -167,6 +167,12 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $previousURL = CRM_Utils_System::url('civicrm/import/contact', $path, FALSE, NULL, FALSE);
     $cancelURL = CRM_Utils_System::url('civicrm/import/contact', 'reset=1');
 
+    $attr = array('onclick' => "return verify();");
+    $locked = CRM_Core_Lock::isUsed($this->get('importTableName'));
+    if ($locked) {
+      $attr['disabled'] = 'disabled';
+      $this->assign('locked_import', TRUE);
+    }
     $buttons = array(
       array('type' => 'back',
         'name' => ts('<< Previous'),
@@ -176,7 +182,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
         'name' => ts('Import Now >>'),
         'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         'isDefault' => TRUE,
-        'js' => array('onclick' => "return verify( );"),
+        'js' => $attr,
       ),
       array('type' => 'cancel',
         'name' => ts('Cancel'),

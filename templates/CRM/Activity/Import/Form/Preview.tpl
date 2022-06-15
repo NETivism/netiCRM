@@ -51,6 +51,7 @@
     <p>{ts}Click 'Import Now' if you are ready to proceed.{/ts}</p>
  </div>
  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>  
+ {if $locked_import}<div class="messages warning">{ts}The selected import job is already running. To prevent duplicate records being imported, please wait the job complete.{/ts}</div>{/if}
  {* Summary Preview (record counts) *}
  <table id="preview-counts" class="report">
     <tr><td class="label">{ts}Total Rows{/ts}</td>
