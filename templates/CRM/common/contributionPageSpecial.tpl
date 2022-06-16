@@ -109,7 +109,7 @@
     };
   {/literal}
 </script>
-{if $config->userFrameworkVersion > 7}
+{if $config->userFrameworkVersion >= 8}
   <script type="text/javascript" src="{$config->resourceBase}js/contribution_page.d9.js?v{$config->ver}"></script>
 {else}
   <script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js?v{$config->ver}"></script>
