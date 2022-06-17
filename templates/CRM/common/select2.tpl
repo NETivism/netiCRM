@@ -14,5 +14,5 @@ cj(document).ready(function(){
 {if $config->lcMessages eq 'zh_TW'}
   {* this will compitable with drupal 6-7-9 *}
   {* parameter library will use library name pree-defined in civicrm.module *}
-  {js src=packages/jquery/plugins/jquery.select2.zh-TW.js library=civicrm/civicrm-js-zh-tw}{/js}
+  {js src=packages/jquery/plugins/jquery.select2.zh-TW.js library=civicrm/civicrm-js-zh-tw group=999 weight=998}{/js}
 {/if}
