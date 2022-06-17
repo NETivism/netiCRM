@@ -215,6 +215,9 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     // is this processor active ?
     $this->add('checkbox', 'is_active', ts('Is this Payment Processor active?'));
     $this->add('checkbox', 'is_default', ts('Is this Payment Processor the default?'));
+    if ($this->_isFreezed) {
+      $this->freeze('is_active');
+    }
 
 
     foreach ($this->_fields as $field) {
