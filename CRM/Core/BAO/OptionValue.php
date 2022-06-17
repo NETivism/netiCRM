@@ -163,7 +163,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
    * @access public
    */
   static function getActivityTypeDetails($activityTypeId) {
-    $query = "SELECT civicrm_option_value.label, civicrm_option_value.description
+    $query = "SELECT civicrm_option_value.label, civicrm_option_value.description, civicrm_option_value.name
    FROM civicrm_option_value
         LEFT JOIN civicrm_option_group ON ( civicrm_option_value.option_group_id = civicrm_option_group.id )
    WHERE civicrm_option_group.name = 'activity_type'
@@ -173,7 +173,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
 
     $dao->fetch();
 
-    return array($dao->label, $dao->description);
+    return array($dao->label, $dao->description, $dao->name);
   }
 
   /**

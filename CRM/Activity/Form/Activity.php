@@ -354,10 +354,19 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
 
     if ($this->_activityTypeId) {
       //set activity type name and description to template
-      require_once 'CRM/Core/BAO/OptionValue.php';
-      list($this->_activityTypeName, $activityTypeDescription) = CRM_Core_BAO_OptionValue::getActivityTypeDetails($this->_activityTypeId);
+      list($this->_activityTypeName, $activityTypeDescription, $activityTypeMachineName) = CRM_Core_BAO_OptionValue::getActivityTypeDetails($this->_activityTypeId);
       $this->assign('activityTypeName', $this->_activityTypeName);
       $this->assign('activityTypeDescription', $activityTypeDescription);
+
+      // refs #33948, attach transactional email list
+      if ($this->_action & CRM_Core_Action::VIEW && in_array($activityTypeMachineName, explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
+        $this->assign('is_transactional', TRUE);
+        $mailingEvents = CRM_Mailing_Event_BAO_Transactional::getEventsByActivity($this->_activityId);
+        if (!empty($mailingEvents)) {
+          $mailingEvents = CRM_Mailing_Event_BAO_Transactional::formatMailingEvents($mailingEvents);
+          $this->assign('mailing_events', $mailingEvents);
+        }
+      }
     }
 
     // set user context
