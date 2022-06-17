@@ -99,7 +99,10 @@ class CRM_Core_IDS {
         'about',
       ],
       'civicrm/admin/contribute/friend' => ['thankyou_text'],
-      'civicrm/contribute/search' => ['html_message'],
+      'civicrm/contribute/search' => [
+        'html_message',
+        'receipt_text',
+      ],
       'civicrm/contact/view/contribution' => ['from_email_address'],
     ],
     'access CiviEvent' => [
