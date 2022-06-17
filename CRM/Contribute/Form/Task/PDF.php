@@ -178,7 +178,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         ts('Text Message'),
         array(
           'cols' => '80',
-          'rows' => '8',
+          'rows' => '4',
         )
       );
     }
