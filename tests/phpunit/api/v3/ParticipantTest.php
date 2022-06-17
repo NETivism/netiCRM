@@ -622,7 +622,23 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
   /**
    * check with complete array
    */
-  function testUpdate() {
+  /**
+   * Phone Update Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Participant
+   * @api_action Update
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Participant&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Participant&action=create&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testUpdateParticipant() {
     $participantId = $this->participantCreate(array('contactID' => $this->_individualId, 'eventID' => $this->_eventID, $this->_apiversion));
     $params = array(
       'id' => $participantId,
@@ -635,7 +651,9 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
       'event_level' => 'Donation',
       'version' => $this->_apiversion,
     );
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $participant = civicrm_api('participant', 'create', $params);
+    $this->docMakerResponse($participant, __FILE__, __FUNCTION__);
     $this->assertNotEquals($participant['is_error'], 1);
 
 
