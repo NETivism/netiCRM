@@ -2672,7 +2672,7 @@ WHERE c.id = $id";
   static function sendPDFReceipt($contributionId, $fromEmail, $receiptType = NULL, $receiptText = NULL) {
     $params = array();
     $args = array('id' => $contributionId);
-    CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_Contribution', $args, $params);
+    $contrib = CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_Contribution', $args, $params);
     if (empty($params['id'])) {
       return;
     }
@@ -2734,30 +2734,16 @@ WHERE c.id = $id";
 
     $config = CRM_Core_Config::singleton();
     $smarty = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);
-    CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, $smarty);
-
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+
     if (!empty($activityTypeId)) {
-      if (!empty($params['userID'])) {
-        $userID = $params['userID'];
-      }
-      else {
-        $session = CRM_Core_Session::singleton();
-        $userID = $session->get('userID');
-      }
-      $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
-      $subject = !empty($params['source']) ? ' - '.$params['source'] : ' - '.$params['contributionType_name'];
-      $activityParams = array(
-        'activity_type_id' => $activityTypeId,
-        'source_record_id' => $contributionId,
-        'activity_date_time' => date('Y-m-d H:i:s'),
-        'is_test' => !empty($params['is_test']) ? 1 : 0,
-        'status_id' => $statusId,
-        'subject' => ts('Email Receipt').$subject,
-        'assignee_contact_id' => $params['contact_id'],
-        'source_contact_id' => $userID,
-      );
-      CRM_Activity_BAO_Activity::create($activityParams);
+      $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow('msg_tpl_workflow_contribution', 'contribution_offline_receipt');
+      $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contrib, 'Email Receipt', $workflow['msg_title']);
+      $templateParams['activityId'] = $activityId;
+      CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, $smarty, array(
+        0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+        1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+      ));
     }
   }
 

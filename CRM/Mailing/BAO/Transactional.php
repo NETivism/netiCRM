@@ -11,7 +11,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   /**
    * Activity Names that can invoke transactional email
    */
-  const ALLOWED_ACTIVITY_TYPES = 'Email,Email Receipt,Contribution Notification Email,Event Notification Email,Membership Notification Email,PCP Notification Email';
+  const ALLOWED_ACTIVITY_TYPES = 'Email,Email Receipt,Contribution Notification Email,Event Notification Email,Membership Notification Email,PCP Notification Email,Mailing Notification Email';
 
   /**
    * job object of this mailing
