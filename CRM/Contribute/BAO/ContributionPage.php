@@ -313,31 +313,34 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         'PDFFilename' => 'receipt.pdf',
       );
 
-      if (!empty($pdfParams)) {
+      $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
+      $contribparams = array('id' => $values['contribution_id']);
+      $contribution = crm_core_dao::commonretrieve('crm_contribute_dao_contribution', $contribparams, CRM_Core_DAO::$_nullArray);
+      $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($sendTemplateParams['groupName'], $sendTemplateParams['valueName']);
+      if (!empty($pdfParams) && !empty($activityTypeId)) {
         $sendTemplateParams['attachments'][] = $pdfParams;
         $sendTemplateParams['tplParams']['pdf_receipt'] = 1;
         unset($sendTemplateParams['PDFFilename']);
 
-        $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
-        if (!empty($activityTypeId)) {
-          $userID = $contactID;
-          $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
-          $activityParams = array(
-            'activity_type_id' => $activityTypeId,
-            'source_record_id' => $values['contribution_id'],
-            'activity_date_time' => date('Y-m-d H:i:s'),
-            'status_id' => $statusId,
-            'is_test' => $isTest ? 1 : 0,
-            'subject' => ts('Email Receipt').' - '. $values['source'],
-            'assignee_contact_id' => $contactID,
-            'source_contact_id' => $userID,
-          );
-          CRM_Activity_BAO_Activity::create($activityParams);
+        $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Email Receipt', $workflow['msg_title']);
+      }
+      else {
+        if ($tplParams['membershipID']) {
+          $memberParams = array('id' => $tplParams['membershipID']);
+          $membership = CRM_Core_DAO::commonRetrieve('CRM_Member_DAO_Membership', $memberParams, CRM_Core_DAO::$_nullArray);
+          $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($membership, 'Membership Notification Email', $workflow['msg_title']);
+        }
+        else {
+          $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Contribution Notification Email', $workflow['msg_title']);
         }
       }
-      
+      $sendTemplateParams['activityId'] = $activityId;
+
       if ($returnMessageText) {
-        list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+        list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, array(
+          0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+          1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+        ));
         return array('subject' => $subject,
           'body' => $message,
           'to' => $displayName,
@@ -351,7 +354,10 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         $sendTemplateParams['toEmail'] = $email;
         $sendTemplateParams['cc'] = CRM_Utils_Array::value('cc_receipt', $values);
         $sendTemplateParams['bcc'] = CRM_Utils_Array::value('bcc_receipt', $values);
-        list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+        list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, array(
+          0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+          1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+        ));
       }
 
       // send duplicate alert, if dupe match found during on-behalf-of processing.

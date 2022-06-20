@@ -2061,7 +2061,7 @@ SELECT  display_name
   /**
    * Function to add activity for transactional email
    *
-   * @param object &$object particular component object
+   * @param object &$object particular component object, can be return valur from CRM_Core_DAO::commonRetrieve
    * @param string $activityType activity type internal name, use this to get activity id
    * @param string $subjectSuffix subject suffix prepend to activity
    *
@@ -2072,40 +2072,52 @@ SELECT  display_name
    */
   public static function addTransactionalActivity(&$object, $activityType, $subjectSuffix = NULL) {
     if ($object->__table == 'civicrm_membership') {
+      $membershipType = CRM_Member_PseudoConstant::membershipType($object->membership_type_id);
+      if (!$membershipType) {
+        $membershipType = ts('Membership');
+      }
+      $sub = array();
+      $sub[] = $membershipType;
+      $sub[] = $object->source;
+      $sub[] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipStatus', $object->status_id, 'label');
+      $subject = implode(' - ', $sub);
     }
     elseif ($object->__table == 'civicrm_participant') {
       $subject = CRM_Event_BAO_Event::getEventTitle($object->event_id).'('.$object->event_id.')';
     }
     elseif ($object->__table == 'civicrm_contribution') {
-      if (empty($activityType)) {
-        $activityType = 'Contribution';
+      $sub = array();
+      $sub[] = CRM_Contribute_PseudoConstant::contributionType($object->contribution_type_id);
+      $sub[] = CRM_Utils_Money::format($object->total_amount, $object->currency);
+      if (!empty($object->source) && $object->source != 'null') {
+        $sub[] = $object->source;
       }
-      //create activity record only for Completed Contribution
-      if ($object->contribution_status_id != 1 && $activityType === 'Contribution') {
-        return FALSE;
+      // Email Receipt
+      if ($activityType == 'Email Receipt') {
+        $subject = ts('Email Receipt').' - '.implode(' / ', $sub);
       }
-
-      $subject = CRM_Utils_Money::format($object->total_amount, $object->currency);
-      if ($object->source != 'null') {
-        $subject .= " - {$object->source}";
+      // common contribution notify
+      else {
+        $subject = implode(' - ', $sub);
       }
     }
     if ($subjectSuffix) {
-      $subject .= ' - '.$subjectSuffix;
+      $subject .= ' @'.$subjectSuffix;
     }
 
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', $activityType, 'name');
     if (empty($activityType) || empty($activityTypeId)) {
       return FALSE;
     }
-    $activityStatus = !empty($activityStatus) ? $activityStatus : 'Completed';
-    $activityStatusId = CRM_Core_OptionGroup::getValue('activity_status', $activityStatus, 'name');
+
+    // always set scheduled for indicate this activity is un-completed
+    $activityStatusId = CRM_Core_OptionGroup::getValue('activity_status', 'Scheduled', 'name');
     if (empty($activityStatusId)) {
       return FALSE;
     }
 
     $activityParams = array(
-      'source_contact_id' => $object->contact_id,
+      'assignee_contact_id' => $object->contact_id,
       'source_record_id' => $object->id,
       'activity_type_id' => $activityTypeId,
       'subject' => $subject,
@@ -2117,10 +2129,12 @@ SELECT  display_name
 
     // create assignment activity if created by logged in user
     $session = CRM_Core_Session::singleton();
-    $id = $session->get('userID');
-    if ($id) {
-      $activityParams['source_contact_id'] = $id;
-      $activityParams['assignee_contact_id'] = $object->contact_id;
+    $loggedUserId = $session->get('userID');
+    if ($loggedUserId) {
+      $activityParams['source_contact_id'] = $loggedUserId;
+    }
+    else {
+      $activityParams['source_contact_id'] = $object->contact_id;
     }
 
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
@@ -2134,8 +2148,8 @@ SELECT  display_name
    * Update Transactional Status
    *
    * @param int $activityId
-   * @param bool $success 
-   * @return bool 
+   * @param bool $success
+   * @return bool
    */
   public static function updateTransactionalStatus($activityId, $success) {
     if ($success) {
