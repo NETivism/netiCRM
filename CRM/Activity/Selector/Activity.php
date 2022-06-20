@@ -129,28 +129,42 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     $showDelete = FALSE;
     $url = '';
     // event registration
-    if ($activityTypeId == $activityTypeIds['Event Registration']) {
+    if (in_array($activityTypeId, array(
+      $activityTypeIds['Event Registration'],
+      $activityTypeIds['Event Notificaiont Email'],
+    ))) {
       if ($sourceRecordId) {
         $url = 'civicrm/contact/view/participant';
+        $text = 'View Participant';
         $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
       }
     }
-    elseif ($activityTypeId == $activityTypeIds['Contribution']) {
-      $url = 'civicrm/contact/view/contribution';
-      $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+    elseif (in_array($activityTypeId, array(
+      $activityTypeIds['Contribution'],
+      $activityTypeIds['Email Receipt'],
+      $activityTypeIds['Contribution Notification Email'])
+      )) {
+      if ($sourceRecordId) {
+        $url = 'civicrm/contact/view/contribution';
+        $text = 'View Contribution';
+        $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+      }
     }
     elseif ($activityTypeId == $activityTypeIds['Print Contribution Receipts']) {
       $url = 'civicrm/contact/view/contribution';
+      $text = 'View Contribution';
       $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
 
       $showUpdate = TRUE;
       $urlUpdate = 'civicrm/contact/view/activity';
       $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
-    elseif (in_array($activityTypeId,
-        array($activityTypeIds['Membership Signup'], $activityTypeIds['Membership Renewal'])
-        // membership
-      )) {
+    elseif (in_array($activityTypeId, array(
+      $activityTypeIds['Membership Signup'],
+      $activityTypeIds['Membership Renewal'],
+      $activityTypeIds['Membership Notification Email'],
+      ))) {
+      $text = 'View Membership';
       $url = 'civicrm/contact/view/membership';
       $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
@@ -161,17 +175,16 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $url = 'civicrm/contact/view/activity';
       $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
-    elseif ($activityTypeId == $activityTypeIds['Email'] || $activityTypeId == $activityTypeIds['Bulk Email']) {
-      $url = 'civicrm/activity/view';
+    elseif (in_array($activityTypeId, array(
+      $activityTypeIds['Email'], $activityTypeIds['Bulk Email'],
+      ))) {
+      $url = 'civicrm/contact/view/activity';
       $delUrl = 'civicrm/activity';
       $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
-      // allow delete of regular outbound emails (CRM-)
-      if ($activityTypeId == $activityTypeIds['Email']) {
-        $showDelete = TRUE;
-      }
     }
     elseif ($activityTypeId == $activityTypeIds['Inbound Email']) {
       $url = 'civicrm/contact/view/activity';
+      $text = 'View Activity';
       $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
     elseif ($activityTypeId == CRM_Utils_Array::value('Open Case', $activityTypeIds) ||
@@ -180,31 +193,20 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $activityTypeId == CRM_Utils_Array::value('Change Case Start Date', $activityTypeIds)
     ) {
       $showUpdate = $showDelete = FALSE;
+      $text = 'View Case';
       $url = 'civicrm/contact/view/activity';
       $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
       $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
     elseif ($activityTypeId == $activityTypeIds['SMS']) {
-      $url = 'civicrm/activity/view';
-      $qsView = "action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
-    }
-    elseif ($activityTypeId == $activityTypeIds['Email Receipt']) {
-      $url = 'civicrm/contact/view/contribution';
-      $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
-
-      $showUpdate = TRUE;
-      $urlUpdate = 'civicrm/contact/view/activity';
-      $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
-    }
-    // transactional email activity types
-    elseif (in_array($activityTypeName, explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
       $showUpdate = $showDelete = FALSE;
+      $text = 'View Activity';
       $url = 'civicrm/contact/view/activity';
-      $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
-      $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+      $qsView = "action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
     else {
       $showUpdate = $showDelete = TRUE;
+      $text = 'View Activity';
       $url = 'civicrm/contact/view/activity';
       $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
       $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
@@ -222,14 +224,22 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
 
     if ($url) {
       self::$_actionLinks = array(
-        CRM_Core_Action::VIEW =>
-        array(
-          'name' => ts('View'),
+        CRM_Core_Action::VIEW => array(
+          'name' => ts($text),
           'url' => $url,
           'qs' => $qsView,
-          'title' => ts('View Activity'),
+          'title' => ts($text),
         ),
       );
+      // transactional email activity types, show activity detail link
+      if ($text != 'View Activity' && in_array($activityTypeName, explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
+        self::$_actionLinks = self::$_actionLinks + array(CRM_Core_Action::FOLLOWUP => array(
+          'name' => ts('View Activity'),
+          'url' => 'civicrm/contact/view/activity',
+          'qs' => "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}",
+          'title' => ts($text),
+        ));
+      }
     }
 
     if ($showUpdate) {
