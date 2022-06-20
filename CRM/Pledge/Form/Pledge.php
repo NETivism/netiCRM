@@ -705,7 +705,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
 
         //check if we can process credit card payment.
         $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
-          "billing_mode IN ( 1, 3 )"
+          "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
         );
         if (count($processors) > 0) {
           $statusMsg .= ' ' . ts("If a payment is due now, you can record <a href='%1'>a check, EFT, or cash payment for this pledge</a> OR <a href='%2'>submit a credit card payment</a>.", array(1 => $contribURL, 2 => $creditURL));
