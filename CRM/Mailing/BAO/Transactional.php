@@ -93,6 +93,10 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
 
     $tmail = new CRM_Mailing_BAO_Transactional($params);
+    if (empty($tmail->id)) {
+      CRM_Core_Error::debug_log_message("Cannot start transactional email because init error. ".__LINE__);
+
+    }
 
     // got to discuss how to send cc / bcc
     /*
@@ -111,11 +115,12 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
 
     // create mailing recipient
-    CRM_Core_DAO::executeQuery("INSERT INTO civicrm_mailing_recipients (mailing_id, contact_id, email_id) VALUES (%1, %2, %3)", array(
+    $recipient = array(
       1 => array($tmail->id, 'Integer'),
       2 => array($params['contactId'], 'Integer'),
       3 => array($emailId, 'Integer'),
-    ));
+    );
+    CRM_Core_DAO::executeQuery("INSERT INTO civicrm_mailing_recipients (mailing_id, contact_id, email_id) VALUES (%1, %2, %3)", $recipient);
 
     // create mailing event queue
     $queueParams = array(
@@ -258,10 +263,12 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     if (!$this->id) {
       CRM_Core_Error::debug_log_message('Transactional Email Error: Cannot find transactional email base object.');
+      return;
     }
 
     if (empty($params)) {
       CRM_Core_Error::debug_log_message('Transactional Email Error: needs init params.');
+      return;
     }
 
     // basic Mailing object

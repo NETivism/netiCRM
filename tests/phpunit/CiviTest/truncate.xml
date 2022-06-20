@@ -83,8 +83,6 @@
 
   <civicrm_contribution_linepay />
 
-  <civicrm_contribution_allpay />
-
   <civicrm_premiums />
 
   <civicrm_product />
@@ -284,6 +282,8 @@
   <civicrm_contribution_tappay />
 
   <civicrm_contribution_tappay_log />
+
+  <civicrm_contribution_allpay />
 
   <civicrm_coupon_track />
 

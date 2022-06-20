@@ -1210,10 +1210,15 @@ INSERT INTO `civicrm_contact_type`
 
 INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (2, 'Mailing', '{ts escape="sql"}Mailing{/ts}', '', NULL, NULL, 1, 'Public Pages', '2');
 
-{include file='civicrm_msg_template.tpl'}
-
-
 INSERT INTO `civicrm_mailing`
   (`domain_id`, `header_id`, `footer_id`, `reply_id`, `unsubscribe_id`, `resubscribe_id`, `optout_id`, `name`, `from_name`, `from_email`, `replyto_email`, `subject`, `body_preview`, `body_text`, `body_html`, `body_json`, `url_tracking`, `forward_replies`, `auto_responder`, `open_tracking`, `is_completed`, `msg_template_id`, `override_verp`, `created_id`, `created_date`, `scheduled_id`, `scheduled_date`, `is_archived`, `visibility`, `dedupe_email`, `sms_provider_id`, `is_hidden`)
   VALUES
   (@domainID, NULL, NULL, NULL, NULL, NULL, NULL, 'Transactional Email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 0, 0, 0, 1, NULL, NULL, 0, NULL, '2000-01-01 00:00:00', NULL, NULL, 0, 'User and User Admin Only', 0, NULL, 1);
+
+SELECT @transactional_mailing_id := max(id) from civicrm_mailing where is_hidden = '1';
+
+INSERT INTO `civicrm_mailing_job`
+  (`mailing_id`, `scheduled_date`, `start_date`, `end_date`, `status`, `is_test`, `job_type`, `parent_id`, `job_offset`, `job_limit`) VALUES
+  (@transactional_mailing_id, NULL, NULL, NULL, 'Running', 0, NULL, NULL, 0, 0);
+
+{include file='civicrm_msg_template.tpl'}

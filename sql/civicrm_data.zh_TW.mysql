@@ -4619,10 +4619,11 @@ VALUES
    (@option_group_id_act, '列印收據',        33, 'Print Contribution Receipts', NULL, 1, 0, 33, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, '捐款通知簡訊',                   34, 'Contribution SMS', NULL, 1, 0, 34, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, '活動通知簡訊',             35, 'Event Registration SMS', NULL, 1, 0, 35, '', 0, 1, 1, @eventCompId, NULL),
-   (@option_group_id_act, 'Contribution Notification Email',    36, 'Contribution Notification Email', NULL, 1, 0, 36, '', 0, 1, 1, @contributeCompId, NULL),
-   (@option_group_id_act, 'Event Notification Email',           37, 'Event Notification Email', NULL, 1, 0, 37, '', 0, 1, 1, @eventCompId, NULL),
-   (@option_group_id_act, 'Membership Notification Email',      38, 'Membership Notification Email', NULL, 1, 0, 38, '', 0, 1, 1, @memberCompId, NULL),
-   (@option_group_id_act, 'PCP Notification Email',             39, 'PCP Notification Email', NULL, 1, 0, 39, '', 0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '捐款通知信',    36, 'Contribution Notification Email', NULL, 1, 0, 36, '', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, '活動通知信',           37, 'Event Notification Email', NULL, 1, 0, 37, '', 0, 1, 1, @eventCompId, NULL),
+   (@option_group_id_act, '會員通知信',      38, 'Membership Notification Email', NULL, 1, 0, 38, '', 0, 1, 1, @memberCompId, NULL),
+   (@option_group_id_act, '個人募款頁通知信',             39, 'PCP Notification Email', NULL, 1, 0, 39, '', 0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '電子報通知信',         40, 'Mailing Notification Email', NULL, 1, 0, 40, '', 0, 1, 1, NULL, NULL),
 
    (@option_group_id_gender, '女',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, '男',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
@@ -4801,7 +4802,7 @@ VALUES
   (@option_group_id_csearch , '鄰近搜尋'            , 6, 'CRM_Contact_Form_Search_Custom_Proximity', NULL, 0, NULL, 6, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '活動整合'       , 7, 'CRM_Contact_Form_Search_Custom_EventAggregate', NULL, 0, NULL, 7, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '任務搜尋'       , 8, 'CRM_Contact_Form_Search_Custom_ActivitySearch', NULL, 0, NULL, 8, '', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , '給活動參與者的價目表詳情'             , 9, 'CRM_Contact_Form_Search_Custom_PriceSet', NULL, 0, NULL, 9, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '給活動參與者的價格表詳情'             , 9, 'CRM_Contact_Form_Search_Custom_PriceSet', NULL, 0, NULL, 9, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '郵遞區號範圍'         ,10, 'CRM_Contact_Form_Search_Custom_ZipCodeRange', NULL, 0, NULL, 10, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '新增日期到 CiviCRM'            ,11, 'CRM_Contact_Form_Search_Custom_DateAdded', NULL, 0, NULL, 11, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '自訂群組多重數值列表'       ,12, 'CRM_Contact_Form_Search_Custom_MultipleValues', NULL, 0, NULL, 12, '', 0, 0, 1, NULL, NULL),
@@ -5712,6 +5713,17 @@ INSERT INTO `civicrm_contact_type`
   ( 3, 'Organization', '組織', NULL, NULL, 1, 1);
 
 INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (2, 'Mailing', '電子報', '', NULL, NULL, 1, 'Public Pages', '2');
+
+INSERT INTO `civicrm_mailing`
+  (`domain_id`, `header_id`, `footer_id`, `reply_id`, `unsubscribe_id`, `resubscribe_id`, `optout_id`, `name`, `from_name`, `from_email`, `replyto_email`, `subject`, `body_preview`, `body_text`, `body_html`, `body_json`, `url_tracking`, `forward_replies`, `auto_responder`, `open_tracking`, `is_completed`, `msg_template_id`, `override_verp`, `created_id`, `created_date`, `scheduled_id`, `scheduled_date`, `is_archived`, `visibility`, `dedupe_email`, `sms_provider_id`, `is_hidden`)
+  VALUES
+  (@domainID, NULL, NULL, NULL, NULL, NULL, NULL, 'Transactional Email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 0, 0, 0, 1, NULL, NULL, 0, NULL, '2000-01-01 00:00:00', NULL, NULL, 0, 'User and User Admin Only', 0, NULL, 1);
+
+SELECT @transactional_mailing_id := max(id) from civicrm_mailing where is_hidden = '1';
+
+INSERT INTO `civicrm_mailing_job`
+  (`mailing_id`, `scheduled_date`, `start_date`, `end_date`, `status`, `is_test`, `job_type`, `parent_id`, `job_offset`, `job_limit`) VALUES
+  (@transactional_mailing_id, NULL, NULL, NULL, 'Running', 0, NULL, NULL, 0, 0);
 
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 3.3                                                |
