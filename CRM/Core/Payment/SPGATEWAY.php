@@ -539,7 +539,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $url = CRM_Utils_System::url(
       $path,
       $query,
-      TRUE,
+      TRUE
     );
     if( ( !empty($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on' ) || ( !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ){
       return str_replace('http://', 'https://', $url);
