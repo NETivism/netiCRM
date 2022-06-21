@@ -314,8 +314,8 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       );
 
       $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
-      $contribparams = array('id' => $values['contribution_id']);
-      $contribution = crm_core_dao::commonretrieve('crm_contribute_dao_contribution', $contribparams, CRM_Core_DAO::$_nullArray);
+      $contribParams = array('id' => $values['contribution_id']);
+      $contribution = CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_Contribution', $contribParams, CRM_Core_DAO::$_nullArray);
       $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($sendTemplateParams['groupName'], $sendTemplateParams['valueName']);
       if (!empty($pdfParams) && !empty($activityTypeId)) {
         $sendTemplateParams['attachments'][] = $pdfParams;

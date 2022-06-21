@@ -509,29 +509,22 @@ class CRM_Contribute_Form_AdditionalInfo {
     else {
       $templateParams['PDFFilename'] = 'receipt.pdf';
     }
-    list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams);
 
-    if (!empty($params['is_attach_receipt'])) {
-      $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
-      if (!empty($activityTypeId)) {
-        if (empty($userID)) {
-          $session = CRM_Core_Session::singleton();
-          $userID = $session->get('userID');
-        }
-        $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
-        $activityParams = array(
-          'activity_type_id' => $activityTypeId,
-          'source_record_id' => $params['contribution_id'],
-          'activity_date_time' => date('Y-m-d H:i:s'),
-          'is_test' => !empty($params['is_test']) ? 1 : 0,
-          'status_id' => $statusId,
-          'subject' => ts('Email Receipt').' - '.$params['source'],
-          'assignee_contact_id' => $params['contact_id'],
-          'source_contact_id' => $userID,
-        );
-        CRM_Activity_BAO_Activity::create($activityParams);
-      }
+    $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($templateParams['groupName'], $templateParams['valueName']);
+    $contribParams = array('id' => $params['contribution_id']);
+    $contribution = CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_Contribution', $contribParams, CRM_Core_DAO::$_nullArray);
+    if (!empty($params['is_attach_receipt']) && !empty(CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name'))) {
+      $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Email Receipt', $workflow['msg_title']);
     }
+    else {
+      $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Contribution Notification Email', $workflow['msg_title']);
+    }
+    $templateParams['activityId'] = $activityId;
+    list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, CRM_Core_DAO::$_nullObject, array(
+      0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+      1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+    ));
+
 
     return $sendReceipt;
   }

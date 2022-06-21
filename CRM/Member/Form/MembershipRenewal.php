@@ -650,9 +650,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       }
 
       #14664, remove un-notice strange design to send member notice
-      require_once 'CRM/Core/BAO/MessageTemplates.php';
+      $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow('msg_tpl_workflow_membership', 'membership_offline_receipt');
+      $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($renewMembership, 'Membership Notification Email', $workflow['msg_title']);
       list($mailSend, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         array(
+          'activityId' => $activityId,
           'groupName' => 'msg_tpl_workflow_membership',
           'valueName' => 'membership_offline_receipt',
           'contactId' => $this->_contactID,
@@ -660,6 +662,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
           'toName' => $this->_contributorDisplayName,
           'toEmail' => $this->_contributorEmail,
           'isTest' => $this->_mode == 'test',
+        ),
+        CRM_Core_DAO::$_nullObject,
+        array(
+          0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+          1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
         )
       );
     }
