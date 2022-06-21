@@ -58,7 +58,9 @@ class CRM_Mailing_Page_Event extends CRM_Core_Page {
    * @return void
    */
   function run() {
-    require_once 'CRM/Mailing/Selector/Event.php';
+    $mailing_id = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
+    CRM_Mailing_BAO_Mailing::checkPermission($mailing_id);
+
     $selector = new CRM_Mailing_Selector_Event(
       CRM_Utils_Request::retrieve('event', 'String',
         $this
@@ -76,8 +78,6 @@ class CRM_Mailing_Page_Event extends CRM_Core_Page {
         $this
       )
     );
-
-    $mailing_id = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
 
     CRM_Utils_System::setTitle($selector->getTitle());
     $this->assign('title', $selector->getTitle());

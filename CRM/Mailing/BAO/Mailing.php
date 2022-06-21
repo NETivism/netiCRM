@@ -2230,11 +2230,11 @@ AND civicrm_contact.is_opt_out =0";
     // if they dont have universal access
     $groups = CRM_Core_PseudoConstant::group();
     if (CRM_Core_Permission::check('Administer CiviCRM') || CRM_Core_Permission::check('view all contacts')) {
-      $where = ' ( 1 )';
+      $where = ' ( m.is_hidden = 0 )';
     }
     elseif (!empty($groups)) {
       $groupIDs = implode(',', array_keys($groups));
-      $where = "( ( g.entity_table = 'civicrm_group' AND g.entity_id IN ( $groupIDs ) ) OR   ( g.entity_table IS NULL AND g.entity_id IS NULL ) )";
+      $where = "( ( g.entity_table = 'civicrm_group' AND g.entity_id IN ( $groupIDs ) ) OR   ( g.entity_table IS NULL AND g.entity_id IS NULL ) ) AND ( m.is_hidden = 0 ) ";
     }
 
     $selectClause = ($count) ? 'COUNT( DISTINCT m.id) as count' : 'DISTINCT( m.id ) as id';
@@ -2274,13 +2274,6 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     $session = CRM_Core_Session::singleton();
 
     $mailingACL = self::mailingACL();
-
-    /*
-    //get all campaigns.
-    require_once 'CRM/Campaign/BAO/Campaign.php';
-    $allCampaigns = CRM_Campaign_BAO_Campaign::getCampaigns(NULL, NULL, FALSE, FALSE, FALSE, TRUE);
-*/
-
 
     // we only care about parent jobs, since that holds all the info on
     // the mailing
@@ -3000,7 +2993,7 @@ WHERE  civicrm_mailing_job.id = %1
   }
 
   /**
-   * @return mixed
+   * @return array
    */
   public static function getMailingsList() {
     static $list = array();
@@ -3009,7 +3002,7 @@ WHERE  civicrm_mailing_job.id = %1
       $query = "
 SELECT civicrm_mailing.id, civicrm_mailing.name, civicrm_mailing_job.end_date
 FROM   civicrm_mailing
-INNER JOIN civicrm_mailing_job ON civicrm_mailing.id = civicrm_mailing_job.mailing_id WHERE 1
+INNER JOIN civicrm_mailing_job ON civicrm_mailing.id = civicrm_mailing_job.mailing_id WHERE civicrm_mailing.is_archived = 0 AND civicrm_mailing.is_hidden = 0
 ORDER BY civicrm_mailing.name";
       $mailing = CRM_Core_DAO::executeQuery($query);
 
