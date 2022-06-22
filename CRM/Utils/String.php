@@ -352,7 +352,7 @@ class CRM_Utils_String {
   /**
    * Function to extract variable values
    *
-   * @param  mix $query this is basically url
+   * @param  string $query this is basically url
    *
    * @return mix $v  returns civicrm url (eg: civicrm/contact/search/...)
    * @access public
@@ -415,6 +415,13 @@ class CRM_Utils_String {
     else {
       return FALSE;
     }
+  }
+
+  static function xssFilter($str, $decodeFirst = FALSE) {
+    if ($decodeFirst) {
+      $str = urldecode($str);
+    }
+    return filter_var($str, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
   }
 
   /**
