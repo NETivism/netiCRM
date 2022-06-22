@@ -48548,3 +48548,7 @@ msgstr ""
 #: CRM/Admin/Page/PaymentProcessor.php
 msgid "Some recurring contributions are in progress, so some payment processors can't be disabled or deleted."
 msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid "This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?"
+msgstr ""
