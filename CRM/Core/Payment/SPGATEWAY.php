@@ -539,7 +539,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $url = CRM_Utils_System::url(
       $path,
       $query,
-      TRUE,
+      TRUE
     );
     if( ( !empty($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on' ) || ( !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ){
       return str_replace('http://', 'https://', $url);
@@ -984,6 +984,123 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
     }
 
+  }
+
+  
+  /**
+   * Function called from contributionRecur page to show tappay detail information
+   * 
+   * @param int @contributionId the contribution id
+   * 
+   * @return array The label as the key to value.
+   */
+  public static function getRecordDetail($contributionId) {
+    require_once 'CRM/Core/Smarty/resources/String.php';
+    $smarty = CRM_Core_Smarty::singleton();
+    civicrm_smarty_register_string_resource();
+    $returnTables[ts("Manually Synchronize")] = $smarty->fetch('string: {$form.$update_notify.html}');
+    return $returnTables;
+  }
+
+  /**
+   * Behavior after pressed "Sync now" button.
+   * 
+   * @param int $id The contribution recurring ID
+   * @param string $idType Means the type of the ID, value as "Contribution" or "recur"
+   * @param object $form The MakingTransaction form object
+   * @return void
+   */
+  public static function doRecurUpdate($id, $idType = 'contribution', $form = NULL) {
+    if (!empty($form)) {
+      $contributionId = $form->get('contributionId');
+      $contribution = new CRM_Contribute_DAO_Contribution();
+      $contribution->id = $contributionId;
+      $contribution->find(TRUE);
+      $trxn_id = $contribution->trxn_id;
+      $explodedTrxnId = explode('_', $trxn_id);
+      $isAddedNewContribution = FALSE;
+      // If current contribution status is waited, solved current contribution.
+      if ($contribution->contribution_status_id == 2) {
+        if (count($explodedTrxnId) == 1) {
+          $trxn_id .= '_1';
+        }
+      }
+      // If current contribution status is completed, find next contribution.
+      if ($contribution->contribution_status_id == 1) {
+        $isAddedNewContribution = TRUE;
+        $trxn_id = $explodedTrxnId[0] . '_' . ($explodedTrxnId[1] + 1);
+      }
+
+      $result = civicrm_spgateway_single_check($trxn_id, TRUE);
+      $session = CRM_Core_Session::singleton();
+      if (!empty($result)) {
+        if ($isAddedNewContribution) {
+          if (!empty($result->Result->OrderNo)) {
+            $orderNo = $result->Result->OrderNo;
+          }
+          $session->setStatus(ts("The contribution with transaction ID: %1 has been created and updated.", array(
+            1 => $orderNo,
+          )));
+        }
+        else {
+          $session->setStatus(ts("%1 status has been updated to %2.", array(
+            1 => ts("Recurring Contribution"),
+            2 => ts("In Progress"),
+          )));
+        }
+      }
+      else {
+        if ($isAddedNewContribution) {
+          $session->setStatus(ts("The contribution with transaction ID: %1 can't find from Newebpay API.", array(
+            1 => $trxn_id,
+          )));
+        }
+        else {
+          $session->setStatus(ts("There are no any change."));
+        }
+      }
+    }
+  }
+
+  static function doSingleQueryRecord($contributionId = NULL) {
+    $get = $_GET;
+    unset($get['q']);
+    if (!is_numeric($contributionId) || empty($contributionId)) {
+      $cid = $get['id'];
+    }
+    else {
+      $cid = $contributionId;
+    }
+    $trxnId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $cid, 'trxn_id');
+    if (empty($trxnId)) {
+      $resultMessage = ts("The contribution with transaction ID: %1 can't find from Newebpay API.", array(1 => $cid));
+    }
+    else {
+      if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.checkout') === FALSE) {
+        $resultMessage = ts('Module %1 doesn\'t exists.', array(1 => 'civicrm_spgateway'));
+      }
+      else {
+        if (!function_exists('civicrm_spgateway_single_contribution_sync')) {
+          $resultMessage = ts("Sync single contribution function doesn't exist.");
+        }
+        else {
+          civicrm_spgateway_single_contribution_sync($trxnId);
+          $resultMessage = ts("Synchronizing to %1 server success.", array(1 => ts("NewebPay")));
+        }
+      }
+    }
+    // Redirect to contribution view page.
+    $query = http_build_query($get);
+    $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
+    CRM_Core_Error::statusBounce($resultMessage, $redirect);
+  }
+
+  static function getSyncDataUrl($contributionId) {
+    $get = $_GET;
+    unset($get['q']);
+    $query = http_build_query($get);
+    $sync_url = CRM_Utils_System::url("civicrm/spgateway/query", $query);
+    return $sync_url;
   }
 }
 

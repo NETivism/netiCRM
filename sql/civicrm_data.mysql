@@ -4619,6 +4619,11 @@ VALUES
    (@option_group_id_act, 'Print Contribution Receipts',        33, 'Print Contribution Receipts', NULL, 1, 0, 33, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, 'Contribution SMS',                   34, 'Contribution SMS', NULL, 1, 0, 34, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, 'Event Registration SMS',             35, 'Event Registration SMS', NULL, 1, 0, 35, '', 0, 1, 1, @eventCompId, NULL),
+   (@option_group_id_act, 'Contribution Notification Email',    36, 'Contribution Notification Email', NULL, 1, 0, 36, '', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, 'Event Notification Email',           37, 'Event Notification Email', NULL, 1, 0, 37, '', 0, 1, 1, @eventCompId, NULL),
+   (@option_group_id_act, 'Membership Notification Email',      38, 'Membership Notification Email', NULL, 1, 0, 38, '', 0, 1, 1, @memberCompId, NULL),
+   (@option_group_id_act, 'PCP Notification Email',             39, 'PCP Notification Email', NULL, 1, 0, 39, '', 0, 1, 1, NULL, NULL),
+   (@option_group_id_act, 'Mailing Notification Email',         40, 'Mailing Notification Email', NULL, 1, 0, 40, '', 0, 1, 1, NULL, NULL),
 
    (@option_group_id_gender, 'Female',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, 'Male',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
@@ -4665,19 +4670,22 @@ VALUES
   (@option_group_id_pi, 'Check',  4, 'Check', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, 'EFT',  5, 'EFT', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, 'Credit Card (Offline)',  6, 'Credit Card (Offline)', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pi, 'Credit Card Recurring (Offline)',  7, 'Credit Card Recurring (Offline)', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pi, 'Post Office Transfer',  8, 'Post Office Transfer', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pi, 'Convenient Store Barcode',  9, 'Convenient Store', NULL, 0, NULL, 9, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'Convenient Store (Code)',  10, 'Convenient Store (Code)', NULL, 0, NULL, 10, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'Web ATM Transfer',  11, 'Web ATM', NULL, 0, NULL, 11, NULL, 0, 1, 0, NULL, NULL),
-  (@option_group_id_pi, 'ATM Transfer',  12, 'ATM', NULL, 0, NULL, 14, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'Yahoo Charity',  13, 'Yahoo', NULL, 0, NULL, 15, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pi, 'UnionPay',  14, 'UnionPay', NULL, 0, NULL, 16, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'ApplePay',  15, 'ApplePay', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'GooglePay',  16, 'GooglePay', NULL, 0, NULL, 16, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'LinePay',  17, 'LinePay', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'ACH Bank',  18, 'ACH Bank', NULL, 0, NULL, 18, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'ACH Post',  19, 'ACH Post', NULL, 0, NULL, 19, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Credit Card Recurring',  7, 'Credit Card Recurring', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, 'Credit Card Recurring (Offline)',  8, 'Credit Card Recurring (Offline)', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, 'Post Office Transfer',  9, 'Post Office Transfer', NULL, 0, NULL, 9, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, 'Post Office Recurring (Offline)',  10, 'Post Office Recurring (Offline)', NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, 'Convenient Store Barcode',  11, 'Convenient Store', NULL, 0, NULL, 11, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Convenient Store (Code)',  12, 'Convenient Store (Code)', NULL, 0, NULL, 12, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Web ATM Transfer',  13, 'Web ATM', NULL, 0, NULL, 13, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'ATM Transfer',  14, 'ATM', NULL, 0, NULL, 14, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Yahoo Charity',  15, 'Yahoo', NULL, 0, NULL, 15, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, 'UnionPay',  16, 'UnionPay', NULL, 0, NULL, 16, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'ApplePay',  17, 'ApplePay', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'GooglePay',  18, 'GooglePay', NULL, 0, NULL, 18, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'LinePay',  19, 'LinePay', NULL, 0, NULL, 19, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'ACH Bank',  20, 'ACH Bank', NULL, 0, NULL, 20, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'ACH Post',  21, 'ACH Post', NULL, 0, NULL, 21, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Alipay',  22, 'Alipay', NULL, 0, NULL, 22, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_cs, 'Completed'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, 'Pending'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -5578,7 +5586,8 @@ INSERT INTO civicrm_mailing_bounce_pattern
     (@bounceTypeID, 'sender ip must resolve'),
     (@bounceTypeID, 'unable to relay'),
     (@bounceTypeID, '550 relaying.+denied'),
-    (@bounceTypeID, '550 relaying.+not allowed');
+    (@bounceTypeID, '550 relaying.+not allowed'),
+    (@bounceTypeID, '550.+blacklisted');
 
 INSERT INTO civicrm_mailing_bounce_type 
         (name, description, hold_threshold) 
@@ -5704,6 +5713,17 @@ INSERT INTO `civicrm_contact_type`
   ( 3, 'Organization', 'Organization', NULL, NULL, 1, 1);
 
 INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (2, 'Mailing', 'Mailing', '', NULL, NULL, 1, 'Public Pages', '2');
+
+INSERT INTO `civicrm_mailing`
+  (`domain_id`, `header_id`, `footer_id`, `reply_id`, `unsubscribe_id`, `resubscribe_id`, `optout_id`, `name`, `from_name`, `from_email`, `replyto_email`, `subject`, `body_preview`, `body_text`, `body_html`, `body_json`, `url_tracking`, `forward_replies`, `auto_responder`, `open_tracking`, `is_completed`, `msg_template_id`, `override_verp`, `created_id`, `created_date`, `scheduled_id`, `scheduled_date`, `is_archived`, `visibility`, `dedupe_email`, `sms_provider_id`, `is_hidden`)
+  VALUES
+  (@domainID, NULL, NULL, NULL, NULL, NULL, NULL, 'Transactional Email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 0, 0, 0, 1, NULL, NULL, 0, NULL, '2000-01-01 00:00:00', NULL, NULL, 0, 'User and User Admin Only', 0, NULL, 1);
+
+SELECT @transactional_mailing_id := max(id) from civicrm_mailing where is_hidden = '1';
+
+INSERT INTO `civicrm_mailing_job`
+  (`mailing_id`, `scheduled_date`, `start_date`, `end_date`, `status`, `is_test`, `job_type`, `parent_id`, `job_offset`, `job_limit`) VALUES
+  (@transactional_mailing_id, NULL, NULL, NULL, 'Running', 0, NULL, NULL, 0, 0);
 
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 3.3                                                |

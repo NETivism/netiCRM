@@ -34,6 +34,16 @@
  */
 
 class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
+  /**
+   * queue name
+   */
+  const QUEUE_NAME = 'dedupe_running';
+
+  /**
+   * running time limit
+   */
+  const RUNNING_TIME_LIMIT = 1800;
+
   protected $_cid = NULL;
   protected $_rgid;
   protected $_mainContacts;
@@ -62,7 +72,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    * @access public
    */
   function run() {
-    set_time_limit(1800);
+    set_time_limit(self::RUNNING_TIME_LIMIT);
     $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this, FALSE, 0);
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 0);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
@@ -137,6 +147,13 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
         $session->setStatus(ts("This list is cached result, generated at %1.", array(1 => CRM_Utils_Date::customFormat($datetime))).' '.ts('You can renew this list by click "Refresh" button.'));
       }
       else{
+        if ($this->dedupeRunning()) {
+          CRM_Core_Error::fatal(ts('You have another running dedupe job. For system performance concern, we can only allow one dedupe job concurrently. Please try again later.'));
+          return;
+        }
+        else {
+          $this->dedupeStart();
+        }
         if ($this->_gid) {
           $foundDupes = CRM_Dedupe_Finder::dupesInGroup($this->_rgid, $this->_gid);
         }
@@ -150,6 +167,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
         if (!empty($foundDupes)) {
           $this->storeFoundDupes($foundDupes);
         }
+        $this->dedupeEnd();
       }
       if (!$foundDupes) {
         $ruleGroup = new CRM_Dedupe_BAO_RuleGroup();
@@ -368,5 +386,42 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $this->assign_by_ref('pager', $this->_pager);
   }
 
+  function dedupeRunning() {
+    $dao = new CRM_Core_DAO_Sequence();
+    $dao->name = self::QUEUE_NAME;
+    if ($dao->find(TRUE)) {
+      $timestamp = (int) $dao->timestamp;
+      if (CRM_REQUEST_TIME - $timestamp < self::RUNNING_TIME_LIMIT) {
+        return TRUE;
+      }
+    }
+    $dao->free();
+    return FALSE;
+  }
+
+  function dedupeStart() {
+    $dao = new CRM_Core_DAO_Sequence();
+    $dao->name = self::QUEUE_NAME;
+    if ($dao->find(TRUE)) {
+      $dao->timestamp = microtime(true);
+      $dao->value = $this->_cachePath;
+      $dao->update();
+    }
+    else {
+      $dao->timestamp = microtime(true);
+      $dao->value = $this->_cachePath;
+      $dao->insert();
+    }
+    return $dao;
+  }
+
+  function dedupeEnd() {
+    $dao = new CRM_Core_DAO_Sequence();
+    $dao->name = self::QUEUE_NAME;
+    if ($dao->find()) {
+      return $dao->delete();
+    }
+    return FALSE;
+  }
 }
 

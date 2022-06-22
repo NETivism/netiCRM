@@ -70,6 +70,7 @@ DROP TABLE IF EXISTS civicrm_group_contact;
 DROP TABLE IF EXISTS civicrm_loc_block;
 DROP TABLE IF EXISTS civicrm_address;
 DROP TABLE IF EXISTS civicrm_pcp_block;
+DROP TABLE IF EXISTS civicrm_mailing_event_transactional;
 DROP TABLE IF EXISTS civicrm_uf_join;
 DROP TABLE IF EXISTS civicrm_uf_field;
 DROP TABLE IF EXISTS civicrm_uf_group;
@@ -1222,7 +1223,8 @@ CREATE TABLE civicrm_mailing (
      is_archived tinyint   DEFAULT 0 COMMENT 'Is this mailing archived?',
      visibility enum('User and User Admin Only', 'Public Pages')   DEFAULT 'User and User Admin Only' COMMENT 'In what context(s) is the mailing contents visible (online viewing)',
      dedupe_email tinyint   DEFAULT 0 COMMENT 'Remove duplicate emails?',
-     sms_provider_id int unsigned     
+     sms_provider_id int unsigned    ,
+     is_hidden tinyint   DEFAULT 0 COMMENT 'Is this mailing hidden?' 
 ,
     PRIMARY KEY ( id )
  
@@ -4328,6 +4330,28 @@ CREATE TABLE civicrm_uf_join (
   
 ,      
      CONSTRAINT FK_civicrm_uf_join_uf_group_id FOREIGN KEY (uf_group_id) REFERENCES civicrm_uf_group(id)   
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_mailing_event_transactional
+-- *
+-- * Transactional mailing table connect delivery and activity link.
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_mailing_event_transactional (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  ,
+     event_queue_id int unsigned NOT NULL   COMMENT 'FK to EventQueue',
+     activity_id int unsigned NOT NULL   COMMENT 'Foreign key to the activity for this mailing deliver record.' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+,      
+     CONSTRAINT FK_civicrm_mailing_event_transactional_event_queue_id FOREIGN KEY (event_queue_id) REFERENCES civicrm_mailing_event_queue(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_mailing_event_transactional_activity_id FOREIGN KEY (activity_id) REFERENCES civicrm_activity(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

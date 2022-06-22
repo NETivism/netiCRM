@@ -56,6 +56,9 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
    */
   function preProcess() {
     $this->rgid = CRM_Utils_Request::retrieve('rgid', 'Positive', $this, FALSE, 0);
+    if (CRM_Contact_Page_DedupeFind::dedupeRunning()) {
+      $this->assign('is_running_process', TRUE);
+    }
   }
 
   /**
@@ -75,6 +78,10 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
         array('type' => 'next',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
+          'js' => array(
+            'data' => 'click-once',
+            'data-once-msg' => ts('Form processing. Do not reload page or you will loss your progress.'),
+          ),
         ),
         //hack to support cancel button functionality
         array('type' => 'submit',

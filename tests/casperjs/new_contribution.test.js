@@ -302,22 +302,12 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#receive_date_time");
     });
 
-    /* clear recipt date */
+    /* clear receipt date */
     casper.waitForSelector('.crm-clear-link a', function success() {
         test.assertExists('.crm-clear-link a');
         this.click('.crm-clear-link a');
     }, function fail() {
         test.assertExists('.crm-clear-link a');
-    });
-
-    /* clear receipt id */
-    casper.waitForSelector("#receipt_id", function success() {
-        test.assertExists("#receipt_id");
-        this.evaluate(function () {
-            document.querySelector("#receipt_id").value = '';
-        });
-    }, function fail() {
-        test.assertExists("#receipt_id");
     });
 
     casper.then(function() {

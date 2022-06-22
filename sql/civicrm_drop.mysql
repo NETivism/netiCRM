@@ -45,6 +45,7 @@ DROP TABLE IF EXISTS civicrm_group_contact;
 DROP TABLE IF EXISTS civicrm_loc_block;
 DROP TABLE IF EXISTS civicrm_address;
 DROP TABLE IF EXISTS civicrm_pcp_block;
+DROP TABLE IF EXISTS civicrm_mailing_event_transactional;
 DROP TABLE IF EXISTS civicrm_uf_join;
 DROP TABLE IF EXISTS civicrm_uf_field;
 DROP TABLE IF EXISTS civicrm_uf_group;

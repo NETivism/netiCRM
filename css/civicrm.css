@@ -3181,6 +3181,27 @@ div#crm-toolTip #hide-tooltip {
   margin-bottom: 0px;
 }
 
+/* docurl */
+.crm-container a.crm-docurl{
+  text-decoration: none !important;
+  position: relative;
+}
+.crm-container a.crm-docurl::before {
+  content: '\f2f5';
+  font-family: 'Material-Design-Iconic-Font';
+  margin-right: 5px;
+}
+.crm-container a.crm-docurl:hover::after {
+  content: '\f1a3';
+  font-family: 'Material-Design-Iconic-Font';
+  opacity: .5;
+  font-size: .85em;
+  margin-left: 5px;
+  position: absolute;
+  right: -15px;
+  top: -3px;
+}
+
 /* crm-summary-group appears outside crm-container for contact summary icon overlay */
 .crm-container .crm-summary-group .crm-section .label,
 .crm-summary-group .crm-section .label {
@@ -4405,6 +4426,17 @@ ul.ui-sortable {
   border-color: #F44336;
 }
 
+.crm-container .zmdi.ok{
+  color: #44af29;
+}
+.crm-container .zmdi.warning {
+  color: #ff9800;
+}
+.crm-container .zmdi.error {
+  color: #d50000;
+}
+
+
 /* fieldset */
 .crm-container fieldset {
   top: 0;
@@ -4769,6 +4801,7 @@ ul.ui-sortable {
 .crm-button-type-upload a.button:visited,
 .crm-button-type-upload .form-submit,
 .crm-button-type-next .form-submit,
+.crm-button-type-done .form-submit,
 .crm-container .form-submit[name*=_upload_],
 .crm-container #register-me,
 .crm-container a.button.crm-register-button {
@@ -4785,6 +4818,8 @@ ul.ui-sortable {
 .crm-button-type-upload .form-submit:focus,
 .crm-button-type-next .form-submit:hover,
 .crm-button-type-next .form-submit:focus,
+.crm-button-type-done .form-submit:hover,
+.crm-button-type-done .form-submit:focus,
 .crm-container #register-me:hover,
 .crm-container #register-me:focus,
 .crm-container a.button.crm-register-button:hover,
@@ -4797,6 +4832,7 @@ ul.ui-sortable {
 .crm-button-type-upload .button:active,
 .crm-button-type-upload .form-submit:active,
 .crm-button-type-next .form-submit:active,
+.crm-button-type-done .form-submit:active,
 .crm-container #register-me:active,
 .crm-container a.button.crm-register-button:active {
   background: #303F9F;
@@ -5244,7 +5280,28 @@ tbody.scrollContent tr.alternateRow {
   color: #777;
   font-weight: normal;
 }
-
+.crm-container td.crm-contribution-amount .premium-info {
+  font-weight: normal;
+}
+.crm-container td.crm-contribution-amount .product-name {
+  line-height: 1.4;
+  font-size: 15px;
+}
+.crm-container td.crm-contribution-amount .product-name > i {
+  font-size: 20px;
+  color: #8e0101;
+}
+.crm-container td.crm-contribution-amount .product-option {
+  font-size: 13px;
+  color: #555;
+}
+.crm-container td.crm-contribution-amount .product-option-label::after {
+  content: "：";
+}
+.i18n-en .crm-container td.crm-contribution-amount .product-option-label::after {
+  content: ":";
+  margin-right: 5px;
+}
 
 /*
 ** Styles for record browser and report tables, and pager bar

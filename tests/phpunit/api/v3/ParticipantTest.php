@@ -1,38 +1,15 @@
 <?php
-// $Id$
-
-/*
- +--------------------------------------------------------------------+
- | CiviCRM version 4.2                                                |
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2012                                |
- +--------------------------------------------------------------------+
- | This file is a part of CiviCRM.                                    |
- |                                                                    |
- | CiviCRM is free software; you can copy, modify, and distribute it  |
- | under the terms of the GNU Affero General Public License           |
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
- |                                                                    |
- | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
- | See the GNU Affero General Public License for more details.        |
- |                                                                    |
- | You should have received a copy of the GNU Affero General Public   |
- | License and the CiviCRM Licensing Exception along                  |
- | with this program; if not, contact CiviCRM LLC                     |
- | at info[AT]civicrm[DOT]org. If you have questions about the        |
- | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+
+/**
+ * Phone Unit Test
+ *
+ * @docmaker_intro_start
+ * @api_title Participant
+ * This is a API Document about Participant.
+ * @docmaker_intro_end
  */
 
 
-
-
-
-
-require_once 'api/v3/DeprecatedUtils.php';
+// require_once 'api/v3/DeprecatedUtils.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ParticipantTest extends CiviUnitTestCase {
 
@@ -95,6 +72,22 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
    * variables specific to participant so it can be replicated into other entities
    * and / or moved to the automated test suite
    */
+  /**
+   * Participant Create Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Participant
+   * @api_action Create
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Participant&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Participant&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
   function testCreateWithCustom() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
 
@@ -102,8 +95,11 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     $params['custom_' . $ids['custom_field_id']] = "custom string";
 
     $result = civicrm_api($this->_entity, 'create', $params);
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
+
     $this->assertEquals($result['id'], $result['values'][$result['id']]['id']);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertNotEquals($result['is_error'], 1, $result['error_message'] . ' in line ' . __LINE__);
 
     $check = civicrm_api($this->_entity, 'get', array('version' => 3, 'id' => $result['id']));
@@ -113,6 +109,36 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     $this->customGroupDelete($ids['custom_group_id']);
   }
 
+  /**
+   * Test civicrm_participant_get with custom params
+   */
+  /**
+   * Participant Get Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Participant
+   * @api_action Get
+   * @http_method GET
+   * @request_url <entrypoint>?entity=Participant&action=get&json={$request_body_inline}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Participant&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testGetWithCustom() {
+    $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
+
+    $params = $this->_params;
+    $params['custom_' . $ids['custom_field_id']] = "custom string";
+    $result = civicrm_api($this->_entity, 'create', $params);
+
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $get = civicrm_api('participant', 'get', $params);
+    $this->docMakerResponse($get, __FILE__, __FUNCTION__);
+
+    $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
+  }
 
   ///////////////// civicrm_participant_get methods
 
@@ -596,7 +622,23 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
   /**
    * check with complete array
    */
-  function testUpdate() {
+  /**
+   * Phone Update Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Participant
+   * @api_action Update
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Participant&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Participant&action=create&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testUpdateParticipant() {
     $participantId = $this->participantCreate(array('contactID' => $this->_individualId, 'eventID' => $this->_eventID, $this->_apiversion));
     $params = array(
       'id' => $participantId,
@@ -609,7 +651,9 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
       'event_level' => 'Donation',
       'version' => $this->_apiversion,
     );
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $participant = civicrm_api('participant', 'create', $params);
+    $this->docMakerResponse($participant, __FILE__, __FUNCTION__);
     $this->assertNotEquals($participant['is_error'], 1);
 
 
@@ -654,12 +698,35 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
   /**
    * check with participant_id
    */
-  function testParticipantDelete() {
+  /**
+   * Participant Delete Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Participant
+   * @api_action Delete
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Participant&action=delete
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Participant&action=delete&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testDeleteParticipant() {
     $params = array(
       'id' => $this->_participantID,
       'version' => $this->_apiversion,
     );
+    //create one
+    $create = civicrm_api('phone', 'create', $params);
+    $this->assertAPISuccess($create, 'In line ' . __LINE__);
+
     $participant = civicrm_api('participant', 'delete', $params);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($participant, __FILE__, __FUNCTION__);
+
     $this->assertNotEquals($participant['is_error'], 1);
     $this->assertDBState('CRM_Event_DAO_Participant', $this->_participantID, NULL, TRUE);
   }

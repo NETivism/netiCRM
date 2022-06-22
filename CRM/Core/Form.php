@@ -378,6 +378,18 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $this->addRules();
   }
 
+  function addButton($buttonType, $label, $attributes = NULL) {
+    $attributes = !empty($attributes) ? $attributes : array();
+    if (!empty($attributes['class'])) {
+      $attributes['class'] .= ' form-submit';
+    }
+    else {
+      $attributes['class'] = 'form-submit';
+    }
+    $buttonName = $this->getButtonName($buttonType);
+    return $this->add('submit', $buttonName, $label, $attributes);
+  }
+
   /**
    * Add default Next / Back buttons
    *
@@ -720,6 +732,14 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     self::$_template->isAssigned($var, $value);
   }
 
+  function addTextfield($name, $label, $attributes = NULL, $required = FALSE) {
+    return $this->add('text', $name, $label, $attributes, $required);
+  }
+
+  function addCbx($name, $label, $attributes = NULL, $required = FALSE) {
+    return $this->add('checkbox', $name, $label, $attributes, $required);
+  }
+
   function addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
     $options = array();
     $attributes = $attributes ? $attributes : array();
@@ -857,6 +877,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       }
       return $ele;
     }
+  }
+  
+  function addTextarea($name, $label, $attributes = NULL, $required = NULL) {
+    return $this->add('textarea', $name, $label, $attributes, $required);
   }
 
   function addWysiwyg($name, $label, $attributes, $forceTextarea = FALSE) {

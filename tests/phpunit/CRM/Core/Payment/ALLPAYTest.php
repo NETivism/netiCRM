@@ -339,7 +339,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid2");
     $this->assertNotEmpty($data, "In line " . __LINE__);
 
-    // use civicrm_allpay_recur_check to insert third Payment_ALLPAY
+    // use CRM_Core_Payment_ALLPAY::recurCheck to insert third Payment_ALLPAY
     $gwsr2 = 222222;
     $get = $post = $ids = array();
     $order_base = (object)(array(
@@ -420,7 +420,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $order_sample = json_decode($order_json);
 
     // add new payment from recurring notification
-    civicrm_allpay_recur_check($recurring->id, $order_sample);
+    CRM_Core_Payment_ALLPAY::recurCheck($recurring->id, $order_sample);
     $params = array(
       'id' => $recurring->id,
       'contribution_status_id' => 5,
@@ -476,7 +476,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     // refs #21187, submit again but change gwsr data (simulate gw bad api)
     // we should still 6 records
     $order_base->ExecLog[6]->gwsr = 0;
-    civicrm_allpay_recur_check($recurring->id, $order_base);
+    CRM_Core_Payment_ALLPAY::recurCheck($recurring->id, $order_base);
     $params = array(
       1 => array($recurring->id, 'Integer'),
     );
@@ -484,7 +484,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     // completed recurring
     $order_base->ExecStatus = 2;
-    civicrm_allpay_recur_check($recurring->id, $order_base);
+    CRM_Core_Payment_ALLPAY::recurCheck($recurring->id, $order_base);
     $params = array(
       'id' => $recurring->id,
       'contribution_status_id' => 1,
@@ -493,7 +493,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     // cancelled recurring
     $order_base->ExecStatus = 0;
-    civicrm_allpay_recur_check($recurring->id, $order_base);
+    CRM_Core_Payment_ALLPAY::recurCheck($recurring->id, $order_base);
     $params = array(
       'id' => $recurring->id,
       'contribution_status_id' => 3,
@@ -510,7 +510,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TEST2' => 'BBB',
     );
     $_GET['q'] = 'allpay/record';
-    CRM_Core_Payment_ALLPAYIPN::doRecordData($cid);
+    CRM_Core_Payment_ALLPAYIPN::doRecordData(array('allpay', 'record', $cid));
     $this->assertDBQuery($cid, "SELECT cid FROM civicrm_contribution_allpay WHERE data LIKE '%#info%TEST1%' AND cid = $cid");
   }
 }

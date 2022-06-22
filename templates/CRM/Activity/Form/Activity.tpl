@@ -285,25 +285,49 @@
                         </table>
                        </div><!-- /.crm-accordion-body -->
 					 </div><!-- /.crm-accordion-wrapper -->
-					{literal} 
-					<script type="text/javascript">
-					cj(function() {
-					   cj().crmaccordions(); 
-					});
-					</script>
-					{/literal}
-					 
 					 </td>
                  </tr>
              {/if}
         {/if} {* End Delete vs. Add / Edit action *}
         </table>   
+        {if $action eq 4 && $mailing_events}
+        <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+          <div class="crm-accordion-header">
+          <div class="zmdi crm-accordion-pointer"></div>
+            {ts}Email Tracking{/ts}
+          </div><!-- /.crm-accordion-header -->
+          <div class="crm-accordion-body">
+            <table class="form-layout-compressed">
+              <tr>
+                <th class="twelve">{ts}Action{/ts}</th>
+                <th class="twelve">{ts}Date{/ts}</th>
+                <th>{ts}Details{/ts}</th>
+              </tr>
+              {foreach from=$mailing_events item=mailing_event_row}
+                <tr>
+                  <td>{$mailing_event_row.action}</td>
+                  <td>{$mailing_event_row.time|crmDate}</td>
+                  <td>
+                    {if $mailing_event_row.detail}
+                      {$mailing_event_row.detail|nl2br}
+                    {else}
+                      {ts}None{/ts}
+                    {/if}
+                  </td>
+                </tr>
+              {/foreach}
+              <tr>
+              </tr>
+            </table>
+          </div><!-- /.crm-accordion-body -->
+        </div><!-- /.crm-accordion-wrapper -->
+        {/if}
 	    <div class="crm-submit-buttons">
             {if $action eq 4 && $activityTName neq 'Inbound Email'} 
 	            {if !$context }
 	                {assign var="context" value='activity'}
 	            {/if}
-	            {if $permission EQ 'edit'}
+	            {if $permission EQ 'edit' && !$is_transactional}
 		            {assign var='urlParams' value="reset=1&atype=$atype&action=update&reset=1&id=$entityID&cid=$contactId&context=$context"}
 		            {if ($context eq 'fulltext' || $context eq 'search') && $searchKey}
 		                {assign var='urlParams' value="reset=1&atype=$atype&action=update&reset=1&id=$entityID&cid=$contactId&context=$context&key=$searchKey"}
@@ -311,7 +335,7 @@
                     <a href="{crmURL p='civicrm/contact/view/activity' q=$urlParams}" class="edit button" title="{ts}Edit{/ts}"><span><div class="zmdi zmdi-edit"></div>{ts}Edit{/ts}</span></a>
                  {/if}
                  
-                 {if call_user_func(array('CRM_Core_Permission','check'), 'delete activities')}
+                 {if call_user_func(array('CRM_Core_Permission','check'), 'delete activities') && !$is_transactional}
 		            {assign var='urlParams' value="reset=1&atype=$atype&action=delete&reset=1&id=$entityID&cid=$contactId&context=$context"}
 		            {if ($context eq 'fulltext' || $context eq 'search') && $searchKey}
 		                {assign var='urlParams' value="reset=1&atype=$atype&action=delete&reset=1&id=$entityID&cid=$contactId&context=$context&key=$searchKey"}	

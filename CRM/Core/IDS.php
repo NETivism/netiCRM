@@ -49,9 +49,9 @@ class CRM_Core_IDS {
 
   /**
    * define general exceptions and field types
-   * 
+   *
    * @var array
-   * @access public 
+   * @access public
    */
   public static $definition = [
     'administer CiviCRM' => [
@@ -81,7 +81,7 @@ class CRM_Core_IDS {
       'civicrm/admin/options/from_email_address' => ['label']
     ],
     'access CiviContribute' => [
-      'civicrm/admin/contribute/settings' => [ 
+      'civicrm/admin/contribute/settings' => [
         'intro_text',
         'footer_text',
       ],
@@ -99,7 +99,10 @@ class CRM_Core_IDS {
         'about',
       ],
       'civicrm/admin/contribute/friend' => ['thankyou_text'],
-      'civicrm/contribute/search' => ['html_message'],
+      'civicrm/contribute/search' => [
+        'html_message',
+        'receipt_text',
+      ],
       'civicrm/contact/view/contribution' => ['from_email_address'],
     ],
     'access CiviEvent' => [
@@ -151,13 +154,13 @@ class CRM_Core_IDS {
 
   /**
    * define the threshold for the ids reactions
-   * 
+   *
    * @var array
-   * @access private 
+   * @access private
    */
   private $_threshold = array(
-    'log' => 7,
-    'warn' => 50,
+    'log' => 30,
+    'warn' => 55,
     'kick' => 75,
   );
 
@@ -242,7 +245,7 @@ class CRM_Core_IDS {
       $init->config['General']['json'][] = 'IDS_php_input';
     }
 
-    $ids = new Monitor($init, array('sqli', 'dt', 'id', 'lfi', 'rfe', 'spam', 'dos'));
+    $ids = new Monitor($init, array('sqli', 'dt', 'id', 'lfi', 'rfe'));
     $result = $ids->run($request);
     unset($request); // release memory
 
@@ -333,7 +336,7 @@ class CRM_Core_IDS {
   }
 
   /**
-   * These function 
+   * These function
    */
   private function log() {
     return TRUE;
@@ -341,7 +344,7 @@ class CRM_Core_IDS {
 
   private function warn() {
     if(CRM_Utils_System::isUserLoggedIn()) {
-      return TRUE; 
+      return TRUE;
     }
     else {
       $session = CRM_Core_Session::singleton();

@@ -86,14 +86,23 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     $id = $this->get('recurId');
+    $contributionId = $this->get('contributionId');
 
-    $name = $this->getButtonName('submit');
-    $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", array(1 => $id))."')"));
-    $this->assign('submit_name', $name);
-
-    $name = $this->getButtonName('upload');
-    $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".ts("Are you sure you want to sync all expiry dates of this token?")."')"));
-    $this->assign('update_notify', $name);
+    $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
+    if (method_exists($paymentClass, 'doRecurUpdate')) {
+      $name = $this->getButtonName('upload');
+      $message = ts("Are you sure you want to sync the recurring status and check the contributions?");
+      if (method_exists($paymentClass, 'getSyncNowMessage')) {
+        $message = $paymentClass::getSyncNowMessage($contributionId, $id);
+      }
+      $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".$message."')"));
+      $this->assign('update_notify', $name);
+    }
+    if (method_exists($paymentClass, 'doRecurTransact')) {
+      $name = $this->getButtonName('submit');
+      $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", array(1 => $id))."')"));
+      $this->assign('submit_name', $name);
+    }
   }
 
   /**
@@ -115,7 +124,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
     if ($isActionUpdate) {
       if (method_exists($paymentClass, 'doRecurUpdate')) {
-        $resultMessage = $paymentClass::doRecurUpdate($recurId, 'recur');
+        $resultMessage = $paymentClass::doRecurUpdate($recurId, 'recur', $this);
       }
     }
     else {

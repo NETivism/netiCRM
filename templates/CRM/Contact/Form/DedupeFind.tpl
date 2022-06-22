@@ -24,6 +24,11 @@
  +--------------------------------------------------------------------+
 *}
 <div class="crm-block crm-form-block crm-dedupe-find-form-block">
+{if $is_running_process}
+<div class="messages warning">
+  {ts}You have another running dedupe job. For system performance concern, we can only allow one dedupe job concurrently. Please try again later.{/ts}
+</div>
+{/if}
 <div id="help">
     {ts}You can search all contacts for duplicates or limit the search to a specific group.{/ts} 
 </div>
@@ -36,3 +41,4 @@
    </table>
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
+{include file="CRM/common/formNavigate.tpl" force=true}

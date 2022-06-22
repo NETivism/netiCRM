@@ -161,6 +161,10 @@
               <td class="label"><label>{ts}Receipt{/ts}</label></td>
               <td>
                 <div class="have-receipt"><input value="1" class="form-checkbox" type="checkbox" name="have_receipt" id="have_receipt" /> <span class="description">{ts}Have receipt?{/ts}</span></div>
+                <div id="dialog-confirm-receipt" title="{ts}Procceed Receipt Generation?{/ts}" style="display:none;">
+                  <p><span class="zmdi zmdi-alert-circle" style="margin: 0 7px 0 0;"></span>{ts}This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?{/ts}</p>
+                  <p>{ts}Are you sure you want to continue?{/ts}</p>
+                </div>
                 <div id="receipt-option">
                   {if $email and $outBound_option != 2}
                     <div class="crm-receipt-option crm-contribution-form-block-is_email_receipt">
@@ -453,18 +457,50 @@ cj(document).ready(function(){
    else{
      cj('#receipt-option').hide();
    }
+   
+  {/literal}{if !$smarty.get.snippet}{literal}
+  console.log('test');
+   // Define dialog behavior.
+  cj("#dialog-confirm-receipt").dialog({
+    autoOpen: false,
+    resizable: false,
+    width:450,
+    height:250,
+    modal: true,
+    buttons: {
+      "{/literal}{ts}OK{/ts}{literal}": function() {
+        isPassChekcedDeductible = true;
+        cj(this).dialog("close");
+        cj('#have_receipt')[0].click();
+        return true;
+      },
+      "{/literal}{ts}Cancel{/ts}{literal}": function() {
+        cj( this ).dialog( "close" );
+        return false;
+      }
+    }
+  });
+  isPassChekcedDeductible = false;
+
    cj('#have_receipt').on('click', function(){
      if(cj(this).attr('checked') == 'checked'){
+      let contributionTypeId = parseInt(cj('#contribution_type_id').val());
+      if (!([{/literal}{$deductible_type_ids}{literal}].includes(contributionTypeId)) && !isPassChekcedDeductible){
+        cj("#dialog-confirm-receipt").dialog('open');
+        return false;
+      }
        var d = new Date();
        cj("#receipt_date").datepicker('setDate', d);
        cj("#receipt_date_time").val(d.getHours().pad(2)+':'+d.getMinutes().pad(2));
        cj('#receipt-option').show();
      }
      else{
+       isPassChekcedDeductible = false;
        cj('#receipt-option').hide();
        clearDateTime('receipt_date');
      }
    });
+   {/literal}{/if}{literal}
    cj("#manual-receipt-id").click(function(e){
      var okok = confirm("{/literal}{ts}This action will break auto serial number. Please confirm you really want to change receipt number manually.{/ts}{literal}");
      if(okok){
@@ -486,7 +522,7 @@ cj(function() {
 {/literal}
 
  {if $pcp}{literal}pcpAnonymous();{/literal}{/if}
-
+ {if $checkReceipt}{literal}checkReceipt();{/literal}{/if}
  // load form during form rule.
  {if $buildPriceSet}{literal}buildAmount( );{/literal}
  {/if}
@@ -549,6 +585,14 @@ function adjustPayment( ) {
 cj('#adjust-option-type').show();		    	    
 cj("#total_amount").removeAttr("READONLY");
 cj("#total_amount").css('background-color', '#ffffff');
+}
+function checkReceipt( ) {
+  cj("#receipt_id")
+    .change(function() {
+      var receiptId = cj("#receipt_id").val();
+      cj("#receipt_id").after( "<font color='red'>{/literal}{ts}Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.{/ts}{literal}</font>" );
+      }
+    )
 }
 </script>
 {/literal}

@@ -901,6 +901,8 @@ WHERE  contribution_id = {$this->_id}
       array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE),
       TRUE, array('onChange' => "buildCustomData( 'Contribution', this.value );")
     );
+    $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
+    $this->assign('deductible_type_ids', implode(',', array_keys($deductibleType)));
     if ($this->_online) {
       // $element->freeze( );
     }
@@ -1168,7 +1170,7 @@ WHERE  contribution_id = {$this->_id}
     );
 
     $this->addFormRule(array('CRM_Contribute_Form_Contribution', 'formRule'), $this);
-
+    $this->assign('checkReceipt', TRUE);
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
     }
@@ -1215,6 +1217,17 @@ WHERE  contribution_id = {$this->_id}
       if ($priceSetId = CRM_Utils_Array::value('price_set_id', $fields)) {
         require_once 'CRM/Price/BAO/Field.php';
         CRM_Price_BAO_Field::priceSetValidation($priceSetId, $fields, $errors);
+      }
+    }
+
+    // check receiptId.
+    $contributionId = $self->_id;
+    if (!empty($contributionId)) {
+      $receiptId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',$contributionId, 'receipt_id');
+      if (!empty($receiptId) && empty($fields['receipt_id'])) {
+        if (!empty($fields['receipt_date']) || !empty($fields['receipt_date_time'])) {
+          $errors['receipt_id'] = ts('Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.');
+        }
       }
     }
 

@@ -306,8 +306,10 @@ class CRM_Utils_REST {
     return self::process($args);
   }
 
-  static function process(&$args, $restInterface = TRUE) {
-    $params = &self::buildParamList();
+  static function process(&$args, $params = array()) {
+    if (empty($params)) {
+      $params = &self::buildParamList();
+    }
 
     $params['check_permissions'] = TRUE;
     $fnName = $apiFile = NULL;
@@ -454,7 +456,8 @@ class CRM_Utils_REST {
 
     CRM_Utils_System::setTitle("API Parameters");
     $template = CRM_Core_Smarty::singleton();
-    return CRM_Utils_System::theme($template->fetch('CRM/Core/APIDoc.tpl'));
+    $content = $template->fetch('CRM/Core/APIDoc.tpl');
+    return CRM_Utils_System::theme($content);
   }
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */

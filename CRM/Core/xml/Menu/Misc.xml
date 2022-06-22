@@ -177,5 +177,10 @@
      <access_callback>1</access_callback>
      <is_ssl>true</is_ssl>
      <is_public>true</is_public>
+   </item>
+   <item>
+     <path>civicrm/spgateway/query</path>
+     <page_callback>CRM_Core_Payment_SPGATEWAY::doSingleQueryRecord</page_callback> 
+     <access_arguments>access CiviContribute</access_arguments>
   </item>
 </menu>

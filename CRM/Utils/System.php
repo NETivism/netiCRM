@@ -761,16 +761,21 @@ class CRM_Utils_System {
     return $result;
   }
 
-  static function checkPHPVersion($ver = 5, $abort = TRUE) {
-    $phpVersion = substr(PHP_VERSION, 0, 1);
+  static function checkPHPVersion($ver = 5, $abort = FALSE) {
+    if (is_int($ver)) {
+      $phpVersion = PHP_MAJOR_VERSION;
+      $phpVersion = (int) $phpVersion;
+    }
+    if (is_float($ver)) {
+      $phpVersion = PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;
+      $phpVersion = (float) $phpVersion;
+    }
     if ($phpVersion >= $ver) {
       return TRUE;
     }
 
     if ($abort) {
-      CRM_Core_Error::fatal(ts('This feature requires PHP Version %1 or greater',
-          array(1 => $ver)
-        ));
+      CRM_Core_Error::fatal(ts('This feature requires PHP Version %1 or greater', array(1 => $ver)));
     }
     return FALSE;
   }
@@ -966,8 +971,7 @@ class CRM_Utils_System {
    * @access public
    */
   static function getDocBaseURL() {
-    // FIXME: move this to configuration at some stage
-    return 'https://neticrm.tw/CRMDOC/';
+    return CRM_Core_Config::singleton()->docURLBase;
   }
 
   /**
@@ -989,7 +993,12 @@ class CRM_Utils_System {
     // return just the URL, no matter what other parameters are defined
     if (!function_exists('ts')) {
       $docBaseURL = self::getDocBaseURL();
-      return $docBaseURL . str_replace(' ', '+', $page);
+      if (!empty($docBaseURL)) {
+        return $docBaseURL . str_replace(' ', '+', $page);
+      }
+      else {
+        return '';
+      }
     }
     else {
       $params = array(
@@ -1013,36 +1022,37 @@ class CRM_Utils_System {
    * @access public
    */
   static function docURL($params) {
-
     if (!isset($params['page'])) {
       return;
     }
 
     $docBaseURL = self::getDocBaseURL();
+    if (!empty($docBaseURL)) {
+      if (!isset($params['title']) or $params['title'] === NULL) {
+        $params['title'] = ts('Opens documentation in a new window.');
+      }
 
-    if (!isset($params['title']) or $params['title'] === NULL) {
-      $params['title'] = ts('Opens documentation in a new window.');
-    }
+      if (!isset($params['text']) or $params['text'] === NULL) {
+        $params['text'] = ts('(learn more...)');
+      }
 
-    if (!isset($params['text']) or $params['text'] === NULL) {
-      $params['text'] = ts('(learn more...)');
-    }
+      if (!isset($params['style']) || $params['style'] === NULL) {
+        $style = '';
+      }
+      else {
+        $style = "style=\"{$params['style']}\"";
+      }
 
-    if (!isset($params['style']) || $params['style'] === NULL) {
-      $style = '';
-    }
-    else {
-      $style = "style=\"{$params['style']}\"";
-    }
+      $link = $docBaseURL . str_replace(' ', '+', $params['page']);
 
-    $link = $docBaseURL . str_replace(' ', '+', $params['page']);
-
-    if (isset($params['URLonly']) && $params['URLonly'] == TRUE) {
-      return $link;
+      if (isset($params['URLonly']) && $params['URLonly'] == TRUE) {
+        return $link;
+      }
+      else {
+        return "<a class=\"crm-docurl\" href=\"{$link}\" $style target=\"_blank\" title=\"{$params['title']}\">".ts($params['text'])."</a>";
+      }
     }
-    else {
-      return "<a href=\"{$link}\" $style target=\"_blank\" title=\"{$params['title']}\">{$params['text']}</a>";
-    }
+    return '';
   }
 
   /**
@@ -1141,6 +1151,7 @@ class CRM_Utils_System {
    * We should also commit session before here to prevent session miss.
    * The civiBeforeShutdown will doing session commit well.
    * Only functions in register_shutdown_function will be call after this.
+   * You should add callbacks into CRM_Core_Config::shutdownCallbacks
    * When using fpm, we may have fastcgi_finish_request and location of header here.
    * 
    * @param integer $status
@@ -1151,21 +1162,14 @@ class CRM_Utils_System {
     $config = CRM_Core_Config::singleton();
     self::civiBeforeShutdown();
     if ($config->userFramework == 'Drupal') {
-      if ($version < 7) {
-        // drupal 6 need to trigger hook exit manually
-        module_invoke_all('exit');
-        exit($status);
-      }
-      else {
-        // drupal 7, change old exit method. Use exception to handling route
-        // drupal 8,9, the correct way to exit
-        // let symfony router handling this
-        // will trigger event(KernelEvents::TERMINATE at controller
-        throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
-      }
+      // drupal 6,7, change old exit method. Use exception to handling route
+      // drupal 8,9, the correct way to exit
+      // let symfony router handling this
+      // will trigger event(KernelEvents::TERMINATE at controller
+      throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
     }
 
-    // we shuould being here when using drupal
+    // we should never hit here when using drupal
     exit($status);
   }
 
@@ -1206,9 +1210,81 @@ class CRM_Utils_System {
   }
 
   static function civiBeforeShutdown() {
+    // now we register shutdown functions here
+    if (!empty(CRM_Core_Config::$_shutdownCallbacks)) {
+      $registerFastcgiFinishRequest = FALSE;
+      if (!empty(CRM_Core_Config::$_shutdownCallbacks['before'])) {
+        foreach(CRM_Core_Config::$_shutdownCallbacks['before'] as $call) {
+          $callback = key($call);
+          $args = reset($call);
+          if (is_callable($callback)) {
+            if (!empty($ele['args']) && is_array($ele['args'])) {
+              $args = $ele['args'];
+            }
+            else {
+              $args = array();
+            }
+            call_user_func_array($callback, $args);
+          }
+          else {
+            // do not silent fail here
+            // make sure all callbacks can be call
+            CRM_Core_Error::fatal('shutdown callback '.$callback. ' is not callable');
+          }
+        }
+      }
+      if (!empty(CRM_Core_Config::$_shutdownCallbacks['after'])) {
+        register_shutdown_function('CRM_Utils_System::civiAfterShutdown');
+        foreach(CRM_Core_Config::$_shutdownCallbacks['after'] as $call) {
+          $callback = key($call);
+          $args = reset($call);
+          if (is_callable($callback)) {
+            if (!empty($args) && is_array($args)) {
+              switch(count($args)) {
+                case 0:
+                  register_shutdown_function($callback);
+                  break;
+                case 1:
+                  register_shutdown_function($callback, $args[0]);
+                  break;
+                case 2:
+                  register_shutdown_function($callback, $args[0], $args[1]);
+                  break;
+                case 3:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2]);
+                  break;
+                case 4:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2], $args[3]);
+                  break;
+                case 5:
+                default:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2], $args[3], $args[4]);
+                  break;
+              }
+            }
+            else {
+              register_shutdown_function($callback);
+            }
+          }
+          else {
+            // do not silent fail here
+            // make sure all callbacks can be call
+            CRM_Core_Error::fatal('shutdown callback '.$callback. ' is not callable');
+          }
+        }
+      }
+    }
+
+    // save session before shutdown
     CRM_Core_Session::storeSessionObjects();
     if (!self::isUserLoggedIn() && isset($_SESSION[CRM_Core_Session::KEY]['qfPrivateKey'])) {
       CRM_Core_Config::$_userSystem->tempstoreSet('qfPrivateKey', $_SESSION[CRM_Core_Session::KEY]['qfPrivateKey']);
+    }
+  }
+
+  static function civiAfterShutdown() {
+    if (function_exists('fastcgi_finish_request')) {
+      fastcgi_finish_request();
     }
   }
 
@@ -1570,6 +1646,17 @@ class CRM_Utils_System {
       // all except deprecated, strict, warning
       error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING & ~E_NOTICE);
     }
+  }
+
+  public static function getHostIPAddress($host = NULL) {
+    if (empty($host)) {
+      $host = $_SERVER['HTTP_HOST'];
+    }
+    $ip = gethostbyname($host);
+    if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ip)) {
+      $ip = $_SERVER['SERVER_ADDR'];
+    }
+    return $ip;
   }
 }
 

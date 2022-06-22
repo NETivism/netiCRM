@@ -84,6 +84,11 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
   protected $_profileIds = array();
 
   /**
+   * Set title on page
+   */
+  protected $_setTitle;
+
+  /**
    * class constructor
    *
    * @param int $id  the contact id
@@ -92,11 +97,12 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function __construct($id, $gid, $restrict, $skipPermission = FALSE, $profileIds = NULL) {
+  function __construct($id, $gid, $restrict, $skipPermission = FALSE, $profileIds = NULL, $setTitle = TRUE) {
     $this->_id = $id;
     $this->_gid = $gid;
     $this->_restrict = $restrict;
     $this->_skipPermission = $skipPermission;
+    $this->_setTitle = $setTitle;
     if ($profileIds) {
       $this->_profileIds = $profileIds;
     }
@@ -217,28 +223,14 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       $template->assign('overlayProfile', TRUE);
     }
 
-    $title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'title');
-
-    //CRM-4131.
-    $displayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id, 'display_name');
-    if ($displayName) {
-      require_once 'CRM/Core/Permission.php';
-      require_once 'CRM/Contact/BAO/Contact/Permission.php';
-      $session = CRM_Core_Session::singleton();
-      $config = CRM_Core_Config::singleton();
-      if ($session->get('userID') &&
-        CRM_Core_Permission::check('access CiviCRM') &&
-        CRM_Contact_BAO_Contact_Permission::allow($session->get('userID'), CRM_Core_Permission::VIEW) &&
-        !$config->userFrameworkFrontend
-      ) {
-        $contactViewUrl = CRM_Utils_System::url('civicrm/contact/view', "action=view&reset=1&cid={$this->_id}", TRUE);
-        $this->assign('displayName', $displayName);
-        $displayName = "<a href=\"$contactViewUrl\">{$displayName}</a>";
+    if ($this->_setTitle) {
+      $title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'title');
+      $displayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id, 'display_name');
+      if ($displayName) {
+        $title .= ' - ' . $displayName;
       }
-      $title .= ' - ' . $displayName;
+      CRM_Utils_System::setTitle($title);
     }
-
-    CRM_Utils_System::setTitle($title);
 
     // invoke the pagRun hook, CRM-3906
     require_once 'CRM/Utils/Hook.php';

@@ -220,7 +220,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   function testRecurringPaymentNotify(){
     $now = time();
-    $trxn_id = 'ut100000';
+    $trxn_id = 'ut'.substr($now, -5);
     $amount = 222;
 
     // create recurring

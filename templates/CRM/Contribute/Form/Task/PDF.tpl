@@ -45,6 +45,9 @@
 <div class="form-item">
   {$form.email_pdf_receipt.html}
   <span class="description">{ts}Add receipt as attachment in email.{/ts}</span>
+  {if $emptyEmailList}
+  <span class="description">{$emptyEmailList}{ts}Doesn't have email. Would not generate receipt and send email.{/ts}</span>
+  {/if}
 </div>
 <table class="form-layout-compressed pdf-receipt-table" style="display:none;">
 <tr class="form-item">
@@ -112,7 +115,7 @@ cj(document).ready(function($){
         $("input[name=_qf_PDF_next]").trigger('click');
         return true;
       },
-      Cancel: function() {
+      "{/literal}{ts}Cancel{/ts}{literal}": function() {
         $( this ).dialog( "close" );
         return false;
       }

@@ -183,6 +183,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     $snippet = CRM_Utils_Array::value('snippet', $_REQUEST);
     //$snippet = CRM_Utils_Request::retrieve( 'snippet', 'Integer', $this, false, null, $_REQUEST );
     if ($snippet) {
+      header('X-Robots-Tag: noindex', TRUE);
       if ($snippet == 3) {
         $this->_print = CRM_Core_Smarty::PRINT_PDF;
       }
@@ -451,6 +452,20 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       //as we have deprecated reference object creation.
       unset($$stateName);
     }
+  }
+
+  /**
+   * Get current page
+   * 
+   * Get current form object for further usage.
+   * In most case, pages defined in statemachine and it's form object.
+   *
+   * @return CRM_Core_Form
+   */
+  public function getCurrentPage() {
+    $this->_actionName = $this->getActionName();
+    list($pageName, $action) = $this->_actionName;
+    return $this->getPage($pageName);
   }
 
   public function nextPage(){

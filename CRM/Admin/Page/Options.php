@@ -114,7 +114,12 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
     else {
       CRM_Utils_System::setTitle(ts('%1 Options', array(1 => ts(self::$_GName))));
     }
-    if (in_array(self::$_gName, array('from_email_address', 'email_greeting', 'postal_greeting', 'addressee', 'website_type'))) {
+
+    // #30318, use new form for DKIM / SPF verification
+    if (self::$_gName == 'from_email_address') {
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/from_email', 'reset=1'));
+    }
+    if (in_array(self::$_gName, array('email_greeting', 'postal_greeting', 'addressee', 'website_type'))) {
       $this->assign('showIsDefault', TRUE);
     }
     if (self::$_gName == 'participant_status') {

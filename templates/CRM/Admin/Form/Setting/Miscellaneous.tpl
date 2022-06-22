@@ -71,10 +71,17 @@
             <td>{$form.maxAttachments.html}<br />
                 <span class="description">{ts}Maximum number of files (documents, images, etc.) which can attached to emails or activities.{/ts}</span></td>
         </tr>
-	<tr class="crm-miscellaneous-form-block-maxFileSize">
-	    <td class="label">{$form.maxFileSize.label} (in MB)</td>
+        <tr class="crm-miscellaneous-form-block-maxFileSize">
+            <td class="label">{$form.maxFileSize.label} (in MB)</td>
             <td>{$form.maxFileSize.html}<br />
                 <span class="description">{ts}Maximum Size of file (documents, images, etc.) which can attached to emails or activities.<br />Note: php.ini should support this file size.{/ts}</span></td>
+        </tr>
+        <tr>
+            <td class="label">{$form.docURLBase.label}</td>
+            <td>
+              {$form.docURLBase.html}<br />
+              <span class="description">{ts}With trailing slash.{/ts}</span>
+            </td>
         </tr>
       {/if}
     </table>

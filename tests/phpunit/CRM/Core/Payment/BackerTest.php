@@ -245,9 +245,8 @@ EOT;
         'backerFounderRelationship' => $rtypeId,
       );
       CRM_Core_BAO_ConfigSetting::add($params);
-
-      // needs refresh config here
-      CRM_Core_Config::singleton(TRUE, TRUE);
+      $config =& CRM_Core_Config::singleton();
+      $config->backerFounderRelationship = $rtypeId;
     }
     $this->_rtypeId = $rtypeId;
   }

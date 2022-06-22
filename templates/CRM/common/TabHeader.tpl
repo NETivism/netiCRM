@@ -52,10 +52,10 @@ function stopSpinner( ) {
 
     cj( function() {
         cj('li.crm-tab-button').hover(function(){
-          $(this).addClass('ui-state-hover');
+            cj(this).addClass('ui-state-hover');
         },
         function(){
-          $(this).removeClass('ui-state-hover');
+            cj(this).removeClass('ui-state-hover');
         });
         /*
         var tabIndex = cj('#tab_' + selectedTab).prevAll().length

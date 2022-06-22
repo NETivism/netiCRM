@@ -179,6 +179,30 @@
     </div>
   </td>
 </tr>
+<tr>
+	<td colspan="2">
+    <div class="crm-accordion-wrapper crm-accordion-open">
+      <div class="crm-accordion-header">
+        <div class="zmdi crm-accordion-pointer"></div>
+        {ts}Premium Information{/ts}
+      </div>
+      <div class="crm-accordion-body">
+        <table class="form-layout-compressed">
+          <tbody>
+            <tr>
+              <td class="label">{$form.product_name.label}</td>
+              <td>{$form.product_name.html}</td>
+            </tr>
+            <tr>
+              <td class="label">{$form.product_option.label}</td>
+              <td>{$form.product_option.html}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </td>
+</tr>
 {if $contributeGroupTree}
 <tr>
 	<td colspan="2">

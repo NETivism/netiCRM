@@ -1800,7 +1800,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $params['html'] = $html_message;
     $params['attachments'] = $attachments;
 
-    if (!CRM_Utils_Mail::send($params)) {
+    $callback = array(
+      0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityID, TRUE)),
+    );
+    if (!CRM_Utils_Mail::send($params, $callback)) {
       return FALSE;
     }
 
@@ -1942,17 +1945,22 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   /**
    * Function to add activity for Membership/Event/Contribution
    *
-   * @param object  $activity   (reference) perticular component object
-   * @param string  $activityType for Membership Signup or Renewal
-   *
+   * @param object &$object particular component object
+   * @param string $activityType 
+   * @param int $targetContactID
+   * @param string $activityStatus
    *
    * @static
    * @access public
+   * 
+   * @return int
    */
-  static function addActivity(&$activity, $activityType = 'Membership Signup', $targetContactID = NULL) {
-    if ($activity->__table == 'civicrm_membership') {
-      require_once "CRM/Member/PseudoConstant.php";
-      $membershipType = CRM_Member_PseudoConstant::membershipType($activity->membership_type_id);
+  public static function addActivity(&$object, $activityType = '', $targetContactID = NULL, $activityStatus = NULL) {
+    if ($object->__table == 'civicrm_membership') {
+      $membershipType = CRM_Member_PseudoConstant::membershipType($object->membership_type_id);
+      if (empty($activityType)) {
+        $activityType = 'Membership Signup';
+      }
 
       if (!$membershipType) {
         $membershipType = ts('Membership');
@@ -1960,77 +1968,76 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
 
       $subject = "{$membershipType}";
 
-      if ($activity->source != 'null') {
-        $subject .= " - {$activity->source}";
+      if ($object->source != 'null') {
+        $subject .= " - {$object->source}";
       }
 
-      if ($activity->owner_membership_id) {
+      if ($object->owner_membership_id) {
         $query = "
 SELECT  display_name 
   FROM  civicrm_contact, civicrm_membership  
  WHERE  civicrm_contact.id    = civicrm_membership.contact_id
-   AND  civicrm_membership.id = $activity->owner_membership_id
+   AND  civicrm_membership.id = $object->owner_membership_id
 ";
         $displayName = CRM_Core_DAO::singleValueQuery($query);
         $subject .= " (by {$displayName})";
       }
 
-      require_once 'CRM/Member/DAO/MembershipStatus.php';
-      $subject .= " - Status: " . CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipStatus', $activity->status_id);
+      $subject .= " - Status: " . CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipStatus', $object->status_id);
       $date = date('Y-m-d H:i:s');
-      $component = 'Membership';
     }
-    elseif ($activity->__table == 'civicrm_participant') {
-      require_once "CRM/Event/BAO/Event.php";
-      $event = CRM_Event_BAO_Event::getEvents(TRUE, $activity->event_id);
-
-      require_once "CRM/Event/PseudoConstant.php";
-      $roles = CRM_Event_PseudoConstant::participantRole();
-      $status = CRM_Event_PseudoConstant::participantStatus();
-
-      $subject = $event[$activity->event_id];
-      if (CRM_Utils_Array::value($activity->role_id, $roles)) {
-        $subject .= ' - ' . $roles[$activity->role_id];
-      }
-      if (CRM_Utils_Array::value($activity->status_id, $status)) {
-        $subject .= ' - ' . $status[$activity->status_id];
-      }
-      $date = date('YmdHis');
-      if ($activityType != 'Email') {
+    elseif ($object->__table == 'civicrm_participant') {
+      if (empty($activityType) && $activityType != 'Email') {
         $activityType = 'Event Registration';
       }
-      $component = 'Event';
+
+      $roles = CRM_Event_PseudoConstant::participantRole();
+      $status = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
+
+      $subject = CRM_Event_BAO_Event::getEventTitle($object->event_id).'('.$object->event_id.')';
+      if (CRM_Utils_Array::value($object->role_id, $roles)) {
+        $subject .= ' - ' . $roles[$object->role_id];
+      }
+      if (CRM_Utils_Array::value($object->status_id, $status)) {
+        $subject .= ' - ' . $status[$object->status_id];
+      }
+      $date = date('YmdHis');
     }
-    elseif ($activity->__table == 'civicrm_contribution') {
-      //create activity record only for Completed Contributions
-      if ($activity->contribution_status_id != 1) {
-        return;
+    elseif ($object->__table == 'civicrm_contribution') {
+      if (empty($activityType)) {
+        $activityType = 'Contribution';
+      }
+      //create activity record only for Completed Contribution
+      if ($object->contribution_status_id != 1 && $activityType === 'Contribution') {
+        return FALSE;
       }
 
-      $subject = NULL;
-
-      require_once "CRM/Utils/Money.php";
-      $subject .= CRM_Utils_Money::format($activity->total_amount, $activity->currency);
-      if ($activity->source != 'null') {
-        $subject .= " - {$activity->source}";
+      $subject = '';
+      $subject .= CRM_Utils_Money::format($object->total_amount, $object->currency);
+      if ($object->source != 'null') {
+        $subject .= " - {$object->source}";
       }
-      $date = CRM_Utils_Date::isoToMysql($activity->receive_date);
-      $activityType = $component = 'Contribution';
+      $date = CRM_Utils_Date::isoToMysql($object->receive_date);
     }
-    require_once "CRM/Core/OptionGroup.php";
-    $activityParams = array('source_contact_id' => $activity->contact_id,
-      'source_record_id' => $activity->id,
-      'activity_type_id' => CRM_Core_OptionGroup::getValue('activity_type',
-        $activityType,
-        'name'
-      ),
+
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', $activityType, 'name');
+    if (empty($activityType) || empty($activityTypeId)) {
+      return FALSE;
+    }
+    $activityStatus = !empty($activityStatus) ? $activityStatus : 'Completed';
+    $activityStatusId = CRM_Core_OptionGroup::getValue('activity_status', $activityStatus, 'name');
+    if (empty($activityStatusId)) {
+      return FALSE;
+    }
+
+    $activityParams = array(
+      'source_contact_id' => $object->contact_id,
+      'source_record_id' => $object->id,
+      'activity_type_id' => $activityTypeId,
       'subject' => $subject,
       'activity_date_time' => $date,
-      'is_test' => $activity->is_test,
-      'status_id' => CRM_Core_OptionGroup::getValue('activity_status',
-        'Completed',
-        'name'
-      ),
+      'is_test' => $object->is_test,
+      'status_id' => $activityStatusId,
       'skipRecentView' => TRUE,
     );
 
@@ -2040,18 +2047,136 @@ SELECT  display_name
     }
 
     // create assignment activity if created by logged in user
-    $session = &CRM_Core_Session::singleton();
+    $session = CRM_Core_Session::singleton();
     $id = $session->get('userID');
     if ($id) {
       $activityParams['source_contact_id'] = $id;
-      $activityParams['assignee_contact_id'] = $activity->contact_id;
+      $activityParams['assignee_contact_id'] = $object->contact_id;
     }
 
-    require_once 'api/v2/Activity.php';
-    if (is_a(civicrm_activity_create($activityParams), 'CRM_Core_Error')) {
-      CRM_Core_Error::fatal("Failed creating Activity for $component of id {$activity->id}");
+    $activity = CRM_Activity_BAO_Activity::create($activityParams);
+    if (!is_a($activity, 'CRM_Core_Error') && isset($activity->id)) {
+      return $activity->id;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Function to add activity for transactional email
+   *
+   * @param object &$object particular component object, can be return valur from CRM_Core_DAO::commonRetrieve
+   * @param string $activityType activity type internal name, use this to get activity id
+   * @param string $subjectSuffix subject suffix prepend to activity
+   *
+   * @static
+   * @access public
+   *
+   * @return int
+   */
+  public static function addTransactionalActivity(&$object, $activityType, $subjectSuffix = NULL) {
+    if ($object->__table == 'civicrm_membership') {
+      $membershipType = CRM_Member_PseudoConstant::membershipType($object->membership_type_id);
+      if (!$membershipType) {
+        $membershipType = ts('Membership');
+      }
+      $sub = array();
+      $sub[] = $membershipType;
+      $sub[] = $object->source;
+      $sub[] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipStatus', $object->status_id, 'label');
+      $subject = implode(' - ', $sub);
+    }
+    elseif ($object->__table == 'civicrm_participant') {
+      $subject = CRM_Event_BAO_Event::getEventTitle($object->event_id).'('.$object->event_id.')';
+    }
+    elseif ($object->__table == 'civicrm_contribution') {
+      $sub = array();
+      $sub[] = CRM_Contribute_PseudoConstant::contributionType($object->contribution_type_id);
+      $sub[] = CRM_Utils_Money::format($object->total_amount, $object->currency);
+      if (!empty($object->source) && $object->source != 'null') {
+        $sub[] = $object->source;
+      }
+      // Email Receipt
+      if ($activityType == 'Email Receipt') {
+        $subject = ts('Email Receipt').' - '.implode(' / ', $sub);
+      }
+      // common contribution notify
+      else {
+        $subject = implode(' - ', $sub);
+      }
+    }
+    if ($subjectSuffix) {
+      $subject .= ' @'.$subjectSuffix;
+    }
+
+    $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', $activityType, 'name');
+    if (empty($activityType) || empty($activityTypeId)) {
       return FALSE;
     }
+
+    // always set scheduled for indicate this activity is un-completed
+    $activityStatusId = CRM_Core_OptionGroup::getValue('activity_status', 'Scheduled', 'name');
+    if (empty($activityStatusId)) {
+      return FALSE;
+    }
+
+    $activityParams = array(
+      'assignee_contact_id' => $object->contact_id,
+      'source_record_id' => $object->id,
+      'activity_type_id' => $activityTypeId,
+      'subject' => $subject,
+      'activity_date_time' => date('YmdHis'),
+      'is_test' => $object->is_test,
+      'status_id' => $activityStatusId,
+      'skipRecentView' => TRUE,
+    );
+
+    // create assignment activity if created by logged in user
+    $session = CRM_Core_Session::singleton();
+    $loggedUserId = $session->get('userID');
+    if ($loggedUserId) {
+      $activityParams['source_contact_id'] = $loggedUserId;
+    }
+    else {
+      $activityParams['source_contact_id'] = $object->contact_id;
+    }
+
+    $activity = CRM_Activity_BAO_Activity::create($activityParams);
+    if (!is_a($activity, 'CRM_Core_Error') && isset($activity->id)) {
+      return $activity->id;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Update Transactional Status
+   *
+   * @param int $activityId
+   * @param bool $success
+   * @return bool
+   */
+  public static function updateTransactionalStatus($activityId, $success) {
+    if ($success) {
+      $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name'); 
+    }
+    else {
+      $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Unreachable', 'name'); 
+    }
+    $transaction = new CRM_Core_Transaction();
+    $activity = new CRM_Activity_BAO_Activity();
+    $activity->id = $activityId;
+    if ($activity->find()) {
+      $activity->status_id = $statusId;
+      $activity->update();
+    }
+
+    if (is_a($activity, 'CRM_Core_Error')) {
+      $transaction->rollback();
+      return FALSE;
+    }
+    
+    $activity->free();
+    $transaction->commit();
+    return TRUE;
   }
 
   /**

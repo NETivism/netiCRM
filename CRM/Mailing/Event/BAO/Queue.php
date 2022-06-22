@@ -97,7 +97,8 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
   public static function &verify($job_id, $queue_id, $hash) {
     $success = NULL;
     $q = new CRM_Mailing_Event_BAO_Queue();
-    if (!empty($job_id) && !empty($queue_id) && !empty($hash)) {
+    if (!empty($job_id) && !empty($queue_id) && !empty($hash) &&
+    CRM_Utils_Rule::positiveInteger($job_id) && CRM_Utils_Rule::positiveInteger($queue_id) && CRM_Utils_Rule::alphanumeric($hash)) {
       $q->id = $queue_id;
       $q->job_id = $job_id;
       $q->hash = $hash;

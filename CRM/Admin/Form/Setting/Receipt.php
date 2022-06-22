@@ -80,6 +80,8 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     if (empty($defaults['receiptDisplayLegalID'])) {
       $defaults['receiptDisplayLegalID'] = 'complete';
     }
+    $defaults['receiptDescription'] = htmlspecialchars_decode($defaults['receiptDescription']);
+    $defaults['receiptOrgInfo'] = htmlspecialchars_decode($defaults['receiptOrgInfo']);
     return $defaults;
   }
 

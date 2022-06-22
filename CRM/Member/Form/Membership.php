@@ -92,7 +92,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->_paymentProcessor = array('billing_mode' => 1);
       $validProcessors = array();
-      $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 )");
+      $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
 
       foreach ($processors as $ppID => $label) {
         require_once 'CRM/Core/BAO/PaymentProcessor.php';
@@ -1063,9 +1063,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         ));
       $this->assign('customValues', $customValues);
 
-      require_once 'CRM/Core/BAO/MessageTemplates.php';
+      $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow('msg_tpl_workflow_membership', 'membership_offline_receipt');
+      $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($membership, 'Membership Notification Email', $workflow['msg_title']);
       list($mailSend, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         array(
+          'activityId' => $activityId,
           'groupName' => 'msg_tpl_workflow_membership',
           'valueName' => 'membership_offline_receipt',
           'contactId' => $this->_contactID,
@@ -1073,6 +1075,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           'toName' => $this->_memberDisplayName,
           'toEmail' => $this->_memberEmail,
           'isTest' => (bool)($this->_action & CRM_Core_Action::PREVIEW),
+        ),
+        CRM_Core_DAO::$_nullObject,
+        array(
+          0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+          1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
         )
       );
     }

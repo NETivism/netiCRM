@@ -262,7 +262,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
       $this->_paymentProcessor = array('billing_mode' => 1);
 
       $validProcessors = array();
-      $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 )");
+      $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
 
       foreach ($processors as $ppID => $label) {
         require_once 'CRM/Core/BAO/PaymentProcessor.php';
@@ -311,7 +311,6 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
 
     if ($this->_showFeeBlock) {
       $this->assign('showFeeBlock', TRUE);
-      $this->assign('paid', TRUE);
       return CRM_Event_Form_EventFees::preProcess($this);
     }
 
@@ -1742,11 +1741,16 @@ cj(function() {
           $skipMSG = TRUE;
         }
         else {
-          require_once 'CRM/Core/BAO/MessageTemplates.php';
-          list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+          $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($sendTemplateParams['groupName'], $sendTemplateParams['valueName']);
+          $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participants[$num], 'Event Notification Email', $workflow['msg_title']);
+          $callback = array(
+            0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+            1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+          );
+          $sendTemplateParams['activityId'] = $activityId;
+          list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, $callback);
           if ($mailSent) {
             $sent[] = $contactID;
-            CRM_Activity_BAO_Activity::addActivity($participants[$num], 'Email');
           }
           else {
             $notSent[] = $contactID;
@@ -1761,7 +1765,7 @@ cj(function() {
     elseif (($this->_action & CRM_Core_Action::UPDATE)) {
       $statusMsg = ts('Event registration information for %1 has been updated.', array(1 => $this->_contributorDisplayName));
       if (CRM_Utils_Array::value('send_receipt', $params) && count($sent)) {
-        $statusMsg .= ' ' . ts('A confirmation email has been sent to %1', array(1 => $this->_contributorEmail));
+        $statusMsg .= ' ' . ts('A confirmation email has been scheduled to sent to %1.', array(1 => $this->_contributorEmail));
       }
 
       if ($updateStatusMsg) {
@@ -1772,7 +1776,7 @@ cj(function() {
       if ($this->_single) {
         $statusMsg = ts('Event registration for %1 has been added.', array(1 => $this->_contributorDisplayName));
         if (CRM_Utils_Array::value('send_receipt', $params) && count($sent)) {
-          $statusMsg .= ' ' . ts('A confirmation email has been sent to %1.', array(1 => $this->_contributorEmail));
+          $statusMsg .= ' ' . ts('A confirmation email has been scheduled to sent to %1.', array(1 => $this->_contributorEmail));
         }
       }
       else {
@@ -1781,7 +1785,7 @@ cj(function() {
           $statusMsg .= ' ' . ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT EMAIL OR valid Email is NOT present. ', array(1 => count($notSent)));
         }
         elseif (isset($params['send_receipt'])) {
-          $statusMsg .= ' ' . ts('A confirmation email has been sent to ALL participants');
+          $statusMsg .= ' ' . ts('A confirmation email has been scheduled to sent to ALL participants');
         }
       }
     }

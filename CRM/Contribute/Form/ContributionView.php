@@ -198,6 +198,11 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     // assign values to the template
     $this->assign($values);
 
+    $deductibleTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
+    if (in_array($values['contribution_type'], $deductibleTypes)) {
+      $this->assign('isdeductible', 1);
+    }
+
     // get detail about membership payment, contribution page, or event
     $details = CRM_Contribute_BAO_Contribution::getComponentDetails(array($id));
     if (!empty($details[$id])) {
@@ -235,7 +240,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $recentOther
     );
 
-    // recipt sending activity
+    // receipt sending activity
     $sortID = NULL;
     $activityTypes = array('Email Receipt', 'Print Contribution Receipts');
     foreach ($activityTypes as $typeName) {

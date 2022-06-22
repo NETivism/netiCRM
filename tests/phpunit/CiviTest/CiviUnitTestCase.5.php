@@ -239,9 +239,6 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
     require_once 'CRM/Core/Config.php';
     $config = CRM_Core_Config::singleton();
 
-    // when running unit tests, use mockup user framework
-    $config->setUserFramework('UnitTests');
-
     // also fix the fatal error handler to throw exceptions,
     // rather than exit
     $config->fatalErrorHandler = 'CiviUnitTestCase_fatalErrorHandler';
@@ -2062,6 +2059,15 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
     $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-response.json", "w");
     fwrite($file, json_encode($response, JSON_PRETTY_PRINT));
     fclose($file);
+  }
+
+  public static function getDBConfig() {
+    $options = PEAR::getStaticProperty('DB_DataObject', 'options');
+    $dbConfig = DB::parseDSN($options['database']);
+    if (empty($dbConfig['database'])) {
+      throw new Exception("No database config found.");
+    }
+    return $dbConfig;
   }
 }
 
