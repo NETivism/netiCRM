@@ -48905,3 +48905,9 @@ msgid ""
 "Some recurring contributions are in progress, so some payment processors "
 "can't be disabled or deleted."
 msgstr "有些定期捐款仍在進行中，相對應的金流工具將不能停用或刪除，以免影響定期定額捐款。"
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid ""
+"This contribution type is not deductible. Are you sure you want to generate "
+"receipt date and receipt ID?"
+msgstr "此捐款類型並未設成可開立收據，您確定要新增收據日期和收據編號嗎？"
