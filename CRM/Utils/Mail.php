@@ -201,7 +201,13 @@ class CRM_Utils_Mail {
 
       // only send non-blocking when there is a callback
       if (isset($callback) && is_array($callback)) {
-        CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', array($mailer, $to, $headers, $message, $callback));
+        $sendParams = array(
+          'headers' => $headers,
+          'to' => $to,
+          'body' => $message,
+          'callback' => $callback,
+        );
+        CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', array($mailer, $sendParams));
         return TRUE;
       }
       else {
@@ -221,24 +227,26 @@ class CRM_Utils_Mail {
   /**
    * Wrapper function which called by shutdown callback
    *
-   * @param object $mailer this will get by CRM_Core_Config::getMailer
-   * @param array  $to to email address
-   * @param array $headers email header
-   * @param array $message email body
-   * @param array $callback result handling after sending mail, only call when success. eg. activity status
-   * 
+   * @param object $mailer From CRM_Core_Config::getMailer($params['mailerType'])
+   * @param array $params An associative array for to send email.
+   *   $params = array(
+   *     'headers' => (array) associative array from Mail_mime->headers
+   *     'to' => (string) recipient email address, required.
+   *     'body' => (string) string from Mail_mime->body
+   *     'callback' => (string) associative array for callbacks
+   *   );
    * @return void
    */
-  public static function sendNonBlocking($mailer, $to, $headers, $message, $callback){
-    //sleep(30);
-    $result = $mailer->send($to, $headers, $message);
+  public static function sendNonBlocking($mailer, $params){
+    $result = $mailer->send($params['to'], $params['headers'], $params['body']);
     CRM_Core_Error::setCallback();
     $error = 0;
     if (is_a($result, 'PEAR_Error')) {
       $error = 1;
     }
 
-    if (!empty($callback[$error])) {
+    if (!empty($params['callback'][$error])) {
+      $callback = $params['callback'];
       $call = key($callback[$error]);
       $args = reset($callback[$error]);
       if (is_callable($call)) {

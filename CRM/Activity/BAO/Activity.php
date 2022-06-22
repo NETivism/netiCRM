@@ -1800,7 +1800,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $params['html'] = $html_message;
     $params['attachments'] = $attachments;
 
-    if (!CRM_Utils_Mail::send($params)) {
+    $callback = array(
+      0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityID, TRUE)),
+    );
+    if (!CRM_Utils_Mail::send($params, $callback)) {
       return FALSE;
     }
 
