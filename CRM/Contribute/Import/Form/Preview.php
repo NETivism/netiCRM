@@ -131,14 +131,19 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-
+    $attr = array('onclick' => "return verify();");
+    $locked = CRM_Core_Lock::isUsed($this->get('importTableName'));
+    if ($locked) {
+      $attr['disabled'] = 'disabled';
+      $this->assign('locked_import', TRUE);
+    }
     $this->addButtons(array(
         array('type' => 'back',
           'name' => ts('<< Previous'),
         ),
         array('type' => 'next',
           'name' => ts('Import Now >>'),
-          'js' => array('onclick' => "return verify();"),
+          'js' => $attr,
           'isDefault' => TRUE,
         ),
         array('type' => 'cancel',

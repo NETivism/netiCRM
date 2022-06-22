@@ -84,6 +84,14 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
       }
+      else {
+        // not batch process, acuire lock
+        $lock = new CRM_Core_Lock($this->_tableName);
+        if (!$lock->isAcquired()) {
+          CRM_Core_Error::statusBounce(ts("The selected import job is already running. To prevent duplicate records being imported, please wait the job complete."));
+          CRM_Core_Error::debug_log_message("Trying acquire lock $this->_tableName failed at line ".__LINE__);
+        }
+      }
     }
     else {
       // unserialized batch object need re-init controller
