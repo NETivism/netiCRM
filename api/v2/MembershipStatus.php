@@ -124,7 +124,8 @@ function civicrm_membership_status_get(&$params) {
   if ($membershipStatusBAO->find()) {
     $membershipStatus = array();
     while ($membershipStatusBAO->fetch()) {
-      _civicrm_object_to_array(clone($membershipStatusBAO), $membershipStatus);
+      $bao = clone $membershipStatusBAO;
+      _civicrm_object_to_array($bao, $membershipStatus);
       $membershipStatuses[$membershipStatusBAO->id] = $membershipStatus;
     }
   }
@@ -179,7 +180,8 @@ function &civicrm_membership_status_update(&$params) {
     $membershipStatusBAO->save();
   }
   $membershipStatus = array();
-  _civicrm_object_to_array(clone($membershipStatusBAO), $membershipStatus);
+  $bao = clone $membershipStatusBAO;
+  _civicrm_object_to_array($bao, $membershipStatus);
   $membershipStatus['is_error'] = 0;
   return $membershipStatus;
 }

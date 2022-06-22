@@ -78,14 +78,42 @@ class CRM_Core_Lock {
     }
   }
 
-  function isFree() {
+  function isAcquired() {
+    return $this->_hasLock;
+  }
+
+  /**
+   * Check lock is free
+   *
+   * @param string $name
+   * @return boolean
+   */
+  public static function isFree($name) {
+    $config = CRM_Core_Config::singleton();
+    $dsnArray = DB::parseDSN($config->dsn);
+    $database = $dsnArray['database'];
+    $domainID = CRM_Core_Config::domainID();
+    $name = $database . '.' . $domainID . '.' . $name;
     $query = "SELECT IS_FREE_LOCK( %1 )";
-    $params = array(1 => array($this->_name, 'String'));
+    $params = array(1 => array($name, 'String'));
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
-  function isAcquired() {
-    return $this->_hasLock;
+  /**
+   * check lock is used
+   *
+   * @param string $name
+   * @return string|null
+   */
+  public static function isUsed($name) {
+    $config = CRM_Core_Config::singleton();
+    $dsnArray = DB::parseDSN($config->dsn);
+    $database = $dsnArray['database'];
+    $domainID = CRM_Core_Config::domainID();
+    $name = $database . '.' . $domainID . '.' . $name;
+    $query = "SELECT IS_USED_LOCK( %1 )";
+    $params = array(1 => array($name, 'String'));
+    return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 }
 

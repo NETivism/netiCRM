@@ -112,6 +112,12 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    $attr = array();
+    $locked = CRM_Core_Lock::isUsed($this->controller->_key);
+    if ($locked) {
+      $attr['disabled'] = 'disabled';
+      $this->assign('locked_import', TRUE);
+    }
     $this->addButtons(array(
         array('type' => 'back',
           'name' => ts('<< Previous'),
@@ -120,6 +126,7 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
           'name' => ts('Import Now >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
+          'js' => $attr,
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),
@@ -175,6 +182,11 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
       $mapperFields[] = implode(' - ', $header);
     }
 
+    $lock = new CRM_Core_Lock($this->controller->_key);
+    if (!$lock->isAcquired()) {
+      CRM_Core_Error::statusBounce(ts("The selected import job is already running. To prevent duplicate records being imported, please wait the job complete."));
+      CRM_Core_Error::debug_log_message("Trying acquire lock {$this->controller->_key} failed at line ".__LINE__);
+    }
     $parser->run($fileName, $seperator,
       $mapperFields,
       $skipColumnHeader,

@@ -7,11 +7,11 @@
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
  | CiviCRM is free software; you can copy, modify, and distribute it  |
+ | WITHOUT ANY WARRANTY; without even the implied warranty of         |
  | under the terms of the GNU Affero General Public License           |
  | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
  |                                                                    |
  | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
  | See the GNU Affero General Public License for more details.        |
  |                                                                    |
@@ -85,6 +85,7 @@ function verify( ) {
  {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
  {include file="CRM/common/WizardHeader.tpl"}
  
+{if !$locked_import}
  <div id="help">
     <p>
     {ts}The information below previews the results of importing your data in CiviCRM. Review the totals to ensure that they represent your expected results.{/ts}         
@@ -105,7 +106,11 @@ function verify( ) {
 
     <p>{ts}Click 'Import Now' if you are ready to proceed.{/ts}</p>
  </div>
+{/if}
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>  
+{if $locked_import}
+  <div class="messages warning">{ts}The selected import job is already running. To prevent duplicate records being imported, please wait the job complete.{/ts}</div>
+{/if}
  {* Summary Preview (record counts) *}
  <table id="preview-counts" class="report">
     <tr><td class="label">{ts}Total Rows{/ts}</td>
