@@ -3014,5 +3014,31 @@ SELECT  group_id
     return $groupTypeValue;
   }
 
+  /**
+   * Check email value is which submitted
+   *
+   * Before sending email, we will add fields value into email notification.
+   * Which should be the submitted value from user, not admin.
+   *
+   * @param array $fields The fields generally from self::getFields
+   * @param array &$values The values generated from self::checkFieldsEmptyValues
+   * @param array $submitted The submitted values from $form->controller->exportValues
+   * @return void
+   */
+  public static function verifySubmittedValue($fields, &$values, $submitted) {
+    // refs #30009, special case for note. We should remove values which not submit
+    foreach($fields as $fieldName => $field) {
+      $label = $field['title'];
+      $value = $values['values'][$label];
+      if (!CRM_Utils_Array::value($fieldName, $submitted)) {
+        if (isset($values['values'][$label])) {
+          $values['values'][$label] = '';
+        }
+      }
+      if ((CRM_Utils_Array::value('data_type', $field, '') == 'File' || $fieldName == 'image_URL') && !empty($value)){
+        $values['values'][$label] = ts("Uploaded files received");
+      }
+    }
+  }
 }
 
