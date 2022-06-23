@@ -48552,3 +48552,13 @@ msgstr ""
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid "This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?"
 msgstr ""
+
+#: templates/CRM/Contact/Form/Merge.hlp templates/CRM/Contact/Form/Merge.tpl
+msgid "Because the contact has membership payment record(s), click one of the checkboxes moving Membership and Contribution will act on both."
+msgstr ""
+
+msgid "Because the contact has participant payment record(s), click one of the checkboxes moving Participant and Contribution will act on both."
+msgstr ""
+
+msgid "Because the contact has membership and participant payment records, click one of the checkboxes moving Membership, Participant and Contribution will act on all of them."
+msgstr ""
