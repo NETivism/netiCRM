@@ -38,12 +38,17 @@
     },
     _crmPath = "",
     _language = "en_US",
+    _mailingID = "",
+    _qfKey = "",
+    _storageKey = "",
     _debugMode = false,
     _data = {},
     _dataLoadMode = "field",
     _dataLoadSource = "",
     _dataVersion = {},
     _defaultData = {},
+    _intervalSaveData,
+    _intervalSaveDataTimer,
     _nme = {}, // plugin object
     _nmeOptions = {},
     _nmeAPI = window.location.origin + "/api/",
@@ -577,6 +582,14 @@
       let data = JSON.stringify(_data, undefined, 4);
       $(_dataLoadSource).val(data);
       $.nmEditor.instance.data = _data;
+    },
+    save: function() {
+      if (typeof Storage !== "undefined") {
+        // Store current timestamp (ms) when updating data
+        _data.saveTimestamp = Date.now();
+        _nmeData.update();
+        localStorage.setItem(_storageKey, JSON.stringify(_data));
+      }
     },
     sort: function(order, section) {
       if (_data["sections"][section]) {
@@ -1536,6 +1549,10 @@
   };
 
   var _nmeMain = function() {
+    _intervalSaveData = function() {
+      _nmeData.save();
+    }
+
     if ($(_main).length) {
       $(_main).remove();
     }
@@ -1659,6 +1676,9 @@
             else {
               saveContentToOldEditor();
             }
+
+            // refs #34990. Save mailing data when leaving the page.
+            _nmeData.save();
           }
         }
       });
@@ -1678,8 +1698,10 @@
 
       _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
       _tooltip();
-    }
 
+      // refs #34990. Save mailing data every 60 seconds.
+      _intervalSaveDataTimer = setInterval(_intervalSaveData, 60000);
+    }
   };
 
   var _nmeMailOutput = {
@@ -3148,6 +3170,20 @@
       _debug("/***** nmEditor Debug Mode *****/");
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
+        if (window.nmEditor.mailingID) {
+          _mailingID = window.nmEditor.mailingID;
+          _storageKey = "mailing_" + _mailingID;
+          this.mailingID = _mailingID;
+        }
+
+        if (window.nmEditor.qfKey) {
+          _qfKey = window.nmEditor.qfKey;
+          _storageKey += "--" + _qfKey;
+          this.qfKey = _qfKey;
+        }
+
+        this.storageKey = _storageKey;
+
         if (window.nmEditor.crmPath) {
           _crmPath = window.nmEditor.crmPath;
           this.crmPath = _crmPath;

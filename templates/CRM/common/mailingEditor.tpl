@@ -18,6 +18,8 @@
 <!-- Added global variable: nmEditor -->
 <script type="text/javascript">
 window.nmEditor = {
+	mailingID: "{/literal}{$mailingID}{literal}",
+	qfKey: "{/literal}{$qfKey}{literal}",
 	crmPath: "{/literal}{$config->resourceBase}{literal}",
 	language: "{/literal}{$tsLocale}{literal}",
 	translation: {
