@@ -38,9 +38,10 @@
  */
 class CRM_Mailing_Form_Upload extends CRM_Core_Form {
   public $_mailingID;
-  
+
   function preProcess() {
     $this->_mailingID = $this->get('mailing_id');
+    $this->assign('mailingID', $this->_mailingID);
     require_once 'CRM/Core/Permission.php';
     if (CRM_Core_Permission::check('administer CiviCRM')) {
       $this->assign('isAdmin', 1);
