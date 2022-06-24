@@ -3030,9 +3030,11 @@ SELECT  group_id
     foreach($fields as $fieldName => $field) {
       $label = $field['title'];
       $value = $values['values'][$label];
-      if (!CRM_Utils_Array::value($fieldName, $submitted)) {
-        if (isset($values['values'][$label])) {
-          $values['values'][$label] = '';
+      if (!empty($submitted)) {
+        if (!CRM_Utils_Array::value($fieldName, $submitted)) {
+          if (isset($values['values'][$label])) {
+            $values['values'][$label] = '';
+          }
         }
       }
       if ((CRM_Utils_Array::value('data_type', $field, '') == 'File' || $fieldName == 'image_URL') && !empty($value)){
