@@ -30,8 +30,8 @@
 packages/jquery/jquery-3.6.0.min.js
 packages/jquery/jquery-migrate-3.3.2.js
 packages/jquery/jquery-migrate-neticrm.js
-packages/jquery/jquery-ui/js/jquery-ui-1.12.1.min.js
-packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.12.1.min.css
+packages/jquery/jquery-ui/js/jquery-ui.min.js
+packages/jquery/jquery-ui/css/custom-theme/jquery-ui.min.css
 
 packages/jquery/plugins/jquery.autocomplete.js
 packages/jquery/css/jquery.autocomplete.css
