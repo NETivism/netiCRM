@@ -70,9 +70,11 @@ function jQueryVersionSince( version ) {
 
 	// Show a message on the console so devs know we're active
 	if ( !jQuery.migrateMute ) {
+    /*
 		window.console.log( "JQMIGRATE: Migrate is installed" +
 			( jQuery.migrateMute ? "" : " with logging active" ) +
 			", version " + jQuery.migrateVersion );
+    */
 	}
 } )();
 
