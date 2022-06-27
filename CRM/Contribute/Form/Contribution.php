@@ -972,7 +972,6 @@ WHERE  contribution_id = {$this->_id}
     // add receipt id text area
     $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly', 'class' => 'readonly'));
     $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
-    $this->addRule('receipt_id', ts('This Receipt ID already exists in the database.'), 'objectExists', array('CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id'));
     $this->assign('receipt_id_setting', CRM_Utils_System::url("civicrm/admin/receipt", 'reset=1'));
 
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -1224,6 +1223,20 @@ WHERE  contribution_id = {$this->_id}
     $contributionId = $self->_id;
     if (!empty($contributionId)) {
       $receiptId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',$contributionId, 'receipt_id');
+
+      //check receiptId exists or not
+      $daoName = 'CRM_Contribute_DAO_Contribution';
+      $fieldName = 'receipt_id';
+      $object = new $daoName( );
+      $object->$fieldName = $receiptId;
+      if ($object->find(TRUE)) {
+        $checkReceiptId = ($contributionId && $object->id == $contributionId) ? TRUE : FALSE;
+        //If DB have exist receipt id then checkReceiptId would be FALSE.
+        if (!$checkReceiptId) {
+          $errors['receipt_id'] = ts('This Receipt ID already exists in the database.');
+        }
+      }
+
       if (!empty($receiptId) && empty($fields['receipt_id'])) {
         if (!empty($fields['receipt_date']) || !empty($fields['receipt_date_time'])) {
           $errors['receipt_id'] = ts('Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.');
