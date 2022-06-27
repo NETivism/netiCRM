@@ -681,8 +681,8 @@ LIMIT 0, 100
 
       $command = 'drush neticrm-process-recurring --payment-processor=tappay --time='.$time.' --contribution-recur-id='.$dao->recur_id.'&';
       popen($command, 'w');
-      // wait for 0.5 second.
-      usleep(500000);
+      // wait for 1 second.
+      usleep(1000000);
     }
 
     // Delete the sequence data of this process.
