@@ -87,6 +87,23 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
         return;
       }
     }
+
+    // use CRM_Utils_Mail to send cc / bcc
+    $additionalRecipients = array();
+    foreach(array('cc', 'bcc') as $ccType) {
+      if (CRM_Utils_Array::value($ccType, $params)) {
+        $aRecipients = explode(',', $params[$ccType]);
+        unset($params[$ccType]);
+        if (!empty($aRecipients)) {
+          foreach($aRecipients as $rec) {
+            if (CRM_Utils_Rule::email($rec)) {
+              $additionalRecipients[] = $rec;
+            }
+          }
+        }
+      }
+    }
+
     if (empty($params['from'])) {
       $defaultNameEmail = CRM_Core_BAO_Domain::getNameAndEmail( );
       $params['from'] = "{$defaultNameEmail[0]} <{$defaultNameEmail[1]}>";
@@ -97,12 +114,6 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       CRM_Core_Error::debug_log_message("Cannot start transactional email because init error. ".__LINE__);
 
     }
-
-    // got to discuss how to send cc / bcc
-    /*
-    CRM_Utils_Array::value('cc', $params);
-    CRM_Utils_Array::value('bcc', $params);
-    */
 
     $emailId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_email WHERE contact_id = %1 AND email = %2 ORDER BY is_primary DESC', array(
       1 => array($params['contactId'], 'Integer'),
@@ -170,10 +181,16 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
             'queue' => $queue,
           );
           CRM_Core_Config::addShutdownCallback('after', 'CRM_Mailing_BAO_Transactional::sendNonBlocking', array($mailer, $sendParams));
+          if (!empty($additionalRecipients)) {
+            self::additionalRecipients($additionalRecipients, $params);
+          }
           return TRUE;
         }
         else {
           $result = $mailer->send($recipient, $headers, $body);
+          if (!empty($additionalRecipients)) {
+            self::additionalRecipients($additionalRecipients, $params);
+          }
           CRM_Core_Error::setCallback();
           if (is_a($result, 'PEAR_Error')) {
             self::bounced($queue->id, $tmail->_job->id, $queue->hash, $result->getMessage());
@@ -269,6 +286,20 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     );
     $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match($resultMessage));
     CRM_Mailing_Event_BAO_Bounce::create($params);
+  }
+
+  public static function additionalRecipients($recipients, $params) {
+    unset($params['activityId'], $params['toName'], $params['toMail']);
+    $tidyParams = $params;
+    foreach($recipients as $email) {
+      if (CRM_Utils_Rule::email($email)) {
+        $sendParams = $tidyParams;
+        $sendParams['toEmail'] = $email;
+        CRM_Utils_Mail::send($sendParams, array(
+          0 => array('CRM_Utils_Callback::nullCallback' => array()),
+        ));
+      }
+    }
   }
 
   /**
