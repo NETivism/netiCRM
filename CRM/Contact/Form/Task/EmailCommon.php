@@ -361,7 +361,6 @@ class CRM_Contact_Form_Task_EmailCommon {
     );
 
     // format contact details array to handle multiple emails from same contact
-    $formattedContactDetails = array();
     $tempEmails = array();
 
     foreach ($form->_contactIds as $contactId) {
@@ -372,33 +371,31 @@ class CRM_Contact_Form_Task_EmailCommon {
         $emailKey = "{$contactId}::{$email}";
         if (!in_array($emailKey, $tempEmails)) {
           $tempEmails[] = $emailKey;
-          $details = $form->_contactDetails[$contactId];
-          $details['email'] = $email;
+          $details = array($form->_contactDetails[$contactId]);
+          $details[0]['email'] = $email;
           unset($details['email_id']);
-          $formattedContactDetails[] = $details;
+          // send the mail
+          list($sent, $activityId) = CRM_Activity_BAO_Activity::sendEmail(
+            $details,
+            $subject,
+            $formValues['text_message'],
+            $formValues['html_message'],
+            NULL,
+            NULL,
+            $from,
+            $attachments,
+            $cc,
+            $bcc,
+            array_keys($form->_contactDetails),
+            $form
+          );
         }
       }
     }
 
-    // send the mail
-    require_once 'CRM/Activity/BAO/Activity.php';
-    list($sent, $activityId) = CRM_Activity_BAO_Activity::sendEmail(
-      $formattedContactDetails,
-      $subject,
-      $formValues['text_message'],
-      $formValues['html_message'],
-      NULL,
-      NULL,
-      $from,
-      $attachments,
-      $cc,
-      $bcc,
-      array_keys($form->_contactDetails),
-      $form
-    );
 
     if ($sent) {
-      $status = array('', ts('Your message has been sent.'));
+      $status = array('', ts('Your message has been scheduled to send.'));
     }
 
     //Display the name and number of contacts for those email is not sent.

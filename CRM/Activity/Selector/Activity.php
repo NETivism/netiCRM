@@ -178,8 +178,8 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     elseif (in_array($activityTypeId, array(
       $activityTypeIds['Email'], $activityTypeIds['Bulk Email'],
       ))) {
-      $url = 'civicrm/contact/view/activity';
-      $delUrl = 'civicrm/activity';
+      $url = 'civicrm/activity/view';
+      $text = 'View Activity';
       $qsView = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
     elseif ($activityTypeId == $activityTypeIds['Inbound Email']) {
@@ -201,7 +201,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     elseif ($activityTypeId == $activityTypeIds['SMS']) {
       $showUpdate = $showDelete = FALSE;
       $text = 'View Activity';
-      $url = 'civicrm/contact/view/activity';
+      $url = 'civicrm/activity/view';
       $qsView = "action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
     }
     else {
