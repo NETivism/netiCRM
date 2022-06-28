@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48928,3 +48928,18 @@ msgid ""
 "one of the checkboxes moving Membership, Participant and Contribution will "
 "act on all of them."
 msgstr "當有付費會員或參加者時，取消勾選捐款時，會員、參加者也會一併取消勾選，反之相同。"
+
+msgid "Your current DNS record is listed below."
+msgstr "您目前設定的 DNS 紀錄如下"
+
+msgid "Email Tracking"
+msgstr "電子郵件追蹤"
+
+msgid "Bounced"
+msgstr "已退信"
+
+msgid "Unsubscribed"
+msgstr "已取消訂閱"
+
+msgid "Opt-Outed"
+msgstr "已全佔退訂"
