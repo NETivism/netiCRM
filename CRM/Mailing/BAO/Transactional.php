@@ -582,7 +582,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   /**
    * Get transactional details for an email
    *
-   * @param  array   $contactId     
+   * @param  array   $contactId
    * @param  array   $activityId
    *
    * @return array
@@ -618,10 +618,10 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     return array(
       'Delivered' => $dao->delivered,
       'Opened' => $dao->opened,
-      'Clicks' => $dao->clicks,
-      'Bounce' => $dao->bounce,
-      'Unsubscribe' => $dao->unsubscribe,
-      'Opt-Out' => $dao->optout,
+      'Clicked' => $dao->clicks,
+      'Bounced' => $dao->bounce,
+      'Unsubscribed' => $dao->unsubscribe,
+      'Opt-Outed' => $dao->optout,
     );
   }
 }

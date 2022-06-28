@@ -90,8 +90,8 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
           $event['action'] = ts('Delivered');
           break;
         case 'bounce':
-          $event['action'] = ts('Bounce');
-          $event['detail'] = ts('Bounce Reason').": ".$event['additional']."\n".CRM_Utils_String::htmltotext($event['detail']);
+          $event['action'] = ts('Bounced');
+          $event['detail'] = ts('Bounce Reason').": ".$event['additional']."\n".CRM_Utils_String::htmlToText($event['detail']);
           break;
         case 'opened':
           $event['action'] = ts('Opened');
@@ -102,7 +102,7 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
         case 'unsubscribe':
           $event['action'] = ts('Unsubscribed');
           if (!empty($event['detail'])) {
-            $event['detail'] = ts('OptOut');
+            $event['detail'] = ts('Opt-Out');
           }
           else {
             $event['detail'] = ts('Unsubscription Group');
