@@ -1678,7 +1678,7 @@ msgstr "顯示名稱"
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/OptionValue.php
 #: CRM/Report/Form/Mailing/Opened.php CRM/Report/Form/Mailing/Summary.php
 msgid "Opened"
-msgstr "開啟"
+msgstr "已開啟"
 
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/OptionValue.php
 msgid "Closed"
@@ -48928,3 +48928,22 @@ msgid ""
 "one of the checkboxes moving Membership, Participant and Contribution will "
 "act on all of them."
 msgstr "當有付費會員或參加者時，取消勾選捐款時，會員、參加者也會一併取消勾選，反之相同。"
+
+msgid "Your current DNS record is listed below."
+msgstr "您目前設定的 DNS 紀錄如下"
+
+msgid "Email Tracking"
+msgstr "電子郵件追蹤"
+
+msgid "Bounced"
+msgstr "已退信"
+
+msgid "Unsubscribed"
+msgstr "已取消訂閱"
+
+msgid "Opt-Outed"
+msgstr "已全佔退訂"
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "This Receipt ID already exists in the database."
+msgstr "此收據編號已存在於資料庫。"

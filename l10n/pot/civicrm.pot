@@ -48562,3 +48562,22 @@ msgstr ""
 
 msgid "Because the contact has membership and participant payment records, click one of the checkboxes moving Membership, Participant and Contribution will act on all of them."
 msgstr ""
+
+msgid "Your current DNS record is listed below."
+msgstr ""
+
+msgid "Email Tracking"
+msgstr ""
+
+msgid "Bounced"
+msgstr ""
+
+msgid "Unsubscribed"
+msgstr ""
+
+msgid "Opt-Outed"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "This Receipt ID already exists in the database."
+msgstr ""
