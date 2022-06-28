@@ -1051,7 +1051,9 @@ class CRM_Contribute_BAO_Query {
       $product_option_select_attr = array('data-parent-filter' => $product_name);
 
       foreach ($product_options as $product_option) {
-        $product_option_select_elem->addOption($product_option, $product_option, $product_option_select_attr);
+        if (trim($product_option) !== '') {
+          $product_option_select_elem->addOption($product_option, $product_option, $product_option_select_attr);
+        }
       }
     }
 
