@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2022\n"
+"Last-Translator: 馮 佳今, 2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48943,3 +48943,7 @@ msgstr "已取消訂閱"
 
 msgid "Opt-Outed"
 msgstr "已全佔退訂"
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "This Receipt ID already exists in the database."
+msgstr "此收據編號已存在於資料庫。"
