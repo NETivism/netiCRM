@@ -134,9 +134,10 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    *
    */
   function doTransferCheckout(&$params, $component) {
-    if(!empty($this->_paymentForm->_params['civicrm_instrument_id'])){
+    $instrument_id = $params['civicrm_instrument_id'];
+    if(!empty($instrument_id)){
       // civicrm_instrument_by_id($params['civicrm_instrument_id'], 'name');
-      $options = array(1 => array( $this->_paymentForm->_params['civicrm_instrument_id'], 'Integer'));
+      $options = array(1 => array( $instrument_id, 'Integer'));
       $instrument_name = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
       $this->_instrumentType = strtolower($instrument_name);
     }
@@ -152,7 +153,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     }
 
     if($this->_instrumentType == 'linepay'){
-      $this->_mobilePayment = new CRM_Core_Payment_LinePay($this->_paymentForm->_params['payment_processor']);
+      $this->_mobilePayment = new CRM_Core_Payment_LinePay($params['payment_processor']);
       $this->_mobilePayment->doRequest($params);
       return;
     }
@@ -181,7 +182,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     $description = !empty($params['amount_level']) ? $page_title . ' - ' . $params['amount_level'] : $page_title;
 
-    if($this->_paymentForm->_mode == 'test'){
+    if($this->_mode == 'test'){
       $is_test = 1;
     }else{
       $is_test = 0;
