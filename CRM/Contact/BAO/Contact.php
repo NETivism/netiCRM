@@ -451,6 +451,9 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
    * @static
    */
   static function getDisplayAndImage($id, $type = FALSE) {
+    if (empty($id)) {
+      return NULL;
+    }
     $sql = "
 SELECT    civicrm_contact.display_name as display_name,
           civicrm_contact.contact_type as contact_type,
