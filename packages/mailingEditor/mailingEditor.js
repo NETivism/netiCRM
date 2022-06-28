@@ -365,11 +365,11 @@
 
   var _htmlDecode = function(input) {
     if (typeof input !== "undefined") {
-      _debug(input, "_htmlDecode function: Original input HTML");
+      //_debug(input, "_htmlDecode function: Original input HTML");
 
       // Input is escape HTML, we need to unescape HTML first.
       input = _htmlUnescape(input);
-      _debug(input, "_htmlDecode function: HTML unescape");
+      //_debug(input, "_htmlDecode function: HTML unescape");
 
       // Unescape HTML contains the encoded URL, we need to decode.
       // But before decodeURI, in order to avoid URIError caused by
@@ -377,11 +377,11 @@
       // escape character), we have to convert the content from '%'
       // to '%25' by encodeURI.
       input = encodeURI(input);
-      _debug(input, "_htmlDecode function: Encode URI");
+      //_debug(input, "_htmlDecode function: Encode URI");
 
       // Finally, we can decodeURI.
       input = decodeURI(input);
-      _debug(input, "_htmlDecode function: Decode URI");
+      //_debug(input, "_htmlDecode function: Decode URI");
 
       return input;
     }
@@ -427,7 +427,8 @@
       width  : window.innerWidth,
       height : window.innerHeight,
     };
-    _debug(_viewport, "viewport");
+
+    //_debug(_viewport, "viewport");
   };
 
   var _updateUrlHash = function(hash) {
@@ -572,7 +573,7 @@
 
           if (_isJsonString(dataString)) {
             _data = JSON.parse(dataString);
-            _debug(_data, "nmeData.get.field");
+            //_debug(_data, "nmeData.get.field");
           }
         }
       }
@@ -3292,9 +3293,9 @@
         _dataVersion = _nmeData.version.get();
 
         if (_dataVersion.current != _dataVersion.lastest) {
-          _debug(_dataVersion, "Before data version update");
+          //_debug(_dataVersion, "Before data version update");
           _nmeData.version.update();
-          _debug(_dataVersion, "After data version update");
+          //_debug(_dataVersion, "After data version update");
           $.nmEditor.instance.data = _data;
           _nmeData.update();
 
