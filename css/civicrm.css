@@ -838,6 +838,12 @@
     border: 1px solid #999;
 }
 
+.crm-container pre {
+  background-color: #EFEFEF;
+  border: 1px solid #EEE;
+  padding: 8px;
+  width: fit-content;
+}
 
 .crm-form-block {
     padding:4px;
