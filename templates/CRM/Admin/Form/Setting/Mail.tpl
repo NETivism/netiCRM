@@ -25,18 +25,15 @@
 *}
 {capture assign=docLink}{docURL page="CiviMail Admin" text="CiviMail Administration Guide"}{/capture}
 <div class="crm-block crm-form-block crm-mail-form-block">
-<div id="help">
-    {ts 1=$docLink}These settings are used to configure mailer properties for the optional CiviMail component. They are NOT used for the built-in 'Send Email to Contacts' feature. Refer to the %1 for more information.{/ts}
-</div>
-<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>                         
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
       <table class="form-layout-compressed">
         {if $admin}
         <tr class="crm-mail-form-block-mailerBatchLimit">
-            <td class="label">{$form.mailerBatchLimit.label}</td><td>{$form.mailerBatchLimit.html}<br />    
+            <td class="label">{$form.mailerBatchLimit.label}</td><td>{$form.mailerBatchLimit.html}<br />
             <span class="description">{ts}Throttle email delivery by setting the maximum number of emails sent during each CiviMail run (0 = unlimited).{/ts}</span></td>
         </tr>
         <tr class="crm-mail-form-block-mailerJobSize">
-            <td class="label">{$form.mailerJobSize.label}</td><td>{$form.mailerJobSize.html}<br />    
+            <td class="label">{$form.mailerJobSize.label}</td><td>{$form.mailerJobSize.html}<br />
             <span class="description">{ts}If you want to utilize multi-threading enter the size you want your sub jobs to be split into (0 = disables multi-threading and processes mail as one single job - batch limits still apply){/ts}</span></td>
         </tr>
         <tr class="crm-mail-form-block-verpSeparator">
@@ -55,6 +52,6 @@
           </td>
         </tr>
       </table>
-<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 <div class="spacer"></div>
 </div>
