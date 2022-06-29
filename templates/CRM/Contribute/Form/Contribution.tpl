@@ -450,6 +450,8 @@ Number.prototype.pad = function (len) {
   return (new Array(len+1).join("0") + this).slice(-len);
 }
 cj(document).ready(function(){
+
+  {/literal}{if !$smarty.get.snippet}{literal}
    if(cj('#receipt_date').val()){
      cj('#have_receipt').attr('checked', 'checked');
      cj('#have_receipt').attr('disabled', 'disabled');
@@ -458,8 +460,6 @@ cj(document).ready(function(){
      cj('#receipt-option').hide();
    }
    
-  {/literal}{if !$smarty.get.snippet}{literal}
-  console.log('test');
    // Define dialog behavior.
   cj("#dialog-confirm-receipt").dialog({
     autoOpen: false,
