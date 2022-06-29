@@ -418,7 +418,7 @@ class CRM_Utils_Mail {
 
   static function checkSPF($email, $mailer = NULL) {
     if (strstr($email, '@')) {
-      list($user, $domain) = explode('@', $email);
+      list($user, $domain) = explode('@', trim($email));
     }
     else {
       $domain = $email;
@@ -448,7 +448,21 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
-  static function checkDKIM($email, $mailer = NULL) {
+  static function getSPF($email) {
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', trim($email));
+    }
+    else {
+      $domain = $email;
+    }
+    $records = dns_get_record($domain, DNS_TXT);
+    if (!empty($records)) {
+      return $records;
+    }
+    return array();
+  }
+
+  static function checkDKIM($email) {
     global $civicrm_conf;
 
     // skip check when there were no selector
@@ -456,14 +470,7 @@ class CRM_Utils_Mail {
       return NULL;
     }
 
-    if (strstr($email, '@')) {
-      list($user, $domain) = explode('@', $email);
-    }
-    else {
-      $domain = $email;
-    }
-    $dkimCheck = $civicrm_conf['mailing_dkim_selector'].'._domainkey.'.$domain;
-    $records = dns_get_record($dkimCheck, DNS_CNAME);
+    $records = self::getDKIM($email);
     if (!empty($records)) {
       foreach($records as $r) {
         if (!empty($r['target']) && $r['target'] === $civicrm_conf['mailing_dkim_domain']) {
@@ -472,6 +479,29 @@ class CRM_Utils_Mail {
       }
     }
     return FALSE;
+  }
+
+  static function getDKIM($email) {
+    global $civicrm_conf;
+
+    // skip check when there were no selector
+    if (empty($civicrm_conf['mailing_dkim_domain']) || empty($civicrm_conf['mailing_dkim_selector'])) {
+      return array();
+    }
+
+
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', trim($email));
+    }
+    else {
+      $domain = $email;
+    }
+    $dkimCheck = $civicrm_conf['mailing_dkim_selector'].'._domainkey.'.$domain;
+    $records = dns_get_record($dkimCheck, DNS_CNAME);
+    if (!empty($records)) {
+      return $records;
+    }
+    return array();
   }
 }
 

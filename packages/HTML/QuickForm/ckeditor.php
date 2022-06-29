@@ -88,7 +88,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
             $html = '';
             $html .= parent::toHtml();
             if (empty($GLOBALS['civcirm_ckeditor_script'])) {
-              $html .= "\n".'<script type="text/javascript" src="'.$config->resourceBase.'packages/ckeditor/ckeditor.js?4.11.3"></script>'."\n";
+              $html .= "\n".'<script type="text/javascript" src="'.$config->resourceBase.'packages/ckeditor/ckeditor.js?'.$config->ver.'"></script>'."\n";
               $GLOBALS['civicrm_ckeditor_script'] = TRUE;
             }
             $html .= "<script type='text/javascript'>

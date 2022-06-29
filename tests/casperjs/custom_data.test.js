@@ -1600,6 +1600,8 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* input ckeditor */
+    // refs #34197, ckeditor not support old phantomjs
+    /*
     casper.then(function() {
         var cke_selector = '#customData' + vars.custom_id + ' iframe.cke_wysiwyg_frame';
         casper.waitForSelector(cke_selector, function success() {
@@ -1614,6 +1616,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.then(function() {
         // this.capture('Filled_up_ckeditor.png');
     });
+    */
 
     casper.waitForSelector("#_qf_Contact_upload_view", function success() {
         casper.echo('** Step 6-11: Save data. **');

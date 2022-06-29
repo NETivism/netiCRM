@@ -302,12 +302,14 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('** Step 8: Widget. **');
         casper.echo('=====================================');
         test.assertExists('#is_active');
-        this.click('#is_active');
+        // refs #34197, ckeditor not support old phantomjs
+        // this.click('#is_active');
     }, function fail() {
         test.assertExists('#is_active');
     });
 
     /* filled up About(ckeditor) */
+    /* refs #34197, ckeditor not support old phantomjs
     casper.waitForSelector("iframe.cke_wysiwyg_frame", function success() {
         test.assertExists("iframe.cke_wysiwyg_frame");
         this.evaluate(function() {
@@ -316,6 +318,7 @@ casper.test.begin('Resurrectio test', function(test) {
     }, function fail() {
         test.assertExists("iframe.cke_wysiwyg_frame");
     });
+    */
 
     /* click Save and Preview */
     casper.waitForSelector('#_qf_Widget_refresh', function success() {

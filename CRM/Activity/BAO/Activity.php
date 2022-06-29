@@ -1754,7 +1754,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param string $subject      the subject of the message
    * @param string $message      the message contents
    * @param string $emailAddress use this 'to' email address instead of the default Primary address
-   * @param int    $activityID   the activity ID that tracks the message
+   * @param int    $activityId   the activity ID that tracks the message
    *
    * @return boolean             true if successfull else false.
    * @access public
@@ -1767,7 +1767,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     &$text_message,
     &$html_message,
     $emailAddress,
-    $activityID,
+    $activityId,
     $attachments = NULL,
     $cc = NULL,
     $bcc = NULL
@@ -1788,8 +1788,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
 
     // create the params array
     $params = array();
-
-    $params['groupName'] = 'Activity Email Sender';
+    $params['contactId'] = $toID;
+    $params['activityId'] = $activityId;
     $params['from'] = $from;
     $params['toName'] = $toDisplayName;
     $params['toEmail'] = $toEmail;
@@ -1800,19 +1800,21 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $params['html'] = $html_message;
     $params['attachments'] = $attachments;
 
-    $callback = array(
-      0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityID, TRUE)),
-    );
-    if (!CRM_Utils_Mail::send($params, $callback)) {
-      return FALSE;
-    }
-
-    // add activity target record for every mail that is send
+    // add activity target record for every email prepred to send
     $activityTargetParams = array(
-      'activity_id' => $activityID,
+      'activity_id' => $activityId,
       'target_contact_id' => $toID,
     );
     self::createActivityTarget($activityTargetParams);
+
+    $callback = array(
+      0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+      1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+    );
+    if (!CRM_Mailing_BAO_Transactional::send($params, $callback)) {
+      return FALSE;
+    }
+
     return TRUE;
   }
 

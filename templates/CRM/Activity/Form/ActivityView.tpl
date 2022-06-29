@@ -104,6 +104,38 @@
         </tr>  
 {/if}
      </table>
+      {if $mailing_events}
+      <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+        <div class="crm-accordion-header">
+        <div class="zmdi crm-accordion-pointer"></div>
+          {ts}Email Tracking{/ts}
+        </div><!-- /.crm-accordion-header -->
+        <div class="crm-accordion-body">
+          <table class="form-layout-compressed">
+            <tr>
+              <th class="twelve">{ts}Action{/ts}</th>
+              <th class="twelve">{ts}Date{/ts}</th>
+              <th>{ts}Details{/ts}</th>
+            </tr>
+            {foreach from=$mailing_events item=mailing_event_row}
+              <tr>
+                <td>{$mailing_event_row.action}</td>
+                <td>{$mailing_event_row.time|crmDate}</td>
+                <td>
+                  {if $mailing_event_row.detail}
+                    {$mailing_event_row.detail|nl2br}
+                  {else}
+                    {ts}None{/ts}
+                  {/if}
+                </td>
+              </tr>
+            {/foreach}
+            <tr>
+            </tr>
+          </table>
+        </div><!-- /.crm-accordion-body -->
+      </div><!-- /.crm-accordion-wrapper -->
+      {/if}
      <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>  
  
