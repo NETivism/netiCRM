@@ -794,7 +794,13 @@ SELECT g.*
   ) {
     require_once 'CRM/ACL/BAO/Cache.php';
 
-    $acls = &CRM_ACL_BAO_Cache::build($contactID);
+    if ($contactID > 0) {
+      $contactID = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE id = %1", array(1 => array($contactID, 'Positive')));
+    }
+    $acls = NULL;
+    if (!empty($contactID)) {
+      $acls = &CRM_ACL_BAO_Cache::build($contactID);
+    }
 
     if (!empty($includedGroups) &&
       is_array($includedGroups)
