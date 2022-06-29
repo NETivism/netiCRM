@@ -41,6 +41,12 @@
     _mailingID = "",
     _qfKey = "",
     _storageKey = "",
+    _storageMailings = {
+      maximum: 20,
+      key: [],
+      timestamp: {},
+      timestampOrder: []
+    },
     _debugMode = false,
     _data = {},
     _dataLoadMode = "field",
@@ -48,6 +54,7 @@
     _dataVersion = {},
     _defaultData = {},
     _intervalSaveData,
+    _intervalSaveDataTime = 60000,
     _intervalSaveDataTimer,
     _nme = {}, // plugin object
     _nmeOptions = {},
@@ -586,6 +593,42 @@
     },
     save: function() {
       if (typeof Storage !== "undefined") {
+        _storageMailings.key = [];
+        _storageMailings.timestamp = {};
+        _storageMailings.timestampOrder = [];
+
+        _storageMailings.key = Object.keys(localStorage).filter(function(k) {
+          if (k.startsWith("mailing_")) {
+            return k;
+          }
+        });
+
+        if (_storageMailings.key.length >= _storageMailings.maximum) {
+          let deleteCount = _storageMailings.key.length - _storageMailings.maximum;
+
+          for (let i in _storageMailings.key) {
+            let storageKey = _storageMailings.key[i],
+                tempData = JSON.parse(localStorage[storageKey]);
+
+            _storageMailings.timestamp[storageKey] = tempData.saveTimestamp;
+          }
+
+          for (let t in _storageMailings.timestamp) {
+            _storageMailings.timestampOrder.push([t, _storageMailings.timestamp[t]]);
+          }
+
+          _storageMailings.timestampOrder.sort(function(a, b) {
+            return a[1] - b[1];
+          });
+
+          let deleteMailings = _storageMailings.timestampOrder.slice(0, deleteCount);
+
+          for (let i in deleteMailings) {
+            let deleteMailing = deleteMailings[i];
+            localStorage.removeItem(deleteMailing[0]);
+          }
+        }
+
         // Store current timestamp (ms) when updating data
         _data.saveTimestamp = Date.now();
         _nmeData.update();
@@ -1701,7 +1744,7 @@
       _tooltip();
 
       // refs #34990. Save mailing data every 60 seconds.
-      _intervalSaveDataTimer = setInterval(_intervalSaveData, 60000);
+      _intervalSaveDataTimer = setInterval(_intervalSaveData, _intervalSaveDataTime);
     }
   };
 
