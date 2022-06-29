@@ -313,7 +313,7 @@ class CRM_Contact_Form_Task_EmailCommon {
    */
   static function postProcess(&$form) {
     if (count($form->_contactIds) > self::MAX_EMAILS_KILL_SWITCH) {
-       return CRM_Core_Error::statusBounce(ts('Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead.',
+      return CRM_Core_Error::statusBounce(ts('Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead.',
           array(1 => self::MAX_EMAILS_KILL_SWITCH)
         ));
     }
@@ -361,6 +361,7 @@ class CRM_Contact_Form_Task_EmailCommon {
     );
 
     // format contact details array to handle multiple emails from same contact
+    $formattedContactDetails = array();
     $tempEmails = array();
 
     foreach ($form->_contactIds as $contactId) {
@@ -371,31 +372,54 @@ class CRM_Contact_Form_Task_EmailCommon {
         $emailKey = "{$contactId}::{$email}";
         if (!in_array($emailKey, $tempEmails)) {
           $tempEmails[] = $emailKey;
-          $details = array($form->_contactDetails[$contactId]);
-          $details[0]['email'] = $email;
+          $details = $form->_contactDetails[$contactId];
+          $details['email'] = $email;
           unset($details['email_id']);
-          // send the mail
-          list($sent, $activityId) = CRM_Activity_BAO_Activity::sendEmail(
-            $details,
-            $subject,
-            $formValues['text_message'],
-            $formValues['html_message'],
-            NULL,
-            NULL,
-            $from,
-            $attachments,
-            $cc,
-            $bcc,
-            array_keys($form->_contactDetails),
-            $form
-          );
+          $formattedContactDetails[] = $details;
         }
       }
     }
 
-
-    if ($sent) {
+    // send the mail
+    if (CRM_Core_Config::singleton()->enableTransactionalEmail) {
+      foreach($formattedContactDetails as $details) {
+        $detailsParam = array($details);
+        list($sent, $activityId) = CRM_Activity_BAO_Activity::sendEmail(
+          $detailsParam,
+          $subject,
+          $formValues['text_message'],
+          $formValues['html_message'],
+          NULL,
+          NULL,
+          $from,
+          $attachments,
+          $cc,
+          $bcc,
+          array_keys($form->_contactDetails),
+          $form
+        );
+      }
       $status = array('', ts('Your message has been scheduled to send.'));
+    }
+    else {
+      list($sent, $activityId) = CRM_Activity_BAO_Activity::sendEmail(
+        $formattedContactDetails,
+        $subject,
+        $formValues['text_message'],
+        $formValues['html_message'],
+        NULL,
+        NULL,
+        $from,
+        $attachments,
+        $cc,
+        $bcc,
+        array_keys($form->_contactDetails),
+        $form
+      );
+
+      if ($sent) {
+        $status = array('', ts('Your message has been sent.'));
+      }
     }
 
     //Display the name and number of contacts for those email is not sent.

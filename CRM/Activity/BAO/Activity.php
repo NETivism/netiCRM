@@ -1811,11 +1811,18 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
       1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
     );
-    if (!CRM_Mailing_BAO_Transactional::send($params, $callback)) {
-      return FALSE;
+    if (CRM_Core_Config::singleton()->enableTransactionalEmail) {
+      $sent = CRM_Mailing_BAO_Transactional::send($params, $callback);
+    }
+    else {
+      $sent = CRM_Utils_Mail::send($params, $callback);
     }
 
-    return TRUE;
+    if ($sent) {
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   /**
