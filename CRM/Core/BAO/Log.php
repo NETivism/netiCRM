@@ -50,7 +50,9 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
     $log->limit(1);
     $result = array();
     if ($log->find(TRUE)) {
-      list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($log->modified_id);
+      if (!empty($log->modified_id)) {
+        list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($log->modified_id);
+      }
       $result = array(
         'log_id' => $log->id,
         'id' => $log->modified_id,

@@ -48548,3 +48548,36 @@ msgstr ""
 #: CRM/Admin/Page/PaymentProcessor.php
 msgid "Some recurring contributions are in progress, so some payment processors can't be disabled or deleted."
 msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid "This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Merge.hlp templates/CRM/Contact/Form/Merge.tpl
+msgid "Because the contact has membership payment record(s), click one of the checkboxes moving Membership and Contribution will act on both."
+msgstr ""
+
+msgid "Because the contact has participant payment record(s), click one of the checkboxes moving Participant and Contribution will act on both."
+msgstr ""
+
+msgid "Because the contact has membership and participant payment records, click one of the checkboxes moving Membership, Participant and Contribution will act on all of them."
+msgstr ""
+
+msgid "Your current DNS record is listed below."
+msgstr ""
+
+msgid "Email Tracking"
+msgstr ""
+
+msgid "Bounced"
+msgstr ""
+
+msgid "Unsubscribed"
+msgstr ""
+
+msgid "Opt-Outed"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "This Receipt ID already exists in the database."
+msgstr ""

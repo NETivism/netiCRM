@@ -1024,6 +1024,15 @@ WHERE civicrm_event.is_active = 1
       $participantParams['custom_post_id'] = array(array('participant_id', '=', $participantId, 0, 0));
     }
 
+    //check whether it is a test drive
+    if ($isTest && !empty($participantParams['custom_pre_id'])) {
+      $participantParams['custom_pre_id'][] = array('participant_test', '=', 1, 0, 0);
+    }
+
+    if ($isTest && !empty($participantParams['custom_post_id'])) {
+      $participantParams['custom_post_id'][] = array('participant_test', '=', 1, 0, 0);
+    }
+
     if (!$returnMessageText) {
       //send notification email if field values are set (CRM-1941)
       foreach ($gIds as $key => $gId) {
@@ -1033,11 +1042,7 @@ WHERE civicrm_event.is_active = 1
             //get values of corresponding profile fields for notification
             $val = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($gId, $contactID, $participantParams[$key]);
             $fields = CRM_Core_BAO_UFGroup::getFields($gId, FALSE, CRM_Core_Action::VIEW);
-            foreach ($fields as $k => $v) {
-              if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($val['values'][$v['title']] )){
-                $val['values'][$v['title']] = ts("Uploaded files received");
-              }
-            }
+            CRM_Core_BAO_UFGroup::verifySubmittedValue($fields, $val, $values['params'][$participantId]);
             CRM_Core_BAO_UFGroup::commonSendMail($contactID, $val);
           }
         }

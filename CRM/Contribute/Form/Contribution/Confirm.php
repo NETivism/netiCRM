@@ -468,6 +468,9 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
     $premiumParams = $membershipParams = $tempParams = $params = $this->_params;
 
+    // refs #30009, add submitted values into _values for CRM_Contribute_BAO_ContributionPage::sendMail
+    $this->_values['submitted'] =& $this->_params;
+
     //carry payment processor id.
     if ($paymentProcessorId = CRM_Utils_Array::value('id', $this->_paymentProcessor)) {
       $this->_params['payment_processor_id'] = $paymentProcessorId;

@@ -1158,7 +1158,7 @@ class CRM_Contact_BAO_Query {
 
       // refs #30009, special case for one to many note
       if ($this->_useGroupBy && !strstr($this->_whereClause, 'civicrm_note') && isset($this->_select['note']) && !empty($this->_tables['civicrm_note'])) {
-        $this->_whereClause .= " AND (civicrm_note.id = (SELECT MAX(cnote.id) FROM civicrm_note cnote WHERE cnote.entity_table = 'civicrm_contact' AND contact_a.id = cnote.entity_id GROUP BY cnote.entity_id)) ";
+        $this->_whereClause .= " AND (civicrm_note.id = (SELECT MAX(cnote.id) FROM civicrm_note cnote WHERE cnote.entity_table = 'civicrm_contact' AND contact_a.id = cnote.entity_id GROUP BY cnote.entity_id) OR civicrm_note.id IS NULL) ";
       }
 
       $select = "SELECT ";
