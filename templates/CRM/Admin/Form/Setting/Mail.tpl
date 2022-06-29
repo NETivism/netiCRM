@@ -30,6 +30,7 @@
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>                         
       <table class="form-layout-compressed">
+        {if $admin}
         <tr class="crm-mail-form-block-mailerBatchLimit">
             <td class="label">{$form.mailerBatchLimit.label}</td><td>{$form.mailerBatchLimit.html}<br />    
             <span class="description">{ts}Throttle email delivery by setting the maximum number of emails sent during each CiviMail run (0 = unlimited).{/ts}</span></td>
@@ -41,6 +42,17 @@
         <tr class="crm-mail-form-block-verpSeparator">
             <td class="label">{$form.verpSeparator.label}</td><td>{$form.verpSeparator.html}<br />
             <span class="description">{ts}Separator character used when CiviMail generates VERP (variable envelope return path) Mail-From addresses.{/ts}</span></td>
+        </tr>
+        {/if}
+        <tr class="crm-mail-form-block-enableTransactionalEmail">
+          <td class="label">{$form.enableTransactionalEmail.label}</td><td>{$form.enableTransactionalEmail.html}<br />
+            <div class="description">
+              {ts}Enable email tracking will track email opened data of contribution and event notification to an activity.{/ts}<br>
+              {ts}After enable, changes below may affect your current usage:{/ts}<br>
+              <i class="zmdi zmdi-alert-circle-o"></i><span class="font-red">{ts}The cc and bcc in notification will no longer in the same mail which means you won't see the from name and email address in cc / bcc in thank-you letter.{/ts}</span><br>
+              <i class="zmdi zmdi-alert-circle-o"></i><span class="font-red">{ts}Instead of create an one aggregate activity, email to multiple contacts now will create separate activity on each contact.{/ts}</span>
+            </div>
+          </td>
         </tr>
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
