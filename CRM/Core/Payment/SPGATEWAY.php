@@ -308,7 +308,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     // url 
     $notify_url = self::_civicrm_spgateway_notify_url($vars, 'spgateway/ipn/'.$instrument_code, $component);
     $civi_base_url = CRM_Utils_System::currentPath();
-    $thankyou_url = CRM_Utils_System::url($civi_base_url, array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey'], ), true);
+    $query = http_build_query(array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey'], ));
+    $thankyou_url = CRM_Utils_System::url($civi_base_url, $query, true);
   
     // parameter
     if($component == 'event' && !empty($_SESSION['CiviCRM'][$form_key])){
@@ -536,6 +537,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
        }
     }
   
+    $query = http_build_query($query);
     $url = CRM_Utils_System::url(
       $path,
       $query,
