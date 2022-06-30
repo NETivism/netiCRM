@@ -1224,11 +1224,8 @@ WHERE  contribution_id = {$this->_id}
     if (!empty($contributionId)) {
       $receiptId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',$contributionId, 'receipt_id');
 
-      //check receiptId exists or not
-      $daoName = 'CRM_Contribute_DAO_Contribution';
-      $fieldName = 'receipt_id';
-      $object = new $daoName( );
-      $object->$fieldName = $receiptId;
+      $object = new CRM_Contribute_DAO_Contribution();
+      $object->$receipt_id = $receiptId;
       if ($object->find(TRUE)) {
         $checkReceiptId = ($contributionId && $object->id == $contributionId) ? TRUE : FALSE;
         //If DB have exist receipt id then checkReceiptId would be FALSE.
@@ -1240,6 +1237,18 @@ WHERE  contribution_id = {$this->_id}
       if (!empty($receiptId) && empty($fields['receipt_id'])) {
         if (!empty($fields['receipt_date']) || !empty($fields['receipt_date_time'])) {
           $errors['receipt_id'] = ts('Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.');
+        }
+      }
+    } else {
+      if ($fields['receipt_id']) {
+        $object = new CRM_Contribute_DAO_Contribution();
+        $object->$receipt_id = $receiptId;
+        if ($object->find(TRUE)) {
+          $checkReceiptId = ($contributionId && $object->id == $contributionId) ? TRUE : FALSE;
+          //If DB have exist receipt id then checkReceiptId would be FALSE.
+          if (!$checkReceiptId) {
+            $errors['receipt_id'] = ts('This Receipt ID already exists in the database.');
+          }
         }
       }
     }
