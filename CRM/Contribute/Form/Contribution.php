@@ -1239,18 +1239,6 @@ WHERE  contribution_id = {$this->_id}
           $errors['receipt_id'] = ts('Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.');
         }
       }
-    } else {
-      if ($fields['receipt_id']) {
-        $object = new CRM_Contribute_DAO_Contribution();
-        $object->$receipt_id = $receiptId;
-        if ($object->find(TRUE)) {
-          $checkReceiptId = ($contributionId && $object->id == $contributionId) ? TRUE : FALSE;
-          //If DB have exist receipt id then checkReceiptId would be FALSE.
-          if (!$checkReceiptId) {
-            $errors['receipt_id'] = ts('This Receipt ID already exists in the database.');
-          }
-        }
-      }
     }
 
     return $errors;
