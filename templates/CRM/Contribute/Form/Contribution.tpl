@@ -588,11 +588,25 @@ cj("#total_amount").css('background-color', '#ffffff');
 }
 function checkReceipt( ) {
   cj("#receipt_id")
-    .change(function() {
-      var receiptId = cj("#receipt_id").val();
-      cj("#receipt_id").after( "<font color='red'>{/literal}{ts}Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.{/ts}{literal}</font>" );
+  .change(function() {
+    var receiptId = cj("#receipt_id").val();
+    var receiptDate = cj("#receipt_date").val();
+    var receiptTime = cj("#receipt_date_time").val();
+    if (receiptId.length == 0) {
+      if (receiptDate.length != 0 && receiptTime.length != 0) {
+        cj("#receipt_id").after( "<span class='alter' style='color:red'>{/literal}{ts}Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.{/ts}{literal}</span>");
       }
-    )
+    } else {
+      cj(".alter").remove();
+    }
+  });
+  cj(".crm-clear-link a")
+  .click(function() {
+    var receiptId = cj("#receipt_id").val();
+    if (receiptId.length == 0) {
+      cj(".alter").remove();
+    }
+  });
 }
 </script>
 {/literal}

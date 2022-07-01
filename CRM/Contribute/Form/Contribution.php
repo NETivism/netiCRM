@@ -1220,8 +1220,8 @@ WHERE  contribution_id = {$this->_id}
     }
 
     //Check receipt exist or not
+    $contributionId = $self->_id;
     if (!empty($fields['receipt_id'])) {
-      $contributionId = $self->_id;
       $object = new CRM_Contribute_DAO_Contribution();
       $object->receipt_id = $fields['receipt_id'];
       if ($object->find(TRUE)) {
