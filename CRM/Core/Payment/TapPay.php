@@ -49,7 +49,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode, &$paymentProcessor, $paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $args = func_get_args();
     if (isset($args[3])) {
       $apiType = $args[3];
@@ -190,7 +190,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+      $null = NULL;
+      
+      $paymentClass = self::singleton($mode, $paymentProcessor, $null);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
@@ -314,7 +316,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
 
       // Allow further manipulation of the arguments via custom hooks ..
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+      $null = NULL;
+      $paymentClass = self::singleton($mode, $paymentProcessor, $null);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       // Send tappay pay_by_token post
@@ -397,7 +400,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     );
 
     // Allow further manipulation of the arguments via custom hooks ..
-    $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+    $null = NULL;
+    $paymentClass = self::singleton($mode, $paymentProcessor, $null);
     CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
     if ($debug) {
       CRM_Core_Error::debug('TapPay::payByTokenForNonRecur $data', $data);
@@ -675,7 +679,10 @@ LIMIT 0, 100
         continue;
       }
 
-      self::doCheckRecur($dao->recur_id, $time);
+      $command = 'drush neticrm-process-recurring --payment-processor=tappay --time='.$time.' --contribution-recur-id='.$dao->recur_id.'&';
+      popen($command, 'w');
+      // wait for 1 second.
+      usleep(1000000);
     }
 
     // Delete the sequence data of this process.
@@ -689,6 +696,7 @@ LIMIT 0, 100
   }
 
   public static function doCheckRecur($recurId, $time = NULL) {
+    CRM_Core_Error::debug_log_message("TapPay synchronize execute: ".$recurId);
     if (empty($time)) {
       $time = time();
     }
@@ -803,6 +811,7 @@ LIMIT 0, 100
     }
 
     CRM_Core_Error::debug_log_message($resultNote);
+    CRM_Core_Error::debug_log_message("TapPay synchronize finished: ".$recurId);
     return $resultNote;
   }
 
@@ -863,8 +872,9 @@ LIMIT 0, 100
       );
 
       // Allow further manipulation of the arguments via custom hooks ..
+      $null = NULL;
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+      $paymentClass = self::singleton($mode, $paymentProcessor, $null);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, CRM_Core_DAO::$_nullObject, $params);
 
       $result = $api->request($params);
@@ -892,8 +902,9 @@ LIMIT 0, 100
           );
 
           // Allow further manipulation of the arguments via custom hooks ..
+          $null = NULL;
           $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-          $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+          $paymentClass = self::singleton($mode, $paymentProcessor, $null);
           CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, CRM_Core_DAO::$_nullObject, $params);
 
           $result = $api_history->request($params);
