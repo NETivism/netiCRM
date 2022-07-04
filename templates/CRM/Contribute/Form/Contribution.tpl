@@ -482,6 +482,17 @@ cj(document).ready(function(){
   });
   isPassChekcedDeductible = false;
 
+  cj("#contribution_type_id").change(function(){
+    let contributionTypeId = parseInt(cj(this).val());
+    let notifySpan = cj('#have_receipt').next('.description');
+    notifySpan.find('span.font-red').remove();
+    if (cj('#have_receipt').attr('checked') == 'checked'){
+      if (!([{/literal}{$deductible_type_ids}{literal}].includes(contributionTypeId))){
+        notifySpan.append('<span class="font-red">{/literal}{ts}This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?{/ts}{literal}</span>');
+      }
+    }
+  });
+
    cj('#have_receipt').on('click', function(){
      if(cj(this).attr('checked') == 'checked'){
       let contributionTypeId = parseInt(cj('#contribution_type_id').val());
