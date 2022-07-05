@@ -48593,3 +48593,7 @@ msgstr ""
 
 msgid "Instead of create an one aggregate activity, email to multiple contacts now will create separate activity on each contact."
 msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "If the transaction is finished, it will update the follow data by this action: %1"
+msgstr ""

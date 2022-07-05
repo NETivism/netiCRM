@@ -555,11 +555,31 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     CRM_Core_Error::statusBounce($resultMessage, $redirect);
   }
 
-  static function getSyncDataUrl($contributionId) {
+  static function getSyncDataUrl($contributionId, &$form = NULL) {
     $get = $_GET;
     unset($get['q']);
     $query = http_build_query($get);
     $sync_url = CRM_Utils_System::url("civicrm/spgateway/query", $query);
+    $params = array( 1 => array( $contributionId, 'Positive'));
+    $dao = CRM_Core_DAO::executeQuery("SELECT contribution_status_id, contribution_page_id FROM civicrm_contribution WHERE id = %1", $params);
+    $dao->fetch();
+    if ($dao->contribution_status_id == 2) {
+      $updateDataArray = array(ts('Contribution Status'), ts('Receive Date'), );
+      $pageParams = array(1 => array( $dao->contribution_page_id, 'Positive'));
+      $isEmailReceipt = CRM_Core_DAO::singleValueQuery("SELECT is_email_receipt FROM civicrm_contribution_page WHERE id = %1", $pageParams);
+      if ($isEmailReceipt) {
+        $updateDataArray[] = ts('Receipt Date');
+        $updateDataArray[] = ts('Receipt ID');
+        $updateDataArray[] = ts('Payment Notification');
+      }
+      $isSendSMS = CRM_Core_DAO::singleValueQuery("SELECT is_send_sms FROM civicrm_contribution_page WHERE id = %1", $pageParams);
+      if ($isSendSMS) {
+        $updateDataArray[] = ts('Send SMS');
+      }
+      $updateData = implode(', ', $updateDataArray);
+      $form->set('sync_data_hint', ts('If the transaction is finished, it will update the follow data by this action: %1', $updateData));
+    }
+
     return $sync_url;
   }
 }

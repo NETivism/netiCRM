@@ -77,8 +77,12 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
     if (method_exists($paymentClass, 'getSyncDataUrl')) {
-      $syncUrl = $paymentClass::getSyncDataUrl($id);
+      $syncUrl = $paymentClass::getSyncDataUrl($id, $this);
       $this->assign('sync_url', $syncUrl);
+      $syncDataHint = $this->get('sync_data_hint');
+      if (!empty($syncDataHint)) {
+        $this->assign('sync_data_hint', $syncDataHint);
+      }
     }
 
     $softParams = array('contribution_id' => $values['contribution_id']);

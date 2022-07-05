@@ -48966,3 +48966,9 @@ msgid ""
 "Instead of create an one aggregate activity, email to multiple contacts now "
 "will create separate activity on each contact."
 msgstr "一次寄送電子郵件至多個聯絡人，以往是建立一個任務與多個目標聯絡人，在啟用追蹤後會變成建立多個任務，也就是每個收件人都會有自己的任務來追蹤開信。"
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid ""
+"If the transaction is finished, it will update the follow data by this "
+"action: %1"
+msgstr "若交易成功，將會進行以下更新：%1"

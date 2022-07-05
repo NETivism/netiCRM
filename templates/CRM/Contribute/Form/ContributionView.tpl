@@ -156,7 +156,10 @@
   {if $sync_url}
   <tr>
       <td class="label">{ts}Sync Data with Payment Processor Provider{/ts}</td>
-      <td><a href="{$sync_url}">{ts}Sync Now{/ts}</a></td>
+      <td>
+        <a href="{$sync_url}">{ts}Sync Now{/ts}</a>
+        {if $sync_data_hint}<br/><span class="font-red">{$sync_data_hint}</span>{/if}
+      </td>
   </tr>
   {/if}
 
