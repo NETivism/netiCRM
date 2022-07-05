@@ -111,6 +111,11 @@ return array(
     'class' => 'CRM_Core_DAO_Sequence',
     'table' => 'civicrm_sequence',
   ) ,
+  'CRM_Core_DAO_Instrument' => array(
+    'name' => 'Instrument',
+    'class' => 'CRM_Core_DAO_Instrument',
+    'table' => 'civicrm_instrument',
+  ) ,
   'CRM_ACL_DAO_ACL' => array(
     'name' => 'ACL',
     'class' => 'CRM_ACL_DAO_ACL',
@@ -651,6 +656,11 @@ return array(
     'class' => 'CRM_Core_DAO_UFJoin',
     'table' => 'civicrm_uf_join',
   ) ,
+  'CRM_Mailing_Event_DAO_Transactional' => array(
+    'name' => 'Transactional',
+    'class' => 'CRM_Mailing_Event_DAO_Transactional',
+    'table' => 'civicrm_mailing_event_transactional',
+  ) ,
   'CRM_Contribute_DAO_PCPBlock' => array(
     'name' => 'PCPBlock',
     'class' => 'CRM_Contribute_DAO_PCPBlock',
@@ -695,6 +705,11 @@ return array(
     'name' => 'TapPayLog',
     'class' => 'CRM_Contribute_DAO_TapPayLog',
     'table' => 'civicrm_contribution_tappay_log',
+  ) ,
+  'CRM_Contribute_DAO_AllPay' => array(
+    'name' => 'AllPay',
+    'class' => 'CRM_Contribute_DAO_AllPay',
+    'table' => 'civicrm_contribution_allpay',
   ) ,
   'CRM_Coupon_DAO_CouponTrack' => array(
     'name' => 'CouponTrack',

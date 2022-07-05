@@ -45,7 +45,7 @@
 {if $config->debug}
 {include file="CRM/common/debug.tpl"}
 {/if}
-{include file="CRM/common/jquery.tpl"}
+
 <div id="crm-container" class="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
 {* Check for Status message for the page (stored in session->getStatus). Status is cleared on retrieval. *}
 {if $session->getStatus(false)}

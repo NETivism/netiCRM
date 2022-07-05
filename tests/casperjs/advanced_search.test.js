@@ -1,6 +1,5 @@
 var system = require('system'); 
 var port = system.env.RUNPORT; 
-var baseURL = port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 
 function makeid(length) {
     var result           = '';
@@ -12,37 +11,28 @@ function makeid(length) {
     return result;
 }
 
+var vars = {
+    baseURL : port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/'
+};
+
 casper.test.begin('Resurrectio test', function(test) {
-    casper.start(baseURL, function() {
+    casper.start(vars.baseURL, function() {
         casper.echo('=====================================');
         casper.echo('** Step 0: Login. **');
         casper.echo('=====================================');
         // this.capture('login.png');
     });
-    casper.waitForSelector("form#user-login-form input[name='name']", function success() {
-        test.assertExists("form#user-login-form input[name='name']");
-        this.click("form#user-login-form input[name='name']");
-    }, function fail() {
-        test.assertExists("form#user-login-form input[name='name']");
-    });
-    casper.waitForSelector("input[name='name']", function success() {
-        this.sendKeys("input[name='name']", "admin");
-    }, function fail() {
-        test.assertExists("input[name='name']");
-    });
-    casper.waitForSelector("input[name='pass']", function success() {
-        this.sendKeys("input[name='pass']", "123456");
-    }, function fail() {
-        test.assertExists("input[name='pass']");
-    });
-    casper.waitForSelector("form#user-login-form input[type=submit][value='Log in']", function success() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-        this.click("form#user-login-form input[type=submit][value='Log in']");
-    }, function fail() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-    }); /* submit form */
     
-    casper.thenOpen(baseURL + "civicrm/contact/search/advanced?reset=1", function() {
+    casper.waitForSelector("#user-login-form", function success() {
+        this.fill('#user-login-form', {
+          'name':'admin',
+          'pass':'123456'
+        }, true);
+    }, function fail() {
+        test.assertExists("#user-login-form", 'Login form exist.');
+    });
+    
+    casper.thenOpen(vars.baseURL + "civicrm/contact/search/advanced?reset=1", function() {
     });
 
     casper.then(function() {
@@ -55,20 +45,20 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo("Step 1-1: Fill up 'Contact Information'.");
     });
 
-    casper.waitForSelector("#crmasmSelect1", function success() {
+    casper.waitForSelector("#group", function success() {
         this.evaluate(function () {
-            document.getElementById("crmasmSelect1").selectedIndex = 2;
+            document.getElementById("group").selectedIndex = 2;
         });
     }, function fail() {
-        test.assertExists("#crmasmSelect1", "Assert 'Group(s)' field exist.");
+        test.assertExists("#group", "Assert 'Group(s)' field does not exist.");
     });
 
-    casper.waitForSelector("#crmasmSelect2", function success() {
+    casper.waitForSelector("#contact_tags", function success() {
         this.evaluate(function () {
-            document.getElementById("crmasmSelect2").selectedIndex = 1;
+            document.getElementById("contact_tags").selectedIndex = 1;
         });
     }, function fail() {
-        test.assertExists("#crmasmSelect2", "Assert 'Select Tag(s)' field exist.");
+        test.assertExists("#contact_tags", "Assert 'Select Tag(s)' field does not exist.");
     });
 
     casper.then(function() {
@@ -83,16 +73,13 @@ casper.test.begin('Resurrectio test', function(test) {
     
     casper.wait(2000);
 
-    casper.waitForSelector("#state_province_chzn input[value='-- Select --']", function success() {
-        this.click("#state_province_chzn input[value='-- Select --']");
+    casper.waitForSelector("#state_province", function success() {
+        test.assertExists('#state_province');
+        this.evaluate(function () {
+            document.querySelector("#state_province").selectedIndex = 1;
+        });
     }, function fail() {
-        test.assertExists("#state_province_chzn input[value='-- Select --']", "Assert 'State / Province' field exist.");
-    });
-
-    casper.waitForSelector("#state_province_chzn_o_1", function success() {
-        this.click("#state_province_chzn_o_1");
-    }, function fail() {
-        test.assertExists("#state_province_chzn_o_1", "Assert first option of 'State / Province dropdown list' exist.");
+        test.assertExists('#state_province', "Assert first option of 'State / Province dropdown list' does not exist.");
     });
 
     casper.then(function() {
@@ -162,7 +149,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.wait(2000);
 
     casper.waitForSelector("#event_id", function success() {
-        this.sendKeys("#event_id", makeid(5));
+        this.sendKeys("#event_id", 1);
     }, function fail() {
         test.assertExists("#event_id", "Assert 'Event Name' field exist.");
     });

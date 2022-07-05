@@ -294,7 +294,7 @@ cj( function( ) {
         cj('#store_employers').val('');
     } 
 
-    cj('.pagerDisplay tbody tr .contact_select input').live('click', function () {
+    cj('.pagerDisplay tbody tr .contact_select input').on('click', function () {
         var valueSelected = cj(this).val();	  
         if ( cj(this).attr('checked') == true ) {   
             contact_checked[valueSelected] =  valueSelected;
@@ -312,7 +312,7 @@ cj( function( ) {
     } );
 
     if ( useEmployer ) {
-        cj('.pagerDisplay tbody tr .'+ employerClass +' input').live('click', function () {
+        cj('.pagerDisplay tbody tr .'+ employerClass +' input').on('click', function () {
             var valueSelected = cj(this).val();	
             if ( isRadio ) {
                 employer_checked = new Array();

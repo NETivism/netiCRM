@@ -173,7 +173,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
   public function preProcess() {
     //check permission for action.
     if (!CRM_Core_Permission::checkActionPermission('CiviContribute', $this->_action)) {
-      CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
+       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
@@ -283,7 +283,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
         }
       }
       if (empty($validProcessors)) {
-        CRM_Core_Error::fatal(ts('You will need to configure the %1 settings for your Payment Processor before you can submit credit card transactions.', array(1 => $this->_mode)));
+         return CRM_Core_Error::statusBounce(ts('You will need to configure the %1 settings for your Payment Processor before you can submit credit card transactions.', array(1 => $this->_mode)));
       }
       else {
         $this->_processors = $validProcessors;
@@ -313,7 +313,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $this->_bltID = array_search('Billing', $locationTypes);
     if (!$this->_bltID) {
-      CRM_Core_Error::fatal(ts('Please set a location type of %1', array(1 => 'Billing')));
+       return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
     }
     $this->set('bltID', $this->_bltID);
     $this->assign('bltID', $this->_bltID);
@@ -901,6 +901,8 @@ WHERE  contribution_id = {$this->_id}
       array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE),
       TRUE, array('onChange' => "buildCustomData( 'Contribution', this.value );")
     );
+    $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
+    $this->assign('deductible_type_ids', implode(',', array_keys($deductibleType)));
     if ($this->_online) {
       // $element->freeze( );
     }
@@ -970,7 +972,6 @@ WHERE  contribution_id = {$this->_id}
     // add receipt id text area
     $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly', 'class' => 'readonly'));
     $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
-    $this->addRule('receipt_id', ts('This Receipt ID already exists in the database.'), 'objectExists', array('CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id'));
     $this->assign('receipt_id_setting', CRM_Utils_System::url("civicrm/admin/receipt", 'reset=1'));
 
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -1168,7 +1169,7 @@ WHERE  contribution_id = {$this->_id}
     );
 
     $this->addFormRule(array('CRM_Contribute_Form_Contribution', 'formRule'), $this);
-
+    $this->assign('checkReceipt', TRUE);
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
     }
@@ -1215,6 +1216,30 @@ WHERE  contribution_id = {$this->_id}
       if ($priceSetId = CRM_Utils_Array::value('price_set_id', $fields)) {
         require_once 'CRM/Price/BAO/Field.php';
         CRM_Price_BAO_Field::priceSetValidation($priceSetId, $fields, $errors);
+      }
+    }
+
+    //Check receipt exist or not
+    $contributionId = $self->_id;
+    if (!empty($fields['receipt_id'])) {
+      $object = new CRM_Contribute_DAO_Contribution();
+      $object->receipt_id = $fields['receipt_id'];
+      if ($object->find(TRUE)) {
+        $checkReceiptId = ($contributionId && $object->id == $contributionId) ? TRUE : FALSE;
+        //If DB have exist receipt id then checkReceiptId would be FALSE.
+        if (!$checkReceiptId) {
+          $errors['receipt_id'] = ts('This Receipt ID already exists in the database.');
+        }
+      }
+    }
+
+    // Check receipt field empty or not.
+    if (!empty($contributionId)) {
+      $receiptId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',$contributionId, 'receipt_id');
+      if (!empty($receiptId) && empty($fields['receipt_id'])) {
+        if (!empty($fields['receipt_date']) || !empty($fields['receipt_date_time'])) {
+          $errors['receipt_id'] = ts('Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.');
+        }
       }
     }
 

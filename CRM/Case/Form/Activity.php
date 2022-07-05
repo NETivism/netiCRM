@@ -116,7 +116,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
     //check for case activity access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-      CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
     //validate case id.
     if ($this->_caseId &&
@@ -125,7 +125,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       $session = CRM_Core_Session::singleton();
       $allCases = CRM_Case_BAO_Case::getCases(TRUE, $session->get('userID'));
       if (!array_key_exists($this->_caseId, $allCases)) {
-        CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+        return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
     }
 
@@ -137,7 +137,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
         $this->_activityTypeId
       );
       if (!$valid) {
-        CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+        return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
     }
 
@@ -183,7 +183,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
         );
         $session = CRM_Core_Session::singleton();
         $session->pushUserContext($url);
-        CRM_Core_Error::statusBounce(ts("You do not have any active Case Types"));
+        return CRM_Core_Error::statusBounce(ts("You do not have any active Case Types"));
       }
 
       // check if activity count is within the limit
@@ -208,7 +208,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
               "reset=1&cid={$this->_currentlyViewedContactId}&caseid={$this->_caseId}&action=update&id={$activities}"
             );
           }
-          CRM_Core_Error::statusBounce(ts("You can not add another '%1' activity to this case. %2",
+          return CRM_Core_Error::statusBounce(ts("You can not add another '%1' activity to this case. %2",
               array(1 => $this->_activityTypeName,
                 2 => "Do you want to <a href='$editUrl'>edit the existing activity</a> ?",
               )

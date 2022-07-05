@@ -100,7 +100,6 @@
         </td>
      </tr>
      
-     {include file="CRM/common/overlay.tpl"}
      <script type="text/javascript">
      {literal}
      cj( function( ) {

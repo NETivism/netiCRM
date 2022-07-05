@@ -25,6 +25,7 @@
  +--------------------------------------------------------------------+
 */
 
+
 /**
  *
  * @package CRM
@@ -37,30 +38,42 @@ class CRM_Utils_Mail {
   const DMARC_MAIL_PROVIDERS = 'yahoo.com|gmail.com|msn.com|outlook.com|hotmail.com';
 
   /**
-   * Wrapper function to send mail in CiviCRM. Hooks are called from this function. The input parameter
-   * is an associateive array which holds the values of field needed to send an email. These are:
+   * Wrapper function to send mail in CiviCRM. Hooks are called from this function.
    *
-   * from    : complete from envelope
-   * toName  : name of person to send email
-   * toEmail : email address to send to
-   * cc      : email addresses to cc
-   * bcc     : email addresses to bcc
-   * subject : subject of the email
-   * text    : text of the message
-   * html    : html version of the message
-   * reply-to: reply-to header in the email
-   * attachments: an associative array of
+   * @param array &$params Is an associative array which holds the values of field needed to send an email. These are:
+   *   from    : complete from envelope
+   *   toName  : name of person to send email
+   *   toEmail : email address to send to
+   *   cc      : email addresses to cc
+   *   bcc     : email addresses to bcc
+   *   subject : subject of the email
+   *   text    : text of the message
+   *   html    : html version of the message
+   *   reply-to: reply-to header in the email
+   *   attachments: an associative array of
    *   fullPath : complete pathname to the file
    *   mime_type: mime type of the attachment
    *   cleanName: the user friendly name of the attachmment
    *
-   * @param array $params (by reference)
+   * @param array $callback array first element is for success callback, second is for error callback
+   *   ```
+   *   $callback = [
+   *     0 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' => [ // this is for success
+   *       $activityId,
+   *       TRUE,
+   *     ]],
+   *     1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' => [ // this is for error
+   *       $activityId,
+   *       FALSE,
+   *     ]],
+   *   ];
+   *   ```
    *
    * @access public
    *
    * @return boolean true if a mail was sent, else false
    */
-  static function send(&$params) {
+  static function send(&$params, $callback = NULL) {
     require_once 'CRM/Core/BAO/MailSettings.php';
     $returnPath = CRM_Core_BAO_MailSettings::defaultReturnPath();
     $from = CRM_Utils_Array::value('from', $params);
@@ -71,7 +84,9 @@ class CRM_Utils_Mail {
 
     // first call the mail alter hook
     require_once 'CRM/Utils/Hook.php';
+    $params['alterTag'] = 'mail';
     CRM_Utils_Hook::alterMailParams($params);
+    unset($params['alterTag']);
 
     // check if any module has aborted mail sending
     if (CRM_Utils_Array::value('abortMailSend', $params) ||
@@ -183,16 +198,61 @@ class CRM_Utils_Mail {
         $headers['Sender'] = $mailer->_mailSetting['return_path'];
         $headers['Return-Path'] = $mailer->_mailSetting['return_path'];
       }
-      $result = $mailer->send($to, $headers, $message);
-      CRM_Core_Error::setCallback();
-      if (is_a($result, 'PEAR_Error')) {
-        $message = self::errorMessage($mailer, $result);
-        CRM_Core_Session::setStatus($message, FALSE);
-        return FALSE;
+
+      // only send non-blocking when there is a callback
+      if (isset($callback) && is_array($callback)) {
+        $sendParams = array(
+          'headers' => $headers,
+          'to' => $to,
+          'body' => $message,
+          'callback' => $callback,
+        );
+        CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', array($mailer, $sendParams));
+        return TRUE;
       }
-      return TRUE;
+      else {
+        $result = $mailer->send($to, $headers, $message);
+        CRM_Core_Error::setCallback();
+        if (is_a($result, 'PEAR_Error')) {
+          $message = self::errorMessage($mailer, $result);
+          CRM_Core_Session::setStatus($message, FALSE);
+          return FALSE;
+        }
+        return TRUE;
+      }
     }
     return FALSE;
+  }
+
+  /**
+   * Wrapper function which called by shutdown callback
+   *
+   * @param object $mailer From CRM_Core_Config::getMailer($params['mailerType'])
+   * @param array $params An associative array for to send email.
+   *   $params = array(
+   *     'headers' => (array) associative array from Mail_mime->headers
+   *     'to' => (string) recipient email address, required.
+   *     'body' => (string) string from Mail_mime->body
+   *     'callback' => (string) associative array for callbacks
+   *   );
+   * @return void
+   */
+  public static function sendNonBlocking($mailer, $params){
+    $result = $mailer->send($params['to'], $params['headers'], $params['body']);
+    CRM_Core_Error::setCallback();
+    $error = 0;
+    if (is_a($result, 'PEAR_Error')) {
+      $error = 1;
+    }
+
+    if (!empty($params['callback'][$error])) {
+      $callback = $params['callback'];
+      $call = key($callback[$error]);
+      $args = reset($callback[$error]);
+      if (is_callable($call)) {
+        call_user_func_array($call, $args);
+      }
+    }
   }
 
   static function errorMessage($mailer, $result) {
@@ -251,6 +311,20 @@ class CRM_Utils_Mail {
   static function pluckEmailFromHeader($header) {
     preg_match('/<([^<]*)>$/', $header, $matches);
     return $matches[1];
+  }
+
+  /**
+   * Get the from name from a formatted full name + address string
+   *
+   * @param  string $header  the full name + email address string
+   *
+   * @return string          the plucked email address
+   */
+  static function pluckNameFromHeader($header) {
+    $email = self::pluckEmailFromHeader($header);
+    $name = str_replace("<{$email}>", '', $header);
+    $name = trim($name, '" ');
+    return trim($name); 
   }
 
   /**
@@ -340,6 +414,94 @@ class CRM_Utils_Mail {
       return FALSE;
     }
     return TRUE;
+  }
+
+  static function checkSPF($email, $mailer = NULL) {
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', trim($email));
+    }
+    else {
+      $domain = $email;
+    }
+
+    if (empty($mailer)) {
+      $config = CRM_Core_Config::singleton();
+      $mailer = $config->getMailer();
+      $host = $mailer->host;
+    }
+    if (!empty($host)) {
+      $ip = CRM_Utils_System::getHostIPAddress($host);
+      if (CRM_Utils_System::checkPHPVersion(7.1)) {
+        require_once 'SPFLib/autoload.php';
+        $checker = new SPFLib\Checker();
+        $checkResult = $checker->check(new SPFLib\Check\Environment($ip, $domain));
+        $result = $checkResult->getCode();
+        return $result === 'pass';
+      }
+      else {
+        require_once 'SPFCheck/autoload.php';
+        $checker = new Mika56\SPFCheck\SPFCheck(new Mika56\SPFCheck\DNSRecordGetter());
+        $result = $checker->isIPAllowed($ip, $domain);
+        return $result === Mika56\SPFCheck\SPFCheck::RESULT_PASS;
+      }
+    }
+    return FALSE;
+  }
+
+  static function getSPF($email) {
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', trim($email));
+    }
+    else {
+      $domain = $email;
+    }
+    $records = dns_get_record($domain, DNS_TXT);
+    if (!empty($records)) {
+      return $records;
+    }
+    return array();
+  }
+
+  static function checkDKIM($email) {
+    global $civicrm_conf;
+
+    // skip check when there were no selector
+    if (empty($civicrm_conf['mailing_dkim_domain']) || empty($civicrm_conf['mailing_dkim_selector'])) {
+      return NULL;
+    }
+
+    $records = self::getDKIM($email);
+    if (!empty($records)) {
+      foreach($records as $r) {
+        if (!empty($r['target']) && $r['target'] === $civicrm_conf['mailing_dkim_domain']) {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  static function getDKIM($email) {
+    global $civicrm_conf;
+
+    // skip check when there were no selector
+    if (empty($civicrm_conf['mailing_dkim_domain']) || empty($civicrm_conf['mailing_dkim_selector'])) {
+      return array();
+    }
+
+
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', trim($email));
+    }
+    else {
+      $domain = $email;
+    }
+    $dkimCheck = $civicrm_conf['mailing_dkim_selector'].'._domainkey.'.$domain;
+    $records = dns_get_record($dkimCheck, DNS_CNAME);
+    if (!empty($records)) {
+      return $records;
+    }
+    return array();
   }
 }
 

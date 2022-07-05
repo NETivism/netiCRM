@@ -276,7 +276,7 @@ UNION
       // get the relationship type id of "Employee of"
       $relTypeId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', 'Employee of', 'id', 'name_a_b');
       if (!$relTypeId) {
-        CRM_Core_Error::fatal(ts("You seem to have deleted the relationship type 'Employee of'"));
+        return CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type 'Employee of'"));
       }
 
       // create employee of relationship
@@ -398,7 +398,7 @@ WHERE id={$contactId}; ";
       //get the relationship type id of "Employee of"
       $relTypeId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', 'Employee of', 'id', 'name_a_b');
       if (!$relTypeId) {
-        CRM_Core_Error::fatal(ts("You seem to have deleted the relationship type 'Employee of'"));
+         return CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type 'Employee of'"));
       }
       $relMembershipParams['relationship_type_id'] = $relTypeId . '_a_b';
       $relMembershipParams['contact_check'][$employerId] = 1;

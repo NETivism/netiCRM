@@ -69,7 +69,7 @@ LIMIT 0, 50
    */
   function eventType() {
     require_once 'CRM/Utils/Type.php';
-    $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
+    $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
     $whereClause = " v.label LIKE '%$name%' ";
 
     $query = "
@@ -84,8 +84,10 @@ ORDER by v.weight";
 
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
-      echo $elements = "$dao->label|$dao->value\n";
+      $e = array('id' => $dao->value, 'name' => $dao->label);
+      $results[] = $e;
     }
+    echo json_encode($results);
     CRM_Utils_System::civiExit();
   }
 

@@ -71,6 +71,12 @@
      <page_callback>CRM_Contact_Form_Search_Simple</page_callback>
   </item>
   <item>
+     <path>civicrm/search</path>
+     <title>Custom Search Redirect</title>
+     <page_callback>CRM_Contact_Page_SearchRedirect</page_callback>
+     <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
      <path>civicrm/contact/add</path>
      <title>New Contact</title>
      <page_callback>CRM_Contact_Form_Contact</page_callback>

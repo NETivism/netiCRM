@@ -388,6 +388,9 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
     if (!empty($defaults['event_id'])) {
       CRM_Event_Form_Search::fixEventIdDefaultValues($defaults);
     }
+    if (!empty($defaults['event_type_id'])) {
+      CRM_Event_Form_Search::fixEventTypeIdDefaultValues($defaults);
+    }
     return $defaults;
   }
 }

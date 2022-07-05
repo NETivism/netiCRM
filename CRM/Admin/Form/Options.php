@@ -89,7 +89,9 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $session->pushUserContext(CRM_Utils_System::url($url, $params));
     $this->assign('id', $this->_id);
 
+    // #30318, use new form for DKIM / SPF verification
     if ($this->_gName == 'from_email_address') {
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/from_email', 'reset=1'));
       $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
 			$defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
 			$this->assign('default_from_target', 'label');
@@ -100,7 +102,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domainID) {
-        CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
     }
 
@@ -108,7 +110,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       if ($this->_id) {
         $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , array(1 => array($this->_id, 'Integer')));
         if ($is_default) {
-          CRM_Core_Error::fatal(ts('You cannot delete default value.'));
+          return CRM_Core_Error::statusBounce(ts('You cannot delete default value.'));
         }
       }
     }

@@ -18,6 +18,8 @@
 <!-- Added global variable: nmEditor -->
 <script type="text/javascript">
 window.nmEditor = {
+	mailingID: "{/literal}{$mailingID}{literal}",
+	qfKey: "{/literal}{$qfKey}{literal}",
 	crmPath: "{/literal}{$config->resourceBase}{literal}",
 	language: "{/literal}{$tsLocale}{literal}",
 	translation: {
@@ -77,11 +79,11 @@ window.nmEditor = {
 </script>
 <!-- poshytip -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css?v{$config->ver}">
-{js src=packages/poshytip/src/jquery.poshytip.min.js group=999 weight=997}{/js}
+{js src=packages/poshytip/src/jquery.poshytip.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
 <!-- x-editable -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/jquery-editable/css/jquery-editable.css?v{$config->ver}">
-{js src=packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.min.js group=999 weight=997}{/js}
+{js src=packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/quill.override.css?v{$config->ver}">
@@ -90,19 +92,19 @@ window.nmEditor = {
 {if $tsLocale == 'zh_TW'}
 <link rel="stylesheet" href="{$config->resourceBase}packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css?v{$config->ver}">
 {/if}
-{js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js group=999 weight=997}{/js}
-{js src=packages/x-editable/dist/inputs-ext/quill/lib/placeholder/quill.placeholder.min.js group=999 weight=997}{/js}
-{js src=packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.min.js group=999 weight=997}{/js}
-{js src=packages/x-editable/dist/inputs-ext/quill/quill.js group=999 weight=997}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/lib/placeholder/quill.placeholder.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+{js src=packages/x-editable/dist/inputs-ext/quill/quill.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
 
 <!-- pickr -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/pickr/dist/themes/nano.min.css?v{$config->ver}"/>
-{js src=packages/pickr/dist/pickr.min.js group=999 weight=997}{/js}
+{js src=packages/pickr/dist/pickr.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
 <!-- Magnific Popup -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
-{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997}{/js}
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
 <!-- mailingEditor -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css?v{$config->ver}">
@@ -114,7 +116,7 @@ window.nmEditor = {
 	}
 </style>
 {/literal}
-{js src=packages/mailingEditor/mailingEditor.js group=999 weight=998}{/js}
+{js src=packages/mailingEditor/mailingEditor.js group=999 weight=998 library=civicrm/civicrm-js-mailingeditor}{/js}
 {literal}
 <script type="text/javascript">
 (function ($) {
@@ -126,7 +128,7 @@ window.nmEditor = {
 				nmEditorOpts = {};
 
 		nmEditorOpts.debugMode = "{/literal}{$config->debug}{literal}";
-		window.nmEditorInstance = $(".nme-container").nmEditor(nmEditorOpts);
+		window.nmEditorInstance = $(".nme-container").nmEditor(".nme-container", nmEditorOpts);
 	});
 })(cj);
 </script>

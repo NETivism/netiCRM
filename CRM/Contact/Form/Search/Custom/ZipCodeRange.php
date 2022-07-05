@@ -110,7 +110,7 @@ LEFT JOIN civicrm_email   email   ON ( email.contact_id = contact_a.id AND
       $this->_formValues
     );
     if ($low == NULL || $high == NULL) {
-      CRM_Core_Error::statusBounce(ts('Please provide start and end postal codes'),
+      return CRM_Core_Error::statusBounce(ts('Please provide start and end postal codes'),
         CRM_Utils_System::url('civicrm/contact/search/custom',
           "reset=1&csid={$this->_formValues['customSearchID']}",
           FALSE, NULL, FALSE, TRUE

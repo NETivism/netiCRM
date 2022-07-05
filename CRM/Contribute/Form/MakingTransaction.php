@@ -100,7 +100,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     }
     if (method_exists($paymentClass, 'doRecurTransact')) {
       $name = $this->getButtonName('submit');
-      $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", $id)."')"));
+      $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", array(1 => $id))."')"));
       $this->assign('submit_name', $name);
     }
   }
@@ -140,7 +140,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
       'reset=1&id='.$recurId.'&cid=' . $contactId
     );
     $message = ts("The contribution record has been processed.").$resultMessage;
-    CRM_Core_Error::statusBounce($message, $url);
+     return CRM_Core_Error::statusBounce($message, $url);
   }
   //end of function
 }

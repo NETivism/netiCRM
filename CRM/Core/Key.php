@@ -99,7 +99,7 @@ class CRM_Core_Key {
       $session = CRM_Core_Session::singleton();
       self::$_sessionID = $session->get('qfSessionID');
       if (!self::$_sessionID) {
-        self::$_sessionID = session_id();
+        self::$_sessionID = CRM_Utils_System::getSessionID();
         $session->set('qfSessionID', self::$_sessionID);
       }
     }

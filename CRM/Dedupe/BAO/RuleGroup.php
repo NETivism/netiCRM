@@ -170,6 +170,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
           $queries["{$bao->rule_table}.{$bao->rule_field}.{$bao->rule_weight}"] = $query;
         }
       }
+      $idx++;
     }
 
     // if there are no rules in this rule group, add an empty query fulfilling the pattern

@@ -47,7 +47,6 @@ if (!empty($language)) {
   global $tsLocale;
   $tsLocale = $language;
 }
-$template = CRM_Core_Smarty::singleton( );
 
 
 if (!CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Widget', $cpageId, 'is_active', 'contribution_page_id')) {

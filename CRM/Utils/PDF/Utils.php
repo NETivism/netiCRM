@@ -77,6 +77,7 @@ class CRM_Utils_PDF_Utils {
         header('Pragma: no-cache');
         echo file_get_contents($pdf);
         unlink($pdf);
+        CRM_Utils_System::civiExit();
       }
       else {
         return $dest;
@@ -149,6 +150,7 @@ class CRM_Utils_PDF_Utils {
 
       if ($download) {
         $pdf->Output($fileName, 'D');
+        CRM_Utils_System::civiExit();
       }
       else {
         file_put_contents($dest, $pdf->Output($fileName, 'S'));

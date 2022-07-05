@@ -113,7 +113,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     }
 
     if (!$this->_contactId) {
-      CRM_Core_Error::statusBounce(ts('We could not find a contact id.'));
+       return CRM_Core_Error::statusBounce(ts('We could not find a contact id.'));
     }
     $this->assign('contactId', $this->_contactId);
 
@@ -329,7 +329,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     }
     else {
       $session->pushUserContext(CRM_Utils_System::url('civicrm', 'reset=1'));
-      CRM_Core_Error::statusBounce(ts('You do not have the necessary permission to view this contact.'));
+       return CRM_Core_Error::statusBounce(ts('You do not have the necessary permission to view this contact.'));
     }
   }
 

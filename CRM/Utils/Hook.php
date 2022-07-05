@@ -63,6 +63,20 @@ class CRM_Utils_Hook {
   }
 
   /**
+   * This hook is called when dao->find triggered
+   *
+   * @param bool $fetch Wheather the dao->find want to fetch first result
+   * @param object $dao The fetched object which can be alter
+   * @param int $num Number of rows after dao->find
+   * @return void
+   */
+  static function get($fetch, &$dao, $numRows) {
+    $className = CRM_Core_Config::singleton()->userHookClass;
+    $null = &CRM_Core_DAO::$_nullObject;
+    return $className::invoke( 3, $fetch, $dao, $numRows, $null, $null, 'civicrm_get' );
+  }
+
+  /**
    * This hook is called before a db write on some core objects.
    * This hook does not allow the abort of the operation
    *
@@ -118,7 +132,27 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook is invoked when building a CiviCRM form. This hook should also
+   * This hook is invoked *before* building a CiviCRM form
+   * 
+   * After form preprocessed, form already prepared to be build
+   * Use this hook to add more preparation before adding element.
+   * After this, we will invoke buildQuickForm in Core/Form
+   *
+   * @param string $formName the name of the form
+   * @param object $form     reference to the form object
+   *
+   * @return null the return value is ignored
+   */
+  static function preProcess($formName, &$form) {
+    $config = CRM_Core_Config::singleton();
+    $className = $config->userHookClass;
+    $null = &CRM_Core_DAO::$_nullObject;
+    return $className::invoke( 2, $formName, $form, $null, $null, $null, 'civicrm_preProcess' );
+  }
+
+
+  /**
+   * This hook is invoked *after* building a CiviCRM form. This hook should also
    * be used to set the default values of a form element
    *
    * @param string $formName the name of the form
@@ -409,10 +443,7 @@ class CRM_Utils_Hook {
     return $className::invoke(  2, $objectName, $object, $null, $null, $null, 'civicrm_copy' );
   }
 
-  static function invoke($numParams,
-    &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
-    $fnSuffix, $fnPrefix
-  ) {
+  static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
     static $included = FALSE;
 
     $result = array();

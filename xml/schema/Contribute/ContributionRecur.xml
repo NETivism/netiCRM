@@ -9,7 +9,7 @@
       <name>id</name>
       <type>int unsigned</type>
       <required>true</required>
-      <comment>Contribution Recur ID</comment>
+      <comment>Unique Contribution Recur ID</comment>
       <add>1.6</add>
   </field>
   <primaryKey>
@@ -20,7 +20,7 @@
       <name>contact_id</name>
       <type>int unsigned</type>
       <required>true</required>
-      <comment>Foreign key to civicrm_contact.id .</comment>
+      <comment>Foreign key to civicrm_contact.id</comment>
       <add>1.6</add>
   </field>
   <foreignKey>
@@ -42,7 +42,7 @@
       <type>varchar</type>
       <length>3</length>
       <default>NULL</default>
-      <comment>3 character string, value from config setting or input via user.</comment>
+      <comment>3 character string, value from config setting.</comment>
       <add>3.2</add>
   </field>
   <field>
@@ -63,7 +63,7 @@
   <field>
        <name>installments</name>
        <type>int unsigned</type>
-       <comment>Total number of payments to be made. Set this to 0 if this is an open-ended commitment i.e. no set end date.</comment>
+       <comment>Total number of payments to be made. Set this to 0 if this is an open-ended commitment.</comment>
        <add>1.6</add>
   </field>
   <field>
@@ -101,7 +101,7 @@
   <field>   
       <name>processor_id</name>
       <type>int unsigned</type>
-      <comment>FK to payment processor</comment>   
+      <comment>FK to Payment Processor</comment>   
       <add>1.6</add>   
   </field>  
   <foreignKey> 
@@ -114,7 +114,7 @@
       <name>external_id</name>
       <type>varchar</type>   
       <length>255</length>
-      <comment>Possibly needed to store a unique identifier for this recurring payment order - if this is available from the processor??</comment>   
+      <comment>an external unique identifier for this recurring payment order provide by payment method</comment>   
       <add>4.0</add>   
   </field>  
   <field>        
@@ -122,7 +122,7 @@
       <title>Transaction ID</title>
       <type>varchar</type>     
       <length>255</length>  
-      <comment>unique transaction id. may be processor id, bank id + trans id, or account number + check number... depending on payment_method</comment>
+      <comment>unique transaction id or this recurring defined by this application</comment>
       <add>1.6</add>     
   </field>   
   <field>        
@@ -148,6 +148,7 @@
   <field>
       <name>contribution_status_id</name>
       <title>Recurring Contribution Status</title>
+      <comment>1=completed, 2=pending, 3=cancel, 4=failed, 5=in progress, 6=overdue, 7=suspend</comment>
       <type>int unsigned</type>
       <default>1</default>
       <import>true</import>
@@ -161,6 +162,7 @@
   <field>     
       <name>is_test</name>  
       <title>Test</title>
+      <comment>Mark 1 when this order is an testing order.</comment>
       <type>boolean</type>
       <default>0</default>
       <import>true</import>
@@ -176,20 +178,20 @@
   <field>
        <name>next_sched_contribution</name>
        <type>datetime</type>
-       <comment>At Groundspring this was used by the cron job which triggered payments. If we\'re not doing that but we know about payments, it might still be useful to store for display to org andor contributors.</comment>
+       <comment>Next payment day for display or execution(if needed).</comment>
        <add>1.6</add>
   </field>
   <field>
        <name>failure_count</name>
        <type>int unsigned</type>
        <default>0</default>
-       <comment>Number of failed charge attempts since last success. Business rule could be set to deactivate on more than x failures.</comment>
+       <comment>Number of failed charge attempts since last success.</comment>
        <add>1.6</add>
   </field>
   <field>
        <name>failure_retry_date</name>
        <type>datetime</type>
-       <comment>At Groundspring we set a business rule to retry failed payments every 7 days - and stored the next scheduled attempt date there.</comment>
+       <comment>Record retried date after payment fail retry.</comment>
        <add>1.6</add>
   </field>
   <field>     
@@ -197,13 +199,13 @@
       <type>boolean</type> 
       <required>true</required> 
       <default>0</default>
-      <comment>Some systems allow contributor to set a number of installments - but then auto-renew the subscription or commitment if they do not cancel.</comment>  
+      <comment>Auto renew card expiration date when available.</comment>  
       <add>1.6</add>  
   </field>
   <field>
        <name>last_execute_date</name>
        <type>datetime</type>
-       <comment>Last expected execute transaction date.</comment>
+       <comment>Last payment execution transaction date to prevent duplicate execution at the same frequency_unit.</comment>
        <add>4.0</add>
   </field>
 </table>

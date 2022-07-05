@@ -38,52 +38,53 @@ require_once 'CRM/Utils/Hook.php';
 class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
 
   static function availableHooks($hook) {
-    if (function_exists('module_implements')) {
-      return module_implements($hook);
-    }
-    elseif (function_exists('module_list')) {
-      $implements = array();
-      foreach (module_list() as $module) {
-        $fnName = "{$module}_{$hook}";
-        if (function_exists($fnName)) {
-          $implements[] = $module;
-        }
-      }
-      return $implements;
-    }
+    return CRM_Utils_System::moduleImplements($hook);
   }
 
-  static function invoke($numParams,
-    &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
-    $fnSuffix, $fnPrefix = ''
-  ) {
+  static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
     static $functions = array();
+    $config = CRM_Core_Config::singleton();
     $result = array();
-    // copied from user_module_invoke
-    if (function_exists('module_list')) {
-      $procceed = FALSE;
-      $functions[$fnSuffix] = array();
-      $r = FALSE;
-      foreach (module_list() as $module) {
-        $fnName = "{$module}_{$fnSuffix}";
-        if (isset($functions[$fnSuffix][$fnName])) {
-          if (!empty($functions[$fnSuffix][$fnName])) {
+    if ($config->userSystem->version < 8 ){
+      // copied from user_module_invoke
+      if (function_exists('module_list')) {
+        $procceed = FALSE;
+        $functions[$fnSuffix] = array();
+        $r = FALSE;
+        foreach (module_list() as $module) {
+          $fnName = "{$module}_{$fnSuffix}";
+          if (isset($functions[$fnSuffix][$fnName])) {
+            if (!empty($functions[$fnSuffix][$fnName])) {
+              $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
+            }
+          }
+          elseif (function_exists($fnName)) {
+            $functions[$fnSuffix][$fnName] = TRUE;
             $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
           }
+          else {
+            $functions[$fnSuffix][$fnName] = FALSE;
+          }
+          if (is_array($r)) {
+            $result = array_merge($result, $r);
+          }
         }
-        elseif (function_exists($fnName)) {
-          $functions[$fnSuffix][$fnName] = TRUE;
-          $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
-        }
-        else {
-          $functions[$fnSuffix][$fnName] = FALSE;
-        }
+      }
+      return empty($result) ? TRUE : $result;
+    }
+    else {
+      // drupal 8 / 9
+      $implements = CRM_Utils_System::moduleImplements($fnSuffix);
+      foreach ($implements as $module) {
+        $fnName = "{$module}_{$fnSuffix}";
+        $array = array(&$arg1, &$arg2, &$arg3, &$arg4, &$arg5);
+        $r = call_user_func_array($fnName, $array);
         if (is_array($r)) {
           $result = array_merge($result, $r);
         }
       }
+      return empty($result) ? TRUE : $result;
     }
-    return empty($result) ? TRUE : $result;
   }
 
   static function runHook($fnName, $numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5) {

@@ -58,7 +58,7 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
     if ($activityId &&
       !CRM_Activity_BAO_Activity::checkPermission($activityId, CRM_Core_Action::VIEW)
     ) {
-      CRM_Core_Error::fatal(ts('You do not have permission to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
     }
 
     $session = CRM_Core_Session::singleton();
@@ -76,7 +76,7 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
 
     //set activity type name and description to template
     require_once 'CRM/Core/BAO/OptionValue.php';
-    list($activityTypeName, $activityTypeDescription) = CRM_Core_BAO_OptionValue::getActivityTypeDetails($defaults['activity_type_id']);
+    list($activityTypeName, $activityTypeDescription, $activityTypeMachineName) = CRM_Core_BAO_OptionValue::getActivityTypeDetails($defaults['activity_type_id']);
 
     $this->assign('activityTypeName', $activityTypeName);
     $this->assign('activityTypeDescription', $activityTypeDescription);
@@ -100,6 +100,15 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
       $activityId
     );
     $this->assign('values', $values);
+
+    if (in_array($activityTypeMachineName, explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
+      $this->assign('is_transactional', TRUE);
+      $mailingEvents = CRM_Mailing_Event_BAO_Transactional::getEventsByActivity($activityId);
+      if (!empty($mailingEvents)) {
+        $mailingEvents = CRM_Mailing_Event_BAO_Transactional::formatMailingEvents($mailingEvents);
+        $this->assign('mailing_events', $mailingEvents);
+      }
+    }
   }
 
   /**

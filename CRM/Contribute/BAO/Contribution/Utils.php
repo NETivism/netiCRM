@@ -377,7 +377,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
       $params['contactID'] = $contactID;
       require_once "CRM/Core/BAO/CMSUser.php";
       if (!CRM_Core_BAO_CMSUser::create($params, $mail)) {
-        CRM_Core_Error::statusBounce(ts('Your profile is not saved and Account is not created.'));
+         return CRM_Core_Error::statusBounce(ts('Your profile is not saved and Account is not created.'));
       }
     }
   }

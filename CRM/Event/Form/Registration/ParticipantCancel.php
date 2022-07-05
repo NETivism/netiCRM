@@ -90,7 +90,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
 
     if (!$this->_csContactID) {
       $config = CRM_Core_Config::singleton();
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this event registration. Contact the site administrator if you need assistance.'), $config->userFrameworkBaseURL);
+       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this event registration. Contact the site administrator if you need assistance.'), $config->userFrameworkBaseURL);
     }
   }
 
@@ -103,7 +103,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
   public function buildQuickForm() {
     if(CRM_Utils_Array::value('is_monetary', $values['event'])){
       $statusMessage = ts("Cancelling registration only available for free events. Contact your site administrator if you need assistance.");
-      CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",
+       return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",
           FALSE, NULL, FALSE, TRUE
         ));
       return ;
@@ -246,7 +246,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
         }
       }
 
-      CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",
+       return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",
           FALSE, NULL, FALSE, TRUE
         ));
     }

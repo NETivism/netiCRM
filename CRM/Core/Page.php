@@ -219,8 +219,7 @@ class CRM_Core_Page {
     $config = CRM_Core_Config::singleton();
     $content = self::$_template->fetch('CRM/common/' . strtolower($config->userFramework) . '.tpl');
     CRM_Utils_Hook::alterContent($content, 'page', $pageTemplateFile, $this);
-    CRM_Utils_System::theme('page', $content, TRUE, $this->_print);
-    return;
+    return CRM_Utils_System::theme($content);
   }
 
   /**

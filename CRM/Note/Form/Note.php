@@ -81,7 +81,7 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
     }
 
     if ($this->_id && CRM_Core_BAO_Note::getNotePrivacyHidden($this->_id)) {
-      CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));
+       return CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));
     }
 
     // set title to "Note - "+Contact Name

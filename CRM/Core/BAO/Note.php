@@ -170,7 +170,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
         $note->contact_id = $params['entity_id'];
       }
       else {
-        CRM_Core_Error::statusBounce(ts('We could not find your logged in user ID'));
+         return CRM_Core_Error::statusBounce(ts('We could not find your logged in user ID'));
       }
     }
 

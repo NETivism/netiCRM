@@ -306,7 +306,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
     // check if we can process credit card registration
     require_once 'CRM/Core/PseudoConstant.php';
     $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
-      "billing_mode IN ( 1, 3 )"
+      "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
     );
     if (count($processors) > 0) {
       $this->_isPaymentProcessor = TRUE;

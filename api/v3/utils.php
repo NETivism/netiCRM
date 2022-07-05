@@ -1617,6 +1617,27 @@ function _civicrm_api3_validate_string(&$params, &$fieldname, &$fieldInfo) {
 }
 
 /**
+ * Translate the custom field data_type attribute into a std 'type'
+ */
+function _getStandardTypeFromCustomDataType($dataType) {
+  $mapping = array(
+    'String' => CRM_Utils_Type::T_STRING,
+    'Int' => CRM_Utils_Type::T_INT,
+    'Money' => CRM_Utils_Type::T_MONEY,
+    'Memo' => CRM_Utils_Type::T_LONGTEXT,
+    'Float' => CRM_Utils_Type::T_FLOAT,
+    'Date' => CRM_Utils_Type::T_DATE,
+    'Boolean' => CRM_Utils_Type::T_BOOLEAN,
+    'StateProvince' => CRM_Utils_Type::T_INT,
+    'File' => CRM_Utils_Type::T_STRING,
+    'Link' => CRM_Utils_Type::T_STRING,
+    'ContactReference' => CRM_Utils_Type::T_INT,
+    'Country' => CRM_Utils_Type::T_INT,
+  );
+  return $mapping[$dataType];
+}
+
+/**
  * amount related field allowed zero
  *
  * Mandatory keys validation should allow zero on some fields

@@ -494,6 +494,7 @@ WHERE  id = %1
   static function skipVars() {
     return array(
       'dsn', 'templateCompileDir',
+      'userSystem',
       'userFrameworkDSN',
       'userFramework',
       'userFrameworkBaseURL', 'userFrameworkClass', 'userHookClass',

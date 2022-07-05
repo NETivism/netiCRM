@@ -127,10 +127,10 @@ class CRM_Core_Smarty extends Smarty {
     }
 
     //check if logged in use has access CiviCRM permission and build menu
-    require_once 'CRM/Core/Permission.php';
-    global $user;
-    if (isset($user)) {
-      $buildNavigation = $user->uid == 1 || CRM_Core_Permission::check('administer CiviCRM') ? TRUE : FALSE;
+    $uid = CRM_Utils_System::getLoggedInUfID();
+    $buildNavigation = 0;
+    if ($uid) {
+      $buildNavigation = $uid == 1 || CRM_Core_Permission::check('administer CiviCRM') ? TRUE : FALSE;
     }
     else {
       $buildNavigation = CRM_Core_Permission::check('access CiviCRM');
@@ -186,8 +186,7 @@ class CRM_Core_Smarty extends Smarty {
    */
   static function &singleton() {
     if (!isset(self::$_singleton)) {
-      $config = CRM_Core_Config::singleton();
-      self::$_singleton = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);
+      self::$_singleton = new CRM_Core_Smarty();
     }
     return self::$_singleton;
   }

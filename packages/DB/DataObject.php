@@ -2306,7 +2306,6 @@ class DB_DataObject extends DB_DataObject_Overload
         }
         
         // change the connection and results charsets to UTF-8 if we're using MySQL 4.1+
-        $civicrmConfig =& CRM_Core_Config::singleton();
         $this->query("/*!40101 SET NAMES utf8mb4 */");
         $this->query("/*!40101 SET SESSION group_concat_max_len = 65535*/");
         
@@ -2425,18 +2424,19 @@ class DB_DataObject extends DB_DataObject_Overload
               try {
                 $result = $DB->query($string);
               }
-              catch (PEAR_Exception $e) {
+              catch (CRM_Core_Exception $e) {
                 // CRM-21489 If we have caught a DB lock - let it go around the loop until our tries limit is hit.
-                // else rethrow the exception. The 2 locks we are looking at are mysql code 1205 (lock) and
-                // 1213 (deadlock).
-                $dbErrorMessage = $e->getCause()->getUserInfo();
+                // else rethrow the exception.
+                // The 2 locks we are looking at are mysql code 1205 (lock) and 1213 (deadlock).
+                $data = $e->getErrorData();
+                $dbErrorMessage = $data['object']->getUserInfo();
                 if (!stristr($dbErrorMessage, 'nativecode=1205') && !stristr($dbErrorMessage, 'nativecode=1213')) {
                   throw $e;
                 }
 
                 $message = (stristr($dbErrorMessage, 'nativecode=1213') ? 'Database deadlock encountered' : 'Database lock encountered');
                 if (($tries + 1) === $maxTries) {
-                  throw new CRM_Core_Exception($message, 0, array('sql' => $string, 'trace' => $e->getTrace()));
+                  throw new CRM_Core_Exception($message, CRM_Core_Error::FATAL_ERROR, array('content' => $data['content'], 'sql' => $string, 'trace' => $e->getTrace()));
                 }
                 CRM_Core_Error::debug_log_message("Retrying after $message hit on attempt " . ($tries + 1) . ' at query : ' . $string);
                 usleep(500000); // 0.5s

@@ -325,6 +325,19 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event {
   }
 
   /**
+   * Get event title
+   *
+   * @param int $id
+   * @return string
+   */
+  static function getEventTitle($id) {
+    if  (!empty($id)) {
+      return CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $id, 'title');
+    }
+    return '';
+  }
+
+  /**
    * Function to get events Summary
    *
    * @static
@@ -1161,9 +1174,17 @@ WHERE civicrm_event.is_active = 1
           $sendTemplateParams['tplParams']['lineItem'] = $lineItem;
         }
 
-        require_once 'CRM/Core/BAO/MessageTemplates.php';
+        $participant = new CRM_Event_DAO_Participant();
+        $participant->id = $participantId;
+        $participant->find(TRUE);
+        $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($sendTemplateParams['groupName'], $sendTemplateParams['valueName']);
+        $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participant, 'Event Notification Email', $workflow['msg_title']);
+        $sendTemplateParams['activityId'] = $activityId;
         if ($returnMessageText) {
-          list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+          list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, array(
+            0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+            1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+          ));
           return array('subject' => $subject,
             'body' => $message,
             'to' => $displayName,
@@ -1177,7 +1198,10 @@ WHERE civicrm_event.is_active = 1
           $sendTemplateParams['autoSubmitted'] = TRUE;
           $sendTemplateParams['cc'] = CRM_Utils_Array::value('cc_confirm', $values['event']);
           $sendTemplateParams['bcc'] = CRM_Utils_Array::value('bcc_confirm', $values['event']);
-          CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+          CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, array(
+            0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
+            1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
+          ));
         }
       }
     }

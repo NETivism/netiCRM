@@ -94,7 +94,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domainID) {
-        CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
     }
   }

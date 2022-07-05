@@ -480,7 +480,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     }
 
     if (empty($fields) && !$validGroup) {
-      CRM_Core_Error::fatal(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.',
+       return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.',
           array(1 => implode(',', $profileIds))
         ));
     }
@@ -559,9 +559,13 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     $session = CRM_Core_Session::singleton();
 
     if ($register) {
-      $controller = new CRM_Core_Controller_Simple('CRM_Profile_Form_Dynamic',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Profile_Form_Dynamic',
         ts('Dynamic Form Creator'),
-        $action
+        $action,
+        FALSE,
+        FALSE,
+        TRUE
       );
       if ($reset || $doNotProcess) {
         // hack to make sure we do not process this form
@@ -633,9 +637,13 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           }
         }
 
-        $controller = new CRM_Core_Controller_Simple('CRM_Profile_Form_Dynamic',
+        $controller = new CRM_Core_Controller_Simple(
+          'CRM_Profile_Form_Dynamic',
           ts('Dynamic Form Creator'),
-          $action
+          $action,
+          FALSE,
+          FALSE,
+          TRUE
         );
         if ($reset) {
           $controller->reset();
@@ -2355,7 +2363,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     if (!$domainEmailAddress || $domainEmailAddress == 'info@FIXME.ORG') {
       require_once 'CRM/Utils/System.php';
       $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
-      CRM_Core_Error::fatal(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
+       return CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
     }
 
     require_once 'CRM/Core/BAO/MessageTemplates.php';

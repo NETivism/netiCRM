@@ -19,7 +19,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     if(!defined('DRUPAL_ROOT')){
       die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
     }
-    if(!module_exists('civicrm_spgateway')){
+    if(!CRM_Utils_System::moduleExists('civicrm_spgateway')){
       die("You must enable civicrm_spgateway module first before test.");
     }
     $payment_page = variable_get('civicrm_demo_payment_page', array());
@@ -220,7 +220,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   function testRecurringPaymentNotify(){
     $now = time();
-    $trxn_id = 'ut100000';
+    $trxn_id = 'ut'.substr($now, -5);
     $amount = 222;
 
     // create recurring

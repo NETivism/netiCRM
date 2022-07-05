@@ -120,7 +120,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
     // Prepare params used for meta.
     $params = array();
-    $siteName = CRM_Utils_System::variable_get('site_name', 'Drupal');
+    $siteName = CRM_Utils_System::siteName();
     $params['site'] = $siteName;
     $params['title'] = $this->_values['event']['title'] . ' - ' . $siteName;
 

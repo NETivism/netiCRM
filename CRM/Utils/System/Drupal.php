@@ -33,20 +33,49 @@
  *
  */
 
+use Drupal\Core\DrupalKernel;
+
 /**
  * Drupal specific stuff goes here
  */
 class CRM_Utils_System_Drupal {
   public $is_drupal;
   public $version;
-  private $_pseudoClass;
+  public $versionalClass;
+  private static $_version;
+  private static $_loaded = FALSE;
+  public static $jsLibraries;
 
+  /**
+   * Construct will make sure durpal fully bootstrap
+   */
   function __construct() {
+    global $civicrm_drupal_root;
     $this->is_drupal = TRUE;
-    if(defined('VERSION')){  // drupal 7 or 8
+
+    // loading civicrm before drupal
+    // this hack will determin verison number of drupal
+    // work for drupal 8, 9
+    if(class_exists('DRUPAL') || is_file($civicrm_drupal_root.'/core/CHANGELOG.txt')) {
+      // bootstrap drupal when drupal not ready
+      $class = 'CRM_Utils_System_Drupal9';
+      $this->versionalClass = new $class();
+      if (!class_exists('DRUPAL')) {
+        $this->versionalClass->loadBootStrap();
+      }
+      $this->version = (float )substr(DRUPAL::VERSION, 0, strrpos(DRUPAL::VERSION, '.'));
+      self::$_loaded = TRUE;
+      self::$_version = $this->version;
+    }
+    // loading civicrm *after* drupal
+    // this will quick when drupal 7
+    elseif(defined('VERSION')){
       $this->version = (float) VERSION;
     }
-    else{ // drupal 6 only
+
+    // whatever
+    // drupal 6, 7 will save version into module info
+    if (empty($this->version)){ 
       $config = CRM_Core_Config::singleton();
       $db_cms = DB::connect($config->userFrameworkDSN);
       if (DB::isError($db_cms)) {
@@ -58,15 +87,25 @@ class CRM_Utils_System_Drupal {
       $this->version = (float) $info['version'];
     }
 
-    // pseudoMethods make life easier
-    $v = floor($this->version);
-    $v = empty($v) ? '' : $v;
-    $class = 'CRM_Utils_System_Drupal'.$v;
-    $this->_pseudoClass = new $class();
-    // bootstrap drupal when needed
-    global $user;
-    if (empty($user)) {
-      self::loadBootStrap();
+    // bootstrap drupal when drupal not ready
+    if (!self::$_loaded) {
+      $v = floor($this->version);
+      $v = empty($v) ? '' : $v;
+      $class = 'CRM_Utils_System_Drupal'.$v;
+      $this->versionalClass = new $class();
+      if ($this->version >= 7 && $this->version < 8) {
+        if (!class_exists('DRUPAL')) {
+          $this->versionalClass->loadBootStrap();
+        }
+      }
+      elseif($this->version >= 6 && $this->version < 7) {
+        global $user;
+        if (empty($user)) {
+          $this->versionalClass->loadBootStrap();
+        }
+      }
+      self::$_loaded = TRUE;
+      self::$_version = $this->version;
     }
 
     // #27780, correct SameSite for chrome 80
@@ -80,10 +119,10 @@ class CRM_Utils_System_Drupal {
       }
 
       if (PHP_VERSION_ID < 70300) {
-        setcookie(session_name(), session_id(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
+        setcookie(session_name(), self::sessionID(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
       }
       else {
-        setcookie(session_name(), session_id(), array(
+        setcookie(session_name(), self::sessionID(), array(
           'expires' => $lifetime,
           'path' => '/',
           'domain' => $sparams['domain'],
@@ -97,13 +136,134 @@ class CRM_Utils_System_Drupal {
 
   /**
    * Magic method handling
+   * 
+   * Usage: CRM_Core_Config::singleton()->userSystem->$function
    */
   function __call($method, $args) {
-    if(method_exists($this->_pseudoClass, $method)) {
-      return call_user_func_array(array($this->_pseudoClass, $method), $args);
+    if(method_exists($this->versionalClass, $method)) {
+      return call_user_func_array(array($this->versionalClass, $method), $args);
     }
     else{
       return FALSE;
+    }
+  }
+  
+  /**
+   * Redirect to url
+   * 
+   * Do not use drupal_goto in civicrm. That won't save civicrm related correctly
+   * Redirection in drupal 8/9 is trigger by symfony, handle it differently.
+   *
+   * @param string $url
+   * @return void
+   */
+  public static function redirect($url = NULL) {
+    $version = self::$_version;
+    if (!$url) {
+      $url = self::url('');
+    }
+    $url = str_replace('&amp;', '&', $url); // legacy url/crmURL behaviour should remove
+    if($version >= 8){
+      $headers = array('Cache-Control' => 'no-cache');
+      $response = \Symfony\Component\HttpFoundation\RedirectResponse::create($url, 302, $headers);
+      $response->send();
+    }
+    else {
+      // this hack borrow from symfony
+      // do not use drupal_goto
+      header('Location: ' . $url);
+      if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+      }
+    }
+    CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Current Path without language prefix
+   *
+   * @return string
+   */
+  public static function currentPath() {
+    $version = CRM_Core_Config::$_userSystem->version;
+    if ($version >= 8) {
+      $path = \Drupal::service('path.current')->getPath();
+      return ltrim($path, '/');
+    }
+    else {
+      $config = CRM_Core_Config::singleton();
+      return trim(CRM_Utils_Array::value($config->userFrameworkURLVar, $_GET), '/');
+    }
+  }
+
+  /**
+   * Get best UF IF from drupal system
+   * 
+   * @return int
+   */
+  public static function getBestUFID($user = NULL) {
+    $version = self::$_version;
+    if($version < 8){
+      if (is_object($user)) {
+        return is_numeric($user->uid) ? $user->uid : 0;
+      }
+      else {
+        global $user;
+        return !empty($user->uid) ? $user->uid : 0;
+      }
+    }
+    else {
+      // it's loaded user object
+      if (is_object($user)) {
+        $uid = $user->get('uid')->value;
+        return $uid;
+      }
+      else {
+        $uid = \Drupal::currentUser()->id();
+        return !empty($uid) ? $uid : 0;
+      }
+    }
+    return 0;
+  }
+
+  public static function getBestUFUniqueIdentifier($user) {
+    $version = self::$_version;
+    if($version < 8){
+      if (is_object($user)) {
+        return !empty($user->mail) ? $user->mail: 0;
+      }
+      else {
+        global $user;
+        return !empty($user->mail) ? $user->mail: 0;
+      }
+    }
+    else {
+      // it's loaded user object
+      if (is_object($user)) {
+        return $user->get('mail')->value;
+      }
+      else {
+        $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+        return $user->get('mail')->value;
+      }
+    }
+    return 0;
+  }
+
+  public static function getBestUFName($ufId) {
+    $version = self::$_version;
+    if (!is_numeric($ufId)) {
+      return;
+    }
+    if($version < 8){
+      $user = user_load($ufId);
+      return $user->name;
+    }
+    else {
+      $user = \Drupal\user\Entity\User::load($ufId);
+      if ($user) {
+        return $user->get('name')->value;
+      }
     }
   }
 
@@ -120,75 +280,7 @@ class CRM_Utils_System_Drupal {
     if (!$pageTitle) {
       $pageTitle = $title;
     }
-    if (arg(0) == 'civicrm') {
-      //set drupal title
-      $config = CRM_Core_Config::singleton();
-      $version = $config->userSystem->version;
-      if($version >= 6 && $version < 7){
-        drupal_set_title($pageTitle);
-      }
-      else{
-        drupal_set_title($pageTitle, PASS_THROUGH);
-      }
-    }
-  }
-
-  /**
-   * if we are using a theming system, invoke theme, else just print the
-   * content
-   *
-   * @param string  $type    name of theme object/file
-   * @param string  $content the content that will be themed
-   * @param array   $args    the args for the themeing function if any
-   * @param boolean $print   are we displaying to the screen or bypassing theming?
-   * @param boolean $ret     should we echo or return output
-   * @param boolean $maintenance  for maintenance mode
-   *
-   * @return void           prints content on stdout
-   * @access public
-   */
-  function theme($type, &$content, $args = NULL, $print = FALSE, $ret = FALSE, $maintenance = FALSE){
-    $config = CRM_Core_Config::singleton();
-    $version = $config->userSystem->version;
-    if($version >= 6 && $version < 7){
-      if(!$print){
-        if ($maintenance) {
-          drupal_set_breadcrumb('');
-          drupal_maintenance_theme();
-        }
-        $content = theme($type, $content, $args);
-        if($ret) {
-          return $content;
-        }
-        else{
-          echo $content;
-          return;
-        }
-      }
-    }
-    elseif($version >= 7 && $version < 8){
-      // refs #20890, prevent infinite page loop when system needs cron
-      global $conf;
-      $conf['cron_safe_threshold'] = 0;
-      if(!$print && $type == 'page'){
-        if ($maintenance) {
-          drupal_set_breadcrumb('');
-          drupal_maintenance_theme();
-        }
-        if($ret){
-          return drupal_render_page($content);
-        }
-        else{
-          drupal_deliver_page($content);
-          return;
-        }
-      }
-    }
-    elseif($version >= 8){
-      echo 'We havnt support d8 yet';
-      return;
-    }
-
+    CRM_Core_Config::$_userSystem->versionalClass->setTitle($pageTitle);
   }
 
   /**
@@ -201,26 +293,32 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function appendBreadCrumb($breadCrumbs) {
-    $breadCrumb = drupal_get_breadcrumb();
+  static function appendBreadCrumb($breadcrumbs) {
+    $version = self::$_version;
+    if ($version < 8) {
+      $bc = drupal_get_breadcrumb();
 
-    if (is_array($breadCrumbs)) {
-      foreach ($breadCrumbs as $crumbs) {
-        if (stripos($crumbs['url'], 'id%%')) {
-          $args = array('cid', 'mid');
-          foreach ($args as $a) {
-            $val = CRM_Utils_Request::retrieve($a, 'Positive', CRM_Core_DAO::$_nullObject,
-              FALSE, NULL, $_GET
-            );
-            if ($val) {
-              $crumbs['url'] = str_ireplace("%%{$a}%%", $val, $crumbs['url']);
+      if (is_array($breadcrumbs)) {
+        foreach ($breadcrumbs as $crumbs) {
+          if (stripos($crumbs['url'], 'id%%')) {
+            $args = array('cid', 'mid');
+            foreach ($args as $a) {
+              $val = CRM_Utils_Request::retrieve($a, 'Positive', CRM_Core_DAO::$_nullObject,
+                FALSE, NULL, $_GET
+              );
+              if ($val) {
+                $crumbs['url'] = str_ireplace("%%{$a}%%", $val, $crumbs['url']);
+              }
             }
           }
+          $bc[] = "<a href=\"{$crumbs['url']}\">{$crumbs['title']}</a>";
         }
-        $breadCrumb[] = "<a href=\"{$crumbs['url']}\">{$crumbs['title']}</a>";
       }
+      drupal_set_breadcrumb($bc);
     }
-    drupal_set_breadcrumb($breadCrumb);
+    else {
+      CRM_Core_Config::$_userSystem->versionalClass->appendBreadCrumb($breadcrumbs);
+    }
   }
 
   /**
@@ -231,14 +329,31 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function resetBreadCrumb() {
-    $bc = array();
-    drupal_set_breadcrumb($bc);
+    if (self::$_version < 8) {
+      $bc = array();
+      drupal_set_breadcrumb($bc);
+    }
+    else {
+      CRM_Core_Config::$_userSystem->versionalClass->resetBreadCrumb();
+    }
   }
 
   /**
    * Append a string to the head of the html file
    *
-   * @param string $head the new string to be appended
+   * @param array $head The head format array likes:
+   * [
+   *   'type' => 'markup',
+   *   'markup' => '<meta name="robots" content="noindex" />',
+   * ]
+   * or
+   * [
+   *   'tag' => 'style',
+   *   'attribute' => [
+   *     'type' => 'text/css',
+   *   ],
+   *   'value => '@import url(xxx.css)',
+   * ]
    *
    * @return void
    * @access public
@@ -251,8 +366,7 @@ class CRM_Utils_System_Drupal {
       CRM_Core_Error::debug($message);
       return;
     }
-    $config = CRM_Core_Config::singleton();
-    $version = $config->userSystem->version;
+    $version = self::$_version;
     if($version >= 6 && $version < 7){
       if ($head['type'] == 'markup' && $head['markup']) {
         drupal_set_html_head($head['markup']);
@@ -290,6 +404,19 @@ class CRM_Utils_System_Drupal {
       drupal_add_html_head($element, $head_key);
       return;
     }
+    elseif ($version >= 8) {
+      if ($head['type'] == 'markup') {
+        $civicrm_head = $head['markup'];
+        \Drupal::service('civicrm.page_state')->addHtmlHeaderMarkup($civicrm_head);
+      }
+      else {
+        // All key prepend '#'
+        foreach ($head as $key => $value) {
+          $civicrm_head['#'.$key] = $value;
+        }
+        \Drupal::service('civicrm.page_state')->addHtmlHeaderMeta($civicrm_head);
+      }
+    }
   }
 
   /**
@@ -305,8 +432,7 @@ class CRM_Utils_System_Drupal {
   static function addJs($params, $text) {
     global $civicrm_root;
     $crmRelativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $civicrm_root);
-    $config = CRM_Core_Config::singleton();
-    $version = $config->userSystem->version;
+    $version = self::$_version;
     $data = NULL;
 
     if ($version >= 6 && $version < 7) {
@@ -416,8 +542,34 @@ class CRM_Utils_System_Drupal {
         }
       }
     }
-    else {
-      CRM_Core_Error::debug_log_message("addJs function have not yet supported this version of drupal $version");
+    elseif($version >= 8) {
+      // special case for durpal 8-9
+      // we got to define library first, and lib info will cached
+      // the dynamic attachment only can specify by library name
+      // we use some dirty definition for supporting Smarty block.js.php
+      if (!empty($params['smarty_block_js'])) {
+        if (!empty($params['library'])) {
+          self::$jsLibraries[$params['library']] = 1;
+        }
+      }
+
+      // these condition is for drupal module hook
+      // hook module can use hook_library_info_alter to add library
+      // then civicrm hook can be triggered here
+      // check civicrm_jvalidate.module for details
+      elseif(!empty($params['library'])) {
+        self::$jsLibraries[$params['library']] = 1;
+      }
+
+      // for now, we won't additional js library in page
+      // all js blocks is inline
+      elseif(isset($params['type'])) {
+        switch($params['type']) {
+          case 'inline':
+            \Drupal::service('civicrm.page_state')->addJs($text, $params['type']);
+            break;
+        }
+      }
     }
 
     return;
@@ -433,7 +585,88 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static  */
   static function variable_get($name, $default) {
-    return variable_get($name, $default);
+    // drupal 6 and 7
+    $version = self::$_version;
+    if ($version < 8 ) {
+      return variable_get($name, $default);
+    }
+    else {
+      // exception
+    }
+  }
+
+  /**
+   * Get sitename from cms system
+   *
+   * @return string
+   * @access public
+   * @static
+   */
+  static function siteName() {
+    $version = self::$_version;
+    if ($version >= 8) {
+      return \Drupal::config('system.site')->get('name');
+    }
+    else {
+      return self::variable_get('site_name', 'Drupal');
+    }
+  }
+
+  /**
+   * Get user registration setting from cms system
+   *
+   * @return string
+   * @access public
+   * @static
+   */
+  static function allowedUserRegisteration() {
+    $version = self::$_version;
+    if ($version >= 8) {
+      $allowedRegister = \Drupal::config('user.settings')->get('register');
+      if ($allowedRegister == 'admin_only') {
+        return FALSE;
+      }
+      else {
+        return TRUE;
+      }
+    }
+    else {
+      return self::variable_get('user_register', TRUE);
+    }
+  }
+
+  /**
+   * User email verification setting
+   *
+   * @return string
+   * @access public
+   * @static
+   */
+  static function userEmailVerification() {
+    $version = self::$_version;
+    if ($version >= 8) {
+      return \Drupal::config('user.settings')->get('verify_email');
+    }
+    else {
+      return self::variable_get('user_email_verification', TRUE);
+    }
+  }
+
+  /**
+   * check module exists
+   *
+   * @return string
+   * @access public
+   * @static
+   */
+  static function moduleExists($module) {
+    $version = self::$_version;
+    if ($version >= 8) {
+      return \Drupal::moduleHandler()->moduleExists($module);
+    }
+    else {
+      return module_exists($module);
+    }
   }
 
   /**
@@ -502,7 +735,7 @@ class CRM_Utils_System_Drupal {
 
     $separator = $htmlize ? '&amp;' : '&';
 
-    if (!variable_get('clean_url', 0)) {
+    if (!CIVICRM_CLEANURL) {
       if (isset($path)) {
         if (isset($query)) {
           return $base . $script . '?q=' . $path . $separator . $query . $fragment;
@@ -593,8 +826,43 @@ class CRM_Utils_System_Drupal {
     drupal_set_message($message);
   }
 
+  static function permissionCheck($permission, $uid = NULL) {
+    $version = self::$_version;
+    if ($version < 8) {
+      if ($uid) {
+        if ($version < 7) {
+          $account = user_load(array('uid' => $uid));
+        }
+        else {
+          $account = user_load($uid);
+        }
+        return user_access($permission, $account) ? TRUE : FALSE;
+      }
+      else {
+        return user_access($permission) ? TRUE : FALSE;
+      }
+    }
+    else {
+      if ($uid) {
+        $account = user_load($uid);
+        return $account->hasPermission($permission) ? TRUE : FALSE;
+      }
+      else {
+        return \Drupal::currentUser()->hasPermission($permission) ? TRUE : FALSE;
+      }
+    }
+    return FALSE;
+  }
+
   static function permissionDenied() {
-    drupal_access_denied();
+    $version = self::$_version;
+    if ($version >= 8) {
+      throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+    }
+    else {
+      drupal_not_found();
+    }
+    return;
   }
 
   static function logout() {
@@ -603,10 +871,16 @@ class CRM_Utils_System_Drupal {
   }
 
   static function updateCategories() {
-    // copied this from profile.module. Seems a bit inefficient, but i dont know a better way
+    $version = self::$_version;
+
     // CRM-3600
-    cache_clear_all();
-    menu_rebuild();
+    if ($version < 8) {
+      cache_clear_all();
+      menu_rebuild();
+    }
+    else {
+      \Drupal::service('router.builder')->rebuild();
+    }
   }
 
   /**
@@ -615,22 +889,28 @@ class CRM_Utils_System_Drupal {
    * @return string  with the locale or null for none
    */
   static function getUFLocale() {
-    // return CiviCRM’s xx_YY locale that either matches Drupal’s Chinese locale
-    // (for CRM-6281), Drupal’s xx_YY or is retrieved based on Drupal’s xx
-    global $language;
-    switch (TRUE) {
-      case $language->language == 'zh-hans':
-        return 'zh_CN';
+    $version = self::$_version;
+    if ($version >= 8) {
+      $languageCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    }
+    else {
+      global $language;
+      $languageCode = $language->language;
+    }
 
-      case $language->language == 'zh-hant':
-        return 'zh_TW';
-
-      case preg_match('/^.._..$/', $language->language):
-        return $language->language;
-
-      default:
-        require_once 'CRM/Core/I18n/PseudoConstant.php';
-        return CRM_Core_I18n_PseudoConstant::longForShort(substr($language->language, 0, 2));
+    if ($languageCode == 'zh-hans') {
+      return 'zh_CN';
+    }
+    elseif ($languageCode == 'zh-hant') {
+      return 'zh_TW';
+    }
+    else {
+      if (preg_match('/^.._..$/', $languageCode)) {
+        return $languageCode;
+      }
+      else {
+        return CRM_Core_I18n_PseudoConstant::longForShort(substr($languageCode, 0, 2));
+      }
     }
   }
 
@@ -674,92 +954,17 @@ class CRM_Utils_System_Drupal {
   static function loadBootStrap($params = array(), $throwError = TRUE) {
     //take the cms root path.
     $cmsPath = self::cmsRootPath();
-
-    if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
-      if ($throwError) {
-        throw new Exception('Sorry, could not locate bootstrap.inc');
-      }
-      return FALSE;
-    }
-
     chdir($cmsPath);
-    require_once 'includes/bootstrap.inc';
-    @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-    // explicitly setting error reporting, since we cannot handle drupal related notices
-    // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code
-    // causes grief with debugging scripts
-		global $user;
-    if (empty($user)) {
-      if ($throwError) {
-        throw new Exception('Sorry, could not load drupal bootstrap.');
-      }
-      return FALSE;
-    }
 
-    // we have user to load
-		if (!empty($params)) {
-      $config = CRM_Core_Config::singleton();
-      $version = $config->userSystem->version;
-      $uid = CRM_Utils_Array::value('uid', $params);
-
-      if (!$uid) {
-        //load user, we need to check drupal permissions.
-        $name = CRM_Utils_Array::value('name', $params, FALSE) ? $params['name'] : trim(CRM_Utils_Array::value('name', $_REQUEST));
-        $pass = CRM_Utils_Array::value('pass', $params, FALSE) ? $params['pass'] : trim(CRM_Utils_Array::value('pass', $_REQUEST));
-
-        if ($name) {
-          if($version >= 6 && $version < 7){
-            $user = user_authenticate(array('name' => $name, 'pass' => $pass));
-            if (empty($user->uid)) {
-              if ($throwError) {
-                throw new Exception('Sorry, unrecognized username or password.');
-              }
-              return FALSE;
-            }
-            else {
-              $uid = $user->uid;
-            }
-          }
-          elseif ($version >= 7 && $version < 8){
-            $uid = user_authenticate($name, $pass);
-            if (empty($uid)) {
-              if ($throwError) {
-                throw new Exception('Sorry, unrecognized username or password.');
-              }
-              return FALSE;
-            }
-          }
-        }
-      }
-      if ($uid) {
-        if ($version >= 6 && $version < 7) {
-          $account = user_load(array('uid' => $uid));
-          if ($account && $account->uid) {
-            global $user;
-            $user = $account;
-            return TRUE;
-          }
-        }
-        if ($version >= 7 && $version < 8) {
-          $account = user_load($uid);
-          if ($account && $account->uid) {
-            global $user;
-            $user = $account;
-            return TRUE;
-          }
-        }
-      }
-
-      if ($throwError) {
-        throw new Exception('Sorry, can not load CMS user account.');
-      }
-    }
+    // call method in Drupalx.php
+    CRM_Core_Config::$_userSystem->versionalClass->loadBootStrap($params);
   }
 
   static function cmsRootPath() {
     if (defined('DRUPAL_ROOT')) {
       return DRUPAL_ROOT;
     }
+
     $cmsRoot = $valid = NULL;
     if (!empty($_SERVER['PWD'])) {
       $scriptPath = $_SERVER['PWD'];
@@ -778,11 +983,15 @@ class CRM_Utils_System_Drupal {
     //start w/ csm dir search.
     foreach ($pathVars as $var) {
       $cmsRoot .= "/$var";
-      $cmsIncludePath = "$cmsRoot/includes";
-      //stop as we found bootstrap.
-      if (file_exists("$cmsIncludePath/bootstrap.inc")) {
-        $valid = TRUE;
-        break;
+      $cmsIncludePath = array();
+      $cmsIncludePath[] = "$cmsRoot/includes";
+      $cmsIncludePath[] = "$cmsRoot/core/includes";
+      foreach($cmsIncludePath as $path) {
+        //stop as we found bootstrap.
+        if (file_exists("$path/bootstrap.inc")) {
+          $valid = TRUE;
+          break 2;
+        }
       }
     }
 
@@ -798,12 +1007,14 @@ class CRM_Utils_System_Drupal {
    * @return boolean true/false.
    */
   public static function isUserLoggedIn() {
-    $isloggedIn = FALSE;
-    if (function_exists('user_is_logged_in')) {
-      $isloggedIn = user_is_logged_in();
+    $version = self::$_version;
+    if ($version >= 8) {
+      return \Drupal::currentUser()->isAuthenticated();
     }
-
-    return $isloggedIn;
+    else {
+      return user_is_logged_in();
+    }
+    return FALSE;
   }
 
   /**
@@ -812,103 +1023,55 @@ class CRM_Utils_System_Drupal {
    * @return int $userID logged in user uf id.
    */
   public static function getLoggedInUfID() {
-    global $user;
-    return isset($user) && $user->uid ? $user->uid : 0;
+    return self::getBestUFID();
   }
 
   function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
-    static $exists;
-    if (empty($url)) {
-      return $url;
-    }
-
-    //CRM-7803 -from d7 onward.
-    $config = CRM_Core_Config::singleton();
-    $version = substr($config->userSystem->version, 0, strpos($config->userSystem->version, '.'));
-    if ($version == '7') {
-      if($exists || function_exists('language_negotiation_get')){
-        $exists = TRUE;
-        global $language;
-
-        //does user configuration allow language
-        //support from the URL (Path prefix or domain)
-        if (language_negotiation_get('language') == 'locale-url') {
-          $urlType = variable_get('locale_language_negotiation_url_part');
-
-          //url prefix
-          if ($urlType == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
-            if (isset($language->prefix) && $language->prefix) {
-              if ($addLanguagePart) {
-                $url .= $language->prefix . '/';
-              }
-              if ($removeLanguagePart) {
-                $url = str_replace("/{$language->prefix}/", '/', $url);
-              }
-            }
-          }
-          //domain
-          if ($urlType == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
-            if (isset($language->domain) && $language->domain) {
-              if ($addLanguagePart) {
-                $cleanedUrl = preg_replace('#^https?://#', '', $language->domain);
-                // drupal function base_path() adds a "/" to the beginning and end of the returned path
-                if (substr($cleanedUrl, -1) == '/') {
-                  $cleanedUrl = substr($cleanedUrl, 0, -1);
-                }
-                $url = (CRM_Utils_System::isSSL() ? 'https' : 'http') . '://' . $cleanedUrl . base_path();
-              }
-              if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
-                $url = str_replace('\\', '/', $url);
-                $parseUrl = parse_url($url);
-
-                //kinda hackish but not sure how to do it right
-                //hope http_build_url() will help at some point.
-                if (is_array($parseUrl) && !empty($parseUrl)) {
-                  $urlParts           = explode('/', $url);
-                  $hostKey            = array_search($parseUrl['host'], $urlParts);
-                  $ufUrlParts         = parse_url(CIVICRM_UF_BASEURL);
-                  $urlParts[$hostKey] = $ufUrlParts['host'];
-                  $url                = implode('/', $urlParts);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    elseif($version == '6'){
-      //upto d6 only, already we have code in place for d7
-      $config = CRM_Core_Config::singleton();
-      $url = CRM_Utils_System_Drupal6::languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
-    }
-    return $url;
+    // call method in Drupalx.php
+    return CRM_Core_Config::$_userSystem->versionalClass->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
   }
 
   function notFound(){
-    drupal_not_found();
+    $version = self::$_version;
+    if ($version >= 8) {
+      throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
+    }
+    else {
+      drupal_not_found();
+    }
     return;
   }
 
   function cmsDir($type) {
-    $config = CRM_Core_Config::singleton();
-    $version = $config->userSystem->version;
+    $version = self::$_version;
     switch($type) {
       case 'temp':
       case 'tmp':
-        return file_directory_temp();
+        if ($version >= 8 ) {
+          return \Drupal::service('file_system')->getTempDirectory();
+        }
+        else {
+          return file_directory_temp();
+        }
       case 'public':
         if ($version >= 6 && $version < 7){
           return file_directory_path();
         }
         if ($version >= 7 && $version < 8) {
-          return variable_get('file_public_path', 'sites/default/files');
+          return self::variable_get('file_public_path', 'sites/default/files');
+        }
+        if ($version >= 8 ) {
+          return \Drupal\Core\StreamWrapper\PublicStream::basePath();
         }
       case 'private':
         if ($version >= 6 && $version < 7){
           return FALSE;
         }
         if ($version >= 7 && $version < 8) {
-          return variable_get('file_private_path', '');
+          return self::variable_get('file_private_path', '');
+        }
+        if ($version >= 8 ) {
+          return \Drupal\Core\StreamWrapper\PrivateStream::basePath();
         }
     }
     return FALSE;
@@ -917,7 +1080,13 @@ class CRM_Utils_System_Drupal {
   function confPath() {
     global $civicrm_conf_path;
     if (empty($civicrm_conf_path)) {
-      $civicrm_conf_path = conf_path(FALSE);
+      $version = self::$_version;
+      if ($version >= 8) {
+        $civicrm_conf_path = \Drupal::service('kernel')->getSitePath();
+      }
+      else {
+        $civicrm_conf_path = conf_path(FALSE);
+      }
     }
     return $civicrm_conf_path;
   }
@@ -936,14 +1105,107 @@ class CRM_Utils_System_Drupal {
     return $logoURL;
   }
 
-  function transliteration($string) {
-    require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
-    $purgedName = '';
-    if (module_exists('transliteration')) {
-      $purgedName = strtolower(transliteration_clean_filename($string));
-      $purgedName = trim($purgedName, '_');
+  function moduleImplements($hook) {
+    if (self::$_version < 8) {
+      return module_implements($hook);
     }
-    return $purgedName;
+    elseif(self::$_version >= 8) {
+      return \Drupal::moduleHandler()->getImplementations($hook);
+    }
+    elseif (function_exists('module_list')) {
+      $implements = array();
+      foreach (module_list() as $module) {
+        $fnName = "{$module}_{$hook}";
+        if (function_exists($fnName)) {
+          $implements[] = $module;
+        }
+      }
+      return $implements;
+    }
+    return array();
+  }
+
+  function sessionStart(){
+    $version = self::$_version;
+    $ufId = self::getBestUFID();
+    if ($version < 7) {
+      if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+      }
+    }
+    elseif ($version < 8 && $version >= 7) {
+      if (session_status() === PHP_SESSION_NONE || !isset($_SESSION)) {
+        if ($ufId === 0) {
+          $_SESSION["CiviCRM_Anonymous"] = TRUE;
+        }
+        drupal_session_start();
+      }
+    }
+    else {
+      if (\Drupal::hasContainer()) {
+        // refs #31356, force session start for anonymous user
+        $session = \Drupal::service('session_manager');
+        if (!$session->isStarted()) {
+          $session->start();
+        }
+      }
+    }
+  }
+
+  function sessionID() {
+    // when session success started, this should have id
+    $sessionID = session_id();
+    if ($sessionID) {
+      return $sessionID;
+    }
+
+    // try start session here
+    self::sessionStart();
+    $sessionID = session_id();
+    if ($sessionID) {
+      return $sessionID;
+    }
+
+    // refs #31356, because self::sessionStart() force initialize session for drupal
+    // we should get session id by session manager service here
+    // not sure why session_id() doesn't return correct id
+    $version = self::$_version;
+    if ($version >= 8) {
+      $session = \Drupal::service('session_manager');
+      $sessionID = $session->getId();
+      return $sessionID;
+
+      // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore
+      /*
+      $sessionID = self::tempstoreGet('sessionID');
+      if ($sessionID) {
+        return $sessionID;
+      }
+      $sessionID = str_replace(array('+','/','='), array('-','_','',), base64_encode(random_bytes(32)));
+      self::tempstoreSet('sessionID', $sessionID);
+      */
+    }
+    return '';
+  }
+
+  function tempstoreSet($name, $value) {
+    $version = self::$_version;
+    // refs #31356, this is drupal 8 / 9 specific code for set tempstore
+    if ($version >= 8) {
+      $tempstore = \Drupal::service('tempstore.private')->get('civicrm');
+      $tempstore->set($name, $value);
+    }
+    return FALSE;
+  }
+  
+  function tempstoreGet($name) {
+    $version = self::$_version;
+    // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore
+    if ($version >= 8) {
+      $tempstore = \Drupal::service('tempstore.private')->get('civicrm');
+      return $tempstore->get($name);
+    }
+    return FALSE;
   }
 }
 

@@ -166,7 +166,7 @@ class CRM_Core_BAO_CMSUser {
         return FALSE;
       }
     }
-    elseif ($isDrupal && !variable_get('user_register', TRUE)) {
+    elseif ($isDrupal && !CRM_Utils_System::allowedUserRegisteration()) {
       return FALSE;
     }
     // if cms is drupal having version greater than equal to 5.1
@@ -205,7 +205,7 @@ class CRM_Core_BAO_CMSUser {
           require_once 'CRM/Core/Action.php';
           if (!$userID || $action & CRM_Core_Action::PREVIEW || $action & CRM_Core_Action::PROFILE) {
             $form->add('text', 'cms_name', ts('Username'), NULL, $required);
-            if (($isDrupal && !variable_get('user_email_verification', TRUE)) OR ($isJoomla)) {
+            if (($isDrupal && !CRM_Utils_System::userEmailVerification()) OR ($isJoomla)) {
               $form->add('password', 'cms_pass', ts('Password'));
               $form->add('password', 'cms_confirm_pass', ts('Confirm Password'));
             }
@@ -302,7 +302,7 @@ class CRM_Core_BAO_CMSUser {
         $errors[$emailName] = ts('Please specify a valid email address.');
       }
 
-      if (($isDrupal && !variable_get('user_email_verification', TRUE)) OR ($isJoomla)) {
+      if (($isDrupal && !CRM_Utils_System::userEmailVerification()) OR ($isJoomla)) {
         if (empty($fields['cms_pass']) ||
           empty($fields['cms_confirm_pass'])
         ) {
@@ -394,7 +394,7 @@ class CRM_Core_BAO_CMSUser {
     ) {
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
-      CRM_Core_Error::statusBounce(ts("Cannot connect to UF db via %1. Please check the CIVICRM_UF_DSN value in your civicrm.settings.php file",
+       return CRM_Core_Error::statusBounce(ts("Cannot connect to UF db via %1. Please check the CIVICRM_UF_DSN value in your civicrm.settings.php file",
           array(1 => $db_uf->getMessage())
         ));
     }

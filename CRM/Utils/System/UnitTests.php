@@ -143,7 +143,7 @@ class CRM_Utils_System_UnitTests {
   }
 
   static function permissionDenied() {
-    CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
+     return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
   }
 
   static function logout() {
@@ -195,6 +195,19 @@ class CRM_Utils_System_UnitTests {
     }
   }
 
+  /**
+   * Get logged user id, unit test always anonymous user
+   *
+   * @return int 0
+   */
+  public static function getLoggedInUfID() {
+    return 0;
+  }
+
+  function notFound(){
+    return;
+  }
+
   function cmsDir($type) {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
@@ -212,12 +225,18 @@ class CRM_Utils_System_UnitTests {
           if ($version >= 7 && $version < 8) {
             return variable_get('file_public_path', 'sites/default/files');
           }
+          if ($version >= 8 ) {
+            return \Drupal\Core\StreamWrapper\PublicStream::basePath();
+          }
         case 'private':
           if ($version >= 6 && $version < 7){
             return FALSE;
           }
           if ($version >= 7 && $version < 8) {
             return variable_get('file_private_path', '');
+          }
+          if ($version >= 8 ) {
+            return \Drupal\Core\StreamWrapper\PrivateStream::basePath();
           }
       }
     }

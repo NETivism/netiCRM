@@ -76,8 +76,7 @@ $GLOBALS['mysql_db'] = $dsninfo['database'];
  *
  * CiviCRM can be hosted in either Drupal, Joomla or WordPress.
 */
-define('CIVICRM_UF', 'UnitTests');
-
+define('CIVICRM_UF', 'Drupal');
 
 
 // set this to a temporary directory. it defaults to /tmp/civi on linux
@@ -120,4 +119,4 @@ if($memLimit >= 0 and $memLimit < 67108864) {
 
 require_once 'CRM/Core/ClassLoader.php';
 CRM_Core_ClassLoader::singleton()->register();
-
+CRM_Core_Config::singleton();

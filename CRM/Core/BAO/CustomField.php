@@ -1612,7 +1612,7 @@ SELECT id
       // rename this file to go into the secure directory
       $config = CRM_Core_Config::singleton();
       if (!rename($filePath, $config->customFileUploadDir . $basename)) {
-        CRM_Core_Error::statusBounce(ts('Could not move custom file to custom upload directory'));
+         return CRM_Core_Error::statusBounce(ts('Could not move custom file to custom upload directory'));
         return;
       }
 

@@ -219,10 +219,17 @@
   </item>
   <item>
      <path>civicrm/admin/options/from_email_address</path>
-     <title>From Email Addresses</title>
-     <desc>List of Email Addresses which can be used when sending emails to contacts.</desc>
+     <title>From Email Address</title>
      <path_arguments>group=from_email_address</path_arguments>
+     <desc>List of Email Addresses which can be used when sending emails to contacts.</desc>
      <page_callback>CRM_Admin_Page_Options</page_callback>
+  </item>
+  <item>
+     <path>civicrm/admin/from_email_address</path>
+     <title>FROM Email Addresses</title>
+     <desc>List of Email Addresses which can be used when sending emails to contacts.</desc>
+     <page_callback>CRM_Admin_Page_FromEmailAddress</page_callback>
+     <access_arguments>administer CiviCRM</access_arguments>
      <adminGroup>Configure</adminGroup>
      <icon>admin/small/title.png</icon>
      <weight>275</weight>

@@ -49,7 +49,6 @@
 {/if}
 <script type="text/javascript">
   {literal}
-  (function($){
     window.ContribPageParams = {
       backgroundImageUrl : "{/literal}{$backgroundImageUrl}{literal}",
       mobileBackgroundImageUrl : "{/literal}{$mobileBackgroundImageUrl}{literal}",
@@ -108,10 +107,13 @@
         "Please enter a valid amount." : "{/literal}{ts}Please enter a valid amount.{/ts}{literal}"
       }
     };
-  })(jQuery);
   {/literal}
 </script>
-<script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js?v{$config->ver}"></script>
+{if $config->userFrameworkVersion >= 8}
+  <script type="text/javascript" src="{$config->resourceBase}js/contribution_page.d9.js?v{$config->ver}"></script>
+{else}
+  <script type="text/javascript" src="{$config->resourceBase}js/contribution_page.js?v{$config->ver}"></script>
+{/if}
 <img class="pre-load-background-images" src="{$backgroundImageUrl}" alt="" style="display: none;" loading="lazy">
 <img class="pre-load-background-images" src="{$mobileBackgroundImageUrl}" alt="" style="display: none;" loading="lazy">
 <style>

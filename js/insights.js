@@ -191,8 +191,11 @@ function trackVisit(visitInfo) {
   });
 }
 
-var inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
-loadScript(inboundSrc, function(){
-  loadReferrer();
-});
-
+if (typeof Drupal !== 'undefined' && typeof Drupal.settings !== 'undefined') {
+  var inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
+  loadScript(inboundSrc, function(){ loadReferrer(); });
+}
+else if (typeof drupalSettings !== 'undefined') {
+  var inboundSrc = drupalSettings.civicrm.resourceBase+'js/inbound.js';
+  loadScript(inboundSrc, function(){ loadReferrer(); });
+}

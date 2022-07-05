@@ -260,4 +260,11 @@
       <type>Select</type>
     </html>
   </field>
+  <field>
+    <name>is_hidden</name>
+    <type>boolean</type>
+    <default>0</default>
+    <comment>Is this mailing hidden?</comment>
+    <add>4.0</add>
+  </field>
 </table>

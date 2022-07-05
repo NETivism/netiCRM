@@ -385,10 +385,7 @@ class DB_DataObject_Cast {
                 return "'".pg_escape_bytea($this->value)."'::bytea";
                 
             case 'mysql':
-                return "'".mysql_real_escape_string($this->value,$db->connection)."'";
-            
             case 'mysqli':
-                // this is funny - the parameter order is reversed ;)
                 return "'".mysqli_real_escape_string($db->connection, $this->value)."'";
              
             case 'sqlite':
@@ -432,9 +429,6 @@ class DB_DataObject_Cast {
                 return "'".pg_escape_string($this->value)."'::bytea";
             
             case 'mysql':
-                return "'".mysql_real_escape_string($this->value,$db->connection)."'";
-            
-            
             case 'mysqli':
                 return "'".mysqli_real_escape_string($db->connection, $this->value)."'";
 

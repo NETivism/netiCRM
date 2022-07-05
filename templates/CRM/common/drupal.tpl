@@ -38,7 +38,8 @@
     <script type="text/javascript" src="{$config->resourceBase}packages/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
     <script type="text/javascript" src="{$config->resourceBase}packages/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 {elseif $defaultWysiwygEditor eq 2}
-    <script type="text/javascript" src="{$config->resourceBase}packages/ckeditor/ckeditor.js?4.11.3"></script>
+   {* we will put this javascript include into quickform *}
+   {* quickform can easily override by other modules *}
 {/if}
 
 {* Make sure we've tidy url from backend. *}

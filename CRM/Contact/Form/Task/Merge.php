@@ -73,7 +73,7 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
       }
     }
     if ($statusMsg) {
-      CRM_Core_Error::statusBounce($statusMsg);
+       return CRM_Core_Error::statusBounce($statusMsg);
     }
 
     $url = NULL;
@@ -101,7 +101,7 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
       $rgBao->is_default = 1;
       $rgBao->contact_type = $cType;
       if (!$rgBao->find(TRUE)) {
-        CRM_Core_Error::statusBounce("You can not merge contact records because $level rule for $cType does not exist.");
+         return CRM_Core_Error::statusBounce("You can not merge contact records because $level rule for $cType does not exist.");
       }
       $ruleGroupID = $rgBao->id;
       $session = CRM_Core_Session::singleton();

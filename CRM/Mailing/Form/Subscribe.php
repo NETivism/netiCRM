@@ -68,7 +68,7 @@ SELECT   title, description
         CRM_Utils_System::setTitle(ts('Subscribe to Mailing List - %1', array(1 => $dao->title)));
       }
       else {
-        CRM_Core_Error::statusBounce("The specified group is not configured for this action OR The group doesn't exist.");
+         return CRM_Core_Error::statusBounce("The specified group is not configured for this action OR The group doesn't exist.");
       }
 
       $this->assign('single', TRUE);
@@ -118,7 +118,7 @@ ORDER BY title";
         $rows[] = $row;
       }
       if (empty($rows)) {
-        CRM_Core_Error::fatal(ts('There are no public mailing list groups to display.'));
+         return CRM_Core_Error::statusBounce(ts('There are no public mailing list groups to display.'));
       }
       if (count($rows) == 1) {
         $row = reset($rows);

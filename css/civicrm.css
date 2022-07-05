@@ -838,6 +838,12 @@
     border: 1px solid #999;
 }
 
+.crm-container pre {
+  background-color: #EFEFEF;
+  border: 1px solid #EEE;
+  padding: 8px;
+  width: fit-content;
+}
 
 .crm-form-block {
     padding:4px;
@@ -1019,7 +1025,6 @@ div.spacer,
     padding         : 3px 0px 5px 0px;
     clear           : none;
     /* overflow        : auto; This causes horiz scrollbars, not sure if needed. dgg*/
-    height          : 100%;
 }
 
 .crm-container div.form-item dl, .crm-container .section-hidden dl, .crm-container .crm-form-block dl{
@@ -2928,6 +2933,10 @@ span.icon {
 body.civicrm-menu-enabled {
   padding-top: 25px;
 }
+/* drupal 9 */
+body.civicrm-menu-enabled .toolbar-oriented .toolbar-bar {
+  top: 25px;
+}
 #civicrm-menu {
     height:25px;
 }
@@ -3176,6 +3185,27 @@ div#crm-toolTip #hide-tooltip {
 .crm-tooltip .crm-table-group-summary {
   width: 95%;
   margin-bottom: 0px;
+}
+
+/* docurl */
+.crm-container a.crm-docurl{
+  text-decoration: none !important;
+  position: relative;
+}
+.crm-container a.crm-docurl::before {
+  content: '\f2f5';
+  font-family: 'Material-Design-Iconic-Font';
+  margin-right: 5px;
+}
+.crm-container a.crm-docurl:hover::after {
+  content: '\f1a3';
+  font-family: 'Material-Design-Iconic-Font';
+  opacity: .5;
+  font-size: .85em;
+  margin-left: 5px;
+  position: absolute;
+  right: -15px;
+  top: -3px;
 }
 
 /* crm-summary-group appears outside crm-container for contact summary icon overlay */
@@ -4402,6 +4432,17 @@ ul.ui-sortable {
   border-color: #F44336;
 }
 
+.crm-container .zmdi.ok{
+  color: #44af29;
+}
+.crm-container .zmdi.warning {
+  color: #ff9800;
+}
+.crm-container .zmdi.error {
+  color: #d50000;
+}
+
+
 /* fieldset */
 .crm-container fieldset {
   top: 0;
@@ -4766,6 +4807,7 @@ ul.ui-sortable {
 .crm-button-type-upload a.button:visited,
 .crm-button-type-upload .form-submit,
 .crm-button-type-next .form-submit,
+.crm-button-type-done .form-submit,
 .crm-container .form-submit[name*=_upload_],
 .crm-container #register-me,
 .crm-container a.button.crm-register-button {
@@ -4782,6 +4824,8 @@ ul.ui-sortable {
 .crm-button-type-upload .form-submit:focus,
 .crm-button-type-next .form-submit:hover,
 .crm-button-type-next .form-submit:focus,
+.crm-button-type-done .form-submit:hover,
+.crm-button-type-done .form-submit:focus,
 .crm-container #register-me:hover,
 .crm-container #register-me:focus,
 .crm-container a.button.crm-register-button:hover,
@@ -4794,6 +4838,7 @@ ul.ui-sortable {
 .crm-button-type-upload .button:active,
 .crm-button-type-upload .form-submit:active,
 .crm-button-type-next .form-submit:active,
+.crm-button-type-done .form-submit:active,
 .crm-container #register-me:active,
 .crm-container a.button.crm-register-button:active {
   background: #303F9F;
@@ -5000,6 +5045,7 @@ ul.ui-sortable {
 .crm-container tr {
   font-size: 1em;
   background: none;
+  border-bottom: 0px;
 }
 
 .crm-container td,
@@ -5158,11 +5204,15 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
 }
 
+.crm-container td.label {
+  display: table-cell;
+}
 .crm-container .form-layout td.label,
 .ui-dialog-content .form-layout td.label,
 .crm-container .form-layout-compressed td.label,
 .crm-container .selector td.label,
 .crm-container .form-layout-compressed th.label {
+  display: table-cell;
   text-align: right;
   padding: 5px 12px 5px 5px;
   border: 0px none;
@@ -5236,7 +5286,28 @@ tbody.scrollContent tr.alternateRow {
   color: #777;
   font-weight: normal;
 }
-
+.crm-container td.crm-contribution-amount .premium-info {
+  font-weight: normal;
+}
+.crm-container td.crm-contribution-amount .product-name {
+  line-height: 1.4;
+  font-size: 15px;
+}
+.crm-container td.crm-contribution-amount .product-name > i {
+  font-size: 20px;
+  color: #8e0101;
+}
+.crm-container td.crm-contribution-amount .product-option {
+  font-size: 13px;
+  color: #555;
+}
+.crm-container td.crm-contribution-amount .product-option-label::after {
+  content: "：";
+}
+.i18n-en .crm-container td.crm-contribution-amount .product-option-label::after {
+  content: ":";
+  margin-right: 5px;
+}
 
 /*
 ** Styles for record browser and report tables, and pager bar
@@ -6831,6 +6902,20 @@ input.crm-form-textfield,
 
 .crm-container a.button.url-copy {
   margin: 0 0 0 -21px !important;
+}
+
+/** Select2 style */
+.crm-container button.select2-selection__clear,
+.crm-container button.select2-selection__clear:hover {
+  color: #333030;
+}
+.crm-container .select2-selection--single button.select2-selection__clear,
+.crm-container .select2-selection--single button.select2-selection__clear:hover {
+  margin-top: 0;
+}
+.crm-container .select2-selection--multiple .select2-selection__clear,
+.crm-container .select2-selection--multiple button.select2-selection__clear:hover {
+  margin-right: 5px;
 }
 
 /* RWD block */

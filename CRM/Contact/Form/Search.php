@@ -552,7 +552,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $this->_tagID = CRM_Utils_Request::retrieve( 'tid' , 'Positive', $this);
     
     if (!empty($this->_ssID) && !CRM_Core_Permission::check('edit groups')) {
-      CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
     }
 
     /**

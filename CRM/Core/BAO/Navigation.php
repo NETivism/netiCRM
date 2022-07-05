@@ -576,10 +576,7 @@ ORDER BY parent_id, weight";
         $homeLabel = ts('Homepage');
       }
 
-      if (($config->userFramework == 'Drupal') &&
-        function_exists('module_exists') &&
-        module_exists('admin_menu') &&
-        user_access('access administration menu')
+      if (($config->userFramework == 'Drupal') && CRM_Utils_System::moduleExists('admin_menu') &&  user_access('access administration menu')
       ) {
         $prepandString = "<li class=\"menumain crm-link-home\">" . $homeLabel . "<ul id=\"civicrm-home\"><li><a href=\"{$homeURL}\">" . $homeLabel . "</a></li><li><a href=\"#\" onclick=\"cj.Menu.closeAll( );cj('#civicrm-menu').toggle( );\">" . ts('Drupal Menu') . "</a></li></ul></li>";
       }

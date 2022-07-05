@@ -52,7 +52,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     $ufGroups = &CRM_Core_BAO_UFGroup::getModuleUFGroup('User Registration');
 
     if (count($ufGroups) > 1) {
-      CRM_Core_Error::fatal(ts('You have more than one profile that has been enabled for user registration.'));
+       return CRM_Core_Error::statusBounce(ts('You have more than one profile that has been enabled for user registration.'));
     }
 
     foreach ($ufGroups as $id => $dontCare) {

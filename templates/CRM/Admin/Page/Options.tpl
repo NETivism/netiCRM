@@ -90,6 +90,9 @@
                     {ts}Label{/ts}
                 {/if}
             </th>
+        <th>
+          {ts}Name{/ts}
+        </th>
 	    {if $gName eq "case_status"}
 	    	<th>
 		    {ts}Status Class{/ts}
@@ -120,6 +123,7 @@
                 <td class="crm-admin-options-component_name">{$row.component_name}</td>
             {/if}
 	        <td class="crm-admin-options-label">{$row.label}</td>
+          <td class="crm-admin-options-name">{$row.name}</td>
 	    {if $gName eq "case_status"}				
 		<td class="crm-admin-options-grouping">{$row.grouping}</td>
             {/if}	

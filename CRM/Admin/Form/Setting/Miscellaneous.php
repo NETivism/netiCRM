@@ -82,6 +82,7 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       );
       $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
       $this->assign('admin', TRUE);
+      $this->addTextfield('docURLBase', ts('Documentation URL Base Path'));
     }
     else {
       $this->assign('admin', FALSE);

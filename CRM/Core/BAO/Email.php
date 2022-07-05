@@ -41,7 +41,7 @@ require_once 'CRM/Core/DAO/Email.php';
 class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
 
   /**
-   * takes an associative array and adds email
+   * low level logic of create email
    *
    * @param array  $params         (reference ) an assoc array of name/value pairs
    *
@@ -56,22 +56,49 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
     // lower case email field to optimize queries
     $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
     $email->email = $strtolower($email->email);
+    self::holdEmail($email);
+
+    return $email->save();
+  }
+
+  /**
+   * Business logic of create email
+   *
+   * @param array $params
+   * 
+   * @return object CRM_Core_BAO_Email object on success, null otherwise
+   * @access public
+   * @static
+   */
+  static function create(&$params) {
+    CRM_Core_BAO_Block::handlePrimary($params, get_class());
+
+    $hook = empty($params['id']) ? 'create' : 'edit';
+    CRM_Utils_Hook::pre($hook, 'Email', CRM_Utils_Array::value('id', $params), $params);
 
     // since we're setting bulkmail for 1 of this contact's emails, first reset all their emails to is_bulkmail false
     // (only 1 email address can have is_bulkmail = true)
-    if ($email->is_bulkmail != 'null' && $params['contact_id']) {
+    if ($params['is_bulkmail'] == 1 && !empty($params['contact_id'])) {
       $sql = "
 UPDATE civicrm_email 
 SET is_bulkmail = 0
 WHERE 
 contact_id = {$params['contact_id']}";
+      if (!empty($params['id']) && intval($params['id'])) {
+        $sql .= " AND id <> {$params['id']}";
+      }
       CRM_Core_DAO::executeQuery($sql);
     }
 
-    // handle if email is on hold
-    self::holdEmail($email);
+    $email = self::add($params);
 
-    return $email->save();
+    if (!empty($email->is_primary)) {
+      // update the UF user email if that has changed
+      CRM_Core_BAO_UFMatch::updateUFName($email->contact_id);
+    }
+
+    CRM_Utils_Hook::post($hook, 'Email', $email->id, $email);
+    return $email;
   }
 
   /**

@@ -293,7 +293,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     $transaction = new CRM_Core_Transaction();
     $contact = self::add($params);
     if (!$contact) {
-      // CRM_Core_Error::fatal( ts( 'THe contact was not created, not set up to handle error' ) );
+      // return CRM_Core_Error::statusBounce( ts( 'THe contact was not created, not set up to handle error' ) );
     }
 
     $params['contact_id'] = $contact->id;
@@ -392,11 +392,6 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
         CRM_Core_BAO_Note::add($noteParams, CRM_Core_DAO::$_nullArray);
       }
     }
-
-
-    // update the UF user_unique_id if that has changed
-    require_once 'CRM/Core/BAO/UFMatch.php';
-    CRM_Core_BAO_UFMatch::updateUFName($contact->id);
 
     if (CRM_Utils_Array::value('custom', $params) &&
       is_array($params['custom'])
@@ -816,14 +811,7 @@ WHERE id={$id}; ";
     elseif ($config->userFramework == 'Drupal') {
       require_once 'CRM/Utils/System/Drupal.php';
       $rootPath = CRM_Utils_System_Drupal::cmsRootPath();
-      $baseUrl = $config->userFrameworkBaseURL;
-      if (module_exists('locale') && $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
-        global $language;
-        if (isset($language->prefix)) {
-          $baseUrl = str_replace($language->prefix . '/', '', $config->userFrameworkBaseURL);
-        }
-      }
-
+      $baseUrl = CIVICRM_UF_BASEURL;
       $relativePath = str_replace("$rootPath/", $baseUrl, str_replace('\\', '/', $absolutePath));
     }
     elseif ($config->userFramework == 'Standalone') {

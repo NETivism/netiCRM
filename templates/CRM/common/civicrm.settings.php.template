@@ -289,11 +289,18 @@ if ( set_include_path( $include_path ) === false ) {
    exit( );
 }
 
-if ( function_exists( 'variable_get' ) && variable_get('clean_url', '0') != '0' ) {
-    define( 'CIVICRM_CLEANURL', 1 );
-} else {
-    define( 'CIVICRM_CLEANURL', 0 );
+if (!defined('CIVICRM_CLEANURL')) {
+  if (class_exists('Drupal') && method_exists('Drupal', 'config')) {
+    define('CIVICRM_CLEANURL', 1 );
+  }
+  elseif ( function_exists('variable_get') && variable_get('clean_url', '0') != '0') {
+    define('CIVICRM_CLEANURL', 1 );
+  }
+  else {
+    define('CIVICRM_CLEANURL', 0);
+  }
 }
+
 
 // force PHP to auto-detect Mac line endings
 ini_set('auto_detect_line_endings', '1');

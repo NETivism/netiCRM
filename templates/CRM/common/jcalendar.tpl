@@ -61,6 +61,12 @@
     <span class="crm-clear-link">(<a href="javascript:clearDateTime( '{$elementId}' );">{ts}clear{/ts}</a>)</span>
 {/if}
 {if not $form.$elementName.frozen}
+
+{* refs #32591, correct localization js behaviour *}
+{if $config->lcMessages eq 'zh_TW'}
+  {js src=packages/jquery/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-TW.js library=civicrm/civicrm-js-zh-tw group=999 weight=950}{/js}
+{/if}
+
 <script type="text/javascript">
     {literal}
     cj( function() {

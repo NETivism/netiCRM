@@ -7,6 +7,76 @@
 class CRM_Utils_System_Drupal6 {
 
   /**
+   * Load drupal bootstrap.
+   *
+   * @param array $params
+   *   Either uid, or name & pass.
+   *
+   * @return bool
+   * @Todo Handle setting cleanurls configuration for CiviCRM?
+   */
+  function loadBootStrap($params = array()) {
+    $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
+    if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
+      if ($throwError) {
+        throw new Exception('Sorry, could not locate bootstrap.inc');
+      }
+      return FALSE;
+    }
+    chdir($cmsPath);
+    require_once "$cmsPath/includes/bootstrap.inc";
+    @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+    // explicitly setting error reporting, since we cannot handle drupal related notices
+    // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code
+    // causes grief with debugging scripts
+		global $user;
+    if (empty($user)) {
+      if ($throwError) {
+        throw new Exception('Sorry, could not load drupal bootstrap.');
+      }
+      return FALSE;
+    }
+
+    // we have user to load
+		if (!empty($params)) {
+      $config = CRM_Core_Config::singleton();
+      $version = $config->userSystem->version;
+      $uid = CRM_Utils_Array::value('uid', $params);
+
+      if (!$uid) {
+        //load user, we need to check drupal permissions.
+        $name = CRM_Utils_Array::value('name', $params, FALSE) ? $params['name'] : trim(CRM_Utils_Array::value('name', $_REQUEST));
+        $pass = CRM_Utils_Array::value('pass', $params, FALSE) ? $params['pass'] : trim(CRM_Utils_Array::value('pass', $_REQUEST));
+
+        if ($name) {
+          $user = user_authenticate(array('name' => $name, 'pass' => $pass));
+          if (empty($user->uid)) {
+            if ($throwError) {
+              throw new Exception('Sorry, unrecognized username or password.');
+            }
+            return FALSE;
+          }
+          else {
+            $uid = $user->uid;
+          }
+        }
+      }
+      if ($uid) {
+        $account = user_load(array('uid' => $uid));
+        if ($account && $account->uid) {
+          global $user;
+          $user = $account;
+          return TRUE;
+        }
+      }
+
+      if ($throwError) {
+        throw new Exception('Sorry, can not load CMS user account.');
+      }
+    }
+  }
+
+  /**
    * Check if username and email exists in the drupal db
    *
    * @params $params    array   array of name and mail values
@@ -133,7 +203,10 @@ class CRM_Utils_System_Drupal6 {
     }
   }
 
-  public static function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+  function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+    if (empty($url)) {
+      return $url;
+    }
     if (function_exists('locale')) {
       global $language;
 
@@ -183,4 +256,7 @@ class CRM_Utils_System_Drupal6 {
     return $url;
   }
 
+  function setTitle($pageTitle) {
+    drupal_set_title($pageTitle);
+  }
 }

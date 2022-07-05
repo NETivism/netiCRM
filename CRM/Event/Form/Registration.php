@@ -249,7 +249,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       if (!CRM_Core_Permission::event(CRM_Core_Permission::EDIT,
           $this->_eventId
         )) {
-        CRM_Core_Error::statusBounce(ts('You do not have permission to register for this event'), $infoUrl);
+         return CRM_Core_Error::statusBounce(ts('You do not have permission to register for this event'), $infoUrl);
       }
 
       // get all the values from the dao object
@@ -333,29 +333,29 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $is_test = $this->_action & CRM_Core_Action::PREVIEW;
       if (!$this->_values['event']['is_active'] && !$is_test) {
         // form is inactive, die a fatal death
-        CRM_Core_Error::statusBounce(ts('The event you requested is currently unavailable (contact the site administrator for assistance).'));
+         return CRM_Core_Error::statusBounce(ts('The event you requested is currently unavailable (contact the site administrator for assistance).'));
       }
 
       // is online registration is enabled?
       if (!$this->_values['event']['is_online_registration'] && !$is_test) {
-        CRM_Core_Error::statusBounce(ts('Online registration is not currently available for this event (contact the site administrator for assistance).'), $infoUrl);
+         return CRM_Core_Error::statusBounce(ts('Online registration is not currently available for this event (contact the site administrator for assistance).'), $infoUrl);
       }
 
       // is this an event template ?
       if (CRM_Utils_Array::value('is_template', $this->_values['event'])) {
-        CRM_Core_Error::statusBounce(ts('Event templates are not meant to be registered.'), $infoUrl);
+         return CRM_Core_Error::statusBounce(ts('Event templates are not meant to be registered.'), $infoUrl);
       }
 
       $now = date('YmdHis');
       $startDate = CRM_Utils_Date::processDate(CRM_Utils_Array::value('registration_start_date', $this->_values['event']));
 
       if ($startDate &&  $startDate >= $now && !$is_test) {
-        CRM_Core_Error::statusBounce(ts('Registration for this event begins on %1', array(1 => CRM_Utils_Date::customFormat(CRM_Utils_Array::value('registration_start_date', $this->_values['event'])))), $infoUrl);
+         return CRM_Core_Error::statusBounce(ts('Registration for this event begins on %1', array(1 => CRM_Utils_Date::customFormat(CRM_Utils_Array::value('registration_start_date', $this->_values['event'])))), $infoUrl);
       }
 
       $endDate = CRM_Utils_Date::processDate(CRM_Utils_Array::value('registration_end_date', $this->_values['event']));
       if ($endDate && $endDate < $now && !$is_test) {
-        CRM_Core_Error::statusBounce(ts('Registration for this event ended on %1', array(1 => CRM_Utils_Date::customFormat(CRM_Utils_Array::value('registration_end_date', $this->_values['event'])))), $infoUrl);
+         return CRM_Core_Error::statusBounce(ts('Registration for this event ended on %1', array(1 => CRM_Utils_Date::customFormat(CRM_Utils_Array::value('registration_end_date', $this->_values['event'])))), $infoUrl);
       }
 
 
@@ -375,7 +375,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
           $this->_values['event']
         );
         if (!$ppID) {
-          CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later.'), $infoUrl);
+           return CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later.'), $infoUrl);
         }
         $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
 
@@ -405,7 +405,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
               // check selected payment processor is active
               if (!$eachPaymentProcessor) {
-                CRM_Core_Error::fatal(ts('The site administrator must set a Payment Processor for this event in order to use online registration.'));
+                 return CRM_Core_Error::statusBounce(ts('The site administrator must set a Payment Processor for this event in order to use online registration.'));
               }
 
               // ensure that processor has a valid config
@@ -471,7 +471,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
-        CRM_Core_Error::fatal(ts('Please set a location type of %1', array(1 => 'Billing')));
+         return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
       }
       $this->set('bltID', $this->_bltID);
 
@@ -802,7 +802,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $isPaidEvent = CRM_Utils_Array::value('is_monetary', $form->_values['event']);
     }
     if ($isPaidEvent && empty($form->_values['fee'])) {
-      CRM_Core_Error::fatal(ts('No Fee Level(s) or Price Set is configured for this event.<br />Click <a href=\'%1\'>CiviEvent >> Manage Event >> Configure >> Event Fees</a> to configure the Fee Level(s) or Price Set for this event.', array(1 => CRM_Utils_System::url('civicrm/event/manage/fee', 'reset=1&action=update&id=' . $form->_eventId))));
+       return CRM_Core_Error::statusBounce(ts('No Fee Level(s) or Price Set is configured for this event.<br />Click <a href=\'%1\'>CiviEvent >> Manage Event >> Configure >> Event Fees</a> to configure the Fee Level(s) or Price Set for this event.', array(1 => CRM_Utils_System::url('civicrm/event/manage/fee', 'reset=1&action=update&id=' . $form->_eventId))));
     }
   }
 
@@ -832,7 +832,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       // 3. waiting list participant.
       // 4. require approval participant.
       if (!CRM_Core_BAO_CMSUser::create($this->_params, $mail)) {
-        CRM_Core_Error::statusBounce(ts('Your profile is not saved and Account is not created.'));
+         return CRM_Core_Error::statusBounce(ts('Your profile is not saved and Account is not created.'));
       }
     }
     //get the amount of primary participant

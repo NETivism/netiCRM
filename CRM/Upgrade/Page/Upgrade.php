@@ -256,7 +256,7 @@ SELECT  count( id ) as statusCount
 
     $template->assign('message', $message);
     $content = $template->fetch('CRM/common/success.tpl');
-    echo CRM_Utils_System::theme('page', $content, TRUE, $this->_print, FALSE, TRUE);
+    return CRM_Utils_System::theme($content);
   }
 
   function upgrade_2_2_alpha1($rev) {

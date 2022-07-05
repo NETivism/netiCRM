@@ -230,7 +230,7 @@ cj(document).ready(function(){
    else{
      cj('#receipt-option').hide();
    }
-   cj('#have_receipt').live('click', function(){
+   cj('#have_receipt').on('click', function(){
      if(cj(this).attr('checked') == 'checked'){
        cj('#send_receipt').attr("checked", "checked");{/literal}
 {if ($emailExists and $outBound_option != 2) OR $context eq 'standalone' }

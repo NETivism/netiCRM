@@ -84,10 +84,10 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       $fieldDAO->find(TRUE);
 
       if ($fieldDAO->is_active == 0) {
-        CRM_Core_Error::statusBounce(ts('This field is inactive so it will not be displayed on profile form.'));
+         return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not be displayed on profile form.'));
       }
       elseif ($fieldDAO->is_view == 1) {
-        CRM_Core_Error::statusBounce(ts('This field is view only so it will not be displayed on profile form.'));
+         return CRM_Core_Error::statusBounce(ts('This field is view only so it will not be displayed on profile form.'));
       }
       $name = $fieldDAO->field_name;
       // preview for field

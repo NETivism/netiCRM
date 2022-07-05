@@ -172,7 +172,8 @@ class CRM_Core_Menu {
   }
 
   static function fillMenuValues(&$menu, $path) {
-    $fieldsToPropagate = array('access_callback',
+    $fieldsToPropagate = array(
+      'access_callback',
       'access_arguments',
       'page_callback',
       'page_arguments',
@@ -184,10 +185,7 @@ class CRM_Core_Menu {
     }
 
     $args = explode('/', $path);
-    while (!self::isArrayTrue($fieldsPresent) &&
-      !empty($args)
-    ) {
-
+    while (!self::isArrayTrue($fieldsPresent) && !empty($args)) {
       array_pop($args);
       $parentPath = implode('/', $args);
 
@@ -200,7 +198,10 @@ class CRM_Core_Menu {
         }
       }
     }
-
+    if ($menu[$path]['access_callback'] == '1') {
+      unset($fieldsPresent['access_arguments']);
+    }
+    unset($fieldsPresent['page_arguments']);
     if (self::isArrayTrue($fieldsPresent)) {
       return;
     }
@@ -464,9 +465,7 @@ class CRM_Core_Menu {
       }
 
       // add to crumb, if current-path exists in params.
-      if (array_key_exists($currentPath, $menu) &&
-        isset($menu[$currentPath]['title'])
-      ) {
+      if (array_key_exists($currentPath, $menu) && isset($menu[$currentPath]['title']) && $currentPath != 'civicrm') {
         $urlVar = CRM_Utils_Array::value('path_arguments', $menu[$currentPath]) ? '&' . $menu[$currentPath]['path_arguments'] : '';
         $crumbs[] = array(
           'title' => $menu[$currentPath]['title'],

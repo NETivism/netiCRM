@@ -141,7 +141,7 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
 
     //check for civicase access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-      CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
 
     //validate case configuration.

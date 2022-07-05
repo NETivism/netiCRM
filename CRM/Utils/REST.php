@@ -109,10 +109,10 @@ class CRM_Utils_REST {
     $session->set('api_key', $api_key);
     $session->set('key', $result[2]);
     $session->set('rest_time', time());
-    $session->set('PHPSESSID', session_id());
+    $session->set('PHPSESSID', CRM_Utils_System::getSessionID());
     $session->set('cms_user_id', $result[1]);
 
-    return self::simple(array('api_key' => $api_key, 'PHPSESSID' => session_id(), 'key' => sha1($result[2])));
+    return self::simple(array('api_key' => $api_key, 'PHPSESSID' => CRM_Utils_System::getSessionID(), 'key' => sha1($result[2])));
   }
 
   // Generates values needed for error messages
@@ -456,10 +456,8 @@ class CRM_Utils_REST {
 
     CRM_Utils_System::setTitle("API Parameters");
     $template = CRM_Core_Smarty::singleton();
-    return CRM_Utils_System::theme('page',
-      $template->fetch('CRM/Core/APIDoc.tpl'),
-      TRUE
-    );
+    $content = $template->fetch('CRM/Core/APIDoc.tpl');
+    return CRM_Utils_System::theme($content);
   }
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
@@ -507,7 +505,7 @@ class CRM_Utils_REST {
       }
       CRM_Utils_System::appendTPLFile($tpl, $content);
 
-      return CRM_Utils_System::theme('page', $content, TRUE);
+      return CRM_Utils_System::theme($content);
     }
     else {
       $content = "<!-- .tpl file embeded: $tpl -->\n";

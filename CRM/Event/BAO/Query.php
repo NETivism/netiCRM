@@ -271,8 +271,14 @@ class CRM_Event_BAO_Query {
         require_once 'CRM/Utils/Array.php';
 
         $eventTypes = CRM_Core_OptionGroup::values("event_type");
-        $query->_where[$grouping][] = "civicrm_participant.event_id = civicrm_event.id and civicrm_event.event_type_id = '{$value}'";
-        $query->_qill[$grouping][] = ts('Event Type - %1', array(1 => $eventTypes[$value]));
+        $query->_where[$grouping][] = "civicrm_participant.event_id = civicrm_event.id and civicrm_event.event_type_id $op {$value}";
+        if ($op == 'IN') {
+          $string = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(label) FROM civicrm_option_value WHERE value $op {$value} AND option_group_id = (SELECT id FROM civicrm_option_group WHERE name = 'event_type')");
+        }
+        else {
+          $string = $eventTypes[$value];
+        }
+        $query->_qill[$grouping][] = ts('Event Type - %1', array(1 => $string));
         $query->_tables['civicrm_event'] = $query->_whereTables['civicrm_event'] = 1;
         return;
 
@@ -506,7 +512,12 @@ class CRM_Event_BAO_Query {
     $from = NULL;
     switch ($name) {
       case 'civicrm_participant':
-        $from = " LEFT JOIN civicrm_participant ON civicrm_participant.contact_id = contact_a.id ";
+        if ($mode & CRM_Contact_BAO_Query::MODE_EVENT) {
+          $from = " INNER JOIN civicrm_participant ON civicrm_participant.contact_id = contact_a.id ";
+        }
+        else {
+          $from = " $side JOIN civicrm_participant ON civicrm_participant.contact_id = contact_a.id ";
+        }
         break;
 
       case 'civicrm_event':
@@ -622,7 +633,8 @@ class CRM_Event_BAO_Query {
     $form->assign('dataURLEventFee', $dataURLEventFee);
 
     $form->add('text', 'event_id', ts('Event Name'), array('id' => 'event_id'));
-    $form->add('text', 'event_type', ts('Event Type'));
+    $eventType = CRM_Event_PseudoConstant::eventType();
+    $form->addSelect('event_type', ts('Event Type'), $eventType, array('multiple' => 'multiple', 'style' => 'width: 100%;'));
     $levels = array();
     $where = array();
     $where[] = "ce.entity_table = 'civicrm_event'";
@@ -645,7 +657,6 @@ class CRM_Event_BAO_Query {
 
     //elements for assigning value operation
     $form->add('hidden', 'event_type_id', '', array('id' => 'event_type_id'));
-
     $form->addDate('event_start_date_low', ts('Event Dates - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('event_end_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
 

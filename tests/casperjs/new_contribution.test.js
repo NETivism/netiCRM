@@ -1,7 +1,6 @@
 /* basic setting */
 var system = require('system'); 
 var port = system.env.RUNPORT; 
-var baseURL = port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 
 function makeid(length) {
     var result           = '';
@@ -13,38 +12,29 @@ function makeid(length) {
     return result;
 }
 
+var vars = {
+    baseURL: port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/'
+};
+
 casper.test.begin('Resurrectio test', function(test) {
-    casper.start(baseURL, function() {
+    casper.start(vars.baseURL, function() {
         casper.echo('=====================================');
         casper.echo('** Step 0: Login. **');
         casper.echo('=====================================');
         // this.capture('login.png');
     });
-    casper.waitForSelector("form#user-login-form input[name='name']", function success() {
-        test.assertExists("form#user-login-form input[name='name']");
-        this.click("form#user-login-form input[name='name']");
+
+    casper.waitForSelector("#user-login-form", function success() {
+        this.fill('#user-login-form', {
+          'name':'admin',
+          'pass':'123456'
+        }, true);
     }, function fail() {
-        test.assertExists("form#user-login-form input[name='name']");
+        test.assertExists("#user-login-form", 'Login form exist.');
     });
-    casper.waitForSelector("input[name='name']", function success() {
-        this.sendKeys("input[name='name']", "admin");
-    }, function fail() {
-        test.assertExists("input[name='name']");
-    });
-    casper.waitForSelector("input[name='pass']", function success() {
-        this.sendKeys("input[name='pass']", "123456");
-    }, function fail() {
-        test.assertExists("input[name='pass']");
-    });
-    casper.waitForSelector("form#user-login-form input[type=submit][value='Log in']", function success() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-        this.click("form#user-login-form input[type=submit][value='Log in']");
-    }, function fail() {
-        test.assertExists("form#user-login-form input[type=submit][value='Log in']");
-    }); /* submit form */
 
     /* open new contribution page */
-    casper.thenOpen(baseURL + "civicrm/contribute/add?reset=1&action=add&context=standalone", function() {
+    casper.thenOpen(vars.baseURL + "civicrm/contribute/add?reset=1&action=add&context=standalone", function() {
         casper.echo('=====================================');
         casper.echo('** Step 1: New Contribution. **');
         casper.echo('=====================================');
@@ -117,11 +107,13 @@ casper.test.begin('Resurrectio test', function(test) {
     });
 
     /* select Paid By */
-    casper.waitForSelector('#payment_instrument_id_chzn_o_1', function success() {
-        test.assertExists('#payment_instrument_id_chzn_o_1');
-        this.click('#payment_instrument_id_chzn_o_1');
+    casper.waitForSelector('#payment_instrument_id', function success() {
+        test.assertExists('#payment_instrument_id');
+        this.evaluate(function () {
+            document.querySelector("#payment_instrument_id").selectedIndex = 1;
+        });
     }, function fail() {
-        test.assertExists('#payment_instrument_id_chzn_o_1');
+        test.assertExists('#payment_instrument_id');
     });
 
     /* sendKeys to Transaction ID */
@@ -316,16 +308,6 @@ casper.test.begin('Resurrectio test', function(test) {
         this.click('.crm-clear-link a');
     }, function fail() {
         test.assertExists('.crm-clear-link a');
-    });
-
-    /* clear receipt id */
-    casper.waitForSelector("#receipt_id", function success() {
-        test.assertExists("#receipt_id");
-        this.evaluate(function () {
-            document.querySelector("#receipt_id").value = '';
-        });
-    }, function fail() {
-        test.assertExists("#receipt_id");
     });
 
     casper.then(function() {

@@ -61,7 +61,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     $messages = array_unique($messages);
     if ($this->_hasProblem) {
       $message = implode('<br>', $messages);
-      CRM_Core_Error::statusBounce($message);
+       return CRM_Core_Error::statusBounce($message);
     }
     else if(!empty($messages)) {
       foreach ($messages as $message) {

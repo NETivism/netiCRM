@@ -179,7 +179,7 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
 
     require_once 'CRM/Core/BAO/Note.php';
     if ($this->_id && CRM_Core_BAO_Note::getNotePrivacyHidden($this->_id)) {
-      CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));
+       return CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));
     }
 
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);

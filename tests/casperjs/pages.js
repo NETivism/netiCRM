@@ -68,7 +68,7 @@ var vars = {
     {title:'Archived Mailings', url:'civicrm/mailing/browse/archived?reset=1'},
     {title:'Headers, Footers, and Automated Messages', url:'civicrm/admin/component?reset=1'},
     {title:'Message Templates', url:'civicrm/admin/messageTemplates?reset=1'},
-    {title:'From Email Address Options', url:'civicrm/admin/options/from_email?group=from_email_address&reset=1'},
+    {title:'FROM Email Addresses', url:'civicrm/admin/from_email_address?&reset=1&action=browse'},
     {title:'Email Greeting Options', url:'civicrm/admin/options/email_greeting?group=email_greeting&reset=1'},
     {title:'CiviMember', url:'civicrm/member?reset=1'},
     {title:'New Member', url:'civicrm/member/add?reset=1&action=add&context=standalone'},

@@ -235,7 +235,7 @@ WHERE p.extends LIKE '%2%'
     if ($dao->fetch() &&
       !$dao->price_set_id
     ) {
-      CRM_Core_Error::fatal(ts('There are no events with Price Sets'));
+      return CRM_Core_Error::statusBounce(ts('There are no events with Price Sets'));
     }
 
     // get all the fields and all the option values associated with it

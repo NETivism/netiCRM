@@ -37,7 +37,7 @@
        {/if}
        <li><a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><i class="zmdi zmdi-edit"></i>{ts}Edit{/ts}</a></li>
     {/if}
-     {if $receipt_id}
+    {if $isdeductible}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=pdf&context=$context"}
        {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
          {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=pdf&context=$context&key=$searchKey"}
@@ -55,8 +55,51 @@
            </div>
          </div>
        </div>
+        {if !$receipt_id}
+        <div id="dialog-confirm-download" title="{ts}Procceed Receipt Generation?{/ts}" style="display:none;">
+          <p><span class="zmdi zmdi-alert-circle" style="margin: 0 7px 0 0;"></span>{ts}In order to prevent non-continues receipt id. After generate, you can't insert any receipt number between these contribution.{/ts}</p>
+          <p>{ts}Are you sure you want to continue?{/ts}</p>
+        </div>
+        {literal}
+        <script>
+          cj(document).ready(function($){
+            var confirmDownload = false;
+
+            // Define dialog behavior.
+            $("#dialog-confirm-download").dialog({
+              autoOpen: false,
+              resizable: false,
+              width:450,
+              height:250,
+              modal: true,
+              buttons: {
+                "{/literal}{ts}OK{/ts}{literal}": function() {
+                  confirmDownload = true;
+                  $(this).dialog("close" );
+                  thisReceiptBtn.click();
+                  return true;
+                },
+                "{/literal}{ts}Cancel{/ts}{literal}": function() {
+                  $( this ).dialog( "close" );
+                  return false;
+                }
+              }
+            });
+
+            // Callback as press .print-receipt link.
+            $('.print-receipt').click(function(event){
+              if (!confirmDownload) {
+                thisReceiptBtn = this;
+                $("#dialog-confirm-download").dialog('open');
+                return false;
+              }
+            });
+          });
+        </script>
+        {/literal}
+        {/if}
+      {/if}
        </li>
-     {/if}
      <li>{include file="CRM/common/formButtons.tpl" location="top"}</li>
    </ul>
 </div>

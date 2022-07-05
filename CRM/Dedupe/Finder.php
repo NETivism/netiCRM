@@ -311,7 +311,19 @@ class CRM_Dedupe_Finder {
     foreach ($flat as $key => $value) {
       $matches = array();
       if (preg_match('/([^-]*)-(\d+|Primary)(-\d+)*$/', $key, $matches)) {
-        $flat[$matches[1]] = $value;
+        if ($matches[2] == 'Primary') {
+          $matches[2] = '0';
+        }
+        $flatKey = $matches[1];
+
+        // collapsed all related value to array
+        if (isset($flat[$flatKey]) && !is_array($flat[$flatKey])) {
+          unset($flat[$flatKey]);
+        }
+        $hasResult = array_search($value, $flat[$flatKey]);
+        if(!$hasResult) {
+          $flat[$flatKey][] = $value;
+        }
         unset($flat[$key]);
       }
     }
@@ -335,11 +347,14 @@ class CRM_Dedupe_Finder {
         }
         foreach ($fields as $field => $title) {
           if (CRM_Utils_Array::value($field, $flat)) {
-            $params[$table][$field] = $flat[$field];
-          }
-          // refs #25998, need support primary field from email
-          elseif (CRM_Utils_Array::value($field.'-Primary', $flat)) {
-            $params[$table][$field] = $flat[$field.'-Primary'];
+            if (is_array($flat[$field])) {
+              foreach($flat[$field] as $val) {
+                $params[$table][$field][] = $val;
+              }
+            }
+            else {
+              $params[$table][$field] = $flat[$field];
+            }
           }
         }
       }

@@ -36,22 +36,10 @@
                 <td>{$form.debug.html}<br />
                 <span class="description">{ts}Set this value to <strong>Yes</strong> if you want to use one of CiviCRM's debugging tools. <strong>This feature should NOT be enabled for production sites</strong>{/ts} {help id='debug'}</span></td>
             </tr>
-            {if $form.userFrameworkLogging}
             <tr class="crm-debugging-form-block-userFrameworkLogging">
                 <td class="label">{$form.userFrameworkLogging.label}</td>
                 <td>{$form.userFrameworkLogging.html}<br />
                 <span class="description">{ts}Set this value to <strong>Yes</strong> if you want CiviCRM error/debugging messages to also appear in Drupal error logs{/ts} {help id='userFrameworkLogging'}</span></td>
-            </tr>
-            {/if}
-            <tr class="crm-debugging-form-block-backtrace">
-                <td class="label">{$form.backtrace.label}</td>
-                <td>{$form.backtrace.html}<br />
-                <span class="description">{ts}Set this value to <strong>Yes</strong> if you want to display a backtrace listing when a fatal error is encountered. <strong>This feature should NOT be enabled for production sites</strong>{/ts}</span></td>
-            </tr>
-            <tr class="crm-debugging-form-block-fatalErrorTemplate">
-                <td>{$form.fatalErrorTemplate.label}</td>
-                <td>{$form.fatalErrorTemplate.html}<br />
-                <span class="description">{ts}Enter the path and filename for a custom Smarty template if you want to define your own screen for displaying fatal errors.{/ts}</span></td>
             </tr>
             <tr class="crm-debugging-form-block-fatalErrorHandler">
                 <td>{$form.fatalErrorHandler.label}</td>

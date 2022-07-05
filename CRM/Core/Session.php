@@ -47,6 +47,7 @@ class CRM_Core_Session {
    * @var string
    */
   protected $_key = 'CiviCRM';
+  CONST KEY = 'CiviCRM';
   CONST USER_CONTEXT = 'userContext';
   CONST EXPIRED_TIME = 3600; // second
   CONST EXPIRED_TIME_LONG = 10800; // second
@@ -115,23 +116,16 @@ class CRM_Core_Session {
     // hopefully any bootstrapping code will actually load the session from the CMS
     if (!isset($this->_session)) {
       // CRM-9483
-      if (!isset($_SESSION) && PHP_SAPI !== 'cli') {
+      if (php_sapi_name() !== 'cli') {
+        CRM_Core_Config::singleton()->userSystem->sessionStart();
+        $this->_session =& $_SESSION;
         if ($isRead) {
           return;
         }
-        if (function_exists('drupal_session_start')) {
-          // https://issues.civicrm.org/jira/browse/CRM-14356
-          if (! (isset($GLOBALS['lazy_session']) && $GLOBALS['lazy_session'] == true)) {
-            drupal_session_start();
-          }
-          $_SESSION = array();
-        }
-        else {
-          ini_set('session.save_handler', 'files');
-          session_start();
-        }
       }
-      $this->_session =& $_SESSION;
+      else {
+        $this->_session =& $_SESSION;
+      }
     }
 
     if ($isRead) {
@@ -512,7 +506,12 @@ class CRM_Core_Session {
    * @return void
    */
   static function setStatus($status, $append = TRUE, $type = 'status') {
-    if (empty($status)) { return; }
+    if ($status === FALSE && !$append) {
+      unset(self::$_singleton->_session[self::$_singleton->_key]['status'][$type]);
+    }
+    if (empty($status)) {
+      return; 
+    }
     $session = self::singleton();
     $session->initialize();
 

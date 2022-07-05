@@ -104,7 +104,7 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
         }
         $status = $element->moveUploadedFile($this->_uploadDir, $newName);
         if (!$status) {
-          CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', array(1 => $oldName, 2 => $this->_uploadDir)));
+           return CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', array(1 => $oldName, 2 => $this->_uploadDir)));
         }
         if (is_array($newName)) {
           foreach($newName as $idx => $name) {

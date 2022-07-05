@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  PHP 5 version Base class for CiviCRM unit tests
  *
@@ -80,19 +81,17 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
    *  @param  string $dataName
    */
   function __construct($name = NULL, array $data = array(), $dataName = '') {
+    // we need warning and error reporting
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_PARSE & ~E_NOTICE);
     parent::__construct($name, $data, $dataName);
 
-    // we need warning and error reporting
-    if (!empty($GLOBALS['mysql_db'])) {
-      self::$_dbName = $GLOBALS['mysql_db'];
-    }
-    else {
-      self::$_dbName = 'civicrm_tests_dev';
-    }
+    // the UserFramework should already boot when landing here
+    // we can't rely testing without UF
+    $dbConfig = self::getDBConfig();
+    self::$_dbName = $dbConfig['database'];
 
     // Setup test database
-    self::$utils = new Utils($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass']);
+    self::$utils = new Utils($dbConfig['hostspec'], $dbConfig['username'], $dbConfig['password']);
     $queries = array(
       "USE ".self::$_dbName.';',
     );
@@ -112,8 +111,8 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
   }
 
   static function getDBName() {
-    $dbName = !empty($GLOBALS['mysql_db']) ? $GLOBALS['mysql_db'] : 'civicrm_tests_dev';
-    return $dbName;
+    $dbConfig = self::getDBConfig();
+    return $dbConfig['database'];
   }
 
   /**
@@ -240,9 +239,6 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
     require_once 'CRM/Core/Config.php';
     $config = CRM_Core_Config::singleton();
 
-    // when running unit tests, use mockup user framework
-    $config->setUserFramework('UnitTests');
-
     // also fix the fatal error handler to throw exceptions,
     // rather than exit
     $config->fatalErrorHandler = 'CiviUnitTestCase_fatalErrorHandler';
@@ -298,12 +294,9 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
    *  FIXME: Maybe a better way to do it
    */
   function foreignKeyChecksOff() {
-
-    self::$utils = new Utils($GLOBALS['mysql_host'],
-      $GLOBALS['mysql_user'],
-      $GLOBALS['mysql_pass']
-    );
-    $dbName = self::getDBName();
+    $dbConfig = self::getDBConfig();
+    self::$utils = new Utils($dbConfig['hostspec'], $dbConfig['username'], $dbConfig['password']);
+    $dbName = $dbConfig['database'];
     $query = "USE {$dbName};" . "SET foreign_key_checks = 1";
     if (self::$utils->do_query($query) === FALSE) {
       // fail happens
@@ -500,12 +493,12 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
   function individualCreate($params = NULL) {
     if ($params === NULL) {
       $params = array(
-        'first_name' => 'Anthony',
-        'middle_name' => 'J.',
-        'last_name' => 'Anderson',
+        'first_name' => 'Test '.CRM_UTils_String::createRandom(5),
+        'middle_name' => '',
+        'last_name' => 'Unit',
         'prefix_id' => 3,
         'suffix_id' => 3,
-        'email' => 'anthony_anderson@civicrm.org',
+        'email' => 'api.test+'.CRM_UTils_String::createRandom(3).'@civicrm.test.org',
         'contact_type' => 'Individual',
       );
     }
@@ -787,24 +780,6 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * Function to create Contribution Type
-   *
-   * @return int $id of contribution type created
-   */
-  function contributionTypeCreate($apiversion = 3) {
-    // $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $path = dirname(__FILE__) . '/../api/v' . $apiversion . '/dataset/contribution_types.xml';
-    $dataset = $this->createXMLDataSet($path);
-
-    // $op->execute($this->_dbconn, $dataset);
-
-    require_once 'CRM/Contribute/PseudoConstant.php';
-    CRM_Contribute_PseudoConstant::flush('contributionType');
-    // FIXME: CHEATING LIKE HELL HERE, TO BE FIXED
-    return 11;
-  }
-
-  /**
    * Function to delete contribution Types
    *      * @param int $contributionTypeId
    */
@@ -940,7 +915,7 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
     $params = array(
       'domain_id' => 1,
       'contact_id' => $cID,
-      'receive_date' => date('Ymd'),
+      'receive_date' => date('YmdHis'),
       'total_amount' => 100.00,
       'contribution_type_id' => $cTypeID,
       'payment_instrument_id' => 1,
@@ -949,7 +924,7 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
       'net_amount' => 90.00,
       'trxn_id' => $trxnID,
       'invoice_id' => $invoiceID,
-      'source' => 'SSF',
+      'source' => 'Contribution Unit Test',
       'version' => API_LATEST_VERSION,
       'contribution_status_id' => 1,
       // 'note'                   => 'Donating for Nobel Cause', *Fixme
@@ -1897,8 +1872,11 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
    * @param string $errorText text to print on error
    *
    */
-  function getAndCheck($params, $id, $entity, $delete = 1, $errorText = '') {
+  function getAndCheck($params, $id, $entity, $delete = 0, $errorText = '') {
 
+    if (isset($params['sequential'])) {
+      unset($params['sequential']);
+    }
     $result = civicrm_api($entity, 'GetSingle', array(
       'id' => $id,
         'version' => $this->_apiversion,
@@ -1934,7 +1912,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
         $value = date('Y-m-d', strtotime($value));
         $result[$key] = date('Y-m-d', strtotime($result[$key]));
       }
-      $this->assertEquals($value, $result[$keys[$key]], $key . " GetandCheck function determines that value: $value doesn't match " . print_r($result, TRUE) . $errorText);
+      $this->assertEquals($value, $result[$keys[$key]], $key . " getAndCheck function determines that value: $value doesn't match " . print_r($result, TRUE) . $errorText);
     }
   }
   /*
@@ -2061,6 +2039,35 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
         CRM_Utils_File::cleanDir($tempDir, TRUE, FALSE);
       }
     }
+  }
+
+  function docMakerRequest($request, $filepath, $functionName) {
+    global $civicrm_root;
+    unset($request['version']);
+    if (isset($request['sequential'])) {
+      unset($request['sequential']);
+    }
+    $filename = basename($filepath, ".php");
+    $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-request.json", "w");
+    fwrite($file, json_encode($request, JSON_PRETTY_PRINT));
+    fclose($file);
+  }
+
+  function docMakerResponse($response, $filepath, $functionName) {
+    global $civicrm_root;
+    $filename = basename($filepath, ".php");
+    $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-response.json", "w");
+    fwrite($file, json_encode($response, JSON_PRETTY_PRINT));
+    fclose($file);
+  }
+
+  public static function getDBConfig() {
+    $options = PEAR::getStaticProperty('DB_DataObject', 'options');
+    $dbConfig = DB::parseDSN($options['database']);
+    if (empty($dbConfig['database'])) {
+      throw new Exception("No database config found.");
+    }
+    return $dbConfig;
   }
 }
 

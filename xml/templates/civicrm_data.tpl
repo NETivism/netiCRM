@@ -316,6 +316,11 @@ VALUES
    (@option_group_id_act, '{ts escape="sql"}Print Contribution Receipts{/ts}',        33, 'Print Contribution Receipts', NULL, 1, 0, 33, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, '{ts escape="sql"}Contribution SMS{/ts}',                   34, 'Contribution SMS', NULL, 1, 0, 34, '', 0, 1, 1, @contributeCompId, NULL),
    (@option_group_id_act, '{ts escape="sql"}Event Registration SMS{/ts}',             35, 'Event Registration SMS', NULL, 1, 0, 35, '', 0, 1, 1, @eventCompId, NULL),
+   (@option_group_id_act, '{ts escape="sql"}Contribution Notification Email{/ts}',    36, 'Contribution Notification Email', NULL, 1, 0, 36, '', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, '{ts escape="sql"}Event Notification Email{/ts}',           37, 'Event Notification Email', NULL, 1, 0, 37, '', 0, 1, 1, @eventCompId, NULL),
+   (@option_group_id_act, '{ts escape="sql"}Membership Notification Email{/ts}',      38, 'Membership Notification Email', NULL, 1, 0, 38, '', 0, 1, 1, @memberCompId, NULL),
+   (@option_group_id_act, '{ts escape="sql"}PCP Notification Email{/ts}',             39, 'PCP Notification Email', NULL, 1, 0, 39, '', 0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '{ts escape="sql"}Mailing Notification Email{/ts}',         40, 'Mailing Notification Email', NULL, 1, 0, 40, '', 0, 1, 1, NULL, NULL),
 
    (@option_group_id_gender, '{ts escape="sql"}Female{/ts}',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, '{ts escape="sql"}Male{/ts}',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
@@ -361,6 +366,23 @@ VALUES
   (@option_group_id_pi, '{ts escape="sql"}Cash{/ts}',  3, 'Cash', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}Check{/ts}',  4, 'Check', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}EFT{/ts}',  5, 'EFT', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Credit Card (Offline){/ts}',  6, 'Credit Card (Offline)', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Credit Card Recurring{/ts}',  7, 'Credit Card Recurring', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Credit Card Recurring (Offline){/ts}',  8, 'Credit Card Recurring (Offline)', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Post Office Transfer{/ts}',  9, 'Post Office Transfer', NULL, 0, NULL, 9, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Post Office Recurring (Offline){/ts}',  10, 'Post Office Recurring (Offline)', NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Convenient Store Barcode{/ts}',  11, 'Convenient Store', NULL, 0, NULL, 11, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Convenient Store (Code){/ts}',  12, 'Convenient Store (Code)', NULL, 0, NULL, 12, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Web ATM Transfer{/ts}',  13, 'Web ATM', NULL, 0, NULL, 13, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}ATM Transfer{/ts}',  14, 'ATM', NULL, 0, NULL, 14, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Yahoo Charity{/ts}',  15, 'Yahoo', NULL, 0, NULL, 15, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}UnionPay{/ts}',  16, 'UnionPay', NULL, 0, NULL, 16, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}ApplePay{/ts}',  17, 'ApplePay', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}GooglePay{/ts}',  18, 'GooglePay', NULL, 0, NULL, 18, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}LinePay{/ts}',  19, 'LinePay', NULL, 0, NULL, 19, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}ACH Bank{/ts}',  20, 'ACH Bank', NULL, 0, NULL, 20, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}ACH Post{/ts}',  21, 'ACH Post', NULL, 0, NULL, 21, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Alipay{/ts}',  22, 'Alipay', NULL, 0, NULL, 22, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_cs, '{ts escape="sql"}Completed{/ts}'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, '{ts escape="sql"}Pending{/ts}'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -734,7 +756,6 @@ VALUES
    (@option_group_id_batch_status, '{ts escape="sql"}Running{/ts}', 3, 'Running', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL),
    (@option_group_id_batch_status, '{ts escape="sql"}Canceled{/ts}', 4, 'Canceled', NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, @domainID, NULL);
 
-
 -- URL preferences
 
 
@@ -791,21 +812,21 @@ VALUES
 INSERT INTO `civicrm_payment_processor_type` 
  (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur )
 VALUES 
- ('PayPal_Standard',    '{ts escape="sql"}PayPal - Website Payments Standard{/ts}', NULL,1,0,'{ts escape="sql"}Merchant Account Email{/ts}',NULL,NULL,NULL,'Payment_PayPalImpl','https://www.paypal.com/',NULL,'https://www.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,4,1),
- ('PayPal',             '{ts escape="sql"}PayPal - Website Payments Pro{/ts}',      NULL,1,0,'{ts escape="sql"}User Name{/ts}','{ts escape="sql"}Password{/ts}','{ts escape="sql"}Signature{/ts}',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/','https://www.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/','https://www.sandbox.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',3, 1 ),
- ('PayPal_Express',     '{ts escape="sql"}PayPal - Express{/ts}',       NULL,1,0,'{ts escape="sql"}User Name{/ts}','{ts escape="sql"}Password{/ts}','{ts escape="sql"}Signature{/ts}',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',2,NULL),
- ('Google_Checkout',    '{ts escape="sql"}Google Checkout{/ts}',        NULL,1,0,'{ts escape="sql"}Merchant ID{/ts}','{ts escape="sql"}Key{/ts}',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
- ('Moneris',            '{ts escape="sql"}Moneris{/ts}',                NULL,1,0,'{ts escape="sql"}User Name{/ts}','{ts escape="sql"}Password{/ts}','{ts escape="sql"}Store ID{/ts}',NULL,'Payment_Moneris','https://www3.moneris.com/',NULL,NULL,NULL,'https://esqa.moneris.com/',NULL,NULL,NULL,1,1),
- ('AuthNet_AIM',        '{ts escape="sql"}Authorize.Net - AIM{/ts}',    NULL,1,0,'{ts escape="sql"}API Login{/ts}','{ts escape="sql"}Payment Key{/ts}','{ts escape="sql"}MD5 Hash{/ts}',NULL,'Payment_AuthorizeNet','https://secure.authorize.net/gateway/transact.dll',NULL,'https://api.authorize.net/xml/v1/request.api',NULL,'https://test.authorize.net/gateway/transact.dll',NULL,'https://apitest.authorize.net/xml/v1/request.api',NULL,1,NULL),
- ('PayJunction',        '{ts escape="sql"}PayJunction{/ts}',            NULL,1,0,'User Name','Password',NULL,NULL,'Payment_PayJunction','https://payjunction.com/quick_link',NULL,NULL,NULL,'https://www.payjunctionlabs.com/quick_link',NULL,NULL,NULL,1,1),
- ('eWAY',               '{ts escape="sql"}eWAY (Single Currency){/ts}', NULL,1,0,'Customer ID',NULL,NULL,NULL,'Payment_eWAY','https://www.eway.com.au/gateway_cvn/xmlpayment.asp',NULL,NULL,NULL,'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp',NULL,NULL,NULL,1,0),
- ('Payment_Express',    '{ts escape="sql"}DPS Payment Express{/ts}',    NULL,1,0,'User ID','Key','Mac Key - pxaccess only',NULL,'Payment_PaymentExpress','https://www.paymentexpress.com/pleaseenteraurl',NULL,NULL,NULL,'https://www.paymentexpress.com/pleaseenteratesturl',NULL,NULL,NULL,4,0),
- ('ClickAndPledge',     '{ts escape="sql"}Click and Pledge{/ts}',       NULL,1,0,'Customer ID',NULL,NULL,NULL,'Payment_ClickAndPledge','http://www.clickandpledge.com/',NULL,NULL,NULL,'http://www.clickandpledge.com/',NULL,NULL,NULL,4,0),
- ('Dummy',              '{ts escape="sql"}Dummy Payment Processor{/ts}',NULL,1,1,'{ts escape="sql"}User Name{/ts}',NULL,NULL,NULL,'Payment_Dummy',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL),
- ('Elavon',             '{ts escape="sql"}Elavon Payment Processor{/ts}','{ts escape="sql"}Elavon / Nova Virtual Merchant{/ts}',1,0,'{ts escape="sql"}SSL Merchant ID {/ts}','{ts escape="sql"}SSL User ID{/ts}','{ts escape="sql"}SSL PIN{/ts}',NULL,'Payment_Elavon','https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,'https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,1,0),
- ('Realex',             '{ts escape="sql"}Realex Payment{/ts}',         NULL,1,0,'Merchant ID', 'Password', NULL, 'Account', 'Payment_Realex', 'https://epage.payandshop.com/epage.cgi', NULL, NULL, NULL, 'https://epage.payandshop.com/epage-remote.cgi', NULL, NULL, NULL, 1, 0 ),
- ('PayflowPro',         '{ts escape="sql"}PayflowPro{/ts}',             NULL,1,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
- ('FirstData',          '{ts escape="sql"}FirstData (aka linkpoint){/ts}', '{ts escape="sql"}FirstData (aka linkpoint){/ts}', 1, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
+ ('PayPal_Standard',    '{ts escape="sql"}PayPal - Website Payments Standard{/ts}', NULL,0,0,'{ts escape="sql"}Merchant Account Email{/ts}',NULL,NULL,NULL,'Payment_PayPalImpl','https://www.paypal.com/',NULL,'https://www.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,4,1),
+ ('PayPal',             '{ts escape="sql"}PayPal - Website Payments Pro{/ts}',      NULL,0,0,'{ts escape="sql"}User Name{/ts}','{ts escape="sql"}Password{/ts}','{ts escape="sql"}Signature{/ts}',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/','https://www.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/','https://www.sandbox.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',3, 1 ),
+ ('PayPal_Express',     '{ts escape="sql"}PayPal - Express{/ts}',       NULL,0,0,'{ts escape="sql"}User Name{/ts}','{ts escape="sql"}Password{/ts}','{ts escape="sql"}Signature{/ts}',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',2,NULL),
+ ('Google_Checkout',    '{ts escape="sql"}Google Checkout{/ts}',        NULL,0,0,'{ts escape="sql"}Merchant ID{/ts}','{ts escape="sql"}Key{/ts}',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
+ ('Moneris',            '{ts escape="sql"}Moneris{/ts}',                NULL,0,0,'{ts escape="sql"}User Name{/ts}','{ts escape="sql"}Password{/ts}','{ts escape="sql"}Store ID{/ts}',NULL,'Payment_Moneris','https://www3.moneris.com/',NULL,NULL,NULL,'https://esqa.moneris.com/',NULL,NULL,NULL,1,1),
+ ('AuthNet_AIM',        '{ts escape="sql"}Authorize.Net - AIM{/ts}',    NULL,0,0,'{ts escape="sql"}API Login{/ts}','{ts escape="sql"}Payment Key{/ts}','{ts escape="sql"}MD5 Hash{/ts}',NULL,'Payment_AuthorizeNet','https://secure.authorize.net/gateway/transact.dll',NULL,'https://api.authorize.net/xml/v1/request.api',NULL,'https://test.authorize.net/gateway/transact.dll',NULL,'https://apitest.authorize.net/xml/v1/request.api',NULL,1,NULL),
+ ('PayJunction',        '{ts escape="sql"}PayJunction{/ts}',            NULL,0,0,'User Name','Password',NULL,NULL,'Payment_PayJunction','https://payjunction.com/quick_link',NULL,NULL,NULL,'https://www.payjunctionlabs.com/quick_link',NULL,NULL,NULL,1,1),
+ ('eWAY',               '{ts escape="sql"}eWAY (Single Currency){/ts}', NULL,0,0,'Customer ID',NULL,NULL,NULL,'Payment_eWAY','https://www.eway.com.au/gateway_cvn/xmlpayment.asp',NULL,NULL,NULL,'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp',NULL,NULL,NULL,1,0),
+ ('Payment_Express',    '{ts escape="sql"}DPS Payment Express{/ts}',    NULL,0,0,'User ID','Key','Mac Key - pxaccess only',NULL,'Payment_PaymentExpress','https://www.paymentexpress.com/pleaseenteraurl',NULL,NULL,NULL,'https://www.paymentexpress.com/pleaseenteratesturl',NULL,NULL,NULL,4,0),
+ ('ClickAndPledge',     '{ts escape="sql"}Click and Pledge{/ts}',       NULL,0,0,'Customer ID',NULL,NULL,NULL,'Payment_ClickAndPledge','http://www.clickandpledge.com/',NULL,NULL,NULL,'http://www.clickandpledge.com/',NULL,NULL,NULL,4,0),
+ ('Dummy',              '{ts escape="sql"}Dummy Payment Processor{/ts}',NULL,0,1,'{ts escape="sql"}User Name{/ts}',NULL,NULL,NULL,'Payment_Dummy',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL),
+ ('Elavon',             '{ts escape="sql"}Elavon Payment Processor{/ts}','{ts escape="sql"}Elavon / Nova Virtual Merchant{/ts}',0,0,'{ts escape="sql"}SSL Merchant ID {/ts}','{ts escape="sql"}SSL User ID{/ts}','{ts escape="sql"}SSL PIN{/ts}',NULL,'Payment_Elavon','https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,'https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do',NULL,NULL,NULL,1,0),
+ ('Realex',             '{ts escape="sql"}Realex Payment{/ts}',         NULL,0,0,'Merchant ID', 'Password', NULL, 'Account', 'Payment_Realex', 'https://epage.payandshop.com/epage.cgi', NULL, NULL, NULL, 'https://epage.payandshop.com/epage-remote.cgi', NULL, NULL, NULL, 1, 0 ),
+ ('PayflowPro',         '{ts escape="sql"}PayflowPro{/ts}',             NULL,0,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
+ ('FirstData',          '{ts escape="sql"}FirstData (aka linkpoint){/ts}', '{ts escape="sql"}FirstData (aka linkpoint){/ts}', 0, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
  ('Mobile', '{ts escape="sql"}Mobile Payment{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', '{ts escape="sql"}Payment Processor Provider{/ts}', '{ts escape="sql"}Account{/ts}', '{ts escape="sql"}Password{/ts}',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
  ('TapPay', '{ts escape="sql"}TapPay Payment{/ts}', NULL, 1, 0, 'Merchant ID', '{ts escape="sql"}Partner Key{/ts}', '{ts}App ID{/ts}', '{ts}App Key{/ts}',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
  ('TaiwanACH', '{ts escape="sql"}Taiwan ACH Payment{/ts}', NULL, 1, 0, '{ts}Bank Account Number{/ts}', '{ts}Sic Code{/ts}', '{ts}Bank Identification Number{/ts}', '{ts}Post Delegate Institution Code{/ts}',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0),
@@ -1061,7 +1082,8 @@ INSERT INTO civicrm_mailing_bounce_pattern
     (@bounceTypeID, 'sender ip must resolve'),
     (@bounceTypeID, 'unable to relay'),
     (@bounceTypeID, '550 relaying.+denied'),
-    (@bounceTypeID, '550 relaying.+not allowed');
+    (@bounceTypeID, '550 relaying.+not allowed'),
+    (@bounceTypeID, '550.+blacklisted');
 
 INSERT INTO civicrm_mailing_bounce_type 
         (name, description, hold_threshold) 
@@ -1187,5 +1209,16 @@ INSERT INTO `civicrm_contact_type`
   ( 3, 'Organization', '{ts escape="sql"}Organization{/ts}', NULL, NULL, 1, 1);
 
 INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (2, 'Mailing', '{ts escape="sql"}Mailing{/ts}', '', NULL, NULL, 1, 'Public Pages', '2');
+
+INSERT INTO `civicrm_mailing`
+  (`domain_id`, `header_id`, `footer_id`, `reply_id`, `unsubscribe_id`, `resubscribe_id`, `optout_id`, `name`, `from_name`, `from_email`, `replyto_email`, `subject`, `body_preview`, `body_text`, `body_html`, `body_json`, `url_tracking`, `forward_replies`, `auto_responder`, `open_tracking`, `is_completed`, `msg_template_id`, `override_verp`, `created_id`, `created_date`, `scheduled_id`, `scheduled_date`, `is_archived`, `visibility`, `dedupe_email`, `sms_provider_id`, `is_hidden`)
+  VALUES
+  (@domainID, NULL, NULL, NULL, NULL, NULL, NULL, 'Transactional Email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 0, 0, 0, 1, NULL, NULL, 0, NULL, '2000-01-01 00:00:00', NULL, NULL, 0, 'User and User Admin Only', 0, NULL, 1);
+
+SELECT @transactional_mailing_id := max(id) from civicrm_mailing where is_hidden = '1';
+
+INSERT INTO `civicrm_mailing_job`
+  (`mailing_id`, `scheduled_date`, `start_date`, `end_date`, `status`, `is_test`, `job_type`, `parent_id`, `job_offset`, `job_limit`) VALUES
+  (@transactional_mailing_id, NULL, NULL, NULL, 'Running', 0, NULL, NULL, 0, 0);
 
 {include file='civicrm_msg_template.tpl'}

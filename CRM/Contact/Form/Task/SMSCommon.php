@@ -63,7 +63,7 @@ class CRM_Contact_Form_Task_SMSCommon {
     $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
 
     if (!$providersCount) {
-      CRM_Core_Error::statusBounce(ts('There are no SMS providers configured, or no SMS providers are set active'));
+       return CRM_Core_Error::statusBounce(ts('There are no SMS providers configured, or no SMS providers are set active'));
     }
 
     if ($className == 'CRM_Activity_Form_Task_SMS') {
@@ -74,7 +74,7 @@ class CRM_Contact_Form_Task_SMSCommon {
         }
       }
       if ($activityCheck == count($form->_activityHolderIds)) {
-        CRM_Core_Error::statusBounce(ts("The Reply SMS Could only be sent for activities with '%1' subject.",
+         return CRM_Core_Error::statusBounce(ts("The Reply SMS Could only be sent for activities with '%1' subject.",
           array(1 => self::RECIEVED_SMS_ACTIVITY_SUBJECT)
         ));
       }
@@ -173,7 +173,7 @@ class CRM_Contact_Form_Task_SMSCommon {
             'plural' => '%count selected activities are invalid.',
           ));
         }
-        CRM_Core_Error::statusBounce(ts("%1: SMS Reply will not be sent.", array(1 => $errorMess)));
+         return CRM_Core_Error::statusBounce(ts("%1: SMS Reply will not be sent.", array(1 => $errorMess)));
       }
     }
 
@@ -274,7 +274,7 @@ class CRM_Contact_Form_Task_SMSCommon {
       // Custom end
 
       if (empty($toArray)) {
-        CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid Phone, or communication preferences specify DO NOT SMS, or they are deceased'));
+         return CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid Phone, or communication preferences specify DO NOT SMS, or they are deceased'));
       }
     }
 

@@ -5,12 +5,6 @@
 function run_civimail_process(){
   global $config;
 
-  //load bootstrap to call hooks
-  require_once 'CRM/Utils/System.php';
-  $params = array();
-  CRM_Utils_System::loadBootStrap($params);
-
-  require_once 'CRM/Core/Lock.php';
   $lock = new CRM_Core_Lock('CiviMailProcessor');
 
   if ($lock->isAcquired()) {

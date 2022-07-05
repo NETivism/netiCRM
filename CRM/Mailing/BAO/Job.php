@@ -90,7 +90,7 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
       $query = "
 SELECT j.*
   FROM $jobTable j
-  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
+  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID} AND m.is_hidden <= 0
 WHERE j.is_test = 0
   AND (
     ( j.start_date IS null AND j.scheduled_date <= $currentTime AND  j.status = 'Scheduled' )
@@ -136,7 +136,7 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
       // Get the mailer
       // make it a persistent connection, CRM-9349
       $mailerType = array_search('Mass Mailing', CRM_Core_BAO_MailSettings::$_mailerTypes);
-      $mailer = $config->getMailer($mailerType);
+      $mailer = CRM_Core_Config::getMailer($mailerType);
       // refs #30585, test mailer first before start
 
       if ($job->status != 'Running') {
@@ -207,7 +207,7 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
     $query = "
 SELECT j.*
   FROM $jobTable j
-  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
+  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID} AND m.is_hidden <= 0
 WHERE j.is_test = 0
   AND j.scheduled_date <= $currentTime
   AND j.status = 'Running'
@@ -424,7 +424,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
   /**
    * Send the mailing
    *
-   * @param object $mailer        A Mail object to send the messages
+   * @param object $mailer  A Mail settings object retrieve from CRM_Core_Config::getMailer
    *
    * @return void
    * @access public
@@ -435,6 +435,9 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     $mailing->id = $this->mailing_id;
     $mailing->find(TRUE);
     $mailing->free();
+    if ($mailing->is_hidden) {
+      return FALSE;
+    }
 
     $eq = new CRM_Mailing_Event_BAO_Queue();
     $eqTable = CRM_Mailing_Event_BAO_Queue::getTableName();
@@ -537,8 +540,23 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     return $isDelivered;
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param array $fields
+   * @param CRM_Mailing_BAO_Mailing $mailing
+   * @param object $mailer get from CRM_Core_Config::getMailer
+   * @param string $job_date mysql date string from job->scheduled_date
+   * @param array $attachments
+   *
+   * @return bool
+   */
   public function deliverGroup(&$fields, &$mailing, &$mailer, &$job_date, &$attachments) {
     static $smtpConnectionErrors = 0;
+    if (!empty($mailing->is_hidden)) {
+      CRM_Core_Error::fatal('Mailing is hidden. We can not deliver hidden mailing by mailing job.');
+      return;
+    }
 
     if (!is_object($mailer) || empty($fields)) {
       CRM_Core_Error::fatal();
@@ -617,11 +635,11 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
       if (is_a($result, 'PEAR_Error')) {
         // CRM-9191
-        $message = $result->getMessage();
-        if (strpos($message, 'to write to socket') !== FALSE) {
+        $msg = $result->getMessage();
+        $code = $result->getCode();
+        if (strpos($msg, 'to write to socket') !== FALSE) {
           // lets log this message and code
-          $code = $result->getCode();
-          CRM_Core_Error::debug_log_message("SMTP Socket Error. Message: $message, Code: $code");
+          CRM_Core_Error::debug_log_message("SMTP Socket Error. Message: $msg, Code: $code");
 
           // these are socket write errors which most likely means smtp connection errors
           // lets skip them
@@ -637,7 +655,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
           }
         }
         else {
-          CRM_Core_Error::debug_log_message("SMTP Error. Message: $message, Code: $code");
+          CRM_Core_Error::debug_log_message("SMTP Error. Message: $msg, Code: $code");
         }
 
         /* Register the bounce event */

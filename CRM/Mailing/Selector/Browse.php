@@ -190,17 +190,6 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
         ),
       );
 
-      /*
-      require_once 'CRM/Campaign/BAO/Campaign.php';
-      if (CRM_Campaign_BAO_Campaign::isCampaignEnable()) {
-        self::$_columnHeaders[] = array('name' => ts('Campaign'),
-          'sort' => 'campaign_id',
-          'direction' => CRM_Utils_Sort::DONTCARE,
-        );
-      }
-*/
-
-
       if ($output != CRM_Core_Selector_Controller::EXPORT) {
         self::$_columnHeaders[] = array('name' => ts('Action'));
       }
@@ -333,12 +322,6 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
       if (CRM_Core_Permission::check('access CiviMail')) {
         $allAccess = TRUE;
       }
-
-      /*
-      if (CRM_Core_Permission::check('approve mailings')) {
-        $showApprovalLinks = TRUE;
-      }
-      */
 
       if (CRM_Core_Permission::check('create mailings')) {
         $showCreateLinks = TRUE;
@@ -549,15 +532,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
     if ($this->_parent->get('scheduled')) {
       $clauses[] = "civicrm_mailing.scheduled_date IS NOT NULL";
       $clauses[] = "( civicrm_mailing.is_archived IS NULL OR civicrm_mailing.is_archived = 0)";
-      $status = $this->_parent->get('mailing_status');
-      if (!empty($status)) {
-        $status = array_keys($status);
-        $status = implode("','", $status);
-        $clauses[] = "civicrm_mailing_job.status IN ('$status')";
-      }
-      else {
-        $clauses[] = "civicrm_mailing_job.status IN ('Scheduled', 'Complete', 'Running', 'Canceled')";
-      }
+      $clauses[] = "civicrm_mailing_job.status IN ('Scheduled', 'Complete', 'Running', 'Canceled')";
     }
 
     if ($sortBy &&
@@ -589,13 +564,8 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
       $params[5] = array($createdId, 'Integer');
     }
 
-    $campainIds = $this->_parent->get('campaign_id');
-    if (!CRM_Utils_System::isNull($campainIds)) {
-      if (!is_array($campainIds)) {
-        $campaignIds = array($campaignIds);
-      }
-      $clauses[] = '( campaign_id IN ( ' . implode(' , ', array_values($campainIds)) . ' ) )';
-    }
+    // #33948, hide transactional email on list
+    $clauses[] = '( is_hidden = 0 )';
 
     if (empty($clauses)) {
       return 1;

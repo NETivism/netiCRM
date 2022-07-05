@@ -185,7 +185,7 @@ cj(document).ready(function(){
    else{
      cj('#receipt-option').hide();
    }
-   cj('#have_receipt').live('click', function(){
+   cj('#have_receipt').on('click', function(){
      if(cj(this).attr('checked') == 'checked'){
        cj('#send_receipt').attr("checked", "checked");{/literal}
 {if $email and $outBound_option != 2}
@@ -215,15 +215,15 @@ cj(document).ready(function(){
        clearDateTime('receipt_date');
      }
    });
-   cj("#record_contribution").live('click', function(){
+   cj("#record_contribution").on('click', function(){
      if(cj(this).attr('checked') == 'checked'){
-       $("#recordContribution").show();
+       cj("#recordContribution").show();
      }
      else{
        cj('#send_receipt, #have_receipt').removeAttr("checked");
        cj('#receipt-option').hide();
        clearDateTime('receipt_date');
-       $("#recordContribution").hide();
+       cj("#recordContribution").hide();
      }
    });
 });

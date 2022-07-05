@@ -284,7 +284,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
 
     // check if we can process credit card membership
     $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
-      "billing_mode IN ( 1, 3 )"
+      "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
     );
     if (count($processors) > 0) {
       $this->assign('newCredit', TRUE);

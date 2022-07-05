@@ -40,7 +40,7 @@ http_response_code(404);
 exit;
 
 /* Cache the real UF, override it with the SOAP environment */
-$config = CRM_Core_Config::singleton();
+CRM_Core_Config::singleton();
 
 if ( empty( $_GET ) ) {
     $rpInvoiceArray = array();

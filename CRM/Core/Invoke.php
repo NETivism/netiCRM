@@ -47,54 +47,8 @@ class CRM_Core_Invoke {
    * @access public
    */
   static function invoke($args) {
-    if ($args[0] !== 'civicrm') {
-      return;
-    }
-
-    if (isset($args[1]) and $args[1] == 'menu' and
-      isset($args[2]) and $args[2] == 'rebuild'
-    ) {
-      // ensure that the user has a good privilege level
-      if (CRM_Core_Permission::check('administer CiviCRM')) {
-        CRM_Core_Menu::store();
-        CRM_Core_Session::setStatus(ts('Menu has been rebuilt'));
-
-        // also reset navigation
-        CRM_Core_BAO_Navigation::resetNavigation();
-
-        return CRM_Utils_System::redirect();
-      }
-      else {
-        CRM_Core_Error::fatal('You do not have permission to execute this url');
-      }
-    }
-
-    $config = CRM_Core_Config::singleton();
-    if ($config->debug) {
-      $sessionReset = CRM_Utils_Request::retrieve('sessionReset', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
-      if ($sessionReset) {
-        $config->sessionReset();
-      }
-    }
-
-    // first fire up IDS and check for bad stuff
-    if ($config->useIDS) {
-      $ids = new CRM_Core_IDS();
-      $ids->check($args);
-    }
-
-    // also initialize the i18n framework
-    $i18n = CRM_Core_I18n::singleton();
-
-    if ($config->userFramework == 'Standalone') {
-      $session = CRM_Core_Session::singleton();
-      if ($session->get('new_install') !== TRUE) {
-        CRM_Core_Standalone::sidebarLeft();
-      }
-      elseif ($args[1] == 'standalone' && $args[2] == 'register') {
-        CRM_Core_Menu::store();
-      }
-    }
+    self::menuRebuild($args);
+    CRM_Utils_System::civiBeforeInvoke($args);
 
     // get the menu items
     $path = implode('/', $args);
@@ -103,23 +57,9 @@ class CRM_Core_Invoke {
     // we should try to compute menus, if item is empty and stay on the same page,
     // rather than compute and redirect to dashboard.
     if (!$item) {
-      CRM_Core_Menu::store(FALSE);
+      self::menuRebuild($args, TRUE);
       $item = &CRM_Core_Menu::get($path);
     }
-
-    if ($config->userFramework == 'Joomla' && $item) {
-      $config->userFrameworkURLVar = 'task';
-
-      // joomla 1.5RC1 seems to push this in the POST variable, which messes
-      // QF and checkboxes
-      unset($_POST['option']);
-      CRM_Core_Joomla::sidebarLeft();
-    }
-
-    // set active Component
-    $template = CRM_Core_Smarty::singleton();
-    $template->assign('activeComponent', 'CiviCRM');
-    $template->assign('formTpl', 'default');
 
     if ($item) {
       if (!array_key_exists('page_callback', $item)) {
@@ -171,8 +111,7 @@ class CRM_Core_Invoke {
 
       $result = NULL;
       if (is_array($item['page_callback'])) {
-        $newArgs = explode('/', $_GET[$config->userFrameworkURLVar]);
-        $result = call_user_func($item['page_callback'], $newArgs);
+        $result = call_user_func($item['page_callback'], $args);
       }
       elseif (strstr($item['page_callback'], '_Form')) {
         $wrapper = new CRM_Utils_Wrapper();
@@ -183,7 +122,6 @@ class CRM_Core_Invoke {
         );
       }
       else {
-        $newArgs = explode('/', $_GET[$config->userFrameworkURLVar]);
         $mode = 'null';
         if (isset($pageArgs['mode'])) {
           $mode = $pageArgs['mode'];
@@ -206,21 +144,20 @@ class CRM_Core_Invoke {
         else {
           CRM_Core_Error::fatal();
         }
-        if ($config->debug) {
+        if (CRM_Core_Config::singleton()->debug) {
           if (method_exists($object, 'editForm')) {
             $template->assign('callbackArgs', $object->editForm());
           }
         }
-        $result = $object->run($newArgs, $pageArgs);
+        $result = $object->run($args, $pageArgs);
       }
 
-      CRM_Core_Session::storeSessionObjects();
+      CRM_Utils_System::civiBeforeShutdown();
       return $result;
     }
-
-    CRM_Core_Menu::store();
-    CRM_Core_Session::setStatus(ts('Menu has been rebuilt'));
-    return CRM_Utils_System::redirect();
+    else {
+      CRM_Utils_System::notFound();
+    }
   }
 
   /**
@@ -329,7 +266,8 @@ class CRM_Core_Invoke {
         );
         $controller->set('edit', 1);
         $controller->process();
-        return $controller->run();
+        $result = $controller->run();
+        return $result;
       }
       else {
         $embed = CRM_Utils_Request::retrieve('embed', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE);
@@ -365,16 +303,17 @@ class CRM_Core_Invoke {
           $template->assign('embedId', 'profile-'.$gid);
           $content = $template->fetch('CRM/common/Embed.tpl');
           echo $content; 
-          return;
+          CRM_Utils_System::civiExit();
         }
         else {
           $wrapper = new CRM_Utils_Wrapper();
-          return $wrapper->run('CRM_Profile_Form_Edit',
+          $result = $wrapper->run('CRM_Profile_Form_Edit',
             ts('Create Profile'),
             array('mode' => CRM_Core_Action::ADD,
               'ignoreKey' => TRUE,
             )
           );
+          return $result;
         }
       }
     }
@@ -382,6 +321,29 @@ class CRM_Core_Invoke {
     require_once 'CRM/Profile/Page/Listings.php';
     $page = new CRM_Profile_Page_Listings();
     return $page->run();
+  }
+
+  static function menuRebuild($args = NULL, $force = FALSE) {
+    // when force rebuild, do not check permission and add status message
+    if ($force) {
+      CRM_Core_Menu::store(FALSE);
+      return;
+    }
+
+    // when calling by url, check various rules to rebuild menu
+    if (isset($args[1]) and $args[1] == 'menu' && isset($args[2]) and $args[2] == 'rebuild') {
+      if (CRM_Core_Permission::check('administer CiviCRM')) {
+        CRM_Core_Menu::store();
+        CRM_Core_Session::setStatus(ts('Menu has been rebuilt'));
+
+        // also reset navigation
+        CRM_Core_BAO_Navigation::resetNavigation();
+        return CRM_Utils_System::redirect();
+      }
+      else {
+        CRM_Core_Error::fatal('You do not have permission to execute this url');
+      }
+    }
   }
 }
 

@@ -38,12 +38,24 @@
     },
     _crmPath = "",
     _language = "en_US",
+    _mailingID = "",
+    _qfKey = "",
+    _storageKey = "",
+    _storageMailings = {
+      maximum: 20,
+      key: [],
+      timestamp: {},
+      timestampOrder: []
+    },
     _debugMode = false,
     _data = {},
     _dataLoadMode = "field",
     _dataLoadSource = "",
     _dataVersion = {},
     _defaultData = {},
+    _intervalSaveData,
+    _intervalSaveDataTime = 60000,
+    _intervalSaveDataTimer,
     _nme = {}, // plugin object
     _nmeOptions = {},
     _nmeAPI = window.location.origin + "/api/",
@@ -360,11 +372,11 @@
 
   var _htmlDecode = function(input) {
     if (typeof input !== "undefined") {
-      _debug(input, "_htmlDecode function: Original input HTML");
+      //_debug(input, "_htmlDecode function: Original input HTML");
 
       // Input is escape HTML, we need to unescape HTML first.
       input = _htmlUnescape(input);
-      _debug(input, "_htmlDecode function: HTML unescape");
+      //_debug(input, "_htmlDecode function: HTML unescape");
 
       // Unescape HTML contains the encoded URL, we need to decode.
       // But before decodeURI, in order to avoid URIError caused by
@@ -372,11 +384,11 @@
       // escape character), we have to convert the content from '%'
       // to '%25' by encodeURI.
       input = encodeURI(input);
-      _debug(input, "_htmlDecode function: Encode URI");
+      //_debug(input, "_htmlDecode function: Encode URI");
 
       // Finally, we can decodeURI.
       input = decodeURI(input);
-      _debug(input, "_htmlDecode function: Decode URI");
+      //_debug(input, "_htmlDecode function: Decode URI");
 
       return input;
     }
@@ -422,7 +434,8 @@
       width  : window.innerWidth,
       height : window.innerHeight,
     };
-    _debug(_viewport, "viewport");
+
+    //_debug(_viewport, "viewport");
   };
 
   var _updateUrlHash = function(hash) {
@@ -567,7 +580,7 @@
 
           if (_isJsonString(dataString)) {
             _data = JSON.parse(dataString);
-            _debug(_data, "nmeData.get.field");
+            //_debug(_data, "nmeData.get.field");
           }
         }
       }
@@ -577,6 +590,50 @@
       let data = JSON.stringify(_data, undefined, 4);
       $(_dataLoadSource).val(data);
       $.nmEditor.instance.data = _data;
+    },
+    save: function() {
+      if (typeof Storage !== "undefined") {
+        _storageMailings.key = [];
+        _storageMailings.timestamp = {};
+        _storageMailings.timestampOrder = [];
+
+        _storageMailings.key = Object.keys(localStorage).filter(function(k) {
+          if (k.startsWith("mailing_")) {
+            return k;
+          }
+        });
+
+        if (_storageMailings.key.length >= _storageMailings.maximum) {
+          let deleteCount = _storageMailings.key.length - _storageMailings.maximum;
+
+          for (let i in _storageMailings.key) {
+            let storageKey = _storageMailings.key[i],
+                tempData = JSON.parse(localStorage[storageKey]);
+
+            _storageMailings.timestamp[storageKey] = tempData.saveTimestamp;
+          }
+
+          for (let t in _storageMailings.timestamp) {
+            _storageMailings.timestampOrder.push([t, _storageMailings.timestamp[t]]);
+          }
+
+          _storageMailings.timestampOrder.sort(function(a, b) {
+            return a[1] - b[1];
+          });
+
+          let deleteMailings = _storageMailings.timestampOrder.slice(0, deleteCount);
+
+          for (let i in deleteMailings) {
+            let deleteMailing = deleteMailings[i];
+            localStorage.removeItem(deleteMailing[0]);
+          }
+        }
+
+        // Store current timestamp (ms) when updating data
+        _data.saveTimestamp = Date.now();
+        _nmeData.update();
+        localStorage.setItem(_storageKey, JSON.stringify(_data));
+      }
     },
     sort: function(order, section) {
       if (_data["sections"][section]) {
@@ -1536,6 +1593,10 @@
   };
 
   var _nmeMain = function() {
+    _intervalSaveData = function() {
+      _nmeData.save();
+    }
+
     if ($(_main).length) {
       $(_main).remove();
     }
@@ -1659,6 +1720,9 @@
             else {
               saveContentToOldEditor();
             }
+
+            // refs #34990. Save mailing data when leaving the page.
+            _nmeData.save();
           }
         }
       });
@@ -1678,8 +1742,10 @@
 
       _onScreenCenterElem("#nme-mail-body-blocks > .nme-block");
       _tooltip();
-    }
 
+      // refs #34990. Save mailing data every 60 seconds.
+      _intervalSaveDataTimer = setInterval(_intervalSaveData, _intervalSaveDataTime);
+    }
   };
 
   var _nmeMailOutput = {
@@ -3066,8 +3132,10 @@
    */
 
   // IMCE客製公用函式，用來介接圖片上傳功能
+  let imcePath = "/imce?app=nme|sendto@nmeImce.afterInsert"; // drupal 7 imce
+  imcePath += "&sendto=nmeImce.afterInsert"; // drupal 9 imce
   window.nmeImce = {
-    path: decodeURI("/imce?app=nme|sendto@nmeImce.afterInsert"),
+    path: decodeURI(imcePath),
     targetID: "",
     targetSection: "",
     afterInsert: function(file, imceWindow) {
@@ -3076,7 +3144,7 @@
           parentID = window.nmeImce.targetParentID,
           parentType = window.nmeImce.targetParentType,
           index = window.nmeImce.targetIndex,
-          fileURL = file.url,
+          fileURL = typeof file.url === 'undefined' ? file.getUrl() : file.url,
           fileName = file.name,
           fileWidth = file.width,
           fileHeight = file.height;
@@ -3146,6 +3214,20 @@
       _debug("/***** nmEditor Debug Mode *****/");
       _debug("===== nmEditor Init =====");
       if (window.nmEditor && window.nmEditor.translation) {
+        if (window.nmEditor.mailingID) {
+          _mailingID = window.nmEditor.mailingID;
+          _storageKey = "mailing_" + _mailingID;
+          this.mailingID = _mailingID;
+        }
+
+        if (window.nmEditor.qfKey) {
+          _qfKey = window.nmEditor.qfKey;
+          _storageKey += "--" + _qfKey;
+          this.qfKey = _qfKey;
+        }
+
+        this.storageKey = _storageKey;
+
         if (window.nmEditor.crmPath) {
           _crmPath = window.nmEditor.crmPath;
           this.crmPath = _crmPath;
@@ -3254,9 +3336,9 @@
         _dataVersion = _nmeData.version.get();
 
         if (_dataVersion.current != _dataVersion.lastest) {
-          _debug(_dataVersion, "Before data version update");
+          //_debug(_dataVersion, "Before data version update");
           _nmeData.version.update();
-          _debug(_dataVersion, "After data version update");
+          //_debug(_dataVersion, "After data version update");
           $.nmEditor.instance.data = _data;
           _nmeData.update();
 
@@ -3332,23 +3414,29 @@
    };
 
   // Plugin definition
-  $.fn.nmEditor = function(options) {
-    // Extend our default options with those provided
-    _nmeOptions = $.extend({}, $.fn.nmEditor.defaults, options);
+  $.fn.nmEditor = function(selector, options) {
+    if (typeof selector === "string" && $(selector).length) {
+      // Extend our default options with those provided
+      _nmeOptions = $.extend({}, $.fn.nmEditor.defaults, options);
 
-    // Plugin implementation
-    _qs = _parseQueryString(_query);
-    _debugMode = _nmeOptions.debugMode === "1" ? true : false;
+      // Plugin implementation
+      _qs = _parseQueryString(_query);
+      _debugMode = _nmeOptions.debugMode === "1" ? true : false;
 
-    if (_debugMode) {
-      $("html").addClass("is-debug");
+      if (_debugMode) {
+        $("html").addClass("is-debug");
+      }
+
+      _container = selector;
+      _checkNmeInstance();
+
+      return _nme;
     }
-
-    _container = this.selector;
-    //_debug(_container);
-    _checkNmeInstance();
-
-    return _nme;
+    else {
+      if (window.console || window.console.error) {
+        console.error(".selector API has been removed in jQuery 3.0. jQuery Plugin that need to use a selector string within their plugin can require it as a parameter of the method.");
+      }
+    }
   };
 
   // Plugin defaults options

@@ -85,7 +85,6 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['civicrm_contribution_type'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
-      $query->_whereTables['civicrm_contribution_type'] = 1;
     }
 
     if (CRM_Utils_Array::value('contribution_note', $query->_returnProperties)) {
@@ -101,7 +100,6 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['contribution_status'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
-      $query->_whereTables['contribution_status'] = 1;
     }
 
     // get contribution_status label
@@ -111,7 +109,6 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['contribution_status'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
-      $query->_whereTables['contribution_status'] = 1;
     }
 
     // get payment instruments
@@ -121,7 +118,6 @@ class CRM_Contribute_BAO_Query {
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['contribution_payment_instrument'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
-      $query->_whereTables['contribution_payment_instrument'] = 1;
     }
 
     if (CRM_Utils_Array::value('check_number', $query->_returnProperties)) {
@@ -136,25 +132,21 @@ class CRM_Contribute_BAO_Query {
       $query->_select['contribution_referrer_type'] = "civicrm_track.referrer_type as contribution_referrer_type";
       $query->_element['contribution_referrer_type'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_referrer_network', $query->_returnProperties)) {
       $query->_select['contribution_referrer_network'] = "civicrm_track.referrer_network as contribution_referrer_network";
       $query->_element['contribution_referrer_network'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_referrer_url', $query->_returnProperties)) {
       $query->_select['contribution_referrer_url'] = "civicrm_track.referrer_url as contribution_referrer_url";
       $query->_element['contribution_referrer_url'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_landing', $query->_returnProperties)) {
       $query->_select['contribution_landing'] = "civicrm_track.landing as contribution_landing";
       $query->_element['contribution_landing'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     
     /* utm fields */
@@ -162,31 +154,26 @@ class CRM_Contribute_BAO_Query {
       $query->_select['contribution_utm_source'] = "civicrm_track.referrer_type as contribution_utm_source";
       $query->_element['contribution_utm_source'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_utm_medium', $query->_returnProperties)) {
       $query->_select['contribution_utm_medium'] = "civicrm_track.referrer_type as contribution_utm_medium";
       $query->_element['contribution_utm_medium'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_utm_campaign', $query->_returnProperties)) {
       $query->_select['contribution_utm_campaign'] = "civicrm_track.referrer_type as contribution_utm_campaign";
       $query->_element['contribution_utm_campaign'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_utm_term', $query->_returnProperties)) {
       $query->_select['contribution_utm_term'] = "civicrm_track.referrer_type as contribution_utm_term";
       $query->_element['contribution_utm_term'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
     if (CRM_Utils_Array::value('contribution_utm_content', $query->_returnProperties)) {
       $query->_select['contribution_utm_content'] = "civicrm_track.referrer_type as contribution_utm_content";
       $query->_element['contribution_utm_content'] = 1;
       $query->_tables['civicrm_track'] = 1;
-      $query->_whereTables['civicrm_track'] = 1;
     }
   }
 
@@ -560,12 +547,12 @@ class CRM_Contribute_BAO_Query {
         if ($value == 1) {
           $query->_where[$grouping][] = "civicrm_contribution.contribution_recur_id IS NOT NULL";
           $query->_qill[$grouping][] = ts("Displaying Recurring Contributions");
-          $query->_tables['civicrm_contribution_recur'] = $query->_whereTables['civicrm_contribution_recur'] = 1;
         }
         elseif($value == 2){
           $query->_where[$grouping][] = "civicrm_contribution.contribution_recur_id IS NULL";
           $query->_qill[$grouping][] = ts("Displaying Non-Recurring Contributions");
         }
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
       case 'contribution_recur_id':
@@ -666,6 +653,18 @@ class CRM_Contribute_BAO_Query {
         $query->_tables['civicrm_track'] = $query->_whereTables['civicrm_track'] = 1;
         return;
 
+      case 'product_name':
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_product.name', $op, $value, "String");
+        $query->_qill[$grouping][] = ts('Product Name') . ' - ' . $value;
+        $query->_tables['civicrm_product'] = $query->_whereTables['civicrm_product'] = 1;
+        return;
+
+      case 'product_option':
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_contribution_product.product_option', $op, $value, "String");
+        $query->_qill[$grouping][] = ts('Product Option') . ' - ' . $value;
+        $query->_tables['civicrm_contribution_product'] = $query->_whereTables['civicrm_contribution_product'] = 1;
+        return;
+
       default:
         //all other elements are handle in this case
         $fldName = substr($name, 13);
@@ -706,7 +705,12 @@ class CRM_Contribute_BAO_Query {
     $from = NULL;
     switch ($name) {
       case 'civicrm_contribution':
-        $from = " $side JOIN civicrm_contribution ON civicrm_contribution.contact_id = contact_a.id ";
+        if ($mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) {
+          $from = " INNER JOIN civicrm_contribution ON civicrm_contribution.contact_id = contact_a.id ";
+        }
+        else {
+          $from = " $side JOIN civicrm_contribution ON civicrm_contribution.contact_id = contact_a.id ";
+        }
         break;
 
       case 'civicrm_contribution_recur':
@@ -714,12 +718,7 @@ class CRM_Contribute_BAO_Query {
         break;
 
       case 'civicrm_contribution_type':
-        if ($mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) {
-          $from = " INNER JOIN civicrm_contribution_type ON civicrm_contribution.contribution_type_id = civicrm_contribution_type.id ";
-        }
-        else {
-          $from = " $side JOIN civicrm_contribution_type ON civicrm_contribution.contribution_type_id = civicrm_contribution_type.id ";
-        }
+        $from = " $side JOIN civicrm_contribution_type ON civicrm_contribution.contribution_type_id = civicrm_contribution_type.id ";
         break;
 
       case 'civicrm_contribution_page':
@@ -1011,6 +1010,52 @@ class CRM_Contribute_BAO_Query {
     $form->addElement('text', 'contribution_utm_campaign', 'UTM Campaign');
     $form->addElement('text', 'contribution_utm_term', 'UTM Term');
     $form->addElement('text', 'contribution_utm_content', 'UTM Content');
+
+    // premium filters
+    require_once 'CRM/Contribute/DAO/Product.php';
+    $product_dao = new CRM_Contribute_DAO_Product();
+    $product_dao->is_active = 1;
+    $product_dao->find();
+    $product_name_select = $product_option_select = array();
+    $product_name_select[""] = ts('- select -');
+    $product_option_select[""] = ts('- select -');
+    $product_option_data = array();
+
+    while ($product_dao->fetch()) {
+      $product_name_select[$product_dao->name] = $product_dao->sku ? $product_dao->name . " ( " . $product_dao->sku . " )" : $product_dao->name;
+      $options = explode(',', $product_dao->options);
+      $product_option_data[$product_dao->name] = array();
+
+      foreach ($options as $v) {
+        $trim_v = trim($v);
+        $product_option_data[$product_dao->name][] = $trim_v;
+      }
+    }
+
+    $form->addSelect(
+      'product_name',
+      ts('Product Name'),
+      $product_name_select
+    );
+
+    // Use data-parent and data-parent-filter setting to associate the product_name with the product_option
+    $form->addSelect(
+      'product_option',
+      ts('Product Option'),
+      $product_option_select,
+      array('data-parent' => 'product_name', 'data-parent-custom' => 0)
+    );
+    $product_option_select_elem = $form->getElement('product_option');
+
+    foreach ($product_option_data as $product_name => $product_options) {
+      $product_option_select_attr = array('data-parent-filter' => $product_name);
+
+      foreach ($product_options as $product_option) {
+        if (trim($product_option) !== '') {
+          $product_option_select_elem->addOption($product_option, $product_option, $product_option_select_attr);
+        }
+      }
+    }
 
     $form->assign('validCiviContribute', TRUE);
   }

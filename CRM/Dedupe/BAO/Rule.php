@@ -71,7 +71,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
     // extend them; $where is an array of required conditions, $on and
     // $using are arrays of required field matchings (for substring and
     // full matches, respectively)
-    $where = array();
+    $where = $whereOr = array();
     $on = array("SUBSTR(t1.{$this->rule_field}, 1, {$this->rule_length}) = SUBSTR(t2.{$this->rule_field}, 1, {$this->rule_length})");
     $using = array($this->rule_field);
 
@@ -128,14 +128,28 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
       $from = "{$this->rule_table} t1";
       $str = 'NULL';
       if (isset($this->params[$this->rule_table][$this->rule_field])) {
-        $str = CRM_Utils_Type::escape($this->params[$this->rule_table][$this->rule_field], 'String');
-      }
-      if ($this->rule_length) {
-        $where[] = "SUBSTR(t1.{$this->rule_field}, 1, {$this->rule_length}) = SUBSTR('$str', 1, {$this->rule_length})";
-        $where[] = "t1.{$this->rule_field} IS NOT NULL";
-      }
-      else {
-        $where[] = "t1.{$this->rule_field} = '$str'";
+        if (is_array($this->params[$this->rule_table][$this->rule_field])) {
+          foreach($this->params[$this->rule_table][$this->rule_field] as $str) {
+            $str = CRM_Utils_Type::escape($str, 'String');
+            if ($this->rule_length) {
+              $where[] = "SUBSTR(t1.{$this->rule_field}, 1, {$this->rule_length}) = SUBSTR('$str', 1, {$this->rule_length})";
+              $whereOr[] = "t1.{$this->rule_field} IS NOT NULL";
+            }
+            else {
+              $whereOr[] = "t1.{$this->rule_field} = '$str'";
+            }
+          }
+        }
+        else {
+          $str = CRM_Utils_Type::escape($this->params[$this->rule_table][$this->rule_field], 'String');
+          if ($this->rule_length) {
+            $where[] = "SUBSTR(t1.{$this->rule_field}, 1, {$this->rule_length}) = SUBSTR('$str', 1, {$this->rule_length})";
+            $where[] = "t1.{$this->rule_field} IS NOT NULL";
+          }
+          else {
+            $where[] = "t1.{$this->rule_field} = '$str'";
+          }
+        }
       }
     }
     else {
@@ -165,7 +179,16 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
       }
     }
 
-    return "SELECT $select FROM $from WHERE " . implode(' AND ', $where);
+    $sql = "SELECT $select FROM $from WHERE " . implode(' AND ', $where);
+    if (!empty($whereOr)) {
+      if (!empty($where)) {
+        $sql .= " AND ( ".implode(' OR ', $whereOr)." )";
+      }
+      else {
+        $sql .= " ( ".implode(' OR ', $whereOr)." )";
+      }
+    }
+    return $sql;
   }
 
   /**

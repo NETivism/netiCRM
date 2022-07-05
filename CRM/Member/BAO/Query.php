@@ -291,7 +291,12 @@ class CRM_Member_BAO_Query {
     $from = NULL;
     switch ($name) {
       case 'civicrm_membership':
-        $from = " $side JOIN civicrm_membership ON civicrm_membership.contact_id = contact_a.id ";
+        if ($mode & CRM_Contact_BAO_Query::MODE_MEMBER) {
+          $from = " INNER JOIN civicrm_membership ON civicrm_membership.contact_id = contact_a.id ";
+        }
+        else {
+          $from = " $side JOIN civicrm_membership ON civicrm_membership.contact_id = contact_a.id ";
+        }
         break;
 
       case 'civicrm_membership_type':

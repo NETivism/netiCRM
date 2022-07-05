@@ -147,11 +147,22 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::DISABLE;
       }
 
+      $isHaveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND contribution_status_id = 5", array( 1 => array( $dao->id, 'Positive')));
+      if ($isHaveActiveRecur) {
+        $action -= CRM_Core_Action::DISABLE;
+        $action -= CRM_Core_Action::DELETE;
+        $isShowMessage = TRUE;
+      }
+
       $paymentProcessor[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
         array('id' => $dao->id)
       );
     }
     $this->assign('rows', $paymentProcessor);
+
+    if ($isShowMessage) {
+      CRM_Core_Session::setStatus(ts("Some recurring contributions are in progress, so some payment processors can't be disabled or deleted."), TRUE, 'warning');
+    }
 
     $dao = new CRM_Core_DAO_PaymentProcessorType();
     $dao->is_test = 0;
@@ -161,7 +172,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
       $this->assign('availablePaymentProcessor', $dao->name);
     }
 
-    $hostIP = gethostbyname($_SERVER['HTTP_HOST']);
+    $hostIP = CRM_Utils_System::getHostIPAddress();
     if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $hostIP)) {
       $hostIP = $_SERVER['SERVER_ADDR'];
     }

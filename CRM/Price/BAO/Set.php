@@ -771,7 +771,7 @@ WHERE  id = %1";
     if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
       $domain_id = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $sid, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domain_id) {
-        CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
+         return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
     }
     return TRUE;

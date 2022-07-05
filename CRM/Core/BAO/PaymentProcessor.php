@@ -231,8 +231,23 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
       'payment_type', 'is_default',
     );
     $result = array();
+
+    // allow class to pass default settings of payment processor
+    if ($dao->class_name && strpos($dao->class_name, 'Payment_') === 0) {
+      $class = 'CRM_Core_'.$dao->class_name;
+      if (method_exists($class, 'buildPaymentDefault')) {
+        call_user_func_array(array($class, 'buildPaymentDefault'), array(&$result, $dao));
+      }
+    }
     foreach ($fields as $name) {
-      $result[$name] = $dao->$name;
+      if (!empty($dao->$name)) {
+        $result[$name] = $dao->$name;
+      }
+      else {
+        if (empty($result[$name])) {
+          $result[$name] = '';
+        }
+      }
     }
     return $result;
   }

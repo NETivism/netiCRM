@@ -29,7 +29,7 @@ class CRM_Contribute_Page_Widget extends CRM_Core_Page {
       $widgetCode = $template->fetch('CRM/common/Embed.tpl');
       echo $widgetCode;
       // do not output drupal theme
-      return;
+      CRM_Utils_System::civiExit();
     }
     parent::run();
   }

@@ -127,60 +127,22 @@ class CRM_Utils_System {
   }
 
   /**
-   * if we are using a theming system, invoke theme, else just print the
-   * content
+   * Wrapping function to themeing
+   * 
+   * For drupal 9 and new exception handling, we use exception to handle what kind of theme we should output
+   * Do not use this control themeing anymore. Use drupal invoke function to display output
+   * All content will use stdout and capture by drupal
    *
-   * @param string  $type    name of theme object/file
    * @param string  $content the content that will be themed
-   * @param array   $args    the args for the themeing function if any
-   * @param boolean $print   are we displaying to the screen or bypassing theming?
-   * @param boolean $ret     should we echo or return output
-   * @param boolean $maintenance  for maintenance mode
    *
    * @return void           prints content on stdout
    * @access public
    */
-  function theme($type, &$content, $args = NULL, $print = FALSE, $ret = FALSE, $maintenance = FALSE) {
+  function theme(&$content) {
     if(empty($content)){
       return self::notFound();
     }
-    $config = CRM_Core_Config::singleton();
-    $version = $config->userSystem->version;
-    if($version >= 6 && $version < 7){
-      if(function_exists('theme') && !$print){
-        if ($maintenance) {
-          drupal_set_breadcrumb('');
-          drupal_maintenance_theme();
-        }
-        $content = theme($type, $content, $args);
-      }
-    }
-    elseif($version >= 7 && $version < 8){
-      if(function_exists('drupal_deliver_page') && !$print){
-        if ($maintenance) {
-          drupal_set_breadcrumb('');
-          drupal_maintenance_theme();
-        }
-        if($ret){
-          $content = drupal_render_page($content);
-        }
-        else{
-          CRM_Core_Session::storeSessionObjects();
-          drupal_deliver_page($content);
-          return;
-        }
-      }
-    }
-    elseif($version >= 8){
-      drupal_set_message('We havnt support d8 yet');
-      return;
-    }
-    if($ret){
-      return $content; 
-    }
-    else{
-      print $content;
-    }
+    echo $content;
   }
 
   /**
@@ -198,15 +160,14 @@ class CRM_Utils_System {
    *
    */
   static function url($path = NULL, $query = NULL, $absolute = FALSE,
-    $fragment = NULL, $htmlize = TRUE, $frontend = FALSE
+    $fragment = NULL, $htmlize = FALSE, $frontend = FALSE
   ) {
     // we have a valid query and it has not yet been transformed
     if ( $htmlize && ! empty( $query ) && strpos( $query, '&amp;' ) === false ) {
       $query = htmlentities( $query );
     }
 
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->url($path, $query, $absolute, $fragment, $htmlize, $frontend);
+    return CRM_Core_Config::$_userSystem->url($path, $query, $absolute, $fragment, $htmlize, $frontend);
   }
 
   function href($text, $path = NULL, $query = NULL, $absolute = TRUE,
@@ -217,13 +178,11 @@ class CRM_Utils_System {
   }
 
   function permissionDenied() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->permissionDenied();
+    return CRM_Core_Config::$_userSystem->permissionDenied();
   }
 
   static function logout() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->logout();
+    return CRM_Core_Config::$_userSystem->logout();
   }
 
   // this is a very drupal specific function for now
@@ -236,16 +195,12 @@ class CRM_Utils_System {
   }
 
   /**
-   * What menu path are we currently on. Called for the primary tpl
+   * Current Path without language prefix and leading slash
    *
-   * @return string the current menu path
-   * @access public
+   * @return string
    */
   static function currentPath() {
-    $config = CRM_Core_Config::singleton();
-    $path = trim(CRM_Utils_Array::value($config->userFrameworkURLVar, $_GET), '/'); 
-    $path = filter_var($path, FILTER_SANITIZE_SPECIAL_CHARS);
-    return $path;
+    return CRM_Core_Config::$_userSystem->currentPath();
   }
 
   /**
@@ -266,7 +221,7 @@ class CRM_Utils_System {
       CRM_Utils_Array::value('q', $params),
       CRM_Utils_Array::value('a', $params, FALSE),
       CRM_Utils_Array::value('f', $params),
-      CRM_Utils_Array::value('h', $params, TRUE),
+      CRM_Utils_Array::value('h', $params, FALSE),
       CRM_Utils_Array::value('fe', $params, FALSE)
     );
   }
@@ -281,8 +236,7 @@ class CRM_Utils_System {
    * @access public
    */
   function setTitle($title, $pageTitle = NULL) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->setTitle($title, $pageTitle);
+    return CRM_Core_Config::$_userSystem->setTitle($title, $pageTitle);
   }
 
   /**
@@ -337,15 +291,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function redirect($url = NULL) {
-    if (!$url) {
-      $url = self::url('');
-    }
-
-    // replace the &amp; characters with &
-    // this is kinda hackish but not sure how to do it right
-    $url = str_replace('&amp;', '&', $url);
-    header('Location: ' . $url);
-    self::civiExit();
+    return CRM_Core_Config::$_userSystem->redirect($url);
   }
 
   /**
@@ -358,8 +304,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function appendBreadCrumb($breadCrumbs) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->appendBreadCrumb($breadCrumbs);
+    return CRM_Core_Config::$_userSystem->appendBreadCrumb($breadCrumbs);
   }
 
   /**
@@ -369,8 +314,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function resetBreadCrumb() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->resetBreadCrumb();
+    return CRM_Core_Config::$_userSystem->resetBreadCrumb();
   }
 
   /**
@@ -382,8 +326,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function addHTMLHead($bc) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->addHTMLHead($bc);
+    return CRM_Core_Config::$_userSystem->addHTMLHead($bc);
   }
 
 
@@ -397,8 +340,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function addJs($params, $text) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->addJs($params, $text);
+    return CRM_Core_Config::$_userSystem->addJs($params, $text);
   }
 
   /**
@@ -410,22 +352,68 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function postURL($action) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->postURL($action);
+    return CRM_Core_Config::$_userSystem->postURL($action);
   }
 
   /**
-   * Get variable from CMS system
+   * Get sitename from CMS system
    *
-   * @param variable name
-   * @param Default value when variable is null.
-   * 
-   * @return void
+   * @return string
    * @access public
-   * @static  */
-  static function variable_get($name, $default) {
+   * @static  
+   */
+  static function siteName() {
+    return CRM_Core_Config::$_userSystem->siteName($name, $default);
+  }
+
+  /**
+   * Get user registration setting from CMS system
+   *
+   * @return boolean
+   * @access public
+   * @static  
+   */
+  static function allowedUserRegisteration() {
+    return CRM_Core_Config::$_userSystem->allowedUserRegisteration();
+  }
+
+  /**
+   * Get user registration setting from CMS system
+   *
+   * @return boolean
+   * @access public
+   * @static  
+   */
+  static function userEmailVerification() {
+    return CRM_Core_Config::$_userSystem->userEmailVerification();
+  }
+
+  /**
+   * Check module exists on system
+   * @return string
+   * @access public
+   * @static  
+   */
+  static function moduleExists($module) {
     $config = CRM_Core_Config::singleton();
-    return $config->userSystem->variable_get($name, $default);
+    if ($config->userFramework == 'Drupal') {
+      return CRM_Core_Config::$_userSystem->moduleExists($module);
+    }
+    return FALSE;
+  }
+
+  /**
+   * Check hook exists in module list
+   * @return string
+   * @access public
+   * @static  
+   */
+  static function moduleImplements($hook) {
+    $config = CRM_Core_Config::singleton();
+    if ($config->userFramework == 'Drupal') {
+      return CRM_Core_Config::$_userSystem->moduleImplements($hook);
+    }
+    return array();
   }
 
   /**
@@ -443,7 +431,7 @@ class CRM_Utils_System {
     if (!empty($config->extensionsURL)) {
       $config->extensionsURL = str_replace('http://', 'https://', $config->extensionsURL);
     }
-    $config->userSystem->mapConfigToSSL();
+    CRM_Core_Config::$_userSystem->mapConfigToSSL();
   }
 
   /**
@@ -554,8 +542,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function authenticate($name, $password) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->authenticate($name, $password);
+    return CRM_Core_Config::$_userSystem->authenticate($name, $password);
   }
 
   /**
@@ -566,8 +553,7 @@ class CRM_Utils_System {
    * @access public
    * @static  */
   static function setUFMessage($message) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->setMessage($message);
+    return CRM_Core_Config::$_userSystem->setMessage($message);
   }
 
 
@@ -775,16 +761,21 @@ class CRM_Utils_System {
     return $result;
   }
 
-  static function checkPHPVersion($ver = 5, $abort = TRUE) {
-    $phpVersion = substr(PHP_VERSION, 0, 1);
+  static function checkPHPVersion($ver = 5, $abort = FALSE) {
+    if (is_int($ver)) {
+      $phpVersion = PHP_MAJOR_VERSION;
+      $phpVersion = (int) $phpVersion;
+    }
+    if (is_float($ver)) {
+      $phpVersion = PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;
+      $phpVersion = (float) $phpVersion;
+    }
     if ($phpVersion >= $ver) {
       return TRUE;
     }
 
     if ($abort) {
-      CRM_Core_Error::fatal(ts('This feature requires PHP Version %1 or greater',
-          array(1 => $ver)
-        ));
+      CRM_Core_Error::fatal(ts('This feature requires PHP Version %1 or greater', array(1 => $ver)));
     }
     return FALSE;
   }
@@ -980,8 +971,7 @@ class CRM_Utils_System {
    * @access public
    */
   static function getDocBaseURL() {
-    // FIXME: move this to configuration at some stage
-    return 'https://neticrm.tw/CRMDOC/';
+    return CRM_Core_Config::singleton()->docURLBase;
   }
 
   /**
@@ -1003,7 +993,12 @@ class CRM_Utils_System {
     // return just the URL, no matter what other parameters are defined
     if (!function_exists('ts')) {
       $docBaseURL = self::getDocBaseURL();
-      return $docBaseURL . str_replace(' ', '+', $page);
+      if (!empty($docBaseURL)) {
+        return $docBaseURL . str_replace(' ', '+', $page);
+      }
+      else {
+        return '';
+      }
     }
     else {
       $params = array(
@@ -1027,36 +1022,37 @@ class CRM_Utils_System {
    * @access public
    */
   static function docURL($params) {
-
     if (!isset($params['page'])) {
       return;
     }
 
     $docBaseURL = self::getDocBaseURL();
+    if (!empty($docBaseURL)) {
+      if (!isset($params['title']) or $params['title'] === NULL) {
+        $params['title'] = ts('Opens documentation in a new window.');
+      }
 
-    if (!isset($params['title']) or $params['title'] === NULL) {
-      $params['title'] = ts('Opens documentation in a new window.');
-    }
+      if (!isset($params['text']) or $params['text'] === NULL) {
+        $params['text'] = ts('(learn more...)');
+      }
 
-    if (!isset($params['text']) or $params['text'] === NULL) {
-      $params['text'] = ts('(learn more...)');
-    }
+      if (!isset($params['style']) || $params['style'] === NULL) {
+        $style = '';
+      }
+      else {
+        $style = "style=\"{$params['style']}\"";
+      }
 
-    if (!isset($params['style']) || $params['style'] === NULL) {
-      $style = '';
-    }
-    else {
-      $style = "style=\"{$params['style']}\"";
-    }
+      $link = $docBaseURL . str_replace(' ', '+', $params['page']);
 
-    $link = $docBaseURL . str_replace(' ', '+', $params['page']);
-
-    if (isset($params['URLonly']) && $params['URLonly'] == TRUE) {
-      return $link;
+      if (isset($params['URLonly']) && $params['URLonly'] == TRUE) {
+        return $link;
+      }
+      else {
+        return "<a class=\"crm-docurl\" href=\"{$link}\" $style target=\"_blank\" title=\"{$params['title']}\">".ts($params['text'])."</a>";
+      }
     }
-    else {
-      return "<a href=\"{$link}\" $style target=\"_blank\" title=\"{$params['title']}\">{$params['text']}</a>";
-    }
+    return '';
   }
 
   /**
@@ -1065,8 +1061,7 @@ class CRM_Utils_System {
    * @return string  the used locale or null for none
    */
   static function getUFLocale() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->getUFLocale();
+    return CRM_Core_Config::$_userSystem->getUFLocale();
   }
 
   /**
@@ -1149,19 +1144,158 @@ class CRM_Utils_System {
     return TRUE;
   }
 
+  /**
+   * Exit the program
+   *
+   * No user output since here, no additional header here.
+   * We should also commit session before here to prevent session miss.
+   * The civiBeforeShutdown will doing session commit well.
+   * Only functions in register_shutdown_function will be call after this.
+   * You should add callbacks into CRM_Core_Config::shutdownCallbacks
+   * When using fpm, we may have fastcgi_finish_request and location of header here.
+   * 
+   * @param integer $status
+   * @return void
+   */
   static function civiExit($status = 0) {
+    $version = CRM_Core_Config::$_userSystem->version;
     $config = CRM_Core_Config::singleton();
-    CRM_Core_Session::storeSessionObjects();
+    self::civiBeforeShutdown();
     if ($config->userFramework == 'Drupal') {
-      // drupal needs handling exit for it self
-      if(function_exists('drupal_exit')){
-        drupal_exit();
-      }
-      else{
-        exit($status);
+      // drupal 6,7, change old exit method. Use exception to handling route
+      // drupal 8,9, the correct way to exit
+      // let symfony router handling this
+      // will trigger event(KernelEvents::TERMINATE at controller
+      throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
+    }
+
+    // we should never hit here when using drupal
+    exit($status);
+  }
+
+  static function civiBeforeInvoke(&$args = NULL) {
+    $config = CRM_Core_Config::singleton();
+
+    // qfPrivateKey for drupal 9
+    if (!self::isUserLoggedIn()) {
+      $qfPrivateKey = CRM_Core_Config::$_userSystem->tempstoreGet('qfPrivateKey');
+      if (!empty($qfPrivateKey)) {
+        $session = CRM_Core_Session::singleton();
+        $session->set('qfPrivateKey', $qfPrivateKey);
       }
     }
-    exit($status);
+
+    // IDS and check for bad stuff
+    if ($config->useIDS) {
+      $ids = new CRM_Core_IDS();
+      $ids->check($args);
+    }
+
+    // also initialize the i18n framework
+    CRM_Core_I18n::singleton();
+
+    // reset session when needed
+    if ($config->debug) {
+      $sessionReset = CRM_Utils_Request::retrieve('sessionReset', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
+      if ($sessionReset) {
+        $config->sessionReset();
+      }
+    }
+
+    // initialize smarty
+    // set active Component
+    $template = CRM_Core_Smarty::singleton();
+    $template->assign('activeComponent', 'CiviCRM');
+    $template->assign('formTpl', 'default');
+  }
+
+  static function civiBeforeShutdown() {
+    // now we register shutdown functions here
+    if (!empty(CRM_Core_Config::$_shutdownCallbacks)) {
+      $registerFastcgiFinishRequest = FALSE;
+      if (!empty(CRM_Core_Config::$_shutdownCallbacks['before'])) {
+        foreach(CRM_Core_Config::$_shutdownCallbacks['before'] as $call) {
+          $callback = key($call);
+          $args = reset($call);
+          if (is_callable($callback)) {
+            if (!empty($ele['args']) && is_array($ele['args'])) {
+              $args = $ele['args'];
+            }
+            else {
+              $args = array();
+            }
+            call_user_func_array($callback, $args);
+          }
+          else {
+            // do not silent fail here
+            // make sure all callbacks can be call
+            CRM_Core_Error::fatal('shutdown callback '.$callback. ' is not callable');
+          }
+        }
+      }
+      if (!empty(CRM_Core_Config::$_shutdownCallbacks['after'])) {
+        register_shutdown_function('CRM_Utils_System::civiAfterShutdown');
+        foreach(CRM_Core_Config::$_shutdownCallbacks['after'] as $call) {
+          $callback = key($call);
+          $args = reset($call);
+          if (is_callable($callback)) {
+            if (!empty($args) && is_array($args)) {
+              switch(count($args)) {
+                case 0:
+                  register_shutdown_function($callback);
+                  break;
+                case 1:
+                  register_shutdown_function($callback, $args[0]);
+                  break;
+                case 2:
+                  register_shutdown_function($callback, $args[0], $args[1]);
+                  break;
+                case 3:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2]);
+                  break;
+                case 4:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2], $args[3]);
+                  break;
+                case 5:
+                default:
+                  register_shutdown_function($callback, $args[0], $args[1], $args[2], $args[3], $args[4]);
+                  break;
+              }
+            }
+            else {
+              register_shutdown_function($callback);
+            }
+          }
+          else {
+            // do not silent fail here
+            // make sure all callbacks can be call
+            CRM_Core_Error::fatal('shutdown callback '.$callback. ' is not callable');
+          }
+        }
+      }
+    }
+
+    // save session before shutdown
+    CRM_Core_Session::storeSessionObjects();
+    if (!self::isUserLoggedIn() && isset($_SESSION[CRM_Core_Session::KEY]['qfPrivateKey'])) {
+      CRM_Core_Config::$_userSystem->tempstoreSet('qfPrivateKey', $_SESSION[CRM_Core_Session::KEY]['qfPrivateKey']);
+    }
+  }
+
+  static function civiAfterShutdown() {
+    if (function_exists('fastcgi_finish_request')) {
+      fastcgi_finish_request();
+    }
+  }
+
+  /**
+   * session_id() is not reliable after drupal 9.2
+   * use this instead
+   *
+   * @return void
+   */
+  static function getSessionID() {
+    return CRM_Core_Config::$_userSystem->sessionID();
   }
 
   /**
@@ -1205,8 +1339,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function isUserLoggedIn() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->isUserLoggedIn();
+    return CRM_Core_Config::$_userSystem->isUserLoggedIn();
   }
 
   /**
@@ -1215,14 +1348,13 @@ class CRM_Utils_System {
    * @return int ufId, currently logged in user uf id.
    */
   public static function getLoggedInUfID() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->getLoggedInUfID();
+    return CRM_Core_Config::$_userSystem->getLoggedInUfID();
   }
 
   static function baseCMSURL() {
     static $_baseURL = NULL;
     if (!$_baseURL) {
-      $config = &CRM_Core_Config::singleton();
+      $config = CRM_Core_Config::singleton();
       $_baseURL = $userFrameworkBaseURL = $config->userFrameworkBaseURL;
 
       if ($config->userFramework == 'Joomla') {
@@ -1288,7 +1420,6 @@ class CRM_Utils_System {
     $baseURL = self::baseCMSURL();
 
     //CRM-7622: drop the language from the URL if requested (and it’s there)
-    $config = CRM_Core_Config::singleton();
     if ($removeLanguagePart) {
       $baseURL = self::languageNegotiationURL($baseURL, FALSE, TRUE);
     }
@@ -1304,8 +1435,7 @@ class CRM_Utils_System {
    * @return string $url, formatted url.
    * @static  */
   static function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
+    return CRM_Core_Config::$_userSystem->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
   }
 
   /**
@@ -1314,8 +1444,7 @@ class CRM_Utils_System {
    * @return string  the used locale or null for none
    */
   static function notFound() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->notFound();
+    return CRM_Core_Config::$_userSystem->notFound();
   }
 
   /**
@@ -1367,8 +1496,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function cmsDir($type) {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->cmsDir($type);
+    return CRM_Core_Config::$_userSystem->cmsDir($type);
   }
 
   /**
@@ -1377,8 +1505,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function cmsRootPath() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->cmsRootPath();
+    return CRM_Core_Config::$_userSystem->cmsRootPath();
   }
 
   /**
@@ -1397,8 +1524,7 @@ class CRM_Utils_System {
    * @return boolean.
    */
   public static function getLogoURL() {
-    $config = CRM_Core_Config::singleton();
-    return $config->userSystem->getLogoURL();
+    return CRM_Core_Config::$_userSystem->getLogoURL();
   }
 
   /**
@@ -1472,7 +1598,7 @@ class CRM_Utils_System {
    * 
    * from https://www.chromium.org/updates/same-site/incompatible-clients
    */
-  function sameSiteCheck() {
+  public static function sameSiteCheck() {
     $useragent = $_SERVER['HTTP_USER_AGENT'];
     $isIOS = preg_match('/(iP.+; CPU .*OS (\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $ios);
     if ($isIOS && $ios[2] == '12') {
@@ -1509,6 +1635,28 @@ class CRM_Utils_System {
       }
     }
     return TRUE;
+  }
+
+  public static function errorReporting($debug = 0) {
+    if ($debug) {
+      // all except notice
+      error_reporting(E_ALL & ~E_NOTICE);
+    }
+    else {
+      // all except deprecated, strict, warning
+      error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING & ~E_NOTICE);
+    }
+  }
+
+  public static function getHostIPAddress($host = NULL) {
+    if (empty($host)) {
+      $host = $_SERVER['HTTP_HOST'];
+    }
+    $ip = gethostbyname($host);
+    if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ip)) {
+      $ip = $_SERVER['SERVER_ADDR'];
+    }
+    return $ip;
   }
 }
 

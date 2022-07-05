@@ -232,7 +232,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       }
       $page = $smarty->fetch('CRM/Core/Payment/ApplePay.tpl');
       CRM_Utils_System::setTitle(ts('Contribute Now'));
-      CRM_Utils_System::theme('page', $page);
+      return CRM_Utils_System::theme($page);
     }
   }
 

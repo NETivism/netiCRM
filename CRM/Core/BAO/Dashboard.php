@@ -245,7 +245,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
       // -make sure relative url should not be htmlize.
       if (substr($dao->url, 0, 4) != 'http') {
         if ($config->userFramework == 'Joomla' ||
-          ($config->userFramework == 'Drupal' && !variable_get('clean_url', '0'))
+          ($config->userFramework == 'Drupal' && CIVICRM_CLEANURL)
         ) {
           $url = CRM_Utils_System::url($dao->url, NULL, FALSE, NULL, FALSE);
         }

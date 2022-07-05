@@ -78,7 +78,7 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
 
     //redirect if group not available for search criteria
     if (count($groups) == 0) {
-      CRM_Core_Error::statusBounce(ts("Atleast one Group must be present for search."),
+      return CRM_Core_Error::statusBounce(ts("Atleast one Group must be present for search."),
         CRM_Utils_System::url('civicrm/contact/search/custom/list',
           'reset=1'
         )

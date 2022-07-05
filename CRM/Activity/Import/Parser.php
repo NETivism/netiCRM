@@ -209,7 +209,7 @@ abstract class CRM_Activity_Import_Parser {
     $onDuplicate = self::DUPLICATE_SKIP
   ) {
     if (!is_array($fileName)) {
-      CRM_Core_Error::fatal();
+      CRM_Core_Error::fatal('Empty file array');
     }
     $fileName = $fileName['name'];
 
