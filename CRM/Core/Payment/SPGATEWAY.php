@@ -531,6 +531,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     else {
       $cid = $contributionId;
     }
+    $origDAO = new CRM_Contribute_DAO_Contribution();
+    $origDAO->id = $cid;
+    $origDAO->find(TRUE);
     $trxnId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $cid, 'trxn_id');
     if (empty($trxnId)) {
       $resultMessage = ts("The contribution with transaction ID: %1 can't find from Newebpay API.", array(1 => $cid));
@@ -546,13 +549,71 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         else {
           civicrm_spgateway_single_contribution_sync($trxnId);
           $resultMessage = ts("Synchronizing to %1 server success.", array(1 => ts("NewebPay")));
+          $updatedDAO = new CRM_Contribute_DAO_Contribution();
+          $updatedDAO->id = $cid;
+          $updatedDAO->find(TRUE);
+          $diffContribution = array();
+          if ($updatedDAO->contribution_status_id != $origDAO->contribution_status_id) {
+            $status = CRM_Contribute_PseudoConstant::contributionStatus();
+            $diffContribution[ts('Contribution Status')] = array($status[$origDAO->contribution_status_id], $status[$updatedDAO->contribution_status_id]);
+
+            // Check it will send Email.
+            $pageParams = array(1 => array( $origDAO->contribution_page_id, 'Positive'));
+            $isEmailReceipt = CRM_Core_DAO::singleValueQuery("SELECT is_email_receipt FROM civicrm_contribution_page WHERE id = %1", $pageParams);
+            if ($isEmailReceipt) {
+              $diffContribution[] = ts('A notification email has been sent to the supporter.');
+            }
+
+            // Check if the SMS is sent.
+            $activityType = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
+            $activitySMSParams = array(
+              'source_record_id' => $cid,
+              'activity_type_id' => CRM_Utils_Array::key('Contribution SMS', $activityType),
+            );
+            $smsActivity = new CRM_Activity_DAO_Activity();
+            $smsActivity->copyValues($activitySMSParams);
+            if ($smsActivity->find(TRUE)) {
+              $diffContribution[] = ts('SMS Sent');
+            }
+          }
+          if ($updatedDAO->receive_date != $origDAO->receive_date) {
+            $diffContribution[ts('Received Date')] = array($origDAO->receive_date, $updatedDAO->receive_date);
+          }
+          if ($updatedDAO->cancel_date != $origDAO->cancel_date) {
+            $diffContribution[ts('Cancel Date')] = array($origDAO->cancel_date, $updatedDAO->cancel_date);
+          }
+          if ($updatedDAO->cancel_reason != $origDAO->cancel_reason) {
+            $diffContribution[ts('Cancel Reason')] = array($origDAO->cancel_reason, $updatedDAO->cancel_reason);
+          }
+          if ($updatedDAO->receipt_id != $origDAO->receipt_id) {
+            $diffContribution[ts('Receipt ID')] = array($origDAO->receipt_id, $updatedDAO->receipt_id);
+          }
+          if ($updatedDAO->receipt_date != $origDAO->receipt_date) {
+            $diffContribution[ts('Receipt Date')] = array($origDAO->receipt_date, $updatedDAO->receipt_date);
+          }
+          if (empty($diffContribution)) {
+            $diffContribution[] = ts("There are no any change.");
+          }
         }
       }
     }
     // Redirect to contribution view page.
     $query = http_build_query($get);
     $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
-    CRM_Core_Error::statusBounce($resultMessage, $redirect);
+    if (!empty($diffContribution)) {
+      $resultMessage."<ul>";
+      foreach ($diffContribution as $key => $value) {
+        if ($key && is_array($value)) {
+          $resultMessage .= "<li><span>{$key}: </span>".implode(' ==> ', $value)."</li>";
+        }
+        else {
+          $resultMessage .= "<li>{$value}</li>";
+        }
+      }
+      $resultMessage.="</ul>";
+    }
+    CRM_Core_Session::setStatus($resultMessage);
+    CRM_Utils_System::redirect($redirect);
   }
 
   static function getSyncDataUrl($contributionId, &$form = NULL) {
