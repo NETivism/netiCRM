@@ -16,14 +16,15 @@ class CRM_Utils_System_Drupal6 {
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
   function loadBootStrap($params = array()) {
-    $cmsPath = CRM_Utils_System::cmsRootPath();
+    $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
     if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
       if ($throwError) {
         throw new Exception('Sorry, could not locate bootstrap.inc');
       }
       return FALSE;
     }
-    require_once 'includes/bootstrap.inc';
+    chdir($cmsPath);
+    require_once "$cmsPath/includes/bootstrap.inc";
     @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
     // explicitly setting error reporting, since we cannot handle drupal related notices
     // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code
