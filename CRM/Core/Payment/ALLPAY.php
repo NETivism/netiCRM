@@ -297,7 +297,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     // url 
     $notify_url = self::generateNotifyUrl($vars, 'allpay/ipn/'.$instrument_code, $component);
     $civi_base_url = CRM_Utils_System::currentPath();
-    $query = http_build_query(array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey']));
+    $query = http_build_query(array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey']), '', '&');
     $thankyou_url = CRM_Utils_System::url($civi_base_url, $query, TRUE, NULL, FALSE);
   
     // parameter
@@ -507,7 +507,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       }
     }
 
-    $query = http_build_query($query);
+    $query = http_build_query($query, '', '&');
     $url = CRM_Utils_System::url(
       $path,
       $query,
