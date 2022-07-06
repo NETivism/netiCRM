@@ -1166,7 +1166,9 @@ class CRM_Utils_System {
       // drupal 8,9, the correct way to exit
       // let symfony router handling this
       // will trigger event(KernelEvents::TERMINATE at controller
-      throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
+      // set default null exception handler to prevent no catch after this
+      set_exception_handler(array('CRM_Core_Exception', 'nullExceptionHandler'));
+      throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR);
     }
 
     // we should never hit here when using drupal
