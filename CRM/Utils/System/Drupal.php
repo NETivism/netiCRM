@@ -50,6 +50,11 @@ class CRM_Utils_System_Drupal {
    * Construct will make sure durpal fully bootstrap
    */
   function __construct() {
+    // refs #31213, link current object to static variable immediately
+    // this will prevent conflict like CRM_Core_Permission_Drupal::check called
+    // in loadBootStrap below
+    CRM_Core_Config::$_userSystem = $this;
+
     global $civicrm_drupal_root;
     $this->is_drupal = TRUE;
 

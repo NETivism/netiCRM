@@ -298,7 +298,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     $class = $this->userFrameworkClass;
     $this->userSystem = new $class();
-    self::$_userSystem = $this->userSystem;
     if(isset($this->userSystem->version)){
       $this->userFrameworkVersion = $this->userSystem->version;
     }
