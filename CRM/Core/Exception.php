@@ -64,4 +64,25 @@ class CRM_Core_Exception extends PEAR_Exception {
     return $this->errorData;
   }
 
+  /**
+   * Get current exception handler
+   *
+   * @return void
+   */
+  public static function getExcceptionHandler() {
+    $handler = set_error_handler(function(){});
+    restore_error_handler();
+    return $handler;
+  }
+
+  /**
+   * Exception handler for null exception
+   *
+   * Triggered by civiExit in CRM_Utils_System, which may not have
+   * drupal pre-defined handler for catch exception.
+   *
+   * @return void
+   */
+  public static function nullExceptionHandler($exception) {
+  }
 }
