@@ -228,7 +228,7 @@ $(function(){
             // Replace quill emoji blot to simple emoji entity
             $(element).find(".ql-emojiblot").each(function() {
                 var $emojiBlot = $(this),
-                    emoji = $.trim($emojiBlot.context.innerText);
+                emoji = typeof $emojiBlot.context !== "undefined" ? $emojiBlot.context.innerText.trim() : $emojiBlot[0].innerText.trim();
 
                 $emojiBlot.after(emoji);
                 $emojiBlot.remove();

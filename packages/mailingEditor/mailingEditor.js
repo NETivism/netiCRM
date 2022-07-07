@@ -2383,7 +2383,7 @@
       if ($item.length) {
         $item.find(".ql-emojiblot").each(function() {
           var $emojiBlot = $(this),
-              emoji = $.trim($emojiBlot.context.innerText);
+              emoji = typeof $emojiBlot.context !== "undefined" ? $emojiBlot.context.innerText.trim() : $emojiBlot[0].innerText.trim();
 
           $emojiBlot.after(emoji);
           $emojiBlot.remove();
