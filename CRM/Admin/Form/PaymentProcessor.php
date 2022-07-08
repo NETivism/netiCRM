@@ -215,7 +215,8 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     // is this processor active ?
     $this->add('checkbox', 'is_active', ts('Is this Payment Processor active?'));
     $this->add('checkbox', 'is_default', ts('Is this Payment Processor the default?'));
-    if ($this->_isFreezed) {
+    $isActivePaymentProcessor = CRM_Core_DAO::singleValueQuery("SELECT is_active FROM civicrm_payment_processor WHERE id = %1", array( 1 => array( $this->_id, 'Positive')));
+    if ($this->_isFreezed && $isActivePaymentProcessor) {
       $this->freeze('is_active');
     }
 
