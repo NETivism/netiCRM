@@ -257,7 +257,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       // refs #27780 check if is POST request and is payment related page
       // give another message for user to check email to get result of payment
       if (!empty($_GET['_qf_ThankYou_display']) && !empty($qfKey)) {
-         return CRM_Core_Error::statusBounce('missing cookie on thank-you page', '', ts("Because of the missing cookie from your browser, we don't know the result of your form submission. If you enter payment information about this form submission, there should be an email notification in your inbox. Please use that for your final payment result."));
+        CRM_Core_Error::fatal('missing cookie on thank-you page', '', ts("Because of the missing cookie from your browser, we don't know the result of your form submission. If you enter payment information about this form submission, there should be an email notification in your inbox. Please use that for your final payment result."));
       }
       else {
         $msg = ts('We can\'t load the requested web page. This page requires cookies to be enabled in your browser settings. Please check this setting and enable cookies (if they are not enabled). Then try again. If this error persists, contact the site adminstrator for assistance.') . '<br /><br />' . ts('Site Administrators: This error may indicate that users are accessing this page using a domain or URL other than the configured Base URL. EXAMPLE: Base URL is http://example.org, but some users are accessing the page via http://www.example.org or a domain alias like http://myotherexample.org.') . '<br /><br />' . ts('Error type: Could not find a valid session key.');
