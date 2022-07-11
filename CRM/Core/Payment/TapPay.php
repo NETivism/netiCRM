@@ -750,8 +750,10 @@ LIMIT 0, 100
     $tappay->orderBy("contribution_id DESC");
     $tappay->find(TRUE);
     if ($goPayment) {
+      $params = array(1 => array($recurId, 'Positive'));
+      $expiry_date = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1", $params);
       // Check if Credit card over date.
-      if ($time <= strtotime($tappay->expiry_date)) {
+      if ($time <= strtotime($expiry_date)) {
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
         self::payByToken($dao->recur_id);
@@ -773,14 +775,16 @@ LIMIT 0, 100
     $tappay->contribution_recur_id = $recurId;
     $tappay->orderBy("contribution_id DESC");
     $tappay->find(TRUE);
+    $params = array(1 => array($recurId, 'Positive'));
+    $new_expiry_date = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1", $params);
 
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
       $statusNote = ts("This is lastest contribution of this recurring (end date is %1).", array(1 => date('Y-m-d', strtotime($dao->end_date))));
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
     }
-    elseif ($donePayment && $dao->frequency_unit == 'month' && !empty($tappay->expiry_date) && date('Ym', $time) == date('Ym', strtotime($tappay->expiry_date))) {
-      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", array(1 => date('Y/m',strtotime($tappay->expiry_date))));
+    elseif ($donePayment && $dao->frequency_unit == 'month' && !empty($new_expiry_date) && date('Ym', $time) == date('Ym', strtotime($new_expiry_date))) {
+      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", array(1 => date('Y/m',strtotime($new_expiry_date))));
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
     }
@@ -794,7 +798,7 @@ LIMIT 0, 100
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
-    elseif ($time > strtotime($tappay->expiry_date)) {
+    elseif (!empty($new_expiry_date) && $time > strtotime($new_expiry_date)) {
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
