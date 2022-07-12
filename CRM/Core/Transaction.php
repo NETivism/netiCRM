@@ -82,7 +82,7 @@ class CRM_Core_Transaction {
     if (!self::$_dao) {
       self::$_dao = new CRM_Core_DAO();
     }
-    if (!self::$_isolationLevel && !empty($isolationLevel) && in_array($isolationLevel, explode(',', self::ISOLATION_LEVEL))) {
+    if (!self::$_isolationLevel && !empty($isolationLevel) && in_array($isolationLevel, explode(',', self::ISOLATION_LEVEL)) && self::$_count == 0) {
       $isolationQuery = "SET TRANSACTION ISOLATION LEVEL ".CRM_Utils_Type::escape($isolationLevel, 'String');
       self::$_dao->query($isolationQuery);
     }
