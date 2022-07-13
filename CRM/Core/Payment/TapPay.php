@@ -1279,7 +1279,7 @@ LIMIT 0, 100
     civicrm_smarty_register_string_resource();
     $updateCardmetaButton = $smarty->fetch('string: {$form.$update_notify.html}');
     $params = array( 1 => array($tappayDAO->contribution_recur_id, 'Positive'));
-    $newestExpiryDate = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1", $params);
+    $newestExpiryDate = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id", $params);
     $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($newestExpiryDate)).$updateCardmetaButton;
     $returnData[ts('Response Code')] = $tappayObject->status;
     $returnData[ts('Response Message')] = $tappayObject->msg;
