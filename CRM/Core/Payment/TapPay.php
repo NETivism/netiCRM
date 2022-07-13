@@ -747,11 +747,10 @@ LIMIT 0, 100
 
     $tappay = new CRM_Contribute_DAO_TapPay();
     $tappay->contribution_recur_id = $recurId;
-    $tappay->orderBy("contribution_id DESC");
+    $tappay->orderBy("expiry_date DESC");
     $tappay->find(TRUE);
+    $expiry_date = $tappay->expiry_date;
     if ($goPayment) {
-      $params = array(1 => array($recurId, 'Positive'));
-      $expiry_date = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1", $params);
       // Check if Credit card over date.
       if ($time <= strtotime($expiry_date)) {
         $resultNote .= $reason;
@@ -773,11 +772,9 @@ LIMIT 0, 100
     $tappay->free();
     $tappay = new CRM_Contribute_DAO_TapPay();
     $tappay->contribution_recur_id = $recurId;
-    $tappay->orderBy("contribution_id DESC");
+    $tappay->orderBy("expiry_date DESC");
     $tappay->find(TRUE);
-    $params = array(1 => array($recurId, 'Positive'));
-    $new_expiry_date = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1", $params);
-
+    $new_expiry_date = $tappay->expiry_date;
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
       $statusNote = ts("This is lastest contribution of this recurring (end date is %1).", array(1 => date('Y-m-d', strtotime($dao->end_date))));
       $resultNote .= "\n" . $statusNote;
@@ -1282,7 +1279,7 @@ LIMIT 0, 100
     civicrm_smarty_register_string_resource();
     $updateCardmetaButton = $smarty->fetch('string: {$form.$update_notify.html}');
     $params = array( 1 => array($tappayDAO->contribution_recur_id, 'Positive'));
-    $newestExpiryDate = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1", $params);
+    $newestExpiryDate = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id", $params);
     $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($newestExpiryDate)).$updateCardmetaButton;
     $returnData[ts('Response Code')] = $tappayObject->status;
     $returnData[ts('Response Message')] = $tappayObject->msg;
