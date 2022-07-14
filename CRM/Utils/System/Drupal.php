@@ -638,14 +638,14 @@ class CRM_Utils_System_Drupal {
   /**
    * User email verification setting
    *
-   * @return string
+   * @return bool
    * @access public
    * @static
    */
   static function userEmailVerification() {
     $version = self::$_version;
     if ($version >= 8) {
-      return \Drupal::config('user.settings')->get('verify_email');
+      return !empty(\Drupal::config('user.settings')->get('verify_mail')) ? TRUE : FALSE;
     }
     else {
       return self::variable_get('user_email_verification', TRUE);

@@ -35,7 +35,12 @@ class CRM_Utils_System_Drupal8 {
     }
 
     /** @var \Drupal\user\Entity\User $account */
-    $account = entity_create('user');
+    if (function_exists('entity_create')) {
+      $account = entity_create('user');
+    }
+    else {
+      $account = \Drupal\user\Entity\User::create();
+    }
     $account->setUsername($params['cms_name'])->setEmail($params[$mail]);
 
     // Allow user to set password only if they are an admin or if
@@ -50,7 +55,7 @@ class CRM_Utils_System_Drupal8 {
     if ($user_register_conf != 'visitors' && !$user->hasPermission('administer users')) {
       $account->block();
     }
-    elseif (!$verify_mail_conf) {
+    else {
       $account->activate();
     }
 
@@ -84,23 +89,22 @@ class CRM_Utils_System_Drupal8 {
     //    - 'register_pending_approval': Welcome message, user pending admin
     //      approval.
     // @Todo: Should we only send off emails if $params['notify'] is set?
-    switch (TRUE) {
-      case $user_register_conf == 'admin_only' || $user->isAuthenticated():
-        _user_mail_notify('register_admin_created', $account);
-        break;
-
-      case $user_register_conf == 'visitors':
-        _user_mail_notify('register_no_approval_required', $account);
-        break;
-
-      case 'visitors_admin_approval':
-        _user_mail_notify('register_pending_approval', $account);
-        break;
+    if ($user_register_conf == 'admin_only' || $user->isAuthenticated()) {
+      _user_mail_notify('register_admin_created', $account);
     }
-
-    // If this is a user creating their own account, login them in!
-    if ($account->isActive() && $user->isAnonymous()) {
-      \user_login_finalize($account);
+    elseif ($user_register_conf == 'visitors' && $account->isActive()) {
+      _user_mail_notify('register_no_approval_required', $account);
+      if (!$verify_mail_conf) {
+        \user_login_finalize($account);
+        \Drupal::messenger()->addStatus(t('Registration successful. You are now logged in.'));
+      }
+      else {
+        \Drupal::messenger()->addStatus(t('A welcome message with further instructions has been sent to your email address.'));
+      }
+    }
+    elseif ($user_register_conf == 'visitors_admin_approval') {
+      _user_mail_notify('register_pending_approval', $account);
+      \Drupal::messenger()->addStatus(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your email address.'));
     }
 
     return $account->id();
@@ -135,7 +139,12 @@ class CRM_Utils_System_Drupal8 {
     if (!empty($params['name'])) {
       $name = $params['name'];
 
-      $user = entity_create('user');
+      if (function_exists('entity_create')) {
+        $user = entity_create('user');
+      }
+      else {
+        $user = \Drupal\user\Entity\User::create();
+      }
       $user->setUsername($name);
 
       // This checks for both username uniqueness and validity.
@@ -153,7 +162,12 @@ class CRM_Utils_System_Drupal8 {
     if (!empty($params['mail'])) {
       $mail = $params['mail'];
 
-      $user = entity_create('user');
+      if (function_exists('entity_create')) {
+        $user = entity_create('user');
+      }
+      else {
+        $user = \Drupal\user\Entity\User::create();
+      }
       $user->setEmail($mail);
 
       // This checks for both email uniqueness.
