@@ -109,17 +109,25 @@ class CRM_Utils_ReCAPTCHA {
   }
 
   static function validate($value, $form) {
+    // refs #35022 when recaptcha has twice,recored the previous result.
+    static $previousResult;
     $config = CRM_Core_Config::singleton();
 
     $resp = self::checkAnswer($config->recaptchaPrivateKey, $_POST['g-recaptcha-response'], self::getIp());
     // refs #17773, when submit twice, we will get false but no error codes
     $errors = $resp->getErrorCodes();
+    if ($previousResult) {
+      return TRUE;
+    }
     if ($resp->isSuccess()) {
+      $previousResult = TRUE;
       return TRUE;
     }
     elseif(empty($errors)){
+      $previousResult = TRUE;
       return TRUE;
     }
+    $previousResult = FALSE;
     return FALSE;
   }
 
