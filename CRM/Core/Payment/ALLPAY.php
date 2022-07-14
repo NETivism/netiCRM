@@ -236,10 +236,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         if($new_pstatus = array_search('Pending from pay later', $pstatus)){
           CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $params['participantID'], 'status_id', $new_pstatus, 'id');
           $sql = 'SELECT id FROM civicrm_participant WHERE registered_by_id = %1';
-          $params = array(
+          $paramsRegisteredBy = array(
             1 => array($params['participantID'], 'Integer'),
           );
-          $dao = CRM_Core_DAO::executeQuery($sql, $params);
+          $dao = CRM_Core_DAO::executeQuery($sql, $paramsRegisteredBy);
           while($dao->fetch()){
             CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $dao->id, 'status_id', $new_pstatus, 'id');
           }
