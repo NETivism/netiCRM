@@ -67,6 +67,12 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * @return boolean true if a mail was sent, else false
    */
   public static function send(&$params, $callback = NULL) {
+    $config = CRM_Core_Config::singleton();
+
+    // when transactional email not enabled, fallback to use common send
+    if (!$config->enableTransactionalEmail) {
+      return CRM_Utils_Mail::send($params, $callback);
+    }
     // validate required params
     $required = array(
       'contactId' => 'positiveInteger',
@@ -582,7 +588,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   /**
    * Get transactional details for an email
    *
-   * @param  array   $contactId     
+   * @param  array   $contactId
    * @param  array   $activityId
    *
    * @return array
@@ -618,10 +624,10 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     return array(
       'Delivered' => $dao->delivered,
       'Opened' => $dao->opened,
-      'Clicks' => $dao->clicks,
-      'Bounce' => $dao->bounce,
-      'Unsubscribe' => $dao->unsubscribe,
-      'Opt-Out' => $dao->optout,
+      'Clicked' => $dao->clicks,
+      'Bounced' => $dao->bounce,
+      'Unsubscribed' => $dao->unsubscribe,
+      'Opt-Outed' => $dao->optout,
     );
   }
 }

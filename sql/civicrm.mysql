@@ -856,7 +856,11 @@ CREATE TABLE civicrm_instrument (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     UNIQUE INDEX UI_instrument_id(
+        entity_id
+      , entity_table
+  )
+  
  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
@@ -4755,7 +4759,10 @@ CREATE TABLE civicrm_contribution_allpay (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     UNIQUE INDEX UI_allpay_id(
+        cid
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_contribution_allpay_cid FOREIGN KEY (cid) REFERENCES civicrm_contribution(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;

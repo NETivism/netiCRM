@@ -31,6 +31,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * @return void
    */
   function preProcess() {
+    $this->set('action', CRM_Core_Action::UPDATE);
     parent::preProcess();
 
     if ($this->_values['filter'] & self::VALID_SPF) {

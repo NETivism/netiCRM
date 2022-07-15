@@ -162,11 +162,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         if ($email) {
           $val = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($gId, $contactID, $params[$key]);
           $fields = CRM_Core_BAO_UFGroup::getFields($gId, FALSE, CRM_Core_Action::VIEW);
-          foreach ($fields as $k => $v) {
-            if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($val['values'][$v['title']] )){
-              $val['values'][$v['title']] = ts("Uploaded files received");
-            }
-          }
+          CRM_Core_BAO_UFGroup::verifySubmittedValue($fields, $val, $values['submitted']);
           CRM_Core_BAO_UFGroup::commonSendMail($contactID, $val);
         }
       }

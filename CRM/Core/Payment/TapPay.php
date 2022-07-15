@@ -49,7 +49,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode, &$paymentProcessor, $paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $args = func_get_args();
     if (isset($args[3])) {
       $apiType = $args[3];
@@ -195,7 +195,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+      $null = NULL;
+      
+      $paymentClass = self::singleton($mode, $paymentProcessor, $null);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
@@ -319,7 +321,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
 
       // Allow further manipulation of the arguments via custom hooks ..
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+      $null = NULL;
+      $paymentClass = self::singleton($mode, $paymentProcessor, $null);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       // Send tappay pay_by_token post
@@ -402,7 +405,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     );
 
     // Allow further manipulation of the arguments via custom hooks ..
-    $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+    $null = NULL;
+    $paymentClass = self::singleton($mode, $paymentProcessor, $null);
     CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
     if ($debug) {
       CRM_Core_Error::debug('TapPay::payByTokenForNonRecur $data', $data);
@@ -755,7 +759,10 @@ LIMIT 0, 100
         continue;
       }
 
-      self::doCheckRecur($dao->recur_id, $time);
+      $command = 'drush neticrm-process-recurring --payment-processor=tappay --time='.$time.' --contribution-recur-id='.$dao->recur_id.'&';
+      popen($command, 'w');
+      // wait for 1 second.
+      usleep(1000000);
     }
 
     // Delete the sequence data of this process.
@@ -769,6 +776,7 @@ LIMIT 0, 100
   }
 
   public static function doCheckRecur($recurId, $time = NULL) {
+    CRM_Core_Error::debug_log_message("TapPay synchronize execute: ".$recurId);
     if (empty($time)) {
       $time = time();
     }
@@ -817,11 +825,12 @@ LIMIT 0, 100
 
     $tappay = new CRM_Contribute_DAO_TapPay();
     $tappay->contribution_recur_id = $recurId;
-    $tappay->orderBy("contribution_id DESC");
+    $tappay->orderBy("expiry_date DESC");
     $tappay->find(TRUE);
+    $expiry_date = $tappay->expiry_date;
     if ($goPayment) {
       // Check if Credit card over date.
-      if ($time <= strtotime($tappay->expiry_date)) {
+      if ($time <= strtotime($expiry_date)) {
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
         self::payByToken($dao->recur_id);
@@ -841,16 +850,16 @@ LIMIT 0, 100
     $tappay->free();
     $tappay = new CRM_Contribute_DAO_TapPay();
     $tappay->contribution_recur_id = $recurId;
-    $tappay->orderBy("contribution_id DESC");
+    $tappay->orderBy("expiry_date DESC");
     $tappay->find(TRUE);
-
+    $new_expiry_date = $tappay->expiry_date;
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
       $statusNote = ts("This is lastest contribution of this recurring (end date is %1).", array(1 => date('Y-m-d', strtotime($dao->end_date))));
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
     }
-    elseif ($donePayment && $dao->frequency_unit == 'month' && !empty($tappay->expiry_date) && date('Ym', $time) == date('Ym', strtotime($tappay->expiry_date))) {
-      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", array(1 => date('Y/m',strtotime($tappay->expiry_date))));
+    elseif ($donePayment && $dao->frequency_unit == 'month' && !empty($new_expiry_date) && date('Ym', $time) == date('Ym', strtotime($new_expiry_date))) {
+      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", array(1 => date('Y/m',strtotime($new_expiry_date))));
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
     }
@@ -864,7 +873,7 @@ LIMIT 0, 100
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
-    elseif ($time > strtotime($tappay->expiry_date)) {
+    elseif (!empty($new_expiry_date) && $time > strtotime($new_expiry_date)) {
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
@@ -883,6 +892,7 @@ LIMIT 0, 100
     }
 
     CRM_Core_Error::debug_log_message($resultNote);
+    CRM_Core_Error::debug_log_message("TapPay synchronize finished: ".$recurId);
     return $resultNote;
   }
 
@@ -943,8 +953,9 @@ LIMIT 0, 100
       );
 
       // Allow further manipulation of the arguments via custom hooks ..
+      $null = NULL;
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+      $paymentClass = self::singleton($mode, $paymentProcessor, $null);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, CRM_Core_DAO::$_nullObject, $params);
 
       $result = $api->request($params);
@@ -972,8 +983,9 @@ LIMIT 0, 100
           );
 
           // Allow further manipulation of the arguments via custom hooks ..
+          $null = NULL;
           $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
-          $paymentClass = self::singleton($mode, $paymentProcessor, NULL);
+          $paymentClass = self::singleton($mode, $paymentProcessor, $null);
           CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, CRM_Core_DAO::$_nullObject, $params);
 
           $result = $api_history->request($params);
@@ -1344,7 +1356,14 @@ LIMIT 0, 100
     $smarty = CRM_Core_Smarty::singleton();
     civicrm_smarty_register_string_resource();
     $updateCardmetaButton = $smarty->fetch('string: {$form.$update_notify.html}');
-    $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($tappayDAO->expiry_date)).$updateCardmetaButton;
+    if (!empty($tappayDAO->contribution_recur_id)) {
+      $params = array( 1 => array($tappayDAO->contribution_recur_id, 'Positive'));
+      $newestExpiryDate = CRM_Core_DAO::singleValueQuery("SELECT MAX(expiry_date) FROM civicrm_contribution_tappay WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id", $params);
+    }
+    else {
+      $newestExpiryDate = $tappayDAO->expiry_date;
+    }
+    $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($newestExpiryDate)).$updateCardmetaButton;
     $returnData[ts('Response Code')] = $tappayObject->status;
     $returnData[ts('Response Message')] = $tappayObject->msg;
     if (!empty($tappayObject->card_info)) {

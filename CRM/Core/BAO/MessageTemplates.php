@@ -493,16 +493,15 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
           'cleanName' => $params['PDFFilename'],
         );
       }
-    
+
       $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_mailerTypes);
-      if (!empty($params['activityId'])) {
+      if (!empty($params['activityId']) && $config->enableTransactionalEmail) {
         $activityTypeId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $params['activityId'], 'activity_type_id');
         if(in_array(CRM_Core_OptionGroup::getName('activity_type', $activityTypeId), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
           $sent = CRM_Mailing_BAO_Transactional::send($params, $callback);
         }
       }
-      // fallback to normal utils mail
-      if (!$sent) {
+      else {
         $sent = CRM_Utils_Mail::send($params, $callback);
       }
 

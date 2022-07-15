@@ -156,7 +156,7 @@ class CRM_Core_Invoke {
       return $result;
     }
     else {
-      CRM_Utils_System::notFonud();
+      CRM_Utils_System::notFound();
     }
   }
 

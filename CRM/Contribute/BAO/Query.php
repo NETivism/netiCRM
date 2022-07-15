@@ -382,13 +382,30 @@ class CRM_Contribute_BAO_Query {
       case 'contribution_payment_instrument_id':
       case 'contribution_payment_instrument':
         require_once 'CRM/Contribute/PseudoConstant.php';
-        $pi = $value;
         $pis = CRM_Contribute_PseudoConstant::paymentInstrument();
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.payment_instrument_id",
-          $op, $value, "Integer"
-        );
-
-        $query->_qill[$grouping][] = ts('Paid By - %1', array(1 => $pis[$pi]));
+        if (is_array($value)) {
+          foreach ($value as $k => $v) {
+            if ($v) {
+              $val[$v] = $v;
+              $nameSelectedPi[] = $pis[$v];
+            }
+          }
+          $instrument_ids = implode(',', $val);
+          $op = 'IN';
+          $value = "({$instrument_ids})";
+            $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.payment_instrument_id",
+            $op, $value, "Integer"
+          );
+          $query->_qill[$grouping][] = ts('Paid By - %1', array(1 => implode(', ', $nameSelectedPi)));
+        }
+        else {
+          $pi = $value;
+          $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.payment_instrument_id",
+            $op, $value, "Integer"
+          );
+  
+          $query->_qill[$grouping][] = ts('Paid By - %1', array(1 => $pis[$pi]));
+        }
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
@@ -907,7 +924,8 @@ class CRM_Contribute_BAO_Query {
     $form->addSelect(
       'contribution_payment_instrument_id',
       ts('Payment Instrument'),
-      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::paymentInstrument()
+      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::paymentInstrument(), 
+      $attrs
     );
 
     $form->addSelect(
@@ -1051,7 +1069,9 @@ class CRM_Contribute_BAO_Query {
       $product_option_select_attr = array('data-parent-filter' => $product_name);
 
       foreach ($product_options as $product_option) {
-        $product_option_select_elem->addOption($product_option, $product_option, $product_option_select_attr);
+        if (trim($product_option) !== '') {
+          $product_option_select_elem->addOption($product_option, $product_option, $product_option_select_attr);
+        }
       }
     }
 

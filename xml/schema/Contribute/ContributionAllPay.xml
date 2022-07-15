@@ -31,6 +31,12 @@
     <add>2.0</add>
     <onDelete>SET NULL</onDelete>
   </foreignKey> 
+  <index>
+      <name>UI_allpay_id</name>
+      <fieldName>cid</fieldName>
+      <unique>true</unique>
+      <add>4.0</add>
+  </index>
   <field>
     <name>data</name>
     <comment>Allpay return data log</comment>

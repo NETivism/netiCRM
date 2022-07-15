@@ -50,6 +50,11 @@ class CRM_Utils_System_Drupal {
    * Construct will make sure durpal fully bootstrap
    */
   function __construct() {
+    // refs #31213, link current object to static variable immediately
+    // this will prevent conflict like CRM_Core_Permission_Drupal::check called
+    // in loadBootStrap below
+    CRM_Core_Config::$_userSystem = $this;
+
     global $civicrm_drupal_root;
     $this->is_drupal = TRUE;
 
@@ -860,7 +865,10 @@ class CRM_Utils_System_Drupal {
       throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
     }
     else {
-      drupal_not_found();
+      // drupal_access_denied will deliver page and exit
+      // should also trigger civiExit
+      drupal_access_denied();
+      CRM_Utils_System::civiExit();
     }
     return;
   }
@@ -1037,7 +1045,10 @@ class CRM_Utils_System_Drupal {
       throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
     }
     else {
+      // drupal_not_found will deliver page and exit
+      // should also trigger civiExit
       drupal_not_found();
+      CRM_Core_System::civiExit();
     }
     return;
   }

@@ -48552,3 +48552,48 @@ msgstr ""
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid "This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?"
 msgstr ""
+
+#: templates/CRM/Contact/Form/Merge.hlp templates/CRM/Contact/Form/Merge.tpl
+msgid "Because the contact has membership payment record(s), click one of the checkboxes moving Membership and Contribution will act on both."
+msgstr ""
+
+msgid "Because the contact has participant payment record(s), click one of the checkboxes moving Participant and Contribution will act on both."
+msgstr ""
+
+msgid "Because the contact has membership and participant payment records, click one of the checkboxes moving Membership, Participant and Contribution will act on all of them."
+msgstr ""
+
+msgid "Your current DNS record is listed below."
+msgstr ""
+
+msgid "Email Tracking"
+msgstr ""
+
+msgid "Bounced"
+msgstr ""
+
+msgid "Unsubscribed"
+msgstr ""
+
+msgid "Opt-Outed"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "This Receipt ID already exists in the database."
+msgstr ""
+
+msgid "Enable email tracking will track email opened data of contribution and event notification to an activity."
+msgstr ""
+
+msgid "After enable, changes below may affect your current usage:"
+msgstr ""
+
+msgid "The cc and bcc in notification will no longer in the same mail which means you won't see the from name and email address in cc / bcc in thank-you letter."
+msgstr ""
+
+msgid "Instead of create an one aggregate activity, email to multiple contacts now will create separate activity on each contact."
+msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "If the transaction is finished, it will update the follow data by this action: %1"
+msgstr ""

@@ -384,6 +384,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
+    sleep(3);
 
     $recurParams = array(
       1 => array("r_{$recurring->id}_%", 'String')
@@ -457,6 +458,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
+    sleep(3);
 
     $recurParams = array(
       1 => array("r_{$recurring->id}_%", 'String')
@@ -528,6 +530,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
+    sleep(3);
 
     $recurParams = array(
       1 => array("r_{$recurring->id}_%", 'String')
@@ -600,6 +603,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
+    sleep(3);
     $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
   }
 
