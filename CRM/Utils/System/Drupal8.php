@@ -114,7 +114,12 @@ class CRM_Utils_System_Drupal8 {
    * @inheritDoc
    */
   public function updateCMSName($ufID, $email) {
-    $user = entity_load('user', $ufID);
+    if (function_exists('entity_load')) {
+      $user = entity_load('user', $ufID);
+    }
+    else {
+      $user = \Drupal\user\Entity\User::load($ufID);
+    }
     if ($user && $user->getEmail() != $email) {
       $user->setEmail($email);
 
