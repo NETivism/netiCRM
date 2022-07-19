@@ -250,10 +250,12 @@ function calculateText( object ) {
   eval( 'var option = ' + cj(object).attr('price') );
   ele = option[0];
   if(cj('[name='+ele+']').is('input.form-radio')){
+    // for countable radio option.
     opid = option[1];
     cj('[name='+ele+'][value='+opid+']').trigger('click');
   }
   else if(cj('[name^='+ele+'][type="checkbox"]').length > 0){
+    // for countable checkbox option.
     fdName = ele;
     ele = option[1];
     countEleName = fdName+'_'+ele+'_count';
@@ -266,12 +268,13 @@ function calculateText( object ) {
 
   }
   else{
+    // For text type fields.
     if ( ! price[ele] ) {
       price[ele] = 0;
     }
     var optionPart = String(option[1]).split(optionSep);
     addprice    = parseFloat( optionPart[0] );
-    var textval = parseFloat( cj(object).attr('value') );
+    var textval = parseFloat( cj(object).val() );
     var curval  = textval * addprice;
     if ( textval >= 0 ) {
       totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
