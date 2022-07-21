@@ -101,7 +101,7 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO
   /**
    * Type of object this group extends (can add other options later e.g. contact_address, etc.).
    *
-   * @var enum('Contact', 'Individual', 'Household', 'Organization', 'Location', 'Address', 'Contribution', 'ContributionPage', 'Activity', 'Relationship', 'Group', 'Membership', 'Participant', 'Event', 'Grant', 'Pledge', 'Case', 'PriceField')
+   * @var enum('Contact', 'Individual', 'Household', 'Organization', 'Location', 'Address', 'Contribution', 'ContributionPage', 'ContributionRecur', 'Activity', 'Relationship', 'Group', 'Membership', 'Participant', 'Event', 'Grant', 'Pledge', 'Case', 'PriceField')
    */
   public $extends;
   /**
@@ -267,7 +267,7 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Extends') ,
           'default' => 'Contact',
-          'enumValues' => 'Contact, Individual, Household, Organization, Location, Address, Contribution, ContributionPage, Activity, Relationship, Group, Membership, Participant, Event, Grant, Pledge, Case, PriceField',
+          'enumValues' => 'Contact, Individual, Household, Organization, Location, Address, Contribution, ContributionPage, ContributionRecur, Activity, Relationship, Group, Membership, Participant, Event, Grant, Pledge, Case, PriceField',
         ) ,
         'extends_entity_column_id' => array(
           'name' => 'extends_entity_column_id',
@@ -459,6 +459,7 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO
           'Address' => ts('Address') ,
           'Contribution' => ts('Contribution') ,
           'ContributionPage' => ts('ContributionPage') ,
+          'ContributionRecur' => ts('ContributionRecur') ,
           'Activity' => ts('Activity') ,
           'Relationship' => ts('Relationship') ,
           'Group' => ts('Group') ,

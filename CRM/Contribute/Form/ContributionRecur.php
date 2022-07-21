@@ -103,6 +103,19 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       }
     }
     $this->assign('hide_fields', $hideFields);
+
+    // custom data need entityID for template
+    if ($this->_id) {
+      $this->assign('entityID', $this->_id);
+    }
+
+    // when custom data is included in this page
+    if ($_GET['type'] == 'ContributionRecur' || CRM_Utils_Array::value("hidden_custom", $_POST)) {
+      $this->set('type', 'ContributionRecur');
+      $this->set('entityId', $this->_id);
+      CRM_Custom_Form_CustomData::preProcess($this);
+      CRM_Custom_Form_CustomData::buildQuickForm($this);
+    }
   }
 
   /**
@@ -152,6 +165,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         ) = CRM_Utils_Date::setDateDefaults($defaults['end_date'], 'activityDateTime');
       }
 
+      $customFieldDefaults = CRM_Custom_Form_CustomData::setDefaultValues($this);
+      $defaults += $customFieldDefaults;
+
     }
     return $defaults;
   }
@@ -163,6 +179,14 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    if ($_GET['type'] == 'ContributionRecur') {
+      $this->assign('cftype', 'ContributionRecur');
+      $form = CRM_Custom_Form_CustomData::buildQuickForm($this);
+      return $form;
+    }
+
+    //need to assign custom data type and subtype to the template
+    $this->assign('customDataType', 'ContributionRecur');
 
     // define the fields
     $field = array(
@@ -280,6 +304,11 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       )
     );
 
+    //retrieve custom field information
+    require_once 'CRM/Core/BAO/CustomGroup.php';
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionRecur", $this, $this->_id, 0);
+    CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
+
     if (!empty($paymentClass) && method_exists($paymentClass, 'postBuildForm')) {
       $paymentClass::postBuildForm($this);
     }
@@ -362,6 +391,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
           $resultParams = $paymentClass->doUpdateRecur($requestParams, $config->debug);
           CRM_Core_Error::debug('ContributionRecur_PostProcess_resultParams', $resultParams);
           if ($resultParams['msg']) {
+            
             CRM_Core_Session::setStatus($resultParams['msg']);
           }
           if ($resultParams['is_error']) {
@@ -400,6 +430,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $isUpdate = TRUE;
       } // Payment has no doUpdateRecur function
     } // $recur has 'process_id'
+
+    $customFields = CRM_Core_BAO_CustomField::getFields('ContributionRecur');
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params, $customFields, $this->_id, 'ContributionRecur');
+
 
     if ($isUpdate) {
       // If there has update.

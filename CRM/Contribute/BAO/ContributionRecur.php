@@ -51,6 +51,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @static
    */
   static function add(&$params, &$ids = NULL) {
+    $transaction = new CRM_Core_Transaction();
 
     // pre-processing hooks
     require_once 'CRM/Utils/Hook.php';
@@ -91,6 +92,11 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $recurring->modified_date = date('YmdHis');
 
     $result = $recurring->save();
+
+    if (CRM_Utils_Array::value('custom', $params) && is_array($params['custom'])) {
+      CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_contribution_recur', $recurring->id);
+    }
+    $transaction->commit();
 
     $params['id'] = $recurring->id;
     if ($ids['log']) {

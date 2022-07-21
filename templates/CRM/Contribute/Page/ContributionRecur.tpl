@@ -23,6 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $cftype eq 'ContributionRecur'}
+    {include file="CRM/Custom/Form/CustomData.tpl"}
+{else}
 
 {include file="CRM/common/enableDisable.tpl"}
 
@@ -134,6 +137,8 @@
             </div>
           </div>
           {/if}
+
+          {include file="CRM/Custom/Page/CustomDataView.tpl"}
 
           {if $logs}
           <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
@@ -305,6 +310,19 @@
       <tr><td class="label">{$form.note_body.label}</td><td>{$form.note_body.html}</td></tr>
       {/if}
     </table>
+    <div id="customData"></div>
+      {*include custom data js file*}
+      {include file="CRM/common/customData.tpl"}	
+      {literal}
+        <script type="text/javascript">
+          cj(document).ready(function() {
+            {/literal}
+              buildCustomData( '{$customDataType}' );
+            {literal}
+          });
+        </script>
+      {/literal}
+
     <div class="crm-section recurcontrib-buttons-section no-label">
       <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
       <div class="clear"></div> 
@@ -455,4 +473,6 @@
     {* include jscript to warn if unsaved form field changes *}
     {include file="CRM/common/formNavigate.tpl"}
 </div>
+{/if}
+
 {/if}
