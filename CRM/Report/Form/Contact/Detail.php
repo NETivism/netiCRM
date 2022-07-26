@@ -35,7 +35,7 @@
 
 require_once 'CRM/Report/Form.php';
 class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
-  CONST ROW_COUNT_LIMIT = 10;
+  CONST ROW_COUNT_LIMIT = 1;
 
   protected $_summary = NULL;
 
@@ -45,7 +45,9 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
   protected $_addressField = FALSE;
 
-  protected $_customGroupExtends = array('Contact', 'Individual', 'Household', 'Organization'); function __construct() {
+  protected $_customGroupExtends = array('Contact', 'Individual', 'Household', 'Organization');
+
+  function __construct() {
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -60,12 +62,13 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
           ),
         ),
         'filters' =>
-        array('id' =>
-          array('title' => ts('Contact ID'),
-            'no_display' => TRUE,
+        array(
+          'id' =>  array(
+            'title' => ts('Contact ID'),
+            'type' => CRM_Utils_Type::T_INT,
           ),
-          'display_name' =>
-          array('title' => ts('Contact Name'),
+          'display_name' => array(
+            'title' => ts('Contact Name'),
           ),
         ),
         'grouping' => 'contact-fields',
@@ -350,8 +353,31 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->_select = "SELECT " . implode(', ', $select) . " ";
   }
 
+  function buildQuickForm() {
+    parent::buildQuickForm();
+
+    $idOperator = $this->getElement('id_op');
+    foreach($idOperator->_options as $idx => $opt) {
+      if (!empty($opt['attr']['value']) && $opt['attr']['value'] != 'eq') {
+        unset($idOperator->_options[$idx]);
+      }
+    }
+  }
+
+  function setDefaultValues($freeze = TRUE) {
+    parent::setDefaultValues($freeze);
+    if (empty($this->_defaults['id_value'])) {
+      $this->_params['id_value'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE is_deleted = 0");
+      $this->_defaults['id_value'] = $this->_params['id_value'];
+    }
+    return $this->_defaults;
+  }
+
   static function formRule($fields, $files, $self) {
     $errors = array();
+    if (empty($fields['id_value'])) {
+      $errors['id_value'] = ts('%1 is a required field.', array(1 => ts('Contact ID')));
+    }
     return $errors;
   }
 
