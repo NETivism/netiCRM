@@ -434,6 +434,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $customFields = CRM_Core_BAO_CustomField::getFields('ContributionRecur');
     $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params, $customFields, $this->_id, 'ContributionRecur');
 
+    if (!empty($params['custom'])) {
+      $isUpdate = TRUE;
+    }
 
     if ($isUpdate) {
       // If there has update.
