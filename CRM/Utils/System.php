@@ -1216,7 +1216,8 @@ class CRM_Utils_System {
     if (!empty(CRM_Core_Config::$_shutdownCallbacks)) {
       $registerFastcgiFinishRequest = FALSE;
       if (!empty(CRM_Core_Config::$_shutdownCallbacks['before'])) {
-        foreach(CRM_Core_Config::$_shutdownCallbacks['before'] as $call) {
+        foreach(CRM_Core_Config::$_shutdownCallbacks['before'] as $idx => $call) {
+          unset(CRM_Core_Config::$_shutdownCallbacks['before'][$idx]);
           $callback = key($call);
           $args = reset($call);
           if (is_callable($callback)) {
@@ -1237,7 +1238,8 @@ class CRM_Utils_System {
       }
       if (!empty(CRM_Core_Config::$_shutdownCallbacks['after'])) {
         register_shutdown_function('CRM_Utils_System::civiAfterShutdown');
-        foreach(CRM_Core_Config::$_shutdownCallbacks['after'] as $call) {
+        foreach(CRM_Core_Config::$_shutdownCallbacks['after'] as $idx => $call) {
+          unset(CRM_Core_Config::$_shutdownCallbacks['after'][$idx]);
           $callback = key($call);
           $args = reset($call);
           if (is_callable($callback)) {
