@@ -1414,7 +1414,12 @@ UPDATE  civicrm_participant
             $lastRegisteration = $eventDetails[$participantValues['event_id']]['registration_end_date'];
           }
           if (!empty($eventDetails[$participantValues['event_id']]['expiration_time'])) {
-            $baseTime = strtotime($participantValues['register_date']);
+            if (array_key_exists($toStatusId, $pendingStatuses)) {
+              $baseTime = CRM_REQUEST_TIME;
+            }
+            else {
+              $baseTime = strtotime($participantValues['register_date']);
+            }
             $plusDay = ceil($eventDetails[$participantValues['event_id']]['expiration_time']/24);
             $lastRegisteration = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
             $lastRegisteration = date('Y-m-d H:i:s', $lastRegisteration);
