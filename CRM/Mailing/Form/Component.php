@@ -84,13 +84,19 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
       $componentType = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Component', $this->_id, 'component_type');
       $isRequired = ($componentType != 'Header');
     }
-    $this->add('textarea', 'body_text', ts('Body - TEXT Format'),
-      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'body_text'),
-      $isRequired
+    $this->addWysiwyg('body_text',
+    ts('Body - TEXT Format'),
+    array(
+      'cols' => '80',
+      'rows' => '8',
+      )
     );
-    $this->add('textarea', 'body_html', ts('Body - HTML Format'),
-      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'body_html'),
-      $isRequired
+    $this->addWysiwyg('body_html',
+    ts('Body - HTML Format'),
+    array(
+      'cols' => '80',
+      'rows' => '8',
+      )
     );
 
     $this->add('checkbox', 'is_default', ts('Default?'));
@@ -190,6 +196,12 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
             1 => $type,
           )) . '<ul>' . implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('CiviMail Action Tokens', TRUE) . '">' . ts('More information on tokens...') . '</a>';
       }
+    }
+    if (!CRM_Utils_Array::value('body_html', $params)) {
+      $errors['body_html'] = ts('body_html is a required field.');
+    }
+    if (!CRM_Utils_Array::value('body_text', $params)) {
+      $errors['body_text'] = ts('body_text is a required field.');
     }
 
     return empty($errors) ? TRUE : $errors;
