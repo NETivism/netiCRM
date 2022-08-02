@@ -56,7 +56,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    *
    * @param array $fields the input form values
    * @param array $files  the uploaded files if any
-   * @param array $self   current form object.
+   * @param object $self   current form object.
    *
    * @return array array of errors / empty array.
    */
@@ -67,12 +67,14 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       list($user, $domain) = explode('@', trim($self->_values['email']));
       $result = CRM_Utils_Mail::checkSPF($domain);
       $filter = $self->_values['filter'];
-      if (!$result) {
-        $errors['qfKey'] = ts('Your %1 validation failed.', array(1 => 'SPF'));
+      if ($result !== TRUE) {
+        $failReason = $result;
+        $errors['qfKey'] = ts('Your %1 validation failed.', array(1 => 'SPF')).'<br>'.ts("Reason").": ".$failReason;
         $filter = $filter & ~(self::VALID_SPF);
       }
       else {
         $filter = $filter | self::VALID_SPF;
+        $self->assign('spf_status', TRUE);
       }
 
       $result = CRM_Utils_Mail::checkDKIM($domain);
@@ -82,6 +84,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       }
       else {
         $filter = $filter | self::VALID_DKIM;
+        $self->assign('dkim_status', TRUE);
       }
 
       // save validation result
