@@ -48597,3 +48597,10 @@ msgstr ""
 #: CRM/Core/Payment/SPGATEWAY.php
 msgid "If the transaction is finished, it will update the follow data by this action: %1"
 msgstr ""
+
+#: CRM/Mailing/Page/Component.php
+msgid "body_text is a required field."
+msgstr ""
+
+msgid "body_html is a required field."
+msgstr ""
