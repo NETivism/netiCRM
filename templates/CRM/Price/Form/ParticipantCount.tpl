@@ -41,7 +41,7 @@
       cj("input,#priceset select,#priceset").each(function () {
 
         if ( cj(this).attr('price') ) {
-            switch( cj(this).attr('type') ) { 
+            switch( cj(this).attr('type') ) {
               case 'checkbox':
 	          eval( 'var option = ' + cj(this).attr('price') ) ;
  		  ele        = option[0];
@@ -97,6 +97,7 @@
 		  break;
 
 	       case 'text':
+	       case 'number':
 	          // default calcution of element. 
       	 	  var textval = parseFloat( cj(this).val() );
 		  var addCount = 0;
@@ -185,7 +186,7 @@
   	var optionPart = option[1].split(optionSep);
 	if ( optionPart[1] ) {
   	  addCount    = parseInt( optionPart[1] );
-  	  var textval = parseInt( cj(object).attr('value') );
+  	  var textval = parseInt( cj(object).val() );
   	  var curval  = textval * addCount;
     	  if ( textval >= 0 ) {
 	    pPartiCount    = pPartiCount + curval - parseInt(pPartiRef[ele]);

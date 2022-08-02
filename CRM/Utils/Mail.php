@@ -416,6 +416,13 @@ class CRM_Utils_Mail {
     return TRUE;
   }
 
+  /**
+   * Check if SPF record valid
+   *
+   * @param string $email email or domain name to verify
+   * @param object $mailer specific mailer which contain host info to help verify
+   * @return bool|string return TRUE when success, return fail reason explain when failed.
+   */
   static function checkSPF($email, $mailer = NULL) {
     if (strstr($email, '@')) {
       list($user, $domain) = explode('@', trim($email));
@@ -436,13 +443,32 @@ class CRM_Utils_Mail {
         $checker = new SPFLib\Checker();
         $checkResult = $checker->check(new SPFLib\Check\Environment($ip, $domain));
         $result = $checkResult->getCode();
-        return $result === 'pass';
+        if ($result === 'pass') {
+          return TRUE;
+        }
+        $explains = $checkResult->getMessages();
+        return implode("\n", $explains);
       }
       else {
         require_once 'SPFCheck/autoload.php';
         $checker = new Mika56\SPFCheck\SPFCheck(new Mika56\SPFCheck\DNSRecordGetter());
         $result = $checker->isIPAllowed($ip, $domain);
-        return $result === Mika56\SPFCheck\SPFCheck::RESULT_PASS;
+        if ($result === Mika56\SPFCheck\SPFCheck::RESULT_PASS) {
+          return TRUE;
+        }
+        switch($result) {
+          case Mika56\SPFCheck\SPFCheck::RESULT_NONE:
+            return 'No SPF record found.';
+          case Mika56\SPFCheck\SPFCheck::RESULT_MULTIPLE:
+            return 'Too many SPF records or configuration error.';
+          case Mika56\SPFCheck\SPFCheck::RESULT_PERMERROR:
+            return 'SPF syntax error or configuration error.';
+          case Mika56\SPFCheck\SPFCheck::RESULT_TEMPERROR:
+            return 'Unknown temporary error occurred, please try again.';
+          case Mika56\SPFCheck\SPFCheck::RESULT_DEFINITIVE_PERMERROR:
+            return 'Too many DNS lookups have been performed (max limit is 10)';
+        }
+        return 'Unknown error occurred.';
       }
     }
     return FALSE;
@@ -462,6 +488,14 @@ class CRM_Utils_Mail {
     return array();
   }
 
+  /**
+   * Check if DKIM record valid
+   *
+   * @param string $email Email or domain name.
+   * @return bool|null
+   *   Return NULL when there is no dkim selector or domain.
+   *   Return bool when apply the validation.
+   */
   static function checkDKIM($email) {
     global $civicrm_conf;
 
