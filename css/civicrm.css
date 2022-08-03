@@ -6853,7 +6853,8 @@ input.crm-form-textfield,
 }
 
 /** Coupon */
-#priceset .coupon-description{
+#priceset .coupon-description,
+.coupon-result {
   color: red;
   padding-left: 10px;
 }
