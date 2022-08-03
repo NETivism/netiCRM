@@ -64,12 +64,13 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     $errors = array();
     // verify on every submission
     if (!empty($self->_values['email'])) {
+      $errorMsg = array();
       list($user, $domain) = explode('@', trim($self->_values['email']));
       $result = CRM_Utils_Mail::checkSPF($domain);
       $filter = $self->_values['filter'];
       if ($result !== TRUE) {
         $failReason = $result;
-        $errors['qfKey'] = ts('Your %1 validation failed.', array(1 => 'SPF')).'<br>'.ts("Reason").": ".$failReason;
+        $errorMsg['spf'] = ts('Your %1 validation failed.', array(1 => 'SPF')).' '.ts("Reason").": ".$failReason;
         $filter = $filter & ~(self::VALID_SPF);
       }
       else {
@@ -79,12 +80,16 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
 
       $result = CRM_Utils_Mail::checkDKIM($domain);
       if ($result === FALSE) {
-        $errors['qfKey'] .= ts('Your %1 validation failed.', array(1 => 'DKIM'));
+        $errorMsg['dkim'] = ts('Your %1 validation failed.', array(1 => 'DKIM'));
         $filter = $filter & ~(self::VALID_DKIM);
       }
       else {
         $filter = $filter | self::VALID_DKIM;
         $self->assign('dkim_status', TRUE);
+      }
+
+      if (!empty($errorMsg)) {
+        $errors['qfKey'] = implode('<br>', $errorMsg);
       }
 
       // save validation result
