@@ -926,7 +926,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       }
     }
 
-    if ($config->profileDoubleOptIn && !empty($submittedGroup)) {
+    if (!empty($submittedGroup)) {
       $profile = NULL;
       foreach ($params as $name => $values) {
         if (substr($name, 0, 6) == 'email-') {
@@ -969,7 +969,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
     }
 
     // last, if still have mail to subscribe group, send mail
-    if (!empty($mailingType)) {
+    if ($config->profileDoubleOptIn) {
       $toSubscribe = array_keys($mailingType);
       CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($toSubscribe, $profile, $this->_id);
     }
