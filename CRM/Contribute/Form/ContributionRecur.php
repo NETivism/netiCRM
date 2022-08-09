@@ -294,7 +294,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
 
     // define the buttons
     $this->addButtons(array(
-        array('type' => 'next',
+        array('type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
         ),
@@ -323,7 +323,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
    */
   public function postProcess() {
     // store the submitted values in an array
-    $params = $this->exportValues();
+    $params = $this->controller->exportValues($this->_name);
 
     // if this is an update of an existing recurring contribution, pass the ID
     if ($this->_action & CRM_Core_Action::UPDATE) {
