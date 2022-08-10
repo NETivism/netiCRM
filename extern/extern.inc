@@ -1,5 +1,5 @@
 <?php
-require_once '../civicrm.config.php';
+require_once __DIR__.'/../civicrm.config.php';
 
 // wrap function to prevent variale become global
 function _forcePHPIDS() {
