@@ -1,5 +1,5 @@
 <?php
-require_once '../civicrm.config.php';
+require_once __DIR__.'/extern.inc';
 CRM_Core_Config::singleton();
 $rest = new CRM_Utils_REST();
 
@@ -8,7 +8,6 @@ $rest = new CRM_Utils_REST();
 if (empty(CRM_Utils_Array::value('xml', $_REQUEST))) {
   header('Content-Type: application/json; charset=utf-8');
 }
-require_once __DIR__.'/extern.inc';
 
 // prevent API access by pass
 if (!defined('CIVICRM_APIEXPLORER_ENABLED')) {
