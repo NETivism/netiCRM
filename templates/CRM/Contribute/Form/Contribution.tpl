@@ -286,11 +286,11 @@ cj(document).ready( function() {
     cj('.crm-ajax-accordion .crm-accordion-header').one('click', function() { 
     	loadPanes(cj(this).attr('id')); 
     });
-    cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function() {
+    cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function(idx) {
       var paneID = cj(this).attr('id');
       window.setTimeout(function(){
         loadPanes(paneID);
-      }, 400);
+      }, 800*(idx+1));
     });
 });
 // load panes function calls for snippet based on id of crm-accordion-header

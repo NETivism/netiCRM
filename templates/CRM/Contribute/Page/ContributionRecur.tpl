@@ -329,7 +329,7 @@
             }
           }
 
-          var freq = $('input#frequency_unit').attr('value');
+          var freq = $('input#frequency_unit').val();
           $('input#frequency_unit').closest('td').append($('<select id="fake_frequency_unit"><option value="month">{/literal}{ts}monthly{/ts}{literal}</option><option value="year">{/literal}{ts}yearly{/ts}{literal}</option></select>'));
           $('select#fake_frequency_unit [value='+freq+']').attr('selected', 'selected');
           $('#frequency_interval_block').hide();
@@ -353,7 +353,7 @@
                 e.value = e.defaultValue;
                 e.disabled = true;
               });
-              $('#fake_frequency_unit').val($('input#frequency_unit').attr('value')).attr('disabled','disabled');
+              $('#fake_frequency_unit').val($('input#frequency_unit').val()).attr('disabled','disabled');
             }
 
             $('input#frequency_unit').val($('#fake_frequency_unit').val());
