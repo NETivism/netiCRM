@@ -184,10 +184,18 @@
                 {/if}
                 <p>
                 {if $contributeMode EQ 'notify'}
-                  {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact us at %1.{/ts}
+                  {if $display_recurring_email}
+                    {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact us at %1.{/ts}
+                  {else}
+                    {ts}To modify or cancel future contributions please contact us{/ts}
+                  {/if}
                 {/if}
                 {if $contributeMode EQ 'direct'}
-                  {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact us at %1.{/ts}
+                  {if $display_recurring_email}
+                    {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact us at %1.{/ts}
+                  {else}
+                    {ts}To modify or cancel future contributions please contact us{/ts}
+                  {/if}
                 {/if}
                 {if $is_email_receipt}
                     {ts}You will receive an email receipt for each recurring contribution.{/ts}
