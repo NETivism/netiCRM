@@ -971,7 +971,14 @@ class CRM_Profile_Form extends CRM_Core_Form {
     // last, if still have mail to subscribe group, send mail
     if ($config->profileDoubleOptIn) {
       $toSubscribe = array_keys($mailingType);
-      CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($toSubscribe, $profile, $this->_id);
+      if ($config->profileDoubleOptIn) {
+        CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($toSubscribe, $profile, $this->_id);
+      } else {
+        foreach ($toSubscribe as $groupID) {
+          $se = CRM_Mailing_Event_BAO_Subscribe::subscribe($groupID, $profile['email'], $this->_id);
+          $confirm = CRM_Mailing_Event_BAO_Confirm::confirm($this->_id, $se->id, $se->hash);
+        }
+      }
     }
 
     require_once 'CRM/Core/BAO/UFGroup.php';

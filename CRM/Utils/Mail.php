@@ -443,11 +443,26 @@ class CRM_Utils_Mail {
         $checker = new SPFLib\Checker();
         $checkResult = $checker->check(new SPFLib\Check\Environment($ip, $domain));
         $result = $checkResult->getCode();
-        if ($result === 'pass') {
+        if ($result === SPFLib\Check\Result::CODE_PASS) {
           return TRUE;
         }
         $explains = $checkResult->getMessages();
-        return implode("\n", $explains);
+        if (!empty($explains)) {
+          return implode("\n", $explains);
+        }
+        switch($result) {
+          case SPFLib\Check\Result::CODE_NONE:
+            return 'No SPF record found.';
+          case SPFLib\Check\Result::CODE_NEUTRAL:
+          case SPFLib\Check\Result::CODE_FAIL:
+          case SPFLib\Check\Result::CODE_SOFTFAIL:
+          case SPFLib\Check\Result::CODE_ERROR_PERMANENT:
+            return 'SPF syntax error or configuration error.';
+          case SPFLib\Check\Result::CODE_ERROR_TEMPORARY:
+            return 'Unknown temporary error occurred, please try again.';
+          default:
+            return 'Unknown error occurred.';
+        }
       }
       else {
         require_once 'SPFCheck/autoload.php';
