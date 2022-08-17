@@ -247,10 +247,20 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       }
 
       // set email in the template here
+      global $civicrm_conf;
+      $fromEmail = '';
+      if (!empty($values['receipt_from_email'])) {
+        if (!empty($civicrm_conf['mailing_noreply_domain']) && preg_match($civicrm_conf['mailing_noreply_domain'], $values['receipt_from_email'])) {
+          $fromEmail = '';
+        }
+        else {
+          $fromEmail = $values['receipt_from_email'];
+        }
+      }
       $tplParams = array(
         'createdDate' => CRM_Utils_Array::value('created_date', $values),
         'email' => $email,
-        'receiptFromEmail' => strstr($values['receipt_from_email'], 'neticrm.net') ? '' : $values['receipt_from_email'],
+        'receiptFromEmail' => $fromEmail,
         'contactID' => $contactID,
         'contributionID' => $values['contribution_id'],
         'membershipID' => CRM_Utils_Array::value('membership_id', $values),
