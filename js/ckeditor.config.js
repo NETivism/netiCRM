@@ -12,14 +12,6 @@ CKEDITOR.editorConfig = function(config) {
   // The minimum editor width, in pixels, when resizing it with the resize handle.
   config.resize_minWidth = 450;
 
-  // Protect PHP code tags (<?...?>) so CKEditor will not break them when
-  // switching from Source to WYSIWYG.
-  // Uncommenting this line doesn't mean the user will not be able to type PHP
-  // code in the source. This kind of prevention must be done in the server
-  // side
-  // (as does Drupal), so just leave this line as is.
-  config.protectedSource.push(/<\?[\s\S]*?\?>/g); // PHP Code
-
   // This toolbar should work fine with "Filtered HTML" filter
   config.toolbar_CiviCRM = [
     ['Maximize'],['RemoveFormat'],
@@ -34,7 +26,7 @@ CKEDITOR.editorConfig = function(config) {
     ['TextColor','BGColor'],
     ['Table','HorizontalRule'],
     ['Source']
-   ];
+  ];
   config.toolbar_CiviCRMBasic = [
     ['Format'],
     ['RemoveFormat'],
@@ -42,7 +34,7 @@ CKEDITOR.editorConfig = function(config) {
     ['NumberedList','BulletedList'],
     ['Link','Unlink'],['Image']
     ['Undo','Redo']
-   ];
+  ];
 
   /**
    * CKEditor's editing area body ID & class.
@@ -53,6 +45,16 @@ CKEDITOR.editorConfig = function(config) {
   config.bodyId = '';
   config.resize_enabled = true;
   config.extraAllowedContent = 'p()[]{*};div()[]{*};li()[]{*};ul()[]{*}';
+  config.disallowedContent = {
+    img: {
+      match: function( element ) {
+        if ( element.name === 'img' && element.attributes.src && String( element.attributes.src ).match( /^data\:/ ) ) {
+          return true;
+        }
+        return false;
+      }
+    }
+  };
 };
 CKEDITOR.dtd.$removeEmpty['i'] = false;
 CKEDITOR.dtd.$removeEmpty['span'] = false;
