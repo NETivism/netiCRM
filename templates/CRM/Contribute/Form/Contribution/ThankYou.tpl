@@ -183,14 +183,22 @@
                     <p><strong>{ts 1=$frequency_interval 2=$frequency_unit}This recurring contribution will be automatically processed every %1 %2(s).{/ts}</strong></p>
                 {/if}
                 <p>
-                {if $contributeMode EQ 'notify'}
-                  {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact us at %1.{/ts}
-                {/if}
-                {if $contributeMode EQ 'direct'}
-                  {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact us at %1.{/ts}
-                {/if}
                 {if $is_email_receipt}
                     {ts}You will receive an email receipt for each recurring contribution.{/ts}
+                {/if}
+                {if $contributeMode EQ 'notify'}
+                  {if $display_recurring_email}
+                    {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact us at %1.{/ts}
+                  {else}
+                    {ts}To modify or cancel future contributions please contact us{/ts}
+                  {/if}
+                {/if}
+                {if $contributeMode EQ 'direct'}
+                  {if $display_recurring_email}
+                    {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact us at %1.{/ts}
+                  {else}
+                    {ts}To modify or cancel future contributions please contact us{/ts}
+                  {/if}
                 {/if}
                 </p>
                 <span class="crmdata-recur" style="display:none">Y</span>

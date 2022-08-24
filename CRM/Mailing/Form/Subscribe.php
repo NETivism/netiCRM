@@ -235,9 +235,8 @@ ORDER BY title";
         $se = CRM_Mailing_Event_BAO_Subscribe::subscribe($groupID, $params['email'], $contactId);
         $confirm = CRM_Mailing_Event_BAO_Confirm::confirm($contactId, $se->id, $se->hash);
       }
-
     }
-    
+    CRM_Core_Session::setStatus(ts('Thank you. Your information has been saved.'));
   }
 }
 
