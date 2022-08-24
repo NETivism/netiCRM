@@ -167,6 +167,17 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     $membershipTypeID = $this->get('membershipTypeID');
     $this->assign('receiptFromEmail', CRM_Utils_Array::value('receipt_from_email', $this->_values));
 
+    // refs #34646, hide the noreply email when user use default email on page.
+    global $civicrm_conf;
+    if (!empty($this->_values['receipt_from_email']) && !empty($civicrm_conf['mailing_noreply_domain'])) {
+      if (preg_match($civicrm_conf['mailing_noreply_domain'], $this->_values['receipt_from_email'])) {
+        $this->assign('display_recurring_email', FALSE);
+      }
+      else {
+        $this->assign('display_recurring_email', TRUE);
+      }
+    }
+
     if ($productID) {
       require_once 'CRM/Contribute/BAO/Premium.php';
       CRM_Contribute_BAO_Premium::buildPremiumBlock($this, $this->_id, FALSE, $productID, $option);

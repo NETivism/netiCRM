@@ -1094,6 +1094,17 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       }
       $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
     }
+
+    // refs #34646, hide the noreply email when user use default email on page.
+    global $civicrm_conf;
+    if (!empty($this->_values['receipt_from_email']) && !empty($civicrm_conf['mailing_noreply_domain'])) {
+      if (preg_match($civicrm_conf['mailing_noreply_domain'], $this->_values['receipt_from_email'])) {
+        $this->assign('display_recurring_email', FALSE);
+      }
+      else {
+        $this->assign('display_recurring_email', TRUE);
+      }
+    }
   }
 
   /**

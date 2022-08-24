@@ -109,11 +109,17 @@ function civicrm_conf_init() {
     exit();
 }
 
-if( file_exists(civicrm_conf_init( ) . '/settings.php')){
-  $error = include_once civicrm_conf_init( ) . '/settings.php';
+civicrm_conf_init();
+global $civicrm_root, $civicrm_conf_path, $civicrm_drupal_root;
+if ($civicrm_drupal_root) {
+  chdir($civicrm_drupal_root);
 }
 
-$settingsFile = civicrm_conf_init( ) . '/civicrm.settings.php';
+if( file_exists($civicrm_conf_path . '/settings.php')){
+  $error = include_once $civicrm_conf_path . '/settings.php';
+}
+
+$settingsFile = $civicrm_conf_path . '/civicrm.settings.php';
 define('CIVICRM_SETTINGS_PATH', $settingsFile);
 $error = @include_once( $settingsFile );
 if ( $error === false ) {
@@ -123,6 +129,5 @@ if ( $error === false ) {
 }
 
 // Load class loader
-global $civicrm_root;
 require_once $civicrm_root . '/CRM/Core/ClassLoader.php';
 CRM_Core_ClassLoader::singleton()->register();
