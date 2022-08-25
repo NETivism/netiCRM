@@ -50,6 +50,13 @@
           </td>
         </tr>
         <tr>
+          <td class="label">{$form.onDuplicate.label}{help id="id-onDuplicate"}</td>
+          <td>
+            {$form.onDuplicate.html}
+          </td>
+        </tr>
+        <tr class="create-new-contact"><td class="label">{$form.createContactOption.label}{help id="id-createContactOption"}</td><td>{$form.createContactOption.html}</td></tr>
+        <tr>
           <td class="{$form.contactType.name} label">{$form.contactType.label}</td>
           <td class="{$form.contactType.name}">{$form.contactType.html}<br />
             <div class="description">
@@ -58,13 +65,6 @@
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="label">{$form.onDuplicate.label}{help id="id-onDuplicate"}</td>
-          <td>
-            {$form.onDuplicate.html}
-          </td>
-        </tr>
-        <tr class="create-new-contact"><td class="label">{$form.createContactOption.label}{help id="id-createContactOption"}</td><td>{$form.createContactOption.html}</td></tr>
         <tr class="dedupe-rule-group">
           <td class="label">{$form.dedupeRuleGroup.label}</td>
           <td>
@@ -91,6 +91,8 @@ cj(document).ready(function($){
         $("input[name=createContactOption]").not("[value=102]").closest("label").addClass("disabled");
         $("input[name=createContactOption]").not("[value=102]").attr('disabled', 'disabled');
         $("input[name=createContactOption][value=102]").click();
+        $("input[name=contactType]").attr('disabled', 'disabled');
+        $("select[name=dedupeRuleGroup]").attr('disabled', 'disabled');
       }
       else {
         $("input[name=createContactOption]").not("[value=102]").removeAttr('disabled');
@@ -98,6 +100,8 @@ cj(document).ready(function($){
           $("input[name=createContactOption][value=100]").click();
         }
         $("tr.create-new-contact label").removeClass("disabled");
+        $("input[name=contactType]").removeAttr('disabled');
+        $("select[name=dedupeRuleGroup]").removeAttr('disabled');
       }
     });
   }
