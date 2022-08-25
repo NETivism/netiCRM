@@ -84,12 +84,9 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
       $componentType = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Component', $this->_id, 'component_type');
       $isRequired = ($componentType != 'Header');
     }
-    $this->addWysiwyg('body_text',
-    ts('Body - TEXT Format'),
-    array(
-      'cols' => '80',
-      'rows' => '8',
-      )
+    $this->add('textarea', 'body_text', ts('Body - TEXT Format'),
+      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'body_text'),
+      $isRequired
     );
     $this->addWysiwyg('body_html',
     ts('Body - HTML Format'),
