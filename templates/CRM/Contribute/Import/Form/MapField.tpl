@@ -35,6 +35,7 @@
     <p>{ts}Click 'Load Saved Field Mapping' if data has been previously imported from the same source. You can then select the saved import mapping setup and load it automatically.{/ts}<p>
     {/if}
     <p>{ts}If you think you may be importing additional data from the same data source, check 'Save this field mapping' at the bottom of the page before continuing. The saved mapping can then be easily reused the next time data is imported.{/ts}</p>
+    <p>{ts}When updating an existing contribution, the Contribution IDs, Transaction ID,and Invoice ID can be any one of these three fields as the value correspondingto the existing contribution.{/ts}</p>
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
  {* Table for mapping data to CRM fields *}
