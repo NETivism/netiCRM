@@ -48604,3 +48604,7 @@ msgstr ""
 
 msgid "body_html is a required field."
 msgstr ""
+
+#: templates/CRM/Contribute/Import/Form/MapField.tpl
+msgid "When updating an existing contribution, the Contribution IDs, Transaction ID, and Invoice ID can be any one of these three fields as the value corresponding to the existing contribution."
+msgstr ""
