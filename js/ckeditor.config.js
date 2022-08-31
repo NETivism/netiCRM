@@ -13,7 +13,7 @@ CKEDITOR.editorConfig = function(config) {
     ['Bold','Italic','Underline','Strike'],
     ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
     ['NumberedList','BulletedList','Outdent','Indent','Blockquote'],
-    ['Link','Unlink'],['Image2','MediaEmbed'],
+    ['Link','Unlink'],['Image','MediaEmbed'],
     '/',
     ['Format','Font','FontSize'],
     ['PasteFromWord','PasteText'],
@@ -27,7 +27,7 @@ CKEDITOR.editorConfig = function(config) {
     ['RemoveFormat'],
     ['Bold','Italic','Underline','Strike'],
     ['NumberedList','BulletedList'],
-    ['Link','Unlink'],['Image2']
+    ['Link','Unlink'],['Image']
     ['Undo','Redo']
   ];
 
