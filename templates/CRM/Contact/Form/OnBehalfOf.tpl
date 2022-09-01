@@ -79,7 +79,7 @@
       </div>
     {/if}
       <div id="create_org" class="crm-section create_org-section">
-        <div class="label">{$form.organization_name.label}</div>
+        <div class="label">{$form.organization_name.label}<span class="crm-marker" title="{ts}This field is required.{/ts}">*</span></div>
         <div class="content">{$form.organization_name.html|crmReplace:class:big}</div>
         <div class="clear"></div>
       </div>
@@ -122,7 +122,7 @@
             <div class="clear"></div>
         </div>
 		<div class="crm-section {$form.email.$index.email.id}-section">
-            <div class="label">{$form.email.$index.email.label}</div>
+            <div class="label">{$form.email.$index.email.label}<span class="crm-marker" title="{ts}This field is required.{/ts}">*</span></div>
             <div class="content">{$form.email.$index.email.html}</div>
             <div class="clear"></div>
         </div>
