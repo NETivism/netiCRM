@@ -74,7 +74,7 @@
         <div class="content">{$form.org_option.html}</div>
       </div>
       <div id="select_org" class="crm-section select_org-section">
-        <div class="label">{$form.organization_name.label}</div>	   
+        <div class="label">{$form.organization_name.label}<span class="crm-marker" title="{ts}This field is required.{/ts}">*</span></div>	   
         <div class="content">{$form.organization_id.html|crmReplace:class:big}</div>
       </div>
     {/if}
