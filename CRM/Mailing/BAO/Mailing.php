@@ -1334,9 +1334,18 @@ AND civicrm_contact.is_opt_out =0";
 
     // push the tracking url on to the html email if necessary
     if ($this->open_tracking && $html) {
-      array_push($html, "\n" . '<img src="' . $config->userFrameworkResourceURL .
-        "extern/open.php?q=$event_queue_id\" width='1' height='1' alt='' border='0'>"
-      );
+      $trackedOpen = FALSE;
+      $openTrack = '<img src="' . $config->userFrameworkResourceURL ."extern/open.php?q=$event_queue_id\" width='1' height='1' alt='' border='0'>\n";
+      foreach($html as $idx => $document) {
+        if (stristr($document, '</body>')) {
+          $html[$idx] = preg_replace('@</body>@i', $openTrack.'</body>', $document);
+          $trackedOpen = TRUE;
+          break;
+        }
+      }
+      if (!$trackedOpen){
+        array_push($html, "\n".$openTrack);
+      }
     }
 
     $message = new Mail_mime("\n");
