@@ -104,7 +104,7 @@ cj(document).ready(function($){
         $("tr.create-new-contact label").removeClass("disabled");
         $("input[name=contactType]").removeAttr('disabled');
         $("select[name=dedupeRuleGroup]").removeAttr('disabled');
-        $("input[name=contactType]").attr('checked', 'checked');
+        $("input[value=Individual]").attr('checked', 'checked');
         showDedupeRuleOption();
 
       }
