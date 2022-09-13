@@ -7,3 +7,9 @@ source_file = l10n/pot/civicrm.pot
 source_lang = en
 type        = PO
 
+
+[neticrm.neticrmpot]
+file_filter = l10n/<lang>/civicrm.po
+source_file = l10n/pot/civicrm.pot
+source_lang = en
+type = PO
