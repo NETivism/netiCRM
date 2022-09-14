@@ -207,7 +207,13 @@ class CRM_Utils_Mail {
           'body' => $message,
           'callback' => $callback,
         );
-        CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', array($mailer, $sendParams));
+        // Non-blocking only make sense when there is fastcgi_finish_request
+        if (php_sapi_name() === 'fpm-fcgi') {
+          CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', array($mailer, $sendParams));
+        }
+        else {
+          CRM_Utils_Mail::sendNonBlocking($mailer, $sendParams);
+        }
         return TRUE;
       }
       else {
