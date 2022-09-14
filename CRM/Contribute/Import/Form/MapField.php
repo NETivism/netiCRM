@@ -164,12 +164,23 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    */
   public function preProcess() {
     $columnNames = array();
-    $this->_mapperFields = $this->get('fields');
     $this->_dataValues = $this->get('dataValues');
     $this->_importTableName = $this->get('importTableName');
-
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
     $this->_onDuplicate = $this->get('onDuplicate', isset($onDuplicate) ? $onDuplicate : "");
+    if ($this->_onDuplicate == 4) {
+      // When user choose update contribution.
+      $updateMapperFields = $this->get('fields');
+      foreach ($updateMapperFields as $key) {
+        if (strpos($key,'聯絡人') !==  false){
+          $index = array_search($key,$updateMapperFields);
+          unset($updateMapperFields[$index]);
+        }
+      }
+      $this->_mapperFields = $updateMapperFields;
+    } else {
+      $this->_mapperFields = $this->get('fields');
+    }
 
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);

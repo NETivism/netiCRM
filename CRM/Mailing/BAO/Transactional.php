@@ -186,7 +186,13 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
             'callback' => $callback,
             'queue' => $queue,
           );
-          CRM_Core_Config::addShutdownCallback('after', 'CRM_Mailing_BAO_Transactional::sendNonBlocking', array($mailer, $sendParams));
+          // Non-blocking only make sense when there is fastcgi_finish_request
+          if (php_sapi_name() === 'fpm-fcgi') {
+            CRM_Core_Config::addShutdownCallback('after', 'CRM_Mailing_BAO_Transactional::sendNonBlocking', array($mailer, $sendParams));
+          }
+          else {
+            CRM_Mailing_BAO_Transactional::sendNonBlocking($mailer, $sendParams);
+          }
           if (!empty($additionalRecipients)) {
             self::additionalRecipients($additionalRecipients, $params);
           }
