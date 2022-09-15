@@ -48986,3 +48986,21 @@ msgid ""
 "ID, and Invoice ID can be any one of these three fields as the value "
 "corresponding to the existing contribution."
 msgstr "更新現有捐款時，捐款編號、交易編號、帳單編號，這三個欄位任選一個做為對應現有捐款的值即可。"
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid ""
+"Uploading file must include the following columns or the data cannot be "
+"imported successfully."
+msgstr "您上傳的匯入資料檔，必須包含以下欄位，否則無法成功匯入資料"
+
+msgid "First Name,Last Name,Email(or Dedupe Rule of Contact you selected)"
+msgstr "姓、名、email(或您選定的「尋找聯絡人欄位對應規則」)"
+
+msgid ""
+"When importing members, if the member has already have data in the system, "
+"the content of the member's personal information (contact, personal field) "
+"you imported this time,It is not possible to update the personal information"
+" of this member, but only for the purpose of comparing members. If you want "
+"to update your membership information, please use the Import Contacts "
+"function to do so."
+msgstr "匯入會員時，若這位會員已在系統建檔過，本次您匯入的會員個資內容(聯絡人、個人類欄位)，並無法更新到這位會員的個資，而只是做為比對會員的用途。若想要更新會員個資，請利用匯入聯絡人功能來達成。"
