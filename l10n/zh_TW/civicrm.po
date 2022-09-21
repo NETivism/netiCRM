@@ -48987,7 +48987,7 @@ msgid ""
 "corresponding to the existing contribution."
 msgstr "更新現有捐款時，捐款編號、交易編號、帳單編號，這三個欄位任選一個做為對應現有捐款的值即可。"
 
-#: CRM/Contribute/Import/Form/UploadFile.php
+#: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid ""
 "Uploading file must include the following columns or the data cannot be "
 "imported successfully."
@@ -49004,3 +49004,16 @@ msgid ""
 "to update your membership information, please use the Import Contacts "
 "function to do so."
 msgstr "匯入會員時，若這位會員已在系統建檔過，本次您匯入的會員個資內容(聯絡人、個人類欄位)，並無法更新到這位會員的個資，而只是做為比對會員的用途。若想要更新會員個資，請利用匯入聯絡人功能來達成。"
+
+#: templates/CRM/Contribute/Import/Form/UploadFile.tpl
+msgid "Contribution Received Date"
+msgstr "捐款收到日期"
+
+msgid ""
+"When importing contributions, if the contributor has already have data in "
+"the system, the content of the contributor's personal information (contact, "
+"personal field) you imported this time,It is not possible to update the "
+"personal information of this contributor, but only for the purpose of "
+"comparing contributor. If you want to update your contributor information, "
+"please use the Import Contacts function to do so."
+msgstr "匯入捐款時，若這位捐款人已在系統建檔過，本次您匯入的捐款人個資內容(聯絡人、個人類欄位)，並無法更新到這位捐款人的個資，而只是做為比對捐款人的用途。若想要更新捐款人個資，請利用匯入聯絡人功能來達成。"
