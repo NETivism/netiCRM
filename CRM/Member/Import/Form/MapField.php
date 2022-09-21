@@ -819,7 +819,8 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
           elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
             $saveMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
           }
-          $saveMappingFields->location_type_id = isset($location_id[0]) ? $location_id[0] : NULL;
+          $location = array_keys($locationTypes, $locations[$i]);
+          $saveMappingFields->location_type_id = !empty($location) ? $location[0] : 'NULL';
         }
 
         $saveMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : NULL;
