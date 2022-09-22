@@ -140,8 +140,13 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       $form->_componentTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
       $sql = " DROP TABLE IF EXISTS {$form->_componentTable}";
       CRM_Core_DAO::executeQuery($sql);
+      if ($customHeader = $form->get('customHeader')) {
+        foreach ($customHeader as $i => $val) {
+          $customColumns .= ", column{$i} varchar(64)";
+        }
+      }
 
-      $sql = "CREATE TABLE {$form->_componentTable} ( contact_id int primary key) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+      $sql = "CREATE TABLE {$form->_componentTable} ( contact_id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
       CRM_Core_DAO::executeQuery($sql);
     }
 
@@ -188,8 +193,16 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       if ($useTable) {
         $count = 0;
         $insertString = array();
+        $customRows = $form->get('customRows', $rows);
+        $customColumnsNames = str_replace('varchar(64)', '', $customColumns);
         while ($dao->fetch()) {
           $count++;
+          if ($customColumns) {
+            $values = "'".implode("','", $customRows[$dao->contact_id])."'";
+            $sql = "REPLACE INTO {$form->_componentTable} ( contact_id $customColumnsNames) VALUES ( $dao->contact_id , $values)";
+            CRM_Core_DAO::executeQuery($sql);
+            continue;
+          }
           $insertString[] = " ( {$dao->contact_id} ) ";
           if ($count % 200 == 0) {
             $string = implode(',', $insertString);

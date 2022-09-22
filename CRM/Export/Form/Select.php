@@ -72,10 +72,14 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
     $customSearchID = $this->get('customSearchID');
     if ($customSearchID) {
       require_once 'CRM/Export/BAO/Export.php';
-      CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
+      list('header' => $header, 'rows' => $rows) = CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
         $this->get('formValues'),
-        $this->get(CRM_Utils_Sort::SORT_ORDER)
+        $this->get(CRM_Utils_Sort::SORT_ORDER),
+        TRUE
       );
+      $this->set('customHeader', $header);
+      $this->set('customRows', $rows);
+      $isUseTempTable = TRUE;
     }
 
     $this->_selectAll = FALSE;
@@ -149,7 +153,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       $taskName = $contactTasks[$this->_task];
 
       require_once "CRM/Contact/Form/Task.php";
-      CRM_Contact_Form_Task::preProcessCommon($this);
+      CRM_Contact_Form_Task::preProcessCommon($this, $isUseTempTable);
     }
     else {
       $this->assign('taskName', "Export $componentName[1]");

@@ -1235,7 +1235,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order) {
+  static function exportCustom($customSearchClass, $formValues, $order, $isReturnTable = FALSE) {
     require_once "CRM/Core/Extensions.php";
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
@@ -1277,7 +1277,12 @@ class CRM_Export_BAO_Export {
         $search->alterRow($row);
       }
       unset($row['action']);
-      $rows[] = $row;
+      if ($isReturnTable) {
+        $rows[$dao->id] = $row;
+      }
+      else {
+        $rows[] = $row;
+      }
     }
 
     // remove the fields which key is numeric. refs #19235
@@ -1292,6 +1297,9 @@ class CRM_Export_BAO_Export {
       }
     }
 
+    if ($isReturnTable) {
+      return array('header' => $header, 'rows' => $rows);
+    }
     CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
     CRM_Utils_System::civiExit();
   }
