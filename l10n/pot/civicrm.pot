@@ -48608,3 +48608,20 @@ msgstr ""
 #: templates/CRM/Contribute/Import/Form/MapField.tpl
 msgid "When updating an existing contribution, the Contribution IDs, Transaction ID, and Invoice ID can be any one of these three fields as the value corresponding to the existing contribution."
 msgstr ""
+
+#: templates/CRM/Member/Import/Form/UploadFile.tpl
+msgid "Uploading file must include the following columns or the data cannot be imported successfully."
+msgstr ""
+
+msgid "First Name,Last Name,Email(or Dedupe Rule of Contact you selected)"
+msgstr ""
+
+msgid "When importing members, if the member has already have data in the system, the content of the member's personal information (contact, personal field) you imported this time,It is not possible to update the personal information of this member, but only for the purpose of comparing members. If you want to update your membership information, please use the Import Contacts function to do so."
+msgstr ""
+
+#: templates/CRM/Contribute/Import/Form/UploadFile.tpl
+msgid "Contribution Received Date"
+msgstr ""
+
+msgid "When importing contributions, if the contributor has already have data in the system, the content of the contributor's personal information (contact, personal field) you imported this time,It is not possible to update the personal information of this contributor, but only for the purpose of comparing contributor. If you want to update your contributor information, please use the Import Contacts function to do so."
+msgstr ""
