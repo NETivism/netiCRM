@@ -593,6 +593,11 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
     }
     $params['is_pay_later'] = CRM_Utils_Array::value('is_pay_later', $params, 0);
 
+    // Refs #23510, clear pay_later_receipt if is_pay_later doesn't be checked.
+    if (empty($params['is_pay_later'])) {
+      $params['pay_later_receipt'] = 'null';
+    }
+
     if ($this->_id) {
       require_once 'CRM/Price/BAO/Set.php';
 
