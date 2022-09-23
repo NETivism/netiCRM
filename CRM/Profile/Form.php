@@ -369,10 +369,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
             $deleteExtra = ts("Are you sure you want to delete attached file.");
             $fileId = $url['file_id'];
-            $deleteURL = CRM_Utils_System::url('civicrm/file',
-              "reset=1&id={$fileId}&eid=$this->_id&fid={$customFieldID}&action=delete&stay=1"
-            );
-            $customFiles[$field['name']]['deleteURL'] = "<a href=\"{$deleteURL}\" onclick = \"if (confirm( ' $deleteExtra ' )) this.href+='&confirmed=1'; else return false;\">".ts("Delete Attached File")."</a>";
+            if (empty($field['is_view'])) {
+              $deleteURL = CRM_Utils_System::url('civicrm/file',
+                "reset=1&id={$fileId}&eid=$this->_id&fid={$customFieldID}&action=delete&stay=1"
+              );
+              $customFiles[$field['name']]['deleteURL'] = "<a href=\"{$deleteURL}\" onclick = \"if (confirm( ' $deleteExtra ' )) this.href+='&confirmed=1'; else return false;\">".ts("Delete Attached File")."</a>"; 
+            }
           }
         }
       }

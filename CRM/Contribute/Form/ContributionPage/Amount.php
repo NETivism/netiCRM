@@ -495,6 +495,11 @@ SELECT id
       $params['payment_processor'] = 'null';
     }
 
+    // Refs #23510, clear pay_later_receipt if is_pay_later doesn't be checked.
+    if (empty($params['is_pay_later'])) {
+      $params['pay_later_receipt'] = 'null';
+    }
+
     require_once 'CRM/Contribute/BAO/ContributionPage.php';
     $contributionPage = CRM_Contribute_BAO_ContributionPage::create($params);
     $contributionPageID = $contributionPage->id;

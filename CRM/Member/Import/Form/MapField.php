@@ -356,6 +356,22 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       unset($sel1['membership_id']);
     }
 
+    
+    // start of soft credit section
+    // get contact type for this import
+    $contactTypeId = $this->get('contactType');
+    $contactTypes = array(
+      CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL => 'Individual',
+      CRM_Contribute_Import_Parser::CONTACT_HOUSEHOLD => 'Household',
+      CRM_Contribute_Import_Parser::CONTACT_ORGANIZATION => 'Organization',
+    );
+
+    $contactType = $contactTypes[$contactTypeId];
+
+    // get imporatable fields for contact type
+    require_once 'CRM/Contact/BAO/Contact.php';
+    $contactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
+
     $sel2[''] = NULL;
 
     $js = "<script type='text/javascript'>\n";
@@ -377,9 +393,26 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             $mappingHeader = $this->defaultFromHeader($mapName, $patterns);
 
             $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : NULL;
-            $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
-            $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
-            $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : NULL;
+            $locationId = 0;
+            if ($contactFields[$mappingHeader]['hasLocationType']) {
+              $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
+            }
+            $phoneType = NULL;
+            if ($mappingHeader == 'phone') {
+              $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
+              if ($phoneType && !$locationId) {
+                // Avoid has phone type but has no location id error.
+                $locationId = 1;
+              }
+            }
+            $imProvider = NULL;
+            if ($mappingHeader == 'im') {
+              $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : NULL;
+              if ($imProvider && !$locationId) {
+                // Avoid has im provider but has no location id error.
+                $locationId = 1;
+              }
+            }
             $softField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
 
             if ($softField) {
@@ -420,6 +453,11 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             for ($k = 1; $k < 4; $k++) {
               $js .= "{$formName}['mapper[$i][$k]'].style.display = 'none';\n";
             }
+          }
+        }
+        else {
+          for ($k = 1; $k < 4; $k++) {
+            $js .= "{$formName}['mapper[$i][$k]'].style.display = 'none';\n";
           }
         }
         //end of load mapping
@@ -781,7 +819,8 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
           elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
             $saveMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
           }
-          $saveMappingFields->location_type_id = isset($location_id[0]) ? $location_id[0] : NULL;
+          $location = array_keys($locationTypes, $locations[$i]);
+          $saveMappingFields->location_type_id = !empty($location) ? $location[0] : 'NULL';
         }
 
         $saveMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : NULL;

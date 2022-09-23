@@ -822,11 +822,6 @@ WHERE  contribution_id = {$this->_id}
       }
 
       $open = 'false';
-      if ($type == 'CreditCard' ||
-        $type == 'DirectDebit'
-      ) {
-        $open = 'true';
-      }
 
       $allPanes[$name] = array('url' => CRM_Utils_System::url('civicrm/contact/view/contribution', $urlParams),
         'open' => $open,
@@ -839,7 +834,6 @@ WHERE  contribution_id = {$this->_id}
         CRM_Utils_Array::value("hidden_{$type}", $defaults)
       ) {
         $showAdditionalInfo = TRUE;
-        $allPanes[$name]['open'] = 'true';
       }
 
       if ($type == 'CreditCard') {

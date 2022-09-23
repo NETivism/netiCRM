@@ -164,12 +164,23 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    */
   public function preProcess() {
     $columnNames = array();
-    $this->_mapperFields = $this->get('fields');
     $this->_dataValues = $this->get('dataValues');
     $this->_importTableName = $this->get('importTableName');
-
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
     $this->_onDuplicate = $this->get('onDuplicate', isset($onDuplicate) ? $onDuplicate : "");
+    if ($this->_onDuplicate == 4) {
+      // When user choose update contribution.
+      $updateMapperFields = $this->get('fields');
+      foreach ($updateMapperFields as $key) {
+        if (strpos($key,'聯絡人') !==  false){
+          $index = array_search($key,$updateMapperFields);
+          unset($updateMapperFields[$index]);
+        }
+      }
+      $this->_mapperFields = $updateMapperFields;
+    } else {
+      $this->_mapperFields = $this->get('fields');
+    }
 
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
@@ -440,9 +451,26 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             $mappingHeader = $this->defaultFromHeader($mapName, $patterns);
 
             $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : NULL;
-            $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
-            $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
-            $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : NULL;
+            $locationId = 0;
+            if ($contactFields[$mappingHeader]['hasLocationType']) {
+              $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
+            }
+            $phoneType = NULL;
+            if ($mappingHeader == 'phone') {
+              $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
+              if ($phoneType && !$locationId) {
+                // Avoid has phone type but has no location id error.
+                $locationId = 1;
+              }
+            }
+            $imProvider = NULL;
+            if ($mappingHeader == 'im') {
+              $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : NULL;
+              if ($imProvider && !$locationId) {
+                // Avoid has im provider but has no location id error.
+                $locationId = 1;
+              }
+            }
             $softField = isset($mappingContactType[$i]) && $mapName == ts('Soft Credit') ? $mappingContactType[$i] : 0;
             $pcpField = isset($mappingContactType[$i]) && $mapName == ts('Personal Campaign Page Creator') ? $mappingContactType[$i] : 0;
 
@@ -487,6 +515,11 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             for ($k = 1; $k < 4; $k++) {
               $js .= "{$formName}['mapper[$i][$k]'].style.display = 'none';\n";
             }
+          }
+        }
+        else {
+          for ($k = 1; $k < 4; $k++) {
+            $js .= "{$formName}['mapper[$i][$k]'].style.display = 'none';\n";
           }
         }
         //end of load mapping
