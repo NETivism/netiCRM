@@ -1662,5 +1662,17 @@ class CRM_Utils_System {
     }
     return $ip;
   }
+
+  /**
+   * Load and login user by uid or name
+   *
+   * @param array $params
+   *   'uid' => uid
+   *   'name' => username
+   * @return void
+   */
+  public static function loadUser($params) {
+    return CRM_Core_Config::$_userSystem->loadUser($params);
+  }
 }
 

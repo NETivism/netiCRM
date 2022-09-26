@@ -278,7 +278,7 @@ class CRM_Utils_REST {
       if ($contactId) {
         $uid = CRM_Core_BAO_UFMatch::getUFId($contactId);
         if ($uid) {
-          CRM_Utils_System::loadBootStrap(array('uid' => $uid), FALSE);
+          CRM_Utils_System::loadUser(array('uid' => $uid));
           $ufId = CRM_Utils_System::getLoggedInUfID();
           if (CRM_Utils_System::isUserLoggedIn() && $ufId == $uid) {
             $validUser = $contactId;
