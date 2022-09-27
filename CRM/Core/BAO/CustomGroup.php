@@ -1534,6 +1534,9 @@ SELECT $select
       case 'ContributionPage':
         return 'civicrm_contribution_page';
 
+      case 'ContributionRecur':
+        return 'civicrm_contribution_recur';
+
       case 'Relationship':
         return 'civicrm_relationship';
 

@@ -157,7 +157,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       $errors['extends'] = ts("You need to select the type of record that this set of custom fields is applicable for.");
     }
 
-    $extends = array('Activity', 'Relationship', 'Group', 'Contribution', 'ContributionPage', 'Membership', 'Event', 'Participant');
+    $extends = array('Activity', 'Relationship', 'Group', 'Contribution', 'ContributionPage', 'ContributionRecur', 'Membership', 'Event', 'Participant');
     if (in_array($fields['extends'][0], $extends) && $fields['style'] == 'Tab') {
       $errors['style'] = ts("Display Style should be Inline for this Class");
       $self->assign('showStyle', TRUE);
