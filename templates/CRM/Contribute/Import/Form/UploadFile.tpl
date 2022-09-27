@@ -143,6 +143,7 @@ cj(document).ready(function($){
 
   var showDedupeRuleOption = function(){
       $("select[name=dedupeRuleGroup]").append($option);
+      $("#dedupeRuleGroup").val($option.val());
   }
   var $option = $("#dedupeRuleGroup option").filter(function(){
         if($(this).css('display') == 'none'){
