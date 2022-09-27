@@ -332,7 +332,11 @@
     <script>
       (function($){
         $(function(){
-          var allowStatusId = ["1", "5", "7"];
+          {/literal}{if $set_active_only}{literal}
+            var allowStatusId = ["3", "5"];
+          {/literal}{else}{literal}
+            var allowStatusId = ["1", "5", "7"];
+          {/literal}{/if}{literal}
           if ($('select#contribution_status_id').length) {
             if ($('select#contribution_status_id').val() == 2) {
               $('select#contribution_status_id').attr('disabled','disabled');
