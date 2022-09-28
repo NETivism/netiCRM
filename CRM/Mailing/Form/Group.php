@@ -105,7 +105,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       if ($reschedule) {
         $existsJob = array();
         $returnProperties = array('id', 'status', 'start_date');
-        $params = array('mailing_id' => $mailing->id);
+        $params = array('mailing_id' => $mailing->id, 'is_test' => 0);
         CRM_Core_DAO::commonRetrieve('CRM_Mailing_DAO_Job', $params, $existsJob, $returnProperties);
 
         if (!empty($existsJob) && empty($existsJob['start_date']) && $existsJob['status'] === 'Scheduled') {
