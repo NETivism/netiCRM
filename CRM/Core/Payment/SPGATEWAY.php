@@ -74,6 +74,15 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         if ($length >= 30 || empty($length)) {
           $returnArray[] = 'trxn_id';
         }
+        // Refs 35835, recur should switch to in_process as canceled, and no use neweb recur IPN.
+        if ($paymentProcessor['url_recur'] != 1) {
+          $sql = "SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1";
+          $statusId = CRM_Core_DAO::singleValueQuery($sql, $params);
+          if ($statusId == 3) {
+            $returnArray[] = 'contribution_status_id';
+            $form->assign('set_active_only', 1);
+          }
+        }
       }
     }
 
@@ -206,6 +215,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   function doUpdateRecur($params, $debug = FALSE) {
     if ($debug) {
       CRM_Core_error::debug('SPGATEWAY doUpdateRecur $params', $params);
+    }
+    // For no use neweb recur API condition, return original parameters.
+    if ($this->_paymentProcessor['url_recur'] != 1) {
+      return $params;
     }
     if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.api') === FALSE) {
       CRM_Core_Error::fatal('Module civicrm_spgateway doesn\'t exists.');

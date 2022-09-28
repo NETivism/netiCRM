@@ -947,6 +947,11 @@ WHERE civicrm_event.is_active = 1
       }
     }
 
+    // Refs #23510, If Event is_pay_later is not checked, should remove pay_later_receipt
+    if (empty($copyEvent->is_pay_later)) {
+      $copyEvent->pay_later_receipt = 'null';
+    }
+
     //copy custom data
     require_once 'CRM/Core/BAO/CustomGroup.php';
     $extends = array('event');
