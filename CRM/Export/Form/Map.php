@@ -206,7 +206,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       }
     }
 
-    if (!$checkEmpty) {
+    $customSearchID = $this->get('customSearchID');
+    if (!$checkEmpty && empty($customSearchID)) {
       $this->set('mappingId', NULL);
       require_once 'CRM/Utils/System.php';
       CRM_Utils_System::redirect(CRM_Utils_System::url($currentPath, '_qf_Map_display=true' . $urlParams));
@@ -225,6 +226,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     require_once "CRM/Export/BAO/Export.php";
     $mappingId = $this->get('mappingId');
     $separateMode = $this->get('separateMode');
+    $customHeaders = $this->get('customHeader');
     CRM_Export_BAO_Export::exportComponents($this->get('selectAll'),
       $this->get('componentIds'),
       $this->get('queryParams'),
@@ -237,7 +239,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       $this->get('mergeSameAddress'),
       $this->get('mergeSameHousehold'),
       $mappingId,
-      $separateMode
+      $separateMode,
+      $this->get('customHeader')
     );
   }
 

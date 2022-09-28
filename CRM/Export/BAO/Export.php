@@ -74,7 +74,8 @@ class CRM_Export_BAO_Export {
     $mergeSameAddress = FALSE,
     $mergeSameHousehold = FALSE,
     $mappingId = NULL,
-    $separateMode = FALSE
+    $separateMode = FALSE, 
+    $customHeader = array()
   ) {
     global $civicrm_batch;
     $allArgs = func_get_args();
@@ -147,6 +148,11 @@ class CRM_Export_BAO_Export {
       );
 
       $index = 2;
+      if (!empty($customHeader) && $componentTable) {
+        foreach($customHeader as $columneName => $val) {
+          $returnProperties[$columneName] = $index++;
+        }
+      }
 
       $needsProviderId = FALSE;
       foreach ($fields as $key => $value) {
@@ -369,6 +375,11 @@ class CRM_Export_BAO_Export {
     }
 
     $query = new CRM_Contact_BAO_Query(0, $returnProperties, NULL, FALSE, FALSE, $queryMode);
+    if (!empty($customHeader) && $componentTable) {
+      foreach($customHeader as $columneName => $val) {
+        $query->_select[$columneName] = "ctTable.$columneName";
+      }
+    }
     list($select, $from, $where) = $query->query();
 
     if ($mergeSameHousehold == 1) {
@@ -661,6 +672,7 @@ class CRM_Export_BAO_Export {
 
     while (1) {
       $limitQuery = "{$queryString} LIMIT {$offset}, {$rowCount}";
+      dpm($limitQuery);
       $dao = CRM_Core_DAO::executeQuery($limitQuery);
 
       if ($dao->N <= 0) {
@@ -678,6 +690,7 @@ class CRM_Export_BAO_Export {
         foreach ($returnProperties as $field => $value) {
           //we should set header only once
           if ($setHeader) {
+            
             $sqlDone = FALSE;
             if (isset($query->_fields[$field]['title'])) {
               $headerRows[$value] = $query->_fields[$field]['title'];
@@ -768,6 +781,10 @@ class CRM_Export_BAO_Export {
                   }
                 }
               }
+            }
+            elseif (strstr($field, 'column')) {
+              $headerRows[$value] = $customHeader[$field];
+              $fieldOrder[] = $value;
             }
             else {
               $headerRows[$value] = $field;

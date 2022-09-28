@@ -77,7 +77,11 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
         $this->get(CRM_Utils_Sort::SORT_ORDER),
         TRUE
       );
-      $this->set('customHeader', $header);
+      $customHeader = array();
+      foreach ($header as $i => $headerName) {
+        $customHeader["column{$i}"] = $headerName;
+      }
+      $this->set('customHeader', $customHeader);
       $this->set('customRows', $rows);
       $isUseTempTable = TRUE;
     }
