@@ -141,8 +141,8 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       $sql = " DROP TABLE IF EXISTS {$form->_componentTable}";
       CRM_Core_DAO::executeQuery($sql);
       if ($customHeader = $form->get('customHeader')) {
-        foreach ($customHeader as $i => $val) {
-          $customColumns .= ", column{$i} varchar(64)";
+        foreach ($customHeader as $columnName => $val) {
+          $customColumns .= ", $columnName varchar(64)";
         }
       }
 
