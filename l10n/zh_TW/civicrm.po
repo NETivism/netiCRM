@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21294,7 +21294,7 @@ msgid ""
 "create contact records first, if necessary. Then you can match activities to"
 " contacts by Email Address, CiviCRM Contact ID, or an External Identifier "
 "(see the TIP below)."
-msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
+msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid ""
@@ -21321,7 +21321,7 @@ msgid ""
 "value into CiviCRM's External Identifier field. Then you can use that unique"
 " key as the 'match to contact' value when importing related data such as "
 "Activities and Contributions."
-msgstr "<strong>說明 - 配對行動到聯絡人記錄</strong><br />CiviCRM允許您標註每項行動記錄歸屬於哪位聯絡人，透過使用特定的CiviCRM-assigned 系統編號、您指派的外部編號或您的\n設定\"strict\" 刪除重複記錄規則(使用預設Email)。您必須在匯入檔案的欄位中至少寫入一個值。\n如果您正在從其他應用程式統整(或遷移)聯絡人到CiviCRM，而且這個應用程式已經為每一個聯絡人指定了特定的ID，您可以匯入那個值到\nCiviCRM外部編號，然後當匯入相關數據如行動或捐款時，您可以使用那個特定鍵當做\"配對聯絡人\"值。"
+msgstr "CiviCRM允許您標註每項行動記錄歸屬於哪位聯絡人，透過使用特定的CiviCRM-assigned 系統編號、您指派的外部編號或您的\n設定\"strict\" 刪除重複記錄規則(使用預設Email)。您必須在匯入檔案的欄位中至少寫入一個值。\n如果您正在從其他應用程式統整(或遷移)聯絡人到CiviCRM，而且這個應用程式已經為每一個聯絡人指定了特定的ID，您可以匯入那個值到\nCiviCRM外部編號，然後當匯入相關數據如行動或捐款時，您可以使用那個特定鍵當做\"配對聯絡人\"值。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.tpl
 msgid ""
@@ -29678,14 +29678,14 @@ msgid ""
 "contact in CiviCRM, you can include that value as a column in your import "
 "file. Contributions will then be matched to contributors using their "
 "External ID."
-msgstr "外部編號"
+msgstr "「外部編號」：如果您已將對應到每個聯絡人的「外部編號」儲存在CiviCRM中，您可以在匯入檔中加入外部編號，系統將以聯絡人的外部編號配對參加者的資料。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid ""
 "You can include a column with each contributor's <strong>Internal Contact "
 "ID</strong>. This is the unique ID assigned by CiviCRM which is displayed at"
 " the bottom of the Contact Summary screen - and can be exported."
-msgstr "系統編號"
+msgstr "「系統編號」：您可以在匯入檔使用系統編號欄位。聯絡人建立時，系統會自動給予一個專屬的數字編號，此編號將顯示在聯絡人摘要的最下方，也可以匯出取得。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid ""
@@ -33094,7 +33094,7 @@ msgid ""
 " application if you're not sure how to do this. Save this file to your local"
 " hard drive (or an accessible drive on your network) - and then choose that "
 "file as your Import Upload File."
-msgstr "由Excel或其他試算表軟體，另存新檔為「逗號分隔」檔案，資料便會以逗號做分隔的文字文件，儲存後再選擇該檔案做為您要匯入的資料檔案。您可以從各式應用程式中，匯出\"CSV\"檔，如Google通訊錄，Microsoft Office 試算表，Outlook等。如果您不確定該如何使用，請先查看您應用軟體的使用說明。"
+msgstr "被匯入的檔案必須是 CSV 格式。您可以由Excel或其他試算表軟體，另存新檔為\"CSV\"檔案，再選擇該檔案做為您要匯入的資料檔案。多數文書處理軟體中都可以匯出CSV檔，如Google通訊錄，Microsoft Office 試算表，Outlook等。如果您不確定該如何使用，請先查看軟體的使用說明。"
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "A direct SQL query in the form of a SELECT query. For example:"
@@ -33113,7 +33113,7 @@ msgid ""
 "applications into CiviCRM. For example, if your organization has contacts in"
 " MS Access&reg; or Excel&reg;, and you want to start using CiviCRM to store "
 "these contacts, you can 'import' them here."
-msgstr "匯入精靈將導引您更容易匯入聯絡人資料。舉例來說，您的組織原本採用 MS Access&copy 或 Excel&copy 來建立資料，但有了匯入精靈，您即可在此輕鬆匯入資料到 CiviCRM 的聯絡人資料庫。"
+msgstr "您可以將其他應用軟體的聯絡人紀錄上傳到 CiviCRM。例如：如果您的組織使用 Excel&copy 來存放聯絡人資料，並且您想改用 CiviCRM 來存放這些聯絡人，您可以在此使用CSV檔案來「匯入」紀錄。"
 
 #: templates/CRM/Import/Form/DataSource.tpl
 msgid "Import Options"
@@ -38019,7 +38019,7 @@ msgid ""
 "applications into CiviCRM. For example, if your organization has contacts in"
 " MS Access&copy; or Excel&copy;, and you want to start using CiviCRM to "
 "store these contacts, you can 'import' them here."
-msgstr "匯入精靈將導引您更容易匯入聯絡人資料。舉例來說，您的組織原本採用 MS Access&copy 或 Excel&copy 來建立資料，但有了匯入精靈，您即可在此輕鬆匯入資料到 CiviCRM 的聯絡人資料庫。"
+msgstr "您可以將其他應用軟體的聯絡人紀錄上傳到 CiviCRM。例如：如果您的組織使用 Excel&copy 來存放聯絡人資料，並且您想改用 CiviCRM 來存放這些聯絡人，您可以在此使用CSV檔案來「匯入」紀錄。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Unit price"
