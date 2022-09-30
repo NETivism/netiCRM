@@ -4433,7 +4433,7 @@ INSERT INTO
    civicrm_contribution_type(name, is_reserved, is_active, is_deductible)
 VALUES
   ( '一般捐款'             , 0, 1, 1 ),
-  ( '會費'          , 0, 1, 1 ), 
+  ( '會費'          , 0, 1, 0 ), 
   ( '指定捐款', 0, 1, 0 ),
   ( '活動費用'            , 0, 1, 0 );
   
