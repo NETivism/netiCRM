@@ -88,18 +88,19 @@
 {literal}
 <script type="text/Javascript">
 cj(document).ready(function() {
-  if (cj('#extends\\[1\\]').find("option").length <= 0) {
-    cj('#extends_1__chzn').hide();
+  if (cj('select#extends\\[1\\]').find("option").length <= 0) {
+    cj('select#extends\\[1\\]').select2().next('.select2-container').hide();
   }
-  cj('#extends\\[0\\]').change(function() {
-    if (cj('#extends\\[1\\]').find("option").length > 0) {
-      cj('#extends\\[1\\]').trigger("liszt:updated");
+  cj('select#extends\\[0\\]').change(function() {
+    if (cj('select#extends\\[1\\]').find("option").length > 0) {
+      cj('select#extends\\[1\\]').trigger("change");
       cj('select#extends\\[1\\]').css('display', 'none');
-      cj('#extends_1__chzn').show();
+      cj('select#extends\\[1\\]').attr("data-placeholder","{/literal}{ts}-- Select --{/ts}{literal}");
+      cj('select#extends\\[1\\]').select2().next('.select2-container').show();
     }
     else {
       cj('select#extends\\[1\\]').css('display', 'none');
-      cj('#extends_1__chzn').hide();
+      cj('select#extends\\[1\\]').select2().next('.select2-container').hide();
     }
   });
 
