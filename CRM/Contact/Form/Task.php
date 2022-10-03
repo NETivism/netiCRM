@@ -193,7 +193,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       if ($useTable) {
         $count = 0;
         $insertString = array();
-        $customRows = $form->get('customRows', $rows);
+        $customRows = $form->get('customRows');
         $customColumnsNames = str_replace('varchar(64)', '', $customColumns);
         while ($dao->fetch()) {
           $count++;

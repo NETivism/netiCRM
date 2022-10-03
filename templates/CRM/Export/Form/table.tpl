@@ -25,6 +25,14 @@
 *}
 {* Export Wizard - Data Mapping table used by MapFields.tpl and Preview.tpl *}
  <div id="map-field">
+    {if $customHeader}
+      {ts}The export file already include these fields, in front of the selectable fields:{/ts}
+      <ul>
+      {foreach from=$customHeader item=columnName }
+        <li>{$columnName}</li>
+      {/foreach}
+      </ul>
+    {/if}
     {strip}
     <table>
         {if $loadedMapping}

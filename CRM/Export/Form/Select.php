@@ -82,6 +82,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       }
       $this->set('customHeader', $customHeader);
       $this->set('customRows', $rows);
+      $this->assign('customHeader', $customHeader);
       $isUseTempTable = TRUE;
     }
 
