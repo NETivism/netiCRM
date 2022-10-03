@@ -106,6 +106,11 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
 
   public function buildQuickForm() {
     require_once "CRM/Core/BAO/Mapping.php";
+    $customSearchID = $this->get('customSearchID');
+    if ($customSearchID) {
+      $customHeader = $this->get('customHeader');
+      $this->assign('customHeader', $customHeader);
+    }
     CRM_Core_BAO_Mapping::buildMappingForm($this, 'Export', $this->_mappingId, $this->_exportColumnCount, $blockCnt = 2, $this->get('exportMode'));
 
     $this->addButtons(array(

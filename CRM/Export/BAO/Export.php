@@ -519,7 +519,11 @@ class CRM_Export_BAO_Export {
       if ($order) {
         list($field, $dir) = explode(' ', $order, 2);
         $field = trim($field);
-        if (CRM_Utils_Array::value($field, $returnProperties)) {
+        if ($field == 'id') {
+          // Avoid 'Column 'id' in order clause is ambiguous' error.
+          $orderBy = "ORDER BY contact_a.id $dir";
+        }
+        elseif (CRM_Utils_Array::value($field, $returnProperties)) {
           $orderBy = " ORDER BY $order ";
         }
       }
@@ -672,7 +676,6 @@ class CRM_Export_BAO_Export {
 
     while (1) {
       $limitQuery = "{$queryString} LIMIT {$offset}, {$rowCount}";
-      dpm($limitQuery);
       $dao = CRM_Core_DAO::executeQuery($limitQuery);
 
       if ($dao->N <= 0) {
@@ -1252,7 +1255,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order, $isReturnTable = FALSE) {
+  static function exportCustom($customSearchClass, $formValues, $order) {
     require_once "CRM/Core/Extensions.php";
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
@@ -1285,6 +1288,17 @@ class CRM_Export_BAO_Export {
       $alterRow = TRUE;
     }
     while ($dao->fetch()) {
+      if (!$isReturnableChekced) {
+        // First check the table could add custom field, or just only download raw table.
+        // If the index is contact_id, then it could be add custom contact field when export, otherwise just only download file with origin fields.
+        if (!empty($dao->id) && !empty($dao->contact_id) && ($dao->id != $dao->contact_id)) {
+          $isReturnable = FALSE;
+        }
+        else {
+          $isReturnable = TRUE;
+        }
+        $isReturnableChekced = TRUE;
+      }
       $row = array();
 
       foreach ($fields as $field) {
@@ -1294,8 +1308,8 @@ class CRM_Export_BAO_Export {
         $search->alterRow($row);
       }
       unset($row['action']);
-      if ($isReturnTable) {
-        $rows[$dao->id] = $row;
+      if ($isReturnable) {
+        $rows[$dao->contact_id] = $row;
       }
       else {
         $rows[] = $row;
@@ -1314,7 +1328,7 @@ class CRM_Export_BAO_Export {
       }
     }
 
-    if ($isReturnTable) {
+    if ($isReturnable) {
       return array('header' => $header, 'rows' => $rows);
     }
     CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
