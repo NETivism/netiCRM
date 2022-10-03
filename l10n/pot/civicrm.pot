@@ -48625,3 +48625,8 @@ msgstr ""
 
 msgid "When importing contributions, if the contributor has already have data in the system, the content of the contributor's personal information (contact, personal field) you imported this time,It is not possible to update the personal information of this contributor, but only for the purpose of comparing contributor. If you want to update your contributor information, please use the Import Contacts function to do so."
 msgstr ""
+
+#: templates/CRM/Export/Form/table.tpl
+#: templates/CRM/Export/Form/Select.tpl
+msgid "The export file already include these fields, in front of the selectable fields:"
+msgstr ""
