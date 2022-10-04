@@ -392,54 +392,57 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             $patterns = array();
             $mappingHeader = $this->defaultFromHeader($mapName, $patterns);
 
-            $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : NULL;
-            $locationId = 0;
+            // Prepare values and sub type values.
+            // If the field have sub type but the subtype value is NULL, the subtype value would be 0.
+            // Otherwise, the field have no subtype, the subtype value should be NULL. 
+            $websiteTypeId = NULL;
+            if ($mappingHeader == 'url') {
+              $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : 0;
+            }
+            $locationId = NULL;
             if ($contactFields[$mappingHeader]['hasLocationType']) {
               $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
             }
             $phoneType = NULL;
             if ($mappingHeader == 'phone') {
-              $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
-              if ($phoneType && !$locationId) {
-                // Avoid has phone type but has no location id error.
-                $locationId = 1;
-              }
+              $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : 0;
             }
             $imProvider = NULL;
             if ($mappingHeader == 'im') {
-              $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : NULL;
-              if ($imProvider && !$locationId) {
-                // Avoid has im provider but has no location id error.
-                $locationId = 1;
-              }
+              $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : 0;
             }
-            $softField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
 
-            if ($softField) {
-              $defaults["mapper[$i]"] = array($mappingHeader, $softField);
-            }
-            elseif ($websiteTypeId) {
-              if (!$websiteTypeId) {
-                $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+            // Set visibility of each fields and sub type selection.
+            // If subtype is NULL, the subtype selector would be hided.
+            if (!is_null($locationId) || !is_null($websiteTypeId)) {
+              if (!is_null($websiteTypeId)) {
+                $defaults["mapper[$i]"] = array($mappingHeader, $websiteTypeId);
+                $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
               }
-              $defaults["mapper[$i]"] = array($mappingHeader, $websiteTypeId);
+              else {
+                //default for IM/phone without related contact
+                $typeId = NULL;
+                if (!is_null($phoneType)) {
+                  $typeId = $phoneType;
+                }
+                elseif (!is_null($imProvider)) {
+                  $typeId = $imProvider;
+                }
+                if (!is_null($typeId)) {
+                  $defaults["mapper[$i]"] = array($mappingHeader, $locationId ? $locationId : 1, $typeId);
+                }
+                else {
+                  $defaults["mapper[$i]"] = array($mappingHeader, $locationId);
+                  $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+                }
+              }
             }
             else {
-              if (!$locationId) {
-                $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+              // No location type fields.
+              if ($mappingHeader) {
+                $defaults["mapper[$i]"] = array($mappingHeader);
               }
-              //default for IM/phone without related contact
-              $typeId = NULL;
-              if (isset($phoneType)) {
-                $typeId = $phoneType;
-              }
-              elseif (isset($imProvider)) {
-                $typeId = $imProvider;
-              }
-              $defaults["mapper[$i]"] = array($mappingHeader, $locationId, $typeId);
-            }
-
-            if ((!$phoneType) && (!$imProvider)) {
+              $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
               $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
             }
             $js .= "{$formName}['mapper[$i][3]'].style.display = 'none';\n";
