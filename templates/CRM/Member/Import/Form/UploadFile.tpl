@@ -70,7 +70,16 @@
            <div class="description">
              {capture assign='newrule'}{crmURL p='civicrm/contact/deduperules' q='reset=1'}{/capture}
              {ts 1=$newrule}Use rule you choose above for matching contact in each row. You can also <a href="%1">add new rule</a> anytime.{/ts}
-           </div>
+            <ul style="list-style-type: decimal;">
+            <li>{ts}Uploading file must include the following columns or the data cannot be imported successfully.{/ts}</li>
+            <ul style="list-style-type: disc;">
+              <li>{ts}First Name,Last Name,Email(or Dedupe Rule of Contact you selected){/ts}</li>
+              <li>{ts}Membership Types{/ts}</li>
+              <li>{ts}Membership Start Date{/ts}</li>
+            </ul>
+            <li>{ts}When importing members, if the member has already have data in the system, the content of the member's personal information (contact, personal field) you imported this time,It is not possible to update the personal information of this member, but only for the purpose of comparing members. If you want to update your membership information, please use the Import Contacts function to do so.{/ts}</li>
+            </ul>
+            </div>
          </td>
        </tr>
        <tr class="crm-member-import-uploadfile-from-block-dataReferenceField"><td class="label">{$form.dataReferenceField.label}</td><td>{$form.dataReferenceField.html}</td></tr>
