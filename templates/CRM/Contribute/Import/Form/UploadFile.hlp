@@ -24,10 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {htxt id='upload'}
-<h1>{ts}Import File Format{/ts}</h1>
     <p>{ts}Files to be imported must be in the 'comma-separated-values' format (CSV). Most applications will allow you to export records in CSV format. Consult the documentation for your application if you're not sure how to do this.{/ts}</p>
-<h1>{ts}Contact Records for Contributors{/ts}</h1>
-    <p>{ts}Contribution import requires that the Contributors already exist as contact records in your CiviCRM database. If you need to import contributions for contributors who haven't been added to CiviCRM yet - you will do this in 2 steps. First, use <strong>Import Contacts</strong> to add the contact records. If possible, include a unique 'External ID' for each new contact which you can then use to match contributions to contributors. Then return to this screen and import the contribution records.{/ts}</p>
 <h1>{ts}Matching Contributions to Contributors{/ts}</h1>
     <p>{ts}Contribution import files must contain data needed to <strong>match the contribution to the contributor</strong>. This 'matching' can be handled in several different ways:{/ts}</p>
     <ul>
