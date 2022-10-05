@@ -8,6 +8,11 @@ cj(document).ready(function(){
     "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
     "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
   });
+  cj(document).on('select2:open', () => {
+    setTimeout(() => {
+      document.querySelector('.select2-search__field').focus();
+    }, 100);
+  });
 });
 {/literal}
 {if !$nowrapper}</script>{/if}
