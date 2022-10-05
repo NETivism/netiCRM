@@ -1653,12 +1653,17 @@ class CRM_Utils_System {
   }
 
   public static function getHostIPAddress($host = NULL) {
-    if (empty($host)) {
-      $host = $_SERVER['HTTP_HOST'];
-    }
-    $ip = gethostbyname($host);
-    if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ip)) {
-      $ip = $_SERVER['SERVER_ADDR'];
+    $ip = $_SERVER['SERVER_ADDR'];
+    if (empty($ip)) {
+      if (empty($host)) {
+        $host = $_SERVER['HTTP_HOST'];
+      }
+      if ($host) {
+        $ipByHost = gethostbyname($host);
+        if (preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ipByHost)) {
+          $ip = $ipByHost;
+        }
+      }
     }
     return $ip;
   }
