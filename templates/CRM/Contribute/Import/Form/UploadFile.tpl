@@ -155,7 +155,7 @@ cj(document).ready(function($){
   $("input[name=contactType]").click(showHideDedupeRule);
   $("tr.create-new-contact label.crm-form-elem").css('display', 'block');
   $("tr.create-new-contact").find("br").remove();
-  showHideCreateContact(true);
+  setTimeout(showHideCreateContact,100);
   showHideDedupeRule();
 });
 {/literal}</script>
