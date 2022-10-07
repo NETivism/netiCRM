@@ -191,6 +191,8 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       'totalRowCount' => $this->get('totalRowCount'),
       'dedupeRuleGroupId' => $this->get('dedupeRuleGroup'),
       'createContactOption' => $this->get('createContactOption'),
+      'skipColumnHeader' => $this->get('skipColumnHeader'),
+      'dateFormats' => $this->get('dateFormats'),
     );
     $properties = array(
       'ims' => 'mapperImProvider',
