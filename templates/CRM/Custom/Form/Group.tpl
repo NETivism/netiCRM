@@ -35,7 +35,7 @@
     <tr>
         <td class="label">{$form.extends.label}</td>
         <td>{$form.extends.html} {help id="id-extends"}
-        {include file="CRM/common/chosen.tpl" selector='#extends\\\\[1\\\\]'}
+        {include file="CRM/common/chosen.tpl" selector='#extends\\\\[1\\\\]' select_width='100%'}
         </td>
     </tr>
     <tr>
