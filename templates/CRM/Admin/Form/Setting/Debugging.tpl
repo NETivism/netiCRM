@@ -36,6 +36,11 @@
                 <td>{$form.debug.html}<br />
                 <span class="description">{ts}Set this value to <strong>Yes</strong> if you want to use one of CiviCRM's debugging tools. <strong>This feature should NOT be enabled for production sites</strong>{/ts} {help id='debug'}</span></td>
             </tr>
+            <tr class="crm-debugging-form-block-debugDatabaseProfiling">
+                <td class="label">{$form.debugDatabaseProfiling.label}</td>
+                <td>{$form.debugDatabaseProfiling.html}<br />
+                <span class="description">{ts}Set this value to <strong>Yes</strong> if you want to record database profiling. <strong>This feature should NOT be enabled for production sites</strong>{/ts} </span></td>
+            </tr>
             <tr class="crm-debugging-form-block-userFrameworkLogging">
                 <td class="label">{$form.userFrameworkLogging.label}</td>
                 <td>{$form.userFrameworkLogging.html}<br />

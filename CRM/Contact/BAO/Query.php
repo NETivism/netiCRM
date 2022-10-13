@@ -3939,6 +3939,7 @@ civicrm_relationship.start_date > {$today}
     $additionalFromClause = NULL, $skipOrderAndLimit = FALSE
   ) {
 
+    CRM_Core_DAO::profiling(1);
     if ($includeContactIds) {
       $this->_includeContactIds = TRUE;
       $this->_whereClause = $this->whereClause();
@@ -4196,10 +4197,13 @@ civicrm_relationship.start_date > {$today}
     }
 
     if ($count) {
-      return CRM_Core_DAO::singleValueQuery($query);
+      $result = CRM_Core_DAO::singleValueQuery($query);
+      CRM_Core_DAO::profiling(0);
+      return $result;
     }
 
     $dao = CRM_Core_DAO::executeQuery($query);
+    CRM_Core_DAO::profiling(0);
     if ($groupContacts) {
       $ids = array();
       while ($dao->fetch()) {
