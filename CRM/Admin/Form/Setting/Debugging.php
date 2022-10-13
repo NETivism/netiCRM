@@ -53,6 +53,7 @@ class CRM_Admin_Form_Setting_Debugging extends CRM_Admin_Form_Setting {
     $config = CRM_Core_Config::singleton();
 
     $this->addYesNo('debug', ts('Enable Debugging'));
+    $this->addYesNo('debugDatabaseProfiling', ts('Enable Database Profiling'));
     $this->addYesNo('userFrameworkLogging', ts('Enable Drupal Watchdog Logging'));
     $this->addElement('text', 'fatalErrorHandler', ts('Fatal Error Handler'));
 

@@ -544,6 +544,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     $result = $this->_query->searchQuery($offset, $rowCount, $sort,
       FALSE, $includeContactIds
     );
+    //CRM_Core_Error::debugDatabaseProfiling();
+
     if ($this->_refresh) {
       $url = CRM_Utils_String::parseUrl($_SERVER['REQUEST_URI']);
       $query = $_GET;

@@ -642,6 +642,19 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       }
     }
   }
+
+  public static function debugDatabaseProfiling() {
+    if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
+      $profiles = CRM_Core_DAO::getProfiles();
+      if (!empty($profiles)) {
+        $smarty = CRM_Core_Smarty::singleton();
+        $smarty->assign('query_profiling', $profiles);
+        $debug = "This page exit by debug purpose at ".__CLASS__.'::'.__FUNCTION__.' line '.__LINE__.'<br>';
+        $debug = $smarty->fetch('CRM/common/queryProfiling.tpl');
+        self::debug('Database Profiling', $debug);
+      }
+    }
+  }
 }
 
 PEAR_ErrorStack::singleton('CRM', FALSE, NULL, 'CRM_Core_Error');
