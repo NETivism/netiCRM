@@ -48634,3 +48634,6 @@ msgstr ""
 #: xml/templates/message_templates/membership_offline_receipt_html.tpl
 msgid "Thanks for your support."
 msgstr ""
+
+msgid "case sensitive"
+msgstr ""
