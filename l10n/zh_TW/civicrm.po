@@ -49023,3 +49023,7 @@ msgid ""
 "The export file already include these fields, in front of the selectable "
 "fields:"
 msgstr "匯出的檔案將包含下列搜尋結果的欄位，並會排在自行選取要匯出的欄位之前："
+
+#: xml/templates/message_templates/membership_offline_receipt_html.tpl
+msgid "Thanks for your support."
+msgstr "感謝您的支持。"

@@ -48630,3 +48630,7 @@ msgstr ""
 #: templates/CRM/Export/Form/Select.tpl
 msgid "The export file already include these fields, in front of the selectable fields:"
 msgstr ""
+
+#: xml/templates/message_templates/membership_offline_receipt_html.tpl
+msgid "Thanks for your support."
+msgstr ""
