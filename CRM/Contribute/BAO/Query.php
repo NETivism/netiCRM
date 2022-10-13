@@ -78,12 +78,18 @@ class CRM_Contribute_BAO_Query {
       $query->_groupByComponentClause = ' GROUP BY civicrm_contribution.id';
     }
 
-    // get contribution_type
     if (CRM_Utils_Array::value('contribution_type', $query->_returnProperties)) {
       $query->_select['contribution_type'] = "civicrm_contribution_type.name as contribution_type";
       $query->_element['contribution_type'] = 1;
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['civicrm_contribution_type'] = 1;
+      $query->_whereTables['civicrm_contribution'] = 1;
+    }
+
+    if (CRM_Utils_Array::value('contribution_type_id', $query->_returnProperties)) {
+      $query->_select['contribution_type_id'] = "civicrm_contribution.contribution_type_id as contribution_type_id";
+      $query->_element['contribution_type_id'] = 1;
+      $query->_tables['civicrm_contribution'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
     }
 
@@ -95,10 +101,9 @@ class CRM_Contribute_BAO_Query {
 
     // get contribution_status
     if (CRM_Utils_Array::value('contribution_status_id', $query->_returnProperties)) {
-      $query->_select['contribution_status_id'] = "contribution_status.value as contribution_status_id";
+      $query->_select['contribution_status_id'] = "civicrm_contribution.contribution_status_id as contribution_status_id";
       $query->_element['contribution_status_id'] = 1;
       $query->_tables['civicrm_contribution'] = 1;
-      $query->_tables['contribution_status'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
     }
 
@@ -117,6 +122,13 @@ class CRM_Contribute_BAO_Query {
       $query->_element['contribution_payment_instrument'] = 1;
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['contribution_payment_instrument'] = 1;
+      $query->_whereTables['civicrm_contribution'] = 1;
+    }
+
+    if (CRM_Utils_Array::value('payment_instrument_id', $query->_returnProperties)) {
+      $query->_select['payment_instrument_id'] = "civicrm_contribution.payment_instrument_id as payment_instrument_id";
+      $query->_element['payment_instrument_id'] = 1;
+      $query->_tables['civicrm_contribution'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
     }
 
@@ -816,6 +828,7 @@ class CRM_Contribute_BAO_Query {
         'sort_name' => 1,
         'display_name' => 1,
         'contribution_type' => 1,
+        'contribution_type_id' => 1,
         'contribution_source' => 1,
         'created_date' => 1,
         'receive_date' => 1,
@@ -824,6 +837,7 @@ class CRM_Contribute_BAO_Query {
         'total_amount' => 1,
         'accounting_code' => 1,
         'payment_instrument' => 1,
+        'payment_instrument_id' => 1,
         'check_number' => 1,
         'non_deductible_amount' => 1,
         'fee_amount' => 1,
