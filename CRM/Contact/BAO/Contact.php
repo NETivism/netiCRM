@@ -184,7 +184,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     // since hash was required, make sure we have a 0 value for it, CRM-1063
     // fixed in 1.5 by making hash optional
     // only do this in create mode, not update
-    if ((!array_key_exists('hash', $contact) || !$contact->hash) && !$contact->id) {
+    if (empty($contact->hash) && !$contact->id) {
       $allNull = FALSE;
       $contact->hash = md5(uniqid(rand(), TRUE));
     }
@@ -192,31 +192,18 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     if (!$allNull) {
       $contact->modified_date = date('YmdHis');
       $contact->save();
-
-      require_once 'CRM/Core/BAO/Log.php';
       $message = !empty($params['log_data']) ? $params['log_data'] : ts('Updated contact');
-      CRM_Core_BAO_Log::register($contact->id,
-        'civicrm_contact',
-        $contact->id, NULL, $message
-      );
+      CRM_Core_BAO_Log::register($contact->id, 'civicrm_contact', $contact->id, NULL, $message);
     }
 
     if ($contact->contact_type == 'Individual' &&
-      (array_key_exists('current_employer', $params) ||
-        array_key_exists('employer_id', $params)
-      )
-    ) {
+      (array_key_exists('current_employer', $params) || array_key_exists('employer_id', $params))) {
       // create current employer
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
       if ($params['employer_id']) {
-        CRM_Contact_BAO_Contact_Utils::createCurrentEmployerRelationship($contact->id,
-          $params['employer_id']
-        );
+        CRM_Contact_BAO_Contact_Utils::createCurrentEmployerRelationship($contact->id, $params['employer_id']);
       }
       elseif ($params['current_employer']) {
-        CRM_Contact_BAO_Contact_Utils::createCurrentEmployerRelationship($contact->id,
-          $params['current_employer']
-        );
+        CRM_Contact_BAO_Contact_Utils::createCurrentEmployerRelationship($contact->id, $params['current_employer']);
       }
       else {
         //unset if employer id exits
@@ -225,10 +212,8 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
         }
       }
     }
-
     //update cached employee name
-    if ($contact->contact_type == 'Organization') {
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+    elseif ($contact->contact_type == 'Organization') {
       CRM_Contact_BAO_Contact_Utils::updateCurrentEmployer($contact->id);
     }
 
@@ -260,7 +245,6 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
 
     $isEdit = TRUE;
     if ($invokeHooks) {
-      require_once 'CRM/Utils/Hook.php';
       if (CRM_Utils_Array::value('contact_id', $params)) {
         CRM_Utils_Hook::pre('edit', $params['contact_type'], $params['contact_id'], $params);
       }
@@ -289,18 +273,20 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
       }
     }
 
-    require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
     $contact = self::add($params);
-    if (!$contact) {
-      // return CRM_Core_Error::statusBounce( ts( 'THe contact was not created, not set up to handle error' ) );
+    if (is_a($contact, 'CRM_Core_Error') || empty($contact->id)) {
+      // fatal error will rollback record
+      return CRM_Core_Error::fatal(ts("Data not saved."));
     }
+    // refs #22380, trying to solve deadlock
+    // The transaction should small to prevent deadlock.
+    $transaction->commit();
 
     $params['contact_id'] = $contact->id;
 
     if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE) {
       // in order to make sure that every contact must be added to a group (CRM-4613) -
-      require_once 'CRM/Core/BAO/Domain.php';
       $domainGroupID = CRM_Core_BAO_Domain::getGroupId();
       if (CRM_Utils_Array::value('group', $params) && is_array($params['group'])) {
         $grpFlp = array_flip($params['group']);
@@ -314,7 +300,6 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     }
 
     if (isset($params['group']) && !empty($params['group'])) {
-      require_once 'CRM/Contact/BAO/GroupContact.php';
       $contactIds = array($params['contact_id']);
       foreach ($params['group'] as $groupId => $flag) {
         if ($flag == 1) {
@@ -332,25 +317,35 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
       // approach in future.
 
       // clear acl cache if any.
-      require_once 'CRM/ACL/BAO/Cache.php';
       CRM_ACL_BAO_Cache::resetCache();
     }
 
-    //add location Block data
+    // refs #22380, trying to solve deadlock
+    // Use READ COMMITTED isolation level to prevent race condition of index lock
+    $transaction = new CRM_Core_Transaction('READ COMMITTED');
+
+    // add location Block data
     $blocks = CRM_Core_BAO_Location::create($params, $fixAddress);
     foreach ($blocks as $name => $value) {
       $contact->$name = $value;
     }
 
-    //add website
-    require_once 'CRM/Core/BAO/Website.php';
+    // add website
     CRM_Core_BAO_Website::create($params['website'], $contact->id, $skipDelete);
+
+    // add custom values
+    if (CRM_Utils_Array::value('custom', $params) && is_array($params['custom'])) {
+      CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_contact', $contact->id);
+    }
+    $transaction->commit(TRUE);
 
     //get userID from session
     $session = CRM_Core_Session::singleton();
     $userID = $session->get('userID');
+
     // add notes
     if (CRM_Utils_Array::value('note', $params)) {
+      $transaction = new CRM_Core_Transaction();
       if (is_array($params['note'])) {
         foreach ($params['note'] as $note) {
           $contactId = $contact->id;
@@ -391,25 +386,8 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
         );
         CRM_Core_BAO_Note::add($noteParams, CRM_Core_DAO::$_nullArray);
       }
+      $transaction->commit();
     }
-
-    if (CRM_Utils_Array::value('custom', $params) &&
-      is_array($params['custom'])
-    ) {
-      require_once 'CRM/Core/BAO/CustomValueTable.php';
-      CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_contact', $contact->id);
-    }
-
-    // make a civicrm_subscription_history entry only on contact create (CRM-777)
-    if (!CRM_Utils_Array::value('contact_id', $params)) {
-      $subscriptionParams = array('contact_id' => $contact->id,
-        'status' => 'Added',
-        'method' => 'Admin',
-      );
-      CRM_Contact_BAO_SubscriptionHistory::create($subscriptionParams);
-    }
-
-    $transaction->commit();
 
     // CRM-6367: fetch the right label for contact type’s display
     $contact->contact_type_display = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_ContactType', $contact->contact_type, 'label', 'name');
