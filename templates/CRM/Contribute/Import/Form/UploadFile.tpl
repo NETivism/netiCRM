@@ -85,9 +85,11 @@
  </div>
  <script>{literal}
 cj(document).ready(function($){
+  var selectContactType;
   var showHideCreateContact = function(init){
     $("input[name=onDuplicate]:checked").each(function(){
       if ($(this).val() == 4) {
+        selectContactType = $("input[name=contactType]:checked").val();
         $("input[name=createContactOption]").not("[value=102]").closest("label").addClass("disabled");
         $("input[name=createContactOption]").not("[value=102]").attr('disabled', 'disabled');
         $("input[name=createContactOption][value=102]").click();
@@ -104,7 +106,8 @@ cj(document).ready(function($){
         $("tr.create-new-contact label").removeClass("disabled");
         $("input[name=contactType]").removeAttr('disabled');
         $("select[name=dedupeRuleGroup]").removeAttr('disabled');
-        $("input[value=Individual]").attr('checked', 'checked');
+        var contactTypeElement = "input[value="+selectContactType+"]";
+        $(contactTypeElement).attr('checked','checked');
         showDedupeRuleOption();
 
       }
@@ -143,7 +146,7 @@ cj(document).ready(function($){
 
   var showDedupeRuleOption = function(){
       $("select[name=dedupeRuleGroup]").append($option);
-      $("#dedupeRuleGroup").val($option.val());
+      $("#dedupeRuleGroup").val($select.val());
   }
   var $option = $("#dedupeRuleGroup option").filter(function(){
         if($(this).css('display') == 'none'){
