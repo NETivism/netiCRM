@@ -470,19 +470,25 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
               $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : 0;
             }
             $softField = NULL;
-            $softField = isset($mappingContactType[$i]) && $mapName == ts('Soft Credit') ? $mappingContactType[$i] : 0;
+            if ($mapName == ts('Soft Credit')) {
+              $softField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
+            }
             $pcpField = NULL;
-            $pcpField = isset($mappingContactType[$i]) && $mapName == ts('Personal Campaign Page Creator') ? $mappingContactType[$i] : 0;
+            if ($mapName == ts('Personal Campaign Page Creator')) {
+              $pcpField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
+            }
 
             // Set visibility of each fields and sub type selection.
             // If subtype is NULL, the subtype selector would be hided.
             if (!is_null($softField)) {
               $defaults["mapper[$i]"] = array($mappingHeader, $softField);
+              $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
             }
-            if (!is_null($pcpField)) {
+            elseif (!is_null($pcpField)) {
               $defaults["mapper[$i]"] = array($mappingHeader, $pcpField);
+              $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
             }
-            if (!is_null($locationId) || !is_null($websiteTypeId)) {
+            elseif (!is_null($locationId) || !is_null($websiteTypeId)) {
               if (!is_null($websiteTypeId)) {
                 $defaults["mapper[$i]"] = array($mappingHeader, $websiteTypeId);
                 $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
