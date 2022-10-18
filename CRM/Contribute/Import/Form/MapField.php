@@ -567,10 +567,20 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
               break;
           }
         }
-        if ($mappedHeaderKey == 'website') {
+        if ($mappedHeaderKey == 'url') {
           $mappedLocationId = key($websiteTypes); 
+          $defaults["mapper[$i]"] = array($mappedHeaderKey, $mappedLocationId);
+          $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
         }
-        if (!empty($mappedHeaderKey)) {
+        elseif ($mappedHeaderKey == 'soft_credit') {
+          $defaults["mapper[$i]"] = array($mappedHeaderKey, 'contact_id');
+          $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+        }
+        elseif ($mappedHeaderKey == 'pcp_creator') {
+          $defaults["mapper[$i]"] = array($mappedHeaderKey, 'contact_id');
+          $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+        }
+        elseif (!empty($mappedHeaderKey)) {
           $defaults["mapper[$i]"] = array($mappedHeaderKey, $mappedLocationId, $mappedTypeId);
           if ((!$mappedLocationId)) {
             $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
