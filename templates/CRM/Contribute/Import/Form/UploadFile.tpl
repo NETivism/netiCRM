@@ -85,11 +85,9 @@
  </div>
  <script>{literal}
 cj(document).ready(function($){
-  var selectContactType;
   var showHideCreateContact = function(init){
     $("input[name=onDuplicate]:checked").each(function(){
       if ($(this).val() == 4) {
-        selectContactType = $("input[name=contactType]:checked").val();
         $("input[name=createContactOption]").not("[value=102]").closest("label").addClass("disabled");
         $("input[name=createContactOption]").not("[value=102]").attr('disabled', 'disabled');
         $("input[name=createContactOption][value=102]").click();
@@ -110,7 +108,6 @@ cj(document).ready(function($){
         if(init != true){
           $("input[value=Individual]").click();
         }
-
       }
     });
   }
@@ -149,8 +146,8 @@ cj(document).ready(function($){
   $("tr.create-new-contact label.crm-form-elem").css('display', 'block');
   $("tr.create-new-contact").find("br").remove();
   setTimeout(function(){
-    showHideCreateContact(true)
+    showHideCreateContact(true);
+    showHideDedupeRule()
   },100);
-  showHideDedupeRule();
 });
 {/literal}</script>
