@@ -106,7 +106,8 @@ cj(document).ready(function($){
         $("input[name=contactType]").attr('disabled', 'disabled');
         $("select[name=dedupeRuleGroup]").attr('disabled', 'disabled');
         $("input[name=contactType]").removeAttr('checked');
-        $("select[name=dedupeRuleGroup]").empty();
+        $("select[name=dedupeRuleGroup]").val(-1);
+        $("select[name=dedupeRuleGroup] option").hide();
       }
       else {
         $("input[name=createContactOption]").not("[value=102]").removeAttr('disabled');
@@ -116,9 +117,9 @@ cj(document).ready(function($){
         $("tr.create-new-contact label").removeClass("disabled");
         $("input[name=contactType]").removeAttr('disabled');
         $("select[name=dedupeRuleGroup]").removeAttr('disabled');
-        $("input[value=Individual]").attr('checked', 'checked');
-        showDedupeRuleOption();
-
+        if(init != true){
+          $("input[value=Individual]").click();
+        }
       }
     });
   }
@@ -152,22 +153,13 @@ cj(document).ready(function($){
 			}
     });
   }
-
-  var showDedupeRuleOption = function(){
-      $("select[name=dedupeRuleGroup]").append($option);
-      $("#dedupeRuleGroup").val($option.val());
-  }
-  var $option = $("#dedupeRuleGroup option").filter(function(){
-        if($(this).css('display') == 'none'){
-          return false;
-        }
-        return true;
-      });
   $("input[name=onDuplicate]").click(showHideCreateContact);
   $("input[name=contactType]").click(showHideDedupeRule);
   $("tr.create-new-contact label.crm-form-elem").css('display', 'block');
   $("tr.create-new-contact").find("br").remove();
-  setTimeout(showHideCreateContact,100);
-  showHideDedupeRule();
+  setTimeout(function(){
+    showHideCreateContact(true);
+    showHideDedupeRule()
+  },100);
 });
 {/literal}</script>

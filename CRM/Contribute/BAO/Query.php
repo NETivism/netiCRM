@@ -986,8 +986,8 @@ class CRM_Contribute_BAO_Query {
     $form->addElement('checkbox', 'contribution_pay_later', ts('Find Pay Later Contributions?'));
 
     //add field for transaction ID search
-    $form->addElement('text', 'contribution_transaction_id', ts("Transaction ID"), array('placeholder' => ts('case sensitive')));
-    $form->addElement('text', 'contribution_receipt_id', ts("Receipt ID"), array('placeholder' => ts('case sensitive')));
+    $form->addElement('text', 'contribution_transaction_id', ts("Transaction ID"));
+    $form->addElement('text', 'contribution_receipt_id', ts("Receipt ID"));
 
     $form->addSelect(
       'contribution_recurring',
@@ -998,7 +998,7 @@ class CRM_Contribute_BAO_Query {
         2 => ts('Non-Recurring Contribution'),
       )
     );
-    $form->addElement('text', 'contribution_check_number', ts('Check Number'), array('placeholder' => ts('case sensitive')));
+    $form->addElement('text', 'contribution_check_number', ts('Check Number'));
 
     //add field for pcp display in roll search
     $form->addYesNo('contribution_pcp_display_in_roll', ts('Personal Campaign Page').' - '.ts('Display In Roll ?'));

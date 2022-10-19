@@ -227,7 +227,16 @@ ORDER BY title";
       }
     }
 
-    CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($groups, $params, $contactId);
+    $config = CRM_Core_Config::singleton();
+    if ($config->profileDoubleOptIn) {
+      CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($groups, $params, $contactId);
+    } else {
+      foreach ($groups as $groupID) {
+        $se = CRM_Mailing_Event_BAO_Subscribe::subscribe($groupID, $params['email'], $contactId);
+        $confirm = CRM_Mailing_Event_BAO_Confirm::confirm($contactId, $se->id, $se->hash);
+      }
+    }
+    CRM_Core_Session::setStatus(ts('Thank you. Your information has been saved.'));
   }
 }
 
