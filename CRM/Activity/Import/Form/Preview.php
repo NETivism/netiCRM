@@ -155,6 +155,9 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
    * @access public
    */
   public function postProcess() {
+    if (PHP_SAPI != 'cli') {
+      set_time_limit(1800);
+    }
     $fileName = $this->controller->exportValue('UploadFile', 'uploadFile');
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
     $invalidRowCount = $this->get('invalidRowCount');
