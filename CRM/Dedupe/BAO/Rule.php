@@ -146,6 +146,9 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
             $where[] = "SUBSTR(t1.{$this->rule_field}, 1, {$this->rule_length}) = SUBSTR('$str', 1, {$this->rule_length})";
             $where[] = "t1.{$this->rule_field} IS NOT NULL";
           }
+          elseif ($this->rule_field === 'phone') {
+            $where[] = "REPLACE(t1.{$this->rule_field}, '-', '') = REPLACE('$str', '-', '')";
+          }
           else {
             $where[] = "t1.{$this->rule_field} = '$str'";
           }

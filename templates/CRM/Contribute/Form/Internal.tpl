@@ -15,7 +15,7 @@
         <td>{$form.contact_id.label}</td><td>{$form.contact_id.html} {if $display_name}({$display_name}){/if}</td>
       </tr>
       {else}
-        {include file="CRM/Contact/Form/NewContact.tpl" readonly=true}
+        {include file="CRM/Contact/Form/NewContact.tpl"}
       {/if}
       <tr>
         <td class="label">{$form.contribution_page_id.label}</td>

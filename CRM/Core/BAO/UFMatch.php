@@ -183,8 +183,6 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
     }
     $ufmatch->uf_id = $userKey;
     if (!$ufmatch->find(TRUE)) {
-      $transaction = new CRM_Core_Transaction();
-
       // very dirty way use POST as verify parameter
       if (!empty($_POST) && !$isLogin && isset($_POST['_qf_default'])) {
         $params = $_POST;
@@ -221,6 +219,8 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
         $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($uniqId, $ctype);
       }
 
+      // refs #22380, we don't need transaction when dedupe
+      $transaction = new CRM_Core_Transaction();
       if (!empty($dao)) {
         $ufmatch->contact_id = $dao->contact_id;
         $ufmatch->uf_name = $uniqId;
@@ -287,6 +287,7 @@ AND    domain_id    = %4
         );
         CRM_Core_Error::debug_var('ufmatch_error', $msg);
         unset($conflict);
+        // we don't need rollback transaction because we still need to create contact.
       }
     }
 

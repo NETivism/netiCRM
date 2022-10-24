@@ -19,6 +19,6 @@ if (!CIVICRM_APIEXPLORER_ENABLED) {
   exit;
 }
 
-$config = CRM_Core_Config::singleton();
+CRM_Core_Config::singleton();
 $rest = new CRM_Utils_REST();
 echo $rest->bootAndRun();

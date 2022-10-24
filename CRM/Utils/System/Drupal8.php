@@ -35,7 +35,12 @@ class CRM_Utils_System_Drupal8 {
     }
 
     /** @var \Drupal\user\Entity\User $account */
-    $account = entity_create('user');
+    if (function_exists('entity_create')) {
+      $account = entity_create('user');
+    }
+    else {
+      $account = \Drupal\user\Entity\User::create();
+    }
     $account->setUsername($params['cms_name'])->setEmail($params[$mail]);
 
     // Allow user to set password only if they are an admin or if
@@ -50,7 +55,7 @@ class CRM_Utils_System_Drupal8 {
     if ($user_register_conf != 'visitors' && !$user->hasPermission('administer users')) {
       $account->block();
     }
-    elseif (!$verify_mail_conf) {
+    else {
       $account->activate();
     }
 
@@ -84,23 +89,22 @@ class CRM_Utils_System_Drupal8 {
     //    - 'register_pending_approval': Welcome message, user pending admin
     //      approval.
     // @Todo: Should we only send off emails if $params['notify'] is set?
-    switch (TRUE) {
-      case $user_register_conf == 'admin_only' || $user->isAuthenticated():
-        _user_mail_notify('register_admin_created', $account);
-        break;
-
-      case $user_register_conf == 'visitors':
-        _user_mail_notify('register_no_approval_required', $account);
-        break;
-
-      case 'visitors_admin_approval':
-        _user_mail_notify('register_pending_approval', $account);
-        break;
+    if ($user_register_conf == 'admin_only' || $user->isAuthenticated()) {
+      _user_mail_notify('register_admin_created', $account);
     }
-
-    // If this is a user creating their own account, login them in!
-    if ($account->isActive() && $user->isAnonymous()) {
-      \user_login_finalize($account);
+    elseif ($user_register_conf == 'visitors' && $account->isActive()) {
+      _user_mail_notify('register_no_approval_required', $account);
+      if (!$verify_mail_conf) {
+        \user_login_finalize($account);
+        \Drupal::messenger()->addStatus(t('Registration successful. You are now logged in.'));
+      }
+      else {
+        \Drupal::messenger()->addStatus(t('A welcome message with further instructions has been sent to your email address.'));
+      }
+    }
+    elseif ($user_register_conf == 'visitors_admin_approval') {
+      _user_mail_notify('register_pending_approval', $account);
+      \Drupal::messenger()->addStatus(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your email address.'));
     }
 
     return $account->id();
@@ -110,7 +114,12 @@ class CRM_Utils_System_Drupal8 {
    * @inheritDoc
    */
   public function updateCMSName($ufID, $email) {
-    $user = entity_load('user', $ufID);
+    if (function_exists('entity_load')) {
+      $user = entity_load('user', $ufID);
+    }
+    else {
+      $user = \Drupal\user\Entity\User::load($ufID);
+    }
     if ($user && $user->getEmail() != $email) {
       $user->setEmail($email);
 
@@ -135,7 +144,12 @@ class CRM_Utils_System_Drupal8 {
     if (!empty($params['name'])) {
       $name = $params['name'];
 
-      $user = entity_create('user');
+      if (function_exists('entity_create')) {
+        $user = entity_create('user');
+      }
+      else {
+        $user = \Drupal\user\Entity\User::create();
+      }
       $user->setUsername($name);
 
       // This checks for both username uniqueness and validity.
@@ -153,7 +167,12 @@ class CRM_Utils_System_Drupal8 {
     if (!empty($params['mail'])) {
       $mail = $params['mail'];
 
-      $user = entity_create('user');
+      if (function_exists('entity_create')) {
+        $user = entity_create('user');
+      }
+      else {
+        $user = \Drupal\user\Entity\User::create();
+      }
       $user->setEmail($mail);
 
       // This checks for both email uniqueness.
@@ -325,7 +344,7 @@ class CRM_Utils_System_Drupal8 {
 
     $uid = \Drupal::service('user.auth')->authenticate($name, $password);
     if ($uid) {
-      if ($this->loadUser($name)) {
+      if ($this->loadUserByName($name)) {
         $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
         return [$contact_id, $uid, mt_rand()];
       }
@@ -337,8 +356,32 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function loadUser($username) {
+  public function loadUserByName($username) {
     $user = user_load_by_name($username);
+    if (!$user) {
+      return FALSE;
+    }
+
+    // Set Drupal's current user to the loaded user.
+    \Drupal::currentUser()->setAccount($user);
+
+    $uid = $user->id();
+    $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
+
+    // Store the contact id and user id in the session
+    $session = CRM_Core_Session::singleton();
+    $session->set('ufID', $uid);
+    $session->set('userID', $contact_id);
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function loadUserById($uid) {
+    if (!empty($uid) && CRM_Utils_Rule::positiveInteger($uid)) {
+      $user = \Drupal\user\Entity\User::load($uid);
+    }
     if (!$user) {
       return FALSE;
     }
@@ -397,7 +440,7 @@ class CRM_Utils_System_Drupal8 {
    * @return bool
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
-  public function loadBootStrap($params = [], $loadUser = TRUE, $throwError = TRUE, $realPath = NULL) {
+  public function loadBootStrap($params = [], $loadUser = TRUE, $throwError = FALSE) {
     static $run_once = FALSE;
     if ($run_once) {
       return TRUE;
@@ -420,27 +463,16 @@ class CRM_Utils_System_Drupal8 {
     $kernel->boot();
     $kernel->preHandle($request);
 
-    /* 
-    // this has performance issue. Not sure why we need to do rebuildContainer here
-    echo microtime(TRUE)."<br>";
-    $container = $kernel->rebuildContainer();
-    echo microtime(TRUE)."<br>";
-    // Add our request to the stack and route context.
-    $request->attributes->set(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT, new \Symfony\Component\Routing\Route('<none>'));
-    $request->attributes->set(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_NAME, '<none>');
-    $container->get('request_stack')->push($request);
-    $container->get('router.request_context')->fromRequest($request);
-    */
-
     // Initialize Civicrm
     \Drupal::service('civicrm')->initialize();
 
     if ($loadUser) {
-      if (!empty($params['uid']) && $username = \Drupal\user\Entity\User::load($params['uid'])->getUsername()) {
-        $this->loadUser($username);
+      $userObject = \Drupal\user\Entity\User::load($params['uid']);
+      if (!empty($params['uid']) && $username = $userObject->getAccountName()) {
+        $this->loadUserByName($username);
       }
       elseif (!empty($params['name']) && !empty($params['pass']) && \Drupal::service('user.auth')->authenticate($params['name'], $params['pass'])) {
-        $this->loadUser($params['name']);
+        $this->loadUserByName($params['name']);
       }
     }
     return TRUE;
@@ -568,16 +600,6 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function getUser($contactID) {
-    $user_details = parent::getUser($contactID);
-    $user_details['name'] = $user_details['name']->value;
-    $user_details['email'] = $user_details['email']->value;
-    return $user_details;
-  }
-
-  /**
-   * @inheritDoc
-   */
   public function getUniqueIdentifierFromUserObject($user) {
     return $user->get('mail')->value;
   }
@@ -592,39 +614,14 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function synchronizeUsers() {
-    $config = CRM_Core_Config::singleton();
-    if (PHP_SAPI != 'cli') {
-      set_time_limit(300);
+  public function synchronizeUser() {
+    $user = \Drupal::currentUser();
+    $uid = $user->id();
+    $email = $user->get('mail')->value;
+    if (!empty($user) && !empty($uid) && !empty($email)) {
+      return CRM_Core_BAO_UFMatch::synchronizeUFMatch($user, $uid, $email, 'Drupal');
     }
-
-    $users = [];
-    $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties();
-
-    $uf = $config->userFramework;
-    $contactCount = 0;
-    $contactCreated = 0;
-    $contactMatching = 0;
-    foreach ($users as $user) {
-      $mail = $user->get('mail')->value;
-      if (empty($mail)) {
-        continue;
-      }
-      $uid = $user->get('uid')->value;
-      $contactCount++;
-      if ($match = CRM_Core_BAO_UFMatch::synchronizeUFMatch($user, $uid, $mail, $uf, 1, 'Individual', TRUE)) {
-        $contactCreated++;
-      }
-      else {
-        $contactMatching++;
-      }
-    }
-
-    return [
-      'contactCount' => $contactCount,
-      'contactMatching' => $contactMatching,
-      'contactCreated' => $contactCreated,
-    ];
+    return FALSE;
   }
 
   /**

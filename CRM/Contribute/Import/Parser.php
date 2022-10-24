@@ -347,7 +347,7 @@ abstract class CRM_Contribute_Import_Parser {
     $this->_pledgePaymentErrors = array();
     $this->_softCreditErrors = array();
     $this->_pcpErrors = array();
-
+    $this->_contributionPages = CRM_Contribute_PseudoConstant::contributionPage();
 
     $status = '';
 

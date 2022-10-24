@@ -223,7 +223,7 @@ class CRM_Core_BAO_CMSUser {
       $loginUrl .= 'index.php?option=com_user&view=login';
     }
     elseif ($isDrupal) {
-      $loginUrl .= 'user';
+      $loginUrl .= 'user/login';
       // For Drupal we can redirect user to current page after login by passing it as destination.
       require_once 'CRM/Utils/System.php';
       $args = array('reset' => 1);

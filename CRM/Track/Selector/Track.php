@@ -378,6 +378,10 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
           $where[] = "entity_id IS NOT NULL";
           $args[5] = array(0, 'Integer');
         }
+        elseif (is_array($this->_entityId)) {
+          $where[] = "entity_id IN (%5)";
+          $args[5] = array(implode(',', $this->_entityId), 'CommaSeperatedIntegers');
+        }
       }
     }
     if ($this->_visitDateStart) {

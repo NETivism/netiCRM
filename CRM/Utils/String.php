@@ -753,6 +753,14 @@ class CRM_Utils_String {
     return $str;
   }
 
+  /**
+   * Transliteration string to ascii
+   *
+   * @param string $string
+   * @param string $unknown
+   * @param string $source_langcode
+   * @return string
+   */
   public static function transliteration($string, $unknown = '?', $source_langcode = NULL) {
     // ASCII is always valid NFC! If we're only ever given plain ASCII, we can
     // avoid the overhead of initializing the decomposition tables by skipping
@@ -930,6 +938,31 @@ class CRM_Utils_String {
     $ord = $ord & 255;
 
     return isset($map[$bank][$langcode][$ord]) ? $map[$bank][$langcode][$ord] : $unknown;
+  }
+
+  /**
+   * Truncate UTF8 string to length
+   *
+   * @param string $utf8String
+   * @param int $length
+   * @return string
+   */
+  function truncate($utf8String, $length) {
+    if (extension_loaded('mbstring')) {
+      return mb_substr($utf8String, 0, $length, 'UTF-8');
+    }
+    else {
+      $slen = strlen($utf8String);
+      if ($slen <= $length) {
+        return $utf8String;
+      }
+      if (ord($utf8String[$length]) < 0x80 || ord($utf8String[$length]) >= 0xc0) {
+        return substr($utf8String, 0, $length);
+      }
+      while (--$length >= 0 && ord($utf8String[$length]) >= 0x80 && ord($utf8String[$length]) < 0xc0) {
+      }
+      return substr($utf8String, 0, $length);
+    }
   }
 }
 

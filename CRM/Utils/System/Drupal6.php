@@ -15,7 +15,7 @@ class CRM_Utils_System_Drupal6 {
    * @return bool
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
-  function loadBootStrap($params = array()) {
+  function loadBootStrap($params = array(), $loadUser = TRUE, $throwError = FALSE) {
     $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
     if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
       if ($throwError) {
@@ -62,12 +62,10 @@ class CRM_Utils_System_Drupal6 {
         }
       }
       if ($uid) {
-        $account = user_load(array('uid' => $uid));
-        if ($account && $account->uid) {
-          global $user;
-          $user = $account;
-          return TRUE;
+        if ($loadUser) {
+          $this->loadUserById($uid);
         }
+        return TRUE;
       }
 
       if ($throwError) {
@@ -258,5 +256,77 @@ class CRM_Utils_System_Drupal6 {
 
   function setTitle($pageTitle) {
     drupal_set_title($pageTitle);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function authenticate($name, $password, $loadCMSBootstrap = FALSE, $realPath = NULL) {
+    $user = user_authenticate(array('name' => $name, 'pass' => $password));
+    if (!empty($user->uid)) {
+      if ($this->loadUserByName($name)) {
+        $uid = $user->uid;
+        $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
+        return [$contact_id, $uid, mt_rand()];
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function loadUserByName($username) {
+    if (!empty($username)) {
+      $account = user_load(array('name' => $username));
+    }
+    if ($account && $account->uid && $account->name == $username) {
+      global $user;
+      $user = $account;
+      $uid = $account->uid;
+      $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
+
+      // Store the contact id and user id in the session
+      $session = CRM_Core_Session::singleton();
+      $session->set('ufID', $uid);
+      $session->set('userID', $contact_id);
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function loadUserById($uid) {
+    if (!empty($uid) && CRM_Utils_Rule::positiveInteger($uid)) {
+      $account = user_load(array('uid' => $uid));
+    }
+    if ($account && $account->uid == $uid) {
+      global $user;
+      $user = $account;
+      $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
+
+      // Store the contact id and user id in the session
+      $session = CRM_Core_Session::singleton();
+      $session->set('ufID', $uid);
+      $session->set('userID', $contact_id);
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function synchronizeUser() {
+    global $user;
+    $uid = $user->uid;
+    $email = $user->email;
+    if (!empty($user) && !empty($uid) && !empty($email)) {
+      return CRM_Core_BAO_UFMatch::synchronizeUFMatch($user, $uid, $email, 'Drupal');
+    }
+    return FALSE;
   }
 }

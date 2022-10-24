@@ -72,6 +72,18 @@
             <div class="description">
               {capture assign='newrule'}{crmURL p='civicrm/contact/deduperules' q='reset=1'}{/capture}
               {ts 1=$newrule}Use rule you choose above for matching contact in each row. You can also <a href="%1">add new rule</a> anytime.{/ts}
+              <ul style="list-style-type: decimal;">
+              <li>{ts}Uploading file must include the following columns or the data cannot be imported successfully.{/ts}</li>
+              <ul style="list-style-type: disc;">
+                <li>{ts}First Name,Last Name,Email(or Dedupe Rule of Contact you selected){/ts}</li>
+                <li>{ts}Total Amount{/ts}</li>
+                <li>{ts}Contribution Type{/ts}</li>
+                <li>{ts}Contribution Received Date{/ts}</li>
+                <li>{ts}Receipt Date{/ts}</li>
+                <li>{ts}Invoice ID{/ts}</li>
+              </ul>
+              <li>{ts}When importing contributions, if the contributor has already have data in the system, the content of the contributor's personal information (contact, personal field) you imported this time,It is not possible to update the personal information of this contributor, but only for the purpose of comparing contributor. If you want to update your contributor information, please use the Import Contacts function to do so.{/ts}</li>
+              </ul>
             </div>
           </td>
         </tr>

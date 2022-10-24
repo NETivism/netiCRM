@@ -70,7 +70,8 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    * @var array
    * @static
    */
-  static $_properties = array('contact_id',
+  static $_properties = array(
+    'contact_id',
     'contribution_id',
     'contact_type',
     'sort_name',
@@ -81,6 +82,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     'contribution_source',
     'contribution_referrer_type',
     'payment_instrument',
+    'payment_instrument_id',
     'created_date',
     'receive_date',
     'thankyou_date',
@@ -201,7 +203,8 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     // type of selector
     $this->_action = $action;
 
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    // refs #32894, custom default properties for performance reason
+    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, self::returnProperties($this->_queryParams), NULL, FALSE, FALSE,
       CRM_Contact_BAO_Query::MODE_CONTRIBUTE
     );
 
@@ -354,16 +357,24 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     }
 
     // get all contribution status
-    $contributionStatuses = CRM_Core_OptionGroup::values('contribution_status', FALSE, FALSE, FALSE, NULL, 'name', FALSE);
-    $taxReceiptTypes = array();
-    CRM_Core_PseudoConstant::populate($taxReceiptTypes, 'CRM_Contribute_DAO_ContributionType', FALSE, 'name', 'is_active', 'is_taxreceipt<>0');
+    $contributionStatusesName = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
+    $contributionStatuses = CRM_Contribute_PseudoConstant::contributionStatus();
+    $taxReceiptTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_taxreceipt');
     $taxReceiptImplements = CRM_Utils_Hook::availableHooks('civicrm_validateTaxReceipt');
     $taxReceiptImplements = count($taxReceiptImplements);
 
+    $paymentInstruments = CRM_Contribute_PseudoConstant::paymentInstrument();
+    $contributionTypes = CRM_Contribute_PseudoConstant::contributionType();
+
     $ids = array();
-    While ($result->fetch()) {
+    while ($result->fetch()) {
       $row = array();
       $ids[] = $result->id;
+      // prepare result from pseudo element
+      $result->payment_instrument = $paymentInstruments[$result->payment_instrument_id];
+      $result->contribution_status = $contributionStatuses[$result->contribution_status_id];
+      $result->contribution_type = $contributionTypes[$result->contribution_type_id];
+
       // the columns we are interested in
       foreach (self::$_properties as $property) {
         if (property_exists($result, $property)) {
@@ -373,7 +384,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
       // add contribution status name
       $row['id'] = $result->id;
-      $row['contribution_status_name'] = CRM_Utils_Array::value($row['contribution_status_id'], $contributionStatuses);
+      $row['contribution_status_name'] = CRM_Utils_Array::value($row['contribution_status_id'], $contributionStatusesName);
 
       if ($result->is_pay_later && CRM_Utils_Array::value('contribution_status_name', $row) == 'Pending') {
         $row['contribution_status_suffix'] = '(' . ts('Pay Later') . ')';
@@ -425,9 +436,18 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     }
     if(!empty($ids)){
       $details = CRM_Contribute_BAO_Contribution::getComponentDetails($ids);
+      $premiums = self::getContributionPremiums($ids);
+      $referrers = self::getContributionReferrers($ids);
       foreach($rows as $k => $r){
-        if(!empty($details[$r['contribution_id']])){
-          $rows[$k]['ids'] = $details[$r['contribution_id']];
+        if (!empty($details[$r['id']])){
+          $rows[$k]['ids'] = $details[$r['id']];
+        }
+        if (!empty($referrers[$r['id']])) {
+          $rows[$k]['contribution_referrer_type'] = $referrers[$r['id']];
+        }
+        if (!empty($premiums[$r['id']])) {
+          $rows[$k]['product_name'] = $premiums[$r['id']]['product_name'];
+          $rows[$k]['product_option'] = $premiums[$r['id']]['product_option'];
         }
       }
     }
@@ -573,6 +593,68 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
   function getSummary() {
     return $this->_query->summaryContribution($this->_context);
+  }
+
+  public static function returnProperties($queryParams) {
+    $returnProperties = CRM_Contribute_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CONTRIBUTE);
+
+    // never used
+    unset($returnProperties['accounting_code']);
+    unset($returnProperties['contribution_note']);
+
+    // for performance reason, show these values when getRows
+    unset($returnProperties['payment_instrument']);
+    unset($returnProperties['contribution_status']);
+    unset($returnProperties['contribution_type']);
+
+    // do not include queries when no product related search
+    $includeProduct = FALSE;
+    $includeReferrer = FALSE;
+    foreach($queryParams as $query) {
+      if ($query[0] === 'product_name') {
+        $includeProduct = TRUE;
+      }
+      if (preg_match('/^(contribution_referrer|contribution_utm|contribution_landing)/', $query[0])) {
+        $includeReferrer = TRUE;
+      }
+    }
+    if (!$includeProduct) {
+      unset($returnProperties['product_name']);
+      unset($returnProperties['sku']);
+      unset($returnProperties['product_option']);
+      unset($returnProperties['fulfilled_date']);
+    }
+    if (!$includeReferrer) {
+      unset($returnProperties['contribution_referrer_type']);
+    }
+    return $returnProperties;
+  }
+
+  public static function getContributionPremiums($ids) {
+    $sql = "SELECT cp.contribution_id, cp.product_option, p.name FROM civicrm_contribution_product cp INNER JOIN civicrm_product p ON p.id = cp.product_id WHERE cp.contribution_id IN (%1)";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(
+      1 => array(implode(',', $ids), 'CommaSeperatedIntegers')
+    ));
+    $premiums = array();
+    while($dao->fetch()) {
+      $premiums[$dao->contribution_id]['product_name'] = $dao->name;
+      $premiums[$dao->contribution_id]['product_option'] = $dao->product_option;
+    }
+    return $premiums;
+  }
+
+  public static function getContributionReferrers($ids) {
+    $params = array(
+      'entityTable' => 'civicrm_contribution',
+      'entityId' => $ids,
+    );
+    $selector = new CRM_Track_Selector_Track($params);
+    $dao = $selector->getQuery("entity_id, referrer_type", 'GROUP BY entity_table, entity_id');
+    $referrer = array();
+    while($dao->fetch()){
+      $referrer[$dao->entity_id] = $dao->referrer_type;
+    }
+    return $referrer;
   }
 }
 //end of class

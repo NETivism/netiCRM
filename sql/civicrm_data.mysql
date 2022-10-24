@@ -4433,7 +4433,7 @@ INSERT INTO
    civicrm_contribution_type(name, is_reserved, is_active, is_deductible)
 VALUES
   ( 'Donation'             , 0, 1, 1 ),
-  ( 'Member Dues'          , 0, 1, 1 ), 
+  ( 'Member Dues'          , 0, 1, 0 ), 
   ( 'Campaign Contribution', 0, 1, 0 ),
   ( 'Event Fee'            , 0, 1, 0 );
   

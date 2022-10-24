@@ -1,7 +1,8 @@
 "use strict";
+(function() {
 
 function loadScript(url, callback){
-  var script = document.createElement("script")
+  let script = document.createElement("script")
   script.type = "text/javascript";
 
   if (script.readyState){  //IE
@@ -25,16 +26,16 @@ function loadScript(url, callback){
 
 function getHostNameFromUrl(url) {
   // <summary>Parses the domain/host from a given url.</summary>
-  var a = document.createElement("a");
+  let a = document.createElement("a");
   a.href = url;
   // Handle chrome which will default to domain where script is called from if invalid
   return url.indexOf(a.hostname) != -1 ? a.hostname : '';
 }
 
 function loadReferrer() {
-  var dateTime = Date.now();
-  var timestamp = Math.floor(dateTime / 1000);
-  var referrerInfo = localStorage.getItem('referrerInfo');
+  let dateTime = Date.now();
+  let timestamp = Math.floor(dateTime / 1000);
+  let referrerInfo = localStorage.getItem('referrerInfo');
   if (referrerInfo) {
     referrerInfo = JSON.parse(referrerInfo);
   }
@@ -42,8 +43,8 @@ function loadReferrer() {
   // use 30mins time to check if this is same session.
   if (referrerInfo && typeof referrerInfo.timestamp !== 'undefined' && timestamp - referrerInfo.timestamp < 1800) {
     // check if campaign exists
-    var url = window.location.href;
-    var referrer = '';
+    let url = window.location.href;
+    let referrer = '';
     if (typeof document.referrer !== 'undefined') {
       referrer = document.referrer;
     }
@@ -59,8 +60,8 @@ function loadReferrer() {
   // someone visit this site over 30mins, it's a new visit anyway
   else {
     localStorage.removeItem('referrerInfo');
-    var url = window.location.href;
-    var referrer = '';
+    let url = window.location.href;
+    let referrer = '';
     if (typeof document.referrer !== 'undefined') {
       referrer = document.referrer;
     }
@@ -74,128 +75,135 @@ function loadReferrer() {
   }
 
   // remove unused params
-  var queue_id = location.search.match(/civimail_x_q=(\d+)/);
-  var url_id = location.search.match(/civimail_x_u=(\d+)/);
+  let queue_id = location.search.match(/civimail_x_q=(\d+)/);
+  let url_id = location.search.match(/civimail_x_u=(\d+)/);
   if (queue_id && url_id) {
     if (typeof URLSearchParams === 'function') {
-      var searchParams = new URLSearchParams(window.location.search);
+      let searchParams = new URLSearchParams(window.location.search);
       searchParams.delete("civimail_x_q");
       searchParams.delete("civimail_x_u");
       if (searchParams.toString() === '') {
-        var newQuery = '';
+        let newQuery = '';
       }
       else {
-        var newQuery = '?'+searchParams.toString();
+        let newQuery = '?'+searchParams.toString();
       }
-      var newUrl = window.location.origin+window.location.pathname+newQuery;
+      let newUrl = window.location.origin+window.location.pathname+newQuery;
       window.history.replaceState({}, null, newUrl);
     }
   }
 }
 
 function trackVisit(visitInfo) {
-  if (typeof cj === 'undefined') {
+  let object = {};
+  if (location.href.match(/civicrm\/event\/(register|info)/)) {
+    object['page_type'] = 'civicrm_event';
+  }
+  else if (location.href.match(/civicrm\/contribute\/transact/)) {
+    object['page_type'] = 'civicrm_contribution_page';
+  }
+  else if (location.href.match(/civicrm\/profile\/create/)) {
+    object['page_type'] = 'civicrm_uf_group';
+  }
+  let page_id = location.search.match(/id=(\d+)/);
+  if (page_id) {
+    object['page_id'] = page_id[1];
+  }
+  if (!object['page_type'] || !object['page_id']) {
     return;
   }
-  cj(document).ready(function($){
-    var object = {};
-    if (location.href.match(/civicrm\/event\/(register|info)/)) {
-      object['page_type'] = 'civicrm_event';
-    }
-    else if (location.href.match(/civicrm\/contribute\/transact/)) {
-      object['page_type'] = 'civicrm_contribution_page';
-    }
-    else if (location.href.match(/civicrm\/profile\/create/)) {
-      object['page_type'] = 'civicrm_uf_group';
-    }
-    var page_id = location.search.match(/id=(\d+)/);
-    if (page_id) {
-      object['page_id'] = page_id[1];
-    }
-    if (!object['page_type'] || !object['page_id']) {
-      return;
-    }
 
-    // prepare 
-    object['landing'] = visitInfo.landing ? visitInfo.landing : '';
-    object['referrer_type'] = visitInfo.referrer.type;
-    object['referrer_network'] = '';
-    object['referrer_url'] = '';
-    // detect if from civimail mailing list
-    var queue_id = location.search.match(/civimail_x_q=(\d+)/);
-    var url_id = location.search.match(/civimail_x_u=(\d+)/);
-    if (queue_id && url_id) {
-      object['referrer_type'] = 'email';
-      object['referrer_network'] = 'civimail';
-      object['referrer_url'] = 'external/url.php?qid='+queue_id[1]+'&u='+url_id[1];
-      if (typeof URLSearchParams === 'function') {
-        var searchParams = new URLSearchParams(window.location.search);
-        searchParams.delete("civimail_x_q");
-        searchParams.delete("civimail_x_u");
-        var newQuery = '?'+searchParams.toString();
-        var newUrl = window.location.origin+window.location.pathname+newQuery;
-        window.history.replaceState({}, null, newUrl);
+  // prepare
+  object['landing'] = visitInfo.landing ? visitInfo.landing : '';
+  object['referrer_type'] = visitInfo.referrer.type;
+  object['referrer_network'] = '';
+  object['referrer_url'] = '';
+  // detect if from civimail mailing list
+  let queue_id = location.search.match(/civimail_x_q=(\d+)/);
+  let url_id = location.search.match(/civimail_x_u=(\d+)/);
+  if (queue_id && url_id) {
+    object['referrer_type'] = 'email';
+    object['referrer_network'] = 'civimail';
+    object['referrer_url'] = 'external/url.php?qid='+queue_id[1]+'&u='+url_id[1];
+    if (typeof URLSearchParams === 'function') {
+      let searchParams = new URLSearchParams(window.location.search);
+      searchParams.delete("civimail_x_q");
+      searchParams.delete("civimail_x_u");
+      let newQuery = '?'+searchParams.toString();
+      let newUrl = window.location.origin+window.location.pathname+newQuery;
+      window.history.replaceState({}, null, newUrl);
+    }
+  }
+  switch(object['referrer_type']){
+    case 'ad':
+      object['referrer_network'] = visitInfo.referrer.network;
+      break;
+    case 'direct':
+      object['referrer_network'] = '';
+      break;
+    case 'email':
+      if (typeof visitInfo.referrer.client !== 'undefined' && visitInfo.referrer.client !== 'unknown') {
+        object['referrer_network'] = visitInfo.referrer.client;
       }
-    }
-    switch(object['referrer_type']){
-      case 'ad':
-        object['referrer_network'] = visitInfo.referrer.network;
-        break;
-      case 'direct':
-        object['referrer_network'] = '';
-        break;
-      case 'email':
-        if (typeof visitInfo.referrer.client !== 'undefined' && visitInfo.referrer.client !== 'unknown') {
-          object['referrer_network'] = visitInfo.referrer.client;
-        }
-        break;
-      case 'internal':
-        object['referrer_network'] = '';
-        break;
-      case 'link':
-        object['referrer_network'] = getHostNameFromUrl(visitInfo.referrer.from);
-        if (typeof visitInfo.referrer.from !== 'undefined') {
-          object['referrer_url'] = visitInfo.referrer.from;
-        }
-        break;
-      case 'local':
-        object['referrer_network'] = visitInfo.referrer.site;
-        break;
-      case 'search':
-        object['referrer_network'] = visitInfo.referrer.engine;
-        break;
-      case 'social':
-        object['referrer_network'] = visitInfo.referrer.network;
-        break;
-      default:
-        object['referrer_type'] = 'unknown';
-        object['referrer_network'] = '';
-        break;
-    }
-    if (typeof visitInfo.campaign !== 'undefined') {
-      for(var utmKey in visitInfo.campaign) {
-        object[utmKey] = visitInfo.campaign[utmKey];
+      break;
+    case 'internal':
+      object['referrer_network'] = '';
+      break;
+    case 'link':
+      object['referrer_network'] = getHostNameFromUrl(visitInfo.referrer.from);
+      if (typeof visitInfo.referrer.from !== 'undefined') {
+        object['referrer_url'] = visitInfo.referrer.from;
       }
-    }
-    if (typeof navigator.doNotTrack === 'string' && navigator.doNotTrack == '1') {
+      break;
+    case 'local':
+      object['referrer_network'] = visitInfo.referrer.site;
+      break;
+    case 'search':
+      object['referrer_network'] = visitInfo.referrer.engine;
+      break;
+    case 'social':
+      object['referrer_network'] = visitInfo.referrer.network;
+      break;
+    default:
       object['referrer_type'] = 'unknown';
       object['referrer_network'] = '';
-      object['referrer_url'] = '';
+      break;
+  }
+  if (typeof visitInfo.campaign !== 'undefined') {
+    for(let utmKey in visitInfo.campaign) {
+      object[utmKey] = visitInfo.campaign[utmKey];
     }
+  }
+  if (typeof navigator.doNotTrack === 'string' && navigator.doNotTrack == '1') {
+    object['referrer_type'] = 'unknown';
+    object['referrer_network'] = '';
+    object['referrer_url'] = '';
+  }
 
-    $.ajax({
-      type: "POST",
-      url: '/civicrm/ajax/track',
-      data: 'data='+encodeURIComponent(JSON.stringify(object))
-    });
+  const url = '/civicrm/ajax/track';
+  const data = 'data='+encodeURIComponent(JSON.stringify(object));
+  fetch(url, {
+    method: "POST",
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    },
+    body: data
   });
 }
 
-if (typeof Drupal !== 'undefined' && typeof Drupal.settings !== 'undefined') {
-  var inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
+;
+if (typeof document.currentScript === 'object' && typeof document.currentScript.src === 'string') {
+  let inboundSrc = document.currentScript.src;
+  inboundSrc = inboundSrc.replace('insights.js', 'inbound.js');
+  loadScript(inboundSrc, function(){ loadReferrer(); });
+}
+else if (typeof Drupal !== 'undefined' && typeof Drupal.settings !== 'undefined') {
+  let inboundSrc = Drupal.settings.civicrm.resourceBase+'js/inbound.js';
   loadScript(inboundSrc, function(){ loadReferrer(); });
 }
 else if (typeof drupalSettings !== 'undefined') {
-  var inboundSrc = drupalSettings.civicrm.resourceBase+'js/inbound.js';
+  let inboundSrc = drupalSettings.civicrm.resourceBase+'js/inbound.js';
   loadScript(inboundSrc, function(){ loadReferrer(); });
 }
+
+})();

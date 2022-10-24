@@ -310,6 +310,12 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       $isDeleted = NULL;
       if ($val) {
         switch ($key) {
+          case 'contribution_page_id':
+            if (!isset($this->_contributionPages[$val])) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Contribution Page ID'), $errorMessage);
+            }
+            break;
+
           case 'receive_date':
             if (CRM_Utils_Date::convertToDefaultDate($params, $dateType, $key)) {
               if (!CRM_Utils_Rule::dateTime($params[$key])) {

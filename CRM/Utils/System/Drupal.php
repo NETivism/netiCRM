@@ -643,14 +643,14 @@ class CRM_Utils_System_Drupal {
   /**
    * User email verification setting
    *
-   * @return string
+   * @return bool
    * @access public
    * @static
    */
   static function userEmailVerification() {
     $version = self::$_version;
     if ($version >= 8) {
-      return \Drupal::config('user.settings')->get('verify_email');
+      return !empty(\Drupal::config('user.settings')->get('verify_mail')) ? TRUE : FALSE;
     }
     else {
       return self::variable_get('user_email_verification', TRUE);
@@ -790,33 +790,7 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function authenticate($name, $password) {
-    require_once 'DB.php';
-
-    $config = CRM_Core_Config::singleton();
-
-    $dbDrupal = DB::connect($config->userFrameworkDSN);
-    if (DB::isError($dbDrupal)) {
-      CRM_Core_Error::fatal("Cannot connect to drupal db via $config->userFrameworkDSN, " . $dbDrupal->getMessage());
-    }
-
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-    $password = md5($password);
-    $name = $dbDrupal->escapeSimple($strtolower($name));
-    $sql = 'SELECT u.* FROM ' . $config->userFrameworkUsersTableName . " u WHERE LOWER(u.name) = '$name' AND u.pass = '$password' AND u.status = 1";
-    $query = $dbDrupal->query($sql);
-
-    $user = NULL;
-    // need to change this to make sure we matched only one row
-    require_once 'CRM/Core/BAO/UFMatch.php';
-    while ($row = $query->fetchRow(DB_FETCHMODE_ASSOC)) {
-      CRM_Core_BAO_UFMatch::synchronizeUFMatch($user, $row['uid'], $row['mail'], 'Drupal');
-      $contactID = CRM_Core_BAO_UFMatch::getContactId($row['uid']);
-      if (!$contactID) {
-        return FALSE;
-      }
-      return array($contactID, $row['uid'], mt_rand());
-    }
-    return FALSE;
+    return CRM_Core_Config::$_userSystem->versionalClass->authenticate($name, $password);
   }
 
   /**
@@ -828,7 +802,14 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function setMessage($message) {
-    drupal_set_message($message);
+    $version = self::$_version;
+
+    if ($version < 8) {
+      drupal_set_message($message);
+    }
+    else {
+      CRM_Core_Config::$_userSystem->versionalClass->setMessage($message);
+    }
   }
 
   static function permissionCheck($permission, $uid = NULL) {
@@ -954,10 +935,13 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
-   * load drupal bootstrap
+   * Dupal bootstrap
    *
-   * @param $name string  optional username for login
-   * @param $pass string  optional password for login
+   * This will only trigger once, after bootstrap, use self::loadUser instead for login
+   *
+   * @param array $params optional login when bootstrap
+   *   'name' for username
+   *   'pass' for password for login
    */
   static function loadBootStrap($params = array(), $throwError = TRUE) {
     //take the cms root path.
@@ -965,7 +949,28 @@ class CRM_Utils_System_Drupal {
     chdir($cmsPath);
 
     // call method in Drupalx.php
-    CRM_Core_Config::$_userSystem->versionalClass->loadBootStrap($params);
+    CRM_Core_Config::$_userSystem->versionalClass->loadBootStrap($params, TRUE, $throwError);
+  }
+
+  /**
+   * Load user by uid or name
+   *
+   * @param array $params
+   * @return void
+   */
+  static function loadUser($params = array()) {
+    if (empty($params)) {
+      return FALSE;
+    }
+
+    // call method in Drupalx.php
+    if (!empty($params['uid'])) {
+      return CRM_Core_Config::$_userSystem->versionalClass->loadUserById($params['uid']);
+    }
+    elseif (!empty($params['name'])) {
+      return CRM_Core_Config::$_userSystem->versionalClass->loadUserByName($params['name']);
+    }
+    return FALSE;
   }
 
   static function cmsRootPath() {

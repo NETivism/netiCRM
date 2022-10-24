@@ -49,7 +49,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode = 'live', &$paymentProcessor, &$paymentForm = NULL) {
     $args = func_get_args();
     if (isset($args[3])) {
       $apiType = $args[3];
@@ -132,7 +132,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $currentPath = CRM_Utils_System::currentPath();
     $params['prime'] = CRM_Utils_Type::escape($_POST['prime'], 'String');
     $params['mode'] = $this->_mode;
-    $paymentResult = self::payByPrime($params);
+    if (!empty($params['isPayByBindCard'])) {
+      $paymentResult = self::payByBindCard($params);
+    }
+    else {
+      $paymentResult = self::payByPrime($params);
+    }
     if ($paymentResult['status'] == "0") {
       $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=1');
     }
@@ -428,6 +433,78 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $response;
   }
 
+  public static function payByBindCard($payment) {
+    if ($payment && !empty($payment['payment_processor_id'])) {
+      $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
+      $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'contribution_recur_id');
+      if(empty($trxn_id)){
+        $rand = base_convert(rand(16, 255), 10, 16);
+        $recurringId = 
+        $trxn_id = 'b_'.$recurringId.'_'.$payment['contributionID'].'_'.$rand;
+        CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id', $trxn_id);
+      }
+
+      CRM_Core_Error::debug_var('payment', $payment);
+      $contribution = $ids = array();
+      $params = array('id' => $payment['contributionID']);
+      CRM_Contribute_BAO_Contribution::getValues($params, $contribution, $ids);
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($payment['payment_processor_id'], $payment['mode']);
+      $prime = $payment['prime'];
+      $tappayParams = array(
+        'apiType' => 'bind_card',
+        'partnerKey' => $paymentProcessor['password'],
+        'isTest' => $contribution['is_test'],
+      );
+      $api = new CRM_Core_Payment_TapPayAPI($tappayParams);
+      $details = !empty($contribution['amount_level']) ? $contribution['source'].'-'.$contribution['amount_level'] : $contribution['source'];
+      $data = array(
+        'prime' => $prime,
+        'partner_key' => $paymentProcessor['password'],
+        'merchant_id' => $paymentProcessor['user_name'],
+        'currency' => $contribution['currency'],
+        'cardholder'=> array(
+          'phone_number'=> '', #required #TODO
+          'name' => '', #required but use empty
+          'email' => '', #required but use empty
+          'zip_code' => '',    //optional
+          'address' => '',     //optional
+          'national_id' => '', //optional
+        ),
+        'contribution_id' => $payment['contributionID'],
+      );
+
+      CRM_Core_Error::debug_var('data', $data);
+      // Allow further manipulation of the arguments via custom hooks ..
+      $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
+      $paymentClass = self::singleton($mode, $paymentProcessor, CRM_Core_DAO::$_nullObject);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
+
+      $result = $api->request($data);
+      CRM_Core_Error::debug_var('result', $result);
+      self::doTransaction($result, $payment['contributionID']);
+
+      CRM_Contribute_BAO_Contribution::getValues($params, $contribution, $ids);
+      if ($contribution['contribution_status_id'] == 1) {
+        $contribution['contribution_status_id'] = 3;
+        $contribution['cancel_date'] = date('Y-m-d H:i:s');
+        $contribution['total_amount'] = 0;
+        $contribution['cancel_reason'] = ts('This record is only used to make authorization.');
+        $contributionDAO = new CRM_Contribute_DAO_Contribution();
+        $contributionDAO->copyValues($contribution);
+        $contributionDAO->save();
+      }
+
+      // update token status after transaction completed
+      if ($result->status === 0 && !empty($contribution['contribution_recur_id'])) {
+        self::cardMetadata($payment['contributionID']); 
+      }
+
+      $response = array('status' => $result->status, 'msg' => $result->msg);
+      return $response;
+    }
+    return FALSE;
+  }
+
   public static function cardMetadata($contributionId, $data = NULL) {
     if (empty($contributionId))  {
       return FALSE;
@@ -527,7 +604,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $contribution = $objects['contribution'];
 
       // check trxn_id when pay_by_prime
-      if ( !empty($result->card_secret) && !strstr($contribution->trxn_id, $result->order_number)) {
+      // result->order_id is only used in payByBindCard
+      if ( empty($result->order_id) && !empty($result->card_secret) && !strstr($contribution->trxn_id, $result->order_number)) {
         $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request.").$contribution->trxn_id.": ".$result->order_number."\n";
         CRM_Core_Error::debug_log_message($msgText);
         $note .= $msgText;
@@ -542,7 +620,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
 
       // check amount
-      if ( !empty($result->amount) && $amount != $result->amount ) {
+      if (!empty($result->amount) && $amount != $result->amount ) {
         $msgText = ts("Failuare: Amount values dont match between database and IPN request. Trxn_id is %1, Data from payment : %2, Data in CRM : %3", array(1 => $contribution->trxn_id, 2 => $result->amount, 3 => $amount))."\n";
         CRM_Core_Error::debug_log_message($msgText);
         $note .= $msgText;
