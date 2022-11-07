@@ -74,7 +74,8 @@ class CRM_Export_BAO_Export {
     $mergeSameAddress = FALSE,
     $mergeSameHousehold = FALSE,
     $mappingId = NULL,
-    $separateMode = FALSE
+    $separateMode = FALSE, 
+    $customHeader = array()
   ) {
     global $civicrm_batch;
     $allArgs = func_get_args();
@@ -1052,6 +1053,14 @@ class CRM_Export_BAO_Export {
           $addPaymentHeader = FALSE;
         }
 
+        if (empty($row['contact_id'])) {
+          $row['contact_id'] = $dao->contact_id;
+          $allColumnNames = implode(',', $sqlColumns);
+          if (!strstr($allColumnNames, 'contact_id')) {
+            self::sqlColumnDefn($query, $sqlColumns, 'contact_id');
+          }
+        }
+
         if ($setHeader) {
           $exportTempTable = self::createTempTable($sqlColumns);
         }
@@ -1111,6 +1120,28 @@ class CRM_Export_BAO_Export {
     // fix the headers for rows with relationship type
     if ($relName) {
       self::manipulateHeaderRows($headerRows, $contactRelationshipTypes);
+    }
+
+    if (!empty($customHeader)) {      
+      // Get componetentTable column name:
+      $sql = "DESC $componentTable";
+      $componentColumns = '';
+      $dao = CRM_Core_DAO::executeQuery($sql);
+      while ($dao->fetch()) {
+        if (strstr($dao->Field, 'column')) {
+          $componentColumns .= ", ctTable.$dao->Field";
+        }
+      }
+
+      $tempTableName = 'new_export_temp_table';
+      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT {$exportTempTable}.* $componentColumns FROM $exportTempTable LEFT JOIN $componentTable ctTable ON ctTable.contact_id = {$exportTempTable}.contact_id";
+      CRM_Core_DAO::executeQuery($sql);
+      $exportTempTable = $tempTableName;
+
+      $headerRows = $customHeader + $headerRows;
+      foreach (array_reverse($customHeader) as $key => $ignore) {
+        array_unshift($sqlColumns, "$key varchar(64)");
+      }
     }
 
     // call export hook
