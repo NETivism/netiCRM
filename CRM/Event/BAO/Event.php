@@ -1835,12 +1835,15 @@ WHERE  ce.loc_block_id = $locBlockId";
      * @access public
      */
 
-  static function showHideRegistrationLink($values) {
+  static function showHideRegistrationLink($values, $forceAllowedRegister = FALSE) {
 
     $session = CRM_Core_Session::singleton();
     $contactID = $session->get('userID');
     $alreadyRegistered = FALSE;
 
+    if ($forceAllowedRegister) {
+      return TRUE;
+    }
     if ($contactID) {
       $params = array('contact_id' => $contactID);
 
