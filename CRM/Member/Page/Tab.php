@@ -163,6 +163,11 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    * @access public
    */
   function view() {
+    // prevent contribution controller override membership button
+    // we need call contribution first
+    $this->associatedContribution();
+
+    // membership controller here
     $controller = new CRM_Core_Controller_Simple('CRM_Member_Form_MembershipView', 'View Membership',
       $this->_action
     );
@@ -171,7 +176,6 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $controller->set('cid', $this->_contactId);
     $controller->run();
 
-    $this->associatedContribution();
 
     $search_values = array(
       'membership_id' => $this->_id,
