@@ -1,31 +1,11 @@
 <?php
 /**
- *  File for the TestActivity class
+ * Activity Unit Test
  *
- *  (PHP 5)
- *
- *   @author Walt Haas <walt@dharmatech.org> (801) 534-1262
- *   @copyright Copyright CiviCRM LLC (C) 2009
- *   @license   http://www.fsf.org/licensing/licenses/agpl-3.0.html
- *              GNU Affero General Public License version 3
- *   @version   $Id: ActivityTest.php 31254 2010-12-15 10:09:29Z eileen $
- *   @package   CiviCRM
- *
- *   This file is part of CiviCRM
- *
- *   CiviCRM is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Affero General Public License
- *   as published by the Free Software Foundation; either version 3 of
- *   the License, or (at your option) any later version.
- *
- *   CiviCRM is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
- *
- *   You should have received a copy of the GNU Affero General Public
- *   License along with this program.  If not, see
- *   <http://www.gnu.org/licenses/>.
+ * @docmaker_intro_start
+ * @api_title Activity
+ * This is a API Document about Activity.
+ * @docmaker_intro_end
  */
 
 /**
@@ -62,15 +42,15 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
       'civicrm_custom_field',
     );
 
-    $this->quickCleanup($tablesToTruncate);
+    // $this->quickCleanup($tablesToTruncate);
 
     //  Insert a row in civicrm_contact creating contact 17
-    $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
-      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
-        dirname(__FILE__) . '/dataset/contact_17.xml'
-      )
-    );
+    // $op = new PHPUnit_Extensions_Database_Operation_Insert();
+    // $op->execute($this->_dbconn,
+    //   new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
+    //     dirname(__FILE__) . '/dataset/contact_17.xml'
+    //   )
+    // );
 
     //create activity types
     $activityTypes = civicrm_api('option_value', 'create', array(
@@ -82,7 +62,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
     $this->test_activity_type_value = $activityTypes['values'][0]['value'];
     $this->test_activity_type_id = $activityTypes['id'];
     $this->_params = array(
-      'source_contact_id' => 17,
+      'source_contact_id' => 1,
       'activity_type_id' => $this->test_activity_type_value,
       'subject' => 'test activity type id',
       'activity_date_time' => '2011-06-02 14:36:13',
@@ -121,8 +101,41 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
       'civicrm_activity_target',
       'civicrm_activity_assignment',
     );
-    $this->quickCleanup($tablesToTruncate, TRUE);
-    civicrm_api('option_value', 'delete', array('version' => 3, 'id' => $this->test_activity_type_id));
+    // $this->quickCleanup($tablesToTruncate, TRUE);
+    // civicrm_api('option_value', 'delete', array('version' => 3, 'id' => $this->test_activity_type_id));
+  }
+  /**
+   * Activity Create Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Activity
+   * @api_action Create
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Activity&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Activity&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testCreateActivity() {
+
+    $result = civicrm_api('activity', 'create', $this->_params);
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $result = civicrm_api('activity', 'get', $this->_params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['source_contact_id'], 17, 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['duration'], 120, 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['subject'], 'test activity type id', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['activity_date_time'], '2011-06-02 14:36:13', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['location'], 'Pensulvania', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['details'], 'a test activity', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['status_id'], 2, 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['id'], $result['id'], 'in line ' . __LINE__);
   }
 
   /**
