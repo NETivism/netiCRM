@@ -839,7 +839,10 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     if (civicrm_error($newContribution)) {
       if (is_array($newContribution['error_message'])) {
         if ($newContribution['error_message']['params'][0]) {
-          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::DUPLICATE, "${statusFieldName}Msg" => ts('On duplicate entrie').':'.$newContribution['error_message']['params'][0]);
+          // original message will be "Duplicate error - existing contribution record(s) have a matching Transaction ID or Invoice ID." or
+          // "Duplicate error - existing contribution record(s) have a matching Receipt ID."
+          $duplicateField = strstr($newContribution['error_message']['message'], 'Transaction ID') ? ts('Transaction ID').'/'.ts('Invoice ID') : ts('Receipt ID');
+          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::DUPLICATE, "${statusFieldName}Msg" => $duplicateField.'-'.ts('On duplicate entries').":".ts("Contribution ID").$newContribution['error_message']['params'][0]);
           $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
           array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
           return CRM_Contribute_Import_Parser::DUPLICATE;
