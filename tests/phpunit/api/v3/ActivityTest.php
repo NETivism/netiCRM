@@ -140,9 +140,48 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
     $result_get = civicrm_api('activity', 'get', $params);
-    $this->assertAPISuccess($result_create, ' in line ' . __LINE__);
+    $this->assertAPISuccess($result_get, ' in line ' . __LINE__);
     $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
     $this->docMakerResponse($result_get, __FILE__, __FUNCTION__);
+  }
+
+  /**
+   * Activity Update Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Activity
+   * @api_action Update
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Activity&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Activity&action=create&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testUpdateActivity() {
+    $activity = civicrm_api('activity', 'create', $this->_params);
+    $this->assertAPISuccess($activity, ' in line ' . __LINE__);
+    $params = array(
+      'id' => $activity['id'],
+      'subject' => 'Updated Make-it-Happen Meeting',
+      'duration' => 120,
+      'location' => '21, Park Avenue',
+      'details' => 'Lets update Meeting',
+      'status_id' => 1,
+      'activity_name' => 'Test activity type',
+      'priority_id' => 1,
+      'version' => '3',
+    );
+    $result = civicrm_api('activity', 'update', $params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['subject'], 'Updated Make-it-Happen Meeting', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['location'], 'Lets update Meeting', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['details'], '21, Park Avenue', 'in line ' . __LINE__);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
   }
 
   /**
