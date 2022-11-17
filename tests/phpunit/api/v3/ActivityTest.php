@@ -49,6 +49,9 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
       ));
     $this->test_activity_type_value = $activityTypes['values'][0]['value'];
     $this->test_activity_type_id = $activityTypes['id'];
+    //local
+    // $this->test_activity_type_value = '45';
+    // $this->test_activity_type_id = '715';
     $this->_params = array(
       'source_contact_id' => $this->_individualId,
       'activity_type_id' => $this->test_activity_type_value,
@@ -178,10 +181,40 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
     $result = civicrm_api('activity', 'update', $params);
     $this->assertAPISuccess($result, ' in line ' . __LINE__);
     $this->assertEquals($result['values'][$result['id']]['subject'], 'Updated Make-it-Happen Meeting', 'in line ' . __LINE__);
-    $this->assertEquals($result['values'][$result['id']]['location'], 'Lets update Meeting', 'in line ' . __LINE__);
-    $this->assertEquals($result['values'][$result['id']]['details'], '21, Park Avenue', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['location'], '21, Park Avenue', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['details'], 'Lets update Meeting', 'in line ' . __LINE__);
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+  }
+
+  /**
+   * Activity Delete Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Activity
+   * @api_action Delete
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Activity&action=delete
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Activity&action=delete&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  public function testDeleteActivity() {
+    $activity = civicrm_api('activity', 'create', $this->_params);
+    $this->assertAPISuccess($activity, ' in line ' . __LINE__);
+    $params = array(
+      'id' => $activity['id'],
+      'version' => '3',
+    );
+    $result = civicrm_api('activity', 'delete', $params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+
   }
 
   /**
@@ -904,21 +937,6 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
     );
-  }
-
-  /**
-   * check activity deletion with correct data
-   */
-  function testDeleteActivity() {
-    $result = civicrm_api('activity', 'create', $this->_params);
-    $params = array(
-      'id' => $result['id'],
-      'version' => $this->_apiversion,
-    );
-
-    $result = civicrm_api('activity', 'delete', $params);
-    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
-    $this->assertAPISuccess($result);
   }
 
   /**
