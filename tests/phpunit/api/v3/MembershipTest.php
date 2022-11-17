@@ -1,36 +1,13 @@
 <?php
-// $Id$
+/**
+ * MembershipTest Unit Test
+ *
+ * @docmaker_intro_start
+ * @api_title Activity
+ * This is a API Document about Activity.
+ * @docmaker_intro_end
+ */
 
-/*
- +--------------------------------------------------------------------+
- | CiviCRM version 4.2                                                |
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2012                                |
- +--------------------------------------------------------------------+
- | This file is a part of CiviCRM.                                    |
- |                                                                    |
- | CiviCRM is free software; you can copy, modify, and distribute it  |
- | under the terms of the GNU Affero General Public License           |
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
- |                                                                    |
- | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
- | See the GNU Affero General Public License for more details.        |
- |                                                                    |
- | You should have received a copy of the GNU Affero General Public   |
- | License and the CiviCRM Licensing Exception along                  |
- | with this program; if not, contact CiviCRM LLC                     |
- | at info[AT]civicrm[DOT]org. If you have questions about the        |
- | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+
-*/
-
-
-
-
-require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_MembershipTest extends CiviUnitTestCase {
   protected $_apiversion;
@@ -46,6 +23,8 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     //  Connect to the database
     parent::setUp();
     $this->_apiversion = 3;
+    //local
+    // $this->_contactID = 54;
     $this->_contactID = $this->individualCreate();
     $this->_membershipTypeID = $this->membershipTypeCreate($this->_contactID);
     $this->_membershipStatusID = $this->membershipStatusCreate('test status');
@@ -70,14 +49,35 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
   }
 
   function tearDown() {
-    $this->quickCleanup(array(
-      'civicrm_membership',
-      'civicrm_membership_payment')
-    );
-    $this->membershipStatusDelete($this->_membershipStatusID);
-    $this->membershipTypeDelete(array('id' => $this->_membershipTypeID));
-    $this->contactDelete($this->_contactID);
+    // $this->membershipStatusDelete($this->_membershipStatusID);
+    // $this->membershipTypeDelete(array('id' => $this->_membershipTypeID));
+    // $this->contactDelete($this->_contactID);
 
+  }
+  /**
+   * Membership Create Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Membership
+   * @api_action Create
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Membership&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Membership&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testCreateMembership() {
+
+    $result = civicrm_api('membership', 'create', $this->params);
+    // $this->getAndCheck($this->params, $result['id'], $this->_entity);
+    $this->assertEquals($result['is_error'], 0);
+    $this->assertNotNull($result['id']);
+    $this->assertEquals($this->_contactID, $result['values'][$result['id']]['contact_id'], " in line " . __LINE__);
+    $this->assertEquals($result['id'], $result['values'][$result['id']]['id'], " in line " . __LINE__);
   }
 
   /**
