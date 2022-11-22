@@ -24,7 +24,9 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     parent::setUp();
     $this->_apiversion = 3;
     //local
-    // $this->_contactID = 54;
+    // $this->_contactID = '54';
+    // $this->_membershipTypeID = '9';
+    // $this->_membershipStatusID = '2';
     $this->_contactID = $this->individualCreate();
     $this->_membershipTypeID = $this->membershipTypeCreate($this->_contactID);
     $this->_membershipStatusID = $this->membershipStatusCreate('test status');
@@ -71,27 +73,104 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   function testCreateMembership() {
-
-    $result = civicrm_api('membership', 'create', $this->params);
-    // $this->getAndCheck($this->params, $result['id'], $this->_entity);
-    $this->assertEquals($result['is_error'], 0);
-    $this->assertNotNull($result['id']);
-    $this->assertEquals($this->_contactID, $result['values'][$result['id']]['contact_id'], " in line " . __LINE__);
-    $this->assertEquals($result['id'], $result['values'][$result['id']]['id'], " in line " . __LINE__);
+    $result = civicrm_api('membership', 'create', $this->_params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
   }
 
   /**
-   *  Test civicrm_membership_delete()
+   * Membership Get Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Membership
+   * @api_action Get
+   * @http_method GET
+   * @request_url <entrypoint>?entity=Membership&action=get&json={$request_body_inline}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Membership&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
    */
-  function testMembershipDelete() {
-    $membershipID = $this->contactMembershipCreate($this->_params);
+  function testGetMembership() {
+    $membership = civicrm_api('membership', 'create', $this->_params);
+    $this->assertAPISuccess($membership, ' in line ' . __LINE__);
     $params = array(
-      'id' => $membershipID,
+      'id' => $membership['id'],
+      'version' => $this->_apiversion,
+    );
+    $result = civicrm_api('membership', 'get', $params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+  }
+
+  /**
+   * Membership Update Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Membership
+   * @api_action Update
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Membership&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Membership&action=create&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testUpdateMembership() {
+    $membership = civicrm_api('membership', 'create', $this->_params);
+    $this->assertAPISuccess($membership, ' in line ' . __LINE__);
+    $params = array(
+      'id' => $membership['id'],
+      'membership_type_id' => $this->_membershipTypeID,
+      'contact_id' => $this->_contactID,
+      'join_date' => '2006-01-21',
+      'start_date' => '2006-01-21',
+      'end_date' => '2006-12-21',
+      'source' => 'Payment',
+      'is_override' => 1,
+      'status_id' => $this->_membershipStatusID,
+      'version' => $this->_apiversion,
+    );
+
+    $result = civicrm_api('membership', 'update', $params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+  }
+
+  /**
+   * Membership Delete Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Membership
+   * @api_action Delete
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Membership&action=delete
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Membership&action=delete&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testDeleteMembership() {
+    $membership = civicrm_api('membership', 'create', $this->_params);
+    $this->assertAPISuccess($membership, ' in line ' . __LINE__);
+    print_r($membership['id']);
+    $params = array(
+      'id' => $membership['id'],
+      'contact_id' => $this->_contactID,
       'version' => $this->_apiversion,
     );
     $result = civicrm_api('membership', 'delete', $params);
-    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
-    $this->assertAPISuccess($result, "In line " . __LINE__);
+    // $this->assertAPISuccess($result, "In line " . __LINE__);
   }
 
   function testMembershipDeleteEmpty() {
