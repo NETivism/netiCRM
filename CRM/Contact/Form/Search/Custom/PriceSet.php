@@ -40,6 +40,8 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
 
   protected $_tableName = NULL;
 
+  public static $_isExportFileDirectly = TRUE;
+
   protected $_pstatus = NULL; function __construct(&$formValues) {
     parent::__construct($formValues);
 

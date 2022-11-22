@@ -72,10 +72,15 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
     $customSearchID = $this->get('customSearchID');
     if ($customSearchID) {
       require_once 'CRM/Export/BAO/Export.php';
+      $customSearchClass = $this->get('customSearchClass');
+      $isReturnValues = TRUE;
+      if (property_exists($customSearchClass, '_isExportFileDirectly')) {
+        $isReturnValues = !$customSearchClass::$_isExportFileDirectly;
+      }
       list('header' => $header, 'rows' => $rows) = CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
         $this->get('formValues'),
         $this->get(CRM_Utils_Sort::SORT_ORDER), 
-        TRUE
+        $isReturnValues
       );
       $customHeader = array();
       foreach ($header as $i => $headerName) {

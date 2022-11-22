@@ -510,7 +510,12 @@ class CRM_Export_BAO_Export {
         list($field, $dir) = explode(' ', $order, 2);
         $field = trim($field);
         if (CRM_Utils_Array::value($field, $returnProperties)) {
-          $orderBy = " ORDER BY $order ";
+          if ($field == 'id') {
+            $orderBy = " ORDER BY contact_a.$order ";
+          }
+          else {
+            $orderBy = " ORDER BY $order ";
+          }
         }
       }
     }
@@ -1309,7 +1314,12 @@ class CRM_Export_BAO_Export {
       }
       unset($row['action']);
       if ($isReturnTable) {
-        $rows[$dao->id] = $row;
+        if (isset($dao->contact_id)) {
+          $rows[$dao->contact_id] = $row;
+        }
+        elseif (isset($dao->id)) {
+          $rows[$dao->id] = $row;
+        }
       }
       else {
         $rows[] = $row;
@@ -1321,7 +1331,7 @@ class CRM_Export_BAO_Export {
       $header[$key] = strip_tags($value);
       if(is_numeric($value)){
         unset($header[$key]);
-        foreach ($rows as $row) {
+        foreach ($rows as &$row) {
           unset($row[$fields[$key]]);
         }
         unset($fields[$key]);
