@@ -238,12 +238,18 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       // need to perform action on only selected contacts
       $insertString = array();
       $alreadySeen = array();
+      
+      $customRows = $form->get('customRows');
+      $customHeader = $form->get('customHeader');
+      $customColumns = array_keys($customHeader);
+      $customColumnsNames = implode(',' , $customColumns);
       foreach ($values as $name => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
         if (!empty($contactID)) {
           if ($useTable) {
             if (!array_key_exists($contactID, $alreadySeen)) {
-              $insertString[] = " ( {$contactID} ) ";
+              $customRowsValues = '"'.implode('","', $customRows[$contactID]).'"';
+              $insertString[] = " ( {$contactID} , $customRowsValues) ";
             }
           }
           else {
@@ -259,7 +265,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       }
       if (!empty($insertString)) {
         $string = implode(',', $insertString);
-        $sql = "REPLACE INTO {$form->_componentTable} ( contact_id ) VALUES $string";
+        $sql = "REPLACE INTO {$form->_componentTable} ( contact_id , $customColumnsNames) VALUES $string";
         CRM_Core_DAO::executeQuery($sql);
       }
     }
