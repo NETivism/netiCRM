@@ -283,7 +283,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       civicrm_api('contact', 'create', $contact);
     }
 
-    // process contribution
+    // process recurring or contribution
     if ($contactId) {
       // create additional contact if needed
       $backerRelationTypeId = $config->backerFounderRelationship;
@@ -353,7 +353,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
               'id' => $additionalContactId,
               'address' => $params['additional']['address'],
               'log_data' => ts('Updated contact').'-'.ts('Backer Auto Import'),
-            ); 
+            );
             // log exists
             civicrm_api('contact', 'create', $addContact);
           }
@@ -377,27 +377,51 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           civicrm_api('Relationship', 'create', $addContactParams);
         }
       }
-      // create a pending contribution      
-      $params['contribution']['contact_id'] = $contactId;
-      $contrib = $params['contribution'];
-      $page = array();
-      CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
-      if ($page['id']) {
-        $contrib['contribution_status_id'] = 2; // pending
-        $contrib['contribution_page_id'] = $page['id'];
-        $contrib['contribution_type_id'] = $page['contribution_type_id'];
-        $contrib['payment_processor_id'] = $this->_paymentProcessor['id'];
-        $contrib['is_test'] = $this->_paymentProcessor['is_test'];
-        $contrib['invoice_id'] = !empty($this->_delivery) ? $this->_delivery : md5(uniqid(rand(), TRUE));
-        $contrib['version'] = 3;
-        $result = civicrm_api('contribution', 'create', $contrib);
+
+      // create recurring when available
+      if (!empty($params['recurring'])) {
+        $params['recurring']['contact_id'] = $contactId;
+        $params['recurring']['processor_id'] = $this->_paymentProcessor['id'];
+        $params['recurring']['is_test'] = $this->_paymentProcessor['is_test'];
+        $recur = $params['recurring'];
+        $recurFind = array(
+          'version' => 3,
+          'trxn_id' => $recur['trxn_id'],
+        );
+        $result = civicrm_api('ContributionRecur', 'get', $recurFind);
         if ($result['id']) {
-          $currentContributionId = $result['id'];
-          $params['contribution']['id'] = $result['id'];
-          $contrib['id'] = $result['id'];
-          $ids = CRM_Contribute_BAO_Contribution::buildIds($contrib['id'], 'ipn');
-          $this->processIPN($ids, $params['contribution']);
-          return $currentContributionId;
+          $recur['id'] = $result['id'];
+          $recur['invoice_id'] = $result['values'][$result['id']]['invoice_id'];
+        }
+        else {
+          $recur['invoice_id'] = md5(uniqid(rand(), TRUE));
+        }
+        civicrm_api('ContributionRecur', 'create', $recur);
+      }
+
+      // create a pending contribution then trigger ipn
+      if (!empty($params['contribution'])) {
+        $params['contribution']['contact_id'] = $contactId;
+        $contrib = $params['contribution'];
+        $page = array();
+        CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+        if ($page['id']) {
+          $contrib['contribution_status_id'] = 2; // pending
+          $contrib['contribution_page_id'] = $page['id'];
+          $contrib['contribution_type_id'] = $page['contribution_type_id'];
+          $contrib['payment_processor_id'] = $this->_paymentProcessor['id'];
+          $contrib['is_test'] = $this->_paymentProcessor['is_test'];
+          $contrib['invoice_id'] = !empty($this->_delivery) ? $this->_delivery : md5(uniqid(rand(), TRUE));
+          $contrib['version'] = 3;
+          $result = civicrm_api('contribution', 'create', $contrib);
+          if ($result['id']) {
+            $currentContributionId = $result['id'];
+            $params['contribution']['id'] = $result['id'];
+            $contrib['id'] = $result['id'];
+            $ids = CRM_Contribute_BAO_Contribution::buildIds($contrib['id'], 'ipn');
+            $this->processIPN($ids, $params['contribution']);
+            return $currentContributionId;
+          }
         }
       }
     }
@@ -450,6 +474,22 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       return $params;
     }
 
+    // contact
+    self::formatContact($json, $params);
+
+    // recurring
+    if ($json['transaction']['type'] == 'parent') {
+      self::formatRecurring($json, $params);
+    }
+
+    // contribution
+    if ($json['transaction']['type'] == 'normal' || $json['transaction']['type'] == 'child') {
+      self::formatContribution($json, $params);
+    }
+    return $params;
+  }
+
+  public static function formatContact($json, &$params) {
     $name = self::explodeName($json['user']['name']);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     if ($name === FALSE) {
@@ -481,7 +521,6 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     );
 
     // address
-    $stateAbbr = CRM_Core_PseudoConstant::stateProvinceAbbreviation();
     // backer special abbr convert to CRM
     if ($json['recipient']['recipient_subdivision']) {
       if ($json['recipient']['recipient_subdivision'] == 'KIN') $json['recipient']['recipient_subdivision'] = 'KMN';
@@ -543,8 +582,52 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       }
       $params['additional']['address'][0] = $address;
     }
+  }
 
-    // contribution
+  public static function formatRecurring($json, &$params) {
+    $statusMap = array(
+      // recurring contribution status
+      'success' => 1,
+      'suspend' => 7,
+      'recurring' => 5,
+      'failed_cancel' => 3,
+    );
+
+    $recurring = [];
+    $recurring['trxn_id'] = $json['transaction']['trade_no'];
+    $recurring['amount'] = $json['transaction']['money'];
+    $recurring['frequency_unit'] = 'month';
+    $recurring['frequency_interval'] = 1;
+    $recurring['installments'] = NULL;
+    $recurring['create_date'] = date('YmdHis', strtotime($json['transaction']['created_at']));
+
+    // status
+    $recurring['contribution_status_id'] = $statusMap[$json['transaction']['render_status']];
+    if ($json['transaction']['render_status'] == 'success') {
+      $recurring['end_date'] = date('YmdHis');
+    }
+    elseif ($json['transaction']['render_status'] == 'recurring') {
+      $recurring['start_date'] = date('YmdHis', strtotime($json['transaction']['created_at']));
+    }
+    elseif ($json['transaction']['render_status'] == 'suspend') {
+    }
+    elseif ($json['transaction']['render_status'] == 'failed_cancel') {
+    }
+
+    if (!empty($json['transaction']['updated_at'])) {
+      $recurring['modified_date'] = date('YmdHis', strtotime($json['transaction']['updated_at']));
+    }
+    else {
+      $recurring['modified_date'] = date('YmdHis');
+    }
+    $recurring['cycle_day'] = date('j');
+    $recurring['processor_id'] = NULL;
+    $recurring["is_test"] = NULL;
+    $recurring['contact_id'] = NULL;
+    $params['recurring'] = $recurring;
+  }
+
+  public static function formatContribution($json, &$params) {
     $instruments =  CRM_Contribute_PseudoConstant::paymentInstrument('name');
     $instrumentMap = array(
       'credit' => 'Credit Card',
@@ -561,10 +644,6 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'cancel' => 3,
       'failed' => 4,
       'failed_code' => 4,
-      // recurring contribution status
-      'suspend' => 7,
-      'recurring' => 5,
-      'failed_cancel' => 3,
     );
 
     $params['contribution'] = array(
@@ -628,7 +707,6 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
-    return $params;
   }
 
   /**
