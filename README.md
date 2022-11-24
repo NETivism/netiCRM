@@ -1,12 +1,15 @@
 netiCRM 
 ==============
 
+You can also read this in [繁體中文](./README.zh-tw.md).
+
 <img src="https://img.shields.io/github/last-commit/NETivism/netiCRM">
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/NETivism/netiCRM"> 
 
 [![Build Status](https://github.com/NETivism/netiCRM/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/NETivism/netiCRM/actions?query=branch%3Amaster+) **Master**
 [![Build Status](https://github.com/NETivism/netiCRM/actions/workflows/ci.yml/badge.svg?branch=hotfix)](https://github.com/NETivism/netiCRM/actions?query=branch%3Ahotfix) **Hotfix**
 [![Build Status](https://github.com/NETivism/netiCRM/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/NETivism/netiCRM/actions?query=branch%3Adevelop++) **Develop**
+
 
 ### Why Forked from CiviCRM
 CiviCRM is a constituent relationship management system for non-profit organizations developed by civicrm.org in 2005. In any case, you should check the original [CiviCRM](http://civicrm.org) project first instead of this one.
@@ -54,8 +57,8 @@ We take the security of this project very seriously. If you believe you have fou
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 3.3.x   | :white_check_mark: |
-| < 3.3   | :x:                |
+| 4.1     | :white_check_mark: |
+| < 4.1   | :x:                |
 
 ### License
 
