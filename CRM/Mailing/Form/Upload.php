@@ -446,28 +446,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         }
       }
 
-      if (CRM_Utils_Array::value('updateTemplate', $composeParams)) {
-        if ($params['body_json'] != 'null') {
-          $templateParams = array(
-            'msg_text' => $params['body_json'],
-            'msg_html' => '',
-            'msg_subject' => $params['subject'],
-            'is_active' => TRUE,
-          );
-        }
-        else {
-          $templateParams = array(
-            'msg_text' => '',
-            'msg_html' => $html_message,
-            'msg_subject' => $params['subject'],
-            'is_active' => TRUE,
-          );
-        }
-
-        $templateParams['id'] = $formValues['template'];
-        $msgTemplate = CRM_Core_BAO_MessageTemplates::add($templateParams);
-      }
-
       if (CRM_Utils_Array::value('saveTemplate', $composeParams)) {
         if ($params['body_json'] != 'null') {
           $templateParams = array(
@@ -490,6 +468,28 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
         $msgTemplate = CRM_Core_BAO_MessageTemplates::add($templateParams);
       }
+      elseif (CRM_Utils_Array::value('updateTemplate', $composeParams)) {
+        if ($params['body_json'] != 'null') {
+          $templateParams = array(
+            'msg_text' => $params['body_json'],
+            'msg_html' => '',
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
+        else {
+          $templateParams = array(
+            'msg_text' => '',
+            'msg_html' => $html_message,
+            'msg_subject' => $params['subject'],
+            'is_active' => TRUE,
+          );
+        }
+
+        $templateParams['id'] = $formValues['template'];
+        $msgTemplate = CRM_Core_BAO_MessageTemplates::add($templateParams);
+      }
+
 
       if (isset($msgTemplate->id)) {
         $params['msg_template_id'] = $msgTemplate->id;
