@@ -289,7 +289,6 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       $defaults['is_cms_user'] = 0;
       $defaults['is_update_dupe'] = 1;
       $defaults['is_proximity_search'] = 0;
-      $defaults['uf_group_type[Profile]'] = 1;
     }
     // Don't assign showHide elements to template in DELETE mode (fields to be shown and hidden don't exist)
     if (!($this->_action & CRM_Core_Action::DELETE) && !($this->_action & CRM_Core_Action::DISABLE)) {
