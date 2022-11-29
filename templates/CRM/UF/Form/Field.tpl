@@ -153,13 +153,21 @@
 cj().crmaccordions(); 
 cj("#field_name\\[0\\]").bind( 'change', function( ) {
   cj("#field_name\\[1\\]").select2({
-    "allowClear": true,
     "dropdownAutoWidth": true,
     "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
     "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
   }).change(function(){
     showLabel();mixProfile();
   }).hide();
+  cj(document).on('select2:open', () => {
+    var inputField = document.querySelector('input.select2-search__field');
+    if (inputField) {
+      inputField.placeholder='{/literal}{ts}Input search keywords{/ts}{literal}';
+      setTimeout(() => {
+          inputField.focus();
+      }, 100);
+    }
+  });
   cj("#field_name\\[1\\]").trigger("liszt:updated");
 }); 
 function showLabel( ) {
@@ -331,4 +339,8 @@ function verify( ) {
 
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
-
+{if $config->lcMessages eq 'zh_TW'}
+  {* this will compitable with drupal 6-7-9 *}
+  {* parameter library will use library name pree-defined in civicrm.module *}
+  {js src=packages/jquery/plugins/jquery.select2.zh-TW.js library=civicrm/civicrm-js-zh-tw group=999 weight=998}{/js}
+{/if}
