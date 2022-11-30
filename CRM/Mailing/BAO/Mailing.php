@@ -2758,6 +2758,11 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         $form->setConstants(
           array("{$prefix}updateTemplate" => 1)
         );
+        if (!empty($_POST["{$prefix}saveTemplate"])) {
+          $form->setConstants(
+            array("{$prefix}updateTemplate" => 0)
+          );
+        }
       }
     }
 

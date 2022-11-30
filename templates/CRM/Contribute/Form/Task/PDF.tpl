@@ -44,7 +44,9 @@
 
 <div class="form-item">
   {$form.email_pdf_receipt.html}
+  {if !empty($form.email_pdf_receipt.html)}
   <span class="description">{ts}Add receipt as attachment in email.{/ts}</span>
+  {/if}
   {if $emptyEmailList}
   <span class="description">{$emptyEmailList}{ts}Doesn't have email. Would not generate receipt and send email.{/ts}</span>
   {/if}

@@ -9,9 +9,13 @@ cj(document).ready(function(){
     "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
   });
   cj(document).on('select2:open', () => {
-    setTimeout(() => {
-      document.querySelector('.select2-search__field').focus();
-    }, 100);
+    var inputField = document.querySelector('input.select2-search__field');
+    if (inputField) {
+      inputField.placeholder='{/literal}{ts}Input search keywords{/ts}{literal}';
+      setTimeout(() => {
+        inputField.focus();
+      }, 100);
+    }
   });
 });
 {/literal}
