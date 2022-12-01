@@ -1,5 +1,5 @@
 "use strict";
-console.log("nsp hello !");
+
 (function($) {
 	/**
 	 * ============================
@@ -7,9 +7,11 @@ console.log("nsp hello !");
 	 * ============================
 	 */
   const NSP_CONTAINER = "nsp-container",
-        NSP_MAIN = "nsp-main",
+        NSP_CONTENT = "nsp-content",
+        NSP_TRIGGER = "nsp-trigger",
         INNER_CLASS = "inner",
         ACTIVE_CLASS = "is-active",
+        OPEN_CLASS = "is-opened",
         INIT_CLASS = "is-initialized";
 
 	/**
@@ -36,7 +38,8 @@ console.log("nsp hello !");
 		_nspOptions = {},
 		_nspAPI = window.location.origin + "/api/",
 		_container,
-		_main = "." + NSP_MAIN;
+		_content = "." + NSP_CONTENT,
+		_trigger = "." + NSP_TRIGGER;
 
 	/**
 	 * ============================
@@ -114,14 +117,33 @@ console.log("nsp hello !");
 	 */
 	var _nspMain = {
 		render: function() {
-			if ($(_main).length == 0) {
-				$(_container).append("<div class='" + NSP_MAIN + "'><div class='" + INNER_CLASS + "'></div></div>");
+			if ($(_content).length == 0) {
+				$(_container).append("<div class='" + NSP_CONTENT + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
-		}
+
+      $(_container).on("click", _trigger, function(event) {
+        event.preventDefault();
+
+        if ($(_container).hasClass(OPEN_CLASS)) {
+          _nspMain.close();
+        }
+        else {
+          _nspMain.open();
+        }
+      });
+		},
+    open: function() {
+      $(_container).addClass(OPEN_CLASS);
+      $("body").addClass("nsp-" + OPEN_CLASS);
+    },
+    close: function() {
+      $(_container).removeClass(OPEN_CLASS);
+      $("body").removeClass("nsp-" + OPEN_CLASS);
+    }
 	};
 
 	/* Main Help function */
-	var _checkSnaInstance = function() {
+	var _checkNspInstance = function() {
 		if(!$.neticrmSidePanel.instance) {
 			_nsp = new neticrmSidePanel();
 			_nsp.init();
@@ -138,24 +160,6 @@ console.log("nsp hello !");
 		api: function(url) {
 			return _getJSON(url);
 		}
-	};
-
-	var _neticrmSidePanelInit = function() {
-    _debug("===== neticrmSidePanel Init =====");
-
-		if (!$(_container).hasClass(NSP_CONTAINER)) {
-			$(_container).addClass(NSP_CONTAINER);
-		}
-
-		_nsp.render();
-
-		// Window resize
-		$(window).resize(function() {
-			clearTimeout(_resizeTimer);
-			_resizeTimer = setTimeout(_windowResize, 250);
-		});
-
-		$(_container).addClass(INIT_CLASS);
 	};
 
 	var _rwdEvents = function() {
@@ -232,53 +236,30 @@ console.log("nsp hello !");
 	neticrmSidePanel.prototype = {
 		constructor: neticrmSidePanel,
 		init: function() {
-      _neticrmSidePanelInit();
+      _debug("===== neticrmSidePanel Init =====");
 
-      /*
-      if (_dataLoadMode == "api") {
-        var dataURL =  _nspAPI + "/xxx";
-        $.ajax({
-          url: dataURL,
-          method: "GET",
-          async: true,
-          dataType: "JSON",
-          success: function(response) {
-            _debug(response, "get data");
-            _data = response;
-            _neticrmSidePanelInit();
-          },
-          error: function(xhr, status, error) {
-            _debug("xhr:" + xhr + '\n' + "status:" + status + '\n' + "error:" + error);
-            return false;
-          }
-        });
+      if (!$(_container).hasClass(NSP_CONTAINER)) {
+        $(_container).addClass(NSP_CONTAINER);
       }
-      */
-			/*
-			if (_dataLoadMode == "local") {
-				_data = _getData.local();
-				_neticrmSidePanelInit();
-			}
-			*/
+
+      _nsp.render();
+
+      // Window resize
+      $(window).resize(function() {
+        clearTimeout(_resizeTimer);
+        _resizeTimer = setTimeout(_windowResize, 250);
+      });
+
+      $(_container).addClass(INIT_CLASS);
 		},
 		render: function() {
 			_nspMain.render();
 		},
 		open: function(elem) {
-			var $elem = $(elem);
-			if ($elem.length) {
-			}
-			else {
-				_debug("\"" + elem + "\" can not open, because this element has not existed yet.");
-			}
+      _nspMain.open();
 		},
 		close: function(elem) {
-			var $elem = $(elem);
-			if ($elem.length) {
-			}
-			else {
-				_debug("\"" + elem + "\" can not close, because this element has not existed yet.");
-			}
+      _nspMain.close();
 		}
 	};
 
@@ -298,29 +279,33 @@ console.log("nsp hello !");
  	};
 
 	// Plugin definition
-	$.fn.neticrmSidePanel = function(options) {
-    // Extend our default options with those provided
-    _nspOptions = $.extend({}, $.fn.neticrmSidePanel.defaults, options);
+	$.fn.neticrmSidePanel = function(selector, options) {
+    if (typeof selector === "string" && $(selector).length) {
+      // Extend our default options with those provided
+      _nspOptions = $.extend({}, $.fn.neticrmSidePanel.defaults, options);
 
-    // Plugin implementation
-    _qs = _parseQueryString(_query);
+      // Plugin implementation
+      _qs = _parseQueryString(_query);
+      _debugMode = _nspOptions.debugMode === "1" ? true : false;
 
-		if (_qs.dataLoadMode) {
-      _dataLoadMode = _qs.dataLoadMode;
+      if (_debugMode) {
+        $("html").addClass("is-debug");
+      }
+
+      _container = selector;
+      _checkNspInstance();
+
+      return _nsp;
     }
-
-    if (_qs.debug) {
-      _debugMode = _qs.debug;
+    else {
+      if (window.console || window.console.error) {
+        console.error(".selector API has been removed in jQuery 3.0. jQuery Plugin that need to use a selector string within their plugin can require it as a parameter of the method.");
+      }
     }
-
-    _container = this.selector;
-    _checkSnaInstance();
-
-		return this;
 	};
 
 	// Plugin defaults options
 	$.fn.neticrmSidePanel.defaults = {
-		// zoom: zoomProps.default
+		debugMode: false
 	};
 }(jQuery));

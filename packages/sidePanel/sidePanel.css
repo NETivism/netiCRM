@@ -1,0 +1,58 @@
+img {
+  max-width: 100%;
+  height: auto;
+}
+.inner {
+  position: relative;
+}
+a.btn:hover {
+  text-decoration: none;
+}
+.nsp-container {
+  position: fixed;
+  z-index: 1000;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 320px;
+  border: 1px solid #bbb;
+  background: #eee;
+  -webkit-transform: translate3d(320px,0,0);
+  -moz-transform: translate3d(320px,0,0);
+  transform: translate3d(320px,0,0);
+  -webkit-overflow-scrolling: touch;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  transition: all .3s ease;
+}
+.nsp-container.is-opened {
+  top: 0;
+  opacity: 1;
+  -webkit-transform: translate3d(0,0,0);
+  -moz-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+.nsp-inner {
+  position: relative;
+  height: 100%;
+}
+.nsp-container .nsp-trigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 220px 0 0 -50px;
+  padding: 10px;
+  text-align: center;
+  color: #fff;
+  background: #3F51B5;
+  cursor: pointer;
+}
+.nsp-container .nsp-trigger i {
+  display: flex;
+  text-align: center;
+  width: auto;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+}

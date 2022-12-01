@@ -8,13 +8,18 @@
 		let neticrmSidePanelOpts = {};
 
 		neticrmSidePanelOpts.debugMode = "{/literal}{$config->debug}{literal}";
-    console.log("sidePanel tpl hello");
-		// window.neticrmSidePanelInstance = $(".nme-container").neticrmSidePanel(".nme-container", neticrmSidePanelOpts);
+    window.neticrmSidePanelInstance = $(".nsp-container").neticrmSidePanel(".nsp-container", neticrmSidePanelOpts);
 	});
 })(cj);
 </script>
 {/literal}
 <!-- sidePanel files end -->
 <!-- sidePanel HTML start -->
-
+<div class="nsp-container">
+  <div class="nsp-inner">
+    <div class="nsp-content">
+      <div class="inner"></div>
+    </div>
+  <div class="nsp-trigger" title="{ts}Open & Close Panel{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-settings"></i></div>
+</div>
 <!-- sidePanel HTML end -->
