@@ -158,7 +158,13 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     if ($queue->id && $trans->id) {
       $recipient = '';
-      $message = $tmail->compose($tmail->_job->id, $queue->id, $queue->hash, $params['contactId'], $params['toEmail'], $recipient, FALSE, NULL, $params['attachments'], $tmail->from_email);
+      $attachments = CRM_Utils_Array::value('attachments', $params);
+      $embedImages = CRM_Utils_Array::value('images', $params);
+      $attachFiles = array(
+        'attachments' => $attachments,
+        'images' => $embedImages,
+      );
+      $message = $tmail->compose($tmail->_job->id, $queue->id, $queue->hash, $params['contactId'], $params['toEmail'], $recipient, FALSE, NULL, $attachFiles, $tmail->from_email);
       if (!empty($params['mailerType'])) {
         $mailer = &CRM_Core_Config::getMailer($params['mailerType']);
       }
@@ -378,7 +384,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * @param string &$recipient
    * @param book $test
    * @param array $contactDetails
-   * @param array $attachments
+   * @param array $attachFiles array element include attachments / images
    * @param bool $isForward
    * @param string $fromEmail
    * @param string $replyToEmail
@@ -388,7 +394,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    */
   public function &compose($job_id, $event_queue_id, $hash, $contactId,
   $email, &$recipient, $test,
-  $contactDetails, &$attachments, $isForward = FALSE,
+  $contactDetails, &$attachFiles, $isForward = FALSE,
   $fromEmail = NULL, $replyToEmail = NULL
 ) {
     $config = CRM_Core_Config::singleton();
@@ -529,7 +535,8 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       return $res;
     }
 
-    $mailParams['attachments'] = $attachments;
+    $mailParams['attachments'] = $attachFiles['attachments'];
+    $mailParams['images'] = $attachFiles['images'];
     $mailingSubject = CRM_Utils_Array::value('subject', $pEmails);
     if (is_array($mailingSubject)) {
       $mailingSubject = join('', $mailingSubject);
@@ -546,7 +553,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     foreach ($mailParams as $paramKey => $paramValue) {
       //exclude values not intended for the header
       if (!in_array($paramKey, array(
-            'text', 'html', 'attachments', 'toName', 'toEmail',
+            'text', 'html', 'toName', 'toEmail',
           ))) {
         $headers[$paramKey] = $paramValue;
       }
@@ -565,6 +572,17 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
         $message->addAttachment($attach['fullPath'],
           $attach['mime_type'],
           $attach['cleanName']
+        );
+      }
+    }
+    if (!empty($mailParams['images'])) {
+      foreach ($mailParams['images'] as $imageID => $attach) {
+        $message->addHTMLImage(
+          $attach['fullPath'],
+          $attach['mime_type'],
+          $attach['cleanName'],
+          TRUE,
+          $imageID
         );
       }
     }
