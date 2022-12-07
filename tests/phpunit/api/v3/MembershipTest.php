@@ -3,8 +3,8 @@
  * MembershipTest Unit Test
  *
  * @docmaker_intro_start
- * @api_title Activity
- * This is a API Document about Activity.
+ * @api_title Membership
+ * This is a API Document about Membership.
  * @docmaker_intro_end
  */
 
@@ -54,7 +54,6 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     // $this->membershipStatusDelete($this->_membershipStatusID);
     // $this->membershipTypeDelete(array('id' => $this->_membershipTypeID));
     // $this->contactDelete($this->_contactID);
-
   }
   /**
    * Membership Create Unit Test
