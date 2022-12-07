@@ -411,7 +411,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           $contrib['contribution_type_id'] = $page['contribution_type_id'];
           $contrib['payment_processor_id'] = $this->_paymentProcessor['id'];
           $contrib['is_test'] = $this->_paymentProcessor['is_test'];
-          $contrib['invoice_id'] = !empty($this->_delivery) ? $this->_delivery : md5(uniqid(rand(), TRUE));
+          if (!empty($this->_delivery)) {
+            $contrib['invoice_id'] = $contrib['invoice_id'].'_'.$this->_delivery;
+          }
           $contrib['version'] = 3;
           $result = civicrm_api('contribution', 'create', $contrib);
           if ($result['id']) {
@@ -628,6 +630,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   public static function formatContribution($json, &$params) {
+    $config = CRM_Core_Config::singleton();
     $instruments =  CRM_Contribute_PseudoConstant::paymentInstrument('name');
     $instrumentMap = array(
       'credit' => 'Credit Card',
@@ -654,6 +657,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'contribution_status_id' => $statusMap[$json['transaction']['render_status']],
       'updated_at' => date('YmdHis', strtotime($json['transaction']['updated_at'])),
     );
+
+    // invoice_id, recurring
+    if (!empty($json['transaction']['parent_trade_no'])) {
+      // invoice id is uniq, will append additional info
+      $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid(rand(), TRUE)), 0, 10);
+    }
+    else {
+      $params['contribution']['invoice_id'] = md5(uniqid(rand(), TRUE));
+    }
+
     switch($statusMap[$json['transaction']['render_status']]) {
       case 1: // success
         $params['contribution']['receive_date'] = date('YmdHis', strtotime($json['payment']['paid_at']));
@@ -705,6 +718,50 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       }
       if (!empty($amountLevel)) {
         $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+      }
+    }
+
+    // handling receipt
+    if (!empty($json['receipt']) && !empty($json['receipt']['receipt_type'])) {
+      $receiptFieldsMap = array(
+        'choice' => 'custom_'.$config->receiptYesNo,
+        'receipt_type' => 'custom_'.$config->receiptYesNo,
+        'corporate_name' => 'custom_'.$config->receiptTitle,
+        'contact_name' => 'custom_'.$config->receiptTitle,
+        'tax_number' => 'custom_'.$config->receiptSerial,
+        'identity_card_number' => 'custom_'.$config->receiptSerial,
+      );
+      $choice = trim($json['receipt']['choice']);
+      $receiptType = trim($json['receipt']['receipt_type']);
+      if ($choice === '不需要收據') {
+        $params['contribution'][$receiptFieldsMap['choice']] = '0';
+        $needReceipt = FALSE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '單次寄送紙本收據') {
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = '1';
+        $needReceipt = TRUE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '需要收據，但不需寄送') {
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = '2';
+        $needReceipt = TRUE;
+      }
+      else {
+        // TODO: special case to mapping non-record field to another notes
+      }
+      if ($needReceipt) {
+        if (!empty($json['receipt']['corporate_name'])) {
+          $params['contribution'][$receiptFieldsMap['corporate_name']] = $json['receipt']['corporate_name'];
+        }
+        elseif (!empty($json['receipt']['contact_name'])) {
+          $params['contribution'][$receiptFieldsMap['contact_name']] = $json['receipt']['contact_name'];
+        }
+
+        if (!empty($json['receipt']['tax_number'])) {
+          $params['contribution'][$receiptFieldsMap['tax_number']] = $json['receipt']['tax_number'];
+        }
+        elseif (!empty($json['receipt']['identity_card_number'])) {
+          $params['contribution'][$receiptFieldsMap['identity_card_number']] = $json['receipt']['identity_card_number'];
+        }
       }
     }
   }
