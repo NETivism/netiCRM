@@ -48640,3 +48640,7 @@ msgstr ""
 
 msgid "Input search keywords"
 msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid "Input search keywords"
+msgstr ""
