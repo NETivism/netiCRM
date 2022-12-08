@@ -1,11 +1,17 @@
 // @ts-check
 const { devices } = require('@playwright/test');
 
+// Read from default ".env" file.
+require('dotenv').config();
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, 'setup.env') });
+
 /**
  * @see https://playwright.dev/docs/test-configuration
  * @type {import('@playwright/test').PlaywrightTestConfig}
  */
 const config = {
+  globalSetup: require.resolve('./global-setup'),
   testDir: './tests',
   /* Maximum time one test can run for. */
   timeout: 120 * 1000,
@@ -32,6 +38,8 @@ const config = {
     actionTimeout: 10000,
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
+    storageState: 'storageState.json',
+    baseURL: process.env.isLocal === 'true' ? process.env.localUrl : process.env.remoteUrl,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
