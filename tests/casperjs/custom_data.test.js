@@ -96,7 +96,7 @@ casper.test.begin('Resurrectio test', function(test) {
     casper.waitForSelector("select[name='extends[0]']", function success() {
         test.assertExists("select[name='extends[0]']");
         this.evaluate(function () {
-            document.querySelector("select[name='extends[0]']").selectedIndex = 3;
+            document.querySelector("select[name='extends[0]']").selectedIndex = 1;
         });
     }, function fail() {
         test.assertExists("select[name='extends[0]']");
