@@ -745,8 +745,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution'][$receiptFieldsMap['receipt_type']] = '2';
         $needReceipt = TRUE;
       }
-      else {
-        // TODO: special case to mapping non-record field to another notes
+      elseif ($receiptType === '稅捐收據' && $choice === '年度寄送紙本收據') {
+        // special case
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_paper_receipt';
+        $needReceipt = TRUE;
       }
       if ($needReceipt) {
         if (!empty($json['receipt']['corporate_name'])) {
