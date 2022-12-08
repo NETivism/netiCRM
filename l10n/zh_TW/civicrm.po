@@ -49033,3 +49033,14 @@ msgstr "有區分大小寫"
 
 msgid "Input search keywords"
 msgstr "搜尋關鍵字"
+
+#: templates/CRM/Custom/Page/Group.hlp
+msgid ""
+"After the above type is selected, you can choose to only be limited to the "
+"subtype here. For example: If your choose events types, you can assign this "
+"set of custom fields to a specific subtype (e.g. Workshop')."
+msgstr "上方類型選擇後，此處可選擇只限定使用在特定的次分類。例如：這個自訂欄位群組限定只使用於活動底下的工作坊類型，而非所有活動均使用此自訂欄位群組，即可做特定類型的選取。"
+
+#: templates/CRM/Custom/Form/Group.tpl
+msgid "Used For subtype"
+msgstr "次類型"
