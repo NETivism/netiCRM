@@ -49,8 +49,8 @@ class CRM_Core_Session {
   protected $_key = 'CiviCRM';
   CONST KEY = 'CiviCRM';
   CONST USER_CONTEXT = 'userContext';
-  CONST EXPIRED_TIME = 3600; // second
-  CONST EXPIRED_TIME_LONG = 10800; // second
+  CONST EXPIRED_TIME = 32400; // second
+  CONST EXPIRED_TIME_LONG = 86400; // second
 
   /**
    * This is just a reference to the real session. Allows us to

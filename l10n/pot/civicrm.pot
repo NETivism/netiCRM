@@ -48637,3 +48637,14 @@ msgstr ""
 
 msgid "case sensitive"
 msgstr ""
+
+msgid "Input search keywords"
+msgstr ""
+
+#: templates/CRM/Custom/Page/Group.hlp
+msgid "After the above type is selected, you can choose to only be limited to the subtype here. For example: If your choose events types, you can assign this set of custom fields to a specific subtype (e.g. Workshop')."
+msgstr ""
+
+#: templates/CRM/Custom/Form/Group.tpl
+msgid "Used For subtype"
+msgstr ""

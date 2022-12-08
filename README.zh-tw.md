@@ -1,6 +1,8 @@
 netiCRM 
 ==============
 
+You can also read this in [English](./README.md).
+
 <img src="https://img.shields.io/github/last-commit/NETivism/netiCRM">
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/NETivism/netiCRM"> 
 

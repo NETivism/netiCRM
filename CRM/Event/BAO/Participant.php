@@ -1918,7 +1918,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
   static function checkinCode($contactId, $id) {
     $checkinUrl = self::checkinUrl($contactId, $id);
     $qrcode = new CRM_Utils_QRCode($checkinUrl);
-    $filename = 'qrcode_'.$id.'_'.$contactChecksum;
+    $filename = 'qrcode_'.$id;
     return $qrcode->fileImg($filename);
   }
 

@@ -782,6 +782,51 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
   }
 
   /**
+   * Check if there is a contribution with the same receipt_id
+   *
+   * Separate this with checkDuplicate to prevent unwanted behavior when calling old duplicate check
+   *
+   * @param array  $params (reference ) an assoc array of name/value pairs
+   * @param array  $duplicates (reference ) store ids of duplicate contribs
+   *
+   * @return boolean true if duplicate, false otherwise
+   * @access public
+   * static  */
+  static function checkDuplicateReceipt($input, &$duplicates, $id = NULL) {
+    if (!$id) {
+      $id = CRM_Utils_Array::value('id', $input);
+    }
+    $receipt_id = CRM_Utils_Array::value('receipt_id', $input);
+
+    $clause = array();
+    $input = array();
+
+    if ($receipt_id && is_string($receipt_id)) {
+      $clause[] = "receipt_id = %1";
+      $input[1] = array($receipt_id, 'String');
+    }
+
+    if (empty($clause)) {
+      return FALSE;
+    }
+
+    $clause = implode(' OR ', $clause);
+    if ($id) {
+      $clause = "( $clause ) AND id != %3";
+      $input[3] = array($id, 'Integer');
+    }
+
+    $query = "SELECT id FROM civicrm_contribution WHERE $clause";
+    $dao = CRM_Core_DAO::executeQuery($query, $input);
+    $result = FALSE;
+    while ($dao->fetch()) {
+      $duplicates[] = $dao->id;
+      $result = TRUE;
+    }
+    return $result;
+  }
+
+  /**
    * Check contribution related object can still process payment
    *
    * @param array  $id of contribution
