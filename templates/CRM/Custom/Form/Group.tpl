@@ -40,7 +40,7 @@
     </tr>
     <tr class="subtype">
         <td class="label">次類型</td>
-        <td class="select-subtype"></td>
+        <td><span class="select-subtype"></span><span>{help id="id-extends_subtype"}</span></td>
     </tr>
     <tr>
         <td class="label">{$form.weight.label}</td>
