@@ -27949,7 +27949,7 @@ msgid ""
 "Your initial contribution will be processed once you complete the "
 "confirmation step. You will be able to modify or cancel future contributions"
 " at any time by contact us."
-msgstr "您一旦完成確認的步驟，第一期捐款就會執行。您可以隨時與我們聯絡，以取消日後的定期定額捐款。"
+msgstr "請確認您的捐款金額與期數，確認無誤後，接下來金流結帳授權成功就會執行第一次扣款。您可以隨時與我們聯絡，以調整或取消您的定期定額捐款。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
@@ -49030,3 +49030,6 @@ msgstr "感謝您的支持。"
 
 msgid "case sensitive"
 msgstr "有區分大小寫"
+
+msgid "Input search keywords"
+msgstr "搜尋關鍵字"
