@@ -382,7 +382,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       if (!empty($params['recurring'])) {
         $params['recurring']['contact_id'] = $contactId;
         $params['recurring']['processor_id'] = $this->_paymentProcessor['id'];
-        $params['recurring']['is_test'] = $this->_paymentProcessor['is_test'];
+        $params['recurring']['is_test'] = $this->_paymentProcessor['is_test'] ? 1 : 0;
         $recur = $params['recurring'];
         $recurFind = array(
           'version' => 3,
@@ -410,7 +410,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           $contrib['contribution_page_id'] = $page['id'];
           $contrib['contribution_type_id'] = $page['contribution_type_id'];
           $contrib['payment_processor_id'] = $this->_paymentProcessor['id'];
-          $contrib['is_test'] = $this->_paymentProcessor['is_test'];
+          $contrib['is_test'] = $this->_paymentProcessor['is_test'] ? 1 : 0;
           if (!empty($this->_delivery)) {
             $contrib['invoice_id'] = $contrib['invoice_id'].'_'.$this->_delivery;
           }
