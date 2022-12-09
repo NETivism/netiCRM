@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49044,3 +49044,7 @@ msgstr "上方類型選擇後，此處可選擇只限定使用在特定的次分
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Used For subtype"
 msgstr "次類型"
+
+#: CRM/Custom/Form/Group.php
+msgid "Common"
+msgstr "常用"
