@@ -304,7 +304,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
             array('table' => 'civicrm_contact', 'field' => 'last_name', 'weight' => 2),
             array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 8),
             array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 10),
-            array('table' => 'civicrm_email', 'field' => 'phone', 'weight' => 7),
+            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 7),
           ),
           20
         );
@@ -382,7 +382,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       if (!empty($params['recurring'])) {
         $params['recurring']['contact_id'] = $contactId;
         $params['recurring']['processor_id'] = $this->_paymentProcessor['id'];
-        $params['recurring']['is_test'] = $this->_paymentProcessor['is_test'];
+        $params['recurring']['is_test'] = $this->_paymentProcessor['is_test'] ? 1 : 0;
         $recur = $params['recurring'];
         $recurFind = array(
           'version' => 3,
@@ -410,7 +410,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           $contrib['contribution_page_id'] = $page['id'];
           $contrib['contribution_type_id'] = $page['contribution_type_id'];
           $contrib['payment_processor_id'] = $this->_paymentProcessor['id'];
-          $contrib['is_test'] = $this->_paymentProcessor['is_test'];
+          $contrib['is_test'] = $this->_paymentProcessor['is_test'] ? 1 : 0;
           if (!empty($this->_delivery)) {
             $contrib['invoice_id'] = $contrib['invoice_id'].'_'.$this->_delivery;
           }
@@ -507,17 +507,17 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'first_name' => $name[1],
       'email' => $json['user']['email'],
     );
-    $params['email'][0] = array(
+    $params['email'][] = array(
       'email' => $json['user']['email'],
-      'location_type_id' => array_search('Billing', $locationType),
+      'location_type_id' => array_search('Home', $locationType),
       'is_primary' => 1,
       'append' => TRUE,
     );
     $phone = self::validateMobilePhone($json['user']['cellphone']);
-    $params['phone'][0] = array(
+    $params['phone'][] = array(
       'phone' => $phone ? $phone : $json['user']['cellphone'],
       'phone_type_id' => $phone ? 2 : 5, // mobile
-      'location_type_id' => array_search('Billing', $locationType),
+      'location_type_id' => array_search('Home', $locationType),
       'is_primary' => 1,
       'append' => TRUE,
     );
@@ -541,10 +541,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'state_province_id' => $stateProvinceId ? $stateProvinceId : '',
       'city' => $json['recipient']['recipient_cityarea'] ? $json['recipient']['recipient_cityarea'] : '',
       'street_address' => $json['recipient']['recipient_address'] ? $json['recipient']['recipient_address'] : '',
-      'location_type_id' => array_search('Billing', $locationType),
+      'location_type_id' => array_search('Home', $locationType),
     );
     if (trim($json['recipient']['recipient_name']) == trim($json['user']['name'])) {
-      $params['address'][0] = $address;
+      $params['address'][] = $address;
     }
     else {
       $params['additional'] = array();
@@ -563,7 +563,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       if ($json['recipient']['recipient_contact_email'] && CRM_Utils_Rule::email(trim($json['recipient']['recipient_contact_email']))) {
         $params['additional']['email'][0] = array(
           'email' => trim($json['recipient']['recipient_contact_email']),
-          'location_type_id' => array_search('Billing', $locationType),
+          'location_type_id' => array_search('Home', $locationType),
           'is_primary' => 1,
           'append' => TRUE,
         );
@@ -572,7 +572,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['additional']['phone'][0] = array(
           'phone' => trim($json['recipient']['recipient_cellphone']),
           'phone_type_id' => 5, // other 
-          'location_type_id' => array_search('Billing', $locationType),
+          'location_type_id' => array_search('Home', $locationType),
           'is_primary' => 1,
           'append' => TRUE,
         );
@@ -631,6 +631,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
   public static function formatContribution($json, &$params) {
     $config = CRM_Core_Config::singleton();
+    $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $instruments =  CRM_Contribute_PseudoConstant::paymentInstrument('name');
     $instrumentMap = array(
       'credit' => 'Credit Card',
@@ -713,7 +714,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution'] += $matches[1];
         $leftItems = array_diff_key($items, $matches[0]);
         foreach($leftItems as $label => $value) {
-          $amountLevel[] = $label.'=>'.$value;
+          $amountLevel[] = $label.'→'.$value;
         }
       }
       if (!empty($amountLevel)) {
@@ -763,6 +764,43 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         }
         elseif (!empty($json['receipt']['identity_card_number'])) {
           $params['contribution'][$receiptFieldsMap['identity_card_number']] = $json['receipt']['identity_card_number'];
+        }
+
+        // billing address and email
+        if ($json['receipt']['address']) {
+          if ($json['receipt']['subdivision'] == 'KIN') $json['receipt']['subdivision'] = 'KMN';
+          elseif ($json['receipt']['subdivision'] == 'LIE') $json['receipt']['subdivision'] = 'LCI';
+          elseif ($json['receipt']['subdivision'] == 'NWT') $json['receipt']['subdivision'] = 'TPQ';
+
+          $countryId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_country WHERE name = 'Taiwan'");
+          $stateProvinceId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_state_province WHERE abbreviation = %1 AND country_id = %2", array(
+            1 => array($json['receipt']['subdivision'], 'String'),
+            2 => array($countryId, 'Integer'),
+          ));
+          $address = array(
+            'country' => ($json['receipt']['country'] == 'TW') ? 'Taiwan' : '',
+            'postal_code' => $json['receipt']['postal_code'] ? $json['receipt']['postal_code'] : '',
+            'state_province_id' => $stateProvinceId ? $stateProvinceId : '',
+            'city' => $json['receipt']['city_area'] ? $json['receipt']['city_area'] : '',
+            'street_address' => $json['receipt']['address'] ? $json['receipt']['address'] : '',
+            'location_type_id' => array_search('Billing', $locationType),
+          );
+          $params['address'][] = $address;
+        }
+        if ($json['receipt']['email']) {
+          if (!empty($params['email'])) {
+            foreach($params['email'] as &$mail) {
+              if (isset($mail['is_primary'])) {
+                $mail['is_primary'] = 0;
+              }
+            }
+          }
+          $params['email'][] = array(
+            'email' => $json['receipt']['email'],
+            'location_type_id' => array_search('Billing', $locationType),
+            'is_primary' => 1,
+            'append' => TRUE,
+          );
         }
       }
     }
