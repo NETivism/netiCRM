@@ -742,7 +742,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution'][$receiptFieldsMap['receipt_type']] = '1';
         $needReceipt = TRUE;
       }
-      elseif ($receiptType === '稅捐收據' && $choice === '需要收據，但不需寄送') {
+      elseif ($receiptType === '稅捐收據' && $choice === '需要收據但不需要寄送') {
         $params['contribution'][$receiptFieldsMap['receipt_type']] = '2';
         $needReceipt = TRUE;
       }
