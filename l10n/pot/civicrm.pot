@@ -48648,3 +48648,7 @@ msgstr ""
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Used For subtype"
 msgstr ""
+
+#: CRM/Custom/Form/Group.php
+msgid "Common"
+msgstr ""
