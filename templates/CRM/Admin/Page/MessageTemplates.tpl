@@ -150,8 +150,16 @@
     {if $selectedChild}selectedTab = '{$selectedChild}';{/if}
     {literal}
       cj( function() {
+        var stateObj = {"tabs": 1};
         var tabIndex = cj('#tab_' + selectedTab).prevAll().length
-        cj("#mainTabContainer").tabs( {selected: tabIndex} );
+        cj("#mainTabContainer").tabs( {
+          selected: tabIndex,
+          activate: function(){
+            var historyObj = {"tab":tabIndex};
+            var currentTab = cj("#mainTabContainer .ui-tabs-active a").prop("href");
+            history.replaceState(stateObj, "", currentTab);
+          }
+        } );
       });
     {/literal}
   </script>
