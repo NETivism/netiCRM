@@ -115,7 +115,12 @@
                 <tbody>
                 {foreach from=$template_row item=row}
                     <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-                      <td>{$row.msg_title}</td>
+                      <td>
+                        {$row.msg_title}
+                        {if $row.workflow}
+                          <div class="description">debug: {$row.workflow.groupName}-{$row.workflow.valueName}</div>
+                        {/if}
+                      </td>
                       {if $type eq 'userTemplates'}
                         <td>{$row.msg_subject}</td>
                         <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
