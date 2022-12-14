@@ -3,8 +3,8 @@
  * MembershipTest Unit Test
  *
  * @docmaker_intro_start
- * @api_title Activity
- * This is a API Document about Activity.
+ * @api_title Membership
+ * This is a API Document about Membership.
  * @docmaker_intro_end
  */
 
@@ -54,7 +54,6 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     // $this->membershipStatusDelete($this->_membershipStatusID);
     // $this->membershipTypeDelete(array('id' => $this->_membershipTypeID));
     // $this->contactDelete($this->_contactID);
-
   }
   /**
    * Membership Create Unit Test
@@ -163,14 +162,17 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
   function testDeleteMembership() {
     $membership = civicrm_api('membership', 'create', $this->_params);
     $this->assertAPISuccess($membership, ' in line ' . __LINE__);
-    print_r($membership['id']);
     $params = array(
       'id' => $membership['id'],
       'contact_id' => $this->_contactID,
       'version' => $this->_apiversion,
     );
+    $session = CRM_Core_Session::singleton();
+    $session->set('userID', '1');
     $result = civicrm_api('membership', 'delete', $params);
-    // $this->assertAPISuccess($result, "In line " . __LINE__);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+    $this->assertAPISuccess($result, "In line " . __LINE__);
   }
 
   function testMembershipDeleteEmpty() {
