@@ -115,7 +115,12 @@
                 <tbody>
                 {foreach from=$template_row item=row}
                     <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-                      <td>{$row.msg_title}</td>
+                      <td>
+                        {$row.msg_title}
+                        {if $row.workflow}
+                          <div class="description">debug: {$row.workflow.groupName}-{$row.workflow.valueName}</div>
+                        {/if}
+                      </td>
                       {if $type eq 'userTemplates'}
                         <td>{$row.msg_subject}</td>
                         <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
@@ -150,8 +155,16 @@
     {if $selectedChild}selectedTab = '{$selectedChild}';{/if}
     {literal}
       cj( function() {
+        var stateObj = {"tabs": 1};
         var tabIndex = cj('#tab_' + selectedTab).prevAll().length
-        cj("#mainTabContainer").tabs( {selected: tabIndex} );
+        cj("#mainTabContainer").tabs( {
+          selected: tabIndex,
+          activate: function(){
+            var historyObj = {"tab":tabIndex};
+            var currentTab = cj("#mainTabContainer .ui-tabs-active a").prop("href");
+            history.replaceState(stateObj, "", currentTab);
+          }
+        } );
       });
     {/literal}
   </script>
