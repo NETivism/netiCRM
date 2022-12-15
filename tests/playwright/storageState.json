@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "SESSe3b0c44298fc1c149afbf4c8996fb924",
+      "value": "trEiCCAqjsgowjwqFOoYBTI545XM7jQmOIYXan2r7Ac",
+      "domain": ".local.dev7.neticrm.tw",
+      "path": "/",
+      "expires": 1673095820.170939,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://local.dev7.neticrm.tw:8080",
+      "localStorage": [
+        {
+          "name": "referrerInfo",
+          "value": "{\"referrer\":{\"type\":\"direct\"},\"landing\":\"/\",\"timestamp\":1671095819}"
+        }
+      ]
+    }
+  ]
+}
