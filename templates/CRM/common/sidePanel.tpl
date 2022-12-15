@@ -8,6 +8,9 @@
 		let neticrmSidePanelOpts = {};
 
 		neticrmSidePanelOpts.debugMode = "{/literal}{$config->debug}{literal}";
+    neticrmSidePanelOpts.src = "#nsp-test";
+    //neticrmSidePanelOpts.src = "http://local.dev7.neticrm.tw/";
+    //neticrmSidePanelOpts.type = "iframe";
     window.neticrmSidePanelInstance = $(".nsp-container").neticrmSidePanel(".nsp-container", neticrmSidePanelOpts);
 	});
 })(cj);
@@ -23,3 +26,13 @@
   <div class="nsp-trigger" title="{ts}Open & Close Panel{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-settings"></i></div>
 </div>
 <!-- sidePanel HTML end -->
+
+<!-- nsp inline test start -->
+<div id="nsp-test" class="nsp-hide">
+  <div class="nsp-test-content">
+    <h3>Test Title</h3>
+    <p>This HTML will put in nsp !!</p>
+  </div>
+</div>
+<!-- nsp inline test end -->
+

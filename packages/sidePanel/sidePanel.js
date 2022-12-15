@@ -36,10 +36,14 @@
 		_dataLoadMode = "api",
     _nsp, // plugin object
 		_nspOptions = {},
+    _nspType,
+    _nspSrc,
+    _nspContent,
 		_nspAPI = window.location.origin + "/api/",
 		_container,
 		_content = "." + NSP_CONTENT,
-		_trigger = "." + NSP_TRIGGER;
+		_trigger = "." + NSP_TRIGGER,
+    _inner = "." + INNER_CLASS;
 
 	/**
 	 * ============================
@@ -66,6 +70,16 @@
     }
     return true;
 	}
+
+  var _isValidHttpUrl = function(string) {
+    try {
+      const url = new URL(string);
+      return url.protocol === "http:" || url.protocol === "https:";
+    }
+    catch (err) {
+      return false;
+    }
+  }
 
 	var _parseQueryString = function(query) {
 	  var vars = query.split("&");
@@ -120,6 +134,22 @@
 			if ($(_content).length == 0) {
 				$(_container).append("<div class='" + NSP_CONTENT + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
+
+      switch (_nspType) {
+        case "inline":
+          if ($(_nspSrc).length) {
+            _nspContent = $(_nspSrc).html();
+          }
+          break;
+
+        case "iframe":
+          if (_isValidHttpUrl(_nspSrc)) {
+            _nspContent = "<iframe src='" + _nspSrc + "' class='nsp-iframe' frameborder='0' allowfullscreen></iframe>";
+          }
+          break;
+      }
+
+      $(_container).find(_content).find(_inner).html(_nspContent);
 
       $(_container).on("click", _trigger, function(event) {
         event.preventDefault();
@@ -287,6 +317,10 @@
       // Plugin implementation
       _qs = _parseQueryString(_query);
       _debugMode = _nspOptions.debugMode === "1" ? true : false;
+      _nspType = _nspOptions.type;
+      _nspSrc = _nspOptions.src;
+      console.log(_nspType);
+      console.log(_nspSrc);
 
       if (_debugMode) {
         $("html").addClass("is-debug");
@@ -306,6 +340,7 @@
 
 	// Plugin defaults options
 	$.fn.neticrmSidePanel.defaults = {
+    type: "inline",
 		debugMode: false
 	};
 }(jQuery));

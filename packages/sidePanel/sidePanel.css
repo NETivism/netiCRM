@@ -8,6 +8,9 @@ img {
 a.btn:hover {
   text-decoration: none;
 }
+.nsp-hide {
+  display: none !important;
+}
 .nsp-container {
   position: fixed;
   z-index: 1000;
