@@ -39,6 +39,7 @@
     _nspType,
     _nspSrc,
     _nspContent,
+    _nspOpened,
 		_nspAPI = window.location.origin + "/api/",
 		_container,
 		_content = "." + NSP_CONTENT,
@@ -161,6 +162,10 @@
           _nspMain.open();
         }
       });
+
+      if (_nspOpened) {
+        _nspMain.open();
+      }
 		},
     open: function() {
       $(_container).addClass(OPEN_CLASS);
@@ -319,8 +324,7 @@
       _debugMode = _nspOptions.debugMode === "1" ? true : false;
       _nspType = _nspOptions.type;
       _nspSrc = _nspOptions.src;
-      console.log(_nspType);
-      console.log(_nspSrc);
+      _nspOpened = _nspOptions.opened;
 
       if (_debugMode) {
         $("html").addClass("is-debug");
@@ -341,6 +345,7 @@
 	// Plugin defaults options
 	$.fn.neticrmSidePanel.defaults = {
     type: "inline",
+    opened: false,
 		debugMode: false
 	};
 }(jQuery));
