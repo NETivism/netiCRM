@@ -39,6 +39,7 @@
     _nspType,
     _nspSrc,
     _nspContent,
+    _nspWidth,
     _nspOpened,
 		_nspAPI = window.location.origin + "/api/",
 		_container,
@@ -127,6 +128,13 @@
     }
   }
 
+  var _cssVariablesUpdate = function(name, value) {
+    if (typeof name !== "undefined" && typeof value !== "undefined") {
+      document.documentElement.style.setProperty(name, value);
+      console.log(getComputedStyle(document.documentElement).getPropertyValue(name));
+    }
+  }
+
 	/**
 	 * Main
 	 */
@@ -162,6 +170,10 @@
           _nspMain.open();
         }
       });
+
+      if (_nspWidth) {
+        _cssVariablesUpdate("--nsp-width", _nspWidth);
+      }
 
       if (_nspOpened) {
         _nspMain.open();
@@ -324,6 +336,7 @@
       _debugMode = _nspOptions.debugMode === "1" ? true : false;
       _nspType = _nspOptions.type;
       _nspSrc = _nspOptions.src;
+      _nspWidth = _nspOptions.width;
       _nspOpened = _nspOptions.opened;
 
       if (_debugMode) {

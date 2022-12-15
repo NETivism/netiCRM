@@ -1,3 +1,6 @@
+:root {
+  --nsp-width: 320px;
+}
 img {
   max-width: 100%;
   height: auto;
@@ -17,12 +20,12 @@ a.btn:hover {
   right: 0;
   top: 0;
   bottom: 0;
-  width: 320px;
+  width: var(--nsp-width);
   border: 1px solid #bbb;
   background: #eee;
-  -webkit-transform: translate3d(320px,0,0);
-  -moz-transform: translate3d(320px,0,0);
-  transform: translate3d(320px,0,0);
+  -webkit-transform: translate3d(var(--nsp-width), 0, 0);
+  -moz-transform: translate3d(var(--nsp-width), 0, 0);
+  transform: translate3d(var(--nsp-width), 0, 0);
   -webkit-overflow-scrolling: touch;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
