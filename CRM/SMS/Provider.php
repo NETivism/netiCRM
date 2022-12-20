@@ -51,7 +51,6 @@ abstract class CRM_SMS_Provider {
    * @return object
    */
   public static function &singleton($providerParams = array(), $force = FALSE) {
-    $mailingID = CRM_Utils_Array::value('mailing_id', $providerParams);
     $providerID = CRM_Utils_Array::value('provider_id', $providerParams);
     $providerName = CRM_Utils_Array::value('provider', $providerParams);
 
@@ -87,106 +86,6 @@ abstract class CRM_SMS_Provider {
    * @param string $message
    * @param int $dncID
    */
-  abstract public function send($recipients, $header, $message, $dncID = NULL);
-
-  /**
-   * Return message text.
-   *
-   * Child class could override this function to have better control over the message being sent.
-   *
-   * @param string $message
-   * @param int $contactID
-   * @param array $contactDetails
-   *
-   * @return string
-   */
-  public function getMessage($message, $contactID, $contactDetails) {
-    $html = $message->getHTMLBody();
-    $text = $message->getTXTBody();
-
-    return $html ? $html : $text;
-  }
-
-  /**
-   * Get recipient details.
-   *
-   * @param array $fields
-   * @param array $additionalDetails
-   *
-   * @return mixed
-   */
-  public function getRecipientDetails($fields, $additionalDetails) {
-    // we could do more altering here
-    $fields['To'] = $fields['phone'];
-    return $fields;
-  }
-
-  /**
-   * @param int $apiMsgID
-   * @param $message
-   * @param array $headers
-   * @param int $jobID
-   * @param int $userID
-   *
-   * @return self|null|object
-   * @throws CRM_Core_Exception
-   */
-  public function createActivity($apiMsgID, $message, $headers = array(), $jobID = NULL, $userID = NULL) {
-    if ($jobID) {
-      $sql = "
-SELECT scheduled_id FROM civicrm_mailing m
-INNER JOIN civicrm_mailing_job mj ON mj.mailing_id = m.id AND mj.id = %1";
-      $sourceContactID = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($jobID, 'Integer')));
-    }
-    elseif ($userID) {
-      $sourceContactID = $userID;
-    }
-    else {
-      $session = CRM_Core_Session::singleton();
-      $sourceContactID = $session->get('userID');
-    }
-
-    if (!$sourceContactID) {
-      $sourceContactID = CRM_Utils_Array::value('Contact', $headers);
-    }
-    if (!$sourceContactID) {
-      return FALSE;
-    }
-
-    // $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'SMS delivery', 'name');
-    $activityTypeID = CRM_Utils_Array::key('SMS delivery', CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE));
-    // note: lets not pass status here, assuming status will be updated by callback
-    $activityParams = array(
-      'source_contact_id' => $sourceContactID,
-      'target_contact_id' => $headers['contact_id'],
-      'activity_type_id' => $activityTypeID,
-      'activity_date_time' => date('YmdHis'),
-      'details' => $message,
-      'result' => $apiMsgID,
-    );
-    return CRM_Activity_BAO_Activity::create($activityParams);
-  }
-
-  /**
-   * @param string $name
-   * @param $type
-   * @param bool $abort
-   * @param null $default
-   * @param string $location
-   *
-   * @return mixed
-   */
-  public function retrieve($name, $type, $abort = TRUE, $default = NULL, $location = 'REQUEST') {
-    static $store = NULL;
-    $value = CRM_Utils_Request::retrieve($name, $type, $store,
-      FALSE, $default, $location
-    );
-    if ($abort && $value === NULL) {
-      CRM_Core_Error::debug_log_message("Could not find an entry for $name in $location");
-      echo "Failure: Missing Parameter<p>";
-      exit();
-    }
-    return $value;
-  }
+  abstract public function send($recipients, $header, $message, $additional = NULL);
 
 }
