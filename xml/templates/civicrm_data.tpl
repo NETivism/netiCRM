@@ -1135,20 +1135,28 @@ INSERT INTO civicrm_uf_group
     (5,  'new_organization',   'Organization,Contact','{ts escape="sql"}New Organization{/ts}'  , 0,           1,           NULL),
     (6,  'new_household',      'Household,Contact',   '{ts escape="sql"}New Household{/ts}'     , 0,           1,           NULL),
     (7,  'summary_overlay',    'Contact',   		  '{ts escape="sql"}Summary Overlay{/ts}'   , 0,           1,           NULL),
-    (8,  'shared_address',     'Contact',   		  '{ts escape="sql"}Shared Address{/ts}'    , 0,           1,           NULL);
+    (8,  'shared_address',     'Contact',   		  '{ts escape="sql"}Shared Address{/ts}'    , 0,           1,           NULL),
+    (9,  'participants_information_proflie',     'Participant,Contact',   		  '{ts escape="sql"}Participants Information Proflie{/ts}'    , 0,           1,           NULL),
+    (10,  'volunteer_information_proflie',     'Participant,Contact',   		  '{ts escape="sql"}Volunteer Information Proflie{/ts}'    , 0,           1,           NULL),
+    (11,  'website_registered_member_information_proflie',     'Individual,Contact',   		  '{ts escape="sql"}Website Registered Member Information Proflie{/ts}'    , 0,           1,           NULL),
+    (12,  'subscribe_information_proflie',     'Contact',   		  '{ts escape="sql"}Subscribe Information Proflie{/ts}'    , 0,           1,           NULL);
 
 INSERT INTO civicrm_uf_join
    (is_active,module,entity_table,entity_id,weight,uf_group_id)
 VALUES
-   (1, 'User Registration',NULL, NULL,1,1),
-   (1, 'User Account', NULL, NULL, 1, 1),
    (1, 'Profile', NULL, NULL, 1, 1),
    (1, 'Profile', NULL, NULL, 2, 2),
    (1, 'Profile', NULL, NULL, 3, 4),
    (1, 'Profile', NULL, NULL, 4, 5),
    (1, 'Profile', NULL, NULL, 5, 6),
    (1, 'Profile', NULL, NULL, 6, 7),
-   (1, 'Profile', NULL, NULL, 7, 8);
+   (1, 'Profile', NULL, NULL, 7, 8),
+   (1, 'CiviEvent', NULL, NULL, 8, 9),
+   (1, 'CiviEvent', NULL, NULL, 9, 10),
+   (1, 'Profile', NULL, NULL, 10, 11),
+   (1, 'User Registration', NULL, NULL, 10, 11),
+   (1, 'User Account', NULL, NULL, 10, 11),
+   (1, 'Profile', NULL, NULL, 11, 12);
    
 INSERT INTO civicrm_uf_field
        (id, uf_group_id, field_name,              is_required, is_reserved, weight, visibility,                  in_selector, is_searchable, location_type_id, label,                                         		field_type,    help_post, phone_type_id ) VALUES
@@ -1185,7 +1193,32 @@ INSERT INTO civicrm_uf_field
        (31,  8,           'city',                  1,           0,           2,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}City{/ts}',           		'Contact',     NULL,  NULL),
        (32,  8,           'postal_code',           0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Postal Code{/ts}',    		'Contact',     NULL,  NULL),
        (33,  8,           'country',               0,           0,           4,      'User and User Admin Only', 0,           1,             1,                '{ts escape="sql"}Country{/ts}',        		'Contact',     NULL,  NULL),
-       (34,  8,           'state_province',        0,           0,           5,      'User and User Admin Only', 1,           1,             1,                '{ts escape="sql"}State{/ts}',          		'Contact',     NULL,  NULL);
+       (34,  8,           'state_province',        0,           0,           5,      'User and User Admin Only', 1,           1,             1,                '{ts escape="sql"}State{/ts}',          		'Contact',     NULL,  NULL),
+       (35,  9,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}First Name{/ts}',            		'Individual',  NULL,  NULL),
+       (36,  9,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Last Name{/ts}',             		'Individual',  NULL,  NULL),
+       (37,  9,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Email Address{/ts}',         		'Contact',     NULL,  NULL),
+       (38,  9,           'current_employer',      1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Current Employer{/ts}',         		'Contact',     NULL,  NULL),
+ 	     (39,  9,           'phone' 				 ,1  	      ,0 			,2 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'{ts escape="sql"}Home Mobile{/ts}' 					,'Contact' 	  ,NULL, 2 ),
+       (40,  10,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}First Name{/ts}',            		'Individual',  NULL,  NULL),
+       (41,  10,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Last Name{/ts}',             		'Individual',  NULL,  NULL),
+       (42,  10,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Email Address{/ts}',         		'Contact',     NULL,  NULL),
+       (43,  10,           'current_employer',      1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Current Employer{/ts}',         		'Contact',     NULL,  NULL),
+ 	     (44,  10,           'phone' 				 ,1  	      ,0 			,2 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'{ts escape="sql"}Home Mobile{/ts}' 					,'Contact' 	  ,NULL, 2 ),
+       (45,  11,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}First Name{/ts}',            		'Individual',  NULL,  NULL),
+       (46,  11,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Last Name{/ts}',             		'Individual',  NULL,  NULL),
+       (47,  11,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Email Address{/ts}',         		'Contact',     NULL,  NULL),
+       (48,  11,           'current_employer',      1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Current Employer{/ts}',         		'Contact',     NULL,  NULL),
+ 	     (49,  11,           'phone' 				 ,1  	      ,0 			,2 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'{ts escape="sql"}Home Mobile{/ts}' 					,'Contact' 	  ,NULL, 2 ),
+       (50,  11,           'country',               0,           0,           6,      'User and User Admin Only', 0,           1,             1,                '{ts escape="sql"}Country (Home){/ts}',        		'Contact',     NULL,  NULL),
+       (51,  11,           'state_province',        0,           0,           7,      'User and User Admin Only', 1,           1,             1,                '{ts escape="sql"}State (Home){/ts}',          		'Contact',     NULL,  NULL),
+       (52,  11,           'postal_code',           0,           0,           5,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Postal Code (Home){/ts}',    		'Contact',     NULL,  NULL),
+       (53,  11,           'city',                  0,           0,           4,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}City (Home){/ts}',           		'Contact',     NULL,  NULL),
+       (54,  11,           'street_address',        0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Street Address (Home){/ts}', 		'Contact',     NULL,  NULL),
+       (55,  12,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}First Name{/ts}',            		'Individual',  NULL,  NULL),
+       (56,  12,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Last Name{/ts}',             		'Individual',  NULL,  NULL),
+       (57,  12,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Email Address{/ts}',         		'Contact',     NULL,  NULL),
+	     (58,  12, 			     'group', 				  1, 		   0, 			8, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '{ts escape="sql"}Groups{/ts}',  					'Contact', 	   NULL,  NULL);
+       
 
 INSERT INTO civicrm_participant_status_type
   (id, name,                                  label,                                                       class,      is_reserved, is_active, is_counted, weight, visibility_id) VALUES
