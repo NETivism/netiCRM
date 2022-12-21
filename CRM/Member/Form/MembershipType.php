@@ -476,20 +476,39 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
 
       $membershipType = CRM_Member_BAO_MembershipType::add($params, $ids);
       CRM_Core_Session::setStatus(ts('The membership type \'%1\' has been saved.', array(1 => $membershipType->name)));
-      
+
       $originReminder = $this->get('origin_reminder_day');
       $memberCount = $this->get('memberCount');
       if ( (!empty($originReminder) || $originReminder == 0) && $originReminder != $params['renewal_reminder_day'] && $memberCount > 0 && $this->_id) {
-        $dao = CRM_Core_DAO::executeQuery("SELECT id, end_date, reminder_date FROM civicrm_membership WHERE membership_type_id = %1 AND end_date IS NOT NULL AND reminder_date IS NOT NULL", array(
+        $dao = CRM_Core_DAO::executeQuery("SELECT id, end_date, reminder_date FROM civicrm_membership WHERE membership_type_id = %1 AND end_date IS NOT NULL", array(
           1 => array($this->_id, 'Integer')
         ));
         while($dao->fetch()) {
           if ($params['renewal_reminder_day'] != '' && !empty($dao->reminder_date)) {
+            // we should trust reminder date exists means no notification sent recently
             $reminderDate = CRM_Member_BAO_MembershipType::calcReminderDate($dao->end_date, $params['renewal_reminder_day']);
             if (empty($reminderDate)) {
               $reminderDate = 'null';
             }
             CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
+          }
+          elseif ($params['renewal_reminder_day'] != '' && empty($dao->reminder_date)) {
+            // prevent duplicate reminder sent
+            // only set reminder date when no notification sent in recent 30 days
+            $reminderDate = CRM_Member_BAO_MembershipType::calcReminderDate($dao->end_date, $params['renewal_reminder_day']);
+            if (!empty($reminderDate)) {
+              $reminderActivityTypId = CRM_Core_OptionGroup::getValue('activity_type', 'Membership Renewal Reminder', 'name');
+              $lastRemindSentDate = CRM_Core_DAO::singleValueQuery("SELECT MAX(activity_date_time) FROM civicrm_activity WHERE source_record_id = %1 AND activity_type_id = %2 GROUP BY source_record_id", array(
+                1 => array($dao->id, 'Integer'),
+                2 => array($reminderActivityTypId, 'Integer'),
+              ));
+              if (empty($lastRemindSentDate)) {
+                CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
+              }
+              else if ($lastRemindSentDate && (CRM_REQUEST_TIME - strtotime($lastRemindSentDate)) / 86400 > 30) {
+                CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
+              }
+            }
           }
           else {
             CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', 'null');
