@@ -27946,7 +27946,7 @@ msgid "I want to contribute this amount every %1 %2(s) for %3 installments."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
-msgid "I want to contribute this amount every %1 %2(s)."
+msgid "I want to contribute this amount every %1 %2(s) until credit card expires."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
@@ -48651,4 +48651,8 @@ msgstr ""
 
 #: CRM/Custom/Form/Group.php
 msgid "Common"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid "Since you didn't assign the expiration date of your donation installment plan, the recurring payments will be canceled when your credit card expires."
 msgstr ""

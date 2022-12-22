@@ -10,7 +10,7 @@
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2022
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
-# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020
+# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2022
 # 馮 佳今, 2022
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022\n"
+"Last-Translator: 馮 佳今, 2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15596,7 +15596,7 @@ msgstr "您確定要取消此活動的報名登記？"
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid ""
 "You can cancel your registration for %1 by clicking \"Cancel Registration\"."
-msgstr "您可以點擊「取消登記」選項以取消 %1 的登記。"
+msgstr "您可以點擊「取消報名」選項以取消 %1 的報名。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid ""
@@ -27941,8 +27941,9 @@ msgid "I want to contribute this amount every %1 %2(s) for %3 installments."
 msgstr "我想要每%1個%2捐款此金額，總共捐款%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
-msgid "I want to contribute this amount every %1 %2(s)."
-msgstr "我每%1個%2以此金額捐款。"
+msgid ""
+"I want to contribute this amount every %1 %2(s) until credit card expires."
+msgstr "我每%1個%2以此金額捐款至信用卡有效期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid ""
@@ -49048,3 +49049,9 @@ msgstr "次類型"
 #: CRM/Custom/Form/Group.php
 msgid "Common"
 msgstr "常用"
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid ""
+"Since you didn't assign the expiration date of your donation installment "
+"plan, the recurring payments will be canceled when your credit card expires."
+msgstr "由於您選擇不限期數，我們將在您填入信用卡資訊後，以卡片的到期日來計算實際扣款期數。"
