@@ -1611,10 +1611,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       unset($activity);
     }
 
-    // bulk sending or not
-    if ($bulk) {
-
+    // bulk send
+    $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
+    if (!empty($providerObj->_bulkMode)) {
+      $sendResults = self::sendBulkSMSMessage($preparedSMS);
     }
+    // loop send
     else {
       $successCount = 0;
       foreach($preparedSMS as $activityId => $msg) {
@@ -1649,7 +1651,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   }
 
   /**
-   * Send the sms message to a specific phone or contact
+   * Send an sms message to a specific phone or contact
    *
    * This function can call without civicrm contact object when specify phone in smsParams
    *
@@ -1711,9 +1713,52 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     return $sendResult;
   }
 
+  /**
+   * Send sms messages to group of contacts
+   *
+   * SMS provider may provide send multiple messages at a time
+   */
+  public static function sendBulkSMSMessage($bulkMessages) {
+    $msg = reset($bulkMessages);
+    $providerId = $msg['smsParams']['provider_id'];
+    $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $providerId));
+    if (!empty($providerObj->_bulkMode)) {
+      $messages = array();
+      foreach($bulkMessages as $msg) {
+        if (empty($msg['smsParams']['phone'])) {
+          continue;
+        }
+        if (empty($msg['smsMessage'])) {
+          continue;
+        }
+        $sms = array(
+          'phone' => $msg['smsParams']['phone'],
+          'body' => $msg['smsMessage'],
+          'guid' => md5($msg['smsParams']['phone'].$msg['smsMessage']),
+          'activityId' => $msg['activityId'],
+        );
+        $messages[] = $sms;
+      }
+      if (!empty($providerObj->_bulkLimit)) {
+        $chunks = array_chunk($messages, $providerObj->_bulkLimit, true);
+        $results = array();
+        foreach($chunks as $chunk) {
+          $results = array_merge($results, $providerObj->send($chunk));
+        }
+      }
+      else {
+        $results = $providerObj->send($messages);
+      }
+      return $results;
+    }
+    else {
+      CRM_Core_Error::fatal("The SMS provider you choose doesn't support bulk mode");
+    }
+  }
+
 
   /**
-   * send the message to a specific contact
+   * send the email message to a specific contact
    *
    * @param string $from         the name and email of the sender
    * @param int    $toID         the contact id of the recipient

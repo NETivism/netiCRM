@@ -11,9 +11,11 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    */
   static private $_singleton = NULL;
 
-  public $_multiMode = FALSE;
+  public $_bulkMode = FALSE;
 
-  private $_batchObjectId = NULL;
+  public $_bulkLimit = 500;
+
+  private $_objectId = NULL;
 
   private $_mitakeStatuses = NULL;
 
@@ -33,9 +35,9 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     $providerInfo = CRM_SMS_BAO_Provider::getProviderInfo($providerId);
     $this->_providerInfo = $providerInfo;
     if (strstr($this->_providerInfo['api_url'], 'SmBulkSend')) {
-      $this->_multiMode = TRUE;
+      $this->_bulkMode = TRUE;
     }
-    $this->_batchObjectId = (string) microtime(true);
+    $this->_objectId = (string) microtime(true);
     $this->_mitakeStatuses = array(
       '0' => ts('Scheduled'),
       '1' => ts('Delivered'),
@@ -66,24 +68,30 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * The result should be mapping to activity status name for better update activity
    *
    * @param array $messages
-   *   array should format like this
-   *     phone(string) => phone number
-   *     body(string) => message
-   *     guid(string) => Unique ID to identify this sms
-   *     activityId(int) => activity id correspond to this sms
+   *   multi-dimention array should format like this
+   *     index => array(
+   *       phone(string) => phone number
+   *       body(string) => message
+   *       guid(string) => Unique ID to identify this sms
+   *       activityId(int) => activity id correspond to this sms
+   *     );
    * @return array
    */
   public function send(&$messages){
     $data = array();
-    if ($this->_multiMode){
-      //$this->initMultiSMS($recipients, $message);
+    if ($this->_bulkMode){
+      if (count($messages) > $this->_bulkLimit) {
+        CRM_Core_Error::debug_log_message("The max number of recipients per bulk is ".$this->_bulkLimit.'. Abort this action.');
+        return FALSE;
+      }
+      $data = $this->formatBulkSMS($messages);
     }
     elseif (count($messages) == 1) {
       $data = $this->formatSMS(reset($messages));
     }
     else {
       // error
-      CRM_Core_Error::debug_log_message("Mitake need to enable SmBulkSend to send to multiple recipients at once");
+      CRM_Core_Error::debug_log_message("Mitake need to enable SmBulkSend to send to multiple recipients at once.");
       return FALSE;
     }
 
@@ -153,6 +161,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    *     error_message(bool) => error message that show http erro
    */
   protected function doRequest($requestUri, $request = array()) {
+    // CRM_Core_Error::debug_var('mitake_requst_uri', $requestUri);
     $ch = curl_init($requestUri);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -162,7 +171,13 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     // When array passed into CURLOPT_POSTFIELDS, content-type will convert to multipart/form-data
     // We use http_build_query instead
     // PHP_QUERY_RFC1738 means application/x-www-form-urlencoded compatible
-    $postFields = http_build_query($request['post_data'], "", "&", PHP_QUERY_RFC1738);
+    if (is_array($request['post_data'])) {
+      $postFields = http_build_query($request['post_data'], "", "&", PHP_QUERY_RFC1738);
+    }
+    else {
+      $postFields = $request['post_data'];
+    }
+    // CRM_Core_Error::debug_var('mitake_request_body', $postFields);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
 
     $response = array();
@@ -230,12 +245,12 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       $msg['clientID'] = substr($message['guid'], 0, 36);
     }
     else {
-      $msg['clientID'] = substr(md5($msg['dstaddr'].date('Ymd').$msg['body']), 0, 36);
+      $msg['clientID'] = substr(md5($message['phone'].date('Ymd').$message['body']), 0, 36);
     }
     if ($message['callback']) {
       $msg['response'] = $message['callback'];
     }
-    $msg['objectID'] = $this->_batchObjectId;
+    $msg['objectID'] = $this->_objectId;
 
     // TODO: validate the format base by rules
 
@@ -247,24 +262,69 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     // prepare request
     $msg['username'] = $this->_providerInfo['username'];
     $msg['password'] = $this->_providerInfo['password'];
-    return $this->prepareSmsRequest(array($msg));
+    return $this->prepareSmsRequest($msg);
+  }
+
+  /**
+   * SmsData constructor.
+   *
+   * @param $message
+   *
+   * @return array|bool
+   */
+  protected function formatBulkSMS($messages) {
+    // format SMS per line in http request body
+    // ClientID $$ dstaddr $$ dlvtime $$ vldtime $$ destname $$ response $$ smbody
+    $body = array();
+    foreach($messages as $message) {
+      $msg = array();
+      if ($message['guid']) {
+        $msg['clientID'] = substr($message['guid'], 0, 36);
+      }
+      else {
+        $msg['clientID'] = substr(md5($message['phone'].date('Ymd').$message['body']), 0, 36);
+      }
+
+      $msg['dstaddr'] = $this->formatPhone($message['phone']);
+      $msg['dlvtime'] = '';
+      $msg['vldtime'] = '';
+      $msg['destname'] = '';
+      if ($message['callback']) {
+        $msg['response'] = $message['callback'];
+      }
+      else {
+        $msg['response'] = ''; // TODO: add callback
+      }
+      $msg['smbody'] = preg_replace('/(\r\n|\n|\r)/m', chr(6), $message['body']);
+      $body[] = implode('$$', $msg);
+
+      // for update activity
+      $this->_sms[$msg['clientID']] = $msg;
+      if (!empty($message['activityId'])) {
+        $this->_sms[$msg['clientID']]['activityId'] = $message['activityId'];
+      }
+    }
+    $httpBody = implode("\n", $body);
+    return $this->prepareSmsRequest($httpBody);
   }
 
   public function prepareSmsRequest($formatted) {
-    if ($this->_multiMode) {
-      foreach ($this->_sms as $sms) {
-        /*
-        $data = '[' . REQUEST_TIME . $sms->dest . "]\r\n" . $smsData['get'] . "\r\n";
-        */
-      }
+    if ($this->_bulkMode) {
+      $data = array();
+      $data['http_query_params'] = array(
+        'username' => $this->_providerInfo['username'],
+        'password' => $this->_providerInfo['password'],
+        'Encoding_PostIn' => 'UTF8',
+        'objectID' => $this->_objectId,
+      );
+      $data['http_post_params'] = $formatted;
     }
     else {
-      $sms = reset($formatted);
       $data = array();
       $data['http_query_params'] = array(
         'CharsetURL' => 'UTF8',
       );
-      $data['http_post_params'] = $sms;
+      $data['http_post_params'] = $formatted;
     }
     return $data;
   }
