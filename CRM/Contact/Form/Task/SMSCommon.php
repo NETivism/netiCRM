@@ -346,6 +346,7 @@ class CRM_Contact_Form_Task_SMSCommon {
           if (preg_match('/(\{[^\}]+\})/u', $messageCheck)) {
             $errors['sms_text_message'] = ts("Since you have used tokens. The word count may be wrong.");
             $self->set('force_send', TRUE);
+            $self->set('has_token', TRUE);
           }
           if(preg_match ("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)){
             if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR)) {

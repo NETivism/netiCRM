@@ -89,6 +89,11 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
       $this->assign('mailingReport', $mailingReport);
     }
 
+    $allActivityStatus = CRM_Core_PseudoConstant::activityStatus();
+    if ($defaults['status_id']) {
+      $defaults['status'] = $allActivityStatus[$defaults['status_id']];
+    }
+
     foreach ($defaults as $key => $value) {
       if (substr($key, -3) != '_id') {
         $values[$key] = $value;

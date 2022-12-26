@@ -29,9 +29,9 @@
 <div class="crm-accordion-header">
   {$form.sms_text_message.label}
   </div><!-- /.crm-accordion-header -->
- <div class="crm-accordion-body">
- <div id='char-count-message'></div>
-   <div class="helpIcon" id="helptext">
+  <div class="crm-accordion-body">
+  <div id='char-count-message'></div>
+    <div id="helptext">
       <a class="token-trigger" href="#" onClick="return showToken('Text', 1);">{$form.token1.label}</a>
       {help id="id-token-text" file="CRM/Contact/Form/Task/SMS.hlp"}
       <div id="tokenText" style="display:none;">
@@ -41,7 +41,7 @@
       </div>
     </div>
     <div class='text'>
-  {$form.sms_text_message.html}<br />
+    {$form.sms_text_message.html}<br />
     </div>
   </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
