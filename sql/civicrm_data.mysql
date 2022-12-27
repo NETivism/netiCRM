@@ -5712,7 +5712,7 @@ INSERT INTO civicrm_uf_field
        (46,  11,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             'Last Name',             		'Individual',  NULL,  NULL),
        (47,  11,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             'Email Address',         		'Contact',     NULL,  NULL),
        (48,  11,           'current_employer',      1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             'Current Employer',         		'Contact',     NULL,  NULL),
- 	     (49,  11,           'phone' 				 ,1  	      ,0 			,2 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'Home Mobile' 					,'Contact' 	  ,NULL, 2 ),
+ 	     (49,  11,           'phone' 				 ,0  	      ,0 			,2 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'Home Mobile' 					,'Contact' 	  ,NULL, 2 ),
        (50,  11,           'country',               0,           0,           6,      'User and User Admin Only', 0,           1,             1,                'Country (Home)',        		'Contact',     NULL,  NULL),
        (51,  11,           'state_province',        0,           0,           7,      'User and User Admin Only', 1,           1,             1,                'State (Home)',          		'Contact',     NULL,  NULL),
        (52,  11,           'postal_code',           0,           0,           5,      'User and User Admin Only',  0,           0,             1,                'Postal Code (Home)',    		'Contact',     NULL,  NULL),
