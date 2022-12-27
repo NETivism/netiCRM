@@ -261,17 +261,21 @@ class CRM_Contact_Form_Task_SMSCommon {
         }
       }
 
-      // Custom in Neticrm
-
       $toArrayIdPhone = array();
-      foreach ($toArray as $key => $value) {
-        $toArrayIdPhone[] = $value['id'];
+      if (count($toArray) > 500) {
+        $defaults['to'] = ts('We will send messages to %1 contacts.', array(1 => count($form->_contactIds) - $suppressedSms));
       }
-      $toDefault = implode(', ', $toArrayIdPhone);
-      $defaults['to'] = $toDefault;
+      else {
+        foreach ($toArray as $key => $value) {
+          if ($key >= 500) {
+            break;
+          }
+          $toArrayIdPhone[] = $value['id'];
+        }
+        $toDefault = implode(', ', $toArrayIdPhone);
+        $defaults['to'] = $toDefault;
+      }
       $form->setDefaults($defaults);
-
-      // Custom end
 
       if (empty($toArray)) {
         return CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid Phone, or communication preferences specify DO NOT SMS, or they are deceased'));
@@ -430,9 +434,8 @@ class CRM_Contact_Form_Task_SMSCommon {
     unset($smsParams['sms_text_message']);
     $smsParams['provider_id'] = $fromSmsProviderId;
     $contactIds = array_keys($form->_contactDetails);
-    $allContactIds = array_keys($form->_allContactDetails);
 
-    list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::sendSMS($formattedContactDetails,
+    $sendResult = CRM_Activity_BAO_Activity::sendSMS($formattedContactDetails,
       $thisValues,
       $smsParams,
       $contactIds
@@ -442,49 +445,14 @@ class CRM_Contact_Form_Task_SMSCommon {
       $form->set('force_send', FALSE);
     }
 
-    if ($countSuccess > 0) {
-      CRM_Core_Session::setStatus(ts('One message was sent successfully.', array(
-            'plural' => '%count messages were sent successfully.',
-            'count' => $countSuccess,
-          )), ts('Message Sent', array('plural' => 'Messages Sent', 'count' => $countSuccess)), 'success');
-    }
-
-    if (is_array($sent)) {
-      // At least one PEAR_Error object was generated.
-      // Display the error messages to the user.
-      $status = '<ul>';
-      foreach ($sent as $errMsg) {
-        $status .= '<li>' . $errMsg . '</li>';
-      }
-      $status .= '</ul>';
-      CRM_Core_Session::setStatus(ts('One Message Not Sent', array(
-            'count' => count($sent),
-            'plural' => '%count Messages Not Sent',
-          )) . $status, 'info');
-    }
-    else {
-      //Display the name and number of contacts for those sms is not sent.
-      $smsNotSent = array_diff_assoc($allContactIds, $contactIds);
-
-      if (!empty($smsNotSent)) {
-        $not_sent = array();
-        foreach ($smsNotSent as $index => $contactId) {
-          $displayName = $form->_allContactDetails[$contactId]['display_name'];
-          $phone = $form->_allContactDetails[$contactId]['phone'];
-          $contactViewUrl = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid=$contactId");
-          $not_sent[] = "<a href='$contactViewUrl' title='$phone'>$displayName</a>";
-        }
-        $status = '(' . ts('because no phone number on file or communication preferences specify DO NOT SMS or Contact is deceased');
-        if (CRM_Utils_System::getClassName($form) == 'CRM_Activity_Form_Task_SMS') {
-          $status .= ' ' . ts("or the contact is not part of the activity '%1'", array(1 => self::RECIEVED_SMS_ACTIVITY_SUBJECT));
-        }
-        $status .= ')<ul><li>' . implode('</li><li>', $not_sent) . '</li></ul>';
-        CRM_Core_Session::setStatus($status, ts('One Message Not Sent', array(
-              'count' => count($smsNotSent),
-              'plural' => '%count Messages Not Sent',
-            )), 'info');
-      }
-    }
+    $smsNotSent = count($sendResult['activityIds']) - $sendResult['sent'];
+    CRM_Core_Session::setStatus(ts('One message was sent successfully.', array(
+      'count' => $sendResult['sent'],
+      'plural' => '%count messages were sent successfully.',
+    )));
+    CRM_Core_Session::setStatus(ts('One Message Not Sent', array(
+      'count' => $smsNotSent,
+      'plural' => '%count Messages Not Sent',
+    )));
   }
-
 }

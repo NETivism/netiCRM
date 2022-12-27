@@ -50,15 +50,15 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       '9' => ts('Error').":".ts('Cancelled'),
     );
     $this->_mitakeStatusesMapping = array(
-      '0' => 1,
+      '0' => 4,
       '1' => 4,
       '2' => 4,
       '4' => 2,
       '5' => 3,
       '6' => 5,
       '7' => 5,
-      '8' => 5,
-      '9' => 5,
+      '8' => 3,
+      '9' => 3,
     );
   }
 
@@ -67,15 +67,13 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    *
    * The result should be mapping to activity status name for better update activity
    *
-   * @param array $messages
-   *   multi-dimention array should format like this
-   *     index => array(
-   *       phone(string) => phone number
-   *       body(string) => message
-   *       guid(string) => Unique ID to identify this sms
-   *       activityId(int) => activity id correspond to this sms
-   *     );
-   * @return array
+   * @param array $messages [
+   *  'phone' => string,
+   *  'body' => string,
+   *  'guid' => string,
+   *  'activityId' => int,
+   * ]
+   * @return array response of self::doRequest
    */
   public function send(&$messages){
     $data = array();
@@ -117,9 +115,14 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     foreach($this->_sms as $guid => $sms) {
       if ($sms['activityId']) {
         $details = array();
-        $details[] = '<div class="content">'.ts("Body") . ": " . $sms['smbody'].'</div>';
+        $details[] = '<div class="content">'.ts("Body") . ": <br>" . nl2br($sms['smbody']).'</div>';
         $details[] = '<div class="meta">';
-        $details[] = ts("To") .": ". CRM_Utils_String::mask($sms['dstaddr'], 'custom', 4, 2);
+        if (empty($sms['dstaddr'])) {
+          $details[] = ts("Please enter a valid phone number."). ' '.ts("Format is not correct. Input format is '%1'", array(1 => $sms['phone']));
+        }
+        else {
+          $details[] = ts("To"). CRM_Utils_String::mask($sms['dstaddr'], 'custom', 4, 2);
+        }
         if (!empty($sms['result'])) {
           foreach($sms['result'] as $key => $val) {
             $details[] = $key.': '.$val;
@@ -153,12 +156,13 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * @param string requestUri
    * @param array request
    *
-   * @return array
-   *   result array will contain these element
-   *     raw(string) => response body
-   *     body(array) => formatted response, contain real result of sms
-   *     error(bool) => http request success or not
-   *     error_message(bool) => error message that show http erro
+   * @return array [
+   *  'raw' => string,
+   *  'body' => array,
+   *  'error' => bool,
+   *  'error_message' => string,
+   *  'success' => int, count of success sent
+   * ]
    */
   protected function doRequest($requestUri, $request = array()) {
     // CRM_Core_Error::debug_var('mitake_requst_uri', $requestUri);
@@ -203,9 +207,11 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       $response['error'] = 0;
       $response['raw'] = $responseBody;
       $response['body'] = $this->formatResponse($responseBody);
+      $response['success'] = $response['body']['success'];
     }
     curl_close($ch);
 
+    // CRM_Core_Error::debug_var('response', $response);
     return $response;
   }
 
@@ -255,6 +261,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     // TODO: validate the format base by rules
 
     $this->_sms[$msg['clientID']] = $msg;
+    $this->_sms[$msg['clientID']]['phone'] = $message['phone'];
     if (!empty($message['activityId'])) {
       $this->_sms[$msg['clientID']]['activityId'] = $message['activityId'];
     }
@@ -300,6 +307,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
 
       // for update activity
       $this->_sms[$msg['clientID']] = $msg;
+      $this->_sms[$msg['clientID']]['phone'] = $message['phone'];
       if (!empty($message['activityId'])) {
         $this->_sms[$msg['clientID']]['activityId'] = $message['activityId'];
       }
@@ -345,7 +353,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     $result = array();
 
     // any of SMS correctly response numberic status, this will be TRUE
-    $success = FALSE;
+    $success = 0;
     foreach($responseLines as $line) {
       if (preg_match('/^\[([0-9a-z]+)\]/i', $line, $matches)) {
         $msgCount++;
@@ -359,7 +367,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
           if ($key === 'statuscode') {
             // Send
             if (is_numeric($val)) {
-              $success = TRUE;
+              $success++;
               if (isset($this->_mitakeStatuses[$val])) {
                 $result[$msgIndex]['status'] = $this->_mitakeStatuses[$val];
               }
@@ -393,7 +401,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
         $this->_sms[$idx]['result'] = $result[1];
       }
     }
-    $result['all']['success'] = $success ? 1 : 0;
+    $result['success'] = $success;
     return $result;
   }
 }

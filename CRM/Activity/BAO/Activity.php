@@ -1385,10 +1385,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   }
 
   /**
-   * Prepare SMS, Copy from SMSCommon::postProcess()
+   * Prepare SMS from objects
    *
-   * @param array $contactIds
-   *        Also cound be 1 integer of contact_id
+   * @param array $contactIds Also cound be 1 integer of contact_id
    * @param integer $providerId
    * @param string $message
    * @param array $values objects, contribution is $values['contribution']
@@ -1401,6 +1400,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $message,
     $values = array()
   ) {
+    if(!is_array($contactIds)){
+      $contactIds = array($contactIds);
+    }
     $activityParams = array(
       'sms_provider_id' => $providerId,
       'sms_text_message' => $message,
@@ -1422,10 +1424,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     );
     // format contact details array to handle multiple sms from same contact
     $contactDetails = array();
-
-    if(!is_array($contactIds)){
-      $contactIds = array($contactIds);
-    }
 
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
     foreach ($contactIds as $cid) {
@@ -1470,11 +1468,11 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     unset($smsParams['sms_text_message']);
     $smsParams['provider_id'] = $providerId;
 
-    list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::sendSMS(
-      $contactDetails,
-      $activityParams,
-      $smsParams,
-      $contactIds
+    return array(
+      'contactDetails' => $contactDetails,
+      'activityParams' => $activityParams,
+      'smsParams' => $smsParams,
+      'contactIds' => $contactIds,
     );
   }
 
@@ -1491,8 +1489,11 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param int $userID sender contact id, null will use current logged contact
    * @param bool $bulk default FALSE send one by one, TRUE will disable token replace
    *
-   * @return array
-   * @throws CRM_Core_Exception
+   * @return array[
+   *  'sent' => int,
+   *  'activityIds' => array,
+   *  'result' => array,
+   * ]
    */
   public static function sendSMS(
     &$contactDetails,
@@ -1615,10 +1616,16 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
     if (!empty($providerObj->_bulkMode)) {
       $sendResults = self::sendBulkSMSMessage($preparedSMS);
+      return array(
+        'sent' => $sendResults['success'],
+        'activityIds' => array_keys($preparedSMS),
+        'results' => $sendResults,
+      );
     }
     // loop send
     else {
       $successCount = 0;
+      $results = array();
       foreach($preparedSMS as $activityId => $msg) {
         $sendResult = self::sendSMSMessage(
           $msg['smsParams'],
@@ -1626,27 +1633,21 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
           $msg['contactId'],
           $msg['activityId'] // provide this will trigger callback to update activity
         );
-        if (!$sendResult['error']) {
+        if ($sendResult['success']) {
           $successCount++;
         }
-        else {
-          $errMsgs[$activityId] = $sendResult['error_message'];
-        }
+        $results[$activityId] = $sendResult;
       }
 
-      // If at least one message was sent and no errors
-      // were generated then return a boolean value of TRUE.
-      // Otherwise, return FALSE (no messages sent) or
-      // and array of 1 or more PEAR_Error objects.
-      $sent = FALSE;
+      $sent = 0;
       if ($successCount > 0) {
-        $sent = TRUE;
+        $sent = $successCount;
       }
-      elseif (count($errMsgs) > 0) {
-        $sent = $errMsgs;
-      }
-
-      return array($sent, array_keys($preparedSMS), $successCount);
+      return array(
+        'sent' => $sent,
+        'activityIds' => array_keys($preparedSMS),
+        'results' => $results,
+      );
     }
   }
 
