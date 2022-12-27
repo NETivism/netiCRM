@@ -27,7 +27,10 @@
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 {if $suppressedSms > 0}
     <div class="status">
-        <p>{ts count=$suppressedSms plural='SMS will NOT be sent to %count contacts - (no phone number on file, or communication preferences specify DO NOT SMS, or contact is deceased).'}SMS will NOT be sent to %count contact - (no phone number on file, or communication preferences specify DO NOT SMS, or contact is deceased).{/ts}</p>
+        <ul>
+          <li>{ts 1=$totalSelectedContacts}Number of selected contacts: %1{/ts}</li>
+          <li>{ts 1="$estimatedSms"}We will send %1 messages during this process.{/ts} {ts count=$suppressedSms plural='SMS will NOT be sent to %count contacts - (no phone number on file, or communication preferences specify DO NOT SMS, or contact is deceased).'}SMS will NOT be sent to %count contact - (no phone number on file, or communication preferences specify DO NOT SMS, or contact is deceased).{/ts}</li>
+        </ul>
     </div>
 {/if}
 {if $extendTargetContacts > 0}

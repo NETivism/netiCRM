@@ -55,8 +55,8 @@
 </div>
 
 <div id="SMSsaveDetails" class="section">
-   <div class="label">{$form.SMSsaveTemplateName.label}</div>
-   <div class="content">{$form.SMSsaveTemplateName.html}</div>
+  <div class="label">{$form.SMSsaveTemplateName.label}</div>
+  <div class="content">{$form.SMSsaveTemplateName.html}</div>
 </div>
 
 {include file="CRM/Mailing/Form/InsertTokens.tpl" editor=""}
@@ -68,49 +68,49 @@ maxCharInfoDisplay();
 
 cj('#sms_text_message').bind({
   change: function() {
-   maxLengthMessage();
+    maxLengthMessage();
   },
   keyup:  function() {
-   maxCharInfoDisplay();
+    maxCharInfoDisplay();
   }
 });
 
 function maxLengthMessage()
 {
-   var len = cj('#sms_text_message').val().length;
-   var maxLength = {/literal}{$max_sms_length}{literal};
-   if (len > maxLength) {
-      cj('#sms_text_message').crmError({/literal}'{ts escape="js"}SMS body exceeding limit of 160 characters{/ts}'{literal});
-      return false;
-   }
+  var len = cj('#sms_text_message').val().length;
+  var maxLength = {/literal}{$max_sms_length}{literal};
+  if (len > maxLength) {
+    cj('#sms_text_message').crmError({/literal}'{ts escape="js"}SMS body exceeding limit of 160 characters{/ts}'{literal});
+    return false;
+  }
 return true;
 }
 
 function maxCharInfoDisplay(){
-   var maxLength = {/literal}{$max_sms_length}{literal};
-   var textMsg = cj('#sms_text_message').val();
-   var is_chinese = textMsg.match(/[^\x00-\xff]/g);
-   var regToken = /(\{[^\}]+\})/g;
-   var have_token = textMsg.match(regToken);
-   var textMsg = textMsg.replace(regToken, '');
-   if(is_chinese || have_token){
-     maxLength = {/literal}{$max_zh_sms_length}{literal};
-   }
-   var enteredCharLength = textMsg.length;
-   var count = enteredCharLength;
+  var maxLength = {/literal}{$max_sms_length}{literal};
+  var textMsg = cj('#sms_text_message').val();
+  var is_chinese = textMsg.match(/[^\x00-\xff]/g);
+  var regToken = /(\{[^\}]+\})/g;
+  var have_token = textMsg.match(regToken);
+  var textMsg = textMsg.replace(regToken, '');
+  if(is_chinese || have_token){
+    maxLength = {/literal}{$max_zh_sms_length}{literal};
+  }
+  var enteredCharLength = textMsg.length;
+  var count = enteredCharLength;
 
-   if( count < 0 ) {
-      cj('#sms_text_message').val(cj('#sms_text_message').val().substring(0, maxLength));
-      count = 0;
-   }
-   if (have_token) {
-     var finalMsg =  "{/literal}{ts}You can insert up to %1 characters include token. You have entered %2 characters without token.{/ts}{literal}";
-   }
-   else {
-     var finalMsg =  "{/literal}{ts}You can insert up to %1 characters. You have entered %2 characters.{/ts}{literal}";
-   }
-   finalMsg = finalMsg.replace("%1", maxLength).replace("%2",count);
-   cj('#char-count-message').text(finalMsg);
+  if( count < 0 ) {
+    cj('#sms_text_message').val(cj('#sms_text_message').val().substring(0, maxLength));
+    count = 0;
+  }
+  if (have_token) {
+    var finalMsg =  "{/literal}{ts}You can insert up to %1 characters include token. You have entered %2 characters without token.{/ts}{literal}";
+  }
+  else {
+    var finalMsg =  "{/literal}{ts}You can insert up to %1 characters. You have entered %2 characters.{/ts}{literal}";
+  }
+  finalMsg = finalMsg.replace("%1", maxLength).replace("%2",count);
+  cj('#char-count-message').text(finalMsg);
 }
 
 cj(document).ajaxComplete(function( event, xhr, settings ) {
