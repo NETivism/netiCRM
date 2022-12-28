@@ -435,24 +435,80 @@ class CRM_Contact_Form_Task_SMSCommon {
     $smsParams['provider_id'] = $fromSmsProviderId;
     $contactIds = array_keys($form->_contactDetails);
 
-    $sendResult = CRM_Activity_BAO_Activity::sendSMS($formattedContactDetails,
-      $thisValues,
-      $smsParams,
-      $contactIds
-    );
-
     if ($form->get('force_send')) {
       $form->set('force_send', FALSE);
     }
 
-    $smsNotSent = count($sendResult['activityIds']) - $sendResult['sent'];
-    CRM_Core_Session::setStatus(ts('One message was sent successfully.', array(
-      'count' => $sendResult['sent'],
-      'plural' => '%count messages were sent successfully.',
-    )));
-    CRM_Core_Session::setStatus(ts('One Message Not Sent', array(
-      'count' => $smsNotSent,
-      'plural' => '%count Messages Not Sent',
-    )));
+    $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
+    if (!empty($providerObj->_bulkMode)) {
+      // start batch
+      $config = CRM_Core_Config::singleton();
+      $batch = new CRM_Batch_BAO_Batch();
+      $batchParams = array(
+        'label' => ts('SMS').': '.date('YmdHis'),
+        'startCallback' => NULL,
+        'startCallbackArgs' => NULL,
+        'processCallback' => array('CRM_Contact_Form_Task_SMSCommon', 'batchSend'),
+        'processCallbackArgs' => array($formattedContactDetails, $thisValues, $smsParams, $contactIds),
+        'finishCallback' => NULL,
+        'finishCallbackArgs' => NULL,
+        'actionPermission' => '',
+        'total' => count($formattedContactDetails),
+        'processed' => 0,
+      );
+      $batch->start($batchParams);
+
+      // redirect to notice page
+      CRM_Core_Session::setStatus(ts("Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed."));
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
+    }
+    else {
+      $sendResult = CRM_Activity_BAO_Activity::sendSMS($formattedContactDetails,
+        $thisValues,
+        $smsParams,
+        $contactIds
+      );
+
+      $smsNotSent = count($sendResult['activityIds']) - $sendResult['sent'];
+      CRM_Core_Session::setStatus(ts('One message was sent successfully.', array(
+        'count' => $sendResult['sent'],
+        'plural' => '%count messages were sent successfully.',
+      )));
+      CRM_Core_Session::setStatus(ts('One Message Not Sent', array(
+        'count' => $smsNotSent,
+        'plural' => '%count Messages Not Sent',
+      )));
+    }
+  }
+
+  public static function batchSend($contactDetails, $activityParams, $smsParams = array(), $contactIds) {
+    global $civicrm_batch;
+
+    print_r($contactDetails);
+    print_r($activityParams);
+    print_r($smsParams);
+    print_r($contactIds);
+    if ($civicrm_batch) {
+      $offset = 0;
+      $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
+      $batchLimit = $providerObj->_bulkLimit;
+      if (isset($civicrm_batch->data['processed']) && !empty($civicrm_batch->data['processed'])) {
+        $offset = $civicrm_batch->data['processed'];
+      }
+      $contactDetails = array_slice($contactDetails, $offset, $batchLimit);
+      $contactIds = array_slice($contactIds, $offset, $batchLimit);
+      CRM_Activity_BAO_Activity::sendSMS(
+        $contactDetails,
+        $activityParams,
+        $smsParams,
+        $contactIds
+      );
+      $civicrm_batch->data['processed'] += count($contactDetails);
+
+      if ($civicrm_batch->data['processed'] >= $civicrm_batch->data['total']) {
+        $civicrm_batch->data['processed'] = $civicrm_batch->data['total'];
+        $civicrm_batch->data['isCompleted'] = TRUE;
+      }
+    }
   }
 }
