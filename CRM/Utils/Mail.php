@@ -444,6 +444,10 @@ class CRM_Utils_Mail {
     }
     if (!empty($host)) {
       $ip = CRM_Utils_System::getHostIPAddress($host);
+      if (!$ip) {
+        CRM_Core_Error::debug_log_message("Could not resolve IP address of $host.");
+        return 'Cannot resolve IP address of provided host: '.$host.'. Abort SPF verification.';
+      }
       if (CRM_Utils_System::checkPHPVersion(7.1)) {
         require_once 'SPFLib/autoload.php';
         $checker = new SPFLib\Checker();

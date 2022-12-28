@@ -119,6 +119,10 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       }
     }
 
+    if (!CRM_Utils_Array::value('is_test', $params)) {
+      $params['is_test'] = 0;
+    }
+
     require_once 'CRM/Utils/Hook.php';
     if (CRM_Utils_Array::value('contribution', $ids)) {
       CRM_Utils_Hook::pre('edit', 'Contribution', $ids['contribution'], $params);
