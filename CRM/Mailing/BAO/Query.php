@@ -202,6 +202,11 @@ class CRM_Mailing_BAO_Query {
       case 'recipient_email':
         $from = " $side JOIN civicrm_email recipient_email ON recipient_email.id = civicrm_mailing_recipients.email_id";
         break;
+
+      case 'civicrm_mailing_trackable_url':
+        $from = " $side JOIN civicrm_mailing_trackable_url ON civicrm_mailing_trackable_url.id = civicrm_mailing_event_trackable_url_open.trackable_url_id";
+        break;
+
     }
 
     return $from;
@@ -339,6 +344,22 @@ class CRM_Mailing_BAO_Query {
         );
         return;
 
+      case 'mailing_click_url':
+        if ($wildcard) {
+          $value = "$value%";
+          $op = 'LIKE';
+        }
+        $query->_where[$grouping][] = "civicrm_mailing_trackable_url.url $op '$value'";
+        $query->_qill[$grouping][] = ts("URL")." - \"$value\"";
+
+        $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
+        $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
+        $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
+        $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
+        $query->_tables['civicrm_mailing_event_trackable_url_open'] = $query->_whereTables['civicrm_mailing_event_trackable_url_open'] = 1;
+        $query->_tables['civicrm_mailing_trackable_url'] = $query->_whereTables['civicrm_mailing_trackable_url'] = 1;
+        return;
+
       case 'mailing_reply_status':
         self::mailingEventQueryBuilder($query, $values,
           'civicrm_mailing_event_reply', 'mailing_reply_status', ts('Trackable Reply'), CRM_Mailing_PseudoConstant::yesNoOptions('reply')
@@ -419,7 +440,7 @@ class CRM_Mailing_BAO_Query {
       'Canceled' => ts('Canceled'),
     );
     $form->addSelect('mailing_job_status', ts('Mailing Status'), $mailingJobStatuses);
-  
+
     $mailingBounceTypes = CRM_Mailing_PseudoConstant::bounceType();
     $mailingBounceTypesDesc = CRM_Mailing_PseudoConstant::bounceType('id', 'description');
     foreach($mailingBounceTypes as $bid => $type) {
@@ -435,6 +456,7 @@ class CRM_Mailing_BAO_Query {
 
     $form->add('checkbox', 'mailing_unsubscribe', ts('Unsubscribe Requests'));
     $form->add('checkbox', 'mailing_optout', ts('Opt-out Requests'));
+    $form->add('text', 'mailing_click_url', ts('Trackable URL'));
 
     // Campaign select field
     // CRM_Campaign_BAO_Campaign::addCampaignInComponentSearch($form, 'mailing_campaign_id');
