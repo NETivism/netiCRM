@@ -282,6 +282,9 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
           break;
         }
       }
+      if (isset($defaults['uf_group_type']['System'])) {
+        $defaults['is_in_other_situation'] = 1;
+      }
     }
     else {
       $defaults['is_active'] = 1;
@@ -350,6 +353,17 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
           $params['uf_group_type'] = array_merge($params['uf_group_type'], $params['uf_group_type_user']);
         }
         CRM_Core_BAO_UFGroup::createUFJoin($params, $ufGroup->id);
+        //refs #36509, create uf join when click is in other situation checkbox.
+
+        if ($params['is_in_other_situation'] == '1') {
+          $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($ufGroup->id);
+          if (!in_array("System",$ufJoinRecords)) {
+            $joinParams = array();
+            $joinParams['uf_group_id'] = $ufGroup->id;
+            $joinParams['module'] = "System";
+            CRM_Core_BAO_UFGroup::addUFJoin($joinParams);
+          }
+        }
       }
       elseif ($this->_id) {
         // this profile has been set to inactive, delete all corresponding UF Join's
