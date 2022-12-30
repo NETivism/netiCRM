@@ -175,8 +175,8 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     }
 
     $hostIP = CRM_Utils_System::getHostIPAddress();
-    if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $hostIP)) {
-      $hostIP = $_SERVER['SERVER_ADDR'];
+    if (!$hostIP) {
+      $hostIP = ts('None');
     }
     $this->assign('hostIP', $hostIP);
   }

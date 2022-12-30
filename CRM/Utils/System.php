@@ -1652,18 +1652,42 @@ class CRM_Utils_System {
     }
   }
 
+  /**
+   * Get IP address from provided host
+   *
+   * @param string $host
+   *   Use host to resolve IP address when provided. Default NULL will provide IP address of current CRM
+   * @return string|false
+   *   Return IP address when success. return FALSE when IP address is private or can't resolve
+   */
   public static function getHostIPAddress($host = NULL) {
-    $ip = $_SERVER['SERVER_ADDR'];
-    if (empty($ip)) {
-      if (empty($host)) {
-        $host = $_SERVER['HTTP_HOST'];
-      }
-      if ($host) {
+    $ip = FALSE;
+    if (!empty($host)) {
+      $ipByHost = gethostbyname($host);
+      $ipByHost = filter_var(
+        $ipByHost,
+        FILTER_VALIDATE_IP,
+        FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE
+      );
+    }
+    else {
+      $ipByHost = filter_var(
+        $_SERVER['SERVER_ADDR'],
+        FILTER_VALIDATE_IP,
+        FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE
+      );
+      if (empty($ipByHost)) {
+        $host = $_SERVER['SERVER_NAME'];
         $ipByHost = gethostbyname($host);
-        if (preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ipByHost)) {
-          $ip = $ipByHost;
-        }
+        $ipByHost = filter_var(
+          $ipByHost,
+          FILTER_VALIDATE_IP,
+          FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE
+        );
       }
+    }
+    if ($ipByHost && preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ipByHost)) {
+      $ip = $ipByHost;
     }
     return $ip;
   }
