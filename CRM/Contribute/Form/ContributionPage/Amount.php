@@ -254,6 +254,19 @@ SELECT id
     if (!CRM_Utils_Array::value('pay_later_text', $defaults)) {
       $defaults['pay_later_text'] = ts('I will send payment by check');
     }
+    
+    if (CRM_Utils_Array::value('payment_processor', $defaults)) {
+      $defaults['payment_processor'] = array_fill_keys(explode(CRM_Core_DAO::VALUE_SEPARATOR,
+          $defaults['payment_processor']
+        ), '1');
+    }
+
+    if (!isset($defaults['installments_option'])) {
+      $defaults['show_installments_option'] = 1;
+    }
+    else {
+      $defaults['show_installments_option'] = $defaults['installments_option'] ? 1 : 0;
+    }
 
     if (CRM_Utils_Array::value('amount_block_is_active', $defaults)) {
 
@@ -299,18 +312,6 @@ SELECT id
       $defaults['max_amount'] = CRM_Utils_Money::format($defaults['max_amount'], NULL, '%a');
     }
 
-    if (CRM_Utils_Array::value('payment_processor', $defaults)) {
-      $defaults['payment_processor'] = array_fill_keys(explode(CRM_Core_DAO::VALUE_SEPARATOR,
-          $defaults['payment_processor']
-        ), '1');
-    }
-
-    if (!isset($defaults['installments_option'])) {
-      $defaults['show_installments_option'] = 1;
-    }
-    else {
-      $defaults['show_installments_option'] = $defaults['installments_option'] ? 1 : 0;
-    }
     return $defaults;
   }
 
