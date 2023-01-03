@@ -280,7 +280,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     );
     if (!$activity->find()) {
       require_once "CRM/Activity/BAO/Activity.php";
-      CRM_Activity_BAO_Activity::addActivity($contribution, 'Offline');
+      CRM_Activity_BAO_Activity::addActivity($contribution, 'Contribution');
     }
 
 
