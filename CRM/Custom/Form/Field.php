@@ -169,20 +169,6 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
         array('ContactReference' => ts('Autocomplete Select')),
       );
     }
-    //add current fields
-    if ($this->_gid && !($this->_action & CRM_Core_Action::DELETE) && !($this->_action & CRM_Core_Action::ADD)) {
-      // Check html_type is multiple choice types.
-      $htmlType = $this->_values['html_type'];
-      $multipleTypes = array("CheckBox","Radio","Select","Multi-Select");
-      if (in_array($htmlType,$multipleTypes)) {
-        $fieldTitle = CRM_Core_BAO_CustomField::getTitle($this->_id);
-        $this->assign('fieldTitle', $fieldTitle);
-        $page = new CRM_Custom_Page_Option();
-        $page->setVar('_gid', $this->_gid);
-        $page->setVar('_fid', $this->_id);
-        $page->browse();
-      }
-    }
   }
 
   /**

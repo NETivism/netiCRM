@@ -306,46 +306,9 @@ function custom_option_html_type( ) {
     }
 </script>
 {/literal}
-{* Give table to view/edit choice options if in edit mode and html_type is one of the multiple choice types *}
+{* Give link to view/edit choice options if in edit mode and html_type is one of the multiple choice types *}
 {if $action eq 2 AND ($form.data_type.value.1.0 eq 'CheckBox' OR ($form.data_type.value.1.0 eq 'Radio' AND $form.data_type.value.0.0 neq 6) OR $form.data_type.value.1.0 eq 'Select' OR ($form.data_type.value.1.0 eq 'Multi-Select' AND $dontShowLink neq 1 ) ) }
-<div>
-</div>
-    <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
-      <div class="crm-accordion-header">
-        <div class="zmdi crm-accordion-pointer"></div>
-        {ts 1=$fieldTitle}%1 - Multiple Choice Options{/ts}
-      </div><!-- /.crm-accordion-header -->
-      <div class="crm-accordion-body">
-        {strip}
-        {* handle enable/disable actions*}
- 	{include file="CRM/common/enableDisable.tpl"}
- 	{include file="CRM/common/jsortable.tpl"}
-    <table class="selector">
-        <tr class="columnheader">
-        <th>{ts}Label{/ts}</th>
-        <th>{ts}Value{/ts}</th>
-        <th>{ts}Default{/ts}</th>
-        <th>{ts}Order{/ts}</th>
-        <th>{ts}Enabled?{/ts}</th>
-        <th>&nbsp;</th>
-        </tr>
-        {foreach from=$customOption item=row key=id}
-        <tr id="row_{$id}"class="{cycle values="odd-row,even-row"} {$row.class} crm-custom_option {if NOT $row.is_active} disabled{/if}">
-            <td class="crm-custom_option-label">{$row.label}</td>
-            <td class="crm-custom_option-value">{$row.value}</td>
-            <td class="crm-custom_option-default_value">{$row.default_value}</td>
-            <td class="nowrap crm-custom_option-weight">{$row.weight}</td>
-	        <td id="row_{$id}_status" class="crm-custom_option-is_active">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
-            <td>{$row.action|replace:'xx':$id}</td>
-        </tr>
-        {/foreach}
-        </table>
-        {/strip}
-      </div><!-- /.crm-accordion-body -->
-    </div><!-- /.crm-accordion-wrapper -->
+    <div class="action-link-button">
+        <a href="{crmURL p="civicrm/admin/custom/group/field/option" q="reset=1&action=browse&fid=`$id`&gid=`$gid`"}">&raquo; {ts}View / Edit Multiple Choice Options{/ts}</a>
+    </div>
 {/if}
-{literal}
-<script type="text/javascript">
-cj().crmaccordions();
-</script>
-{/literal}
