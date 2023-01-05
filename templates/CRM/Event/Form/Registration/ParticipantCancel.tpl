@@ -53,7 +53,6 @@
                 {/if}
             {/if}
             {capture assign=event_info_url}{crmURL p='civicrm/event/info' q="reset=1&id=`$event.id`"}{/capture}
-            <a class="add-to-calendar" target="_blank" href="{$share_google_calendar}"><i class="zmdi zmdi-account-calendar"></i>{ts}Add to Google Calendar{/ts}</a>
         </div>
     <div class="clear"></div>
   </div>
@@ -74,40 +73,6 @@
           {$event.description}
       </div>
   {/if}
-
-  {if $isShowLocation}
-
-        {if $location.address.1}
-            <div class="crm-section event_address-section crm-section-big">
-                <div class="label"><label>{ts}Location{/ts}</label></div>
-                <div class="content">{$location.address.1.display|nl2br}</div>
-                <div class="clear"></div>
-            </div>
-        {/if}
-
-      {if ( $event.is_map && $config->mapProvider && 
-          ( is_numeric($location.address.1.geo_code_1)  || 
-          ( $config->mapGeoCoding && $location.address.1.city AND $location.address.1.state_province ) ) ) }
-          <div class="crm-section event_map-section crm-section-big">
-              <div class="content">
-                  <div class="event-map">
-                    {assign var=showDirectly value="1"}
-                    {if $mapProvider eq 'Google'}
-                        {include file="CRM/Contact/Form/Task/Map/Google.tpl" fields=$showDirectly}
-                    {elseif $mapProvider eq 'Yahoo'}
-                        {include file="CRM/Contact/Form/Task/Map/Yahoo.tpl"  fields=$showDirectly}
-                    {/if}
-                    <div class="event-map-links">
-                      <a href="{$mapURL}" title="{ts}Show large map{/ts}">{ts}Show large map{/ts}</a>
-                    </div>
-                  </div>
-              </div>
-              <div class="clear"></div>
-          </div>
-      {/if}
-
-  {/if}{*End of isShowLocation condition*}  
-
 
   {if $location.phone.1.phone || $location.email.1.email}
       <div class="crm-section event_contact-section crm-section-big">

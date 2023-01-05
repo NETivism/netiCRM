@@ -29,9 +29,19 @@
         <div id="help">{$activityTypeDescription}</div>
       {/if}
       <table class="crm-info-panel">
+        {if $values.is_test}
+        <tr>
+            <td class="label">{ts}Is Test{/ts}</td><td class="view-value">{ts}Yes{/ts}</td>
+        </tr>
+        {/if}
+        {if $values.status}
+        <tr>
+            <td class="label">{ts}Activity Status{/ts}</td><td class="view-value">{$values.status}</td>
+        </tr>
+        {/if}
         <tr>
             <td class="label">{ts}Added By{/ts}</td><td class="view-value">{$values.source_contact}</td>
-        </tr> 
+        </tr>
        {if $values.target_contact_value} 
            <tr>
                 <td class="label">{ts}With Contact{/ts}</td><td class="view-value">{$values.target_contact_value}</td>

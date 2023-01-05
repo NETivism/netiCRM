@@ -97,6 +97,8 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
     );
     $form->addRadio('is_proximity_search', ts('Proximity search'), $proxOptions, NULL, '<br>');
 
+    // add is in other situation to this group
+    $form->addElement('checkbox', 'is_in_other_situation', ts('Use in other situation'), ts('Used for Batch Update and Contact Search Profile'));
   }
 }
 

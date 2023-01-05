@@ -127,6 +127,10 @@
         <td>{$form.is_cms_user.html} {help id='id-is_cms_user' file="CRM/UF/Form/Group.hlp"}</td>
       </tr>		
       {/if}
+      <tr class="crm-uf-advancesetting-form-block-is_in_other_situation">
+        <td class="label">{$form.is_in_other_situation.label}</td>
+        <td>{$form.is_in_other_situation.html}</td>
+      </tr>
     </table>
   </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->

@@ -138,7 +138,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       $this->assign('dkim_record', $record);
     }
     else {
-      $this->assign('spf_record', ts('None'));
+      $this->assign('dkim_record', ts('None'));
     }
 
     if ($this->_spfStatus && $this->_dkimStatus) {

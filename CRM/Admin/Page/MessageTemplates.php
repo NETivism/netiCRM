@@ -221,6 +221,7 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
    * @access public
    */
   function browse($action = NULL, $sort = NULL) {
+    $config = CRM_Core_Config::singleton();
     if ($this->_action & CRM_Core_Action::ADD) {
       return;
     }
@@ -259,10 +260,15 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
       }
       elseif (!$messageTemplate->is_reserved) {
         $workflowTemplates[$messageTemplate->id] = $values[$messageTemplate->id];
+        if ($config->debug) {
+          $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateNames($messageTemplate->workflow_id);
+          $workflowTemplates[$messageTemplate->id]['workflow'] = $workflow;
+        }
       }
     }
 
-    $rows = array('userTemplates' => $userTemplates,
+    $rows = array(
+      'userTemplates' => $userTemplates,
       'workflowTemplates' => $workflowTemplates,
     );
 

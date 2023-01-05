@@ -21,6 +21,11 @@
         <required>true</required>
         <comment>The URL to be tracked.</comment>
     </field>
+    <index>
+        <name>index_trackable_url</name>
+        <fieldName>url</fieldName>
+        <add>4.0</add>
+    </index>
     <field>
         <name>mailing_id</name>
         <type>int unsigned</type>
