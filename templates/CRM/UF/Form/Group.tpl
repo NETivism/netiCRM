@@ -134,6 +134,9 @@
     </table>
   </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
+<script type="text/javascript">
+  var actionIsAdd = '{$actionIsAdd}';
+</script>
 {literal}
 <script type="text/javascript">
 cj(function($) {
@@ -173,7 +176,9 @@ cj(function($) {
     if (show) {
       $("tr.crm-uf_group-form-block-uf_group_type .description").hide();
       $("tr.crm-uf-group-form-block-uf_group_type_user").show();
-      $("#uf_group_type\\\[Profile\\\]").attr('checked', true);
+      if (!actionIsAdd) {
+        $("#uf_group_type\\\[Profile\\\]").attr('checked', true);
+      }
     }
     else {
       $("#uf_group_type\\\[Profile\\\]").attr('checked', false);
