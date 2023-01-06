@@ -144,6 +144,8 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
 
     //add checkboxes
     $ufGroupTypes = CRM_Core_SelectValues::ufGroupTypes();
+    // Grouptype System should not show on Used for field
+    unset($ufGroupTypes['System']);
     $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_id);
     $this->addCheckBox('uf_group_type', ts('Used For'), $ufGroupTypes, NULL, NULL, NULL, NULL, '<br>', $flip = TRUE);
     $ele = $this->getElement('uf_group_type');
