@@ -178,6 +178,11 @@ cj(function($) {
       $("tr.crm-uf-group-form-block-uf_group_type_user").show();
       if (!actionIsAdd) {
         $("#uf_group_type\\\[Profile\\\]").attr('checked', true);
+      } else {
+        // if uf_group_type_user check,Profile should be checked.
+        if ($("input[id^=uf_group_type_user\\\[User]:checked").length) {
+          $("#uf_group_type\\\[Profile\\\]").attr('checked', true);
+        }
       }
     }
     else {
