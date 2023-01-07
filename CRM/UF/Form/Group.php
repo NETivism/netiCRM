@@ -144,6 +144,8 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
 
     //add checkboxes
     $ufGroupTypes = CRM_Core_SelectValues::ufGroupTypes();
+    // Grouptype System should not show on Used for field
+    unset($ufGroupTypes['System']);
     $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_id);
     $this->addCheckBox('uf_group_type', ts('Used For'), $ufGroupTypes, NULL, NULL, NULL, NULL, '<br>', $flip = TRUE);
     $ele = $this->getElement('uf_group_type');
@@ -216,6 +218,10 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
       $this->addElement('button', 'done', ts('Done'), array('onclick' => "location.href='civicrm/admin/uf/group?reset=1&action=browse'"));
+    }
+
+    if ($this->_action & CRM_Core_Action::ADD) {
+      $this->assign('actionIsAdd', true);
     }
   }
 

@@ -129,11 +129,14 @@
       {/if}
       <tr class="crm-uf-advancesetting-form-block-is_in_other_situation">
         <td class="label">{$form.is_in_other_situation.label}</td>
-        <td>{$form.is_in_other_situation.html}</td>
+        <td>{$form.is_in_other_situation.html}<div class="description">{ts}If you want to check this checkbox, Please uncheck Used For option or copy this CiviCRM Profile for Use in other situation.{/ts}</div></td>
       </tr>
     </table>
   </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
+<script type="text/javascript">
+  var actionIsAdd = '{$actionIsAdd}';
+</script>
 {literal}
 <script type="text/javascript">
 cj(function($) {
@@ -173,7 +176,14 @@ cj(function($) {
     if (show) {
       $("tr.crm-uf_group-form-block-uf_group_type .description").hide();
       $("tr.crm-uf-group-form-block-uf_group_type_user").show();
-      $("#uf_group_type\\\[Profile\\\]").attr('checked', true);
+      if (!actionIsAdd) {
+        $("#uf_group_type\\\[Profile\\\]").attr('checked', true);
+      } else {
+        // if uf_group_type_user check,Profile should be checked.
+        if ($("input[id^=uf_group_type_user\\\[User]:checked").length) {
+          $("#uf_group_type\\\[Profile\\\]").attr('checked', true);
+        }
+      }
     }
     else {
       $("#uf_group_type\\\[Profile\\\]").attr('checked', false);
