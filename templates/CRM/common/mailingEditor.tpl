@@ -116,40 +116,23 @@ window.nmEditor = {
 	}
 </style>
 {/literal}
-{js src=packages/mailingEditor/mailingEditor.js group=999 weight=998 library=civicrm/civicrm-js-mailingeditor}{/js}
-{literal}
-<script type="text/javascript">
-(function ($) {
-	$(function() {
-		let $oldEditorData = $("#html_message"),
-				$newEditorData = $("#body_json"),
-				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
-				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "",
-				nmEditorOpts = {};
-
-		nmEditorOpts.debugMode = "{/literal}{$config->debug}{literal}";
-		window.nmEditorInstance = $(".nme-container").nmEditor(".nme-container", nmEditorOpts);
-	});
-})(cj);
-</script>
-{/literal}
-
 <!-- mailingEditor files end -->
 
 <!-- mailingEditor HTML start -->
 {* TODO: Replace DEMO with framework content with correct version (generated after loading json) *}
 <div class="demo">
 	<div class="nme-container">
+    <div>
  		<div class="nme-setting-panels">
 			<div class="nme-setting-panels-inner">
-				<div class="nme-setting-panels-header">
+				<div class="nme-setting-panels-header" id="nme-setting-panels-header">
 					<ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
 						<li><a title="{ts}Switch Templates{/ts}" href="#nme-select-tpl" class="is-active" data-target-id="nme-select-tpl" data-tooltip>{ts}Templates{/ts}</a></li>
 						<li><a title="{ts}Add Blocks{/ts}" href="#nme-add-block" data-target-id="nme-add-block" data-tooltip>{ts}Blocks{/ts}</a></li>
 						<li><a title="{ts}Global Settings{/ts}" href="#nme-global-setting" data-target-id="nme-global-setting" data-tooltip>{ts}Settings{/ts}</a></li>
 					</ul>
 				</div>
-				<div class="nme-setting-panels-content">
+				<div class="nme-setting-panels-content" id="nme-setting-panels-content">
 					<div id="nme-select-tpl" class="nme-select-tpl nme-setting-panel is-active">
 						<div class="nme-setting-panel-inner">
 							<h3 class="nme-setting-panel-title">{ts}Templates{/ts}</h3>
@@ -266,7 +249,7 @@ window.nmEditor = {
 						</div>
 					</div>
 				</div>
-				<div class="nme-setting-panels-footer">
+				<div class="nme-setting-panels-footer" id="nme-setting-panels-footer">
 					<div class="preview-mode switch-toggle-container">
 						<label class="switch-toggle">
 							<input class="switch-toggle-input nme-preview-mode-switch" type="checkbox" value="1">
@@ -279,6 +262,26 @@ window.nmEditor = {
 			</div> <!-- setting panels inner -->
 			<div class="nme-setting-panels-trigger" title="{ts}Mailing Advanced Settings{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-settings"></i></div>
 		</div> <!-- setting panels -->
+    </div>
 	</div>
 </div>
 <!-- mailingEditor HTML end -->
+
+{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header" contentSelector="#nme-setting-panels-content" footerSelector="#nme-setting-panels-footer" containerClass="nme-setting-panels" opened="true"}
+{js src=packages/mailingEditor/mailingEditor.js group=999 weight=998 library=civicrm/civicrm-js-mailingeditor}{/js}
+{literal}
+<script type="text/javascript">
+(function ($) {
+	$(function() {
+		let $oldEditorData = $("#html_message"),
+				$newEditorData = $("#body_json"),
+				oldEditorData = $oldEditorData.length ? $.trim($oldEditorData.val()) : "",
+				newEditorData = $newEditorData.length ? $.trim($newEditorData.val()) : "",
+				nmEditorOpts = {};
+
+		nmEditorOpts.debugMode = "{/literal}{$config->debug}{literal}";
+		window.nmEditorInstance = $(".nme-container").nmEditor(".nme-container", nmEditorOpts);
+	});
+})(cj);
+</script>
+{/literal}

@@ -6,11 +6,16 @@
 (function ($) {
 	$(function() {
 		let neticrmSidePanelOpts = {};
-
+    neticrmSidePanelOpts.type = "{/literal}{$type}{literal}";
+    neticrmSidePanelOpts.src = "{/literal}{$src}{literal}";
+    neticrmSidePanelOpts.selector = "{/literal}{$selector}{literal}";
+    neticrmSidePanelOpts.contentSelector = "{/literal}{$contentSelector}{literal}";
+    neticrmSidePanelOpts.headerSelector = "{/literal}{$headerSelector}{literal}";
+    neticrmSidePanelOpts.footerSelector = "{/literal}{$footerSelector}{literal}";
+    neticrmSidePanelOpts.containerClass = "{/literal}{$containerClass}{literal}";
+    neticrmSidePanelOpts.width = "{/literal}{$width}{literal}";
+    neticrmSidePanelOpts.opened = "{/literal}{$opened}{literal}";
 		neticrmSidePanelOpts.debugMode = "{/literal}{$config->debug}{literal}";
-    neticrmSidePanelOpts.src = "#nsp-test";
-    //neticrmSidePanelOpts.src = "http://local.dev7.neticrm.tw/";
-    //neticrmSidePanelOpts.type = "iframe";
     window.neticrmSidePanelInstance = $(".nsp-container").neticrmSidePanel(".nsp-container", neticrmSidePanelOpts);
 	});
 })(cj);
@@ -20,19 +25,10 @@
 <!-- sidePanel HTML start -->
 <div class="nsp-container">
   <div class="nsp-inner">
+
     <div class="nsp-content">
       <div class="inner"></div>
     </div>
   <div class="nsp-trigger" title="{ts}Open & Close Panel{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-settings"></i></div>
 </div>
 <!-- sidePanel HTML end -->
-
-<!-- nsp inline test start -->
-<div id="nsp-test" class="nsp-hide">
-  <div class="nsp-test-content">
-    <h3>Test Title</h3>
-    <p>This HTML will put in nsp !!</p>
-  </div>
-</div>
-<!-- nsp inline test end -->
-

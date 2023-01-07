@@ -7,7 +7,10 @@
 	 * ============================
 	 */
   const NSP_CONTAINER = "nsp-container",
+        NSP_INNER = "nsp-inner",
         NSP_CONTENT = "nsp-content",
+        NSP_HEADER = "nsp-header",
+        NSP_FOOTER = "nsp-footer",
         NSP_TRIGGER = "nsp-trigger",
         INNER_CLASS = "inner",
         ACTIVE_CLASS = "is-active",
@@ -38,12 +41,21 @@
 		_nspOptions = {},
     _nspType,
     _nspSrc,
+    _nspSelector,
+    _nspContentSelector,
+    _nspHeaderSelector,
+    _nspFooterSelector,
     _nspContent,
+    _nspHeader,
+    _nspFooter,
     _nspWidth,
     _nspOpened,
+    _nspContainerClass,
 		_nspAPI = window.location.origin + "/api/",
 		_container,
 		_content = "." + NSP_CONTENT,
+		_header = "." + NSP_HEADER,
+		_footer = "." + NSP_FOOTER,
 		_trigger = "." + NSP_TRIGGER,
     _inner = "." + INNER_CLASS;
 
@@ -140,14 +152,37 @@
 	 */
 	var _nspMain = {
 		render: function() {
+      $(_container).attr("data-type", _nspType);
+
 			if ($(_content).length == 0) {
-				$(_container).append("<div class='" + NSP_CONTENT + "'><div class='" + INNER_CLASS + "'></div></div>");
+				$(_container).find("." + NSP_INNER).append("<div class='" + NSP_CONTENT + "'><div class='" + INNER_CLASS + "'></div></div>");
+			}
+
+			if ($(_header).length == 0 && _nspHeaderSelector) {
+				$(_container).find("." + NSP_INNER).prepend("<div class='" + NSP_HEADER + "'><div class='" + INNER_CLASS + "'></div></div>");
+			}
+
+			if ($(_footer).length == 0 && _nspFooterSelector) {
+				$(_container).find("." + NSP_INNER).append("<div class='" + NSP_FOOTER + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
 
       switch (_nspType) {
         case "inline":
-          if ($(_nspSrc).length) {
-            _nspContent = $(_nspSrc).html();
+          if ($(_nspSelector).length) {
+            _nspContent = $(_nspSelector).html();
+          }
+          else {
+            if ($(_nspContentSelector).length) {
+              _nspContent = $(_nspContentSelector).html();
+            }
+
+            if ($(_nspHeaderSelector).length) {
+              _nspHeader = $(_nspHeaderSelector).html();
+            }
+
+            if ($(_nspFooterSelector).length) {
+              _nspFooter = $(_nspFooterSelector).html();
+            }
           }
           break;
 
@@ -159,6 +194,8 @@
       }
 
       $(_container).find(_content).find(_inner).html(_nspContent);
+      $(_container).find(_header).find(_inner).html(_nspHeader);
+      $(_container).find(_footer).find(_inner).html(_nspFooter);
 
       $(_container).on("click", _trigger, function(event) {
         event.preventDefault();
@@ -170,6 +207,22 @@
           _nspMain.open();
         }
       });
+
+      if (_nspContainerClass) {
+        $(_container).addClass(_nspContainerClass);
+        $(_container).find("." + NSP_INNER).addClass(_nspContainerClass + "-innner");
+        $(_content).addClass(_nspContainerClass + "-content");
+        $(_header).addClass(_nspContainerClass + "-header");
+        $(_footer).addClass(_nspContainerClass + "-footer");
+
+        if ($("." + _nspContainerClass).length) {
+          $("." + _nspContainerClass).each(function() {
+            if (!$(this).hasClass(NSP_CONTAINER)) {
+              $(this).remove();
+            }
+          });
+        }
+      }
 
       if (_nspWidth) {
         _cssVariablesUpdate("--nsp-width", _nspWidth);
@@ -336,6 +389,11 @@
       _debugMode = _nspOptions.debugMode === "1" ? true : false;
       _nspType = _nspOptions.type;
       _nspSrc = _nspOptions.src;
+      _nspSelector = _nspOptions.selector;
+      _nspContentSelector = _nspOptions.contentSelector;
+      _nspHeaderSelector = _nspOptions.headerSelector;
+      _nspFooterSelector = _nspOptions.footerSelector;
+      _nspContainerClass = _nspOptions.containerClass;
       _nspWidth = _nspOptions.width;
       _nspOpened = _nspOptions.opened;
 
