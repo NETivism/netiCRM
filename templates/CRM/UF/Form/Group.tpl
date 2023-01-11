@@ -189,6 +189,22 @@ cj(function($) {
       $("#uf_group_type\\\[Profile\\\]").attr('checked', false);
       $("tr.crm-uf_group-form-block-uf_group_type .description").show();
     }
+    if (this.checked) {
+      $("#is_in_other_situation").attr("disabled", true);
+    } else {
+      $("#is_in_other_situation").attr("disabled", false);
+    }
+  });
+  $("input[id^=is_in_other_situation]").change(function(){
+    if (this.checked) {
+      $("#uf_group_type\\\[Profile\\\]").attr("disabled", true);
+      $("#uf_group_type\\\[CiviContribute\\\]").attr("disabled", true);
+      $("#uf_group_type\\\[CiviEvent\\\]").attr("disabled", true);
+    } else {
+      $("#uf_group_type\\\[Profile\\\]").attr("disabled", false);
+      $("#uf_group_type\\\[CiviContribute\\\]").attr("disabled", false);
+      $("#uf_group_type\\\[CiviEvent\\\]").attr("disabled", false);
+    }
   });
 
   if ($("#uf_group_type\\\[Profile\\\]").attr('type') == 'hidden') {
