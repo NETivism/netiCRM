@@ -48664,3 +48664,14 @@ msgstr ""
 #: templates/CRM/Contact/Form/Task/SMS.tpl
 msgid "We will send messages to %1 contacts."
 msgstr ""
+
+#: CRM/UF/Form/AdvanceSetting.php
+msgid "Use in other situation"
+msgstr ""
+
+msgid "Used for Batch Update and Contact Search Profile."
+msgstr ""
+
+#: templates/CRM/UF/Form/Group.tpl
+msgid "If you want to check this checkbox, Please uncheck Used For option or copy this CiviCRM Profile for Use in other situation."
+msgstr ""
