@@ -215,6 +215,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $contributionExcludeField = array('receive_date', 'non_deductible_amount', 'total_amount', 'fee_amount', 'net_amount', 'trxn_id', 'invoice_id', 'cancel_date', 'receipt_date', 'amount_level', 'check_number', 'receipt_id', 'expire_date', 'payment_instrument', 'contribution_type');
     $participantExcludeField = array('participant_role_id', 'participant_status_id', 'participant_fee_currency', 'participant_fee_amount', 'participant_register_date', 'participant_registered_by_id', 'event_type');
     $memberExcludeField = array('reminder_date', 'owner_membership_id', 'membership_type', 'membership_status');
+    $contactExcludeField = array('id', 'external_identifier', 'contact_sub_type', 'group_name', 'tag_name', 'contact_created_date');
     if ($this->_action & CRM_Core_Action::DELETE) {
       $this->addButtons(array(
           array('type' => 'next',
@@ -324,6 +325,15 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     );
 
     unset($fields['Contact']['contact_type']);
+
+    if (strstr($this->_groupInfo['usage'], 'Profile') ||
+      strstr($this->_groupInfo['usage'], 'CiviContribute') ||
+      strstr($this->_groupInfo['usage'], 'CiviEvent')) {
+        // refs #36509 Don't show specific field.
+        foreach($contactExcludeField as $key => $field) {
+          unset($fields['Contact'][$field]);
+        }
+      }
 
     // since we need a hierarchical list to display contact types & subtypes,
     // this is what we going to display in first selector
