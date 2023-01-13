@@ -696,6 +696,10 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     $field['comment']  = $this->value('comment', $fieldXML);
     $field['default']  = $this->value('default', $fieldXML);
     $field['import']   = $this->value('import', $fieldXML);
+
+    if ($this->value('usage', $fieldXML)) {
+      $field['usage'] = $this->value('usage', $fieldXML);
+    }
     if ($this->value('export', $fieldXML)) {
       $field['export'] = $this->value('export', $fieldXML);
     }

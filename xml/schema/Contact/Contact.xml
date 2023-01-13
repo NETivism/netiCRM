@@ -12,6 +12,7 @@
       <type>int unsigned</type>
       <title>Internal Contact ID</title>
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/internal|contact?|id$/i</headerPattern>
       <required>true</required>
       <comment>Unique Contact ID</comment>
@@ -27,6 +28,7 @@
        <type>varchar</type>
        <length>64</length>
        <comment>Type of Contact.</comment>
+       <usage>System</usage>
        <export>true</export>
        <add>1.1</add>
        <change>3.1</change>
@@ -43,6 +45,7 @@
        <length>64</length>
        <export>true</export>
        <import>true</import>
+       <usage>System</usage>
        <headerPattern>/C(ontact )?(subtype|sub-type|sub type)/i</headerPattern>
        <comment>May be used to over-ride contact view and edit templates.</comment>
        <add>1.5</add>
@@ -122,6 +125,7 @@
        <type>varchar</type>
        <length>128</length>
        <import>true</import>
+       <usage>System</usage>
        <headerPattern>/external\s?id/i</headerPattern>
        <dataPattern>/^\d{11,}$/</dataPattern>
        <comment>Unique trusted external ID (generally from a legacy app/datasource). Particularly useful for deduping operations.</comment>
@@ -609,6 +613,7 @@
     <uniqueName>contact_created_date</uniqueName>
     <type>datetime</type>
     <import>true</import>
+    <usage>System</usage>
     <comment>When was the contact was created.</comment>
     <headerPattern>/created(.?date)?/i</headerPattern>
     <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
