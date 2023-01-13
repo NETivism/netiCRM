@@ -380,21 +380,26 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       $fields['Student'] = &CRM_Quest_BAO_Student::exportableFields();
     }
 
-    if (CRM_Core_Permission::access('CiviContribute') && strstr($this->_groupInfo['usage'], 'CiviContribute')) {
+    if (CRM_Core_Permission::access('CiviContribute')) {
       $contribFields = &CRM_Contribute_BAO_Contribution::getContributionFields();
       if (!empty($contribFields)) {
         unset($contribFields['is_test']);
         unset($contribFields['is_pay_later']);
         unset($contribFields['contribution_id']);
         // refs #36509 Don't show specific field.
-        foreach($contributionExcludeField as $key => $field) {
-          unset($contribFields[$field]);
+        if (strstr($this->_groupInfo['usage'], 'CiviContribute')) {
+          foreach($contributionExcludeField as $key => $field) {
+            unset($contribFields[$field]);
+          }
+          $fields['Contribution'] = &$contribFields;
         }
-        $fields['Contribution'] = &$contribFields;
+        elseif (strstr($this->_groupInfo['usage'], 'System')) {
+          $fields['Contribution'] = &$contribFields;
+        }
       }
     }
 
-    if (CRM_Core_Permission::access('CiviEvent') && strstr($this->_groupInfo['usage'], 'CiviEvent')) {
+    if (CRM_Core_Permission::access('CiviEvent')) {
       $participantFields = &CRM_Event_BAO_Query::getParticipantFields(TRUE);
       if (!empty($participantFields)) {
         unset($participantFields['external_identifier']);
@@ -405,14 +410,19 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($participantFields['participant_id']);
         unset($participantFields['participant_is_pay_later']);
         // refs #36509 Don't show specific field.
-        foreach($participantExcludeField as $key => $field) {
-          unset($participantFields[$field]);
+        if (strstr($this->_groupInfo['usage'], 'CiviEvent')) {
+          foreach($participantExcludeField as $key => $field) {
+            unset($participantFields[$field]);
+          }
+          $fields['Participant'] = &$participantFields;
         }
-        $fields['Participant'] = &$participantFields;
+        elseif (strstr($this->_groupInfo['usage'], 'System')) {
+          $fields['Participant'] = &$participantFields;
+        }
       }
     }
 
-    if (CRM_Core_Permission::access('CiviMember') && strstr($this->_groupInfo['usage'], 'CiviContribute')) {
+    if (CRM_Core_Permission::access('CiviMember')) {
       require_once 'CRM/Member/BAO/Membership.php';
       $membershipFields = &CRM_Member_BAO_Membership::getMembershipFields();
       unset($membershipFields['membership_id']);
@@ -425,10 +435,15 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       unset($membershipFields['status_id']);
       unset($membershipFields['member_is_pay_later']);
       // refs #36509 Don't show specific field.
-      foreach($memberExcludeField as $key => $field) {
-        unset($membershipFields[$field]);
+      if (strstr($this->_groupInfo['usage'], 'CiviContribute')) {
+        foreach($memberExcludeField as $key => $field) {
+          unset($membershipFields[$field]);
+        }
+        $fields['Membership'] = &$membershipFields;
       }
-      $fields['Membership'] = &$membershipFields;
+      elseif (strstr($this->_groupInfo['usage'], 'System')) {
+        $fields['Membership'] = &$membershipFields;
+      }
     }
 
     $activityFields = CRM_Activity_BAO_Activity::exportableFields('Activity');
