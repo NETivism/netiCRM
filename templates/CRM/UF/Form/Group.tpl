@@ -129,7 +129,7 @@
       {/if}
       <tr class="crm-uf-advancesetting-form-block-is_in_other_situation">
         <td class="label">{$form.is_in_other_situation.label}</td>
-        <td>{$form.is_in_other_situation.html}<div class="description">{ts}If you want to check this checkbox, Please uncheck Used For option or copy this CiviCRM Profile for Use in other situation.{/ts}</div></td>
+        <td>{$form.is_in_other_situation.html}<div class="description">{ts}If you want to check this checkbox, Please uncheck Used For option or copy this CiviCRM Profile for Use in other situation. If this CiviCRM Profile is in use, please uncheck the Enabled checkbox then edit profile.{/ts}</div></td>
       </tr>
     </table>
   </div><!-- /.crm-accordion-body -->

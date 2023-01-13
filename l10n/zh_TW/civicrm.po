@@ -49074,5 +49074,6 @@ msgstr "用於批次修改、聯絡人搜尋表單"
 #: templates/CRM/UF/Form/Group.tpl
 msgid ""
 "If you want to check this checkbox, Please uncheck Used For option or copy "
-"this CiviCRM Profile for Use in other situation."
-msgstr "若要勾選此項，請取消勾選設定區塊中的使用類型，或複製資料表單做其他情境使用。"
+"this CiviCRM Profile for Use in other situation. If this CiviCRM Profile is "
+"in use, please uncheck the Enabled checkbox then edit profile."
+msgstr "若要勾選此項，請取消勾選設定區塊中的使用類型，或複製資料表單做其他情境使用。若是使用中的資料表單請先取消啟用後再做編輯。"
