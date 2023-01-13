@@ -212,6 +212,9 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    $contributionExcludeField = array('receive_date', 'non_deductible_amount', 'total_amount', 'fee_amount', 'net_amount', 'trxn_id', 'invoice_id', 'cancel_date', 'receipt_date', 'amount_level', 'check_number', 'receipt_id', 'expire_date', 'payment_instrument', 'contribution_type');
+    $participantExcludeField = array('participant_role_id', 'participant_status_id', 'participant_fee_currency', 'participant_fee_amount', 'participant_register_date', 'participant_registered_by_id', 'event_type');
+    $memberExcludeField = array('reminder_date', 'owner_membership_id', 'membership_type', 'membership_status');
     if ($this->_action & CRM_Core_Action::DELETE) {
       $this->addButtons(array(
           array('type' => 'next',
@@ -373,6 +376,10 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($contribFields['is_test']);
         unset($contribFields['is_pay_later']);
         unset($contribFields['contribution_id']);
+        // refs #36509 Don't show specific field.
+        foreach($contributionExcludeField as $key => $field) {
+          unset($contribFields[$field]);
+        }
         $fields['Contribution'] = &$contribFields;
       }
     }
@@ -387,6 +394,10 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($participantFields['participant_fee_level']);
         unset($participantFields['participant_id']);
         unset($participantFields['participant_is_pay_later']);
+        // refs #36509 Don't show specific field.
+        foreach($participantExcludeField as $key => $field) {
+          unset($participantFields[$field]);
+        }
         $fields['Participant'] = &$participantFields;
       }
     }
@@ -403,6 +414,10 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       unset($membershipFields['is_override']);
       unset($membershipFields['status_id']);
       unset($membershipFields['member_is_pay_later']);
+      // refs #36509 Don't show specific field.
+      foreach($memberExcludeField as $key => $field) {
+        unset($membershipFields[$field]);
+      }
       $fields['Membership'] = &$membershipFields;
     }
 
