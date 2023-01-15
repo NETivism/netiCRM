@@ -135,7 +135,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
     $form->_task = CRM_Utils_Array::value('task', $values);
     $crmContactTaskTasks = CRM_Contact_Task::taskTitles();
     $form->assign('taskName', CRM_Utils_Array::value($form->_task, $crmContactTaskTasks));
-
+    $primaryIDName = $form->get('primaryIDName', NULL);
     if ($useTable) {
       $form->_componentTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
       $sql = " DROP TABLE IF EXISTS {$form->_componentTable}";
@@ -146,7 +146,13 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
         }
       }
 
-      $sql = "CREATE TABLE {$form->_componentTable} ( contact_id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+      if (!empty($primaryIDName)) {
+        $sql = "CREATE TABLE {$form->_componentTable} ( id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";  
+      }
+      else {
+        $sql = "CREATE TABLE {$form->_componentTable} ( contact_id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+      }
+
       CRM_Core_DAO::executeQuery($sql);
     }
 
@@ -198,8 +204,15 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
         while ($dao->fetch()) {
           $count++;
           if ($customColumns) {
-            $values = "'".implode("','", $customRows[$dao->contact_id])."'";
-            $sql = "REPLACE INTO {$form->_componentTable} ( contact_id $customColumnsNames) VALUES ( $dao->contact_id , $values)";
+            if (!empty($primaryIDName)) {
+              $values = "'".implode("','", $customRows[$dao->$primaryIDName])."'";
+              $sql = "REPLACE INTO {$form->_componentTable} ( id $customColumnsNames) VALUES ( {$dao->$primaryIDName} , $values)";
+            }
+            else {
+              $values = "'".implode("','", $customRows[$dao->contact_id])."'";
+              $sql = "REPLACE INTO {$form->_componentTable} ( contact_id $customColumnsNames) VALUES ( {$dao->contact_id} , $values)";
+            }
+
             CRM_Core_DAO::executeQuery($sql);
             continue;
           }
@@ -243,29 +256,31 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       $customHeader = $form->get('customHeader');
       $customColumns = array_keys($customHeader);
       $customColumnsNames = implode(',' , $customColumns);
+      $usedIDName = empty($primaryIDName) ? 'contact_id' : 'id';
       foreach ($values as $name => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
-        if (!empty($contactID)) {
+        $usedID = empty($primaryIDName) ? $contactID : $additionalID;
+        if (!empty($usedID)) {
           if ($useTable) {
-            if (!array_key_exists($contactID, $alreadySeen)) {
-              $customRowsValues = '"'.implode('","', $customRows[$contactID]).'"';
-              $insertString[] = " ( {$contactID} , $customRowsValues) ";
+            if (!array_key_exists($usedID, $alreadySeen)) {
+              $customRowsValues = '"'.implode('","', $customRows[$usedID]).'"';
+              $insertString[] = " ( {$usedID} , $customRowsValues) ";
             }
           }
           else {
-            if (!array_key_exists($contactID, $alreadySeen)) {
+            if (!array_search($contactID, $form->_contactIds)) {
               $form->_contactIds[] = $contactID;
             }
             if (!empty($additionalID) && is_numeric($additionalID)) {
               $form->_additionalIds[$additionalID] = $additionalID;
             }
           }
-          $alreadySeen[$contactID] = 1;
+          $alreadySeen[$usedID] = 1;
         }
       }
       if (!empty($insertString)) {
         $string = implode(',', $insertString);
-        $sql = "REPLACE INTO {$form->_componentTable} ( contact_id , $customColumnsNames) VALUES $string";
+        $sql = "REPLACE INTO {$form->_componentTable} ( $usedIDName , $customColumnsNames) VALUES $string";
         CRM_Core_DAO::executeQuery($sql);
       }
     }

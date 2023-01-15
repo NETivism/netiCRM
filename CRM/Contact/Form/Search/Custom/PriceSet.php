@@ -40,7 +40,7 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
 
   protected $_tableName = NULL;
 
-  public static $_isExportFileDirectly = TRUE;
+  public static $_primaryIDName = 'participant_id';
 
   protected $_pstatus = NULL; function __construct(&$formValues) {
     parent::__construct($formValues);
@@ -307,5 +307,18 @@ INNER JOIN {$this->_tableName} tempTable ON ( tempTable.contact_id = contact_a.i
   function alterRow(&$row) {
     $row['status_id'] = $this->_pstatus[$row['status_id']];
   }
+
+  
+  /**
+   * This will call by search tasks
+   * Which not only provide contact id, but also provide additional id
+   * Mostly used by custom search support multiple record of one contact
+   */
+  function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+    $fields = "contact_a.id AS contact_id, participant_id" ;
+
+    return $this->sql($fields, $offset, $rowcount, $sort, FALSE);
+  }
+
 }
 

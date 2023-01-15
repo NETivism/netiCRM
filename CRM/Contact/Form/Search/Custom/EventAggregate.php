@@ -37,8 +37,6 @@ require_once 'CRM/Contact/Form/Search/Interface.php';
 require_once 'CRM/Contact/Form/Search/Custom/Base.php';
 class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
-  public static $_isExportFileDirectly = TRUE;
-
   protected $_formValues; function __construct(&$formValues) {
     $this->_formValues = $formValues;
 

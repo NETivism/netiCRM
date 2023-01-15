@@ -1137,9 +1137,9 @@ class CRM_Export_BAO_Export {
           $componentColumns .= ", ctTable.$dao->Field";
         }
       }
-
+      $exportTempTableAlias = 'export_temp_contact';
       $tempTableName = 'new_export_temp_table';
-      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT {$exportTempTable}.* $componentColumns FROM $exportTempTable LEFT JOIN $componentTable ctTable ON ctTable.contact_id = {$exportTempTable}.contact_id";
+      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT {$exportTempTableAlias}.* $componentColumns FROM $componentTable ctTable INNER JOIN (SELECT * FROM $exportTempTable GROUP BY contact_id) AS $exportTempTableAlias ON ctTable.contact_id = {$exportTempTableAlias}.contact_id";
       CRM_Core_DAO::executeQuery($sql);
       $exportTempTable = $tempTableName;
 
@@ -1271,7 +1271,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order, $isReturnTable = FALSE) {
+  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE) {
     require_once "CRM/Core/Extensions.php";
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
@@ -1294,8 +1294,18 @@ class CRM_Export_BAO_Export {
 
     $columns = $search->columns();
 
-    $header = array_keys($columns);
-    $fields = array_values($columns);
+    if (!empty($primaryIDName)) {
+      $keyContactIDName = array_search('contact_id', $columns);
+      unset($columns[$keyContactIDName]);
+      $header = array_keys($columns);
+      $header[] = ts('CiviCRM Contact ID');
+      $fields = array_values($columns);
+      $fields[] = 'contact_id';
+    }
+    else {
+      $header = array_keys($columns);
+      $fields = array_values($columns);
+    }
 
     $rows = array();
     $dao = CRM_Core_DAO::executeQuery($sql);
@@ -1312,14 +1322,19 @@ class CRM_Export_BAO_Export {
       if ($alterRow) {
         $search->alterRow($row);
       }
+      if (!empty($primaryIDName)) {
+        unset($row['contact_id']);
+        $row['contact_id'] = $dao->contact_id;
+      }
       unset($row['action']);
-      if ($isReturnTable) {
-        if (isset($dao->contact_id)) {
-          $rows[$dao->contact_id] = $row;
-        }
-        elseif (isset($dao->id)) {
-          $rows[$dao->id] = $row;
-        }
+      if (!empty($primaryIDName)) {
+        $rows[$dao->$primaryIDName] = $row;
+      }
+      elseif (isset($dao->id)) {
+        $rows[$dao->id] = $row;
+      }
+      elseif (isset($dao->contact_id)) {
+        $rows[$dao->contact_id] = $row;
       }
       else {
         $rows[] = $row;
@@ -1338,9 +1353,7 @@ class CRM_Export_BAO_Export {
       }
     }
 
-    if ($isReturnTable) {
-      return array('header' => $header, 'rows' => $rows);
-    }
+    return array('header' => $header, 'rows' => $rows);
     CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
     CRM_Utils_System::civiExit();
   }

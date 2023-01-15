@@ -44,7 +44,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
   protected $_context = NULL;
   protected $_cpage = NULL;
 
-  public static $_isExportFileDirectly = TRUE;
+  public static $_primaryIDName = 'id';
   
   function __construct(&$formValues){
     parent::__construct($formValues);
