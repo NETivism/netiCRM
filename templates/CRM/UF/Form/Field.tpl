@@ -23,6 +23,12 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $action eq 1}
+<div id="help">
+  {capture assign=docLinkCustom}{docURL page="Custom Data Fields & Custom Data Groups Admin" text="custom fields"}{/capture}
+  {ts 1=$docLinkCustom}When adding a field, please select the appropriate field according to the type of use, if the existing field cannot meet the situation, you can use the %1 to add it.{/ts}
+</div>
+{/if}
 <h3>{if $action eq 8}{ts}Delete Field{/ts} - {$fieldTitle}{elseif $action eq 1}{ts}Add Field{/ts}{elseif $action eq 2}{ts}Edit Field{/ts} - {$fieldTitle}{/if}</h3>
 <div class="crm-block crm-form-block crm-uf-field-form-block">
     {if $action eq 8}
