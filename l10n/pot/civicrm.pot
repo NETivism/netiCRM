@@ -48673,5 +48673,9 @@ msgid "Used for Batch Update and Contact Search Profile."
 msgstr ""
 
 #: templates/CRM/UF/Form/Group.tpl
-msgid "If you want to check this checkbox, Please uncheck Used For option or copy this CiviCRM Profile for Use in other situation."
+msgid "If you want to check this checkbox, Please uncheck Used For option or copy this CiviCRM Profile for Use in other situation. If this CiviCRM Profile is in use, please uncheck the Enabled checkbox then edit profile."
+msgstr ""
+
+#: templates/CRM/UF/Form/Field.tpl
+msgid "When adding a field, please select the appropriate field according to the type of use, if the existing field cannot meet the situation, you can use the %1 to add it."
 msgstr ""
