@@ -230,6 +230,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $extends = CRM_Core_SelectValues::customGroupExtends();
     if (empty($this->_id)) {
       $customPriorityNames = array('Contact', 'Contribution', 'Individual', 'Membership', 'Participant');
+      $hidedExtends = array('Group', 'Address');
       $extendsTop = array();
       $extendsBottom = array();
       foreach ($extends as $key => $value) {
@@ -237,7 +238,9 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
           $extendsTop[$key] = $value;
         }
         else {
-          $extendsBottom[$key] = $value;
+          if (!in_array($key, $hidedExtends)) {
+            $extendsBottom[$key] = $value;
+          }
         }
       }
       $newExtends = array( ts('Common') => $extendsTop , ts('Other') => $extendsBottom);
