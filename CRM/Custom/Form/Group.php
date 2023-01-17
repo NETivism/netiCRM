@@ -228,37 +228,42 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
     $this->assign('contactTypes', json_encode($contactTypes));
     $extends = CRM_Core_SelectValues::customGroupExtends();
-    $customPriorityNames = array('Contact', 'Contribution', 'Individual', 'Membership', 'Participant');
-    $extendsTop = array();
-    $extendsBottom = array();
-    foreach ($extends as $key => $value) {
-      if (in_array($key, $customPriorityNames)) {
-        $extendsTop[$key] = $value;
+    if (empty($this->_id)) {
+      $customPriorityNames = array('Contact', 'Contribution', 'Individual', 'Membership', 'Participant');
+      $extendsTop = array();
+      $extendsBottom = array();
+      foreach ($extends as $key => $value) {
+        if (in_array($key, $customPriorityNames)) {
+          $extendsTop[$key] = $value;
+        }
+        else {
+          $extendsBottom[$key] = $value;
+        }
       }
-      else {
-        $extendsBottom[$key] = $value;
-      }
-    }
-    $newExtends = array( ts('Common') => $extendsTop , ts('Other') => $extendsBottom);
-    if ($this->_action & CRM_Core_Action::UPDATE) {
-      if (strstr($this->_defaults['extends'], 'Participant')) {
-        foreach($extends as $ext => $dontcare) {
-          if (strpos($ext, $this->_defaults['extends']) === FALSE) {
-            unset($newExtends[ts('Common')][$ext]);
-            unset($newExtends[ts('Other')][$ext]);
+      $newExtends = array( ts('Common') => $extendsTop , ts('Other') => $extendsBottom);
+      if ($this->_action & CRM_Core_Action::UPDATE) {
+        if (strstr($this->_defaults['extends'], 'Participant')) {
+          foreach($extends as $ext => $dontcare) {
+            if (strpos($ext, $this->_defaults['extends']) === FALSE) {
+              unset($newExtends[ts('Common')][$ext]);
+              unset($newExtends[ts('Other')][$ext]);
+            }
+          }
+        }
+        else {
+          foreach($extends as $ext => $dontcare) {
+            if ($this->_defaults['extends'] != $ext) {
+              unset($newExtends[ts('Common')][$ext]);
+              unset($newExtends[ts('Other')][$ext]);
+            }
           }
         }
       }
-      else {
-        foreach($extends as $ext => $dontcare) {
-          if ($this->_defaults['extends'] != $ext) {
-            unset($newExtends[ts('Common')][$ext]);
-            unset($newExtends[ts('Other')][$ext]);
-          }
-        }
-      }
+      $sel1 = array("" => ts("- select -")) + $newExtends;
     }
-    $sel1 = array("" => ts("- select -")) + $newExtends;
+    else {
+      $sel1 = array("" => ts("- select -")) + $extends;
+    }
     $sel2 = array();
     $activityType = CRM_Core_PseudoConstant::activityType(FALSE, TRUE, FALSE, 'label', TRUE);
 
