@@ -434,6 +434,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'headerPattern' => '/internal|contact?|id$/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'contact_type' => array(
           'name' => 'contact_type',
@@ -445,6 +446,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'where' => 'civicrm_contact.contact_type',
           'headerPattern' => '',
           'dataPattern' => '',
+          'usage' => 'System',
         ) ,
         'contact_sub_type' => array(
           'name' => 'contact_sub_type',
@@ -457,6 +459,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'headerPattern' => '/C(ontact )?(subtype|sub-type|sub type)/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'do_not_email' => array(
           'name' => 'do_not_email',
@@ -542,6 +545,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'headerPattern' => '/external\s?id/i',
           'dataPattern' => '/^\d{11,}$/',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'sort_name' => array(
           'name' => 'sort_name',
@@ -902,6 +906,7 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
           'export' => true,
           'default' => 'URRENT_TIMESTAM',
+          'usage' => 'System',
         ) ,
         'contact_modified_date' => array(
           'name' => 'modified_date',

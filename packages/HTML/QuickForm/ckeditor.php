@@ -71,7 +71,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
             }
             if (CRM_Core_Permission::check('access CiviCRM')) {
               $toolbar = 'CiviCRM';
-              $allowedContent = "editor.config.allowedContent = true;";
+              $allowedContent = 'editor.config.allowedContent = true;';
             }
             else {
               $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height];';";

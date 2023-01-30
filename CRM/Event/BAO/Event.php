@@ -947,6 +947,11 @@ WHERE civicrm_event.is_active = 1
       }
     }
 
+    // Refs #23510, If Event is_pay_later is not checked, should remove pay_later_receipt
+    if (empty($copyEvent->is_pay_later)) {
+      $copyEvent->pay_later_receipt = 'null';
+    }
+
     //copy custom data
     require_once 'CRM/Core/BAO/CustomGroup.php';
     $extends = array('event');
@@ -1830,12 +1835,15 @@ WHERE  ce.loc_block_id = $locBlockId";
      * @access public
      */
 
-  static function showHideRegistrationLink($values) {
+  static function showHideRegistrationLink($values, $forceAllowedRegister = FALSE) {
 
     $session = CRM_Core_Session::singleton();
     $contactID = $session->get('userID');
     $alreadyRegistered = FALSE;
 
+    if ($forceAllowedRegister) {
+      return TRUE;
+    }
     if ($contactID) {
       $params = array('contact_id' => $contactID);
 

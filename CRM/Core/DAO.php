@@ -57,6 +57,8 @@ class CRM_Core_DAO extends DB_DataObject {
   BULK_INSERT_HIGH_COUNT = 200,
   BULK_MAIL_INSERT_COUNT = 10;
 
+  const PROFILE_RESULT_COLUMNS = 'QUERY_ID,SEQ,STATE,DURATION,CPU_USER,CPU_SYSTEM,CONTEXT_VOLUNTARY,CONTEXT_INVOLUNTARY,BLOCK_OPS_IN,BLOCK_OPS_OUT,MESSAGES_SENT,MESSAGES_RECEIVED,PAGE_FAULTS_MAJOR,PAGE_FAULTS_MINOR,SWAPS,SOURCE_FUNCTION,SOURCE_FILE,SOURCE_LINE';
+
   /**
    * the factory class for this application
    * @var object
@@ -1528,6 +1530,71 @@ SELECT contact_id
     while ($customValueTables->fetch()) {
       $cidRefs[$customValueTables->table_name] = array('entity_id');
     }
+  }
+
+  /**
+   * Profiling Database Query
+   *
+   * @param bool $enable enable or disable profiling
+   * @return void
+   */
+  public static function profiling($enable = 1) {
+    if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
+      if ($enable) {
+        $profiling = 1;
+      }
+      else {
+        $profiling = 0;
+      }
+      CRM_Core_DAO::executeQuery("SET SESSION profiling = $profiling");
+    }
+  }
+
+  /**
+   * Get profiles result array and disable profiling
+   *
+   * @return array
+   */
+  public static function getProfiles() {
+    global $_DB_PROFILING;
+    if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
+      $dao = CRM_Core_DAO::executeQuery("SHOW PROFILES");
+      while($dao->fetch()) {
+        $_DB_PROFILING[] = array(
+          'id' => $dao->Query_ID,
+          'duration' => $dao->Duration,
+          'query' => $dao->Query,
+          'details' => self::getProfile($dao->Query_ID),
+        );
+      }
+    }
+    // disable profiling after fetch result
+    self::profiling(0);
+    return $_DB_PROFILING;
+  }
+
+  /**
+   * Get specific profile details
+   *
+   * @param int $queryId
+   * @return array
+   */
+  public static function getProfile($queryId) {
+    $details = array();
+    if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
+      $dao = CRM_Core_DAO::executeQuery("SELECT * FROM INFORMATION_SCHEMA.PROFILING WHERE QUERY_ID = %1", array(
+        1 => array($queryId, 'Integer')
+      ));
+      $columnName = explode(',', self::PROFILE_RESULT_COLUMNS);
+      $count = 0;
+      while($dao->fetch()) {
+        $count++;
+        foreach($columnName as $col) {
+          $details[$count][$col] = $dao->$col;
+        }
+      }
+    }
+    return $details;
   }
 }
 

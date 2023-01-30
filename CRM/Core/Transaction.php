@@ -42,6 +42,7 @@
  * http://drupal.org/project/pressflow_transaction
  */
 class CRM_Core_Transaction {
+  const ISOLATION_LEVEL = 'READ UNCOMMITTED,READ COMMITTED,REPEATABLE READ,SERIALIZABLE';
 
   /**
    * Keep track of the number of opens and close
@@ -65,14 +66,25 @@ class CRM_Core_Transaction {
   private static $_dao = NULL;
 
   /**
+   * Isolation level of transaction
+   *
+   * @var string
+   */
+  private static $_isolationLevel = NULL;
+
+  /**
    * Whether commit() has been called on this instance
    * of CRM_Core_Transaction
    */
   private $_pseudoCommitted = FALSE;
 
-  function __construct() {
+  function __construct($isolationLevel = NULL) {
     if (!self::$_dao) {
       self::$_dao = new CRM_Core_DAO();
+    }
+    if (!self::$_isolationLevel && !empty($isolationLevel) && in_array($isolationLevel, explode(',', self::ISOLATION_LEVEL)) && self::$_count == 0) {
+      $isolationQuery = "SET TRANSACTION ISOLATION LEVEL ".CRM_Utils_Type::escape($isolationLevel, 'String');
+      self::$_dao->query($isolationQuery);
     }
 
     if (self::$_count == 0) {
@@ -86,7 +98,7 @@ class CRM_Core_Transaction {
     $this->commit();
   }
 
-  function commit() {
+  function commit($resetIsolation = NULL) {
     if (self::$_count > 0 && !$this->_pseudoCommitted) {
       $this->_pseudoCommitted = TRUE;
       self::$_count--;
@@ -99,6 +111,10 @@ class CRM_Core_Transaction {
           self::$_dao->query('ROLLBACK');
         }
         // this transaction is complete, so reset doCommit flag
+        if ($resetIsolation) {
+          $isolationQuery = "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ";
+          self::$_dao->query($isolationQuery);
+        }
         self::$_doCommit = TRUE;
       }
     }

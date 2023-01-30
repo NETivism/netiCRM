@@ -35,8 +35,12 @@
     <tr>
         <td class="label">{$form.extends.label}</td>
         <td>{$form.extends.html} {help id="id-extends"}
-        {include file="CRM/common/chosen.tpl" selector='#extends\\\\[1\\\\]'}
+        {include file="CRM/common/chosen.tpl" selector='#extends\\\\[1\\\\]' select_width='100%'}
         </td>
+    </tr>
+    <tr class="subtype">
+        <td class="label">次類型</td>
+        <td><span class="select-subtype"></span><span>{help id="id-extends_subtype"}</span></td>
     </tr>
     <tr>
         <td class="label">{$form.weight.label}</td>
@@ -88,18 +92,26 @@
 {literal}
 <script type="text/Javascript">
 cj(document).ready(function() {
-  if (cj('#extends\\[1\\]').find("option").length <= 0) {
-    cj('#extends_1__chzn').hide();
+  if (cj('select#extends\\[1\\]').find("option").length <= 0) {
+    cj('select#extends\\[1\\]').select2().next('.select2-container').hide();
+    cj('.subtype').hide();
+  } else {
+    cj(".crm-form-select-multiple").appendTo(".select-subtype");
+    cj('.subtype').show();
   }
-  cj('#extends\\[0\\]').change(function() {
-    if (cj('#extends\\[1\\]').find("option").length > 0) {
-      cj('#extends\\[1\\]').trigger("liszt:updated");
+  cj('select#extends\\[0\\]').change(function() {
+    if (cj('select#extends\\[1\\]').find("option").length > 0) {
+      cj('select#extends\\[1\\]').trigger("change");
       cj('select#extends\\[1\\]').css('display', 'none');
-      cj('#extends_1__chzn').show();
+      cj('select#extends\\[1\\]').attr("data-placeholder","{/literal}{ts}-- Select --{/ts}{literal}");
+      cj('select#extends\\[1\\]').select2().next('.select2-container').show();
+      cj(".crm-form-select-multiple").appendTo(".select-subtype");
+      cj('.subtype').show();
     }
     else {
       cj('select#extends\\[1\\]').css('display', 'none');
-      cj('#extends_1__chzn').hide();
+      cj('select#extends\\[1\\]').select2().next('.select2-container').hide();
+      cj('.subtype').hide();
     }
   });
 
@@ -120,7 +132,6 @@ function showHideStyle()
     var showStyle       = "{/literal}{$showStyle}{literal}";
     var showMultiple    = "{/literal}{$showMultiple}{literal}";
     var showMaxMultiple = "{/literal}{$showMaxMultiple}{literal}";
-  
     eval('var contactTypes = ' + contactTypes);
     
     if ( cj.inArray(extend, contactTypes) >= 0 ) {

@@ -239,14 +239,6 @@ function custom_option_html_type( ) {
                 {/if}
             </td>
         </tr>
-        <tr class="crm-custom-field-form-block-is_required">
-            <td class="label">{$form.is_required.label}</td>
-            <td class="html-adjust">{$form.is_required.html}
-            {if $action neq 4}
-                <span class="description">{ts}When 'Required' is active, it is necessary to fill value on contact add/edit page. If you need this feature to visitor, please enable it in profiles setting.{/ts}</span>
-            {/if}
-            </td>
-        </tr>
         <tr id ="searchable" class="crm-custom-field-form-block-is_searchable">
             <td class="label">{$form.is_searchable.label}</td>
             <td class="html-adjust">{$form.is_searchable.html}
@@ -263,12 +255,32 @@ function custom_option_html_type( ) {
             <td class="label">{$form.is_active.label}</td>
             <td class="html-adjust">{$form.is_active.html}</td>
         </tr>    
-        <tr class="crm-custom-field-form-block-is_view">
-            <td class="label">{$form.is_view.label}</td>
-            <td class="html-adjust">{$form.is_view.html}
-                <span class="description">{ts}Is this field set by PHP code (via a custom hook). This field will not be updated by CiviCRM.{/ts}</span>
-            </td>
-        </tr>
+        <tr>
+        <td colspan=2>
+            <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+            <div class="crm-accordion-header">
+            <div class="zmdi crm-accordion-pointer"></div>
+            {ts}Advanced options{/ts}
+            </div><!-- /.crm-accordion-header -->
+            <div class="crm-accordion-body">
+                <table>
+                    <tr class="crm-custom-field-form-block-is_required">
+                        <td class="label">{$form.is_required.label}</td>
+                        <td class="html-adjust">{$form.is_required.html}
+                        {if $action neq 4}
+                        <span class="description">{ts}When 'Required' is active, it is necessary to fill value on contact add/edit page. If you need this feature to visitor, please enable it in profiles setting.{/ts}</span>
+                        {/if}</td>
+                    </tr>
+                    <tr class="crm-custom-field-form-block-is_view">
+                        <td class="label">{$form.is_view.label}</td>
+                        <td class="html-adjust">{$form.is_view.html}
+                            <span class="description">{ts}Is this field set by PHP code (via a custom hook). This field will not be updated by CiviCRM.{/ts}</span>
+                        </td>
+                    </tr>
+                </table>
+            </div><!-- /.crm-accordion-body -->
+          </div><!-- /.crm-accordion-wrapper -->
+        </td></tr>
     </table>
    	    {if $action ne 4}
 	       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
@@ -312,3 +324,8 @@ function custom_option_html_type( ) {
         <a href="{crmURL p="civicrm/admin/custom/group/field/option" q="reset=1&action=browse&fid=`$id`&gid=`$gid`"}">&raquo; {ts}View / Edit Multiple Choice Options{/ts}</a>
     </div>
 {/if}
+{literal}
+<script type="text/javascript">
+cj().crmaccordions();
+</script>
+{/literal}

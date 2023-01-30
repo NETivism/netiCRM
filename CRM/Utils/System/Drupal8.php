@@ -344,7 +344,7 @@ class CRM_Utils_System_Drupal8 {
 
     $uid = \Drupal::service('user.auth')->authenticate($name, $password);
     if ($uid) {
-      if ($this->loadUser($name)) {
+      if ($this->loadUserByName($name)) {
         $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
         return [$contact_id, $uid, mt_rand()];
       }
@@ -356,8 +356,32 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function loadUser($username) {
+  public function loadUserByName($username) {
     $user = user_load_by_name($username);
+    if (!$user) {
+      return FALSE;
+    }
+
+    // Set Drupal's current user to the loaded user.
+    \Drupal::currentUser()->setAccount($user);
+
+    $uid = $user->id();
+    $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
+
+    // Store the contact id and user id in the session
+    $session = CRM_Core_Session::singleton();
+    $session->set('ufID', $uid);
+    $session->set('userID', $contact_id);
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function loadUserById($uid) {
+    if (!empty($uid) && CRM_Utils_Rule::positiveInteger($uid)) {
+      $user = \Drupal\user\Entity\User::load($uid);
+    }
     if (!$user) {
       return FALSE;
     }
@@ -416,7 +440,7 @@ class CRM_Utils_System_Drupal8 {
    * @return bool
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
-  public function loadBootStrap($params = [], $loadUser = TRUE, $throwError = TRUE, $realPath = NULL) {
+  public function loadBootStrap($params = [], $loadUser = TRUE, $throwError = FALSE) {
     static $run_once = FALSE;
     if ($run_once) {
       return TRUE;
@@ -439,27 +463,16 @@ class CRM_Utils_System_Drupal8 {
     $kernel->boot();
     $kernel->preHandle($request);
 
-    /* 
-    // this has performance issue. Not sure why we need to do rebuildContainer here
-    echo microtime(TRUE)."<br>";
-    $container = $kernel->rebuildContainer();
-    echo microtime(TRUE)."<br>";
-    // Add our request to the stack and route context.
-    $request->attributes->set(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT, new \Symfony\Component\Routing\Route('<none>'));
-    $request->attributes->set(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_NAME, '<none>');
-    $container->get('request_stack')->push($request);
-    $container->get('router.request_context')->fromRequest($request);
-    */
-
     // Initialize Civicrm
     \Drupal::service('civicrm')->initialize();
 
     if ($loadUser) {
-      if (!empty($params['uid']) && $username = \Drupal\user\Entity\User::load($params['uid'])->getUsername()) {
-        $this->loadUser($username);
+      $userObject = \Drupal\user\Entity\User::load($params['uid']);
+      if (!empty($params['uid']) && $username = $userObject->getAccountName()) {
+        $this->loadUserByName($username);
       }
       elseif (!empty($params['name']) && !empty($params['pass']) && \Drupal::service('user.auth')->authenticate($params['name'], $params['pass'])) {
-        $this->loadUser($params['name']);
+        $this->loadUserByName($params['name']);
       }
     }
     return TRUE;
@@ -587,16 +600,6 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function getUser($contactID) {
-    $user_details = parent::getUser($contactID);
-    $user_details['name'] = $user_details['name']->value;
-    $user_details['email'] = $user_details['email']->value;
-    return $user_details;
-  }
-
-  /**
-   * @inheritDoc
-   */
   public function getUniqueIdentifierFromUserObject($user) {
     return $user->get('mail')->value;
   }
@@ -611,39 +614,14 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function synchronizeUsers() {
-    $config = CRM_Core_Config::singleton();
-    if (PHP_SAPI != 'cli') {
-      set_time_limit(300);
+  public function synchronizeUser() {
+    $user = \Drupal::currentUser();
+    $uid = $user->id();
+    $email = $user->get('mail')->value;
+    if (!empty($user) && !empty($uid) && !empty($email)) {
+      return CRM_Core_BAO_UFMatch::synchronizeUFMatch($user, $uid, $email, 'Drupal');
     }
-
-    $users = [];
-    $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties();
-
-    $uf = $config->userFramework;
-    $contactCount = 0;
-    $contactCreated = 0;
-    $contactMatching = 0;
-    foreach ($users as $user) {
-      $mail = $user->get('mail')->value;
-      if (empty($mail)) {
-        continue;
-      }
-      $uid = $user->get('uid')->value;
-      $contactCount++;
-      if ($match = CRM_Core_BAO_UFMatch::synchronizeUFMatch($user, $uid, $mail, $uf, 1, 'Individual', TRUE)) {
-        $contactCreated++;
-      }
-      else {
-        $contactMatching++;
-      }
-    }
-
-    return [
-      'contactCount' => $contactCount,
-      'contactMatching' => $contactMatching,
-      'contactCreated' => $contactCreated,
-    ];
+    return FALSE;
   }
 
   /**

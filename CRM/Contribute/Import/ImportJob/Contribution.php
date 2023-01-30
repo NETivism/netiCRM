@@ -101,8 +101,8 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     if ($civicrm_batch) {
       $this->_parser->setMaxLinesToProcess(CRM_Import_ImportJob::BATCH_LIMIT);
     }
-    $this->_parser->_skipColumnHeader = $form->get('skipColumnHeader');
-    $this->_parser->_dateFormats = $form->get('dateFormats');
+    $this->_parser->_skipColumnHeader = $this->_skipColumnHeader ? $this->_skipColumnHeader : $form->get('skipColumnHeader');
+    $this->_parser->_dateFormats = $this->_dateFormats ? $this->_dateFormats : $form->get('dateFormats');
     $this->_parser->run(
       $this->_tableName,
       $mapperFields,

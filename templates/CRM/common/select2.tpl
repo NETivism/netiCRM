@@ -8,6 +8,15 @@ cj(document).ready(function(){
     "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
     "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
   });
+  cj(document).on('select2:open', () => {
+    var inputField = document.querySelector('input.select2-search__field');
+    if (inputField) {
+      inputField.placeholder='{/literal}{ts}Input search keywords{/ts}{literal}';
+      setTimeout(() => {
+        inputField.focus();
+      }, 100);
+    }
+  });
 });
 {/literal}
 {if !$nowrapper}</script>{/if}

@@ -42,8 +42,8 @@
       <legend>{ts}Choose Data Source{/ts}</legend>
       <table class="form-layout">
         <tr class="crm-import-datasource-form-block-dataSource">
-            <td class="label">{$form.dataSource.label}</td>
-            <td>{$form.dataSource.html} {help id='data-source-selection'}</td>
+            <td class="label">{$form.dataSource.label} {help id='data-source-selection'}</td>
+            <td>{$form.dataSource.html} </td>
         </tr>
       </table>
     </fieldset>

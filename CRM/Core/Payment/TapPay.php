@@ -433,7 +433,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $response;
   }
 
-  public static function payByBindCard($payment) {
+  public static function payByBindCard($payment, $isSendMail = FALSE) {
     if ($payment && !empty($payment['payment_processor_id'])) {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'contribution_recur_id');
@@ -481,7 +481,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       $result = $api->request($data);
       CRM_Core_Error::debug_var('result', $result);
-      self::doTransaction($result, $payment['contributionID']);
+      self::doTransaction($result, $payment['contributionID'], $isSendMail);
 
       CRM_Contribute_BAO_Contribution::getValues($params, $contribution, $ids);
       if ($contribution['contribution_status_id'] == 1) {

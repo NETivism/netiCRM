@@ -174,6 +174,11 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       CRM_Core_Session::setStatus(ts('Some recurring contributions that belong to this Payment Processor are in progress, so the fields are freeze.'), TRUE, 'warning');
     }
 
+    $hostIP = CRM_Utils_System::getHostIPAddress();
+    if (!$hostIP) {
+      $hostIP = ts('None');
+    }
+    $this->assign('hostIP', $hostIP);
   }
 
   /**

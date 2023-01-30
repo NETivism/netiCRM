@@ -1286,7 +1286,10 @@ CREATE TABLE civicrm_mailing_trackable_url (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX index_trackable_url(
+        url
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_mailing_trackable_url_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;

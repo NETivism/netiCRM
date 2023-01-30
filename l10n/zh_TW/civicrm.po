@@ -1,6 +1,6 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2022
+# CC Chu <poliphilonet@gmail.com>, 2020-2023
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022
 # Charles Chuang, 2022
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
@@ -10,15 +10,15 @@
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2022
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
-# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020
+# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2022
-# 馮 佳今, 2022
+# 馮 佳今, 2022-2023
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2022\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15596,7 +15596,7 @@ msgstr "您確定要取消此活動的報名登記？"
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid ""
 "You can cancel your registration for %1 by clicking \"Cancel Registration\"."
-msgstr "您可以點擊「取消登記」選項以取消 %1 的登記。"
+msgstr "您可以點擊「取消報名」選項以取消 %1 的報名。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid ""
@@ -15880,7 +15880,7 @@ msgstr "重複的項目"
 
 #: CRM/Event/Import/Parser/Participant.php
 msgid "Select either EventID OR Event Title"
-msgstr "選擇活動編號或活動標題"
+msgstr "「活動編號」或「活動標題」僅能選擇其中一項"
 
 #: CRM/Event/Import/Parser/Participant.php
 msgid "Missing required field(s) :"
@@ -21294,7 +21294,7 @@ msgid ""
 "create contact records first, if necessary. Then you can match activities to"
 " contacts by Email Address, CiviCRM Contact ID, or an External Identifier "
 "(see the TIP below)."
-msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
+msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid ""
@@ -21321,7 +21321,7 @@ msgid ""
 "value into CiviCRM's External Identifier field. Then you can use that unique"
 " key as the 'match to contact' value when importing related data such as "
 "Activities and Contributions."
-msgstr "<strong>說明 - 配對行動到聯絡人記錄</strong><br />CiviCRM允許您標註每項行動記錄歸屬於哪位聯絡人，透過使用特定的CiviCRM-assigned 系統編號、您指派的外部編號或您的\n設定\"strict\" 刪除重複記錄規則(使用預設Email)。您必須在匯入檔案的欄位中至少寫入一個值。\n如果您正在從其他應用程式統整(或遷移)聯絡人到CiviCRM，而且這個應用程式已經為每一個聯絡人指定了特定的ID，您可以匯入那個值到\nCiviCRM外部編號，然後當匯入相關數據如行動或捐款時，您可以使用那個特定鍵當做\"配對聯絡人\"值。"
+msgstr "CiviCRM允許您標註每項行動記錄歸屬於哪位聯絡人，透過使用特定的CiviCRM-assigned 系統編號、您指派的外部編號或您的\n設定\"strict\" 刪除重複記錄規則(使用預設Email)。您必須在匯入檔案的欄位中至少寫入一個值。\n如果您正在從其他應用程式統整(或遷移)聯絡人到CiviCRM，而且這個應用程式已經為每一個聯絡人指定了特定的ID，您可以匯入那個值到\nCiviCRM外部編號，然後當匯入相關數據如行動或捐款時，您可以使用那個特定鍵當做\"配對聯絡人\"值。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.tpl
 msgid ""
@@ -27941,15 +27941,16 @@ msgid "I want to contribute this amount every %1 %2(s) for %3 installments."
 msgstr "我想要每%1個%2捐款此金額，總共捐款%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
-msgid "I want to contribute this amount every %1 %2(s)."
-msgstr "我每%1個%2以此金額捐款。"
+msgid ""
+"I want to contribute this amount every %1 %2(s) until credit card expires."
+msgstr "我每%1個%2以此金額捐款至信用卡有效期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid ""
 "Your initial contribution will be processed once you complete the "
 "confirmation step. You will be able to modify or cancel future contributions"
 " at any time by contact us."
-msgstr "您一旦完成確認的步驟，第一期捐款就會執行。您可以隨時與我們聯絡，以取消日後的定期定額捐款。"
+msgstr "請確認您的捐款金額與期數，確認無誤後，接下來金流結帳授權成功就會執行第一次扣款。您可以隨時與我們聯絡，以調整或取消您的定期定額捐款。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
@@ -29328,7 +29329,7 @@ msgstr "警告：刪除此選項會導致捐款記錄遺失。"
 msgid ""
 "Personalize the contents and appearance of your fundraising page here. You "
 "will be able to return to this page and make changes at any time."
-msgstr "您可在此對您個人募款頁面的內容與外觀進行個人化。您將可隨時返回此頁面，並做修改。"
+msgstr "您可在此對您個人募款頁面的內容與外觀進行修改。請先填入所有必填欄位後點選儲存。您隨時可以回到此頁面修改所有內容。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid ""
@@ -29678,14 +29679,14 @@ msgid ""
 "contact in CiviCRM, you can include that value as a column in your import "
 "file. Contributions will then be matched to contributors using their "
 "External ID."
-msgstr "外部編號"
+msgstr "「外部編號」：如果您已將對應到每個聯絡人的「外部編號」儲存在CiviCRM中，您可以在匯入檔中加入外部編號，系統將以聯絡人的外部編號配對參加者的資料。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid ""
 "You can include a column with each contributor's <strong>Internal Contact "
 "ID</strong>. This is the unique ID assigned by CiviCRM which is displayed at"
 " the bottom of the Contact Summary screen - and can be exported."
-msgstr "系統編號"
+msgstr "「系統編號」：您可以在匯入檔使用系統編號欄位。聯絡人建立時，系統會自動給予一個專屬的數字編號，此編號將顯示在聯絡人摘要的最下方，也可以匯出取得。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid ""
@@ -33094,7 +33095,7 @@ msgid ""
 " application if you're not sure how to do this. Save this file to your local"
 " hard drive (or an accessible drive on your network) - and then choose that "
 "file as your Import Upload File."
-msgstr "由Excel或其他試算表軟體，另存新檔為「逗號分隔」檔案，資料便會以逗號做分隔的文字文件，儲存後再選擇該檔案做為您要匯入的資料檔案。您可以從各式應用程式中，匯出\"CSV\"檔，如Google通訊錄，Microsoft Office 試算表，Outlook等。如果您不確定該如何使用，請先查看您應用軟體的使用說明。"
+msgstr "被匯入的檔案必須是 CSV 格式。您可以由Excel或其他試算表軟體，另存新檔為\"CSV\"檔案，再選擇該檔案做為您要匯入的資料檔案。多數文書處理軟體中都可以匯出CSV檔，如Google通訊錄，Microsoft Office 試算表，Outlook等。如果您不確定該如何使用，請先查看軟體的使用說明。"
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "A direct SQL query in the form of a SELECT query. For example:"
@@ -33113,7 +33114,7 @@ msgid ""
 "applications into CiviCRM. For example, if your organization has contacts in"
 " MS Access&reg; or Excel&reg;, and you want to start using CiviCRM to store "
 "these contacts, you can 'import' them here."
-msgstr "匯入精靈將導引您更容易匯入聯絡人資料。舉例來說，您的組織原本採用 MS Access&copy 或 Excel&copy 來建立資料，但有了匯入精靈，您即可在此輕鬆匯入資料到 CiviCRM 的聯絡人資料庫。"
+msgstr "您可以將其他應用軟體的聯絡人紀錄上傳到 CiviCRM。例如：如果您的組織使用 Excel&copy 來存放聯絡人資料，並且您想改用 CiviCRM 來存放這些聯絡人，您可以在此使用CSV檔案來「匯入」紀錄。"
 
 #: templates/CRM/Import/Form/DataSource.tpl
 msgid "Import Options"
@@ -35701,7 +35702,7 @@ msgstr "警告：刪除此資料表單欄位會從資料表單表格及列表中
 msgid ""
 "Select the type of CiviCRM record and the field you want to include in this "
 "Profile."
-msgstr "選擇 CiviCRM 記錄類型，以及您所想包含的資料表單。"
+msgstr "選擇 CiviCRM 的紀錄類型，以及要加入資料表單的欄位。"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid ""
@@ -38019,7 +38020,7 @@ msgid ""
 "applications into CiviCRM. For example, if your organization has contacts in"
 " MS Access&copy; or Excel&copy;, and you want to start using CiviCRM to "
 "store these contacts, you can 'import' them here."
-msgstr "匯入精靈將導引您更容易匯入聯絡人資料。舉例來說，您的組織原本採用 MS Access&copy 或 Excel&copy 來建立資料，但有了匯入精靈，您即可在此輕鬆匯入資料到 CiviCRM 的聯絡人資料庫。"
+msgstr "您可以將其他應用軟體的聯絡人紀錄上傳到 CiviCRM。例如：如果您的組織使用 Excel&copy 來存放聯絡人資料，並且您想改用 CiviCRM 來存放這些聯絡人，您可以在此使用CSV檔案來「匯入」紀錄。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Unit price"
@@ -48972,3 +48973,114 @@ msgid ""
 "If the transaction is finished, it will update the follow data by this "
 "action: %1"
 msgstr "若交易成功，將會進行以下更新：%1"
+
+#: CRM/Mailing/Page/Component.php
+msgid "body_text is a required field."
+msgstr "內文 - 文字格式是必填欄位。"
+
+msgid "body_html is a required field."
+msgstr "內文 - HTML格式是必填欄位。"
+
+#: templates/CRM/Contribute/Import/Form/MapField.tpl
+msgid ""
+"When updating an existing contribution, the Contribution IDs, Transaction "
+"ID, and Invoice ID can be any one of these three fields as the value "
+"corresponding to the existing contribution."
+msgstr "更新現有捐款時，捐款編號、交易編號、帳單編號，這三個欄位任選一個做為對應現有捐款的值即可。"
+
+#: templates/CRM/Member/Import/Form/UploadFile.tpl
+msgid ""
+"Uploading file must include the following columns or the data cannot be "
+"imported successfully."
+msgstr "您上傳的匯入資料檔，必須包含以下欄位，否則無法成功匯入資料"
+
+msgid "First Name,Last Name,Email(or Dedupe Rule of Contact you selected)"
+msgstr "姓、名、email(或您選定的「尋找聯絡人欄位對應規則」)"
+
+msgid ""
+"When importing members, if the member has already have data in the system, "
+"the content of the member's personal information (contact, personal field) "
+"you imported this time,It is not possible to update the personal information"
+" of this member, but only for the purpose of comparing members. If you want "
+"to update your membership information, please use the Import Contacts "
+"function to do so."
+msgstr "匯入會員時，若這位會員已在系統建檔過，本次您匯入的會員個資內容(聯絡人、個人類欄位)，並無法更新到這位會員的個資，而只是做為比對會員的用途。若想要更新會員個資，請利用匯入聯絡人功能來達成。"
+
+#: templates/CRM/Contribute/Import/Form/UploadFile.tpl
+msgid "Contribution Received Date"
+msgstr "捐款收到日期"
+
+msgid ""
+"When importing contributions, if the contributor has already have data in "
+"the system, the content of the contributor's personal information (contact, "
+"personal field) you imported this time,It is not possible to update the "
+"personal information of this contributor, but only for the purpose of "
+"comparing contributor. If you want to update your contributor information, "
+"please use the Import Contacts function to do so."
+msgstr "匯入捐款時，若這位捐款人已在系統建檔過，本次您匯入的捐款人個資內容(聯絡人、個人類欄位)，並無法更新到這位捐款人的個資，而只是做為比對捐款人的用途。若想要更新捐款人個資，請利用匯入聯絡人功能來達成。"
+
+#: templates/CRM/Export/Form/table.tpl templates/CRM/Export/Form/Select.tpl
+msgid ""
+"The export file already include these fields, in front of the selectable "
+"fields:"
+msgstr "匯出的檔案將包含下列搜尋結果的欄位，並會排在自行選取要匯出的欄位之前："
+
+#: xml/templates/message_templates/membership_offline_receipt_html.tpl
+msgid "Thanks for your support."
+msgstr "感謝您的支持。"
+
+msgid "case sensitive"
+msgstr "有區分大小寫"
+
+msgid "Input search keywords"
+msgstr "搜尋關鍵字"
+
+#: templates/CRM/Custom/Page/Group.hlp
+msgid ""
+"After the above type is selected, you can choose to only be limited to the "
+"subtype here. For example: If your choose events types, you can assign this "
+"set of custom fields to a specific subtype (e.g. Workshop')."
+msgstr "上方類型選擇後，此處可選擇只限定使用在特定的次分類。例如：這個自訂欄位群組限定只使用於活動底下的工作坊類型，而非所有活動均使用此自訂欄位群組，即可做特定類型的選取。"
+
+#: templates/CRM/Custom/Form/Group.tpl
+msgid "Used For subtype"
+msgstr "次類型"
+
+#: CRM/Custom/Form/Group.php
+msgid "Common"
+msgstr "常用"
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid ""
+"Since you didn't assign the expiration date of your donation installment "
+"plan, the recurring payments will be canceled when your credit card expires."
+msgstr "由於您選擇不限期數，我們將在您填入信用卡資訊後，以卡片的到期日來計算實際扣款期數。"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable URL"
+msgstr "追蹤網址"
+
+#: templates/CRM/Contact/Form/Task/SMS.tpl
+msgid "We will send messages to %1 contacts."
+msgstr "我們將寄送訊息給 %1 個聯絡人。"
+
+#: CRM/UF/Form/AdvanceSetting.php
+msgid "Use in other situation"
+msgstr "其他情境使用"
+
+msgid "Used for Batch Update and Contact Search Profile."
+msgstr "用於批次修改、聯絡人搜尋表單"
+
+#: templates/CRM/UF/Form/Group.tpl
+msgid ""
+"If you want to check this checkbox, Please uncheck Used For option or copy "
+"this CiviCRM Profile for Use in other situation. If this CiviCRM Profile is "
+"in use, please uncheck the Enabled checkbox then edit profile."
+msgstr "若要勾選此項，請取消勾選設定區塊中的使用類型，或複製資料表單做其他情境使用。若是使用中的資料表單請先取消啟用後再做編輯。"
+
+#: templates/CRM/UF/Form/Field.tpl
+msgid ""
+"When adding a field, please select the appropriate field according to the "
+"type of use, if the existing field cannot meet the situation, you can use "
+"the %1 to add it."
+msgstr "新增欄位時請依使用類型選擇合適欄位，若現有欄位無法符合情境，可使用 %1 做新增。"

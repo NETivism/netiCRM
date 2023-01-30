@@ -23,6 +23,12 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $action eq 1}
+<div id="help">
+  {capture assign=docLinkCustom}{docURL page="Custom Data Fields & Custom Data Groups Admin" text="custom fields"}{/capture}
+  {ts 1=$docLinkCustom}When adding a field, please select the appropriate field according to the type of use, if the existing field cannot meet the situation, you can use the %1 to add it.{/ts}
+</div>
+{/if}
 <h3>{if $action eq 8}{ts}Delete Field{/ts} - {$fieldTitle}{elseif $action eq 1}{ts}Add Field{/ts}{elseif $action eq 2}{ts}Edit Field{/ts} - {$fieldTitle}{/if}</h3>
 <div class="crm-block crm-form-block crm-uf-field-form-block">
     {if $action eq 8}
@@ -153,13 +159,21 @@
 cj().crmaccordions(); 
 cj("#field_name\\[0\\]").bind( 'change', function( ) {
   cj("#field_name\\[1\\]").select2({
-    "allowClear": true,
     "dropdownAutoWidth": true,
     "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
     "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
   }).change(function(){
     showLabel();mixProfile();
   }).hide();
+  cj(document).on('select2:open', () => {
+    var inputField = document.querySelector('input.select2-search__field');
+    if (inputField) {
+      inputField.placeholder='{/literal}{ts}Input search keywords{/ts}{literal}';
+      setTimeout(() => {
+          inputField.focus();
+      }, 100);
+    }
+  });
   cj("#field_name\\[1\\]").trigger("liszt:updated");
 }); 
 function showLabel( ) {
@@ -331,4 +345,8 @@ function verify( ) {
 
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
-
+{if $config->lcMessages eq 'zh_TW'}
+  {* this will compitable with drupal 6-7-9 *}
+  {* parameter library will use library name pree-defined in civicrm.module *}
+  {js src=packages/jquery/plugins/jquery.select2.zh-TW.js library=civicrm/civicrm-js-zh-tw group=999 weight=998}{/js}
+{/if}

@@ -284,9 +284,10 @@ class CRM_Core_SelectValues {
     $ufGroupType = array();
     if ($type == 'all' || empty($type)) {
       $ufGroupType += array(
-        'Profile' => ts('Online Form for Data Collection'),
         'CiviContribute' => ts('Form in Contribution or Membership Page'),
         'CiviEvent' => ts('Form in Event Registeration Page for Participant'),
+        'Profile' => ts('Online Form for Data Collection'),
+        'System' => ts('Used for Batch Update and Contact Search Profile.'),
       );
     }
     if ($type == 'all' || $type == 'register') {

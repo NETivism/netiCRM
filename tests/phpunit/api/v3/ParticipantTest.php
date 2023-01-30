@@ -58,12 +58,12 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
   }
 
   function tearDown() {
-    $this->eventDelete($this->_eventID);
-    $tablesToTruncate = array(
-      'civicrm_custom_group', 'civicrm_custom_field', 'civicrm_contact', 'civicrm_participant'
-    );
+    // $this->eventDelete($this->_eventID);
+    // $tablesToTruncate = array(
+    //   'civicrm_custom_group', 'civicrm_custom_field', 'civicrm_contact', 'civicrm_participant'
+    // );
     // true tells quickCleanup to drop any tables that might have been created in the test
-    $this->quickCleanup($tablesToTruncate, TRUE);
+    // $this->quickCleanup($tablesToTruncate, TRUE);
   }
 
   /**
@@ -720,14 +720,15 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
     //create one
-    $create = civicrm_api('phone', 'create', $params);
+    $create = civicrm_api('participant', 'create', $params);
     $this->assertAPISuccess($create, 'In line ' . __LINE__);
 
-    $participant = civicrm_api('participant', 'delete', $params);
+    $session = CRM_Core_Session::singleton();
+    $session->set('userID', '1');
+    $result = civicrm_api('participant', 'delete', $params);
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
-    $this->docMakerResponse($participant, __FILE__, __FUNCTION__);
-
-    $this->assertNotEquals($participant['is_error'], 1);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+    $this->assertNotEquals($result['is_error'], 1);
     $this->assertDBState('CRM_Event_DAO_Participant', $this->_participantID, NULL, TRUE);
   }
 

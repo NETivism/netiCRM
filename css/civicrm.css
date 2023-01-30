@@ -99,6 +99,9 @@
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
+.crm-container ul.select2-selection__rendered {
+  margin: 0;
+}
 
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -6853,7 +6856,8 @@ input.crm-form-textfield,
 }
 
 /** Coupon */
-#priceset .coupon-description{
+#priceset .coupon-description,
+.coupon-result {
   color: red;
   padding-left: 10px;
 }

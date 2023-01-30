@@ -27946,7 +27946,7 @@ msgid "I want to contribute this amount every %1 %2(s) for %3 installments."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
-msgid "I want to contribute this amount every %1 %2(s)."
+msgid "I want to contribute this amount every %1 %2(s) until credit card expires."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
@@ -48596,4 +48596,86 @@ msgstr ""
 
 #: CRM/Core/Payment/SPGATEWAY.php
 msgid "If the transaction is finished, it will update the follow data by this action: %1"
+msgstr ""
+
+#: CRM/Mailing/Page/Component.php
+msgid "body_text is a required field."
+msgstr ""
+
+msgid "body_html is a required field."
+msgstr ""
+
+#: templates/CRM/Contribute/Import/Form/MapField.tpl
+msgid "When updating an existing contribution, the Contribution IDs, Transaction ID, and Invoice ID can be any one of these three fields as the value corresponding to the existing contribution."
+msgstr ""
+
+#: templates/CRM/Member/Import/Form/UploadFile.tpl
+msgid "Uploading file must include the following columns or the data cannot be imported successfully."
+msgstr ""
+
+msgid "First Name,Last Name,Email(or Dedupe Rule of Contact you selected)"
+msgstr ""
+
+msgid "When importing members, if the member has already have data in the system, the content of the member's personal information (contact, personal field) you imported this time,It is not possible to update the personal information of this member, but only for the purpose of comparing members. If you want to update your membership information, please use the Import Contacts function to do so."
+msgstr ""
+
+#: templates/CRM/Contribute/Import/Form/UploadFile.tpl
+msgid "Contribution Received Date"
+msgstr ""
+
+msgid "When importing contributions, if the contributor has already have data in the system, the content of the contributor's personal information (contact, personal field) you imported this time,It is not possible to update the personal information of this contributor, but only for the purpose of comparing contributor. If you want to update your contributor information, please use the Import Contacts function to do so."
+msgstr ""
+
+#: templates/CRM/Export/Form/table.tpl
+#: templates/CRM/Export/Form/Select.tpl
+msgid "The export file already include these fields, in front of the selectable fields:"
+msgstr ""
+
+#: xml/templates/message_templates/membership_offline_receipt_html.tpl
+msgid "Thanks for your support."
+msgstr ""
+
+msgid "case sensitive"
+msgstr ""
+
+msgid "Input search keywords"
+msgstr ""
+
+#: templates/CRM/Custom/Page/Group.hlp
+msgid "After the above type is selected, you can choose to only be limited to the subtype here. For example: If your choose events types, you can assign this set of custom fields to a specific subtype (e.g. Workshop')."
+msgstr ""
+
+#: templates/CRM/Custom/Form/Group.tpl
+msgid "Used For subtype"
+msgstr ""
+
+#: CRM/Custom/Form/Group.php
+msgid "Common"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid "Since you didn't assign the expiration date of your donation installment plan, the recurring payments will be canceled when your credit card expires."
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable URL"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/SMS.tpl
+msgid "We will send messages to %1 contacts."
+msgstr ""
+
+#: CRM/UF/Form/AdvanceSetting.php
+msgid "Use in other situation"
+msgstr ""
+
+msgid "Used for Batch Update and Contact Search Profile."
+msgstr ""
+
+#: templates/CRM/UF/Form/Group.tpl
+msgid "If you want to check this checkbox, Please uncheck Used For option or copy this CiviCRM Profile for Use in other situation. If this CiviCRM Profile is in use, please uncheck the Enabled checkbox then edit profile."
+msgstr ""
+
+#: templates/CRM/UF/Form/Field.tpl
+msgid "When adding a field, please select the appropriate field according to the type of use, if the existing field cannot meet the situation, you can use the %1 to add it."
 msgstr ""

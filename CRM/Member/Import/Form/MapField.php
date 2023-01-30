@@ -356,6 +356,22 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       unset($sel1['membership_id']);
     }
 
+    
+    // start of soft credit section
+    // get contact type for this import
+    $contactTypeId = $this->get('contactType');
+    $contactTypes = array(
+      CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL => 'Individual',
+      CRM_Contribute_Import_Parser::CONTACT_HOUSEHOLD => 'Household',
+      CRM_Contribute_Import_Parser::CONTACT_ORGANIZATION => 'Organization',
+    );
+
+    $contactType = $contactTypes[$contactTypeId];
+
+    // get imporatable fields for contact type
+    require_once 'CRM/Contact/BAO/Contact.php';
+    $contactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
+
     $sel2[''] = NULL;
 
     $js = "<script type='text/javascript'>\n";
@@ -376,37 +392,57 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             $patterns = array();
             $mappingHeader = $this->defaultFromHeader($mapName, $patterns);
 
-            $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : NULL;
-            $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
-            $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
-            $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : NULL;
-            $softField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
-
-            if ($softField) {
-              $defaults["mapper[$i]"] = array($mappingHeader, $softField);
+            // Prepare values and sub type values.
+            // If the field have sub type but the subtype value is NULL, the subtype value would be 0.
+            // Otherwise, the field have no subtype, the subtype value should be NULL. 
+            $websiteTypeId = NULL;
+            if ($mappingHeader == 'url') {
+              $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : 0;
             }
-            elseif ($websiteTypeId) {
-              if (!$websiteTypeId) {
-                $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+            $locationId = NULL;
+            if ($contactFields[$mappingHeader]['hasLocationType']) {
+              $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
+            }
+            $phoneType = NULL;
+            if ($mappingHeader == 'phone') {
+              $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : 0;
+            }
+            $imProvider = NULL;
+            if ($mappingHeader == 'im') {
+              $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : 0;
+            }
+
+            // Set visibility of each fields and sub type selection.
+            // If subtype is NULL, the subtype selector would be hided.
+            if (!is_null($locationId) || !is_null($websiteTypeId)) {
+              if (!is_null($websiteTypeId)) {
+                $defaults["mapper[$i]"] = array($mappingHeader, $websiteTypeId);
+                $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
               }
-              $defaults["mapper[$i]"] = array($mappingHeader, $websiteTypeId);
+              else {
+                //default for IM/phone without related contact
+                $typeId = NULL;
+                if (!is_null($phoneType)) {
+                  $typeId = $phoneType;
+                }
+                elseif (!is_null($imProvider)) {
+                  $typeId = $imProvider;
+                }
+                if (!is_null($typeId)) {
+                  $defaults["mapper[$i]"] = array($mappingHeader, $locationId ? $locationId : 1, $typeId);
+                }
+                else {
+                  $defaults["mapper[$i]"] = array($mappingHeader, $locationId);
+                  $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+                }
+              }
             }
             else {
-              if (!$locationId) {
-                $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+              // No location type fields.
+              if ($mappingHeader) {
+                $defaults["mapper[$i]"] = array($mappingHeader);
               }
-              //default for IM/phone without related contact
-              $typeId = NULL;
-              if (isset($phoneType)) {
-                $typeId = $phoneType;
-              }
-              elseif (isset($imProvider)) {
-                $typeId = $imProvider;
-              }
-              $defaults["mapper[$i]"] = array($mappingHeader, $locationId, $typeId);
-            }
-
-            if ((!$phoneType) && (!$imProvider)) {
+              $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
               $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
             }
             $js .= "{$formName}['mapper[$i][3]'].style.display = 'none';\n";
@@ -420,6 +456,11 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             for ($k = 1; $k < 4; $k++) {
               $js .= "{$formName}['mapper[$i][$k]'].style.display = 'none';\n";
             }
+          }
+        }
+        else {
+          for ($k = 1; $k < 4; $k++) {
+            $js .= "{$formName}['mapper[$i][$k]'].style.display = 'none';\n";
           }
         }
         //end of load mapping
@@ -781,7 +822,8 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
           elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
             $saveMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : NULL;
           }
-          $saveMappingFields->location_type_id = isset($location_id[0]) ? $location_id[0] : NULL;
+          $location = array_keys($locationTypes, $locations[$i]);
+          $saveMappingFields->location_type_id = !empty($location) ? $location[0] : 'NULL';
         }
 
         $saveMappingFields->contact_type = isset($mapperSoftCredit[$i]) ? $mapperSoftCredit[$i] : NULL;
