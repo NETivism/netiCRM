@@ -318,6 +318,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $fields['Contact']['id'] = array(
       'name' => 'id',
       'title' => ts('Internal Contact ID'),
+      'usage' => 'System',
     );
 
     unset($fields['Contact']['contact_type']);

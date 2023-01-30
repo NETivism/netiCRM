@@ -310,9 +310,11 @@ class CRM_Core_OptionValue {
 
       $nameTitle = array();
       if ($mode == 'contribute') {
-        $nameTitle = array('payment_instrument' => array('name' => 'payment_instrument',
+        $nameTitle = array('payment_instrument' => array(
+          'name' => 'payment_instrument',
             'title' => ts('Payment Instrument'),
             'headerPattern' => '/^payment|(p(ayment\s)?instrument)$/i',
+            'usage' => 'System',
           ),
         );
       }
