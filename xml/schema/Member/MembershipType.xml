@@ -41,6 +41,7 @@
       <localizable>true</localizable>
       <comment>Name of Membership Type</comment>
       <add>1.5</add>
+      <usage>System</usage>
   </field>
   <field>
       <name>description</name>
