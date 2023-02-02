@@ -205,6 +205,7 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'label' => array(
           'name' => 'label',

@@ -248,6 +248,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'description' => array(
           'name' => 'description',
