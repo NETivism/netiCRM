@@ -1354,8 +1354,6 @@ class CRM_Export_BAO_Export {
     }
 
     return array('header' => $header, 'rows' => $rows);
-    CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
-    CRM_Utils_System::civiExit();
   }
 
   static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {

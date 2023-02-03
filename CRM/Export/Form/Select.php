@@ -77,11 +77,13 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       if (property_exists($customSearchClass, '_primaryIDName')) {
         $primaryIDName = $customSearchClass::$_primaryIDName;
       }
-      list('header' => $header, 'rows' => $rows) = CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
+      $exportCustomResult = CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
         $this->get('formValues'),
         $this->get(CRM_Utils_Sort::SORT_ORDER), 
         $primaryIDName
       );
+      $header = $exportCustomResult['header'];
+      $rows = $exportCustomResult['rows'];
       if (!empty($primaryIDName)) {
         $this->set('primaryIDName', $primaryIDName);
       }
