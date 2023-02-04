@@ -68,10 +68,8 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
    * @access public
    */
   function preProcess() {
-    //special case for custom search, directly give option to download csv file
     $customSearchID = $this->get('customSearchID');
     if ($customSearchID) {
-      require_once 'CRM/Export/BAO/Export.php';
       $customSearchClass = $this->get('customSearchClass');
       $primaryIDName = '';
       if (property_exists($customSearchClass, '_primaryIDName')) {
@@ -80,14 +78,10 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       $exportCustomResult = CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
         $this->get('formValues'),
         $this->get(CRM_Utils_Sort::SORT_ORDER), 
-        $primaryIDName
+        $primaryIDName, 
+        FALSE
       );
       $header = $exportCustomResult['header'];
-      $rows = $exportCustomResult['rows'];
-      if (!empty($primaryIDName)) {
-        $this->set('primaryIDName', $primaryIDName);
-      }
-      $customHeader = array();
       foreach ($header as $i => $headerName) {
         if ($headerName == ts('CiviCRM Contact ID')) {
           $customHeader['contact_id'] = $headerName;  
@@ -96,10 +90,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
           $customHeader["column{$i}"] = $headerName;
         }
       }
-      $this->set('customHeader', $customHeader);
-      $this->set('customRows', $rows);
       $this->assign('customHeader', $customHeader);
-      $isUseTempTable = TRUE;
     }
 
     $this->_selectAll = FALSE;
@@ -173,7 +164,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       $taskName = $contactTasks[$this->_task];
 
       require_once "CRM/Contact/Form/Task.php";
-      CRM_Contact_Form_Task::preProcessCommon($this, $isUseTempTable);
+      CRM_Contact_Form_Task::preProcessCommon($this);
     }
     else {
       $this->assign('taskName', "Export $componentName[1]");

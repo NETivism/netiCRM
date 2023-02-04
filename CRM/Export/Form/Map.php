@@ -232,6 +232,20 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     $mappingId = $this->get('mappingId');
     $separateMode = $this->get('separateMode');
     $customHeaders = $this->get('customHeader');
+    $customSearchID = $this->get('customSearchID');
+    if ($customSearchID) {
+      $customSearchClass = $this->get('customSearchClass');
+      $primaryIDName = '';
+      if (property_exists($customSearchClass, '_primaryIDName')) {
+        $primaryIDName = $customSearchClass::$_primaryIDName;
+      }
+      $exportCustomVars = array(
+        'customSearchClass' => $this->get('customSearchClass'),
+        'formValues' => $this->get('formValues'),
+        'order' => $this->get(CRM_Utils_Sort::SORT_ORDER),
+        'pirmaryIDName' => $primaryIDName,
+      );
+    }
     CRM_Export_BAO_Export::exportComponents($this->get('selectAll'),
       $this->get('componentIds'),
       $this->get('queryParams'),
@@ -245,7 +259,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       $this->get('mergeSameHousehold'),
       $mappingId,
       $separateMode,
-      $this->get('customHeader')
+      $exportCustomVars
     );
   }
 

@@ -75,7 +75,7 @@ class CRM_Export_BAO_Export {
     $mergeSameHousehold = FALSE,
     $mappingId = NULL,
     $separateMode = FALSE, 
-    $customHeader = array()
+    $customExport = array()
   ) {
     global $civicrm_batch;
     $allArgs = func_get_args();
@@ -510,12 +510,7 @@ class CRM_Export_BAO_Export {
         list($field, $dir) = explode(' ', $order, 2);
         $field = trim($field);
         if (CRM_Utils_Array::value($field, $returnProperties)) {
-          if ($field == 'id') {
-            $orderBy = " ORDER BY contact_a.$order ";
-          }
-          else {
-            $orderBy = " ORDER BY $order ";
-          }
+          $orderBy = " ORDER BY $order ";
         }
       }
     }
@@ -1058,14 +1053,6 @@ class CRM_Export_BAO_Export {
           $addPaymentHeader = FALSE;
         }
 
-        if (empty($row['contact_id'])) {
-          $row['contact_id'] = $dao->contact_id;
-          $allColumnNames = implode(',', $sqlColumns);
-          if (!strstr($allColumnNames, 'contact_id')) {
-            self::sqlColumnDefn($query, $sqlColumns, 'contact_id');
-          }
-        }
-
         if ($setHeader) {
           $exportTempTable = self::createTempTable($sqlColumns);
         }
@@ -1127,8 +1114,78 @@ class CRM_Export_BAO_Export {
       self::manipulateHeaderRows($headerRows, $contactRelationshipTypes);
     }
 
-    if (!empty($customHeader)) {      
+    if (!empty($customExport)) {
+
+      // prepare data for custom search export.
+      $exportCustomResult = CRM_Export_BAO_Export::exportCustom(
+        $exportCustomVars['customSearchClass'],
+        $exportCustomVars['formValues'],
+        $exportCustomVars['order'],
+        $exportCustomVars['pirmaryIDName'],
+      );
+
+      $customHeader = $exportCustomResult['header'];
+      $customRows = $exportCustomResult['rows'];
+      
+      $primaryIDName = $exportCustomVars['pirmaryIDName'];
+      $componentTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
+      CRM_Core_DAO::executeQuery($sql);
+      foreach ($customHeader as $columnName => $val) {
+        $customColumns .= ", $columnName varchar(64)";
+      }
+
+      // Create custom search custom table.
+      if (!empty($primaryIDName)) {
+        $sql = "CREATE TEMP TABLE {$componentTable} ( id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";  
+      }
+      else {
+        $sql = "CREATE TEMP TABLE {$componentTable} ( contact_id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+      }
+
+      // Write data into Table
+      $customColumnsNames = str_replace('varchar(255)', '', $customColumns);
+      foreach ($customRows as $key => $rows) {
+        if (!empty($primaryIDName)) {
+          $values = "'".implode("','", $customRows[$primaryIDName])."'";
+          $sql = "REPLACE INTO {$componentTable} ( id $customColumnsNames) VALUES ( {$primaryIDName} , $values)";
+        }
+        else {
+          $values = "'".implode("','", $customRows[$primaryIDName])."'";
+          $sql = "REPLACE INTO {$componentTable} ( contact_id $customColumnsNames) VALUES ( {$primaryIDName} , $values)";
+        }
+
+        CRM_Core_DAO::executeQuery($sql);
+      }
+
+      // write data as checkbox is selected.
+      /* 
+      $customColumns = array_keys($customHeader);
+      $customColumnsNames = implode(',' , $customColumns);
+      foreach ($values as $name => $value) {
+        list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
+        $usedID = empty($primaryIDName) ? $contactID : $additionalID;
+        if (!empty($usedID)) {
+          if ($useTable) {
+            if (!array_key_exists($usedID, $alreadySeen)) {
+              $customRowsValues = '"'.implode('","', $customRows[$usedID]).'"';
+              $insertString[] = " ( {$usedID} , $customRowsValues) ";
+            }
+          }
+          else {
+            if (!array_search($contactID, $form->_contactIds)) {
+              $form->_contactIds[] = $contactID;
+            }
+            if (!empty($additionalID) && is_numeric($additionalID)) {
+              $form->_additionalIds[$additionalID] = $additionalID;
+            }
+          }
+          $alreadySeen[$usedID] = 1;
+        }
+      }
+      */
+
       // Get componetentTable column name:
+      /*
       $sql = "DESC $componentTable";
       $componentColumns = '';
       $dao = CRM_Core_DAO::executeQuery($sql);
@@ -1137,6 +1194,13 @@ class CRM_Export_BAO_Export {
           $componentColumns .= ", ctTable.$dao->Field";
         }
       }
+      */
+      foreach ($customColumns as $field) {
+        if (strstr($field, 'column')) {
+          $componentColumns .= ", ctTable.$field";
+        }
+      }
+
       $exportTempTableAlias = 'export_temp_contact';
       $tempTableName = 'new_export_temp_table';
       $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT {$exportTempTableAlias}.* $componentColumns FROM $componentTable ctTable INNER JOIN (SELECT * FROM $exportTempTable GROUP BY contact_id) AS $exportTempTableAlias ON ctTable.contact_id = {$exportTempTableAlias}.contact_id";
@@ -1271,7 +1335,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE) {
+  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE) {
     require_once "CRM/Core/Extensions.php";
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
@@ -1339,6 +1403,10 @@ class CRM_Export_BAO_Export {
       else {
         $rows[] = $row;
       }
+      // If only return Header, just run once.
+      if (!$returnRows) {
+        break;
+      }
     }
 
     // remove the fields which key is numeric. refs #19235
@@ -1353,7 +1421,14 @@ class CRM_Export_BAO_Export {
       }
     }
 
-    return array('header' => $header, 'rows' => $rows);
+    if ($returnRows) {
+      $returnArray = array('header' => $header, 'rows' => $rows);
+    }
+    else {
+      $returnArray = array('header' => $header);
+    }
+
+    return $returnArray;
   }
 
   static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {

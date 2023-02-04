@@ -199,23 +199,8 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       if ($useTable) {
         $count = 0;
         $insertString = array();
-        $customRows = $form->get('customRows');
-        $customColumnsNames = str_replace('varchar(64)', '', $customColumns);
         while ($dao->fetch()) {
           $count++;
-          if ($customColumns) {
-            if (!empty($primaryIDName)) {
-              $values = "'".implode("','", $customRows[$dao->$primaryIDName])."'";
-              $sql = "REPLACE INTO {$form->_componentTable} ( id $customColumnsNames) VALUES ( {$dao->$primaryIDName} , $values)";
-            }
-            else {
-              $values = "'".implode("','", $customRows[$dao->contact_id])."'";
-              $sql = "REPLACE INTO {$form->_componentTable} ( contact_id $customColumnsNames) VALUES ( {$dao->contact_id} , $values)";
-            }
-
-            CRM_Core_DAO::executeQuery($sql);
-            continue;
-          }
           $insertString[] = " ( {$dao->contact_id} ) ";
           if ($count % 200 == 0) {
             $string = implode(',', $insertString);
@@ -251,36 +236,28 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       // need to perform action on only selected contacts
       $insertString = array();
       $alreadySeen = array();
-      
-      $customRows = $form->get('customRows');
-      $customHeader = $form->get('customHeader');
-      $customColumns = array_keys($customHeader);
-      $customColumnsNames = implode(',' , $customColumns);
-      $usedIDName = empty($primaryIDName) ? 'contact_id' : 'id';
       foreach ($values as $name => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
-        $usedID = empty($primaryIDName) ? $contactID : $additionalID;
-        if (!empty($usedID)) {
+        if (!empty($contactID)) {
           if ($useTable) {
-            if (!array_key_exists($usedID, $alreadySeen)) {
-              $customRowsValues = '"'.implode('","', $customRows[$usedID]).'"';
-              $insertString[] = " ( {$usedID} , $customRowsValues) ";
+            if (!array_key_exists($contactID, $alreadySeen)) {
+              $insertString[] = " ( {$contactID} ) ";
             }
           }
           else {
-            if (!array_search($contactID, $form->_contactIds)) {
+            if (!array_key_exists($contactID, $alreadySeen)) {
               $form->_contactIds[] = $contactID;
             }
             if (!empty($additionalID) && is_numeric($additionalID)) {
               $form->_additionalIds[$additionalID] = $additionalID;
             }
           }
-          $alreadySeen[$usedID] = 1;
+          $alreadySeen[$contactID] = 1;
         }
       }
       if (!empty($insertString)) {
         $string = implode(',', $insertString);
-        $sql = "REPLACE INTO {$form->_componentTable} ( $usedIDName , $customColumnsNames) VALUES $string";
+        $sql = "REPLACE INTO {$form->_componentTable} ( contact_id ) VALUES $string";
         CRM_Core_DAO::executeQuery($sql);
       }
     }
