@@ -44,7 +44,8 @@ class CRM_Utils_PDF_Utils {
   static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $fileName = CRM_Utils_File::makeFileName($fileName);
-    $dest = $config->uploadDir.$fileName;
+    $uploadDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+    $dest = $uploadDir.$fileName;
     $paperSize = $paperSize ? $paperSize : 'a4';
 
     // make whole html first
