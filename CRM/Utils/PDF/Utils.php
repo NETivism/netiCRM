@@ -44,7 +44,7 @@ class CRM_Utils_PDF_Utils {
   static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $fileName = CRM_Utils_File::makeFileName($fileName);
-    $uploadDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+    $uploadDir = empty($config->uploadDir) ? CRM_Utils_System::cmsDir('temp') .'/' : $config->uploadDir;
     $dest = $uploadDir.$fileName;
     $paperSize = $paperSize ? $paperSize : 'a4';
 
@@ -193,7 +193,7 @@ class CRM_Utils_PDF_Utils {
       $option .= $additionalOption;
 
       $temp_prefix = 'pdf_';
-      $temp_dir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+      $temp_dir = empty($config->uploadDir) ? CRM_Utils_System::cmsDir('temp') .'/' : $config->uploadDir;
       $dest = $dest ? $dest : tempnam($temp_dir, $temp_prefix).".pdf";
       if (preg_match('/^http:\/\//i', $html)) {
         $source = $html;

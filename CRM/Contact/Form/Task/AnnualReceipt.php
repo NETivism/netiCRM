@@ -196,7 +196,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     global $civicrm_batch;
 
     $config = CRM_Core_Config::singleton();
-    $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+    $tmpDir = empty($config->uploadDir) ? CRM_Utils_System::cmsDir('temp') .'/' : $config->uploadDir;
     self::$_tmpreceipt = tempnam($tmpDir, 'receipt');
     $offset = 0;
     $download = TRUE;
