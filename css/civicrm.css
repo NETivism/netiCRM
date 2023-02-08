@@ -6921,6 +6921,10 @@ input.crm-form-textfield,
 .crm-container .select2-selection--multiple button.select2-selection__clear:hover {
   margin-right: 5px;
 }
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  padding-left: 30px;
+  background: url(images/icon--search.png) left 0 top 50% / 30px no-repeat;
+}
 
 /* RWD block */
 @media screen and (max-width: 768px) {
