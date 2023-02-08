@@ -1,6 +1,6 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2022
+# CC Chu <poliphilonet@gmail.com>, 2020-2023
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022
 # Charles Chuang, 2022
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2023\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35702,7 +35702,7 @@ msgstr "警告：刪除此資料表單欄位會從資料表單表格及列表中
 msgid ""
 "Select the type of CiviCRM record and the field you want to include in this "
 "Profile."
-msgstr "選擇 CiviCRM 記錄類型，以及您所想包含的資料表單。"
+msgstr "選擇 CiviCRM 的紀錄類型，以及要加入資料表單的欄位。"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid ""
@@ -49077,3 +49077,10 @@ msgid ""
 "this CiviCRM Profile for Use in other situation. If this CiviCRM Profile is "
 "in use, please uncheck the Enabled checkbox then edit profile."
 msgstr "若要勾選此項，請取消勾選設定區塊中的使用類型，或複製資料表單做其他情境使用。若是使用中的資料表單請先取消啟用後再做編輯。"
+
+#: templates/CRM/UF/Form/Field.tpl
+msgid ""
+"When adding a field, please select the appropriate field according to the "
+"type of use, if the existing field cannot meet the situation, you can use "
+"the %1 to add it."
+msgstr "新增欄位時請依使用類型選擇合適欄位，若現有欄位無法符合情境，可使用 %1 做新增。"

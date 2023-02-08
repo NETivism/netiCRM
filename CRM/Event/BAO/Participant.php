@@ -673,6 +673,7 @@ GROUP BY  participant.event_id
         'title' => ts('Event Type'),
         'name' => 'event_type',
         'data_type' => CRM_Utils_Type::T_STRING,
+        'usage' => 'System',
       ));
       $tmpConatctField = array();
       if (!$onlyParticipant) {

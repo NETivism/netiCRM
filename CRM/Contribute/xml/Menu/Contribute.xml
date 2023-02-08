@@ -284,7 +284,7 @@
   <item>
      <path>civicrm/ajax/permlocation</path>
      <page_callback>CRM_Core_Page_AJAX_Location::getPermissionedLocation</page_callback>
-     <access_arguments>make online contributions</access_arguments>
+     <access_arguments>edit contributions</access_arguments>
   </item>
   <item>
      <path>civicrm/ajax/employer</path>

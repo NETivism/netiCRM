@@ -49,6 +49,9 @@ class CRM_Core_Page_AJAX_Location {
    * location field values for selected permissioned contact.
    */
   function getPermissionedLocation() {
+    if (!CRM_Core_Permission::check('access CiviContribute')) {
+      CRM_Utils_System::civiExit();
+    }
     $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
 
     require_once 'CRM/Core/BAO/Location.php';

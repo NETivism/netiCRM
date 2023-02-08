@@ -27,6 +27,7 @@
        <length>128</length>
        <comment>Name for Membership Status</comment>
        <add>1.5</add>
+       <usage>System</usage>
   </field>
   <field>
        <name>label</name>
