@@ -482,7 +482,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
           }
         }
         else {
-          $this->_mapperFields[$key][$key1] = $value1['title'];
+          $this->_mapperFields[$key][$key1] = ts("Default").' - ' . $value1['title'];
         }
         $hasLocationTypes[$key][$key1] = CRM_Utils_Array::value('hasLocationType', $value1);
         $hasWebsiteTypes[$key][$key1] = CRM_Utils_Array::value('hasWebsiteType', $value1);
@@ -553,6 +553,18 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         $sel2[$key] = $this->_mapperFields[$key];
       }
     }
+
+    if (isset($sel2['Contact']) && isset($sel2['Individual'])) {
+      $sel2['Individual'] = $sel2['Contact'] + $sel2['Individual'];
+      unset($sel2['Contact']);
+    }
+    // reorder by FieldHierarchy mapping rule
+    $sel2['Individual'] = CRM_Core_FieldHierarchy::arrange($sel2['Individual']);
+
+    if (isset($sel1['Contact'])) {
+      unset($sel1['Contact']);
+    }
+
     $sel3[''] = NULL;
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
     foreach($phoneTypes as $idx => $val) {
