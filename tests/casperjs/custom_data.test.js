@@ -92,11 +92,11 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#title");
     });
 
-    /* select 'Used For' to 'Contact' */
+    /* select 'Used For' to 'Individual' */
     casper.waitForSelector("select[name='extends[0]']", function success() {
         test.assertExists("select[name='extends[0]']");
         this.evaluate(function () {
-            document.querySelector("select[name='extends[0]']").value = 'Contact';
+            document.querySelector("select[name='extends[0]']").value = 'Individual';
         });
     }, function fail() {
         test.assertExists("select[name='extends[0]']");
