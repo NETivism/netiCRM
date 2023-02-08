@@ -186,3 +186,26 @@ if ( subtypes ) {
 */
 </script>
 {/literal}
+
+{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Custom%20Groups%20Used%20For%20-%20Contact" triggerText="Description of used for" triggerIcon="zmdi-help-outline" width="400px"}
+{literal}
+<script type="text/Javascript">
+  if (cj(".nsp-container").length) {
+    cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
+
+    cj("select#extends\\[0\\]").change(function() {
+      let value = cj(this).val();
+
+      if (value.trim() !== "") {
+        docURL = "https://neticrm.tw/CRMDOC/Custom Groups Used For - " + value;
+        cj(".nsp-container .nsp-iframe").attr("src", docURL);
+        cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
+
+        if (!cj(".nsp-container.is-initialized.is-opened").length) {
+          window.neticrmSidePanelInstance.open();
+        }
+      }
+    });
+  }
+</script>
+{/literal}
