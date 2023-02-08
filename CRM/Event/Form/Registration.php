@@ -61,10 +61,10 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
   /**
    * the array of ids of all the participant we are proceessing
    *
-   * @var int
+   * @var array
    * @protected
    */
-  protected $_participantIDs;
+  protected $_participantIDS;
 
   /**
    * the id of the participant we are proceessing
@@ -170,6 +170,23 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * @protected
    */
   public $_priceSet;
+
+  /**
+   * The contribution mode.
+   *
+   * @var string
+   * @protected
+   */
+  public $_contributeMode;
+
+  /**
+   * The infomations of participants.
+   *
+   * @var array
+   * @protected
+   */
+  public $_participantInfo;
+
 
   public $_action;
 
@@ -888,7 +905,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $createPayment = TRUE;
     }
 
-    if ($createPayment && $this->_values['event']['is_monetary'] &&
+    if (!empty($contribution->id) && $this->_values['event']['is_monetary'] &&
       CRM_Utils_Array::value('contributionID', $this->_params)
     ) {
       require_once 'CRM/Event/BAO/ParticipantPayment.php';
@@ -1093,7 +1110,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
   /**
    * Process the participant
    *
-   * @return void
+   * @return object
    * @access public
    */
   public function addParticipant($params, $contactID) {
