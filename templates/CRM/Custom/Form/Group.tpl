@@ -187,7 +187,7 @@ if ( subtypes ) {
 </script>
 {/literal}
 
-{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Custom%20Groups%20Used%20For%20-%20Contact" triggerText="Description of used for" triggerIcon="zmdi-help-outline" width="400px"}
+{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Custom%20Groups%20Used%20For%20-%20Contact" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px"}
 {literal}
 <script type="text/Javascript">
   if (cj(".nsp-container").length) {
