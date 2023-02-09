@@ -329,3 +329,63 @@ function custom_option_html_type( ) {
 cj().crmaccordions();
 </script>
 {/literal}
+
+{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Data%20and%20Input%20Field%20Type%20-%20Alphanumeric:%20Text" triggerText="Description of used for" triggerIcon="zmdi-help-outline" width="400px"}
+  {literal}
+<script type="text/Javascript">
+  if (cj(".nsp-container").length) {
+    cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
+
+    let childType = cj("select#data_type\\[1\\]").val(),
+        parentTypeIndex = cj("select#data_type\\[0\\]").val(),
+        parentTypeMapping = [
+          "Alphanumeric",
+          "Integer",
+          "Number",
+          "Money",
+          "Note",
+          "Date",
+          "Yes or No",
+          "State/Province",
+          "Country",
+          "File",
+          "Link",
+          "Contact Reference"
+        ],
+        parentType = parentTypeMapping[parentTypeIndex],
+        defaultDocURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - Alphanumeric: Text";
+
+    let setDocURL = function(parentType , childType) {
+      let docURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - " + parentType + ": " + childType;
+
+      if (defaultDocURL !== docURL) {
+        cj(".nsp-container .nsp-iframe").attr("src", docURL);
+      }
+
+      cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
+
+      if (!cj(".nsp-container.is-initialized.is-opened").length) {
+        window.neticrmSidePanelInstance.open();
+      }
+    }
+
+    setTimeout(function() {
+      setDocURL(parentType, childType);
+    }, 2000);
+
+    cj(".crm-container").on("change", "select#data_type\\[0\\]", function() {
+      childType = cj("select#data_type\\[1\\]").val();
+      parentTypeIndex = cj(this).val();
+      parentType = parentTypeMapping[parentTypeIndex];
+      setDocURL(parentType, childType);
+    });
+
+    cj(".crm-container").on("change", "select#data_type\\[1\\]", function() {
+      childType = cj(this).val();
+      parentTypeIndex = cj("select#data_type\\[0\\]").val();
+      parentType = parentTypeMapping[parentTypeIndex];
+      setDocURL(parentType, childType);
+    });
+  }
+</script>
+{/literal}
