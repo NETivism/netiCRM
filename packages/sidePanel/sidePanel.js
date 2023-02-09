@@ -239,6 +239,8 @@
         }
       }
 
+      _tooltip();
+
       if (_nspWidth) {
         _cssVariablesUpdate("--nsp-width", _nspWidth);
       }
@@ -283,6 +285,29 @@
 	var _windowResize = function() {
 		_getViewport();
 	};
+
+  var _tooltip = function() {
+    var jq = $.fn.powerTip ? $ : jQuery.fn.powerTip ? jQuery : null;
+
+    if (jq) {
+      if ($("[data-tooltip]").length) {
+        $("[data-tooltip]:not(.tooltip-initialized)").each(function() {
+          let options = {};
+
+          if ($(this).is("[data-tooltip-placement]")) {
+            options.placement = $(this).data("tooltip-placement");
+          }
+
+          if ($(this).is("[data-tooltip-fadeouttime]")) {
+            options.fadeOutTime = $(this).data("tooltip-fadeouttime");
+          }
+
+          jq(this).powerTip(options);
+          $(this).addClass("tooltip-initialized");
+        });
+      }
+    }
+  };
 
 	/**
 	 * Debug
