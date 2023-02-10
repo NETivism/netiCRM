@@ -26,21 +26,25 @@ test.afterAll(async () => {
   await page.close();
 });
 
-test.describe.serial('Event register page test', () => {
+test.describe.serial('Event register page', () => {
   test.use({ storageState: 'storageState.json' });
   test('Normal registration', async () => {
     var page_title = getPageTitle(item.event_name_1);
-    await page.goto('/civicrm/event/register?reset=1&action=preview&id=1&cid=0');
-    await expect(page).toHaveTitle(page_title);
-    await page.locator('input[name="email-5"]').click();
-    await page.locator('input[name="email-5"]').fill('test@aipvo.com');
-    await page.locator('text=/.*Continue \\>\\>.*/').click();
-    await expect(page).toHaveURL(/_qf_ThankYou_display/);
+    await test.step("Check can visit page.", async () =>{
+      await page.goto('/civicrm/event/register?reset=1&action=preview&id=1&cid=0');
+      await expect(page).toHaveTitle(page_title);
+    })
+    await test.step("Check register event.", async () =>{
+      await page.locator('input[name="email-5"]').click();
+      await page.locator('input[name="email-5"]').fill('test@aipvo.com');
+      await page.locator('text=/.*Continue \\>\\>.*/').click();
+      await expect(page).toHaveURL(/_qf_ThankYou_display/);
+    })
   });
 
-  test.describe('limit participants. Not fot waiting', () => {
+  test('limit participants. Not fot waiting', async() => {
     var page_title = getPageTitle(item.event_name_2);
-    test('Check can register', async () => {
+    await test.step('Check can register', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
       await expect(page).toHaveTitle(page_title);
       await page.locator('input[name="email-5"]').click();
@@ -48,16 +52,16 @@ test.describe.serial('Event register page test', () => {
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
     });
-    test('second participant message is correct.', async () => {
+    await test.step('Second participant message is correct.', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
     });
   });
 
-  test.describe('limit participants. Not fot waiting.', async () => {
+  test('limit participants. Not fot waiting.', async () => {
     var page_title = getPageTitle(item.event_name_3);
-    test('Check can register', async () => {
+    await test.step('Check can register', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
       await expect(page).toHaveTitle(page_title);
       await page.locator('input[name="email-5"]').click();
@@ -65,7 +69,7 @@ test.describe.serial('Event register page test', () => {
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
     });
-    test('Check message hvae wait list', async () => {
+    await test.step('Check message hvae wait list', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
       await expect(page).toHaveTitle(page_title);
       await page.locator('input[name="email-5"]').click();
@@ -75,9 +79,9 @@ test.describe.serial('Event register page test', () => {
     });
   });
 
-  test.describe('limit participants. Need approval.', async () => {
+  test('limit participants. Need approval', async () => {
     var page_title = getPageTitle(item.event_name_4);
-    test('First register success', async () => {
+    await test.step('First register success', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
       await page.locator('input[name="email-5"]').click();
@@ -86,35 +90,33 @@ test.describe.serial('Event register page test', () => {
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     });
-    test('Second participant message is correct.', async () => {
+    await test.step('Second participant message is correct.', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
     });    
   });
 
-  test('No limit participants. Need approval.', async () => {
+  test('No limit participants. Need approval', async () => {
     var page_title = getPageTitle(item.event_name_5);
-    await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
-    
-    //Verity login to event page.
-    await expect(page).toHaveTitle(page_title);
-    await page.locator('input[name="email-5"]').click();
-    await page.locator('input[name="email-5"]').fill('test@aipvo.com');
-    await page.locator('text=/.*Continue \\>\\>.*/').click();
-    await expect(page).toHaveURL(/_qf_ThankYou_display/);
-
-    //Verify register successful
-    await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
-    await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
-
-    //Second register
-    await expect(page).toHaveTitle(page_title);
-    await page.locator('input[name="email-5"]').click();
-    await page.locator('input[name="email-5"]').fill('test2@aipvo.com');
-    await page.locator('text=/.*Continue \\>\\>.*/').click();
-    await expect(page).toHaveURL(/_qf_ThankYou_display/);
-    await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
+    await test.step("Verity can register event.", async () =>{
+      await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
+      await expect(page).toHaveTitle(page_title);
+      await page.locator('input[name="email-5"]').click();
+      await page.locator('input[name="email-5"]').fill('test@aipvo.com');
+      await page.locator('text=/.*Continue \\>\\>.*/').click();
+      await expect(page).toHaveURL(/_qf_ThankYou_display/);
+      await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
+    })
+    await test.step("Second participant message is correct", async () =>{
+      await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
+      await expect(page).toHaveTitle(page_title);
+      await page.locator('input[name="email-5"]').click();
+      await page.locator('input[name="email-5"]').fill('test2@aipvo.com');
+      await page.locator('text=/.*Continue \\>\\>.*/').click();
+      await expect(page).toHaveURL(/_qf_ThankYou_display/);
+      await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
+    })
   });
 });
 
