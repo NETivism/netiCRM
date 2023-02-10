@@ -3,3 +3,5 @@ node_modules/
 /playwright-report/
 /playwright/.cache/
 package-lock.json
+setup.env
+storageState.json
