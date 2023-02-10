@@ -78,12 +78,18 @@ class CRM_Contribute_BAO_Query {
       $query->_groupByComponentClause = ' GROUP BY civicrm_contribution.id';
     }
 
-    // get contribution_type
     if (CRM_Utils_Array::value('contribution_type', $query->_returnProperties)) {
       $query->_select['contribution_type'] = "civicrm_contribution_type.name as contribution_type";
       $query->_element['contribution_type'] = 1;
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['civicrm_contribution_type'] = 1;
+      $query->_whereTables['civicrm_contribution'] = 1;
+    }
+
+    if (CRM_Utils_Array::value('contribution_type_id', $query->_returnProperties)) {
+      $query->_select['contribution_type_id'] = "civicrm_contribution.contribution_type_id as contribution_type_id";
+      $query->_element['contribution_type_id'] = 1;
+      $query->_tables['civicrm_contribution'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
     }
 
@@ -95,10 +101,9 @@ class CRM_Contribute_BAO_Query {
 
     // get contribution_status
     if (CRM_Utils_Array::value('contribution_status_id', $query->_returnProperties)) {
-      $query->_select['contribution_status_id'] = "contribution_status.value as contribution_status_id";
+      $query->_select['contribution_status_id'] = "civicrm_contribution.contribution_status_id as contribution_status_id";
       $query->_element['contribution_status_id'] = 1;
       $query->_tables['civicrm_contribution'] = 1;
-      $query->_tables['contribution_status'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
     }
 
@@ -117,6 +122,13 @@ class CRM_Contribute_BAO_Query {
       $query->_element['contribution_payment_instrument'] = 1;
       $query->_tables['civicrm_contribution'] = 1;
       $query->_tables['contribution_payment_instrument'] = 1;
+      $query->_whereTables['civicrm_contribution'] = 1;
+    }
+
+    if (CRM_Utils_Array::value('payment_instrument_id', $query->_returnProperties)) {
+      $query->_select['payment_instrument_id'] = "civicrm_contribution.payment_instrument_id as payment_instrument_id";
+      $query->_element['payment_instrument_id'] = 1;
+      $query->_tables['civicrm_contribution'] = 1;
       $query->_whereTables['civicrm_contribution'] = 1;
     }
 
@@ -382,13 +394,30 @@ class CRM_Contribute_BAO_Query {
       case 'contribution_payment_instrument_id':
       case 'contribution_payment_instrument':
         require_once 'CRM/Contribute/PseudoConstant.php';
-        $pi = $value;
         $pis = CRM_Contribute_PseudoConstant::paymentInstrument();
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.payment_instrument_id",
-          $op, $value, "Integer"
-        );
-
-        $query->_qill[$grouping][] = ts('Paid By - %1', array(1 => $pis[$pi]));
+        if (is_array($value)) {
+          foreach ($value as $k => $v) {
+            if ($v) {
+              $val[$v] = $v;
+              $nameSelectedPi[] = $pis[$v];
+            }
+          }
+          $instrument_ids = implode(',', $val);
+          $op = 'IN';
+          $value = "({$instrument_ids})";
+            $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.payment_instrument_id",
+            $op, $value, "Integer"
+          );
+          $query->_qill[$grouping][] = ts('Paid By - %1', array(1 => implode(', ', $nameSelectedPi)));
+        }
+        else {
+          $pi = $value;
+          $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.payment_instrument_id",
+            $op, $value, "Integer"
+          );
+  
+          $query->_qill[$grouping][] = ts('Paid By - %1', array(1 => $pis[$pi]));
+        }
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
@@ -491,7 +520,7 @@ class CRM_Contribute_BAO_Query {
 
       case 'contribution_trxn_id':
       case 'contribution_transaction_id':
-        $wc = "LOWER(civicrm_contribution.trxn_id)";
+        $wc = "civicrm_contribution.trxn_id";
         $value = $value.'%';
         if (!strstr(strtolower($op), 'null')) {
           $op = 'LIKE';
@@ -505,7 +534,7 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_receipt_id':
-        $wc = "LOWER(civicrm_contribution.receipt_id)";
+        $wc = "civicrm_contribution.receipt_id";
         $value = $value.'%';
         if (!strstr(strtolower($op), 'null')) {
           $op = 'LIKE';
@@ -575,7 +604,7 @@ class CRM_Contribute_BAO_Query {
           $value = "%$value%";
           $op = 'LIKE';
         }
-        $wc = ($op != 'LIKE') ? "LOWER(civicrm_note_contribution.note)" : "civicrm_note_contribution.note";
+        $wc = "civicrm_note_contribution.note";
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
         $query->_qill[$grouping][] = ts('Contribution Note %1 %2', array(1 => $op, 2 => $quoteValue));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = $query->_whereTables['contribution_note'] = 1;
@@ -686,7 +715,7 @@ class CRM_Contribute_BAO_Query {
           $dataType = "String";
         }
 
-        $wc = ($op != 'LIKE' && $dataType != 'Date') ? "LOWER($whereTable[where])" : "$whereTable[where]";
+        $wc = $whereTable['where'];
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, $dataType);
         $query->_qill[$grouping][] = "$whereTable[title] $op $quoteValue";
         list($tableName, $fieldName) = explode('.', $whereTable['where'], 2);
@@ -799,6 +828,7 @@ class CRM_Contribute_BAO_Query {
         'sort_name' => 1,
         'display_name' => 1,
         'contribution_type' => 1,
+        'contribution_type_id' => 1,
         'contribution_source' => 1,
         'created_date' => 1,
         'receive_date' => 1,
@@ -807,6 +837,7 @@ class CRM_Contribute_BAO_Query {
         'total_amount' => 1,
         'accounting_code' => 1,
         'payment_instrument' => 1,
+        'payment_instrument_id' => 1,
         'check_number' => 1,
         'non_deductible_amount' => 1,
         'fee_amount' => 1,
@@ -907,7 +938,8 @@ class CRM_Contribute_BAO_Query {
     $form->addSelect(
       'contribution_payment_instrument_id',
       ts('Payment Instrument'),
-      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::paymentInstrument()
+      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::paymentInstrument(), 
+      $attrs
     );
 
     $form->addSelect(
@@ -1051,7 +1083,9 @@ class CRM_Contribute_BAO_Query {
       $product_option_select_attr = array('data-parent-filter' => $product_name);
 
       foreach ($product_options as $product_option) {
-        $product_option_select_elem->addOption($product_option, $product_option, $product_option_select_attr);
+        if (trim($product_option) !== '') {
+          $product_option_select_elem->addOption($product_option, $product_option, $product_option_select_attr);
+        }
       }
     }
 

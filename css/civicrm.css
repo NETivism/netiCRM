@@ -1,3 +1,17 @@
+/* Visually hidden helper (bootstrap 5) */
+.visually-hidden,
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+  position: absolute!important;
+  width: 1px!important;
+  height: 1px!important;
+  padding: 0!important;
+  margin: -1px!important;
+  overflow: hidden!important;
+  clip: rect(0,0,0,0)!important;
+  white-space: nowrap!important;
+  border: 0!important;
+}
+
 /* TipTip CSS - Version 1.2 */
 #tiptip_holder {
   display: none;
@@ -98,6 +112,9 @@
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
+}
+.crm-container ul.select2-selection__rendered {
+  margin: 0;
 }
 
 /*!
@@ -838,6 +855,12 @@
     border: 1px solid #999;
 }
 
+.crm-container pre {
+  background-color: #EFEFEF;
+  border: 1px solid #EEE;
+  padding: 8px;
+  width: fit-content;
+}
 
 .crm-form-block {
     padding:4px;
@@ -6847,7 +6870,8 @@ input.crm-form-textfield,
 }
 
 /** Coupon */
-#priceset .coupon-description{
+#priceset .coupon-description,
+.coupon-result {
   color: red;
   padding-left: 10px;
 }
@@ -6910,6 +6934,10 @@ input.crm-form-textfield,
 .crm-container .select2-selection--multiple .select2-selection__clear,
 .crm-container .select2-selection--multiple button.select2-selection__clear:hover {
   margin-right: 5px;
+}
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  padding-left: 30px;
+  background: url(images/icon--search.png) left 0 top 50% / 30px no-repeat;
 }
 
 /* RWD block */

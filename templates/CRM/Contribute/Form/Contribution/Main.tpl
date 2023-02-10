@@ -115,7 +115,7 @@
           {/if}
             {if $is_email_receipt}
                 {ts}You will receive an email receipt for each recurring contribution.{/ts} 
-                {if $receipt_from_email}
+                {if $receipt_from_email && $display_recurring_email}
                 {ts 1=$receipt_from_email}To modify or cancel future contributions please contact us at %1.{/ts}
                 {else}
                 {ts}To modify or cancel future contributions please contact us{/ts}

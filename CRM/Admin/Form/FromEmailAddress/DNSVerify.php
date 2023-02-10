@@ -31,6 +31,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * @return void
    */
   function preProcess() {
+    $this->set('action', CRM_Core_Action::UPDATE);
     parent::preProcess();
 
     if ($this->_values['filter'] & self::VALID_SPF) {
@@ -55,7 +56,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    *
    * @param array $fields the input form values
    * @param array $files  the uploaded files if any
-   * @param array $self   current form object.
+   * @param object $self   current form object.
    *
    * @return array array of errors / empty array.
    */
@@ -63,23 +64,32 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     $errors = array();
     // verify on every submission
     if (!empty($self->_values['email'])) {
-      $result = CRM_Utils_Mail::checkSPF($self->_values['email']);
+      $errorMsg = array();
+      list($user, $domain) = explode('@', trim($self->_values['email']));
+      $result = CRM_Utils_Mail::checkSPF($domain);
       $filter = $self->_values['filter'];
-      if (!$result) {
-        $errors['qfKey'] = ts('Your %1 validation failed.', array(1 => 'SPF'));
+      if ($result !== TRUE) {
+        $failReason = $result;
+        $errorMsg['spf'] = ts('Your %1 validation failed.', array(1 => 'SPF')).' '.ts("Reason").": ".$failReason;
         $filter = $filter & ~(self::VALID_SPF);
       }
       else {
         $filter = $filter | self::VALID_SPF;
+        $self->assign('spf_status', TRUE);
       }
 
-      $result = CRM_Utils_Mail::checkDKIM($self->_values['email']);
+      $result = CRM_Utils_Mail::checkDKIM($domain);
       if ($result === FALSE) {
-        $errors['qfKey'] .= ts('Your %1 validation failed.', array(1 => 'DKIM'));
+        $errorMsg['dkim'] = ts('Your %1 validation failed.', array(1 => 'DKIM'));
         $filter = $filter & ~(self::VALID_DKIM);
       }
       else {
         $filter = $filter | self::VALID_DKIM;
+        $self->assign('dkim_status', TRUE);
+      }
+
+      if (!empty($errorMsg)) {
+        $errors['qfKey'] = implode('<br>', $errorMsg);
       }
 
       // save validation result
@@ -109,6 +119,28 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
 
     $this->assign('spf_status', $this->_spfStatus);
     $this->assign('dkim_status', $this->_dkimStatus);
+
+    $spfRecord = CRM_Utils_Mail::getSPF($this->_values['email']);
+    if (!empty($spfRecord)) {
+      $record = array();
+      foreach($spfRecord as $spf) {
+        $record[] = $spf['host'].' '.$spf['type'].' '.$spf['txt'];
+      }
+      $this->assign('spf_record', implode("\n", $record));
+    }
+    else {
+      $this->assign('spf_record', ts('None'));
+    }
+
+    $dkimRecord= CRM_Utils_Mail::getDKIM($this->_values['email']);
+    if (!empty($dkimRecord)) {
+      $record = $dkimRecord[0]['host'].' '.$dkimRecord[0]['type'].' '.$dkimRecord[0]['target'];
+      $this->assign('dkim_record', $record);
+    }
+    else {
+      $this->assign('dkim_record', ts('None'));
+    }
+
     if ($this->_spfStatus && $this->_dkimStatus) {
       $this->addButtons(array(
           array(

@@ -31,17 +31,17 @@ class CRM_Core_Payment_TapPayAPI {
     'trade_history' => '/tpc/transaction/trade-history',
     'card_metadata' => '/tpc/card/metadata',
     'card_notify_api_sandbox' => '/tpc/sandbox/card/metadata/notify',
+    'bind_card' => '/tpc/card/bind',
     /* not supportted api types
     'refund' => '/tpc/transaction/refund',
     'cap' => '/tpc/transaction/cap',
-    'bind_card' => '/tpc/card/bind',
     'remove_card' => '/tpc/card/remove',
     'refund_cancel' => '/tpc/transaction/refund/cancel',
     'cap_cancel' => '/tpc/transaction/cap/cancel',
     */
   );
 
-  protected $_apiNeedSaveData = array('pay_by_prime', 'pay_by_token', 'trade_history');
+  protected $_apiNeedSaveData = array('pay_by_prime', 'pay_by_token', 'trade_history', 'bind_card');
 
   protected $_contribution_id; // this request relative contribution.
 
@@ -329,6 +329,10 @@ class CRM_Core_Payment_TapPayAPI {
         break;
       case 'card_notify_api_sandbox':
         $fields = explode(',', 'partner_key*,card_key*,card_token*,tsp_notify_url');
+        break;
+      case 'bind_card':
+        $fields = explode(',', 'prime*,partner_key*,merchant_id*,merchant_group_id,currency*,three_domain_secure,result_url,cardholder*,cardholder_verify,kyc_verification_merchant_id');
+        break;
     }
     foreach ($fields as $key => &$value) {
       if(!strstr($value, '*') && $is_required) {

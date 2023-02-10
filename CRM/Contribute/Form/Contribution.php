@@ -822,11 +822,6 @@ WHERE  contribution_id = {$this->_id}
       }
 
       $open = 'false';
-      if ($type == 'CreditCard' ||
-        $type == 'DirectDebit'
-      ) {
-        $open = 'true';
-      }
 
       $allPanes[$name] = array('url' => CRM_Utils_System::url('civicrm/contact/view/contribution', $urlParams),
         'open' => $open,
@@ -839,7 +834,6 @@ WHERE  contribution_id = {$this->_id}
         CRM_Utils_Array::value("hidden_{$type}", $defaults)
       ) {
         $showAdditionalInfo = TRUE;
-        $allPanes[$name]['open'] = 'true';
       }
 
       if ($type == 'CreditCard') {
@@ -972,7 +966,6 @@ WHERE  contribution_id = {$this->_id}
     // add receipt id text area
     $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly', 'class' => 'readonly'));
     $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
-    $this->addRule('receipt_id', ts('This Receipt ID already exists in the database.'), 'objectExists', array('CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id'));
     $this->assign('receipt_id_setting', CRM_Utils_System::url("civicrm/admin/receipt", 'reset=1'));
 
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -1220,8 +1213,21 @@ WHERE  contribution_id = {$this->_id}
       }
     }
 
-    // check receiptId.
+    //Check receipt exist or not
     $contributionId = $self->_id;
+    if (!empty($fields['receipt_id'])) {
+      $object = new CRM_Contribute_DAO_Contribution();
+      $object->receipt_id = $fields['receipt_id'];
+      if ($object->find(TRUE)) {
+        $checkReceiptId = ($contributionId && $object->id == $contributionId) ? TRUE : FALSE;
+        //If DB have exist receipt id then checkReceiptId would be FALSE.
+        if (!$checkReceiptId) {
+          $errors['receipt_id'] = ts('This Receipt ID already exists in the database.');
+        }
+      }
+    }
+
+    // Check receipt field empty or not.
     if (!empty($contributionId)) {
       $receiptId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',$contributionId, 'receipt_id');
       if (!empty($receiptId) && empty($fields['receipt_id'])) {

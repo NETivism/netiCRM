@@ -137,7 +137,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
             $registerText = $values['event']['registration_link_text'];
           }
           //Fixed for CRM-4855
-          $allowRegistration = CRM_Event_BAO_Event::showHideRegistrationLink($values);
+          $allowRegistration = CRM_Event_BAO_Event::showHideRegistrationLink($values, $forceAllowedRegister);
 
           $this->assign('registerText', $registerText);
         }

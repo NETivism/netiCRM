@@ -17,6 +17,7 @@ class SPFCheck
     const RESULT_SOFTFAIL = '~';
     const RESULT_NEUTRAL = '?';
     const RESULT_NONE = 'NO';
+    const RESULT_MULTIPLE = 'MT';
     const RESULT_PERMERROR = 'PE';
     const RESULT_TEMPERROR = 'TE';
     const RESULT_DEFINITIVE_PERMERROR = 'DPE'; // Special result for recursion limit, that cannot be ignored and is transformed to PERMERROR
@@ -84,9 +85,6 @@ class SPFCheck
         }
 
         $result = $this->doCheck($ipAddress, $domain);
-        if ($result == self::RESULT_DEFINITIVE_PERMERROR) {
-            $result = self::RESULT_PERMERROR;
-        }
 
         return $result;
     }
@@ -109,7 +107,7 @@ class SPFCheck
             return self::RESULT_NONE;
         }
         if (count($spfRecords) > 1) {
-            return self::RESULT_PERMERROR;
+            return self::RESULT_MULTIPLE;
         }
         $spfRecord = $spfRecords[0];
         if (!self::isSPFValid($spfRecord)) {

@@ -1206,9 +1206,8 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             }
           }
           // need not check for label filed import
-          $htmlType = array('CheckBox', 'Multi-Select', 'AdvMulti-Select', 'Select', 'Radio', 'Multi-Select State/Province', 'Multi-Select Country', 'File');
+          $htmlType = array('CheckBox', 'Multi-Select', 'AdvMulti-Select', 'Select', 'Radio', 'Multi-Select State/Province', 'Multi-Select Country', 'File', 'Select Date');
           if (!in_array($customFields[$customFieldID]['html_type'], $htmlType) ||
-            $customFields[$customFieldID]['data_type'] == 'Boolean' ||
             $customFields[$customFieldID]['data_type'] == 'ContactReference'
           ) {
             $valid = CRM_Core_BAO_CustomValue::typecheck($customFields[$customFieldID]['data_type'], $value);
@@ -1294,7 +1293,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
                 CRM_Core_PseudoConstant::populate($countryNames, 'CRM_Core_DAO_Country',
                   TRUE, 'name', 'is_active'
                 );
-
+                $countryTranslateNames = array_map('ts', $countryNames);
                 CRM_Core_PseudoConstant::populate($countryIsoCodes,
                   'CRM_Core_DAO_Country', TRUE,
                   'iso_code'
@@ -1304,7 +1303,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
                 $limitCodes = $config->countryLimit();
 
                 $error = TRUE;
-                foreach (array($countryNames, $countryIsoCodes, $limitCodes) as $values) {
+                foreach (array($countryNames, $countryTranslateNames, $countryIsoCodes, $limitCodes) as $values) {
                   if (in_array(trim($countryValue), $values)) {
                     $error = FALSE;
                     break;
@@ -2124,6 +2123,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             CRM_Core_PseudoConstant::populate($countryNames, 'CRM_Core_DAO_Country',
               TRUE, 'name', 'is_active'
             );
+            $countryTranslateNames = array_map('ts', $countryNames);
             CRM_Core_PseudoConstant::populate($countryIsoCodes,
               'CRM_Core_DAO_Country', TRUE,
               'iso_code'
@@ -2134,6 +2134,9 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
                 $formatted[$key][] = $val;
               }
               elseif ($val = CRM_Utils_Array::key($values, $countryIsoCodes)) {
+                $formatted[$key][] = $val;
+              }
+              elseif ($val = CRM_Utils_Array::key($values, $countryTranslateNames)) {
                 $formatted[$key][] = $val;
               }
               elseif ($val = CRM_Utils_Array::key($values, $limitCodes)) {

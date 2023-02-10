@@ -157,7 +157,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       $errors['extends'] = ts("You need to select the type of record that this set of custom fields is applicable for.");
     }
 
-    $extends = array('Activity', 'Relationship', 'Group', 'Contribution', 'ContributionPage', 'Membership', 'Event', 'Participant');
+    $extends = array('Activity', 'Relationship', 'Group', 'Contribution', 'ContributionPage', 'ContributionRecur', 'Membership', 'Event', 'Participant');
     if (in_array($fields['extends'][0], $extends) && $fields['style'] == 'Tab') {
       $errors['style'] = ts("Display Style should be Inline for this Class");
       $self->assign('showStyle', TRUE);
@@ -228,23 +228,45 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
     $this->assign('contactTypes', json_encode($contactTypes));
     $extends = CRM_Core_SelectValues::customGroupExtends();
-    if ($this->_action & CRM_Core_Action::UPDATE) {
-      if (strstr($this->_defaults['extends'], 'Participant')) {
-        foreach($extends as $ext => $dontcare) {
-          if (strpos($ext, $this->_defaults['extends']) === FALSE) {
-            unset($extends[$ext]);
+    if (empty($this->_id)) {
+      $customPriorityNames = array('Contact', 'Contribution', 'Individual', 'Membership', 'Participant');
+      $hidedExtends = array('Group', 'Address');
+      $extendsTop = array();
+      $extendsBottom = array();
+      foreach ($extends as $key => $value) {
+        if (in_array($key, $customPriorityNames)) {
+          $extendsTop[$key] = $value;
+        }
+        else {
+          if (!in_array($key, $hidedExtends)) {
+            $extendsBottom[$key] = $value;
           }
         }
       }
-      else {
-        foreach($extends as $ext => $dontcare) {
-          if ($this->_defaults['extends'] != $ext) {
-            unset($extends[$ext]);
+      $newExtends = array( ts('Common') => $extendsTop , ts('Other') => $extendsBottom);
+      if ($this->_action & CRM_Core_Action::UPDATE) {
+        if (strstr($this->_defaults['extends'], 'Participant')) {
+          foreach($extends as $ext => $dontcare) {
+            if (strpos($ext, $this->_defaults['extends']) === FALSE) {
+              unset($newExtends[ts('Common')][$ext]);
+              unset($newExtends[ts('Other')][$ext]);
+            }
+          }
+        }
+        else {
+          foreach($extends as $ext => $dontcare) {
+            if ($this->_defaults['extends'] != $ext) {
+              unset($newExtends[ts('Common')][$ext]);
+              unset($newExtends[ts('Other')][$ext]);
+            }
           }
         }
       }
+      $sel1 = array("" => ts("- select -")) + $newExtends;
     }
-    $sel1 = array("" => ts("- select -")) + $extends;
+    else {
+      $sel1 = array("" => ts("- select -")) + $extends;
+    }
     $sel2 = array();
     $activityType = CRM_Core_PseudoConstant::activityType(FALSE, TRUE, FALSE, 'label', TRUE);
 
@@ -255,7 +277,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $relTypeOrg = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, 'Organization');
     $relTypeHou = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, 'Household');
 
-    ksort($sel1);
     asort($activityType);
     asort($eventType);
     asort($membershipType);

@@ -856,7 +856,11 @@ CREATE TABLE civicrm_instrument (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     UNIQUE INDEX UI_instrument_id(
+        entity_id
+      , entity_table
+  )
+  
  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
@@ -1282,7 +1286,10 @@ CREATE TABLE civicrm_mailing_trackable_url (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX index_trackable_url(
+        url
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_mailing_trackable_url_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
@@ -2493,7 +2500,7 @@ CREATE TABLE civicrm_custom_group (
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Unique Custom Group ID',
      name varchar(64)    COMMENT 'Variable name/programmatic handle for this group.',
      title varchar(64)    COMMENT 'Friendly Name.',
-     extends enum('Contact', 'Individual', 'Household', 'Organization', 'Location', 'Address', 'Contribution', 'ContributionPage', 'Activity', 'Relationship', 'Group', 'Membership', 'Participant', 'Event', 'Grant', 'Pledge', 'Case', 'PriceField')   DEFAULT 'Contact' COMMENT 'Type of object this group extends (can add other options later e.g. contact_address, etc.).',
+     extends enum('Contact', 'Individual', 'Household', 'Organization', 'Location', 'Address', 'Contribution', 'ContributionPage', 'ContributionRecur', 'Activity', 'Relationship', 'Group', 'Membership', 'Participant', 'Event', 'Grant', 'Pledge', 'Case', 'PriceField')   DEFAULT 'Contact' COMMENT 'Type of object this group extends (can add other options later e.g. contact_address, etc.).',
      extends_entity_column_id int unsigned   DEFAULT NULL COMMENT 'FK to civicrm_option_value.id (for option group custom_data_type.)',
      extends_entity_column_value varchar(64)    COMMENT 'linking custom group for dynamic object',
      style enum('Tab', 'Inline')    COMMENT 'Visual relationship between this form and its parent.',
@@ -4755,7 +4762,10 @@ CREATE TABLE civicrm_contribution_allpay (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     UNIQUE INDEX UI_allpay_id(
+        cid
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_contribution_allpay_cid FOREIGN KEY (cid) REFERENCES civicrm_contribution(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;

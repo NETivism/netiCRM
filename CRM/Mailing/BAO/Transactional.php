@@ -67,6 +67,12 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * @return boolean true if a mail was sent, else false
    */
   public static function send(&$params, $callback = NULL) {
+    $config = CRM_Core_Config::singleton();
+
+    // when transactional email not enabled, fallback to use common send
+    if (!$config->enableTransactionalEmail) {
+      return CRM_Utils_Mail::send($params, $callback);
+    }
     // validate required params
     $required = array(
       'contactId' => 'positiveInteger',
@@ -87,6 +93,23 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
         return;
       }
     }
+
+    // use CRM_Utils_Mail to send cc / bcc
+    $additionalRecipients = array();
+    foreach(array('cc', 'bcc') as $ccType) {
+      if (CRM_Utils_Array::value($ccType, $params)) {
+        $aRecipients = explode(',', $params[$ccType]);
+        unset($params[$ccType]);
+        if (!empty($aRecipients)) {
+          foreach($aRecipients as $rec) {
+            if (CRM_Utils_Rule::email($rec)) {
+              $additionalRecipients[] = $rec;
+            }
+          }
+        }
+      }
+    }
+
     if (empty($params['from'])) {
       $defaultNameEmail = CRM_Core_BAO_Domain::getNameAndEmail( );
       $params['from'] = "{$defaultNameEmail[0]} <{$defaultNameEmail[1]}>";
@@ -97,12 +120,6 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       CRM_Core_Error::debug_log_message("Cannot start transactional email because init error. ".__LINE__);
 
     }
-
-    // got to discuss how to send cc / bcc
-    /*
-    CRM_Utils_Array::value('cc', $params);
-    CRM_Utils_Array::value('bcc', $params);
-    */
 
     $emailId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_email WHERE contact_id = %1 AND email = %2 ORDER BY is_primary DESC', array(
       1 => array($params['contactId'], 'Integer'),
@@ -141,7 +158,13 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     if ($queue->id && $trans->id) {
       $recipient = '';
-      $message = $tmail->compose($tmail->_job->id, $queue->id, $queue->hash, $params['contactId'], $params['toEmail'], $recipient, FALSE, NULL, $params['attachments'], $tmail->from_email);
+      $attachments = CRM_Utils_Array::value('attachments', $params);
+      $embedImages = CRM_Utils_Array::value('images', $params);
+      $attachFiles = array(
+        'attachments' => $attachments,
+        'images' => $embedImages,
+      );
+      $message = $tmail->compose($tmail->_job->id, $queue->id, $queue->hash, $params['contactId'], $params['toEmail'], $recipient, FALSE, NULL, $attachFiles, $tmail->from_email);
       if (!empty($params['mailerType'])) {
         $mailer = &CRM_Core_Config::getMailer($params['mailerType']);
       }
@@ -169,11 +192,23 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
             'callback' => $callback,
             'queue' => $queue,
           );
-          CRM_Core_Config::addShutdownCallback('after', 'CRM_Mailing_BAO_Transactional::sendNonBlocking', array($mailer, $sendParams));
+          // Non-blocking only make sense when there is fastcgi_finish_request
+          if (php_sapi_name() === 'fpm-fcgi') {
+            CRM_Core_Config::addShutdownCallback('after', 'CRM_Mailing_BAO_Transactional::sendNonBlocking', array($mailer, $sendParams));
+          }
+          else {
+            CRM_Mailing_BAO_Transactional::sendNonBlocking($mailer, $sendParams);
+          }
+          if (!empty($additionalRecipients)) {
+            self::additionalRecipients($additionalRecipients, $params);
+          }
           return TRUE;
         }
         else {
           $result = $mailer->send($recipient, $headers, $body);
+          if (!empty($additionalRecipients)) {
+            self::additionalRecipients($additionalRecipients, $params);
+          }
           CRM_Core_Error::setCallback();
           if (is_a($result, 'PEAR_Error')) {
             self::bounced($queue->id, $tmail->_job->id, $queue->hash, $result->getMessage());
@@ -271,6 +306,20 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     CRM_Mailing_Event_BAO_Bounce::create($params);
   }
 
+  public static function additionalRecipients($recipients, $params) {
+    unset($params['activityId'], $params['toName'], $params['toMail']);
+    $tidyParams = $params;
+    foreach($recipients as $email) {
+      if (CRM_Utils_Rule::email($email)) {
+        $sendParams = $tidyParams;
+        $sendParams['toEmail'] = $email;
+        CRM_Utils_Mail::send($sendParams, array(
+          0 => array('CRM_Utils_Callback::nullCallback' => array()),
+        ));
+      }
+    }
+  }
+
   /**
    * Transactional Object
    *
@@ -335,7 +384,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * @param string &$recipient
    * @param book $test
    * @param array $contactDetails
-   * @param array $attachments
+   * @param array $attachFiles array element include attachments / images
    * @param bool $isForward
    * @param string $fromEmail
    * @param string $replyToEmail
@@ -345,7 +394,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    */
   public function &compose($job_id, $event_queue_id, $hash, $contactId,
   $email, &$recipient, $test,
-  $contactDetails, &$attachments, $isForward = FALSE,
+  $contactDetails, &$attachFiles, $isForward = FALSE,
   $fromEmail = NULL, $replyToEmail = NULL
 ) {
     $config = CRM_Core_Config::singleton();
@@ -434,8 +483,18 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     // push the tracking url on to the html email if necessary
     if ($this->open_tracking && $html) {
-      array_push($html, "\n" . '<img src="' . $config->userFrameworkResourceURL . "extern/open.php?q=$event_queue_id\" width='1' height='1' alt='' border='0'>"
-      );
+      $trackedOpen = FALSE;
+      $openTrack = '<img src="' . $config->userFrameworkResourceURL . "extern/open.php?q=$event_queue_id\" width='1' height='1' alt='' border='0'>\n";
+      foreach($html as $idx => $document) {
+        if (stristr($document, '</body>')) {
+          $html[$idx] = preg_replace('@</body>@i', $openTrack.'</body>', $document);
+          $trackedOpen = TRUE;
+          break;
+        }
+      }
+      if (!$trackedOpen){
+        array_push($html, "\n".$openTrack);
+      }
     }
 
     $message = new Mail_mime("\n");
@@ -476,7 +535,8 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       return $res;
     }
 
-    $mailParams['attachments'] = $attachments;
+    $mailParams['attachments'] = $attachFiles['attachments'];
+    $mailParams['images'] = $attachFiles['images'];
     $mailingSubject = CRM_Utils_Array::value('subject', $pEmails);
     if (is_array($mailingSubject)) {
       $mailingSubject = join('', $mailingSubject);
@@ -493,7 +553,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     foreach ($mailParams as $paramKey => $paramValue) {
       //exclude values not intended for the header
       if (!in_array($paramKey, array(
-            'text', 'html', 'attachments', 'toName', 'toEmail',
+            'text', 'html', 'toName', 'toEmail',
           ))) {
         $headers[$paramKey] = $paramValue;
       }
@@ -512,6 +572,17 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
         $message->addAttachment($attach['fullPath'],
           $attach['mime_type'],
           $attach['cleanName']
+        );
+      }
+    }
+    if (!empty($mailParams['images'])) {
+      foreach ($mailParams['images'] as $imageID => $attach) {
+        $message->addHTMLImage(
+          $attach['fullPath'],
+          $attach['mime_type'],
+          $attach['cleanName'],
+          TRUE,
+          $imageID
         );
       }
     }
@@ -551,7 +622,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   /**
    * Get transactional details for an email
    *
-   * @param  array   $contactId     
+   * @param  array   $contactId
    * @param  array   $activityId
    *
    * @return array
@@ -587,10 +658,10 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     return array(
       'Delivered' => $dao->delivered,
       'Opened' => $dao->opened,
-      'Clicks' => $dao->clicks,
-      'Bounce' => $dao->bounce,
-      'Unsubscribe' => $dao->unsubscribe,
-      'Opt-Out' => $dao->optout,
+      'Clicked' => $dao->clicks,
+      'Bounced' => $dao->bounce,
+      'Unsubscribed' => $dao->unsubscribe,
+      'Opt-Outed' => $dao->optout,
     );
   }
 }

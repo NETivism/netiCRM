@@ -149,8 +149,8 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
 
       $isHaveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND contribution_status_id = 5", array( 1 => array( $dao->id, 'Positive')));
       if ($isHaveActiveRecur) {
-        $action -= CRM_Core_Action::DISABLE;
-        $action -= CRM_Core_Action::DELETE;
+        $action = $action & ~CRM_Core_Action::DISABLE;
+        $action = $action & ~CRM_Core_Action::DELETE;
         $isShowMessage = TRUE;
       }
 
@@ -173,8 +173,8 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
     }
 
     $hostIP = CRM_Utils_System::getHostIPAddress();
-    if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $hostIP)) {
-      $hostIP = $_SERVER['SERVER_ADDR'];
+    if (!$hostIP) {
+      $hostIP = ts('None');
     }
     $this->assign('hostIP', $hostIP);
   }

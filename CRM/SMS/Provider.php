@@ -39,7 +39,52 @@ abstract class CRM_SMS_Provider {
    * @var object
    */
   static private $_singleton = array();
+
+  /**
+   * Each array element is a message constructor by provider prepared to send
+   *
+   * The key of array may be the unique id of SMS message
+   *
+   * @var array
+   */
+  public $_sms = array();
+
+  /**
+   * Each acitvity ID that SMS need to update after send
+   *
+   * @var array
+   */
+  public $_activityId = array();
+
+  /**
+   * The result of this batch / process
+   *
+   * @var bool
+   */
+  public $_success = NULL;
+
+  /**
+   * HTTP or other response from provider
+   *
+   * @var array
+   */
+  public $_response = array();
+
+  /**
+   * Provider info increase secret
+   *
+   * @var array
+   */
+  private $_providerInfo = array();
+
+  /**
+   * Max SMS Characters to send in 1 message
+   */
   const MAX_SMS_CHAR = 160;
+
+  /**
+   * Max multi-bytes charactiers to send in 1 message
+   */
   const MAX_ZH_SMS_CHAR = 70;
 
   /**
@@ -51,14 +96,9 @@ abstract class CRM_SMS_Provider {
    * @return object
    */
   public static function &singleton($providerParams = array(), $force = FALSE) {
-    $mailingID = CRM_Utils_Array::value('mailing_id', $providerParams);
     $providerID = CRM_Utils_Array::value('provider_id', $providerParams);
     $providerName = CRM_Utils_Array::value('provider', $providerParams);
 
-    if (!$providerID && $mailingID) {
-      $providerID = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $mailingID, 'sms_provider_id', 'id');
-      $providerParams['provider_id'] = $providerID;
-    }
     if ($providerID) {
       $providerName = CRM_SMS_BAO_Provider::getProviderInfo($providerID, 'name');
     }
@@ -68,13 +108,13 @@ abstract class CRM_SMS_Provider {
     }
 
     $providerName = CRM_Utils_Type::escape($providerName, 'String');
-    $cacheKey = "{$providerName}_" . (int) $providerID . "_" . (int) $mailingID;
+    $cacheKey = "{$providerName}_" . (int) $providerID;
     if (!isset(self::$_singleton[$cacheKey]) || $force) {
-      $paymentClass = $providerName;
-      $paymentFile = str_replace('_', '/', $providerName);
-      require_once "{$paymentFile}.php";
+      $providerClass = $providerName;
+      $providerFile = str_replace('_', '/', $providerName);
+      require_once "{$providerFile}.php";
 
-      self::$_singleton[$cacheKey] = $paymentClass::singleton($providerParams, $force);
+      self::$_singleton[$cacheKey] = $providerClass::singleton($providerParams, $force);
     }
     return self::$_singleton[$cacheKey];
   }
@@ -82,111 +122,27 @@ abstract class CRM_SMS_Provider {
   /**
    * Send an SMS Message via the API Server.
    *
-   * @param array $recipients
-   * @param string $header
-   * @param string $message
-   * @param int $dncID
+   * @param array $messages
    */
-  abstract public function send($recipients, $header, $message, $dncID = NULL);
+  abstract public function send(&$messages);
 
   /**
-   * Return message text.
+   * Activity status and detail update after SMS send callback
    *
-   * Child class could override this function to have better control over the message being sent.
-   *
-   * @param string $message
-   * @param int $contactID
-   * @param array $contactDetails
-   *
-   * @return string
+   * This will trigger by Activity.php which hook the activity update after normal or bulk send
    */
-  public function getMessage($message, $contactID, $contactDetails) {
-    $html = $message->getHTMLBody();
-    $text = $message->getTXTBody();
-
-    return $html ? $html : $text;
-  }
+  abstract public function activityUpdate();
 
   /**
-   * Get recipient details.
+   * Free public / private params on each iteration
    *
-   * @param array $fields
-   * @param array $additionalDetails
-   *
-   * @return mixed
+   * @return void
    */
-  public function getRecipientDetails($fields, $additionalDetails) {
-    // we could do more altering here
-    $fields['To'] = $fields['phone'];
-    return $fields;
+  public function free() {
+    $this->_sms = array();
+    $this->_activityId = array();
+    $this->_success = NULL;
+    $this->_response = array();
+    $this->_activityId = array();
   }
-
-  /**
-   * @param int $apiMsgID
-   * @param $message
-   * @param array $headers
-   * @param int $jobID
-   * @param int $userID
-   *
-   * @return self|null|object
-   * @throws CRM_Core_Exception
-   */
-  public function createActivity($apiMsgID, $message, $headers = array(), $jobID = NULL, $userID = NULL) {
-    if ($jobID) {
-      $sql = "
-SELECT scheduled_id FROM civicrm_mailing m
-INNER JOIN civicrm_mailing_job mj ON mj.mailing_id = m.id AND mj.id = %1";
-      $sourceContactID = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($jobID, 'Integer')));
-    }
-    elseif ($userID) {
-      $sourceContactID = $userID;
-    }
-    else {
-      $session = CRM_Core_Session::singleton();
-      $sourceContactID = $session->get('userID');
-    }
-
-    if (!$sourceContactID) {
-      $sourceContactID = CRM_Utils_Array::value('Contact', $headers);
-    }
-    if (!$sourceContactID) {
-      return FALSE;
-    }
-
-    // $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'SMS delivery', 'name');
-    $activityTypeID = CRM_Utils_Array::key('SMS delivery', CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE));
-    // note: lets not pass status here, assuming status will be updated by callback
-    $activityParams = array(
-      'source_contact_id' => $sourceContactID,
-      'target_contact_id' => $headers['contact_id'],
-      'activity_type_id' => $activityTypeID,
-      'activity_date_time' => date('YmdHis'),
-      'details' => $message,
-      'result' => $apiMsgID,
-    );
-    return CRM_Activity_BAO_Activity::create($activityParams);
-  }
-
-  /**
-   * @param string $name
-   * @param $type
-   * @param bool $abort
-   * @param null $default
-   * @param string $location
-   *
-   * @return mixed
-   */
-  public function retrieve($name, $type, $abort = TRUE, $default = NULL, $location = 'REQUEST') {
-    static $store = NULL;
-    $value = CRM_Utils_Request::retrieve($name, $type, $store,
-      FALSE, $default, $location
-    );
-    if ($abort && $value === NULL) {
-      CRM_Core_Error::debug_log_message("Could not find an entry for $name in $location");
-      echo "Failure: Missing Parameter<p>";
-      exit();
-    }
-    return $value;
-  }
-
 }

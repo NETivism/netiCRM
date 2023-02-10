@@ -238,6 +238,7 @@ class CRM_Core_SelectValues {
         'Relationship' => ts('Relationships'),
         'Contribution' => ts('Contributions'),
         'ContributionPage' => ts('Contribution Page'),
+        'ContributionRecur' => ts('Recurring Contribution'),
         'Group' => ts('Groups'),
         'Membership' => ts('Memberships'),
         'Event' => ts('Events'),
@@ -283,9 +284,10 @@ class CRM_Core_SelectValues {
     $ufGroupType = array();
     if ($type == 'all' || empty($type)) {
       $ufGroupType += array(
-        'Profile' => ts('Online Form for Data Collection'),
         'CiviContribute' => ts('Form in Contribution or Membership Page'),
         'CiviEvent' => ts('Form in Event Registeration Page for Participant'),
+        'Profile' => ts('Online Form for Data Collection'),
+        'System' => ts('Used for Batch Update and Contact Search Profile.'),
       );
     }
     if ($type == 'all' || $type == 'register') {

@@ -17,7 +17,8 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
    * @return void
    */
   function preProcess() {
-    parent::preProcess();    
+    $this->set('action', CRM_Core_Action::UPDATE);
+    parent::preProcess();
   }
 
   /**

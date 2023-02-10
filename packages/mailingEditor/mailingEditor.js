@@ -41,6 +41,12 @@
     _mailingID = "",
     _qfKey = "",
     _storageKey = "",
+    _storageMailings = {
+      maximum: 20,
+      key: [],
+      timestamp: {},
+      timestampOrder: []
+    },
     _debugMode = false,
     _data = {},
     _dataLoadMode = "field",
@@ -48,6 +54,7 @@
     _dataVersion = {},
     _defaultData = {},
     _intervalSaveData,
+    _intervalSaveDataTime = 60000,
     _intervalSaveDataTimer,
     _nme = {}, // plugin object
     _nmeOptions = {},
@@ -365,11 +372,11 @@
 
   var _htmlDecode = function(input) {
     if (typeof input !== "undefined") {
-      _debug(input, "_htmlDecode function: Original input HTML");
+      //_debug(input, "_htmlDecode function: Original input HTML");
 
       // Input is escape HTML, we need to unescape HTML first.
       input = _htmlUnescape(input);
-      _debug(input, "_htmlDecode function: HTML unescape");
+      //_debug(input, "_htmlDecode function: HTML unescape");
 
       // Unescape HTML contains the encoded URL, we need to decode.
       // But before decodeURI, in order to avoid URIError caused by
@@ -377,11 +384,11 @@
       // escape character), we have to convert the content from '%'
       // to '%25' by encodeURI.
       input = encodeURI(input);
-      _debug(input, "_htmlDecode function: Encode URI");
+      //_debug(input, "_htmlDecode function: Encode URI");
 
       // Finally, we can decodeURI.
       input = decodeURI(input);
-      _debug(input, "_htmlDecode function: Decode URI");
+      //_debug(input, "_htmlDecode function: Decode URI");
 
       return input;
     }
@@ -427,7 +434,8 @@
       width  : window.innerWidth,
       height : window.innerHeight,
     };
-    _debug(_viewport, "viewport");
+
+    //_debug(_viewport, "viewport");
   };
 
   var _updateUrlHash = function(hash) {
@@ -572,7 +580,7 @@
 
           if (_isJsonString(dataString)) {
             _data = JSON.parse(dataString);
-            _debug(_data, "nmeData.get.field");
+            //_debug(_data, "nmeData.get.field");
           }
         }
       }
@@ -585,6 +593,42 @@
     },
     save: function() {
       if (typeof Storage !== "undefined") {
+        _storageMailings.key = [];
+        _storageMailings.timestamp = {};
+        _storageMailings.timestampOrder = [];
+
+        _storageMailings.key = Object.keys(localStorage).filter(function(k) {
+          if (k.startsWith("mailing_")) {
+            return k;
+          }
+        });
+
+        if (_storageMailings.key.length >= _storageMailings.maximum) {
+          let deleteCount = _storageMailings.key.length - _storageMailings.maximum;
+
+          for (let i in _storageMailings.key) {
+            let storageKey = _storageMailings.key[i],
+                tempData = JSON.parse(localStorage[storageKey]);
+
+            _storageMailings.timestamp[storageKey] = tempData.saveTimestamp;
+          }
+
+          for (let t in _storageMailings.timestamp) {
+            _storageMailings.timestampOrder.push([t, _storageMailings.timestamp[t]]);
+          }
+
+          _storageMailings.timestampOrder.sort(function(a, b) {
+            return a[1] - b[1];
+          });
+
+          let deleteMailings = _storageMailings.timestampOrder.slice(0, deleteCount);
+
+          for (let i in deleteMailings) {
+            let deleteMailing = deleteMailings[i];
+            localStorage.removeItem(deleteMailing[0]);
+          }
+        }
+
         // Store current timestamp (ms) when updating data
         _data.saveTimestamp = Date.now();
         _nmeData.update();
@@ -1700,7 +1744,7 @@
       _tooltip();
 
       // refs #34990. Save mailing data every 60 seconds.
-      _intervalSaveDataTimer = setInterval(_intervalSaveData, 60000);
+      _intervalSaveDataTimer = setInterval(_intervalSaveData, _intervalSaveDataTime);
     }
   };
 
@@ -2236,7 +2280,7 @@
         });
       }
 
-      $(".nme-container").on("change", ".nme-preview-mode-switch", function() {
+      $(".nme-setting-panels").on("change", ".nme-preview-mode-switch", function() {
         if ($(this).is(":checked")) {
           setTimeout(function() { _nmePreview.open(); }, 500);
         }
@@ -2339,7 +2383,7 @@
       if ($item.length) {
         $item.find(".ql-emojiblot").each(function() {
           var $emojiBlot = $(this),
-              emoji = $.trim($emojiBlot.context.innerText);
+              emoji = typeof $emojiBlot.context !== "undefined" ? $emojiBlot.context.innerText.trim() : $emojiBlot[0].innerText.trim();
 
           $emojiBlot.after(emoji);
           $emojiBlot.remove();
@@ -2977,6 +3021,7 @@
         }
       });
 
+
       $(".nme-setting-panels-tabs").on("click", "a", function(event) {
         event.preventDefault();
         let $thisTabLink = $(this),
@@ -3292,9 +3337,9 @@
         _dataVersion = _nmeData.version.get();
 
         if (_dataVersion.current != _dataVersion.lastest) {
-          _debug(_dataVersion, "Before data version update");
+          //_debug(_dataVersion, "Before data version update");
           _nmeData.version.update();
-          _debug(_dataVersion, "After data version update");
+          //_debug(_dataVersion, "After data version update");
           $.nmEditor.instance.data = _data;
           _nmeData.update();
 

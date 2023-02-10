@@ -207,7 +207,13 @@ class CRM_Utils_Mail {
           'body' => $message,
           'callback' => $callback,
         );
-        CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', array($mailer, $sendParams));
+        // Non-blocking only make sense when there is fastcgi_finish_request
+        if (php_sapi_name() === 'fpm-fcgi') {
+          CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', array($mailer, $sendParams));
+        }
+        else {
+          CRM_Utils_Mail::sendNonBlocking($mailer, $sendParams);
+        }
         return TRUE;
       }
       else {
@@ -416,9 +422,16 @@ class CRM_Utils_Mail {
     return TRUE;
   }
 
+  /**
+   * Check if SPF record valid
+   *
+   * @param string $email email or domain name to verify
+   * @param object $mailer specific mailer which contain host info to help verify
+   * @return bool|string return TRUE when success, return fail reason explain when failed.
+   */
   static function checkSPF($email, $mailer = NULL) {
     if (strstr($email, '@')) {
-      list($user, $domain) = explode('@', $email);
+      list($user, $domain) = explode('@', trim($email));
     }
     else {
       $domain = $email;
@@ -431,24 +444,84 @@ class CRM_Utils_Mail {
     }
     if (!empty($host)) {
       $ip = CRM_Utils_System::getHostIPAddress($host);
+      if (!$ip) {
+        CRM_Core_Error::debug_log_message("Could not resolve IP address of $host.");
+        return 'Cannot resolve IP address of provided host: '.$host.'. Abort SPF verification.';
+      }
       if (CRM_Utils_System::checkPHPVersion(7.1)) {
         require_once 'SPFLib/autoload.php';
         $checker = new SPFLib\Checker();
         $checkResult = $checker->check(new SPFLib\Check\Environment($ip, $domain));
         $result = $checkResult->getCode();
-        return $result === 'pass';
+        if ($result === SPFLib\Check\Result::CODE_PASS) {
+          return TRUE;
+        }
+        $explains = $checkResult->getMessages();
+        if (!empty($explains)) {
+          return implode("\n", $explains);
+        }
+        switch($result) {
+          case SPFLib\Check\Result::CODE_NONE:
+            return 'No SPF record found.';
+          case SPFLib\Check\Result::CODE_NEUTRAL:
+          case SPFLib\Check\Result::CODE_FAIL:
+          case SPFLib\Check\Result::CODE_SOFTFAIL:
+          case SPFLib\Check\Result::CODE_ERROR_PERMANENT:
+            return 'SPF syntax error or configuration error.';
+          case SPFLib\Check\Result::CODE_ERROR_TEMPORARY:
+            return 'Unknown temporary error occurred, please try again.';
+          default:
+            return 'Unknown error occurred.';
+        }
       }
       else {
         require_once 'SPFCheck/autoload.php';
         $checker = new Mika56\SPFCheck\SPFCheck(new Mika56\SPFCheck\DNSRecordGetter());
         $result = $checker->isIPAllowed($ip, $domain);
-        return $result === Mika56\SPFCheck\SPFCheck::RESULT_PASS;
+        if ($result === Mika56\SPFCheck\SPFCheck::RESULT_PASS) {
+          return TRUE;
+        }
+        switch($result) {
+          case Mika56\SPFCheck\SPFCheck::RESULT_NONE:
+            return 'No SPF record found.';
+          case Mika56\SPFCheck\SPFCheck::RESULT_MULTIPLE:
+            return 'Too many SPF records or configuration error.';
+          case Mika56\SPFCheck\SPFCheck::RESULT_PERMERROR:
+            return 'SPF syntax error or configuration error.';
+          case Mika56\SPFCheck\SPFCheck::RESULT_TEMPERROR:
+            return 'Unknown temporary error occurred, please try again.';
+          case Mika56\SPFCheck\SPFCheck::RESULT_DEFINITIVE_PERMERROR:
+            return 'Too many DNS lookups have been performed (max limit is 10)';
+        }
+        return 'Unknown error occurred.';
       }
     }
     return FALSE;
   }
 
-  static function checkDKIM($email, $mailer = NULL) {
+  static function getSPF($email) {
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', trim($email));
+    }
+    else {
+      $domain = $email;
+    }
+    $records = dns_get_record($domain, DNS_TXT);
+    if (!empty($records)) {
+      return $records;
+    }
+    return array();
+  }
+
+  /**
+   * Check if DKIM record valid
+   *
+   * @param string $email Email or domain name.
+   * @return bool|null
+   *   Return NULL when there is no dkim selector or domain.
+   *   Return bool when apply the validation.
+   */
+  static function checkDKIM($email) {
     global $civicrm_conf;
 
     // skip check when there were no selector
@@ -456,14 +529,7 @@ class CRM_Utils_Mail {
       return NULL;
     }
 
-    if (strstr($email, '@')) {
-      list($user, $domain) = explode('@', $email);
-    }
-    else {
-      $domain = $email;
-    }
-    $dkimCheck = $civicrm_conf['mailing_dkim_selector'].'._domainkey.'.$domain;
-    $records = dns_get_record($dkimCheck, DNS_CNAME);
+    $records = self::getDKIM($email);
     if (!empty($records)) {
       foreach($records as $r) {
         if (!empty($r['target']) && $r['target'] === $civicrm_conf['mailing_dkim_domain']) {
@@ -472,6 +538,29 @@ class CRM_Utils_Mail {
       }
     }
     return FALSE;
+  }
+
+  static function getDKIM($email) {
+    global $civicrm_conf;
+
+    // skip check when there were no selector
+    if (empty($civicrm_conf['mailing_dkim_domain']) || empty($civicrm_conf['mailing_dkim_selector'])) {
+      return array();
+    }
+
+
+    if (strstr($email, '@')) {
+      list($user, $domain) = explode('@', trim($email));
+    }
+    else {
+      $domain = $email;
+    }
+    $dkimCheck = $civicrm_conf['mailing_dkim_selector'].'._domainkey.'.$domain;
+    $records = dns_get_record($dkimCheck, DNS_CNAME);
+    if (!empty($records)) {
+      return $records;
+    }
+    return array();
   }
 }
 

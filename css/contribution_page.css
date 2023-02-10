@@ -881,8 +881,9 @@ button.intro_text-readmore-btn:after {
 button.intro_text-readmore-btn.is-active:after {
   content: '\f271';
 }
-#main h1{
-  color: #FFFFFF;
+#main h1 {
+  margin-bottom: .5em;
+  color: var(--color-white, #fff);
   font-size: 44px;
   font-weight: bold;
 }
@@ -901,6 +902,11 @@ button.intro_text-readmore-btn.is-active:after {
   max-height: unset;
   max-width: unset;
 }
+#intro_text blockquote {
+  color: #fff;
+  border-left-color: var(--color-crm-special-contribute-primary);
+}
+
 @media screen and (min-width: 1024px) {
   .intro_text-content.is-collapsed,
   .intro_text-content.is-expanded {

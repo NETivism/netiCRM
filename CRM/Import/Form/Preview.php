@@ -282,6 +282,8 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       'statusFieldName' => $this->get('statusFieldName'),
       'statusID' => $this->get('statusID'),
       'totalRowCount' => $this->get('totalRowCount'),
+      'skipColumnHeader' => $this->get('skipColumnHeader'),
+      'dateFormats' => $this->get('dateFormats'),
     );
 
     $tableName = $this->get('importTableName');

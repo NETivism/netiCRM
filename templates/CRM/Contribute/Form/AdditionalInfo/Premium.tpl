@@ -70,10 +70,10 @@
 	
       {/literal}
 		
-      var index = 1;
+      var index;
       {foreach from= $mincontribution item=amt key=id}
-            {literal}amount[index]{/literal} = "{$amt}"
-            {literal}index = index + 1{/literal}
+            {literal}index = {/literal}{$id};
+            {literal}amount[index]{/literal} = "{$amt}";
       {/foreach}
       {literal}
           if(amount[product_id]) {  

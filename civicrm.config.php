@@ -17,19 +17,15 @@
  * http://www.drupal.org/mysite/test/ the 'settings.php' is
  * searched in the following directories:
  *
- *  1. $confdir/www.drupal.org.mysite.test
- *  2. $confdir/drupal.org.mysite.test
- *  3. $confdir/org.mysite.test
+ *  1. $confdir/www.drupal.org.mysite
+ *  2. $confdir/drupal.org.mysite
+ *  3. $confdir/org.mysite
  *
- *  4. $confdir/www.drupal.org.mysite
- *  5. $confdir/drupal.org.mysite
- *  6. $confdir/org.mysite
+ *  4. $confdir/www.drupal.org
+ *  5. $confdir/drupal.org
+ *  6. $confdir/org
  *
- *  7. $confdir/www.drupal.org
- *  8. $confdir/drupal.org
- *  9. $confdir/org
- *
- * 10. $confdir/default
+ *  7. $confdir/default
  *
  */
 
@@ -53,19 +49,17 @@ function civicrm_conf_init() {
       $sfile = $_SERVER['SCRIPT_FILENAME'];
     }
     // drupal 6-7
-    if (preg_match('/sites\/([^\/]+)\/modules\/civicrm\/.*$/', $sfile)) {
-      $scriptFile = preg_replace('/sites\/([^\/]+)\/modules\/civicrm\/.*$/', 'sites/whatever', $sfile);
-      preg_match('/(.*)(sites\/([^\/]+)\/modules\/civicrm)\/.*$/', $sfile, $matches);
+    if (preg_match('@sites/([^/]+)/modules/civicrm/.*$@', $sfile)) {
+      preg_match('@(.*)(sites/([^/]+)/modules/civicrm)/.*$@', $sfile, $matches);
     }
     // drupal 9
-    elseif (preg_match('/\/modules\/civicrm\/.*$/', $sfile)) {
-      $scriptFile = $sfile;
-      preg_match('/(.*)(\/modules\/civicrm)\/.*$/', $sfile, $matches);
+    elseif (preg_match('@/modules/civicrm/.*$@', $sfile)) {
+      preg_match('@(.*)(/modules/civicrm)/.*$@', $sfile, $matches);
     }
 
-    $site_dir = $drupal_root = $matches[3];
+    $drupal_root = $civicrm_root = $site_dir = '';
     if(!empty($matches[1])) {
-      $drupal_root = $matches[1];
+      $drupal_root = rtrim($matches[1], '/');
     }
     if(!empty($matches[1]) && !empty($matches[2])){
       $civicrm_root = rtrim($matches[1].$matches[2], '/');
@@ -74,73 +68,66 @@ function civicrm_conf_init() {
       $site_dir = $matches[3];
     }
 
-    $currentDir = dirname( $scriptFile );
-    if ( file_exists( $currentDir . 'settings_location.php' ) ) {
-      include $currentDir . 'settings_location.php';
+    $possibleConf = array();
+    if (defined('CIVICRM_CONFDIR')) {
+      $possibleConf[] = CIVICRM_CONFDIR;
     }
 
-    $possibleConf = array();
-    if ( defined( 'CIVICRM_CONFDIR' ) && ! isset( $confdir ) ) {
-      $confdir = CIVICRM_CONFDIR;
-      $possibleConf[] = $confdir; 
-    }
-    else {
-      unset($confdir);
-      $possibleConf[] = $currentDir; 
-      if ($site_dir) {
-        $possibleConf[] = $drupal_root.'/sites/'.$site_dir;
+    // detection dirs by
+    $phpSelf  = array_key_exists( 'PHP_SELF' , $_SERVER ) ? $_SERVER['PHP_SELF' ] : '';
+    $httpHost = array_key_exists( 'HTTP_HOST', $_SERVER ) ? $_SERVER['HTTP_HOST'] : '';
+    $httpHost = preg_replace('/[^0-9a-z.\-]+/i', '', $httpHost);
+
+    if ($phpSelf && $httpHost && $drupal_root) {
+      $uri = explode('/', $phpSelf, 3); // only support 1st sub-dir
+      $server = explode('.', implode('.', array_reverse(explode(':', rtrim($httpHost, '.')))));
+      for ($i = count($uri) - 1; $i > 0; $i--) {
+        for ($j = count($server); $j > 0; $j--) {
+          $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
+          $possibleConf[] = $drupal_root.'/sites/'.$dir;
+        }
       }
-      $possibleConf[] = $drupal_root.'/sites/default';
     }
+
+    // fallback dirs
+    if ($site_dir && $site_dir !== 'all') {
+      $possibleConf[] = $drupal_root.'/sites/'.$site_dir;
+    }
+    $possibleConf[] = $drupal_root.'/sites/default';
 
     foreach($possibleConf as $pdir) {
       if (file_exists($pdir. DIRECTORY_SEPARATOR . 'civicrm.settings.php')) {
-        $confdir = $conf = $pdir;
+        $conf = $pdir;
         $civicrm_drupal_root = $drupal_root;
         $civicrm_conf_path = $conf;
         return $conf;
       }
     }
 
-    if ( ! file_exists( $confdir ) && ! $skipConfigError ) {
-      echo "Could not find valid configuration dir, best guess: $confdir\n";
-      exit( );
-    }
-
-    $phpSelf  = array_key_exists( 'PHP_SELF' , $_SERVER ) ? $_SERVER['PHP_SELF' ] : '';
-    $httpHost = array_key_exists( 'HTTP_HOST', $_SERVER ) ? $_SERVER['HTTP_HOST'] : '';
-
-    $uri = explode('/', $phpSelf );
-    $server = explode('.', implode('.', array_reverse(explode(':', rtrim($httpHost, '.')))));
-    for ($i = count($uri) - 1; $i > 0; $i--) {
-      for ($j = count($server); $j > 0; $j--) {
-        $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-        if (file_exists("$confdir/$dir/civicrm.settings.php")) {
-          $conf = "$confdir/$dir";
-          return $conf;
-        }
-      }
-    }
-
-    $conf = "$confdir/default";
-
-    $civicrm_conf_path = $conf;
-    return $conf;
+    echo "403 Forbidden";
+    http_response_code(403);
+    exit();
 }
 
-if( file_exists(civicrm_conf_init( ) . '/settings.php')){
-  $error = include_once civicrm_conf_init( ) . '/settings.php';
+civicrm_conf_init();
+global $civicrm_root, $civicrm_conf_path, $civicrm_drupal_root;
+if ($civicrm_drupal_root) {
+  chdir($civicrm_drupal_root);
 }
 
-$settingsFile = civicrm_conf_init( ) . '/civicrm.settings.php';
+if( file_exists($civicrm_conf_path . '/settings.php')){
+  $error = include_once $civicrm_conf_path . '/settings.php';
+}
+
+$settingsFile = $civicrm_conf_path . '/civicrm.settings.php';
 define('CIVICRM_SETTINGS_PATH', $settingsFile);
 $error = @include_once( $settingsFile );
 if ( $error === false ) {
-  echo "Could not load the settings file at: {$settingsFile}\n";
+  echo "403 Forbidden";
+  http_response_code(403);
   exit();
 }
 
 // Load class loader
-global $civicrm_root;
 require_once $civicrm_root . '/CRM/Core/ClassLoader.php';
 CRM_Core_ClassLoader::singleton()->register();

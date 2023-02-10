@@ -969,12 +969,26 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
       case 'fee_amount':
       case 'net_amount':
         if (!CRM_Utils_Rule::money($value)) {
-          return civicrm_create_error("$key not a valid amount: $value");
+          if ($key == 'non_deductible_amount') {
+            $errorMsg = ts('Invalid value for field(s)').': '. ts("Non Deductible Amount").'('.$value.')';
+          }
+          elseif ($key == 'total_amount') {
+            $errorMsg = ts('Invalid value for field(s)').': '. ts("Total Amount").'('.$value.')';
+          }
+          elseif ($key == 'fee_amount') {
+            $errorMsg = ts('Invalid value for field(s)').': '. ts("Fee Amount").'('.$value.')';
+          }
+          elseif ($key == 'net_amount') {
+            $errorMsg = ts('Invalid value for field(s)').': '. ts("Net Amount").'('.$value.')';
+          }
+          return civicrm_create_error($errorMsg);
         }
         break;
 
       case 'currency':
         if (!CRM_Utils_Rule::currencyCode($value)) {
+          $errorMsg = ts('Invalid value for field(s)').': '. ts("Currency").'('.$value.')';
+          return civicrm_create_error($errorMsg);
           return civicrm_create_error("currency not a valid code: $value");
         }
         break;
@@ -988,14 +1002,16 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
           }
         }
         if ( !CRM_Utils_Array::value( 'contribution_type_id', $values ) ) {
-          return civicrm_create_error("Contribution Type is not valid: $value");
+          $errorMsg = ts('Invalid value for field(s)').': '. ts("Contribution Types").'('.$value.')';
+          return civicrm_create_error($errorMsg);
         }
         break;
 
       case 'payment_instrument':
         $values['payment_instrument_id'] = CRM_Core_OptionGroup::getValue('payment_instrument', $value);
         if (!CRM_Utils_Array::value('payment_instrument_id', $values)) {
-          return civicrm_create_error("Payment Instrument is not valid: $value");
+          $errorMsg = ts('Invalid value for field(s)').': '. ts("Payment Instruments").'('.$value.')';
+          return civicrm_create_error($errorMsg);
         }
         break;
 

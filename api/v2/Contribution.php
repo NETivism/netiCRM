@@ -261,8 +261,13 @@ function &civicrm_contribution_format_create(&$params) {
   if (civicrm_error($error)) {
     return $error;
   }
-  $ids = array();
 
+  $error = _civicrm_contribute_receiptid_check($params);
+  if (civicrm_error($error)) {
+    return $error;
+  }
+
+  $ids = array();
   CRM_Contribute_BAO_Contribution::resolveDefaults($params, TRUE);
 
   $contribution = CRM_Contribute_BAO_Contribution::create($params, $ids);
@@ -358,6 +363,31 @@ function _civicrm_contribute_duplicate_check(&$params) {
   if ($result) {
     $d = implode(', ', $duplicates);
     $error = CRM_Core_Error::createError("Duplicate error - existing contribution record(s) have a matching Transaction ID or Invoice ID. Contribution record ID(s) are: $d", CRM_Core_Error::DUPLICATE_CONTRIBUTION, 'Fatal', $d);
+    return civicrm_create_error($error->pop(),
+      $d
+    );
+  }
+  else {
+    return array();
+  }
+}
+
+/**
+ * Check if there is a contribution with the same receipt_id
+ *
+ * @param array  $params       Associative array of property name/value
+ *                             pairs to insert in new contribution.
+ *
+ * @return array|CRM_Error
+ * @access private
+ */
+function _civicrm_contribute_receiptid_check(&$params) {
+  $duplicates = array();
+  $result = CRM_Contribute_BAO_Contribution::checkDuplicateReceipt($params, $duplicates);
+
+  if ($result) {
+    $d = implode(', ', $duplicates);
+    $error = CRM_Core_Error::createError("Duplicate error - existing contribution record(s) have a matching Receipt ID. Contribution record ID(s) are: $d", CRM_Core_Error::DUPLICATE_CONTRIBUTION, 'Fatal', $d);
     return civicrm_create_error($error->pop(),
       $d
     );

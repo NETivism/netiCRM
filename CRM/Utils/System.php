@@ -1166,7 +1166,9 @@ class CRM_Utils_System {
       // drupal 8,9, the correct way to exit
       // let symfony router handling this
       // will trigger event(KernelEvents::TERMINATE at controller
-      throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR); 
+      // set default null exception handler to prevent no catch after this
+      set_exception_handler(array('CRM_Core_Exception', 'nullExceptionHandler'));
+      throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR);
     }
 
     // we should never hit here when using drupal
@@ -1214,7 +1216,8 @@ class CRM_Utils_System {
     if (!empty(CRM_Core_Config::$_shutdownCallbacks)) {
       $registerFastcgiFinishRequest = FALSE;
       if (!empty(CRM_Core_Config::$_shutdownCallbacks['before'])) {
-        foreach(CRM_Core_Config::$_shutdownCallbacks['before'] as $call) {
+        foreach(CRM_Core_Config::$_shutdownCallbacks['before'] as $idx => $call) {
+          unset(CRM_Core_Config::$_shutdownCallbacks['before'][$idx]);
           $callback = key($call);
           $args = reset($call);
           if (is_callable($callback)) {
@@ -1235,7 +1238,8 @@ class CRM_Utils_System {
       }
       if (!empty(CRM_Core_Config::$_shutdownCallbacks['after'])) {
         register_shutdown_function('CRM_Utils_System::civiAfterShutdown');
-        foreach(CRM_Core_Config::$_shutdownCallbacks['after'] as $call) {
+        foreach(CRM_Core_Config::$_shutdownCallbacks['after'] as $idx => $call) {
+          unset(CRM_Core_Config::$_shutdownCallbacks['after'][$idx]);
           $callback = key($call);
           $args = reset($call);
           if (is_callable($callback)) {
@@ -1648,15 +1652,56 @@ class CRM_Utils_System {
     }
   }
 
+  /**
+   * Get IP address from provided host
+   *
+   * @param string $host
+   *   Use host to resolve IP address when provided. Default NULL will provide IP address of current CRM
+   * @return string|false
+   *   Return IP address when success. return FALSE when IP address is private or can't resolve
+   */
   public static function getHostIPAddress($host = NULL) {
-    if (empty($host)) {
-      $host = $_SERVER['HTTP_HOST'];
+    $ip = FALSE;
+    if (!empty($host)) {
+      $ipByHost = gethostbyname($host);
+      $ipByHost = filter_var(
+        $ipByHost,
+        FILTER_VALIDATE_IP,
+        FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE
+      );
     }
-    $ip = gethostbyname($host);
-    if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ip)) {
-      $ip = $_SERVER['SERVER_ADDR'];
+    else {
+      $ipByHost = filter_var(
+        $_SERVER['SERVER_ADDR'],
+        FILTER_VALIDATE_IP,
+        FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE
+      );
+      if (empty($ipByHost)) {
+        $host = $_SERVER['SERVER_NAME'];
+        $ipByHost = gethostbyname($host);
+        $ipByHost = filter_var(
+          $ipByHost,
+          FILTER_VALIDATE_IP,
+          FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE
+        );
+      }
+    }
+    if ($ipByHost && preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ipByHost)) {
+      $ip = $ipByHost;
     }
     return $ip;
+  }
+
+  /**
+   * Load and login user by uid or name
+   *
+   * @param array $params
+   *   'uid' => uid
+   *   'name' => username
+   * @return void
+   */
+  public static function loadUser($params) {
+    return CRM_Core_Config::$_userSystem->loadUser($params);
   }
 }
 

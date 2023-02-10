@@ -1158,7 +1158,7 @@ class CRM_Contact_BAO_Query {
 
       // refs #30009, special case for one to many note
       if ($this->_useGroupBy && !strstr($this->_whereClause, 'civicrm_note') && isset($this->_select['note']) && !empty($this->_tables['civicrm_note'])) {
-        $this->_whereClause .= " AND (civicrm_note.id = (SELECT MAX(cnote.id) FROM civicrm_note cnote WHERE cnote.entity_table = 'civicrm_contact' AND contact_a.id = cnote.entity_id GROUP BY cnote.entity_id)) ";
+        $this->_whereClause .= " AND (civicrm_note.id = (SELECT MAX(cnote.id) FROM civicrm_note cnote WHERE cnote.entity_table = 'civicrm_contact' AND contact_a.id = cnote.entity_id GROUP BY cnote.entity_id) OR civicrm_note.id IS NULL) ";
       }
 
       $select = "SELECT ";
@@ -3939,6 +3939,7 @@ civicrm_relationship.start_date > {$today}
     $additionalFromClause = NULL, $skipOrderAndLimit = FALSE
   ) {
 
+    CRM_Core_DAO::profiling(1);
     if ($includeContactIds) {
       $this->_includeContactIds = TRUE;
       $this->_whereClause = $this->whereClause();
@@ -4196,10 +4197,13 @@ civicrm_relationship.start_date > {$today}
     }
 
     if ($count) {
-      return CRM_Core_DAO::singleValueQuery($query);
+      $result = CRM_Core_DAO::singleValueQuery($query);
+      CRM_Core_DAO::profiling(0);
+      return $result;
     }
 
     $dao = CRM_Core_DAO::executeQuery($query);
+    CRM_Core_DAO::profiling(0);
     if ($groupContacts) {
       $ids = array();
       while ($dao->fetch()) {

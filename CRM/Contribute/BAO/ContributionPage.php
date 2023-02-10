@@ -162,11 +162,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         if ($email) {
           $val = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($gId, $contactID, $params[$key]);
           $fields = CRM_Core_BAO_UFGroup::getFields($gId, FALSE, CRM_Core_Action::VIEW);
-          foreach ($fields as $k => $v) {
-            if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($val['values'][$v['title']] )){
-              $val['values'][$v['title']] = ts("Uploaded files received");
-            }
-          }
+          CRM_Core_BAO_UFGroup::verifySubmittedValue($fields, $val, $values['submitted']);
           CRM_Core_BAO_UFGroup::commonSendMail($contactID, $val);
         }
       }
@@ -251,10 +247,20 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       }
 
       // set email in the template here
+      global $civicrm_conf;
+      $fromEmail = '';
+      if (!empty($values['receipt_from_email'])) {
+        if (!empty($civicrm_conf['mailing_noreply_domain']) && preg_match($civicrm_conf['mailing_noreply_domain'], $values['receipt_from_email'])) {
+          $fromEmail = '';
+        }
+        else {
+          $fromEmail = $values['receipt_from_email'];
+        }
+      }
       $tplParams = array(
         'createdDate' => CRM_Utils_Array::value('created_date', $values),
         'email' => $email,
-        'receiptFromEmail' => strstr($values['receipt_from_email'], 'neticrm.net') ? '' : $values['receipt_from_email'],
+        'receiptFromEmail' => $fromEmail,
         'contactID' => $contactID,
         'contributionID' => $values['contribution_id'],
         'membershipID' => CRM_Utils_Array::value('membership_id', $values),

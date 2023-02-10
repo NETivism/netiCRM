@@ -229,6 +229,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'headerPattern' => '/(^(participant(.)?)?id$)/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'participant_contact_id' => array(
           'name' => 'contact_id',
@@ -240,6 +241,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
+          'usage' => 'System',
         ) ,
         'event_id' => array(
           'name' => 'event_id',
@@ -251,6 +253,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'FKClassName' => 'CRM_Event_DAO_Event',
+          'usage' => 'System',
         ) ,
         'participant_status_id' => array(
           'name' => 'status_id',
@@ -264,6 +267,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'export' => false,
           'default' => '',
           'FKClassName' => 'CRM_Event_DAO_ParticipantStatusType',
+          'usage' => 'System',
         ) ,
         'participant_role_id' => array(
           'name' => 'role_id',
@@ -277,6 +281,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => false,
           'default' => 'UL',
+          'usage' => 'System',
         ) ,
         'participant_register_date' => array(
           'name' => 'register_date',
@@ -287,6 +292,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'headerPattern' => '/^(r(egister\s)?date)$/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'participant_source' => array(
           'name' => 'source',
@@ -319,6 +325,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'participant_is_pay_later' => array(
           'name' => 'is_pay_later',
@@ -329,6 +336,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'headerPattern' => '/(is.)?(pay(.)?later)$/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'participant_fee_amount' => array(
           'name' => 'fee_amount',
@@ -339,6 +347,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'headerPattern' => '/fee(.?am(ou)?nt)?/i',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'participant_registered_by_id' => array(
           'name' => 'registered_by_id',
@@ -351,6 +360,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'export' => true,
           'default' => 'UL',
           'FKClassName' => 'CRM_Event_DAO_Participant',
+          'usage' => 'System',
         ) ,
         'participant_discount_id' => array(
           'name' => 'discount_id',
@@ -371,6 +381,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '/^[A-Z]{3}$/i',
           'export' => true,
           'default' => 'UL',
+          'usage' => 'System',
         ) ,
       );
     }

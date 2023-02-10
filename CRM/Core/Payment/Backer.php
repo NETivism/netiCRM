@@ -283,7 +283,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       civicrm_api('contact', 'create', $contact);
     }
 
-    // process contribution
+    // process recurring or contribution
     if ($contactId) {
       // create additional contact if needed
       $backerRelationTypeId = $config->backerFounderRelationship;
@@ -304,7 +304,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
             array('table' => 'civicrm_contact', 'field' => 'last_name', 'weight' => 2),
             array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 8),
             array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 10),
-            array('table' => 'civicrm_email', 'field' => 'phone', 'weight' => 7),
+            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 7),
           ),
           20
         );
@@ -353,7 +353,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
               'id' => $additionalContactId,
               'address' => $params['additional']['address'],
               'log_data' => ts('Updated contact').'-'.ts('Backer Auto Import'),
-            ); 
+            );
             // log exists
             civicrm_api('contact', 'create', $addContact);
           }
@@ -377,27 +377,53 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           civicrm_api('Relationship', 'create', $addContactParams);
         }
       }
-      // create a pending contribution      
-      $params['contribution']['contact_id'] = $contactId;
-      $contrib = $params['contribution'];
-      $page = array();
-      CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
-      if ($page['id']) {
-        $contrib['contribution_status_id'] = 2; // pending
-        $contrib['contribution_page_id'] = $page['id'];
-        $contrib['contribution_type_id'] = $page['contribution_type_id'];
-        $contrib['payment_processor_id'] = $this->_paymentProcessor['id'];
-        $contrib['is_test'] = $this->_paymentProcessor['is_test'];
-        $contrib['invoice_id'] = !empty($this->_delivery) ? $this->_delivery : md5(uniqid(rand(), TRUE));
-        $contrib['version'] = 3;
-        $result = civicrm_api('contribution', 'create', $contrib);
+
+      // create recurring when available
+      if (!empty($params['recurring'])) {
+        $params['recurring']['contact_id'] = $contactId;
+        $params['recurring']['processor_id'] = $this->_paymentProcessor['id'];
+        $params['recurring']['is_test'] = $this->_paymentProcessor['is_test'] ? 1 : 0;
+        $recur = $params['recurring'];
+        $recurFind = array(
+          'version' => 3,
+          'trxn_id' => $recur['trxn_id'],
+        );
+        $result = civicrm_api('ContributionRecur', 'get', $recurFind);
         if ($result['id']) {
-          $currentContributionId = $result['id'];
-          $params['contribution']['id'] = $result['id'];
-          $contrib['id'] = $result['id'];
-          $ids = CRM_Contribute_BAO_Contribution::buildIds($contrib['id'], 'ipn');
-          $this->processIPN($ids, $params['contribution']);
-          return $currentContributionId;
+          $recur['id'] = $result['id'];
+          $recur['invoice_id'] = $result['values'][$result['id']]['invoice_id'];
+        }
+        else {
+          $recur['invoice_id'] = md5(uniqid(rand(), TRUE));
+        }
+        civicrm_api('ContributionRecur', 'create', $recur);
+      }
+
+      // create a pending contribution then trigger ipn
+      if (!empty($params['contribution'])) {
+        $params['contribution']['contact_id'] = $contactId;
+        $contrib = $params['contribution'];
+        $page = array();
+        CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+        if ($page['id']) {
+          $contrib['contribution_status_id'] = 2; // pending
+          $contrib['contribution_page_id'] = $page['id'];
+          $contrib['contribution_type_id'] = $page['contribution_type_id'];
+          $contrib['payment_processor_id'] = $this->_paymentProcessor['id'];
+          $contrib['is_test'] = $this->_paymentProcessor['is_test'] ? 1 : 0;
+          if (!empty($this->_delivery)) {
+            $contrib['invoice_id'] = $contrib['invoice_id'].'_'.$this->_delivery;
+          }
+          $contrib['version'] = 3;
+          $result = civicrm_api('contribution', 'create', $contrib);
+          if ($result['id']) {
+            $currentContributionId = $result['id'];
+            $params['contribution']['id'] = $result['id'];
+            $contrib['id'] = $result['id'];
+            $ids = CRM_Contribute_BAO_Contribution::buildIds($contrib['id'], 'ipn');
+            $this->processIPN($ids, $params['contribution']);
+            return $currentContributionId;
+          }
         }
       }
     }
@@ -450,6 +476,22 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       return $params;
     }
 
+    // contact
+    self::formatContact($json, $params);
+
+    // recurring
+    if ($json['transaction']['type'] == 'parent') {
+      self::formatRecurring($json, $params);
+    }
+
+    // contribution
+    if ($json['transaction']['type'] == 'normal' || $json['transaction']['type'] == 'child') {
+      self::formatContribution($json, $params);
+    }
+    return $params;
+  }
+
+  public static function formatContact($json, &$params) {
     $name = self::explodeName($json['user']['name']);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     if ($name === FALSE) {
@@ -465,28 +507,27 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'first_name' => $name[1],
       'email' => $json['user']['email'],
     );
-    $params['email'][0] = array(
+    $params['email'][] = array(
       'email' => $json['user']['email'],
-      'location_type_id' => array_search('Billing', $locationType),
+      'location_type_id' => array_search('Home', $locationType),
       'is_primary' => 1,
       'append' => TRUE,
     );
     $phone = self::validateMobilePhone($json['user']['cellphone']);
-    $params['phone'][0] = array(
+    $params['phone'][] = array(
       'phone' => $phone ? $phone : $json['user']['cellphone'],
       'phone_type_id' => $phone ? 2 : 5, // mobile
-      'location_type_id' => array_search('Billing', $locationType),
+      'location_type_id' => array_search('Home', $locationType),
       'is_primary' => 1,
       'append' => TRUE,
     );
 
     // address
-    $stateAbbr = CRM_Core_PseudoConstant::stateProvinceAbbreviation();
     // backer special abbr convert to CRM
     if ($json['recipient']['recipient_subdivision']) {
       if ($json['recipient']['recipient_subdivision'] == 'KIN') $json['recipient']['recipient_subdivision'] = 'KMN';
       elseif ($json['recipient']['recipient_subdivision'] == 'LIE') $json['recipient']['recipient_subdivision'] = 'LCI';
-      elseif ($json['recipient']['recipient_subdivision'] == 'NWT') $json['recipient']['recipient_subdivision'] = 'TPO';
+      elseif ($json['recipient']['recipient_subdivision'] == 'NWT') $json['recipient']['recipient_subdivision'] = 'TPQ';
 
       $countryId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_country WHERE name = 'Taiwan'");
       $stateProvinceId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_state_province WHERE abbreviation = %1 AND country_id = %2", array(
@@ -500,10 +541,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'state_province_id' => $stateProvinceId ? $stateProvinceId : '',
       'city' => $json['recipient']['recipient_cityarea'] ? $json['recipient']['recipient_cityarea'] : '',
       'street_address' => $json['recipient']['recipient_address'] ? $json['recipient']['recipient_address'] : '',
-      'location_type_id' => array_search('Billing', $locationType),
+      'location_type_id' => array_search('Home', $locationType),
     );
     if (trim($json['recipient']['recipient_name']) == trim($json['user']['name'])) {
-      $params['address'][0] = $address;
+      $params['address'][] = $address;
     }
     else {
       $params['additional'] = array();
@@ -522,7 +563,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       if ($json['recipient']['recipient_contact_email'] && CRM_Utils_Rule::email(trim($json['recipient']['recipient_contact_email']))) {
         $params['additional']['email'][0] = array(
           'email' => trim($json['recipient']['recipient_contact_email']),
-          'location_type_id' => array_search('Billing', $locationType),
+          'location_type_id' => array_search('Home', $locationType),
           'is_primary' => 1,
           'append' => TRUE,
         );
@@ -531,7 +572,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['additional']['phone'][0] = array(
           'phone' => trim($json['recipient']['recipient_cellphone']),
           'phone_type_id' => 5, // other 
-          'location_type_id' => array_search('Billing', $locationType),
+          'location_type_id' => array_search('Home', $locationType),
           'is_primary' => 1,
           'append' => TRUE,
         );
@@ -543,8 +584,54 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       }
       $params['additional']['address'][0] = $address;
     }
+  }
 
-    // contribution
+  public static function formatRecurring($json, &$params) {
+    $statusMap = array(
+      // recurring contribution status
+      'success' => 1,
+      'suspend' => 7,
+      'recurring' => 5,
+      'failed_cancel' => 3,
+    );
+
+    $recurring = [];
+    $recurring['trxn_id'] = $json['transaction']['trade_no'];
+    $recurring['amount'] = $json['transaction']['money'];
+    $recurring['frequency_unit'] = 'month';
+    $recurring['frequency_interval'] = 1;
+    $recurring['installments'] = NULL;
+    $recurring['create_date'] = date('YmdHis', strtotime($json['transaction']['created_at']));
+
+    // status
+    $recurring['contribution_status_id'] = $statusMap[$json['transaction']['render_status']];
+    if ($json['transaction']['render_status'] == 'success') {
+      $recurring['end_date'] = date('YmdHis');
+    }
+    elseif ($json['transaction']['render_status'] == 'recurring') {
+      $recurring['start_date'] = date('YmdHis', strtotime($json['transaction']['created_at']));
+    }
+    elseif ($json['transaction']['render_status'] == 'suspend') {
+    }
+    elseif ($json['transaction']['render_status'] == 'failed_cancel') {
+    }
+
+    if (!empty($json['transaction']['updated_at'])) {
+      $recurring['modified_date'] = date('YmdHis', strtotime($json['transaction']['updated_at']));
+    }
+    else {
+      $recurring['modified_date'] = date('YmdHis');
+    }
+    $recurring['cycle_day'] = date('j');
+    $recurring['processor_id'] = NULL;
+    $recurring["is_test"] = NULL;
+    $recurring['contact_id'] = NULL;
+    $params['recurring'] = $recurring;
+  }
+
+  public static function formatContribution($json, &$params) {
+    $config = CRM_Core_Config::singleton();
+    $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $instruments =  CRM_Contribute_PseudoConstant::paymentInstrument('name');
     $instrumentMap = array(
       'credit' => 'Credit Card',
@@ -561,10 +648,6 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'cancel' => 3,
       'failed' => 4,
       'failed_code' => 4,
-      // recurring contribution status
-      'suspend' => 7,
-      'recurring' => 5,
-      'failed_cancel' => 3,
     );
 
     $params['contribution'] = array(
@@ -575,6 +658,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'contribution_status_id' => $statusMap[$json['transaction']['render_status']],
       'updated_at' => date('YmdHis', strtotime($json['transaction']['updated_at'])),
     );
+
+    // invoice_id, recurring
+    if (!empty($json['transaction']['parent_trade_no'])) {
+      // invoice id is uniq, will append additional info
+      $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid(rand(), TRUE)), 0, 10);
+    }
+    else {
+      $params['contribution']['invoice_id'] = md5(uniqid(rand(), TRUE));
+    }
+
     switch($statusMap[$json['transaction']['render_status']]) {
       case 1: // success
         $params['contribution']['receive_date'] = date('YmdHis', strtotime($json['payment']['paid_at']));
@@ -621,14 +714,96 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution'] += $matches[1];
         $leftItems = array_diff_key($items, $matches[0]);
         foreach($leftItems as $label => $value) {
-          $amountLevel[] = $label.'=>'.$value;
+          $amountLevel[] = $label.'→'.$value;
         }
       }
       if (!empty($amountLevel)) {
         $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
-    return $params;
+
+    // handling receipt
+    if (!empty($json['receipt']) && !empty($json['receipt']['receipt_type'])) {
+      $receiptFieldsMap = array(
+        'choice' => 'custom_'.$config->receiptYesNo,
+        'receipt_type' => 'custom_'.$config->receiptYesNo,
+        'corporate_name' => 'custom_'.$config->receiptTitle,
+        'contact_name' => 'custom_'.$config->receiptTitle,
+        'tax_number' => 'custom_'.$config->receiptSerial,
+        'identity_card_number' => 'custom_'.$config->receiptSerial,
+      );
+      $choice = trim($json['receipt']['choice']);
+      $receiptType = trim($json['receipt']['receipt_type']);
+      if ($choice === '不需要收據') {
+        $params['contribution'][$receiptFieldsMap['choice']] = '0';
+        $needReceipt = FALSE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '單次寄送紙本收據') {
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = '1';
+        $needReceipt = TRUE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '需要收據但不需要寄送') {
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = '2';
+        $needReceipt = TRUE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '年度寄送紙本收據') {
+        // special case
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_paper_receipt';
+        $needReceipt = TRUE;
+      }
+      if ($needReceipt) {
+        if (!empty($json['receipt']['corporate_name'])) {
+          $params['contribution'][$receiptFieldsMap['corporate_name']] = $json['receipt']['corporate_name'];
+        }
+        elseif (!empty($json['receipt']['contact_name'])) {
+          $params['contribution'][$receiptFieldsMap['contact_name']] = $json['receipt']['contact_name'];
+        }
+
+        if (!empty($json['receipt']['tax_number'])) {
+          $params['contribution'][$receiptFieldsMap['tax_number']] = $json['receipt']['tax_number'];
+        }
+        elseif (!empty($json['receipt']['identity_card_number'])) {
+          $params['contribution'][$receiptFieldsMap['identity_card_number']] = $json['receipt']['identity_card_number'];
+        }
+
+        // billing address and email
+        if ($json['receipt']['address']) {
+          if ($json['receipt']['subdivision'] == 'KIN') $json['receipt']['subdivision'] = 'KMN';
+          elseif ($json['receipt']['subdivision'] == 'LIE') $json['receipt']['subdivision'] = 'LCI';
+          elseif ($json['receipt']['subdivision'] == 'NWT') $json['receipt']['subdivision'] = 'TPQ';
+
+          $countryId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_country WHERE name = 'Taiwan'");
+          $stateProvinceId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_state_province WHERE abbreviation = %1 AND country_id = %2", array(
+            1 => array($json['receipt']['subdivision'], 'String'),
+            2 => array($countryId, 'Integer'),
+          ));
+          $address = array(
+            'country' => ($json['receipt']['country'] == 'TW') ? 'Taiwan' : '',
+            'postal_code' => $json['receipt']['postal_code'] ? $json['receipt']['postal_code'] : '',
+            'state_province_id' => $stateProvinceId ? $stateProvinceId : '',
+            'city' => $json['receipt']['city_area'] ? $json['receipt']['city_area'] : '',
+            'street_address' => $json['receipt']['address'] ? $json['receipt']['address'] : '',
+            'location_type_id' => array_search('Billing', $locationType),
+          );
+          $params['address'][] = $address;
+        }
+        if ($json['receipt']['email']) {
+          if (!empty($params['email'])) {
+            foreach($params['email'] as &$mail) {
+              if (isset($mail['is_primary'])) {
+                $mail['is_primary'] = 0;
+              }
+            }
+          }
+          $params['email'][] = array(
+            'email' => $json['receipt']['email'],
+            'location_type_id' => array_search('Billing', $locationType),
+            'is_primary' => 1,
+            'append' => TRUE,
+          );
+        }
+      }
+    }
   }
 
   /**

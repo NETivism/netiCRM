@@ -29,9 +29,19 @@
         <div id="help">{$activityTypeDescription}</div>
       {/if}
       <table class="crm-info-panel">
+        {if $values.is_test}
+        <tr>
+            <td class="label">{ts}Is Test{/ts}</td><td class="view-value">{ts}Yes{/ts}</td>
+        </tr>
+        {/if}
+        {if $values.status}
+        <tr>
+            <td class="label">{ts}Activity Status{/ts}</td><td class="view-value">{$values.status}</td>
+        </tr>
+        {/if}
         <tr>
             <td class="label">{ts}Added By{/ts}</td><td class="view-value">{$values.source_contact}</td>
-        </tr> 
+        </tr>
        {if $values.target_contact_value} 
            <tr>
                 <td class="label">{ts}With Contact{/ts}</td><td class="view-value">{$values.target_contact_value}</td>
@@ -104,6 +114,38 @@
         </tr>  
 {/if}
      </table>
+      {if $mailing_events}
+      <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+        <div class="crm-accordion-header">
+        <div class="zmdi crm-accordion-pointer"></div>
+          {ts}Email Tracking{/ts}
+        </div><!-- /.crm-accordion-header -->
+        <div class="crm-accordion-body">
+          <table class="form-layout-compressed">
+            <tr>
+              <th class="twelve">{ts}Action{/ts}</th>
+              <th class="twelve">{ts}Date{/ts}</th>
+              <th>{ts}Details{/ts}</th>
+            </tr>
+            {foreach from=$mailing_events item=mailing_event_row}
+              <tr>
+                <td>{$mailing_event_row.action}</td>
+                <td>{$mailing_event_row.time|crmDate}</td>
+                <td>
+                  {if $mailing_event_row.detail}
+                    {$mailing_event_row.detail|nl2br}
+                  {else}
+                    {ts}None{/ts}
+                  {/if}
+                </td>
+              </tr>
+            {/foreach}
+            <tr>
+            </tr>
+          </table>
+        </div><!-- /.crm-accordion-body -->
+      </div><!-- /.crm-accordion-wrapper -->
+      {/if}
      <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>  
  

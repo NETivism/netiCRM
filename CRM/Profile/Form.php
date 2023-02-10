@@ -369,10 +369,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
             $deleteExtra = ts("Are you sure you want to delete attached file.");
             $fileId = $url['file_id'];
-            $deleteURL = CRM_Utils_System::url('civicrm/file',
-              "reset=1&id={$fileId}&eid=$this->_id&fid={$customFieldID}&action=delete&stay=1"
-            );
-            $customFiles[$field['name']]['deleteURL'] = "<a href=\"{$deleteURL}\" onclick = \"if (confirm( ' $deleteExtra ' )) this.href+='&confirmed=1'; else return false;\">".ts("Delete Attached File")."</a>";
+            if (empty($field['is_view'])) {
+              $deleteURL = CRM_Utils_System::url('civicrm/file',
+                "reset=1&id={$fileId}&eid=$this->_id&fid={$customFieldID}&action=delete&stay=1"
+              );
+              $customFiles[$field['name']]['deleteURL'] = "<a href=\"{$deleteURL}\" onclick = \"if (confirm( ' $deleteExtra ' )) this.href+='&confirmed=1'; else return false;\">".ts("Delete Attached File")."</a>"; 
+            }
           }
         }
       }
@@ -926,7 +928,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       }
     }
 
-    if ($config->profileDoubleOptIn && !empty($submittedGroup)) {
+    if (!empty($submittedGroup)) {
       $profile = NULL;
       foreach ($params as $name => $values) {
         if (substr($name, 0, 6) == 'email-') {
@@ -969,9 +971,14 @@ class CRM_Profile_Form extends CRM_Core_Form {
     }
 
     // last, if still have mail to subscribe group, send mail
-    if (!empty($mailingType)) {
-      $toSubscribe = array_keys($mailingType);
+    $toSubscribe = array_keys($mailingType);
+    if ($config->profileDoubleOptIn) {
       CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($toSubscribe, $profile, $this->_id);
+    } else {
+      foreach ($toSubscribe as $groupID) {
+        $se = CRM_Mailing_Event_BAO_Subscribe::subscribe($groupID, $profile['email'], $this->_id);
+        $confirm = CRM_Mailing_Event_BAO_Confirm::confirm($this->_id, $se->id, $se->hash);
+      }
     }
 
     require_once 'CRM/Core/BAO/UFGroup.php';
@@ -987,11 +994,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       if ($notify = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gId, 'notify')) {
         $values = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($gId, $this->_id, NULL);
         $fields = CRM_Core_BAO_UFGroup::getFields($gId, FALSE, CRM_Core_Action::VIEW);
-        foreach ($fields as $k => $v) {
-          if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($values['values'][$v['title']] )){
-            $values['values'][$v['title']] = ts("Uploaded files received");
-          }
-        }
+        CRM_Core_BAO_UFGroup::verifySubmittedValue($fields, $values, $params);
         CRM_Core_BAO_UFGroup::commonSendMail($this->_id, $values);
       }
     }

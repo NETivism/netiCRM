@@ -25,11 +25,17 @@
 *}
 <div class="crm-block crm-form-block crm-contactSMS-form-block">
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
-{if $suppressedSms > 0}
     <div class="status">
-        <p>{ts count=$suppressedSms plural='SMS will NOT be sent to %count contacts - (no phone number on file, or communication preferences specify DO NOT SMS, or contact is deceased).'}SMS will NOT be sent to %count contact - (no phone number on file, or communication preferences specify DO NOT SMS, or contact is deceased).{/ts}</p>
+        <ul>
+          <li>{ts 1=$totalSelectedContacts}Number of selected contacts: %1{/ts}</li>
+          <li>{ts 1="$estimatedSms"}We will send messages to %1 contacts.{/ts}
+              {if $suppressedSms > 0}
+                {ts count=$suppressedSms plural='SMS will NOT be sent to %count contacts - (no phone number on file, or communication preferences specify DO NOT SMS, or contact is deceased).'}SMS will NOT be sent to %count contact - (no phone number on file, or communication preferences specify DO NOT SMS, or contact is deceased).{/ts}
+              {/if}
+          </li>
+
+        </ul>
     </div>
-{/if}
 {if $extendTargetContacts > 0}
    <div class="status">
         <p>{ts count=$extendTargetContacts plural='SMS will NOT be sent to contacts of %count Activities - (there are more than one Target contact).'}SMS will NOT be sent to contacts of %count Activity - (there are more than one Target contact).{/ts}</p>
@@ -111,6 +117,15 @@ cj(function($){
         }
       }
     }).select2('data', toContact);
+    $(document).on('select2:open', () => {
+      var inputField = document.querySelector('input.select2-search__field');
+      if (inputField) {
+        inputField.placeholder='{/literal}{ts}Input search keywords{/ts}{literal}';
+        setTimeout(() => {
+          inputField.focus();
+        }, 100);
+      }
+    });
   }
   phoneSelect('#to');
 });

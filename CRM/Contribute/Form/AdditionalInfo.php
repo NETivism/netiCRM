@@ -54,7 +54,14 @@ class CRM_Contribute_Form_AdditionalInfo {
     $sel1[0] = ts('- select -');
     while ($dao->fetch()) {
       $sel1[$dao->id] = $dao->name . " ( " . $dao->sku . " )";
-      $min_amount[$dao->id] = $dao->min_contribution;
+      if ($dao->calculate_mode == 'first') {
+        $min_contribution = min($dao->min_contribution, $dao->min_contribution_recur);
+      }
+      else {
+        // condition: $dao->calculate_mode == 'cumulative'
+        $min_contribution = $dao->min_contribution;
+      }
+      $min_amount[$dao->id] = $min_contribution;
       $options = explode(',', $dao->options);
       foreach ($options as $k => $v) {
         $options[$k] = trim($v);
@@ -72,7 +79,14 @@ class CRM_Contribute_Form_AdditionalInfo {
         $dao->id = $selectedProductId;
         $dao->find(TRUE);
         $sel1[$dao->id] = $dao->name . " ( " . $dao->sku . " ) ( ".ts('Disable')." )";
-        $min_amount[$dao->id] = $dao->min_contribution;
+        if ($dao->calculate_mode == 'first') {
+          $min_contribution = min($dao->min_contribution, $dao->min_contribution_recur);
+        }
+        else {
+          // condition: $dao->calculate_mode == 'cumulative';
+          $min_contribution = $dao->min_contribution;
+        }
+        $min_amount[$dao->id] = $min_contribution;
         $options = explode(',', $dao->options);
         foreach ($options as $k => $v) {
           $options[$k] = trim($v);

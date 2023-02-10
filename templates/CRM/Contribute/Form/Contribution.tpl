@@ -286,11 +286,11 @@ cj(document).ready( function() {
     cj('.crm-ajax-accordion .crm-accordion-header').one('click', function() { 
     	loadPanes(cj(this).attr('id')); 
     });
-    cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function() {
+    cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function(idx) {
       var paneID = cj(this).attr('id');
       window.setTimeout(function(){
         loadPanes(paneID);
-      }, 400);
+      }, 800*(idx+1));
     });
 });
 // load panes function calls for snippet based on id of crm-accordion-header
@@ -450,6 +450,8 @@ Number.prototype.pad = function (len) {
   return (new Array(len+1).join("0") + this).slice(-len);
 }
 cj(document).ready(function(){
+
+  {/literal}{if !$smarty.get.snippet}{literal}
    if(cj('#receipt_date').val()){
      cj('#have_receipt').attr('checked', 'checked');
      cj('#have_receipt').attr('disabled', 'disabled');
@@ -458,8 +460,6 @@ cj(document).ready(function(){
      cj('#receipt-option').hide();
    }
    
-  {/literal}{if !$smarty.get.snippet}{literal}
-  console.log('test');
    // Define dialog behavior.
   cj("#dialog-confirm-receipt").dialog({
     autoOpen: false,
@@ -481,6 +481,17 @@ cj(document).ready(function(){
     }
   });
   isPassChekcedDeductible = false;
+
+  cj("#contribution_type_id").change(function(){
+    let contributionTypeId = parseInt(cj(this).val());
+    let notifySpan = cj('#have_receipt').next('.description');
+    notifySpan.find('span.font-red').remove();
+    if (cj('#have_receipt').attr('checked') == 'checked'){
+      if (!([{/literal}{$deductible_type_ids}{literal}].includes(contributionTypeId))){
+        notifySpan.append('<span class="font-red">{/literal}{ts}This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?{/ts}{literal}</span>');
+      }
+    }
+  });
 
    cj('#have_receipt').on('click', function(){
      if(cj(this).attr('checked') == 'checked'){
@@ -588,11 +599,25 @@ cj("#total_amount").css('background-color', '#ffffff');
 }
 function checkReceipt( ) {
   cj("#receipt_id")
-    .change(function() {
-      var receiptId = cj("#receipt_id").val();
-      cj("#receipt_id").after( "<font color='red'>{/literal}{ts}Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.{/ts}{literal}</font>" );
+  .change(function() {
+    var receiptId = cj("#receipt_id").val();
+    var receiptDate = cj("#receipt_date").val();
+    var receiptTime = cj("#receipt_date_time").val();
+    if (receiptId.length == 0) {
+      if (receiptDate.length != 0 && receiptTime.length != 0) {
+        cj("#receipt_id").after( "<span class='alter' style='color:red'>{/literal}{ts}Receipt ID can not be empty. Because Receipt Date Time and Receipt Date not empty.{/ts}{literal}</span>");
       }
-    )
+    } else {
+      cj(".alter").remove();
+    }
+  });
+  cj(".crm-clear-link a")
+  .click(function() {
+    var receiptId = cj("#receipt_id").val();
+    if (receiptId.length == 0) {
+      cj(".alter").remove();
+    }
+  });
 }
 </script>
 {/literal}

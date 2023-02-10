@@ -673,6 +673,7 @@ GROUP BY  participant.event_id
         'title' => ts('Event Type'),
         'name' => 'event_type',
         'data_type' => CRM_Utils_Type::T_STRING,
+        'usage' => 'System',
       ));
       $tmpConatctField = array();
       if (!$onlyParticipant) {
@@ -1414,7 +1415,12 @@ UPDATE  civicrm_participant
             $lastRegisteration = $eventDetails[$participantValues['event_id']]['registration_end_date'];
           }
           if (!empty($eventDetails[$participantValues['event_id']]['expiration_time'])) {
-            $baseTime = strtotime($participantValues['register_date']);
+            if (array_key_exists($toStatusId, $pendingStatuses)) {
+              $baseTime = CRM_REQUEST_TIME;
+            }
+            else {
+              $baseTime = strtotime($participantValues['register_date']);
+            }
             $plusDay = ceil($eventDetails[$participantValues['event_id']]['expiration_time']/24);
             $lastRegisteration = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
             $lastRegisteration = date('Y-m-d H:i:s', $lastRegisteration);
@@ -1913,7 +1919,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
   static function checkinCode($contactId, $id) {
     $checkinUrl = self::checkinUrl($contactId, $id);
     $qrcode = new CRM_Utils_QRCode($checkinUrl);
-    $filename = 'qrcode_'.$id.'_'.$contactChecksum;
+    $filename = 'qrcode_'.$id;
     return $qrcode->fileImg($filename);
   }
 

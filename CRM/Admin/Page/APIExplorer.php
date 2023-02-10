@@ -40,16 +40,12 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
 
   function run() {
     if($this->allowVisit()){
+      $config = CRM_Core_Config::singleton();
       CRM_Utils_System::setTitle(ts('API explorer and generator'));
       $publicAPI = explode(',', self::PUBLIC_API);
-
       self::$_template->assign('entities', $publicAPI);
 
-      $civicrm_path = '/'.drupal_get_path('module', 'civicrm').'/';
-      drupal_add_js(array('resourceBase' => $civicrm_path), 'setting');
-
-      $config = CRM_Core_Config::singleton();
-      $this->assign('admin', user_access("administer CiviCRM") && $config->debug);
+      $this->assign('admin', CRM_Core_Permission::check("administer CiviCRM") && $config->debug);
     }
     return parent::run();
   }

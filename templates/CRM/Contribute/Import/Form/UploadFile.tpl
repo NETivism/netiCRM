@@ -50,6 +50,13 @@
           </td>
         </tr>
         <tr>
+          <td class="label">{$form.onDuplicate.label}{help id="id-onDuplicate"}</td>
+          <td>
+            {$form.onDuplicate.html}
+          </td>
+        </tr>
+        <tr class="create-new-contact"><td class="label">{$form.createContactOption.label}{help id="id-createContactOption"}</td><td>{$form.createContactOption.html}</td></tr>
+        <tr>
           <td class="{$form.contactType.name} label">{$form.contactType.label}</td>
           <td class="{$form.contactType.name}">{$form.contactType.html}<br />
             <div class="description">
@@ -58,13 +65,6 @@
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="label">{$form.onDuplicate.label}{help id="id-onDuplicate"}</td>
-          <td>
-            {$form.onDuplicate.html}
-          </td>
-        </tr>
-        <tr class="create-new-contact"><td class="label">{$form.createContactOption.label}{help id="id-createContactOption"}</td><td>{$form.createContactOption.html}</td></tr>
         <tr class="dedupe-rule-group">
           <td class="label">{$form.dedupeRuleGroup.label}</td>
           <td>
@@ -72,6 +72,18 @@
             <div class="description">
               {capture assign='newrule'}{crmURL p='civicrm/contact/deduperules' q='reset=1'}{/capture}
               {ts 1=$newrule}Use rule you choose above for matching contact in each row. You can also <a href="%1">add new rule</a> anytime.{/ts}
+              <ul style="list-style-type: decimal;">
+              <li>{ts}Uploading file must include the following columns or the data cannot be imported successfully.{/ts}</li>
+              <ul style="list-style-type: disc;">
+                <li>{ts}First Name,Last Name,Email(or Dedupe Rule of Contact you selected){/ts}</li>
+                <li>{ts}Total Amount{/ts}</li>
+                <li>{ts}Contribution Type{/ts}</li>
+                <li>{ts}Contribution Received Date{/ts}</li>
+                <li>{ts}Receipt Date{/ts}</li>
+                <li>{ts}Invoice ID{/ts}</li>
+              </ul>
+              <li>{ts}When importing contributions, if the contributor has already have data in the system, the content of the contributor's personal information (contact, personal field) you imported this time,It is not possible to update the personal information of this contributor, but only for the purpose of comparing contributor. If you want to update your contributor information, please use the Import Contacts function to do so.{/ts}</li>
+              </ul>
             </div>
           </td>
         </tr>
@@ -91,6 +103,11 @@ cj(document).ready(function($){
         $("input[name=createContactOption]").not("[value=102]").closest("label").addClass("disabled");
         $("input[name=createContactOption]").not("[value=102]").attr('disabled', 'disabled');
         $("input[name=createContactOption][value=102]").click();
+        $("input[name=contactType]").attr('disabled', 'disabled');
+        $("select[name=dedupeRuleGroup]").attr('disabled', 'disabled');
+        $("input[name=contactType]").removeAttr('checked');
+        $("select[name=dedupeRuleGroup]").val(-1);
+        $("select[name=dedupeRuleGroup] option").hide();
       }
       else {
         $("input[name=createContactOption]").not("[value=102]").removeAttr('disabled');
@@ -98,6 +115,11 @@ cj(document).ready(function($){
           $("input[name=createContactOption][value=100]").click();
         }
         $("tr.create-new-contact label").removeClass("disabled");
+        $("input[name=contactType]").removeAttr('disabled');
+        $("select[name=dedupeRuleGroup]").removeAttr('disabled');
+        if(init != true){
+          $("input[value=Individual]").click();
+        }
       }
     });
   }
@@ -131,12 +153,13 @@ cj(document).ready(function($){
 			}
     });
   }
-
   $("input[name=onDuplicate]").click(showHideCreateContact);
   $("input[name=contactType]").click(showHideDedupeRule);
   $("tr.create-new-contact label.crm-form-elem").css('display', 'block');
   $("tr.create-new-contact").find("br").remove();
-  showHideCreateContact(true);
-  showHideDedupeRule();
+  setTimeout(function(){
+    showHideCreateContact(true);
+    showHideDedupeRule()
+  },100);
 });
 {/literal}</script>

@@ -262,7 +262,8 @@ UNION
       }
       else {
         //create new organization
-        $newOrg = array('contact_type' => 'Organization',
+        $newOrg = array(
+          'contact_type' => 'Organization',
           'organization_name' => trim($orgName[0]),
         );
         $org = CRM_Contact_BAO_Contact::add($newOrg);

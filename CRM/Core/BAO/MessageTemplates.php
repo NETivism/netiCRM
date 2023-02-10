@@ -493,16 +493,15 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
           'cleanName' => $params['PDFFilename'],
         );
       }
-    
+
       $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_mailerTypes);
-      if (!empty($params['activityId'])) {
+      if (!empty($params['activityId']) && $config->enableTransactionalEmail) {
         $activityTypeId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $params['activityId'], 'activity_type_id');
         if(in_array(CRM_Core_OptionGroup::getName('activity_type', $activityTypeId), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
           $sent = CRM_Mailing_BAO_Transactional::send($params, $callback);
         }
       }
-      // fallback to normal utils mail
-      if (!$sent) {
+      else {
         $sent = CRM_Utils_Mail::send($params, $callback);
       }
 
@@ -513,6 +512,29 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
     // CRM_Core_Error::debug(CRM_Utils_System::memory('end')); // memory leak detection
     return array($sent, $subject, $text, $html);
+  }
+
+  /**
+   * Get workflow group name / value name by workflow id
+   *
+   * @param int $workflow_id workflow id of message template
+   * @return array
+   */
+  static function getMessageTemplateNames($workflowId) {
+    $query = 'SELECT ov.name as groupName, og.name as valueName
+                  FROM civicrm_msg_template mt
+                  INNER JOIN civicrm_option_value ov ON workflow_id = ov.id
+                  INNER JOIN civicrm_option_group og ON ov.option_group_id = og.id
+                  WHERE ov.id = %1 AND mt.is_default = 1';
+    $dao = CRM_Core_DAO::executeQuery($query, array(1 => array($workflowId, 'Integer')));
+    $dao->fetch();
+    if ($dao->N) {
+      return array(
+        'groupName' => $dao->groupName,
+        'valueName' => $dao->valueName,
+      );
+    }
+    return array();
   }
 }
 

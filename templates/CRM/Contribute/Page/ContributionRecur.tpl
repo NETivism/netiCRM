@@ -23,6 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $cftype eq 'ContributionRecur'}
+    {include file="CRM/Custom/Form/CustomData.tpl"}
+{else}
 
 {include file="CRM/common/enableDisable.tpl"}
 
@@ -134,6 +137,8 @@
             </div>
           </div>
           {/if}
+
+          {include file="CRM/Custom/Page/CustomDataView.tpl"}
 
           {if $logs}
           <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
@@ -305,6 +310,19 @@
       <tr><td class="label">{$form.note_body.label}</td><td>{$form.note_body.html}</td></tr>
       {/if}
     </table>
+    <div id="customData"></div>
+      {*include custom data js file*}
+      {include file="CRM/common/customData.tpl"}	
+      {literal}
+        <script type="text/javascript">
+          cj(document).ready(function() {
+            {/literal}
+              buildCustomData( '{$customDataType}' );
+            {literal}
+          });
+        </script>
+      {/literal}
+
     <div class="crm-section recurcontrib-buttons-section no-label">
       <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
       <div class="clear"></div> 
@@ -314,7 +332,11 @@
     <script>
       (function($){
         $(function(){
-          var allowStatusId = ["1", "5", "7"];
+          {/literal}{if $set_active_only}{literal}
+            var allowStatusId = ["3", "5"];
+          {/literal}{else}{literal}
+            var allowStatusId = ["1", "5", "7"];
+          {/literal}{/if}{literal}
           if ($('select#contribution_status_id').length) {
             if ($('select#contribution_status_id').val() == 2) {
               $('select#contribution_status_id').attr('disabled','disabled');
@@ -329,7 +351,7 @@
             }
           }
 
-          var freq = $('input#frequency_unit').attr('value');
+          var freq = $('input#frequency_unit').val();
           $('input#frequency_unit').closest('td').append($('<select id="fake_frequency_unit"><option value="month">{/literal}{ts}monthly{/ts}{literal}</option><option value="year">{/literal}{ts}yearly{/ts}{literal}</option></select>'));
           $('select#fake_frequency_unit [value='+freq+']').attr('selected', 'selected');
           $('#frequency_interval_block').hide();
@@ -353,7 +375,7 @@
                 e.value = e.defaultValue;
                 e.disabled = true;
               });
-              $('#fake_frequency_unit').val($('input#frequency_unit').attr('value')).attr('disabled','disabled');
+              $('#fake_frequency_unit').val($('input#frequency_unit').val()).attr('disabled','disabled');
             }
 
             $('input#frequency_unit').val($('#fake_frequency_unit').val());
@@ -455,4 +477,6 @@
     {* include jscript to warn if unsaved form field changes *}
     {include file="CRM/common/formNavigate.tpl"}
 </div>
+{/if}
+
 {/if}

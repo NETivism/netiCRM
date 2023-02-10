@@ -1,39 +1,47 @@
 {include file="CRM/common/WizardHeader.tpl"}
 
 <div class="crm-block crm-form-block crm-admin-options-form-block">
-  <div class="spf">
-    <h2>{ts 1=SPF}Verify %1{/ts}</h2>
+  <fieldset class="spf">
+    <legend>{ts 1=SPF}Verify %1{/ts}</legend>
+    <div>
     {if $spf_status}
-    <div>
       <i class="zmdi zmdi-shield-check ok"></i> {ts 1=SPF 2=$values.email}<strong>%1 - your email address '%2' has been successfully verified.</strong>{/ts}
-    </div>
     {else}
-    <div>
       <div>
         {capture assign=spf_doc}{docURL page="Configure SPF Record" text="Learn how to config settings"}{/capture}
         <i class="zmdi zmdi-alert-triangle warning"></i>
         {ts 1=SPF 2=$values.email}%1 for your email %2 is not verified.{/ts} <span class="crm-submit-buttons">{$form._qf_DNSVerify_refresh.html}</span> {$spf_doc}
       </div>
-    </div>
     {/if}
-  </div>
-
-  <div class="dkim">
-    <h2>{ts 1=DKIM}Verify %1{/ts}</h2>
-    {if $dkim_status}
-    <div>
-      <i class="zmdi zmdi-shield-check ok"></i> {ts 1=DKIM 2=$values.email}<strong>%1 - your email address '%2' has been successfully verified.</strong>{/ts}
+    {if $spf_record}
+      <div>
+        {ts}Your current DNS record is listed below.{/ts}
+        <pre>{$spf_record}</pre>
+      </div>
+    {/if}
     </div>
-    {else}
+  </fieldset>
+
+  <fieldset class="dkim">
+    <legend>{ts 1=DKIM}Verify %1{/ts}</legend>
     <div>
+    {if $dkim_status}
+      <i class="zmdi zmdi-shield-check ok"></i> {ts 1=DKIM 2=$values.email}<strong>%1 - your email address '%2' has been successfully verified.</strong>{/ts}
+    {else}
       <div>
         {capture assign=dkim_doc}{docURL page="Configure DKIM Record" text="Learn how to config settings"}{/capture}
         <i class="zmdi zmdi-alert-triangle warning"></i>
         {ts 1=DKIM 2=$values.email}%1 for your email %2 is not verified.{/ts} <span class="crm-submit-buttons">{$form._qf_DNSVerify_refresh.html}</span> {$dkim_doc}
       </div>
-    </div>
     {/if}
-  </div>
+    {if $dkim_record}
+      <div>
+        {ts}Your current DNS record is listed below.{/ts}
+        <pre>{$dkim_record}</pre>
+      </div>
+    {/if}
+    </div>
+  </fieldset>
 
   {if !$spf_status or !$dkim_status}
   <div class="messages warning">
