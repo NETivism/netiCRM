@@ -2247,7 +2247,6 @@ SELECT source_contact_id
       $tplParams = array(
         'email' => $email,
         'phone' => $phone,
-        'receiptFromEmail' => $values['receipt_from_email'],
         'contactID' => $contact_id,
         'sort_name' => $sort_name,
         'contact_info' => $contactInfo,
@@ -2272,8 +2271,8 @@ SELECT source_contact_id
 
       // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
       $sendTemplateParams = array(
-        'groupName' => 'msg_tpl_workflow_receipt',
-        'valueName' => 'receipt_letter_annual',
+        'groupName' => !empty($option['workflow_group']) ? $option['workflow_group'] : 'msg_tpl_workflow_receipt',
+        'valueName' => !empty($option['workflow_value']) ? $option['workflow_value'] : 'receipt_letter_annual',
         'contactId' => $contact_id,
         'tplParams' => $tplParams,
       );
