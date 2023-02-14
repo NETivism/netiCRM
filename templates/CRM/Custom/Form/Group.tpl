@@ -193,17 +193,39 @@ if ( subtypes ) {
   if (cj(".nsp-container").length) {
     cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
 
-    cj("select#extends\\[0\\]").change(function() {
+    let sidePanelShow = function() {
+      cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
+
+      if (!cj(".nsp-container.is-initialized.is-opened").length) {
+        window.neticrmSidePanelInstance.open();
+      }
+    }
+
+    let sidePanelHide = function() {
+      cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
+
+      if (cj(".nsp-container.is-initialized.is-opened").length) {
+        window.neticrmSidePanelInstance.close();
+      }
+    }
+
+    let trigger = "select#extends\\[0\\]";
+
+    cj(".crm-container").on("focus", trigger, function() {
+      sidePanelShow();
+    });
+
+    cj(".crm-container").on("blur", trigger, function() {
+      sidePanelHide();
+    });
+
+    cj(trigger).change(function() {
       let value = cj(this).val();
 
       if (value.trim() !== "") {
         docURL = "https://neticrm.tw/CRMDOC/Custom Groups Used For - " + value;
         cj(".nsp-container .nsp-iframe").attr("src", docURL);
-        cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
-
-        if (!cj(".nsp-container.is-initialized.is-opened").length) {
-          window.neticrmSidePanelInstance.open();
-        }
+        sidePanelShow();
       }
     });
   }

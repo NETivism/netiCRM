@@ -356,13 +356,7 @@ cj().crmaccordions();
           parentType = parentTypeMapping[parentTypeIndex],
           defaultDocURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - Alphanumeric: Text";
 
-      let setDocURL = function(parentType , childType) {
-        let docURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - " + parentType + ": " + childType;
-
-        if (defaultDocURL !== docURL) {
-          cj(".nsp-container .nsp-iframe").attr("src", docURL);
-        }
-
+      let sidePanelShow = function() {
         cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
 
         if (!cj(".nsp-container.is-initialized.is-opened").length) {
@@ -370,9 +364,36 @@ cj().crmaccordions();
         }
       }
 
+      let sidePanelHide = function() {
+        cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
+
+        if (cj(".nsp-container.is-initialized.is-opened").length) {
+          window.neticrmSidePanelInstance.close();
+        }
+      }
+
+      let setDocURL = function(parentType , childType) {
+        let docURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - " + parentType + ": " + childType;
+
+        if (defaultDocURL !== docURL) {
+          cj(".nsp-container .nsp-iframe").attr("src", docURL);
+        }
+      }
+
+      let trigger = "select#data_type\\[0\\], select#data_type\\[1\\]";
+
       setTimeout(function() {
         setDocURL(parentType, childType);
       }, 2000);
+
+
+      cj(".crm-container").on("focus", trigger, function() {
+        sidePanelShow();
+      });
+
+      cj(".crm-container").on("blur", trigger, function() {
+        sidePanelHide();
+      });
 
       cj(".crm-container").on("change", "select#data_type\\[0\\]", function() {
         childType = cj("select#data_type\\[1\\]").val();
