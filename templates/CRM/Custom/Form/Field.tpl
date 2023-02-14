@@ -373,6 +373,10 @@ cj().crmaccordions();
       }
 
       let setDocURL = function(parentType , childType) {
+        if (parentType.indexOf("/") != -1) {
+          parentType = parentType.replaceAll(/\//g, "");
+        }
+
         let docURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - " + parentType + ": " + childType;
 
         if (defaultDocURL !== docURL) {
