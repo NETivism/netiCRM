@@ -1126,10 +1126,13 @@ class CRM_Export_BAO_Export {
 
       $customHeader = $exportCustomResult['header'];
       $customRows = $exportCustomResult['rows'];
-      
       $primaryIDName = empty($exportCustomVars['pirmaryIDName']) ? 'contact_id' : $exportCustomVars['pirmaryIDName'];
       $componentTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
       foreach ($customHeader as $columnName => $val) {
+        if ($primaryIDName == 'contact_id' && $columnName == 'contact_id') {
+          // If primary field of custom search result is 'contact_id', it will write as $primaryIDName in the former $sql. So skip it.
+          continue;
+        }
         $customColumns .= ", $columnName varchar(255)";
       }
 
@@ -1156,8 +1159,22 @@ class CRM_Export_BAO_Export {
         }
       }
 
+      // Look for primary field name of $exportTempTable.
+      $sql = "SELECT * FROM $exportTempTable";
+      $dao = CRM_Core_DAO::executeQuery($sql);
+      $dao->fetch();
+      if (isset($dao->civicrm_primary_id)) {
+        $exportTempTablePrimaryIdName = 'civicrm_primary_id';
+      }
+      elseif (isset($dao->contact_id)) {
+        $exportTempTablePrimaryIdName = 'contact_id';
+      }
+      else {
+        $exportTempTablePrimaryIdName = 'id';
+      }
+
       $tempTableName = 'new_export_temp_table';
-      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT $exportTempTable.* $componentColumns FROM $componentTable ctTable INNER JOIN $exportTempTable ON ctTable.contact_id = $exportTempTable.civicrm_primary_id";
+      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT $exportTempTable.* $componentColumns FROM $componentTable ctTable INNER JOIN $exportTempTable ON ctTable.contact_id = $exportTempTable.$exportTempTablePrimaryIdName";
       CRM_Core_DAO::executeQuery($sql);
       $exportTempTable = $tempTableName;
 
@@ -1376,6 +1393,10 @@ class CRM_Export_BAO_Export {
       else {
         if ($value == ts('CiviCRM Contact ID')) {
           $customHeader['contact_id'] = $value;  
+        }
+        elseif ($key == 0 && $fields[0] == 'contact_id') {
+          // If primary field is 'contact_id', than don't use column_0.
+          $customHeader['contact_id'] = $value;
         }
         else {
           $customHeader["column_{$key}"] = $value;
