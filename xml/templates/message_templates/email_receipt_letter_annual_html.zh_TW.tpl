@@ -1,13 +1,6 @@
 {foreach from=$contact_info key=contact_name item=info name=annual}
 
 <div class="wrapper">
-<div class="single-page-header">
-  <div class="info">
-    <div class="address">{$address}</div>
-    <div><span class="web-name">{$info.addressee}收</span></div>
-  </div>
-</div>
-
 <div class="receipt">
   <div class="receipt-head">
     <div class="logo"><img src="{$logo}" height="30" /></div>
@@ -56,11 +49,11 @@
       </tr>
       {foreach from=$record.$contact_name item=row}
       <tr>
-        <td class="align-right">{$row.receipt_id}</td>
-        <td>{$row.contribution_type}</td>
-        <td>{$row.instrument}</td>
-        <td>{$row.receipt_date}</td>
-        <td class="align-right">{$row.total_amount}</td>
+         <td class="align-right">{$row.receipt_id}</td>
+         <td>{$row.contribution_type}</td>
+         <td>{$row.instrument}</td>
+         <td>{$row.receipt_date}</td>
+         <td class="align-right">{$row.total_amount}</td>
       </tr>
       {/foreach}
     </table>

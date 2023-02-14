@@ -223,7 +223,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     // making email template
     $sendTemplateParams = array(
       'groupName' => 'msg_tpl_workflow_receipt',
-      'valueName' => 'email_annual_receipt',
+      'valueName' => 'email_receipt_content_annual',
     );
     $sendTemplateParams = array();
     $sendTemplateParams['attachments'][] = array(
