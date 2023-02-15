@@ -146,7 +146,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
           'exportFile' => $file,
           'download' => array(
             'header' => array(
-              'Content-Type: application/pdf',
+              'Content-Type: application/zip',
               'Content-Disposition: attachment;filename="'.$exportFileName.'"',
             ),
             'file' => $file,
