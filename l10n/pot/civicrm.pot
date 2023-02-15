@@ -48688,3 +48688,11 @@ msgstr ""
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Description of Data and Input Field Type"
 msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/SearchOption.tpl
+msgid "Send Annual Receipt Email"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/EmailOption.tpl
+msgid "PDF receipt will be an email attachment."
+msgstr ""
