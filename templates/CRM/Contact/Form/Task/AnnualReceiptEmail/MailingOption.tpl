@@ -5,7 +5,20 @@
     {ts}PDF receipt will be an email attachment.{/ts}
     <ul>
       <li>{ts 1=$total_selected}Total Selected Contact(s): %1{/ts}</li>
-      <li>{ts count=$suppressed plural='Email will NOT be sent to %count contacts - (no email address on file, or communication preferences specify DO NOT EMAIL, or contact is deceased).'}Email will NOT be sent to %count contact - (no email address on file, or communication preferences specify DO NOT EMAIL, or contact is deceased).{/ts}</li>
+      <li>
+        {ts}Search Settings{/ts}:
+        <ul>
+          {if $search_option.year}<li>{ts}Receipt Year{/ts} = {$search_option.year}</li>{/if}
+          {if $search_option.contribution_types}<li>{ts}Contribution Types{/ts} {ts}IN{/ts} {', '|implode:$search_option.contribution_types}</li>{/if}
+          <li>{ts}Find Recurring Contributions?{/ts} = {$search_option.recur}</li>
+        </ul>
+      </li>
+      {if $suppressed_no_email}
+      <li>{ts count=$suppressed_no_email plural='Email will NOT be sent to %count contacts - (no email address on file, or communication preferences specify DO NOT EMAIL, or contact is deceased).'}Email will NOT be sent to %count contact - (no email address on file, or communication preferences specify DO NOT EMAIL, or contact is deceased).{/ts}</li>
+      {/if}
+      {if $suppressed_no_record}
+      <li>{ts count=$suppressed_no_record plural='Email will NOT be sent to %count contacts.'}Email will NOT be sent to %count contact.{/ts}{ts}There were no contributions during the selected year.{/ts}</li>
+      {/if}
       <li>{ts}Total Recipients:{/ts} {$total_recipient}</li>
     </ul>
   </div>

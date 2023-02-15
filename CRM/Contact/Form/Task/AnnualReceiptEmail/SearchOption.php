@@ -74,18 +74,18 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
       $this->addElement('select', 'year', ts('Receipt Year'), $years);
     }
 
-    $contribution_type = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible', TRUE);
+    $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible', TRUE);
     $deductible = array( 0 => '- '.ts('All').' '.ts('Deductible').' -');
-    $contribution_type = $deductible + $contribution_type;
+    $contributionTypes = $deductible + $contributionTypes;
     $attrs = array('multiple' => 'multiple');
-    $this->addElement('select', 'contribution_type_id', ts('Contribution Type'), $contribution_type, $attrs);
+    $this->addElement('select', 'contribution_type_id', ts('Contribution Types'), $contributionTypes, $attrs);
 
-    $is_recur = array(
+    $isRecur = array(
       '' => '- '.ts('All').' -' ,
       -1 => ts('Non-Recurring Contribution'),
       1 => ts('Recurring Contribution'),
     );
-    $this->addElement('select', 'is_recur', ts('Find Recurring Contributions?'), $is_recur);
+    $this->addElement('select', 'is_recur', ts('Find Recurring Contributions?'), $isRecur);
 
     $this->addButtons(array(
         array(
