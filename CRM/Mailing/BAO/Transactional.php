@@ -553,7 +553,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     foreach ($mailParams as $paramKey => $paramValue) {
       //exclude values not intended for the header
       if (!in_array($paramKey, array(
-            'text', 'html', 'toName', 'toEmail',
+            'text', 'html', 'toName', 'toEmail', 'attachments', 'images'
           ))) {
         $headers[$paramKey] = $paramValue;
       }
