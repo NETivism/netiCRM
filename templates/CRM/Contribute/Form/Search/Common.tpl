@@ -94,6 +94,9 @@
       {$form.contribution_transaction_id.label} {$form.contribution_transaction_id.html}
     </div>
     <div>
+      {$form.contribution_invoice_id.label} {$form.contribution_invoice_id.html}
+    </div>
+    <div>
       {$form.contribution_receipt_id.label} {$form.contribution_receipt_id.html}
     </div>
     <div>

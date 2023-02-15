@@ -532,6 +532,19 @@ class CRM_Contribute_BAO_Query {
         $query->_qill[$grouping][] = ts('Transaction ID %1 %2', array(1 => $op, 2 => $quoteValue));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
+      case 'contribution_invoice_id':
+        $wc = "civicrm_contribution.invoice_id";
+        $value = $value.'%';
+        if (!strstr(strtolower($op), 'null')) {
+          $op = 'LIKE';
+        }
+        if ($wildcard) {
+          $value = "%".trim($value, '%')."%";
+        }
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
+        $query->_qill[$grouping][] = ts('Invoice ID %1 %2', array(1 => $op, 2 => $quoteValue));
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        return;
 
       case 'contribution_receipt_id':
         $wc = "civicrm_contribution.receipt_id";
@@ -987,6 +1000,7 @@ class CRM_Contribute_BAO_Query {
 
     //add field for transaction ID search
     $form->addElement('text', 'contribution_transaction_id', ts("Transaction ID"));
+    $form->addElement('text', 'contribution_invoice_id', ts("Invoice ID"));
     $form->addElement('text', 'contribution_receipt_id', ts("Receipt ID"));
 
     $form->addSelect(

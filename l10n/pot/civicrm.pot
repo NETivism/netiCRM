@@ -48696,3 +48696,7 @@ msgstr ""
 #: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/EmailOption.tpl
 msgid "PDF receipt will be an email attachment."
 msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Invoice ID %1 %2"
+msgstr ""
