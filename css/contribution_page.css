@@ -541,10 +541,10 @@ body .crm-container-md table.crm-custom-data-view.no-border{
 
 
 @media screen and (max-width: 480px) {
-  html body.frontend.page-civicrm-contribute-transact {
+  html body.frontend.section-civicrm {
     background: none;
   }
-  html body.frontend.page-civicrm-contribute-transact:before {
+  html body.section-civicrm:before {
     content: ' ';
     position: fixed;
     z-index: -1;

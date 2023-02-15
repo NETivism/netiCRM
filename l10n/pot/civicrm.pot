@@ -48679,3 +48679,20 @@ msgstr ""
 #: templates/CRM/UF/Form/Field.tpl
 msgid "When adding a field, please select the appropriate field according to the type of use, if the existing field cannot meet the situation, you can use the %1 to add it."
 msgstr ""
+
+#: templates/CRM/UF/Form/Group.tpl
+#: templates/CRM/Custom/Form/Group.tpl
+msgid "Description of Used For"
+msgstr ""
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid "Description of Data and Input Field Type"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/SearchOption.tpl
+msgid "Send Annual Receipt Email"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/EmailOption.tpl
+msgid "PDF receipt will be an email attachment."
+msgstr ""

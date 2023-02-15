@@ -737,7 +737,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   public function addUploadAction($uploadDir, $uploadNames) {
     if (empty($uploadDir)) {
       $config = CRM_Core_Config::singleton();
-      $uploadDir = $config->uploadDir;
+      $uploadDir = empty($config->uploadDir) ? CRM_Utils_System::cmsDir('temp') .'/' : $config->uploadDir;
     }
 
     require_once 'CRM/Core/BAO/File.php';
