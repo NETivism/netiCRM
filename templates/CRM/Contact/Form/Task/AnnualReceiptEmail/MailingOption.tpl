@@ -43,7 +43,7 @@
     {include file="CRM/common/formButtons.tpl"}
   </div>
   <div id="dialog-confirm-email" title="{ts}Procceed Receipt Sending?{/ts}" style="display:none;">
-    <p><span class="zmdi zmdi-alert-circle" style="margin: 0 7px 0 0;"></span>{ts}In order to prevent non-continues receipt id. After generate, you can't insert any receipt number between these contribution.{/ts}</p>
+    <p><span class="zmdi zmdi-alert-circle" style="margin: 0 7px 0 0;"></span> {ts}Because of the large amount of data you are about to perform, we will schedule this job for the batch process after you submit. You will receive an email notification when the work is completed.{/ts}</p>
     <p>{ts}Are you sure you want to continue?{/ts}</p>
   </div>
   {literal}
