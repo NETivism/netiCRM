@@ -147,17 +147,32 @@
 	<tr class="crm-contribution-contributionpage-settings-form-block-footer_text">
 	    <td class ="label"><div class="footer_text-label">{$form.footer_text.label}<br />{help id="id-footer_msg"}</div><div class="non_recurring_hint_msg-label">{ts}Non-recurring contribution hint message.{/ts}</div></td><td>{$form.footer_text.html}</td>
 	</tr>
-	<tr class="crm-contribution-contributionpage-settings-form-block-start_date">
-	    <td class ="label">{$form.start_date.label} {help id="id-start_date"}</td>
-	    <td>
-	        {include file="CRM/common/jcalendar.tpl" elementName=start_date}
-	    </td>    
-    </tr>
-	<tr class="crm-contribution-contributionpage-settings-form-block-end_date">
-	    <td class ="label">{$form.end_date.label}</td>
-	    <td>
-	        {include file="CRM/common/jcalendar.tpl" elementName=end_date}
-	    </td>    
+	<tr class="crm-contribution-contributionpage-settings-form-block-date">
+	    <td colspan="2">
+            <div class="crm-accordion-wrapper crm-contribution_page_start_end_date-accordion crm-accordion-closed">
+                <div class="crm-accordion-header">
+                    <div class="zmdi crm-accordion-pointer"></div> 
+                    {ts}Contribution Widget{/ts}
+                    
+                </div><!-- /.crm-accordion-header -->
+                <div class="crm-accordion-body" id="start_end_date">
+                    <table class="crm-section form-layout-compressed">
+                        <tr class="crm-contribution-contributionpage-settings-form-block-start_date">
+                            <td class ="label">{$form.start_date.label} {help id="id-start_date"}</td>
+                            <td>
+                                {include file="CRM/common/jcalendar.tpl" elementName=start_date}
+                            </td>    
+                        </tr>
+                        <tr class="crm-contribution-contributionpage-settings-form-block-end_date">
+                            <td class ="label">{$form.end_date.label}</td>
+                            <td>
+                                {include file="CRM/common/jcalendar.tpl" elementName=end_date}
+                            </td>    
+                        </tr>
+                    </table>
+                </div><!-- /.crm-accordion-body -->
+            </div><!-- /.crm-accordion-wrapper -->
+        </td>    
     </tr>
 	<tr class="crm-contribution-contributionpage-settings-form-block-is_organization"><td>&nbsp;</td><td>{$form.is_organization.html} {$form.is_organization.label}</td></tr>
 	<tr id="for_org_option" class="crm-contribution-form-block-is_organization">
