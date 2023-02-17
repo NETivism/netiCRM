@@ -105,7 +105,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -141,7 +141,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -177,7 +177,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -213,7 +213,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -249,7 +249,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -285,7 +285,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -321,7 +321,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -357,7 +357,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -393,7 +393,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -429,7 +429,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -465,7 +465,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -501,7 +501,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
@@ -537,7 +537,7 @@ casper.test.begin('Resurrectio test', function(test) {
 
     casper.waitForSelector("select[name='field_name[0]']", function success() {
         this.evaluate(function () {
-            document.querySelector('select[name="field_name[0]"]').value = "Individual";
+            document.querySelector('select[name="field_name[0]"]').value = "Contact";
             var s = document.querySelector('select[name="field_name[0]"]');
             swapOptions(s.form, 'field_name', 0, 4, 'hs_field_name');
         });
