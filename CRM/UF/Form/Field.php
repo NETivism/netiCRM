@@ -554,17 +554,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       }
     }
 
-    if (isset($sel2['Contact']) && isset($sel2['Individual'])) {
-      $sel2['Individual'] = $sel2['Contact'] + $sel2['Individual'];
-      unset($sel2['Contact']);
-    }
-    // reorder by FieldHierarchy mapping rule
-    $sel2['Individual'] = CRM_Core_FieldHierarchy::arrange($sel2['Individual']);
-
-    if (isset($sel1['Contact'])) {
-      unset($sel1['Contact']);
-    }
-
     $sel3[''] = NULL;
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
     foreach($phoneTypes as $idx => $val) {
