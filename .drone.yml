@@ -15,11 +15,10 @@ steps:
     RUNPORT: 8080
     DRUPAL_ROOT: /var/www/html
     CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
-    DRUPAL: 7.94
-    NETICRM: develop
   commands:
     - /usr/bin/supervisord &
     - /init.sh
+    - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
@@ -48,11 +47,10 @@ steps:
     RUNPORT: 8080
     DRUPAL_ROOT: /var/www/html
     CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
-    DRUPAL: 7.94
-    NETICRM: develop
   commands:
     - /usr/bin/supervisord &
     - /init.sh
+    - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
