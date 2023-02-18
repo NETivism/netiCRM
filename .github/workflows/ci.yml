@@ -16,9 +16,9 @@ jobs:
 
       - name: Prepare container
         run: |
-          docker pull docker.pkg.github.com/netivism/docker-neticrm-ci/neticrm-ci:drone-php7
+          docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php7
           git clone -b drone-php7 https://github.com/NETivism/docker-neticrm-ci.git
-          docker run -d --name neticrm-ci-php7 -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" docker.pkg.github.com/netivism/docker-neticrm-ci/neticrm-ci:drone-php7
+          docker run -d --name neticrm-ci-php7 -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php7
 
       - name: Install netiCRM
         run: |
