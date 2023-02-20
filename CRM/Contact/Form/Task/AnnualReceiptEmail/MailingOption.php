@@ -304,7 +304,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
         'receipt_text' => $mailingOption['receipt_text'],
         'year' => $searchOption['year'],
       );
-      $sendTemplateParams['bcc'] = CRM_Utils_Array::value('bcc_receipt', $mailingOption['bcc']);
+      $sendTemplateParams['bcc'] = $mailingOption['bcc'];
       $sendTemplateParams['activityId'] = $activity->id;
       CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, array(
         0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
@@ -334,11 +334,14 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
       else {
         $offset = 0;
       }
+
+      // re-assign contacts id array keys
+      $contacts = array_values($contactIds);
       for ($i = $offset; $i < $offset + $limit; $i++) {
-        if (!isset($contactIds[$i])) {
+        if (!isset($contacts[$i])) {
           break;
         }
-        self::sendAnnualReceiptEmail($contactIds[$i], $searchOption, $mailingOption);
+        self::sendAnnualReceiptEmail($contacts[$i], $searchOption, $mailingOption);
       }
       $civicrm_batch->data['processed'] = $i;
       if ($civicrm_batch->data['processed'] >= $civicrm_batch->data['total']) {
