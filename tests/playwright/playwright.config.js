@@ -36,7 +36,7 @@ const config = {
     headless: true,
     actionTimeout: 10000,
     storageState: 'storageState.json',
-    baseURL: process.env.isLocal === 'true' ? process.env.localUrl : process.env.remoteUrl,
+    baseURL: process.env.localUrl ,
     trace: 'retain-on-failure',
   },
 
