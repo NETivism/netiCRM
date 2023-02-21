@@ -48700,3 +48700,10 @@ msgstr ""
 #: CRM/Contribute/BAO/Query.php
 msgid "Invoice ID %1 %2"
 msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Single and first contributions of recur"
+msgstr ""
+
+msgid "Not single and first contribution of recur"
+msgstr ""

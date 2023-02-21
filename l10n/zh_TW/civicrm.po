@@ -49104,3 +49104,10 @@ msgstr "PDF 格式的收據將會附加於電子郵件附檔。"
 #: CRM/Contribute/BAO/Query.php
 msgid "Invoice ID %1 %2"
 msgstr "帳單編號 %1 %2"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Single and first contributions of recur"
+msgstr "單筆和首次定期捐款"
+
+msgid "Not single and first contribution of recur"
+msgstr "第二次之後的定期捐款"

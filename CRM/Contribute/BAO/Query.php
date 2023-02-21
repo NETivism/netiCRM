@@ -707,6 +707,26 @@ class CRM_Contribute_BAO_Query {
         $query->_tables['civicrm_contribution_product'] = $query->_whereTables['civicrm_contribution_product'] = 1;
         return;
 
+      // First contribution type:
+      //   1: only single contribution or first time of recurring
+      //   2: The second and above contribution of recurring
+      case 'contribution_first_type':
+        $sqlSingle = "SELECT GROUP_CONCAT(id) FROM civicrm_contribution WHERE contribution_recur_id IS NULL ";
+        $idSingle = CRM_Core_DAO::singleValueQuery($sqlSingle);
+        $sqlRecurFirst = "SELECT GROUP_CONCAT(id) FROM (SELECT * FROM civicrm_contribution WHERE contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) c";
+        $idRecurFirst = CRM_Core_DAO::singleValueQuery($sqlRecurFirst);
+        $idIn = $idSingle.','.$idRecurFirst;
+        if ($value == 1) {
+          $query->_where[$grouping][] = "civicrm_contribution.id IN ($idIn)";
+          $query->_qill[$grouping][] = ts('Single and first contributions of recur');
+        }
+        if ($value == 2) {
+          $query->_where[$grouping][] = "civicrm_contribution.id NOT IN ($idIn)";
+          $query->_qill[$grouping][] = ts('Not single and first contribution of recur');
+        }
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        return;
+
       default:
         //all other elements are handle in this case
         $fldName = substr($name, 13);
