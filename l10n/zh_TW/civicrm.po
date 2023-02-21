@@ -49111,3 +49111,6 @@ msgstr "單筆和首次定期捐款"
 
 msgid "Not single and first contribution of recur"
 msgstr "第二次之後的定期捐款"
+
+msgid "Cover processing fee %1%"
+msgstr "我願意協助負擔交易手續費 %1%"

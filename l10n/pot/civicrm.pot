@@ -48707,3 +48707,6 @@ msgstr ""
 
 msgid "Not single and first contribution of recur"
 msgstr ""
+
+msgid "Cover processing fee %1%"
+msgstr ""
