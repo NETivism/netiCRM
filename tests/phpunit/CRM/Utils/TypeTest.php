@@ -21,7 +21,6 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
    * @after
    */
   public function tearDownTest() {
-    parent::setUp();
   }
 
   /**
