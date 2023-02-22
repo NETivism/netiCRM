@@ -1,13 +1,13 @@
 # 
 # Translators:
 # CC Chu <poliphilonet@gmail.com>, 2020-2023
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
 # Charles Chuang, 2022
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2022
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49092,3 +49092,25 @@ msgstr "使用類型說明"
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Description of Data and Input Field Type"
 msgstr "資料及輸入欄位類別說明"
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/SearchOption.tpl
+msgid "Send Annual Receipt Email"
+msgstr "寄送年度彙整收據電子郵件"
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/EmailOption.tpl
+msgid "PDF receipt will be an email attachment."
+msgstr "PDF 格式的收據將會附加於電子郵件附檔。"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Invoice ID %1 %2"
+msgstr "帳單編號 %1 %2"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Single and first contributions of recur"
+msgstr "單筆和首次定期捐款"
+
+msgid "Not single and first contribution of recur"
+msgstr "第二次之後的定期捐款"
+
+msgid "Cover processing fee %1%"
+msgstr "我願意協助負擔交易手續費 %1%"
