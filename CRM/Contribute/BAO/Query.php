@@ -532,6 +532,19 @@ class CRM_Contribute_BAO_Query {
         $query->_qill[$grouping][] = ts('Transaction ID %1 %2', array(1 => $op, 2 => $quoteValue));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
+      case 'contribution_invoice_id':
+        $wc = "civicrm_contribution.invoice_id";
+        $value = $value.'%';
+        if (!strstr(strtolower($op), 'null')) {
+          $op = 'LIKE';
+        }
+        if ($wildcard) {
+          $value = "%".trim($value, '%')."%";
+        }
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
+        $query->_qill[$grouping][] = ts('Invoice ID %1 %2', array(1 => $op, 2 => $quoteValue));
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        return;
 
       case 'contribution_receipt_id':
         $wc = "civicrm_contribution.receipt_id";
@@ -692,6 +705,26 @@ class CRM_Contribute_BAO_Query {
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_contribution_product.product_option', $op, $value, "String");
         $query->_qill[$grouping][] = ts('Product Option') . ' - ' . $value;
         $query->_tables['civicrm_contribution_product'] = $query->_whereTables['civicrm_contribution_product'] = 1;
+        return;
+
+      // First contribution type:
+      //   1: only single contribution or first time of recurring
+      //   2: The second and above contribution of recurring
+      case 'contribution_first_type':
+        $sqlSingle = "SELECT GROUP_CONCAT(id) FROM civicrm_contribution WHERE contribution_recur_id IS NULL ";
+        $idSingle = CRM_Core_DAO::singleValueQuery($sqlSingle);
+        $sqlRecurFirst = "SELECT GROUP_CONCAT(id) FROM (SELECT * FROM civicrm_contribution WHERE contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) c";
+        $idRecurFirst = CRM_Core_DAO::singleValueQuery($sqlRecurFirst);
+        $idIn = $idSingle.','.$idRecurFirst;
+        if ($value == 1) {
+          $query->_where[$grouping][] = "civicrm_contribution.id IN ($idIn)";
+          $query->_qill[$grouping][] = ts('Single and first contributions of recur');
+        }
+        if ($value == 2) {
+          $query->_where[$grouping][] = "civicrm_contribution.id NOT IN ($idIn)";
+          $query->_qill[$grouping][] = ts('Not single and first contribution of recur');
+        }
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
       default:
@@ -987,6 +1020,7 @@ class CRM_Contribute_BAO_Query {
 
     //add field for transaction ID search
     $form->addElement('text', 'contribution_transaction_id', ts("Transaction ID"));
+    $form->addElement('text', 'contribution_invoice_id', ts("Invoice ID"));
     $form->addElement('text', 'contribution_receipt_id', ts("Receipt ID"));
 
     $form->addSelect(
