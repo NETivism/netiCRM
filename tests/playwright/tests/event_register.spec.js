@@ -13,7 +13,34 @@ var item = {
 }
 
 function getPageTitle(title){
-  return title + " | "+item.site_name;
+  return title + " | " + item.site_name;
+}
+
+async function fillInput(locator, text_input){
+  await expect(locator).toBeEnabled();
+  await locator.click();
+  await locator.fill(text_input);
+  await expect(locator).toHaveValue(text_input);
+}
+
+async function fillForm(email='test@aipvo.com', first_name='user', last_name='test', phone='0222233311', current_employer='test company', form_selector='form#Register'){
+  
+  await expect(page.locator(form_selector)).toBeDefined();
+
+  var locator = page.locator('input[name="email-5"]')
+  await fillInput(locator, email);
+
+  locator = page.locator('input[name="first_name"]');
+  await fillInput(locator, first_name);
+
+  locator = page.locator('input[name="last_name"]');
+  await fillInput(locator, last_name);
+
+  locator = page.locator('input[name="phone-1-2"]');
+  await fillInput(locator, phone);
+
+  locator = page.locator('input[name="current_employer"]');
+  await fillInput(locator, current_employer);
 }
 
 test.beforeAll(async () => {
@@ -35,10 +62,10 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveTitle(page_title);
     })
     await test.step("Check register event.", async () =>{
-      await page.locator('input[name="email-5"]').click();
-      await page.locator('input[name="email-5"]').fill('test@aipvo.com');
+      await fillForm();
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
+      await expect(page.locator('#help .msg-register-success')).toBeDefined();
     })
   });
 
@@ -47,14 +74,15 @@ test.describe.serial('Event register page', () => {
     await test.step('Check can register', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
       await expect(page).toHaveTitle(page_title);
-      await page.locator('input[name="email-5"]').click();
-      await page.locator('input[name="email-5"]').fill('test@aipvo.com');
+      await fillForm('test@kvien.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
+      await expect(page.locator('#help .msg-register-success')).toBeDefined();
     });
     await test.step('Second participant message is correct.', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
       await expect(page).toHaveTitle(page_title);
+      await expect(page.locator('.messages.status')).toBeDefined();
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
     });
   });
@@ -64,16 +92,15 @@ test.describe.serial('Event register page', () => {
     await test.step('Check can register', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
       await expect(page).toHaveTitle(page_title);
-      await page.locator('input[name="email-5"]').click();
-      await page.locator('input[name="email-5"]').fill('test@aipvo.com');
+      await fillForm('test@ovoqnj.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
+      await expect(page.locator('#help p')).toBeDefined();
     });
     await test.step('Check message hvae wait list', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
       await expect(page).toHaveTitle(page_title);
-      await page.locator('input[name="email-5"]').click();
-      await page.locator('input[name="email-5"]').fill('test2@soossovk.com');
+      await fillForm('test2@soossovk.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page.locator('.bold')).toContainText([/候補|wait list/i]);
     });
@@ -84,40 +111,39 @@ test.describe.serial('Event register page', () => {
     await test.step('First register success', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
-      await page.locator('input[name="email-5"]').click();
-      await page.locator('input[name="email-5"]').fill('test@aipvo.com');
+      await fillForm('test@vkioob.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
+      await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     });
     await test.step('Second participant message is correct.', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
+      await expect(page.locator('.messages.status')).toBeDefined();
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
     });    
   });
 
-  test('No limit participants. Need approval', async () => {
+  test('Unlimit participants. Need approval', async () => {
     var page_title = getPageTitle(item.event_name_5);
     await test.step("Verity can register event.", async () =>{
       await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
       await expect(page).toHaveTitle(page_title);
-      await page.locator('input[name="email-5"]').click();
-      await page.locator('input[name="email-5"]').fill('test@aipvo.com');
+      await fillForm('test@vkioob.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
+      await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     })
     await test.step("Second participant message is correct", async () =>{
       await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
       await expect(page).toHaveTitle(page_title);
-      await page.locator('input[name="email-5"]').click();
-      await page.locator('input[name="email-5"]').fill('test2@aipvo.com');
+      await fillForm('test2@aipvo.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
+      await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     })
   });
 });
-
-
