@@ -113,6 +113,14 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    *
    * Called by children form pages.
    *
+   * @param int $action CRM_Core_Action::ADD or CRM_Core_Action::UPDATE
+   * @param int $id option value id when update, null for add
+   * @param array $params associative array to save from email address
+   *   'from' => 'Email From Name',
+   *   'email' => 'Email From Address',
+   *   'is_active' => 1,
+   *   'filter' => logic combination of self::VALID_EMAIL / self::VALID_SPF / self::VALID_DKIM
+   *   'description' => 'description of this email'
    * @return object
    */
   public static function saveEmailAddress($action, $id, $params) {
@@ -216,5 +224,72 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
       }
     }
     CRM_Core_Error::statusBounce(ts('Invalid URL'));
+  }
+
+
+  /**
+   * Return verified email array
+   *
+   * @param int $verifiedType
+   * @return array
+   */
+  public static function getVerifiedEmail($verifiedType = self::VALID_EMAIL | self::VALID_SPF | self::VALID_DKIM) {
+    $all = array();
+    CRM_Core_OptionGroup::getAssoc('from_email_address', $all);
+    $verified = array();
+    foreach($all['filter'] as $idx => $filter) {
+      if ($filter == $verifiedType) {
+        $verified[$all['value'][$idx]] = CRM_Utils_Mail::pluckEmailFromHeader($all['label'][$idx]);
+      }
+    }
+    return $verified;
+  }
+
+  /**
+   * Migrate from email address from event / contribution page
+   *
+   * @param string $fromName
+   * @param string $fromEmail
+   *
+   * @return bool
+   */
+  public static function migrateEmailFromPages($fromName, $fromEmail) {
+    $availableEmails = CRM_Core_PseudoConstant::fromEmailAddress(TRUE);
+    $migrateEmail = TRUE;
+    foreach($availableEmails as $info) {
+      if ($info['email'] === $fromEmail) {
+        $migrateEmail = FALSE;
+        return TRUE;
+        break;
+      }
+    }
+    if ($migrateEmail) {
+      // check if domain already verified
+      $verifiedSPFDKIM = self::VALID_EMAIL;
+      $existsFrom = array();
+      list($dontcare, $domain) = explode('@', $fromEmail);
+      CRM_Core_OptionGroup::getAssoc('from_email_address', $existsFrom);
+      foreach($existsFrom['filter'] as $idx => $filter) {
+        $filterPassed = (self::VALID_EMAIL | self::VALID_SPF | self::VALID_DKIM);
+        if ($filter == $filterPassed) {
+          $validAddr = $existsFrom['label'][$idx];
+          $validEmail = CRM_Utils_Mail::pluckEmailFromHeader($validAddr);
+          list($account, $validDomain) = explode('@', $validEmail);
+          if ($validDomain === $domain) {
+            $verifiedSPFDKIM = $filterPassed;
+          }
+        }
+      }
+
+      $params = array();
+      $params['email'] = trim($fromEmail);
+      $params['from'] = trim($fromName);
+      $params['is_active'] = 1;
+      $params['filter'] = $verifiedSPFDKIM;
+      $params['description'] = ts('Automatically Generated');
+      self::saveEmailAddress(CRM_Core_Action::ADD, NULL, $params);
+      return TRUE;
+    }
+    return FALSE;
   }
 }

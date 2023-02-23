@@ -751,20 +751,34 @@ class CRM_Core_PseudoConstant {
    * @access public
    * @static
    *
+   * @param bool $separateNameEmail default FALSE, TRUE will return associative array for separate name / email
+   * @param bool $refresh refresh default FALSE, TRUE will refresh data from database
+   *
    * @return array - array reference of all From Email Address.
    */
-  public static function &fromEmailAddress() {
-    if (!self::$fromEmailAddress) {
+  public static function &fromEmailAddress($separateNameEmail = FALSE, $refresh = FALSE) {
+    if (!self::$fromEmailAddress || $refresh) {
       require_once 'CRM/Core/OptionGroup.php';
-      $default = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
-      $others = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 0');
+      $default = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1', 'label', TRUE, $refresh);
+      $others = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 0', 'label', TRUE, $refresh);
       if(!empty($default)){
         $default_mail = array('default' => reset($default));
         $others = array_merge($default_mail, $others);
       }
       self::$fromEmailAddress = $others;
     }
-    return self::$fromEmailAddress;
+    if ($separateNameEmail) {
+      $pluckedFromEmail = array();
+      foreach(self::$fromEmailAddress as $idx => $addr) {
+        preg_match('/"([^"]+)"\s*<([^<]*)>$/', $addr, $matches);
+        $pluckedFromEmail[$idx]['name'] = trim($matches[1]);
+        $pluckedFromEmail[$idx]['email'] = $matches[2];
+      }
+      return $pluckedFromEmail;
+    }
+    else {
+      return self::$fromEmailAddress;
+    }
   }
 
   /**
