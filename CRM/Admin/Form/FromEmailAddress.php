@@ -230,10 +230,11 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   /**
    * Return verified email array
    *
-   * @param int $verifiedType
+   * @param int $verifiedType self::VALID_EMAIL self::VALID_SPF self::VALID_DKIM logic check
+   * @param string $returnType 'email' to return full email, 'domain' to return domain only
    * @return array
    */
-  public static function getVerifiedEmail($verifiedType = self::VALID_EMAIL | self::VALID_SPF | self::VALID_DKIM) {
+  public static function getVerifiedEmail($verifiedType = self::VALID_EMAIL | self::VALID_SPF | self::VALID_DKIM, $returnType = 'email') {
     $all = array();
     CRM_Core_OptionGroup::getAssoc('from_email_address', $all);
     $verified = array();
@@ -241,6 +242,15 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
       if ($filter == $verifiedType) {
         $verified[$all['value'][$idx]] = CRM_Utils_Mail::pluckEmailFromHeader($all['label'][$idx]);
       }
+    }
+    $defaultFrom = CRM_Mailing_BAO_Mailing::defaultFromMail();
+    $verified['default'] = $defaultFrom;
+    if ($returnType === 'domain') {
+      foreach($verified as $idx => $email) {
+        $domain = preg_replace('/^[^@]+@/', '', $email);
+        $verified[$idx] = $domain;
+      }
+      $verified = array_unique($verified);
     }
     return $verified;
   }

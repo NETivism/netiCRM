@@ -41,6 +41,25 @@ require_once 'CRM/Contribute/Form/ContributionPage.php';
 class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_ContributionPage {
 
   /**
+   * Function to set variables up before form is built
+   *
+   * @return void
+   * @access public
+   */
+  function preProcess() {
+    parent::preProcess();
+
+    // refs #30318, migrate exists mail address to from_email_address
+    // do not trigger lookup when submit form
+    if (empty($_POST)) {
+      $pageDefault = parent::setDefaultValues();
+      if (!empty($pageDefault['receipt_from_email']) && CRM_Utils_Rule::email($pageDefault['receipt_from_email'])){
+        CRM_Admin_Form_FromEmailAddress::migrateEmailFromPages($pageDefault['receipt_from_name'], $pageDefault['receipt_from_email']);
+      }
+    }
+  }
+
+  /**
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
@@ -70,7 +89,25 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
 
     $this->addElement('checkbox', 'is_email_receipt', ts('Email Payment Notification to User?'), NULL, array('onclick' => "showReceipt()"));
     $this->add('text', 'receipt_from_name', ts('Payment Notification From Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_name'));
-    $this->add('text', 'receipt_from_email', ts('Payment Notification From Email'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_email'));
+
+    $availableFrom = CRM_Core_PseudoConstant::fromEmailAddress(TRUE, TRUE);
+    $verifiedFrom = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail();
+    $selectableEmail = array();
+    $hasVerified = FALSE;
+    foreach($availableFrom as $fromAddr) {
+      $email = htmlspecialchars($fromAddr['email']);
+      if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
+        $email = ts('%1 Verified', array(1 => '🛡️ '.htmlspecialchars($fromAddr['email'])));
+        $hasVerified = TRUE;
+      }
+      $selectableEmail[$fromAddr['email']] = $email;
+    }
+    arsort($selectableEmail);
+    if (!$hasVerified) {
+      $this->assign('show_spf_dkim_notice', TRUE);
+    }
+    $this->addSelect('receipt_from_email', ts('Payment Notification From Email'), $selectableEmail);
+
     $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
     $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
     $this->assign('default_from_target', 'receipt_from_email');
