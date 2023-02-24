@@ -171,8 +171,13 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
       $emails = array(
         ts('Default') => $fromEmails['default'],
-        ts('Your Email') => $fromEmails['contact'],
       );
+      if (!empty($fromEmails['contact'])) {
+        $emails[ts('Your Email')] = $fromEmails['contact'];
+      }
+      if (CRM_Core_Permission::check('access CiviContribute') && !empty($fromEmails['domain'])) {
+        $emails[ts('Other')] = $fromEmails['domain'];
+      }
       $this->addSelect('from_email', ts('From Email'), array('' => ts('- select -')) + $emails);
       $this->addWysiwyg('receipt_text',
         ts('Body Html'),

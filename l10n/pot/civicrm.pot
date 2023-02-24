@@ -48696,3 +48696,29 @@ msgstr ""
 #: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/EmailOption.tpl
 msgid "PDF receipt will be an email attachment."
 msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Invoice ID %1 %2"
+msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Single and first contributions of recur"
+msgstr ""
+
+msgid "Not single and first contribution of recur"
+msgstr ""
+
+msgid "Cover processing fee %1%"
+msgstr ""
+
+msgid "After your confirmation, email will send immediately."
+msgstr ""
+
+msgid "Only verified domain of email can be set as sender."
+msgstr ""
+
+msgid "Otherwise, the email will be hidden on above select list."
+msgstr ""
+
+msgid "Make sure at least one of your email domain verified in <a href=\"%1\">FROM email address</a> list."
+msgstr ""

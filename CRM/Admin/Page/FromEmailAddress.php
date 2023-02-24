@@ -137,6 +137,28 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
     $returnURL = CRM_Utils_System::url("civicrm/admin/from_email_address", "reset=1");
     $filter = "option_group_id = " . self::$_optionGroupId;
     CRM_Utils_Weight::addOrder($optionValues, 'CRM_Core_DAO_OptionValue', 'id', $returnURL, $filter);
+    foreach($optionValues as $idx => $val) {
+      $email = CRM_Utils_Mail::pluckEmailFromHeader($val['name']);
+      $pageCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution_page WHERE receipt_from_email LIKE %1", array(
+        1 => array($email, 'String'),
+      ));
+      $eventCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_event WHERE confirm_from_email LIKE %1", array(
+        1 => array($email, 'String'),
+      ));
+      $optionValues[$idx]['used_for_page'] = $pageCount;
+      $optionValues[$idx]['used_for_event'] = $eventCount;
+
+      // remove delete link
+      if (($pageCount || $eventCount) && !$val['is_reserved']) {
+        $this->links();
+        $action = CRM_Core_Action::UPDATE;
+        $optionValues[$idx]['action'] = CRM_Core_Action::formLink($this->links(), $action, array(
+          'id' => $val['id'],
+          'gid' => $val['option_group_id'],
+          'value' => $val['value'],
+        ));
+      }
+    }
     $this->assign('rows', $optionValues);
   }
 

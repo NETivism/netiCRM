@@ -895,6 +895,11 @@ Group By  componentId";
     }
 
     $email = $defaultEmail = $domainEmail = $onHold = array();
+    $verifiedDomains = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail(
+      CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_DKIM | CRM_Admin_Form_FromEmailAddress::VALID_SPF,
+      'domain'
+    );
+
     $contactEmail = CRM_Core_BAO_Email::allEmails($contactId);
     $fromDisplayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactId, 'display_name');
 
@@ -909,14 +914,16 @@ Group By  componentId";
           continue;
         }
         $emailAdded[$mail] = 1;
-        $mailAddr = '"' . $fromDisplayName . '" <' . $mail . '> ';
+        $mailAddr = '"' . $fromDisplayName . '" <' . $mail . '>';
         $mailSuffix = ts($item['locationType']);
 
         if ($item['is_primary']) {
           $mailSuffix .= ' ' . ts('(preferred)');
         }
+        if (CRM_Utils_Mail::checkMailInDomains($mail, $verifiedDomains)) {
+          $email[$mailAddr] = htmlspecialchars($mailAddr.$mailSuffix);
+        }
       }
-      $email[$mailAddr] = htmlspecialchars($mailAddr.$mailSuffix);
     }
 
     // now add domain from addresses
@@ -924,7 +931,9 @@ Group By  componentId";
     $default = array_shift($domainFrom);
     foreach (array_keys($domainFrom) as $k) {
       $dmail = $domainFrom[$k];
-      $domainEmail[$dmail] = htmlspecialchars($dmail);
+      if (CRM_Utils_Mail::checkMailInDomains($dmail, $verifiedDomains)) {
+        $domainEmail[$dmail] = htmlspecialchars($dmail);
+      }
     }
     $defaultEmail = array($default => htmlspecialchars($default));
     return array(

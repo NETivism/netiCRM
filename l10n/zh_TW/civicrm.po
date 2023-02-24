@@ -1,7 +1,7 @@
 # 
 # Translators:
 # CC Chu <poliphilonet@gmail.com>, 2020-2023
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2022
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
 # Charles Chuang, 2022
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
@@ -36358,7 +36358,7 @@ msgstr "編輯相關聯絡人"
 
 #: msgctxt "menu"
 msgid "Email address verified"
-msgstr "Email 位址無效"
+msgstr "Email 位址已驗證"
 
 #: msgctxt "menu"
 msgid "Email Greetings"
@@ -49100,3 +49100,31 @@ msgstr "寄送年度彙整收據電子郵件"
 #: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/EmailOption.tpl
 msgid "PDF receipt will be an email attachment."
 msgstr "PDF 格式的收據將會附加於電子郵件附檔。"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Invoice ID %1 %2"
+msgstr "帳單編號 %1 %2"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Single and first contributions of recur"
+msgstr "單筆和首次定期捐款"
+
+msgid "Not single and first contribution of recur"
+msgstr "第二次之後的定期捐款"
+
+msgid "Cover processing fee %1%"
+msgstr "我願意協助負擔交易手續費 %1%"
+
+msgid "After your confirmation, email will send immediately."
+msgstr "一旦您確認後，Email 會立刻送出。"
+
+msgid "Only verified domain of email can be set as sender."
+msgstr "Email 的網域需要驗證後，才可以設定為寄件人。"
+
+msgid "Otherwise, the email will be hidden on above select list."
+msgstr "上方的選項將會隱藏未驗證的 Email。"
+
+msgid ""
+"Make sure at least one of your email domain verified in <a href=\"%1\">FROM "
+"email address</a> list."
+msgstr "請確定至少有 1 個相同的 Email 網域出現在 <a href=\"%1\">Email 寄件人</a> 清單中且完成驗證。"

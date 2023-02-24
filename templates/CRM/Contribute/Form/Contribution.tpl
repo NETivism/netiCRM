@@ -179,7 +179,14 @@
                   {/if}
                   <div id="from_email_address" class="crm-contribution-form-block-from_email_address">
                     <div class="label">{$form.from_email_address.label}</div>
-                    <div>{$form.from_email_address.html}</div>
+                    <div>
+                      {$form.from_email_address.html}
+                      <span class="description font-red">
+                        {ts}Only verified domain of email can be set as sender.{/ts} {ts}Otherwise, the email will be hidden on above select list.{/ts}<br>
+                        {capture assign="from_email_admin_path"}{crmURL p="civicrm/admin/from_email" q="reset=1"}{/capture}
+                        {ts 1=$from_email_admin_path}Make sure at least one of your email domain verified in <a href="%1">FROM email address</a> list.{/ts}
+                      </span>
+                    </div>
                   </div>
                   {if $have_attach_receipt_option}
                   <div id="is_attach_receipt" class="crm-contribution-form-block-is_attach_receipt">

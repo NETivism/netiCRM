@@ -69,8 +69,14 @@
 	<td class="label">{$form.receipt_from_email.label}{$reqMark}
 	</td>
 	<td class="html-adjust">{$form.receipt_from_email.html}
-      {include file="CRM/common/defaultFrom.tpl"}
-      <br />
+      {capture assign="from_email_text"}{ts}FROM Email Address{/ts}{/capture}
+      <a href="{crmURL p='civicrm/admin/from_email' q='reset=1'}" target="_blank">{ts 1=$from_email_text}Add %1{/ts}</a><br>
+      {if $show_spf_dkim_notice}
+        <span class="description font-red">
+          {ts}All{/ts} {ts 1='SPF / DKIM' 2=''}%1 for your email %2 is not verified.{/ts}
+          {docURL page="Configure SPF Record" text="Learn how to config settings"}
+        </span>
+      {/if}
 	    <span class="description">{ts}Enter the FROM email address to be used when payment notification are emailed to contributors.{/ts}<br>
       {ts}Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox.{/ts}<br>
 			{ts 1=`$mail_providers`}Do not use free mail address as mail sender. (eg. %1){/ts}

@@ -68,7 +68,6 @@
 	{$form.contribution_page_id.html}</td>
 </tr>
 <tr>
-<tr>
 	<td>
     <div>
       <label>{ts}Paid By{/ts}</label> 
@@ -92,6 +91,9 @@
     </div>
     <div>
       {$form.contribution_transaction_id.label} {$form.contribution_transaction_id.html}
+    </div>
+    <div>
+      {$form.contribution_invoice_id.label} {$form.contribution_invoice_id.html}
     </div>
     <div>
       {$form.contribution_receipt_id.label} {$form.contribution_receipt_id.html}
@@ -125,6 +127,12 @@
 	<td>{$form.contribution_pcp_display_in_roll.label}
 	{$form.contribution_pcp_display_in_roll.html}<span class="crm-clear-link">(<a href="javascript:unselectRadio('contribution_pcp_display_in_roll','{$form.formName}')">{ts}clear{/ts}</a>)</span></td>
 </tr>
+{if $form.contribution_first_type.html}
+<tr>
+	<td colspan="2"><label>{$form.contribution_first_type.label}</label> <br />
+	{$form.contribution_first_type.html}</td>
+</tr>
+{/if}
 <tr>
 	<td colspan="2">
     <div class="crm-accordion-wrapper crm-accordion-open">

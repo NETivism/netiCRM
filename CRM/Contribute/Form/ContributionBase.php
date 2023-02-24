@@ -879,7 +879,9 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
         if (array_intersect_key($fields, $fieldsToIgnore)) {
           $fields = array_diff_key($fields, $fieldsToIgnore);
-          CRM_Core_Session::setStatus(ts("Some of the profile fields cannot be configured for this page."));
+          if (CRM_Core_Permission::check('access CiviContribute')) {
+            CRM_Core_Session::setStatus(ts("Some of the profile fields cannot be configured for this page."));
+          }
         }
 
         $fields = array_diff_assoc($fields, $this->_fields);
