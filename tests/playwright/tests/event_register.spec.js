@@ -49,7 +49,6 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
-  console.log('After tests');
   await page.close();
 });
 

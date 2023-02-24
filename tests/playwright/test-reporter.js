@@ -13,7 +13,7 @@ class MyReporter {
 
   onStepBegin(test, result, step) {
     if (step.category == "test.step") {
-      console.log(`Test step : ${step.title}`);
+      console.log(`** Test step : ${step.title} **`);
     }
   }
 
