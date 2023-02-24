@@ -245,6 +245,23 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
         'order' => $this->get(CRM_Utils_Sort::SORT_ORDER),
         'pirmaryIDName' => $primaryIDName,
       );
+      // If select fields is empty, than only export custom search result table.
+      $isSelectorEmpty = TRUE;
+      foreach ($mapperKeys as $selectors) {
+        if (count($selectors) != 1) {
+          $isSelectorEmpty = FALSE;
+          break;
+        }
+      }
+      if ($isSelectorEmpty) {
+        CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
+          $this->get('formValues'),
+          $this->get(CRM_Utils_Sort::SORT_ORDER), 
+          $primaryIDName, 
+          TRUE,
+          TRUE
+        );
+      }
     }
     CRM_Export_BAO_Export::exportComponents($this->get('selectAll'),
       $this->get('componentIds'),

@@ -1306,7 +1306,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE) {
+  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE) {
     require_once "CRM/Core/Extensions.php";
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
@@ -1404,14 +1404,19 @@ class CRM_Export_BAO_Export {
       }
     }
 
-    if ($returnRows) {
-      $returnArray = array('header' => $customHeader, 'rows' => $rows);
+    if ($exportFile) {
+      CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
+      CRM_Utils_System::civiExit();
     }
     else {
-      $returnArray = array('header' => $customHeader);
+      if ($returnRows) {
+        $returnArray = array('header' => $customHeader, 'rows' => $rows);
+      }
+      else {
+        $returnArray = array('header' => $customHeader);
+      }
+      return $returnArray;
     }
-
-    return $returnArray;
   }
 
   static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {
