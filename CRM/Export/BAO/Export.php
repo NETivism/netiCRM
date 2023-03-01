@@ -74,7 +74,8 @@ class CRM_Export_BAO_Export {
     $mergeSameAddress = FALSE,
     $mergeSameHousehold = FALSE,
     $mappingId = NULL,
-    $separateMode = FALSE
+    $separateMode = FALSE, 
+    $exportCustomVars = array()
   ) {
     global $civicrm_batch;
     $allArgs = func_get_args();
@@ -1113,6 +1114,76 @@ class CRM_Export_BAO_Export {
       self::manipulateHeaderRows($headerRows, $contactRelationshipTypes);
     }
 
+    if (!empty($exportCustomVars)) {
+
+      // prepare data for custom search export.
+      $exportCustomResult = CRM_Export_BAO_Export::exportCustom(
+        $exportCustomVars['customSearchClass'],
+        $exportCustomVars['formValues'],
+        $exportCustomVars['order'],
+        $exportCustomVars['pirmaryIDName'],
+      );
+
+      $customHeader = $exportCustomResult['header'];
+      $customRows = $exportCustomResult['rows'];
+      $primaryIDName = empty($exportCustomVars['pirmaryIDName']) ? 'contact_id' : $exportCustomVars['pirmaryIDName'];
+      $componentTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
+      foreach ($customHeader as $columnName => $val) {
+        if ($primaryIDName == 'contact_id' && $columnName == 'contact_id') {
+          // If primary field of custom search result is 'contact_id', it will write as $primaryIDName in the former $sql. So skip it.
+          continue;
+        }
+        $customColumns .= ", $columnName varchar(255)";
+      }
+
+      // Create custom search custom table.
+      $sql = "CREATE TEMPORARY TABLE {$componentTable} ( $primaryIDName int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+      CRM_Core_DAO::executeQuery($sql);
+
+      // Write data into Table
+      $customColumnsNames = str_replace('varchar(255)', '', $customColumns);
+      foreach ($customRows as $key => $rows) {
+        if ($primaryIDName == 'contact_id') {
+          unset($rows[$primaryIDName]);
+        }
+        $values = "'".implode("','", $rows)."'";
+        $sql = "REPLACE INTO {$componentTable} ( $primaryIDName $customColumnsNames) VALUES ( {$key} , $values)";
+
+        CRM_Core_DAO::executeQuery($sql);
+      }
+
+      // Join custom search table and selected field table.
+      foreach ($customHeader as $fieldName => $dontcard) {
+        if (strstr($fieldName, 'column')) {
+          $componentColumns .= ", ctTable.$fieldName";
+        }
+      }
+
+      // Look for primary field name of $exportTempTable.
+      $sql = "SELECT * FROM $exportTempTable";
+      $dao = CRM_Core_DAO::executeQuery($sql);
+      $dao->fetch();
+      if (isset($dao->civicrm_primary_id)) {
+        $exportTempTablePrimaryIdName = 'civicrm_primary_id';
+      }
+      elseif (isset($dao->contact_id)) {
+        $exportTempTablePrimaryIdName = 'contact_id';
+      }
+      else {
+        $exportTempTablePrimaryIdName = 'id';
+      }
+
+      $tempTableName = 'new_export_temp_table';
+      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT $exportTempTable.* $componentColumns FROM $componentTable ctTable INNER JOIN $exportTempTable ON ctTable.contact_id = $exportTempTable.$exportTempTablePrimaryIdName";
+      CRM_Core_DAO::executeQuery($sql);
+      $exportTempTable = $tempTableName;
+
+      $headerRows = $customHeader + $headerRows;
+      foreach (array_reverse($customHeader) as $key => $ignore) {
+        array_unshift($sqlColumns, "$key varchar(255)");
+      }
+    }
+
     // call export hook
     require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::export($exportTempTable, $headerRows, $sqlColumns, $exportMode, $mappingId);
@@ -1235,7 +1306,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order) {
+  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE) {
     require_once "CRM/Core/Extensions.php";
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
@@ -1258,8 +1329,18 @@ class CRM_Export_BAO_Export {
 
     $columns = $search->columns();
 
-    $header = array_keys($columns);
-    $fields = array_values($columns);
+    if (!empty($primaryIDName)) {
+      $keyContactIDName = array_search('contact_id', $columns);
+      unset($columns[$keyContactIDName]);
+      $header = array_keys($columns);
+      $header[] = ts('CiviCRM Contact ID');
+      $fields = array_values($columns);
+      $fields[] = 'contact_id';
+    }
+    else {
+      $header = array_keys($columns);
+      $fields = array_values($columns);
+    }
 
     $rows = array();
     $dao = CRM_Core_DAO::executeQuery($sql);
@@ -1276,8 +1357,27 @@ class CRM_Export_BAO_Export {
       if ($alterRow) {
         $search->alterRow($row);
       }
+      if (!empty($primaryIDName)) {
+        unset($row['contact_id']);
+        $row['contact_id'] = $dao->contact_id;
+      }
       unset($row['action']);
-      $rows[] = $row;
+      if (!empty($primaryIDName)) {
+        $rows[$dao->$primaryIDName] = $row;
+      }
+      elseif (isset($dao->id)) {
+        $rows[$dao->id] = $row;
+      }
+      elseif (isset($dao->contact_id)) {
+        $rows[$dao->contact_id] = $row;
+      }
+      else {
+        $rows[] = $row;
+      }
+      // If only return Header, just run once.
+      if (!$returnRows) {
+        break;
+      }
     }
 
     // remove the fields which key is numeric. refs #19235
@@ -1285,15 +1385,38 @@ class CRM_Export_BAO_Export {
       $header[$key] = strip_tags($value);
       if(is_numeric($value)){
         unset($header[$key]);
-        foreach ($rows as $row) {
+        foreach ($rows as &$row) {
           unset($row[$fields[$key]]);
         }
         unset($fields[$key]);
       }
+      else {
+        if ($value == ts('CiviCRM Contact ID')) {
+          $customHeader['contact_id'] = $value;  
+        }
+        elseif ($key == 0 && $fields[0] == 'contact_id') {
+          // If primary field is 'contact_id', than don't use column_0.
+          $customHeader['contact_id'] = $value;
+        }
+        else {
+          $customHeader["column_{$key}"] = $value;
+        }
+      }
     }
 
-    CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
-    CRM_Utils_System::civiExit();
+    if ($exportFile) {
+      CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
+      CRM_Utils_System::civiExit();
+    }
+    else {
+      if ($returnRows) {
+        $returnArray = array('header' => $customHeader, 'rows' => $rows);
+      }
+      else {
+        $returnArray = array('header' => $customHeader);
+      }
+      return $returnArray;
+    }
   }
 
   static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {

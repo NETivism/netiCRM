@@ -68,14 +68,29 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
    * @access public
    */
   function preProcess() {
-    //special case for custom search, directly give option to download csv file
     $customSearchID = $this->get('customSearchID');
     if ($customSearchID) {
-      require_once 'CRM/Export/BAO/Export.php';
-      CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
+      $customSearchClass = $this->get('customSearchClass');
+      $primaryIDName = '';
+      if (property_exists($customSearchClass, '_primaryIDName')) {
+        $primaryIDName = $customSearchClass::$_primaryIDName;
+      }
+      $exportCustomResult = CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
         $this->get('formValues'),
-        $this->get(CRM_Utils_Sort::SORT_ORDER)
+        $this->get(CRM_Utils_Sort::SORT_ORDER), 
+        $primaryIDName, 
+        FALSE
       );
+      $header = $exportCustomResult['header'];
+      foreach ($header as $i => $headerName) {
+        if ($headerName == ts('CiviCRM Contact ID')) {
+          $customHeader['contact_id'] = $headerName;  
+        }
+        else {
+          $customHeader["column{$i}"] = $headerName;
+        }
+      }
+      $this->assign('customHeader', $customHeader);
     }
 
     $this->_selectAll = FALSE;
