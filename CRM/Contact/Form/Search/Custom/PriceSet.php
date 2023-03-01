@@ -40,7 +40,7 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
 
   protected $_tableName = NULL;
 
-  public static $_primaryIDName = 'participant_id';
+  public static $_primaryIDName = 'id';
 
   protected $_pstatus = NULL; function __construct(&$formValues) {
     parent::__construct($formValues);
@@ -267,6 +267,7 @@ AND    p.entity_id    = e.id
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
+tempTable.participant_id as id ,
 contact_a.id             as contact_id  ,
 contact_a.display_name   as display_name";
 
