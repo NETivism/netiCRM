@@ -48656,3 +48656,69 @@ msgstr ""
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "Since you didn't assign the expiration date of your donation installment plan, the recurring payments will be canceled when your credit card expires."
 msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable URL"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/SMS.tpl
+msgid "We will send messages to %1 contacts."
+msgstr ""
+
+#: CRM/UF/Form/AdvanceSetting.php
+msgid "Use in other situation"
+msgstr ""
+
+msgid "Used for Batch Update and Contact Search Profile."
+msgstr ""
+
+#: templates/CRM/UF/Form/Group.tpl
+msgid "If you want to check this checkbox, Please uncheck Used For option or copy this CiviCRM Profile for Use in other situation. If this CiviCRM Profile is in use, please uncheck the Enabled checkbox then edit profile."
+msgstr ""
+
+#: templates/CRM/UF/Form/Field.tpl
+msgid "When adding a field, please select the appropriate field according to the type of use, if the existing field cannot meet the situation, you can use the %1 to add it."
+msgstr ""
+
+#: templates/CRM/UF/Form/Group.tpl
+#: templates/CRM/Custom/Form/Group.tpl
+msgid "Description of Used For"
+msgstr ""
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid "Description of Data and Input Field Type"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/SearchOption.tpl
+msgid "Send Annual Receipt Email"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail/EmailOption.tpl
+msgid "PDF receipt will be an email attachment."
+msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Invoice ID %1 %2"
+msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Single and first contributions of recur"
+msgstr ""
+
+msgid "Not single and first contribution of recur"
+msgstr ""
+
+msgid "Cover processing fee %1%"
+msgstr ""
+
+msgid "After your confirmation, email will send immediately."
+msgstr ""
+
+msgid "Only verified domain of email can be set as sender."
+msgstr ""
+
+msgid "Otherwise, the email will be hidden on above select list."
+msgstr ""
+
+msgid "Make sure at least one of your email domain verified in <a href=\"%1\">FROM email address</a> list."
+msgstr ""

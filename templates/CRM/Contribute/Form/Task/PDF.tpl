@@ -54,7 +54,14 @@
 <table class="form-layout-compressed pdf-receipt-table" style="display:none;">
 <tr class="form-item">
   <td class="label"><label>{$form.from_email.label}</label></td>
-  <td>{$form.from_email.html}</td>
+  <td>
+    {$form.from_email.html}
+    <span class="description font-red">
+      {ts}Only verified domain of email can be set as sender.{/ts} {ts}Otherwise, the email will be hidden on above select list.{/ts}<br>
+      {capture assign="from_email_admin_path"}{crmURL p="civicrm/admin/from_email" q="reset=1"}{/capture}
+      {ts 1=$from_email_admin_path}Make sure at least one of your email domain verified in <a href="%1">FROM email address</a> list.{/ts}
+    </span>
+  </td>
 </tr>
 <tr class="form-item">
   <td class="label"><label>{$form.receipt_text.label}</label></td>

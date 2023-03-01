@@ -81,7 +81,7 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all the membership statuss
+   * Get all the membership status
    *
    * @access public
    *
@@ -113,6 +113,18 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
     }
 
     return $value;
+  }
+
+  /**
+   * Alias of membershipStatus for getoptions API
+   *
+   * @access public
+   *
+   * @return array - array reference of all membership statuss if any
+   * @static
+   */
+  public static function &status($id = NULL, $cond = NULL, $column = 'label') {
+    return self::membershipStatus($id, $cond, $column);
   }
 }
 

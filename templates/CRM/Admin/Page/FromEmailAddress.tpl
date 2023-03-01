@@ -18,6 +18,7 @@
       <tr>
       <th>{ts}Label{/ts}</th>
       <th id="nosort">{ts}Description{/ts}</th>
+      <th>{ts}Used for{/ts}</th>
       <th id="order" class="sortable">{ts}Order{/ts}</th>
       <th>{ts}Default?{/ts}</th>
       <th>{ts}Enabled?{/ts}</th>
@@ -36,6 +37,10 @@
       <tr id="row_{$row.id}" class="crm-admin-from_email_address crm-admin-options_{$row.id} {cycle values="odd-row,even-row"}{if NOT $row.is_active} disabled{/if}">
         <td class="crm-admin-from_email_address-label">{$row.label}</td>
         <td class="crm-admin-from_email_address-description">{$row.description}</td>  
+        <td class="crm-admin-from_email_address-usedfor">
+          {ts}Contribution Page{/ts}: {$row.used_for_page} {ts}times{/ts}<br>
+          {ts}Event{/ts}: {$row.used_for_event} {ts}times{/ts}
+        </td>
         <td class="nowrap crm-admin-from_email_address-order">{$row.order}</td>
         <td class="crm-admin-from_email_address-is_reserved">{if $row.is_default eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
         <td class="crm-admin-from_email_address-is_active" id="row_{$row.id}_status">

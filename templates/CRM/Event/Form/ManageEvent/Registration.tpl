@@ -254,12 +254,18 @@
              <tr class="crm-event-manage-registration-form-block-confirm_from_email">
                <td scope="row" class="label" width="20%">{$form.confirm_from_email.label} <span class="marker">*</span></td>
                <td>{$form.confirm_from_email.html}
-                   {include file="CRM/common/defaultFrom.tpl"}
-                   <br />
-                   <span class="description">{ts}FROM email address (this must be a valid email account with your SMTP email service provider).{/ts}<br>
-                   {ts}Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox.{/ts}<br>
-                   {ts 1=`$mail_providers`}Do not use free mail address as mail sender. (eg. %1){/ts}
-                   </span>
+                  {capture assign="from_email_text"}{ts}FROM Email Address{/ts}{/capture}
+                  <a href="{crmURL p='civicrm/admin/from_email' q='reset=1'}" target="_blank">{ts 1=$from_email_text}Add %1{/ts}</a>
+                  {if $show_spf_dkim_notice}
+                    <span class="description font-red">
+                      {ts}All{/ts} {ts 1='SPF / DKIM' 2=''}%1 for your email %2 is not verified.{/ts}
+                      {docURL page="Configure SPF Record" text="Learn how to config settings"}
+                    </span>
+                  {/if}
+                  <span class="description">{ts}FROM email address (this must be a valid email account with your SMTP email service provider).{/ts}<br>
+                  {ts}Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox.{/ts}<br>
+                  {ts 1=`$mail_providers`}Do not use free mail address as mail sender. (eg. %1){/ts}
+                  </span>
                </td>
              </tr>
              <tr class="crm-event-manage-registration-form-block-cc_confirm">

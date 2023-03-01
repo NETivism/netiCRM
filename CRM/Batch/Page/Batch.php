@@ -253,7 +253,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
             }
           }
           header('Content-Length: ' . filesize($batch->data['download']['file']));
-          if(ob_get_level()){
+          while (ob_get_level()) {
             ob_end_clean();
           }
           readfile($batch->data['download']['file']);
