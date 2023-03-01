@@ -32,8 +32,17 @@
 {/if}
 <table class="form-layout-compressed">
     <tr class="crm-contactEmail-form-block-fromEmailAddress">
-       <td class="label">{$form.fromEmailAddress.label}</td>
-       <td>{$form.fromEmailAddress.html} {help id ="id-from_email" file="CRM/Contact/Form/Task/Email.hlp"}</td>
+      <td class="label">{$form.fromEmailAddress.label}</td>
+      <td>
+        {$form.fromEmailAddress.html} {help id ="id-from_email" file="CRM/Contact/Form/Task/Email.hlp"}
+        {if $show_spf_dkim_notice}
+        <span class="description font-red">
+          {ts}Only verified domain of email can be set as sender.{/ts} {ts}Otherwise, the email will be hidden on above select list.{/ts}<br>
+          {capture assign="from_email_admin_path"}{crmURL p="civicrm/admin/from_email" q="reset=1"}{/capture}
+          {ts 1=$from_email_admin_path}Make sure at least one of your email domain verified in <a href="%1">FROM email address</a> list.{/ts}
+        </span>
+        {/if}
+      </td>
     </tr>
     <tr class="crm-contactEmail-form-block-recipient">
        <td class="label">{if $single eq false}{ts}Recipient(s){/ts}{else}{$form.to.label}{/if}</td>

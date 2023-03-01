@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36358,7 +36358,7 @@ msgstr "編輯相關聯絡人"
 
 #: msgctxt "menu"
 msgid "Email address verified"
-msgstr "Email 位址無效"
+msgstr "Email 位址已驗證"
 
 #: msgctxt "menu"
 msgid "Email Greetings"
@@ -49114,3 +49114,17 @@ msgstr "第二次之後的定期捐款"
 
 msgid "Cover processing fee %1%"
 msgstr "我願意協助負擔交易手續費 %1%"
+
+msgid "After your confirmation, email will send immediately."
+msgstr "一旦您確認後，Email 會立刻送出。"
+
+msgid "Only verified domain of email can be set as sender."
+msgstr "Email 的網域需要驗證後，才可以設定為寄件人。"
+
+msgid "Otherwise, the email will be hidden on above select list."
+msgstr "上方的選項將會隱藏未驗證的 Email。"
+
+msgid ""
+"Make sure at least one of your email domain verified in <a href=\"%1\">FROM "
+"email address</a> list."
+msgstr "請確定至少有 1 個相同的 Email 網域出現在 <a href=\"%1\">Email 寄件人</a> 清單中且完成驗證。"
