@@ -1121,7 +1121,7 @@ class CRM_Export_BAO_Export {
         $exportCustomVars['customSearchClass'],
         $exportCustomVars['formValues'],
         $exportCustomVars['order'],
-        $exportCustomVars['pirmaryIDName'],
+        $exportCustomVars['pirmaryIDName']
       );
 
       $customHeader = $exportCustomResult['header'];
