@@ -57,66 +57,39 @@ class CRM_Contact_Form_Task_EmailCommon {
     }
 
     $form->_emails = $emails = array();
-
     $session = CRM_Core_Session::singleton();
     $contactID = $session->get('userID');
-
     $form->_contactIds = array($contactID);
-    $contactEmails = CRM_Core_BAO_Email::allEmails($contactID);
 
-    $form->_onHold = array();
+    $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress($contactID);
 
-    $fromDisplayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
-      $contactID, 'display_name'
-    );
-
-    foreach ($contactEmails as $emailId => $item) {
-      $email = $item['email'];
-      if (!$email && (count($emails) < 1)) {
-        $form->_noEmails = TRUE;
-      }
-      else {
-        if ($email) {
-          if (in_array($email, $emails)) {
-            // CRM-3624
-            continue;
-          }
-
-          $emails[$emailId] = '"' . $fromDisplayName . '" <' . $email . '> ';
-          $form->_onHold[$emailId] = $item['on_hold'];
-          $form->_noEmails = FALSE;
+    foreach($fromEmails as $emailType => $emails) {
+      if (!empty($emails)) {
+        array_keys($emails);
+        foreach($emails as $header => $display) {
+          $form->_emails[$header] = $header;
         }
       }
-
-      $form->_emails[$emailId] = $emails[$emailId];
-
-      $emails[$emailId] .= $item['locationType'];
-
-      if ($item['is_primary']) {
-        $emails[$emailId] .= ' ' . ts('(preferred)');
-      }
-      $emails[$emailId] = htmlspecialchars($emails[$emailId]);
     }
-
-    $form->assign('noEmails', $form->_noEmails);
-
-    if ($form->_noEmails) {
-       return CRM_Core_Error::statusBounce(ts('Your user record does not have a valid email address'));
+    if (empty($form->_emails)) {
+      $form->assign('noEmails', TRUE);
+      return CRM_Core_Error::statusBounce(ts('Your user record does not have a valid email address'));
     }
-
-    // now add domain from addresses
-    $domainEmails = array();
-    $domainFrom = CRM_Core_PseudoConstant::fromEmailAddress();
-    $defaultEmail = array_shift($domainFrom);
-    foreach (array_keys($domainFrom) as $k) {
-      $domainEmail = $domainFrom[$k];
-      $domainEmails[$domainEmail] = htmlspecialchars($domainEmail);
-      $form->_emails[$domainEmail] = $domainEmail;
+    $selectableEmails = array();
+    if (!empty($fromEmails['contact'])) {
+      $selectableEmails[ts('Your Email')] = $fromEmails['contact'];
     }
-
-    $defaultFrom = array($defaultEmail => htmlspecialchars($defaultEmail));
-    $form->_fromEmails = array_merge($defaultFrom, $emails, $domainEmails);
-    $form->_emails = array($defaultEmail => $defaultEmail) + $form->_emails;
+    else {
+      $form->assign('show_spf_dkim_notice', TRUE);
+    }
+    if (!empty($fromEmails['system'])) {
+      $selectableEmails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
+    }
+    $selectableEmails[ts('Default')] = $fromEmails['default'];
+    if (!empty($fromEmails['domain'])) {
+      $selectableEmails[ts('Other')] = $fromEmails['domain'];
+    }
+    $form->_fromEmails = $selectableEmails;
   }
 
   /**

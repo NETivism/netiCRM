@@ -58,6 +58,15 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    */
   function preProcess() {
     parent::preProcess();
+
+    // refs #30318, migrate exists mail address to from_email_address
+    // do not trigger lookup when submit form
+    if (empty($_POST)) {
+      $eventDefault = parent::setDefaultValues();
+      if (!empty($eventDefault['confirm_from_email']) && CRM_Utils_Rule::email($eventDefault['confirm_from_email'])){
+        CRM_Admin_Form_FromEmailAddress::migrateEmailFromPages($eventDefault['confirm_from_name'], $eventDefault['confirm_from_email']);
+      }
+    }
   }
 
   /**
@@ -308,7 +317,24 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->add('text', 'bcc_confirm', ts('BCC Confirmation To'), CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event', 'bcc_confirm'));
     $form->addRule("bcc_confirm", ts('Please enter a valid list of comma delimited email addresses'), 'emailList');
     $form->add('text', 'confirm_from_name', ts('Confirm From Name'));
-    $form->add('text', 'confirm_from_email', ts('Confirm From Email'));
+
+    $availableFrom = CRM_Core_PseudoConstant::fromEmailAddress(TRUE, TRUE);
+    $verifiedFrom = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail();
+    $selectableEmail = array();
+    $hasVerified = FALSE;
+    foreach($availableFrom as $fromAddr) {
+      $email = htmlspecialchars($fromAddr['email']);
+      if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
+        $email = ts('%1 Verified', array(1 => '🛡️ '.htmlspecialchars($fromAddr['email'])));
+        $hasVerified = TRUE;
+      }
+      $selectableEmail[$fromAddr['email']] = $email;
+    }
+    arsort($selectableEmail);
+    if (!$hasVerified) {
+      $form->assign('show_spf_dkim_notice', TRUE);
+    }
+    $form->addSelect('confirm_from_email', ts('Confirm From Email'), $selectableEmail);
     $form->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
     $form->addRule("confirm_from_email", ts('Email is not valid.'), 'email');
 

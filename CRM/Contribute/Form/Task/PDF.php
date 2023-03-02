@@ -169,10 +169,17 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     if (count($this->_contributionIds) <= self::PDF_BATCH_THRESHOLD && $this->_enableEmailReceipt) {
       $this->addCheckBox('email_pdf_receipt', '', array(ts('Send an Email') => 1));
       $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
-      $emails = array(
-        ts('Default') => $fromEmails['default'],
-        ts('Your Email') => $fromEmails['contact'],
-      );
+      $emails = array();
+      if (!empty($fromEmails['system'])) {
+        $emails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
+      }
+      $emails[ts('Default')] = $fromEmails['default'];
+      if (!empty($fromEmails['contact'])) {
+        $emails[ts('Your Email')] = $fromEmails['contact'];
+      }
+      if (CRM_Core_Permission::check('access CiviContribute') && !empty($fromEmails['domain'])) {
+        $emails[ts('Other')] = $fromEmails['domain'];
+      }
       $this->addSelect('from_email', ts('From Email'), array('' => ts('- select -')) + $emails);
       $this->addWysiwyg('receipt_text',
         ts('Body Html'),

@@ -955,10 +955,15 @@ WHERE  contribution_id = {$this->_id}
     }
     $emails = array(
       ts('Contribution Page') => $pageFromAddress,
-      ts('Default') => $fromEmails['default'],
-      ts('Your Email') => $fromEmails['contact'],
     );
-    if (CRM_Core_Permission::check('access CiviContribute')) {
+    if (!empty($fromEmails['system'])) {
+      $emails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
+    }
+    $emails[ts('Default')] = $fromEmails['default'];
+    if (!empty($fromEmails['contact'])) {
+      $emails[ts('Your Email')] = $fromEmails['contact'];
+    }
+    if (CRM_Core_Permission::check('access CiviContribute') && !empty($fromEmails['domain'])) {
       $emails[ts('Other')] = $fromEmails['domain'];
     }
     $this->addSelect('from_email_address', ts('FROM Email Address'), $emails);

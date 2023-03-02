@@ -895,6 +895,11 @@ Group By  componentId";
     }
 
     $email = $defaultEmail = $domainEmail = $onHold = array();
+    $verifiedDomains = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail(
+      CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_DKIM | CRM_Admin_Form_FromEmailAddress::VALID_SPF,
+      'domain'
+    );
+
     $contactEmail = CRM_Core_BAO_Email::allEmails($contactId);
     $fromDisplayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactId, 'display_name');
 
@@ -909,28 +914,49 @@ Group By  componentId";
           continue;
         }
         $emailAdded[$mail] = 1;
-        $mailAddr = '"' . $fromDisplayName . '" <' . $mail . '> ';
+        $mailAddr = '"' . $fromDisplayName . '" <' . $mail . '>';
         $mailSuffix = ts($item['locationType']);
 
         if ($item['is_primary']) {
           $mailSuffix .= ' ' . ts('(preferred)');
         }
+        if (CRM_Utils_Mail::checkMailInDomains($mail, $verifiedDomains)) {
+          $email[$mailAddr] = htmlspecialchars($mailAddr.$mailSuffix);
+        }
       }
-      $email[$mailAddr] = htmlspecialchars($mailAddr.$mailSuffix);
     }
 
     // now add domain from addresses
     $domainFrom = CRM_Core_PseudoConstant::fromEmailAddress();
     $default = array_shift($domainFrom);
+
     foreach (array_keys($domainFrom) as $k) {
       $dmail = $domainFrom[$k];
-      $domainEmail[$dmail] = htmlspecialchars($dmail);
+      if (CRM_Utils_Mail::checkMailInDomains($dmail, $verifiedDomains)) {
+        $domainEmail[$dmail] = htmlspecialchars($dmail);
+      }
     }
-    $defaultEmail = array($default => htmlspecialchars($default));
+
+    // add default from address
+    $systemEmail = array();
+    if (CRM_Utils_Mail::checkMailInDomains($default, $verifiedDomains)) {
+      $defaultEmail = array($default => htmlspecialchars($default));
+    }
+    else {
+      $defaultEmail = array($default => htmlspecialchars($default));
+      // add system default when default is not system email
+      $systemFromEmail = CRM_Mailing_BAO_Mailing::defaultFromMail();
+      if (!strstr($default, '<'.$systemFromEmail.'>')) {
+        $systemRFC822 = CRM_Utils_Mail::formatRFC822Email(CRM_Utils_Mail::pluckNameFromHeader($default), $systemFromEmail, TRUE);
+        $systemEmail = array($systemRFC822 => htmlspecialchars($systemRFC822));
+      }
+    }
+
     return array(
       'contact' => $email,
       'default' => $defaultEmail,
       'domain' => $domainEmail,
+      'system' => $systemEmail,
     );
   }
 }

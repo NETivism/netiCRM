@@ -562,5 +562,27 @@ class CRM_Utils_Mail {
     }
     return array();
   }
+
+  /**
+   * Check email has whitelist domain
+   *
+   * @param string $email
+   * @param array $domains
+   * @return bool
+   */
+  function checkMailInDomains($email, $domains) {
+    if (strstr($email, '<')) {
+      $email = self::pluckEmailFromHeader($email);
+    }
+    if (empty($email) || !CRM_Utils_Rule::email($email)) {
+      return FALSE;
+    }
+    foreach($domains as $domain) {
+      if (strstr($email, '@'.$domain)) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
 }
 
