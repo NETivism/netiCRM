@@ -57,12 +57,50 @@ function civicrm_api3_group_contact_get($params) {
     return civicrm_api3_create_success($values, $params);
   }
   else {
+    if (!empty($params['group_id'])) {
+      $group_id = $params['group_id'];
+      //Get all contact id in group
+      $params_new = array(
+        0 => array('group', 'IN', array($group_id => 1), 0, 0),
+      );
+      $searchDescendentGroups = TRUE; // return sub-group contact
+      $smartGroupCache = TRUE;
+      $returnProperties = array('contact_id');
+      $query = new CRM_Contact_BAO_Query($params_new, $returnProperties, NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, FALSE, $searchDescendentGroups, $smartGroupCache);
+      $offset = $rowCount = 0;
+      $result = $query->searchQuery($offset, $rowCount);
+      while($result->fetch()) {
+        $contactIds[] = $result->contact_id;
+      }
+    }
+
     if (empty($params['status'])) {
       //default to 'Added'
       $params['status'] = 'Added';
     }
     //ie. id passed in so we have to return something
-    return _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
+    $origin = _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
+    // return _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
+    // dpm($origin);
+
+    $smartContactIds = $contactIds;
+    foreach ($contactIds as $index => $id) {
+      foreach ($origin['values'] as $i => $value) {
+        $addValue = $value['contact_id'];
+        if ($id == $addValue) {
+          unset($smartContactIds[$index]);
+        }
+      }
+    }
+
+    foreach ($smartContactIds as $index => $id) {
+      $smartContact[$index]['id'] = $index;
+      $smartContact[$index]['group_id'] = $group_id;
+      $smartContact[$index]['contact_id'] = $id;
+      $smartContact[$index]['status'] = "smart";
+    }
+    // dpm($smartContact);
+    return $origin;
   }
 }
 
