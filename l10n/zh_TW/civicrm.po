@@ -21294,7 +21294,7 @@ msgid ""
 "create contact records first, if necessary. Then you can match activities to"
 " contacts by Email Address, CiviCRM Contact ID, or an External Identifier "
 "(see the TIP below)."
-msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
+msgstr "您可以輕易從其他程式搬移任務紀錄到CiviCRM，但匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人紀錄，然後您可以透過Email地址、CiviCRM系統編號，或外部編號（看以下的說明）來配對行動和聯絡人。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid ""
@@ -21303,7 +21303,7 @@ msgid ""
 "the documentation for your application if you're not sure how to do this. "
 "Save this file to your local hard drive (or an accessible drive on your "
 "network) - and you are now ready for step 1 (Upload Data)."
-msgstr "匯入的檔案必須是'CSV''格式。大部分應用程式允許您用此格式匯出記錄。如果不確定該怎麼做，查詢此應用程式的說明文件檔(documentation)，儲存此檔案到您的本機硬碟(或網路硬碟accessible drive on your network) - 就可以進入步驟一(上傳檔案)。"
+msgstr "匯入的檔案必須是\"CSV\"格式，大部分應用程式都可以用此格式匯出紀錄。如果不確定該怎麼做，請查詢該應用程式的說明文件。儲存此檔案到您的硬碟就可以進入步驟一：上傳檔案。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid "TIP - Matching Activities to Contact Records"
@@ -21321,7 +21321,7 @@ msgid ""
 "value into CiviCRM's External Identifier field. Then you can use that unique"
 " key as the 'match to contact' value when importing related data such as "
 "Activities and Contributions."
-msgstr "CiviCRM允許您標註每項行動記錄歸屬於哪位聯絡人，透過使用特定的CiviCRM-assigned 系統編號、您指派的外部編號或您的\n設定\"strict\" 刪除重複記錄規則(使用預設Email)。您必須在匯入檔案的欄位中至少寫入一個值。\n如果您正在從其他應用程式統整(或遷移)聯絡人到CiviCRM，而且這個應用程式已經為每一個聯絡人指定了特定的ID，您可以匯入那個值到\nCiviCRM外部編號，然後當匯入相關數據如行動或捐款時，您可以使用那個特定鍵當做\"配對聯絡人\"值。"
+msgstr "如果想要在CiviCRM標註每項行動紀錄歸屬於哪位聯絡人，您可以透過使用特定的CiviCRM系統編號、您指派的外部編號，或您設定的\"嚴謹\"去重複規則（必須在匯入檔案的欄位中至少寫入一個對應值）來達成。如果您正從其他應用程式將聯絡人搬移到CiviCRM，而且已經為每一個聯絡人指定了特定的ID，您可以匯入該ID值到CiviCRM外部編號。當匯入相關數據（如任務或捐款）時，您可以使用外部編號做為\"對應聯絡人\"的值。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.tpl
 msgid ""
@@ -40104,7 +40104,7 @@ msgstr "聯絡人概況"
 msgid ""
 "The Activity Import Wizard allows you to easily upload activity from other applications into CiviCRM. Contacts must already exist in your CiviCRM database prior to importing activities for them.\n"
 "        Use Import Contacts to create contact records first, if necessary. Then you can match activities to contacts by Email Address, CiviCRM Contact ID, or an External Identifier (see the TIP below)."
-msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
+msgstr "您可以輕易從其他程式搬移任務紀錄到CiviCRM，但匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人紀錄，然後您可以透過Email地址、CiviCRM系統編號，或外部編號（看以下的說明）來配對行動和聯絡人。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid ""
