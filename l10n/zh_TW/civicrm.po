@@ -34496,7 +34496,7 @@ msgstr "匯入會籍資料之前，須先建立這些會員的聯絡人資料。
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "Matching Memberships to Contacts"
-msgstr "會員與連絡人資料配對 "
+msgstr "會員與聯絡人資料配對"
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid ""
