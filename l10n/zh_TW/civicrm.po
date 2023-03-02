@@ -32026,14 +32026,14 @@ msgstr "匯入參加者資料之前，須先建立這些參加者的聯絡人資
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Matching Participant Data to Contacts"
-msgstr "對應到的參加者資料（聯絡人）"
+msgstr "對應聯絡人紀錄"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid ""
 "Participant import files must contain data needed to <strong>match the "
 "participant to a contact record in your CiviCRM database</strong>. This "
 "'matching' can be handled in several different ways:"
-msgstr "匯入參加者檔案，所需欄位包含<strong>對應參加者和聯絡人的資料</strong>。這些「對應」的方式通常會以下列格式存在："
+msgstr "匯入參加者資料之前，須先建立這些參加者的聯絡人資料，這樣參加者資料才能正確匯入到活動中。匯入參加者檔案，欄位需要包含能<strong>對應參加者和聯絡人的資料</strong>，您可以利用任一欄位來進行配對："
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid ""
@@ -32041,7 +32041,7 @@ msgid ""
 "contact in CiviCRM, you can include that value as a column in your import "
 "file. Participant data will then be matched to contact records using their "
 "External ID."
-msgstr "如果您是唯一的 <strong>外部識別碼</strong> 為每個聯絡人儲存在系統資料庫中，您可以匯入檔中將該值作為一組。然後系統將配對參加者的資料，以聯絡人記錄使用其外部編號。"
+msgstr "「外部編號」：如果您已將對應到每個聯絡人的「外部編號」儲存在CiviCRM中，您可以在匯入檔中加入外部編號，系統將以聯絡人的外部編號配對參加者的資料。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
@@ -32049,7 +32049,7 @@ msgid ""
 "You can include a column with each contact's <strong>Internal Contact "
 "ID</strong>. This is the unique ID assigned by CiviCRM which is displayed at"
 " the bottom of the Contact Summary screen - and can be exported."
-msgstr "「系統編號」：聯絡人建立時，系統自動給予的一個獨一無二數字編號。\n您可以將每個連絡人的設定<strong>內部聯絡人編號</strong> 。這是系統自動給予聯絡人的獨一無二數字編號。此聯絡人摘要將顯示在螢幕視窗底部-以及可以進行匯出。"
+msgstr "「系統編號」：您可以在匯入檔使用系統編號欄位。聯絡人建立時，系統會自動給予一個專屬的數字編號，此編號將顯示在聯絡人摘要的最下方，也可以匯出取得。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid ""
