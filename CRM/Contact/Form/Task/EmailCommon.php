@@ -82,6 +82,9 @@ class CRM_Contact_Form_Task_EmailCommon {
     else {
       $form->assign('show_spf_dkim_notice', TRUE);
     }
+    if (!empty($fromEmails['system'])) {
+      $selectableEmails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
+    }
     $selectableEmails[ts('Default')] = $fromEmails['default'];
     if (!empty($fromEmails['domain'])) {
       $selectableEmails[ts('Other')] = $fromEmails['domain'];
