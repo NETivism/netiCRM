@@ -29635,7 +29635,7 @@ msgid ""
 "Files to be imported must be in the 'comma-separated-values' format (CSV). "
 "Most applications will allow you to export records in CSV format. Consult "
 "the documentation for your application if you're not sure how to do this."
-msgstr "被匯入的檔案必須是 CSV 格式。大部分的應用軟體都允許您將記錄匯出為 CSV 格式的檔案。若您不確定如何操作，請查看該應用軟體的說明文件。"
+msgstr "被匯入的檔案必須是 CSV 格式。大部分的應用軟體都允許您將記錄匯出為 CSV 格式的檔案。如果不確定如何操作，請查看該應用軟體的說明文件。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid "Contact Records for Contributors"
@@ -29661,7 +29661,7 @@ msgid ""
 "Contribution import files must contain data needed to <strong>match the "
 "contribution to the contributor</strong>. This 'matching' can be handled in "
 "several different ways:"
-msgstr "匯入資料必須包含可以讓捐款記錄與捐款人對應的資料。您可以利用任一欄位來進行捐款人與捐款資料的配對："
+msgstr "匯入資料必須包含可以讓捐款紀錄與捐款人對應的資料，您可以利用任一欄位來進行配對："
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
@@ -29671,7 +29671,7 @@ msgid ""
 " <strong>Strict Duplicate Matching</strong> rules. For the default duplicate"
 " matching rules, you would include a column in each row with the "
 "contributors' Email Address."
-msgstr "您的聯絡人「配對」資料欄位的設定是基於<strong>嚴格重複配對</strong>規則。對於預設重複配對的規則，您將設定包括每一行列以及捐款者的電子郵件地址。"
+msgstr "您的聯絡人「配對」資料欄位的設定是基於<strong>嚴格重複配對</strong>規則。若使用預設重複配對的規則，每列資料都須包含參加者的電子郵件地址。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid ""
@@ -29693,7 +29693,7 @@ msgid ""
 "Save the CSV file with your contributions and 'contact matching' data to "
 "your local hard drive (or an accessible drive on your network) - and you are"
 " now ready for step 1 (Upload Data)."
-msgstr "將您的捐款及聯絡人配對資料儲存為 CSV 檔，並下載至您的電腦硬碟（或是網路硬碟） - 您現在已經準備好了第一步（上傳資料）。"
+msgstr "將您的捐款及聯絡人配對資料儲存為 CSV 檔，並下載至您的硬碟，您現在已經準備好了第一步（上傳資料）。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid ""
