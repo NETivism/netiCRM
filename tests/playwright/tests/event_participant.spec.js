@@ -1,7 +1,7 @@
 const { test, expect, chromium } = require('@playwright/test');
 
 /** @type {import('@playwright/test').Page} */
-let page, page1;
+let page, pageCreateContact;
 var locator, element;
 
 var vars = {
@@ -37,6 +37,7 @@ test.beforeAll(async () => {
   
 test.afterAll(async () => {
     await page.close();
+    await pageCreateContact.close();
 });
   
 test.describe.serial('Participant Editing', () => {
@@ -58,13 +59,15 @@ test.describe.serial('Participant Editing', () => {
             await expect(page.locator('.sorting_1')).not.toHaveCount(0);
             await elementFoundLog(element);
 
-            /* click latest event */
+            /* click latest created event */
             element = '#event_status_id table tbody tr:last-child td.crm-event-title a';
             locator = page.locator(element).nth(0);
+            var event_title = await locator.textContent();
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.click();
             await expect(page.locator('#actions')).not.toHaveCount(0);
+            await expect(page.locator('#page-title')).toHaveText(event_title);
             
         });
 
@@ -78,34 +81,34 @@ test.describe.serial('Participant Editing', () => {
             await locator.click();
 
             /* switch to new tab */
-            const page1Promise = page.waitForEvent('popup');
-            page1 = await page1Promise;
-            await expect(page1.locator('form#Participant')).not.toHaveCount(0);
+            const pageCreateContactPromise = page.waitForEvent('popup');
+            pageCreateContact = await pageCreateContactPromise;
+            await expect(pageCreateContact.locator('form#Participant')).not.toHaveCount(0);
             
             /* select 新增個人 */
             element = '#profiles_1';
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.selectOption('4');
-            await expect(page1.locator('form#Edit')).not.toHaveCount(0);
+            await expect(pageCreateContact.locator('form#Edit')).not.toHaveCount(0);
 
             /* filled up new contact form */
             element = 'form#Edit';
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             
-            locator = page1.locator('#first_name');
+            locator = pageCreateContact.locator('#first_name');
             await fillInput(locator, vars.first_name);
-            locator = page1.locator('#last_name');
+            locator = pageCreateContact.locator('#last_name');
             await fillInput(locator, vars.last_name);
-            await page1.locator('#_qf_Edit_next').click();
-            await expect(page1.locator('#contact_1')).toHaveValue(`${vars.first_name} ${vars.last_name}`);
+            await pageCreateContact.locator('#_qf_Edit_next').click();
+            await expect(pageCreateContact.locator('#contact_1')).toHaveValue(`${vars.first_name} ${vars.last_name}`);
 
             /* select Participant Status */
             element = '#status_id';
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.selectOption('1');
@@ -113,7 +116,7 @@ test.describe.serial('Participant Editing', () => {
 
             /* click submit */
             element = "form#Participant input[type=submit][value='Save']";
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.click();
@@ -126,15 +129,15 @@ test.describe.serial('Participant Editing', () => {
 
             /* click edit event */
             element = 'table.selector .row-action .action-item:nth-child(2)';
-            locator = page1.locator(element).nth(0);
+            locator = pageCreateContact.locator(element).nth(0);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.click();
-            await expect(page1.locator('form#Participant')).not.toHaveCount(0);
+            await expect(pageCreateContact.locator('form#Participant')).not.toHaveCount(0);
 
             /* click checkbox 志工 */
             element = "input[name='role_id[2]']";
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.click();
@@ -142,24 +145,24 @@ test.describe.serial('Participant Editing', () => {
 
             /* change Registration Date */
             element = '#register_date';
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.click();
-            await page1.locator('select.ui-datepicker-year').selectOption('2020');
-            await page1.locator('select.ui-datepicker-month').selectOption('0');
-            await page1.locator("a.ui-state-default[data-date='1']").click();
+            await pageCreateContact.locator('select.ui-datepicker-year').selectOption('2020');
+            await pageCreateContact.locator('select.ui-datepicker-month').selectOption('0');
+            await pageCreateContact.locator("a.ui-state-default[data-date='1']").click();
             await expect(locator).toHaveValue('01/01/2020');
 
             element = '#register_date_time';
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await fillInput(locator, '12:00PM');
 
             /* select Participant Status */
             element = '#status_id';
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.selectOption('2');
@@ -167,7 +170,7 @@ test.describe.serial('Participant Editing', () => {
 
             /* click submit */
             element = "form#Participant input[type=submit][value='Save']";
-            locator = page1.locator(element);
+            locator = pageCreateContact.locator(element);
             await expect(locator).not.toHaveCount(0);
             await elementFoundLog(element);
             await locator.click();
