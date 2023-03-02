@@ -955,8 +955,11 @@ WHERE  contribution_id = {$this->_id}
     }
     $emails = array(
       ts('Contribution Page') => $pageFromAddress,
-      ts('Default') => $fromEmails['default'],
     );
+    if (!empty($fromEmails['system'])) {
+      $emails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
+    }
+    $emails[ts('Default')] = $fromEmails['default'];
     if (!empty($fromEmails['contact'])) {
       $emails[ts('Your Email')] = $fromEmails['contact'];
     }
