@@ -12,13 +12,13 @@
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
-# 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2022
+# 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2023
 # 馮 佳今, 2022-2023
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023\n"
+"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2023\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21294,7 +21294,7 @@ msgid ""
 "create contact records first, if necessary. Then you can match activities to"
 " contacts by Email Address, CiviCRM Contact ID, or an External Identifier "
 "(see the TIP below)."
-msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
+msgstr "您可以輕易從其他程式搬移任務紀錄到CiviCRM，但匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人紀錄，然後您可以透過Email地址、CiviCRM系統編號，或外部編號（看以下的說明）來配對行動和聯絡人。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid ""
@@ -21303,7 +21303,7 @@ msgid ""
 "the documentation for your application if you're not sure how to do this. "
 "Save this file to your local hard drive (or an accessible drive on your "
 "network) - and you are now ready for step 1 (Upload Data)."
-msgstr "匯入的檔案必須是'CSV''格式。大部分應用程式允許您用此格式匯出記錄。如果不確定該怎麼做，查詢此應用程式的說明文件檔(documentation)，儲存此檔案到您的本機硬碟(或網路硬碟accessible drive on your network) - 就可以進入步驟一(上傳檔案)。"
+msgstr "匯入的檔案必須是\"CSV\"格式，大部分應用程式都可以用此格式匯出紀錄。如果不確定該怎麼做，請查詢該應用程式的說明文件。儲存此檔案到您的硬碟就可以進入步驟一：上傳檔案。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid "TIP - Matching Activities to Contact Records"
@@ -21321,7 +21321,7 @@ msgid ""
 "value into CiviCRM's External Identifier field. Then you can use that unique"
 " key as the 'match to contact' value when importing related data such as "
 "Activities and Contributions."
-msgstr "CiviCRM允許您標註每項行動記錄歸屬於哪位聯絡人，透過使用特定的CiviCRM-assigned 系統編號、您指派的外部編號或您的\n設定\"strict\" 刪除重複記錄規則(使用預設Email)。您必須在匯入檔案的欄位中至少寫入一個值。\n如果您正在從其他應用程式統整(或遷移)聯絡人到CiviCRM，而且這個應用程式已經為每一個聯絡人指定了特定的ID，您可以匯入那個值到\nCiviCRM外部編號，然後當匯入相關數據如行動或捐款時，您可以使用那個特定鍵當做\"配對聯絡人\"值。"
+msgstr "如果想要在CiviCRM標註每項行動紀錄歸屬於哪位聯絡人，您可以透過使用特定的CiviCRM系統編號、您指派的外部編號，或您設定的\"嚴謹\"去重複規則（必須在匯入檔案的欄位中至少寫入一個對應值）來達成。如果您正從其他應用程式將聯絡人搬移到CiviCRM，而且已經為每一個聯絡人指定了特定的ID，您可以匯入該ID值到CiviCRM外部編號。當匯入相關數據（如任務或捐款）時，您可以使用外部編號做為\"對應聯絡人\"的值。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.tpl
 msgid ""
@@ -29635,7 +29635,7 @@ msgid ""
 "Files to be imported must be in the 'comma-separated-values' format (CSV). "
 "Most applications will allow you to export records in CSV format. Consult "
 "the documentation for your application if you're not sure how to do this."
-msgstr "被匯入的檔案必須是 CSV 格式。大部分的應用軟體都允許您將記錄匯出為 CSV 格式的檔案。若您不確定如何操作，請查看該應用軟體的說明文件。"
+msgstr "被匯入的檔案必須是 CSV 格式。大部分的應用軟體都允許您將記錄匯出為 CSV 格式的檔案。如果不確定如何操作，請查看該應用軟體的說明文件。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid "Contact Records for Contributors"
@@ -29661,7 +29661,7 @@ msgid ""
 "Contribution import files must contain data needed to <strong>match the "
 "contribution to the contributor</strong>. This 'matching' can be handled in "
 "several different ways:"
-msgstr "匯入資料必須包含可以讓捐款記錄與捐款人對應的資料。您可以利用任一欄位來進行捐款人與捐款資料的配對："
+msgstr "匯入資料必須包含可以讓捐款紀錄與捐款人對應的資料，您可以利用任一欄位來進行配對："
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
@@ -29671,7 +29671,7 @@ msgid ""
 " <strong>Strict Duplicate Matching</strong> rules. For the default duplicate"
 " matching rules, you would include a column in each row with the "
 "contributors' Email Address."
-msgstr "您的聯絡人「配對」資料欄位的設定是基於<strong>嚴格重複配對</strong>規則。對於預設重複配對的規則，您將設定包括每一行列以及捐款者的電子郵件地址。"
+msgstr "您的聯絡人「配對」資料欄位的設定是基於<strong>嚴格重複配對</strong>規則。若使用預設重複配對的規則，每列資料都須包含參加者的電子郵件地址。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid ""
@@ -29693,7 +29693,7 @@ msgid ""
 "Save the CSV file with your contributions and 'contact matching' data to "
 "your local hard drive (or an accessible drive on your network) - and you are"
 " now ready for step 1 (Upload Data)."
-msgstr "將您的捐款及聯絡人配對資料儲存為 CSV 檔，並下載至您的電腦硬碟（或是網路硬碟） - 您現在已經準備好了第一步（上傳資料）。"
+msgstr "將您的捐款及聯絡人配對資料儲存為 CSV 檔，並下載至您的硬碟，您現在已經準備好了第一步（上傳資料）。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid ""
@@ -32026,14 +32026,14 @@ msgstr "匯入參加者資料之前，須先建立這些參加者的聯絡人資
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Matching Participant Data to Contacts"
-msgstr "對應到的參加者資料（聯絡人）"
+msgstr "對應聯絡人紀錄"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid ""
 "Participant import files must contain data needed to <strong>match the "
 "participant to a contact record in your CiviCRM database</strong>. This "
 "'matching' can be handled in several different ways:"
-msgstr "匯入參加者檔案，所需欄位包含<strong>對應參加者和聯絡人的資料</strong>。這些「對應」的方式通常會以下列格式存在："
+msgstr "匯入參加者資料之前，須先建立這些參加者的聯絡人資料，這樣參加者資料才能正確匯入到活動中。匯入參加者檔案，欄位需要包含能<strong>對應參加者和聯絡人的資料</strong>，您可以利用任一欄位來進行配對："
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid ""
@@ -32041,7 +32041,7 @@ msgid ""
 "contact in CiviCRM, you can include that value as a column in your import "
 "file. Participant data will then be matched to contact records using their "
 "External ID."
-msgstr "如果您是唯一的 <strong>外部識別碼</strong> 為每個聯絡人儲存在系統資料庫中，您可以匯入檔中將該值作為一組。然後系統將配對參加者的資料，以聯絡人記錄使用其外部編號。"
+msgstr "「外部編號」：如果您已將對應到每個聯絡人的「外部編號」儲存在CiviCRM中，您可以在匯入檔中加入外部編號，系統將以聯絡人的外部編號配對參加者的資料。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
@@ -32049,7 +32049,7 @@ msgid ""
 "You can include a column with each contact's <strong>Internal Contact "
 "ID</strong>. This is the unique ID assigned by CiviCRM which is displayed at"
 " the bottom of the Contact Summary screen - and can be exported."
-msgstr "「系統編號」：聯絡人建立時，系統自動給予的一個獨一無二數字編號。\n您可以將每個連絡人的設定<strong>內部聯絡人編號</strong> 。這是系統自動給予聯絡人的獨一無二數字編號。此聯絡人摘要將顯示在螢幕視窗底部-以及可以進行匯出。"
+msgstr "「系統編號」：您可以在匯入檔使用系統編號欄位。聯絡人建立時，系統會自動給予一個專屬的數字編號，此編號將顯示在聯絡人摘要的最下方，也可以匯出取得。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid ""
@@ -32981,7 +32981,7 @@ msgid ""
 "applications into CiviCRM. For example, if your organization has contacts in"
 " MS Access&copy; or Excel&copy;, and you want to start using CiviCRM to "
 "store these contacts, you can 'import' them here."
-msgstr "匯入精靈允許您更容易地將其他應用軟體的聯絡人記錄上傳至 CiviCRM。例如：如果您的組織是使用 MS Access&copy; 或 Excel&copy; 來存放聯絡人資料，並且您想改用 CiviCRM 來存放這些聯絡人，您可以在此「匯入」。"
+msgstr "您可以將其他應用軟體的聯絡人紀錄上傳到 CiviCRM。例如：如果您的組織使用 Excel&copy; 來存放聯絡人資料，並且您想改用 CiviCRM 來存放這些聯絡人，您可以在此使用CSV檔案來「匯入」紀錄。"
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid ""
@@ -34496,7 +34496,7 @@ msgstr "匯入會籍資料之前，須先建立這些會員的聯絡人資料。
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "Matching Memberships to Contacts"
-msgstr "會員與連絡人資料配對 "
+msgstr "會員與聯絡人資料配對"
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid ""
@@ -40104,7 +40104,7 @@ msgstr "聯絡人概況"
 msgid ""
 "The Activity Import Wizard allows you to easily upload activity from other applications into CiviCRM. Contacts must already exist in your CiviCRM database prior to importing activities for them.\n"
 "        Use Import Contacts to create contact records first, if necessary. Then you can match activities to contacts by Email Address, CiviCRM Contact ID, or an External Identifier (see the TIP below)."
-msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
+msgstr "您可以輕易從其他程式搬移任務紀錄到CiviCRM，但匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人紀錄，然後您可以透過Email地址、CiviCRM系統編號，或外部編號（看以下的說明）來配對行動和聯絡人。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid ""
@@ -49127,4 +49127,4 @@ msgstr "上方的選項將會隱藏未驗證的 Email。"
 msgid ""
 "Make sure at least one of your email domain verified in <a href=\"%1\">FROM "
 "email address</a> list."
-msgstr "請確定至少有 1 個相同的 Email 網域出現在 <a href=\"%1\">Email 寄件人</a> 清單中且完成驗證。"
+msgstr " <a href=\"%1\">Email 寄件人</a> 清單中，需有一個已完成驗證的域名信箱，其他相同域名信箱就會完成驗證提供使用。"
