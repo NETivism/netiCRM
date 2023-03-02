@@ -402,10 +402,17 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     if ($button != 'skip') {
       //Additional Participant can also register for an event only once
       require_once 'CRM/Event/Form/Registration/Register.php';
-      $isRegistered = CRM_Event_Form_Registration_Register::checkRegistration($fields, $self, TRUE);
+
+      // implement hook for change registrion check
+      $contactID = NULL;
+      $contactID = CRM_Event_Form_Registration_Register::getRegistrationContactID($fields, $self, TRUE);
+      $forceAllowedRegister = NULL;
+      CRM_Utils_Hook::checkRegistration($contactID, $fields, $self, TRUE, $forceAllowedRegister);
+      $isRegistered = CRM_Event_Form_Registration_Register::checkRegistration($fields, $self, TRUE , $forceAllowedRegister);
       if ($isRegistered) {
         $errors['_qf_default'] = ts('A person is already registered for this event.');
       }
+
 
       // check when event is full 
       if($self->_isEventFull){
