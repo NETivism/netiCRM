@@ -49136,3 +49136,11 @@ msgid ""
 "file. Memberships will then be matched to contributors using their External "
 "ID."
 msgstr ""
+
+#: templates/CRM/Import/Form/CSV.tpl
+#: templates/CRM/Activity/Import/Form/UploadFile.tpl
+#: templates/CRM/Contribute/Import/Form/UploadFile.tpl
+#: templates/CRM/Event/Import/Form/UploadFile.tpl
+#: templates/CRM/Member/Import/Form/UploadFile.tpl
+msgid "Imported tutorial and example file"
+msgstr "匯入教學與範例檔案"
