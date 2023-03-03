@@ -77,6 +77,7 @@ test.describe.serial('Event Editing', () => {
             await expect(page.locator('form#Location')).not.toHaveCount(0);
             var page_title = await page.locator('#page-title').textContent();
             await expect(page_title).toMatch(new RegExp(event_title));
+            console.log('Page Header Title matching: ' + event_title);
 
         });
 
