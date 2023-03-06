@@ -270,6 +270,10 @@ class CRM_Export_BAO_Export {
       elseif ($exportMode == CRM_Export_Form_Select::ACTIVITY_EXPORT && empty($returnProperties['activity_id'])) {
         $returnProperties['activity_id'] = $index++;
       }
+      elseif ($exportMode == CRM_Export_Form_Select::CONTACT_EXPORT && empty($returnProperties['contact_id']) && !empty($exportCustomVars)) {
+        // Refs #35465, Add contact_id field for join.
+        $returnProperties['contact_id'] = $index++;
+      }
     }
     else {
       $primary = TRUE;
@@ -1127,7 +1131,7 @@ class CRM_Export_BAO_Export {
       $customHeader = $exportCustomResult['header'];
       $customRows = $exportCustomResult['rows'];
       $primaryIDName = empty($exportCustomVars['pirmaryIDName']) ? 'contact_id' : $exportCustomVars['pirmaryIDName'];
-      $componentTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
+      $csResultTempTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
       foreach ($customHeader as $columnName => $val) {
         if ($primaryIDName == 'contact_id' && $columnName == 'contact_id') {
           // If primary field of custom search result is 'contact_id', it will write as $primaryIDName in the former $sql. So skip it.
@@ -1137,7 +1141,7 @@ class CRM_Export_BAO_Export {
       }
 
       // Create custom search custom table.
-      $sql = "CREATE TEMPORARY TABLE {$componentTable} ( $primaryIDName int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+      $sql = "CREATE TEMPORARY TABLE {$csResultTempTable} ( $primaryIDName int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
       CRM_Core_DAO::executeQuery($sql);
 
       // Write data into Table
@@ -1157,7 +1161,7 @@ class CRM_Export_BAO_Export {
           );
           $i++;
         }
-        $sql = "REPLACE INTO {$componentTable} ( $primaryIDName $customColumnsNames) VALUES ( {$key} $values)";
+        $sql = "REPLACE INTO {$csResultTempTable} ( $primaryIDName $customColumnsNames) VALUES ( {$key} $values)";
 
         CRM_Core_DAO::executeQuery($sql, $params);
       }
@@ -1165,29 +1169,27 @@ class CRM_Export_BAO_Export {
       // Join custom search table and selected field table.
       foreach ($customHeader as $fieldName => $dontcard) {
         if (strstr($fieldName, 'column')) {
-          $componentColumns .= ", ctTable.$fieldName";
+          $componentColumns .= ", csResultTable.{$fieldName}";
         }
       }
 
-      // Look for primary field name of $exportTempTable.
-      $sql = "SELECT * FROM $exportTempTable";
-      $dao = CRM_Core_DAO::executeQuery($sql);
-      $dao->fetch();
-      if (isset($dao->civicrm_primary_id)) {
-        $exportTempTablePrimaryIdName = 'civicrm_primary_id';
+      $exportTempTableSelectFields = array();
+      foreach ($sqlColumns as $value) {
+        if (!strstr($value, 'contact_id')) {
+          // grep field name from string like 'field_name varchar(16)';
+          $fieldName = preg_replace('/^([a-z0-9_]+) .+$/i', '$1', $value);
+          $exportTempTableSelectFields[] = "{$exportTempTable}.{$fieldName}";
+        }
       }
-      elseif (isset($dao->contact_id)) {
-        $exportTempTablePrimaryIdName = 'contact_id';
-      }
-      else {
-        $exportTempTablePrimaryIdName = 'id';
-      }
-
+      $exportTempTableSelectColumns = implode(', ', $exportTempTableSelectFields);
       $tempTableName = 'new_export_temp_table';
-      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT $exportTempTable.* $componentColumns FROM $componentTable ctTable INNER JOIN $exportTempTable ON ctTable.contact_id = $exportTempTable.$exportTempTablePrimaryIdName";
+      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT $exportTempTableSelectColumns $componentColumns FROM $csResultTempTable csResultTable INNER JOIN $exportTempTable ON csResultTable.contact_id = $exportTempTable.contact_id";
       CRM_Core_DAO::executeQuery($sql);
       $exportTempTable = $tempTableName;
 
+      // unset 'contact_id' in header
+      $key = array_search('contact_id', $headerRows);
+      unset($headerRows[$key]);
       $headerRows = $customHeader + $headerRows;
       foreach (array_reverse($customHeader) as $key => $ignore) {
         array_unshift($sqlColumns, "$key varchar(255)");
