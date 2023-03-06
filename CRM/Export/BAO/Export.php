@@ -1146,10 +1146,20 @@ class CRM_Export_BAO_Export {
         if ($primaryIDName == 'contact_id') {
           unset($rows[$primaryIDName]);
         }
-        $values = "'".implode("','", $rows)."'";
-        $sql = "REPLACE INTO {$componentTable} ( $primaryIDName $customColumnsNames) VALUES ( {$key} , $values)";
+        $params = array();
+        $i = 1;
+        $values = '';
+        foreach ($rows as $value) {
+          $values .= ", %{$i}";
+          $params[$i] = array(
+            $value, 
+            'String'
+          );
+          $i++;
+        }
+        $sql = "REPLACE INTO {$componentTable} ( $primaryIDName $customColumnsNames) VALUES ( {$key} $values)";
 
-        CRM_Core_DAO::executeQuery($sql);
+        CRM_Core_DAO::executeQuery($sql, $params);
       }
 
       // Join custom search table and selected field table.
