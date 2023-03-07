@@ -48738,3 +48738,7 @@ msgstr ""
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "Imported tutorial and example file"
 msgstr ""
+
+#: custom/civicrm_contribute_charge/civicrm_contribute_charge.module
+msgid "For each donation, the processing fee charged by the bank and third-party payment platform."
+msgstr ""

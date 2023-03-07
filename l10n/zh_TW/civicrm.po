@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49144,3 +49144,9 @@ msgstr ""
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "Imported tutorial and example file"
 msgstr "匯入教學與範例檔案"
+
+#: custom/civicrm_contribute_charge/civicrm_contribute_charge.module
+msgid ""
+"For each donation, the processing fee charged by the bank and third-party "
+"payment platform."
+msgstr "每筆捐款，銀行與金流平台會收取的處理費用"
