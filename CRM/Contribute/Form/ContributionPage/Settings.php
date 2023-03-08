@@ -179,8 +179,8 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->add('textarea', 'honor_block_text', ts('Honoree Introductory Message'), $attributes['honor_block_text']);
 
     // add optional start and end dates
-    $this->addDateTime('start_date', ts('Start Date'));
-    $this->addDateTime('end_date', ts('End Date'));
+    $this->addDateTime('start_date', ts('Contribution Widget').ts('Start Date'));
+    $this->addDateTime('end_date', ts('Contribution Widget').ts('End Date'));
 
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_Settings', 'formRule'));
 

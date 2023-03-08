@@ -286,7 +286,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
       case self::AGE:
         $interval = empty($params['interval'])? 10 : $params['interval'];
         $interval_1 = $interval - 1;
-        $group_by_field = "CONCAT($interval * ROUND(year / $interval), '-', ($interval * ROUND(year / $interval) + $interval_1))";
+        $group_by_field = "CONCAT($interval * FLOOR(year / $interval), '-', ($interval * FLOOR(year / $interval) + $interval_1))";
         // $group_by_condition = 'ranges ORDER BY year';
         $order_by = 'ORDER BY year';
         $table = '(SELECT (YEAR(current_timestamp) - YEAR(c.birth_date)) year, c.* FROM civicrm_contact c) c';
