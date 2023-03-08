@@ -1301,12 +1301,11 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * @param array $fields  the input form values(anonymous user)
    * @param array $self    event data
    * @param boolean $isAdditional  if it's additional participant
-   * @param boolean $forceAllowedRegister  if it's force allowed register
    *
-   * @return bool|CRM_Utils_Error false can skip check registration
+   * @return void
    * @access public
    */
-  function checkRegistration($fields, &$self, $isAdditional = FALSE, $forceAllowedRegister = FALSE) {
+  function checkRegistration($fields, &$self, $isAdditional = FALSE) {
     if ($self->_mode == 'test') {
       return FALSE;
     }
@@ -1314,8 +1313,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $contactID = NULL;
     $contactID = self::getRegistrationContactID($fields, $self, $isAdditional);
 
-    if ($forceAllowedRegister) {
-      return FALSE;
+    // implement hook for change registrion check
+    CRM_Utils_Hook::checkRegistration($contactID, $fields, $self, $isAdditional, $result);
+    if (!empty($result)) {
+      return $result;
     }
 
     // skip check when confirm by mail link
