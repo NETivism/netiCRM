@@ -49,6 +49,8 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
   protected $_isFreezed = NULL;
 
   protected $_isTestFreezed = NULL;
+
+  protected $_isTypeFreezed = NULL;
   
   protected $_ppDAO;
   function preProcess() {
@@ -169,6 +171,11 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       if ($haveActiveRecur) {
         $this->_isTestFreezed = TRUE;
       }
+      $processorUsedInContribution = CRM_Core_DAO::singleValueQuery("SELECT count(id) FROM civicrm_contribution WHERE payment_processor_id = %1 AND is_test = 0", array( 1 => array( $this->_id, 'Positive')));
+      $processorUsedInRecur = CRM_Core_DAO::singleValueQuery("SELECT count(id) FROM civicrm_contribution_recur WHERE processor_id = %1 AND is_test = 0", array( 1 => array( $this->_id, 'Positive')));
+      if ($processorUsedInContribution || $processorUsedInRecur) {
+        $this->_isTypeFreezed = TRUE;
+      }
     }
     if ($this->_isFreezed || $this->_isTestFreezed) {
       CRM_Core_Session::setStatus(ts('Some recurring contributions that belong to this Payment Processor are in progress, so the fields are freeze.'), TRUE, 'warning');
@@ -209,13 +216,19 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $types = CRM_Core_PseudoConstant::paymentProcessorType();
     // Refs #28304, Remove neweb selection on payment processor edit page.
     $id = $this->get('id');
-    if (empty($id) || CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $id, 'payment_processor_type') != 'Neweb') {
+    $currentType = NULL;
+    if ($id) {
+      $currentType = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $id, 'payment_processor_type');
+    }
+    if (empty($id) || $currentType !== 'Neweb') {
       unset($types['Neweb']);
     }
-    $this->add('select', 'payment_processor_type', ts('Payment Processor Type'), $types, TRUE,
+    $processorTypeEle = $this->add('select', 'payment_processor_type', ts('Payment Processor Type'), $types, TRUE,
       array('onchange' => "reload(true)")
     );
-
+    if ($this->_isTypeFreezed) {
+      $processorTypeEle->freeze();
+    }
 
     // is this processor active ?
     $this->add('checkbox', 'is_active', ts('Is this Payment Processor active?'));
@@ -227,13 +240,19 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       }
     }
 
-
     foreach ($this->_fields as $field) {
       if (empty($field['label'])) {
         continue;
       }
       if ($this->_isFreezed) {
-        $fieldAttributes = $attributes[$field['name']] + array('readonly' => 'readonly');
+        if ($field['name'] == 'user_name') {
+          if($currentType !== 'TapPay') {
+            $fieldAttributes = $attributes[$field['name']] + array('readonly' => 'readonly');
+          }
+        }
+        else {
+          $fieldAttributes = $attributes[$field['name']] + array('readonly' => 'readonly');
+        }
       }
       else {
         $fieldAttributes = $attributes[$field['name']];
