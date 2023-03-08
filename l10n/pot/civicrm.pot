@@ -48722,3 +48722,19 @@ msgstr ""
 
 msgid "Make sure at least one of your email domain verified in <a href=\"%1\">FROM email address</a> list."
 msgstr ""
+
+#: templates/CRM/Member/Import/Form/UploadFile.hlp
+msgid ""
+"If you've stored a unique <strong>External Identifier</strong> for each "
+"contact in CiviCRM, you can include that value as a column in your import "
+"file. Memberships will then be matched to contributors using their "
+"External ID."
+msgstr ""
+
+#: templates/CRM/Import/Form/CSV.tpl
+#: templates/CRM/Activity/Import/Form/UploadFile.tpl
+#: templates/CRM/Contribute/Import/Form/UploadFile.tpl
+#: templates/CRM/Event/Import/Form/UploadFile.tpl
+#: templates/CRM/Member/Import/Form/UploadFile.tpl
+msgid "Imported tutorial and example file"
+msgstr ""
