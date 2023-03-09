@@ -198,6 +198,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     $entityFileDAO->entity_table = $tableName;
 
     if ($entityFileDAO->find(TRUE)) {
+      CRM_Core_BAO_File::deleteEntityFile($tableName, $entityID);
       $entityFileDAO->delete();
     }
     else {
