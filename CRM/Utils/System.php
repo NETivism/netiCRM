@@ -128,7 +128,7 @@ class CRM_Utils_System {
 
   /**
    * Wrapping function to themeing
-   * 
+   *
    * For drupal 9 and new exception handling, we use exception to handle what kind of theme we should output
    * Do not use this control themeing anymore. Use drupal invoke function to display output
    * All content will use stdout and capture by drupal
@@ -201,6 +201,12 @@ class CRM_Utils_System {
    */
   static function currentPath() {
     return CRM_Core_Config::$_userSystem->currentPath();
+  }
+
+  static function setCSPHeader() {
+
+    // Try as a starting point, do not use in production environment.
+    header("Content-Security-Policy: default-src 'self'");
   }
 
   /**
@@ -360,7 +366,7 @@ class CRM_Utils_System {
    *
    * @return string
    * @access public
-   * @static  
+   * @static
    */
   static function siteName() {
     return CRM_Core_Config::$_userSystem->siteName($name, $default);
@@ -371,7 +377,7 @@ class CRM_Utils_System {
    *
    * @return boolean
    * @access public
-   * @static  
+   * @static
    */
   static function allowedUserRegisteration() {
     return CRM_Core_Config::$_userSystem->allowedUserRegisteration();
@@ -382,7 +388,7 @@ class CRM_Utils_System {
    *
    * @return boolean
    * @access public
-   * @static  
+   * @static
    */
   static function userEmailVerification() {
     return CRM_Core_Config::$_userSystem->userEmailVerification();
@@ -392,7 +398,7 @@ class CRM_Utils_System {
    * Check module exists on system
    * @return string
    * @access public
-   * @static  
+   * @static
    */
   static function moduleExists($module) {
     $config = CRM_Core_Config::singleton();
@@ -406,7 +412,7 @@ class CRM_Utils_System {
    * Check hook exists in module list
    * @return string
    * @access public
-   * @static  
+   * @static
    */
   static function moduleImplements($hook) {
     $config = CRM_Core_Config::singleton();
@@ -1153,7 +1159,7 @@ class CRM_Utils_System {
    * Only functions in register_shutdown_function will be call after this.
    * You should add callbacks into CRM_Core_Config::shutdownCallbacks
    * When using fpm, we may have fastcgi_finish_request and location of header here.
-   * 
+   *
    * @param integer $status
    * @return void
    */
@@ -1599,17 +1605,17 @@ class CRM_Utils_System {
 
   /**
    * SameSite cookie compatibility check
-   * 
+   *
    * from https://www.chromium.org/updates/same-site/incompatible-clients
    */
   public static function sameSiteCheck() {
     $useragent = $_SERVER['HTTP_USER_AGENT'];
     $isIOS = preg_match('/(iP.+; CPU .*OS (\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $ios);
     if ($isIOS && $ios[2] == '12') {
-      return FALSE; 
+      return FALSE;
     }
     $safariStr = preg_match('/Version\/.* Safari\//i', $useragent);
-    $isChromiumBased = preg_match('/Chrom(e|ium)/i', $useragent); 
+    $isChromiumBased = preg_match('/Chrom(e|ium)/i', $useragent);
     $isSafari = !empty($safariStr) && !$isChromiumBased;
     if ($isSafari) {
       $isMAC = preg_match('/(Macintosh;.*Mac OS X (\d+)_(\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $mac);
