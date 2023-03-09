@@ -186,10 +186,13 @@ test.describe.serial('Event Editing', () => {
             await findElement(element);
             await fillInput(page.locator(element), 'Name For Confirm');
 
-            /* filled up Confirm From Email */
+            /* Select Option of Confirm From Email */
             element = '#confirm_from_email';
             await findElement(element);
-            await fillInput(page.locator(element), 'confirm@fakemail.com');
+            locator = page.locator(element);
+            await expect(locator).toBeEnabled();
+            await locator.selectOption({ index: 1 });
+            await expect(locator).not.toHaveValue('');
 
             /* click Save */
             element = "#_qf_Registration_upload-bottom";

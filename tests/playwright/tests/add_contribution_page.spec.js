@@ -132,11 +132,14 @@ test.describe.serial('Contribution Page Editing', () => {
             await findElement(element);
             await fillInput(locator, makeid(10));
 
-            /* fill Payment Notification From Email */
+            /* Select Option of Payment Notification From Email */
             element = '#receipt_from_email';
             locator = page.locator(element);
             await findElement(element);
-            await fillInput(locator, makeid(5) + '@fakemail.com');
+            locator = page.locator(element);
+            await expect(locator).toBeEnabled();
+            await locator.selectOption({ index: 1 });
+            await expect(locator).not.toHaveValue('');
 
             /* click submit */
             element = "#_qf_ThankYou_upload-bottom";
