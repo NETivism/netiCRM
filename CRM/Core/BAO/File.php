@@ -198,20 +198,21 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     $entityFileDAO->entity_table = $tableName;
 
     if ($entityFileDAO->find(TRUE)) {
-      CRM_Core_BAO_File::deleteEntityFile($tableName, $entityID);
       $entityFileDAO->delete();
     }
     else {
-      CRM_Core_Error::fatal();
+      CRM_Core_Error::fatal("Can't find entity file data.");
     }
 
     $fileDAO = new CRM_Core_DAO_File();
     $fileDAO->id = $fileID;
     if ($fileDAO->find(TRUE)) {
+      $config = &CRM_Core_Config::singleton();
+      unlink($config->customFileUploadDir . DIRECTORY_SEPARATOR . $fileDAO->uri);
       $fileDAO->delete();
     }
     else {
-      CRM_Core_Error::fatal();
+      CRM_Core_Error::fatal("Can't find file DAO data.");
     }
 
     // also set the value to null of the table and column
