@@ -173,6 +173,11 @@
      <page_callback>CRM_Admin_Form_Setting_Search</page_callback>
   </item>
   <item>
+     <path>civicrm/admin/setting/csp</path>
+     <title>Content Security Policy</title>
+     <page_callback>CRM_Admin_Form_Setting_CSP</page_callback>
+  </item>
+  <item>
      <path>civicrm/admin/setting/misc</path>
      <title>Miscellaneous</title>
      <page_callback>CRM_Admin_Form_Setting_Miscellaneous</page_callback>
