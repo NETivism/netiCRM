@@ -330,7 +330,7 @@ cj().crmaccordions();
 </script>
 {/literal}
 
-{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Data%20and%20Input%20Field%20Type%20-%20Alphanumeric:%20Text" triggerText="Description of Data and Input Field Type" triggerIcon="zmdi-help-outline" width="400px"}
+{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Data+and+Input+Field+Type+-+Alphanumeric:+Text" triggerText="Description of Data and Input Field Type" triggerIcon="zmdi-help-outline" width="400px"}
   {literal}
 <script type="text/Javascript">
   cj(function() {
