@@ -610,12 +610,16 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     // do not include queries when no product related search
     $includeProduct = FALSE;
     $includeReferrer = FALSE;
+    $includedCustoms = array();
     foreach($queryParams as $query) {
       if ($query[0] === 'product_name') {
         $includeProduct = TRUE;
       }
       if (preg_match('/^(contribution_referrer|contribution_utm|contribution_landing)/', $query[0])) {
         $includeReferrer = TRUE;
+      }
+      if (preg_match('/^custom_\d+/', $query[0])) {
+        $includedCustoms[] = $query[0];
       }
     }
     if (!$includeProduct) {
@@ -627,6 +631,14 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     if (!$includeReferrer) {
       unset($returnProperties['contribution_referrer_type']);
     }
+    foreach($returnProperties as $field => $return) {
+      if (preg_match('/^custom_\d+/', $field)) {
+        if (!in_array($field, $includedCustoms)) {
+          unset($returnProperties[$field]);
+        }
+      }
+    }
+
     return $returnProperties;
   }
 

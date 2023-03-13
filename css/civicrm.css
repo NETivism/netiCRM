@@ -957,7 +957,6 @@
     border: 1px solid #999;
 }
 
-
 /*
 ** class for hiding the text box; it is used in the OtherActivity template
 ** for showing the descrition of activity type element.
@@ -994,6 +993,14 @@
     font-size: .9em;
 }
 
+
+/* CRM link */
+.crm-container .new-window-link::after,
+.crm-container a.new-window-link::after {
+  content: "\f1a3";
+  font-family: "Material-Design-Iconic-Font";
+  margin: 0 0 0 .25em;
+}
 
 /*
 ** CRM form layout classes (from www.realworldstyle.com)
@@ -1127,6 +1134,18 @@ div.spacer,
     vertical-align: top;
     padding: 0.5em 0em 0em 0em;
     font-size: .9em
+}
+
+.crm-container .form-layout td.with-help-link,
+.crm-container .form-layout-compressed td.with-help-link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 10px;
+}
+.crm-container .form-layout td.with-help-link .description,
+.crm-container .form-layout-compressed td.with-help-link .description {
+    flex: 0 0 100%;
 }
 
 .crm-container .right {
