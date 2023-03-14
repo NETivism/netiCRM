@@ -76,16 +76,16 @@ class CRM_Contact_Form_Task_EmailCommon {
       return CRM_Core_Error::statusBounce(ts('Your user record does not have a valid email address'));
     }
     $selectableEmails = array();
+    if (!empty($fromEmails['system'])) {
+      $selectableEmails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
+    }
+    $selectableEmails[ts('Default')] = $fromEmails['default'];
     if (!empty($fromEmails['contact'])) {
       $selectableEmails[ts('Your Email')] = $fromEmails['contact'];
     }
     else {
       $form->assign('show_spf_dkim_notice', TRUE);
     }
-    if (!empty($fromEmails['system'])) {
-      $selectableEmails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
-    }
-    $selectableEmails[ts('Default')] = $fromEmails['default'];
     if (!empty($fromEmails['domain'])) {
       $selectableEmails[ts('Other')] = $fromEmails['domain'];
     }
