@@ -760,7 +760,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * function to check if running in upgrade mode
    */
-  function isUpgradeMode($path = NULL) {
+  static function isUpgradeMode($path = NULL) {
     if ($path && $path == 'civicrm/upgrade') {
       return TRUE;
     }
