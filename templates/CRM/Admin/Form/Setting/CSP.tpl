@@ -30,15 +30,21 @@
  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
            <table class="form-layout">
             <tr class="crm-csp-form-block-CSP">
-                <td class="label">{$form.customCSP.label}</td>
-                <td>{$form.customCSP.html|crmReplace:class:'huge40'}<br />
-                    <span class="description">{ts}CiviCRM Content Security Policy.{/ts}
+                <td class="label">{$form.CSPrules.label}</td>
+                <td>{$form.CSPrules.html|crmReplace:class:'huge40'}<br />
+                    <span class="description">{ts}CiviCRM Content Security Policy. If blank will use the default value.{/ts}</span>
                 </td>
             </tr>
-            <tr class="crm-csp-form-block-excludeCSP">
-                <td class="label">{$form.customCSPExcludePath.label}</td>
-                <td>{$form.customCSPExcludePath.html|crmReplace:class:'huge40'}<br />
-                    <span class="description">{ts}Specify pages by using their paths. Enter one path per line.{/ts}
+            <tr class="crm-csp-form-block-CSPexcludePath">
+                <td class="label">{$form.CSPexcludePath.label}</td>
+                <td>{$form.CSPexcludePath.html|crmReplace:class:'huge40'}<br />
+                    <span class="description">{ts}Specify pages by using their paths. Enter one path per line.{/ts}</span>
+                </td>
+            </tr>
+            <tr class="crm-csp-form-block-CSPoff">
+                <td class="label">{$form.CSPoff.label}</td>
+                <td>{$form.CSPoff.html}<br />
+                    <span class="description">{ts}If checked, CSP will be disabled.{/ts}</span></td>
                 </td>
             </tr>
         </table>

@@ -206,7 +206,7 @@ class CRM_Utils_System {
   static function setCSPHeader() {
 
     // Try as a starting point, do not use in production environment.
-    header("Content-Security-Policy: default-src 'self'");
+    // header("Content-Security-Policy: default-src 'self'");
   }
 
   /**

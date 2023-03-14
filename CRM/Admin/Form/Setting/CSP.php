@@ -50,8 +50,9 @@ class CRM_Admin_Form_Setting_CSP extends CRM_Admin_Form_Setting {
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Content Security Policy'));
 
-    $this->addElement('textarea', 'customCSP', ts('Content Security Policy'));
-    $this->addElement('textarea', 'customCSPExcludePath', ts('Exclude path'));
+    $this->addElement('textarea', 'CSPrules', ts('Content Security Policy'));
+    $this->addElement('textarea', 'CSPexcludePath', ts('Exclude path'));
+    $this->addElement('checkbox', 'CSPoff', ts('Disable csp rules'));
 
     parent::buildQuickForm();
   }
