@@ -44,7 +44,7 @@
             <tr class="crm-csp-form-block-CSPoff">
                 <td class="label">{$form.CSPoff.label}</td>
                 <td>{$form.CSPoff.html}<br />
-                    <span class="description">{ts}If checked, CSP will be disabled.{/ts}</span></td>
+                    <span class="description">{ts}If checked, CSP will be disabled.{/ts}</span>
                 </td>
             </tr>
         </table>
