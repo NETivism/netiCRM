@@ -1371,6 +1371,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         }
       }
     }
+    return TRUE;
   }
 
   public static function getRegistrationContactID($fields, $self, $isAdditional){
