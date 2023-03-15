@@ -403,7 +403,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       //Additional Participant can also register for an event only once
       require_once 'CRM/Event/Form/Registration/Register.php';
       $isRegistered = CRM_Event_Form_Registration_Register::checkRegistration($fields, $self, TRUE);
-      if (is_numeric($isRegistered)) {
+      // refs #32662,return false means additional participant already registered
+      if (!$isRegistered) {
         $errors['_qf_default'] = ts('A person is already registered for this event.');
       }
 
