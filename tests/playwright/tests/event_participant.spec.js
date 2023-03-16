@@ -31,7 +31,7 @@ async function fillInput(locator, text_input){
 }
 
 test.beforeAll(async () => {
-    const browser = await chromium.launch({"headless": false});
+    const browser = await chromium.launch();
     page = await browser.newPage();
 });
   
