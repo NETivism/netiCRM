@@ -28593,7 +28593,7 @@ msgid ""
 "This phone number is included in automated contribution receipts if the "
 "contributor has selected a premium. It should be an appropriate phone number"
 " for inquiries about premium fulfillment/shipping."
-msgstr "若捐款人以選取感謝禮，此電話號碼會自動包含在捐款收冀中。建議使用合適的電話號碼，以提供感謝禮索取與運送查詢。"
+msgstr "若捐款人已選取感謝禮，此電話號碼會自動包含在捐款收據中。建議使用合適的電話號碼，以提供感謝禮索取與運送查詢。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Premium.tpl
 msgid ""
