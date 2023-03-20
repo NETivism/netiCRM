@@ -99,6 +99,12 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
 
     // add is in other situation to this group
     $form->addElement('checkbox', 'is_in_other_situation', ts('Use in other situation'), ts('Used for Batch Update and Contact Search Profile.'));
+
+    $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($form->_id);
+    if (!empty($ufJoinRecords) && $form->_action & CRM_Core_Action::UPDATE) {
+      $ele = $form->getElement('is_in_other_situation');
+      $ele->freeze();
+    }
   }
 }
 
