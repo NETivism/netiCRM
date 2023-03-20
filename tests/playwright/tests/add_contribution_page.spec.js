@@ -33,7 +33,7 @@ async function checkInput(locator){
 }
 
 test.beforeAll(async () => {
-    const browser = await chromium.launch({"headless": false});
+    const browser = await chromium.launch();
     page = await browser.newPage();
 });
   
@@ -136,9 +136,8 @@ test.describe.serial('Contribution Page Editing', () => {
             element = '#receipt_from_email';
             locator = page.locator(element);
             await findElement(element);
-            locator = page.locator(element);
             await expect(locator).toBeEnabled();
-            await locator.selectOption({ index: 1 });
+            await locator.selectOption({ index: await locator.locator('option').count() - 1 });
             await expect(locator).not.toHaveValue('');
 
             /* click submit */

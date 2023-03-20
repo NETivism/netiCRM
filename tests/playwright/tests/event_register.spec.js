@@ -44,7 +44,7 @@ async function fillForm(email='test@aipvo.com', first_name='user', last_name='te
 }
 
 test.beforeAll(async () => {
-  const browser = await chromium.launch({"headless": false});
+  const browser = await chromium.launch();
   page = await browser.newPage();
 });
 

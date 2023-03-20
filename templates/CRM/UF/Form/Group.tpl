@@ -200,6 +200,9 @@ cj(function($) {
       $("#uf_group_type\\\[Profile\\\]").attr("disabled", true);
       $("#uf_group_type\\\[CiviContribute\\\]").attr("disabled", true);
       $("#uf_group_type\\\[CiviEvent\\\]").attr("disabled", true);
+      if ($("#is_active").length) {
+      $("#is_active").attr("checked", true);
+      }
     } else {
       $("#uf_group_type\\\[Profile\\\]").attr("disabled", false);
       $("#uf_group_type\\\[CiviContribute\\\]").attr("disabled", false);
