@@ -15,7 +15,7 @@ test.afterAll(async () => {
 test.describe('This is sample test', () => {
   test('Visit site front page', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/^Welcome to netiCRM/);
+    await expect(page).toHaveTitle(/Welcome.*netiCRM$/);
     await page.screenshot({ path: 'test-results/screenshot-1.png', fullPage: true });
   });
 });
