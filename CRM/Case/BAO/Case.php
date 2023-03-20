@@ -1529,7 +1529,7 @@ AND civicrm_case.is_deleted     = {$cases['case_deleted']}";
    * @return array array of exportable Fields
    * @access public
    */
-  function &exportableFields() {
+  static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = array();
@@ -1889,7 +1889,7 @@ INNER JOIN  civicrm_option_value ov ON (ca.case_type_id=ov.value AND ov.option_g
     return $unclosedCases;
   }
 
-  function caseCount($contactId = NULL, $excludeDeleted = TRUE) {
+  static function caseCount($contactId = NULL, $excludeDeleted = TRUE) {
     $whereConditions = array();
     if ($excludeDeleted) {
       $whereConditions[] = "( civicrm_case.is_deleted = 0 OR civicrm_case.is_deleted IS NULL )";
@@ -2484,7 +2484,7 @@ WHERE id IN (' . implode(',', $copiedActivityIds) . ')';
    * @return boolean $allow  true/false
    * @static
    */
-  function checkPermission($activityId, $operation, $actTypeId = NULL, $contactId = NULL, $checkComponent = TRUE) {
+  static function checkPermission($activityId, $operation, $actTypeId = NULL, $contactId = NULL, $checkComponent = TRUE) {
     $allow = FALSE;
     if (!$actTypeId && $activityId) {
       $actTypeId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activityId, 'activity_type_id');
@@ -2692,7 +2692,7 @@ WHERE id IN (' . implode(',', $copiedActivityIds) . ')';
    * if user has 'access my cases and activities'
    * or 'access all cases and activities'
    */
-  function accessCiviCase() {
+  static function accessCiviCase() {
     static $componentEnabled;
     if (!isset($componentEnabled)) {
       $componentEnabled = FALSE;

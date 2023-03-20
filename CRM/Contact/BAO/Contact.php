@@ -973,7 +973,7 @@ WHERE id={$id}; ";
    * @return array array of importable Fields
    * @access public
    */
-  function &importableFields($contactType = 'Individual', $status = FALSE, $showAll = FALSE,
+  static function &importableFields($contactType = 'Individual', $status = FALSE, $showAll = FALSE,
     $isProfile = FALSE
   ) {
     if (empty($contactType)) {
@@ -1125,7 +1125,7 @@ WHERE id={$id}; ";
    * @return array array of exportable Fields
    * @access public
    */
-  function &exportableFields($contactType = 'Individual', $status = FALSE, $export = FALSE) {
+  static function &exportableFields($contactType = 'Individual', $status = FALSE, $export = FALSE) {
     if (empty($contactType)) {
       $contactType = 'All';
     }

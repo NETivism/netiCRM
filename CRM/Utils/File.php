@@ -247,7 +247,7 @@ class CRM_Utils_File {
     return $name;
   }
 
-  function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
+  static function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
     require_once 'DB.php';
 
     $db = &DB::connect($dsn);

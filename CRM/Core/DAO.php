@@ -79,7 +79,7 @@ class CRM_Core_DAO extends DB_DataObject {
   /**
    * empty definition for virtual function
    */
-  function getTableName() {
+  static function getTableName() {
     return NULL;
   }
 
@@ -258,7 +258,7 @@ class CRM_Core_DAO extends DB_DataObject {
    *
    * @return array
    */
-  function &fields() {
+  static function &fields() {
     $result = NULL;
     return $result;
   }
@@ -464,7 +464,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @access public
    * @static
    */
-  function getAttribute($class, $fieldName = NULL) {
+  static function getAttribute($class, $fieldName = NULL) {
     $object = new $class( );
     $fields = &$object->fields();
     if ($fieldName != NULL) {
@@ -526,7 +526,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @return boolean true if exists, else false
    * @static
    */
-  function checkFieldExists($tableName, $columnName) {
+  static function checkFieldExists($tableName, $columnName) {
     $query = "
 SHOW COLUMNS
 FROM $tableName
@@ -1555,7 +1555,7 @@ SELECT contact_id
    *
    * @return array
    */
-  public static function getProfiles() {
+  public static function getProfiles($types, $onlyPure = FALSE) {
     global $_DB_PROFILING;
     if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
       $dao = CRM_Core_DAO::executeQuery("SHOW PROFILES");

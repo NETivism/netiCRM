@@ -470,6 +470,9 @@ class CRM_Contact_BAO_Query {
     $this->_simpleFromClause = self::fromClause($this->_whereTables, NULL, NULL, $this->_primaryLocation, $this->_mode);
 
     $this->openedSearchPanes(TRUE);
+    $queryArr = $this->query();
+    $query = "{$queryArr[0]} {$queryArr[1]} {$queryArr[2]} {$queryArr[3]}";
+    CRM_Core_Error::debug('$query', $query);
   }
 
   function buildParamsLookup() {

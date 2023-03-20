@@ -298,7 +298,7 @@ class CRM_Core_BAO_CustomValueTable {
     }
   }
 
-  function store(&$params, $entityTable, $entityID) {
+  static function store(&$params, $entityTable, $entityID) {
     $cvParams = array();
     foreach ($params as $fieldID => $param) {
       if (is_array($param)) {
@@ -342,7 +342,7 @@ class CRM_Core_BAO_CustomValueTable {
     }
   }
 
-  function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
+  static function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
     require_once "CRM/Core/BAO/CustomField.php";
     $customData = CRM_Core_BAO_CustomField::postProcess($params,
       $customFields,

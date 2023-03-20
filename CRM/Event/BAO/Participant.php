@@ -642,7 +642,7 @@ GROUP BY  participant.event_id
    * @return array array of importable Fields
    * @access public
    */
-  function &importableFields($contactType = 'Individual', $status = TRUE, $onlyParticipant = FALSE) {
+  static function &importableFields($contactType = 'Individual', $status = TRUE, $onlyParticipant = FALSE) {
     if (!self::$_importableFields) {
       if (!self::$_importableFields) {
         self::$_importableFields = array();
@@ -733,7 +733,7 @@ GROUP BY  participant.event_id
    * @return array array of exportable Fields
    * @access public
    */
-  function &exportableFields() {
+  static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = array();

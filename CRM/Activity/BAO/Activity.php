@@ -148,7 +148,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @access public
    *
    */
-  public function deleteActivity(&$params, $moveToTrash = FALSE) {
+  public static function deleteActivity(&$params, $moveToTrash = FALSE) {
     require_once 'CRM/Core/Transaction.php';
 
     $transaction = new CRM_Core_Transaction();
@@ -311,7 +311,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    *
    * @return
    */
-  public function create(&$params) {
+  public static function create(&$params) {
     // check required params
     if (!self::dataExists($params)) {
       CRM_Core_Error::fatal('Not enough data to create activity object,');
@@ -613,7 +613,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     return $result;
   }
 
-  public function logActivityAction($activity, $logMessage = NULL) {
+  public static function logActivityAction($activity, $logMessage = NULL) {
     $session = &CRM_Core_Session::singleton();
     $id = $session->get('userID');
     if (!$id) {
@@ -2432,7 +2432,7 @@ AND cl.modified_id  = c.id
    * @access public
    *
    */
-  public function restoreActivity(&$params) {
+  public static function restoreActivity(&$params) {
     $activity = new CRM_Activity_DAO_Activity();
     $activity->copyValues($params);
 
@@ -2450,7 +2450,7 @@ AND cl.modified_id  = c.id
    * @return array array of exportable Fields
    * @access public
    */
-  function &exportableFields($name = 'Activity') {
+  static function &exportableFields($name = 'Activity') {
     if (!isset(self::$_exportableFields[$name])) {
       self::$_exportableFields[$name] = array();
 
@@ -2502,7 +2502,7 @@ AND cl.modified_id  = c.id
    * @return true/null
    * @access public
    */
-  public function cleanupActivity($contactId) {
+  public static function cleanupActivity($contactId) {
     $result = NULL;
     if (!$contactId) {
       return $result;

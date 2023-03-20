@@ -40,7 +40,7 @@
 class CRM_Core_BAO_File extends CRM_Core_DAO_File {
   const PUBLIC_ENTITY_TABLE = 'civicrm_pcp';
 
-  function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
+  static function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
 
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
@@ -188,7 +188,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     $entityFileDAO->save();
   }
 
-  public function del($fileID, $entityID, $fieldID) {
+  public static function del($fileID, $entityID, $fieldID) {
     // get the table and column name
     list($tableName, $columnName, $groupID) = CRM_Core_BAO_CustomField::getTableColumnGroup($fieldID);
 
@@ -270,7 +270,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
    * get all the files and associated object associated with this
    * combination
    */
-  public function &getEntityFile($entityTable, $entityID) {
+  public static function &getEntityFile($entityTable, $entityID) {
     static $entityFiles;
     $config = CRM_Core_Config::singleton();
     if (!empty($entityFiles[$entityTable][$entityID])) {

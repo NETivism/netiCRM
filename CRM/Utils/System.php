@@ -138,7 +138,7 @@ class CRM_Utils_System {
    * @return void           prints content on stdout
    * @access public
    */
-  function theme(&$content) {
+  static function theme(&$content) {
     if(empty($content)){
       return self::notFound();
     }
@@ -177,7 +177,7 @@ class CRM_Utils_System {
     return "<a href=\"$url\">$text</a>";
   }
 
-  function permissionDenied() {
+  static function permissionDenied() {
     return CRM_Core_Config::$_userSystem->permissionDenied();
   }
 
@@ -235,7 +235,7 @@ class CRM_Utils_System {
    * @return void
    * @access public
    */
-  function setTitle($title, $pageTitle = NULL) {
+  static function setTitle($title, $pageTitle = NULL) {
     return CRM_Core_Config::$_userSystem->setTitle($title, $pageTitle);
   }
 

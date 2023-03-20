@@ -102,7 +102,7 @@ class CRM_Utils_PagerAToZ {
    * @access private
    * @static
    */
-  function createLinks(&$query, $sortByCharacter, $isDAO) {
+  static function createLinks(&$query, $sortByCharacter, $isDAO) {
     $AToZBar = self::getStaticCharacters();
     $dynamicAlphabets = self::getDynamicCharacters($query, $isDAO);
 

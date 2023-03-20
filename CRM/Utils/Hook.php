@@ -956,5 +956,7 @@ class CRM_Utils_Hook {
     $className = $config->userHookClass;
     return $className::invoke( 3, $coupon, $valid, $phase, $null, $null, 'civicrm_validateCoupon' );
   }
+
+  // static function alterAPI
 }
 

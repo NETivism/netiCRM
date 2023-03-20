@@ -96,7 +96,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
   }
 
-  function getMessages(&$error, $separator = '<br />') {
+  static function getMessages(&$error, $separator = '<br />') {
     if (is_a($error, 'CRM_Core_Error')) {
       $errors = $error->getErrors();
       $message = array();
@@ -109,7 +109,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return NULL;
   }
 
-  function displaySessionError(&$error, $separator = '<br />') {
+  static function displaySessionError(&$error, $separator = '<br />') {
     $message = self::getMessages($error, $separator);
     if ($message) {
       $status = ts("Payment Processor Error message") . "{$separator}: $message";

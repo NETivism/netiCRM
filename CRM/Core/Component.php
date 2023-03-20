@@ -46,7 +46,7 @@ class CRM_Core_Component {
 
   static $_contactSubTypes = NULL;
 
-  private function &_info() {
+  private static function &_info() {
     if (self::$_info == NULL) {
       self::$_info = array();
       $c = array();
@@ -72,7 +72,7 @@ class CRM_Core_Component {
     return $comp;
   }
 
-  public function &getComponents($force = FALSE) {
+  public static function &getComponents($force = FALSE) {
     static $_cache = NULL;
 
     if (!$_cache || $force) {
@@ -96,7 +96,7 @@ class CRM_Core_Component {
     return $_cache;
   }
 
-  public function &getEnabledComponents() {
+  public static function &getEnabledComponents() {
     return self::_info();
   }
 

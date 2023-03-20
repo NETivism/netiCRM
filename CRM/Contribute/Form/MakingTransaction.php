@@ -129,7 +129,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     }
     else {
       if (method_exists($paymentClass, 'doRecurTransact')) {
-        $result = $paymentClass::doRecurTransact($recurId);
+        $result = $paymentClass::doRecurTransact($recurId, TRUE);
         $resultMessage = ts("Total Payments: %1", array(1));
       }
     }

@@ -905,7 +905,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
    *
    * @retun array return array of all exportable fields
    */
-  function &exportableFields() {
+  static function &exportableFields() {
     require_once 'CRM/Member/DAO/MembershipType.php';
     $expFieldMembership = CRM_Member_DAO_Membership::export();
     $expFieldsMemType = CRM_Member_DAO_MembershipType::export();

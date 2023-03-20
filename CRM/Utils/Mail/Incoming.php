@@ -192,7 +192,7 @@ class CRM_Utils_Mail_Incoming {
     return $name . "<{$address->email}>";
   }
 
-  function &parse(&$file) {
+  static function &parse(&$file) {
 
     // check that the file exists and has some content
     if (!file_exists($file) ||

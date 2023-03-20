@@ -592,7 +592,7 @@ class CRM_Utils_String {
     $alphabetSize = strlen($alphabet);
     $result = '';
     for ($i = 0; $i < $len; $i++) {
-      $result .= $alphabet{mt_rand(1, $alphabetSize) - 1};
+      $result .= $alphabet[mt_rand(1, $alphabetSize) - 1];
     }
     return $result;
   }

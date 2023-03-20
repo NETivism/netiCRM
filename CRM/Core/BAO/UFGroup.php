@@ -2235,7 +2235,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    * @static
    * @access public
    */
-  static function getProfiles($types, $onlyPure = FALSE) {
+  public static function getProfiles($types, $onlyPure = FALSE) {
     require_once "CRM/Core/BAO/UFField.php";
     $profiles = array();
     $ufGroups = CRM_Core_PseudoConstant::ufgroup();

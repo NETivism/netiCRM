@@ -90,7 +90,7 @@ class CRM_Dedupe_Finder {
    *
    * @return array  matching contact ids
    */
-  function dupesByParams($params,
+  static function dupesByParams($params,
     $ctype,
     $level = 'Strict',
     $except = array(),
@@ -250,7 +250,7 @@ class CRM_Dedupe_Finder {
    *
    * @return array  valid $params array for dedupe
    */
-  function formatParams($fields, $ctype) {
+  static function formatParams($fields, $ctype) {
     $flat = array();
     CRM_Utils_Array::flatten($fields, $flat);
 

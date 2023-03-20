@@ -685,7 +685,7 @@ WHERE  $whereCond
    * @return array array of exportable Fields
    * @access public
    */
-  function &exportableFields() {
+  static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = array();

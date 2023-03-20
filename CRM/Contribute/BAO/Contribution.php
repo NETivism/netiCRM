@@ -561,7 +561,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     return self::$_importableFields;
   }
 
-  function &exportableFields() {
+  static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = array();
@@ -1867,7 +1867,7 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
     return $componentDetails;
   }
 
-  function contributionCount($contactId, $includeSoftCredit = TRUE, $includeHonoree = TRUE) {
+  static function contributionCount($contactId, $includeSoftCredit = TRUE, $includeHonoree = TRUE) {
     if (!$contactId) {
       return 0;
     }
@@ -1960,7 +1960,7 @@ SELECT source_contact_id
     return $ids;
   }
 
-  function getContributionDates() {
+  static function getContributionDates() {
     $config = CRM_Core_Config::singleton();
     $currentMonth = date('m');
     $currentDay = date('d');

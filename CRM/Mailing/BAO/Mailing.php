@@ -2457,7 +2457,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
    * @return array
    * @access public
    */
-  function getDetails($contactIDs,
+  function static getDetails($contactIDs,
     $returnProperties = NULL,
     $skipOnHold = TRUE,
     $skipDeceased = TRUE,

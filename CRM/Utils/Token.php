@@ -1152,7 +1152,7 @@ class CRM_Utils_Token {
    *
    * @access public
    */
-  function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL, $className = NULL) {
+  static function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL, $className = NULL) {
     if (!$contactDetails && !$contactId) {
       return;
     }

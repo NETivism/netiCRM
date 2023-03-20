@@ -147,7 +147,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $coupon;
   }
 
-  function getCouponList($filter, $returnFetchedResult = False) {
+  static function getCouponList($filter, $returnFetchedResult = False) {
     $sql = "SELECT cc.*, e.entity_table, e.entity_id FROM civicrm_coupon cc LEFT JOIN civicrm_coupon_entity e ON cc.id = e.coupon_id WHERE ";
     $where = $args = array();
     foreach($filter as $field => $value) {
