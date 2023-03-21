@@ -1314,9 +1314,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $contactID = self::getRegistrationContactID($fields, $self, $isAdditional);
 
     // implement hook for change registrion check
-    CRM_Utils_Hook::checkRegistration($contactID, $fields, $self, $isAdditional, $result);
-    if (!empty($result)) {
-      return $result;
+    CRM_Utils_Hook::checkRegistration($contactID, $fields, $self, $isAdditional, $forceAllowedRegister);
+    if (!empty($forceAllowedRegister)) {
+      return $forceAllowedRegister;
     }
 
     // skip check when confirm by mail link
@@ -1366,11 +1366,12 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           }
 
           if ($isAdditional) {
-            return $participant->id;
+            return FALSE;
           }
         }
       }
     }
+    return TRUE;
   }
 
   public static function getRegistrationContactID($fields, $self, $isAdditional){
