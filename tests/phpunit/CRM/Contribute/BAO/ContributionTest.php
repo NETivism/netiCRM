@@ -491,12 +491,18 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     {
         if (!empty($sleep)) {
             $GLOBALS['CiviTest_ContributionTest_sleep'] = $sleep;
-        }      
-        //get contact_id
-        $query = "SELECT min(id) as minID FROM civicrm_contact";
-        $dao = CRM_Core_DAO::executeQuery($query);
-        if ($dao->fetch()) {
-            $contactId = $dao->minID;
+        }
+        $contactId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE 1 ORDER BY id ASC");
+        if (empty($contactId)) {
+          $createdContact = civicrm_api('Contact', 'create', array(
+            'version' => 3,
+            'contact_type' => 'Individual',
+            'last_name' => 'CI',
+            'first_name' => 'Testing',
+          ));
+          if ($createdContact['id']) {
+            $contactId = $createdContact['id'];
+          }
         }
         $prefix = 'testReceipt';
         $receiptID = CRM_Contribute_BAO_Contribution::lastReceiptID($prefix);
@@ -509,7 +515,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
             'contribution_type_id'   => 1,
             'contribution_status_id' => 1,
             'payment_instrument_id'  => 1,
-            'source'                 => 'STUDENT',
+            'source'                 => 'CI Test',
             'receive_date'           => '20080522000000',
             'receipt_date'           => date('YmdHis'),
             'id'                     => null,
@@ -535,7 +541,8 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         $currentTime = time();
         // print("Current date: ".date("Y-m-d H:i:s", $currentTime)."\n");
         // case1:exec twice testCreateContribution function and verifty ReceiptId 
-        exec('cd sites/all/modules/civicrm/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php && echo 0 > /dev/null 2>&1 & cd sites/all/modules/civicrm/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php');
+        global $civicrm_root;
+        exec("cd {$civicrm_root}/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php && echo 0 > /dev/null 2>&1 & cd {$civicrm_root}/tests/phpunit && phpunit --filter testCreateContribution CRM/Contribute/BAO/ContributionTest.php");
         $prefix = 'testReceipt';
         $query = "SELECT receipt_id, receipt_date FROM civicrm_contribution WHERE receipt_id LIKE '{$prefix}%' ORDER BY id DESC LIMIT 2";
         $dao = CRM_Core_DAO::executeQuery($query);

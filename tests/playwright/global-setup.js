@@ -9,10 +9,10 @@ module.exports = async config => {
   await page.goto(baseURL);
   await page.locator('input[name="name"]').fill(process.env.adminUser);
   await page.locator('input[name="pass"]').fill(process.env.adminPwd);
-  await page.locator('text=Log in').click();
+  await page.locator('input[value="Log in"]').click();
 
   // Save signed-in state to 'storageState.json'.
   await page.context().storageState({ path: storageState });
-  await expect(page).toHaveTitle('Welcome to netiCRM | netiCRM');
+  await expect(page).toHaveTitle(/Welcome[^|]+ \| netiCRM/);
   await browser.close();
 };

@@ -18,7 +18,8 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     if(!defined('DRUPAL_ROOT')){
       die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
     }
-    $payment_page = variable_get('civicrm_demo_payment_page', array());
+    $query = "SELECT id FROM civicrm_payment_processor WHERE payment_processor_type = 'Mobile'";
+    $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
     $class_name = 'Payment_Mobile';
     if(isset($payment_page[$class_name])){
       $this->_page_id = $payment_page[$class_name];
