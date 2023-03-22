@@ -304,6 +304,7 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .civicrm-menu-enabled.admin-menu.simplemenu-enabled .nme-setting-panels-inner {
   padding-top: 90px;
 }
+
 .nme-setting-panels-header,
 .nme-setting-panels-content,
 .nme-setting-panels-footer {
@@ -372,11 +373,11 @@ ul.nme-setting-panels-tabs li a.is-active {
   margin: 220px 0 0 -50px;
   padding: 10px;
   text-align: center;
-  color: #fff; 
+  color: #fff;
   background: #3F51B5;
   cursor: pointer;
 }
-.nme-container .nme-setting-panels-trigger i {
+.nme-setting-panels .nme-setting-panels-trigger i {
   display: flex;
   text-align: center;
   width: auto;
@@ -384,7 +385,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   color: #fff;
   cursor: pointer;
 }
-.nme-container .nme-setting-panels-trigger .trigger-label {
+.nme-setting-panels .nme-setting-panels-trigger .trigger-label {
   margin: 5px auto 0;
   width: 1em;
   line-height: 1.4;
@@ -397,7 +398,7 @@ ul.nme-setting-panels-tabs li a.is-active {
 }
 .nme-setting-panel-inner {
 }
-.nme-container .nme-setting-panel .nme-setting-panel-title {
+.nme-setting-panels .nme-setting-panel .nme-setting-panel-title {
   display: none;
   padding: 20px;
   height: 60px;
@@ -410,7 +411,7 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nme-setting-section {
   margin-bottom: 20px;
 }
-.nme-container .nme-setting-section .nme-setting-section-title {
+.nme-setting-panels .nme-setting-section .nme-setting-section-title {
   margin-bottom: 10px;
   padding: 10px;
   line-height: 1;
@@ -421,46 +422,46 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nme-container .nme-setting-section .nme-setting-section-content {
   padding: 0 5px;
 }
-.nme-container .nme-setting-panel .nme-setting-field {
+.nme-setting-panels .nme-setting-panel .nme-setting-field {
   display: flex;
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #ddd;
 }
-.nme-container .nme-setting-panel .nme-setting-field:last-child {
+.nme-setting-panels .nme-setting-panel .nme-setting-field:last-child {
   margin-bottom: 0;
   border-bottom: 0;
 }
-.nme-container .nme-setting-panel .nme-setting-field-label {
+.nme-setting-panels .nme-setting-panel .nme-setting-field-label {
   flex: 0 0 40%;
   max-width: 40%;
   padding-right: 15px;
   text-align: right;
 }
-.nme-container .nme-setting-panel .nme-setting-field .pcr-button {
+.nme-setting-panels .nme-setting-panel .nme-setting-field .pcr-button {
   margin: 0;
   border: 1px solid #ccc;
   box-shadow: 0 0 5px rgba(0,0,0,.1);
 }
-.nme-container ul.nme-setting-item-list {
+.nme-setting-panels ul.nme-setting-item-list {
   display: flex;
   flex-wrap: wrap;
+  gap: 15px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.nme-container ul.nme-setting-item-list > li {
-  margin: 0 15px 15px 0;
+.nme-setting-panels ul.nme-setting-item-list > li {
   padding: 0;
   list-style: none;
 }
-.nme-container ul.nme-setting-item-list > li::before {
+.nme-setting-panels ul.nme-setting-item-list > li::before {
   display: none;
 }
-.nme-container ul.nme-setting-item-list > li:nth-child(even) {
+.nme-setting-panels ul.nme-setting-item-list > li:nth-child(even) {
   margin-right: 0;
 }
-.nme-container ul.nme-setting-item-list button {
+.nme-setting-panels ul.nme-setting-item-list button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -477,40 +478,40 @@ ul.nme-setting-panels-tabs li a.is-active {
   border-radius: 6px;
   cursor: pointer;
 }
-.nme-container ul.nme-setting-item-list button::before {
+.nme-setting-panels ul.nme-setting-item-list button::before {
  font-family: "Material-Design-Iconic-Font";
  font-size: 24px;
 }
-.nme-container ul.nme-setting-item-list button:hover {
+.nme-setting-panels ul.nme-setting-item-list button:hover {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
 }
-.nme-container ul.nme-setting-item-list button:hover::before {
+.nme-setting-panels ul.nme-setting-item-list button:hover::before {
   content: "\f275";
 }
 .nme-container ul.nme-select-tpl-list button:hover::before {
   content: "\f30b";
 }
-.nme-container .nme-setting-panel #nme-theme-setting {
+.nme-setting-panels .nme-setting-panel #nme-theme-setting {
   align-items: flex-start;
 }
-.nme-container .nme-setting-panel #nme-theme-setting .nme-setting-field-label {
+.nme-setting-panels .nme-setting-panel #nme-theme-setting .nme-setting-field-label {
   padding-top: 5px;
 }
-.nme-container .nme-theme-setting-items {
+.nme-setting-panels .nme-theme-setting-items {
   display: flex;
   flex-wrap: wrap;
 }
-.nme-container .nme-theme-setting-item {
+.nme-setting-panels .nme-theme-setting-item {
   margin: 0 10px 10px 0;
   cursor: pointer;
 }
-.nme-container .nme-theme-setting-item .form-radio {
+.nme-setting-panels .nme-theme-setting-item .form-radio {
   position: absolute;
   opacity: 0;
   z-index: 1;
   cursor: pointer;
 }
-.nme-container .nme-theme-thumb {
+.nme-setting-panels .nme-theme-thumb {
   position: relative;
   width: 0;
   height: 0;
@@ -518,7 +519,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   border-left: 30px solid transparent;
   box-shadow: 0 0 5px rgba(0,0,0,.1);
 }
-.nme-container .nme-theme-thumb:hover {
+.nme-setting-panels .nme-theme-thumb:hover {
   box-shadow: 0 0 5px rgba(0,0,0,.3);
 }
 .nme-container .form-radio:checked + .elem-label .nme-theme-thumb {
@@ -717,7 +718,7 @@ ul.nme-setting-panels-tabs li a.is-active {
   width: 60px;
   height: 34px;
 }
-.switch-toggle-input { 
+.switch-toggle-input {
   opacity: 0;
   width: 0;
   height: 0;

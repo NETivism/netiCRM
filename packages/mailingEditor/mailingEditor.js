@@ -2280,7 +2280,7 @@
         });
       }
 
-      $(".nme-container").on("change", ".nme-preview-mode-switch", function() {
+      $(".nme-setting-panels").on("change", ".nme-preview-mode-switch", function() {
         if ($(this).is(":checked")) {
           setTimeout(function() { _nmePreview.open(); }, 500);
         }
@@ -3020,6 +3020,7 @@
           _nmePanels.open();
         }
       });
+
 
       $(".nme-setting-panels-tabs").on("click", "a", function(event) {
         event.preventDefault();

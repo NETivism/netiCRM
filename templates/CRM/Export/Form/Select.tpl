@@ -39,6 +39,16 @@
  <div id="export-type">
   <div class="crm-section crm-exportOption-section">
     <h3>{ts count=$totalSelectedRecords plural='%count records selected for export.'}One record selected for export.{/ts}</h3>
+    {if $customHeader}
+    <div class="crm-customDescription">
+      {ts}The export file already include these fields, in front of the selectable fields:{/ts}
+      <ul>
+      {foreach from=$customHeader item=columnName }
+        <li>{$columnName}</li>
+      {/foreach}
+      </ul>
+    </div>
+    {/if}
     <div class="content-no-label crm-content-exportOption">
         {$form.exportOption.html}
    </div>

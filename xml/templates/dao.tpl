@@ -232,6 +232,9 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
 {if $field.FKClassName}
                'FKClassName' => '{$field.FKClassName}',
 {/if} {* field.FKClassName *}
+{if $field.usage}
+               'usage' => '{$field.usage}',
+{/if} {* field.usage *}
              ),
 {/foreach} {* table.fields *}
           );

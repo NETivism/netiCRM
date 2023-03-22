@@ -1,31 +1,11 @@
 <?php
 /**
- *  File for the TestActivity class
+ * Activity Unit Test
  *
- *  (PHP 5)
- *
- *   @author Walt Haas <walt@dharmatech.org> (801) 534-1262
- *   @copyright Copyright CiviCRM LLC (C) 2009
- *   @license   http://www.fsf.org/licensing/licenses/agpl-3.0.html
- *              GNU Affero General Public License version 3
- *   @version   $Id: ActivityTest.php 31254 2010-12-15 10:09:29Z eileen $
- *   @package   CiviCRM
- *
- *   This file is part of CiviCRM
- *
- *   CiviCRM is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Affero General Public License
- *   as published by the Free Software Foundation; either version 3 of
- *   the License, or (at your option) any later version.
- *
- *   CiviCRM is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
- *
- *   You should have received a copy of the GNU Affero General Public
- *   License along with this program.  If not, see
- *   <http://www.gnu.org/licenses/>.
+ * @docmaker_intro_start
+ * @api_title Activity
+ * This is a API Document about Activity.
+ * @docmaker_intro_end
  */
 
 /**
@@ -55,34 +35,25 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
   public function setUp() {
     //  Connect to the database
     parent::setUp();
-    $tablesToTruncate = array(
-      'civicrm_activity',
-      'civicrm_contact',
-      'civicrm_custom_group',
-      'civicrm_custom_field',
-    );
-
-    $this->quickCleanup($tablesToTruncate);
-
-    //  Insert a row in civicrm_contact creating contact 17
-    $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
-      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
-        dirname(__FILE__) . '/dataset/contact_17.xml'
-      )
-    );
+    $this->_apiversion = 3;
+    // local
+    // $this->_individualId = 54;
+    $this->_individualId = $this->individualCreate();
 
     //create activity types
     $activityTypes = civicrm_api('option_value', 'create', array(
-      'version' => API_LATEST_VERSION, 'option_group_id' => 2,
+      'version' => $this->_apiversion, 'option_group_id' => 2,
         'name' => 'Test activity type',
         'label' => 'Test activity type',
         'sequential' => 1,
       ));
     $this->test_activity_type_value = $activityTypes['values'][0]['value'];
     $this->test_activity_type_id = $activityTypes['id'];
+    //local
+    // $this->test_activity_type_value = '45';
+    // $this->test_activity_type_id = '715';
     $this->_params = array(
-      'source_contact_id' => 17,
+      'source_contact_id' => $this->_individualId,
       'activity_type_id' => $this->test_activity_type_value,
       'subject' => 'test activity type id',
       'activity_date_time' => '2011-06-02 14:36:13',
@@ -94,7 +65,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
     $this->_params2 = array(
-      'source_contact_id' => 17,
+      'source_contact_id' => $this->_individualId,
       'subject' => 'Eat & drink',
       'activity_date_time' => date('Ymd'),
       'duration' => 120,
@@ -105,7 +76,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     );
     // create a logged in USER since the code references it for source_contact_id
-    $this->createLoggedInUser();
+    // $this->createLoggedInUser();
   }
 
   /**
@@ -115,14 +86,135 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
    * @access protected
    */
   function tearDown() {
-    $tablesToTruncate = array(
-      'civicrm_contact',
-      'civicrm_activity',
-      'civicrm_activity_target',
-      'civicrm_activity_assignment',
-    );
-    $this->quickCleanup($tablesToTruncate, TRUE);
     civicrm_api('option_value', 'delete', array('version' => 3, 'id' => $this->test_activity_type_id));
+  }
+  /**
+   * Activity Create Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Activity
+   * @api_action Create
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Activity&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Activity&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testCreateActivity() {
+
+    $result = civicrm_api('activity', 'create', $this->_params);
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $result = civicrm_api('activity', 'get', $this->_params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['source_contact_id'], 17, 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['duration'], 120, 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['subject'], 'test activity type id', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['activity_date_time'], '2011-06-02 14:36:13', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['location'], 'Pensulvania', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['details'], 'a test activity', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['status_id'], 2, 'in line ' . __LINE__);
+  }
+
+  /**
+   * Activity Get Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Activity
+   * @api_action Get
+   * @http_method GET
+   * @request_url <entrypoint>?entity=Activity&action=get&json={$request_body_inline}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Activity&action=get&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testGetActivity() {
+    $result_create = civicrm_api('activity', 'create', $this->_params);
+    $this->assertAPISuccess($result_create, ' in line ' . __LINE__);
+    $params = array(
+      'id' => $result_create['id'],
+      'version' => $this->_apiversion,
+    );
+    $result_get = civicrm_api('activity', 'get', $params);
+    $this->assertAPISuccess($result_get, ' in line ' . __LINE__);
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result_get, __FILE__, __FUNCTION__);
+  }
+
+  /**
+   * Activity Update Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Activity
+   * @api_action Update
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Activity&action=create
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Activity&action=create&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  function testUpdateActivity() {
+    $activity = civicrm_api('activity', 'create', $this->_params);
+    $this->assertAPISuccess($activity, ' in line ' . __LINE__);
+    $params = array(
+      'id' => $activity['id'],
+      'subject' => 'Updated Make-it-Happen Meeting',
+      'duration' => 120,
+      'location' => '21, Park Avenue',
+      'details' => 'Lets update Meeting',
+      'status_id' => 1,
+      'activity_name' => 'Test activity type',
+      'priority_id' => 1,
+      'version' => '3',
+    );
+    $result = civicrm_api('activity', 'update', $params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['subject'], 'Updated Make-it-Happen Meeting', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['location'], '21, Park Avenue', 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['details'], 'Lets update Meeting', 'in line ' . __LINE__);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+  }
+
+  /**
+   * Activity Delete Unit Test
+   *
+   * @docmaker_start
+   *
+   * @api_entity Activity
+   * @api_action Delete
+   * @http_method POST
+   * @request_content_type application/json
+   * @request_url <entrypoint>?entity=Activity&action=delete
+   * @request_body {$request_body}
+   * @api_explorer /civicrm/apibrowser#/civicrm/ajax/rest?entity=Activity&action=delete&pretty=1&json={$request_body_inline}
+   * @response_body {$response_body}
+   *
+   * @docmaker_end
+   */
+  public function testDeleteActivity() {
+    $activity = civicrm_api('activity', 'create', $this->_params);
+    $this->assertAPISuccess($activity, ' in line ' . __LINE__);
+    $params = array(
+      'id' => $activity['id'],
+      'version' => '3',
+    );
+    $result = civicrm_api('activity', 'delete', $params);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
+    $this->docMakerRequest($params, __FILE__, __FUNCTION__);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+
   }
 
   /**
@@ -845,21 +937,6 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
     );
-  }
-
-  /**
-   * check activity deletion with correct data
-   */
-  function testDeleteActivity() {
-    $result = civicrm_api('activity', 'create', $this->_params);
-    $params = array(
-      'id' => $result['id'],
-      'version' => $this->_apiversion,
-    );
-
-    $result = civicrm_api('activity', 'delete', $params);
-    $this->documentMe($params, $result, __FUNCTION__, __FILE__);
-    $this->assertAPISuccess($result);
   }
 
   /**

@@ -38,6 +38,10 @@
   <td>
   {$form.mailing_click_status.label}<br />
   {$form.mailing_click_status.html}
+  <div class="mailing-click-url">
+    {$form.mailing_click_url.label}<br />
+    {$form.mailing_click_url.html}
+  </div>
   </td>
   <td>
   {$form.mailing_reply_status.label}<br />
@@ -61,3 +65,20 @@
   </td>
 </tr>
 {include file="CRM/common/chosen.tpl" selector="select#mailing_id,select#mailing_bounce_types"}
+<script>{literal}
+cj(document).ready(function($){
+  var trackClick = function() {
+    let selected = $("input[name=mailing_click_status]:checked").val();
+    if (selected == 'Y') {
+      $('.mailing-click-url').show();
+    }
+    else {
+      $('.mailing-click-url').hide();
+    }
+  }
+  $(".crm-CiviMail-accordion input[name=mailing_click_status]").on("click", function(){
+    trackClick();
+  });
+  trackClick();
+});
+{/literal}</script>

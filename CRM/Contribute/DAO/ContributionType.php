@@ -170,6 +170,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           'headerPattern' => '/(contrib(ution)?)?type/i',
           'dataPattern' => '/donation|member|campaign/i',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'accounting_code' => array(
           'name' => 'accounting_code',
@@ -181,6 +182,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           'where' => 'civicrm_contribution_type.accounting_code',
           'headerPattern' => '',
           'dataPattern' => '',
+          'usage' => 'System',
         ) ,
         'description' => array(
           'name' => 'description',

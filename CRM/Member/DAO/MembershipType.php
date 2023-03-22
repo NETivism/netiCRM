@@ -280,6 +280,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'description' => array(
           'name' => 'description',

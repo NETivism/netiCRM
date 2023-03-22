@@ -239,14 +239,6 @@ function custom_option_html_type( ) {
                 {/if}
             </td>
         </tr>
-        <tr class="crm-custom-field-form-block-is_required">
-            <td class="label">{$form.is_required.label}</td>
-            <td class="html-adjust">{$form.is_required.html}
-            {if $action neq 4}
-                <span class="description">{ts}When 'Required' is active, it is necessary to fill value on contact add/edit page. If you need this feature to visitor, please enable it in profiles setting.{/ts}</span>
-            {/if}
-            </td>
-        </tr>
         <tr id ="searchable" class="crm-custom-field-form-block-is_searchable">
             <td class="label">{$form.is_searchable.label}</td>
             <td class="html-adjust">{$form.is_searchable.html}
@@ -263,12 +255,32 @@ function custom_option_html_type( ) {
             <td class="label">{$form.is_active.label}</td>
             <td class="html-adjust">{$form.is_active.html}</td>
         </tr>    
-        <tr class="crm-custom-field-form-block-is_view">
-            <td class="label">{$form.is_view.label}</td>
-            <td class="html-adjust">{$form.is_view.html}
-                <span class="description">{ts}Is this field set by PHP code (via a custom hook). This field will not be updated by CiviCRM.{/ts}</span>
-            </td>
-        </tr>
+        <tr>
+        <td colspan=2>
+            <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+            <div class="crm-accordion-header">
+            <div class="zmdi crm-accordion-pointer"></div>
+            {ts}Advanced options{/ts}
+            </div><!-- /.crm-accordion-header -->
+            <div class="crm-accordion-body">
+                <table>
+                    <tr class="crm-custom-field-form-block-is_required">
+                        <td class="label">{$form.is_required.label}</td>
+                        <td class="html-adjust">{$form.is_required.html}
+                        {if $action neq 4}
+                        <span class="description">{ts}When 'Required' is active, it is necessary to fill value on contact add/edit page. If you need this feature to visitor, please enable it in profiles setting.{/ts}</span>
+                        {/if}</td>
+                    </tr>
+                    <tr class="crm-custom-field-form-block-is_view">
+                        <td class="label">{$form.is_view.label}</td>
+                        <td class="html-adjust">{$form.is_view.html}
+                            <span class="description">{ts}Is this field set by PHP code (via a custom hook). This field will not be updated by CiviCRM.{/ts}</span>
+                        </td>
+                    </tr>
+                </table>
+            </div><!-- /.crm-accordion-body -->
+          </div><!-- /.crm-accordion-wrapper -->
+        </td></tr>
     </table>
    	    {if $action ne 4}
 	       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
@@ -312,3 +324,95 @@ function custom_option_html_type( ) {
         <a href="{crmURL p="civicrm/admin/custom/group/field/option" q="reset=1&action=browse&fid=`$id`&gid=`$gid`"}">&raquo; {ts}View / Edit Multiple Choice Options{/ts}</a>
     </div>
 {/if}
+{literal}
+<script type="text/javascript">
+cj().crmaccordions();
+</script>
+{/literal}
+
+{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Data+and+Input+Field+Type+-+Alphanumeric:+Text" triggerText="Description of Data and Input Field Type" triggerIcon="zmdi-help-outline" width="400px"}
+  {literal}
+<script type="text/Javascript">
+  cj(function() {
+    if (cj(".nsp-container").length) {
+      cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
+
+      let childType = cj("select#data_type\\[1\\]").val(),
+          parentTypeIndex = cj("select#data_type\\[0\\]").val(),
+          parentTypeMapping = [
+            "Alphanumeric",
+            "Integer",
+            "Number",
+            "Money",
+            "Note",
+            "Date",
+            "Yes or No",
+            "State/Province",
+            "Country",
+            "File",
+            "Link",
+            "Contact Reference"
+          ],
+          parentType = parentTypeMapping[parentTypeIndex],
+          defaultDocURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - Alphanumeric: Text";
+
+      let sidePanelShow = function() {
+        cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
+
+        if (!cj(".nsp-container.is-initialized.is-opened").length) {
+          window.neticrmSidePanelInstance.open();
+        }
+      }
+
+      let sidePanelHide = function() {
+        cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
+
+        if (cj(".nsp-container.is-initialized.is-opened").length) {
+          window.neticrmSidePanelInstance.close();
+        }
+      }
+
+      let setDocURL = function(parentType , childType) {
+        if (parentType.indexOf("/") != -1) {
+          parentType = parentType.replaceAll(/\//g, "");
+        }
+
+        let docURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - " + parentType + ": " + childType;
+
+        if (defaultDocURL !== docURL) {
+          cj(".nsp-container .nsp-iframe").attr("src", docURL);
+        }
+      }
+
+      let trigger = "select#data_type\\[0\\], select#data_type\\[1\\]";
+
+      setTimeout(function() {
+        setDocURL(parentType, childType);
+      }, 2000);
+
+
+      cj(".crm-container").on("focus", trigger, function() {
+        sidePanelShow();
+      });
+
+      cj(".crm-container").on("blur", trigger, function() {
+        sidePanelHide();
+      });
+
+      cj(".crm-container").on("change", "select#data_type\\[0\\]", function() {
+        childType = cj("select#data_type\\[1\\]").val();
+        parentTypeIndex = cj(this).val();
+        parentType = parentTypeMapping[parentTypeIndex];
+        setDocURL(parentType, childType);
+      });
+
+      cj(".crm-container").on("change", "select#data_type\\[1\\]", function() {
+        childType = cj(this).val();
+        parentTypeIndex = cj("select#data_type\\[0\\]").val();
+        parentType = parentTypeMapping[parentTypeIndex];
+        setDocURL(parentType, childType);
+      });
+    }
+  });
+</script>
+{/literal}

@@ -83,7 +83,7 @@
       </table>
 
     {*Form Block*}
-    <div class="crm-accordion-wrapper crm-accordion-closed" id="">
+    <div class="crm-accordion-wrapper crm-accordion-open" id="">
       <div class="crm-accordion-header">
         <div class="zmdi crm-accordion-pointer"></div>{ts}Include Profiles{/ts}
       </div>
