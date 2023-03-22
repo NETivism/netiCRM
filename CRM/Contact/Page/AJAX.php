@@ -236,7 +236,8 @@ class CRM_Contact_Page_AJAX {
       2 => array($optionGroupID, 'Positive'),
     ));
     if (empty($id)) {
-      CRM_Core_Error::debug("The custom field ID and option group ID are not correct. Which field ID is {$fieldID} and option group ID is {$optionGroupID}");
+      CRM_Core_Error::debug_log_message("The custom field ID and option group ID are not correct. Which field ID is {$fieldID} and option group ID is {$optionGroupID}");
+      CRM_Utils_System::civiExit();
     }
 
     require_once 'CRM/Core/BAO/CustomOption.php';
