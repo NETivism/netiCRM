@@ -106,6 +106,11 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
 
   public function buildQuickForm() {
     require_once "CRM/Core/BAO/Mapping.php";
+    $customSearchID = $this->get('customSearchID');
+    if ($customSearchID) {
+      $customHeader = $this->get('customHeader');
+      $this->assign('customHeader', $customHeader);
+    }
     CRM_Core_BAO_Mapping::buildMappingForm($this, 'Export', $this->_mappingId, $this->_exportColumnCount, $blockCnt = 2, $this->get('exportMode'));
 
     $this->addButtons(array(
@@ -206,7 +211,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       }
     }
 
-    if (!$checkEmpty) {
+    $customSearchID = $this->get('customSearchID');
+    if (!$checkEmpty && empty($customSearchID)) {
       $this->set('mappingId', NULL);
       require_once 'CRM/Utils/System.php';
       CRM_Utils_System::redirect(CRM_Utils_System::url($currentPath, '_qf_Map_display=true' . $urlParams));
@@ -225,6 +231,38 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     require_once "CRM/Export/BAO/Export.php";
     $mappingId = $this->get('mappingId');
     $separateMode = $this->get('separateMode');
+    $customHeaders = $this->get('customHeader');
+    $customSearchID = $this->get('customSearchID');
+    if ($customSearchID) {
+      $customSearchClass = $this->get('customSearchClass');
+      $primaryIDName = '';
+      if (property_exists($customSearchClass, '_primaryIDName')) {
+        $primaryIDName = $customSearchClass::$_primaryIDName;
+      }
+      $exportCustomVars = array(
+        'customSearchClass' => $this->get('customSearchClass'),
+        'formValues' => $this->get('formValues'),
+        'order' => $this->get(CRM_Utils_Sort::SORT_ORDER),
+        'pirmaryIDName' => $primaryIDName,
+      );
+      // If select fields is empty, than only export custom search result table.
+      $isSelectorEmpty = TRUE;
+      foreach ($mapperKeys as $selectors) {
+        if (count($selectors) != 1) {
+          $isSelectorEmpty = FALSE;
+          break;
+        }
+      }
+      if ($isSelectorEmpty) {
+        CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
+          $this->get('formValues'),
+          $this->get(CRM_Utils_Sort::SORT_ORDER), 
+          $primaryIDName, 
+          TRUE,
+          TRUE
+        );
+      }
+    }
     CRM_Export_BAO_Export::exportComponents($this->get('selectAll'),
       $this->get('componentIds'),
       $this->get('queryParams'),
@@ -237,7 +275,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       $this->get('mergeSameAddress'),
       $this->get('mergeSameHousehold'),
       $mappingId,
-      $separateMode
+      $separateMode,
+      $exportCustomVars
     );
   }
 

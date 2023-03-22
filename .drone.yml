@@ -9,17 +9,16 @@ steps:
   commands:
   - git submodule update --init --recursive
 - name: neticrm ci php 7
-  image: netivism/neticrm-ci:drone-php7
+  image: ghcr.io/netivism/docker-neticrm-ci:drone-php7
   environment:
     TZ: Asia/Taipei
     RUNPORT: 8080
     DRUPAL_ROOT: /var/www/html
     CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
-    DRUPAL: 7.84
-    NETICRM: develop
   commands:
     - /usr/bin/supervisord &
     - /init.sh
+    - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
@@ -42,17 +41,16 @@ steps:
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_profile.test.js
 - name: neticrm ci php 5
-  image: netivism/neticrm-ci:drone-php5
+  image: ghcr.io/netivism/docker-neticrm-ci:drone-php5
   environment:
     TZ: Asia/Taipei
     RUNPORT: 8080
     DRUPAL_ROOT: /var/www/html
     CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
-    DRUPAL: 7.84
-    NETICRM: develop
   commands:
     - /usr/bin/supervisord &
     - /init.sh
+    - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php

@@ -38,6 +38,10 @@
         {include file="CRM/common/chosen.tpl" selector='#extends\\\\[1\\\\]' select_width='100%'}
         </td>
     </tr>
+    <tr class="subtype">
+        <td class="label">次類型</td>
+        <td><span class="select-subtype"></span><span>{help id="id-extends_subtype"}</span></td>
+    </tr>
     <tr>
         <td class="label">{$form.weight.label}</td>
         <td>{$form.weight.html} {help id="id-weight"}</td>
@@ -90,6 +94,10 @@
 cj(document).ready(function() {
   if (cj('select#extends\\[1\\]').find("option").length <= 0) {
     cj('select#extends\\[1\\]').select2().next('.select2-container').hide();
+    cj('.subtype').hide();
+  } else {
+    cj(".crm-form-select-multiple").appendTo(".select-subtype");
+    cj('.subtype').show();
   }
   cj('select#extends\\[0\\]').change(function() {
     if (cj('select#extends\\[1\\]').find("option").length > 0) {
@@ -97,10 +105,13 @@ cj(document).ready(function() {
       cj('select#extends\\[1\\]').css('display', 'none');
       cj('select#extends\\[1\\]').attr("data-placeholder","{/literal}{ts}-- Select --{/ts}{literal}");
       cj('select#extends\\[1\\]').select2().next('.select2-container').show();
+      cj(".crm-form-select-multiple").appendTo(".select-subtype");
+      cj('.subtype').show();
     }
     else {
       cj('select#extends\\[1\\]').css('display', 'none');
       cj('select#extends\\[1\\]').select2().next('.select2-container').hide();
+      cj('.subtype').hide();
     }
   });
 
@@ -121,7 +132,6 @@ function showHideStyle()
     var showStyle       = "{/literal}{$showStyle}{literal}";
     var showMultiple    = "{/literal}{$showMultiple}{literal}";
     var showMaxMultiple = "{/literal}{$showMaxMultiple}{literal}";
-  
     eval('var contactTypes = ' + contactTypes);
     
     if ( cj.inArray(extend, contactTypes) >= 0 ) {
@@ -174,5 +184,50 @@ if ( subtypes ) {
      }
 }
 */
+</script>
+{/literal}
+
+{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Custom+Groups+Used+For+-+Contact" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px"}
+{literal}
+<script type="text/Javascript">
+  if (cj(".nsp-container").length) {
+    cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
+
+    let sidePanelShow = function() {
+      cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
+
+      if (!cj(".nsp-container.is-initialized.is-opened").length) {
+        window.neticrmSidePanelInstance.open();
+      }
+    }
+
+    let sidePanelHide = function() {
+      cj(".nsp-container:not(.visually-hidden)").addClass("visually-hidden");
+
+      if (cj(".nsp-container.is-initialized.is-opened").length) {
+        window.neticrmSidePanelInstance.close();
+      }
+    }
+
+    let trigger = "select#extends\\[0\\]";
+
+    cj(".crm-container").on("focus", trigger, function() {
+      sidePanelShow();
+    });
+
+    cj(".crm-container").on("blur", trigger, function() {
+      sidePanelHide();
+    });
+
+    cj(trigger).change(function() {
+      let value = cj(this).val();
+
+      if (value.trim() !== "") {
+        docURL = "https://neticrm.tw/CRMDOC/Custom Groups Used For - " + value;
+        cj(".nsp-container .nsp-iframe").attr("src", docURL);
+        sidePanelShow();
+      }
+    });
+  }
 </script>
 {/literal}

@@ -27,6 +27,7 @@
        <headerPattern>/(contrib(ution)?)?type/i</headerPattern>
        <dataPattern>/donation|member|campaign/i</dataPattern>
        <comment>Contribution Type Name.</comment>
+       <usage>System</usage>
        <add>1.3</add>
   </field>
   <field>
@@ -35,6 +36,7 @@
        <type>varchar</type>
        <length>64</length>
        <export>true</export>
+       <usage>System</usage>
        <comment>Optional value for mapping contributions to accounting system codes for each type/category of contribution.</comment>
        <add>1.3</add>
   </field>

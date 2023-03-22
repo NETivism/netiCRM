@@ -47,17 +47,23 @@ class CRM_Core_OptionGroup {
   );
 
   static function &valuesCommon($dao, $flip = FALSE, $grouping = FALSE,
-    $localize = FALSE, $labelColumnName = 'label'
+    $localize = FALSE, $labelColumnName = 'label', $keyColumnName = 'value'
   ) {
     self::$_values = array();
+    if ($keyColumnName !== 'value' && !CRM_Utils_Rule::alphanumeric($keyColumnName)) {
+      $keyColumnName = 'value';
+    }
 
     while ($dao->fetch()) {
+      if (isset($dao->$keyColumnName) && !is_array($dao->$keyColumnName) && (is_string($dao->$keyColumnName) || is_numeric($dao->$keyColumnName))) {
+        $keyColumn = $dao->$keyColumnName;
+      }
       if ($flip) {
         if ($grouping) {
           self::$_values[$dao->value] = $dao->grouping;
         }
         else {
-          self::$_values[$dao->{$labelColumnName}] = $dao->value;
+          self::$_values[$dao->{$labelColumnName}] = $keyColumn;
         }
       }
       else {
@@ -65,7 +71,7 @@ class CRM_Core_OptionGroup {
           self::$_values[$dao->{$labelColumnName}] = $dao->grouping;
         }
         else {
-          self::$_values[$dao->value] = $dao->{$labelColumnName};
+          self::$_values[$keyColumn] = $dao->{$labelColumnName};
         }
       }
     }
@@ -94,13 +100,24 @@ class CRM_Core_OptionGroup {
       }
     }
 
-    $query = "
-SELECT  v.{$labelColumnName} as {$labelColumnName} ,v.value as value, v.grouping as grouping
-FROM   civicrm_option_value v,
-       civicrm_option_group g
-WHERE  v.option_group_id = g.id
-  AND  g.name            = %1
-  AND  g.is_active       = 1 ";
+    if ($labelColumnName !== 'label') {
+      $query = "
+  SELECT  v.label as label, v.{$labelColumnName} as {$labelColumnName} ,v.value as value, v.grouping as grouping, v.id as id
+  FROM   civicrm_option_value v,
+        civicrm_option_group g
+  WHERE  v.option_group_id = g.id
+    AND  g.name            = %1
+    AND  g.is_active       = 1 ";
+    }
+    else {
+      $query = "
+  SELECT  v.{$labelColumnName} as {$labelColumnName} ,v.value as value, v.grouping as grouping, v.id as id
+  FROM   civicrm_option_value v,
+        civicrm_option_group g
+  WHERE  v.option_group_id = g.id
+    AND  g.name            = %1
+    AND  g.is_active       = 1 ";
+    }
 
     if ($onlyActive) {
       $query .= " AND  v.is_active = 1 ";
@@ -118,7 +135,7 @@ WHERE  v.option_group_id = g.id
     $p = array(1 => array($name, 'String'));
     $dao = &CRM_Core_DAO::executeQuery($query, $p);
 
-    $var = &self::valuesCommon($dao, $flip, $grouping, $localize, $labelColumnName);
+    $var = &self::valuesCommon($dao, $flip, $grouping, $localize, $labelColumnName, $keyColumnName);
 
     $cache->set($cacheKey, $var);
 

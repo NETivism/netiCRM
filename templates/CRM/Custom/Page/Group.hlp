@@ -76,3 +76,7 @@
 {htxt id="id-help_post"}
     {ts}Explanatory text displayed below this set of fields.{/ts}
 {/htxt}
+
+{htxt id="id-extends_subtype"}
+    {ts}After the above type is selected, you can choose to only be limited to the subtype here. For example: If your choose events types, you can assign this set of custom fields to a specific subtype (e.g. Workshop').{/ts}
+{/htxt}

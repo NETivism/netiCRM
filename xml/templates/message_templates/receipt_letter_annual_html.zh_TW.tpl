@@ -56,11 +56,11 @@
       </tr>
       {foreach from=$record.$contact_name item=row}
       <tr>
-         <td class="align-right">{$row.receipt_id}</td>
-         <td>{$row.contribution_type}</td>
-         <td>{$row.instrument}</td>
-         <td>{$row.receipt_date}</td>
-         <td class="align-right">{$row.total_amount}</td>
+        <td class="align-right">{$row.receipt_id}</td>
+        <td>{$row.contribution_type}</td>
+        <td>{$row.instrument}</td>
+        <td>{$row.receipt_date}</td>
+        <td class="align-right">{$row.total_amount}</td>
       </tr>
       {/foreach}
     </table>

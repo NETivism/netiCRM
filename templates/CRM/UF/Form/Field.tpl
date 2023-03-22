@@ -202,7 +202,14 @@ function showLabel( ) {
     }
     
     var input = document.getElementById('label');
-    input.value = labelValue.indexOf('::') >= 0 ? labelValue.substring(labelValue.indexOf('::') + 2).trim() : labelValue;
+    var prefix = "{/literal}{ts}Default{/ts} - {literal}";
+
+    if (labelValue.indexOf(prefix) != -1) {
+      input.value = labelValue.replace(prefix, "").trim();
+    }
+    else {
+      input.value = labelValue.indexOf('::') >= 0 ? labelValue.substring(labelValue.indexOf('::') + 2).trim() : labelValue;
+    }
 
     /* Code to hide searchable attribute for no searchable fields */
     if (document.getElementsByName("field_name[1]")[0].selectedIndex == -1) {

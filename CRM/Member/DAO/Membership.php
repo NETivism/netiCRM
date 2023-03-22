@@ -220,6 +220,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'headerPattern' => '/^(m(embership\s)?id)$/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'membership_contact_id' => array(
           'name' => 'contact_id',
@@ -232,6 +233,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'dataPattern' => '/^\d+$/',
           'export' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
+          'usage' => 'System',
         ) ,
         'membership_type_id' => array(
           'name' => 'membership_type_id',
@@ -244,6 +246,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => false,
           'FKClassName' => 'CRM_Member_DAO_MembershipType',
+          'usage' => 'System',
         ) ,
         'join_date' => array(
           'name' => 'join_date',
@@ -254,6 +257,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'headerPattern' => '/^join|(j(oin\s)?date)$/i',
           'dataPattern' => '/\d{4}-?\d{2}-?\d{2}/',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'membership_start_date' => array(
           'name' => 'start_date',
@@ -264,6 +268,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'headerPattern' => '/(member(ship)?.)?start(s)?(.date$)?/i',
           'dataPattern' => '/\d{4}-?\d{2}-?\d{2}/',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'membership_end_date' => array(
           'name' => 'end_date',
@@ -274,6 +279,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'headerPattern' => '/(member(ship)?.)?end(s)?(.date$)?/i',
           'dataPattern' => '/\d{4}-?\d{2}-?\d{2}/',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'membership_source' => array(
           'name' => 'source',
@@ -298,6 +304,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => false,
           'FKClassName' => 'CRM_Member_DAO_MembershipStatus',
+          'usage' => 'System',
         ) ,
         'is_override' => array(
           'name' => 'is_override',
@@ -308,6 +315,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'headerPattern' => '/override$/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'reminder_date' => array(
           'name' => 'reminder_date',
@@ -317,6 +325,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'where' => 'civicrm_membership.reminder_date',
           'headerPattern' => '',
           'dataPattern' => '',
+          'usage' => 'System',
         ) ,
         'owner_membership_id' => array(
           'name' => 'owner_membership_id',
@@ -327,6 +336,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'FKClassName' => 'CRM_Member_DAO_Membership',
+          'usage' => 'System',
         ) ,
         'member_is_test' => array(
           'name' => 'is_test',
@@ -337,6 +347,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'headerPattern' => '/(is.)?test(.member(ship)?)?/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'member_is_pay_later' => array(
           'name' => 'is_pay_later',
@@ -347,6 +358,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'headerPattern' => '/(is.)?(pay(.)?later)$/i',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
       );
     }

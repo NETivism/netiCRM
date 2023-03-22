@@ -81,7 +81,7 @@ function showSaveUpdateChkBox(prefix) {
   cj(document).ready(function($){
     var $update = $('input[id='+prefix+'updateTemplate]');
     var $save = $('input[id='+prefix+'saveTemplate]');
-    var $saveName = $('#saveDetails');
+    var $saveName = $('#'+prefix+'saveDetails');
     $saveName.hide();
     if ($update.is(":checked")) {
       $save.prop("checked", false);

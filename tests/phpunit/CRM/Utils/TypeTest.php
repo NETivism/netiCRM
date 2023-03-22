@@ -10,8 +10,17 @@ require_once 'CiviTest/CiviUnitTestCase.php';
  */
 class CRM_Utils_TypeTest extends CiviUnitTestCase {
 
-  public function setUp() {
+  /**
+   * @before
+   */
+  public function setUpTest() {
     parent::setUp();
+  }
+
+  /**
+   * @after
+   */
+  public function tearDownTest() {
   }
 
   /**

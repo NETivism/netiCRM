@@ -135,13 +135,24 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
     $form->_task = CRM_Utils_Array::value('task', $values);
     $crmContactTaskTasks = CRM_Contact_Task::taskTitles();
     $form->assign('taskName', CRM_Utils_Array::value($form->_task, $crmContactTaskTasks));
-
+    $primaryIDName = $form->get('primaryIDName', NULL);
     if ($useTable) {
       $form->_componentTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
       $sql = " DROP TABLE IF EXISTS {$form->_componentTable}";
       CRM_Core_DAO::executeQuery($sql);
+      if ($customHeader = $form->get('customHeader')) {
+        foreach ($customHeader as $columnName => $val) {
+          $customColumns .= ", $columnName varchar(64)";
+        }
+      }
 
-      $sql = "CREATE TABLE {$form->_componentTable} ( contact_id int primary key) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+      if (!empty($primaryIDName)) {
+        $sql = "CREATE TABLE {$form->_componentTable} ( id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";  
+      }
+      else {
+        $sql = "CREATE TABLE {$form->_componentTable} ( contact_id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+      }
+
       CRM_Core_DAO::executeQuery($sql);
     }
 

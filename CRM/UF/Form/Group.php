@@ -144,6 +144,8 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
 
     //add checkboxes
     $ufGroupTypes = CRM_Core_SelectValues::ufGroupTypes();
+    // Grouptype System should not show on Used for field
+    unset($ufGroupTypes['System']);
     $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_id);
     $this->addCheckBox('uf_group_type', ts('Used For'), $ufGroupTypes, NULL, NULL, NULL, NULL, '<br>', $flip = TRUE);
     $ele = $this->getElement('uf_group_type');
@@ -217,6 +219,10 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       $this->freeze();
       $this->addElement('button', 'done', ts('Done'), array('onclick' => "location.href='civicrm/admin/uf/group?reset=1&action=browse'"));
     }
+
+    if ($this->_action & CRM_Core_Action::ADD) {
+      $this->assign('actionIsAdd', true);
+    }
   }
 
   /**
@@ -282,6 +288,9 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
           break;
         }
       }
+      if (isset($defaults['uf_group_type']['System'])) {
+        $defaults['is_in_other_situation'] = 1;
+      }
     }
     else {
       $defaults['is_active'] = 1;
@@ -289,7 +298,6 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       $defaults['is_cms_user'] = 0;
       $defaults['is_update_dupe'] = 1;
       $defaults['is_proximity_search'] = 0;
-      $defaults['uf_group_type[Profile]'] = 1;
     }
     // Don't assign showHide elements to template in DELETE mode (fields to be shown and hidden don't exist)
     if (!($this->_action & CRM_Core_Action::DELETE) && !($this->_action & CRM_Core_Action::DISABLE)) {
@@ -351,6 +359,17 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
           $params['uf_group_type'] = array_merge($params['uf_group_type'], $params['uf_group_type_user']);
         }
         CRM_Core_BAO_UFGroup::createUFJoin($params, $ufGroup->id);
+        //refs #36509, create uf join when click is in other situation checkbox.
+
+        if ($params['is_in_other_situation'] == '1') {
+          $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($ufGroup->id);
+          if (!in_array("System",$ufJoinRecords)) {
+            $joinParams = array();
+            $joinParams['uf_group_id'] = $ufGroup->id;
+            $joinParams['module'] = "System";
+            CRM_Core_BAO_UFGroup::addUFJoin($joinParams);
+          }
+        }
       }
       elseif ($this->_id) {
         // this profile has been set to inactive, delete all corresponding UF Join's

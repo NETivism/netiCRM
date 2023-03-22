@@ -79,7 +79,9 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
     list($activityTypeName, $activityTypeDescription, $activityTypeMachineName) = CRM_Core_BAO_OptionValue::getActivityTypeDetails($defaults['activity_type_id']);
 
     $this->assign('activityTypeName', $activityTypeName);
-    $this->assign('activityTypeDescription', $activityTypeDescription);
+    if ($activityTypeMachineName != 'SMS') {
+      $this->assign('activityTypeDescription', $activityTypeDescription);
+    }
 
     if (CRM_Utils_Array::value('mailingId', $defaults)) {
       $this->_mailing_id = CRM_Utils_Array::value('source_record_id', $defaults);
@@ -87,6 +89,11 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
       $mailingReport = &CRM_Mailing_BAO_Mailing::report($this->_mailing_id, TRUE);
       CRM_Mailing_BAO_Mailing::getMailingContent($mailingReport, $this);
       $this->assign('mailingReport', $mailingReport);
+    }
+
+    $allActivityStatus = CRM_Core_PseudoConstant::activityStatus();
+    if ($defaults['status_id']) {
+      $defaults['status'] = $allActivityStatus[$defaults['status_id']];
     }
 
     foreach ($defaults as $key => $value) {

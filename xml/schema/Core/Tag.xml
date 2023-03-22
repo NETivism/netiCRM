@@ -25,6 +25,7 @@
        <length>64</length>
        <comment>Name of Tag.</comment>
        <add>1.1</add>
+       <usage>System</usage>
   </field>
   <field>
        <name>description</name>

@@ -12,6 +12,7 @@
       <type>int unsigned</type> 
       <required>true</required>
       <import>true</import> 
+      <usage>System</usage>
       <title>Contribution ID</title>
       <comment>Unique Contribution ID</comment> 
       <add>1.3</add> 
@@ -27,6 +28,7 @@
       <type>int unsigned</type> 
       <required>true</required> 
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/contact(.?id)?/i</headerPattern>
       <dataPattern>/^\d+$/</dataPattern>
       <comment>FK to Contact ID</comment> 
@@ -58,6 +60,7 @@
   <field>  
       <name>contribution_type_id</name>  
       <export>false</export>
+      <usage>System</usage>
       <type>int unsigned</type>
       <comment>FK to Contribution Type</comment>
       <add>1.3</add>  
@@ -76,6 +79,7 @@
       <headerPattern></headerPattern>
       <dataPattern>/^\d+$/</dataPattern>
       <import>true</import>
+      <usage>System</usage>
       <export>true</export>
       <comment>The Contribution Page which triggered this contribution</comment> 
       <add>1.5</add> 
@@ -92,11 +96,13 @@
       <type>int unsigned</type>
       <comment>FK to Payment Processor</comment>   
       <export>true</export>
+      <usage>System</usage>
       <add>3.3</add>   
   </field>  
   <foreignKey> 
        <name>payment_processor_id</name> 
        <table>civicrm_payment_processor</table> 
+       <usage>System</usage>
        <key>id</key> 
        <onDelete>SET NULL</onDelete>
   </foreignKey>
@@ -109,6 +115,7 @@
       <name>payment_instrument_id</name>
       <type>int unsigned</type>
       <comment>FK to Payment Instrument</comment>   
+      <usage>System</usage>
       <add>1.3</add>   
   </field>  
   <index>
@@ -121,6 +128,7 @@
       <title>Contribution Created Date</title>
       <type>datetime</type> 
       <import>false</import>
+      <usage>System</usage>
       <export>true</export>
       <headerPattern>/created(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
@@ -136,6 +144,7 @@
       <name>receive_date</name> 
       <type>datetime</type> 
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/receive(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
       <comment>when was gift received(or got authorized by credit card)</comment> 
@@ -147,6 +156,7 @@
       <type>decimal</type>
       <default>0</default>
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/non?.?deduct/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
       <comment>Portion of total amount which is NOT tax deductible.</comment>  
@@ -157,6 +167,7 @@
       <type>decimal</type>  
       <required>true</required>
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/^total|(.?^am(ou)?nt)/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
       <comment>Total amount of this contribution.</comment>  
@@ -166,6 +177,7 @@
       <name>fee_amount</name>    
       <type>decimal</type>    
       <import>true</import>
+      <usage>System</usage>
       <title>Transaction Fee Amount</title>
       <headerPattern>/fee(.?am(ou)?nt)?/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
@@ -176,6 +188,7 @@
       <name>net_amount</name>    
       <type>decimal</type>    
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/net(.?am(ou)?nt)?/i</headerPattern>
       <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
       <comment>net amount + fee amount = total amount</comment>
@@ -187,6 +200,7 @@
       <type>varchar</type>     
       <length>255</length>  
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/tr(ansactio|x)n(.?id)?/i</headerPattern>
       <comment>unique transaction id by this application</comment>
       <add>1.3</add>     
@@ -197,6 +211,7 @@
       <type>varchar</type>     
       <length>255</length>  
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/invoice(.?id)?/i</headerPattern>
       <comment>unique invoice id, system generated or passed in</comment>
       <add>1.3</add>     
@@ -207,6 +222,7 @@
       <length>3</length>
       <default>NULL</default>
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/cur(rency)?/i</headerPattern>
       <dataPattern>/^[A-Z]{3}$/i</dataPattern>
       <comment>3 character string, value from config setting.</comment>
@@ -216,6 +232,7 @@
       <name>cancel_date</name>  
       <type>datetime</type>  
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/cancel(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
       <comment>when was gift cancelled</comment>  
@@ -225,6 +242,7 @@
       <name>cancel_reason</name>   
       <type>text</type>   
       <import>true</import>
+      <usage>System</usage>
       <comment>Reason that gift was cancelled</comment>  
       <headerPattern>/(cancel.?)?reason/i</headerPattern>
       <add>1.3</add>   
@@ -233,6 +251,7 @@
       <name>receipt_date</name>   
       <type>datetime</type>   
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/receipt(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
       <comment>Record date after (email)receipt sent.</comment>
@@ -243,6 +262,7 @@
       <title>Thank-you Date</title>
       <type>datetime</type>    
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/thank(s|(.?you))?(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
       <comment>when (if) was donor thanked</comment>    
@@ -262,6 +282,7 @@
   <field>      
       <name>amount_level</name>
       <title>Amount Label</title>
+      <usage>System</usage>
       <comment>Amount level / label that donor choose in contribution page.</comment>   
       <type>text</type>   
       <import>true</import>
@@ -310,6 +331,7 @@
       <type>int unsigned</type>   
       <comment>FK to contact ID. If this set, contribution is honor of other contact.</comment>   
       <add>1.3</add>   
+      <usage>System</usage>
   </field>   
   <foreignKey> 
        <name>honor_contact_id</name> 
@@ -325,6 +347,7 @@
       <type>boolean</type>
       <default>0</default>
       <import>true</import>
+      <usage>System</usage>
   </field>
   <field>     
       <name>is_pay_later</name>  
@@ -333,6 +356,7 @@
       <type>boolean</type>
       <default>0</default>
       <import>true</import>
+      <usage>System</usage>
       <add>2.1</add> 
   </field>
   <field>
@@ -342,6 +366,7 @@
       <type>int unsigned</type>
       <default>1</default>
       <import>true</import>
+      <usage>System</usage>
       <export>false</export>
       <headerPattern>/status/i</headerPattern>
       <add>1.6</add>
@@ -350,6 +375,7 @@
       <name>honor_type_id</name>
       <title>Honor Type</title>
       <type>int unsigned</type>
+      <usage>System</usage>
       <comment>Implicit FK to civicrm_option_value.</comment>
       <add>2.0</add>
       <onDelete>SET NULL</onDelete>
@@ -366,6 +392,7 @@
    </index>
   <field> 
     <name>address_id</name> 
+    <usage>System</usage>
     <type>int unsigned</type> 
     <comment>Conditional foreign key to civicrm_address.id. We insert an address record for each contribution when we have associated billing name and address data.</comment> 
     <add>2.2</add> 
@@ -384,6 +411,7 @@
     <type>varchar</type>     
     <length>255</length>  
     <import>true</import>
+    <usage>System</usage>
     <add>2.2</add>     
   </field>  
   <index>
@@ -398,6 +426,7 @@
     <type>varchar</type>     
     <length>255</length>  
     <import>true</import>
+    <usage>System</usage>
     <add>2.2</add>     
   </field>  
   <index>
@@ -409,6 +438,7 @@
       <name>expire_date</name> 
       <type>datetime</type> 
       <import>true</import>
+      <usage>System</usage>
       <headerPattern>/expire(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
       <comment>when is payment expiration</comment> 

@@ -190,6 +190,7 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
+          'usage' => 'System',
         ) ,
         'description' => array(
           'name' => 'description',

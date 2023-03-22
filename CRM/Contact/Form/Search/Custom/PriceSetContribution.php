@@ -43,6 +43,8 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Fo
 
   protected $_cstatus = NULL;
 
+  public static $_isExportFileDirectly = TRUE;
+
   function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_price_set_id = CRM_Utils_Array::value('price_set_id', $this->_formValues);
