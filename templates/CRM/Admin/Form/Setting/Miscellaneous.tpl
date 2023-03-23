@@ -100,6 +100,19 @@
             <td>{$form.recaptchaPrivateKey.html}</td>
         </tr>
         </table>
-           <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </fieldset>
+{if $admin_user1}
+<fieldset><legend>{ts}Trusted Host{/ts}</legend>
+    <div class="description">
+        {ts}To enable the trusted host mechanism, you enable your allowable hosts in 'Trusted Host Settings' field. This should be a regular expression patterns, without delimiters, representing the hosts you would like to allow.{/ts}
+    </div>
+    <table class="form-layout">
+        <tr class="crm-miscellaneous-form-block-trustedHosts">
+            <td class="label">{$form.trustedHostsPatterns.label}</td>
+            <td>{$form.trustedHostsPatterns.html}</td>
+        </tr>
+        </table>
+        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+    </fieldset>
+{/if}
 </div>
