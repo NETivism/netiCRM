@@ -86,6 +86,33 @@
       {/if}
     </table>
 </fieldset>
+{if $admin}
+<fieldset><legend>{ts}Content Security Policy{/ts}</legend>
+    <div class="description">
+        {ts}Default values will be supplied for these Content Security Policy when you access CiviCRM.{/ts}
+    </div>
+    <table class="form-layout">
+        <tr class="crm-csp-form-block-CSP">
+            <td class="label">{$form.CSPrules.label}</td>
+            <td>{$form.CSPrules.html|crmReplace:class:'huge40'}
+                <span class="description">{ts}CiviCRM Content Security Policy. If blank will use the default value.{/ts}</span>
+            </td>
+        </tr>
+        <tr class="crm-csp-form-block-CSPexcludePath">
+            <td class="label">{$form.CSPexcludePath.label}</td>
+            <td>{$form.CSPexcludePath.html|crmReplace:class:'huge40'}
+                <span class="description">{ts}Specify pages by using their paths. Enter one path per line.{/ts}</span>
+            </td>
+        </tr>
+        <tr class="crm-csp-form-block-CSPoff">
+            <td class="label">{$form.CSPoff.label}</td>
+            <td>{$form.CSPoff.html}
+                <span class="description">{ts}If checked, CSP will be disabled.{/ts}</span>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+{/if}
 <fieldset><legend>{ts}reCAPTCHA Keys{/ts}</legend>
     <div class="description">
         {ts}reCAPTCHA is a free service that helps prevent automated abuse of your site. To use reCAPTCHA on public-facing CiviCRM forms: sign up at <a href="http://recaptcha.net">recaptcha.net</a>; enter the provided public and private reCAPTCHA keys here; then enable reCAPTCHA under Advanced Settings in any Profile.{/ts}
