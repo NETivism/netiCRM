@@ -1,28 +1,13 @@
 const { test, expect, chromium } = require('@playwright/test');
+const utils = require('./utils.js');
 
 /** @type {import('@playwright/test').Page} */
 let page;
 var locator;
 
-function makeid(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
-async function fillInput(locator, text_input){
-  await expect(locator).toBeEnabled();
-  await locator.click();
-  await locator.fill(text_input);
-  await expect(locator).toHaveValue(text_input);
-}
-
-var first_name = makeid(5);
-var last_name = makeid(5);
+var first_name = utils.makeid(5);
+var last_name = utils.makeid(5);
 
 var vars = {
   first_name: first_name,
@@ -30,6 +15,7 @@ var vars = {
   user_email: first_name.toLowerCase() + last_name.toLowerCase() + '123@gmail.com',
   user_phone: '09' + Math.floor(Math.random() * 100000000).toString()
 };
+
 
 test.beforeAll(async () => {
   const browser = await chromium.launch();
@@ -40,6 +26,7 @@ test.afterAll(async () => {
   await page.close();
 });
 
+
 test.describe.serial('Add Contact', () => {
   test.use({ storageState: 'storageState.json' });
   test('Add Contact test', async () => {
@@ -49,19 +36,19 @@ test.describe.serial('Add Contact', () => {
       await expect(page.locator('form[name=Contact]'), 'form[name=Contact] is undefined.').toBeDefined();
       
       locator = page.locator("input[name='last_name']");
-      await fillInput(locator, vars.last_name);
+      await utils.fillInput(locator, vars.last_name);
       console.log("Add lastname.");
 
       locator = page.locator("input[name='first_name']");
-      await fillInput(locator, vars.first_name);
+      await utils.fillInput(locator, vars.first_name);
       console.log("Add firstname.");
 
       locator = page.locator('#email_1_email');
-      await fillInput(locator, vars.user_email);
+      await utils.fillInput(locator, vars.user_email);
       console.log("Add email.");
 
       locator = page.locator('#phone_1_phone');
-      await fillInput(locator, vars.user_phone);
+      await utils.fillInput(locator, vars.user_phone);
       console.log("Add phone.");
 
       await page.locator('#phone_1_phone_type_id').selectOption('1');
