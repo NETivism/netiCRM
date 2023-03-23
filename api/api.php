@@ -112,6 +112,8 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
       }
     }
 
+    CRM_Utils_Hook::alterAPIResult($entity, $action, $params, $result);
+
     return $result;
   }
   catch(PEAR_Exception $e) {
