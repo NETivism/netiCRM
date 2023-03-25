@@ -929,17 +929,34 @@ Group By  componentId";
     // now add domain from addresses
     $domainFrom = CRM_Core_PseudoConstant::fromEmailAddress();
     $default = array_shift($domainFrom);
+
     foreach (array_keys($domainFrom) as $k) {
       $dmail = $domainFrom[$k];
       if (CRM_Utils_Mail::checkMailInDomains($dmail, $verifiedDomains)) {
         $domainEmail[$dmail] = htmlspecialchars($dmail);
       }
     }
-    $defaultEmail = array($default => htmlspecialchars($default));
+
+    // add default from address
+    $systemEmail = array();
+    if (CRM_Utils_Mail::checkMailInDomains($default, $verifiedDomains)) {
+      $defaultEmail = array($default => htmlspecialchars($default));
+    }
+    else {
+      $defaultEmail = array($default => htmlspecialchars($default));
+      // add system default when default is not system email
+      $systemFromEmail = CRM_Mailing_BAO_Mailing::defaultFromMail();
+      if (!strstr($default, '<'.$systemFromEmail.'>')) {
+        $systemRFC822 = CRM_Utils_Mail::formatRFC822Email(CRM_Utils_Mail::pluckNameFromHeader($default), $systemFromEmail, TRUE);
+        $systemEmail = array($systemRFC822 => htmlspecialchars($systemRFC822));
+      }
+    }
+
     return array(
       'contact' => $email,
       'default' => $defaultEmail,
       'domain' => $domainEmail,
+      'system' => $systemEmail,
     );
   }
 }

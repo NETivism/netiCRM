@@ -229,13 +229,30 @@ class CRM_Contact_Page_AJAX {
     $optionGroupID = CRM_Utils_Type::escape($_GET['ogid'], 'Integer');
     $label = CRM_Utils_Type::escape($_GET['s'], 'String');
 
+    // Check custom field ID is correct.
+    $sql = "SELECT id FROM civicrm_custom_field WHERE id = %1 AND option_group_id = %2";
+    $id = CRM_Core_DAO::singleValueQuery($sql, array(
+      1 => array($fieldID, 'Positive'),
+      2 => array($optionGroupID, 'Positive'),
+    ));
+    if (empty($id)) {
+      CRM_Core_Error::debug_log_message("The custom field ID and option group ID are not correct. Which field ID is {$fieldID} and option group ID is {$optionGroupID}");
+      CRM_Utils_System::civiExit();
+    }
+
     require_once 'CRM/Core/BAO/CustomOption.php';
     $selectOption = &CRM_Core_BAO_CustomOption::valuesByID($fieldID, $optionGroupID);
 
     $completeList = NULL;
     foreach ($selectOption as $id => $value) {
-      if (strtolower($label) == strtolower(substr($value, 0, strlen($label)))) {
+      if (empty($label)) {
         echo $completeList = "$value|$id\n";
+      }
+      else {
+        $optionLabel = preg_replace('/^(.+)\|([^\|]+)$/', '$1', $value);
+        if (strstr($optionLabel, $label)) {
+          echo $completeList = "$value|$id\n";
+        }
       }
     }
     CRM_Utils_System::civiExit();

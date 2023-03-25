@@ -957,6 +957,19 @@ class CRM_Utils_Hook {
     return $className::invoke( 3, $coupon, $valid, $phase, $null, $null, 'civicrm_validateCoupon' );
   }
 
-  // static function alterAPI
+  /**
+   * Modifies the API response content before it is returned.
+   * 
+   * @param string $entity  The entity being called by this api.
+   * @param string $action  The action being performed (e.g. GET, CREATE, DELETE).
+   * @param array  $params  The query parameters sent with the API request.
+   * @param array  $result The API response data, passed by reference for modification.
+   */
+  static function alterAPIResult($entity, $action, $params, &$result) {
+    $config = CRM_Core_Config::singleton();
+    $null = &CRM_Core_DAO::$_nullObject;
+    $className = $config->userHookClass;
+    return $className::invoke( 4, $entity, $action, $params, $result, $null, 'civicrm_alterAPIResult' );
+  }
 }
 

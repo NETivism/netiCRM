@@ -24,18 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 {htxt id='upload'}
-<h1>{ts}Import File Format{/ts}</h1>
     <p>{ts}Files to be imported must be in the 'comma-separated-values' format (CSV). Most applications will allow you to export records in CSV format. Consult the documentation for your application if you're not sure how to do this.{/ts}</p>
-<h1>{ts}Required Participant Data{/ts}</h1>
-    <p>{ts}Participant import data MUST include the following columns:{/ts}</p>
-    <ul>
-    <li>{ts}Event Title OR Event ID (a unique integer assigned by CiviEvent, displayed in the Manage Events listing){/ts}</li>
-    <li>{ts}Participant Status (ie. Registered, Attended, Cancelled, etc.){/ts}</li>
-    <li>{ts}Participant Role (ie. Attendee, Volunteer, Host, etc.){/ts}</li>
-    </ul>
-    <p>{ts}Valid values for Status and Role can be found in the CiviEvent section of the Administer CiviCRM screen. You can also import Fee Level, Registration Date and any other standard or custom Participant fields.{/ts}</p>
-<h1>{ts}Contact Records for Event Participants{/ts}</h1>
-    <p>{ts}Participant import requires that each person, household or organization already exists as a contact record in your CiviCRM database. If you need to import participant information for contact records which haven't been added to CiviCRM yet - you will do this in 2 steps. First, use <strong>Import Contacts</strong> to add the contact records. If possible, include a unique 'External ID' for each new contact which you can then use to match participant info such as event registration to the corresponding contact record. Then return to this screen and import the participant records.{/ts}</p>
+
 <h1>{ts}Matching Participant Data to Contacts{/ts}</h1>
     <p>{ts}Participant import files must contain data needed to <strong>match the participant to a contact record in your CiviCRM database</strong>. This 'matching' can be handled in several different ways:{/ts}</p>
     <ul>
@@ -46,6 +36,14 @@
     <p>
         {ts}Save the CSV file with your participant data and 'contact matching' data to your local hard drive (or an accessible drive on your network) - and you are now ready for step 1 (Upload Data).{/ts}
     </p>
+
+    <p>{ts}Participant import data MUST include the following columns:{/ts}</p>
+    <ul>
+    <li>{ts}Event Title OR Event ID (a unique integer assigned by CiviEvent, displayed in the Manage Events listing){/ts}</li>
+    <li>{ts}Participant Status (ie. Registered, Attended, Cancelled, etc.){/ts}</li>
+    <li>{ts}Participant Role (ie. Attendee, Volunteer, Host, etc.){/ts}</li>
+    </ul>
+    <p>{ts}Valid values for Status and Role can be found in the CiviEvent section of the Administer CiviCRM screen. You can also import Fee Level, Registration Date and any other standard or custom Participant fields.{/ts}</p>
 {/htxt}
 
 {htxt id="id-onDuplicate"}
