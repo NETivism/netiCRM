@@ -102,6 +102,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
         unset($params[$ccType]);
         if (!empty($aRecipients)) {
           foreach($aRecipients as $rec) {
+            $rec = trim($rec);
             if (CRM_Utils_Rule::email($rec)) {
               $additionalRecipients[] = $rec;
             }
