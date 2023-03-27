@@ -1185,7 +1185,7 @@ class PEAR_Registry extends PEAR
 
         $dp = opendir($this->channelsdir);
         while ($ent = readdir($dp)) {
-            if ($ent{0} == '.' || substr($ent, -4) != '.reg') {
+            if ($ent[0] == '.' || substr($ent, -4) != '.reg') {
                 continue;
             }
 
@@ -1236,7 +1236,7 @@ class PEAR_Registry extends PEAR
         }
 
         while ($ent = readdir($dp)) {
-            if ($ent{0} == '.' || substr($ent, -4) != '.reg') {
+            if ($ent[0] == '.' || substr($ent, -4) != '.reg') {
                 continue;
             }
 
@@ -1260,7 +1260,7 @@ class PEAR_Registry extends PEAR
         }
 
         while ($ent = readdir($dp)) {
-            if ($ent{0} == '.' || substr($ent, -4) != '.reg') {
+            if ($ent[0] == '.' || substr($ent, -4) != '.reg') {
                 continue;
             }
             $pkglist[] = substr($ent, 0, -4);
@@ -2202,7 +2202,7 @@ class PEAR_Registry extends PEAR
             }
             if (!isset($components['scheme'])) {
                 if (strpos($components['path'], '/') !== false) {
-                    if ($components['path']{0} == '/') {
+                    if ($components['path'][0] == '/') {
                         return PEAR::raiseError('parsePackageName(): this is not ' .
                             'a package name, it begins with "/" in "' . $param . '"',
                             'invalid', null, null, $param);
