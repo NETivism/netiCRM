@@ -38,7 +38,7 @@
         <tr>
           <td class="label">{$form.uploadFile.label}</td>
           <td class="html-adjust with-help-link">{$form.uploadFile.html}
-            <a class="help-link new-window-link" href="https://neticrm.tw/resources/2457#a" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
+            <a class="help-link new-window-link" href="{$config->docURLBase}Prepare+Files+for+Importing+Contributions" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
        	   <div class="description">{ts}File format must be comma-separated-values (CSV).{/ts}</div>
           </td>
         </tr>
