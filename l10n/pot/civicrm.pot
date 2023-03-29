@@ -48742,3 +48742,11 @@ msgstr ""
 #: custom/civicrm_contribute_charge/civicrm_contribute_charge.module
 msgid "For each donation, the processing fee charged by the bank and third-party payment platform."
 msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail.tpl
+msgid "NOTE: Due to the confidential nature of receipts containing personal information, please use a mailbox with a high level of security for the confidential copy."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceiptEmail.tpl
+msgid "When sending a large number of copies, the mailbox will receive a large number of duplicate emails with PDF receipts attached, so please make sure the mailbox has enough space."
+msgstr ""

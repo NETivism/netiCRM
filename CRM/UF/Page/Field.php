@@ -127,6 +127,11 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
       $this->assign('skipCreate', TRUE);
       $this->assign('skipBrowse', TRUE);
     }
+    $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_gid);
+    if (!in_array('Profile', $ufJoinRecords)) {
+      $this->assign('skipCreate', TRUE);
+      $this->assign('skipBrowse', TRUE);
+    }
     if ($this->_ufGroup['is_reserved']) {
       $this->assign('skipCreate', TRUE);
       $this->assign('skipBrowse', TRUE);

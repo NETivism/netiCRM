@@ -330,7 +330,7 @@ cj().crmaccordions();
 </script>
 {/literal}
 
-{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Data+and+Input+Field+Type+-+Alphanumeric:+Text" triggerText="Description of Data and Input Field Type" triggerIcon="zmdi-help-outline" width="400px"}
+{include file="CRM/common/sidePanel.tpl" type="iframe" src="`$config->docURLBase`Data+and+Input+Field+Type+-+Alphanumeric:+Text" triggerText="Description of Data and Input Field Type" triggerIcon="zmdi-help-outline" width="400px"}
   {literal}
 <script type="text/Javascript">
   cj(function() {
@@ -354,7 +354,7 @@ cj().crmaccordions();
             "Contact Reference"
           ],
           parentType = parentTypeMapping[parentTypeIndex],
-          defaultDocURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - Alphanumeric: Text";
+          defaultDocURL = "{/literal}{$config->docURLBase}{literal}Data+and+Input+Field+Type+-+Alphanumeric:+Text";
 
       let sidePanelShow = function() {
         cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
@@ -377,7 +377,7 @@ cj().crmaccordions();
           parentType = parentType.replaceAll(/\//g, "");
         }
 
-        let docURL = "https://neticrm.tw/CRMDOC/Data and Input Field Type - " + parentType + ": " + childType;
+        let docURL = "{/literal}{$config->docURLBase}{literal}Data+and+Input+Field+Type+-+" + parentType + ": " + childType;
 
         if (defaultDocURL !== docURL) {
           cj(".nsp-container .nsp-iframe").attr("src", docURL);
