@@ -249,6 +249,16 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         self::$_singleton->componentRegistry->addConfig($this);
       }
 
+      // Get trusted host patterns
+      $trusted_host_patterns = CRM_Utils_System::getTrustedHostsPatterns();
+      if (!empty(trim($trusted_host_patterns))) {
+        // Check trusted HTTP Host headers to protect against header attacks
+        if (!CRM_Utils_System::checkTrustedHosts($_SERVER['HTTP_HOST'])) {
+          header('', TRUE, 400);
+          exit('The provided host name is not valid for this server.');
+        }
+      }
+
       self::$_singleton->initialized = 1;
 
       if (isset(self::$_singleton->customPHPPathDir) &&
