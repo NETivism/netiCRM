@@ -591,7 +591,7 @@ class CRM_Utils_Token {
     return $str;
   }
 
-  public function getContactTokenReplacement($token, &$contact, $html = FALSE,
+  public static function getContactTokenReplacement($token, &$contact, $html = FALSE,
     $returnBlankToken = FALSE, $escapeSmarty = FALSE
   ) {
     if (self::$_tokens['contact'] == NULL) {

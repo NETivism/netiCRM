@@ -334,7 +334,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  function match($url1, $url2) {
+  static function match($url1, $url2) {
     $url1 = strtolower($url1);
     $url2 = strtolower($url2);
 
@@ -357,7 +357,7 @@ class CRM_Utils_String {
    * @return mix $v  returns civicrm url (eg: civicrm/contact/search/...)
    * @access public
    */
-  function extractURLVarValue($query) {
+  static function extractURLVarValue($query) {
     $config = CRM_Core_Config::singleton();
     $urlVar = $config->userFrameworkURLVar;
 
