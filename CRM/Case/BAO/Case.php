@@ -1012,7 +1012,7 @@ WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id A
     require_once "CRM/Core/PseudoConstant.php";
     require_once 'CRM/Case/PseudoConstant.php';
 
-    $activityTypes = CRM_Case_PseudoConstant::activityType(FALSE, TRUE);
+    $activityTypes = CRM_Case_PseudoConstant::caseActivityType(FALSE, TRUE);
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
     $activityPriority = CRM_Core_PseudoConstant::priority();
 
@@ -1447,7 +1447,7 @@ AND        ca.is_deleted = 0";
           'name'
         );
 
-        $details = CRM_Case_PseudoConstant::activityType();
+        $details = CRM_Case_PseudoConstant::caseActivityType();
         $matches = array();
         preg_match('/^\W+([a-zA-Z0-9_ ]+)(\W+)?\n/i',
           $result['body'], $matches

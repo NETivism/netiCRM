@@ -94,7 +94,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
       }
     }
 
-    $activityTypes = CRM_Case_PseudoConstant::activityType();
+    $activityTypes = CRM_Case_PseudoConstant::caseActivityType();
 
     $this->assign('openCaseId', $activityTypes['Open Case']['id']);
     $this->assign('changeCaseTypeId', $activityTypes['Change Case Type']['id']);

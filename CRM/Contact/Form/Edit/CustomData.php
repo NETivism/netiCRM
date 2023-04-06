@@ -98,7 +98,7 @@ class CRM_Contact_Form_Edit_CustomData {
    *
    * @return None
    */
-  function setDefaultValues(&$form, &$defaults) {
+  static function setDefaultValues(&$form, &$defaults) {
     $defaults += CRM_Custom_Form_Customdata::setDefaultValues($form);
   }
 }

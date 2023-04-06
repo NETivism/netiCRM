@@ -33,7 +33,7 @@
  *
  */
 class CRM_Core_BAO_CustomValueTable {
-  function create(&$customParams) {
+  static function create(&$customParams) {
     if (empty($customParams) ||
       !is_array($customParams)
     ) {

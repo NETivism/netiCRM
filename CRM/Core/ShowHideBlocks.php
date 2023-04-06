@@ -183,14 +183,14 @@ class CRM_Core_ShowHideBlocks {
    * @return void
    * @access public
    */
-  function links(&$form, $prefix, $showLinkText, $hideLinkText, $assign = TRUE) {
+  static function links(&$form, $prefix, $showLinkText, $hideLinkText, $assign = TRUE) {
     $showCode = "show('id_{$prefix}'); hide('id_{$prefix}_show');";
     $hideCode = "hide('id_{$prefix}'); show('id_{$prefix}_show'); return false;";
 
     self::setIcons();
     $values = array();
-    $values['show'] = self::linkHtml("${prefix}_show", "#${prefix}_hide", self::$_showIcon . $showLinkText, "onclick=\"$showCode\"");
-    $values['hide'] = self::linkHtml("${prefix}_hide", "#${prefix}", self::$_hideIcon . $hideLinkText, "onclick=\"$hideCode\"");
+    $values['show'] = self::linkHtml("{$prefix}_show", "#{$prefix}_hide", self::$_showIcon . $showLinkText, "onclick=\"$showCode\"");
+    $values['hide'] = self::linkHtml("{$prefix}_hide", "#{$prefix}", self::$_hideIcon . $hideLinkText, "onclick=\"$hideCode\"");
 
     if ($assign) {
       $form->assign($prefix, $values);

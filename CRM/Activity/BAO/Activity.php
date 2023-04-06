@@ -878,7 +878,7 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$acti
    *
    * return an array of component id and name.
    **/
-  function activityComponents() {
+  static function activityComponents() {
     require_once 'CRM/Core/Permission.php';
     $components = array();
     $compInfo = CRM_Core_Component::getEnabledComponents();
@@ -2399,7 +2399,7 @@ AND cl.modified_id  = c.id
    */
   static function getFileForActivityTypeId($activityTypeId, $crmDir = 'Activity') {
     require_once "CRM/Case/PseudoConstant.php";
-    $activityTypes = CRM_Case_PseudoConstant::activityType(FALSE, TRUE);
+    $activityTypes = CRM_Case_PseudoConstant::caseActivityType(FALSE, TRUE);
 
     if ($activityTypes[$activityTypeId]['name']) {
       require_once 'CRM/Utils/String.php';

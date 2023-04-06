@@ -100,7 +100,7 @@ class CRM_Core_Component {
     return self::_info();
   }
 
-  public function &getNames($translated = FALSE) {
+  public static function &getNames($translated = FALSE) {
     $allComponents = self::getComponents();
 
     $names = array();

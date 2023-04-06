@@ -131,7 +131,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     }
   }
 
-  function getTagsUsedFor($usedFor = array('civicrm_contact'),
+  static function getTagsUsedFor($usedFor = array('civicrm_contact'),
     $buildSelect = TRUE,
     $all = FALSE,
     $parentId = NULL

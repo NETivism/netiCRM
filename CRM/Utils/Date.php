@@ -873,7 +873,7 @@ class CRM_Utils_Date {
    * @param $format given format ( eg 'M Y', 'Y M' )
    * return array of qfMapping and date parts for date format.
    */
-  function checkBirthDateFormat($format = NULL) {
+  static function checkBirthDateFormat($format = NULL) {
     $birthDateFormat = NULL;
     if (!$format) {
       $birthDateFormat = self::getDateFormat('birth');

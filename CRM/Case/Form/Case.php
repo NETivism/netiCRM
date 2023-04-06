@@ -153,7 +153,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       $this->assign('activityTypeFile', $this->_activityTypeFile);
     }
 
-    $details = CRM_Case_PseudoConstant::activityType(FALSE);
+    $details = CRM_Case_PseudoConstant::caseActivityType(FALSE);
 
     CRM_Utils_System::setTitle($details[$this->_activityTypeId]['label']);
     $this->assign('activityType', $details[$this->_activityTypeId]['label']);
