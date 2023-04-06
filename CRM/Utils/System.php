@@ -205,8 +205,46 @@ class CRM_Utils_System {
 
   static function setCSPHeader() {
 
-    // Try as a starting point, do not use in production environment.
-    // header("Content-Security-Policy: default-src 'self'");
+    if (CRM_Core_Config::singleton()->CSPoff) {
+      return;
+    }
+
+    $default_csp = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.google-analytics.com https://*.facebook.net https://*.facebook.com https://*.twitter.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com; object-src 'none'";
+
+    $default_csp = empty(CRM_Core_Config::singleton()->CSPrules) ? $default_csp : CRM_Core_Config::singleton()->CSPrules;
+
+    $current_path = self::currentPath();
+    $csp_exclude_path = CRM_Core_Config::singleton()->CSPexcludePath;
+
+    if (!self::matchPath($csp_exclude_path, $current_path)) {
+      header("Content-Security-Policy: {$default_csp}");
+    }
+  }
+
+  static function matchPath($pattern, $path) {
+
+    if (empty($pattern)) {
+      return false;
+    }
+
+    $patterns = preg_split('/\r?\n/', $pattern);
+    $patterns = array_map('trim', $patterns);
+    static $results = [];
+
+    foreach ($patterns as $pattern) {
+      if (isset($results[$pattern])) {
+        $result = $results[$pattern];
+      }
+      else {
+        $result = fnmatch($pattern, $path);
+        $results[$pattern] = $result;
+      }
+
+      if ($result) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
