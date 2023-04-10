@@ -264,7 +264,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    * @return bool
    */
   public static function migrateEmailFromPages($fromName, $fromEmail) {
-    $availableEmails = CRM_Core_PseudoConstant::fromEmailAddress(TRUE);
+    $availableEmails = CRM_Core_PseudoConstant::fromEmailAddress(TRUE, TRUE);
     $migrateEmail = TRUE;
     foreach($availableEmails as $info) {
       if ($info['email'] === $fromEmail) {
