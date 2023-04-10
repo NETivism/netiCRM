@@ -45,36 +45,22 @@ jobs:
         run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php"
       - name: API Test - Get Options
         run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php"
-      - name: Frontend - All Pages
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js"
-      - name: Frontend - Event Registeration
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js"
-      - name: Frontend - Import Records
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js"
-      - name: Frontend - Add Contact
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contact.test.js"
-      - name: Frontend - Edit Contact
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/edit_contact.test.js"
-      - name: Frontend - Search Tasks
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/batch_action.test.js"
-      - name: Frontend - Event Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_event.test.js"
-      - name: Frontend - Participant Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_participant.test.js"
-      - name: Frontend - Contribution Page Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contribution_page.test.js"
-      - name: Frontend - Contribution Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/new_contribution.test.js"
-      - name: Frontend - Custom Data
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/custom_data.test.js"
-      - name: Frontend - Group Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_group.test.js"
-      - name: Frontend - Advanced Search
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js"
-      - name: Frontend - Profile Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_profile.test.js"
       - name: Frontend - All Pages - Playwright
         run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js --reporter=list"
+      - name: Frontend - Add Contact - Playwright
+        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js --reporter=list"
+      - name: Frontend - Contribution Page Editing - Playwright
+        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js --reporter=list"
+      - name: Frontend - Event Editing - Playwright
+        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js --reporter=list"
+      - name: Frontend - Edit Contact - Playwright
+        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js --reporter=list"
+      - name: Frontend - Participant Editing - Playwright
+        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js --reporter=list"
+      - name: Frontend - Event Registeration - Playwright
+        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_register.spec.js --reporter=list"
+      - name: Frontend - Contribution Editing - Playwright
+        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js --reporter=list"
   notification:
     if: ${{ failure() }}
     needs: testing

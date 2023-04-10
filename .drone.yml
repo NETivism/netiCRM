@@ -28,21 +28,14 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contact.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/edit_contact.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/batch_action.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_event.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_participant.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contribution_page.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/new_contribution.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/custom_data.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_group.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js
-    - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_profile.test.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_register.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js --reporter=list
 - name: neticrm ci php 5
   image: ghcr.io/netivism/docker-neticrm-ci:drone-php5
   environment:
