@@ -172,16 +172,16 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
     // duplicate handling options
     $duplicateOptions = array();
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Skip'), CRM_Import_Parser::DUPLICATE_SKIP
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Update'), CRM_Import_Parser::DUPLICATE_UPDATE
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Fill'), CRM_Import_Parser::DUPLICATE_FILL
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('No Duplicate Checking'), CRM_Import_Parser::DUPLICATE_NOCHECK
     );
 
@@ -209,7 +209,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     // contact types option
     $contactOptions = array();
     foreach($this->_contactTypes as $type => $tsName) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, $tsName, $type, $js);
+      $contactOptions[] = $this->createElement('radio', NULL, NULL, $tsName, $type, $js);
     }
     $this->addGroup($contactOptions, 'contactType', ts('Contact Type'));
 

@@ -391,7 +391,7 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
     // }}}
     // {{{ onQuickFormEvent()
 
-    function onQuickFormEvent($event, $arg, $caller = null)
+    function onQuickFormEvent($event, $arg, &$caller)
     {
         if ('updateValue' == $event) {
             // we need to call setValue(), 'cause the default/constant value

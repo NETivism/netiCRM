@@ -296,7 +296,8 @@ class HTML_QuickForm extends HTML_Common
         $attributes = array('action'=>$action, 'method'=>$method, 'name'=>$formName, 'id'=>$formName) + $target;
         $this->updateAttributes($attributes);
         if (!$trackSubmit || isset($_REQUEST['_qf__' . $formName])) {
-            if (1 == get_magic_quotes_gpc()) {
+            // Remove a usage of deprecated funtion get_magic_quotes_gpc
+            if (FALSE) {
                 $this->_submitValues = $this->_recursiveFilter('stripslashes', 'get' == $method? $_GET: $_POST);
                 foreach ($_FILES as $keyFirst => $valFirst) {
                     foreach ($valFirst as $keySecond => $valSecond) {
@@ -572,7 +573,7 @@ class HTML_QuickForm extends HTML_Common
     function createElement($elementType)
     {
         $args    =  func_get_args();
-        $element = HTML_QuickForm::_loadElement('createElement', $elementType, array_slice($args, 1));
+        $element = $this->_loadElement('createElement', $elementType, array_slice($args, 1));
         return $element;
     } // end func createElement
 
@@ -606,7 +607,7 @@ class HTML_QuickForm extends HTML_Common
                 $args[$i] = null;
             }
         }
-        $err = $elementObject->onQuickFormEvent($event, $args, isset($this) ? $this : null);
+        $err = $elementObject->onQuickFormEvent($event, $args, $this);
         if ($err !== true) {
             return $err;
         }
@@ -633,7 +634,7 @@ class HTML_QuickForm extends HTML_Common
     {
         if (is_object($element) && is_subclass_of($element, 'html_quickform_element')) {
            $elementObject = &$element;
-           $elementObject->onQuickFormEvent('updateValue', null, isset($this) ? $this : null);
+           $elementObject->onQuickFormEvent('updateValue', null, $this);
         } else {
             $args = func_get_args();
             $elementObject = $this->_loadElement('addElement', $element, array_slice($args, 1));
@@ -734,7 +735,7 @@ class HTML_QuickForm extends HTML_Common
         } else {
             $this->_duplicateIndex[$elementName][] = $targetIdx;
         }
-        $element->onQuickFormEvent('updateValue', null, isset($this) ? $this : null);
+        $element->onQuickFormEvent('updateValue', null, $this);
         if ($this->_freezeAll) {
             $element->freeze();
         }
@@ -1315,7 +1316,7 @@ class HTML_QuickForm extends HTML_Common
     * @param    array   $b  array which will be merged into first one
     * @return   array   merged array
     */
-    function arrayMerge($a, $b)
+    static function arrayMerge($a, $b)
     {
         foreach ($b as $k => $v) {
             if (is_array($v)) {
@@ -1345,7 +1346,7 @@ class HTML_QuickForm extends HTML_Common
      * @access    public
      * @return    boolean
      */
-    function isTypeRegistered($type)
+    static function isTypeRegistered($type)
     {
         return isset($GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'][strtolower($type)]);
     } // end func isTypeRegistered

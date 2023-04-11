@@ -747,7 +747,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     unset($attributes['allowClear']);
 
     foreach ($values as $key => $var) {
-      $options[] = &HTML_QuickForm::createElement('radio', NULL, NULL, $var, $key, $attributes);
+      $options[] = &$this->createElement('radio', NULL, NULL, $var, $key, $attributes);
     }
     $group = &$this->addGroup($options, $name, $title, $separator);
     if ($required) {
@@ -784,20 +784,20 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     if ($javascriptMethod) {
       foreach ($values as $key => $var) {
         if (!$flipValues) {
-          $options[] = &HTML_QuickForm::createElement('checkbox', $var, NULL, $key, $javascriptMethod);
+          $options[] = &$this->createElement('checkbox', $var, NULL, $key, $javascriptMethod);
         }
         else {
-          $options[] = &HTML_QuickForm::createElement('checkbox', $key, NULL, $var, $javascriptMethod);
+          $options[] = &$this->createElement('checkbox', $key, NULL, $var, $javascriptMethod);
         }
       }
     }
     else {
       foreach ($values as $key => $var) {
         if (!$flipValues) {
-          $options[] = HTML_QuickForm::createElement('checkbox', $var, NULL, $key);
+          $options[] = $this->createElement('checkbox', $var, NULL, $key);
         }
         else {
-          $options[] = HTML_QuickForm::createElement('checkbox', $key, NULL, $var);
+          $options[] = $this->createElement('checkbox', $key, NULL, $var);
         }
       }
     }

@@ -110,8 +110,8 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
       $membership = array();
       $membershipDefault = array();
       foreach ($membershipTypes as $k => $v) {
-        $membership[] = HTML_QuickForm::createElement('advcheckbox', $k, NULL, $v);
-        $membershipDefault[] = HTML_QuickForm::createElement('radio', NULL, NULL, NULL, $k);
+        $membership[] = $this->createElement('advcheckbox', $k, NULL, $v);
+        $membershipDefault[] = $this->createElement('radio', NULL, NULL, NULL, $k);
       }
 
       $this->addGroup($membership, 'membership_type', ts('Membership Types'));

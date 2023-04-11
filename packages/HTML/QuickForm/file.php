@@ -169,7 +169,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      * @access    public
      * @return    bool
      */
-    function onQuickFormEvent($event, $arg, $caller = null)
+    function onQuickFormEvent($event, $arg, &$caller)
     {
         switch ($event) {
             case 'updateValue':

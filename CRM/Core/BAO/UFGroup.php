@@ -1654,7 +1654,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       $genderOptions = array();
       $gender = CRM_Core_PseudoConstant::gender();
       foreach ($gender as $key => $var) {
-        $genderOptions[$key] = HTML_QuickForm::createElement('radio', NULL, ts('Gender'), $var, $key);
+        $genderOptions[$key] = $form->createElement('radio', NULL, ts('Gender'), $var, $key);
       }
       $form->addGroup($genderOptions, $name, $title);
       if ($required) {
@@ -1739,7 +1739,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
         if ($key == '') {
           continue;
         }
-        $communicationOptions[] = &HTML_QuickForm::createElement('checkbox', $key, NULL, $var);
+        $communicationOptions[] = &$form->createElement('checkbox', $key, NULL, $var);
       }
       $form->addGroup($communicationOptions, $name, $title, '<br/>');
     }

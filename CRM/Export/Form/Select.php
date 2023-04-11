@@ -230,26 +230,26 @@ FROM   {$this->_componentTable}
     //export option
     $exportOptions = $mergeHousehold = $mergeAddress = array();
     /*
-        $exportOptions[] = HTML_QuickForm::createElement('radio',
+        $exportOptions[] = $this->createElement('radio',
                                                          null, null,
                                                          ts('Export PRIMARY fields'),
                                                          self::EXPORT_ALL,
                                                          array( 'onClick' => 'showMappingOption( );' ));
         */
 
-    $exportOptions[] = HTML_QuickForm::createElement('radio',
+    $exportOptions[] = $this->createElement('radio',
       NULL, NULL,
       ts('Select fields for export'),
       self::EXPORT_SELECTED,
       array('onClick' => 'showMappingOption( );')
     );
 
-    $mergeAddress[] = HTML_QuickForm::createElement('advcheckbox',
+    $mergeAddress[] = $this->createElement('advcheckbox',
       'merge_same_address',
       NULL,
       ts('Merge Contacts with the Same Address')
     );
-    $mergeHousehold[] = HTML_QuickForm::createElement('advcheckbox',
+    $mergeHousehold[] = $this->createElement('advcheckbox',
       'merge_same_household',
       NULL,
       ts('Merge Household Members into their Households')
