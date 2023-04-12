@@ -48750,3 +48750,15 @@ msgstr ""
 #: templates/CRM/Contact/Form/Task/AnnualReceiptEmail.tpl
 msgid "When sending a large number of copies, the mailbox will receive a large number of duplicate emails with PDF receipts attached, so please make sure the mailbox has enough space."
 msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "Trusted Host"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "Trusted Host Settings"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "To enable the trusted host mechanism, you enable your allowable hosts in 'Trusted Host Settings' field. You can input as many values as needed, but only one value is allowed per row. You can use '*' as a wildcard character."
+msgstr ""
