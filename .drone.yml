@@ -17,7 +17,7 @@ steps:
     CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
   commands:
     - /usr/bin/supervisord &
-    - /init.sh
+    - /init-7.sh
     - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
@@ -45,13 +45,21 @@ steps:
     CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
   commands:
     - /usr/bin/supervisord &
-    - /init.sh
+    - /init-7.sh
     - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_register.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js --reporter=list
 - name: notify
   image: drillster/drone-email
   settings:
