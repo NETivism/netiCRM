@@ -211,7 +211,7 @@ class CRM_Utils_System {
    * @return string url
    * @access public
    */
-  function crmURL($params) {
+  static function crmURL($params) {
     $p = CRM_Utils_Array::value('p', $params);
     if (!isset($p)) {
       $p = self::currentPath();

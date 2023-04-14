@@ -627,7 +627,7 @@ class DB
      *
      * @return boolean  whether $query is a data manipulation query
      */
-    function isManip($query)
+    static function isManip($query)
     {
         $manips = 'INSERT|UPDATE|DELETE|REPLACE|'
                 . 'CREATE|DROP|'

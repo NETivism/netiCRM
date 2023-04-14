@@ -412,7 +412,7 @@ class Auth_OpenID {
      * @return mixed $new_url The URL after normalization, or null if
      * $url was malformed.
      */
-    function normalizeUrl($url)
+    static function normalizeUrl($url)
     {
         @$parsed = parse_url($url);
 
