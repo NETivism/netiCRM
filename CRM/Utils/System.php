@@ -40,6 +40,7 @@
 class CRM_Utils_System {
 
   static $_callbacks = NULL;
+  public static $default_csp = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.google-analytics.com https://*.facebook.net https://*.facebook.com https://*.twitter.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com; object-src 'none'";
 
   /**
    * Compose a new url string from the current url string
@@ -203,15 +204,19 @@ class CRM_Utils_System {
     return CRM_Core_Config::$_userSystem->currentPath();
   }
 
+  /**
+	 * This static function sets the Content-Security-Policy header based on the configuration
+	 * rules defined in CRM_Core_Config. If the current path matches the CSPexcludePath
+	 * configuration rule, the header is not set.
+	 */
   static function setCSPHeader() {
 
-    if (CRM_Core_Config::singleton()->CSPoff) {
+    if (empty(CRM_Core_Config::singleton()->CSPrules)) {
       return;
     }
-
-    $default_csp = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.google-analytics.com https://*.facebook.net https://*.facebook.com https://*.twitter.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com; object-src 'none'";
-
-    $default_csp = empty(CRM_Core_Config::singleton()->CSPrules) ? $default_csp : CRM_Core_Config::singleton()->CSPrules;
+    else {
+      $default_csp = CRM_Core_Config::singleton()->CSPrules;
+    }
 
     $current_path = self::currentPath();
     $csp_exclude_path = CRM_Core_Config::singleton()->CSPexcludePath;
@@ -221,6 +226,16 @@ class CRM_Utils_System {
     }
   }
 
+
+  /**
+   * This static function checks if the given path matches any of the patterns in the
+   * given pattern string. The pattern string should be a newline-separated list of
+   * Unix-style shell wildcards (e.g. *.php, /admin/*).
+   *
+   * @param string $pattern The pattern string to match against.
+   * @param string $path The path to test.
+   * @return bool Whether the path matches any of the patterns in the pattern string.
+   */
   static function matchPath($pattern, $path) {
 
     if (empty($pattern)) {

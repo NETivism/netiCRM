@@ -85,7 +85,6 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       $this->addTextfield('docURLBase', ts('Documentation URL Base Path'));
       $this->addElement('textarea', 'CSPrules', ts('Content Security Policy'));
       $this->addElement('textarea', 'CSPexcludePath', ts('Exclude path'));
-      $this->addElement('checkbox', 'CSPoff', ts('Disable csp rules'));
     }
     else {
       $this->assign('admin', FALSE);
