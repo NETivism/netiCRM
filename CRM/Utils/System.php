@@ -1725,10 +1725,13 @@ class CRM_Utils_System {
       $trusted_host_patterns = self::getTrustedHostsPatterns();
       $trusted_host_patterns_arr = explode("\n", $trusted_host_patterns);
 
-      if (PHP_SAPI !== 'cli' && !empty($trusted_host_patterns_arr)) {
+      if (php_sapi_name() !== 'cli' && !empty($trusted_host_patterns_arr)) {
         foreach ($trusted_host_patterns_arr as $pattern) {
           $pattern = trim($pattern);
-          $pattern = sprintf('{%s}i', str_replace('}', '\\}', $pattern));
+
+          // Replace wildcard character "*" with regular expression ".*"
+          // and add anchors at the start and end of the pattern
+          $pattern = '/^' . str_replace('\*', '.*', preg_quote($pattern, '/')) . '$/';
 
           if (preg_match($pattern, $host)) {
             return TRUE;

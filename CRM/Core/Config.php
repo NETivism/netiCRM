@@ -254,8 +254,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       if (!empty(trim($trusted_host_patterns))) {
         // Check trusted HTTP Host headers to protect against header attacks
         if (!CRM_Utils_System::checkTrustedHosts($_SERVER['HTTP_HOST'])) {
-          header('', TRUE, 400);
-          exit('The provided host name is not valid for this server.');
+          CRM_Core_Error::fatalWithoutInitialized(ts('Access Denied.'));
         }
       }
 
