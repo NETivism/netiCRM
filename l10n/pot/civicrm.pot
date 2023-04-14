@@ -48762,3 +48762,7 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "To enable the trusted host mechanism, you enable your allowable hosts in 'Trusted Host Settings' field. You can input as many values as needed, but only one value is allowed per row. You can use '*' as a wildcard character."
 msgstr ""
+
+#: CRM/Core/Config.php
+msgid "Access Denied."
+msgstr ""
