@@ -49179,3 +49179,7 @@ msgid ""
 "'Trusted Host Settings' field. You can input as many values as needed, but "
 "only one value is allowed per row. You can use '*' as a wildcard character."
 msgstr "請在「信任主機設定」欄位中啟用您允許的主機。可允許多值，但每一列只能輸入一個值。您可以使用星號「*」作為萬用字元。"
+
+#: CRM/Core/Config.php
+msgid "Access Denied."
+msgstr "拒絕存取"
