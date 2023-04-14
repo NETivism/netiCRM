@@ -101,7 +101,7 @@
         </tr>
         </table>
     </fieldset>
-{if $admin_user1}
+{if $admin}
 <fieldset><legend>{ts}Trusted Host{/ts}</legend>
     <div class="description">
         {ts}To enable the trusted host mechanism, you enable your allowable hosts in 'Trusted Host Settings' field. You can input as many values as needed, but only one value is allowed per row. You can use '*' as a wildcard character.{/ts}

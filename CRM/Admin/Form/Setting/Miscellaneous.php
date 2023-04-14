@@ -48,8 +48,6 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
    * @access public
    */
   public function buildQuickForm() {
-    global $user;
-
     CRM_Utils_System::setTitle(ts('Settings - Miscellaneous'));
 
     // FIXME: for now, disable logging for multilingual sites
@@ -85,14 +83,7 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
       $this->assign('admin', TRUE);
       $this->addTextfield('docURLBase', ts('Documentation URL Base Path'));
-
-      if ($user->uid == 1) {
-        $this->assign('admin_user1', TRUE);
-        $this->addElement('textarea', 'trustedHostsPatterns', ts('Trusted Host Settings'));
-      }
-      else {
-        $this->assign('admin_user1', FALSE);
-      }
+      $this->addElement('textarea', 'trustedHostsPatterns', ts('Trusted Host Settings'));
     }
     else {
       $this->assign('admin', FALSE);
