@@ -17,7 +17,7 @@ steps:
     CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
   commands:
     - /usr/bin/supervisord &
-    - /init-7.sh
+    - /init.sh
     - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
@@ -45,7 +45,7 @@ steps:
     CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
   commands:
     - /usr/bin/supervisord &
-    - /init-7.sh
+    - /init.sh
     - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
