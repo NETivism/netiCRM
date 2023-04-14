@@ -250,6 +250,20 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
+   * Handles fatal errors without requiring an initialized configuration object
+   * This function is useful in cases where using the regular fatal() function
+   * would cause a circular dependency
+   *
+   * @param string message The error message to be displayed
+   *
+   */
+  static function fatalWithoutInitialized($message = NULL) {
+    http_response_code(self::FATAL_ERROR);
+    echo $message;
+    exit;
+  }
+
+  /**
    * display timeout message
    *
    * @param string message 
