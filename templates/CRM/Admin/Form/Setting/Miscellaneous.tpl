@@ -86,7 +86,6 @@
       {/if}
     </table>
 </fieldset>
-{if $admin}
 <fieldset><legend>{ts}Content Security Policy{/ts}</legend>
     <div class="description">
         {ts}Default values will be supplied for these Content Security Policy when you access CiviCRM.{/ts}
@@ -95,7 +94,7 @@
         <tr class="crm-csp-form-block-CSP">
             <td class="label">{$form.CSPrules.label}</td>
             <td>{$form.CSPrules.html|crmReplace:class:'huge40'}
-                <span class="description">{ts}CiviCRM Content Security Policy.{/ts}</span>
+                <a id="use-default-csp" href="#">{ts}Click here to replace the current input values with CSP default values.{/ts}</a>
             </td>
         </tr>
         <tr class="crm-csp-form-block-CSPexcludePath">
@@ -105,8 +104,17 @@
             </td>
         </tr>
     </table>
+  {literal}
+    <script>
+      cj('#use-default-csp').click(function(){
+        var CSPrules = textarea = document.getElementById('CSPrules');
+        var defaultCSP = {/literal}"{$default_csp}";
+        {literal}
+        CSPrules.value = defaultCSP;
+      });
+    </script>
+  {/literal}
 </fieldset>
-{/if}
 <fieldset><legend>{ts}reCAPTCHA Keys{/ts}</legend>
     <div class="description">
         {ts}reCAPTCHA is a free service that helps prevent automated abuse of your site. To use reCAPTCHA on public-facing CiviCRM forms: sign up at <a href="http://recaptcha.net">recaptcha.net</a>; enter the provided public and private reCAPTCHA keys here; then enable reCAPTCHA under Advanced Settings in any Profile.{/ts}
