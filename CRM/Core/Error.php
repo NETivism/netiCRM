@@ -110,12 +110,17 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   static function displaySessionError(&$error, $separator = '<br />') {
-    $message = self::getMessages($error, $separator);
-    if ($message) {
-      $status = ts("Payment Processor Error message") . "{$separator}: $message";
-      $session = CRM_Core_Session::singleton();
-      $session->setStatus($status);
+    $message = ts('Payment failed.').' '.ts('We were unable to process your payment. You will not be charged in this transaction.');
+    $detail = self::getMessages($error, $separator);
+    if (!empty($detail)) {
+      $message .= $separator.ts("Payment Processor Error message") . ": $detail";
     }
+    else {
+      $message .= ' '.ts("Network or system error. Please try again a minutes later, if you still can't success, please contact us for further assistance.");
+    }
+    CRM_Core_Error::debug_var('payment_processor_failed', $message);
+    CRM_Core_Error::backtrace('backtrace', TRUE);
+    CRM_Core_Session::setStatus($message, TRUE, 'error');
   }
 
   /**
@@ -247,6 +252,20 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $content = self::output($config->fatalErrorTemplate, $vars);
     self::abend();
     throw new CRM_Core_Exception($message, CRM_Core_Error::FATAL_ERROR, array('content' => $content));
+  }
+
+  /**
+   * Handles fatal errors without requiring an initialized configuration object
+   * This function is useful in cases where using the regular fatal() function
+   * would cause a circular dependency
+   *
+   * @param string message The error message to be displayed
+   *
+   */
+  static function fatalWithoutInitialized($message = NULL) {
+    http_response_code(self::FATAL_ERROR);
+    echo $message;
+    exit;
   }
 
   /**

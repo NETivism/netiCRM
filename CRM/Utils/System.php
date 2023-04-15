@@ -975,6 +975,16 @@ class CRM_Utils_System {
   }
 
   /**
+   * Returns trusted Hosts patterns
+   *
+   * @return string hosts patterns
+   * @access public
+   */
+  static function getTrustedHostsPatterns() {
+    return CRM_Core_Config::singleton()->trustedHostsPatterns;
+  }
+
+  /**
    * Returns URL or link to documentation page, based on provided parameters.
    * For use in PHP code.
    * WARNING: Always returns URL, if ts function is not defined ($URLonly has no effect).
@@ -1702,6 +1712,37 @@ class CRM_Utils_System {
    */
   public static function loadUser($params) {
     return CRM_Core_Config::$_userSystem->loadUser($params);
+  }
+
+  /**
+   * Validates that a hostname (for example $_SERVER['HTTP_HOST']) is safe.
+   *
+   * @return bool
+   *   TRUE if only containing valid characters, or FALSE otherwise.
+   */
+  static function checkTrustedHosts($host = null) {
+    if (!empty($host)) {
+      $trusted_host_patterns = self::getTrustedHostsPatterns();
+      $trusted_host_patterns_arr = explode("\n", $trusted_host_patterns);
+
+      if (php_sapi_name() !== 'cli' && !empty($trusted_host_patterns_arr)) {
+        foreach ($trusted_host_patterns_arr as $pattern) {
+          $pattern = trim($pattern);
+
+          // Replace wildcard character "*" with regular expression ".*"
+          // and add anchors at the start and end of the pattern
+          $pattern = '/^' . str_replace('\*', '.*', preg_quote($pattern, '/')) . '$/';
+
+          if (preg_match($pattern, $host)) {
+            return TRUE;
+          }
+        }
+
+        return FALSE;
+      }
+
+      return TRUE;
+    }
   }
 }
 

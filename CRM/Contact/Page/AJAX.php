@@ -327,19 +327,23 @@ class CRM_Contact_Page_AJAX {
    * Function to obtain list of permissioned employer for the given contact-id.
    */
   static function getPermissionedEmployer() {
-    $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
-    $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
-    $name = str_replace('*', '%', $name);
+    $session = CRM_Core_Session::singleton();
+    $userID = $session->get('userID');
+    if ($userID) {
+      $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
+      $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
+      $name = str_replace('*', '%', $name);
 
-    require_once 'CRM/Contact/BAO/Relationship.php';
-    $elements = CRM_Contact_BAO_Relationship::getPermissionedEmployer($cid, $name);
+      require_once 'CRM/Contact/BAO/Relationship.php';
+      $elements = CRM_Contact_BAO_Relationship::getPermissionedEmployer($cid, $name);
 
-    if (!empty($elements)) {
-      foreach ($elements as $cid => $name) {
-        echo $element = $name['name'] . "|$cid\n";
+      if (!empty($elements)) {
+        foreach ($elements as $cid => $name) {
+          echo $element = $name['name'] . "|$cid\n";
+        }
       }
+      CRM_Utils_System::civiExit();
     }
-    CRM_Utils_System::civiExit();
   }
 
 

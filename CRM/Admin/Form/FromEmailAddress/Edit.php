@@ -104,6 +104,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
   public function postProcess() {
     $this->_values['from'] = $this->controller->exportValue($this->_name, 'from');
     $this->_values['email'] = $this->controller->exportValue($this->_name, 'email');
+    $this->_values['description'] = $this->controller->exportValue($this->_name, 'description');
     if (!empty($from)) {
       $this->_values['from'] = $from;
     }

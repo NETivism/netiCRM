@@ -50,13 +50,15 @@ class CRM_Contribute_Controller_Payment extends CRM_Core_Controller {
    * class constructor
    */
   function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
-    parent::__construct($title, $modal);
-
-    $this->_stateMachine = new CRM_Contribute_StateMachine_Payment($this, $action);
-    $this->addPages($this->_stateMachine, $action);
-
-    // add all the actions
-    $this->addActions();
+    $session = CRM_Core_Session::singleton();
+    $userID = $session->get('userID');
+    if ($userID) {
+      parent::__construct($title, $modal);
+      $this->_stateMachine = new CRM_Contribute_StateMachine_Payment($this, $action);
+      $this->addPages($this->_stateMachine, $action);
+      // add all the actions
+      $this->addActions();
+    }
   }
 }
 

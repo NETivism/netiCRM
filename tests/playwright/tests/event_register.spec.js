@@ -24,17 +24,6 @@ async function fillForm(email='test@aipvo.com', first_name='user', last_name='te
   var locator = page.locator('input[name="email-5"]')
   await utils.fillInput(locator, email);
 
-  locator = page.locator('input[name="first_name"]');
-  await utils.fillInput(locator, first_name);
-
-  locator = page.locator('input[name="last_name"]');
-  await utils.fillInput(locator, last_name);
-
-  locator = page.locator('input[name="phone-1-2"]');
-  await utils.fillInput(locator, phone);
-
-  locator = page.locator('input[name="current_employer"]');
-  await utils.fillInput(locator, current_employer);
 }
 
 
