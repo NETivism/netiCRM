@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -49164,3 +49164,22 @@ msgid ""
 "number of duplicate emails with PDF receipts attached, so please make sure "
 "the mailbox has enough space."
 msgstr "大量寄送時密件副本信箱會收到大量夾帶收據 PDF 的副本信，請留意使用的信箱空間是否足夠。"
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "Trusted Host"
+msgstr "信任主機"
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "Trusted Host Settings"
+msgstr "信任主機設定"
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid ""
+"To enable the trusted host mechanism, you enable your allowable hosts in "
+"'Trusted Host Settings' field. You can input as many values as needed, but "
+"only one value is allowed per row. You can use '*' as a wildcard character."
+msgstr "請在「信任主機設定」欄位中啟用您允許的主機。可允許多值，但每一列只能輸入一個值。您可以使用星號「*」作為萬用字元。"
+
+#: CRM/Core/Config.php
+msgid "Access Denied."
+msgstr "拒絕存取"

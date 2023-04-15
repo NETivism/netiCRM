@@ -110,12 +110,17 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   function displaySessionError(&$error, $separator = '<br />') {
-    $message = self::getMessages($error, $separator);
-    if ($message) {
-      $status = ts("Payment Processor Error message") . "{$separator}: $message";
-      $session = CRM_Core_Session::singleton();
-      $session->setStatus($status);
+    $message = ts('Payment failed.').' '.ts('We were unable to process your payment. You will not be charged in this transaction.');
+    $detail = self::getMessages($error, $separator);
+    if (!empty($detail)) {
+      $message .= $separator.ts("Payment Processor Error message") . ": $detail";
     }
+    else {
+      $message .= ' '.ts("Network or system error. Please try again a minutes later, if you still can't success, please contact us for further assistance.");
+    }
+    CRM_Core_Error::debug_var('payment_processor_failed', $message);
+    CRM_Core_Error::backtrace('backtrace', TRUE);
+    CRM_Core_Session::setStatus($message, TRUE, 'error');
   }
 
   /**
