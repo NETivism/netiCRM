@@ -1,5 +1,6 @@
 <?php
 $drupal_root = getenv("DRUPAL_ROOT");
+$drupal_version = getenv("DRUPAL");
 if (empty($drupal_root)) {
   $drupal_root = '/var/www/html';  
   if (!file_exists($drupal_root.'/CHANGELOG.txt')) {
@@ -8,15 +9,37 @@ if (empty($drupal_root)) {
 }
 
 if($drupal_root && is_dir($drupal_root)){
-  define('DRUPAL_ROOT', $drupal_root);
-  chdir($drupal_root);
-  $_SERVER['HTTP_HOST'] = 'mysite.com';
-  $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-  require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+  // detect drupal version via env
+  if ($drupal_version && $drupal_version >= 8) {
+    chdir($drupal_root);
+    $_SERVER['HTTP_HOST'] = 'mysite.com';
+    $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-  // fixes base_path problem
-  $GLOBALS['base_path'] = '/';
+    // Create a mock $request object
+    $autoloader = require_once $drupal_root . '/autoload.php';
+
+    // @Todo: do we need to handle case where $_SERVER has no HTTP_HOST key, ie. when run via cli?
+    $request = new \Symfony\Component\HttpFoundation\Request([], [], [], [], [], $_SERVER);
+
+    // Create a kernel and boot it.
+    $kernel = \Drupal\Core\DrupalKernel::createFromRequest($request, $autoloader, 'prod');
+    $kernel->boot();
+    $kernel->preHandle($request);
+
+    // Initialize Civicrm
+    \Drupal::service('civicrm')->initialize();
+  }
+  else {
+    define('DRUPAL_ROOT', $drupal_root);
+    chdir($drupal_root);
+    $_SERVER['HTTP_HOST'] = 'mysite.com';
+    $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+    require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+
+    // fixes base_path problem
+    $GLOBALS['base_path'] = '/';
+  }
 }
 
 if(!defined('CIVICRM_DSN')&&!empty($GLOBALS['mysql_user'])){

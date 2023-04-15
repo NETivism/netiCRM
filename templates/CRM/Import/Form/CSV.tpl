@@ -28,7 +28,7 @@
     <tr>
         <td class="label">{$form.uploadFile.label}</td>
         <td class="html-adjust with-help-link">{$form.uploadFile.html}
-          <a class="help-link new-window-link" href="https://neticrm.tw/resources/2614" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
+          <a class="help-link new-window-link" href="{$config->docURLBase}Prepare+Files+for+Importing+Contacts" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
           <div class="description">{ts}File format must be comma-separated-values (CSV). File must be UTF8 encoded if it contains special characters (e.g. accented letters, etc.).{/ts}</div>
         </td>
     </tr>

@@ -86,7 +86,7 @@ function smarty_function_help($params, &$smarty) {
     $help = $smarty->fetch($file);
   }
   return <<< EOT
-<script type="text/javascript"> cj( function() { cj("{$helpselector}").toolTip(); });</script>
+<script type="text/javascript"> cj( function() { cj("{$helpselector}").toolTip({ skipVerticalComparison: true }); });</script>
 <div class="{$helpclass}">&nbsp;<span id="{$id}_help" style="display:none">$help</span></div>&nbsp;&nbsp;&nbsp;
 EOT;
 }

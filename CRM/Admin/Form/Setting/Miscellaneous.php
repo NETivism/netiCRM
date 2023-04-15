@@ -86,6 +86,7 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       $this->addElement('textarea', 'CSPrules', ts('Content Security Policy'));
       $this->addElement('textarea', 'CSPexcludePath', ts('Exclude path'));
       $this->assign('default_csp', CRM_Utils_System::$default_csp);
+      $this->addElement('textarea', 'trustedHostsPatterns', ts('Trusted Host Settings'));
     }
     else {
       $this->assign('admin', FALSE);

@@ -46,7 +46,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
    * @param int     $contributionTypeId   contribution type id
    * @param int     $component   component id
    *
-   * @return array associated array
+   * @return false|array FALSE when failed, associated array when success.
    *
    * @static
    * @access public
@@ -159,7 +159,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
               $form->_values,
               $contribution->is_test
             );
-            return;
+            return array();
           }
         }
       }
@@ -211,21 +211,9 @@ class CRM_Contribute_BAO_Contribution_Utils {
     }
 
     if (is_a($result, 'CRM_Core_Error')) {
-      //make sure to cleanup db for recurring case.
-      if (CRM_Utils_Array::value('contributionID', $paymentParams)) {
-        CRM_Contribute_BAO_Contribution::deleteContribution($paymentParams['contributionID']);
-      }
-      if (CRM_Utils_Array::value('contributionRecurID', $paymentParams)) {
-        CRM_Contribute_BAO_ContributionRecur::deleteRecurContribution($paymentParams['contributionRecurID']);
-      }
-
-      if ($component !== 'membership') {
-        CRM_Core_Error::displaySessionError($result);
-        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact',
-            "_qf_Main_display=true&qfKey={$form->_params['qfKey']}"
-          ));
-      }
-      $membershipResult[1] = $result;
+      CRM_Core_Error::displaySessionError($result);
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', "_qf_Confirm_display=true&qfKey={$form->_params['qfKey']}"));
+      return FALSE;
     }
     elseif ($result) {
       if ($result) {
@@ -267,6 +255,15 @@ class CRM_Contribute_BAO_Contribution_Utils {
 
       $membershipResult[1] = $contribution;
     }
+    elseif (empty($result) && $form->_values['is_monetary'] && $form->_amount > 0.0) {
+      $errorResult = CRM_Core_Error::singleton();
+      CRM_Core_Error::displaySessionError($errorResult);
+      CRM_Core_Session::setStatus(ts("We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry.", array(
+        1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$form->_params['contributionPageID']))),
+        TRUE, 'error');
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', "_qf_Confirm_display=true&qfKey={$form->_params['qfKey']}"));
+      return FALSE;
+    }
 
     if ($component == 'membership') {
       return $membershipResult;
@@ -274,7 +271,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
     //Do not send an email if Recurring contribution is done via Direct Mode
     //Email will we send once the IPN will receive.
     if ($paymentParams['is_recur'] && $form->_contributeMode == 'direct') {
-      return TRUE;
+      return array();
     }
 
     // get the price set values for receipt.
@@ -287,6 +284,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
     require_once "CRM/Contribute/BAO/ContributionPage.php";
     $form->_values['contribution_id'] = $contribution->id;
     CRM_Contribute_BAO_ContributionPage::sendMail($contactID, $form->_values, $contribution->is_test);
+    return array();
   }
 
   /**

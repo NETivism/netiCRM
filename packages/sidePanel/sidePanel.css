@@ -54,8 +54,8 @@ a.btn:hover {
   position: absolute;
   top: 0;
   left: 0;
-  margin: 220px 0 0 -50px;
-  padding: 10px;
+  margin: 220px 0 0 -44px;
+  padding: 10px 12px;
   text-align: center;
   color: #fff;
   background: #3F51B5;
@@ -68,6 +68,7 @@ a.btn:hover {
   font-size: 24px;
   color: #fff;
   cursor: pointer;
+  margin: 0;
 }
 
 .nsp-container .nsp-inner {

@@ -1,4 +1,5 @@
 const { test, expect, chromium } = require('@playwright/test');
+const utils = require('./utils.js');
 
 /** @type {import('@playwright/test').Page} */
 let page;
@@ -16,41 +17,25 @@ function getPageTitle(title){
   return title + " | " + item.site_name;
 }
 
-async function fillInput(locator, text_input){
-  await expect(locator).toBeEnabled();
-  await locator.click();
-  await locator.fill(text_input);
-  await expect(locator).toHaveValue(text_input);
-}
-
 async function fillForm(email='test@aipvo.com', first_name='user', last_name='test', phone='0222233311', current_employer='test company', form_selector='form#Register'){
   
   await expect(page.locator(form_selector)).toBeDefined();
 
   var locator = page.locator('input[name="email-5"]')
-  await fillInput(locator, email);
+  await utils.fillInput(locator, email);
 
-  locator = page.locator('input[name="first_name"]');
-  await fillInput(locator, first_name);
-
-  locator = page.locator('input[name="last_name"]');
-  await fillInput(locator, last_name);
-
-  locator = page.locator('input[name="phone-1-2"]');
-  await fillInput(locator, phone);
-
-  locator = page.locator('input[name="current_employer"]');
-  await fillInput(locator, current_employer);
 }
 
+
 test.beforeAll(async () => {
-  const browser = await chromium.launch({"headless": false});
+  const browser = await chromium.launch();
   page = await browser.newPage();
 });
 
 test.afterAll(async () => {
   await page.close();
 });
+
 
 test.describe.serial('Event register page', () => {
   test.use({ storageState: 'storageState.json' });
