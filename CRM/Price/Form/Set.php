@@ -98,7 +98,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     //checks the given price set doesnot start with digit
     $title = $fields['title'];
     // gives the ascii value
-    $asciiValue = ord($title{0});
+    $asciiValue = ord($title[0]);
     if ($asciiValue >= 48 && $asciiValue <= 57) {
       $errors['title'] = ts("Set's Name should not start with digit");
     }
