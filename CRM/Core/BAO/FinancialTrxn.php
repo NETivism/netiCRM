@@ -71,7 +71,7 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
       ));
       if ($existsId) {
         // #37595, something may wrong here, make sure override exists records is correct
-        $conflictContribution = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1 AND c.id != %2", array(
+        $conflictContribution = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1 AND id != %2", array(
           1 => array($trxn->trxn_id, 'String'),
           2 => array($params['contribution_id'], 'Integer'),
         ));
