@@ -495,7 +495,7 @@ class System_Command {
      * @return string error message, or false if the error code was
      * not recognized
      */
-    function errorMessage($in_value)
+    static function errorMessage($in_value)
     {
         static $errorMessages;
         if (!isset($errorMessages)) {
@@ -535,7 +535,7 @@ class System_Command {
      *
      * @access public
      */
-    function isError($in_value)
+    static function isError($in_value)
     {
         return (is_object($in_value) &&
                 (strtolower(get_class($in_value)) == 'system_command_error' ||

@@ -420,7 +420,7 @@ class XML_RPC_Server
          */
         $this->server_headers = $GLOBALS['XML_RPC_func_ereg_replace']("[\r\n]+[ \t]+",
                                 ' ', trim($this->server_headers));
-        $headers = $GLOBALS['XML_RPC_func_split']("[\r\n]+", $this->server_headers);
+        $headers = $GLOBALS['XML_RPC_func_split']("/[\r\n]+/", $this->server_headers);
         foreach ($headers as $header)
         {
             header($header);
@@ -545,7 +545,7 @@ class XML_RPC_Server
             $data = $HTTP_RAW_POST_DATA;
         }
 
-        $this->encoding = XML_RPC_Message::getEncoding($data);
+        $this->encoding = XML_RPC_Message::getEncodingStatic($data);
         $parser_resource = xml_parser_create($this->encoding);
         $parser = (int) $parser_resource;
 
