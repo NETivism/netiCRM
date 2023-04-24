@@ -302,7 +302,7 @@ class CRM_Core_Payment_TapPayAPI {
     if($response->card_info && $response->card_info->token_status) {
       $tappay->token_status = $response->card_info->token_status;
     }
-    CRM_Utils_Hook::alterPaymentResponse($response, $tappay, 'TapPay', $apiType); // Need to change name , effect to cloudgate.
+    CRM_Utils_Hook::alterAPIResponse($response, $tappay, 'TapPay', $apiType);
     $tappay->save();
   }
 
