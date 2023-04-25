@@ -444,7 +444,7 @@ class Smarty_Compiler extends Smarty {
         
         $tag_command = $match[1];
         $tag_modifier = isset($match[2]) ? $match[2] : null;
-        $tag_args = $match[3] ?? '';
+        $tag_args = isset($match[3]) ? $match[3] : '';
 
         if (preg_match('~^' . $this->_num_const_regexp . '|' . $this->_obj_call_regexp . '|' . $this->_var_regexp . '$~', $tag_command)) {
             /* tag name is a variable or object */
