@@ -145,7 +145,7 @@ class DB_Table_QuickForm {
     * 
     */
     
-    function &getForm($cols, $arrayName = null, $args = array(),
+    static function &getForm($cols, $arrayName = null, $args = array(),
         $clientValidate = null, $formFilters = null)
     {
         $form =& DB_Table_QuickForm::createForm($args);
@@ -250,7 +250,7 @@ class DB_Table_QuickForm {
     * 
     */
     
-    function addElements(&$form, $cols, $arrayName = null)
+    static function addElements(&$form, $cols, $arrayName = null)
     {
         $elements =& DB_Table_QuickForm::getElements($cols, $arrayName);
         $cols_keys = array_keys($cols);
@@ -327,7 +327,7 @@ class DB_Table_QuickForm {
     * 
     */
     
-    function &getElements($cols, $arrayName = null)
+    static function &getElements($cols, $arrayName = null)
     {
         $elements = array();
         
@@ -365,7 +365,7 @@ class DB_Table_QuickForm {
     * 
     */
     
-    function &getElement($col, $elemname)
+    static function &getElement($col, $elemname)
     {
         if (isset($col['qf_setvalue'])) {
             $setval = $col['qf_setvalue'];
@@ -727,7 +727,7 @@ class DB_Table_QuickForm {
     * 
     */
     
-    function &getGroup($cols, $arrayName = null)
+    static function &getGroup($cols, $arrayName = null)
     {
         $group = array();
         
@@ -765,7 +765,7 @@ class DB_Table_QuickForm {
     * 
     */
     
-    function addStaticElements(&$form, $elements)
+    static function addStaticElements(&$form, $elements)
     {
         foreach ($elements as $name => $elemDef) {
 
@@ -862,7 +862,7 @@ class DB_Table_QuickForm {
     * 
     */
     
-    function addRules(&$form, $cols, $arrayName = null,
+    static function addRules(&$form, $cols, $arrayName = null,
         $clientValidate = null)
     {
         foreach ($cols as $name => $col) {
@@ -999,7 +999,7 @@ class DB_Table_QuickForm {
     * 
     */
     
-    function fixColDef(&$col, $elemname)
+    static function fixColDef(&$col, $elemname)
     {    
         // always have a "require" value, false if not set
         if (! isset($col['require'])) {

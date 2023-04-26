@@ -111,7 +111,7 @@ class PEAR_Dependency2
         $this->_currentPackage = $package;
     }
 
-    function _getExtraString($dep)
+    static function _getExtraString($dep)
     {
         $extra = ' (';
         if (isset($dep['uri'])) {
@@ -1247,7 +1247,7 @@ class PEAR_Dependency2
     /**
      * Convert a 1.0 dep into a 2.0 dep
      */
-    function normalizeDep($dep)
+    static function normalizeDep($dep)
     {
         $types = array(
             'pkg' => 'Package',

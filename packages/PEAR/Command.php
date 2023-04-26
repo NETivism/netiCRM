@@ -113,7 +113,7 @@ class PEAR_Command
      * @access public
      * @static
      */
-    function &factory($command, &$config)
+    static function &factory($command, &$config)
     {
         if (empty($GLOBALS['_PEAR_Command_commandlist'])) {
             PEAR_Command::registerCommands();
@@ -164,7 +164,7 @@ class PEAR_Command
      * @return object|PEAR_Error
      * @static
      */
-    function &getFrontendObject()
+    static function &getFrontendObject()
     {
         $a = &PEAR_Frontend::singleton();
         return $a;
@@ -198,7 +198,7 @@ class PEAR_Command
      * @return object the frontend object, or a PEAR error
      * @static
      */
-    function setFrontendType($uitype)
+    static function setFrontendType($uitype)
     {
         $uiclass = 'PEAR_Frontend_' . $uitype;
         return PEAR_Command::setFrontendClass($uiclass);
@@ -309,7 +309,7 @@ class PEAR_Command
      * @access public
      * @static
      */
-    function getCommands()
+    static function getCommands()
     {
         if (empty($GLOBALS['_PEAR_Command_commandlist'])) {
             PEAR_Command::registerCommands();
@@ -328,7 +328,7 @@ class PEAR_Command
      * @access public
      * @static
      */
-    function getShortcuts()
+    static function getShortcuts()
     {
         if (empty($GLOBALS['_PEAR_Command_shortcuts'])) {
             PEAR_Command::registerCommands();
@@ -351,7 +351,7 @@ class PEAR_Command
      * @access public
      * @static
      */
-    function getGetoptArgs($command, &$short_args, &$long_args)
+    static function getGetoptArgs($command, &$short_args, &$long_args)
     {
         if (empty($GLOBALS['_PEAR_Command_commandlist'])) {
             PEAR_Command::registerCommands();
@@ -379,7 +379,7 @@ class PEAR_Command
      * @access public
      * @static
      */
-    function getDescription($command)
+    static function getDescription($command)
     {
         if (!isset($GLOBALS['_PEAR_Command_commanddesc'][$command])) {
             return null;
@@ -398,7 +398,7 @@ class PEAR_Command
      * @access public
      * @static
      */
-    function getHelp($command)
+    static function getHelp($command)
     {
         $cmds = PEAR_Command::getCommands();
         if (isset($GLOBALS['_PEAR_Command_shortcuts'][$command])) {

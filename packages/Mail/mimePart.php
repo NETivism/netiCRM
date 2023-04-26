@@ -796,7 +796,7 @@ class Mail_mimePart
      * @access public
      * @since 1.6.1
      */
-    function encodeHeader($name, $value, $charset='ISO-8859-1',
+    static function encodeHeader($name, $value, $charset='ISO-8859-1',
         $encoding='quoted-printable', $eol="\r\n"
     ) {
         // Structured headers
@@ -1192,7 +1192,7 @@ class Mail_mimePart
      * @return string        Encoded character string
      * @access private
      */
-    function _qpReplaceCallback($matches)
+    static function _qpReplaceCallback($matches)
     {
         return sprintf('=%02X', ord($matches[1]));
     }

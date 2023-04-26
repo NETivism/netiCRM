@@ -163,7 +163,7 @@ class PEAR_Task_Common
      * @static
      * @final
      */
-    function hasPostinstallTasks()
+    static function hasPostinstallTasks()
     {
         return isset($GLOBALS['_PEAR_TASK_POSTINSTANCES']);
     }
@@ -172,7 +172,7 @@ class PEAR_Task_Common
      * @static
      * @final
      */
-     function runPostinstallTasks()
+     static function runPostinstallTasks()
      {
          foreach ($GLOBALS['_PEAR_TASK_POSTINSTANCES'] as $class => $tasks) {
              $err = call_user_func(array($class, 'run'),

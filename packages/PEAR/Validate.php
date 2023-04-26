@@ -87,7 +87,7 @@ class PEAR_Validate
      * @final
      * @static
      */
-    function validGroupName($name)
+    static function validGroupName($name)
     {
         return (bool) preg_match('/^' . _PEAR_COMMON_PACKAGE_NAME_PREG . '\\z/', $name);
     }

@@ -326,7 +326,7 @@ class PEAR_ChannelFile
      * @static
      * @return PEAR_ChannelFile
      */
-    function &fromArrayWithErrors($data, $compatibility = false,
+    static function &fromArrayWithErrors($data, $compatibility = false,
                                   $stackClass = 'PEAR_ErrorStack')
     {
         $a = new PEAR_ChannelFile($compatibility, $stackClass);

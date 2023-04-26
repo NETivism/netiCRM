@@ -399,7 +399,7 @@ class PEAR_Downloader_Package
      * @param array of PEAR_Downloader_Package objects
      * @static
      */
-    function removeInstalled(&$params)
+    static function removeInstalled(&$params)
     {
         if (!isset($params[0])) {
             return;
@@ -1243,7 +1243,7 @@ class PEAR_Downloader_Package
      * @param array $errorparams empty array
      * @return array array of stupid duplicated packages in PEAR_Downloader_Package obejcts
      */
-    function detectStupidDuplicates($params, &$errorparams)
+    static function detectStupidDuplicates($params, &$errorparams)
     {
         $existing = array();
         foreach ($params as $i => $param) {
@@ -1283,7 +1283,7 @@ class PEAR_Downloader_Package
      * @param bool ignore install groups - for final removal of dupe packages
      * @static
      */
-    function removeDuplicates(&$params, $ignoreGroups = false)
+    static function removeDuplicates(&$params, $ignoreGroups = false)
     {
         $pnames = array();
         foreach ($params as $i => $param) {

@@ -91,7 +91,7 @@ class PEAR_DependencyDB
      * @return PEAR_DependencyDB|PEAR_Error
      * @static
      */
-    function &singleton(&$config, $depdb = false)
+    static function &singleton(&$config, $depdb = false)
     {
         $phpdir = $config->get('php_dir', null, 'pear.php.net');
         if (!isset($GLOBALS['_PEAR_DEPENDENCYDB_INSTANCE'][$phpdir])) {

@@ -39,7 +39,7 @@ class PEAR_Installer_Role
      * @access private
      * @static
      */
-    function initializeConfig(&$config)
+    static function initializeConfig(&$config)
     {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
@@ -61,7 +61,7 @@ class PEAR_Installer_Role
      * @return PEAR_Installer_Role_Common
      * @static
      */
-    function &factory($pkg, $role, &$config)
+    static function &factory($pkg, $role, &$config)
     {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
@@ -90,7 +90,7 @@ class PEAR_Installer_Role
      * @return array
      * @static
      */
-    function getValidRoles($release, $clear = false)
+    static function getValidRoles($release, $clear = false)
     {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
@@ -125,7 +125,7 @@ class PEAR_Installer_Role
      * @return array
      * @static
      */
-    function getInstallableRoles($clear = false)
+    static function getInstallableRoles($clear = false)
     {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
@@ -160,7 +160,7 @@ class PEAR_Installer_Role
      * @return array
      * @static
      */
-    function getBaseinstallRoles($clear = false)
+    static function getBaseinstallRoles($clear = false)
     {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
@@ -192,7 +192,7 @@ class PEAR_Installer_Role
      * @return array
      * @static
      */
-    function getPhpRoles($clear = false)
+    static function getPhpRoles($clear = false)
     {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();

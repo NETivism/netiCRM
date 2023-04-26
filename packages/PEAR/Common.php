@@ -206,7 +206,7 @@ class PEAR_Common extends PEAR
      *
      * @access public
      */
-    function addTempFile($file)
+    static function addTempFile($file)
     {
         if (!class_exists('PEAR_Frontend')) {
             require_once 'PEAR/Frontend.php';
@@ -308,7 +308,7 @@ class PEAR_Common extends PEAR
      * @param boolean Determines whether to include $state in the list
      * @return false|array False if $state is not a valid release state
      */
-    function betterStates($state, $include = false)
+    static function betterStates($state, $include = false)
     {
         static $states = array('snapshot', 'devel', 'alpha', 'beta', 'stable');
         $i = array_search($state, $states);
@@ -327,7 +327,7 @@ class PEAR_Common extends PEAR
      * @return array
      * @static
      */
-    function getUserRoles()
+    static function getUserRoles()
     {
         return $GLOBALS['_PEAR_Common_maintainer_roles'];
     }
@@ -349,7 +349,7 @@ class PEAR_Common extends PEAR
      * @return array
      * @static
      */
-    function getDependencyTypes()
+    static function getDependencyTypes()
     {
         return $GLOBALS['_PEAR_Common_dependency_types'];
     }
@@ -360,7 +360,7 @@ class PEAR_Common extends PEAR
      * @return array
      * @static
      */
-    function getDependencyRelations()
+    static function getDependencyRelations()
     {
         return $GLOBALS['_PEAR_Common_dependency_relations'];
     }
@@ -371,7 +371,7 @@ class PEAR_Common extends PEAR
      * @return array
      * @static
      */
-    function getFileRoles()
+    static function getFileRoles()
     {
         return $GLOBALS['_PEAR_Common_file_roles'];
     }
@@ -442,7 +442,7 @@ class PEAR_Common extends PEAR
      * @return boolean
      * @static
      */
-    function isIncludeable($path)
+    static function isIncludeable($path)
     {
         if (file_exists($path) && is_readable($path)) {
             return true;

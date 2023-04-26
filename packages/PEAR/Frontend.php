@@ -50,7 +50,7 @@ class PEAR_Frontend extends PEAR
      * @return PEAR_Frontend_CLI|PEAR_Frontend_Web|PEAR_Frontend_Gtk
      * @static
      */
-    function &singleton($type = null)
+    static function &singleton($type = null)
     {
         if ($type === null) {
             if (!isset($GLOBALS['_PEAR_FRONTEND_SINGLETON'])) {
@@ -73,7 +73,7 @@ class PEAR_Frontend extends PEAR
      * @return PEAR_Frontend
      * @static
      */
-    function &setFrontendClass($uiclass)
+    static function &setFrontendClass($uiclass)
     {
         if (is_object($GLOBALS['_PEAR_FRONTEND_SINGLETON']) &&
               is_a($GLOBALS['_PEAR_FRONTEND_SINGLETON'], $uiclass)) {
@@ -165,7 +165,7 @@ class PEAR_Frontend extends PEAR
      * needs to be able to sustain a list over many sessions in order to support
      * user interaction with install scripts
      */
-    function addTempFile($file)
+    static function addTempFile($file)
     {
         $GLOBALS['_PEAR_Common_tempfiles'][] = $file;
     }

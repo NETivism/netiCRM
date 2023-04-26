@@ -238,7 +238,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function create(&$db, $table, $column_set, $index_set)
+    static function create(&$db, $table, $column_set, $index_set)
     {
         if (is_subclass_of($db, 'db_common')) {
             $backend = 'db';
@@ -465,7 +465,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function verify(&$db, $table, $column_set, $index_set)
+    static function verify(&$db, $table, $column_set, $index_set)
     {
         if (is_subclass_of($db, 'db_common')) {
             $backend = 'db';
@@ -597,7 +597,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function alter(&$db, $table, $column_set, $index_set)
+    static function alter(&$db, $table, $column_set, $index_set)
     {
         $phptype = $db->phptype;
 
@@ -845,7 +845,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function tableExists(&$db, $table)
+    static function tableExists(&$db, $table)
     {
         if (is_subclass_of($db, 'db_common')) {
             $list = $db->getListOf('tables');
@@ -1557,7 +1557,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function getIndexes(&$db, $table)
+    static function getIndexes(&$db, $table)
     {
         if (is_subclass_of($db, 'db_common')) {
             $backend = 'db';

@@ -364,7 +364,7 @@ class HTML_QuickForm extends HTML_Common
      * @access    public
      * @return    void
      */
-    function registerElementType($typeName, $include, $className)
+    static function registerElementType($typeName, $include, $className)
     {
         $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'][strtolower($typeName)] = array($include, $className);
     } // end func registerElementType
@@ -383,7 +383,7 @@ class HTML_QuickForm extends HTML_Common
      * @access    public
      * @return    void
      */
-    function registerRule($ruleName, $type, $data1, $data2 = null)
+    static function registerRule($ruleName, $type, $data1, $data2 = null)
     {
         include_once('HTML/QuickForm/RuleRegistry.php');
         $registry =& HTML_QuickForm_RuleRegistry::singleton();
