@@ -322,7 +322,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     return self::$_modeValues[$mode];
   }
 
-  function getModeSelect() {
+  static function getModeSelect() {
     self::setModeValues();
 
     $select = array();
