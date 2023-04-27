@@ -35,7 +35,11 @@
       <td class="label">{$form.bcc.label}</td>
       <td>
         {$form.bcc.html}
-        <div class="description">{ts}You may specify one or more email addresses to receive a blind carbon copy (bcc) of the confirmation email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</div>
+        <div class="description">
+          <i class="zmdi zmdi-alert-circle-o"></i> <span class="font-red">{ts}NOTE: Due to the confidential nature of receipts containing personal information, please use a mailbox with a high level of security for the confidential copy.{/ts}</span><br>
+          <i class="zmdi zmdi-alert-circle-o"></i> <span class="font-red">{ts}When sending a large number of copies, the mailbox will receive a large number of duplicate emails with PDF receipts attached, so please make sure the mailbox has enough space.{/ts}</span><br>
+          {ts}You may specify one or more email addresses to receive a blind carbon copy (bcc) of the confirmation email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}
+        </div>
       </td>
     </tr>
   </table>

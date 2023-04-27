@@ -39,10 +39,9 @@
    <table class="form-layout">	
         <tr class="crm-event-import-uploadfile-form-block-uploadFile">
             <td class="label">{$form.uploadFile.label}</td>
-            <td>{$form.uploadFile.html}<br />
-                <span class="description">
-                    {ts}File format must be comma-separated-values (CSV).{/ts}
-                </span>
+            <td class="html-adjust with-help-link">{$form.uploadFile.html}
+              <a class="help-link new-window-link" href="{$config->docURLBase}Prepare+Files+for+Importing+Events" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
+              <div class="description">{ts}File format must be comma-separated-values (CSV).{/ts}</div>
             </td>
 	</tr>
 	<tr>    

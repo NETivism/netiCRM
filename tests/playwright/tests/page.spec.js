@@ -1,4 +1,7 @@
-import { test, expect } from '@playwright/test';
+const { test, expect, chromium } = require('@playwright/test');
+
+/** @type {import('@playwright/test').Page} */
+let page;
 
 const site_name = 'netiCRM';
 
@@ -70,22 +73,39 @@ const url_ary = [
     {title:'Search Builder', url:'/civicrm/contact/search/builder?reset=1'},
     {title:'全文搜尋', url:'/civicrm/contact/search/custom?csid=15&reset=1'},
     {title:'Advanced Search', url:'/civicrm/contact/search/advanced?reset=1'}
-  ]
+]
 
 
+test.beforeAll(async () => {
+    const browser = await chromium.launch();
+    page = await browser.newPage();
+});
+  
+test.afterAll(async () => {
+    await page.close();
+});
 
-test.describe('Page output correct test', () => {
-  test('Check page output', async ({ page }) => {
+
+test.describe.serial('Page output correct test', () => {
+
+    var i = 0;
     for(let obj of url_ary){
-      var url = obj.url;
-      var full_title = obj.title + ' | ' + site_name;
-      await test.step(`"${full_title}" should be match page title`, async() => {
-        await page.goto(url);
-        await expect(page, `page title is not match "${full_title}"`).toHaveTitle(full_title);
-      });
-      await test.step(`"${full_title}" page have no error`, async() => {
-        await expect(page.locator('.error-ci')).toHaveCount(0);
-      });
+        var url = obj.url;
+        var full_title = obj.title + ' | ' + site_name;
+        i += 1;
+
+        test(`Check page output ${i} - ${obj.title}`, async () => {
+            
+            await test.step(`"${full_title}" should match the page title and have no errors`, async() => {
+                
+                await page.goto(url);
+                await expect(page, `page title is not match "${full_title}"`).toHaveTitle(full_title);
+                await expect(page.locator('.error-ci'), 'an error occurred in the page').toHaveCount(0);
+            
+            });
+
+        });
+        
     }
-  });
+
 });

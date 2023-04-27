@@ -27,11 +27,12 @@
   <table class="form-layout">
     <tr>
         <td class="label">{$form.uploadFile.label}</td>
-        <td>{$form.uploadFile.html}<br />
-            <div class="description">{ts}File format must be comma-separated-values (CSV). File must be UTF8 encoded if it contains special characters (e.g. accented letters, etc.).{/ts}</div>
-            {ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}
+        <td class="html-adjust with-help-link">{$form.uploadFile.html}
+          <a class="help-link new-window-link" href="{$config->docURLBase}Prepare+Files+for+Importing+Contacts" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
+          <div class="description">{ts}File format must be comma-separated-values (CSV). File must be UTF8 encoded if it contains special characters (e.g. accented letters, etc.).{/ts}</div>
         </td>
     </tr>
+    <tr><td class="label"></td><td>{ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}</td></tr>
     <tr>
         <td></td>
         <td>{$form.skipColumnHeader.html} {$form.skipColumnHeader.label}

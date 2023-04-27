@@ -41,11 +41,12 @@
  <h3>{ts}Upload Data File{/ts}</h3>
       <table class="form-layout-compressed">
         <tr class="crm-activity-import-uploadfile-form-block-uploadFile">
-           <td class="label">{$form.uploadFile.label}</td>
-           <td>{$form.uploadFile.html}<br />
-                <span class="description">{ts}File format must be comma-separated-values (CSV).{/ts}</span><br /><span>{ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}</span>
-           </td>
+          <td class="label">{$form.uploadFile.label}</td>
+          <td class="html-adjust with-help-link">{$form.uploadFile.html}
+            <a class="help-link new-window-link" href="{$config->docURLBase}Prepare+Files+for+Importing+Activities" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
+            <div class="description">{ts}File format must be comma-separated-values (CSV).{/ts}</div>
         </tr>
+        <tr><td class="label"></td><td>{ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}</td></tr>
         <tr class="crm-activity-import-uploadfile-form-block-skipColumnHeader"> 
            <td class="label"></td>
            <td>{$form.skipColumnHeader.html}{$form.skipColumnHeader.label}<br />

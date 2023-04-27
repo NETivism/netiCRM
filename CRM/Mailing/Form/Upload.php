@@ -264,7 +264,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     }
 
     $selectableEmails = array();
-    $selectableEmails[ts('Default')] = $fromEmails['default'];
+    if (!empty($fromEmails['system'])) {
+      $selectableEmails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
+    }
+    else {
+      $selectableEmails[ts('Default')] = $fromEmails['default'];
+    }
     if (!empty($fromEmails['contact'])) {
       $selectableEmails[ts('Your Email')] = $fromEmails['contact'];
     }

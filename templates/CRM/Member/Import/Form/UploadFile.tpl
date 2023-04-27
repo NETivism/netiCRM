@@ -37,12 +37,13 @@
    <table class="form-layout">
       <div id="upload-file" class="form-item">
        <tr class="crm-member-import-uploadfile-from-block-uploadFile">
-           <td class="label">{$form.uploadFile.label}</td>
-           <td>{$form.uploadFile.html}<br />
-                <span class="description">{ts}File format must be comma-separated-values (CSV).{/ts}</span>
-                 <br /><span>{ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}</span>
-           </td>
+          <td class="label">{$form.uploadFile.label}</td>
+          <td class="html-adjust with-help-link">{$form.uploadFile.html}
+            <a class="help-link new-window-link" href="{$config->docURLBase}Prepare+Files+for+Importing+Members" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
+            <div class="description">{ts}File format must be comma-separated-values (CSV).{/ts}</div>
+          </td>
        </tr>
+       <tr><td class="label"></td><td>{ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}</td></tr>
        <tr class="crm-member-import-uploadfile-from-block-skipColumnHeader">
            <td class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 	   <td>{$form.skipColumnHeader.html} {$form.skipColumnHeader.label}<br />
