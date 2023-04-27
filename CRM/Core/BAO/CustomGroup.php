@@ -1951,7 +1951,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    * @return array $groupLabels - array consisting of groups and fields labels with ids.
    * @access public
    */
-  function getGroupTitles($fieldIds) {
+  static function getGroupTitles($fieldIds) {
     if (!is_array($fieldIds) && empty($fieldIds)) {
       return;
     }
@@ -1996,7 +1996,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
     * @return boolean true if empty otherwise false.
     * @access public
     */
-  function isGroupEmpty($gID) {
+  static function isGroupEmpty($gID) {
     if (!$gID) {
       return;
     }

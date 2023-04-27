@@ -1220,7 +1220,7 @@ WHERE  v.option_group_id = g.id
      * @access public 
      */
 
-  public function getParticipantCount(&$form, $params, $skipCurrent = FALSE) {
+  public static function getParticipantCount(&$form, $params, $skipCurrent = FALSE) {
     $totalCount = 0;
     if (!is_array($params) || empty($params)) {
       return $totalCount;
@@ -1313,7 +1313,7 @@ WHERE  v.option_group_id = g.id
      * @access public 
      */
 
-  public function formatPriceSetParams(&$form, $params) {
+  public static function formatPriceSetParams(&$form, $params) {
     if (!is_array($params) || empty($params)) {
       return $params;
     }
@@ -1357,7 +1357,7 @@ WHERE  v.option_group_id = g.id
      * @return array $optionsCount, array of each option w/ count total.
      * @access public 
      */
-  function getPriceSetOptionCount(&$form) {
+  static function getPriceSetOptionCount(&$form) {
     $params = $form->get('params');
     $priceSet = $form->get('priceSet');
     $priceSetId = $form->get('priceSetId');
@@ -1454,7 +1454,7 @@ WHERE  v.option_group_id = g.id
      * as well as user should select at least one price field option.
      *
      */
-  function validatePriceSet(&$form, $params) {
+  static function validatePriceSet(&$form, $params) {
     $errors = array();
     if (!is_array($params) || empty($params)) {
       return $errors;

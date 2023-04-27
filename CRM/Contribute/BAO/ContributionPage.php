@@ -519,7 +519,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  function buildCustomDisplay($gid, $name, $cid, &$template, &$params) {
+  static function buildCustomDisplay($gid, $name, $cid, &$template, &$params) {
     if ($gid) {
       require_once 'CRM/Core/BAO/UFGroup.php';
       if (CRM_Core_BAO_UFGroup::filterUFGroups($gid, $cid)) {
@@ -848,7 +848,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     return array();
   }
 
-  function tokenize($contactId, $input, $contributionId = NULL) {
+  static function tokenize($contactId, $input, $contributionId = NULL) {
     $output = $input;
     $tokens = CRM_Utils_Token::getTokens($input);
     $contactParams = array('contact_id' => $contactId);

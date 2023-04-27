@@ -1226,7 +1226,7 @@ class CRM_Export_BAO_Export {
    *
    * @return string name of the file
    */
-  function getExportFileName($mode = NULL) {
+  static function getExportFileName($mode = NULL) {
     $rand = substr(md5(microtime(TRUE)), 0, 4);
     $name = self::getExportName($mode);
     return date('Ymd_').str_replace(array(' ', '.', '/', '-') , '_', $name) . "_" . $rand . '.xlsx';
@@ -1974,7 +1974,7 @@ GROUP BY civicrm_primary_id ";
    * Function to manipulate header rows for relationship fields
    *
    */
-  function manipulateHeaderRows(&$headerRows, $contactRelationshipTypes) {
+  static function manipulateHeaderRows(&$headerRows, $contactRelationshipTypes) {
     foreach ($headerRows as & $header) {
       $split = explode('-', $header);
       if ($relationTypeName = CRM_Utils_Array::value($split[0], $contactRelationshipTypes)) {

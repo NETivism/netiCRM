@@ -314,7 +314,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
   /**
    * function to get the amount details date wise.
    */
-  function getTotalAmountAndCount($status = NULL, $startDate = NULL, $endDate = NULL) {
+  static function getTotalAmountAndCount($status = NULL, $startDate = NULL, $endDate = NULL) {
     $where = array();
     $select = $from = $queryDate = NULL;
     //get all status
@@ -482,7 +482,7 @@ WHERE  $whereCond
    *
    * @return None.
    */
-  function sendAcknowledgment(&$form, $params) {
+  static function sendAcknowledgment(&$form, $params) {
     //handle Acknowledgment.
     $allPayments = $payments = array();
 

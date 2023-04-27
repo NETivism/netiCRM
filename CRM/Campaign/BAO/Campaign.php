@@ -119,7 +119,7 @@ Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
    *
    * @access public
    */
-  public function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $campaign = new CRM_Campaign_DAO_Campaign();
 
     $campaign->copyValues($params);
@@ -131,7 +131,7 @@ Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
     return NULL;
   }
 
-  public function getAllCampaign($id = NULL) {
+  public static function getAllCampaign($id = NULL) {
     $campaigns = array();
     $whereClause = NULL;
     if ($id) {

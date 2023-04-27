@@ -570,7 +570,7 @@ class CRM_Utils_Mail {
    * @param array $domains
    * @return bool
    */
-  function checkMailInDomains($email, $domains) {
+  static function checkMailInDomains($email, $domains) {
     if (strstr($email, '<')) {
       $email = self::pluckEmailFromHeader($email);
     }

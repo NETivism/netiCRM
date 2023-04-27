@@ -138,7 +138,7 @@ class CRM_Case_BAO_Case extends CRM_Case_DAO_Case {
    * @return object
    * @access public
    */
-  function addCaseToContact($params) {
+  static function addCaseToContact($params) {
     require_once 'CRM/Case/DAO/CaseContact.php';
     $caseContact = new CRM_Case_DAO_CaseContact();
     $caseContact->case_id = $params['case_id'];
@@ -389,7 +389,7 @@ INNER JOIN  civicrm_option_value ov ON ( ca.case_type_id=ov.value AND ov.option_
    * @access public
    *
    */
-  function retrieveContactIdsByCaseId($caseId, $contactID = NULL) {
+  static function retrieveContactIdsByCaseId($caseId, $contactID = NULL) {
     require_once 'CRM/Case/DAO/CaseContact.php';
     $caseContact = new CRM_Case_DAO_CaseContact();
     $caseContact->case_id = $caseId;
@@ -483,7 +483,7 @@ WHERE cc.contact_id = %1
     return $caseArray;
   }
 
-  function getCaseActivityQuery($type = 'upcoming', $userID = NULL, $condition = NULL, $isDeleted = 0) {
+  static function getCaseActivityQuery($type = 'upcoming', $userID = NULL, $condition = NULL, $isDeleted = 0) {
     if (!$userID) {
       $session = CRM_Core_Session::singleton();
       $userID = $session->get('userID');
@@ -618,7 +618,7 @@ WHERE cc.contact_id = %1
    * @access public
    *
    */
-  function getCases($allCases = TRUE, $userID = NULL, $type = 'upcoming') {
+  static function getCases($allCases = TRUE, $userID = NULL, $type = 'upcoming') {
     $condition = NULL;
     $casesList = array();
 
@@ -755,7 +755,7 @@ AND civicrm_case.status_id != $closedId";
   /**
    * Function to get the summary of cases counts by type and status.
    */
-  function getCasesSummary($allCases = TRUE, $userID) {
+  static function getCasesSummary($allCases = TRUE, $userID) {
     $caseSummary = array();
 
     //validate access for civicase.
@@ -1934,7 +1934,7 @@ LEFT JOIN  civicrm_case_contact ON ( civicrm_case.id = civicrm_case_contact.case
    *
    * @access public
    */
-  function getContactCases($contactId, $excludeDeleted = TRUE) {
+  static function getContactCases($contactId, $excludeDeleted = TRUE) {
     $cases = array();
     if (!$contactId) {
       return $cases;
@@ -1977,7 +1977,7 @@ INNER JOIN  civicrm_case_contact ON ( civicrm_case.id = civicrm_case_contact.cas
    *
    * @access public
    */
-  function getRelatedCases($mainCaseId, $contactId, $excludeDeleted = TRUE) {
+  static function getRelatedCases($mainCaseId, $contactId, $excludeDeleted = TRUE) {
     //FIXME : do check for permissions.
 
     $relatedCases = array();
@@ -2091,7 +2091,7 @@ INNER JOIN  civicrm_contact      client         ON ( client.id = relCaseContact.
    * @return void.
    * @static
    */
-  function mergeCases($mainContactId, $mainCaseId = NULL,
+  static function mergeCases($mainContactId, $mainCaseId = NULL,
     $otherContactId = NULL, $otherCaseId = NULL, $changeClient = FALSE
   ) {
     $moveToTrash = TRUE;
@@ -2446,7 +2446,7 @@ WHERE id IN (' . implode(',', $copiedActivityIds) . ')';
    * @return void
    * @static
    */
-  function buildPermissionLinks(&$tplParams, $activityParams) {
+  static function buildPermissionLinks(&$tplParams, $activityParams) {
     $activityTypeId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activityParams['source_record_id'],
       'activity_type_id', 'id'
     );
@@ -2806,7 +2806,7 @@ WHERE id IN (' . implode(',', $copiedActivityIds) . ')';
    *
    * @return an array $configured
    */
-  function isCaseConfigured($contactId = NULL) {
+  static function isCaseConfigured($contactId = NULL) {
     $configured = array_fill_keys(array('configured', 'allowToAddNewCase', 'redirectToCaseAdmin'), FALSE);
 
     //lets check for case configured.

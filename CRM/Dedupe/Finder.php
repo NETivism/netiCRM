@@ -52,7 +52,7 @@ class CRM_Dedupe_Finder {
    *
    * @return array  array of (cid1, cid2, weight) dupe triples
    */
-  function dupes($rgid, $cids = array()) {
+  static function dupes($rgid, $cids = array()) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
     $rgBao->id = $rgid;
     $rgBao->contactIds = $cids;
@@ -157,7 +157,7 @@ class CRM_Dedupe_Finder {
    * @param int    $threshold threshold that meet above rules
    * @return array  matching contact ids
    */
-  function dupesByRules($params, $ctype, $level = 'Strict', $except = array(), $rules = array(),     $threshold = 10) {
+  static function dupesByRules($params, $ctype, $level = 'Strict', $except = array(), $rules = array(),     $threshold = 10) {
     // If $params is empty there is zero reason to proceed.
     if (!$params) {
       return array();
@@ -195,7 +195,7 @@ class CRM_Dedupe_Finder {
    *
    * @return array  array of (cid1, cid2, weight) dupe triples
    */
-  function dupesInGroup($rgid, $gid) {
+  static function dupesInGroup($rgid, $gid) {
     $cids = array_keys(CRM_Contact_BAO_Group::getMember($gid));
     return self::dupes($rgid, $cids);
   }

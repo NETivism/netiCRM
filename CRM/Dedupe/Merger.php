@@ -356,7 +356,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * Based on the provided two contact_ids and a set of tables, move the
    * belongings of the other contact to the main one.
    */
-  function moveContactBelongings($mainId, $otherId, $tables = FALSE, $tableOperations = array()) {
+  static function moveContactBelongings($mainId, $otherId, $tables = FALSE, $tableOperations = array()) {
     $cidRefs = self::cidRefs();
     $eidRefs = self::eidRefs();
     $cpTables = self::cpTables();
@@ -438,7 +438,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
   /**
    * Find differences between contacts.
    */
-  function findDifferences($main, $other) {
+  static function findDifferences($main, $other) {
     $result = array(
       'contact' => array(),
       'custom' => array(),
@@ -1510,7 +1510,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
   /**
    * Sort dupes by deepest tree(children) to root(parent)
    */
-  function sortDupes($dupePairs) {
+  static function sortDupes($dupePairs) {
     self::$dupePairsSorted = array();
     $dupeTree = CRM_Dedupe_Merger::treeDupes($dupePairs);
     $iterator = new RecursiveArrayIterator($dupeTree);

@@ -90,7 +90,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     parent::__construct();
   }
 
-  function &getRecipientsCount($job_id, $mailing_id = NULL) {
+  static function &getRecipientsCount($job_id, $mailing_id = NULL) {
     // need this for backward compatibility, so we can get count for old mailings
     // please do not use this function if possible
     $eq = self::getRecipients($job_id, $mailing_id);
@@ -99,7 +99,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
 
   // note that $job_id is used only as a variable in the temp table construction
   // and does not play a role in the queries generated
-  function &getRecipients($job_id, $mailing_id = NULL, $offset = NULL, $limit = NULL, $storeRecipients = FALSE, $dedupeEmail = FALSE, $mode = NULL) {
+  static function &getRecipients($job_id, $mailing_id = NULL, $offset = NULL, $limit = NULL, $storeRecipients = FALSE, $dedupeEmail = FALSE, $mode = NULL) {
     $mailingGroup = new CRM_Mailing_DAO_Group();
 
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
@@ -1469,7 +1469,7 @@ AND civicrm_contact.is_opt_out =0";
    * domain and mailing tokens
    *
    */
-  function tokenReplace(&$mailing) {
+  static function tokenReplace(&$mailing) {
     require_once 'CRM/Core/BAO/Domain.php';
     $domain = CRM_Core_BAO_Domain::getDomain();
 
@@ -2610,7 +2610,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
    * @access public
    */
 
-  public function commonCompose(&$form) {
+  public static function commonCompose(&$form) {
     //get the tokens.
     $tokens = array();
     if (method_exists($form, 'listTokens')) {
@@ -2783,7 +2783,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
    * @return None
    * @access public
    */
-  public function commonLetterCompose(&$form) {
+  public static function commonLetterCompose(&$form) {
     //get the tokens.
     $tokens = CRM_Core_SelectValues::contactTokens();
     if (CRM_Utils_System::getClassName($form) == 'CRM_Mailing_Form_Upload') {
@@ -2871,7 +2871,7 @@ SELECT  $mailing.id as mailing_id
    * @return $report array content/component.
    * @access public
    */
-  public function getMailingContent(&$report, &$form) {
+  public static function getMailingContent(&$report, &$form) {
     $htmlHeader = $textHeader = NULL;
     $htmlFooter = $textFooter = NULL;
 

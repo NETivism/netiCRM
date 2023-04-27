@@ -202,7 +202,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * @return string   the permission that the user has (or null)
    * @access public
    */
-  function checkPermission($id, $title) {
+  static function checkPermission($id, $title) {
     return CRM_Contact_BAO_Group::checkPermission($id, $title);
   }
 

@@ -111,7 +111,7 @@ class CRM_Core_Config_Defaults {
    *
    * @access public
    */
-  public function setValues(&$defaults, $formMode = FALSE) {
+  public static function setValues(&$defaults, $formMode = FALSE) {
     global $civicrm_root;
     $config = CRM_Core_Config::singleton();
 

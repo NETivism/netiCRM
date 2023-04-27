@@ -585,7 +585,7 @@ LIMIT      0, 10
    *
    * @return array array with count of participants for each event based on status/role
    */
-  function getParticipantCount($eventId,
+  static function getParticipantCount($eventId,
     $considerStatus = TRUE,
     $status = TRUE,
     $considerRole = TRUE,
@@ -1219,7 +1219,7 @@ WHERE civicrm_event.is_active = 1
    * @return None
    * @access public
    */
-  function buildCustomDisplay($gid,
+  static function buildCustomDisplay($gid,
     $name,
     $cid,
     &$template,
@@ -1360,7 +1360,7 @@ WHERE civicrm_event.is_active = 1
    * @return None
    * @access public
    */
-  function displayProfile(&$params, $gid, &$groupTitle, &$values) {
+  static function displayProfile(&$params, $gid, &$groupTitle, &$values) {
     if ($gid) {
       require_once 'CRM/Core/BAO/UFGroup.php';
       require_once 'CRM/Profile/Form.php';
@@ -1649,7 +1649,7 @@ WHERE  id = $cfID
    *@return array $customProfile array of Additional participant's info OR array of Ids.
    *@access public
    */
-  function buildCustomProfile($participantId,
+  static function buildCustomProfile($participantId,
     $values,
     $contactId = NULL,
     $isTest = FALSE,
@@ -1870,7 +1870,7 @@ WHERE  ce.loc_block_id = $locBlockId";
      * @return boolean $alreadyRegistered true/false
      * @access public
      */
-  function alreadyRegistered($params) {
+  static function alreadyRegistered($params) {
     $alreadyRegistered = FALSE;
     if (!CRM_Utils_Array::value('contact_id', $params)) {
       return $alreadyRegistered;
@@ -2055,7 +2055,7 @@ WHERE  ce.loc_block_id = $locBlockId";
    * @access public
    * @static
    */
-  function eventTotalSeats($eventId, $extraWhereClause = NULL) {
+  static function eventTotalSeats($eventId, $extraWhereClause = NULL) {
     if (empty($eventId)) {
       return 0;
     }
@@ -2120,7 +2120,7 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
     $templateObject->assign('share_google_calendar', 'http://www.google.com/calendar/event?'.http_build_query($gcal));
   }
 
-  function tokenize($contactId, $input) {
+  static function tokenize($contactId, $input) {
     $output = $input;
     $tokens = CRM_Utils_Token::getTokens($input);
     if (isset($tokens['contact'])) {

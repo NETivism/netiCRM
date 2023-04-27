@@ -230,7 +230,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
+  static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
     require_once 'CRM/Contribute/DAO/ContributionProduct.php';
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contributionID;
@@ -264,7 +264,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
+  static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
     //process note
     require_once 'CRM/Core/BAO/Note.php';
     $noteParams = array('entity_table' => 'civicrm_contribution',
@@ -287,7 +287,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function postProcessCommon(&$params, &$formatted) {
+  static function postProcessCommon(&$params, &$formatted) {
     $fields = array('non_deductible_amount',
       'total_amount',
       'fee_amount',
@@ -352,7 +352,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None.
    */
-  function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+  static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     if (!empty($params['is_attach_receipt'])) {
       $config = CRM_Core_Config::singleton();
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
@@ -550,7 +550,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processPriceSet($contributionId, $lineItem) {
+  static function processPriceSet($contributionId, $lineItem) {
     if (!$contributionId || !is_array($lineItem)
       || CRM_Utils_system::isNull($lineItem)
     ) {

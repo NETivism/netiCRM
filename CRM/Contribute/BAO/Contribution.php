@@ -506,7 +506,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * @return array array of importable Fields
    * @access public
    */
-  function &importableFields($contacType = 'Individual', $status = TRUE) {
+  static function &importableFields($contacType = 'Individual', $status = TRUE) {
     if (!self::$_importableFields) {
       if (!self::$_importableFields) {
         self::$_importableFields = array();
@@ -991,7 +991,7 @@ GROUP BY p.id
    *
    * @return contact id
    */
-  function createHonorContact(&$params, $honorId = NULL) {
+  static function createHonorContact(&$params, $honorId = NULL) {
     $honorParams = array('first_name' => $params["honor_first_name"],
       'last_name' => $params["honor_last_name"],
       'prefix_id' => $params["honor_prefix_id"],
@@ -1512,7 +1512,7 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
   /**
    * This function update contribution as well as related objects.
    */
-  function transitionComponents($params, $processContributionObject = FALSE) {
+  static function transitionComponents($params, $processContributionObject = FALSE) {
     // get minimum required values.
     $contactId = CRM_Utils_Array::value('contact_id', $params);
     $componentId = CRM_Utils_Array::value('component_id', $params);
@@ -1816,7 +1816,7 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
    *
    * @param array $ids contribution ids 
    */
-  function getComponentDetails($ids) {
+  static function getComponentDetails($ids) {
     $componentDetails = $pledgePayment = array();
     if (empty($ids)) {
       return $componentDetails;
@@ -1901,7 +1901,7 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
    * @return array $ids             containing organization id and individual id
    * @access public
    */
-  function getOnbehalfIds($contributionId, $contributorId = NULL) {
+  static function getOnbehalfIds($contributionId, $contributorId = NULL) {
 
     $ids = array();
 
@@ -2581,7 +2581,7 @@ WHERE c.id = $id";
    * @param boolean $return_query to only return query string 
    * when TRUE, default FALSE
    */
-  function makeNotifyUrl(&$params, $path, $return_query = FALSE){
+  static function makeNotifyUrl(&$params, $path, $return_query = FALSE){
     $query = array();
     $query[] = "contact_id={$params['contactID']}";
     $query[] = "cid={$params['contributionID']}";

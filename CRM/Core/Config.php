@@ -704,7 +704,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * clear db cache
    */
-  function clearDBCache() {
+  static function clearDBCache() {
     $queries = array('TRUNCATE TABLE civicrm_acl_cache',
       'TRUNCATE TABLE civicrm_acl_contact_cache',
       'TRUNCATE TABLE civicrm_cache',

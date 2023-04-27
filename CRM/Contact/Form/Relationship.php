@@ -679,7 +679,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    * @return None
    *
    */
-  function search(&$params, $object = NULL) {
+  static function search(&$params, $object = NULL) {
     if (isset($this)) {
       $object = $this;
     }

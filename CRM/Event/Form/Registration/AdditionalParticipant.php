@@ -658,7 +658,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     }
   }
 
-  function &getPages($additionalParticipant) {
+  static function &getPages($additionalParticipant) {
     $details = array();
     for ($i = 1; $i <= $additionalParticipant; $i++) {
       $details["Participant_{$i}"] = array('className' => 'CRM_Event_Form_Registration_AdditionalParticipant',

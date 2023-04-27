@@ -136,7 +136,7 @@ class CRM_Utils_File {
    * @access public
    * @static
    */
-  public function cleanDir($target, $rmdir = TRUE) {
+  public static function cleanDir($target, $rmdir = TRUE) {
     static $exceptions = array('.', '..');
 
     if ($sourcedir = @opendir($target)) {
@@ -160,7 +160,7 @@ class CRM_Utils_File {
     }
   }
 
-  public function copyDir($source, $destination) {
+  public static function copyDir($source, $destination) {
 
     $dir = opendir($source);
     @mkdir($destination);

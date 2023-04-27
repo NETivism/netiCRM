@@ -224,7 +224,7 @@ class CRM_Utils_Mail_Incoming {
     return $mailParams;
   }
 
-  function parseMailingObject(&$mail) {
+  static function parseMailingObject(&$mail) {
     require_once 'CRM/Core/Config.php';
     require_once 'api/v2/Activity.php';
     require_once 'api/v2/Contact.php';

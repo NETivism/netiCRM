@@ -617,7 +617,7 @@ class CRM_Utils_System {
   }
 
   /** get a module setting */
-  function getModuleSetting($pModuleName, $pSetting) {
+  static function getModuleSetting($pModuleName, $pSetting) {
     $vModules = self::parsePHPModules();
     return $vModules[$pModuleName][$pSetting];
   }

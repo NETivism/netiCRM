@@ -76,7 +76,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return array(NULL, NULL, NULL);
   }
 
-  function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
+  static function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
       $entityFileDAO->entity_table = $entityTable;
@@ -114,7 +114,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
   }
 
 
-  public function filePostProcess($data, $fileID,
+  public static function filePostProcess($data, $fileID,
     $entityTable, $entityID,
     $entitySubtype, $overwrite = TRUE,
     $fileParams = NULL,
@@ -225,7 +225,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
    * delete all the files and associated object associated with this
    * combination
    */
-  public function deleteEntityFile($entityTable, $entityID) {
+  public static function deleteEntityFile($entityTable, $entityID) {
     if (empty($entityTable) ||
       empty($entityID)
     ) {
@@ -307,7 +307,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return $entityFiles[$entityTable][$entityID];
   }
 
-  public function sql($entityTable, $entityID, $fileID = NULL) {
+  public static function sql($entityTable, $entityID, $fileID = NULL) {
     $sql = "
 SELECT    CF.id as cfID,
           CF.uri as uri,

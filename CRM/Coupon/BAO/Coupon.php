@@ -47,7 +47,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return CRM_Core_DAO::setFieldValue('CRM_Coupon_DAO_Coupon', $id, 'is_active', $isActive);
   }
 
-  function saveCouponEntity($couponId, $data) {
+  static function saveCouponEntity($couponId, $data) {
     if (empty($couponId) || !is_numeric($couponId)) {
       return;
     }
@@ -218,7 +218,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  function getCouponUsed($ids) {
+  static function getCouponUsed($ids) {
     $result = array_fill_keys($ids, 0);
     if (!empty($ids)) {
       $couponIds = implode(',', $ids);
@@ -231,7 +231,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $result;
   }
 
-  function getCouponUsedBy($ids = array(), $field = 'ct.coupon_id') {
+  static function getCouponUsedBy($ids = array(), $field = 'ct.coupon_id') {
     if (!empty($ids)) {
       if (empty($field)) {
         $field = 'ct.coupon_id';
@@ -341,7 +341,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $valid;
   }
 
-  function validEventFromCode($code, $eventId, $additionalVerify = array()) {
+  static function validEventFromCode($code, $eventId, $additionalVerify = array()) {
     $valid = TRUE;
     $coupon = self::validFromCode($code);
     if (empty($coupon)) {

@@ -686,7 +686,7 @@ class CRM_Utils_Token {
     return $str;
   }
 
-  public function getContributionTokenReplacement($token, &$contribution, $html = FALSE,
+  public static function getContributionTokenReplacement($token, &$contribution, $html = FALSE,
     $returnBlankToken = FALSE, $escapeSmarty = FALSE
   ) {
     if (self::$_tokens['contribution'] == NULL) {
@@ -753,7 +753,7 @@ class CRM_Utils_Token {
     return $str;
   }
 
-  public function getHookTokenReplacement($token, &$contact, $category, $html = FALSE, $escapeSmarty = FALSE) {
+  public static function getHookTokenReplacement($token, &$contact, $category, $html = FALSE, $escapeSmarty = FALSE) {
     $value = CRM_Utils_Array::value("{$category}.{$token}", $contact);
 
     if ($value &&

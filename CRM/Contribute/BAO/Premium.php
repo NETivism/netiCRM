@@ -103,7 +103,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $pageId
    * @static
    */
-  function buildPremiumBlock(&$form, $pageID, $formItems = FALSE, $selectedProductID = NULL, $selectedOption = NULL) {
+  static function buildPremiumBlock(&$form, $pageID, $formItems = FALSE, $selectedProductID = NULL, $selectedOption = NULL) {
 
     require_once 'CRM/Contribute/DAO/Premium.php';
     $dao = new CRM_Contribute_DAO_Premium();
@@ -194,7 +194,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $pageId
    * @static
    */
-  function buildPremiumPreviewBlock($form, $productID, $premiumProductID = NULL) {
+  static function buildPremiumPreviewBlock($form, $productID, $premiumProductID = NULL) {
 
     require_once 'CRM/Contribute/DAO/Product.php';
     if ($premiumProductID) {

@@ -253,7 +253,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     CRM_Utils_System::civiExit(1);
   }
 
-  function formatMessage(&$message) {
+  static function formatMessage(&$message) {
     $newLineOperators = array('p' => array('oper' => '<p>',
         'pattern' => '/<(\s+)?p(\s+)?>/m',
       ),

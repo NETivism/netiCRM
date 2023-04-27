@@ -767,7 +767,7 @@ WHERE  id = %1";
    *
    * @param int $sid the price set id
    */
-  function checkPermission($sid) {
+  static function checkPermission($sid) {
     if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
       $domain_id = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $sid, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domain_id) {

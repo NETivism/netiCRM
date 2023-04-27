@@ -333,7 +333,7 @@ SELECT     civicrm_email.id as email_id
    * @return array $groups    array of group ids
    * @access public
    */
-  function getContactGroups($email, $contactID = NULL) {
+  static function getContactGroups($email, $contactID = NULL) {
     if ($contactID) {
       $query = "
                  SELECT DISTINCT group_a.group_id, group_a.status, civicrm_group.title 
@@ -385,7 +385,7 @@ SELECT     civicrm_email.id as email_id
    *
    * @return void
    */
-  function commonSubscribe(&$groups, &$params, $contactId = NULL, $context = NULL) {
+  static function commonSubscribe(&$groups, &$params, $contactId = NULL, $context = NULL) {
     $contactGroups = CRM_Mailing_Event_BAO_Subscribe::getContactGroups($params['email'], $contactId);
     $group = array();
     $success = NULL;

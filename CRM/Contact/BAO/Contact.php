@@ -651,7 +651,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
    * @access public
    * @static
    */
-  function deleteContact($id, $restore = FALSE, $skipUndelete = FALSE, $reason = NULL) {
+  static function deleteContact($id, $restore = FALSE, $skipUndelete = FALSE, $reason = NULL) {
     require_once 'CRM/Activity/BAO/Activity.php';
 
     if (!$id) {

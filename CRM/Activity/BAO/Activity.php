@@ -68,7 +68,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @return boolean
    * @access public
    */
-  public function dataExists(&$params) {
+  public static function dataExists(&$params) {
     if (CRM_Utils_Array::value('source_contact_id', $params) ||
       CRM_Utils_Array::value('id', $params)
     ) {
@@ -91,7 +91,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @return object CRM_Core_BAO_Meeting object
    * @access public
    */
-  public function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $activity = new CRM_Activity_DAO_Activity();
     $activity->copyValues($params);
 
@@ -237,7 +237,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @return null
    * @access public
    */
-  public function deleteActivityAssignment($activityId) {
+  public static function deleteActivityAssignment($activityId) {
     require_once 'CRM/Activity/BAO/ActivityAssignment.php';
     $assignment = new CRM_Activity_BAO_ActivityAssignment();
     $assignment->activity_id = $activityId;
@@ -252,7 +252,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @return null
    * @access public
    */
-  public function deleteActivityTarget($activityId) {
+  public static function deleteActivityTarget($activityId) {
     require_once 'CRM/Activity/BAO/ActivityTarget.php';
     $target = new CRM_Activity_BAO_ActivityTarget();
     $target->activity_id = $activityId;
@@ -267,7 +267,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @return null
    * @access public
    */
-  public function createActivityTarget($params) {
+  public static function createActivityTarget($params) {
     if (!$params['target_contact_id']) {
       return;
     }
@@ -288,7 +288,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @return null
    * @access public
    */
-  public function createActivityAssignment($params) {
+  public static function createActivityAssignment($params) {
     if (!$params['assignee_contact_id']) {
       return;
     }
@@ -1849,7 +1849,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @return array    array of importable Fields
    * @access public
    */
-  function &importableFields() {
+  static function &importableFields() {
     if (!self::$_importableFields) {
       if (!self::$_importableFields) {
         self::$_importableFields = array();
@@ -2571,7 +2571,7 @@ AND cl.modified_id  = c.id
    * @return boolean $allow true/false
    * @access public
    */
-  public function checkPermission($activityId, $action) {
+  public static function checkPermission($activityId, $action) {
     $allow = FALSE;
     if (!$activityId ||
       !in_array($action, array(CRM_Core_Action::UPDATE, CRM_Core_Action::VIEW))

@@ -386,7 +386,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $this->assign_by_ref('pager', $this->_pager);
   }
 
-  function dedupeRunning() {
+  static function dedupeRunning() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {

@@ -323,7 +323,7 @@ class CRM_Core_Block {
    * @return void
    * @access private
    */
-  private function setTemplateShortcutValues() {
+  private static function setTemplateShortcutValues() {
     $config = CRM_Core_Config::singleton();
 
     static $shortCuts = array();
@@ -416,7 +416,7 @@ class CRM_Core_Block {
    * @return void
    * @access private
    */
-  private function setTemplateDashboardValues() {
+  private static function setTemplateDashboardValues() {
     static $dashboardLinks = array();
     if (CRM_Core_Permission::check('access Contact Dashboard')) {
       $dashboardLinks = array(array('path' => 'civicrm/user',
@@ -498,7 +498,7 @@ class CRM_Core_Block {
    * @return void
    * @access private
    */
-  private function setTemplateEventValues() {
+  private static function setTemplateEventValues() {
     $config = CRM_Core_Config::singleton();
 
     require_once 'CRM/Event/BAO/Event.php';

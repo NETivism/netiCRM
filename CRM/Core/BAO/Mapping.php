@@ -905,7 +905,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
      * @relationshipTypeId related relationship type id
      * @return $groupTitle all custom field titles
      */
-  function getRelationTypeCustomGroupData($relationshipTypeId) {
+  static function getRelationTypeCustomGroupData($relationshipTypeId) {
 
     $customFields = CRM_Core_BAO_CustomField::getFields('Relationship', NULL, NULL, $relationshipTypeId, NULL, NULL);
     $groupTitle = array();
@@ -920,7 +920,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
      * @customfieldId related custom field id
      * @return $customGroupName all custom group names
      */
-  function getCustomGroupName($customfieldId) {
+  static function getCustomGroupName($customfieldId) {
 
 
     if ($customFieldId = CRM_Core_BAO_CustomField::getKeyID($customfieldId)) {

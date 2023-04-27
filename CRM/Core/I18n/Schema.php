@@ -68,7 +68,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  function makeMultilingual($locale) {
+  static function makeMultilingual($locale) {
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
 
@@ -122,7 +122,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  function makeSinglelingual($retain) {
+  static function makeSinglelingual($retain) {
     $domain = new CRM_Core_DAO_Domain;
     $domain->find(TRUE);
     $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
@@ -192,7 +192,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  function addLocale($locale, $source) {
+  static function addLocale($locale, $source) {
     // get the current supported locales
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
@@ -345,7 +345,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return array          array of CREATE INDEX queries
    */
-  private function createIndexQueries($locale, $table, $class = 'CRM_Core_I18n_SchemaStructure') {
+  private static function createIndexQueries($locale, $table, $class = 'CRM_Core_I18n_SchemaStructure') {
     $indices =& $class::indices();
     $columns =& $class::columns();
     if (!isset($indices[$table])) {
@@ -380,7 +380,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return array          array of CREATE TRIGGER queries
    */
-  private function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
+  private static function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
     $columns =& $class::columns();
     $queries = array();
     $namesTrigger = array();
@@ -465,7 +465,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return array          array of CREATE INDEX queries
    */
-  private function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
+  private static function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
     $columns =& $class::columns();
     $cols = array();
     $dao->query("DESCRIBE {$table}", FALSE);

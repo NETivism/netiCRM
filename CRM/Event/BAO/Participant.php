@@ -1063,7 +1063,7 @@ WHERE  civicrm_participant.id = {$participantId}
    * @return array $feeDetails
    * @static
    */
-  function getFeeDetails($participantIds, $hasLineItems = FALSE) {
+  static function getFeeDetails($participantIds, $hasLineItems = FALSE) {
     $feeDetails = array();
     if (!is_array($participantIds) || empty($participantIds)) {
       return $feeDetails;
@@ -1482,7 +1482,7 @@ UPDATE  civicrm_participant
    * @access public
    * @static
    */
-  function sendTransitionParticipantMail($participantId,
+  static function sendTransitionParticipantMail($participantId,
     $participantValues,
     $eventDetails,
     $contactDetails,
@@ -1579,7 +1579,7 @@ UPDATE  civicrm_participant
    * @return string
    * @access public
    */
-  function updateStatusMessage($participantId, $statusChangeTo, $fromStatusId) {
+  static function updateStatusMessage($participantId, $statusChangeTo, $fromStatusId) {
     $statusMsg = NULL;
     $results = self::transitionParticipants(array($participantId),
       $statusChangeTo, $fromStatusId, TRUE

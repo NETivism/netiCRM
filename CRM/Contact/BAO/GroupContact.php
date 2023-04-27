@@ -545,7 +545,7 @@ AND civicrm_subscription_history.method ='Email' ";
    * @access public
    * @static
    */
-  function updateGroupMembershipStatus($contactId, $groupID, $method = 'Email', $tracking = NULL) {
+  static function updateGroupMembershipStatus($contactId, $groupID, $method = 'Email', $tracking = NULL) {
     if (!isset($contactId) && !isset($groupID)) {
       return CRM_Core_Error::fatal("$contactId or $groupID should not empty");
     }

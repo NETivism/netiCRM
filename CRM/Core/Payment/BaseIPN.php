@@ -1094,7 +1094,7 @@ class CRM_Core_Payment_BaseIPN {
     }
   }
 
-  function updateContributionStatus(&$params) {
+  static function updateContributionStatus(&$params) {
     // get minimum required values.
     $statusId = CRM_Utils_Array::value('contribution_status_id', $params);
     $componentId = CRM_Utils_Array::value('component_id', $params);

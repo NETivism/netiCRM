@@ -470,7 +470,7 @@ class CRM_Utils_Date {
    * @param string $dateParam  index of params
    * @static
    */
-  function convertToDefaultDate(&$params, $dateType, $dateParam) {
+  static function convertToDefaultDate(&$params, $dateType, $dateParam) {
     $now = getDate();
     $cen = substr($now['year'], 0, 2);
     $prevCen = $cen - 1;
@@ -906,7 +906,7 @@ class CRM_Utils_Date {
    * @return array $dateRange    start date and end date for the relative time frame
    * @static
    */
-  function relativeToAbsolute($relativeTerm, $unit) {
+  static function relativeToAbsolute($relativeTerm, $unit) {
     $now = getDate();
     $from = $to = $dateRange = array();
     $from['H'] = $from['i'] = $from['s'] = 0;

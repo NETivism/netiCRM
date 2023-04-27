@@ -116,7 +116,7 @@ class CRM_Core_Payment_Form {
    * @return void
    * @access public
    */
-  function setCreditCardFields(&$form) {
+  static function setCreditCardFields(&$form) {
     CRM_Core_Payment_Form::_setPaymentFields($form);
 
     $form->_fields['credit_card_number'] = array('htmlType' => 'text',
@@ -159,7 +159,7 @@ class CRM_Core_Payment_Form {
    * @return void
    * @access public
    */
-  function setDirectDebitFields(&$form) {
+  static function setDirectDebitFields(&$form) {
     CRM_Core_Payment_Form::_setPaymentFields($form);
 
     $form->_fields['account_holder'] = array('htmlType' => 'text',
@@ -203,7 +203,7 @@ class CRM_Core_Payment_Form {
    * @return None
    * @access public
    */
-  function buildCreditCard(&$form, $useRequired = FALSE) {
+  static function buildCreditCard(&$form, $useRequired = FALSE) {
 
     require_once 'CRM/Core/Payment.php';
     if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {
@@ -256,7 +256,7 @@ class CRM_Core_Payment_Form {
    * @return None
    * @access public
    */
-  function buildDirectDebit(&$form, $useRequired = FALSE) {
+  static function buildDirectDebit(&$form, $useRequired = FALSE) {
     require_once 'CRM/Core/Payment.php';
 
     if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {

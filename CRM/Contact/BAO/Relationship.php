@@ -964,7 +964,7 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
    * @return array - array reference of all relationship types with context to current contact type .
    *
    */
-  function getRelationType($targetContactType) {
+  static function getRelationType($targetContactType) {
     $relationshipType = array();
     $allRelationshipType = CRM_Core_PseudoConstant::relationshipType();
 

@@ -784,7 +784,7 @@ class CRM_Report_Form extends CRM_Core_Form {
 
   // Note: $fieldName param allows inheriting class to build operationPairs
   // specific to a field.
-  function getOperationPair($type = "string", $fieldName = NULL) {
+  static function getOperationPair($type = "string", $fieldName = NULL) {
     // FIXME: At some point we should move these key-val pairs
     // to option_group and option_value table.
 
