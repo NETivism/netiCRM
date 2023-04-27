@@ -80,8 +80,6 @@ function civicrm_api3_group_contact_get($params) {
     }
     //ie. id passed in so we have to return something
     $origin = _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
-    // return _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
-    // dpm($origin);
 
     $smartContactIds = $contactIds;
     foreach ($contactIds as $index => $id) {
@@ -94,12 +92,16 @@ function civicrm_api3_group_contact_get($params) {
     }
 
     foreach ($smartContactIds as $index => $id) {
-      $smartContact[$index]['id'] = $index;
-      $smartContact[$index]['group_id'] = $group_id;
-      $smartContact[$index]['contact_id'] = $id;
-      $smartContact[$index]['status'] = "smart";
+      //refs #36681 32f, set custom id for smart group.
+      $smartId = $group_id."_".$id;
+      $smartContact[$group_id."_".$id]['id'] = $group_id."_".$id;
+      $smartContact[$group_id."_".$id]['group_id'] = $group_id;
+      $smartContact[$group_id."_".$id]['contact_id'] = $id;
+      //smart group to 'smart'
+      $smartContact[$group_id."_".$id]['status'] = "smart";
+      array_push($origin['values'], $smartContact[$group_id."_".$id]);
     }
-    // dpm($smartContact);
+    $origin['count'] = count($origin['values']);
     return $origin;
   }
 }
