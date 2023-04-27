@@ -202,7 +202,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * @return string   the permission that the user has (or null)
    * @access public
    */
-  static function checkPermission($id, $title) {
+  function checkPermission($id, $title) {
     return CRM_Contact_BAO_Group::checkPermission($id, $title);
   }
 
@@ -309,7 +309,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
           }
         }
         $action = array_sum(array_keys($newLinks));
-        if (array_key_exists('is_active', $object)) {
+        if (property_exists($object, 'is_active')) {
           if ($object->is_active) {
             $action -= CRM_Core_Action::ENABLE;
           }
@@ -341,7 +341,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
             'ssid' => $object->saved_search_id,
           )
         );
-        if (array_key_exists('orgName', $object)) {
+        if (property_exists($object, 'orgName')) {
           if ($object->orgName) {
             $values[$object->id]['org_name'] = $object->orgName;
             $values[$object->id]['org_id'] = $object->orgID;
