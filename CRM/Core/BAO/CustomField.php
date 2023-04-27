@@ -932,8 +932,9 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           $qf->addRule($elementName, ts('Select a valid contact for %1.', array(1 => $label)), 'validContact', $actualElementValue);
         }
         else {
+          $controllerName = CRM_Utils_System::getClassName($qf->controller);
           $customUrls[$elementName] = CRM_Utils_System::url("civicrm/ajax/auto",
-            "reset=1&ogid={$field->option_group_id}&cfid={$field->id}",
+            "reset=1&ogid={$field->option_group_id}&cfid={$field->id}&qfKey={$qf->controller->_key}&ctrName={$controllerName}",
             FALSE, NULL, FALSE
           );
           $qf->addRule($elementName, ts('Select a valid value for %1.', array(1 => $label)),
