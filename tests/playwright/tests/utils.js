@@ -15,7 +15,7 @@ async function print(s){
 }
 
 async function findElement(page, element){
-    await expect(page.locator(element)).not.toHaveCount(0);
+    await page.locator(element).first().waitFor();
     await print('Find an element matching: ' + element);
 }
 
@@ -51,11 +51,13 @@ async function selectOption(locator, option) {
 }
 
 async function clickElement(page, locator, expectEl={}){
+    await locator.waitFor();
     await expect(locator).toBeEnabled();
     await locator.click();
+
     if ('exist' in expectEl) await expect(page.locator(expectEl.exist)).not.toHaveCount(0);
-    else if ('notExist' in expectEl) await expect(page.locator(expectEl.notExist)).toHaveCount(0);
-    else if ('visible' in expectEl) await expect(page.locator(expectEl.visible)).toBeVisible();
+    if ('notExist' in expectEl) await expect(page.locator(expectEl.notExist)).toHaveCount(0);
+    if ('visible' in expectEl) await expect(page.locator(expectEl.visible)).toBeVisible();
 }
 
 function formatNumber(num, digits=2, fill='0') {
@@ -73,6 +75,10 @@ async function selectDate(page, locator, year, month, day){
     await expect(locator).toHaveValue(format.replace('yy', year).replace('mm', formatNumber(month)).replace('dd', formatNumber(day)));
 }
 
+function wait(ms){
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 module.exports = {
-    makeid, print, findElement, fillInput, checkInput, selectOption, clickElement, selectDate
+    makeid, print, findElement, fillInput, checkInput, selectOption, clickElement, selectDate, wait
 }
