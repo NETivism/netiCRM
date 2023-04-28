@@ -785,7 +785,7 @@ function _civicrm_api3_dao_to_array($dao, $params = NULL, $uniqueFields = TRUE, 
   while ($dao->fetch()) {
     $tmp = array();
     foreach ($fields as $key) {
-      if (array_key_exists($key, $dao)) {
+      if (property_exists($dao, $key)) {
         // not sure on that one
         if ($dao->$key !== NULL) {
           $tmp[$key] = $dao->$key;

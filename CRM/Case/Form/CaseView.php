@@ -369,7 +369,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     // so they don't show up twice.
     $clientRelationships = array();
     foreach ($relClient as $r) {
-      if (!array_key_exists($r['id'], $caseRelationships)) {
+      if (!property_exists($caseRelationships, $r['id'])) {
         $clientRelationships[] = $r;
       }
     }

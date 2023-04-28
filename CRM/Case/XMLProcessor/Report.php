@@ -834,7 +834,7 @@ LIMIT  1
         }
         $r['email'] = self::redact($r['email'], TRUE, $report->_redactionStringRules);
       }
-      if (!array_key_exists($r['id'], $caseRelationships)) {
+      if (!property_exists($caseRelationships, $r['id'])) {
         $otherRelationships[] = $r;
       }
     }
