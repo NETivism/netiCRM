@@ -822,14 +822,14 @@ class PEAR_Common extends PEAR
      *                 getCode().
      *
      * @access public
-     * @deprecated in favor of PEAR_Downloader::downloadHttp()
+     * @deprecated in favor of PEAR_Downloader::_downloadHttp()
      */
     function downloadHttp($url, &$ui, $save_dir = '.', $callback = null)
     {
         if (!class_exists('PEAR_Downloader')) {
             require_once 'PEAR/Downloader.php';
         }
-        return PEAR_Downloader::downloadHttp($url, $ui, $save_dir, $callback);
+        return PEAR_Downloader::_downloadHttp($url, $ui, $save_dir, $callback);
     }
 }
 

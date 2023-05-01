@@ -189,13 +189,13 @@ class PEAR_Downloader extends PEAR_Common
         }
 
         $tmp = System::mktemp(array('-d'));
-        $a   = $this->downloadHttp('http://' . $channel . '/channel.xml', $this->ui, $tmp, $callback, false);
+        $a   = static::_downloadHttp('http://' . $channel . '/channel.xml', $this->ui, $tmp, $callback, false);
         PEAR::popErrorHandling();
         if (PEAR::isError($a)) {
             // Attempt to fallback to https automatically.
             PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
             $this->log(1, 'Attempting fallback to https instead of http on channel "' . $channel . '"...');
-            $a = $this->downloadHttp('https://' . $channel . '/channel.xml', $this->ui, $tmp, $callback, false);
+            $a = static::_downloadHttp('https://' . $channel . '/channel.xml', $this->ui, $tmp, $callback, false);
             PEAR::popErrorHandling();
             if (PEAR::isError($a)) {
                 return false;
@@ -326,13 +326,13 @@ class PEAR_Downloader extends PEAR_Common
 
                         $mirror = $this->config->get('preferred_mirror', null, $params[$i]->getChannel());
                         $url    = 'http://' . $mirror . '/channel.xml';
-                        $a = $this->downloadHttp($url, $this->ui, $dir, null, $curchannel->lastModified());
+                        $a = static::_downloadHttp($url, $this->ui, $dir, null, $curchannel->lastModified());
 
                         PEAR::staticPopErrorHandling();
                         if (PEAR::isError($a) || !$a) {
                             // Attempt fallback to https automatically
                             PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-                            $a = $this->downloadHttp('https://' . $mirror .
+                            $a = static::_downloadHttp('https://' . $mirror .
                                 '/channel.xml', $this->ui, $dir, null, $curchannel->lastModified());
 
                             PEAR::staticPopErrorHandling();
@@ -1530,7 +1530,7 @@ class PEAR_Downloader extends PEAR_Common
      *
      * @access public
      */
-    function downloadHttp($url, &$ui, $save_dir = '.', $callback = null, $lastmodified = null,
+    public static function _downloadHttp($url, &$ui, $save_dir = '.', $callback = null, $lastmodified = null,
                           $accept = false, $channel = false)
     {
         static $redirect = 0;
@@ -1554,11 +1554,7 @@ class PEAR_Downloader extends PEAR_Common
         $port = isset($info['port']) ? $info['port'] : null;
         $path = isset($info['path']) ? $info['path'] : null;
 
-        if (isset($this)) {
-            $config = &$this->config;
-        } else {
-            $config = &PEAR_Config::singleton();
-        }
+        $config = &PEAR_Config::singleton();
 
         $proxy_host = $proxy_port = $proxy_user = $proxy_pass = '';
         if ($config->get('http_proxy') &&
@@ -1687,7 +1683,7 @@ class PEAR_Downloader extends PEAR_Common
             }
 
             $redirect = $wasredirect + 1;
-            return $this->downloadHttp($headers['location'],
+            return static::_downloadHttp($headers['location'],
                     $ui, $save_dir, $callback, $lastmodified, $accept);
         }
 
