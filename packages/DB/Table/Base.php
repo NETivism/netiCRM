@@ -175,13 +175,12 @@ class DB_Table_Base
      * 
      * Throws a PEAR_Error with an error message based on an error code 
      * and corresponding error message defined in $this->_primary_subclass
-     * 
+     *
      * @param string $code  An error code constant 
      * @param string $extra Extra text for the error (in addition to the 
      *                      regular error message).
      * @return object PEAR_Error
      * @access public
-     * @static
      */
     function &throwError($code, $extra = null)
     {
@@ -738,6 +737,36 @@ class DB_Table_Base
             }
         }
         return implode(' AND ', $filter);
+    }
+
+    /**
+     * Specialized version of throwError() modeled on PEAR_Error.
+     *
+     * Throws a PEAR_Error with an error message based on an error code
+     * and corresponding error message defined in class DB_TABLE or DB_TABLE_DATABASE
+     *
+     * @param string $code  An error code constant
+     * @param string $extra Extra text for the error (in addition to the
+     *                      regular error message).
+     * @return object PEAR_Error
+     * @access public
+     * @static
+     */
+    public static function &throwDBError($code, $extra = null, $class = 'DB_TABLE')
+    {
+        // get the error message text based on the error code
+        $index = '_' . $class;
+        $text = $class . " Error - \n"
+              . $GLOBALS[$index]['error'][$code];
+
+        // add any additional error text
+        if ($extra) {
+            $text .= ' ' . $extra;
+        }
+
+        // done!
+        $error = PEAR::throwError($text, $code);
+        return $error;
     }
 
     // }}}
