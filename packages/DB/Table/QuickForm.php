@@ -367,6 +367,7 @@ class DB_Table_QuickForm {
     
     static function &getElement($col, $elemname)
     {
+        $qform = new HTML_QuickForm();
         if (isset($col['qf_setvalue'])) {
             $setval = $col['qf_setvalue'];
         }
@@ -376,7 +377,7 @@ class DB_Table_QuickForm {
         case 'advcheckbox':
         case 'checkbox':
             
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 'advcheckbox',
                 $elemname,
                 $col['qf_label'],
@@ -400,7 +401,7 @@ class DB_Table_QuickForm {
             
         case 'autocomplete':
         
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 $col['qf_label'],
@@ -420,7 +421,7 @@ class DB_Table_QuickForm {
                 $col['qf_opts']['format'] = 'Y-m-d';
             }
             
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 'date',
                 $elemname,
                 $col['qf_label'],
@@ -440,7 +441,7 @@ class DB_Table_QuickForm {
                 $col['qf_opts']['format'] = 'H:i:s';
             }
             
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 'date',
                 $elemname,
                 $col['qf_label'],
@@ -460,7 +461,7 @@ class DB_Table_QuickForm {
                 $col['qf_opts']['format'] = 'Y-m-d H:i:s';
             }
             
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 'date',
                 $elemname,
                 $col['qf_label'],
@@ -476,7 +477,7 @@ class DB_Table_QuickForm {
         
         case 'hidden':
         
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 null,
@@ -496,7 +497,7 @@ class DB_Table_QuickForm {
             
             foreach ((array) $col['qf_vals'] as $btnvalue => $btnlabel) {
                 
-                $element[] =& HTML_QuickForm::createElement(
+                $element[] =& $qform->createElement(
                     $col['qf_type'],
                     null, // elemname not added because this is a group
                     null,
@@ -511,7 +512,7 @@ class DB_Table_QuickForm {
             
         case 'select':
             
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 $col['qf_label'],
@@ -534,7 +535,7 @@ class DB_Table_QuickForm {
                 $col['qf_attrs']['maxlength'] = $col['size'];
             }
             
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 $col['qf_label'],
@@ -548,7 +549,7 @@ class DB_Table_QuickForm {
             break;
         
         case 'static':
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 $col['qf_label'],
@@ -558,7 +559,7 @@ class DB_Table_QuickForm {
 
         case 'hierselect':
 
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 $col['qf_label'],
@@ -574,7 +575,7 @@ class DB_Table_QuickForm {
 
         case 'jscalendar':
 
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 $col['qf_label'],
@@ -590,7 +591,7 @@ class DB_Table_QuickForm {
 
         case 'header':
 
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname
             );
@@ -603,7 +604,7 @@ class DB_Table_QuickForm {
 
         case 'static':
 
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 $col['qf_label']
@@ -617,7 +618,7 @@ class DB_Table_QuickForm {
 
         case 'link':
 
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 $col['qf_label'],
@@ -631,7 +632,7 @@ class DB_Table_QuickForm {
         case 'reset':
         case 'submit':
 
-            $element =& HTML_QuickForm::createElement(
+            $element =& $qform->createElement(
                 $col['qf_type'],
                 $elemname,
                 null,
@@ -681,7 +682,7 @@ class DB_Table_QuickForm {
             if (HTML_QuickForm::isTypeRegistered($col['qf_type'])) {
                 
                 // yes, create it with some minimalist parameters
-                $element =& HTML_QuickForm::createElement(
+                $element =& $qform->createElement(
                     $col['qf_type'],
                     $elemname,
                     $col['qf_label'],

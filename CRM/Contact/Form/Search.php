@@ -418,7 +418,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       $group_contact_status = array();
       foreach (CRM_Core_SelectValues::groupContactStatus() as $k => $v) {
         if (!empty($k)) {
-          $group_contact_status[] = HTML_QuickForm::createElement('checkbox', $k, NULL, $v);
+          $group_contact_status[] = $this->createElement('checkbox', $k, NULL, $v);
         }
       }
       $this->addGroup($group_contact_status,
