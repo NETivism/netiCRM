@@ -501,7 +501,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
    * @access public
    * @static
    */
-  public function formRule($params, $files, $self) {
+  public static function formRule($params, $files, $self) {
     $errors = array();
 
     //check if contact is selected in standalone mode
