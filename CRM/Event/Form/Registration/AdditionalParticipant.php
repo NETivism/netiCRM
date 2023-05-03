@@ -404,13 +404,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       require_once 'CRM/Event/Form/Registration/Register.php';
       $isRegistered = CRM_Event_Form_Registration_Register::checkRegistration($fields, $self, TRUE);
       // refs #32662,return false means additional participant already registered
-      $contactID = CRM_Event_Form_Registration_Register::getRegistrationContactID($fields, $self, TRUE);
-      require_once 'CRM/Event/BAO/Participant.php';
-      $participant = new CRM_Event_BAO_Participant();
-      $participant->contact_id = $contactID;
-      $participant->status_id = $self->_values['participant']['status_id'];
 
-      if (!$isRegistered && $participant->status_id != '10') {
+      if (!$isRegistered) {
         $errors['_qf_default'] = ts('A person is already registered for this event.');
       }
 
