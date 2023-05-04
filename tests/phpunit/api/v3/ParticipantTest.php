@@ -73,12 +73,6 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
   }
 
   /**
-   * check with complete array + custom field
-   * Note that the test is written on purpose without any
-   * variables specific to participant so it can be replicated into other entities
-   * and / or moved to the automated test suite
-   */
-  /**
    * Participant Create Unit Test
    *
    * @docmaker_start
@@ -94,6 +88,21 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    * @group CItesting
+   */
+  function testCreateParticipant() {
+    $result = civicrm_api($this->_entity, 'create', $this->_params);
+    $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
+
+    $this->assertEquals($result['id'], $result['values'][$result['id']]['id']);
+    $this->docMakerResponse($result, __FILE__, __FUNCTION__);
+    $this->assertNotEquals($result['is_error'], 1, $result['error_message'] . ' in line ' . __LINE__);
+  }
+
+  /**
+   * check with complete array + custom field
+   * Note that the test is written on purpose without any
+   * variables specific to participant so it can be replicated into other entities
+   * and / or moved to the automated test suite
    */
   function testCreateWithCustom() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
