@@ -249,16 +249,25 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         self::$_singleton->componentRegistry->addConfig($this);
       }
 
+      self::$_singleton->initialized = 1;
+
       // Get trusted host patterns
-      $trusted_host_patterns = CRM_Utils_System::getTrustedHostsPatterns();
-      if (!empty(trim($trusted_host_patterns))) {
+      $trustedHostsPatterns = CRM_Utils_System::getTrustedHostsPatterns();
+      if (!empty($trustedHostsPatterns)) {
         // Check trusted HTTP Host headers to protect against header attacks
         if (!CRM_Utils_System::checkTrustedHosts($_SERVER['HTTP_HOST'])) {
-          CRM_Core_Error::fatalWithoutInitialized(ts('Access Denied.'));
+          if (CRM_Core_Permission::check('access CiviCRM')) {
+            CRM_Core_Session::singleton()->setStatus(ts("Current host \"%1\" doesn't in Trusted Host. If you are sure it's correct host, please add your domain into the <a href=\"%2\">trusted host setting</a>.", array(
+              1 => $_SERVER['HTTP_HOST'],
+              2 => CRM_Utils_System::url('civicrm/admin/setting/misc', 'reset=1')
+            )), TRUE, 'error');
+          }
+          else {
+            CRM_Core_Error::fatalWithoutInitialized(ts('Access Denied.'));
+          }
         }
       }
 
-      self::$_singleton->initialized = 1;
 
       if (isset(self::$_singleton->customPHPPathDir) &&
         self::$_singleton->customPHPPathDir

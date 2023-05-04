@@ -109,7 +109,10 @@
     <table class="form-layout">
         <tr class="crm-miscellaneous-form-block-trustedHosts">
             <td class="label">{$form.trustedHostsPatterns.label}</td>
-            <td>{$form.trustedHostsPatterns.html}</td>
+            <td>
+              {$form.trustedHostsPatterns.html}
+              <div class="description font-red">{ts}NOTE: Once this option is set, security rules will be applied to recognize access to your website only from domains that match those listed above, in order to provide page services. Please make sure that you have set the "trusted hosts" correctly to avoid blocking visitors due to your security settings.{/ts}</div>
+            </td>
         </tr>
         </table>
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
