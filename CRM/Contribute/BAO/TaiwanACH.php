@@ -1241,12 +1241,13 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // check Amount
     // check Recurring Status
 
-
+    // pass: Solved or not. TRUE: Solve,, FALSE: don't solve 
     $pass = TRUE;
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
     $result = (array) $contribution;
+    // Result is success or not.
     $isSuccess = FALSE;
     $processDate = $parsedData['process_date'] ? date('YmdHis', strtotime($parsedData['process_date'])) : '';
     if ($processType == self::BANK && $parsedData['is_success']) {
@@ -1257,8 +1258,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
     if ($isSuccess) {
       if ($contribution->contribution_status_id == 1) {
-        $result['cancel_reason'] = ts('On duplicate entries');
-        $pass = false;
+        $pass = FALSE; // Duplicated Contribution
+        $result['source'] = '<span style="color:red;">'.ts('Records Imported').' ('.ts('Skip').') </span>';
+
       }
       else {
         $result['contribution_status_id'] = 1;
@@ -1275,7 +1277,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       else if($processType == self::POST) {
         $result['cancel_reason'] = $allFailedReason[$processType][self::TRANSACTION][15][$parsedData[15]];
       }
-      $pass = FALSE;
+      if ($contribution->contribution_status_id == 4 && $result['cancel_reason'] == $contribution->cancel_reason) {
+        $pass = FALSE; // Duplicated Contribution
+        $result['source'] = '<span style="color:red;">'.ts('Records Imported').' ('.ts('Skip').') </span>';
+      }
     }
 
     // when $isPreview = TRUE, interrupt and return preview data.
@@ -1288,9 +1293,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     // prepare input
     $input = $result;
-    if ( $isSuccess && !$pass ) {
-      $result['cancel_reason'] = ts('On duplicate entries'); // Duplicated Contribution
-    }
 
     if(!empty($ids['event'])){
       $input['component'] = 'event';
@@ -1336,34 +1338,44 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $transaction = new CRM_Core_Transaction();
 
       if($pass){
-        $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
-        $input['amount'] = $objects['contribution']->amount;
-        $objects['contribution']->receive_date = $input['receive_date'];
-        $sendMail = TRUE;
-        $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
-        $objects['contribution']->receipt_date = $input['receive_date'];
-        $objects['contribution']->save();
-        if (!empty($ids['contributionRecur'])) {
-          $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
-          $params = array( 1 => array($ids['contributionRecur'], 'Positive'));
-          $recurTimes = CRM_Core_DAO::singleValueQuery($sql, $params);
-          if ($recurTimes == 1) {
-            $recur_params = array(
-              'id' => $ids['contributionRecur'],
-              'contribution_status_id' => 5,
-            );
-            $null = array();
-            CRM_Contribute_BAO_ContributionRecur::add($recur_params, $null);
+        // Solve the contribution.
+        $result['executed'] = TRUE;
+        if ($isSuccess) {
+          // Run completeTrransaction.
+
+          $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
+          $input['amount'] = $objects['contribution']->amount;
+          $objects['contribution']->receive_date = $input['receive_date'];
+          $sendMail = TRUE;
+          $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
+          $objects['contribution']->receipt_date = $input['receive_date'];
+          $objects['contribution']->save();
+          if (!empty($ids['contributionRecur'])) {
+            $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
+            $params = array( 1 => array($ids['contributionRecur'], 'Positive'));
+            $recurTimes = CRM_Core_DAO::singleValueQuery($sql, $params);
+            if ($recurTimes == 1) {
+              $recur_params = array(
+                'id' => $ids['contributionRecur'],
+                'contribution_status_id' => 5,
+              );
+              $null = array();
+              CRM_Contribute_BAO_ContributionRecur::add($recur_params, $null);
+            }
           }
         }
+        else if (!$isSuccess && $result['cancel_reason']) {
+          // run Failed.
+          $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['cancel_date']));
+          $ipn->failed($objects, $transaction, $result['cancel_reason']);
+          $note = $result['cancel_reason'];
+        }
+        // Finish or not, add note.
+        self::addNote($note, $objects['contribution']);
       }
-      else{
-        // Failed
-        $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['cancel_date']));
-        $ipn->failed($objects, $transaction, $result['cancel_reason']);
-        $note = $result['cancel_reason'];
+      else {
+        $result['executed'] = FALSE;
       }
-      self::addNote($note, $objects['contribution']);
     }
     return $result;
   }

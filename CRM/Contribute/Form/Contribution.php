@@ -627,6 +627,7 @@ WHERE  contribution_id = {$this->_id}
 
     if (CRM_Utils_Array::value('is_test', $defaults)) {
       $this->assign('is_test', TRUE);
+      $defaults['is_test'] = 1;
     }
 
     if (isset($defaults['honor_contact_id'])) {
@@ -889,6 +890,12 @@ WHERE  contribution_id = {$this->_id}
     }
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution');
+
+    if (CRM_Utils_Array::value('is_test', $defaults)) {
+      $isTestOption = array(0 => ts('No'), 1 => ts('Yes'));
+      $isTestElement = $this->addRadio('is_test', ts('Is Test'), $isTestOption);
+      $isTestElement->freeze();
+    }
 
     $element = $this->add('select', 'contribution_type_id',
       ts('Contribution Type'),
@@ -1579,7 +1586,8 @@ WHERE  contribution_id = {$this->_id}
         $currentCurrency
       );
 
-      $fields = array('contribution_type_id',
+      $fields = array(
+        'contribution_type_id',
         'contribution_status_id',
         'payment_instrument_id',
         'cancel_reason',
@@ -1591,6 +1599,7 @@ WHERE  contribution_id = {$this->_id}
         'pcp_roll_nickname',
         'pcp_personal_note',
         'receipt_id',
+        'is_test',
       );
 
       foreach ($fields as $f) {
