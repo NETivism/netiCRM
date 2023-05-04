@@ -97,6 +97,11 @@
 {/if}
 
 <tr>
+    <td class="nowrap"><a href="{crmURL p='civicrm/admin/setting/security' q='reset=1'}">&raquo; {ts}Website Security Settings{/ts}</a></td>
+    <td>{ts}Global website security settings. eg. CSP, trusted hosts, export encrypt... etc.{/ts}</td>
+</tr>
+
+<tr>
     <td class="nowrap"><a href="{crmURL p='civicrm/admin/setting/misc' q='reset=1'}" id="idMisc">&raquo; {ts}Miscellaneous Settings{/ts}</a></td>
     <td>{ts}Dashboard caching time, move to trash / undelete, change logging, version checking and reCAPTCHA (prevents automated abuse of public forms).{/ts}</td>
 </tr>
