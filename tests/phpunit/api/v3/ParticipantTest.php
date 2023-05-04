@@ -29,7 +29,10 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     $this->_apiversion = 3;
     parent::setUp();
     $this->_entity  = 'participant';
@@ -57,7 +60,10 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     );
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     // $this->eventDelete($this->_eventID);
     // $tablesToTruncate = array(
     //   'civicrm_custom_group', 'civicrm_custom_field', 'civicrm_contact', 'civicrm_participant'
@@ -87,6 +93,7 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testCreateWithCustom() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
@@ -125,6 +132,7 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testGetWithCustom() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
@@ -135,9 +143,8 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
 
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $get = civicrm_api('participant', 'get', $params);
+    $this->assertAPISuccess($get, 'In line ' . __LINE__);
     $this->docMakerResponse($get, __FILE__, __FUNCTION__);
-
-    $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
   }
 
   ///////////////// civicrm_participant_get methods
@@ -637,6 +644,7 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testUpdateParticipant() {
     $participantId = $this->participantCreate(array('contactID' => $this->_individualId, 'eventID' => $this->_eventID, $this->_apiversion));
@@ -668,7 +676,7 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
       $this->assertDBState('CRM_Event_DAO_Participant', $participant['id'], $match);
     }
     // Cleanup created participant records.
-    $result = $this->participantDelete($params['id']);
+    // $result = $this->participantDelete($params['id']);
   }
 
 
@@ -713,6 +721,7 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testDeleteParticipant() {
     $params = array(
