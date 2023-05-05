@@ -863,6 +863,15 @@ AND    option_group_id = %2";
       $errors['is_view'] = ts('Can not set this field Required and View Only at the same time.');
     }
 
+
+    if (CRM_Utils_Array::value('is_searchable', $fields)) {
+      $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $self->_gid, 'table_name');
+      $existsIndexCount = CRM_Core_BAO_SchemaHandler::checkIndexCountByTable($tableName);
+      if ($existsIndexCount >= CRM_Core_DAO::MAX_KEYS_PER_TABLE) {
+        $errors['is_searchable'] = ts('You can not add more than %1 searchable fields in this custom group.', CRM_Core_DAO::MAX_KEYS_PER_TABLE);
+      }
+    }
+
     return empty($errors) ? TRUE : $errors;
   }
 
