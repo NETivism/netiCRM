@@ -255,7 +255,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $trustedHostsPatterns = CRM_Utils_System::getTrustedHostsPatterns();
       if (!empty($trustedHostsPatterns)) {
         // Check trusted HTTP Host headers to protect against header attacks
-        if (!CRM_Utils_System::checkTrustedHosts($_SERVER['HTTP_HOST'])) {
+        if (!CRM_Utils_System::checkTrustedHosts($_SERVER['HTTP_HOST']) && php_sapi_name() !== 'cli') {
           if (CRM_Core_Permission::check('access CiviCRM')) {
             CRM_Core_Session::singleton()->setStatus(ts("Current host \"%1\" doesn't in Trusted Host. If you are sure it's correct host, please add your domain into the <a href=\"%2\">trusted host setting</a>.", array(
               1 => $_SERVER['HTTP_HOST'],
