@@ -49183,3 +49183,12 @@ msgstr "請在「信任主機設定」欄位中啟用您允許的主機。可允
 #: CRM/Core/Config.php
 msgid "Access Denied."
 msgstr "拒絕存取"
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid ""
+"NOTE: Once this option is set, security rules will be applied to recognize "
+"access to your website only from domains that match those listed above, in "
+"order to provide page services. Please make sure that you have set the "
+"\"trusted hosts\" correctly to avoid blocking visitors due to your security "
+"settings."
+msgstr "注意：一旦設定這個選項，會套用安全規則，辨識欲存取您的網站網域名稱符合上述所列，才會提供頁面服務。請務必確定您設定「信任主機」是正確的，以避免您的安全設定阻擋了訪客。"
