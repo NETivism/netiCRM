@@ -36,6 +36,7 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js --reporter=list
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_register.spec.js --reporter=list
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js --reporter=list
 - name: neticrm ci php 5
   image: ghcr.io/netivism/docker-neticrm-ci:drone-php5
   environment:
@@ -59,6 +60,8 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js --reporter=list
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js --reporter=list
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_register.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js --reporter=list
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js --reporter=list
 - name: notify
   image: drillster/drone-email
   settings:
