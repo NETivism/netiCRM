@@ -228,6 +228,7 @@ class CRM_Contact_Page_AJAX {
     $fieldID = CRM_Utils_Type::escape($_GET['cfid'], 'Integer');
     $optionGroupID = CRM_Utils_Type::escape($_GET['ogid'], 'Integer');
     $label = CRM_Utils_Type::escape($_GET['s'], 'String');
+    self::validate();
 
     // Check custom field ID is correct.
     $sql = "SELECT id FROM civicrm_custom_field WHERE id = %1 AND option_group_id = %2";
@@ -628,6 +629,7 @@ WHERE sort_name LIKE '%$name%'";
     */
 
   static public function checkUserName() {
+    self::validate();
     $config = CRM_Core_Config::singleton();
     $username = $_POST['cms_name'];
 
@@ -1122,6 +1124,18 @@ WHERE sort_name LIKE '%$name%'";
 
     echo json_encode($addressVal);
     CRM_Utils_System::civiExit();
+  }
+
+  private static function validate() {
+    $qfKey = CRM_Utils_Type::escape($_GET['qfKey'], 'String');
+    $ctrName = CRM_Utils_Type::escape($_GET['ctrName'], 'String');
+
+    if (!($ctrName == 'CRM_Core_Controller_Simple' && $qfKey == 'ignoreKey')) {
+      $key = CRM_Core_Key::validate($qfKey, $ctrName, TRUE);
+      if (!$key) {
+        CRM_Core_Error::fatal(ts('Site Administrators: This error may indicate that users are accessing this page using a domain or URL other than the configured Base URL. EXAMPLE: Base URL is http://example.org, but some users are accessing the page via http://www.example.org or a domain alias like http://myotherexample.org.'));
+      }
+    }
   }
 }
 

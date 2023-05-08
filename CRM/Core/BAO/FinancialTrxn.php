@@ -45,7 +45,7 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
    *
    * @param array  $params (reference ) an assoc array of name/value pairs
    *
-   * @return object CRM_Core_BAO_FinancialTrxn object
+   * @return false|object CRM_Core_BAO_FinancialTrxn object
    * @access public
    * @static
    */
@@ -64,6 +64,25 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
     $fids = self::getFinancialTrxnIds($params['contribution_id'], 'civicrm_contribution');
     if ($fids['financialTrxnId']) {
       $trxn->id = $fids['financialTrxnId'];
+    }
+    else {
+      $existsId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_financial_trxn WHERE trxn_id = %1", array(
+        1 => array($trxn->trxn_id, 'String'),
+      ));
+      if ($existsId) {
+        // #37595, something may wrong here, make sure override exists records is correct
+        $conflictContribution = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1 AND id != %2", array(
+          1 => array($trxn->trxn_id, 'String'),
+          2 => array($params['contribution_id'], 'Integer'),
+        ));
+        if ($conflictContribution) {
+          CRM_Core_Error::debug_log_message(sprintf("Failed to add transaction record into civicrm_financial_trxn due to conflict between contribution %d:%d.", $conflictContribution, $params['contribution_id']));
+          return FALSE;
+        }
+        else {
+          $trxn->id = $existsId;
+        }
+      }
     }
 
     $trxn->save();

@@ -3054,11 +3054,11 @@
     },
     open: function() {
       $(_panels).addClass("is-opened");
-      $("body").addClass("nme-panel-is-opened");
+      $("body").addClass("nsp-is-opened");
     },
     close: function() {
       $(_panels).removeClass("is-opened");
-      $("body").removeClass("nme-panel-is-opened");
+      $("body").removeClass("nsp-is-opened");
     }
   }
 
