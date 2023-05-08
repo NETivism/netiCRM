@@ -30,7 +30,10 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     // login by user 1 to get customfield
     CRM_Utils_System::loadUser(array('uid' => 1));
     parent::setUp();
@@ -322,7 +325,10 @@ EOT;
     $this->_rtypeId = $rtypeId;
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
   }
 
   function testBackerIPN(){

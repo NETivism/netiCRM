@@ -1039,7 +1039,18 @@ class CRM_Utils_System {
    * @access public
    */
   static function getTrustedHostsPatterns() {
-    return CRM_Core_Config::singleton()->trustedHostsPatterns;
+    global $civicrm_conf;
+    $patterns = array();
+    if (!empty($civicrm_conf['trustedHostsPatterns'])) {
+      $patterns[] = trim($civicrm_conf['trustedHostsPatterns']);
+    }
+    if (!empty(CRM_Core_Config::singleton()->trustedHostsPatterns)) {
+      $patterns[] = trim(CRM_Core_Config::singleton()->trustedHostsPatterns);
+    }
+    if (!empty($patterns)) {
+      return trim(implode("\n", $patterns));
+    }
+    return '';
   }
 
   /**
@@ -1786,6 +1797,9 @@ class CRM_Utils_System {
       if (php_sapi_name() !== 'cli' && !empty($trusted_host_patterns_arr)) {
         foreach ($trusted_host_patterns_arr as $pattern) {
           $pattern = trim($pattern);
+          if ($pattern === '') {
+            continue;
+          }
 
           // Replace wildcard character "*" with regular expression ".*"
           // and add anchors at the start and end of the pattern

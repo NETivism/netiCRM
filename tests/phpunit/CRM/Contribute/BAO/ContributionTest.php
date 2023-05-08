@@ -40,15 +40,21 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                      'group'       => 'CiviCRM BAO Tests',
                      );
     }
-    
-    function setUp( ) 
+
+    /**
+     * @before
+     */
+    function setUpTest()
     {
         parent::setUp();
         // $this->emptyContributionData();
         // $this->contributionTypeCreate();
     }
-    
-    function teardown( ) 
+
+    /**
+     * @after
+     */
+    function tearDownTest( )
     {
         $this->contributionTypeDelete();
     }

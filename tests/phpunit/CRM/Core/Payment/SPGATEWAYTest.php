@@ -38,7 +38,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
 
     $this->_is_test = 1;
@@ -125,7 +128,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $loaded = module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.ipn');
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     $this->_processor = NULL;
   }
 
