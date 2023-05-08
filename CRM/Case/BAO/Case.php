@@ -460,7 +460,7 @@ INNER JOIN  civicrm_option_value ov ON ( ca.case_type_id=ov.value AND ov.option_
    * @access public
    *
    */
-  function retrieveCaseIdsByContactId($contactID, $includeDeleted = FALSE) {
+  static function retrieveCaseIdsByContactId($contactID, $includeDeleted = FALSE) {
     $query = "
 SELECT ca.id as id
 FROM civicrm_case_contact cc

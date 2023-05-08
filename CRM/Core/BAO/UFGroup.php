@@ -2586,7 +2586,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    *
    * @return array list of calculated group type
    */
-  function calculateGroupType($gId, $ignoreFieldId = NULL) {
+  static function calculateGroupType($gId, $ignoreFieldId = NULL) {
     //get the profile fields.
     $ufFields = self::getFields($gId, FALSE, NULL, NULL, NULL, TRUE, NULL, TRUE);
     $groupType = array();
@@ -2672,7 +2672,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    *
    * @return void.
    */
-  function setComponentDefaults(&$fields, $componentId, $component, &$defaults) {
+  static function setComponentDefaults(&$fields, $componentId, $component, &$defaults) {
     if (!$componentId ||
       !in_array($component, array('Contribute', 'Membership', 'Event', 'Activity'))
     ) {

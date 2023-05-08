@@ -1895,7 +1895,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @return array    array of activity fields
    * @access public
    */
-  function getContactActivity($contactId) {
+  static function getContactActivity($contactId) {
     $activities = array();
 
     // First look for activities where contactId is one of the targets

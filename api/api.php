@@ -270,7 +270,7 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
   $loaded_files = array(); // array($relativeFilePath => TRUE)
   $include_dirs = array_unique(explode(PATH_SEPARATOR, get_include_path()));
   foreach ($include_dirs as $include_dir) {
-    $action_dir = implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', "v${version}", $camelName));
+    $action_dir = implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', "v{$version}", $camelName));
     if (! is_dir($action_dir)) {
       continue;
     }

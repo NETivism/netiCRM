@@ -817,7 +817,7 @@ function _civicrm_api3_object_to_array(&$dao, &$values, $uniqueFields = FALSE) {
 
   $fields = _civicrm_api3_build_fields_array($dao, $uniqueFields);
   foreach ($fields as $key => $value) {
-    if (array_key_exists($key, $dao)) {
+    if (property_exists($dao, $key)) {
       $values[$key] = $dao->$key;
     }
   }
