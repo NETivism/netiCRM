@@ -41,7 +41,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildPremium(&$form) {
+  static function buildPremium(&$form) {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
     require_once 'CRM/Contribute/DAO/Product.php';
@@ -124,7 +124,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildAdditionalDetail(&$form) {
+  static function buildAdditionalDetail(&$form) {
     //Additional information section
     $form->add('hidden', 'hidden_AdditionalDetail', 1);
 
@@ -189,7 +189,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildHonoree(&$form) {
+  static function buildHonoree(&$form) {
     //Honoree section
     $form->add('hidden', 'hidden_Honoree', 1);
     $honor = CRM_Core_PseudoConstant::honor();
@@ -212,7 +212,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildPaymentReminders(&$form) {
+  static function buildPaymentReminders(&$form) {
     //PaymentReminders section
     $form->add('hidden', 'hidden_PaymentReminders', 1);
     $form->add('text', 'initial_reminder_day', ts('Send Initial Reminder'), array('size' => 3));

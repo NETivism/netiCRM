@@ -40,7 +40,7 @@ class CRM_Core_Payment_Form {
    * @return void
    * @access protected
    */
-  protected function _setPaymentFields(&$form) {
+  protected static function _setPaymentFields(&$form) {
     $bltID = $form->_bltID;
 
     $form->_fields['billing_first_name'] = array('htmlType' => 'text',
@@ -336,7 +336,7 @@ class CRM_Core_Payment_Form {
    * function to return state/province is_required = true/false
    *
    */
-  function checkRequiredStateProvince($form) {
+  static function checkRequiredStateProvince($form) {
     // If selected country has possible values for state/province mark the
     // state/province field as required.
     require_once 'CRM/Core/DAO/StateProvince.php';
