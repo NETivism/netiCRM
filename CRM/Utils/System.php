@@ -40,7 +40,6 @@
 class CRM_Utils_System {
 
   static $_callbacks = NULL;
-  public static $default_csp = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.google-analytics.com https://*.facebook.net https://*.facebook.com https://*.twitter.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com; object-src 'none'";
 
   /**
    * Compose a new url string from the current url string

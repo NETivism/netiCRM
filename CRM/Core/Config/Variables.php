@@ -428,6 +428,16 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $wkhtmltopdfPath = FALSE;
 
   /**
+   * The default value for Content Security Policy recover.
+   */
+  public $default_csp = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.google-analytics.com https://*.facebook.net https://*.facebook.com https://*.twitter.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com; object-src 'none'";
+
+  /**
+   * The default value for Content Security Policy setting.
+   */
+  public $CSPrules = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.google-analytics.com https://*.facebook.net https://*.facebook.com https://*.twitter.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com; object-src 'none'";
+
+  /**
    * Provide addressSequence
    *
    * @param
