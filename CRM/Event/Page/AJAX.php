@@ -158,7 +158,7 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
   /**
    * Function to get Event Full or left seat
    */
-  function eventFull() {
+  static function eventFull() {
     $id = $_GET['id'] ? $_GET['id'] : ($_GET['eventId'] ? $_GET['eventId'] : NULL);
     $info = array();
     if (is_numeric($id) && !empty($id)) {

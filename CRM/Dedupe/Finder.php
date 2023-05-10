@@ -320,7 +320,7 @@ class CRM_Dedupe_Finder {
         if (isset($flat[$flatKey]) && !is_array($flat[$flatKey])) {
           unset($flat[$flatKey]);
         }
-        $hasResult = array_search($value, $flat[$flatKey]);
+        $hasResult = is_array($flat[$flatKey]) ? array_search($value, $flat[$flatKey]) : NULL;
         if(!$hasResult) {
           $flat[$flatKey][] = $value;
         }

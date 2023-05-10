@@ -2061,16 +2061,20 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
     }
     $filename = basename($filepath, ".php");
     $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-request.json", "w");
-    fwrite($file, json_encode($request, JSON_PRETTY_PRINT));
-    fclose($file);
+    if ($file) {
+      fwrite($file, json_encode($request, JSON_PRETTY_PRINT));
+      fclose($file);
+    }
   }
 
   function docMakerResponse($response, $filepath, $functionName) {
     global $civicrm_root;
     $filename = basename($filepath, ".php");
     $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-response.json", "w");
-    fwrite($file, json_encode($response, JSON_PRETTY_PRINT));
-    fclose($file);
+    if ($file) {
+      fwrite($file, json_encode($response, JSON_PRETTY_PRINT));
+      fclose($file);
+    }
   }
 
   public static function getDBConfig() {
