@@ -28,6 +28,8 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js

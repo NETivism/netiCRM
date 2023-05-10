@@ -66,6 +66,11 @@
       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
       {if $isOnline}{assign var=valueStyle value=" class='view-value'"}{else}{assign var=valueStyle value=""}{/if}
       <table class="form-layout-compressed">
+        {if $is_test}
+            <tr>
+                <td class="label">{$form.is_test.label}</td><td>{$form.is_test.html}</td>
+            </tr>
+        {/if}
         {if $context neq 'standalone'}
             <tr>
                 <td class="font-size12pt label"><strong>{ts}Contributor{/ts}</strong></td><td class="font-size12pt"><strong>{$displayName}</strong></td>

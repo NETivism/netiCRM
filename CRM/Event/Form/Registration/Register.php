@@ -1321,6 +1321,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
     // skip check when confirm by mail link
     if ($self->_allowConfirmation) {
+      if ($isAdditional) {
+        // refs #32662,return false means additional participant already registered
+        return TRUE;
+      }
       return FALSE;
     }
     if ($contactID) {
