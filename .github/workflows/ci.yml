@@ -103,21 +103,9 @@ jobs:
 
       - name: Unit Test - Type test
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
-      # - name: Unit Test - Contribution - Duplicate receipt id test
-      #   run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php"
-      # - name: Payment Test - ALLPAY
-      #   run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
-      # - name: Payment Test - Neweb(new)
-      #   run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php"
       - name: Payment Test - LINE Pay
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php"
-      # - name: Payment Test - TapPay
-      #   run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php"
-      # - name: Payment Test - Backer
-      #   run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php"
-      # - name: API Test - Contribution Recur
-      #   run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php"
-      # - name: API Test - Get Options
+      - name: API Test - Get Options
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php"
       - name: Frontend - All Pages
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js"
