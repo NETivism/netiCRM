@@ -392,5 +392,22 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
       $dao->query($query, FALSE);
     }
   }
+
+  public static function checkIndexCountByTable($table) {
+    $table = CRM_Utils_Type::escape($table, 'String');
+    $dao = CRM_Core_DAO::executeQuery("SHOW INDEX FROM $table");
+    $dao->fetch();
+    if (!empty($dao->N)) {
+      return $dao->N;
+    }
+
+    // in case no N return
+    $count = 1;
+    while($dao->fetch()) {
+      $count++;
+    }
+    return $count;
+  }
+
 }
 
