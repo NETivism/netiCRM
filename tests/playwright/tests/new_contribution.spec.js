@@ -124,9 +124,12 @@ test.describe.serial('Add Contribution', () => {
             await utils.fillInput(page.locator(element), utils.makeid(5));
 
             /* get contribution status */
-            element = '#contribution_status_id option';
+            element = '#contribution_status_id';
             await utils.findElement(page, element);
-            contribution_status = await page.locator(element).nth(0).innerText();
+            contribution_status = await page.evaluate((element) => {
+                const contribution_value = document.querySelector(element).value;
+                return document.querySelector(`${element} option[value="${contribution_value}"]`).innerText;
+            }, element);
 
             /* click Additional Details */
             element = '#AdditionalDetail';
