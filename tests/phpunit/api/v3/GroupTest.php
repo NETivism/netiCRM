@@ -27,19 +27,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
     $this->_apiversion = 3;
 
     parent::setUp();
-    // $this->_groupID = $this->groupCreate(NULL, 3);
-    $params_create = array(
-      'name' => 'Test Group Update',
-      'domain_id' => 1,
-      'title' => 'New Test Group Created For Update',
-      'description' => 'New Test Group Created For Update',
-      'is_active' => 1,
-      'visibility' => 'Public Pages',
-      'version' => $this->_apiversion,
-    );
-    $result_create = civicrm_api('group', 'create', $params_create);
-    $this->_groupID = $result_create['id'];
-
+    $this->_groupID = $this->groupCreate(NULL, 3);
   }
 
   /**
@@ -68,21 +56,20 @@ class api_v3_GroupTest extends CiviUnitTestCase {
    */
   public function testCreateGroup() {
     $params_create = array(
-      'name' => 'Test Group 1',
+      'name' => 'Test Group 1 For Create',
       'domain_id' => 1,
-      'title' => 'New Test Group Created',
+      'title' => 'New Test Group For Create',
       'description' => 'New Test Group Created',
       'is_active' => 1,
+      'group_type' => '1,2',
       'visibility' => 'Public Pages',
       'version' => $this->_apiversion,
-      'group_type' => '1',
     );
     $result_create = civicrm_api('group', 'create', $params_create);
-    $this->_groupID = $result_create['id'];
     $this->docMakerRequest($params_create, __FILE__, __FUNCTION__);
     $this->assertAPISuccess($result_create, 'In line ' . __LINE__);
     $this->docMakerResponse($result_create, __FILE__, __FUNCTION__);
-    $this->groupDelete($this->_groupID);
+    $this->groupDelete($result_create['id']);
   }
 
   /**
@@ -137,23 +124,8 @@ class api_v3_GroupTest extends CiviUnitTestCase {
    * @group CItesting
    */
   public function testDeleteGroup() {
-    //create new group
-    $params_create = array(
-      'name' => 'Test Group 1',
-      'domain_id' => 1,
-      'title' => 'New Test Group Created For Delete',
-      'description' => 'New Test Group For Delete',
-      'is_active' => 1,
-      'visibility' => 'Public Pages',
-      'version' => $this->_apiversion,
-      'group_type' => '1',
-    );
-    $result_create = civicrm_api('group', 'create', $params_create);
-    $this->assertAPISuccess($result_create, 'In line ' . __LINE__);
-    $groupID = $result_create['id'];
-
     $params = array(
-      'id' => $groupID,
+      'id' => $this->_groupID,
       'version' => $this->_apiversion,
     );
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
@@ -220,23 +192,9 @@ class api_v3_GroupTest extends CiviUnitTestCase {
    * @group CItesting
    */
   function testGetGroupParamsWithGroupId() {
-    $params_create = array(
-      'name' => 'Test Group 1',
-      'domain_id' => 1,
-      'title' => 'New Test Group Created',
-      'description' => 'New Test Group Created',
-      'is_active' => 1,
-      'visibility' => 'Public Pages',
-      'version' => $this->_apiversion,
-      'group_type' => '1',
-    );
-    $result_create = civicrm_api('group', 'create', $params_create);
-    $this->assertAPISuccess($result_create, 'In line ' . __LINE__);
-    $groupID = $result_create['id'];
-
-    $params       = array('version' => $this->_apiversion);
-    $params['id'] = $groupID;
-    $group        = civicrm_api('group', 'get', $params);
+    $params = array('version' => $this->_apiversion);
+    $params['id'] = $this->_groupID;
+    $group = civicrm_api('group', 'get', $params);
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $this->docMakerResponse($group, __FILE__, __FUNCTION__);
 
