@@ -131,6 +131,7 @@ DROP TABLE IF EXISTS civicrm_custom_field;
 DROP TABLE IF EXISTS civicrm_custom_group;
 DROP TABLE IF EXISTS civicrm_country;
 DROP TABLE IF EXISTS civicrm_cache;
+DROP TABLE IF EXISTS civicrm_aicompletion;
 DROP TABLE IF EXISTS civicrm_entity_batch;
 DROP TABLE IF EXISTS civicrm_batch;
 DROP TABLE IF EXISTS civicrm_price_set_entity;
@@ -2426,6 +2427,24 @@ CREATE TABLE civicrm_entity_batch (
   
 ,      
      CONSTRAINT FK_civicrm_entity_batch_batch_id FOREIGN KEY (batch_id) REFERENCES civicrm_batch(id) ON DELETE CASCADE  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_aicompletion
+-- *
+-- * AI Completion log table.
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_aicompletion (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'AICompletion ID' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+ 
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

@@ -356,6 +356,11 @@ return array(
     'class' => 'CRM_Batch_DAO_EntityBatch',
     'table' => 'civicrm_entity_batch',
   ) ,
+  'CRM_AI_DAO_AICompletion' => array(
+    'name' => 'AICompletion',
+    'class' => 'CRM_AI_DAO_AICompletion',
+    'table' => 'civicrm_aicompletion',
+  ) ,
   'CRM_Core_DAO_Cache' => array(
     'name' => 'Cache',
     'class' => 'CRM_Core_DAO_Cache',

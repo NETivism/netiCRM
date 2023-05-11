@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/AI</base>
+  <class>AICompletion</class>
+  <name>civicrm_aicompletion</name>
+  <comment>AI Completion log table.</comment>
+  <add>4.0</add>
+  <log>false</log>
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>AICompletion ID</comment>
+    <add>4.0</add>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+</table>
