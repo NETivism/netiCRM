@@ -107,7 +107,9 @@ item.task.forEach(function(task, i){
       casper.echo('=====================================');
       casper.echo('** Step 1: Enter Upload File Page. **');
       casper.echo('=====================================');
-      test.assertExists('#skipColumnHeader', 'Skip Column Header Field is Exist.');
+      casper.waitForSelector('#skipColumnHeader', function(){
+        test.assertExists('#skipColumnHeader', 'Skip Column Header Field is Exist.');
+      });
       casper.capture(currentTestFolder+"picture/import_task_"+i+"_1.png");
     });
 

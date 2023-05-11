@@ -31,7 +31,14 @@ casper.test.begin('Resurrectio test', function(test) {
     }, function fail() {
         test.assertExists("#user-login-form", 'Login form exist.');
     });
-    
+
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('Start testing...', function(test) {
+
     casper.thenOpen(vars.baseURL + "civicrm/contact/search/advanced?reset=1", function() {
     });
 

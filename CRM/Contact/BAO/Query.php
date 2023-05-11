@@ -1342,7 +1342,7 @@ class CRM_Contact_BAO_Query {
     elseif (!$useEquals && in_array($id, $likeNames)) {
       $result = array($id, 'LIKE', $values, 0, 1);
     }
-    elseif (!$useEquals && preg_match('/^\d+(,\d+)*$/', $values) && !is_numeric($values)) {
+    elseif (!$useEquals && is_string($values) && preg_match('/^\d+(,\d+)*$/', $values) && !is_numeric($values)) {
       $result = array($id, 'IN', '('.$values.')', 0);
     }
     elseif (is_string($values) && strpos($values, '%') !== FALSE) {

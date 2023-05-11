@@ -1165,7 +1165,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    *
    *  @access public
    */
-  function isErrorInCustomData($params, &$errorMessage) {
+  static function isErrorInCustomData($params, &$errorMessage) {
     //CRM-5125
     //add custom fields for contact sub type
     if (isset($this)) {

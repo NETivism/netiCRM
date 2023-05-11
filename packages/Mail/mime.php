@@ -183,7 +183,7 @@ class Mail_mime
 
         // Update build parameters
         if (!empty($params) && is_array($params)) {
-            while (list($key, $value) = each($params)) {
+            foreach ($params as $key => $value) {
                 $this->_build_params[$key] = $value;
             }
         }
@@ -842,7 +842,7 @@ class Mail_mime
     function &get($params = null, $filename = null, $skip_head = false)
     {
         if (isset($params)) {
-            while (list($key, $value) = each($params)) {
+            foreach ($params as $key => $value) {
                 $this->_build_params[$key] = $value;
             }
         }
@@ -1268,7 +1268,7 @@ class Mail_mime
     function _encodeHeaders($input, $params = array())
     {
         $build_params = $this->_build_params;
-        foreach($params as $key => $value) {
+        foreach ($params as $key => $value) {
             $build_params[$key] = $value;
         }
 

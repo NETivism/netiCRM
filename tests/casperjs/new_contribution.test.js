@@ -32,6 +32,13 @@ casper.test.begin('Resurrectio test', function(test) {
     }, function fail() {
         test.assertExists("#user-login-form", 'Login form exist.');
     });
+    
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('Start testing...', function(test) {
 
     /* open new contribution page */
     casper.thenOpen(vars.baseURL + "civicrm/contribute/add?reset=1&action=add&context=standalone", function() {
@@ -39,8 +46,6 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('** Step 1: New Contribution. **');
         casper.echo('=====================================');
     });
-
-    casper.wait(2000);
 
     /* select 新增個人 */
     casper.waitForSelector("#profiles_1", function success() {

@@ -592,7 +592,7 @@ class Mail_mimePart
         $escape = '=';
         $output = '';
 
-        while (list($idx, $line) = each($lines)) {
+        foreach ($lines as $idx => $line) {
             $newline = '';
             $i = 0;
 
@@ -931,7 +931,7 @@ class Mail_mimePart
      * @return array            String tokens array
      * @access private
      */
-    function _explodeQuotedString($delimiter, $string)
+    static function _explodeQuotedString($delimiter, $string)
     {
         $result = array();
         $strlen = strlen($string);

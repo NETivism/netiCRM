@@ -246,6 +246,9 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         );
       }
       $this->_dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
+      if (!$dedupeFields || !is_array($dedupeFields)) {
+        $dedupeFields = array();
+      }
       $this->_dedupeFields = array_merge($dedupeFields, array('contribution_contact_id', 'external_identifier'));
       // correct sort_name / display_name problem
       $hasSortName = array_search('sort_name', $dedupeFields);

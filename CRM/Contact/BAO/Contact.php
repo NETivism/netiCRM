@@ -876,7 +876,7 @@ WHERE id={$id}; ";
    *
    *  @return void
    */
-  function contactTrashRestore($contactId, $restore = FALSE, $reason = NULL) {
+  static function contactTrashRestore($contactId, $restore = FALSE, $reason = NULL) {
     require_once 'CRM/Core/BAO/Log.php';
     $params = array(1 => array($contactId, 'Integer'));
     $isDelete = ' is_deleted = 1 ';
