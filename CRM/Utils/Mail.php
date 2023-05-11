@@ -276,7 +276,7 @@ class CRM_Utils_Mail {
     return $message;
   }
 
-  function logger(&$to, &$headers, &$message) {
+  static function logger(&$to, &$headers, &$message) {
     if (is_array($to)) {
       $toString = implode(', ', $to);
       $fileName = $to[0];

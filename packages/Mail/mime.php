@@ -841,10 +841,8 @@ class Mail_mime
      */
     function &get($params = null, $filename = null, $skip_head = false)
     {
-        if (isset($params)) {
-            foreach ($params as $key => $value) {
-                $this->_build_params[$key] = $value;
-            }
+        if (!empty($params) && is_array($params)) {
+            $this->_build_params = array_merge($this->_build_params, $params);
         }
 
         if (count($this->_html_images) && isset($this->_htmlbody)) {
