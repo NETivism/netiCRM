@@ -97,11 +97,19 @@
             -->
             <tr><td class="label">{ts}Recurring Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
             {if $record_detail}
+            {capture assign="card_expiry_date"}{ts}Card Expiry Date{/ts}{/capture}
+            {include file="CRM/common/clickToShow.tpl"}
             <tr><td></td><td></td></tr>
               {foreach from=$record_detail key=label item=value}
                 <tr>
                     <td class="label">{$label}</td>
-                    <td>{$value}</td>
+                    <td>
+                      {if $label eq $card_expiry_date}
+                        <div class="click-to-show"><a href="#" class="click-to-show-trigger">{ts}Please pay attention to protect credit card information.{/ts} {ts}Click to show details{/ts} *******</a><span class="click-to-show-info">{$value}</span></div>
+                      {else}
+                        {$value}
+                      {/if}
+                    </td>
                 </tr>
               {/foreach}
             {/if}

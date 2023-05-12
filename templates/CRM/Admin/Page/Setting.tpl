@@ -118,19 +118,12 @@
     <td class="nowrap">&raquo; CiviCRM {ts}Private Key{/ts}</td>
     <td>
       {ts}Carefully. You should never make this publicly.{/ts}
-      <div id="site-key"><a href="#" id="show-sitekey">{ts}Show{/ts} ***********</a><textarea rows="1" style="display:none; width: 100%;">{$site_key}</textarea></div>
+      {include file="CRM/common/clickToShow.tpl"}
+      <div class="click-to-show">
+        <a href="#" class="click-to-show-trigger">{ts}Show{/ts} ***********</a>
+        <textarea rows="1" style="display:none; width: 100%;" class="click-to-show-info">{$site_key}</textarea>
+      </div>
     </td>
 </tr>
 {/if}
 </table>
-{literal}<script>
-cj(document).ready(function($){
-  $("#show-sitekey").click(function(){
-    $("#site-key > textarea").show();
-    $(this).remove();
-  });
-  $("#site-key > textarea").click(function(){
-    $(this).select();
-  });
-});
-</script>{/literal}

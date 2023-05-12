@@ -49199,3 +49199,25 @@ msgid ""
 "host, please add your domain into the <a href=\"%2\">trusted host "
 "setting</a>."
 msgstr "目前主機 「%1」 不在「信任主機設定」中。 如果您確定這是正確的主機，請將您的網域新增到「<a href=\"%2\">信任主機設定</a>」中。"
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Please pay attention to protect credit card information."
+msgstr "請妥善注重客戶隱私，保護好信用卡相關資訊。"
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Click to show details"
+msgstr "點擊顯示詳情"
+
+# CRM/Admin/Form/Setting/Security.php
+msgid "Settings - Website Security"
+msgstr "設定 - 網站安全性"
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Website Security Settings"
+msgstr "網站安全性設定"
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid ""
+"Global website security settings. eg. CSP, trusted hosts, export encrypt... "
+"etc."
+msgstr "全域網站安全性設定，例如：CSP、受信任的主機、匯出加密...等。"
