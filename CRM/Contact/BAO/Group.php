@@ -368,10 +368,11 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
       }
       elseif (is_string ($params['group_type'])) {
         $type = explode(',', $params['group_type']);
-        $params['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR,
+        if (is_array($type)) {
+          $params['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR,
           array_values($type)
-        ) . CRM_Core_DAO::VALUE_SEPARATOR;
-
+          ) . CRM_Core_DAO::VALUE_SEPARATOR;
+        }
       }
     }
     else {
