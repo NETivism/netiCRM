@@ -29,7 +29,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode = 'live', &$paymentProcessor, $paymentForm = NULL) {
+  public static function &singleton($mode = 'live', &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Backer($mode, $paymentProcessor);
@@ -262,7 +262,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       // move exists billing address to other
       $otherLocationTypeId = array_search('Other', $locationType);
       $billingLocationTypeId = array_search('Billing', $locationType);
-      if (count($contact['address']) > 0 && $otherLocationTypeId && $billingLocationTypeId) {
+      if (count((array)$contact['address']) > 0 && $otherLocationTypeId && $billingLocationTypeId) {
         $existsBillingAddress = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_address WHERE location_type_id = '$billingLocationTypeId' AND contact_id = %1", array(
           1 => array($contact['id'], 'Integer')
         ));
