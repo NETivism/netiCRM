@@ -48774,3 +48774,11 @@ msgstr ""
 #: CRM/Core/Config.php
 msgid "Current host \"%1\" doesn't in Trusted Host. If you are sure it's correct host, please add your domain into the <a href=\"%2\">trusted host setting</a>."
 msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Please pay attention to protect credit card information."
+msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Click to show details"
+msgstr ""
