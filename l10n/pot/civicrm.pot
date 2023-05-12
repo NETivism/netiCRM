@@ -48782,3 +48782,15 @@ msgstr ""
 # templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Click to show details"
 msgstr ""
+
+# CRM/Admin/Form/Setting/Security.php
+msgid "Settings - Website Security"
+msgstr ""
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Website Security Settings"
+msgstr ""
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Global website security settings. eg. CSP, trusted hosts, export encrypt... etc."
+msgstr ""
