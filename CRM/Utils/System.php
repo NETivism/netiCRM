@@ -210,18 +210,18 @@ class CRM_Utils_System {
 	 */
   static function setCSPHeader() {
 
-    if (empty(CRM_Core_Config::singleton()->CSPrules)) {
+    if (empty(CRM_Core_Config::singleton()->cspRules)) {
       return;
     }
     else {
-      $default_csp = CRM_Core_Config::singleton()->CSPrules;
+      $defaultCSP = CRM_Core_Config::singleton()->cspRules;
     }
 
-    $current_path = self::currentPath();
-    $csp_exclude_path = CRM_Core_Config::singleton()->CSPexcludePath;
+    $currentPath = self::currentPath();
+    $cspExcludePath = CRM_Core_Config::singleton()->cspExcludePath;
 
-    if (!self::matchPath($csp_exclude_path, $current_path)) {
-      header("Content-Security-Policy: {$default_csp}");
+    if (!self::matchPath($cspExcludePath, $currentPath)) {
+      header("Content-Security-Policy: {$defaultCSP}");
     }
   }
 

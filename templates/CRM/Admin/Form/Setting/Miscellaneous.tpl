@@ -91,15 +91,15 @@
         {ts}Default values will be supplied for these Content Security Policy when you access CiviCRM.{/ts}
     </div>
     <table class="form-layout">
-        <tr class="crm-csp-form-block-CSP">
-            <td class="label">{$form.CSPrules.label}</td>
-            <td>{$form.CSPrules.html|crmReplace:class:'huge40'}
+        <tr class="crm-csp-form-block-csp">
+            <td class="label">{$form.cspRules.label}</td>
+            <td>{$form.cspRules.html|crmReplace:class:'huge40'}
                 <a id="use-default-csp" href="#">{ts}Click here to replace the current input values with CSP default values.{/ts}</a>
             </td>
         </tr>
-        <tr class="crm-csp-form-block-CSPexcludePath">
-            <td class="label">{$form.CSPexcludePath.label}</td>
-            <td>{$form.CSPexcludePath.html|crmReplace:class:'huge40'}
+        <tr class="crm-csp-form-block-cspExcludePath">
+            <td class="label">{$form.cspExcludePath.label}</td>
+            <td>{$form.cspExcludePath.html|crmReplace:class:'huge40'}
                 <span class="description">{ts}Specify pages by using their paths. Enter one path per line.{/ts}</span>
             </td>
         </tr>
@@ -107,10 +107,10 @@
   {literal}
     <script>
       cj('#use-default-csp').click(function(){
-        var CSPrules = textarea = document.getElementById('CSPrules');
-        var defaultCSP = {/literal}"{$default_csp}";
+        var cspRules = textarea = document.getElementById('cspRules');
+        var defaultCSP = {/literal}"{$defaultCSP}";
         {literal}
-        CSPrules.value = defaultCSP;
+        cspRules.value = defaultCSP;
       });
     </script>
   {/literal}
