@@ -17,6 +17,14 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
       $this->addTextarea('trustedHostsPatterns', ts('Trusted Host Settings'), array(
         'placeholder' => ts('Example'). ":" . $_SERVER['HTTP_HOST']
       ));
+
+      $this->addElement('textarea', 'cspRules', ts('Content Security Policy'));
+      $this->addElement('textarea', 'cspExcludePath', ts('Exclude path'));
+
+      $config = CRM_Core_Config::singleton();
+      if ($config->defaultCSP) {
+        $this->assign('defaultCSP', $config->defaultCSP);
+      }
     }
     else {
       $this->assign('admin', FALSE);

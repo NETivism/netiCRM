@@ -83,13 +83,6 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
       $this->assign('admin', TRUE);
       $this->addTextfield('docURLBase', ts('Documentation URL Base Path'));
-      $this->addElement('textarea', 'cspRules', ts('Content Security Policy'));
-      $this->addElement('textarea', 'cspExcludePath', ts('Exclude path'));
-
-      $config = CRM_Core_Config::singleton();
-      if ($config->defaultCSP) {
-        $this->assign('defaultCSP', $config->defaultCSP);
-      }
     }
     else {
       $this->assign('admin', FALSE);
