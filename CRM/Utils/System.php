@@ -128,7 +128,7 @@ class CRM_Utils_System {
 
   /**
    * Wrapping function to themeing
-   * 
+   *
    * For drupal 9 and new exception handling, we use exception to handle what kind of theme we should output
    * Do not use this control themeing anymore. Use drupal invoke function to display output
    * All content will use stdout and capture by drupal
@@ -201,6 +201,65 @@ class CRM_Utils_System {
    */
   static function currentPath() {
     return CRM_Core_Config::$_userSystem->currentPath();
+  }
+
+  /**
+	 * This static function sets the Content-Security-Policy header based on the configuration
+	 * rules defined in CRM_Core_Config. If the current path matches the CSPexcludePath
+	 * configuration rule, the header is not set.
+	 */
+  static function setCSPHeader() {
+    if (empty(CRM_Core_Config::singleton()->cspRules)) {
+      return;
+    }
+    else {
+      $defaultCSP = CRM_Core_Config::singleton()->cspRules;
+    }
+    $csp = new CRM_Utils_CSP($defaultCSP);
+    $csp = (string) $csp;
+
+    $currentPath = self::currentPath();
+    $cspExcludePath = CRM_Core_Config::singleton()->cspExcludePath;
+
+    if (!self::matchPath($cspExcludePath, $currentPath) && !empty($csp)) {
+      header("Content-Security-Policy: ".$csp);
+    }
+  }
+
+
+  /**
+   * This static function checks if the given path matches any of the patterns in the
+   * given pattern string. The pattern string should be a newline-separated list of
+   * Unix-style shell wildcards (e.g. *.php, /admin/*).
+   *
+   * @param string $pattern The pattern string to match against.
+   * @param string $path The path to test.
+   * @return bool Whether the path matches any of the patterns in the pattern string.
+   */
+  static function matchPath($pattern, $path) {
+
+    if (empty($pattern)) {
+      return false;
+    }
+
+    $patterns = preg_split('/\r?\n/', $pattern);
+    $patterns = array_map('trim', $patterns);
+    static $results = [];
+
+    foreach ($patterns as $pattern) {
+      if (isset($results[$pattern])) {
+        $result = $results[$pattern];
+      }
+      else {
+        $result = fnmatch($pattern, $path);
+        $results[$pattern] = $result;
+      }
+
+      if ($result) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -360,7 +419,7 @@ class CRM_Utils_System {
    *
    * @return string
    * @access public
-   * @static  
+   * @static
    */
   static function siteName() {
     return CRM_Core_Config::$_userSystem->siteName($name, $default);
@@ -371,7 +430,7 @@ class CRM_Utils_System {
    *
    * @return boolean
    * @access public
-   * @static  
+   * @static
    */
   static function allowedUserRegisteration() {
     return CRM_Core_Config::$_userSystem->allowedUserRegisteration();
@@ -382,7 +441,7 @@ class CRM_Utils_System {
    *
    * @return boolean
    * @access public
-   * @static  
+   * @static
    */
   static function userEmailVerification() {
     return CRM_Core_Config::$_userSystem->userEmailVerification();
@@ -392,7 +451,7 @@ class CRM_Utils_System {
    * Check module exists on system
    * @return string
    * @access public
-   * @static  
+   * @static
    */
   static function moduleExists($module) {
     $config = CRM_Core_Config::singleton();
@@ -406,7 +465,7 @@ class CRM_Utils_System {
    * Check hook exists in module list
    * @return string
    * @access public
-   * @static  
+   * @static
    */
   static function moduleImplements($hook) {
     $config = CRM_Core_Config::singleton();
@@ -1174,7 +1233,7 @@ class CRM_Utils_System {
    * Only functions in register_shutdown_function will be call after this.
    * You should add callbacks into CRM_Core_Config::shutdownCallbacks
    * When using fpm, we may have fastcgi_finish_request and location of header here.
-   * 
+   *
    * @param integer $status
    * @return void
    */
@@ -1620,17 +1679,17 @@ class CRM_Utils_System {
 
   /**
    * SameSite cookie compatibility check
-   * 
+   *
    * from https://www.chromium.org/updates/same-site/incompatible-clients
    */
   public static function sameSiteCheck() {
     $useragent = $_SERVER['HTTP_USER_AGENT'];
     $isIOS = preg_match('/(iP.+; CPU .*OS (\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $ios);
     if ($isIOS && $ios[2] == '12') {
-      return FALSE; 
+      return FALSE;
     }
     $safariStr = preg_match('/Version\/.* Safari\//i', $useragent);
-    $isChromiumBased = preg_match('/Chrom(e|ium)/i', $useragent); 
+    $isChromiumBased = preg_match('/Chrom(e|ium)/i', $useragent);
     $isSafari = !empty($safariStr) && !$isChromiumBased;
     if ($isSafari) {
       $isMAC = preg_match('/(Macintosh;.*Mac OS X (\d+)_(\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $mac);
