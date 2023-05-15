@@ -90,9 +90,6 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       if ($config->defaultCSP) {
         $this->assign('defaultCSP', $config->defaultCSP);
       }
-      $this->addTextarea('trustedHostsPatterns', ts('Trusted Host Settings'), array(
-        'placeholder' => ts('Example').":".$_SERVER['HTTP_HOST']
-      ));
     }
     else {
       $this->assign('admin', FALSE);
