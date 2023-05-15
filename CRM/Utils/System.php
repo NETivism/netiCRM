@@ -209,19 +209,20 @@ class CRM_Utils_System {
 	 * configuration rule, the header is not set.
 	 */
   static function setCSPHeader() {
-
     if (empty(CRM_Core_Config::singleton()->cspRules)) {
       return;
     }
     else {
       $defaultCSP = CRM_Core_Config::singleton()->cspRules;
     }
+    $csp = new CRM_Utils_CSP($defaultCSP);
+    $csp = (string) $csp;
 
     $currentPath = self::currentPath();
     $cspExcludePath = CRM_Core_Config::singleton()->cspExcludePath;
 
-    if (!self::matchPath($cspExcludePath, $currentPath)) {
-      header("Content-Security-Policy: {$defaultCSP}");
+    if (!self::matchPath($cspExcludePath, $currentPath) && !empty($csp)) {
+      header("Content-Security-Policy: ".$csp);
     }
   }
 
