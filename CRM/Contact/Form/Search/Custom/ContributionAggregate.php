@@ -100,13 +100,17 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
   ) {
 
     // SELECT clause must include contact_id as an alias for civicrm_contact.id
-    // We need remove '$onlyIDs' here, otherwise we couldn't use `donation_amount` in the filter.
+    if ($onlyIDs) {
+      $select = "DISTINCT contact_a.id as contact_id";
+    }
+    else {
       $select = "
 DISTINCT contact_a.id as contact_id,
 contact_a.sort_name as sort_name,
 sum(contrib.total_amount) AS donation_amount,
 count(contrib.id) AS donation_count
 ";
+    }
     $from = $this->from();
 
     $where = $this->where($includeContactIDs);
@@ -130,13 +134,12 @@ GROUP BY contact_a.id
 $having
 ";
     //for only contact ids ignore order.
-    if(!empty($this->_formValues['top_contributors'])){
-      $top_amount = $this->_formValues['top_contributors'];
-      $sql .= "ORDER BY donation_amount DESC LIMIT $top_amount ";
-    }
     if (!$onlyIDs) {
-      $sql = "SELECT * FROM ($sql) orig ";
-
+      if(!empty($this->_formValues['top_contributors'])){
+        $top_amount = $this->_formValues['top_contributors'];
+        $sql .= "ORDER BY donation_amount DESC LIMIT $top_amount ";
+        $sql = "SELECT * FROM ($sql) orig ";
+      }
       // Define ORDER BY for query in $sort, with default value
       if (!empty($sort)) {
         if (is_string($sort)) {
@@ -151,7 +154,10 @@ $having
       }
     }
     else {
-      $sql = "SELECT contact_id FROM ($sql) orig ";
+      if(!empty($this->_formValues['top_contributors'])){
+        $top_amount = $this->_formValues['top_contributors'];
+        $sql .= "ORDER BY sum(contrib.total_amount) DESC LIMIT $top_amount ";
+      }
     }
 
     if ($rowcount > 0 && $offset >= 0) {
@@ -248,4 +254,3 @@ civicrm_contact AS contact_a
     return NULL;
   }
 }
-
