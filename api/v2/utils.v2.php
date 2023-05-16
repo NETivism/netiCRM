@@ -155,7 +155,7 @@ function _civicrm_object_to_array(&$dao, &$values) {
   }
 
   foreach ($fields as $key => $value) {
-    if (array_key_exists($key, $dao)) {
+    if (property_exists($dao, $key)) {
       $values[$key] = $dao->$key;
     }
   }

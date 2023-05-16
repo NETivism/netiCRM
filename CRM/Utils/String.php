@@ -442,7 +442,14 @@ class CRM_Utils_String {
   static function htmlPurifier($html, $allowed_tags = array()) {
     require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.auto.php';
     static $_purifier;
-    $hash = md5(implode('', $allowed_tags));
+    if (is_array($allowed_tags)) {
+      // $allowed_tags is Array
+      $hash = md5(implode('', $allowed_tags));
+    }
+    else {
+      // $allowed_tags is String 
+      $hash = md5($allowed_tags);
+    }
     if (!$_purifier[$hash]) {
       $config = CRM_Core_Config::singleton();
 
