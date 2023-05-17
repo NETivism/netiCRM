@@ -105,7 +105,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    */
   public function defaultFromHeader($columnName, &$patterns) {
     if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
-      $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
+      $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}\/])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
       // Find matching columns in the mapper fields array
       $matches = preg_grep('/(^'.$columnMatch.'$)|(^\w+\::'.$columnMatch.'$)/iu', $this->_mapperFields);
 
