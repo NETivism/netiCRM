@@ -6959,6 +6959,11 @@ input.crm-form-textfield,
   background: url(images/icon--search.png) left 0 top 50% / 30px no-repeat;
 }
 
+/* click to show */
+.click-to-show-info {
+  display: none;
+}
+
 /* RWD block */
 @media screen and (max-width: 768px) {
   .crm-container .crm-block-rwd {
