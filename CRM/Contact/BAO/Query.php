@@ -2412,7 +2412,7 @@ class CRM_Contact_BAO_Query {
    * @return void
    */
   function deletedContacts($values) {
-    list($_, $_, $value, $grouping, $_) = $values;
+    list($dontcare1, $dontcare2, $value, $grouping, $dontcare3) = $values;
     if ($value) {
       // *prepend* to the relevant grouping as this is quite an important factor
       array_unshift($this->_qill[$grouping], ts('Search in Trash'));
@@ -3954,7 +3954,7 @@ civicrm_relationship.start_date > {$today}
     // if we’re explicitely looking for a certain contact’s contribs, events, etc.
     // and that contact happens to be deleted, set $onlyDeleted to true
     foreach ($this->_params as $values) {
-      list($name, $op, $value, $_, $_) = $values;
+      list($name, $op, $value) = $values;
       if ($name == 'contact_id' and $op == '=') {
         if (CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $value, 'is_deleted')) {
           $onlyDeleted = TRUE;

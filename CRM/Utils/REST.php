@@ -462,12 +462,13 @@ class CRM_Utils_REST {
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
   static function loadTemplate() {
-    $request = CRM_Utils_Request::retrieve('q', 'String');
+    /*
+    $request = CRM_Utils_Request::retrieve('q', 'String', CRM_Core_DAO::$_nullObject);
     if (FALSE !== strpos($request, '..')) {
       die("SECURITY FATAL: the url can't contain '..'. Please report the issue on the forum at civicrm.org");
     }
 
-    $request = split('/', $request);
+    $request = preg_split('/\//', $request);
     $entity = _civicrm_api_get_camel_name($request[2]);
     $tplfile = _civicrm_api_get_camel_name($request[3]);
 
@@ -513,6 +514,7 @@ class CRM_Utils_REST {
       echo $content . $smarty->fetch($tpl);
       CRM_Utils_System::civiExit();
     }
+    */
   }
 
   /** This is a wrapper so you can call an api via json (it returns json too)
