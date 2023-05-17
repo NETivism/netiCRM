@@ -398,7 +398,7 @@ LEFT  JOIN (
     }
   }
 
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = $grouping = $checkDate = $errorCount = array();
 
     $rules = array('id' => array('sort_name', 'email', 'phone',
