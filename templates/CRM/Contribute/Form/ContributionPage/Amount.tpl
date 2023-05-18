@@ -180,9 +180,9 @@
             <tr id="minMaxFields" class="crm-contribution-form-block-minMaxFields"><td>&nbsp;</td><td>
                <table class="form-layout-compressed">
                 <tr class="crm-contribution-form-block-min_amount"><th scope="row" class="label">{$form.min_amount.label}</th>
-                <td>{$form.min_amount.html|crmMoney}</td></tr> 
+                <td>{$form.min_amount.html}</td></tr>
                 <tr class="crm-contribution-form-block-max_amount"><th scope="row" class="label">{$form.max_amount.label}</th>
-                <td>{$form.max_amount.html|crmMoney}<br />
+                <td>{$form.max_amount.html}<br />
                 <span class="description">{ts 1=5|crmMoney}If you have chosen to <strong>Allow Other Amounts</strong>, you can use the fields above to control minimum and/or maximum acceptable values (e.g. don't allow contribution amounts less than %1).{/ts}</span></td></tr>
                </table>
             </td></tr>
@@ -202,7 +202,7 @@
                             <tr>
                               <td class="even-row">{$form.default.$idx.html} {$form.grouping.$idx.html}</td>
                               <td>{$form.label.$idx.html}</td>
-                              <td class="even-row">{$form.value.$idx.html|crmMoney}</td>
+                              <td class="even-row">{$form.value.$idx.html}</td>
                               <td class="even-row">{$form.filter.$idx.html}</td>
                             </tr>
                         {/section}

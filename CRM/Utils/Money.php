@@ -144,6 +144,9 @@ class CRM_Utils_Money {
    * @return string
    */
   protected static function formatNumericByFormat($amount, $valueFormat) {
+    if (!is_numeric($amount)) {
+      return $amount;
+    }
     $formatted = $amount;
     switch($valueFormat) {
       case '%!i':

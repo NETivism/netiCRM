@@ -124,7 +124,7 @@
       <table class="form-layout-compressed">
              <tr class="crm-membership-type-form-block-minimum_fee">
                  <td class="label">{$form.minimum_fee.label}</td>
-                 <td>{$form.minimum_fee.html|crmMoney}<br />
+                 <td>{$form.minimum_fee.html}<br />
                     <span  class="description">{ts}Minimum fee required for this membership type. For free/complimentary memberships - set minimum fee to zero (0).{/ts}</span>
                  </td>
              </tr>

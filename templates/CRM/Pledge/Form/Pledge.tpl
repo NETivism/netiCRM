@@ -67,9 +67,9 @@
         {/if}
 	<tr class="crm-pledge-form-block-amount">
 	    <td class="font-size12pt right">{$form.amount.label}</td>
-	    <td><span class="font-size12pt">{$form.amount.html|crmMoney}</span> {if $originalPledgeAmount}<div class="messages status">&nbsp;{ts 1=$originalPledgeAmount|crmMoney} Pledge total has changed due to payment adjustments. Original pledge amount was %1.{/ts}</div>{/if}</td>
+	    <td><span class="font-size12pt">{$form.amount.html}</span> {if $originalPledgeAmount}<div class="messages status">&nbsp;{ts 1=$originalPledgeAmount|crmMoney} Pledge total has changed due to payment adjustments. Original pledge amount was %1.{/ts}</div>{/if}</td>
 	</tr>
-        <tr class="crm-pledge-form-block-installments"><td class="label">{$form.installments.label}</td><td>{$form.installments.html} {ts}installments of{/ts} {if $action eq 1 or $isPending}{$form.eachPaymentAmount.html|crmMoney}{elseif $action eq 2 and !$isPending}{$eachPaymentAmount|crmMoney}{/if}&nbsp;{ts}every{/ts}&nbsp;{$form.frequency_interval.html}&nbsp;{$form.frequency_unit.html}</td></tr>
+        <tr class="crm-pledge-form-block-installments"><td class="label">{$form.installments.label}</td><td>{$form.installments.html} {ts}installments of{/ts} {if $action eq 1 or $isPending}{$form.eachPaymentAmount.html}{elseif $action eq 2 and !$isPending}{$eachPaymentAmount|crmMoney}{/if}&nbsp;{ts}every{/ts}&nbsp;{$form.frequency_interval.html}&nbsp;{$form.frequency_unit.html}</td></tr>
         <tr class="crm-pledge-form-block-frequency_day"><td class="label nowrap">{$form.frequency_day.label}</td><td>{$form.frequency_day.html} {ts}day of the period{/ts}<br />
             <span class="description">{ts}This applies to weekly, monthly and yearly payments.{/ts}</td></tr>
         {if $form.create_date}	
