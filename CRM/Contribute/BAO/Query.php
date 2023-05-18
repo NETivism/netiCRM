@@ -350,6 +350,7 @@ class CRM_Contribute_BAO_Query {
         else {
           $op = '=';
           $contribution_type_id = $value;
+          $names = array($types[$contribution_type_id]);
         }
         $query->_qill[$grouping][] = ts('Contribution Type - %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_type_id", $op, $contribution_type_id, "Integer");
@@ -376,16 +377,10 @@ class CRM_Contribute_BAO_Query {
         else {
           $op = '=';
           $contribution_page_id = $cPage;
+          $names = array($pages[$contribution_page_id]);
         }
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_page_id", $op, $contribution_page_id, "Integer");
-        if (is_array($names)) {
-          // $names is Array
-          $query->_qill[$grouping][] = ts('Contribution Page - %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
-        }
-        else {
-          // $names is String
-          $query->_qill[$grouping][] = ts('Contribution Page - %1', array(1 => $op)) . ' ' . $names;
-        }
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_contribution.contribution_page_id", $op, $contribution_page_id, "Integer");;
+        $query->_qill[$grouping][] = ts('Contribution Page - %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
