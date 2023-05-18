@@ -49,7 +49,14 @@ class CRM_Utils_String {
   /**
    * Allowed HTML Tags
    */
-  const ALLOWED_TAGS = 'div[style],b,strong,i,em,s,a[href|title],ul,ol,li,p[style],blockquote,br,span[style],img[width|height|alt|src|style],figure[class|style],figcaption,table[border|cellpadding|cellspacing|style],thead,tbody,tr,td[style],th[style],hr,iframe[allow|allowfullscreen|frameborder|src|height|title|width]';
+  const ALLOWED_TAGS = array(
+    'div[style]','b','strong','i','em','s','a[href|title]',
+    'ul','ol','li','p[style]','blockquote','br','span[style]',
+    'img[width|height|alt|src|style]','figure[class|style]',
+    'figcaption','table[border|cellpadding|cellspacing|style]',
+    'thead','tbody','tr','td[style]','th[style]','hr',
+    'iframe[allow|allowfullscreen|frameborder|src|height|title|width]',
+  );
 
   /**
    * Convert a display name into a potential variable
@@ -442,14 +449,8 @@ class CRM_Utils_String {
   static function htmlPurifier($html, $allowed_tags = array()) {
     require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.auto.php';
     static $_purifier;
-    if (is_array($allowed_tags)) {
-      // $allowed_tags is Array
-      $hash = md5(CRM_Utils_Array::implode('', $allowed_tags));
-    }
-    else {
-      // $allowed_tags is String 
-      $hash = md5($allowed_tags);
-    }
+    $hash = md5(CRM_Utils_Array::implode('', $allowed_tags));
+
     if (!$_purifier[$hash]) {
       $config = CRM_Core_Config::singleton();
 
