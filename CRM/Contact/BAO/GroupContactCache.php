@@ -157,7 +157,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
         unset(self::$_alreadyLoaded[$gid]);
       }
     }
-    else if ($groupID && array_key_exists($groupID, self::$_alreadyLoaded)) {
+    else if ($groupID && CRM_Utils_Array::arrayKeyExists($groupID, self::$_alreadyLoaded)) {
       unset(self::$_alreadyLoaded[$groupID]);
     }
 
@@ -246,7 +246,7 @@ WHERE  id = %1
   static function load(&$group, $fresh = FALSE) {
     $groupID = $group->id;
     $savedSearchID = $group->saved_search_id;
-    if (array_key_exists($groupID, self::$_alreadyLoaded) && !$fresh) {
+    if (CRM_Utils_Array::arrayKeyExists($groupID, self::$_alreadyLoaded) && !$fresh) {
       return;
     }
     self::$_alreadyLoaded[$groupID] = 1;
@@ -548,7 +548,7 @@ ORDER BY   gc.contact_id, g.children
         $contactGroup[$prevContactID]['groupTitle'] = implode(', ', $contactGroup[$prevContactID]['groupTitle']);
       }
       $prevContactID = $dao->contact_id;
-      if (!array_key_exists($dao->contact_id, $contactGroup)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->contact_id, $contactGroup)) {
         $contactGroup[$dao->contact_id] =
           array( 'group' => array(), 'groupTitle' => array());
       }

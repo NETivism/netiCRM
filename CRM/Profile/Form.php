@@ -482,7 +482,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
       list($prefixName, $index) = CRM_Utils_System::explode('-', $name, 2);
       if ($prefixName == 'state_province' || $prefixName == 'country') {
-        if (!array_key_exists($index, $stateCountryMap)) {
+        if (!CRM_Utils_Array::arrayKeyExists($index, $stateCountryMap)) {
           $stateCountryMap[$index] = array();
         }
         $stateCountryMap[$index][$prefixName] = $name;
@@ -859,7 +859,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       $filter = CRM_Utils_Array::key($profileType, $contactTypeFilters);
       if ($filter) {
         foreach ($greetingTypes as $key => $value) {
-          if (!array_key_exists($key, $params)) {
+          if (!CRM_Utils_Array::arrayKeyExists($key, $params)) {
             $defaultGreetingTypeId = CRM_Core_OptionGroup::values($key, NULL,
               NULL, NULL,
               "AND is_default =1

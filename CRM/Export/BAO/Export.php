@@ -167,7 +167,7 @@ class CRM_Export_BAO_Export {
           }
         }
 
-        if (array_key_exists($relationshipTypes, $contactRelationshipTypes)) {
+        if (CRM_Utils_Array::arrayKeyExists($relationshipTypes, $contactRelationshipTypes)) {
           if (CRM_Utils_Array::value(2, $value)) {
             $relationField = CRM_Utils_Array::value(2, $value);
             if (trim(CRM_Utils_Array::value(3, $value))) {
@@ -387,7 +387,7 @@ class CRM_Export_BAO_Export {
 
       $relationKey = CRM_Utils_Array::key('Household Member of', $contactRelationshipTypes);
       foreach ($returnProperties as $key => $value) {
-        if (!array_key_exists($key, $contactRelationshipTypes)) {
+        if (!CRM_Utils_Array::arrayKeyExists($key, $contactRelationshipTypes)) {
           $returnProperties[$relationKey][$key] = $value;
         }
       }
@@ -728,7 +728,7 @@ class CRM_Export_BAO_Export {
                 $fieldOrder[] = $value;
               }
             }
-            elseif (array_key_exists($field, $contactRelationshipTypes)) {
+            elseif (CRM_Utils_Array::arrayKeyExists($field, $contactRelationshipTypes)) {
               $relName = $field;
               foreach ($value as $relationField => $relationValue) {
                 // below block is same as primary block (duplicate)
@@ -882,7 +882,7 @@ class CRM_Export_BAO_Export {
               }
             }
           }
-          elseif (array_key_exists($field, $contactRelationshipTypes)) {
+          elseif (CRM_Utils_Array::arrayKeyExists($field, $contactRelationshipTypes)) {
             $relDAO = $allRelContactArray[$field][$dao->contact_id];
 
             foreach ($value as $relationField => $relationValue) {
@@ -979,7 +979,7 @@ class CRM_Export_BAO_Export {
                 $row[$field] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $query->_options, NULL, $separateMode);
               }
             }
-            elseif (array_key_exists($field, $multipleSelectFields)) {
+            elseif (CRM_Utils_Array::arrayKeyExists($field, $multipleSelectFields)) {
               //option group fixes
               $paramsNew = array($field => $fieldValue);
               if ($field == 'test_tutoring') {
@@ -1073,7 +1073,7 @@ class CRM_Export_BAO_Export {
         }
 
         //remove organization name for individuals if it is set for current employer
-        if (CRM_Utils_Array::value('contact_type', $row) && $row['contact_type'] == 'Individual' && array_key_exists('organization_name', $row)) {
+        if (CRM_Utils_Array::value('contact_type', $row) && $row['contact_type'] == 'Individual' && CRM_Utils_Array::arrayKeyExists('organization_name', $row)) {
           $row['organization_name'] = '';
         }
 

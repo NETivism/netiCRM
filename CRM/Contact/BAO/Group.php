@@ -415,7 +415,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
         // make sure site group goes as parent
         $params['parents'] = array($domainGroupID => 1);
       }
-      elseif (array_key_exists('parents', $params) && !is_array($params['parents'])) {
+      elseif (CRM_Utils_Array::arrayKeyExists('parents', $params) && !is_array($params['parents'])) {
         $params['parents'] = array($params['parents'] => 1);
       }
 

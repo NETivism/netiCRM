@@ -844,7 +844,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     }
 
     //Activity type is mandatory if creating new activity, CRM-4515
-    if (array_key_exists('activity_type_id', $fields) &&
+    if (CRM_Utils_Array::arrayKeyExists('activity_type_id', $fields) &&
       !CRM_Utils_Array::value('activity_type_id', $fields)
     ) {
       $errors['activity_type_id'] = ts('Activity Type is required field.');
@@ -1057,7 +1057,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
 
       //build an associative array with unique email addresses.
       foreach ($activityAssigned as $id => $dnc) {
-        if (isset($id) && array_key_exists($id, $assigneeContacts)) {
+        if (isset($id) && CRM_Utils_Array::arrayKeyExists($id, $assigneeContacts)) {
           $mailToContacts[$assigneeContacts[$id]['email']] = $assigneeContacts[$id];
         }
       }

@@ -89,7 +89,7 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function &component($type = NULL) {
     $name = $type ? $type : 'ALL';
 
-    if (!self::$component || !array_key_exists($name, self::$component)) {
+    if (!self::$component || !CRM_Utils_Array::arrayKeyExists($name, self::$component)) {
       if (!self::$component) {
         self::$component = array();
       }

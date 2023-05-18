@@ -55,7 +55,7 @@ class CRM_Core_BAO_CustomValueTable {
             $entityID = $field['entity_id'];
             $hookID = $field['custom_group_id'];
             $isMultiple = $field['is_multiple'];
-            if (array_key_exists('id', $field)) {
+            if (CRM_Utils_Array::arrayKeyExists('id', $field)) {
               $sqlOP = "UPDATE $tableName ";
               $where = " WHERE  id = %{$count}";
               $params[$count] = array($field['id'], 'Integer');
@@ -324,11 +324,11 @@ class CRM_Core_BAO_CustomValueTable {
           if (CRM_Utils_Array::value('id', $customValue)) {
             $cvParam['id'] = $customValue['id'];
           }
-          if (!array_key_exists($customValue['table_name'], $cvParams)) {
+          if (!CRM_Utils_Array::arrayKeyExists($customValue['table_name'], $cvParams)) {
             $cvParams[$customValue['table_name']] = array();
           }
 
-          if (!array_key_exists($index, $cvParams[$customValue['table_name']])) {
+          if (!CRM_Utils_Array::arrayKeyExists($index, $cvParams[$customValue['table_name']])) {
             $cvParams[$customValue['table_name']][$index] = array();
           }
 
@@ -416,7 +416,7 @@ AND    $cond
     $select = $fields = $isMultiple = array();
 
     while ($dao->fetch()) {
-      if (!array_key_exists($dao->table_name, $select)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->table_name, $select)) {
         $fields[$dao->table_name] = array();
         $select[$dao->table_name] = array();
       }
@@ -480,7 +480,7 @@ AND    $cond
               array(1 => $fieldID)
             ));
         }
-        if (!array_key_exists($fieldID, $fieldValues)) {
+        if (!CRM_Utils_Array::arrayKeyExists($fieldID, $fieldValues)) {
           $fieldValues[$fieldID] = array();
         }
         $id = -1;
@@ -530,11 +530,11 @@ AND    cf.id IN ( $fieldIDList )
           'is_multiple' => $dao->is_multiple,
         );
 
-        if (!array_key_exists($dao->table_name, $cvParams)) {
+        if (!CRM_Utils_Array::arrayKeyExists($dao->table_name, $cvParams)) {
           $cvParams[$dao->table_name] = array();
         }
 
-        if (!array_key_exists($fieldValue['id'], $cvParams[$dao->table_name])) {
+        if (!CRM_Utils_Array::arrayKeyExists($fieldValue['id'], $cvParams[$dao->table_name])) {
           $cvParams[$dao->table_name][$fieldValue['id']] = array();
         }
 
@@ -603,7 +603,7 @@ AND    cf.id IN ( $fieldIDList )
     }
     else {
       $entities = CRM_Core_SelectValues::customGroupExtends();
-      if (!array_key_exists($type, $entities)) {
+      if (!CRM_Utils_Array::arrayKeyExists($type, $entities)) {
         if (in_array($type, $entities)) {
           $type = $entities[$type];
           if (in_array($type, $default)) {
@@ -700,7 +700,7 @@ AND    $cond
     $select = $fields = $isMultiple = array();
 
     while ($dao->fetch()) {
-      if (!array_key_exists($dao->table_name, $select)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->table_name, $select)) {
         $fields[$dao->table_name] = array();
         $select[$dao->table_name] = array();
       }

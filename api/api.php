@@ -278,7 +278,7 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
     $iterator = new DirectoryIterator($action_dir);
     foreach ($iterator as $fileinfo) {
       $file = $fileinfo->getFilename();
-      if (array_key_exists($file, $loaded_files)) {
+      if (CRM_Utils_Array::arrayKeyExists($file, $loaded_files)) {
         continue; // action provided by an earlier item on include_path
       }
 
@@ -348,7 +348,7 @@ function civicrm_get_api_version($desired_version = NULL) {
  */
 function civicrm_error($result) {
   if (is_array($result)) {
-    return (array_key_exists('is_error', $result) &&
+    return (CRM_Utils_Array::arrayKeyExists('is_error', $result) &&
       $result['is_error']
     ) ? TRUE : FALSE;
   }
@@ -483,7 +483,7 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
         }
         $enforcedSubParams['sequential'] = 1;
         $enforcedSubParams['api.has_parent'] = 1;
-        if (array_key_exists(0, $newparams)) {
+        if (CRM_Utils_Array::arrayKeyExists(0, $newparams)) {
           // it is a numerically indexed array - ie. multiple creates
           foreach ($newparams as $entity => $entityparams) {
             // Defaults, overridden by request params, overridden by enforced params.
@@ -550,7 +550,7 @@ function _civicrm_api_replace_variables($entity, $action, &$params, &$parentResu
         $count = count($stringParts);
         while ($count > 0) {
           $fieldname .= "." . array_shift($stringParts);
-          if (array_key_exists($fieldname, $parentResult) && is_array($parentResult[$fieldname])) {
+          if (CRM_Utils_Array::arrayKeyExists($fieldname, $parentResult) && is_array($parentResult[$fieldname])) {
             $arrayLocation = $parentResult[$fieldname];
             foreach ($stringParts as $key => $value) {
               $arrayLocation = $arrayLocation[$value];

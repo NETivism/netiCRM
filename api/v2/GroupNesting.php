@@ -57,18 +57,18 @@ function civicrm_group_nesting_get(&$params) {
     return civicrm_create_error('Params need to be of type array!');
   }
 
-  if (!array_key_exists('child_group_id', $params) &&
-    !array_key_exists('parent_group_id', $params)
+  if (!CRM_Utils_Array::arrayKeyExists('child_group_id', $params) &&
+    !CRM_Utils_Array::arrayKeyExists('parent_group_id', $params)
   ) {
     return civicrm_create_error(ts('At least one of child_group_id or parent_group_id is a required field'));
   }
 
   require_once 'CRM/Contact/DAO/GroupNesting.php';
   $dao = new CRM_Contact_DAO_GroupNesting();
-  if (array_key_exists('child_group_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('child_group_id', $params)) {
     $dao->child_group_id = $params['child_group_id'];
   }
-  if (array_key_exists('parent_group_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('parent_group_id', $params)) {
     $dao->parent_group_id = $params['parent_group_id'];
   }
 
@@ -108,8 +108,8 @@ function civicrm_group_nesting_create(&$params) {
 
   require_once 'CRM/Contact/BAO/GroupNesting.php';
 
-  if (!array_key_exists('child_group_id', $params) &&
-    !array_key_exists('parent_group_id', $params)
+  if (!CRM_Utils_Array::arrayKeyExists('child_group_id', $params) &&
+    !CRM_Utils_Array::arrayKeyExists('parent_group_id', $params)
   ) {
     return civicrm_create_error(ts('You need to define parent_group_id and child_group_id in params.'));
   }
@@ -137,8 +137,8 @@ function civicrm_group_nesting_remove(&$params) {
     return civicrm_create_error('Params need to be of type array!');
   }
 
-  if (!array_key_exists('child_group_id', $params) ||
-    !array_key_exists('parent_group_id', $params)
+  if (!CRM_Utils_Array::arrayKeyExists('child_group_id', $params) ||
+    !CRM_Utils_Array::arrayKeyExists('parent_group_id', $params)
   ) {
     return civicrm_create_error(ts('You need to define parent_group_id and child_group_id in params.'));
   }

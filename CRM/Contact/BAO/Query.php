@@ -479,13 +479,13 @@ class CRM_Contact_BAO_Query {
       }
       $cfID = CRM_Core_BAO_CustomField::getKeyID($value[0]);
       if ($cfID) {
-        if (!array_key_exists($cfID, $this->_cfIDs)) {
+        if (!CRM_Utils_Array::arrayKeyExists($cfID, $this->_cfIDs)) {
           $this->_cfIDs[$cfID] = array();
         }
         $this->_cfIDs[$cfID][] = $value;
       }
 
-      if (!array_key_exists($value[0], $this->_paramLookup)) {
+      if (!CRM_Utils_Array::arrayKeyExists($value[0], $this->_paramLookup)) {
         $this->_paramLookup[$value[0]] = array();
       }
       $this->_paramLookup[$value[0]][] = $value;
@@ -561,7 +561,7 @@ class CRM_Contact_BAO_Query {
 
         if ($cfID) {
           // add to cfIDs array if not present
-          if (!array_key_exists($cfID, $this->_cfIDs)) {
+          if (!CRM_Utils_Array::arrayKeyExists($cfID, $this->_cfIDs)) {
             $this->_cfIDs[$cfID] = array();
           }
         }
@@ -685,7 +685,7 @@ class CRM_Contact_BAO_Query {
       ) {
         // this is a custom field with range search enabled, so we better check for two/from values
         if (CRM_Utils_Array::value($name . '_from', $this->_paramLookup)) {
-          if (!array_key_exists($cfID, $this->_cfIDs)) {
+          if (!CRM_Utils_Array::arrayKeyExists($cfID, $this->_cfIDs)) {
             $this->_cfIDs[$cfID] = array();
           }
           foreach ($this->_paramLookup[$name . '_from'] as $pID => $p) {
@@ -704,7 +704,7 @@ class CRM_Contact_BAO_Query {
           }
         }
         if (CRM_Utils_Array::value($name . '_to', $this->_paramLookup)) {
-          if (!array_key_exists($cfID, $this->_cfIDs)) {
+          if (!CRM_Utils_Array::arrayKeyExists($cfID, $this->_cfIDs)) {
             $this->_cfIDs[$cfID] = array();
           }
           foreach ($this->_paramLookup[$name . '_to'] as $pID => $p) {
@@ -1247,7 +1247,7 @@ class CRM_Contact_BAO_Query {
           $toRange = "{$dateComponent[0]}_date_high";
         }
 
-        if (array_key_exists($fromRange, $formValues) && array_key_exists($toRange, $formValues)) {
+        if (CRM_Utils_Array::arrayKeyExists($fromRange, $formValues) && CRM_Utils_Array::arrayKeyExists($toRange, $formValues)) {
           CRM_Contact_BAO_Query::fixDateValues($formValues[$id], $formValues[$fromRange], $formValues[$toRange]);
           continue;
         }
@@ -2051,7 +2051,7 @@ class CRM_Contact_BAO_Query {
           $cnt = count($values);
           $count = 1;
           foreach ($values as $v) {
-            if (!array_key_exists($v, $current)) {
+            if (!CRM_Utils_Array::arrayKeyExists($v, $current)) {
               $current[$v] = array();
             }
             //bad hack for im_provider
@@ -2528,7 +2528,7 @@ class CRM_Contact_BAO_Query {
 
     $names = array();
     foreach ($value as $id => $dontCare) {
-      if (array_key_exists($id, $groupNames) && $dontCare) {
+      if (CRM_Utils_Array::arrayKeyExists($id, $groupNames) && $dontCare) {
         $names[] = $groupNames[$id];
       }
     }
@@ -3714,7 +3714,7 @@ WHERE  id IN ( $groupIDs )
       $groupNames = &CRM_Core_PseudoConstant::group();
       $qillNames = array();
       foreach ($targetGroup[2] as $groupId) {
-        if (array_key_exists($groupId, $groupNames)) {
+        if (CRM_Utils_Array::arrayKeyExists($groupId, $groupNames)) {
           $qillNames[] = $groupNames[$groupId];
         }
       }

@@ -1090,7 +1090,7 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
     // done with 'values' array.
     // Finally add / edit / delete memberships for the related contacts
     foreach ($values as $cid => $details) {
-      if (!array_key_exists('memberships', $details)) {
+      if (!CRM_Utils_Array::arrayKeyExists('memberships', $details)) {
         continue;
       }
 

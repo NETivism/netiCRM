@@ -345,7 +345,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       //custom fields for sub type
       $subTypeFields = CRM_Core_BAO_CustomField::getFieldsForImport($name);
 
-      if (array_key_exists($val['parent'], $fields)) {
+      if (CRM_Utils_Array::arrayKeyExists($val['parent'], $fields)) {
         $fields[$name] = $fields[$val['parent']] + $subTypeFields;
       }
       else {

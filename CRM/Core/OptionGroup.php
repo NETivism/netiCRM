@@ -90,7 +90,7 @@ class CRM_Core_OptionGroup {
     $cacheKey = self::createCacheKey($name, $flip, $grouping, $localize, $condition, $labelColumnName, $onlyActive, $keyColumnName);
     if (!$fresh) {
       // Fetch from static var
-      if (array_key_exists($cacheKey, self::$_cache)) {
+      if (CRM_Utils_Array::arrayKeyExists($cacheKey, self::$_cache)) {
         return self::$_cache[$cacheKey];
       }
       // Fetch from main cache
@@ -338,7 +338,7 @@ WHERE  v.option_group_id = g.id
       return NULL;
     }
     $cacheKey = self::createCacheKey('getValue_', $groupName, $label, $labelField, $labelType, $valueField);
-    if (array_key_exists($cacheKey, self::$_cache)) {
+    if (CRM_Utils_Array::arrayKeyExists($cacheKey, self::$_cache)) {
       return self::$_cache[$cacheKey];
     }
 

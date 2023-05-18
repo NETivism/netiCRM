@@ -541,7 +541,7 @@ class CRM_Core_PseudoConstant {
     $index = (int) $all . '_' . $returnColumn . '_' . (int) $includeCaseActivities;
     $index .= '_' . (int)$includeCampaignActivities;
 
-    if (!array_key_exists($index, self::$activityType) || $reset) {
+    if (!CRM_Utils_Array::arrayKeyExists($index, self::$activityType) || $reset) {
       require_once 'CRM/Core/OptionGroup.php';
       $condition = NULL;
       if (!$all) {
@@ -850,7 +850,7 @@ class CRM_Core_PseudoConstant {
       }
     }
     if ($id) {
-      if (array_key_exists($id, self::$stateProvince)) {
+      if (CRM_Utils_Array::arrayKeyExists($id, self::$stateProvince)) {
         return self::$stateProvince[$id];
       }
       else {
@@ -908,7 +908,7 @@ WHERE  id = %1";
     }
 
     if ($id) {
-      if (array_key_exists($id, self::$stateProvinceAbbreviation)) {
+      if (CRM_Utils_Array::arrayKeyExists($id, self::$stateProvinceAbbreviation)) {
         return self::$stateProvinceAbbreviation[$id];
       }
       else {
@@ -982,7 +982,7 @@ WHERE  id = %1";
       }
     }
     if ($id) {
-      if (array_key_exists($id, self::$country)) {
+      if (CRM_Utils_Array::arrayKeyExists($id, self::$country)) {
         return self::$country[$id];
       }
       else {
@@ -1014,7 +1014,7 @@ WHERE  id = %1";
       );
     }
     if ($id) {
-      if (array_key_exists($id, self::$countryIsoCode)) {
+      if (CRM_Utils_Array::arrayKeyExists($id, self::$countryIsoCode)) {
         return self::$countryIsoCode[$id];
       }
       else {
@@ -1342,7 +1342,7 @@ WHERE  id = %1";
       self::populate(self::$county, 'CRM_Core_DAO_County', TRUE, 'name', NULL, NULL, 'id');
     }
     if ($id) {
-      if (array_key_exists($id, self::$county)) {
+      if (CRM_Utils_Array::arrayKeyExists($id, self::$county)) {
         return self::$county[$id];
       }
       else {
@@ -1435,7 +1435,7 @@ WHERE  id = %1";
     }
 
     if ($id) {
-      if (array_key_exists($id, self::$worldRegions)) {
+      if (CRM_Utils_Array::arrayKeyExists($id, self::$worldRegions)) {
         return self::$worldRegions[$id];
       }
       else {
@@ -1478,7 +1478,7 @@ WHERE  id = %1";
    * @return array - array reference of all activity statuses
    */
   public static function &activityStatus($column = 'label') {
-    if (!array_key_exists($column, self::$activityStatus)) {
+    if (!CRM_Utils_Array::arrayKeyExists($column, self::$activityStatus)) {
       self::$activityStatus[$column] = array();
 
       require_once 'CRM/Core/OptionGroup.php';

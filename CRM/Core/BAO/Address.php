@@ -92,12 +92,12 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
       $addressExists = self::dataExists($value);
 
       if ($updateBlankLocInfo) {
-        if ((!empty($addresses) || !$addressExists) && array_key_exists($key, $addresses)) {
+        if ((!empty($addresses) || !$addressExists) && CRM_Utils_Array::arrayKeyExists($key, $addresses)) {
           $value['id'] = $addresses[$key];
         }
       }
       else {
-        if (!empty($addresses) && array_key_exists($value['location_type_id'], $addresses)) {
+        if (!empty($addresses) && CRM_Utils_Array::arrayKeyExists($value['location_type_id'], $addresses)) {
           $value['id'] = $addresses[$value['location_type_id']];
         }
       }
@@ -647,8 +647,8 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
 
     if (!empty($config->stateCountryMap)) {
       foreach ($config->stateCountryMap as $index => $match) {
-        if (array_key_exists('state_province', $match) &&
-          array_key_exists('country', $match)
+        if (CRM_Utils_Array::arrayKeyExists('state_province', $match) &&
+          CRM_Utils_Array::arrayKeyExists('country', $match)
         ) {
           require_once 'CRM/Contact/Form/Edit/Address.php';
           CRM_Contact_Form_Edit_Address::fixStateSelect($form,

@@ -155,7 +155,7 @@ class CRM_Core_Form_Tag {
       $insertSQL = NULL;
       if (!empty($tagsIDs)) {
         foreach ($tagsIDs as $tagId) {
-          if (is_numeric($tagId) && !array_key_exists($tagId, $form->_entityTagValues)) {
+          if (is_numeric($tagId) && !CRM_Utils_Array::arrayKeyExists($tagId, $form->_entityTagValues)) {
             $insertValues[] = "( {$tagId}, {$entityId}, '{$entityTable}' ) ";
           }
         }

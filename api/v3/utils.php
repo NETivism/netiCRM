@@ -102,7 +102,7 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
       $match = 0;
       $optionset = array();
       foreach ($key as $subkey) {
-        if (!array_key_exists($subkey, $params) || empty($params[$subkey])) {
+        if (!CRM_Utils_Array::arrayKeyExists($subkey, $params) || empty($params[$subkey])) {
           $optionset[] = $subkey;
         }
         else {
@@ -115,7 +115,7 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
       }
     }
     else {
-      if (!array_key_exists($key, $params) || empty($params[$key])) {
+      if (!CRM_Utils_Array::arrayKeyExists($key, $params) || empty($params[$key])) {
         // get allow zeor field list
         if ($params[$key] === 0 && in_array($key, _civicrm_api3_allowed_zero_list())) {
           continue;
@@ -188,7 +188,7 @@ function civicrm_api3_create_success($values = 1, $params = array(
     }
   }
   //if ( array_key_exists ('debug',$params) && is_object ($dao)) {
-  if (is_array($params) && array_key_exists('debug', $params)) {
+  if (is_array($params) && CRM_Utils_Array::arrayKeyExists('debug', $params)) {
     if (!is_object($dao)) {
       $d = _civicrm_api3_get_DAO(CRM_Utils_Array::value('entity', $params));
       if (!empty($d)) {
@@ -650,7 +650,7 @@ function _civicrm_api3_get_options_from_params(&$params, $queryObject = false, $
 
   $returnProperties = array();
   // handle the format return =sort_name,display_name...
-  if (array_key_exists('return', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('return', $params)) {
     if (is_array($params['return'])) {
       $returnProperties = array_flip($params['return']);
       $returnProperties[key($returnProperties)] = 1;
@@ -1372,7 +1372,7 @@ function _civicrm_api_get_fields($entity, $unique = FALSE, &$params = array(
       if ($name == $field['name']) {
         continue;
       }
-      if (array_key_exists($field['name'], $fields)) {
+      if (CRM_Utils_Array::arrayKeyExists($field['name'], $fields)) {
         $field['error'] = 'name conflict';
         // it should never happen, but better safe than sorry
         continue;
@@ -1517,7 +1517,7 @@ function _civicrm_api3_swap_out_aliases(&$apiRequest) {
     if (!isset($apiRequest['params'][$field])
       && $uniqueName
       && $field != $uniqueName
-      && array_key_exists($uniqueName, $apiRequest['params'])
+      && CRM_Utils_Array::arrayKeyExists($uniqueName, $apiRequest['params'])
       )
     {
       $apiRequest['params'][$field] = CRM_Utils_Array::value($values['uniqueName'], $apiRequest['params']);
@@ -1544,7 +1544,7 @@ function _civicrm_api3_validate_integer(&$params, &$fieldname, &$fieldInfo) {
     }
     if (CRM_Utils_Array::value('pseudoconstant', $fieldInfo) && !CRM_Utils_Array::value('FKClassName',$fieldInfo)) {
       $constant = $fieldInfo['options'];
-      if (is_numeric($params[$fieldname]) && !array_key_exists($params[$fieldname], $fieldInfo['options'])) {
+      if (is_numeric($params[$fieldname]) && !CRM_Utils_Array::arrayKeyExists($params[$fieldname], $fieldInfo['options'])) {
         throw new API_Exception("$fieldname is not valid", 2001, array('error_field' => $fieldname,"type"=>"integer"));
       }
       elseif (!is_numeric($params[$fieldname])) {

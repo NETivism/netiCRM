@@ -842,7 +842,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       foreach ($nameFields as $name) {
         $fields[$name] = 1;
-        if (array_key_exists("billing_$name", $formValues)) {
+        if (CRM_Utils_Array::arrayKeyExists("billing_$name", $formValues)) {
           $formValues[$name] = $formValues["billing_{$name}"];
           $formValues['preserveDBName'] = TRUE;
         }

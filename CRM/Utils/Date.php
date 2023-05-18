@@ -68,10 +68,10 @@ class CRM_Utils_Date {
       return $invalidDate;
     }
 
-    if (array_key_exists('m', $date)) {
+    if (CRM_Utils_Array::arrayKeyExists('m', $date)) {
       $date['M'] = $date['m'];
     }
-    elseif (array_key_exists('F', $date)) {
+    elseif (CRM_Utils_Array::arrayKeyExists('F', $date)) {
       $date['M'] = $date['F'];
     }
 
@@ -888,7 +888,7 @@ class CRM_Utils_Date {
       'dd/mm/yy' => '%E%f %B %Y',
     );
 
-    if (array_key_exists($birthDateFormat, $supportableFormats)) {
+    if (CRM_Utils_Array::arrayKeyExists($birthDateFormat, $supportableFormats)) {
       $birthDateFormat = array('qfMapping' => $supportableFormats[$birthDateFormat],
         'dateParts' => $formatMapping,
       );

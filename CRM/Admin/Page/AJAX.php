@@ -97,7 +97,7 @@ class CRM_Admin_Page_AJAX {
             );
             $contexts = array();
             foreach ($comps as $name => $table) {
-              if (array_key_exists($table, $usedBy)) {
+              if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
                 $contexts[] = $name;
               }
             }

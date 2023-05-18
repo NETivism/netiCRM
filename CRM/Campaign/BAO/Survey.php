@@ -537,7 +537,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
       $activity->source_record_id
     ) {
       $surveyActTypes = self::getSurveyActivityType();
-      if (array_key_exists($activity->activity_type_id, $surveyActTypes)) {
+      if (CRM_Utils_Array::arrayKeyExists($activity->activity_type_id, $surveyActTypes)) {
         $isSurveyActivity = TRUE;
       }
     }

@@ -1127,7 +1127,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     }
 
     $params['defaultRole'] = 1;
-    if (array_key_exists('participant_role_id', $params)) {
+    if (CRM_Utils_Array::arrayKeyExists('participant_role_id', $params)) {
       $params['defaultRole'] = 0;
     }
     if (!CRM_Utils_Array::value('participant_role_id', $params) && $this->_values['event']['default_role_id']) {
@@ -1195,7 +1195,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         $params['payment_action'] = 'Sale';
         $params['invoiceID'] = $invoiceID;
       }
-      if (($this->_values['is_pay_later'] && empty($this->_paymentProcessor) && !array_key_exists('hidden_processor', $params)) || CRM_Utils_Array::value('payment_processor', $params) == 0) {
+      if (($this->_values['is_pay_later'] && empty($this->_paymentProcessor) && !CRM_Utils_Array::arrayKeyExists('hidden_processor', $params)) || CRM_Utils_Array::value('payment_processor', $params) == 0) {
         $params['is_pay_later'] = 1;
       }
       else {
@@ -1355,7 +1355,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       require_once 'CRM/Event/PseudoConstant.php';
       $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1");
       while ($participant->fetch()) {
-        if (array_key_exists($participant->status_id, $statusTypes)) {
+        if (CRM_Utils_Array::arrayKeyExists($participant->status_id, $statusTypes)) {
           if (!$isAdditional) {
             $registerUrl = CRM_Utils_System::url('civicrm/event/register',
               "reset=1&id={$self->_values['event']['id']}&cid=0"

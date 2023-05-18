@@ -368,7 +368,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
  * @param array $fieldsToResolve anny field resolutions specifically requested
  */
 function _civicrm_api3_generic_get_metadata_options(&$metadata, $fieldname, $fieldSpec, $fieldsToResolve){
-  if (array_key_exists('enumValues', $fieldSpec)) {
+  if (CRM_Utils_Array::arrayKeyExists('enumValues', $fieldSpec)) {
     // use of a space after the comma is inconsistent in xml
     $enumStr = str_replace(', ', ',', $fieldSpec['enumValues']);
     $metadata[$fieldname]['options'] = explode(',', $enumStr);

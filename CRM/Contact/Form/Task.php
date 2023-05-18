@@ -223,7 +223,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
           if (!empty($dao->id)) {
             $form->_additionalIds[$dao->id] = $dao->id;
           }
-          if (!array_key_exists($dao->contact_id, $alreadySeen)) {
+          if (!CRM_Utils_Array::arrayKeyExists($dao->contact_id, $alreadySeen)) {
             $form->_contactIds[] = $dao->contact_id;
             $alreadySeen[$dao->contact_id] = 1;
           }
@@ -240,12 +240,12 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
         if (!empty($contactID)) {
           if ($useTable) {
-            if (!array_key_exists($contactID, $alreadySeen)) {
+            if (!CRM_Utils_Array::arrayKeyExists($contactID, $alreadySeen)) {
               $insertString[] = " ( {$contactID} ) ";
             }
           }
           else {
-            if (!array_key_exists($contactID, $alreadySeen)) {
+            if (!CRM_Utils_Array::arrayKeyExists($contactID, $alreadySeen)) {
               $form->_contactIds[] = $contactID;
             }
             if (!empty($additionalID) && is_numeric($additionalID)) {

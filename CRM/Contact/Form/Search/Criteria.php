@@ -131,7 +131,7 @@ class CRM_Contact_Form_Search_Criteria {
 
     $searchProfiles = array();
     foreach ($ufGroups as $key => $var) {
-      if (!array_key_exists($key, $componentProfiles) && in_array($key, $accessibleUfGroups)) {
+      if (!CRM_Utils_Array::arrayKeyExists($key, $componentProfiles) && in_array($key, $accessibleUfGroups)) {
         $searchProfiles[$key] = $var['title'];
       }
     }

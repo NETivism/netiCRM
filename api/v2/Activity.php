@@ -368,7 +368,7 @@ SELECT  count(*)
       $params['activity_type_id'] = $activityNameId;
     }
     elseif ($activityTypeId &&
-      !array_key_exists($activityTypeId, $activityTypes)
+      !CRM_Utils_Array::arrayKeyExists($activityTypeId, $activityTypes)
     ) {
       return civicrm_create_error(ts('Invalid Activity Type ID'));
     }
@@ -379,7 +379,7 @@ SELECT  count(*)
     require_once "CRM/Core/PseudoConstant.php";
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
 
-    if (is_numeric($params['status_id']) && !array_key_exists($params['status_id'], $activityStatus)) {
+    if (is_numeric($params['status_id']) && !CRM_Utils_Array::arrayKeyExists($params['status_id'], $activityStatus)) {
       return civicrm_create_error(ts('Invalid Activity Status'));
     }
     elseif (!is_numeric($params['status_id'])) {
@@ -394,7 +394,7 @@ SELECT  count(*)
   if (isset($params['priority_id']) && is_numeric($params['priority_id'])) {
     require_once "CRM/Core/PseudoConstant.php";
     $activityPriority = CRM_Core_PseudoConstant::priority();
-    if (!array_key_exists($params['priority_id'], $activityPriority)) {
+    if (!CRM_Utils_Array::arrayKeyExists($params['priority_id'], $activityPriority)) {
       return civicrm_create_error(ts('Invalid Priority'));
     }
   }

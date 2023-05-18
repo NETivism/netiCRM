@@ -249,12 +249,12 @@ function _civicrm_api3_contact_get_supportanomalies(&$params, &$options) {
     }
   }
   // support for group filters
-  if (array_key_exists('filter_group_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('filter_group_id', $params)) {
     $params['filter.group_id'] = $params['filter_group_id'];
     unset($params['filter_group_id']);
   }
   // filter.group_id works both for 1,2,3 and array (1,2,3)
-  if (array_key_exists('filter.group_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('filter.group_id', $params)) {
     if (is_array($params['filter.group_id'])) {
       $groups = $params['filter.group_id'];
     }
@@ -418,7 +418,7 @@ function _civicrm_api3_greeting_format_params($params) {
 
     // check if greetings are present in present
     foreach ($greetingParams as $greetingValues) {
-      if (array_key_exists("{$key}{$greeting}{$greetingValues}", $params)) {
+      if (CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}{$greetingValues}", $params)) {
         $formatParams = TRUE;
         break;
       }
@@ -461,7 +461,7 @@ function _civicrm_api3_greeting_format_params($params) {
 
     if ($greetingId) {
 
-      if (!array_key_exists($greetingId, $greetings)) {
+      if (!CRM_Utils_Array::arrayKeyExists($greetingId, $greetings)) {
         return civicrm_api3_create_error(ts('Invalid %1 greeting Id', array(1 => $key)));
       }
 
@@ -489,13 +489,13 @@ function _civicrm_api3_greeting_format_params($params) {
       "{$key}{$greeting}_custom"
     ) : FALSE;
 
-    if (array_key_exists("{$key}{$greeting}_id", $params) && empty($params["{$key}{$greeting}_id"])) {
+    if (CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}_id", $params) && empty($params["{$key}{$greeting}_id"])) {
       $nullValue = TRUE;
     }
-    elseif (array_key_exists("{$key}{$greeting}", $params) && empty($params["{$key}{$greeting}"])) {
+    elseif (CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}", $params) && empty($params["{$key}{$greeting}"])) {
       $nullValue = TRUE;
     }
-    elseif ($customValue && array_key_exists("{$key}{$greeting}_custom", $params)
+    elseif ($customValue && CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}_custom", $params)
       && empty($params["{$key}{$greeting}_custom"])
     ) {
       $nullValue = TRUE;
@@ -503,7 +503,7 @@ function _civicrm_api3_greeting_format_params($params) {
 
     $params["{$key}{$greeting}_id"] = $greetingId;
 
-    if (!$customValue && !$customGreeting && array_key_exists("{$key}{$greeting}_custom", $params)) {
+    if (!$customValue && !$customGreeting && CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}_custom", $params)) {
       unset($params["{$key}{$greeting}_custom"]);
     }
 

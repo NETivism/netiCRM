@@ -137,7 +137,7 @@ class CRM_Core_ShowHideBlocks {
    */
   function addShow($name) {
     $this->_show[$name] = 1;
-    if (array_key_exists($name, $this->_hide)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $this->_hide)) {
       unset($this->_hide[$name]);
     }
   }
@@ -152,7 +152,7 @@ class CRM_Core_ShowHideBlocks {
    */
   function addHide($name) {
     $this->_hide[$name] = 1;
-    if (array_key_exists($name, $this->_show)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $this->_show)) {
       unset($this->_show[$name]);
     }
   }

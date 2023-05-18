@@ -325,8 +325,8 @@ class CRM_Core_Component {
 
   static function &contactSubTypeProperties($subType, $op) {
     $properties = &self::contactSubTypes();
-    if (array_key_exists($subType, $properties) &&
-      array_key_exists($op, $properties[$subType])
+    if (CRM_Utils_Array::arrayKeyExists($subType, $properties) &&
+      CRM_Utils_Array::arrayKeyExists($op, $properties[$subType])
     ) {
       return $properties[$subType][$op];
     }

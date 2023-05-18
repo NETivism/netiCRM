@@ -277,7 +277,7 @@ class CRM_Contact_Form_Edit_Address {
         }
 
         if ($countryId = CRM_Utils_Array::value('country_id', $addressValues)) {
-          if (!array_key_exists($countryId, CRM_Core_PseudoConstant::country())) {
+          if (!CRM_Utils_Array::arrayKeyExists($countryId, CRM_Core_PseudoConstant::country())) {
             $countryId = NULL;
             $errors["address[$instance][country_id]"] = ts('Enter a valid country name.');
           }
@@ -287,7 +287,7 @@ class CRM_Contact_Form_Edit_Address {
           // hack to skip  - type first letter(s) - for state_province
           // CRM-2649
           if ($stateProvinceId != ts('- type first letter(s) -')) {
-            if (!array_key_exists($stateProvinceId, CRM_Core_PseudoConstant::stateProvince(FALSE, FALSE))) {
+            if (!CRM_Utils_Array::arrayKeyExists($stateProvinceId, CRM_Core_PseudoConstant::stateProvince(FALSE, FALSE))) {
               $stateProvinceId = NULL;
               $errors["address[$instance][state_province_id]"] = ts('Please select a valid State/Province name.');
             }

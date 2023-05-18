@@ -635,11 +635,11 @@ AND civicrm_group_contact.group_id = %2";
 
     // check which values has to be add/remove contact from group
     foreach ($allGroup as $key => $varValue) {
-      if (CRM_Utils_Array::value($key, $params) && !array_key_exists($key, $contactGroup)) {
+      if (CRM_Utils_Array::value($key, $params) && !CRM_Utils_Array::arrayKeyExists($key, $contactGroup)) {
         // add contact to group
         CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $key, $method);
       }
-      elseif (!CRM_Utils_Array::value($key, $params) && array_key_exists($key, $contactGroup)) {
+      elseif (!CRM_Utils_Array::value($key, $params) && CRM_Utils_Array::arrayKeyExists($key, $contactGroup)) {
         // remove contact from group
         CRM_Contact_BAO_GroupContact::removeContactsFromGroup($contactIds, $key, $method);
       }

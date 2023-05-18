@@ -286,7 +286,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
 
       $tempProduct = array();
       foreach ($products as $key => $value) {
-        if (!array_key_exists($key, $productID)) {
+        if (!CRM_Utils_Array::arrayKeyExists($key, $productID)) {
           $tempProduct[$key] = $value;
         }
       }

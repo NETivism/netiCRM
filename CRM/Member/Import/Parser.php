@@ -679,7 +679,7 @@ abstract class CRM_Member_Import_Parser {
     }
     else {
       $tempField = CRM_Contact_BAO_Contact::importableFields('All', NULL);
-      if (!array_key_exists($name, $tempField)) {
+      if (!CRM_Utils_Array::arrayKeyExists($name, $tempField)) {
         $this->_fields[$name] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
       else {

@@ -767,7 +767,7 @@ class CRM_Utils_System_Drupal8 {
       //does user configuration allow language
       //support from the URL (Path prefix or domain)
       $enabledLanguageMethods = \Drupal::config('language.types')->get('negotiation.language_interface.enabled') ?: [];
-      if (array_key_exists(\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::METHOD_ID, $enabledLanguageMethods)) {
+      if (CRM_Utils_Array::arrayKeyExists(\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::METHOD_ID, $enabledLanguageMethods)) {
         $urlType = $config['source'];
 
         //url prefix

@@ -237,7 +237,7 @@ FROM civicrm_navigation WHERE domain_id = $domainID {$whereClause} ORDER BY pare
 
   // helper function for getNavigationList( )
   static function _getNavigationValue($val, &$pidGroups) {
-    if (array_key_exists($val, $pidGroups)) {
+    if (CRM_Utils_Array::arrayKeyExists($val, $pidGroups)) {
       $list = array('navigation_id' => $val);
       foreach ($pidGroups[$val] as $label => $id) {
         $list[$label] = self::_getNavigationValue($id, $pidGroups);
@@ -550,7 +550,7 @@ ORDER BY parent_id, weight";
     }
 
     CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_Preferences', $navParams, $navParams);
-    $navigation = array_key_exists('navigation', $navParams) ? $navParams['navigation'] : FALSE;
+    $navigation = CRM_Utils_Array::arrayKeyExists('navigation', $navParams) ? $navParams['navigation'] : FALSE;
 
     // FIXME: hack for CRM-5027: we need to prepend the navigation string with
     // (HTML-commented-out) locale info so that we rebuild menu on locale changes

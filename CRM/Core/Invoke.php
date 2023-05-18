@@ -62,7 +62,7 @@ class CRM_Core_Invoke {
     }
 
     if ($item) {
-      if (!array_key_exists('page_callback', $item)) {
+      if (!CRM_Utils_Array::arrayKeyExists('page_callback', $item)) {
         CRM_Core_Error::debug('Bad item', $item);
         CRM_Core_Error::fatal(ts('Bad menu record in database'));
       }

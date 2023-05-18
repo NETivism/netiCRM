@@ -316,7 +316,7 @@ class CRM_Utils_Pager extends Pager_Sliding {
       $query = http_build_query($query);
       $href = CRM_Utils_System::url($path, $query);
       $onclick = '';
-      if (array_key_exists($this->_urlVar, $this->_linkData)) {
+      if (CRM_Utils_Array::arrayKeyExists($this->_urlVar, $this->_linkData)) {
         $onclick = str_replace('%d', $this->_linkData[$this->_urlVar], $this->_onclick);
       }
       return sprintf('<a href="%s"%s%s%s%s title="%s">%s</a>',

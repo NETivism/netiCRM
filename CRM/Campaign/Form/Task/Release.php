@@ -154,7 +154,7 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
   function postProcess() {
     $deleteActivityIds = array();
     foreach ($this->_contactIds as $cid) {
-      if (array_key_exists($cid, $this->_surveyActivities)) {
+      if (CRM_Utils_Array::arrayKeyExists($cid, $this->_surveyActivities)) {
         $deleteActivityIds[] = $this->_surveyActivities[$cid]['activity_id'];
       }
     }

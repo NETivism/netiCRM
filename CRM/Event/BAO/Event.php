@@ -537,7 +537,7 @@ LIMIT      0, 10
       $statusTypes = CRM_Event_PseudoConstant::participantStatus();
       $statusLabels = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
       foreach ($statusValues as $statusId => $statusValue) {
-        if (!array_key_exists($statusId, $statusTypes)) {
+        if (!CRM_Utils_Array::arrayKeyExists($statusId, $statusTypes)) {
           continue;
         }
         $class = $statusValue['class'];
@@ -995,7 +995,7 @@ WHERE civicrm_event.is_active = 1
    */
   static function isMonetary($id) {
     static $isMonetary = array();
-    if (!array_key_exists($id, $isMonetary)) {
+    if (!CRM_Utils_Array::arrayKeyExists($id, $isMonetary)) {
       $isMonetary[$id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
         $id,
         'is_monetary'
@@ -1011,7 +1011,7 @@ WHERE civicrm_event.is_active = 1
   static function usesPriceSet($id) {
     require_once 'CRM/Price/BAO/Set.php';
     static $usesPriceSet = array();
-    if (!array_key_exists($id, $usesPriceSet)) {
+    if (!CRM_Utils_Array::arrayKeyExists($id, $usesPriceSet)) {
       $usesPriceSet[$id] = CRM_Price_BAO_Set::getFor('civicrm_event', $id);
     }
     return $usesPriceSet[$id];
@@ -1886,7 +1886,7 @@ WHERE  ce.loc_block_id = $locBlockId";
     $participant->is_test = CRM_Utils_Array::value('is_test', $params, 0);
     $participant->selectAdd();
     $participant->selectAdd('status_id');
-    if ($participant->find(TRUE) && array_key_exists($participant->status_id, $statusTypes)) {
+    if ($participant->find(TRUE) && CRM_Utils_Array::arrayKeyExists($participant->status_id, $statusTypes)) {
       $alreadyRegistered = TRUE;
     }
 

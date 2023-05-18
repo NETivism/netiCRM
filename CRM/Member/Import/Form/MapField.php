@@ -557,7 +557,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     $errors = array();
     $fieldMessage = NULL;
 
-    if (!array_key_exists('savedMapping', $fields)) {
+    if (!CRM_Utils_Array::arrayKeyExists('savedMapping', $fields)) {
       $importKeys = array();
       foreach ($fields['mapper'] as $mapperPart) {
         $importKeys[] = $mapperPart[0];
@@ -588,7 +588,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($ruleParams);
         $weightSum = 0;
         foreach ($importKeys as $key => $val) {
-          if (array_key_exists($val, $ruleFields)) {
+          if (CRM_Utils_Array::arrayKeyExists($val, $ruleFields)) {
             $weightSum += $ruleFields[$val];
           }
         }

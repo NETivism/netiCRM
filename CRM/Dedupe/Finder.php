@@ -271,7 +271,7 @@ class CRM_Dedupe_Finder {
     }
 
     // handle preferred_communication_method
-    if (array_key_exists('preferred_communication_method', $fields)) {
+    if (CRM_Utils_Array::arrayKeyExists('preferred_communication_method', $fields)) {
       $methods = array_intersect($fields['preferred_communication_method'], array('1'));
       $methods = array_keys($methods);
       sort($methods);

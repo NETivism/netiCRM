@@ -212,7 +212,7 @@ AND    co.id IN ( $contribIDs )";
     foreach ($fields as $name => $value) {
       if (strpos($name, 'trxn_id_') !== FALSE) {
         if ($fields[$name]) {
-          if (array_key_exists($value, $seen)) {
+          if (CRM_Utils_Array::arrayKeyExists($value, $seen)) {
             $errors[$name] = ts('Transaction ID\'s must be unique. Include the account number for checks.');
           }
           $seen[$value] = 1;

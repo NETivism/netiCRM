@@ -2218,7 +2218,7 @@ SELECT  display_name
 
     $activityId = CRM_Utils_Type::escape($activityId, 'Integer');
 
-    if (!array_key_exists($activityId, $parentActivities)) {
+    if (!CRM_Utils_Array::arrayKeyExists($activityId, $parentActivities)) {
       $parentActivities[$activityId] = array();
 
       $parentId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity',
@@ -2245,7 +2245,7 @@ SELECT  display_name
 
     $activityID = CRM_Utils_Type::escape($activityID, 'Integer');
 
-    if (!array_key_exists($activityID, $priorCounts)) {
+    if (!CRM_Utils_Array::arrayKeyExists($activityID, $priorCounts)) {
       $priorCounts[$activityID] = array();
       $originalID = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity',
         $activityID,
@@ -2283,7 +2283,7 @@ AND id < {$activityID}
     $activityID = CRM_Utils_Type::escape($activityID, 'Integer');
     $index = $activityID . '_' . (int) $onlyPriorRevisions;
 
-    if (!array_key_exists($index, $priorActivities)) {
+    if (!CRM_Utils_Array::arrayKeyExists($index, $priorActivities)) {
       $priorActivities[$index] = array();
 
       $originalID = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity',
@@ -2332,7 +2332,7 @@ AND cl.modified_id  = c.id
 
     $activityID = CRM_Utils_Type::escape($activityID, 'Integer');
 
-    if (!array_key_exists($activityID, $latestActivityIds)) {
+    if (!CRM_Utils_Array::arrayKeyExists($activityID, $latestActivityIds)) {
       $latestActivityIds[$activityID] = array();
 
       $originalID = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity',

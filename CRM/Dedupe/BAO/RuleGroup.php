@@ -315,7 +315,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     foreach ($tableQueries as $key => $query) {
       $table = explode(".", $key);
       $table = $table[0];
-      if (!array_key_exists($table, $tableCount)) {
+      if (!CRM_Utils_Array::arrayKeyExists($table, $tableCount)) {
         $query = "SELECT COUNT(*) FROM {$table}";
         $tableCount[$table] = CRM_Core_DAO::singleValueQuery($query);
       }

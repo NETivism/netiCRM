@@ -93,7 +93,7 @@ function civicrm_membership_contact_create(&$params) {
   require_once 'CRM/Member/BAO/Membership.php';
   $membershipBAO = CRM_Member_BAO_Membership::create($params, $ids, TRUE);
 
-  if (array_key_exists('is_error', $membershipBAO)) {
+  if (CRM_Utils_Array::arrayKeyExists('is_error', $membershipBAO)) {
     // In case of no valid status for given dates, $membershipBAO
     // is going to contain 'is_error' => "Error Message"
     return civicrm_create_error(ts('The membership can not be saved, no valid membership status for given dates'));

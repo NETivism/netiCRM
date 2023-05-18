@@ -74,7 +74,7 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
       // now handle all the fields
       foreach ($group['fields'] as $fieldID => $field) {
         $this->_columns[$field['label']] = "custom_{$field['id']}";
-        if (!array_key_exists($group['table_name'], $this->_tables)) {
+        if (!CRM_Utils_Array::arrayKeyExists($group['table_name'], $this->_tables)) {
           $this->_tables[$group['table_name']] = array();
         }
         $this->_tables[$group['table_name']][$field['id']] = $field['column_name'];
@@ -243,7 +243,7 @@ contact_a.sort_name    as sort_name,
           $row["custom_{$fieldID}"] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', (int)$row["custom_{$fieldID}"], 'display_name');
         }
         elseif ($row["custom_{$fieldID}"] &&
-          array_key_exists($row["custom_{$fieldID}"],
+          CRM_Utils_Array::arrayKeyExists($row["custom_{$fieldID}"],
             $values
           )
         ) {

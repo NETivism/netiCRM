@@ -712,7 +712,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
       //CRM-4430, don't carry if not submitted.
       foreach (array('prefix', 'suffix', 'gender') as $name) {
-        if (array_key_exists($name, $formatted)) {
+        if (CRM_Utils_Array::arrayKeyExists($name, $formatted)) {
           if (in_array($name, array('prefix', 'suffix'))) {
             $formattedName = "individual_{$name}";
             $formatted[$formattedName] = CRM_Core_OptionGroup::getValue($formattedName, (string)$formatted[$name]);
@@ -1185,7 +1185,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
         /* check if it's a valid custom field id */
 
-        if (!array_key_exists($customFieldID, $customFields)) {
+        if (!CRM_Utils_Array::arrayKeyExists($customFieldID, $customFields)) {
           self::addToErrorMsg(ts('field ID'), $errorMessage);
         }
         /* validate the data against the CF type */
@@ -1324,7 +1324,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         //CRM-5125
         //supporting custom data of related contact subtypes
         if (isset($this)) {
-          if (array_key_exists($key, $this->_relationships)) {
+          if (CRM_Utils_Array::arrayKeyExists($key, $this->_relationships)) {
             $relation = $key;
           }
           elseif (CRM_Utils_Array::key($key, $this->_relationships)) {
@@ -1470,7 +1470,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             break;
 
           case 'preferred_mail_format':
-            if (!array_key_exists(strtolower($value), array_change_key_case(CRM_Core_SelectValues::pmf(), CASE_LOWER))) {
+            if (!CRM_Utils_Array::arrayKeyExists(strtolower($value), array_change_key_case(CRM_Core_SelectValues::pmf(), CASE_LOWER))) {
               self::addToErrorMsg(ts('Preferred Mail Format'), $errorMessage);
             }
             break;
@@ -1610,7 +1610,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             break;
 
           case 'email_greeting_custom':
-            if (array_key_exists('email_greeting', $params)) {
+            if (CRM_Utils_Array::arrayKeyExists('email_greeting', $params)) {
               $emailGreetingLabel = key(CRM_Core_OptionGroup::values('email_greeting', TRUE, NULL,
                   NULL, 'AND v.name = "Customized"'
                 ));
@@ -1621,7 +1621,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             break;
 
           case 'postal_greeting_custom':
-            if (array_key_exists('postal_greeting', $params)) {
+            if (CRM_Utils_Array::arrayKeyExists('postal_greeting', $params)) {
               $postalGreetingLabel = key(CRM_Core_OptionGroup::values('postal_greeting', TRUE,
                   NULL, NULL, 'AND v.name = "Customized"'
                 ));
@@ -1632,7 +1632,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             break;
 
           case 'addressee_custom':
-            if (array_key_exists('addressee', $params)) {
+            if (CRM_Utils_Array::arrayKeyExists('addressee', $params)) {
               $addresseeLabel = key(CRM_Core_OptionGroup::values('addressee', TRUE, NULL, NULL,
                   'AND v.name = "Customized"'
                 ));
@@ -1843,7 +1843,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         continue;
       }
 
-      if (array_key_exists($key, $locationFields)) {
+      if (CRM_Utils_Array::arrayKeyExists($key, $locationFields)) {
         continue;
       }
       elseif (in_array($key, array('email_greeting', 'postal_greeting', 'addressee'))) {
@@ -1958,7 +1958,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       'addressee_custom' => 'addressee',
     );
     foreach ($elements as $k => $v) {
-      if (array_key_exists($k, $params) && !(array_key_exists($v, $params))) {
+      if (CRM_Utils_Array::arrayKeyExists($k, $params) && !(CRM_Utils_Array::arrayKeyExists($v, $params))) {
         $label = key(CRM_Core_OptionGroup::values($v, TRUE, NULL, NULL, 'AND v.name = "Customized"'));
         $params[$v] = $label;
       }
@@ -2033,7 +2033,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       $formatValues = array($key => $field);
 
       if (($key !== 'preferred_communication_method') &&
-        (array_key_exists($key, $contactFields))
+        (CRM_Utils_Array::arrayKeyExists($key, $contactFields))
       ) {
         // due to merging of individual table and
         // contact table, we need to avoid
@@ -2051,7 +2051,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
       //Handling Custom Data
       if (($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key))
-        && array_key_exists($customFieldID, $customFields)
+        && CRM_Utils_Array::arrayKeyExists($customFieldID, $customFields)
       ) {
 
         //get the html type.
@@ -2167,7 +2167,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     // parse street address, CRM-5450
     if ($this->_parseStreetAddress) {
       require_once 'CRM/Core/BAO/Address.php';
-      if (array_key_exists('address', $formatted) && is_array($formatted['address'])) {
+      if (CRM_Utils_Array::arrayKeyExists('address', $formatted) && is_array($formatted['address'])) {
         foreach ($formatted['address'] as $instance => & $address) {
           $streetAddress = CRM_Utils_Array::value('street_address', $address);
           if (empty($streetAddress)) {

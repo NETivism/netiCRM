@@ -315,7 +315,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
   static function getModeValue($mode = 1) {
     self::setModeValues();
 
-    if (!array_key_exists($mode, self::$_modeValues)) {
+    if (!CRM_Utils_Array::arrayKeyExists($mode, self::$_modeValues)) {
       $mode = 1;
     }
 

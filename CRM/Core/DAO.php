@@ -187,7 +187,7 @@ class CRM_Core_DAO extends DB_DataObject {
       $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database] = array();
     }
 
-    if (!array_key_exists($this->__table, $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database])) {
+    if (!CRM_Utils_Array::arrayKeyExists($this->__table, $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database])) {
       $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database][$this->__table] = $links;
     }
   }
@@ -353,11 +353,11 @@ class CRM_Core_DAO extends DB_DataObject {
     $allNull = TRUE;
     foreach ($fields as $name => $value) {
       $dbName = $value['name'];
-      if (array_key_exists($dbName, $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($dbName, $params)) {
         $pValue = $params[$dbName];
         $exists = TRUE;
       }
-      elseif (array_key_exists($name, $params)) {
+      elseif (CRM_Utils_Array::arrayKeyExists($name, $params)) {
         $pValue = $params[$name];
         $exists = TRUE;
       }
@@ -584,7 +584,7 @@ LIKE %1
   static function isDBMyISAM($maxTablesToCheck = 10) {
     // show error if any of the tables, use 'MyISAM' storage engine.
     $engines = self::getStorageValues(NULL, $maxTablesToCheck);
-    if (array_key_exists('MyISAM', $engines)) {
+    if (CRM_Utils_Array::arrayKeyExists('MyISAM', $engines)) {
       return TRUE;
     }
     return FALSE;
@@ -602,7 +602,7 @@ LIKE %1
   function checkConstraintExists($tableName, $constraint) {
     static $show = array();
 
-    if (!array_key_exists($tableName, $show)) {
+    if (!CRM_Utils_Array::arrayKeyExists($tableName, $show)) {
       $query = "SHOW CREATE TABLE $tableName";
       $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -630,7 +630,7 @@ LIKE %1
   function checkFKConstraintInFormat($tableName, $columnName) {
     static $show = array();
 
-    if (!array_key_exists($tableName, $show)) {
+    if (!CRM_Utils_Array::arrayKeyExists($tableName, $show)) {
       $query = "SHOW CREATE TABLE $tableName";
       $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -735,7 +735,7 @@ FROM   civicrm_domain
       self::$_dbColumnValueCache = array();
     }
 
-    if (!array_key_exists($cacheKey, self::$_dbColumnValueCache) || $force) {
+    if (!CRM_Utils_Array::arrayKeyExists($cacheKey, self::$_dbColumnValueCache) || $force) {
       $object = new $daoName();
       $object->$searchColumn = $searchValue;
       $object->selectAdd();

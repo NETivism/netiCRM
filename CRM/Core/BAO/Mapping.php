@@ -449,7 +449,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       );
 
       foreach ($subTypeRelationshipTypes as $key => $var) {
-        if (!array_key_exists($key, $fields[$val['parent']])) {
+        if (!CRM_Utils_Array::arrayKeyExists($key, $fields[$val['parent']])) {
           list($type) = explode('_', $key);
 
           $csRelationships[$key]['title'] = $var;
@@ -496,7 +496,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         }
       }
 
-      if (array_key_exists('related', $relatedMapperFields[$key])) {
+      if (CRM_Utils_Array::arrayKeyExists('related', $relatedMapperFields[$key])) {
         unset($relatedMapperFields[$key]['related']);
       }
     }
@@ -806,7 +806,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         //Fix for Search Builder
         if ($mappingType == 'Export') {
           if (!isset($mappingId) || $i >= count(reset($mappingName))) {
-            if (array_key_exists($formValues['mapper'][$x][$i][1], $relationshipTypes)) {
+            if (CRM_Utils_Array::arrayKeyExists($formValues['mapper'][$x][$i][1], $relationshipTypes)) {
               $sel->setOptions(array($sel1, $sel2, $sel5, $sel6, $sel7, $sel3, $sel4));
             }
             else {
@@ -1063,13 +1063,13 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           }
 
           if (isset($v[2]) && is_numeric($v[2])) {
-            if (!array_key_exists('location', $fields)) {
+            if (!CRM_Utils_Array::arrayKeyExists('location', $fields)) {
               $fields['location'] = array();
             }
 
             // make sure that we have a location fields and a location type for this
             $locationName = $locationTypes[$v[2]];
-            if (!array_key_exists($locationName, $fields['location'])) {
+            if (!CRM_Utils_Array::arrayKeyExists($locationName, $fields['location'])) {
               $fields['location'][$locationName] = array();
               $fields['location'][$locationName]['location_type'] = $v[2];
             }

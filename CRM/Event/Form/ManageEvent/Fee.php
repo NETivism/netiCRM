@@ -585,7 +585,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
       return;
     }
 
-    if (array_key_exists('payment_processor', $params) && !CRM_Utils_System::isNull($params['payment_processor'])) {
+    if (CRM_Utils_Array::arrayKeyExists('payment_processor', $params) && !CRM_Utils_System::isNull($params['payment_processor'])) {
       $params['payment_processor'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($params['payment_processor']));
     }
     else {

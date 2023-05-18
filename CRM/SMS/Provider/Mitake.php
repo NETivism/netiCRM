@@ -394,7 +394,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     }
 
     foreach($this->_sms as $idx => $sms) {
-      if (array_key_exists($idx, $result)) {
+      if (CRM_Utils_Array::arrayKeyExists($idx, $result)) {
         $this->_sms[$idx]['result'] = $result[$idx];
       }
       elseif (!$result[1]['success']) {

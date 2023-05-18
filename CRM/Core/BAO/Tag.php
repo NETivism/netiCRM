@@ -99,7 +99,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
         $this->tree[$dao->id]['name'] = $dao->name;
       }
       else {
-        if (array_key_exists($dao->parent_id, $this->tree)) {
+        if (CRM_Utils_Array::arrayKeyExists($dao->parent_id, $this->tree)) {
           $parent = &$this->tree[$dao->parent_id];
           if (!isset($this->tree[$dao->parent_id]['children'])) {
             $this->tree[$dao->parent_id]['children'] = array();
@@ -107,7 +107,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
         }
         else {
           //3rd level tag
-          if (!array_key_exists($dao->parent_id, $orphan)) {
+          if (!CRM_Utils_Array::arrayKeyExists($dao->parent_id, $orphan)) {
             $orphan[$dao->parent_id] = array('children' => array());
           }
           $parent = &$orphan[$dao->parent_id];
@@ -123,7 +123,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
         }
 
         foreach ($level1['children'] as $key => & $level2) {
-          if (array_key_exists($key, $orphan)) {
+          if (CRM_Utils_Array::arrayKeyExists($key, $orphan)) {
             $level2['children'] = $orphan[$key]['children'];
           }
         }

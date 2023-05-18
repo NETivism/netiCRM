@@ -141,7 +141,7 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
     $select = array();
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -169,10 +169,10 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
 
   static function formRule($fields, $files, $self) {
     $errors = $grouping = array();
-    if (empty($fields['relationship_type_id_value']) && (array_key_exists('sort_name', $fields['fields']) || array_key_exists('label_b_a', $fields['fields']))) {
+    if (empty($fields['relationship_type_id_value']) && (CRM_Utils_Array::arrayKeyExists('sort_name', $fields['fields']) || CRM_Utils_Array::arrayKeyExists('label_b_a', $fields['fields']))) {
       $errors['fields'] = ts('Either filter on at least one relationship type, or de-select Staff Member and Relationship from the list of fields.');
     }
-    if ((!empty($fields['relationship_type_id_value']) || !empty($fields['sort_name_value'])) && (!array_key_exists('sort_name', $fields['fields']) || !array_key_exists('label_b_a', $fields['fields']))) {
+    if ((!empty($fields['relationship_type_id_value']) || !empty($fields['sort_name_value'])) && (!CRM_Utils_Array::arrayKeyExists('sort_name', $fields['fields']) || !CRM_Utils_Array::arrayKeyExists('label_b_a', $fields['fields']))) {
       $errors['fields'] = ts('To filter on Staff Member or Relationship, please also select Staff Member and Relationship from the list of fields.');
     }
     return $errors;
@@ -210,7 +210,7 @@ inner join civicrm_contact $c2 on ${c2}.id=${ccc}.contact_id
     $clauses = array();
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if ($field['operatorType'] & CRM_Report_Form::OP_DATE) {
@@ -271,14 +271,14 @@ inner join civicrm_contact $c2 on ${c2}.id=${ccc}.contact_id
   function alterDisplay(&$rows) {
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
-      if (array_key_exists('civicrm_case_status_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_case_status_id', $row)) {
         if ($value = $row['civicrm_case_status_id']) {
           $rows[$rowNum]['civicrm_case_status_id'] = $this->case_statuses[$value];
           $entryFound = TRUE;
         }
       }
 
-      if (array_key_exists('civicrm_case_is_deleted', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_case_is_deleted', $row)) {
         //                if ( $value = $row['civicrm_case_is_deleted'] ) {
         $value = $row['civicrm_case_is_deleted'];
         $rows[$rowNum]['civicrm_case_is_deleted'] = $this->deleted_labels[$value];

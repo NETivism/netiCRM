@@ -379,7 +379,7 @@ function _civicrm_mailer_check_params(&$params, $required) {
   }
 
   foreach ($required as $name) {
-    if (!array_key_exists($name, $params) || !$params[$name]) {
+    if (!CRM_Utils_Array::arrayKeyExists($name, $params) || !$params[$name]) {
       return civicrm_create_error(ts('Required parameter missing: "%1"', array(1 => $name)));
     }
   }

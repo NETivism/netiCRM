@@ -179,7 +179,7 @@ class CRM_Activity_BAO_Query {
         $clause = array();
         if (is_array($value)) {
           foreach ($value as $id) {
-            if (array_key_exists($id, $types)) {
+            if (CRM_Utils_Array::arrayKeyExists($id, $types)) {
               $clause[] = "'" . CRM_Utils_Type::escape($types[$id], 'String') . "'";
             }
           }

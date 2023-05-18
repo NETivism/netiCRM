@@ -191,10 +191,10 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
       // special case for communication method
       $this->addElement($element[0],
         $element[1],
-        array_key_exists('2', $element) ? $element[2] : NULL,
-        array_key_exists('3', $element) ? $element[3] : NULL,
-        array_key_exists('4', $element) ? $element[4] : NULL,
-        array_key_exists('5', $element) ? $element[5] : NULL
+        CRM_Utils_Array::arrayKeyExists('2', $element) ? $element[2] : NULL,
+        CRM_Utils_Array::arrayKeyExists('3', $element) ? $element[3] : NULL,
+        CRM_Utils_Array::arrayKeyExists('4', $element) ? $element[4] : NULL,
+        CRM_Utils_Array::arrayKeyExists('5', $element) ? $element[5] : NULL
       );
     }
 

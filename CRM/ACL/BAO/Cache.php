@@ -47,7 +47,7 @@ class CRM_ACL_BAO_Cache extends CRM_ACL_DAO_Cache {
       self::$_cache = array();
     }
 
-    if (array_key_exists($id, self::$_cache)) {
+    if (CRM_Utils_Array::arrayKeyExists($id, self::$_cache)) {
       return self::$_cache[$id];
     }
 
@@ -101,7 +101,7 @@ SELECT acl_id
 
   static function deleteEntry($id) {
     if (self::$_cache &&
-      array_key_exists($id, self::$_cache)
+      CRM_Utils_Array::arrayKeyExists($id, self::$_cache)
     ) {
       unset(self::$_cache[$id]);
     }

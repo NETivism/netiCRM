@@ -248,7 +248,7 @@ class CRM_Utils_Token {
       static $addressCache = array();
 
       $cache_key = $html ? 'address-html' : 'address-text';
-      if (array_key_exists($cache_key, $addressCache)) {
+      if (CRM_Utils_Array::arrayKeyExists($cache_key, $addressCache)) {
         return $addressCache[$cache_key];
       }
 
@@ -1096,9 +1096,9 @@ class CRM_Utils_Token {
     $contactDetails = &$details[0];
 
     foreach ($contactIDs as $key => $contactID) {
-      if (array_key_exists($contactID, $contactDetails)) {
+      if (CRM_Utils_Array::arrayKeyExists($contactID, $contactDetails)) {
         if (CRM_Utils_Array::value('preferred_communication_method', $returnProperties) == 1
-          && array_key_exists('preferred_communication_method', $contactDetails[$contactID])
+          && CRM_Utils_Array::arrayKeyExists('preferred_communication_method', $contactDetails[$contactID])
         ) {
           require_once 'CRM/Core/PseudoConstant.php';
           $pcm = CRM_Core_PseudoConstant::pcm();
@@ -1171,7 +1171,7 @@ class CRM_Utils_Token {
 
       // $greetingTokens not empty, means there are few tokens which are not evaluated, like custom data etc
       // so retrieve it from database
-      if (!empty($greetingTokens) && array_key_exists('contact', $greetingTokens)) {
+      if (!empty($greetingTokens) && CRM_Utils_Array::arrayKeyExists('contact', $greetingTokens)) {
         $greetingsReturnProperties = array_flip(CRM_Utils_Array::value('contact', $greetingTokens));
         $greetingsReturnProperties = array_fill_keys(array_keys($greetingsReturnProperties), 1);
         $contactParams = array('contact_id' => $contactId);

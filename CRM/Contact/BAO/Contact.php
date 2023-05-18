@@ -197,7 +197,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     }
 
     if ($contact->contact_type == 'Individual' &&
-      (array_key_exists('current_employer', $params) || array_key_exists('employer_id', $params))) {
+      (CRM_Utils_Array::arrayKeyExists('current_employer', $params) || CRM_Utils_Array::arrayKeyExists('employer_id', $params))) {
       // create current employer
       if ($params['employer_id']) {
         CRM_Contact_BAO_Contact_Utils::createCurrentEmployerRelationship($contact->id, $params['employer_id']);
@@ -290,7 +290,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
       $domainGroupID = CRM_Core_BAO_Domain::getGroupId();
       if (CRM_Utils_Array::value('group', $params) && is_array($params['group'])) {
         $grpFlp = array_flip($params['group']);
-        if (!array_key_exists(1, $grpFlp)) {
+        if (!CRM_Utils_Array::arrayKeyExists(1, $grpFlp)) {
           $params['group'][$domainGroupID] = 1;
         }
       }
@@ -498,7 +498,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
 
     $blocks = array('address', 'im', 'phone');
     foreach ($blocks as $name) {
-      if (!array_key_exists($name, $defaults) || !is_array($defaults[$name])) {
+      if (!CRM_Utils_Array::arrayKeyExists($name, $defaults) || !is_array($defaults[$name])) {
         continue;
       }
       foreach ($defaults[$name] as $count => & $values) {
@@ -585,10 +585,10 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
    * @static
    */
   static function &retrieve(&$params, &$defaults, $microformat = FALSE) {
-    if (array_key_exists('contact_id', $params)) {
+    if (CRM_Utils_Array::arrayKeyExists('contact_id', $params)) {
       $params['id'] = $params['contact_id'];
     }
-    elseif (array_key_exists('id', $params)) {
+    elseif (CRM_Utils_Array::arrayKeyExists('id', $params)) {
       $params['contact_id'] = $params['id'];
     }
 
@@ -1518,7 +1518,7 @@ ORDER BY civicrm_email.is_primary DESC";
     list($data, $contactDetails) = self::formatProfileContactParams($params, $fields, $contactID, $ufGroupId, $ctype);
 
     // manage is_opt_out
-    if (array_key_exists('is_opt_out', $fields) && array_key_exists('is_opt_out', $params)) {
+    if (CRM_Utils_Array::arrayKeyExists('is_opt_out', $fields) && CRM_Utils_Array::arrayKeyExists('is_opt_out', $params)) {
       $wasOptOut = CRM_Utils_Array::value('is_opt_out', $contactDetails, FALSE);
       $isOptOut = CRM_Utils_Array::value('is_opt_out', $params, FALSE);
       $data['is_opt_out'] = $isOptOut;
@@ -1706,7 +1706,7 @@ ORDER BY civicrm_email.is_primary DESC";
     // prevent overwritten of formatted array, reset all block from
     // params if it is not in valid format (since import pass valid format)
     foreach ($blocks as $blk) {
-      if (array_key_exists($blk, $params) &&
+      if (CRM_Utils_Array::arrayKeyExists($blk, $params) &&
         !is_array($params[$blk])
       ) {
         unset($params[$blk]);
@@ -1890,7 +1890,7 @@ ORDER BY civicrm_email.is_primary DESC";
           if ($key == 'location') {
             foreach ($value as $locationTypeId => $field) {
               foreach ($field as $block => $val) {
-                if ($block == 'address' && array_key_exists('address_name', $val)) {
+                if ($block == 'address' && CRM_Utils_Array::arrayKeyExists('address_name', $val)) {
                   $value[$locationTypeId][$block]['name'] = $value[$locationTypeId][$block]['address_name'];
                 }
               }
@@ -1912,7 +1912,7 @@ ORDER BY civicrm_email.is_primary DESC";
       $studentFieldPresent = 0;
       foreach ($fields as $name => $field) {
         // check if student fields present
-        if ((!$studentFieldPresent) && array_key_exists($name, CRM_Quest_BAO_Student::exportableFields())) {
+        if ((!$studentFieldPresent) && CRM_Utils_Array::arrayKeyExists($name, CRM_Quest_BAO_Student::exportableFields())) {
           $studentFieldPresent = 1;
         }
       }
@@ -1921,8 +1921,8 @@ ORDER BY civicrm_email.is_primary DESC";
     //set the values for checkboxes (do_not_email, do_not_mail, do_not_trade, do_not_phone)
     $privacy = CRM_Core_SelectValues::privacy();
     foreach ($privacy as $key => $value) {
-      if (array_key_exists($key, $fields)) {
-        if (array_key_exists($key, $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($key, $fields)) {
+        if (CRM_Utils_Array::arrayKeyExists($key, $params)) {
           $data[$key] = $params[$key];
           // dont reset it for existing contacts
         }
@@ -2419,7 +2419,7 @@ UNION
         $fields =& $daoName::fields( );
         $conditions = array();
         foreach ($criteria as $field => $value) {
-          if (array_key_exists($field, $fields)) {
+          if (CRM_Utils_Array::arrayKeyExists($field, $fields)) {
             $cond = "( $field = $value )";
             // value might be zero or null.
             if (!$value || strtolower($value) == 'null') {

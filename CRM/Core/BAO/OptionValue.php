@@ -238,7 +238,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
       return TRUE;
     }
 
-    if (array_key_exists($gName, $individuals)) {
+    if (CRM_Utils_Array::arrayKeyExists($gName, $individuals)) {
       require_once 'CRM/Contact/BAO/Contact.php';
       $contactDAO = new CRM_Contact_DAO_Contact();
 
@@ -262,7 +262,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
       return TRUE;
     }
 
-    if (array_key_exists($gName, $contributions)) {
+    if (CRM_Utils_Array::arrayKeyExists($gName, $contributions)) {
       require_once 'CRM/Contribute/DAO/Contribution.php';
       $contribution = new CRM_Contribute_DAO_Contribution();
       $contribution->$fieldName = $value;
@@ -276,7 +276,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
       return TRUE;
     }
 
-    if (array_key_exists($gName, $activities)) {
+    if (CRM_Utils_Array::arrayKeyExists($gName, $activities)) {
       require_once 'CRM/Activity/DAO/Activity.php';
       $activity = new CRM_Activity_DAO_Activity();
       $activity->$fieldName = $value;
@@ -288,7 +288,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
     }
 
     //delete participant role, type and event type option value
-    if (array_key_exists($gName, $participant)) {
+    if (CRM_Utils_Array::arrayKeyExists($gName, $participant)) {
       require_once 'CRM/Event/DAO/Participant.php';
       $participantValue = new CRM_Event_DAO_Participant();
       $participantValue->$fieldName = $value;
@@ -299,7 +299,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
     }
 
     //delete event type option value
-    if (array_key_exists($gName, $eventType)) {
+    if (CRM_Utils_Array::arrayKeyExists($gName, $eventType)) {
       require_once 'CRM/Event/DAO/Event.php';
       $event = new CRM_Event_DAO_Event();
       $event->$fieldName = $value;
@@ -310,7 +310,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
     }
 
     //delete acl_role option value
-    if (array_key_exists($gName, $aclRole)) {
+    if (CRM_Utils_Array::arrayKeyExists($gName, $aclRole)) {
       require_once 'CRM/ACL/DAO/EntityRole.php';
       require_once 'CRM/ACL/DAO/ACL.php';
       $entityRole = new CRM_ACL_DAO_EntityRole();

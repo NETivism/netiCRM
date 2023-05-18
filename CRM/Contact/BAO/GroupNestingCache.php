@@ -50,13 +50,13 @@ WHERE  n.child_group_id  = gc.id
 
     $tree = array();
     while ($dao->fetch()) {
-      if (!array_key_exists($dao->child, $tree)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->child, $tree)) {
         $tree[$dao->child] = array('children' => array(),
           'parents' => array(),
         );
       }
 
-      if (!array_key_exists($dao->parent, $tree)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->parent, $tree)) {
         $tree[$dao->parent] = array('children' => array(),
           'parents' => array(),
         );

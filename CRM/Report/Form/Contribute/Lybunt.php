@@ -165,7 +165,7 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
 
     foreach ($this->_columns as $tableName => $table) {
 
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
 
           if (CRM_Utils_Array::value('required', $field) ||
@@ -223,7 +223,7 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
     $previous_year = $current_year - 1;
 
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if (CRM_Utils_Array::value('type', $field) & CRM_Utils_Type::T_DATE) {
@@ -402,8 +402,8 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
   function alterDisplay(&$rows) {
     foreach ($rows as $rowNum => $row) {
       //Convert Display name into link
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        array_key_exists('civicrm_contribution_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contribution_contact_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contribution_contact_id'],

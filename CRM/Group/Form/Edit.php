@@ -262,7 +262,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       $parentGroupIds = explode(',', $this->_groupValues['parents']);
       foreach ($parentGroupIds as $parentGroupId) {
         $parentGroups[$parentGroupId] = $groupNames[$parentGroupId];
-        if (array_key_exists($parentGroupId, $groupNames)) {
+        if (CRM_Utils_Array::arrayKeyExists($parentGroupId, $groupNames)) {
           $parentGroupElements[$parentGroupId] = $groupNames[$parentGroupId];
           $this->addElement('checkbox', "remove_parent_group_$parentGroupId",
             $groupNames[$parentGroupId]
@@ -284,7 +284,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
     $parentGroupSelectValues = array('' => '- ' . ts('select') . ' -');
     foreach ($potentialParentGroupIds as $potentialParentGroupId) {
-      if (array_key_exists($potentialParentGroupId, $groupNames)) {
+      if (CRM_Utils_Array::arrayKeyExists($potentialParentGroupId, $groupNames)) {
         $parentGroupSelectValues[$potentialParentGroupId] = $groupNames[$potentialParentGroupId];
       }
     }

@@ -535,7 +535,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
     }
     while ($dao->fetch()) {
       // make sure we're not following any cyclical references
-      if (!array_key_exists($dao->child_group_id, $parentGroupIds) && $dao->parent_group_id != $groupIds[0]) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->child_group_id, $parentGroupIds) && $dao->parent_group_id != $groupIds[0]) {
         $tmpGroupIds[] = $dao->parent_group_id;
       }
     }
@@ -635,7 +635,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
     }
     while ($dao->fetch()) {
       // make sure we're not following any cyclical references
-      if (!array_key_exists($dao->parent_group_id, $childGroupIds) && $dao->child_group_id != $groupIds[0]) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->parent_group_id, $childGroupIds) && $dao->child_group_id != $groupIds[0]) {
         $tmpGroupIds[] = $dao->child_group_id;
       }
     }

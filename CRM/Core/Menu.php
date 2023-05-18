@@ -300,7 +300,7 @@ class CRM_Core_Menu {
         'icon' => CRM_Utils_Array::value('icon', $item),
         'extra' => CRM_Utils_Array::value('extra', $item),
       );
-      if (!array_key_exists($item['adminGroup'], $values)) {
+      if (!CRM_Utils_Array::arrayKeyExists($item['adminGroup'], $values)) {
         $values[$item['adminGroup']] = array();
         $values[$item['adminGroup']]['fields'] = array();
       }
@@ -328,14 +328,14 @@ class CRM_Core_Menu {
       return array();
     }
 
-    if (!array_key_exists('navigation', self::$_menuCache)) {
+    if (!CRM_Utils_Array::arrayKeyExists('navigation', self::$_menuCache)) {
       // problem could be due to menu table empty. Just do a
       // menu store and try again
       self::store();
 
       // here we goo
       self::get('navigation');
-      if (!array_key_exists('navigation', self::$_menuCache)) {
+      if (!CRM_Utils_Array::arrayKeyExists('navigation', self::$_menuCache)) {
         CRM_Core_Error::fatal();
       }
     }
@@ -465,7 +465,7 @@ class CRM_Core_Menu {
       }
 
       // add to crumb, if current-path exists in params.
-      if (array_key_exists($currentPath, $menu) && isset($menu[$currentPath]['title']) && $currentPath != 'civicrm') {
+      if (CRM_Utils_Array::arrayKeyExists($currentPath, $menu) && isset($menu[$currentPath]['title']) && $currentPath != 'civicrm') {
         $urlVar = CRM_Utils_Array::value('path_arguments', $menu[$currentPath]) ? '&' . $menu[$currentPath]['path_arguments'] : '';
         $crumbs[] = array(
           'title' => $menu[$currentPath]['title'],
@@ -510,7 +510,7 @@ class CRM_Core_Menu {
   static function fillComponentIds(&$menu, $path) {
     static $cache = array();
 
-    if (array_key_exists('component_id', $menu[$path])) {
+    if (CRM_Utils_Array::arrayKeyExists('component_id', $menu[$path])) {
       return;
     }
 
@@ -525,7 +525,7 @@ class CRM_Core_Menu {
 
     $componentId = NULL;
 
-    if (array_key_exists($compPath, $cache)) {
+    if (CRM_Utils_Array::arrayKeyExists($compPath, $cache)) {
       $menu[$path]['component_id'] = $cache[$compPath];
     }
     else {
@@ -636,7 +636,7 @@ UNION (
       $arr[$key] = $val;
     }
 
-    if (array_key_exists('urlToSession', $arr)) {
+    if (CRM_Utils_Array::arrayKeyExists('urlToSession', $arr)) {
       $urlToSession = array();
 
       $params = explode(';', $arr['urlToSession']);

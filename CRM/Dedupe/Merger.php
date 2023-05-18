@@ -638,14 +638,14 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         if ($fieldName == 'address') {
           $mainNewLocTypeId = $migrationInfo['location'][$fieldName][$fieldCount]['locTypeId'];
           if (!empty($migrationInfo['main_loc_block']) &&
-              array_key_exists("main_{$fieldName}{$mainNewLocTypeId}", $migrationInfo['main_loc_block'])) {
+              CRM_Utils_Array::arrayKeyExists("main_{$fieldName}{$mainNewLocTypeId}", $migrationInfo['main_loc_block'])) {
             // main loc already has some address for the loc-type. Its a overwrite situation.
 
             // look for next available loc-type
             $newTypeId = $otherLocationTypeId;
             if (!$newTypeId) {
               foreach ($allLocationTypes as $typeId => $typeLabel) {
-                if (!array_key_exists("main_{$fieldName}{$typeId}", $migrationInfo['main_loc_block'])) {
+                if (!CRM_Utils_Array::arrayKeyExists("main_{$fieldName}{$typeId}", $migrationInfo['main_loc_block'])) {
                   $newTypeId = $typeId;
                 }
               }
@@ -903,7 +903,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
               $blkValues
             );
             $locTypes[$moniker][$name][$count] = $locTypeId;
-            if ($moniker == 'main' && array_key_exists($name, self::$locationBlocks)) {
+            if ($moniker == 'main' && CRM_Utils_Array::arrayKeyExists($name, self::$locationBlocks)) {
               $mainLocBlock["main_$name$locTypeId"] = CRM_Utils_Array::value($fldName,
                 $blkValues
               );
@@ -942,7 +942,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
 
           // keep 1-1 mapping for address - location type.
           $attr = NULL;
-          if (array_key_exists($name, self::$locationBlocks) && !empty($mainLocBlock)) {
+          if (CRM_Utils_Array::arrayKeyExists($name, self::$locationBlocks) && !empty($mainLocBlock)) {
             $attr = array(
               'data-location-name' => $name,
               'data-location-id' => $count,
@@ -1146,9 +1146,9 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
       }
       elseif (substr($key, 0, 15) == 'move_rel_table_' and $value == '1') {
         $moveTables = array_merge($moveTables, $relTables[substr($key, 5)]['tables']);
-        if (array_key_exists('operation', $migrationInfo)) {
+        if (CRM_Utils_Array::arrayKeyExists('operation', $migrationInfo)) {
           foreach ($relTables[substr($key, 5)]['tables'] as $table) {
-            if (array_key_exists($key, $migrationInfo['operation'])) {
+            if (CRM_Utils_Array::arrayKeyExists($key, $migrationInfo['operation'])) {
               $tableOperations[$table] = $migrationInfo['operation'][$key];
             }
           }
@@ -1172,8 +1172,8 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
           continue;
         }
         $daoName = 'CRM_Core_DAO_' . $locComponent[$name];
-        $primaryDAOId = (array_key_exists($name, $primaryBlockIds)) ? array_pop($primaryBlockIds[$name]) : NULL;
-        $billingDAOId = (array_key_exists($name, $billingBlockIds)) ? array_pop($billingBlockIds[$name]) : NULL;
+        $primaryDAOId = (CRM_Utils_Array::arrayKeyExists($name, $primaryBlockIds)) ? array_pop($primaryBlockIds[$name]) : NULL;
+        $billingDAOId = (CRM_Utils_Array::arrayKeyExists($name, $billingBlockIds)) ? array_pop($billingBlockIds[$name]) : NULL;
 
         foreach ($block as $blkCount => $values) {
           $locTypeId = CRM_Utils_Array::value('locTypeId', $values, 1);
@@ -1184,7 +1184,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
 
           // keep 1-1 mapping for address - loc type.
           $idKey = $blkCount;
-          if (array_key_exists($name, $locComponent)) {
+          if (CRM_Utils_Array::arrayKeyExists($name, $locComponent)) {
             $idKey = $locTypeId;
           }
 
@@ -1255,7 +1255,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
 
     // fix custom fields so they're edible by createProfileContact()
     static $treeCache = array();
-    if (!array_key_exists($migrationInfo['main_details']['contact_type'], $treeCache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($migrationInfo['main_details']['contact_type'], $treeCache)) {
       $treeCache[$migrationInfo['main_details']['contact_type']] = CRM_Core_BAO_CustomGroup::getTree($migrationInfo['main_details']['contact_type'],
         CRM_Core_DAO::$_nullObject, NULL, -1
       );
@@ -1384,7 +1384,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     $viewOnlyCustomFields = array();
     foreach ($submitted as $key => $value) {
       $fid = (int) substr($key, 7);
-      if (array_key_exists($fid, $cFields) &&
+      if (CRM_Utils_Array::arrayKeyExists($fid, $cFields) &&
         CRM_Utils_Array::value('is_view', $cFields[$fid]['attributes'])
       ) {
         $viewOnlyCustomFields[$key] = $value;

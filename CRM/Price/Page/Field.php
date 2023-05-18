@@ -294,7 +294,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
         );
         $priceSetContexts = array();
         foreach ($comps as $name => $table) {
-          if (array_key_exists($table, $usedBy)) {
+          if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
             $priceSetContexts[] = $name;
           }
         }

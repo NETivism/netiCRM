@@ -122,7 +122,7 @@ class AuditConfig {
       return FALSE;
     }
     else {
-      return array_key_exists($n, $this->regionFieldList[$r]);
+      return CRM_Utils_Array::arrayKeyExists($n, $this->regionFieldList[$r]);
     }
   }
 

@@ -124,7 +124,7 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
             $contact->$dbName = $value;
             $$phpName = $value;
           }
-          elseif (array_key_exists($dbName, $params)) {
+          elseif (CRM_Utils_Array::arrayKeyExists($dbName, $params)) {
             $$phpName = $params[$dbName];
           }
           elseif ($value) {
@@ -149,7 +149,7 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
               $$phpName = NULL;
             }
           }
-          elseif (array_key_exists($dbName, $params)) {
+          elseif (CRM_Utils_Array::arrayKeyExists($dbName, $params)) {
             $temp = $$vals;
             // CRM-5278
             if (!empty($params[$dbName])) {

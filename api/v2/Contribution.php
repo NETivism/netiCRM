@@ -200,7 +200,7 @@ function &civicrm_contribution_search(&$params) {
   }
 
   // add is_test to the clause if not present
-  if (!array_key_exists('contribution_test', $inputParams)) {
+  if (!CRM_Utils_Array::arrayKeyExists('contribution_test', $inputParams)) {
     $inputParams['contribution_test'] = 0;
   }
 

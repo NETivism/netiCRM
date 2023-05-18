@@ -193,7 +193,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       }
 
       // get the billing location type
-      if (!array_key_exists('related_contact', $values)) {
+      if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         $locationTypes = &CRM_Core_PseudoConstant::locationType();
         $billingLocationTypeId = array_search(ts('Billing'), $locationTypes);
       }
@@ -206,7 +206,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       }
 
       require_once 'CRM/Contact/BAO/Contact/Location.php';
-      if (!array_key_exists('related_contact', $values)) {
+      if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE, $billingLocationTypeId);
       }
       // get primary location email if no email exist( for billing location).
@@ -296,7 +296,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       // cc to related contacts of contributor OR the one who
       // signs up. Is used for cases like - on behalf of
       // contribution / signup ..etc
-      if (array_key_exists('related_contact', $values)) {
+      if (CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         list($ccDisplayName, $ccEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($values['related_contact']);
         $ccMailId = "{$ccDisplayName} <{$ccEmail}>";
 

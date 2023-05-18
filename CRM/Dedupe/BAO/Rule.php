@@ -59,8 +59,8 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    */
   function sql() {
     if ($this->params &&
-      (!array_key_exists($this->rule_table, $this->params) ||
-        !array_key_exists($this->rule_field, $this->params[$this->rule_table])
+      (!CRM_Utils_Array::arrayKeyExists($this->rule_table, $this->params) ||
+        !CRM_Utils_Array::arrayKeyExists($this->rule_field, $this->params[$this->rule_table])
       )
     ) {
       // if params is present and doesn't have an entry for a field, don't construct the clause.

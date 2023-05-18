@@ -110,7 +110,7 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
     }
 
     if ($id) {
-      if (array_key_exists($id, self::$event[$key])) {
+      if (CRM_Utils_Array::arrayKeyExists($id, self::$event[$key])) {
         return self::$event[$key][$id];
       }
       else {

@@ -461,14 +461,14 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     $src = $reverse ? $property : $id;
     $dst = $reverse ? $id : $property;
 
-    if (!array_key_exists($src, $defaults)) {
+    if (!CRM_Utils_Array::arrayKeyExists($src, $defaults)) {
       return FALSE;
     }
 
     $look = $reverse ? array_flip($lookup) : $lookup;
 
     if (is_array($look)) {
-      if (!array_key_exists($defaults[$src], $look)) {
+      if (!CRM_Utils_Array::arrayKeyExists($defaults[$src], $look)) {
         return FALSE;
       }
     }
@@ -2085,7 +2085,7 @@ SELECT source_contact_id
     }
 
     // get the billing location type
-    if (!array_key_exists('related_contact', $values)) {
+    if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
       $locationTypes = &CRM_Core_PseudoConstant::locationType();
       $billingLocationTypeId = array_search('Billing', $locationTypes);
     }

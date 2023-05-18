@@ -298,7 +298,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->_columnHeaders = array();
     $this->_component = array('contribution_civireport', 'membership_civireport', 'participant_civireport', 'relationship_civireport', 'activity_civireport');
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -473,7 +473,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $clauses = array();
 
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
@@ -722,8 +722,8 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
       // make count columns point to detail report
 
       // change contact name with link
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         if ($rowCount > 1) {
           $url = CRM_Utils_System::url("civicrm/report/instance/".$this->_id, "reset=1&force=1&id_op=eq&id_value=".$row['civicrm_contact_id'], $this->_absoluteUrl);
@@ -737,13 +737,13 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
       }
 
       // handle country
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
         }
         $entryFound = TRUE;
       }
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
         }

@@ -76,7 +76,7 @@ function civicrm_api3_case_create($params) {
   if (!CRM_Utils_Array::value('status_id', $params)) {
     $params['status_id'] = 1;
   }
-  if (!array_key_exists('creator_id', $params)) {
+  if (!CRM_Utils_Array::arrayKeyExists('creator_id', $params)) {
     $session = CRM_Core_Session::singleton();
     $params['creator_id'] = $session->get('userID');
   }
@@ -310,7 +310,7 @@ function civicrm_api3_case_update($params) {
   }
 
   // return error if modifing creator id
-  if (array_key_exists('creator_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('creator_id', $params)) {
     return civicrm_api3_create_error(ts('You cannot update creator id'));
   }
 
@@ -526,7 +526,7 @@ function _civicrm_api3_case_check_params($params, $mode = NULL) {
   }
 
   if (CRM_Utils_Array::value('case_type_id', $params)) {
-    if (!array_key_exists($params['case_type_id'], $caseTypes)) {
+    if (!CRM_Utils_Array::arrayKeyExists($params['case_type_id'], $caseTypes)) {
       return civicrm_api3_create_error('Invalid Case Type Id');
     }
 
@@ -542,13 +542,13 @@ function _civicrm_api3_case_check_params($params, $mode = NULL) {
 
   // check for valid status id
   $caseStatusIds = CRM_Case_PseudoConstant::caseStatus();
-  if (CRM_Utils_Array::value('status_id', $params) && !array_key_exists($params['status_id'], $caseStatusIds)) {
+  if (CRM_Utils_Array::value('status_id', $params) && !CRM_Utils_Array::arrayKeyExists($params['status_id'], $caseStatusIds)) {
     return civicrm_api3_create_error('Invalid Case Status Id');
   }
 
   // check for valid medium id
   $encounterMedium = CRM_Core_OptionGroup::values('encounter_medium');
-  if (CRM_Utils_Array::value('medium_id', $params) && !array_key_exists($params['medium_id'], $encounterMedium)) {
+  if (CRM_Utils_Array::value('medium_id', $params) && !CRM_Utils_Array::arrayKeyExists($params['medium_id'], $encounterMedium)) {
     return civicrm_api3_create_error('Invalid Case Medium Id');
   }
 

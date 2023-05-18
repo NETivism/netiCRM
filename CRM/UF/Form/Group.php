@@ -332,7 +332,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       $params = $ids = array();
       $params = $this->controller->exportValues($this->_name);
 
-      if (!array_key_exists('is_active', $params)) {
+      if (!CRM_Utils_Array::arrayKeyExists('is_active', $params)) {
         $params['is_active'] = 0;
       }
 

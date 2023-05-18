@@ -247,7 +247,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     $hasNoteField = FALSE;
     // refs #34079, participant_note has greater priority then note
     foreach (array('participant_note', 'note') as $noteFld) {
-      if (array_key_exists($noteFld, $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($noteFld, $params)) {
         $noteValue = $params[$noteFld];
         $hasNoteField = TRUE;
         break;
@@ -830,14 +830,14 @@ WHERE  civicrm_participant.id = {$participantId}
     $src = $reverse ? $property : $id;
     $dst = $reverse ? $id : $property;
 
-    if (!array_key_exists($src, $defaults)) {
+    if (!CRM_Utils_Array::arrayKeyExists($src, $defaults)) {
       return FALSE;
     }
 
     $look = $reverse ? array_flip($lookup) : $lookup;
 
     if (is_array($look)) {
-      if (!array_key_exists($defaults[$src], $look)) {
+      if (!CRM_Utils_Array::arrayKeyExists($defaults[$src], $look)) {
         return FALSE;
       }
     }
@@ -1290,11 +1290,11 @@ UPDATE  civicrm_participant
         'register_date' => $dao->register_date,
         'registered_by_id' => $dao->registered_by_id,
       );
-      if (!array_key_exists($dao->contact_id, $contactDetails)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->contact_id, $contactDetails)) {
         $contactIds[$dao->contact_id] = $dao->contact_id;
       }
 
-      if (!array_key_exists($dao->event_id, $eventDetails)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->event_id, $eventDetails)) {
         $eventIds[$dao->event_id] = $dao->event_id;
       }
     }
@@ -1385,7 +1385,7 @@ UPDATE  civicrm_participant
       }
 
       //check is it primary and has additional.
-      if (array_key_exists($participantId, $primaryANDAdditonalIds)) {
+      if (CRM_Utils_Array::arrayKeyExists($participantId, $primaryANDAdditonalIds)) {
         foreach ($primaryANDAdditonalIds[$participantId] as $additonalId) {
 
           if ($emailType) {
@@ -1415,7 +1415,7 @@ UPDATE  civicrm_participant
             $lastRegisteration = $eventDetails[$participantValues['event_id']]['registration_end_date'];
           }
           if (!empty($eventDetails[$participantValues['event_id']]['expiration_time'])) {
-            if (array_key_exists($toStatusId, $pendingStatuses)) {
+            if (CRM_Utils_Array::arrayKeyExists($toStatusId, $pendingStatuses)) {
               $baseTime = CRM_REQUEST_TIME;
             }
             else {
@@ -1449,7 +1449,7 @@ UPDATE  civicrm_participant
       //update the register date only when we,
       //move participant to pending class, CRM-6496
       $updateRegisterDate = FALSE;
-      if (array_key_exists($toStatusId, $pendingStatuses)) {
+      if (CRM_Utils_Array::arrayKeyExists($toStatusId, $pendingStatuses)) {
         $updateRegisterDate = TRUE;
       }
       self::updateStatus($updateParticipantIds, $toStatusId, $updateRegisterDate);
@@ -1590,7 +1590,7 @@ UPDATE  civicrm_participant
     if (is_array($results) && !empty($results)) {
       if (is_array($results['updatedParticipantIds']) && !empty($results['updatedParticipantIds'])) {
         foreach ($results['updatedParticipantIds'] as $processedId) {
-          if (is_array($results['mailedParticipants']) && array_key_exists($processedId, $results['mailedParticipants'])) {
+          if (is_array($results['mailedParticipants']) && CRM_Utils_Array::arrayKeyExists($processedId, $results['mailedParticipants'])) {
             $statusMsg .= '<br /> ' . ts("Participant status has been updated to '%1'. An email has been sent to %2.",
               array(
                 1 => ts($allStatuses[$statusChangeTo]),
@@ -1617,7 +1617,7 @@ UPDATE  civicrm_participant
     if ($participantId) {
       require_once 'CRM/Event/PseudoConstant.php';
       $dbStatusId = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $participantId, 'status_id');
-      if (array_key_exists($dbStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1"))) {
+      if (CRM_Utils_Array::arrayKeyExists($dbStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1"))) {
         //participant already in counted status no need to check for event full messages.
         $checkEventFull = FALSE;
       }

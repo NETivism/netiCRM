@@ -209,7 +209,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     $this->_columnHeaders = array();
 
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -250,7 +250,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
   function where() {
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if (CRM_Utils_Array::value('type', $field) & CRM_Utils_Type::T_DATE) {
@@ -311,7 +311,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       !empty($this->_params['group_bys'])
     ) {
       foreach ($this->_columns as $tableName => $table) {
-        if (array_key_exists('group_bys', $table)) {
+        if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
           foreach ($table['group_bys'] as $fieldName => $field) {
             if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
               $this->_groupBy[] = $field['dbAlias'];
@@ -372,8 +372,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     foreach ($rows as $rowNum => $row) {
 
       // convert sort name to links
-      if (array_key_exists('civicrm_contact_sort_name', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         if ($value = $row['civicrm_contact_sort_name']) {
           $url = CRM_Utils_System::url("civicrm/contact/view",
@@ -387,8 +387,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       }
 
       // convert participant ID to links
-      if (array_key_exists('civicrm_participant_participant_id', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_participant_participant_id', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         if ($value = $row['civicrm_participant_participant_id']) {
           $url = CRM_Utils_System::url("civicrm/contact/view/participant",
@@ -402,7 +402,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       }
 
       // convert event name to links
-      if (array_key_exists('civicrm_participant_event_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_participant_event_id', $row)) {
         if ($value = $row['civicrm_participant_event_id']) {
           $rows[$rowNum]['civicrm_participant_event_id'] = CRM_Event_PseudoConstant::event($value, FALSE);
           $url = CRM_Report_Utils_Report::getNextUrl('event/Income',
@@ -416,7 +416,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       }
 
       // handle event type id
-      if (array_key_exists('civicrm_event_event_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_event_event_type_id', $row)) {
         if ($value = $row['civicrm_event_event_type_id']) {
           $rows[$rowNum]['civicrm_event_event_type_id'] = $eventType[$value];
         }
@@ -424,7 +424,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       }
 
       // handle participant status id
-      if (array_key_exists('civicrm_participant_status_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_participant_status_id', $row)) {
         if ($value = $row['civicrm_participant_status_id']) {
           $rows[$rowNum]['civicrm_participant_status_id'] = CRM_Event_PseudoConstant::participantStatus($value, FALSE, 'label');
         }
@@ -432,7 +432,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       }
 
       // handle participant role id
-      if (array_key_exists('civicrm_participant_role_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_participant_role_id', $row)) {
         if ($value = $row['civicrm_participant_role_id']) {
           $roles = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
           $value = array();

@@ -241,10 +241,10 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       CRM_Core_BAO_UFGroup::setProfileDefaults(NULL, $this->_fields, $defaults, FALSE, $participantId, 'Event');
 
       //get the from status ids, CRM-4323
-      if (array_key_exists('participant_status_id', $this->_fields)) {
+      if (CRM_Utils_Array::arrayKeyExists('participant_status_id', $this->_fields)) {
         $this->_fromStatusIds[$participantId] = CRM_Utils_Array::value("field[$participantId][participant_status_id]", $defaults);
       }
-      if (array_key_exists('participant_role_id', $this->_fields)) {
+      if (CRM_Utils_Array::arrayKeyExists('participant_role_id', $this->_fields)) {
         if ($defaults["field[{$participantId}][participant_role_id]"]) {
           $roles = $defaults["field[{$participantId}][participant_role_id]"];
           foreach (explode(CRM_Core_DAO::VALUE_SEPARATOR, $roles) as $k => $v) {
@@ -356,10 +356,10 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $contributionStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
     $contributionStatusId = NULL;
-    if (array_key_exists($statusId, $positiveStatuses)) {
+    if (CRM_Utils_Array::arrayKeyExists($statusId, $positiveStatuses)) {
       $contributionStatusId = array_search('Completed', $contributionStatuses);
     }
-    if (array_key_exists($statusId, $negativeStatuses)) {
+    if (CRM_Utils_Array::arrayKeyExists($statusId, $negativeStatuses)) {
       $contributionStatusId = array_search('Cancelled', $contributionStatuses);
     }
 

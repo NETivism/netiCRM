@@ -71,7 +71,7 @@ class CRM_Report_Utils_Report {
   static function getInstanceIDForValue($optionVal) {
     static $valId = array();
 
-    if (!array_key_exists($optionVal, $valId)) {
+    if (!CRM_Utils_Array::arrayKeyExists($optionVal, $valId)) {
       $sql = "
 SELECT MAX(id) FROM civicrm_report_instance
 WHERE  report_id = %1";
@@ -88,7 +88,7 @@ WHERE  report_id = %1";
     // if $path is null, try to get it from url
     $path = self::getInstancePath();
 
-    if ($path && !array_key_exists($path, $valId)) {
+    if ($path && !CRM_Utils_Array::arrayKeyExists($path, $valId)) {
       $sql = "
 SELECT MAX(id) FROM civicrm_report_instance
 WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";

@@ -1205,7 +1205,7 @@ cj(function() {
 
       foreach ($nameFields as $name) {
         $fields[$name] = 1;
-        if (array_key_exists("billing_$name", $params)) {
+        if (CRM_Utils_Array::arrayKeyExists("billing_$name", $params)) {
           $params[$name] = $params["billing_{$name}"];
           $params['preserveDBName'] = TRUE;
         }

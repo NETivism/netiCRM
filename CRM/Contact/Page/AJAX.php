@@ -361,7 +361,7 @@ class CRM_Contact_Page_AJAX {
   static function search() {
     $json = TRUE;
     $name = CRM_Utils_Array::value('name', $_GET, '');
-    if (!array_key_exists('name', $_GET)) {
+    if (!CRM_Utils_Array::arrayKeyExists('name', $_GET)) {
       $name = CRM_Utils_Array::value('s', $_GET) . '%';
       $json = FALSE;
     }

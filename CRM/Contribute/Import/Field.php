@@ -209,7 +209,7 @@ class CRM_Contribute_Import_Field {
       if (!$customFields) {
         $customFields = &CRM_Core_BAO_CustomField::getFields('Contribution');
       }
-      if (!array_key_exists($customFieldID, $customFields)) {
+      if (!CRM_Utils_Array::arrayKeyExists($customFieldID, $customFields)) {
         return FALSE;
       }
       return CRM_Core_BAO_CustomValue::typecheck($customFields[$customFieldID]['data_type'], $this->_value);

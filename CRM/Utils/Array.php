@@ -179,7 +179,7 @@ class CRM_Utils_Array {
 
     $a3 = array();
     foreach ($a1 as $key => $value) {
-      if (array_key_exists($key, $a2) &&
+      if (CRM_Utils_Array::arrayKeyExists($key, $a2) &&
         is_array($a2[$key]) && is_array($a1[$key])
       ) {
         $a3[$key] = array_merge($a1[$key], $a2[$key]);
@@ -190,7 +190,7 @@ class CRM_Utils_Array {
     }
 
     foreach ($a2 as $key => $value) {
-      if (array_key_exists($key, $a1)) {
+      if (CRM_Utils_Array::arrayKeyExists($key, $a1)) {
         // already handled in above loop
         continue;
       }
@@ -295,6 +295,22 @@ class CRM_Utils_Array {
   }
 
   /**
+   * Strict type version of array_key_exists
+   *
+   * During php 8, null given args will throw fatal error, use this for safer replacement
+   *
+   * @param string|int $key
+   * @param array $array
+   * @return bool
+   */
+  public static function arrayKeyExists($key, $array) {
+    if (!is_array($array)) {
+      return FALSE;
+    }
+    return array_key_exists($key, $array);
+  }
+
+  /**
    * look up property from given lookup, and padding to defaults
    *
    * Use one array value to search another array's value. Then padding retrieved value back to original array
@@ -311,7 +327,7 @@ class CRM_Utils_Array {
     $src = $reverse ? $property : $id;
     $dst = $reverse ? $id : $property;
 
-    if (!array_key_exists(strtolower($src), array_change_key_case($defaults, CASE_LOWER))) {
+    if (!CRM_Utils_Array::arrayKeyExists(strtolower($src), array_change_key_case($defaults, CASE_LOWER))) {
       return FALSE;
     }
 
@@ -326,7 +342,7 @@ class CRM_Utils_Array {
     $look = $newLook;
 
     if (is_array($look)) {
-      if (!array_key_exists(trim(strtolower($defaults[strtolower($src)]), '.'), array_change_key_case($look, CASE_LOWER))) {
+      if (!CRM_Utils_Array::arrayKeyExists(trim(strtolower($defaults[strtolower($src)]), '.'), array_change_key_case($look, CASE_LOWER))) {
         return FALSE;
       }
     }

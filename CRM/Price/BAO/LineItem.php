@@ -176,7 +176,7 @@ WHERE     %2.id = %1";
     //lets first check in fun parameter,
     //since user might modified w/ hooks.
     $options = array();
-    if (array_key_exists('options', $fields)) {
+    if (CRM_Utils_Array::arrayKeyExists('options', $fields)) {
       $options = $fields['options'];
     }
     else {

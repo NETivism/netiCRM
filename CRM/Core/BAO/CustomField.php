@@ -1442,7 +1442,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
 
     $customFields = CRM_Core_BAO_CustomField::getFields($customFieldExtend, FALSE, $inline, $customDataSubType);
 
-    if (!array_key_exists($customFieldId, $customFields)) {
+    if (!CRM_Utils_Array::arrayKeyExists($customFieldId, $customFields)) {
       return;
     }
 
@@ -1545,7 +1545,7 @@ SELECT id
           }
           $value = $dateTimeArray[0] . $separator . '1902';
 
-          if (array_key_exists(1, $dateTimeArray)) {
+          if (CRM_Utils_Array::arrayKeyExists(1, $dateTimeArray)) {
             $value .= ' ' . $dateTimeArray[1];
           }
         }
@@ -1650,7 +1650,7 @@ SELECT $columnName
       $customFormatted = array();
     }
 
-    if (!array_key_exists($customFieldId, $customFormatted)) {
+    if (!CRM_Utils_Array::arrayKeyExists($customFieldId, $customFormatted)) {
       $customFormatted[$customFieldId] = array();
     }
 
@@ -1659,7 +1659,7 @@ SELECT $columnName
       $index = $customValueId;
     }
 
-    if (!array_key_exists($index, $customFormatted[$customFieldId])) {
+    if (!CRM_Utils_Array::arrayKeyExists($index, $customFormatted[$customFieldId])) {
       $customFormatted[$customFieldId][$index] = array();
     }
     $customFormatted[$customFieldId][$index] = array('id' => $customValueId > 0 ? $customValueId : NULL,

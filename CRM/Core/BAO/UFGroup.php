@@ -87,7 +87,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
       if (in_array($type, $validTypes)) {
         $cType = $type;
       }
-      elseif (array_key_exists($type, $validSubTypes)) {
+      elseif (CRM_Utils_Array::arrayKeyExists($type, $validSubTypes)) {
         $cType = CRM_Utils_Array::value('parent', $validSubTypes[$type]);
       }
       if ($cType)
@@ -459,7 +459,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         ) {
           // if field is not present in customFields, that means the user
           // DOES NOT HAVE permission to access that field
-          if (array_key_exists($field->field_name, $customFields)) {
+          if (CRM_Utils_Array::arrayKeyExists($field->field_name, $customFields)) {
             $fields[$name]['is_search_range'] = $customFields[$field->field_name]['is_search_range'];
             // fix for CRM-1994
             $fields[$name]['options_per_line'] = $customFields[$field->field_name]['options_per_line'];
@@ -865,7 +865,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           $values[$index] = implode(', ', $title);
           $params[$index] = implode(',', $entityTags);
         }
-        elseif (array_key_exists($name, $studentFields)) {
+        elseif (CRM_Utils_Array::arrayKeyExists($name, $studentFields)) {
           require_once 'CRM/Core/OptionGroup.php';
           $paramsNew = array($name => $details->$name);
           if ($name == 'test_tutoring') {
@@ -1285,11 +1285,11 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
       if ($key == 'User Account') {
         $menuRebuild = TRUE;
       }
-      if (array_key_exists($key, $groupTypes) && !in_array($key, $ufGroupRecord)) {
+      if (CRM_Utils_Array::arrayKeyExists($key, $groupTypes) && !in_array($key, $ufGroupRecord)) {
         // insert a new record
         CRM_Core_BAO_UFGroup::addUFJoin($joinParams);
       }
-      elseif (!array_key_exists($key, $groupTypes) && in_array($key, $ufGroupRecord)) {
+      elseif (!CRM_Utils_Array::arrayKeyExists($key, $groupTypes) && in_array($key, $ufGroupRecord)) {
         // delete a record for existing ufgroup
         CRM_Core_BAO_UFGroup::delUFJoin($joinParams);
       }
@@ -2094,7 +2094,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
               foreach ($details as $key => $value) {
                 $primaryLocationType = FALSE;
                 if ($locTypeId == 'Primary') {
-                  if (is_array($value) && array_key_exists($fieldName, $value)) {
+                  if (is_array($value) && CRM_Utils_Array::arrayKeyExists($fieldName, $value)) {
                     $primaryLocationType = TRUE;
                     $locTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($contactId, FALSE, $fieldName);
                   }
@@ -2195,7 +2195,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
 
             foreach ($fields as $name => $field) {
               $fldName = "field[$contactId][$name]";
-              if (array_key_exists($name, $studentDefaults)) {
+              if (CRM_Utils_Array::arrayKeyExists($name, $studentDefaults)) {
                 $defaults[$fldName] = $studentDefaults[$name];
               }
             }
@@ -2719,7 +2719,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
         $timefldName = "field[$componentId][{$name}_time]";
         list($defaults[$fldName], $defaults[$timefldName]) = CRM_Utils_Date::setDateDefaults($values[$name]);
       }
-      elseif (array_key_exists($name, $values)) {
+      elseif (CRM_Utils_Array::arrayKeyExists($name, $values)) {
         $defaults[$fldName] = $values[$name];
       }
       elseif ($name == 'participant_note') {
@@ -2859,7 +2859,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
 
     // process further only if profileDoubleOptIn enabled and if groups exist
     if (!$config->profileDoubleOptIn ||
-      !array_key_exists('group', $params) ||
+      !CRM_Utils_Array::arrayKeyExists('group', $params) ||
       CRM_Utils_System::isNull($params['group'])
     ) {
       return $subscribeGroupIds;

@@ -234,7 +234,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $select = array();
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -307,7 +307,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
 
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
 
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
@@ -418,7 +418,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     }
     foreach ($rows as $rowNum => $row) {
 
-      if (array_key_exists('civicrm_contact_contact_source', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_contact_source', $row)) {
         if ($value = $row['civicrm_contact_source_contact_id']) {
           if ($viewLinks) {
             $url = CRM_Utils_System::url("civicrm/contact/view",
@@ -431,7 +431,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
           $entryFound = TRUE;
         }
       }
-      if (array_key_exists('civicrm_contact_contact_assignee', $row) &&
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_contact_assignee', $row) &&
         $row['civicrm_activity_assignment_assignee_contact_id']
       ) {
         $assignee = array();
@@ -450,7 +450,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         $rows[$rowNum]['civicrm_contact_contact_assignee'] = implode('; ', $assignee);
         $entryFound = TRUE;
       }
-      if (array_key_exists('civicrm_contact_contact_target', $row) &&
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_contact_target', $row) &&
         $row['civicrm_activity_target_target_contact_id']
       ) {
         $target = array();
@@ -470,7 +470,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_activity_activity_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_activity_type_id', $row)) {
         if ($value = $row['civicrm_activity_activity_type_id']) {
           $rows[$rowNum]['civicrm_activity_activity_type_id'] = $activityType[$value];
           if ($viewLinks) {
@@ -496,7 +496,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         }
       }
 
-      if (array_key_exists('civicrm_activity_status_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_status_id', $row)) {
         if ($value = $row['civicrm_activity_status_id']) {
           $rows[$rowNum]['civicrm_activity_status_id'] = $activityStatus[$value];
           $entryFound = TRUE;

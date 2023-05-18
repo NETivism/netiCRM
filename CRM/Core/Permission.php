@@ -314,7 +314,7 @@ class CRM_Core_Permission {
   }
 
   static function checkMenuItem(&$item) {
-    if (!array_key_exists('access_callback', $item)) {
+    if (!CRM_Utils_Array::arrayKeyExists('access_callback', $item)) {
       CRM_Core_Error::backtrace();
       CRM_Core_Error::fatal();
     }

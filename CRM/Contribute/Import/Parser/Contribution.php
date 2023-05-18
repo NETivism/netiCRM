@@ -405,7 +405,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           case 'pcp_display_in_roll':
           case 'pcp_roll_nickname':
           case 'pcp_personal_note':
-            if (!array_key_exists('pcp_id', $params) && !array_key_exists('pcp_page', $params) && !array_key_exists('pcp_creator', $params) && !$addedError) {
+            if (!CRM_Utils_Array::arrayKeyExists('pcp_id', $params) && !CRM_Utils_Array::arrayKeyExists('pcp_page', $params) && !CRM_Utils_Array::arrayKeyExists('pcp_creator', $params) && !$addedError) {
               $addedError = TRUE;
               CRM_Import_Parser_Contact::addToErrorMsg(ts('PCP related field needs PCP page title or id or user'), $errorMessage);
             }
@@ -725,11 +725,11 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         $dispArray = array();
         foreach ($fieldsArray as $value) {
           if ($doCreateContact) {
-            if (!array_key_exists(trim($value), $params)) {
+            if (!CRM_Utils_Array::arrayKeyExists(trim($value), $params)) {
               $dispArray[] = $this->_importableContactFields[$value]['title'];
             }
           }
-          elseif (array_key_exists(trim($value), $params)) {
+          elseif (CRM_Utils_Array::arrayKeyExists(trim($value), $params)) {
             $paramValue = $params[trim($value)];
             if (is_array($paramValue)) {
               $dispArray[] = $params[trim($value)][0][trim($value)];

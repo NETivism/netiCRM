@@ -458,7 +458,7 @@ ORDER BY civicrm_custom_group.weight,
         $fieldId = $crmDAO->civicrm_custom_field_id;
 
         // create an array for groups if it does not exist
-        if (!array_key_exists($groupID, $groupTree)) {
+        if (!CRM_Utils_Array::arrayKeyExists($groupID, $groupTree)) {
           $groupTree[$groupID] = array();
           $groupTree[$groupID]['id'] = $groupID;
 
@@ -488,7 +488,7 @@ ORDER BY civicrm_custom_group.weight,
 
         // add the fields now (note - the query row will always contain a field)
         // we only reset this once, since multiple values come is as multiple rows
-        if (!array_key_exists($fieldId, $groupTree[$groupID]['fields'])) {
+        if (!CRM_Utils_Array::arrayKeyExists($fieldId, $groupTree[$groupID]['fields'])) {
           $groupTree[$groupID]['fields'][$fieldId] = array();
         }
 
@@ -644,7 +644,7 @@ SELECT $select
                     'data' => $dao->$fieldName,
                   );
                 }
-                if (!array_key_exists('customValue', $groupTree[$groupID]['fields'][$fieldID])) {
+                if (!CRM_Utils_Array::arrayKeyExists('customValue', $groupTree[$groupID]['fields'][$fieldID])) {
                   $groupTree[$groupID]['fields'][$fieldID]['customValue'] = array();
                 }
                 if (empty($groupTree[$groupID]['fields'][$fieldID]['customValue'])) {
@@ -844,7 +844,7 @@ SELECT $select
       $fieldId = $crmDAO->civicrm_custom_field_id;
 
       // create an array for groups if it does not exist
-      if (!array_key_exists($groupId, $groupTree)) {
+      if (!CRM_Utils_Array::arrayKeyExists($groupId, $groupTree)) {
         $groupTree[$groupId] = array();
         $groupTree[$groupId]['id'] = $groupId;
 
@@ -1767,7 +1767,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
           'yy' => "%Y $customTimeFormat",
         );
         if ($format = CRM_Utils_Array::value('date_format', $field)) {
-          if (array_key_exists($format, $supportableFormats)) {
+          if (CRM_Utils_Array::arrayKeyExists($format, $supportableFormats)) {
             $customFormat = $supportableFormats["$format"];
           }
         }
@@ -2099,7 +2099,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
                 $matches[0][$label] = 1;
                 $matches[1]['custom_'.$field['id']] = $val;
               }
-              elseif(array_key_exists($value, $field['options'])) {
+              elseif(CRM_Utils_Array::arrayKeyExists($value, $field['options'])) {
                 $matches[0][$label] = 1;
                 $matches[1]['custom_'.$field['id']] = $value;
               }

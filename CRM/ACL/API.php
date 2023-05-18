@@ -171,7 +171,7 @@ class CRM_ACL_API {
     static $cache = array();
 
     $key = "{$tableName}_{$type}_{$contactID}";
-    if (array_key_exists($key, $cache)) {
+    if (CRM_Utils_Array::arrayKeyExists($key, $cache)) {
       $groups = &$cache[$key];
     }
     else {

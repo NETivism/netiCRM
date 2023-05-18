@@ -100,7 +100,7 @@ class CRM_Case_Form_Activity_LinkCases {
 
     // do check for existing related cases.
     $relatedCases = $form->get('relatedCases');
-    if (is_array($relatedCases) && array_key_exists($linkCaseId, $relatedCases)) {
+    if (is_array($relatedCases) && CRM_Utils_Array::arrayKeyExists($linkCaseId, $relatedCases)) {
       $errors['link_to_case'] = ts('It looks like selected case is already linked.');
     }
 

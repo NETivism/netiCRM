@@ -214,14 +214,14 @@ class CRM_Case_BAO_Case extends CRM_Case_DAO_Case {
     $src = $reverse ? $property : $id;
     $dst = $reverse ? $id : $property;
 
-    if (!array_key_exists($src, $defaults)) {
+    if (!CRM_Utils_Array::arrayKeyExists($src, $defaults)) {
       return FALSE;
     }
 
     $look = $reverse ? array_flip($lookup) : $lookup;
 
     if (is_array($look)) {
-      if (!array_key_exists($defaults[$src], $look)) {
+      if (!CRM_Utils_Array::arrayKeyExists($defaults[$src], $look)) {
         return FALSE;
       }
     }
@@ -1874,7 +1874,7 @@ INNER JOIN  civicrm_option_value ov ON (ca.case_type_id=ov.value AND ov.option_g
     $unclosedCases = array();
     while ($dao->fetch()) {
       if ($doFilterCases &&
-        !array_key_exists($dao->id, $filterCases)
+        !CRM_Utils_Array::arrayKeyExists($dao->id, $filterCases)
       ) {
         continue;
       }
@@ -2057,7 +2057,7 @@ INNER JOIN  civicrm_contact      client         ON ( client.id = relCaseContact.
 
     while ($dao->fetch()) {
       $caseView = NULL;
-      if (!$doFilterCases || array_key_exists($dao->id, $filterCases)) {
+      if (!$doFilterCases || CRM_Utils_Array::arrayKeyExists($dao->id, $filterCases)) {
         $caseViewStr = "reset=1&id={$dao->id}&cid={$dao->client_id}&action=view&context=case&selectedChild=case";
         $caseViewUrl = CRM_Utils_System::url("civicrm/contact/view/case", $caseViewStr);
         $caseView = "<a href='{$caseViewUrl}'>" . ts('View Case') . "</a>";
@@ -2531,7 +2531,7 @@ WHERE id IN (' . implode(',', $copiedActivityIds) . ')';
       static $allowOperations;
 
       if (!is_array($allowOperations) ||
-        !array_key_exists($operation, $allowOperations)
+        !CRM_Utils_Array::arrayKeyExists($operation, $allowOperations)
       ) {
 
         if (!$contactId) {
@@ -2671,12 +2671,12 @@ WHERE id IN (' . implode(',', $copiedActivityIds) . ')';
       //(special case activities).CRM-5871
       if ($allow && in_array($operation, $actionOperations)) {
         static $actionFilter = array();
-        if (!array_key_exists($operation, $actionFilter)) {
+        if (!CRM_Utils_Array::arrayKeyExists($operation, $actionFilter)) {
           require_once 'CRM/Case/XMLProcessor/Process.php';
           $xmlProcessor = new CRM_Case_XMLProcessor_Process();
           $actionFilter[$operation] = $xmlProcessor->get('Settings', 'ActivityTypes', FALSE, $operation);
         }
-        if (array_key_exists($operation, $actionFilter[$operation]) &&
+        if (CRM_Utils_Array::arrayKeyExists($operation, $actionFilter[$operation]) &&
           in_array($actTypeId, $actionFilter[$operation][$operation])
         ) {
           $allow = FALSE;

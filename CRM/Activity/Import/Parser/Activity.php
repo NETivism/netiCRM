@@ -316,7 +316,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
         $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
 
         foreach ($fieldsArray as $value) {
-          if (array_key_exists(trim($value), $params)) {
+          if (CRM_Utils_Array::arrayKeyExists(trim($value), $params)) {
             $paramValue = $params[trim($value)];
             if (is_array($paramValue)) {
               $disp .= $params[trim($value)][0][trim($value)] . " ";

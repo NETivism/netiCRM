@@ -698,7 +698,7 @@ class CRM_Utils_System {
       self::$_callbacks = array();
     }
 
-    if (!array_key_exists($callback, self::$_callbacks)) {
+    if (!CRM_Utils_Array::arrayKeyExists($callback, self::$_callbacks)) {
       if (strpos($callback, '::') !== FALSE) {
         list($className, $methodName) = explode('::', $callback);
         $fileName = str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';

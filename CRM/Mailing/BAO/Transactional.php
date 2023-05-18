@@ -508,7 +508,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
     if ($text && ($test || $contact['preferred_mail_format'] == 'Text' ||
         $contact['preferred_mail_format'] == 'Both' ||
-        ($contact['preferred_mail_format'] == 'HTML' && !array_key_exists('html', $pEmails))
+        ($contact['preferred_mail_format'] == 'HTML' && !CRM_Utils_Array::arrayKeyExists('html', $pEmails))
       )) {
       if (is_array($text)) {
         $textBody = join('', $text);

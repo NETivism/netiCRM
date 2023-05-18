@@ -52,7 +52,7 @@ class CRM_Core_Extensions_Search {
 
 
   public function install() {
-    if (array_key_exists($this->ext->key, $this->customSearches)) {
+    if (CRM_Utils_Array::arrayKeyExists($this->ext->key, $this->customSearches)) {
       CRM_Core_Error::fatal('This custom search is already registered.');
     }
 
@@ -74,7 +74,7 @@ class CRM_Core_Extensions_Search {
   }
 
   public function uninstall() {
-    if (!array_key_exists($this->ext->key, $this->customSearches)) {
+    if (!CRM_Utils_Array::arrayKeyExists($this->ext->key, $this->customSearches)) {
       CRM_Core_Error::fatal('This custom search is not registered.');
     }
 

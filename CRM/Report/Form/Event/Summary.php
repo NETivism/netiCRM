@@ -102,7 +102,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
   function select() {
     $select = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -124,7 +124,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
     $clauses = array();
     $this->_participantWhere = "";
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if (CRM_Utils_Array::value('type', $field) & CRM_Utils_Type::T_DATE) {
@@ -201,14 +201,14 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
     foreach ($participant_data as $event_id => $event_data) {
       foreach ($event_data as $status_id => $data) {
 
-        if (array_key_exists($status_id, $statusType1)) {
+        if (CRM_Utils_Array::arrayKeyExists($status_id, $statusType1)) {
           //total income of event
           $amt = $amt + $data['amount'];
 
           //number of Registered/Attended participants
           $particiType1 = $particiType1 + $data['participant'];
         }
-        elseif (array_key_exists($info->statusId, $statusType2)) {
+        elseif (CRM_Utils_Array::arrayKeyExists($info->statusId, $statusType2)) {
 
           //number of No-show/Cancelled/Pending participants
           $particiType2 = $particiType2 + $data['participant'];
@@ -229,7 +229,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
 
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -296,7 +296,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
     if (!empty($rows)) {
       $participant_info = $this->participantInfo();
       foreach ($rows as $key => $value) {
-        if (array_key_exists($value['civicrm_event_id'], $participant_info)) {
+        if (CRM_Utils_Array::arrayKeyExists($value['civicrm_event_id'], $participant_info)) {
           foreach ($participant_info[$value['civicrm_event_id']] as $k => $v) {
             $rows[$key][$k] = $v;
           }
@@ -353,7 +353,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
       $eventType = CRM_Core_OptionGroup::values('event_type');
       foreach ($rows as $rowNum => $row) {
 
-        if (array_key_exists('civicrm_event_title', $row)) {
+        if (CRM_Utils_Array::arrayKeyExists('civicrm_event_title', $row)) {
           if ($value = $row['civicrm_event_id']) {
             //CRM_Event_PseudoConstant::event( $value, false );
             $url = CRM_Report_Utils_Report::getNextUrl('event/income',
@@ -366,7 +366,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
         }
 
         //handle event type
-        if (array_key_exists('civicrm_event_event_type_id', $row)) {
+        if (CRM_Utils_Array::arrayKeyExists('civicrm_event_event_type_id', $row)) {
           if ($value = $row['civicrm_event_event_type_id']) {
             $rows[$rowNum]['civicrm_event_event_type_id'] = $eventType[$value];
           }

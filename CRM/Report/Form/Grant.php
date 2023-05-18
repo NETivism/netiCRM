@@ -215,7 +215,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
       if ($tableName == 'civicrm_address') {
         $this->_addressField = TRUE;
       }
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -250,7 +250,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
   function where() {
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
 
           $clause = NULL;
@@ -290,7 +290,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
       !empty($this->_params['group_bys'])
     ) {
       foreach ($this->_columns as $tableName => $table) {
-        if (array_key_exists('group_bys', $table)) {
+        if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
           foreach ($table['group_bys'] as $fieldName => $field) {
             if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
               $this->_groupBy[] = $field['dbAlias'];
@@ -308,19 +308,19 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
-      if (array_key_exists('civicrm_grant_grant_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_grant_grant_type_id', $row)) {
         if ($value = $row['civicrm_grant_grant_type_id']) {
           $rows[$rowNum]['civicrm_grant_grant_type_id'] = CRM_Grant_PseudoConstant::grantType($value);
         }
         $entryFound = TRUE;
       }
-      if (array_key_exists('civicrm_grant_status_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_grant_status_id', $row)) {
         if ($value = $row['civicrm_grant_status_id']) {
           $rows[$rowNum]['civicrm_grant_status_id'] = CRM_Grant_PseudoConstant::grantStatus($value);
         }
         $entryFound = TRUE;
       }
-      if (array_key_exists('civicrm_grant_grant_report_received', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_grant_grant_report_received', $row)) {
         if ($value = $row['civicrm_grant_grant_report_received']) {
           if ($value == 1) {
             $value = 'Yes';

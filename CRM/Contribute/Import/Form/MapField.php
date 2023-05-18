@@ -650,7 +650,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $errors = array();
     $fieldMessage = NULL;
 
-    if (!array_key_exists('savedMapping', $fields)) {
+    if (!CRM_Utils_Array::arrayKeyExists('savedMapping', $fields)) {
       $importKeys = array();
       foreach ($fields['mapper'] as $mapperPart) {
         $importKeys[] = $mapperPart[0];
@@ -687,7 +687,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       unset($ruleFields['display_name']);
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
-        if (array_key_exists($val, $ruleFields)) {
+        if (CRM_Utils_Array::arrayKeyExists($val, $ruleFields)) {
           $weightSum += $ruleFields[$val];
         }
       }

@@ -195,7 +195,7 @@ class CRM_Core_Session {
       return;
     }
 
-    if (array_key_exists($prefix, $this->_session[$this->_key])) {
+    if (CRM_Utils_Array::arrayKeyExists($prefix, $this->_session[$this->_key])) {
       unset($this->_session[$this->_key][$prefix]);
     }
   }
@@ -215,7 +215,7 @@ class CRM_Core_Session {
     $this->initialize();
 
     if (!empty($oldPrefix) && !empty($newPrefix)) {
-      if (array_key_exists($oldPrefix, $this->_session[$this->_key]) && !isset($this->_session[$this->_key][$newPrefix])) {
+      if (CRM_Utils_Array::arrayKeyExists($oldPrefix, $this->_session[$this->_key]) && !isset($this->_session[$this->_key][$newPrefix])) {
         $this->_session[$this->_key][$newPrefix] = $this->_session[$this->_key][$oldPrefix];
         unset($this->_session[$this->_key][$oldPrefix]);
         return TRUE;
@@ -485,7 +485,7 @@ class CRM_Core_Session {
     $this->initialize();
 
     $status = NULL;
-    if (array_key_exists('status', $this->_session[$this->_key])) {
+    if (CRM_Utils_Array::arrayKeyExists('status', $this->_session[$this->_key])) {
       $status = $this->_session[$this->_key]['status'];
     }
     if ($reset) {

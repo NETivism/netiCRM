@@ -66,7 +66,7 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
     $providers = array();
     $temp = array();
     $dao = new CRM_SMS_DAO_Provider();
-    if ($filter && !array_key_exists('is_active', $filter) && $getActive) {
+    if ($filter && !CRM_Utils_Array::arrayKeyExists('is_active', $filter) && $getActive) {
       $dao->is_active = 1;
     }
     if ($filter && is_array($filter)) {
@@ -165,7 +165,7 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   public static function getProviderInfo($providerID, $returnParam = NULL, $returnDefaultString = NULL) {
     static $providerInfo = array();
 
-    if (!array_key_exists($providerID, $providerInfo)) {
+    if (!CRM_Utils_Array::arrayKeyExists($providerID, $providerInfo)) {
       $providerInfo[$providerID] = array();
 
       $dao = new CRM_SMS_DAO_Provider();

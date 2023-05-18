@@ -59,7 +59,7 @@ function civicrm_verify_mandatory(&$params, $daoName = NULL, $keys = array(
   }
 
   foreach ($keys as $key) {
-    if (!array_key_exists($key, $params)) {
+    if (!CRM_Utils_Array::arrayKeyExists($key, $params)) {
       throw new Exception("Mandatory param missing: " . $key);
     }
   }
@@ -296,7 +296,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
     $preffComm = explode(',', $values['preferred_communication_method']);
     foreach ($preffComm as $v) {
       $v = strtolower(trim($v));
-      if (array_key_exists($v, $pcm)) {
+      if (CRM_Utils_Array::arrayKeyExists($v, $pcm)) {
         $comm[$pcm[$v]] = 1;
       }
     }
@@ -312,7 +312,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
       require_once 'CRM/Core/DAO/Website.php';
       $websiteFields = CRM_Core_DAO_Website::fields();
     }
-    if (!array_key_exists('website', $params) ||
+    if (!CRM_Utils_Array::arrayKeyExists('website', $params) ||
       !is_array($params['website'])
     ) {
       $params['website'] = array();
@@ -371,7 +371,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
       /* check if it's a valid custom field id */
 
 
-      if (!array_key_exists($customFieldID, $fields['custom'])) {
+      if (!CRM_Utils_Array::arrayKeyExists($customFieldID, $fields['custom'])) {
         return civicrm_create_error('Invalid custom field ID');
       }
       else {
@@ -399,16 +399,16 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
   foreach (array(
     'Phone', 'Email', 'IM', 'OpenID') as $block) {
     $name = strtolower($block);
-    if (!array_key_exists($name, $values)) {
+    if (!CRM_Utils_Array::arrayKeyExists($name, $values)) {
       continue;
     }
 
     // block present in value array.
-    if (!array_key_exists($name, $params) || !is_array($params[$name])) {
+    if (!CRM_Utils_Array::arrayKeyExists($name, $params) || !is_array($params[$name])) {
       $params[$name] = array();
     }
 
-    if (!array_key_exists($block, $fields)) {
+    if (!CRM_Utils_Array::arrayKeyExists($block, $fields)) {
       $daoName = 'CRM_Core_DAO_' . $block;
       $fields[$block] =& $daoName::fields( );
     }
@@ -433,7 +433,7 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
   }
 
   // handle address fields.
-  if (!array_key_exists('address', $params) || !is_array($params['address'])) {
+  if (!CRM_Utils_Array::arrayKeyExists('address', $params) || !is_array($params['address'])) {
     $params['address'] = array();
   }
 
@@ -448,7 +448,7 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
     $addressCnt++;
   }
 
-  if (!array_key_exists('Address', $fields)) {
+  if (!CRM_Utils_Array::arrayKeyExists('Address', $fields)) {
     require_once 'CRM/Core/DAO/Address.php';
     $fields['Address'] = CRM_Core_DAO_Address::fields();
   }
@@ -461,8 +461,8 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
   );
 
   foreach ($addressFields as $field) {
-    if (array_key_exists($field, $values)) {
-      if (!array_key_exists('address', $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($field, $values)) {
+      if (!CRM_Utils_Array::arrayKeyExists('address', $params)) {
         $params['address'] = array();
       }
       $params['address'][$addressCnt][$field] = $values[$field];
@@ -475,7 +475,7 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
       /* check if it's a valid custom field id */
 
 
-      if (array_key_exists($customFieldID, $fields['address_custom'])) {
+      if (CRM_Utils_Array::arrayKeyExists($customFieldID, $fields['address_custom'])) {
         $type = $fields['address_custom'][$customFieldID]['html_type'];
         _civicrm_add_custom_formatted_param($customFieldID, $key, $value, $params['address'][$addressCnt], $type);
       }
@@ -514,7 +514,7 @@ function _civicrm_required_formatted_contact(&$params) {
         return civicrm_create_success(TRUE);
       }
 
-      if (array_key_exists('email', $params) &&
+      if (CRM_Utils_Array::arrayKeyExists('email', $params) &&
         is_array($params['email']) &&
         !CRM_Utils_System::isNull($params['email'])
       ) {
@@ -610,7 +610,7 @@ function _civicrm_validate_formatted_contact(&$params) {
   /* Look for offending email addresses */
 
 
-  if (array_key_exists('email', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('email', $params)) {
     foreach ($params['email'] as $count => $values) {
       if (!is_array($values)) {
         continue;
@@ -632,7 +632,7 @@ function _civicrm_validate_formatted_contact(&$params) {
   /* Validate custom data fields */
 
 
-  if (array_key_exists('custom', $params) && is_array($params['custom'])) {
+  if (CRM_Utils_Array::arrayKeyExists('custom', $params) && is_array($params['custom'])) {
     foreach ($params['custom'] as $key => $custom) {
       if (is_array($custom)) {
         $valid = CRM_Core_BAO_CustomValue::typecheck(
@@ -836,7 +836,7 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
     }
   }
 
-  if (array_key_exists('participant_note', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('participant_note', $params)) {
     $values['participant_note'] = $params['participant_note'];
   }
 
@@ -1288,7 +1288,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
     }
   }
 
-  if (array_key_exists('note', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('note', $params)) {
     $values['note'] = $params['note'];
   }
 
@@ -1525,7 +1525,7 @@ function civicrm_check_contact_dedupe(&$params, $dedupeRuleGroupID = NULL) {
     if (in_array($key, $locationFields)) {
       $value['location_type_id'] = $defaultLocationId;
     }
-    elseif (array_key_exists($key, $cIndieFields)) {
+    elseif (CRM_Utils_Array::arrayKeyExists($key, $cIndieFields)) {
       $value['contact_type'] = $contactType;
     }
 

@@ -223,7 +223,7 @@ class CRM_Report_Utils_Get {
               $flag = TRUE;
             }
             foreach ($groupBys as $gby) {
-              if (array_key_exists($gby, $fields)) {
+              if (CRM_Utils_Array::arrayKeyExists($gby, $fields)) {
                 $defaults['group_bys'][$gby] = 1;
               }
             }
@@ -242,7 +242,7 @@ class CRM_Report_Utils_Get {
       if (!empty($urlFields)) {
         foreach ($reportFields as $tableName => $fields) {
           foreach ($urlFields as $fld) {
-            if (array_key_exists($fld, $fields)) {
+            if (CRM_Utils_Array::arrayKeyExists($fld, $fields)) {
               $defaults['fields'][$fld] = 1;
             }
           }

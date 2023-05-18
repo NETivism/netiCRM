@@ -435,7 +435,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
         $fieldsArray = $this->_dedupeRuleFields;
 
         foreach ($fieldsArray as $value) {
-          if (array_key_exists(trim($value), $params)) {
+          if (CRM_Utils_Array::arrayKeyExists(trim($value), $params)) {
             $paramValue = $params[trim($value)];
             if (is_array($paramValue)) {
               $disp .= $params[trim($value)][0][trim($value)] . " ";
