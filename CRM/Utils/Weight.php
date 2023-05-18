@@ -258,7 +258,7 @@ class CRM_Utils_Weight {
    */
   static function &query($queryType,
     $daoName,
-    $fieldValues = NULL,
+    $fieldValues,
     $queryData,
     $additionalWhere = NULL,
     $orderBy = NULL,

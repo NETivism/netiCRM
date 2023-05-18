@@ -29,7 +29,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode = 'live', &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Backer($mode, $paymentProcessor);

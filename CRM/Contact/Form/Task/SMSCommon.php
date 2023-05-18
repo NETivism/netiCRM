@@ -365,7 +365,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     }
   }
 
-  public static function batchSend($contactDetails, $activityParams, $smsParams = array(), $contactIds) {
+  public static function batchSend($contactDetails, $activityParams, $smsParams, $contactIds) {
     global $civicrm_batch;
 
     if ($civicrm_batch) {

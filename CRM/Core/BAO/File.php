@@ -119,7 +119,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     $entitySubtype, $overwrite = TRUE,
     $fileParams = NULL,
     $uploadName = 'uploadFile',
-    $mimeType
+    $mimeType = NULL
   ) {
 
     $config = &CRM_Core_Config::singleton();

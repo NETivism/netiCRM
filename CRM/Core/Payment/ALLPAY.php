@@ -51,7 +51,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode = 'live', &$paymentProcessor, &$paymentForm = NULL) {
+  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_ALLPAY($mode, $paymentProcessor);

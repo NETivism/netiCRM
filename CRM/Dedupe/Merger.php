@@ -589,11 +589,11 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * @static
    * @access public
    */
-  static function skipMerge($mainId, $otherId, &$migrationInfo, $mode = 'safe', &$reason) {
+  static function skipMerge($mainId, $otherId, &$migrationInfo, $mode, &$reason) {
     $conflicts = array();
     $migrationData = array(
       'old_migration_info' => $migrationInfo,
-      'mode' => $mode,
+      'mode' => $mode ? $mode : 'safe',
     );
     $allLocationTypes = CRM_Core_PseudoConstant::locationType(TRUE, 'name');
     $otherLocationTypeId = array_search('Other', $allLocationTypes);

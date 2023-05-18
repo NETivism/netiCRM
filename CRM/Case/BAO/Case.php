@@ -755,7 +755,7 @@ AND civicrm_case.status_id != $closedId";
   /**
    * Function to get the summary of cases counts by type and status.
    */
-  static function getCasesSummary($allCases = TRUE, $userID) {
+  static function getCasesSummary($allCases, $userID) {
     $caseSummary = array();
 
     //validate access for civicase.
@@ -1239,7 +1239,7 @@ GROUP BY cc.id';
    * @return void
    * @access public
    */
-  static function sendActivityCopy($clientId, $activityId, $contacts, $attachments = NULL, $caseId) {
+  static function sendActivityCopy($clientId, $activityId, $contacts, $attachments, $caseId) {
     if (!$activityId) {
       return;
     }

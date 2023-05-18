@@ -145,7 +145,7 @@ class CRM_Core_Form_Tag {
    * Function to save entity tags when it is not save used AJAX
    *
    */
-  static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form) {
+  static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form = NULL) {
     foreach ($params as $value) {
       if (!$value) {
         continue;

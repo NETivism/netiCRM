@@ -301,7 +301,7 @@ ORDER BY start_date desc
     $controller->run();
   }
 
-  function whereClause(&$params, $sortBy = TRUE, $force) {
+  function whereClause(&$params, $sortBy, $force) {
     $values = array();
     $clauses = array();
     $title = $this->get('title');

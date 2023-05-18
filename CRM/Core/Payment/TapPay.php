@@ -49,7 +49,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode = 'live', &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $args = func_get_args();
     if (isset($args[3])) {
       $apiType = $args[3];

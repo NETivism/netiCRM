@@ -202,7 +202,7 @@ abstract class CRM_Activity_Import_Parser {
 
   abstract function init();
   function run($fileName,
-    $seperator = ',',
+    $seperator,
     &$mapper,
     $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,

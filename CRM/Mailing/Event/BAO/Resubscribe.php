@@ -200,7 +200,7 @@ class CRM_Mailing_Event_BAO_Resubscribe {
    * @access public
    * @static
    */
-  public static function send_resub_response($queue_id, $groups, $is_domain = FALSE, $job) {
+  public static function send_resub_response($queue_id, $groups, $is_domain, $job) {
     // param is_domain is not supported as of now.
 
     $config = CRM_Core_Config::singleton();

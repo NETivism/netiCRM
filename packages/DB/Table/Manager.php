@@ -989,7 +989,7 @@ class DB_Table_Manager {
     */
 
     function getDeclareMDB2($coltype, $size = null, $scope = null,
-        $require = null, $default = null, &$max_scope)
+        $require = null, $default = null, &$max_scope = NULL)
     {
         // validate char/varchar/decimal type declaration
         $validation = DB_Table_Manager::_validateTypeDeclaration($coltype, $size,

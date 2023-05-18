@@ -11,7 +11,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $this->_get = $get;
   }
 
-  function main($component = 'contribute', $instrument){
+  function main($component, $instrument){
     // get the contribution and contact ids from the GET params
     require_once 'CRM/Utils/Request.php';
     $objects = $ids = $input = array();

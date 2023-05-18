@@ -1499,7 +1499,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     &$contactDetails,
     &$activityParams,
     &$smsParams = array(),
-    &$contactIds,
+    &$contactIds = array(),
     $userID = NULL
   ) {
     if ($userID == NULL) {
@@ -1669,7 +1669,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    *   true on success or PEAR_Error object
    */
   public static function sendSMSMessage(
-    $smsParams = array(),
+    $smsParams,
     $smsMessage,
     $toId = NULL,
     $activityId = NULL

@@ -1495,7 +1495,7 @@ AND civicrm_contact.is_opt_out =0";
    *  and returns the appropriate data for the token
    *
    */
-  protected function getTokenData(&$token_a, $html = FALSE, &$contact, &$verp, &$urls, $event_queue_id) {
+  protected function getTokenData(&$token_a, $html, &$contact, &$verp, &$urls, $event_queue_id) {
     $type = $token_a['type'];
     $token = $token_a['token'];
     $data = $token;
