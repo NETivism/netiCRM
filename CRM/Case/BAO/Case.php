@@ -1172,7 +1172,7 @@ WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id A
         }
       }
 
-      if (CRM_Utils_Array::crmInArray($dao->status, $compStatusValues)) {
+      if (CRM_Utils_Array::inArray($dao->status, $compStatusValues)) {
         $values[$dao->id]['class'] = $values[$dao->id]['class'] . " status-completed";
       }
       else {

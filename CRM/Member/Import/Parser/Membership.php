@@ -285,7 +285,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
             break;
 
           case 'membership_type_id':
-            if (!CRM_Utils_Array::crmInArray($val, CRM_Member_PseudoConstant::membershipType())) {
+            if (!CRM_Utils_Array::inArray($val, CRM_Member_PseudoConstant::membershipType())) {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Type', $errorMessage);
             }
             break;
@@ -296,7 +296,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
             if (is_numeric($val) && !array_key_exists($val, $statuses)) {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
             }
-            elseif (!CRM_Utils_Array::crmInArray($val, $statues) && !CRM_Utils_Array::crmInArray($val, $statusesLabel)) {
+            elseif (!CRM_Utils_Array::inArray($val, $statues) && !CRM_Utils_Array::inArray($val, $statusesLabel)) {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
             }
             break;

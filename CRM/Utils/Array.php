@@ -168,7 +168,7 @@ class CRM_Utils_Array {
    * @return  $a3
    * @static
    */
-  static function crmArrayMerge($a1, $a2) {
+  static function arrayMerge($a1, $a2) {
     if (empty($a1)) {
       return $a2;
     }
@@ -221,14 +221,14 @@ class CRM_Utils_Array {
    * @static
    * @access public
    */
-  static function array_deep_copy(&$array, $maxdepth = 50, $depth = 0) {
+  static function arrayDeepCopy(&$array, $maxdepth = 50, $depth = 0) {
     if ($depth > $maxdepth) {
       return $array;
     }
     $copy = array();
     foreach ($array as $key => $value) {
       if (is_array($value)) {
-        self::array_deep_copy($value, $copy[$key], $maxdepth, ++$depth);
+        self::arrayDeepCopy($value, $copy[$key], $maxdepth, ++$depth);
       }
       else {
         $copy[$key] = $value;
@@ -249,7 +249,7 @@ class CRM_Utils_Array {
    * @return  void
    * @static
    */
-  static function crmArraySplice(&$params, $start, $end) {
+  static function arraySplice(&$params, $start, $end) {
     // verify start and end date
     if ($start < 0) {
       $start = 0;
@@ -276,12 +276,13 @@ class CRM_Utils_Array {
    * @param array $params array that need to be searched
    * @param boolean $caseInsensitive   boolean true or false
    *
+   * @return bool
    * @static
    */
-  static function crmInArray($value, $params, $caseInsensitive = TRUE) {
+  static function inArray($value, $params, $caseInsensitive = TRUE) {
     foreach ($params as $item) {
       if (is_array($item)) {
-        $ret = self::crmInArray($value, $item, $caseInsensitive);
+        $ret = self::inArray($value, $item, $caseInsensitive);
       }
       else {
         $ret = ($caseInsensitive) ? strtolower($item) == strtolower($value) : $item == $value;
@@ -338,26 +339,20 @@ class CRM_Utils_Array {
 
   /**
    *  Function to check if give array is empty
+   *
    *  @param array $array array that needs to be check for empty condition
    *
    *  @return boolean true is array is empty else false
    *  @static
    */
-  static function crmIsEmptyArray($array = array()) {
+  static function isEmpty($array = array()) {
     if (!is_array($array)) {
       return TRUE;
     }
-    foreach ($array as $element) {
-      if (is_array($element)) {
-        if (!self::crmIsEmptyArray($element)) {
-          return FALSE;
-        }
-      }
-      elseif (isset($element)) {
-        return FALSE;
-      }
+    if (empty($array)) {
+      return TRUE;
     }
-    return TRUE;
+    return FALSE;
   }
 
   /**
@@ -448,6 +443,54 @@ class CRM_Utils_Array {
       $r = &$r[$part];
     }
     $r[$last] = $value;
+  }
+
+  /**
+   * Deprecated function, use arrayMerge instead
+   *
+   * @param array $a1
+   * @param array $a2
+   * @return array
+   */
+  public static function crmArrayMerge($a1, $a2) {
+    return self::arrayMerge($a1, $a2);
+  }
+
+  /**
+   * Deprecated function, use arraySplice instead
+   *
+   * @param array $params
+   * @param int $start
+   * @param int $end
+   * @return void
+   */
+  public static function crmArraySplice(&$params, $start, $end) {
+    self::arraySplice($params, $start, $end);
+  }
+
+  /**
+   * Deprecated function, use inArray instead
+   *
+   * @param string $value value or search string
+   * @param array $params array that need to be searched
+   * @param boolean $caseInsensitive   boolean true or false
+   *
+   * @static
+   */
+  public static function crmInArray($value, $params, $caseInsensitive = TRUE) {
+    self::inArray($value, $params, $caseInsensitive);
+  }
+
+  /**
+   * Deprecated function, use isEmpty
+   *
+   * @param array $array array that needs to be check for empty condition
+   *
+   * @return bool
+   * @static
+   */
+  static function crmIsEmptyArray($array = array()) {
+    return self::isEmpty($array);
   }
 }
 

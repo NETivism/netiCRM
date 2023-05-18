@@ -130,7 +130,7 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
       $this->_tags[$key] = $value['name'];
     }
     // merge contact and taglist tags
-    $allTags = CRM_Utils_Array::crmArrayMerge($contactTags, $tagList);
+    $allTags = CRM_Utils_Array::arrayMerge($contactTags, $tagList);
 
     $this->_name = array();
     foreach ($allTags as $key => $dnc) {

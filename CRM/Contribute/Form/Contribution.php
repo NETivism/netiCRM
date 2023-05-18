@@ -1484,7 +1484,7 @@ WHERE  contribution_id = {$this->_id}
           $params
         )
       );
-      $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsContributionType,
+      $customFields = CRM_Utils_Array::arrayMerge($customFieldsContributionType,
         CRM_Core_BAO_CustomField::getFields('Contribution', FALSE, FALSE, NULL, NULL, TRUE)
       );
       $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,

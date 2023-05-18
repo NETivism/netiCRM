@@ -2012,7 +2012,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
             // hack to add custom data for components
             $components = array("Contribution", "Participant", "Membership", "Activity");
             foreach ($components as $value) {
-              $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+              $customFields = CRM_Utils_Array::arrayMerge($customFields,
                 CRM_Core_BAO_CustomField::getFieldsForImport($value)
               );
             }
@@ -2738,7 +2738,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
           require_once 'CRM/Core/BAO/CustomGroup.php';
           foreach ($componentSubType as $subType) {
             $subTree = CRM_Core_BAO_CustomGroup::getTree($componentBAOName, CRM_Core_DAO::$_nullObject, $componentId, 0, $values[$subType]);
-            $groupTree = CRM_Utils_Array::crmArrayMerge($groupTree, $subTree);
+            $groupTree = CRM_Utils_Array::arrayMerge($groupTree, $subTree);
           }
           $formattedGroupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);
           CRM_Core_BAO_CustomGroup::setDefaults($formattedGroupTree, $defaults);

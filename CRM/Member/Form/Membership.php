@@ -760,7 +760,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       CRM_Utils_Array::value('membership_type_id', $params)
     );
 
-    $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+    $customFields = CRM_Utils_Array::arrayMerge($customFields,
       CRM_Core_BAO_CustomField::getFields('Membership', FALSE, FALSE, NULL, NULL, TRUE)
     );
 

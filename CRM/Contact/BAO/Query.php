@@ -1615,10 +1615,10 @@ class CRM_Contact_BAO_Query {
       // Added following if condition to avoid the wrong value diplay for 'myaccount' / any UF info.
       // Hope it wont affect the other part of civicrm.. if it does please remove it.
       if (!empty($this->_customQuery->_where)) {
-        $this->_where = CRM_Utils_Array::crmArrayMerge($this->_where, $this->_customQuery->_where);
+        $this->_where = CRM_Utils_Array::arrayMerge($this->_where, $this->_customQuery->_where);
       }
 
-      $this->_qill = CRM_Utils_Array::crmArrayMerge($this->_qill, $this->_customQuery->_qill);
+      $this->_qill = CRM_Utils_Array::arrayMerge($this->_qill, $this->_customQuery->_qill);
     }
 
     $clauses = array();

@@ -569,7 +569,7 @@ class CRM_Core_Block {
     // Suppress Recent Items block if it's empty - CRM-5188
     if ($id == self::RECENTLY_VIEWED) {
       $recent = self::getProperty($id, 'templateValues');
-      if (CRM_Utils_Array::crmIsEmptyArray($recent)) {
+      if (CRM_Utils_Array::isEmpty($recent)) {
         return NULL;
       }
     }

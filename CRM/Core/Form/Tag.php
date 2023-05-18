@@ -129,7 +129,7 @@ class CRM_Core_Form_Tag {
           $tagset[$tagsetItem]['entityTags'] = json_encode(array_values($entityTags));
 
           if (!empty($form->_entityTagValues)) {
-            $form->_entityTagValues = CRM_Utils_Array::crmArrayMerge($entityTags, $form->_entityTagValues);
+            $form->_entityTagValues = CRM_Utils_Array::arrayMerge($entityTags, $form->_entityTagValues);
           }
           else {
             $form->_entityTagValues = $entityTags;

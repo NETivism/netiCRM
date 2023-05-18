@@ -240,7 +240,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     //get all clients.
     $clients = CRM_Case_BAO_Case::getContactNames($this->_caseId);
     if (isset($this->_activityId) && empty($_POST)) {
-      if (!CRM_Utils_Array::crmIsEmptyArray($this->_defaults['target_contact'])) {
+      if (!CRM_Utils_Array::isEmpty($this->_defaults['target_contact'])) {
         $targetContactValues = array_combine(array_unique($this->_defaults['target_contact']),
           explode(';', trim($this->_defaults['target_contact_value']))
         );
@@ -469,7 +469,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
       // build custom data getFields array
       $customFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE, $this->_activityTypeId);
-      $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+      $customFields = CRM_Utils_Array::arrayMerge($customFields,
         CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
           NULL, NULL, TRUE
         )
@@ -623,7 +623,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     // create activity assignee records
     $assigneeParams = array('activity_id' => $activity->id);
 
-    if (!CRM_Utils_Array::crmIsEmptyArray($params['assignee_contact_id'])) {
+    if (!CRM_Utils_Array::isEmpty($params['assignee_contact_id'])) {
       //skip those assignee contacts which are already assigned
       //while sending a copy.CRM-4509.
       $activityAssigned = array_flip($params['assignee_contact_id']);

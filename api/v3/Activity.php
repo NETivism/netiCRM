@@ -129,10 +129,10 @@ function civicrm_api3_activity_create($params) {
 
   if ($case_id && $createRevision) {
     // This is very similar to the copy-to-case action.
-    if (!CRM_Utils_Array::crmIsEmptyArray($oldActivityValues['target_contact'])) {
+    if (!CRM_Utils_Array::isEmpty($oldActivityValues['target_contact'])) {
       $oldActivityValues['targetContactIds'] = implode(',', array_unique($oldActivityValues['target_contact']));
     }
-    if (!CRM_Utils_Array::crmIsEmptyArray($oldActivityValues['assignee_contact'])) {
+    if (!CRM_Utils_Array::isEmpty($oldActivityValues['assignee_contact'])) {
       $oldActivityValues['assigneeContactIds'] = implode(',', array_unique($oldActivityValues['assignee_contact']));
     }
     $oldActivityValues['mode'] = 'copy';

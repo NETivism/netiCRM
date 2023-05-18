@@ -168,10 +168,10 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $customFieldsRole = CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, $this->_roleCustomDataTypeID);
 
     $customFieldsEvent = CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, $this->_eventNameCustomDataTypeID);
-    $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsRole,
+    $customFields = CRM_Utils_Array::arrayMerge($customFieldsRole,
       CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, NULL, TRUE)
     );
-    $this->_customFields = CRM_Utils_Array::crmArrayMerge($customFieldsEvent, $customFields);
+    $this->_customFields = CRM_Utils_Array::arrayMerge($customFieldsEvent, $customFields);
 
     foreach ($this->_participantIds as $participantId) {
       $roleId = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $participantId, 'role_id');

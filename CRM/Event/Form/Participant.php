@@ -990,7 +990,7 @@ cj(function() {
         CRM_Price_BAO_Field::priceSetValidation($priceSetId, $values, $errorMsg);
       }
     }
-    return CRM_Utils_Array::crmIsEmptyArray($errorMsg) ? TRUE : $errorMsg;
+    return CRM_Utils_Array::isEmpty($errorMsg) ? TRUE : $errorMsg;
   }
 
   /**
@@ -1229,11 +1229,11 @@ cj(function() {
           $this->_eventTypeId,
           $this->_eventTypeCustomDataTypeID
         );
-        $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsRole,
+        $customFields = CRM_Utils_Array::arrayMerge($customFieldsRole,
           CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, NULL, TRUE)
         );
-        $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsEvent, $customFields);
-        $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsEventType, $customFields);
+        $customFields = CRM_Utils_Array::arrayMerge($customFieldsEvent, $customFields);
+        $customFields = CRM_Utils_Array::arrayMerge($customFieldsEventType, $customFields);
         $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
           $customFields,
           $this->_id,

@@ -73,7 +73,7 @@ class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
     require_once 'CRM/Activity/BAO/Activity.php';
     CRM_Activity_BAO_Activity::retrieve($params, $defaults);
     $defaults['case_activity_subject'] = $defaults['subject'];
-    if (!CRM_Utils_Array::crmIsEmptyArray($defaults['target_contact'])) {
+    if (!CRM_Utils_Array::isEmpty($defaults['target_contact'])) {
       $targetContactValues = array_combine(array_unique($defaults['target_contact']),
         explode(';', trim($defaults['target_contact_value']))
       );

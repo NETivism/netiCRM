@@ -498,12 +498,12 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       $defaults['source_contact_qid'] = $defaults['source_contact_id'];
       $defaults['source_contact_id'] = $defaults['source_contact'];
 
-      if (!CRM_Utils_Array::crmIsEmptyArray($defaults['target_contact'])) {
+      if (!CRM_Utils_Array::isEmpty($defaults['target_contact'])) {
         $target_contact_value = explode(';', trim($defaults['target_contact_value']));
         $this->assign('target_contact', array_combine(array_unique($defaults['target_contact']), $target_contact_value));
       }
 
-      if (!CRM_Utils_Array::crmIsEmptyArray($defaults['assignee_contact'])) {
+      if (!CRM_Utils_Array::isEmpty($defaults['assignee_contact'])) {
         $assignee_contact_value = explode(';', trim($defaults['assignee_contact_value']));
         $this->assign('assignee_contact', array_combine($defaults['assignee_contact'], $assignee_contact_value));
       }
@@ -946,7 +946,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       $customFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
         $this->_activityTypeId
       );
-      $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+      $customFields = CRM_Utils_Array::arrayMerge($customFields,
         CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
           NULL, NULL, TRUE
         )
@@ -1002,7 +1002,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
 
     $activityAssigned = array();
     // format assignee params
-    if (!CRM_Utils_Array::crmIsEmptyArray($params['assignee_contact_id'])) {
+    if (!CRM_Utils_Array::isEmpty($params['assignee_contact_id'])) {
       //skip those assignee contacts which are already assigned
       //while sending a copy.CRM-4509.
       $activityAssigned = array_flip($params['assignee_contact_id']);
@@ -1051,7 +1051,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     $mailStatus = '';
     $config = &CRM_Core_Config::singleton();
 
-    if (!CRM_Utils_Array::crmIsEmptyArray($params['assignee_contact_id']) && $config->activityAssigneeNotification) {
+    if (!CRM_Utils_Array::isEmpty($params['assignee_contact_id']) && $config->activityAssigneeNotification) {
       $mailToContacts = array();
       $assigneeContacts = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($activity->id, TRUE, FALSE);
 

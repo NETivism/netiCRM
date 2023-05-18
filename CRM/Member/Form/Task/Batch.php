@@ -257,7 +257,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
           // membership type custom data
           $customFields = CRM_Core_BAO_CustomField::getFields('Membership', FALSE, FALSE, $membership->membership_type_id);
 
-          $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+          $customFields = CRM_Utils_Array::arrayMerge($customFields,
             CRM_Core_BAO_CustomField::getFields('Membership',
               FALSE, FALSE, NULL, NULL, TRUE
             )
